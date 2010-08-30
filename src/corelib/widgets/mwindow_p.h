@@ -21,6 +21,7 @@
 #define MWINDOW_P_H
 
 #include <QTimeLine>
+#include <QElapsedTimer>
 #include "mwindow.h"
 
 #include <mscenemanager.h>
@@ -97,6 +98,10 @@ public:
     MGConfItem minimizedSoftwareSwitchItem;
 #endif
     bool minimizedSoftwareSwitch;
+
+    QElapsedTimer timeSinceLastPaintInSwitcher;
+    bool updateIsPending;
+    bool discardedPaintEvent;
 
 protected:
     MWindow *q_ptr;

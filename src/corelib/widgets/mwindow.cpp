@@ -76,6 +76,8 @@ MWindowPrivate::MWindowPrivate() :
     minimizedSoftwareSwitchItem("/meegotouch/debug/minimized_software_switch"),
 #endif
     minimizedSoftwareSwitch(false),
+    updateIsPending(false),
+    discardedPaintEvent(false),
     q_ptr(NULL)
 {
 #ifndef Q_WS_X11
@@ -88,6 +90,8 @@ MWindowPrivate::MWindowPrivate() :
         angle = window->orientationAngle();
     else
         angle = MOrientationTracker::instance()->orientationAngle();
+
+    timeSinceLastPaintInSwitcher.invalidate();
 }
 
 MWindowPrivate::~MWindowPrivate()
@@ -386,6 +390,13 @@ void MWindowPrivate::doEnterDisplayEvent()
 
     q->enterDisplayEvent();
     emit q->displayEntered();
+
+    if (discardedPaintEvent) {
+        // we discarded a paint event while beeing invisible
+        // make sure the screen is up to date
+        discardedPaintEvent = false;
+        QTimer::singleShot(0, q->viewport(), SLOT(update()));
+    }
 }
 
 void MWindowPrivate::doExitDisplayEvent()
@@ -442,6 +453,7 @@ void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
     else if (event->oldState() == Qt::WindowMinimized &&
              q->windowState() != Qt::WindowMinimized) {
         isInSwitcher = false;
+        timeSinceLastPaintInSwitcher.invalidate();
         emit q->switcherExited();
     }
 
@@ -943,13 +955,43 @@ void MWindow::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 
 void MWindow::paintEvent(QPaintEvent *event)
 {
-#ifdef M_USE_OPENGL
     Q_D(MWindow);
+#ifdef M_USE_OPENGL
 
     if (!MApplication::softwareRendering()) {
         MGLES2Renderer::activate(d->glWidget);
     }
 #endif // M_USE_OPENGL
+
+    if (isInSwitcher()) {
+        if (!isOnDisplay()) {
+            // TODO: also do this check for the foreground app not visible in the switcher once onDisplay is immediately
+            // true when starting an application. right now during startup the first frames would be discarded
+            mWarning("MWindow::paintEvent") << "Application is not visible. Paint event discarded. Make sure the application does not paint in the first place.";
+            event->accept();
+            d->discardedPaintEvent = true;
+            return;
+        } else if (!d->timeSinceLastPaintInSwitcher.isValid()) {
+            d->timeSinceLastPaintInSwitcher.start();
+            d->updateIsPending = false;
+        } else {
+            const int maxFpsInSwitcher = 5;
+            const int minDelay = 1000. / maxFpsInSwitcher;
+            qint64 msSinceLastPaint = d->timeSinceLastPaintInSwitcher.elapsed();
+            if (msSinceLastPaint < minDelay) {
+                event->accept();
+                if (!d->updateIsPending) {
+                    // trigger a new paint event as otherwise the screen may not be up to date
+                    QTimer::singleShot(minDelay, viewport(), SLOT(update()));
+                    d->updateIsPending = true;
+                }
+                return;
+            } else {
+                d->timeSinceLastPaintInSwitcher.restart();
+                d->updateIsPending = false;
+            }
+        }
+    }
 
     QGraphicsView::paintEvent(event);
 }
