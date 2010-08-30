@@ -1,3 +1,9 @@
+libmeegotouch (0.20.38~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 30 Aug 2010 16:04:09 +0300
+
 libmeegotouch (0.20.37-1) unstable; urgency=low
 
   * Fixes: NB#186493 - Images are not displayed in Grid widget from WidgetsGallery
