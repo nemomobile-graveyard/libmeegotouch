@@ -38,6 +38,14 @@ M_REGISTER_WIDGET(MWidgetController)
 
 const MTheme::ViewType MWidgetController::defaultType = "default";
 
+static void combineSize(QSizeF &result, const QSizeF &size)
+{
+    if (result.width() < 0)
+        result.setWidth(size.width());
+    if (result.height() < 0)
+        result.setHeight(size.height());
+}
+
 // TODO: if model needs to be shared, a version of constructor is
 // needed which takes model as a parameter. Some consideration is also
 // needed of how the shared model is managed outside the controllers
@@ -519,29 +527,34 @@ void MWidgetController::setStyleName(const QString &name)
 QSizeF MWidgetController::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MWidgetController);
-    QSizeF sh(-1, -1);
-    // check if we have, or if we can create a view
+    QSizeF sh(constraint);
+    // check if we have, or if we can create, a view
     if (view()) {
         QRect margins = d->view->margins();
-        qreal widthMargin = margins.x() + margins.width();
+        qreal widthMargin = margins.left() + margins.width();
         qreal heightMargin = margins.top() + margins.height();
 
-        if (constraint.width() >= 0 || constraint.height() >= 0) {
-            QSizeF adjustedConstraint(constraint);
-            if (adjustedConstraint.width() >= 0) {
-                adjustedConstraint.rwidth() -= widthMargin;
-                if (adjustedConstraint.width() < 0) //what to do if the margins are bigger than the constraint?
-                    adjustedConstraint.rwidth() = 0;
-            }
-            if (adjustedConstraint.height() >= 0) {
-                adjustedConstraint.rheight() -= heightMargin;
-                if (adjustedConstraint.height() < 0) //what to do if the margins are bigger than the constraint?
-                    adjustedConstraint.rheight() = 0;
-            }
-            // fetch the size hint from the view
-            sh = d->view->sizeHint(which, adjustedConstraint);
-        } else
-            sh = d->view->sizeHint(which, constraint);
+        // Adjust the constraint to remove the margins
+        if (sh.width() > 0)
+            sh.setWidth( qMax((qreal)0, sh.width() - widthMargin) );
+        if (sh.height() > 0)
+            sh.setHeight( qMax((qreal)0, sh.height() - heightMargin) );
+
+        //Combine the constraint with the size given by the style (e.g. as set by the CSS file),
+        //with the constraint taking priority
+        QSizeF styleSize;
+        if (which == Qt::MinimumSize)
+            styleSize = d->view->style()->minimumSize();
+        else if (which == Qt::MaximumSize)
+            styleSize = d->view->style()->maximumSize();
+        else if (which == Qt::PreferredSize)
+            styleSize = d->view->style()->preferredSize();
+
+        combineSize(sh, styleSize);
+
+        // The size isn't fully specified by the constraint and CSS.  Fetch the size hint from the view
+        if (!sh.isValid())
+            combineSize(sh, d->view->sizeHint(which, sh));
 
         // unless the final size dimensions are unconstrained, we need to add margins to them
         // so the layouting system reserves enough space for the content + margins.
@@ -551,14 +564,13 @@ QSizeF MWidgetController::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
             sh.rheight() += heightMargin;
     }
 
-    if (sh.width() < 0 || sh.height() < 0) {
-        QSizeF baseSizeHint = MWidget::sizeHint(which, constraint);
-        if (sh.width() < 0) {
-            sh.rwidth() = baseSizeHint.width();
-        }
-        if (sh.height() < 0) {
-            sh.rheight() = baseSizeHint.height();
-        }
+    //If the size is not specified manually, nor by css, nor by the view, then
+    //fallback to using the layout's sizeHint
+    if (!sh.isValid()) {
+        QSizeF widgetSize = MWidget::sizeHint(which, sh);
+        if (widgetSize.width() == 0) // Work around bug NB#189091
+            widgetSize = MWidget::sizeHint(which);
+        combineSize(sh, widgetSize);
     }
 
     return sh;

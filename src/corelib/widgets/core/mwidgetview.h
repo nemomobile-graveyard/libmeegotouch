@@ -62,6 +62,7 @@ class QGraphicsSceneResizeEvent;
     inline STYLE##Container& style() { return static_cast<STYLE##Container&>(MWidgetView::style()); } \
     inline const STYLE##Container& style() const { return static_cast<const STYLE##Container&>(MWidgetView::style()); }
 
+
 /*!
  * \class MWidgetView
  * \brief MWidgetView provides an abstract base class for MVC views
@@ -150,26 +151,37 @@ public:
      */
     virtual QFont font() const;
 
-Q_SIGNALS:
-
 protected:
 
-    /*
-      \brief Reimplementation that takes the CSS specified sizes into account.
+    /*!
+      \brief Default sizeHint implementation for a view
 
-      The default widget view size hint implementation adds the option to specify
-      the hints in the style definition of the widget.
+      To determine the size of a widget in a layout, the layout uses the widget's QGraphicsLayoutItem::preferredSize() and its QGraphicsLayoutItem::sizePolicy() functions.  The preferred size of a MWidgetController is determined from:
 
-      The priority order while evaluting the hints are, from highest to lowest:
-      developer set hints (using setMinimumSize, setMaximumSize and setPreferredSize),
-      CSS specified hints and finally widget layout reported hints.
+      -# The constraint passed to the MWidgetController::sizeHint() function - usually due to the layout.
+      -# Developer set hints (using QGraphicsLayoutItem::setPreferredSize(), etc).
+      -# Style set size (e.g. from the CSS).
+      -# View's sizeHint() function.
+      -# MWidgetController::layout()->QGraphicsLayoutItem::sizeHint() function.
 
-      Widget layout reported hints refer to the layout added to the widget with setLayout(),
-      not any layout the widget may itself be inside. In order to create a widget that
-      expands dynamically based on the contents inside the set layout, you should
-      leave at least one dimension of the size hint unspecified in the CSS.
+      The sizes given from the first 3 steps are combined, in the order of preference as shown.
+      If the height and/or width is not specified, then this function is called, with \a constraint set
+      to the size determined so far.  The result from the view is then combined with the constraint.
+      Finally, if this size is still not valid, this is combined with QGraphicsWidget::sizeHint() which
+      in turn uses the layouts sizeHint function.
 
-      Reimplemented from QGraphicsLayoutItem.
+      The default implementation returns <code>QSizeF(-1,-1)</code> so that any layout attached to the controller
+      is used instead.
+
+      If you reimplement this function and you use the \a constraint parameter to set the height of the widget
+      depend on its width, you need to set controller's QGraphicsLayoutItem::sizePolicy() to have
+      QSizePolicy::hasHeightForWidth().
+
+      <i>Note: In order to create a widget that expands dynamically based on the contents inside the
+      set layout, you should not reimplement this function, and should leave at least the height
+      unspecified in the CSS.  E.g. <code>preferred-size: 200 -1;</code> </i>
+
+      \see \ref pagelayout-widgetSize
     */
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 

@@ -385,6 +385,7 @@ private:
 
 #ifdef UNIT_TEST
     friend class Ut_MWidgetController;
+    friend class Ut_AllWidgets;
     friend class Ut_MButton;
     friend class Ut_MOverlay;
     friend class Ut_MPannableViewport;

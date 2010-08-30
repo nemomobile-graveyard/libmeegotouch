@@ -570,7 +570,6 @@ void MWidgetView::setScale(qreal scale)
     d->controller->setScale(scale);
 }
 
-
 bool MWidgetView::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {
     Q_UNUSED(watched);
@@ -580,25 +579,9 @@ bool MWidgetView::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 
 QSizeF MWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
+    Q_UNUSED(which);
     Q_UNUSED(constraint);
-    QSizeF sh;
-
-    switch (which) {
-    case Qt::MinimumSize:
-        sh = style()->minimumSize();
-        break;
-
-    case Qt::MaximumSize:
-        sh = style()->maximumSize();
-        break;
-    case Qt::PreferredSize:
-        sh = style()->preferredSize();
-        break;
-    default:
-        break;
-    }
-
-    return sh;
+    return QSizeF(-1,-1);
 }
 
 void MWidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
