@@ -1,0 +1,312 @@
+/*! \page input_feedback Input feedback
+
+\section input_feedback_support Input feedback support for MeeGo Touch applications
+
+MeeGo Touch provides an easy way to integrate immediate feedback into graphical applications. The concept is based on the Qt's signal/slot architecture and the standard theme principles of Linux systems and it is therefore easy to understand and deploy.
+
+A mobile device can support several means for feedback, for example audio speaker, vibra or piezo actuators. Input feedback helps the user to use the graphical controls on the touch screen by providing feedback which is similar to physical buttons. MeeGo Touch offers low latency input feedback which is important for the usability of the product.
+
+\subsection technical_background Short technical background
+
+The feedbacks are identified by name. For instance, if a user touches a button on the screen, "press" feedback is played or if a  selected check box is pressed, "press-off" feedback is played. These feedbacks are played by a daemon (meegofeedbackd) that is invisible for the developers. Different types of feedback methods can be provided by different hardware. Some mentioned in this documentation are:
+
+- Vibra: Based on Immersion TouchSense&reg;
+- Audio: Based on PulseAudio
+
+MFeedbackPlayer class provides an interface to send playback requests from MeeGo Touch level to the feedback daemon. In practice, when a feedback related Qt signal is emitted, it should be translated into a feedback name and sent to the feedback daemon via the feedback player. The MFeedbackPlayer only forwards the feedback name to the feedback daemon, it does not know anything about the source Qt signal which triggered that event and the feedback name is not validated at MeeGo Touch level. The feedback daemon receives the feedback name, validates it in the context of the current theme and the application name and plays the corresponding vibra/audio feedback if there is any. If multiple feedbacks (e.g audio and vibra) are available for the same name, they are played simultaneously.
+
+\subsection feedbacks_in_themes Feedbacks in themes
+
+Read the feedbacks part of \ref theme_structure "theme directory structure" documentation to see how the feedback files are located in theming directories.
+
+Typically, a feedback directory contains two files: vibra.ivt and audio.wav.
+
+Some principles are followed in the theme logic:
+- When an event happens (e.g. pressing on an MButton), both a vibra and an audio feedback are played at the same time if available.
+- If a feedback directory does not contain any file for a backend (e.g. vibra.ivt), a fallback mechanism tries to find a feedback for the backend going back on the theme inheritance tree.
+- Using a non-existing name (e.g. "press-loud") triggers fallback mechanism to look for a generic feedback name before the first (and only the first) dash (e.g "press-loud-something" -> "press").
+- A zero sized sample file means no feedback, the fallback mechanism stops at this point.
+
+The feedbacks can be played on three different volume levels. This is a global setting of the feedback daemon, but the feedbacks should be prepared for this. The PulseAudio backend sets the appropriate playback volume from a config file so nothing needs to be done in PulseAudio case. The vibra backend checks the vibra.ivt for three timeline effects named "low", "medium" and "high" referring to low, medium and high volume levels. The first effect from the file is used if there is no correctly named timeline effects (its type does not matter in this case).
+
+\subsection stylesheets Stylesheets
+
+It is recommended to read the \ref styling "styling" part of the MeeGo Touch documentation before this section, because only the feedback specific syntax is described here.
+
+A css file is associated with an application to describe the style of the widgets. For an application named "example" and a theme named "base", it is located in /usr/share/themes/base/meegotouch/example/style/example.css. The widgets in the applications can be styled on class (means e.g. every button in an application) or object/instance level (means one specific button in the application). Here is a minimal explanation about this concept for readers without deeper developer knowledge:
+
+- The widgets in an application are instances of their class definitions. E.g. Buttons are instances of MButton classes.
+- To distinguish two instances of the same class (e.g an Ok and Cancel button on the screen), the different instances can be named. This name is not visible on the screen and does not have any predefined format, but gives the potential to differentiate the instances (e.g. buttons) for styling.
+- As a natural demand, there can be use cases when the instances of different classes should be themed with the same rules. E.g. Buttons and text input fields (MTextEdit) have a common style property on a particular window, for instance text color. In these cases, the instances can be named with the same name and style with a simple rule referring to the name, but not to the class type.
+
+Let's see some real-life examples for the principles above. If a style is specific to every instance of a class then it should be written in the following form:
+
+\code
+MButton {
+}
+\endcode
+
+Object instances can be referred by their name. The style data of a button named "SendButton" (an instance of an MButton):
+
+\code
+MButton#SendButton {
+}
+\endcode
+
+If multiple instances of several classes (MButton, MTextEdit) are named with the same name "CommonElements", they can be styled with:
+
+\code
+#CommonElements {
+}
+\endcode
+
+Specifying a feedback "huge-feedback" for the "press" event of an MButton widget instance with the object name "SignInButton":
+
+\code
+MButton#SignInButton {
+  press-feedback: huge-feedback;
+}
+\endcode
+
+As shown above, the styling rules are written between the curly brackets.
+
+\section mfeedbackplayer MFeedbackPlayer
+
+MFeedbackPlayer class instance should not be explicitly created by an application since it is built-in in the MApplication class. To get the MFeedbackPlayer instance, a static function MApplication::feedbackPlayer() should be called:
+
+\code
+MFeedbackPlayer* MApplication::feedbackPlayer();
+\endcode
+
+\subsection simple_demo MFeedbackPlayer simple demo application
+
+A minimalistic application, requesting a "press" feedback from the MFeedbackPlayer without any widgets:
+
+app.pro:
+
+\code
+TEMPLATE = app
+CONFIG += meegotouch
+SOURCES += main.cpp
+\endcode
+
+main.cpp:
+
+\code
+#include <MApplication>
+#include <MFeedbackPlayer>
+
+int main(int argc, char* argv[])
+{
+  MApplication app(argc, argv);
+
+  // Process some initial events in the event queue
+  app.processEvents();
+  // Request the press feedback
+  MApplication::feedbackPlayer()->play("press");
+  // Be sure that the request is processed
+  app.processEvents();
+}
+\endcode
+
+\section mfeedback MFeedback
+
+MFeedback class is a thin convenience class to make working with feedbacks very easy. An MFeedback instance that can play a "press" feedback:
+
+\code
+MFeedback* feedback = new MFeedback("press");
+\endcode
+
+Play the input feedback by hand:
+
+\code
+feedback->play();
+\endcode
+
+Connect a signal to the feedback:
+
+\code
+connect(button, SIGNAL(press()), feedback, SLOT(play()));
+\endcode
+
+Behind the scenes, MFeedbackPlayer forwards the feedback events to the feedback daemon and the audio/vibra feedback gets played as soon as possible.
+
+\subsection simplest_application Simplest application with feedbacks
+
+The following demo application creates a window and places a button (MButton) there. The default press and release feedbacks are used automatically. Feedback named "press" is played when button is pressed and feedback named "release" is played when the button is released. These "press" and "release" feedback files are loaded from the current theme.
+
+app.pro:
+
+\code
+TEMPLATE = app
+CONFIG += meegotouch
+SOURCES += main.cpp
+\endcode
+
+main.cpp:
+
+\code
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MButton>
+
+int main(int argc, char* argv[])
+{
+  // Create an application with a button
+  MApplication app(argc, argv);
+  MApplicationPage* page = new MApplicationPage();
+  MApplicationWindow* window = new MApplicationWindow();
+  MButton* button = new MButton("Hello World");
+
+  // Show the UI
+  page->setCentralWidget(button);
+  window->show();
+  page->appear(window);
+
+  // Enter the main loop
+  app.exec();
+
+  // Clean up
+  delete window;
+}
+\endcode
+
+\subsection advanced_example Advanced example
+
+The following demo application creates a window and places a button in the window (ExampleButton). The default press and the release feedbacks for the button are ignored and instead the button emits a newPress signal when tapping on the button.  This signal is used to play a feedback named "press-on".
+
+app.pro:
+
+\code
+TEMPLATE = app
+CONFIG += meegotouch
+HEADERS += main.h
+SOURCES += main.cpp
+\endcode
+
+main.cpp:
+
+\code
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MFeedback>
+
+#include "main.h"
+
+int main(int argc, char* argv[])
+{
+  // Create an application with a button
+  MApplication app(argc, argv);
+  MApplicationPage* page = new MApplicationPage();
+  MApplicationWindow* window = new MApplicationWindow();
+  ExampleButton* button = new ExampleButton("Hello World");
+
+  // Show the UI
+  page->setCentralWidget(button);
+  window->show();
+  page->appear(window);
+
+  MFeedback* feedback = new MFeedback("press-on");
+  button->connect(button, SIGNAL(newPress()), feedback, SLOT(play()));
+
+  // Enter the main loop
+  app.exec();
+
+  // Clean up
+  delete feedback;
+  delete window;
+}
+\endcode
+
+main.h:
+
+\code
+#include <QGraphicsSceneMouseEvent>
+#include <MButton>
+
+class ExampleButton : public MButton
+{
+  Q_OBJECT
+
+public:
+
+  ExampleButton(const QString& text, QGraphicsItem* parent = 0) : MButton(text, parent)
+  { }
+
+signals:
+  // Declare a new signal for a press event
+  void newPress();
+
+protected:
+
+  void mousePressEvent(QGraphicsSceneMouseEvent* event)
+  {
+    // Emit the new signal
+    emit newPress();
+    // Skip the event processing further
+    event->ignore();
+  }
+};
+\endcode
+
+\section feedback_use_case1 Use case 1: Override a default feedback for an application
+
+Let's say that an application's name is "app" and we want to change the "press" feedback to an application specific custom feedback regardless of the selected theme. To achieve this the following should be done:
+
+- The new feedback files should be placed in the base theme directory structure because every theme is derived from this theme. This leads to the fact that the custom feedback will be the same regardless of the selected theme. This is true because an application specific feedback always overrides the general theme specific feedback.
+- The base theme can be extended/overriden in the application specific part. Thus the correct place for the new files is at /usr/share/themes/base/meegotouch/app/feedbacks/press
+
+\section feedback_use_case2 Use case 2: Use an MButton widget and override the default feedback
+
+The application created in this section places a normal MButton named "NormalButton" in a window and the style sheet overrides the default "press" feedback of the press feedback into "release" feedback. The app.css file should be placed in the usr/share/themes/base/meegotouch/app/style directory.
+
+app.css:
+
+\code
+MButtonStyle#NormalButton {
+  press-feedback: release;
+}
+\endcode
+
+app.pro:
+
+\code
+TEMPLATE = app
+CONFIG += meegotouch
+SOURCES += main.cpp
+\endcode
+
+main.cpp:
+
+\code
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MButton>
+
+int main(int argc, char* argv[])
+{
+  // Create an application with a button
+  MApplication app(argc, argv);
+  MApplicationPage* page = new MApplicationPage();
+  MApplicationWindow* window = new MApplicationWindow();
+  MButton* button = new MButton("Hello World");
+
+  button->setStyleName("NormalButton");
+
+  // Show the UI
+  page->setCentralWidget(button);
+  window->show();
+  page->appear(window);
+
+  // Enter the main loop
+  app.exec();
+
+  // Clean up
+  delete window;
+}
+\endcode
+
+*/

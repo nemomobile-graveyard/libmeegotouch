@@ -55,11 +55,12 @@
        <li><a href="faststart.html">Fast application startup</a></li>
        <li><a href="notifications.html">Notifications</a></li>
        <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
-       <li><a href="applicationextensions.html">Application extensions</a></li>
+       <li>\subpage input_feedback "Input feedback"</li>
       </ul>
     </td>
     <td>
       <ul>
+       <li><a href="applicationextensions.html">Application extensions</a></li>
        <li><a href="settingslanguageschema.html">Settings language reference</a></li>
        <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
        <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
