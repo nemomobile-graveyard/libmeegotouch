@@ -83,7 +83,6 @@ private slots:
     void testRichTextElide();
 
     void testHighlighting();
-    void testHighlightingModel();
 
     void testAnchor();
 
