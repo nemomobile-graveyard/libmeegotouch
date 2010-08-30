@@ -4,6 +4,11 @@
 
 \subsection New
 - MWidgetController::setStyleName can now be used for associating a style with a widget (like setObjectName)
+- MSwipeRecognizerStyle, MPanRecognizerStyle, MTapAndHoldRecognizerStyle. The gesture recognizers contained
+  some hardcoded values of threshold and timeout values. Those are now exposed via style sheets.
+- MListStyle: Support for enabling group separators by setting the group separators object name in the list
+  style css. Disabled by default.
+- MTheme::themeIsChanging() signal.
 
 \subsection Deprecated
 - MWindow::setObjectName and MWidgetController:setObjectname overloaded methods, use MWidgetController::setStyleName instead.

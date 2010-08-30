@@ -1,3 +1,16 @@
+libmeegotouch (0.20.37-1) unstable; urgency=low
+
+  * Fixes: NB#186493 - Images are not displayed in Grid widget from WidgetsGallery
+  * Fixes: NB#185180 - mgen does not support defines to export symbols of classes except M_EXPORT
+  * Fixes: NB#186801 - View menu items are not aligned properly and green bar is shown for share button.
+  * Fixes: NB#185884 - Don't check for d->isMenuOpen before calling d->menu->disappear()
+  * Fixes: NB#185241 - (empty_image_crop) MImageWidget: setCrop() does not work with empty images
+  * Fixes: NB#182221 - Item object menu gets displayed when fast scroll indicator area is long tapped.
+  * Fixes: NB#184785 - Move meegotouch-boostable QMake specification to libmeegotouch-dev
+  * Fixes: NB#187275 - removeButton in MDialog deletes the MButtonModel in contrast to documentation
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 30 Aug 2010 15:52:13 +0300
+
 libmeegotouch (0.20.36-1) unstable; urgency=low
 
   * Fixes: NB#179986 - MImageWidget does not take aspect ratio of images (logical IDs) into account when specifying image sizes.
