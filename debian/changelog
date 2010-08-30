@@ -1,3 +1,9 @@
+libmeegotouch (0.20.37-2) unstable; urgency=low
+
+  * Unit test build fix
+  
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 30 Aug 2010 18:16:00 +0300
+
 libmeegotouch (0.20.37-1) unstable; urgency=low
 
   * Fixes: NB#186493 - Images are not displayed in Grid widget from WidgetsGallery
