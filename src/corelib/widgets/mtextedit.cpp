@@ -125,7 +125,9 @@ void MTextEditPrivate::init()
         q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     } else {
         //Set to expand vertically only in multiline mode
-        q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        QSizePolicy policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        policy.setHeightForWidth(true);
+        q->setSizePolicy(policy);
     }
 
     q->document()->setDefaultTextOption(option);

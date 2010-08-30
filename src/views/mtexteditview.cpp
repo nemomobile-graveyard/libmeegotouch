@@ -908,28 +908,23 @@ void MTextEditView::updateCursorPosition(QGraphicsSceneMouseEvent *event, const 
 QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MTextEditView);
-    // sizeHint follows below rules:
+    // sizeHint follows the rules:
     //  Qt::MinimumSize:
-    //      Returns the size given by style system if it is valid. Otherwise returns a size, which
-    //      width is the width of one character, the height is the minimum height of one line.
+    //      Returns a size which is the width of one character and the height of one line
     //  Qt::PreferredSize:
-    //      Returns the size given by style system or constraint if it is valid. If there are both
-    //      valid style perferredSize and constraint, takes the smaller one.
-    //      Otherwise uses the valid width/height from style system/constraint. Correct the invalid
-    //      one to:
     //      SingleLine:
-    //          the width is the width of the document, the height is the minimum height of one line.
+    //          Returns the width of the document and the minimum height of one line.
     //      MultiLine:
-    //          Has valid constraint width(from style or constraint):
+    //          If there is a width constraint:
     //              Resizes the current document to the given constraint's width.
     //              Stores that document height. Resizes current document back to old size.
     //              Uses the stored height (including padding).
-    //          No valid constraint width:
-    //              the width and height are from the size of the document (including padding).
+    //          If there is no width constraint:
+    //              Return the current size of the document (including padding).
     //  Qt::MaximumSize:
-    //      Returns the size given by style system if it is valid. Otherwise returns QWIDGETSIZE_MAX
+    //      Return QWIDGETSIZE_MAX
 
-    QSizeF hint;
+    QSizeF hint = constraint;
     const QTextBlock block = d->textDocument->firstBlock();
     const QTextLayout *layout = block.layout();
     QTextLine line = layout->lineAt(0);
@@ -938,7 +933,6 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
 
     switch (which) {
     case Qt::MinimumSize:
-        hint = style()->minimumSize();
         if (hint.width() < 0) {
             QFontMetrics fm(style()->font());
             qreal minWidth = fm.width('x') + style()->paddingLeft() + style()->paddingRight()
@@ -951,44 +945,43 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
         break;
     case Qt::PreferredSize:
         {
-            qreal preferredWidth = hint.width();
-            qreal preferredHeight = hint.height();
-            if (constraint.width() >= 0 && (preferredWidth < 0 || constraint.width() < preferredWidth))
-                preferredWidth = constraint.width();
-            if (constraint.height() >= 0 && (preferredHeight < 0 || constraint.height() < preferredHeight))
-                preferredHeight = constraint.height();
+            if (model()->line() == MTextEditModel::SingleLine) {
+                if (hint.width() < 0) {
+                    hint.setWidth(d->textDocument->size().width() +
+                        style()->paddingLeft() + style()->paddingRight());
+                }
+                if (hint.height() < 0) {
+                    hint.setHeight(minLineHeight);
+                }
+            } else {
+                // multi line
+                if (hint.width() > 0) {
+                    /* To find out the preferred height, we need to set the text document width
+                     * to the given constraint width.  But we don't want this to trigger
+                     * a documentsSizeChanged so we disconnect that signal and reconnect afterwards
+                     */
+                    qreal oldWidth = d->textDocument->textWidth();
+                    disconnect(d->textDocument->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
+                            d, SLOT(handleDocumentSizeChange(QSizeF)));
+                    d->textDocument->setTextWidth(hint.width());
+                    hint.setHeight(d->textDocument->size().height() +
+                        style()->paddingTop() + style()->paddingBottom());
+                    d->textDocument->setTextWidth(oldWidth);
+                    connect(d->textDocument->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
+                            d, SLOT(handleDocumentSizeChange(QSizeF)));
 
-            if (preferredWidth < 0 || preferredHeight < 0 ) {
-                if (model()->line() == MTextEditModel::SingleLine) {
-                    if (preferredWidth < 0) {
-                        preferredWidth = d->textDocument->size().width() +
-                                         style()->paddingLeft() + style()->paddingRight();
-                    }
-                    if (preferredHeight < 0) {
-                        preferredHeight = minLineHeight;
-                    }
                 } else {
-                    // multi line
-                    if (preferredWidth > 0) {
-                        qreal oldWidth = d->textDocument->textWidth();
-                        d->textDocument->setTextWidth(preferredWidth);
-                        preferredHeight = d->textDocument->size().height() +
-                                          style()->paddingTop() + style()->paddingBottom();
-                        d->textDocument->setTextWidth(oldWidth);
-                    } else {
-                        preferredWidth = d->textDocument->size().width() +
-                                         style()->paddingLeft() + style()->paddingRight();
-                        if (preferredHeight < 0)
-                            preferredHeight = d->textDocument->size().height() +
-                                              style()->paddingTop() + style()->paddingBottom();
-                    }
+                    //Use the current document width if we are given no constraints
+                    hint.setWidth(d->textDocument->size().width() +
+                        style()->paddingLeft() + style()->paddingRight());
+                    if (hint.height() < 0)
+                        hint.setHeight(d->textDocument->size().height() +
+                            style()->paddingTop() + style()->paddingBottom());
                 }
             }
-            hint = QSizeF(preferredWidth, preferredHeight);
         }
         break;
     case Qt::MaximumSize:
-        hint = style()->maximumSize();
         if (hint.width() < 0) {
             hint.setWidth(QWIDGETSIZE_MAX);
         }
