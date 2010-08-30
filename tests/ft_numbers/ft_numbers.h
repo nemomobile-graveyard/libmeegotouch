@@ -20,11 +20,10 @@
 #ifndef FT_NUMBERS_H
 #define FT_NUMBERS_H
 
-
 #include <QtTest/QtTest>
 #include <QObject>
+#include <QTextStream>
 #include <MLocale>
-
 
 Q_DECLARE_METATYPE(MLocale);
 Q_DECLARE_METATYPE(qlonglong);
@@ -41,23 +40,37 @@ private slots:
     void initTestCase();
     void cleanup();
 
-    void testFloats_data();
-    void testFloats();
+    void testQLongLongs_data();
+    void testQLongLongs();
+
+    void testToLongLong_data();
+    void testToLongLong();
 
     void testShorts_data();
     void testShorts();
 
-    void testQLongLongs_data();
-    void testQLongLongs();
+    void testToShort_data();
+    void testToShort();
 
     void testInts_data();
     void testInts();
 
+    void testToInt_data();
+    void testToInt();
+
     void testDoubles_data();
     void testDoubles();
 
-    void testDoublesWithFormatting_data();
+    void testToDouble_data();
+    void testToDouble();
 
+    void testFloats_data();
+    void testFloats();
+
+    void testToFloat_data();
+    void testToFloat();
+
+    void testDoublesWithFormatting_data();
     void testDoublesWithFormatting();
 
     void testPercents_data();

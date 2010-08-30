@@ -22,6 +22,7 @@
 
 #include "mexport.h"
 
+#include <float.h>
 #include <QtGlobal>
 #include <QObject>
 
@@ -685,6 +686,18 @@ public:
     QString formatNumber(qlonglong i) const;
 
     /*!
+     * \brief Returns the qlonglong represented by a localized string
+     * \param s localized string to parse
+     * \param ok pointer to a bool indicating success or failure
+     *
+     * If ok is not NULL, reports failure by setting *ok to false and
+     * success by setting *ok to true.
+     *
+     * \sa formatNumber(qlonglong i) const
+     */
+    qlonglong toLongLong(const QString &s, bool *ok = 0) const;
+
+    /*!
      * \brief Returns the string representation of a number
      * \param i number to format
      *
@@ -694,6 +707,18 @@ public:
      * \sa formatNumber(float i) const
      */
     QString formatNumber(short i) const;
+
+    /*!
+     * \brief Returns the short represented by a localized string
+     * \param s localized string to parse
+     * \param ok pointer to a bool indicating success or failure
+     *
+     * If ok is not NULL, reports failure by setting *ok to false and
+     * success by setting *ok to true.
+     *
+     * \sa formatNumber(short i) const
+     */
+    short toShort(const QString &s, bool *ok = 0) const;
 
     /*!
      * \brief Returns the string representation of a number
@@ -707,6 +732,18 @@ public:
     QString formatNumber(int i) const;
 
     /*!
+     * \brief Returns the int represented by a localized string
+     * \param s localized string to parse
+     * \param ok pointer to a bool indicating success or failure
+     *
+     * If ok is not NULL, reports failure by setting *ok to false and
+     * success by setting *ok to true.
+     *
+     * \sa formatNumber(int i) const
+     */
+    int toInt(const QString &s, bool *ok = 0) const;
+
+    /*!
      * \brief Returns the string representation of a number
      * \param i number to format
      * \param precision number of fractional digits
@@ -717,6 +754,18 @@ public:
      * \sa formatNumber(float i) const
      */
     QString formatNumber(double i, int precision = -1) const;
+
+    /*!
+     * \brief Returns the double represented by a localized string
+     * \param s localized string to parse
+     * \param ok pointer to a bool indicating success or failure
+     *
+     * If ok is not NULL, reports failure by setting *ok to false and
+     * success by setting *ok to true.
+     *
+     * \sa formatNumber(double i, int precision) const
+     */
+    double toDouble(const QString &s, bool *ok = 0) const;
 
     /*!
      * \brief Returns the string representation of a number
@@ -753,6 +802,18 @@ public:
      * \sa formatNumber(double i, int precision) const
      */
     QString formatNumber(float i) const;
+
+    /*!
+     * \brief Returns the float represented by a localized string
+     * \param s localized string to parse
+     * \param ok pointer to a bool indicating success or failure
+     *
+     * If ok is not NULL, reports failure by setting *ok to false and
+     * success by setting *ok to true.
+     *
+     * \sa formatNumber(float i) const
+     */
+    float toFloat(const QString &s, bool *ok = 0) const;
 
     /*!
      * \brief Returns the string representation of a number as percentage

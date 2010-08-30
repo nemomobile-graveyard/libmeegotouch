@@ -1522,9 +1522,6 @@ QString MLocale::categoryName(Category category) const
     return d->categoryName(category);
 }
 
-//////////////////////////
-//// Formatting stuff ////
-
 QString MLocale::formatNumber(qlonglong i) const
 {
 #ifdef HAVE_ICU
@@ -1540,6 +1537,39 @@ QString MLocale::formatNumber(qlonglong i) const
 #endif
 }
 
+qlonglong MLocale::toLongLong(const QString &s, bool *ok) const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    UErrorCode status = U_ZERO_ERROR;
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    icu::Formattable formattable;
+    qint64 result;
+    d->_numberFormat->parse(str, formattable, status);
+    if (!U_SUCCESS(status)) {
+        if (ok != NULL)
+            *ok = false;
+        return (qlonglong(0));
+    }
+    else {
+        status = U_ZERO_ERROR;
+        result = formattable.getInt64(status);
+        if (!U_SUCCESS(status)) {
+            if (ok != NULL)
+                *ok = false;
+            return (qlonglong(0));
+        }
+        else {
+            if (ok != NULL)
+                *ok = true;
+            return (qlonglong(result));
+        }
+    }
+#else
+    Q_D(const MLocale);
+    return d->createQLocale(MLcNumeric).toLongLong(s, ok);
+#endif
+}
 
 QString MLocale::formatNumber(short i) const
 {
@@ -1554,6 +1584,46 @@ QString MLocale::formatNumber(short i) const
 #endif
 }
 
+short MLocale::toShort(const QString &s, bool *ok) const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    UErrorCode status = U_ZERO_ERROR;
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    icu::Formattable formattable;
+    qint64 result;
+    d->_numberFormat->parse(str, formattable, status);
+    if (!U_SUCCESS(status)) {
+        if (ok != NULL)
+            *ok = false;
+        return (short(0));
+    }
+    else {
+        status = U_ZERO_ERROR;
+        result = formattable.getInt64(status);
+        if (!U_SUCCESS(status)) {
+            if (ok != NULL)
+                *ok = false;
+            return (short(0));
+        }
+        else {
+            if (result < SHRT_MIN || result > SHRT_MAX) {
+                if (ok != NULL)
+                    *ok = false;
+                return (short(0));
+            }
+            else {
+                if (ok != NULL)
+                    *ok = true;
+                return (short(result));
+            }
+        }
+    }
+#else
+    Q_D(const MLocale);
+    return d->createQLocale(MLcNumeric).toShort(s, ok);
+#endif
+}
 
 QString MLocale::formatNumber(int i) const
 {
@@ -1565,6 +1635,47 @@ QString MLocale::formatNumber(int i) const
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcNumeric).toString(i);
+#endif
+}
+
+int MLocale::toInt(const QString &s, bool *ok) const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    UErrorCode status = U_ZERO_ERROR;
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    icu::Formattable formattable;
+    qint64 result;
+    d->_numberFormat->parse(str, formattable, status);
+    if (!U_SUCCESS(status)) {
+        if (ok != NULL)
+            *ok = false;
+        return (int(0));
+    }
+    else {
+        status = U_ZERO_ERROR;
+        result = formattable.getInt64(status);
+        if (!U_SUCCESS(status)) {
+            if (ok != NULL)
+                *ok = false;
+            return (int(0));
+        }
+        else {
+            if (result < INT_MIN || result > INT_MAX) {
+                if (ok != NULL)
+                    *ok = false;
+                return (int(0));
+            }
+            else {
+                if (ok != NULL)
+                    *ok = true;
+                return (int(result));
+            }
+        }
+    }
+#else
+    Q_D(const MLocale);
+    return d->createQLocale(MLcNumeric).toInt(s, ok);
 #endif
 }
 
@@ -1602,6 +1713,40 @@ QString MLocale::formatNumber(double i, int prec) const
 #endif
 }
 
+double MLocale::toDouble(const QString &s, bool *ok) const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    UErrorCode status = U_ZERO_ERROR;
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    icu::Formattable formattable;
+    double result;
+    d->_numberFormat->parse(str, formattable, status);
+    if (!U_SUCCESS(status)) {
+        if (ok != NULL)
+            *ok = false;
+        return (double(0.0));
+    }
+    else {
+        status = U_ZERO_ERROR;
+        result = formattable.getDouble(status);
+        if (!U_SUCCESS(status)) {
+            if (ok != NULL)
+                *ok = false;
+            return (double(0.0));
+        }
+        else {
+            if (ok != NULL)
+                *ok = true;
+            return (result);
+        }
+    }
+#else
+    Q_D(const MLocale);
+    return d->createQLocale(MLcNumeric).toDouble(s, ok);
+#endif
+}
+
 QString MLocale::formatNumber(float i) const
 {
 #ifdef HAVE_ICU
@@ -1613,6 +1758,47 @@ QString MLocale::formatNumber(float i) const
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcNumeric).toString(i, 'g');
+#endif
+}
+
+float MLocale::toFloat(const QString &s, bool *ok) const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    UErrorCode status = U_ZERO_ERROR;
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    icu::Formattable formattable;
+    double result;
+    d->_numberFormat->parse(str, formattable, status);
+    if (!U_SUCCESS(status)) {
+        if (ok != NULL)
+            *ok = false;
+        return (float(0.0));
+    }
+    else {
+        status = U_ZERO_ERROR;
+        result = formattable.getDouble(status);
+        if (!U_SUCCESS(status)) {
+            if (ok != NULL)
+                *ok = false;
+            return (float(0.0));
+        }
+        else {
+            if (qAbs(result) > FLT_MAX) {
+                if (ok != NULL)
+                    *ok = false;
+                return (float(0.0));
+            }
+            else {
+                if (ok != NULL)
+                    *ok = true;
+                return (float(result));
+            }
+        }
+    }
+#else
+    Q_D(const MLocale);
+    return d->createQLocale(MLcNumeric).toFloat(s, ok);
 #endif
 }
 

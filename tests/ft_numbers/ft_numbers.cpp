@@ -41,82 +41,82 @@ void Ft_Numbers::testQLongLongs_data()
     QTest::newRow("en_US")
             << QString("en_US")
             << QString("en_US")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1,542,678,073");
     QTest::newRow("en_US")
             << QString("en_US")
             << QString("de_DE")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1.542.678.073");
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("fi_FI")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1 542 678 073");
     QTest::newRow("en_GB")
             << QString("en_GB")
             << QString("en_GB")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1,542,678,073");
     QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("de_DE")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1.542.678.073");
     QTest::newRow("de_CH")
             << QString("de_CH")
             << QString("de_CH")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1'542'678'073");
     QTest::newRow("fr_FR 0")
             << QString("fr_FR")
             << QString("fr_FR")
-            << (qlonglong) 0
+            << qlonglong(0)
             << QString("0");
     QTest::newRow("fr_FR")
             << QString("fr_FR")
             << QString("fr_FR")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1 542 678 073");
     QTest::newRow("ar_EG 0")
             << QString("ar_EG")
             << QString("ar_EG")
-            << (qlonglong) 0
+            << qlonglong(0)
             << QString("٠");
     QTest::newRow("ar_EG")
             << QString("ar_EG")
             << QString("ar_EG")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("١٬٥٤٢٬٦٧٨٬٠٧٣");
     QTest::newRow("ar_EG")
             << QString("ar_EG")
             << QString("en_US")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1,542,678,073");
     QTest::newRow("ur_PK")
             << QString("ur_PK")
             << QString("ur_PK")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1,542,678,073");
     QTest::newRow("ur_IN")
             << QString("ur_IN")
             << QString("ur_IN")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1,54,26,78,073");
     QTest::newRow("zh_CN")
             << QString("zh_CN")
             << QString("zh_CN")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1,542,678,073");
     QTest::newRow("ja_JP")
             << QString("ja_JP")
             << QString("ja_JP")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("1,542,678,073");
     QTest::newRow("hi_IN")
             << QString("hi_IN")
             << QString("hi_IN")
-            << (qlonglong) 1542678073
+            << qlonglong(1542678073)
             << QString("१,५४,२६,७८,०७३");
 }
 
@@ -133,90 +133,240 @@ void Ft_Numbers::testQLongLongs()
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
+void Ft_Numbers::testToLongLong_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("formattedLongLong");
+    QTest::addColumn<bool>("parsable");
+    QTest::addColumn<qlonglong>("parsedLongLong");
+    QTest::addColumn<QString>("formattedAgainLongLong");
+
+    QTest::newRow("fi_FI 0")
+        << QString("fi_FI")
+        << QString("0")
+        << true
+        << qlonglong(0)
+        << QString("0");
+    QTest::newRow("en_GB 0")
+        << QString("en_GB")
+        << QString("0")
+        << true
+        << qlonglong(0)
+        << QString("0");
+    QTest::newRow("fi_FI 0,1")
+        << QString("fi_FI")
+        << QString("0,1")
+        << true
+        << qlonglong(0)
+        << QString("0");
+    QTest::newRow("en_GB 0.1")
+        << QString("en_GB")
+        << QString("0.1")
+        << true
+        << qlonglong(0)
+        << QString("0");
+    QTest::newRow("fi_FI 1 234,1")
+        << QString("fi_FI")
+        << QString("1 234,1")
+        << true
+        << qlonglong(1234)
+        << QString("1 234");
+    QTest::newRow("en_GB 1,234.1")
+        << QString("en_GB")
+        << QString("1,234.1")
+        << true
+        << qlonglong(1234)
+        << QString("1,234");
+    QTest::newRow("fi_FI 1 234 567,12")
+        << QString("fi_FI")
+        << QString("1 234 567,12")
+        << true
+        << qlonglong(1234567)
+        << QString("1 234 567");
+    QTest::newRow("en_GB 1,234,567.12")
+        << QString("en_GB")
+        << QString("1,234,567.12")
+        << true
+        << qlonglong(1234567)
+        << QString("1,234,567");
+    QTest::newRow("en_GB 8,446,744,073,709,551,615")
+        << QString("en_GB")
+        << QString("8,446,744,073,709,551,615")
+        << true
+        << qlonglong(8446744073709551615LL)
+        << QString("8,446,744,073,709,551,615");
+    // The following string gives a number which is
+    // too big for a 64 bit integer:
+    QTest::newRow("en_GB 318,446,744,073,709,551,615")
+        << QString("en_GB")
+        << QString("318,446,744,073,709,551,615")
+        << false
+        << qlonglong(0LL)
+        << QString("0");
+    QTest::newRow("de_DE 1234.56")
+        << QString("de_DE")
+        << QString("1234.56")
+        << true
+        << qlonglong(123456)
+        << QString("123.456");
+    QTest::newRow("de_DE 1'234,56")
+        << QString("de_DE")
+        << QString("1'234,56")
+        << true
+        << qlonglong(1)
+        << QString("1");
+    QTest::newRow("de_CH 1'234,56")
+        << QString("de_CH")
+        << QString("1'234,56")
+        << true
+        << qlonglong(1234)
+        << QString("1'234");
+    QTest::newRow("de_CH 1'234.56")
+        << QString("de_CH")
+        << QString("1'234.56")
+        << true
+        << qlonglong(1234)
+        << QString("1'234");
+    QTest::newRow("de_DE 1.234,56X")
+        << QString("de_DE")
+        << QString("1.234,56X")
+        << true
+        << qlonglong(1234)
+        << QString("1.234");
+    QTest::newRow("de_DE 1.23X4,56")
+        << QString("de_DE")
+        << QString("1.23X4,56X")
+        << true
+        << qlonglong(123)    // weird result, roundtrip fails
+        << QString("123");
+    QTest::newRow("de_DE X1.234,56")
+        << QString("de_DE")
+        << QString("X1.234,56")
+        << false
+        << qlonglong(0)
+        << QString("0");
+    QTest::newRow("de_DE Nonsense")
+        << QString("de_DE")
+        << QString("Nonsense")
+        << false
+        << qlonglong(0)
+        << QString("0");
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣")
+        << true
+        << qlonglong(1234)
+        << QString("١٢٣٤");
+    QTest::newRow("hi_HI ४,५६७.१२३")
+        << QString("hi_HI")
+        << QString("४,५६७.१२३")
+        << true
+        << qlonglong(4567)
+        << QString("४,५६७");
+}
+
+void Ft_Numbers::testToLongLong()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, formattedLongLong);
+    QFETCH(bool, parsable);
+    QFETCH(qlonglong, parsedLongLong);
+    QFETCH(QString, formattedAgainLongLong);
+
+    MLocale locale(localeName);
+    qlonglong result = locale.toLongLong(formattedLongLong);
+    QCOMPARE(result, parsedLongLong);
+    QCOMPARE(locale.toLongLong(formattedLongLong, NULL), parsedLongLong);
+    bool ok;
+    QCOMPARE(locale.toLongLong(formattedLongLong, &ok), parsedLongLong);
+    QCOMPARE(ok, parsable);
+    QCOMPARE(locale.formatNumber(result), formattedAgainLongLong);
+}
+
 void Ft_Numbers::testShorts_data()
 {
     QTest::addColumn<QString>("localeName");
     QTest::addColumn<short>("val");
     QTest::addColumn<QString>("formatted");
-    QTest::newRow("0_fi")
+    QTest::newRow("fi_FI 632")
             << QString("fi_FI")
-            << (short) 632
+            << short(632)
             << QString("632");
-    QTest::newRow("0_en")
+    QTest::newRow("en_GB 632")
             << QString("en_GB")
-            << (short) 632
+            << short(632)
             << QString("632");
-    QTest::newRow("1_fi")
+    QTest::newRow("fi_FI 21131")
             << QString("fi_FI")
-            << (short) 21131
+            << short(21131)
             << QString("21 131");
-    QTest::newRow("1_en")
+    QTest::newRow("en_GB 21131")
             << QString("en_GB")
-            << (short) 21131
+            << short(21131)
             << QString("21,131");
-    QTest::newRow("2_fi")
+    QTest::newRow("fi_FI 28515")
             << QString("fi_FI")
-            << (short) 28515
+            << short(28515)
             << QString("28 515");
-    QTest::newRow("2_en")
+    QTest::newRow("en_GB 28515")
             << QString("en_GB")
-            << (short) 28515
+            << short(28515)
             << QString("28,515");
-    QTest::newRow("3_fi")
+    QTest::newRow("fi_FI 6822")
             << QString("fi_FI")
-            << (short) 6822
+            << short(6822)
             << QString("6 822");
-    QTest::newRow("3_en")
+    QTest::newRow("en_GB 6822")
             << QString("en_GB")
-            << (short) 6822
+            << short(6822)
             << QString("6,822");
-    QTest::newRow("4_fi")
+    QTest::newRow("fi_FI -1824")
             << QString("fi_FI")
-            << (short) - 1824
+            << short(-1824)
             << QString("-1 824");
-    QTest::newRow("4_en")
+    QTest::newRow("en_GB -1824")
             << QString("en_GB")
-            << (short) - 1824
+            << short(-1824)
             << QString("-1,824");
-    QTest::newRow("5_fi")
+    QTest::newRow("fi_FI 11741")
             << QString("fi_FI")
-            << (short) 11741
+            << short(11741)
             << QString("11 741");
-    QTest::newRow("5_en")
+    QTest::newRow("en_GB 11741")
             << QString("en_GB")
-            << (short) 11741
+            << short(11741)
             << QString("11,741");
-    QTest::newRow("6_fi")
+    QTest::newRow("fi_FI 13490")
             << QString("fi_FI")
-            << (short) 13490
+            << short(13490)
             << QString("13 490");
-    QTest::newRow("6_en")
+    QTest::newRow("en_GB 13490")
             << QString("en_GB")
-            << (short) 13490
+            << short(13490)
             << QString("13,490");
-    QTest::newRow("7_fi")
+    QTest::newRow("fi_FI -7886")
             << QString("fi_FI")
-            << (short) - 7886
+            << short(-7886)
             << QString("-7 886");
-    QTest::newRow("7_en")
+    QTest::newRow("en_GB -7886")
             << QString("en_GB")
-            << (short) - 7886
+            << short(-7886)
             << QString("-7,886");
-    QTest::newRow("8_fi")
+    QTest::newRow("fi_FI -27117")
             << QString("fi_FI")
-            << (short) - 27117
+            << short(-27117)
             << QString("-27 117");
-    QTest::newRow("8_en")
+    QTest::newRow("en_GB -27117")
             << QString("en_GB")
-            << (short) - 27117
+            << short(-27117)
             << QString("-27,117");
-    QTest::newRow("9_fi")
+    QTest::newRow("fi_FI 27627")
             << QString("fi_FI")
-            << (short) 27627
+            << short(27627)
             << QString("27 627");
-    QTest::newRow("9_en")
+    QTest::newRow("en_GB 27627")
             << QString("en_GB")
-            << (short) 27627
+            << short(27627)
             << QString("27,627");
 }
 
@@ -228,90 +378,232 @@ void Ft_Numbers::testShorts()
     QTEST(loc.formatNumber(val), "formatted");
 }
 
+void Ft_Numbers::testToShort_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("formattedShort");
+    QTest::addColumn<bool>("parsable");
+    QTest::addColumn<short>("parsedShort");
+    QTest::addColumn<QString>("formattedAgainShort");
+
+    QTest::newRow("fi_FI 0")
+        << QString("fi_FI")
+        << QString("0")
+        << true
+        << short(0)
+        << QString("0");
+    QTest::newRow("en_GB 0")
+        << QString("en_GB")
+        << QString("0")
+        << true
+        << short(0)
+        << QString("0");
+    QTest::newRow("fi_FI 0,1")
+        << QString("fi_FI")
+        << QString("0,1")
+        << true
+        << short(0)
+        << QString("0");
+    QTest::newRow("en_GB 0.1")
+        << QString("en_GB")
+        << QString("0.1")
+        << true
+        << short(0)
+        << QString("0");
+    QTest::newRow("fi_FI 1 234,1")
+        << QString("fi_FI")
+        << QString("1 234,1")
+        << true
+        << short(1234)
+        << QString("1 234");
+    QTest::newRow("en_GB 1,234.1")
+        << QString("en_GB")
+        << QString("1,234.1")
+        << true
+        << short(1234)
+        << QString("1,234");
+    QTest::newRow("fi_FI 1 234 567,12")
+        << QString("fi_FI")
+        << QString("1 234 567,12")
+        << false
+        << short(0)
+        << QString("0");
+    QTest::newRow("en_GB 1,234,567.12")
+        << QString("en_GB")
+        << QString("1,234,567.12")
+        << false
+        << short(0)
+        << QString("0");
+    QTest::newRow("en_GB 8,446,744,073,709,551,615")
+        << QString("en_GB")
+        << QString("8,446,744,073,709,551,615")
+        << false
+        << short(0)
+        << QString("0");
+    QTest::newRow("de_DE 1234.56")
+        << QString("de_DE")
+        << QString("1234.56")
+        << false
+        << short(0)
+        << QString("0");
+    QTest::newRow("de_DE 1'234,56")
+        << QString("de_DE")
+        << QString("1'234,56")
+        << true
+        << short(1)
+        << QString("1");
+    QTest::newRow("de_CH 1'234,56")
+        << QString("de_CH")
+        << QString("1'234,56")
+        << true
+        << short(1234)
+        << QString("1'234");
+    QTest::newRow("de_CH 1'234.56")
+        << QString("de_CH")
+        << QString("1'234.56")
+        << true
+        << short(1234)
+        << QString("1'234");
+    QTest::newRow("de_DE 1.234,56X")
+        << QString("de_DE")
+        << QString("1.234,56X")
+        << true
+        << short(1234)
+        << QString("1.234");
+    QTest::newRow("de_DE 1.23X4,56")
+        << QString("de_DE")
+        << QString("1.23X4,56X")
+        << true
+        << short(123)    // weird result, roundtrip fails
+        << QString("123");
+    QTest::newRow("de_DE X1.234,56")
+        << QString("de_DE")
+        << QString("X1.234,56")
+        << false
+        << short(0)
+        << QString("0");
+    QTest::newRow("de_DE Nonsense")
+        << QString("de_DE")
+        << QString("Nonsense")
+        << false
+        << short(0)
+        << QString("0");
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣")
+        << true
+        << short(1234)
+        << QString("١٢٣٤");
+    QTest::newRow("hi_HI ४,५६७.१२३")
+        << QString("hi_HI")
+        << QString("४,५६७.१२३")
+        << true
+        << short(4567)
+        << QString("४,५६७");
+}
+
+void Ft_Numbers::testToShort()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, formattedShort);
+    QFETCH(bool, parsable);
+    QFETCH(short, parsedShort);
+    QFETCH(QString, formattedAgainShort);
+
+    MLocale locale(localeName);
+    short result = locale.toShort(formattedShort);
+    QCOMPARE(result, parsedShort);
+    QCOMPARE(locale.toShort(formattedShort, NULL), parsedShort);
+    bool ok;
+    QCOMPARE(locale.toShort(formattedShort, &ok), parsedShort);
+    QCOMPARE(ok, parsable);
+    QCOMPARE(locale.formatNumber(result), formattedAgainShort);
+}
+
 void Ft_Numbers::testInts_data()
 {
     QTest::addColumn<QString>("localeName");
     QTest::addColumn<int>("val");
     QTest::addColumn<QString>("formatted");
-    QTest::newRow("0_fi")
+    QTest::newRow("fi_FI 1369430476")
             << QString("fi_FI")
-            << (int) 1369430476
+            << int(1369430476)
             << QString("1 369 430 476");
-    QTest::newRow("0_en")
+    QTest::newRow("en_GB 1369430476")
             << QString("en_GB")
-            << (int) 1369430476
+            << int(1369430476)
             << QString("1,369,430,476");
-    QTest::newRow("1_fi")
+    QTest::newRow("fi_FI 1536207176")
             << QString("fi_FI")
-            << (int) 1536207176
+            << int(1536207176)
             << QString("1 536 207 176");
-    QTest::newRow("1_en")
+    QTest::newRow("en_GB 1536207176")
             << QString("en_GB")
-            << (int) 1536207176
+            << int(1536207176)
             << QString("1,536,207,176");
-    QTest::newRow("2_fi")
+    QTest::newRow("fi_FI 1320475240")
             << QString("fi_FI")
-            << (int) 1320475240
+            << int(1320475240)
             << QString("1 320 475 240");
-    QTest::newRow("2_en")
+    QTest::newRow("en_GB 1320475240")
             << QString("en_GB")
-            << (int) 1320475240
+            << int(1320475240)
             << QString("1,320,475,240");
-    QTest::newRow("3_fi")
+    QTest::newRow("fi_FI 2135623067")
             << QString("fi_FI")
-            << (int) 2135623067
+            << int(2135623067)
             << QString("2 135 623 067");
-    QTest::newRow("3_en")
+    QTest::newRow("en_GB 2135623067")
             << QString("en_GB")
-            << (int) 2135623067
+            << int(2135623067)
             << QString("2,135,623,067");
-    QTest::newRow("4_fi")
+    QTest::newRow("fi_FI 1868779941")
             << QString("fi_FI")
-            << (int) 1868779941
+            << int(1868779941)
             << QString("1 868 779 941");
-    QTest::newRow("4_en")
+    QTest::newRow("en_GB 1868779941")
             << QString("en_GB")
-            << (int) 1868779941
+            << int(1868779941)
             << QString("1,868,779,941");
-    QTest::newRow("5_fi")
+    QTest::newRow("fi_FI 885469168")
             << QString("fi_FI")
-            << (int) 885469168
+            << int(885469168)
             << QString("885 469 168");
-    QTest::newRow("5_en")
+    QTest::newRow("en_GB 885469168")
             << QString("en_GB")
-            << (int) 885469168
+            << int(885469168)
             << QString("885,469,168");
-    QTest::newRow("6_fi")
+    QTest::newRow("fi_FI 948672826")
             << QString("fi_FI")
-            << (int) 948672826
+            << int(948672826)
             << QString("948 672 826");
-    QTest::newRow("6_en")
+    QTest::newRow("en_GB 948672826")
             << QString("en_GB")
-            << (int) 948672826
+            << int(948672826)
             << QString("948,672,826");
-    QTest::newRow("7_fi")
+    QTest::newRow("fi_FI 242845572")
             << QString("fi_FI")
-            << (int) 242845572
+            << int(242845572)
             << QString("242 845 572");
-    QTest::newRow("7_en")
+    QTest::newRow("en_GB 242845572")
             << QString("en_GB")
-            << (int) 242845572
+            << int(242845572)
             << QString("242,845,572");
-    QTest::newRow("8_fi")
+    QTest::newRow("fi_FI 1469851943")
             << QString("fi_FI")
-            << (int) 1469851943
+            << int(1469851943)
             << QString("1 469 851 943");
-    QTest::newRow("8_en")
+    QTest::newRow("en_GB 1469851943")
             << QString("en_GB")
-            << (int) 1469851943
+            << int(1469851943)
             << QString("1,469,851,943");
-    QTest::newRow("9_fi")
+    QTest::newRow("fi_FI 1970611277")
             << QString("fi_FI")
-            << (int) 1970611277
+            << int(1970611277)
             << QString("1 970 611 277");
-    QTest::newRow("9_en")
+    QTest::newRow("en_GB 1970611277")
             << QString("en_GB")
-            << (int) 1970611277
+            << int(1970611277)
             << QString("1,970,611,277");
 }
 
@@ -324,131 +616,269 @@ void Ft_Numbers::testInts()
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
+void Ft_Numbers::testToInt_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("formattedInt");
+    QTest::addColumn<bool>("parsable");
+    QTest::addColumn<int>("parsedInt");
+    QTest::addColumn<QString>("formattedAgainInt");
+
+    QTest::newRow("fi_FI 0")
+        << QString("fi_FI")
+        << QString("0")
+        << true
+        << int(0)
+        << QString("0");
+    QTest::newRow("en_GB 0")
+        << QString("en_GB")
+        << QString("0")
+        << true
+        << int(0)
+        << QString("0");
+    QTest::newRow("fi_FI 0,1")
+        << QString("fi_FI")
+        << QString("0,1")
+        << true
+        << int(0)
+        << QString("0");
+    QTest::newRow("en_GB 0.1")
+        << QString("en_GB")
+        << QString("0.1")
+        << true
+        << int(0)
+        << QString("0");
+    QTest::newRow("fi_FI 1 234,1")
+        << QString("fi_FI")
+        << QString("1 234,1")
+        << true
+        << int(1234)
+        << QString("1 234");
+    QTest::newRow("en_GB 1,234.1")
+        << QString("en_GB")
+        << QString("1,234.1")
+        << true
+        << int(1234)
+        << QString("1,234");
+    QTest::newRow("en_GB 8,446,744,073,709,551,615")
+        << QString("en_GB")
+        << QString("8,446,744,073,709,551,615")
+        << false
+        << int(0)
+        << QString("0");
+    QTest::newRow("de_DE 1234.56")
+        << QString("de_DE")
+        << QString("1234.56")
+        << true
+        << int(123456)
+        << QString("123.456");
+    QTest::newRow("de_DE 1'234,56")
+        << QString("de_DE")
+        << QString("1'234,56")
+        << true
+        << int(1)
+        << QString("1");
+    QTest::newRow("de_CH 1'234,56")
+        << QString("de_CH")
+        << QString("1'234,56")
+        << true
+        << int(1234)
+        << QString("1'234");
+    QTest::newRow("de_CH 1'234.56")
+        << QString("de_CH")
+        << QString("1'234.56")
+        << true
+        << int(1234)
+        << QString("1'234");
+    QTest::newRow("de_DE 1.234,56X")
+        << QString("de_DE")
+        << QString("1.234,56X")
+        << true
+        << int(1234)
+        << QString("1.234");
+    QTest::newRow("de_DE 1.23X4,56")
+        << QString("de_DE")
+        << QString("1.23X4,56X")
+        << true
+        << int(123)    // weird result, roundtrip fails
+        << QString("123");
+    QTest::newRow("de_DE X1.234,56")
+        << QString("de_DE")
+        << QString("X1.234,56")
+        << false
+        << int(0)
+        << QString("0");
+    QTest::newRow("de_DE Nonsense")
+        << QString("de_DE")
+        << QString("Nonsense")
+        << false
+        << int(0)
+        << QString("0");
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣")
+        << true
+        << int(1234)
+        << QString("١٢٣٤");
+    QTest::newRow("hi_HI ४,५६७.१२३")
+        << QString("hi_HI")
+        << QString("४,५६७.१२३")
+        << true
+        << int(4567)
+        << QString("४,५६७");
+}
+
+void Ft_Numbers::testToInt()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, formattedInt);
+    QFETCH(bool, parsable);
+    QFETCH(int, parsedInt);
+    QFETCH(QString, formattedAgainInt);
+
+    MLocale locale(localeName);
+    int result = locale.toInt(formattedInt);
+    QCOMPARE(result, parsedInt);
+    QCOMPARE(locale.toInt(formattedInt, NULL), parsedInt);
+    bool ok;
+    QCOMPARE(locale.toInt(formattedInt, &ok), parsedInt);
+    QCOMPARE(ok, parsable);
+    QCOMPARE(locale.formatNumber(result), formattedAgainInt);
+}
+
 void Ft_Numbers::testDoubles_data()
 {
     QTest::addColumn<QString>("localeName");
     QTest::addColumn<double>("val");
     QTest::addColumn<QString>("formatted");
-    QTest::newRow("0_fi")
+    QTest::newRow("fi_FI 0")
             << QString("fi_FI")
-            << (double) 0
+            << double(0)
             << QString("0");
-    QTest::newRow("0_en")
+    QTest::newRow("en_GB 0")
             << QString("en_GB")
-            << (double) 0
+            << double(0)
             << QString("0");
-    QTest::newRow("1_fi")
+    QTest::newRow("fi_FI 0.1")
             << QString("fi_FI")
-            << (double) 0.1
+            << double(0.1)
             << QString("0,1");
-    QTest::newRow("1_en")
+    QTest::newRow("en_GB 0.1")
             << QString("en_GB")
-            << (double) 0.1
+            << double(0.1)
             << QString("0.1");
-    QTest::newRow("2_fi")
+    QTest::newRow("fi_FI 0.12")
             << QString("fi_FI")
-            << (double) 0.12
+            << double(0.12)
             << QString("0,12");
-    QTest::newRow("2_en")
+    QTest::newRow("en_GB 0.12")
             << QString("en_GB")
-            << (double) 0.12
+            << double(0.12)
             << QString("0.12");
-    QTest::newRow("3_fi")
+    QTest::newRow("fi_FI 0.123")
             << QString("fi_FI")
-            << (double) 0.123
+            << double(0.123)
             << QString("0,123");
-    QTest::newRow("3_en")
+    QTest::newRow("en_GB 0.123")
             << QString("en_GB")
-            << (double) 0.123
+            << double(0.123)
             << QString("0.123");
-    QTest::newRow("4_fi")
+    QTest::newRow("fi_FI 0.1234")
             << QString("fi_FI")
-            << (double) 0.1234
+            << double(0.1234)
             << QString("0,123");
-    QTest::newRow("4_en")
+    QTest::newRow("en_GB 0.1234")
             << QString("en_GB")
-            << (double) 0.1234
+            << double(0.1234)
             << QString("0.123");
-    QTest::newRow("5_fi")
+    QTest::newRow("fi_FI 0.12345")
             << QString("fi_FI")
-            << (double) 0.12345
+            << double(0.12345)
             << QString("0,123");
-    QTest::newRow("5_en")
+    QTest::newRow("en_GB 0.12345")
             << QString("en_GB")
-            << (double) 0.12345
+            << double(0.12345)
             << QString("0.123");
-    QTest::newRow("6_fi")
+    QTest::newRow("fi_FI 0.123456")
             << QString("fi_FI")
-            << (double) 0.123456
+            << double(0.123456)
             << QString("0,123");
-    QTest::newRow("6_en")
+    QTest::newRow("en_GB 0.123456")
             << QString("en_GB")
-            << (double) 0.123456
+            << double(0.123456)
             << QString("0.123");
-    QTest::newRow("7_fi")
+    QTest::newRow("fi_FI 0.1234567")
             << QString("fi_FI")
-            << (double) 0.1234567
+            << double(0.1234567)
             << QString("0,123");
-    QTest::newRow("7_en")
+    QTest::newRow("en_GB 0.1234567")
             << QString("en_GB")
-            << (double) 0.1234567
+            << double(0.1234567)
             << QString("0.123");
-    QTest::newRow("8_fi")
+    QTest::newRow("fi_FI 1.1234567")
             << QString("fi_FI")
-            << (double) 1.1234567
+            << double(1.1234567)
             << QString("1,123");
-    QTest::newRow("8_en")
+    QTest::newRow("en_GB 1.1234567")
             << QString("en_GB")
-            << (double) 1.1234567
+            << double(1.1234567)
             << QString("1.123");
-    QTest::newRow("9_fi")
+    QTest::newRow("fi_FI 12.1234567")
             << QString("fi_FI")
-            << (double) 12.1234567
+            << double(12.1234567)
             << QString("12,123");
-    QTest::newRow("9_en")
+    QTest::newRow("en_GB 12.1234567")
             << QString("en_GB")
-            << (double) 12.1234567
+            << double(12.1234567)
             << QString("12.123");
-    QTest::newRow("10_fi")
+    QTest::newRow("fi_FI 123.1234567")
             << QString("fi_FI")
-            << (double) 123.1234567
+            << double(123.1234567)
             << QString("123,123");
-    QTest::newRow("10_en")
+    QTest::newRow("en_GB 123.1234567")
             << QString("en_GB")
-            << (double) 123.1234567
+            << double(123.1234567)
             << QString("123.123");
-    QTest::newRow("11_fi")
+    QTest::newRow("fi_FI 1234.1234567")
             << QString("fi_FI")
-            << (double) 1234.1234567
+            << double(1234.1234567)
             << QString("1 234,123");
-    QTest::newRow("11_en")
+    QTest::newRow("en_GB 1234.1234567")
             << QString("en_GB")
-            << (double) 1234.1234567
+            << double(1234.1234567)
             << QString("1,234.123");
-    QTest::newRow("12_fi")
+    QTest::newRow("fi_FI 12345.1234567")
             << QString("fi_FI")
-            << (double) 12345.1234567
+            << double(12345.1234567)
             << QString("12 345,123");
-    QTest::newRow("12_en")
+    QTest::newRow("en_GB 12345.1234567")
             << QString("en_GB")
-            << (double) 12345.1234567
+            << double(12345.1234567)
             << QString("12,345.123");
-    QTest::newRow("13_fi")
+    QTest::newRow("fi_FI 123456.1234567")
             << QString("fi_FI")
-            << (double) 123456.1234567
+            << double(123456.1234567)
             << QString("123 456,123");
-    QTest::newRow("13_en")
+    QTest::newRow("en_GB 123456.1234567")
             << QString("en_GB")
-            << (double) 123456.1234567
+            << double(123456.1234567)
             << QString("123,456.123");
-    QTest::newRow("14_fi")
+    QTest::newRow("fi_FI 1234567.1234567")
             << QString("fi_FI")
-            << (double) 1234567.1234567
+            << double(1234567.1234567)
             << QString("1 234 567,123");
-    QTest::newRow("14_en")
+    QTest::newRow("en_GB 1234567.1234567")
             << QString("en_GB")
-            << (double) 1234567.1234567
+            << double(1234567.1234567)
             << QString("1,234,567.123");
+    QTest::newRow("ar_SA 1234567.1234567")
+            << QString("ar_SA")
+            << double(1234567.1234567)
+            << QString("١٢٣٤٥٦٧٫١٢٣");
+    QTest::newRow("hi_HI 1234567.1234567")
+            << QString("hi_HI")
+            << double(1234567.1234567)
+            << QString("१२,३४,५६७.१२३");
 }
 
 void Ft_Numbers::testDoubles()
@@ -457,7 +887,286 @@ void Ft_Numbers::testDoubles()
     QFETCH(double, val);
     QFETCH(QString, formatted);
     MLocale loc(localeName);
-    QCOMPARE(loc.formatNumber(val), formatted);
+    QString result = loc.formatNumber(val);
+    QTextStream stream(stdout);
+    stream.setCodec("UTF-8");
+    stream << "result: " << result << " expected: " << formatted << "\n";
+    QCOMPARE(result, formatted);
+}
+
+void Ft_Numbers::testToDouble_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("formattedDouble");
+    QTest::addColumn<bool>("parsable");
+    QTest::addColumn<double>("parsedDouble");
+    QTest::addColumn<QString>("formattedAgainDouble");
+
+    QTest::newRow("fi_FI 0")
+        << QString("fi_FI")
+        << QString("0")
+        << true
+        << double(0)
+        << QString("0");
+    QTest::newRow("en_GB 0")
+        << QString("en_GB")
+        << QString("0")
+        << true
+        << double(0)
+        << QString("0");
+    QTest::newRow("fi_FI 0,1")
+        << QString("fi_FI")
+        << QString("0,1")
+        << true
+        << double(0.1)
+        << QString("0,1");
+    QTest::newRow("en_GB 0.1")
+        << QString("en_GB")
+        << QString("0.1")
+        << true
+        << double(0.1)
+        << QString("0.1");
+    QTest::newRow("fi_FI 0,12")
+        << QString("fi_FI")
+        << QString("0,12")
+        << true
+        << double(0.12)
+        << QString("0,12");
+    QTest::newRow("en_GB 0.12")
+        << QString("en_GB")
+        << QString("0.12")
+        << true
+        << double(0.12)
+        << QString("0.12");
+    QTest::newRow("fi_FI 0,123")
+        << QString("fi_FI")
+        << QString("0,123")
+        << true
+        << double(0.123)
+        << QString("0,123");
+    QTest::newRow("en_GB 0.123")
+        << QString("en_GB")
+        << QString("0.123")
+        << true
+        << double(0.123)
+        << QString("0.123");
+    QTest::newRow("fi_FI 0,1234")
+        << QString("fi_FI")
+        << QString("0,1234")
+        << true
+        << double(0.1234)
+        << QString("0,1234");
+    QTest::newRow("en_GB 0.1234")
+        << QString("en_GB")
+        << QString("0.1234")
+        << true
+        << double(0.1234)
+        << QString("0.1234");
+    QTest::newRow("fi_FI 0,12345")
+        << QString("fi_FI")
+        << QString("0,12345")
+        << true
+        << double(0.12345)
+        << QString("0,12345");
+    QTest::newRow("en_GB 0.12345")
+        << QString("en_GB")
+        << QString("0.12345")
+        << true
+        << double(0.12345)
+        << QString("0.12345");
+    QTest::newRow("fi_FI 0,123456")
+        << QString("fi_FI")
+        << QString("0,123456")
+        << true
+        << double(0.123456)
+        << QString("0,123456");
+    QTest::newRow("en_GB 0.123456")
+        << QString("en_GB")
+        << QString("0.123456")
+        << true
+        << double(0.123456)
+        << QString("0.123456");
+    QTest::newRow("fi_FI 0,1234567")
+        << QString("fi_FI")
+        << QString("0,1234567")
+        << true
+        << double(0.1234567)
+        << QString("0,1234567");
+    QTest::newRow("en_GB 0.1234567")
+        << QString("en_GB")
+        << QString("0.1234567")
+        << true
+        << double(0.1234567)
+        << QString("0.1234567");
+    QTest::newRow("fi_FI 1,1234567")
+        << QString("fi_FI")
+        << QString("1,1234567")
+        << true
+        << double(1.1234567)
+        << QString("1,1234567");
+    QTest::newRow("en_GB 1.1234567")
+        << QString("en_GB")
+        << QString("1.1234567")
+        << true
+        << double(1.1234567)
+        << QString("1.1234567");
+    QTest::newRow("fi_FI 12,1234567")
+        << QString("fi_FI")
+        << QString("12,1234567")
+        << true
+        << double(12.1234567)
+        << QString("12,1234567");
+    QTest::newRow("en_GB 12.1234567")
+        << QString("en_GB")
+        << QString("12.1234567")
+        << true
+        << double(12.1234567)
+        << QString("12.1234567");
+    QTest::newRow("fi_FI 123,1234567")
+        << QString("fi_FI")
+        << QString("123,1234567")
+        << true
+        << double(123.1234567)
+        << QString("123,1234567");
+    QTest::newRow("en_GB 123.1234567")
+        << QString("en_GB")
+        << QString("123.1234567")
+        << true
+        << double(123.1234567)
+        << QString("123.1234567");
+    QTest::newRow("fi_FI 1 234,1234567")
+        << QString("fi_FI")
+        << QString("1 234,1234567")
+        << true
+        << double(1234.1234567)
+        << QString("1 234,1234567");
+    QTest::newRow("en_GB 1,234.1234567")
+        << QString("en_GB")
+        << QString("1,234.1234567")
+        << true
+        << double(1234.1234567)
+        << QString("1,234.1234567");
+    QTest::newRow("fi_FI 12 345,1234567")
+        << QString("fi_FI")
+        << QString("12 345,1234567")
+        << true
+        << double(12345.1234567)
+        << QString("12 345,1234567");
+    QTest::newRow("en_GB 12,345.1234567")
+        << QString("en_GB")
+        << QString("12,345.1234567")
+        << true
+        << double(12345.1234567)
+        << QString("12,345.1234567");
+    QTest::newRow("fi_FI 123 456,1234567")
+        << QString("fi_FI")
+        << QString("123 456,1234567")
+        << true
+        << double(123456.1234567)
+        << QString("123 456,1234567");
+    QTest::newRow("en_GB 123,456.1234567")
+        << QString("en_GB")
+        << QString("123,456.1234567")
+        << true
+        << double(123456.1234567)
+        << QString("123,456.1234567");
+    QTest::newRow("fi_FI 1 234 567,1234567")
+        << QString("fi_FI")
+        << QString("1 234 567,1234567")
+        << true
+        << double(1234567.1234567)
+        << QString("1 234 567,1234567");
+    QTest::newRow("en_GB 1,234,567.1234567")
+        << QString("en_GB")
+        << QString("1,234,567.1234567")
+        << true
+        << double(1234567.1234567)
+        << QString("1,234,567.1234567");
+    QTest::newRow("en_GB 1,234,567.1234567")
+        << QString("en_GB")
+        << QString("1,234,567.1234567")
+        << true
+        << double(1234567.1234567)
+        << QString("1,234,567.1234567");
+
+    QTest::newRow("de_DE 1234.56")
+        << QString("de_DE")
+        << QString("1234.56")
+        << true           // With QLocale this fails
+        << double(123456) // ICU gives a weird result
+        << QString("123.456");
+    QTest::newRow("de_DE 1'234,56")
+        << QString("de_DE")
+        << QString("1'234,56")
+        << true
+        << double(1)      // weird result, roundtrip fails
+        << QString("1");
+    QTest::newRow("de_CH 1'234,56")
+        << QString("de_CH")
+        << QString("1'234,56")
+        << true
+        << double(1234)   // weird result, roundtrip fails
+        << QString("1'234");
+    QTest::newRow("de_CH 1'234.56")
+        << QString("de_CH")
+        << QString("1'234.56")
+        << true
+        << double(1234.56)
+        << QString("1'234.56");
+    QTest::newRow("de_DE 1.234,56X")
+        << QString("de_DE")
+        << QString("1.234,56X")
+        << true
+        << double(1234.56)
+        << QString("1.234,56");
+    QTest::newRow("de_DE 1.23X4,56")
+        << QString("de_DE")
+        << QString("1.23X4,56X")
+        << true
+        << double(123)    // weird result, roundtrip fails
+        << QString("123");
+    QTest::newRow("de_DE X1.234,56")
+        << QString("de_DE")
+        << QString("X1.234,56")
+        << false
+        << double(0)
+        << QString("0");
+    QTest::newRow("de_DE Nonsense")
+        << QString("de_DE")
+        << QString("Nonsense")
+        << false
+        << double(0)
+        << QString("0");
+    QTest::newRow("ar_SA ١٢٣٤٥٦٧٫١٢٣٤٥٦٧")
+        << QString("ar_SA")
+        << QString("١٢٣٤٥٦٧٫١٢٣٤٥٦٧")
+        << true
+        << double(1234567.1234567)
+        << QString("١٢٣٤٥٦٧٫١٢٣٤٥٦٧");
+    QTest::newRow("hi_HI १२,३४,५६७.१२३४५६७")
+        << QString("hi_HI")
+        << QString("१२,३४,५६७.१२३४५६७")
+        << true
+        << double(1234567.1234567)
+        << QString("१२,३४,५६७.१२३४५६७");
+}
+
+void Ft_Numbers::testToDouble()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, formattedDouble);
+    QFETCH(bool, parsable);
+    QFETCH(double, parsedDouble);
+    QFETCH(QString, formattedAgainDouble);
+
+    MLocale locale(localeName);
+    double result = locale.toDouble(formattedDouble);
+    QCOMPARE(result, parsedDouble);
+    QCOMPARE(locale.toDouble(formattedDouble, NULL), parsedDouble);
+    bool ok;
+    QCOMPARE(locale.toDouble(formattedDouble, &ok), parsedDouble);
+    QCOMPARE(ok, parsable);
+    QCOMPARE(locale.formatNumber(result, 1000), formattedAgainDouble);
 }
 
 void Ft_Numbers::testFloats_data()
@@ -465,125 +1174,125 @@ void Ft_Numbers::testFloats_data()
     QTest::addColumn<QString>("localeName");
     QTest::addColumn<float>("val");
     QTest::addColumn<QString>("formatted");
-    QTest::newRow("0_fi")
+    QTest::newRow("fi_FI 0")
             << QString("fi_FI")
-            << (float) 0
+            << float(0)
             << QString("0");
-    QTest::newRow("0_en")
+    QTest::newRow("en_GB 0")
             << QString("en_GB")
-            << (float) 0
+            << float(0)
             << QString("0");
-    QTest::newRow("1_fi")
+    QTest::newRow("fi_FI 0.1")
             << QString("fi_FI")
-            << (float) 0.1
+            << float(0.1)
             << QString("0,1");
-    QTest::newRow("1_en")
+    QTest::newRow("en_GB 0.1")
             << QString("en_GB")
-            << (float) 0.1
+            << float(0.1)
             << QString("0.1");
-    QTest::newRow("2_fi")
+    QTest::newRow("fi_FI 0.12")
             << QString("fi_FI")
-            << (float) 0.12
+            << float(0.12)
             << QString("0,12");
-    QTest::newRow("2_en")
+    QTest::newRow("en_GB 0.12")
             << QString("en_GB")
-            << (float) 0.12
+            << float(0.12)
             << QString("0.12");
-    QTest::newRow("3_fi")
+    QTest::newRow("fi_FI 0.123")
             << QString("fi_FI")
-            << (float) 0.123
+            << float(0.123)
             << QString("0,123");
-    QTest::newRow("3_en")
+    QTest::newRow("en_GB 0.123")
             << QString("en_GB")
-            << (float) 0.123
+            << float(0.123)
             << QString("0.123");
-    QTest::newRow("4_fi")
+    QTest::newRow("fi_FI 0.1234")
             << QString("fi_FI")
-            << (float) 0.1234
+            << float(0.1234)
             << QString("0,123");
-    QTest::newRow("4_en")
+    QTest::newRow("en_GB 0.1234")
             << QString("en_GB")
-            << (float) 0.1234
+            << float(0.1234)
             << QString("0.123");
-    QTest::newRow("5_fi")
+    QTest::newRow("fi_FI 0.12345")
             << QString("fi_FI")
-            << (float) 0.12345
+            << float(0.12345)
             << QString("0,123");
-    QTest::newRow("5_en")
+    QTest::newRow("en_GB 0.12345")
             << QString("en_GB")
-            << (float) 0.12345
+            << float(0.12345)
             << QString("0.123");
-    QTest::newRow("6_fi")
+    QTest::newRow("fi_FI 0.123456")
             << QString("fi_FI")
-            << (float) 0.123456
+            << float(0.123456)
             << QString("0,123");
-    QTest::newRow("6_en")
+    QTest::newRow("en_GB 0.123456")
             << QString("en_GB")
-            << (float) 0.123456
+            << float(0.123456)
             << QString("0.123");
-    QTest::newRow("7_fi")
+    QTest::newRow("fi_FI 0.1234567")
             << QString("fi_FI")
-            << (float) 0.1234567
+            << float(0.1234567)
             << QString("0,123");
-    QTest::newRow("7_en")
+    QTest::newRow("en_GB 0.1234567")
             << QString("en_GB")
-            << (float) 0.1234567
+            << float(0.1234567)
             << QString("0.123");
-    QTest::newRow("8_fi")
+    QTest::newRow("fi_FI 1.1234567")
             << QString("fi_FI")
-            << (float) 1.1234567
+            << float(1.1234567)
             << QString("1,123");
-    QTest::newRow("8_en")
+    QTest::newRow("en_GB 1.1234567")
             << QString("en_GB")
-            << (float) 1.1234567
+            << float(1.1234567)
             << QString("1.123");
-    QTest::newRow("9_fi")
+    QTest::newRow("fi_FI 12.1234567")
             << QString("fi_FI")
-            << (float) 12.1234567
+            << float(12.1234567)
             << QString("12,123");
-    QTest::newRow("9_en")
+    QTest::newRow("en_GB 12.1234567")
             << QString("en_GB")
-            << (float) 12.1234567
+            << float(12.1234567)
             << QString("12.123");
-    QTest::newRow("10_fi")
+    QTest::newRow("fi_FI 123.1234567")
             << QString("fi_FI")
-            << (float) 123.1234567
+            << float(123.1234567)
             << QString("123,123");
-    QTest::newRow("10_en")
+    QTest::newRow("en_GB 123.1234567")
             << QString("en_GB")
-            << (float) 123.1234567
+            << float(123.1234567)
             << QString("123.123");
-    QTest::newRow("11_fi")
+    QTest::newRow("fi_FI 1234.1234567")
             << QString("fi_FI")
-            << (float) 1234.1234567
+            << float(1234.1234567)
             << QString("1 234,123");
-    QTest::newRow("11_en")
+    QTest::newRow("en_GB 1234.1234567")
             << QString("en_GB")
-            << (float) 1234.1234567
+            << float(1234.1234567)
             << QString("1,234.123");
-    QTest::newRow("12_fi")
+    QTest::newRow("fi_FI 12345.1234567")
             << QString("fi_FI")
-            << (float) 12345.1234567
+            << float(12345.1234567)
             << QString("12 345,123");
-    QTest::newRow("12_en")
+    QTest::newRow("en_GB 12345.1234567")
             << QString("en_GB")
-            << (float) 12345.1234567
+            << float(12345.1234567)
             << QString("12,345.123");
-    QTest::newRow("13_fi")
+    QTest::newRow("fi_FI 123456.1234567")
             << QString("fi_FI")
-            << (float) 123456.1234567
+            << float(123456.1234567)
             << QString("123 456,125");
-    QTest::newRow("13_en")
+    QTest::newRow("en_GB 123456.1234567")
             << QString("en_GB")
-            << (float) 123456.1234567
+            << float(123456.1234567)
             << QString("123,456.125");
-    QTest::newRow("14_fi")
+    QTest::newRow("fi_FI 1234567.1234567")
             << QString("fi_FI")
-            << (float) 1234567.1234567
+            << float(1234567.1234567)
             << QString("1 234 567,125");
-    QTest::newRow("14_en")
+    QTest::newRow("en_GB 1234567.1234567")
             << QString("en_GB")
-            << (float) 1234567.1234567
+            << float(1234567.1234567)
             << QString("1,234,567.125");
 }
 
@@ -596,6 +1305,296 @@ void Ft_Numbers::testFloats()
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
+void Ft_Numbers::testToFloat_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("formattedFloat");
+    QTest::addColumn<bool>("parsable");
+    QTest::addColumn<float>("parsedFloat");
+    QTest::addColumn<QString>("formattedAgainFloat");
+
+    QTest::newRow("fi_FI 0")
+        << QString("fi_FI")
+        << QString("0")
+        << true
+        << float(0)
+        << QString("0");
+    QTest::newRow("en_GB 0")
+        << QString("en_GB")
+        << QString("0")
+        << true
+        << float(0)
+        << QString("0");
+    QTest::newRow("fi_FI 0,1")
+        << QString("fi_FI")
+        << QString("0,1")
+        << true
+        << float(0.1)
+        << QString("0,1");
+    QTest::newRow("en_GB 0.1")
+        << QString("en_GB")
+        << QString("0.1")
+        << true
+        << float(0.1)
+        << QString("0.1");
+    QTest::newRow("fi_FI 0,12")
+        << QString("fi_FI")
+        << QString("0,12")
+        << true
+        << float(0.12)
+        << QString("0,12");
+    QTest::newRow("en_GB 0.12")
+        << QString("en_GB")
+        << QString("0.12")
+        << true
+        << float(0.12)
+        << QString("0.12");
+    QTest::newRow("fi_FI 0,123")
+        << QString("fi_FI")
+        << QString("0,123")
+        << true
+        << float(0.123)
+        << QString("0,123");
+    QTest::newRow("en_GB 0.123")
+        << QString("en_GB")
+        << QString("0.123")
+        << true
+        << float(0.123)
+        << QString("0.123");
+    QTest::newRow("fi_FI 0,1234")
+        << QString("fi_FI")
+        << QString("0,1234")
+        << true
+        << float(0.1234)
+        << QString("0,123");
+    QTest::newRow("en_GB 0.1234")
+        << QString("en_GB")
+        << QString("0.1234")
+        << true
+        << float(0.1234)
+        << QString("0.123");
+    QTest::newRow("fi_FI 0,12345")
+        << QString("fi_FI")
+        << QString("0,12345")
+        << true
+        << float(0.12345)
+        << QString("0,123");
+    QTest::newRow("en_GB 0.12345")
+        << QString("en_GB")
+        << QString("0.12345")
+        << true
+        << float(0.12345)
+        << QString("0.123");
+    QTest::newRow("fi_FI 0,123456")
+        << QString("fi_FI")
+        << QString("0,123456")
+        << true
+        << float(0.123456)
+        << QString("0,123");
+    QTest::newRow("en_GB 0.123456")
+        << QString("en_GB")
+        << QString("0.123456")
+        << true
+        << float(0.123456)
+        << QString("0.123");
+    QTest::newRow("fi_FI 0,1234567")
+        << QString("fi_FI")
+        << QString("0,1234567")
+        << true
+        << float(0.1234567)
+        << QString("0,123");
+    QTest::newRow("en_GB 0.1234567")
+        << QString("en_GB")
+        << QString("0.1234567")
+        << true
+        << float(0.1234567)
+        << QString("0.123");
+    QTest::newRow("fi_FI 1,1234567")
+        << QString("fi_FI")
+        << QString("1,1234567")
+        << true
+        << float(1.1234567)
+        << QString("1,123");
+    QTest::newRow("en_GB 1.1234567")
+        << QString("en_GB")
+        << QString("1.1234567")
+        << true
+        << float(1.1234567)
+        << QString("1.123");
+    QTest::newRow("fi_FI 12,1234567")
+        << QString("fi_FI")
+        << QString("12,1234567")
+        << true
+        << float(12.1234567)
+        << QString("12,123");
+    QTest::newRow("en_GB 12.1234567")
+        << QString("en_GB")
+        << QString("12.1234567")
+        << true
+        << float(12.1234567)
+        << QString("12.123");
+    QTest::newRow("fi_FI 123,1234567")
+        << QString("fi_FI")
+        << QString("123,1234567")
+        << true
+        << float(123.1234567)
+        << QString("123,123");
+    QTest::newRow("en_GB 123.1234567")
+        << QString("en_GB")
+        << QString("123.1234567")
+        << true
+        << float(123.1234567)
+        << QString("123.123");
+    QTest::newRow("fi_FI 1 234,1234567")
+        << QString("fi_FI")
+        << QString("1 234,1234567")
+        << true
+        << float(1234.1234567)
+        << QString("1 234,123");
+    QTest::newRow("en_GB 1,234.1234567")
+        << QString("en_GB")
+        << QString("1,234.1234567")
+        << true
+        << float(1234.1234567)
+        << QString("1,234.123");
+    QTest::newRow("fi_FI 12 345,1234567")
+        << QString("fi_FI")
+        << QString("12 345,1234567")
+        << true
+        << float(12345.1234567)
+        << QString("12 345,123");
+    QTest::newRow("en_GB 12,345.1234567")
+        << QString("en_GB")
+        << QString("12,345.1234567")
+        << true
+        << float(12345.1234567)
+        << QString("12,345.123");
+    QTest::newRow("fi_FI 123 456,1234567")
+        << QString("fi_FI")
+        << QString("123 456,1234567")
+        << true
+        << float(123456.1234567)
+        << QString("123 456,125");
+    QTest::newRow("en_GB 123,456.1234567")
+        << QString("en_GB")
+        << QString("123,456.1234567")
+        << true
+        << float(123456.1234567)
+        << QString("123,456.125");
+    QTest::newRow("fi_FI 1 234 567,1234567")
+        << QString("fi_FI")
+        << QString("1 234 567,1234567")
+        << true
+        << float(1234567.1234567)
+        << QString("1 234 567,125");
+    QTest::newRow("en_GB 1,234,567.1234567")
+        << QString("en_GB")
+        << QString("1,234,567.1234567")
+        << true
+        << float(1234567.1234567)
+        << QString("1,234,567.125");
+    QTest::newRow("en_GB 1,234,567.1234567")
+        << QString("en_GB")
+        << QString("1,234,567.1234567")
+        << true
+        << float(1234567.1234567)
+        << QString("1,234,567.125");
+
+    // FLT_MAX:
+    QTest::newRow("en_GB 3.40282e+38")
+        << QString("en_GB")
+        << QString("3.40282e+38")
+        << true
+        << float(3.40282e+38)
+        << QString("340,282,001,837,566,000,000,000,000,000,000,000,000");
+    // FLT_MAX * 10:
+    QTest::newRow("en_GB 3.40282e+39")
+        << QString("en_GB")
+        << QString("3.40282e+39")
+        << false
+        << float(0)
+        << QString("0");
+
+    QTest::newRow("de_DE 1234.56")
+        << QString("de_DE")
+        << QString("1234.56")
+        << true           // With QLocale this fails
+        << float(123456) // ICU gives a weird result
+        << QString("123.456");
+    QTest::newRow("de_DE 1'234,56")
+        << QString("de_DE")
+        << QString("1'234,56")
+        << true
+        << float(1)      // weird result, roundtrip fails
+        << QString("1");
+    QTest::newRow("de_CH 1'234,56")
+        << QString("de_CH")
+        << QString("1'234,56")
+        << true
+        << float(1234)   // weird result, roundtrip fails
+        << QString("1'234");
+    QTest::newRow("de_CH 1'234.56")
+        << QString("de_CH")
+        << QString("1'234.56")
+        << true
+        << float(1234.56)
+        << QString("1'234.56");
+    QTest::newRow("de_DE 1.234,56X")
+        << QString("de_DE")
+        << QString("1.234,56X")
+        << true
+        << float(1234.56)
+        << QString("1.234,56");
+    QTest::newRow("de_DE 1.23X4,56")
+        << QString("de_DE")
+        << QString("1.23X4,56X")
+        << true
+        << float(123)    // weird result, roundtrip fails
+        << QString("123");
+    QTest::newRow("de_DE X1.234,56")
+        << QString("de_DE")
+        << QString("X1.234,56")
+        << false
+        << float(0)
+        << QString("0");
+    QTest::newRow("de_DE Nonsense")
+        << QString("de_DE")
+        << QString("Nonsense")
+        << false
+        << float(0)
+        << QString("0");
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣")
+        << true
+        << float(1234.123)
+        << QString("١٢٣٤٫١٢٣");
+    QTest::newRow("hi_HI ४,५६७.१२३")
+        << QString("hi_HI")
+        << QString("४,५६७.१२३")
+        << true
+        << float(4567.123)
+        << QString("४,५६७.१२३");
+}
+
+void Ft_Numbers::testToFloat()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, formattedFloat);
+    QFETCH(bool, parsable);
+    QFETCH(float, parsedFloat);
+    QFETCH(QString, formattedAgainFloat);
+
+    MLocale locale(localeName);
+    float result = locale.toFloat(formattedFloat);
+    QCOMPARE(result, parsedFloat);
+    QCOMPARE(locale.toFloat(formattedFloat, NULL), parsedFloat);
+    bool ok;
+    QCOMPARE(locale.toFloat(formattedFloat, &ok), parsedFloat);
+    QCOMPARE(ok, parsable);
+    QCOMPARE(locale.formatNumber(result), formattedAgainFloat);
+}
+
 void Ft_Numbers::testDoublesWithFormatting_data()
 {
     QTest::addColumn<QString>("localeName");
@@ -605,59 +1604,59 @@ void Ft_Numbers::testDoublesWithFormatting_data()
 
     double defaultNumber = 1234567.1234567;
 
-    QTest::newRow("0_fi")
+    QTest::newRow("fi_FI 0")
             << QString("fi_FI")
             << defaultNumber
             << 0 << QString("1 234 567");
-    QTest::newRow("0_en")
+    QTest::newRow("en_GB 0")
             << QString("en_GB")
             << defaultNumber
             << 0 << QString("1,234,567");
-    QTest::newRow("1_fi")
+    QTest::newRow("fi_FI 1")
             << QString("fi_FI")
             << defaultNumber
             << 1 << QString("1 234 567,1");
-    QTest::newRow("1_en")
+    QTest::newRow("en_GB 1")
             << QString("en_GB")
             << defaultNumber
             << 1 << QString("1,234,567.1");
-    QTest::newRow("2_fi")
+    QTest::newRow("fi_FI 2")
             << QString("fi_FI")
             << defaultNumber
             << 2 << QString("1 234 567,12");
-    QTest::newRow("2_en")
+    QTest::newRow("en_GB 2")
             << QString("en_GB")
             << defaultNumber
             << 2 << QString("1,234,567.12");
-    QTest::newRow("3_fi")
+    QTest::newRow("fi_FI 3")
             << QString("fi_FI")
             << defaultNumber
             << 3 << QString("1 234 567,123");
-    QTest::newRow("3_en")
+    QTest::newRow("en_GB 3")
             << QString("en_GB")
             << defaultNumber
             << 3 << QString("1,234,567.123");
-    QTest::newRow("4_fi")
+    QTest::newRow("fi_FI 4")
             << QString("fi_FI")
             << defaultNumber
             << 4 << QString("1 234 567,1235");
-    QTest::newRow("4_en")
+    QTest::newRow("en_GB 4")
             << QString("en_GB")
             << defaultNumber
             << 4 << QString("1,234,567.1235");
-    QTest::newRow("5_fi")
+    QTest::newRow("fi_FI 5")
             << QString("fi_FI")
             << defaultNumber
             << 5 << QString("1 234 567,12346");
-    QTest::newRow("5_en")
+    QTest::newRow("en_GB 5")
             << QString("en_GB")
             << defaultNumber
             << 5 << QString("1,234,567.12346");
-    QTest::newRow("6_fi")
+    QTest::newRow("fi_FI 6")
             << QString("fi_FI")
             << defaultNumber
             << 6 << QString("1 234 567,123457");
-    QTest::newRow("6_en")
+    QTest::newRow("en_GB 6")
             << QString("en_GB")
             << defaultNumber
             << 6 << QString("1,234,567.123457");
@@ -679,7 +1678,7 @@ void Ft_Numbers::testPercents_data()
     QTest::addColumn<int>("decimals");
     QTest::addColumn<QString>("formatted");
 
-    QTest::newRow("0_fi")
+    QTest::newRow("fi_FI")
             << QString("fi_FI")
             << 0.123456
             << 0
