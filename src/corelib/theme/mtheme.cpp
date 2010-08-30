@@ -89,8 +89,6 @@ namespace
     }
 } // anonymous namespace
 
-MThemePrivate::LeakedStyles MThemePrivate::leakedStyles;
-
 MThemePrivate::LeakedStyles::~LeakedStyles()
 {
     QHash<MStyle*, QString>::iterator end = styles.end();
@@ -106,12 +104,12 @@ MThemePrivate::LeakedStyles::~LeakedStyles()
 
 void MThemePrivate::addLeakedStyle(MStyle *style, const QString &id)
 {
-    leakedStyles.insert(style, id);
+    gTheme->d_ptr->leakedStyles.insert(style, id);
 }
 
 void MThemePrivate::removeLeakedStyle(MStyle *style)
 {
-    leakedStyles.remove(style);
+    gTheme->d_ptr->leakedStyles.remove(style);
 }
 
 MTheme::MTheme(const QString &applicationName, const QString &, ThemeService themeService) :

@@ -190,7 +190,7 @@ private:
     private:
         QHash<MStyle*, QString> styles;
     };
-    static LeakedStyles leakedStyles;
+    LeakedStyles leakedStyles;
 };
 
 #endif
