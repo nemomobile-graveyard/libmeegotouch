@@ -41,6 +41,7 @@ public:
 
     const QPixmap* getPixmap();
     const QImage& getImage();
+    void init();
 
     mutable QPixmap imagePlaceHolder;
 

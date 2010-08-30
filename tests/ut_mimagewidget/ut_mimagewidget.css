@@ -1,0 +1,15 @@
+MImageWidgetStyle#width10 {
+    preferred-size: 10 -1;
+}
+
+MImageWidgetStyle#height10 {
+    preferred-size: -1 10;
+}
+
+MImageWidgetStyle#topmargin5 {
+    margin-top:5;
+}
+
+MImageWidgetStyle#toppadding5 {
+    padding-top:5;
+}
