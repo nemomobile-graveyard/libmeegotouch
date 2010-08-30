@@ -42,6 +42,7 @@ private slots:
     void cleanup();
 
     void constructorWithParameters();
+    void testStandardButtonsInConstructor();
 
     void initVals();
     void settersAndGetters();

@@ -92,6 +92,55 @@ void Ut_MDialog::constructorWithParameters()
     QVERIFY(!dlg->button(M::RestoreDefaultsButton));
 }
 
+void Ut_MDialog::testStandardButtonsInConstructor()
+{
+    QString title("Title");
+    MDialog *dlg = new MDialog(title,
+                                   M::SaveButton | M::SaveAllButton | M::OpenButton |
+                                   M::YesButton | M::NoToAllButton| M::HelpButton |
+                                   M::AbortButton | M::RetryButton | M::IgnoreButton |
+                                   M::CloseButton | M::DiscardButton | M::ApplyButton |
+                                   M::RestoreDefaultsButton |M::OkButton | M::CancelButton |
+                                   M::YesToAllButton | M::NoButton | M::ResetButton );
+
+    QVERIFY(dlg->button(M::SaveButton));
+    QCOMPARE(dlg->button(M::SaveButton)->role(), M::AcceptRole);
+    QVERIFY(dlg->button(M::SaveAllButton));
+    QCOMPARE(dlg->button(M::SaveAllButton)->role(), M::AcceptRole);
+    QVERIFY(dlg->button(M::OpenButton));
+    QCOMPARE(dlg->button(M::OpenButton)->role(), M::AcceptRole);
+    QVERIFY(dlg->button(M::YesButton));
+    QCOMPARE(dlg->button(M::YesButton)->role(), M::YesRole);
+    QVERIFY(dlg->button(M::NoToAllButton));
+    QCOMPARE(dlg->button(M::NoToAllButton)->role(), M::NoRole);
+    QVERIFY(dlg->button(M::HelpButton));
+    QCOMPARE(dlg->button(M::HelpButton)->role(), M::HelpRole);
+    QVERIFY(dlg->button(M::OkButton));
+     QCOMPARE(dlg->button(M::OkButton)->role(), M::AcceptRole);
+    QVERIFY(dlg->button(M::CancelButton));
+    QCOMPARE(dlg->button(M::CancelButton)->role(), M::RejectRole);
+    QVERIFY(dlg->button(M::YesToAllButton));
+    QCOMPARE(dlg->button(M::YesToAllButton)->role(), M::YesRole);
+    QVERIFY(dlg->button(M::NoButton));
+    QCOMPARE(dlg->button(M::NoButton)->role(), M::NoRole);
+    QVERIFY(dlg->button(M::ResetButton));
+    QCOMPARE(dlg->button(M::ResetButton)->role(), M::ResetRole);
+    QVERIFY(dlg->button(M::AbortButton));
+    QCOMPARE(dlg->button(M::AbortButton)->role(), M::RejectRole);
+    QVERIFY(dlg->button(M::RetryButton));
+    QCOMPARE(dlg->button(M::RetryButton)->role(), M::AcceptRole);
+    QVERIFY(dlg->button(M::IgnoreButton));
+    QCOMPARE(dlg->button(M::IgnoreButton)->role(), M::AcceptRole);
+    QVERIFY(dlg->button(M::CloseButton));
+    QCOMPARE(dlg->button(M::CloseButton)->role(), M::RejectRole);
+    QVERIFY(dlg->button(M::DiscardButton));
+    QCOMPARE(dlg->button(M::DiscardButton)->role(), M::DestructiveRole);
+    QVERIFY(dlg->button(M::ApplyButton));
+    QCOMPARE(dlg->button(M::ApplyButton)->role(), M::ApplyRole);
+    QVERIFY(dlg->button(M::RestoreDefaultsButton));
+    QCOMPARE(dlg->button(M::RestoreDefaultsButton)->role(), M::ResetRole);
+}
+
 void Ut_MDialog::initVals()
 {
     QCOMPARE(dialog->clickedButton(), (MButtonModel *)NULL);
