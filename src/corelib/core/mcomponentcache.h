@@ -80,6 +80,9 @@ public:
     //! Populates cache for the use of an ordinary Meegotouch application, called by the launcher.
     static void populateForMApplication();
 
+    //! Populates cache for the use of a web runtime application, called by the launcher.
+    static void populateForWRTApplication();
+
     //! Returns true if cache is currently being populated, otherwise false.
     static bool populating();
 

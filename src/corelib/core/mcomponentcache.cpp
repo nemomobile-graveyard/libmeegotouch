@@ -95,6 +95,13 @@ void MComponentCachePrivate::populateForMApplication()
     cacheBeingPopulated = false;
 }
 
+void MComponentCachePrivate::populateForWRTApplication()
+{
+    cacheBeingPopulated = true; // reset and unset in populateForMApplication
+    MApplication::setGraphicsSystem("raster");
+    populateForMApplication();
+}
+
 QGLWidget* MComponentCachePrivate::createNewGlWidget(const QGLFormat* format)
 {
     QGLFormat fmt;
@@ -259,6 +266,11 @@ MComponentCache::MComponentCache()
 void MComponentCache::populateForMApplication()
 {
     d_ptr->populateForMApplication();
+}
+
+void MComponentCache::populateForWRTApplication()
+{
+    d_ptr->populateForWRTApplication();
 }
 
 bool MComponentCache::populating()

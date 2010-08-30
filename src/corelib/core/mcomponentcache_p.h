@@ -34,6 +34,7 @@ public:
     MComponentCachePrivate();
     virtual ~MComponentCachePrivate();
     void populateForMApplication();
+    void populateForWRTApplication();
     bool populating();
     MApplication* mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service);
     MApplicationWindow* mApplicationWindow();
