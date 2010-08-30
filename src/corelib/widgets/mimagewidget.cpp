@@ -128,15 +128,26 @@ void MImageWidgetPrivate::deepCopy(const MImageWidget &other)
     q->d_func()->image = other.d_func()->image;
 }
 
+void MImageWidgetPrivate::init() {
+    Q_Q(MImageWidget);
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    policy.setHeightForWidth(true);
+    q->setSizePolicy(policy);
+}
+
 MImageWidget::MImageWidget(QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
+    Q_D(MImageWidget);
+    d->init();
 }
 
 MImageWidget::MImageWidget(const QString &id, QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
+    Q_D(MImageWidget);
     setImage(id);
+    d->init();
 }
 
 MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
@@ -145,6 +156,7 @@ MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
     Q_D(MImageWidget);
     d->pixmap = NULL;
     d->image = *image;
+    d->init();
 }
 
 MImageWidget::MImageWidget(const QPixmap *pixmap, QGraphicsItem *parent) :
@@ -152,6 +164,7 @@ MImageWidget::MImageWidget(const QPixmap *pixmap, QGraphicsItem *parent) :
 {
     Q_D(MImageWidget);
     d->pixmap = new QPixmap(*pixmap);
+    d->init();
 }
 
 MImageWidget::MImageWidget(const MImageWidget &other) :
@@ -159,6 +172,7 @@ MImageWidget::MImageWidget(const MImageWidget &other) :
 {
     Q_D(MImageWidget);
     d->deepCopy(other);
+    d->init();
 }
 
 MImageWidget &MImageWidget::operator=(const MImageWidget &other)
