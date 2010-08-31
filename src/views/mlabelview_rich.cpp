@@ -118,7 +118,9 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
 bool MLabelViewRich::shouldElide() const
 {
     static const int MAXIMUM_NON_ELIDING_TEXT_SIZE = 4;
-    return viewPrivate->model()->textElide() && ((textDocument.size().width() > viewPrivate->boundingRect().size().width()) || (textDocument.size().height() > viewPrivate->boundingRect().size().height())) && (textDocument.characterCount() > MAXIMUM_NON_ELIDING_TEXT_SIZE);
+
+    return viewPrivate->model()->textElide() && (textDocument.size().width() > viewPrivate->boundingRect().size().width()) && (textDocument.characterCount() > MAXIMUM_NON_ELIDING_TEXT_SIZE);
+
 }
 
 void MLabelViewRich::ensureDocumentIsReady()
