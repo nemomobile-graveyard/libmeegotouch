@@ -276,6 +276,7 @@ icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Local
 }
 #endif
 
+#ifdef HAVE_ICU
 static bool isTwelveHours(const QString &icuFormatQString)
 {
     if (icuFormatQString.contains('\'')) {
@@ -295,6 +296,7 @@ static bool isTwelveHours(const QString &icuFormatQString)
             return false;
     }
 }
+#endif
 
 #ifdef HAVE_ICU
 void MLocalePrivate::dateFormatTo24h(icu::DateFormat *df) const
