@@ -225,13 +225,10 @@ void Ut_MImageWidget::testSetCropSize()
     QRectF rect(QPointF(0.0, 0.0), crop);
     m_subject->setCrop(rect);
 
-    QSize imgSize = m_subject->imageSize();
     QSizeF t = m_subject->crop().size();
 
     if (crop.width() < 0.0)
         QCOMPARE(t, QSizeF(0.0, 0.0));
-    else if (crop.width() > imgSize.width())
-        QCOMPARE(t, QSizeF(imgSize));
     else
         QCOMPARE(t, crop);
 
@@ -265,13 +262,7 @@ void Ut_MImageWidget::testSetCropTopLeftPoint()
     QPointF point = m_subject->crop().topLeft();
     QSize imgSize = m_subject->imageSize();
 
-    // This is default value in MImageWidget
-    if (topLeft.x() < 0.0 || topLeft.x() < 0.0)
-        QCOMPARE(point, QPointF(-1.0, -1.0));
-    else if (topLeft.x() > imgSize.width() || topLeft.y() > imgSize.height())
-        QCOMPARE(point, QPointF(-1.0, -1.0));
-    else
-        QCOMPARE(point, topLeft);
+    QCOMPARE(point, topLeft);
 
     delete m_subject;
     m_subject = 0;
