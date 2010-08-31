@@ -264,6 +264,11 @@ void MDialogView::applyStyle()
     d->realignButtonBox();
 
     // update title bar height
+    if (style()->titleBarHeight() <= 0)
+        d->titleBar->hide();
+    else
+        d->titleBar->show();
+
     d->titleBar->setMinimumHeight(style()->titleBarHeight());
     d->titleBar->setPreferredHeight(style()->titleBarHeight());
     d->titleBar->setMaximumHeight(style()->titleBarHeight());
