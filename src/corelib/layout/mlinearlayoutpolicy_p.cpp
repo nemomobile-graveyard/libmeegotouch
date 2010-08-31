@@ -116,7 +116,7 @@ void MLinearLayoutPolicyPrivate::notifyAffectedWidgetsOfLayoutPosition(int index
                 notifyWidgetOfLayoutPosition(1, center);
             }
             //added as last
-            else if( index == engine->count() - 1 ) {
+            else if( index >= engine->count() - 1 ) {
                 notifyWidgetOfLayoutPosition(engine->count()-2, center);
                 notifyWidgetOfLayoutPosition(engine->count()-1, last);
             }
