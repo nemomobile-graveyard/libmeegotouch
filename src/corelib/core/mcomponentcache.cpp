@@ -35,6 +35,10 @@
 #include <QGLWidget>
 #endif
 
+#ifdef Q_WS_X11
+#include <X11/Xlib.h>
+#endif
+
 MComponentCachePrivate * const MComponentCache::d_ptr = new MComponentCachePrivate;
 const int MComponentCachePrivate::ARGV_LIMIT = 32;
 
@@ -155,6 +159,15 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
             initialArgc = qMin(argc, ARGV_LIMIT);
 
             MComponentData::instance()->reinit(argc, argv, appIdentifier, service);
+
+#ifdef Q_WS_X11
+            // reinit WM_COMMAND X11 property
+            Display *display = QX11Info::display();
+            if (display) {
+                XSetCommand(display, mApplicationWindowInstance->winId(), argv, argc);
+            }
+#endif
+
         } else {
             /* Clean up cache.
                
