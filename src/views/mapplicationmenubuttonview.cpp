@@ -46,6 +46,7 @@ void MApplicationMenuButtonViewPrivate::init()
 
     iconImage->setObjectName("NavigationBarMenuButtonIconImage");
     arrowIconImage->setObjectName("NavigationBarMenuButtonArrowImage");
+    arrowIconImage->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     label->setObjectName("NavigationBarMenuButtonLabel");
 
     layout = new MLayout();
@@ -104,7 +105,7 @@ void MApplicationMenuButtonViewPrivate::refreshLayout()
         }
         if (buttonController->isArrowIconVisible()) {
             policy->addItem(arrowIconImage, 0, colIndex++);
-            policy->setAlignment(arrowIconImage, Qt::AlignCenter);
+            policy->setAlignment(arrowIconImage, Qt::AlignLeft | Qt::AlignVCenter);
             arrowIconImage->show();
         }
     }
