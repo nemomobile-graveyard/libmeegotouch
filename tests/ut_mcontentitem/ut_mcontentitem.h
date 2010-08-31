@@ -60,7 +60,9 @@ private slots:
     void testModelSetItemQImage_data();
     void testModelSetItemQImage();
     void testTitle();
+    void testSubtitle();
     void testItemMode();
+    void testProgressBar();
 
 private:
     MContentItem *m_subject;

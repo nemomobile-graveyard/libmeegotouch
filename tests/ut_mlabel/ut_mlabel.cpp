@@ -342,6 +342,40 @@ void Ut_MLabel::testHighlighting()
     delete h;
 }
 
+void Ut_MLabel::testHighlightingModel()
+{
+    QSKIP("Wait for issue in bug #164207 to be resolved", SkipSingle);
+    label->setText("Label <b>rich</b>");
+
+    QImage nonhighlighted = captureImage(label);
+
+    MCommonLabelHighlighter *h = new MCommonLabelHighlighter(QRegExp("Label"));
+    label->model()->addHighlighter(h);
+    QImage highlighted = captureImage(label);
+
+    QVERIFY(nonhighlighted != highlighted);
+
+    QSignalSpy spyClick(h, SIGNAL(clicked(QString)));
+    label->simulateClick(QPoint(15, 5));
+    QCOMPARE(spyClick.count(), 1);
+
+    QSignalSpy spyLongPress(h, SIGNAL(longPressed(QString)));
+
+    QList<QGesture *> list;
+    QTapAndHoldGesture gesture;
+    list.append( &gesture );
+    QGestureEvent gestureEvent(list);
+    label->tapAndHoldGestureEvent (&gestureEvent, &gesture );
+
+    QCOMPARE(spyLongPress.count(), 1);
+
+    label->model()->removeHighlighter(NULL);
+    label->model()->removeHighlighter(h);
+    delete h;
+}
+
+
+
 void Ut_MLabel::testAnchor()
 {
     label->setText("<a href=\"http://www.nokia.com\">www.nokia.com</a>");

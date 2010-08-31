@@ -224,10 +224,25 @@ void Ut_MContentItem::testTitle()
     QCOMPARE( m_subject->title(), title );
 }
 
+void Ut_MContentItem::testSubtitle()
+{
+    QString subtitle("Subitle");
+    m_subject->enableProgressBar(); //setting additional item
+    m_subject->setSubtitle( subtitle );
+    QCOMPARE( m_subject->subtitle(), subtitle );
+}
+
 void Ut_MContentItem::testItemMode()
 {
     m_subject->setItemMode(MContentItem::TopLeft);
     QCOMPARE( m_subject->itemMode(), MContentItem::TopLeft );
+}
+
+void Ut_MContentItem::testProgressBar()
+{
+    QVERIFY( m_subject->additionalItem() == NULL );
+    m_subject->enableProgressBar();
+    QVERIFY( m_subject->additionalItem() != NULL );
 }
 
 
