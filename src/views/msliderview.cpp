@@ -812,7 +812,8 @@ void MSliderGroove::lowerHandleIndicator()
     //by lowering  handle indicator will be also hidden
     sliderHandleIndicator->setVisible(false);
 
-    sliderHandleIndicator->setParentItem(this);
+    //This effectively removes the sliderHandleIndicator item from the scene.
+    sliderHandleIndicator->setParentItem(0);
 
     updateHandleIndicatorPos();
 }
