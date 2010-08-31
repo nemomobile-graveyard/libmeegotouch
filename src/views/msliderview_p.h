@@ -141,6 +141,8 @@ public:
     void setText(const QString &text);
     void setImage(const QString &id);
 
+    void moveOnTopAllSiblings();
+
 protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
