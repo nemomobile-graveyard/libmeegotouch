@@ -2378,9 +2378,8 @@ QRect QtMaemo6Style::subElementRect(SubElement element,
                         static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Sunken,
                                 "MTextEditStyle"));
                 QFontMetrics fm(widget->font());
-                if(style) {
-                    retRect.translate(style->paddingLeft(), 0);
-                }
+                if(style)
+                    retRect.adjust(style->paddingLeft(), 0, -style->paddingRight(), 0);
                 if(fm.height() > retRect.height())
                     retRect.setHeight(fm.height());
             }
