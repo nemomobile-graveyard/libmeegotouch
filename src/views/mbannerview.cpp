@@ -52,7 +52,7 @@ MLabel *MBannerViewPrivate::title()
 {
     if (!titleLabel) {
         titleLabel = new MLabel(controller);
-        titleLabel->setObjectName("MBannerTitle");
+        titleLabel->setStyleName("MBannerTitle");
         titleLabel->setAlignment(Qt::AlignVCenter);
         titleLabel->setWordWrap(true);
     }
@@ -63,7 +63,7 @@ MLabel *MBannerViewPrivate::subtitle()
 {
     if (!subtitleLabel) {
         subtitleLabel = new MLabel(controller);
-        subtitleLabel->setObjectName("MBannerSubtitle");
+        subtitleLabel->setStyleName("MBannerSubtitle");
         subtitleLabel->setAlignment(Qt::AlignVCenter);
         subtitleLabel->setWordWrap(true);
     }
@@ -74,7 +74,7 @@ MImageWidget *MBannerViewPrivate::icon()
 {
     if (!iconId) {
         iconId = new MImageWidget(controller);
-        iconId->setObjectName("MBannerIcon");
+        iconId->setStyleName("MBannerIcon");
     }
     return iconId;
 }
@@ -121,12 +121,12 @@ void MBannerViewPrivate::initDynamicLayout()
         portraitPolicy->addItem(subtitle(),1,1,Qt::AlignLeft);
         
     } else if (q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
-        subtitle()->setObjectName("MBannerSubtitleSingle");
+        subtitle()->setStyleName("MBannerSubtitleSingle");
         landscapePolicy->addItem(subtitle(),0,0,Qt::AlignVCenter);
         portraitPolicy->addItem(subtitle(),0,0,Qt::AlignVCenter);
 
     } else if (!q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
-        subtitle()->setObjectName("MBannerSubtitleSingle");
+        subtitle()->setStyleName("MBannerSubtitleSingle");
         subtitle()->setWordWrap(false);
         landscapePolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
         portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
