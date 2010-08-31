@@ -162,9 +162,11 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
 
 #ifdef Q_WS_X11
             // reinit WM_COMMAND X11 property
-            Display *display = QX11Info::display();
-            if (display) {
-                XSetCommand(display, mApplicationWindowInstance->winId(), argv, argc);
+            if (mApplicationWindowInstance) {
+                Display *display = QX11Info::display();
+                if (display) {
+                    XSetCommand(display, mApplicationWindowInstance->winId(), argv, argc);
+                }
             }
 #endif
 
