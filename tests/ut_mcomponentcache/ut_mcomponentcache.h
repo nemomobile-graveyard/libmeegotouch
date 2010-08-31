@@ -37,7 +37,7 @@ private slots:
     void cleanup();
     void cleanupCache();
 
-    void testGLWidgetAndDBusService();
+    void testDBusService();
 };
 
 #endif //UT_MCOMPONENT_CACHE_H

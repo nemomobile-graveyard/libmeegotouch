@@ -52,7 +52,7 @@ void Ut_MComponentCache::cleanup()
 }
 
 
-void Ut_MComponentCache::testGLWidgetAndDBusService()
+void Ut_MComponentCache::testDBusService()
 {
     /* We must test many things in the same function because
        populateForMApplication can be run only once. */
@@ -64,42 +64,7 @@ void Ut_MComponentCache::testGLWidgetAndDBusService()
     MComponentCache::d_ptr->cacheBeingPopulated = false;
     QVERIFY2( MComponentCache::populating() == false, "Failure");	
 
-#ifdef QT_OPENGL_LIB
-    /* run only if glwidgets can be created, otherwise give warning */
-    QGLWidget *tmp;
-
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfmApplicationWindowInstance == 0, "Failure");	
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfOtherWindow == 0, "Failure");	
-#endif /* QT_OPENGL_LIB */
-
     MComponentCache::populateForMApplication();
-
-#ifdef QT_OPENGL_LIB
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfmApplicationWindowInstance == 0, "Failure");	
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfOtherWindow != 0, "Failure");	
-
-    QVERIFY2( (tmp = MComponentCache::glWidget()) != 0, "Failure");	
-    delete tmp;
-    tmp = 0;
-
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfmApplicationWindowInstance == 0, "Failure");	
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfOtherWindow == 0, "Failure");
-
-    MComponentCache::d_ptr->glWidgetOfmApplicationWindowInstance =  MComponentCache::glWidget();
-    MComponentCache::d_ptr->cacheBeingPopulated = true;
-    QVERIFY2( MComponentCache::populating() == true, "Failure");	
-    QVERIFY2( (tmp = MComponentCache::glWidget()) != 0, "Failure");	
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfmApplicationWindowInstance == 0, "Failure");	
-    QVERIFY2( MComponentCache::d_ptr->glWidgetOfOtherWindow == 0, "Failure");
-    delete tmp;
-    tmp = 0;
-
-    MComponentCache::d_ptr->cacheBeingPopulated = false;
-    QVERIFY2( (tmp = MComponentCache::glWidget()) != 0, "Failure");	
-    delete tmp;
-
-    tmp = 0;
-#endif /* QT_OPENGL_LIB */
 
     /* Pick up the application from the cache and register a special D-Bus service */
     static char ** argv  = packTwoArgs("testDBusRegistration", "argument1");
