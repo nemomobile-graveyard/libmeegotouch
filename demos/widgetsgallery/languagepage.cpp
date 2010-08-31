@@ -513,7 +513,7 @@ void LanguagePage::changeLcTimeFormat24h(int index)
 #else
     MLocale currentLocale;
     if (newLcTimeFormat24h != currentLocale.timeFormat24h()) {
-        currentLocale.setTimeFormat24h(newTimeFormat24h);
+        currentLocale.setTimeFormat24h(newLcTimeFormat24h);
         MLocale::setDefault(currentLocale);
     }
 #endif
