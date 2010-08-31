@@ -27,6 +27,7 @@ MPageSwitchAnimationPrivate::MPageSwitchAnimationPrivate()
 {
     newPage = NULL;
     oldPage = NULL;
+    direction = MPageSwitchAnimation::ToChildPage;
 }
 
 MPageSwitchAnimationPrivate::~MPageSwitchAnimationPrivate()

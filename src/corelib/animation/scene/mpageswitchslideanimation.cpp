@@ -27,7 +27,9 @@
 #include <QPropertyAnimation>
 
 MPageSwitchSlideAnimationPrivate::MPageSwitchSlideAnimationPrivate()
-    : MPageSwitchAnimationPrivate()
+    : MPageSwitchAnimationPrivate(),
+      positionNewPageAnimation(NULL),
+      positionOldPageAnimation(NULL)
 {
 }
 
