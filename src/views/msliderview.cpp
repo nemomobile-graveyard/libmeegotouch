@@ -773,8 +773,23 @@ void MSliderGroove::raiseHandleIndicator()
     QGraphicsItem *newParent = topLevelItem();
     if (newParent) {
         //reparents slider handle indicator only if it is necessary
-        if (newParent != sliderHandleIndicator->parentItem())
+        if (newParent != sliderHandleIndicator->parentItem()) {
             sliderHandleIndicator->setParentItem(newParent);
+
+            //sets the zValue of sliderHandleIndicator the highest of all
+            //its siblings to ensure that it will be displayed on top of them
+            QList<QGraphicsItem *> childItems = sliderHandleIndicator->parentItem()->childItems();
+
+            if (!childItems.empty()) {
+                int zValue = childItems.first()->zValue();
+                for (int i = 1; i < childItems.size(); ++i) {
+                    if (zValue < childItems.at(i)->zValue())
+                        zValue = childItems.at(i)->zValue();
+                }
+
+                sliderHandleIndicator->setZValue(zValue + 1);
+            }
+        }
 
         //by raising handle indicator will be shown (only if it
         //is not already visible)
