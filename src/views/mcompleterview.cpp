@@ -73,7 +73,6 @@ MCompleterViewPrivate::MCompleterViewPrivate(MCompleter *controller, MCompleterV
     controller->setLayout(layout);
 
     //click focus, and eat focusout for the textedit widget
-    completionLabel->setFocusPolicy(Qt::ClickFocus);
     controller->setFocusPolicy(Qt::ClickFocus);
     controller->setManagedManually(true);
 }
@@ -299,7 +298,7 @@ void MCompleterViewPrivate::showPopup()
     //hide completion widget before showing popup
     controller->hideCompleter();
     q->model()->setPopupActive(true);
-    controller->scene()->setFocusItem(popup);
+    controller->widget()->clearFocus();
     if (controller->sceneManager()->execDialog(popup) == MDialog::Accepted) {
         //only confirm when accept
         controller->scene()->setFocusItem(controller->widget());
