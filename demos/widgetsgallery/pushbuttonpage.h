@@ -26,8 +26,7 @@
 #include <MLayout>
 #include <MGridLayoutPolicy>
 
-class MButton;
-class MButtonGroup;
+class MButton ;
 class MWidget;
 class MLabel;
 
@@ -39,12 +38,54 @@ public:
     virtual ~PushButtonPage();
     virtual QString timedemoTitle();
     virtual void createContent();
+
 protected:
     virtual void retranslateUi();
+
 private:
-    MButton *pushButton1;
-    MButton *pushButton2;
-    MButton *pushButton3;
+    void singleButton();
+    void twoButtons();
+    void threeButtons();
+    void twoButtonsRowLayout();
+    void threeButtonsRowLayout();
+    void callRejectButtonLayout();
+    void callRejectRowLayout();
+    void splitButtonsLayout();
+
+    MLinearLayoutPolicy *layoutPolicy;
+
+    MButton *button1;
+    MButton *button2;
+    MButton *button3;
+    MButton *button4;
+    MButton *button5;
+    MButton *button6;
+    MButton *button7;
+    MButton *button8;
+    MButton *button9;
+    MButton *button10;
+    MButton *button11;
+    MButton *button12;
+    MButton *button13;
+    MButton *button14;
+    MButton *button15;
+    MButton *button16;
+    MButton *button17;
+    MButton *button18;
+    MButton *button19;
+
+    MLabel *text1;
+    MLabel *text2;
+    MLabel *text3;
+    MLabel *text4;
+    MLabel *text5;
+    MLabel *text6;
+    MLabel *text7;
+    MLabel *text8;
+    MLabel *text9;
+    MLabel *text10;
+    MLabel *text11;
+    MLabel *text12;
 };
 
 #endif
