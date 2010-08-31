@@ -1605,9 +1605,10 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
 
     if (sceneWindow->windowType() == MSceneWindow::EscapeButtonPanel) {
-        MEscapeButtonPanel *escapeButtonPanel = static_cast<MEscapeButtonPanel*>(sceneWindow);
-        q->disconnect(escapeButtonPanel, SIGNAL(escapeModeChanged(MEscapeButtonPanelModel::EscapeMode)),
-                      q, SLOT(_q_updateDecoratorButtonsProperty()));
+        MEscapeButtonPanel *escapeButtonPanel = qobject_cast<MEscapeButtonPanel*>(sceneWindow);
+        if (escapeButtonPanel)
+            q->disconnect(escapeButtonPanel, SIGNAL(escapeModeChanged(MEscapeButtonPanelModel::EscapeMode)),
+                q, SLOT(_q_updateDecoratorButtonsProperty()));
     }
 
     // If there is a layer effect it is deleted
