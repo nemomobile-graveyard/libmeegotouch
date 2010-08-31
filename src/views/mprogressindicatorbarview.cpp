@@ -467,7 +467,8 @@ void MProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOpti
         }
         // 100% width
         else if (d->fullWidth()) {
-            painter->drawImage( 0,0, *d->animationCache[d->position] );
+            if ((d->position >= 0) && (d->position < d->animationCacheSize))
+                painter->drawImage( 0,0, *d->animationCache[d->position] );
 
         // need to draw in 1 or 2 parts, depending if the indicator element goes across the ends
         } else {
