@@ -23,7 +23,7 @@ case "$1" in
         fi
     ;;
 
-    failed-upgrade|abort-install|abort-upgrade)
+    upgrade|failed-upgrade|abort-install|abort-upgrade)
     ;;
 
     *)
