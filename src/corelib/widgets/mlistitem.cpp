@@ -36,6 +36,7 @@ MListItemPrivate::~MListItemPrivate()
 MListItem::MListItem(QGraphicsItem *parent)
     : MWidgetController(new MListItemPrivate, new MListItemModel, parent)
 {
+    grabGesture(Qt::TapAndHoldGesture);
 }
 
 MListItem::~MListItem()
@@ -47,5 +48,7 @@ void MListItem::click()
     emit clicked();
 }
 
-
-
+void MListItem::longTap(const QPointF &pos)
+{
+    emit longTapped(pos);
+}

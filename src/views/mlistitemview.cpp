@@ -25,6 +25,7 @@
 #include <MListItem>
 
 #include <QGraphicsSceneMouseEvent>
+#include <QTapAndHoldGesture>
 #include <QTimer>
 
 
@@ -79,6 +80,11 @@ void MListItemViewPrivate::updateStyleMode()
 void MListItemViewPrivate::click()
 {
     controller->click();
+}
+
+void MListItemViewPrivate::longTap(const QPointF &pos)
+{
+    controller->longTap(pos);
 }
 
 MListItemView::MListItemView(MWidgetController *controller) 
@@ -151,6 +157,16 @@ void MListItemView::cancelEvent(MCancelEvent *event)
 
     d->down = false;
     d->updateStyleMode();
+}
+
+void MListItemView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    Q_D(MListItemView);
+
+    if (gesture->state() == Qt::GestureFinished)
+        d->longTap(gesture->position());
+
+    event->accept(gesture);
 }
 
 M_REGISTER_VIEW_NEW(MListItemView, MListItem)

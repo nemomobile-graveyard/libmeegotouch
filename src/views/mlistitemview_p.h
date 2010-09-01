@@ -33,6 +33,7 @@ public:
     
     void updateStyleMode();
     void click();
+    void longTap(const QPointF &pos);
 
     void _q_applyQueuedStyleModeChange();
 private:

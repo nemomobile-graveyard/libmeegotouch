@@ -41,6 +41,8 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     
     void cancelEvent(MCancelEvent *event);
+
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
       
 private:
     Q_DISABLE_COPY(MListItemView)

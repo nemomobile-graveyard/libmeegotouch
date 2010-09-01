@@ -57,12 +57,24 @@ public Q_SLOTS:
       \brief Makes the list cell to send clicked() signal.
     */
     void click();
+
+    /*!
+      \brief Makes the list cell to send longTapped signal.
+      \param pos The position of the tap.
+    */
+    void longTap(const QPointF &pos);
     
 Q_SIGNALS:
     /*!
       \brief The signal is emitted when the list cell is clicked.
     */
     void clicked();
+
+    /*!
+      \brief The signal is emitted when the list cell has been tapped and holded.
+    */
+    void longTapped(const QPointF &pos);
+
     
 private:   
     Q_DECLARE_PRIVATE(MListItem)
