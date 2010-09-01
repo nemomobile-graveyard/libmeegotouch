@@ -84,6 +84,8 @@ void MBubbleItemBackgroundView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
 
+    style()->pressFeedback().play();
+
     if (!down)
         down = true;
 
@@ -93,6 +95,8 @@ void MBubbleItemBackgroundView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MBubbleItemBackgroundView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
+
+    style()->releaseFeedback().play();
 
     if (down) {
         down = false;
@@ -105,6 +109,8 @@ void MBubbleItemBackgroundView::mouseReleaseEvent(QGraphicsSceneMouseEvent *even
 void MBubbleItemBackgroundView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
+
+    style()->cancelFeedback().play();
 
     if (down)
         down = false;
