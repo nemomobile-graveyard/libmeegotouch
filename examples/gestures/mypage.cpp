@@ -164,14 +164,29 @@ void MyPage::swipeGestureEvent(QGestureEvent *event,
     // next widget.
     event->accept(gesture);
 
-    // Swiping towards left, brings in a new picure from the right
-    if (gesture->horizontalDirection() == QSwipeGesture::Left) {
-        mDebug("swipeGestureEvent") << "Left";
-        showNextImage();
-    } else if (gesture->horizontalDirection() == QSwipeGesture::Right) {
-        mDebug("swipeGestureEvent") << "Right";
-        showPreviousImage();
+    if (gesture->state() == Qt::GestureStarted) {
+        // Swiping towards left, brings in a new picure from the right
+        if (gesture->horizontalDirection() == QSwipeGesture::Left) {
+            mDebug("swipeGestureEvent") << "Left";
+            showNextImage();
+        } else if (gesture->horizontalDirection() == QSwipeGesture::Right) {
+            mDebug("swipeGestureEvent") << "Right";
+            showPreviousImage();
+        }
+    } else if (gesture->state() == Qt::GestureCanceled) {
+        // Revert the transition of images. The user didn't
+        // do swipe gesture after all, he could for example change
+        // the direction of finger movement.
+        if (gesture->horizontalDirection() == QSwipeGesture::Left) {
+            mDebug("swipeGestureEvent") << "Cancel left movement";
+            showPreviousImage(true);
+        } else if (gesture->horizontalDirection() == QSwipeGesture::Right) {
+            mDebug("swipeGestureEvent") << "Cancel right movement";
+            showNextImage(true);
+        }
     }
+    // We will also be getting GestureUpdated and GestureFinished states
+    // here, but we don't need to react to them here.
 }
 
 // End of the gesture handlers
@@ -186,10 +201,17 @@ void MyPage::keyReleaseEvent(QKeyEvent *event)
 }
 
 // Transition in a new image from the left
-void MyPage::showPreviousImage()
+void MyPage::showPreviousImage(bool stopCurrentAnimation)
 {
-    if (swipeAnimation->state() == QAbstractAnimation::Running)
-        return;
+
+    if (swipeAnimation->state() == QAbstractAnimation::Running) {
+        if (stopCurrentAnimation) {
+            // We are in the middle of animation and we need to revert it.
+            swipeAnimation->stop();
+        } else {
+            return;
+        }
+    }
 
     MImageWidget *oldImage = images[currentImageNumber];
     currentImageNumber = --currentImageNumber % ImageCount;
@@ -203,7 +225,7 @@ void MyPage::showPreviousImage()
 
     newImagePosAnimation->setTargetObject(newImage);
     newImagePosAnimation->setStartValue(-QPointF(this->size().width(), 0)); // Animate in from the left...
-    newImagePosAnimation->setEndValue(oldImage->pos()); // ... to the old image's position.
+    newImagePosAnimation->setEndValue(QPointF(0,0)); // ... to the old image's position.
 
     scaleAnimation->setTargetObject(oldImage);
     rotationAnimation->setTargetObject(oldImage);
@@ -216,10 +238,16 @@ void MyPage::showPreviousImage()
 }
 
 // Transition in a new image from the right
-void MyPage::showNextImage()
+void MyPage::showNextImage(bool stopCurrentAnimation)
 {
-    if (swipeAnimation->state() == QAbstractAnimation::Running)
-        return;
+    if (swipeAnimation->state() == QAbstractAnimation::Running) {
+        if (stopCurrentAnimation) {
+            // We are in the middle of animation and we need to revert it.
+            swipeAnimation->stop();
+        } else {
+            return;
+        }
+    }
 
     MImageWidget *oldImage = images[currentImageNumber];
     currentImageNumber = ++currentImageNumber % ImageCount;
@@ -231,7 +259,7 @@ void MyPage::showNextImage()
 
     newImagePosAnimation->setTargetObject(newImage);
     newImagePosAnimation->setStartValue(QPointF(this->size().width(), 0)); // Animate in from the right...
-    newImagePosAnimation->setEndValue(oldImage->pos()); // ... to the old image's position.
+    newImagePosAnimation->setEndValue(QPointF(0,0)); // ... to the old image's position.
 
     scaleAnimation->setTargetObject(oldImage);
     rotationAnimation->setTargetObject(oldImage);

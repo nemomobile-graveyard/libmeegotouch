@@ -20,8 +20,8 @@ public:
     virtual void createContent();
 
 public slots:
-    void showPreviousImage();
-    void showNextImage();
+    void showPreviousImage(bool stopCurrentAnimation = false);
+    void showNextImage(bool stopCurrentAnimation = false);
     void hideImagesExceptCurrent();
 
 protected:
