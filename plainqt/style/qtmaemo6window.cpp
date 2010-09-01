@@ -202,6 +202,7 @@ void QtMaemo6Window::showFastMaximized()
 void QtMaemo6Window::setCentralWidget(QWidget *widget)
 {
     if (widget) {
+        QWidget* focusWidget = widget->focusWidget();
         m_window = widget;
         m_originalFlags = m_window->windowFlags();
         m_window->setWindowFlags(Qt::Widget);
@@ -235,6 +236,9 @@ void QtMaemo6Window::setCentralWidget(QWidget *widget)
             widget->setMinimumWidth(maxViewportSize().width());
         if(widget->sizePolicy().verticalPolicy() == QSizePolicy::Expanding)
             widget->setMinimumHeight(maxViewportSize().height());
+
+        if(focusWidget)
+            focusWidget->setFocus();
     }
 }
 
