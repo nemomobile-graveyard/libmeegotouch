@@ -94,11 +94,12 @@ MThemeDaemonServer::~MThemeDaemonServer()
     // remove all registered clients
     while (registeredClients.count() > 0) {
         MThemeDaemonClient *client = registeredClients.begin().value();
+        QLocalSocket *socket = registeredClients.begin().key();
+        socket->disconnect(this);
         daemon.removeClient(client);
         delete client;
         registeredClients.erase(registeredClients.begin());
     }
-
 }
 
 void MThemeDaemonServer::loadPriorities(const QString& filename)
@@ -117,8 +118,8 @@ void MThemeDaemonServer::clientConnected()
 {
     while (server.hasPendingConnections()) {
         QLocalSocket *socket = server.nextPendingConnection();
-        QObject::connect(socket, SIGNAL(disconnected()), SLOT(clientDisconnected()));
-        QObject::connect(socket, SIGNAL(readyRead()), SLOT(clientDataAvailable()));
+        QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
+        QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(clientDataAvailable()));
     }
 }
 
