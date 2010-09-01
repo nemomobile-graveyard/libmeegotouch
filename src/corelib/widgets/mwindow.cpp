@@ -1100,6 +1100,9 @@ bool MWindow::event(QEvent *event)
                 mWarning("MWindow") << "Could not save screenshot to" << path;
 
             d->playScreenshotEffect();
+        } else if (Qt::Key_Q == k->key() && (k->modifiers() & Qt::ControlModifier)) {
+            foreach(MWindow* window, MApplication::windows())
+                window->close();
         }
 
         if (updateNeeded) {
