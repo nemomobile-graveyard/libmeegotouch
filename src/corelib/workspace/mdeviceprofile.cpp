@@ -41,8 +41,8 @@
 namespace{
 #ifdef HAVE_DBUS
     static const QString pixmapProviderDbusService = "com.meego.core.MStatusBar";
-    static const qreal mmPerInch = 25.4;
 #endif
+    static const qreal mmPerInch = 25.4;
 }
 
 MDeviceProfilePrivate::MDeviceProfilePrivate()
