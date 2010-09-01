@@ -519,13 +519,15 @@ void MProgressIndicatorBarView::visibilityChangedSlot()
 void MProgressIndicatorBarView::resumeAnimation()
 {
     Q_D(MProgressIndicatorBarView);
-    d->paused = false;
+
+    d->animate(true);
 }
 
 void MProgressIndicatorBarView::pauseAnimation()
 {
     Q_D(MProgressIndicatorBarView);
-    d->paused = true;
+
+    d->animate(false);
 }
 
 void MProgressIndicatorBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
