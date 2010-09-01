@@ -139,7 +139,7 @@ void MAbstractLayoutPolicy::updateStyle()
 
     const MAbstractLayoutPolicyStyle *style =
         static_cast<const MAbstractLayoutPolicyStyle *>(MTheme::style(
-                    "MAbstractLayoutPolicyStyle", d->objectName, "", "",
+                    "MAbstractLayoutPolicyStyle", d->styleName, "", "",
                     orientation));
 
     if (d->style != style) {
@@ -190,16 +190,24 @@ void MAbstractLayoutPolicy::applyStyle()
 
 void MAbstractLayoutPolicy::setObjectName(const QString &name)
 {
+    setStyleName(name);
+}
+void MAbstractLayoutPolicy::setStyleName(const QString &name)
+{
     Q_D(MAbstractLayoutPolicy);
-    if (name == d->objectName)
+    if (name == d->styleName)
         return;
-    d->objectName = name;
+    d->styleName = name;
     updateStyle();
 }
 QString MAbstractLayoutPolicy::objectName() const
 {
+    return styleName();
+}
+QString MAbstractLayoutPolicy::styleName() const
+{
     Q_D(const MAbstractLayoutPolicy);
-    return d->objectName;
+    return d->styleName;
 }
 
 const MAbstractLayoutPolicyStyle *MAbstractLayoutPolicy::style() const

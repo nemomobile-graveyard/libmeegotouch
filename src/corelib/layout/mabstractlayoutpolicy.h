@@ -58,14 +58,14 @@ class QGraphicsLayoutItem;
  * \section styling_policy CSS Styling of Policies
  *
  * Policies can be styled in the CSS stylesheet files, however the class name is always
- * MAbstractLayoutPolicy.  Their object name can be set with setObjectName() and they
+ * MAbstractLayoutPolicy.  Their object name can be set with setStyleName() and they
  * can be styled different depending on the current device orientation.
  *
  * For example:
  *
  * \code
  *  MLinearLayoutPolicy mypolicy(mylayout);
- *  mypolicy.setObjectName("address");
+ *  mypolicy.setStyleName("address");
  * \endcode
  *  could then be styled in the .css file with
  * \code
@@ -260,12 +260,12 @@ public:
 
     /*! \brief Sets the name of this policy, for CSS styling.
      *
-     * This is similar to QObject::setObjectName() and is used as
+     * This is similar to MWidgetController::setStyleName() and is used as
      * the object name for the MStyle object name.
      * For example:
      * \code
      *  MLinearLayoutPolicy mypolicy(mylayout);
-     *  mypolicy.setObjectName("address");
+     *  mypolicy.setStyleName("address");
      * \endcode
      *  could then be styled in the .css file with
      * \code
@@ -278,15 +278,21 @@ public:
      *
      * \param name object name
      */
-    void setObjectName(const QString &name);
+    void setStyleName(const QString &name);
 
-    /*! \brief Return the name of this policy, for CSS styling
+    /*! \brief Return the name of this policy, for CSS styling.
      *
-     * This is similar in functionality and usage to QObject::objectName()
+     * This is similar in functionality and usage to MWidgetController::styleName()
      *
-     * \sa setObjectName(const QString &)
+     * \sa setStyleName(const QString &)
      */
-    QString objectName() const;
+    QString styleName() const;
+
+    /*! \internal
+     *  For backwards compatibility - these just call setStyleName and styleName */
+    void Q_DECL_DEPRECATED setObjectName(const QString &name);
+    QString Q_DECL_DEPRECATED objectName() const;
+    /*! \internal_end */
 
     /*!
      * \brief Set the horizontal spacing.

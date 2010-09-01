@@ -61,12 +61,12 @@ void MAppletInventoryViewPrivate::init(MAppletInventory *controller)
     appletContainer->setObjectName("MAppletInventoryAppletContainer");
     appletContainer->centralWidget()->setLayout(appletLayout);
     appletLayout->setContentsMargins(0, 0, 0, 0);
-    appletLayoutPolicy->setObjectName("MAppletInventoryFlowLayoutPolicy");
+    appletLayoutPolicy->setStyleName("MAppletInventoryFlowLayoutPolicy");
 
     // Define layout properties
     controller->setLayout(layout);
     layout->setContentsMargins(0, 0, 0, 0);
-    layoutPolicy->setObjectName("MAppletInventoryLinearLayoutPolicy");
+    layoutPolicy->setStyleName("MAppletInventoryLinearLayoutPolicy");
     layoutPolicy->addItem(appletContainer);
 
     // Set close button properties

@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     MLayout *layout = new MLayout;
 
     MFlowLayoutPolicy *policy = new MFlowLayoutPolicy(layout);
-    policy->setObjectName("example");
+    policy->setStyleName("example");
     policy->setRowLimit(2); //Only show 2 rows of items
 
     /* Add 20 items to the policy */

@@ -104,11 +104,11 @@ void MApplicationMenuViewPrivate::createPolicy(M::Orientation orientation)
     if (orientation == M::Landscape) {
         landscapePolicy = new MGridLayoutPolicy(actionCommandLayout);
         actionCommandLayout->setLandscapePolicy(landscapePolicy);
-        landscapePolicy->setObjectName("menulandscape");
+        landscapePolicy->setStyleName("menulandscape");
     } else {
         portraitPolicy = new MLinearLayoutPolicy(actionCommandLayout, Qt::Vertical);
         actionCommandLayout->setPortraitPolicy(portraitPolicy);
-        portraitPolicy->setObjectName("menuportrait");
+        portraitPolicy->setStyleName("menuportrait");
     }
 }
 

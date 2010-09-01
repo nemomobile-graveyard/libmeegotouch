@@ -1851,55 +1851,55 @@ void Ut_MLayout::testLayoutPolicyStyling()
 
     QCOMPARE(isCurrent, policy->isActive());
 
-    // The objectName of the policy should be empty be default, make sure it is:
-    QVERIFY(policy->objectName().isEmpty());
+    // The styleName of the policy should be empty be default, make sure it is:
+    QVERIFY(policy->styleName().isEmpty());
 
     QCOMPARE(MApplication::activeWindow()->orientationAngle(), M::Angle0);
 
     // The numbers which follow here are taken from the ut_mlayout.css file
     // if you change the css file, you need to keep them in sync:
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
-    policy->setObjectName("packed");
-    QCOMPARE(policy->objectName(), QString("packed"));
+    policy->setStyleName("packed");
+    QCOMPARE(policy->styleName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 0.0, 0.0);
-    policy->setObjectName("spacing");
-    QCOMPARE(policy->objectName(), QString("spacing"));
+    policy->setStyleName("spacing");
+    QCOMPARE(policy->styleName(), QString("spacing"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 10.0, 11.0);
-    policy->setObjectName("margins");
-    QCOMPARE(policy->objectName(), QString("margins"));
+    policy->setStyleName("margins");
+    QCOMPARE(policy->styleName(), QString("margins"));
     checkPolicies(layout, policy, isCurrent, policyType, 10.0, 10.0, -1.0, 10.0, 0.0, 0.0);
-    policy->setObjectName("spacing+margins");
-    QCOMPARE(policy->objectName(), QString("spacing+margins"));
+    policy->setStyleName("spacing+margins");
+    QCOMPARE(policy->styleName(), QString("spacing+margins"));
     checkPolicies(layout, policy, isCurrent, policyType, 10.0, -1.0, 10.0, 10.0, 10.0, 11.0);
-    policy->setObjectName(QString::null);
-    QVERIFY(policy->objectName().isEmpty());
+    policy->setStyleName(QString::null);
+    QVERIFY(policy->styleName().isEmpty());
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
 
     // Now rotate to portrait
     MApplication::activeWindow()->setOrientationAngle(M::Angle90);
     checkPolicies(layout, policy, isCurrent, policyType, 4.0, 5.0, 2.0, 6.0, 2.0, 3.0);
-    policy->setObjectName("packed");
-    QCOMPARE(policy->objectName(), QString("packed"));
+    policy->setStyleName("packed");
+    QCOMPARE(policy->styleName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, 1, 2.0, 3.0, 4.0, 5.0, 6.0);
 
     MApplication::activeWindow()->setOrientationAngle(M::Angle180);
-    QCOMPARE(policy->objectName(), QString("packed"));
+    QCOMPARE(policy->styleName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 0.0, 0.0);
-    policy->setObjectName("spacing");
-    QCOMPARE(policy->objectName(), QString("spacing"));
+    policy->setStyleName("spacing");
+    QCOMPARE(policy->styleName(), QString("spacing"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 10.0, 11.0);
 
     MApplication::activeWindow()->setOrientationAngle(M::Angle270);
-    QCOMPARE(policy->objectName(), QString("spacing"));
+    QCOMPARE(policy->styleName(), QString("spacing"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 10.0, 11.0);
 
-    policy->setObjectName("packed");
-    QCOMPARE(policy->objectName(), QString("packed"));
+    policy->setStyleName("packed");
+    QCOMPARE(policy->styleName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, 1, 2.0, 3.0, 4.0, 5.0, 6.0);
 
     MApplication::activeWindow()->setOrientationAngle(M::Angle0);
-    policy->setObjectName(QString::null);
-    QVERIFY(policy->objectName().isEmpty());
+    policy->setStyleName(QString::null);
+    QVERIFY(policy->styleName().isEmpty());
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
 }
 
@@ -2926,13 +2926,13 @@ void Ut_MLayout::testUserChangingValues()
     QCOMPARE(policy->horizontalSpacing(), 7.0);
     QCOMPARE(policy->verticalSpacing(), 6.0); //From CSS
 
-    policy->setObjectName("packed"); //This should not change the margins since we, the, user specified them manually
+    policy->setStyleName("packed"); //This should not change the margins since we, the, user specified them manually
     compareContentsMargins(policy, 12, 12, 12, 12);
     compareContentsMargins(layout, 12, 12, 12, 12);
     QCOMPARE(policy->horizontalSpacing(), 7.0);
     QCOMPARE(policy->verticalSpacing(), 0.0); // From CSS
 
-    policy->setObjectName("");
+    policy->setStyleName("");
     compareContentsMargins(policy, 12, 12, 12, 12);
     compareContentsMargins(layout, 12, 12, 12, 12);
     QCOMPARE(policy->horizontalSpacing(), 7.0);
@@ -2940,7 +2940,7 @@ void Ut_MLayout::testUserChangingValues()
 
     policy->setVerticalSpacing(6);
     QCOMPARE(policy->verticalSpacing(), 6.0); // Now manually set
-    policy->setObjectName("packed");
+    policy->setStyleName("packed");
     QCOMPARE(policy->verticalSpacing(), 6.0);
 }
 void Ut_MLayout::testAddingAndRemovingWithSpacing()

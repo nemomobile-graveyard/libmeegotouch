@@ -72,8 +72,8 @@ public:
     /** Style for the abstract policy, but can be also used for inheriting policies */
     const MAbstractLayoutPolicyStyle *style;
 
-    /** Name for this policy for MStyle.  Similar to the QObject::objectName() property */
-    QString objectName;
+    /** Name for this policy for MStyle.  Similar to the MWidgetController::styleName() property */
+    QString styleName;
 
     /** List of items in this policy, as an index of layout */
     QList<int> items;

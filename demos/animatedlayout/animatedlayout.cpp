@@ -268,7 +268,7 @@ protected:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
         foreach(MAbstractLayoutPolicy * policy, s_policies) {
-            policy->setObjectName(_objectName);
+            policy->setStyleName(_objectName);
         }
         MButton::mousePressEvent(event);
     }
@@ -516,7 +516,7 @@ int main(int argc, char **argv)
     }
     name_buttons[0]->click();
     foreach(MAbstractLayoutPolicy * policy, s_policies) {
-        policy->setObjectName("spacing+margins");
+        policy->setStyleName("spacing+margins");
     }
 
     s_addItemButton = new AddItemButton();
