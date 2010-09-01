@@ -39,6 +39,7 @@ class MList;
 class MComboBox;
 class MListContentItemCreator;
 class MAbstractItemModel;
+class MObjectMenu;
 
 class MListPage: public TemplatePage
 {
@@ -82,7 +83,7 @@ public slots:
     void scrollToTop();
 
     void itemClick(const QModelIndex &index);
-    void itemLongTapped(const QModelIndex &index);
+    void itemLongTapped(const QModelIndex &index, const QPointF &position);
 
     void removeListItem();
     void editListItem();
@@ -108,6 +109,8 @@ private:
     PhoneBookImageLoader *imageLoader;
 
     MComboBox *comboListMode;
+    MObjectMenu *objectMenu;
+    MWidget *objectMenuHolder;
 
     MAction *actionAdvancedConfiguration;
     QPointer<MDialog> dialogAdvancedConfiguration;

@@ -38,6 +38,8 @@
 #include <MAction>
 #include <MSortFilterProxyModel>
 #include <MDialog>
+#include <MSceneManager>
+#include <MObjectMenu>
 
 #include <MComboBox>
 #include <MDebug>
@@ -61,6 +63,8 @@ MListPage::MListPage()
     proxyModel(NULL),
     imageLoader(NULL),
     comboListMode(NULL),
+    objectMenu(NULL),
+    objectMenuHolder(NULL),
     actionAdvancedConfiguration(NULL),
     dialogAdvancedConfiguration(NULL),
     list(NULL),
@@ -495,9 +499,19 @@ void MListPage::itemClick(const QModelIndex &index)
     mDebug("MListPage::itemClick") << "Row was clicked: " << index.row();
 }
 
-void MListPage::itemLongTapped(const QModelIndex &index)
+void MListPage::itemLongTapped(const QModelIndex &index, const QPointF &position)
 {
-    mDebug("MListPage::itemLongTapped") << "Row was long tapped: " << index.row();
+    objectMenu->setCursorPosition(position);
+    if (index.parent().isValid()) {
+        mDebug("MListPage::itemLongTapped") << "Row: " << index.row() << " Group: " << index.parent().row();
+        sceneManager()->appearSceneWindow(objectMenu);
+    }
+    else if (model->hasChildren(index) > 0)
+        mDebug("MListPage::itemLongTapped") << "Group: " << index.row();
+    else {
+        mDebug("MListPage::itemLongTapped") << "Row: " << index.row();
+        sceneManager()->appearSceneWindow(objectMenu);
+    }
     longTappedIndex = index;
 }
 
@@ -630,17 +644,20 @@ void MListPage::createContent()
     panel->setLayout(layout);
 
     list = new MList(panel);
+    objectMenuHolder = new MWidget(panel);
+
+    objectMenu = new MObjectMenu(objectMenuHolder);
 
     //% "Remove"
-    MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), list);
+    MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), objectMenuHolder);
     action->setLocation(MAction::ObjectMenuLocation);
-    list->addAction(action);
+    objectMenuHolder->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
 
     //% "Edit"
-    action = new MAction(qtTrId("xx_listpage_list_edit"), list);
+    action = new MAction(qtTrId("xx_listpage_list_edit"), objectMenuHolder);
     action->setLocation(MAction::ObjectMenuLocation);
-    list->addAction(action);
+    objectMenuHolder->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(editListItem()));
 
     setPlainListModel();
@@ -648,7 +665,7 @@ void MListPage::createContent()
     layout->addItem(list);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClick(QModelIndex)));
-    connect(list, SIGNAL(itemLongTapped(QModelIndex)), this, SLOT(itemLongTapped(QModelIndex)));
+    connect(list, SIGNAL(itemLongTapped(QModelIndex,QPointF)), this, SLOT(itemLongTapped(QModelIndex,QPointF)));
 
     retranslateUi();
 }

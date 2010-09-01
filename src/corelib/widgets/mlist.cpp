@@ -84,8 +84,6 @@ void MList::updateData(const QList<const char *>& modifications)
 
 void MList::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    model()->setLongTap(event->pos());
-
     MWidgetController::contextMenuEvent(event);
 }
 
@@ -167,7 +165,13 @@ void MList::selectItem(const QModelIndex &index)
 
 void MList::longTapItem(const QModelIndex &index)
 {
+    longTapItem(index, QPointF());
+}
+
+void MList::longTapItem(const QModelIndex &index, const QPointF &position)
+{
     emit itemLongTapped(index);
+    emit itemLongTapped(index, position);
 }
 
 void MList::setCellCreator(MCellCreator *itemCreator)

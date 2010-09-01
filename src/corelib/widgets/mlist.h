@@ -346,8 +346,14 @@ public Q_SLOTS:
 
     /*!
         \brief Convenience function - Emits a long tap event for an item.
+        \deprecated Use MList::longTapItem(QModelIndex, QPointF) instead.
      */
     void longTapItem(const QModelIndex &index);
+
+    /*!
+        \brief Convenience function - Emits a long tap event for an item. Also provides tap location.
+     */
+    void longTapItem(const QModelIndex &index, const QPointF &position);
 
     /*!
         \brief Scrolls list to a specific index. Call to function will ensure
@@ -384,8 +390,14 @@ Q_SIGNALS:
 
     /*!
         \brief Emitted when an item is long tapped.
+        \deprecated The MList::itemLongTapped(QModelIndex, QPointF) extends the signal.
     */
     void itemLongTapped(const QModelIndex &index);
+
+    /*!
+        \brief Emitted when an item is long tapped. Also provides tap location.
+    */
+    void itemLongTapped(const QModelIndex &index, const QPointF &position);
 
     /*!
         \brief Emitted when list is moving, e.g. pannable by user

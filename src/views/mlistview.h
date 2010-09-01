@@ -86,7 +86,9 @@ private:
     void scrollTo(const QModelIndex &index, MList::ScrollHint hint);
     void longTap(const QPointF &pos);
 
+
     Q_PRIVATE_SLOT(d_func(), void _q_moveViewportToNextPosition(int))
+    Q_PRIVATE_SLOT(d_func(), void _q_itemLongTapped(QPointF))
 
 private:
     Q_DECLARE_PRIVATE(MListView)

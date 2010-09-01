@@ -21,6 +21,10 @@
 #include <QVector>
 #include <QTimeLine>
 #include <QStyleOptionGraphicsItem>
+
+#include <QGestureEvent>
+#include <QTapAndHoldGesture>
+
 #include <MList>
 #include <MWidgetView>
 #include <MSeparator>
@@ -328,8 +332,9 @@ void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
 
 void MListView::longTap(const QPointF &pos)
 {
-    QModelIndex index = d_ptr->flatRowToIndex(d_ptr->locateVisibleRowAt(pos.y(), pos.x()));
-    d_ptr->cellLongTapped(index);
+    QPointF relativePos = d_ptr->controller->mapFromScene(pos);
+    QModelIndex index = d_ptr->flatRowToIndex(d_ptr->locateVisibleRowAt(relativePos.y(), relativePos.x()));
+    d_ptr->cellLongTapped(index, pos);
 }
 
 #include "moc_mlistview.cpp"

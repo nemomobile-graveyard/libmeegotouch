@@ -117,7 +117,7 @@ public:
     virtual void clearFirstAndLastVisibleRows();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void cellClicked(MWidget *source);
-    virtual void cellLongTapped(const QModelIndex &index);
+    virtual void cellLongTapped(const QModelIndex &index, const QPointF &position);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void updateItemSize();
     virtual void updateSeparatorSize();
@@ -158,6 +158,7 @@ public Q_SLOTS:
     void updateListGeometry();
 
     void _q_moveViewportToNextPosition(int frame);
+    void _q_itemLongTapped(const QPointF &pos);
 
 public:
     MListView *q_ptr;

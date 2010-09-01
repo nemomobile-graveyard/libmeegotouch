@@ -146,9 +146,9 @@ void MListViewPrivate::cellClicked(MWidget *source)
     controller->selectItem(cellIndex);
 }
 
-void MListViewPrivate::cellLongTapped(const QModelIndex &index)
+void MListViewPrivate::cellLongTapped(const QModelIndex &index, const QPointF &position)
 {
-    controller->longTapItem(index);
+    controller->longTapItem(index, position);
 }
 
 void MListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
@@ -170,9 +170,8 @@ void MListViewPrivate::deleteItem(MWidget *widget)
 
 MWidget *MListViewPrivate::createCell(int row)
 {
-    const MCellCreator *cellCreator = controllerModel->cellCreator();
     QModelIndex index(flatRowToIndex(row));
-    MWidget *cell = cellCreator->createCell(index, *recycler);
+    MWidget *cell = controllerModel->cellCreator()->createCell(index, *recycler);
     cell->setParent(NULL);
     cell->setParentItem(controller);
     cell->setVisible(true);
@@ -196,6 +195,10 @@ MWidget *MListViewPrivate::createCell(int row)
     // it's own function
     if (cell->metaObject()->indexOfSignal("clicked()") != -1) {
         QObject::connect(cell, SIGNAL(clicked()), q_ptr, SLOT(itemClick()), Qt::UniqueConnection);
+    }
+
+    if (cell->metaObject()->indexOfSignal("longTapped(QPointF)") != -1) {
+        QObject::connect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)), Qt::UniqueConnection);
     }
 
     return cell;
@@ -294,9 +297,8 @@ void MListViewPrivate::updatePannableViewportPosition()
 
 void MListViewPrivate::updateItemHeight()
 {
-    const MCellCreator *cellCreator = controller->cellCreator();
-    if (cellCreator)
-        itemHeight = cellCreator->cellSize().height();
+    if (controllerModel->cellCreator())
+        itemHeight = controllerModel->cellCreator()->cellSize().height();
 }
 
 void MListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
@@ -528,6 +530,11 @@ void MListViewPrivate::_q_moveViewportToNextPosition(int frame)
     } else {
         scrollToTimeLine->stop();
     }
+}
+
+void MListViewPrivate::_q_itemLongTapped(const QPointF &pos)
+{
+    q_ptr->longTap(pos);
 }
 
 QPointF MListViewPrivate::calculateViewportNextPosition()
