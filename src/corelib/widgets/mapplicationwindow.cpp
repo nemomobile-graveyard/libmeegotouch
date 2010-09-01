@@ -99,6 +99,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingStatusBar(false)
     , showingNavigationBar(false)
     , showingDockWidget(false)
+    , style(0)
 {
     if(MDeviceProfile::instance()->showStatusbar())    {
         statusBar = new MStatusBar;
@@ -123,6 +124,9 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
     delete escapeButtonPanel;
     escapeButtonPanel = 0;
 
+    MTheme::releaseStyle(style);
+    style = 0;
+
     if (statusBar) {
         delete statusBar;
         statusBar = 0;
@@ -132,6 +136,8 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
 void MApplicationWindowPrivate::init()
 {
     Q_Q(MApplicationWindow);
+
+    style = static_cast<const MApplicationWindowStyle *>(MTheme::style("MApplicationWindowStyle", ""));
 
     q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
@@ -251,10 +257,7 @@ void MApplicationWindowPrivate::appendMApplicationWindowTypeProperty()
 
 void  MApplicationWindowPrivate::initAutoHideComponentsTimer()
 {
-    // TODO: Get the interval from CSS or some system wide
-    // configuration.
-    autoHideComponentsTimer.setInterval(2000);
-
+    autoHideComponentsTimer.setInterval(style->autoHideTimeout());
     autoHideComponentsTimer.setSingleShot(true);
 }
 

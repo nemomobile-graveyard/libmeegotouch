@@ -38,6 +38,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mpanrecognizerstyle.h \
     $$STYLE_SRC_DIR/mswiperecognizerstyle.h \
     $$STYLE_SRC_DIR/mtapandholdrecognizerstyle.h \
+    $$STYLE_SRC_DIR/mapplicationwindowstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \

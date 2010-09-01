@@ -26,6 +26,7 @@
 #include "mescapebuttonpanelmodel.h"
 #include <QPointer>
 #include <QTimer>
+#include "mapplicationwindowstyle.h"
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
 # include "contextproperty.h"
@@ -147,6 +148,8 @@ public:
     void restorePageArea();
 
 private:
+    const MApplicationWindowStyle *style;
+
     void init();
     void initAutoHideComponentsTimer();
     void removePageActions();
@@ -168,6 +171,8 @@ public:
 #endif
     void _q_updatePageExposedContentRect();
     void _q_enablePaintUpdates();
+
+
 };
 
 #endif
