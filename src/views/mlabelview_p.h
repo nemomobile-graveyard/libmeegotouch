@@ -47,6 +47,7 @@ public:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
+    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
     Qt::TextFlag wrap() const;
     void initializeStaticText();
@@ -71,10 +72,20 @@ class MLabelViewRich : public MLabelViewSimple
 {
 
 public:
+    /**
+     * Caches parts of the textdocument inside a pixmap to
+     * increase the performance. Several tiles might be used
+     * as there are size limitations for pixmaps.
+     */
+    struct Tile {
+        qreal y;
+        QString pixmapCacheKey;
+        QSize size;
+    };
+
     MLabelViewRich(MLabelViewPrivate *viewPrivate);
     virtual ~MLabelViewRich();
 
-    QPixmap generatePixmap();
     virtual void drawContents(QPainter *painter, const QSizeF &size);
     virtual bool shouldElide() const;
     virtual bool resizeEvent(QGraphicsSceneResizeEvent *event);
@@ -86,6 +97,7 @@ public:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
+    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
     virtual void applyStyle();
 
@@ -95,11 +107,65 @@ public:
     void updateHighlighting();
     QString wrapTextWithSpanTag(const QString &text) const;
 
+    /**
+     * Assures that the tiles are initialized for the given size.
+     * If enough pixmap cache is available the member 'tiles'
+     * represents the list of all tiles.
+     */
+    void initTiles(const QSize &size);
+
+    /**
+     * Creates \a count tiles with a size of \a size
+     * and applies them to the member 'tiles'.
+     */
+    void createTiles(int count, const QSize &size);
+
+    /**
+     * Releases the cache for all tiles. The member 'tiles' will be set empty.
+     */
+    void cleanupTiles();
+
+    /**
+     * \param painter Painter where the tiles are drawn into.
+     * \param pos     Position of the tile relative to the painter.
+     * \param size    Size of the MLabelView widget.
+     */
+    void drawTiles(QPainter *painter, const QPointF &pos, const QSizeF &size);
+
+    /**
+     * If the scene-position has been changed the vertical position of the
+     * tiles (stored in the member 'tiles') probably must be adjusted if the
+     * tile got completely invisible.
+     */
+    void updateTilesPosition();
+
+    /**
+     * Updates the pixmap of the tile with the content of the textdocument
+     * from the position indicated by the tile.
+     * \return False, if the updating has been failed because of a limited cache.
+     */
+    bool updateTilePixmap(const Tile &tile);
+
+    /**
+     * \return True, if all tiles indicated by the member 'tiles' are cached
+     *         inside QPixmapCache.
+     */
+    bool isTilesCacheValid() const;
+
+    Tile* topTile();
+    Tile* bottomTile();
+
+    QRectF textBoundaries() const;
+
     mutable QTextDocument textDocument;
     bool textDocumentDirty;
     QPoint pixmapOffset;
     int mouseDownCursorPos;
-    QPixmap pixmap;
+
+    int tileHeight;
+    QString tileCacheKey;
+    M::Orientation tileOrientation;
+    QList<Tile> tiles;
 };
 
 class MLabelViewPrivate : public MWidgetViewPrivate
@@ -119,7 +185,6 @@ public:
     // need define this for there are overload functions in controller
     MLabel *controller;
 
-    QString cacheKey;
     MLabelViewSimple *impl;
     QTextOption textOptions;
 };

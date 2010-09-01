@@ -32,7 +32,6 @@
 MLabelViewPrivate::MLabelViewPrivate()
 {
     impl = new MLabelViewSimple(this);
-    cacheKey.sprintf("%p", (void *)(this));
 }
 
 MLabelViewPrivate::~MLabelViewPrivate()
@@ -80,7 +79,6 @@ void MLabelView::applyStyle()
 {
     MWidgetView::applyStyle();
     Q_D(MLabelView);
-    QPixmapCache::remove(d->cacheKey);
     d->impl->markDirty();
     d->impl->applyStyle();
     updateGeometry();
@@ -102,7 +100,6 @@ void MLabelView::resizeEvent(QGraphicsSceneResizeEvent *event)
     MWidgetView::resizeEvent(event);
 
     Q_D(MLabelView);
-    QPixmapCache::remove(d->cacheKey);
     d->impl->markDirty();
 
     QSizeF padding(style()->paddingLeft() + style()->paddingRight(),
@@ -153,7 +150,6 @@ void MLabelView::setupModel()
     }
     d->impl->setupModel();
 
-    QPixmapCache::remove(d->cacheKey);
     d->impl->markDirty();
 }
 
@@ -184,7 +180,6 @@ void MLabelView::updateData(const QList<const char *>& modifications)
 
     if (d->impl->updateData(modifications))
         updateGeometry();
-    QPixmapCache::remove(d->cacheKey);
     d->impl->markDirty();
     update();
 }
@@ -218,6 +213,12 @@ void MLabelView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture
     d->impl->longPressEvent(event,gesture);
 }
 
+void MLabelView::orientationChangeEvent(MOrientationChangeEvent *event)
+{
+    Q_D(MLabelView);
+    MWidgetView::orientationChangeEvent(event);
+    d->impl->orientationChangeEvent(event);
+}
 
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
 

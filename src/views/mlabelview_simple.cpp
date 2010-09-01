@@ -222,6 +222,11 @@ void MLabelViewSimple::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* 
     event->ignore(gesture);
 }
 
+void MLabelViewSimple::orientationChangeEvent(MOrientationChangeEvent *event)
+{
+    Q_UNUSED(event);
+}
+
 void MLabelViewSimple::applyStyle()
 {
 }

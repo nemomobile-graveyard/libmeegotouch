@@ -37,6 +37,9 @@
 #include "mlabel_p.h"
 #include "mlabelhighlighter.h"
 #include "mdebug.h"
+#include "mdeviceprofile.h"
+#include "morientationchangeevent.h"
+#include "morientationtracker.h"
 
 static const QString unicodeEllipsisString = QString("...");//QChar(0x2026);
 
@@ -44,71 +47,55 @@ static const int M_HIGHLIGHT_PROPERTY       = QTextFormat::UserProperty;
 static const int M_HIGHLIGHTER_ID_PROPERTY  = QTextFormat::UserProperty + 1;
 
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
-    MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1)
+    MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
+    tileHeight(-1), tileCacheKey(), tiles()
 {
+    const M::OrientationAngle orientationAngle = MOrientationTracker::instance()->orientationAngle();
+    tileOrientation = (orientationAngle == M::Angle0 || orientationAngle == M::Angle180)
+                      ? M::Landscape : M::Portrait;
     textDocument.setDocumentMargin(0);
+    tileCacheKey.sprintf("%p", static_cast<void*>(this));
 }    
 
 
 MLabelViewRich::~MLabelViewRich()
 {
+    cleanupTiles();
 }
 
-
-QPixmap MLabelViewRich::generatePixmap()
-{
-    ensureDocumentIsReady();
-    updateRichTextEliding();
-    updateHighlighting();
-
-    // Document's rect can be very big if it doesn't fit label's space, however
-    // label as well can be bigger then the amount of text. Intersecting 2 rectangles
-    // will give us smallest visible area, where content should be painted.
-    QRectF paintingRect = QRectF(QPointF(0, 0), textDocument.size()).intersected(viewPrivate->boundingRect());
-
-    //include horizontal padding into the pixmap to make
-    //the text wrap correctly, the vertical padding is added
-    //when drawing the pixmap into the screen
-    const MLabelStyle *style = viewPrivate->style();
-    paintingRect.adjust(0, 0, style->paddingLeft(), 0);
-    if (paintingRect.isEmpty()) {
-        return QPixmap();
-    }
-
-    //draw the textdocument into the pixmap
-    QPixmap pixmap(paintingRect.size().toSize());
-    if (!pixmap.isNull()) {
-        pixmap.fill(Qt::transparent);
-        QPainter painter(&pixmap);
-        painter.translate(style->paddingLeft(), 0);
-        textDocument.drawContents(&painter, paintingRect);
-    }
-
-    return pixmap;
-}
 
 void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
 {
-    if (!QPixmapCache::find(viewPrivate->cacheKey, pixmap)) {
-        pixmap = generatePixmap();
-        QPixmapCache::insert(viewPrivate->cacheKey, pixmap);
+    // Calculate the height of the tile, which represents the screen height
+    // in the landscape mode and the screen width in the portrait mode.
+    if (tileHeight < 0) {
+        const QSize resolution = MDeviceProfile::instance()->resolution();
+        tileHeight = (tileOrientation == M::Landscape) ? resolution.height() : resolution.width();
+        cleanupTiles();
     }
-    if (!pixmap.isNull()) {
-        // There's no way to set document height to QTextDocument. The document height contains
-        // only the area which has text written, therefore being 'compact'. This leads to fact that
-        // the vertical alignment is not working, because the widget can be bigger in size when compared
-        // to the text document. Therefore we need to do the vertical alignment manually in here.
-        // Perform manual alignment for bottom alignment.
-        pixmapOffset = QPoint(0, viewPrivate->style()->paddingTop());
-        if (viewPrivate->textOptions.alignment() & Qt::AlignBottom) {
-            pixmapOffset.setY(viewPrivate->style()->paddingTop() + size.height() - pixmap.size().height());
-        }
-        // Perform manual alignment for vertical center alignment.
-        else if (viewPrivate->textOptions.alignment() & Qt::AlignVCenter) {
-            pixmapOffset.setY(viewPrivate->style()->paddingTop() + ((size.height() / 2) - (pixmap.size().height() / 2)));
-        }
 
-        painter->drawPixmap(pixmapOffset, pixmap);
+    initTiles(QSize(size.width(), tileHeight));
+    updateTilesPosition();
+
+    // There's no way to set document height to QTextDocument. The document height contains
+    // only the area which has text written, therefore being 'compact'. This leads to fact that
+    // the vertical alignment is not working, because the widget can be bigger in size when compared
+    // to the text document. Therefore we need to do the vertical alignment manually in here.
+    // Perform manual alignment for bottom alignment.
+    pixmapOffset = QPoint(0, viewPrivate->style()->paddingTop());
+    if (viewPrivate->textOptions.alignment() & Qt::AlignBottom) {
+        pixmapOffset.setY(viewPrivate->style()->paddingTop() + size.height() - textDocument.size().height());
+    } else if (viewPrivate->textOptions.alignment() & Qt::AlignVCenter) {
+        pixmapOffset.setY(viewPrivate->style()->paddingTop() + ((size.height() / 2) - (textDocument.size().height() / 2)));
+    }
+
+    if (tiles.isEmpty()) {
+        // The QPixmapCache is full. Draw the text directly as fallback.
+        QRectF bounds = textBoundaries();
+        bounds.translate(pixmapOffset);
+        textDocument.drawContents(painter, bounds);
+    } else {
+        drawTiles(painter, pixmapOffset, size);
     }
 }
 
@@ -311,7 +298,7 @@ void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
             event->accept();
             mouseDownCursorPos = cursorPos;
-            QPixmapCache::remove(viewPrivate->cacheKey);
+            cleanupTiles();
             viewPrivate->controller->update();
             viewPrivate->style()->pressFeedback().play();
         }
@@ -326,7 +313,7 @@ void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     mouseDownCursorPos = -1;
-    QPixmapCache::remove(viewPrivate->cacheKey);
+    cleanupTiles();
     viewPrivate->controller->update();
     
     int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
@@ -355,7 +342,7 @@ void MLabelViewRich::cancelEvent(MCancelEvent *event)
     Q_UNUSED(event);
     if (mouseDownCursorPos > 0) {
         mouseDownCursorPos = -1;
-        QPixmapCache::remove(viewPrivate->cacheKey);
+        cleanupTiles();
         viewPrivate->controller->update();
         viewPrivate->style()->cancelFeedback().play();
     }
@@ -382,10 +369,15 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
         }
     }
     mouseDownCursorPos = -1;
-    QPixmapCache::remove(viewPrivate->cacheKey);
+    cleanupTiles();
     viewPrivate->controller->update();
 }
 
+void MLabelViewRich::orientationChangeEvent(MOrientationChangeEvent *event)
+{
+    tileOrientation = event->orientation();
+    tileHeight = -1;
+}
 
 /**
  * Find cursor position of last visible character of document.
@@ -503,4 +495,171 @@ void MLabelViewRich::applyStyle()
 {
     textDocumentDirty = true;
     ensureDocumentIsReady();
+}
+
+void MLabelViewRich::initTiles(const QSize &size)
+{
+    if (dirty || textDocumentDirty) {
+        cleanupTiles();       
+        dirty = false;
+    }
+
+    if (!tiles.isEmpty()) {
+        // The tiles should be cached already, but it might be possible that
+        // the cache got invalid in the meantime. In this case just try
+        // to update the cache again.
+        if (isTilesCacheValid()) {
+            return;
+        }       
+        cleanupTiles();
+    }
+
+    Q_ASSERT(tiles.isEmpty());
+
+    ensureDocumentIsReady();
+    updateRichTextEliding();
+    updateHighlighting();
+
+    int tileCount = 2;
+    QSize tileSize = size;
+
+    const int requiredHeight = textDocument.size().height();
+    if (requiredHeight < tileSize.height()) {
+        tileSize.setHeight(requiredHeight);
+        tileCount = 1;
+    }
+
+    createTiles(tileCount, tileSize);
+}
+
+void MLabelViewRich::createTiles(int count, const QSize &size)
+{
+    Q_ASSERT(tiles.isEmpty());
+
+    int y = 0;
+    for (int i = 0; i < count; ++i) {
+        Tile tile;
+        tiles.append(tile);
+
+        tiles[i].y = y;
+        tiles[i].pixmapCacheKey = tileCacheKey + QString::number(i);
+        tiles[i].size = size;
+
+        if (!updateTilePixmap(tiles[i])) {
+            cleanupTiles();
+            return;
+        }
+
+        y += size.height();
+    }
+}
+
+void MLabelViewRich::cleanupTiles()
+{
+    foreach (const Tile &tile, tiles) {
+        QPixmapCache::remove(tile.pixmapCacheKey);
+    }
+    tiles.clear();
+}
+
+void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos, const QSizeF &size)
+{
+    foreach (const Tile &tile, tiles) {
+        if (tile.y >= 0.0) {
+            QPixmap pixmap;
+            QPixmapCache::find(tile.pixmapCacheKey, pixmap);
+            const QPointF tileOffset(pos.x(), pos.y() + tile.y);
+            const bool clip = tileOffset.y() + pixmap.height() > size.height() ||
+                              tileOffset.y() + pixmap.height() <= 0.0;
+            if (clip) {
+                painter->save();
+                const QRectF clipRect(QPointF(0, 0), size);
+                painter->setClipRect(clipRect, Qt::IntersectClip);
+                painter->drawPixmap(tileOffset, pixmap);
+                painter->restore();
+            } else {
+                painter->drawPixmap(tileOffset, pixmap);
+            }
+        }
+    }
+}
+
+void MLabelViewRich::updateTilesPosition()
+{
+    if (tiles.count() <= 1) {
+        // If only one tile is used, the whole text fits into the tile and no change of the
+        // position is required.
+        return;
+    }
+
+    Q_ASSERT(tiles.count() == 2);
+    Tile *top = topTile();
+    Tile *bottom = bottomTile();
+
+    // Update the tile pixmaps and position, if they got invalid because of a changed scene position
+    const QPointF scenePos = viewPrivate->controller->scenePos();
+    const int sceneY = (tileOrientation == M::Landscape) ? scenePos.y() : scenePos.x();
+    if (sceneY + top->y + tileHeight < 0.0) {
+        // The top tile got invisible, use it as bottom tile for the next iteration
+        top->y = bottom->y + tileHeight;
+        updateTilePixmap(*top);
+    } else if (sceneY + top->y > 0.0) {
+        // The bottom tile got invisible, use it as top tile for the next iteration
+        bottom->y = top->y - tileHeight;
+        if (bottom->y >= 0.0) {
+            updateTilePixmap(*bottom);
+        }
+    }
+}
+
+bool MLabelViewRich::updateTilePixmap(const Tile &tile)
+{
+    QRectF textBounds = textBoundaries();
+    textBounds = textBounds.intersected(QRectF(0, tile.y, tile.size.width(), tile.size.height()));
+    if (!textBounds.isEmpty()) {
+        QPixmap pixmap(tile.size);
+        pixmap.fill(Qt::transparent);
+
+        QPainter painter(&pixmap);
+        painter.translate(viewPrivate->style()->paddingLeft(), -tile.y);
+        textDocument.drawContents(&painter, textBounds);
+
+        return QPixmapCache::insert(tile.pixmapCacheKey, pixmap);
+    }
+    return true;
+}
+
+bool MLabelViewRich::isTilesCacheValid() const
+{
+    QPixmap pixmap;
+    foreach (const Tile &tile, tiles) {
+        if (!QPixmapCache::find(tile.pixmapCacheKey, pixmap)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+MLabelViewRich::Tile* MLabelViewRich::topTile()
+{
+    Q_ASSERT(tiles.count() == 2);
+    return (tiles[0].y <= tiles[1].y) ? &tiles[0] : &tiles[1];
+}
+
+MLabelViewRich::Tile* MLabelViewRich::bottomTile()
+{
+    Q_ASSERT(tiles.count() == 2);
+    return (tiles[0].y <= tiles[1].y) ? &tiles[1] : &tiles[0];
+}
+
+QRectF MLabelViewRich::textBoundaries() const
+{
+    QRectF bounds = QRectF(QPointF(0, 0), textDocument.size()).intersected(viewPrivate->boundingRect());
+
+    // Include horizontal padding into the pixmap to make
+    // the text wrap correctly, the vertical padding is added
+    // when drawing the pixmap into the screen
+    bounds.adjust(0, 0, viewPrivate->style()->paddingLeft(), 0);
+
+    return bounds;
 }
