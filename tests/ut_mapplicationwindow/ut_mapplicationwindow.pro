@@ -5,7 +5,8 @@ TARGET = ut_mapplicationwindow
 INCLUDEPATH += \
     $$MSRCDIR/corelib/core \
     $$MSRCDIR/corelib/scene \
-    $$MSRCDIR/corelib/widgets
+    $$MSRCDIR/corelib/widgets \
+    $$MSRCDIR/corelib/style
 
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
     CONFIG += link_pkgconfig
