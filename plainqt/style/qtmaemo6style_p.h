@@ -65,6 +65,7 @@ public:
                                     const QString &styleClass,
                                     const QString &styleObject = QString(),
                                     const QString &type = QString(),
+                                    const bool hasFocus = false,
                                     const MWidgetController *parent = NULL);
 
     /*!

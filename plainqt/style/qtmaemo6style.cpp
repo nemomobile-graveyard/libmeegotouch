@@ -206,11 +206,16 @@ const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
         const QString &styleClass,
         const QString &styleObject,
         const QString &type,
+        const bool hasFocus,
         const MWidgetController *parent
                                               )
 {
     // Set mode
     QString mode = modeFromState(state);
+
+    // a line edit is selected in respect of its focus
+    if ((styleClass == "MTextEditStyle") && hasFocus)
+        mode = "selected";
 
     const MStyle* style = MTheme::style(styleClass.toLocal8Bit().constData(),
                                         styleObject.toLocal8Bit().constData(),
@@ -1329,14 +1334,16 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
             break;
         }
 
-        if (const QStyleOptionFrame *panel = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
-            const MTextEditStyle *style =
-                static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(panel->state,
-                        "MTextEditStyle"));
-            if(style) {
-                drawBackground(painter, option, panel->rect, style, widget);
-            } else {
-                qCritical() << "Could not load MTextEditStyle for QLineEdit";
+        if (widget) {
+            if (const QStyleOptionFrame *panel = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+                const MTextEditStyle *style =
+                        static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(panel->state,
+                                                                                         "MTextEditStyle", "", "", widget->hasFocus()));
+                if(style) {
+                    drawBackground(painter, option, panel->rect, style, widget);
+                } else {
+                    qCritical() << "Could not load MTextEditStyle for QLineEdit";
+                }
             }
         }
     }
