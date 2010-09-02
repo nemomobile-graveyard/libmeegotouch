@@ -55,6 +55,12 @@ class M_EXPORT MButtonSwitchStyle : public MButtonStyle
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *, sliderImage, SliderImage)
 
     /*!
+        \property MButtonSwitchStyle::sliderImageSelected
+        \brief Image for the sliding backgrouckground when it's selected.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, sliderImageSelected, SliderImageSelected)
+
+    /*!
         \property MButtonSwitchStyle::sliderMask
         \brief Image for masking the sliding background.
     */

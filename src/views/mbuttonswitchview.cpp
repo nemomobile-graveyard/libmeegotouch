@@ -59,9 +59,7 @@ MButtonSwitchViewPrivate::MButtonSwitchViewPrivate() :
     m_thumbPos(),
     m_thumbPosValid(false),
     m_handleAnimation(new HandleAnimation(this)),
-    m_animationSpeed(500),
-    defaultStyle(NULL),
-    selectedStyle(NULL)
+    m_animationSpeed(500)
 {
 }
 
@@ -115,25 +113,36 @@ QPoint MButtonSwitchViewPrivate::thumbEndPos(bool checked) const
 const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
 {
     //create new masked slider image if it has been invalidated
-    if( m_maskedSliderPm.isNull() ) {
+    if (m_maskedSliderPm.isNull()) {
 
         //create the new masked slider image only if the source images are valid
         Q_Q(const MButtonSwitchView);
-        if( !(q->style()->sliderImage()->pixmap()->isNull() ||
-              q->style()->sliderMask()->pixmap()->isNull()) ) {
+        if (!q->style()->sliderImage()->pixmap()->isNull() &&
+            !q->style()->sliderImageSelected()->pixmap()->isNull() &&
+            !q->style()->sliderMask()->pixmap()->isNull() &&
+            q->size().toSize().width() != thumbSize().width()) {
 
             //create image and make it totally transparent
             m_maskedSliderPm = QPixmap(q->size().toSize());
             m_maskedSliderPm.fill(Qt::transparent);
 
             //create the masked slider image using MScalableImage::draw() overload
-            QPainter p(&m_maskedSliderPm);
+            QPainter p;
+
+            // blend backgrounds
+            QPixmap backgroundsBlend = QPixmap(q->size().toSize());
+            backgroundsBlend.fill(Qt::transparent);
+            p.begin(&backgroundsBlend);
             qreal opacity = ((qreal)thumbPos().x() - q->style()->thumbMargin() * 2) / ((qreal)q->size().toSize().width() - thumbSize().width());
             p.setOpacity(1.0 - opacity);
-            q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(0,0), defaultStyle->sliderImage()->pixmap(), &p);
+            p.drawPixmap(QRect(QPoint(), q->size().toSize()), *q->style()->sliderImage()->pixmap());
             p.setOpacity(opacity);
-            q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(0,0), selectedStyle->sliderImage()->pixmap(), &p);
-            //p.setOpacity(1.0);
+            p.drawPixmap(QRect(QPoint(), q->size().toSize()), *q->style()->sliderImageSelected()->pixmap());
+            p.end();
+
+            p.begin(&m_maskedSliderPm);
+            q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(0,0), &backgroundsBlend, &p);
+            p.end();
         }
     }
 
@@ -183,10 +192,6 @@ void MButtonSwitchView::applyStyle()
     //invalidate masked slider image
     Q_D(MButtonSwitchView);
     d->m_maskedSliderPm = QPixmap();
-    style().setModeSelected();
-    d->selectedStyle = style().operator ->();
-    style().setModeDefault();
-    d->defaultStyle = style().operator ->();
 }
 
 void MButtonSwitchView::updateData(const QList<const char *>& modifications)
