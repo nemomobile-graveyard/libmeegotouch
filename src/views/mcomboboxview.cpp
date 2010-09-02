@@ -208,6 +208,7 @@ void MComboBoxView::applyStyle()
     if (d->popuplist && d->popuplist->viewType() != style()->popupListType())
         d->popuplist->setViewType(style()->popupListType());
 
+    d->buttonWidget()->setStyleName(style()->contentItemObjectName());
     d->buttonWidget()->setTitleObjectName(style()->titleObjectName());
     d->buttonWidget()->setSubTitleObjectName(style()->subTitleObjectName());
     d->buttonWidget()->setIconObjectName(style()->iconObjectName());

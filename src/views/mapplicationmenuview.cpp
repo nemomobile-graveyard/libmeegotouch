@@ -218,6 +218,7 @@ MWidget *MApplicationMenuViewPrivate::createWidget(QAction *action)
             widget = requestWidget(widgetAction);
             MComboBox *comboBox = qobject_cast<MComboBox *>(widget);
             if (comboBox) {
+                comboBox->setStyleName("menucomboboxcommand");
                 connect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
             }
             leasedWidgets.insert(action, widget);
