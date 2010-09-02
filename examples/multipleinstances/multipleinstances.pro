@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = multipleInstances
-CONFIG += meegotouch 
+CONFIG += meegotouch
 
 # Input
 SOURCES += main.cpp
@@ -10,4 +10,4 @@ SOURCES += main.cpp
 # libm first:
 INCLUDEPATH += ../../src/include
 QMAKE_LIBDIR += ../../lib/
-LIBS += -lmeegotouch
+LIBS += -lmeegotouchcore
