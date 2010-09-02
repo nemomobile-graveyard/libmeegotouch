@@ -169,7 +169,7 @@ void MBasicListItem::setImageWidget(MImageWidget *imageWidget)
 {
     Q_D(MBasicListItem);
 
-    if (d->image) {
+    if (d->layout() && d->image) {
         for (int i = 0; i < d->layout()->count(); i++) {
             if (d->layout()->itemAt(i) == d->image) {
                 d->layout()->removeAt(i);
@@ -182,10 +182,12 @@ void MBasicListItem::setImageWidget(MImageWidget *imageWidget)
 
     if (imageWidget) {
         d->image = imageWidget;
-        if (d->listItemStyle == MBasicListItem::IconWithTitle)
-            d->layout()->addItem(d->image, 0, 0);
-        else if (d->listItemStyle == MBasicListItem::IconWithTitleAndSubtitle)
-            d->layout()->addItem(d->image, 0, 0, 3, 1);
+        if (d->layout()) {
+            if (d->listItemStyle == MBasicListItem::IconWithTitle)
+                d->layout()->addItem(d->image, 0, 0);
+            else if (d->listItemStyle == MBasicListItem::IconWithTitleAndSubtitle)
+                d->layout()->addItem(d->image, 0, 0, 3, 1);
+        }
     }
 }
 
