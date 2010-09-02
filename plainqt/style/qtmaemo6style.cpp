@@ -1450,7 +1450,6 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
 
 }
 
-
 void QtMaemo6Style::drawControl(ControlElement element,
                                 const QStyleOption *opt,
                                 QPainter *p,
@@ -2386,8 +2385,13 @@ QRect QtMaemo6Style::subElementRect(SubElement element,
                         static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Sunken,
                                 "MTextEditStyle"));
                 QFontMetrics fm(widget->font());
-                if(style)
-                    retRect.adjust(style->paddingLeft(), 0, -style->paddingRight(), 0);
+                if(style) {
+                    const QLineEdit *lineEdit  = qobject_cast<const QLineEdit *>(widget);
+                    if (lineEdit && lineEdit->layoutDirection() == Qt::RightToLeft)
+                        retRect.adjust(style->paddingRight(), 0, -style->paddingLeft(), 0);
+                    else // layoutDirection is Qt::LeftToRight/default
+                         retRect.adjust(style->paddingLeft(), 0, -style->paddingRight(), 0);
+                }
                 if(fm.height() > retRect.height())
                     retRect.setHeight(fm.height());
             }
