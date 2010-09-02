@@ -28,6 +28,7 @@
 
 MPageSwitchSlideAnimationPrivate::MPageSwitchSlideAnimationPrivate()
     : MPageSwitchAnimationPrivate(),
+      sceneWindow(NULL),
       positionNewPageAnimation(NULL),
       positionOldPageAnimation(NULL)
 {
