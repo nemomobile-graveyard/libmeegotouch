@@ -53,6 +53,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mbubbleitembackgroundstyle.h \
     $$STYLE_SRC_DIR/mbubbleitemstyle.h \
     $$STYLE_SRC_DIR/mstatusbarstyle.h \
+    $$STYLE_SRC_DIR/mstylablewidgetstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \
