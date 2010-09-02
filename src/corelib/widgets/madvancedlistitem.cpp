@@ -169,12 +169,13 @@ void MAdvancedListItem::setImageWidget(MImageWidget * imageWidget)
     Q_D(MAdvancedListItem);
 
     if (d->image) {
-        for (int i = 0; i < d->layout()->count(); i++) {
-            if (d->layout()->itemAt(i) == d->image) {
-                d->layout()->removeAt(i);
-                break;
+        if (d->layout())
+            for (int i = 0; i < d->layout()->count(); i++) {
+                if (d->layout()->itemAt(i) == d->image) {
+                    d->layout()->removeAt(i);
+                    break;
+                }
             }
-        }
         delete d->image;
         d->image = NULL;
     }
