@@ -447,12 +447,12 @@ void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
     Q_Q(MWindow);
 
     // Check if window has entered / left the switcher
-    if(q->windowState() == Qt::WindowMinimized) {
+    if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
         isInSwitcher = true;
         emit q->switcherEntered();
     }
-    else if (event->oldState() == Qt::WindowMinimized &&
-             q->windowState() != Qt::WindowMinimized) {
+    else if (event->oldState().testFlag(Qt::WindowMinimized) &&
+             !q->windowState().testFlag(Qt::WindowMinimized)) {
         isInSwitcher = false;
         timeSinceLastPaintInSwitcher.invalidate();
         emit q->switcherExited();
@@ -462,13 +462,14 @@ void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
     if (!minimizedSoftwareSwitch || MApplication::softwareRendering())
         return;
 
-    if (q->windowState() == Qt::WindowMinimized) {
+    if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
         q->setUpdatesEnabled(false);
         initSoftwareViewport();
         // no timer here. otherwise updates are not properly enabled again
         q->setUpdatesEnabled(true);
         MComponentCache::cleanupCache();
-    } else if (event->oldState() == Qt::WindowMinimized && q->windowState() != Qt::WindowMinimized) {
+    } else if (event->oldState().testFlag(Qt::WindowMinimized)
+               && !q->windowState().testFlag(Qt::WindowMinimized)) {
         q->setUpdatesEnabled(false);
         initGLViewport();
         QTimer::singleShot(700, q, SLOT(_q_enablePaintUpdates()));
@@ -1160,7 +1161,7 @@ void MWindow::setVisible(bool visible)
                     this, SLOT(_q_onPixmapRequestsFinished()));
             return;
         } else {
-            if (windowState() != Qt::WindowMinimized && !MApplication::softwareRendering() && d->glWidget == 0) {
+            if (!windowState().testFlag(Qt::WindowMinimized) && !MApplication::softwareRendering() && d->glWidget == 0) {
                 d->initGLViewport();
             }
             d->isLogicallyClosed = false;

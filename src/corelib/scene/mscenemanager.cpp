@@ -1999,7 +1999,7 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
                 MWindow *window = qobject_cast<MWindow *>(viewsList[i]);
 
                 if (window && window->isOnDisplay()) {
-                    if (window->windowState() != Qt::WindowMinimized) {
+                    if (!window->windowState().testFlag(Qt::WindowMinimized)) {
                         managesVisibleWindow = true;
                     }
                     break;
