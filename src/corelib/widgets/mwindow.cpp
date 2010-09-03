@@ -982,7 +982,7 @@ bool MWindow::event(QEvent *event)
                     }
                 }
             }
-        } else if (Qt::Key_P == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
+        } else if (Qt::Key_T == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowPosition(!MApplication::showPosition());
             updateNeeded = true;
         } else if (Qt::Key_S == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
@@ -1040,7 +1040,7 @@ bool MWindow::event(QEvent *event)
             MLocale::setDefault(newLocale);
 
             updateNeeded = true;
-        } else if (Qt::Key_T == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
+        } else if (Qt::Key_P == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             QPixmap screenshot;
             screenshot = QPixmap::grabWindow(winId());
 
