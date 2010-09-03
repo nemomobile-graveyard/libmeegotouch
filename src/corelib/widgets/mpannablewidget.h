@@ -203,6 +203,7 @@ protected:
     virtual void cancelEvent(MCancelEvent *event);
     virtual void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
     virtual void panGestureEvent(QGestureEvent *event, QPanGesture* state);
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     //! \reimp_end
 
 private:

@@ -265,6 +265,7 @@ void MPannableWidget::init()
 
     d->glass->setObjectName("glass");
     grabGesture(Qt::PanGesture);
+    grabGesture(Qt::TapAndHoldGesture);
 
     setPosition(QPointF());
     setRange(QRectF());
@@ -489,6 +490,20 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
     }
 
     event->accept(panGesture);
+}
+
+void MPannableWidget::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* tapAndHoldGesture)
+{
+    Q_D(MPannableWidget);
+
+    if (isEnabled() && d->physics->inMotion()) {
+        // The viewport is still moving,
+        // let's swallow this event and avoid showing
+        // object menu.
+        event->accept(tapAndHoldGesture);
+    } else {
+        event->ignore(tapAndHoldGesture);
+    }
 }
 
 void MPannableWidget::glassTimerEvent(QTimerEvent *event)
