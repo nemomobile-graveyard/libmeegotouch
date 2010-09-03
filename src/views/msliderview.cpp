@@ -1211,6 +1211,8 @@ void MSliderViewPrivate::init(MSlider *controller)
 
     sliderGroove->init(controller);
 
+    sliderGroove->lowerHandleIndicator();
+
     //these are minmax indicators
     minIndicator = new MSliderIndicator(controller);
     minIndicator->setObjectName("MSliderHandleMinMaxIndicator");
@@ -1660,10 +1662,12 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     d->controller->setState(MSliderModel::Released);
 
-    style()->releaseFeedback().play();
+    if (d->controller->isVisible() && d->controller->isOnDisplay()) {
+        style()->releaseFeedback().play();
 
-    if (d->isCollision(event))
-        d->updateValue(event);
+        if (d->isCollision(event))
+            d->updateValue(event);
+    }
 
     if (d->pressTimerId) {
         killTimer(d->pressTimerId);
@@ -1677,13 +1681,31 @@ void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MSliderView);
 
-    if (d->controller->state() == MSliderModel::Pressed) {
-        d->playSliderMoveFeedback(d->updateValue(event));
+    if (d->controller->isVisible() && d->controller->isOnDisplay()) {
+        if (d->controller->state() == MSliderModel::Pressed) {
+            d->playSliderMoveFeedback(d->updateValue(event));
 
-        if (model()->handleLabelVisible())
-            d->sliderGroove->raiseHandleIndicator();
-    } else
-        d->sliderGroove->lowerHandleIndicator();
+            if (model()->handleLabelVisible())
+                d->sliderGroove->raiseHandleIndicator();
+        } else
+            lowerSliderHandleIndicator();
+    } else {
+        if (d->controller->state() == MSliderModel::Pressed) {
+            d->controller->setState(MSliderModel::Released);
+ 
+            style()->cancelFeedback().play();
+ 
+            if (d->pressTimerId) {
+                killTimer(d->pressTimerId);
+                d->pressTimerId = 0;
+            }
+ 
+            if (d->valueAnimation)
+                d->valueAnimation->stop();
+ 
+            d->sliderGroove->lowerHandleIndicator();
+        }
+    }
 }
 
 void MSliderView::timerEvent(QTimerEvent *event)
