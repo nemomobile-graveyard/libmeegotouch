@@ -36,6 +36,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGesture>
+#include <QTextDocument>
 
 #define SAVE_IMAGE(fileName, image) \
     do{ \
@@ -456,62 +457,93 @@ void Ut_MLabel::testPlainTextColor()
 void Ut_MLabel::testSizeHint_data()
 {
     QTest::addColumn<QString>("text");
+    QTest::addColumn<QTextOption::WrapMode>("wrapMode");
+    QTest::addColumn<qreal>("widthConstraint");
 
-    QTest::newRow("plain") << "this is just some plain text";
-    QTest::newRow("rich") << "<b>this is just some rich text.</b>";
+    QStringList texts;
+    texts.append("Short plain text");
+    texts.append("Long plain text that gets wrapped several times within the label boundaries.");
+    texts.append("UnwrappablePlainTextWithoutSpaces");
+    texts.append("Partly wrappable text containing VeryLongUnwrappableWordsThatExceedTheWidth of the label.");
+    texts.append("<b>Some short rich text</b>");
+    texts.append("Long rich text <b>that</b> gets wrapped <i>several times</i> within the label boundaries.");
+
+    typedef QPair<QByteArray, QTextOption::WrapMode> WrapInfo;
+    QList<WrapInfo> wrapModes;
+    wrapModes.append(WrapInfo("NoWrap", QTextOption::NoWrap));
+    wrapModes.append(WrapInfo("WordWrap", QTextOption::WordWrap));
+    wrapModes.append(WrapInfo("ManualWrap", QTextOption::ManualWrap));
+    wrapModes.append(WrapInfo("WrapAnywhere", QTextOption::WrapAnywhere));
+    wrapModes.append(WrapInfo("WrapAtWordBoundaryOrAnywhere", QTextOption::WrapAtWordBoundaryOrAnywhere));
+
+    static QList<QByteArray> descriptions;
+    for (qreal widthConstraint = -1.0; widthConstraint < 90.0; widthConstraint += 30.0) {
+        foreach (const WrapInfo &wrapInfo, wrapModes) {
+            foreach (const QString &text, texts) {
+                const QString descr = text.left(20) + ".../" + wrapInfo.first + "/" + QString::number(widthConstraint);
+                descriptions.append(descr.toAscii());
+                QTest::newRow(descriptions.last().constData()) << text << wrapInfo.second << widthConstraint;
+            }
+        }
+    }
 }
 
 void Ut_MLabel::testSizeHint()
 {
+    QSKIP("Wait until merge-request 356 has been applied", SkipSingle);
+
     QFETCH(QString, text);
+    QFETCH(QTextOption::WrapMode, wrapMode);
+    QFETCH(qreal, widthConstraint);
 
     TestMLabel *label = new TestMLabel();
     label->setText(text);
     label->setGeometry(QRectF(0, 0, 400, 20));
 
     label->setWordWrap(true);
-    {
-        QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize);
-        QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize);
-        QSizeF maxSizeHint = label->sizeHint(Qt::MaximumSize);
+    label->setWrapMode(wrapMode);
+
+    QSizeF constraint(widthConstraint, -1);
+    QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize, constraint);
+    QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize, constraint);
+    QSizeF maxSizeHint = label->sizeHint(Qt::MaximumSize, constraint);
+
+    QVERIFY(minSizeHint.width() <= prefSizeHint.width() || minSizeHint.height() <= prefSizeHint.height());
+    QVERIFY(prefSizeHint.width() <= maxSizeHint.width() || prefSizeHint.height() <= maxSizeHint.height());
+
+    if (widthConstraint > 0.0) {
+        QVERIFY(minSizeHint.width() <= widthConstraint);
+        QVERIFY(prefSizeHint.width() <= widthConstraint);
     }
 
-    {
-        qreal width = 100.0;
-        QSizeF constraint(width, -1);
-        QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize, constraint);
-        QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize, constraint);
-        QSizeF maxSizeHint = label->sizeHint(Qt::MaximumSize, constraint);
-
-        QVERIFY(minSizeHint.width() <= width);
-        QVERIFY(prefSizeHint.width() <= width);
+    // To verify whether the preferred size hint allows to show the whole text,
+    // a local QTextDocument is created as reference.
+    QTextDocument textDocument(text);
+    if (Qt::mightBeRichText(text)) {
+        const QString spanTag("<span>%1</span>");
+        textDocument.setHtml(spanTag.arg(text));
     }
-
-    {
-        qreal width = 80.0;
-        QSizeF constraint(width, -1);
-        QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize, constraint);
-        QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize, constraint);
-        QSizeF maxSizeHint = label->sizeHint(Qt::MaximumSize, constraint);
-
-        QVERIFY(minSizeHint.width() <= width);
-        QVERIFY(prefSizeHint.width() <= width);
+    textDocument.setDocumentMargin(0);
+    textDocument.setDefaultFont(label->font());
+    QTextOption textOption;
+    textOption.setWrapMode(wrapMode);
+    textDocument.setDefaultTextOption(textOption);
+    textDocument.setTextWidth(prefSizeHint.width());
+    if (textDocument.size().width() <= prefSizeHint.width()) {
+        QVERIFY(textDocument.size().height() == prefSizeHint.height());
+    } else {
+        // If the width of the text document is greater than the width
+        // set by QTextDocument::setTextWidth(), then no wrapping has
+        // been done and the width has been exceeded.
+        // However the preferred size hint always respects the maximum
+        // available width (see MLabelViewSimple::resizeEvent()).
+        QVERIFY(textDocument.size().height() <= prefSizeHint.height());
     }
+}
 
-    {
-        qreal width = 50.0;
-        QSizeF constraint(width, -1);
-        QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize, constraint);
-        QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize, constraint);
-        QSizeF maxSizeHint = label->sizeHint(Qt::MaximumSize, constraint);
-
-        QVERIFY(minSizeHint.width() <= width);
-        QVERIFY(prefSizeHint.width() <= width);
-    }
-
-    {
-        QSizeF hint = label->sizeHint((Qt::SizeHint)12345);
-    }
+void Ut_MLabel::testUnknownSizeHint()
+{
+    QSizeF hint = label->sizeHint((Qt::SizeHint)12345);
 }
 
 void Ut_MLabel::testFont_data()

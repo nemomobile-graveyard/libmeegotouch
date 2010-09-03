@@ -58,7 +58,6 @@ private:
 
     //Width of the painted area in the image
     int contentWidth(const QImage& image);
-    
 
 private slots:
     void initTestCase();
@@ -92,6 +91,8 @@ private slots:
 
     void testSizeHint_data();
     void testSizeHint();
+
+    void testUnknownSizeHint();
 
     void testFont_data();
     void testFont();
