@@ -28,24 +28,12 @@
 #include <MLabel>
 #include <MButton>
 #include <MProgressIndicator>
-#include <MStylableWidget>
 #include <MLayout>
 #include <MGridLayoutPolicy>
 #include "mbuttongrouplayoutpolicy_p.h"
 
 #include <QFont>
 #include <QGraphicsLinearLayout>
-
-class MTransparentWidget : public QGraphicsWidget {
-    public:
-    MTransparentWidget() : QGraphicsWidget() {
-        setFlag(QGraphicsItem::ItemHasNoContents, true);
-    }
-    QPainterPath shape() const {
-        QPainterPath path;
-        return path;
-    }
-};
 
 MDialogViewPrivate::MDialogViewPrivate()
     : q_ptr(0),
@@ -159,7 +147,8 @@ void MDialogViewPrivate::createButtonBox()
     buttonBoxLayoutPolicy = new MButtonGroupLayoutPolicy(buttonBoxLayout, Qt::Horizontal);
     buttonBoxLayout->setPolicy(buttonBoxLayoutPolicy);
     buttonBoxLayout->setContentsMargins(0, 0, 0, 0);
-    buttonBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    buttonBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    buttonBoxLayout->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 
     centerLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     buttonBox->setLayout(centerLayout);
@@ -199,7 +188,7 @@ void MDialogViewPrivate::createTitleBar()
     // OBS: Need any simple class whose styling works.
     //      For some reason neither MWidgetController nor MStylableWidget get its
     //      style loaded.
-    titleBar = new MLabel;
+    titleBar = new MDialogInternalBox;
     titleBar->setObjectName("MDialogTitleBar");
     titleBar->setLayout(layout);
     titleBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

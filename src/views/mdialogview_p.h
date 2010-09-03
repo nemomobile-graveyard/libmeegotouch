@@ -21,6 +21,8 @@
 #define MDIALOGVIEW_P_H
 
 #include "mdialogview.h"
+#include "mstylablewidget.h"
+#include "mstylablewidgetstyle.h"
 #include <mnamespace.h>
 #include <QPointer>
 
@@ -141,9 +143,26 @@ public:
     MProgressIndicator *spinner;
     MButton *closeButton;
 
-    MLabel *buttonBox;
+    MWidgetController *buttonBox;
     MLayout *buttonBoxLayout;
     MButtonGroupLayoutPolicy *buttonBoxLayoutPolicy;
+};
+
+class MDialogInternalBox : public MStylableWidget
+{
+private:
+    M_STYLABLE_WIDGET(MStylableWidgetStyle)
+};
+
+class MTransparentWidget : public QGraphicsWidget {
+    public:
+    MTransparentWidget() : QGraphicsWidget() {
+        setFlag(QGraphicsItem::ItemHasNoContents, true);
+    }
+    QPainterPath shape() const {
+        QPainterPath path;
+        return path;
+    }
 };
 
 #endif
