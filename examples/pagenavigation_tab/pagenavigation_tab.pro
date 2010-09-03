@@ -1,8 +1,6 @@
+include( ../common.pri )
+
 TEMPLATE = app
-TARGET = 
-DEPENDPATH += .
-INCLUDEPATH += .
-CONFIG += meegotouch
 
 # Input
 HEADERS += samplewindow.h

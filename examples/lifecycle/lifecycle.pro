@@ -1,6 +1,12 @@
+include( ../common.pri )
+
+LIBS += -lmeegotouchsettings
+LIBS += -lmeegotouchviews
+LIBS += -lmeegotouchextensions
+
 TEMPLATE = app
 TARGET   = lifecycle
-CONFIG  += meegotouch
+
 SOURCES += main.cpp mainpage.cpp anotherpage.cpp containerpage.cpp
 HEADERS += mainpage.h anotherpage.h containerpage.h
 

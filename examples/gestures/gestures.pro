@@ -1,6 +1,6 @@
+include( ../common.pri )
+
 TEMPLATE = app
-TARGET = gestures
-CONFIG += meegotouch
 
 # Input
 SOURCES += \
@@ -11,5 +11,3 @@ HEADERS += \
   mypage.h
 
 RESOURCES = images.qrc
-
-include(../insrc.pri)

@@ -1,8 +1,6 @@
+include( ../common.pri )
+
 TEMPLATE = app
-TARGET = 
-DEPENDPATH += .
-INCLUDEPATH += .
-CONFIG += meegotouch
 
 # Input
 HEADERS += albumpage.h data.h mainpage.h artistpage.h

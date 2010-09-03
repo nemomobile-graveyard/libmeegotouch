@@ -1,6 +1,25 @@
+include( ../common.pri )
+include( ../../mkspecs/common.pri )
+
+# make sure mgen executable is found
+win32 {
+    debug {
+        M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/debug/mgen.exe
+    } else {
+        M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/release/mgen.exe
+    }
+} else {
+    M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/mgen
+}
+
+include( ../../mkspecs/features/meegotouch_mgen.prf )
+
+LIBS += -lmeegotouchsettings
+LIBS += -lmeegotouchviews
+LIBS += -lmeegotouchextensions
+
 TEMPLATE = app
 TARGET = testwidget
-CONFIG += meegotouch 
 
 # Input
 SOURCES += testwidgetmodel.cpp \

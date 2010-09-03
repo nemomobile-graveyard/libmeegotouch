@@ -1,5 +1,6 @@
+include( ../common.pri )
+
 TEMPLATE = app
-CONFIG += meegotouch
 
 # Input
 SOURCES += *.cpp

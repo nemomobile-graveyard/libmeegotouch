@@ -1,7 +1,10 @@
 MROOT = ../../../../..
 include($$MROOT/mkspecs/common.pri)
 
-system(m-servicefwgen -p com.nokia.TextProcessorInterface)
+# for M_DBUS_INTERFACES_DIR
+include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
+
+system($$M_BUILD_TREE/tools/m-servicefwgen -p com.nokia.TextProcessorInterface)
 
 MLIB = $$MROOT/lib
 MSIF = $$MROOT/examples/servicefw
@@ -16,7 +19,7 @@ INCLUDEPATH += \
     $$MSIFINCLUDE \
     $$MROOT/src/include \
 
-DEPENTPATH += $$INCLUDEPATH
+DEPENDPATH += $$INCLUDEPATH
 TARGET = textprocessor
 DESTDIR = $$MSIFLIB
 TEMPLATE = lib
@@ -27,8 +30,6 @@ SOURCES += \
 HEADERS += \
     textprocessorinterfaceproxy.h \
     textprocessorinterface.h \
-
-CONFIG += meegotouch
 
 target.path += $$[QT_INSTALL_LIBS]
 

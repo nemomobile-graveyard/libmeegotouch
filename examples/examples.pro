@@ -3,7 +3,9 @@ SUBDIRS       = \
                 apscanner \
                 calculator \
                 containertest \
+                focus \
                 helloworld \
+                gestures \
                 layout/mflowlayoutpolicy \
                 layout/mfreestylelayoutpolicy \
                 layout/mlinearlayoutpolicy \

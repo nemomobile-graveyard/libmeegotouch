@@ -1,5 +1,6 @@
 usr/bin/widgetsgallery
-usr/share/themes/*
+usr/share/themes/base/meegotouch/icons/*
+usr/share/themes/base/meegotouch/widgetsgallery/*
 usr/share/applications/*widgetsgallery.desktop
 usr/share/applications/hildon/*widgetsgallery.desktop
 usr/share/dbus-1/services/com.nokia.widgetsgallery.service

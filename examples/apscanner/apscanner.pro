@@ -1,8 +1,8 @@
-CONFIG += meegotouch qt link_pkgconfig debug
+include( ../common.pri )
+
+CONFIG += qt link_pkgconfig debug
 TEMPLATE = app
 TARGET = apscanner
-DEPENDPATH += .
-INCLUDEPATH += .
 
 # Input
 SOURCES += main.cpp \
@@ -16,8 +16,3 @@ HEADERS += apscanner.h \
            apitemmodel.h \
            apitemcreator.h
 
-# The following lines are only to allow building the
-# example inside the source tree without installing
-# libm first:
-INCLUDEPATH += ../../src/include
-QMAKE_LIBDIR += ../../lib/

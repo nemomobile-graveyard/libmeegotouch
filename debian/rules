@@ -66,7 +66,7 @@ endif
 
 # Perform a minimal build by setting DEB_BUILD_OPTION=minimal,...
 ifeq (,$(findstring minimal,$(DEB_BUILD_OPTIONS)))
-     OPTIONS += -make "tests benchmarks"
+     OPTIONS += -make "tests benchmarks examples"
 else
      OPTIONS += -minimal
      MAKEDOCS = 0

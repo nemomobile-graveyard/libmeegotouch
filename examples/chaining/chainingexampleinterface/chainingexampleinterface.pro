@@ -1,14 +1,17 @@
+include( ../common.pri )
+
 TEMPLATE = lib
 TARGET   = chainingexampleinterface
-CONFIG += dll meegotouch
 
-system(m-servicefwgen -p com.nokia.ChainingExampleInterface)
+system($${M_BUILD_TREE}/tools/m-servicefwgen -p com.nokia.ChainingExampleInterface)
 
-OBJECTS_DIR = ./.obj
-MOC_DIR     = ./.moc
+SOURCES += \
+    chainingexampleinterfaceproxy.cpp \
+    chainingexampleinterface.cpp
 
-SOURCES += chainingexampleinterfaceproxy.cpp chainingexampleinterface.cpp
-HEADERS += chainingexampleinterface.h chainingexampleinterfaceproxy.h
+HEADERS += \
+    chainingexampleinterface.h \
+    chainingexampleinterfaceproxy.h
 
 QMAKE_CLEAN += *.cpp *.h *~ *.so*
 

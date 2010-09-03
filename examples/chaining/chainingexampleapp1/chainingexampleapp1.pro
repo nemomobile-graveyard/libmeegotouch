@@ -1,17 +1,12 @@
+include( ../common.pri )
+
 TEMPLATE = app
 TARGET = chainingexampleapp1
-CONFIG += meegotouch 
 
-OBJECTS_DIR = ./.obj
-MOC_DIR     = ./.moc
-
-INCLUDEPATH += \
-    ../chainingexampleinterface \
-
+INCLUDEPATH += ../chainingexampleinterface
 DEPENDPATH += $$INCLUDEPATH
 
-LIBS += \
-    ../chainingexampleinterface/libchainingexampleinterface.so \
+LIBS += ../chainingexampleinterface/libchainingexampleinterface.so
 
 # Input
 SOURCES += \
@@ -20,9 +15,6 @@ SOURCES += \
 
 HEADERS += \
     imageviewer.h \
-
-OBJECTS_DIR = .tmp
-MOC_DIR = .tmp
 
 # target installation
 target.path = /usr/bin
@@ -44,4 +36,3 @@ INSTALLS += \
     prf \
     desktop \
     service \
-

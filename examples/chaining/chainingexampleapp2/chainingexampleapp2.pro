@@ -1,18 +1,10 @@
+include( ../common.pri )
+
 TEMPLATE = app
 TARGET = chainingexampleapp2
-CONFIG += meegotouch 
-
-OBJECTS_DIR = ./.obj
-MOC_DIR     = ./.moc
-
-INCLUDEPATH += \
-
-DEPENDPATH += $$INCLUDEPATH
-
-LIBS += \
 
 system(cp ../chainingexampleinterface/com.nokia.ChainingExampleInterface.xml .)
-system(m-servicefwgen -a com.nokia.ChainingExampleInterface)
+system($${M_BUILD_TREE}/tools/m-servicefwgen -a com.nokia.ChainingExampleInterface)
 
 QMAKE_CLEAN += \
     com.nokia.ChainingExampleInterface.xml \

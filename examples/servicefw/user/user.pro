@@ -9,8 +9,6 @@ TARGET     = user
 DESTDIR = $$MSIF/bin
 TEMPLATE   = app
 
-CONFIG += meegotouch
-
 INCLUDEPATH += \
     . \
     $$MSIFINCLUDE \
