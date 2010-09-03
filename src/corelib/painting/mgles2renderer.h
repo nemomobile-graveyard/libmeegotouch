@@ -31,6 +31,8 @@ class MGLES2RendererPrivate;
 class QGLShader;
 class QGLShaderProgram;
 class QPainter;
+class QPixmap;
+class QRect;
 
 //some definitions to enable building without gles2 libraries
 #ifdef QT_OPENGL_LIB

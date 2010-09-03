@@ -122,8 +122,9 @@ QT += \
     network \
     core \
     gui \
-    opengl \
     xml
+
+!simulator: QT += opengl
 
 QMAKE_EXTRA_TARGETS += check
 check.depends = $$DESTDIR/lib$${TARGET}.so.$$VERSION

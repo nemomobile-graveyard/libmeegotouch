@@ -54,8 +54,10 @@ public:
     int initialArgc;
     char **initialArgv;
 
+#ifdef QT_OPENGL_LIB
     typedef QPair<QGLFormat,QGLWidget*> FormatWidgetPair;
     QList<FormatWidgetPair> shareWidgetsCache;
+#endif
 
 #ifdef UNIT_TEST
     friend class Ut_MComponentCache;

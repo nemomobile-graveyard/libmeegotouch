@@ -24,6 +24,7 @@
 #include <mtheme.h>
 
 #include <QPainter>
+#include <QPixmapCache>
 #include <MDebug>
 #include <MComponentData>
 #include <MDebug>

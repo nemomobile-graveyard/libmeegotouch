@@ -180,9 +180,9 @@ void MWindowPrivate::initSoftwareViewport()
 
 void MWindowPrivate::initGLViewport()
 {
-#ifdef QT_OPENGL_LIB
     Q_Q(MWindow);
 
+#ifdef QT_OPENGL_LIB
     mDebug("MWindow") << "Window restored, switching to GL rendering";
 
     bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);

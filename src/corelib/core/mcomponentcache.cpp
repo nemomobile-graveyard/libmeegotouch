@@ -30,8 +30,10 @@
 
 #include "mthemedaemon.h"
 
+#ifdef QT_OPENGL_LIB
 #include <QGLFormat>
 #include <QGLWidget>
+#endif
 
 MComponentCachePrivate * const MComponentCache::d_ptr = new MComponentCachePrivate;
 const int MComponentCachePrivate::ARGV_LIMIT = 32;
@@ -49,14 +51,12 @@ MComponentCachePrivate::MComponentCachePrivate() :
 
 MComponentCachePrivate::~MComponentCachePrivate()
 {
-    if (glWidgetOfmApplicationWindowInstance != 0)
-        delete glWidgetOfmApplicationWindowInstance;
-    if (glWidgetOfOtherWindow != 0)
-        delete glWidgetOfOtherWindow;
-    if (mApplicationWindowInstance != 0)
-        delete mApplicationWindowInstance;
-    if (initialArgv != 0)
-        delete[] initialArgv; 
+#ifdef QT_OPENGL_LIB
+    delete glWidgetOfmApplicationWindowInstance;
+    delete glWidgetOfOtherWindow;
+#endif
+    delete mApplicationWindowInstance;
+    delete[] initialArgv;
 
     MComponentCache::cleanupCache();
 }
@@ -104,6 +104,7 @@ void MComponentCachePrivate::populateForWRTApplication()
 
 QGLWidget* MComponentCachePrivate::createNewGlWidget(const QGLFormat* format)
 {
+#ifdef QT_OPENGL_LIB
     QGLFormat fmt;
 
     if (!format) {
@@ -129,6 +130,10 @@ QGLWidget* MComponentCachePrivate::createNewGlWidget(const QGLFormat* format)
     }
 
     return new QGLWidget(fmt, NULL, shareWidget);
+#else
+    Q_UNUSED(format);
+    return 0;
+#endif
 }
 
 MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
@@ -242,6 +247,7 @@ MApplicationWindow* MComponentCachePrivate::mApplicationWindow()
 
 QGLWidget* MComponentCachePrivate::glWidget(const QGLFormat* format)
 {
+#ifdef QT_OPENGL_LIB
     QGLWidget *returnValue;
     if (cacheBeingPopulated && glWidgetOfmApplicationWindowInstance != 0
         && (!format || glWidgetOfmApplicationWindowInstance->format() == *format))
@@ -257,6 +263,10 @@ QGLWidget* MComponentCachePrivate::glWidget(const QGLFormat* format)
         returnValue = createNewGlWidget(format);
     }
     return returnValue;
+#else
+    Q_UNUSED(format);
+    return 0;
+#endif
 }
 
 MComponentCache::MComponentCache()
@@ -278,11 +288,14 @@ bool MComponentCache::populating()
     return d_ptr->populating();
 }
 
-void MComponentCache::cleanupCache() {
+void MComponentCache::cleanupCache()
+{
+#ifdef QT_OPENGL_LIB
     while (!d_ptr->shareWidgetsCache.isEmpty()) {
         MComponentCachePrivate::FormatWidgetPair pair = d_ptr->shareWidgetsCache.takeFirst();
         delete pair.second;
     }
+#endif
 }
 
 MApplication* MComponentCache::mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
