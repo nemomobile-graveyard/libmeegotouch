@@ -55,6 +55,7 @@
 
 #include <MComponentData>
 #include <MDebug>
+#include <MFeedback>
 #include <MTheme>
 #include <MScalableImage>
 #include <MLabel>
@@ -2391,6 +2392,47 @@ QRect QtMaemo6Style::subElementRect(SubElement element,
     return retRect;
 }
 
+
+const MFeedback * QtMaemo6Style::feedback(const QString& feedbackName, const QWidget *widget)
+{
+    if ( widget ) {
+
+        // First check for dynamic properties
+        if ( widget->dynamicPropertyNames().contains("NoMFeedback") )
+            return 0;
+
+        // Then check for the class type
+
+        QString meegoClassString;
+
+        if(qobject_cast<const QWidget*>(widget))
+            meegoClassString = "MWidgetStyle";
+
+        if(qobject_cast<const QPushButton*>(widget))
+            meegoClassString = "MButtonIconStyle";
+
+        if(qobject_cast<const QComboBox*>(widget))
+            meegoClassString = "MComboBoxStyle";
+
+        if ( meegoClassString.isEmpty() )
+            return 0;
+
+        QStyleOption opt;
+        opt.initFrom(widget);
+
+        const MWidgetStyle *style = static_cast<const MWidgetStyle *>(
+            QtMaemo6StylePrivate::mStyle(opt.state, meegoClassString, ""));
+
+        if ( feedbackName == MFeedbackPlayer::Press )
+            return &(style->pressFeedback());
+        if ( feedbackName == MFeedbackPlayer::Release )
+            return &(style->releaseFeedback());
+        if ( feedbackName == MFeedbackPlayer::Cancel )
+            return &(style->cancelFeedback());
+    }
+
+    return 0;
+}
 
 QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                                       const QStyleOption *option,
