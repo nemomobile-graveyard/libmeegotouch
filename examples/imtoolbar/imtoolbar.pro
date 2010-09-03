@@ -1,6 +1,3 @@
-MROOT = ../..
-include($$MROOT/mkspecs/common.pri)
-
 TEMPLATE = app
 TARGET = imtoolbar
 CONFIG += meegotouch 
@@ -12,8 +9,8 @@ INCLUDEPATH += .
 HEADERS += imtoolbarpage.h
 SOURCES += imtoolbarpage.cpp main.cpp
 
-install.files =  ./toolbar1.xml \
-                ./toolbar2.xml
-install.path = /usr/share/m/imtoolbars/
+install.files = toolbar1.xml \
+                toolbar2.xml
+install.path = /usr/share/meegotouch/imtoolbars/
 INSTALLS += install
 
