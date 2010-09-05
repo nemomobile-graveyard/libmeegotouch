@@ -2113,6 +2113,15 @@ void Ut_MTextEdit::testArrowKeyNavigation_data()
     QTest::addColumn<KeyList>("sequence");
     QTest::addColumn<Qt::KeyboardModifiers>("modifiers");
 
+    // Needed because of fuzzy auto-repeat check in MArrowKeyNavigator:
+    QTest::newRow("init") << ""
+                          << 0
+                          << area.centerTop()
+                          << PositionedTextEditList()
+                          << -1
+                          << (KeyList() << Qt::Key_Space)
+                          << Qt::KeyboardModifiers(Qt::NoModifier);
+
     QTest::newRow("left0") << ""
                            << 0
                            << area.centerTop()
@@ -2258,13 +2267,22 @@ void Ut_MTextEdit::testArrowKeyNavigation_data()
                            << Qt::KeyboardModifiers(Qt::ShiftModifier);
 
     QTest::newRow("ctrl") << ""
-                           << 0
-                           << area.center()
-                           << (PositionedTextEditList() << PositionedTextEdit(
-                                   new MTextEdit, area.centerLeft()))
-                           << -1
-                           << (KeyList() << Qt::Key_Left)
-                           << Qt::KeyboardModifiers(Qt::ControlModifier);
+                          << 0
+                          << area.center()
+                          << (PositionedTextEditList() << PositionedTextEdit(
+                                  new MTextEdit, area.centerLeft()))
+                          << -1
+                          << (KeyList() << Qt::Key_Left)
+                          << Qt::KeyboardModifiers(Qt::ControlModifier);
+
+    QTest::newRow("fn") << ""
+                        << 0
+                        << area.center()
+                        << (PositionedTextEditList() << PositionedTextEdit(
+                                new MTextEdit, area.centerLeft()))
+                        << 0
+                        << (KeyList() << Qt::Key_Left)
+                        << Qt::KeyboardModifiers(Qt::GroupSwitchModifier);
 
     QTest::newRow("auto-repeat") << "stop"
                                  << 0
@@ -2310,9 +2328,9 @@ void Ut_MTextEdit::testArrowKeyNavigation()
         MTextEdit *edit = dynamic_cast<MTextEdit *>(sc.focusItem());
 
         if (edit) {
+            QTest::qWait(200);
             QKeyEvent ev(QEvent::KeyPress, key, modifiers);
             edit->keyPressEvent(&ev);
-            QTest::qWait(0);
         }
     }
 

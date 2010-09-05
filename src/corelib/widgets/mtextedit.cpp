@@ -35,6 +35,10 @@
 #include <QValidator>
 #include <QRegExpValidator>
 #include <QClipboard>
+#include <QGraphicsItem>
+#include <QGraphicsScene>
+#include <QPointer>
+#include <QTime>
 
 #include "mapplication.h"
 #include "mapplicationwindow.h"
@@ -52,6 +56,212 @@
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MTextEdit)
+
+//! Helper class for arrow key navigation for focusable items.
+class MArrowKeyNavigator
+{
+public:
+    MArrowKeyNavigator()
+        : skipNext(false)
+        , haveSeenAnyKeyEvent(false)
+    {
+        time.start();
+    }
+
+    void skipNextRequest()
+    {
+        // Not valid to skip the *very first* request => cant be autorepeat,
+        // by definition:
+        if (haveSeenAnyKeyEvent) {
+            skipNext = true;
+        }
+    }
+
+    MSceneWindow *parentSceneWindow(QGraphicsWidget *widget) const
+    {
+        QGraphicsWidget *parent = widget;
+
+        while (parent) {
+            parent = parent->parentWidget();
+            MSceneWindow *sm = qobject_cast<MSceneWindow *>(parent);
+
+            if (sm) {
+                return sm;
+            }
+        }
+
+        return 0;
+    }
+
+    bool isChildOfSceneWindow(QGraphicsWidget *child,
+                              const MSceneWindow *sceneWindow) const
+    {
+        return (parentSceneWindow(child) == sceneWindow);
+    }
+
+    bool operator()(QGraphicsItem *focusItem, QKeyEvent *ev, QTextCursor *cursor = 0)
+    {
+        // FIXME:
+        // Instead of using QKeyEvent::isAutoRepeat(), we remember the elapsed time to measure auto-repeat.
+        // It is not possible to use key release + storing last key for this (limitation in MInputContext).
+        // Elapsed time for auto-repeat detection needs to be between 10 and 150 ms - the former is a
+        // safeguard against programmtically sending key events (but still allows for some IM-related latency),
+        // the latter is a guess.
+        //
+        // See NB#181350 - autoRepeat in QKeyEvents not set correctly on the application side
+        haveSeenAnyKeyEvent = true;
+        const bool isAutoRepeat = (ev->isAutoRepeat() || (10 < time.elapsed() && time.elapsed() < 150));
+        time.restart();
+        bool result = false;
+
+        if ((ev->modifiers().testFlag(Qt::NoModifier) ||
+            ev->modifiers().testFlag(Qt::GroupSwitchModifier)) &&
+            !isAutoRepeat &&
+            !skipNext) {
+            QGraphicsItem *nextItem = findNextFocusItem(focusItem, ev->key(), cursor);
+
+            if (nextItem) {
+                nextItem->setFocus(Qt::OtherFocusReason);
+                result = true;
+            }
+        }
+
+        skipNext = false;
+        return result;
+    }
+
+private:
+    QTime time;
+    bool skipNext;
+    bool haveSeenAnyKeyEvent;
+
+    // This one is expensive, as it iterates over all scene items!
+    QGraphicsItem *findNextFocusItem(QGraphicsItem *focusItem, int key, QTextCursor *cursor) const
+    {
+        // Initialize cursorAt* to true if no cursor was specified.
+        // Keeps conditions small and clean.
+        const bool cursorAtStart = cursor ? cursor->atStart() : true;
+        const bool cursorAtEnd = cursor ? cursor->atEnd() : true;
+
+        if (!focusItem ||
+            !focusItem->hasFocus() ||
+            !focusItem->scene() ||
+            !isArrowKeyNavigationRequest(key, cursorAtStart, cursorAtEnd)) {
+            return 0;
+        }
+
+        const MSceneWindow *const sm = parentSceneWindow(dynamic_cast<QGraphicsWidget *>(focusItem));
+        QGraphicsItem *nextItem = 0;
+        int distance = INT_MAX;
+
+        const QPoint center = focusItem->mapToScene(focusItem->pos() +
+                                                    focusItem->boundingRect().center())
+                              .toPoint();
+
+        foreach(QGraphicsItem *item, focusItem->scene()->items()) {
+
+            // TODO: Make it work for other focusable items, not just those who accept IM:
+            if (item != focusItem &&
+                item->flags().testFlag(QGraphicsItem::ItemAcceptsInputMethod) &&
+                isChildOfSceneWindow(dynamic_cast<QGraphicsWidget *>(item), sm)) {
+                bool found = false;
+                const QPoint targetCenter = item->mapToScene(item->pos() +
+                                                             item->boundingRect().center())
+                                            .toPoint();
+
+                switch(key) {
+                case Qt::Key_Left:
+                    found = isTargetLeftOf(targetCenter, center);
+                    break;
+
+                case Qt::Key_Up:
+                    found = isTargetTopOf(targetCenter, center);
+                    break;
+
+                case Qt::Key_Right:
+                    found = isTargetRightOf(targetCenter, center);
+                    break;
+
+                case Qt::Key_Down:
+                    found = isTargetBottomOf(targetCenter, center);
+                    break;
+
+                default:
+                    break;
+                }
+
+                if (found) {
+                    const int currentDistance = qMin(distance,
+                                                     (targetCenter - center).manhattanLength());
+
+                    if (currentDistance < distance) {
+                        distance = currentDistance;
+                        nextItem = item;
+                    }
+                }
+            }
+        }
+
+        return nextItem;
+    }
+
+    bool isArrowKeyNavigationRequest(int key, bool cursorAtStart, bool cursorAtEnd) const
+    {
+        return (((key == Qt::Key_Left || key == Qt::Key_Up) && cursorAtStart) ||
+               ((key == Qt::Key_Right || key == Qt::Key_Down) && cursorAtEnd));
+
+    }
+
+    int fallingDiagonalFor(int x, const QPoint &p) const
+    {
+        return (x + p.y() - p.x());
+    }
+
+    int raisingDiagonalFor(int x, const QPoint &p) const
+    {
+        return (-x + p.y() + p.x());
+    }
+
+    bool isTargetLeftOf(const QPoint &target, const QPoint &origin) const
+    {
+        if (target.y() > fallingDiagonalFor(target.x(), origin) &&
+            target.y() < raisingDiagonalFor(target.x(), origin)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool isTargetRightOf(const QPoint &target, const QPoint &origin) const
+    {
+        if (target.y() < fallingDiagonalFor(target.x(), origin) &&
+            target.y() > raisingDiagonalFor(target.x(), origin)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool isTargetTopOf(const QPoint &target, const QPoint &origin) const
+    {
+        if (target.y() < fallingDiagonalFor(target.x(), origin) &&
+            target.y() < raisingDiagonalFor(target.x(), origin)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool isTargetBottomOf(const QPoint &target, const QPoint &origin) const
+    {
+        if (target.y() > fallingDiagonalFor(target.x(), origin) &&
+            target.y() > raisingDiagonalFor(target.x(), origin)) {
+            return true;
+        }
+
+        return false;
+    }
+};
 
 namespace
 {
@@ -75,7 +285,10 @@ namespace
     const QString LineBreakSet = QString("\n%1%2")
         .arg(QChar(0x2028))
         .arg(QChar(0x2029));
+
+    MArrowKeyNavigator gArrowKeyNav;
 }
+
 
 
 /*!
@@ -141,7 +354,6 @@ QTextCursor *MTextEditPrivate::cursor() const
     Q_Q(const MTextEdit);
     return q->model()->cursor();
 }
-
 
 /*!
   * \brief Moves cursor, parameters as in QTextCursor::movePosition().
@@ -1146,13 +1358,16 @@ bool MTextEdit::isSelectionEnabled() const
             (Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard)) != 0;
 }
 
-
 void MTextEdit::keyPressEvent(QKeyEvent *event)
 {
     Q_D(MTextEdit);
 
     // assuming that just moving the cursor or text copying requires some interaction flag
     if (textInteractionFlags() == Qt::NoTextInteraction) {
+        return;
+    }
+
+    if (gArrowKeyNav(this, event, model()->cursor())) {
         return;
     }
 
@@ -1392,6 +1607,12 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
+
+    // Need to tell the MArrowKeyNavigator that the next key event it sees
+    // would come from a different focus item. Otherwise, it could think
+    // of the key event as an auto-repeat
+    // TODO: Replace with better auto-repeat detection, and remove this hack.
+    gArrowKeyNav.skipNextRequest();
 
     d->commitPreedit();
     deselect();

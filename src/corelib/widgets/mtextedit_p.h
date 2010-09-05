@@ -98,14 +98,11 @@ public:
     void addStyleToPreeditStyling(StyleType currentStyleType, bool setValue);
     void insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount);
     void clearUnusedPreeditStyling(int currentListIndex, int currentCount);
-
+    virtual bool copy();
+    QString replaceLineBreaks(QString text, QChar replacement);
     void _q_confirmCompletion(const QString &);
 
-    virtual bool copy();
-
     bool pendingSoftwareInputPanelRequest;
-
-    QString replaceLineBreaks(QString text, QChar replacement);
 
 private:
     const QValidator *validator;
