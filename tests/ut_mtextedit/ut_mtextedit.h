@@ -54,14 +54,13 @@ public:
 private:
     void confirmKeyEventIgnored(MTextEdit *subject, int key, int expectedReturnPressed);
     void constraintTest(MTextEdit *subject, const QString &input, const QString &expectedOutput);
-    void setupSipEnv();
-    void requestSip(Qt::FocusReason fr);
-    void dismissSip(Qt::FocusReason fr);
+    void setupSipEnv(MTextEdit *edit);
+    void requestSip(MTextEdit *edit, Qt::FocusReason fr);
 
     MApplication *m_app;
     MApplicationWindow* m_appWindow;
     std::auto_ptr<MTextEdit> m_subject;
-    std::auto_ptr<SimpleInputContext> m_sic;
+    SimpleInputContext *m_sic;
 
     QStringList validStrings;
     static const QString testString;
@@ -129,7 +128,8 @@ private slots:
 
     void testAutoSipEnabled();
     void testAutoSipDisabled();
-    void testDismissSipOnDestruction();
+    void testCloseSipOnDestruction();
+    void testIgnoreSipIfNotFocused();
 
     void testInsertMultiLineText_data();
     void testInsertMultiLineText();

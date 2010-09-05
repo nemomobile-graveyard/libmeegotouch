@@ -193,6 +193,12 @@ public:
         edit->setZValue(1);
     }
 
+    AlwaysOnDisplayWindow *window()
+    {
+        return &m;
+    }
+
+private:
     AlwaysOnDisplayWindow m;
 };
 
@@ -227,7 +233,7 @@ void Ut_MTextEdit::initTestCase()
 
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
-    m_sic.reset(new SimpleInputContext);
+    m_sic = 0;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     // contains valid strings which should be stored by widget as they are
@@ -2013,47 +2019,84 @@ void Ut_MTextEdit::testSelectByArrowKeys()
 
 void Ut_MTextEdit::testAutoSipEnabled()
 {
-    setupSipEnv();
-    dismissSip(Qt::OtherFocusReason);
+    MTextEdit *subject = new MTextEdit;
+    setupSipEnv(subject);
+
+    AutoActivatedScene sc;
+    subject->setParentItem(sc.window()->box());
+
+    subject->clearFocus();
     QVERIFY(!m_sic->isVisible());
 
-    requestSip(Qt::MouseFocusReason);
+    requestSip(subject, Qt::MouseFocusReason);
     QVERIFY(m_sic->isVisible());
 
-    dismissSip(Qt::MouseFocusReason);
-    requestSip(Qt::OtherFocusReason);
+    subject->clearFocus();
+    requestSip(subject, Qt::OtherFocusReason);
     QVERIFY(m_sic->isVisible());
 }
 
 void Ut_MTextEdit::testAutoSipDisabled()
 {
-    setupSipEnv();
-    dismissSip(Qt::OtherFocusReason);
+    MTextEdit *subject = new MTextEdit;
+    setupSipEnv(subject);
+
+    AutoActivatedScene sc;
+    subject->setParentItem(sc.window()->box());
+
+    subject->clearFocus();
     QVERIFY(!m_sic->isVisible());
 
-    m_subject->setAutoSipEnabled(false);
-    requestSip(Qt::MouseFocusReason);
+    subject->setAutoSipEnabled(false);
+    requestSip(subject, Qt::MouseFocusReason);
     QVERIFY(!m_sic->isVisible());
 
-    requestSip(Qt::OtherFocusReason);
+    requestSip(subject, Qt::OtherFocusReason);
     QVERIFY(!m_sic->isVisible());
 }
 
-void Ut_MTextEdit::testDismissSipOnDestruction()
+void Ut_MTextEdit::testCloseSipOnDestruction()
 {
-    setupSipEnv();
+    MTextEdit *subject = new MTextEdit;
+    setupSipEnv(subject);
 
-    requestSip(Qt::MouseFocusReason);
+    AutoActivatedScene sc;
+    subject->setParentItem(sc.window()->box());
+
+    requestSip(subject, Qt::MouseFocusReason);
     QVERIFY(m_sic->isVisible());
 
-    const bool hasAutoSip = m_subject->isAutoSipEnabled();
-    m_subject.reset();
+    const bool hasAutoSip = subject->isAutoSipEnabled();
+    delete subject;
 
     if (hasAutoSip) {
         QVERIFY(!m_sic->isVisible());
     } else {
+        qWarning() << __PRETTY_FUNCTION__
+                   << "MTextEdit does not use autoSip functionality - cannot complete test.";
         QVERIFY(m_sic->isVisible());
     }
+}
+
+void Ut_MTextEdit::testIgnoreSipIfNotFocused()
+{
+    MTextEdit *subject = new MTextEdit;
+    setupSipEnv(subject);
+
+    AutoActivatedScene sc;
+    subject->setParentItem(sc.window()->box());
+
+    requestSip(subject, Qt::MouseFocusReason);
+    QVERIFY(m_sic->isVisible());
+
+    // Now create another text edit, and destroy it:
+    MTextEdit *edit = new MTextEdit();
+    edit->setParentItem(sc.window()->box());
+    QVERIFY(edit->isAutoSipEnabled());
+    QVERIFY(!edit->hasFocus());
+
+    delete edit;
+    QVERIFY(m_sic->isVisible());
 }
 
 void Ut_MTextEdit::testInsertMultiLineText_data()
@@ -2341,37 +2384,21 @@ void Ut_MTextEdit::testArrowKeyNavigation()
     }
 }
 
-void Ut_MTextEdit::setupSipEnv()
+void Ut_MTextEdit::setupSipEnv(MTextEdit *edit)
 {
-    m_subject->setFlag(QGraphicsItem::ItemAcceptsInputMethod);
-
-    // Guard manually against self-assignment - see QTBUG-10780:
-    if (m_sic.get() != qApp->inputContext()) {
-        qApp->setInputContext(m_sic.get());
-    }
-
-    // Need this setup to assign a valid scene manager to m_subject:
-    MApplicationPage *page = new MApplicationPage;
-    page->setCentralWidget(m_subject.get());
-    m_appWindow->sceneManager()->appearSceneWindowNow(page);
+    edit->setFlag(QGraphicsItem::ItemAcceptsInputMethod);
+    qApp->setInputContext(m_sic = new SimpleInputContext);
 }
 
-void Ut_MTextEdit::requestSip(Qt::FocusReason fr)
+void Ut_MTextEdit::requestSip(MTextEdit *edit, Qt::FocusReason fr)
 {
-    QFocusEvent focusIn(QEvent::FocusIn, fr);
-    m_subject->focusInEvent(&focusIn);
+    edit->setFocus(fr);
 
     // Makes test fragile, as this behaviour (SIP request on mouse release) can easily change:
     if (fr == Qt::MouseFocusReason) {
         QGraphicsSceneMouseEvent mouseRelease(QEvent::GraphicsSceneMouseRelease);
-        m_subject->mouseReleaseEvent(&mouseRelease);
+        edit->mouseReleaseEvent(&mouseRelease);
     }
-}
-
-void Ut_MTextEdit::dismissSip(Qt::FocusReason fr)
-{
-    QFocusEvent focusOut(QEvent::FocusOut, fr);
-    m_subject->focusOutEvent(&focusOut);
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextEdit);
