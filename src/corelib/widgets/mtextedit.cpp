@@ -886,10 +886,13 @@ bool MTextEditPrivate::isPreediting() const
 
 void MTextEditPrivate::requestSip()
 {
+    if (!isValidSipRequest()) {
+        qWarning() << "MTextEditPrivate::requestSip(): "
+                   << "Invalid SIP request - no scene manager found, or not focused!";
+        return;
+    }
+
     Q_Q(MTextEdit);
-    Q_ASSERT_X(q->sceneManager(),
-               "MTextEditPrivate::requestSip()",
-               "Invalid SIP request - no scene manager found!");
 
     q->sceneManager()->requestSoftwareInputPanel(q);
     pendingSoftwareInputPanelRequest = false;
@@ -910,6 +913,34 @@ void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
     } else {
         requestSip();
     }
+}
+
+void MTextEditPrivate::closeSip()
+{
+    if (!isValidSipRequest()) {
+        return;
+    }
+
+    Q_Q(MTextEdit);
+    q->sceneManager()->closeSoftwareInputPanel();
+}
+
+void MTextEditPrivate::closeAutoSip()
+{
+    Q_Q(MTextEdit);
+
+    if (!q->isAutoSipEnabled()) {
+        return;
+    }
+
+    closeSip();
+}
+
+bool MTextEditPrivate::isValidSipRequest()
+{
+    Q_Q(MTextEdit);
+
+    return (q->sceneManager() && q->hasFocus());
 }
 
 /*!
@@ -1241,7 +1272,13 @@ MTextEdit::MTextEdit(MTextEditPrivate *dd, MTextEditModel *model, QGraphicsItem 
 
 MTextEdit::~MTextEdit()
 {
+    Q_D(MTextEdit);
+
+    d->closeAutoSip();
     detachToolbar();
+
+    // TODO: This cannot be right - MTextEdit does not own the model, so we cannot just delete stuff from the model (another text edit could be using them).
+    // Revise after MR#434 has been merged!
 
     // kludge so view doesn't receive memberModified() signals for the deleted pointers
     model()->beginTransaction();

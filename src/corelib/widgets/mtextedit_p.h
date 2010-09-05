@@ -71,6 +71,9 @@ public:
 
     void requestSip();
     void requestAutoSip(Qt::FocusReason fr);
+    void closeSip();
+    void closeAutoSip();
+    bool isValidSipRequest();
 
     void setMode(MTextEditModel::EditMode mode);
 
