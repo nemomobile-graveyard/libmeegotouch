@@ -2,6 +2,9 @@
 
 \section v02043 0.20.43
 
+\subsection New
+- Parent style (object) support for css selectors. E.g.: MListItem#BlackItem MLabelStyle#CommonSingleTitle.
+
 \subsection Deprecated
 - MFeedbackPlayer, use class MFeedback instead.
 - MApplication::feedbackPlayer() and MComponentData::feedbackPlayer(), use class MFeedback instead.

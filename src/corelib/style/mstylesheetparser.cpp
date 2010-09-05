@@ -46,6 +46,7 @@ public:
     MStyleSheetParserPrivate(const MLogicalValues *logicalValues);
 
     QChar read(QFile &stream, const QString &delimeters, QString &out);
+    QChar peek(QFile &stream, const QString &delimeters, QString &out);
 
     bool load(const QString &filename, QHash<QString, QString>* constants);
 
@@ -220,7 +221,8 @@ void outputSelector(MStyleSheetSelector *selector)
                                            << selector->objectName()
                                            << selector->orientation()
                                            << selector->mode()
-                                           << selector->parentName();
+                                           << selector->parentName()
+                                           << selector->parentObjectName();
     MAttributeList::const_iterator attributesEnd = selector->attributes()->constEnd();
     for (MAttributeList::const_iterator i = selector->attributes()->constBegin();
             i != attributesEnd;
@@ -344,6 +346,15 @@ QChar MStyleSheetParserPrivate::read(QFile &stream, const QString &delimeters, Q
 
     // EOF, return zero
     return QChar(0);
+}
+
+QChar MStyleSheetParserPrivate::peek(QFile &stream, const QString &delimeters, QString &out)
+{
+    qint64 startPos = stream.pos();
+    QChar result = read(stream, delimeters, out);
+    stream.seek(startPos);
+
+    return result;
 }
 
 bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QString, QString>* constants)
@@ -643,6 +654,7 @@ void MStyleSheetParserPrivate::setupConsts(QString &value) const
 MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool *error)
 {
     QString parentName,
+            parentObjectName,
             className,
             classType,
             objectName,
@@ -672,13 +684,30 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
                 stream.read(&peek, 1);
                 flags |= MStyleSheetSelector::Child;
             }
+        } else if (result == '#' && className.length() > 0) {
+            // we may have the parent object name
+            // so we peek and check it
+            QString tmp;
+            peek(stream, "{", tmp);
 
+            if (tmp.contains(' '))
+                flags |= MStyleSheetSelector::Child;
         }
 
         if ((result == ' ') || (flags & MStyleSheetSelector::Child)) {
-            result = read(stream, "[#.:{", tmp);
-            if (tmp.length() > 0) {
-                parentName = className;
+            if (result == ' ') {
+                result = read(stream, "[#.:{", tmp);
+                if (tmp.length() > 0) {
+                    parentName = className;
+                    className = tmp;
+                }
+            } else if (result == '#') {
+                result = read(stream, " ", tmp);
+                if (tmp.length() > 0) {
+                    parentName = className;
+                    parentObjectName = tmp;
+                }
+                result = read(stream, "[#.:{", tmp);
                 className = tmp;
             }
         }
@@ -758,6 +787,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
                 cachedString(mode),
                 parsedFileName,
                 cachedString(parentName),
+                parentObjectName,
                 (MStyleSheetSelector::Flags) flags);
 
 //        mDebug("MStyleSheetParserPrivate") << "selector found: " << selector->className() << selector->objectName();
@@ -969,8 +999,8 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
         int file_version;
         stream >> file_version;
 
-        // This is how we read v0.11 files
-        if (file_version == FILE_VERSION(0, 11)) {
+        // This is how we read v0.12 files
+        if (file_version == FILE_VERSION(0, 12)) {
             // read fileinfo
             MStyleSheetParser::StylesheetFileInfo *fileinfo = new MStyleSheetParser::StylesheetFileInfo;
             stream >> fileinfo->time_t;
@@ -1049,7 +1079,7 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
     QDataStream stream(&file);
 
     // write version number (32bit, 16 major, 16 minor)
-    stream << (int) FILE_VERSION(0, 11);
+    stream << (int) FILE_VERSION(0, 12);
     stream << info.time_t;
     stream << info.filename;
     stream << info.includes;
@@ -1082,10 +1112,11 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
 
 MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file, QDataStream &stream)
 {
-    QString parentName, objectName, className, classType, orientation, mode;
+    QString parentName, parentObjectName, objectName, className, classType, orientation, mode;
     int flags;
 
     stream >> parentName;
+    stream >> parentObjectName;
     stream >> flags;
     stream >> objectName;
     stream >> className;
@@ -1107,6 +1138,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file,
             mode,
             file,
             parentName,
+            parentObjectName,
             (MStyleSheetSelector::Flags) flags);
 
 
@@ -1143,6 +1175,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file,
 void MStyleSheetParserPrivate::writeSelector(MStyleSheetSelector *selector, QDataStream &stream)
 {
     stream << selector->parentName();
+    stream << selector->parentObjectName();
     stream << (int) selector->flags();
     stream << selector->objectName();
     stream << selector->className();

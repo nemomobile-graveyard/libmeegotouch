@@ -63,7 +63,7 @@ void Ft_MStyleSheetParser::cleanupTestCase()
     delete app;
 }
 
-const int SELECTOR_COUNT = 23;
+const int SELECTOR_COUNT = 29;
 
 
 void Ft_MStyleSheetParser::test_load()
@@ -322,6 +322,66 @@ void Ft_MStyleSheetParser::test_load()
     QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QString(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributes()->count(), 1);
+
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QString("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QString("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QString(""));
+    QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
+    QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributes()->count(), 1);
+
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QString("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QString(""));
+    QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
+    QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributes()->count(), 1);
+
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QString("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QString("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QString("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QString(""));
+    QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
+    QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributes()->count(), 1);
+
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QString("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QString("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QString("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), QString(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QString(""));
+    QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
+    QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributes()->count(), 1);
+
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QString("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QString("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QString("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), QString("Portrait"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QString(""));
+    QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
+    QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributes()->count(), 1);
+
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QString("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QString("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QString("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QString("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), QString("Portrait"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QString("Active"));
+    QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
+    QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributes()->count(), 1);
 }
 
 void Ft_MStyleSheetParser::test_import()
@@ -550,6 +610,7 @@ void Ft_MStyleSheetParser::test_binary_equality()
 
             // check that selector properties are equal
             QCOMPARE(selector0->parentName(), selector1->parentName());
+            QCOMPARE(selector0->parentObjectName(), selector1->parentObjectName());
             QCOMPARE(selector0->objectName(), selector1->objectName());
             QCOMPARE(selector0->className(), selector1->className());
             QCOMPARE(selector0->orientation(), selector1->orientation());

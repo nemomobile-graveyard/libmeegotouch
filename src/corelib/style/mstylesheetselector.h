@@ -67,6 +67,7 @@ public:
                                    const QString &mode = "",
                                    const QString &filename = "",
                                    const QString &parentName = "",
+                                   const QString &parentObjectName = "",
                                    Flags flags = (Flags) 0);
 
 
@@ -88,6 +89,11 @@ public:
      * \brief Returns the parent class name for this selector.
      */
     QString parentName() const;
+
+    /*!
+     * \brief Returns the parent class object name for this selector.
+     */
+    QString parentObjectName() const;
 
     /*!
      * \brief Returns the object name for this selector.

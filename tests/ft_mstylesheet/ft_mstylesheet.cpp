@@ -360,6 +360,38 @@ void Ft_MStyleSheet::test_parent()
     QCOMPARE(style->attributeColor(), QColor("#000020"));
     MStyleSheet::releaseStyle(style);
 }
+
+void Ft_MStyleSheet::test_parent_stylenames()
+{
+    m_subject->setBinaryFileGenerationEnabled(false);
+
+    // Open test file
+    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QList<const MStyleSheet *> sheets;
+    sheets.append(m_subject);
+
+    TestWidget       w;
+    TestWidget3      w2;
+    TestWidget2      w3;
+
+    w.setStyleName("Specialized");
+    w2.setParentItem(&w);
+    w2.setStyleName("Specialized");
+    w3.setParentItem(&w2);
+
+    TestObjectStyle *style = (TestObjectStyle *) MStyleSheet::style(sheets, "TestObjectStyle", "", "", "", M::Landscape, &w);
+    QCOMPARE(style->attributeColor(), QColor("#000100"));
+    MStyleSheet::releaseStyle(style);
+
+    style = (TestObjectStyle *) MStyleSheet::style(sheets, "TestObjectStyle", "Specialized", "", "", M::Landscape, &w2);
+    QCOMPARE(style->attributeColor(), QColor("#000110"));
+    MStyleSheet::releaseStyle(style);
+
+    style = (TestObjectStyle *) MStyleSheet::style(sheets, "TestObjectStyle", "", "", "", M::Landscape, &w3);
+    QCOMPARE(style->attributeColor(), QColor("#000020"));
+    MStyleSheet::releaseStyle(style);
+}
+
 /*
 void Ft_CSS::test_cache_size()
 {

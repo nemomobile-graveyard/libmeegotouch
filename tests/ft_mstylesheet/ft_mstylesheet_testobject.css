@@ -172,3 +172,13 @@ TestWidget2 TestObjectStyle
     attribute-color: #000020;
 }
 
+TestWidget#Specialized TestObjectStyle 
+{
+    attribute-color: #000100;
+}
+
+TestWidget3#Specialized TestObjectStyle#Specialized
+{
+    attribute-color: #000110;
+}
+

@@ -152,3 +152,33 @@ ParentName > TestObject[icon]#Specialized
 {
     attribute-color: #00ff00;
 }
+
+ParentName#Specialized TestObject 
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized #Specialized
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]#Specialized
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]#Specialized.Portrait
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]#Specialized.Portrait:Active
+{
+    attribute-color: #00ff00;
+}

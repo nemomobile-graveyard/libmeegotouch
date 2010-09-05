@@ -28,6 +28,8 @@ class MStyleSheetSelectorPrivate
 public:
     //! Parent class name, represented by this selector.
     QString parentName;
+    //! Parent class object name, represented by this selector.
+    QString parentObjectName;
     //! Object name, represented by this selector.
     QString objName;
     //! Class name, represented by this selector.

@@ -30,6 +30,7 @@ void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &oth
     objectMode = other.objectMode;
     filename = other.filename;
     parentName = other.parentName;
+    parentObjectName = other.parentObjectName;
     flags = other.flags;
 
     // copy attributes
@@ -59,6 +60,7 @@ MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
         const QString &mode,
         const QString &filename,
         const QString &parentName,
+        const QString &parentObjectName,
         Flags flags) :
     d_ptr(new MStyleSheetSelectorPrivate)
 {
@@ -70,6 +72,7 @@ MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
     d->objectMode = mode;
     d->filename = filename;
     d->parentName = parentName;
+    d->parentObjectName = parentObjectName;
     d->flags = flags;
 }
 
@@ -102,6 +105,12 @@ QString MStyleSheetSelector::parentName() const
 {
     Q_D(const MStyleSheetSelector);
     return d->parentName;
+}
+
+QString MStyleSheetSelector::parentObjectName() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->parentObjectName;
 }
 
 QString MStyleSheetSelector::objectName() const

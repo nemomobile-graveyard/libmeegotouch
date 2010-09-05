@@ -460,7 +460,7 @@ bool MStyleSheetPrivate::isHigherPriority(MOriginContainer *prev,
 
 
 // calculates "order" number (how far is in superclass inheritance tree)
-int MStyleSheetPrivate::orderNumber(const QString &n, const QMetaObject *mobj)
+int MStyleSheetPrivate::orderNumber(const QString &n, const QString &sn, const QString &parentStyleName, const QMetaObject *mobj)
 {
     // Selectors class name may have "." in front of it, remove it
     QStringRef realClassName;
@@ -472,6 +472,11 @@ int MStyleSheetPrivate::orderNumber(const QString &n, const QMetaObject *mobj)
 
     int found = -1;
     int indx = 0;
+
+    // Exit imediately if the style name does not match
+    // parent style (object) name.
+    if (!sn.isEmpty() && sn != parentStyleName)
+        return found;
 
     // Calculate level of inheritance
     const QMetaObject *metaObject = mobj;
@@ -490,12 +495,14 @@ int MStyleSheetPrivate::orderNumber(const QString &n, const QMetaObject *mobj)
 
 bool MStyleSheetPrivate::matchParent(MStyleSheetSelector *selector,
                                      const QMetaObject* mobj,
+                                     const QString &styleName,
                                      unsigned int sceneOrder,
                                      unsigned int &parentPriority)
 {
     parentPriority = MAKE_PRIORITY(0xffff, 0xffff);
+
     // Check whether the parent class derives from the given one
-    int inheritanceOrder = MStyleSheetPrivate::orderNumber(selector->parentName(), mobj);
+    int inheritanceOrder = MStyleSheetPrivate::orderNumber(selector->parentName(), selector->parentObjectName(), styleName, mobj);
     if (inheritanceOrder != -1) {
         parentPriority = MAKE_PRIORITY(sceneOrder, inheritanceOrder);
         return true;
@@ -515,11 +522,19 @@ bool MStyleSheetPrivate::matchParents(MStyleSheetSelector *selector,
         int sceneOrder = 0;
 
         const QGraphicsItem *p = parent;
+        QString parentStyleName;
+        if (parent) {
+            if (!parent->styleName().isNull())
+                parentStyleName = parent->styleName();
+            else
+                parentStyleName = parent->objectName();
+        }
+
         while (p) {
             if (p->isWidget()) {
                 const QGraphicsWidget *widget = static_cast<const QGraphicsWidget *>(p);
 
-                if (matchParent(selector, widget->metaObject(), sceneOrder, parentPriority)) {
+                if (matchParent(selector, widget->metaObject(), parentStyleName, sceneOrder, parentPriority)) {
                     return true;
                 }
             }
@@ -565,7 +580,7 @@ bool MStyleSheetPrivate::match(MStyleSheetSelector *selector,
                 return false;
         } else {
             // Early out: Make sure that we are a class of requested type or it's subclass
-            order = MStyleSheetPrivate::orderNumber(selector->className(), &styleMetaObject);
+            order = MStyleSheetPrivate::orderNumber(selector->className(), "", "", &styleMetaObject);
             if (order == -1)
                 return false;
         }
@@ -614,7 +629,15 @@ void MStyleSheetPrivate::getMatchingSelectorsWithParent(const QList<const MStyle
             foreach(const MStyleSheetParser::StylesheetFileInfo* fi, sheet->fileInfoList()) {
                 unsigned int parentPriority, classPriority;
                 foreach(MStyleSheetSelector* selector, fi->parentSelectors) {
-                    if(matchParent(selector, mobj, sceneOrder, parentPriority) &&
+                    QString parentStyleName;
+                    if (parent) {
+                        if (!parent->styleName().isNull())
+                            parentStyleName = parent->styleName();
+                        else
+                            parentStyleName = parent->objectName();
+                    }
+
+                    if(matchParent(selector, mobj, parentStyleName, sceneOrder, parentPriority) &&
                        match(selector, styleMetaObject, objectName, mode, type, orientation, classPriority)) {
 
                         // match found, store it to results list

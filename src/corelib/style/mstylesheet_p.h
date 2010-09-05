@@ -90,7 +90,7 @@ public:
 
     static bool isHigherPriority(MOriginContainer *prev, MStyleSheetSelector *n, unsigned int classPriority, unsigned int parentPriority);
 
-    static int orderNumber(const QString &n, const QMetaObject *mobj);
+    static int orderNumber(const QString &n, const QString &sn, const QString &parentStyleName, const QMetaObject *mobj);
 
     static bool populateStyle(const QList<const MStyleSheet *>& sheets,
                               MStyle *style,
@@ -103,6 +103,7 @@ public:
 
     static bool matchParent(MStyleSheetSelector *selector,
                             const QMetaObject* mobj,
+                            const QString &styleName,
                             unsigned int sceneOrder,
                             unsigned int &parentPriority);
 
