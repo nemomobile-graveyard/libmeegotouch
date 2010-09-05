@@ -20,12 +20,14 @@
 #ifndef UT_MTEXTEDIT_H
 #define UT_MTEXTEDIT_H
 
+#include <MTextEdit>
+#include <MApplication>
+#include <MApplicationWindow>
+
 #include <QtTest>
 #include <QObject>
+#include <memory>
 
-class MApplication;
-class MApplicationWindow;
-class MTextEdit;
 class SimpleInputContext;
 
 Q_DECLARE_METATYPE(MTextEdit *);
@@ -55,12 +57,11 @@ private:
     void setupSipEnv();
     void requestSip(Qt::FocusReason fr);
     void dismissSip(Qt::FocusReason fr);
-    bool wouldSipBecomeVisible();
 
-        MTextEdit *m_subject;
     MApplication *m_app;
-    MApplicationWindow *m_appWindow;
-    SimpleInputContext *m_sic;
+    MApplicationWindow* m_appWindow;
+    std::auto_ptr<MTextEdit> m_subject;
+    std::auto_ptr<SimpleInputContext> m_sic;
 
     QStringList validStrings;
     static const QString testString;
@@ -128,6 +129,7 @@ private slots:
 
     void testAutoSipEnabled();
     void testAutoSipDisabled();
+    void testDismissSipOnDestruction();
 
     void testInsertMultiLineText_data();
     void testInsertMultiLineText();

@@ -97,12 +97,12 @@ class SimpleInputContext: public QInputContext
 public:
     SimpleInputContext(QObject *parent = 0)
         : QInputContext(parent),
-          m_sipVisible(false)
+          m_visible(false)
     {}
 
-    bool wouldSipBecomeVisible()
+    bool isVisible()
     {
-        return m_sipVisible;
+        return m_visible;
     }
 
     QString identifierName()
@@ -129,11 +129,11 @@ public:
         {
 
         case QEvent::RequestSoftwareInputPanel:
-            m_sipVisible = true;
+            m_visible = true;
             break;
 
         case QEvent::CloseSoftwareInputPanel:
-            m_sipVisible = false;
+            m_visible = false;
             break;
 
         default:
@@ -144,7 +144,7 @@ public:
     }
 
 private:
-    bool m_sipVisible;
+    bool m_visible;
 };
 
 class AlwaysOnDisplayWindow
@@ -227,7 +227,7 @@ void Ut_MTextEdit::initTestCase()
 
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
-    m_sic = new SimpleInputContext(m_app);
+    m_sic.reset(new SimpleInputContext);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     // contains valid strings which should be stored by widget as they are
@@ -242,10 +242,6 @@ void Ut_MTextEdit::initTestCase()
  */
 void Ut_MTextEdit::cleanupTestCase()
 {
-    delete m_appWindow;
-    m_appWindow = 0;
-    delete m_app;
-    m_app = 0;
 }
 
 
@@ -254,7 +250,7 @@ void Ut_MTextEdit::cleanupTestCase()
  */
 void Ut_MTextEdit::init()
 {
-    m_subject = new MTextEdit(MTextEditModel::MultiLine, "");
+    m_subject.reset(new MTextEdit(MTextEditModel::MultiLine, ""));
 }
 
 
@@ -263,8 +259,6 @@ void Ut_MTextEdit::init()
  */
 void Ut_MTextEdit::cleanup()
 {
-    delete m_subject;
-    m_subject = 0;
 }
 
 
@@ -322,7 +316,7 @@ void Ut_MTextEdit::testSetText()
 {
     QTextDocument *document = m_subject->document();
     QSignalSpy mySpy(document, SIGNAL(contentsChanged()));
-    QSignalSpy mySpy2(m_subject, SIGNAL(textChanged()));
+    QSignalSpy mySpy2(m_subject.get(), SIGNAL(textChanged()));
 
     for (int i = 0; i < validStrings.size(); i++) {
         QString setText = validStrings.at(i);
@@ -356,8 +350,8 @@ void Ut_MTextEdit::testInsert()
 {
     QTextDocument *document = m_subject->document();
     QSignalSpy mySpy(document, SIGNAL(contentsChanged()));
-    QSignalSpy mySpy2(m_subject, SIGNAL(textChanged()));
-    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QSignalSpy mySpy2(m_subject.get(), SIGNAL(textChanged()));
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
 
     QString appendedString = QString();
 
@@ -489,13 +483,12 @@ void Ut_MTextEdit::testFocusInEvent()
 void Ut_MTextEdit::testFocusOutEvent()
 {
     // Set up spies on gainedFocus and lostFocus signals
-    QSignalSpy spyGainedFocus(m_subject, SIGNAL(gainedFocus(Qt::FocusReason)));
-    QSignalSpy spyLostFocus(m_subject, SIGNAL(lostFocus(Qt::FocusReason)));
+    QSignalSpy spyGainedFocus(m_subject.get(), SIGNAL(gainedFocus(Qt::FocusReason)));
+    QSignalSpy spyLostFocus(m_subject.get(), SIGNAL(lostFocus(Qt::FocusReason)));
 
     // Perform test
-    QFocusEvent *focusEvent = new QFocusEvent(QEvent::FocusOut);
-    m_subject->focusOutEvent(focusEvent);
-    delete focusEvent;
+    QFocusEvent focusEvent(QEvent::FocusOut);
+    m_subject->focusOutEvent(&focusEvent);
 
     // Check that the signals were emitted and their parameters were correct
     QCOMPARE(spyGainedFocus.count(), 0);
@@ -509,13 +502,12 @@ void Ut_MTextEdit::testFocusOutEvent()
 void Ut_MTextEdit::testInputMethodEvent()
 {
     QString testString2 = testString + '2';
-    QSignalSpy spy(m_subject, SIGNAL(textChanged()));
+    QSignalSpy spy(m_subject.get(), SIGNAL(textChanged()));
     QVERIFY(spy.isValid());
 
-    QInputMethodEvent *event = new QInputMethodEvent(testString,
-            QList<QInputMethodEvent::Attribute>());
-    m_subject->inputMethodEvent(event);
-    delete event;
+    QInputMethodEvent event(testString, QList<QInputMethodEvent::Attribute>());
+    m_subject->inputMethodEvent(&event);
+
     QCOMPARE(m_subject->text(), testString);
     QCOMPARE(spy.count(), 1);
     spy.clear();
@@ -523,10 +515,10 @@ void Ut_MTextEdit::testInputMethodEvent()
     // Confirm that widget moved to pre-editing mode
     QVERIFY(m_subject->mode() == MTextEditModel::EditModeActive);
 
-    event = new QInputMethodEvent;
-    event->setCommitString(testString2);
-    m_subject->inputMethodEvent(event);
-    delete event;
+    QInputMethodEvent commitEvent;
+    commitEvent.setCommitString(testString2);
+    m_subject->inputMethodEvent(&commitEvent);
+
     QCOMPARE(m_subject->text(), testString2);
     QCOMPARE(spy.count(), 1);
     spy.clear();
@@ -720,34 +712,30 @@ void Ut_MTextEdit::testMaxLength()
     QFETCH(int, maxLength);
     QFETCH(QString, text);
 
-    const int initialMaxLength = m_subject->maxLength();
-
-    if (m_subject->lineMode() != lineMode) {
-        delete m_subject;
-        m_subject = new MTextEdit(lineMode);
-    }
+    MTextEdit subject(lineMode);
+    const int initialMaxLength = subject.maxLength();
 
     for (int i = 0; i < 3; ++i) {
-        m_subject->clear();
-        m_subject->setMaxLength(initialMaxLength);
+        subject.clear();
+        subject.setMaxLength(initialMaxLength);
 
         QString expectedText = text;
 
         // Test in three different ways:
         if (i == 0) {
             // Set limitation afterwards.
-            m_subject->setText(text);
-            m_subject->setMaxLength(maxLength);
+            subject.setText(text);
+            subject.setMaxLength(maxLength);
         } else if (i == 1) {
             // Set limitation prior setting text.
-            m_subject->setMaxLength(maxLength);
-            m_subject->setText(text);
+            subject.setMaxLength(maxLength);
+            subject.setText(text);
         } else {
             // Check maxLength with insert().
-            m_subject->setMaxLength(maxLength);
-            m_subject->setText(testString); // Set some initial diibadaaba text.
+            subject.setMaxLength(maxLength);
+            subject.setText(testString); // Set some initial diibadaaba text.
             // Special case where text is inserted at the end.
-            m_subject->insert(text);
+            subject.insert(text);
 
             expectedText.prepend(testString);
         }
@@ -763,15 +751,15 @@ void Ut_MTextEdit::testMaxLength()
         }
 
         // Check that correct value was stored.
-        QCOMPARE(m_subject->maxLength(), maxLength);
+        QCOMPARE(subject.maxLength(), maxLength);
 
         // This is what should happen to the text.
         expectedText.truncate(maxLength);
 
-        QCOMPARE(m_subject->text(), expectedText);
+        QCOMPARE(subject.text(), expectedText);
 
         // Length must always be equal or less than maxLength.
-        QVERIFY(m_subject->text().length() <= maxLength);
+        QVERIFY(subject.text().length() <= maxLength);
     }
 }
 
@@ -1002,7 +990,7 @@ void Ut_MTextEdit::testSelection()
         Qt::LinksAccessibleByKeyboard,
     };
 
-    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
     const char *text = "a bcd e";
     m_subject->setText(text);
 
@@ -1030,7 +1018,7 @@ void Ut_MTextEdit::testSelection()
         m_subject->setText(text);
         m_subject->setSelection(1, 1, true);
 
-        QSignalSpy updatedSpy(m_subject, SIGNAL(selectionChanged()));
+        QSignalSpy updatedSpy(m_subject.get(), SIGNAL(selectionChanged()));
         m_subject->setSelection(2, 1, true);
         QCOMPARE(updatedSpy.count(), 1);
         QVERIFY(m_subject->mode() == MTextEditModel::EditModeSelect);
@@ -1168,21 +1156,20 @@ void Ut_MTextEdit::testPrompt()
             << "Multi\nline\nprompt";
 
     foreach(M::TextContentType contentType, contentTypes) {
-        delete m_subject;
-        m_subject = new MTextEdit(MTextEditModel::MultiLine, "");
-        m_subject->setContentType(contentType);
+        MTextEdit subject(MTextEditModel::MultiLine);
+        subject.setContentType(contentType);
 
-        model = m_subject->model();
+        model = subject.model();
         QVERIFY(model != 0);
         //Verify default prompt
-        QVERIFY(m_subject->prompt() == QString());
+        QVERIFY(subject.prompt().isEmpty());
 
         //qDebug() << "Multi line text entry; content type:" << contentType;
         for (int n = 0; n < prompts.count(); ++n) {
             //qDebug() << "Test step #" << n << "prompt:" << prompts.at(n);
 
-            m_subject->setPrompt(prompts.at(n));
-            QVERIFY(m_subject->prompt() == prompts.at(n));
+            subject.setPrompt(prompts.at(n));
+            QVERIFY(subject.prompt() == prompts.at(n));
         }
     }
 
@@ -1191,28 +1178,27 @@ void Ut_MTextEdit::testPrompt()
     prompts.removeLast();
 
     foreach(M::TextContentType contentType, contentTypes) {
-        delete m_subject;
-        m_subject = new MTextEdit(MTextEditModel::SingleLine, "");
-        m_subject->setContentType(contentType);
+        MTextEdit subject(MTextEditModel::SingleLine);
+        subject.setContentType(contentType);
 
-        model = m_subject->model();
+        model = subject.model();
         QVERIFY(model != 0);
         //Verify default prompt
-        QVERIFY(m_subject->prompt() == QString());
+        QVERIFY(subject.prompt().isEmpty());
 
         //qDebug() << "Single line text entry; content type:" << contentType;
         for (int n = 0; n < prompts.count(); ++n) {
             //qDebug() << "Test step #" << n << "prompt:" << prompts.at(n);
 
-            m_subject->setPrompt(prompts.at(n));
-            QVERIFY(m_subject->prompt() == prompts.at(n));
+            subject.setPrompt(prompts.at(n));
+            QVERIFY(subject.prompt() == prompts.at(n));
         }
     }
 }
 
 void Ut_MTextEdit::testValidator()
 {
-    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
     // first test validation with builtin validator
     ReplacerValidator replacer;
     m_subject->setValidator(&replacer);
@@ -1286,8 +1272,8 @@ void Ut_MTextEdit::testClear()
 
 void Ut_MTextEdit::testCursorPositionChanged()
 {
-    QSignalSpy cursorSpy(m_subject, SIGNAL(cursorPositionChanged()));
-    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QSignalSpy cursorSpy(m_subject.get(), SIGNAL(cursorPositionChanged()));
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
     int expectedCallCount = 0;
 
     // test that setting text moves cursor to back
@@ -1338,6 +1324,7 @@ void Ut_MTextEdit::testCopyPaste()
     m_subject->setSelection(1, 1, true);
     //something should be copied
     m_subject->copy();
+
     QCOMPARE(clipboard->text(), QString("123"));
 
     m_subject->selectAll();
@@ -1749,17 +1736,16 @@ void Ut_MTextEdit::testReturnKeyPressed()
     QFETCH(QValidator::State, validatorState);
     QFETCH(int, expectedSignals);
 
-    delete m_subject;
-    m_subject = new MTextEdit(lineMode, "");
+    MTextEdit subject(lineMode);
 
     SimpleValidator validator;
     QKeyEvent event(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "\n");
-    QSignalSpy returnPressedSpy(m_subject, SIGNAL(returnPressed()));
+    QSignalSpy returnPressedSpy(&subject, SIGNAL(returnPressed()));
 
     validator.state = validatorState;
-    m_subject->setValidator(&validator);
+    subject.setValidator(&validator);
 
-    m_subject->keyPressEvent(&event);
+    subject.keyPressEvent(&event);
     QCOMPARE(returnPressedSpy.count(), expectedSignals);
 }
 
@@ -1804,16 +1790,15 @@ void Ut_MTextEdit::testLineBreakSent()
     QFETCH(M::TextContentType, contentType);
     QFETCH(int, expectedSignals);
 
-    delete m_subject;
-    m_subject = new MTextEdit(lineMode, "");
-    m_subject->setContentType(contentType);
+    MTextEdit subject(lineMode);
+    subject.setContentType(contentType);
 
-    QSignalSpy returnPressedSpy(m_subject, SIGNAL(returnPressed()));
+    QSignalSpy returnPressedSpy(&subject, SIGNAL(returnPressed()));
     QVERIFY(returnPressedSpy.isValid());
 
     QInputMethodEvent event(preeditString, QList<QInputMethodEvent::Attribute>());
     event.setCommitString(commitString);
-    m_subject->inputMethodEvent(&event);
+    subject.inputMethodEvent(&event);
 
     QCOMPARE(returnPressedSpy.count(), expectedSignals);
 }
@@ -1846,34 +1831,33 @@ void Ut_MTextEdit::testCommitLineBreakAfterPreedit()
     QFETCH(QString, commitString);
     QFETCH(int, expectedSignals);
 
-    delete m_subject;
-    m_subject = new MTextEdit(MTextEditModel::SingleLine, "");
+    MTextEdit subject;
 
     SimpleValidator validator;
     validator.state = QValidator::Acceptable;
-    m_subject->setValidator(&validator);
+    subject.setValidator(&validator);
 
-    QSignalSpy returnPressedSpy(m_subject, SIGNAL(returnPressed()));
+    QSignalSpy returnPressedSpy(&subject, SIGNAL(returnPressed()));
     QVERIFY(returnPressedSpy.isValid());
 
     QInputMethodEvent preeditEvent("123\n", QList<QInputMethodEvent::Attribute>());
-    m_subject->inputMethodEvent(&preeditEvent);
+    subject.inputMethodEvent(&preeditEvent);
     QCOMPARE(returnPressedSpy.count(), 0);
 
     validator.state = validatorState;
 
     QInputMethodEvent commitEvent("", QList<QInputMethodEvent::Attribute>());
     commitEvent.setCommitString(commitString);
-    m_subject->inputMethodEvent(&commitEvent);
+    subject.inputMethodEvent(&commitEvent);
     QCOMPARE(returnPressedSpy.count(), expectedSignals);
 }
 
 void Ut_MTextEdit::testArrowKeys()
 {
-    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
     QVERIFY(copyAvailableSpy.isValid());
 
-    QSignalSpy selectionChangedSpy(m_subject, SIGNAL(selectionChanged()));
+    QSignalSpy selectionChangedSpy(m_subject.get(), SIGNAL(selectionChanged()));
     QVERIFY(selectionChangedSpy.isValid());
 
     QString line(QString(1000, '1'));
@@ -1924,10 +1908,10 @@ void Ut_MTextEdit::testArrowKeys()
 
 void Ut_MTextEdit::testSelectByArrowKeys()
 {
-    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
     QVERIFY(copyAvailableSpy.isValid());
 
-    QSignalSpy selectionChangedSpy(m_subject, SIGNAL(selectionChanged()));
+    QSignalSpy selectionChangedSpy(m_subject.get(), SIGNAL(selectionChanged()));
     QVERIFY(selectionChangedSpy.isValid());
 
     QString line(QString("123 ") + QString(1000, '4'));
@@ -2031,28 +2015,45 @@ void Ut_MTextEdit::testAutoSipEnabled()
 {
     setupSipEnv();
     dismissSip(Qt::OtherFocusReason);
-    QVERIFY(!m_sic->wouldSipBecomeVisible());
+    QVERIFY(!m_sic->isVisible());
 
     requestSip(Qt::MouseFocusReason);
-    QVERIFY(m_sic->wouldSipBecomeVisible());
+    QVERIFY(m_sic->isVisible());
 
     dismissSip(Qt::MouseFocusReason);
     requestSip(Qt::OtherFocusReason);
-    QVERIFY(m_sic->wouldSipBecomeVisible());
+    QVERIFY(m_sic->isVisible());
 }
 
 void Ut_MTextEdit::testAutoSipDisabled()
 {
     setupSipEnv();
     dismissSip(Qt::OtherFocusReason);
-    QVERIFY(!m_sic->wouldSipBecomeVisible());
+    QVERIFY(!m_sic->isVisible());
 
     m_subject->setAutoSipEnabled(false);
     requestSip(Qt::MouseFocusReason);
-    QVERIFY(!m_sic->wouldSipBecomeVisible());
+    QVERIFY(!m_sic->isVisible());
 
     requestSip(Qt::OtherFocusReason);
-    QVERIFY(!m_sic->wouldSipBecomeVisible());
+    QVERIFY(!m_sic->isVisible());
+}
+
+void Ut_MTextEdit::testDismissSipOnDestruction()
+{
+    setupSipEnv();
+
+    requestSip(Qt::MouseFocusReason);
+    QVERIFY(m_sic->isVisible());
+
+    const bool hasAutoSip = m_subject->isAutoSipEnabled();
+    m_subject.reset();
+
+    if (hasAutoSip) {
+        QVERIFY(!m_sic->isVisible());
+    } else {
+        QVERIFY(m_sic->isVisible());
+    }
 }
 
 void Ut_MTextEdit::testInsertMultiLineText_data()
@@ -2075,30 +2076,29 @@ void Ut_MTextEdit::testInsertMultiLineText()
     QFETCH(QString, expectedText);
     QFETCH(QString, expectedText2);
 
-    delete m_subject;
-    m_subject = new MTextEdit(lineMode);
+    MTextEdit subject(lineMode);
 
     QClipboard *clipboard = QApplication::clipboard();
     QVERIFY(clipboard != 0);
 
     clipboard->setText(text);
-    m_subject->paste();
-    QCOMPARE(m_subject->text(), expectedText);
+    subject.paste();
+    QCOMPARE(subject.text(), expectedText);
 
-    m_subject->clear();
+    subject.clear();
     QInputMethodEvent preeditEvent(text, QList<QInputMethodEvent::Attribute>());
-    m_subject->inputMethodEvent(&preeditEvent);
-    QCOMPARE(m_subject->text(), expectedText2);
+    subject.inputMethodEvent(&preeditEvent);
+    QCOMPARE(subject.text(), expectedText2);
 
-    m_subject->clear();
+    subject.clear();
     QInputMethodEvent commitEvent("", QList<QInputMethodEvent::Attribute>());
     commitEvent.setCommitString(text);
-    m_subject->inputMethodEvent(&preeditEvent);
-    QCOMPARE(m_subject->text(), expectedText2);
+    subject.inputMethodEvent(&preeditEvent);
+    QCOMPARE(subject.text(), expectedText2);
 
-    m_subject->clear();
-    m_subject->insert(text);
-    QCOMPARE(m_subject->text(), expectedText);
+    subject.clear();
+    subject.insert(text);
+    QCOMPARE(subject.text(), expectedText);
 }
 
 void Ut_MTextEdit::testArrowKeyNavigation_data()
@@ -2346,13 +2346,13 @@ void Ut_MTextEdit::setupSipEnv()
     m_subject->setFlag(QGraphicsItem::ItemAcceptsInputMethod);
 
     // Guard manually against self-assignment - see QTBUG-10780:
-    if (m_sic != qApp->inputContext()) {
-        qApp->setInputContext(m_sic);
+    if (m_sic.get() != qApp->inputContext()) {
+        qApp->setInputContext(m_sic.get());
     }
 
     // Need this setup to assign a valid scene manager to m_subject:
     MApplicationPage *page = new MApplicationPage;
-    page->setCentralWidget(m_subject);
+    page->setCentralWidget(m_subject.get());
     m_appWindow->sceneManager()->appearSceneWindowNow(page);
 }
 
