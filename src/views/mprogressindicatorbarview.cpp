@@ -547,6 +547,8 @@ void MProgressIndicatorBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
     d->resetBarComposition();
     d->setupBarBody();
 
+    d->updateBarPosition();
+
     if(model()->unknownDuration()) {
         d->compositeBarForUnknownDuration();
         d->buildAnimationCache();
