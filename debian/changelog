@@ -1,35 +1,27 @@
-libmeegotouch (0.20.38~1) unstable; urgency=low
+libmeegotouch (0.20.38-1) unstable; urgency=low
 
-  * Fixes: NB#183435 -  plainQt - selected text entry is not highlighted
+  * Fixes: NB#183435 - plainQt - selected text entry is not highlighted
   * Fixes: NB#182543 - plainQt - Weird haptic feedback
   * Fixes: NB#186250 - List item object menu gets displayed when list is long tapped while it is scrolling
-  * Fixes: NB#182500 -  Slider can be adjusted in minimized window
+  * Fixes: NB#182500 - Slider can be adjusted in minimized window
   * Fixes: NB#188497 - Crash observed in switch button.
   * Fixes: NB#182145 - MLabel does not display long rich text properly
   * Fixes: NB#180385 - COREWEB: /usr/bin/mthemedaemon 'MThemeDaemonServer::clientDisconnected MThemeDaemonServer::qt_metacall QMetaObject::metacall QMetaObject::activate'
   * Fixes: NB#185601 - Full screen mode timeout is less than 5 seconds.
-  * Fixes: NB#188861 -  MCompleterListOptions is shown behind VKB
-  * Fixes: NB#183987 -  Scene is not refreshed by showing or hiding slider handle label
-  * Fixes: NB#170703, Support unformatNumber() in MLocale
-  * Fixes: NB#187034 MLabel don't render rich text correctly, it displayed the rich text as "..."
-  * Fixes: NB#185828 -  COREWEB: /usr/bin/applauncherd.bin 'qt_message_output ~QDebug ~LeakedStyles __cxa_finalize'
+  * Fixes: NB#188861 - MCompleterListOptions is shown behind VKB
+  * Fixes: NB#183987 - Scene is not refreshed by showing or hiding slider handle label
+  * Fixes: NB#170703 - Support unformatNumber() in MLocale
+  * Fixes: NB#187034 - MLabel don't render rich text correctly, it displayed the rich text as "..."
+  * Fixes: NB#185828 - COREWEB: /usr/bin/applauncherd.bin 'qt_message_output ~QDebug ~LeakedStyles __cxa_finalize'
   * Fixes: NB#183931 - MApplicationMenu strange behavior when more than 7 actions are added.
-  * Fixes: NB#164207 -  long press in MLabel
-  * Fixes: NB#182384 MLabel doesn't render rich text correctly
-  * Fixes: NB#188758 -  MProgressIndicatorBarView paints even when invisible
-  * Fixes: NB#187550  -  Object menu is not closed when tapped on home icon
+  * Fixes: NB#164207 - long press in MLabel
+  * Fixes: NB#182384 - MLabel doesn't render rich text correctly
+  * Fixes: NB#188758 - MProgressIndicatorBarView paints even when invisible
+  * Fixes: NB#187550 - Object menu is not closed when tapped on home icon
   * Fixes: MB#5585 - Handle label doesn't show when moving a slider handle.
   * Fixes: NB#188708 - "No such signal MSceneWindow::escapeModeChanged()" when closing application.
   * Fixes: MB#6081 - compile failure when disable ICU
-  * Fixes: NB#188079 -  MProgressIndicator setUnknownDuration() function call crashes the application
-  * Fixes: NB#186493 -  Images are not displayed in Grid widget from WidgetsGallery
-  * Fixes: NB#185180 -  mgen does not support defines to export symbols of classes except M_EXPORT
-  * Fixes: NB#186801 - View menu items are not aligned properly and green bar is shown for share button.
-  * Fixes: NB#185884 - Don't check for d->isMenuOpen before calling d->menu->disappear()
-  * Fixes: NB#185241 -  (empty_image_crop) MImageWidget: setCrop() does not work with empty images
-  * Fixes: NB#182221 - Item object menu gets displayed when fast scroll indicator area is long tapped.
-  * Fixes: NB#184785 - Move meegotouch-boostable QMake specification to libmeegotouch-dev
-  * Fixes: NB#187275 - removeButton in MDialog deletes the MButtonModel in contrast to documentation
+  * Fixes: NB#188079 - MProgressIndicator setUnknownDuration() function call crashes the application
 
  -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 06 Sep 2010 10:15:48 +0300
 
