@@ -1,6 +1,5 @@
 libmeegotouch (0.20.38-1) unstable; urgency=low
 
-  * Fixes: NB#186688 MLabel - fix sizeHint to reuse the staticText for the sizehint
   * Fixes: NB#183435 -  plainQt - selected text entry is not highlighted
   * Fixes: NB#182543 - plainQt - Weird haptic feedback
   * Fixes: NB#186250 - List item object menu gets displayed when list is long tapped while it is scrolling
