@@ -34,10 +34,16 @@
 
 #ifdef HAVE_GCONF
 static QString languageGConfValue = "en";
-
+static QString targetGConfValue = "Default";
 QVariant MGConfItem::value() const
 {
-    return languageGConfValue;
+    QString rv = "";
+    if( key() == "/meegotouch/i18n/language" )
+        rv = languageGConfValue;
+    else if(key() == "/meegotouch/target/name")
+        rv = targetGConfValue;
+    qWarning() << "MGConfItem::value()" << key() << rv;
+    return rv;
 }
 #endif
 
