@@ -141,6 +141,11 @@ void MContentItem::click()
     emit clicked();
 }
 
+void MContentItem::longTap(const QPointF &pos)
+{
+    emit longTapped(pos);
+}
+
 QVariant MContentItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     if (change == QGraphicsItem::ItemSelectedHasChanged) {

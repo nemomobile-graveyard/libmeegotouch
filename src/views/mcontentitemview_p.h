@@ -62,6 +62,8 @@ public:
     void applyStyle();
     void refreshStyleMode();
 
+    void longTap(const QPointF &pos);
+
     typedef const MScalableImage*(MContentItemStyle::*backgroundFunc)() const;
 
     static void initBackgroundFunctions();

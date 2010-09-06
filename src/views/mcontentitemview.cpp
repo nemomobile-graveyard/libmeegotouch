@@ -25,6 +25,7 @@
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsSceneEvent>
+#include <QTapAndHoldGesture>
 #include <QTimer>
 
 #include "mcontentitem.h"
@@ -378,6 +379,11 @@ void MContentItemViewPrivate::refreshStyleMode()
     q->update();
 }
 
+void MContentItemViewPrivate::longTap(const QPointF &pos)
+{
+    controller->longTap(pos);
+}
+
 MContentItemView::MContentItemView(MContentItem *controller)
     : MWidgetView(* new MContentItemViewPrivate, controller)
 {
@@ -524,6 +530,16 @@ void MContentItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         d->down = pressed;
         d->refreshStyleMode();
     }
+}
+
+void MContentItemView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    Q_D(MContentItemView);
+
+    if (gesture->state() == Qt::GestureFinished)
+        d->longTap(gesture->position());
+
+    event->accept(gesture);
 }
 
 void MContentItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

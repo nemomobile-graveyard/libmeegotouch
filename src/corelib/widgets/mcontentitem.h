@@ -321,11 +321,22 @@ public Q_SLOTS:
       */
     void click();
 
+    /*!
+      \brief Makes the content item to send longTapped signal.
+      \param pos The position of the tap.
+    */
+    void longTap(const QPointF &pos);
+
 Q_SIGNALS:
     /*!
       \brief This signal is emitted when content item is pressed.
       */
     void clicked();
+
+    /*!
+      \brief The signal is emitted when the content item has been tapped and holded.
+    */
+    void longTapped(const QPointF &pos);
 
 protected:
     //! \internal

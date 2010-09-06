@@ -66,6 +66,8 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     //! \reimp_end
 
     void setSelected(bool selected);
