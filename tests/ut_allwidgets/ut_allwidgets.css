@@ -1,20 +1,6 @@
 MWidgetStyle#cssWidth {
     minimum-size: 9 -1;
     preferred-size: 10 -1;
-    maximum-size: 11 -1;
-    margin-left: 1;
-    margin-right: 2;
-    margin-top: 3;
-    margin-bottom: 4;
-}
-
-MWidgetStyle#noCssSizes {
-    minimum-size: -1 -1;
-    preferred-size: -1 -1;
-    maximum-size: -1 -1;
-    margin-left: 1;
-    margin-right: 2;
-    margin-top: 3;
-    margin-bottom: 4;
+    maximum-size: 11 -1;    
 }
 

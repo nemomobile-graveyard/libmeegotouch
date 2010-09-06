@@ -47,12 +47,9 @@ private slots:
 
     void testAllWidgets_data();
     void testAllWidgets();
-    void testSizeHints_data();
-    void testSizeHints();
-    void testMemoryLeaks_data();
-    void testMemoryLeaks();
 
 private:
+    bool checkSubWidgets(MWidgetController * parentWidget, QList< QPointer<QGraphicsObject> > subwidgets);
     void debugDisplayPixmap(const QPixmap &pixmap, int seconds);
     void debugDisplayImage(const QImage &image, int seconds);
     bool paintAndTestWidget(QGraphicsWidget *widget, bool strict);
