@@ -1,4 +1,4 @@
-libmeegotouch (0.20.38-1) unstable; urgency=low
+libmeegotouch (0.20.38~1) unstable; urgency=low
 
   * Fixes: NB#183435 -  plainQt - selected text entry is not highlighted
   * Fixes: NB#182543 - plainQt - Weird haptic feedback
@@ -18,9 +18,8 @@ libmeegotouch (0.20.38-1) unstable; urgency=low
   * Fixes: NB#182384 MLabel doesn't render rich text correctly
   * Fixes: NB#188758 -  MProgressIndicatorBarView paints even when invisible
   * Fixes: NB#187550  -  Object menu is not closed when tapped on home icon
-  * Fixes: NB#5585 - Handle label doesn't show when moving a slider handle.
+  * Fixes: MB#5585 - Handle label doesn't show when moving a slider handle.
   * Fixes: NB#188708 - "No such signal MSceneWindow::escapeModeChanged()" when closing application.
-  * Fixes: NB#5585 - Handle label doesn't show when moving a slider handle.
   * Fixes: MB#6081 - compile failure when disable ICU
   * Fixes: NB#188079 -  MProgressIndicator setUnknownDuration() function call crashes the application
   * Fixes: NB#186493 -  Images are not displayed in Grid widget from WidgetsGallery
