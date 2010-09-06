@@ -39,7 +39,6 @@ public:
     QSizeF imageDataSize() const;
 
     void deepCopy(const MImageWidget &);
-    void init();
 
     const QPixmap *pixmap;
     mutable QPixmap imagePlaceHolder;

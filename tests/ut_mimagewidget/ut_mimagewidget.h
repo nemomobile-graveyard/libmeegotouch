@@ -36,9 +36,6 @@ private slots:
     void cleanupTestCase();
 
     void testConstructor();
-    void testSizeHint_data();
-    void testSizeHint();
-
     void testImageDataSize();
 
     void testSetZoomFactor_data();

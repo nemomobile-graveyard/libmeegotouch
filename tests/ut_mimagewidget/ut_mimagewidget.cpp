@@ -43,7 +43,6 @@ void Ut_MImageWidget::initTestCase()
     static char *app_name[1] = { (char *) "./ut_mimagewidget" };
     static int argc = 0;
     app = new MApplication(argc, app_name);
-    MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mimagewidget.css");
     m_subject = new MImageWidget(&img);
     QVERIFY(m_subject != 0);
 }
@@ -84,48 +83,6 @@ void Ut_MImageWidget::testConstructor()
 
     delete source;
     delete myImage;
-}
-
-void Ut_MImageWidget::testSizeHint_data()
-{
-    QTest::addColumn<QString>("fname");
-
-    QTest::newRow("png") << qApp->applicationDirPath() + "/ut_mimagewidget-test.png";
-}
-
-void Ut_MImageWidget::testSizeHint()
-{
-    QFETCH(QString, fname);
-
-    QImage img(fname);
-    m_subject = new MImageWidget(&img);
-
-    QSize imgSize;
-    QPixmap pixmap(fname);
-    imgSize = pixmap.size();
-
-    const QPixmap *p = m_subject->pixmap();
-    QCOMPARE(imgSize, p->size());
-    QCOMPARE(imgSize, m_subject->imageSize());
-    QCOMPARE(p->size().width(), p->size().height()); //The unit test assumes the pixmap is square, just to make things easier
-
-    // test the height for width size hint
-    QCOMPARE(m_subject->preferredSize(), QSizeF(p->size()));
-    QVERIFY(m_subject->sizePolicy().hasHeightForWidth());
-    QCOMPARE(m_subject->effectiveSizeHint(Qt::PreferredSize, QSizeF(40,-1)), QSizeF(40,40));
-    m_subject->setPreferredWidth(40); //Make sure the aspect ratio is maintained
-    QCOMPARE(m_subject->preferredSize(), QSizeF(40,40));
-    m_subject->setPreferredWidth(-1);
-    // Check that the CSS overrides the sizehint width and height and we maintain aspect ratio
-    m_subject->setObjectName("width10");
-    QCOMPARE(m_subject->preferredSize(), QSizeF(10,10));
-    m_subject->setObjectName("height10");
-    QCOMPARE(m_subject->preferredSize(), QSizeF(10,10));
-    m_subject->setObjectName("topmargin5");
-    QCOMPARE(m_subject->preferredSize(), p->size()+QSizeF(0,5));
-
-    delete m_subject;
-    m_subject = 0;
 }
 
 void Ut_MImageWidget::testImageDataSize()

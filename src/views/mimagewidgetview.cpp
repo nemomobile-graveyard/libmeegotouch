@@ -332,15 +332,23 @@ QSizeF MImageWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 {
     Q_D(const MImageWidgetView);
 
-    if(which == Qt::MinimumSize || which == Qt::MaximumSize)
-        return QSizeF(-1,-1);
+    QSizeF s = MWidgetView::sizeHint(which, constraint);
+    if(s.isValid())
+        return s;
 
-    QSizeF size = d->controller->imageSize();
-    if(constraint.width() >= 0)
-        size.scale(QSizeF(constraint.width(), QWIDGETSIZE_MAX), Qt::KeepAspectRatio);
-    else if(constraint.height() >= 0)
-        size.scale(QSizeF(QWIDGETSIZE_MAX, constraint.height()), Qt::KeepAspectRatio);
-    return size;
+    QSizeF s2;
+    if(which == Qt::MinimumSize)
+        s2 = QSizeF(0,0);
+    else if(which == Qt::MaximumSize)
+        s2 = QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+    else
+        s2 = d->controller->imageSize();
+
+    if(s.height() < 0)
+        s.setHeight(s2.height());
+    if(s.width() < 0)
+        s.setWidth(s2.width());
+    return s;
 }
 
 QSize MImageWidgetView::imageDataSize()
