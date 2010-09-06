@@ -51,7 +51,7 @@ public:
     virtual void applyStyle();
     Qt::TextFlag wrap() const;
     void initializeStaticText();
-
+    
     // Helper method for initializeStaticText(): Adjusts the member variable
     // 'textOffset' dependent on the used alignment, as QStaticText does not support
     // text alignment within a bounding rectangle.
@@ -61,6 +61,7 @@ public:
 
     MLabelViewPrivate *viewPrivate;
 
+    QSizeF preferredSize;
     QPoint textOffset;
     QRectF paintingRect;
     bool dirty;

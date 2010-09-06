@@ -25,7 +25,6 @@
 class MLabelPrivate : public MWidgetControllerPrivate
 {
     Q_DECLARE_PUBLIC(MLabel)
-    void init();
 };
 
 #endif
