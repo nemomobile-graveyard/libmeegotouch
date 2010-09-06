@@ -41,6 +41,8 @@ public: // public to inherited classes
     void setEnabled(bool enabled);
     void setSelected(bool selected);
 
+    static void reloadChildItemsStyles(QGraphicsItem* item);
+
 //private: // public only to MWidgetView
     MWidgetController     *controller;
 private:// public only to MWidgetView

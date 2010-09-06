@@ -89,6 +89,7 @@
     void setMode##MODE();
 
 class MWidgetController;
+class MWidgetViewPrivate;
 
 class M_EXPORT MStyle : public QObject
 {
@@ -125,6 +126,7 @@ protected:
     QString currentMode() const;
 
     friend class MTheme;
+    friend class MWidgetViewPrivate; // it needs to call reloadStyles()
 };
 
 #endif

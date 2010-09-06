@@ -391,6 +391,26 @@ void MWidgetView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     event->ignore();
 }
 
+void MWidgetViewPrivate::reloadChildItemsStyles(QGraphicsItem* item)
+{
+    foreach(QGraphicsItem* child, item->childItems()) {
+        reloadChildItemsStyles(child);
+
+        if (!child->isWidget()) {
+            continue;
+        }
+        QGraphicsWidget *graphicsWidget = static_cast<QGraphicsWidget*>(child);
+        MWidgetController *widget = qobject_cast<MWidgetController*>(graphicsWidget);
+
+        MWidgetView *view = widget ? const_cast<MWidgetView*>(widget->view()) : NULL;
+        if (view) {
+            MWidgetStyleContainer& style = view->style();
+            style.reloadStyles();
+            view->applyStyle();
+        }
+    }
+}
+
 void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     Q_D(MWidgetView);
@@ -409,6 +429,8 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
         }
 
         style().setParent(parent);
+        d->reloadChildItemsStyles(d->controller);
+        applyStyle();
     }
 }
 void MWidgetView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
