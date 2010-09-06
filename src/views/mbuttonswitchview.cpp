@@ -117,7 +117,9 @@ const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
 
         //create the new masked slider image only if the source images are valid
         Q_Q(const MButtonSwitchView);
-        if (!q->style()->sliderImage()->pixmap()->isNull() &&
+        if (q->style()->sliderImage() &&
+            q->style()->sliderImageSelected() &&
+            !q->style()->sliderImage()->pixmap()->isNull() &&
             !q->style()->sliderImageSelected()->pixmap()->isNull() &&
             !q->style()->sliderMask()->pixmap()->isNull() &&
             q->size().toSize().width() != thumbSize().width()) {
