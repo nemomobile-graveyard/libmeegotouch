@@ -224,10 +224,12 @@ MPannableWidget* MPannableWidgetPrivate::parentPannableWidget()
 
     QGraphicsWidget* parentWidget = q->parentWidget();
     MPannableWidget* parentPannableWidget = 0;
-    while(parentWidget && !parentPannableWidget) {
-        parentPannableWidget = qobject_cast<MPannableWidget*>(parentWidget);
-        if (parentPannableWidget && !parentPannableWidget->isEnabled())
-            parentPannableWidget = 0;
+
+    // Looking for topmost enabled pannablewidget.
+    while(parentWidget) {
+        MPannableWidget* candidate = qobject_cast<MPannableWidget*>(parentWidget);
+        if (candidate && candidate->isEnabled())
+            parentPannableWidget = candidate;
         parentWidget = parentWidget->parentWidget();
     }
 
