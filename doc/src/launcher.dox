@@ -1,15 +1,22 @@
 /*! \page launcher How to write launchable applications
 
+Launcher enables starting up various types of applications very
+fast. Launcher uses different <em>booster</em> for each of the
+application types. This page concentrates on launching MeeGo Touch
+applications with the MeeGo Touch booster, but also other boosters are
+briefly introduced at the bottom of the page.
+
 \section intro Introduction
 
-In order to be started with the launcher, an application needs to
+In order to be started up with the launcher, an application needs to
 
-\li use the MApplication instance from MComponentCache
+\li take MApplication and MApplicationWindow instances into use from
+MComponentCache
 
 \li be compiled and linked to a position independent binary
 (executable or library)
 
-\li started with the \c invoker command instead of executing the
+\li be started with the \c invoker command instead of executing the
 executable file.
 
 In the following we will explain how the launcher works and then
@@ -18,30 +25,37 @@ explain how to fulfill the requirements above.
 
 \section howitworks How the launcher works
 
-Applauncherd is a daemon that helps launching applications faster. It
-preloads MeeGo Touch and Qt dynamically linked libraries and makes
-some initializations before loading application binaries and running
-them.
+Applauncherd daemon helps launching applications faster by two
+means. First, it preloads a number of libraries, including MeeGo Touch
+and Qt libraries. This allows faster loading of application binaries
+when needed. Second, it initializes certain components before an
+application is loaded and makes the results available to applications
+when they start.
 
-Applauncherd forks the will-be-application process a.k.a booster
-before knowing which application is going to be launched next. Booster
-processes do application-type specific initializations, for instance
-the MeeGo Touch booster instantiates an MApplication object and stores
-it to MComponentCache. Then the booster process waits for a connection
-from the \c invoker.
+More technically, applauncherd forks a will-be-application process,
+a.k.a booster, before knowing which application is going to be
+launched next. Booster processes do application-type specific
+initializations. For instance, the MeeGo Touch booster instantiates
+MApplication and MApplicationWindow objects and stores them to
+MComponentCache. Then the booster process waits for a connection from
+the \c invoker.
 
-An application of the boosted application type is invoked with the \c
-invoker. The invoker sends the booster process the name of the
-application binary and data on its running environment. This triggers
-the booster process to load the application binary, to initialize its
-environment, and finally to call its \c main() function.
+An application is invoked with the \c invoker. The invoker sends the
+booster process the name and location of the application binary and
+data on its running environment. This triggers the booster process to
+load the binary, to initialize its environment, and finally to call
+the \c main() function in the binary.
+
+Boosted MeeGo Touch applications pick up and use the already
+instantiated MApplication and MApplicationWindow objects from
+MComponentCache instead of creating new ones.
 
 
 \section source Source code modifications
 
-MApplication instance must be picked up from the MComponentCache. For
-further acceleration, MApplicationWindow can be taken from the cache
-as well. That is, in your main program you should have:
+MApplication instance must be taken from the MComponentCache. It is
+recommended to take MApplicationWindow from the cache as well. That
+is, the main program should have:
 
 \code
 MApplication* application = MComponentCache::mApplication(argc, argv);
@@ -49,14 +63,16 @@ MApplicationWindow* window = MComponentCache::mApplicationWindow();
 \endcode
 
 Note that applications that use MComponentCache can be run without the
-launcher/invoker as well.
+launcher/invoker as well. In that case MComponentCache will
+instantiate new MApplication and MApplicationWindow objects on the
+fly.
 
-The launcher needs to find the symbol \c main in an application
-binary in order to start executing the application. However,
-unnecessary symbols in the application binary cause unnecessary
-overhead, so the recommended flags for compiling for the launcher make
-symbols hidden by default. The main function must be explicitly
-exported as follows:
+The launcher needs to find the symbol \c main in an application binary
+in order to start executing the application. However, unnecessary
+symbols in the application binary cause unnecessary overhead, so the
+recommended flags for compiling for the launcher make symbols hidden
+by default. When the flags are used, the main function must be
+explicitly exported. It can be done as follows:
 
 \code
 #include <MExport>
@@ -74,7 +90,7 @@ Binaries intended to be run with applauncherd should be compiled with
 \c -fPIC option to produce position independent code. In order to
 produce a position independent executable, \c -pie option and \c
 -rdynamic options can be used in linking. This allows the result to be
-executed traditionally and with the launcher.
+executed both traditionally and with the invoker.
 
 To improve linking and load times of shared object libraries the size
 of dynamic export table it is encouraged to hide the unnecessary
@@ -116,8 +132,8 @@ It's also possible to manually define the following variables
 in the .pro file:
 
 \code
-  QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
-  QMAKE_LFLAGS += -pie -rdynamic
+QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+QMAKE_LFLAGS += -pie -rdynamic
 \endcode
 
 It is then up to you to modify the .pro file if there are changes to the
@@ -128,35 +144,35 @@ required compiler and linker flags.
 You can utilize \c pkg-config in CMake by including \c FindPkgConfig in \c CMakeLists.txt:
 
 \code
-  include(FindPkgConfig) 
+include(FindPkgConfig) 
 \endcode
 
 To obtain the compiler and linker flags, add the following lines:
 
 \code
-  pkg_check_modules(MEEGOTOUCH_BOOSTABLE REQUIRED meegotouch-boostable)
-  add_definitions(${MEEGOTOUCH_BOOSTABLE_CFLAGS})
-  link_libraries(${MEEGOTOUCH_BOOSTABLE_LDFLAGS})
+pkg_check_modules(MEEGOTOUCH_BOOSTABLE REQUIRED meegotouch-boostable)
+add_definitions(${MEEGOTOUCH_BOOSTABLE_CFLAGS})
+link_libraries(${MEEGOTOUCH_BOOSTABLE_LDFLAGS})
 \endcode  
 
 In order to install the application binary with a \c .launch filename extension, use the following
 line:
 
 \code
-  install(PROGRAMS myapplication DESTINATION /usr/bin RENAME myapplication.launch)
+install(PROGRAMS myapplication DESTINATION /usr/bin RENAME myapplication.launch)
 \endcode
 
 If you do not want to use \c pkg-config for some reason, you can manually add the
 compiler and linker flags like this:
 
 \code
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fvisibility=hidden -fvisibility-inlines-hidden")
-  set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fvisibility=hidden -fvisibility-inlines-hidden")
+set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic")
 \endcode  
 
 Again, this requires you to update the flags if something changes.
 
-\subsection pkgconfig Obtaining Flags with pkg-config
+\subsection pkgconfig Obtaining flags with pkg-config
 
 The package \c libmeegotouch-dev provides the necessary files for
 \c pkg-config to get the appropriate compiler and linker flags.
@@ -230,8 +246,8 @@ execute your binaries directly, you have to use \c invoker.
 Setting correct linker flags with QMake:
 
 \code
-  QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
-  QMAKE_LFLAGS += -shared -rdynamic
+QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+QMAKE_LFLAGS += -shared -rdynamic
 \endcode
 
 Remember to remove the CONFIG += meegotouch-boostable, if used.
@@ -309,7 +325,21 @@ docs for more information about command options usage):
 \li  \c -remote-theme
 \li  \c -fullscreen
 \li  \c -disable-m-input-context
-\li QCoreApplication::arguments() - does not work. Use argc and argv received by the main function directly.
+
+QCoreApplication::arguments() returns a QStringList that containing at
+most 32 arguments and drops the rest. The full list of arguments is
+accessible through \c argc and \c argv. They can be converted into
+QStringList similar to returned by QCoreApplication::arguments() as
+follows:
+
+\code
+M_EXPORT int main(int argc, char **argv) {
+    QStringList arguments;
+    for (int a = 0; a < argc; ++a) {
+        arguments << QString::fromLocal8Bit(argv[a]);
+    }
+    ...
+\endcode
 
 \subsection issue-watchdog Issues with scripts, D-Bus, and process monitoring
 
@@ -320,13 +350,15 @@ solving these issues invoker accepts parameters
 
 \li \c --delay \c 10 invoker waits for 10 seconds before terminating
 \li \c --wait-term invoker will not terminate until the launched
-application process terminates.
+application terminates. Invoker will return the same return value as
+the application did, or it will be terminated by the same signal as
+the launched application. Signals received by the invoker process will
+be forwarded to the launched application.
 
 
 \section sample Sample MeeGo Touch launchable application
 
 \code
-
 #include <MApplication>
 #include <MApplicationPage>
 #include <MApplicationWindow>
@@ -346,8 +378,21 @@ M_EXPORT int main(int argc, char ** argv)
   
     return app->exec();
 }
+\endcode
 
-\endcode  
+\section otherboosters Other boosters
+
+Warning: behavior of these boosters is subject to change.
+
+Qt booster is a no-operation booster. It can be used by calling \c
+invoker \c --type=qt. Qt booster requires only the M_EXPORT source
+modification. Any MeeGo Touch boostable application can be launched
+with this booster type as well, but it will result in a slower start
+up because of empty cache.
+
+Wrt booster, used with \c invoker \c --type=wrt, populates
+MComponentCache with MApplication and MApplicationWindow, just like
+the MeeGo Touch booster. However, in this case MApplication uses a
+graphics system which suits better for rendering web content.
 
 */
-
