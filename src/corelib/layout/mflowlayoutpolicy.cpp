@@ -55,6 +55,19 @@ void MFlowLayoutPolicy::removeAt(int index)
     d->alignments.removeAt(index);
     Q_ASSERT(count() == d->alignments.count());
 }
+//Convience function to get the width of the item, obeying heightForWidth if needed
+static QSizeF getItemPreferredSize(const QGraphicsLayoutItem *item, qreal constraintWidth) {
+    QSizeF size = item->effectiveSizeHint(Qt::PreferredSize);
+    if (size.width() > constraintWidth) {
+        if (item->sizePolicy().hasHeightForWidth()) {
+            //If the object's preferred size is too big to fit, try constraining it
+            size = item->effectiveSizeHint(Qt::PreferredSize, QSizeF(constraintWidth, -1));
+        } else {
+            size.setWidth(constraintWidth);
+        }
+    }
+    return size;
+}
 QSizeF MFlowLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MFlowLayoutPolicy);
@@ -110,9 +123,7 @@ QSizeF MFlowLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
         const QGraphicsLayoutItem *item = itemAt(i);
         //We use the preferredsize for both the minimum and preferred sizeHints since
         //doing otherwise would make this code a lot more complicated
-        QSizeF size = item->effectiveSizeHint(Qt::PreferredSize);
-        if (size.width() > constraintWidth)
-            size = item->effectiveSizeHint(Qt::PreferredSize, QSizeF(constraintWidth, -1));
+        QSizeF size = getItemPreferredSize(item, constraintWidth);
         bool sameRow = d->roomForItemOnCurrentRow(size, constraintWidth, &current_position, &current_rowheight);
         if (sameRow) {
             //It fits on the same row
@@ -173,11 +184,7 @@ void MFlowLayoutPolicy::relayout()
         int row_start = i; //The item index at the start of a row
         while (i < count()) {
             QGraphicsLayoutItem *item = itemAt(i);
-            QSizeF size = item->effectiveSizeHint(Qt::PreferredSize);
-            if (size.width() > constraintWidth) {
-                //If the object's preferred size is too big to fit, try constraining it
-                size = item->effectiveSizeHint(Qt::PreferredSize, QSizeF(constraintWidth, -1));
-            }
+            QSizeF size = getItemPreferredSize(item, constraintWidth);
             bool sameRow = d->roomForItemOnCurrentRow(size, constraintWidth, &current_position, &current_rowheight);
             //check if we have finished with this row
             if (sameRow) {
@@ -201,9 +208,7 @@ void MFlowLayoutPolicy::relayout()
         for (int j = row_start; j < i; ++j) {
             QGraphicsLayoutItem *item = itemAt(j);
             //get the size again
-            QSizeF size = item->effectiveSizeHint(Qt::PreferredSize);
-            if (size.width() > constraintWidth)
-                size = item->effectiveSizeHint(Qt::PreferredSize, QSizeF(constraintWidth, -1));
+            QSizeF size = getItemPreferredSize(item, constraintWidth);
             d->roomForItemOnCurrentRow(size, constraintWidth, &current_position);
 //            Q_ASSERT(sameRow);
 
