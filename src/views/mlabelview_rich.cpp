@@ -290,7 +290,7 @@ bool MLabelViewRich::isRich()
 void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->ignore();
-    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
+    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit) + 1;
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
         cursor.setPosition(cursorPos);
@@ -317,7 +317,7 @@ void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     cleanupTiles();
     viewPrivate->controller->update();
     
-    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
+    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit) + 1;
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
         cursor.setPosition(cursorPos);
@@ -355,7 +355,7 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
     // the gesture was insid highlightable text.
     event->ignore(gesture);
 
-    int cursorPos = textDocument.documentLayout()->hitTest(viewPrivate->controller->mapFromScene(gesture->position()) - pixmapOffset, Qt::ExactHit);
+    int cursorPos = textDocument.documentLayout()->hitTest(viewPrivate->controller->mapFromScene(gesture->position()) - pixmapOffset, Qt::ExactHit) + 1;
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
         cursor.setPosition(cursorPos);
