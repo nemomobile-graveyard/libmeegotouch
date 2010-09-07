@@ -499,17 +499,31 @@ MWidget *MToolBarView::getWidget(QAction *action) const
     return d->leasedWidgets.value(action);
 }
 
+MWidget *MToolBarViewPrivate::getWidget(QAction *action) const
+{
+    return buttons.value(action);
+}
+
 void MToolBarViewPrivate::setEnabledPreservingSelection(bool enabled)
 {
-    foreach(MButton *button, buttons) {
-        if (!button->isChecked())
-            button->setEnabled(enabled);
+    // To ensure that buttons/widgets are restored correctly to their original state,
+    // AND the state of their associated actions with the enabled parameter
+
+    for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
+        QAction *action = bit.key();
+        MButton *button = bit.value();
+        if (!button->isChecked()) {
+            button->setEnabled(enabled && action->isEnabled());
+        }
     }
 
-    foreach(MWidget *leasedWidget, leasedWidgets) {
-        MButton *button = qobject_cast<MButton *>(leasedWidget);
-        if (!button || !button->isChecked())
-            leasedWidget->setEnabled(enabled);
+    for (QHash<QAction *, MWidget *>::const_iterator wit = leasedWidgets.constBegin(); wit != leasedWidgets.constEnd(); ++wit) {
+        QAction *action = wit.key();
+        MWidget *widget = wit.value();
+        MButton *button = qobject_cast<MButton *>(widget);
+        if (!button || !button->isChecked()) {
+            widget->setEnabled(enabled && action->isEnabled());
+        }
     }
 }
 

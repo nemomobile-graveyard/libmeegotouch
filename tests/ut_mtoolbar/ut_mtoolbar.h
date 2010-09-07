@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testAddTabAction();
     void testRemoveTabAction();
     void testNoLocation();
+    void testPropertyChange();
 
     void actionSlot(bool);
 

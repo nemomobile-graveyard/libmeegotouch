@@ -31,7 +31,6 @@
 #include <MWidgetAction>
 #include "mtoolbar_p.h"
 
-
 MApplication *app(NULL);
 // TODO: remove this when unneeded in MTextEdit's constructor
 MApplicationWindow *appWin(NULL);
@@ -356,4 +355,41 @@ void Ut_MToolBar::testNoLocation()
     actionTextEdit->setLocation(MAction::NoLocation);
 
 }
+
+void Ut_MToolBar::testPropertyChange()
+{
+    // Add an action then set the Property which is triggered by the AppMenu when it is opened and closed
+    m_subject->clearActions();
+    QVERIFY(m_subject->actions().count() == 0);
+
+    // Add a normal action
+    MAction *action = new MAction("action", m_subject);
+    action->setLocation(MAction::ToolBarLocation);
+    action->setEnabled(true);
+    action->setVisible(true);
+    m_subject->addAction(action);
+
+    // Retrieve the widget associated with the action
+    const MToolBarView *view = dynamic_cast<const MToolBarView *>(m_subject->view());
+    QVERIFY(view);
+    MWidget *widget = view->getWidget(action);
+    QVERIFY(widget);
+    QVERIFY(widget->isEnabled());
+
+    // Test that enabled state is restored, this is called i.e. when appmenu is opened
+    // widget/action starting as enabled
+    m_subject->setProperty(_M_IsEnabledPreservingSelection, QVariant(false));
+    QVERIFY(!widget->isEnabled());
+    m_subject->setProperty(_M_IsEnabledPreservingSelection, QVariant(true));
+    QVERIFY(widget->isEnabled());
+
+    // widget/action starting as disabled
+    action->setEnabled(false);
+    QVERIFY(!widget->isEnabled());
+    m_subject->setProperty(_M_IsEnabledPreservingSelection, QVariant(false));
+    QVERIFY(!widget->isEnabled());
+    m_subject->setProperty(_M_IsEnabledPreservingSelection, QVariant(true));
+    QVERIFY(!widget->isEnabled());
+}
+
 QTEST_APPLESS_MAIN(Ut_MToolBar)
