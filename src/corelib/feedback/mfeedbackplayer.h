@@ -62,6 +62,9 @@ class M_EXPORT MFeedbackPlayer : public QObject
     // class
     friend class MApplicationPrivate;
     friend class MComponentDataPrivate;
+#ifdef UNIT_TEST
+    friend class Pt_MComponentData2;
+#endif
 
 public:
 

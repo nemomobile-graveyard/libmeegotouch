@@ -14,6 +14,7 @@ SUBDIRS     = \
  pt_mcalendar \
  pt_mcomponentcache \
  pt_mcomponentdata \
+ pt_mcomponentdata2 \
  pt_mgles2renderer \
  pt_mimagewidget \
  pt_mmenu \
