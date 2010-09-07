@@ -44,6 +44,7 @@
 #include <QPropertyAnimation>
 #include <QSettings>
 #include <QDir>
+#include <QTimer>
 
 #ifdef Q_WS_X11
 # include <QX11Info>
