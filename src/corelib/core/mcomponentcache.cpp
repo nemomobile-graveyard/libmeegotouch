@@ -92,7 +92,6 @@ void MComponentCachePrivate::populateForMApplication()
     }
 
     glWidgetOfmApplicationWindowInstance = createNewGlWidget();
-    glWidgetOfOtherWindow = createNewGlWidget();
 
     mApplicationWindowInstance = new MApplicationWindow();
 
