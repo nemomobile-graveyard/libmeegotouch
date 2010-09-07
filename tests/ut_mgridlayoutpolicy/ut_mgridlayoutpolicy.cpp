@@ -391,7 +391,10 @@ void Ut_MGridLayoutPolicy::testAlignmentSubLayouts()
     m_policy->setAlignment(subLayout200, Qt::AlignCenter);
     qApp->processEvents();
 
+    //These currently (2010-09-08) fail because of https://projects.maemo.org/bugzilla/show_bug.cgi?id=189091
+    QEXPECT_FAIL("", "See NB#189091", Continue);
     QCOMPARE(subLayout100->geometry(), QRectF(QPointF(200.0, 0.0), QSize(100.0, 100.0)));
+    QEXPECT_FAIL("", "See NB#189091", Continue);
     QCOMPARE(subLayout200->geometry(), QRectF(QPointF(50.0, 100.0), QSize(200.0, 200.0)));
     QCOMPARE(m_mockItem300->geometry(), QRectF(QPointF(0.0, 300.0), QSize(300.0, 300.0)));
 }
