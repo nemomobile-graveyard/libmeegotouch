@@ -160,7 +160,7 @@ void Ut_MLocationDatabase::testMatchingCities()
     MLocationDatabase db;
     QList<MCity> cities = db.cities();
 
-    // do only run the tests, if we were able to load
+    // do only run the tests if we were able to load
     // some cities from the meegotouch-cities-*
     // package.
     if (cities.count() < 10) {

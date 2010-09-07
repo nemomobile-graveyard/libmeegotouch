@@ -20,6 +20,7 @@ SUBDIRS     = \
  pt_mmenu \
  pt_minimalmapplication \
  pt_minimalqtapplication \
+ pt_mlocationdatabase \
  pt_mprogressindicator \
  pt_qapplication \
  pt_mlabel \
