@@ -82,7 +82,7 @@
       <applyto>/meegotouch/debug/minimized_software_switch</applyto>
       <owner>libmeegotouch</owner>
       <type>bool</type>
-      <default>false</default>
+      <default>true</default>
       <locale name="C">
         <short>Switch to software rendering for minimized applications.</short>
         <long>An OpenGL context needs a lot of memory. When this option is enabled aplications using OpenGL rendering will destroy the OpenGL context when they are minimized.</long>
