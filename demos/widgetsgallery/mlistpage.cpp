@@ -445,12 +445,21 @@ void MListPage::changeSeparatorsMode(int index)
 
 void MListPage::changeListIndexVisibility(int index)
 {
-    Q_ASSERT(index >= 0 && index <= 1);
-    bool indexVisible = (index == 1);
+    Q_ASSERT(index >= 0 && index <= 2);
 
-    list->setIndexVisible(indexVisible);
+    switch (index) {
+    case 1:
+        list->setIndexDisplayMode(MList::Show);
+        break;
+    case 2:
+        list->setIndexDisplayMode(MList::Auto);
+        break;
+    default:
+        list->setIndexDisplayMode(MList::Hide);
+        break;
+    }
 
-    if (indexVisible)
+    if (index > 0)
         comboListMode->setCurrentIndex(Grouped);
 
 }
@@ -587,7 +596,7 @@ void MListPage::showAdvancedConfigurationDialog()
         landscapePolicy->addItem(combo);
 
         QStringList listIndexModes;
-        listIndexModes << "Off" << "On";
+        listIndexModes << "Off" << "On" << "Auto";
         combo = createComboBoxLabelButton("List Index", listIndexModes, panel);
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
 
