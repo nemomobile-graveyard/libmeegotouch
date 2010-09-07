@@ -185,6 +185,22 @@ public:
         PositionAtCenterHint
     };
 
+    enum DisplayMode {
+        /*!
+          \brief The list index is always hidden.
+        */
+        Hide = 0,
+        /*!
+          \brief The list index is always visible.
+        */
+        Show,
+        /*!
+          \brief The list index appears on panning,
+            and disappears when panning is stopped.
+        */
+        Auto
+    };
+
     /*!
      * \brief Constructor for creating an empty object.
      * \param parent Parent object.
@@ -368,8 +384,16 @@ public Q_SLOTS:
 
     /*!
       \brief Specifies whether the list index for a grouped model should be visible or not.
+      \deprecated Please use setIndexDisplayMode(MList::DisplayMode);
       */
     void setIndexVisible(bool visible);
+
+    /*!
+      \brief Specifies fi the list index bar for a grouped model should be visible or not, or
+        automatically to appear on list panning.
+      \sa MList::DisplayMode
+    */
+    void setIndexDisplayMode(DisplayMode displayMode);
 
 Q_SIGNALS:
     /*!

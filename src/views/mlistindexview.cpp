@@ -30,6 +30,8 @@
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <qmath.h>
+#include <QPropertyAnimation>
+#include <QTapAndHoldGesture>
 
 #include "mlistindex.h"
 #include "mlist.h"
@@ -41,8 +43,12 @@ MListIndexViewPrivate::MListIndexViewPrivate()
     container(NULL),
     shortcutHeight(0),
     shortcutsCount(0),
+    autoVisibilityAnimation(0),
+    down(false),
     q_ptr(NULL)
 {
+    autoVisibilityTimer.setSingleShot(true);
+    autoVisibilityTimer.stop();
 }
 
 MListIndexViewPrivate::~MListIndexViewPrivate()
@@ -67,6 +73,16 @@ void MListIndexViewPrivate::applyStyleToShortcuts()
 void MListIndexViewPrivate::initLayout()
 {
     clearVisible();
+
+    if (!autoVisibilityAnimation) {
+        autoVisibilityAnimation = new QPropertyAnimation(controller, "opacity", controller);
+        autoVisibilityAnimation->setLoopCount(1);
+        autoVisibilityAnimation->setStartValue(0.0);
+        autoVisibilityAnimation->setEndValue(1.0);
+        autoVisibilityAnimation->setDuration(timelineDuration());
+        autoVisibilityAnimation->setKeyValueAt(delayTimelineDuration(), 0.0);
+        autoVisibilityAnimation->setKeyValueAt(1.0 - delayTimelineDuration(), 1.0);
+    }
 
     if (!layout) {
         layout = new QGraphicsLinearLayout(Qt::Vertical, controller);
@@ -93,10 +109,14 @@ void MListIndexViewPrivate::initLayout()
         }
 
         disconnect(this, SLOT(listParentChanged()));
+        disconnect(this, SLOT(listPanningStarted()));
+        disconnect(this, SLOT(listPanningStopped()));
         if (controllerModel && controllerModel->list()) {
             connect(controllerModel->list(), SIGNAL(parentChanged()), this, SLOT(listParentChanged()));
+            connect(controllerModel->list(), SIGNAL(panningStarted()), this, SLOT(listPanningStarted()));
+            connect(controllerModel->list(), SIGNAL(panningStopped()), this, SLOT(listPanningStopped()));
         }
-
+        connect(&autoVisibilityTimer, SIGNAL(timeout()), this, SLOT(visibilityTimerTimeout()));
     }
 }
 
@@ -184,7 +204,35 @@ void MListIndexViewPrivate::createContainer()
         }
 
     }
+}
 
+qreal MListIndexViewPrivate::delayTimelineDuration()
+{
+    Q_Q(MListIndexView);
+    return q->style()->appearDelay() / timelineDuration();
+}
+
+qreal MListIndexViewPrivate::timelineDuration()
+{
+    Q_Q(MListIndexView);
+    return q->style()->appearDelay() * 2.0 + q->style()->appearDuration();
+}
+
+void MListIndexViewPrivate::updateDisplayMode()
+{
+    switch(controller->displayMode()) {
+    case MList::Auto:
+        controller->show();
+        hideAnimated();
+        break;
+    case MList::Show:
+        controller->show();
+        showAnimated();
+        break;
+    default:
+        controller->hide();
+        break;
+    };
 }
 
 void MListIndexViewPrivate::scrollToGroupHeader(int y)
@@ -200,6 +248,45 @@ void MListIndexViewPrivate::listParentChanged()
     initLayout();
 }
 
+void MListIndexViewPrivate::listPanningStarted()
+{
+    autoVisibilityTimer.stop();
+    if (!autoVisibilityAnimation || controller->displayMode() != MList::Auto)
+        return;
+
+    if (controller->opacity() < 1.0)
+        showAnimated();
+}
+
+void MListIndexViewPrivate::listPanningStopped()
+{
+    if (!autoVisibilityAnimation || controller->displayMode() != MList::Auto || down)
+        return;
+
+    if (!autoVisibilityTimer.isActive())
+        autoVisibilityTimer.start();
+}
+
+void MListIndexViewPrivate::visibilityTimerTimeout()
+{
+    hideAnimated();
+}
+
+void MListIndexViewPrivate::hideAnimated()
+{
+    if (autoVisibilityAnimation->state() != QPropertyAnimation::Running) {
+        autoVisibilityAnimation->setDirection(QPropertyAnimation::Backward);
+        autoVisibilityAnimation->start();
+    }
+}
+
+void MListIndexViewPrivate::showAnimated()
+{
+    autoVisibilityAnimation->setDirection(QPropertyAnimation::Forward);
+    if (autoVisibilityAnimation->state() != QPropertyAnimation::Running)
+        autoVisibilityAnimation->start();
+}
+
 void MListIndexViewPrivate::exposedContentRectChanged()
 {
     containerRect = container->exposedContentRect();
@@ -212,6 +299,7 @@ MListIndexView::MListIndexView(MListIndex *controller) : MWidgetView(controller)
 
     d->q_ptr = this;
     d->controller = controller;
+    connect(controller, SIGNAL(visibleChanged()), this, SLOT(_q_visibleChanged()));
 }
 
 MListIndexView::~MListIndexView()
@@ -225,6 +313,7 @@ void MListIndexView::setupModel()
 
     MWidgetView::setupModel();
     d->initLayout();
+    d->updateDisplayMode();
 }
 
 void MListIndexView::applyStyle()
@@ -237,6 +326,15 @@ void MListIndexView::applyStyle()
         d->controller->setPreferredWidth(style()->preferredSize().width());
     else
         d->controller->setPreferredWidth(0.0);
+
+    if (d->autoVisibilityAnimation) {
+        d->autoVisibilityAnimation->setDuration(style()->appearDuration());
+
+        d->autoVisibilityAnimation->setKeyValueAt(d->delayTimelineDuration(), 0.0);
+        d->autoVisibilityAnimation->setKeyValueAt(1.0 - d->delayTimelineDuration(), 1.0);
+    }
+
+    d->autoVisibilityTimer.setInterval(style()->fadeOutDelay());
 
     d->applyStyleToShortcuts();
 }
@@ -253,6 +351,9 @@ void MListIndexView::updateData(const QList<const char *> &modifications)
             if (model()->list())
                 d->initLayout();
         }
+        else if (member == MListIndexModel::DisplayMode) {
+            d->updateDisplayMode();
+        }
     }
 
     MWidgetView::updateData(modifications);
@@ -264,8 +365,20 @@ void MListIndexView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     MWidgetView::mousePressEvent(event);
 
     d->scrollToGroupHeader(event->pos().y());
+    d->down = true;
+    d->listPanningStarted();
+    d->autoVisibilityTimer.stop();
 
     event->accept();
+}
+
+void MListIndexView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_D(MListIndexView);
+    MWidgetView::mouseReleaseEvent(event);
+
+    d->down = false;
+    d->autoVisibilityTimer.start();
 }
 
 void MListIndexView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -276,6 +389,20 @@ void MListIndexView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     d->scrollToGroupHeader(event->pos().y());
 
     event->accept();   
+}
+
+void MListIndexView::cancelEvent(MCancelEvent *event)
+{
+    Q_D(MListIndexView);
+    MWidgetView::cancelEvent(event);
+
+    d->down = false;
+    d->autoVisibilityTimer.start();
+}
+
+void MListIndexView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    event->accept(gesture);
 }
 
 M_REGISTER_VIEW_NEW(MListIndexView, MListIndex)

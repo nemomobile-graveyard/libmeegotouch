@@ -23,6 +23,7 @@
 #include <QModelIndex>
 #include <QRectF>
 #include <QVector>
+#include <QTimer>
 
 class MApplicationPage;
 class MListIndex;
@@ -32,6 +33,7 @@ class MLabel;
 class MWidgetController;
 
 class QGraphicsLinearLayout;
+class QPropertyAnimation;
 
 class MListIndexViewPrivate : public QObject
 {
@@ -54,14 +56,24 @@ public:
 
     virtual void createContainer();
 
+    qreal delayTimelineDuration();
+    qreal timelineDuration();
+    void updateDisplayMode();
+
 protected:
     void scrollToGroupHeader(int y);
 
 protected Q_SLOTS:
     virtual void listParentChanged();
+    virtual void listPanningStarted();
+    virtual void listPanningStopped();
+    virtual void visibilityTimerTimeout();
+    virtual void hideAnimated();
+    virtual void showAnimated();
+
     virtual void exposedContentRectChanged();
 
-public:
+private:
     MListIndex *controller;
     const MListIndexModel *controllerModel;
     QGraphicsLinearLayout *layout;
@@ -72,7 +84,10 @@ public:
     int shortcutsCount;
     QRectF containerRect;
 
-protected:
+    QPropertyAnimation *autoVisibilityAnimation;
+    QTimer autoVisibilityTimer;
+    bool down;
+
     MListIndexView *q_ptr;
 };
 

@@ -52,6 +52,16 @@ void MListIndex::setList(MList *list)
     model()->setList(list);
 }
 
+void MListIndex::setDisplayMode(MList::DisplayMode displayMode)
+{
+    model()->setDisplayMode(displayMode);
+}
+
+MList::DisplayMode MListIndex::displayMode()
+{
+    return (MList::DisplayMode)model()->displayMode();
+}
+
 void MListIndex::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     event->accept();

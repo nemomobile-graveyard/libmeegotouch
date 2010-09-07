@@ -106,7 +106,7 @@ void MListView::updateData(const QList<const char *>& modifications)
             scrollTo(model()->scrollToIndex(), static_cast<MList::ScrollHint>(model()->scrollHint()));
         } else if (member == MListModel::LongTap) {
             longTap(model()->longTap());
-        } else if (member == MListModel::ListIndexVisible) {
+        } else if (member == MListModel::ListIndexDisplayMode) {
             d_ptr->updateListIndexVisibility();
         }
     }

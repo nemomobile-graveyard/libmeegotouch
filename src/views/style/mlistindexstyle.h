@@ -28,6 +28,10 @@ class MListIndexStyle : public MWidgetStyle
     M_STYLE(MListIndexStyle)
 
     M_STYLE_ATTRIBUTE(QString, shortcutObjectName, ShortcutObjectName)
+
+    M_STYLE_ATTRIBUTE(qreal, appearDelay, AppearDelay)
+    M_STYLE_ATTRIBUTE(qreal, appearDuration, AppearDuration)
+    M_STYLE_ATTRIBUTE(qreal, fadeOutDelay, FadeOutDelay)
 };
 
 class MListIndexStyleContainer : public MWidgetStyleContainer

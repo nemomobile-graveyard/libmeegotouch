@@ -25,6 +25,8 @@
 
 #include <QMap>
 
+#include <MList>
+
 class MListIndexPrivate;
 class DuiList;
 
@@ -69,6 +71,15 @@ public:
      * \param list The list widget that the index widget provides fast navigation for.
      */
     void setList(MList *list);
+
+    /*!
+     * \brief Sets the automatic visibility to the list index.
+     * \param displayMode The display mode of the list index bar.
+     * \sa MList::DisplayMode
+     */
+    void setDisplayMode(MList::DisplayMode displayMode);
+
+    MList::DisplayMode displayMode();
 
 protected:
    /*! \reimp */

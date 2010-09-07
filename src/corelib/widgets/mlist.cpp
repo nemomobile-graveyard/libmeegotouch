@@ -218,7 +218,15 @@ void MList::setShowGroups(bool showGroups)
 
 void MList::setIndexVisible(bool visible)
 {
-    model()->setListIndexVisible(visible);
+    if (visible)
+        setIndexDisplayMode(MList::Show);
+    else
+        setIndexDisplayMode(MList::Hide);
+}
+
+void MList::setIndexDisplayMode(MList::DisplayMode displayMode)
+{
+    model()->setListIndexDisplayMode(displayMode);
 }
 
 bool MList::indexVisible()

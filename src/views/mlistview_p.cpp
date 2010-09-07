@@ -1267,12 +1267,8 @@ void MGroupHeaderListViewPrivate::drawGroupSeparator(const int row, QPainter *pa
 
 void MGroupHeaderListViewPrivate::updateListIndexVisibility()
 {
-    if(listIndexWidget) {
-        if(controllerModel->listIndexVisible())
-            listIndexWidget->show();
-        else
-            listIndexWidget->hide();
-    }
+    if(listIndexWidget)
+        listIndexWidget->setDisplayMode((MList::DisplayMode)controllerModel->listIndexDisplayMode());
 }
 
 ////////////

@@ -34,6 +34,7 @@ public:
     M_MODEL_PROPERTY(QStringList, shortcutLabels, ShortcutLabels, true, QStringList())
     M_MODEL_PROPERTY(QModelIndexList, shortcutIndexes, ShortcutIndexes, true, QModelIndexList())
     M_MODEL_PTR_PROPERTY(MList*, list, List, true, NULL)
+    M_MODEL_PROPERTY(int, displayMode, DisplayMode, true, 0)
 };
 
 #endif
