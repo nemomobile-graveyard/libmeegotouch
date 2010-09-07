@@ -22,7 +22,12 @@
 #include "qtmaemo6style_p.h"
 
 #include <QAbstractButton>
+#include <QCheckBox>
+#include <QLabel>
+#include <QListWidget>
+#include <QTextEdit>
 #include <QPainter>
+#include <QProgressBar>
 #include <QStyleOptionButton>
 #include <QApplication>
 #include <QDialogButtonBox>
@@ -2449,16 +2454,54 @@ const MFeedback * QtMaemo6Style::feedback(const QString& feedbackName, const QWi
 
         QString meegoClassString;
 
+	// classes that are lower in the inheritance chain need to
+	// be placed first to allow for the string to be overwritten.
         if(qobject_cast<const QWidget*>(widget))
             meegoClassString = "MWidgetStyle";
 
-        if(qobject_cast<const QPushButton*>(widget))
-            meegoClassString = "MButtonIconStyle";
+	// We don't map the QAbstract* widget classes since inherited
+	// classes are often enough semantically quite different.
+
+        if(qobject_cast<const QCheckBox*>(widget))
+            meegoClassString = "MCheckboxStyle";
 
         if(qobject_cast<const QComboBox*>(widget))
             meegoClassString = "MComboBoxStyle";
 
-        if ( meegoClassString.isEmpty() )
+        if(qobject_cast<const QDialog*>(widget))
+            meegoClassString = "MDialogStyle";
+
+        if(qobject_cast<const QLabel*>(widget))
+            meegoClassString = "MLabelStyle";
+
+        if(qobject_cast<const QListWidget*>(widget))
+            meegoClassString = "MListStyle";
+
+        if(qobject_cast<const QMenu*>(widget))
+            meegoClassString = "MApplicationMenuStyle";
+
+        if(qobject_cast<const QMessageBox*>(widget))
+            meegoClassString = "MMessageBoxStyle";
+
+        if(qobject_cast<const QProgressBar*>(widget))
+            meegoClassString = "MProgressIndicatorStyle";
+
+        if(qobject_cast<const QPushButton*>(widget))
+            meegoClassString = "MButtonStyle";
+
+        if(qobject_cast<const QScrollArea*>(widget))
+            meegoClassString = "MPannableWidgetStyle";
+
+        if(qobject_cast<const QSlider*>(widget))
+            meegoClassString = "MSliderStyle";
+
+        if(qobject_cast<const QTextEdit*>(widget))
+            meegoClassString = "MTextEditStyle";
+
+        if(qobject_cast<const QToolBar*>(widget))
+            meegoClassString = "MToolbarStyle";
+
+	if ( meegoClassString.isEmpty() )
             return 0;
 
         QStyleOption opt;
