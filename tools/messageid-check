@@ -116,7 +116,7 @@ my @sourcePackagesToDownloadAndScan = (
     "calc",
     "caldav-plugin",
     "calendar",
-    "calendar-plugin-facebook",
+#    "calendar-plugin-facebook",
     "call-history",
     "call-ui",
     "camera-ui",
@@ -133,6 +133,7 @@ my @sourcePackagesToDownloadAndScan = (
     "contacts",
     "contacts-application",
     "contentmanager",
+    "contextkit-maemo",
     "cp-ombservice",
     "csd-trace-ui",
     "crash-reporter",
@@ -175,6 +176,7 @@ my @sourcePackagesToDownloadAndScan = (
     "libresourceqt",
     "libsaveas",
     "libshare-ui",
+    "libmusicsuitesettings",
     "libtimepicker",
     "libvideosettings",
     "libvsvideowidget",
@@ -186,6 +188,7 @@ my @sourcePackagesToDownloadAndScan = (
     "mcompositor",
     "mcontrolpanel-telecoilapplet",
     "mediaextension-interfaces",
+    "mediaextensioninterfaces-examples",
     "media-suite-lib",
     "meegocertman-extn",
     "meego-im-framework",
@@ -217,14 +220,17 @@ my @sourcePackagesToDownloadAndScan = (
     "qmsystem-demo",
     "recipients-editor",
     "signon-ui",
+    "smartsearch",
     "sm-common-utils",
     "socialprovider-ovi",
     "sync-app",
     "syncshare-test-app",
+    "sync-app-nokia",
     "sync-ui",
     "system-ui",
     "systemui-applets",
     "systemui-applets-ui-tests",
+    "telepathy-nokiamessaging",
     "transfer-ui",
     "userguide",
     "userguide-ui-tests",
@@ -567,10 +573,11 @@ sub checkListOfSourcePackagesDependingOnLibmeegotouch {
         }
     }
     if ($#missingSourcePackages >= 0) {
-        printf STDERR "The following source packages have binary packages depending on libmeegotouch but are not included in the list of packages to download and scan and are not explicitely ignore either:\n";
+        printf STDERR "The following source packages have binary packages depending on libmeegotouch but are not included in the list of packages to download and scan and are not explicitely ignored either:\n";
         for my $missingPackage (@missingSourcePackages) {
             printf STDERR "missing source package: %s\n", $missingPackage;
         }
+        printf STDERR "Before you continue running this script, add the missing packages either to the list of packages to scan or to the list of packages to ignore.";
         myExit (1);
     }
 }
@@ -1131,8 +1138,9 @@ EOF
         $package =~ s/\.tar\.gz//g;
         $sourcePackagesScannedList .= "<li>$package</li>\n";
     }
+    my $numberOfSourcePackagesScanned = $#sourcePackagesScanned + 1;
     $htmlOutIdsFromSourcePackagesDetail .= <<"EOF";
-        List of source packages scanned:
+        List of source packages scanned (number of packages scanned: $numberOfSourcePackagesScanned):
         <ul>
             $sourcePackagesScannedList
         </ul>
