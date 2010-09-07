@@ -21,6 +21,7 @@
 
 #include <QFile>
 #include <QDomDocument>
+#include <QStringMatcher>
 #include <QDebug>
 
 const QString path = "/usr/share/meegotouch/locationdatabase/";
@@ -255,9 +256,10 @@ QList<MCity> MLocationDatabase::matchingCities(const QString& searchString)
     Q_D(MLocationDatabase);
 
     QList<MCity> list;
+    QStringMatcher matcher(searchString, Qt::CaseInsensitive);
     foreach (const MCity &city, d->cities) {
-        if (city.englishName().contains(searchString, Qt::CaseInsensitive)
-            || city.localName().contains(searchString, Qt::CaseInsensitive))
+        if (matcher.indexIn(city.englishName()) != -1
+            || matcher.indexIn(city.localName()) != -1)
         {
             list.append( city );
         }
