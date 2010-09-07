@@ -255,15 +255,16 @@ void MDetailedListItem::setImageWidget(MImageWidget *image)
 {
     Q_D(MDetailedListItem);
 
-    if (d->layout() && d->image) {
-        for (int i = 0; i < d->layout()->count(); i++) {
-            if (d->layout()->itemAt(i) == d->image) {
-                d->layout()->removeAt(i);
-                delete d->image;
-                d->image = NULL;
-                break;
+    if (d->image) {
+        if (d->layout())
+            for (int i = 0; i < d->layout()->count(); i++) {
+                if (d->layout()->itemAt(i) == d->image) {
+                    d->layout()->removeAt(i);
+                    break;
+                }
             }
-        }
+        delete d->image;
+        d->image = NULL;
     }
 
     if (image) {
