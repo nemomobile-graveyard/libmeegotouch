@@ -83,6 +83,10 @@ void Ut_MFeedbackPlayer::reconnect()
     // for that reconnection.
     QTest::qWait(60);
 
+    // Make sure all events are processed (= timer above
+    // has been handled) before proceeding.
+    QApplication::processEvents();
+
     QDataStream testStream(*testSocket->getWrittenData());
     testStream >> writtenString;
 
