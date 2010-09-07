@@ -33,7 +33,7 @@ public:
 
     MSceneWindow *controller;
 
-    void _q_playSceneWindowAppearedFeedback();
+    void _q_playSceneWindowAppearingFeedback();
 };
 
 #endif

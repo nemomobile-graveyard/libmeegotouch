@@ -34,11 +34,11 @@ MSceneWindowViewPrivate::~MSceneWindowViewPrivate()
 {
 }
 
-void MSceneWindowViewPrivate::_q_playSceneWindowAppearedFeedback()
+void MSceneWindowViewPrivate::_q_playSceneWindowAppearingFeedback()
 {
     Q_Q(MSceneWindowView);
 
-    // Play a feedback when scene window appears
+    // Play a feedback when scene window starts to appear
     q->style()->appearFeedback().play();
 }
 
@@ -49,7 +49,7 @@ MSceneWindowView::MSceneWindowView(MSceneWindow *controller) :
 
     d->controller = controller;
     connect(this, SIGNAL(geometryAttributesChanged()), controller, SIGNAL(repositionNeeded()));
-    connect(controller, SIGNAL(appeared()), this, SLOT(_q_playSceneWindowAppearedFeedback()));
+    connect(controller, SIGNAL(appearing()), this, SLOT(_q_playSceneWindowAppearingFeedback()));
 }
 
 MSceneWindowView::MSceneWindowView(MSceneWindowViewPrivate &dd, MSceneWindow *controller) :
@@ -59,7 +59,7 @@ MSceneWindowView::MSceneWindowView(MSceneWindowViewPrivate &dd, MSceneWindow *co
 
     d->controller = controller;
     connect(this, SIGNAL(geometryAttributesChanged()), controller, SIGNAL(repositionNeeded()));
-    connect(controller, SIGNAL(appeared()), this, SLOT(_q_playSceneWindowAppearedFeedback()));
+    connect(controller, SIGNAL(appearing()), this, SLOT(_q_playSceneWindowAppearingFeedback()));
 }
 
 MSceneWindowView::~MSceneWindowView()

@@ -35,7 +35,7 @@ class M_EXPORT MSceneWindowStyle : public MWidgetStyle
 
     /*!
         \property MSceneWindowStyle::appearFeedback
-        \brief Feedback given when scene window reaches the Appeared state.
+        \brief Feedback given when scene window reaches the Appearing state.
       */
     M_STYLE_ATTRIBUTE(MFeedback, appearFeedback, AppearFeedback)
 };
