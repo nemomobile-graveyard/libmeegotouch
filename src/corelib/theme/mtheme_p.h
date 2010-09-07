@@ -165,7 +165,7 @@ public:
     /*!
      * Reinitializes the theme to correspond to the new application name
      */
-    void reinit(const QString &applicationName, const QString &imglistFilename = QString(), MTheme::ThemeService themeService = MTheme::AnyTheme);
+    void reinit(const QString &applicationName);
 
     static void registerStyleContainer(MStyleContainer *container);
     static void unregisterStyleContainer(MStyleContainer *container);

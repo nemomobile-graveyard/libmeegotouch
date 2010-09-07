@@ -124,6 +124,8 @@ bool MRemoteThemeDaemonPrivate::waitForServer(const QString &serverAddress, int 
             }
         }
 
+        qCritical() << "Failed to connect to remote themedaemon. Retrying in one second.";
+
         // wait for a while
 #ifndef Q_OS_WIN
         sleep(1);

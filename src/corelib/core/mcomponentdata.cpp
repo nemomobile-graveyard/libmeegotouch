@@ -157,7 +157,6 @@ MComponentDataPrivate::MComponentDataPrivate()
     windows(),
     feedbackPlayer(0),
     locale(),
-    imglistFilename(),
     appName(),
     binaryName(),
     deviceName(),
@@ -307,7 +306,11 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     // Therefore, we can not parse it here.)
     reverseLayout = qApp->layoutDirection() == Qt::RightToLeft;
 
+#ifdef __arm__
+    MTheme::ThemeService themeService = MTheme::RemoteTheme;
+#else
     MTheme::ThemeService themeService = MTheme::AnyTheme;
+#endif
 
 #ifdef HAVE_N900
     //#MS - default commadline: /usr/bin/widgetsgallery -target N900 -fullscreen
@@ -325,10 +328,6 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
         qInstallMsgHandler(handler);
     }
 
-    if (themeService == MTheme::RemoteTheme && !imglistFilename.isEmpty()) {
-        qFatal("-genimglist switch can't be used with remote theme daemon");
-    }
-
     QFileInfo fileInfo(argv[0]);
     QString themeIdentifier = fileInfo.fileName();
     if (!appIdentifier.isEmpty()) {
@@ -337,7 +336,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
             themeIdentifier = appIdentifier;
         }
     }
-    theme = new MTheme(themeIdentifier, imglistFilename, themeService);
+    theme = new MTheme(themeIdentifier, QString(), themeService);
     deviceProfile = new MDeviceProfile();
 
     QString catalog = appIdentifier;
@@ -491,11 +490,6 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
         else if (s == "-dev") {
             showSize = true;
             showPosition = true;
-        } else if (s == "-genimglist") {
-            if (i < (argc - 1)) {
-                imglistFilename = argv[i+1];
-                i++;
-            }
         } else if (s == "-remote-theme") {
             themeService = MTheme::RemoteTheme;
         } else if (s == "-local-theme") {
@@ -702,7 +696,7 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
     MLocale::setDefault(systemLocale);
 
     if (MTheme::instance()) {
-        MTheme::instance()->d_func()->reinit(d->appName, d->imglistFilename, MTheme::AnyTheme);
+        MTheme::instance()->d_func()->reinit(d->appName);
     }
 
     if (newService) {

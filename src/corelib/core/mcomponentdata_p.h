@@ -71,7 +71,6 @@ public:
     QList<MWindow *> windows;
     MFeedbackPlayer *feedbackPlayer;
     MLocale locale;
-    QString imglistFilename;
     QString appName;
     QString binaryName;
     QString deviceName;

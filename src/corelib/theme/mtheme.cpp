@@ -554,7 +554,7 @@ bool MTheme::hasPendingRequests()
     return instance()->d_ptr->themeDaemon->hasPendingRequests();
 }
 
-void MThemePrivate::reinit(const QString &newApplicationName, const QString &, MTheme::ThemeService)
+void MThemePrivate::reinit(const QString &newApplicationName)
 {
     delete application;
     applicationName = newApplicationName;

@@ -101,8 +101,8 @@ public:
 
 
      \a applicationName is used as the first part of the search path for resources, ensuring that application
-     specific theme resources are prioritized. If \a imglistFilename is passed, MTheme will create a local
-     theme daemon and output the list of used images to the specified file.
+     specific theme resources are prioritized.
+     \a imglistFilename is not in use anymore.
      */
     MTheme(const QString &applicationName, const QString &imglistFilename = QString(), ThemeService themeService = AnyTheme);
 
