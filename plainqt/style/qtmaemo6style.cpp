@@ -1285,6 +1285,12 @@ void QtMaemo6Style::polish(QWidget *widget)
     if(QSlider* slider = qobject_cast<QSlider*>(widget)) {
         QtMaemo6SliderPopUp* sliderPopup = new QtMaemo6SliderPopUp();
         sliderPopup->enableOn(slider);
+	const MLabelStyle *labelTitle =
+	    static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+					      "MLabelStyle", "MSliderHandleLabel"));
+	QPalette pal = sliderPopup->palette();
+	pal.setColor(QPalette::WindowText, labelTitle->color());
+	sliderPopup->setPalette(pal);
     }
     if(QLineEdit* le = qobject_cast<QLineEdit*>(widget)) {
         const MTextEditStyle *styleActive =
