@@ -41,7 +41,7 @@
 const int QtMaemo6WindowDecoration::layoutOffset = 2;
 
 
-QtMaemo6WindowDecoration::QtMaemo6WindowDecoration(QWidget *mw, QWidget *parent /*= NULL*/)
+QtMaemo6WindowDecoration::QtMaemo6WindowDecoration(QWidget *mw, QWidget *parent /* = NULL*/)
     : QtMaemo6Window(mw, parent),
       m_menuBar(0),
       m_statusBar(0),

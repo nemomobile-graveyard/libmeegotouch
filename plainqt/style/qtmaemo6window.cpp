@@ -33,7 +33,7 @@
 #include "qtmaemo6dialogtitle.h"
 #include "qtmaemo6style_p.h"
 
-QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /*= NULL*/)
+QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /* = NULL*/)
     : QWidget(parent)
     , m_window(originalWidget)
     , m_centralWidget(0)

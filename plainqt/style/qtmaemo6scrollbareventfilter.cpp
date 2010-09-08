@@ -38,7 +38,7 @@
 #include <mwidgetfadeanimationstyle.h>
 
 #ifdef SHOW_SCROLLING_THUMBNAIL
-AbstractScrollAreaThumbView::AbstractScrollAreaThumbView(QWidget *parent /*= NULL*/)
+AbstractScrollAreaThumbView::AbstractScrollAreaThumbView(QWidget *parent /* = NULL*/)
     : QLabel(parent)
 {
     setVisible(false);
@@ -206,7 +206,7 @@ void QtMaemo6ScrollBarEventFilter::setScrollBarVisibility(QScrollBar *scrollBar)
 
 
 void QtMaemo6ScrollBarEventFilter::generateScrollAreaThumb(QAbstractScrollArea *scrollArea,
-        bool forceUpdate /*= false*/)
+        bool forceUpdate /* = false*/)
 {
 #ifndef SHOW_SCROLLING_THUMBNAIL
     //surpress unused warning while this is inactive

@@ -410,7 +410,7 @@ bool QtMaemo6Style::drawBackground(QPainter *p,
                                    const QStyleOption *option,
                                    const QRect &rect,
                                    const MWidgetStyle *style,
-                                   const QWidget* w /*= 0*/) const
+                                   const QWidget* w /* = 0*/) const
 {
     Q_D(const QtMaemo6Style);
     bool ret = false;
@@ -603,7 +603,7 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
         const QRect &rect,
         const QStyleOption *option,
         const QString &styleClass,
-        const QString &styleObject /*= QString()*/) const
+        const QString &styleObject /* = QString()*/) const
 {
     const MButtonStyle *style =
         static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
@@ -619,7 +619,7 @@ void QtMaemo6StylePrivate::drawToggleButton(QPainter *p,
         const QRect &rect,
         const QStyleOption *option,
         const QString &styleClass,
-        const QString &styleObject /*= QString()*/) const
+        const QString &styleObject /* = QString()*/) const
 {
     const MButtonStyle *style =
         static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
@@ -754,7 +754,7 @@ void QtMaemo6StylePrivate::drawButtonIcon(const MButtonStyle *style,
         QPainter *painter,
         const QRect &contentsRect,
         const QIcon &icon,
-        const QSize &iconSize /*= QSize()*/) const
+        const QSize &iconSize /* = QSize()*/) const
 {
     if(style) {
         Q_Q(const QtMaemo6Style);
@@ -779,9 +779,9 @@ void QtMaemo6StylePrivate::drawButtonIcon(const MButtonStyle *style,
 
 QRect QtMaemo6StylePrivate::getTextAndIconRect(const MButtonStyle *style,
         const QString &text,
-        const QIcon &icon /*= QIcon()*/,
-        const QFont &font /*= QFont()*/,
-        const QSize &iconSize /*= QSize()*/) const
+        const QIcon &icon /* = QIcon()*/,
+        const QFont &font /* = QFont()*/,
+        const QSize &iconSize /* = QSize()*/) const
 {
     QRect textAndIconRect;
     QRect textRect = textBoundingRect(text, font);
@@ -853,7 +853,7 @@ void QtMaemo6StylePrivate::paddingFromStyle(const MWidgetStyle *style,
 }
 
 QRect QtMaemo6StylePrivate::scrollBarSliderRect(const QStyleOptionComplex *option,
-        const QWidget *widget /*= 0*/) const
+        const QWidget *widget /* = 0*/) const
 {
     Q_Q(const QtMaemo6Style);
     if (const QStyleOptionSlider *scrollBar = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
@@ -1781,7 +1781,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
 void QtMaemo6Style::drawComplexControl(ComplexControl control,
                                        const QStyleOptionComplex *opt,
                                        QPainter *p,
-                                       const QWidget *widget /*= 0*/) const
+                                       const QWidget *widget /* = 0*/) const
 {
     if( !isStyled( widget ) ) {
         QPlastiqueStyle::drawComplexControl(control, opt, p, widget);
@@ -2082,7 +2082,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
 QRect QtMaemo6Style::subControlRect(ComplexControl control,
                                     const QStyleOptionComplex *option,
                                     SubControl subControl,
-                                    const QWidget *widget /*= 0*/) const
+                                    const QWidget *widget /* = 0*/) const
 {
     if( !isStyled( widget ) ) {
         return QPlastiqueStyle::subControlRect(control, option, subControl, widget);
