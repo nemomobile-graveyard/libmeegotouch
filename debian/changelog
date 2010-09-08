@@ -1,3 +1,9 @@
+libmeegotouch (0.20.40~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 08 Sep 2010 16:24:19 +0300
+
 libmeegotouch (0.20.39-1) unstable; urgency=low
 
   * Fixes: NB#181896 - blank window with title "Menu" becomes visible when using invoker
