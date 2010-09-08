@@ -61,7 +61,6 @@ CFG_MINIMAL=no
 CFG_BUILD_TESTS=no
 CFG_BUILD_BENCHMARKS=no
 CFG_BUILD_PLAINQT=yes
-CFG_BUILD_EXAMPLES=no
 
 M_DEFAULT_BUILD_PARTS="libs demos"
 CFG_BUILD_PARTS=""
@@ -218,7 +217,6 @@ while [ "$#" -gt 0 ]; do
     dev)
         CFG_DEV="yes"
         CFG_BUILD_TESTS="yes"
-        CFG_BUILD_EXAMPLES="yes"
         CFG_BUILD_BENCHMARKS="yes"
         CFG_BUILD_PLAINQT="yes"
         ;;
@@ -227,9 +225,6 @@ while [ "$#" -gt 0 ]; do
         ;;
     tests)
         CFG_BUILD_TESTS="yes"
-        ;;
-    examples)
-        CFG_BUILD_EXAMPLES="yes"
         ;;
     benchmarks)
         CFG_BUILD_BENCHMARKS="yes"
@@ -339,14 +334,6 @@ if [ "$CFG_BUILD_PLAINQT" = "yes" ]; then
 else
   if echo $CFG_BUILD_PARTS | grep plainqt >/dev/null 2>&1; then
     CFG_BUILD_PLAINQT="yes"
-  fi
-fi
-
-if [ "$CFG_BUILD_EXAMPLES" = "yes" ]; then
-    CFG_BUILD_PARTS="$CFG_BUILD_PARTS examples"
-else
-  if echo $CFG_BUILD_PARTS | grep examples >/dev/null 2>&1; then
-    CFG_BUILD_EXAMPLES="yes"
   fi
 fi
 
@@ -475,7 +462,6 @@ Additional options:
 
     -tests ............. Build the tests.
     -benchmarks ........ Build the benchmarks.
-    -examples .......... Build the examples.
 
     -n900 .............. Build libmeegotouch for the N900 device.
 
@@ -795,7 +781,6 @@ echo
 echo "Benchmarks .......... $CFG_BUILD_BENCHMARKS"
 echo "Plain Qt support .... $CFG_BUILD_PLAINQT"
 echo "Tests ............... $CFG_BUILD_TESTS"
-echo "Examples ............ $CFG_BUILD_EXAMPLES"
 
 if [ "$HAVE_N900" = "yes" ]; then
     echo ""

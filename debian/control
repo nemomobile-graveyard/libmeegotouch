@@ -356,15 +356,3 @@ Section: devel
 Architecture: any
 Enhances: meegotouch-demos-widgetsgallery
 Description: Simplified Chinese translations for widgetsgallery
-
-Package: meegotouch-examples
-Section: devel
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: Example applications
-
-Package: meegotouch-examples-dbg
-Section: devel
-Architecture: any
-Depends: meegotouch-examples (= ${Source-Version})
-Description: Debug symbols of the example applications

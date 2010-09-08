@@ -60,8 +60,6 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
        win32:SUBDIRS -= benchmarks
     }  else:isEqual(PROJECT, demos) {
        SUBDIRS += demos
-    }  else:isEqual(PROJECT, examples) {
-       SUBDIRS += examples
     } else {
        message(Unknown PROJECT: $$PROJECT)
     }

@@ -10,3 +10,4 @@ SOURCES += main.cpp
 # libm first:
 INCLUDEPATH += ../../src/include
 QMAKE_LIBDIR += ../../lib/
+LIBS += -lmeegotouchcore
