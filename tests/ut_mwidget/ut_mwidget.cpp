@@ -200,6 +200,15 @@ void Ut_MWidget::testShowHideSimple()
     widget->hide();
     QVERIFY(m_dummySlotCalled == true);
     disconnect(widget, SIGNAL(displayExited()), this, SLOT(dummySlot()));
+
+    /* displayEntered() should not be emitted when show() is called
+       for an off-view widget */
+    widget->setGeometry(-500, -500, 50, 50);
+    m_dummySlotCalled = false;
+    connect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
+    widget->show();
+    QVERIFY(m_dummySlotCalled == false);
+    disconnect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
 }
 
 void Ut_MWidget::testShowHidePropagation()

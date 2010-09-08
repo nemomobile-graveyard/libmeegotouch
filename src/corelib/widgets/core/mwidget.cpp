@@ -503,7 +503,11 @@ void MWidget::setVisible(bool visible)
 
             // show() called: resolve visibility
             if (visible) {
-                d->resolveIsOnDisplay(this, &visibleSceneRect);
+                if (isOnDisplay()) {
+                    MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOnDisplay,
+                                            visibleSceneRect);
+                    d->resolveIsOnDisplay(this, &visibleSceneRect, &event);
+                }
             // hide() called: explicitly send FullyOffDisplay
             } else {
                 MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOffDisplay,
