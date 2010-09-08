@@ -90,7 +90,7 @@ QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGest
         qreal angleDelta = swipeGesture->recognizedAngle - swipeGesture->swipeAngle();
 
         if ( isAngleDeltaBelowThreshold(angleDelta, style->angleThreshold()) &&
-             currentDistance > swipeGesture->prevDistance )
+             currentDistance + style->jitterThreshold() > swipeGesture->prevDistance )
             result = QGestureRecognizer::TriggerGesture;
 
         swipeGesture->prevDistance = currentDistance;
