@@ -38,8 +38,17 @@ private:
 
     M_MODEL_PROPERTY(int, resultCode, ResultCode, true, 0)
 
+    /*!
+        \property MDialogModel::closeButtonVisible
+        \deprecated Use MDialogStyle::hasCloseButton instead.
+     */
     M_MODEL_PROPERTY(bool, closeButtonVisible, CloseButtonVisible, true, true)
     M_MODEL_PROPERTY(bool, buttonBoxVisible, ButtonBoxVisible, true, true)
+
+    /*!
+        \property MDialogModel::titleBarVisible
+        \deprecated Use MDialogStyle::hasTitleBar instead.
+     */
     M_MODEL_PROPERTY(bool, titleBarVisible, TitleBarVisible, true, true)
     M_MODEL_PROPERTY(QString, title, Title, true, QString())
     M_MODEL_PROPERTY(bool, system, System, true, false)

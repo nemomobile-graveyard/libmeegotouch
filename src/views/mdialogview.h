@@ -126,6 +126,7 @@ private:
     Q_DISABLE_COPY(MDialogView)
 #ifdef UNIT_TEST
     friend class Ut_MDialog;
+    friend class Ut_MDialogView;
 #endif
 };
 

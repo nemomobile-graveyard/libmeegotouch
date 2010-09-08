@@ -252,11 +252,8 @@ void MDialogView::applyStyle()
     MSceneWindowView::applyStyle();
     d->realignButtonBox();
 
-    // update title bar height
-    if (style()->titleBarHeight() <= 0)
-        d->titleBar->hide();
-    else if(model()->titleBarVisible())
-        d->titleBar->show();
+    d->closeButton->setVisible(style()->hasCloseButton());
+    d->updateTitleBarVisibility();
 
     d->titleBar->setMinimumHeight(style()->titleBarHeight());
     d->titleBar->setPreferredHeight(style()->titleBarHeight());
@@ -317,6 +314,39 @@ void MDialogViewPrivate::setupDialogVerticalAlignment()
     }
 }
 
+void MDialogViewPrivate::updateTitleBarVisibility()
+{
+    Q_Q(MDialogView);
+    bool visible = q->style()->titleBarHeight() > 0.0 && q->style()->hasTitleBar();
+
+    if (titleBar->isVisible() == visible) {
+        // nothing to do here
+        return;
+    }
+
+    // invisible items still occupy space in layouts, therefore I manually have
+    // to remove them.
+
+    if (visible) {
+        // I am currenly invisible and therefore not part of the layout.
+        // To become visible I have to be added to the layout.
+        dialogBoxLayout->insertItem(0, titleBar);
+    } else {
+        // I am currently visible and therefore part of the layout.
+        // To become invisible I have to be removed from it.
+        dialogBoxLayout->removeItem(titleBar);
+    }
+
+    // update visibility property
+    titleBar->setVisible(visible);
+
+    if (visible) {
+        contentsViewport->setViewType(MPannableWidget::defaultType);
+    } else {
+        contentsViewport->setViewType("titlebarless");
+    }
+}
+
 void MDialogViewPrivate::updateWidgetVisibility(QGraphicsWidget *widget, bool visible, int index,
         QGraphicsLinearLayout *layout)
 {
@@ -340,14 +370,6 @@ void MDialogViewPrivate::updateWidgetVisibility(QGraphicsWidget *widget, bool vi
 
     // update visibility property
     widget->setVisible(visible);
-
-    if (widget == titleBar) {
-        if (visible) {
-            contentsViewport->setViewType(MPannableWidget::defaultType);
-        } else {
-            contentsViewport->setViewType("titlebarless");
-        }
-    }
 }
 
 void MDialogViewPrivate::repopulateButtonBox()
@@ -555,17 +577,11 @@ void MDialogView::setupModel()
     }
 
     d->titleLabel->setText(model()->title());
-    d->closeButton->setVisible(model()->closeButtonVisible());
     d->setSpinnerVisibility(model()->progressIndicatorVisible());
 
     d->updateWidgetVisibility(d->buttonBox,
                               model()->buttonBoxVisible(),
                               2,
-                              d->dialogBoxLayout);
-
-    d->updateWidgetVisibility(d->titleBar,
-                              model()->titleBarVisible(),
-                              0,
                               d->dialogBoxLayout);
 
     d->repopulateButtonBox();
@@ -588,9 +604,7 @@ void MDialogView::updateData(const QList<const char *> &modifications)
     }
 
     foreach(member, modifications) {
-        if (member == MDialogModel::CloseButtonVisible) {
-            d->closeButton->setVisible(model()->closeButtonVisible());
-        } else if (member == MDialogModel::ProgressIndicatorVisible) {
+        if (member == MDialogModel::ProgressIndicatorVisible) {
             d->setSpinnerVisibility(model()->progressIndicatorVisible());
         } else if (member == MDialogModel::Title) {
             d->titleLabel->setText(model()->title());
@@ -599,12 +613,6 @@ void MDialogView::updateData(const QList<const char *> &modifications)
                                       model()->buttonBoxVisible(),
                                       2,
                                       d->dialogBoxLayout);
-        } else if (member == MDialogModel::TitleBarVisible) {
-            d->updateWidgetVisibility(d->titleBar,
-                                      model()->titleBarVisible(),
-                                      0,
-                                      d->dialogBoxLayout);
-
         } else if (member == MDialogModel::CentralWidget) {
             d->setCentralWidget(model()->centralWidget());
         } else if (member == MDialogModel::Buttons) {

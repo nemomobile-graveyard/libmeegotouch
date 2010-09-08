@@ -33,7 +33,6 @@ MMessageBox::MMessageBox(const QString &text, M::StandardButtons buttons)
     model()->setText(text);
 
     setCentralWidget(0);
-    setTitleBarVisible(false);
 }
 
 MMessageBox::MMessageBox(const QString &title, const QString &text, M::StandardButtons buttons)

@@ -487,11 +487,13 @@ void MDialog::setButtonBoxVisible(bool visible)
 
 bool MDialog::isCloseButtonVisible() const
 {
+    mWarning("MDialog") << Q_FUNC_INFO << "is deprecated. Use styles instead";
     return model()->closeButtonVisible();
 }
 
 void MDialog::setCloseButtonVisible(bool visible)
 {
+    mWarning("MDialog") << Q_FUNC_INFO << "is deprecated. Use styles instead";
     model()->setCloseButtonVisible(visible);
 }
 
@@ -507,11 +509,13 @@ void MDialog::setProgressIndicatorVisible(bool visible)
 
 bool MDialog::isTitleBarVisible() const
 {
+    mWarning("MDialog") << Q_FUNC_INFO << "is deprecated. Use styles instead";
     return model()->titleBarVisible();
 }
 
 void MDialog::setTitleBarVisible(bool visible)
 {
+    mWarning("MDialog") << Q_FUNC_INFO << "is deprecated. Use styles instead";
     model()->setTitleBarVisible(visible);
 }
 

@@ -44,6 +44,10 @@
             dialog-preferred-size: 100% -1;
 
             button-box-orientation: horizontal;
+            button-box-centered: false;
+
+            has-close-button: true;
+            has-title-bar: true;
         }
     \endcode
 
@@ -160,6 +164,24 @@ class M_EXPORT MDialogStyle : public MSceneWindowStyle
         \brief If true, title text will be all uppercase.
     */
     M_STYLE_ATTRIBUTE(bool, titleCapitalization, titleCapitalization)
+
+    /*!
+        \property MDialogStyle::hasTitleBar
+        \brief Whether the dialog should have a title bar.
+
+        The title bar usually sits on top of the dialog and contains a title
+        text, an optional close button and an optional progress indicator.
+    */
+    M_STYLE_ATTRIBUTE(bool, hasTitleBar, HasTitleBar)
+
+    /*!
+        \property MDialogStyle::hasCloseButton
+        \brief Whether the dialog should have a close button.
+
+       The dialog's optional close button is provided as a convenient way of
+       rejecting the dialog and discarding all changes.
+    */
+    M_STYLE_ATTRIBUTE(bool, hasCloseButton, HasCloseButton)
 };
 
 /*!
