@@ -544,6 +544,7 @@ void TextEntryPage::createContent()
     labelCustomToolbar1->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(labelCustomToolbar1, row, 0);
     layoutPolicy->addItem(customTextEdit1, row, 1);
+    Entries << customTextEdit1;
     row++;
 
     CustomTextEdit *customTextEdit2 = new CustomTextEdit("", centralWidget());
@@ -557,6 +558,7 @@ void TextEntryPage::createContent()
     labelCustomToolbar2->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(labelCustomToolbar2, row, 0);
     layoutPolicy->addItem(customTextEdit2, row, 1);
+    Entries << customTextEdit2;
     row++;
 
     // Auto capitalisation button (Toggle)
