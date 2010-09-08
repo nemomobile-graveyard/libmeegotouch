@@ -608,25 +608,21 @@ void Ut_MLabel::testColor()
 
 void Ut_MLabel::linefeedBeforeFirstTag()
 {
-    QString htmlData;
-    QChar wierd(10);
-    htmlData = "Hey,";
-    htmlData.append(wierd); 
-    htmlData.append(" <br />");
-    htmlData.append(wierd);
-    htmlData.append("<br /> I have some ");
-    htmlData.append(wierd);
-    htmlData.append("character in between <br /> B import A.");
+    label->setWordWrap(true);
 
-    MLabel label;
-    label.setWordWrap(true);
-    label.setText(htmlData);
-    QSizeF prefSizeHint = label.sizeHint(Qt::PreferredSize);
-
-    //This is true if label interprets <br> tags correctly 
-    QVERIFY(prefSizeHint.height() > prefSizeHint.width());
-
+    label->setText("\n<b></b>\na\nb\nc\nd\ne\nf\ng\n");
+    QImage image1  = captureImage(label);
     
+    label->setText("\na<br>b<br>c<br>d<br>e<br>");
+    QImage image2  = captureImage(label);
+    
+    //Linefeed characters are ignored and but <br> tags are interpreted as line breaks
+
+    //Ignoring linefeeds causes content to be horizontal
+    QVERIFY2(contentWidth(image1) > contentHeight(image1), "'\n' needs to be ignored in rich label");
+    //Interpreting <br> tags causes content to be vertical
+    QVERIFY2(contentHeight(image2) > contentWidth(image2), "<br> needs to work in rich label");
+
 }
 
 void Ut_MLabel::highlighterEmptyRegexp()
@@ -801,6 +797,7 @@ void Ut_MLabel::multiLengthSeparator()
     QCOMPARE(shortCapture, longAndShortCapture);
 
 }
+
 
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

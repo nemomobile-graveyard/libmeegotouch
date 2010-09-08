@@ -100,7 +100,6 @@ private slots:
     void testColor_data();
     void testColor();
 
-    //regression test for bug  159042  MLabel: Unable to handle strings in presence of certain characters
     void linefeedBeforeFirstTag();
 
     //regression test for bug 178905 regexp matching an empty string causes an infinite loop in MLabelHighlighter
@@ -112,6 +111,8 @@ private slots:
     void wrapModes();
 
     void multiLengthSeparator();
+
+    
 
 private:
     TestMLabel *label;
