@@ -1519,14 +1519,16 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         d->commitPreedit();
     }
 
+    // Whether text was modified, excluding the removal of 'needRemoveFirst' text above.
     bool modified = false;
 
     switch (key) {
     case Qt::Key_Backspace:
         // backspace and delete in selection mode are special cases, only selection is removed
+        // These also need explicit validation here.
         if (wasSelecting == false) {
             modified = d->doBackspace();
-        } else {
+        } else if (d->validateCurrentBlock()) {
             d->cursor()->setCharFormat(format);
             modified = true;
         }
@@ -1535,7 +1537,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Delete:
         if (wasSelecting == false) {
             modified = d->doDelete();
-        } else {
+        } else if (d->validateCurrentBlock()) {
             modified = true;
         }
         break;

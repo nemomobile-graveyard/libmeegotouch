@@ -93,6 +93,8 @@ private slots:
     void testAutoSelection();
     void testPrompt();
     void testValidator();
+    void testValidatorSelectionRemoval_data();
+    void testValidatorSelectionRemoval();
     void testClear();
     void testCursorPositionChanged();
     void testCopyPaste();

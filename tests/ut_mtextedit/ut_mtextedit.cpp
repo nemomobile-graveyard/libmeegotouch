@@ -1264,6 +1264,37 @@ void Ut_MTextEdit::testValidator()
 }
 
 
+void Ut_MTextEdit::testValidatorSelectionRemoval_data()
+{
+    QTest::addColumn<int>("selectionRemovingKey");
+
+    QTest::newRow("removing selection with backspace") << static_cast<int>(Qt::Key_Backspace);
+    QTest::newRow("removing selection with delete") << static_cast<int>(Qt::Key_Delete);
+}
+
+void Ut_MTextEdit::testValidatorSelectionRemoval()
+{
+    QFETCH(int, selectionRemovingKey);
+
+    m_appWindow->scene()->addItem(m_subject.get());
+
+    QRegExpValidator abValidator(QRegExp("ab"), 0);
+
+    m_subject->setValidator(&abValidator);
+    m_subject->setText("ab");
+    QCOMPARE(m_subject->text(), QString("ab"));
+
+    // Select "a" and delete it. The result "b" should not be acceptable nor
+    // plausible string, thus original content should still remain.
+    m_subject->setSelection(0, 1);
+
+    QKeyEvent keyEvent(QEvent::KeyPress, selectionRemovingKey, Qt::NoModifier);
+    m_subject->scene()->sendEvent(m_subject.get(), &keyEvent);
+
+    QCOMPARE(m_subject->text(), QString("ab"));
+}
+
+
 void Ut_MTextEdit::testClear()
 {
     // test that clear() works. first set content and then test that after clear the state has reset
