@@ -34,22 +34,89 @@
 MSwipeRecognizerPrivate::MSwipeRecognizerPrivate()
   : style( 0 ),
     q_ptr( 0 )
-{
-}
+{}
 
 MSwipeRecognizerPrivate::~MSwipeRecognizerPrivate()
+{}
+
+qreal MSwipeRecognizerPrivate::vectorLength(const QPointF &vector)
 {
+    return 0.7 *(vector.x()*vector.x() + vector.y()*vector.y());
 }
 
 bool MSwipeRecognizerPrivate::isAngleDeltaBelowThreshold(qreal angleDelta, qreal threshold)
 {
-   if (angleDelta < 0)
+    if (angleDelta < 0)
         angleDelta += 360;
 
-    if (angleDelta < threshold || (360 - angleDelta ) < threshold)
-        return true;
+    return angleDelta < threshold || (360 - angleDelta) < threshold;
+}
 
-    return false;
+void MSwipeRecognizerPrivate::snapToRightAngle(MSwipeGesture *swipeGesture)
+{
+    if (isAngleDeltaBelowThreshold(0 - swipeGesture->swipeAngle(), style->angleSnappingThreshold()))
+        swipeGesture->setSwipeAngle(0);
+
+    else if (isAngleDeltaBelowThreshold(90 - swipeGesture->swipeAngle(), style->angleSnappingThreshold()))
+        swipeGesture->setSwipeAngle(90);
+
+    else if (isAngleDeltaBelowThreshold(180 - swipeGesture->swipeAngle(), style->angleSnappingThreshold()))
+        swipeGesture->setSwipeAngle(180);
+
+    else if (isAngleDeltaBelowThreshold(270 - swipeGesture->swipeAngle(), style->angleSnappingThreshold()))
+        swipeGesture->setSwipeAngle(270);
+}
+
+QGestureRecognizer::Result MSwipeRecognizerPrivate::startRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent)
+{
+    swipeGesture->time = QTime::currentTime();
+    swipeGesture->startPosition = mouseEvent->scenePos();
+    swipeGesture->setHotSpot(mouseEvent->screenPos());
+
+    return QGestureRecognizer::MayBeGesture;
+}
+
+QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent)
+{
+    QGestureRecognizer::Result result = QGestureRecognizer::CancelGesture;
+    qreal currentDistance = vectorLength(mouseEvent->scenePos() - swipeGesture->startPosition);
+
+    //Swipe angle is equal to the angle of a line between starting position and current position.
+    swipeGesture->setSwipeAngle(QLineF(swipeGesture->startPosition, mouseEvent->scenePos()).angle());
+    int elapsedTime = swipeGesture->time.msecsTo(QTime::currentTime());
+
+    if (swipeGesture->state() != Qt::NoGesture) {
+        //The gesture has already been recognized, check if the user didn't change direction.
+        qreal angleDelta = swipeGesture->recognizedAngle - swipeGesture->swipeAngle();
+
+        if ( isAngleDeltaBelowThreshold(angleDelta, style->angleThreshold()) &&
+             currentDistance > swipeGesture->prevDistance )
+            result = QGestureRecognizer::TriggerGesture;
+
+        swipeGesture->prevDistance = currentDistance;
+
+    } else if (elapsedTime > style->timeout()) {
+        // Timeout! This movement is too slow to be a swipe;
+        result = QGestureRecognizer::CancelGesture;
+
+    } else if (currentDistance > style->distanceThreshold()) {
+        swipeGesture->recognizedAngle = swipeGesture->swipeAngle();
+        swipeGesture->prevDistance = currentDistance;
+        result = QGestureRecognizer::TriggerGesture;
+
+    } else {
+        //The gesture was not yet recognized, keep checking.
+        result = QGestureRecognizer::MayBeGesture;
+    }
+
+    snapToRightAngle(swipeGesture);
+
+    return result;
+}
+
+QGestureRecognizer::Result MSwipeRecognizerPrivate::finishRecognition(MSwipeGesture *swipeGesture)
+{
+    return swipeGesture->state() != Qt::NoGesture ? QGestureRecognizer::FinishGesture : QGestureRecognizer::CancelGesture;
 }
 
 MSwipeRecognizer::MSwipeRecognizer() :
@@ -70,10 +137,8 @@ MSwipeRecognizer::~MSwipeRecognizer()
     delete d_ptr;
 }
 
-QGesture* MSwipeRecognizer::create(QObject* target)
+QGesture* MSwipeRecognizer::create(QObject* /*target*/)
 {
-    Q_UNUSED(target);
-
     return new MSwipeGesture();
 }
 
@@ -81,94 +146,34 @@ QGestureRecognizer::Result MSwipeRecognizer::recognize(QGesture *state, QObject 
 {
     Q_D(MSwipeRecognizer);
 
-    MSwipeGesture *swipeGesture = static_cast<MSwipeGesture *>(state);
     const QGraphicsSceneMouseEvent *mouseEvent = static_cast<const QGraphicsSceneMouseEvent*>(event);
     const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
     QGestureRecognizer::Result result;
+
+    MSwipeGesture *swipeGesture = static_cast<MSwipeGesture *>(state);
 
     switch (event->type()) {
     case QEvent::TouchBegin:
     case QEvent::TouchUpdate:
     case QEvent::TouchEnd:
 
-        if (swipeGesture->state() != Qt::NoGesture && touchEvent->touchPoints().count() > 1) {
-            result = QGestureRecognizer::CancelGesture;
-        } else {
-            result = QGestureRecognizer::Ignore;
-        }
+        // The swipe gesture is a one finger gesture. If we receive information that
+        // there are two or more fingers pressed, we need to cancel our gesture.
+        result = swipeGesture->state() != Qt::NoGesture && touchEvent->touchPoints().count() > 1 ? CancelGesture : Ignore;
         break;
 
     case QEvent::GraphicsSceneMousePress:
-        swipeGesture->time = QTime::currentTime();
-        swipeGesture->startPosition = mouseEvent->scenePos();
-        swipeGesture->setHotSpot(mouseEvent->screenPos());
-
-        result = QGestureRecognizer::MayBeGesture;
+        result = d->startRecognition(swipeGesture, mouseEvent);
         break;
 
-    case QEvent::GraphicsSceneMouseMove: {
-        int xDistance = qAbs(mouseEvent->scenePos().x() - swipeGesture->startPosition.x());
-        int yDistance = qAbs(mouseEvent->scenePos().y() - swipeGesture->startPosition.y());
-
-        swipeGesture->setSwipeAngle(QLineF(swipeGesture->startPosition, mouseEvent->scenePos()).angle());
-        int elapsedTime = swipeGesture->time.msecsTo(QTime::currentTime());
-
-        if (swipeGesture->state() == Qt::NoGesture && elapsedTime > d->style->timeout()) {
-
-            //Timeout! This movement is too slow to be a swipe;
-            result = QGestureRecognizer::CancelGesture;
-
-        } else if (swipeGesture->state() == Qt::NoGesture &&
-                   (xDistance > d->style->distanceThreshold() || yDistance > d->style->distanceThreshold())) {
-
-            //The gesture has just been recognized, store the current angle to validate with further events.
-            swipeGesture->recognizedAngle = QLineF(swipeGesture->startPosition, mouseEvent->scenePos()).angle();
-            QPointF gestureVector = mouseEvent->scenePos() - swipeGesture->startPosition;
-            swipeGesture->prevDistance = 0.7 *(gestureVector.x()*gestureVector.x() + gestureVector.y()*gestureVector.y());
-            result = QGestureRecognizer::TriggerGesture;
-
-        } else if (swipeGesture->state() != Qt::NoGesture) {
-
-            //The gesture was already recognized, check if the user didn't zigzagged.
-            qreal angleDelta = swipeGesture->recognizedAngle - swipeGesture->swipeAngle();
-
-            QPointF gestureVector = mouseEvent->scenePos() - swipeGesture->startPosition;
-            qreal currentDistance = 0.7 *(gestureVector.x()*gestureVector.x() + gestureVector.y()*gestureVector.y());
-
-            if ( d->isAngleDeltaBelowThreshold(angleDelta, d->style->angleThreshold()) && currentDistance > swipeGesture->prevDistance )
-                result = QGestureRecognizer::TriggerGesture;
-            else
-                result = QGestureRecognizer::CancelGesture;
-
-            swipeGesture->prevDistance = currentDistance;
-
-
-        } else {
-            //The gesture was not yet recognized, keep checking.
-            result = QGestureRecognizer::MayBeGesture;
-        }
-
-        //Snapping to 0,90,180,270 degrees:
-        if (d->isAngleDeltaBelowThreshold(0 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
-            swipeGesture->setSwipeAngle(0);
-        else if (d->isAngleDeltaBelowThreshold(90 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
-            swipeGesture->setSwipeAngle(90);
-        else if (d->isAngleDeltaBelowThreshold(180 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
-            swipeGesture->setSwipeAngle(180);
-        else if (d->isAngleDeltaBelowThreshold(270 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
-            swipeGesture->setSwipeAngle(270);
-
+    case QEvent::GraphicsSceneMouseMove:
+        result = d->updateRecognition(swipeGesture, mouseEvent);
         break;
-    }
 
-    case QEvent::GraphicsSceneMouseRelease: {
-        if (swipeGesture->state() != Qt::NoGesture) {
-            result = QGestureRecognizer::FinishGesture;
-        } else {
-            result = QGestureRecognizer::CancelGesture;
-        }
+    case QEvent::GraphicsSceneMouseRelease:
+        result = d->finishRecognition(swipeGesture);
         break;
-    }
+
     default:
         result = QGestureRecognizer::Ignore;
         break;

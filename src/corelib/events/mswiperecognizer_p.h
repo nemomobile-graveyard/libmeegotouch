@@ -23,6 +23,11 @@
 #include "mswiperecognizer.h"
 #include "mswiperecognizerstyle.h"
 
+class MSwipeGesture;
+
+class QPointF;
+class QGraphicsSceneMouseEvent;
+
 /*!
   Private class used by MSwipeRecognizer objects to
   store variables during gesture recognition.
@@ -39,7 +44,13 @@ protected:
 
     const MSwipeRecognizerStyle *style;
 
+    qreal vectorLength(const QPointF& vector);
     bool isAngleDeltaBelowThreshold(qreal angle, qreal threshold);
+    void snapToRightAngle(MSwipeGesture *swipeGesture);
+
+    QGestureRecognizer::Result startRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent);
+    QGestureRecognizer::Result updateRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent);
+    QGestureRecognizer::Result finishRecognition(MSwipeGesture *swipeGesture);
 
     MSwipeRecognizer* q_ptr;
 

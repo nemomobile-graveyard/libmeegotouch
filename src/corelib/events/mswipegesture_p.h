@@ -69,6 +69,7 @@ private:
     QTime time;
 
     friend class MSwipeRecognizer;
+    friend class MSwipeRecognizerPrivate;
 
 #ifdef UNIT_TEST
     friend class Ut_MSwipeRecognizer;
