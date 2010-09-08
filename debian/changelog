@@ -1,8 +1,10 @@
-libmeegotouch (0.20.40~1) unstable; urgency=low
+libmeegotouch (0.20.40-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixed issue with packaging the examples (reverted)
+  * Fixes: NB#190346 - plainQt - black slider label in QtExample app
+  * Fixes: NB#174712 - QWebView crashes if content set before window is
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 08 Sep 2010 16:24:19 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 08 Sep 2010 17:48:04 +0300
 
 libmeegotouch (0.20.39-1) unstable; urgency=low
 
