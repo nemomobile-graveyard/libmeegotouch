@@ -984,6 +984,55 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_appearAndDisappearWhileDis
     QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappeared);
 }
 
+void Ut_MSceneManager::testCallingAppearOnAppearingPageWhenTransitionQueueHasOtherPages()
+{
+    MSceneWindow *page1 = new MApplicationPage;
+    MSceneWindow *page2 = new MApplicationPage;
+    TestBridge testBridge;
+
+    testBridge.setObjectName("_m_testBridge");
+    testBridge.setParent(sm);
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->appearSceneWindowNow(page1);
+    sm->appearSceneWindow(page2);
+
+    QCOMPARE(page1->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(page2->sceneWindowState(), MSceneWindow::Appearing);
+
+    sm->appearSceneWindow(page1);
+
+    // Nothing changes. page1 appearance got queued.
+    QCOMPARE(page1->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(page2->sceneWindowState(), MSceneWindow::Appearing);
+
+    sm->appearSceneWindow(page2);
+
+    // Nothing changes. page2 appearance got queued as well.
+    QCOMPARE(page1->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(page2->sceneWindowState(), MSceneWindow::Appearing);
+
+    testBridge.fastForwardPageSwitchAnimation();
+
+    // queued page1 appearance got applied.
+    QCOMPARE(page1->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(page2->sceneWindowState(), MSceneWindow::Disappearing);
+
+    testBridge.fastForwardPageSwitchAnimation();
+
+    // queued page2 appearance got applied.
+    QCOMPARE(page1->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(page2->sceneWindowState(), MSceneWindow::Appearing);
+
+    testBridge.fastForwardPageSwitchAnimation();
+
+    // No more page transitions, queue is empty
+    QCOMPARE(page1->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(page2->sceneWindowState(), MSceneWindow::Appeared);
+}
+
 void Ut_MSceneManager::testDismissPageThatIsReappearing()
 {
     TestBridge testBridge;

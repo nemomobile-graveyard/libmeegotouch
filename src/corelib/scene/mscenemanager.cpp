@@ -1137,8 +1137,12 @@ bool MSceneManagerPrivate::verifySceneWindowStateBeforeAppear(
             break;
 
         case MSceneWindow::Appearing:
-            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage
-                && pageSwitchAnimation->state() == QAbstractAnimation::Running) {
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+                // If there's any page being animated it means that a page switch animation is
+                // taking place.
+                Q_ASSERT(pageSwitchAnimation->state() == QAbstractAnimation::Running);
+
+                // Remove all disappearances for this page from the queue
                 foreach(MSceneWindowTransition transition, queuedTransitionsPageSwitchAnimation) {
                     if (transition.sceneWindow == sceneWindow
                         && transition.type == MSceneWindowTransition::DisappearTransition)
@@ -1146,6 +1150,16 @@ bool MSceneManagerPrivate::verifySceneWindowStateBeforeAppear(
                         queuedTransitionsPageSwitchAnimation.removeAll(transition);
                         break;
                     }
+                }
+
+                if (!queuedTransitionsPageSwitchAnimation.isEmpty()) {
+                    // something might be queded to replace us -- make sure we are on top afterwards
+                    MSceneWindowTransition transition;
+                    transition.sceneWindow = sceneWindow;
+                    transition.type = MSceneWindowTransition::AppearTransition;
+                    transition.policy = policy;
+                    transition.animated = animatedTransition;
+                    queuedTransitionsPageSwitchAnimation.append(transition);
                 }
             } else {
                 // This appear() request cancels the previously pending
