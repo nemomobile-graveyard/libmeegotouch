@@ -1313,7 +1313,12 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
         return;
     }
 
+    // Handle rare case where this method is invoked before the polish is invoked
     Q_D(const QtMaemo6Style);
+    if (!d->m_isMInitialized) {
+        mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
+        return;
+    }
 
     switch (element) {
     case PE_Widget: {
@@ -1460,8 +1465,12 @@ void QtMaemo6Style::drawControl(ControlElement element,
         return;
     }
 
+    // Handle rare case where this method is invoked before the polish is invoked
     Q_D(const QtMaemo6Style);
-
+    if (!d->m_isMInitialized) {
+        mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
+        return;
+    }
 
     switch (element) {
 
@@ -1788,7 +1797,13 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
         return;
     }
 
+    // Handle rare case where this method is invoked before the polish is invoked
     Q_D(const QtMaemo6Style);
+    if (!d->m_isMInitialized) {
+        mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
+        return;
+    }
+
     switch (control) {
     case CC_ComboBox: {
     /*
@@ -2088,9 +2103,10 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
         return QPlastiqueStyle::subControlRect(control, option, subControl, widget);
     }
 
+    // Handle rare case where this method is invoked before the polish is invoked
     Q_D(const QtMaemo6Style);
-
     if (!d->m_isMInitialized) {
+        mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
         return QRect();
     }
 
@@ -2377,6 +2393,17 @@ QRect QtMaemo6Style::subElementRect(SubElement element,
                                     const QStyleOption* option,
                                     const QWidget* widget) const
 {
+    if( !isStyled( widget ) ) {
+        return QPlastiqueStyle::subElementRect(element, option, widget);
+    }
+
+    // Handle rare case where this method is invoked before the polish is invoked
+    Q_D(const QtMaemo6Style);
+    if (!d->m_isMInitialized) {
+        mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
+        return QRect();
+    }
+
     QRect retRect = QtMaemo6TestStyle::subElementRect(element, option, widget);
     switch(element) {
         case SE_LineEditContents: {
@@ -2454,7 +2481,12 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
         return QPlastiqueStyle::sizeFromContents(type, option, contentsSize, widget);
     }
 
+    // Handle rare case where this method is invoked before the polish is invoked
     Q_D(const QtMaemo6Style);
+    if (!d->m_isMInitialized) {
+        mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
+        return QSize();
+    }
 
     QSize retSize = QtMaemo6TestStyle::sizeFromContents(type, option, contentsSize, widget);
 
@@ -2616,6 +2648,14 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
     if ( !isStyled( widget ) ) {
         return QPlastiqueStyle::pixelMetric(metric, option, widget);
     }
+
+    // Handle rare case where this method is invoked before the polish is invoked
+    Q_D(const QtMaemo6Style);
+    if (!d->m_isMInitialized) {
+        mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
+        return 0;
+    }
+
     switch (metric) {
     case PM_ScrollBarExtent:
     case PM_ScrollBarSliderMin: {
