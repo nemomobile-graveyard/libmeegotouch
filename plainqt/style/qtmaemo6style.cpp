@@ -64,6 +64,7 @@
 #include <MTheme>
 #include <MScalableImage>
 #include <MLabel>
+#include <MImageWidget>
 #include <MApplicationWindow>
 #include <MInputMethodState>
 #include <mbuttonstyle.h>
@@ -1833,13 +1834,25 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             QStyleOptionComboBox subopt = *btn;
             subopt.rect = subControlRect(control, opt, SC_ToolButton, widget);
 
-            const MButtonStyle *style =
-                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle"));
+            const MComboBoxStyle *cbStyle =
+                static_cast<const MComboBoxStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MComboBoxStyle", "", "button"));
 
-            qDebug("Button \"%s\" font-size: %d, icon-size: %d", subopt.currentText.toLocal8Bit().constData(),
-                   style->font().pixelSize(), style->iconSize().width());
+            const MButtonStyle *bStyle =
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", "", ""));
 
-            d->drawBasicButton(p, subopt.currentText, subopt.currentIcon, subopt.rect, opt, style, style->font(), style->iconSize());
+            //cbStyle->background
+
+            //get icon from MComboBoxStyle
+            MImageWidget indicator;
+            indicator.setImage(cbStyle->indicatorImage());
+            indicator.setObjectName(cbStyle->indicatorObjectName());
+            QPixmap indicatorPM = *indicator.pixmap();
+            const QIcon indicatorIcon(indicatorPM);
+            const QSize indicatorSize(indicator.size().width(), indicator.size().height());
+
+            d->drawBasicButton(p, subopt.currentText, indicatorIcon, subopt.rect, opt, bStyle, bStyle->font(), indicatorSize);
+            //d->drawBasicButton(p, subopt.currentText, subopt.currentIcon, subopt.rect, opt, bStyle, bStyle->font(), bStyle->iconSize());
+            //drawBackground(p, btn, subopt.rect, style, widget);
         }
     }
     break;
