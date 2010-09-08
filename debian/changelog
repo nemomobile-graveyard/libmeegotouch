@@ -1,3 +1,9 @@
+libmeegotouch (0.20.41~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 08 Sep 2010 17:51:43 +0300
+
 libmeegotouch (0.20.40-1) unstable; urgency=low
 
   * Fixed issue with packaging the examples (reverted)
