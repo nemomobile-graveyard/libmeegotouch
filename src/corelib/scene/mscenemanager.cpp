@@ -183,6 +183,7 @@ MSceneManagerPrivate::~MSceneManagerPrivate()
     delete orientationAnimation;
     delete pageSwitchAnimation;
     delete pendingRotation;
+    delete styleContainer;
 }
 
 int MSceneManagerPrivate::zForWindowType(MSceneWindow::WindowType windowType)
