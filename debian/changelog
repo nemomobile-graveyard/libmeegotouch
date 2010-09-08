@@ -1,3 +1,17 @@
+libmeegotouch (0.20.39-1) unstable; urgency=low
+
+  * Fixes: NB#181896 - blank window with title "Menu" becomes visible when using invoker
+  * Fixes: NB#188156 - X11 property WM_COMMAND incorrect if the application is started with applauncher
+  * Fixes: NB#188639 - MList: selection triggered when beginning to pan
+  * Fixes: NB#189515 - Button box in MDialog is always visible
+  * Fixes: NB#188127 - MBasicListItem crashes when setting ImageWidget into it
+  * Fixes: NB#185581 - Live filtering searches for substrings
+  * Fixes: NB#189798 - Destruction of text input does not hide the VKB that was inputting into that input
+  * Fixes: NB#188973 - Ctrl + Shift + P not taking screen shot
+  * Fixes: NB#187437, NB#176872, NB#187363, Relocating text edit in a dialog
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 08 Sep 2010 16:14:25 +0300
+
 libmeegotouch (0.20.38-1) unstable; urgency=low
 
   * Fixes: NB#183435 - plainQt - selected text entry is not highlighted
