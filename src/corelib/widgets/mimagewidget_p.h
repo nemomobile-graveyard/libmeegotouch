@@ -34,17 +34,22 @@ public:
 
     void cleanUp();
     MImageWidgetPrivate &operator=(const MImageWidgetPrivate &other);
-    void setImage(const QString &id, const QSize &s = QSize());
 
-    QSizeF imageDataSize() const;
+    QSizeF imageDataSize(const QRectF& cropRect) const;
 
-    void deepCopy(const MImageWidget &);
+    void setPixmap(const QPixmap* pixmap, bool takeOwnership);
+    void setImage(const QImage& image);
 
-    const QPixmap *pixmap;
+    const QPixmap* getPixmap();
+    const QImage& getImage();
+
     mutable QPixmap imagePlaceHolder;
+
+private:
+    const QPixmap *pixmap;
     QImage image;
 
-    bool deletePixmap;
+    bool ownPixmap;
 };
 
 #endif

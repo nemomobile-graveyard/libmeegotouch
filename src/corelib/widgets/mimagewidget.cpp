@@ -33,19 +33,20 @@ M_REGISTER_WIDGET(MImageWidget)
 MImageWidgetPrivate::MImageWidgetPrivate()
     : MWidgetControllerPrivate(),
       pixmap(0),
-      deletePixmap(true)
+      ownPixmap(true)
 {
 }
 
 MImageWidgetPrivate::~MImageWidgetPrivate()
 {
-    cleanUp();
+    if (ownPixmap)
+        delete pixmap;
 }
 
 void MImageWidgetPrivate::cleanUp()
 {
     if (pixmap != 0) {
-        if (deletePixmap)
+        if (ownPixmap)
             delete pixmap;
         else
             MTheme::releasePixmap(pixmap);
@@ -54,19 +55,18 @@ void MImageWidgetPrivate::cleanUp()
     image = QImage();
 }
 
-QSizeF MImageWidgetPrivate::imageDataSize() const
+QSizeF MImageWidgetPrivate::imageDataSize(const QRectF& cropRect) const
 {
-    Q_Q(const MImageWidget);
     QSizeF imageSize = QSizeF(0, 0);
 
     if ((pixmap != 0 && !pixmap->isNull()) || (!image.isNull())) {
-        if (q->model()->crop().isEmpty()) {
+        if (cropRect.isEmpty()) {
             if (image.isNull())
                 imageSize = pixmap->size();
             else
                 imageSize = image.size();
         } else {
-            imageSize = q->model()->crop().size();
+            imageSize = cropRect.size();
         }
     }
 
@@ -77,55 +77,42 @@ MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &o
 {
     cleanUp();
 
-    if (other.pixmap != 0) {
-        if (other.deletePixmap) {
-            if (other.pixmap)
-                pixmap = new QPixmap(*(other.pixmap));
-            else
-                image = other.image;
-        }
-        else
-            setImage(other.q_func()->model()->imageId(), other.q_func()->model()->imageSize());
-    }
+    if (other.ownPixmap) {
+        if (other.pixmap)
+            pixmap = new QPixmap(*(other.pixmap));
+    } else
+      pixmap = other.pixmap;
 
-    deletePixmap = other.deletePixmap;
-    q_func()->setImage(other.q_func()->model()->imageId(), other.q_func()->model()->imageSize());
+    ownPixmap = other.ownPixmap;
+
+    image = other.image;
 
     return *this;
 }
 
-// initialize from image name
-void MImageWidgetPrivate::setImage(const QString &id, const QSize &s)
+void MImageWidgetPrivate::setPixmap(const QPixmap* pixmap, bool takeOwnership)
 {
-    Q_Q(MImageWidget);
-
-    if (id == q->model()->imageId() && s == q->model()->imageSize())
-        return;
-
     cleanUp();
 
-    q->model()->beginTransaction();
-    q->model()->setImageId(id);
-    q->model()->setImageSize(s);
-    q->model()->commitTransaction();
-
-    deletePixmap = false;
+    this->pixmap = pixmap;
+    ownPixmap = takeOwnership;
 }
 
-void MImageWidgetPrivate::deepCopy(const MImageWidget &other)
+void MImageWidgetPrivate::setImage(const QImage& image)
 {
-    Q_Q(MImageWidget);
-    *q->d_func() = *(other.d_func());
+    cleanUp();
 
-    qreal fx(0), fy(0);
+    this->image = image;
+}
 
-    other.zoomFactor(&fx, &fy);
-    q->setZoomFactor(fx, fy);
+const QPixmap* MImageWidgetPrivate::getPixmap()
+{
+    return this->pixmap;
+}
 
-    q->model()->setCrop(other.crop());
-    q->model()->setAspectRatioMode(other.aspectRatioMode());
-
-    q->d_func()->image = other.d_func()->image;
+const QImage& MImageWidgetPrivate::getImage()
+{
+    return this->image;
 }
 
 MImageWidget::MImageWidget(QGraphicsItem *parent) :
@@ -143,7 +130,6 @@ MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
     Q_D(MImageWidget);
-    d->pixmap = NULL;
     d->image = *image;
 }
 
@@ -157,14 +143,22 @@ MImageWidget::MImageWidget(const QPixmap *pixmap, QGraphicsItem *parent) :
 MImageWidget::MImageWidget(const MImageWidget &other) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), 0)
 {
-    Q_D(MImageWidget);
-    d->deepCopy(other);
+    *this = other;
 }
 
 MImageWidget &MImageWidget::operator=(const MImageWidget &other)
 {
     Q_D(MImageWidget);
-    d->deepCopy(other);
+    *d = *other.d_func();
+
+    qreal fx(0), fy(0);
+
+    other.zoomFactor(&fx, &fy);
+    setZoomFactor(fx, fy);
+
+    model()->setCrop(other.crop());
+    model()->setAspectRatioMode(other.aspectRatioMode());
+
     return *this;
 }
 
@@ -174,8 +168,10 @@ MImageWidget::~MImageWidget()
 
 void MImageWidget::setImage(const QString &id, const QSize &s)
 {
-    Q_D(MImageWidget);
-    d->setImage(id, s);
+    model()->beginTransaction();
+    model()->setImageId(id);
+    model()->setImageSize(s);
+    model()->commitTransaction();
 
     model()->setCrop(QRect());
 
@@ -246,7 +242,8 @@ void MImageWidget::zoomFactor(qreal *fx, qreal *fy) const
     if ((fx && *fx == 0) || (fy && *fy == 0)) {
         // If the zoom factor is 0, calculate it with imageSize, targetSize and widgetSize
         QSizeF buffer;
-        QSizeF imageSize = d->imageDataSize();
+        QSizeF imageSize = d->imageDataSize(model()->crop());
+
         if (imageSize.isEmpty())
             return;
 
@@ -318,11 +315,9 @@ void MImageWidget::setImage(const QString &id)
 void MImageWidget::setImage(const QImage &image)
 {
     Q_D(MImageWidget);
-    d->setImage(QString());
+    setImage(QString(), QSize());
 
-    d->cleanUp();
-    d->image = image;
-    d->deletePixmap = false;
+    d->setImage(image);
 
     model()->setCrop(QRect());
 
@@ -333,11 +328,10 @@ void MImageWidget::setImage(const QImage &image)
 void MImageWidget::setPixmap(const QPixmap &pixmap)
 {
     Q_D(MImageWidget);
-    d->setImage(QString());
+    setImage(QString(), QSize());
 
-    d->cleanUp();
-    d->pixmap = new QPixmap(pixmap);
-    d->deletePixmap = true;
+    QPixmap* newPixmap = new QPixmap(pixmap);
+    d->setPixmap(newPixmap, true);
 
     model()->setCrop(QRect());
 

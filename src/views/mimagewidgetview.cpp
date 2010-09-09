@@ -262,17 +262,15 @@ void MImageWidgetView::drawContents(QPainter *painter, const QStyleOptionGraphic
 
     Q_D(const MImageWidgetView);
 
-    const QPixmap *pixmap = d->controller->d_func()->pixmap;  
+    const QPixmap *pixmap = d->controller->d_func()->getPixmap();
 
     d->drawBorders(painter, d->drawRect);
 
     if (pixmap) {
         const_cast<MImageWidgetViewPrivate*>(d)->checkPixmapSize();
         painter->drawPixmap(d->drawRect, *pixmap, d->sourceRect);
-    } else {
-        QImage image = d->controller->d_func()->image;
-        painter->drawImage(d->drawRect, image, d->sourceRect);
-    }
+    } else
+        painter->drawImage(d->drawRect, d->controller->d_func()->getImage(), d->sourceRect);
 }
 
 void MImageWidgetView::resizeEvent(QGraphicsSceneResizeEvent *event)
@@ -297,7 +295,7 @@ void MImageWidgetView::applyStyle()
     d->applyStyle();
 
     if (!model()->imageId().isEmpty())
-        d->controller->d_func()->pixmap = d->createPixmapFromTheme();
+        d->controller->d_func()->setPixmap(d->createPixmapFromTheme(), false);
 }
 
 void MImageWidgetView::updateData(const QList<const char *> &modifications)
@@ -322,7 +320,7 @@ void MImageWidgetView::updateData(const QList<const char *> &modifications)
     }
 
     if (needsPixmap && !model()->imageId().isEmpty())
-        d->controller->d_func()->pixmap = d->createPixmapFromTheme();
+        d->controller->d_func()->setPixmap(d->createPixmapFromTheme(), false);
 
     if (needsGeometryUpdate || needsPixmap)
         updateGeometry();
@@ -355,7 +353,7 @@ QSize MImageWidgetView::imageDataSize()
 {
     Q_D(MImageWidgetView);
 
-    return d->controller->d_func()->imageDataSize().toSize();
+    return d->controller->d_func()->imageDataSize(model()->crop()).toSize();
 }
 
 M_REGISTER_VIEW_NEW(MImageWidgetView, MImageWidget)
