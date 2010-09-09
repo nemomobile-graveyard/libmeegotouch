@@ -40,6 +40,10 @@ class QMenuBar;
 class QtMaemo6KineticScrolling;
 class QStyleOptionButton;
 
+class MComboBoxStyle;
+class MListItemStyle;
+
+
 class QtMaemo6StylePrivate : public QtMaemo6TestStylePrivate
 {
 public:
@@ -230,6 +234,24 @@ public:
                           const QStyleOption *option,
                           const QString &styleClass,
                           const QString &styleObject = QString()) const;
+
+    /*!
+     * Draws the combo box button, i.e. a button which informs about the current
+     * selection. If the user clicks on the button, a popup list should be opeend.
+     * \param painter
+     * \param cbStyle the m style that delivers the indicator image
+     * \param liStyle the m style used to draw the button
+     * \param currentText the selected text
+     * \param rect the rect in which the combobox button is drawn
+     * \param option the QStyleOption used to draw the button
+     */
+    void drawComboBoxButton(QPainter *p,
+                            const MComboBoxStyle *cbStyle,
+                            const MListItemStyle *liStyle,
+                            const QString &currentText,
+                            const QRect &rect,
+                            const QStyleOption *option) const;
+
 
     /*!
      * Draws the checkbox

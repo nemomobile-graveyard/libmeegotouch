@@ -75,6 +75,7 @@
 #include <mwidgetstyle.h>
 #include <mdialogstyle.h>
 #include <mbuttoniconstyle.h>
+#include <mlistitemstyle.h>
 #include <mcheckboxstyle.h>
 #include <mcontainerstyle.h>
 #include <mcomboboxstyle.h>
@@ -91,6 +92,7 @@
 //#include <mwidgetfadeoutanimationstyle.h>
 #include <mdeviceprofile.h>
 #include <morientationtracker.h>
+#include <mcombobox.h>
 
 #include "qtmaemo6titlebar.h"
 #include "qtmaemo6dialogtitle.h"
@@ -423,9 +425,9 @@ bool QtMaemo6Style::drawBackground(QPainter *p,
     if (style) {
         if(style->backgroundImage()) {
             ret = d->drawScalableImage(p, option, rect, style->backgroundImage(), style, w);
-        } // else {
-        //    p->fillRect(rect, QBrush(style->backgroundColor()));
-        //}
+        } else if(style->backgroundColor().isValid()) {
+            p->fillRect(rect, QBrush(style->backgroundColor()));
+        }
     }
     return ret;
 }
@@ -442,7 +444,9 @@ bool QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
     qreal effectiveOpacity = p->opacity();
     if(style)
         p->setOpacity(style->backgroundOpacity() * effectiveOpacity);
-
+    if (!scalableImage) {
+        qWarning() << "Image nocht valid *********************";
+    }
     if (scalableImage && rect.isValid()) {
         if (MTheme::hasPendingRequests()) {
             //cache widgets that need an update, after the images are loaded
@@ -716,6 +720,24 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
             drawButtonText(style, p, textAndIconRect, text, style->horizontalTextAlign() | style->verticalTextAlign(), font);
         }
     }
+}
+
+void QtMaemo6StylePrivate::drawComboBoxButton(QPainter *p,
+                                              const MComboBoxStyle *cbStyle,
+                                              const MListItemStyle *liStyle,
+                                              const QString &currentText,
+                                              const QRect &rect,
+                                              const QStyleOption *option) const
+{
+    //Q_Q(const QtMaemo6Style);
+    if (!cbStyle || !liStyle)
+        return;
+
+    Q_UNUSED(p)
+    Q_UNUSED(currentText)
+    Q_UNUSED(rect)
+    Q_UNUSED(option)
+
 }
 
 void QtMaemo6StylePrivate::drawButtonText(const MButtonStyle *style,
@@ -1818,17 +1840,6 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
 
     switch (control) {
     case CC_ComboBox: {
-    /*
-        if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
-
-            const MComboBoxStyle *style =
-                static_cast<const MComboBoxStyle *>(QtMaemo6StylePrivate::mStyle(cmb->state,
-                        "MComboBoxStyle"));
-            drawBackground(p, opt, cmb->rect, style, widget);
-        }
-    }
-    break;
-    */
         if (const QStyleOptionComboBox *btn = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
             mDebug("PlainQt Style") << "### drawing ComboBox";
             QStyleOptionComboBox subopt = *btn;
@@ -1836,23 +1847,19 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
 
             const MComboBoxStyle *cbStyle =
                 static_cast<const MComboBoxStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MComboBoxStyle", "", "button"));
-
-            const MButtonStyle *bStyle =
-                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", "", ""));
-
-            //cbStyle->background
+            const MListItemStyle *liStyle =
+                  static_cast<const MListItemStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MListItemStyle", "", "button", false, new MComboBox()));
 
             //get icon from MComboBoxStyle
-            MImageWidget indicator;
-            indicator.setImage(cbStyle->indicatorImage());
-            indicator.setObjectName(cbStyle->indicatorObjectName());
-            QPixmap indicatorPM = *indicator.pixmap();
-            const QIcon indicatorIcon(indicatorPM);
-            const QSize indicatorSize(indicator.size().width(), indicator.size().height());
+//            MImageWidget indicator;
+//            indicator.setImage(cbStyle->indicatorImage());
+//            indicator.setObjectName(cbStyle->indicatorObjectName());
+//            QPixmap indicatorPM = *indicator.pixmap();
+//            const QIcon indicatorIcon(indicatorPM);
+//            const QSize indicatorSize(indicator.size().width(), indicator.size().height());
+            drawBackground(p, btn, subopt.rect, liStyle, widget);
 
-            d->drawBasicButton(p, subopt.currentText, indicatorIcon, subopt.rect, opt, bStyle, bStyle->font(), indicatorSize);
-            //d->drawBasicButton(p, subopt.currentText, subopt.currentIcon, subopt.rect, opt, bStyle, bStyle->font(), bStyle->iconSize());
-            //drawBackground(p, btn, subopt.rect, style, widget);
+            d->drawComboBoxButton(p, cbStyle, liStyle, subopt.currentText, subopt.rect, opt);
         }
     }
     break;
