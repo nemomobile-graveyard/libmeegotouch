@@ -277,7 +277,7 @@ icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Local
 #endif
 
 #ifdef HAVE_ICU
-static bool isTwelveHours(const QString &icuFormatQString)
+bool MLocalePrivate::isTwelveHours(const QString &icuFormatQString) const
 {
     if (icuFormatQString.contains('\'')) {
         bool isQuoted = false;
@@ -1458,6 +1458,21 @@ MLocale::TimeFormat24h MLocale::timeFormat24h() const
     Q_D(const MLocale);
     return d->_timeFormat24h;
 }
+
+#ifdef HAVE_ICU
+MLocale::TimeFormat24h MLocale::defaultTimeFormat24h() const
+{
+    Q_D(const MLocale);
+    QString defaultTimeShortFormat
+        = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                             d->_calendarType,
+                             MLocale::LocaleDefaultTimeFormat24h);
+    if (d->isTwelveHours(defaultTimeShortFormat))
+        return MLocale::TwelveHourTimeFormat24h;
+    else
+        return MLocale::TwentyFourHourTimeFormat24h;
+}
+#endif
 
 #ifdef HAVE_ICU
 MCollator MLocale::collator() const

@@ -87,6 +87,8 @@ public:
 
     static icu::DateFormatSymbols *createDateFormatSymbols(const icu::Locale &locale);
 
+    // checks if an ICU format string is a twelve hour format string or not
+    bool isTwelveHours(const QString &icuFormatQString) const;
     // converts an ICU date format to 24 hour clock
     void dateFormatTo24h(icu::DateFormat *df) const;
     // converts an ICU date format to 12 hour clock

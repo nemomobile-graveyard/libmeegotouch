@@ -363,13 +363,52 @@ public:
 
     /*!
      * \brief Sets whether 24 hour clock, 12 hour clock or default is used
+     *
+     * \param timeFormat24h enum to choose the 12/24 hour mode
+     *
+     * If MLocale::TwelveHourTimeFormat24h is given as the parameter
+     * the locale is forced to use 24 hour mode, if
+     * MLocale::TwentyFourHourTimeFormat24h is given as the parameter
+     * the locale is forced to use 12 hour mode.
+     * If MLocale::LocaleDefaultTimeFormat24 is given as the parameter
+     * the locale is neither forced to use 12 nor 24 hour mode,
+     * it uses the default for this locale then.
+     *
+     * \sa timeFormat24h() const
+     * \sa defaultTimeFormat24h() const
      */
     void setTimeFormat24h(TimeFormat24h timeFormat24h);
 
     /*!
      * \brief Returns whether 24 hour clock, 12 hour clock or default is used
+     *
+     * returns MLocale::TwelveHourTimeFormat24h if 12 hour mode
+     * is forced for this locale,
+     * returns MLocale::TwentyFourHourTimeFormat24h if 24 hour mode
+     * is forced for this locale and returns
+     * MLocale::LocaleDefaultTimeFormat24h if the 12/24 hour mode
+     * is not forced but left to what this locale would use by default.
+     *
+     * \sa setTimeFormat24h(TimeFormat24h timeFormat24h)
+     * \sa defaultTimeFormat24h() const
      */
     TimeFormat24h timeFormat24h() const;
+
+    /*!
+     * \brief Returns whether 24 hour or 12 hour format is used by default
+     *
+     * returns MLocale::TwelveHourTimeFormat24h if this locale would use
+     * 12 hour mode by default and MLocale::TwentyFourHourTimeFormat24h
+     * if this locale would use 24 hour mode by default.
+     *
+     * Actually this locale may use a different mode because
+     * the default can be overridden, this method shows only
+     * what the default would be if it were not overridden.
+     *
+     * \sa timeFormat24h() const
+     * \sa setTimeFormat24h(TimeFormat24h timeFormat24h)
+     */
+    TimeFormat24h defaultTimeFormat24h() const;
 
     /*!
      * \brief Returns a MCollator which compares QStrings based on language/country/collation rules

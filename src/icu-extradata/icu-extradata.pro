@@ -7,7 +7,8 @@ ICUUSRDATA = $$replace(ICUDATA, icudt, usrdt) # for example “usrdt44l”
 
 greaterThan(ICUVERSION, 4.4) {
     LOCALESTXT = $${ICUVERSION}/fi.txt \
-                 $${ICUVERSION}/it.txt
+                 $${ICUVERSION}/it.txt \
+                 $${ICUVERSION}/ms_BN.txt
     LANGTXT    = $${ICUVERSION}/lang/de_CH.txt
     REGIONTXT  = $${ICUVERSION}/region/de_CH.txt
 } else {

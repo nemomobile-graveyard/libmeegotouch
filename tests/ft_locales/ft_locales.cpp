@@ -1185,37 +1185,69 @@ void Ft_Locales::checkAvailableLocales()
                     }
                     if (dateType == MLocale::DateNone && timeType == MLocale::TimeNone)
                         continue;
-                    for (int hourMode = 0; hourMode < 3; ++hourMode) {
-                        MLocale::TimeFormat24h timeFormat24h;
+                    for (int hourMode = 0; hourMode < 2; ++hourMode) {
+                        MLocale::TimeFormat24h timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
+                        locale.setTimeFormat24h(timeFormat24h);
+                        QString icuFormatStringDefault
+                            = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
+                                                     static_cast<MLocale::TimeType>(timeType),
+                                                     calendarType);
+                        QString formattedDateTimeDefault
+                            = locale.formatDateTime(calendar,
+                                                    static_cast<MLocale::DateType>(dateType),
+                                                    static_cast<MLocale::TimeType>(timeType));
+                        QString icuFormatStringForced;
+                        QString formattedDateTimeForced;
                         QString timeFormat24hString;
                         switch (hourMode) {
                         case 0:
-                            timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
-                            timeFormat24hString = "24/12 hour mode: default";
+                            timeFormat24h = MLocale::TwelveHourTimeFormat24h;
+                            locale.setTimeFormat24h(timeFormat24h);
+                            icuFormatStringForced
+                                = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
+                                                         static_cast<MLocale::TimeType>(timeType),
+                                                         calendarType);
+                            formattedDateTimeForced
+                                = locale.formatDateTime(calendar,
+                                                        static_cast<MLocale::DateType>(dateType),
+                                                        static_cast<MLocale::TimeType>(timeType));
+                            if (locale.defaultTimeFormat24h() == MLocale::TwelveHourTimeFormat24h) {
+                                QCOMPARE(icuFormatStringDefault, icuFormatStringForced);
+                                timeFormat24hString = "24/12 hour mode: 12 (default)";
+                            }
+                            else {
+                                timeFormat24hString = "24/12 hour mode: 12          ";
+                            }
                             break;
                         case 1:
-                            timeFormat24h = MLocale::TwelveHourTimeFormat24h;
-                            timeFormat24hString = "24/12 hour mode: 12     ";
-                            break;
-                        case 2:
                             timeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
-                            timeFormat24hString = "24/12 hour mode: 24     ";
+                            locale.setTimeFormat24h(timeFormat24h);
+                            icuFormatStringForced
+                                = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
+                                                         static_cast<MLocale::TimeType>(timeType),
+                                                         calendarType);
+                            formattedDateTimeForced
+                                = locale.formatDateTime(calendar,
+                                                        static_cast<MLocale::DateType>(dateType),
+                                                        static_cast<MLocale::TimeType>(timeType));
+                            if (locale.defaultTimeFormat24h() == MLocale::TwentyFourHourTimeFormat24h) {
+                                QCOMPARE(icuFormatStringDefault, icuFormatStringForced);
+                                timeFormat24hString = "24/12 hour mode: 24 (default)";
+                            }
+                            else {
+                                timeFormat24hString = "24/12 hour mode: 24          ";
+                            }
                             break;
                         }
-                        locale.setTimeFormat24h(timeFormat24h);
                         ft_localesTestOutput +=
                             newLinePlusSupportedLocaleName
                             + "\t"
                             + dateTypeString + ", " + timeTypeString + ", "
                             + calendarTypeString + ", " + timeFormat24hString
                             + "\t"
-                            + locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
-                                                     static_cast<MLocale::TimeType>(timeType),
-                                                     calendarType)
+                            + icuFormatStringForced
                             + " -> "
-                            + locale.formatDateTime(calendar,
-                                                    static_cast<MLocale::DateType>(dateType),
-                                                    static_cast<MLocale::TimeType>(timeType));
+                            + formattedDateTimeForced;
                     }
                 }
             }
@@ -1233,8 +1265,13 @@ void Ft_Locales::checkAvailableLocales()
     QCOMPARE(uint(bytesWritten), qstrlen(ft_localesTestOutput.toUtf8().constData()));
     ft_localesTestOutputFile.close();
 
-    QString ft_localesTestInputFileName =
-        qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-icu-" + U_ICU_VERSION + ".txt";
+    QString ft_localesTestInputFileName;
+    if (runFullTest)
+        ft_localesTestInputFileName =
+            qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-full-icu-" + U_ICU_VERSION + ".txt";
+    else
+        ft_localesTestInputFileName =
+            qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-icu-" + U_ICU_VERSION + ".txt";
     QFile ft_localesTestInputFile(ft_localesTestInputFileName);
     if (!ft_localesTestInputFile.open(QIODevice::ReadOnly))
         QFAIL(qPrintable("could not open file " + ft_localesTestInputFileName));
