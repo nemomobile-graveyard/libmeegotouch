@@ -139,7 +139,7 @@ To obtain the compiler and linker flags, add the following lines:
   link_libraries(${MEEGOTOUCH_BOOSTABLE_LDFLAGS})
 \endcode  
 
-In order to install the application binary with a \c .launch prefix, use the following
+In order to install the application binary with a \c .launch filename extension, use the following
 line:
 
 \code
