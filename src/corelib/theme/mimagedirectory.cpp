@@ -363,11 +363,36 @@ void MThemeImagesDirectory::reloadLocalizedResources(const QString &locale)
     localizedImageResources.clear();
     idsInLocalizedSvgImages.clear();
 
-    m_locale = locale;
-    QString localePath = m_path + QDir::separator() + "locale" + QDir::separator() + m_locale + QDir::separator();
-    if (m_locale.isEmpty() || !QFile::exists(localePath)) {
+    if( locale.isEmpty() ) {
+        m_locale = "";
         return;
     }
+
+    //try to find a matching directory for the specified locale, if exactly mathcing 
+    //directory is not found we try to truncate the locale string to find next matching 
+    //directory ("ar_SA" ==> "ar", "en_GB" ==> "en" etc. )
+    QString localePath;
+    m_locale = locale;
+    while(1) {
+        //check if directory for the locale is found and break the loop
+        localePath = m_path + QDir::separator() + "locale" + QDir::separator() + m_locale + QDir::separator();
+        if( QFile::exists(localePath) ) {
+            break;
+        }
+
+        //find last underscore and truncate locale string to that 
+        //if the locale cannot be truncated anymore return from the method     
+        int k = m_locale.lastIndexOf('_');
+        if( k == -1 ) {
+            m_locale = "";
+            return;
+        }
+        m_locale.truncate(k);
+    }
+
+    //output a warning if the original locale was truncated
+    if( m_locale != locale )
+        mWarning("MThemeImagesDirectory") << "Using" << m_locale << "as locale, because no localized resources was found for" << locale;
 
     // read localized images, icons and svgs
     readImageResources(localePath + pixmapsDir, true);
