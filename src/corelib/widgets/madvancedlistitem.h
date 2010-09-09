@@ -34,9 +34,25 @@ class M_EXPORT MAdvancedListItem : public MListItem
     Q_OBJECT
 
     Q_PROPERTY(QString title READ title WRITE setTitle)
+
+    /*!
+        \deprecated please use imageWidget property
+    */
     Q_PROPERTY(MImageWidget* imagewidget READ imageWidget WRITE setImageWidget)
+
+    /*!
+        \deprecated please use sideTopImageWidget property
+    */
     Q_PROPERTY(MImageWidget* sideTopImage READ sideTopImageWidget)
+
+    /*!
+        \deprecated please use sideBottomImageWidget property
+    */
     Q_PROPERTY(MImageWidget* sideBottomImage READ sideBottomImageWidget)
+
+    Q_PROPERTY(MImageWidget* imageWidget READ imageWidget WRITE setImageWidget)
+    Q_PROPERTY(MImageWidget* sideTopImageWidget READ sideTopImageWidget)
+    Q_PROPERTY(MImageWidget* sideBottomImageWidget READ sideBottomImageWidget)
     Q_PROPERTY(MProgressIndicator* progressIndicator READ progressIndicator)
 
 public:
