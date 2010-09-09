@@ -129,14 +129,14 @@ void MProgressIndicatorBarViewPrivate::createMaskOnGeometry()
        +-----+-------+---+--------+-----+
      */
 
-    QImage canvas(q->rect().width(),barHeight, QImage::Format_ARGB32);
-    canvas.fill(Qt::transparent);
+    QImage canvas(q->rect().width(),barHeight, QImage::Format_ARGB32_Premultiplied);
+    canvas.fill(0);
 
-    leftEndMask = QImage(leftWidth,barHeight,QImage::Format_ARGB32);
-    leftEndMask.fill(Qt::transparent);
+    leftEndMask = QImage(leftWidth,barHeight,QImage::Format_ARGB32_Premultiplied);
+    leftEndMask.fill(0);
 
-    rightEndMask = QImage(rightWidth,barHeight,QImage::Format_ARGB32);
-    rightEndMask.fill(Qt::transparent);
+    rightEndMask = QImage(rightWidth,barHeight,QImage::Format_ARGB32_Premultiplied);
+    rightEndMask.fill(0);
 
     // first scale up and draw the entire mask image
     p.begin( &canvas );
@@ -153,8 +153,8 @@ void MProgressIndicatorBarViewPrivate::createMaskOnGeometry()
     p.drawImage( QRect(topLeft,rightEndMask.size()), canvas, QRect(QPoint(q->rect().toRect().width()-rightWidth,0),QSize(rightWidth,barHeight)) );
     p.end();
 
-    barMask = QImage( QSize(q->style()->knownBarTexture()->pixmap()->width(),barHeight),QImage::Format_ARGB32);
-    barMask.fill(Qt::transparent);
+    barMask = QImage( QSize(q->style()->knownBarTexture()->pixmap()->width(),barHeight),QImage::Format_ARGB32_Premultiplied);
+    barMask.fill(0);
 
     // alpha blending is more correct in the middle
     const QPoint centerTop( q->rect().center().x() - barMask.size().width()/2, q->rect().y() );
@@ -267,8 +267,8 @@ void MProgressIndicatorBarViewPrivate::setupBarBody()
 {
     Q_Q(MProgressIndicatorBarView);
 
-    barBody = QImage( q->rect().size().toSize(), QImage::Format_ARGB32 );
-    barBody.fill(Qt::transparent);
+    barBody = QImage( q->rect().size().toSize(), QImage::Format_ARGB32_Premultiplied );
+    barBody.fill(0);
 
     // draw the mask
     QPainter painter(&barBody);
@@ -296,7 +296,7 @@ void MProgressIndicatorBarViewPrivate::setupBarBody()
     painter.end();
 
     // draw the right end
-    rightEndImage = QImage( rightEndRect.size().toSize(), QImage::Format_ARGB32 );
+    rightEndImage = QImage( rightEndRect.size().toSize(), QImage::Format_ARGB32_Premultiplied );
 
     painter.begin(&rightEndImage);
     if(textureTiled())
@@ -313,7 +313,7 @@ void MProgressIndicatorBarViewPrivate::setupBarBody()
     rightEnd = rightEndImage;
 
     // draw the left end
-    leftEndImage = QImage( leftEndRect.size().toSize(), QImage::Format_ARGB32 );
+    leftEndImage = QImage( leftEndRect.size().toSize(), QImage::Format_ARGB32_Premultiplied );
 
     painter.begin(&leftEndImage);
     q->style()->knownBarTexture()->draw( leftEndRect.toRect(), &painter );
@@ -395,8 +395,8 @@ void MProgressIndicatorBarViewPrivate::buildAnimationCache()
 
     for(int i=0; i<animationCacheSize; i++)
     {
-        QImage* cachedPixmap = new QImage(cachedPixmapSize,QImage::Format_ARGB32);
-        cachedPixmap->fill(Qt::transparent);
+        QImage* cachedPixmap = new QImage(cachedPixmapSize,QImage::Format_ARGB32_Premultiplied);
+        cachedPixmap->fill(0);
 
         backgroundPainter->drawPixmap( slice_x += slice_width, 0, *scalableBarImage->pixmap() );
 
