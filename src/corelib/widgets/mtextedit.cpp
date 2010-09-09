@@ -1131,6 +1131,7 @@ void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &cu
  */
 void MTextEditPrivate::addStyleToPreeditStyling(StyleType currentStyleType, bool setValue)
 {
+    Q_Q(MTextEdit);
     QTextCharFormat format;
     int preeditStyleSize = preeditStyling.size();
 
@@ -1143,9 +1144,9 @@ void MTextEditPrivate::addStyleToPreeditStyling(StyleType currentStyleType, bool
     } else if (currentStyleType == Italic) {
         format.setFontItalic(setValue);
     } else { // bold
-        QFont::Weight wt = QFont::Normal;
-        if (setValue)
-            wt = QFont::Bold;
+        QFont font = q->document()->defaultFont();
+        QFont::Weight defaultWeight = static_cast<QFont::Weight>(font.weight());
+        QFont::Weight wt = (setValue ? QFont::Bold : defaultWeight);
 
         format.setFontWeight(wt);
     }

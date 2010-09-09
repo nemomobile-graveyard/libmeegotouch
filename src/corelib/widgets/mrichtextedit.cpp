@@ -124,7 +124,7 @@ void MRichTextEditPrivate::_q_updateStyle()
     MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
                                                            "Bold",
                                                            "pressed",
-                                                           QVariant((QFont::Bold == format.fontWeight()) ? "true" : "false"));
+                                                           QVariant((format.fontWeight() > QFont::Normal) ? "true" : "false"));
     MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
                                                            "Underline",
                                                            "pressed",
@@ -245,9 +245,9 @@ void MRichTextEdit::setFontBold(bool bold)
     } else {
         QTextCursor textcursor = textCursor();
 
-        QFont::Weight wt = QFont::Normal;
-        if (bold)
-            wt = QFont::Bold;
+        QFont font = document()->defaultFont();
+        QFont::Weight defaultWeight = static_cast<QFont::Weight>(font.weight());
+        QFont::Weight wt = (bold ? QFont::Bold : defaultWeight);
 
         QTextCharFormat format;
         format.setFontWeight(wt);
