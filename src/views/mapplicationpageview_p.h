@@ -21,6 +21,9 @@
 #define MAPPLICATIONPAGEVIEW_P_H
 
 #include "mapplicationpageview.h"
+#include <QPointer>
+
+class QGraphicsLinearLayout;
 
 class MApplicationPageViewPrivate
 {
@@ -28,10 +31,30 @@ class MApplicationPageViewPrivate
 
 protected:
     MApplicationPageView *q_ptr;
+    MApplicationPage *controller;
 
 public:
     MApplicationPageViewPrivate();
     virtual ~MApplicationPageViewPrivate();
+    void init();
+
+    void setWidgetHeight(MWidget *w, qreal height);
+    QGraphicsLinearLayout *createLayout();
+    MWidget *createSpacer(QGraphicsItem *parent);
+    void propagateOnDisplayChangeEvent(bool visible);
+    void setCentralWidget(QGraphicsWidget *newCentralWidget);
+    void updateAutoMarginsForComponents();
+    void resetPannableViewportPositionIfNeeded();
+
+    void _q_onPageStateChanged();
+
+    MWidget *topSpacer;
+    MWidget *bottomSpacer;
+    MWidget *mainWidget;
+    QGraphicsLinearLayout *mainLayout;
+    QPointer<QGraphicsWidget> centralWidget;
+
+    QRectF exposedContentRect;
 };
 
 #endif

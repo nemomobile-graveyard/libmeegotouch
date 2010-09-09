@@ -117,12 +117,31 @@ private:
     M_MODEL_PROPERTY(bool, autoMarginsForComponentsEnabled, AutoMarginsForComponentsEnabled, true, true)
 
     /*!
+        \property MApplicationPageModel::rememberPosition
+        \brief Whether the page should remember the pannable viewport position it had
+               on its last appearance.
+     */
+    M_MODEL_PROPERTY(bool, rememberPosition, RememberPosition, true, true)
+
+    /*!
+        \property MApplicationPageModel::exposedContentRect
+        \brief Area of the page whose content is not covered by any bar
+     */
+    M_MODEL_PROPERTY(QRectF, exposedContentRect, ExposedContentRect, true, QRectF())
+
+    /*!
         \property MApplicationPageModel::title
         \brief Title for a page.
 
         Title appears on the navigation bar.
      */
     M_MODEL_PROPERTY(QString, title, Title, true, QString())
+
+    /*!
+        \property MApplicationPageModel::centralWidget
+        \brief Central widget for the applicationPage.
+    */
+    M_MODEL_PTR_PROPERTY(QGraphicsWidget *, centralWidget, CentralWidget, true, new MWidget)
 };
 
 #endif

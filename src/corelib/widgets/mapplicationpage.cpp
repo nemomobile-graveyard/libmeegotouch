@@ -19,139 +19,37 @@
 
 #include "mapplicationpage.h"
 #include "mapplicationpage_p.h"
-#include <mapplicationpagemodel.h>
-#include <MDebug>
-#include <MPannableViewport>
-#include <QGraphicsLinearLayout>
-#include <MTheme>
-#include <MApplication>
-#include <MApplicationWindow>
-#include <MPannableViewport>
-#include <MSceneManager>
-#include <MEscapeButtonPanel>
-#include <MAction>
-#include <MScene>
-#include <MPositionIndicator>
-#include <mdockwidget.h>
-#include <mapplicationwindow_p.h>
-
+#include "mapplicationpagemodel.h"
+#include "mapplicationwindow.h"
+#include "mwidgetview.h"
 #include "mondisplaychangeevent.h"
-
 #include "mwidgetcreator.h"
+#include "mpannableviewport.h"
+
+#include <QAction>
+#include <QGraphicsLinearLayout>
+
 M_REGISTER_WIDGET(MApplicationPage)
 
 MApplicationPagePrivate::MApplicationPagePrivate() :
-    rememberPosition(false),
-    topSpacer(NULL),
-    bottomSpacer(NULL),
-    mainWidget(NULL),
-    mainLayout(NULL),
-    pannableViewPort(NULL),
-    centralWidget(NULL),
-    contentCreated(false),
-    backEnabled(false)
+    pannableViewport(0),
+    contentCreated(false)
 {}
 
 void MApplicationPagePrivate::init()
 {
     Q_Q(MApplicationPage);
 
-    contentCreated = false;
-    backEnabled = false;
-    rememberPosition = true;
-
-    QGraphicsLinearLayout *layout = createLayout();
-    q->setLayout(layout);
-
-    pannableViewPort = new MPannableViewport(q);
-    pannableViewPort->setClipping(false);
-    layout->addItem(pannableViewPort);
-
-    mainWidget = new MWidget;
-
-    pannableViewPort->setWidget(mainWidget);
-
-    mainLayout = createLayout();
-    mainWidget->setLayout(mainLayout);
-
-    topSpacer = createSpacer(mainWidget);
-    setWidgetHeight(topSpacer, 0);
-    mainLayout->addItem(topSpacer);
-
-    centralWidget = new MWidget(mainWidget);
-    mainLayout->addItem(centralWidget);
-
-    bottomSpacer = createSpacer(mainWidget);
-    setWidgetHeight(bottomSpacer, 0);
-    mainLayout->addItem(bottomSpacer);
-}
-
-QGraphicsLinearLayout *MApplicationPagePrivate::createLayout()
-{
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0.0);
-    return layout;
-}
 
-MWidget *MApplicationPagePrivate::createSpacer(QGraphicsItem *parent)
-{
-    MWidget *spacer = new MWidget(parent);
-    return spacer;
-}
+    pannableViewport = new MPannableViewport;
+    pannableViewport->setClipping(false);
 
-void MApplicationPagePrivate::setWidgetHeight(MWidget *w, qreal height)
-{
-    w->setMinimumHeight(height);
-    w->setMaximumHeight(height);
-    w->setPreferredHeight(height);
-}
+    layout->addItem(pannableViewport);
 
-void MApplicationPagePrivate::deleteCurrentCentralWidget()
-{
-    if (centralWidget) {
-        mainLayout->removeItem(centralWidget);
-        delete centralWidget;
-        centralWidget = 0;
-    }
-}
-
-void MApplicationPagePrivate::placeCentralWidget(QGraphicsWidget *widget)
-{
-    if (widget) {
-        // insert the new central widget between top and bottom spacers
-        if (mainLayout->count() > 0)
-            mainLayout->insertItem(1,widget);
-        else
-            mainLayout->addItem(widget);
-        centralWidget = widget;
-    }
-}
-
-void MApplicationPagePrivate::updatePannableViewportPosition()
-{
-    if (!rememberPosition) {
-        pannableViewPort->setPosition(QPointF(0, 0));
-    }
-}
-
-void MApplicationPagePrivate::propagateOnDisplayChangeEvent(bool visible)
-{
-    Q_Q(MApplicationPage);
-
-    if (q->scene() == 0 || q->sceneManager() == 0)
-        return;
-
-    if (centralWidget) {
-        QRectF viewRect(QPointF(0, 0), q->sceneManager()->visibleSceneSize());
-        if (visible) {
-            MOnDisplayChangeEvent ev(MOnDisplayChangeEvent::MustBeResolved, viewRect);
-            q->scene()->sendEvent(centralWidget, &ev);
-        } else {
-            MOnDisplayChangeEvent ev(false, viewRect);
-            q->scene()->sendEvent(centralWidget, &ev);
-        }
-    }
+    q->setLayout(layout);
 }
 
 MApplicationPage::MApplicationPage(QGraphicsItem *parent)
@@ -165,22 +63,20 @@ MApplicationPage::MApplicationPage(QGraphicsItem *parent)
 
 MApplicationPage::~MApplicationPage()
 {
+    setCentralWidget(0);
 }
 
 void MApplicationPage::setCentralWidget(QGraphicsWidget *centralWidget)
 {
-    Q_D(MApplicationPage);
+    if (model()->centralWidget())
+        delete model()->centralWidget();
 
-    d->deleteCurrentCentralWidget();
-    d->placeCentralWidget(centralWidget);
-    d->propagateOnDisplayChangeEvent(isOnDisplay());
+    model()->setCentralWidget(centralWidget);
 }
 
 QGraphicsWidget *MApplicationPage::centralWidget()
 {
-    Q_D(MApplicationPage);
-
-    return d->centralWidget;
+    return model()->centralWidget();
 }
 
 MApplicationWindow *MApplicationPage::applicationWindow()
@@ -227,44 +123,40 @@ bool MApplicationPage::isContentCreated() const
 
 void MApplicationPage::setRememberPosition(bool remember)
 {
-    Q_D(MApplicationPage);
-
-    d->rememberPosition = remember;
+    model()->setRememberPosition(remember);
 }
 
 bool MApplicationPage::rememberPosition() const
 {
-    Q_D(const MApplicationPage);
-
-    return d->rememberPosition;
+    return model()->rememberPosition();
 }
 
 void MApplicationPage::setPannable(bool pannable)
 {
     Q_D(MApplicationPage);
 
-    d->pannableViewPort->setEnabled(pannable);
+    d->pannableViewport->setEnabled(pannable);
 }
 
 bool MApplicationPage::isPannable() const
 {
     Q_D(const MApplicationPage);
 
-    return d->pannableViewPort->isEnabled();
-}
-
-Qt::Orientations MApplicationPage::panningDirection() const
-{
-    Q_D(const MApplicationPage);
-
-    return d->pannableViewPort->panDirection();
+    return d->pannableViewport->isEnabled();
 }
 
 void MApplicationPage::setPanningDirection(Qt::Orientations directions)
 {
     Q_D(MApplicationPage);
 
-    d->pannableViewPort->setPanDirection(directions);
+    d->pannableViewport->setPanDirection(directions);
+}
+
+Qt::Orientations MApplicationPage::panningDirection() const
+{
+    Q_D(const MApplicationPage);
+
+    return d->pannableViewport->panDirection();
 }
 
 void MApplicationPage::actionEvent(QActionEvent *e)
@@ -301,8 +193,6 @@ void MApplicationPagePrivate::doEnterDisplayEvent()
         q->createContent();
     }
 
-    updatePannableViewportPosition();
-
     MWidgetPrivate::doEnterDisplayEvent();
 }
 
@@ -310,45 +200,15 @@ void MApplicationPagePrivate::setExposedContentRect(const QRectF &exposedContent
 {
     Q_Q(MApplicationPage);
 
-    if (exposedContentRect != this->exposedContentRect) {
-        this->exposedContentRect = exposedContentRect;
+    if (exposedContentRect != q->model()->exposedContentRect()) {
+        q->model()->setExposedContentRect(exposedContentRect);
         emit q->exposedContentRectChanged();
-
-        updateAutoMarginsForComponents();
     }
 }
 
 QRectF MApplicationPage::exposedContentRect() const
 {
-    Q_D(const MApplicationPage);
-
-    return d->exposedContentRect;
-}
-
-void MApplicationPagePrivate::updateAutoMarginsForComponents()
-{
-    Q_Q(MApplicationPage);
-
-    qreal topMargin = 0.0;
-    qreal bottomMargin = 0.0;
-
-    if (q->autoMarginsForComponentsEnabled()) {
-        topMargin = exposedContentRect.y();
-
-        qreal exposedContentRectBottomEdge = exposedContentRect.y() + exposedContentRect.height();
-        bottomMargin = q->boundingRect().height() - exposedContentRectBottomEdge;
-    }
-
-    pannableViewPort->positionIndicator()->setPos(exposedContentRect.topLeft());
-    setWidgetHeight(pannableViewPort->positionIndicator(), exposedContentRect.height());
-
-    setWidgetHeight(topSpacer, topMargin);
-    setWidgetHeight(bottomSpacer, bottomMargin);
-
-    // FIXME: This activation is needed so input widget relocator can correctly calculate
-    // positions after decorations hide. Correct place for this would be after all
-    // decorations have been hidden. Only one activation is required.
-    pannableViewPort->widget()->layout()->activate();
+    return model()->exposedContentRect();
 }
 
 MApplicationPageModel::ComponentDisplayMode MApplicationPage::componentDisplayMode(
@@ -421,7 +281,8 @@ void MApplicationPage::setEscapeMode(MApplicationPageModel::PageEscapeMode mode)
 MPannableViewport * MApplicationPage::pannableViewport()
 {
     Q_D(MApplicationPage);
-    return d->pannableViewPort;
+
+    return d->pannableViewport;
 }
 
 #include "moc_mapplicationpage.cpp"

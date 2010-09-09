@@ -213,6 +213,8 @@ void MApplicationWindowPrivate::init()
 #endif
     q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
             SLOT(_q_updatePageExposedContentRect()));
+    q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()),
+               SLOT(_q_updatePageExposedContentRect()));
 }
 
 #ifdef Q_WS_X11
@@ -400,14 +402,6 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
 
         if (member == MApplicationPageModel::ProgressIndicatorVisible) {
             navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
-
-        } else if (member == MApplicationPageModel::AutoMarginsForComponentsEnabled) {
-
-            // FIXME: Fix this on the next ABI break.
-            // updateAutoMarginsForComponents() calls due to changes in
-            // MApplicationPageModel::autoMarginsForComponentsEnabled() should
-            // be handled in MApplicationPage::updateData().
-            page->d_func()->updateAutoMarginsForComponents();
 
         } else if (member == MApplicationPageModel::EscapeMode) {
             setupPageEscape();

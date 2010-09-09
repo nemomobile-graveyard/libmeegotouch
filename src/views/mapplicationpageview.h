@@ -22,6 +22,7 @@
 
 #include "mscenewindowview.h"
 #include <mapplicationpagestyle.h>
+#include <mapplicationpagemodel.h>
 
 class MApplicationPage;
 class MApplicationPageViewPrivate;
@@ -29,20 +30,25 @@ class MApplicationPageViewPrivate;
 class M_EXPORT MApplicationPageView : public MSceneWindowView
 {
     Q_OBJECT
-    M_VIEW(MWidgetModel, MApplicationPageStyle)
+    M_VIEW(MApplicationPageModel, MApplicationPageStyle)
 
 public:
     MApplicationPageView(MApplicationPage *controller);
     virtual ~MApplicationPageView();
 
-    //! \reimp
-    //virtual QRectF boundingRect() const;
-    //! \reimp_end
-
 protected:
     MApplicationPageViewPrivate *const d_ptr;
 
+    //! \reimp
+    virtual void applyStyle();
+    virtual void setupModel();
+
+protected slots:
+    virtual void updateData(const QList<const char *>& modifications);
+    //! \reimp_end
+
 private:
+    Q_PRIVATE_SLOT(d_func(), void _q_onPageStateChanged())
     Q_DECLARE_PRIVATE(MApplicationPageView)
 };
 
