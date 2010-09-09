@@ -147,7 +147,6 @@ void MWidgetPrivate::resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visib
     if (item->isWidget()) {
         mWidget = qobject_cast<MWidget *>(static_cast<QGraphicsWidget *>(item));
         if (mWidget) {
-
             // Check if event was defined explicitly. If so then send it, otherwise
             // let sendOnDisplayChangeEvent() resolve visibility and send
             // the corresponding event.
@@ -195,7 +194,10 @@ void MWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
     switch (event->state()) {
     case MOnDisplayChangeEvent::FullyOnDisplay:
     case MOnDisplayChangeEvent::PartiallyOnDisplay:
-        if (!d->onDisplay || !d->onDisplaySet) {
+        // If the widget has not previously gotten enterDisplayEvent
+        // and it hasn't been hidden by hide() (setVisible(false)),
+        // consider this event as entering the display.
+        if ((!d->onDisplay || !d->onDisplaySet) && isVisible()) {
             d->doEnterDisplayEvent();
         }
         break;
@@ -256,7 +258,7 @@ bool MWidget::isOnDisplay() const
         graphicsView = viewsList.at(i);
         ++i;
 
-        if (!graphicsView->isVisible() || graphicsView->isMinimized()) {
+        if (!graphicsView->isVisible()) {
             continue;
         }
 
@@ -419,7 +421,7 @@ bool MWidget::event(QEvent *event)
                return true;
            }
            break;
-        default: 
+        default:
            if(type >= QEvent::User) {
                if (type == MCancelEvent::eventNumber())
                    cancelEvent((MCancelEvent *)event);
