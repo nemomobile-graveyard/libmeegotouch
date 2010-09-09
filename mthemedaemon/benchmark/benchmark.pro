@@ -21,8 +21,6 @@ QT += svg \
 # Check for mixing of const and non-const iterators,
 # which can cause problems when built with some compilers:
 DEFINES += QT_STRICT_ITERATORS
-!win32:CONFIG += link_pkgconfig
-PKGCONFIG += gconf-2.0
 
 # Input
 SOURCES += benchmarkremoteclient.cpp \
@@ -32,12 +30,20 @@ SOURCES += benchmarkremoteclient.cpp \
     ../../src/corelib/theme/mthemedaemonclient.cpp \
     ../../src/corelib/theme/mthemedaemonprotocol.cpp \
     ../../src/corelib/theme/mthemeresourcemanager.cpp \
-    ../../src/corelib/core/mgconfitem.cpp \
     ../../src/corelib/core/mcpumonitor.cpp \
     main.cpp \
     benchmarklocalclient.cpp \
     common.cpp \
     ../../src/corelib/theme/mlocalthemedaemon.cpp
+
+contains(DEFINES, HAVE_GCONF) {
+    SOURCES += ../../src/corelib/core/mgconfitem.cpp
+
+    CONFIG += link_pkgconfig
+    PKGCONFIG += gconf-2.0
+} else {
+    SOURCES += ../../src/corelib/core/mgconfitem_stub.cpp
+}
 
 HEADERS += benchmarkremoteclient.h \
     ../../src/corelib/theme/imthemedaemon.h \

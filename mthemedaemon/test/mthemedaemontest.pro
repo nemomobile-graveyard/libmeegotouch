@@ -14,9 +14,6 @@ DEFINES += IMAGESDIR=\\\"./images\\\"
 # we want to be able to access private classes
 DEFINES += UNIT_TEST
 
-!win32:CONFIG += link_pkgconfig
-PKGCONFIG += gconf-2.0
-
 # Input
 SOURCES += main.cpp \
            clientmanager.cpp \
@@ -28,9 +25,15 @@ SOURCES += main.cpp \
            ../../src/corelib/theme/mthemedaemonclient.cpp \
            ../../src/corelib/theme/mthemedaemonprotocol.cpp \
            ../../src/corelib/theme/mthemeresourcemanager.cpp \
-           ../../src/corelib/core/mgconfitem.cpp \
            ../../src/corelib/core/mcpumonitor.cpp \
 
+contains(DEFINES, HAVE_GCONF) {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += gconf-2.0
+    SOURCES += ../../src/corelib/core/mgconfitem.cpp
+} else {
+    SOURCES += ../../src/corelib/core/mgconfitem_stub.cpp
+}
 
 HEADERS += clientmanager.h \
            testclient.h \

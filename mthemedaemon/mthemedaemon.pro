@@ -24,7 +24,6 @@ DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
 DEFINES += QT_STRICT_ITERATORS
 
 !win32:CONFIG += link_pkgconfig
-PKGCONFIG += gconf-2.0
 PKGCONFIG += gobject-2.0
 PKGCONFIG += x11
 
@@ -37,8 +36,14 @@ SOURCES += main.cpp \
            ../src/corelib/theme/mthemedaemonclient.cpp \
            ../src/corelib/theme/mthemedaemonprotocol.cpp \
            ../src/corelib/theme/mthemeresourcemanager.cpp \
-           ../src/corelib/core/mgconfitem.cpp \
            ../src/corelib/core/mcpumonitor.cpp \
+
+contains(DEFINES, HAVE_GCONF) {
+    PKGCONFIG += gconf-2.0
+    SOURCES += ../src/corelib/core/mgconfitem.cpp
+} else {
+    SOURCES += ../src/corelib/core/mgconfitem_stub.cpp
+}
 
 HEADERS += \
            mthemedaemonserver.h \

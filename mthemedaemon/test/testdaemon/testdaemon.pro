@@ -20,9 +20,6 @@ DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
 # which can cause problems when built with some compilers:
 DEFINES += QT_STRICT_ITERATORS
 
-CONFIG += link_pkgconfig
-PKGCONFIG += gconf-2.0
-
 # Input
 SOURCES += ../../main.cpp \
            ../../mthemedaemonserver.cpp \
@@ -32,8 +29,16 @@ SOURCES += ../../main.cpp \
            ../../../src/corelib/theme/mthemedaemonclient.cpp \
            ../../../src/corelib/theme/mthemedaemonprotocol.cpp \
            ../../../src/corelib/theme/mthemeresourcemanager.cpp \
-           ../../../src/corelib/core/mgconfitem.cpp \
            ../../../src/corelib/core/mcpumonitor.cpp \
+
+contains(DEFINES, HAVE_GCONF) {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += gconf-2.0
+    SOURCES += ../../../src/corelib/core/mgconfitem.cpp
+}
+} else {
+    SOURCES += ../../../src/corelib/core/mgconfitem_stub.cpp
+}
 
 HEADERS += \
            ../../mthemedaemonserver.h \

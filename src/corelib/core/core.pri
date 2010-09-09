@@ -84,3 +84,4 @@ contains(DEFINES, HAVE_GCONF) {
 } else {
     SOURCES += $$CORE_SRC_DIR/mgconfitem_stub.cpp
 }
+
