@@ -251,8 +251,6 @@ QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
         if(state & QStyle::State_Sunken)
             mode = "pressed";
         else if(state & QStyle::State_On)
-           // mode = "active";
-           // mode = "pressed";
             mode = "selected";
         else if(state & QStyle::State_Selected)
             mode = "selected";
@@ -727,16 +725,76 @@ void QtMaemo6StylePrivate::drawComboBoxButton(QPainter *p,
                                               const MListItemStyle *liStyle,
                                               const QString &currentText,
                                               const QRect &rect,
-                                              const QStyleOption *option) const
+                                              const QStyleOption *option,
+                                              const Qt::LayoutDirection layoutDirection) const
 {
-    //Q_Q(const QtMaemo6Style);
+    Q_Q(const QtMaemo6Style);
     if (!cbStyle || !liStyle)
         return;
 
-    Q_UNUSED(p)
-    Q_UNUSED(currentText)
-    Q_UNUSED(rect)
-    Q_UNUSED(option)
+    q->drawBackground(p, option, rect, liStyle);
+
+    int paddingLeft, paddingTop, paddingRight, paddingBottom;
+    paddingFromStyle(liStyle, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
+
+    //draw indicator Image
+    MImageWidget indicator;
+    indicator.setImage(cbStyle->indicatorImage());
+    indicator.setObjectName(cbStyle->indicatorObjectName());
+
+    QSize indicatorSize;
+    if (indicator.pixmap()) {
+        QPixmap indicatorPm = *indicator.pixmap();
+
+        if (indicatorPm.size().width() > rect.width()
+            || indicatorPm.size().height() > rect.height()) {
+            indicatorPm = indicatorPm.scaled(rect.size(), Qt::KeepAspectRatio);
+        }
+
+        indicatorSize = indicatorPm.size();
+
+        // there are no padding values for the indicator, so the spacing has to be hardcoded
+        // maybe there is a better way?
+        QRect usedIndicatorRect;
+        if (layoutDirection == Qt::LeftToRight)
+            usedIndicatorRect = rect.adjusted(0, 0, -paddingRight, 0);
+        else
+            usedIndicatorRect = rect.adjusted(paddingRight, 0, 0, 0);
+
+        q->drawItemPixmap(p, usedIndicatorRect, Qt::AlignVCenter | Qt::AlignRight, indicatorPm);
+
+    }
+
+    //drawText
+    if (!currentText.isEmpty()) {
+
+        QColor textColor;
+        QFont textFont;
+
+        const MLabelStyle *labelStyle =
+                static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(
+                        QStyle::State_Enabled, "MLabelStyle", cbStyle->subTitleObjectName()));
+
+        if (labelStyle) {
+            textColor = labelStyle->color();
+            textFont = labelStyle->font();
+        } else {
+            textColor = qApp->palette().text().color();
+            textFont =  qApp->font();
+        }
+
+        int realPaddingRight = indicatorSize.isValid() ? paddingRight+indicatorSize.width() : paddingRight;
+        QRect textRect;
+        if (layoutDirection == Qt::LeftToRight)
+            textRect = rect.adjusted(paddingLeft, 0, -realPaddingRight, 0);
+        else
+            textRect = rect.adjusted(realPaddingRight, 0, -paddingLeft, 0);
+
+        p->setPen(textColor);
+        p->setFont(textFont);
+        p->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, currentText);
+
+    }
 
 }
 
@@ -1850,16 +1908,10 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             const MListItemStyle *liStyle =
                   static_cast<const MListItemStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MListItemStyle", "", "button", false, new MComboBox()));
 
-            //get icon from MComboBoxStyle
-//            MImageWidget indicator;
-//            indicator.setImage(cbStyle->indicatorImage());
-//            indicator.setObjectName(cbStyle->indicatorObjectName());
-//            QPixmap indicatorPM = *indicator.pixmap();
-//            const QIcon indicatorIcon(indicatorPM);
-//            const QSize indicatorSize(indicator.size().width(), indicator.size().height());
-            drawBackground(p, btn, subopt.rect, liStyle, widget);
-
-            d->drawComboBoxButton(p, cbStyle, liStyle, subopt.currentText, subopt.rect, opt);
+            if (widget)
+                d->drawComboBoxButton(p, cbStyle, liStyle, subopt.currentText, subopt.rect, opt, widget->layoutDirection());
+            else
+                d->drawComboBoxButton(p, cbStyle, liStyle, subopt.currentText, subopt.rect, opt, qApp->layoutDirection());
         }
     }
     break;

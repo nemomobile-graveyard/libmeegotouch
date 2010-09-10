@@ -244,13 +244,15 @@ public:
      * \param currentText the selected text
      * \param rect the rect in which the combobox button is drawn
      * \param option the QStyleOption used to draw the button
+     * \param layoutDirection the direction (either Qt::LeftToRight or Qt::RightToLeft)
      */
     void drawComboBoxButton(QPainter *p,
                             const MComboBoxStyle *cbStyle,
                             const MListItemStyle *liStyle,
                             const QString &currentText,
                             const QRect &rect,
-                            const QStyleOption *option) const;
+                            const QStyleOption *option,
+                            const Qt::LayoutDirection layoutDirection = Qt::LeftToRight) const;
 
 
     /*!
