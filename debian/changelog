@@ -1,8 +1,16 @@
-libmeegotouch (0.20.41~1) unstable; urgency=low
+libmeegotouch (0.20.41-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#190995 - Close button displayed for a while when opening/closing Message Box
+  * Fixes: NB#188527 - Message Ui got crashed while playing around sending and Composing SMS and MMS
+  * Fixes: NB#186012 - Progress bar doesn't start properly in Backup application
+  * Fixes: NB#185011 - Widget placed in view menu via MWidgetAction doesn't update its style on theme change.
+  * Fixes: NB#188778 - showFullScreen() prevents switcherEntered() and switcherExited() from being emitted
+  * Fixes: NB#190714 - ApplicationPages fails to appear if appear()s are called many times fast enough
+  * Fixes: NB#181047 - Opening and closing Application Menu reenables any previously disabled Toolbar buttons
+  * Fixes: NB#189072 - QValidator is not invoked when selected text is removed with backspace
+  * Fixes: NB#184318 - With the auto capitalization feature off [...]
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 08 Sep 2010 17:51:43 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Fri, 10 Sep 2010 15:28:23 +0300
 
 libmeegotouch (0.20.40-1) unstable; urgency=low
 
