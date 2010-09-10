@@ -595,10 +595,14 @@ void MDialog::setupModel()
 
 void MDialog::dismissEvent(MDismissEvent *event)
 {
+    if (isModal() && isSystem()) {
+        event->ignore();
+        return;
+    }
+
     setResult(Rejected);
     emit finished(result());
     emit rejected();
-
     event->accept();
 }
 
