@@ -21,7 +21,6 @@
 #include "qtmaemo6clicklabel.h"
 #include "qtmaemo6style_p.h"
 
-#include "qtmaemo6clicklabel.h"
 #include <QCoreApplication>
 #include <QToolButton>
 #include <QPushButton>
@@ -37,7 +36,6 @@
 #include <mlabelstyle.h>
 #include <MTheme>
 #include <mnavigationbarstyle.h>
-#include <mlabelstyle.h>
 
 
 

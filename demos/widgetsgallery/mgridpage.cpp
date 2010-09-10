@@ -17,6 +17,8 @@
 **
 ****************************************************************************/
 
+#include "mgridpage.h"
+
 #include <QDir>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
@@ -38,7 +40,6 @@
 #include <MGridLayoutPolicy>
 
 #include "utils.h"
-#include "mgridpage.h"
 #include "gridmodel.h"
 
 #include "gridimagewidget.h"

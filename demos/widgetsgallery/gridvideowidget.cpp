@@ -17,9 +17,9 @@
 **
 ****************************************************************************/
 
-#include <QGraphicsSceneMouseEvent>
-
 #include "gridvideowidget.h"
+
+#include <QGraphicsSceneMouseEvent>
 
 #ifdef HAVE_GSTREAMER
 

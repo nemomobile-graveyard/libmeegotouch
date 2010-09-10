@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef MFILEPICKER_H
-#define MFILEPICKER_H
+#ifndef QTMEEGOFILEPICKER_H
+#define QTMEEGOFILEPICKER_H
 
 #include <MApplication>
 #include <MApplicationWindow>

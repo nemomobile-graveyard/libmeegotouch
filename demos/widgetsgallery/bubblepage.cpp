@@ -17,6 +17,8 @@
 **
 ****************************************************************************/
 
+#include "bubblepage.h"
+
 #include <QDir>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
@@ -29,7 +31,6 @@
 #include <MBubbleItem>
 
 #include "utils.h"
-#include "bubblepage.h"
 #include "bubblelistmodel.h"
 
 static MBubbleItem *createBubbleItem(const QModelIndex& index)
@@ -161,7 +162,7 @@ QString BubblePage::timedemoTitle()
 void BubblePage::bubbleLinkActivated(QString url)
 {
     //% "Link activated"
-    messageBox = new MMessageBox(qtTrId("xx_wg_bubblepage_linkactivated") + " " + url);
+    messageBox = new MMessageBox(qtTrId("xx_wg_bubblepage_linkactivated") + ' ' + url);
     messageBox->appear(MSceneWindow::DestroyWhenDone);
 }
 

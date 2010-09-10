@@ -451,7 +451,7 @@ void PushButtonPage::retranslateUi()
     /*% "1. Single button" */
     text2->setText(qtTrId("xx_push_button_text2"));
 
-    /*% "When using a button that literally has no other button next to it (neither in rows or colums) set the Object name to <i>#CommonSingleButton.</i>" */
+    /*% "When using a button that literally has no other button next to it (neither in rows or columns) set the Object name to <i>#CommonSingleButton.</i>" */
     text3->setText(qtTrId("xx_push_button_text3"));
 
     /*% "Multiple buttons" */

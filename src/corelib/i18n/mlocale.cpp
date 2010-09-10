@@ -364,7 +364,8 @@ void MLocalePrivate::dateFormatTo12h(icu::DateFormat *df) const
             bool amPmMarkerWritten = false;
             QString language = categoryName(MLocale::MLcTime);
             bool writeAmPmMarkerBeforeHours = false;
-            if (language.startsWith("ja") || language.startsWith("zh"))
+            if (language.startsWith( QLatin1String("ja"))
+                || language.startsWith( QLatin1String("zh")))
                 writeAmPmMarkerBeforeHours = true;
             if (writeAmPmMarkerBeforeHours) {
                 for (int i = 0; i < icuFormatQString.size(); ++i) {
@@ -1006,7 +1007,7 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
         _telephoneLocale = localeName;
         // here we set the phone number grouping depending on the
         // setting in the gconf key
-        if ( _telephoneLocale.startsWith( "en_US" ) ) {
+        if ( _telephoneLocale.startsWith( QLatin1String( "en_US" ) ) ) {
             _phoneNumberGrouping = MLocale::NorthAmericanPhoneNumberGrouping;
         } else {
             _phoneNumberGrouping = MLocale::NoPhoneNumberGrouping;
@@ -2837,7 +2838,7 @@ QString MLocale::formatPhoneNumber( const QString& phoneNumber,
     // system setting for the grouping
     if ( tmpGrouping == DefaultPhoneNumberGrouping )
     {
-        if ( d->_telephoneLocale.startsWith( "en_US" ) ) {
+        if ( d->_telephoneLocale.startsWith( QLatin1String( "en_US" ) ) ) {
             tmpGrouping = NorthAmericanPhoneNumberGrouping;
         } else {
             tmpGrouping = NoPhoneNumberGrouping;
@@ -3014,7 +3015,7 @@ QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
   // 00 is not a valid country calling code in north america
   // -> do not do grouping in this case at all
   if ( ( grouping == MLocale::NorthAmericanPhoneNumberGrouping )
-       && phoneNumber.startsWith( "00" ) )
+       && phoneNumber.startsWith( QLatin1String( "00" ) ) )
   {
     return phoneNumber;
   }
@@ -3036,13 +3037,13 @@ QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
     result.append( '+' );
     remaining.remove( 0, 1 );
   }
-  else if ( remaining.startsWith( "00" ) )
+  else if ( remaining.startsWith( QLatin1String( "00" ) ) )
   {
     foundCountryCodeIndicator = true;
     result.append( "00 " );
     remaining.remove( 0, 2 );
   }
-  else if ( remaining.startsWith( "011" ) )
+  else if ( remaining.startsWith( QLatin1String( "011" ) ) )
   {
     foundCountryCodeIndicator = true;
     result.append( "011 " );
@@ -3108,7 +3109,7 @@ QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
       return result;
     }
     // 11 is an invalid code, so disable grouping for this case
-    else if ( remaining.startsWith( "11" ) )
+    else if ( remaining.startsWith( QLatin1String( "11" ) ) )
     {
       result.append( remaining );
       return result;

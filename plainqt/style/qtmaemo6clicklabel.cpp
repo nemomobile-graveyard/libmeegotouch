@@ -17,9 +17,11 @@
 **
 ****************************************************************************/
 
+#include <qtmaemo6clicklabel.h>
+
 #include <QPainter>
 #include <QPixmap>
-#include <qtmaemo6clicklabel.h>
+
 #include <qtmaemo6style.h>
 
 QtMaemo6ClickLabel::QtMaemo6ClickLabel(QWidget *parent)

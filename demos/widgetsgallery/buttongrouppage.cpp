@@ -28,7 +28,6 @@
 #include <MButtonGroup>
 #include <MDebug>
 #include <MApplication>
-#include <MButtonGroup>
 
 ButtonGroupPage::ButtonGroupPage() :
     TemplatePage(TemplatePage::Buttons),

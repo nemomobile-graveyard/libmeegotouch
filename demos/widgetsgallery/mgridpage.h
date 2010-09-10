@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef DUIGRIDPAGE_H
-#define DUIGRIDPAGE_H
+#ifndef MGRIDPAGE_H
+#define MGRIDPAGE_H
 
 #include <MList>
 #include <MVideoWidget>

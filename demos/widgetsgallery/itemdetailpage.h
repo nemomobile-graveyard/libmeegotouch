@@ -1,4 +1,4 @@
-            /***************************************************************************
+/***************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
@@ -16,6 +16,9 @@
 ** of this file.
 **
 ****************************************************************************/
+
+#ifndef ITEMDETAILPAGE_H
+#define ITEMDETAILPAGE_H
 
 #include "timedemopage.h"
 #include "gridmodel.h"
@@ -152,3 +155,5 @@ private:
     qreal scaleFactor;
     qreal lastScaleFactor;
 };
+
+#endif

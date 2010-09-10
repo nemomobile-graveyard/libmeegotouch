@@ -99,7 +99,7 @@ void Timedemo::showFirstPage()
             demoPages.append(page);
         }
     } else {
-        foreach(const QString title, demoPageTitles) {
+        foreach(const QString& title, demoPageTitles) {
             TimedemoPage *page;
             if (title == m_pFrontPage->timedemoTitle()) {
                 page = m_pFrontPage;
@@ -303,7 +303,7 @@ void Timedemo::saveFramelog() {
             framelog.writeTextElement("type", resultIter->type);
             framelog.writeTextElement("runtime", QString::number(resultIter->runtime()));
             QString timestamps;
-            foreach(const timestamp ts, resultIter->timestamps) {
+            foreach(const timestamp& ts, resultIter->timestamps) {
                 timestamps.append(QString::number(ts - firstTs) + ',');
             }
             timestamps.truncate(timestamps.size() - 1);

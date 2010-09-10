@@ -17,11 +17,11 @@
 **
 ****************************************************************************/
 
+#include "gridmodel.h"
+
 #include <QImage>
 #include <QPixmap>
 #include <QPainter>
-
-#include "gridmodel.h"
 
 GridModel::GridModel(const QSize &size, const QString &dir)
     : QAbstractTableModel(),
@@ -93,7 +93,7 @@ void GridModel::createItems()
 
         if( videoTypes.contains( file.suffix() )) {
 #ifdef HAVE_GSTREAMER
-            if( file.fileName().startsWith("thumb-") ) {
+            if( file.fileName().startsWith( QLatin1String( "thumb-" ) ) ) {
                 m.path = path;
                 m.type = MediaType::Video;
             } else {
@@ -129,7 +129,7 @@ void GridModel::insertImage(QImage image, int index)
 void GridModel::rateImage(MediaType::Rating rating, const QString& id)
 {
     int index = 0;
-    foreach(QVariant v, m_items) {
+    foreach(const QVariant& v, m_items) {
         if( v.canConvert<MediaType>() ) {
             MediaType m = m_items[index].value<MediaType>();
 

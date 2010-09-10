@@ -90,7 +90,7 @@ public:
     };
 
     /*!
-     * \brief Returns the current intervall in milliseconds the deacceleration methode is called.
+     * \brief Returns the current interval in milliseconds the deacceleration methode is called.
      * After a press event a move must been made with at least this manhattan
      * length before the scrolling starts. If there is no move within this length
      * the mouse press event is forwarded to the widget under the mouse.

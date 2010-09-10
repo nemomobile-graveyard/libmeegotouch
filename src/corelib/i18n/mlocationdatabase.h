@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef MCITYLIST_H
-#define MCITYLIST_H
+#ifndef MLOCATIONDATABASE_H
+#define MLOCATIONDATABASE_H
 
 #include "mexport.h"
 

@@ -291,7 +291,7 @@ void PhoneBookImageLoader::addJob(const QModelIndex &index)
     if (entry == NULL)
         return;
     
-    foreach (Job job, thumbnailLoadingJobs) {
+    foreach (const Job& job, thumbnailLoadingJobs) {
         if (job.entry == entry)
             return;
     }

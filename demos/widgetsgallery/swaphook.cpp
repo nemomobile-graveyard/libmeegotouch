@@ -1,3 +1,5 @@
+#include "swaphook.h"
+
 #include <cstdio>
 #include <ctime>
 
@@ -9,7 +11,6 @@
 #include <MApplication>
 #include <MWindow>
 
-#include "swaphook.h"
 #ifdef EGL
 #include <dlfcn.h>
 #endif
@@ -79,10 +80,10 @@ SwapHookPrivate::SwapHookPrivate() :
 #ifdef EGL
     QString preload = qgetenv("LD_PRELOAD");
 
-    QStringList libs = preload.split(":", QString::SkipEmptyParts);
+    QStringList libs = preload.split(':', QString::SkipEmptyParts);
     libs << QString("libEGL.so");
 
-    foreach (QString candidate, libs) {
+    foreach (const QString& candidate, libs) {
 
         lib = dlopen(candidate.toAscii().data(), RTLD_NOW);
 

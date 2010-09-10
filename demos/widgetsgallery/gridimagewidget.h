@@ -17,6 +17,9 @@
 **
 ****************************************************************************/
 
+#ifndef GRIDIMAGEWIDGET_H
+#define GRIDIMAGEWIDGET_H
+
 #include <MImageWidget>
 #include <QString>
 #include "gridmodel.h"
@@ -44,3 +47,5 @@ private:
     QString m_id;
     MGridPage* m_page;
 };
+
+#endif

@@ -139,7 +139,7 @@ public:
         QVariant data = index.data(Qt::DisplayRole);
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
 
-        if(highlightText == "") {
+        if(highlightText.isEmpty()) {
             listCell->setTitle(entry->fullName);
         } else {
             QString highlightedTitle = entry->fullName;
@@ -545,9 +545,9 @@ void MListPage::liveFilteringTextChanged()
         return;
 
     // With HWKB live filtering text edit is hidden when empty and shown when user enters text
-    if(list->filtering()->editor()->text() == "" && list->filtering()->editor()->isOnDisplay())
+    if(list->filtering()->editor()->text().isEmpty() && list->filtering()->editor()->isOnDisplay())
         QTimer::singleShot(1500, this, SLOT(hideEmptyTextEdit()));
-    else if(list->filtering()->editor()->text() != "" && !list->filtering()->editor()->isOnDisplay())
+    else if( !list->filtering()->editor()->text().isEmpty() && !list->filtering()->editor()->isOnDisplay())
         showTextEdit(true);
 
     // Load images for items which match filtering
@@ -571,7 +571,7 @@ void MListPage::filteringVKB()
 
 void MListPage::hideEmptyTextEdit()
 {
-    if (list->filtering()->enabled() && list->filtering()->editor()->text() == "") {
+    if (list->filtering()->enabled() && list->filtering()->editor()->text().isEmpty()) {
         showTextEdit(false);
     }
 }

@@ -38,7 +38,7 @@ class CustomTextEdit: public MTextEdit
 {
     Q_OBJECT
 public:
-    CustomTextEdit(const QString &text = QString(), QGraphicsItem *parent = 0);
+    explicit CustomTextEdit(const QString &text = QString(), QGraphicsItem *parent = 0);
 public slots:
     void changeLabel();
     void changeButton();

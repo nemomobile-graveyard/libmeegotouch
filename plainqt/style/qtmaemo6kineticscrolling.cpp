@@ -62,7 +62,7 @@ void QtMaemo6KineticScrolling::enableOn(QAbstractScrollArea *scrollArea)
 
     if(QAbstractItemView* itemView = qobject_cast<QAbstractItemView*>(scrollArea)) {
         //FIXME: public API usage... scrollPerItem prevents the kinetic from working
-        // proberly
+        // properly
         itemView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
         itemView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     }
@@ -327,7 +327,7 @@ void QtMaemo6KineticScrolling::timerEvent(QTimerEvent *event)
         }
         if (data->state() == KineticData::BounceBack) {
             QPoint pos = data->scrollArea->viewport()->pos();
-            //bounce back to orignal position, this is required if e.g. headers are enabled
+            //bounce back to original position, this is required if e.g. headers are enabled
             pos -= data->viewportOrigPos;
             QPoint bounceStep;
 

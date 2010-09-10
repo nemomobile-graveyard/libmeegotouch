@@ -50,7 +50,7 @@ QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity);
 
 /*!
  * This class emulates the M windowdecoration, it provides a emulation
- * of the M titlebar, adds scrolling functionallity and places a statusbar
+ * of the M titlebar, adds scrolling functionality and places a statusbar
  * on the bottom of the screen, if the application has one.
  * This class inherits indirectly from QPlastiqueStyle and reimplements
  * necessarry methods for doing the correct m-like styling.
@@ -138,7 +138,7 @@ public:
     int kineticScrollStartOffset() const;
 
     /*!
-     * \brief Returns the current intervall in milliseconds the deacceleration methode
+     * \brief Returns the current interval in milliseconds the deacceleration methode
      * is called.
      *
      * After a press event a move must been made with at least this manhattan

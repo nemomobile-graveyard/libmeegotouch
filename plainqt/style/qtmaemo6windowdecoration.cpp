@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#include "qtmaemo6style.h"
 #include "qtmaemo6windowdecoration.h"
+#include "qtmaemo6style.h"
 #include "qtmaemo6titlebar.h"
 #include "qtmaemo6menuproxy.h"
 #include "qtmaemo6style_p.h"

@@ -212,7 +212,7 @@ QList<MCountry> MLocationDatabase::countries()
 
     QList<MCountry> list;
 
-    foreach( MCountry country, d->countries )
+    foreach( const MCountry& country, d->countries )
     {
         list.append( country );
     }
@@ -226,7 +226,7 @@ QList<MCity> MLocationDatabase::cities()
 
     QList<MCity> list;
 
-    foreach( MCity city, d->cities )
+    foreach( const MCity& city, d->cities )
     {
         list.append( city );
     }
@@ -240,7 +240,7 @@ QList<MCity> MLocationDatabase::citiesInCountry( const QString& countryKey )
 
     QList<MCity> list;
 
-    foreach( MCity city, d->cities )
+    foreach( const MCity& city, d->cities )
     {
         if ( city.country().key() == countryKey )
         {

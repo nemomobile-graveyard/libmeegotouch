@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef BUBBLEMODEL_H
-#define BUBBLEMODEL_H
+#ifndef BUBBLELISTMODEL_H
+#define BUBBLELISTMODEL_H
 
 #include <QAbstractItemModel>
 #include <QList>

@@ -229,7 +229,7 @@ void MeegoFilePicker::contentItemsSelected(const QString &aCallerId,
 
     mSelectedFileNames.clear();
 
-    foreach(QString contentItem, aContentItems)
+    foreach(const QString& contentItem, aContentItems)
     {
         Live<nfo::FileDataObject> data =
           ::tracker()->liveNode(QUrl(contentItem));

@@ -1,5 +1,5 @@
-#ifndef __SWAPHOOK_H__
-#define __SWAPHOOK_H__
+#ifndef SWAPHOOK_H
+#define SWAPHOOK_H
 
 // Used to store time in milliseconds.
 typedef unsigned long long timestamp;
