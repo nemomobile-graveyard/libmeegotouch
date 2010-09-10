@@ -1,3 +1,9 @@
+libmeegotouch (0.20.42~1) unstable; urgency=low
+
+  * [unreleased]
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Fri, 10 Sep 2010 15:37:26 +0300
+
 libmeegotouch (0.20.41-1) unstable; urgency=low
 
   * Fixes: NB#190995 - Close button displayed for a while when opening/closing Message Box
