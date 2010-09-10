@@ -255,7 +255,7 @@ void MDialogView::applyStyle()
     // update title bar height
     if (style()->titleBarHeight() <= 0)
         d->titleBar->hide();
-    else
+    else if(model()->titleBarVisible())
         d->titleBar->show();
 
     d->titleBar->setMinimumHeight(style()->titleBarHeight());
