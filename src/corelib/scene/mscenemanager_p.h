@@ -173,6 +173,7 @@ public:
     void onSceneWindowEnteringDisappearedState(MSceneWindow *sceneWindow);
 
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
+    QList<QGraphicsWidget*> findSceneWindowsForMoveAnimation(MSceneWindow *sceneWindow);
 
     MSceneManagerStyleContainer &style();
     const MSceneManagerStyleContainer &style() const;
@@ -214,6 +215,7 @@ public:
     QGraphicsWidget *rootElement;
     QGraphicsWidget *homeButtonRootElement;
     QGraphicsWidget *navigationBarRootElement;
+    QGraphicsWidget *dockWidgetRootElement;
 
     MOrientationAnimation *orientationAnimation;
     MPageSwitchAnimation *pageSwitchAnimation;

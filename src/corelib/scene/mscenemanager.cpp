@@ -115,6 +115,8 @@ void MSceneManagerPrivate::init(MScene *scene)
     homeButtonRootElement->setZValue(zForWindowType(MSceneWindow::HomeButtonPanel));
     navigationBarRootElement = new QGraphicsWidget(rootElement);
     navigationBarRootElement->setZValue(zForWindowType(MSceneWindow::NavigationBar));
+    dockWidgetRootElement = new QGraphicsWidget(rootElement);
+    dockWidgetRootElement->setZValue(zForWindowType(MSceneWindow::DockWidget));
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
     scene->addItem(rootElement);
 
@@ -661,6 +663,9 @@ QGraphicsItem *MSceneManagerPrivate::rootElementForSceneWindowType(MSceneWindow:
         case MSceneWindow::NotificationInformation:
         case MSceneWindow::NotificationEvent:
             root = homeButtonRootElement;
+            break;
+        case MSceneWindow::DockWidget:
+            root = dockWidgetRootElement;
             break;
         default:
             root = rootElement;
@@ -1229,6 +1234,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
             if (window->windowType() == MSceneWindow::StatusBar) {
                 qreal y = window->y() + window->geometry().height();
                 navigationBarRootElement->setPos(0, y);
+                dockWidgetRootElement->setPos(0, y);
                 homeButtonRootElement->setPos(0, y);
             }
         }
@@ -1377,6 +1383,7 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
         setSceneWindowState(window, MSceneWindow::Disappeared);
         if (window->windowType() == MSceneWindow::StatusBar) {
             navigationBarRootElement->setPos(0, 0);
+            dockWidgetRootElement->setPos(0, 0);
             homeButtonRootElement->setPos(0, 0);
         }
     }
@@ -1425,8 +1432,7 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
             animation = slideInAnimation;
 
-            QList<QGraphicsWidget*> list;
-            list << navigationBarRootElement << homeButtonRootElement;
+            QList<QGraphicsWidget*> list = findSceneWindowsForMoveAnimation(sceneWindow);
             foreach(QGraphicsWidget *widget, list) {
                 MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                 moveAnimation->setWidget(widget);
@@ -1495,8 +1501,7 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
             animation = slideOutAnimation;
 
-            QList<QGraphicsWidget*> list;
-            list << navigationBarRootElement << homeButtonRootElement;
+            QList<QGraphicsWidget*> list = findSceneWindowsForMoveAnimation(sceneWindow);
             foreach(QGraphicsWidget *widget, list) {
                 MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                 moveAnimation->setWidget(widget);
@@ -1531,6 +1536,31 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
         animation->addAnimation(effect->d_func()->disappearanceAnimation);
 
     sceneWindow->d_func()->disappearanceAnimation = animation;
+}
+
+QList<QGraphicsWidget*> MSceneManagerPrivate::findSceneWindowsForMoveAnimation(MSceneWindow *sceneWindow)
+{
+    QList<QGraphicsWidget*> rootElements;
+    QList<QGraphicsWidget*> list;
+    rootElements << navigationBarRootElement << dockWidgetRootElement << homeButtonRootElement;
+
+    foreach(QGraphicsWidget *rootElement, rootElements) {
+        foreach(QGraphicsItem *item, rootElement->childItems()) {
+            MSceneWindow *win = static_cast<MSceneWindow*>(item);
+            if (win && (win->sceneWindowState() == MSceneWindow::Appeared ||
+                        win->sceneWindowState() == MSceneWindow::Appearing))
+            {
+                if ((win->alignment() & Qt::AlignVertical_Mask) ==
+                    (sceneWindow->alignment() & Qt::AlignVertical_Mask))
+                {
+                    list << rootElement;
+                    break;
+                }
+            }
+        }
+    }
+
+    return list;
 }
 
 void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
