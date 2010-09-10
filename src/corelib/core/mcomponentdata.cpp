@@ -312,12 +312,12 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     MTheme::ThemeService themeService = MTheme::AnyTheme;
 #endif
 
-#ifdef HAVE_N900
-    //#MS - default commadline: /usr/bin/widgetsgallery -target N900 -fullscreen
+#ifdef M_OS_MAEMO5
+    //#MS - default commandline: /usr/bin/widgetsgallery -target N900 -fullscreen
     // -graphicssystem native  this we have to set in themedaemon or before MApplication()
     fullScreen = true;
     deviceName = "N900";
-#endif //HAVE_N900
+#endif //M_OS_MAEMO5
 
     parseArguments(argc, argv, themeService);
 

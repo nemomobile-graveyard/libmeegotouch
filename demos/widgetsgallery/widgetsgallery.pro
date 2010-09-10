@@ -136,7 +136,7 @@ HEADERS += templatepage.h \
 # theme
 include(theme/theme.pri)
 
-contains( DEFINES, HAVE_N900 ) {
+contains( DEFINES, M_OS_MAEMO5 ) {
     CONFIG += release link_pkgconfig
 
     desktop_icon.path = $$M_INSTALL_DATA/icons/hicolor/48x48/hildon

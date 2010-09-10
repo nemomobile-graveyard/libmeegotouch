@@ -29,7 +29,7 @@ MKeyboardStateTracker *MKeyboardStateTrackerPrivate::tracker = 0;
 MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker *controller) :
 #ifdef HAVE_CONTEXTSUBSCRIBER
     keyboardOpenProperty("/maemo/InternalKeyboard/Open"),
-#elif defined(HAVE_N900)
+#elif defined(M_OS_MAEMO5)
     keyboardOpenConf("/system/osso/af/slide-open"),
 #endif
     q_ptr(controller),
@@ -39,7 +39,7 @@ MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker
     Q_Q(MKeyboardStateTracker);
     QObject::connect(&keyboardOpenProperty, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
-#elif defined(HAVE_N900)
+#elif defined(M_OS_MAEMO5)
     Q_Q(MKeyboardStateTracker);
     QObject::connect(&keyboardOpenConf, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
@@ -55,7 +55,7 @@ void MKeyboardStateTrackerPrivate::initContextSubscriber()
     keyboardOpenProperty.waitForSubscription();
     // TODO: use actual ContextProperty for present, which is still unready.
     present = true;
-#elif defined(HAVE_N900)
+#elif defined(M_OS_MAEMO5)
     present = true;
 #endif
 }
@@ -94,7 +94,7 @@ bool MKeyboardStateTracker::isOpen() const
     if (isPresent()) {
         val = d->keyboardOpenProperty.value().toBool();
     }
-#elif defined(HAVE_N900)
+#elif defined(M_OS_MAEMO5)
     Q_D(const MKeyboardStateTracker);
     val = d->keyboardOpenConf.value().toBool();
 #endif

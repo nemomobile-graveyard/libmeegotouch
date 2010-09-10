@@ -168,12 +168,12 @@ void MApplicationWindowPrivate::init()
     appendMApplicationWindowTypeProperty();
 #endif
 
-#ifdef HAVE_N900
+#ifdef M_OS_MAEMO5
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(_q_exitAppView()));
 #else
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(closeMenu()));
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(showMinimized()));
-#endif //HAVE_N900
+#endif //M_OS_MAEMO5
 
     q->connect(navigationBar, SIGNAL(viewmenuTriggered()),
                q, SLOT(openMenu()));
@@ -545,14 +545,14 @@ void MApplicationWindowPrivate::_q_navigationBarStateChanged(
     }
 }
 
-#ifdef HAVE_N900
+#ifdef M_OS_MAEMO5
 void MApplicationWindowPrivate::_q_exitAppView()
 {
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusMessage message = QDBusMessage::createSignal("/", "com.nokia.hildon_desktop", "exit_app_view");
     bus.send(message);
 }
-#endif //HAVE_N900
+#endif //M_OS_MAEMO5
 
 void MApplicationWindowPrivate::manageActions()
 {

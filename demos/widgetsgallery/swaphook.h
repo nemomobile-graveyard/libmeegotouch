@@ -7,10 +7,10 @@ typedef unsigned long long timestamp;
 #ifdef __arm__
 #define EGL
 #include <EGL/egl.h>
-#   ifdef HAVE_N900
+#   ifdef M_OS_MAEMO5
 #       define EGLAPI
 #       define EGLAPIENTRY
-#   endif //HAVE_N900
+#   endif //M_OS_MAEMO5
 #endif //__arm__
 
 #include <QObject>

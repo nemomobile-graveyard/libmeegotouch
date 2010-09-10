@@ -28,9 +28,9 @@ ifneq (,$(filter coverage,$(TMP_BUILD_OPTS)))
     OPTIONS += -coverage
 endif
 
-# Enable build for n900
-ifneq (,$(filter n900,$(TMP_BUILD_OPTS)))
-    OPTIONS += -n900
+# Enable build for n900 - maemo5
+ifneq (,$(filter maemo5,$(TMP_BUILD_OPTS)))
+    OPTIONS += -maemo5
 endif
 
 # Enable instrumentation by setting DEB_BUILD_OPTION=timestamps,...
@@ -109,7 +109,7 @@ clean:
 install: build
 	dh_testdir
 	dh_testroot
-ifeq (,$(filter n900,$(TMP_BUILD_OPTS))) #fremantle debhelper is older..
+ifeq (,$(filter maemo5,$(TMP_BUILD_OPTS))) #fremantle debhelper is older..
 	dh_prep
 else
 	dh_clean -k

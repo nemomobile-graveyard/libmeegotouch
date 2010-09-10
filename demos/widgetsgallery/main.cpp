@@ -57,9 +57,9 @@ public:
 
 int main(int argc, char **argv)
 {
-#ifdef HAVE_N900
+#ifdef M_OS_MAEMO5
     QApplication::setGraphicsSystem(QLatin1String("native"));
-#endif
+#endif //M_OS_MAEMO5
     //MApplication application(argc, argv, "widgetsgallery", new MyApplicationService() );
     MApplication application(argc, argv, "widgetsgallery");
 

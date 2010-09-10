@@ -22,7 +22,7 @@
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
 #include "contextproperty.h"
-#elif defined(HAVE_N900)
+#elif defined(M_OS_MAEMO5)
 #include "mgconfitem.h"
 #endif
 
@@ -37,7 +37,7 @@ protected:
     static MKeyboardStateTracker *tracker;
 #ifdef HAVE_CONTEXTSUBSCRIBER
     ContextProperty keyboardOpenProperty;
-#elif defined(HAVE_N900)
+#elif defined(M_OS_MAEMO5)
     MGConfItem keyboardOpenConf;
 #endif
     MKeyboardStateTracker *q_ptr;

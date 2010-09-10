@@ -76,7 +76,7 @@ HAVE_GSTREAMER=no
 HAVE_DBUS=no
 HAVE_CONTENTACTION=no
 HAVE_XDAMAGE=no
-HAVE_N900=no
+IS_MAEMO5=no
 
 OPT_SHADOW=maybe
 
@@ -239,8 +239,8 @@ while [ "$#" -gt 0 ]; do
             CFG_BUILD_PLAINQT="$VAL"
         fi
         ;;
-    n900)
-        HAVE_N900="yes"
+    maemo5)
+        IS_MAEMO5="yes"
         ;;
     icu)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
@@ -477,7 +477,7 @@ Additional options:
     -benchmarks ........ Build the benchmarks.
     -examples .......... Build the examples.
 
-    -n900 .............. Build libmeegotouch for the N900 device.
+    -maemo5 ............ Build libmeegotouch for the N900 device with maemo5.
 
     -no-icu ............ Do not compile with ICU support.
  +  -icu ............... Compile with ICU support.
@@ -576,8 +576,8 @@ if [ "$HAVE_DBUS" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_DBUS"
 fi
 
-if [ "$HAVE_N900" = "yes" ]; then
-    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_N900"
+if [ "$IS_MAEMO5" = "yes" ]; then
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS M_OS_MAEMO5"
 fi
 
 if [ "$IS_ARMEL" = "yes" ]; then
@@ -797,9 +797,9 @@ echo "Plain Qt support .... $CFG_BUILD_PLAINQT"
 echo "Tests ............... $CFG_BUILD_TESTS"
 echo "Examples ............ $CFG_BUILD_EXAMPLES"
 
-if [ "$HAVE_N900" = "yes" ]; then
+if [ "$IS_MAEMO5" = "yes" ]; then
     echo ""
-    echo "Building for Maemo 5 on N900"
+    echo "Building for Maemo 5"
 fi
 
 echo ""

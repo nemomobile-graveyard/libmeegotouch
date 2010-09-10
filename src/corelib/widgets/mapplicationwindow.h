@@ -175,9 +175,9 @@ private:
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_PRIVATE_SLOT(d_func(), void _q_updateStatusBarVisibility())
 #endif
-#ifdef HAVE_N900
+#ifdef M_OS_MAEMO5
     Q_PRIVATE_SLOT(d_func(), void _q_exitAppView())
-#endif
+#endif //M_OS_MAEMO5
     Q_PRIVATE_SLOT(d_func(), void _q_updatePageEscapeAuto())
     Q_PRIVATE_SLOT(d_func(), void _q_updatePageExposedContentRect())
     Q_PRIVATE_SLOT(d_func(), void _q_navigationBarStateChanged(MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState))

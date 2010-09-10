@@ -112,9 +112,9 @@ void MWindowPrivate::init()
     // We do window decorations ourselves. Set env variable accordingly for
     // development purposes
 
-#ifdef HAVE_N900
+#ifdef M_OS_MAEMO5
     if ( !MApplication::fullScreen() ) {
-#endif
+#endif //M_OS_MAEMO5
 
     QString env = qgetenv("M_DECORATED");
     if (env.contains("0")) {
@@ -127,9 +127,9 @@ void MWindowPrivate::init()
     }
 #endif // __arm__
 
-#ifdef HAVE_N900
+#ifdef M_OS_MAEMO5
     }
-#endif
+#endif //M_OS_MAEMO5
 
 #endif // Q_WS_X11
 

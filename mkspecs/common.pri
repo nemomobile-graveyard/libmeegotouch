@@ -15,10 +15,10 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2010 Nokia
     include($${M_BUILD_TREE}/mkspecs/meegotouchconfig.pri)
 }
 
-#disable werrors on windows and freemantle (HAVE_N900 comes from meegotouchconfig.pri)
+#disable werrors on windows and freemantle (M_OS_MAEMO5 comes from meegotouchconfig.pri)
 win32 {
    } else {
-         contains( DEFINES, HAVE_N900 ) {
+         contains( DEFINES, M_OS_MAEMO5 ) {
          } else {
              QMAKE_CFLAGS *= -Werror
              QMAKE_CXXFLAGS *= -Werror

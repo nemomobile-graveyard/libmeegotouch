@@ -166,9 +166,9 @@ public:
     void _q_menuDisappeared();
     void _q_updateStatusBarVisibility();
     void _q_navigationBarStateChanged(MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState);
-#ifdef HAVE_N900
+#ifdef M_OS_MAEMO5
     void _q_exitAppView();
-#endif
+#endif //M_OS_MAEMO5
     void _q_updatePageExposedContentRect();
     void _q_enablePaintUpdates();
 
