@@ -90,6 +90,11 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("١٬٥٤٢٬٦٧٨٬٠٧٣");
     QTest::newRow("ar_EG")
             << QString("ar_EG")
+            << QString("ar_EG")
+            << qlonglong(-1542678073)
+            << QString("١٬٥٤٢٬٦٧٨٬٠٧٣-");
+    QTest::newRow("ar_EG")
+            << QString("ar_EG")
             << QString("en_US")
             << qlonglong(1542678073)
             << QString("1,542,678,073");
@@ -494,6 +499,18 @@ void Ft_Numbers::testToShort_data()
         << true
         << short(1234)
         << QString("١٢٣٤");
+    QTest::newRow("ar_SA ١٢٣٤-")
+        << QString("ar_SA")
+        << QString("١٢٣٤-")
+        << true
+        << short(-1234)
+        << QString("١٢٣٤-");
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣-")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣-")
+        << true
+        << short(-1234)
+        << QString("١٢٣٤-");
     QTest::newRow("hi_HI ४,५६७.१२३")
         << QString("hi_HI")
         << QString("४,५६७.१२३")
