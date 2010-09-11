@@ -42,6 +42,8 @@ MEscapeButtonPanelViewPrivate::~MEscapeButtonPanelViewPrivate()
 {
     delete warpInAnimation;
     delete warpOutAnimation;
+    delete backButton;
+    delete closeButton;
 }
 
 void MEscapeButtonPanelViewPrivate::init()
