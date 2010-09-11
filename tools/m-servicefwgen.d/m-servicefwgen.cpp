@@ -1038,7 +1038,7 @@ void processAdaptorHeaderFile()
                 if (isChainTask) {
                     newAdaptorHeaderStream
                         << "\"      <arg direction=\\\"in\\\" type=\\\"u\\\" name=\\\"_windowId\\\"/>\\n\"" << endl
-                        << "\"      <arg direction=\\\"in\\\" type=\\\"u\\\" name=\\\"_taskTitle\\\"/>\\n\"" << endl;
+                        << "\"      <arg direction=\\\"in\\\" type=\\\"s\\\" name=\\\"_taskTitle\\\"/>\\n\"" << endl;
                     if ( chainTaskHasNoParameters ) {
                         newAdaptorHeaderStream
                             << "\"    </method>\\n\"" << endl;

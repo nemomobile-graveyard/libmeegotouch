@@ -43,7 +43,7 @@ class FtMServiceFwGen2Adaptor: public QDBusAbstractAdaptor
 "    </method>\n"
 "    <method name=\"showImage\">\n"
 "      <arg direction=\"in\" type=\"u\" name=\"_windowId\"/>\n"
-"      <arg direction=\"in\" type=\"u\" name=\"_taskTitle\"/>\n"
+"      <arg direction=\"in\" type=\"s\" name=\"_taskTitle\"/>\n"
 "      <arg direction=\"in\" type=\"s\" name=\"uri\"/>\n"
 "      <arg direction=\"in\" type=\"as\" name=\"uriList\"/>\n"
 "    </method>\n"
