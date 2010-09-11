@@ -116,6 +116,19 @@ public:
      */
     bool isMenuOpen() const;
 
+#ifdef Q_WS_X11
+    /*!
+     * Returns the window id of the parent task for windows that are chained.
+     * \sa isChained()
+     */
+    WId chainParentWinId() const;
+
+    /*!
+     * Returns true if the window is chained otherwise false.
+     */
+    bool isChained() const;
+#endif
+
 Q_SIGNALS:
     /*!
      This signal is emitted after \page has become shown.

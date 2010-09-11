@@ -1179,6 +1179,20 @@ bool MApplicationWindow::isMenuOpen() const
     return d->isMenuOpen();
 }
 
+#ifdef Q_WS_X11
+WId MApplicationWindow::chainParentWinId() const
+{
+    Q_D(const MApplicationWindow);
+    return d->chainParentWinId;
+}
+
+bool MApplicationWindow::isChained() const
+{
+    Q_D(const MApplicationWindow);
+    return d->isChained;
+}
+#endif
+
 void MApplicationWindow::mousePressEvent(QMouseEvent *event)
 {
     Q_D(MApplicationWindow);
