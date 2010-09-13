@@ -95,7 +95,7 @@ class MPannableViewport;
             MApplicationPage *songPage = new SongPage(song);
 
             // I don't need this page anymore after it gets dismissed
-            songPage->appear(MSceneWindow::DestroyWhenDismissed);
+            songPage->appear(scene(), MSceneWindow::DestroyWhenDismissed);
         }
         ...
     };
@@ -112,6 +112,8 @@ class MPannableViewport;
 
     You can also check and manually modify the page navigation history of your application using the methods
     MSceneManager::pageHistory() and MSceneManager::setPageHistory().
+
+    For information on this and other navigational patterns see \subpage pagenavigation.
 */
 
 class M_EXPORT MApplicationPage : public MSceneWindow
