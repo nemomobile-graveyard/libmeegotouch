@@ -21,11 +21,12 @@
 #define MNAVIGATIONBARVIEW_P_H
 
 #include "mscenewindowview_p.h"
+#include "mtoolbar.h"
+#include <QPointer>
 
 class MNavigationBar;
 class MApplicationMenuButton;
 class MWidget;
-class MToolBar;
 class QGraphicsGridLayout;
 class QGraphicsLinearLayout;
 
@@ -49,7 +50,7 @@ public:
     QGraphicsLinearLayout *layout;
 
     MApplicationMenuButton *applicationMenuButton;
-    MToolBar *toolBar;
+    QPointer<MToolBar> toolBar;
 };
 
 #endif

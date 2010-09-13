@@ -79,6 +79,7 @@ void MDockWidget::dockToolBar(MToolBar *toolbar)
     if (0 != toolbar) {
         d->layout->addItem(toolbar);
         d->toolbar->setParentItem(this);
+        d->toolbar->show();
     }
 }
 

@@ -46,6 +46,10 @@ MNavigationBarViewPrivate::MNavigationBarViewPrivate()
 
 MNavigationBarViewPrivate::~MNavigationBarViewPrivate()
 {
+    if (toolBar)
+        layout->removeItem(toolBar);
+
+    delete applicationMenuButton;
 }
 
 void MNavigationBarViewPrivate::init()
