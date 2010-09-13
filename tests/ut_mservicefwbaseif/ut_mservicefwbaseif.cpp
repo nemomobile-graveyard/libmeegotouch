@@ -64,7 +64,9 @@ void Ut_MServiceFwBaseIf::init()
     m_subject = new MyServiceFwIf(new EmailServiceIfProxy());
 
     // no point in testing these
-    m_subject->isValid();
+    if ( !  m_subject->isValid() ) {
+        qWarning() << "m_subject is not valid";
+    }
     m_subject->serviceNames("com.nokia.TextProcessorIf");
     m_subject->serviceName();
     m_subject->serviceFwProxy();

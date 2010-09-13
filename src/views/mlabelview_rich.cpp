@@ -567,7 +567,10 @@ void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos, const QSiz
     foreach (const Tile &tile, tiles) {
         if (tile.y >= 0.0) {
             QPixmap pixmap;
-            QPixmapCache::find(tile.pixmapCacheKey, pixmap);
+            if ( !QPixmapCache::find(tile.pixmapCacheKey, pixmap) ) {
+                return;
+            }
+
             const QPointF tileOffset(pos.x(), pos.y() + tile.y);
             const bool clip = tileOffset.y() + pixmap.height() > size.height() ||
                               tileOffset.y() + pixmap.height() <= 0.0;

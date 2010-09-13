@@ -20,7 +20,7 @@
 #include <QTimer>
 #include "apscanner.h"
 
-APScanner::APScanner()
+APScanner::APScanner() : timer (NULL)
 {
     QStringList apNames = QStringList() << "Home"
                           << "Private"

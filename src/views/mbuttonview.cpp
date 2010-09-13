@@ -40,6 +40,7 @@
 
 MButtonViewPrivate::MButtonViewPrivate()
     : icon(0), toggledIcon(0), label(NULL), styleModeChangeTimer(NULL),
+    iconOrigin(IconOriginUndefined), toggledIconOrigin(IconOriginUndefined),
     queuedStyleModeChange(false)
 {
 }
