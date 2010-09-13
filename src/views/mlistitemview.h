@@ -27,23 +27,23 @@
 
 class MListItemViewPrivate;
 
-class MListItemView : public MWidgetView
+class M_EXPORT MListItemView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MListItemModel, MListItemStyle)
 
 public:
     MListItemView(MWidgetController *controller);
-   
+
 protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    
+
     void cancelEvent(MCancelEvent *event);
 
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
-      
+
 private:
     Q_DISABLE_COPY(MListItemView)
     Q_DECLARE_PRIVATE(MListItemView)
