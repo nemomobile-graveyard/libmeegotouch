@@ -268,7 +268,7 @@ void MLabelViewSimple::initializeStaticText()
         textToRender = metrics.elidedText(textToRender, Qt::ElideRight, paintingRect.width());
     }
 
-    // QStaticText uses QTextLayout internally to render text. In opposite to
+    // QStaticText uses QTextLayout internally to render text. Contrary to
     // QPainter::drawText(const QRect &rectangle, ...) no pre-preparation of the
     // text is done (e. g. replace \n by QChar::LineSeparator or spaces dependent
     // on the wrapping). This is done manually here:
