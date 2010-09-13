@@ -412,6 +412,7 @@ private:
 
     friend class MSceneWindowView;
     friend class MSceneManagerPrivate;
+    friend class MApplicationWindowPrivate;
 
     /* TODO: temporarily required for calling MSceneWindow::done()
        from MSceneManager::{hide,show}Window{,Now}()*/

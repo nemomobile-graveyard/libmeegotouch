@@ -470,11 +470,18 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
     const bool navBarIsCovering = pageAreaMaximized ? showingNavigationBar :
                                   (page->componentDisplayMode(MApplicationPage::NavigationBar) == MApplicationPageModel::Show);
     if (navBarIsCovering) {
-        topCoverage += navigationBar->size().height();
+        if (navigationBar->alignment().testFlag(Qt::AlignTop))
+            topCoverage += navigationBar->size().height();
+        else if (navigationBar->alignment().testFlag(Qt::AlignBottom))
+            bottomCoverage += navigationBar->size().height();
     }
 
+
     if (showingDockWidget) {
-        bottomCoverage += dockWidget->size().height();
+        if (dockWidget->alignment().testFlag(Qt::AlignTop))
+            topCoverage += dockWidget->size().height();
+        else if (dockWidget->alignment().testFlag(Qt::AlignBottom))
+            bottomCoverage += dockWidget->size().height();
     }
 
     pageExposedContentRect.setY(topCoverage);
