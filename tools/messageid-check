@@ -195,6 +195,7 @@ my @sourcePackagesToDownloadAndScan = (
     "meego-keyboard",
     "meego-vkb-magnifier",
     "meegofeedback-reactionmaps",
+    "meegotouchhome-nokia",
     "meegotouch-tests",
     "meegotouch-visual-benchmark",
     "messaging-service",
@@ -218,7 +219,10 @@ my @sourcePackagesToDownloadAndScan = (
     "presence-ui",
     "qmafw-gui",
     "qmsystem-demo",
+    "qtwebkit-meegotouchplugin",
     "recipients-editor",
+    "relevance",
+    "search",
     "signon-ui",
     "smartsearch",
     "sm-common-utils",
@@ -1457,7 +1461,7 @@ $class = $totalNumberOfIdsFoundInSourcePackagesButNotInSpec? "errorcolor" : "okc
 $htmlOutTocHeader .= <<"EOF";
     <p>
     <b>
-    Total number of Ids found in by scanning the source packages which are not in the specifications:
+    Total number of Ids found by scanning the source packages which are not in the specifications:
     <span class="$class">
     $totalNumberOfIdsFoundInSourcePackagesButNotInSpec
     </span>
