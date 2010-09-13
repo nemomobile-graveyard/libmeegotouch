@@ -157,7 +157,6 @@ my @sourcePackagesToDownloadAndScan = (
     "fenix",
     "fennec",
     "fennec-taskswitcher-extension",
-    "fennec.e10s",
     "gallery",
     "geo-engine-demo",
     "groovem-account-ui-plugins",
