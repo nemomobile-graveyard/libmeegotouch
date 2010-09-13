@@ -26,6 +26,8 @@
 #include "mnamespace.h"
 #include "mexport.h"
 
+class QKeyEvent;
+
 class MInputMethodStatePrivate;
 
 /*!
@@ -54,6 +56,11 @@ public:
     //! \brief Get the orientation of application's active window
     //! \return orientation of application's active window
     M::OrientationAngle activeWindowOrientationAngle() const;
+
+    //! \internal
+    void emitKeyPress(const QKeyEvent &event);
+    void emitKeyRelease(const QKeyEvent &event);
+    //! \internal_end
 
 public Q_SLOTS:
     //! \brief Set the orientation of application's active window to \a newOrientation
@@ -104,6 +111,12 @@ Q_SIGNALS:
 
     //! Emitted when input method toolbar item attribute is changed.
     void toolbarItemAttributeChanged(int id, const QString &item, const QString &attribute, const QVariant &value);
+
+    //! Can be emitted by input method to notify about raw key press event it receives.
+    void keyPress(const QKeyEvent &);
+
+    //! Can be emitted by input method to notify about raw key release event it receives.
+    void keyRelease(const QKeyEvent &);
 
 private:
     //! Disable default construction

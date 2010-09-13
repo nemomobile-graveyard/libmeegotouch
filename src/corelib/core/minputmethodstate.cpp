@@ -21,6 +21,7 @@
 #include "minputmethodstate_p.h"
 
 #include <QTimer>
+#include <QKeyEvent>
 
 
 MInputMethodStatePrivate::MInputMethodStatePrivate()
@@ -90,6 +91,16 @@ M::OrientationAngle MInputMethodState::activeWindowOrientationAngle() const
     Q_D(const MInputMethodState);
 
     return d->orientation;
+}
+
+void MInputMethodState::emitKeyPress(const QKeyEvent &event)
+{
+    emit keyPress(event);
+}
+
+void MInputMethodState::emitKeyRelease(const QKeyEvent &event)
+{
+    emit keyRelease(event);
 }
 
 int MInputMethodState::registerToolbar(const QString &fileName)
