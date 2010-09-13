@@ -25,6 +25,7 @@
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
 #include <mwidgetcontroller.h>
+#include <mscenemanager.h>
 
 void MWidgetSlideAnimationPrivate::init()
 {
@@ -115,9 +116,9 @@ void MWidgetSlideAnimation::updateState(QAbstractAnimation::State newState, QAbs
         if (style()->origin() == "top") {
             offscreenPos = QPointF(0, -targetWidget()->boundingRect().height());
         } else if (style()->origin() == "right") {
-            offscreenPos = QPointF(targetWidget()->boundingRect().width(), 0);
+            offscreenPos = QPointF(targetWidget()->sceneManager()->visibleSceneSize().width() , 0);
         } else if (style()->origin() == "bottom") {
-            offscreenPos = QPointF(0, targetWidget()->boundingRect().height());
+            offscreenPos = QPointF(0, targetWidget()->sceneManager()->visibleSceneSize().height());
         } else if (style()->origin() == "left") {
             offscreenPos = QPointF(-targetWidget()->boundingRect().width(), 0);
         }
