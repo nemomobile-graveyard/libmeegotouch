@@ -55,7 +55,7 @@ MeeGo Touch allows to control which messages are shown and to optionally stream 
 
 \subsection outputlevel -output-level
 
-Which messages are shown is specified by adding <em>-output-level {debug|warning|critical}</em> as parameter when starting an application.
+Which messages are shown is specified by adding <em>-output-level {debug|warning|critical}</em> as parameter when starting an application or by setting the environment variable M_OUTPUT_LEVEL.
 <ul>
 <li>debug: Messages from qDebug(), mDebug(), qWarning(), mWarning(), qCritical() and qFatal() are shown.</li>
 <li>warning: Messages from qWarning(), mWarning(), qCritical() and qFatal() are shown.</li>
