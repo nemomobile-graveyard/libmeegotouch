@@ -2089,6 +2089,47 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QVERIFY(!m_sic->selectionAvailableAtLastUpdate);
 }
 
+void Ut_MTextEdit::testSelectAll()
+{
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
+    QVERIFY(copyAvailableSpy.isValid());
+
+    QSignalSpy selectionChangedSpy(m_subject.get(), SIGNAL(selectionChanged()));
+    QVERIFY(selectionChangedSpy.isValid());
+
+    setupSipEnv(m_subject.get());
+
+    // Case 1, text and pre-edit
+    m_subject->setText("fish ");
+    // Pre-edit should be committed, yet that shouldn't cause extra
+    // QInputContext::update() calls
+    QInputMethodEvent preeditEvent("salmon", QList<QInputMethodEvent::Attribute>());
+    m_subject->inputMethodEvent(&preeditEvent);
+
+    QKeyEvent selectAll(QEvent::KeyPress, Qt::Key_A, Qt::ControlModifier, QChar('a'));
+    m_sic->updateCallCount = 0;
+    m_subject->keyPressEvent(&selectAll);
+    QCOMPARE(m_sic->updateCallCount, 1);
+    QVERIFY(m_sic->selectionAvailableAtLastUpdate);
+    QCOMPARE(copyAvailableSpy.count(), 1);
+    QCOMPARE(copyAvailableSpy.first().count(), 1);
+    QVERIFY(copyAvailableSpy.first().first() == true);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    QCOMPARE(m_sic->selectedTextAtLastUpdate, QString("fish salmon"));
+    QCOMPARE(m_subject->cursorPosition(), m_sic->selectedTextAtLastUpdate.length());
+
+    // Case 2, no text
+    m_subject->setText("");
+    copyAvailableSpy.clear();
+    selectionChangedSpy.clear();
+
+    m_sic->updateCallCount = 0;
+    m_subject->keyPressEvent(&selectAll);
+    QCOMPARE(m_sic->updateCallCount, 0);
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+}
+
 void Ut_MTextEdit::testAutoSipEnabled()
 {
     MTextEdit *subject = new MTextEdit;

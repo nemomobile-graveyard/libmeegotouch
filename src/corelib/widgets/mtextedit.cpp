@@ -1946,6 +1946,7 @@ void MTextEdit::handleMouseMove(int cursorPosition, QGraphicsSceneMouseEvent *ev
 void MTextEdit::selectAll()
 {
     Q_D(MTextEdit);
+    d->disableUpdateMicroFocus();
     d->commitPreedit();
 
     d->cursor()->setPosition(0);
@@ -1960,7 +1961,9 @@ void MTextEdit::selectAll()
         model()->updateCursor();
         emit selectionChanged();
         d->sendCopyAvailable(true);
+        d->updateMicroFocus();
     }
+    d->enableUpdateMicroFocus(true);
 }
 
 

@@ -127,6 +127,7 @@ private slots:
 
     void testArrowKeys();
     void testSelectByArrowKeys();
+    void testSelectAll();
 
     void testAutoSipEnabled();
     void testAutoSipDisabled();
