@@ -76,6 +76,16 @@ public:
      */
     void removeTrFromQCoreApp();
 
+    /*!
+     * \brief inserts a text direction translator into QCoreApplication
+     *
+     * This is a special translator used to make QCoreApplication
+     * detect the correct layout direction used for the language
+     * of the current locale. For example, in case of Arabic or
+     * Hebrew right-to-left layout is used.
+     */
+    void insertDirectionTrToQCoreApp();
+
     QLocale createQLocale(MLocale::Category catetory) const;
 
     void setCategoryLocale(MLocale *mlocale, MLocale::Category category,

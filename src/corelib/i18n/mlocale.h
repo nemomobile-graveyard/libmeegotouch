@@ -29,6 +29,7 @@
 class QString;
 class QStringList;
 class QDateTime;
+class QTranslator;
 
 class MCollator;
 class MAbstractName;
@@ -1455,7 +1456,8 @@ private:
 
     // global default locale
     static MLocale *s_systemDefault;
-
+    static QTranslator *s_ltrTranslator;
+    static QTranslator *s_rtlTranslator;
     // private info is kept away from the public header
     MLocalePrivate *const d_ptr;
     Q_DECLARE_PRIVATE(MLocale)

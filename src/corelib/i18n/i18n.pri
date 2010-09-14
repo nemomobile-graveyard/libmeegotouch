@@ -4,6 +4,7 @@
 I18N_SRC_DIR=./i18n
 INCLUDEPATH+=./i18n
 
+RESOURCES += ./i18n/i18n.qrc
 
 PUBLIC_HEADERS += \
     $$I18N_SRC_DIR/mbreakiterator.h \

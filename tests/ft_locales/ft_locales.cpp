@@ -46,16 +46,33 @@ void Ft_Locales::cleanup()
 
 void Ft_Locales::testBug169305()
 {
+    // see
+    // https://projects.maemo.org/bugzilla/show_bug.cgi?id=169305
+    // and also:
+    // https://projects.maemo.org/bugzilla/show_bug.cgi?id=184502
+    MLocale locale0("en_US");
+    locale0.installTrCatalog("foo");
+    MLocale::setDefault(locale0);
+    QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("LTR"));
+    QCOMPARE(qApp->layoutDirection(), Qt::LeftToRight);
     MLocale locale1("ar_SA");
     locale1.installTrCatalog("foo");
     MLocale::setDefault(locale1);
+    QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("RTL"));
     QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
-    MLocale locale;
-    QCOMPARE(locale.name(), QString("ar_SA"));
-    locale.installTrCatalog("foo");
-    MLocale::setDefault(locale);
+    MLocale locale2;
+    QCOMPARE(locale2.name(), QString("ar_SA"));
+    locale2.installTrCatalog("foo");
+    MLocale::setDefault(locale2);
+    QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("RTL"));
     QCoreApplication::processEvents();
+    QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("RTL"));
     QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
+    MLocale::setDefault(locale0);
+    QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("LTR"));
+    QCoreApplication::processEvents();
+    QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("LTR"));
+    QCOMPARE(qApp->layoutDirection(), Qt::LeftToRight);
 }
 
 void Ft_Locales::testMLocaleConstructor()
