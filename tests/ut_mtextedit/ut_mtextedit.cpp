@@ -257,6 +257,7 @@ void Ut_MTextEdit::cleanupTestCase()
 void Ut_MTextEdit::init()
 {
     m_subject.reset(new MTextEdit(MTextEditModel::MultiLine, ""));
+    qApp->setInputContext(m_sic = new SimpleInputContext);
 }
 
 
@@ -2418,7 +2419,6 @@ void Ut_MTextEdit::testArrowKeyNavigation()
 void Ut_MTextEdit::setupSipEnv(MTextEdit *edit)
 {
     edit->setFlag(QGraphicsItem::ItemAcceptsInputMethod);
-    qApp->setInputContext(m_sic = new SimpleInputContext);
 }
 
 void Ut_MTextEdit::requestSip(MTextEdit *edit, Qt::FocusReason fr)
