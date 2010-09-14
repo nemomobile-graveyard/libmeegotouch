@@ -41,6 +41,8 @@ MImageWidgetPrivate::~MImageWidgetPrivate()
 {
     if (ownPixmap)
         delete pixmap;
+    else
+        MTheme::releasePixmap(pixmap);
 }
 
 void MImageWidgetPrivate::cleanUp()

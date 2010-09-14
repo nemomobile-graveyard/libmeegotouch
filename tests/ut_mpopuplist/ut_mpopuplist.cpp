@@ -131,8 +131,8 @@ void Ut_MPopupList::testCurrentIndex()
 
 void Ut_MPopupList::testSetItemIconID()
 {
-    QStandardItemModel *itemModel = new QStandardItemModel;
     MList* list = new MList();
+    QStandardItemModel *itemModel = new QStandardItemModel(list);
     MPopupListCellCreator *cellCreator = new MPopupListCellCreator(list);
     list->setCellCreator(cellCreator);
     list->setItemModel(itemModel);
@@ -151,7 +151,7 @@ void Ut_MPopupList::testSetItemIconID()
     cellCreator->updateCell(itemModel->index(0,0), item);
     QCOMPARE(item->icon->image(), QString("icon-l-music"));
 
-    delete itemModel;
+    delete item;
     delete list;
 }
 
