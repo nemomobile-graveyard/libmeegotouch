@@ -127,7 +127,7 @@ void Ut_MTheme::testPixmap()
 
     // Release icon
     m_theme->releasePixmap(pixmap);
-    QVERIFY(!isIconCached(KnownIconId, pixmap->size()));
+    QVERIFY(!isIconCached(KnownIconId, QSize(100, 150)));
     QCOMPARE(cachedIconCount(), 0);
 }
 
@@ -146,7 +146,7 @@ void Ut_MTheme::testPixmapWithSize()
 
     // Release icon
     m_theme->releasePixmap(fixedSizePixmap);
-    QVERIFY(!isIconCached(KnownIconId, fixedSizePixmap->size()));
+    QVERIFY(!isIconCached(KnownIconId, QSize(100, 150)));
     QCOMPARE(cachedIconCount(), 0);
 }
 
@@ -170,7 +170,7 @@ void Ut_MTheme::testUnknownPixmap()
 
     // Release icon
     m_theme->releasePixmap(unknownPixmap);
-    QVERIFY(!isIconCached(UnknownIconId, unknownPixmap->size()));
+    QVERIFY(!isIconCached(UnknownIconId, QSize(100, 150)));
     QCOMPARE(cachedIconCount(), 0);
 }
 
