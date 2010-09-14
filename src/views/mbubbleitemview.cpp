@@ -98,7 +98,7 @@ void MBubbleItemViewPrivate::initLayout()
 
     setupCentralWidget();
 
-    controller->connect(speechBubble, SIGNAL(clicked()), controller, SIGNAL(bubbleClicked()));
+    controller->connect(speechBubble, SIGNAL(clicked()), controller, SIGNAL(bubbleClicked()), Qt::UniqueConnection);
 }
 
 void MBubbleItemViewPrivate::clearLayout()
