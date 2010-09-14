@@ -54,7 +54,7 @@ public:
 
     /*!
         This enum specifies the page's escape mode.
-        \sa MSceneManager::pageHistoryStack()
+        \sa MSceneManager::pageHistory()
      */
     enum PageEscapeMode {
         EscapeAuto, /*!< Default value. Escape button will automatically be set
