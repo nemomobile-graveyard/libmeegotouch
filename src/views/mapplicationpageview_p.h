@@ -23,6 +23,7 @@
 #include "mapplicationpageview.h"
 #include <QPointer>
 
+class MLabel;
 class QGraphicsLinearLayout;
 
 class MApplicationPageViewPrivate
@@ -44,6 +45,7 @@ public:
     void propagateOnDisplayChangeEvent(bool visible);
     void setCentralWidget(QGraphicsWidget *newCentralWidget);
     void updateAutoMarginsForComponents();
+    void updateTitleLabel();
     void resetPannableViewportPositionIfNeeded();
 
     void _q_onPageStateChanged();
@@ -51,6 +53,7 @@ public:
     MWidget *topSpacer;
     MWidget *bottomSpacer;
     MWidget *mainWidget;
+    MLabel *titleLabel;
     QGraphicsLinearLayout *mainLayout;
     QPointer<QGraphicsWidget> centralWidget;
 

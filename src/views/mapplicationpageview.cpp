@@ -24,6 +24,7 @@
 #include "mapplicationwindow.h"
 #include "mscalableimage.h"
 #include "mapplicationpage.h"
+#include "mlabel.h"
 #include "mscenemanager.h"
 #include "mviewcreator.h"
 #include "mpannableviewport.h"
@@ -38,6 +39,7 @@ MApplicationPageViewPrivate::MApplicationPageViewPrivate()
     topSpacer(0),
     bottomSpacer(0),
     mainWidget(0),
+    titleLabel(0),
     mainLayout(0),
     centralWidget(0)
 {
@@ -114,7 +116,7 @@ void MApplicationPageViewPrivate::setCentralWidget(QGraphicsWidget *newCentralWi
 
     // Place the new one
     if (newCentralWidget) {
-        mainLayout->insertItem(1, newCentralWidget);
+        mainLayout->insertItem(mainLayout->count()-1, newCentralWidget);
         centralWidget = newCentralWidget;
         propagateOnDisplayChangeEvent(controller->isOnDisplay());
     }
@@ -162,6 +164,26 @@ void MApplicationPageViewPrivate::resetPannableViewportPositionIfNeeded()
         controller->pannableViewport()->setPosition(QPointF(0, 0));
 }
 
+void MApplicationPageViewPrivate::updateTitleLabel()
+{
+    Q_Q(MApplicationPageView);
+
+    if (q->style()->hasTitleLabel() &&
+        !q->model()->title().isEmpty())
+    {
+        if (titleLabel)
+            delete titleLabel;
+
+        titleLabel = new MLabel;
+        titleLabel->setStyleName("titleLabel");
+        titleLabel->setText(q->model()->title());
+        mainLayout->insertItem(1,titleLabel);
+    } else {
+        delete titleLabel;
+        titleLabel = 0;
+    }
+}
+
 MApplicationPageView::MApplicationPageView(MApplicationPage *controller) :
     MSceneWindowView(controller),
     d_ptr(new MApplicationPageViewPrivate)
@@ -194,6 +216,7 @@ void MApplicationPageView::applyStyle()
     MSceneWindowView::applyStyle();
     d->updateAutoMarginsForComponents();
     d->resetPannableViewportPositionIfNeeded();
+    d->updateTitleLabel();
 }
 
 void MApplicationPageView::setupModel()
@@ -221,6 +244,8 @@ void MApplicationPageView::updateData(const QList<const char *> &modifications)
                    member == MApplicationPageModel::ExposedContentRect)
         {
             d->updateAutoMarginsForComponents();
+        } else if (member == MApplicationPageModel::Title) {
+            d->updateTitleLabel();
         }
     }
 }
