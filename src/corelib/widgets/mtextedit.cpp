@@ -302,7 +302,9 @@ MTextEditPrivate::MTextEditPrivate()
       completer(0),
       registeredToolbarId(-1),
       editActive(false),
-      omitInputMethodEvents(false)
+      omitInputMethodEvents(false),
+      updateMicroFocusDisabled(0),
+      pendingMicroFocusUpdate(false)
 {
 }
 
@@ -374,7 +376,7 @@ bool MTextEditPrivate::moveCursor(QTextCursor::MoveOperation moveOp,
     result = cursor()->movePosition(moveOp, moveMode, n);
     if (result) {
         q->model()->updateCursor();
-        q->updateMicroFocus();
+        updateMicroFocus();
         emit q->cursorPositionChanged();
     }
 
@@ -788,7 +790,7 @@ void MTextEditPrivate::commitPreedit()
     }
 
     setMode(MTextEditModel::EditModeBasic);
-    q->updateMicroFocus();
+    updateMicroFocus();
 
     if (q->hasFocus()) {
         // make sure the committed preedit doesn't get left on the input context
@@ -1212,7 +1214,7 @@ void MTextEditPrivate::_q_confirmCompletion(const QString &completion)
     QObject::disconnect(q, SIGNAL(textChanged()), completer, SLOT(complete()));
     emit q->textChanged();
     QObject::connect(q, SIGNAL(textChanged()), completer, SLOT(complete()));
-    q->updateMicroFocus();
+    updateMicroFocus();
 }
 
 bool MTextEditPrivate::copy()
@@ -1239,6 +1241,34 @@ QString MTextEditPrivate::replaceLineBreaks(QString text, QChar replacement)
 
     return text;
 }
+
+void MTextEditPrivate::disableUpdateMicroFocus()
+{
+    ++updateMicroFocusDisabled;
+}
+
+void MTextEditPrivate::enableUpdateMicroFocus(bool flush)
+{
+    Q_Q(MTextEdit);
+    Q_ASSERT(updateMicroFocusDisabled);
+    if ((--updateMicroFocusDisabled == 0) && pendingMicroFocusUpdate && flush) {
+        q->updateMicroFocus();
+    }
+    pendingMicroFocusUpdate = false;
+}
+
+void MTextEditPrivate::updateMicroFocus()
+{
+    Q_Q(MTextEdit);
+
+    if (updateMicroFocusDisabled <= 0) {
+        q->updateMicroFocus();
+        pendingMicroFocusUpdate = false;
+    } else {
+        pendingMicroFocusUpdate = true;
+    }
+}
+
 
 ///////////////////////////////////////////////
 // Actual class implementation
@@ -1357,7 +1387,7 @@ void MTextEdit::setSelection(int start, int length, bool useBoundaries)
 
     model()->updateCursor();
 
-    updateMicroFocus();
+    d->updateMicroFocus();
 
     emit selectionChanged();
 
@@ -1439,6 +1469,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
             d->smartMoveCursor(moveDirection, QTextCursor::MoveAnchor, 1);
         } else if (event->modifiers() == Qt::ShiftModifier
                    &&  (textInteractionFlags() & Qt::TextSelectableByKeyboard)) {
+            d->disableUpdateMicroFocus();
             const bool moved = d->smartMoveCursor(moveDirection, QTextCursor::KeepAnchor, 1);
             if (!wasSelecting && d->cursor()->hasSelection()) { // first character was selected
                 d->setMode(MTextEditModel::EditModeSelect);
@@ -1449,7 +1480,9 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
             }
             if (moved) {
                 emit selectionChanged();
+                d->updateMicroFocus();
             }
+            d->enableUpdateMicroFocus(true);
         }
         event->accept();
         return;
@@ -1577,7 +1610,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         }
 
         model()->updateCursor();
-        updateMicroFocus();
+        d->updateMicroFocus();
         emit textChanged();
         emit cursorPositionChanged();
 
@@ -1700,7 +1733,7 @@ bool MTextEdit::insert(const QString &text)
     // either something was inserted or something was deleted, or both
     if (insertionSuccess || wasSelecting) {
         emit textChanged();
-        updateMicroFocus();
+        d->updateMicroFocus();
     }
 
     return insertionSuccess;
@@ -1751,7 +1784,7 @@ bool MTextEdit::setText(const QString &text)
 
     // only avoid signaling if empty before and after
     if (!((document()->characterCount() == 0) && wasEmpty)) {
-        updateMicroFocus();
+        d->updateMicroFocus();
         emit textChanged();
     }
 
@@ -1899,7 +1932,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
     }
 
     if (cursorPosition() != cursorPositionBefore) {
-        updateMicroFocus();
+        d->updateMicroFocus();
     }
 }
 
@@ -1988,7 +2021,7 @@ void MTextEdit::paste()
     if (changed) {
         emit textChanged();
         emit cursorPositionChanged();
-        updateMicroFocus();
+        d->updateMicroFocus();
     } else {
         mDebug("MTextEdit") << __PRETTY_FUNCTION__ << "paste failed";
         emit pasteFailed();
@@ -2021,7 +2054,7 @@ void MTextEdit::cut()
         emit selectionChanged();
         emit textChanged();
         emit cursorPositionChanged();
-        updateMicroFocus();
+        d->updateMicroFocus();
     }
 }
 
@@ -2121,7 +2154,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     }
 
     if (changed) {
-        updateMicroFocus();
+        d->updateMicroFocus();
         emit textChanged();
         emit cursorPositionChanged();
     }
@@ -2406,7 +2439,7 @@ void MTextEdit::deselect()
         d->setMode(MTextEditModel::EditModeBasic);
         model()->updateCursor();
         d->sendCopyAvailable(false);
-        updateMicroFocus();
+        d->updateMicroFocus();
         emit selectionChanged();
     }
 }
@@ -2581,7 +2614,7 @@ void MTextEdit::setCompleter(MCompleter *completer)
         setInputMethodAutoCapitalizationEnabled(false);
 
         if (hasFocus()) {
-            updateMicroFocus();
+            d->updateMicroFocus();
             connect(d->completer, SIGNAL(confirmed(QString, QModelIndex)),
                     this, SLOT(_q_confirmCompletion(QString)));
         }

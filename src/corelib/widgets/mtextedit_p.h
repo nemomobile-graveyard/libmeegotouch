@@ -105,6 +105,19 @@ public:
     QString replaceLineBreaks(QString text, QChar replacement);
     void _q_confirmCompletion(const QString &);
 
+    //! \brief Disable MTextEdit::updateMicroFocus().
+    //!
+    //! Can be called multiple times without calling \a enableUpdateMicroFocus in between.  In such a case
+    //! \a enableUpdateMicroFocus must be called equally many times.
+    void disableUpdateMicroFocus();
+    //! \param flush call updateMicroFocus() automatically if true and updateMicroFocus was called
+    //! while being disabled
+    void enableUpdateMicroFocus(bool flush = false);
+    //! \brief updateMicroFocus() wrapper that can be disabled
+    //! \sa disableUpdateMicroFocus
+    //! \sa enableUpdateMicroFocus
+    void updateMicroFocus();
+
     bool pendingSoftwareInputPanelRequest;
 
 private:
@@ -118,6 +131,9 @@ private:
 
     // protection from input methods that send something on QInputContext::reset()
     bool omitInputMethodEvents;
+
+    int updateMicroFocusDisabled;
+    bool pendingMicroFocusUpdate;
 };
 
 #endif

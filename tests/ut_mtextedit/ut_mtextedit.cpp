@@ -97,6 +97,9 @@ class SimpleInputContext: public QInputContext
 public:
     SimpleInputContext(QObject *parent = 0)
         : QInputContext(parent),
+          updateCallCount(0),
+          selectionAvailableAtLastUpdate(false),
+          edit(0),
           m_visible(false)
     {}
 
@@ -142,6 +145,20 @@ public:
 
         return false;
     }
+
+    void update()
+    {
+        ++updateCallCount;
+        if (edit) {
+            selectedTextAtLastUpdate = edit->selectedText();
+        }
+        selectionAvailableAtLastUpdate = !selectedTextAtLastUpdate.isEmpty();
+    }
+
+    int updateCallCount;
+    bool selectionAvailableAtLastUpdate;
+    QString selectedTextAtLastUpdate;
+    MTextEdit *edit;
 
 private:
     bool m_visible;
@@ -258,6 +275,7 @@ void Ut_MTextEdit::init()
 {
     m_subject.reset(new MTextEdit(MTextEditModel::MultiLine, ""));
     qApp->setInputContext(m_sic = new SimpleInputContext);
+    m_sic->edit = m_subject.get();
 }
 
 
@@ -1946,6 +1964,7 @@ void Ut_MTextEdit::testArrowKeys()
 
 void Ut_MTextEdit::testSelectByArrowKeys()
 {
+    setupSipEnv(m_subject.get());
     QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
     QVERIFY(copyAvailableSpy.isValid());
 
@@ -1982,9 +2001,12 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QCOMPARE(copyAvailableSpy.count(), 0);
     QCOMPARE(selectionChangedSpy.count(), 0);
 
+    QCOMPARE(m_sic->updateCallCount, 0);
+
     m_subject->setText(line);
     m_subject->setCursorPosition(1);
 
+    m_sic->updateCallCount = 0;
     m_subject->keyPressEvent(&right);
     QCOMPARE(m_subject->cursorPosition(), 2);
     QCOMPARE(m_subject->selectedText(), QString("2"));
@@ -1994,6 +2016,9 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QCOMPARE(selectionChangedSpy.count(), 1);
     copyAvailableSpy.clear();
     selectionChangedSpy.clear();
+    QCOMPARE(m_sic->updateCallCount, 1);
+    m_sic->updateCallCount = 0;
+    QVERIFY(m_sic->selectionAvailableAtLastUpdate);
 
     m_subject->keyPressEvent(&left);
     QCOMPARE(m_subject->cursorPosition(), 1);
@@ -2004,6 +2029,9 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QCOMPARE(selectionChangedSpy.count(), 1);
     copyAvailableSpy.clear();
     selectionChangedSpy.clear();
+    QCOMPARE(m_sic->updateCallCount, 1);
+    m_sic->updateCallCount = 0;
+    QVERIFY(!m_sic->selectionAvailableAtLastUpdate);
 
     m_subject->keyPressEvent(&left);
     QCOMPARE(m_subject->cursorPosition(), 0);
@@ -2014,11 +2042,14 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QCOMPARE(selectionChangedSpy.count(), 1);
     copyAvailableSpy.clear();
     selectionChangedSpy.clear();
+    QCOMPARE(m_sic->updateCallCount, 1);
+    QVERIFY(m_sic->selectionAvailableAtLastUpdate);
 
     m_subject->setCursorPosition(0);
     copyAvailableSpy.clear();
     selectionChangedSpy.clear();
 
+    m_sic->updateCallCount = 0;
     m_subject->keyPressEvent(&down);
     QVERIFY(m_subject->cursorPosition() > 0);
     QVERIFY(!m_subject->selectedText().isEmpty());
@@ -2028,6 +2059,9 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QCOMPARE(selectionChangedSpy.count(), 1);
     copyAvailableSpy.clear();
     selectionChangedSpy.clear();
+    QCOMPARE(m_sic->updateCallCount, 1);
+    m_sic->updateCallCount = 0;
+    QVERIFY(m_sic->selectionAvailableAtLastUpdate);
 
     m_subject->keyPressEvent(&up);
     QVERIFY(m_subject->cursorPosition() == 0);
@@ -2038,15 +2072,21 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QCOMPARE(selectionChangedSpy.count(), 1);
     copyAvailableSpy.clear();
     selectionChangedSpy.clear();
+    QCOMPARE(m_sic->updateCallCount, 1);
+    QVERIFY(!m_sic->selectionAvailableAtLastUpdate);
 
     //disable flag Qt::TextSelectableByKeyboard
     m_subject->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextEditable);
 
+    m_sic->updateCallCount = 0;
     m_subject->keyPressEvent(&right);
     QCOMPARE(m_subject->cursorPosition(), 0);
     QVERIFY(!m_subject->hasSelectedText());
     QCOMPARE(copyAvailableSpy.count(), 0);
     QCOMPARE(selectionChangedSpy.count(), 0);
+    QCOMPARE(m_sic->updateCallCount, 0);
+    m_sic->updateCallCount = 0;
+    QVERIFY(!m_sic->selectionAvailableAtLastUpdate);
 }
 
 void Ut_MTextEdit::testAutoSipEnabled()
@@ -2419,6 +2459,7 @@ void Ut_MTextEdit::testArrowKeyNavigation()
 void Ut_MTextEdit::setupSipEnv(MTextEdit *edit)
 {
     edit->setFlag(QGraphicsItem::ItemAcceptsInputMethod);
+    m_sic->edit = edit;
 }
 
 void Ut_MTextEdit::requestSip(MTextEdit *edit, Qt::FocusReason fr)
