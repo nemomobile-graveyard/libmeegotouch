@@ -112,6 +112,7 @@ protected:
     int removeReference();
 
     friend class MStyleSheet;
+    friend class MStyleSheetPrivate;
     friend class MThemePrivate;
 };
 

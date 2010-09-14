@@ -50,6 +50,7 @@ M_LIBRARY
 #include "mscene.h"
 #include "mscalableimage.h"
 
+#include "private/mstylesheet_p.h"
 #include "private/mwidgetcontroller_p.h"
 
 #include "mapplication.h"
@@ -360,11 +361,11 @@ const MStyle *MTheme::style(const char *styleClassName,
 }
 
 const MStyle *MTheme::style(const char *styleClassName,
-                                const QString &objectName,
-                                const QString &mode,
-                                const QString &type,
-                                M::Orientation orientation,
-                                const MWidgetController *parent)
+                            const QString &objectName,
+                            const QString &mode,
+                            const QString &type,
+                            M::Orientation orientation,
+                            const MWidgetController *parent)
 {
     // The style type should never be "default" - that would probably be a view type
     // that's mistakenly being used as a style type.
@@ -376,9 +377,14 @@ const MStyle *MTheme::style(const char *styleClassName,
     // list containing all stylesheets from all assemblies from which this style is/inherits + app css
     QList<const MStyleSheet *> sheets;
 
+
+    QStringList styleMetaObjectHierarchy;
+
     // go trough the inheritance chain and add stylesheets from each assembly.
     const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
     do {
+        styleMetaObjectHierarchy.append(QString::fromAscii(mobj->className()));
+
         M::AssemblyType assemblyType = MClassFactory::instance()->styleAssemblyType(mobj->className());
         if (assemblyType == M::Application) {
             mobj = mobj->superClass();
@@ -402,37 +408,25 @@ const MStyle *MTheme::style(const char *styleClassName,
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
 
-    const QGraphicsItem* p = parent;
-    QList<QPair<const QMetaObject*, QList<const MStyleSheet*> > > parentsSheets;
-    // go trough the parents and add them to parent stylesheet list
-    while (p) {
-        if (p->isWidget()) {
-            const QGraphicsWidget* widget = static_cast<const QGraphicsWidget*>(p);
+    QVector<MStyleSheetPrivate::ParentData> parentsData = MStyleSheetPrivate::extractParentsData(parent);
 
-            mobj = widget->metaObject();
-            QList<const MStyleSheet*> thisParentSheets;
-            // go trough this parent's inheritance chain
-            do {
-                M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(mobj->className());
-                if (assemblyType == M::Application || assemblyType == M::AssemblyNone) {
-                    mobj = mobj->superClass();
-                    continue;
+    for (int i = 0; i < parentsData.size(); i++) {
+        MStyleSheetPrivate::ParentData &pd = parentsData[i];
+        QList<const MStyleSheet *> &thisParentSheets = pd.sheets;
+
+        foreach (const QString &oneClassName, pd.hierarchy) {
+            M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(oneClassName);
+            if (assemblyType == M::Application || assemblyType == M::AssemblyNone)
+                continue;
+
+            QString assemblyName = MClassFactory::instance()->widgetAssemblyName(oneClassName);
+            MLibrary *library = d->libraries->value(assemblyName, NULL);
+            if (library && library->stylesheet()) {
+                if (!sheets.contains(library->stylesheet()) && !thisParentSheets.contains(library->stylesheet())) {
+                    thisParentSheets.insert(0, library->stylesheet());
                 }
-                QString assemblyName = MClassFactory::instance()->widgetAssemblyName(mobj->className());
-                MLibrary *library = d->libraries->value(assemblyName, NULL);
-                if (library) {
-                    if (library->stylesheet()) {
-                        if (!sheets.contains(library->stylesheet()) && !thisParentSheets.contains(library->stylesheet())) {
-                            thisParentSheets.insert(0, library->stylesheet());
-                        }
-                    }
-                }
-                mobj = mobj->superClass();
-            } while (mobj->className() != QObject::staticMetaObject.className());
-            parentsSheets.insert(0, qMakePair(widget->metaObject(), thisParentSheets));
+            }
         }
-
-        p = p->parentItem();
     }
 
     // add application css
@@ -443,7 +437,15 @@ const MStyle *MTheme::style(const char *styleClassName,
     if (d->customStylesheet)
         sheets.append(d->customStylesheet);
 
-    return MStyleSheet::style(sheets, parentsSheets, styleClassName, objectName, mode, type, orientation, parent);
+    QString parentStyleName;
+    if (parent) {
+        if (!parent->styleName().isNull())
+            parentStyleName = parent->styleName();
+        else
+            parentStyleName = parent->objectName();
+    }
+
+    return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName, styleMetaObjectHierarchy, styleClassName, objectName, mode, type, orientation);
 }
 
 void MTheme::releaseStyle(const MStyle *style)
