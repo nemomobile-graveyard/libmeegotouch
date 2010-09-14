@@ -345,6 +345,7 @@ public:
 
     /*!
       \return Returns the status of the list index availability.
+      \deprecated Please use indexDisplayMode()
       */
     bool indexVisible();
 
@@ -394,6 +395,12 @@ public Q_SLOTS:
       \sa MList::DisplayMode
     */
     void setIndexDisplayMode(DisplayMode displayMode);
+
+    /*!
+      \brief Returns visibility mode of list index.
+      \sa MList::DisplayMode
+      */
+    DisplayMode indexDisplayMode() const;
 
 Q_SIGNALS:
     /*!

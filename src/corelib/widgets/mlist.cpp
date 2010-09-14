@@ -227,6 +227,16 @@ void MList::setIndexVisible(bool visible)
 void MList::setIndexDisplayMode(MList::DisplayMode displayMode)
 {
     model()->setListIndexDisplayMode(displayMode);
+
+    if(displayMode == MList::Hide)
+        model()->setListIndexVisible(false);
+    else
+        model()->setListIndexVisible(true);
+}
+
+MList::DisplayMode MList::indexDisplayMode() const
+{
+    return static_cast<MList::DisplayMode>(model()->listIndexDisplayMode());
 }
 
 bool MList::indexVisible()
