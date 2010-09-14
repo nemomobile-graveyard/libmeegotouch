@@ -9,6 +9,7 @@
 - Some MDialog properties have been moved to MDialogStyle:
   - MDialog::isCloseButtonVisible() and MDialog::setCloseButtonVisible(). Use MDialogStyle::hasCloseButton instead.
   - MDialog::isTitleBarVisible() and MDialog::setTitleBarVisible(). Use MDialogStyle::hasTitleBar instead.
+- MInfoBanner is deprecated, use MBanner for any component with banner requirements
 
 \section v02038 0.20.38
 
