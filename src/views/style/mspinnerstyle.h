@@ -51,6 +51,12 @@ class M_EXPORT MSpinnerStyle : public MWidgetStyle
         \brief Period of unknown duration spinner (duration of one full spin in msec).
     */
     M_STYLE_ATTRIBUTE(int, period, Period)
+
+    /*!
+        \property MSpinnerStyle::refreshRate
+        \brief Refresh rate of unknown duration spinner (interval between frames in msec).
+    */
+    M_STYLE_ATTRIBUTE(int, refreshRate, RefreshRate)
 };
 
 /*!
