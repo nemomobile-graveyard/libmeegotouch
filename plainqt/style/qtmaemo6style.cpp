@@ -670,52 +670,50 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
 {
     Q_Q(const QtMaemo6Style);
     if (style) {
-        // draw Background
-        q->drawBackground(p, option, rect, style);
 
+        //margins aren't part of the button
+        QRect buttonRect = rect.adjusted(style->marginLeft(), style->marginTop(), -style->marginRight(), -style->marginBottom());
+        q->drawBackground(p, option, buttonRect, style);
+
+        buttonRect.adjust(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom());
         QSize usedIconSize = iconSize.isValid() ? iconSize : style->iconSize();
 
-        QRect textAndIconRect = getTextAndIconRect(style, text, icon, font, usedIconSize);
-
-        //there is only an icon
-        if (!icon.isNull() && text.isEmpty()) {
-            //If the iconsize exceeds the widget's size (maybe fixed- or maximumSize set)
-            // scale the icon to the widget size. This is only a fallback solution
-            int paddingLeft, paddingTop, paddingRight, paddingBottom;
-            paddingFromStyle(style, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
-
-            if (usedIconSize.width() > option->rect.width()
-                    || usedIconSize.height() > option->rect.height()) {
-                QSize maxIconSize = option->rect.size() -
-                                    QSize(paddingLeft + paddingRight,
-                                          paddingTop + paddingBottom);
-                usedIconSize.scale(maxIconSize, Qt::KeepAspectRatio);
-            }
-            textAndIconRect = option->rect;
-        } else {
-            //TODO: is always centered
-            textAndIconRect.moveTo(
-                option->rect.left() + (rect.width() - textAndIconRect.width()) / 2,
-                option->rect.top() + (rect.height() - textAndIconRect.height()) / 2);
-        }
-
         if (!icon.isNull()) {
-            drawButtonIcon(style, p, textAndIconRect, icon, usedIconSize);
+
+            //scale icon if necessary (ToDo: investigate if m scales or cuts)
+            if (usedIconSize.width() > buttonRect.width()
+                    || usedIconSize.height() > buttonRect.height()) {
+                usedIconSize.scale(buttonRect.size(), Qt::KeepAspectRatio);
+            }
+
+            if (text.isEmpty()) {
+                drawButtonIcon(style, p, buttonRect, icon, usedIconSize, /*centerAlways=*/true);
+            } else {
+
+                    QRect textAndIconRect = getTextAndIconRect(style, text, icon, font, usedIconSize);
+                    textAndIconRect.moveTo(
+                        buttonRect.left() + (buttonRect.width() - textAndIconRect.width()) / 2,
+                        buttonRect.top() + (buttonRect.height() - textAndIconRect.height()) / 2);
+                     drawButtonIcon(style, p, textAndIconRect, icon, usedIconSize);
+
+                     buttonRect.translate(usedIconSize.width(), 0);
+                     drawButtonText(style, p, buttonRect, text, style->horizontalTextAlign() | style->verticalTextAlign(), font);
 
             //merge the alignment of icon and text
             // if the button is aligned horizontaly to the text, text must be drawn with inverted
             // icon's horizontal align and horizontal align of the text
-            if (hasVerticalAlignment(style->iconAlign())) {
-                drawButtonText(style, p, textAndIconRect, text,
-                               invertAlignment(verticalAlignment(style->iconAlign())) | style->horizontalTextAlign(), font);
-            } else if (hasHorizontalAlignment(style->iconAlign())) {
-                drawButtonText(style, p, textAndIconRect, text,
-                               invertAlignment(horizontalAlignment(style->iconAlign())) | style->verticalTextAlign(), font);
-            } else {
-                mDebug("PlainQt Style") << "Button has no text align";
-            }
+//            if (hasVerticalAlignment(style->iconAlign())) {
+//                drawButtonText(style, p, buttonRect, text,
+//                               invertAlignment(verticalAlignment(style->iconAlign())) | style->horizontalTextAlign(), font);
+//            } else if (hasHorizontalAlignment(style->iconAlign())) {
+//                drawButtonText(style, p, buttonRect, text,
+//                               invertAlignment(horizontalAlignment(style->iconAlign())) | style->verticalTextAlign(), font);
+//            } else {
+//                mDebug("PlainQt Style") << "Button has no text align";
+//            }
+        }
         } else { //Text only
-            drawButtonText(style, p, textAndIconRect, text, style->horizontalTextAlign() | style->verticalTextAlign(), font);
+            drawButtonText(style, p, buttonRect, text, style->horizontalTextAlign() | style->verticalTextAlign(), font);
         }
     }
 }
@@ -837,29 +835,35 @@ void QtMaemo6StylePrivate::drawButtonText(const MButtonStyle *style,
 }
 
 void QtMaemo6StylePrivate::drawButtonIcon(const MButtonStyle *style,
-        QPainter *painter,
-        const QRect &contentsRect,
-        const QIcon &icon,
-        const QSize &iconSize /* = QSize()*/) const
+                                          QPainter *painter,
+                                          const QRect &contentsRect,
+                                          const QIcon &icon,
+                                          const QSize &iconSize, /* = QSize()*/
+                                          const bool centerAlways) const
 {
     if(style) {
         Q_Q(const QtMaemo6Style);
         QSize usedIconSize = iconSize.isValid() ? iconSize : style->iconSize();
 
-        //If alignment is only horizontal oder vertical, center in the other direction
-        Qt::Alignment usedAlign = style->iconAlign();
-        if (!hasHorizontalAlignment(usedAlign))
-            usedAlign |= Qt::AlignHCenter;
-        if (!hasVerticalAlignment(usedAlign))
-            usedAlign |= Qt::AlignVCenter;
+        if (centerAlways) {
+             q->drawItemPixmap(painter, contentsRect, Qt::AlignHCenter | Qt::AlignVCenter, icon.pixmap(usedIconSize));
+        } else {
 
-        int paddingLeft, paddingTop, paddingRight, paddingBottom;
-        paddingFromStyle(style, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
+            //If alignment is only horizontal oder vertical, center in the other direction
+            Qt::Alignment usedAlign = style->iconAlign();
+            if (!hasHorizontalAlignment(usedAlign))
+                usedAlign |= Qt::AlignHCenter;
+            if (!hasVerticalAlignment(usedAlign))
+                usedAlign |= Qt::AlignVCenter;
 
-        QRect ctRect = contentsRect.translated(paddingLeft, paddingTop);
-        ctRect.setWidth(ctRect.width() - (paddingLeft + paddingRight));
-        ctRect.setHeight(ctRect.height() - (paddingTop + paddingBottom));
-        q->drawItemPixmap(painter, ctRect, usedAlign, icon.pixmap(usedIconSize));
+            //        int paddingLeft, paddingTop, paddingRight, paddingBottom;
+            //        paddingFromStyle(style, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
+            //
+            //        QRect ctRect = contentsRect.translated(paddingLeft, paddingTop);
+            //        ctRect.setWidth(ctRect.width() - (paddingLeft + paddingRight));
+            //        ctRect.setHeight(ctRect.height() - (paddingTop + paddingBottom));
+            q->drawItemPixmap(painter, contentsRect,usedAlign, icon.pixmap(usedIconSize));
+        }
     }
 }
 
@@ -899,13 +903,13 @@ QRect QtMaemo6StylePrivate::getTextAndIconRect(const MButtonStyle *style,
         }
     }
 
-    int paddingLeft, paddingTop, paddingRight, paddingBottom;
-    paddingFromStyle(style, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
-
-    //add margins to the final rect
-    textAndIconRect = QRect(textAndIconRect.x(), textAndIconRect.y(),
-                            textAndIconRect.width() + paddingLeft + paddingRight,
-                            textAndIconRect.height() + paddingTop + paddingBottom);
+//    int paddingLeft, paddingTop, paddingRight, paddingBottom;
+//    paddingFromStyle(style, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
+//
+//    //add margins to the final rect
+//    textAndIconRect = QRect(textAndIconRect.x(), textAndIconRect.y(),
+//                            textAndIconRect.width() + paddingLeft + paddingRight,
+//                            textAndIconRect.height() + paddingTop + paddingBottom);
 
     return textAndIconRect;
 }
@@ -937,6 +941,16 @@ void QtMaemo6StylePrivate::paddingFromStyle(const MWidgetStyle *style,
         *left = *top = *right = *bottom = 0;
     }
 }
+
+QSize QtMaemo6StylePrivate::optimalSizeFromStyle(const MWidgetStyle *style) const
+{
+    QSize os;
+    if (style) {
+        os = style->preferredSize();
+    }
+    return os;
+}
+
 
 QRect QtMaemo6StylePrivate::scrollBarSliderRect(const QStyleOptionComplex *option,
         const QWidget *widget /* = 0*/) const
@@ -2681,17 +2695,26 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle"));
 
             if(style) {
-                int borderTop, borderRight, borderBottom, borderLeft;
-                d->paddingFromStyle(style, &borderLeft, &borderTop, &borderRight, &borderBottom);
-
-                QRect textAndIconRect = d->getTextAndIconRect(style, subopt.text, subopt.icon);
-                textAndIconRect.setWidth(textAndIconRect.width() + borderLeft + borderRight);
-                textAndIconRect.setHeight(textAndIconRect.height() + borderTop + borderBottom);
-                retSize = textAndIconRect.size();
+                  QSize bs = d->optimalSizeFromStyle(style);
+                  if (bs.isValid()) {
+                    bs.setWidth(bs.width() + style->marginLeft() + style->marginRight());
+                    bs.setHeight(bs.height() + style->marginBottom() + style->marginTop());
+                } else {
+                    bs = QSize(500, 100);
+                }
+                  retSize = bs;
+//                QRect textAndIconRect = d->getTextAndIconRect(style, subopt.text, subopt.icon);
+//                textAndIconRect.setWidth(textAndIconRect.width() + style->marginLeft() + style->marginRight());
+//                textAndIconRect.setHeight(textAndIconRect.height() + style->marginBottom() + style->marginTop());
+//                retSize = textAndIconRect.size();
             } else {
                 qCritical() << "MButtonStyle for QPushButton could not be loaded";
             }
         }
+    }
+    break;
+    case CT_CheckBox: {
+        //ToDo
     }
     break;
     case CT_ItemViewItem:

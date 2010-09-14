@@ -156,12 +156,14 @@ public:
      * \param contentsRect the rect within the button in which the text (and icon) is drawn
      * \param icon the icon
      * \param iconSize optional overrides the icon size from style
+     * \param centerAlways don't use the icon-align property, but center always
      */
     void drawButtonIcon(const MButtonStyle *style,
                         QPainter *painter,
                         const QRect &contentsRect,
                         const QIcon &icon,
-                        const QSize &iconSize = QSize()) const;
+                        const QSize &iconSize = QSize(),
+                        const bool centerAlways = false) const;
 
     /*!
      * Draws the button.
@@ -307,6 +309,15 @@ public:
                           int *top,
                           int *right,
                           int *bottom) const;
+
+      /*!
+     * returns a size computed from the style properties maximumSize, minimumSize
+     * and preferredSize. This method uses a heuristic to follow m sizes as far as possible
+     * \param style the style from which the optimal size is computed
+     */
+    QSize optimalSizeFromStyle(const MWidgetStyle *style) const;
+
+
 
     /*!
      * returns the rect a slider uses
