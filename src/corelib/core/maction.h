@@ -43,19 +43,20 @@ class M_EXPORT MAction : public QAction
 
 public:
 
-    /*
-       \brief Possible locations for an action to reside in
-       \detail An action may stay in different locations on the screen, but will have preferred ones.
-       This information is useful if actions should be shifted from one location to another automatically.
+    /*!
+       \brief Possible locations for an action to reside in.
+       An action may stay in different locations on the screen, but will have
+       preferred ones. This information is useful if actions should be shifted
+       from one location to another automatically.
      */
     enum Location {
-        NoLocation = 0x0000,
-        ToolBarPortraitLocation = 0x0001,
-        ToolBarLandscapeLocation = 0x0002,
-        ToolBarLocation = 0x0003,
-        ApplicationMenuLocation = 0x0004,
-        ObjectMenuLocation = 0x0008,
-        EveryLocation = 0xffff
+        NoLocation = 0x0000, /*!< No location. */
+        ToolBarPortraitLocation = 0x0001, /*!< In the tool bar, if in portrait orientation. */
+        ToolBarLandscapeLocation = 0x0002, /*!< In the tool bar, if in landscape orientation. */
+        ToolBarLocation = 0x0003, /*!< In the tool bar, regardless of the orientation. */
+        ApplicationMenuLocation = 0x0004, /*!< In the application menu. */
+        ObjectMenuLocation = 0x0008, /*!< In the object menu. */
+        EveryLocation = 0xffff /*!< In all possible locations. */
     };
 
     Q_DECLARE_FLAGS(Locations, Location)
@@ -99,13 +100,13 @@ public:
     void setIconID(const QString &id);
 
     /**
-       \brief Return the possible location this action may reside in
+       \brief Return the possible locations this action may reside in
      */
     Locations location() const;
 
     /**
-       \brief Set the location this action may reside in
-       \param location value of possible location
+       \brief Set the locations this action may reside in
+       \param location value of possible locations
      */
     void setLocation(Locations location);
 
