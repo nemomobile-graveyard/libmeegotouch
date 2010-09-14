@@ -20,6 +20,10 @@
 #include "mfeedback.h"
 #include "mfeedback_p.h"
 
+const QString MFeedback::Press = "press";
+const QString MFeedback::Release = "release";
+const QString MFeedback::Cancel = "cancel";
+
 MFeedback::MFeedback(const MFeedback &feedback)
     : QObject(0), d_ptr(new MFeedbackPrivate)
 {
@@ -68,4 +72,9 @@ void MFeedback::play() const
 {
     Q_D(const MFeedback);
     d->play();
+}
+
+void MFeedback::play(const QString &feedbackName)
+{
+    MFeedbackPrivate::play(feedbackName);
 }

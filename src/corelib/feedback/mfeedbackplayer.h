@@ -42,6 +42,8 @@ class MFeedbackPlayerPrivate;
  * MFeedbackPlayer also ensures that the instantaneous feedback given is going
  * to comply with the system's current "look and feel" (more especifically, to the
  * "feel" part) and will also be in harmony with the context/situation at hand.
+ *
+ * \deprecated Please use class MFeedback to play input feedbacks. Since 0.20.43
  */
 class M_EXPORT MFeedbackPlayer : public QObject
 {
@@ -72,12 +74,16 @@ public:
      * Press feedback. Used when the user presses on an object.
      * It is also used when the user presses off an object,
      * but slides the finger onto one.
+     *
+     * \deprecated Please use MFeedback::Press instead. Since 0.20.43
      */
     static const QString Press;
 
     /*!
      * Release feedback. Used when finger is released on the object.
      * Indicates that an action was done.
+     *
+     * \deprecated Please use MFeedback::Release instead. Since 0.20.43
      */
     static const QString Release;
 
@@ -86,11 +92,15 @@ public:
      * inactive area.
      *
      * Also used in cases where a Tap turns into another stroke.
+     *
+     * \deprecated Please use MFeedback::Cancel instead. Since 0.20.43
      */
     static const QString Cancel;
 
     /*!
      * Error feedback.
+     *
+     * \deprecated Since 0.20.43
      */
     static const QString Error;
 
@@ -98,6 +108,8 @@ public:
      * Plays a feedback, given its name.
      *
      * \param feedbackName Name of the desired feedback.
+     *
+     * \deprecated Please use MFeedback::play(const QString&) instead. Since 0.20.43
      */
     void play(const QString &feedbackName);
 

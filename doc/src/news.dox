@@ -1,5 +1,11 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02043 0.20.43
+
+\subsection Deprecated
+- MFeedbackPlayer, use class MFeedback instead.
+- MApplication::feedbackPlayer() and MComponentData::feedbackPlayer(), use class MFeedback instead.
+
 \section v02042 0.20.42
 
 \subsection New

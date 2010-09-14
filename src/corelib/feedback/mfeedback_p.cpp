@@ -33,3 +33,8 @@ void MFeedbackPrivate::play() const
         feedbackPlayer->play(name);
     }
 }
+
+void MFeedbackPrivate::play(const QString &feedbackName)
+{
+    MApplication::feedbackPlayer()->play(feedbackName);
+}

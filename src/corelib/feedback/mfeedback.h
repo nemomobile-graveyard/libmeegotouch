@@ -84,6 +84,27 @@ public:
     ~MFeedback();
 
     /*!
+     * Press feedback. Used when the user presses on an object.
+     * It is also used when the user presses off an object,
+     * but slides the finger onto one.
+     */
+    static const QString Press;
+
+    /*!
+     * Release feedback. Used when finger is released on the object.
+     * Indicates that an action was done.
+     */
+    static const QString Release;
+
+    /*!
+     * Cancel feedback. Used when finger slides off the object, onto an
+     * inactive area.
+     *
+     * Also used in cases where a Tap turns into another stroke.
+     */
+    static const QString Cancel;
+
+    /*!
      * \brief Sets the name of the feedback.
      *
      * \param name Name of the feedback
@@ -96,6 +117,13 @@ public:
      * \return Name of the feedback.
      */
     QString name() const;
+
+    /*!
+     * \brief Plays a feedback.
+     *
+     * \param feedbackName Name of the feedback to be played
+     */
+    static void play(const QString &feedbackName);
 
 public Q_SLOTS:
     /*!

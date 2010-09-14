@@ -44,7 +44,7 @@
 #include <QDesktopWidget>
 
 #include <MComponentData>
-#include <mfeedbackplayer.h>
+#include <mfeedback.h>
 #include <mdeviceprofile.h>
 #include <MTheme>
 #include <mbuttonstyle.h>
@@ -168,7 +168,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     case QEvent::MouseButtonPress: {
         // now send press feedback
         if(QtMaemo6Style* style = qobject_cast<QtMaemo6Style*>(widget->style())) {
-            const MFeedback *  feedback = style->feedback(MFeedbackPlayer::Press, widget);
+            const MFeedback *  feedback = style->feedback(MFeedback::Press, widget);
             if ( feedback ) feedback->play();
         }
 
@@ -185,7 +185,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     case QEvent::MouseButtonRelease: {
         // now send release feedback
         if(QtMaemo6Style* style = qobject_cast<QtMaemo6Style*>(widget->style())) {
-            const MFeedback *  feedback = style->feedback(MFeedbackPlayer::Release, widget);
+            const MFeedback *  feedback = style->feedback(MFeedback::Release, widget);
             if ( feedback ) feedback->play();
         }
     }

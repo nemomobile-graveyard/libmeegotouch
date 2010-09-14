@@ -35,6 +35,7 @@ private slots:
 
     void name();
     void play();
+    void playWithName();
 
 private:
 };

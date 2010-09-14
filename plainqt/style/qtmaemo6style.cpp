@@ -87,7 +87,7 @@
 #include <mtexteditstyle.h>
 #include <mcontentitemstyle.h>
 #include <mapplicationmenustyle.h>
-#include <mfeedbackplayer.h>
+#include <mfeedback.h>
 //#include <mwidgetfadeinanimationstyle.h>
 //#include <mwidgetfadeoutanimationstyle.h>
 #include <mdeviceprofile.h>
@@ -2596,11 +2596,11 @@ const MFeedback * QtMaemo6Style::feedback(const QString& feedbackName, const QWi
         const MWidgetStyle *style = static_cast<const MWidgetStyle *>(
             QtMaemo6StylePrivate::mStyle(opt.state, meegoClassString, ""));
 
-        if ( feedbackName == MFeedbackPlayer::Press )
+        if ( feedbackName == MFeedback::Press )
             return &(style->pressFeedback());
-        if ( feedbackName == MFeedbackPlayer::Release )
+        if ( feedbackName == MFeedback::Release )
             return &(style->releaseFeedback());
-        if ( feedbackName == MFeedbackPlayer::Cancel )
+        if ( feedbackName == MFeedback::Cancel )
             return &(style->cancelFeedback());
     }
 

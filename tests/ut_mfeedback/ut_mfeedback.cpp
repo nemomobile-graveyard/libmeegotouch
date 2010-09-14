@@ -61,11 +61,13 @@ void Ut_MFeedback::name()
 }
 
 /*
- * Check that MFeedback playing works as expected.
+ * Check that MFeedback::play() works as expected.
  */
 void Ut_MFeedback::play()
 {
-    MFeedbackPlayer *testPlayer;
+    MFeedbackPlayer *testPlayer = MApplication::feedbackPlayer();
+    testPlayer->playedFeedbacks.clear();
+
     MFeedback feedback1("press-foo");
     MFeedback feedback2;
     MFeedback feedback3("release-foo");
@@ -78,12 +80,29 @@ void Ut_MFeedback::play()
     feedback4.play();
 
     // See that the feedbacks actually got played
-    testPlayer = MApplication::feedbackPlayer();
     QCOMPARE(testPlayer->playedFeedbacks.size(), static_cast<int>(4));
     QCOMPARE(testPlayer->playedFeedbacks.at(0), QString("press-foo"));
     QCOMPARE(testPlayer->playedFeedbacks.at(1), QString());
     QCOMPARE(testPlayer->playedFeedbacks.at(2), QString("release-foo"));
     QCOMPARE(testPlayer->playedFeedbacks.at(3), QString("cancel-foo"));
+}
+
+/*
+ * Check that MFeedback::play(const QString&) works as expected.
+ */
+void Ut_MFeedback::playWithName()
+{
+    MFeedbackPlayer *testPlayer = MApplication::feedbackPlayer();
+    testPlayer->playedFeedbacks.clear();
+
+    // Play the feedbacks
+    MFeedback::play("press-bar");
+    MFeedback::play("cancel-everything");
+
+    // See that the feedbacks actually got played
+    QCOMPARE(testPlayer->playedFeedbacks.size(), static_cast<int>(2));
+    QCOMPARE(testPlayer->playedFeedbacks.at(0), QString("press-bar"));
+    QCOMPARE(testPlayer->playedFeedbacks.at(1), QString("cancel-everything"));
 }
 
 QTEST_MAIN(Ut_MFeedback)

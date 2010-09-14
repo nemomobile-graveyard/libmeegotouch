@@ -13,7 +13,7 @@ The feedbacks are identified by name. For instance, if a user touches a button o
 - Vibra: Based on Immersion TouchSense&reg;
 - Audio: Based on PulseAudio
 
-MFeedbackPlayer class provides an interface to send playback requests from MeeGo Touch level to the feedback daemon. In practice, when a feedback related Qt signal is emitted, it should be translated into a feedback name and sent to the feedback daemon via the feedback player. The MFeedbackPlayer only forwards the feedback name to the feedback daemon, it does not know anything about the source Qt signal which triggered that event and the feedback name is not validated at MeeGo Touch level. The feedback daemon receives the feedback name, validates it in the context of the current theme and the application name and plays the corresponding vibra/audio feedback if there is any. If multiple feedbacks (e.g audio and vibra) are available for the same name, they are played simultaneously.
+MFeedback class provides an interface to send playback requests from MeeGo Touch level to the feedback daemon. In practice, when a feedback related Qt signal is emitted, it should be translated into a feedback name and sent to the feedback daemon via MFeedback class. The MFeedback class only forwards the feedback name to the feedback daemon, it does not know anything about the source Qt signal which triggered that event and the feedback name is not validated at MeeGo Touch level. The feedback daemon receives the feedback name, validates it in the context of the current theme and the application name and plays the corresponding vibra/audio feedback if there is any. If multiple feedbacks (e.g audio and vibra) are available for the same name, they are played simultaneously.
 
 \subsection feedbacks_in_themes Feedbacks in themes
 
@@ -42,14 +42,14 @@ A css file is associated with an application to describe the style of the widget
 Let's see some real-life examples for the principles above. If a style is specific to every instance of a class then it should be written in the following form:
 
 \code
-MButton {
+MButtonStyle {
 }
 \endcode
 
 Object instances can be referred by their name. The style data of a button named "SendButton" (an instance of an MButton):
 
 \code
-MButton#SendButton {
+MButtonStyle#SendButton {
 }
 \endcode
 
@@ -63,55 +63,18 @@ If multiple instances of several classes (MButton, MTextEdit) are named with the
 Specifying a feedback "huge-feedback" for the "press" event of an MButton widget instance with the object name "SignInButton":
 
 \code
-MButton#SignInButton {
+MButtonStyle#SignInButton {
   press-feedback: huge-feedback;
 }
 \endcode
 
 As shown above, the styling rules are written between the curly brackets.
 
-\section mfeedbackplayer MFeedbackPlayer
-
-MFeedbackPlayer class instance should not be explicitly created by an application since it is built-in in the MApplication class. To get the MFeedbackPlayer instance, a static function MApplication::feedbackPlayer() should be called:
-
-\code
-MFeedbackPlayer* MApplication::feedbackPlayer();
-\endcode
-
-\subsection simple_demo MFeedbackPlayer simple demo application
-
-A minimalistic application, requesting a "press" feedback from the MFeedbackPlayer without any widgets:
-
-app.pro:
-
-\code
-TEMPLATE = app
-CONFIG += meegotouch
-SOURCES += main.cpp
-\endcode
-
-main.cpp:
-
-\code
-#include <MApplication>
-#include <MFeedbackPlayer>
-
-int main(int argc, char* argv[])
-{
-  MApplication app(argc, argv);
-
-  // Process some initial events in the event queue
-  app.processEvents();
-  // Request the press feedback
-  MApplication::feedbackPlayer()->play("press");
-  // Be sure that the request is processed
-  app.processEvents();
-}
-\endcode
-
 \section mfeedback MFeedback
 
-MFeedback class is a thin convenience class to make working with feedbacks very easy. An MFeedback instance that can play a "press" feedback:
+MFeedback class is a thin convenience class to make working with feedbacks very easy.
+
+\subsection mfeedback_instance Using an MFeedback instance to play a "press" feedback:
 
 \code
 MFeedback* feedback = new MFeedback("press");
@@ -126,14 +89,51 @@ feedback->play();
 Connect a signal to the feedback:
 
 \code
-connect(button, SIGNAL(press()), feedback, SLOT(play()));
+connect(button, SIGNAL(pressed()), feedback, SLOT(play()));
 \endcode
 
-Behind the scenes, MFeedbackPlayer forwards the feedback events to the feedback daemon and the audio/vibra feedback gets played as soon as possible.
+\subsection mfeedback_staic Using static MFeedback::play(const QString&) to play a "press" feedback:
 
-\subsection simplest_application Simplest application with feedbacks
+\code
+MFeedback::play("press");
+\endcode
 
-The following demo application creates a window and places a button (MButton) there. The default press and release feedbacks are used automatically. Feedback named "press" is played when button is pressed and feedback named "release" is played when the button is released. These "press" and "release" feedback files are loaded from the current theme.
+Behind the scenes the feedback event is forwarded to the feedback daemon and the audio/vibra feedback gets played as soon as possible.
+
+\subsection minimal_application Minimal application that plays "press" feedback without using any widgets
+
+The following application simply plays a feedback called "press".
+
+app.pro:
+
+\code
+TEMPLATE = app
+CONFIG += meegotouch
+SOURCES += main.cpp
+\endcode
+
+main.cpp:
+
+\code
+#include <MApplication>
+#include <MFeedback>
+
+int main(int argc, char* argv[])
+{
+  MApplication app(argc, argv);
+
+  // Process some initial events in the event queue
+  app.processEvents();
+  // Request the press feedback
+  MFeedback::play("press");
+  // Be sure that the request is processed
+  app.processEvents();
+}
+\endcode
+
+\subsection simple_application Simple application that uses MButton widget to play feedbacks
+
+The following application creates a window and places a button (MButton) in that window. The default press and release feedbacks are used automatically. Feedback named "press" is played when button is pressed and feedback named "release" is played when the button is released. These "press" and "release" feedback files are loaded from the current theme.
 
 app.pro:
 
@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
 
 \subsection advanced_example Advanced example
 
-The following demo application creates a window and places a button in the window (ExampleButton). The default press and the release feedbacks for the button are ignored and instead the button emits a newPress signal when tapping on the button.  This signal is used to play a feedback named "press-on".
+The following application creates a window and places a button in the window (ExampleButton). The default press and the release feedbacks for the button are ignored and instead the button emits a newPress signal when tapping on the button.  This signal is used to play a feedback named "press-on".
 
 app.pro:
 
@@ -251,14 +251,14 @@ protected:
 };
 \endcode
 
-\section feedback_use_case1 Use case 1: Override a default feedback for an application
+\section feedback_use_case1 Styling use case 1: Override a default feedback for an application
 
 Let's say that an application's name is "app" and we want to change the "press" feedback to an application specific custom feedback regardless of the selected theme. To achieve this the following should be done:
 
 - The new feedback files should be placed in the base theme directory structure because every theme is derived from this theme. This leads to the fact that the custom feedback will be the same regardless of the selected theme. This is true because an application specific feedback always overrides the general theme specific feedback.
 - The base theme can be extended/overriden in the application specific part. Thus the correct place for the new files is at /usr/share/themes/base/meegotouch/app/feedbacks/press
 
-\section feedback_use_case2 Use case 2: Use an MButton widget and override the default feedback
+\section feedback_use_case2 Styling use case 2: Use an MButton widget and override the default feedback
 
 The application created in this section places a normal MButton named "NormalButton" in a window and the style sheet overrides the default "press" feedback of the press feedback into "release" feedback. The app.css file should be placed in the usr/share/themes/base/meegotouch/app/style directory.
 

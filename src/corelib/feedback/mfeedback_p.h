@@ -31,6 +31,8 @@ public:
 
     void play() const;
 
+    static void play(const QString &feedbackName);
+
     QString name;
     MFeedbackPlayer *feedbackPlayer;
 };

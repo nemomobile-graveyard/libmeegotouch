@@ -172,6 +172,8 @@ public:
     static QString serviceName();
 
     //! Returns object which provide interface for nonvisual feedback or NULL
+    //
+    // \deprecated Please use class MFeedback to play input feedbacks. Since 0.20.43
     static MFeedbackPlayer *feedbackPlayer();
 
     //! Returns whether automatic loading of MInputContext is enabled
