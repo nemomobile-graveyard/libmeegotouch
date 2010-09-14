@@ -190,6 +190,7 @@ void MAbstractLayoutPolicy::applyStyle()
 
 void MAbstractLayoutPolicy::setObjectName(const QString &name)
 {
+    mWarning("MAbstractLayoutPolicy") << Q_FUNC_INFO << "is deprecated. Use setStyleName() instead.";
     setStyleName(name);
 }
 void MAbstractLayoutPolicy::setStyleName(const QString &name)
@@ -202,6 +203,7 @@ void MAbstractLayoutPolicy::setStyleName(const QString &name)
 }
 QString MAbstractLayoutPolicy::objectName() const
 {
+    mWarning("MAbstractLayoutPolicy") << Q_FUNC_INFO << "is deprecated. Use styleName() instead.";
     return styleName();
 }
 QString MAbstractLayoutPolicy::styleName() const

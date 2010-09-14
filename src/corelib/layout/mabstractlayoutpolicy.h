@@ -288,11 +288,19 @@ public:
      */
     QString styleName() const;
 
-    /*! \internal
-     *  For backwards compatibility - these just call setStyleName and styleName */
-    void Q_DECL_DEPRECATED setObjectName(const QString &name);
-    QString Q_DECL_DEPRECATED objectName() const;
-    /*! \internal_end */
+    /*!
+     * \brief Sets the style name
+     * \deprecated Use setStyleName() instead.
+     * It simply calls setStyleName().
+     */
+    void setObjectName(const QString &name);
+
+    /*!
+     * \brief returns the style name.
+     * \deprecated Use styleName() instead.
+     * It simply calls styleName().
+     */
+    QString objectName() const;
 
     /*!
      * \brief Set the horizontal spacing.
