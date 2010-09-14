@@ -2702,7 +2702,7 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
     Q_D(const QtMaemo6Style);
     if (!d->m_isMInitialized) {
         mDebug("PlainQt Style") << Q_FUNC_INFO << "entered before initialization of MComponentData";
-        return 0;
+        return  QPlastiqueStyle::pixelMetric(metric, option, widget);
     }
 
     switch (metric) {
