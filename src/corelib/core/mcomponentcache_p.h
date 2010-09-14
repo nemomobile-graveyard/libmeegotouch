@@ -49,7 +49,6 @@ public:
     MApplication *mApplicationInstance;
     MApplicationWindow *mApplicationWindowInstance;
     QGLWidget *glWidgetOfmApplicationWindowInstance;
-    QGLWidget *glWidgetOfOtherWindow;
     bool cacheBeingPopulated;
     int initialArgc;
     char **initialArgv;

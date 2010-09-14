@@ -46,7 +46,6 @@ MComponentCachePrivate::MComponentCachePrivate() :
     mApplicationInstance(0),
     mApplicationWindowInstance(0),
     glWidgetOfmApplicationWindowInstance(0),
-    glWidgetOfOtherWindow(0),
     cacheBeingPopulated(false),
     initialArgc(ARGV_LIMIT),
     initialArgv(new char* [initialArgc])
@@ -57,7 +56,6 @@ MComponentCachePrivate::~MComponentCachePrivate()
 {
 #ifdef QT_OPENGL_LIB
     delete glWidgetOfmApplicationWindowInstance;
-    delete glWidgetOfOtherWindow;
 #endif
     delete mApplicationWindowInstance;
     delete[] initialArgv;
@@ -264,16 +262,11 @@ QGLWidget* MComponentCachePrivate::glWidget(const QGLFormat* format)
 {
 #ifdef QT_OPENGL_LIB
     QGLWidget *returnValue;
-    if (cacheBeingPopulated && glWidgetOfmApplicationWindowInstance != 0
+    if (glWidgetOfmApplicationWindowInstance != 0
         && (!format || glWidgetOfmApplicationWindowInstance->format() == *format))
     {
         returnValue = glWidgetOfmApplicationWindowInstance;
         glWidgetOfmApplicationWindowInstance = 0;
-    } else if (glWidgetOfOtherWindow != 0
-               && (!format || glWidgetOfOtherWindow->format() == *format))
-    {
-        returnValue = glWidgetOfOtherWindow;
-        glWidgetOfOtherWindow = 0;
     } else {
         returnValue = createNewGlWidget(format);
     }
