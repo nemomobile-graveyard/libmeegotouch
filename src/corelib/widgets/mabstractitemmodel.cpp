@@ -16,12 +16,12 @@
 ** of this file.
 **
 ****************************************************************************/
- 
+
 #include "mabstractitemmodel.h"
 #include "mabstractitemmodel_p.h"
 
 MAbstractItemModelPrivate::MAbstractItemModelPrivate()
-    : q_ptr( 0 ), groupMode(false)
+    : q_ptr(0), groupMode(false)
 {
 }
 
@@ -32,7 +32,7 @@ MAbstractItemModelPrivate::~MAbstractItemModelPrivate()
 void MAbstractItemModelPrivate::connectModel()
 {
     Q_Q(MAbstractItemModel);
-    
+
     connect(q, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(_q_rowsInsertAnimated(QModelIndex,int,int)));
     connect(q, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(_q_rowsRemoveAnimated(QModelIndex,int,int)));
 }
@@ -60,14 +60,14 @@ bool MAbstractItemModelPrivate::changeAnimated()
 void MAbstractItemModelPrivate::_q_rowsInsertAnimated(const QModelIndex &parent, int first, int last)
 {
     Q_Q(MAbstractItemModel);
-    
+
     emit q->rowsInserted(parent, first, last, changeAnimated());
 }
 
 void MAbstractItemModelPrivate::_q_rowsRemoveAnimated(const QModelIndex &parent, int first, int last)
 {
     Q_Q(MAbstractItemModel);
-    
+
     emit q->rowsRemoved(parent, first, last, changeAnimated());
 }
 
@@ -76,19 +76,20 @@ MAbstractItemModel::MAbstractItemModel(QObject *parent)
     d_ptr(new MAbstractItemModelPrivate)
 {
     Q_D(MAbstractItemModel);
-    
+
     d->q_ptr = this;
     d->connectModel();
 }
 
 MAbstractItemModel::~MAbstractItemModel()
 {
+    delete d_ptr;
 }
 
 void MAbstractItemModel::setGrouped(bool mode)
 {
     Q_D(MAbstractItemModel);
-    
+
     if (d->isGrouped() == mode)
         return;
 
@@ -99,7 +100,7 @@ void MAbstractItemModel::setGrouped(bool mode)
 bool MAbstractItemModel::isGrouped() const
 {
     Q_D(const MAbstractItemModel);
-    
+
     return d->isGrouped();
 }
 
@@ -127,15 +128,15 @@ QModelIndex MAbstractItemModel::parent(const QModelIndex &child) const
 {
     if (isGrouped()) {
         return index(child.internalId(), 0);
-    }    
-    
+    }
+
     return QModelIndex();
 }
 
 int MAbstractItemModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    
+
     return 1;
 }
 
@@ -150,14 +151,14 @@ QVariant MAbstractItemModel::data(const QModelIndex &index, int role) const
         if (index.isValid())
             return itemData(index.row(), -1, role);
     }
-    
+
     return QVariant();
 }
 
 void MAbstractItemModel::beginInsertRows(const QModelIndex &parent, int first, int last, bool animated)
 {
     Q_D(MAbstractItemModel);
-    
+
     QAbstractItemModel::beginInsertRows(parent, first, last);
     d->setChangeAnimated(animated);
 }
@@ -165,7 +166,7 @@ void MAbstractItemModel::beginInsertRows(const QModelIndex &parent, int first, i
 void MAbstractItemModel::beginRemoveRows(const QModelIndex &parent, int first, int last, bool animated)
 {
     Q_D(MAbstractItemModel);
-    
+
     QAbstractItemModel::beginRemoveRows(parent, first, last);
     d->setChangeAnimated(animated);
 }
