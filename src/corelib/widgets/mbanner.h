@@ -41,7 +41,18 @@
     \li An information banner is a MBanner with a subtitle (only one label)
     \li An system banner is a MBanner with an icon an subtitle
 
-    Is not necessary to setup any view, the use of the above elements creates the layout.
+     You should set the stylename through setStyleName() with one of the following names:
+        -"EventBanner": used for events as emails, sms, etc.
+        -"InformationBanner": used to show generic information without icons.
+        -"SystemBanner": reserved for system notifications as battery, USB, updates, etc.
+
+    If you create a MBanner without styleName it will have a default style.
+    In case that your banner contains any combination above mentioned, the styleName will
+    be configured automatically by the library.
+
+    Is highly recommended use a styleName contemplated in the mentioned categories. As
+    a good practice <b>you should setup one of the mentioned stylenames</b> to avoid conflicts
+    in the look and feel.
 
     By default MBanner is dismissed automatically after a certain amount of time. This
     parameter is defined in mbannerstyle.css under the name of disappear-timeout.
@@ -59,6 +70,7 @@
         Here's how to launch an event banner from code:
         \code
            MBanner *eventBanner = new MBanner();
+           eventBanner->setStyleName("EventBanner");
            eventBanner->setIconID("icon-l-settings");
            eventBanner->setTitle("New updates waiting to install");
            eventBanner->setSubtitle("130 files");
@@ -68,6 +80,7 @@
         Here's how to launch an information banner from code:
         \code
            MBanner *infoBanner = new MBanner();
+           infoBanner->setStyleName("InformationBanner");
            infoBanner->setSubtitle("Info banner with so much information that the text wraps in portrait");
            infoBanner->appear(MSceneWindow::DestroyWhenDone);
         \endcode
@@ -75,6 +88,7 @@
         Here's how to launch a system banner from code:
         \code
           MBanner *systemBanner = new MBanner();
+          systemBanner->setStyleName("SystemBanner");
           systemBanner->setIconID("icon-m-telephony-call-answer");
           systemBanner->setSubtitle("System banner");
           systemBanner->appear(MSceneWindow::DestroyWhenDone);

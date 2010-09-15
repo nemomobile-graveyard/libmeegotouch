@@ -112,7 +112,7 @@ void BannersPage::itemClicked(const QModelIndex &index)
 void BannersPage::showEventBanner()
 {
     MBanner *banner = new MBanner();
-    banner->setObjectName("EventBanner");
+    banner->setStyleName("EventBanner");
     banner->setIconID("icon-l-mail");
     banner->setTitle("New updates waiting to install");
     banner->setSubtitle("130 files");
@@ -122,7 +122,7 @@ void BannersPage::showEventBanner()
 void BannersPage::showInformationBanner()
 {
     MBanner *infoBanner = new MBanner();
-    infoBanner->setObjectName("InformationBanner");
+    infoBanner->setStyleName("InformationBanner");
     infoBanner->setSubtitle("Info banner with so much information that the text wraps in portrait");
     infoBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
@@ -130,7 +130,7 @@ void BannersPage::showInformationBanner()
 void BannersPage::showSystemInformationBanner()
 {
     MBanner *systemBanner = new MBanner();
-    systemBanner->setObjectName("SystemBanner");
+    systemBanner->setStyleName("SystemBanner");
     systemBanner->setIconID("icon-l-settings");
     systemBanner->setSubtitle("System banner");
     systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
