@@ -371,7 +371,7 @@ void Ut_MToolBar::testPropertyChange()
 
     // Retrieve the widget associated with the action
     const MToolBarView *view = dynamic_cast<const MToolBarView *>(m_subject->view());
-    QVERIFY(view);
+    Q_ASSERT(view);
     MWidget *widget = view->getWidget(action);
     QVERIFY(widget);
     QVERIFY(widget->isEnabled());
