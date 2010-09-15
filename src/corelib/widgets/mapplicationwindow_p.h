@@ -171,7 +171,7 @@ public:
 #endif //M_OS_MAEMO5
     void _q_updatePageExposedContentRect();
     void _q_enablePaintUpdates();
-
+    void _q_handleInSwitcherVisibilityChange();
 
 };
 

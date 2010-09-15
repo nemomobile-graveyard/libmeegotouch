@@ -185,6 +185,10 @@ void MApplicationWindowPrivate::init()
                q, SLOT(_q_menuAppeared()));
     q->connect(menu, SIGNAL(disappeared()),
                q, SLOT(_q_menuDisappeared()));
+    q->connect(q, SIGNAL(switcherEntered()),
+               SLOT(_q_handleInSwitcherVisibilityChange()));
+    q->connect(q, SIGNAL(switcherExited()),
+               SLOT(_q_handleInSwitcherVisibilityChange()));
 
     if (!MApplication::fullScreen() && statusBar) {
         sceneManager->appearSceneWindowNow(statusBar);
@@ -215,6 +219,21 @@ void MApplicationWindowPrivate::init()
             SLOT(_q_updatePageExposedContentRect()));
     q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()),
                SLOT(_q_updatePageExposedContentRect()));
+}
+
+void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
+{
+    if (isInSwitcher) {
+        navigationBar->hide();
+        dockWidget->hide();
+        homeButtonPanel->hide();
+        escapeButtonPanel->hide();
+    } else {
+        navigationBar->show();
+        dockWidget->show();
+        homeButtonPanel->show();
+        escapeButtonPanel->show();
+    }
 }
 
 #ifdef Q_WS_X11
