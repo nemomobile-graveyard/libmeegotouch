@@ -47,7 +47,7 @@ MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName)
     QString language = "";
 #if HAVE_GCONF
     theme = themeItem.value(M_THEME_DEFAULT).toString();
-    language = locale.value().toString();
+    language = locale.value("en_GB").toString();
 #else
     M_themeName =  M_THEME_DEFAULT;
     M_localDaemon = this;

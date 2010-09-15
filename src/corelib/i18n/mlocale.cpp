@@ -1170,12 +1170,12 @@ MLocale::createSystemMLocale()
     MGConfItem lcMonetaryItem(SettingsLcMonetary);
     MGConfItem lcTelephoneItem(SettingsLcTelephone);
 
-    QString language = languageItem.value().toString();
-    QString lcTime = lcTimeItem.value().toString();
-    QString lcTimeFormat24h = lcTimeFormat24hItem.value().toString();
-    QString lcCollate = lcCollateItem.value().toString();
-    QString lcNumeric = lcNumericItem.value().toString();
-    QString lcMonetary = lcMonetaryItem.value().toString();
+    QString language = languageItem.value("en_GB").toString();
+    QString lcTime = lcTimeItem.value("en_GB").toString();
+    QString lcTimeFormat24h = lcTimeFormat24hItem.value("12").toString();
+    QString lcCollate = lcCollateItem.value("en_GB").toString();
+    QString lcNumeric = lcNumericItem.value("en_GB").toString();
+    QString lcMonetary = lcMonetaryItem.value("en_GB").toString();
     QString lcTelephone = lcTelephoneItem.value().toString();
 
     MLocale *systemLocale;
@@ -2820,12 +2820,12 @@ void MLocale::refreshSettings()
     Q_D(MLocale);
 
     bool settingsHaveReallyChanged = false;
-    QString localeName = d->currentLanguageItem.value().toString();
-    QString lcTime = d->currentLcTimeItem.value().toString();
-    QString lcTimeFormat24h = d->currentLcTimeFormat24hItem.value().toString();
-    QString lcCollate = d->currentLcCollateItem.value().toString();
-    QString lcNumeric = d->currentLcNumericItem.value().toString();
-    QString lcMonetary = d->currentLcMonetaryItem.value().toString();
+    QString localeName = d->currentLanguageItem.value("en_GB").toString();
+    QString lcTime = d->currentLcTimeItem.value("en_GB").toString();
+    QString lcTimeFormat24h = d->currentLcTimeFormat24hItem.value("12").toString();
+    QString lcCollate = d->currentLcCollateItem.value("en_GB").toString();
+    QString lcNumeric = d->currentLcNumericItem.value("en_GB").toString();
+    QString lcMonetary = d->currentLcMonetaryItem.value("en_GB").toString();
     QString lcTelephone = d->currentLcTelephoneItem.value().toString();
 
     if (localeName != d->_defaultLocale) {
