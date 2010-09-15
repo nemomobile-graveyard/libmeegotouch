@@ -1080,6 +1080,10 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
             } else {
                 delete d->maskedTextDocument;
                 d->maskedTextDocument = 0;
+
+                d->maskTimer->stop();
+                d->unmaskPosition = -1;
+                d->unmaskLength = 0;
             }
 
         } else if (member == MTextEditModel::Prompt) {
