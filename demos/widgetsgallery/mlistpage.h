@@ -64,6 +64,7 @@ public:
     virtual void createContent();
 
     void createActions();
+    void createObjectMenuActions();
 
 public slots:
     void loadPicturesInVisibleItems();
@@ -109,8 +110,9 @@ private:
     PhoneBookImageLoader *imageLoader;
 
     MComboBox *comboListMode;
+
     MObjectMenu *objectMenu;
-    MWidget *objectMenuHolder;
+    QList<MAction *> objectMenuActions;
 
     MAction *actionAdvancedConfiguration;
     QPointer<MDialog> dialogAdvancedConfiguration;

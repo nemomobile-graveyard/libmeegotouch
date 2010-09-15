@@ -126,10 +126,15 @@ public:
     /*!
         \brief Constructs an object menu.
 
-        Object menu is always associated to exactly one widget. The menu shows
+        Object menu is associated to exactly one widget. The menu shows
         automatically all object menu actions from the \a target widget.
      */
     explicit MObjectMenu(MWidget *target);
+
+    /*!
+        \brief Constructs an object menu with a specified actions.
+     */
+    explicit MObjectMenu(const QList<MAction *>& actionList);
 
     /*!
         \brief Destructs an object menu.
@@ -144,7 +149,6 @@ protected:
     virtual bool eventFilter(QObject *obj, QEvent *event);
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     //! \reimp_end
-
 };
 //! \internal_end
 

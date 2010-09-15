@@ -64,7 +64,6 @@ MListPage::MListPage()
     imageLoader(NULL),
     comboListMode(NULL),
     objectMenu(NULL),
-    objectMenuHolder(NULL),
     actionAdvancedConfiguration(NULL),
     dialogAdvancedConfiguration(NULL),
     list(NULL),
@@ -343,6 +342,21 @@ void MListPage::createActions()
     actionAdvancedConfiguration->setText("Advanced Configuration");
     addAction(actionAdvancedConfiguration);
     connect(actionAdvancedConfiguration, SIGNAL(triggered()), SLOT(showAdvancedConfigurationDialog()));
+}
+
+void MListPage::createObjectMenuActions()
+{
+    //% "Remove"
+    MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), this);
+    objectMenuActions.append(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
+
+    //% "Edit"
+    action = new MAction(qtTrId("xx_listpage_list_edit"), this);
+    objectMenuActions.append(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(editListItem()));
+
+    objectMenu = new MObjectMenu(objectMenuActions);
 }
 
 void MListPage::scrollToBottom()
@@ -646,6 +660,7 @@ void MListPage::createContent()
 {
     MApplicationPage::createContent();
     createActions();
+    createObjectMenuActions();
 
     MTheme::addPixmapDirectory(QDir(CONTACTS_DIR).canonicalPath());
     QGraphicsWidget *panel = centralWidget();
@@ -653,21 +668,6 @@ void MListPage::createContent()
     panel->setLayout(layout);
 
     list = new MList(panel);
-    objectMenuHolder = new MWidget(panel);
-
-    objectMenu = new MObjectMenu(objectMenuHolder);
-
-    //% "Remove"
-    MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), objectMenuHolder);
-    action->setLocation(MAction::ObjectMenuLocation);
-    objectMenuHolder->addAction(action);
-    connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
-
-    //% "Edit"
-    action = new MAction(qtTrId("xx_listpage_list_edit"), objectMenuHolder);
-    action->setLocation(MAction::ObjectMenuLocation);
-    objectMenuHolder->addAction(action);
-    connect(action, SIGNAL(triggered()), this, SLOT(editListItem()));
 
     setPlainListModel();
 

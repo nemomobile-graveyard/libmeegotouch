@@ -55,6 +55,12 @@ MObjectMenu::MObjectMenu(MWidget *target)
     target->installEventFilter(this);
 }
 
+MObjectMenu::MObjectMenu(const QList<MAction *> &actionList)
+    : MSceneWindow(new MSceneWindowPrivate, new MObjectMenuModel, MSceneWindow::ObjectMenu)
+{
+    model()->setActions(actionList);
+}
+
 MObjectMenu::~MObjectMenu()
 {
 }
