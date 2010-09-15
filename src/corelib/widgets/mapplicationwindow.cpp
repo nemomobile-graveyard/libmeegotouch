@@ -141,9 +141,6 @@ void MApplicationWindowPrivate::init()
 
     q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
-    q->connect(q, SIGNAL(orientationChanged(M::Orientation)),
-               q, SLOT(_q_placeToolBar(M::Orientation)));
-
 #ifdef Q_WS_X11
     if (!MComponentData::chainDataStackIsEmpty()) {
         MComponentData::ChainData thisData = MComponentData::popChainData();
@@ -190,6 +187,9 @@ void MApplicationWindowPrivate::init()
     q->connect(q, SIGNAL(switcherExited()),
                SLOT(_q_handleInSwitcherVisibilityChange()));
 
+    q->connect(toolBar, SIGNAL(floatableChanged()),
+               q, SLOT(_q_placeToolBar()));
+
     if (!MApplication::fullScreen() && statusBar) {
         sceneManager->appearSceneWindowNow(statusBar);
     }
@@ -201,12 +201,6 @@ void MApplicationWindowPrivate::init()
     // Initialize escape button to close mode.
     escapeButtonPanel->setEscapeMode(MEscapeButtonPanelModel::CloseMode);
     QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
-
-    if (q->orientation() == M::Portrait) {
-        sceneManager->appearSceneWindowNow(dockWidget);
-    }
-
-    _q_placeToolBar(q->orientation());
 
     q->setBackgroundBrush(Qt::black);
 
@@ -295,8 +289,6 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
 
 void MApplicationWindowPrivate::maximizePageArea()
 {
-    Q_Q(MApplicationWindow);
-
     pageAreaMaximized = true;
 
     // When maximized, the window is in control of these components.
@@ -310,7 +302,7 @@ void MApplicationWindowPrivate::maximizePageArea()
         setComponentDisplayMode(navigationBar, MApplicationPageModel::Hide);
     }
 
-    if (q->orientation() == M::Portrait) {
+    if (needsDockWidget()) {
         if (dockWidget->focusItem()) {
             // Always show focused dock widget.
             setComponentDisplayMode(dockWidget, MApplicationPageModel::Show);
@@ -326,8 +318,6 @@ void MApplicationWindowPrivate::maximizePageArea()
 
 void MApplicationWindowPrivate::restorePageArea()
 {
-    Q_Q(MApplicationWindow);
-
     if (!pageAreaMaximized) {
         return;
     }
@@ -339,7 +329,7 @@ void MApplicationWindowPrivate::restorePageArea()
         setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());
         setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
 
-        if (q->orientation() == M::Portrait) {
+        if (needsDockWidget()) {
             // Dock widget follows navigation bar display mode.
             setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
         }
@@ -434,10 +424,10 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
     }
 }
 
-void MApplicationWindowPrivate::_q_placeToolBar(M::Orientation orientation)
+void MApplicationWindowPrivate::_q_placeToolBar()
 {
-    // set position of toolbar according to orientation
-    if (orientation == M::Portrait) {
+    // set position of toolbar
+    if (toolBar->isFloatable()) {
         // take toolbar from navigation bar
         navigationBar->undockToolBar();
         // dock it in lower dock widget
@@ -690,12 +680,13 @@ void MApplicationWindowPrivate::removeComponentFromAutoHide(MSceneWindow *compon
 
 void MApplicationWindowPrivate::updateDockWidgetVisibility()
 {
-    Q_Q(MApplicationWindow);
-
     // Make dock widget visible only if a toolbar is docked and
     // the docked toolbar has some actions
 
-    if (!dockWidget->toolBar() || (q->orientation() != M::Portrait)) {
+    Q_Q(MApplicationWindow);
+
+    if (!dockWidget->toolBar() || !needsDockWidget()) {
+        sceneManager->disappearSceneWindowNow(dockWidget);
         return;
     }
 
@@ -705,7 +696,9 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
     for (int i = 0; i < count; ++i) {
         if (actions[i]->isVisible()) {
             MAction *action = qobject_cast<MAction*>(actions[i]);
-            if(!action || action->location().testFlag(MAction::ToolBarPortraitLocation)) {
+            if (!action
+               || (action->location().testFlag(MAction::ToolBarPortraitLocation) && q->orientation() == M::Portrait)
+               || (action->location().testFlag(MAction::ToolBarLandscapeLocation) && q->orientation() == M::Landscape)) {
                 toolbarHasVisibleActions = true;
                 break;
             }
@@ -909,6 +902,11 @@ void MApplicationWindowPrivate::tearDownPageEscape()
 
     QObject::disconnect(q->sceneManager(), SIGNAL(pageHistoryChanged()),
             q, SLOT(_q_updatePageEscapeAuto()));
+}
+
+bool MApplicationWindowPrivate::needsDockWidget()
+{
+    return toolBar->isFloatable();
 }
 
 void MApplicationWindowPrivate::_q_updatePageEscapeAuto()

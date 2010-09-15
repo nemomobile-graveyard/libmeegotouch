@@ -24,6 +24,7 @@
 
 class MToolBarPrivate;
 
+
 /*!
     \class MToolBar
     \brief MToolBar provides a container for buttons and text input field.
@@ -117,6 +118,15 @@ class M_EXPORT MToolBar : public MWidgetController
 {
     Q_OBJECT
 
+    /*!
+        \property MToolBar::floatable
+        \brief Whether the toolbar prefers to be displayed as a separate, independent, scene window.
+
+        Current value can be get with isFloatable() and be notified about changes
+        by connecting to the floatableChanged() signal.
+     */
+    Q_PROPERTY(bool floatable READ isFloatable NOTIFY floatableChanged)
+
 public:
     /*!
         \brief Variable that defines id for tab variant of the toolbar.
@@ -134,6 +144,18 @@ public:
     */
     virtual ~MToolBar();
 
+    /*!
+        \brief Whether the toolbar prefers to be displayed as a separate, independent, scene window.
+    */
+    bool isFloatable() const;
+
+Q_SIGNALS:
+    /*!
+        \brief Emitted when the floatable property is changed.
+        \sa isFloatable()
+     */
+    void floatableChanged();
+
 protected:
 
     /*!
@@ -150,7 +172,6 @@ private:
     Q_DISABLE_COPY(MToolBar)
 
     friend class MToolBarView;
-
 #ifdef UNIT_TEST
     friend class Ut_MToolBar;
     friend class Ut_MToolBarView;

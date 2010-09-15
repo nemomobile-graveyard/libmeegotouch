@@ -22,10 +22,6 @@
 
 #include "private/mwidgetcontroller_p.h"
 
-class MAction;
-class MWidget;
-class MButton;
-
 #define _M_IsEnabledPreservingSelection "_m_isEnabledPreservingSelection"
 
 class MToolBarPrivate : public MWidgetControllerPrivate
@@ -35,7 +31,6 @@ class MToolBarPrivate : public MWidgetControllerPrivate
 public:
     MToolBarPrivate();
     virtual ~MToolBarPrivate();
-
 
     void initLayout();
 };

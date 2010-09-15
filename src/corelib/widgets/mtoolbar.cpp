@@ -28,8 +28,8 @@
 #include "mbutton.h"
 #include "mbuttongroup.h"
 #include "mwidget.h"
-
 #include "mwidgetcreator.h"
+#include "mwidgetview.h"
 
 M_REGISTER_WIDGET(MToolBar)
 
@@ -71,3 +71,11 @@ MToolBar::~MToolBar()
 {
 }
 
+bool MToolBar::isFloatable() const
+{
+    QVariant var = view()->property("floatable");
+    if (var.isValid() && var.type() == QVariant::Bool)
+        return var.toBool();
+    else
+        return false;
+}
