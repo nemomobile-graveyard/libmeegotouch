@@ -22,6 +22,9 @@ binmode STDERR, ":utf8";
 
 my $version = "0.20100824";
 
+my $run_date = decode_utf8(`date +%Y-%m-%d`);
+chomp ($run_date);
+
 my $original_wd;
 chomp ($original_wd = `pwd`);
 
@@ -309,9 +312,7 @@ sub myBasename {
 
 sub writeHtml {
     my ($htmlOutBody) =@_;
-    my $date = decode_utf8(`date`);
-    chomp($date);
-    my $title = "Results of messageid-check (version $version) run on " . $date;
+    my $title = "Results of messageid-check (version $version) run on " . $run_date;
 
     my $htmlOutHeader = "";
     $htmlOutHeader .= <<"EOF";
@@ -1210,10 +1211,10 @@ if (!defined $OPT_HANDOFF_URL) {
     $OPT_HANDOFF_URL="https://projects.maemo.org/svn/l10n/projects/harmattan/vendor/handoff/";
 }
 if (!defined $OPT_HANDOFF_DIR) {
-    $OPT_HANDOFF_DIR="/tmp/handoff";
+    $OPT_HANDOFF_DIR="/tmp/messageid-check/handoff-${run_date}";
 }
 if (!defined $OPT_SOURCEPACKAGES_DIR) {
-    $OPT_SOURCEPACKAGES_DIR="/tmp/sourcepackages";
+    $OPT_SOURCEPACKAGES_DIR="/tmp/messageid-check/sourcepackages-${run_date}";
 }
 if (!defined $OPT_HTTP_USER) {
     $OPT_HTTP_USER="";
