@@ -42,7 +42,8 @@ SUBDIRS     =  \
      ut_mflowlayoutpolicy \
      ut_mfreestylelayoutpolicy \
      ut_mgridlayoutpolicy \
-     ut_mimagewidget \ 
+     ut_mimagedirectory \
+     ut_mimagewidget \
      ut_mlayout \
      ut_mlinearlayoutpolicy \
      ut_mapplicationmenu \

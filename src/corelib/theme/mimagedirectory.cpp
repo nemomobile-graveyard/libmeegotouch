@@ -368,7 +368,7 @@ void MThemeImagesDirectory::reloadLocalizedResources(const QString &locale)
         return;
     }
 
-    //try to find a matching directory for the specified locale, if exactly mathcing 
+    //try to find a matching directory for the specified locale, if exactly matching
     //directory is not found we try to truncate the locale string to find next matching 
     //directory ("ar_SA" ==> "ar", "en_GB" ==> "en" etc. )
     QString localePath;
@@ -376,18 +376,48 @@ void MThemeImagesDirectory::reloadLocalizedResources(const QString &locale)
     while(1) {
         //check if directory for the locale is found and break the loop
         localePath = m_path + QDir::separator() + "locale" + QDir::separator() + m_locale + QDir::separator();
+
         if( QFile::exists(localePath) ) {
             break;
         }
 
-        //find last underscore and truncate locale string to that 
-        //if the locale cannot be truncated anymore return from the method     
-        int k = m_locale.lastIndexOf('_');
-        if( k == -1 ) {
-            m_locale = "";
-            return;
+        // according to http://userguide.icu-project.org/locale the separators
+        // that specify the parts of a locale are "_", "@", and ";", e.g.
+        // in sr_Latn_RS_REVISED@currency=USD;calendar=islamic-civil
+        // so we remove them from the end of the locale string.
+
+        int semicolonIndex = m_locale.lastIndexOf( ';' );
+        if ( semicolonIndex != -1 )
+        {
+            // found semicolon, remove it and remaining part of string
+            m_locale.truncate( semicolonIndex );
         }
-        m_locale.truncate(k);
+        else
+        {
+            int atIndex = m_locale.lastIndexOf( '@' );
+            if ( atIndex != -1 )
+            {
+                // found "@", remove it and remaining part of string
+                m_locale.truncate( atIndex );
+            }
+            else
+            {
+                int underscoreIndex = m_locale.lastIndexOf( '_' );
+                if ( underscoreIndex != -1 )
+                {
+                    // found "_", remove it and remaining part of string
+                    m_locale.truncate( underscoreIndex );
+                }
+                else
+                {
+                    // locale not found, and no way to shorten it, return
+                    m_locale = "";
+                    mWarning("MThemeImagesDirectory")
+                      << "Could not find locale" << m_locale << ".";
+                    return;
+                }
+            }
+        }
     }
 
     //output a warning if the original locale was truncated
