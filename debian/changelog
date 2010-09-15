@@ -1,8 +1,8 @@
-libmeegotouch (0.20.43~1) unstable; urgency=low
+libmeegotouch (0.20.42-2) unstable; urgency=low
 
-  * unreleased
+  * Revert "Fixes NB#191067 - MButton: Unable to disable the icon."
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 15 Sep 2010 12:35:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 15 Sep 2010 15:42:00 +0300
 
 libmeegotouch (0.20.42-1) unstable; urgency=low
 
@@ -18,7 +18,6 @@ libmeegotouch (0.20.42-1) unstable; urgency=low
   * Fixes: NB#188672 - Not able to get default Normal text once switched to Bold text
   * Fixes: NB#190336 - boosted applications use more SGX memory pages than non-boosted ones
   * Fixes: NB#190226 - MWidget::isOnDisplay() returns false even though application is visible on switcher
-  * Fixes: NB#191067 - MButton: Unable to disable the icon.
   * Fixes: NB#190565 - displayEntered can be received by application page without visible window
 
  -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 15 Sep 2010 12:28:00 +0300
