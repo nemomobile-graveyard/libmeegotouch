@@ -276,7 +276,6 @@ void MButtonViewPrivate::updateIcon(Icon **iconPtr,
      1 - MButtonModel::icon(), a QIcon
      2 - MButtonModel::[toggled]iconID(), a QString
      3 - MButtonStyle::[toggled]iconId(),  a QString
-     4 - No icon at all
      */
 
     /*
@@ -319,10 +318,6 @@ void MButtonViewPrivate::updateIcon(Icon **iconPtr,
         icon->origin = IconOriginFromStyleIconId;
         icon->id = iconIdFromStyle;
         icon->theme = MTheme::currentTheme();
-    } else {
-        delete icon;
-        icon = NULL;
-        *iconPtr = icon;
     }
 }
 
