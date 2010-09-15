@@ -114,7 +114,7 @@ void MWindowPrivate::init()
     displayExitedTimer.setSingleShot(true);
 
 #ifdef HAVE_GCONF
-    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value().toBool();
+    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value(true).toBool();
     QObject::connect(&minimizedSoftwareSwitchItem, SIGNAL(valueChanged()), q_ptr, SLOT(_q_updateMinimizedSoftwareSwitch()));
 #endif
 
