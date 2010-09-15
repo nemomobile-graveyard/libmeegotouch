@@ -105,6 +105,8 @@ protected:
     static int getLineNum(const QString &filename, const qint64 &streamPos);
     static int getLineNum(QFile &stream, const qint64 &streamPos = -1);
 
+    static void cleanup();
+
 private:
     Q_DISABLE_COPY(MStyleSheetParser)
     Q_DECLARE_PRIVATE(MStyleSheetParser)

@@ -229,6 +229,8 @@ void MStyleSheet::cleanup(bool)
     MStyleSheetPrivate::EntryCache.clear();
 
     MStyleSheetPrivate::StyleCache.clear();
+    
+    MStyleSheetParser::cleanup();
 }
 
 MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<const MStyleSheet *>& sheets,

@@ -109,7 +109,15 @@ public:
 
     bool validName(const QString &name);
     bool validValue(const QString &value);
+    
+    //cache for frequently used strings to reduce dynamic memory allocations made
+    //by strings in stylesheet (attributeName, attributeValue, className, selectorName etc.)
+    static QSet<QString> stringCache;
+    const QString& cachedString(const QString& str) const;
+
 };
+
+QSet<QString> MStyleSheetParserPrivate::stringCache;
 #endif
 
 MStyleSheetParserPrivate::MStyleSheetParserPrivate(const MLogicalValues *logicalValues) :
@@ -195,6 +203,14 @@ bool MStyleSheetParserPrivate::validValue(const QString &value)
 
     return true;
 }
+
+const QString& MStyleSheetParserPrivate::cachedString(const QString& str) const
+{
+    //insert string to cache and return the cached string
+    QSet<QString>::const_iterator i = stringCache.insert(str);
+    return (i != stringCache.constEnd()) ? *i : str;
+}
+
 
 void outputSelector(MStyleSheetSelector *selector)
 {
@@ -735,13 +751,13 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
         qint64 startSelector = startReadPos;
 
 
-        MStyleSheetSelector *selector = new MStyleSheetSelector(objectName,
-                className,
-                classType,
-                orientation,
-                mode,
+        MStyleSheetSelector *selector = new MStyleSheetSelector(cachedString(objectName),
+                cachedString(className),
+                cachedString(classType),
+                cachedString(orientation),
+                cachedString(mode),
                 parsedFileName,
-                parentName,
+                cachedString(parentName),
                 (MStyleSheetSelector::Flags) flags);
 
 //        mDebug("MStyleSheetParserPrivate") << "selector found: " << selector->className() << selector->objectName();
@@ -818,9 +834,9 @@ QPair<QString, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribute(
 
         if (((character == ';') || (character == '}'))  && validValue(value)) {
             MStyleSheetAttribute *result = new MStyleSheetAttribute;
-            result->name = MStyleSheetAttribute::attributeNameToPropertyName(name);
-            result->value = value;
-            result->constValue = "";
+            result->name = cachedString(MStyleSheetAttribute::attributeNameToPropertyName(name));
+            result->value = cachedString(value);
+            result->constValue = cachedString("");
             result->position = startReadPos;
 
             if (hasConsts(result->value)) {
@@ -828,6 +844,7 @@ QPair<QString, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribute(
                 //string before replacing const references with real values
                 result->constValue = result->value;
                 setupConsts(result->value);
+                result->value = cachedString(result->value);
                 if (!validValue(result->value)) {
                     outputParseError(parsedFileName, "Invalid constant reference in value: " + value, getLineNum(stream, startReadPos));
                 }
@@ -966,10 +983,11 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
             stream >> fileinfo->filename;
             stream >> fileinfo->includes;
             stream >> fileinfo->constants;
-
+            
             // load includes
             const int includesCount = fileinfo->includes.count();
             for (int i = 0; i < includesCount; ++i) {
+                fileinfo->includes[i] = cachedString(fileinfo->includes[i]);
                 load(fileinfo->includes[i], globalConstants);
             }
 
@@ -979,7 +997,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
                 if (globalConstants->contains(i.key())) {
                     outputParseWarning(fileinfo->filename, "Multiple definition of constant \"" + i.key() + "\". Ignoring redefinition.", 0);
                 } else {
-                    globalConstants->insert(i.key(), i.value());
+                    globalConstants->insert(cachedString(i.key()), cachedString(i.value()));
                 }
             }
 
@@ -1075,6 +1093,13 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file,
     stream >> orientation;
     stream >> mode;
 
+    parentName = cachedString(parentName);
+    objectName = cachedString(objectName);
+    className = cachedString(className);
+    classType = cachedString(classType);
+    orientation = cachedString(orientation);
+    mode = cachedString(mode);
+
     MStyleSheetSelector *selector = new MStyleSheetSelector(objectName,
             className,
             classType,
@@ -1093,9 +1118,9 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file,
     for (int attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex) {
 
         MStyleSheetAttribute *attribute = new MStyleSheetAttribute;
-        stream >> attribute->name;
-        stream >> attribute->value;
-        stream >> attribute->constValue;
+        stream >> attribute->name; attribute->name = cachedString(attribute->name);
+        stream >> attribute->value; attribute->value = cachedString(attribute->value);
+        stream >> attribute->constValue; attribute->constValue = cachedString(attribute->constValue);
         stream >> attribute->position;
 
         //check if the value has used constants
@@ -1104,6 +1129,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file,
         if (!attribute->constValue.isEmpty()) {
             attribute->value = attribute->constValue;
             setupConsts(attribute->value);
+            attribute->value = cachedString(attribute->value);
             //if( !validValue(attribute->value) )
             //    outputParseError(fileinfo->filename, "Invalid constant reference in value: " + attribute->value, 0);
         }
@@ -1213,4 +1239,19 @@ void MStyleSheetParser::outputParseWarning(const QString &filename, const QStrin
 {
     MStyleSheetParserPrivate::outputParseWarning(filename, description, lineNum);
 }
+
+void MStyleSheetParser::cleanup()
+{
+    //remove strings with only one reference from the cache
+    QSet<QString>::iterator i = MStyleSheetParserPrivate::stringCache.begin();
+    while( i !=  MStyleSheetParserPrivate::stringCache.end() ) {
+        if( (*i).isDetached() ) {
+            i = MStyleSheetParserPrivate::stringCache.erase(i);
+        }
+        else
+            ++i;
+    }
+}
+
+
 
