@@ -20,6 +20,8 @@
 #ifndef MSPINNERVIEW_P_H
 #define MSPINNERVIEW_P_H
 
+#include <QElapsedTimer>
+
 class MStyle;
 class MProgressIndicator;
 class QTimer;
@@ -51,6 +53,7 @@ public:
 
     QPropertyAnimation* positionAnimation;
     int angle;
+    QElapsedTimer elapsedTime;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

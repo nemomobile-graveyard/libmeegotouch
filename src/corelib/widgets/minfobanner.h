@@ -80,6 +80,8 @@ class MInfoBannerPrivate;
             QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
         \endcode
     \sa MNotification
+
+    \deprecated MInfoBanner is deprecated, use MBanner for any component with banner requirements
 */
 
 class M_EXPORT MInfoBanner : public MSceneWindow

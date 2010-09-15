@@ -82,6 +82,7 @@ public:
     MDialogViewPrivate();
     virtual ~MDialogViewPrivate();
 
+    void updateTitleBarVisibility();
     void updateWidgetVisibility(QGraphicsWidget *widget, bool visible, int index,
                                 QGraphicsLinearLayout *layout);
     void setupDialogVerticalAlignment();

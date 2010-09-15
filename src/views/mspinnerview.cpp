@@ -86,6 +86,7 @@ void MSpinnerView::setupAnimation()
         d->positionAnimation->setStartValue(0);
         d->positionAnimation->setEndValue(360);
         d->positionAnimation->setLoopCount(-1);
+        d->elapsedTime.start();
     }
 
     if (model()->unknownDuration()) {
@@ -111,7 +112,11 @@ void MSpinnerView::setAngle(int angle)
     Q_D(MSpinnerView);
 
     d->angle = angle;
-    update();
+
+    if (d->elapsedTime.elapsed() > style()->refreshRate()) {
+        d->elapsedTime.start();
+        update();
+    }
 }
 
 void MSpinnerView::updateData(const QList<const char *>& modifications)

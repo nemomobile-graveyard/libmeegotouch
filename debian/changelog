@@ -1,6 +1,7 @@
 libmeegotouch (0.20.42~1) unstable; urgency=low
 
   * [unreleased]
+  * Fixes: NB#187279 - Overriding the default debug level is insufficiently documented
 
  -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Fri, 10 Sep 2010 15:37:26 +0300
 

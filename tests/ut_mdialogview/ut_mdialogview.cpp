@@ -19,6 +19,8 @@
 
 #include "ut_mdialogview.h"
 
+#include <mdialogstyle.h>
+
 #include <QGraphicsLayout>
 
 void Ut_MDialogView::init()
@@ -53,34 +55,40 @@ void Ut_MDialogView::cleanupTestCase()
 void Ut_MDialogView::closeButtonVisibility()
 {
     QGraphicsWidget *dialogCloseButton;
+    MDialogStyle *dialogStyle = (MDialogStyle *)subject->style().operator->();
 
     dialogCloseButton = fetchWidget(*controller, "MDialogCloseButton");
 
     QVERIFY(dialogCloseButton != 0);
 
+    dialogStyle->setHasCloseButton(true);
+    subject->applyStyle();
+
     QCOMPARE(dialogCloseButton->isVisible(), true);
 
-    model->setCloseButtonVisible(false);
+    dialogStyle->setHasCloseButton(false);
+    subject->applyStyle();
 
     QCOMPARE(dialogCloseButton->isVisible(), false);
-
-    model->setCloseButtonVisible(true);
-
-    QCOMPARE(dialogCloseButton->isVisible(), true);
 }
 
 void Ut_MDialogView::titleBarVisibility()
 {
     QGraphicsWidget *dialogTitleBar = 0;
     QGraphicsWidget *widget = 0;
+    MDialogStyle *dialogStyle = (MDialogStyle *)subject->style().operator->();
 
     dialogTitleBar = fetchWidget(*controller, "MDialogTitleBar");
 
     QVERIFY(dialogTitleBar != 0);
 
+    dialogStyle->setHasTitleBar(true);
+    subject->applyStyle();
+
     QCOMPARE(dialogTitleBar->isVisible(), true);
 
-    model->setTitleBarVisible(false);
+    dialogStyle->setHasTitleBar(false);
+    subject->applyStyle();
 
     QCOMPARE(dialogTitleBar->isVisible(), false);
 
@@ -89,7 +97,8 @@ void Ut_MDialogView::titleBarVisibility()
     widget = fetchWidget(*controller, "MDialogTitleBar");
     QVERIFY(widget == 0);
 
-    model->setTitleBarVisible(true);
+    dialogStyle->setHasTitleBar(true);
+    subject->applyStyle();
 
     QCOMPARE(dialogTitleBar->isVisible(), true);
 

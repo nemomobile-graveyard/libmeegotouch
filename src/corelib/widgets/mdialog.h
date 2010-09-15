@@ -172,8 +172,35 @@ class M_EXPORT MDialog : public MSceneWindow
 
     Q_PROPERTY(bool buttonBoxVisible READ isButtonBoxVisible WRITE setButtonBoxVisible)
 
+    /*!
+        \property MDialog::closeButtonVisible
+        \brief Whether the close button should be visible.
+        \deprecated Use MDialogStyle::hasCloseButton instead.
+
+        The dialog's optional close button is provided as a convenient way of
+        rejecting the dialog and discarding all changes. It's visible by default.
+
+        Since the close button is part of the title bar, setting its visibility to
+        true when the title bar is invisible has no effect.
+     */
     Q_PROPERTY(bool closeButtonVisible READ isCloseButtonVisible WRITE setCloseButtonVisible)
+
+    /*!
+        \property MDialog::titleBarVisible
+        \brief Whether the title bar should be visible.
+        \deprecated Use MDialogStyle::hasTitleBar instead.
+
+        The title bar sits on top of the dialog and contains a title text, an
+        optional close button and an optional progress indicator.
+
+        Since both close button and progress indicator are part of the title bar,
+        setting their visibilities to true when the title bar itself is invisible
+        has no effect.
+
+        The title bar is visible by default.
+     */
     Q_PROPERTY(bool titleBarVisible READ isTitleBarVisible WRITE setTitleBarVisible)
+
     Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(bool system READ isSystem WRITE setSystem)
     Q_PROPERTY(bool modal READ isModal WRITE setModal)
@@ -263,19 +290,14 @@ public:
 
     /*!
      * \brief Returns true if the dialog's close button is visible, false otherwise.
-     *
+     * \deprecated Use MDialogStyle::hasCloseButton instead.
      * \sa setCloseButtonVisible()
      */
     bool isCloseButtonVisible() const;
 
     /*!
      * \brief Sets the visibility of the dialog's close button.
-     *
-     * The dialog's optional close button is provided as a convenient way of
-     * rejecting the dialog and discarding all changes. It's visible by default.
-     *
-     * Since the close button is part of the title bar, setting its visibility to
-     * true when the title bar is invisible has no effect.
+     * \deprecated Use MDialogStyle::hasCloseButton instead.
      *
      * \sa isCloseButtonVisible(), setTitleBarVisible()
      */
@@ -304,22 +326,14 @@ public:
 
     /*!
      * \brief Returns true if the dialog's title bar is visible and false otherwise.
-     *
+     * \deprecated Use MDialogStyle::hasTitleBar instead.
      * \sa setTitleBarVisible()
      */
     bool isTitleBarVisible() const;
 
     /*!
      * \brief Sets the visibility of the dialog's title bar.
-     *
-     * The title bar sits on top of the dialog and contains a title text, an
-     * optional close button and an optional progress indicator.
-     *
-     * Since both close button and progress indicator are part of the title bar,
-     * setting their visibilities to true when the title bar itself is invisible
-     * has no effect.
-     *
-     * The title bar is visible by default.
+     *  \deprecated Use MDialogStyle::hasTitleBar instead.
      *
      * \sa isTitleBarVisible(), setCloseButtonVisible(), setTitle()
      */
