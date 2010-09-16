@@ -173,7 +173,7 @@ public:
     void onSceneWindowEnteringDisappearedState(MSceneWindow *sceneWindow);
 
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
-    QList<QGraphicsWidget*> findSceneWindowsForMoveAnimation(MSceneWindow *sceneWindow);
+    QList<QGraphicsWidget*> findRootElementsForMoveAnimation(MSceneWindow *sceneWindow);
 
     MSceneManagerStyleContainer &style();
     const MSceneManagerStyleContainer &style() const;

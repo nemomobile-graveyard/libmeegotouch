@@ -1432,7 +1432,7 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
             animation = slideInAnimation;
 
-            QList<QGraphicsWidget*> list = findSceneWindowsForMoveAnimation(sceneWindow);
+            QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
             foreach(QGraphicsWidget *widget, list) {
                 MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                 moveAnimation->setWidget(widget);
@@ -1501,7 +1501,7 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
             animation = slideOutAnimation;
 
-            QList<QGraphicsWidget*> list = findSceneWindowsForMoveAnimation(sceneWindow);
+            QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
             foreach(QGraphicsWidget *widget, list) {
                 MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                 moveAnimation->setWidget(widget);
@@ -1538,18 +1538,22 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     sceneWindow->d_func()->disappearanceAnimation = animation;
 }
 
-QList<QGraphicsWidget*> MSceneManagerPrivate::findSceneWindowsForMoveAnimation(MSceneWindow *sceneWindow)
+QList<QGraphicsWidget*> MSceneManagerPrivate::findRootElementsForMoveAnimation(MSceneWindow *sceneWindow)
 {
     QList<QGraphicsWidget*> rootElements;
     QList<QGraphicsWidget*> list;
     rootElements << navigationBarRootElement << dockWidgetRootElement << homeButtonRootElement;
 
+    QList<MSceneWindow::WindowType> animatedSceneWindowTypes;
+    animatedSceneWindowTypes << MSceneWindow::NavigationBar
+            << MSceneWindow::DockWidget
+            << MSceneWindow::HomeButtonPanel
+            << MSceneWindow::EscapeButtonPanel;
+
     foreach(QGraphicsWidget *rootElement, rootElements) {
         foreach(QGraphicsItem *item, rootElement->childItems()) {
             MSceneWindow *win = static_cast<MSceneWindow*>(item);
-            if (win && (win->sceneWindowState() == MSceneWindow::Appeared ||
-                        win->sceneWindowState() == MSceneWindow::Appearing))
-            {
+            if (win && animatedSceneWindowTypes.contains(win->windowType())) {
                 if ((win->alignment() & Qt::AlignVertical_Mask) ==
                     (sceneWindow->alignment() & Qt::AlignVertical_Mask))
                 {
