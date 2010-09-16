@@ -14,8 +14,11 @@ HEADERS += \
     mservicemapper_p.h \
 
 QT += dbus
-CONFIG += mobility
-MOBILITY += serviceframework
+
+contains( DEFINES, HAVE_QTM_SERVICEFRAMEWORK ) {
+    CONFIG += mobility
+    MOBILITY += serviceframework
+}
 
 myname = com.nokia.mservicefw
 

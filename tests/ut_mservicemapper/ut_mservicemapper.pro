@@ -6,8 +6,10 @@ INCLUDEPATH += $$SFWDIR
 DEPENDPATH += $$INCLUDEPATH
 QT -= dbus svg network gui
 
-CONFIG += mobility
-MOBILITY += serviceframework
+contains( DEFINES, HAVE_QTM_SERVICEFRAMEWORK ) {
+    CONFIG += mobility
+    MOBILITY += serviceframework
+}
 
 TARGET = ut_mservicemapper
 

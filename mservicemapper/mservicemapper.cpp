@@ -17,16 +17,19 @@
 **
 ****************************************************************************/
 
+#include "mservicemapper.h"
+
 #include <QDir>
 #include <QSettings>
 #include <QDebug>
 
-#include <QServiceManager>
-
-#include "mservicemapper.h"
 #include "mservicemapper_p.h"
 
+#ifdef HAVE_QTM_SERVICEMAPPER
+#include <QServiceManager>
+
 QTM_USE_NAMESPACE
+#endif
 
 MServiceMapper::MServiceMapper(const QString &serviceFileDir) :
     d_ptr(new MServiceMapperPrivate( serviceFileDir ))
@@ -99,10 +102,13 @@ void MServiceMapper::handleServiceChanged(const QString &path)
         bool fileRemoved = !d_ptr->m_serviceFileList[CurrList].contains( thisFile );
         if ( fileRemoved ) {
             QString thisServiceName = d_ptr->m_serviceFileInfo.take(thisFile).service;
-            QServiceManager serviceManager;
 
             qDebug() << "removing" << thisServiceName;
+
+#ifdef HAVE_QTM_SERVICEMAPPER
+            QServiceManager serviceManager;
             serviceManager.removeService( thisServiceName );
+#endif
             emit serviceUnavailable( thisServiceName );
         }
     }
@@ -116,8 +122,6 @@ void MServiceMapper::handleServiceChanged(const QString &path)
         QString thisFile = d_ptr->m_serviceFileList[CurrList][index];
         bool fileAdded = !d_ptr->m_serviceFileList[LastList].contains( thisFile );
         if ( fileAdded ) {
-            QServiceManager serviceManager;
-
             MServiceMapperPrivate::ServiceInfo thisServiceInterfacePair =
                 d_ptr->serviceInterfacePair( thisFile );
             QString thisService   = thisServiceInterfacePair.service;
@@ -125,7 +129,12 @@ void MServiceMapper::handleServiceChanged(const QString &path)
 
             QString xmlFileName( "/usr/lib/maemo-meegotouch-services/"+thisService+".xml" );
             qDebug() << "adding" << xmlFileName;
+
+#ifdef HAVE_QTM_SERVICEMAPPER
+            QServiceManager serviceManager;
             serviceManager.addService( xmlFileName );
+#endif
+
             emit serviceAvailable( thisService, thisInterface );
         }
     }
