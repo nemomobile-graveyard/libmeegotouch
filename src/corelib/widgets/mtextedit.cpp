@@ -324,14 +324,6 @@ void MTextEditPrivate::init()
     Q_Q(MTextEdit);
     Q_ASSERT_X((q->model() != 0), "MTextEditPrivate::init()", "No model found!");
 
-    if (!q->document()) {
-        q->model()->setDocument(new QTextDocument(q->model()));
-    }
-
-    if (!q->hasCursor()) {
-        q->model()->setCursor(new QTextCursor(q->document()));
-    }
-
     QTextOption option = q->document()->defaultTextOption();
     option.setTextDirection(q->layoutDirection());
 
@@ -2186,12 +2178,22 @@ void MTextEdit::changeEvent(QEvent *event)
 
 QTextDocument *MTextEdit::document() const
 {
+    if (!model()->document()) {
+        MTextEditModel *m = const_cast<MTextEditModel *>(model());
+        m->setDocument(new QTextDocument(m));
+    }
+
     return model()->document();
 }
 
 
 QTextCursor MTextEdit::textCursor() const
 {
+    if (!model()->cursor()) {
+        MTextEditModel *m = const_cast<MTextEditModel *>(model());
+        m->setCursor(new QTextCursor(document()));
+    }
+
     return QTextCursor(*model()->cursor());
 }
 
