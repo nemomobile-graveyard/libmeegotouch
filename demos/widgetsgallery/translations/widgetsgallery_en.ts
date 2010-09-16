@@ -4,217 +4,222 @@
 <context>
     <name></name>
     <message id="xx_wg_categories_application_view">
-        <location filename="../mainpage.cpp" line="92"/>
+        <location filename="../mainpage.cpp" line="93"/>
         <source>Application View</source>
         <translation>Application View</translation>
     </message>
     <message id="xx_wg_application_view_view_menu">
-        <location filename="../mainpage.cpp" line="94"/>
+        <location filename="../mainpage.cpp" line="95"/>
         <source>Application Menu</source>
         <translation>Application Menu</translation>
     </message>
     <message id="xx_wg_application_view_display_modes">
-        <location filename="../mainpage.cpp" line="96"/>
+        <location filename="../mainpage.cpp" line="97"/>
         <source>Display Modes</source>
         <translation>Display Modes</translation>
     </message>
     <message id="xx_wg_application_view_toolbar_incl_tab_bar">
-        <location filename="../mainpage.cpp" line="98"/>
+        <location filename="../mainpage.cpp" line="99"/>
         <source>Toolbar (including Tab Bar)</source>
         <translation>Toolbar (including Tab Bar)</translation>
     </message>
     <message id="xx_wg_categories_simple_widgets">
-        <location filename="../mainpage.cpp" line="102"/>
+        <location filename="../mainpage.cpp" line="103"/>
         <source>Simple Widgets</source>
         <translation>Simple Widgets</translation>
     </message>
     <message id="xx_wg_simple_widgets_labels">
-        <location filename="../mainpage.cpp" line="104"/>
+        <location filename="../mainpage.cpp" line="105"/>
         <source>Labels</source>
         <translation>Labels</translation>
     </message>
     <message id="xx_wg_simple_widgets_image">
-        <location filename="../mainpage.cpp" line="106"/>
+        <location filename="../mainpage.cpp" line="107"/>
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message id="xx_wg_simple_widgets_progress_bar">
-        <location filename="../mainpage.cpp" line="108"/>
+        <location filename="../mainpage.cpp" line="109"/>
         <source>Progress Bar</source>
         <translation>Progress Bar</translation>
     </message>
     <message id="xx_wg_simple_widgets_container">
-        <location filename="../mainpage.cpp" line="110"/>
+        <location filename="../mainpage.cpp" line="111"/>
         <source>Container</source>
         <translation>Container</translation>
     </message>
     <message id="xx_wg_simple_widgets_spinner">
-        <location filename="../mainpage.cpp" line="112"/>
+        <location filename="../mainpage.cpp" line="113"/>
         <source>Spinner</source>
         <translation>Spinner</translation>
     </message>
     <message id="xx_wg_categories_buttons">
-        <location filename="../mainpage.cpp" line="115"/>
+        <location filename="../mainpage.cpp" line="116"/>
         <source>Buttons</source>
         <translation>Buttons</translation>
     </message>
     <message id="xx_wg_buttons_push_button">
-        <location filename="../mainpage.cpp" line="117"/>
+        <location filename="../mainpage.cpp" line="118"/>
         <source>Push Button</source>
         <translation>Push Button</translation>
     </message>
     <message id="xx_wg_buttons_icon_button">
-        <location filename="../mainpage.cpp" line="119"/>
+        <location filename="../mainpage.cpp" line="120"/>
         <source>Icon Button</source>
         <translation>Icon Button</translation>
     </message>
     <message id="xx_wg_buttons_switch">
-        <location filename="../mainpage.cpp" line="121"/>
+        <location filename="../mainpage.cpp" line="122"/>
         <source>Switch</source>
         <translation>Switch</translation>
     </message>
     <message id="xx_wg_buttons_checkbox">
-        <location filename="../mainpage.cpp" line="123"/>
+        <location filename="../mainpage.cpp" line="124"/>
         <source>Checkbox</source>
         <translation>Checkbox</translation>
     </message>
     <message id="xx_wg_buttons_buttongroup">
-        <location filename="../mainpage.cpp" line="125"/>
+        <location filename="../mainpage.cpp" line="126"/>
         <source>Button Group</source>
         <translation>Button Group</translation>
     </message>
     <message id="xx_wg_categories_dialogs_and_banners">
-        <location filename="../mainpage.cpp" line="128"/>
+        <location filename="../mainpage.cpp" line="129"/>
         <source>Dialogs and Banners</source>
         <translation>Dialogs and Banners</translation>
     </message>
     <message id="xx_wg_dialogs_and_banners_single_selection_dialog">
-        <location filename="../mainpage.cpp" line="130"/>
+        <location filename="../mainpage.cpp" line="131"/>
         <source>Single Selection Dialog</source>
         <translation>Single Selection Dialog</translation>
     </message>
     <message id="xx_wg_dialogs_and_banners_query_dialog">
-        <location filename="../mainpage.cpp" line="132"/>
+        <location filename="../mainpage.cpp" line="133"/>
         <source>Query Dialog</source>
         <translation>Query Dialog</translation>
     </message>
     <message id="xx_wg_dialogs_and_banners_banner">
-        <location filename="../mainpage.cpp" line="134"/>
+        <location filename="../mainpage.cpp" line="135"/>
         <source>Banner</source>
         <translation>Banner</translation>
     </message>
     <message id="xx_wg_categories_lists_grids_and_popups">
-        <location filename="../mainpage.cpp" line="137"/>
+        <location filename="../mainpage.cpp" line="138"/>
         <source>Lists, Grids and Popups</source>
         <translation>Lists, Grids and Popups</translation>
     </message>
     <message id="xx_wg_lists_grids_and_popups_list">
-        <location filename="../mainpage.cpp" line="139"/>
+        <location filename="../mainpage.cpp" line="140"/>
         <source>List</source>
         <translation>List</translation>
     </message>
     <message id="xx_wg_lists_grids_and_popups_grid">
-        <location filename="../mainpage.cpp" line="141"/>
+        <location filename="../mainpage.cpp" line="142"/>
         <source>Grid</source>
         <translation>Grid</translation>
     </message>
     <message id="xx_wg_lists_grids_and_popups_object_menu">
-        <location filename="../mainpage.cpp" line="143"/>
+        <location filename="../mainpage.cpp" line="144"/>
         <source>Object Menu</source>
         <translation>Object Menu</translation>
     </message>
     <message id="xx_wg_lists_grids_and_popups_combobox">
-        <location filename="../mainpage.cpp" line="145"/>
+        <location filename="../mainpage.cpp" line="146"/>
         <source>ComboBox</source>
         <translation>Combobox</translation>
     </message>
     <message id="xx_wg_lists_grids_and_popups_contentitems">
-        <location filename="../mainpage.cpp" line="147"/>
+        <location filename="../mainpage.cpp" line="148"/>
         <source>ContentItems</source>
         <translation>Content items</translation>
     </message>
     <message id="xx_wg_lists_grids_and_popups_bubble">
-        <location filename="../mainpage.cpp" line="149"/>
+        <location filename="../mainpage.cpp" line="150"/>
         <source>Speech bubble</source>
         <translation>Speech bubble</translation>
     </message>
     <message id="xx_wg_categories_user_input">
-        <location filename="../mainpage.cpp" line="152"/>
+        <location filename="../mainpage.cpp" line="153"/>
         <source>User Input</source>
         <translation>User Input</translation>
     </message>
     <message id="xx_wg_user_input_text_entries">
-        <location filename="../mainpage.cpp" line="154"/>
+        <location filename="../mainpage.cpp" line="155"/>
         <source>Text Entries</source>
         <translation>Text Entries</translation>
     </message>
+    <message id="xx_wg_user_input_text_entries_navigation">
+        <location filename="../mainpage.cpp" line="157"/>
+        <source>Text Entries Navigation</source>
+        <translation>Text Entries Navigation</translation>
+    </message>
     <message id="xx_wg_user_input_slider">
-        <location filename="../mainpage.cpp" line="156"/>
+        <location filename="../mainpage.cpp" line="159"/>
         <source>Slider</source>
         <translation>Slider</translation>
     </message>
     <message id="xx_wg_user_input_input_feedback">
-        <location filename="../mainpage.cpp" line="158"/>
+        <location filename="../mainpage.cpp" line="161"/>
         <source>Input Feedback</source>
         <translation>Input Feedback</translation>
     </message>
     <message id="xx_application_title">
-        <location filename="../mainpage.cpp" line="346"/>
+        <location filename="../mainpage.cpp" line="349"/>
         <source>Widgets Gallery</source>
         <translation>Widgets Gallery</translation>
     </message>
     <message id="xx_mainpage_themes">
-        <location filename="../mainpage.cpp" line="352"/>
+        <location filename="../mainpage.cpp" line="355"/>
         <source>Themes</source>
         <translation>Themes</translation>
     </message>
     <message id="xx_mainpage_orientation">
-        <location filename="../mainpage.cpp" line="354"/>
+        <location filename="../mainpage.cpp" line="357"/>
         <source>Orientation</source>
         <translation>Orientation</translation>
     </message>
     <message id="xx_mainpage_toggle_fps">
-        <location filename="../mainpage.cpp" line="356"/>
+        <location filename="../mainpage.cpp" line="359"/>
         <source>Toggle FPS</source>
         <translation>Toggle FPS</translation>
     </message>
     <message id="xx_mainpage_language_settings">
-        <location filename="../mainpage.cpp" line="358"/>
+        <location filename="../mainpage.cpp" line="361"/>
         <source>Language Settings</source>
         <translation>Language Settings</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../mainpage.cpp" line="570"/>
+        <location filename="../mainpage.cpp" line="573"/>
         <source>Automatic</source>
         <translation>Automatic</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../mainpage.cpp" line="578"/>
+        <location filename="../mainpage.cpp" line="581"/>
         <source>Portrait</source>
         <translation>Portrait</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../mainpage.cpp" line="586"/>
+        <location filename="../mainpage.cpp" line="589"/>
         <source>Landscape</source>
         <translation>Landscape</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../mainpage.cpp" line="594"/>
+        <location filename="../mainpage.cpp" line="597"/>
         <source>0 degrees</source>
         <translation>0 degrees</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../mainpage.cpp" line="602"/>
+        <location filename="../mainpage.cpp" line="605"/>
         <source>90 degrees clockwise</source>
         <translation>90 degrees clockwise</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../mainpage.cpp" line="610"/>
+        <location filename="../mainpage.cpp" line="613"/>
         <source>180 degrees clockwise</source>
         <translation>180 degrees clockwise</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../mainpage.cpp" line="618"/>
+        <location filename="../mainpage.cpp" line="621"/>
         <source>270 degrees clockwise</source>
         <translation>270 degrees clockwise</translation>
     </message>
@@ -372,22 +377,22 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <translation>Single Selection Dialogs</translation>
     </message>
     <message id="xx_bannerspage_title">
-        <location filename="../bannerspage.cpp" line="139"/>
+        <location filename="../bannerspage.cpp" line="142"/>
         <source>Banners</source>
         <translation>Banners</translation>
     </message>
     <message id="xx_wg_banners_page_event_banner">
-        <location filename="../bannerspage.cpp" line="145"/>
+        <location filename="../bannerspage.cpp" line="148"/>
         <source>Event Banner</source>
         <translation>Event Banner</translation>
     </message>
     <message id="xx_wg_banners_page_information_banner">
-        <location filename="../bannerspage.cpp" line="147"/>
+        <location filename="../bannerspage.cpp" line="150"/>
         <source>Information Banner</source>
         <translation>Information Banner</translation>
     </message>
     <message id="xx_wg_banners_page_system_information_banner">
-        <location filename="../bannerspage.cpp" line="149"/>
+        <location filename="../bannerspage.cpp" line="152"/>
         <source>System Information Banner</source>
         <translation>System Information Banner</translation>
     </message>
@@ -427,72 +432,72 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <translation>Crop</translation>
     </message>
     <message id="xx_listpage_list_remove">
-        <location filename="../mlistpage.cpp" line="635"/>
+        <location filename="../mlistpage.cpp" line="661"/>
         <source>Remove</source>
         <translation>Remove</translation>
     </message>
     <message id="xx_listpage_list_edit">
-        <location filename="../mlistpage.cpp" line="641"/>
+        <location filename="../mlistpage.cpp" line="667"/>
         <source>Edit</source>
         <translation>Edit</translation>
     </message>
     <message id="xx_listpage_title">
-        <location filename="../mlistpage.cpp" line="659"/>
+        <location filename="../mlistpage.cpp" line="685"/>
         <source>List</source>
         <translation>List</translation>
     </message>
     <message id="xx_textentry_title">
-        <location filename="../textentrypage.cpp" line="595"/>
+        <location filename="../textentrypage.cpp" line="597"/>
         <source>Text Entries</source>
         <translation>Text Entries</translation>
     </message>
     <message id="xx_textentry_free_text">
-        <location filename="../textentrypage.cpp" line="611"/>
+        <location filename="../textentrypage.cpp" line="613"/>
         <source>Free text:</source>
         <translation>Free text:</translation>
     </message>
     <message id="xx_textentry_free_text_masked">
-        <location filename="../textentrypage.cpp" line="613"/>
+        <location filename="../textentrypage.cpp" line="615"/>
         <source>Free text (masked):</source>
         <translation>Free text (masked):</translation>
     </message>
     <message id="xx_textentry_number_text">
-        <location filename="../textentrypage.cpp" line="615"/>
+        <location filename="../textentrypage.cpp" line="617"/>
         <source>Number text:</source>
         <translation>Number text:</translation>
     </message>
     <message id="xx_textentry_phone_number">
-        <location filename="../textentrypage.cpp" line="617"/>
+        <location filename="../textentrypage.cpp" line="619"/>
         <source>Phone number:</source>
         <translation>Phone number:</translation>
     </message>
     <message id="xx_textentry_email_text">
-        <location filename="../textentrypage.cpp" line="619"/>
+        <location filename="../textentrypage.cpp" line="621"/>
         <source>Email text:</source>
         <translation>Email text:</translation>
     </message>
     <message id="xx_textentry_richtext_text">
-        <location filename="../textentrypage.cpp" line="629"/>
+        <location filename="../textentrypage.cpp" line="631"/>
         <source>Rich text:</source>
         <translation>Rich text:</translation>
     </message>
     <message id="xx_textentry_richtext_text_multiline">
-        <location filename="../textentrypage.cpp" line="631"/>
+        <location filename="../textentrypage.cpp" line="633"/>
         <source>Rich text (multiline):</source>
         <translation>Rich text (multiline):</translation>
     </message>
     <message id="xx_textentry_noecho">
-        <location filename="../textentrypage.cpp" line="634"/>
+        <location filename="../textentrypage.cpp" line="636"/>
         <source>No echo mode:</source>
         <translation>No echo mode:</translation>
     </message>
     <message id="xx_textentry_echoonedit">
-        <location filename="../textentrypage.cpp" line="637"/>
+        <location filename="../textentrypage.cpp" line="639"/>
         <source>Echo on edit:</source>
         <translation>Echo on edit:</translation>
     </message>
     <message id="xx_textentry_direct_input_mode">
-        <location filename="../textentrypage.cpp" line="640"/>
+        <location filename="../textentrypage.cpp" line="642"/>
         <source>Direct input mode:</source>
         <translation>Direct input Mode:</translation>
     </message>
@@ -529,52 +534,52 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <translation>Example custom toolbar 1</translation>
     </message>
     <message id="xx_tooltip_customtoolbar2">
-        <location filename="../textentrypage.cpp" line="552"/>
+        <location filename="../textentrypage.cpp" line="553"/>
         <source>Example custom toolbar 2</source>
         <translation>Example custom toolbar 2</translation>
     </message>
     <message id="xx_textentry_url_text">
-        <location filename="../textentrypage.cpp" line="621"/>
+        <location filename="../textentrypage.cpp" line="623"/>
         <source>URL text:</source>
         <translation>URL text:</translation>
     </message>
     <message id="xx_textentry_multiline">
-        <location filename="../textentrypage.cpp" line="623"/>
+        <location filename="../textentrypage.cpp" line="625"/>
         <source>Multiline:</source>
         <translation>Multiline:</translation>
     </message>
     <message id="xx_tooltip_entry0">
-        <location filename="../textentrypage.cpp" line="599"/>
+        <location filename="../textentrypage.cpp" line="601"/>
         <source>Enter text here</source>
         <translation>Enter text here</translation>
     </message>
     <message id="xx_tooltip_entry1">
-        <location filename="../textentrypage.cpp" line="602"/>
+        <location filename="../textentrypage.cpp" line="604"/>
         <source>This tooltip is quite long and will be clipped on the display</source>
         <translation>This tooltip is quite long and will be clipped on the display</translation>
     </message>
     <message id="xx_textentry_custom_toolbar1">
-        <location filename="../textentrypage.cpp" line="643"/>
+        <location filename="../textentrypage.cpp" line="645"/>
         <source>Custom toolbar 1:</source>
         <translation>Custom toolBar 1:</translation>
     </message>
     <message id="xx_textentry_custom_toolbar2">
-        <location filename="../textentrypage.cpp" line="645"/>
+        <location filename="../textentrypage.cpp" line="647"/>
         <source>Custom toolbar 2:</source>
         <translation>Custom toolBar 2:</translation>
     </message>
     <message id="xx_auto_true_entry0">
-        <location filename="../textentrypage.cpp" line="678"/>
+        <location filename="../textentrypage.cpp" line="680"/>
         <source>Auto capitalisation is active</source>
         <translation>Auto capitalisation is active</translation>
     </message>
     <message id="xx_auto_false_entry0">
-        <location filename="../textentrypage.cpp" line="681"/>
+        <location filename="../textentrypage.cpp" line="683"/>
         <source>No auto capitalisation</source>
         <translation>No auto capitalisation</translation>
     </message>
     <message id="xx_tooltip_entry6">
-        <location filename="../textentrypage.cpp" line="608"/>
+        <location filename="../textentrypage.cpp" line="610"/>
         <source>This is a multiline text entry</source>
         <oldsource>This is
 multiline
@@ -582,17 +587,17 @@ tooltip</oldsource>
         <translation>This is a multiline text entry</translation>
     </message>
     <message id="xx_textentry_singleselectall">
-        <location filename="../textentrypage.cpp" line="625"/>
+        <location filename="../textentrypage.cpp" line="627"/>
         <source>Singleline (selectall):</source>
         <translation>Singleline (selectall)</translation>
     </message>
     <message id="xx_auto_capitalisation">
-        <location filename="../textentrypage.cpp" line="648"/>
+        <location filename="../textentrypage.cpp" line="650"/>
         <source>Auto capitalisation</source>
         <translation>Auto capitalisation</translation>
     </message>
     <message id="xx_error_correction">
-        <location filename="../textentrypage.cpp" line="650"/>
+        <location filename="../textentrypage.cpp" line="652"/>
         <source>Error correction</source>
         <translation>Error correction</translation>
     </message>
@@ -1048,7 +1053,7 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>Template</translation>
     </message>
     <message id="xx_textentry_completion_text">
-        <location filename="../textentrypage.cpp" line="627"/>
+        <location filename="../textentrypage.cpp" line="629"/>
         <source>Email suggestion text:</source>
         <translation>Email suggestion text:</translation>
     </message>
@@ -1063,17 +1068,17 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>ComboBox</translation>
     </message>
     <message id="xx_tooltip_entry8">
-        <location filename="../textentrypage.cpp" line="605"/>
+        <location filename="../textentrypage.cpp" line="607"/>
         <source>Provides email address suggestions</source>
         <translation>Provides email address suggestions</translation>
     </message>
     <message id="xx_checkbox_page_title">
-        <location filename="../checkboxpage.cpp" line="80"/>
+        <location filename="../checkboxpage.cpp" line="78"/>
         <source>Checkbox</source>
         <translation>Checkbox</translation>
     </message>
     <message id="xx_checkbox_page_info_label">
-        <location filename="../checkboxpage.cpp" line="89"/>
+        <location filename="../checkboxpage.cpp" line="87"/>
         <source>The Checkbox is a variant of Button that allows users to set the state of variable or setting which has two values, On and Off.
 
 Checkbox essentially does the same thing as the Switch button, so please consider using a Switch instead.</source>
@@ -1082,7 +1087,7 @@ Checkbox essentially does the same thing as the Switch button, so please conside
 Checkbox essentially does the same thing as the Switch button, so please consider using a Switch instead.</translation>
     </message>
     <message id="xx_checkbox_page_checkbox_label">
-        <location filename="../checkboxpage.cpp" line="92"/>
+        <location filename="../checkboxpage.cpp" line="90"/>
         <source>I have read and understood the instructions.</source>
         <translation>I have read and understood the instructions.</translation>
     </message>
@@ -1106,12 +1111,12 @@ Checkbox essentially does the same thing as the Switch button, so please conside
         <translation>Lorem ipsum</translation>
     </message>
     <message id="xx_push_button_page_title">
-        <location filename="../pushbuttonpage.cpp" line="71"/>
+        <location filename="../pushbuttonpage.cpp" line="432"/>
         <source>Push Button</source>
         <translation>Push Button</translation>
     </message>
     <message id="xx_push_button_page_info_label">
-        <location filename="../pushbuttonpage.cpp" line="80"/>
+        <location filename="../pushbuttonpage.cpp" line="443"/>
         <source>Push Buttons can have an icon and a label. Push Button can be used in any container but usually it is used with Dialogs, Notifications and Main windows to invoke actions.
 
 A Push Button generally looks like a traditional button, with button-style edges.</source>
@@ -1119,28 +1124,145 @@ A Push Button generally looks like a traditional button, with button-style edges
 
 A Push Button generally looks like a traditional button, with button-style edges.</translation>
     </message>
-    <message id="xx_push_button_page_button1">
-        <location filename="../pushbuttonpage.cpp" line="82"/>
-        <source>Lorem</source>
-        <translation>Lorem</translation>
+    <message id="xx_push_button_text1">
+        <location filename="../pushbuttonpage.cpp" line="449"/>
+        <source>Predefined common styles are available for Push Buttons in cases where they have no custom requirement whatsoever.These buttons can have icons next to their label.&lt;b&gt;Common Styles&lt;/b&gt; are applied using the according Object Names.</source>
+        <translation>Predefined common styles are available for Push Buttons in cases where they have no custom requirement whatsoever.These buttons can have icons next to their label.&lt;b&gt;Common Styles&lt;/b&gt; are applied using the according Object Names.</translation>
     </message>
-    <message id="xx_push_button_page_button2">
-        <location filename="../pushbuttonpage.cpp" line="84"/>
-        <source>Ipsum</source>
-        <translation>Ipsum</translation>
+    <message id="xx_push_button_text2">
+        <location filename="../pushbuttonpage.cpp" line="452"/>
+        <source>1. Single button</source>
+        <translation>1. Single button</translation>
     </message>
-    <message id="xx_push_button_page_button3">
-        <location filename="../pushbuttonpage.cpp" line="86"/>
-        <source>Dolor
-sit amet</source>
-        <translation>Dolor
-sit amet</translation>
+    <message id="xx_push_button_text3">
+        <location filename="../pushbuttonpage.cpp" line="455"/>
+        <source>When using a button that literally has no other button next to it (neither in rows or columns) set the Object name to &lt;i&gt;#CommonSingleButton.&lt;/i&gt;</source>
+        <translation>When using a button that literally has no other button next to it (neither in rows or columns) set the Object name to &lt;i&gt;#CommonSingleButton.&lt;/i&gt;</translation>
+    </message>
+    <message id="xx_push_button_text4">
+        <location filename="../pushbuttonpage.cpp" line="458"/>
+        <source>Multiple buttons</source>
+        <translation>Multiple buttons</translation>
+    </message>
+    <message id="xx_push_button_text5">
+        <location filename="../pushbuttonpage.cpp" line="461"/>
+        <source>When more than one button is needed, the naming of each button is depending on their arrangement in &lt;b&gt;portrait&lt;/b&gt; orientation. In landscape buttons are always arranged in rows. </source>
+        <translation>When more than one button is needed, the naming of each button is depending on their arrangement in &lt;b&gt;portrait&lt;/b&gt; orientation. In landscape buttons are always arranged in rows. </translation>
+    </message>
+    <message id="xx_push_button_text6">
+        <location filename="../pushbuttonpage.cpp" line="464"/>
+        <source>2. Multiple buttons that are collected as a column in portrait and rearrange to rows when switching to landscape</source>
+        <translation>2. Multiple buttons that are collected as a column in portrait and rearrange to rows when switching to landscape</translation>
+    </message>
+    <message id="xx_push_button_text7">
+        <location filename="../pushbuttonpage.cpp" line="467"/>
+        <source>For these buttons apply the names &lt;i&gt;#CommonTopButton, #CommonVerticalCenterButton and #CommonBottomButton.&lt;/i&gt;</source>
+        <translation>For these buttons apply the names &lt;i&gt;#CommonTopButton, #CommonVerticalCenterButton and #CommonBottomButton.&lt;/i&gt;</translation>
+    </message>
+    <message id="xx_push_button_text8">
+        <location filename="../pushbuttonpage.cpp" line="470"/>
+        <source>3. Multiple buttons that are always collected in rows (in both orientations)</source>
+        <translation>3. Multiple buttons that are always collected in rows (in both orientations)</translation>
+    </message>
+    <message id="xx_push_button_text9">
+        <location filename="../pushbuttonpage.cpp" line="472"/>
+        <source>For these buttons apply the names &lt;i&gt;#CommonLeftButton, #CommonHorizontalCenterButton and #CommonRightButton.&lt;/i&gt;</source>
+        <translation>For these buttons apply the names &lt;i&gt;#CommonLeftButton, #CommonHorizontalCenterButton and #CommonRightButton.&lt;/i&gt;</translation>
+    </message>
+    <message id="xx_push_button_text10">
+        <location filename="../pushbuttonpage.cpp" line="475"/>
+        <source>4. Call and Reject buttons have also equivalent sets of names. This example contains also the icon.</source>
+        <translation>4. Call and Reject buttons have also equivalent sets of names. This example contains also the icon.</translation>
+    </message>
+    <message id="xx_push_button_text11">
+        <location filename="../pushbuttonpage.cpp" line="478"/>
+        <source>5. Split Buttons</source>
+        <translation>5. Split Buttons</translation>
+    </message>
+    <message id="xx_push_button_text12">
+        <location filename="../pushbuttonpage.cpp" line="481"/>
+        <source>In cases where standard buttons have been used and need to be changed to split buttons just change the Object Names for example from &lt;i&gt;#CommonTopButton to #CommonTopSplitButton&lt;/i&gt;. But first check whether you could use the &lt;b&gt;MButtonGroup&lt;/b&gt; for your purpose. </source>
+        <translation>In cases where standard buttons have been used and need to be changed to split buttons just change the Object Names for example from &lt;i&gt;#CommonTopButton to #CommonTopSplitButton&lt;/i&gt;. But first check whether you could use the &lt;b&gt;MButtonGroup&lt;/b&gt; for your purpose. </translation>
+    </message>
+    <message id="xx_push_button_button1">
+        <location filename="../pushbuttonpage.cpp" line="484"/>
+        <source>only button</source>
+        <translation>only button</translation>
+    </message>
+    <message id="xx_push_button_button2">
+        <location filename="../pushbuttonpage.cpp" line="487"/>
+        <source>first button</source>
+        <translation>first button</translation>
+    </message>
+    <message id="xx_push_button_button3">
+        <location filename="../pushbuttonpage.cpp" line="490"/>
+        <source>second button</source>
+        <translation>second button</translation>
+    </message>
+    <message id="xx_push_button_button4">
+        <location filename="../pushbuttonpage.cpp" line="493"/>
+        <source>first button</source>
+        <translation>first button</translation>
+    </message>
+    <message id="xx_push_button_button5">
+        <location filename="../pushbuttonpage.cpp" line="496"/>
+        <source>second button</source>
+        <translation>second button</translation>
+    </message>
+    <message id="xx_push_button_button7">
+        <location filename="../pushbuttonpage.cpp" line="499"/>
+        <source>first button</source>
+        <translation>first button</translation>
+    </message>
+    <message id="xx_push_button_button8">
+        <location filename="../pushbuttonpage.cpp" line="502"/>
+        <source>second button</source>
+        <translation>second button</translation>
+    </message>
+    <message id="xx_push_button_button9">
+        <location filename="../pushbuttonpage.cpp" line="505"/>
+        <source>first button</source>
+        <translation>first button</translation>
+    </message>
+    <message id="xx_push_button_button10">
+        <location filename="../pushbuttonpage.cpp" line="508"/>
+        <source>second button</source>
+        <translation>second button</translation>
+    </message>
+    <message id="xx_push_button_button12">
+        <location filename="../pushbuttonpage.cpp" line="511"/>
+        <source>call</source>
+        <translation>call</translation>
+    </message>
+    <message id="xx_push_button_button13">
+        <location filename="../pushbuttonpage.cpp" line="514"/>
+        <source>reject</source>
+        <translation>reject</translation>
+    </message>
+    <message id="xx_push_button_button14">
+        <location filename="../pushbuttonpage.cpp" line="517"/>
+        <source>first button</source>
+        <translation>first button</translation>
+    </message>
+    <message id="xx_push_button_button15">
+        <location filename="../pushbuttonpage.cpp" line="520"/>
+        <source>second button</source>
+        <translation>second button</translation>
+    </message>
+    <message id="xx_push_button_button17">
+        <location filename="../pushbuttonpage.cpp" line="523"/>
+        <source>first button</source>
+        <translation>first button</translation>
+    </message>
+    <message id="xx_push_button_button18">
+        <location filename="../pushbuttonpage.cpp" line="526"/>
+        <source>second button</source>
+        <translation>second button</translation>
     </message>
     <message id="xx_spinner_page_application_main_area">
         <location filename="../spinnerpage.cpp" line="112"/>
         <source>In application main area</source>
-        <oldsource>In container main area</oldsource>
-        <translation>In container main area</translation>
+        <translation>In application main area</translation>
     </message>
     <message id="xx_spinner_page_container_header">
         <location filename="../spinnerpage.cpp" line="114"/>
@@ -1150,8 +1272,7 @@ sit amet</translation>
     <message id="xx_spinner_page_menu">
         <location filename="../spinnerpage.cpp" line="116"/>
         <source>In application menu</source>
-        <oldsource>In view menu</oldsource>
-        <translation>In view menu</translation>
+        <translation>In application menu</translation>
     </message>
     <message id="xx_spinner_page_dialog">
         <location filename="../spinnerpage.cpp" line="118"/>
@@ -1290,54 +1411,54 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation>Silent</translation>
     </message>
     <message id="xx_gridpage_configuration">
-        <location filename="../mgridpage.cpp" line="210"/>
+        <location filename="../mgridpage.cpp" line="214"/>
         <source>Configuration</source>
         <translation>Configuration</translation>
     </message>
     <message id="xx_gridpage_title">
-        <location filename="../mgridpage.cpp" line="205"/>
+        <location filename="../mgridpage.cpp" line="209"/>
         <source>Grid page</source>
         <translation>Grid page</translation>
     </message>
     <message id="xx_gridpage_set_columns">
-        <location filename="../mgridpage.cpp" line="301"/>
+        <location filename="../mgridpage.cpp" line="305"/>
         <source>Set columns</source>
         <translation>Set columns</translation>
     </message>
     <message id="xx_gridpage_landscape">
-        <location filename="../mgridpage.cpp" line="333"/>
-        <location filename="../mgridpage.cpp" line="343"/>
+        <location filename="../mgridpage.cpp" line="337"/>
+        <location filename="../mgridpage.cpp" line="347"/>
         <source>Landscape</source>
         <translation>Landscape</translation>
     </message>
     <message id="xx_gridpage_portrait">
-        <location filename="../mgridpage.cpp" line="338"/>
-        <location filename="../mgridpage.cpp" line="348"/>
+        <location filename="../mgridpage.cpp" line="342"/>
+        <location filename="../mgridpage.cpp" line="352"/>
         <source>Portrait</source>
         <translation>Portrait</translation>
     </message>
     <message id="xx_bubblepage_title">
-        <location filename="../bubblepage.cpp" line="158"/>
+        <location filename="../bubblepage.cpp" line="152"/>
         <source>Speech Bubble</source>
         <translation>Speech Bubble</translation>
     </message>
     <message id="xx_wg_bubblepage_linkactivated">
-        <location filename="../bubblepage.cpp" line="171"/>
+        <location filename="../bubblepage.cpp" line="165"/>
         <source>Link activated</source>
         <translation>Link activated</translation>
     </message>
     <message id="xx_wg_bubblepage_bubbleclicked">
-        <location filename="../bubblepage.cpp" line="178"/>
+        <location filename="../bubblepage.cpp" line="172"/>
         <source>Speech buuble clicked</source>
         <translation>Speech bubble clicked</translation>
     </message>
     <message id="xx_button_group_page_title">
-        <location filename="../buttongrouppage.cpp" line="168"/>
+        <location filename="../buttongrouppage.cpp" line="167"/>
         <source>Button Group</source>
         <translation>Button Group</translation>
     </message>
     <message id="xx_button_group_page_info_label">
-        <location filename="../buttongrouppage.cpp" line="180"/>
+        <location filename="../buttongrouppage.cpp" line="179"/>
         <source>Buttons can be grouped together based on visual or logic requirements.
 
 The basic group is formed by placing buttons together into a layout. Depending on the theme, the buttons are typically drawn as connected with each other.
@@ -1350,62 +1471,62 @@ The basic group is formed by placing buttons together into a layout. Depending o
 Logical exclusivity can be added to a group, which ensures only one of the buttons can be selected at a time. If a group is not exclusive, multiple options from the group can be selected.</translation>
     </message>
     <message id="xx_button_group_page_hlabel1">
-        <location filename="../buttongrouppage.cpp" line="183"/>
+        <location filename="../buttongrouppage.cpp" line="182"/>
         <source>Horizontal group</source>
         <translation>Horizontal group</translation>
     </message>
     <message id="xx_button_group_page_button1">
-        <location filename="../buttongrouppage.cpp" line="185"/>
+        <location filename="../buttongrouppage.cpp" line="184"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message id="xx_button_group_page_button2">
-        <location filename="../buttongrouppage.cpp" line="187"/>
+        <location filename="../buttongrouppage.cpp" line="186"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message id="xx_button_group_page_button3">
-        <location filename="../buttongrouppage.cpp" line="189"/>
+        <location filename="../buttongrouppage.cpp" line="188"/>
         <source>Maybe</source>
         <translation>Maybe</translation>
     </message>
     <message id="xx_button_group_page_vlabel2">
-        <location filename="../buttongrouppage.cpp" line="192"/>
+        <location filename="../buttongrouppage.cpp" line="191"/>
         <source>Horizontal group, exclusive</source>
         <translation>Horizontal group, exclusive</translation>
     </message>
     <message id="xx_button_group_page_button4">
-        <location filename="../buttongrouppage.cpp" line="194"/>
+        <location filename="../buttongrouppage.cpp" line="193"/>
         <source>Cost</source>
         <translation>Cost</translation>
     </message>
     <message id="xx_button_group_page_button5">
-        <location filename="../buttongrouppage.cpp" line="196"/>
+        <location filename="../buttongrouppage.cpp" line="195"/>
         <source>Quality</source>
         <translation>Quality</translation>
     </message>
     <message id="xx_button_group_page_button6">
-        <location filename="../buttongrouppage.cpp" line="198"/>
+        <location filename="../buttongrouppage.cpp" line="197"/>
         <source>Schedule</source>
         <translation>Schedule</translation>
     </message>
     <message id="xx_button_group_page_vlabel">
-        <location filename="../buttongrouppage.cpp" line="201"/>
+        <location filename="../buttongrouppage.cpp" line="200"/>
         <source>Vertical group, checkable</source>
         <translation>Vertical group, checkable</translation>
     </message>
     <message id="xx_button_group_page_button7">
-        <location filename="../buttongrouppage.cpp" line="203"/>
+        <location filename="../buttongrouppage.cpp" line="202"/>
         <source>Milk</source>
         <translation>Milk</translation>
     </message>
     <message id="xx_button_group_page_button8">
-        <location filename="../buttongrouppage.cpp" line="205"/>
+        <location filename="../buttongrouppage.cpp" line="204"/>
         <source>Sugar</source>
         <translation>Sugar</translation>
     </message>
     <message id="xx_button_group_page_button9">
-        <location filename="../buttongrouppage.cpp" line="207"/>
+        <location filename="../buttongrouppage.cpp" line="206"/>
         <source>Biscotti</source>
         <translation>Biscotti</translation>
     </message>
