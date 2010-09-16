@@ -49,6 +49,7 @@ if [ "$CHARMAP" != "UTF-8" ]; then
     echo "UTF-8 locale is missing, skipping all tests"
     echo "Installing the libmeegotouch-tests package should have created the en_US.UTF-8 locale"
     echo "but for some reason it appears to be missing."
+    echo "Totals: 0 passed, 0 failed, 1 skipped"
     emptylog "ft_mgconfitem.log" "ft_mgconfitem" "UTF-8 locale is missing, skipping all tests. Installing the libmeegotouch-tests package should have created the en_US.UTF-8 locale but for some reason it appears to be missing."
     exit 0
 fi
