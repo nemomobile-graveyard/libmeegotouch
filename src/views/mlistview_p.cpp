@@ -291,7 +291,8 @@ void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF 
             viewportVisibleHeight = size.height();
 
         viewportRectChanged(QRectF(position, size));
-        q_ptr->relayoutItemsInViewportRect();
+
+        _q_relayoutItemsIfNeeded();
     }
 }
 
@@ -378,6 +379,7 @@ void MListViewPrivate::connectSignalsFromModelToListView()
         connect(model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
 
         connect(scrollToTimeLine, SIGNAL(frameChanged(int)), q_ptr, SLOT(_q_moveViewportToNextPosition(int)));
+        connect(controller, SIGNAL(visibleChanged()), q_ptr, SLOT(_q_relayoutItemsIfNeeded()));
     }
 }
 
@@ -546,6 +548,12 @@ void MListViewPrivate::_q_moveViewportToNextPosition(int frame)
 void MListViewPrivate::_q_itemLongTapped(const QPointF &pos)
 {
     q_ptr->longTap(pos);
+}
+
+void MListViewPrivate::_q_relayoutItemsIfNeeded()
+{
+    if (controller->isVisible())
+        q_ptr->relayoutItemsInViewportRect();
 }
 
 QPointF MListViewPrivate::calculateViewportNextPosition()

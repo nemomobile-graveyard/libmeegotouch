@@ -89,6 +89,7 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_moveViewportToNextPosition(int))
     Q_PRIVATE_SLOT(d_func(), void _q_itemLongTapped(QPointF))
+    Q_PRIVATE_SLOT(d_func(), void _q_relayoutItemsIfNeeded())
 
 private:
     Q_DECLARE_PRIVATE(MListView)

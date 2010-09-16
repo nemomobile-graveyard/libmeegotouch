@@ -161,6 +161,7 @@ public Q_SLOTS:
 
     void _q_moveViewportToNextPosition(int frame);
     void _q_itemLongTapped(const QPointF &pos);
+    void _q_relayoutItemsIfNeeded();
 
 public:
     MListView *q_ptr;

@@ -226,23 +226,28 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
     if (!model()->firstVisibleItem().isValid() && !model()->lastVisibleItem().isValid())
         return;
 
-    const MCellCreator *cellCreator = model()->cellCreator();
+    if(d_ptr->controller->isVisible())
+    {
+        const MCellCreator *cellCreator = model()->cellCreator();
 
-    int firstVisibleRow = d_ptr->indexToFlatRow(model()->firstVisibleItem());
-    int lastVisibleRow = d_ptr->indexToFlatRow(model()->lastVisibleItem());
-    int topLeftRow = d_ptr->indexToFlatRow(topLeft);
-    int bottomRightRow = d_ptr->indexToFlatRow(bottomRight);
+        int firstVisibleRow = d_ptr->indexToFlatRow(model()->firstVisibleItem());
+        int lastVisibleRow = d_ptr->indexToFlatRow(model()->lastVisibleItem());
+        int topLeftRow = d_ptr->indexToFlatRow(topLeft);
+        int bottomRightRow = d_ptr->indexToFlatRow(bottomRight);
 
-    int top = qMax(topLeftRow, firstVisibleRow);
-    int lastCellInLastVisibleRow = lastVisibleRow + model()->columns() - lastVisibleRow % model()->columns() - 1;
-    int bottom = qMin(bottomRightRow, lastCellInLastVisibleRow);
+        int top = qMax(topLeftRow, firstVisibleRow);
+        int lastCellInLastVisibleRow = lastVisibleRow + model()->columns() - lastVisibleRow % model()->columns() - 1;
+        int bottom = qMin(bottomRightRow, lastCellInLastVisibleRow);
 
-    for (int i = top; i <= bottom; i++) {
-        QModelIndex cellIndex = d_ptr->flatRowToIndex(i);
-        if (!d_ptr->isGroupHeader(cellIndex)) {
-            MWidget *cell = d_ptr->findCellAtRow(i);
-            cellCreator->updateCell(cellIndex, cell);
+        for (int i = top; i <= bottom; i++) {
+            QModelIndex cellIndex = d_ptr->flatRowToIndex(i);
+            if (!d_ptr->isGroupHeader(cellIndex)) {
+                MWidget *cell = d_ptr->findCellAtRow(i);
+                cellCreator->updateCell(cellIndex, cell);
+            }
         }
+    } else {
+        d_ptr->clearVisibleOnRelayout = true;
     }
 }
 
