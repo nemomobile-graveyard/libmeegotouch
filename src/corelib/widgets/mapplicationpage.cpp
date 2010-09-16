@@ -50,6 +50,27 @@ void MApplicationPagePrivate::init()
     layout->addItem(pannableViewport);
 
     q->setLayout(layout);
+
+    q->connect(q,
+               SIGNAL(sceneWindowStateChanged(MSceneWindow::SceneWindowState,
+                                              MSceneWindow::SceneWindowState)),
+               SLOT(_q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState,
+                                                 MSceneWindow::SceneWindowState)));
+}
+
+void MApplicationPagePrivate::_q_onSceneWindowStateChanged(
+        MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState)
+{
+    Q_Q(MApplicationPage);
+
+    if (oldState == MSceneWindow::Disappeared &&
+            (newState == MSceneWindow::Appearing || newState == MSceneWindow::Appeared)) {
+
+        if (!contentCreated) {
+            contentCreated = true;
+            q->createContent();
+        }
+    }
 }
 
 MApplicationPage::MApplicationPage(QGraphicsItem *parent)

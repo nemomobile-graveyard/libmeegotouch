@@ -32,6 +32,25 @@ class MApplicationWindow;
 Q_DECLARE_METATYPE(MApplicationPage *);
 Q_DECLARE_METATYPE(MEscapeButtonPanelModel::EscapeMode);
 
+class DummyObject : public QObject
+{
+    Q_OBJECT
+public:
+    DummyObject(QObject *parent = 0);
+    void setApplicationPage(MApplicationPage *page);
+public slots:
+    void onApplicationPageAppearing();
+    void onApplicationPageAppeared();
+public:
+    MApplicationPage *page;
+
+    bool onApplicationPageAppearingWasCalled;
+    bool pageContentWasAlreadyCreatedInAppearing;
+
+    bool onApplicationPageAppearedWasCalled;
+    bool pageContentWasAlreadyCreatedInAppeared;
+};
+
 class Ut_MApplicationPage : public QObject
 {
     Q_OBJECT
@@ -45,7 +64,7 @@ private slots:
     void testInitialValues();
     void testProperties();
     void testCentralWidget();
-    void testCreateContent();
+    void testIsContentCreated();
     void testPageTitleChanged();
     void testRememberPosition();
     void testForgetPosition();
@@ -56,6 +75,8 @@ private slots:
     void testSettingAllComponentsDisplayMode();
     void testUpdatingWindowTitleWithChangingPageTitle();
     void testIfPositionIndicatorGeometryFollowsExposedRect();
+    void testContentIsCreatedOnEnteringAppearingState();
+    void testContentIsCreatedOnEnteringAppearedState();
 
 private:
     MApplicationPage *m_subject;

@@ -476,6 +476,9 @@ private:
 
     Q_DISABLE_COPY(MApplicationPage)
     Q_DECLARE_PRIVATE(MApplicationPage)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState newState,
+                                                               MSceneWindow::SceneWindowState oldState))
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MApplicationPage::Components)

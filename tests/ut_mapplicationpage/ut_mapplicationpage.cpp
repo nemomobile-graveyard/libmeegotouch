@@ -34,12 +34,53 @@
 
 #include "mondisplaychangeevent.h"
 
+bool gMWindowIsOnDisplay = false;
+bool MWindow::isOnDisplay() const
+{
+    return gMWindowIsOnDisplay;
+}
+
+DummyObject::DummyObject(QObject *parent)
+    : QObject(parent)
+{
+    page = 0;
+
+    onApplicationPageAppearingWasCalled = false;
+    pageContentWasAlreadyCreatedInAppearing = false;
+
+    onApplicationPageAppearedWasCalled = false;
+    pageContentWasAlreadyCreatedInAppeared = false;
+}
+
+void DummyObject::setApplicationPage(MApplicationPage *page)
+{
+    Q_ASSERT(page != 0);
+    Q_ASSERT(this->page == 0);
+
+    this->page = page;
+    connect(page, SIGNAL(appearing()), SLOT(onApplicationPageAppearing()));
+    connect(page, SIGNAL(appeared()), SLOT(onApplicationPageAppeared()));
+}
+
+void DummyObject::onApplicationPageAppearing()
+{
+    Q_ASSERT(page);
+    onApplicationPageAppearingWasCalled = true;
+    pageContentWasAlreadyCreatedInAppearing = page->isContentCreated();
+}
+
+void DummyObject::onApplicationPageAppeared()
+{
+    Q_ASSERT(page);
+    onApplicationPageAppearedWasCalled = true;
+    pageContentWasAlreadyCreatedInAppeared = page->isContentCreated();
+}
+
 void Ut_MApplicationPage::initTestCase()
 {
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mapplicationpage" };
     app = new MApplication(argc, app_name);
-    appWin = new MApplicationWindow;
 
     qRegisterMetaType<MApplicationPage *>();
     qRegisterMetaType<MEscapeButtonPanelModel::EscapeMode>();
@@ -53,6 +94,7 @@ void Ut_MApplicationPage::cleanupTestCase()
 
 void Ut_MApplicationPage::init()
 {
+    appWin = new MApplicationWindow;
     m_subject = new MApplicationPage;
 }
 
@@ -63,6 +105,9 @@ void Ut_MApplicationPage::cleanup()
         delete m_subject;
         m_subject = 0;
     }
+
+    delete appWin;
+    appWin = 0;
 }
 
 void Ut_MApplicationPage::testInitialValues()
@@ -120,7 +165,7 @@ void Ut_MApplicationPage::testCentralWidget()
     QVERIFY(widget.isNull());
 }
 
-void Ut_MApplicationPage::testCreateContent()
+void Ut_MApplicationPage::testIsContentCreated()
 {
     QVERIFY(!m_subject->isContentCreated());
     m_subject->createContent();
@@ -251,6 +296,46 @@ void Ut_MApplicationPage::testIfPositionIndicatorGeometryFollowsExposedRect()
 {
     m_subject->appear(appWin);
     QCOMPARE(m_subject->pannableViewport()->positionIndicator()->geometry(), m_subject->exposedContentRect());
+}
+
+void Ut_MApplicationPage::testContentIsCreatedOnEnteringAppearingState()
+{
+    bool original_gMWindowIsOnDisplay = gMWindowIsOnDisplay;
+    gMWindowIsOnDisplay = true;
+
+    DummyObject dummyObject;
+    dummyObject.setApplicationPage(m_subject);
+
+    appWin->show();
+
+    // Simulate an animated appearance.
+
+    QCOMPARE(m_subject->isContentCreated(), false);
+
+    m_subject->appear(appWin);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(m_subject->isContentCreated(), true);
+    QCOMPARE(dummyObject.onApplicationPageAppearingWasCalled, true);
+    QCOMPARE(dummyObject.pageContentWasAlreadyCreatedInAppearing, true);
+
+    // put it back to its original value
+    gMWindowIsOnDisplay = original_gMWindowIsOnDisplay;
+}
+
+void Ut_MApplicationPage::testContentIsCreatedOnEnteringAppearedState()
+{
+    DummyObject dummyObject;
+    dummyObject.setApplicationPage(m_subject);
+
+    QCOMPARE(m_subject->isContentCreated(), false);
+
+    appWin->sceneManager()->appearSceneWindowNow(m_subject);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE(m_subject->isContentCreated(), true);
+    QCOMPARE(dummyObject.onApplicationPageAppearedWasCalled, true);
+    QCOMPARE(dummyObject.pageContentWasAlreadyCreatedInAppeared, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_MApplicationPage)

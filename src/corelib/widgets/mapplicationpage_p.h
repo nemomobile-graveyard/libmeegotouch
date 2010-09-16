@@ -41,6 +41,9 @@ public:
 
     MPannableViewport *pannableViewport;
     bool contentCreated;
+
+    void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState newState,
+                                      MSceneWindow::SceneWindowState oldState);
 };
 
 #endif
