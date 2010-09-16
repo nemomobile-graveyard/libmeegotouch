@@ -592,14 +592,12 @@ void Ft_Locales::testMLocaleLanguageEndonym_data()
     QTest::newRow("de")
             << QString("de")
             << QString("Deutsch");
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
     // de_CH needs a special fix because of
     // see http://site.icu-project.org/design/resbund/issues
     // make sure that the fix works:
     QTest::newRow("de_CH")
             << QString("de_CH")
             << QString("Deutsch");
-#endif
     QTest::newRow("de_AT")
             << QString("de_AT")
             << QString("Deutsch");
@@ -630,14 +628,12 @@ void Ft_Locales::testMLocaleCountryEndonym_data()
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("Suomi");
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
     // de_CH needs a special fix because of
     // see http://site.icu-project.org/design/resbund/issues
     // make sure that the fix works:
     QTest::newRow("de_CH")
             << QString("de_CH")
             << QString("Schweiz");
-#endif
     QTest::newRow("de_AT")
             << QString("de_AT")
             << QString("Österreich");
@@ -804,26 +800,20 @@ void Ft_Locales::checkAvailableLocales()
     requiredLocaleNames << "fr_SN";       // "French (Senegal)"
     requiredLocaleNames << "gl";          // "Galician"
     requiredLocaleNames << "gl_ES";       // "Galician (Spain)"
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
     requiredLocaleNames << "he";          // "Hebrew"
     requiredLocaleNames << "he_IL";       // "Hebrew (Israel)"
-#endif
     requiredLocaleNames << "hi";          // "Hindi"
     requiredLocaleNames << "hi_IN";       // "Hindi (India)"
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
     requiredLocaleNames << "id";          // "Indonesian"
     requiredLocaleNames << "id_ID";       // "Indonesian (Indonesia)"
-#endif
     requiredLocaleNames << "it";          // "Italian"
     requiredLocaleNames << "it_CH";       // "Italian (Switzerland)"
     requiredLocaleNames << "it_IT";       // "Italian (Italy)"
     requiredLocaleNames << "ja";          // "Japanese"
     requiredLocaleNames << "ja_JP";       // "Japanese (Japan)"
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
     requiredLocaleNames << "ms";          //"Malay"
     requiredLocaleNames << "ms_BN";       // "Malay (Brunei)"
     requiredLocaleNames << "ms_MY";       // "Malay (Malaysia)"
-#endif
     requiredLocaleNames << "nb";          // "Norwegian Bokml"
     requiredLocaleNames << "nb_NO";       // "Norwegian Bokml (Norway)"
     requiredLocaleNames << "nl";          // "Dutch"
