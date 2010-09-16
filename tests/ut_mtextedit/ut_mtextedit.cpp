@@ -50,6 +50,7 @@
 #include <mapplicationpage.h>
 
 #include "mtextedit_p.h"
+#include "utils.h"
 
 Q_DECLARE_METATYPE(Qt::InputMethodHints);
 Q_DECLARE_METATYPE(QValidator::State);
@@ -2512,6 +2513,15 @@ void Ut_MTextEdit::requestSip(MTextEdit *edit, Qt::FocusReason fr)
         QGraphicsSceneMouseEvent mouseRelease(QEvent::GraphicsSceneMouseRelease);
         edit->mouseReleaseEvent(&mouseRelease);
     }
+}
+
+void Ut_MTextEdit::testSetters()
+{
+    MSetterTester<MWidgetController, MWidgetModel> tester(m_subject.get(),
+                                                          &MWidgetController::setModel,
+                                                          &MWidgetController::model);
+    tester.set(new MTextEditModel, false);
+    tester.setDoesNotReparent(new MTextEditModel);
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextEdit);

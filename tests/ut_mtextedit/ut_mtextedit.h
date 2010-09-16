@@ -73,6 +73,8 @@ private slots:
     void init();
     void cleanup();
 
+    void testSetters();
+
     void testSetText();
     void testInsert();
     void testKeyPressEvent();

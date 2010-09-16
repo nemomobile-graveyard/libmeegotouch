@@ -14,6 +14,8 @@ HEADERS += \
     $$STUBSDIR/mwidgetview_stub.h \
     ut_mtextedit.h \
 
-INCLUDEPATH += $$MSRCDIR/corelib/widgets/
-
+INCLUDEPATH += \
+    $$MSRCDIR/corelib/widgets/ \
+    $$MSRCDIR/../tests/ \
+             
 include(../common_bot.pri)
