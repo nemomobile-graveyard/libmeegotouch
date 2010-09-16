@@ -43,6 +43,7 @@ MCommonLabelHighlighter::MCommonLabelHighlighter(const QRegExp &regExp)
 
 MCommonLabelHighlighter::~MCommonLabelHighlighter()
 {
+    delete d_ptr;
 }
 
 QRegExp MCommonLabelHighlighter::highlightExpression() const
