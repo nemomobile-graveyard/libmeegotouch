@@ -953,13 +953,13 @@ void MLocalePrivate::insertDirectionTrToQCoreApp()
 {
     if (MLocale::s_rtlTranslator == 0) {
         MLocale::s_rtlTranslator = new QTranslator;
-        bool ok = MLocale::s_rtlTranslator->load(":/libmeegotouchx_rtl.qm");
+        bool ok = MLocale::s_rtlTranslator->load(":/libmeegotouch_rtl.qm");
 	Q_UNUSED(ok);
         Q_ASSERT(ok);
     }
     if (MLocale::s_ltrTranslator == 0) {
         MLocale::s_ltrTranslator = new QTranslator;
-        bool ok = MLocale::s_ltrTranslator->load(":/libmeegotouchx_ltr.qm");
+        bool ok = MLocale::s_ltrTranslator->load(":/libmeegotouch_ltr.qm");
 	Q_UNUSED(ok);
         Q_ASSERT(ok);
     }
