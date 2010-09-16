@@ -49,15 +49,9 @@ public:
     int cursorPosition(QGraphicsSceneMouseEvent *event);
     int cursorPosition(QPointF event);
 
-    const QTextDocument *document() const {
-        return textDocument;
-    }
-    QTextDocument *promptDocument() const {
-        return promptTextDocument;
-    }
-
+    QTextDocument *document() const;
+    QTextDocument *promptDocument() const;
     void checkScroll();
-
     void setMouseTarget(const QPointF &point);
 
     // returns a paint context for drawing. Includes selection formatting
@@ -97,7 +91,6 @@ protected:
 
     bool focused;
 
-    QTextDocument *textDocument;
     QTextDocument *maskedTextDocument;
     QTextDocument *promptTextDocument;
 

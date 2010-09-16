@@ -70,7 +70,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     : q_ptr(q),
       controller(control),
       focused(false),
-      textDocument(control->document()),
       maskedTextDocument(0),
       promptTextDocument(new QTextDocument(this)),
       unmaskPosition(-1),
@@ -94,7 +93,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       hideInfoBannerTimer(new QTimer(this))
 {
     // copy text options from actual document to prompt
-    QTextOption option = textDocument->defaultTextOption();
+    QTextOption option = document()->defaultTextOption();
     promptTextDocument->setDefaultTextOption(option);
 
     selectionFormat.setForeground(Qt::white);
@@ -122,6 +121,15 @@ MTextEditViewPrivate::~MTextEditViewPrivate()
     delete maskedTextDocument;
 }
 
+QTextDocument *MTextEditViewPrivate::document() const
+{
+    return controller->document();
+}
+
+QTextDocument *MTextEditViewPrivate::promptDocument() const
+{
+    return promptTextDocument;
+}
 
 /*!
  * \brief Returns cursor position from a mouse position
@@ -394,7 +402,7 @@ void MTextEditViewPrivate::initMaskedDocument()
     int textLength = 0;
 
     if (q->model()->echo() != MTextEditModel::NoEcho) {
-        QString text = textDocument->toPlainText();
+        QString text = document()->toPlainText();
         textLength = text.length();
     }
 
@@ -407,9 +415,9 @@ void MTextEditViewPrivate::initMaskedDocument()
     }
 
     // copy the settings
-    maskedTextDocument->setDocumentMargin(textDocument->documentMargin());
-    maskedTextDocument->setDefaultFont(textDocument->defaultFont());
-    maskedTextDocument->setTextWidth(textDocument->textWidth());
+    maskedTextDocument->setDocumentMargin(document()->documentMargin());
+    maskedTextDocument->setDefaultFont(document()->defaultFont());
+    maskedTextDocument->setTextWidth(document()->textWidth());
 
     // no word wrapping in masked mode
     QTextOption option = document()->defaultTextOption();
@@ -428,7 +436,7 @@ QTextDocument *MTextEditViewPrivate::activeDocument() const
     if (echoMode == MTextEditModel::Normal ||
             (echoMode == MTextEditModel::PasswordEchoOnEdit && editActive == true) ||
             maskedTextDocument == 0) {
-        return textDocument;
+        return document();
 
     } else {
         return maskedTextDocument;
@@ -668,12 +676,12 @@ QRect MTextEditViewPrivate::cursorRect() const
 {
     QRect rect;
     int position = controller->cursorPosition();
-    const QTextBlock currentBlock = textDocument->findBlock(position);
+    const QTextBlock currentBlock = document()->findBlock(position);
     if (!currentBlock.isValid())
         return rect;
 
     const QTextLayout *layout = currentBlock.layout();
-    const QPointF layoutPos = textDocument->documentLayout()->blockBoundingRect(currentBlock).topLeft();
+    const QPointF layoutPos = document()->documentLayout()->blockBoundingRect(currentBlock).topLeft();
     int relativePos = position - currentBlock.position();
     QTextLine currentLine = layout->lineForTextPosition(relativePos);
     if (!currentLine.isValid())
@@ -685,7 +693,7 @@ QRect MTextEditViewPrivate::cursorRect() const
     int cursorWidth, cursorHeight;
     bool ok = false;
 
-    cursorWidth = textDocument->documentLayout()->property("cursorWidth").toInt(&ok);
+    cursorWidth = document()->documentLayout()->property("cursorWidth").toInt(&ok);
     if (!ok)
         cursorWidth = 1;
     //cursor occupies one space
@@ -767,7 +775,7 @@ void MTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
     Q_D(MTextEditView);
     int textWidth = event->newSize().width() - style()->paddingLeft() - style()->paddingRight();
 
-    d->textDocument->setTextWidth(textWidth);
+    d->document()->setTextWidth(textWidth);
     d->promptTextDocument->setTextWidth(textWidth);
 
     if (d->maskedTextDocument != 0) {
@@ -925,18 +933,18 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
     //      Return QWIDGETSIZE_MAX
 
     QSizeF hint = constraint;
-    const QTextBlock block = d->textDocument->firstBlock();
+    const QTextBlock block = d->document()->firstBlock();
     const QTextLayout *layout = block.layout();
     QTextLine line = layout->lineAt(0);
     qreal minLineHeight = line.height() + style()->paddingTop() + style()->paddingBottom()
-                          + 2 * d->textDocument->documentMargin();
+                          + 2 * d->document()->documentMargin();
 
     switch (which) {
     case Qt::MinimumSize:
         if (hint.width() < 0) {
             QFontMetrics fm(style()->font());
             qreal minWidth = fm.width('x') + style()->paddingLeft() + style()->paddingRight()
-                             + 2 * d->textDocument->documentMargin();
+                             + 2 * d->document()->documentMargin();
             hint.setWidth(minWidth);
         }
         if (hint.height() < 0) {
@@ -947,7 +955,7 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
         {
             if (model()->line() == MTextEditModel::SingleLine) {
                 if (hint.width() < 0) {
-                    hint.setWidth(d->textDocument->size().width() +
+                    hint.setWidth(d->document()->size().width() +
                         style()->paddingLeft() + style()->paddingRight());
                 }
                 if (hint.height() < 0) {
@@ -960,22 +968,22 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
                      * to the given constraint width.  But we don't want this to trigger
                      * a documentsSizeChanged so we disconnect that signal and reconnect afterwards
                      */
-                    qreal oldWidth = d->textDocument->textWidth();
-                    disconnect(d->textDocument->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
+                    qreal oldWidth = d->document()->textWidth();
+                    disconnect(d->document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
                             d, SLOT(handleDocumentSizeChange(QSizeF)));
-                    d->textDocument->setTextWidth(hint.width());
-                    hint.setHeight(d->textDocument->size().height() +
+                    d->document()->setTextWidth(hint.width());
+                    hint.setHeight(d->document()->size().height() +
                         style()->paddingTop() + style()->paddingBottom());
-                    d->textDocument->setTextWidth(oldWidth);
-                    connect(d->textDocument->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
+                    d->document()->setTextWidth(oldWidth);
+                    connect(d->document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
                             d, SLOT(handleDocumentSizeChange(QSizeF)));
 
                 } else {
                     //Use the current document width if we are given no constraints
-                    hint.setWidth(d->textDocument->size().width() +
+                    hint.setWidth(d->document()->size().width() +
                         style()->paddingLeft() + style()->paddingRight());
                     if (hint.height() < 0)
-                        hint.setHeight(d->textDocument->size().height() +
+                        hint.setHeight(d->document()->size().height() +
                             style()->paddingTop() + style()->paddingBottom());
                 }
             }
@@ -1089,7 +1097,7 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
         } else if (member == MTextEditModel::Prompt) {
             d->promptTextDocument->setPlainText(model()->prompt());
 
-            if (d->textDocument->isEmpty() == true) {
+            if (d->document()->isEmpty() == true) {
                 viewChanged = true;
             }
         } else if (member == MTextEditModel::Document) {
@@ -1241,11 +1249,11 @@ void MTextEditView::applyStyle()
     }
 
     // Set document font
-    d->textDocument->setDefaultFont(style()->font());
+    d->document()->setDefaultFont(style()->font());
     d->promptTextDocument->setDefaultFont(style()->font());
 
     // Note: currently using fixed internal margin
-    d->textDocument->setDocumentMargin(InternalMargin);
+    d->document()->setDocumentMargin(InternalMargin);
     d->promptTextDocument->setDocumentMargin(InternalMargin);
 
     if (d->maskedTextDocument != 0) {
