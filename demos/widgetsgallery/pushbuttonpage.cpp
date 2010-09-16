@@ -463,7 +463,7 @@ void PushButtonPage::retranslateUi()
     /*% "2. Multiple buttons that are collected as a column in portrait and rearrange to rows when switching to landscape" */
     text6->setText(qtTrId("xx_push_button_text6"));
 
-    /*%"For these buttons apply the names <i>#CommonTopButton, #CommonVerticalCenterButton and #CommonBottomButton.</i>" */
+    /*% "For these buttons apply the names <i>#CommonTopButton, #CommonVerticalCenterButton and #CommonBottomButton.</i>" */
     text7->setText(qtTrId("xx_push_button_text7"));
 
     /*% "3. Multiple buttons that are always collected in rows (in both orientations)" */
