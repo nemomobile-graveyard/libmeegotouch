@@ -1,3 +1,9 @@
+libmeegotouch (0.20.41.1-1) jaunty; urgency=low
+
+  * Fixes: NB#190116 - enable switching to software rendering when minimizing the
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 16 Sep 2010 15:13:28 +0300
+
 libmeegotouch (0.20.41-1) unstable; urgency=low
 
   * Fixes: NB#190995 - Close button displayed for a while when opening/closing Message Box
