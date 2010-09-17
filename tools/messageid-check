@@ -233,6 +233,7 @@ my @sourcePackagesToDownloadAndScan = (
     "syncshare-test-app",
     "sync-app-nokia",
     "sync-ui",
+    "sync-ui-libs",
     "system-ui",
     "systemui-applets",
     "systemui-applets-ui-tests",
