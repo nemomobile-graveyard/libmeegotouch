@@ -112,6 +112,8 @@ public:
     static bool showMargins();
     //! Show object names
     static bool showObjectNames();
+    //! Show style names
+    static bool showStyleNames();
     //! Show cursor
     static bool showCursor();
     //! Return true if prestarted state active
@@ -126,6 +128,8 @@ public:
     static void setShowMargins(bool show);
     //! Sets if names of objects should be shown or not
     static void setShowObjectNames(bool show);
+    //! Sets if names of styles should be shown or not
+    static void setShowStyleNames(bool show);
     //! Sets if sizes of widgets should be shown or not
     static void setShowSize(bool show);
     //! Sets if bounding rects of widgets should be shown or not

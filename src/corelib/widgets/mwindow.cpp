@@ -1051,6 +1051,7 @@ bool MWindow::event(QEvent *event)
             updateNeeded = true;
         } else if (Qt::Key_N == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowObjectNames(!MApplication::showObjectNames());
+            MApplication::setShowStyleNames(!MApplication::showStyleNames());
             updateNeeded = true;
         } else if (Qt::Key_F == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowFps(!MApplication::showFps());

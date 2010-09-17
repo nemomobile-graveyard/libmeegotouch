@@ -286,6 +286,11 @@ bool MApplication::showObjectNames()
     return MComponentData::showObjectNames();
 }
 
+bool MApplication::showStyleNames()
+{
+    return MComponentData::showStyleNames();
+}
+
 bool MApplication::showCursor()
 {
     return MComponentData::showCursor();
@@ -314,6 +319,11 @@ void MApplication::setShowMargins(bool show)
 void MApplication::setShowObjectNames(bool show)
 {
     MComponentData::setShowObjectNames(show);
+}
+
+void MApplication::setShowStyleNames(bool show)
+{
+    MComponentData::setShowStyleNames(show);
 }
 
 void MApplication::setShowBoundingRect(bool show)

@@ -478,7 +478,7 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
     Q_D(MScene);
 
     /* Overlay information on the widgets in development mode */
-    if (MApplication::showBoundingRect() || MApplication::showSize() || MApplication::showPosition() || MApplication::showMargins() || MApplication::showObjectNames()) {
+    if (MApplication::showBoundingRect() || MApplication::showSize() || MApplication::showPosition() || MApplication::showMargins() || MApplication::showObjectNames() || MApplication::showStyleNames()) {
         QList<QGraphicsItem *> itemList = items(rect);
         QList<QGraphicsItem *>::iterator item;
 
@@ -553,6 +553,20 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
                 if (widget) {
                     QRectF boundingRect = bp.boundingRect();
                     QString name = widget->objectName();
+                    QRect textBoundingRect = metrics.boundingRect(name);
+                    QPointF center = boundingRect.topLeft();
+                    center += QPointF((boundingRect.width() - textBoundingRect.width()) / 2, (boundingRect.height() - fontHeight) / 2);
+                    painter->fillRect(textBoundingRect.translated(center.toPoint()), d->fpsBackgroundBrush);
+                    painter->setPen(FpsTextColor);
+                    painter->drawText(center, name);
+                }
+            }
+
+            if (MApplication::showStyleNames()) {
+                MWidgetController *widget = dynamic_cast<MWidgetController *>(*item);
+                if (widget) {
+                    QRectF boundingRect = bp.boundingRect();
+                    QString name = widget->styleName();
                     QRect textBoundingRect = metrics.boundingRect(name);
                     QPointF center = boundingRect.topLeft();
                     center += QPointF((boundingRect.width() - textBoundingRect.width()) / 2, (boundingRect.height() - fontHeight) / 2);

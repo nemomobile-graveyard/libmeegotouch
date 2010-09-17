@@ -167,6 +167,7 @@ MComponentDataPrivate::MComponentDataPrivate()
     showPosition(false),
     showMargins(false),
     showObjectNames(false),
+    showStyleNames(false),
     showFps(false),
     logFps(false),
 #ifdef __arm__
@@ -497,8 +498,6 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
 // argc and argv (in and out): command line arguments, used ones are removed
 // themeService (out): value changed if theme service is defined in arguments
 {
-    Q_Q(MComponentData);
-
     bool outputLevelSet = false;
 
     // Assume every argument is used and mark those that are not
@@ -529,7 +528,9 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
         else if (s == "-show-cursor")
             showCursor = true;
         else if (s == "-show-object-names")
-            q->setShowObjectNames(true);
+            showObjectNames=true;
+        else if (s == "-show-style-names")
+            showStyleNames=true;
         else if (s == "-dev") {
             showSize = true;
             showPosition = true;
@@ -670,6 +671,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-log-fps] Log the FPS for the application\n"
                                          << "  [-show-size] Show widget sizes in the scene\n"
                                          << "  [-show-object-names] Show the names of the objects in the scene\n"
+                                         << "  [-show-style-names] Show the names of the styles in the scene\n"
                                          << "  [-show-position] Show widget positions in the scene\n"
                                          << "  [-show-cursor] Force the cursor to be visible\n"
                                          << "  [-reverse] Change the layout direction to right-to-left direction\n"
@@ -878,6 +880,14 @@ bool MComponentData::showObjectNames()
     return gMComponentDataPrivate->showObjectNames;
 }
 
+bool MComponentData::showStyleNames()
+{
+    if (!gMComponentDataPrivate) {
+        qFatal("MComponentData::showStyleNames() - MComponentData instance not yet created.");
+    }
+    return gMComponentDataPrivate->showStyleNames;
+}
+
 bool MComponentData::showCursor()
 {
     if (!gMComponentDataPrivate) {
@@ -924,6 +934,14 @@ void MComponentData::setShowObjectNames(bool show)
         qFatal("MComponentData::setShowObjectNames() - MComponentData instance not yet created.");
     }
     gMComponentDataPrivate->showObjectNames = show;
+}
+
+void MComponentData::setShowStyleNames(bool show)
+{
+    if (!gMComponentDataPrivate) {
+        qFatal("MComponentData::setShowStyleNames() - MComponentData instance not yet created.");
+    }
+    gMComponentDataPrivate->showStyleNames = show;
 }
 
 void MComponentData::setShowBoundingRect(bool show)

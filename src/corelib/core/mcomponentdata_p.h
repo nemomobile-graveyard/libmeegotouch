@@ -58,6 +58,7 @@ public:
     bool showPosition;
     bool showMargins;
     bool showObjectNames;
+    bool showStyleNames;
     bool showFps;
     bool logFps;
     bool showCursor;
