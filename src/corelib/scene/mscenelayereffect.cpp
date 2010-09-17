@@ -53,7 +53,9 @@ MSceneLayerEffect::MSceneLayerEffect(const QString &effectType)
     Q_D(MSceneLayerEffect);
 
     d->appearanceAnimation->setTargetWidget(this);
+    d->appearanceAnimation->setParent(this);
     d->disappearanceAnimation->setTargetWidget(this);
+    d->disappearanceAnimation->setParent(this);
 }
 
 MSceneLayerEffect::~MSceneLayerEffect()
