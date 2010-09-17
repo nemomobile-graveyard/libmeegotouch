@@ -145,7 +145,7 @@ Packet MRemoteThemeDaemonPrivate::waitForPacket(quint64 sequenceNumber)
     QObject::disconnect(&socket, SIGNAL(readyRead()), q, SLOT(connectionDataAvailable()));
 
     // wait until we get a packet with type
-    while (socket.waitForReadyRead(-1)) {
+    while (socket.waitForReadyRead(3000)) {
         while (socket.bytesAvailable()) {
             // read one packet
             const Packet packet = readOnePacket();
@@ -161,7 +161,7 @@ Packet MRemoteThemeDaemonPrivate::waitForPacket(quint64 sequenceNumber)
         }
     }
 
-    mWarning("MRemoteThemeDaemon") << "waitForPacket: connection broken";
+    mWarning("MRemoteThemeDaemon") << "waitForPacket: connection timeout when waiting for packet " << sequenceNumber;
     QObject::connect(&socket, SIGNAL(readyRead()), q, SLOT(connectionDataAvailable()));
     return Packet();
 }
@@ -175,7 +175,7 @@ quint64 MRemoteThemeDaemonPrivate::requestPixmap(const QString &imageId, const Q
     quint64 sequenceNumber;
     if (req != pixmapRequests.constEnd()) {
         sequenceNumber = req.value();
-        mWarning("MRemoteThemeDaemon") << "requested pixmap which already exists in cache";
+        mWarning("MRemoteThemeDaemon") << "requested pixmap which already exists in the request queue.";
     }
     else {
         sequenceNumber = ++sequenceCounter;
@@ -210,10 +210,8 @@ void MRemoteThemeDaemonPrivate::removeMostUsedPixmaps(const QList<PixmapIdentifi
 void MRemoteThemeDaemon::pixmapHandleSync(const QString &imageId, const QSize &size)
 {
     Q_D(MRemoteThemeDaemon);
-
     const quint64 sequenceNumber = d->requestPixmap(imageId, size);
     const Packet reply = d->waitForPacket(sequenceNumber);
-
     d->processOnePacket(reply);
 }
 
@@ -322,8 +320,17 @@ void MRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
         }
     } break;
 
+    case Packet::ErrorPacket: {
+        //something went wrong in server side when handling a request from client
+        //client tried to request/release a pixmap multiple times, or it did not 
+        //send a registration package before requesting pixmaps
+        //output the error message and remove pixmap request that caused the problems
+        mWarning("MRemoteThemeDaemon") << "Packet::ErrorPacket:" << static_cast<const String *>(packet.data())->string;
+        pixmapRequests.remove(pixmapRequests.key(packet.sequenceNumber()));
+    }break;
+
     default:
-        mDebug("MRemoteThemeDaemon") << "Couldn't process packet of type" << packet.type();
+        mWarning("MRemoteThemeDaemon") << "Couldn't process packet of type" << packet.type();
         break;
     }
 }
@@ -345,6 +352,7 @@ void MRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)
     Q_Q(MRemoteThemeDaemon);
 
     pixmapRequests.remove(handle.identifier);
+   
     // The pixmap may have been updated either in response to a request or
     // due to a theme change.  It may have gone already, if a release
     // request was processed by the server in the meantime.  The recipient

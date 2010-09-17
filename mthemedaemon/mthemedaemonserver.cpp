@@ -392,7 +392,7 @@ void MThemeDaemonServer::processOneQueueItem()
                                                 new PixmapHandle(item.pixmapId, handle));
             } else {
                 const QString message =
-                        QString::fromLatin1("requested pixmap '%1' %2x%3 already acquired by client").arg(
+                        QString::fromLatin1("requested pixmap '%1' QSize(%2, %3) already acquired by client").arg(
                                 item.pixmapId.imageId,
                                 QString::number(item.pixmapId.size.width()),
                                 QString::number(item.pixmapId.size.height()));
@@ -410,7 +410,7 @@ void MThemeDaemonServer::processOneQueueItem()
         const QueueItem item = releasePixmapsQueue.dequeue();
         if (!daemon.releasePixmap(item.client, item.pixmapId)) {
             const QString message =
-                QString::fromLatin1("pixmap to release '%1' %2x%3 not acquired by client").arg(
+                QString::fromLatin1("pixmap to release '%1' QSize(%2, %3) not acquired by client").arg(
                                     item.pixmapId.imageId,
                                     QString::number(item.pixmapId.size.width()),
                                     QString::number(item.pixmapId.size.height()));
