@@ -81,7 +81,6 @@ public:
 protected:
     //! \reimp
     virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void applyStyle();
     //! \reimp_end
 
     /*!

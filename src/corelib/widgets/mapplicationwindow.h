@@ -181,7 +181,7 @@ private:
     Q_DISABLE_COPY(MApplicationWindow)
     Q_DECLARE_PRIVATE(MApplicationWindow)
     Q_PRIVATE_SLOT(d_func(), void _q_actionUpdated(QActionEvent *))
-    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar())
+    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(M::Orientation))
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))
     Q_PRIVATE_SLOT(d_func(), void _q_menuAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_menuDisappeared())

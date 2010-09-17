@@ -36,12 +36,6 @@ class M_EXPORT MToolbarStyle : public MWidgetStyle
     M_STYLE(MToolbarStyle)
 
     M_STYLE_PTR_ATTRIBUTE(MScalableImage*, dropShadowImage, DropShadowImage)
-
-    /*!
-      \property MToolbarStyle::floatable
-      \brief Whether the toolbar prefers to be displayed as a separate, independent, scene window.
-    */
-    M_STYLE_ATTRIBUTE(bool, floatable, Floatable)
 };
 
 /*!

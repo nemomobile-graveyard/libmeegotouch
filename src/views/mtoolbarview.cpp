@@ -220,7 +220,6 @@ void MToolBarViewPrivate::init()
 
 int MToolBarViewPrivate::policyIndexForAddingAction(QAction *action, ToolBarLayoutPolicy *policy) const {
     Q_Q(const MToolBarView);
-
     //We need to add the action's given widget to the policy
     //This is a bit complicated because we ideally want to add it in the right place,
     //preserving the same order as in the controller->actions()
@@ -602,22 +601,6 @@ void MToolBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsI
     }
     MWidgetView::drawBackground(painter, option);
 }
-
-void MToolBarView::applyStyle()
-{
-    Q_D(MToolBarView);
-
-    MWidgetView::applyStyle();
-
-    bool floatable = style()->floatable();
-
-    QVariant var = property("floatable");
-    if (!var.isValid() || var.toBool() != floatable) {
-        setProperty("floatable", QVariant(floatable));
-        emit d->controller->floatableChanged();
-    }
-}
-
 
 // bind view and controller together
 M_REGISTER_VIEW_NEW(MToolBarView, MToolBar)
