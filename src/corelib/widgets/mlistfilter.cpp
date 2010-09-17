@@ -179,11 +179,13 @@ void MListFilter::keyPressEvent(QKeyEvent *event)
 void MListFilter::editorTextChanged()
 {
     if(filteringMode != MListFilter::FilterByApplication) {
+        QStringList words(QRegExp::escape(filterEditor->text()).split(" "));
+        QString joined(words.join(".* .*"));
         QRegExp regExp(filterProxy->filterRegExp());
         if(filteringMode == MListFilter::FilterAsSubstring)
-            regExp.setPattern(filterEditor->text());
+            regExp.setPattern(joined);
         else if(filteringMode == MListFilter::FilterAsBeginningOfLine && filterEditor->text().length())
-            regExp.setPattern('^' + filterEditor->text());
+            regExp.setPattern('^' + joined);
         filterProxy->setFilterRegExp(regExp);
     }
 }
