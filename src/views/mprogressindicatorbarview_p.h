@@ -21,12 +21,15 @@
 #define MPROGRESSINDICATORBARVIEW_P_H
 
 #include <QObject>
+#include <QElapsedTimer>
+
 #include "mprogressindicatorbarview.h"
 
 class MStyle;
 class MProgressIndicator;
 class QPropertyAnimation;
 class QTimer;
+
 
 class MProgressIndicatorBarViewPrivate : public QObject
 {
@@ -79,6 +82,7 @@ public:
     bool paused;
 
     QTimer* timer;
+    QElapsedTimer fpsUpperBoundTimer;
 
     QImage barBody;
 

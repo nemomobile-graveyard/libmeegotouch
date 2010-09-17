@@ -22,7 +22,6 @@
 #include <QGraphicsSceneResizeEvent>
 #include <QApplication>
 #include <QTimer>
-#include <QDebug>
 
 #include "mprogressindicatorbarview.h"
 #include "mprogressindicatorbarview_p.h"
@@ -106,9 +105,11 @@ void MProgressIndicatorBarViewPrivate::animate(bool animate)
     if (animate) {
         paused = false;
         timer->start();
+        fpsUpperBoundTimer.invalidate();
     } else {
         paused = true;
         timer->stop();
+        fpsUpperBoundTimer.start();
     }
 }
 
@@ -232,7 +233,10 @@ void MProgressIndicatorBarView::updateData(const QList<const char *>& modificati
         }
     }
 
-    update();
+    if (d->fpsUpperBoundTimer.elapsed() > style()->refreshRate()) {
+        d->fpsUpperBoundTimer.start();
+        update();
+    }
 }
 
 void MProgressIndicatorBarView::setupModel()

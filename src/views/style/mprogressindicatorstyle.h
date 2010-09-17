@@ -99,6 +99,13 @@ class M_EXPORT MProgressIndicatorStyle : public MWidgetStyle
         \brief tiled if true, horizontally stretched otherwise.
     */
     M_STYLE_ATTRIBUTE(bool, knownBarTextureTiled, KnownBarTextureTiled)
+
+    /*!
+        \property MProgressIndicator::refreshRate
+        \brief Refresh rate of unknown duration progress bar (interval between frames in msec, e.g. 50).
+    */
+
+    M_STYLE_ATTRIBUTE(int, refreshRate, RefreshRate)
 };
 
 /*!
