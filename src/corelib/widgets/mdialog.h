@@ -175,7 +175,8 @@ class M_EXPORT MDialog : public MSceneWindow
     /*!
         \property MDialog::closeButtonVisible
         \brief Whether the close button should be visible.
-        \deprecated Use MDialogStyle::hasCloseButton instead.
+        \deprecated Use MDialogStyle::hasCloseButton instead. OBS: Style properties
+                    are set in CSS files and consumed by the assigned view.
 
         The dialog's optional close button is provided as a convenient way of
         rejecting the dialog and discarding all changes. It's visible by default.
@@ -188,7 +189,8 @@ class M_EXPORT MDialog : public MSceneWindow
     /*!
         \property MDialog::titleBarVisible
         \brief Whether the title bar should be visible.
-        \deprecated Use MDialogStyle::hasTitleBar instead.
+        \deprecated Use MDialogStyle::hasTitleBar instead. OBS: Style properties are
+                    set in CSS files and consumed by the assigned view.
 
         The title bar sits on top of the dialog and contains a title text, an
         optional close button and an optional progress indicator.
@@ -290,14 +292,18 @@ public:
 
     /*!
      * \brief Returns true if the dialog's close button is visible, false otherwise.
-     * \deprecated Use MDialogStyle::hasCloseButton instead.
+     * \deprecated Use MDialogStyle::hasCloseButton instead. OBS: Style properties
+     *             are set in CSS files and consumed by the assigned view.
+     *
      * \sa setCloseButtonVisible()
      */
     bool isCloseButtonVisible() const;
 
     /*!
      * \brief Sets the visibility of the dialog's close button.
-     * \deprecated Use MDialogStyle::hasCloseButton instead.
+     * \deprecated Use MDialogStyle::hasCloseButton instead. OBS: Style properties
+     *             are set in CSS files and consumed by the assigned view.
+     *
      *
      * \sa isCloseButtonVisible(), setTitleBarVisible()
      */
@@ -326,14 +332,17 @@ public:
 
     /*!
      * \brief Returns true if the dialog's title bar is visible and false otherwise.
-     * \deprecated Use MDialogStyle::hasTitleBar instead.
+     * \deprecated Use MDialogStyle::hasTitleBar instead. OBS: Style properties
+     *             are set in CSS files and consumed by the assigned view.
+     *
      * \sa setTitleBarVisible()
      */
     bool isTitleBarVisible() const;
 
     /*!
      * \brief Sets the visibility of the dialog's title bar.
-     *  \deprecated Use MDialogStyle::hasTitleBar instead.
+     *  \deprecated Use MDialogStyle::hasTitleBar instead. OBS: Style properties
+     *              are set in CSS files and consumed by the assigned view.
      *
      * \sa isTitleBarVisible(), setCloseButtonVisible(), setTitle()
      */

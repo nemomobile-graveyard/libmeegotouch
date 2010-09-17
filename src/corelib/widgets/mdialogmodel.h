@@ -40,14 +40,18 @@ private:
 
     /*!
         \property MDialogModel::closeButtonVisible
-        \deprecated Use MDialogStyle::hasCloseButton instead.
+        \deprecated Use MDialogStyle::hasCloseButton instead. OBS: Style properties
+                    are set in CSS files and consumed by the assigned view.
+
      */
     M_MODEL_PROPERTY(bool, closeButtonVisible, CloseButtonVisible, true, true)
     M_MODEL_PROPERTY(bool, buttonBoxVisible, ButtonBoxVisible, true, true)
 
     /*!
         \property MDialogModel::titleBarVisible
-        \deprecated Use MDialogStyle::hasTitleBar instead.
+        \deprecated Use MDialogStyle::hasTitleBar instead. OBS: Style properties
+                    are set in CSS files and consumed by the assigned view.
+
      */
     M_MODEL_PROPERTY(bool, titleBarVisible, TitleBarVisible, true, true)
     M_MODEL_PROPERTY(QString, title, Title, true, QString())
