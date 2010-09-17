@@ -77,7 +77,7 @@ void MAssemblyPrivate::loadStylesheet(const QString &filename, const MLogicalVal
     } else {
         mWarning("MAssembly") << "Failed to load stylesheet:" << filename;
         delete newStylesheet;
-        newStylesheet = NULL;
+        exit(2);
     }
 }
 

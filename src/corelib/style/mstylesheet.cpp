@@ -177,7 +177,7 @@ MStyle *MStyleSheet::style(const QList<const MStyleSheet *>& sheets,
     // populate it
     if (!MStyleSheetPrivate::populateStyle(sheets, style, objectName, mode, type, orientation, parent, results)) {
         delete style;
-        return NULL;
+	exit(2);
     }
 
     //store this one to cache
@@ -344,7 +344,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const Q
             data.erase(iterator);
 
             if (!attribute->writeAttribute(container->filename, style, style->metaObject()->property(i), orientation)) {
-                qFatal("Failed to write attribute: %s to property %s. The stylesheet syntax might be invalid (%s:%s) in %s.",
+                qCritical("Failed to write attribute: %s to property %s. The stylesheet syntax might be invalid (%s:%s) in %s.",
                        attribute->name.toStdString().c_str(),
                        style->metaObject()->property(i).name(),
                        attribute->name.toStdString().c_str(),

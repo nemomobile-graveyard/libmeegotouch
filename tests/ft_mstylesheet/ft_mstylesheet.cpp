@@ -392,6 +392,15 @@ void Ft_MStyleSheet::test_parent_stylenames()
     MStyleSheet::releaseStyle(style);
 }
 
+void Ft_MStyleSheet::test_wrong_attribute_value()
+{
+    QString app = qApp->applicationDirPath() + "_helper_app/ft_mstylesheet_helper_app";
+    QStringList arguments;
+    arguments << qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_attribute.css";
+    int exit = QProcess::execute(app, arguments);
+    QCOMPARE(exit, 2);
+}
+
 /*
 void Ft_CSS::test_cache_size()
 {

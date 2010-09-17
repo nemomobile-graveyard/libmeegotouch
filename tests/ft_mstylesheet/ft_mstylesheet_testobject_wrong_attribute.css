@@ -1,0 +1,9 @@
+/* 
+ * This file contains an attribute value that is
+ * different from what is expected
+ */
+
+TestObjectStyle
+{
+    attribute-integer: true;
+}

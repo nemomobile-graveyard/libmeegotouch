@@ -66,6 +66,7 @@ private slots:
     void test_types();
     void test_parent();
     void test_parent_stylenames();
+    void test_wrong_attribute_value();
 
     //void test_cache_size();
 

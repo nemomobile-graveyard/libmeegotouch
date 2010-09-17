@@ -10,6 +10,7 @@ SUBDIRS     =  \
     ft_mservicefwgen \
     ft_mstylesheetparser \
     ft_mstylesheet \
+    ft_mstylesheet_helper_app \
     ft_mdialog \
     ft_mprogressindicator \
     ft_mscenemanager \
