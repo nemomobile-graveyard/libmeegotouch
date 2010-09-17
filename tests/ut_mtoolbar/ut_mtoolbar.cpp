@@ -32,8 +32,6 @@
 #include "mtoolbar_p.h"
 
 MApplication *app(NULL);
-// TODO: remove this when unneeded in MTextEdit's constructor
-MApplicationWindow *appWin(NULL);
 
 void Ut_MToolBar::init()
 {
@@ -51,13 +49,12 @@ void Ut_MToolBar::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mtoolbar" };
     app = new MApplication(argc, app_name);
-    appWin = new MApplicationWindow;
 }
 
 void Ut_MToolBar::cleanupTestCase()
 {
-    delete appWin;
     delete app;
+    app = NULL;
 }
 
 void Ut_MToolBar::testConstructor()
@@ -340,13 +337,13 @@ void Ut_MToolBar::testNoLocation()
     MAction *action0 = new MAction("action0", m_subject);
     action0->setCheckable(true);
     action0->setChecked(true);
-    appWin->addAction(action0);
+    m_subject->addAction( action0 );
   
     //Add a widget action
     MTextEdit *textEntry = new MTextEdit();
     MWidgetAction *actionTextEdit = new MWidgetAction(m_subject);
     actionTextEdit->setWidget(textEntry);
-    appWin->addAction(actionTextEdit);
+    m_subject->addAction(actionTextEdit );
 
     QCOMPARE(action0->location(), MAction::EveryLocation);
     QCOMPARE(actionTextEdit->location(), MAction::EveryLocation);
