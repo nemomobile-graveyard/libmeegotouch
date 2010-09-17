@@ -66,6 +66,7 @@ CFG_BUILD_EXAMPLES=no
 M_DEFAULT_BUILD_PARTS="libs demos"
 CFG_BUILD_PARTS=""
 CFG_NOBUILD_PARTS=""
+CFG_DBUS=auto
 CFG_ICU=auto
 CFG_GCONF=auto
 
@@ -124,7 +125,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal|-icu|-gconf)
+        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal|-dbus|-icu|-gconf)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -242,6 +243,13 @@ while [ "$#" -gt 0 ]; do
         ;;
     maemo5)
         IS_MAEMO5="yes"
+        ;;
+    dbus)
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_DBUS="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
         ;;
     icu)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
@@ -406,10 +414,18 @@ if [ $? -eq 0 ]; then
 	HAVE_GSTREAMER=yes
     fi
 
-    pkg-config --exists QtDBus
-    if [ $? -eq 0 ]; then
-	HAVE_DBUS=yes
-    fi    
+    # Test for DBus
+    if [ "$CFG_DBUS" != "no" ]; then
+        pkg-config --exists QtDBus
+        if [ $? -eq 0 ]; then
+	    HAVE_DBUS=yes
+        fi
+        if [ "$CFG_DBUS" = "yes" -a "$HAVE_DBUS" = "no" ]; then
+            echo "You specified  -dbus  but dbus was not found."
+            echo "Please install the DBus and QtDBus packages."
+            exit 1
+        fi
+    fi
 
     pkg-config --exists contentaction-0.1
     if [ $? -eq 0 ]; then
@@ -485,11 +501,14 @@ Additional options:
 
     -maemo5 ............ Build libmeegotouch for the N900 device with maemo5.
 
-    -no-icu ............ Do not compile with ICU support.
- +  -icu ............... Compile with ICU support.
+    -no-dbus ........... Do not compile with DBus support.
+ +  -dbus .............. Compile with DBus support.
 
     -no-gconf .......... Do not compile with gconf support.
  +  -gconf ............. Compile with gconf support.
+
+    -no-icu ............ Do not compile with ICU support.
+ +  -icu ............... Compile with ICU support.
 
     -no-plainqt......... Do not build the Plain Qt style plugin.
  +  -plainqt ........... Build the Plain Qt style plugin.
