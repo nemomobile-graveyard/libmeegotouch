@@ -726,6 +726,7 @@ void QtMaemo6StylePrivate::drawComboBoxButton(QPainter *p,
                                               const QStyleOption *option,
                                               const Qt::LayoutDirection layoutDirection) const
 {
+
     Q_Q(const QtMaemo6Style);
     if (!cbStyle || !liStyle)
         return;
@@ -736,32 +737,42 @@ void QtMaemo6StylePrivate::drawComboBoxButton(QPainter *p,
     paddingFromStyle(liStyle, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
 
     //draw indicator Image
-    MImageWidget indicator;
-    indicator.setImage(cbStyle->indicatorImage());
-    indicator.setObjectName(cbStyle->indicatorObjectName());
+    QPixmap indicator;
+    QString indicatorImageName = cbStyle->indicatorImage();
+    QString cacheKey = QString("%1_%2_%3_%4_%5x%6").arg(reinterpret_cast<quintptr>(p->device()))
+                       .arg(indicatorImageName)
+                       .arg(option ? QtMaemo6StylePrivate::modeFromState(option->state) : "noMode")
+                       .arg("ind")
+                       .arg(rect.width())
+                       .arg(rect.height());
 
-    QSize indicatorSize;
-    if (indicator.pixmap()) {
-        QPixmap indicatorPm = *indicator.pixmap();
+    if (!QPixmapCache::find(cacheKey, indicator) && rect.isValid()) {
 
-        if (indicatorPm.size().width() > rect.width()
-            || indicatorPm.size().height() > rect.height()) {
-            indicatorPm = indicatorPm.scaled(rect.size(), Qt::KeepAspectRatio);
+        QPixmap *pm = MTheme::pixmapCopy(cbStyle->indicatorImage());
+        if (pm) {
+
+            indicator = *pm;
+
+            if (indicator.size().width() > rect.width()
+                || indicator.size().height() > rect.height()) {
+                indicator = indicator.scaled(rect.size(), Qt::KeepAspectRatio);
+            }
+
+            QPixmapCache::insert(cacheKey, indicator);
+
         }
 
-        indicatorSize = indicatorPm.size();
-
-        // there are no padding values for the indicator, so the spacing has to be hardcoded
-        // maybe there is a better way?
-        QRect usedIndicatorRect;
-        if (layoutDirection == Qt::LeftToRight)
-            usedIndicatorRect = rect.adjusted(0, 0, -paddingRight, 0);
-        else
-            usedIndicatorRect = rect.adjusted(paddingRight, 0, 0, 0);
-
-        q->drawItemPixmap(p, usedIndicatorRect, Qt::AlignVCenter | Qt::AlignRight, indicatorPm);
-
     }
+
+    // there are no padding values for the indicator, so the spacing has to be hardcoded
+    // maybe there is a better way?
+    QRect usedIndicatorRect;
+    if (layoutDirection == Qt::LeftToRight)
+        usedIndicatorRect = rect.adjusted(0, 0, -paddingRight, 0);
+    else
+        usedIndicatorRect = rect.adjusted(paddingRight, 0, 0, 0);
+
+    q->drawItemPixmap(p, usedIndicatorRect, Qt::AlignVCenter | Qt::AlignRight, indicator);
 
     //drawText
     if (!currentText.isEmpty()) {
@@ -781,7 +792,7 @@ void QtMaemo6StylePrivate::drawComboBoxButton(QPainter *p,
             textFont =  qApp->font();
         }
 
-        int realPaddingRight = indicatorSize.isValid() ? paddingRight+indicatorSize.width() : paddingRight;
+        int realPaddingRight = indicator.size().isValid() ? paddingRight+indicator.size().width() : paddingRight;
         QRect textRect;
         if (layoutDirection == Qt::LeftToRight)
             textRect = rect.adjusted(paddingLeft, 0, -realPaddingRight, 0);
