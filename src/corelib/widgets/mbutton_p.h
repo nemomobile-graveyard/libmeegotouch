@@ -25,6 +25,8 @@
 class MStyle;
 class MButtonGroup;
 
+#include <QPointer>
+
 class M_EXPORT MButtonPrivate : protected MWidgetControllerPrivate
 {
 public:
@@ -36,7 +38,7 @@ public:
     void init();
     void init(const QString &iconID, const QString &text);
 
-    MButtonGroup *buttonGroup;
+    QPointer<MButtonGroup> buttonGroup;
 };
 
 #endif

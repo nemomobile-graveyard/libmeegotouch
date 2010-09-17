@@ -180,8 +180,6 @@ MToolBarViewPrivate::~MToolBarViewPrivate()
 {
     removeEventFilter(controller);
     if(buttonGroup) {
-        foreach(MButton *button, buttonGroup->buttons())
-            buttonGroup->removeButton(button);
         delete buttonGroup;
         buttonGroup = NULL;
     }
@@ -327,7 +325,7 @@ void MToolBarViewPrivate::change(QAction *action)
         remove(action, false); // I don't think this is possible
         return;
     }
-        
+
     MWidget *widget = q->getWidget(action);
     if (!widget) {
         //We need to add the action
