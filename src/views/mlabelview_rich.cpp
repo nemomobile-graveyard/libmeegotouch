@@ -184,6 +184,7 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
             textDocument.setTextWidth(oldWidth);
         } else {
             size = textDocument.size();
+            size.setWidth(textDocument.idealWidth());
         }
 
         return size;
