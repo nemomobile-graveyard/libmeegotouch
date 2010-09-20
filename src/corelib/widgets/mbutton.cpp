@@ -130,6 +130,7 @@ QIcon MButton::icon() const
 void MButton::setText(const QString &text)
 {
     model()->setText(text);
+    Q_EMIT textChanged();
 }
 
 QString MButton::text() const
