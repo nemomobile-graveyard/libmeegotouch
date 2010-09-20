@@ -68,8 +68,12 @@ protected Q_SLOTS:
     virtual void listPanningStarted();
     virtual void listPanningStopped();
     virtual void visibilityTimerTimeout();
+
     virtual void hideAnimated();
     virtual void showAnimated();
+
+    virtual void startVisibilityTimer();
+    virtual void stopVisibilityTimer();
 
     virtual void exposedContentRectChanged();
 

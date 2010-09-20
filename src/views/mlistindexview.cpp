@@ -223,11 +223,12 @@ void MListIndexViewPrivate::updateDisplayMode()
     switch(controller->displayMode()) {
     case MList::Auto:
         controller->show();
-        hideAnimated();
+        startVisibilityTimer();
         break;
     case MList::Show:
         controller->show();
         showAnimated();
+        stopVisibilityTimer();
         break;
     default:
         controller->hide();
@@ -250,7 +251,7 @@ void MListIndexViewPrivate::listParentChanged()
 
 void MListIndexViewPrivate::listPanningStarted()
 {
-    autoVisibilityTimer.stop();
+    stopVisibilityTimer();
     if (!autoVisibilityAnimation || controller->displayMode() != MList::Auto)
         return;
 
@@ -264,7 +265,7 @@ void MListIndexViewPrivate::listPanningStopped()
         return;
 
     if (!autoVisibilityTimer.isActive())
-        autoVisibilityTimer.start();
+        startVisibilityTimer();
 }
 
 void MListIndexViewPrivate::visibilityTimerTimeout()
@@ -287,6 +288,17 @@ void MListIndexViewPrivate::showAnimated()
         autoVisibilityAnimation->start();
 }
 
+void MListIndexViewPrivate::startVisibilityTimer()
+{
+    if (controllerModel->displayMode() == MList::Auto && !down)
+        autoVisibilityTimer.start();
+}
+
+void MListIndexViewPrivate::stopVisibilityTimer()
+{
+    autoVisibilityTimer.stop();
+}
+
 void MListIndexViewPrivate::exposedContentRectChanged()
 {
     containerRect = container->exposedContentRect();
@@ -299,7 +311,6 @@ MListIndexView::MListIndexView(MListIndex *controller) : MWidgetView(controller)
 
     d->q_ptr = this;
     d->controller = controller;
-    connect(controller, SIGNAL(visibleChanged()), this, SLOT(_q_visibleChanged()));
 }
 
 MListIndexView::~MListIndexView()
@@ -367,7 +378,7 @@ void MListIndexView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     d->scrollToGroupHeader(event->pos().y());
     d->down = true;
     d->listPanningStarted();
-    d->autoVisibilityTimer.stop();
+    d->stopVisibilityTimer();
 
     event->accept();
 }
@@ -378,7 +389,7 @@ void MListIndexView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     MWidgetView::mouseReleaseEvent(event);
 
     d->down = false;
-    d->autoVisibilityTimer.start();
+    d->startVisibilityTimer();
 }
 
 void MListIndexView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -397,7 +408,7 @@ void MListIndexView::cancelEvent(MCancelEvent *event)
     MWidgetView::cancelEvent(event);
 
     d->down = false;
-    d->autoVisibilityTimer.start();
+    d->startVisibilityTimer();
 }
 
 void MListIndexView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
