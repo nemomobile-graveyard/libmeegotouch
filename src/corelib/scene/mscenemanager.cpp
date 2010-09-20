@@ -1595,7 +1595,7 @@ void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
 #ifdef Q_WS_X11
     if ((sceneWindow->sceneWindowState() == MSceneWindow::Appeared ||
          sceneWindow->sceneWindowState() == MSceneWindow::Disappeared) &&
-        sceneWindow->zValue() > MSceneManagerPrivate::EscapeButtonPanel)
+        sceneWindow->zValue() >= MSceneManagerPrivate::EscapeButtonPanel)
     {
         _q_updateDecoratorButtonsProperty();
     }
