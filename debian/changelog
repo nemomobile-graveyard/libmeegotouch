@@ -1,8 +1,8 @@
-libmeegotouch (0.20.44~1) unstable; urgency=low
+libmeegotouch (0.20.43-2) unstable; urgency=low
 
-  * Unreleased
+  * Fixes the ABI/API break and deprecates the default MStyleSheetSelector constructor.
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 20 Sep 2010 11:05:45 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 20 Sep 2010 13:10:00 +0300
 
 libmeegotouch (0.20.43-1) unstable; urgency=low
 
