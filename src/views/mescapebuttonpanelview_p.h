@@ -23,10 +23,10 @@
 #include "mescapebuttonpanelmodel.h"
 #include "animations/mwarpanimation.h"
 #include <QPointer>
+#include <QPropertyAnimation>
 
 class MEscapeButtonPanel;
 class MButton;
-class QTimeLine;
 
 class MEscapeButtonPanelViewPrivate
 {
@@ -35,6 +35,7 @@ class MEscapeButtonPanelViewPrivate
 protected:
 
     void _q_buttonInteracted();
+    void _q_fadeOutAnimationFinished();
 
     MEscapeButtonPanelView *q_ptr;
 
@@ -45,6 +46,7 @@ public:
     virtual void init();
 
     void setupEscapeButtonTransition();
+    void setCloseButtonVisible(bool visible);
 
     MButton *backButton;
     MButton *closeButton;
@@ -53,6 +55,7 @@ public:
     MEscapeButtonPanel *controller;
     QPointer<MWarpAnimation> warpInAnimation;
     QPointer<MWarpAnimation> warpOutAnimation;
+    QPointer<QPropertyAnimation> fadeAnimation;
 
 private:
     void animatedEscapeButtonTransition();

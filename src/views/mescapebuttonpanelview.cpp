@@ -25,9 +25,6 @@
 #include "mdebug.h"
 
 #include <QDebug>
-#include <QPropertyAnimation>
-#include <QParallelAnimationGroup>
-#include <QPauseAnimation>
 
 MEscapeButtonPanelViewPrivate::MEscapeButtonPanelViewPrivate() :
     q_ptr(0),
@@ -42,6 +39,7 @@ MEscapeButtonPanelViewPrivate::~MEscapeButtonPanelViewPrivate()
 {
     delete warpInAnimation;
     delete warpOutAnimation;
+    delete fadeAnimation;
     delete backButton;
     delete closeButton;
 }
@@ -68,6 +66,8 @@ void MEscapeButtonPanelViewPrivate::init()
 
 void MEscapeButtonPanelViewPrivate::animatedEscapeButtonTransition()
 {
+    Q_Q(MEscapeButtonPanelView);
+
     if (warpInAnimation && warpInAnimation->state() == QAbstractAnimation::Running) {
         warpInAnimation->setCurrentTime(warpInAnimation->duration());
         delete warpInAnimation;
@@ -76,33 +76,57 @@ void MEscapeButtonPanelViewPrivate::animatedEscapeButtonTransition()
         warpOutAnimation->setCurrentTime(warpOutAnimation->duration());
         delete warpOutAnimation;
     }
+    if (fadeAnimation && fadeAnimation->state() == QAbstractAnimation::Running) {
+        fadeAnimation->setCurrentTime(fadeAnimation->duration());
+        delete fadeAnimation;
+    }
 
-    switch (escapeMode) {
-    case MEscapeButtonPanelModel::CloseMode:
-        warpInAnimation = new MWarpAnimation(closeButton, MWarpAnimation::InFromLeft, controller);
-        warpOutAnimation = new MWarpAnimation(backButton, MWarpAnimation::OutFromRight, controller);
-        break;
-    case MEscapeButtonPanelModel::BackMode:
-        warpInAnimation = new MWarpAnimation(backButton, MWarpAnimation::InFromRight, controller);
-        warpOutAnimation = new MWarpAnimation(closeButton, MWarpAnimation::OutFromLeft, controller);
-        break;
-    default:
-        mWarning("MEscapeButtonPanelView") << "Unknown mode for escape button transition";
-        break;
-    };
-
-    if (warpInAnimation && warpOutAnimation) {
+    if (q->style()->hasCloseButton()) {
+        switch (escapeMode) {
+        case MEscapeButtonPanelModel::CloseMode:
+            warpInAnimation = new MWarpAnimation(closeButton, MWarpAnimation::InFromLeft, controller);
+            warpOutAnimation = new MWarpAnimation(backButton, MWarpAnimation::OutFromRight, controller);
+            break;
+        case MEscapeButtonPanelModel::BackMode:
+            warpInAnimation = new MWarpAnimation(backButton, MWarpAnimation::InFromRight, controller);
+            warpOutAnimation = new MWarpAnimation(closeButton, MWarpAnimation::OutFromLeft, controller);
+            break;
+        default:
+            mWarning("MEscapeButtonPanelView") << "Unknown mode for escape button transition";
+            break;
+        };
         warpInAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         warpOutAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    } else {
+        fadeAnimation = new QPropertyAnimation(backButton, "opacity", controller);
+        fadeAnimation->setDuration(q->style()->buttonAnimationLength());
+
+        if (escapeMode == MEscapeButtonPanelModel::BackMode) {
+            fadeAnimation->setStartValue(0);
+            fadeAnimation->setEndValue(1);
+        } else {
+            fadeAnimation->setStartValue(1);
+            fadeAnimation->setEndValue(0);
+            q->connect(fadeAnimation, SIGNAL(finished()), SLOT(_q_fadeOutAnimationFinished()));
+        }
+        backButton->show();
+        fadeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }
 
 void MEscapeButtonPanelViewPrivate::immediateEscapeButtonTransition()
 {
+    Q_Q(MEscapeButtonPanelView);
+
     switch (escapeMode) {
     case MEscapeButtonPanelModel::CloseMode:
         backButton->hide();
-        closeButton->show();
+        if (&q->style()) {
+            if (q->style()->hasCloseButton())
+                closeButton->show();
+        } else {
+            closeButton->show();
+        }
         break;
     case MEscapeButtonPanelModel::BackMode:
         closeButton->hide();
@@ -123,10 +147,49 @@ void MEscapeButtonPanelViewPrivate::setupEscapeButtonTransition()
     }
 }
 
+void MEscapeButtonPanelViewPrivate::setCloseButtonVisible(bool visible)
+{
+    Q_Q(MEscapeButtonPanelView);
+
+    if (!controller->isOnDisplay()) {
+        closeButton->setVisible(visible);
+        return;
+    }
+
+    if (fadeAnimation && fadeAnimation->state() == QAbstractAnimation::Running) {
+        fadeAnimation->setCurrentTime(fadeAnimation->duration());
+        delete fadeAnimation;
+    }
+
+    fadeAnimation = new QPropertyAnimation(closeButton, "opacity", controller);
+    fadeAnimation->setDuration(q->style()->buttonAnimationLength());
+    closeButton->show();
+
+    if (visible) {
+        fadeAnimation->setStartValue(0);
+        fadeAnimation->setEndValue(1);
+    } else {
+        fadeAnimation->setStartValue(1);
+        fadeAnimation->setEndValue(0);
+        q->connect(fadeAnimation, SIGNAL(finished()), SLOT(_q_fadeOutAnimationFinished()));
+    }
+
+    fadeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
 void MEscapeButtonPanelViewPrivate::_q_buttonInteracted()
 {
     Q_Q(MEscapeButtonPanelView);
     q->applyStyle();
+}
+
+void MEscapeButtonPanelViewPrivate::_q_fadeOutAnimationFinished()
+{
+    QGraphicsWidget *button = qobject_cast<QGraphicsWidget*>(fadeAnimation->targetObject());
+    if (button) {
+        button->hide();
+        button->setOpacity(1);
+    }
 }
 
 MEscapeButtonPanelView::MEscapeButtonPanelView(MEscapeButtonPanel *controller) :
@@ -160,6 +223,15 @@ void MEscapeButtonPanelView::applyStyle()
     d->backButton->setIconID(style()->backButtonIconId());
     d->closeButton->setObjectName(style()->closeButtonObjectName());
     d->closeButton->setIconID(style()->closeButtonIconId());
+
+    if (d->escapeMode == MEscapeButtonPanelModel::CloseMode) {
+        if (style()->hasCloseButton() && !d->closeButton->isVisible())
+            d->setCloseButtonVisible(true);
+        else if (!style()->hasCloseButton() && d->closeButton->isVisible())
+            d->setCloseButtonVisible(false);
+    }
+
+    d->controller->setProperty("hasCloseButton", style()->hasCloseButton());
 }
 
 void MEscapeButtonPanelView::updateData(const QList<const char *>& modifications)

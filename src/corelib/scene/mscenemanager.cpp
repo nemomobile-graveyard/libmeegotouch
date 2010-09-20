@@ -718,7 +718,11 @@ void MSceneManagerPrivate::_q_updateDecoratorButtonsProperty()
             case MSceneWindow::EscapeButtonPanel:
                 {
                     MEscapeButtonPanel *escapeButtonPanel = static_cast<MEscapeButtonPanel*>(window);
-                    if (escapeButtonPanel->escapeMode() == MEscapeButtonPanelModel::CloseMode) {
+                    QVariant property = escapeButtonPanel->property("hasCloseButton");
+                    bool hasCloseButton = property.isValid() ? property.toBool() : true;
+
+                    if (escapeButtonPanel->escapeMode() == MEscapeButtonPanelModel::CloseMode &&
+                        hasCloseButton) {
                         closeButtonGeometry = window->mapRectToScene(
                                 QRectF(QPointF(),window->geometry().size()));
                     }

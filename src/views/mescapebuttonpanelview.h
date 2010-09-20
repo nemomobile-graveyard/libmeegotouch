@@ -59,6 +59,7 @@ private:
     Q_DECLARE_PRIVATE(MEscapeButtonPanelView)
 
     Q_PRIVATE_SLOT(d_func(), void _q_buttonInteracted())
+    Q_PRIVATE_SLOT(d_func(), void _q_fadeOutAnimationFinished())
 };
 
 #endif // MESCAPEBUTTONPANELVIEW_P

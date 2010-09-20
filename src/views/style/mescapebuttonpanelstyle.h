@@ -27,6 +27,7 @@ class M_EXPORT MEscapeButtonPanelStyle : public MSceneWindowStyle
     Q_OBJECT
     M_STYLE_INTERNAL(MEscapeButtonPanelStyle)
 
+    M_STYLE_ATTRIBUTE(bool, hasCloseButton, HasCloseButton)
     M_STYLE_ATTRIBUTE(int, buttonAnimationLength, ButtonAnimationLength)
     M_STYLE_ATTRIBUTE(QString, backButtonObjectName, BackButtonObjectName)
     M_STYLE_ATTRIBUTE(QString, closeButtonObjectName, CloseButtonObjectName)
