@@ -942,7 +942,7 @@ void QtMaemo6StylePrivate::paddingFromStyle(const MWidgetStyle *style,
     }
 }
 
-QSize QtMaemo6StylePrivate::optimalSizeFromStyle(const MWidgetStyle *style) const
+QSize QtMaemo6StylePrivate::heuristicSizeFromStyle(const MWidgetStyle *style) const
 {
     QSize os;
     if (style) {
@@ -2695,7 +2695,7 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle"));
 
             if(style) {
-                  QSize bs = d->optimalSizeFromStyle(style);
+                  QSize bs = d->heuristicSizeFromStyle(style);
                   if (bs.isValid()) {
                     bs.setWidth(bs.width() + style->marginLeft() + style->marginRight());
                     bs.setHeight(bs.height() + style->marginBottom() + style->marginTop());
@@ -2874,57 +2874,32 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
     case PM_ExclusiveIndicatorWidth:
     case PM_IndicatorWidth: {
 
-        int left = 0;
-        int right = 0;
-        int top = 0;
-        int bottom = 0;
-        int fontSize = 10;
-
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             const MButtonStyle *style =
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(btn->state,
-                                                    "MButtonStyle",
+                                                    "MCheckboxStyle",
                                                     QString(),
                                                     "checkbox"));
 
             if (style) {
-                // Check the recommended border size ...
-                if (style->backgroundImage()) {
-                    style->backgroundImage()->borders(&left, &right, &top, &bottom);
-                }
-                // Use the font size for determining the ideal checkmark height
-                fontSize = style->font().pixelSize();
+                return d->heuristicSizeFromStyle(style).width();
             }
         }
-        return left + 0.8 * fontSize + right;
     }
     break;
     case PM_ExclusiveIndicatorHeight:
     case PM_IndicatorHeight: {
 
-        int left = 0;
-        int right = 0;
-        int top = 0;
-        int bottom = 0;
-        int fontSize = 10;
-
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             const MButtonStyle *style =
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(btn->state,
-                                                    "MButtonStyle",
+                                                    "MCheckboxStyle",
                                                     QString(),
                                                     "checkbox"));
-
             if (style) {
-                // Check the recommended border size ...
-                if (style->backgroundImage()) {
-                    style->backgroundImage()->borders(&left, &right, &top, &bottom);
-                }
-                // Use the font size for determining the ideal checkmark height
-                fontSize = style->font().pixelSize();
+                return d->heuristicSizeFromStyle(style).height();
             }
         }
-        return top + 0.8 * fontSize + bottom;
     }
     break;
     case PM_TabBarScrollButtonWidth:

@@ -315,7 +315,7 @@ public:
      * and preferredSize. This method uses a heuristic to follow m sizes as far as possible
      * \param style the style from which the optimal size is computed
      */
-    QSize optimalSizeFromStyle(const MWidgetStyle *style) const;
+    QSize heuristicSizeFromStyle(const MWidgetStyle *style) const;
 
 
 
