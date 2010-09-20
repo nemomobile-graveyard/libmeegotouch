@@ -1,8 +1,19 @@
-libmeegotouch (0.20.43~1) unstable; urgency=low
+libmeegotouch (0.20.43-1) unstable; urgency=low
 
-  * Preparing 0.20.43
+  * Fixes: NB#192722 - setters/getters for MDialogStyle's has-title-bar does not work and/or exists
+  * Fixes: NB#192723 - setters/getters for MDialogStyle's has-close-button does not work and/or exists
+  * Fixes: NB#191941 - Valgrind - Memory leak in mlabelhighlighter
+  * Fixes: NB#187253 - libmeegotouch allocates large amount of dynamic memory for stylesheets
+  * Fixes: NB#192405 - Empty dock widget when in landscape orientation
+  * Fixes: NB#191358 - <valgrind><MemLeak> Memory leak in MPopupListItem::setIconID()
+  * Fixes: NB#182602 - Modal dialog closes when tapping on inactive (grey) area
+  * Fixes: NB#184502 - [browser-blocker] MLocale must not spin the main loop
+  * Fixes: NB#192268 - MBanner expects the object name to be set to EventBanner, SystemBanner or InformationBanner but this is not documented
+  * Fixes: NB#192375 - Switching from FSM moves down navigation bar (WidgetsGallery)
+  * Fixes: NB#191067 - MButton: Unable to disable the icon.
+  * Fixes: NB#176789 - Loading a specific theme icons / styles when the language is switched (example: arabic ) is not working
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 15 Sep 2010 15:47:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 20 Sep 2010 10:56:45 +0300
 
 libmeegotouch (0.20.42-2) unstable; urgency=low
 
@@ -19,7 +30,6 @@ libmeegotouch (0.20.42-1) unstable; urgency=low
   * Fixes: NB#186723 - Scroll indicator doesn't appear in scrollable views
   * Fixes: NB#188298 - MApplicationWindow should provide isChained() and parentWindowId() APIs
   * Fixes: NB#190336 - Don't create a glWidget for boosted apps on startup
-  * Fixes: NB#190116 - enable switching to software rendering when minimizing the app
   * Fixes: NB#191519 - MListItemView class is not exported
   * Fixes: NB#188672 - Not able to get default Normal text once switched to Bold text
   * Fixes: NB#190336 - boosted applications use more SGX memory pages than non-boosted ones
