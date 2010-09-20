@@ -60,6 +60,28 @@ MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
         const QString &mode,
         const QString &filename,
         const QString &parentName,
+        Flags flags) :
+    d_ptr(new MStyleSheetSelectorPrivate)
+{
+    Q_D(MStyleSheetSelector);
+    d->objName = objectName;
+    d->clName = className;
+    d->clType = classType;
+    d->screenOrientation = orientation;
+    d->objectMode = mode;
+    d->filename = filename;
+    d->parentName = parentName;
+    d->parentObjectName = QString();
+    d->flags = flags;
+}
+
+MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
+        const QString &className,
+        const QString &classType,
+        const QString &orientation,
+        const QString &mode,
+        const QString &filename,
+        const QString &parentName,
         const QString &parentObjectName,
         Flags flags) :
     d_ptr(new MStyleSheetSelectorPrivate)
@@ -75,9 +97,6 @@ MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
     d->parentObjectName = parentObjectName;
     d->flags = flags;
 }
-
-
-
 
 MStyleSheetSelector::MStyleSheetSelector(const MStyleSheetSelector &other) :
     d_ptr(new MStyleSheetSelectorPrivate)

@@ -58,6 +58,7 @@ public:
      * \param child A flag indicating whether this selector represents a descendant or
               direct child of the parent.
      * \param subclasses A flag indicating whether the su
+     * \deprecated Please use the new constructor
      */
 
     explicit MStyleSheetSelector(const QString &objectName = "",
@@ -67,7 +68,32 @@ public:
                                    const QString &mode = "",
                                    const QString &filename = "",
                                    const QString &parentName = "",
-                                   const QString &parentObjectName = "",
+                                   Flags flags = (Flags) 0);
+
+    /*!
+     * MStyleSheetSelector constructor
+     * \param objectName target object name of this selector, can be empty
+     * \param className target class name for this selector, can be empty
+     * \param classType class type
+     * \param orientation target orientation for this selector, can be empty
+     * \param mode target mode for this selector, can be empty
+     * \param filename Name of the css file where this selector was parsed, can be empty.
+              Parameter is used for providing detailed css parsing errors.
+     * \param parentName Name of parent
+     * \param parentObjectName Parent object (style) name
+     * \param child A flag indicating whether this selector represents a descendant or
+              direct child of the parent.
+     * \param subclasses A flag indicating whether the su
+     */
+
+    explicit MStyleSheetSelector(const QString &objectName,
+                                   const QString &className,
+                                   const QString &classType,
+                                   const QString &orientation,
+                                   const QString &mode,
+                                   const QString &filename,
+                                   const QString &parentName,
+                                   const QString &parentObjectName,
                                    Flags flags = (Flags) 0);
 
 
