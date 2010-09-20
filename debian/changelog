@@ -1,3 +1,9 @@
+libmeegotouch (0.20.44~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 20 Sep 2010 11:05:45 +0300
+
 libmeegotouch (0.20.43-1) unstable; urgency=low
 
   * Fixes: NB#192722 - setters/getters for MDialogStyle's has-title-bar does not work and/or exists
