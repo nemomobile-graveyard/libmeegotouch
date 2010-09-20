@@ -249,7 +249,7 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_rich_label">
         <location filename="../labelpage.cpp" line="123"/>
         <source>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</source>
-        <translation>الغنية تسمية &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</translation>
+        <translation>الغنية تسمية &lt;b&gt;جريء&lt;/b&gt;, &lt;i&gt;مائل&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</translation>
     </message>
     <message id="xx_wg_multiple_selection_dialogs_page_question_dialog">
         <location filename="../querydialogspage.cpp" line="227"/>
