@@ -290,8 +290,8 @@ namespace
 
     //! Character set for line break.
     const QString LineBreakSet = QString("\n%1%2")
-        .arg(QChar(0x2028))
-        .arg(QChar(0x2029));
+        .arg(QChar(0x2028))     // line separator
+        .arg(QChar(0x2029));    // paragraph separator
 
     MArrowKeyNavigator gArrowKeyNav;
 }
