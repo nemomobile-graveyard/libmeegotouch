@@ -22,6 +22,7 @@
 
 #include <QTimeLine>
 #include <QElapsedTimer>
+#include <QTimer>
 #include "mwindow.h"
 
 #include <mscenemanager.h>
@@ -82,7 +83,9 @@ public:
 
     void doEnterDisplayEvent();
     void doExitDisplayEvent();
+    void sendExitDisplayEvent(bool delayedSending);
 
+    MOnDisplayChangeEvent *delayedMOnDisplayChangeEvent;
     void propagateMOnDisplayChangeEventToScene(MOnDisplayChangeEvent *event);
 
     void initGLViewport();
@@ -90,8 +93,11 @@ public:
     void configureViewport();
     void playScreenshotEffect();
 
+    void _q_exitDisplayStabilized();
+
     bool onDisplay;
     bool onDisplaySet;
+    QTimer displayExitedTimer;
 
     bool visibleInSwitcher;
     bool fullyObscured;

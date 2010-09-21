@@ -56,6 +56,7 @@
 
 namespace {
     const QString ImagesPath(QDir::homePath() + "/MyDocs/.images");
+    const int DisplayExitedDelay = 1000; //ms.
 }
 
 /// Actual class
@@ -70,8 +71,10 @@ MWindowPrivate::MWindowPrivate() :
     isLogicallyClosed(true),
     isInSwitcher(false),
     closeOnLazyShutdown(false),
+    delayedMOnDisplayChangeEvent(0),
     onDisplay(false),
     onDisplaySet(false),
+    displayExitedTimer(),
     visibleInSwitcher(false),
     fullyObscured(false),
 #ifdef HAVE_GCONF
@@ -98,11 +101,17 @@ MWindowPrivate::MWindowPrivate() :
 
 MWindowPrivate::~MWindowPrivate()
 {
+    delete delayedMOnDisplayChangeEvent;
 }
 
 void MWindowPrivate::init()
 {
     Q_Q(MWindow);
+
+    displayExitedTimer.connect(&displayExitedTimer, SIGNAL(timeout()),
+                               q, SLOT(_q_exitDisplayStabilized()));
+    displayExitedTimer.setInterval(DisplayExitedDelay);
+    displayExitedTimer.setSingleShot(true);
 
 #ifdef HAVE_GCONF
     minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value().toBool();
@@ -427,6 +436,30 @@ void MWindowPrivate::doExitDisplayEvent()
 
     q->exitDisplayEvent();
     emit q->displayExited();
+
+    if (q->scene() && delayedMOnDisplayChangeEvent != 0) {
+        propagateMOnDisplayChangeEventToScene(delayedMOnDisplayChangeEvent);
+        delete delayedMOnDisplayChangeEvent;
+        delayedMOnDisplayChangeEvent = 0;
+    }
+}
+
+void MWindowPrivate::_q_exitDisplayStabilized()
+{
+    doExitDisplayEvent();
+}
+
+void MWindowPrivate::sendExitDisplayEvent(bool delayedSending)
+{
+    Q_Q(MWindow);
+
+    delete delayedMOnDisplayChangeEvent;
+    delayedMOnDisplayChangeEvent = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOffDisplay, q->sceneRect());
+    if (delayedSending) {
+        displayExitedTimer.start();
+    } else {
+        _q_exitDisplayStabilized();
+    }
 }
 
 void MWindowPrivate::propagateMOnDisplayChangeEventToScene(MOnDisplayChangeEvent *event)
@@ -508,6 +541,8 @@ void MWindowPrivate::closeEvent(QCloseEvent *event)
     }
 
     isLogicallyClosed = true;
+
+    sendExitDisplayEvent(false);
 
     if (MApplication::prestartMode() == M::LazyShutdownMultiWindow ||
         MApplication::prestartMode() == M::LazyShutdown) {
@@ -952,24 +987,30 @@ void MWindow::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
     switch (event->state()) {
 
     case MOnDisplayChangeEvent::FullyOnDisplay:
+        d->displayExitedTimer.stop();
         if (!d->onDisplay || !d->onDisplaySet) {
             d->doEnterDisplayEvent();
+            if (scene()) {
+                d->propagateMOnDisplayChangeEventToScene(event);
+            }
         }
         break;
 
     case MOnDisplayChangeEvent::FullyOffDisplay:
         if (d->onDisplay || !d->onDisplaySet) {
-            d->doExitDisplayEvent();
+            // displayEntered signal is emitted immediately above, but
+            // emitting displayExited is delayed by default. Emitting
+            // will be canceled if FullyOnDisplay event is received
+            // during the delay. displayExitedTimer timeout will call
+            // d->doExitDisplayEvent() which will take care of
+            // propagating delayedMOnDisplayChangeEvent to the scene.
+            d->sendExitDisplayEvent(true);
         }
         break;
 
     default:
         event->ignore();
         break;
-    }
-
-    if (scene()) {
-        d->propagateMOnDisplayChangeEventToScene(event);
     }
 }
 
