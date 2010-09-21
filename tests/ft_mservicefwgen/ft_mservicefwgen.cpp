@@ -242,6 +242,7 @@ bool Ft_MServiceFwGen::filesAreTheSame(const QString &filename, const QString &c
         }
 
         bool linesAreIdentical = (newLine == correctLine);
+
         filesAreTheSame = linesAreIdentical;
     } while (filesAreTheSame);
 

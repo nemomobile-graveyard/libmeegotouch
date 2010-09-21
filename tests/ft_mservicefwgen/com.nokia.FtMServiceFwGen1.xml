@@ -34,5 +34,22 @@
     <method name="bug172441" chainTask="true">
     </method>
 
+    <signal name="captureCompleted">
+        <doc>
+            <arg tag="brief">Capturing has been completed</arg>
+            <arg tag="details">
+                This signal is sent when capturing the content has been completed. The
+                parameters returned are a string defining the mode in which the content
+                was captured and a string which contains the file name of the captured content.
+
+                The mode string is one of the strings returned from the enumerateModes
+                method.
+            </arg>
+        </doc>
+        <arg name="mode" type="s" direction="out" />
+        <arg name="fileName" type="s" direction="out" />
+    </signal>
+
+
   </interface>
 </node>

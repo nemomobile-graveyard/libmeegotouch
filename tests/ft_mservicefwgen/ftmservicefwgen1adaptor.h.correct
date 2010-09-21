@@ -61,6 +61,10 @@ class FtMServiceFwGen1Adaptor: public QDBusAbstractAdaptor
 "      <arg direction=\"in\" type=\"u\" name=\"_windowId\"/>\n"
 "      <arg direction=\"in\" type=\"s\" name=\"_taskTitle\"/>\n"
 "    </method>\n"
+"    <signal name=\"captureCompleted\">\n"
+"      <arg direction=\"out\" type=\"s\" name=\"mode\"/>\n"
+"      <arg direction=\"out\" type=\"s\" name=\"fileName\"/>\n"
+"    </signal>\n"
 "  </interface>\n"
         "")
 public:
@@ -76,6 +80,7 @@ public Q_SLOTS: // METHODS
     bool showPage(const QString &targetPage, const QString &previousPage);
     bool showSettings();
 Q_SIGNALS: // SIGNALS
+    void captureCompleted(const QString &mode, const QString &fileName);
 };
 
 }; // namespace

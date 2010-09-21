@@ -45,6 +45,24 @@ public:
     void setService(const QString & service);
 Q_SIGNALS:
 
+    /**
+     * @brief Capturing has been completed
+     * @details 
+                This signal is sent when capturing
+     *  the content has been completed. The
+                parameters
+     *  returned are a string defining the mode in which the content
+
+     *                 was captured and a string which contains
+     *  the file name of the captured content.
+
+               
+     *  The mode string is one of the strings returned from the
+     *  enumerateModes
+                method.
+            
+     */
+    void captureCompleted(const QString &mode, const QString &fileName);
 };
 
 }; // namespace

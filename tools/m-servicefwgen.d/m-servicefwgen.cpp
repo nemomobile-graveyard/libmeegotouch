@@ -867,7 +867,7 @@ QString Worker::mHeaders()
 "\
 #include <Qt> // for Qt::HANDLE\n\
 #include <MApplication>\n\
-#include <MWindow>\n\
+#include <MWindow>\
 ";
 }
 
@@ -986,6 +986,9 @@ void Worker::createConnectSignalCommands( const QStringList& ifSignals, bool for
     QStringList connectSignals;
     for (int thisSignalIndex = 0; thisSignalIndex < ifSignals.size(); ++thisSignalIndex) {
         QString thisSignal = ifSignals.at(thisSignalIndex);
+
+        // need the last line to chop off the documentation
+        thisSignal = thisSignal.split( "\n" ).last();
 
         QString signalName;
         QString signature;
@@ -1359,16 +1362,9 @@ void processAdaptorHeaderFile()
 }
 
 // this method generates the code that is needed for chaining of tasks
-void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxyHeaderStream, bool forQtSfw )
+void doChainTaskHandling( QString &line, bool& inChainTask, QTextStream& newProxyHeaderStream, bool forQtSfw )
 {
-    if (w.needsMApplication() && line.contains(QRegExp("#include <QtDBus/QtDBus>")) && !forQtSfw ) {
-        newProxyHeaderStream << line << "\n\n" << w.mHeaders();
-    }
-    else if (w.needsMApplication() && line.contains(w.newXmlFileName())) {
-        line.replace(w.newXmlFileName(), w.xmlFileName());
-        newProxyHeaderStream << line << "\n";
-    }
-    else if (inChainTask) {
+    if (inChainTask) {
         if (line.contains("QList<QVariant> argumentList;"))
         {
             if ( forQtSfw ) {
@@ -1397,28 +1393,30 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
         else {
             newProxyHeaderStream << line << endl;
         }
-    }
-    else if (line.contains(w.chainTag())) {
+    } else if (line.contains(w.chainTag())) {
         line.remove(w.chainTag());
+        QString outputThisLine = line;
+
         bool hasNoParams = line.endsWith( "()" );
 
         if ( forQtSfw ) {
             if ( hasNoParams ) {
-                line.replace( ")", "const uint _parentWindowId, const QString &_taskTitle)" );
+                outputThisLine.replace( ")", "const uint _parentWindowId, const QString &_taskTitle)" );
             } else {
-                line.replace( ")", ", const uint _parentWindowId, const QString &_taskTitle)" );
+                outputThisLine.replace( ")", ", const uint _parentWindowId, const QString &_taskTitle)" );
             }
         } else {
             if ( hasNoParams ) {
-                line.replace( ")", "const QString &_taskTitle)" );
+                outputThisLine.replace( ")", "const QString &_taskTitle)" );
             } else {
-                line.replace( ")", ", const QString &_taskTitle)" );
+                outputThisLine.replace( ")", ", const QString &_taskTitle)" );
             }
         }
-        newProxyHeaderStream << line << "\n";
+        newProxyHeaderStream << outputThisLine << "\n";
         inChainTask = true;
-    }
-    else {
+    } else {
+        line.remove( w.chainTag() );
+
         newProxyHeaderStream << line << "\n";
     }
 }
@@ -1491,7 +1489,7 @@ void processProxyHeaderFile( bool forQtSfw=false )
         line.replace( w.qdbusxml2cppRegExp(), w.applicationName() );
 
         if (w.hasNameSpace()) {
-            if ( previousLine == "#include <QtDBus/QtDBus>" ) {
+            if ( previousLine.contains(QRegExp("#include <QtDBus/QtDBus>")) ) {
                 // this is the blank line after the forward class declarations, before the beginning of the main class definition
                 newProxyHeaderStream << line << endl;
                 newProxyHeaderStream << "namespace " << w.nameSpace() << " {" << endl;
@@ -1518,7 +1516,8 @@ void processProxyHeaderFile( bool forQtSfw=false )
                 wrapperHeaderStream << w.middleBitH();
             }
         } else if (line.contains( "Command line was:")) {
-          // do nothing - the replacement for this line is output by the above
+            // do nothing - the replacement for this line is output by the above
+            line.chop(1); // remove '\n'
         } else if ( line.contains( w.docTag() ) && !inSignalSection ) {
             // we have to handle doxygen doc here.
             // we have three cases:
@@ -1540,17 +1539,35 @@ void processProxyHeaderFile( bool forQtSfw=false )
                     }
                 }
             }
-
-            // remove docTag with possible number suffix
-            w.removeDocTag( line );
         }
 
         line.remove(w.asyncTag());
 
+        if (w.needsMApplication()) {
+            if (line.contains(QRegExp("#include <QtDBus/QtDBus>")) && !forQtSfw ) {
+                line += QString( "\n\n" ) += w.mHeaders();
+            } else if (line.contains(w.newXmlFileName())) {
+                line.replace(w.newXmlFileName(), w.xmlFileName());
+                line += "\n";
+            }
+        }
+
+        int docId=0;
+        if (inSignalSection) {
+            // method docs
+            QRegExp rx( w.docTag() + "(\\d+)" );
+
+            // do the match
+            if ( rx.indexIn( line ) != -1) {
+                docId = rx.cap( 1 ).toInt();
+            }
+        }
+
+        // remove docTag with possible number suffix
+        w.removeDocTag( line );
+
         // add chaining code to NEWPROXY
         doChainTaskHandling( line, inChainTask, newProxyHeaderStream, forQtSfw );
-
-        line.remove( w.chainTag() );
 
         if (inSignalSection) {
             bool atEndOfSignalSection = (line == "};");
@@ -1558,26 +1575,17 @@ void processProxyHeaderFile( bool forQtSfw=false )
                 inSignalSection = false;
             } else {
                 QString lineWithDoc = "";
-                // method docs
-                QRegExp rx( w.docTag() + "(\\d+)" );
 
-                // do the match
-                if ( rx.indexIn( line ) != -1) {
-                    int id = rx.cap( 1 ).toInt();
-
-                    if ( id > 0 ) {
-                        lineWithDoc = w.mangledMethodDoc( id );
-                    }
+                if ( docId > 0 ) {
+                    lineWithDoc = w.mangledMethodDoc( docId );
                 }
-
-                // remove docTag with possible number suffix
-                w.removeDocTag( line );
 
                 lineWithDoc += line;
 
                 ifSignals.append(lineWithDoc);
             }
         } else {
+
             if (line.contains("Q_SIGNALS:")) {
                 inSignalSection = true;
             } else {

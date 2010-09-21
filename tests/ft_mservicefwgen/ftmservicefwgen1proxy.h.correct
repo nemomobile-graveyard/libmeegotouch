@@ -101,6 +101,7 @@ public Q_SLOTS: // METHODS
     }
 
 Q_SIGNALS: // SIGNALS
+    void captureCompleted(const QString &mode, const QString &fileName);
 };
 
 namespace com {

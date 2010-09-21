@@ -64,6 +64,8 @@ FtMServiceFwGen1::FtMServiceFwGen1( const QString& preferredService, QObject* pa
         // Construct the D-Bus proxy
         setInterfaceProxy( new FtMServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
         // allConnectSignals go here (empty block if none)
+    connect( interfaceProxy(), SIGNAL( captureCompleted( const QString &, const QString & ) ),
+             this, SIGNAL( captureCompleted( const QString &, const QString & ) ) );
 
     }
 }
@@ -75,6 +77,8 @@ void FtMServiceFwGen1::setService(const QString & service)
     setServiceName( service );
     setInterfaceProxy( new FtMServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
     {
+    connect( interfaceProxy(), SIGNAL( captureCompleted( const QString &, const QString & ) ),
+             this, SIGNAL( captureCompleted( const QString &, const QString & ) ) );
 
     }
 }
