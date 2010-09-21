@@ -840,5 +840,31 @@ QSizeF Ut_MLabel::requiredTextSize(const QString &text, const QFont &font,
     return requiredSize;
 }
 
+QImage Ut_MLabel::captureText(Qt::TextFormat textFormat, QString text)
+{
+    label->setTextFormat(textFormat);
+    label->setText(text);
+    
+    return captureImage(label);
+}
+
+void Ut_MLabel::testAutoTextModeRecognizesPlainText()
+{
+    QString plainText("text");
+    QCOMPARE(captureText(Qt::AutoText, plainText), captureText(Qt::PlainText, plainText));
+}
+
+void Ut_MLabel::testAutoTextModeRecognizesRichText()
+{
+    QString richText("<b>text</b>");
+    QCOMPARE(captureText(Qt::AutoText, richText), captureText(Qt::RichText, richText));
+}
+
+void Ut_MLabel::testPlainAndRichTextModes()
+{
+    QString richText("<b>text</b>");
+    QVERIFY2(captureText(Qt::PlainText, richText) != captureText(Qt::RichText, richText), 
+             "Plain text mode renders rich text differently");
+}
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

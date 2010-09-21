@@ -194,8 +194,9 @@ public:
     const MLabelStyle *style() const;
     const QRectF boundingRect() const;
 
-    bool isRichText(QString text) const;
-
+    //Should label be rendered as rich text
+    bool displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const;
+    
     // need define this for there are overload functions in controller
     MLabel *controller;
 

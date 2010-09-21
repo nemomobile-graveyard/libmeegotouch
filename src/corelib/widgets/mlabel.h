@@ -170,6 +170,17 @@ class M_EXPORT MLabel : public MWidgetController
     */
     Q_PROPERTY(QColor color READ color WRITE setColor)
 
+    /*!
+        \property MLabel::textFormat
+        \brief Format the label text is displayed in.
+        
+        This property is used for deciding whether a text string should be interpreted as plain text 
+        or rich text. Supported text formats are Qt::PlainText, Qt::RichText and Qt::AutoText.
+        The default format is Qt::AutoText, which causes MLabel to guess the format of the text
+        on a case-by-case basis.
+    */    
+    Q_PROPERTY(Qt::TextFormat textFormat READ textFormat WRITE setTextFormat);
+
 public:
     
     /*!
@@ -321,6 +332,27 @@ public:
         \sa MLabelHighlighter
     */
     void removeAllHighlighters();
+
+    /*!
+        \brief Set text format.
+
+        This function sets the format in which the label text is displayed. Calling this 
+        function with Qt::PlainText or Qt::RichText is used to turn off auto-recognition of 
+        text format, calling with Qt::AutoText turns auto-recognition back on.
+    */
+    void setTextFormat(Qt::TextFormat textFormat);
+
+    /*!
+      \brief Returns the text format.
+      
+      This method returns the format in which MLabel displays its text. Note that 
+      this function does not give information about the actual format of the label text string,
+      only about the way it is displayed.
+
+      \return text format
+    */
+    Qt::TextFormat textFormat() const;
+    
 
 public Q_SLOTS:
 
