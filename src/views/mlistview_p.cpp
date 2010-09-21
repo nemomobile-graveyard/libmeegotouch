@@ -66,7 +66,6 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
 
 MListViewPrivate::~MListViewPrivate()
 {
-    clearVisibleItemsArray();
     if(controllerModel)
         clearFirstAndLastVisibleRows();
 
