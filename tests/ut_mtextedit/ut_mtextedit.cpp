@@ -771,14 +771,18 @@ void Ut_MTextEdit::testMaxLength_data()
     QString longText(
         "This test checks that maxLength property of MTextEdit trims\n\n"
         "the text as expected.\nasdfasdf\n\nasdfasd");
-    MTextEditModel::LineMode lineModes[2] = {MTextEditModel::SingleLine, MTextEditModel::MultiLine};
-    for (int i = 0; i < 2; ++i) {
-        QTest::newRow("too short") << lineModes[i] << -5 << longText;
-        QTest::newRow("zero")      << lineModes[i] <<  0 << longText;
-        QTest::newRow("short")     << lineModes[i] <<  5 << longText;
-        QTest::newRow("long")      << lineModes[i] << (longText.length() - 5) << longText;
-        QTest::newRow("too long")  << lineModes[i] << (longText.length() + 5) << longText;
-    }
+
+    QTest::newRow("sl: too short") << MTextEditModel::SingleLine << -5 << longText;
+    QTest::newRow("sl: zero")      << MTextEditModel::SingleLine <<  0 << longText;
+    QTest::newRow("sl: short")     << MTextEditModel::SingleLine <<  5 << longText;
+    QTest::newRow("sl: long")      << MTextEditModel::SingleLine << (longText.length() - 5) << longText;
+    QTest::newRow("sl: too long")  << MTextEditModel::SingleLine << (longText.length() + 5) << longText;
+
+    QTest::newRow("ml: too short") << MTextEditModel::MultiLine << -5 << longText;
+    QTest::newRow("ml: zero")      << MTextEditModel::MultiLine <<  0 << longText;
+    QTest::newRow("ml: short")     << MTextEditModel::MultiLine <<  5 << longText;
+    QTest::newRow("ml: long")      << MTextEditModel::MultiLine << (longText.length() - 5) << longText;
+    QTest::newRow("ml: too long")  << MTextEditModel::MultiLine << (longText.length() + 5) << longText;
 }
 
 void Ut_MTextEdit::testMaxLength()
@@ -791,6 +795,7 @@ void Ut_MTextEdit::testMaxLength()
     const int initialMaxLength = subject.maxLength();
 
     for (int i = 0; i < 3; ++i) {
+        qDebug() << "case nr." << i << ".................";
         subject.clear();
         subject.setMaxLength(initialMaxLength);
 
