@@ -3578,6 +3578,364 @@ ca_ES	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE d
 ca_ES	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM 'de' y H:mm:ss z -> dilluns 18 Rajab de 1429 14:31:00 GMT+00:00
 ca_ES	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d MMMM 'de' y h:mm:ss a zzzz -> dilluns 18 Rajab de 1429 2:31:00 p.m. GMT+00:00
 ca_ES	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM 'de' y H:mm:ss zzzz -> dilluns 18 Rajab de 1429 14:31:00 GMT+00:00
+cs	Language endonym	čeština
+cs	Country endonym	
+cs	Floating Point Number	-123 456 789,012
+cs	Percent value	-1 234,5679 %
+cs	Currency value	1 234,56 €
+cs	Negative Currency value	-1 234,56 €
+cs	Name of month 01 (Gregorian Calendar)	leden
+cs	Name of month 02 (Gregorian Calendar)	únor
+cs	Name of month 03 (Gregorian Calendar)	březen
+cs	Name of month 04 (Gregorian Calendar)	duben
+cs	Name of month 05 (Gregorian Calendar)	květen
+cs	Name of month 06 (Gregorian Calendar)	červen
+cs	Name of month 07 (Gregorian Calendar)	červenec
+cs	Name of month 08 (Gregorian Calendar)	srpen
+cs	Name of month 09 (Gregorian Calendar)	září
+cs	Name of month 10 (Gregorian Calendar)	říjen
+cs	Name of month 11 (Gregorian Calendar)	listopad
+cs	Name of month 12 (Gregorian Calendar)	prosinec
+cs	Name of month 01 (Islamic Calendar)	Muharram
+cs	Name of month 02 (Islamic Calendar)	Safar
+cs	Name of month 03 (Islamic Calendar)	Rabiʻ I
+cs	Name of month 04 (Islamic Calendar)	Rabiʻ II
+cs	Name of month 05 (Islamic Calendar)	Jumada I
+cs	Name of month 06 (Islamic Calendar)	Jumada II
+cs	Name of month 07 (Islamic Calendar)	Rajab
+cs	Name of month 08 (Islamic Calendar)	Shaʻban
+cs	Name of month 09 (Islamic Calendar)	Ramadan
+cs	Name of month 10 (Islamic Calendar)	Shawwal
+cs	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
+cs	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
+cs	Name of weekday 01 (Gregorian Calendar), stand-alone, wide	pondělí
+cs	Name of weekday 02 (Gregorian Calendar), stand-alone, wide	úterý
+cs	Name of weekday 03 (Gregorian Calendar), stand-alone, wide	středa
+cs	Name of weekday 04 (Gregorian Calendar), stand-alone, wide	čtvrtek
+cs	Name of weekday 05 (Gregorian Calendar), stand-alone, wide	pátek
+cs	Name of weekday 06 (Gregorian Calendar), stand-alone, wide	sobota
+cs	Name of weekday 07 (Gregorian Calendar), stand-alone, wide	neděle
+cs	Name of weekday 01 (Gregorian Calendar), stand-alone, abbreviated	po
+cs	Name of weekday 02 (Gregorian Calendar), stand-alone, abbreviated	út
+cs	Name of weekday 03 (Gregorian Calendar), stand-alone, abbreviated	st
+cs	Name of weekday 04 (Gregorian Calendar), stand-alone, abbreviated	čt
+cs	Name of weekday 05 (Gregorian Calendar), stand-alone, abbreviated	pá
+cs	Name of weekday 06 (Gregorian Calendar), stand-alone, abbreviated	so
+cs	Name of weekday 07 (Gregorian Calendar), stand-alone, abbreviated	ne
+cs	Name of weekday 01 (Gregorian Calendar), stand-alone, narrow	P
+cs	Name of weekday 02 (Gregorian Calendar), stand-alone, narrow	Ú
+cs	Name of weekday 03 (Gregorian Calendar), stand-alone, narrow	S
+cs	Name of weekday 04 (Gregorian Calendar), stand-alone, narrow	Č
+cs	Name of weekday 05 (Gregorian Calendar), stand-alone, narrow	P
+cs	Name of weekday 06 (Gregorian Calendar), stand-alone, narrow	S
+cs	Name of weekday 07 (Gregorian Calendar), stand-alone, narrow	N
+cs	Name of weekday 01 (Gregorian Calendar), format, wide	pondělí
+cs	Name of weekday 02 (Gregorian Calendar), format, wide	úterý
+cs	Name of weekday 03 (Gregorian Calendar), format, wide	středa
+cs	Name of weekday 04 (Gregorian Calendar), format, wide	čtvrtek
+cs	Name of weekday 05 (Gregorian Calendar), format, wide	pátek
+cs	Name of weekday 06 (Gregorian Calendar), format, wide	sobota
+cs	Name of weekday 07 (Gregorian Calendar), format, wide	neděle
+cs	Name of weekday 01 (Gregorian Calendar), format, abbreviated	po
+cs	Name of weekday 02 (Gregorian Calendar), format, abbreviated	út
+cs	Name of weekday 03 (Gregorian Calendar), format, abbreviated	st
+cs	Name of weekday 04 (Gregorian Calendar), format, abbreviated	čt
+cs	Name of weekday 05 (Gregorian Calendar), format, abbreviated	pá
+cs	Name of weekday 06 (Gregorian Calendar), format, abbreviated	so
+cs	Name of weekday 07 (Gregorian Calendar), format, abbreviated	ne
+cs	Name of weekday 01 (Gregorian Calendar), format, narrow	P
+cs	Name of weekday 02 (Gregorian Calendar), format, narrow	Ú
+cs	Name of weekday 03 (Gregorian Calendar), format, narrow	S
+cs	Name of weekday 04 (Gregorian Calendar), format, narrow	Č
+cs	Name of weekday 05 (Gregorian Calendar), format, narrow	P
+cs	Name of weekday 06 (Gregorian Calendar), format, narrow	S
+cs	Name of weekday 07 (Gregorian Calendar), format, narrow	N
+cs	Name of weekday 01 (Islamic Calendar)	pondělí
+cs	Name of weekday 02 (Islamic Calendar)	úterý
+cs	Name of weekday 03 (Islamic Calendar)	středa
+cs	Name of weekday 04 (Islamic Calendar)	čtvrtek
+cs	Name of weekday 05 (Islamic Calendar)	pátek
+cs	Name of weekday 06 (Islamic Calendar)	sobota
+cs	Name of weekday 07 (Islamic Calendar)	neděle
+cs	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+cs	Scripts used	Latn
+cs	%r (locale specific 12 hour “TimeShort”)	2:31 odp.
+cs	%R (locale specific 24 hour “TimeShort”)	14:31
+cs	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 odp.
+cs	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+cs	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 odp.
+cs	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+cs	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 odp. GMT+00:00
+cs	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 GMT+00:00
+cs	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 odp. GMT+00:00
+cs	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 GMT+00:00
+cs	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy -> 21.7.08
+cs	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy -> 21.7.08
+cs	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm a -> 21.7.08 2:31 odp.
+cs	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm -> 21.7.08 14:31
+cs	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a -> 21.7.08 2:31:00 odp.
+cs	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss -> 21.7.08 14:31:00
+cs	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a z -> 21.7.08 2:31:00 odp. GMT+00:00
+cs	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss z -> 21.7.08 14:31:00 GMT+00:00
+cs	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a zzzz -> 21.7.08 2:31:00 odp. GMT+00:00
+cs	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss zzzz -> 21.7.08 14:31:00 GMT+00:00
+cs	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy -> 21.7.2008
+cs	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 21.7.2008
+cs	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 21.7.2008 2:31 odp.
+cs	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 21.7.2008 14:31
+cs	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 21.7.2008 2:31:00 odp.
+cs	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 21.7.2008 14:31:00
+cs	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 21.7.2008 2:31:00 odp. GMT+00:00
+cs	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 21.7.2008 14:31:00 GMT+00:00
+cs	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 21.7.2008 2:31:00 odp. GMT+00:00
+cs	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 21.7.2008 14:31:00 GMT+00:00
+cs	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y -> 21. července 2008
+cs	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 21. července 2008
+cs	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 21. července 2008 2:31 odp.
+cs	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 21. července 2008 14:31
+cs	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 21. července 2008 2:31:00 odp.
+cs	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 21. července 2008 14:31:00
+cs	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 21. července 2008 2:31:00 odp. GMT+00:00
+cs	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 21. července 2008 14:31:00 GMT+00:00
+cs	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 21. července 2008 2:31:00 odp. GMT+00:00
+cs	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 21. července 2008 14:31:00 GMT+00:00
+cs	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y -> pondělí, 21. července 2008
+cs	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y -> pondělí, 21. července 2008
+cs	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm a -> pondělí, 21. července 2008 2:31 odp.
+cs	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm -> pondělí, 21. července 2008 14:31
+cs	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a -> pondělí, 21. července 2008 2:31:00 odp.
+cs	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss -> pondělí, 21. července 2008 14:31:00
+cs	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a z -> pondělí, 21. července 2008 2:31:00 odp. GMT+00:00
+cs	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss z -> pondělí, 21. července 2008 14:31:00 GMT+00:00
+cs	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a zzzz -> pondělí, 21. července 2008 2:31:00 odp. GMT+00:00
+cs	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss zzzz -> pondělí, 21. července 2008 14:31:00 GMT+00:00
+cs	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 odp.
+cs	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+cs	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 odp.
+cs	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+cs	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 odp. GMT+00:00
+cs	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 GMT+00:00
+cs	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 odp. GMT+00:00
+cs	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 GMT+00:00
+cs	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yy -> 18.7.29
+cs	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy -> 18.7.29
+cs	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm a -> 18.7.29 2:31 odp.
+cs	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm -> 18.7.29 14:31
+cs	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a -> 18.7.29 2:31:00 odp.
+cs	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss -> 18.7.29 14:31:00
+cs	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a z -> 18.7.29 2:31:00 odp. GMT+00:00
+cs	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss z -> 18.7.29 14:31:00 GMT+00:00
+cs	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a zzzz -> 18.7.29 2:31:00 odp. GMT+00:00
+cs	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss zzzz -> 18.7.29 14:31:00 GMT+00:00
+cs	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
+cs	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
+cs	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 odp.
+cs	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
+cs	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 odp.
+cs	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
+cs	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 odp. GMT+00:00
+cs	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 GMT+00:00
+cs	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 odp. GMT+00:00
+cs	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 GMT+00:00
+cs	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y -> 18. Rajab 1429
+cs	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 18. Rajab 1429
+cs	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 18. Rajab 1429 2:31 odp.
+cs	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 18. Rajab 1429 14:31
+cs	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 18. Rajab 1429 2:31:00 odp.
+cs	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 18. Rajab 1429 14:31:00
+cs	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 18. Rajab 1429 14:31:00 GMT+00:00
+cs	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 18. Rajab 1429 14:31:00 GMT+00:00
+cs	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y -> pondělí, 18. Rajab 1429
+cs	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y -> pondělí, 18. Rajab 1429
+cs	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm a -> pondělí, 18. Rajab 1429 2:31 odp.
+cs	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm -> pondělí, 18. Rajab 1429 14:31
+cs	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a -> pondělí, 18. Rajab 1429 2:31:00 odp.
+cs	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss -> pondělí, 18. Rajab 1429 14:31:00
+cs	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a z -> pondělí, 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss z -> pondělí, 18. Rajab 1429 14:31:00 GMT+00:00
+cs	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a zzzz -> pondělí, 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss zzzz -> pondělí, 18. Rajab 1429 14:31:00 GMT+00:00
+cs_CZ	Language endonym	čeština
+cs_CZ	Country endonym	Česká republika
+cs_CZ	Floating Point Number	-123 456 789,012
+cs_CZ	Percent value	-1 234,5679 %
+cs_CZ	Currency value	1 234,56 €
+cs_CZ	Negative Currency value	-1 234,56 €
+cs_CZ	Name of month 01 (Gregorian Calendar)	leden
+cs_CZ	Name of month 02 (Gregorian Calendar)	únor
+cs_CZ	Name of month 03 (Gregorian Calendar)	březen
+cs_CZ	Name of month 04 (Gregorian Calendar)	duben
+cs_CZ	Name of month 05 (Gregorian Calendar)	květen
+cs_CZ	Name of month 06 (Gregorian Calendar)	červen
+cs_CZ	Name of month 07 (Gregorian Calendar)	červenec
+cs_CZ	Name of month 08 (Gregorian Calendar)	srpen
+cs_CZ	Name of month 09 (Gregorian Calendar)	září
+cs_CZ	Name of month 10 (Gregorian Calendar)	říjen
+cs_CZ	Name of month 11 (Gregorian Calendar)	listopad
+cs_CZ	Name of month 12 (Gregorian Calendar)	prosinec
+cs_CZ	Name of month 01 (Islamic Calendar)	Muharram
+cs_CZ	Name of month 02 (Islamic Calendar)	Safar
+cs_CZ	Name of month 03 (Islamic Calendar)	Rabiʻ I
+cs_CZ	Name of month 04 (Islamic Calendar)	Rabiʻ II
+cs_CZ	Name of month 05 (Islamic Calendar)	Jumada I
+cs_CZ	Name of month 06 (Islamic Calendar)	Jumada II
+cs_CZ	Name of month 07 (Islamic Calendar)	Rajab
+cs_CZ	Name of month 08 (Islamic Calendar)	Shaʻban
+cs_CZ	Name of month 09 (Islamic Calendar)	Ramadan
+cs_CZ	Name of month 10 (Islamic Calendar)	Shawwal
+cs_CZ	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
+cs_CZ	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
+cs_CZ	Name of weekday 01 (Gregorian Calendar), stand-alone, wide	pondělí
+cs_CZ	Name of weekday 02 (Gregorian Calendar), stand-alone, wide	úterý
+cs_CZ	Name of weekday 03 (Gregorian Calendar), stand-alone, wide	středa
+cs_CZ	Name of weekday 04 (Gregorian Calendar), stand-alone, wide	čtvrtek
+cs_CZ	Name of weekday 05 (Gregorian Calendar), stand-alone, wide	pátek
+cs_CZ	Name of weekday 06 (Gregorian Calendar), stand-alone, wide	sobota
+cs_CZ	Name of weekday 07 (Gregorian Calendar), stand-alone, wide	neděle
+cs_CZ	Name of weekday 01 (Gregorian Calendar), stand-alone, abbreviated	po
+cs_CZ	Name of weekday 02 (Gregorian Calendar), stand-alone, abbreviated	út
+cs_CZ	Name of weekday 03 (Gregorian Calendar), stand-alone, abbreviated	st
+cs_CZ	Name of weekday 04 (Gregorian Calendar), stand-alone, abbreviated	čt
+cs_CZ	Name of weekday 05 (Gregorian Calendar), stand-alone, abbreviated	pá
+cs_CZ	Name of weekday 06 (Gregorian Calendar), stand-alone, abbreviated	so
+cs_CZ	Name of weekday 07 (Gregorian Calendar), stand-alone, abbreviated	ne
+cs_CZ	Name of weekday 01 (Gregorian Calendar), stand-alone, narrow	P
+cs_CZ	Name of weekday 02 (Gregorian Calendar), stand-alone, narrow	Ú
+cs_CZ	Name of weekday 03 (Gregorian Calendar), stand-alone, narrow	S
+cs_CZ	Name of weekday 04 (Gregorian Calendar), stand-alone, narrow	Č
+cs_CZ	Name of weekday 05 (Gregorian Calendar), stand-alone, narrow	P
+cs_CZ	Name of weekday 06 (Gregorian Calendar), stand-alone, narrow	S
+cs_CZ	Name of weekday 07 (Gregorian Calendar), stand-alone, narrow	N
+cs_CZ	Name of weekday 01 (Gregorian Calendar), format, wide	pondělí
+cs_CZ	Name of weekday 02 (Gregorian Calendar), format, wide	úterý
+cs_CZ	Name of weekday 03 (Gregorian Calendar), format, wide	středa
+cs_CZ	Name of weekday 04 (Gregorian Calendar), format, wide	čtvrtek
+cs_CZ	Name of weekday 05 (Gregorian Calendar), format, wide	pátek
+cs_CZ	Name of weekday 06 (Gregorian Calendar), format, wide	sobota
+cs_CZ	Name of weekday 07 (Gregorian Calendar), format, wide	neděle
+cs_CZ	Name of weekday 01 (Gregorian Calendar), format, abbreviated	po
+cs_CZ	Name of weekday 02 (Gregorian Calendar), format, abbreviated	út
+cs_CZ	Name of weekday 03 (Gregorian Calendar), format, abbreviated	st
+cs_CZ	Name of weekday 04 (Gregorian Calendar), format, abbreviated	čt
+cs_CZ	Name of weekday 05 (Gregorian Calendar), format, abbreviated	pá
+cs_CZ	Name of weekday 06 (Gregorian Calendar), format, abbreviated	so
+cs_CZ	Name of weekday 07 (Gregorian Calendar), format, abbreviated	ne
+cs_CZ	Name of weekday 01 (Gregorian Calendar), format, narrow	P
+cs_CZ	Name of weekday 02 (Gregorian Calendar), format, narrow	Ú
+cs_CZ	Name of weekday 03 (Gregorian Calendar), format, narrow	S
+cs_CZ	Name of weekday 04 (Gregorian Calendar), format, narrow	Č
+cs_CZ	Name of weekday 05 (Gregorian Calendar), format, narrow	P
+cs_CZ	Name of weekday 06 (Gregorian Calendar), format, narrow	S
+cs_CZ	Name of weekday 07 (Gregorian Calendar), format, narrow	N
+cs_CZ	Name of weekday 01 (Islamic Calendar)	pondělí
+cs_CZ	Name of weekday 02 (Islamic Calendar)	úterý
+cs_CZ	Name of weekday 03 (Islamic Calendar)	středa
+cs_CZ	Name of weekday 04 (Islamic Calendar)	čtvrtek
+cs_CZ	Name of weekday 05 (Islamic Calendar)	pátek
+cs_CZ	Name of weekday 06 (Islamic Calendar)	sobota
+cs_CZ	Name of weekday 07 (Islamic Calendar)	neděle
+cs_CZ	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+cs_CZ	Scripts used	Latn
+cs_CZ	%r (locale specific 12 hour “TimeShort”)	2:31 odp.
+cs_CZ	%R (locale specific 24 hour “TimeShort”)	14:31
+cs_CZ	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 odp.
+cs_CZ	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+cs_CZ	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 odp.
+cs_CZ	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+cs_CZ	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 odp. GMT+00:00
+cs_CZ	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 GMT+00:00
+cs_CZ	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 odp. GMT+00:00
+cs_CZ	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 GMT+00:00
+cs_CZ	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy -> 21.7.08
+cs_CZ	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy -> 21.7.08
+cs_CZ	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm a -> 21.7.08 2:31 odp.
+cs_CZ	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm -> 21.7.08 14:31
+cs_CZ	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a -> 21.7.08 2:31:00 odp.
+cs_CZ	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss -> 21.7.08 14:31:00
+cs_CZ	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a z -> 21.7.08 2:31:00 odp. GMT+00:00
+cs_CZ	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss z -> 21.7.08 14:31:00 GMT+00:00
+cs_CZ	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a zzzz -> 21.7.08 2:31:00 odp. GMT+00:00
+cs_CZ	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss zzzz -> 21.7.08 14:31:00 GMT+00:00
+cs_CZ	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy -> 21.7.2008
+cs_CZ	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 21.7.2008
+cs_CZ	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 21.7.2008 2:31 odp.
+cs_CZ	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 21.7.2008 14:31
+cs_CZ	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 21.7.2008 2:31:00 odp.
+cs_CZ	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 21.7.2008 14:31:00
+cs_CZ	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 21.7.2008 2:31:00 odp. GMT+00:00
+cs_CZ	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 21.7.2008 14:31:00 GMT+00:00
+cs_CZ	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 21.7.2008 2:31:00 odp. GMT+00:00
+cs_CZ	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 21.7.2008 14:31:00 GMT+00:00
+cs_CZ	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y -> 21. července 2008
+cs_CZ	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 21. července 2008
+cs_CZ	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 21. července 2008 2:31 odp.
+cs_CZ	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 21. července 2008 14:31
+cs_CZ	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 21. července 2008 2:31:00 odp.
+cs_CZ	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 21. července 2008 14:31:00
+cs_CZ	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 21. července 2008 2:31:00 odp. GMT+00:00
+cs_CZ	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 21. července 2008 14:31:00 GMT+00:00
+cs_CZ	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 21. července 2008 2:31:00 odp. GMT+00:00
+cs_CZ	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 21. července 2008 14:31:00 GMT+00:00
+cs_CZ	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y -> pondělí, 21. července 2008
+cs_CZ	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y -> pondělí, 21. července 2008
+cs_CZ	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm a -> pondělí, 21. července 2008 2:31 odp.
+cs_CZ	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm -> pondělí, 21. července 2008 14:31
+cs_CZ	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a -> pondělí, 21. července 2008 2:31:00 odp.
+cs_CZ	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss -> pondělí, 21. července 2008 14:31:00
+cs_CZ	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a z -> pondělí, 21. července 2008 2:31:00 odp. GMT+00:00
+cs_CZ	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss z -> pondělí, 21. července 2008 14:31:00 GMT+00:00
+cs_CZ	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a zzzz -> pondělí, 21. července 2008 2:31:00 odp. GMT+00:00
+cs_CZ	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss zzzz -> pondělí, 21. července 2008 14:31:00 GMT+00:00
+cs_CZ	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 odp.
+cs_CZ	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+cs_CZ	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 odp.
+cs_CZ	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+cs_CZ	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 odp. GMT+00:00
+cs_CZ	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 GMT+00:00
+cs_CZ	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 odp. GMT+00:00
+cs_CZ	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 GMT+00:00
+cs_CZ	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yy -> 18.7.29
+cs_CZ	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy -> 18.7.29
+cs_CZ	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm a -> 18.7.29 2:31 odp.
+cs_CZ	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm -> 18.7.29 14:31
+cs_CZ	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a -> 18.7.29 2:31:00 odp.
+cs_CZ	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss -> 18.7.29 14:31:00
+cs_CZ	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a z -> 18.7.29 2:31:00 odp. GMT+00:00
+cs_CZ	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss z -> 18.7.29 14:31:00 GMT+00:00
+cs_CZ	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yy h:mm:ss a zzzz -> 18.7.29 2:31:00 odp. GMT+00:00
+cs_CZ	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yy H:mm:ss zzzz -> 18.7.29 14:31:00 GMT+00:00
+cs_CZ	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
+cs_CZ	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
+cs_CZ	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 odp.
+cs_CZ	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
+cs_CZ	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 odp.
+cs_CZ	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
+cs_CZ	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 odp. GMT+00:00
+cs_CZ	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 GMT+00:00
+cs_CZ	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 odp. GMT+00:00
+cs_CZ	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 GMT+00:00
+cs_CZ	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y -> 18. Rajab 1429
+cs_CZ	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 18. Rajab 1429
+cs_CZ	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 18. Rajab 1429 2:31 odp.
+cs_CZ	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 18. Rajab 1429 14:31
+cs_CZ	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 18. Rajab 1429 2:31:00 odp.
+cs_CZ	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 18. Rajab 1429 14:31:00
+cs_CZ	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs_CZ	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 18. Rajab 1429 14:31:00 GMT+00:00
+cs_CZ	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs_CZ	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 18. Rajab 1429 14:31:00 GMT+00:00
+cs_CZ	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y -> pondělí, 18. Rajab 1429
+cs_CZ	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y -> pondělí, 18. Rajab 1429
+cs_CZ	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm a -> pondělí, 18. Rajab 1429 2:31 odp.
+cs_CZ	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm -> pondělí, 18. Rajab 1429 14:31
+cs_CZ	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a -> pondělí, 18. Rajab 1429 2:31:00 odp.
+cs_CZ	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss -> pondělí, 18. Rajab 1429 14:31:00
+cs_CZ	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a z -> pondělí, 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs_CZ	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss z -> pondělí, 18. Rajab 1429 14:31:00 GMT+00:00
+cs_CZ	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d. MMMM y h:mm:ss a zzzz -> pondělí, 18. Rajab 1429 2:31:00 odp. GMT+00:00
+cs_CZ	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d. MMMM y H:mm:ss zzzz -> pondělí, 18. Rajab 1429 14:31:00 GMT+00:00
 da	Language endonym	dansk
 da	Country endonym	
 da	Floating Point Number	-123.456.789,012

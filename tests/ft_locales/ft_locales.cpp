@@ -726,6 +726,8 @@ void Ft_Locales::checkAvailableLocales()
     requiredLocaleNames << "ar_YE";       // "Arabic (Yemen)"
     requiredLocaleNames << "ca";          // "Catalan"
     requiredLocaleNames << "ca_ES";       // "Catalan (Spain)"
+    requiredLocaleNames << "cs";          // "Czech
+    requiredLocaleNames << "cs_CZ";       // "Czech (Czech Republic)"
     requiredLocaleNames << "da";          // "Danish"
     requiredLocaleNames << "da_DK";       // "Danish (Denmark)"
     requiredLocaleNames << "de";          // "German"
