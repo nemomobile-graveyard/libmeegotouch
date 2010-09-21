@@ -354,6 +354,64 @@ void MTheme::releasePixmap(const QPixmap *pixmap)
     Q_ASSERT_X(false, "MTheme::releasePixmap", "Pixmap not found from the cache!");
 }
 
+
+void MThemePrivate::extractDataForStyleClass(const char *styleClassName,
+                                             QList<const MStyleSheet *> &sheets,
+                                             QStringList &styleMetaObjectHierarchy)
+{
+    // Go through the inheritance chain and add stylesheets from each assembly
+    const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
+    Q_ASSERT(mobj);
+
+    do {
+        styleMetaObjectHierarchy.append(QString::fromAscii(mobj->className()));
+
+        M::AssemblyType assemblyType = MClassFactory::instance()->styleAssemblyType(mobj->className());
+        if (assemblyType == M::Application) {
+            mobj = mobj->superClass();
+            continue;
+        }
+        QString assemblyName = MClassFactory::instance()->styleAssemblyName(mobj->className());
+
+        // find proper library
+        MLibrary *library = libraries->value(assemblyName, NULL);
+        if (library) {
+            // use stylesheet from this library if there is one
+            if (library->stylesheet()) {
+                if (!sheets.contains(library->stylesheet())) {
+                    sheets.insert(0, library->stylesheet());
+                }
+            }
+        } else {
+            mWarning("MTheme") << "Cannot find library. You must register your library to theming using M_LIBRARY macro." << '(' << assemblyName << ')';
+            Q_ASSERT_X(library, "MTheme", "Failed to find library");
+        }
+        mobj = mobj->superClass();
+    } while (mobj->className() != QObject::staticMetaObject.className());
+}
+
+QList<const MStyleSheet *> MThemePrivate::extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,
+                                                                         const QStringList &parentHierarchy)
+{
+    QList<const MStyleSheet *> parentSheets;
+
+    foreach (const QString &className, parentHierarchy) {
+        M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(className);
+        if (assemblyType == M::Application || assemblyType == M::AssemblyNone)
+            continue;
+
+        QString assemblyName = MClassFactory::instance()->widgetAssemblyName(className);
+        MLibrary *library = libraries->value(assemblyName, NULL);
+        if (library && library->stylesheet()) {
+            if (!sheets.contains(library->stylesheet()) && !parentSheets.contains(library->stylesheet())) {
+                parentSheets.insert(0, library->stylesheet());
+            }
+        }
+    }
+
+    return parentSheets;
+}
+
 const MStyle *MTheme::style(const char *styleClassName,
                                 const QString &objectName)
 {
@@ -377,56 +435,14 @@ const MStyle *MTheme::style(const char *styleClassName,
     // list containing all stylesheets from all assemblies from which this style is/inherits + app css
     QList<const MStyleSheet *> sheets;
 
-
     QStringList styleMetaObjectHierarchy;
+    d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy);
 
-    // go trough the inheritance chain and add stylesheets from each assembly.
-    const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
-    do {
-        styleMetaObjectHierarchy.append(QString::fromAscii(mobj->className()));
-
-        M::AssemblyType assemblyType = MClassFactory::instance()->styleAssemblyType(mobj->className());
-        if (assemblyType == M::Application) {
-            mobj = mobj->superClass();
-            continue;
-        }
-        QString assemblyName = MClassFactory::instance()->styleAssemblyName(mobj->className());
-
-        // find proper library
-        MLibrary *library = d->libraries->value(assemblyName, NULL);
-        if (library) {
-            // use stylesheet from this library if there is one
-            if (library->stylesheet()) {
-                if (!sheets.contains(library->stylesheet())) {
-                    sheets.insert(0, library->stylesheet());
-                }
-            }
-        } else {
-            mWarning("MTheme") << "Cannot find library. You must register your library to theming using M_LIBRARY macro." << '(' << assemblyName << ')';
-            Q_ASSERT_X(library, "MTheme", "Failed to find library");
-        }
-        mobj = mobj->superClass();
-    } while (mobj->className() != QObject::staticMetaObject.className());
-
+    // Get parent data by traversing the MWidgetController pointer we have
     QVector<MStyleSheetPrivate::ParentData> parentsData = MStyleSheetPrivate::extractParentsData(parent);
-
     for (int i = 0; i < parentsData.size(); i++) {
         MStyleSheetPrivate::ParentData &pd = parentsData[i];
-        QList<const MStyleSheet *> &thisParentSheets = pd.sheets;
-
-        foreach (const QString &oneClassName, pd.hierarchy) {
-            M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(oneClassName);
-            if (assemblyType == M::Application || assemblyType == M::AssemblyNone)
-                continue;
-
-            QString assemblyName = MClassFactory::instance()->widgetAssemblyName(oneClassName);
-            MLibrary *library = d->libraries->value(assemblyName, NULL);
-            if (library && library->stylesheet()) {
-                if (!sheets.contains(library->stylesheet()) && !thisParentSheets.contains(library->stylesheet())) {
-                    thisParentSheets.insert(0, library->stylesheet());
-                }
-            }
-        }
+        pd.sheets = d->extractSheetsForClassHierarchy(sheets, pd.hierarchy);
     }
 
     // add application css
@@ -444,6 +460,46 @@ const MStyle *MTheme::style(const char *styleClassName,
         else
             parentStyleName = parent->objectName();
     }
+
+    return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName, styleMetaObjectHierarchy, styleClassName, objectName, mode, type, orientation);
+}
+
+const MStyle *MTheme::style(const char *styleClassName,
+                            const QString &objectName,
+                            const QString &mode,
+                            const QString &type,
+                            M::Orientation orientation,
+                            const QList<QStringList> &parentClassHierarchies,
+                            const QString &parentStyleName)
+{
+    // The style type should never be "default" - that would probably be a view type
+    // that's mistakenly being used as a style type.
+    // The caller probably means "" instead.
+    Q_ASSERT(type != "default");
+
+    MThemePrivate *d = MTheme::instance()->d_func();
+
+    // list containing all stylesheets from all assemblies from which this style is/inherits + app css
+    QList<const MStyleSheet *> sheets;
+
+    QStringList styleMetaObjectHierarchy;
+    d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy);
+
+    // Get parent data based on the parentClassHierarchies parameter...
+    QVector<MStyleSheetPrivate::ParentData> parentsData(parentClassHierarchies.size());
+    for (int i = 0; i < parentClassHierarchies.size(); i++) {
+        MStyleSheetPrivate::ParentData &pd = parentsData[i];
+        pd.hierarchy = parentClassHierarchies[i];
+        pd.sheets = d->extractSheetsForClassHierarchy(sheets, pd.hierarchy);
+    }
+
+    // add application css
+    if (d->application->stylesheet())
+        sheets.append(d->application->stylesheet());
+
+    // add custom stylesheet
+    if (d->customStylesheet)
+        sheets.append(d->customStylesheet);
 
     return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName, styleMetaObjectHierarchy, styleClassName, objectName, mode, type, orientation);
 }

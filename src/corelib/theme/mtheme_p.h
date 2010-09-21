@@ -167,6 +167,12 @@ public:
      */
     void reinit(const QString &applicationName);
 
+    static void extractDataForStyleClass(const char *styleClassName,
+                                         QList<const MStyleSheet *> &sheets,
+                                         QStringList &styleMetaObjectHierarchy);
+    static QList<const MStyleSheet *> extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,
+                                                                     const QStringList &parentHierarchy);
+
     static void registerStyleContainer(MStyleContainer *container);
     static void unregisterStyleContainer(MStyleContainer *container);
 
