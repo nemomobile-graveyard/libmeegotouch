@@ -47,9 +47,6 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
                   mthemedaemon \
                   tools
        }
-    } else:isEqual(PROJECT, plainqt) {
-       SUBDIRS += plainqt
-       macx:SUBDIRS -= plainqt
     } else:isEqual(PROJECT, tests) {
        SUBDIRS += tests
        macx:SUBDIRS -= tests
@@ -67,12 +64,7 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
     }
 }
 
-# put mmoc, mgen, src and plainqt dirs in right build order...
-
-contains( SUBDIRS, plainqt ) {
-    SUBDIRS -= plainqt
-    SUBDIRS = plainqt $$SUBDIRS
-}
+# put mmoc, mgen and src dirs in right build order...
 
 contains( SUBDIRS, src ) {
     SUBDIRS -= src

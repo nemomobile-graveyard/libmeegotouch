@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=com.nokia.qtstyledialogs
-Exec=@M_INSTALL_BIN@/qtstyledialogs -style iqs

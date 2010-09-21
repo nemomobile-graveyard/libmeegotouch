@@ -196,11 +196,6 @@ SUBDIRS += \
     ft_mmoc
 }
 
-contains(M_BUILD_PARTS, "plainqt") {
-SUBDIRS += \
-  ut_qtmaemo6style
-}
-
 QMAKE_STRIP = echo
 include(shell.pri)
 include(runtests.pri)

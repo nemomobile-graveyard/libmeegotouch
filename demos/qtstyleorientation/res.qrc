@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/images">
-        <file>meegotouch-wallpaper-landscape.jpg</file>
-        <file>meegotouch-wallpaper-portrait.jpg</file>
-    </qresource>
-</RCC>

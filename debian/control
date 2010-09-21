@@ -97,7 +97,7 @@ Description: meegotouch-dev-tools debug package
 Package: meegotouch-demos
 Section: devel
 Architecture: any
-Depends: meegotouch-demos-widgetsgallery, meegotouch-demos-plainqt
+Depends: meegotouch-demos-widgetsgallery
 Description: Demo applications for MeeGo Touch
  Collection of demo applications for MeeGo Touch
 
@@ -175,22 +175,6 @@ Architecture: any
 Depends: ${shlibs:Depends}, meegotestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
 Description: Demo application for MeeGo Touch
 
-Package: meegotouch-demos-plainqt
-Section: devel
-Architecture: any
-Depends: ${shlibs:Depends}
-Conflicts: dui-demos-plainqt
-Replaces: dui-demos-plainqt
-Description: Demo applications showing the capabilities of the plain qt style.
-
-Package: meegotouch-demos-plainqt-dbg
-Section: devel
-Architecture: any
-Depends: meegotouch-demos-plainqt (= ${Source-Version})
-Conflicts: dui-demos-plainqt-dbg
-Replaces: dui-demos-plainqt-dbg
-Description: debug symbols of the plain qt examples
-
 Package: meegotouch-demos-appletinstallationsource
 Section: devel
 Architecture: any
@@ -242,19 +226,6 @@ Section: devel
 Depends: libmeegotouch-benchmarks (= ${Source-Version})
 Description: libmeegotouch-benchmarks debug package
  libmeegotouch-benchmarks debug symbols.
-
-Package: meegotouch-qt-style
-Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
-Description: MeeGo Touch Qt style for plain Qt applications
- MeeGo Touch Qt style plugin
-
-Package: meegotouch-qt-style-dbg
-Architecture: any
-Section: devel
-Depends: meegotouch-qt-style (= ${Source-Version})
-Description: meegotouch-qt-style debug package
- meegotouch-qt-style debug symbols.
 
 Package: libmeegotouch-doc
 Section: doc

@@ -63,7 +63,6 @@ Requires: libmeegotouchextensions0 >= %{version}
 Requires: libmeegotouchsettings0   >= %{version}
 Requires: libmeegotouchviews0      >= %{version}
 Requires: libmeegotouch-bin        >= %{version}
-Requires: meegotouch-qt-style      >= %{version}
 
 
 #
@@ -114,14 +113,6 @@ Requires: libmeegotouchviews0      >= %{version}
 Meego Touch framework binary files
 
 
-%package -n meegotouch-qt-style
-Summary: Meego Touch plain Qt style
-Requires: libmeegotouchcore0       >= %{version}
-Requires: libmeegotouchviews0      >= %{version}
-%description -n meegotouch-qt-style
-Meego Touch Qt style for applications that do not link against libmeegotouch
-
-
 #
 # Development subpackages
 #
@@ -135,7 +126,6 @@ Requires: libmeegotouchcore0       >= %{version}
 Requires: libmeegotouchextensions0 >= %{version}
 Requires: libmeegotouchsettings0   >= %{version}
 Requires: libmeegotouchviews0      >= %{version}
-Requires: meegotouch-qt-style     >= %{version}
 %description -n libmeegotouch-devel
 Development files for Meego Touch
 
@@ -162,7 +152,6 @@ Meego Touch API documentation
 %package -n meegotouch-demos
 Summary: Meego Touch demo applications
 Requires: meegotouch-demos-widgetsgallery
-Requires: meegotouch-demos-qt-style
 Requires: meegotouch-demos-animatedlayout
 %description -n meegotouch-demos
 Collection of demo applications for Meego Touch
@@ -180,15 +169,6 @@ Summary: Meego Touch widgets gallery tests
 Requires: meegotouch-demos-widgetsgallery
 %description -n meegotouch-demos-widgetsgallery-tests
 Meego Touch demo application tests
-
-
-%package -n meegotouch-demos-qt-style
-Summary: Meego Touch plain Qt applications demos
-Requires: meegotouch-qt-style
-%description -n meegotouch-demos-qt-style
-Demo applications that show how plain Qt applications
-(applications that do not link against libmeegotouch) are supported
-in the Meego Touch framework
 
 
 %package -n meegotouch-demos-animatedlayout
@@ -403,7 +383,7 @@ Meego Touch animated layout Japanese translations
 %build
 export PATH=$PATH:%{_libdir}/qt4/bin
 unset LD_AS_NEEDED
-./configure -prefix /usr -release -plainqt -tests -benchmarks
+./configure -prefix /usr -release -tests -benchmarks
 make %{?_smp_mflags}
 
 
@@ -517,11 +497,6 @@ fi
 %{_libdir}/libmeegotouchviews.so.0*
 
 
-%files -n meegotouch-qt-style
-%defattr(-,root,root)
-%{_libdir}/qt4/plugins/styles/libmeegotouchqtstyleplugin.so
-
-
 %files -n libmeegotouch-bin
 %defattr(-,root,root)
 %dir %{_libdir}/meegotouch
@@ -578,16 +553,6 @@ fi
 %defattr(-,root,root)
 %dir %{_libdir}/libmeegotouch-benchmarks
 %{_libdir}/libmeegotouch-benchmarks/*
-
-
-%files -n meegotouch-demos-qt-style
-%defattr(-,root,root)
-%dir /usr/share/qtstyleexample
-%dir /usr/share/qtstyleexample/themes
-/usr/bin/qtstyle*
-/usr/share/applications/qtstyle*
-/usr/share/dbus-1/services/com.nokia.qtstyle*
-/usr/share/qtstyleexample/themes/*
 
 
 %files -n meegotouch-demos-animatedlayout

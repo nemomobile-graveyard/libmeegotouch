@@ -43,8 +43,7 @@
 #        widgetsgallery/translations \
 #        animatedlayout \
 #        animatedlayout/translations \
-#        launcher \
-#        qtstyleexample
+#        launcher
 #
 
 # get around lack of sleep on Windows:

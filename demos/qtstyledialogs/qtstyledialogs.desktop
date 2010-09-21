@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=QtStyle Dialogs Example
-Icon=icon-l-video
-Exec=qtstyledialogs -style iqs
-X-Maemo-Service=com.nokia.qtstyledialogs
-OnlyShowIn=X-MeeGo;

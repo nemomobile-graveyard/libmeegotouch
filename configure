@@ -60,7 +60,6 @@ CFG_DEV=no
 CFG_MINIMAL=no
 CFG_BUILD_TESTS=no
 CFG_BUILD_BENCHMARKS=no
-CFG_BUILD_PLAINQT=yes
 CFG_BUILD_EXAMPLES=no
 
 M_DEFAULT_BUILD_PARTS="libs demos"
@@ -222,7 +221,6 @@ while [ "$#" -gt 0 ]; do
         CFG_BUILD_TESTS="yes"
         CFG_BUILD_EXAMPLES="yes"
         CFG_BUILD_BENCHMARKS="yes"
-        CFG_BUILD_PLAINQT="yes"
         ;;
     minimal)
         CFG_MINIMAL="yes"
@@ -235,11 +233,6 @@ while [ "$#" -gt 0 ]; do
         ;;
     benchmarks)
         CFG_BUILD_BENCHMARKS="yes"
-        ;;
-    plainqt)
-        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
-            CFG_BUILD_PLAINQT="$VAL"
-        fi
         ;;
     maemo5)
         IS_MAEMO5="yes"
@@ -340,14 +333,6 @@ if [ "$CFG_BUILD_BENCHMARKS" = "yes" ]; then
 else
   if echo $CFG_BUILD_PARTS | grep benchmarks >/dev/null 2>&1; then
     CFG_BUILD_BENCHMARKS="yes"
-  fi
-fi
-
-if [ "$CFG_BUILD_PLAINQT" = "yes" ]; then
-    CFG_BUILD_PARTS="$CFG_BUILD_PARTS plainqt"
-else
-  if echo $CFG_BUILD_PARTS | grep plainqt >/dev/null 2>&1; then
-    CFG_BUILD_PLAINQT="yes"
   fi
 fi
 
@@ -489,11 +474,11 @@ Configure options:
 Additional options:
 
     -make <part> ....... Add part to the list of parts to be built at make time
-                         (*libs *demos plainqt tests benchmarks)
+                         (*libs *demos tests benchmarks)
     -nomake <part> ..... Exclude part from the list of parts to be built
 
     -dev ............... Compile and link with default developer options.
-                         This enables the benchmarks, tests and plainqt parts.
+                         This enables the benchmarks and tests parts.
 
     -tests ............. Build the tests.
     -benchmarks ........ Build the benchmarks.
@@ -509,9 +494,6 @@ Additional options:
 
     -no-icu ............ Do not compile with ICU support.
  +  -icu ............... Compile with ICU support.
-
-    -no-plainqt......... Do not build the Plain Qt style plugin.
- +  -plainqt ........... Build the Plain Qt style plugin.
 
 EOF
 
@@ -823,7 +805,6 @@ echo "Debug ............... $CFG_DEBUG"
 
 echo
 echo "Benchmarks .......... $CFG_BUILD_BENCHMARKS"
-echo "Plain Qt support .... $CFG_BUILD_PLAINQT"
 echo "Tests ............... $CFG_BUILD_TESTS"
 echo "Examples ............ $CFG_BUILD_EXAMPLES"
 

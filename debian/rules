@@ -59,11 +59,6 @@ ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -testable
 endif
 
-#disable plain qt by setting DEB_BUILD_OPTION=noplainqt,...
-ifneq (,$(findstring noplainqt,$(DEB_BUILD_OPTIONS)))
-     OPTIONS += -no-plainqt
-endif
-
 # Perform a minimal build by setting DEB_BUILD_OPTION=minimal,...
 ifeq (,$(findstring minimal,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -make "tests benchmarks examples"
@@ -150,12 +145,10 @@ binary-arch: build install
 	dh_strip -p libmeegotouch-bin --dbg-package=libmeegotouch-bin
 	dh_strip -p meegotouch-dev-tools --dbg-package=meegotouch-dev-tools
 	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery
-	dh_strip -p meegotouch-demos-plainqt --dbg-package=meegotouch-demos-plainqt
 	dh_strip -p meegotouch-demos-appletinstallationsource --dbg-package=meegotouch-demos-appletinstallationsource
 	dh_strip -p meegotouch-demos-applicationextension --dbg-package=meegotouch-demos-applicationextension
 	dh_strip -p libmeegotouch-tests --dbg-package=libmeegotouch-tests
 	dh_strip -p libmeegotouch-benchmarks --dbg-package=libmeegotouch-benchmarks
-	dh_strip -p meegotouch-qt-style --dbg-package=meegotouch-qt-style
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs

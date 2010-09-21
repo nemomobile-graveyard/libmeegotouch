@@ -164,10 +164,6 @@ packages:
   "libmeegotouch" has "requires" dependencies set up on all of them so it is
   sufficient to install libmeegotouch.rpm to get all the modularized libs.
 
-- libmeegotouchqtstyle": The "plain Qt style", the Qt plug-in that adds the
-  Meego Touch look and feel for "plain Qt" applications (applications that
-  don't link against libmeegotouch).
-
 - libmeegotouch-bin: Some binaries required by applications using libmeegotouch
   such as the theme daemon and the service mapper.
 
@@ -185,7 +181,6 @@ packages:
 
   - meegotouch-demos-widgetsgallery: Widget gallery demo
   - meegotouch-demos-widgetsgallery-tests
-  - meegotouch-demos-qtstyle
   - meegotouch-demos-animatedlayout
   - meegotouch-demos-appletinstallationsource
   - meegotouch-demos-applicationextension

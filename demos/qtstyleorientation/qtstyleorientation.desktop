@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=QtStyle Orientation
-Icon=icon-l-video
-Exec=qtstyleorientation
-X-Maemo-Service=com.nokia.qtstyleorientation
-OnlyShowIn=X-MeeGo;

@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=com.nokia.qtstyleorientation
-Exec=@M_INSTALL_BIN@/qtstyleorientation

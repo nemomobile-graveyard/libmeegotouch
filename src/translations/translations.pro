@@ -1,6 +1,6 @@
 LANGUAGES = ar de en fi hu ur zh_CN
 CATALOGNAME = libmeegotouch
-SOURCEDIR = $$PWD/.. $$PWD/../../plainqt
+SOURCEDIR = $$PWD/..
 TRANSLATIONDIR = $$PWD
 MROOT = ../..
 # these include files are installed to $$[QT_INSTALL_DATA]/mkspecs/features

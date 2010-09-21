@@ -9,11 +9,7 @@ SUBDIRS     =  \
 !contains(M_BUILD_FEATURES, minimal) {
     SUBDIRS += \
     animatedlayout \
-    animatedlayout/translations \
-    qtstyleexample \
-    qtstyledialogs \
-    qtstylekinetic \
-    qtstyleorientation
+    animatedlayout/translations
 }
 
 # we do not have compiled QtDBusd4
