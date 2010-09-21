@@ -216,17 +216,21 @@ MWidget *MApplicationMenuViewPrivate::createWidget(QAction *action)
         MWidgetAction *widgetAction = qobject_cast<MWidgetAction *>(action);
         if (widgetAction) {
             widget = requestWidget(widgetAction);
-            MComboBox *comboBox = qobject_cast<MComboBox *>(widget);
-            if (comboBox) {
-                comboBox->setStyleName("menucomboboxcommand");
-                connect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
+            if (widget) {
+                MComboBox *comboBox = qobject_cast<MComboBox *>(widget);
+                if (comboBox) {
+                    comboBox->setStyleName("menucomboboxcommand");
+                    connect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
+                }
+                leasedWidgets.insert(action, widget);
             }
-            leasedWidgets.insert(action, widget);
-        } else {
-            widget = createButton(action);
-            buttons.insert(action, widget);
         }
     }
+    if (!widget) {
+        widget = createButton(action);
+        buttons.insert(action, widget);
+    }
+
     connect(action, SIGNAL(triggered()), controller, SLOT(disappear()));
     widget->setVisible(true);
     widget->setEnabled(action->isEnabled());
