@@ -414,7 +414,6 @@ void MWidgetViewPrivate::reloadChildItemsStyles(QGraphicsItem* item)
 void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     Q_D(MWidgetView);
-    Q_UNUSED(value);
     if (change == QGraphicsItem::ItemEnabledHasChanged) {
         d->setEnabled(d->controller->isEnabled());
     } else if (change == QGraphicsItem::ItemSelectedHasChanged) {
@@ -429,8 +428,10 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
         }
 
         style().setParent(parent);
-        d->reloadChildItemsStyles(d->controller);
-        applyStyle();
+        if (value.value<QGraphicsItem*>() != NULL) {
+            d->reloadChildItemsStyles(d->controller);
+            applyStyle();
+        }
     }
 }
 void MWidgetView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
