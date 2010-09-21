@@ -38,7 +38,6 @@
 #include "mapplication.h"
 #include "mcomponentdata.h"
 #include "mscenemanager.h"
-#include "mapplication_p.h"
 #include "mscene.h"
 #include "mstatusbar.h"
 #include "mdeviceprofile.h"
