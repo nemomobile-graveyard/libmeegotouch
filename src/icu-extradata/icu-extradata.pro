@@ -6,7 +6,8 @@ ICUDATA = $$system(icu-config --icudata)      # for example “icudt44l”
 ICUUSRDATA = $$replace(ICUDATA, icudt, usrdt) # for example “usrdt44l”
 
 greaterThan(ICUVERSION, 4.4) {
-    LOCALESTXT = $${ICUVERSION}/en_SG.txt \
+    LOCALESTXT = $${ICUVERSION}/cs.txt \
+                 $${ICUVERSION}/en_SG.txt \
                  $${ICUVERSION}/fi.txt \
                  $${ICUVERSION}/it.txt \
                  $${ICUVERSION}/ms_BN.txt
