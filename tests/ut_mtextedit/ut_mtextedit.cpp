@@ -1866,13 +1866,21 @@ void Ut_MTextEdit::testReturnKeyPressed_data()
     QTest::addColumn<MTextEditModel::LineMode>("lineMode");
     QTest::addColumn<QValidator::State>("validatorState");
     QTest::addColumn<int>("expectedSignals");
+    QTest::addColumn<QString>("returnString");
 
-    QTest::newRow("single line, invalid")      << MTextEditModel::SingleLine << QValidator::Invalid      << 0;
-    QTest::newRow("single line, intermediate") << MTextEditModel::SingleLine << QValidator::Intermediate << 0;
-    QTest::newRow("single line, acceptable")   << MTextEditModel::SingleLine << QValidator::Acceptable   << 1;
-    QTest::newRow("multi line,  invalid")      << MTextEditModel::MultiLine  << QValidator::Invalid      << 0;
-    QTest::newRow("multi line,  intermediate") << MTextEditModel::MultiLine  << QValidator::Intermediate << 0;
-    QTest::newRow("multi line,  acceptable")   << MTextEditModel::MultiLine  << QValidator::Acceptable   << 0;
+    QTest::newRow("single line, invalid, \\n")      << MTextEditModel::SingleLine << QValidator::Invalid      << 0 << "\n";
+    QTest::newRow("single line, intermediate, \\n") << MTextEditModel::SingleLine << QValidator::Intermediate << 0 << "\n";
+    QTest::newRow("single line, acceptable, \\n")   << MTextEditModel::SingleLine << QValidator::Acceptable   << 1 << "\n";
+    QTest::newRow("multi line,  invalid, \\n")      << MTextEditModel::MultiLine  << QValidator::Invalid      << 0 << "\n";
+    QTest::newRow("multi line,  intermediate, \\n") << MTextEditModel::MultiLine  << QValidator::Intermediate << 0 << "\n";
+    QTest::newRow("multi line,  acceptable, \\n")   << MTextEditModel::MultiLine  << QValidator::Acceptable   << 0 << "\n";
+
+    QTest::newRow("single line, invalid, \\r")      << MTextEditModel::SingleLine << QValidator::Invalid      << 0 << "\r";
+    QTest::newRow("single line, intermediate, \\r") << MTextEditModel::SingleLine << QValidator::Intermediate << 0 << "\r";
+    QTest::newRow("single line, acceptable, \\r")   << MTextEditModel::SingleLine << QValidator::Acceptable   << 1 << "\r";
+    QTest::newRow("multi line,  invalid, \\r")      << MTextEditModel::MultiLine  << QValidator::Invalid      << 0 << "\r";
+    QTest::newRow("multi line,  intermediate, \\r") << MTextEditModel::MultiLine  << QValidator::Intermediate << 0 << "\r";
+    QTest::newRow("multi line,  acceptable, \\r")   << MTextEditModel::MultiLine  << QValidator::Acceptable   << 0 << "\r";
 }
 
 /*!
@@ -1886,11 +1894,12 @@ void Ut_MTextEdit::testReturnKeyPressed()
     QFETCH(MTextEditModel::LineMode, lineMode);
     QFETCH(QValidator::State, validatorState);
     QFETCH(int, expectedSignals);
+    QFETCH(QString, returnString);
 
     MTextEdit subject(lineMode);
 
     SimpleValidator validator;
-    QKeyEvent event(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "\n");
+    QKeyEvent event(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, returnString);
     QSignalSpy returnPressedSpy(&subject, SIGNAL(returnPressed()));
 
     validator.state = validatorState;
@@ -1912,18 +1921,26 @@ void Ut_MTextEdit::testLineBreakSent_data()
     QTest::newRow("single line, preedit, no line break") << MTextEditModel::SingleLine << "preedit" << "" << M::FreeTextContentType << 0;
     QTest::newRow("single line, commit, no line break")  << MTextEditModel::SingleLine << "" << "commit" << M::FreeTextContentType << 0;
     QTest::newRow("single line, preedit, line break") << MTextEditModel::SingleLine << "preedit\n" << "" << M::FreeTextContentType << 0;
+    QTest::newRow("single line, preedit, line break \\r") << MTextEditModel::SingleLine << "preedit\r" << "" << M::FreeTextContentType << 0;
     QTest::newRow("single line, commit, line break")  << MTextEditModel::SingleLine << "" << "commit\n" << M::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, line break \\r")  << MTextEditModel::SingleLine << "" << "commit\r" << M::FreeTextContentType << 1;
     QTest::newRow("single line, commit, line break only")  << MTextEditModel::SingleLine << "" << "\n" << M::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, line break \\r only")  << MTextEditModel::SingleLine << "" << "\r" << M::FreeTextContentType << 1;
     QTest::newRow("single line, commit, multiple line breaks")  << MTextEditModel::SingleLine << "" << "commit\n\n\n" << M::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, multiple \\r line breaks")  << MTextEditModel::SingleLine << "" << "commit\r\r\r" << M::FreeTextContentType << 1;
     QTest::newRow("single line, invalid number") << MTextEditModel::SingleLine << "" << "abc\n" << M::NumberContentType << 0;
-    QTest::newRow("single line, valid number") << MTextEditModel::SingleLine << "" << "123\n" << M::NumberContentType << 1;
+    QTest::newRow("single line, valid number, line break") << MTextEditModel::SingleLine << "" << "123\n" << M::NumberContentType << 1;
+    QTest::newRow("single line, valid number, line break \\r") << MTextEditModel::SingleLine << "" << "123\r" << M::NumberContentType << 1;
 
     QTest::newRow("multi line, empty") << MTextEditModel::MultiLine << "" << "" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, preedit, no line break") << MTextEditModel::MultiLine << "preedit" << "" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, no line break")  << MTextEditModel::MultiLine << "" << "commit" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, preedit, line break") << MTextEditModel::MultiLine << "preedit\n" << "" << M::FreeTextContentType << 0;
+    QTest::newRow("multi line, preedit, line break \\r") << MTextEditModel::MultiLine << "preedit\r" << "" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, line break only")  << MTextEditModel::MultiLine << "" << "\n" << M::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, line break \\r only")  << MTextEditModel::MultiLine << "" << "\r" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, line break")  << MTextEditModel::MultiLine << "" << "commit\n" << M::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, line break \\r")  << MTextEditModel::MultiLine << "" << "commit\r" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, multiple line breaks")  << MTextEditModel::MultiLine << "" << "commit\n\n\n" << M::FreeTextContentType << 0;
 }
 
@@ -1964,9 +1981,17 @@ void Ut_MTextEdit::testCommitLineBreakAfterPreedit_data()
     QTest::newRow("123\\n, intermediate") << QValidator::Intermediate << "123\n" << 0;
     QTest::newRow("123\\n, acceptable")   << QValidator::Acceptable   << "123\n" << 1;
 
+    QTest::newRow("123\\r, invalid")      << QValidator::Invalid      << "123\r" << 0;
+    QTest::newRow("123\\r, intermediate") << QValidator::Intermediate << "123\r" << 0;
+    QTest::newRow("123\\r, acceptable")   << QValidator::Acceptable   << "123\r" << 1;
+
     QTest::newRow("\\n, invalid")      << QValidator::Invalid      << "\n" << 0;
     QTest::newRow("\\n, intermediate") << QValidator::Intermediate << "\n" << 0;
     QTest::newRow("\\n, acceptable")   << QValidator::Acceptable   << "\n" << 1;
+
+    QTest::newRow("\\r, invalid")      << QValidator::Invalid      << "\r" << 0;
+    QTest::newRow("\\r, intermediate") << QValidator::Intermediate << "\r" << 0;
+    QTest::newRow("\\r, acceptable")   << QValidator::Acceptable   << "\r" << 1;
 }
 
 /*!

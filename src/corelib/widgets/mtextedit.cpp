@@ -2149,12 +2149,16 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     bool emitReturnPressed = false;
 
     if (lineMode() == MTextEditModel::SingleLine) {
-        emitReturnPressed = commitString.contains('\n');
+        // FIXME: remove \n-check once VKB has been changed to send \r as return
+        emitReturnPressed = commitString.contains('\n') || commitString.contains('\r');
+
         preedit.remove('\n');
         commitString.remove('\n');
 
         preedit = d->replaceLineBreaks(preedit, QChar(' '));
         commitString = d->replaceLineBreaks(commitString, QChar(' '));
+    } else if (lineMode() == MTextEditModel::MultiLine) {
+        commitString.replace("\r", "\n");
     }
 
     // get and remove the current selection
