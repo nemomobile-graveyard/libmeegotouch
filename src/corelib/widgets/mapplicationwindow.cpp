@@ -26,8 +26,6 @@
 #include "mapplicationwindow.h"
 #include "mapplicationpage.h"
 #include "mapplicationpage_p.h"
-#include "mkeyboardstatetracker.h"
-#include "morientationtracker.h"
 #include "mnavigationbar.h"
 #include "mapplicationmenu.h"
 #include "mtoolbar.h"
