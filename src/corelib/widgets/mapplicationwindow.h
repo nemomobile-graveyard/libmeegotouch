@@ -181,7 +181,7 @@ private:
     Q_DISABLE_COPY(MApplicationWindow)
     Q_DECLARE_PRIVATE(MApplicationWindow)
     Q_PRIVATE_SLOT(d_func(), void _q_actionUpdated(QActionEvent *))
-    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(M::Orientation))
+    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar())
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))
     Q_PRIVATE_SLOT(d_func(), void _q_menuAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_menuDisappeared())
@@ -195,6 +195,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_updatePageExposedContentRect())
     Q_PRIVATE_SLOT(d_func(), void _q_navigationBarStateChanged(MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState))
     Q_PRIVATE_SLOT(d_func(), void _q_handleInSwitcherVisibilityChange())
+    Q_PRIVATE_SLOT(d_func(), void _q_updateStyle())
 };
 
 #endif

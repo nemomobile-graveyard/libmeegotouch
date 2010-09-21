@@ -147,6 +147,16 @@ public:
      */
     void restorePageArea();
 
+    /*!
+     * Whether the dock widget is needed or not
+     */
+    bool needsDockWidget();
+
+    /*!
+     * Set viewtype of the toolbar (tools or tabs)
+     */
+    void setToolBarViewType(const MTheme::ViewType& viewType);
+
 private:
     const MApplicationWindowStyle *style;
 
@@ -160,7 +170,7 @@ private:
 public:
     void _q_pageTitleChanged(MApplicationPage *, const QString &);
     void _q_actionUpdated(QActionEvent *e);
-    void _q_placeToolBar(M::Orientation);
+    void _q_placeToolBar();
     void _q_handlePageModelModifications(const QList<const char *>&);
     void _q_menuAppeared();
     void _q_menuDisappeared();
@@ -172,7 +182,7 @@ public:
     void _q_updatePageExposedContentRect();
     void _q_enablePaintUpdates();
     void _q_handleInSwitcherVisibilityChange();
-
+    void _q_updateStyle();
 };
 
 #endif

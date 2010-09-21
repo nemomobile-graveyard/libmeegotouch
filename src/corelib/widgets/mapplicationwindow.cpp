@@ -24,6 +24,7 @@
 #include <mscenewindowevent_p.h>
 #include "mapplicationwindow_p.h"
 #include "mapplicationwindow.h"
+#include "mapplicationwindowstyle.h"
 #include "mapplicationpage.h"
 #include "mapplicationpage_p.h"
 #include "mnavigationbar.h"
@@ -136,10 +137,10 @@ void MApplicationWindowPrivate::init()
 
     style = static_cast<const MApplicationWindowStyle *>(MTheme::style("MApplicationWindowStyle", ""));
 
-    q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
+    q->connect(q, SIGNAL(orientationChanged(M::Orientation)), q, SLOT(_q_updateStyle()));
+    q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()), q, SLOT(_q_updateStyle()));
 
-    q->connect(q, SIGNAL(orientationChanged(M::Orientation)),
-               q, SLOT(_q_placeToolBar(M::Orientation)));
+    q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
 #ifdef Q_WS_X11
     if (!MComponentData::chainDataStackIsEmpty()) {
@@ -199,11 +200,11 @@ void MApplicationWindowPrivate::init()
     escapeButtonPanel->setEscapeMode(MEscapeButtonPanelModel::CloseMode);
     QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
 
-    if (q->orientation() == M::Portrait) {
+    if (needsDockWidget()) {
         sceneManager->appearSceneWindowNow(dockWidget);
     }
 
-    _q_placeToolBar(q->orientation());
+    _q_placeToolBar();
 
     q->setBackgroundBrush(Qt::black);
 
@@ -292,8 +293,6 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
 
 void MApplicationWindowPrivate::maximizePageArea()
 {
-    Q_Q(MApplicationWindow);
-
     pageAreaMaximized = true;
 
     // When maximized, the window is in control of these components.
@@ -307,7 +306,7 @@ void MApplicationWindowPrivate::maximizePageArea()
         setComponentDisplayMode(navigationBar, MApplicationPageModel::Hide);
     }
 
-    if (q->orientation() == M::Portrait) {
+    if (needsDockWidget()) {
         if (dockWidget->focusItem()) {
             // Always show focused dock widget.
             setComponentDisplayMode(dockWidget, MApplicationPageModel::Show);
@@ -323,8 +322,6 @@ void MApplicationWindowPrivate::maximizePageArea()
 
 void MApplicationWindowPrivate::restorePageArea()
 {
-    Q_Q(MApplicationWindow);
-
     if (!pageAreaMaximized) {
         return;
     }
@@ -336,7 +333,7 @@ void MApplicationWindowPrivate::restorePageArea()
         setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());
         setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
 
-        if (q->orientation() == M::Portrait) {
+        if (needsDockWidget()) {
             // Dock widget follows navigation bar display mode.
             setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
         }
@@ -431,10 +428,10 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
     }
 }
 
-void MApplicationWindowPrivate::_q_placeToolBar(M::Orientation orientation)
+void MApplicationWindowPrivate::_q_placeToolBar()
 {
-    // set position of toolbar according to orientation
-    if (orientation == M::Portrait) {
+    // set position of toolbar
+    if (needsDockWidget()) {
         // take toolbar from navigation bar
         navigationBar->undockToolBar();
         // dock it in lower dock widget
@@ -687,12 +684,10 @@ void MApplicationWindowPrivate::removeComponentFromAutoHide(MSceneWindow *compon
 
 void MApplicationWindowPrivate::updateDockWidgetVisibility()
 {
-    Q_Q(MApplicationWindow);
-
     // Make dock widget visible only if a toolbar is docked and
     // the docked toolbar has some actions
 
-    if (!dockWidget->toolBar() || (q->orientation() != M::Portrait)) {
+    if (!dockWidget->toolBar() || !needsDockWidget()) {
         return;
     }
 
@@ -936,6 +931,37 @@ void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
     }
 }
 
+bool MApplicationWindowPrivate::needsDockWidget()
+{
+    return ((toolBar->viewType() == MToolBar::defaultType && style->floatableToolBar())
+            || (toolBar->viewType() == MToolBar::tabType && style->floatableTabBar()));
+}
+
+void MApplicationWindowPrivate::setToolBarViewType(const MTheme::ViewType& viewType)
+{
+    toolBar->setViewType(viewType);
+    _q_placeToolBar();
+}
+
+void MApplicationWindowPrivate::_q_updateStyle()
+{
+    Q_Q(MApplicationWindow);
+
+    const MApplicationWindowStyle *newStyle =
+        static_cast<const MApplicationWindowStyle *>(MTheme::style(
+                   "MApplicationWindowStyle", "", "", "", q->orientation()));
+
+    if (style != newStyle) {
+        MTheme::releaseStyle(style);
+        style = newStyle;
+
+        _q_placeToolBar();
+
+    } else
+        MTheme::releaseStyle(newStyle);
+}
+
+
 MApplicationWindow::MApplicationWindow(MApplicationWindowPrivate &dd, QWidget *parent)
     : MWindow(dd, new MSceneManager, parent)
 {
@@ -1078,7 +1104,7 @@ void MApplicationWindow::setWindowIconID(const QString &windowIconID)
 void MApplicationWindow::setToolbarViewType(const MTheme::ViewType& viewType)
 {
     Q_D(MApplicationWindow);
-    d->toolBar->setViewType(viewType);
+    d->setToolBarViewType(viewType);
 }
 
 void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)

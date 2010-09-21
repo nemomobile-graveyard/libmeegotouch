@@ -36,6 +36,15 @@ class MApplicationWindowStyle : public MStyle
      */
     M_STYLE_ATTRIBUTE(int, autoHideTimeout, AutoHideTimeout)
 
+    /*!
+      \brief Whether the tool bar prefers to be displayed as a separate, independent, scene window.
+    */
+    M_STYLE_ATTRIBUTE(bool, floatableToolBar, FloatableToolBar)
+
+    /*!
+      \brief Whether the tab bar prefers to be displayed as a separate, independent, scene window.
+    */
+    M_STYLE_ATTRIBUTE(bool, floatableTabBar, FloatableTabBar)
 };
 
 class MApplicationWindowStyleContainer : public MStyleContainer
