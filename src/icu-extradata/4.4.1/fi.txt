@@ -2,10 +2,10 @@ fi{
     calendar{
         gregorian{
             DateTimePatterns{
-                "H.mm.ss zzzz",
-                "H.mm.ss z",
-                "H.mm.ss",
-                "H.mm",
+                "H:mm:ss zzzz",
+                "H:mm:ss z",
+                "H:mm:ss",
+                "H:mm",
                 "cccc d. MMMM y",
                 "d. MMMM y",
                 "d.M.yyyy",

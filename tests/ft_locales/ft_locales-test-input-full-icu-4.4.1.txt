@@ -15473,104 +15473,104 @@ fi	Name of weekday 06 (Islamic Calendar)	lauantai
 fi	Name of weekday 07 (Islamic Calendar)	sunnuntai
 fi	Collation sample	a á b oegh z å ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 fi	Scripts used	Latn
-fi	%r (locale specific 12 hour “TimeShort”)	2.31 ip.
-fi	%R (locale specific 24 hour “TimeShort”)	14.31
-fi	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	h.mm a -> 2.31 ip.
-fi	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm -> 14.31
-fi	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a -> 2.31.00 ip.
-fi	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm.ss -> 14.31.00
-fi	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a z -> 2.31.00 ip. UTC+0.00
-fi	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm.ss z -> 14.31.00 UTC+0.00
-fi	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 ip. UTC+0.00
-fi	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm.ss zzzz -> 14.31.00 UTC+0.00
+fi	%r (locale specific 12 hour “TimeShort”)	2:31 ip.
+fi	%R (locale specific 24 hour “TimeShort”)	14:31
+fi	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 ip.
+fi	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+fi	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 ip.
+fi	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+fi	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 ip. UTC+0.00
+fi	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 UTC+0.00
+fi	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 ip. UTC+0.00
+fi	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 UTC+0.00
 fi	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy -> 21.7.2008
 fi	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 21.7.2008
-fi	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 21.7.2008 2.31 ip.
-fi	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 21.7.2008 14.31
-fi	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 21.7.2008 2.31.00 ip.
-fi	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 21.7.2008 14.31.00
-fi	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 21.7.2008 14.31.00 UTC+0.00
-fi	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 21.7.2008 14.31.00 UTC+0.00
+fi	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 21.7.2008 2:31 ip.
+fi	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 21.7.2008 14:31
+fi	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 21.7.2008 2:31:00 ip.
+fi	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 21.7.2008 14:31:00
+fi	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 21.7.2008 14:31:00 UTC+0.00
+fi	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 21.7.2008 14:31:00 UTC+0.00
 fi	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy -> 21.7.2008
 fi	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 21.7.2008
-fi	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 21.7.2008 2.31 ip.
-fi	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 21.7.2008 14.31
-fi	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 21.7.2008 2.31.00 ip.
-fi	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 21.7.2008 14.31.00
-fi	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 21.7.2008 14.31.00 UTC+0.00
-fi	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 21.7.2008 14.31.00 UTC+0.00
+fi	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 21.7.2008 2:31 ip.
+fi	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 21.7.2008 14:31
+fi	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 21.7.2008 2:31:00 ip.
+fi	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 21.7.2008 14:31:00
+fi	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 21.7.2008 14:31:00 UTC+0.00
+fi	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 21.7.2008 14:31:00 UTC+0.00
 fi	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y -> 21. heinäkuuta 2008
 fi	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 21. heinäkuuta 2008
-fi	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm a -> 21. heinäkuuta 2008 2.31 ip.
-fi	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm -> 21. heinäkuuta 2008 14.31
-fi	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a -> 21. heinäkuuta 2008 2.31.00 ip.
-fi	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss -> 21. heinäkuuta 2008 14.31.00
-fi	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a z -> 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss z -> 21. heinäkuuta 2008 14.31.00 UTC+0.00
-fi	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a zzzz -> 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss zzzz -> 21. heinäkuuta 2008 14.31.00 UTC+0.00
+fi	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 21. heinäkuuta 2008 2:31 ip.
+fi	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 21. heinäkuuta 2008 14:31
+fi	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 21. heinäkuuta 2008 2:31:00 ip.
+fi	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 21. heinäkuuta 2008 14:31:00
+fi	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 21. heinäkuuta 2008 14:31:00 UTC+0.00
+fi	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 21. heinäkuuta 2008 14:31:00 UTC+0.00
 fi	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y -> maanantai 21. heinäkuuta 2008
 fi	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y -> maanantai 21. heinäkuuta 2008
-fi	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm a -> maanantai 21. heinäkuuta 2008 2.31 ip.
-fi	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm -> maanantai 21. heinäkuuta 2008 14.31
-fi	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a -> maanantai 21. heinäkuuta 2008 2.31.00 ip.
-fi	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss -> maanantai 21. heinäkuuta 2008 14.31.00
-fi	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a z -> maanantai 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss z -> maanantai 21. heinäkuuta 2008 14.31.00 UTC+0.00
-fi	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a zzzz -> maanantai 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss zzzz -> maanantai 21. heinäkuuta 2008 14.31.00 UTC+0.00
-fi	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h.mm a -> 2.31 ip.
-fi	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm -> 14.31
-fi	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a -> 2.31.00 ip.
-fi	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm.ss -> 14.31.00
-fi	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a z -> 2.31.00 ip. UTC+0.00
-fi	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm.ss z -> 14.31.00 UTC+0.00
-fi	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 ip. UTC+0.00
-fi	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm.ss zzzz -> 14.31.00 UTC+0.00
+fi	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm a -> maanantai 21. heinäkuuta 2008 2:31 ip.
+fi	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm -> maanantai 21. heinäkuuta 2008 14:31
+fi	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a -> maanantai 21. heinäkuuta 2008 2:31:00 ip.
+fi	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss -> maanantai 21. heinäkuuta 2008 14:31:00
+fi	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a z -> maanantai 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss z -> maanantai 21. heinäkuuta 2008 14:31:00 UTC+0.00
+fi	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a zzzz -> maanantai 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss zzzz -> maanantai 21. heinäkuuta 2008 14:31:00 UTC+0.00
+fi	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 ip.
+fi	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+fi	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 ip.
+fi	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+fi	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 ip. UTC+0.00
+fi	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 UTC+0.00
+fi	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 ip. UTC+0.00
+fi	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 UTC+0.00
 fi	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
 fi	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
-fi	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 18.7.1429 2.31 ip.
-fi	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 18.7.1429 14.31
-fi	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 18.7.1429 2.31.00 ip.
-fi	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 18.7.1429 14.31.00
-fi	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 18.7.1429 14.31.00 UTC+0.00
-fi	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 18.7.1429 14.31.00 UTC+0.00
+fi	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 ip.
+fi	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
+fi	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 ip.
+fi	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
+fi	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 UTC+0.00
+fi	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 UTC+0.00
 fi	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
 fi	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
-fi	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 18.7.1429 2.31 ip.
-fi	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 18.7.1429 14.31
-fi	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 18.7.1429 2.31.00 ip.
-fi	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 18.7.1429 14.31.00
-fi	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 18.7.1429 14.31.00 UTC+0.00
-fi	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 18.7.1429 14.31.00 UTC+0.00
+fi	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 ip.
+fi	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
+fi	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 ip.
+fi	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
+fi	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 UTC+0.00
+fi	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 UTC+0.00
 fi	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y -> 18. radžab 1429
 fi	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 18. radžab 1429
-fi	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm a -> 18. radžab 1429 2.31 ip.
-fi	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm -> 18. radžab 1429 14.31
-fi	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a -> 18. radžab 1429 2.31.00 ip.
-fi	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss -> 18. radžab 1429 14.31.00
-fi	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a z -> 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss z -> 18. radžab 1429 14.31.00 UTC+0.00
-fi	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a zzzz -> 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss zzzz -> 18. radžab 1429 14.31.00 UTC+0.00
+fi	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 18. radžab 1429 2:31 ip.
+fi	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 18. radžab 1429 14:31
+fi	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 18. radžab 1429 2:31:00 ip.
+fi	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 18. radžab 1429 14:31:00
+fi	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 18. radžab 1429 14:31:00 UTC+0.00
+fi	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 18. radžab 1429 14:31:00 UTC+0.00
 fi	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y -> maanantai 18. radžab 1429
 fi	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y -> maanantai 18. radžab 1429
-fi	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm a -> maanantai 18. radžab 1429 2.31 ip.
-fi	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm -> maanantai 18. radžab 1429 14.31
-fi	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a -> maanantai 18. radžab 1429 2.31.00 ip.
-fi	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss -> maanantai 18. radžab 1429 14.31.00
-fi	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a z -> maanantai 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss z -> maanantai 18. radžab 1429 14.31.00 UTC+0.00
-fi	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a zzzz -> maanantai 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss zzzz -> maanantai 18. radžab 1429 14.31.00 UTC+0.00
+fi	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm a -> maanantai 18. radžab 1429 2:31 ip.
+fi	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm -> maanantai 18. radžab 1429 14:31
+fi	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a -> maanantai 18. radžab 1429 2:31:00 ip.
+fi	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss -> maanantai 18. radžab 1429 14:31:00
+fi	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a z -> maanantai 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss z -> maanantai 18. radžab 1429 14:31:00 UTC+0.00
+fi	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a zzzz -> maanantai 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss zzzz -> maanantai 18. radžab 1429 14:31:00 UTC+0.00
 fi_FI	Language endonym	suomi
 fi_FI	Country endonym	Suomi
 fi_FI	Floating Point Number	-123 456 789,012
@@ -15652,104 +15652,104 @@ fi_FI	Name of weekday 06 (Islamic Calendar)	lauantai
 fi_FI	Name of weekday 07 (Islamic Calendar)	sunnuntai
 fi_FI	Collation sample	a á b oegh z å ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 fi_FI	Scripts used	Latn
-fi_FI	%r (locale specific 12 hour “TimeShort”)	2.31 ip.
-fi_FI	%R (locale specific 24 hour “TimeShort”)	14.31
-fi_FI	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	h.mm a -> 2.31 ip.
-fi_FI	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm -> 14.31
-fi_FI	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a -> 2.31.00 ip.
-fi_FI	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm.ss -> 14.31.00
-fi_FI	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a z -> 2.31.00 ip. UTC+0.00
-fi_FI	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm.ss z -> 14.31.00 UTC+0.00
-fi_FI	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 ip. UTC+0.00
-fi_FI	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm.ss zzzz -> 14.31.00 UTC+0.00
+fi_FI	%r (locale specific 12 hour “TimeShort”)	2:31 ip.
+fi_FI	%R (locale specific 24 hour “TimeShort”)	14:31
+fi_FI	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 ip.
+fi_FI	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+fi_FI	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 ip.
+fi_FI	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+fi_FI	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 ip. UTC+0.00
+fi_FI	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 UTC+0.00
+fi_FI	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 ip. UTC+0.00
+fi_FI	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 UTC+0.00
 fi_FI	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy -> 21.7.2008
 fi_FI	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 21.7.2008
-fi_FI	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 21.7.2008 2.31 ip.
-fi_FI	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 21.7.2008 14.31
-fi_FI	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 21.7.2008 2.31.00 ip.
-fi_FI	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 21.7.2008 14.31.00
-fi_FI	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi_FI	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 21.7.2008 14.31.00 UTC+0.00
-fi_FI	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi_FI	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 21.7.2008 14.31.00 UTC+0.00
+fi_FI	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 21.7.2008 2:31 ip.
+fi_FI	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 21.7.2008 14:31
+fi_FI	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 21.7.2008 2:31:00 ip.
+fi_FI	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 21.7.2008 14:31:00
+fi_FI	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi_FI	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 21.7.2008 14:31:00 UTC+0.00
+fi_FI	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi_FI	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 21.7.2008 14:31:00 UTC+0.00
 fi_FI	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy -> 21.7.2008
 fi_FI	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 21.7.2008
-fi_FI	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 21.7.2008 2.31 ip.
-fi_FI	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 21.7.2008 14.31
-fi_FI	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 21.7.2008 2.31.00 ip.
-fi_FI	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 21.7.2008 14.31.00
-fi_FI	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi_FI	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 21.7.2008 14.31.00 UTC+0.00
-fi_FI	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 21.7.2008 2.31.00 ip. UTC+0.00
-fi_FI	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 21.7.2008 14.31.00 UTC+0.00
+fi_FI	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 21.7.2008 2:31 ip.
+fi_FI	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 21.7.2008 14:31
+fi_FI	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 21.7.2008 2:31:00 ip.
+fi_FI	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 21.7.2008 14:31:00
+fi_FI	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi_FI	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 21.7.2008 14:31:00 UTC+0.00
+fi_FI	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 21.7.2008 2:31:00 ip. UTC+0.00
+fi_FI	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 21.7.2008 14:31:00 UTC+0.00
 fi_FI	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y -> 21. heinäkuuta 2008
 fi_FI	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 21. heinäkuuta 2008
-fi_FI	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm a -> 21. heinäkuuta 2008 2.31 ip.
-fi_FI	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm -> 21. heinäkuuta 2008 14.31
-fi_FI	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a -> 21. heinäkuuta 2008 2.31.00 ip.
-fi_FI	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss -> 21. heinäkuuta 2008 14.31.00
-fi_FI	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a z -> 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi_FI	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss z -> 21. heinäkuuta 2008 14.31.00 UTC+0.00
-fi_FI	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a zzzz -> 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi_FI	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss zzzz -> 21. heinäkuuta 2008 14.31.00 UTC+0.00
+fi_FI	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 21. heinäkuuta 2008 2:31 ip.
+fi_FI	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 21. heinäkuuta 2008 14:31
+fi_FI	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 21. heinäkuuta 2008 2:31:00 ip.
+fi_FI	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 21. heinäkuuta 2008 14:31:00
+fi_FI	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi_FI	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 21. heinäkuuta 2008 14:31:00 UTC+0.00
+fi_FI	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi_FI	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 21. heinäkuuta 2008 14:31:00 UTC+0.00
 fi_FI	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y -> maanantai 21. heinäkuuta 2008
 fi_FI	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y -> maanantai 21. heinäkuuta 2008
-fi_FI	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm a -> maanantai 21. heinäkuuta 2008 2.31 ip.
-fi_FI	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm -> maanantai 21. heinäkuuta 2008 14.31
-fi_FI	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a -> maanantai 21. heinäkuuta 2008 2.31.00 ip.
-fi_FI	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss -> maanantai 21. heinäkuuta 2008 14.31.00
-fi_FI	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a z -> maanantai 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi_FI	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss z -> maanantai 21. heinäkuuta 2008 14.31.00 UTC+0.00
-fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a zzzz -> maanantai 21. heinäkuuta 2008 2.31.00 ip. UTC+0.00
-fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss zzzz -> maanantai 21. heinäkuuta 2008 14.31.00 UTC+0.00
-fi_FI	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h.mm a -> 2.31 ip.
-fi_FI	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm -> 14.31
-fi_FI	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a -> 2.31.00 ip.
-fi_FI	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm.ss -> 14.31.00
-fi_FI	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a z -> 2.31.00 ip. UTC+0.00
-fi_FI	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm.ss z -> 14.31.00 UTC+0.00
-fi_FI	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 ip. UTC+0.00
-fi_FI	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm.ss zzzz -> 14.31.00 UTC+0.00
+fi_FI	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm a -> maanantai 21. heinäkuuta 2008 2:31 ip.
+fi_FI	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm -> maanantai 21. heinäkuuta 2008 14:31
+fi_FI	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a -> maanantai 21. heinäkuuta 2008 2:31:00 ip.
+fi_FI	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss -> maanantai 21. heinäkuuta 2008 14:31:00
+fi_FI	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a z -> maanantai 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi_FI	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss z -> maanantai 21. heinäkuuta 2008 14:31:00 UTC+0.00
+fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a zzzz -> maanantai 21. heinäkuuta 2008 2:31:00 ip. UTC+0.00
+fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss zzzz -> maanantai 21. heinäkuuta 2008 14:31:00 UTC+0.00
+fi_FI	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 ip.
+fi_FI	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
+fi_FI	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 ip.
+fi_FI	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss -> 14:31:00
+fi_FI	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a z -> 2:31:00 ip. UTC+0.00
+fi_FI	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 UTC+0.00
+fi_FI	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 ip. UTC+0.00
+fi_FI	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 UTC+0.00
 fi_FI	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
 fi_FI	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
-fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 18.7.1429 2.31 ip.
-fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 18.7.1429 14.31
-fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 18.7.1429 2.31.00 ip.
-fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 18.7.1429 14.31.00
-fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 18.7.1429 14.31.00 UTC+0.00
-fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 18.7.1429 14.31.00 UTC+0.00
+fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 ip.
+fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
+fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 ip.
+fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
+fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 UTC+0.00
+fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 UTC+0.00
 fi_FI	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
 fi_FI	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
-fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm a -> 18.7.1429 2.31 ip.
-fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm -> 18.7.1429 14.31
-fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a -> 18.7.1429 2.31.00 ip.
-fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss -> 18.7.1429 14.31.00
-fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a z -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss z -> 18.7.1429 14.31.00 UTC+0.00
-fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h.mm.ss a zzzz -> 18.7.1429 2.31.00 ip. UTC+0.00
-fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H.mm.ss zzzz -> 18.7.1429 14.31.00 UTC+0.00
+fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 ip.
+fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
+fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 ip.
+fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
+fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 UTC+0.00
+fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 ip. UTC+0.00
+fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 UTC+0.00
 fi_FI	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y -> 18. radžab 1429
 fi_FI	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 18. radžab 1429
-fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm a -> 18. radžab 1429 2.31 ip.
-fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm -> 18. radžab 1429 14.31
-fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a -> 18. radžab 1429 2.31.00 ip.
-fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss -> 18. radžab 1429 14.31.00
-fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a z -> 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss z -> 18. radžab 1429 14.31.00 UTC+0.00
-fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h.mm.ss a zzzz -> 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H.mm.ss zzzz -> 18. radžab 1429 14.31.00 UTC+0.00
+fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 18. radžab 1429 2:31 ip.
+fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 18. radžab 1429 14:31
+fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 18. radžab 1429 2:31:00 ip.
+fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 18. radžab 1429 14:31:00
+fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 18. radžab 1429 14:31:00 UTC+0.00
+fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 18. radžab 1429 14:31:00 UTC+0.00
 fi_FI	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y -> maanantai 18. radžab 1429
 fi_FI	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y -> maanantai 18. radžab 1429
-fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm a -> maanantai 18. radžab 1429 2.31 ip.
-fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm -> maanantai 18. radžab 1429 14.31
-fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a -> maanantai 18. radžab 1429 2.31.00 ip.
-fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss -> maanantai 18. radžab 1429 14.31.00
-fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a z -> maanantai 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss z -> maanantai 18. radžab 1429 14.31.00 UTC+0.00
-fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h.mm.ss a zzzz -> maanantai 18. radžab 1429 2.31.00 ip. UTC+0.00
-fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H.mm.ss zzzz -> maanantai 18. radžab 1429 14.31.00 UTC+0.00
+fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm a -> maanantai 18. radžab 1429 2:31 ip.
+fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm -> maanantai 18. radžab 1429 14:31
+fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a -> maanantai 18. radžab 1429 2:31:00 ip.
+fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss -> maanantai 18. radžab 1429 14:31:00
+fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a z -> maanantai 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss z -> maanantai 18. radžab 1429 14:31:00 UTC+0.00
+fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a zzzz -> maanantai 18. radžab 1429 2:31:00 ip. UTC+0.00
+fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss zzzz -> maanantai 18. radžab 1429 14:31:00 UTC+0.00
 fr	Language endonym	français
 fr	Country endonym	
 fr	Floating Point Number	-123 456 789,012
