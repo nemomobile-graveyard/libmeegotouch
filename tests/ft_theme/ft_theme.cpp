@@ -181,16 +181,14 @@ void Ft_Theme::cleanupTestCase()
     // restore the original daemon we replaced
     MTheme::instance()->d_ptr->themeDaemon = daemon;
     delete testDaemon;
-    delete argv[0];
-    delete[] argv;
 }
 
 void Ft_Theme::testThemeReinit()
 {
     QSignalSpy themeReinitedSpy(testDaemon, SIGNAL(themeReinited()));
-    argc = 1;
-    argv = new char * [ argc ];
-    argv[0] = strdup("./Ft_Theme");
+    static int argc = 1;
+    static char *argv[ 1 ];
+    argv[ 0 ] = (char*)"./Ft_Theme";
     QCOMPARE(themeReinitedSpy.count(), 0);
     MComponentCache::mApplication(argc, argv);
     QCOMPARE(themeReinitedSpy.count(), 1);

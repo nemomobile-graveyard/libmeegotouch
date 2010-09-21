@@ -71,8 +71,6 @@ private:
     MComponentData *componentData;
     IMThemeDaemon *daemon;
     TestThemeDaemon *testDaemon;
-    char ** argv;
-    int argc;
 };
 
 #endif
