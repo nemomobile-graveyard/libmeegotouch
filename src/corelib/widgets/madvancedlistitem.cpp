@@ -88,7 +88,6 @@ void MAdvancedListItemPrivate::clearLayout()
 {
     Q_Q(MAdvancedListItem);
 
-    delete layoutGrid;
     layoutGrid = new QGraphicsGridLayout(q);
     layoutGrid->setContentsMargins(0, 0, 0, 0);
     layoutGrid->setSpacing(0);
