@@ -41,6 +41,9 @@ class MLogicalValues;
  */
 class M_EXPORT MStyleSheetParser
 {
+    //! \brief Set the parser mode
+    Q_PROPERTY(SyntaxMode syntaxMode READ syntaxMode WRITE setSyntaxMode)
+
 public:
     //! \internal
     struct StylesheetFileInfo {
@@ -52,6 +55,11 @@ public:
         uint                            time_t;
     };
     //! \internal_end
+
+    enum SyntaxMode {
+        RelaxedSyntax,
+        StrictSyntax
+    };
 
     /*!
      * Constructor for MStyleSheetParser.
@@ -97,6 +105,18 @@ public:
      * \return A list of file information structures in this style sheet.
      */
     QList<MStyleSheetParser::StylesheetFileInfo *>& fileInfoList() const;
+
+    /*!
+     * Gets the current parse mode.
+     * \return the current parse
+     */
+    SyntaxMode syntaxMode() const;
+
+    /*!
+     * Sets the parse mode.
+     * \param syntaxMode the parse mode to be set
+     */
+    void setSyntaxMode(SyntaxMode syntaxMode);
 
 protected:
     static void outputParseError(const QString &filename, const QString &description, int lineNum);

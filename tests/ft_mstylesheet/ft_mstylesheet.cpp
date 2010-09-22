@@ -397,8 +397,26 @@ void Ft_MStyleSheet::test_wrong_attribute_value()
     QString app = qApp->applicationDirPath() + "_helper_app/ft_mstylesheet_helper_app";
     QStringList arguments;
     arguments << qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_attribute.css";
+
+    /* Testing with default syntax mode: strict */
     int exit = QProcess::execute(app, arguments);
     QCOMPARE(exit, 2);
+
+    arguments << "relaxed";
+    exit = QProcess::execute(app, arguments);
+    QCOMPARE(exit, 0);
+}
+
+void Ft_MStyleSheet::test_wrong_syntax()
+{
+    m_subject->setBinaryFileGenerationEnabled(false);
+
+    /* Testing with default syntax mode: strict */
+    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_syntax.css"), false);
+
+    m_subject->setSyntaxMode(MStyleSheet::RelaxedSyntax);
+    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_syntax.css"), true);
+    m_subject->setSyntaxMode(MStyleSheet::StrictSyntax);
 }
 
 /*

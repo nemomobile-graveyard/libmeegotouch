@@ -31,6 +31,9 @@ int main(int argc, char **argv)
 
     QString css_filename;
     css_filename += QString(argv[1]);
+
+    if (argc > 2 && QString(argv[2]).toLower() == "relaxed")
+	sheet.setSyntaxMode(MStyleSheet::RelaxedSyntax);
     sheet.load(css_filename);
 
     QList<const MStyleSheet *> sheets;
@@ -42,4 +45,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-

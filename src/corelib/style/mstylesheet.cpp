@@ -52,18 +52,21 @@ public:
                        MStyleSheetSelector *selector,
                        unsigned int classPriority,
                        unsigned int parentPriority,
-                       const QString &file) :
+                       const QString &file,
+                       const MStyleSheet *stylesheet) :
         value(val),
         selector(selector),
         classPriority(classPriority),
         parentPriority(parentPriority),
-        filename(file) {}
+        filename(file),
+        stylesheet(stylesheet) {}
 
     MStyleSheetAttribute *value;
     MStyleSheetSelector *selector;
     unsigned int classPriority;
     unsigned int parentPriority;
     QString filename;
+    const MStyleSheet *stylesheet;
 };
 //! \endcond
 
@@ -275,6 +278,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                             existing->parentPriority = parentPriority;
                             existing->filename = fi->filename;
                             existing->value = j.value();
+                            existing->stylesheet = sheet;
                         }
                     } else {
                         // New settings, just add them to the hash
@@ -282,7 +286,8 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                                 selector,
                                 classPriority,
                                 parentPriority,
-                                fi->filename);
+                                fi->filename,
+                                sheet);
                     }
                 }
             }
@@ -318,7 +323,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const Q
             }
 
             // override
-            MOriginContainer *tempMOriginCont =   new MOriginContainer(attribute, info.selector, info.classPriority, info.parentPriority, info.filename);
+            MOriginContainer *tempMOriginCont =   new MOriginContainer(attribute, info.selector, info.classPriority, info.parentPriority, info.filename, old->stylesheet);
             data[attribute->name] = tempMOriginCont;
             tempMOriginContainers.append(tempMOriginCont);
         }
@@ -351,7 +356,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const Q
                        attribute->value.toStdString().c_str(),
                        container->filename.toStdString().c_str());
 
-                result = false;
+                result = container->stylesheet->syntaxMode() == MStyleSheet::RelaxedSyntax;
             } else {
                 propertyInitialized = true;
             }

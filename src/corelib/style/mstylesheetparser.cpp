@@ -92,6 +92,7 @@ public:
 
     bool binaryFileMode;
     QString binaryDirectory;
+    MStyleSheetParser::SyntaxMode syntaxMode;
 
     void debugOutput();
 
@@ -383,7 +384,7 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QString, QStr
         bool result = parse(file, fileInfo);
         file.close();
 
-        if (result) {
+        if (result || syntaxMode == MStyleSheetParser::RelaxedSyntax) {
             fileInfoList.push_back(privateFileInfo);
 
             // dump this file to the disk for faster access in future?
@@ -442,8 +443,10 @@ bool MStyleSheetParserPrivate::parse(QFile &file, const QFileInfo &fileInfo)
                     // It wasn't selector.. there was an error..
                     // we don't really know what it is then so fail.
                     result = false;
-                    break;
-                } else if (selector) {
+                    if (syntaxMode == MStyleSheetParser::StrictSyntax)
+                        break;
+                }
+                if (selector) {
                     if (selector->parentName().isEmpty()) {
                         privateFileInfo->selectors.push_back(selector);
                     } else {
@@ -591,7 +594,8 @@ bool MStyleSheetParserPrivate::importFile(const QString &filename)
     MStyleSheetParserPrivate parser(logicalValues);
     parser.binaryDirectory = binaryDirectory;
     parser.binaryFileMode = binaryFileMode;
-    if (parser.load(parsedFileInfo.absolutePath() + QDir::separator() + filename, globalConstants)) {
+    if (parser.load(parsedFileInfo.absolutePath() + QDir::separator() + filename, globalConstants) ||
+        syntaxMode == MStyleSheetParser::RelaxedSyntax) {
         // add all the new file infos into the list of parsed files
         while (parser.fileInfoList.count() > 0) {
             MStyleSheetParser::StylesheetFileInfo *fileInfo = parser.fileInfoList.front();
@@ -817,6 +821,10 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
             if (!result.second) {
                 mWarning("MStyleSheetParserPrivate") << "Attribute read failed in selector: " <<
                         selector->className() + '[' + selector->classType() + "]#" + selector->objectName();
+
+                if (syntaxMode == MStyleSheetParser::RelaxedSyntax)
+                    return selector;
+
                 delete selector;
                 return NULL;
             }
@@ -912,6 +920,8 @@ MStyleSheetParser::MStyleSheetParser(const MLogicalValues *logicalValues) :
     d->binaryDirectory = QDir::tempPath() + QDir::separator();
 #endif
     d->binaryFileMode = true;
+
+    setSyntaxMode(StrictSyntax);
 }
 
 MStyleSheetParser::~MStyleSheetParser()
@@ -977,6 +987,18 @@ void MStyleSheetParser::setBinaryFileGenerationEnabled(bool enabled)
 {
     Q_D(MStyleSheetParser);
     d->binaryFileMode = enabled;
+}
+
+void MStyleSheetParser::setSyntaxMode(SyntaxMode syntaxMode)
+{
+    Q_D(MStyleSheetParser);
+    d->syntaxMode = syntaxMode;
+}
+
+MStyleSheetParser::SyntaxMode MStyleSheetParser::syntaxMode() const
+{
+    Q_D(const MStyleSheetParser);
+    return d->syntaxMode;
 }
 
 bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QString &binaryFilename)
