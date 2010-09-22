@@ -227,8 +227,8 @@ void MListIndexViewPrivate::updateDisplayMode()
         break;
     case MList::Show:
         controller->show();
-        showAnimated();
         stopVisibilityTimer();
+        showAnimated();
         break;
     default:
         controller->hide();
@@ -340,6 +340,9 @@ void MListIndexView::applyStyle()
 
     if (d->autoVisibilityAnimation) {
         d->autoVisibilityAnimation->setDuration(style()->appearDuration());
+
+        d->autoVisibilityAnimation->setStartValue(0.0);
+        d->autoVisibilityAnimation->setEndValue(1.0);
 
         d->autoVisibilityAnimation->setKeyValueAt(d->delayTimelineDuration(), 0.0);
         d->autoVisibilityAnimation->setKeyValueAt(1.0 - d->delayTimelineDuration(), 1.0);
