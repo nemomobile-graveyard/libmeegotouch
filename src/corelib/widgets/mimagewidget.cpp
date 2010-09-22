@@ -75,23 +75,6 @@ QSizeF MImageWidgetPrivate::imageDataSize(const QRectF& cropRect) const
     return imageSize;
 }
 
-MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &other)
-{
-    cleanUp();
-
-    if (other.ownPixmap) {
-        if (other.pixmap)
-            pixmap = new QPixmap(*(other.pixmap));
-    } else
-      pixmap = other.pixmap;
-
-    ownPixmap = other.ownPixmap;
-
-    image = other.image;
-
-    return *this;
-}
-
 void MImageWidgetPrivate::setPixmap(const QPixmap* pixmap, bool takeOwnership)
 {
     cleanUp();
@@ -151,7 +134,18 @@ MImageWidget::MImageWidget(const MImageWidget &other) :
 MImageWidget &MImageWidget::operator=(const MImageWidget &other)
 {
     Q_D(MImageWidget);
-    *d = *other.d_func();
+
+    d->cleanUp();
+
+    if (other.d_func()->ownPixmap) {
+        if (other.d_func()->pixmap)
+            d->pixmap = new QPixmap(*(other.d_func()->pixmap));
+    } else
+        setImage(other.model()->imageId(), other.model()->imageSize());
+
+    d->ownPixmap = other.d_func()->ownPixmap;
+
+    d->image = other.d_func()->image;
 
     qreal fx(0), fy(0);
 

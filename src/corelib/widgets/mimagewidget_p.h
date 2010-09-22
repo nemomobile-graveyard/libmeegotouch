@@ -33,7 +33,6 @@ public:
     virtual ~MImageWidgetPrivate();
 
     void cleanUp();
-    MImageWidgetPrivate &operator=(const MImageWidgetPrivate &other);
 
     QSizeF imageDataSize(const QRectF& cropRect) const;
 
