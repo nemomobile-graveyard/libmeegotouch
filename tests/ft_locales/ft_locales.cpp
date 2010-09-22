@@ -1287,7 +1287,7 @@ void Ft_Locales::checkAvailableLocales()
     QString ft_localesTestInput = QString::fromUtf8(ft_localesTestInputFile.readAll().constData());
     ft_localesTestInputFile.close();
     
-    // QTextStream debugStream(stderr);
+    // QTextStream debugStream(stdout);
     // debugStream.setCodec("UTF-8");
     // debugStream << ft_localesTestInput;
 

@@ -835,7 +835,7 @@ void Ut_MCalendar::testIcuFormatString()
                 static_cast<MLocale::DateType>(dateType),
                 static_cast<MLocale::TimeType>(timeType),
                 calendarType);
-            QTextStream debugStream(stderr);
+            QTextStream debugStream(stdout);
             debugStream.setCodec("UTF-8");
             debugStream << lcTime
                         << " timeFormat24h: " << timeFormat24h
@@ -1393,7 +1393,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                 expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
             else
                 expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
-            QTextStream debugStream(stderr);
+            QTextStream debugStream(stdout);
             debugStream.setCodec("UTF-8");
             debugStream
                 << "language " << localeName
@@ -2803,7 +2803,7 @@ void Ut_MCalendar::testFormatDateTimeICU()
     QDateTime datetime(date, time, Qt::LocalTime);
     QLocale qlocale(localeName);
 
-    QTextStream debugStream(stderr);
+    QTextStream debugStream(stdout);
     debugStream.setCodec("UTF-8");
     debugStream << "format: " << format
                 << " actual result: " << locale.formatDateTimeICU(mcal, format)
