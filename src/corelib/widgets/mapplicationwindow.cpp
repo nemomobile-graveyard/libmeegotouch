@@ -226,6 +226,7 @@ void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
         dockWidget->hide();
         homeButtonPanel->hide();
         escapeButtonPanel->hide();
+        closeMenu();
     } else {
         navigationBar->show();
         dockWidget->show();
