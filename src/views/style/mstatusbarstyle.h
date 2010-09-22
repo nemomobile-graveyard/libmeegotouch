@@ -27,6 +27,7 @@ class M_EXPORT MStatusBarStyle : public MSceneWindowStyle
     Q_OBJECT
     M_STYLE(MStatusBarStyle)
 
+    M_STYLE_ATTRIBUTE(bool, useSwipeGesture, UseSwipeGesture)
     M_STYLE_ATTRIBUTE(int, swipeThreshold, SwipeThreshold)
 };
 

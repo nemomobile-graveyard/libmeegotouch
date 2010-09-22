@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include "mviewconstants.h"
 #include "mstatusbarview.h"
 #include <mstatusbar.h>
 #include <mapplication.h>
@@ -149,11 +150,29 @@ void MStatusBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!style()->useSwipeGesture()) {
+        return;
+    }
+
     if(firstPos.y()+ style()->swipeThreshold() < event->pos().y()) {
         showStatusIndicatorMenu();
     }
 }
 
+void MStatusBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (style()->useSwipeGesture()) {
+        return;
+    }
+
+    QPointF touch = event->scenePos();
+    QRectF rect = controller->sceneBoundingRect();
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
+    if(rect.contains(touch)) {
+        showStatusIndicatorMenu();
+    }
+}
 
 #ifdef Q_WS_X11
 void MStatusBarView::updateSharedPixmap()
