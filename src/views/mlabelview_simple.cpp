@@ -105,39 +105,23 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     switch (which) {
     case Qt::MinimumSize: {
         QFontMetricsF fm(viewPrivate->controller->font());
-        QRectF r(0, 0, constraint.width(), constraint.height());
+        const QSizeF maxSize = sizeForConstraint(constraint);
 
-        if (r.width() < 0) {
-            r.setWidth(QWIDGETSIZE_MAX);
-        }
-        if (r.height() < 0) {
-            r.setHeight(QWIDGETSIZE_MAX);
-        }
+        QSizeF requiredSize = sizeForWidth(maxSize.width());
+        requiredSize.rwidth() = fm.width(QLatin1Char('x'));
 
-        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | wrap(),
-                                  viewPrivate->model()->text()));
-
-        return QSizeF(fm.width("x"), bR.height());
+        return requiredSize.boundedTo(maxSize);
     }
     case Qt::PreferredSize: {
-        qreal w = constraint.width();
-        qreal h = constraint.height();
-        if (w < 0) {
-            w = QWIDGETSIZE_MAX;
+        QSizeF maxSize = sizeForConstraint(constraint);
+        if (preferredSize.width() >= 0 && preferredSize.width() < maxSize.width()) {
+            maxSize.rwidth() = preferredSize.width();
         }
-        if (h < 0) {
-            h = QWIDGETSIZE_MAX;
+        if (preferredSize.height() >= 0 && preferredSize.height() < maxSize.height()) {
+            maxSize.rheight() = preferredSize.height();
         }
-        if (preferredSize.width() >= 0 && preferredSize.width() < w)
-            w = preferredSize.width();
-        if (preferredSize.height() >= 0 && preferredSize.height() < h)
-            h = preferredSize.height();
 
-        QFontMetricsF fm(viewPrivate->controller->font());
-
-        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | wrap(),
-                                  viewPrivate->model()->text()));
-        return bR.size().boundedTo(QSizeF(w, h));
+        return sizeForWidth(maxSize.width()).boundedTo(maxSize);
     }
     case Qt::MaximumSize: {
         return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -330,6 +314,36 @@ void MLabelViewSimple::adjustTextOffset()
     } else if (alignment & Qt::AlignBottom) {
         textOffset.setY(paintingRect.bottom() - staticText.size().height());
     }
+}
+
+QSizeF MLabelViewSimple::sizeForWidth(qreal width) const
+{
+    if (width == QWIDGETSIZE_MAX) {
+        width = -1.0;
+    }
+
+    const_cast<MLabelViewSimple*>(this)->initializeStaticText();
+    if ((width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth()) {
+        return staticText.size();
+    }
+
+    QStaticText staticText2(staticText);
+    staticText2.setTextOption(staticText.textOption());  // TODO: remove after Qt-bug #13368 has been fixed
+    staticText2.setTextWidth(width);
+
+    return staticText2.size();
+}
+
+QSizeF MLabelViewSimple::sizeForConstraint(const QSizeF &constraint) const
+{
+    QSizeF size = constraint;
+    if (size.width() < 0.0) {
+        size.setWidth(QWIDGETSIZE_MAX);
+    }
+    if (size.height() < 0.0) {
+        size.setHeight(QWIDGETSIZE_MAX);
+    }
+    return size;
 }
 
 void MLabelViewSimple::markDirty()

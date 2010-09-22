@@ -490,8 +490,6 @@ void Ut_MLabel::testSizeHint_data()
 
 void Ut_MLabel::testSizeHint()
 {
-    QSKIP("Wait until merge-request 356 has been applied", SkipSingle);
-
     QFETCH(QString, text);
     QFETCH(QTextOption::WrapMode, wrapMode);
     QFETCH(qreal, widthConstraint);

@@ -43,6 +43,9 @@ private slots:
 
     void multiplePaintPerformance();
     void multiplePaintPerformance_data();
+
+    void sizeHint();
+    void sizeHint_data();
     
 private:
     void data();

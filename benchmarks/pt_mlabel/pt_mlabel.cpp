@@ -114,6 +114,27 @@ void Pt_MLabel::multiplePaintPerformance_data()
     data();
 }
 
+void Pt_MLabel::sizeHint()
+{
+    QFETCH(QSizeF, constraint);
+    QBENCHMARK {
+        subject->sizeHint(Qt::MinimumSize, constraint);
+        subject->sizeHint(Qt::PreferredSize, constraint);
+        subject->sizeHint(Qt::MaximumSize, constraint);
+    }
+}
+
+void Pt_MLabel::sizeHint_data()
+{
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<QSizeF>("constraint");
+
+    const QString text("Longer text will get wrapped above several lines inside MLabel.");
+    QTest::newRow("none") << text << QSizeF(-1, -1);
+    QTest::newRow("50/50") << text << QSizeF(50, 50);
+    QTest::newRow("100/100") << text << QSizeF(100, 100);
+}
+
 void Pt_MLabel::data()
 {
     QTest::addColumn<QString>("text");

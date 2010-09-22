@@ -52,10 +52,24 @@ public:
     Qt::TextFlag wrap() const;
     void initializeStaticText();
     
-    // Helper method for initializeStaticText(): Adjusts the member variable
-    // 'textOffset' dependent on the used alignment, as QStaticText does not support
-    // text alignment within a bounding rectangle.
+    /**
+     * Helper method for initializeStaticText(): Adjusts the member variable
+     * 'textOffset' dependent on the used alignment, as QStaticText does not support
+     * text alignment within a bounding rectangle.
+     */
     void adjustTextOffset();
+
+    /**
+     * \return The required size of the label to fit into the given width. If the width
+     *         is smaller than 0 no restriction for the width is given.
+     */
+    QSizeF sizeForWidth(qreal width) const;
+
+    /**
+     * \return Size for the constraint \a constraint. If the width or height
+     *         of the constraint is < 0 it will be replaced by QWIDGETSIZE_MAX.
+     */
+    QSizeF sizeForConstraint(const QSizeF &constraint) const;
 
     void markDirty();
 
