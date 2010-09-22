@@ -293,6 +293,7 @@ void MSceneManagerPrivate::_q_emitOrientationChangeFinished()
     emit q->orientationChangeFinished(q->orientation());
 #ifdef Q_WS_X11
     _q_updateDecoratorButtonsProperty();
+    updateStatusBarGeometryProperty();
 #endif
 
     // Needs to be called on every angle change and after animation and scene window
@@ -789,6 +790,32 @@ bool MSceneManagerPrivate::windowIntersectsRect(const QRectF &rect, MSceneWindow
     return rect.intersects(window->geometry()) ||
         (window->d_func()->effect && rect.intersects(window->d_func()->effect->geometry()));
 }
+
+void MSceneManagerPrivate::updateStatusBarGeometryProperty()
+{
+    QRectF statusBarGeometry;
+
+    if (statusBar) {
+        statusBarGeometry = statusBar->mapRectToScene(
+                QRectF(QPointF(), statusBar->geometry().size()));
+    }
+
+    long data[4] = {0};
+    data[0] = statusBarGeometry.x();
+    data[1] = statusBarGeometry.y();
+    data[2] = statusBarGeometry.width();
+    data[3] = statusBarGeometry.height();
+
+    Display *dpy = QX11Info::display();
+
+    Atom a = XInternAtom(dpy, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY", False);
+    foreach (QGraphicsView *view, scene->views()) {
+        Window w = view->winId();
+        XChangeProperty(dpy, w, a, XA_CARDINAL, 32, PropModeReplace,
+                        (unsigned char*)data, 4);
+    }
+}
+
 #endif
 
 void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
@@ -1602,6 +1629,13 @@ void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
         sceneWindow->zValue() >= MSceneManagerPrivate::EscapeButtonPanel)
     {
         _q_updateDecoratorButtonsProperty();
+    }
+
+    if (sceneWindow->windowType() == MSceneWindow::StatusBar &&
+        (sceneWindow->sceneWindowState() == MSceneWindow::Appeared ||
+         sceneWindow->sceneWindowState() == MSceneWindow::Disappeared))
+    {
+        updateStatusBarGeometryProperty();
     }
 #endif
 

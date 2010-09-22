@@ -86,6 +86,9 @@ private slots:
     void testDismissPageThatIsReappearing();
     void testDeletePageThatIsAppearing();
     void testDeletePageThatIsDisappearing();
+#ifdef Q_WS_X11
+    void testStatusBarGeometryProperty();
+#endif
 private:
     MComponentData* m_componentData;
 };

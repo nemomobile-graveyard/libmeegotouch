@@ -206,6 +206,7 @@ public:
     void _q_applyPendingOrientationChange();
 #ifdef Q_WS_X11
     void _q_updateDecoratorButtonsProperty();
+    void updateStatusBarGeometryProperty();
 #endif
 
 public:

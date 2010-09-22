@@ -39,6 +39,13 @@
 #include <MComponentData>
 #include <mapplicationwindow.h>
 #include <MDeviceProfile>
+#include "mstatusbar.h"
+
+#ifdef Q_WS_X11
+# include <QX11Info>
+# include <X11/Xatom.h>
+# include <X11/Xlib.h>
+#endif
 
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
@@ -1131,6 +1138,69 @@ void Ut_MSceneManager::testDeletePageThatIsDisappearing()
 
     QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Appeared);
 }
+
+#ifdef Q_WS_X11
+
+static QVector<unsigned long> getX11Property(MWindow* window, const char *propertyName)
+{
+    QVector<unsigned long> result;
+    Atom actualType = 0;
+    int actualFormat = 0;
+    unsigned long nitems = 0;
+    unsigned long bytes = 0;
+    unsigned long* data = 0;
+
+    Atom propertyAtom = XInternAtom(QX11Info::display(), propertyName, False);
+
+    int status = XGetWindowProperty(QX11Info::display(), window->winId(), propertyAtom,
+                                    0, 4, False, AnyPropertyType,
+                                    &actualType, &actualFormat, &nitems,
+                                    &bytes, reinterpret_cast<unsigned char**>(&data));
+
+    if (status == Success && actualType == XA_CARDINAL && actualFormat == 32) {
+        for (unsigned long i=0; i<nitems; i++)
+            result.append(data[i]);
+    }
+    if (status == Success)
+        XFree(data);
+    return result;
+}
+
+static QVector<unsigned long> windowGeometry(MSceneWindow* window)
+{
+    QRectF rect = window->mapRectToScene(QRectF(QPointF(), window->geometry().size()));
+    QVector<unsigned long> vector;
+    vector << rect.x() << rect.y() << rect.width() << rect.height();
+    return vector;
+}
+
+void Ut_MSceneManager::testStatusBarGeometryProperty()
+{
+    MSceneManager* sceneManager = new MSceneManager;
+    MWindow *window = new MWindow(sceneManager);
+    MStatusBar* statusbar = new MStatusBar;
+
+    QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), QVector<unsigned long>());
+
+    sceneManager->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+
+    sceneManager->appearSceneWindowNow(statusbar);
+
+    QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), windowGeometry(statusbar));
+
+    sceneManager->setOrientationAngle(M::Angle270, MSceneManager::ImmediateTransition);
+
+    QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), windowGeometry(statusbar));
+
+    sceneManager->disappearSceneWindowNow(statusbar);
+
+    QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), QVector<unsigned long>(4,0));
+
+    window->setSceneManager(0);
+    delete window;
+}
+
+#endif
 
 TestBridge::TestBridge(QObject *parent)
     : QObject(parent)
