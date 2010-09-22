@@ -28,6 +28,7 @@
 #include "mscenewindowmodel.h"
 #include "mscenewindow_p.h"
 #include "mscene.h"
+#include "mscene_p.h"
 #include "mscenemanager.h"
 #include "mscenemanager_p.h"
 #include "mapplication.h"
@@ -343,6 +344,23 @@ bool MSceneWindow::event(QEvent *event)
     }
 
     return MWidgetController::event(event);
+}
+
+void MSceneWindow::gestureEvent(QGestureEvent *event)
+{
+
+    MWidgetController::gestureEvent(event);
+
+    MScene *mScene = qobject_cast<MScene *>(scene());
+    if (!mScene)
+        return;
+
+    foreach(QGesture* gesture, event->gestures()) {
+        if (gesture->state() == Qt::GestureStarted) {
+            mScene->d_func()->notifyGestureCaughtByPanel(gesture->gestureType());
+            event->accept(gesture);
+        }
+    }
 }
 
 MSceneWindowTestInterface::MSceneWindowTestInterface(MSceneWindowPrivate *d, QObject *parent)

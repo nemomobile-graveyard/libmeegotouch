@@ -209,6 +209,9 @@ MWidget *MListViewPrivate::createCell(int row)
         QObject::connect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)), Qt::UniqueConnection);
     }
 
+    if (controllerModel->longTapEnabled()) {
+        cell->grabGesture(Qt::TapAndHoldGesture);
+    }
     return cell;
 }
 

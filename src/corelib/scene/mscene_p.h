@@ -23,6 +23,7 @@
 #include <QTime>
 #include <QFile>
 #include <QTextStream>
+#include <QList>
 
 class MSceneManager;
 class MOnDisplayChangeEvent;
@@ -70,6 +71,19 @@ public:
     bool eventEmulatePinch(QEvent *event);
     void fillMarginRectWithPattern(QPainter *painter, const QRectF& rect, int thickness);
 
+    void handleGestureEvent(QEvent* event);
+
+    /*
+     MeegoTouch needs to have widgets that stop
+     propagation of gestures. We implement that using
+     MSceneWindows, which are supposed to swallow all
+     gesture events. The scene windows on the other hand
+     need to inform the scene that they swallowed gesture
+     event and they use the notifyGestureCaughtByPanel
+     method.
+     */
+    void notifyGestureCaughtByPanel(Qt::GestureType gestureType);
+
 protected:
     MScene *q_ptr;
     MSceneManager *manager;
@@ -80,6 +94,9 @@ protected:
 
     Fps fps;
     FpsLog fpsLog;
+
+    QList<Qt::GestureType>   childrenAcceptedGestures;
+    QList<Qt::GestureType>   panelAcceptedGestures;
 };
 
 #endif // MSCENE_P_H

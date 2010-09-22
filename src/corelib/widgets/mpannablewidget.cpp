@@ -135,12 +135,18 @@ void MPannableWidgetGlass::timerEvent(QTimerEvent *event)
     pannableWidget->glassTimerEvent(event);
 }
 
+void MPannableWidgetGlass::cancelEvent(MCancelEvent *event)
+{
+    pannableWidget->cancelEvent(event);
+}
+
 MPannableWidgetPrivate::MPannableWidgetPrivate() :
     pressEvent(QEvent::GraphicsSceneMousePress),
     physics(0),
     mouseGrabber(0),
     resentList(),
-    pressDeliveryTimerId(0)
+    pressDeliveryTimerId(0),
+    panGestureCausedCancelEvent(false)
 {
 }
 
@@ -457,6 +463,7 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
         {
             // Panning against the pannable direction, we aren't interested in it.
             event->ignore(panGesture);
+            d->panGestureCausedCancelEvent = true;
             return;
         }
     }
@@ -484,6 +491,7 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
         d->physics->pointerMove(itemSpaceOffset);
         break;
     case Qt::GestureFinished:
+        d->panGestureCausedCancelEvent = true;
     case Qt::GestureCanceled:
         d->physics->pointerRelease();
         break;
@@ -555,7 +563,12 @@ void MPannableWidget::cancelEvent(MCancelEvent *event)
     Q_UNUSED(event);
     Q_D(MPannableWidget);
 
-    d->resetPhysics();
+    if (d->panGestureCausedCancelEvent) {
+        d->panGestureCausedCancelEvent = false;  
+    } else {
+        sendCancel();
+        d->resetPhysics();
+    }
 
     //We will still receive mouse release, but
     //we aren't interested in it.

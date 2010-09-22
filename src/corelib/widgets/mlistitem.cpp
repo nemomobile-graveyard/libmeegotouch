@@ -36,7 +36,6 @@ MListItemPrivate::~MListItemPrivate()
 MListItem::MListItem(QGraphicsItem *parent)
     : MWidgetController(new MListItemPrivate, new MListItemModel, parent)
 {
-    grabGesture(Qt::TapAndHoldGesture);
 }
 
 MListItem::~MListItem()

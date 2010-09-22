@@ -23,6 +23,8 @@
 #include <QTime>
 #include <QTimer>
 #include <QFileInfo>
+#include <QGesture>
+#include <QGestureEvent>
 
 #include "mdebug.h"
 #include <mondisplaychangeevent.h>
@@ -34,6 +36,7 @@
 #include "mapplicationpage.h"
 #include "mscene_p.h"
 #include "mdeviceprofile.h"
+#include "mcancelevent.h"
 
 const QFont     TextFont                = QFont("Sans", 10);
 const QSize     FpsBoxSize              = QSize(100, 40);
@@ -382,6 +385,45 @@ void MScenePrivate::fillMarginRectWithPattern(QPainter *painter, const QRectF& r
     painter->fillRect(rect, QBrush(Qt::black, Qt::BDiagPattern));
 }
 
+void MScenePrivate::handleGestureEvent(QEvent* event)
+{
+    Q_Q(MScene);
+
+    QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(event);
+
+    foreach(QGesture* gesture, gestureEvent->gestures()) {
+
+        switch (gesture->state()) {
+        case Qt::GestureStarted:
+            if (panelAcceptedGestures.contains(gesture->gestureType()))
+                panelAcceptedGestures.removeAt(panelAcceptedGestures.indexOf(gesture->gestureType()));
+            else if (gestureEvent->isAccepted(gesture))
+                childrenAcceptedGestures.append(gesture->gestureType());
+            break;
+        case Qt::GestureCanceled:
+            if (childrenAcceptedGestures.contains(gesture->gestureType()))
+                childrenAcceptedGestures.removeAt(childrenAcceptedGestures.indexOf(gesture->gestureType()));
+            break;
+        case Qt::GestureFinished:
+                if (childrenAcceptedGestures.contains(gesture->gestureType())) {
+                    if (q->mouseGrabberItem()) {
+                        MCancelEvent cancelEvent;
+                        q->sendEvent(q->mouseGrabberItem(),&cancelEvent);
+                    }
+                    childrenAcceptedGestures.removeAt(childrenAcceptedGestures.indexOf(gesture->gestureType()));
+                }
+        default:
+            break;
+        }
+    }
+}
+
+void MScenePrivate::notifyGestureCaughtByPanel(Qt::GestureType gestureType)
+{
+    if (!panelAcceptedGestures.contains(gestureType))
+        panelAcceptedGestures.append(gestureType);
+}
+
 MScene::MScene(QObject *parent)
     : QGraphicsScene(parent),
       d_ptr(new MScenePrivate)
@@ -423,7 +465,12 @@ bool MScene::event(QEvent *event)
         return true;
     }
 
-    return QGraphicsScene::event(event);
+    bool retValue = QGraphicsScene::event(event);
+
+    if (event->type() == QEvent::Gesture)
+        d->handleGestureEvent(event);
+
+    return retValue;
 }
 
 void MScene::drawForeground(QPainter *painter, const QRectF &rect)

@@ -72,6 +72,9 @@ Q_SIGNALS:
 
     /*!
       \brief The signal is emitted when the list cell has been tapped and holded.
+
+      If the MListItem is used outside MList, the user needs to invoke
+      item->grabGesture(Qt::TapAndHoldGesture) to start receiving longTapped() signal.
     */
     void longTapped(const QPointF &pos);
 

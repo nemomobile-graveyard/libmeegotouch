@@ -46,6 +46,7 @@ public:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void timerEvent(QTimerEvent* event);
+    virtual void cancelEvent(MCancelEvent *event);
 
 protected:
 
@@ -74,6 +75,7 @@ public:
     QList<struct resentItem> resentList;
 
     int pressDeliveryTimerId;
+    bool panGestureCausedCancelEvent;
 public:
 
     /*!

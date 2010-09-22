@@ -324,6 +324,10 @@ public Q_SLOTS:
     /*!
       \brief Makes the content item to send longTapped signal.
       \param pos The position of the tap.
+
+      If the MContentItem is used outside MList, the user needs to
+      invoke item->grabGesture(Qt::TapAndHoldGesture) to start
+      receiving longTapped() signal.
     */
     void longTap(const QPointF &pos);
 

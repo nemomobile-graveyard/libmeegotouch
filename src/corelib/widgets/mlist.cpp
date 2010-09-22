@@ -51,6 +51,18 @@ void MListPrivate::init()
     q->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)); //grow to available space in both directions
 }
 
+void MListPrivate::updateLongTapConnections()
+{
+    Q_Q(MList);
+
+    if (q->receivers(SIGNAL(itemLongTapped(QModelIndex))) > 0  ||
+        q->receivers(SIGNAL(itemLongTapped(QModelIndex,QPointF))) > 0) {
+        q->model()->setLongTapEnabled(true);
+    } else {
+        q->model()->setLongTapEnabled(false);
+    }
+}
+
 MList::MList(MListPrivate *dd, MListModel *model, QGraphicsItem *parent)
     : MWidgetController(dd, model, parent)
 {
@@ -289,4 +301,22 @@ void MList::keyPressEvent(QKeyEvent *event)
 
     if (d->listFilter && d->listFilter->enabled())
         d->listFilter->keyPressEvent(event);
+}
+
+void MList::connectNotify(const char *signal)
+{
+    Q_D(MList);
+    if (QLatin1String(signal) == SIGNAL(itemLongTapped(QModelIndex)) ||
+        QLatin1String(signal) == SIGNAL(itemLongTapped(QModelIndex,QPointF))) {
+        d->updateLongTapConnections();
+    }
+}
+
+void MList::disconnectNotify(const char *signal)
+{
+    Q_D(MList);
+    if (QLatin1String(signal) == SIGNAL(itemLongTapped(QModelIndex)) ||
+        QLatin1String(signal) == SIGNAL(itemLongTapped(QModelIndex,QPointF))) {
+        d->updateLongTapConnections();
+    }
 }

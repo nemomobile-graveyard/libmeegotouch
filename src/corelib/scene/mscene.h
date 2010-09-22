@@ -100,6 +100,7 @@ private:
 
     friend class MSceneManager;
     friend class MWindowPrivate;
+    friend class MSceneWindow;
 };
 
 #endif

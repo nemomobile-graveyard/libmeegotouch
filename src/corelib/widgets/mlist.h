@@ -458,6 +458,16 @@ protected:
      */
     virtual void keyPressEvent(QKeyEvent *event);
 
+    /*!
+       Handler of notifications of new receivers connected to MList signals.
+    */
+    virtual void connectNotify(const char *signal);
+
+    /*!
+       Handler of notifications of receivers disconnecting from MList signals.
+    */
+    virtual void disconnectNotify(const char *signal);
+
 private:
     Q_DECLARE_PRIVATE(MList)
     Q_DISABLE_COPY(MList)
