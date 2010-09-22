@@ -239,6 +239,17 @@ void MWindowPrivate::configureViewport()
     q->viewport()->grabGesture(Qt::TapGesture);
 
     q->setAttribute(Qt::WA_AcceptTouchEvents);
+
+    // If we don't set this flag, the technique of discarding paintEvent() calls
+    // for limiting the framerate (e.g. because window is a thumbnail in the
+    // application switcher) will cause the window to flicker between its regular
+    // appearance and a blank window.
+    // That's because even though we avoided the actual rendering of the contents,
+    // by the time paintEvent() is called Qt might have already painted the system
+    // background over of the window's previous state. This seems to be happening only
+    // with softare rendering.
+    q->setAttribute(Qt::WA_OpaquePaintEvent);
+    q->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
 }
 
 
