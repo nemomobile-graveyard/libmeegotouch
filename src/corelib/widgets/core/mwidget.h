@@ -212,6 +212,7 @@ protected:
 
     /*! \reimp */
     bool event(QEvent *event);
+    bool sceneEvent(QEvent *event);
     /*! \reimp_end */
 
     /*!
