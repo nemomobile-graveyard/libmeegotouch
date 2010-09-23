@@ -32,6 +32,7 @@ const QImage &MContentItemModel::itemQImage() const
 
 void MContentItemModel::setItemPixmap(const QPixmap &itemImage)
 {
+    _itemImageID() = "";
     _itemPixmap() = itemImage;
     memberModified(ItemPixmap);
 }
@@ -54,6 +55,7 @@ const QPixmap &MContentItemModel::itemPixmap() const
 
 void MContentItemModel::setItemImage(const QImage &itemImage)
 {
+    _itemImageID() = "";
     _itemImage() = itemImage;
     memberModified(ItemImage);
 }
