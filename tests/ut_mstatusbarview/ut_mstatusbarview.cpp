@@ -27,11 +27,16 @@
 #include "mstatusbar_p.h"
 #include "ut_mstatusbarview.h"
 
-const MStatusBarStyle* MStatusBarStyleContainer::operator->() const
+#define SWIPE_THRESHOLD 30
+#define SCENE_WIDTH 100
+
+// an arbitrary point
+#define START_POINT QPointF(15.20, 2.10)
+
+// QGraphicsItem::sceneBoundingRect mock
+QRectF QGraphicsItem::sceneBoundingRect() const
 {
-    MStatusBarStyle* style = new MStatusBarStyle;
-    style->setSwipeThreshold(30);
-    return style;
+    return QRect(0, 0, SCENE_WIDTH, SCENE_WIDTH);
 }
 
 // Stub the Dbus call used by status bar to open a menu
@@ -61,19 +66,38 @@ QDBusMessage QDBusAbstractInterface::call(QDBus::CallMode callmode, const QStrin
     return message;
 }
 
-// QGraphicsSceneMouseEvent::pos mock
+// QGraphicsSceneMouseEvent::pos and QGraphicsSceneMouseEvent::scenePos mock
 QPointF mouseDownPos;
 QPointF mouseMovePos;
-bool mouseDown;
-bool mouseMove;
+QPointF mouseUpPos;
+
+namespace MouseEvent {
+    enum Event {
+        MouseDown,
+        MouseMove,
+        MouseUp
+    };
+};
+
+MouseEvent::Event mouseEvent;
+
 QPointF QGraphicsSceneMouseEvent::pos() const
 {
-    if (mouseDown)
-        return mouseDownPos;
-    else if (mouseMove)
-        return mouseMovePos;
-    else
-        return QPointF();
+    switch(mouseEvent) {
+        case MouseEvent::MouseDown:
+            return mouseDownPos;
+        case MouseEvent::MouseMove:
+            return mouseMovePos;
+        case MouseEvent::MouseUp:
+            return mouseUpPos;
+    };
+
+    return QPointF();
+}
+
+QPointF QGraphicsSceneMouseEvent::scenePos() const
+{
+    return pos();
 }
 
 bool hapticsDone = false;
@@ -94,15 +118,20 @@ void Ut_MStatusBarView::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mstatusbarview" };
     app = new MApplication(argc, app_name);
-    m_statusbar = new MStatusBar();
-    m_subject= new MStatusBarView(m_statusbar);
 }
 
 void Ut_MStatusBarView::cleanupTestCase()
 {
-    delete m_statusbar;
-    m_statusbar = 0;
     delete app;
+}
+
+void Ut_MStatusBarView::init()
+{
+    m_statusbar = new MStatusBar();
+    m_subject = new TestMStatusBarView(m_statusbar);
+    m_statusbar->setView(m_subject);
+    m_subject->modifiableStyle()->setUseSwipeGesture(true);
+    m_subject->modifiableStyle()->setSwipeThreshold(SWIPE_THRESHOLD);
 }
 
 void Ut_MStatusBarView::cleanup()
@@ -115,6 +144,9 @@ void Ut_MStatusBarView::cleanup()
     dbusPath = QString();
     callMode = QDBus::NoBlock;
     dbusMethod = QString();
+
+    delete m_statusbar;
+    m_statusbar = 0;
 }
 
 #ifdef Q_WS_X11
@@ -140,8 +172,8 @@ void Ut_MStatusBarView::cleanup()
 
 void Ut_MStatusBarView::testWhenMouseMovesAboveThresholdStatusIndicatorMenuAppears()
 {
-    mouseDownWorker();
-    mouseMoveworker(QPointF(15.20, 59.10));
+    mouseDownWorker(START_POINT);
+    mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD + 1));
     QCOMPARE(dbusCallMade, true);
     QCOMPARE(dbusService, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE);
     QCOMPARE(dbusInterface, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE);
@@ -152,33 +184,77 @@ void Ut_MStatusBarView::testWhenMouseMovesAboveThresholdStatusIndicatorMenuAppea
 
 void Ut_MStatusBarView::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear()
 {
-    mouseDownWorker();
-    mouseMoveworker(QPointF(15.20, 49.10));
+    mouseDownWorker(START_POINT);
+    mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD - 1));
     QCOMPARE(dbusCallMade, false);
 }
 
 void Ut_MStatusBarView::testWhenMousePressHapticsDone()
 {
-    mouseDownWorker();
+    mouseDownWorker(START_POINT);
     QCOMPARE(hapticsDone, true);
 }
 
-// Helpers
-void Ut_MStatusBarView::mouseDownWorker()
+void Ut_MStatusBarView::testWhenUsingSwipeTapDoesNothing()
 {
-    mouseDownPos = QPointF(12.24, 20.20); // Arbitary point
-    mouseDown = true;
+    mouseDownWorker(START_POINT);
+    mouseUpWorker(START_POINT);
+    QCOMPARE(dbusCallMade, false);
+}
+
+void Ut_MStatusBarView::testWhenUsingTapSwipeDoesNothing()
+{
+    m_subject->modifiableStyle()->setUseSwipeGesture(false);
+    mouseDownWorker(START_POINT);
+    mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD - 1));
+    QCOMPARE(dbusCallMade, false);
+}
+
+void Ut_MStatusBarView::testTapFunctionality()
+{
+    m_subject->modifiableStyle()->setUseSwipeGesture(false);
+
+    // Test that a tap where a release is out of bounds is not recognised
+    mouseDownWorker(START_POINT);
+    mouseUpWorker(START_POINT + QPointF(SCENE_WIDTH, SCENE_WIDTH) * 2);
+    QCOMPARE(dbusCallMade, false);
+
+    // Test that a tap where a release is within bounds is recognised
+    mouseDownWorker(START_POINT);
+    mouseUpWorker(START_POINT + QPointF(5,5));
+    QCOMPARE(dbusCallMade, true);
+    QCOMPARE(dbusService, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE);
+    QCOMPARE(dbusInterface, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE);
+    QCOMPARE(dbusPath, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH);
+    QCOMPARE(callMode, QDBus::NoBlock);
+    QCOMPARE(dbusMethod, QString("open"));
+}
+
+
+
+// Helpers
+void Ut_MStatusBarView::mouseDownWorker(QPointF downAt)
+{
+    mouseDownPos = downAt;
+    mouseEvent = MouseEvent::MouseDown;
     QGraphicsSceneMouseEvent mouseDownEvent(QEvent::GraphicsSceneMousePress);
     m_subject->mousePressEvent(&mouseDownEvent);
 }
 
-void Ut_MStatusBarView::mouseMoveworker(QPointF moveTo)
+void Ut_MStatusBarView::mouseMoveWorker(QPointF moveTo)
 {
     mouseMovePos = moveTo;
-    mouseMove = true;
-    mouseDown = false;
+    mouseEvent = MouseEvent::MouseMove;
     QGraphicsSceneMouseEvent mouseMoveEvent(QEvent::GraphicsSceneMouseMove);
     m_subject->mouseMoveEvent(&mouseMoveEvent);
+}
+
+void Ut_MStatusBarView::mouseUpWorker(QPointF upAt)
+{
+    mouseUpPos = upAt;
+    mouseEvent = MouseEvent::MouseUp;
+    QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
+    m_subject->mouseReleaseEvent(&mouseReleaseEvent);
 }
 
 #endif

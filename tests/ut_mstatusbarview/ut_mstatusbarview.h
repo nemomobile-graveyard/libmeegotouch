@@ -30,6 +30,23 @@ class MApplication;
 
 Q_DECLARE_METATYPE(MStatusBarView *);
 
+class TestMStatusBarView : public MStatusBarView
+{
+    M_VIEW(MSceneWindowModel, MStatusBarStyle)
+
+public:
+    TestMStatusBarView(MStatusBar *controller)
+        : MStatusBarView(controller)
+    {}
+
+    MStatusBarStyle *modifiableStyle() {
+        MStatusBarStyleContainer &sc = style();
+        const MStatusBarStyle *const_s = sc.operator ->();
+        MStatusBarStyle *s = const_cast<MStatusBarStyle *>(const_s);
+        return s;
+    }
+};
+
 class Ut_MStatusBarView : public QObject
 {
     Q_OBJECT
@@ -39,6 +56,7 @@ public:
 private slots:
     void initTestCase();
     void cleanupTestCase();
+    void init();
     void cleanup();
 #ifdef Q_WS_X11
 //    void testXDamageWhileTogglingVisibility();
@@ -50,11 +68,19 @@ private slots:
     void testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear();
     // Test when mouse is moved over a certain threshold then haptics done.
     void testWhenMousePressHapticsDone();
+    // Thest when using swipe functionality, tapping the statusbar has no effect
+    void testWhenUsingSwipeTapDoesNothing();
+    // Thest when using tap functionality, swiping the statusbar has no effect
+    void testWhenUsingTapSwipeDoesNothing();
+    // Thest that the tap functionality works
+    void testTapFunctionality();
 
 private:
-    void mouseDownWorker();
-    void mouseMoveworker(QPointF moveTo);
-    MStatusBarView *m_subject;
+    void mouseDownWorker(QPointF downAt);
+    void mouseMoveWorker(QPointF moveTo);
+    void mouseUpWorker(QPointF upAt);
+
+    TestMStatusBarView *m_subject;
     MStatusBar *m_statusbar;
     MApplication* app;
 };
