@@ -66,6 +66,8 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
 
 MListViewPrivate::~MListViewPrivate()
 {
+    deleteVisibleItemsArray();
+
     if(controllerModel)
         clearFirstAndLastVisibleRows();
 
@@ -128,6 +130,13 @@ void MListViewPrivate::clearVisibleItemsArray()
     foreach(MWidget * item, visibleItems) {
         deleteItem(item);
     }
+
+    visibleItems.clear();
+}
+
+void MListViewPrivate::deleteVisibleItemsArray()
+{
+    qDeleteAll(visibleItems);
 
     visibleItems.clear();
 }

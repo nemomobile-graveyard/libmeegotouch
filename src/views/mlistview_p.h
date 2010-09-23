@@ -106,6 +106,8 @@ public:
     QPointF calculateViewportNextPosition();
     void updateScrollToTargetPosition();
 
+    void deleteVisibleItemsArray();
+
 public:
     virtual void createSeparators();
     virtual void updateSeparators();
