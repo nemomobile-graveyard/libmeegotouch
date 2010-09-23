@@ -289,7 +289,7 @@ void Ut_MComboBox::testBuiltinModel()
     // remove current item
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("qtn_comm_popup_default"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeLast()[0], QVariant(-1));
     // check that after removing items everything looks ok
@@ -350,7 +350,7 @@ void Ut_MComboBox::testModelSwitching()
 
     // model changed selection should reset
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("qtn_comm_popup_default"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeLast()[0], QVariant(-1));
 
@@ -378,7 +378,7 @@ void Ut_MComboBox::testStringListModel()
     // remove current item
     strListModel->removeRow(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("qtn_comm_popup_default"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
@@ -413,7 +413,7 @@ void Ut_MComboBox::testStringListModelSetStringList()
     // change string list completely
     strListModel->setStringList(QStringList() << "bar0" << "bar1" << "bar2" << "bar3");
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("qtn_comm_popup_default"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeFirst()[0], QVariant(-1));
 }
