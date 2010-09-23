@@ -1,3 +1,9 @@
+libmeegotouch (0.20.45~1) unstable; urgency=low
+
+  * unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 23 Sep 2010 14:35:00 +0300
+
 libmeegotouch (0.20.44-1) jaunty; urgency=low
 
   * Fixes: NB188568 - View menu doesn't close when tapping Home button
