@@ -87,6 +87,13 @@ public:
     bool load(const QString &filename);
 
     /*!
+     * Verifies if the syntax of a given .css style sheet file is correct.
+     * \param filename Style sheet filename
+     * \return true if the style sheet was successfully loaded, otherwise false.
+     */
+    static bool validate(const QString &filename);
+
+    /*!
      * Sets binary file directory, which is used to read/write binary stylesheet files. By default, system tmp
      * directory is used.
      * \param directory Binary stylesheet directory

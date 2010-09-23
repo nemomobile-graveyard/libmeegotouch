@@ -6,10 +6,12 @@ SUBDIRS = \
     mapplicationextensiontester \
     mnotificationtool \
     m-servicefwgen.d \
+    mcssvalidator
 
 macx:SUBDIRS -= mnotificationtool
 macx:SUBDIRS -= mapplettester
 macx:SUBDIRS -= mapplicationextensiontester
+macx:SUBDIRS -= mcssvalidator
 
 QMAKE_EXTRA_TARGETS += check
 check.depends =
