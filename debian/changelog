@@ -1,8 +1,26 @@
-libmeegotouch (0.20.44~1) unstable; urgency=low
+libmeegotouch (0.20.44-1) jaunty; urgency=low
 
-  * Unrleased
+  * Fixes: NB188568 - View menu doesn't close when tapping Home button
+  * Fixes: NB#187235 - madvancedlist item - calling setItemStyle more than once causes a crash
+  * Fixes: NB#188419 - Invalid attribute in mimagewidgetstyle.css leads to app core dump
+  * Fixes: NB#193418 - The captureCompleted and cameraClosed slots are not hit when the image is captured and when camera is closed
+  * Fixes: NB#191769 - startup wizard closed by tapping on back button in any of the views.
+  * Fixes: NB#190583 - It is difficult to swipe between Promotional sets
+  * Fixes: NB#191622 - List item click is handled after longtap launches the object menu in widgets gallery
+  * Fixes: NB#193886 - (image_copy_construct) MImageWidget: the copy constructor somehow affects the original MImageWidget
+  * Fixes: NB#193058 - Videos&TV;in the ASF video file (and in any other kind of video file) info the date is not in accordance with the POSIX values §qtn_vide_added§ and §qtn_vide_lastplayed§
+  * Fixes: NB#193327 - Application thumbnails in switcher get blank when moving back from launcher
+  * Fixes: NB#193497 - Clock; Unusual time display separator (.) in Finnish.)
+  * Fixes: NB#193086 - Music; Date format §qtn_musi_lastplayed_md§ and §qtn_musi_datecreated_md§ in metadata for audio files is not clear
+  * Fixes: NB#193497 - Clock; Unusual time display separator (.) in Finnish.
+  * Fixes: NB#181695 - MTextEditModel is not getting the data
+  * Fixes: Don't store pointer to MTextEditModel's document in MTextEditView
+  * Fixes: NB#193553 - Format of POSIX maybe incorrect
+  * Fixes: NB#192918 - MList Index disappears after some time and does not appear again
+  * Fixes: NB#181963 - PlainQt checkbox background images are displayed
+  * Fixes: NB#191319 - <MemLeak> Valgrind leak for mscenelayereffect.cpp, ft_mdialog test
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 20 Sep 2010 13:12:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 23 Sep 2010 14:29:28 +0300
 
 libmeegotouch (0.20.43-2) unstable; urgency=low
 
