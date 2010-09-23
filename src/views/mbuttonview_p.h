@@ -86,6 +86,8 @@ public:
     void loadIcon(const QString &newIconId, const QSize &newIconSize, QIcon::Mode mode = QIcon::Normal);
 
     void _q_applyQueuedStyleModeChange();
+
+    int pressTimeout() const;
 };
 
 #endif

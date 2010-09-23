@@ -147,6 +147,13 @@ class M_EXPORT MButtonStyle : public MWidgetStyle
         Empty space after bottom text boundary.
     */
     M_STYLE_ATTRIBUTE(int,                    textMarginBottom,         TextMarginBottom)
+
+    /*!
+        \property MButtonStyle::pressTimeout
+        \brief timeout for button press.
+
+    */
+    M_STYLE_ATTRIBUTE(int,                    pressTimeout,         PressTimeout)
 };
 
 /*!

@@ -74,6 +74,13 @@ MButtonViewPrivate::Icon::~Icon()
     theme.clear();
 }
 
+int MButtonViewPrivate::pressTimeout() const
+{
+    Q_Q(const MButtonView);
+
+    return q->style()->pressTimeout();
+}
+
 void MButtonViewPrivate::freeIcons()
 {
     if (icon) {
@@ -120,10 +127,10 @@ void MButtonViewPrivate::refreshStyleMode()
 
     if (q->model()->down()) {
         if (styleModeChangeTimer->isActive()) {
-            styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
+            styleModeChangeTimer->start(pressTimeout());
             return;
         }
-        styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
+        styleModeChangeTimer->start(pressTimeout());
         q->style().setModePressed();
     } else if (q->model()->checked()) {
         q->style().setModeSelected();
