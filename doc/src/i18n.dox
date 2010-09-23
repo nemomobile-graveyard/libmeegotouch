@@ -26,39 +26,43 @@ may also be applicable in another projects and vice versa.
 Below is the list of officially supported languages both for writing
 systems and text rendering:
 
-- American English
-- Arabic
+- <a href="http://en.wikipedia.org/wiki/American_english">American English</a>
+- <a href="http://en.wikipedia.org/wiki/Arabic_language">Arabic</a>
 - <a href="http://en.wikipedia.org/wiki/Basque_language">Basque</a>
-- Brazilian Portuguese
-- British English
-- Canadian French
-- Catalan
-- Chinese Simplified
-- Chinese Traditional
-- Chinese Hongkong
-- Danish
-- Dutch
-- Finnish
-- French
-- Galician
-- German
-- Greek
-- Hebrew
-- Hindi
+- <a href="http://en.wikipedia.org/wiki/Brazilian_Portuguese">Brazilian Portuguese</a>
+- <a href="http://en.wikipedia.org/wiki/British_English">British English</a>
+- <a href="http://en.wikipedia.org/wiki/Canadian_French">Canadian French</a>
+- <a href="http://en.wikipedia.org/wiki/Catalan_language">Catalan</a>
+- <a href="http://en.wikipedia.org/wiki/Simplified_Chinese_characters">Chinese Simplified</a>
+- <a href="http://en.wikipedia.org/wiki/Traditional_Chinese_characters">Chinese Traditional</a>
+- <a href="http://en.wikipedia.org/wiki/Traditional_Chinese_characters">Chinese Hongkong</a>
+- <a href="http://en.wikipedia.org/wiki/Danish_language">Danish</a>
+- <a href="http://en.wikipedia.org/wiki/Dutch_language">Dutch</a>
+- <a href="http://en.wikipedia.org/wiki/Finnish_language">Finnish</a>
+- <a href="http://en.wikipedia.org/wiki/French_language">French</a>
+- <a href="http://en.wikipedia.org/wiki/Galician_language">Galician</a>
+- <a href="http://en.wikipedia.org/wiki/German_language">German</a>
+- <a href="http://en.wikipedia.org/wiki/Greek_language">Greek</a>
+- <a href="http://en.wikipedia.org/wiki/Hebrew_language">Hebrew</a>
+- <a href="http://en.wikipedia.org/wiki/Standard_Hindi">Hindi</a>
+- <a href="http://en.wikipedia.org/wiki/Hungarian_language">Hungarian</a>
 - <a href="http://en.wikipedia.org/wiki/Indonesian_language">Indonesian</a>
-- Italian
-- Latin American Spanish
+- <a href="http://en.wikipedia.org/wiki/Italian_language">Italian</a>
 - <a href="http://en.wikipedia.org/wiki/Malay_language">Malay</a>
-- Norwegian
+- <a href="http://en.wikipedia.org/wiki/Norwegian_language">Norwegian</a>
 - <a href="http://en.wikipedia.org/wiki/Persian_language">Persian</a>
-- Portuguese
-- Russian
-- Spanish
-- Swedish
-- Thai
-- Turkish
-- Ukranian
-- Urdu
+- <a href="http://en.wikipedia.org/wiki/Polish_language">Polish</a>
+- <a href="http://en.wikipedia.org/wiki/Portuguese_language">Portuguese</a>
+- <a href="http://en.wikipedia.org/wiki/Romanian_language">Romanian</a>
+- <a href="http://en.wikipedia.org/wiki/Russian_language">Russian</a>
+- <a href="http://en.wikipedia.org/wiki/Spanish_language">Spanish</a>
+- <a href="http://en.wikipedia.org/wiki/Spanish_language_in_the_Americas">Spanish in Latin America</a>
+- <a href="http://en.wikipedia.org/wiki/Slovak_language">Slovak</a>
+- <a href="http://en.wikipedia.org/wiki/Swedish_language">Swedish</a>
+- <a href="http://en.wikipedia.org/wiki/Thai_language">Thai</a>
+- <a href="http://en.wikipedia.org/wiki/Turkish_language">Turkish</a>
+- <a href="http://en.wikipedia.org/wiki/Ukrainian_language">Ukranian</a>
+- <a href="http://en.wikipedia.org/wiki/Urdu_language">Urdu</a>
 
 Although the implementation contains support for several calendar
 systems, officially the MeeGo Touch UI Framework currently supports only
