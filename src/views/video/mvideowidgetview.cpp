@@ -54,8 +54,8 @@ MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()
 MVideoWidgetViewPrivate::~MVideoWidgetViewPrivate()
 {
     delete image;
-    delete bits;
-    delete scaleOffsets;
+    delete[] bits;
+    delete[] scaleOffsets;
 
     delete m_gstVideo;
 
@@ -314,14 +314,14 @@ void MVideoWidgetViewPrivate::prepareBlit(int w, int h)
 {
     if (image && (image->width() != w || image->height() != h)) {
         delete image;
-        delete bits;
+        delete[] bits;
         image = NULL;
         bits = NULL;
     }
 
     if (!image) {
         if (scaleOffsets)
-            delete scaleOffsets;
+            delete[] scaleOffsets;
 
         scaleOffsets = calc_linear_scale(m_gstVideo->resolution().width(), m_gstVideo->resolution().height(), w, h);
 
@@ -364,6 +364,12 @@ void MVideoWidgetViewPrivate::blit(const uchar* data, int w, int h)
             dp[1] = sp[1];
             dp[2] = sp[0];
         } else {
+
+            if (x == w) {
+                x = 0;
+                ++y;
+            }        
+
             int xx = (x * videoSize.width()) / w;
             int yy = (y * videoSize.height()) / h;
 
@@ -382,11 +388,6 @@ void MVideoWidgetViewPrivate::blit(const uchar* data, int w, int h)
             dp[0] = CLAMP(b, 0, 255);
             dp[1] = CLAMP(g, 0, 255);
             dp[2] = CLAMP(r, 0, 255);
-        }
-
-        if (x == w) {
-            x = 0;
-            ++y;
         }
     }
 
