@@ -72,7 +72,7 @@ If a device has a hardware keyboard, its set of allowed angles will also depend 
 
 To check whether a given orientation angle is supported by the host device (i.e., makes sense for it) you can use the following method:
 
-MDeviceProfile::orientationAngleIsSupported(angle, isKeyboardOpen);
+bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen);
 
 \section rotation_deviceorientation Following (or not) the orientation of the host device
 
