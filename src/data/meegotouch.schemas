@@ -34,6 +34,17 @@
       </locale>
     </schema>
     <schema>
+      <key>/schemas/meegotouch/i18n/lc_timeformat24h</key>
+      <applyto>/meegotouch/i18n/lc_timeformat24h</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
+    <schema>
       <key>/schemas/meegotouch/i18n/lc_collate</key>
       <applyto>/meegotouch/i18n/lc_collate</applyto>
       <owner>libmeegotouch</owner>
