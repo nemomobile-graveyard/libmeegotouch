@@ -1609,7 +1609,7 @@ en_BE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE d
 en_BE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM y HH:mm:ss z -> Monday 18 Rajab 1429 14:31:00 GMT+00:00
 en_BE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d MMMM y hh 'h' mm 'min' ss 's' a zzzz -> Monday 18 Rajab 1429 02 h 31 min 00 s PM GMT+00:00
 en_BE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM y HH 'h' mm 'min' ss 's' zzzz -> Monday 18 Rajab 1429 14 h 31 min 00 s GMT+00:00
-en_GB	Language endonym	British English
+en_GB	Language endonym	English (UK)
 en_GB	Country endonym	United Kingdom
 en_GB	Floating Point Number	-123,456,789.012
 en_GB	Percent value	-1,234.5679%
@@ -1788,7 +1788,7 @@ en_GB	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, 
 en_GB	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y HH:mm:ss z -> Monday, 18 Rajab 1429 14:31:00 GMT+00:00
 en_GB	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y hh:mm:ss a zzzz -> Monday, 18 Rajab 1429 02:31:00 PM GMT+00:00
 en_GB	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y HH:mm:ss zzzz -> Monday, 18 Rajab 1429 14:31:00 GMT+00:00
-en_US	Language endonym	U.S. English
+en_US	Language endonym	English (US)
 en_US	Country endonym	United States
 en_US	Floating Point Number	-123,456,789.012
 en_US	Percent value	-1,234.5679%
@@ -1967,7 +1967,7 @@ en_US	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, 
 en_US	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss z -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
 en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, MMMM d, y h:mm:ss a zzzz -> Monday, Rajab 18, 1429 2:31:00 PM GMT+00:00
 en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss zzzz -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
-en_US_POSIX	Language endonym	U.S. English
+en_US_POSIX	Language endonym	English (US)
 en_US_POSIX	Country endonym	United States
 en_US_POSIX	Floating Point Number	-123456789.01234
 en_US_POSIX	Percent value	-1234.5679%
@@ -2146,7 +2146,7 @@ en_US_POSIX	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	
 en_US_POSIX	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss z -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
 en_US_POSIX	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, MMMM d, y h:mm:ss a zzzz -> Monday, Rajab 18, 1429 2:31:00 PM GMT+00:00
 en_US_POSIX	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss zzzz -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
-es_419	Language endonym	español latinoamericano
+es_419	Language endonym	español (América Latina)
 es_419	Country endonym	Latinoamérica y el Caribe
 es_419	Floating Point Number	-123.456.789,012
 es_419	Percent value	-1.234,5679%
@@ -3578,7 +3578,7 @@ hi_IN	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, 
 hi_IN	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	EEEE, d MMMM y H:mm:ss z -> सोमवार, १८ रजब १४२९ १४:३१:०० GMT+००:००
 hi_IN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, d MMMM y h:mm:ss a zzzz -> सोमवार, १८ रजब १४२९ २:३१:०० अपराह्न GMT+००:००
 hi_IN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE, d MMMM y H:mm:ss zzzz -> सोमवार, १८ रजब १४२९ १४:३१:०० GMT+००:००
-id_ID	Language endonym	Bahasa Indonesia
+id_ID	Language endonym	Indonesia
 id_ID	Country endonym	Indonesia
 id_ID	Floating Point Number	-123.456.789,012
 id_ID	Percent value	-1.234,5679%
@@ -4115,7 +4115,7 @@ ja_JP	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	y年M�
 ja_JP	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	y年M月d日EEEEH:mm:ss z -> 1429年7月18日月曜日14:31:00 GMT+00:00
 ja_JP	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	y年M月d日EEEEah時mm分ss秒 zzzz -> 1429年7月18日月曜日午後2時31分00秒 GMT+00:00
 ja_JP	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y年M月d日EEEEH時mm分ss秒 zzzz -> 1429年7月18日月曜日14時31分00秒 GMT+00:00
-ms_MY	Language endonym	Bahasa Melayu
+ms_MY	Language endonym	Melayu
 ms_MY	Country endonym	Malaysia
 ms_MY	Floating Point Number	-123,456,789.012
 ms_MY	Percent value	-1,234.5679%
@@ -5010,7 +5010,7 @@ no_NO	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE d
 no_NO	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d. MMMM y HH:mm:ss z -> mandag 18. Rajab 1429 14:31:00 GMT+00:00
 no_NO	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d. MMMM y 'kl'. hh:mm:ss a zzzz -> mandag 18. Rajab 1429 kl. 02:31:00 PM GMT+00:00
 no_NO	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d. MMMM y 'kl'. HH:mm:ss zzzz -> mandag 18. Rajab 1429 kl. 14:31:00 GMT+00:00
-pt_BR	Language endonym	português do Brasil
+pt_BR	Language endonym	português (Brasil)
 pt_BR	Country endonym	Brasil
 pt_BR	Floating Point Number	-123.456.789,012
 pt_BR	Percent value	-1.234,5679%
@@ -5189,7 +5189,7 @@ pt_BR	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, 
 pt_BR	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' z -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
 pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> segunda-feira, 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
-pt_PT	Language endonym	português europeu
+pt_PT	Language endonym	português
 pt_PT	Country endonym	PT
 pt_PT	Floating Point Number	-123 456 789,012
 pt_PT	Percent value	-1 234,5679%

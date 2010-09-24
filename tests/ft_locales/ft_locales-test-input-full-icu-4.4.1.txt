@@ -7337,7 +7337,7 @@ en_CA	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, 
 en_CA	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	EEEE, d MMMM, y H:mm:ss z -> Monday, 18 Rajab, 1429 14:31:00 GMT+00:00
 en_CA	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, d MMMM, y h:mm:ss a zzzz -> Monday, 18 Rajab, 1429 2:31:00 PM GMT+00:00
 en_CA	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE, d MMMM, y H:mm:ss zzzz -> Monday, 18 Rajab, 1429 14:31:00 GMT+00:00
-en_GB	Language endonym	British English
+en_GB	Language endonym	English (UK)
 en_GB	Country endonym	United Kingdom
 en_GB	Floating Point Number	-123,456,789.012
 en_GB	Percent value	-1,234.5679%
@@ -9664,7 +9664,7 @@ en_TT	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, 
 en_TT	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss z -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
 en_TT	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, MMMM d, y h:mm:ss a zzzz -> Monday, Rajab 18, 1429 2:31:00 PM GMT+00:00
 en_TT	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss zzzz -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
-en_US	Language endonym	U.S. English
+en_US	Language endonym	English (US)
 en_US	Country endonym	United States
 en_US	Floating Point Number	-123,456,789.012
 en_US	Percent value	-1,234.5679%
@@ -9843,7 +9843,7 @@ en_US	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, 
 en_US	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss z -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
 en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, MMMM d, y h:mm:ss a zzzz -> Monday, Rajab 18, 1429 2:31:00 PM GMT+00:00
 en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE, MMMM d, y H:mm:ss zzzz -> Monday, Rajab 18, 1429 14:31:00 GMT+00:00
-en_US_POSIX	Language endonym	U.S. English
+en_US_POSIX	Language endonym	English (US)
 en_US_POSIX	Country endonym	United States
 en_US_POSIX	Floating Point Number	-123456789.01234
 en_US_POSIX	Percent value	-1234.5679%
@@ -10738,7 +10738,7 @@ es	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE d 'd
 es	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d 'de' MMMM 'de' y HH:mm:ss z -> lunes 18 de Rajab de 1429 14:31:00 GMT+00:00
 es	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d 'de' MMMM 'de' y hh:mm:ss a zzzz -> lunes 18 de Rajab de 1429 02:31:00 p.m. GMT+00:00
 es	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d 'de' MMMM 'de' y HH:mm:ss zzzz -> lunes 18 de Rajab de 1429 14:31:00 GMT+00:00
-es_419	Language endonym	español latinoamericano
+es_419	Language endonym	español (América Latina)
 es_419	Country endonym	Latinoamérica y el Caribe
 es_419	Floating Point Number	-123.456.789,012
 es_419	Percent value	-1.234,5679%
@@ -12170,7 +12170,7 @@ es_EC	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE d
 es_EC	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d 'de' MMMM 'de' y H:mm:ss z -> lunes 18 de Rajab de 1429 14:31:00 GMT+00:00
 es_EC	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d 'de' MMMM 'de' y hh:mm:ss a zzzz -> lunes 18 de Rajab de 1429 02:31:00 p.m. GMT+00:00
 es_EC	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d 'de' MMMM 'de' y HH:mm:ss zzzz -> lunes 18 de Rajab de 1429 14:31:00 GMT+00:00
-es_ES	Language endonym	español de España
+es_ES	Language endonym	español
 es_ES	Country endonym	España
 es_ES	Floating Point Number	-123.456.789,012
 es_ES	Percent value	-1.234,5679%
@@ -16108,7 +16108,7 @@ fr_BE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE d
 fr_BE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM y HH:mm:ss z -> lundi 18 Radjab 1429 14:31:00 UTC+00:00
 fr_BE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d MMMM y h 'h' mm 'min' ss 's' a zzzz -> lundi 18 Radjab 1429 2 h 31 min 00 s PM UTC+00:00
 fr_BE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM y H 'h' mm 'min' ss 's' zzzz -> lundi 18 Radjab 1429 14 h 31 min 00 s UTC+00:00
-fr_CA	Language endonym	français canadien
+fr_CA	Language endonym	français (Canada)
 fr_CA	Country endonym	Canada
 fr_CA	Floating Point Number	-123 456 789,012
 fr_CA	Percent value	-1 234,5679 %
@@ -18614,7 +18614,7 @@ hu_HU	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	y. MMM
 hu_HU	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	y. MMMM d., EEEE H:mm:ss z -> 1429. Redseb 18., hétfő 14:31:00 GMT+00:00
 hu_HU	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	y. MMMM d., EEEE h:mm:ss a zzzz -> 1429. Redseb 18., hétfő 2:31:00 du. GMT+00:00
 hu_HU	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y. MMMM d., EEEE H:mm:ss zzzz -> 1429. Redseb 18., hétfő 14:31:00 GMT+00:00
-id	Language endonym	Bahasa Indonesia
+id	Language endonym	Indonesia
 id	Country endonym	
 id	Floating Point Number	-123.456.789,012
 id	Percent value	-1.234,5679%
@@ -18793,7 +18793,7 @@ id	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd 
 id	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy HH.mm.ss z -> Senin, 18 Rajab 1429 14.31.00 GMT+00.00
 id	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy h.mm.ss a zzzz -> Senin, 18 Rajab 1429 2.31.00 PM GMT+00.00
 id	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy H.mm.ss zzzz -> Senin, 18 Rajab 1429 14.31.00 GMT+00.00
-id_ID	Language endonym	Bahasa Indonesia
+id_ID	Language endonym	Indonesia
 id_ID	Country endonym	Indonesia
 id_ID	Floating Point Number	-123.456.789,012
 id_ID	Percent value	-1.234,5679%
@@ -19867,7 +19867,7 @@ ja_JP	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	y年M�
 ja_JP	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	y年M月d日EEEEH:mm:ss z -> 1429年7月18日月曜日14:31:00 GMT+00:00
 ja_JP	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	y年M月d日EEEEah時mm分ss秒 zzzz -> 1429年7月18日月曜日午後2時31分00秒 GMT+00:00
 ja_JP	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y年M月d日EEEEH時mm分ss秒 zzzz -> 1429年7月18日月曜日14時31分00秒 GMT+00:00
-ms	Language endonym	Bahasa Melayu
+ms	Language endonym	Melayu
 ms	Country endonym	
 ms	Floating Point Number	-123,456,789.012
 ms	Percent value	-1,234.5679%
@@ -20046,7 +20046,7 @@ ms	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, y M
 ms	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, y MMMM dd HH:mm:ss z -> Isnin, 1429 Rajab 18 14:31:00 GMT+00:00
 ms	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, y MMMM dd hh:mm:ss a zzzz -> Isnin, 1429 Rajab 18 02:31:00 PM GMT+00:00
 ms	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, y MMMM dd HH:mm:ss zzzz -> Isnin, 1429 Rajab 18 14:31:00 GMT+00:00
-ms_BN	Language endonym	Bahasa Melayu
+ms_BN	Language endonym	Melayu
 ms_BN	Country endonym	Brunei
 ms_BN	Floating Point Number	-123.456.789,012
 ms_BN	Percent value	-1.234,5679%
@@ -20225,7 +20225,7 @@ ms_BN	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd MMM
 ms_BN	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd MMMM y H:mm:ss z -> 18 Rajab 1429 14:31:00 GMT+00:00
 ms_BN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd MMMM y h:mm:ss a zzzz -> 18 Rajab 1429 2:31:00 PM GMT+00:00
 ms_BN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd MMMM y H:mm:ss zzzz -> 18 Rajab 1429 14:31:00 GMT+00:00
-ms_MY	Language endonym	Bahasa Melayu
+ms_MY	Language endonym	Melayu
 ms_MY	Country endonym	Malaysia
 ms_MY	Floating Point Number	-123,456,789.012
 ms_MY	Percent value	-1,234.5679%
@@ -22552,7 +22552,7 @@ pt	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, d '
 pt	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' z -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
 pt	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> segunda-feira, 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
-pt_BR	Language endonym	português do Brasil
+pt_BR	Language endonym	português (Brasil)
 pt_BR	Country endonym	Brasil
 pt_BR	Floating Point Number	-123.456.789,012
 pt_BR	Percent value	-1.234,5679%
@@ -22731,7 +22731,7 @@ pt_BR	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, 
 pt_BR	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' z -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
 pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> segunda-feira, 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
-pt_PT	Language endonym	português europeu
+pt_PT	Language endonym	português
 pt_PT	Country endonym	PT
 pt_PT	Floating Point Number	-123 456 789,012
 pt_PT	Percent value	-1 234,5679%
@@ -23805,7 +23805,7 @@ ru_RU	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, 
 ru_RU	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'г'. H:mm:ss z -> понедельник, 18 Раджаб 1429 г. 14:31:00 GMT+00:00
 ru_RU	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'г'. h:mm:ss a zzzz -> понедельник, 18 Раджаб 1429 г. 2:31:00 PM GMT+00:00
 ru_RU	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'г'. H:mm:ss zzzz -> понедельник, 18 Раджаб 1429 г. 14:31:00 GMT+00:00
-ru_UA	Language endonym	ru_UA
+ru_UA	Language endonym	русский
 ru_UA	Country endonym	Украина
 ru_UA	Floating Point Number	-123 456 789,012
 ru_UA	Percent value	-1 234,5679 %

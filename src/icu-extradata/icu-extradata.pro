@@ -12,7 +12,14 @@ greaterThan(ICUVERSION, 4.4) {
                  $${ICUVERSION}/it.txt \
                  $${ICUVERSION}/ms_BN.txt
     LANGTXT    = $${ICUVERSION}/lang/de_CH.txt \
+                 $${ICUVERSION}/lang/en.txt \
+                 $${ICUVERSION}/lang/es.txt \
+                 $${ICUVERSION}/lang/fr.txt \
+                 $${ICUVERSION}/lang/id.txt \
+                 $${ICUVERSION}/lang/ms.txt \
                  $${ICUVERSION}/lang/nl_BE.txt \
+                 $${ICUVERSION}/lang/pt.txt \
+                 $${ICUVERSION}/lang/pt_PT.txt \
                  $${ICUVERSION}/lang/ru_UA.txt
     REGIONTXT  = $${ICUVERSION}/region/de_CH.txt
 } else {
