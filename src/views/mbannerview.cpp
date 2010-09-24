@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-// TODO: Consider calculating size hint from the content
-
 #include "mbanner.h"
 #include "mbannerview.h"
 #include "mbannerview_p.h"
@@ -32,14 +30,19 @@
 #include "mgridlayoutpolicy.h"
 
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsGridLayout>
+#include <QColor>
+#include <QPalette>
+#include <QDebug>
 
 MBannerViewPrivate::MBannerViewPrivate() :
     layout(0),
-    landscapePolicy(0),
-    portraitPolicy(0),
+    gridBanner(0),
     iconId(NULL),
     titleLabel(NULL),
-    subtitleLabel(NULL)
+    subtitleLabel(NULL),
+    bannerTimeStampLabel(NULL),
+    bannerTimeStampData(NULL)
 {
 }
 
@@ -47,14 +50,15 @@ MBannerViewPrivate::~MBannerViewPrivate()
 {
 }
 
-
 MLabel *MBannerViewPrivate::title()
 {
     if (!titleLabel) {
         titleLabel = new MLabel(controller);
-        titleLabel->setStyleName("MBannerTitle");
-        titleLabel->setAlignment(Qt::AlignVCenter);
+        //Banners can't have html
+        titleLabel->setTextFormat(Qt::PlainText);
+        titleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         titleLabel->setWordWrap(true);
+        titleLabel->setTextElide(true);
     }
     return titleLabel;
 }
@@ -63,9 +67,10 @@ MLabel *MBannerViewPrivate::subtitle()
 {
     if (!subtitleLabel) {
         subtitleLabel = new MLabel(controller);
-        subtitleLabel->setStyleName("MBannerSubtitle");
-        subtitleLabel->setAlignment(Qt::AlignVCenter);
-        subtitleLabel->setWordWrap(true);
+        //Banners can't have html
+        subtitleLabel->setTextFormat(Qt::PlainText);
+        subtitleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        subtitleLabel->setTextElide(true);
     }
     return subtitleLabel;
 }
@@ -74,9 +79,23 @@ MImageWidget *MBannerViewPrivate::icon()
 {
     if (!iconId) {
         iconId = new MImageWidget(controller);
-        iconId->setStyleName("MBannerIcon");
+        iconId->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
     return iconId;
+}
+
+MLabel *MBannerViewPrivate::bannerTimeStamp()
+{
+    if (!bannerTimeStampLabel) {
+        bannerTimeStampLabel = new MLabel(controller);
+        bannerTimeStampLabel->setTextFormat(Qt::PlainText);
+        //TODO: giving opacity due to the property can't be set it in the CSS (yet)
+        bannerTimeStampLabel->setOpacity(0.5);
+        if (bannerTimeStampData){
+            bannerTimeStampLabel->setText(bannerTimeStampData->toString("hh:mm ap"));
+        }
+    }
+    return bannerTimeStampLabel;
 }
 
 void MBannerViewPrivate::setTitle(const QString &string)
@@ -94,70 +113,188 @@ void MBannerViewPrivate::setIcon(const QString &i, const QSize &s)
     icon()->setImage(i,s);
 }
 
-void MBannerViewPrivate::initDynamicLayout()
+void MBannerViewPrivate::setBannerTimeStamp(const QDateTime &date)
+{
+    bannerTimeStampData = new QDateTime(date);
+}
+
+MLayout *MBannerViewPrivate::createLayout()
 {
     layout = new MLayout();
-
-    landscapePolicy = new MGridLayoutPolicy(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     landscapePolicy->setSpacing(0);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
 
-    portraitPolicy = new MGridLayoutPolicy(layout);
+    portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
+    layout->setPortraitPolicy(portraitPolicy);
+    layout->setLandscapePolicy(landscapePolicy);
+    controller->setLayout(layout);
+
+    return layout;
+}
+
+QGraphicsGridLayout *MBannerViewPrivate::createGrid()
+{
+    gridBanner = new QGraphicsGridLayout();
+    gridBanner->setContentsMargins(0, 0, 0, 0);
+    gridBanner->setSpacing(0);
+    controller->setLayout(gridBanner);
+
+    return gridBanner;
+}
+
+void MBannerViewPrivate::layoutEventBanner()
+{
+    Q_Q(MBannerView);
+
+    layout = createLayout();
+
+    if (!q->model()->iconID().isEmpty()) {
+        icon()->setStyleName("MBannerIconEvent");
+        landscapePolicy->addItem(icon(), Qt::AlignTop);
+        portraitPolicy->addItem(icon(), Qt::AlignTop);
+    }
+
+    if (!q->model()->title().isEmpty()) {
+        title()->setAlignment(Qt::AlignTop);
+        title()->setStyleName("MBannerTitleEvent");
+        landscapePolicy->addItem(title(), Qt::AlignTop);
+        portraitPolicy->addItem(title(), Qt::AlignTop);
+    }
+
+    if (!q->model()->subtitle().isEmpty()) {
+        subtitle()->setAlignment(Qt::AlignTop);
+        subtitle()->setStyleName("MBannerSubtitleEvent");
+        landscapePolicy->addItem(subtitle(), Qt::AlignTop);
+        portraitPolicy->addItem(subtitle(), Qt::AlignTop);
+    }
+    portraitPolicy->addStretch();
+    landscapePolicy->addStretch();
+}
+
+void MBannerViewPrivate::layoutInformationBanner()
+{
+    Q_Q(MBannerView);
+
+    layout = createLayout();
+
+    if (!q->model()->iconID().isEmpty()) {
+        icon()->setStyleName("MBannerIconInformation");
+        landscapePolicy->addItem(icon(), Qt::AlignTop);
+        portraitPolicy->addItem(icon(), Qt::AlignTop);
+    }
+    if (!q->model()->title().isEmpty()) {
+        title()->setStyleName("MBannerTitleInformation");
+        landscapePolicy->addItem(title(), Qt::AlignTop);
+        portraitPolicy->addItem(title(), Qt::AlignTop);
+    }
+    landscapePolicy->addStretch();
+    portraitPolicy->addStretch();
+}
+
+void MBannerViewPrivate::layoutSystemBanner()
+{
+    Q_Q(MBannerView);
+
+    layout = createLayout();
+
+    if (!q->model()->title().isEmpty()) {
+        title()->setStyleName("MBannerTitleSystem");
+        landscapePolicy->addItem(title(), Qt::AlignTop);
+        portraitPolicy->addItem(title(), Qt::AlignTop);
+    }
+    landscapePolicy->addStretch();
+    portraitPolicy->addStretch();
+}
+
+void MBannerViewPrivate::layoutGenericBanner(){
 
     Q_Q(MBannerView);
 
-    if (!q->model()->iconID().isEmpty()&& !q->model()->title().isEmpty()
-        && !q->model()->subtitle().isEmpty()) {
+    q->model()->setStyleName("GenericBanner");
 
-        landscapePolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
-        portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
+    layout = createLayout();
 
-        landscapePolicy->addItem(title(), 0,1,Qt::AlignLeft);
-        portraitPolicy->addItem(title(), 0,1,Qt::AlignLeft);
-        
-        landscapePolicy->addItem(subtitle(),1,1,Qt::AlignLeft);
-        portraitPolicy->addItem(subtitle(),1,1,Qt::AlignLeft);
-        
-    } else if (q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
-        subtitle()->setStyleName("MBannerSubtitleSingle");
-        landscapePolicy->addItem(subtitle(),0,0,Qt::AlignVCenter);
-        portraitPolicy->addItem(subtitle(),0,0,Qt::AlignVCenter);
-
-    } else if (!q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
-        subtitle()->setStyleName("MBannerSubtitleSingle");
-        subtitle()->setWordWrap(false);
-        landscapePolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
-        portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
-
-        landscapePolicy->addItem(subtitle(),1,1,Qt::AlignVCenter);
-        portraitPolicy->addItem(subtitle(),1,1,Qt::AlignVCenter);
-    } else {
-        /*These conditionals are necessary for cases not contemplated
-        in the common layouts */
-
-        if (!q->model()->iconID().isEmpty()) {
-            landscapePolicy->addItem(icon(), 0, 0, 2, 1, Qt::AlignVCenter);
-            portraitPolicy->addItem(icon(), 0, 0, 2, 1, Qt::AlignVCenter);
-        }
-
-        if (!q->model()->title().isEmpty()) {
-            landscapePolicy->addItem(title(), 0, 1, Qt::AlignLeft);
-            portraitPolicy->addItem(title(), 0, 1, Qt::AlignLeft);
-        }
-
-        if (!q->model()->subtitle().isEmpty()) {
-            landscapePolicy->addItem(subtitle(), 0, 0, Qt::AlignVCenter);
-            portraitPolicy->addItem(subtitle(), 0, 0, Qt::AlignVCenter);
-        }
+    if (!q->model()->iconID().isEmpty()) {
+        icon()->setStyleName("MBannerIconGeneric");
+        landscapePolicy->addItem(icon(), Qt::AlignTop);
+        portraitPolicy->addItem(icon(), Qt::AlignTop);
     }
+    if (!q->model()->title().isEmpty()) {
+        title()->setStyleName("MBannerTitleGeneric");
+        landscapePolicy->addItem(title(), Qt::AlignTop);
+        portraitPolicy->addItem(title(), Qt::AlignTop);
+    }
+    if (!q->model()->subtitle().isEmpty()) {
+        subtitle()->setStyleName("MBannerSubTitleGeneric");
+        landscapePolicy->addItem(subtitle(), Qt::AlignTop);
+        portraitPolicy->addItem(subtitle(), Qt::AlignTop);
+    }
+    if (q->model()->bannerTimeStamp().isValid()) {
+        bannerTimeStamp()->setStyleName("MBannerTimeStampGeneric");
+        landscapePolicy->addItem(bannerTimeStamp(), Qt::AlignTop);
+        portraitPolicy->addItem(bannerTimeStamp(), Qt::AlignTop);
+    }
+    landscapePolicy->addStretch();
+    portraitPolicy->addStretch();
+    qWarning() << "You are using a generic MBanner. Consider use System Banner,Information Banner or Event Banner";
+}
 
-    layout->setPortraitPolicy(portraitPolicy);
-    layout->setLandscapePolicy(landscapePolicy);
+void MBannerViewPrivate::layoutEventLockScreen()
+{
+    gridBanner = createGrid();
 
-    controller->setLayout(layout);
+    icon()->setStyleName("Icon");
+    title()->setStyleName("HeadLine");
+    title()->setTextElide(true);
+    subtitle()->setStyleName("Body");
+    bannerTimeStamp()->setStyleName("TimeStamp");
 
+    gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
+    gridBanner->addItem(title(), 0 , 1, Qt::AlignTop);
+    gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+    gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+}
+
+void MBannerViewPrivate::layoutEventScreen()
+{
+    gridBanner = createGrid();
+
+    icon()->setStyleName("IconScreen");
+    title()->setStyleName("HeadLine");
+    subtitle()->setStyleName("Body");
+    bannerTimeStamp()->setStyleName("TimeStamp");
+
+    gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
+    gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
+    gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+    gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+}
+
+void MBannerViewPrivate::initDynamicLayout()
+{
+    Q_Q(MBannerView);
+
+    if (q->model()->styleName()=="EventBanner") {
+        layoutEventBanner();
+    } else if (q->model()->styleName()=="EventScreen") {
+        layoutEventScreen();
+    } else if (q->model()->styleName()=="LockScreen") {
+        //Until new designs same layout as event screen
+        layoutEventScreen();
+        //layoutEventLockScreen();
+    } else if (q->model()->styleName()=="SystemBanner") {
+        layoutSystemBanner();
+    } else if (q->model()->styleName()=="InformationBanner") {
+        layoutInformationBanner();
+    } else {
+        //If empty or no styleName == generic banner
+        layoutGenericBanner();
+    }
     QObject::connect(controller, SIGNAL(clicked()), controller, SLOT(dismiss()));
 }
 
@@ -207,13 +344,14 @@ void MBannerView::setupModel()
 
     Q_D(MBannerView);
 
-
     if (!model()->title().isEmpty())
         d->setTitle(model()->title());
     if (!model()->subtitle().isEmpty())
         d->setSubtitle(model()->subtitle());
     if (!model()->iconID().isEmpty())
-        d->setIcon(model()->iconID(), style()->iconSize());
+        d->setIcon(model()->iconID(),style()->iconSize());
+    if (!model()->bannerTimeStamp().isNull())
+        d->setBannerTimeStamp(model()->bannerTimeStamp());
 
     d->initDynamicLayout();
 }
@@ -230,17 +368,28 @@ void MBannerView::updateData(const QList<const char *>& modifications)
     Q_D(MBannerView);
 
     const char *member;
-
+    bool updateLayout=false;
     foreach(member, modifications) {
         if (member == MBannerModel::Title) {
             d->setTitle(model()->title());
+            updateLayout=true;
         } else if (member == MBannerModel::Subtitle) {
             d->setSubtitle(model()->subtitle());
+            updateLayout=true;
         } else if (member == MBannerModel::IconID) {
-            d->setIcon(model()->iconID(), style()->iconSize());
+            d->setIcon(model()->iconID(),style()->iconSize());
+            updateLayout=true;
+        } else if (member == MBannerModel::BannerTimeStamp) {
+            d->setBannerTimeStamp(model()->bannerTimeStamp());
+            updateLayout=true;
         }
     }
-    d->initDynamicLayout();
+    /*! Due to the dynamic method for the layouts
+    is necessary to check every widget to avoid unnecessary updates
+      */
+    if (updateLayout == true) {
+        d->initDynamicLayout();
+    }
 }
 
 M_REGISTER_VIEW_NEW(MBannerView, MBanner)

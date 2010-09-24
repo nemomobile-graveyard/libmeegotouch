@@ -36,11 +36,6 @@ MBanner::~MBanner()
 {
 }
 
-void MBanner::setIconID(const QString &iconId)
-{
-    model()->setIconID(iconId);
-}
-
 QString MBanner::iconID() const
 {
     return model()->iconID();
@@ -61,6 +56,16 @@ QString MBanner::subtitle() const
     return model()->subtitle();
 }
 
+QDateTime MBanner::bannerTimeStamp() const
+{
+    return model()->bannerTimeStamp();
+}
+
+void MBanner::setIconID(const QString &iconId)
+{
+    model()->setIconID(iconId);
+}
+
 void MBanner::setTitle(const QString &text)
 {
     model()->setTitle(text);
@@ -69,4 +74,9 @@ void MBanner::setTitle(const QString &text)
 void MBanner::setSubtitle(const QString &text)
 {
     model()->setSubtitle(text);
+}
+
+void MBanner::setBannerTimeStamp(const QDateTime &date)
+{
+    model()->setBannerTimeStamp(date);
 }

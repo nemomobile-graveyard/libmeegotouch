@@ -28,6 +28,8 @@
 
 #include <QStringListModel>
 #include <QTimer>
+#include <MDialog>
+#include <QGraphicsLinearLayout>
 
 class BannersPageCellCreator : public MAbstractCellCreator<MBasicListItem>
 {
@@ -113,26 +115,26 @@ void BannersPage::showEventBanner()
 {
     MBanner *banner = new MBanner();
     banner->setStyleName("EventBanner");
-    banner->setIconID("icon-l-mail");
-    banner->setTitle("New updates waiting to install");
-    banner->setSubtitle("130 files");
+    banner->setIconID("icon-s-status-sms");
+    banner->setTitle("John Milles");
+    banner->setSubtitle("Voicemail");
     banner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::showInformationBanner()
 {
-    MBanner *infoBanner = new MBanner();
-    infoBanner->setStyleName("InformationBanner");
-    infoBanner->setSubtitle("Info banner with so much information that the text wraps in portrait");
-    infoBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
+    MBanner *banner = new MBanner();
+    banner->setStyleName("InformationBanner");
+    banner->setIconID("icon-m-camera-scene-landscape-selected");
+    banner->setTitle("Call");
+    banner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::showSystemInformationBanner()
 {
     MBanner *systemBanner = new MBanner();
     systemBanner->setStyleName("SystemBanner");
-    systemBanner->setIconID("icon-l-settings");
-    systemBanner->setSubtitle("System banner");
+    systemBanner->setTitle("Unable to continue video editing. USB disconnected.");
     systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 

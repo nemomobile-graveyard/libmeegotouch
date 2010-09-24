@@ -21,6 +21,7 @@
 #define MBANNERMODEL_H
 
 #include "mscenewindowmodel.h"
+#include <QDateTime>
 
 class M_EXPORT MBannerModel : public MSceneWindowModel
 {
@@ -44,6 +45,11 @@ class M_EXPORT MBannerModel : public MSceneWindowModel
 
     M_MODEL_PROPERTY(QString, subtitle, Subtitle, true, QString())
 
+    /*!
+        \property Datetime
+    */
+
+    M_MODEL_PROPERTY(QDateTime, bannerTimeStamp, BannerTimeStamp, true, QDateTime())
 };
 
 #endif

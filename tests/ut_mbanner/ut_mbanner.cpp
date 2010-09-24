@@ -19,7 +19,6 @@
 
 #include <QTest>
 #include <QSignalSpy>
-
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
 
@@ -78,6 +77,16 @@ void Ut_MBanner::testIcon()
     QCOMPARE(m_subject->iconID(), icon);
 }
 
+void Ut_MBanner::testTimeStamp()
+{
+    QDate tempdate;
+    tempdate.setDate(2010,10,22);
+    QTime temptime;
+    temptime.setHMS(20,32,0,0);
+    QDateTime time= QDateTime(tempdate,temptime);
+    m_subject->setBannerTimeStamp(time);
+    QCOMPARE(m_subject->bannerTimeStamp(),time);
+}
 
 void Ut_MBanner::testBannerCreation()
 {

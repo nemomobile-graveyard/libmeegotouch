@@ -22,6 +22,7 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
+#include <QDateTime>
 #include "mbanner.h"
 
 class Ut_MBanner : public QObject
@@ -37,6 +38,7 @@ private slots:
     void testTitle();
     void testSubTitle();
     void testIcon();
+    void testTimeStamp();
     void testBannerCreation();
     void testBannerClicking();
 

@@ -121,6 +121,12 @@ public:
     */
     Q_PROPERTY(QString subtitle READ subtitle WRITE setSubtitle)
 
+    /*!
+        \property MContentItem::subtitle
+        \brief See MContentItemModel::subtitle
+    */
+    Q_PROPERTY(QDateTime bannerTimeStamp READ bannerTimeStamp WRITE setBannerTimeStamp)
+
 public:
 
     /*!
@@ -154,6 +160,11 @@ public:
      */
     QString subtitle() const;
 
+    /*!
+        \brief Get the subtitle.
+     */
+    QDateTime bannerTimeStamp() const;
+
 Q_SIGNALS:
 
     /*!
@@ -180,6 +191,12 @@ public Q_SLOTS:
         \param text text.
      */
     void setSubtitle(const QString &text);
+
+    /**
+        \brief Set subtitle text. This is second line.
+        \param text text.
+     */
+    void setBannerTimeStamp(const QDateTime &date);
 
 private:
     Q_DISABLE_COPY(MBanner)

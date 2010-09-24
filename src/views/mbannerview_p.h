@@ -22,6 +22,7 @@
 
 #include "mscenewindowview_p.h"
 #include "mbannerview.h"
+#include <QGraphicsGridLayout>
 
 class MLabel;
 class MLayout;
@@ -29,6 +30,7 @@ class MLinearLayoutPolicy;
 class MImageWidget;
 class MBanner;
 class MGridLayoutPolicy;
+class QDateTime;
 
 class MBannerViewPrivate : public MSceneWindowViewPrivate
 {
@@ -44,21 +46,38 @@ public:
     MLabel * title();
     MLabel * subtitle();
     MImageWidget * icon();
+    MLabel *bannerTimeStamp();
 
     void setTitle(const QString& string);
     void setSubtitle(const QString& string);
     void setIcon(const QString& id, const QSize &s);
+    void setBannerTimeStamp(const QDateTime& date);
 
 protected:
-    //! The layout of the notification
-    MLayout * layout;
-    MGridLayoutPolicy *landscapePolicy;
-    MGridLayoutPolicy *portraitPolicy;
 
+    int MBannerStyle;
+
+    MLayout * layout;
+    MLinearLayoutPolicy *landscapePolicy;
+    MLinearLayoutPolicy *portraitPolicy;
+    //For event & lock screen
+    QGraphicsGridLayout *gridBanner;
+
+    //Layouts
+    MLayout *createLayout();
+    QGraphicsGridLayout *createGrid();
+    void layoutEventBanner();
+    void layoutInformationBanner();
+    void layoutSystemBanner();
+    void layoutEventScreen();
+    void layoutEventLockScreen();
+    void layoutGenericBanner();
 
     MImageWidget *iconId;
     MLabel *titleLabel;
     MLabel *subtitleLabel;
+    MLabel *bannerTimeStampLabel;
+    QDateTime *bannerTimeStampData;
 
     MBanner *controller;
 };
