@@ -47,6 +47,7 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void applyStyle();
     //! \reimp_end
 
 protected Q_SLOTS:

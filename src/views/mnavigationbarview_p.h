@@ -27,7 +27,8 @@
 class MNavigationBar;
 class MApplicationMenuButton;
 class MWidget;
-class QGraphicsGridLayout;
+class MLayout;
+class MLinearLayoutPolicy;
 class QGraphicsLinearLayout;
 
 class MNavigationBarViewPrivate : public MSceneWindowViewPrivate
@@ -47,7 +48,10 @@ public:
     void notificationFlagChanged();
     void toolBarChanged();
 
-    QGraphicsLinearLayout *layout;
+    MLayout *layout;
+    MLinearLayoutPolicy *policyTitle;
+    MLinearLayoutPolicy *policySimple;
+    QGraphicsLinearLayout *toolBarLayout;
 
     MApplicationMenuButton *applicationMenuButton;
     QPointer<MToolBar> toolBar;

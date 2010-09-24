@@ -20,7 +20,6 @@
 #include "mnavigationbarview.h"
 #include "mnavigationbarview_p.h"
 
-#include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 
@@ -32,13 +31,18 @@
 #include "mviewcreator.h"
 #include "mdeviceprofile.h"
 #include "mscalableimage.h"
+#include "mlayout.h"
+#include "mlinearlayoutpolicy.h"
 
 // --------------------------------------------------------------------------
 // MNavigationBarViewPrivate
 // --------------------------------------------------------------------------
 
 MNavigationBarViewPrivate::MNavigationBarViewPrivate()
-    : layout(new QGraphicsLinearLayout()),
+    : layout(0),
+      policyTitle(0),
+      policySimple(0),
+      toolBarLayout(0),
       applicationMenuButton(0),
       toolBar(0)
 {
@@ -47,22 +51,35 @@ MNavigationBarViewPrivate::MNavigationBarViewPrivate()
 MNavigationBarViewPrivate::~MNavigationBarViewPrivate()
 {
     if (toolBar)
-        layout->removeItem(toolBar);
+        toolBarLayout->removeItem(toolBar);
 
     delete applicationMenuButton;
 }
 
 void MNavigationBarViewPrivate::init()
 {
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-    controller->setLayout(layout);
-
     applicationMenuButton = new MApplicationMenuButton(controller);
     applicationMenuButton->setObjectName("NavigationBarMenuButton");
 
-    layout->addItem(applicationMenuButton);
-    layout->setAlignment(applicationMenuButton, Qt::AlignCenter);
+    layout = new MLayout;
+    controller->setLayout(layout);
+
+    toolBarLayout = new QGraphicsLinearLayout(Qt::Horizontal, layout);
+
+    policyTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policyTitle->setContentsMargins(0, 0, 0, 0);
+    policyTitle->setSpacing(0);
+    policyTitle->addItem(applicationMenuButton);
+    policyTitle->addItem(toolBarLayout);
+    policyTitle->setAlignment(applicationMenuButton, Qt::AlignCenter);
+
+    policySimple = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policySimple->setContentsMargins(0, 0, 0, 0);
+    policySimple->setSpacing(0);
+    policySimple->addItem(toolBarLayout);
+    policySimple->addStretch();
+    policySimple->addItem(applicationMenuButton);
+    policySimple->setAlignment(applicationMenuButton, Qt::AlignRight);
 
     // Connects button signals
     QObject::connect(applicationMenuButton, SIGNAL(clicked()), controller, SIGNAL(viewmenuTriggered()));
@@ -73,15 +90,21 @@ void MNavigationBarViewPrivate::setMenuButtonwidth()
 {
     Q_Q(MNavigationBarView);
 
-    /* FIXME: Its there because the UI specs contains the following formula:
-      width of application menu button = width of portrait view - width of home button - width of close button.
-      This needs to be removed when there exists support for reading CSS constants in the code
-     */
-    int widthofPortraitMode = MDeviceProfile::instance()->resolution().height();
-    qreal width = widthofPortraitMode - (qreal)q->style()->paddingLeft() - (qreal)q->style()->paddingRight();
-    applicationMenuButton->setPreferredWidth(width);
-    applicationMenuButton->setMinimumWidth(width);
-    applicationMenuButton->setMaximumWidth(width);
+    if (q->style()->hasTitle()) {
+        /* FIXME: Its there because the UI specs contains the following formula:
+          width of application menu button = width of portrait view - width of home button - width of close button.
+          This needs to be removed when there exists support for reading CSS constants in the code
+         */
+        int widthofPortraitMode = MDeviceProfile::instance()->resolution().height();
+        qreal width = widthofPortraitMode - (qreal)q->style()->paddingLeft() - (qreal)q->style()->paddingRight();
+        applicationMenuButton->setPreferredWidth(width);
+        applicationMenuButton->setMinimumWidth(width);
+        applicationMenuButton->setMaximumWidth(width);
+    } else {
+        applicationMenuButton->setPreferredWidth(-1);
+        applicationMenuButton->setMinimumWidth(-1);
+        applicationMenuButton->setMaximumWidth(-1);
+    }
 }
 
 void MNavigationBarViewPrivate::notificationFlagChanged()
@@ -99,12 +122,12 @@ void MNavigationBarViewPrivate::toolBarChanged()
     if (toolBar) {
         if (nextToolBar == toolBar) return;
 
-        layout->removeAt(1);
+        toolBarLayout->removeItem(toolBar);
         toolBar->setParentItem(NULL);
     }
 
     if (nextToolBar) {
-        layout->addItem(nextToolBar);
+        toolBarLayout->addItem(nextToolBar);
         nextToolBar->show();
     }
     toolBar = nextToolBar;
@@ -173,11 +196,24 @@ void MNavigationBarView::setupModel()
     MSceneWindowView::setupModel();
 
     Q_D(MNavigationBarView);
-    d->setMenuButtonwidth();
     d->applicationMenuButton->setText(model()->viewMenuDescription());
     d->applicationMenuButton->setIconID(model()->viewMenuIconID());
     d->applicationMenuButton->setProgressIndicatorVisible(model()->progressIndicatorVisible());
     d->applicationMenuButton->setArrowIconVisible(model()->arrowIconVisible());
+}
+
+void MNavigationBarView::applyStyle()
+{
+    MSceneWindowView::applyStyle();
+
+    Q_D(MNavigationBarView);
+
+    d->applicationMenuButton->setTextVisible(style()->hasTitle());
+    d->applicationMenuButton->setIconVisible(style()->hasTitle());
+
+    d->layout->setPolicy(style()->hasTitle() ? d->policyTitle : d->policySimple);
+
+    d->setMenuButtonwidth();
 }
 
 void MNavigationBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
