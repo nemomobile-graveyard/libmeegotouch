@@ -1232,7 +1232,7 @@ int MGroupHeaderListViewPrivate::totalHeight()
     int headersCount = this->headersCount();
     int itemsCount = this->itemsCount();
     int hseparatorsCount = this->hseparatorsCount();
-    int totalHeight = headersCount * headerHeight() + itemsCount * itemHeight + hseparatorsCount * hseparatorHeight;
+    int totalHeight = headersCount * headerHeight() + itemsCount * itemHeight + hseparatorsCount * hseparatorHeight + gseparatorHeight * headersCount;
     return totalHeight;
 }
 
@@ -1562,7 +1562,7 @@ int MMultiColumnListViewPrivate::totalHeight()
 {
     int totalHeight = 0;
     for (int i = 0; i < headersCount(); ++i) {
-        totalHeight += headerHeight() + groupSize(i);
+        totalHeight += headerHeight() + groupSize(i) + gseparatorHeight;
     }
 
     return totalHeight;
