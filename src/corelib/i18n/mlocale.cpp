@@ -2505,38 +2505,74 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
 #ifdef HAVE_ICU
 QString MLocale::languageEndonym() const
 {
-    Q_D(const MLocale);
     UErrorCode status = U_ZERO_ERROR;
+    QString localeName = this->name();
 
     // TODO: implement a workaround for
     // http://site.icu-project.org/design/resbund/issues
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
-    UResourceBundle *res = ures_open(U_ICUDATA_NAME "-lang", qPrintable(d->_defaultLocale), &status);
-#else
-    UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
-#endif
+    UResourceBundle *res = ures_open(U_ICUDATA_NAME "-lang", qPrintable(localeName), &status);
+
     if (U_FAILURE(status)) {
         mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+        ures_close(res);
+        return localeName;
     }
 
     res = ures_getByKey(res, Languages, res, &status);
     if (U_FAILURE(status)) {
         mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
+        ures_close(res);
+        return localeName;
     }
 
-    QString lang = language();
+    while(1) {
+        int len;
+        status = U_ZERO_ERROR;
+        const UChar *val = ures_getStringByKey(res, qPrintable(localeName), &len, &status);
 
-    int len;
-    const UChar *val = ures_getStringByKey(res, qPrintable(lang), &len, &status);
+        if (U_SUCCESS(status)) {
+            // found language endonym, return it:
+            ures_close(res);
+            return QString::fromUtf16(val, len);
+        }
+        // according to http://userguide.icu-project.org/locale the separators
+        // that specify the parts of a locale are "_", "@", and ";", e.g.
+        // in sr_Latn_RS_REVISED@currency=USD;calendar=islamic-civil
+        // so we remove them from the end of the locale string.
 
-    QString convertedValue = lang;
-
-    if (U_SUCCESS(status)) {
-        convertedValue = QString::fromUtf16(val, len);
+        int semicolonIndex = localeName.lastIndexOf(';');
+        if (semicolonIndex != -1)
+        {
+            // found semicolon, remove it and remaining part of string
+            localeName.truncate(semicolonIndex);
+        }
+        else
+        {
+            int atIndex = localeName.lastIndexOf('@');
+            if (atIndex != -1)
+            {
+                // found "@", remove it and remaining part of string
+                localeName.truncate(atIndex);
+            }
+            else
+            {
+                int underscoreIndex = localeName.lastIndexOf('_');
+                if (underscoreIndex != -1)
+                {
+                    // found "_", remove it and remaining part of string
+                    localeName.truncate(underscoreIndex);
+                }
+                else
+                {
+                    // no language endonym found and there is no way to shorten the localeName
+                    // return the full locale name as a fallback
+                    ures_close(res);
+                    return this->name();
+                }
+            }
+        }
     }
-
-    ures_close(res);
-    return convertedValue;
+    // never reached
 }
 #endif
 
@@ -2548,11 +2584,8 @@ QString MLocale::countryEndonym() const
 
     // TODO: implement a workaround for
     // http://site.icu-project.org/design/resbund/issues
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
     UResourceBundle *res = ures_open(U_ICUDATA_NAME "-region", qPrintable(d->_defaultLocale), &status);
-#else
-    UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
-#endif
+
     if (U_FAILURE(status)) {
         mDebug("MLocale") << "Error ures_open" << u_errorName(status);
     }

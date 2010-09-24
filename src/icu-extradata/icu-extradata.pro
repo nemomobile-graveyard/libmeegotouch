@@ -11,7 +11,9 @@ greaterThan(ICUVERSION, 4.4) {
                  $${ICUVERSION}/fi.txt \
                  $${ICUVERSION}/it.txt \
                  $${ICUVERSION}/ms_BN.txt
-    LANGTXT    = $${ICUVERSION}/lang/de_CH.txt
+    LANGTXT    = $${ICUVERSION}/lang/de_CH.txt \
+                 $${ICUVERSION}/lang/nl_BE.txt \
+                 $${ICUVERSION}/lang/ru_UA.txt
     REGIONTXT  = $${ICUVERSION}/region/de_CH.txt
 } else {
     # old icu version, just do nothing

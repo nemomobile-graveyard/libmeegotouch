@@ -597,10 +597,10 @@ void Ft_Locales::testMLocaleLanguageEndonym_data()
     // make sure that the fix works:
     QTest::newRow("de_CH")
             << QString("de_CH")
-            << QString("Deutsch");
+            << QString("Schweizer Hochdeutsch");
     QTest::newRow("de_AT")
             << QString("de_AT")
-            << QString("Deutsch");
+            << QString("Österreichisches Deutsch");
     QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("Deutsch");
