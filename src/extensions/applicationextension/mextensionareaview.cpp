@@ -197,8 +197,20 @@ MExtensionAreaView::MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtension
     }
 }
 
+MExtensionAreaView::MExtensionAreaView(MExtensionAreaViewPrivate *dd, MExtensionArea *controller) :
+    MWidgetView(controller),
+    d_ptr(dd)
+{
+    Q_D(MExtensionAreaView);
+    if (d) {
+        d->q_ptr = this;
+    }
+}
+
 MExtensionAreaView::~MExtensionAreaView()
 {
+    Q_D(MExtensionAreaView);
+    delete d;
 }
 
 void MExtensionAreaView::setupModel()

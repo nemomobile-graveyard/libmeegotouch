@@ -61,8 +61,19 @@ protected:
      *
      * \param dd the MExtensionAreaViewPrivate private class instance to be used.
      * \param controller the MExtensionArea controller for the view.
+     * \deprecated This constructor is deprecated, the private must be
+     * passed via pointer in order to maintain sane lifetime rules (so
+     * that the view can always delete the private given to it, or the
+     * private it creates itself)
      */
     MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtensionArea *controller);
+    /*!
+     * Constructs a new view for MExtensionArea.
+     *
+     * \param dd the MExtensionAreaViewPrivate private class instance to be used. The view takes ownership.
+     * \param controller the MExtensionArea controller for the view.
+     */
+    MExtensionAreaView(MExtensionAreaViewPrivate *dd, MExtensionArea *controller);
     MExtensionAreaViewPrivate *const d_ptr;
 
 private:

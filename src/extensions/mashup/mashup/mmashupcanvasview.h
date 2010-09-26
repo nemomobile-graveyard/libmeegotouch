@@ -67,8 +67,19 @@ protected:
      *
      * \param dd the MMashupCanvasViewPrivate private class instance to be used.
      * \param controller the MMashupCanvas controller for the view.
+     * \deprecated This constructor is deprecated in order to achieve sane
+     * lifecycle rules. Use the version taking a pointer to the private instead
      */
     MMashupCanvasView(MMashupCanvasViewPrivate &dd, MMashupCanvas *controller);
+
+    /*!
+     * Constructs a new view for MMashupCanvas.
+     *
+     * \param dd the MMashupCanvasViewPrivate private class instance to be used.
+     * The view takes ownership of the private.
+     * \param controller the MMashupCanvas controller for the view.
+     */
+    MMashupCanvasView(MMashupCanvasViewPrivate *dd, MMashupCanvas *controller);
 
 protected slots:
     /*!

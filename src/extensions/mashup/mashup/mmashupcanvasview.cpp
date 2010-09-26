@@ -147,7 +147,7 @@ void MMashupCanvasViewPrivate::connectContainerToWidget(MContainer *container, Q
 
 
 MMashupCanvasView::MMashupCanvasView(MMashupCanvas *controller) :
-    MExtensionAreaView(* new MMashupCanvasViewPrivate, controller)
+    MExtensionAreaView(new MMashupCanvasViewPrivate, controller)
 {
     Q_D(MMashupCanvasView);
     d->q_ptr = this;
@@ -157,6 +157,12 @@ MMashupCanvasView::MMashupCanvasView(MMashupCanvas *controller) :
 }
 
 MMashupCanvasView::MMashupCanvasView(MMashupCanvasViewPrivate &dd, MMashupCanvas *controller) :
+    MExtensionAreaView(dd, controller)
+{
+    init(controller);
+}
+
+MMashupCanvasView::MMashupCanvasView(MMashupCanvasViewPrivate *dd, MMashupCanvas *controller) :
     MExtensionAreaView(dd, controller)
 {
     init(controller);

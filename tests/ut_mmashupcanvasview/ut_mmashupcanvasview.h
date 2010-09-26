@@ -63,6 +63,8 @@ private slots:
     // Called after every testfunction
     void cleanup();
 
+    // Test that the constructor does the right thing
+    void testConstruction();
     // Test that the layout is set up as expected
     void testLayoutPolicy();
     // Test widget addition with flow layout policy

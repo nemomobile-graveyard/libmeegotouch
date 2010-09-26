@@ -33,6 +33,24 @@
 #include <QGraphicsLinearLayout>
 #include <QtTest/QtTest>
 
+//MExtensionAreaView stubs
+static bool gMExtensionAreaViewConstructedWithPointer = false;
+MExtensionAreaView::MExtensionAreaView(MExtensionAreaViewPrivate *dd, MExtensionArea *controller) :
+    MWidgetView(controller),
+    d_ptr(dd)
+{
+    gMExtensionAreaViewConstructedWithPointer = true;
+}
+
+static bool gMExtensionAreaViewConstructedWithReference = false;
+MExtensionAreaView::MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtensionArea *controller) :
+    MWidgetView(controller),
+    d_ptr(& dd)
+
+{
+    gMExtensionAreaViewConstructedWithReference = true;
+}
+
 void QFileSystemWatcher::addPath(const QString &)
 {
 }
@@ -64,6 +82,8 @@ void Ut_MMashupCanvasView::cleanupTestCase()
 
 void Ut_MMashupCanvasView::init()
 {
+    gMExtensionAreaViewConstructedWithPointer = false;
+    gMExtensionAreaViewConstructedWithReference = false;
     mashupCanvas = new MMashupCanvas("test");
     m_subject = new TestMMashupCanvasView(mashupCanvas);
     mashupCanvas->setView(m_subject);
@@ -141,6 +161,12 @@ void Ut_MMashupCanvasView::createWidgets(int numberOfWidgets, bool containerMode
         addWidgetToMashupCanvas(widget, store);
         createdWidgets.append(widget);
     }
+}
+
+void Ut_MMashupCanvasView::testConstruction()
+{
+    QVERIFY(gMExtensionAreaViewConstructedWithPointer);
+    QVERIFY(!gMExtensionAreaViewConstructedWithReference);
 }
 
 void Ut_MMashupCanvasView::testLayoutPolicy()

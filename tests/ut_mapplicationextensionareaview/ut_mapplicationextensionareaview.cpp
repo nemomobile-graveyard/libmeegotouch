@@ -32,6 +32,25 @@
 #include <QGraphicsLinearLayout>
 #include <QtTest/QtTest>
 
+//MExtensionAreaView stubs
+static bool gMExtensionAreaViewConstructedWithPointer = false;
+MExtensionAreaView::MExtensionAreaView(MExtensionAreaViewPrivate *dd, MExtensionArea *controller) :
+    MWidgetView(controller),
+    d_ptr(dd)
+{
+    gMExtensionAreaViewConstructedWithPointer = true;
+}
+
+static bool gMExtensionAreaViewConstructedWithReference = false;
+MExtensionAreaView::MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtensionArea *controller) :
+    MWidgetView(controller),
+    d_ptr(& dd)
+
+{
+    gMExtensionAreaViewConstructedWithReference = true;
+}
+
+
 void QFileSystemWatcher::addPath(const QString &)
 {
 }
@@ -58,6 +77,8 @@ void Ut_MApplicationExtensionAreaView::cleanupTestCase()
 
 void Ut_MApplicationExtensionAreaView::init()
 {
+    gMExtensionAreaViewConstructedWithPointer = false;
+    gMExtensionAreaViewConstructedWithReference = false;
     extensionArea = new MApplicationExtensionArea("test");
     m_subject = new TestMApplicationExtensionAreaView(extensionArea);
     extensionArea->setView(m_subject);
@@ -130,6 +151,12 @@ int Ut_MApplicationExtensionAreaView::widgetPosInLayout(MWidget *widget)
 bool Ut_MApplicationExtensionAreaView::widgetInLayout(MWidget *widget)
 {
     return widgetPosInLayout(widget) >= 0;
+}
+
+void Ut_MApplicationExtensionAreaView::testConstruction()
+{
+    QVERIFY(gMExtensionAreaViewConstructedWithPointer);
+    QVERIFY(!gMExtensionAreaViewConstructedWithReference);
 }
 
 void Ut_MApplicationExtensionAreaView::testLayoutPolicy()

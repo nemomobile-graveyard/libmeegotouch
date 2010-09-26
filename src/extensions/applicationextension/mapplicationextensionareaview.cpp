@@ -96,7 +96,7 @@ void MApplicationExtensionAreaViewPrivate::connectContainerToWidget(MContainer *
 
 
 MApplicationExtensionAreaView::MApplicationExtensionAreaView(MApplicationExtensionArea *controller) :
-    MExtensionAreaView(* new MApplicationExtensionAreaViewPrivate, controller)
+    MExtensionAreaView(new MApplicationExtensionAreaViewPrivate, controller)
 {
     Q_D(MApplicationExtensionAreaView);
     d->q_ptr = this;
@@ -104,6 +104,13 @@ MApplicationExtensionAreaView::MApplicationExtensionAreaView(MApplicationExtensi
 }
 
 MApplicationExtensionAreaView::MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate &dd, MApplicationExtensionArea *controller) :
+    MExtensionAreaView(dd, controller)
+{
+    Q_D(MApplicationExtensionAreaView);
+    d->init(controller);
+}
+
+MApplicationExtensionAreaView::MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate *dd, MApplicationExtensionArea *controller) :
     MExtensionAreaView(dd, controller)
 {
     Q_D(MApplicationExtensionAreaView);

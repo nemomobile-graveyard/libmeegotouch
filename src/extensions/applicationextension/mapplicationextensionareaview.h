@@ -55,8 +55,18 @@ protected:
      *
      * \param dd the MApplicationExtensionAreaViewPrivate private class instance to be used.
      * \param controller the MApplicationExtensionArea controller for the view.
+     * \deprecated This constructor is deprecated in order to achieve sane
+     * lifecycle rules. Use the version taking a pointer to the private instead
      */
     MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate &dd, MApplicationExtensionArea *controller);
+
+    /*!
+     * Constructs a new view for MApplicationExtensionArea.
+     *
+     * \param dd the MApplicationExtensionAreaViewPrivate private class instance to be used. The view takes ownership of the private.
+     * \param controller the MApplicationExtensionArea controller for the view.
+     */
+    MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate *dd, MApplicationExtensionArea *controller);
 
     //! \reimp
     virtual void applyStyle();
