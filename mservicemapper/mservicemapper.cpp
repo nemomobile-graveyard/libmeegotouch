@@ -48,6 +48,7 @@ void MServiceMapper::init()
 
 MServiceMapper::~MServiceMapper()
 {
+    delete d_ptr;
 }
 
 QString MServiceMapper::serviceName(const QString &interfaceName)

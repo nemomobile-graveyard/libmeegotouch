@@ -1,4 +1,4 @@
-include( ../../../mkspecs/common.pri )
+include( ../../mkspecs/common.pri )
 
 CONFIG += ordered
 SUBDIRS += \

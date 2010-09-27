@@ -62,7 +62,13 @@ Package: libmeegotouch-bin
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch binary files
- Binary files of MeeGo Touch framework
+ Contains executables (and their associated files):
+ mthemedaemon   - daemon that serves as a central service/cache that MeeGo
+                  Touch applications can use to obtain theme files.
+ mservicemapper - daemon (qdbus) that is the part of the MeeGo Touch Service
+                  Framework that controls which service the clients use.
+                  Also exposes the services to the Qt Service Framework.
+ mappletrunner  - launcher process for MeeGo Touch applets.
 
 Package: libmeegotouch-bin-dbg
 Architecture: any
