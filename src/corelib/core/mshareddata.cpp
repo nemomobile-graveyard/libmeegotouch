@@ -86,6 +86,7 @@ QSharedMemory *MSharedDataPrivate::attachToPage(int num)
     if (!page->attach(QSharedMemory::ReadOnly)) {
         errorString = QString("cannot attach to page ") + pageName + QString(" ") + page->errorString();
         qDebug() << errorString;
+	delete page;
         return NULL;
     }
 
