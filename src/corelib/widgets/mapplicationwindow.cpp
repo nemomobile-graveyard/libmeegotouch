@@ -228,10 +228,21 @@ void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
         escapeButtonPanel->hide();
         closeMenu();
     } else {
-        navigationBar->show();
-        dockWidget->show();
-        homeButtonPanel->show();
-        escapeButtonPanel->show();
+        if (navigationBar->sceneWindowState() == MSceneWindow::Appeared ||
+                navigationBar->sceneWindowState() == MSceneWindow::Appearing)
+            navigationBar->show();
+
+        if (dockWidget->sceneWindowState() == MSceneWindow::Appeared ||
+                dockWidget->sceneWindowState() == MSceneWindow::Appearing)
+            dockWidget->show();
+
+        if (homeButtonPanel->sceneWindowState() == MSceneWindow::Appeared ||
+                homeButtonPanel->sceneWindowState() == MSceneWindow::Appearing)
+            homeButtonPanel->show();
+
+        if (escapeButtonPanel->sceneWindowState() == MSceneWindow::Appeared ||
+                escapeButtonPanel->sceneWindowState() == MSceneWindow::Appearing)
+            escapeButtonPanel->show();
     }
 }
 
