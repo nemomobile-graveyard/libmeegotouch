@@ -35,7 +35,7 @@ The service mapper will send signals to the corresponding SU interfaces to infor
 <li> Show calendar appointments for 13. friday 2042
 </ol>
 
-Service Framework should not be used for generic IPC communication purposes or for example communication between applets. This should be done using other means like using a data backend that provides notifications of changes to values like DuiValueSpace.
+Service Framework should not be used for generic IPC communication purposes or, for example, communication between applets. This should be done using other means like using a data backend that provides notifications of changes to values like MValueSpace.
 
 \section usage Using the Service Framework
 
@@ -49,8 +49,8 @@ Two things are required of the developer of an SP :
 <dt>Interface</dt>
 <dd>This consists of the files needed by the developer of a Service User application. It consists of :
 <ul>
-<li>duiservicefwbaseif.h/cpp files that are common to all interfaces.<br/>
-The duiservicefwbaseif.h file is part of the libdui-dev package and the duiservicefwbaseif.cpp is compiled into libdui itself and so is part of the libdui0 package.</li>
+<li>mservicefwbaseif.h/cpp files that are common to all interfaces.<br/>
+The mservicefwbaseif.h file is part of the libmeegotouch-dev package and the mservicefwbaseif.cpp is compiled into libmeegotouch itself and so is part of the libmeegotouchcore0 package.</li>
 <li>XML file, header files, a library and a .service file for the interface being supplied.<br/>
 The interface specific header files should be made part of the maemo-interfaces-dev package along with the interface's XML file, and the corresponding cpp files compiled into interface specific libs that are made part of the maemo-interfaces package. The .service file should also be made part of the maemo-interfaces package.</li>
 </dd>
@@ -82,10 +82,10 @@ The interface specific header files should be made part of the maemo-interfaces-
 </node>
 \endverbatim
 
-<li>Run the dui-servicefwgen tool to generate the adaptor h and cpp files, for example : </li>
+<li>Run the m-servicefwgen tool to generate the adaptor h and cpp files, for example : </li>
 
 \verbatim
-dui-servicefwgen -a com.nokia.TextProcessorInterface
+m-servicefwgen -a com.nokia.TextProcessorInterface
 \endverbatim
 
 <li>Change your code.</li>
@@ -117,10 +117,10 @@ There are three steps to defining an interface.
 
 <ul>
 <li>Create an XML file defining the interface - this is the same XML file as described above.</li>
-<li>Run the dui-servicefwgen tool to generate the proxy header and cpp files, and the wrapper header file. For example : </li>
+<li>Run the m-servicefwgen tool to generate the proxy header and cpp files, and the wrapper header file. For example : </li>
 
 \verbatim
-dui-servicefwgen -p com.nokia.TextProcessorInterface
+m-servicefwgen -p com.nokia.TextProcessorInterface
 \endverbatim
 
 <li>You need to generate the service libraries.</li>
@@ -151,9 +151,9 @@ Documentation for an interface and its methods can be added between '<doc>' and 
 \subsection usagesu As a Service User
 
 <ol>
-<li>Install the libdui-dev debian package. This gives you the service mapper dbus daemon, headers, and lib.</li>
-<li>Install the maemo-interfaces-dev package (incudes the proxy header and lib, and the wrapper header file).</li>
-<li>Add -ldui and -l<interfacename> to LIBS in your project file.</li>
+<li>Install the libmeegotouch-dev and libmeegotouch-bin debian packages. This gives you the service mapper dbus daemon, headers, and lib.</li>
+<li>Install the maemo-meegotouch-interfaces-dev package (incudes the proxy header and lib, and the wrapper header file).</li>
+<li>Add -lmeegotouch and -l<interfacename> to LIBS in your project file.</li>
 <li>In your source, include the interface header file and create an instance of the interface and call method serviceName() to get the provider for the interface.</li>
 <li>Check to see if the service was found OK using the 'isValid()' method.</li>
 <li>Call the interface method(s) as desired/appropriate.</li>
@@ -162,10 +162,10 @@ Documentation for an interface and its methods can be added between '<doc>' and 
 
 \section demos Demos and example code
 
-In libdui/demos/servicefw/ there is example code showing three service providers and a service user. The com.nokia.textprocessor and org.maemo.textprocessor services both implement the same interface - com.nokia.TextProcessorInterface. There are two services so that we are able to remove services and see that the service user is switched from one service to another/etc. There is one script tools/dui-servicefwgen, which is used to generate the source files that are used to define the interface to the service user. To run this demo :</li>
+In libmeegotouch/demos/servicefw/ there is example code showing three service providers and a service user. The com.nokia.textprocessor and org.maemo.textprocessor services both implement the same interface - com.nokia.TextProcessorInterface. There are two services so that we are able to remove services and see that the service user is switched from one service to another/etc. There is one script tools/m-servicefwgen, which is used to generate the source files that are used to define the interface to the service user. To run this demo :</li>
 <ul>
-<li>cd libdui</li>
-<li>qmake && make && make install (or at least do a make install in the duiservicemapper directory)</li>
+<li>cd libmeegotouch</li>
+<li>qmake && make && make install (or at least do a make install in the mservicemapper directory)</li>
 <li>cd demos/servicefw</li>
 <li>pushd misc; sudo ./INSTALL; popd (this will install the relevant dbus service files into /usr/share/dbus-1/services)</li>
 <li>LD_LIBRARY_PATH=lib bin/user</li>
