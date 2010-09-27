@@ -64,7 +64,7 @@ protected:
      * \deprecated This constructor is deprecated, the private must be
      * passed via pointer in order to maintain sane lifetime rules (so
      * that the view can always delete the private given to it, or the
-     * private it creates itself)
+     * private it creates itself). Use the version taking a pointer to the private instead.
      */
     Q_DECL_DEPRECATED MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtensionArea *controller);
     /*!

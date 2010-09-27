@@ -56,7 +56,7 @@ protected:
      * \param dd the MApplicationExtensionAreaViewPrivate private class instance to be used.
      * \param controller the MApplicationExtensionArea controller for the view.
      * \deprecated This constructor is deprecated in order to achieve sane
-     * lifecycle rules. Use the version taking a pointer to the private instead
+     * lifecycle rules. Use the version taking a pointer to the private instead.
      */
     Q_DECL_DEPRECATED MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate &dd, MApplicationExtensionArea *controller);
 
