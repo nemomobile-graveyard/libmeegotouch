@@ -208,7 +208,8 @@ void Ut_MTextEditView::testUpdateScrollWhenTextChanged()
     QKeyEvent event(QEvent::KeyPress, Qt::Key_X, Qt::NoModifier, "x");
 
     // test for bug #150452
-    QCOMPARE(m_subject->d_ptr->hscroll, qreal(0));
+    // (note: QCOMPARE doesn't know how to properly compare two zero floats)
+    QVERIFY(qAbs(m_subject->d_ptr->hscroll) < 0.01);
     for (int n = 0; n < count; ++n) {
         m_controller->keyPressEvent(&event);
     }
@@ -219,12 +220,12 @@ void Ut_MTextEditView::testUpdateScrollWhenTextChanged()
         m_controller->keyPressEvent(&bsEvent);
     }
     QVERIFY(hscroll > m_subject->d_ptr->hscroll);
-    QCOMPARE(m_subject->d_ptr->hscroll, qreal(0));
+    QVERIFY(qAbs(m_subject->d_ptr->hscroll) < 0.01);
 
     while (!m_controller->text().isEmpty()) {
         m_controller->keyPressEvent(&bsEvent);
     }
-    QCOMPARE(m_subject->d_ptr->hscroll, qreal(0));
+    QVERIFY(qAbs(m_subject->d_ptr->hscroll) < 0.01);
 
     // test for bug #177305
     for (int n = 0; n < count; ++n) {
