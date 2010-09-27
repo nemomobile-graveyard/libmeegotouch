@@ -66,7 +66,7 @@ protected:
      * that the view can always delete the private given to it, or the
      * private it creates itself)
      */
-    MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtensionArea *controller);
+    Q_DECL_DEPRECATED MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtensionArea *controller);
     /*!
      * Constructs a new view for MExtensionArea.
      *

@@ -104,7 +104,7 @@ MApplicationExtensionAreaView::MApplicationExtensionAreaView(MApplicationExtensi
 }
 
 MApplicationExtensionAreaView::MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate &dd, MApplicationExtensionArea *controller) :
-    MExtensionAreaView(dd, controller)
+    MExtensionAreaView(&dd, controller)
 {
     Q_D(MApplicationExtensionAreaView);
     d->init(controller);

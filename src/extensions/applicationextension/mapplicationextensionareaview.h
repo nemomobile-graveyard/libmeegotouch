@@ -58,7 +58,7 @@ protected:
      * \deprecated This constructor is deprecated in order to achieve sane
      * lifecycle rules. Use the version taking a pointer to the private instead
      */
-    MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate &dd, MApplicationExtensionArea *controller);
+    Q_DECL_DEPRECATED MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate &dd, MApplicationExtensionArea *controller);
 
     /*!
      * Constructs a new view for MApplicationExtensionArea.

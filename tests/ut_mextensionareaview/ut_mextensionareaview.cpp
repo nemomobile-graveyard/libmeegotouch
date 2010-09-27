@@ -64,15 +64,14 @@ void Ut_MExtensionAreaView::init()
 void Ut_MExtensionAreaView::cleanup()
 {
     delete m_subject;
-    
 }
 
 void Ut_MExtensionAreaView::testDestruction()
 {
     MExtensionArea* area = new MExtensionArea;
-    TestMExtensionAreaViewPrivate* view_private = 
+    TestMExtensionAreaViewPrivate* view_private =
         new TestMExtensionAreaViewPrivate;
-    TestMExtensionAreaView* view = 
+    TestMExtensionAreaView* view =
         new TestMExtensionAreaView(view_private, area);
     area->setView(view);
     delete view;

@@ -70,7 +70,7 @@ protected:
      * \deprecated This constructor is deprecated in order to achieve sane
      * lifecycle rules. Use the version taking a pointer to the private instead
      */
-    MMashupCanvasView(MMashupCanvasViewPrivate &dd, MMashupCanvas *controller);
+    Q_DECL_DEPRECATED MMashupCanvasView(MMashupCanvasViewPrivate &dd, MMashupCanvas *controller);
 
     /*!
      * Constructs a new view for MMashupCanvas.

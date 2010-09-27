@@ -157,7 +157,7 @@ MMashupCanvasView::MMashupCanvasView(MMashupCanvas *controller) :
 }
 
 MMashupCanvasView::MMashupCanvasView(MMashupCanvasViewPrivate &dd, MMashupCanvas *controller) :
-    MExtensionAreaView(dd, controller)
+    MExtensionAreaView(&dd, controller)
 {
     init(controller);
 }
