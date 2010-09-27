@@ -1673,6 +1673,13 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
         break;
     }
 
+    // Make sure that items with subfocus get the scene's focus after
+    // appearing:
+    QGraphicsItem *nextFocusItem = sceneWindow->focusItem();
+    if (nextFocusItem && !nextFocusItem->hasFocus()) {
+        scene->setFocusItem(nextFocusItem, Qt::OtherFocusReason);
+    }
+
     MSceneWindow::WindowType type = sceneWindow->windowType();
 
     if (type == MSceneWindow::Dialog ||
