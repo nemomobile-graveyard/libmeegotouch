@@ -18,10 +18,10 @@
 ****************************************************************************/
 
 #include "mimagedirectory.h"
-#include "mthemeresourcemanager.h"
 #include "mthemedaemon.h"
 
 #include "mdebug.h"
+#include <QDateTime>
 #include <QDir>
 #include <QPainter>
 #include <QPixmap>
@@ -231,12 +231,12 @@ QString PixmapImageResource::uniqueKey()
 
 QPixmap *IconImageResource::createPixmap(const QSize &size)
 {
-    QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(absoluteFilePath());
+   QSvgRenderer renderer(absoluteFilePath());
 
     QSize svgImageSize = size;
     if (size.isNull()) {
-        if (renderer) {
-            svgImageSize = renderer->defaultSize();
+        if (renderer.isValid()) {
+            svgImageSize = renderer.defaultSize();
         } else if (svgImageSize.isNull()) {
             mWarning("IconImageResource") << "    Invalid svg, size of the document is (0,0)";
         }
@@ -244,9 +244,9 @@ QPixmap *IconImageResource::createPixmap(const QSize &size)
 
     QPixmap *pixmap = new QPixmap(svgImageSize);
     pixmap->fill(QColor(Qt::transparent));
-    if (renderer) {
+    if (renderer.isValid()) {
         QPainter painter(pixmap);
-        renderer->render(&painter);
+        renderer.render(&painter);
     }
 
     return pixmap;
@@ -259,13 +259,13 @@ QString IconImageResource::uniqueKey()
 
 QPixmap *SvgImageResource::createPixmap(const QSize &size)
 {
-    QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(absoluteFilePath());
+    QSvgRenderer renderer(absoluteFilePath());
 
     QSize svgImageSize = size;
     if (size.isNull()) {
         // the requested size is (0,0) so we need to fetch the default size from the svg.
-        if (renderer) {
-            svgImageSize = renderer->boundsOnElement(imageId).size().toSize();
+        if (renderer.isValid()) {
+            svgImageSize = renderer.boundsOnElement(imageId).size().toSize();
         } else if (svgImageSize.isNull()) {
             mWarning("SvgImageResource") << "    Invalid svg, size of id" << imageId << "is (0,0)";
         }
@@ -273,9 +273,9 @@ QPixmap *SvgImageResource::createPixmap(const QSize &size)
 
     QPixmap *pixmap = new QPixmap(svgImageSize);
     pixmap->fill(QColor(Qt::transparent));
-    if (renderer) {
+    if (renderer.isValid()) {
         QPainter painter(pixmap);
-        renderer->render(&painter, imageId);
+        renderer.render(&painter, imageId);
     }
 
     return pixmap;
@@ -458,7 +458,7 @@ void MThemeImagesDirectory::readImageResources(const QString& path, bool localiz
         for (; i != end; ++i) {
             if (i->isDir()) {
                 directories.append(i->absoluteFilePath());
-            } else if (i->suffix() == "png" || i->suffix() == "jpg" || i->suffix() == "svg") {
+            } else if (i->suffix() == QLatin1String("png") || i->suffix() == QLatin1String("jpg") || i->suffix() == QLatin1String("svg")) {
                 addImageResource(*i, localized);
             }
         }
@@ -483,7 +483,7 @@ void MThemeImagesDirectory::readSvgResources(const QString& path, bool localized
         for (; i != end; ++i) {
             if (i->isDir()) {
                 directories.append(i->absoluteFilePath());
-            } else if (i->suffix() == "svg") {
+            } else if (i->suffix() == QLatin1String("svg")) {
                 addSvgResource(*i, localized);
             }
         }
@@ -500,7 +500,7 @@ void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool loc
                                      << "instead of" << fileInfo.absoluteFilePath();
         } else {
             //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
-            imageResources.insert(fileInfo.baseName(), fileInfo.suffix() == "svg" ? (ImageResource*) new IconImageResource(fileInfo.absoluteFilePath()) : (ImageResource*) new PixmapImageResource(fileInfo.absoluteFilePath()));
+            imageResources.insert(fileInfo.baseName(), fileInfo.suffix() == QLatin1String("svg") ? (ImageResource*) new IconImageResource(fileInfo.absoluteFilePath()) : (ImageResource*) new PixmapImageResource(fileInfo.absoluteFilePath()));
         }
     }
     else {
@@ -509,7 +509,7 @@ void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool loc
             mWarning("MThemeDaemon") << "Ignoring localized image resource" << fileInfo.absoluteFilePath() << "because it was not found from the original theme!";
         } else {
             //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
-            localizedImageResources.insert(fileInfo.baseName(), fileInfo.suffix() == "svg" ? (ImageResource*) new IconImageResource(fileInfo.absoluteFilePath()) : (ImageResource*) new PixmapImageResource(fileInfo.absoluteFilePath()));
+            localizedImageResources.insert(fileInfo.baseName(), fileInfo.suffix() == QLatin1String("svg") ? (ImageResource*) new IconImageResource(fileInfo.absoluteFilePath()) : (ImageResource*) new PixmapImageResource(fileInfo.absoluteFilePath()));
         }    
     }
 }
@@ -626,14 +626,14 @@ MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursion
 
             if (i->isDir() && recursionMode == M::Recursive) {
                 directories.append(QDir(i->absoluteFilePath()));
-            } else if (i->suffix() == "png" || i->suffix() == "jpg") {
+            } else if (i->suffix() == QLatin1String("png") || i->suffix() == QLatin1String("jpg")) {
                 if (imageResources.contains(i->baseName())) {
                     mDebug("MThemeDaemon") << "Path" << path << "contains multiple images with id" << i->baseName();
                 } else {
                     imageResources.insert(i->baseName(), new PixmapImageResource(i->absoluteFilePath()));
                 }
-            } else if (i->suffix() == "svg") {
-                svgFiles.insert(i->absoluteFilePath(), QSharedPointer<QSvgRenderer>());
+            } else if (i->suffix() == QLatin1String("svg")) {
+                svgFiles.insert(i->absoluteFilePath());
             }
         }
     }
@@ -659,14 +659,11 @@ ImageResource *MImageDirectory::findImage(const QString &imageId)
         }
 
         // it was not resolved, so we need to go trough all svg-files.
-        QHash< QString, QSharedPointer<QSvgRenderer> >::iterator i = svgFiles.begin();
-        QHash< QString, QSharedPointer<QSvgRenderer> >::iterator end = svgFiles.end();
-
-        for (; i != end; ++i) {
-            QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(i.key());
+        foreach (const QString &svgFile, svgFiles) {
+            QSvgRenderer renderer(svgFile);
             // does this svg contain the element we're looking for?
-            if (renderer->elementExists(imageId)) {
-                resource = new SvgImageResource(imageId, i.key());
+            if (renderer.isValid() && renderer.elementExists(imageId)) {
+                resource = new SvgImageResource(imageId, svgFile);
                 imageResources.insert(imageId, resource);
                 break;
             }

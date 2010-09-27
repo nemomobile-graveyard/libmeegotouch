@@ -183,8 +183,7 @@ private:
     // image id => image resource
     QHash<QString, ImageResource *> imageResources;
 
-    // svg renderer file path => shared svg renderer pointer
-    QHash< QString, QSharedPointer<QSvgRenderer> > svgFiles;
+    QSet<QString> svgFiles;
 
     QSet<QString> notFoundIds;
 };

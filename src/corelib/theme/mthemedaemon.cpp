@@ -33,7 +33,6 @@
 #include "mthemedaemonclient.h"
 #include "mimagedirectory.h"
 #include "mthemedaemonprotocol.h"
-#include "mthemeresourcemanager.h"
 
 using namespace M::MThemeDaemonProtocol;
 
@@ -360,8 +359,6 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
 
         client->reloadImagePaths(themeInheritance);
     }
-
-    MThemeResourceManager::instance().themeChanged();
 
     // 5: release rest of the old theme resources and load the new ones
     reloadImagePaths(locale, forceReload);

@@ -35,7 +35,6 @@ SOURCES += main.cpp \
            ../src/corelib/theme/mimagedirectory.cpp \
            ../src/corelib/theme/mthemedaemonclient.cpp \
            ../src/corelib/theme/mthemedaemonprotocol.cpp \
-           ../src/corelib/theme/mthemeresourcemanager.cpp \
            ../src/corelib/core/mcpumonitor.cpp \
 
 contains(DEFINES, HAVE_GCONF) {
@@ -52,7 +51,6 @@ HEADERS += \
            ../src/corelib/theme/mimagedirectory.h \
            ../src/corelib/theme/mthemedaemonclient.h \
            ../src/corelib/theme/mthemedaemonprotocol.h \
-           ../src/corelib/theme/mthemeresourcemanager.h \
            ../src/corelib/core/mgconfitem.h \
            ../src/corelib/core/mcpumonitor.h \
            keypresswaiter.h \

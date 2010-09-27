@@ -14,7 +14,6 @@ SOURCES += \
     $$MSRCDIR/corelib/theme/mthemedaemon.cpp \
     $$MSRCDIR/corelib/theme/mthemedaemonclient.cpp \
     $$MSRCDIR/corelib/theme/mthemedaemonprotocol.cpp \
-    $$MSRCDIR/corelib/theme/mthemeresourcemanager.cpp \
 
 HEADERS += \
     ut_mlocalthemedaemon.h \
@@ -26,6 +25,5 @@ HEADERS += \
     $$MSRCDIR/corelib/theme/mthemedaemon.h \
     $$MSRCDIR/corelib/theme/mthemedaemonprotocol.h \
     $$MSRCDIR/corelib/theme/mthemedaemonclient.h \
-    $$MSRCDIR/corelib/theme/mthemeresourcemanager.h \
 
 include(../common_bot.pri)
