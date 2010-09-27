@@ -50,6 +50,7 @@
 #include "mtextedit.h"
 
 #include "minputwidgetrelocator.h"
+#include "minputmethodstate.h"
 
 #include "mapplicationpage.h"
 #include "morientationtracker.h"
@@ -2002,28 +2003,7 @@ bool MSceneManager::eventFilter(QObject *watched, QEvent *event)
 
 void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *)
 {
-    QInputContext *inputContext = qApp->inputContext();
-
-    if (!inputContext) {
-        return;
-    }
-
-    QWidget *focusWidget = QApplication::focusWidget();
-
-    if (focusWidget) {
-        // FIXME: this is a temporary workaround because of the
-        // QGraphicsView unable to correctly update the attribute.
-        // We're waiting for fixing this on Qt side.
-        focusWidget->setAttribute(Qt::WA_InputMethodEnabled, true);
-        //enforce update if focus is moved from one MTextEdit to other
-        //if attribute WA_InputMethodEnabled is not set then Qt will call
-        //setFocusWidget automatically
-        inputContext->setFocusWidget(focusWidget);
-    }
-
-    //FIXME: verify if application style allows SIP usage
-    QEvent request(QEvent::RequestSoftwareInputPanel);
-    inputContext->filterEvent(&request);
+    MInputMethodState::requestSoftwareInputPanel();
 
     // This is normally called automatically except in cases where input panel area does not change and we
     // move between two similar text edits, for example. This should be removed if we ever get a change to
@@ -2035,14 +2015,7 @@ void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *)
 
 void MSceneManager::closeSoftwareInputPanel()
 {
-    // Tell input context we want to close the SIP.
-    QInputContext *inputContext = qApp->inputContext();
-    if (inputContext) {
-        //FIXME: verify if application style allows SIP usage
-        QEvent close(QEvent::CloseSoftwareInputPanel);
-        inputContext->filterEvent(&close);
-        inputContext->reset();
-    }
+    MInputMethodState::closeSoftwareInputPanel();
 }
 
 void MSceneManager::setOrientationAngle(M::OrientationAngle angle,

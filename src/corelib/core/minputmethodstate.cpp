@@ -20,6 +20,9 @@
 #include "minputmethodstate.h"
 #include "minputmethodstate_p.h"
 
+#include "qapplication.h"
+#include "qinputcontext.h"
+
 #include <QTimer>
 #include <QKeyEvent>
 
@@ -91,6 +94,46 @@ M::OrientationAngle MInputMethodState::activeWindowOrientationAngle() const
     Q_D(const MInputMethodState);
 
     return d->orientation;
+}
+
+void MInputMethodState::requestSoftwareInputPanel()
+{
+    QInputContext *inputContext = qApp->inputContext();
+
+    if (!inputContext) {
+        return;
+    }
+
+    QWidget *focusWidget = QApplication::focusWidget();
+
+    if (focusWidget) {
+        // FIXME: this is a temporary workaround because of the
+        // QGraphicsView unable to correctly update the attribute.
+        // We're waiting for fixing this on Qt side.
+        focusWidget->setAttribute(Qt::WA_InputMethodEnabled, true);
+        //enforce update if focus is moved from one MTextEdit to other
+        //if attribute WA_InputMethodEnabled is not set then Qt will call
+        //setFocusWidget automatically
+        inputContext->setFocusWidget(focusWidget);
+    }
+
+    //FIXME: verify if application style allows SIP usage
+    QEvent request(QEvent::RequestSoftwareInputPanel);
+    inputContext->filterEvent(&request);
+}
+
+void MInputMethodState::closeSoftwareInputPanel()
+{
+    QInputContext *inputContext = qApp->inputContext();
+
+    if (!inputContext) {
+        return;
+    }
+
+    //FIXME: verify if application style allows SIP usage
+    QEvent close(QEvent::CloseSoftwareInputPanel);
+    inputContext->filterEvent(&close);
+    inputContext->reset();
 }
 
 void MInputMethodState::emitKeyPress(const QKeyEvent &event)

@@ -23,6 +23,7 @@
 #include "mapplicationwindow.h"
 #include "mscenemanager.h"
 #include "mapplication.h"
+#include "minputmethodstate.h"
 
 #include <QDebug>
 #include <QString>
@@ -313,13 +314,13 @@ void MCompleterPrivate::_q_modelUpdate()
 void MCompleterPrivate::resetFocus()
 {
     Q_Q(MCompleter);
-    if (!q->widget() || !q->widget()->scene())
+
+    if (!q->widget() || !q->widget()->scene()) {
         return;
+    }
+
     //set the focus back to textwidget
     q->widget()->scene()->setFocusItem(q->widget());
-    MSceneManager *targetSceneManager = MApplication::activeWindow()->sceneManager();
-    if (targetSceneManager)
-        targetSceneManager->requestSoftwareInputPanel(q->widget());
 }
 
 MCompleter::MCompleter()

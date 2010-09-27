@@ -57,6 +57,22 @@ public:
     //! \return orientation of application's active window
     M::OrientationAngle activeWindowOrientationAngle() const;
 
+    /*!
+     * Sends a request to the application's input context to open a software
+     * input panel (e.g. the virtual keyboard).
+     * Warning: In order to gain more screen space, window decorations may be
+     * temporarily hidden while the input panel is up.
+     * \sa closeSoftwareInputPanel
+     */
+    static void requestSoftwareInputPanel();
+
+    /*!
+     * Sends a request to the application's input context to close a software
+     * input panel.
+     * \sa requestSoftwareInputPanel
+     */
+    static void closeSoftwareInputPanel();
+
     //! \internal
     void emitKeyPress(const QKeyEvent &event);
     void emitKeyRelease(const QKeyEvent &event);

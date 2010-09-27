@@ -142,6 +142,23 @@ public:
      */
     void setPageHistory(const QList<MSceneWindow *> &list);
 
+    /*!
+     * Sends a request to the application's input context to open a software input
+     * panel (e.g. the virtual keyboard)
+     * Scene manager makes sure the focused input widget is visible to user.
+     * Window decorations may be hidden to gain more screen space when input panel is up.
+     * \param inputWidget This parameter is ignored.
+     * \sa closeSoftwareInputPanel
+     */
+    Q_DECL_DEPRECATED void requestSoftwareInputPanel(QGraphicsWidget *inputWidget);
+
+    /*!
+     * Sends a request to the application's input context to close a software input
+     * panel.
+     * \sa requestSoftwareInputPanel
+     */
+    Q_DECL_DEPRECATED void closeSoftwareInputPanel();
+
 public Q_SLOTS:
     /*!
      * Sets the orientation to \a angle. The \a mode can be set to ImmediateTransition
@@ -151,23 +168,6 @@ public Q_SLOTS:
      */
     void setOrientationAngle(M::OrientationAngle angle,
                              TransitionMode mode = AnimatedTransition);
-
-    /*!
-     * Sends a request to the application's input context to open a software input
-     * panel (e.g. the virtual keyboard)
-     * Scene manager makes sure the focused input widget is visible to user.
-     * Window decorations may be hidden to gain more screen space when input panel is up.
-     * \param inputWidget This parameter is ignored.
-     * \sa closeSoftwareInputPanel
-     */
-    void requestSoftwareInputPanel(QGraphicsWidget *inputWidget);
-
-    /*!
-     * Sends a request to the application's input context to close a software input
-     * panel.
-     * \sa requestSoftwareInputPanel
-     */
-    void closeSoftwareInputPanel();
 
     /*!
      * Makes \a sceneWindow appear on the scene().

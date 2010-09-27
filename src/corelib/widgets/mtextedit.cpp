@@ -886,10 +886,14 @@ void MTextEditPrivate::requestSip()
         return;
     }
 
+    MInputMethodState::requestSoftwareInputPanel();
+    pendingSoftwareInputPanelRequest = false;
+
     Q_Q(MTextEdit);
 
-    q->sceneManager()->requestSoftwareInputPanel(q);
-    pendingSoftwareInputPanelRequest = false;
+    if (q->sceneManager()) {
+        q->sceneManager()->ensureCursorVisible();
+    }
 }
 
 void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
@@ -915,8 +919,8 @@ void MTextEditPrivate::closeSip()
         return;
     }
 
-    Q_Q(MTextEdit);
-    q->sceneManager()->closeSoftwareInputPanel();
+    MInputMethodState::closeSoftwareInputPanel();
+    pendingSoftwareInputPanelRequest = false;
 }
 
 void MTextEditPrivate::closeAutoSip()
@@ -1693,10 +1697,10 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     if (sceneManager()) {
         disconnect(this, SIGNAL(cursorPositionChanged()),
                    sceneManager(), SLOT(ensureCursorVisible()));
-
-        sceneManager()->closeSoftwareInputPanel();
-        d->pendingSoftwareInputPanelRequest = false;
     }
+
+    MInputMethodState::closeSoftwareInputPanel();
+    d->pendingSoftwareInputPanelRequest = false;
 }
 
 bool MTextEdit::insert(const QString &text)
