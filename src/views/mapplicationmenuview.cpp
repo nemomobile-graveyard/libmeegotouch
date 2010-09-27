@@ -658,8 +658,8 @@ void MApplicationMenuViewPrivate::makeLandscapePolicyColumnsEqual()
                  q->style()->paddingLeft() - q->style()->paddingRight() -
                  l - r) ;
     if (landscapePolicy->count()  > 1) {
-        landscapePolicy->setColumnPreferredWidth(0, width/2);
-        landscapePolicy->setColumnPreferredWidth(1, width/2);
+        landscapePolicy->setColumnFixedWidth(0, width/2);
+        landscapePolicy->setColumnFixedWidth(1, width/2);
     } else {
         landscapePolicy->setColumnPreferredWidth(0, width);
         landscapePolicy->setColumnPreferredWidth(1, 0);
