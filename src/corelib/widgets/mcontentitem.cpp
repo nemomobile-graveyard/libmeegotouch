@@ -31,7 +31,7 @@ M_REGISTER_WIDGET(MContentItem)
 
 MContentItemPrivate::MContentItemPrivate():
     MWidgetControllerPrivate(),
-    smallText(0)
+    smallText(0), progressIndicator(0)
 {
 }
 
@@ -206,10 +206,14 @@ MWidget* MContentItem::additionalItem() const
 
 void MContentItem::enableProgressBar()
 {
-    MProgressIndicator* progressIndicator = new MProgressIndicator;
-    progressIndicator->setViewType(MProgressIndicator::barType);
-    progressIndicator->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
-    model()->setAdditionalItem(progressIndicator);
+    Q_D(MContentItem);
+    if(d->progressIndicator == NULL)
+    {
+        d->progressIndicator = new MProgressIndicator(this);
+        d->progressIndicator->setViewType(MProgressIndicator::barType);
+        d->progressIndicator->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
+        model()->setAdditionalItem(d->progressIndicator);
+    }
 }
 
 void MContentItem::setSmallItem(MWidget* widget)

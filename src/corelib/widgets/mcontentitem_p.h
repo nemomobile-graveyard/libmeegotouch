@@ -23,7 +23,9 @@
 #include "private/mwidgetcontroller_p.h"
 #include <QPixmap>
 #include <QImage>
-#include <MLabel>
+
+class MLabel;
+class MProgressIndicator;
 
 class MContentItemPrivate : public MWidgetControllerPrivate
 {
@@ -36,6 +38,7 @@ public:
     QPixmap optionalPixmap;
     QImage optionalImage;
     MLabel* smallText;
+    MProgressIndicator * progressIndicator;
 };
 
 #endif
