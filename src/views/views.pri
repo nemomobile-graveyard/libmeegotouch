@@ -70,6 +70,7 @@ PRIVATE_HEADERS += \
     mescapebuttonpanelview_p.h \
     mhomebuttonpanelview_p.h \
     mviewconstants.h \
+    mdialoginternalbox_p.h \
 
 SOURCES += \
     mapplicationpageview.cpp \

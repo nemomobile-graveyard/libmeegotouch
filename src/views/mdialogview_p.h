@@ -23,6 +23,7 @@
 #include "mdialogview.h"
 #include "mstylablewidget.h"
 #include "mstylablewidgetstyle.h"
+#include "mdialoginternalbox_p.h"
 #include <mnamespace.h>
 #include <QPointer>
 
@@ -147,12 +148,6 @@ public:
     MWidgetController *buttonBox;
     MLayout *buttonBoxLayout;
     MButtonGroupLayoutPolicy *buttonBoxLayoutPolicy;
-};
-
-class MDialogInternalBox : public MStylableWidget
-{
-private:
-    M_STYLABLE_WIDGET(MStylableWidgetStyle)
 };
 
 class MTransparentWidget : public QGraphicsWidget {
