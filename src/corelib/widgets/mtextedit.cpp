@@ -897,12 +897,6 @@ void MTextEditPrivate::requestSip()
     // setFocusWidget automatically
     inputContext->setFocusWidget(focusedGraphicsView);
 
-    if (!isValidSipRequest()) {
-        qWarning() << "MTextEditPrivate::requestSip(): "
-                   << "Invalid SIP request - no scene manager found, or not focused!";
-        return;
-    }
-
     MInputMethodState::requestSoftwareInputPanel();
     pendingSoftwareInputPanelRequest = false;
 
@@ -932,10 +926,6 @@ void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
 
 void MTextEditPrivate::closeSip()
 {
-    if (!isValidSipRequest()) {
-        return;
-    }
-
     MInputMethodState::closeSoftwareInputPanel();
     pendingSoftwareInputPanelRequest = false;
 }
@@ -949,13 +939,6 @@ void MTextEditPrivate::closeAutoSip()
     }
 
     closeSip();
-}
-
-bool MTextEditPrivate::isValidSipRequest()
-{
-    Q_Q(MTextEdit);
-
-    return (q->sceneManager() && q->hasFocus());
 }
 
 /*!
@@ -1318,7 +1301,10 @@ MTextEdit::~MTextEdit()
 {
     Q_D(MTextEdit);
 
-    d->closeAutoSip();
+    if (hasFocus()) {
+        d->closeAutoSip();
+    }
+
     detachToolbar();
 
     // TODO: This cannot be right - MTextEdit does not own the model, so we cannot just delete stuff from the model (another text edit could be using them).
