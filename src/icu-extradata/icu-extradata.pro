@@ -9,6 +9,7 @@ greaterThan(ICUVERSION, 4.4) {
     LOCALESTXT = $${ICUVERSION}/cs.txt \
                  $${ICUVERSION}/en_SG.txt \
                  $${ICUVERSION}/fi.txt \
+                 $${ICUVERSION}/id.txt \
                  $${ICUVERSION}/it.txt \
                  $${ICUVERSION}/ms_BN.txt
     LANGTXT    = $${ICUVERSION}/lang/de_CH.txt \

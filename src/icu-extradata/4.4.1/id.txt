@@ -1,0 +1,25 @@
+﻿id{
+    calendar{
+        gregorian{
+            AmPmMarkers{
+                "pagi",
+                "malam",
+            }
+            DateTimePatterns{
+                "H.mm.ss zzzz",
+                "HH.mm.ss z",
+                "HH.mm.ss",
+                "HH.mm",
+                "EEEE, dd MMMM yyyy",
+                "d MMMM yyyy",
+                "d MMM yyyy",
+                "dd/MM/yy",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+        }
+    }
+}

@@ -3659,103 +3659,103 @@ id_ID	Name of weekday 06 (Islamic Calendar)	Sabtu
 id_ID	Name of weekday 07 (Islamic Calendar)	Minggu
 id_ID	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 id_ID	Scripts used	Latn
-id_ID	%r (locale specific 12 hour “TimeShort”)	02.31 PM
+id_ID	%r (locale specific 12 hour “TimeShort”)	02.31 malam
 id_ID	%R (locale specific 24 hour “TimeShort”)	14.31
-id_ID	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh.mm a -> 02.31 PM
+id_ID	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh.mm a -> 02.31 malam
 id_ID	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	HH.mm -> 14.31
-id_ID	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh.mm.ss a -> 02.31.00 PM
+id_ID	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh.mm.ss a -> 02.31.00 malam
 id_ID	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	HH.mm.ss -> 14.31.00
-id_ID	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh.mm.ss a z -> 02.31.00 PM GMT+00.00
+id_ID	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh.mm.ss a z -> 02.31.00 malam GMT+00.00
 id_ID	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	HH.mm.ss z -> 14.31.00 GMT+00.00
-id_ID	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 PM GMT+00.00
+id_ID	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 malam GMT+00.00
 id_ID	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	H.mm.ss zzzz -> 14.31.00 GMT+00.00
 id_ID	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy -> 21/07/08
 id_ID	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy -> 21/07/08
-id_ID	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm a -> 21/07/08 02.31 PM
+id_ID	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm a -> 21/07/08 02.31 malam
 id_ID	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm -> 21/07/08 14.31
-id_ID	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a -> 21/07/08 02.31.00 PM
+id_ID	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a -> 21/07/08 02.31.00 malam
 id_ID	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss -> 21/07/08 14.31.00
-id_ID	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a z -> 21/07/08 02.31.00 PM GMT+00.00
+id_ID	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a z -> 21/07/08 02.31.00 malam GMT+00.00
 id_ID	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss z -> 21/07/08 14.31.00 GMT+00.00
-id_ID	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy h.mm.ss a zzzz -> 21/07/08 2.31.00 PM GMT+00.00
+id_ID	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy h.mm.ss a zzzz -> 21/07/08 2.31.00 malam GMT+00.00
 id_ID	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy H.mm.ss zzzz -> 21/07/08 14.31.00 GMT+00.00
 id_ID	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy -> 21 Jul 2008
 id_ID	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM yyyy -> 21 Jul 2008
-id_ID	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm a -> 21 Jul 2008 02.31 PM
+id_ID	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm a -> 21 Jul 2008 02.31 malam
 id_ID	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM yyyy HH.mm -> 21 Jul 2008 14.31
-id_ID	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a -> 21 Jul 2008 02.31.00 PM
+id_ID	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a -> 21 Jul 2008 02.31.00 malam
 id_ID	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM yyyy HH.mm.ss -> 21 Jul 2008 14.31.00
-id_ID	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a z -> 21 Jul 2008 02.31.00 PM GMT+00.00
+id_ID	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a z -> 21 Jul 2008 02.31.00 malam GMT+00.00
 id_ID	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM yyyy HH.mm.ss z -> 21 Jul 2008 14.31.00 GMT+00.00
-id_ID	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy h.mm.ss a zzzz -> 21 Jul 2008 2.31.00 PM GMT+00.00
+id_ID	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMM yyyy h.mm.ss a zzzz -> 21 Jul 2008 2.31.00 malam GMT+00.00
 id_ID	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM yyyy H.mm.ss zzzz -> 21 Jul 2008 14.31.00 GMT+00.00
 id_ID	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy -> 21 Juli 2008
 id_ID	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy -> 21 Juli 2008
-id_ID	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm a -> 21 Juli 2008 02.31 PM
+id_ID	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm a -> 21 Juli 2008 02.31 malam
 id_ID	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy HH.mm -> 21 Juli 2008 14.31
-id_ID	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a -> 21 Juli 2008 02.31.00 PM
+id_ID	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a -> 21 Juli 2008 02.31.00 malam
 id_ID	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy HH.mm.ss -> 21 Juli 2008 14.31.00
-id_ID	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a z -> 21 Juli 2008 02.31.00 PM GMT+00.00
+id_ID	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a z -> 21 Juli 2008 02.31.00 malam GMT+00.00
 id_ID	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy HH.mm.ss z -> 21 Juli 2008 14.31.00 GMT+00.00
-id_ID	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy h.mm.ss a zzzz -> 21 Juli 2008 2.31.00 PM GMT+00.00
+id_ID	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMMM yyyy h.mm.ss a zzzz -> 21 Juli 2008 2.31.00 malam GMT+00.00
 id_ID	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy H.mm.ss zzzz -> 21 Juli 2008 14.31.00 GMT+00.00
 id_ID	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy -> Senin, 21 Juli 2008
 id_ID	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy -> Senin, 21 Juli 2008
-id_ID	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm a -> Senin, 21 Juli 2008 02.31 PM
+id_ID	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm a -> Senin, 21 Juli 2008 02.31 malam
 id_ID	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy HH.mm -> Senin, 21 Juli 2008 14.31
-id_ID	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a -> Senin, 21 Juli 2008 02.31.00 PM
+id_ID	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a -> Senin, 21 Juli 2008 02.31.00 malam
 id_ID	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy HH.mm.ss -> Senin, 21 Juli 2008 14.31.00
-id_ID	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a z -> Senin, 21 Juli 2008 02.31.00 PM GMT+00.00
+id_ID	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a z -> Senin, 21 Juli 2008 02.31.00 malam GMT+00.00
 id_ID	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy HH.mm.ss z -> Senin, 21 Juli 2008 14.31.00 GMT+00.00
-id_ID	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy h.mm.ss a zzzz -> Senin, 21 Juli 2008 2.31.00 PM GMT+00.00
+id_ID	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy h.mm.ss a zzzz -> Senin, 21 Juli 2008 2.31.00 malam GMT+00.00
 id_ID	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy H.mm.ss zzzz -> Senin, 21 Juli 2008 14.31.00 GMT+00.00
-id_ID	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh.mm a -> 02.31 PM
+id_ID	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh.mm a -> 02.31 malam
 id_ID	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm -> 14.31
-id_ID	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a -> 02.31.00 PM
+id_ID	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a -> 02.31.00 malam
 id_ID	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm.ss -> 14.31.00
-id_ID	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a z -> 02.31.00 PM GMT+00.00
+id_ID	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a z -> 02.31.00 malam GMT+00.00
 id_ID	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm.ss z -> 14.31.00 GMT+00.00
-id_ID	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 PM GMT+00.00
+id_ID	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h.mm.ss a zzzz -> 2.31.00 malam GMT+00.00
 id_ID	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H.mm.ss zzzz -> 14.31.00 GMT+00.00
 id_ID	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy -> 18/07/29
 id_ID	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy -> 18/07/29
-id_ID	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm a -> 18/07/29 02.31 PM
+id_ID	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm a -> 18/07/29 02.31 malam
 id_ID	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm -> 18/07/29 14.31
-id_ID	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a -> 18/07/29 02.31.00 PM
+id_ID	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a -> 18/07/29 02.31.00 malam
 id_ID	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss -> 18/07/29 14.31.00
-id_ID	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a z -> 18/07/29 02.31.00 PM GMT+00.00
+id_ID	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a z -> 18/07/29 02.31.00 malam GMT+00.00
 id_ID	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss z -> 18/07/29 14.31.00 GMT+00.00
-id_ID	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy h.mm.ss a zzzz -> 18/07/29 2.31.00 PM GMT+00.00
+id_ID	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy h.mm.ss a zzzz -> 18/07/29 2.31.00 malam GMT+00.00
 id_ID	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy H.mm.ss zzzz -> 18/07/29 14.31.00 GMT+00.00
 id_ID	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy -> 18 Raj. 1429
 id_ID	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM yyyy -> 18 Raj. 1429
-id_ID	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm a -> 18 Raj. 1429 02.31 PM
+id_ID	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm a -> 18 Raj. 1429 02.31 malam
 id_ID	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM yyyy HH.mm -> 18 Raj. 1429 14.31
-id_ID	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a -> 18 Raj. 1429 02.31.00 PM
+id_ID	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a -> 18 Raj. 1429 02.31.00 malam
 id_ID	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM yyyy HH.mm.ss -> 18 Raj. 1429 14.31.00
-id_ID	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a z -> 18 Raj. 1429 02.31.00 PM GMT+00.00
+id_ID	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy hh.mm.ss a z -> 18 Raj. 1429 02.31.00 malam GMT+00.00
 id_ID	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM yyyy HH.mm.ss z -> 18 Raj. 1429 14.31.00 GMT+00.00
-id_ID	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy h.mm.ss a zzzz -> 18 Raj. 1429 2.31.00 PM GMT+00.00
+id_ID	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMM yyyy h.mm.ss a zzzz -> 18 Raj. 1429 2.31.00 malam GMT+00.00
 id_ID	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM yyyy H.mm.ss zzzz -> 18 Raj. 1429 14.31.00 GMT+00.00
 id_ID	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy -> 18 Rajab 1429
 id_ID	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy -> 18 Rajab 1429
-id_ID	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm a -> 18 Rajab 1429 02.31 PM
+id_ID	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm a -> 18 Rajab 1429 02.31 malam
 id_ID	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy HH.mm -> 18 Rajab 1429 14.31
-id_ID	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a -> 18 Rajab 1429 02.31.00 PM
+id_ID	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a -> 18 Rajab 1429 02.31.00 malam
 id_ID	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy HH.mm.ss -> 18 Rajab 1429 14.31.00
-id_ID	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a z -> 18 Rajab 1429 02.31.00 PM GMT+00.00
+id_ID	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy hh.mm.ss a z -> 18 Rajab 1429 02.31.00 malam GMT+00.00
 id_ID	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy HH.mm.ss z -> 18 Rajab 1429 14.31.00 GMT+00.00
-id_ID	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy h.mm.ss a zzzz -> 18 Rajab 1429 2.31.00 PM GMT+00.00
+id_ID	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMMM yyyy h.mm.ss a zzzz -> 18 Rajab 1429 2.31.00 malam GMT+00.00
 id_ID	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM yyyy H.mm.ss zzzz -> 18 Rajab 1429 14.31.00 GMT+00.00
 id_ID	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy -> Senin, 18 Rajab 1429
 id_ID	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy -> Senin, 18 Rajab 1429
-id_ID	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm a -> Senin, 18 Rajab 1429 02.31 PM
+id_ID	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm a -> Senin, 18 Rajab 1429 02.31 malam
 id_ID	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy HH.mm -> Senin, 18 Rajab 1429 14.31
-id_ID	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a -> Senin, 18 Rajab 1429 02.31.00 PM
+id_ID	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a -> Senin, 18 Rajab 1429 02.31.00 malam
 id_ID	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy HH.mm.ss -> Senin, 18 Rajab 1429 14.31.00
-id_ID	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a z -> Senin, 18 Rajab 1429 02.31.00 PM GMT+00.00
+id_ID	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy hh.mm.ss a z -> Senin, 18 Rajab 1429 02.31.00 malam GMT+00.00
 id_ID	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy HH.mm.ss z -> Senin, 18 Rajab 1429 14.31.00 GMT+00.00
-id_ID	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy h.mm.ss a zzzz -> Senin, 18 Rajab 1429 2.31.00 PM GMT+00.00
+id_ID	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, dd MMMM yyyy h.mm.ss a zzzz -> Senin, 18 Rajab 1429 2.31.00 malam GMT+00.00
 id_ID	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, dd MMMM yyyy H.mm.ss zzzz -> Senin, 18 Rajab 1429 14.31.00 GMT+00.00
 it_IT	Language endonym	italiano
 it_IT	Country endonym	Italia
