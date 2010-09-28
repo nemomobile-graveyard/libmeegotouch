@@ -1411,13 +1411,6 @@ void MLocale::setDefault(const MLocale &locale)
     (s_systemDefault->d_ptr)->insertDirectionTrToQCoreApp();
     defaultLocaleMutex.unlock();
 
-//#ifdef HAVE_GCONF
-//    QString oldLanguage = (locale.d_ptr)->currentLanguageItem.value().toString();
-//    QString newLanguage = (locale.d_ptr)->_defaultLocale;
-//    if (oldLanguage != newLanguage)
-//        (locale.d_ptr)->currentLanguageItem.set(newLanguage);
-//#endif
-
     // sends QEvent::LanguageChange to qApp:
     (s_systemDefault->d_ptr)->insertTrToQCoreApp();
     // Setting the default QLocale is needed to get localized number
