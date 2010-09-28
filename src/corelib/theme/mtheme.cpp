@@ -603,7 +603,7 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     refreshLocalThemeConfiguration(themeDaemon->themeInheritanceChain());
 
 #ifdef HAVE_GCONF
-    showAsyncRequests = showAsyncRequestsItem.value(false).toBool();
+    showAsyncRequests = showAsyncRequestsItem.value().toBool();
     connect(&showAsyncRequestsItem, SIGNAL(valueChanged()), this, SLOT(updateShowAsyncRequests()));
 #endif
 }
@@ -685,7 +685,7 @@ void MThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInher
 
 #ifdef HAVE_GCONF
     // determine current language
-    language = locale.value("en_GB").toString();
+    language = locale.value().toString();
 #endif
 
     // Load logical values from ini file

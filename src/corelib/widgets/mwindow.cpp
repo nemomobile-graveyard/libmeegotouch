@@ -104,7 +104,7 @@ void MWindowPrivate::init()
     Q_Q(MWindow);
 
 #ifdef HAVE_GCONF
-    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value(true).toBool();
+    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value().toBool();
     QObject::connect(&minimizedSoftwareSwitchItem, SIGNAL(valueChanged()), q_ptr, SLOT(_q_updateMinimizedSoftwareSwitch()));
 #endif
 

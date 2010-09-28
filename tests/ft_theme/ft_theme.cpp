@@ -465,7 +465,7 @@ void Ft_Theme::testFonts_data()
     extraLargeFont.setPixelSize(32);
     QFont largeFont("Arial");
     largeFont.setPixelSize(28);
-    QFont defaultFont("System");
+    QFont defaultFont("Arial");
     defaultFont.setPixelSize(24);
     QFont smallFont("Arial");
     smallFont.setPixelSize(20);
@@ -474,9 +474,11 @@ void Ft_Theme::testFonts_data()
 
     QTest::newRow("theme 1, en") << "theme 1" << "en" << extraLargeFont << largeFont << defaultFont << smallFont << extraSmallFont;
 
+    defaultFont.setFamily("Courier");
     QTest::newRow("theme 2, en") << "theme 2" << "en" << extraLargeFont << largeFont << defaultFont << smallFont << extraSmallFont;
 
 #ifdef HAVE_GCONF
+    defaultFont.setFamily("System");
     QTest::newRow("theme 1, fi") << "theme 1" << "fi" << extraLargeFont << largeFont << defaultFont << smallFont << extraSmallFont;
 #endif
 }
