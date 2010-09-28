@@ -75,6 +75,7 @@ my @engineeringEnglishPackagesObsolete = (
     "libdui-l10n-engineering-english", # now "libmeegotouch-l10n-engineering-english"
     "duistartup-l10n-engineering-english", # now "mstartup-l10n-engineering-english"
     "dui-demos-widgetsgallery-l10n-engineering-english", # now "meegotouch-demos-widgetsgallery-l10n-engineering-english"
+    "duihomescreen-l10n-engineering-english", # now "meegotouchhome-l10n-engineering-english"
     "keychain-ui-l10n-engineering-english", # does not exist anymore
     );
 
@@ -119,7 +120,7 @@ my @sourcePackagesToDownloadAndScan = (
     "calc",
     "caldav-plugin",
     "calendar",
-#    "calendar-plugin-facebook",
+    "calendar-plugin-facebook",
     "call-history",
     "call-ui",
     "camera-ui",
@@ -150,15 +151,18 @@ my @sourcePackagesToDownloadAndScan = (
     "duicontrolpanel-regionformatapplet",
     "duicontrolpanel-soundsettingsapplet",
     "duicontrolpanel-ui-tests",
+    "duifennec-navbar-extension",
+    "duifennec-prestart-extension",
     "duifennec-transferui-extension",
     "duifennec-virtualmouse-extension",
-#    "duihelp",
+    "duihelp",
     "duihome",
     "energy-profiler",
     "feedreader",
     "feedsettings",
     "fenix",
     "fennec",
+    "fennec.e10s",
     "fennec-taskswitcher-extension",
     "gallery",
     "geo-engine-demo",
@@ -198,7 +202,9 @@ my @sourcePackagesToDownloadAndScan = (
     "meego-keyboard",
     "meego-vkb-magnifier",
     "meegofeedback-reactionmaps",
+    "meegotouchhome",
     "meegotouchhome-nokia",
+    "meegotouchhome-nokia-ui-tests",
     "meegotouch-tests",
     "meegotouch-visual-benchmark",
     "messaging-service",
@@ -220,7 +226,7 @@ my @sourcePackagesToDownloadAndScan = (
     "oviplugin",
     "package-manager",
     "package-manager-ui",
-    "presence-ui",
+#    "presence-ui",
     "qmafw-gui",
     "qmsystem-demo",
     "qtwebkit-meegotouchplugin",
@@ -249,6 +255,7 @@ my @sourcePackagesToDownloadAndScan = (
     "visualreminders",
     "webupload-engine",
     "webupload-services",
+    "webupload-service-yelp",
     "wrt",
     "xulrunner",
     );
@@ -500,7 +507,7 @@ sub download {
     mkdir ("$OPT_HANDOFF_DIR") || die "Can’t mkdir $OPT_HANDOFF_DIR: $!\n";
     chdir ("$OPT_HANDOFF_DIR") || die "Can’t cd to $OPT_HANDOFF_DIR: $!\n";
 
-    my $wgetCommand = "wget -nd -r -l1 ";
+    my $wgetCommand = "wget --no-check-certificate -nd -r -l1 ";
     if ($OPT_HTTP_USER ne "") {
         $wgetCommand .= "--http-user=$OPT_HTTP_USER ";
     }
@@ -1258,6 +1265,8 @@ if (! -d $OPT_OUTPUTDIR) {
     }
 }
 
+getEngineeringEnglishPackageList();
+
 if (!$OPT_SKIP_DOWNLOAD) {
     checkListOfSourcePackagesDependingOnLibmeegotouch();
     download();
@@ -1267,8 +1276,6 @@ else {
 }
 
 checkListOfSourcePackagesDependingOnLibmeegotouch();
-
-getEngineeringEnglishPackageList();
 
 readHandoffXmlTrees();
 
