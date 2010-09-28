@@ -50,6 +50,7 @@ public:
     qreal   pointerSpringX;
     qreal   pointerSpringY;
     QPointF sceneLastPos;
+    qreal   maxVel;
 
     PanningAnimation *panningAnimation;
 

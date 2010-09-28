@@ -48,6 +48,7 @@ void MPannableWidgetViewPrivate::_q_applyStyleToPhysics()
     controller->physics()->setBorderSpringK(q->style()->borderSpringK());
     controller->physics()->setBorderFriction(q->style()->borderFrictionC());
     controller->physics()->setPanDirection(controller->panDirection());
+    controller->physics()->setMaximumVelocity(q->style()->maximumVelocity());
 }
 
 MPannableWidgetView::MPannableWidgetView(MPannableWidget *controller) :

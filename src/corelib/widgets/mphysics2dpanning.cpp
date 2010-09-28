@@ -33,6 +33,7 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
     pointerSpringX(0.0),
     pointerSpringY(0.0),
     sceneLastPos(QPointF()),
+    maxVel(0.0),
     panningAnimation(new PanningAnimation),
     pointerPressed(false),
     pointerSpringK(0.0),
@@ -129,6 +130,16 @@ MPhysics2DPanning::MPhysics2DPanning(QObject *parent)
 MPhysics2DPanning::~MPhysics2DPanning()
 {
     delete d_ptr;
+}
+
+qreal MPhysics2DPanning::maximumVelocity() const
+{
+    return d_ptr->maxVel;
+}
+
+void MPhysics2DPanning::setMaximumVelocity(qreal velocity)
+{
+    d_ptr->maxVel = velocity;
 }
 
 bool MPhysics2DPanning::enabled() const
@@ -454,7 +465,9 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
         force += d->pointerSpringK * pointerDifference;
         // Increasing the speed by the last movement of the pointer
         acceleration = force - pointerDifference;
+
         velocity += acceleration;
+        velocity = qBound(-d->maxVel, velocity, d->maxVel);
 
         position           -= pointerDifference;
         pointerDifference = 0;
@@ -464,9 +477,13 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
         acceleration = force - pointerDifference;
 
         velocity                 += acceleration;
+        velocity                 = qBound(-d->maxVel, velocity, d->maxVel);
+
         position                 += velocity;
         pointerDifference        = 0;
     }
+
+
 }
 
 #include "moc_mphysics2dpanning.cpp"

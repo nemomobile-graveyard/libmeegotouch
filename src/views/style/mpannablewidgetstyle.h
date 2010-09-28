@@ -42,6 +42,8 @@
           beyond normal range by user and needs to return to the correct bounds.
       \li border-friction-c - friction constant used when the view was moved
           beyond normal range by user and needs to return to the correct bounds.
+      \li maximum-velocity - maximum speed that the panning of the pannable viewport
+          can reach.
 
     \sa MPannableWidget MWidgetStyle
 */
@@ -57,6 +59,8 @@ class M_EXPORT MPannableWidgetStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(qreal, borderSpringK,    BorderSpringK)
     M_STYLE_ATTRIBUTE(qreal, borderFrictionC,  BorderFrictionC)
     M_STYLE_ATTRIBUTE(qreal, panClickThreshold, PanClickThreshold)
+
+    M_STYLE_ATTRIBUTE(qreal, maximumVelocity, MaximumVelocity)
 };
 
 class M_EXPORT MPannableWidgetStyleContainer : public MWidgetStyleContainer

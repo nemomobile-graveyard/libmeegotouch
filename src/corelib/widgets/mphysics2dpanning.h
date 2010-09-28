@@ -75,6 +75,8 @@ class M_EXPORT MPhysics2DPanning : public QObject
     Q_PROPERTY(qreal borderFriction READ borderFriction WRITE setBorderFriction)
     //! \brief Current position value
     Q_PROPERTY(QPointF position READ position WRITE setPosition)
+    //! \brief Current maximum speed value
+    Q_PROPERTY(qreal maximumVelocity READ maximumVelocity WRITE setMaximumVelocity)
 
 public:
 
@@ -87,6 +89,17 @@ public:
      * \brief Destructs an integrator.
      */
     virtual ~MPhysics2DPanning();
+
+    /*!
+     * \brief Returns the maximum speed of this simulation.
+     */
+    qreal maximumVelocity() const;
+
+    /*!
+     * \brief Sets the maximum speed.
+     * \param speed The maximum speed this simulation can reach.
+     */
+    void setMaximumVelocity(qreal velocity);
 
     /*!
      * \brief Returns the enabled state of the physics engine.
