@@ -2687,13 +2687,14 @@ void MLocale::installTrCatalog(const QString &name)
 
     MTranslationCatalog *catalog
         = new MTranslationCatalog(name);
+    catalog->loadWith(this, MLocale::MLcMessages);
     d->_trTranslations.append(QExplicitlySharedDataPointer<MTranslationCatalog>(catalog));
     if (!name.endsWith(QLatin1String(".qm"))) {
         MTranslationCatalog *engineeringEnglishCatalog
             = new MTranslationCatalog(name + ".qm");
+        engineeringEnglishCatalog->loadWith(this, MLocale::MLcMessages);
         d->_trTranslations.prepend(QExplicitlySharedDataPointer<MTranslationCatalog>(engineeringEnglishCatalog));
     }
-    d->loadTrCatalogs();
 }
 
 void MLocale::removeTrCatalog(const QString &name)
