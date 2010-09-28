@@ -25,6 +25,7 @@
 class QGLWidget;
 class MGLES2Renderer;
 class QPainter;
+class QGLContext;
 
 class Pt_MGLES2Renderer : public QObject
 {
@@ -59,6 +60,7 @@ private slots:
 
 private:
     QGLWidget *glWidget;
+    QGLContext *glContext;
     QPainter *painter;
 };
 

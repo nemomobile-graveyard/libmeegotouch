@@ -29,6 +29,7 @@
 void Pt_MGLES2Renderer::initTestCase()
 {
     glWidget = new QGLWidget();
+    glContext = const_cast<QGLContext*>(glWidget->context());
     painter = new QPainter();
 }
 
@@ -41,14 +42,14 @@ void Pt_MGLES2Renderer::cleanupTestCase()
 void Pt_MGLES2Renderer::firstInstanceCall()
 {
     MBENCHMARK_ONCE (
-        MGLES2Renderer::instance(glWidget);
+        MGLES2Renderer::instance(glContext);
     )
 }
 
 void Pt_MGLES2Renderer::activate()
 {
     MBENCHMARK_ONCE (
-        MGLES2Renderer::activate(glWidget);
+        MGLES2Renderer::activate(glContext);
     )
 }
 
@@ -90,7 +91,7 @@ void Pt_MGLES2Renderer::end2()
 void Pt_MGLES2Renderer::destroy()
 {
     MBENCHMARK_ONCE (
-        MGLES2Renderer::destroy(glWidget);
+        MGLES2Renderer::destroy(glContext);
     )
 }
 

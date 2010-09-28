@@ -35,6 +35,7 @@ class MScene;
 class MOnDisplayChangeEvent;
 class MStatusBar;
 class QGLWidget;
+class QGLContext;
 
 class MWindowPrivate
 {
@@ -62,6 +63,8 @@ public:
     void _q_onPixmapRequestsFinished();
 
     QGLWidget *glWidget;
+    // a non-const pointer to the associated gl context
+    QGLContext *glContext;
 
     M::OrientationAngle angle;
 

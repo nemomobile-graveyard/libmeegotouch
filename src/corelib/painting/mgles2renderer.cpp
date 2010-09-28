@@ -92,7 +92,7 @@ public:
     QVector<GLfloat> m_color;
     QVector<GLushort> m_indices;
 
-    QGLWidget *m_glWidget;
+    QGLContext *m_glContext;
 
     MGLProgramCache m_programCache;
 
@@ -110,7 +110,7 @@ public:
     EGLDisplay dpy;
     PixmapHash bound_pixmaps;
 
-    static QMap<QGLWidget *, MGLES2Renderer *> glRenderers;
+    static QMap<QGLContext *, MGLES2Renderer *> glRenderers;
     static MGLES2Renderer *activeRenderer;
 
     QPainter *m_activePainter;
@@ -120,11 +120,11 @@ public:
     bool m_initialized;
 };
 
-QMap<QGLWidget *, MGLES2Renderer *> MGLES2RendererPrivate::glRenderers;
+QMap<QGLContext *, MGLES2Renderer *> MGLES2RendererPrivate::glRenderers;
 MGLES2Renderer *MGLES2RendererPrivate::activeRenderer = NULL;
 
 MGLES2RendererPrivate::MGLES2RendererPrivate()
-    : m_glWidget(NULL),
+    : m_glContext(NULL),
     m_viewportSize(-1, -1),
     m_activePainter(NULL),
     m_invertTexture(false),
@@ -174,7 +174,7 @@ void MGLES2RendererPrivate::init()
     }
 
     dpy = eglGetDisplay(EGLNativeDisplayType(QX11Info::display()));
-    m_glWidget->makeCurrent();
+    m_glContext->makeCurrent();
 
     //init the orthogonal projection matrix
     //glOrtho(0, w, h, 0, -1, 1):
@@ -182,8 +182,8 @@ void MGLES2RendererPrivate::init()
     //0.0,   -2.0/h,  0.0,  1.0
     //0.0,    0.0,   -1.0,  0.0
     //0.0,    0.0,    0.0,  1.0
-    GLfloat w = m_glWidget->width();
-    GLfloat h = m_glWidget->height();
+    GLfloat w = m_glContext->device()->width();
+    GLfloat h = m_glContext->device()->height();
     m_matProj[0][0] =  2.0f / w; m_matProj[1][0] =  0.0;   m_matProj[2][0] =  0.0; m_matProj[3][0] = -1.0;
     m_matProj[0][1] =  0.0;   m_matProj[1][1] = -2.0f / h; m_matProj[2][1] =  0.0; m_matProj[3][1] =  1.0;
     m_matProj[0][2] =  0.0;   m_matProj[1][2] =  0.0;   m_matProj[2][2] = -1.0; m_matProj[3][2] =  0.0;
@@ -300,29 +300,29 @@ MGLES2Renderer *MGLES2Renderer::instance()
     return MGLES2RendererPrivate::activeRenderer;
 }
 
-MGLES2Renderer *MGLES2Renderer::instance(QGLWidget *glWidget)
+MGLES2Renderer *MGLES2Renderer::instance(QGLContext *glContext)
 {
-    MGLES2Renderer *renderer = MGLES2RendererPrivate::glRenderers.value(glWidget);
+    MGLES2Renderer *renderer = MGLES2RendererPrivate::glRenderers.value(glContext);
 
     if (!renderer) {
         renderer = new MGLES2Renderer();
-        renderer->init(glWidget);
-        MGLES2RendererPrivate::glRenderers.insert(glWidget, renderer);
+        renderer->init(glContext);
+        MGLES2RendererPrivate::glRenderers.insert(glContext, renderer);
     }
     return renderer;
 }
 
-void MGLES2Renderer::activate(QGLWidget *glWidget)
+void MGLES2Renderer::activate(QGLContext *glContext)
 {
-    if (glWidget)
-        MGLES2RendererPrivate::activeRenderer = MGLES2Renderer::instance(glWidget);
+    if (glContext)
+        MGLES2RendererPrivate::activeRenderer = MGLES2Renderer::instance(glContext);
     else
         MGLES2RendererPrivate::activeRenderer = NULL;
 }
 
-void MGLES2Renderer::destroy(QGLWidget *glWidget)
+void MGLES2Renderer::destroy(QGLContext *glContext)
 {
-    if (MGLES2Renderer *const renderer = MGLES2RendererPrivate::glRenderers.take(glWidget)) {
+    if (MGLES2Renderer *const renderer = MGLES2RendererPrivate::glRenderers.take(glContext)) {
 
         if (renderer == MGLES2RendererPrivate::activeRenderer) {
             mWarning("MGLES2Renderer::destroy()") << "Destroying active renderer.";
@@ -342,9 +342,9 @@ void MGLES2Renderer::destroyAll()
     }
 }
 
-void MGLES2Renderer::init(QGLWidget *glWidget)
+void MGLES2Renderer::init(QGLContext *glContext)
 {
-    d_ptr->m_glWidget = glWidget;
+    d_ptr->m_glContext = glContext;
 }
 
 QGLShaderProgram *MGLES2Renderer::getShaderProgram(const QString &frag, const QString &vert)
@@ -372,20 +372,20 @@ QGLShaderProgram *MGLES2Renderer::getShaderProgram(const QString &frag, const QS
 QGLShaderProgram *MGLES2Renderer::compileShaderProgram(const QString &frag, const QString &vert)
 {
     const QString fragFilename = (frag.isEmpty()) ? defaultFragmentShader() : frag;
-    QGLShader fragShader(QGLShader::Fragment, d_ptr->m_glWidget->context());
+    QGLShader fragShader(QGLShader::Fragment, d_ptr->m_glContext);
     if (!fragShader.compileSourceFile(fragFilename)) {
         mWarning("MGLES2Renderer") << "failed to compile fragment shader" << fragFilename
                                        << '\n' << fragShader.log();
         return 0;
     }
     const QString vertFilename = (vert.isEmpty()) ? defaultVertexShader() : vert;
-    QGLShader vertShader(QGLShader::Vertex, d_ptr->m_glWidget->context());
+    QGLShader vertShader(QGLShader::Vertex, d_ptr->m_glContext);
     if (!vertShader.compileSourceFile(vertFilename)) {
         mWarning("MGLES2Renderer") << "failed to compile vertex shader" << vertFilename
                                        << '\n' << vertShader.log();
         return 0;
     }
-    QGLShaderProgram *const program = new QGLShaderProgram(d_ptr->m_glWidget->context());
+    QGLShaderProgram *const program = new QGLShaderProgram(d_ptr->m_glContext);
 
     if (program->addShader(&fragShader) && program->addShader(&vertShader)) {
         // bind needed attribute arrays to specific indices -- TODO: What's this for exactly?
@@ -534,8 +534,8 @@ void MGLES2Renderer::begin(QPainter *painter, QGLShaderProgram *program)
     //TODO: do this only when setting the viewport size manually?
     //      otherwise set this and the uniform only once when creating the program
     //setup orthogonal projection matrix
-    GLfloat w = d_ptr->m_viewportSize.width() == -1 ?  d_ptr->m_glWidget->width() :  d_ptr->m_viewportSize.width();
-    GLfloat h = d_ptr->m_viewportSize.height() == -1 ? d_ptr->m_glWidget->height() : d_ptr->m_viewportSize.height();
+    GLfloat w = d_ptr->m_viewportSize.width() == -1 ?  d_ptr->m_glContext->device()->width() :  d_ptr->m_viewportSize.width();
+    GLfloat h = d_ptr->m_viewportSize.height() == -1 ? d_ptr->m_glContext->device()->height() : d_ptr->m_viewportSize.height();
     glViewport(0, 0, w, h);
     d_ptr->m_matProj[0][0] =  2.0 / w;
     d_ptr->m_matProj[1][1] = -2.0 / h;
@@ -593,8 +593,8 @@ void MGLES2Renderer::activateProgram(QGLShaderProgram *program)
 void MGLES2Renderer::bindTexture(const QPixmap &pixmap, quint32 unit, const QString &uniformName)
 {
     glActiveTexture(GL_TEXTURE0 + unit);
-    bindTexture(d_ptr->m_glWidget->bindTexture(pixmap, GL_TEXTURE_2D, GL_RGBA, QGLContext::PremultipliedAlphaBindOption), pixmap.size(), unit, uniformName);
-    //bindTexture(d_ptr->m_glWidget->bindTexture(pixmap, GL_TEXTURE_2D, GL_RGBA, QGLContext::NoBindOption), pixmap.size(), unit, uniformName);
+    bindTexture(d_ptr->m_glContext->bindTexture(pixmap, GL_TEXTURE_2D, GL_RGBA, QGLContext::PremultipliedAlphaBindOption), pixmap.size(), unit, uniformName);
+    //bindTexture(d_ptr->m_glContext->bindTexture(pixmap, GL_TEXTURE_2D, GL_RGBA, QGLContext::NoBindOption), pixmap.size(), unit, uniformName);
 }
 
 void MGLES2Renderer::bindTexture(quint32 texId, const QSize &texSize, quint32 unit, const QString &uniformName)
@@ -745,12 +745,12 @@ MGLES2Renderer *MGLES2Renderer::instance()
 {
     return NULL;
 }
-MGLES2Renderer *MGLES2Renderer::instance(QGLWidget *)
+MGLES2Renderer *MGLES2Renderer::instance(QGLContext *)
 {
     return NULL;
 }
-void MGLES2Renderer::activate(QGLWidget *) {}
-void MGLES2Renderer::destroy(QGLWidget *) {}
+void MGLES2Renderer::activate(QGLContext *) {}
+void MGLES2Renderer::destroy(QGLContext *) {}
 void MGLES2Renderer::destroyAll() {}
 QGLShaderProgram *MGLES2Renderer::getShaderProgram(const QString &, const QString &)
 {

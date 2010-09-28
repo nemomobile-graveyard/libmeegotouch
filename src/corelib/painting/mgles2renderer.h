@@ -25,7 +25,7 @@
 #include <QString>
 #include "mexport.h"
 
-class QGLWidget;
+class QGLContext;
 class MGLES2RendererPrivate;
 
 class QGLShader;
@@ -77,7 +77,7 @@ public:
     virtual ~MGLES2Renderer();
 
     /*!
-        \brief Returns instance of MGLES2Renderer object for the specified QGLWidget.
+        \brief Returns instance of MGLES2Renderer object for the specified QGLContext.
 
         If the renderer for the specified glWidget does not yet exist it
         will be  created and initialized.
@@ -87,7 +87,7 @@ public:
 
         \return MGLES2Renderer object
     */
-    static MGLES2Renderer *instance(QGLWidget *glWidget);
+    static MGLES2Renderer *instance(QGLContext *glWidget);
 
     /*!
         \brief Returns instance of MGLES2Renderer which was previously set active.
@@ -105,7 +105,7 @@ public:
     static MGLES2Renderer *instance();
 
     /*!
-        \brief Activates a renderer for the specified QGLWidget.
+        \brief Activates a renderer for the specified QGLContext.
 
         If the renderer for the specified glWidget does not yet exist it
         will be created and initialized.
@@ -114,14 +114,14 @@ public:
         when the framework is drawing into it. Widgets should not call this
         method manually.
     */
-    static void activate(QGLWidget *glWidget);
+    static void activate(QGLContext *glWidget);
 
     /*!
-        \brief Destroys a renderer of the specified QGLWidget.
+        \brief Destroys a renderer of the specified QGLContext.
 
         The \a glWidget is not destroyed by this method.
     */
-    static void destroy(QGLWidget *glWidget);
+    static void destroy(QGLContext *glWidget);
 
     /*!
         \brief Destroys all the renderer instances.
@@ -322,9 +322,9 @@ private:
     /*!
         \brief Initialization method for the class.
 
-        Sets the used QGLWidget.
+        Sets the used QGLContext.
     */
-    void init(QGLWidget *glWidget);
+    void init(QGLContext *glWidget);
 
     //! Pointer to private implementation class object.
     MGLES2RendererPrivate *const d_ptr;

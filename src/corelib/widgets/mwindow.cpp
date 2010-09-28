@@ -62,6 +62,7 @@ namespace {
 
 MWindowPrivate::MWindowPrivate() :
     glWidget(0),
+    glContext(0),
     sceneManager(0),
     oldOrientation(M::Landscape), // the initial value is not used at all
     orientationAngleLocked(false),
@@ -173,8 +174,9 @@ void MWindowPrivate::initSoftwareViewport()
 
 #ifdef M_USE_OPENGL
     MGLES2Renderer::activate(NULL);
-    MGLES2Renderer::destroy(glWidget);
+    MGLES2Renderer::destroy(glContext);
     glWidget = NULL;
+    glContext = NULL;
 #endif
 
     q->setViewport(new QWidget());
@@ -215,9 +217,14 @@ void MWindowPrivate::initGLViewport()
         glWidget = MComponentCache::glWidget();
         q->setViewport(glWidget);
     }
+    // we need the const_cast as otherwise the MGLES2Renderer cannot call
+    // QGLContext::bindTexture(). as QGLWidget::bindTexture() just redirects
+    // the call to the QGLContext the cast is safe
+    glContext = const_cast<QGLContext*>(glWidget->context());
+
 #ifdef M_USE_OPENGL
-    MGLES2Renderer::instance(glWidget);
-    MGLES2Renderer::activate(glWidget);
+    MGLES2Renderer::instance(glContext);
+    MGLES2Renderer::activate(glContext);
 #endif
     if (translucent)
         q->setViewport(glWidget);
@@ -532,7 +539,7 @@ void MWindowPrivate::closeEvent(QCloseEvent *event)
 
 #ifdef M_USE_OPENGL
     if (!MApplication::softwareRendering()) {
-        MGLES2Renderer::destroy(glWidget);
+        MGLES2Renderer::destroy(glContext);
     }
 #endif
 
@@ -972,7 +979,7 @@ void MWindow::paintEvent(QPaintEvent *event)
 #ifdef M_USE_OPENGL
 
     if (!MApplication::softwareRendering()) {
-        MGLES2Renderer::activate(d->glWidget);
+        MGLES2Renderer::activate(d->glContext);
     }
 #endif // M_USE_OPENGL
 
