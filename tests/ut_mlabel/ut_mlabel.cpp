@@ -37,6 +37,7 @@
 #include <QGraphicsView>
 #include <QGesture>
 #include <QTextDocument>
+#include <QTextLayout>
 
 #define SAVE_IMAGE(fileName, image) \
     do{ \
@@ -517,28 +518,16 @@ void Ut_MLabel::testSizeHint()
         QVERIFY(prefSizeHint.width() <= widthConstraint);
     }
 
-    // To verify whether the preferred size hint allows to show the whole text,
-    // a local QTextDocument is created as reference.
-    QTextDocument textDocument(text);
-    if (Qt::mightBeRichText(text)) {
-        const QString spanTag("<span>%1</span>");
-        textDocument.setHtml(spanTag.arg(text));
-    }
-    textDocument.setDocumentMargin(0);
-    textDocument.setDefaultFont(label->font());
-    QTextOption textOption;
-    textOption.setWrapMode(wrapMode);
-    textDocument.setDefaultTextOption(textOption);
-    textDocument.setTextWidth(prefSizeHint.width());
-    if (textDocument.size().width() <= prefSizeHint.width()) {
-        QVERIFY(textDocument.size().height() == prefSizeHint.height());
+    const QSizeF requiredSize = requiredTextSize(text, label->font(), wrapMode, prefSizeHint.width());
+    if (requiredSize.width() <= prefSizeHint.width()) {
+        QCOMPARE(requiredSize.height(), prefSizeHint.height());
     } else {
         // If the width of the text document is greater than the width
         // set by QTextDocument::setTextWidth(), then no wrapping has
         // been done and the width has been exceeded.
         // However the preferred size hint always respects the maximum
         // available width (see MLabelViewSimple::resizeEvent()).
-        QVERIFY(textDocument.size().height() <= prefSizeHint.height());
+        QVERIFY(requiredSize.height() <= prefSizeHint.height());
     }
 }
 
@@ -799,6 +788,57 @@ void Ut_MLabel::multiLengthSeparator()
 
 }
 
+QSizeF Ut_MLabel::requiredTextSize(const QString &text, const QFont &font,
+                                   QTextOption::WrapMode wrapMode, int width)
+{
+    QSizeF requiredSize;
+
+    QTextOption textOption;
+    textOption.setWrapMode(wrapMode);
+
+    if (Qt::mightBeRichText(text)) {
+        QTextDocument textDocument(text);
+
+        const QString spanTag("<span>%1</span>");
+        textDocument.setHtml(spanTag.arg(text));
+
+        textDocument.setDocumentMargin(0);
+        textDocument.setDefaultFont(font);
+        textDocument.setDefaultTextOption(textOption);
+        textDocument.setTextWidth(width);
+
+        requiredSize = textDocument.size();
+    } else {
+        // For simple text QStaticText is used, which does a slightly different
+        // layouting than QTextDocument (see QStaticText::paintText() as reference).
+        QTextLayout textLayout;
+        textLayout.setText(text);
+        textLayout.setFont(font);
+        textLayout.setTextOption(textOption);
+        qreal leading = QFontMetricsF(font).leading();
+        qreal height = -leading;
+
+        textLayout.beginLayout();
+        while (1) {
+            QTextLine line = textLayout.createLine();
+            if (!line.isValid()) {
+                break;
+            }
+
+            if (width >= 0.0) {
+                line.setLineWidth(width);
+            }
+            height += leading;
+            line.setPosition(QPointF(0.0, height));
+            height += line.height();
+        }
+        textLayout.endLayout();
+
+        requiredSize = textLayout.boundingRect().size();
+    }
+
+    return requiredSize;
+}
 
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

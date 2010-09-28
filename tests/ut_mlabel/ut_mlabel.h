@@ -115,6 +115,14 @@ private slots:
     
 
 private:
+    /**
+     * Helper method for testSizeHint().
+     * \return The required size for the text \a text, if a maximum width of \a width
+     *         is available.
+     */
+    static QSizeF requiredTextSize(const QString &text, const QFont &font,
+                                   QTextOption::WrapMode wrapMode, int width);
+
     TestMLabel *label;
 };
 
