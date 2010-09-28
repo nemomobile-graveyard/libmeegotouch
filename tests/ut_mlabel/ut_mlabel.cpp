@@ -506,6 +506,9 @@ void Ut_MLabel::testSizeHint()
     QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize, constraint);
     QSizeF maxSizeHint = label->sizeHint(Qt::MaximumSize, constraint);
 
+    QFontMetricsF fm(label->font());
+    QCOMPARE(minSizeHint.height(), fm.height());
+
     QVERIFY(minSizeHint.width() <= prefSizeHint.width() || minSizeHint.height() <= prefSizeHint.height());
     QVERIFY(prefSizeHint.width() <= maxSizeHint.width() || prefSizeHint.height() <= maxSizeHint.height());
 

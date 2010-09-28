@@ -105,12 +105,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     switch (which) {
     case Qt::MinimumSize: {
         QFontMetricsF fm(viewPrivate->controller->font());
-        const QSizeF maxSize = sizeForConstraint(constraint);
-
-        QSizeF requiredSize = sizeForWidth(maxSize.width());
-        requiredSize.rwidth() = fm.width(QLatin1Char('x'));
-
-        return requiredSize.boundedTo(maxSize);
+        return QSizeF(fm.width(QLatin1Char('x')), fm.height());
     }
     case Qt::PreferredSize: {
         QSizeF maxSize = sizeForConstraint(constraint);
