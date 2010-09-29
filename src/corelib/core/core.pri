@@ -22,7 +22,6 @@ PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mtimestamp.h \
     $$CORE_SRC_DIR/minputmethodstate.h \
     $$CORE_SRC_DIR/minputwidgetrelocator.h \
-    $$CORE_SRC_DIR/mresizelistener.h \
     $$CORE_SRC_DIR/mdebug.h \
     $$CORE_SRC_DIR/mdataaccess.h \
     $$CORE_SRC_DIR/mdatastore.h \
@@ -66,7 +65,6 @@ SOURCES += \
     $$CORE_SRC_DIR/minputwidgetrelocator.cpp \
     $$CORE_SRC_DIR/mfiledatastore.cpp \
     $$CORE_SRC_DIR/mnamespace.cpp \
-    $$CORE_SRC_DIR/mresizelistener.cpp \
     $$CORE_SRC_DIR/msyslogclient.cpp \
 
 contains(DEFINES, HAVE_DBUS) {
