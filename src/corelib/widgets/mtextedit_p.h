@@ -119,6 +119,17 @@ public:
 
     bool pendingSoftwareInputPanelRequest;
 
+    enum FocusEventStateType {
+        NoFocusEventReceivedYet,
+        FocusInEventReceived,
+        FocusOutEventReceived
+    };
+
+    //! Used to keep track of focus events, ie., to determine whether a
+    //! focusIn event got its corresponding focusOut event.
+    //! Works around NB#186087 - QGraphicsItem never gets focusOutEvent on hide.
+    FocusEventStateType focusEventState;
+
 private:
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns

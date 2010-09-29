@@ -297,6 +297,7 @@ namespace
  */
 MTextEditPrivate::MTextEditPrivate()
     : pendingSoftwareInputPanelRequest(false),
+      focusEventState(NoFocusEventReceivedYet),
       validator(0),
       ownValidator(false),
       completer(0),
@@ -1301,7 +1302,7 @@ MTextEdit::~MTextEdit()
 {
     Q_D(MTextEdit);
 
-    if (hasFocus()) {
+    if (d->focusEventState == MTextEditPrivate::FocusInEventReceived) {
         d->closeAutoSip();
     }
 
@@ -1644,6 +1645,8 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
 
+    d->focusEventState = MTextEditPrivate::FocusInEventReceived;
+
     d->editActive = false;
 
     if (sceneManager()) {
@@ -1679,6 +1682,8 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
+
+    d->focusEventState = MTextEditPrivate::FocusOutEventReceived;
 
     // Need to tell the MArrowKeyNavigator that the next key event it sees
     // would come from a different focus item. Otherwise, it could think
@@ -2363,6 +2368,33 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     default:
         return MWidgetController::inputMethodQuery(query);
     }
+}
+
+QVariant MTextEdit::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    Q_D(MTextEdit);
+
+    switch (change) {
+
+    case QGraphicsItem::ItemVisibleHasChanged:
+        // Workaround for NB#186087 -  QGraphicsItem never gets focusOutEvent on hide:
+        if (!value.toBool() &&
+            d->focusEventState == MTextEditPrivate::FocusInEventReceived) {
+
+            // Hidden (but focused) MTextEdit (please don't ask what it means
+            // to hide a controller) does not need a VKB:
+            d->closeAutoSip();
+
+            // Need to notify the view, too:
+            emit lostFocus(Qt::OtherFocusReason);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    return MWidgetController::itemChange(change, value);
 }
 
 
