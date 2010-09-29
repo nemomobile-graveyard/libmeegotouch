@@ -1,8 +1,6 @@
-/*! \page prestart How to write prestartable and lazy shutdownable applications
+/*! \page prestart How to write prestartable and lazily shutdownable applications
 
-Prestarting and lazy shutdown reduces the startup time of an
-application to zero: the application is able to show its GUI
-immediately when requested. MeeGo Touch supports prestarting and lazy shutdown
+A prestarted (or lazily shutdowned) application can show its window almost without a delay when getting released from the prestarted state. MeeGo Touch supports prestarting and lazy shutdown
 of application services, that is, applications that are started by
 calling \c launch() (or some other application-specific method) in their
 D-Bus interface.
@@ -10,7 +8,7 @@ D-Bus interface.
 Prestarted applications are started to a special \b prestarted \b
 state during boot by a daemon called \b Applifed. In that state they are running
 in the background in their mainloop but not showing nor doing anything. If
-application gets terminated, Applifed re-prestarts is automatically.
+application gets terminated, Applifed re-prestarts it automatically.
 
 Lazy shutdown allows an application to enter the \b prestarted \b
 state instead of terminating when closed by the user. This makes the next
