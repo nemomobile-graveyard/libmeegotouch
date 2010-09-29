@@ -880,6 +880,23 @@ bool MTextEditPrivate::isPreediting() const
 
 void MTextEditPrivate::requestSip()
 {
+    QInputContext *inputContext = qApp->inputContext();
+    QGraphicsView *focusedGraphicsView = dynamic_cast<QGraphicsView *>(QApplication::focusWidget());
+
+    if (!inputContext || !focusedGraphicsView) {
+        return;
+    }
+
+    // FIXME: this is a temporary workaround because of the
+    // QGraphicsView unable to correctly update the attribute.
+    // We're waiting for fixing this on Qt side.
+    focusedGraphicsView->setAttribute(Qt::WA_InputMethodEnabled, true);
+
+    // Enforce update if focus is moved from one MTextEdit to other.
+    // If WA_InputMethodEnabled is not set then Qt will call
+    // setFocusWidget automatically
+    inputContext->setFocusWidget(focusedGraphicsView);
+
     if (!isValidSipRequest()) {
         qWarning() << "MTextEditPrivate::requestSip(): "
                    << "Invalid SIP request - no scene manager found, or not focused!";
