@@ -708,14 +708,9 @@ would be formatted in that case:
     // and not “123,456”, the place holders %1 to %99
     // never do any automatic locale specific number formatting.
     
-    translation.arg(123456.7).arg(123456.7);
-    // The line above returns “١٢٣٬٤٥٧ 123457”
-    //
-    // Note that the formatted result shows only the integer part of the
-    // floating point numbers.
-    // Number formatting using %L1 to %L99 or %1 to %99 works
-    // only for integers.
-    
+    translation.arg(123456.7, 0, 'g', 10).arg(123456.7, 0, 'g', 10);
+    // The line above returns “١٢٣٬٤٥٦٫٧ 123456.7”
+
     MLocale locale;
     translation.arg(locale.formatNumber(123456.7)).arg(locale.formatNumber(123456.7));
     // The line above returns “١٢٣٬٤٥٦٫٧ ١٢٣٬٤٥٦٫٧”
