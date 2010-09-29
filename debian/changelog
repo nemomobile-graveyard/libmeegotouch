@@ -1,7 +1,8 @@
 libmeegotouch (0.20.45~1) unstable; urgency=low
 
   * unreleased
-  * Fixes: NB#191954 -  Valgrind - Memory leak in mmashupcanvasview, mextensionareaview.cpp
+  * Fixes: NB#191954 - Valgrind - Memory leak in mmashupcanvasview, mextensionareaview.cpp
+  * Fixes: NB#194404 - <MemLeak> valgrind leak mappletinventoryview.cpp
 
  -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 23 Sep 2010 14:35:00 +0300
 

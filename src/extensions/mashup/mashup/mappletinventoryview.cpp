@@ -93,6 +93,7 @@ MAppletInventoryView::MAppletInventoryView(MAppletInventory *container) :
 
 MAppletInventoryView::~MAppletInventoryView()
 {
+    delete d_ptr;
 }
 
 void MAppletInventoryView::updateData(const QList<const char *>& modifications)

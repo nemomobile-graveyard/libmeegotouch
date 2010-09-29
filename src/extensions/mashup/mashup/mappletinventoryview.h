@@ -72,6 +72,8 @@ private:
     QList<MContainer *> installationSourceContainers;
 
 protected:
+    // FIXME this class shouldn't have its own private class pointer. Instead
+    // it should use the one in the class(es) this class inherits from.
     MAppletInventoryViewPrivate *const d_ptr;
 };
 //! \internal_end
