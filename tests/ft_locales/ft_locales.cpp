@@ -974,6 +974,7 @@ void Ft_Locales::checkAvailableLocales()
         MLocale locale(supportedLocaleName);
         QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
         locale.setTimeFormat24h(MLocale::LocaleDefaultTimeFormat24h);
+        QCOMPARE(locale.timeFormat24h(), MLocale::LocaleDefaultTimeFormat24h);
         qSort(sortingTestList.begin(), sortingTestList.end(), locale.collator());
         QString newLinePlusSupportedLocaleName('\n' + supportedLocaleName);
         ft_localesTestOutput
@@ -1206,6 +1207,7 @@ void Ft_Locales::checkAvailableLocales()
                     for (int hourMode = 0; hourMode < 2; ++hourMode) {
                         MLocale::TimeFormat24h timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
                         locale.setTimeFormat24h(timeFormat24h);
+                        QCOMPARE(locale.timeFormat24h(), timeFormat24h);
                         QString icuFormatStringDefault
                             = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
                                                      static_cast<MLocale::TimeType>(timeType),
@@ -1221,6 +1223,7 @@ void Ft_Locales::checkAvailableLocales()
                         case 0:
                             timeFormat24h = MLocale::TwelveHourTimeFormat24h;
                             locale.setTimeFormat24h(timeFormat24h);
+                            QCOMPARE(locale.timeFormat24h(), timeFormat24h);
                             icuFormatStringForced
                                 = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
                                                          static_cast<MLocale::TimeType>(timeType),
@@ -1240,6 +1243,7 @@ void Ft_Locales::checkAvailableLocales()
                         case 1:
                             timeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
                             locale.setTimeFormat24h(timeFormat24h);
+                            QCOMPARE(locale.timeFormat24h(), timeFormat24h);
                             icuFormatStringForced
                                 = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
                                                          static_cast<MLocale::TimeType>(timeType),
