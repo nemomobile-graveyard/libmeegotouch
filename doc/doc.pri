@@ -9,8 +9,10 @@ isEmpty(DOXYGEN_BIN) {
     system( mkdir -p $${OUT_PWD}/doc/html )
 
     doc.commands = ( sed -e \"s:@M_SRC_DIR@:$${IN_PWD}:g\" \
+                         -e \"s:@M_BUILD_DIR@:$${M_BUILD_TREE}:g\" \
                          $${IN_PWD}/mdoxy.cfg.in > doc/mdoxy.cfg );
 
+    doc.commands+= ( $${IN_PWD}/generate-toc.pl < $${M_SOURCE_TREE}/doc/src/i18n.dox > $${M_BUILD_TREE}/doc/i18n-toc.html );
     doc.commands+= ( $${DOXYGEN_BIN} doc/mdoxy.cfg );
     doc.commands+= ( cp $${IN_PWD}/src/images/* doc/html );
     doc.commands+= ( cd doc ; $${IN_PWD}/xmlize.pl );

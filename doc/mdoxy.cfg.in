@@ -54,7 +54,7 @@ EXCLUDE               =
 EXCLUDE_PATTERNS      = moc_*.cpp *_p.h *_p.cpp */demo/* */.gen/* */.qm/* */examples/*.cpp */examples/*.h
 IMAGE_PATH            = @M_SRC_DIR@/src/images
 INPUT_FILTER          = "sed -f @M_SRC_DIR@/aliases.sed <"
-EXAMPLE_PATH          = @M_SRC_DIR@/../examples
+EXAMPLE_PATH          = @M_BUILD_DIR@/doc @M_SRC_DIR@/../examples
 
 #---------------------------------------------------------------------------
 # configuration options related to the alphabetical class index

@@ -1,5 +1,7 @@
 /*! \page  i18n  Internationalisation Guidelines
 
+\htmlinclude i18n-toc.html
+
 \section  intro  Introduction
 
 This document provides guidelines on developing locale-aware
