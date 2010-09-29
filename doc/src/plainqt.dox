@@ -200,7 +200,7 @@ Disabling the navigation bar:
 
 When disabling the navigation bar your application doesn't have close and minimize buttons anymore, so the developer has to care for closing and minimizing the application himself.
 
-The style also provides a basic API for supporting orientation changes on the device. For most QWidget based Qt applications it's difficult to implement an orientation change, but for some cases, e.g. QML oder QGraphicsView based applications it can be useful. Therefore the orientation change support of the style is opt-in which means the application needs to tell the style whether it would like to support the orientation change.
+The style also provides a basic API for supporting orientation changes on the device. For most QWidget based Qt applications it's difficult to implement an orientation change, but for some cases, e.g. QML or QGraphicsView based applications it can be useful. Therefore the orientation change support of the style is opt-in which means the application needs to tell the style whether it would like to support the orientation change.
 Note: The orientation change support only adjusts the window decorations to the new orientation. You have to take care of rotating the application's content yourself!
 
 You can activate the orientation change for your application like this:
@@ -241,7 +241,7 @@ Since MeeGo Touch and its widgets are based on \c QGraphicsView there are a few 
 
 \section knownissues Known issues and pit falls
 
-- Be careful with top level widgets: The style takes care of window management. To accomplish this all top-level windows get reparented into a new layout. This breaks part of Qt's API promise: Windows that are created by the application developer can't later on be indentified or accessed via methods such as \c QWidget::window() or \c QWidget::activeWindow(). 
+- Be careful with top level widgets: The style takes care of window management. To accomplish this all top-level windows get reparented into a new layout. This breaks part of Qt's API promise: Windows that are created by the application developer can't later on be indentified or accessed via methods such as \c QWidget::window() or \c QWidget::activeWindow().
 
 - "Stacked Windows": At this point the concept of "stacked windows" is not supported.
 */
