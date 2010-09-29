@@ -138,6 +138,7 @@ private slots:
     void testAutoSipDisabled();
     void testCloseSipOnDestruction();
     void testIgnoreSipIfNotFocused();
+    void testCloseSipOnHide();
 
     void testInsertMultiLineText_data();
     void testInsertMultiLineText();

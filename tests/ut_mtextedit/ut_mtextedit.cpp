@@ -2230,6 +2230,22 @@ void Ut_MTextEdit::testIgnoreSipIfNotFocused()
     QVERIFY(m_sic->isVisible());
 }
 
+void Ut_MTextEdit::testCloseSipOnHide()
+{
+    AutoActivatedScene sc;
+    MTextEdit *subject = createFromSipHandling(&sc);
+
+    subject->hide();
+
+    if (subject->isAutoSipEnabled()) {
+        QVERIFY(!m_sic->isVisible());
+    } else {
+        qWarning() << __PRETTY_FUNCTION__
+                   << "MTextEdit does not use autoSip functionality - cannot complete test.";
+        QVERIFY(m_sic->isVisible());
+    }
+}
+
 void Ut_MTextEdit::testInsertMultiLineText_data()
 {
     QTest::addColumn<MTextEditModel::LineMode>("lineMode");
