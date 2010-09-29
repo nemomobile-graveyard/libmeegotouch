@@ -35,7 +35,7 @@ on the scene are also free to overlap and can be grouped into layers. All of thi
 of highly fluid user interfaces where objects smoothly transition in and out of view, or where certain
 objects can detach from the rest of UI and stay pinned on the screen while all other content is replaced.
 
-MeeGo Touch presents a programming interface that will will seem familiar to developers with other
+MeeGo Touch presents a programming interface that will seem familiar to developers with other
 UI frameworks such as Qt, most of the time it is therefore not necessary to understand the workings
 of the underlying canvas itself. However, if the developer so chooses he has the possibility of
 going beyond the ready made components provided in the MeeGo Touch style and taking direct advantage of
