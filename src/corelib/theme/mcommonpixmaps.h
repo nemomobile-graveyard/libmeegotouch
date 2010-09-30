@@ -35,7 +35,7 @@ class MCommonPixmaps : public QObject
 {
     Q_OBJECT
 public:
-    MCommonPixmaps(MThemeDaemon *daemon);
+    MCommonPixmaps(MThemeDaemon *daemon, bool loadMostUsed);
     ~MCommonPixmaps();
     void clear();
     void load();

@@ -29,12 +29,14 @@ using namespace M::MThemeDaemonProtocol;
 #define VERSION(major, minor) ((major << 16) | minor)
 const unsigned int PRELOAD_FILE_VERSION = VERSION(0, 1);
 
-MCommonPixmaps::MCommonPixmaps(MThemeDaemon *daemon) :
+MCommonPixmaps::MCommonPixmaps(MThemeDaemon *daemon, bool loadMostUsed) :
     minRequestsForCache(0),
     daemon(daemon)
 {
-    connect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), SLOT(loadOne()));
-    connect(this, SIGNAL(mostUsedPixmapsChanged(M::MThemeDaemonProtocol::MostUsedPixmaps)), SLOT(considerSaving()));
+    if (loadMostUsed) {
+        connect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), SLOT(loadOne()));
+        connect(this, SIGNAL(mostUsedPixmapsChanged(M::MThemeDaemonProtocol::MostUsedPixmaps)), SLOT(considerSaving()));
+    }
     timerSinceLastSave.invalidate();
 }
 

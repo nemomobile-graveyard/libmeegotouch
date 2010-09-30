@@ -36,8 +36,9 @@
 
 using namespace M::MThemeDaemonProtocol;
 
-MThemeDaemon::MThemeDaemon() :
-    mostUsedPixmaps(this)
+MThemeDaemon::MThemeDaemon(Type type) :
+    mostUsedPixmaps(this, type),
+    type(type)
 {
     // check that the base theme ("fallback") directory exists.
     QDir baseThemeDir(systemThemeDirectory() + QDir::separator() + "base" + QDir::separator() +
@@ -52,8 +53,10 @@ MThemeDaemon::MThemeDaemon() :
 
 MThemeDaemon::~MThemeDaemon()
 {
-    mostUsedPixmaps.save();
-    mostUsedPixmaps.clear();
+    if (type == RemoteDaemon) {
+        mostUsedPixmaps.save();
+        mostUsedPixmaps.clear();
+    }
 
     qDeleteAll(themeImageDirs);
     themeImageDirs.clear();
@@ -113,7 +116,7 @@ bool MThemeDaemon::pixmap(MThemeDaemonClient *client, const PixmapIdentifier &id
             client->pixmaps.insert(id, NULL);
             handle = 0;
             return true;
-        } else {
+        } else if (type == RemoteDaemon) {
             mostUsedPixmaps.increaseRequestCount(id, resource);
         }
     }
@@ -329,12 +332,14 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
     }
 
     // 2. save the most used list for the old theme
-    if (!currentThemeName.isEmpty()) {
+    if (!currentThemeName.isEmpty() && type == RemoteDaemon) {
         mostUsedPixmaps.save();
     }
 
     // 3. release all most used pixmaps
-    mostUsedPixmaps.clear();
+    if (type == RemoteDaemon) {
+        mostUsedPixmaps.clear();
+    }
 
     currentThemeName = newTheme;
 
@@ -364,7 +369,9 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
     reloadImagePaths(locale, forceReload);
 
     // 6. load the "preload" list
-    mostUsedPixmaps.load();
+    if (type == RemoteDaemon) {
+        mostUsedPixmaps.load();
+    }
 
     return true;
 }
@@ -395,7 +402,9 @@ void MThemeDaemon::changeLocale(const QString &newLocale, const QList<MThemeDaem
             if (reload) {
                 // this image was locale specific icon so mark it to be reloaded
                 pixmapsToBeReloaded.append(i.key());
-                mostUsedPixmaps.reload(i.key(), i.value());
+                if (type == RemoteDaemon) {
+                    mostUsedPixmaps.reload(i.key(), i.value());
+                }
             } else {
                 // this image was icon but not locale specific so mark it as potential
                 potentialReloadlist.append(qMakePair(i.key(), i.value()));
@@ -424,7 +433,9 @@ void MThemeDaemon::changeLocale(const QString &newLocale, const QList<MThemeDaem
             foreach(MThemeImagesDirectory * imdir, themeImageDirs) {
                 if (imdir->isLocalizedResource(potentialIcon.first.imageId)) {
                     releasePixmap(potentialIconsFromClient.first, potentialIcon.first);
-                    mostUsedPixmaps.reload(potentialIcon.first, potentialIcon.second);
+                    if (type == RemoteDaemon) {
+                        mostUsedPixmaps.reload(potentialIcon.first, potentialIcon.second);
+                    }
                     pixmapsToReload[potentialIconsFromClient.first].append(potentialIcon.first);
                     break;
                 }

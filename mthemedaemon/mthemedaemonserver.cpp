@@ -32,6 +32,7 @@ using namespace M::MThemeDaemonProtocol;
 const int THEME_CHANGE_TIMEOUT = 3000;
 
 MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
+    daemon(MThemeDaemon::RemoteDaemon),
     currentTheme("/meegotouch/theme/name"),
     currentLocale("/meegotouch/i18n/language"),
     defaultTheme(M_THEME_DEFAULT),

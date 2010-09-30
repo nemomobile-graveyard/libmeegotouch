@@ -32,7 +32,12 @@ class MThemeDaemonClient;
 class MThemeDaemon
 {
 public:
-    MThemeDaemon();
+    enum Type {
+        LocalDaemon = 0,
+        RemoteDaemon = 1
+    };
+
+    MThemeDaemon(Type type);
     virtual ~MThemeDaemon();
 
     static QString systemThemeDirectory();
@@ -65,6 +70,7 @@ private:
     QStringList themeInheritance;
     QStringList themeLibraries;
     QList<MThemeImagesDirectory *> themeImageDirs;
+    Type type;
 };
 //! \internal_end
 #endif

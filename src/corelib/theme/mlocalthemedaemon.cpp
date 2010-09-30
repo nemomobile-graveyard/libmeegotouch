@@ -37,10 +37,11 @@ void M_EXPORT M_changeTheme(const QString &theme)
 }
 #endif
 
-MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName)
+MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName) :
+    daemon(MThemeDaemon::LocalDaemon),
 #ifdef HAVE_GCONF
-    : themeItem("/meegotouch/theme/name"),
-      locale("/meegotouch/i18n/language")
+    themeItem("/meegotouch/theme/name"),
+    locale("/meegotouch/i18n/language")
 #endif
 {
     QString theme =  M_THEME_DEFAULT;
