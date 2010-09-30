@@ -2360,9 +2360,19 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
         // Only check whether this text edit *has* a completer, not whether the completer is
         // visible. Otherwise, it would cause further window relocations once the completer hides
         // (shows) again.
-        if (d->completer) {
-            return QVariant(MWidgetController::inputMethodQuery(query).toRectF().unite(d->completer->boundingRect()));
+        {
+            QRect rect = MWidgetController::inputMethodQuery(query).toRect();
+            if (d->completer) {
+                // sum up the cursor rectangle and the completer rectangle.
+                QRect completerRect = d->completer->boundingRect().toRect();
+                completerRect.translate(rect.left(), rect.bottom());
+                QRegion region(rect);
+                region += completerRect;
+                rect = region.boundingRect();
+            }
+            return rect;
         }
+
         // No break - intended fall-through to default case:
 
     default:
