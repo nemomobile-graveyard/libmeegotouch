@@ -179,13 +179,25 @@ void MListFilter::keyPressEvent(QKeyEvent *event)
 void MListFilter::editorTextChanged()
 {
     if(filteringMode != MListFilter::FilterByApplication) {
-        QStringList words(QRegExp::escape(filterEditor->text()).split(" "));
-        QString joined(words.join(".* .*"));
-        QRegExp regExp(filterProxy->filterRegExp());
+
+        // Split the sentence in filter editor
+        QStringList keywords(filterEditor->text().split(" "));
+
+        // Escape each keyword
+        QStringList escapedKeywords;
+        foreach (QString keyword, keywords)
+            escapedKeywords << QRegExp::escape(keyword);
+
+        // Join keywords into regular expression pattern
+        QString pattern(escapedKeywords.join(".* .*") + ".*");
         if(filteringMode == MListFilter::FilterAsSubstring)
-            regExp.setPattern(joined);
-        else if(filteringMode == MListFilter::FilterAsBeginningOfLine && filterEditor->text().length())
-            regExp.setPattern('^' + joined);
+            pattern.prepend(".*");
+        else if(filteringMode == MListFilter::FilterAsBeginningOfLine)
+            pattern.prepend("^");
+
+        // Set regular expression with the new pattern
+        QRegExp regExp(filterProxy->filterRegExp());
+        regExp.setPattern(pattern);
         filterProxy->setFilterRegExp(regExp);
     }
 }
