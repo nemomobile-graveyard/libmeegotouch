@@ -113,7 +113,7 @@ QPoint MButtonSwitchViewPrivate::thumbEndPos(bool checked) const
 const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
 {
     //create new masked slider image if it has been invalidated
-    if (m_maskedSliderPm.isNull()) {
+    if (m_maskedSliderPm.isNull() && !MTheme::hasPendingRequests()) {
 
         //create the new masked slider image only if the source images are valid
         Q_Q(const MButtonSwitchView);
