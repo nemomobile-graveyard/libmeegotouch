@@ -77,6 +77,8 @@ my @engineeringEnglishPackagesObsolete = (
     "dui-demos-widgetsgallery-l10n-engineering-english", # now "meegotouch-demos-widgetsgallery-l10n-engineering-english"
     "duihomescreen-l10n-engineering-english", # now "meegotouchhome-l10n-engineering-english"
     "keychain-ui-l10n-engineering-english", # does not exist anymore
+    "duihomescreen-l10n-engineering-english", # now "meegotouchhome-l10n-engineering-english"
+    "mfe-account-ui-plugins-l10n-engineering-english",
     );
 
 # Engineering English packages which should be ignored because they are only demos:
@@ -92,8 +94,6 @@ my @engineeringEnglishPackagesIgnore = (
 my @engineeringEnglishPackagesBroken = (
     # this one is empty. Why?:
     "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
-    # this one is empty. Why?:
-    "mfe-account-ui-plugins-l10n-engineering-english"
    );
 
 my @engineeringEnglishPackages = ();
@@ -113,6 +113,8 @@ my @sourcePackagesToDownloadAndScan = (
     "accounts-ui",
     "applauncherd",
     "applifed",
+    "as-daemon",
+    "att-video",
     "backup-framework",
     "browserservicefw",
     "bugreporter-daemon",
@@ -200,6 +202,7 @@ my @sourcePackagesToDownloadAndScan = (
     "meegocertman-extn",
     "meego-im-framework",
     "meego-keyboard",
+    "meego-keyboard-zh",
     "meego-vkb-magnifier",
     "meegofeedback-reactionmaps",
     "meegotouchhome",
@@ -517,8 +520,7 @@ sub download {
     $wgetCommand .= "$OPT_HANDOFF_URL";
 
     if (mySystem($wgetCommand)) {
-        printf (STDERR "“wget $OPT_HANDOFF_URL” didn’t work.\n");
-        myExit (1);
+        printf (STDERR "“wget $OPT_HANDOFF_URL” returned failure code. It does this always when --no-check-certificate is used, so let’s just continue ...\n");
     }
 
     chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
