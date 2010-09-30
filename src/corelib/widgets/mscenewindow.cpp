@@ -97,6 +97,7 @@ MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
     Q_D(MSceneWindow);
 
     d->windowType = PlainSceneWindow;
+    grabGesture(Qt::TapGesture);
     grabGesture(Qt::TapAndHoldGesture);
     setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 }
@@ -109,6 +110,7 @@ MSceneWindow::MSceneWindow(MSceneWindowPrivate *dd, MSceneWindowModel *model, MS
     setViewType(viewType);
 
     d->windowType = windowType;
+    grabGesture(Qt::TapGesture);
     grabGesture(Qt::TapAndHoldGesture);
     setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 }
@@ -356,7 +358,7 @@ void MSceneWindow::gestureEvent(QGestureEvent *event)
         return;
 
     foreach(QGesture* gesture, event->gestures()) {
-        if (gesture->state() == Qt::GestureStarted) {
+        if (gesture->state() == Qt::GestureStarted && !event->isAccepted(gesture->gestureType())) {
             mScene->d_func()->notifyGestureCaughtByPanel(gesture->gestureType());
             event->accept(gesture);
         }
