@@ -81,6 +81,7 @@ private slots:
     void testSingleLineKeyPressEvent();
     void testFocusInEvent();
     void testFocusOutEvent();
+    void testSubFocusHandling();
     void testInputMethodEvent();
     void testSetCursorPosition();
     void testSetTextCursor();

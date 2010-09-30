@@ -48,6 +48,7 @@
 #include <mnavigationbar.h>
 #include <mhomebuttonpanel.h>
 #include <mapplicationpage.h>
+#include <mdialog.h>
 
 #include "mtextedit_p.h"
 #include "utils.h"
@@ -521,6 +522,40 @@ void Ut_MTextEdit::testFocusOutEvent()
     QCOMPARE(spyLostFocus.count(), 1);
 }
 
+void Ut_MTextEdit::testSubFocusHandling()
+{
+    MWindow w;
+
+    MTextEdit *subject = new MTextEdit;
+    subject->setFocus();
+
+    MDialog *dlg = new MDialog;
+    QSignalSpy spy(dlg, SIGNAL(appeared()));
+
+    dlg->setCentralWidget(subject);
+    QVERIFY(!subject->hasFocus());
+
+    w.show();
+    QTest::qWaitForWindowShown(&w);
+    dlg->appear(&w);
+
+    // Wait for appearance animation to finish, but no longer than approx. 5secs:
+    int waitCount = 0;
+    while (spy.count() < 1) {
+        ++ waitCount;
+
+        if (waitCount > 10) {
+            qCritical() << __PRETTY_FUNCTION__
+                     << "MDialog didn't appear, test failed.";
+            break;
+        }
+
+        QTest::qWait(500);
+    }
+
+    QCOMPARE(w.scene()->focusItem(), subject);
+    QVERIFY(subject->hasFocus());
+}
 
 /*!
  * Test moving to pre-editing mode.
