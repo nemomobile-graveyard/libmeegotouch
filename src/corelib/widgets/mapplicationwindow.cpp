@@ -135,7 +135,7 @@ void MApplicationWindowPrivate::init()
 {
     Q_Q(MApplicationWindow);
 
-    style = static_cast<const MApplicationWindowStyle *>(MTheme::style("MApplicationWindowStyle", ""));
+    style = static_cast<const MApplicationWindowStyle *>(MTheme::style("MApplicationWindowStyle", "", "", "", q->orientation()));
 
     q->connect(q, SIGNAL(orientationChanged(M::Orientation)), q, SLOT(_q_updateStyle()));
     q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()), q, SLOT(_q_updateStyle()));
