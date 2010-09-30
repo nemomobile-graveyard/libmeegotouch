@@ -4,10 +4,16 @@ SUBDIRS += \
     corelib \
     views \
     settings \
-    extensions
+    extensions \
+    translations
+
 win32|macx:SUBDIRS -= settings extensions
 
 include(../mkspecs/common.pri)
+
+contains(DEFINES, HAVE_ICU) {
+    SUBDIRS += icu-extradata
+}
 
 contains(DEFINES, HAVE_GCONF) {
     # install gconf schema

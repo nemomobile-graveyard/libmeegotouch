@@ -34,11 +34,7 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
                   mmoc \
                   mgen \
                   src \
-                  src/translations \
 
-       contains(DEFINES, HAVE_ICU) {
-           SUBDIRS += src/icu-extradata
-       }
        contains(DEFINES, HAVE_DBUS) {
            SUBDIRS += \
                   mappletrunner \
