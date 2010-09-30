@@ -66,6 +66,7 @@ MContainerViewPrivate::MContainerViewPrivate()
 
 MContainerViewPrivate::~MContainerViewPrivate()
 {
+    delete icon;
 }
 
 void MContainerViewPrivate::init()
