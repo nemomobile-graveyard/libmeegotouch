@@ -11,7 +11,8 @@ SOURCES += \
 
 # unit test and unit
 HEADERS += \
-    ut_mpopuplist.h
+    ut_mpopuplist.h \
+    $$MSRCDIR/views/mdialoginternalbox_p.h
 
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets \
