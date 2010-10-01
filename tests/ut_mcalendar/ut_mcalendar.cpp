@@ -40,6 +40,8 @@ void Ut_MCalendar::initTestCase()
     icuPackageVersion = process.readAllStandardOutput();
     icuPackageVersion.replace("\n", "");
     qDebug() << "libicu44 package version is:" << icuPackageVersion;
+    QFile fiResource("/usr/share/meegotouch/icu/usrdt44l/fi.res");
+    QVERIFY2(fiResource.exists(), "File /usr/share/meegotouch/icu/usrdt44l/fi.res does not exist. The files in /usr/share/meegotouch/icu/usrdt44l/ are needed for this test, please check why they are missing.");
 }
 
 void Ut_MCalendar::cleanupTestCase()
