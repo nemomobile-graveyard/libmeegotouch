@@ -1,0 +1,14 @@
+MApplicationWindowStyle {
+    floatable-tool-bar: false;
+    floatable-tab-bar: true;
+}
+
+MApplicationWindowStyle.Landscape {
+    floatable-tool-bar: true;
+    floatable-tab-bar: false;
+}
+
+MApplicationWindowStyle.Portrait {
+    floatable-tool-bar: false;
+    floatable-tab-bar: true;
+}

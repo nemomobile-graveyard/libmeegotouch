@@ -32,6 +32,7 @@ class MApplicationWindow;
 class MApplicationPage;
 class MEscapeButtonPanel;
 
+
 class Ut_MApplicationWindow : public QObject
 {
     Q_OBJECT
@@ -68,11 +69,20 @@ private slots:
     void testStatusBarVisibility_data();
     void testStatusBarVisibility();
 
+    void testToolBarInLandscapeIsFloating();
+    void testToolBarInPortraiIsInNavigationBar();
+    void testToolBarMovesFromFloatingToNavigationBarWhenRotatedToPortrait();
+    void testTabBarInLandscapeIsInNavigationBar();
+    void testTabBarInPortraitIsFloating();
+    void testTabBarMovesFromNavigationBarToFloatingWhenRotatedToPortrait();
+
 private:
     MEscapeButtonPanel *fetchEscapeButtonPanel(const QList<QGraphicsItem *> &itemsList) const;
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;
 
+    void initToolbarLocationTC(M::OrientationAngle angle, const QString &viewType);
+    bool isToolBarFloating();
 };
 
 

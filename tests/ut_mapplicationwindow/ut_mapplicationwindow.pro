@@ -19,4 +19,7 @@ SOURCES += \
 HEADERS += \
     ut_mapplicationwindow.h
 
+support_files.files += \
+    ut_mapplicationwindow.css
+
 include(../common_bot.pri)
