@@ -17,12 +17,14 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2010 Nokia
 
 #disable werrors on windows and freemantle (M_OS_MAEMO5 comes from meegotouchconfig.pri)
 win32 {
-   } else {
-         contains( DEFINES, M_OS_MAEMO5 ) {
-         } else {
-             QMAKE_CFLAGS *= -Werror
-             QMAKE_CXXFLAGS *= -Werror
-         }
+    } else {
+        contains( DEFINES, M_OS_MAEMO5 ) {
+        } else { 
+	    !contains( M_BUILD_FEATURES, no-werror ) {
+	        QMAKE_CFLAGS *= -Werror
+	        QMAKE_CXXFLAGS *= -Werror
+            }
+        }
     }
 
 contains(TEMPLATE, app) {

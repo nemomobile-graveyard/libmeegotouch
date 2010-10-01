@@ -56,6 +56,7 @@ CFG_TESTABLE=no
 CFG_COVERAGE=no
 CFG_TIMESTAMPS=no
 CFG_PCH=no
+CFG_NO_WERROR=no
 CFG_DEV=no
 CFG_MINIMAL=no
 CFG_BUILD_TESTS=no
@@ -206,6 +207,9 @@ while [ "$#" -gt 0 ]; do
         ;;
     testable)
         CFG_TESTABLE="$VAL"
+        ;;
+    no-werror)
+        CFG_NO_WERROR="yes" 
         ;;
     coverage)
         CFG_COVERAGE="$VAL"
@@ -470,6 +474,7 @@ Configure options:
     -timestamps ........ Enable time debug measurements in the code
     -coverage .......... Enable code coverage calculation
     -pch ............... Enable pre-compiled header
+    -no-werror ......... Disable warnings as errors gcc flag
 
 Additional options:
 
@@ -536,6 +541,10 @@ fi
 
 if [ "$CFG_TESTABLE" = "yes" ]; then
     MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES testable"
+fi
+
+if [ "$CFG_NO_WERROR" = "yes" ]; then
+    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES no-werror" 	
 fi
 
 if [ "$CFG_TIMESTAMPS" = "yes" ]; then
