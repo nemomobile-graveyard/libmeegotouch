@@ -1065,6 +1065,7 @@ void MApplicationWindow::closeEvent(QCloseEvent *event)
     if (!closeOnLazyShutdown()) {
         if (MApplication::prestartMode() == M::LazyShutdownMultiWindow ||
             MApplication::prestartMode() == M::LazyShutdown) {
+            closeMenu();
             event->accept();
             return;
         }
