@@ -312,6 +312,11 @@ MGLES2Renderer *MGLES2Renderer::instance(QGLContext *glContext)
     return renderer;
 }
 
+MGLES2Renderer *MGLES2Renderer::instance(QGLWidget *glWidget)
+{
+    return instance(const_cast<QGLContext*>(glWidget->context()));
+}
+
 void MGLES2Renderer::activate(QGLContext *glContext)
 {
     if (glContext)
@@ -320,23 +325,33 @@ void MGLES2Renderer::activate(QGLContext *glContext)
         MGLES2RendererPrivate::activeRenderer = NULL;
 }
 
+void MGLES2Renderer::activate(QGLWidget *glWidget)
+{
+    return activate(const_cast<QGLContext*>(glWidget->context()));
+}
+
 void MGLES2Renderer::destroy(QGLContext *glContext)
 {
     if (MGLES2Renderer *const renderer = MGLES2RendererPrivate::glRenderers.take(glContext)) {
 
         if (renderer == MGLES2RendererPrivate::activeRenderer) {
             mWarning("MGLES2Renderer::destroy()") << "Destroying active renderer.";
-            MGLES2Renderer::activate(NULL);
+            MGLES2Renderer::activate((QGLContext*)NULL);
         }
         delete renderer;
     }
+}
+
+void MGLES2Renderer::destroy(QGLWidget *glWidget)
+{
+    return activate(const_cast<QGLContext*>(glWidget->context()));
 }
 
 void MGLES2Renderer::destroyAll()
 {
     if (!MGLES2RendererPrivate::glRenderers.empty()) {
         mWarning("MGLES2Renderer::destroyAll()") << "Renderers still existing.";
-        MGLES2Renderer::activate(NULL);
+        MGLES2Renderer::activate((QGLContext*)NULL);
         qDeleteAll(MGLES2RendererPrivate::glRenderers);
         MGLES2RendererPrivate::glRenderers.clear();
     }
@@ -749,8 +764,15 @@ MGLES2Renderer *MGLES2Renderer::instance(QGLContext *)
 {
     return NULL;
 }
+MGLES2Renderer *MGLES2Renderer::instance(QGLWidget *)
+{
+    return NULL;
+}
+
 void MGLES2Renderer::activate(QGLContext *) {}
+void MGLES2Renderer::activate(QGLWidget *) {}
 void MGLES2Renderer::destroy(QGLContext *) {}
+void MGLES2Renderer::destroy(QGLWidget *) {}
 void MGLES2Renderer::destroyAll() {}
 QGLShaderProgram *MGLES2Renderer::getShaderProgram(const QString &, const QString &)
 {

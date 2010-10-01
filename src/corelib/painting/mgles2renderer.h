@@ -79,7 +79,7 @@ public:
     /*!
         \brief Returns instance of MGLES2Renderer object for the specified QGLContext.
 
-        If the renderer for the specified glWidget does not yet exist it
+        If the renderer for the specified glContext does not yet exist it
         will be  created and initialized.
 
         Renderer object is created automatically for each MWindow if SW
@@ -87,7 +87,8 @@ public:
 
         \return MGLES2Renderer object
     */
-    static MGLES2Renderer *instance(QGLContext *glWidget);
+    static MGLES2Renderer *instance(QGLContext *glContext);
+    static MGLES2Renderer *instance(QGLWidget *glWidget);
 
     /*!
         \brief Returns instance of MGLES2Renderer which was previously set active.
@@ -107,21 +108,23 @@ public:
     /*!
         \brief Activates a renderer for the specified QGLContext.
 
-        If the renderer for the specified glWidget does not yet exist it
+        If the renderer for the specified glContext does not yet exist it
         will be created and initialized.
 
         MWindow is responsible for setting the active renderer automatically
         when the framework is drawing into it. Widgets should not call this
         method manually.
     */
-    static void activate(QGLContext *glWidget);
+    static void activate(QGLContext *glContext);
+    static void activate(QGLWidget *glWidget);
 
     /*!
         \brief Destroys a renderer of the specified QGLContext.
 
-        The \a glWidget is not destroyed by this method.
+        The \a glContext is not destroyed by this method.
     */
-    static void destroy(QGLContext *glWidget);
+    static void destroy(QGLContext *glContext);
+    static void destroy(QGLWidget *glWidget);
 
     /*!
         \brief Destroys all the renderer instances.
@@ -324,7 +327,7 @@ private:
 
         Sets the used QGLContext.
     */
-    void init(QGLContext *glWidget);
+    void init(QGLContext *glContext);
 
     //! Pointer to private implementation class object.
     MGLES2RendererPrivate *const d_ptr;

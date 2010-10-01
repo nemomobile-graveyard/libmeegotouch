@@ -173,7 +173,7 @@ void MWindowPrivate::initSoftwareViewport()
     mDebug("MWindow") << "Switching to software rendering";
 
 #ifdef M_USE_OPENGL
-    MGLES2Renderer::activate(NULL);
+    MGLES2Renderer::activate((QGLContext*)NULL);
     MGLES2Renderer::destroy(glContext);
     glWidget = NULL;
     glContext = NULL;
