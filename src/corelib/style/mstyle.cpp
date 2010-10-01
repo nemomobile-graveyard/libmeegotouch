@@ -252,3 +252,8 @@ void MStyleContainer::setModeDefault()
 {
     setCurrentMode("");
 }
+
+MStyleContainer::dummyNeverToBeUsedPtr MStyleContainer::_dummyNeverToBeUsed()
+{
+    return &MStyleContainer::operator->;
+}
