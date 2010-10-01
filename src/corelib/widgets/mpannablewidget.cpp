@@ -140,6 +140,11 @@ void MPannableWidgetGlass::cancelEvent(MCancelEvent *event)
     pannableWidget->cancelEvent(event);
 }
 
+void MPannableWidgetGlass::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    pannableWidget->tapAndHoldGestureEvent(event, gesture);
+}
+
 MPannableWidgetPrivate::MPannableWidgetPrivate() :
     pressEvent(QEvent::GraphicsSceneMousePress),
     physics(0),
@@ -272,8 +277,9 @@ void MPannableWidget::init()
     d->glass->setZValue(ZValueGlass);
 
     d->glass->setObjectName("glass");
+    d->glass->grabGesture(Qt::TapAndHoldGesture);
+
     grabGesture(Qt::PanGesture);
-    grabGesture(Qt::TapAndHoldGesture);
 
     setPosition(QPointF());
     setRange(QRectF());
@@ -505,7 +511,7 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
 void MPannableWidget::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* tapAndHoldGesture)
 {
     Q_D(MPannableWidget);
-
+    // This handler is called by the glass tapAndHoldGestureEvent method.
     if (isEnabled() && d->physics->inMotion()) {
         // The viewport is still moving,
         // let's swallow this event and avoid showing

@@ -47,6 +47,7 @@ public:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void timerEvent(QTimerEvent* event);
     virtual void cancelEvent(MCancelEvent *event);
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
 
 protected:
 
