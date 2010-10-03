@@ -1,10 +1,29 @@
-libmeegotouch (0.20.45~1) unstable; urgency=low
+libmeegotouch (0.20.45-1) unstable; urgency=low
 
-  * unreleased
-  * Fixes: NB#191954 - Valgrind - Memory leak in mmashupcanvasview, mextensionareaview.cpp
+  * Fixes: BMC#6871 - libmeegotouch: revise profile for russellville in devices.conf
+  * Fixes: NB#191802 - Gallery application crashes when closing at MClassFactory::unregisterWidgetCreator
+  * Fixes: NB#194430 - <MemLeak> valgrind leaks mcontainerview.cpp in case of incorrect usage
+  * Fixes: NB#194439 - Cannot maximize/close app from switcher
+  * Fixes: NB#192480 - MApplication prestarting mode - looks like documentation has to be fixed
+  * Fixes: NB#191584 - Not able to make out if the switch is on or off
   * Fixes: NB#194404 - <MemLeak> valgrind leak mappletinventoryview.cpp
+  * Fixes: NB#190845 - COREWEB: /usr/bin/conndlgs 'MAssemblyPrivate::loadViewConfiguration MAssembly::themeChanged
+  * Fixes: NB#189199 - MComboBox added as menu item in MApplicationMenu has wrong width value
+  * Fixes: NB#182427 - Adding an action to an AppPage and then setting its widgets causes a crash.
+  * Fixes: NB#194145 - <MemLeak> valgrind leak in error case mshareddata.cpp
+  * Fixes: NB#191954 - Valgrind - Memory leak in mmashupcanvasview, mextensionareaview.cpp
+  * Fixes: NB#191954 - Valgrind - Memory leak in mmashupcanvasview, mextensionareaview.cpp
+  * Fixes: NB#192301 - What is /usr/bin/mservicemapper? And package description is totally unhelpful
+  * Fixes: NB#167434 - MThemeDaemon uses excessive amount of heap
+  * Fixes: NB#194091 - <MemLeak> valgrind leaks for mcontentitem.cpp
+  * Fixes: NB#193538 - MComboBox uses wrong logical id for default value.
+  * Fixes: NB#177875 - MContentItem does not work when switching between pixmap and image id
+  * Fixes: NB#191029 - Copy of pixmap freezes UI
+  * Fixes: NB#191295 - Valgrind - Invalid read in ut_mvideowidget
+  * Fixes: NB#193932 - ListIndex is not visible on test application startup
+  * Fixes: NB#191330 - <Safety> Mismatched free() / delete / delete [] ft_theme.cpp
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 23 Sep 2010 14:35:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Sun, 03 Oct 2010 11:11:38 +0300
 
 libmeegotouch (0.20.44-1) jaunty; urgency=low
 
