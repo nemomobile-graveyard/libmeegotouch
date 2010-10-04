@@ -28101,7 +28101,7 @@ zh_Hant	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	y年
 zh_Hant	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzH時mm分ss秒 -> 1429年7月18日星期一GMT+00:0014時31分00秒
 zh_Hant	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah時mm分ss秒 -> 1429年7月18日星期一GMT+00:00下午2時31分00秒
 zh_Hant	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH時mm分ss秒 -> 1429年7月18日星期一GMT+00:0014時31分00秒
-zh_Hant_HK	Language endonym	zh_Hant_HK
+zh_Hant_HK	Language endonym	繁體中文
 zh_Hant_HK	Country endonym	中華人民共和國香港特別行政區
 zh_Hant_HK	Floating Point Number	-123,456,789.012
 zh_Hant_HK	Percent value	-1,234.5679%
