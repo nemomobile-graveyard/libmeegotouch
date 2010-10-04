@@ -35,6 +35,9 @@
 #include <QStringList>
 #include <QDebug>
 #include <QDateTime>
+#ifdef HAVE_ICU
+#include <unicode/uloc.h>
+#endif
 
 LanguagePage::LanguagePage()
     : TemplatePage(TemplatePage::ApplicationView),
@@ -136,83 +139,46 @@ void LanguagePage::retranslateUi()
     disconnect(comboBoxLcMonetary, SIGNAL(currentIndexChanged(int)),
                this, SLOT(changeLcMonetary(int)));
 
+    QStringList localeNames;
+#ifdef HAVE_ICU
+    int numberOfAvailableLocales = uloc_countAvailable();
+    for (int i = 0; i < numberOfAvailableLocales; ++i)
+        localeNames << QString::fromUtf8(uloc_getAvailable(i));
+#else
+    for (unsigned language = QLocale::C;
+         language <= QLocale::LastLanguage;
+         language++) {
+        foreach (QLocale::Country country,
+                 QLocale::countriesForLanguage (QLocale::Language(language))) {
+            localeNames << QLocale(QLocale::Language(language), country).name();
+        }
+    }
+#endif
+    localeNames.sort();
+
     QList<QStringList> rowsLocale;
     rowsLocale
         << (QStringList()
             //% "None"
-            << qtTrId("xx_locale_none")
-            + QString::fromUtf8(" “”")
-            << "")
-        << (QStringList()
-            //% "Arabic"
-            << qtTrId("xx_locale_ar")
-            + QString::fromUtf8(" “ar”")
-            << "ar")
-        << (QStringList()
-            //% "German"
-            << qtTrId("xx_locale_de")
-            + QString::fromUtf8(" “de”")
-            << "de")
-        << (QStringList()
-            //% "German (Austria)"
-            << qtTrId("xx_locale_de_AT")
-            + QString::fromUtf8(" “de_AT”")
-            << "de_AT")
-        << (QStringList()
-            //% "German (Switzerland)"
-            << qtTrId("xx_locale_de_CH")
-            + QString::fromUtf8(" “de_CH”")
-            << "de_CH")
-        << (QStringList()
-        //% "English"
-            << qtTrId("xx_locale_en")
-            + QString::fromUtf8(" “en”")
-            << "en")
-        << (QStringList()
-        //% "Finnish"
-            << qtTrId("xx_locale_fi")
-            + QString::fromUtf8(" “fi”")
-            << "fi")
-        << (QStringList()
-        //% "Hindi"
-            << qtTrId("xx_locale_hi")
-            + QString::fromUtf8(" “hi”")
-            << "hi")
-        << (QStringList()
-        //% "Hungarian"
-            << qtTrId("xx_locale_hu")
-            + QString::fromUtf8(" “hu”")
-            << "hu")
-        << (QStringList()
-        //% "Japanese"
-            << qtTrId("xx_locale_ja")
-            + QString::fromUtf8(" “ja”")
-            << "ja")
-        << (QStringList()
-        //% "Urdu"
-            << qtTrId("xx_locale_ur")
-            + QString::fromUtf8(" “ur”")
-            << "ur")
-        << (QStringList()
-        //% "Urdu (Pakistan)"
-            << qtTrId("xx_locale_ur_PK")
-            + QString::fromUtf8(" “ur_PK”")
-            << "ur_PK")
-        << (QStringList()
-        //% "Urdu (India)"
-            << qtTrId("xx_locale_ur_IN")
-            + QString::fromUtf8(" “ur_IN”")
-            << "ur_IN")
-        << (QStringList()
-        //% "Chinese (China)"
-            << qtTrId("xx_locale_zh_CN")
-            + QString::fromUtf8(" “zh_CN”")
-            << "zh_CN")
-        << (QStringList()
-        //% "Chinese (Taiwan)"
-            << qtTrId("xx_locale_zh_TW")
-            + QString::fromUtf8(" “zh_TW”")
-            << "zh_TW");
+            << QString::fromUtf8("“”: ") + qtTrId("xx_locale_none")
+            << "");
+    foreach (QString localeName, localeNames) {
+        QString localeNameDescription;
+        MLocale locale(localeName);
+        if (locale.textDirection() == Qt::RightToLeft)
+            localeNameDescription += QChar(0x200F); // U+200F RIGHT-TO-LEFT MARK
+        QString languageEndonym = locale.languageEndonym();
+        if (!languageEndonym.isEmpty())
+            languageEndonym[0] = languageEndonym.at(0).toUpper();
+        localeNameDescription +=
+            localeName + ": " + languageEndonym;
+        if (!locale.countryEndonym().isEmpty())
+            localeNameDescription += " (" + locale.countryEndonym() + ')';
+        rowsLocale
+            << (QStringList()
+                << localeNameDescription
+                << localeName);
+    }
 
     int rowsLocaleCount = rowsLocale.count();
 
