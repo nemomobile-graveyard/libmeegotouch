@@ -59,6 +59,8 @@ private:
     Q_DECLARE_PRIVATE(MOrientationTracker)
 
     friend class MDeviceProfile;
+    friend class MApplicationPrivate;
+    friend class MWindow;
 };
 
 //! \internal_end

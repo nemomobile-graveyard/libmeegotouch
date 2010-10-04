@@ -182,6 +182,7 @@ bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy po
 
     if (standAloneWindow == 0) {
         standAloneWindow = new MWindow(new MSceneManager);
+        standAloneWindow->setProperty("followsCurrentApplicationWindowOrientation", 1);
         standAloneWindow->setTranslucentBackground(true);
         if(!q->model()->title().isEmpty())
             standAloneWindow->setWindowTitle(q->model()->title());

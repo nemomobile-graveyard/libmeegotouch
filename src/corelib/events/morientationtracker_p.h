@@ -27,7 +27,16 @@
 #include <QObject>
 #include <mnamespace.h>
 
+
+/* Must be last, as it conflicts with some of the Qt defined types */
+#ifdef Q_WS_X11
+#include <QX11Info>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#endif //Q_WS_X11
+
 class MOrientationTracker;
+class MWindow;
 
 class MOrientationTrackerPrivate : public QObject
 {
@@ -43,6 +52,17 @@ public:
     ContextProperty topEdgeProperty;
     ContextProperty isCoveredProperty;
 #endif
+#ifdef Q_WS_X11
+    bool handleX11PropertyEvent(XPropertyEvent* event);
+    void handleCurrentAppWindowOrientationAngleChange();
+    void handleCurrentAppWindowChange();
+    WId fetchWIdCurrentAppWindow();
+    M::OrientationAngle fetchCurrentAppWindowOrientationAngle();
+    WId widCurrentAppWindow;
+    QList<MWindow* > windowsFollowingCurrentAppWindow;
+    void startFollowingCurrentAppWindow(MWindow* win);
+    void stopFollowingCurrentAppWindow(MWindow* win);
+#endif
 
 public slots:
     void isCoveredChanged();
@@ -55,6 +75,8 @@ private slots:
     void updateOrientationAngle();
 
 private:
+    Atom orientationAngleAtom;
+    Atom currentAppWindowAtom;
     Q_DECLARE_PUBLIC(MOrientationTracker)
 };
 
