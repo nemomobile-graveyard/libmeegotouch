@@ -25,6 +25,7 @@
 #include "mondisplaychangeevent.h"
 #include "mlayout.h"
 #include "mlinearlayoutpolicy.h"
+#include "mapplication.h"
 
 /*   ## Removing Stubs ##
 #include "mpannableviewport_stub.h"
@@ -245,4 +246,10 @@ void Ut_MWidget::dummySlot()
     m_dummySlotCalled = true;
 }
 
-QTEST_MAIN(Ut_MWidget);
+
+int main(int argc, char *argv[])
+{
+    MApplication app(argc, argv, "ut_mwidget");
+    Ut_MWidget tc;
+    return QTest::qExec(&tc, argc, argv);
+}
