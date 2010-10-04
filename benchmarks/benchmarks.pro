@@ -1,5 +1,7 @@
 TEMPLATE    = subdirs
 
+  include(../mkspecs/common.pri)
+
 SUBDIRS     = \
  mt_mbutton \
  mt_mbuttongroup \
@@ -11,7 +13,6 @@ SUBDIRS     = \
  \
  pt_mapplication \
  pt_mbutton \
- pt_mcalendar \
  pt_mcomponentcache \
  pt_mcomponentdata \
  pt_mcomponentdata2 \
@@ -30,3 +31,7 @@ SUBDIRS     = \
  pt_mtoolbar \
  pt_widgetsgallery \
 
+contains(DEFINES, HAVE_ICU) {
+SUBDIRS += \
+ pt_mcalendar
+}
