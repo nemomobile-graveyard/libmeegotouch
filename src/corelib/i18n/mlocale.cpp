@@ -2495,9 +2495,9 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
 }
 #endif
 
-#ifdef HAVE_ICU
 QString MLocale::languageEndonym() const
 {
+#ifdef HAVE_ICU
     UErrorCode status = U_ZERO_ERROR;
     QString localeName = this->name();
 
@@ -2566,12 +2566,15 @@ QString MLocale::languageEndonym() const
         }
     }
     // never reached
-}
+#else
+    Q_D(const MLocale);
+    return QLocale::languageToString(d->createQLocale(MLcMessages).language());
 #endif
+}
 
-#ifdef HAVE_ICU
 QString MLocale::countryEndonym() const
 {
+#ifdef HAVE_ICU
     Q_D(const MLocale);
     UErrorCode status = U_ZERO_ERROR;
 
@@ -2602,8 +2605,11 @@ QString MLocale::countryEndonym() const
     ures_close(res);
 
     return convertedValue;
-}
+#else
+    Q_D(const MLocale);
+    return QLocale::countryToString(d->createQLocale(MLcMessages).country());
 #endif
+}
 
 #ifdef HAVE_ICU
 QStringList MLocale::localeScripts() const
