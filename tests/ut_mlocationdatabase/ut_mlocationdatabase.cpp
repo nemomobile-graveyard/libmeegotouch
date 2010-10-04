@@ -381,13 +381,20 @@ void Ut_MLocationDatabase::testCities()
              << "expected longitude" << longitude;
     QVERIFY(qAbs(foundCity.longitude() - longitude) < 0.01);
     QCOMPARE(foundCity.timeZone(), timeZone);
+#ifdef HAVE_ICU
     QCOMPARE(foundCity.timeZoneRawOffset(), timeZoneRawOffset);
     QCOMPARE(foundCity.timeZoneDstOffset(dateTime), timeZoneDstOffset);
     QCOMPARE(foundCity.timeZoneTotalOffset(dateTime), timeZoneTotalOffset);
+#else
+    Q_UNUSED(timeZoneRawOffset);
+    Q_UNUSED(timeZoneDstOffset);
+    Q_UNUSED(timeZoneTotalOffset);
+#endif
 }
 
 void Ut_MLocationDatabase::testCitiesDumpInfo()
 {
+#ifdef HAVE_ICU
     // This test dumps lots of information from the database to detect
     // changes and serves as a simple benchmark whether all the
     // information can be gathered in reasonable time.
@@ -528,6 +535,7 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
     }
 #if QT_VERSION >= 0x040700
     qDebug() << __PRETTY_FUNCTION__ << "took" << timer.restart() << "milliseconds";
+#endif
 #endif
 }
 
