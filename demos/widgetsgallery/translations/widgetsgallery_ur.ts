@@ -67,47 +67,82 @@ Seekbar is a special type of Slider used for displaying playback status for mult
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_multiple_selection_dialogs_page_question_dialog">
-        <location filename="../querydialogspage.cpp" line="227"/>
+        <location filename="../querydialogspage.cpp" line="265"/>
         <source>Question Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_title">
-        <location filename="../querydialogspage.cpp" line="130"/>
+        <location filename="../querydialogspage.cpp" line="168"/>
         <source>Question Dialog Title</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="xx_dialogs_and_notifications_are_you_sure_upcase">
+        <location filename="../querydialogspage.cpp" line="144"/>
+        <source>ARE YOU SURE?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_dialogs_and_notifications_big_lorem_impsum">
+        <location filename="../querydialogspage.cpp" line="148"/>
+        <source>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus laoreet ornare elit ac tincidunt. Ut lectus enim, vestibulum congue aliquet vitae, sagittis nec enim.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_dialogs_and_notifications_short_lorem_impsum">
+        <location filename="../querydialogspage.cpp" line="151"/>
+        <source>Lorem ipsum dolor sit amet.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_dialogs_and_notifications_question_dialog_content">
-        <location filename="../querydialogspage.cpp" line="134"/>
+        <location filename="../querydialogspage.cpp" line="172"/>
         <source>Lorem ipsum dolor sit amet?</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_query_dialog_title">
-        <location filename="../querydialogspage.cpp" line="221"/>
+        <location filename="../querydialogspage.cpp" line="259"/>
         <source>Query Dialogs</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_query_dialogs_page_entry_dialog">
-        <location filename="../querydialogspage.cpp" line="229"/>
+        <location filename="../querydialogspage.cpp" line="267"/>
         <source>Entry Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_query_dialogs_page_long_dialog">
-        <location filename="../querydialogspage.cpp" line="231"/>
+        <location filename="../querydialogspage.cpp" line="269"/>
         <source>Long Dialog</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="xx_wg_query_dialogs_small_query_dialog_without_icon">
+        <location filename="../querydialogspage.cpp" line="271"/>
+        <source>Small Query Dialog without Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_query_dialogs_small_query_dialog_with_icon">
+        <location filename="../querydialogspage.cpp" line="273"/>
+        <source>Small Query Dialog with Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_query_dialogs_big_query_dialog_without_icon">
+        <location filename="../querydialogspage.cpp" line="275"/>
+        <source>Big Query Dialog without Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_query_dialogs_big_query_dialog_with_icon">
+        <location filename="../querydialogspage.cpp" line="277"/>
+        <source>Big Query Dialog with Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_label">
-        <location filename="../querydialogspage.cpp" line="147"/>
+        <location filename="../querydialogspage.cpp" line="185"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_title">
-        <location filename="../querydialogspage.cpp" line="157"/>
+        <location filename="../querydialogspage.cpp" line="195"/>
         <source>Please enter your name</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog_title">
-        <location filename="../querydialogspage.cpp" line="173"/>
+        <location filename="../querydialogspage.cpp" line="211"/>
         <source>Select printer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -221,12 +256,12 @@ Muwhahaha... [evil laugh]</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_listpage_list_remove">
-        <location filename="../mlistpage.cpp" line="661"/>
+        <location filename="../mlistpage.cpp" line="350"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_listpage_list_edit">
-        <location filename="../mlistpage.cpp" line="667"/>
+        <location filename="../mlistpage.cpp" line="355"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
