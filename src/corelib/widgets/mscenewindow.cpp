@@ -289,7 +289,12 @@ void MSceneWindow::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGestu
 {
     Q_D(MSceneWindow);
 
-    if (gesture->state() == Qt::GestureFinished) {
+    if (gesture->state() == Qt::GestureStarted) {
+        // We will send cancel event on our own, unregistering this gesture from mscene.
+        MScene *mScene = qobject_cast<MScene *>(scene());
+        if (mScene)
+            mScene->d_func()->notifyGestureCaughtByPanel(gesture->gestureType());
+    } else if (gesture->state() == Qt::GestureFinished) {
 
         QGraphicsSceneContextMenuEvent contextEvent(QEvent::GraphicsSceneContextMenu);
         contextEvent.setPos(gesture->position());
