@@ -106,6 +106,7 @@ void Ut_MPhysics2DPanning::init()
     physics->d_ptr->borderSpringK = 0.09;
     physics->d_ptr->borderFrictionC = 0.6;
     physics->d_ptr->panDirection = Qt::Vertical | Qt::Horizontal;
+    physics->d_ptr->maxVel = 70.0;
 
     Ut_MPhysics2DPanning::animationActions.clear();
     Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Stopped;
