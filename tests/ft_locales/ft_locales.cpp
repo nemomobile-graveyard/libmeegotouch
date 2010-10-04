@@ -945,7 +945,7 @@ void Ft_Locales::checkAvailableLocales()
         supportedLocaleNames << "zh_CN@collation=pinyin";
         supportedLocaleNames << "zh_CN@collation=stroke";
     }
-    // sort the list for easier comparision in the output
+    // sort the list for easier comparison in the output
     // (i.e. es_419 should be near es, not at the end of the list):
     qSort(supportedLocaleNames.begin(), supportedLocaleNames.end());
     MCalendar::setSystemTimeZone("GMT+0");
