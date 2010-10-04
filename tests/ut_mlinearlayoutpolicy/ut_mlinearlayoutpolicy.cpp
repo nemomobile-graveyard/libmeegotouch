@@ -106,7 +106,6 @@ void Ut_MLinearLayoutPolicy::init()
 
     m_mockLayout->setAnimation(0); // turn off animation
 }
-
 void Ut_MLinearLayoutPolicy::cleanup()
 {
     Q_ASSERT(0 != m_mockItem100);
@@ -209,8 +208,8 @@ void Ut_MLinearLayoutPolicy::testStretch_data()
 void Ut_MLinearLayoutPolicy::testStretch()
 {
     QFETCH(bool, useQt);
-    QGraphicsLinearLayout *qt_layout;
-    QGraphicsWidget *form;
+    QGraphicsLinearLayout *qt_layout(NULL);
+    QGraphicsWidget *form(NULL);
     if (useQt) {
         form = new QGraphicsWidget;
         form->setMinimumSize(600, 600);

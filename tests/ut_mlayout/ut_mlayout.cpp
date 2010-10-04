@@ -2835,7 +2835,7 @@ void Ut_MLayout::testChildItems()
     QGraphicsWidget *widget3 = new QGraphicsWidget;
     innerLayout->addItem(widget3);
 
-    QGraphicsWidget *innerLayoutForm;
+    QGraphicsWidget *innerLayoutForm(NULL);
     if (innerLayoutInWidget) {
         innerLayoutForm = new QGraphicsWidget;
         innerLayoutForm->setLayout(innerLayout);
