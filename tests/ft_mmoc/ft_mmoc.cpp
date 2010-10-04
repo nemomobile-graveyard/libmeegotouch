@@ -77,7 +77,7 @@ void Ft_MMoc::doMMoc_data()
     QTest::addColumn<QString>("fileName");
 
     // test all .h files in samples subdir.
-    QStringList files( QDir( "/usr/lib/libmeegotouch-tests/ft_mmoc-samples" ).
+    QStringList files( QDir(QApplication::applicationDirPath() + "/ft_mmoc-samples" ).
                        entryList( QStringList("*.h") ) );
     foreach ( QString file, files )
     {
@@ -99,7 +99,7 @@ void Ft_MMoc::doMMoc()
   QFETCH( QString, mocPath );
   QFETCH( QString, fileName );
 
-  QString path = "/usr/lib/libmeegotouch-tests/ft_mmoc-samples/";
+  QString path = QApplication::applicationDirPath() + "/ft_mmoc-samples/";
 
   qWarning( "testing: moc: %s file: %s",
             qPrintable( mocPath ),
