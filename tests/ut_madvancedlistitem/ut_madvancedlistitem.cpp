@@ -98,7 +98,6 @@ void Ut_MAdvancedListItem::testProgressIndicator()
 
 void Ut_MAdvancedListItem::testItemStyle()
 {
-    QSKIP("Wait for issue in bug #187235  to be resolved", SkipSingle);
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons );
     m_subject->setItemStyle(MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon);
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon );
