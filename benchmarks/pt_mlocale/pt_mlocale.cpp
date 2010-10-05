@@ -51,7 +51,51 @@ void Pt_MLocale::cleanup()
 {
 }
 
-void Pt_MLocale::benchmarkCountryEndonym()
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkSingleLanguageEndonym()
+{
+    QString language("de_CH");   // only this should matter
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("ar_SA");     // should not matter
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+
+    QString result("Schweizer Hochdeutsch");
+    QCOMPARE(locale.languageEndonym(), result);
+
+    QBENCHMARK {
+        locale.languageEndonym();
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkAllLanguageEndonym()
+{
+    QList<QString> localeNames;
+    int numberOfAvailableLocales = uloc_countAvailable();
+    for (int i = 0; i < numberOfAvailableLocales; ++i)
+        localeNames << QString::fromUtf8(uloc_getAvailable(i));
+
+    QBENCHMARK {
+        foreach (QString localeName, localeNames) {
+            MLocale locale(localeName);
+#if 0
+            QTextStream debugStream(stdout);
+            debugStream.setCodec("UTF-8");
+            debugStream << locale.name() << " " << locale.languageEndonym() << "\n";
+#endif
+            locale.languageEndonym();
+        }
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkSingleCountryEndonym()
 {
     QString language("de_CH");   // only this should matter
     QString lcMessages("en_US"); // should not matter
@@ -69,5 +113,28 @@ void Pt_MLocale::benchmarkCountryEndonym()
         locale.countryEndonym();
     }
 }
+#endif
+
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkAllCountryEndonym()
+{
+    QList<QString> localeNames;
+    int numberOfAvailableLocales = uloc_countAvailable();
+    for (int i = 0; i < numberOfAvailableLocales; ++i)
+        localeNames << QString::fromUtf8(uloc_getAvailable(i));
+
+    QBENCHMARK {
+        foreach (QString localeName, localeNames) {
+            MLocale locale(localeName);
+#if 0
+            QTextStream debugStream(stdout);
+            debugStream.setCodec("UTF-8");
+            debugStream << locale.name() << " " << locale.countryEndonym() << "\n";
+#endif
+            locale.countryEndonym();
+        }
+    }
+}
+#endif
 
 QTEST_APPLESS_MAIN(Pt_MLocale);
