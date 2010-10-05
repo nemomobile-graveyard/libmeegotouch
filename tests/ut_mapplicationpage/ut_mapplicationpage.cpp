@@ -193,22 +193,36 @@ void Ut_MApplicationPage::testPageTitleChanged()
 
 void Ut_MApplicationPage::testRememberPosition()
 {
+    m_subject->view();
+    m_subject->adjustSize();
+
+    m_subject->pannableViewport()->setAutoRange(false);
+    m_subject->pannableViewport()->setRange(QRectF(0,0,1000,1000));
+
     m_subject->setRememberPosition(true);
-    appWin->sceneManager()->appearSceneWindowNow(m_subject);
-    m_subject->d_func()->pannableViewport->adjustSize();
+
     m_subject->d_func()->pannableViewport->setPosition(QPointF(0, 10));
+    emit m_subject->sceneWindowStateChanged(MSceneWindow::Disappeared, MSceneWindow::Appeared);
+    emit m_subject->sceneWindowStateChanged(MSceneWindow::Appeared, MSceneWindow::Disappeared);
+
     QCOMPARE(m_subject->d_func()->pannableViewport->position() + QPointF(10, 10), QPointF(10, 20));
-    QCOMPARE(m_subject->d_func()->pannableViewport->physics()->position() + QPointF(10, 10),  QPointF(10, 20));
 }
 
 void Ut_MApplicationPage::testForgetPosition()
 {
+    m_subject->view();
+    m_subject->adjustSize();
+
+    m_subject->pannableViewport()->setAutoRange(false);
+    m_subject->pannableViewport()->setRange(QRectF(0,0,1000,1000));
+
     m_subject->setRememberPosition(false);
-    m_subject->d_func()->pannableViewport->adjustSize();
+
     m_subject->d_func()->pannableViewport->setPosition(QPointF(0, 10));
-    appWin->sceneManager()->appearSceneWindowNow(m_subject);
+    emit m_subject->sceneWindowStateChanged(MSceneWindow::Disappeared, MSceneWindow::Appeared);
+    emit m_subject->sceneWindowStateChanged(MSceneWindow::Appeared, MSceneWindow::Disappeared);
+
     QCOMPARE(m_subject->d_func()->pannableViewport->position() + QPointF(10, 10), QPointF(10, 10));
-    QCOMPARE(m_subject->d_func()->pannableViewport->physics()->position() + QPointF(10, 10),  QPointF(10, 10));
 }
 
 void Ut_MApplicationPage::testActionUpdated()
