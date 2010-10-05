@@ -1,4 +1,4 @@
-﻿en{
+en{
     Languages{
         aa{"Afar"}
         ab{"Abkhazian"}

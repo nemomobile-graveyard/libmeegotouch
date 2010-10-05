@@ -1,4 +1,4 @@
-﻿fr{
+fr{
     Keys{
         calendar{"Calendrier"}
         collation{"Ordonnancement"}

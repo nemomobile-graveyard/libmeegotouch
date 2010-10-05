@@ -1,4 +1,4 @@
-﻿ms_BN{
+ms_BN{
     calendar{
         gregorian{
             DateTimePatterns{

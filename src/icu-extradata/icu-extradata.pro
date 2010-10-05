@@ -6,23 +6,22 @@ ICUDATA = $$system(icu-config --icudata)      # for example “icudt44l”
 ICUUSRDATA = $$replace(ICUDATA, icudt, usrdt) # for example “usrdt44l”
 
 greaterThan(ICUVERSION, 4.4) {
+    # the contents of the compiled resource files can be dumped
+    # with commands like:
+    # derb -c -i /usr/share/meegotouch/icu/usrdt44l/ lang/en_GB.res
     LOCALESTXT = $${ICUVERSION}/cs.txt \
                  $${ICUVERSION}/en_SG.txt \
                  $${ICUVERSION}/fi.txt \
                  $${ICUVERSION}/id.txt \
                  $${ICUVERSION}/it.txt \
                  $${ICUVERSION}/ms_BN.txt
-    LANGTXT    = $${ICUVERSION}/lang/de_CH.txt \
-                 $${ICUVERSION}/lang/en.txt \
+    LANGTXT    = $${ICUVERSION}/lang/en.txt \
                  $${ICUVERSION}/lang/es.txt \
                  $${ICUVERSION}/lang/fr.txt \
                  $${ICUVERSION}/lang/id.txt \
                  $${ICUVERSION}/lang/ms.txt \
-                 $${ICUVERSION}/lang/nl_BE.txt \
                  $${ICUVERSION}/lang/pt.txt \
-                 $${ICUVERSION}/lang/pt_PT.txt \
-                 $${ICUVERSION}/lang/ru_UA.txt \
-                 $${ICUVERSION}/lang/zh_Hant_HK.txt
+                 $${ICUVERSION}/lang/pt_PT.txt
     REGIONTXT  = 
 } else {
     # old icu version, just do nothing
