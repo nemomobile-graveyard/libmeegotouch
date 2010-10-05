@@ -322,9 +322,7 @@ void MCompleterPrivate::resetFocus()
     // set the focus back to text widget if really lose focus
     if (q->widget()->scene()->focusItem() != q->widget()) {
         q->widget()->scene()->setFocusItem(q->widget());
-        MSceneManager *targetSceneManager = MApplication::activeWindow()->sceneManager();
-        if (targetSceneManager)
-            targetSceneManager->requestSoftwareInputPanel(q->widget());
+        MInputMethodState::requestSoftwareInputPanel();
     }
 }
 
