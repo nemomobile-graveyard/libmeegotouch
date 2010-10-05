@@ -53,7 +53,7 @@ void Ut_MImageDirectory::initTestCase()
     static char *app_name[1] = { (char *) "./ut_mimagedirectory" };
     static int argc = 0;
     app = new MApplication(argc, app_name);
-    m_subject = new MThemeImagesDirectory( "/usr/lib/libmeegotouch-tests/ut_mimagedirectory-dir" );
+    m_subject = new MThemeImagesDirectory(QApplication::applicationDirPath() + "/ut_mimagedirectory-samples");
     QVERIFY(m_subject != 0);
 }
 

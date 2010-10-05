@@ -12,8 +12,8 @@ HEADERS += \
     ut_mimagedirectory.h \
     $${M_SOURCE_TREE}/src/corelib/theme/mimagedirectory.h
 
-locale_files.files += locale
-locale_files.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests/ut_mimagedirectory-dir
+locale_files.files += ut_mimagedirectory-samples/*
+locale_files.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests/ut_mimagedirectory-samples
 INSTALLS += locale_files
 
 include(../common_bot.pri)
