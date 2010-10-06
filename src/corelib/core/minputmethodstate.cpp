@@ -20,6 +20,9 @@
 #include "minputmethodstate.h"
 #include "minputmethodstate_p.h"
 
+#include "qapplication.h"
+#include "qinputcontext.h"
+
 #include <QTimer>
 #include <QKeyEvent>
 
@@ -91,6 +94,31 @@ M::OrientationAngle MInputMethodState::activeWindowOrientationAngle() const
     Q_D(const MInputMethodState);
 
     return d->orientation;
+}
+
+void MInputMethodState::requestSoftwareInputPanel()
+{
+    QInputContext *inputContext = qApp->inputContext();
+
+    if (!inputContext) {
+        return;
+    }
+
+    QEvent request(QEvent::RequestSoftwareInputPanel);
+    inputContext->filterEvent(&request);
+}
+
+void MInputMethodState::closeSoftwareInputPanel()
+{
+    QInputContext *inputContext = qApp->inputContext();
+
+    if (!inputContext) {
+        return;
+    }
+
+    QEvent close(QEvent::CloseSoftwareInputPanel);
+    inputContext->filterEvent(&close);
+    inputContext->reset();
 }
 
 void MInputMethodState::emitKeyPress(const QKeyEvent &event)

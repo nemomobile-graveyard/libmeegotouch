@@ -542,6 +542,7 @@ protected:
     virtual void inputMethodEvent(QInputMethodEvent *);
     virtual void changeEvent(QEvent *event);
     virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     /*! \reimp_end */
 
 private:

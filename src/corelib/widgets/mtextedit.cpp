@@ -297,6 +297,7 @@ namespace
  */
 MTextEditPrivate::MTextEditPrivate()
     : pendingSoftwareInputPanelRequest(false),
+      focusEventState(NoFocusEventReceivedYet),
       validator(0),
       ownValidator(false),
       completer(0),
@@ -880,16 +881,31 @@ bool MTextEditPrivate::isPreediting() const
 
 void MTextEditPrivate::requestSip()
 {
-    if (!isValidSipRequest()) {
-        qWarning() << "MTextEditPrivate::requestSip(): "
-                   << "Invalid SIP request - no scene manager found, or not focused!";
+    QInputContext *inputContext = qApp->inputContext();
+    QGraphicsView *focusedGraphicsView = dynamic_cast<QGraphicsView *>(QApplication::focusWidget());
+
+    if (!inputContext || !focusedGraphicsView) {
         return;
     }
 
+    // FIXME: this is a temporary workaround because of the
+    // QGraphicsView unable to correctly update the attribute.
+    // We're waiting for fixing this on Qt side.
+    focusedGraphicsView->setAttribute(Qt::WA_InputMethodEnabled, true);
+
+    // Enforce update if focus is moved from one MTextEdit to other.
+    // If WA_InputMethodEnabled is not set then Qt will call
+    // setFocusWidget automatically
+    inputContext->setFocusWidget(focusedGraphicsView);
+
+    MInputMethodState::requestSoftwareInputPanel();
+    pendingSoftwareInputPanelRequest = false;
+
     Q_Q(MTextEdit);
 
-    q->sceneManager()->requestSoftwareInputPanel(q);
-    pendingSoftwareInputPanelRequest = false;
+    if (q->sceneManager()) {
+        q->sceneManager()->ensureCursorVisible();
+    }
 }
 
 void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
@@ -911,12 +927,8 @@ void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
 
 void MTextEditPrivate::closeSip()
 {
-    if (!isValidSipRequest()) {
-        return;
-    }
-
-    Q_Q(MTextEdit);
-    q->sceneManager()->closeSoftwareInputPanel();
+    MInputMethodState::closeSoftwareInputPanel();
+    pendingSoftwareInputPanelRequest = false;
 }
 
 void MTextEditPrivate::closeAutoSip()
@@ -928,13 +940,6 @@ void MTextEditPrivate::closeAutoSip()
     }
 
     closeSip();
-}
-
-bool MTextEditPrivate::isValidSipRequest()
-{
-    Q_Q(MTextEdit);
-
-    return (q->sceneManager() && q->hasFocus());
 }
 
 /*!
@@ -1297,7 +1302,10 @@ MTextEdit::~MTextEdit()
 {
     Q_D(MTextEdit);
 
-    d->closeAutoSip();
+    if (d->focusEventState == MTextEditPrivate::FocusInEventReceived) {
+        d->closeAutoSip();
+    }
+
     detachToolbar();
 
     // TODO: This cannot be right - MTextEdit does not own the model, so we cannot just delete stuff from the model (another text edit could be using them).
@@ -1637,6 +1645,8 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
 
+    d->focusEventState = MTextEditPrivate::FocusInEventReceived;
+
     d->editActive = false;
 
     if (sceneManager()) {
@@ -1673,6 +1683,8 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
 
+    d->focusEventState = MTextEditPrivate::FocusOutEventReceived;
+
     // Need to tell the MArrowKeyNavigator that the next key event it sees
     // would come from a different focus item. Otherwise, it could think
     // of the key event as an auto-repeat
@@ -1693,10 +1705,10 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     if (sceneManager()) {
         disconnect(this, SIGNAL(cursorPositionChanged()),
                    sceneManager(), SLOT(ensureCursorVisible()));
-
-        sceneManager()->closeSoftwareInputPanel();
-        d->pendingSoftwareInputPanelRequest = false;
     }
+
+    MInputMethodState::closeSoftwareInputPanel();
+    d->pendingSoftwareInputPanelRequest = false;
 }
 
 bool MTextEdit::insert(const QString &text)
@@ -2348,14 +2360,51 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
         // Only check whether this text edit *has* a completer, not whether the completer is
         // visible. Otherwise, it would cause further window relocations once the completer hides
         // (shows) again.
-        if (d->completer) {
-            return QVariant(MWidgetController::inputMethodQuery(query).toRectF().unite(d->completer->boundingRect()));
+        {
+            QRect rect = MWidgetController::inputMethodQuery(query).toRect();
+            if (d->completer) {
+                // sum up the cursor rectangle and the completer rectangle.
+                QRect completerRect = d->completer->boundingRect().toRect();
+                completerRect.translate(rect.left(), rect.bottom());
+                QRegion region(rect);
+                region += completerRect;
+                rect = region.boundingRect();
+            }
+            return rect;
         }
+
         // No break - intended fall-through to default case:
 
     default:
         return MWidgetController::inputMethodQuery(query);
     }
+}
+
+QVariant MTextEdit::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    Q_D(MTextEdit);
+
+    switch (change) {
+
+    case QGraphicsItem::ItemVisibleHasChanged:
+        // Workaround for NB#186087 -  QGraphicsItem never gets focusOutEvent on hide:
+        if (!value.toBool() &&
+            d->focusEventState == MTextEditPrivate::FocusInEventReceived) {
+
+            // Hidden (but focused) MTextEdit (please don't ask what it means
+            // to hide a controller) does not need a VKB:
+            d->closeAutoSip();
+
+            // Need to notify the view, too:
+            emit lostFocus(Qt::OtherFocusReason);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    return MWidgetController::itemChange(change, value);
 }
 
 

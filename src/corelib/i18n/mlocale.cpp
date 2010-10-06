@@ -1170,12 +1170,12 @@ MLocale::createSystemMLocale()
     MGConfItem lcMonetaryItem(SettingsLcMonetary);
     MGConfItem lcTelephoneItem(SettingsLcTelephone);
 
-    QString language = languageItem.value().toString();
-    QString lcTime = lcTimeItem.value().toString();
-    QString lcTimeFormat24h = lcTimeFormat24hItem.value().toString();
-    QString lcCollate = lcCollateItem.value().toString();
-    QString lcNumeric = lcNumericItem.value().toString();
-    QString lcMonetary = lcMonetaryItem.value().toString();
+    QString language = languageItem.value("en_GB").toString();
+    QString lcTime = lcTimeItem.value("en_GB").toString();
+    QString lcTimeFormat24h = lcTimeFormat24hItem.value("12").toString();
+    QString lcCollate = lcCollateItem.value("en_GB").toString();
+    QString lcNumeric = lcNumericItem.value("en_GB").toString();
+    QString lcMonetary = lcMonetaryItem.value("en_GB").toString();
     QString lcTelephone = lcTelephoneItem.value().toString();
 
     MLocale *systemLocale;
@@ -2576,35 +2576,76 @@ QString MLocale::countryEndonym() const
 {
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    UErrorCode status = U_ZERO_ERROR;
+    QString localeName = d->_defaultLocale;
+    QString countryCode = country();
+    if (countryCode.isEmpty())
+        return QString();
 
-    // TODO: implement a workaround for
-    // http://site.icu-project.org/design/resbund/issues
-    UResourceBundle *res = ures_open(U_ICUDATA_NAME "-region", qPrintable(d->_defaultLocale), &status);
+    while (1) {
+        // Trying several resource bundles is a workaround for
+        // http://site.icu-project.org/design/resbund/issues
+        UErrorCode status = U_ZERO_ERROR;
+        UResourceBundle *res = ures_open(U_ICUDATA_NAME "-region",
+                                         qPrintable(localeName),
+                                         &status);
+        if (U_FAILURE(status)) {
+            mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+            ures_close(res);
+            return countryCode;
+        }
+        res = ures_getByKey(res, Countries, res, &status);
+        if (U_FAILURE(status)) {
+            mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
+            ures_close(res);
+            return countryCode;
+        }
+        int len;
+        const UChar *val = ures_getStringByKey(res,
+                                               countryCode.toStdString().c_str(),
+                                               &len,
+                                               &status);
+        ures_close(res);
+        if (U_SUCCESS(status)) {
+            // found country endonym, return it:
+            return QString::fromUtf16(val, len);
+        }
+        // according to http://userguide.icu-project.org/locale the separators
+        // that specify the parts of a locale are "_", "@", and ";", e.g.
+        // in sr_Latn_RS_REVISED@currency=USD;calendar=islamic-civil
+        // so we remove them from the end of the locale string.
 
-    if (U_FAILURE(status)) {
-        mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+        int semicolonIndex = localeName.lastIndexOf(';');
+        if (semicolonIndex != -1)
+        {
+            // found semicolon, remove it and remaining part of string
+            localeName.truncate(semicolonIndex);
+        }
+        else
+        {
+            int atIndex = localeName.lastIndexOf('@');
+            if (atIndex != -1)
+            {
+                // found "@", remove it and remaining part of string
+                localeName.truncate(atIndex);
+            }
+            else
+            {
+                int underscoreIndex = localeName.lastIndexOf('_');
+                if (underscoreIndex != -1)
+                {
+                    // found "_", remove it and remaining part of string
+                    localeName.truncate(underscoreIndex);
+                }
+                else
+                {
+                    // no country endonym found and there is no way to shorten the localeName
+                    // return the country code as a fallback
+                    return countryCode;
+                }
+            }
+        }
     }
-
-    res = ures_getByKey(res, Countries, res, &status);
-    if (U_FAILURE(status)) {
-        mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
-    }
-
-    QString c = country();
-
-    int len;
-    const UChar *val = ures_getStringByKey(res, c.toStdString().c_str(), &len, &status);
-
-    QString convertedValue = c;
-
-    if (U_SUCCESS(status)) {
-        convertedValue = QString::fromUtf16(val, len);
-    }
-
-    ures_close(res);
-
-    return convertedValue;
+    // never reached
 #else
     Q_D(const MLocale);
     return QLocale::countryToString(d->createQLocale(MLcMessages).country());
@@ -2820,12 +2861,12 @@ void MLocale::refreshSettings()
     Q_D(MLocale);
 
     bool settingsHaveReallyChanged = false;
-    QString localeName = d->currentLanguageItem.value().toString();
-    QString lcTime = d->currentLcTimeItem.value().toString();
-    QString lcTimeFormat24h = d->currentLcTimeFormat24hItem.value().toString();
-    QString lcCollate = d->currentLcCollateItem.value().toString();
-    QString lcNumeric = d->currentLcNumericItem.value().toString();
-    QString lcMonetary = d->currentLcMonetaryItem.value().toString();
+    QString localeName = d->currentLanguageItem.value("en_GB").toString();
+    QString lcTime = d->currentLcTimeItem.value("en_GB").toString();
+    QString lcTimeFormat24h = d->currentLcTimeFormat24hItem.value("12").toString();
+    QString lcCollate = d->currentLcCollateItem.value("en_GB").toString();
+    QString lcNumeric = d->currentLcNumericItem.value("en_GB").toString();
+    QString lcMonetary = d->currentLcMonetaryItem.value("en_GB").toString();
     QString lcTelephone = d->currentLcTelephoneItem.value().toString();
 
     if (localeName != d->_defaultLocale) {

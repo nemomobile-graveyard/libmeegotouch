@@ -331,7 +331,14 @@ QSizeF MCompleterView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
     Q_UNUSED(which);
     Q_UNUSED(constraint);
     Q_D(const MCompleterView);
-    return d->overLaypreferredSize;
+
+    // return the actual height of mcompleter to avoid twice relocation.
+    if (!d->overLaypreferredSize.isEmpty())
+        return d->overLaypreferredSize;
+    else {
+        int height = (style()->height() > 0) ? style()->height() : DefaultCompleterHeight;
+        return QSize(MApplication::activeWindow()->visibleSceneSize().width(), height);
+    }
 }
 
 void MCompleterView::mousePressEvent(QGraphicsSceneMouseEvent *event)

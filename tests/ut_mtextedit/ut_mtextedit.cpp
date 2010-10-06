@@ -48,6 +48,7 @@
 #include <mnavigationbar.h>
 #include <mhomebuttonpanel.h>
 #include <mapplicationpage.h>
+#include <mdialog.h>
 
 #include "mtextedit_p.h"
 #include "utils.h"
@@ -521,6 +522,40 @@ void Ut_MTextEdit::testFocusOutEvent()
     QCOMPARE(spyLostFocus.count(), 1);
 }
 
+void Ut_MTextEdit::testSubFocusHandling()
+{
+    MWindow w;
+
+    MTextEdit *subject = new MTextEdit;
+    subject->setFocus();
+
+    MDialog *dlg = new MDialog;
+    QSignalSpy spy(dlg, SIGNAL(appeared()));
+
+    dlg->setCentralWidget(subject);
+    QVERIFY(!subject->hasFocus());
+
+    w.show();
+    QTest::qWaitForWindowShown(&w);
+    dlg->appear(&w);
+
+    // Wait for appearance animation to finish, but no longer than approx. 5secs:
+    int waitCount = 0;
+    while (spy.count() < 1) {
+        ++ waitCount;
+
+        if (waitCount > 10) {
+            qCritical() << __PRETTY_FUNCTION__
+                     << "MDialog didn't appear, test failed.";
+            break;
+        }
+
+        QTest::qWait(500);
+    }
+
+    QCOMPARE(w.scene()->focusItem(), subject);
+    QVERIFY(subject->hasFocus());
+}
 
 /*!
  * Test moving to pre-editing mode.
@@ -2133,11 +2168,8 @@ void Ut_MTextEdit::testSelectAll()
 
 void Ut_MTextEdit::testAutoSipEnabled()
 {
-    MTextEdit *subject = new MTextEdit;
-    setupSipEnv(subject);
-
     AutoActivatedScene sc;
-    subject->setParentItem(sc.window()->box());
+    MTextEdit *subject = createFromSipHandling(&sc, /* isSipRequested = */ false);
 
     subject->clearFocus();
     QVERIFY(!m_sic->isVisible());
@@ -2152,11 +2184,8 @@ void Ut_MTextEdit::testAutoSipEnabled()
 
 void Ut_MTextEdit::testAutoSipDisabled()
 {
-    MTextEdit *subject = new MTextEdit;
-    setupSipEnv(subject);
-
     AutoActivatedScene sc;
-    subject->setParentItem(sc.window()->box());
+    MTextEdit *subject = createFromSipHandling(&sc, /* isSipRequested = */ false);
 
     subject->clearFocus();
     QVERIFY(!m_sic->isVisible());
@@ -2171,14 +2200,8 @@ void Ut_MTextEdit::testAutoSipDisabled()
 
 void Ut_MTextEdit::testCloseSipOnDestruction()
 {
-    MTextEdit *subject = new MTextEdit;
-    setupSipEnv(subject);
-
     AutoActivatedScene sc;
-    subject->setParentItem(sc.window()->box());
-
-    requestSip(subject, Qt::MouseFocusReason);
-    QVERIFY(m_sic->isVisible());
+    MTextEdit *subject = createFromSipHandling(&sc);
 
     const bool hasAutoSip = subject->isAutoSipEnabled();
     delete subject;
@@ -2194,23 +2217,33 @@ void Ut_MTextEdit::testCloseSipOnDestruction()
 
 void Ut_MTextEdit::testIgnoreSipIfNotFocused()
 {
-    MTextEdit *subject = new MTextEdit;
-    setupSipEnv(subject);
-
     AutoActivatedScene sc;
-    subject->setParentItem(sc.window()->box());
-
-    requestSip(subject, Qt::MouseFocusReason);
-    QVERIFY(m_sic->isVisible());
+    createFromSipHandling(&sc);
 
     // Now create another text edit, and destroy it:
-    MTextEdit *edit = new MTextEdit();
+    MTextEdit *edit = new MTextEdit;
     edit->setParentItem(sc.window()->box());
     QVERIFY(edit->isAutoSipEnabled());
     QVERIFY(!edit->hasFocus());
 
     delete edit;
     QVERIFY(m_sic->isVisible());
+}
+
+void Ut_MTextEdit::testCloseSipOnHide()
+{
+    AutoActivatedScene sc;
+    MTextEdit *subject = createFromSipHandling(&sc);
+
+    subject->hide();
+
+    if (subject->isAutoSipEnabled()) {
+        QVERIFY(!m_sic->isVisible());
+    } else {
+        qWarning() << __PRETTY_FUNCTION__
+                   << "MTextEdit does not use autoSip functionality - cannot complete test.";
+        QVERIFY(m_sic->isVisible());
+    }
 }
 
 void Ut_MTextEdit::testInsertMultiLineText_data()
@@ -2513,6 +2546,31 @@ void Ut_MTextEdit::requestSip(MTextEdit *edit, Qt::FocusReason fr)
         QGraphicsSceneMouseEvent mouseRelease(QEvent::GraphicsSceneMouseRelease);
         edit->mouseReleaseEvent(&mouseRelease);
     }
+}
+
+MTextEdit *Ut_MTextEdit::createFromSipHandling(AutoActivatedScene *scene, bool isSipRequested)
+{
+    if (!scene) {
+        qCritical() << __PRETTY_FUNCTION__
+                    << "Cannot create text edit without scene.";
+        return 0;
+    }
+
+    MTextEdit *edit = new MTextEdit;
+    setupSipEnv(edit);
+
+    edit->setParentItem(scene->window()->box());
+
+    if (isSipRequested) {
+        requestSip(edit, Qt::MouseFocusReason);
+
+        if (!m_sic->isVisible()) {
+            qCritical() << __PRETTY_FUNCTION__
+                        << "SIP not visible.";
+        }
+    }
+
+    return edit;
 }
 
 void Ut_MTextEdit::testSetters()

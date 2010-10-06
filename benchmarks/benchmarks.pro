@@ -25,6 +25,7 @@ SUBDIRS     = \
  pt_mprogressindicator \
  pt_qapplication \
  pt_mlabel \
+ pt_mlocale \
  pt_mslider \
  pt_mstylesheet \
  pt_mtheme \

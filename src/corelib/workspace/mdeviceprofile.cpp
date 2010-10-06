@@ -67,7 +67,7 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
     if (targetname.isEmpty()) {
         #ifdef HAVE_GCONF
         MGConfItem targetNameItem("/meegotouch/target/name");
-        targetname = targetNameItem.value().toString();
+        targetname = targetNameItem.value("Default").toString();
         #else
         targetname = "Default";
         #endif //HAVE_GCONF

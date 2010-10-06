@@ -23,7 +23,7 @@ greaterThan(ICUVERSION, 4.4) {
                  $${ICUVERSION}/lang/pt_PT.txt \
                  $${ICUVERSION}/lang/ru_UA.txt \
                  $${ICUVERSION}/lang/zh_Hant_HK.txt
-    REGIONTXT  = $${ICUVERSION}/region/de_CH.txt
+    REGIONTXT  = 
 } else {
     # old icu version, just do nothing
     LOCALESTXT = # empty, do nothing

@@ -1,8 +1,24 @@
-libmeegotouch (0.20.46~1) unstable; urgency=low
+libmeegotouch (0.20.47~1) unstable; urgency=low
 
   * Unreleased
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Sun, 03 Oct 2010 11:21:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 05 Oct 2010 15:27:00 +0300
+
+libmeegotouch (0.20.46-1) unstable; urgency=low
+
+  * Fixes: NB#196090 -  MButton - tap&hold is not working as expected
+  * Fixes: NB#190673 Regular expressions can be used to filter content of list
+  * Fixes: Ut_MImageDirectory unit tests paths were hardcoded to installation paths.
+  * Fixes: MMoc functional test, to look for the test files in executable path.
+  * Fixes: NB193217 -  In certain scenario call history is opening with view menu on top of it
+  * Fixes: Tool bar positioning when application is started on portrait and not rotated before the tool bar is populated.
+  * Fixes: NB#186250 -  List item object menu gets displayed when list is long tapped while it is scrolling
+  * Fixes: NB#187657 - display _exited_ signal when it is _shown_
+  * Fixes: NB#190745 - Extra displayEntered and displayExited signals during window minimization and maximization
+  * Fixes: MWidget unit test fatal error.
+  * Fixes: Fixes ut_physics2d unit test after introducing maximum velocity for pannable viewport style property.
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 05 Oct 2010 15:22:32 +0300
 
 libmeegotouch (0.20.45-1) unstable; urgency=low
 

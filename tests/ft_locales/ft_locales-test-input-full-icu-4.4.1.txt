@@ -11276,7 +11276,7 @@ es_BO	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d
 es_BO	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d 'de' MMMM 'de' y hh:mm:ss a zzzz -> lunes 18 de Rajab de 1429 02:31:00 p.m. GMT+00:00
 es_BO	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d 'de' MMMM 'de' y HH:mm:ss zzzz -> lunes 18 de Rajab de 1429 14:31:00 GMT+00:00
 es_CL	Language endonym	español
-es_CL	Country endonym	CL
+es_CL	Country endonym	Chile
 es_CL	Floating Point Number	-123.456.789,012
 es_CL	Percent value	-1.234,5679%
 es_CL	Currency value	€1.234,56
@@ -15035,7 +15035,7 @@ fa	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MM
 fa	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d MMMM y GGGG، ساعت h:mm:ss ( a zzzz) -> دوشنبه ۱۸ رجب ۱۴۲۹ هجری قمری، ساعت ۲:۳۱:۰۰ ( بعد از ظهر GMT+۰۰:۰۰)
 fa	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM y GGGG، ساعت H:mm:ss (zzzz) -> دوشنبه ۱۸ رجب ۱۴۲۹ هجری قمری، ساعت ۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)
 fa_AF	Language endonym	دری
-fa_AF	Country endonym	AF
+fa_AF	Country endonym	افغانستان
 fa_AF	Floating Point Number	‪−۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‬
 fa_AF	Percent value	−‪۱٬۲۳۴٫۵۶۷۹٪‬
 fa_AF	Currency value	۱٬۲۳۴٫۵۶ €
@@ -20942,7 +20942,7 @@ nl	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MM
 nl	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE d MMMM y hh:mm:ss a zzzz -> maandag 18 Rajab 1429 02:31:00 PM GMT+00:00
 nl	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE d MMMM y HH:mm:ss zzzz -> maandag 18 Rajab 1429 14:31:00 GMT+00:00
 nl_BE	Language endonym	Vlaams
-nl_BE	Country endonym	BE
+nl_BE	Country endonym	België
 nl_BE	Floating Point Number	-123.456.789,012
 nl_BE	Percent value	-1.234,5679%
 nl_BE	Currency value	1.234,56 €
@@ -22732,7 +22732,7 @@ pt_BR	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, 
 pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> segunda-feira, 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
 pt_PT	Language endonym	português
-pt_PT	Country endonym	PT
+pt_PT	Country endonym	Portugal
 pt_PT	Floating Point Number	-123 456 789,012
 pt_PT	Percent value	-1 234,5679%
 pt_PT	Currency value	1 234,56 €
@@ -24522,7 +24522,7 @@ sv	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 
 sv	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y 'kl'. hh:mm:ss a zzzz -> måndagen den 18:e Rajab 1429 kl. 02:31:00 em GMT+00:00
 sv	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y 'kl'. HH:mm:ss zzzz -> måndagen den 18:e Rajab 1429 kl. 14:31:00 GMT+00:00
 sv_FI	Language endonym	svenska
-sv_FI	Country endonym	FI
+sv_FI	Country endonym	Finland
 sv_FI	Floating Point Number	−123 456 789,012
 sv_FI	Percent value	−1 234,5679 %
 sv_FI	Currency value	1 234,56 €

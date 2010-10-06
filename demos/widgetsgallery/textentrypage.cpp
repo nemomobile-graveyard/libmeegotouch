@@ -154,8 +154,8 @@ CustomDirectIMWidget::~CustomDirectIMWidget()
 void CustomDirectIMWidget::focusInEvent(QFocusEvent *event)
 {
     Q_UNUSED(event);
-    if (sceneManager())
-        sceneManager()->requestSoftwareInputPanel(this);
+
+    MInputMethodState::requestSoftwareInputPanel();
     //% "Press any key"
     this->setText(qtTrId("xx_textentry_press_any_key"));
 }
@@ -163,8 +163,8 @@ void CustomDirectIMWidget::focusInEvent(QFocusEvent *event)
 void CustomDirectIMWidget::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event);
-    if (sceneManager())
-        sceneManager()->closeSoftwareInputPanel();
+
+    MInputMethodState::closeSoftwareInputPanel();
     //% "Click here"
     this->setText(qtTrId("xx_textentry_click_here"));
 }

@@ -29,6 +29,7 @@
 #include <memory>
 
 class SimpleInputContext;
+class AutoActivatedScene;
 
 Q_DECLARE_METATYPE(MTextEdit *);
 
@@ -56,6 +57,7 @@ private:
     void constraintTest(MTextEdit *subject, const QString &input, const QString &expectedOutput);
     void setupSipEnv(MTextEdit *edit);
     void requestSip(MTextEdit *edit, Qt::FocusReason fr);
+    MTextEdit *createFromSipHandling(AutoActivatedScene *scene, bool isSipRequested = true);
 
     MApplication *m_app;
     MApplicationWindow* m_appWindow;
@@ -81,6 +83,7 @@ private slots:
     void testSingleLineKeyPressEvent();
     void testFocusInEvent();
     void testFocusOutEvent();
+    void testSubFocusHandling();
     void testInputMethodEvent();
     void testSetCursorPosition();
     void testSetTextCursor();
@@ -135,6 +138,7 @@ private slots:
     void testAutoSipDisabled();
     void testCloseSipOnDestruction();
     void testIgnoreSipIfNotFocused();
+    void testCloseSipOnHide();
 
     void testInsertMultiLineText_data();
     void testInsertMultiLineText();

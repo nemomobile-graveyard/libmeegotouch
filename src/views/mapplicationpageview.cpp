@@ -215,7 +215,6 @@ void MApplicationPageView::applyStyle()
 
     MSceneWindowView::applyStyle();
     d->updateAutoMarginsForComponents();
-    d->resetPannableViewportPositionIfNeeded();
     d->updateTitleLabel();
 }
 
