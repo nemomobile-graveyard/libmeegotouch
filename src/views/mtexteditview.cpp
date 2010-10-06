@@ -456,6 +456,12 @@ const QPointF &MTextEditView::mouseTarget() const
     return d->mouseTarget;
 }
 
+int MTextEditView::cursorPosition(const QPointF &hitPoint)
+{
+    Q_D(MTextEditView);
+    return d->cursorPosition(hitPoint);
+}
+
 void MTextEditViewPrivate::hideUnmaskedText()
 {
     if (unmaskPosition >= 0 && maskedTextDocument) {

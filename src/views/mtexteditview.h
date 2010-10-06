@@ -80,6 +80,13 @@ protected:
     //! If false, only cursor moves without selecting any text.
     void updateCursorPosition(QGraphicsSceneMouseEvent *event, bool updateSelection);
 
+    /*!
+     * \brief Returns cursor position from a mouse position
+     * \param hitPoint mouse position
+     * \return cursor position as characters from start of document
+     */
+    int cursorPosition(const QPointF &hitPoint);
+
 protected Q_SLOTS:
     /*!
      * \brief Set view focused
