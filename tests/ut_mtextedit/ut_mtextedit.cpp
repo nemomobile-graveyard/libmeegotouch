@@ -2483,6 +2483,12 @@ void Ut_MTextEdit::testArrowKeyNavigation_data()
 
 void Ut_MTextEdit::testArrowKeyNavigation()
 {
+    QSKIP("Auto-repeat detection for arrow key navigation is currently too "
+          "unreliable for this test, as it is based on timers. Trying to wait "
+          "a bit to avoid auto-repeat detection is not good enough. Blocking "
+          "on better MTextEdit implementation.",
+          SkipAll);
+
     QFETCH(QString, subjectText);
     QFETCH(int, subjectCursorPosition);
     QFETCH(QPoint, subjectPosition);
