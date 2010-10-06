@@ -571,10 +571,11 @@ void MPannableWidget::cancelEvent(MCancelEvent *event)
 
     if (d->panGestureCausedCancelEvent) {
         d->panGestureCausedCancelEvent = false;  
-    } else {
-        sendCancel();
-        d->resetPhysics();
+        return;
     }
+
+    sendCancel();
+    d->resetPhysics();
 
     //We will still receive mouse release, but
     //we aren't interested in it.
