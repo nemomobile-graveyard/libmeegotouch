@@ -5,7 +5,6 @@ SUBDIRS = \
     mapplettester \
     mapplicationextensiontester \
     mnotificationtool \
-    m-servicefwgen.d \
     mcssvalidator
 
 macx:SUBDIRS -= mnotificationtool
