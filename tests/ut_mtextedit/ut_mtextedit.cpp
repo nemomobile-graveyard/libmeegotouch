@@ -175,8 +175,13 @@ public:
         , m_page(new MApplicationPage)
     {
         setVisible(true);
-        m_page->appear(this);
+        QTest::qWaitForWindowShown(this);
+        QVERIFY(testAttribute(Qt::WA_Mapped));
+
+        QSignalSpy spy(m_page, SIGNAL(appeared()));
         m_page->setCentralWidget(new QGraphicsWidget);
+        m_page->appear(this);
+        Ut_Utils::waitForSignal(spy);
     }
 
     QGraphicsWidget* box()
@@ -201,7 +206,6 @@ public:
         event(&activate);
 
         setFocus(Qt::OtherFocusReason);
-        QTest::qWaitForWindowShown(&m);
     }
 
     void adjustTextEdit(MTextEdit *edit, const QPoint &pos)
@@ -539,19 +543,7 @@ void Ut_MTextEdit::testSubFocusHandling()
     QTest::qWaitForWindowShown(&w);
     dlg->appear(&w);
 
-    // Wait for appearance animation to finish, but no longer than approx. 5secs:
-    int waitCount = 0;
-    while (spy.count() < 1) {
-        ++ waitCount;
-
-        if (waitCount > 10) {
-            qCritical() << __PRETTY_FUNCTION__
-                     << "MDialog didn't appear, test failed.";
-            break;
-        }
-
-        QTest::qWait(500);
-    }
+    Ut_Utils::waitForSignal(spy);
 
     QCOMPARE(w.scene()->focusItem(), subject);
     QVERIFY(subject->hasFocus());
@@ -2497,6 +2489,13 @@ void Ut_MTextEdit::testArrowKeyNavigation()
 
     // Not using m_subject => clash of ownership ...
     MTextEdit *subject = new MTextEdit;
+    MTextEdit *target = (expectedTarget == -1) ? 0
+                                               : targets.at(expectedTarget).edit;
+
+    // Heap-allocated because of http://bugreports.qt.nokia.com/browse/QTBUG-14283
+    QSignalSpy *subjectSpy = new QSignalSpy(subject, SIGNAL(gainedFocus(Qt::FocusReason)));
+    QSignalSpy *targetSpy = target ? new QSignalSpy(target, SIGNAL(gainedFocus(Qt::FocusReason)))
+                                   : 0;
 
     AutoActivatedScene sc;
     sc.adjustTextEdit(subject, subjectPosition);
@@ -2524,11 +2523,16 @@ void Ut_MTextEdit::testArrowKeyNavigation()
         }
     }
 
-    if (-1 == expectedTarget) {
+    if (!target) {
+        Ut_Utils::waitForSignal(*subjectSpy);
         QVERIFY(subject->hasFocus());
     } else {
-        QVERIFY(targets.at(expectedTarget).edit->hasFocus());
+        Ut_Utils::waitForSignal(*targetSpy);
+        QVERIFY(target->hasFocus());
     }
+
+    delete subjectSpy;
+    delete targetSpy;
 }
 
 void Ut_MTextEdit::setupSipEnv(MTextEdit *edit)
@@ -2539,7 +2543,9 @@ void Ut_MTextEdit::setupSipEnv(MTextEdit *edit)
 
 void Ut_MTextEdit::requestSip(MTextEdit *edit, Qt::FocusReason fr)
 {
+    QSignalSpy spy(edit, SIGNAL(gainedFocus(Qt::FocusReason)));
     edit->setFocus(fr);
+    Ut_Utils::waitForSignal(spy);
 
     // Makes test fragile, as this behaviour (SIP request on mouse release) can easily change:
     if (fr == Qt::MouseFocusReason) {
