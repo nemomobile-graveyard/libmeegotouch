@@ -33,6 +33,7 @@
 #include "mthemedaemonclient.h"
 #include "mimagedirectory.h"
 #include "mthemedaemonprotocol.h"
+#include "mpixmaphandle.h"
 
 using namespace M::MThemeDaemonProtocol;
 
@@ -98,7 +99,7 @@ void MThemeDaemon::removeClient(MThemeDaemonClient *client)
 }
 
 
-bool MThemeDaemon::pixmap(MThemeDaemonClient *client, const PixmapIdentifier &id, Qt::HANDLE &handle)
+bool MThemeDaemon::pixmap(MThemeDaemonClient *client, const PixmapIdentifier &id, MPixmapHandle *handle)
 {
     // has the client already requested this pixmap?
     if (client->pixmaps.contains(id)) {
@@ -114,7 +115,7 @@ bool MThemeDaemon::pixmap(MThemeDaemonClient *client, const PixmapIdentifier &id
         if (!resource) {
             mWarning("MThemeDaemon") << "    The requested pixmap" << id.imageId << "was not found for client" << client->name();
             client->pixmaps.insert(id, NULL);
-            handle = 0;
+            *handle = MPixmapHandle();
             return true;
         } else if (type == RemoteDaemon) {
             mostUsedPixmaps.increaseRequestCount(id, resource);
@@ -125,7 +126,7 @@ bool MThemeDaemon::pixmap(MThemeDaemonClient *client, const PixmapIdentifier &id
     client->pixmaps.insert(id, resource);
 
     // we have found the correct image resource.
-    handle = resource->fetchPixmap(id.size);
+    *handle = resource->fetchPixmap(id.size);
     return true;
 }
 
@@ -245,7 +246,7 @@ const QSettings *themeFile(const QString &theme)
 }
 
 
-bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QList<QPixmap*>& pixmapsToDelete, bool forceReload)
+bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QList<PixmapCacheEntry*>& pixmapsToDelete, bool forceReload)
 {
     if (!forceReload && newTheme == currentThemeName) {
         // TODO: check need for warning
@@ -355,9 +356,9 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
             client->pixmapsToReload.append(id);
             client->pixmaps.erase(i);
             if(resource != NULL) {
-                QPixmap* pixmap = resource->releaseWithoutDelete(id.size);
-                if(pixmap != NULL) {
-                    pixmapsToDelete.append(pixmap);
+                PixmapCacheEntry *cacheEntry = resource->releaseWithoutDelete(id.size);
+                if(cacheEntry != NULL) {
+                    pixmapsToDelete.append(cacheEntry);
                 }
             }
         }

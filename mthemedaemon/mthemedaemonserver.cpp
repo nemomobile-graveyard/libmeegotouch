@@ -393,8 +393,8 @@ void MThemeDaemonServer::processOneQueueItem()
                 loadPixmapsQueue.erase(iter);
             }
 
-            Qt::HANDLE handle = 0;
-            if (daemon.pixmap(item.client, item.pixmapId, handle)) {
+            MPixmapHandle handle;
+            if (daemon.pixmap(item.client, item.pixmapId, &handle)) {
                 if (slowDown > 0)
                     usleep(slowDown);
                 item.client->stream() << Packet(Packet::PixmapUpdatedPacket, item.sequenceNumber,
@@ -456,8 +456,8 @@ void MThemeDaemonServer::pixmapUsed(MThemeDaemonClient *client,
     // release request, otherwise we increase the reference count
     const QueueItem item (client, id, sequenceNumber);
     if (!releasePixmapsQueue.removeOne(item)) {
-        Qt::HANDLE handle;
-        daemon.pixmap(item.client, item.pixmapId, handle);
+        MPixmapHandle handle;
+        daemon.pixmap(item.client, item.pixmapId, &handle);
     }
 }
 
@@ -475,7 +475,7 @@ void MThemeDaemonServer::pixmapRequested(MThemeDaemonClient *client,
         // in case the resource is NULL, the pixmap is not loaded (it's not found from the current theme)
         if (!resource) {
             client->stream() << Packet(Packet::PixmapUpdatedPacket, sequenceNumber,
-                                       new PixmapHandle(id, 0));
+                                       new PixmapHandle(id, MPixmapHandle()));
         } else {
 #ifndef Q_WS_MAC
             client->stream() << Packet(Packet::PixmapUpdatedPacket, sequenceNumber,

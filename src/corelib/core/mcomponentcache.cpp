@@ -27,6 +27,7 @@
 #include "mapplicationservice.h"
 #include "mapplicationwindow.h"
 #include "mcomponentdata.h"
+#include "mgraphicssystemhelper.h"
 
 #include "mthemedaemon.h"
 
@@ -89,7 +90,9 @@ void MComponentCachePrivate::populateForMApplication()
         qFatal("MComponentCache::populateForMApplication() - Cache is already populated.");
     }
 
-    glWidgetOfmApplicationWindowInstance = createNewGlWidget();
+    if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+        glWidgetOfmApplicationWindowInstance = createNewGlWidget();
+    }
 
     mApplicationWindowInstance = new MApplicationWindow();
 

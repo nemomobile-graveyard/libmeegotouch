@@ -20,6 +20,8 @@
 #ifndef MIMAGEDIRECTORY_H
 #define MIMAGEDIRECTORY_H
 
+#include "mpixmaphandle.h"
+
 #include <QString>
 #include <QSharedPointer>
 #include <QSvgRenderer>
@@ -29,21 +31,37 @@
 #include <QImage>
 #include <QColor>
 #include <mnamespace.h>
+#include <QDebug>
+
+#include <sys/mman.h>
 
 class QPixmap;
 class QFileInfo;
 
+
+typedef QPixmap RenderSurface;
 uint qHash(const QSize &size);
 
 //! \internal
 struct PixmapCacheEntry {
-    PixmapCacheEntry() : pixmap(NULL), refCount(0) {}
+    PixmapCacheEntry() :
+        pixmap(NULL),
+        refCount(0) {}
+
     ~PixmapCacheEntry() {
         if (refCount != 0) {
             qCritical("Freeing PixmapCacheEntry with a non-zero reference count. This very likely leads to a crash.");
         }
+        if (!handle.shmHandle.isEmpty()) {
+            shm_unlink(qPrintable(handle.shmHandle));
+        }
+        if (pixmap) {
+            delete pixmap;
+        }
     }
+
     QPixmap *pixmap;
+    MPixmapHandle handle;
     unsigned int refCount;
 };
 
@@ -56,14 +74,14 @@ public:
     virtual ~ImageResource() {}
 
     // creates a cache entry if there's no such yet, otherwise just increase the refCount
-    Qt::HANDLE fetchPixmap(const QSize &size);
+    MPixmapHandle fetchPixmap(const QSize &size);
     // decreases refCount and releases the pixmap if refCount dropped to zero
     void releasePixmap(const QSize &size);
 
-    QPixmap* releaseWithoutDelete(const QSize &size);
+    PixmapCacheEntry* releaseWithoutDelete(const QSize &size);
 
     // returns a handle to pixmap, without increasing the refCount
-    Qt::HANDLE pixmapHandle(const QSize &size);
+    MPixmapHandle pixmapHandle(const QSize &size);
 
     bool save(QIODevice* device, const QSize& size) const;
     bool load(QIODevice* device, const QSize& size);
@@ -72,17 +90,20 @@ public:
     { return filePath; }
 
 protected:
-    virtual QPixmap *createPixmap(const QSize &size) = 0;
+    virtual QImage createPixmap(const QSize &size) = 0;
+    // must not return an empty string
     virtual QString uniqueKey() = 0;
+    virtual bool shouldBeCached();
 
 private:
-    QPixmap *loadFromFsCache(const QSize& size);
-    void saveToFsCache(const QPixmap* pixmap, const QSize& size);
+    void pixmapFromImage(PixmapCacheEntry *cacheEntry ,const QImage image);
+    QImage loadFromFsCache(const QSize& size);
+    void saveToFsCache(const QImage pixmap, const QSize& size);
     QString createCacheFilename(const QSize& size);
 
     QString filePath;
     // pixmaps created from this image resource
-    QHash<QSize, PixmapCacheEntry> cachedPixmaps;
+    QHash<QSize, PixmapCacheEntry*> cachedPixmaps;
 };
 
 class IconImageResource : public ImageResource
@@ -94,7 +115,7 @@ public:
     }
 
 protected:
-    virtual QPixmap *createPixmap(const QSize &size);
+    virtual QImage createPixmap(const QSize &size);
     virtual QString uniqueKey();
 };
 
@@ -107,8 +128,9 @@ public:
     }
 
 protected:
-    virtual QPixmap *createPixmap(const QSize &size);
+    virtual QImage createPixmap(const QSize &size);
     virtual QString uniqueKey();
+    virtual bool shouldBeCached();
 };
 
 class SvgImageResource : public ImageResource
@@ -120,7 +142,7 @@ public:
     virtual ~SvgImageResource() {}
 
 protected:
-    virtual QPixmap *createPixmap(const QSize &size);
+    virtual QImage createPixmap(const QSize &size);
     virtual QString uniqueKey();
 private:
     QString imageId;

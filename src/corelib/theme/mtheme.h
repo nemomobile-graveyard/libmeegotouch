@@ -399,8 +399,8 @@ private:
     Q_DECLARE_PRIVATE(MTheme)
 
 #ifndef UNIT_TEST
-    Q_PRIVATE_SLOT(d_func(), void themeChangedSlot(const QStringList &, const QStringList &))
-    Q_PRIVATE_SLOT(d_func(), void pixmapCreatedOrChangedSlot(const QString &, const QSize &, Qt::HANDLE))
+    Q_PRIVATE_SLOT(d_func(), void themeChangedSlot(QStringList,QStringList))
+    Q_PRIVATE_SLOT(d_func(), void pixmapCreatedOrChangedSlot(QString,QSize,MPixmapHandle))
     Q_PRIVATE_SLOT(d_func(), void localeChangedSlot())
 #endif
 

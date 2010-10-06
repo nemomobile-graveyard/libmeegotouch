@@ -24,6 +24,7 @@
 #include <QSize>
 #include <QColor>
 #include "mnamespace.h"
+#include "mpixmaphandle.h"
 
 class IMThemeDaemon : public QObject
 {
@@ -55,7 +56,7 @@ public:
     virtual bool hasPendingRequests() const = 0;
 
 signals:
-    void pixmapCreatedOrChanged(const QString &imageId, const QSize &size, Qt::HANDLE newHandle);
+    void pixmapCreatedOrChanged(const QString &imageId, const QSize &size, const MPixmapHandle& newHandle);
 
     // emitted when theme has been changed
     void themeChanged(const QStringList &themeInheritance, const QStringList& libraryNames);

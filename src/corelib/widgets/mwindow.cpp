@@ -39,6 +39,7 @@
 #include "mdebug.h"
 #include "mgconfitem.h"
 #include "mlocale.h"
+#include "mgraphicssystemhelper.h"
 
 #include <QPropertyAnimation>
 #include <QSettings>
@@ -68,7 +69,6 @@ namespace {
 /// Actual class
 
 MWindowPrivate::MWindowPrivate() :
-    glWidget(0),
     glContext(0),
     sceneManager(0),
     oldOrientation(M::Landscape), // the initial value is not used at all
@@ -193,11 +193,11 @@ void MWindowPrivate::initSoftwareViewport()
 #ifdef M_USE_OPENGL
     MGLES2Renderer::activate((QGLContext*)NULL);
     MGLES2Renderer::destroy(glContext);
-    glWidget = NULL;
     glContext = NULL;
 #endif
 
-    q->setViewport(new QWidget());
+    MGraphicsSystemHelper::switchToSoftwareRendering(q);
+
     q->setViewportUpdateMode(MWindow::MinimalViewportUpdate);
 
     configureViewport();
@@ -212,41 +212,23 @@ void MWindowPrivate::initGLViewport()
 
     bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);
 
-    // The sequence of calls here is important. When translucency is not
-    // enabled, ensure setViewport() is called before DuiGLES2Renderer
-    // initializes its vertices, otherwise call setViewport() after
-    // DuiGLES2Renderer initializes itself. Failure to do this will cause
-    // a crash.
-    // This QGLWidget is owned by the viewport so previous one
-    // actually gets deleted if we overwrite it with a new one
-    if (translucent) {
-        QGLFormat fmt;
-        // disable multisampling, is enabled by default in Qt
-        fmt.setSampleBuffers(false);
-        fmt.setSamples(0);
-        fmt.setAlpha(true); // Workaround for NB#153625
+    MGraphicsSystemHelper::switchToHardwareRendering(q, &glContext);
 
-        glWidget = MComponentCache::glWidget(fmt);
+    if (translucent) {
         QPalette palette;
         palette.setColor(QPalette::Base, Qt::transparent);
-        glWidget->setAutoFillBackground(true);
-        glWidget->setPalette(palette);
-    } else {
-        glWidget = MComponentCache::glWidget();
-        q->setViewport(glWidget);
+        palette.setColor(QPalette::Window, Qt::transparent);
+        q->setAutoFillBackground(true);
+        q->setPalette(palette);
+        q->viewport()->setAutoFillBackground(true);
+        q->viewport()->setPalette(palette);
     }
-    // we need the const_cast as otherwise the MGLES2Renderer cannot call
-    // QGLContext::bindTexture(). as QGLWidget::bindTexture() just redirects
-    // the call to the QGLContext the cast is safe
-    glContext = const_cast<QGLContext*>(glWidget->context());
 
 #ifdef M_USE_OPENGL
     MGLES2Renderer::instance(glContext);
     MGLES2Renderer::activate(glContext);
 #endif
-    if (translucent)
-        q->setViewport(glWidget);
-#endif
+#endif // QT_OPENGL_LIB
 
     q->setViewportUpdateMode(MWindow::FullViewportUpdate);
 
@@ -523,16 +505,17 @@ void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
         return;
 
     if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
-        q->setUpdatesEnabled(false);
         initSoftwareViewport();
-        // no timer here. otherwise updates are not properly enabled again
-        q->setUpdatesEnabled(true);
         MComponentCache::cleanupCache();
     } else if (event->oldState().testFlag(Qt::WindowMinimized)
                && !q->windowState().testFlag(Qt::WindowMinimized)) {
-        q->setUpdatesEnabled(false);
+        if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+            q->setUpdatesEnabled(false);
+        }
         initGLViewport();
-        QTimer::singleShot(700, q, SLOT(_q_enablePaintUpdates()));
+        if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+            QTimer::singleShot(700, q, SLOT(_q_enablePaintUpdates()));
+        }
     }
 #endif
 }
@@ -671,9 +654,10 @@ void MWindow::setTranslucentBackground(bool enable)
     }
 
     // when the gl widget is not initialized yet we will also not initialize it
-    if (MApplication::softwareRendering() || MApplication::isPrestarted() || d->glWidget == 0)
+    if (MApplication::softwareRendering() || MApplication::isPrestarted() ||
+        (MGraphicsSystemHelper::isRunningNativeGraphicssystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
         d->initSoftwareViewport();
-    else {
+    } else {
         d->initGLViewport();
     }
 
@@ -1045,7 +1029,6 @@ void MWindow::paintEvent(QPaintEvent *event)
 {
     Q_D(MWindow);
 #ifdef M_USE_OPENGL
-
     if (!MApplication::softwareRendering()) {
         MGLES2Renderer::activate(d->glContext);
     }
@@ -1265,8 +1248,14 @@ void MWindow::setVisible(bool visible)
                     this, SLOT(_q_onPixmapRequestsFinished()));
             return;
         } else {
-            if (!windowState().testFlag(Qt::WindowMinimized) && !MApplication::softwareRendering() && d->glWidget == 0) {
-                d->initGLViewport();
+            if (!windowState().testFlag(Qt::WindowMinimized) && !MApplication::softwareRendering()) {
+                if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+                    if (!dynamic_cast<QGLWidget*>(viewport())) {
+                        d->initGLViewport();
+                    }
+                } else {
+                    d->initGLViewport();
+                }
             }
             d->isLogicallyClosed = false;
         }

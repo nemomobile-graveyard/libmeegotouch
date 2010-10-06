@@ -8,12 +8,18 @@ TARGET =  ut_mcomponentcache
 DEPENDPATH += .
 
 QT+=opengl
+contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
+    QT += meegographicssystemhelper
+}
 
 TEST_HEADERS = \
              $$MSRCDIR/corelib/core/mcomponentcache.h \
              $$MSRCDIR/corelib/core/mcomponentdata.h \
+             $$MSRCDIR/corelib/core/mgraphicssystemhelper.h \
 
-TEST_SOURCES = $$MSRCDIR/corelib/core/mcomponentcache.cpp
+TEST_SOURCES = \
+             $$MSRCDIR/corelib/core/mcomponentcache.cpp \
+             $$MSRCDIR/corelib/core/mgraphicssystemhelper.cpp \
 	
 INCLUDEPATH += $$MSRCDIR/feedback
 INCLUDEPATH += $$MSRCDIR/corelib/core

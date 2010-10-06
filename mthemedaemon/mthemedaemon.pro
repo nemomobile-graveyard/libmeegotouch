@@ -13,6 +13,10 @@ DEPENDPATH += .
 
 QT += svg network
 
+contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
+    QT += meegographicssystemhelper
+}
+
 DEFINES += MTHEME_PRINT_DEBUG
 #DEFINES += CLOSE_ON_ENTER
 
@@ -34,8 +38,10 @@ SOURCES += main.cpp \
            ../src/corelib/theme/mcommonpixmaps.cpp \
            ../src/corelib/theme/mimagedirectory.cpp \
            ../src/corelib/theme/mthemedaemonclient.cpp \
+           ../src/corelib/theme/mpixmaphandle.cpp \
            ../src/corelib/theme/mthemedaemonprotocol.cpp \
            ../src/corelib/core/mcpumonitor.cpp \
+           ../src/corelib/core/mgraphicssystemhelper.cpp \
 
 contains(DEFINES, HAVE_GCONF) {
     PKGCONFIG += gconf-2.0
@@ -49,10 +55,12 @@ HEADERS += \
            ../src/corelib/theme/mthemedaemon.h \
            ../src/corelib/theme/mcommonpixmaps.h \
            ../src/corelib/theme/mimagedirectory.h \
+           ../src/corelib/theme/mpixmaphandle.h \
            ../src/corelib/theme/mthemedaemonclient.h \
            ../src/corelib/theme/mthemedaemonprotocol.h \
            ../src/corelib/core/mgconfitem.h \
            ../src/corelib/core/mcpumonitor.h \
+           ../src/corelib/core/mgraphicssystemhelper.h \
            keypresswaiter.h \
 
 QMAKE_EXTRA_TARGETS += check

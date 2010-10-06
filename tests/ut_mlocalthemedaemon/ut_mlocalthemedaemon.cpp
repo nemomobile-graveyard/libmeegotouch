@@ -21,6 +21,8 @@
 
 #include <MApplication>
 #include "mlocalthemedaemon.h"
+#include "mpixmaphandle.h"
+
 #include <MTheme>
 #include <QtTest>
 #include <QSignalSpy>
@@ -54,11 +56,11 @@ void Ut_MLocalThemeDaemon::cleanupTestCase()
 
 void Ut_MLocalThemeDaemon::testPixmapHandle()
 {
-    qRegisterMetaType<Qt::HANDLE>("Qt::HANDLE");
+    qRegisterMetaType<MPixmapHandle>("MPixmapHandle");
 
     // MLocalThemeDaemon::pixmapHandle() for the local theme daemon is equal
     // to MLocalThemeDaemon::pixmapHandleSync() and hence synchronous.
-    QSignalSpy spy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)));
+    QSignalSpy spy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, MPixmapHandle)));
     m_themeDaemon->pixmapHandle(KnownIconId, QSize());
     QVERIFY(!spy.isEmpty());
 
@@ -67,9 +69,9 @@ void Ut_MLocalThemeDaemon::testPixmapHandle()
 
 void Ut_MLocalThemeDaemon::testPixmapHandleSync()
 {
-    qRegisterMetaType<Qt::HANDLE>("Qt::HANDLE");
+    qRegisterMetaType<MPixmapHandle>("MPixmapHandle");
 
-    QSignalSpy spy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)));
+    QSignalSpy spy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, MPixmapHandle)));
     m_themeDaemon->pixmapHandleSync(KnownIconId, QSize());
     QVERIFY(!spy.isEmpty());
 

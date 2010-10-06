@@ -68,16 +68,16 @@ void Ut_MRemoteThemeDaemon::cleanupTestCase()
 
 void Ut_MRemoteThemeDaemon::testPixmapHandle()
 {
-    qRegisterMetaType<Qt::HANDLE>("Qt::HANDLE");
+    qRegisterMetaType<Qt::HANDLE>("MPixmapHandle");
 
     // The signal pixmapCreatedOrChanged() will be emitted if the request could be fulfilled
     // synchronously, otherwise pixmapCreatedOrChanged() will be emitted.
-    QSignalSpy createdSpy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)));
+    QSignalSpy createdSpy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, MPixmapHandle)));
     m_themeDaemon->pixmapHandle(KnownIconId, QSize());
 
     bool gotPixmap = !createdSpy.isEmpty();
     if (!gotPixmap) {
-        QSignalSpy changedSpy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)));
+        QSignalSpy changedSpy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, MPixmapHandle)));
         while (m_themeDaemon->hasPendingRequests()) {
             usleep(10000);
             QCoreApplication::processEvents();
@@ -92,9 +92,9 @@ void Ut_MRemoteThemeDaemon::testPixmapHandle()
 
 void Ut_MRemoteThemeDaemon::testPixmapHandleSync()
 {
-    qRegisterMetaType<Qt::HANDLE>("Qt::HANDLE");
+    qRegisterMetaType<Qt::HANDLE>("MPixmapHandle");
 
-    QSignalSpy spy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)));
+    QSignalSpy spy(m_themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, MPixmapHandle)));
     m_themeDaemon->pixmapHandleSync(KnownIconId, QSize());
     QVERIFY(!spy.isEmpty());
 

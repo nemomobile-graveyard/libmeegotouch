@@ -25,6 +25,13 @@
 
 using namespace M::MThemeDaemonProtocol;
 
+bool operator==(const MPixmapHandle& h1, const MPixmapHandle& h2)
+{
+    return h1.eglHandle == h2.eglHandle && h1.format == h2.format &&
+            h1.numBytes == h2.numBytes && h1.shmHandle == h2.shmHandle &&
+            h1.size == h2.size && h1.xHandle == h2.xHandle;
+}
+
 bool operator==(const PixmapHandle& h1, const PixmapHandle& h2)
 {
     return h1.identifier == h2.identifier && h1.pixmapHandle == h2.pixmapHandle;
@@ -132,19 +139,28 @@ void Ut_MThemedaemonProtocol::streamPixmapHandle_data()
 {
     QTest::addColumn<QString>("imageId");
     QTest::addColumn<QSize>("size");
-    QTest::addColumn<Qt::HANDLE>("pixmapHandle");
+    QTest::addColumn<MPixmapHandle>("pixmapHandle");
 
-    QTest::newRow("normal") << "testId" << QSize(100, 17) << Qt::HANDLE(0);
-    QTest::newRow("empty id") << QString() << QSize(100, 17) << Qt::HANDLE(15);
-    QTest::newRow("default size") << "testId" << QSize() << Qt::HANDLE(23);
-    QTest::newRow("all default") << QString() << QSize() << Qt::HANDLE(1000000);
+    MPixmapHandle pixmapHandle;
+    QTest::newRow("normal") << "testId" << QSize(100, 17) << pixmapHandle;
+    pixmapHandle.eglHandle = 99999;
+    pixmapHandle.format = QImage::Format_ARGB32_Premultiplied;
+    pixmapHandle.numBytes = 195;
+    pixmapHandle.shmHandle = "abcd";
+    pixmapHandle.size = QSize(7,128);
+    pixmapHandle.xHandle = 2;
+    QTest::newRow("empty id") << QString() << QSize(100, 17) << pixmapHandle;
+    pixmapHandle.format = QImage::Format_ARGB32;
+    QTest::newRow("default size") << "testId" << QSize() << pixmapHandle;
+    pixmapHandle.format = QImage::Format_RGB32;
+    QTest::newRow("all default") << QString() << QSize() << pixmapHandle;
 }
 
 void Ut_MThemedaemonProtocol::streamPixmapHandle()
 {
     QFETCH(QString, imageId);
     QFETCH(QSize, size);
-    QFETCH(Qt::HANDLE, pixmapHandle);
+    QFETCH(MPixmapHandle, pixmapHandle);
 
     PixmapHandle handle(PixmapIdentifier(imageId, size), pixmapHandle);
     PixmapHandle handle2 = streamAndReturn(handle);
@@ -313,7 +329,9 @@ void Ut_MThemedaemonProtocol::streamPixmapUpdatedPacket()
 {
     quint64 sequenceNumber = 123;
 
-    PixmapHandle handle(PixmapIdentifier("abc", QSize(123,456)), 789);
+    MPixmapHandle ph;
+    ph.xHandle = 789;
+    PixmapHandle handle(PixmapIdentifier("abc", QSize(123,456)), ph);
     Packet packet(Packet::PixmapUpdatedPacket, sequenceNumber, new PixmapHandle(handle));
 
     Packet packet2 = streamAndReturn(packet);
@@ -330,8 +348,11 @@ void Ut_MThemedaemonProtocol::streamMostUsedPixmapsPacket_data()
     QTest::addColumn<QList<PixmapIdentifier> >("removedIdentifiers");
 
     QList<PixmapHandle> handles;
-    handles << PixmapHandle(PixmapIdentifier("abc", QSize()), 456)
-            << PixmapHandle(PixmapIdentifier("def", QSize(17,23)), 45);
+    MPixmapHandle ph;
+    ph.xHandle = 23;
+    handles << PixmapHandle(PixmapIdentifier("abc", QSize()), ph);
+    ph.xHandle = 97;
+    handles << PixmapHandle(PixmapIdentifier("def", QSize(17,23)), ph);
     QList<PixmapIdentifier> identifiers;
     identifiers << PixmapIdentifier("abc", QSize())
             << PixmapIdentifier("def", QSize(17,23));
@@ -391,6 +412,7 @@ void Ut_MThemedaemonProtocol::streamThemeDaemonStatusPacket()
 
 Q_DECLARE_METATYPE(QList<PixmapHandle>)
 Q_DECLARE_METATYPE(QList<PixmapIdentifier>)
+Q_DECLARE_METATYPE(MPixmapHandle)
 
 void Ut_MThemedaemonProtocol::verifyStreamIsEmpty()
 {

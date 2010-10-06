@@ -45,8 +45,9 @@ int main(int argc, char **argv)
     signal(SIGINT, sigclose);
     signal(SIGHUP, sighup);
 
-    QApplication::setGraphicsSystem(QLatin1String("native"));
-
+    // make sure we are not loading the maemo6 qt style which
+    // could interfere with us
+    QApplication::setStyle("windows");
     QApplication app(argc, argv);
 
     // Apply custom server address, if the "-address" has been passed as argument

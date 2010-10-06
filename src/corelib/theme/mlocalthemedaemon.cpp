@@ -20,6 +20,7 @@
 #include "mlocalthemedaemon.h"
 #include "mthemedaemonprotocol.h"
 #include "mdebug.h"
+#include "mpixmaphandle.h"
 
 using namespace M::MThemeDaemonProtocol;
 
@@ -55,7 +56,7 @@ MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName) :
     M_localDaemon = this;
 #endif
 
-    QList<QPixmap*> pixmapsToDelete;
+    QList<PixmapCacheEntry*> pixmapsToDelete;
     if ( daemon.activateTheme(theme, language, QList<MThemeDaemonClient *>(), pixmapsToDelete) == false ) {
         mWarning("MThemeDaemon") << "Could not activate the theme:" << theme;
     }
@@ -95,8 +96,8 @@ void MLocalThemeDaemon::clearPixmapSearchList()
 void MLocalThemeDaemon::pixmapHandleSync(const QString &imageId, const QSize &size)
 {
     // request
-    Qt::HANDLE handle;
-    if (daemon.pixmap(client, PixmapIdentifier(imageId, size), handle)) {
+    MPixmapHandle handle;
+    if (daemon.pixmap(client, PixmapIdentifier(imageId, size), &handle)) {
         emit pixmapCreatedOrChanged(imageId, size, handle);
     } else {
         qDebug() << "error";
@@ -141,7 +142,7 @@ void MLocalThemeDaemon::themeChangedSlot()
     QList<MThemeDaemonClient *> list;
     list.append(client);
 
-    QList<QPixmap*> pixmapsToDelete;
+    QList<PixmapCacheEntry*> pixmapsToDelete;
 #ifdef HAVE_GCONF
     if (daemon.activateTheme(themeItem.value().toString(), locale.value().toString(), list, pixmapsToDelete)) {
 #else
@@ -176,8 +177,8 @@ void MLocalThemeDaemon::localeChanged()
     daemon.changeLocale(locale.value().toString(), clients, pixmapsToReload);
 
     foreach(const PixmapIdentifier & id, pixmapsToReload[client]) {
-        Qt::HANDLE handle;
-        if (daemon.pixmap(client, id, handle)) {
+        MPixmapHandle handle;
+        if (daemon.pixmap(client, id, &handle)) {
             emit pixmapCreatedOrChanged(id.imageId, id.size, handle);
         } else {
             qDebug() << "error";

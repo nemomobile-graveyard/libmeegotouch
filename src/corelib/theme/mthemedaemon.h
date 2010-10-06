@@ -46,10 +46,10 @@ public:
     void addClient(MThemeDaemonClient *client);
     void removeClient(MThemeDaemonClient *client);
 
-    bool pixmap(MThemeDaemonClient *client, const M::MThemeDaemonProtocol::PixmapIdentifier &id, Qt::HANDLE &handle);
+    bool pixmap(MThemeDaemonClient *client, const M::MThemeDaemonProtocol::PixmapIdentifier &id, MPixmapHandle *handle);
     bool releasePixmap(MThemeDaemonClient *client, const M::MThemeDaemonProtocol::PixmapIdentifier &id);
 
-    bool activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QList<QPixmap*>& pixmapsToDelete, bool forceReload = false);
+    bool activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QList<PixmapCacheEntry*>& pixmapsToDelete, bool forceReload = false);
 
     void changeLocale(const QString &newLocale, const QList<MThemeDaemonClient *>& clientList, QHash<MThemeDaemonClient *, QList<M::MThemeDaemonProtocol::PixmapIdentifier> >& pixmapsToReload);
 

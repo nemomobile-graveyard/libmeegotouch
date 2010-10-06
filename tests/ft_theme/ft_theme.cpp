@@ -172,8 +172,8 @@ void Ft_Theme::initTestCase()
     connect(testDaemon, SIGNAL(themeChanged(QStringList, QStringList)),
             MTheme::instance(), SLOT(themeChangedSlot(QStringList, QStringList)));
 
-    connect(testDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)),
-            MTheme::instance(), SLOT(pixmapCreatedOrChangedSlot(QString, QSize, Qt::HANDLE)));
+    connect(testDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, MPixmapHandle)),
+            MTheme::instance(), SLOT(pixmapCreatedOrChangedSlot(QString, QSize, MPixmapHandle)));
 }
 
 void Ft_Theme::cleanupTestCase()

@@ -32,6 +32,7 @@ M_LIBRARY
 #include <QFileInfo>
 #include <QSettings>
 #include <QDir>
+#include <QSharedMemory>
 
 #include "private/mwidgetcontroller_p.h"
 
@@ -58,11 +59,15 @@ M_LIBRARY
 #include "mcomponentdata.h"
 #include "mcomponentdata_p.h"
 
+#include "mgraphicssystemhelper.h"
+
 // Must be last as it conflicts with some Qt defined types
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #endif
+
+#include <sys/mman.h>
 
 MTheme *gTheme = 0;
 
@@ -134,8 +139,8 @@ MTheme::MTheme(const QString &applicationName, const QString &, ThemeService the
     connect(d->themeDaemon, SIGNAL(themeChanged(QStringList, QStringList)),
             SLOT(themeChangedSlot(QStringList, QStringList)));
 
-    connect(d->themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)),
-            SLOT(pixmapCreatedOrChangedSlot(QString, QSize, Qt::HANDLE)));
+    connect(d->themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, MPixmapHandle)),
+            SLOT(pixmapCreatedOrChangedSlot(QString, QSize, MPixmapHandle)));
 
     connect(d->themeDaemon, SIGNAL(themeChangeCompleted()), SIGNAL(themeChangeCompleted()));
 
@@ -332,6 +337,9 @@ void MTheme::releasePixmap(const QPixmap *pixmap)
         if (i.value().pixmap == pixmap) {
             if (!i.value().refcount.deref()) {
                 instance()->d_ptr->themeDaemon->releasePixmap(i.value().imageId, i.value().size);
+                if (i->addr) {
+                    munmap(i->addr, i->numBytes);
+                }
                 delete i.value().pixmap;
                 instance()->d_ptr->pixmapIdentifiers.erase(i);
             }
@@ -835,7 +843,7 @@ void MThemePrivate::pixmapRequestFinished()
     }
 }
 
-void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
+void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, const MPixmapHandle& pixmapHandle)
 {
     QString identifier = defaultPixmapCacheId(imageId, size.width(), size.height());
     QHash<QString, CachedPixmap>::iterator iterator = pixmapIdentifiers.find(identifier);
@@ -847,7 +855,7 @@ void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSi
 
     QPixmap *pixmap = (QPixmap *) iterator.value().pixmap;
 
-    if (pixmapHandle == 0) {
+    if (!pixmapHandle.isValid()) {
         mWarning("MThemePrivate") << "pixmapChangedSlot - pixmap reload failed (null handle):" << identifier;
         *pixmap = *invalidPixmap;
 
@@ -855,13 +863,7 @@ void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSi
         return;
     }
 
-#ifdef Q_WS_X11
-    // we can create the real pixmap right now
-    *pixmap = QPixmap::fromX11Pixmap(pixmapHandle, QPixmap::ImplicitlyShared);
-#else
-    QPixmap *pixmapPointer = (QPixmap *)(pixmapHandle);
-    *pixmap = *pixmapPointer;
-#endif
+    *pixmap = MGraphicsSystemHelper::pixmapFromHandle(pixmapHandle, &iterator->addr, &iterator->numBytes);
 
     pixmapRequestFinished();
 }

@@ -371,20 +371,34 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
 
 QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::PixmapHandle &handle)
 {
-    stream << handle.identifier << quint64((quintptr) handle.pixmapHandle);
+    stream << handle.identifier;
+    stream << quint64(quintptr(handle.pixmapHandle.xHandle));
+    stream << quint64(quintptr(handle.pixmapHandle.eglHandle));
+    stream << handle.pixmapHandle.shmHandle;
+    stream << handle.pixmapHandle.size;
+    stream << (quint64)handle.pixmapHandle.format;
+    stream << handle.pixmapHandle.numBytes;
     return stream;
 }
 
 QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::PixmapHandle &handle)
 {
-    M::MThemeDaemonProtocol::PixmapIdentifier id;
-    stream >> id;
+    stream >> handle.identifier;
 
-    quint64 pixmapHandle;
+    waitForAvailableBytes(stream, 2 * sizeof(quint64));
+    quint64 h;
+    stream >> h;
+    handle.pixmapHandle.xHandle = (Qt::HANDLE) quintptr(h);
+    stream >> h;
+    handle.pixmapHandle.eglHandle = (Qt::HANDLE) quintptr(h);
+    handle.pixmapHandle.shmHandle = readQString(stream);
+    waitForAvailableBytes(stream, 2*sizeof(qint32));
+    stream >> handle.pixmapHandle.size;
     waitForAvailableBytes(stream, sizeof(quint64));
-    stream >> pixmapHandle;
-    handle.identifier = id;
-    handle.pixmapHandle = (Qt::HANDLE) quintptr(pixmapHandle);
+    stream >> h;
+    handle.pixmapHandle.format = QImage::Format(h);
+    waitForAvailableBytes(stream, sizeof(int));
+    stream >> handle.pixmapHandle.numBytes;
     return stream;
 }
 

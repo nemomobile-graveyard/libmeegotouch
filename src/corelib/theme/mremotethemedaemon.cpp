@@ -212,10 +212,9 @@ void MRemoteThemeDaemonPrivate::pixmapHandle(const QString &imageId, const QSize
 {
     Q_Q(MRemoteThemeDaemon);
 
-    Qt::HANDLE handle = pixmapHandleFromMostUsed(imageId, size);
-    if (handle) {
+    MPixmapHandle handle = pixmapHandleFromMostUsed(imageId, size);
+    if (handle.isValid()) {
         emit q->pixmapCreatedOrChanged(imageId, size, handle);
-        return;
     }
 
     const quint64 sequenceNumber = requestPixmap(imageId, size);
@@ -240,10 +239,10 @@ void MRemoteThemeDaemon::pixmapHandle(const QString &imageId, const QSize &size)
     d->pixmapHandle(imageId, size, false);
 }
 
-Qt::HANDLE MRemoteThemeDaemonPrivate::pixmapHandleFromMostUsed(const QString &imageId, const QSize &size)
+MPixmapHandle MRemoteThemeDaemonPrivate::pixmapHandleFromMostUsed(const QString &imageId, const QSize &size)
 {
     PixmapIdentifier identifier(imageId, size);
-    QHash<PixmapIdentifier, Qt::HANDLE>::iterator it = mostUsedPixmaps.find(identifier);
+    QHash<PixmapIdentifier, MPixmapHandle>::iterator it = mostUsedPixmaps.find(identifier);
     if (it != mostUsedPixmaps.end())
     {
         int sequenceNumber = ++sequenceCounter;
@@ -252,7 +251,7 @@ Qt::HANDLE MRemoteThemeDaemonPrivate::pixmapHandleFromMostUsed(const QString &im
         return it.value();
     }
 
-    return 0;
+    return MPixmapHandle();
 }
 
 void MRemoteThemeDaemon::releasePixmap(const QString &imageId, const QSize &size)

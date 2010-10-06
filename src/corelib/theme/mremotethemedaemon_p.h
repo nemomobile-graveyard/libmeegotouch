@@ -25,13 +25,14 @@
 #include <QLocalSocket>
 
 #include "mthemedaemonprotocol.h"
+#include "mpixmaphandle.h"
 
 
 class MRemoteThemeDaemonPrivate
 {
 public:
     QHash<M::MThemeDaemonProtocol::PixmapIdentifier, quint64> pixmapRequests;
-    QHash<M::MThemeDaemonProtocol::PixmapIdentifier, Qt::HANDLE> mostUsedPixmaps;
+    QHash<M::MThemeDaemonProtocol::PixmapIdentifier, MPixmapHandle> mostUsedPixmaps;
 
     M::MThemeDaemonProtocol::Packet readOnePacket();
     void processOnePacket(const M::MThemeDaemonProtocol::Packet &packet);
@@ -47,7 +48,7 @@ public:
     qint32 priority();
     void loadThemeDaemonPriorities(const QString& filename);
     void pixmapHandle(const QString &imageId, const QSize &size, bool sync);
-    Qt::HANDLE pixmapHandleFromMostUsed(const QString &imageId, const QSize &size);
+    MPixmapHandle pixmapHandleFromMostUsed(const QString &imageId, const QSize &size);
 
     Q_DECLARE_PUBLIC(MRemoteThemeDaemon)
     MRemoteThemeDaemon *q_ptr;

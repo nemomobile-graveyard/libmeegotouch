@@ -39,6 +39,7 @@ class MLibrary;
 #include "mpalette.h"
 #include "mdefaultfonts.h"
 #include "mtheme.h"
+#include "mpixmaphandle.h"
 
 // TODO: remove this with style profiling
 #ifndef Q_OS_WIN
@@ -51,7 +52,7 @@ class MLibrary;
 
 //! \cond
 struct CachedStyle {
-    CachedStyle(MStyle *d) : data(d), refcount(1) {};
+    CachedStyle(MStyle *d) : data(d), refcount(1) {}
 
     MStyle *data;
     int refcount;
@@ -60,16 +61,20 @@ struct CachedStyle {
 
 //! \cond
 struct CachedPixmap {
-    CachedPixmap(const QPixmap *p, const QString &imageId, const QSize &size) : pixmap(p), refcount(1), imageId(imageId), size(size) {};
+    CachedPixmap(const QPixmap *p, const QString &imageId, const QSize &size) :
+            pixmap(p), refcount(1), imageId(imageId), size(size), addr(0), numBytes(0)
+    {}
 
     const QPixmap *pixmap;
     QAtomicInt refcount;
     QString imageId;
     QSize size;
+    void *addr;
+    int numBytes;
 };
 
 struct CachedScalableImage {
-    CachedScalableImage(const MScalableImage *p) : image(p), refcount(1) {};
+    CachedScalableImage(const MScalableImage *p) : image(p), refcount(1) {}
 
     const MScalableImage *image;
     QAtomicInt refcount;
@@ -150,7 +155,7 @@ public:
      * Theme daemon notifies pixmap updates to to this slot
      * In here MTheme will fetch the new pixmap data from X-Server and provide it to the widgets.
      */
-    void pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle);
+    void pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, const MPixmapHandle& pixmapHandle);
 
     const QPixmap * pixmap(const QString &id, bool async, const QSize &size = QSize(0, 0));
 

@@ -19,7 +19,6 @@
 
 #include "mapplication.h"
 #include "mapplicationwindow.h"
-#include "mgraphicssystemhelper.h"
 
 #include <gst/gst.h>
 #include <gst/gstvalue.h>

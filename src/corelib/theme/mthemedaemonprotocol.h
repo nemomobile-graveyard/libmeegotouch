@@ -20,6 +20,8 @@
 #ifndef MTHEMEDAEMONPROTOCOL_H
 #define MTHEMEDAEMONPROTOCOL_H
 
+#include "mpixmaphandle.h"
+
 #include <QDataStream>
 #include <QSharedPointer>
 #include <QSize>
@@ -188,10 +190,10 @@ namespace M
         };
 
         struct PixmapHandle : PacketData {
-            PixmapHandle() : pixmapHandle(0)
+            PixmapHandle() : pixmapHandle()
             {}
 
-            PixmapHandle(const PixmapIdentifier &identifier, Qt::HANDLE pixmapHandle) :
+            PixmapHandle(const PixmapIdentifier &identifier, MPixmapHandle pixmapHandle) :
                 identifier(identifier),
                 pixmapHandle(pixmapHandle)
             {}
@@ -205,7 +207,7 @@ namespace M
             virtual ~PixmapHandle();
 
             PixmapIdentifier identifier;
-            Qt::HANDLE pixmapHandle;
+            MPixmapHandle pixmapHandle;
         };
 
 

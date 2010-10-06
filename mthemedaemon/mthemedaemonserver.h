@@ -120,7 +120,7 @@ private:
     QTimer processQueueTimer;
 
     QList<MThemeDaemonClient*> clientsThatHaveNotYetAppliedThemeChange;
-    QList<QPixmap*> pixmapsToDeleteWhenThemeChangeHasCompleted;
+    QList<PixmapCacheEntry*> pixmapsToDeleteWhenThemeChangeHasCompleted;
 
     QHash<quint64, QList<MThemeDaemonClient*> > clientsThatHaveNotYetUpdatedMostUsed;
     QHash<quint64, QList<M::MThemeDaemonProtocol::PixmapIdentifier> > pixmapsToDeleteWhenUpdatedMostUsed;

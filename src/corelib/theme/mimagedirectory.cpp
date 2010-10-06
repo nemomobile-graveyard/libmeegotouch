@@ -19,8 +19,10 @@
 
 #include "mimagedirectory.h"
 #include "mthemedaemon.h"
-
 #include "mdebug.h"
+
+#include "mgraphicssystemhelper.h"
+
 #include <QDateTime>
 #include <QDir>
 #include <QPainter>
@@ -33,7 +35,7 @@
 
 namespace {
     const unsigned int ID_CACHE_VERSION = 1;
-    const unsigned int IMAGE_CACHE_VERSION = 1;
+    const unsigned int IMAGE_CACHE_VERSION = 2;
 }
 
 uint qHash(const QSize &size)
@@ -41,96 +43,89 @@ uint qHash(const QSize &size)
     return (size.width() & 0x0000ffff) | (size.height() << 16);
 }
 
-Qt::HANDLE ImageResource::fetchPixmap(const QSize &size)
+MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
 {
-    PixmapCacheEntry &cacheEntry = cachedPixmaps[size];
+    QHash<QSize, PixmapCacheEntry*>::iterator it = cachedPixmaps.find(size);
+    PixmapCacheEntry *cacheEntry;
+    if (it == cachedPixmaps.end()) {
+        cacheEntry = new PixmapCacheEntry();
+        cachedPixmaps.insert(size, cacheEntry);
 
-    if (!cacheEntry.pixmap) {
         // try to load it from filesystem cache
-        cacheEntry.pixmap = loadFromFsCache(size);
-
-        if (!cacheEntry.pixmap) {
-            // we didn't have the correctly sized pixmap in cache, so we need to create one.
-            cacheEntry.pixmap = createPixmap(size);
-            saveToFsCache(cacheEntry.pixmap, size);
+        QImage image;
+        if (shouldBeCached()) {
+            loadFromFsCache(size);
         }
 
-#ifdef  Q_WS_X11
-        // Sync X-Server, without this the pixmap handle is still invalid in client-side
-        XSync(QX11Info::display(), false);
-#endif
+        if (image.isNull()) {
+            // we didn't have the correctly sized pixmap in cache, so we need to create one.
+            image = createPixmap(size);
+            if (shouldBeCached()) {
+                saveToFsCache(image, size);
+            }
+        }
+
+        MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
+    } else  {
+        cacheEntry = *it;
     }
 
-    ++cacheEntry.refCount;
-#ifdef  Q_WS_X11
-//#ifndef Q_WS_MAC  - #MS - windows build: This function is X11 specific; using it is non-portable.
-    return cacheEntry.pixmap->handle();
-#else
-    return cacheEntry.pixmap;
-#endif
+    ++cacheEntry->refCount;
+
+    return cacheEntry->handle;
 }
 
 void ImageResource::releasePixmap(const QSize &size)
 {
     Q_ASSERT_X(cachedPixmaps.contains(size), "ImageResource", "Cannot release pixmap because the cache entry cannot be found for the pixmap!");
 
-    PixmapCacheEntry &cacheEntry = cachedPixmaps[size];
+    PixmapCacheEntry *cacheEntry = cachedPixmaps[size];
 
     // decrease the refcount.
-    --cacheEntry.refCount;
+    --cacheEntry->refCount;
 
     // if this was the last reference, release the pixmap
-    if (cacheEntry.refCount == 0) {
-
-        // release the pixmap
-        delete cacheEntry.pixmap;
-
+    if (cacheEntry->refCount == 0) {
         // remove the cache entry from this resource
+        delete cacheEntry;
         cachedPixmaps.remove(size);
     }
 }
 
-QPixmap* ImageResource::releaseWithoutDelete(const QSize &size)
+PixmapCacheEntry* ImageResource::releaseWithoutDelete(const QSize &size)
 {
     Q_ASSERT_X(cachedPixmaps.contains(size), "ImageResource", "Cannot release pixmap because the cache entry cannot be found for the pixmap!");
 
-    PixmapCacheEntry &cacheEntry = cachedPixmaps[size];
+    PixmapCacheEntry *cacheEntry = cachedPixmaps[size];
 
     // decrease the refcount.
-    --cacheEntry.refCount;
+    --cacheEntry->refCount;
 
     // if this was the last reference, release the pixmap
-    if (cacheEntry.refCount == 0) {
-
-        QPixmap* pixmap = cacheEntry.pixmap;
-
+    if (cacheEntry->refCount == 0) {
         // remove the cache entry from this resource
         cachedPixmaps.remove(size);
 
-        return pixmap;
+        return cacheEntry;
     }
     return NULL;
 }
 
-Qt::HANDLE ImageResource::pixmapHandle(const QSize &size)
+MPixmapHandle ImageResource::pixmapHandle(const QSize &size)
 {
-    QHash<QSize, PixmapCacheEntry>::iterator it = cachedPixmaps.find(size);
+    QHash<QSize, PixmapCacheEntry*>::iterator it = cachedPixmaps.find(size);
     if (it == cachedPixmaps.end()) {
-        return 0;
+        return MPixmapHandle();
     } else {
-#if defined(Q_WS_X11)
-        return cachedPixmaps[size].pixmap->handle();
-#else
-        return &(cachedPixmaps[size].pixmap);
-#endif
+        return (*it)->handle;
     }
 }
 
-QPixmap *ImageResource::loadFromFsCache(const QSize& size)
+QImage ImageResource::loadFromFsCache(const QSize& size)
 {
     const QString cacheFileName = createCacheFilename(size);
     if (cacheFileName.isEmpty()) {
-        return 0;
+        return QImage();
     }
 
     if (QFile::exists(cacheFileName)) {
@@ -142,7 +137,7 @@ QPixmap *ImageResource::loadFromFsCache(const QSize& size)
             if (version != IMAGE_CACHE_VERSION) {
                 // will be replaced with up to date version
                 file.close();
-                return 0;
+                return QImage();
             }
             uint timestamp;
             stream >> timestamp;
@@ -150,27 +145,23 @@ QPixmap *ImageResource::loadFromFsCache(const QSize& size)
             if (timestamp != fileInfo.lastModified().toTime_t()) {
                 // will be replaced with up to date version
                 file.close();
-                return 0;
+                return QImage();
             }
 
-            QPixmap *pixmap = new QPixmap();
-            stream >> *pixmap;
-#ifdef  Q_WS_X11
-            // Sync X-Server, without this the pixmap handle is still invalid in client-side
-            XSync(QX11Info::display(), false);
-#endif
+            QImage image;
+            stream >> image;
+
             file.close();
-            return pixmap;
+            return image;
         } else {
-            mWarning("ImageResource") << "Failed to load pixmap from chache" << cacheFileName;
+            mWarning("ImageResource") << "Failed to load pixmap from cache" << cacheFileName;
         }
-        return 0;
     }
 
-    return 0;
+    return QImage();
 }
 
-void ImageResource::saveToFsCache(const QPixmap* pixmap, const QSize& size)
+void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
 {
     const QString cacheFileName = createCacheFilename(size);
     if (cacheFileName.isEmpty()) {
@@ -191,7 +182,7 @@ void ImageResource::saveToFsCache(const QPixmap* pixmap, const QSize& size)
     stream << IMAGE_CACHE_VERSION;
     QFileInfo fileInfo(absoluteFilePath());
     stream << fileInfo.lastModified().toTime_t();
-    stream << *pixmap;
+    stream << pixmap;
 
     file.close();
 }
@@ -200,6 +191,8 @@ QString ImageResource::createCacheFilename(const QSize& size)
 {
     QString cacheKey = uniqueKey();
     if (cacheKey.isEmpty()) {
+        mWarning("ImageResource::loadFromFsCache") << "Cache filename for" << absoluteFilePath()
+                << "could not be created. uniqueKey must not be empty.";
         return QString();
     }
     cacheKey.replace(QLatin1Char('_'), QLatin1String("__"));
@@ -209,27 +202,36 @@ QString ImageResource::createCacheFilename(const QSize& size)
     return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("images/") + cacheKey;
 }
 
-QPixmap *PixmapImageResource::createPixmap(const QSize &size)
+bool ImageResource::shouldBeCached()
+{
+    return true;
+}
+
+QImage PixmapImageResource::createPixmap(const QSize &size)
 {
     QImage image(absoluteFilePath());
 
     if (size.isNull() || size == image.size()) {
         // the requested size is (0,0) or the original image is the same size as the requested one.
         // we can use the original image
-        return new QPixmap(QPixmap::fromImage(image));
+        return image;
     }
 
     // we need to resize the image.
-    return new QPixmap(QPixmap::fromImage(image.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));//Qt::FastTransformation)));
+    return image.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 QString PixmapImageResource::uniqueKey()
 {
-    // caching does not really make sense, return empty id
-    return QString();
+    return absoluteFilePath();
 }
 
-QPixmap *IconImageResource::createPixmap(const QSize &size)
+bool PixmapImageResource::shouldBeCached()
+{
+    return false;
+}
+
+QImage IconImageResource::createPixmap(const QSize &size)
 {
    QSvgRenderer renderer(absoluteFilePath());
 
@@ -242,14 +244,14 @@ QPixmap *IconImageResource::createPixmap(const QSize &size)
         }
     }
 
-    QPixmap *pixmap = new QPixmap(svgImageSize);
-    pixmap->fill(QColor(Qt::transparent));
+    QImage image(svgImageSize, QImage::Format_ARGB32_Premultiplied);
+    image.fill(0);
     if (renderer.isValid()) {
-        QPainter painter(pixmap);
+        QPainter painter(&image);
         renderer.render(&painter);
     }
 
-    return pixmap;
+    return image;
 }
 
 QString IconImageResource::uniqueKey()
@@ -257,7 +259,7 @@ QString IconImageResource::uniqueKey()
     return absoluteFilePath();
 }
 
-QPixmap *SvgImageResource::createPixmap(const QSize &size)
+QImage SvgImageResource::createPixmap(const QSize &size)
 {
     QSvgRenderer renderer(absoluteFilePath());
 
@@ -271,14 +273,14 @@ QPixmap *SvgImageResource::createPixmap(const QSize &size)
         }
     }
 
-    QPixmap *pixmap = new QPixmap(svgImageSize);
-    pixmap->fill(QColor(Qt::transparent));
+    QImage image(svgImageSize, QImage::Format_ARGB32_Premultiplied);
+    image.fill(0);
     if (renderer.isValid()) {
-        QPainter painter(pixmap);
+        QPainter painter(&image);
         renderer.render(&painter, imageId);
     }
 
-    return pixmap;
+    return image;
 }
 
 QString SvgImageResource::uniqueKey()

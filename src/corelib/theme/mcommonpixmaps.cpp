@@ -20,6 +20,8 @@
 #include "mcommonpixmaps.h"
 #include "mthemedaemon.h"
 #include "mdebug.h"
+#include "mpixmaphandle.h"
+
 #include <QFile>
 #include <QDir>
 
@@ -182,7 +184,7 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
         // check if there's still room for this pixmap
         if (mostUsedPixmaps.count() < MCommonPixmaps::CacheSize) {
             // yep, just add this pixmap and return
-            Qt::HANDLE handle = resource->fetchPixmap(id.size);
+            MPixmapHandle handle = resource->fetchPixmap(id.size);
             mostUsedPixmaps.insert(id);
 
             MostUsedPixmaps packet;
@@ -223,7 +225,7 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
         minRequestsForCache = (secondlyLeastUsedRequests > requestCount.value()) ? requestCount.value() : secondlyLeastUsedRequests;
 
         // allocate one pixmap for the list
-        Qt::HANDLE handle = resource->fetchPixmap(id.size);
+        MPixmapHandle handle = resource->fetchPixmap(id.size);
         MostUsedPixmaps packet;
         packet.addedHandles.append(PixmapHandle(id, handle));
 
@@ -261,7 +263,7 @@ QList<M::MThemeDaemonProtocol::PixmapHandle> MCommonPixmaps::mostUsedPixmapHandl
     // we could also save the handles earlier but it is cheap to do the query
     QList<PixmapHandle> pixmapHandles;
     foreach(const M::MThemeDaemonProtocol::PixmapIdentifier& id, mostUsedPixmaps) {
-        Qt::HANDLE handle = daemon->findImageResource(id.imageId)->pixmapHandle(id.size);
+        MPixmapHandle handle = daemon->findImageResource(id.imageId)->pixmapHandle(id.size);
         pixmapHandles.append(M::MThemeDaemonProtocol::PixmapHandle(id, handle));
     }
 
