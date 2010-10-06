@@ -2194,6 +2194,7 @@ void Ut_MTextEdit::testCloseSipOnDestruction()
 {
     AutoActivatedScene sc;
     MTextEdit *subject = createFromSipHandling(&sc);
+    QVERIFY(m_sic->isVisible());
 
     const bool hasAutoSip = subject->isAutoSipEnabled();
     delete subject;
@@ -2210,7 +2211,9 @@ void Ut_MTextEdit::testCloseSipOnDestruction()
 void Ut_MTextEdit::testIgnoreSipIfNotFocused()
 {
     AutoActivatedScene sc;
-    createFromSipHandling(&sc);
+    MTextEdit *subject = createFromSipHandling(&sc);
+    QVERIFY(m_sic->isVisible());
+    Q_UNUSED(subject);
 
     // Now create another text edit, and destroy it:
     MTextEdit *edit = new MTextEdit;
@@ -2226,6 +2229,7 @@ void Ut_MTextEdit::testCloseSipOnHide()
 {
     AutoActivatedScene sc;
     MTextEdit *subject = createFromSipHandling(&sc);
+    QVERIFY(m_sic->isVisible());
 
     subject->hide();
 
@@ -2569,11 +2573,6 @@ MTextEdit *Ut_MTextEdit::createFromSipHandling(AutoActivatedScene *scene, bool i
 
     if (isSipRequested) {
         requestSip(edit, Qt::MouseFocusReason);
-
-        if (!m_sic->isVisible()) {
-            qCritical() << __PRETTY_FUNCTION__
-                        << "SIP not visible.";
-        }
     }
 
     return edit;
