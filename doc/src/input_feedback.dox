@@ -8,36 +8,36 @@ A mobile device can support several means for feedback, for example audio speake
 
 \subsection technical_background Short technical background
 
-The feedbacks are identified by name. For instance, if a user touches a button on the screen, "press" feedback is played or if a  selected check box is pressed, "press-off" feedback is played. These feedbacks are played by a daemon (meegofeedbackd) that is invisible for the developers. Different types of feedback methods can be provided by different hardware. Some mentioned in this documentation are:
+The feedbacks are identified by name. For instance, if a user touches a button on the screen, "press" feedback is played or if a selected check box is pressed, "press-off" feedback is played. These feedbacks are played by a daemon (meegofeedbackd) that is invisible for the developers. Different types of feedback methods can be provided by different hardwares:
 
 - Vibra: Based on Immersion TouchSense&reg;
 - Audio: Based on PulseAudio
 
-MFeedback class provides an interface to send playback requests from MeeGo Touch level to the feedback daemon. In practice, when a feedback related Qt signal is emitted, it should be translated into a feedback name and sent to the feedback daemon via MFeedback class. The MFeedback class only forwards the feedback name to the feedback daemon, it does not know anything about the source Qt signal which triggered that event and the feedback name is not validated at MeeGo Touch level. The feedback daemon receives the feedback name, validates it in the context of the current theme and the application name and plays the corresponding vibra/audio feedback if there is any. If multiple feedbacks (e.g audio and vibra) are available for the same name, they are played simultaneously.
+MFeedback class provides an interface to send playback requests from a MeeGo Touch application to the feedback daemon. In practice, when a feedback related signal is emitted, it should be translated into a feedback name and sent to the feedback daemon via MFeedback class. The MFeedback class only forwards the feedback name to the feedback daemon, it does not know anything about the source of the signal which triggered that event and the feedback name is not validated at MeeGo Touch level. The feedback daemon receives the feedback name, validates it in the context of the current theme and the application name and plays the corresponding vibra/audio feedback if there is any. If multiple feedbacks (e.g audio and vibra) are available for the same name, they are played simultaneously.
 
 \subsection feedbacks_in_themes Feedbacks in themes
 
-Read the feedbacks part of \ref theme_structure "theme directory structure" documentation to see how the feedback files are located in theming directories.
+Read the feedbacks part of \ref theme_structure "theme directory structure" documentation to see how the feedback files are located in themes.
 
-Typically, a feedback directory contains two files: vibra.ivt and audio.wav.
+Typically, a feedback directory can contain two files: vibra.ivt and audio.wav.
 
 Some principles are followed in the theme logic:
-- When an event happens (e.g. pressing on an MButton), both a vibra and an audio feedback are played at the same time if available.
-- If a feedback directory does not contain any file for a backend (e.g. vibra.ivt), a fallback mechanism tries to find a feedback for the backend going back on the theme inheritance tree.
+- When an event happens (e.g. pressing an MButton), both a vibra and an audio feedback are played at the same time if available.
+- If a feedback directory does not contain any file for a hardware (e.g. vibra.ivt), a fallback mechanism tries to find an other effect going back on the theme inheritance tree.
 - Using a non-existing name (e.g. "press-loud") triggers fallback mechanism to look for a generic feedback name before the first (and only the first) dash (e.g "press-loud-something" -> "press").
-- A zero sized sample file means no feedback, the fallback mechanism stops at this point.
+- A zero sized sample file means no feedback, the fallback mechanism stops at such point.
 
-The feedbacks can be played on three different volume levels. This is a global setting of the feedback daemon, but the feedbacks should be prepared for this. The PulseAudio backend sets the appropriate playback volume from a config file so nothing needs to be done in PulseAudio case. The vibra backend checks the vibra.ivt for three timeline effects named "low", "medium" and "high" referring to low, medium and high volume levels. The first effect from the file is used if there is no correctly named timeline effects (its type does not matter in this case).
+The feedbacks can be played on three different volume levels. This is a global setting of the feedback daemon, but the feedbacks should be prepared for. The Pulseaudio (audio) backend of the daemon sets the appropriate playback volume from a config file so nothing needs to be done in Pulseaudio case. The vibra backend checks the vibra.ivt for three timeline effects named "low", "medium" and "high" referring to low, medium and high volume levels. If there are no correctly named timeline effects in the effect file, the first effect is used (its type does not matter in this case).
 
 \subsection stylesheets Stylesheets
 
-It is recommended to read the \ref styling "styling" part of the MeeGo Touch documentation before this section, because only the feedback specific syntax is described here.
+Recommended to read the \ref styling "styling" part of the MeeGo Touch documentation before this section, because only the feedback specific syntax is described here.
 
 A css file is associated with an application to describe the style of the widgets. For an application named "example" and a theme named "base", it is located in /usr/share/themes/base/meegotouch/example/style/example.css. The widgets in the applications can be styled on class (means e.g. every button in an application) or object/instance level (means one specific button in the application). Here is a minimal explanation about this concept for readers without deeper developer knowledge:
 
 - The widgets in an application are instances of their class definitions. E.g. Buttons are instances of MButton classes.
 - To distinguish two instances of the same class (e.g an Ok and Cancel button on the screen), the different instances can be named. This name is not visible on the screen and does not have any predefined format, but gives the potential to differentiate the instances (e.g. buttons) for styling.
-- As a natural demand, there can be use cases when the instances of different classes should be themed with the same rules. E.g. Buttons and text input fields (MTextEdit) have a common style property on a particular window, for instance text color. In these cases, the instances can be named with the same name and style with a simple rule referring to the name, but not to the class type.
+- As a natural demand, there are use cases when the instances of different classes should be themed with the same rules. E.g. Buttons and text input fields (MTextEdit) have a common style property on a particular window, for instance text color. In these cases, the instances can be named with the same name and style with a simple rule referring to the name, but not to the class type.
 
 Let's see some real-life examples for the principles above. If a style is specific to every instance of a class then it should be written in the following form:
 
@@ -72,7 +72,7 @@ As shown above, the styling rules are written between the curly brackets.
 
 \section mfeedback MFeedback
 
-MFeedback class is a thin convenience class to make working with feedbacks very easy.
+MFeedback class is a thin convenience class to have input feedbacks very easily.
 
 \subsection mfeedback_instance Using an MFeedback instance to play a "press" feedback:
 
@@ -92,7 +92,7 @@ Connect a signal to the feedback:
 connect(button, SIGNAL(pressed()), feedback, SLOT(play()));
 \endcode
 
-\subsection mfeedback_staic Using static MFeedback::play(const QString&) to play a "press" feedback:
+\subsection mfeedback_static Using static MFeedback::play(const QString&) to play a "press" feedback:
 
 \code
 MFeedback::play("press");
@@ -172,101 +172,72 @@ int main(int argc, char* argv[])
 }
 \endcode
 
-\subsection advanced_example Advanced example
+\subsection advanced_example Advanced example with plain Qt widgets
 
-The following application creates a window and places a button in the window (ExampleButton). The default press and the release feedbacks for the button are ignored and instead the button emits a newPress signal when tapping on the button.  This signal is used to play a feedback named "press-on".
+The following application creates a window and places a "Hello world!" button in the window. The default input feedback support will be switched off by forcing the usage of the motif style, but the press feedback is connected to the pressed signal of the button manually. If any argument is passed to the application the feedback is not connected to the signal. 
 
 app.pro:
 
 \code
 TEMPLATE = app
 CONFIG += meegotouch
-HEADERS += main.h
 SOURCES += main.cpp
 \endcode
 
 main.cpp:
 
 \code
-#include <MApplication>
-#include <MApplicationWindow>
-#include <MApplicationPage>
-#include <MFeedback>
+#include <QApplication>
+#include <QMotifStyle>
+#include <QPushButton>
 
-#include "main.h"
+#include <MComponentData>
+#include <MFeedback>
 
 int main(int argc, char* argv[])
 {
   // Create an application with a button
-  MApplication app(argc, argv);
-  MApplicationPage* page = new MApplicationPage();
-  MApplicationWindow* window = new MApplicationWindow();
-  ExampleButton* button = new ExampleButton("Hello World");
+  QApplication app(argc, argv);
+  QPushButton* button = new QPushButton("Hello World");
+  // An MComponentData instance is needed for the MeeGo related Qt extensions.
+  MComponentData mTData(argc, argv);
 
+  // Force the motif style to switch off the automatic input feedback support
+  QApplication::setStyle(new QMotifStyle);
   // Show the UI
-  page->setCentralWidget(button);
-  window->show();
-  page->appear(window);
+  button->show();
 
-  MFeedback* feedback = new MFeedback("press-on");
-  button->connect(button, SIGNAL(newPress()), feedback, SLOT(play()));
+  // Get the press feedback
+  MFeedback* feedback = new MFeedback("press");
+  // Switch off the press feedback if arguments are passed
+  if (argc == 1)
+    // Connect the press event to the "press" feedback
+    button->connect(button, SIGNAL(pressed()), feedback, SLOT(play()));
 
   // Enter the main loop
   app.exec();
 
   // Clean up
   delete feedback;
-  delete window;
 }
-\endcode
-
-main.h:
-
-\code
-#include <QGraphicsSceneMouseEvent>
-#include <MButton>
-
-class ExampleButton : public MButton
-{
-  Q_OBJECT
-
-public:
-
-  ExampleButton(const QString& text, QGraphicsItem* parent = 0) : MButton(text, parent)
-  { }
-
-signals:
-  // Declare a new signal for a press event
-  void newPress();
-
-protected:
-
-  void mousePressEvent(QGraphicsSceneMouseEvent* event)
-  {
-    // Emit the new signal
-    emit newPress();
-    // Skip the event processing further
-    event->ignore();
-  }
-};
 \endcode
 
 \section feedback_use_case1 Styling use case 1: Override a default feedback for an application
 
-Let's say that an application's name is "app" and we want to change the "press" feedback to an application specific custom feedback regardless of the selected theme. To achieve this the following should be done:
+Let's say that an application name is "app" and we want to change the "press" feedback to an application specific custom feedback regardless of the selected theme. To achieve this the following should be done:
 
 - The new feedback files should be placed in the base theme directory structure because every theme is derived from this theme. This leads to the fact that the custom feedback will be the same regardless of the selected theme. This is true because an application specific feedback always overrides the general theme specific feedback.
 - The base theme can be extended/overriden in the application specific part. Thus the correct place for the new files is at /usr/share/themes/base/meegotouch/app/feedbacks/press
 
 \section feedback_use_case2 Styling use case 2: Use an MButton widget and override the default feedback
 
-The application created in this section places a normal MButton named "NormalButton" in a window and the style sheet overrides the default "press" feedback of the press feedback into "release" feedback. The app.css file should be placed in the usr/share/themes/base/meegotouch/app/style directory.
+The application created in this section places a normal MButton named "NormalButton" in a window and the style sheet overrides the default "press" feedback of the press feedback into "press-on" feedback. The app.css file should be placed in the usr/share/themes/base/meegotouch/app/style directory.
 
 app.css:
 
 \code
 MButtonStyle#NormalButton {
-  press-feedback: release;
+  press-feedback: press-on;
 }
 \endcode
 
