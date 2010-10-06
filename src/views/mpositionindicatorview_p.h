@@ -36,6 +36,12 @@ public:
     void init(MPositionIndicator *controller);
     virtual ~MPositionIndicatorViewPrivate();
 
+    /**
+     * Returns true if the position indicator is part of a minimized
+     * window in the switcher.
+     */
+    bool isInSwitcher() const;
+
     MPositionIndicator *controller;
     QTimer *hideTimer;
     bool visible;
