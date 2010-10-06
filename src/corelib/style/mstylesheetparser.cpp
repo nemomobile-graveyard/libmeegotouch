@@ -123,7 +123,8 @@ QSet<QString> MStyleSheetParserPrivate::stringCache;
 #endif
 
 MStyleSheetParserPrivate::MStyleSheetParserPrivate(const MLogicalValues *logicalValues) :
-    privateFileInfo(0), binaryFileMode(true), startReadPos(0), logicalValues(logicalValues), globalConstants(NULL)
+    privateFileInfo(0), binaryFileMode(true), syntaxMode(MStyleSheetParser::StrictSyntax),
+    startReadPos(0), logicalValues(logicalValues), globalConstants(NULL)
 {
 }
 
