@@ -187,8 +187,6 @@ void Ut_MLabel::testLayoutDirection_data()
 
 void Ut_MLabel::testLayoutDirection()
 {
-    QSKIP("Wait for issue in bug 175685 to be resolved", SkipSingle);
-
     QFETCH(QString, text);
     label->setText(text);
     QVERIFY(text == label->text());
@@ -314,7 +312,6 @@ void Ut_MLabel::testRichTextElide()
 
 void Ut_MLabel::testHighlighting()
 {
-    QSKIP("Wait for issue in bug #164207 to be resolved", SkipSingle);
     label->setText("Label <b>rich</b>");
 
     QImage nonhighlighted = captureImage(label);
@@ -333,6 +330,7 @@ void Ut_MLabel::testHighlighting()
 
     QList<QGesture *> list;
     QTapAndHoldGesture gesture;
+    gesture.setPosition(QPointF(15, 5));
     list.append( &gesture );
     QGestureEvent gestureEvent(list);
     label->tapAndHoldGestureEvent (&gestureEvent, &gesture );
@@ -346,7 +344,6 @@ void Ut_MLabel::testHighlighting()
 
 void Ut_MLabel::testHighlightingModel()
 {
-    QSKIP("Wait for issue in bug #164207 to be resolved", SkipSingle);
     label->setText("Label <b>rich</b>");
 
     QImage nonhighlighted = captureImage(label);
@@ -365,6 +362,7 @@ void Ut_MLabel::testHighlightingModel()
 
     QList<QGesture *> list;
     QTapAndHoldGesture gesture;
+    gesture.setPosition(QPointF(15, 5));
     list.append( &gesture );
     QGestureEvent gestureEvent(list);
     label->tapAndHoldGestureEvent (&gestureEvent, &gesture );
@@ -376,7 +374,9 @@ void Ut_MLabel::testHighlightingModel()
     delete h;
 }
 
-
+Qt::GestureState QGesture::state() const {
+    return Qt::GestureFinished;
+}
 
 void Ut_MLabel::testAnchor()
 {

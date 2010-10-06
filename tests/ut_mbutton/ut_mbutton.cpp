@@ -125,6 +125,13 @@ void Ut_MButton::testPressedReleased()
     QCOMPARE(releasedSpy.count(), 1);
 }
 
+void Ut_MButton::testIcon()
+{
+    QIcon myIcon;
+    m_subject->setIcon(myIcon);
+    QCOMPARE(m_subject->icon(), myIcon);
+}
+
 void Ut_MButton::testIconID()
 {
     QString myIconID("myIconID");
