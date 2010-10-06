@@ -1,0 +1,20 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.nokia.UserGuideIf">
+        <!--
+            Opens the main page of the current userguide application.
+         -->
+        <method name="mainPage">
+            <arg name="" type="b" direction="out"/>
+        </method>
+
+        <!--
+            Opens a page of the current userguide application.
+         -->
+        <method name="pageByPath">
+            <arg name="path" type="s" direction="in"/>
+            <arg name="" type="b" direction="out"/>
+        </method>
+    </interface>
+</node>
+

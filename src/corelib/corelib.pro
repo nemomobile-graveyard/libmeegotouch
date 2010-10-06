@@ -22,6 +22,7 @@ contains(DEFINES, HAVE_GSTREAMER) {
     include(video/video.pri)
 }
 contains(DEFINES, HAVE_DBUS) {
+    include(help/help.pri)
     include(servicefwif/servicefwif.pri)
     include(notification/notification.pri)
 }
