@@ -120,10 +120,13 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
     QString edge = topEdgeProperty.value().toString();
     bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
 
-    //do not change orientation when closing keyboard and old orientation is allowed:
+    //Check if the keyboard was just closed, old angle is supported and
+    //if device is lying flat (like on the table)
     if (currentIsKeyboardOpen == true && isKeyboardOpen == false
-        && MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen)){
+        && MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen) &&
+        topEdgeProperty.value().isNull()) {
         currentIsKeyboardOpen = isKeyboardOpen;
+        //do nothing
         return;
     }
     currentIsKeyboardOpen = isKeyboardOpen;
