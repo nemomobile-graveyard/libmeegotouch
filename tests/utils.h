@@ -22,6 +22,34 @@
 
 #include <QtTest>
 
+namespace Ut_Utils
+{
+    /*! Generic signal waiter, because signals might not arrive instantly.
+     *
+     * How to use:
+     *
+     * QObject *obj = new QObject;
+     * QSignalSpy spy(obj, SIGNAL(destroyed()));
+     * delete obj;
+     * Ut_Utils::waitForSignal(spy);
+     */
+    void waitForSignal(const QSignalSpy &spy, int waitLimit = 10)
+    {
+        int waitCount = 0;
+        while (spy.count() < 1) {
+            ++ waitCount;
+
+            if (waitCount > waitLimit) {
+                qCritical() << "Signal didn't arrive: "
+                            << spy.signal();
+                break;
+            }
+
+            QTest::qWait(100);
+        }
+    }
+}
+
 /*! An automated tester for common methods (and their expected behaviour),
  *  e.g., don't choke on self-assignment.
  *  TODO: add more common tests.
