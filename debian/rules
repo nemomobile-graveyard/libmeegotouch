@@ -3,6 +3,8 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
+DEB_BUILD_ARCH := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+
 DEBDIR = ..
 
 comma :=,
@@ -67,12 +69,18 @@ else
      MAKEDOCS = 0
 endif
 
+# uncomment this once the meego graphicssystem should be used
+#ifeq ($(DEB_BUILD_ARCH),armel)
+#     OPTIONS += -meegographicssystem
+#endif
+
 # Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
 ifneq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
      MAKEDOCS = 0
 endif
 
-BUILD_DIR=build-$(shell dpkg-architecture -qDEB_BUILD_ARCH)
+
+BUILD_DIR = build-$(DEB_BUILD_ARCH)
 
 configure: configure-stamp
 configure-stamp:

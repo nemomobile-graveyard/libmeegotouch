@@ -119,6 +119,10 @@ QT += \
     gui \
     xml
 
+contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
+    QT += meegographicssystemhelper
+}
+
 !simulator: QT += opengl
 
 QMAKE_EXTRA_TARGETS += check

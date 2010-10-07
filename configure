@@ -69,6 +69,7 @@ CFG_NOBUILD_PARTS=""
 CFG_DBUS=auto
 CFG_ICU=auto
 CFG_GCONF=auto
+CFG_MEEGOGRAPHICSSYSTEM=no
 
 HAVE_ICU=no
 HAVE_CONTEXTSUBSCRIBER=no
@@ -79,6 +80,7 @@ HAVE_CONTENTACTION=no
 HAVE_XDAMAGE=no
 HAVE_QTM_SERVICEFRAMEWORK=no
 IS_MAEMO5=no
+HAVE_MEEGOGRAPHICSSYSTEM=no
 
 OPT_SHADOW=maybe
 
@@ -125,7 +127,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal|-dbus|-icu|-gconf)
+        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal|-dbus|-icu|-gconf|-meegographicssystem)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -258,6 +260,13 @@ while [ "$#" -gt 0 ]; do
     gconf)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
             CFG_GCONF="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
+    meegographicssystem)
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_MEEGOGRAPHICSSYSTEM="$VAL"
         else
             UNKNOWN_OPT=yes
         fi
@@ -432,6 +441,14 @@ if [ $? -eq 0 ]; then
     	IS_ARMEL=yes  
     fi      
 
+    if [ "$CFG_MEEGOGRAPHICSSYSTEM" != "no" ]; then
+        if  [ "$IS_ARMEL" = "yes" ]; then
+            HAVE_MEEGOGRAPHICSSYSTEM=yes
+        else
+            echo "MeeGo graphicssystem is only available for ARM."
+            exit 1
+        fi
+    fi
 fi
 
 # Test for qt service framework
@@ -467,38 +484,41 @@ Configure options:
  that needs to be evaluated. If the evaluation succeeds, the feature is
  included. Here is a short explanation of each option:
 
-    -release ........... Compile and link libmeegotouch in release mode
- *  -debug ............. Compile and link libmeegotouch with debugging turned on
+    -release ................. Compile and link libmeegotouch in release mode
+ *  -debug ................... Compile and link libmeegotouch with debugging turned on
 
-    -testable .......... Enable the testability plugin interface in libmeegotouch
-    -timestamps ........ Enable time debug measurements in the code
-    -coverage .......... Enable code coverage calculation
-    -pch ............... Enable pre-compiled header
-    -no-werror ......... Disable warnings as errors gcc flag
+    -testable ................ Enable the testability plugin interface in libmeegotouch
+    -timestamps .............. Enable time debug measurements in the code
+    -coverage ................ Enable code coverage calculation
+    -pch ..................... Enable pre-compiled header
+    -no-werror ............... Disable warnings as errors gcc flag
 
 Additional options:
 
-    -make <part> ....... Add part to the list of parts to be built at make time
-                         (*libs *demos tests benchmarks)
-    -nomake <part> ..... Exclude part from the list of parts to be built
+    -make <part> ............. Add part to the list of parts to be built at make time
+                               (*libs *demos tests benchmarks)
+    -nomake <part> ........... Exclude part from the list of parts to be built
 
-    -dev ............... Compile and link with default developer options.
-                         This enables the benchmarks and tests parts.
+    -dev ..................... Compile and link with default developer options.
+                               This enables the benchmarks and tests parts.
 
-    -tests ............. Build the tests.
-    -benchmarks ........ Build the benchmarks.
-    -examples .......... Build the examples.
+    -tests ................... Build the tests.
+    -benchmarks .............. Build the benchmarks.
+    -examples ................ Build the examples.
 
-    -maemo5 ............ Build libmeegotouch for the N900 device with maemo5.
+    -maemo5 .................. Build libmeegotouch for the N900 device with maemo5.
 
-    -no-dbus ........... Do not compile with DBus support.
- +  -dbus .............. Compile with DBus support.
+    -no-dbus ................. Do not compile with DBus support.
+ +  -dbus .................... Compile with DBus support.
 
-    -no-gconf .......... Do not compile with gconf support.
- +  -gconf ............. Compile with gconf support.
+    -no-gconf ................ Do not compile with gconf support.
+ +  -gconf ................... Compile with gconf support.
 
-    -no-icu ............ Do not compile with ICU support.
- +  -icu ............... Compile with ICU support.
+    -no-icu .................. Do not compile with ICU support.
+ +  -icu ..................... Compile with ICU support.
+
+    -no-meegographicssystem .. Do not compile with meego graphicssystem support.
+ +  -meegographicssystem ..... Compile with meego graphicssystem support.
 
 EOF
 
@@ -615,6 +635,10 @@ fi
 
 if [ "$IS_MAEMO5" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS M_OS_MAEMO5"
+fi
+
+if [ "$HAVE_MEEGOGRAPHICSSYSTEM" = "yes" ]; then
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_MEEGOGRAPHICSSYSTEM"
 fi
 
 if [ "$IS_ARMEL" = "yes" ]; then
@@ -814,7 +838,7 @@ echo "GStreamer 0.10 .................. $HAVE_GSTREAMER"
 echo "DBus (incl. QtDBus) ............. $HAVE_DBUS"
 echo "XDamage ......................... $HAVE_XDAMAGE"
 echo "Qt Mobility Service Framework ... $HAVE_QTM_SERVICEFRAMEWORK"
-
+echo "MeeGo graphicssystem ............ $HAVE_MEEGOGRAPHICSSYSTEM"
 
 if [ "$CFG_DEV" = "yes" ]; then
     echo ""
