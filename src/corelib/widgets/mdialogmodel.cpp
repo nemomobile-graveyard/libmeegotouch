@@ -53,7 +53,7 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
 
     switch (buttonType) {
     case M::OkButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
         //: Saves changes and closes the dialog
         //% "OK"
         button->setText(qtTrId("qtn_comm_ok"));
@@ -66,21 +66,21 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameOpen);
         break;
     case M::SaveButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
         //: For saving changes
         //% "Save"
         button->setText(qtTrId("qtn_comm_save"));
         button->setObjectName(ButtonNameSave);
         break;
     case M::CancelButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
         //: Discards the changes and closes the dialog
         //% "Cancel"
         button->setText(qtTrId("qtn_comm_cancel"));
         button->setObjectName(ButtonNameCancel);
         break;
     case M::CloseButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
         //: Command for closing e.g. dialogs
         //% "Close"
         button->setText(qtTrId("qtn_comm_command_close"));
@@ -99,8 +99,9 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameApply);
         break;
     case M::ResetButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
-        //% "Reset"
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
+        //: Command for resetting to default settings values
+        //% "Reset Settings"
         button->setText(qtTrId("qtn_comm_settings_reset"));
         button->setObjectName(ButtonNameReset);
         break;
@@ -111,10 +112,10 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameRestoreDefaults);
         break;
     case M::HelpButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
-        //: Opens help for application
-        //% "Help"
-        button->setText(qtTrId("qtn_comm_help"));
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
+        //: Opens the user guide for the application
+        //% "User Guide"
+        button->setText(qtTrId("qtn_comm_userguide"));
         button->setObjectName(ButtonNameHelp);
         break;
     case M::SaveAllButton:
@@ -124,7 +125,7 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameSaveAll);
         break;
     case M::YesButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
         //: Command for confirming queries
         //% "Yes"
         button->setText(qtTrId("qtn_comm_command_yes"));
@@ -137,7 +138,7 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameYesToAll);
         break;
     case M::NoButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.6.doc
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
         //: Command for declining queries
         //% "No"
         button->setText(qtTrId("qtn_comm_command_no"));
@@ -179,7 +180,7 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameIgnore);
         break;
     case M::DoneButton:
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.7.doc
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
         //: Command for confirmation
         //% "Done"
         button->setText(qtTrId("qtn_comm_command_done"));

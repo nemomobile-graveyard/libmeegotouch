@@ -88,8 +88,8 @@ void MMashupCanvasPrivate::addWidget(QGraphicsWidget *widget, MDataStore &store)
     if (!dataStores.contains(widget)) {
         // Add the remove action into the object menu of the applet widget
         //: Object menu command. Removes e.g. applet from canvas.
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.7.pdf
-        //% "Remove Applet"
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.pdf
+        //% "Remove"
         MAction *action = new MAction(qtTrId("qtn_comm_removewidget"), q);
         instanceManager->connect(action, SIGNAL(triggered(bool)), SLOT(removeActionTriggered(bool)));
         widget->addAction(action);

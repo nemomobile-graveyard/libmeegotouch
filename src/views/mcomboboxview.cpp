@@ -76,6 +76,8 @@ void MComboBoxViewPrivate::updateSubtitle(int currentIndex)
     if (currentIndex != -1)  {
         buttonWidget()->setSubtitle(controller->itemText(currentIndex));
     } else {
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.21.doc
+        //: Default value for Popup List button sub-label when no item has been selected yet
         //% "Tap to Select"
         buttonWidget()->setSubtitle(qtTrId("qtn_comm_popup_default"));
     }
