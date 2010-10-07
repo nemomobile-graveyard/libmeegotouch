@@ -41,7 +41,7 @@ SUBDIRS     =  \
      ut_mlist \
      ut_mlistviewgroupheader \
      ut_mlistviewmulticolumn \
-#    ut_mlistviewseparators \ // it currently gets stuck
+     ut_mlistviewseparators \
      ut_mlistfilter \
      ut_mflowlayoutpolicy \
      ut_mfreestylelayoutpolicy \
