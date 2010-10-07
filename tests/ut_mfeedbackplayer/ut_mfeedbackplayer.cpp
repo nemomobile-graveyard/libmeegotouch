@@ -52,17 +52,20 @@ void Ut_MFeedbackPlayer::initialCommunicaton()
 {
     QLocalSocket *testSocket;
     QString writtenString;
+    QString writtenVersion;
 
     // Get written string
     testSocket = QLocalSocket::instance();
     QDataStream testStream(*testSocket->getWrittenData());
-    testStream >> writtenString;
+    testStream >> writtenNumber;
+    testStream >> writtenVersion;
 
     // Make sure the socket was connected
     QCOMPARE(testSocket->state(), QLocalSocket::ConnectedState);
 
     // Make sure the data was as expected
     QCOMPARE(writtenString, QString("fooApplication"));
+    QCOMPARE(writtenVersion, QString("FeedbackProtocolVersion#1"));
 }
 
 /*
@@ -73,6 +76,7 @@ void Ut_MFeedbackPlayer::reconnect()
 {
     QLocalSocket *testSocket;
     QString writtenString;
+    QString writtenVersion;
 
     // Prepare socket
     testSocket = QLocalSocket::instance();
@@ -88,13 +92,15 @@ void Ut_MFeedbackPlayer::reconnect()
     QApplication::processEvents();
 
     QDataStream testStream(*testSocket->getWrittenData());
-    testStream >> writtenString;
+    testStream >> writtenNumber;
+    testStream >> writtenVersion;
 
     // Make sure the socket was connected
     QCOMPARE(testSocket->state(), QLocalSocket::ConnectedState);
 
     // Make sure the data was as expected
     QCOMPARE(writtenString, QString("fooApplication"));
+    QCOMPARE(writtenVersion, QString("FeedbackProtocolVersion#1"));
 }
 
 /*

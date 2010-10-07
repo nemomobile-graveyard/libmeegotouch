@@ -23,6 +23,11 @@
 #include <QDir>
 #include <QString>
 
+namespace {
+    // Version information of protocol used with feedback daemon
+    const QString FeedbackProtocolVersion("FeedbackProtocolVersion#1");
+}
+
 static const char gSocketServer[] = "/tmp/mfeedbackd/player.sock";
 
 MFeedbackPlayerPrivate::MFeedbackPlayerPrivate(QObject *parent)
@@ -83,6 +88,7 @@ void MFeedbackPlayerPrivate::sendPlaybackRequest(const QString &name)
 void MFeedbackPlayerPrivate::onConnected()
 {
     reconnectionAttempts = 0;
+    socketStream << FeedbackProtocolVersion;
     socketStream << applicationName;
 }
 
