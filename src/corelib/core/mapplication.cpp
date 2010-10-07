@@ -55,6 +55,10 @@ MApplicationPrivate::MApplicationPrivate():
 #ifdef Q_WS_X11
     visibleAtom = XInternAtom(QX11Info::display(),
                               "_MEEGOTOUCH_VISIBLE_IN_SWITCHER", False);
+    stateAtom = XInternAtom(QX11Info::display(),
+                            "_NET_WM_STATE", False);
+    skipAtom = XInternAtom(QX11Info::display(),
+                              "_NET_WM_STATE_SKIP_TASKBAR", False);
 #endif
 }
 
@@ -95,11 +99,14 @@ void MApplicationPrivate::removeWindowFromSwitcher(Window window, bool remove)
     Atom stateAtom = XInternAtom(dpy, "_NET_WM_STATE", True);
     if (stateAtom != None) {
         Atom skipAtom = XInternAtom(dpy, "_NET_WM_STATE_SKIP_TASKBAR", True);
+	MWindow *win = windowForId(window);
         if (remove) {
+            win->d_ptr->removeWindowFromSwitcherInProgress = true;
             XChangeProperty(dpy, window, stateAtom,
                             XA_ATOM, 32, PropModeAppend,
                             reinterpret_cast<unsigned char *>(&skipAtom), 1);
-        } else {
+        } else if (!win->d_ptr->skipTaskbar) {
+            // Do not remove SKIP_TASKBAR if it was requested from outside
             XEvent ev;
             memset(&ev, 0, sizeof(ev));
             ev.xclient.type         = ClientMessage;
@@ -111,6 +118,7 @@ void MApplicationPrivate::removeWindowFromSwitcher(Window window, bool remove)
             ev.xclient.data.l[1]    = skipAtom;
             ev.xclient.data.l[2]    = 0;
 
+            win->d_ptr->removeWindowFromSwitcherInProgress = true;
             XSendEvent(dpy, QX11Info::appRootWindow(), False, SubstructureRedirectMask | SubstructureNotifyMask,
                        &ev);
             XSync(dpy, False);
@@ -471,33 +479,52 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
     // flag for corresponding window because we need to combine this
     // information with VisibilityNotify's.
 
+    // Applications can set themselves _NET_WM_STATE_SKIP_TASKBAR to avoid window
+    // being displayed in taskbar. We need to handle this situation too.
+
     MWindow *window = windowForId(xevent->window);
-    if (window) {
+    if (window && xevent->state == PropertyNewValue) {
+        Atom           type;
+        int            format;
+        long           max_len = 1024;
+        unsigned long  nItems;
+        unsigned long  bytesAfter;
+        unsigned char *data = NULL;
 
-        const bool obscured = window->d_ptr->fullyObscured;
-        if (xevent->atom == visibleAtom && xevent->state == PropertyNewValue) {
-
-            // Property's value was changed, read the value
-            Atom           type;
-            int            format;
-            unsigned long  nItems;
-            unsigned long  bytesAfter;
-            unsigned char *data = NULL;
-
+        if (xevent->atom == visibleAtom) {
             // Read value of the property. Should be 1 or 0.
-            if(XGetWindowProperty(QX11Info::display(), xevent->window, visibleAtom, 0, 1, False, XA_CARDINAL,
-                                  &type, &format, &nItems, &bytesAfter, &data) == Success) {
-                if(data) {
-                    bool visible = *data;
-                    window->d_ptr->visibleInSwitcher = visible;
+            if (XGetWindowProperty(QX11Info::display(), xevent->window, visibleAtom,
+                                   0, 1, False, XA_CARDINAL, &type, &format, &nItems,
+                                   &bytesAfter, &data) == Success && data) {
+                const bool obscured = window->d_ptr->fullyObscured;
+                bool visible = *data;
+                window->d_ptr->visibleInSwitcher = visible;
 
-                    if (visible) {
-                        setWindowVisibility(window, true);
-                    } else if (obscured){
-                        setWindowVisibility(window, false);
+                if (visible) {
+                    setWindowVisibility(window, true);
+                } else if (obscured){
+                    setWindowVisibility(window, false);
+                }
+
+                XFree(data);
+            }
+        } else if (xevent->atom == stateAtom) {
+            /* Check if it comes from MTF itself */
+            if (window->d_ptr->removeWindowFromSwitcherInProgress) {
+                window->d_ptr->removeWindowFromSwitcherInProgress = false;
+            } else {
+                /* Check if SKIP_TASKBAR was set or removed */
+                window->d_ptr->skipTaskbar = false;
+                if (XGetWindowProperty(QX11Info::display(), xevent->window, stateAtom, 0,
+                                       max_len, False, XA_ATOM, &type, &format, &nItems,
+                                       &bytesAfter, &data) == Success && data) {
+                    for (unsigned long i = 0; i < nItems; i++) {
+                        if (data[i] == skipAtom) {
+                            window->d_ptr->skipTaskbar = true;
+                            break;
+                        }
                     }
-
-                    XFree(data);
+                    XFree (data);
                 }
             }
         }

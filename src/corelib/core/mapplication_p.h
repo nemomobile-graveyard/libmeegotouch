@@ -75,6 +75,8 @@ private:
     void handleXVisibilityEvent(XVisibilityEvent *xevent);
     void handleXPropertyEvent(XPropertyEvent *xevent);
     Atom visibleAtom;
+    Atom stateAtom;
+    Atom skipAtom;
 #endif
     friend class MApplicationServicePrivate;
     friend class MWindow;
