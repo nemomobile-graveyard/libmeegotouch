@@ -131,6 +131,20 @@ void MInputMethodState::emitKeyRelease(const QKeyEvent &event)
     emit keyRelease(event);
 }
 
+QList<int> MInputMethodState::toolbarIds() const
+{
+    Q_D(const MInputMethodState);
+    return d->toolbars.keys();
+}
+
+MInputMethodState::ItemAttributeMap MInputMethodState::toolbarState(int id) const
+{
+    Q_D(const MInputMethodState);
+    ToolbarInfo *toolbar = d->toolbars.value(id);
+
+    return (toolbar ? toolbar->items : ItemAttributeMap());
+}
+
 int MInputMethodState::registerToolbar(const QString &fileName)
 {
     Q_D(MInputMethodState);
@@ -138,7 +152,7 @@ int MInputMethodState::registerToolbar(const QString &fileName)
     // generate an application local unique identifier for the toolbar.
     int newId = idCounter;
     idCounter++;
-    d->toolbars.insert(newId, fileName);
+    d->toolbars.insert(newId, new ToolbarInfo(fileName));
     emit toolbarRegistered(newId, fileName);
     return newId;
 }
@@ -146,6 +160,7 @@ int MInputMethodState::registerToolbar(const QString &fileName)
 void MInputMethodState::unregisterToolbar(int id)
 {
     Q_D(MInputMethodState);
+    delete d->toolbars[id];
     d->toolbars.remove(id);
     emit toolbarUnregistered(id);
 }
@@ -153,13 +168,28 @@ void MInputMethodState::unregisterToolbar(int id)
 void MInputMethodState::setToolbarItemAttribute(int id, const QString &item,
                                                 const QString &attribute, const QVariant &value)
 {
+    Q_D(MInputMethodState);
+
+    if (!d->toolbars.contains(id)) {
+        return;
+    }
+
+    ToolbarInfo *toolbar = d->toolbars[id];
+    toolbar->items[item][attribute] = value;
     emit toolbarItemAttributeChanged(id, item, attribute, value);
 }
 
 QString MInputMethodState::toolbar(int id) const
 {
     Q_D(const MInputMethodState);
-    return d->toolbars.value(id);
+
+    ToolbarInfo *toolbar = d->toolbars.value(id);
+
+    if (toolbar) {
+        return toolbar->fileName;
+    } else {
+        return QString();
+    }
 }
 
 #include "moc_minputmethodstate.cpp"

@@ -28,6 +28,7 @@ void Ut_MInputMethodState::initTestCase()
 
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_minputmethodstate" };
+    MApplication::setLoadMInputContext(false);
 
     m_app.reset(new MApplication(argc, app_name));
 }
@@ -83,6 +84,70 @@ void Ut_MInputMethodState::testInputMethodArea()
     // Set the same orientation again, don't get notified
     state->setInputMethodArea(rect);
     QCOMPARE(spy.count(), 1);
+}
+
+// checks registering and modifying toolbars
+void Ut_MInputMethodState::testToolbars()
+{
+    MInputMethodState *state = MInputMethodState::instance();
+
+    QSignalSpy registerSpy(state, SIGNAL(toolbarRegistered(int, QString)));
+
+    QSignalSpy changeSpy(state,
+                         SIGNAL(toolbarItemAttributeChanged(int, QString, QString, QVariant)));
+
+    // register toolbar
+    int id = state->registerToolbar("filename");
+    QCOMPARE(registerSpy.count(), 1);
+    registerSpy.clear();
+
+    // make a modification
+    state->setToolbarItemAttribute(id, "itemName", "attributeName", 42);
+    QCOMPARE(changeSpy.count(), 1);
+    changeSpy.clear();
+
+    // another toolbar with one item containing two attributes, and second containing one
+    int id2 = state->registerToolbar("filename2");
+
+    // check that registered toolbar ids are correct
+    QList<int> idList = state->toolbarIds();
+    QList<int> expectedIds;
+    expectedIds << id << id2;
+    QCOMPARE(idList, expectedIds);
+
+    QMap<QString, QMap<QString, QVariant> > valuesToSet;
+    QMap<QString, QVariant> item2Attributes;
+    item2Attributes.insert("attributeName2", 43);
+    item2Attributes.insert("attributeName3", 44);
+    valuesToSet.insert("itemName2", item2Attributes);
+    
+    QMap<QString, QVariant> item3Attributes;
+    item3Attributes.insert("attributeName4", 45);
+    valuesToSet.insert("itemName3", item3Attributes);
+
+    foreach (QString itemName, valuesToSet.keys()) {
+        QMap<QString, QVariant> attributes = valuesToSet[itemName];
+
+        foreach (QString attributeName, attributes.keys()) {
+            QVariant attribute = attributes[attributeName];
+
+            state->setToolbarItemAttribute(id2, itemName, attributeName, attribute);
+        }
+    }
+
+    QCOMPARE(changeSpy.count(), 3);
+    changeSpy.clear();
+
+    // check the toolbar item attribute values are really the ones set
+    QMap<QString, QMap<QString, QVariant> > itemAttributeValues = state->toolbarState(id2);
+    QList<QString> names;
+
+    QCOMPARE(valuesToSet, itemAttributeValues);
+
+    // check that invalid toolbars are not accepted
+    int invalidToolbar = 13131313;
+    state->setToolbarItemAttribute(invalidToolbar, "itemName", "attributeName", 42);
+    QCOMPARE(changeSpy.count(), 0);
 }
 
 

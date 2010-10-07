@@ -22,9 +22,24 @@
 
 #include <QObject>
 #include <QMap>
+#include <QVariant>
 
 #include "minputmethodstate.h"
 #include "mnamespace.h"
+
+
+class ToolbarInfo {
+public:
+    ToolbarInfo(const QString &toolbarFile)
+        : fileName(toolbarFile)
+    {
+    }
+
+    QString fileName;
+    MInputMethodState::ItemAttributeMap items;
+};
+
+
 
 class MInputMethodStatePrivate
 {
@@ -41,7 +56,7 @@ public:
     //! Current orientation of application's active window
     M::OrientationAngle orientation;
 
-    QMap<int, QString> toolbars;
+    QMap<int, ToolbarInfo*> toolbars;
 
 private:
     Q_DISABLE_COPY(MInputMethodStatePrivate)

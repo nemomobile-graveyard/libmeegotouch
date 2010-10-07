@@ -76,6 +76,16 @@ public:
     //! \internal
     void emitKeyPress(const QKeyEvent &event);
     void emitKeyRelease(const QKeyEvent &event);
+
+    // returns the identifiers of registered toolbars
+    QList<int> toolbarIds() const;
+
+    // providing item name -> (attribute name -> attribute value)
+    typedef QMap<QString, QVariant> AttributeMap;
+    typedef QMap<QString, AttributeMap> ItemAttributeMap;
+
+    // returns state set for a toolbar
+    ItemAttributeMap toolbarState(int id) const;
     //! \internal_end
 
 public Q_SLOTS:
@@ -126,7 +136,8 @@ Q_SIGNALS:
     void toolbarUnregistered(int id);
 
     //! Emitted when input method toolbar item attribute is changed.
-    void toolbarItemAttributeChanged(int id, const QString &item, const QString &attribute, const QVariant &value);
+    void toolbarItemAttributeChanged(int id, const QString &item, const QString &attribute,
+                                     const QVariant &value);
 
     //! Can be emitted by input method to notify about raw key press event it receives.
     void keyPress(const QKeyEvent &);

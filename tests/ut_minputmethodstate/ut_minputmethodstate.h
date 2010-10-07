@@ -42,6 +42,8 @@ private slots:
     void testActiveWindowOrientationAngle();
     void testInputMethodArea();
 
+    void testToolbars();
+
 private:
     std::auto_ptr<MApplication> m_app;
 };
