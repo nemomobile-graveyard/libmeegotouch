@@ -30,6 +30,11 @@
 MSceneEventEater::MSceneEventEater(QGraphicsItem *parent) :
         QGraphicsWidget(parent)
 {
+    grabGesture(Qt::TapGesture);
+    grabGesture(Qt::TapAndHoldGesture);
+    grabGesture(Qt::PanGesture);
+    grabGesture(Qt::PinchGesture);
+    grabGesture(Qt::SwipeGesture);
     setFlag(QGraphicsItem::ItemHasNoContents);
     setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 
@@ -43,7 +48,8 @@ bool MSceneEventEater::event(QEvent *event)
 {
     if ((event->type() > QEvent::MouseButtonPress && event->type() < QEvent::MouseMove) ||
         (event->type() > QEvent::GraphicsSceneMouseMove && event->type() < QEvent::GraphicsSceneWheel) ||
-        (event->type() > QEvent::HoverEnter && event->type() < QEvent::HoverMove)) {
+        (event->type() > QEvent::HoverEnter && event->type() < QEvent::HoverMove) ||
+        (event->type() == QEvent::Gesture)) {
 
         event->accept();
         return true;
