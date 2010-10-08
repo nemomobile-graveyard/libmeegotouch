@@ -63,6 +63,7 @@ MDialogPrivate::~MDialogPrivate()
 
     if (standAloneWindow) {
         Q_Q(MDialog);
+        standAloneWindow->close();
         standAloneWindow->scene()->removeItem(q);
         delete standAloneWindow;
         standAloneWindow = 0;
@@ -159,6 +160,7 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
     removeSceneWindowFromStandaloneScene(homeButtonPanel);
     removeSceneWindowFromStandaloneScene(statusBar);
 
+    standAloneWindow->close();
     standAloneWindow->setScene(0);
     standAloneWindow->deleteLater();
     standAloneWindow = 0;
