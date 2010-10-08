@@ -26,22 +26,22 @@
 
 void Ut_MFeedbackPlayer::init()
 {
-}
-
-void Ut_MFeedbackPlayer::cleanup()
-{
-}
-
-void Ut_MFeedbackPlayer::initTestCase()
-{
     feedbackPlayerContainer = new MApplicationPrivate("fooApplication");
     feedbackPlayer = feedbackPlayerContainer->feedbackPlayer;
 }
 
-void Ut_MFeedbackPlayer::cleanupTestCase()
+void Ut_MFeedbackPlayer::cleanup()
 {
     delete feedbackPlayerContainer;
     feedbackPlayerContainer = 0;
+}
+
+void Ut_MFeedbackPlayer::initTestCase()
+{
+}
+
+void Ut_MFeedbackPlayer::cleanupTestCase()
+{
 }
 
 /*
@@ -57,8 +57,8 @@ void Ut_MFeedbackPlayer::initialCommunicaton()
     // Get written string
     testSocket = QLocalSocket::instance();
     QDataStream testStream(*testSocket->getWrittenData());
-    testStream >> writtenNumber;
     testStream >> writtenVersion;
+    testStream >> writtenString;
 
     // Make sure the socket was connected
     QCOMPARE(testSocket->state(), QLocalSocket::ConnectedState);
@@ -83,17 +83,17 @@ void Ut_MFeedbackPlayer::reconnect()
     testSocket->clearReceivedData();
     testSocket->suddenDisconnect();
 
-    // First reconnection takes place after 50ms, so wait
+    // First reconnection takes place after 10ms, so wait
     // for that reconnection.
-    QTest::qWait(60);
+    QTest::qWait(15);
 
     // Make sure all events are processed (= timer above
     // has been handled) before proceeding.
     QApplication::processEvents();
 
     QDataStream testStream(*testSocket->getWrittenData());
-    testStream >> writtenNumber;
     testStream >> writtenVersion;
+    testStream >> writtenString;
 
     // Make sure the socket was connected
     QCOMPARE(testSocket->state(), QLocalSocket::ConnectedState);
@@ -101,6 +101,58 @@ void Ut_MFeedbackPlayer::reconnect()
     // Make sure the data was as expected
     QCOMPARE(writtenString, QString("fooApplication"));
     QCOMPARE(writtenVersion, QString("FeedbackProtocolVersion#1"));
+}
+
+/*
+ * Check that reconnection attempts stops if there are many successfull connections
+ * that then get disconnected very fast.
+ */
+void Ut_MFeedbackPlayer::tooManyReconnections()
+{
+    QLocalSocket *testSocket;
+    QString writtenString;
+    QString writtenVersion;
+
+    // Prepare socket
+    testSocket = QLocalSocket::instance();
+
+    // 10 fast reconnections should be made successfully
+    for (int i = 0; i < 10; ++i) {
+        testSocket->clearReceivedData();
+        testSocket->suddenDisconnect();
+
+        // First reconnection takes place after 10ms, so wait
+        // for that reconnection.
+        QTest::qWait(15);
+
+        // Make sure all events are processed (= timer above
+        // has been handled) before proceeding.
+        QApplication::processEvents();
+
+        QDataStream testStream(*testSocket->getWrittenData());
+        testStream >> writtenVersion;
+        testStream >> writtenString;
+
+        // Make sure the socket was connected
+        QCOMPARE(testSocket->state(), QLocalSocket::ConnectedState);
+
+        // Make sure the data was as expected
+        QCOMPARE(writtenString, QString("fooApplication"));
+        QCOMPARE(writtenVersion, QString("FeedbackProtocolVersion#1"));
+    }
+
+    // Reconnection attempts should end now
+    testSocket->clearReceivedData();
+    testSocket->suddenDisconnect();
+
+    QTest::qWait(60);
+
+    // Make sure all events are processed (= timer above
+    // has been handled) before proceeding.
+    QApplication::processEvents();
+
+    // Make sure the socket was not connected
+    QCOMPARE(testSocket->state(), QLocalSocket::UnconnectedState);
 }
 
 /*

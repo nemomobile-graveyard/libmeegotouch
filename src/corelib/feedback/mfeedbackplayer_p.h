@@ -23,6 +23,7 @@
 #include <QLocalSocket>
 #include <QMap>
 #include <QTimer>
+#include <QTime>
 #include <QDataStream>
 #include <QObject>
 
@@ -60,6 +61,14 @@ public:
     // to reconnect for the second time and so on.
     // It gives up trying to reconnect when failedReconnections == list.size()
     QList<int> reconnectionIntervalsList;
+
+    // Contains time (in milliseconds) from the previous successfull connection
+    // to the feedback daemon.
+    QTime previousSuccessfullConnection;
+
+    // Contains number of successive successfull connections to feedback daemon
+    // that have happened in less than fastReconnectionTime.
+    int fastReconnectionCount;
 };
 
 #endif

@@ -26,6 +26,9 @@
 namespace {
     // Version information of protocol used with feedback daemon
     const QString FeedbackProtocolVersion("FeedbackProtocolVersion#1");
+
+    const int fastReconnectionTime = 1000;
+    const int maximumFastReconnectionCount = 10;
 }
 
 static const char gSocketServer[] = "/tmp/mfeedbackd/player.sock";
@@ -39,9 +42,11 @@ MFeedbackPlayerPrivate::MFeedbackPlayerPrivate(QObject *parent)
             SLOT(onSocketError(QLocalSocket::LocalSocketError)));
 
     reconnectionAttempts = 0;
+    fastReconnectionCount = 0;
 
     // TODO: Load from a config file?
-    reconnectionIntervalsList << 50;
+    reconnectionIntervalsList << 10;
+    reconnectionIntervalsList << 100;
     reconnectionIntervalsList << 300;
     reconnectionIntervalsList << 600;
     reconnectionIntervalsList << 1000;
@@ -90,6 +95,8 @@ void MFeedbackPlayerPrivate::onConnected()
     reconnectionAttempts = 0;
     socketStream << FeedbackProtocolVersion;
     socketStream << applicationName;
+
+    previousSuccessfullConnection.start();
 }
 
 void MFeedbackPlayerPrivate::connectIdle()
@@ -101,7 +108,18 @@ void MFeedbackPlayerPrivate::onSocketError(QLocalSocket::LocalSocketError socket
 {
     Q_UNUSED(socketError);
 
-    if (reconnectionAttempts < reconnectionIntervalsList.size()) {
+    if (reconnectionAttempts == 0) {
+        if (previousSuccessfullConnection.elapsed() < fastReconnectionTime) {
+            // Increment fast reconnection count if time since previous succesfull
+            // reconnection is less than fastReconnectionTime.
+            fastReconnectionCount++;
+        } else {
+            fastReconnectionCount = 0;
+        }
+    }
+
+    if (reconnectionAttempts < reconnectionIntervalsList.size() &&
+        fastReconnectionCount <= maximumFastReconnectionCount) {
         // Try to reconnect to mfeedbackd
         QTimer::singleShot(reconnectionIntervalsList[reconnectionAttempts],
                            this, SLOT(connectIdle()));

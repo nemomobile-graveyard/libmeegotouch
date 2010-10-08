@@ -38,6 +38,7 @@ private slots:
 
     void initialCommunicaton();
     void reconnect();
+    void tooManyReconnections();
     void playFeedback();
 
 private:
