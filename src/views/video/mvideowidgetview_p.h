@@ -53,6 +53,8 @@ public:
     void blit(const uchar* data);
     void blit(const uchar* data, int w, int h);
 
+    unsigned long currentWinId() const;
+
     bool m_useSingleYuvTexture;
     unsigned int m_textures[3];
 

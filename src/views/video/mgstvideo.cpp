@@ -294,11 +294,11 @@ void MGstVideo::expose()
     }
 }
 
-void MGstVideo::setWinId(unsigned long id) 
+void MGstVideo::setWinId(unsigned long id)
 {
     m_winId = id;
     if( gst_elem_xvimagesink )
-        gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);    
+        gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);
 }
 
 unsigned long MGstVideo::winId() 

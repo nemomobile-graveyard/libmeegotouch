@@ -19,6 +19,7 @@
 
 #include "mapplication.h"
 #include "mapplicationwindow.h"
+#include "mgraphicssystemhelper.h"
 
 #include <gst/gst.h>
 #include <gst/gstvalue.h>
@@ -438,6 +439,11 @@ void MVideoWidgetViewPrivate::blit(const uchar* data)
     }
 }
 
+unsigned long MVideoWidgetViewPrivate::currentWinId() const
+{
+    return MApplication::activeApplicationWindow()->viewport()->effectiveWinId();
+}
+
 MVideoWidgetView::MVideoWidgetView(MVideoWidget* controller) :
     MWidgetView(* new MVideoWidgetViewPrivate, controller)
 {
@@ -507,8 +513,9 @@ void MVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraphic
         }
     } else {
         painter->fillRect(boundingRect(), style()->colorKey());
-        if( d->m_gstVideo->winId() != MApplication::activeApplicationWindow()->viewport()->winId() && MApplication::activeApplicationWindow()->viewport()->winId() != 0 )
-            d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
+        unsigned long id = d->currentWinId();
+        if( d->m_gstVideo->winId() != id && id != 0 )
+            d->m_gstVideo->setWinId(id);
         d->m_gstVideo->expose();
     }
 }
@@ -597,9 +604,9 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
         }
         else if( member == MVideoWidgetModel::Fullscreen ) {
             applyStyle();
-            
+
             if( model()->fullscreen() ) {
-                d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
+                d->m_gstVideo->setWinId(d->currentWinId());
                 d->m_gstVideo->setRenderTarget(MGstVideo::XvSink);
             }
             else {
@@ -630,7 +637,7 @@ void MVideoWidgetView::setupModel()
     applyStyle();
 
     if( model()->fullscreen() ) {
-        d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
+        d->m_gstVideo->setWinId(d->currentWinId());
         d->m_gstVideo->setRenderTarget(MGstVideo::XvSink);
     }
     else {
