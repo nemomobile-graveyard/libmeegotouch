@@ -967,7 +967,7 @@ QString MLocalePrivate::categoryName(MLocale::Category category) const
 void MLocalePrivate::loadTrCatalogs()
 {
     Q_Q(MLocale);
-    foreach(const QExplicitlySharedDataPointer<MTranslationCatalog>& sharedCatalog, _trTranslations) {
+    foreach(const QExplicitlySharedDataPointer<MTranslationCatalog>& sharedCatalog, _trTranslations) { // krazy:exclude=foreach
         if(sharedCatalog->_translator.isEmpty()
            || !sharedCatalog->_name.endsWith(QLatin1String(".qm"))) {
             sharedCatalog->loadWith(q, MLocale::MLcMessages);
@@ -977,14 +977,14 @@ void MLocalePrivate::loadTrCatalogs()
 
 void MLocalePrivate::insertTrToQCoreApp()
 {
-    foreach(const QExplicitlySharedDataPointer<MTranslationCatalog>& sharedCatalog, _trTranslations) {
+    foreach(const QExplicitlySharedDataPointer<MTranslationCatalog>& sharedCatalog, _trTranslations) { // krazy:exclude=foreach
         QCoreApplication::installTranslator(&sharedCatalog->_translator);
     }
 }
 
 void MLocalePrivate::removeTrFromQCoreApp()
 {
-    foreach(const QExplicitlySharedDataPointer<MTranslationCatalog>& sharedCatalog, _trTranslations) {
+    foreach(const QExplicitlySharedDataPointer<MTranslationCatalog>& sharedCatalog, _trTranslations) { // krazy:exclude=foreach
         QCoreApplication::removeTranslator(&sharedCatalog->_translator);
     }
 }
@@ -2773,7 +2773,7 @@ void MLocale::setDataPaths(const QStringList &dataPaths)
 #ifdef HAVE_ICU
     QString pathString;
 
-    foreach(QString string, dataPaths) {
+    foreach(QString string, dataPaths) { // krazy:exclude=foreach
         string.replace('/', U_FILE_SEP_CHAR);
         pathString.append(string);
         // separator gets appended to the end of the list. I hope Icu doesn't mind
