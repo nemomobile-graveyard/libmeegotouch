@@ -30,6 +30,8 @@ public:
     MListItemPrivate();
     virtual ~MListItemPrivate();
 
+    void updateLongTapConnections();
+
 private:
     Q_DECLARE_PUBLIC(MListItem)
 };

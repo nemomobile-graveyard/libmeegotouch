@@ -205,13 +205,8 @@ MWidget *MListViewPrivate::createCell(int row)
         QObject::connect(cell, SIGNAL(clicked()), q_ptr, SLOT(itemClick()), Qt::UniqueConnection);
     }
 
-    if (cell->metaObject()->indexOfSignal("longTapped(QPointF)") != -1) {
-        QObject::connect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)), Qt::UniqueConnection);
-    }
+    updateItemLongTapConnection(cell);
 
-    if (controllerModel->longTapEnabled()) {
-        cell->grabGesture(Qt::TapAndHoldGesture);
-    }
     return cell;
 }
 
@@ -380,6 +375,23 @@ void MListViewPrivate::connectSignalsFromModelToListView()
 
         connect(scrollToTimeLine, SIGNAL(frameChanged(int)), q_ptr, SLOT(_q_moveViewportToNextPosition(int)));
         connect(controller, SIGNAL(visibleChanged()), q_ptr, SLOT(_q_relayoutItemsIfNeeded()));
+    }
+}
+
+void MListViewPrivate::updateItemConnections()
+{
+    foreach (MWidget *cell, visibleItems) {
+        updateItemLongTapConnection(cell);
+    }
+}
+
+void MListViewPrivate::updateItemLongTapConnection(MWidget *cell)
+{
+    if (cell->metaObject()->indexOfSignal("longTapped(QPointF)") != -1) {
+        if (controllerModel->longTapEnabled())
+            QObject::connect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)), Qt::UniqueConnection);
+        else
+            QObject::disconnect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)));
     }
 }
 

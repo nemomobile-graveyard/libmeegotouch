@@ -151,6 +151,9 @@ public:
     virtual void disconnectSignalsFromModelToListView();
     virtual void connectSignalsFromModelToListView();
 
+    virtual void updateItemConnections();
+    virtual void updateItemLongTapConnection(MWidget *cell);
+
 public Q_SLOTS:
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);

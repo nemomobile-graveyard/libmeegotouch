@@ -33,6 +33,15 @@ MListItemPrivate::~MListItemPrivate()
 {
 }
 
+void MListItemPrivate::updateLongTapConnections()
+{
+    Q_Q(MListItem);
+    if (q->receivers(SIGNAL(longTapped(QPointF))) > 0)
+        q->grabGesture(Qt::TapAndHoldGesture);
+    else
+        q->ungrabGesture(Qt::TapAndHoldGesture);
+}
+
 MListItem::MListItem(QGraphicsItem *parent)
     : MWidgetController(new MListItemPrivate, new MListItemModel, parent)
 {
@@ -50,4 +59,22 @@ void MListItem::click()
 void MListItem::longTap(const QPointF &pos)
 {
     emit longTapped(pos);
+}
+
+void MListItem::connectNotify(const char *signal)
+{
+    Q_D(MListItem);
+
+    if (QLatin1String(signal) == SIGNAL(longTapped(QPointF))) {
+        d->updateLongTapConnections();
+    }
+}
+
+void MListItem::disconnectNotify(const char *signal)
+{
+    Q_D(MListItem);
+
+    if (QLatin1String(signal) == SIGNAL(longTapped(QPointF))) {
+        d->updateLongTapConnections();
+    }
 }

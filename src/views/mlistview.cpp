@@ -108,6 +108,8 @@ void MListView::updateData(const QList<const char *>& modifications)
             longTap(model()->longTap());
         } else if (member == MListModel::ListIndexDisplayMode) {
             d_ptr->updateListIndexVisibility();
+        } else if (member == MListModel::LongTapEnabled) {
+            d_ptr->updateItemConnections();
         }
     }
 }
