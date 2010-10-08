@@ -15,7 +15,7 @@ SUBDIRS     =  \
     ft_mscenemanager \
     ft_mgconfitem \
     ft_theme \
-#    ft_mbutton \
+    ft_mbutton \
     ft_mslider \
     ft_mscalableimage \
     # ut_allwidgets \ // doesn't work

@@ -1,20 +1,18 @@
 MButtonStyle {
-    minimum-size: size(20, 20);  
-    maximum-size: size(400, 400);                                   
-    preferred-size: size(100, 100);                                   
-    normal-background-image: scalable(SB-normal, 40, 40, 0, 0);
-    pressed-background-image: scalable(SB-press, 40, 40, 0, 0);
+    minimum-size: 20 20;
+    maximum-size: 400 400;
+    preferred-size: 100 100;
 }
 
-.MButtonStyle#ft_test_button {
-    minimum-size: size(20, 20);  
-    maximum-size: size(400, 400);                                   
-    preferred-size: size(100, 100);                                   
+MButtonStyle#ft_test_button {
+    minimum-size: 20 20;
+    maximum-size: 400 400;
+    preferred-size: 100 100;
+    background-image: "meegotouch-viewmenubuttons";
 }
 
-.MButtonStyle#button2 {
-    normal-background-image: scalable(SB-press, 40, 40, 0, 0);
-    pressed-background-image: scalable(SB-press, 40, 40, 0, 0);
+MButtonStyle#button2 {
+    background-image: "meegotouch-button";
 }
 
 MButtonStyle#buttonNotBoxed {

@@ -465,19 +465,21 @@ void Ft_Theme::testFonts_data()
     extraLargeFont.setPixelSize(32);
     QFont largeFont("Arial");
     largeFont.setPixelSize(28);
-    QFont defaultFont("System");
-    defaultFont.setPixelSize(24);
+    QFont defaultFontTheme1("Arial");
+    defaultFontTheme1.setPixelSize(24);
+    QFont defaultFontTheme2("Courier");
+    defaultFontTheme2.setPixelSize(24);
     QFont smallFont("Arial");
     smallFont.setPixelSize(20);
     QFont extraSmallFont("Arial");
     extraSmallFont.setPixelSize(16);
 
-    QTest::newRow("theme 1, en") << "theme 1" << "en" << extraLargeFont << largeFont << defaultFont << smallFont << extraSmallFont;
+    QTest::newRow("theme 1, en") << "theme 1" << "en" << extraLargeFont << largeFont << defaultFontTheme1 << smallFont << extraSmallFont;
 
-    QTest::newRow("theme 2, en") << "theme 2" << "en" << extraLargeFont << largeFont << defaultFont << smallFont << extraSmallFont;
+    QTest::newRow("theme 2, en") << "theme 2" << "en" << extraLargeFont << largeFont << defaultFontTheme2 << smallFont << extraSmallFont;
 
 #ifdef HAVE_GCONF
-    QTest::newRow("theme 1, fi") << "theme 1" << "fi" << extraLargeFont << largeFont << defaultFont << smallFont << extraSmallFont;
+    QTest::newRow("theme 1, fi") << "theme 1" << "fi" << extraLargeFont << largeFont << defaultFontTheme1 << smallFont << extraSmallFont;
 #endif
 }
 void Ft_Theme::testFonts()
@@ -504,6 +506,7 @@ void Ft_Theme::testFonts()
     QCOMPARE(fonts.extraLargeFont(), extraLargeFont);
     QCOMPARE(fonts.largeFont(), largeFont);
     QCOMPARE(fonts.defaultFont(), defaultFont);
+
     QCOMPARE(fonts.smallFont(), smallFont);
     QCOMPARE(fonts.extraSmallFont(), extraSmallFont);
 }

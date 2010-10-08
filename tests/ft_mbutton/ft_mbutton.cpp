@@ -27,9 +27,6 @@
 #include "mapplication.h"
 
 
-
-
-
 Ft_MButton::Ft_MButton()
 {
 }
@@ -52,9 +49,9 @@ void Ft_MButton::buttonPaint()
 {
     // Allocate button, rename, resize and check.
     MButton *b = new MButton();
-    setObjectName("ft_test_button");
-    b->resize(125, 85);
-    QVERIFY(b->size() == QSizeF(125, 85));
+    b->resize(125, 35);
+
+    QVERIFY(b->size() == QSizeF(125, 35));
 
     // Allocate two pixmaps.
     QPixmap *p = new QPixmap(500, 500);
@@ -75,7 +72,7 @@ void Ft_MButton::buttonPaint()
         }
     }
 
-    for (int y = 85; y < 500; y++) {
+    for (int y = 35; y < 500; y++) {
         for (int x = 0; x < 500; x++) {
             QVERIFY(pi.pixel(x, y) == origi.pixel(x, y));
         }
@@ -91,20 +88,22 @@ void Ft_MButton::buttonSetObjectName()
 {
     // Allocate button, resize and check.
     MButton *b1 = new MButton();
-    b1->resize(125, 85);
-    QVERIFY(b1->size() == QSizeF(125, 85));
+    QVERIFY( b1 != NULL );
+    b1->resize(125, 35);
+    QVERIFY(b1->size() == QSizeF(125, 35));
 
     // Allocate button, rename, resize and check.
     MButton *b2 = new MButton();
+    QVERIFY( b2 != NULL );
     b2->setObjectName("button2");
     QVERIFY(b2->objectName() == "button2");
-    b2->resize(125, 85);
-    QVERIFY(b2->size() == QSizeF(125, 85));
+    b2->resize(125, 35);
+    QVERIFY(b2->size() == QSizeF(125, 35));
 
     // Allocate two pixmaps.
-    QPixmap *p1 = new QPixmap(125, 85);
+    QPixmap *p1 = new QPixmap(125, 35);
     p1->fill(QColor(0, 0, 0, 0));
-    QPixmap *p2 = new QPixmap(125, 85);
+    QPixmap *p2 = new QPixmap(125, 35);
     p2->fill(QColor(0, 0, 0, 0));
 
     // Init painters and paint.
@@ -114,9 +113,7 @@ void Ft_MButton::buttonSetObjectName()
     b2->paint(&painter2, 0, 0);
 
     // Convert pixmaps to QT image. Check that images are not the same.
-    QImage i1 = p1->toImage();
-    QImage i2 = p2->toImage();
-    QVERIFY(i1 != i2);
+    QVERIFY( p1->toImage() !=  p2->toImage());
 
     // Clean.
     delete b1;
@@ -152,10 +149,10 @@ void Ft_MButton::buttonSetValues()
     b.setCheckable(false);
     QVERIFY(b.isCheckable() == false);
 
-    b.setState(MButtonModel::Pressed);
-    QVERIFY(b.state() == MButtonModel::Pressed);
-    b.setState(MButtonModel::Released);
-    QVERIFY(b.state() == MButtonModel::Released);
+    b.setDown(true);
+    QVERIFY(b.isDown() == true );
+    b.setDown(false);
+    QVERIFY(b.isDown() == false );
 
     b.setCheckable(true);
     b.setChecked(true);
@@ -192,12 +189,12 @@ void Ft_MButton::testSignalToggled()
 
 void Ft_MButton::testSignalPressed()
 {
-    MButton b;
+     MButton b;
     const int PRESS_COUNT = 60;
     QSignalSpy spy(&b, SIGNAL(pressed()));
     for (int i = 0; i < PRESS_COUNT; i++) {
-        b.setState(MButtonModel::Released);
-        b.setState(MButtonModel::Pressed);
+        b.setDown(true);
+        b.setDown(false);
     }
     QVERIFY(spy.count() == PRESS_COUNT);
 }
@@ -208,8 +205,8 @@ void Ft_MButton::testSignalReleased()
     const int RELEASE_COUNT = 65;
     QSignalSpy spy(&b, SIGNAL(released()));
     for (int i = 0; i < RELEASE_COUNT; i++) {
-        b.setState(MButtonModel::Pressed);
-        b.setState(MButtonModel::Released);
+        b.setDown(true);
+        b.setDown(false);
     }
     QVERIFY(spy.count() == RELEASE_COUNT);
 }
