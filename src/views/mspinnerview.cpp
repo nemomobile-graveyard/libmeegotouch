@@ -178,12 +178,17 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
             endAngle = startAngle - 90;
         }
     } else {
-        if (!reverse) {
-            startAngle = 0.0;
-            endAngle = 360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
+        if (model()->maximum() != model()->minimum()) {
+            if (!reverse) {
+                startAngle = 0.0;
+                endAngle = 360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
+            } else {
+                startAngle = 0.0;
+                endAngle =  -360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
+            }
         } else {
             startAngle = 0.0;
-            endAngle =  -360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
+            endAngle = 0.0;
         }
     }
 
