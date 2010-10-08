@@ -1,3 +1,9 @@
+libmeegotouch (0.20.48~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 08 Oct 2010 12:33:00 +0300
+
 libmeegotouch (0.20.47-1) unstable; urgency=low
 
   * Fixes: NB#196165 - longTapped not emitted by MListItem   
