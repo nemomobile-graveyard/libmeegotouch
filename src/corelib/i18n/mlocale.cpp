@@ -2150,7 +2150,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
             case 'C': {
                 // century, no corresponding icu pattern
                 UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.year() / 100), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.year() / 100), str); //krazy:exclude=typedefs
                 icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
             }
@@ -2257,7 +2257,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 // Weekday, as a decimal number (1(Monday)-7)
                 // no corresponding icu pattern for monday based weekday
                 UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.dayOfWeek()), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.dayOfWeek()), str); //krazy:exclude=typedefs
                 icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
             }
@@ -2266,8 +2266,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 // Week number of the year (Sunday as the first day of the week) as a
                 // decimal number (00-53). First week starts from first Sunday.
                 UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str);
-                d->_numberFormatLcTime->format(static_cast<int32_t>(weekNumberStartingFromDay(mCalendar, MLocale::Sunday)), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str); //krazy:exclude=typedefs
+                d->_numberFormatLcTime->format(static_cast<int32_t>(weekNumberStartingFromDay(mCalendar, MLocale::Sunday)), str); //krazy:exclude=typedefs
                 QString weeknumber = MIcuConversions::unicodeStringToQString(str);
                 if (weeknumber.length() > 2)
                     weeknumber = weeknumber.right(2);
@@ -2284,8 +2284,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 calendarCopy.setFirstDayOfWeek(MLocale::Monday);
                 calendarCopy.setMinimalDaysInFirstWeek(4);
                 UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str);
-                d->_numberFormatLcTime->format(static_cast<int32_t>(calendarCopy.weekNumber()), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str); //krazy:exclude=typedefs
+                d->_numberFormatLcTime->format(static_cast<int32_t>(calendarCopy.weekNumber()), str); //krazy:exclude=typedefs
                 QString weeknumber = MIcuConversions::unicodeStringToQString(str);
                 if (weeknumber.length() > 2)
                     weeknumber = weeknumber.right(2); // cut leading 0
@@ -2300,7 +2300,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                     weekday = 0;
                 }
                 UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(weekday), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(weekday), str); //krazy:exclude=typedefs
                 icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
             }
@@ -2310,7 +2310,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 // decimal number (00-53). Week starts from the first monday
                 int weeknumber = weekNumberStartingFromDay(mCalendar, MLocale::Monday);
                 UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(weeknumber), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(weeknumber), str); //krazy:exclude=typedefs
                 icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
             }
