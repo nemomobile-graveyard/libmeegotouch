@@ -166,6 +166,14 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
                 }
             }
 #endif
+            /* Unregister MApplicationWindow for the case that boosted
+               application instantiates and uses an MApplicationWindow
+               of its own. In that case application's window must be
+               MApplication::activeWindow() as well. On the other
+               hand, if application takes mApplicationWindowInstance
+               from the cache, it will be re-registered then.
+             */
+            MComponentData::unregisterWindow(mApplicationWindowInstance);
 
         } else {
             /* Clean up cache.
