@@ -54,6 +54,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mbubbleitemstyle.h \
     $$STYLE_SRC_DIR/mstatusbarstyle.h \
     $$STYLE_SRC_DIR/mstylablewidgetstyle.h \
+    $$STYLE_SRC_DIR/mlistindextooltipstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \

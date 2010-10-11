@@ -16,31 +16,23 @@
 ** of this file.
 **
 ****************************************************************************/
+ 
+#ifndef MLISTINDEXTOOLTIPSTYLE_H
+#define MLISTINDEXTOOLTIPSTYLE_H
 
-#ifndef MLISTINDEXSTYLE_H
-#define MLISTINDEXSTYLE_H
+#include <mstylablewidgetstyle.h>
 
-#include "mwidgetstyle.h"
-
-class MListIndexStyle : public MWidgetStyle
+class MListIndexTooltipStyle : public MStylableWidgetStyle
 {
     Q_OBJECT
-    M_STYLE(MListIndexStyle)
+    M_STYLE(MListIndexTooltipStyle)
 
-    M_STYLE_ATTRIBUTE(QString, shortcutObjectName, ShortcutObjectName)
-
-    M_STYLE_ATTRIBUTE(qreal, appearDelay, AppearDelay)
-    M_STYLE_ATTRIBUTE(qreal, appearDuration, AppearDuration)
-    M_STYLE_ATTRIBUTE(qreal, fadeOutDelay, FadeOutDelay)
-
-    M_STYLE_ATTRIBUTE(int, floatingIndexOffset, FloatingIndexOffset)
-    M_STYLE_ATTRIBUTE(int, floatingIndexCount, FloatingIndexCount)
-    M_STYLE_ATTRIBUTE(qreal, floatingSnapDistance, FloatingSnapDistance)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap *, arrowPixmap, ArrowPixmap)
 };
 
-class MListIndexStyleContainer : public MWidgetStyleContainer
+class MListIndexTooltipStyleContainer : public MStylableWidgetStyleContainer
 {
-    M_STYLE_CONTAINER(MListIndexStyle)
+    M_STYLE_CONTAINER(MListIndexTooltipStyle)
 };
 
-#endif
+#endif // MLISTINDEXTOOLTIPSTYLE_H

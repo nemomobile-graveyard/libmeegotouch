@@ -19,6 +19,7 @@
 
 #include "mlistindex.h"
 #include "mlistindexview.h"
+#include "mlistindexfloatingview.h"
 #include "mlist.h"
 
 #include <QGraphicsSceneContextMenuEvent>
@@ -54,6 +55,11 @@ void MListIndex::setList(MList *list)
 
 void MListIndex::setDisplayMode(MList::DisplayMode displayMode)
 {
+    if (displayMode == MList::Floating)
+        setView(new MListIndexFloatingView(this));
+    else if (QString::compare(view()->metaObject()->className(), "MListIndexView") != 0)
+        setView(new MListIndexView(this));
+
     model()->setDisplayMode(displayMode);
 }
 

@@ -19,6 +19,7 @@
 
 #include "mstylablewidget.h"
 #include "mscalableimage.h"
+#include "mwidgetmodel.h"
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MStylableWidget)
@@ -92,14 +93,16 @@ MStylableWidget::~MStylableWidget()
 void MStylableWidget::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
-    if (!style()->backgroundImage() && !style()->backgroundColor().isValid())
+    if (!style()->backgroundTiles().isValid() && !style()->backgroundImage() && !style()->backgroundColor().isValid())
         return;
 
     qreal oldOpacity = painter->opacity();
     painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
 
     QSizeF s = size() - QSizeF(style()->marginLeft() + style()->marginRight(), style()->marginTop() + style()->marginBottom());
-    if (style()->backgroundImage()) {
+    if (style()->backgroundTiles().isValid()) {
+        style()->backgroundTiles()[model()->layoutPosition()]->draw(0,0, s.width(), s.height(), painter);
+    }else if (style()->backgroundImage()) {
         style()->backgroundImage()->draw(0, 0, s.width(), s.height(), painter);
     } else { //style background color must be valid
         painter->fillRect(QRectF(QPointF(0, 0), s), QBrush(style()->backgroundColor()));
