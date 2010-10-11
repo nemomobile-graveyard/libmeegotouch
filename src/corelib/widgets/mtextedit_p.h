@@ -60,6 +60,8 @@ public:
 
     bool validateCurrentBlock();
 
+    bool validate();
+
     bool setCursorPosition(int index);
 
     void setPreeditText(const QString &text,

@@ -59,6 +59,20 @@ public:
     /*! \reimp_end */
 
     /*!
+     * \brief Sets html text for this widget. This replaces the existing text.
+     * \param text New html text for this text edit widget.
+     * \return false if \a text is not allowed to be set.
+     * On successful insertion, the cursor is moved to the end of the text
+     */
+    bool setHtml(const QString &text);
+
+    /*!
+     * \brief Returns current text in html format
+     * \return QString containing current widget text in html format
+     */
+    QString toHtml() const;
+
+    /*!
      * \brief sets the Underline style and apply the style to the current selection if any
      */
     void setFontUnderline(bool underline);

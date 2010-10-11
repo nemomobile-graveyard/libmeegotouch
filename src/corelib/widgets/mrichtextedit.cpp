@@ -204,6 +204,56 @@ void MRichTextEdit::cut()
 }
 
 
+bool MRichTextEdit::setHtml(const QString &text)
+{
+    Q_D(MRichTextEdit);
+
+    int cursorPosBefore = d->cursor()->position();
+    bool wasSelecting = hasSelectedText();
+    bool wasEmpty = (document()->characterCount() == 0);
+
+    // clear the state
+    d->removePreedit();
+    d->preeditStyling.clear();
+    d->cursor()->clearSelection();
+    document()->clear();
+    d->setMode(MTextEditModel::EditModeBasic);
+
+    //set cursor to the start again
+    d->cursor()->movePosition(QTextCursor::Start);
+
+    d->cursor()->insertHtml(text);
+
+    bool accepted = d->validate();
+
+    if (!accepted) {
+        document()->clear();
+    }
+
+    // only avoid signaling if empty before and after
+    if (!((document()->characterCount() == 0) && wasEmpty)) {
+        d->updateMicroFocus();
+        emit textChanged();
+    }
+
+    if (d->cursor()->position() != cursorPosBefore) {
+        emit cursorPositionChanged();
+    }
+
+    if (wasSelecting) {
+        d->sendCopyAvailable(false);
+    }
+
+    return accepted;
+}
+
+
+QString MRichTextEdit::toHtml() const
+{
+    return document()->toHtml();
+}
+
+
 void MRichTextEdit::setFontUnderline(bool underline)
 {
     Q_D(MRichTextEdit);

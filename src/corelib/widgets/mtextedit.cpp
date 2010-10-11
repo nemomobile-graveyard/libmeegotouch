@@ -624,6 +624,21 @@ bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
 }
 
 
+bool MTextEditPrivate::validate()
+{
+    Q_Q(MTextEdit);
+
+    if (validator == 0) {
+        return true;
+    } else {
+        QString textCopy = q->model()->document()->toPlainText();
+        int cursorCopy = q->model()->cursor()->position();
+        QValidator::State result = validator->validate(textCopy, cursorCopy);
+        return (result != QValidator::Invalid);
+    }
+}
+
+
 bool MTextEditPrivate::validateCurrentBlock()
 {
     if (validator == 0) {
@@ -1773,14 +1788,7 @@ bool MTextEdit::setText(const QString &text)
 
     d->cursor()->insertText(filteredText);
 
-    bool accepted = true;
-
-    if (d->validator) {
-        QString textCopy = text;
-        int cursorPos = text.length();
-        QValidator::State result = d->validator->validate(textCopy, cursorPos);
-        accepted = (result != QValidator::Invalid);
-    }
+    bool accepted = d->validate();
 
     if (!accepted) {
         document()->clear();
