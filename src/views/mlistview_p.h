@@ -41,7 +41,7 @@ class MWidgetRecycler;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class QItemSelection;
-class QTimeLine;
+class QPropertyAnimation;
 
 namespace MListViewPrivateNamespace
 {
@@ -103,8 +103,9 @@ public:
     void drawHorizontalSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
     QPointF locateScrollToPosition(const QModelIndex &index, MList::ScrollHint hint);
-    QPointF calculateViewportNextPosition();
     void updateScrollToTargetPosition();
+
+    void scrollToPos(const QPointF &targetPosition);
 
     void deleteVisibleItemsArray();
 
@@ -162,7 +163,6 @@ public Q_SLOTS:
     void controllerParentChanged();
     void updateListGeometry();
 
-    void _q_moveViewportToNextPosition(int frame);
     void _q_itemLongTapped(const QPointF &pos);
     void _q_relayoutItemsIfNeeded();
 
@@ -198,9 +198,7 @@ public:
     QPointF listPosition;
 
     // Scroll animation
-    QTimeLine *scrollToTimeLine;
-    QPointF targetPosition;
-    qreal frictionK;
+    QPropertyAnimation *scrollToAnimation;
 };
 
 class MPlainListViewPrivate : public MListViewPrivate
