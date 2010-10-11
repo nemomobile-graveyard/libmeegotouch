@@ -157,10 +157,12 @@ void MScenePrivate::sendEventToMWidgets(QList<MWidget *> widgetsList, QEvent *ev
     Q_Q(MScene);
     MWidget *widget;
 
-    int widgetsCount = widgetsList.count();
-    for (int i = 0; i < widgetsCount; i++) {
-        widget = widgetsList.at(i);
-        q->sendEvent(widget, event);
+    foreach(widget, widgetsList) {
+        //we have to check if any of items was removed from scene or deleted
+        //while previous ones were handling the event
+        if(q->items().contains(widget)){
+            q->sendEvent(widget, event);
+        }
     }
 }
 
