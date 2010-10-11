@@ -20,10 +20,13 @@
 #include <QProcess>
 #include <QStringList>
 #include <QObject>
+#include <QDebug>
 
 #include <MApplication>
 #include <MApplicationService>
+#ifdef HAVE_DBUS
 #include <MApplicationIfAdaptor>
+#endif //HAVE_DBUS
 #include <MApplicationWindow>
 #include <MApplicationPage>
 #include <MAction>

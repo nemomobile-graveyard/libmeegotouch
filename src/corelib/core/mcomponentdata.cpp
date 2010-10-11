@@ -35,8 +35,10 @@
 #include "mlocale.h"
 #include "mfeedbackplayer.h"
 #include "mfeedbackplayer_p.h"
+#ifdef HAVE_DBUS
 #include "mapplicationifproxy.h"
 #include "mapplicationifadaptor.h"
+#endif //HAVE_DBUS
 #include "mapplicationservice.h"
 #include "mcomponentcache.h"
 #include "mcomponentdata_p.h"
