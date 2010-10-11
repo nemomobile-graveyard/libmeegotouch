@@ -60,7 +60,7 @@ void MPositionIndicatorViewPrivate::init(MPositionIndicator *controller)
 bool MPositionIndicatorViewPrivate::isInSwitcher() const
 {
     bool isInSwitcher = false;
-    if (controller->scene()) {
+    if (controller->scene() && !controller->scene()->views().isEmpty()) {
         MWindow* win = qobject_cast<MWindow*>(controller->scene()->views().at(0));
         if (win) {
             isInSwitcher = win->isInSwitcher();
