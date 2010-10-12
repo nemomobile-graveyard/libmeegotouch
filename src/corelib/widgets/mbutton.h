@@ -148,7 +148,7 @@ class M_EXPORT MButton : public MWidgetController
         \property MButton::text
         \brief See MButtonModel::text
     */
-    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(QString text READ text WRITE setText)
 
     /*!
         \property MButton::iconID
@@ -379,12 +379,6 @@ Q_SIGNALS:
       This may be the result of a user action, click() slot activation, or because setChecked() was called.
     */
     void toggled(bool checked);
-
-    /*!
-      \brief This signal is emitted when button text changes.
-    */
-    void textChanged();
-
 
 public Q_SLOTS:
 
