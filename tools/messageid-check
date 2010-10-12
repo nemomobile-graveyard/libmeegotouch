@@ -124,7 +124,7 @@ my @sourcePackagesToDownloadAndScan = (
     "calc",
     "caldav-plugin",
     "calendar",
-    "calendar-plugin-facebook",
+#    "calendar-plugin-facebook",
     "call-history",
     "call-ui",
     "camera-ui",
@@ -164,6 +164,7 @@ my @sourcePackagesToDownloadAndScan = (
     "duihelp",
     "duihome",
     "energy-profiler",
+    "facebook-ui",
     "feedreader",
     "feedsettings",
     "fenix",
@@ -171,8 +172,11 @@ my @sourcePackagesToDownloadAndScan = (
 #    "fennec.e10s",
     "fennec-taskswitcher-extension",
     "gallery",
+    "gallerycamera",
+    "gallerycore",
     "geo-engine-demo",
     "groovem-account-ui-plugins",
+    "libaccounts-ui",
     "libas-common-utils",
     "libcontentaction",
     "libdatepicker",
@@ -212,7 +216,7 @@ my @sourcePackagesToDownloadAndScan = (
     "meegofeedback-reactionmaps",
     "meegotouchhome",
     "meegotouchhome-nokia",
-    "meegotouchhome-nokia-ui-tests",
+#    "meegotouchhome-nokia-ui-tests",
     "meegotouch-qt-style",
     "meegotouch-tests",
     "meegotouch-visual-benchmark",
@@ -221,6 +225,7 @@ my @sourcePackagesToDownloadAndScan = (
     "mfe-account-ui-plugins",
     "mms-ui",
     "mpsa-ui-tests",
+    "msg-tracker-indexer",
     "music-suite",
     "mwelcome",
     "mwts-security-tests",
@@ -279,6 +284,7 @@ my @sourcePackagesToDownloadAndScan = (
 #   - other ?
 my @sourcePackagesIgnore = (
     "libmeegotouch",
+    "meegotouchhome-nokia-ui-tests", # fails to download, 403 error, 2010-10-11
     "nokia-maps", # fails to download, 403 error
     "adobe-flashplayer", # fails to downloadm, 403 error
     "syncshare-test-app", # fails to downloadm, 403 error
