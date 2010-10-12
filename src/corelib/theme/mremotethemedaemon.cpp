@@ -207,37 +207,46 @@ void MRemoteThemeDaemonPrivate::removeMostUsedPixmaps(const QList<PixmapIdentifi
     }
 }
 
+void MRemoteThemeDaemonPrivate::pixmapHandle(const QString &imageId, const QSize &size, bool sync)
+{
+    Q_Q(MRemoteThemeDaemon);
+
+    Qt::HANDLE handle = pixmapHandleFromMostUsed(imageId, size);
+    if (handle) {
+        emit q->pixmapCreatedOrChanged(imageId, size, handle);
+        return;
+    }
+
+    const quint64 sequenceNumber = requestPixmap(imageId, size);
+
+    if (sync) {
+        const Packet reply = waitForPacket(sequenceNumber);
+        processOnePacket(reply);
+    }
+}
+
 void MRemoteThemeDaemon::pixmapHandleSync(const QString &imageId, const QSize &size)
 {
     Q_D(MRemoteThemeDaemon);
-    const quint64 sequenceNumber = d->requestPixmap(imageId, size);
-    const Packet reply = d->waitForPacket(sequenceNumber);
-    d->processOnePacket(reply);
+
+    d->pixmapHandle(imageId, size, true);
 }
 
 void MRemoteThemeDaemon::pixmapHandle(const QString &imageId, const QSize &size)
 {
     Q_D(MRemoteThemeDaemon);
 
-    Qt::HANDLE handle = pixmapHandleFromMostUsed(imageId, size);
-    if (handle) {
-        emit pixmapCreatedOrChanged(imageId, size, handle);
-        return;
-    }
-
-    d->requestPixmap(imageId, size);
+    d->pixmapHandle(imageId, size, false);
 }
 
-Qt::HANDLE MRemoteThemeDaemon::pixmapHandleFromMostUsed(const QString &imageId, const QSize &size)
+Qt::HANDLE MRemoteThemeDaemonPrivate::pixmapHandleFromMostUsed(const QString &imageId, const QSize &size)
 {
-    Q_D(MRemoteThemeDaemon);
-
     PixmapIdentifier identifier(imageId, size);
-    QHash<PixmapIdentifier, Qt::HANDLE>::iterator it = d->mostUsedPixmaps.find(identifier);
-    if (it != d->mostUsedPixmaps.end())
+    QHash<PixmapIdentifier, Qt::HANDLE>::iterator it = mostUsedPixmaps.find(identifier);
+    if (it != mostUsedPixmaps.end())
     {
-        int sequenceNumber = ++d->sequenceCounter;
-        d->stream << Packet(Packet::PixmapUsedPacket, sequenceNumber, new PixmapIdentifier(imageId, size));
+        int sequenceNumber = ++sequenceCounter;
+        stream << Packet(Packet::PixmapUsedPacket, sequenceNumber, new PixmapIdentifier(imageId, size));
 
         return it.value();
     }

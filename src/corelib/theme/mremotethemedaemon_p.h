@@ -45,6 +45,8 @@ public:
     void removeMostUsedPixmaps(const QList<M::MThemeDaemonProtocol::PixmapIdentifier>& identifiers);
     qint32 priority();
     void loadThemeDaemonPriorities(const QString& filename);
+    void pixmapHandle(const QString &imageId, const QSize &size, bool sync);
+    Qt::HANDLE pixmapHandleFromMostUsed(const QString &imageId, const QSize &size);
 
     Q_DECLARE_PUBLIC(MRemoteThemeDaemon)
     MRemoteThemeDaemon *q_ptr;
