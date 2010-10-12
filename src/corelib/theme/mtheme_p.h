@@ -152,6 +152,8 @@ public:
      */
     void pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle);
 
+    const QPixmap * pixmap(const QString &id, bool async, const QSize &size = QSize(0, 0));
+
     /*!
      * GConf item change signals that locale is changed. Logical values & icons are reloaded.
      */

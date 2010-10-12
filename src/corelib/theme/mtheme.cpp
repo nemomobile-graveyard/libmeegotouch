@@ -207,40 +207,32 @@ MTheme *MTheme::instance()
 
 const QPixmap *MTheme::pixmap(const QString &id, const QSize &size)
 {
-    if(id.isEmpty()) {
-        mWarning("MTheme") << "requested pixmap without id";
-        return instance()->d_ptr->invalidPixmap;
-    }
+    return instance()->d_ptr->pixmap(id, false, size);
+}
 
-    // TODO: check if needed
-    QSize realSize = size;
-    if (realSize.width() < 1)
-        realSize.rwidth() = 0;
-    if (realSize.height() < 1)
-        realSize.rheight() = 0;
-
-    QString identifier = defaultPixmapCacheId(id, realSize.width(), realSize.height());
-    const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(identifier);
-
-    // check if we found the pixmap from cache?
-    if (p)
-        return p;
-
-    QPixmap *result = new QPixmap(realSize);
-    if (instance()->d_ptr->showAsyncRequests) {
-        result->fill(QColor(0, 255, 0, 255));
-    } else {
-        result->fill(QColor(0, 0, 0, 0));
-    }
-
-    instance()->d_ptr->pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
-    instance()->d_ptr->themeDaemon->pixmapHandle(id, realSize);
-
-    return result;
+const QPixmap *MTheme::asyncPixmap(const QString &id, const QSize &size)
+{
+    return instance()->d_ptr->pixmap(id, true, size);
 }
 
 QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &size)
 {
+    //force daemon to load the pixmap synchronously, then make copy of the
+    //pixmap and release it immediately
+    const QPixmap *p = instance()->d_ptr->pixmap(id, false, size);
+    QPixmap* copy = new QPixmap(p->copy());
+    releasePixmap(p);
+
+    return copy;
+}
+
+const QPixmap *MThemePrivate::pixmap(const QString &id, bool async, const QSize &size)
+{
+    if (id.isEmpty()) {
+        mWarning("MTheme") << "requested pixmap without id";
+        return invalidPixmap;
+    }
+
     // TODO: check if needed
     QSize realSize = size;
     if (realSize.width() < 1)
@@ -248,24 +240,27 @@ QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &size)
     if (realSize.height() < 1)
         realSize.rheight() = 0;
 
-    // if there is no entry for the copied pixmap yet, we need to create it
     QString identifier = defaultPixmapCacheId(id, realSize.width(), realSize.height());
-    const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(identifier);
-    if (!p) {
-        QPixmap *result = new QPixmap();
-        instance()->d_ptr->pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
-        p = result;
+    const QPixmap *p = fetchPixmapFromCache(identifier);
+    // check if we found the pixmap from the cache
+    if (p)
+        return p;
+
+    QPixmap *result = new QPixmap(async ? realSize : QSize(0, 0));
+    pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
+
+    if (async) {
+        if (showAsyncRequests) {
+            result->fill(QColor(0, 255, 0, 255));
+        } else {
+            result->fill(QColor(0, 0, 0, 0));
+        }
+        themeDaemon->pixmapHandle(id, realSize);
+    } else {
+        themeDaemon->pixmapHandleSync(id, realSize);
     }
 
-    //TODO: check if the local pixmap pointer is valid already,
-    //      no need to fetch anything from daemon then
-
-    //force daemon to load the pixmap synchronously, then make copy of the
-    //pixmap and release it immediately
-    instance()->d_ptr->themeDaemon->pixmapHandleSync(id, realSize);
-    QPixmap* copy = new QPixmap(p->copy());
-    releasePixmap(p);
-    return copy;
+    return result;
 }
 
 const MScalableImage *MTheme::scalableImage(const QString &id, int left, int right, int top, int bottom)
@@ -283,16 +278,10 @@ const MScalableImage *MTheme::scalableImage(const QString &id, int left, int rig
     QString pixmapidentifier = defaultPixmapCacheId(id, 0, 0);
     const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(pixmapidentifier);
     if (!p) {
-        // we have to create temporary pixmap
-        QPixmap *result = new QPixmap(1, 1);
-        if (instance()->d_ptr->showAsyncRequests) {
-            result->fill(QColor(0, 255, 0, 255));
-        } else {
-            result->fill(QColor(0, 0, 0, 0));
-        }
+        QPixmap *result = new QPixmap();
 
         instance()->d_ptr->pixmapIdentifiers.insert(pixmapidentifier, CachedPixmap(result, id, QSize(0, 0)));
-        instance()->d_ptr->themeDaemon->pixmapHandle(id, QSize(0, 0));
+        instance()->d_ptr->themeDaemon->pixmapHandleSync(id, QSize(0, 0));
 
         p = result;
     }

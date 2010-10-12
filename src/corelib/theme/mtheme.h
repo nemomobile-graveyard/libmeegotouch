@@ -47,19 +47,17 @@ class QAbstractAnimation;
  \class MTheme
  \brief MTheme abstracts the theming and styling of DirectUI applications and widgets
 
- MTheme is a singleton class providing runtime access to the DirectUI theming parameters,
+ MTheme is a singleton class providing runtime access to the MeeGo Touch theming parameters,
  as well as factory methods for instantiating various theming resources such as shared
- graphical assets in the form of QPixmaps and MScalableImages as well as style and view
- objects for widgets.
+ graphical assets in the form of QPixmaps and MScalableImages, as well as style and view
+ instances for the widgets.
 
- MTheme communicates asynchronously with a theme server whenever a graphical asset
+ MTheme communicates with a theme server whenever a graphical asset
  is requested. The theme server is responsible for loading the graphics (either from
  static image files, by rasterizing SVG or through procedural generation) and sharing them.
- The sharing of graphics assets is platform specific, DirectUI ships with a reference theme
- server called MThemeDaemon that shares assets using X11. A local theme server can also
- be created in-process, however in this case no sharing occurs and each graphical asset
- instantiated is duplicated for the application.
-
+ The sharing of graphics assets is platform specific, MeeGo Touch ships with a reference theme
+ server called \a mthemedaemon that shares assets using the X11 system. In case a theme server
+ is not available, no sharing occurs and each graphical asset is duplicated for each application.
  */
 class M_EXPORT MTheme : public QObject
 {
@@ -199,40 +197,60 @@ public:
     /*!
      Returns a QPixmap that contains the graphical asset specified by the \ref logicalid "logical ID".
 
-     The \a id is a logical identifier for a single graphical theme asset. The source format of the
-     graphics is abstracted and determined by the theme service. The default MThemeDaemon theme
-     policy is as follows:
+     Note: While loading the graphics the application UI thread is blocked. In case the graphics is large or
+     you do not need to immediately know the final size of the requested graphics, consider using the
+     asyncPixmap() method instead to keep the UI responsive.
+
+     The \a id is a logical identifier for a single graphical theme asset.
+     The source format of the graphics is abstracted and determined by the theme service. The default
+     graphics loading policy is as follows:
 
      - Static images such as PNG have a higher priority than assets which are dynamic or require
-     rasterization (SVG), thus allowing for caching of dynamic assets. For static images the
-     id is the filename without the suffix.
+     rasterization (SVG), thus allowing for static caching of assets. For static images the
+     id is the filename without the filetype suffix.
      - Application supplied assets have higher priority than base theme assets, while assets in
      a theme for a specific application has higher priority than assets supplied by the application itself.
 
      The \a size parameter determines the size of the returned pixmap. The default \a size of QSize(0,0) marks
-     that the original pixmap size should be used.
+     that the original source graphics size should be used.
 
-     The requested pixmap is loaded asynchronously. The returned pixmap can therefore be one of the following:
-
-     - The real pixmap if the pixmap was already loaded by the system.
-     - A transparent gray 1x1 or \a size sized pixmap, serving as a placeholder while the pixmap is loading.
-     - A red pixmap of 50x50 pixels size, indicating that the pixmap with the requested id was not found.
-
-     In the first two cases, the pixmap data can be changed at any time by the theme. This may happen when
-     the theme changes, pixmaps are updated, pixmaps finish loading or for any other reason.
+     The returned pixmap is owned by the theme and should be freed with releasePixmap() when no longer needed.
 
      \sa releasePixmap
-
+     \sa asyncPixmap
      */
     static const QPixmap *pixmap(const QString &id, const QSize &size = QSize(0, 0));
 
     /*!
-     Returns a copy of graphical asset with the given \ref logicalid "logical ID".
+     Returns a QPixmap that contains the graphical asset specified by the \ref logicalid "logical ID".
+
+     Loads the pixmap specified by \a id of size \a size.
+
+     The requested pixmap is loaded asynchronously. The returned pixmap can be one of the following:
+     - The real pixmap if the pixmap was already loaded by the system.
+     - A transparent 1x1 or \a size sized pixmap, serving as a placeholder while the pixmap data is loading.
+     - A red pixmap of 50x50 size, indicating that the pixmap with the requested id was not found in the theme.
+
+     In the first two cases, the pixmap data can be changed at any time by the theme. This may happen when
+     the theme changes, as pixmaps are updated, pixmaps finish loading or for any other reason.
+
+     The returned pixmap is owned by the theme and should be freed with releasePixmap() when no longer needed.
+
+     \sa pixmap
+     \sa releasePixmap
+     */
+    static const QPixmap *asyncPixmap(const QString &id, const QSize &size = QSize(0, 0));
+
+    /*!
+     Returns a copy of the graphical asset with the given \ref logicalid "logical ID".
 
      Loads the pixmap specified by \a id of size \a size synchronously and returns a copy to the caller.
-     This method can be very slow, use the asynchronous pixmap method instead if possible.
+     This method can be very slow, use the pixmap() or asyncPixmap() methods instead if possible.
 
      The ownership of the returned pixmap is transferred to caller, and the pixmap may be modified.
+
+     \sa pixmap
+     \sa asyncPixmap
      */
     static QPixmap *pixmapCopy(const QString &id, const QSize &size = QSize(0, 0));
 
@@ -243,7 +261,10 @@ public:
      The \a left, \a right, \a top and \a bottom parameters specify the non-scaled border values of the
      image.
 
+     The returned image is owned by the theme and should be freed with releaseScalableImage() when no longer needed.
+
      \sa pixmap
+     \sa releaseScalableImage
      */
     static const MScalableImage *scalableImage(const QString &id, int left, int right, int top, int bottom);
 
@@ -251,6 +272,8 @@ public:
      Releases a shared MScalableImage acquired through MTheme.
 
      releaseScalableImage performs cleanup and frees the image if there are no other clients using it.
+
+     \sa scalableImage
      */
     static void releaseScalableImage(const MScalableImage *image);
 
@@ -258,6 +281,8 @@ public:
      Releases a shared QPixmap acquired through MTheme.
 
      releasePixmap performs cleanup and frees the pixmap if there are no other clients using it.
+
+     \sa pixmap
      */
     static void releasePixmap(const QPixmap *pixmap);
 
@@ -333,6 +358,8 @@ Q_SIGNALS:
 
      Widget implementations must not connect to this signal. All widgets
      are repainted after the outstanding requests have finished.
+
+     \sa asyncPixmap
      */
     void pixmapRequestsFinished();
 
