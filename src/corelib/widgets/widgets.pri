@@ -36,7 +36,6 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mpannablewidget.h \
     $$WIDGETS_SRC_DIR/mphysics2dpanning.h \
     $$WIDGETS_SRC_DIR/mpopuplist.h \
-    $$WIDGETS_SRC_DIR/mpopuplist_p.h \
     $$WIDGETS_SRC_DIR/mpositionindicator.h \
     $$WIDGETS_SRC_DIR/mprogressindicator.h \
     $$WIDGETS_SRC_DIR/mrichtextedit.h \
@@ -44,10 +43,8 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mseekbar.h \
     $$WIDGETS_SRC_DIR/mslider.h \
     $$WIDGETS_SRC_DIR/mstatusbar.h \
-    $$WIDGETS_SRC_DIR/mstatusbar_p.h \
     $$WIDGETS_SRC_DIR/mtextedit.h \
     $$WIDGETS_SRC_DIR/mcompleter.h \
-    $$WIDGETS_SRC_DIR/mcompleter_p.h \
     $$WIDGETS_SRC_DIR/mtoolbar.h \
     $$WIDGETS_SRC_DIR/mviewcreator.h \
     $$WIDGETS_SRC_DIR/mwindow.h \
@@ -107,16 +104,20 @@ PUBLIC_HEADERS += \
     $$WIDGET_MODEL_HEADERS \
 
 PRIVATE_HEADERS += \
-    $$WIDGETS_SRC_DIR/mpannableviewportlayout.h \
-    $$WIDGETS_SRC_DIR/mcontentitem_p.h \
-    $$WIDGETS_SRC_DIR/mbuttongroup_p.h \
-    $$WIDGETS_SRC_DIR/mlistitem_p.h \
     $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
-    $$WIDGETS_SRC_DIR/mlistfilter_p.h \
-    $$WIDGETS_SRC_DIR/mbasiclistitem_p.h \
-    $$WIDGETS_SRC_DIR/mdetailedlistitem_p.h \
     $$WIDGETS_SRC_DIR/madvancedlistitem_p.h \
+    $$WIDGETS_SRC_DIR/mbasiclistitem_p.h \
+    $$WIDGETS_SRC_DIR/mbuttongroup_p.h \
+    $$WIDGETS_SRC_DIR/mcontentitem_p.h \
+    $$WIDGETS_SRC_DIR/mcompleter_p.h \
+    $$WIDGETS_SRC_DIR/mdetailedlistitem_p.h \
+    $$WIDGETS_SRC_DIR/mdialog_p.h \
+    $$WIDGETS_SRC_DIR/mlistitem_p.h \
+    $$WIDGETS_SRC_DIR/mlistfilter_p.h \
+    $$WIDGETS_SRC_DIR/mpannableviewportlayout.h \
+    $$WIDGETS_SRC_DIR/mpopuplist_p.h \
     $$WIDGETS_SRC_DIR/mscenewindow_p.h \
+    $$WIDGETS_SRC_DIR/mstatusbar_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
