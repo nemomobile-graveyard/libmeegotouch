@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
     // Apply custom server address, if the "-address" has been passed as argument
     QString serverAddress;
-    const int index = app.arguments().indexOf("-address");
+    int index = app.arguments().indexOf("-address");
     if ((index >= 0) && (index + 1 < app.arguments().count())) {
         serverAddress = app.arguments().at(index + 1);
     }
@@ -67,6 +67,16 @@ int main(int argc, char **argv)
 
     if (app.arguments().indexOf("-quitimmediately") >= 0) {
         QTimer::singleShot(0, &app, SLOT(quit()));
+    }
+
+    index = app.arguments().indexOf("-slowdown");
+    if ((index >= 0) && (index + 1 < app.arguments().count())) {
+        bool conversionOk;
+        int slowDown = app.arguments().at(index + 1).toInt(&conversionOk);
+        if (conversionOk) {
+            server.setSlowDown(slowDown);
+            qDebug() << "Slowing down theme asset requests by" << slowDown << "microseconds";
+        }
     }
 
     return app.exec();

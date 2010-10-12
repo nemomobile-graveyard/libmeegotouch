@@ -48,6 +48,7 @@ public:
 
 public slots:
     void themeChanged(bool forceReload = false);
+    void setSlowDown(int slowDown);
 
 private slots:
     void clientConnected();
@@ -112,6 +113,7 @@ private:
     MGConfItem currentLocale;
     QString defaultTheme;
     bool delayedThemeChange;
+    int slowDown;
 
     QMap<qint32, QQueue<QueueItem> > loadPixmapsQueue;
     QQueue<QueueItem> releasePixmapsQueue;

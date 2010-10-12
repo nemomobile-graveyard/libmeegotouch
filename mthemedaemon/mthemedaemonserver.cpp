@@ -37,6 +37,7 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     currentLocale("/meegotouch/i18n/language"),
     defaultTheme(M_THEME_DEFAULT),
     delayedThemeChange(false),
+    slowDown(false),
     sequenceCounter(0)
 {
     QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/themedaemonpriorities.conf";
@@ -279,6 +280,11 @@ void MThemeDaemonServer::clientDataAvailable()
     }
 }
 
+void MThemeDaemonServer::setSlowDown(int slowDown)
+{
+    this->slowDown = slowDown;
+}
+
 void MThemeDaemonServer::themeChanged(bool forceReload)
 {
     if (!forceReload && daemon.currentTheme() == currentTheme.value().toString())
@@ -389,6 +395,8 @@ void MThemeDaemonServer::processOneQueueItem()
 
             Qt::HANDLE handle = 0;
             if (daemon.pixmap(item.client, item.pixmapId, handle)) {
+                if (slowDown > 0)
+                    usleep(slowDown);
                 item.client->stream() << Packet(Packet::PixmapUpdatedPacket, item.sequenceNumber,
                                                 new PixmapHandle(item.pixmapId, handle));
             } else {
