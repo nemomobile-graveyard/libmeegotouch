@@ -9,4 +9,7 @@ SOURCES += \
 HEADERS += \
 	ft_mbutton.h \
 
+support_files.files += \
+        ft_mbutton.css
+
 include(../common_bot.pri)
