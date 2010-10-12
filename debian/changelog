@@ -1,3 +1,9 @@
+libmeegotouch (0.20.49~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 12 Oct 2010 12:58:03 +0300
+
 libmeegotouch (0.20.48-1) unstable; urgency=low
 
   * Fixes: List unit tests, due to new functionality like floating list index.
