@@ -49,8 +49,16 @@ public:
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
-    Qt::TextFlag wrap() const;
     void initializeStaticText();
+
+    /**
+     * \param availableWidth Available width in pixels for the text to render.
+     * \return Text that should be used for the rendering. Dependent on the available
+     *         width, the wrapping-policies, eliding-settings and multilength-status
+     *         adjustments are done.
+     */
+    QString textToRender(qreal availableWidth) const;
+    bool wrap() const;
     
     /**
      * Helper method for initializeStaticText(): Adjusts the member variable
@@ -80,6 +88,7 @@ public:
     QRectF paintingRect;
     bool dirty;
     QStaticText staticText;
+    QString unconstraintText;
 };
 
 class MLabelViewRich : public MLabelViewSimple

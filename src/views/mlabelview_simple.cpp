@@ -91,8 +91,18 @@ bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     QFontMetricsF fm(viewPrivate->controller->font());
 
+    Qt::TextFlag textFlag = Qt::TextSingleLine;
+    if (viewPrivate->controller->wordWrap()) {
+        const QTextOption::WrapMode wrapMode = viewPrivate->model()->wrapMode();
+        if (wrapMode == QTextOption::WordWrap) {
+            textFlag = Qt::TextWordWrap;
+        } else if (wrapMode == QTextOption::WrapAnywhere || wrapMode == QTextOption::WrapAtWordBoundaryOrAnywhere) {
+            textFlag = Qt::TextWrapAnywhere;
+        }
+    }
+
     QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
-                                viewPrivate->textOptions.alignment() | wrap(), viewPrivate->model()->text());
+                                viewPrivate->textOptions.alignment() | textFlag, viewPrivate->model()->text());
     if (bR.height() > fm.height()) {
         preferredSize = QSizeF(bR.width(), bR.height());
         return true;
@@ -218,7 +228,6 @@ void MLabelViewSimple::initializeStaticText()
 
     dirty = false;
 
-    const MLabelModel *model = viewPrivate->model();
     const MLabelStyle *style = viewPrivate->style();
 
     paintingRect = (viewPrivate->textOptions.alignment() == Qt::LeftToRight)
@@ -226,49 +235,13 @@ void MLabelViewSimple::initializeStaticText()
         : viewPrivate->boundingRect().adjusted(style->paddingRight(), style->paddingTop(), -style->paddingLeft(), -style->paddingBottom());
     textOffset = paintingRect.topLeft().toPoint();
 
-    QString textToRender = model->text();
+    unconstraintText = textToRender(QWIDGETSIZE_MAX);
+    const QString text = textToRender(paintingRect.width());
 
-    const QChar multiLengthSeparator(0x9c, 0);
-    if (textToRender.contains(multiLengthSeparator)) {
-        // The text consists of several strings. Find the first string that fits into the
-        // available width. If no string has been found, the last string will be used.
-        const QStringList strings = textToRender.split(multiLengthSeparator);
-        const QFontMetricsF metrics(viewPrivate->controller->font());
-        foreach (const QString &string, strings) {
-            textToRender = string;
-            if (metrics.width(textToRender) <= paintingRect.width()) {
-                break;
-            }
-        }
-    }
-
-    if (model->textElide() && textToRender.size() > 4) {
-        QFontMetrics metrics(viewPrivate->controller->font());
-        textToRender = metrics.elidedText(textToRender, Qt::ElideRight, paintingRect.width());
-    }
-
-    // QStaticText uses QTextLayout internally to render text. Contrary to
-    // QPainter::drawText(const QRect &rectangle, ...) no pre-preparation of the
-    // text is done (e. g. replace \n by QChar::LineSeparator or spaces dependent
-    // on the wrapping). This is done manually here:
     qreal textWidth = -1.0;
-    const QTextOption::WrapMode wrapMode = model->wrapMode();
-    const bool singleLine = !viewPrivate->controller->wordWrap()
-                            || (wrapMode == QTextOption::NoWrap)
-                            || (wrapMode == QTextOption::ManualWrap);
-    if (singleLine) {
-        // Replace all line breaks by a space
-        for (int i = 0; i < textToRender.length(); ++i) {
-            const QChar chr = textToRender.at(i);
-            if (chr == QLatin1Char('\n') || chr == QChar::LineSeparator) {
-                textToRender[i] = QLatin1Char(' ');
-            }
-        }
-    } else {
-        textToRender.replace(QLatin1Char('\n'), QChar::LineSeparator);
-
+    if (wrap()) {
         const QFontMetricsF metrics(viewPrivate->controller->font());
-        textWidth = metrics.width(textToRender);
+        textWidth = metrics.width(text);
         if (textWidth > paintingRect.width()) {
             textWidth = paintingRect.width();
         }
@@ -277,10 +250,60 @@ void MLabelViewSimple::initializeStaticText()
     staticText.setTextWidth(textWidth);
 
     staticText.setTextOption(viewPrivate->textOptions);
-    staticText.setText(textToRender);
+    staticText.setText(text);
     staticText.prepare(QTransform(), viewPrivate->controller->font());
 
     adjustTextOffset();
+}
+
+QString MLabelViewSimple::textToRender(qreal availableWidth) const
+{
+    QString text = viewPrivate->model()->text();
+
+    const QChar multiLengthSeparator(0x9c, 0);
+    if (text.contains(multiLengthSeparator)) {
+        // The text consists of several strings. Find the first string that fits into the
+        // available width. If no string has been found, the last string will be used.
+        const QStringList strings = text.split(multiLengthSeparator);
+        const QFontMetricsF metrics(viewPrivate->controller->font());
+        foreach (const QString &string, strings) {
+            text = string;
+            if (metrics.width(text) <= availableWidth) {
+                break;
+            }
+        }
+    }
+
+    if (viewPrivate->model()->textElide() && text.size() > 4) {
+        QFontMetrics metrics(viewPrivate->controller->font());
+        text = metrics.elidedText(text, Qt::ElideRight, availableWidth);
+    }
+
+    // QStaticText uses QTextLayout internally to render text. Contrary to
+    // QPainter::drawText(const QRect &rectangle, ...) no pre-preparation of the
+    // text is done (e. g. replace \n by QChar::LineSeparator or spaces dependent
+    // on the wrapping). This is done manually here:
+    if (wrap()) {
+        text.replace(QLatin1Char('\n'), QChar::LineSeparator);
+    } else {
+        // The text should be shown in a single line. Replace all line breaks by a space.
+        for (int i = 0; i < text.length(); ++i) {
+            const QChar chr = text.at(i);
+            if (chr == QLatin1Char('\n') || chr == QChar::LineSeparator) {
+                text[i] = QLatin1Char(' ');
+            }
+        }
+    }
+
+    return text;
+}
+
+bool MLabelViewSimple::wrap() const
+{
+    const QTextOption::WrapMode wrapMode = viewPrivate->model()->wrapMode();
+    return viewPrivate->controller->wordWrap()
+           && (wrapMode != QTextOption::NoWrap)
+           && (wrapMode != QTextOption::ManualWrap);
 }
 
 void MLabelViewSimple::adjustTextOffset()
@@ -318,13 +341,19 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width) const
     }
 
     const_cast<MLabelViewSimple*>(this)->initializeStaticText();
-    if ((width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth()) {
+
+    const bool equalWidth = (width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth();
+    if (equalWidth && staticText.text() == unconstraintText) {
         return staticText.size();
     }
 
     QStaticText staticText2(staticText);
     staticText2.setTextOption(staticText.textOption());  // TODO: remove after Qt-bug #13368 has been fixed
     staticText2.setTextWidth(width);
+    if (staticText2.text() != unconstraintText) {
+        staticText2.setText(unconstraintText);
+    }
+    staticText2.prepare(QTransform(), viewPrivate->controller->font());
 
     return staticText2.size();
 }
@@ -345,19 +374,3 @@ void MLabelViewSimple::markDirty()
 {
     dirty = true;
 }
-
-Qt::TextFlag MLabelViewSimple::wrap() const
-{
-    if(!viewPrivate->controller->wordWrap()) {
-        return Qt::TextSingleLine;
-    }
-
-    QTextOption::WrapMode wrapMode = viewPrivate->model()->wrapMode();
-    if (wrapMode == QTextOption::WordWrap) {
-        return Qt::TextWordWrap;
-    } else if (wrapMode == QTextOption::WrapAnywhere || wrapMode == QTextOption::WrapAtWordBoundaryOrAnywhere) {
-        return Qt::TextWrapAnywhere;
-    }
-    return Qt::TextSingleLine;
-}
-

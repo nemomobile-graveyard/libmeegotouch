@@ -504,31 +504,49 @@ void Ut_MLabel::testSizeHint()
 
     QSizeF constraint(widthConstraint, -1);
     QSizeF minSizeHint = label->sizeHint(Qt::MinimumSize, constraint);
-    QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize, constraint);
     QSizeF maxSizeHint = label->sizeHint(Qt::MaximumSize, constraint);
+    QSizeF prefSizeHint = label->sizeHint(Qt::PreferredSize, constraint);
 
+    // Test minimum size-hint
     QFontMetricsF fm(label->font());
-    QCOMPARE(minSizeHint.height(), fm.height());
-
-    QVERIFY(minSizeHint.width() <= prefSizeHint.width() || minSizeHint.height() <= prefSizeHint.height());
-    QVERIFY(prefSizeHint.width() <= maxSizeHint.width() || prefSizeHint.height() <= maxSizeHint.height());
-
-    if (widthConstraint > 0.0) {
-        QVERIFY(minSizeHint.width() <= widthConstraint);
-        QVERIFY(prefSizeHint.width() <= widthConstraint);
-    }
-
-    const QSizeF requiredSize = requiredTextSize(text, label->font(), wrapMode, prefSizeHint.width());
-    if (requiredSize.width() <= prefSizeHint.width()) {
-        QCOMPARE(requiredSize.height(), prefSizeHint.height());
+    if (constraint.width() > 0.0) {
+        QCOMPARE(minSizeHint.width(), constraint.width());
     } else {
-        // If the width of the text document is greater than the width
-        // set by QTextDocument::setTextWidth(), then no wrapping has
-        // been done and the width has been exceeded.
-        // However the preferred size hint always respects the maximum
-        // available width (see MLabelViewSimple::resizeEvent()).
-        QVERIFY(requiredSize.height() <= prefSizeHint.height());
+        QCOMPARE(minSizeHint.width(), fm.width(QLatin1Char('x')));
     }
+    if (constraint.height() > 0.0) {
+        QCOMPARE(minSizeHint.width(), constraint.height());
+    } else {
+        QCOMPARE(minSizeHint.height(), fm.height());
+    }
+
+    // Test maximum size-hint
+    if (constraint.width() > 0.0) {
+        QCOMPARE(maxSizeHint.width(), constraint.width());
+    } else {
+        QCOMPARE(maxSizeHint.width(), qreal(QWIDGETSIZE_MAX));
+    }
+    if (constraint.height() > 0.0) {
+        QCOMPARE(maxSizeHint.height(), constraint.height());
+    } else {
+        QCOMPARE(maxSizeHint.height(), qreal(QWIDGETSIZE_MAX));
+    }
+
+    // Test preferred size-hint
+    QVERIFY(prefSizeHint.width() <= maxSizeHint.width());
+    QVERIFY(prefSizeHint.height() <= maxSizeHint.height());
+
+    QSizeF targetSize = requiredTextSize(text, label->font(), wrapMode, prefSizeHint.width());
+    if (constraint.width() > 0.0) {
+        QVERIFY(prefSizeHint.width() <= constraint.width());
+        targetSize.rwidth() = constraint.width();
+    }
+    if (constraint.height() > 0.0) {
+        QVERIFY(prefSizeHint.height() <= constraint.height());
+        targetSize.rheight() = constraint.height();
+    }
+
+    QCOMPARE(prefSizeHint, targetSize);
 }
 
 void Ut_MLabel::testUnknownSizeHint()
