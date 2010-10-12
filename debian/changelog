@@ -1,8 +1,15 @@
-libmeegotouch (0.20.48~1) unstable; urgency=low
+libmeegotouch (0.20.48-1) unstable; urgency=low
 
-  * Unreleased
+  * Fixes: List unit tests, due to new functionality like floating list index.
+  * Fixes: NB#195945 - Wrong label size in MDetailedListItem
+  * Fixes: NB#171501 - Back button is not displayed in Text and IM Message Viewer
+  * Fixes: NB#197418 - Device asks for Lock Code too often (renders it unusable)
+  * Fixes: NB#189126 - Avoiding canceling of swipe gesture when touch screen jitter is visible
+  * Fixes: Refactoring of swipe gesture recognizer
+  * Fixes: NB#179070 -  Multi-touch press event cannot be correctly used with MWidget
+  * Fixes: NB#194018 -  MPannableViewport::setMinimumSize resets panned widget position.
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 08 Oct 2010 12:33:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 12 Oct 2010 12:53:03 +0300
 
 libmeegotouch (0.20.47-1) unstable; urgency=low
 
