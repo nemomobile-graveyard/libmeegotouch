@@ -252,7 +252,7 @@ void MDialogView::applyStyle()
     MSceneWindowView::applyStyle();
     d->realignButtonBox();
 
-    d->closeButton->setVisible(style()->hasCloseButton());
+    d->closeButton->setVisible(d->hasCloseButton());
     d->updateTitleBarVisibility();
 
     d->titleBar->setMinimumHeight(style()->titleBarHeight());
@@ -652,6 +652,14 @@ void MDialogViewPrivate::_q_updatePanning()
     Q_Q(MDialogView);
     bool heightFits = contentsViewport->size().height() >= contentsViewport->childrenBoundingRect().height();
     contentsViewport->setEnabled(!heightFits || q->model()->alwaysPannable());
+}
+
+bool MDialogViewPrivate::hasCloseButton() {
+    Q_Q(MDialogView);
+    if (q->model()->system() && q->model()->modal())
+        return false;
+    else
+        return q->style()->hasCloseButton();
 }
 
 #include "moc_mdialogview.cpp"

@@ -21,6 +21,7 @@
 #include "mmessagebox_p.h"
 
 #include "mwidgetcreator.h"
+#include "mdismissevent.h"
 M_REGISTER_WIDGET(MMessageBox)
 
 MMessageBoxPrivate::MMessageBoxPrivate()
@@ -66,4 +67,9 @@ QString MMessageBox::iconId() const
 void MMessageBox::setIconId(const QString &iconId)
 {
     model()->setIconId(iconId);
+}
+
+void MMessageBox::dismissEvent(MDismissEvent *event)
+{
+    event->ignore();
 }
