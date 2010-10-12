@@ -46,9 +46,12 @@ protected:
     MAbstractWidgetAnimation(MAbstractWidgetAnimationPrivate *dd, QObject *parent);
 
 public:
+    /*!
+     * This enum defines the direction of the widget animation.
+     */
     enum TransitionDirection {
-        In,
-        Out
+        In, //!< transitioning into the screen/display
+        Out //!< transitioning out of the screen/display
     };
 
     /*!
