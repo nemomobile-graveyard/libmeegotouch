@@ -209,7 +209,7 @@ bool MTranslationCatalog::loadWith(MLocale *mlocale, MLocale::Category category)
                 return true;
         }
         else {
-            QString delims("_.");
+            QString delims("_.@");
             QString engineeringEnglishName = fname;
             fname += '_' + mlocale->categoryName(category);
             for (;;) {
