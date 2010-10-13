@@ -28,7 +28,6 @@
 #include "mscene_p.h"
 #include "mapplication.h"
 #include "mapplication_p.h"
-#include "mapplicationwindow.h"
 #include "mcomponentcache.h"
 #include "morientationtracker.h"
 #include "mdeviceprofile.h"
