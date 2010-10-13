@@ -85,7 +85,7 @@ class MListCellCreatorHelper
 {
 public:
     static T *createCell(MWidgetRecycler &recycler, const QString &viewType, const QString &objectName) {
-        T *cell = dynamic_cast<T *>(recycler.take(T::staticMetaObject.className()));
+        T *cell = qobject_cast<T *>(recycler.take(T::staticMetaObject.className()));
         if (cell == NULL) {
             cell = new T;
 
