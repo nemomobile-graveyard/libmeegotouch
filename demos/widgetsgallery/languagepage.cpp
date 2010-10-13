@@ -144,6 +144,23 @@ void LanguagePage::retranslateUi()
     int numberOfAvailableLocales = uloc_countAvailable();
     for (int i = 0; i < numberOfAvailableLocales; ++i)
         localeNames << QString::fromUtf8(uloc_getAvailable(i));
+    localeNames << "no";
+    localeNames << "no_NO";
+    localeNames << "es_419";
+    localeNames << "de@collation=phonebook";
+    localeNames << "de_DE@collation=phonebook";
+    localeNames << "zh_Hans_CN@collation=pinyin";
+    localeNames << "zh_Hans_CN@collation=stroke";
+    QStringList localeNamesWithoutScript;
+    QRegExp regexp("^([a-z]{2,3}_)([A-Z][a-z]{3,3}_)(.*)$");
+    foreach (const QString &localeName, localeNames) {
+        if (regexp.indexIn(localeName) == 0) {
+            localeNamesWithoutScript <<
+                regexp.capturedTexts().at(1) + regexp.capturedTexts().at(3);
+        }
+    }
+    foreach (const QString &localeName, localeNamesWithoutScript)
+        localeNames << localeName;
 #else
     for (unsigned language = QLocale::C;
          language <= QLocale::LastLanguage;
