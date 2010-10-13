@@ -48,6 +48,7 @@
 #include <QDynamicPropertyChangeEvent>
 
 #include "morientationtracker_p.h"
+#include "mscenemanager_p.h"
 
 #ifdef Q_WS_X11
 # include <QX11Info>
@@ -948,7 +949,13 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
     if (MComponentData::isOrientationForced())
         return;
 
-    if (orientationAngle() != angle) {
+    M::OrientationAngle targetAngle;
+    if (d->sceneManager && d->sceneManager->d_ptr->pendingRotation)
+        targetAngle = d->sceneManager->d_ptr->pendingRotation->angle;
+    else
+        targetAngle = orientationAngle();
+
+    if (targetAngle != angle) {
         d->oldOrientation = orientation();
         d->angle = angle;
 
