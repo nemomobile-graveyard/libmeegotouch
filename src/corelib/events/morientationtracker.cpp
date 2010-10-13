@@ -168,14 +168,14 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
 #ifdef Q_WS_X11
             if (!window->isOrientationAngleLocked() && !windowsFollowingCurrentAppWindow.contains(window)) {
 #else
-            if (!window->isOrientationAngleLocked())
+            if (!window->isOrientationAngleLocked()) {
 #endif
                 if (!window->isOrientationLocked() || window->orientation() == orientation)
                     window->setOrientationAngle(angle);
             }
         }
     }
-#endif
+#endif //HAVE_CONTEXTSUBSCRIBER
 }
 
 MOrientationTracker::MOrientationTracker() :
