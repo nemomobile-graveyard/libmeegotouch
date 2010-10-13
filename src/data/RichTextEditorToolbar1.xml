@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE MEEGO_IM_TOOLBAR_WIDGET SYSTEM 'VirtualKeyboardToolbarDTD.dtd'>
-<toolbar>
-    <button name="Underline" group="Styles" priority="0" showon="always" alignment="left" text="&lt;U&gt;U&lt;&#x002F;U&gt;" text_id="" toggle="true" pressed="false" icon="Icon-m-common-underline" size="80%">
-        <actions>
-            <sendkeysequence keysequence="Ctrl+U"> </sendkeysequence>
-        </actions>
-    </button>
-    <button name="Italic" group="Styles" priority="0" showon="always" alignment="left" text="&lt;I&gt;I&lt;&#x002F;I&gt;" text_id="" toggle="true" pressed="false" icon="Icon-m-common-italic" size="80%">
-        <actions>
-            <sendkeysequence keysequence="Ctrl+I"> </sendkeysequence>
-        </actions>
-    </button>
-    <button name="Bold" group="Styles" priority="0" showon="always" alignment="left" text="&lt;B&gt;B&lt;&#x002F;B&gt;" text_id="" toggle="true" pressed="false" icon="Icon-m-common-bold" size="80%">
-        <actions>
-            <sendkeysequence keysequence="Ctrl+B"> </sendkeysequence>
-        </actions>
-    </button>
-</toolbar>
+<!DOCTYPE MEEGO_INPUT_METHOD SYSTEM 'VirtualKeyboardToolbarDTD.dtd'>
+<input-method version="1">
+    <toolbar>
+        <items>
+            <button name="Underline" group="Styles" showon="always" text="&lt;U&gt;U&lt;&#x002F;U&gt;" text_id="" toggle="true" pressed="false" icon="Icon-m-common-underline" size="80%">
+                <actions>
+                    <sendkeysequence keysequence="Ctrl+U"> </sendkeysequence>
+                </actions>
+            </button>
+            <button name="Italic" group="Styles" showon="always" text="&lt;I&gt;I&lt;&#x002F;I&gt;" text_id="" toggle="true" pressed="false" icon="Icon-m-common-italic" size="80%">
+                <actions>
+                    <sendkeysequence keysequence="Ctrl+I"> </sendkeysequence>
+                </actions>
+            </button>
+            <button name="Bold" group="Styles" showon="always" text="&lt;B&gt;B&lt;&#x002F;B&gt;" text_id="" toggle="true" pressed="false" icon="Icon-m-common-bold" size="80%">
+                <actions>
+                    <sendkeysequence keysequence="Ctrl+B"> </sendkeysequence>
+                </actions>
+            </button>
+        </items>
+        <layout>
+            <item name="Underline" />
+            <item name="Italic" />
+            <item name="Bold" />
+        </layout>
+    </toolbar>
+</input-method>
+
