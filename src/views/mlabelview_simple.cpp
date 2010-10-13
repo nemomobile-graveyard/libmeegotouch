@@ -91,18 +91,9 @@ bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     QFontMetricsF fm(viewPrivate->controller->font());
 
-    Qt::TextFlag textFlag = Qt::TextSingleLine;
-    if (viewPrivate->controller->wordWrap()) {
-        const QTextOption::WrapMode wrapMode = viewPrivate->model()->wrapMode();
-        if (wrapMode == QTextOption::WordWrap) {
-            textFlag = Qt::TextWordWrap;
-        } else if (wrapMode == QTextOption::WrapAnywhere || wrapMode == QTextOption::WrapAtWordBoundaryOrAnywhere) {
-            textFlag = Qt::TextWrapAnywhere;
-        }
-    }
-
     QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
-                                viewPrivate->textOptions.alignment() | textFlag, viewPrivate->model()->text());
+                                viewPrivate->textOptions.alignment() | textFlagForWrapMode(),
+                                viewPrivate->model()->text());
     if (bR.height() > fm.height()) {
         preferredSize = QSizeF(bR.width(), bR.height());
         return true;
@@ -238,17 +229,8 @@ void MLabelViewSimple::initializeStaticText()
     unconstraintText = textToRender(QWIDGETSIZE_MAX);
     const QString text = textToRender(paintingRect.width());
 
-    qreal textWidth = -1.0;
-    if (wrap()) {
-        const QFontMetricsF metrics(viewPrivate->controller->font());
-        textWidth = metrics.width(text);
-        if (textWidth > paintingRect.width()) {
-            textWidth = paintingRect.width();
-        }
-    }
-
+    const qreal textWidth = restrictedTextWidth(text, paintingRect.width());
     staticText.setTextWidth(textWidth);
-
     staticText.setTextOption(viewPrivate->textOptions);
     staticText.setText(text);
     staticText.prepare(QTransform(), viewPrivate->controller->font());
@@ -256,7 +238,7 @@ void MLabelViewSimple::initializeStaticText()
     adjustTextOffset();
 }
 
-QString MLabelViewSimple::textToRender(qreal availableWidth) const
+QString MLabelViewSimple::textToRender(qreal width) const
 {
     QString text = viewPrivate->model()->text();
 
@@ -268,7 +250,7 @@ QString MLabelViewSimple::textToRender(qreal availableWidth) const
         const QFontMetricsF metrics(viewPrivate->controller->font());
         foreach (const QString &string, strings) {
             text = string;
-            if (metrics.width(text) <= availableWidth) {
+            if (metrics.width(text) <= width) {
                 break;
             }
         }
@@ -276,7 +258,7 @@ QString MLabelViewSimple::textToRender(qreal availableWidth) const
 
     if (viewPrivate->model()->textElide() && text.size() > 4) {
         QFontMetrics metrics(viewPrivate->controller->font());
-        text = metrics.elidedText(text, Qt::ElideRight, availableWidth);
+        text = metrics.elidedText(text, Qt::ElideRight, width);
     }
 
     // QStaticText uses QTextLayout internally to render text. Contrary to
@@ -298,12 +280,39 @@ QString MLabelViewSimple::textToRender(qreal availableWidth) const
     return text;
 }
 
+qreal MLabelViewSimple::restrictedTextWidth(const QString &text, qreal width) const
+{   
+    qreal textWidth = -1.0;
+    if (wrap()) {
+        const QFontMetricsF metrics(viewPrivate->controller->font());
+        textWidth = metrics.width(text);
+        if (textWidth > width) {
+            textWidth = width;
+        }
+    }
+    return textWidth;
+}
+
 bool MLabelViewSimple::wrap() const
 {
     const QTextOption::WrapMode wrapMode = viewPrivate->model()->wrapMode();
     return viewPrivate->controller->wordWrap()
            && (wrapMode != QTextOption::NoWrap)
            && (wrapMode != QTextOption::ManualWrap);
+}
+
+Qt::TextFlag MLabelViewSimple::textFlagForWrapMode() const
+{
+    Qt::TextFlag textFlag = Qt::TextSingleLine;
+    if (viewPrivate->controller->wordWrap()) {
+        const QTextOption::WrapMode wrapMode = viewPrivate->model()->wrapMode();
+        if (wrapMode == QTextOption::WordWrap) {
+            textFlag = Qt::TextWordWrap;
+        } else if (wrapMode == QTextOption::WrapAnywhere || wrapMode == QTextOption::WrapAtWordBoundaryOrAnywhere) {
+            textFlag = Qt::TextWrapAnywhere;
+        }
+    }
+    return textFlag;
 }
 
 void MLabelViewSimple::adjustTextOffset()

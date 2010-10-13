@@ -52,13 +52,31 @@ public:
     void initializeStaticText();
 
     /**
-     * \param availableWidth Available width in pixels for the text to render.
-     * \return Text that should be used for the rendering. Dependent on the available
-     *         width, the wrapping-policies, eliding-settings and multilength-status
-     *         adjustments are done.
+     * \param width Available width in pixels for the text.
+     * \return      Text that should be used for the rendering. Dependent on the available
+     *              width, the wrapping-policies, eliding-settings and multilength-status
+     *              adjustments are done.
      */
-    QString textToRender(qreal availableWidth) const;
+    QString textToRender(qreal width) const;
+
+    /**
+     * \param text  Text that should be rendered.
+     * \param width Available width in pixels for the text to render.
+     * \return      -1.0 (= unrestricted) is returned if no wrapping must be done. If
+     *              a wrapping is done it is assured that the returned width is not
+     *              larger than \a width.
+     */
+    qreal restrictedTextWidth(const QString &text, qreal width) const;
+
+    /**
+     * \return True, if the wrap-mode indicates that a wrapping should be done.
+     */
     bool wrap() const;
+
+    /**
+     * \return Text flag for the current wrap-mode specified by the model.
+     */
+    Qt::TextFlag textFlagForWrapMode() const;
     
     /**
      * Helper method for initializeStaticText(): Adjusts the member variable
