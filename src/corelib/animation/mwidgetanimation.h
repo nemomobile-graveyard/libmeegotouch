@@ -34,7 +34,9 @@ class QRectF;
 class QSizeF;
 class QPointF;
 
-/*!
+/*!  
+  \internal
+  
   \class MWidgetAnimation
   \brief MWidgetAnimation class provides easy to use interface for animating
          widgets.
@@ -84,6 +86,8 @@ class QPointF;
    a->setKeyframes(widget, "position", keyframes);
    a->start(QAbstractAnimation::DeleteWhenStopped);
   \endcode
+  
+  \internal_end
  */
 class MWidgetAnimation : public MGroupAnimation
 {
