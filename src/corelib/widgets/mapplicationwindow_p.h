@@ -60,7 +60,6 @@ public:
     MToolBar *toolBar;
     MDockWidget *dockWidget;
     MHomeButtonPanel *homeButtonPanel;
-    MEscapeButtonPanel *escapeButtonPanel;
     MApplicationMenu *menu;
     QPointer<MSceneWindow> statusBar;
     QTimer autoHideComponentsTimer;

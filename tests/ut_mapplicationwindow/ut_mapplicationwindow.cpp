@@ -29,7 +29,6 @@
 #include <MComponentData>
 #include <MScene>
 #include <MSceneManager>
-#include <MEscapeButtonPanel>
 #include <MToolBar>
 #include <MNavigationBar>
 
@@ -197,59 +196,59 @@ void Ut_MApplicationWindow::testPageEscapeAuto()
 {
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
-    MEscapeButtonPanel *escapeButtonPanel = fetchEscapeButtonPanel(m_subject->scene()->items());
+    MNavigationBar *navigationBar = fetchNavigationBar(m_subject->scene()->items());
 
-    QVERIFY(escapeButtonPanel != 0);
+    QVERIFY(navigationBar != 0);
 
     m_subject->sceneManager()->appearSceneWindowNow(firstPage);
 
-    QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::CloseMode);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonClose);
 
     m_subject->sceneManager()->appearSceneWindowNow(secondPage);
 
-    QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::BackMode);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonBack);
 
     m_subject->sceneManager()->dismissSceneWindowNow(secondPage);
 
-    QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::CloseMode);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonClose);
 }
 
 void Ut_MApplicationWindow::testPageEscapeAutoWhenAddingPageHistory()
 {
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
-    MEscapeButtonPanel *escapeButtonPanel = fetchEscapeButtonPanel(m_subject->scene()->items());
+    MNavigationBar *navigationBar = fetchNavigationBar(m_subject->scene()->items());
     QList<MSceneWindow *> pageHistory;
 
-    QVERIFY(escapeButtonPanel != 0);
+    QVERIFY(navigationBar != 0);
 
     m_subject->sceneManager()->appearSceneWindowNow(secondPage);
 
-    QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::CloseMode);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonClose);
 
     pageHistory.append(firstPage);
     m_subject->sceneManager()->setPageHistory(pageHistory);
 
-    QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::BackMode);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonBack);
 }
 
 void Ut_MApplicationWindow::testPageEscapeAutoWhenClearingPageHistory()
 {
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
-    MEscapeButtonPanel *escapeButtonPanel = fetchEscapeButtonPanel(m_subject->scene()->items());
+    MNavigationBar *navigationBar = fetchNavigationBar(m_subject->scene()->items());
     QList<MSceneWindow *> pageHistory;
 
-    QVERIFY(escapeButtonPanel != 0);
+    QVERIFY(navigationBar != 0);
 
     m_subject->sceneManager()->appearSceneWindowNow(firstPage);
     m_subject->sceneManager()->appearSceneWindowNow(secondPage);
 
-    QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::BackMode);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonBack);
 
     m_subject->sceneManager()->setPageHistory(pageHistory);
 
-    QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::CloseMode);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonClose);
 }
 
 void Ut_MApplicationWindow::testStatusBarVisibility_data()
@@ -372,26 +371,26 @@ void Ut_MApplicationWindow::testTabBarMovesFromNavigationBarToFloatingWhenRotate
     QVERIFY(isToolBarFloating());
 }
 
-MEscapeButtonPanel *Ut_MApplicationWindow::fetchEscapeButtonPanel(
+MNavigationBar *Ut_MApplicationWindow::fetchNavigationBar(
         const QList<QGraphicsItem *> &itemsList) const
 {
     int i = 0;
     int itemsCount = itemsList.count();
     QGraphicsItem *item;
     QGraphicsWidget *widget;
-    MEscapeButtonPanel *escapeButtonPanel = 0;
+    MNavigationBar *navigationBar = 0;
 
-    while (escapeButtonPanel == 0 && i < itemsCount) {
+    while (navigationBar == 0 && i < itemsCount) {
         item = itemsList.at(i);
         if (item->isWidget()) {
             widget = static_cast<QGraphicsWidget *>(item);
-            escapeButtonPanel = qobject_cast<MEscapeButtonPanel*>(widget);
+            navigationBar = qobject_cast<MNavigationBar*>(widget);
         }
 
         ++i;
     }
 
-    return escapeButtonPanel;
+    return navigationBar;
 }
 
 QTEST_MAIN(Ut_MApplicationWindow)

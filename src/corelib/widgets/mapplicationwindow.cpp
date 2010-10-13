@@ -35,7 +35,6 @@
 #include "mcomponentdata.h"
 #include "maction.h"
 #include "mhomebuttonpanel.h"
-#include "mescapebuttonpanel.h"
 #include "mapplication.h"
 #include "mcomponentdata.h"
 #include "mscenemanager.h"
@@ -83,7 +82,6 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , toolBar(new MToolBar)
     , dockWidget(new MDockWidget)
     , homeButtonPanel(new MHomeButtonPanel)
-    , escapeButtonPanel(new MEscapeButtonPanel)
     , menu(new MApplicationMenu)
     , pageAreaMaximized(false)
 #ifdef Q_WS_X11
@@ -119,8 +117,6 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
     navigationBar = 0;
     delete homeButtonPanel;
     homeButtonPanel = 0;
-    delete escapeButtonPanel;
-    escapeButtonPanel = 0;
 
     MTheme::releaseStyle(style);
     style = 0;
@@ -194,11 +190,10 @@ void MApplicationWindowPrivate::init()
 
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
-    sceneManager->appearSceneWindowNow(escapeButtonPanel);
 
     // Initialize escape button to close mode.
-    escapeButtonPanel->setEscapeMode(MEscapeButtonPanelModel::CloseMode);
-    QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
+    navigationBar->setEscapeButtonMode(MNavigationBarModel::EscapeButtonClose);
+    QObject::connect(navigationBar, SIGNAL(closeButtonClicked()), q, SLOT(close()));
 
     if (needsDockWidget()) {
         sceneManager->appearSceneWindowNow(dockWidget);
@@ -225,7 +220,6 @@ void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
         navigationBar->hide();
         dockWidget->hide();
         homeButtonPanel->hide();
-        escapeButtonPanel->hide();
         closeMenu();
     } else {
         if (navigationBar->sceneWindowState() == MSceneWindow::Appeared ||
@@ -239,10 +233,6 @@ void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
         if (homeButtonPanel->sceneWindowState() == MSceneWindow::Appeared ||
                 homeButtonPanel->sceneWindowState() == MSceneWindow::Appearing)
             homeButtonPanel->show();
-
-        if (escapeButtonPanel->sceneWindowState() == MSceneWindow::Appeared ||
-                escapeButtonPanel->sceneWindowState() == MSceneWindow::Appearing)
-            escapeButtonPanel->show();
     }
 }
 
@@ -309,7 +299,6 @@ void MApplicationWindowPrivate::maximizePageArea()
 
     // When maximized, the window is in control of these components.
     setComponentDisplayMode(homeButtonPanel, MApplicationPageModel::Hide);
-    setComponentDisplayMode(escapeButtonPanel, MApplicationPageModel::Hide);
 
     if (navigationBar->focusItem()) {
         // Always show focused navigation bar.
@@ -342,7 +331,6 @@ void MApplicationWindowPrivate::restorePageArea()
 
     if (page) {
         setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
-        setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());
         setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
 
         if (needsDockWidget()) {
@@ -406,10 +394,6 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
             if (member == MApplicationPageModel::HomeButtonDisplayMode) {
                 setComponentDisplayMode(homeButtonPanel,
                                         page->model()->homeButtonDisplayMode());
-
-            } else if (member == MApplicationPageModel::EscapeButtonDisplayMode) {
-                setComponentDisplayMode(escapeButtonPanel,
-                                        page->model()->escapeButtonDisplayMode());
 
             } else if (member == MApplicationPageModel::NavigationBarDisplayMode) {
                 setComponentDisplayMode(navigationBar,
@@ -517,7 +501,7 @@ void MApplicationWindowPrivate::openMenu()
     if (navigationBar->isArrowIconVisible() &&
         (navigationBar->sceneWindowState() != MSceneWindow::Disappearing)) {
         menu->appear(q);
-        escapeButtonPanel->setEnabled(false);
+        navigationBar->setEscapeButtonEnabled(false);
 
         // Simply calling setEnabled(false) would uncheck the currently
         // checked item in the toolbar if tab view is being used.
@@ -554,7 +538,7 @@ void MApplicationWindowPrivate::_q_menuDisappeared()
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(openMenu()));
 
-    escapeButtonPanel->setEnabled(true);
+    navigationBar->setEscapeButtonEnabled(true);
     toolBar->setProperty(_M_IsEnabledPreservingSelection, QVariant(true));
 
     if (!componentsOnAutoHide.isEmpty() && !autoHideComponentsTimer.isActive())
@@ -882,7 +866,7 @@ void MApplicationWindowPrivate::setupPageEscapeAuto()
         setupPageEscapeClose();
     } else {
         setupPageEscapeBack();
-        page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SLOT(dismiss()));
+        page->connect(navigationBar, SIGNAL(backButtonClicked()), SLOT(dismiss()));
     }
 
     // We must update the wiring of our escape button if the application manually
@@ -892,27 +876,22 @@ void MApplicationWindowPrivate::setupPageEscapeAuto()
 
 void MApplicationWindowPrivate::setupPageEscapeBack()
 {
-    escapeButtonPanel->setEscapeMode(MEscapeButtonPanelModel::BackMode);
-    page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SIGNAL(backButtonClicked()));
+    navigationBar->setEscapeButtonMode(MNavigationBarModel::EscapeButtonBack);
 }
 
 void MApplicationWindowPrivate::setupPageEscapeClose()
 {
-    Q_Q(MApplicationWindow);
-
-    escapeButtonPanel->setEscapeMode(MEscapeButtonPanelModel::CloseMode);
-    page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SIGNAL(closeButtonClicked()));
-    QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
+    navigationBar->setEscapeButtonMode(MNavigationBarModel::EscapeButtonClose);
 }
 
 void MApplicationWindowPrivate::tearDownPageEscape()
 {
     Q_Q(MApplicationWindow);
 
-    QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
-
     QObject::disconnect(q->sceneManager(), SIGNAL(pageHistoryChanged()),
             q, SLOT(_q_updatePageEscapeAuto()));
+
+    QObject::disconnect(navigationBar, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
 }
 
 void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
@@ -924,22 +903,21 @@ void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
     Q_ASSERT(page->escapeMode() == MApplicationPageModel::EscapeAuto);
 
     if (pageHistory.isEmpty() &&
-            (escapeButtonPanel->escapeMode() != MEscapeButtonPanelModel::CloseMode)) {
+            (navigationBar->escapeButtonMode() != MNavigationBarModel::EscapeButtonClose)) {
 
-        QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
+        QObject::disconnect(navigationBar, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
         // we don't want MEscapeButtonPanel::escapeModeChanged() to be intercepted
         // by the scene manager which would update close button geometry.
         // The geometry will be updated later on in connectPage().
-        escapeButtonPanel->blockSignals(true);
+        navigationBar->blockSignals(true);
         setupPageEscapeClose();
-        escapeButtonPanel->blockSignals(false);
+        navigationBar->blockSignals(false);
 
     } else if (!pageHistory.isEmpty() &&
-            (escapeButtonPanel->escapeMode() != MEscapeButtonPanelModel::BackMode)) {
+            (navigationBar->escapeButtonMode() != MNavigationBarModel::EscapeButtonBack)) {
 
-        QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
         setupPageEscapeBack();
-        page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SLOT(dismiss()));
+        page->connect(navigationBar, SIGNAL(backButtonClicked()), SLOT(dismiss()));
     }
 }
 
@@ -1138,10 +1116,12 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
     q->setWindowTitle(longestLengthVariant(page->title()));
 
     setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
-    setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());
     setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
 
     setupPageEscape();
+
+    page->connect(navigationBar, SIGNAL(backButtonClicked()), SIGNAL(backButtonClicked()));
+    page->connect(navigationBar, SIGNAL(closeButtonClicked()), SIGNAL(closeButtonClicked()));
 
     // Dock widget follows navigation bar display mode.
     setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
@@ -1165,6 +1145,8 @@ void MApplicationWindowPrivate::disconnectPage(MApplicationPage *pageToDisconnec
                         q, SLOT(_q_handlePageModelModifications(QList<const char *>)));
 
     tearDownPageEscape();
+    QObject::disconnect(navigationBar, SIGNAL(backButtonClicked()), page, 0);
+    QObject::disconnect(navigationBar, SIGNAL(closeButtonClicked()), page, 0);
 
 
     removePageActions();

@@ -40,71 +40,88 @@
 
 MNavigationBarViewPrivate::MNavigationBarViewPrivate()
     : layout(0),
-      policyTitle(0),
-      policySimple(0),
+      menuToolbarEscapePolicy(0),
+      escapeToolbarMenuPolicy(0),
+      escapeToolbarPolicy(0),
+      toolbarPolicy(0),
+      toolbarMenuPolicy(0),
+      toolBarSlot(0),
       toolBarLayout(0),
       applicationMenuButton(0),
-      toolBar(0)
+      toolBar(0),
+      escapeButtonSlot(0),
+      backButton(0),
+      closeButton(0)
 {
 }
 
 MNavigationBarViewPrivate::~MNavigationBarViewPrivate()
 {
-    if (toolBar)
+    if (toolBar) {
         toolBarLayout->removeItem(toolBar);
+        toolBar->setParentItem(0);
+    }
 
     delete applicationMenuButton;
+    delete escapeButtonSlot;
+    delete toolBarSlot;
 }
 
 void MNavigationBarViewPrivate::init()
 {
     applicationMenuButton = new MApplicationMenuButton(controller);
-    applicationMenuButton->setObjectName("NavigationBarMenuButton");
+    applicationMenuButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    escapeButtonSlot = new MEscapeButtonSlot(controller);
+    escapeButtonSlot->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    closeButton = new MButton(escapeButtonSlot);
+    closeButton->setViewType("icon");
+
+    backButton = new MButton(escapeButtonSlot);
+    backButton->setViewType("icon");
 
     layout = new MLayout;
+    layout->setContentsMargins(0, 0, 0, 0);
     controller->setLayout(layout);
 
-    toolBarLayout = new QGraphicsLinearLayout(Qt::Horizontal, layout);
+    toolBarSlot = new QGraphicsWidget(controller);
+    toolBarSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    toolBarLayout = new QGraphicsLinearLayout;
+    toolBarLayout->setContentsMargins(0, 0, 0, 0);
+    toolBarLayout->setSpacing(0);
+    toolBarSlot->setLayout(toolBarLayout);
 
-    policyTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-    policyTitle->setContentsMargins(0, 0, 0, 0);
-    policyTitle->setSpacing(0);
-    policyTitle->addItem(applicationMenuButton);
-    policyTitle->addItem(toolBarLayout);
-    policyTitle->setAlignment(applicationMenuButton, Qt::AlignCenter);
+    menuToolbarEscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    menuToolbarEscapePolicy->setSpacing(0);
+    menuToolbarEscapePolicy->addItem(applicationMenuButton);
+    menuToolbarEscapePolicy->addItem(toolBarSlot);
+    menuToolbarEscapePolicy->addItem(escapeButtonSlot);
 
-    policySimple = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-    policySimple->setContentsMargins(0, 0, 0, 0);
-    policySimple->setSpacing(0);
-    policySimple->addItem(toolBarLayout);
-    policySimple->addStretch();
-    policySimple->addItem(applicationMenuButton);
-    policySimple->setAlignment(applicationMenuButton, Qt::AlignRight);
+    escapeToolbarMenuPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    escapeToolbarMenuPolicy->setSpacing(0);
+    escapeToolbarMenuPolicy->addItem(escapeButtonSlot);
+    escapeToolbarMenuPolicy->addItem(toolBarSlot);
+    escapeToolbarMenuPolicy->addItem(applicationMenuButton);
+
+    escapeToolbarPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    escapeToolbarPolicy->setSpacing(0);
+    escapeToolbarPolicy->addItem(escapeButtonSlot);
+    escapeToolbarPolicy->addItem(toolBarSlot);
+
+    toolbarPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    toolbarPolicy->setSpacing(0);
+    toolbarPolicy->addItem(toolBarSlot);
+
+    toolbarMenuPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    toolbarMenuPolicy->setSpacing(0);
+    toolbarMenuPolicy->addItem(toolBarSlot);
+    toolbarMenuPolicy->addItem(applicationMenuButton);
 
     // Connects button signals
     QObject::connect(applicationMenuButton, SIGNAL(clicked()), controller, SIGNAL(viewmenuTriggered()));
-
-}
-
-void MNavigationBarViewPrivate::setMenuButtonwidth()
-{
-    Q_Q(MNavigationBarView);
-
-    if (q->style()->hasTitle()) {
-        /* FIXME: Its there because the UI specs contains the following formula:
-          width of application menu button = width of portrait view - width of home button - width of close button.
-          This needs to be removed when there exists support for reading CSS constants in the code
-         */
-        int widthofPortraitMode = MDeviceProfile::instance()->resolution().height();
-        qreal width = widthofPortraitMode - (qreal)q->style()->paddingLeft() - (qreal)q->style()->paddingRight();
-        applicationMenuButton->setPreferredWidth(width);
-        applicationMenuButton->setMinimumWidth(width);
-        applicationMenuButton->setMaximumWidth(width);
-    } else {
-        applicationMenuButton->setPreferredWidth(-1);
-        applicationMenuButton->setMinimumWidth(-1);
-        applicationMenuButton->setMaximumWidth(-1);
-    }
+    QObject::connect(closeButton, SIGNAL(clicked()), controller, SIGNAL(closeButtonClicked()));
+    QObject::connect(backButton, SIGNAL(clicked()), controller, SIGNAL(backButtonClicked()));
 }
 
 void MNavigationBarViewPrivate::notificationFlagChanged()
@@ -131,6 +148,85 @@ void MNavigationBarViewPrivate::toolBarChanged()
         nextToolBar->show();
     }
     toolBar = nextToolBar;
+}
+
+void MNavigationBarViewPrivate::updateEscapeButton()
+{
+    Q_Q(MNavigationBarView);
+
+    backButton->setVisible(q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonBack);
+
+    closeButton->setVisible(q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonClose
+                            && q->style()->hasCloseButton());
+}
+
+void MNavigationBarViewPrivate::updateMenuButton()
+{
+    Q_Q(MNavigationBarView);
+
+    if (q->style()->hasTitle()) {
+        applicationMenuButton->setTextVisible(true);
+        applicationMenuButton->setArrowIconVisible(q->model()->arrowIconVisible());
+    } else {
+        applicationMenuButton->setTextVisible(false);
+        applicationMenuButton->setArrowIconVisible(true);
+        applicationMenuButton->setVisible(q->model()->arrowIconVisible());
+    }
+}
+
+void MNavigationBarViewPrivate::updateLayout()
+{
+    Q_Q(MNavigationBarView);
+
+    if (q->style()->hasTitle()) {
+        layout->setPolicy(menuToolbarEscapePolicy);
+    } else {
+
+        bool escapeVisible = q->style()->hasCloseButton()
+            || q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonBack;
+
+        bool menuVisible = q->model()->arrowIconVisible();
+
+        if (menuVisible && escapeVisible) {
+            layout->setPolicy(escapeToolbarMenuPolicy);
+        } else if (menuVisible && !escapeVisible) {
+            layout->setPolicy(toolbarMenuPolicy);
+        } else if (!menuVisible && escapeVisible) {
+            layout->setPolicy(escapeToolbarPolicy);
+        } else if (!menuVisible && !escapeVisible) {
+            layout->setPolicy(toolbarPolicy);
+        }
+    }
+}
+
+void MNavigationBarViewPrivate::updateToolBarAlignment()
+{
+    Q_Q(MNavigationBarView);
+
+    if (!toolBar)
+        return;
+
+    QVariant alignment = QVariant::Invalid;
+
+    if (!q->style()->hasTitle()) {
+
+        bool escapeVisible = q->style()->hasCloseButton()
+            || q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonBack;
+
+        bool menuVisible = q->model()->arrowIconVisible();
+
+        if (menuVisible && escapeVisible) {
+            alignment = Qt::AlignHCenter;
+        } else if (menuVisible && !escapeVisible) {
+            alignment = Qt::AlignLeft;
+        } else if (!menuVisible && escapeVisible) {
+            alignment = Qt::AlignRight;
+        } else if (!menuVisible && !escapeVisible) {
+            alignment = Qt::AlignJustify;
+        }
+    }
+
+    toolBar->setProperty("buttonAlignment", alignment);
 }
 
 // --------------------------------------------------------------------------
@@ -173,8 +269,11 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
 {
     Q_D(MNavigationBarView);
     MSceneWindowView::updateData(modifications);
-    const char *member;
-    foreach(member, modifications) {
+
+    bool layoutNeedsUpdate = false;
+    bool toolBarAlignmentNeedsUpdate = false;
+
+    foreach( const char *member, modifications) {
         if (member == MNavigationBarModel::NotifyUser) {
             d->notificationFlagChanged();
         } else if (member == MNavigationBarModel::ViewMenuDescription) {
@@ -184,11 +283,25 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
         } else if (member == MNavigationBarModel::ProgressIndicatorVisible) {
             d->applicationMenuButton->setProgressIndicatorVisible(model()->progressIndicatorVisible());
         } else if (member == MNavigationBarModel::ArrowIconVisible) {
-            d->applicationMenuButton->setArrowIconVisible(model()->arrowIconVisible());
+            d->updateMenuButton();
+            layoutNeedsUpdate = true;
+            toolBarAlignmentNeedsUpdate = true;
         } else if (member == MNavigationBarModel::ToolBar) {
             d->toolBarChanged();
+            toolBarAlignmentNeedsUpdate = true;
+        } else if (member == MNavigationBarModel::EscapeButtonMode) {
+            d->updateEscapeButton();
+            layoutNeedsUpdate = true;
+            toolBarAlignmentNeedsUpdate = true;
+        } else if (member == MNavigationBarModel::EscapeButtonEnabled) {
+            d->escapeButtonSlot->setEnabled(model()->escapeButtonEnabled());
         }
     }
+
+    if (layoutNeedsUpdate)
+        d->updateLayout();
+    if (toolBarAlignmentNeedsUpdate)
+        d->updateToolBarAlignment();
 }
 
 void MNavigationBarView::setupModel()
@@ -199,7 +312,7 @@ void MNavigationBarView::setupModel()
     d->applicationMenuButton->setText(model()->viewMenuDescription());
     d->applicationMenuButton->setIconID(model()->viewMenuIconID());
     d->applicationMenuButton->setProgressIndicatorVisible(model()->progressIndicatorVisible());
-    d->applicationMenuButton->setArrowIconVisible(model()->arrowIconVisible());
+    d->escapeButtonSlot->setEnabled(model()->escapeButtonEnabled());
 }
 
 void MNavigationBarView::applyStyle()
@@ -208,28 +321,38 @@ void MNavigationBarView::applyStyle()
 
     Q_D(MNavigationBarView);
 
-    d->applicationMenuButton->setTextVisible(style()->hasTitle());
-    d->applicationMenuButton->setIconVisible(style()->hasTitle());
+    d->applicationMenuButton->setStyleName(style()->menuButtonStyleName());
+    d->escapeButtonSlot->setStyleName(style()->escapeButtonSlotStyleName());
+    d->closeButton->setStyleName(style()->closeButtonStyleName());
+    d->backButton->setStyleName(style()->backButtonStyleName());
 
-    d->layout->setPolicy(style()->hasTitle() ? d->policyTitle : d->policySimple);
-
-    d->setMenuButtonwidth();
+    d->updateEscapeButton();
+    d->updateMenuButton();
+    d->updateLayout();
+    d->toolBarChanged();
+    d->updateToolBarAlignment();
 }
 
 void MNavigationBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     MWidgetView::mousePressEvent(event);
 
-    // Don't let it propagate to widgets below
-    event->accept();
+    bool transparent = qFuzzyIsNull(style()->backgroundOpacity());
+
+    // Don't let it propagate to widgets below if background is not transparent
+    if (!transparent)
+        event->accept();
 }
 
 void MNavigationBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     MWidgetView::mouseReleaseEvent(event);
 
-    // Don't let it propagate to widgets below
-    event->accept();
+    bool transparent = qFuzzyIsNull(style()->backgroundOpacity());
+
+    // Don't let it propagate to widgets below if background is not transparent
+    if (!transparent)
+        event->accept();
 }
 
 void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -243,3 +366,4 @@ void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGra
 }
 
 M_REGISTER_VIEW_NEW(MNavigationBarView, MNavigationBar)
+

@@ -113,4 +113,24 @@ void MNavigationBar::undockToolBar()
     dockToolBar(NULL);
 }
 
+MNavigationBarModel::EscapeButtonModeEnum MNavigationBar::escapeButtonMode() const
+{
+    return model()->escapeButtonMode();
+}
+
+void MNavigationBar::setEscapeButtonMode(MNavigationBarModel::EscapeButtonModeEnum newMode)
+{
+    model()->setEscapeButtonMode(newMode);
+}
+
+bool MNavigationBar::escapeButtonEnabled() const
+{
+    return model()->escapeButtonEnabled();
+}
+
+void MNavigationBar::setEscapeButtonEnabled(bool enabled)
+{
+    model()->setEscapeButtonEnabled(enabled);
+}
+
 #include "moc_mnavigationbar.cpp"

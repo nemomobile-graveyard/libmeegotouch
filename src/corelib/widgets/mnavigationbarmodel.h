@@ -29,12 +29,25 @@ class M_EXPORT MNavigationBarModel : public MSceneWindowModel
     Q_OBJECT
     M_MODEL_INTERNAL(MNavigationBarModel)
 
+public:
+    /*!
+        This enum specifies the possible modes of the escape button.
+    */
+    enum EscapeButtonModeEnum {
+        EscapeButtonBack, /*!< The escape button is a back button.*/
+        EscapeButtonClose /*!< The escape button is a close button.*/
+    };
+
+private:
     M_MODEL_PROPERTY(bool, notifyUser, NotifyUser, true, false)
     M_MODEL_PROPERTY(QString, viewMenuDescription, ViewMenuDescription, true, "Menu")
     M_MODEL_PROPERTY(QString, viewMenuIconID, ViewMenuIconID, true, QString())
     M_MODEL_PROPERTY(bool, progressIndicatorVisible, ProgressIndicatorVisible, true, false)
     M_MODEL_PROPERTY(bool, arrowIconVisible, ArrowIconVisible, true, false)
     M_MODEL_PTR_PROPERTY(MToolBar *, toolBar, ToolBar, true, 0)
+    M_MODEL_PROPERTY(MNavigationBarModel::EscapeButtonModeEnum, escapeButtonMode, EscapeButtonMode, true,
+                     MNavigationBarModel::EscapeButtonClose)
+    M_MODEL_PROPERTY(bool, escapeButtonEnabled, EscapeButtonEnabled, true, true)
 };
 
 #endif
