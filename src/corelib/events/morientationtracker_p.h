@@ -75,8 +75,10 @@ private slots:
     void updateOrientationAngle();
 
 private:
+#ifdef Q_WS_X11
     Atom orientationAngleAtom;
     Atom currentAppWindowAtom;
+#endif
     Q_DECLARE_PUBLIC(MOrientationTracker)
 };
 
