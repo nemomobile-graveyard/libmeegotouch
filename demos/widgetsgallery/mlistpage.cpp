@@ -679,6 +679,8 @@ void MListPage::createContent()
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClick(QModelIndex)));
     connect(list, SIGNAL(itemLongTapped(QModelIndex,QPointF)), this, SLOT(itemLongTapped(QModelIndex,QPointF)));
 
+    connect(sceneManager(), SIGNAL(orientationChanged(M::Orientation)), this, SLOT(loadPicturesInVisibleItems()));
+
     retranslateUi();
 }
 
@@ -692,3 +694,4 @@ void MListPage::retranslateUi()
     // at the moment. If more qtTrId() calls are needed they should
     // be added here.
 }
+

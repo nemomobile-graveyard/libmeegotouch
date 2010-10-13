@@ -282,8 +282,7 @@ void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF 
         forceRepaint = false;
 
         viewportTopLeft = position;
-        if (viewportVisibleHeight < size.height())
-            viewportVisibleHeight = size.height();
+        viewportVisibleHeight = size.height();
 
         viewportRectChanged(QRectF(position, size));
 
