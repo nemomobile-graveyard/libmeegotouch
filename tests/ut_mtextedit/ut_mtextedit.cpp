@@ -528,6 +528,9 @@ void Ut_MTextEdit::testFocusOutEvent()
 
 void Ut_MTextEdit::testSubFocusHandling()
 {
+    QSKIP("QGI::setFocus does not work reliably in test environment.",
+          SkipAll);
+
     MWindow w;
 
     MTextEdit *subject = new MTextEdit;
@@ -2160,6 +2163,9 @@ void Ut_MTextEdit::testSelectAll()
 
 void Ut_MTextEdit::testAutoSipEnabled()
 {
+    QSKIP("QGI::setFocus does not work reliably in test environment.",
+          SkipAll);
+
     AutoActivatedScene sc;
     MTextEdit *subject = createFromSipHandling(&sc, /* isSipRequested = */ false);
 
@@ -2176,6 +2182,9 @@ void Ut_MTextEdit::testAutoSipEnabled()
 
 void Ut_MTextEdit::testAutoSipDisabled()
 {
+    QSKIP("QGI::setFocus does not work reliably in test environment.",
+          SkipAll);
+
     AutoActivatedScene sc;
     MTextEdit *subject = createFromSipHandling(&sc, /* isSipRequested = */ false);
 
@@ -2192,6 +2201,9 @@ void Ut_MTextEdit::testAutoSipDisabled()
 
 void Ut_MTextEdit::testCloseSipOnDestruction()
 {
+    QSKIP("QGI::setFocus does not work reliably in test environment.",
+          SkipAll);
+
     AutoActivatedScene sc;
     MTextEdit *subject = createFromSipHandling(&sc);
     QVERIFY(m_sic->isVisible());
@@ -2210,6 +2222,9 @@ void Ut_MTextEdit::testCloseSipOnDestruction()
 
 void Ut_MTextEdit::testIgnoreSipIfNotFocused()
 {
+    QSKIP("QGI::setFocus does not work reliably in test environment.",
+          SkipAll);
+
     AutoActivatedScene sc;
     MTextEdit *subject = createFromSipHandling(&sc);
     QVERIFY(m_sic->isVisible());
@@ -2227,6 +2242,9 @@ void Ut_MTextEdit::testIgnoreSipIfNotFocused()
 
 void Ut_MTextEdit::testCloseSipOnHide()
 {
+    QSKIP("QGI::setFocus does not work reliably in test environment.",
+          SkipAll);
+
     AutoActivatedScene sc;
     MTextEdit *subject = createFromSipHandling(&sc);
     QVERIFY(m_sic->isVisible());
