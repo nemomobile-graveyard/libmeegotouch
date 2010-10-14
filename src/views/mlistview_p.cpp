@@ -473,6 +473,11 @@ void MListViewPrivate::createVisibleItems()
     createVisibleItems(firstVisibleRow, lastVisibleRow);
 }
 
+QModelIndex MListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
+{
+    return locateVisibleIndexAt(pos);
+}
+
 bool MListViewPrivate::isGroupHeader(const QModelIndex &index)
 {
     Q_UNUSED(index);
@@ -786,6 +791,12 @@ MWidget *MPlainMultiColumnListViewPrivate::createItem(int row)
     return cell;
 }
 
+QModelIndex MPlainMultiColumnListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
+{
+    int lastVisibleFlatRow = locateVisibleRowAt(pos, viewWidth-1);
+    return flatRowToIndex(lastVisibleFlatRow);
+}
+
 int MPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     if (itemHeight == 0)
@@ -799,7 +810,7 @@ int MPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 
     int column = 0;
     if (viewWidth)
-        column = x / (viewWidth / columns);
+        column = qMin(x / (viewWidth / columns), columns - 1);
 
     int flatRow = row + column;
     if (flatRow >= itemsCount())
@@ -1535,6 +1546,12 @@ int MMultiColumnListViewPrivate::hseparatorsCount() const
     return hseparatorsCount;
 }
 
+QModelIndex MMultiColumnListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
+{
+    int lastVisibleFlatRow = locateVisibleRowAt(pos, viewWidth-1);
+    return flatRowToIndex(lastVisibleFlatRow);
+}
+
 int MMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
@@ -1556,7 +1573,7 @@ int MMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     int row = relativePos / (hseparatorHeight + itemHeight)  * columns;
     int column = 0;
     if (viewWidth)
-        column = x / (viewWidth / columns);
+        column = qMin(x / (viewWidth / columns), columns - 1);
     return headerRow + row + column + 1;
 }
 

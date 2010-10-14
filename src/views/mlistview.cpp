@@ -194,16 +194,16 @@ void MListView::relayoutItemsInViewportRect()
         int rowCount = d_ptr->rowCount;
 
         if (rowCount) {
-            QModelIndex firstVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
-            d_ptr->updateFirstVisibleRow(firstVisibleRow);
-            QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
-            d_ptr->updateLastVisibleRow(lastVisibleRow);
+            QModelIndex firstVisibleIndex = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
+            d_ptr->updateFirstVisibleRow(firstVisibleIndex);
+            QModelIndex lastVisibleIndex = d_ptr->locateLastVisibleIndexInRowAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
+            d_ptr->updateLastVisibleRow(lastVisibleIndex);
 
-            QPoint firstVisibleItemPos(0, d_ptr->locatePosOfItem(firstVisibleRow));
-            QPoint lastVisibleItemPos(0, d_ptr->locatePosOfItem(lastVisibleRow));
+            QPoint firstVisibleItemPos(0, d_ptr->locatePosOfItem(firstVisibleIndex));
+            QPoint lastVisibleItemPos(0, d_ptr->locatePosOfItem(lastVisibleIndex));
             d_ptr->removeInvisibleItems(firstVisibleItemPos, lastVisibleItemPos);
 
-            d_ptr->createVisibleItems(firstVisibleRow, lastVisibleRow);
+            d_ptr->createVisibleItems(firstVisibleIndex, lastVisibleIndex);
         } else {
             d_ptr->clearVisibleItemsArray();
             d_ptr->clearFirstAndLastVisibleRows();

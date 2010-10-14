@@ -143,6 +143,7 @@ public:
     virtual int totalHeight() = 0;
     virtual int hseparatorsCount() const = 0;
     virtual QModelIndex locateVisibleIndexAt(int pos) = 0;
+    virtual QModelIndex locateLastVisibleIndexInRowAt(int pos);
     virtual bool isGroupHeader(const QModelIndex &index);
     virtual void layoutChanged();
 
@@ -250,6 +251,7 @@ public:
     virtual int hseparatorsCount() const;
     virtual int totalHeight();
     virtual MWidget *createItem(int row);
+    virtual QModelIndex locateLastVisibleIndexInRowAt(int pos);
     virtual int locateVisibleRowAt(int y, int x = 0);
     virtual void updateItemSize();
     virtual void updateSeparatorSize();
@@ -357,6 +359,7 @@ public:
     virtual int hseparatorsCount() const;
     virtual int groupSize(int headerIndex) const;
     virtual int totalHeight();
+    virtual QModelIndex locateLastVisibleIndexInRowAt(int pos);
     virtual int locateVisibleRowAt(int y, int x = 0);
     virtual int locatePosOfItem(int row);
     virtual void createVisibleItems(const QModelIndex &firstVisibleRow,
