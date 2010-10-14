@@ -33,7 +33,6 @@ class M_EXPORT MApplicationPageStyle : public MSceneWindowStyle
         \brief Controls whether the title Label should be visible or not.
     */
     M_STYLE_ATTRIBUTE(bool, hasTitleLabel, HasTitleLabel)
-
 };
 
 class M_EXPORT MApplicationPageStyleContainer : public MSceneWindowStyleContainer

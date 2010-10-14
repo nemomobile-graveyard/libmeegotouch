@@ -37,6 +37,9 @@ MApplicationMenuButtonViewPrivate::MApplicationMenuButtonViewPrivate()
 
 MApplicationMenuButtonViewPrivate::~MApplicationMenuButtonViewPrivate()
 {
+    delete iconImage;
+    delete arrowIconImage;
+    delete spinner;
 }
 
 void MApplicationMenuButtonViewPrivate::init()

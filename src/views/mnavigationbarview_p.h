@@ -23,6 +23,8 @@
 #include "mscenewindowview_p.h"
 #include "mtoolbar.h"
 #include <QPointer>
+#include "mstylablewidgetstyle.h"
+#include "mstylablewidget.h"
 
 class MNavigationBar;
 class MApplicationMenuButton;
@@ -30,6 +32,8 @@ class MWidget;
 class MLayout;
 class MLinearLayoutPolicy;
 class QGraphicsLinearLayout;
+class MButton;
+class MEscapeButtonSlot;
 
 class MNavigationBarViewPrivate : public MSceneWindowViewPrivate
 {
@@ -40,21 +44,42 @@ public:
 
     void init();
 
-    void setMenuButtonwidth();
-
     void finalizeEscapeButtonTransition();
 
-    void escapeModeChanged();
     void notificationFlagChanged();
     void toolBarChanged();
+    void updateEscapeButton();
+    void updateMenuButton();
+    void updateLayout();
+    void updateToolBarAlignment();
 
     MLayout *layout;
-    MLinearLayoutPolicy *policyTitle;
-    MLinearLayoutPolicy *policySimple;
+
+    // parts of policy name describe which components are visible and in what order
+    MLinearLayoutPolicy *menuToolbarEscapePolicy;
+
+    MLinearLayoutPolicy *escapeToolbarMenuPolicy;
+    MLinearLayoutPolicy *escapeToolbarPolicy;
+    MLinearLayoutPolicy *toolbarPolicy;
+    MLinearLayoutPolicy *toolbarMenuPolicy;
+
+    QGraphicsWidget *toolBarSlot;
     QGraphicsLinearLayout *toolBarLayout;
 
     MApplicationMenuButton *applicationMenuButton;
     QPointer<MToolBar> toolBar;
+
+    MEscapeButtonSlot* escapeButtonSlot;
+    MButton *backButton;
+    MButton *closeButton;
+};
+
+class MEscapeButtonSlot : public MStylableWidget
+{
+public:
+    MEscapeButtonSlot(QGraphicsItem *parent = 0) : MStylableWidget(parent) {}
+private:
+    M_STYLABLE_WIDGET(MStylableWidgetStyle)
 };
 
 #endif

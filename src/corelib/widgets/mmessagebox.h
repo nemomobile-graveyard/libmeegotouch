@@ -101,6 +101,11 @@ public:
      */
     virtual ~MMessageBox();
 
+protected:
+    //! \reimp
+    virtual void dismissEvent(MDismissEvent *event);
+    //! \reimp_end
+
 private:
     Q_DECLARE_PRIVATE(MMessageBox)
     Q_DISABLE_COPY(MMessageBox)

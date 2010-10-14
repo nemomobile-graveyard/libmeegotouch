@@ -44,6 +44,16 @@ class M_EXPORT MNavigationBar : public MSceneWindow
     friend class Ut_MNavigationBar;
 #endif // UNIT_TEST
 
+    /*!
+        \property MNavigationBar::escapeButtonMode
+        \brief This property holds the mode of the escape button.
+
+        Set it with setEscapeButtonMode() and get its current value with escapeButtonMode().
+
+        \sa MNavigationBarModel::EscapeButtonModeEnum, escapeButtonClicked().
+        */
+    Q_PROPERTY(MNavigationBarModel::EscapeButtonModeEnum escapeButtonMode READ escapeButtonMode WRITE setEscapeButtonMode)
+
 public:
     /*!
      * \brief Default constructor. Creates a navigation bar.
@@ -69,6 +79,17 @@ public:
       \brief Returns true if the arrow icon is visible.
     */
     bool isArrowIconVisible() const;
+
+    /*!
+        \brief Returns the current mode of the escape button.
+        \sa MNavigationBarModel::EscapeButtonModeEnum
+    */
+    MNavigationBarModel::EscapeButtonModeEnum escapeButtonMode() const;
+
+    /*!
+      \brief Returns true if escape button is enabled.
+    */
+    bool escapeButtonEnabled() const;
 
 public Q_SLOTS:
     /** \brief Trigger notification of the user via the navigation bar.
@@ -106,9 +127,32 @@ public Q_SLOTS:
      */
     void setArrowIconVisible(bool visible);
 
+    /*!
+        \brief Sets the mode of the escape button.
+        \sa MNavigationBarModel::EscapeButtonModeEnum
+    */
+    void setEscapeButtonMode(MNavigationBarModel::EscapeButtonModeEnum newMode);
+
+    /*!
+        \brief Enables or disables escape button.
+    */
+    void setEscapeButtonEnabled(bool enabled);
+
 Q_SIGNALS:
     //! \brief viewmenuButton was clicked
     void viewmenuTriggered();
+
+    /*!
+        \brief Signal emitted when the escape button in back mode is clicked.
+        \sa MNavigationBar::escapeButtonMode
+    */
+    void backButtonClicked();
+
+    /*!
+        \brief Signal emitted when the escape button in close mode is clicked.
+        \sa MNavigationBar::escapeButtonMode
+    */
+    void closeButtonClicked();
 
 private:
     Q_DISABLE_COPY(MNavigationBar)
