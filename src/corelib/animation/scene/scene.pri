@@ -6,7 +6,6 @@
 ANIMATIONS_SCENE_SRC_DIR=./animation/scene
 
 PUBLIC_HEADERS += \
-    $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.h \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation.h \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchslideanimation.h \
 
@@ -19,6 +18,7 @@ PRIVATE_HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/msnapshotitem.h \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation_p.h \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchslideanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.h \
 
 SOURCES += \
     $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.cpp \

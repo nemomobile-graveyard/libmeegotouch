@@ -26,7 +26,6 @@
 #include "mpannableviewport.h"
 #include "mpannableviewport_p.h"
 #include "mpannableviewportlayout.h"
-#include "mresizelistener.h"
 
 #include <mscenemanager.h>
 #include <mondisplaychangeevent.h>
@@ -179,15 +178,29 @@ void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
     recalculatePhysRange();
 }
 
-void MPannableViewportPrivate::_q_pannedWidgetResized(QGraphicsWidget *widget)
+void MPannableViewportPrivate::_q_pannedWidgetGeometryChanged()
+{
+    correctWidgetPositionAfterGeometryChange();
+    ensureFocusedPannedWidgetIsVisible();
+}
+
+void MPannableViewportPrivate::correctWidgetPositionAfterGeometryChange()
 {
     Q_Q(MPannableViewport);
 
-    // If resized panned widget had input focus we have to make sure cursor is visible.
-    if (widget != 0
-        && pannedWidget == widget
-        && q->sceneManager()
-        && widget->focusItem()) {
+    QPointF physicsPosition = q->position();
+    QPointF roundedP = QPointF(floor(physicsPosition.x()), floor(physicsPosition.y()));
+
+    if (roundedP != -pannedWidget->pos())
+        q->updatePosition(physicsPosition);
+}
+
+void MPannableViewportPrivate::ensureFocusedPannedWidgetIsVisible()
+{
+    Q_Q(MPannableViewport);
+
+    if (q->sceneManager()
+        && pannedWidget->focusItem()) {
         q->sceneManager()->ensureCursorVisible();
     }
 }
@@ -219,11 +232,6 @@ MPannableViewport::MPannableViewport(QGraphicsItem *parent)
             SIGNAL(panningStopped()),
             SLOT(_q_resolvePannedWidgetIsOnDisplay()));
 
-    // Use QueuedConnection because this may cause relocations which require resizing
-    // to be finished, not just at beginning of it.
-    connect(&d->resizeListener, SIGNAL(widgetResized(QGraphicsWidget *)),
-            this, SLOT(_q_pannedWidgetResized(QGraphicsWidget *)),
-            Qt::QueuedConnection);
 }
 
 MPannableViewport::~MPannableViewport()
@@ -287,15 +295,14 @@ void MPannableViewport::setWidget(QGraphicsWidget *widget)
 {
     Q_D(MPannableViewport);
 
-    if (d->pannedWidget) {
-        d->pannedWidget->removeEventFilter(&d->resizeListener);
-    }
+    if (d->pannedWidget)
+        disconnect(d->pannedWidget, SIGNAL(geometryChanged()), this, SLOT(_q_pannedWidgetGeometryChanged()));
 
     d->pannedWidget = widget;
     d->viewportLayout->setWidget(widget);
 
     if (widget) {
-        widget->installEventFilter(&d->resizeListener);
+        connect(widget, SIGNAL(geometryChanged()), this, SLOT(_q_pannedWidgetGeometryChanged()));
 
         widget->setPos(-position());
         widget->setZValue(ZValuePannedWidget);

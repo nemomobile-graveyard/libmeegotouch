@@ -17,31 +17,16 @@
 **
 ****************************************************************************/
 
-#include "mstylesheet.h"
-#include "mapplication.h"
-#include "testobjectstyle.h"
+#include "meffectcreator.h"
+#include "mclassfactory.h"
 
-int main(int argc, char **argv)
+MEffectCreatorBase::MEffectCreatorBase(const char *effectClassName)
 {
-    MStyleSheet sheet(0);
-
-    if (argc < 2) {
-	return 0;
-    }
-
-    QString css_filename;
-    css_filename += QString(argv[1]);
-
-    if (argc > 2 && QString(argv[2]).toLower() == "relaxed")
-	sheet.setSyntaxMode(MStyleSheet::RelaxedSyntax);
-    sheet.load(css_filename);
-
-    QList<const MStyleSheet *> sheets;
-    sheets.append(&sheet);
-
-    TestObjectStyle *style = (TestObjectStyle *) MStyleSheet::style(sheets, "TestObjectStyle", "", "", "", M::Landscape, NULL);
-
-    MStyleSheet::releaseStyle(style);
-
-    return 0;
+    MClassFactory::instance()->registerEffectCreator(this, effectClassName);
 }
+
+MEffectCreatorBase::~MEffectCreatorBase()
+{
+    MClassFactory::instance()->unregisterEffectCreator(this);
+}
+

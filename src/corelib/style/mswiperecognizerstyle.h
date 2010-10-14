@@ -59,6 +59,15 @@ class MSwipeRecognizerStyle : public MStyle
      to the closest of 0,90,180 or 270 degree angles.
      */
     M_STYLE_ATTRIBUTE(qreal, angleSnappingThreshold, angleSnappingThreshold)
+
+    /*!
+     \brief The jitterThreshold is a movement value used to avoid
+     canceling gesture because of jitter effect when user removes
+     his finger from the screen. When that happens the screen
+     driver can sometimes report rapidly changing positions of
+     the pointer and that could be interpreted as a change of direction.
+     */
+    M_STYLE_ATTRIBUTE(qreal, jitterThreshold, jitterThreshold)
 };
 
 class MSwipeRecognizerStyleContainer : public MStyleContainer

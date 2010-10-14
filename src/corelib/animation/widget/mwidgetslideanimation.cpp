@@ -139,3 +139,5 @@ void MWidgetSlideAnimation::updateState(QAbstractAnimation::State newState, QAbs
 }
 
 #include "moc_mwidgetslideanimation.cpp"
+
+M_REGISTER_ANIMATION(MWidgetSlideAnimation)

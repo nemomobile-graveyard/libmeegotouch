@@ -158,17 +158,20 @@ void Ut_MPannableViewport::updatePosition()
 {
 
     QGraphicsWidget *widget = new QGraphicsWidget();
+    widget->setMinimumSize(QSizeF(10,10));
+    widget->setMaximumSize(QSizeF(10,10));
     subject->setWidget(widget);
 
     // Forcing the size of subject to some value
     subject->setMinimumSize(QSizeF(500, 300));
     subject->setMaximumSize(QSizeF(500, 300));
+    subject->adjustSize();
 
     QSignalSpy spy(subject, SIGNAL(positionChanged(QPointF)));
 
-    subject->updatePosition(QPointF(-50, 75));
+    subject->physics()->setPosition(QPointF(0,75));
 
-    QCOMPARE(static_cast<MPannableViewportPrivate *>(subject->d_ptr)->pannedWidget->pos(), -QPointF(-50, 75));
+    QCOMPARE(static_cast<MPannableViewportPrivate *>(subject->d_ptr)->pannedWidget->pos(), -QPointF(0, 75));
 
     QCOMPARE(spy.count(), 1);
 

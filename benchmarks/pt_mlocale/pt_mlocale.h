@@ -23,10 +23,12 @@
 #include <QtTest/QtTest>
 #include <QCoreApplication>
 #include <QTextCodec>
+#include <QTextStream>
 #include <QObject>
 #include <MLocale>
 #ifdef HAVE_ICU
 #include <unicode/uversion.h>
+#include <unicode/uloc.h>
 #endif
 
 class Pt_MLocale : public QObject
@@ -43,7 +45,12 @@ private slots:
     void init();
     void cleanup();
 
-    void benchmarkCountryEndonym();
+#ifdef HAVE_ICU
+    void benchmarkSingleLanguageEndonym();
+    void benchmarkAllLanguageEndonym();
+    void benchmarkSingleCountryEndonym();
+    void benchmarkAllCountryEndonym();
+#endif
 };
 
 #endif

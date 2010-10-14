@@ -46,88 +46,104 @@ public:
         int parentPriority;
     };
 
-    struct Key {
-        Key(const QString &className, const QString &objectName, const QString &mode, const QString &type, M::Orientation orientation, const QList<SelectorInfo>* parentInfo) :
-            className(className), objectName(objectName), mode(mode), type(type), orientation(orientation), parentInfo(parentInfo) {}
+    // Aggregates the (non-parent) data that specifies which style we want to obtain
+    struct StyleSpec {
+        StyleSpec(const QString &className, const QStringList &classHierarchy, const QString &objectName, const QString &mode, const QString &type, M::Orientation orientation) :
+            className(className), classHierarchy(classHierarchy), objectName(objectName), mode(mode), type(type), orientation(orientation), parentInfo(0) {}
 
-        QString uniqueId() const {
-            // basic identifier without scene graph info
-            QString orientationAsString((orientation == M::Landscape) ? "Landscape" : "Portrait");
-            QString id = className + "[" + type + "]" + "#" + objectName + "." + orientationAsString + ":" + mode;
-
-            if (parentInfo) {
-                // scene graph info
-                id +=  + "{";
-                for (QList<SelectorInfo>::const_iterator iterator = parentInfo->begin(); iterator != parentInfo->constEnd(); ++iterator) {
-                    if (iterator != parentInfo->constBegin()) {
-                        id += ',';
-                    }
-                    id += QString::number((quintptr) iterator->selector, 16);
-                }
-                id += '}';
-            }
-            return id;
+        void setParentInfo(const QList<SelectorInfo> *newParentInfo) {
+            parentInfo = newParentInfo;
         }
 
-        QString className, objectName, mode, type;
+        QString entryCacheKey() const {
+            QString orientationAsString((orientation == M::Landscape) ? "Landscape" : "Portrait");
+            QString result = className + "[" + type + "]" + "#" + objectName + "." + orientationAsString + ":" + mode;
+            return result;
+        }
+
+        QString styleCacheKey() const {
+            QString result = entryCacheKey();
+
+            if (parentInfo) {
+                result +=  + "{";
+                for (QList<SelectorInfo>::const_iterator iterator = parentInfo->begin(); iterator != parentInfo->constEnd(); ++iterator) {
+                    if (iterator != parentInfo->constBegin()) {
+                        result += ',';
+                    }
+                    result += QString::number((quintptr) iterator->selector, 16);
+                }
+                result += '}';
+            }
+
+            return result;
+        }
+
+        bool match(const MStyleSheetSelector *selector, unsigned int &classPriority) const;
+
+        const QString className;
+        const QStringList classHierarchy;
+
+        const QString objectName;
+        const QString mode;
+        const QString type;
         M::Orientation orientation;
-        const QList<SelectorInfo>* parentInfo;
+
+        const QList<SelectorInfo> *parentInfo;
     };
+
+    // Basic structure used to aggregate parent data of the style we want to obtain
+    struct ParentData {
+        QStringList hierarchy;
+        QList<const MStyleSheet *> sheets;
+    };
+
+    static QVector<ParentData> extractParentsData(const MWidgetController *parent);
+
+    static MStyle *style(const QList<const MStyleSheet *> &sheets,
+                         const QVector<ParentData> &parentsData,
+                         const QString &parentStyleName,
+                         const QStringList &styleMetaObjectHierarchy,
+                         const QString &styleClassName,
+                         const QString &objectName,
+                         const QString &mode,
+                         const QString &type,
+                         M::Orientation orientation);
 
     typedef QHash<QString, MOriginContainer *> CacheEntry;
     static QHash<QString, CacheEntry *> EntryCache;
     static QHash<QString, MStyle *> StyleCache;
 
-    static CacheEntry *buildCacheEntry(const QList<const MStyleSheet *>& sheets,
-                                       const QMetaObject &styleMetaObject,
-                                       const QString &objectName,
-                                       const QString &mode,
-                                       const QString &type,
-                                       M::Orientation orientation,
-                                       const MWidgetController *parent);
+    static CacheEntry *buildCacheEntry(const QList<const MStyleSheet *> &sheets,
+                                       const StyleSpec &spec,
+                                       const QVector<ParentData> &parentsData,
+                                       const QString &parentStyleName);
 
-    static bool combine(MStyle *style, const CacheEntry &entry, const QList<SelectorInfo>& parentInfo, M::Orientation orientation);
+    static bool combine(MStyle *style, const CacheEntry &entry, const StyleSpec &spec);
 
     static bool isHigherPriority(MOriginContainer *prev, MStyleSheetSelector *n, unsigned int classPriority, unsigned int parentPriority);
 
-    static int orderNumber(const QString &n, const QString &sn, const QString &parentStyleName, const QMetaObject *mobj);
+    static int orderNumber(const QString &n, const QString &sn, const QString &parentStyleName, const QStringList &parentHierarchy);
 
-    static bool populateStyle(const QList<const MStyleSheet *>& sheets,
-                              MStyle *style,
-                              const QString &objectName,
-                              const QString &mode,
-                              const QString &type,
-                              M::Orientation orientation,
-                              const MWidgetController *parent,
-                              const QList<SelectorInfo>& parentInfo);
+    static MStyle *buildStyle(const StyleSpec &spec,
+                              const QList<const MStyleSheet *> &sheets,
+                              const QVector<ParentData> &parentsData,
+                              const QString &parentStyleName);
 
-    static bool matchParent(MStyleSheetSelector *selector,
-                            const QMetaObject* mobj,
-                            const QString &styleName,
+    static bool matchParent(const MStyleSheetSelector *selector,
+                            const QStringList &parentHierarchy,
+                            const QString &parentStyleName,
                             unsigned int sceneOrder,
                             unsigned int &parentPriority);
 
-    static bool matchParents(MStyleSheetSelector *selector,
-                             const MWidgetController *parent,
+    static bool matchParents(const MStyleSheetSelector *selector,
+                             const QVector<ParentData> &parentsData,
+                             const QString &parentStyleName,
                              unsigned int &parentPriority);
 
-    static bool match(MStyleSheetSelector *selector,
-                      const QMetaObject &styleMetaObject,
-                      const QString &objectName,
-                      const QString &mode,
-                      const QString &type,
-                      M::Orientation orientation,
-                      unsigned int &classPriority);
-
-    static void getMatchingSelectorsWithParent(const QList<const MStyleSheet *>& sheets,
-            const QMetaObject &styleMetaObject,
-            const QList<QPair<const QMetaObject*, QList<const MStyleSheet*> > > parentsSheets,
-            const QString &objectName,
-            const QString &mode,
-            const QString &type,
-            M::Orientation orientation,
-            const MWidgetController *parent,
-            QList<SelectorInfo>& results);
+    static QList<SelectorInfo> getMatchingSelectorsWithParent(const QList<const MStyleSheet *> &sheets,
+                                                              const QVector<ParentData> &parentsData,
+                                                              const QString &parentStyleName,
+                                                              const StyleSpec &spec);
 };
 
 #endif

@@ -16,24 +16,23 @@
 ** of this file.
 **
 ****************************************************************************/
+ 
+#ifndef MLISTINDEXTOOLTIPSTYLE_H
+#define MLISTINDEXTOOLTIPSTYLE_H
 
-#ifndef TESTOBJECTSTYLE_H
-#define TESTOBJECTSTYLE_H
+#include <mstylablewidgetstyle.h>
 
-#include <mstyle.h>
-
-class TestObjectStyle : public MStyle
+class MListIndexTooltipStyle : public MStylableWidgetStyle
 {
     Q_OBJECT
-    M_STYLE(TestObjectStyle)
+    M_STYLE(MListIndexTooltipStyle)
 
-    M_STYLE_ATTRIBUTE(int, attributeInteger, AttributeInteger)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap *, arrowPixmap, ArrowPixmap)
 };
 
-class TestObjectStyleContainer : public MStyleContainer
+class MListIndexTooltipStyleContainer : public MStylableWidgetStyleContainer
 {
-    M_STYLE_CONTAINER(TestObjectStyle)
+    M_STYLE_CONTAINER(MListIndexTooltipStyle)
 };
 
-#endif
-
+#endif // MLISTINDEXTOOLTIPSTYLE_H

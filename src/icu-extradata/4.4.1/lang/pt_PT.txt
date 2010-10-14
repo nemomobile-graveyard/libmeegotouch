@@ -1,4 +1,4 @@
-﻿pt_PT{
+pt_PT{
     Keys{
         calendar{"calendário"}
         collation{"ordenação"}

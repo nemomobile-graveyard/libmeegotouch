@@ -415,12 +415,6 @@ bool MWidget::event(QEvent *event)
             } while( (item = item->parentLayoutItem()) );
             break;
         }
-        case QEvent::TouchBegin:
-           if(acceptTouchEvents()) {
-               event->setAccepted(true);
-               return true;
-           }
-           break;
         default:
            if(type >= QEvent::User) {
                if (type == MCancelEvent::eventNumber())
@@ -432,6 +426,22 @@ bool MWidget::event(QEvent *event)
            }
     }
     return QGraphicsWidget::event(event);
+}
+
+bool MWidget::sceneEvent(QEvent *event)
+{
+    QEvent::Type type = event->type();
+    switch(type) {
+        case QEvent::TouchBegin:
+           if(acceptTouchEvents()) {
+               event->setAccepted(true);
+               return true;
+           }
+           break;
+        default:
+           break;
+    }
+    return QGraphicsWidget::sceneEvent(event);
 }
 
 void MWidget::cancelEvent(MCancelEvent *event)

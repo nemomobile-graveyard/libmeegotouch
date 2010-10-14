@@ -37,11 +37,6 @@ class MWidgetZoomAnimation : public MAbstractWidgetAnimation
 public:
     MWidgetZoomAnimation(QObject *parent = NULL);
 
-    enum TransitionDirection {
-        In,
-        Out
-    };
-
     virtual void setTargetWidget(MWidgetController *widget);
     virtual void restoreTargetWidgetState();
 

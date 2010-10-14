@@ -1,8 +1,34 @@
-libmeegotouch (0.20.47~1) unstable; urgency=low
+libmeegotouch (0.20.49~1) unstable; urgency=low
 
   * Unreleased
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 05 Oct 2010 15:27:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 12 Oct 2010 12:58:03 +0300
+
+libmeegotouch (0.20.48-1) unstable; urgency=low
+
+  * Fixes: List unit tests, due to new functionality like floating list index.
+  * Fixes: NB#195945 - Wrong label size in MDetailedListItem
+  * Fixes: NB#171501 - Back button is not displayed in Text and IM Message Viewer
+  * Fixes: NB#197418 - Device asks for Lock Code too often (renders it unusable)
+  * Fixes: NB#189126 - Avoiding canceling of swipe gesture when touch screen jitter is visible
+  * Fixes: Refactoring of swipe gesture recognizer
+  * Fixes: NB#179070 -  Multi-touch press event cannot be correctly used with MWidget
+  * Fixes: NB#194018 -  MPannableViewport::setMinimumSize resets panned widget position.
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 12 Oct 2010 12:53:03 +0300
+
+libmeegotouch (0.20.47-1) unstable; urgency=low
+
+  * Fixes: NB#196165 - longTapped not emitted by MListItem   
+  * Fixes: The function of switch button color calculation.
+  * Fixes: NB#196274 - Switch button visual & 'toggled' signal aren't in sync at slow sliding
+  * Fixes: NB#195654 - Applications updating themselves unnecessarily in switcher grid during panning
+  * Fixes: NB#174044 - MCompleter: Contact name is cut by VKB in Text Message Editor
+  * Fixes: NB#179542 - Recipient-editor disables fn key lock
+  * Fixes: NB#195455 - Rotating feeds list from portrait to landscape returns user to top of feeds list
+  * Fixes: NB#194443 - Slider label doesn't disappear automatically
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 08 Oct 2010 12:27:00 +0300
 
 libmeegotouch (0.20.46-1) unstable; urgency=low
 

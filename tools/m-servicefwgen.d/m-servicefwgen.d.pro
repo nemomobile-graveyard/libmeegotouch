@@ -2,8 +2,6 @@ include(../../mkspecs/common.pri)
 
 TEMPLATE = app
 TARGET = ../m-servicefwgen
-DEPENDPATH += .
-INCLUDEPATH += .
 
 QT += xml
 

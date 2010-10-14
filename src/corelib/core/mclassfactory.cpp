@@ -22,6 +22,7 @@
 #include "mstylecreator.h"
 #include "mwidgetcreator.h"
 #include "manimationcreator.h"
+#include "meffectcreator.h"
 
 #include <QHash>
 #include <QString>
@@ -34,6 +35,7 @@ public:
     QHash<QString, MViewCreatorBase *> viewCreators;
     QHash<QString, MStyleCreatorBase *> styleCreators;
     QHash<QString, MAnimationCreatorBase *> animationCreators;
+    QHash<QString, MEffectCreatorBase *> effectCreators;
 };
 
 MClassFactory::MClassFactory() :
@@ -261,4 +263,39 @@ QAbstractAnimation *MClassFactory::createAnimation(const QString &animationClass
     return animationCreator->create();
 }
 
+///////////////
+// Effect    //
+///////////////
 
+void MClassFactory::registerEffectCreator(MEffectCreatorBase *creator, const char *effectClassName)
+{
+    QString type(effectClassName);
+    if (type.isEmpty())
+        qFatal("MClassFactory cannot register MEffectCreator with empty type identifier");
+
+    if (d_ptr->effectCreators.contains(type)) {
+        qWarning("MClassFactory already contains MEffectCreator for %s", effectClassName);
+    } else {
+        d_ptr->effectCreators.insert(type, creator);
+    }
+}
+
+void MClassFactory::unregisterEffectCreator(MEffectCreatorBase *creator)
+{
+    QString effectClassName = d_ptr->effectCreators.key(creator);
+    if (effectClassName.isEmpty()) {
+        qWarning("MClassFactory cannot unregister MEffectCreator which is not registered");
+    } else {
+        d_ptr->effectCreators.remove(effectClassName);
+    }
+}
+
+QGraphicsEffect *MClassFactory::createEffect(const QString &effectClassName) const
+{
+    const MEffectCreatorBase *effectCreator = d_ptr->effectCreators.value(effectClassName, NULL);
+    if (!effectCreator) {
+        mWarning("MClassFactory") << "could not create" << effectClassName;
+        return NULL;
+    }
+    return effectCreator->create();
+}

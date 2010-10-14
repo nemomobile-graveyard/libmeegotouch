@@ -65,18 +65,12 @@ void Ft_MStyleSheet::cleanup()
     delete m_subject;
 }
 
-MApplication *app;
-
 void Ft_MStyleSheet::initTestCase()
 {
-    static int argc = 1;
-    static char *app_name[1] = { (char *) "./ft_css" };
-    app = new MApplication(argc, app_name);
 }
 
 void Ft_MStyleSheet::cleanupTestCase()
 {
-    delete app;
 }
 
 void Ft_MStyleSheet::test_supported_attribute_types()
@@ -394,9 +388,10 @@ void Ft_MStyleSheet::test_parent_stylenames()
 
 void Ft_MStyleSheet::test_wrong_attribute_value()
 {
-    QString app = qApp->applicationDirPath() + "_helper_app/ft_mstylesheet_helper_app";
+    QString app = qApp->applicationFilePath();
     QStringList arguments;
-    arguments << qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_attribute.css";
+    arguments << "helper"
+            << qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_attribute.css";
 
     /* Testing with default syntax mode: strict */
     int exit = QProcess::execute(app, arguments);
@@ -464,5 +459,45 @@ void Ft_CSS::test_cache_size()
 }
 */
 
+int main_stylesheet_helper_app(const QStringList &arguments)
+{
+    MStyleSheet sheet(0);
 
-QTEST_APPLESS_MAIN(Ft_MStyleSheet)
+    if (arguments.indexOf("helper") < 0) {
+        return 0;
+    }
+
+    QString css_filename = arguments.at(2);
+
+    if (arguments.indexOf("relaxed") > 0)
+        sheet.setSyntaxMode(MStyleSheet::RelaxedSyntax);
+
+    sheet.load(css_filename);
+
+    QList<const MStyleSheet *> sheets;
+    sheets.append(&sheet);
+
+    TestObjectStyle *style = (TestObjectStyle *) MStyleSheet::style(sheets, "TestObjectStyle", "", "", "", M::Landscape, NULL);
+
+    MStyleSheet::releaseStyle(style);
+
+    return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    QStringList arguments;
+    for (int i = 0; i < argc; i++) {
+        arguments << argv[i];
+    }
+
+    MApplication app(argc, argv, QFileInfo(argv[0]).fileName() + QString::number(arguments.indexOf("helper")));
+    Q_UNUSED(app);
+
+    if (arguments.indexOf("helper") > 0) {
+        return main_stylesheet_helper_app(arguments);
+    }
+
+    Ft_MStyleSheet tc;
+    return QTest::qExec(&tc, argc, argv);
+}

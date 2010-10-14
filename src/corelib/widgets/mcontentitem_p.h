@@ -33,12 +33,17 @@ public:
     MContentItemPrivate();
     virtual ~MContentItemPrivate();
 
+    void updateLongTapConnections();
+
+private:
     QPixmap pixmap;
     QImage image;
     QPixmap optionalPixmap;
     QImage optionalImage;
     MLabel* smallText;
     MProgressIndicator * progressIndicator;
+
+    Q_DECLARE_PUBLIC(MContentItem)
 };
 
 #endif

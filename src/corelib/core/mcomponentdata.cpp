@@ -35,8 +35,10 @@
 #include "mlocale.h"
 #include "mfeedbackplayer.h"
 #include "mfeedbackplayer_p.h"
+#ifdef HAVE_DBUS
 #include "mapplicationifproxy.h"
 #include "mapplicationifadaptor.h"
+#endif //HAVE_DBUS
 #include "mapplicationservice.h"
 #include "mcomponentcache.h"
 #include "mcomponentdata_p.h"
@@ -1088,8 +1090,7 @@ void MComponentData::registerWindow(MWindow *w)
     if (!gMComponentDataPrivate) {
         qFatal("MComponentData::registerWindow() - MComponentData instance not yet created.");
     }
-    if (!MComponentCache::populating() &&
-        !gMComponentDataPrivate->windows.contains(w)) {
+    if (!gMComponentDataPrivate->windows.contains(w)) {
         gMComponentDataPrivate->windows.append(w);
     }
 }

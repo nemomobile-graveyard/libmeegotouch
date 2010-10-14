@@ -59,6 +59,8 @@ private:
     //Width of the painted area in the image
     int contentWidth(const QImage& image);
 
+    QImage captureText(Qt::TextFormat textFormat, QString text);
+    
 private slots:
     void initTestCase();
     void cleanupTestCase();
@@ -112,7 +114,11 @@ private slots:
 
     void multiLengthSeparator();
 
-    
+    void testAutoTextModeRecognizesPlainText();
+
+    void testAutoTextModeRecognizesRichText();
+
+    void testPlainAndRichTextModes();
 
 private:
     /**
@@ -124,6 +130,7 @@ private:
                                    QTextOption::WrapMode wrapMode, int width);
 
     TestMLabel *label;
+
 };
 
 #endif

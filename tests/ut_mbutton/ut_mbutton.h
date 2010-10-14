@@ -38,6 +38,7 @@ private slots:
     void cleanupTestCase();
 
     void testConstructionAndDestruction();
+    void testIcon();
     void testIconID();
     void testToggledIconID();
     void testText();

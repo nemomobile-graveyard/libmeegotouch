@@ -28,6 +28,14 @@ class MSceneManagerStyle : public MStyle
     M_STYLE(MSceneManagerStyle)
 
     M_STYLE_ATTRIBUTE(QString, pageSwitchAnimation, PageSwitchAnimation)
+    M_STYLE_ATTRIBUTE(QString, dialogAnimation, DialogAnimation)
+    M_STYLE_ATTRIBUTE(QString, notificationInformationAnimation, NotificationInformationAnimation)
+    M_STYLE_ATTRIBUTE(QString, notificationEventAnimation, NotificationEventAnimation)
+    M_STYLE_ATTRIBUTE(QString, applicationMenuAnimation, ApplicationMenuAnimation)
+    M_STYLE_ATTRIBUTE(QString, popupListAnimation, PopupListAnimation)
+    M_STYLE_ATTRIBUTE(QString, messageBoxAnimation, MessageBoxAnimation)
+    M_STYLE_ATTRIBUTE(QString, statusBarAnimation, StatusBarAnimation)
+    M_STYLE_ATTRIBUTE(QString, objectMenuAnimation, ObjectMenuAnimation)
 };
 
 class MSceneManagerStyleContainer : public MStyleContainer

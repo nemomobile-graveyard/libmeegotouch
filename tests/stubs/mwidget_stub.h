@@ -45,6 +45,7 @@ class MWidgetStub : public StubBase {
   virtual void exitDisplayEvent();
   virtual void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
   virtual bool event(QEvent *event);
+  virtual bool sceneEvent(QEvent *event);
   virtual void cancelEvent(MCancelEvent *event);
   virtual void orientationChangeEvent(MOrientationChangeEvent *event);
   virtual void actionEvent(QActionEvent *event);
@@ -147,6 +148,13 @@ bool MWidgetStub::event(QEvent *event) {
   params.append( new Parameter<QEvent * >(event));
   stubMethodEntered("event",params);
   return stubReturnValue<bool>("event");
+}
+
+bool MWidgetStub::sceneEvent(QEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QEvent * >(event));
+  stubMethodEntered("sceneEvent",params);
+  return stubReturnValue<bool>("sceneEvent");
 }
 
 void MWidgetStub::cancelEvent(MCancelEvent *event) {
@@ -304,6 +312,10 @@ void MWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event) {
 
 bool MWidget::event(QEvent *event) {
   return gMWidgetStub->event(event);
+}
+
+bool MWidget::sceneEvent(QEvent *event) {
+  return gMWidgetStub->sceneEvent(event);
 }
 
 void MWidget::cancelEvent(MCancelEvent *event) {

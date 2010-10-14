@@ -17,29 +17,24 @@
 **
 ****************************************************************************/
 
-#ifndef MRESIZELISTENER_H
-#define MRESIZELISTENER_H
+#ifndef UT_MPROGRESSINDICATOR_H
+#define UT_MPROGRESSINDICATOR_H
 
 #include <QObject>
+#include <QtTest/QtTest>
+#include <QString>
+#include <mprogressindicator.h>
 
-class QGraphicsWidget;
-
-//! \internal
-
-class MResizeListener : public QObject
+class Ut_MProgressIndicator : public QObject
 {
     Q_OBJECT
-public:
-    MResizeListener(QObject *parent = 0);
-    virtual ~MResizeListener();
 
-signals:
-    void widgetResized(QGraphicsWidget *widget);
-
-protected:
-    virtual bool eventFilter(QObject *, QEvent *event);
+private slots:
+    void progressIndicatorSetMinimum();
+    void progressIndicatorSetMaximum();
+    void progressIndicatorSetRange();
+    void progressIndicatorSetRangeNegative();
+    void progressIndicatorOutOfRange();
 };
 
-//! \internal_end
-
-#endif // MRESIZELISTENER_H
+#endif

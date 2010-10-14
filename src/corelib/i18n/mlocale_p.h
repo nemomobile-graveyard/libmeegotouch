@@ -92,6 +92,23 @@ public:
                            const QString &localeName);
 
 #ifdef HAVE_ICU
+    /*!
+     * \brief tries to truncate a locale name to search for fallbacks
+     * \param a pointer to a QString containing an ICU locale name
+     *
+     * When searching for ICU resource bundles or when trying to
+     * get ICU resource strings by keys it is sometimes necessary
+     * to use fallbacks, i.e. when nothing is found for the
+     * locale name “en_US”, try “en” as well. This function
+     * tries to truncate the locale name given as the parameter to
+     * the next fallback to try. If truncating was possible and
+     * the function returns true. If no further truncating is
+     * possible it returns false and the locale name given
+     * as the parameter is left unchanged. I.e. if false is returned
+     * there are no fallbacks left to try.
+     */
+    bool truncateLocaleName(QString *localeName) const;
+
     // creates an icu::Locale for specific category
     icu::Locale getCategoryLocale(MLocale::Category category) const;
 

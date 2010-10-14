@@ -105,29 +105,29 @@ static const QString units[NUM_UNITS] = {
     QString('%')
 };
 
-static const QString types[NUM_TYPES] = {
-    QString("bool"),
-    QString("int"),
-    QString("QColor"),
-    QString("qreal"),
-    QString("const QPixmap*"),
-    QString("const MScalableImage*"),
-    QString("MBackgroundTiles"),
-    QString("QSize"),
-    QString("QSizeF"),
-    QString("QPoint"),
-    QString("QPointF"),
-    QString("QFont"),
-    QString("QString"),
-    QString("QChar"),
-    QString("Qt::Alignment"),
-    QString("Qt::Orientation"),
-    QString("QTextCharFormat::UnderlineStyle"),
-    QString("Qt::PenStyle"),
-    QString("Qt::Axis"),
-    QString("MFeedback"),
+static const QByteArray types[NUM_TYPES] = {
+    QByteArray("bool"),
+    QByteArray("int"),
+    QByteArray("QColor"),
+    QByteArray("qreal"),
+    QByteArray("const QPixmap*"),
+    QByteArray("const MScalableImage*"),
+    QByteArray("MBackgroundTiles"),
+    QByteArray("QSize"),
+    QByteArray("QSizeF"),
+    QByteArray("QPoint"),
+    QByteArray("QPointF"),
+    QByteArray("QFont"),
+    QByteArray("QString"),
+    QByteArray("QChar"),
+    QByteArray("Qt::Alignment"),
+    QByteArray("Qt::Orientation"),
+    QByteArray("QTextCharFormat::UnderlineStyle"),
+    QByteArray("Qt::PenStyle"),
+    QByteArray("Qt::Axis"),
+    QByteArray("MFeedback"),
 #if QT_VERSION >= 0x040600
-    QString("QEasingCurve")
+    QByteArray("QEasingCurve")
 #endif
 };
 
@@ -529,7 +529,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
 
     bool conversionOK = false;
 
-    QString attributeType(property.typeName());
+    const char *attributeType = property.typeName();
     if (attributeType == types[BOOL_TYPE]) {
         bool result = booleanFromString(value, &conversionOK);
         if (conversionOK) {
@@ -764,7 +764,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
     return true;
 #endif
 
-    MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + attributeType + "): " + name + ": " + value, MStyleSheetParser::getLineNum(filename, position));
+    MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(attributeType) + "): " + name + ": " + value, MStyleSheetParser::getLineNum(filename, position));
     return false;
 }
 
@@ -888,7 +888,7 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
 {
     bool conversionOK = false;
 
-    QString attributeType(property.typeName());
+    const char *attributeType = property.typeName();
 
     if (attributeType == types[BOOL_TYPE]) {
         if (value.compare("true", Qt::CaseInsensitive) == 0) {
@@ -1245,7 +1245,7 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             }
         }
     } else {
-        MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + attributeType + "): " + name + ": " + value, MStyleSheetParser::getLineNum(filename, position));
+        MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(attributeType) + "): " + name + ": " + value, MStyleSheetParser::getLineNum(filename, position));
     }
 #else
     else {

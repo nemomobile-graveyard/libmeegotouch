@@ -133,7 +133,7 @@ void Ut_MListFilter::testEditorTextChange()
 
     list->filtering()->editor()->setText("X");
     QCOMPARE(spy.count(), 1);
-    QCOMPARE(list->filtering()->proxy()->filterRegExp(), QRegExp("X", Qt::CaseInsensitive, QRegExp::RegExp));
+    QCOMPARE(list->filtering()->proxy()->filterRegExp(), QRegExp(".*X.*", Qt::CaseInsensitive, QRegExp::RegExp));
 
     delete list;
 }

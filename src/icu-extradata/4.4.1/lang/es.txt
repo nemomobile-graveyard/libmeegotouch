@@ -1,4 +1,4 @@
-﻿es{
+es{
     Keys{
         calendar{"calendario"}
         collation{"intercalación"}

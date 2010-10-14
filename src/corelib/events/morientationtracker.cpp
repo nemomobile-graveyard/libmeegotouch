@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-#include "morientationtracker.h"
-#include "morientationtracker_p.h"
 #include "mkeyboardstatetracker.h"
 #include "mapplication.h"
 #include "mwindow.h"
@@ -30,6 +28,9 @@
 
 #include <MDebug>
 
+#include "morientationtracker.h"
+#include "morientationtracker_p.h"
+
 MOrientationTracker *MOrientationTrackerPrivate::tracker = 0;
 
 MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *controller) :
@@ -40,6 +41,9 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , topEdgeProperty("Screen.TopEdge")
     , isCoveredProperty("Screen.IsCovered")
 #endif
+#ifdef Q_WS_X11
+    , widCurrentAppWindow(0)
+#endif //Q_WS_X11
     , q_ptr(controller)
 {
     if (MComponentData::isOrientationForced()) {
@@ -67,6 +71,13 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif
 
     initContextSubscriber();
+
+#ifdef Q_WS_X11
+    orientationAngleAtom = XInternAtom(QX11Info::display(),
+                                       "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
+    currentAppWindowAtom = XInternAtom(QX11Info::display(),
+                                       "_MEEGOTOUCH_CURRENT_APP_WINDOW", False);
+#endif //Q_WS_X11
 }
 
 void MOrientationTrackerPrivate::initContextSubscriber()
@@ -133,7 +144,7 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
         if (MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen)) {
             //it was: let's just use an old angle
             angle = currentAngle;
-        } else {            
+        } else {
             //it was not: let's use first allowed:
             if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))
                 angle = M::Angle0;
@@ -154,13 +165,17 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
         // on windows, because this is very often excuted before the application's
         // event loop is started and leads to crash in QMetaObject
         foreach(MWindow * window, MApplication::windows()) {
+#ifdef Q_WS_X11
+            if (!window->isOrientationAngleLocked() && !windowsFollowingCurrentAppWindow.contains(window)) {
+#else
             if (!window->isOrientationAngleLocked()) {
+#endif
                 if (!window->isOrientationLocked() || window->orientation() == orientation)
                     window->setOrientationAngle(angle);
             }
         }
     }
-#endif
+#endif //HAVE_CONTEXTSUBSCRIBER
 }
 
 MOrientationTracker::MOrientationTracker() :
@@ -188,3 +203,113 @@ M::OrientationAngle MOrientationTracker::orientationAngle() const
 
     return d->currentAngle;
 }
+
+#ifdef Q_WS_X11
+bool MOrientationTrackerPrivate::handleX11PropertyEvent(XPropertyEvent *event)
+{
+    //handle only if there are any windows registered  to follow Current Window
+    if (windowsFollowingCurrentAppWindow.count() > 0) {
+        if (event->atom == orientationAngleAtom) {
+            handleCurrentAppWindowOrientationAngleChange();
+            return true;
+        } else if (event->atom == currentAppWindowAtom) {
+            handleCurrentAppWindowChange();
+            return true;
+        }
+    }
+    return false;
+}
+
+void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
+{
+    M::OrientationAngle angle = fetchCurrentAppWindowOrientationAngle();
+
+    Q_FOREACH(MWindow * win, windowsFollowingCurrentAppWindow) {
+        win->setOrientationAngle(angle);
+    }
+}
+
+void MOrientationTrackerPrivate::handleCurrentAppWindowChange()
+{
+    //We stop listenieng to previous top window
+    XSelectInput(QX11Info::display(), widCurrentAppWindow, 0);
+    widCurrentAppWindow = fetchWIdCurrentAppWindow();
+    //if current window is invalid or not set then return
+    if (widCurrentAppWindow == 0)
+        return;
+    //And start listening to new top window
+    XSelectInput(QX11Info::display(), widCurrentAppWindow, PropertyChangeMask);
+}
+
+WId MOrientationTrackerPrivate::fetchWIdCurrentAppWindow()
+{
+    WId currentWindowId = 0;
+    Atom actualType = 0;
+    int actualFormat = 0;
+    unsigned long nitems = 0;
+    unsigned long bytes = 0;
+
+    union {
+        unsigned char* asUChar;
+        unsigned long* asULong;
+    } data = {0};
+
+    int status = XGetWindowProperty(QX11Info::display(), RootWindow(QX11Info::display(), 0),
+                                    currentAppWindowAtom, 0, 1, False, AnyPropertyType,
+                                    &actualType, &actualFormat, &nitems,
+                                    &bytes, &data.asUChar);
+    if (status == Success && actualType == XA_WINDOW && actualFormat == 32)
+        currentWindowId = data.asULong[0];
+
+    if (status == Success)
+        XFree(data.asUChar);
+
+    return currentWindowId;
+}
+
+M::OrientationAngle MOrientationTrackerPrivate::fetchCurrentAppWindowOrientationAngle()
+{
+    M::OrientationAngle angle = M::Angle0;
+    Atom actualType = 0;
+    int actualFormat = 0;
+    unsigned long nitems = 0;
+    unsigned long bytes = 0;
+
+    union {
+        unsigned char* asUChar;
+        unsigned int* asInt;
+    } data = {0};
+    //we are using fetchWIdCurrentAppWindow() instead of stored value (widCurrentAppWindow)
+    //to eliminate a risk of race condition
+    int status = XGetWindowProperty(QX11Info::display(), fetchWIdCurrentAppWindow(),
+                                    orientationAngleAtom, 0, 1, False, AnyPropertyType,
+                                    &actualType, &actualFormat, &nitems,
+                                    &bytes, &data.asUChar);
+
+    if (status == Success && actualType == XA_CARDINAL && actualFormat == 32 && nitems == 1) {
+        if (data.asInt[0] == M::Angle0 || data.asInt[0] == M::Angle90 || data.asInt[0] == M::Angle180
+            || data.asInt[0] == M::Angle270 ){
+            angle = (M::OrientationAngle)( data.asInt[0] );
+        }
+    }
+
+    if (status == Success)
+        XFree(data.asUChar);
+    return angle;
+}
+
+void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win)
+{
+    windowsFollowingCurrentAppWindow.append(win);
+    M::OrientationAngle angle = fetchCurrentAppWindowOrientationAngle();
+    win->setOrientationAngle(angle);
+}
+
+void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win)
+{
+    windowsFollowingCurrentAppWindow.removeAll(win);
+    if (windowsFollowingCurrentAppWindow.count() == 0)
+        XSelectInput(QX11Info::display(), widCurrentAppWindow, 0);
+}
+
+#endif //Q_WS_X11

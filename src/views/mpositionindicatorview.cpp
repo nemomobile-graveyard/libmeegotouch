@@ -57,12 +57,26 @@ void MPositionIndicatorViewPrivate::init(MPositionIndicator *controller)
     q->connect(controller, SIGNAL(displayExited()), SLOT(_q_displayExited()));
 }
 
+bool MPositionIndicatorViewPrivate::isInSwitcher() const
+{
+    bool isInSwitcher = false;
+    if (controller->scene() && !controller->scene()->views().isEmpty()) {
+        MWindow* win = qobject_cast<MWindow*>(controller->scene()->views().at(0));
+        if (win) {
+            isInSwitcher = win->isInSwitcher();
+        }
+    }
+    return isInSwitcher;
+}
+
 void MPositionIndicatorViewPrivate::_q_displayEntered()
 {
     Q_Q(MPositionIndicatorView);
 
     onDisplay = true;
-    hideTimer->start(q->style()->hideTimeout());
+    if (!isInSwitcher()) {
+        hideTimer->start(q->style()->hideTimeout());
+    }
 }
 
 void MPositionIndicatorViewPrivate::_q_displayExited()
@@ -100,6 +114,11 @@ void MPositionIndicatorView::drawBackground(QPainter *painter, const QStyleOptio
 void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
+    Q_D(const MPositionIndicatorView);
+
+    if (d->isInSwitcher()) {
+        return;
+    }
 
     QSizeF  vpSize = model()->viewportSize();
     QRectF  pRange = model()->range();
@@ -239,7 +258,9 @@ void MPositionIndicatorView::resetHideTimer()
         d->visible = true;
     }
     d->hideTimer->stop();
-    d->hideTimer->start(style()->hideTimeout());
+    if (!d->isInSwitcher()) {
+        d->hideTimer->start(style()->hideTimeout());
+    }
 }
 
 M_REGISTER_VIEW_NEW(MPositionIndicatorView, MPositionIndicator)

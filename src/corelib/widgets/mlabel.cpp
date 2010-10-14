@@ -152,6 +152,16 @@ QColor MLabel::color() const
     return model()->color();
 }
 
+void MLabel::setTextFormat(Qt::TextFormat textFormat)
+{
+    model()->setTextFormat(textFormat);
+}
+ 
+Qt::TextFormat MLabel::textFormat() const
+{
+    return model()->textFormat();
+}
+
 void MLabel::addHighlighter(MLabelHighlighter *highlighter)
 {
     model()->addHighlighter(highlighter);

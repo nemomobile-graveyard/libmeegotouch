@@ -17,27 +17,4 @@
 **
 ****************************************************************************/
 
-#include "mresizelistener.h"
-
-#include <QGraphicsSceneResizeEvent>
-#include <QGraphicsWidget>
-#include <QEvent>
-#include <QDebug>
-
-MResizeListener::MResizeListener(QObject *parent)
-    : QObject(parent)
-{
-}
-
-MResizeListener::~MResizeListener()
-{
-}
-
-bool MResizeListener::eventFilter(QObject *watched, QEvent *event)
-{
-    if (event->type() == QEvent::GraphicsSceneResize) {
-        // Has to be QGraphicsWidget when got GraphicsSceneResize.
-        emit widgetResized(static_cast<QGraphicsWidget *>(watched));
-    }
-    return false;
-}
+#include "../corelib/effects/core/mgraphicseffect.h"

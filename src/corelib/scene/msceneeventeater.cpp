@@ -31,6 +31,7 @@ MSceneEventEater::MSceneEventEater(QGraphicsItem *parent) :
         QGraphicsWidget(parent)
 {
     setFlag(QGraphicsItem::ItemHasNoContents);
+    setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 
     //FLT_MAX is maximal value for single precision floating-point number
     //We want this item to be on top of everything

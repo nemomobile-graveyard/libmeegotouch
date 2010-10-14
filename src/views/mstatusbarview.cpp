@@ -73,7 +73,7 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
             this, SLOT(enablePixmapUpdates()));
 
 
-    if (controller->scene()){
+    if (controller->scene() && !controller->scene()->views().isEmpty()) {
         MWindow* win = qobject_cast<MWindow*>(controller->scene()->views().at(0));
         if (win){
             connect(win, SIGNAL(switcherEntered()), this, SLOT(handleSwitcherEntered()));

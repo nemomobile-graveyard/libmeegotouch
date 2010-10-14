@@ -198,7 +198,12 @@ public:
           \brief The list index appears on panning,
             and disappears when panning is stopped.
         */
-        Auto
+        Auto,
+        /*!
+          \brief The list index appears on tapping
+            right area of the list.
+        */
+        Floating
     };
 
     /*!

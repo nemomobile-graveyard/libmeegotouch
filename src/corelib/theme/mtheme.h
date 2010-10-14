@@ -144,6 +144,26 @@ public:
     /*!
       This is an overloaded function.
 
+      Returns the style object matching the given parameters. Instead of taking the controller of
+      the widget to get the contextual information for the style, this function gets a list of
+      QStringLists, describing the metaclass hierarchy of each parent, starting from the most
+      direct.
+
+      This overload is not for using in regular MeeGo Touch applications. It is intended to be
+      used by other libraries that need the styling information but do not have widget controllers
+      or views instantiated.
+    */
+    static const MStyle *style(const char *styleClassName,
+                               const QString &objectName,
+                               const QString &mode,
+                               const QString &type,
+                               M::Orientation orientation,
+                               const QList<QStringList> &parentClassHierarchies,
+                               const QString &parentStyleName);
+
+    /*!
+      This is an overloaded function.
+
       Returns the style object with the given \a styleClassName and \a objectName
     */
     static const MStyle *style(const char *styleClassName,
@@ -249,6 +269,15 @@ public:
      The returned animation is theme specific.
      */
     static QAbstractAnimation *animation(const QString &animationTypeName);
+
+    /*!
+     Returns an effect instance with the given type.
+
+    \param effectTypeName Name of the effect type.
+
+     The returned effect is theme specific.
+     */
+    static QGraphicsEffect *effect(const QString &effectTypeName);
 
     /*!
      Returns a view instance for the given \a controller.

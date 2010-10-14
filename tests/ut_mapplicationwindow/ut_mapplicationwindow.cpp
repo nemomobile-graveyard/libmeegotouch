@@ -30,6 +30,8 @@
 #include <MScene>
 #include <MSceneManager>
 #include <MEscapeButtonPanel>
+#include <MToolBar>
+#include <MNavigationBar>
 
 #include <QSignalSpy>
 #include <QEvent>
@@ -47,6 +49,8 @@ void Ut_MApplicationWindow::initTestCase()
     }
     qRegisterMetaType<MApplicationPage *>("MApplicationPage*");
     qRegisterMetaType< QList<StatusBarTestOperation> >("QList<StatusBarTestOperation>");
+
+    MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mapplicationwindow.css");
 }
 
 void Ut_MApplicationWindow::cleanupTestCase()
@@ -304,6 +308,68 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
     // This relies on status bar being out of display which means no animation
     // and change in QGraphicsItem visibility is immediate.
     QCOMPARE(statusBar->isVisible(), expectedVisibility);
+}
+
+
+void Ut_MApplicationWindow::initToolbarLocationTC(M::OrientationAngle angle, const QString &viewType)
+{
+    // set orientation
+    m_subject->sceneManager()->setOrientationAngle(angle, MSceneManager::ImmediateTransition);
+
+    // set toolbar type
+    m_subject->setToolbarViewType(viewType);
+}
+
+bool Ut_MApplicationWindow::isToolBarFloating()
+{
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    MNavigationBar *navBar = m_subject->d_func()->navigationBar;
+    MNavigationBarModel *model = navBar->model();
+
+    return (!model->toolBar() || model->toolBar() != m_subject->d_func()->toolBar);
+}
+
+void Ut_MApplicationWindow::testToolBarInLandscapeIsFloating()
+{
+    initToolbarLocationTC(M::Angle0, MToolBar::defaultType);
+    QVERIFY(isToolBarFloating());
+}
+
+void Ut_MApplicationWindow::testToolBarInPortraiIsInNavigationBar()
+{
+    initToolbarLocationTC(M::Angle90, MToolBar::defaultType);
+    QVERIFY(isToolBarFloating() == false);
+}
+
+void Ut_MApplicationWindow::testToolBarMovesFromFloatingToNavigationBarWhenRotatedToPortrait()
+{
+    initToolbarLocationTC(M::Angle0, MToolBar::defaultType);
+    QVERIFY(isToolBarFloating());
+
+    m_subject->sceneManager()->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+    QVERIFY(isToolBarFloating() == false);
+}
+
+void Ut_MApplicationWindow::testTabBarInLandscapeIsInNavigationBar()
+{
+    initToolbarLocationTC(M::Angle0, MToolBar::tabType);
+    QVERIFY(isToolBarFloating() == false);
+}
+
+void Ut_MApplicationWindow::testTabBarInPortraitIsFloating()
+{
+    initToolbarLocationTC(M::Angle90, MToolBar::tabType);
+    QVERIFY(isToolBarFloating());
+}
+
+void Ut_MApplicationWindow::testTabBarMovesFromNavigationBarToFloatingWhenRotatedToPortrait()
+{
+    initToolbarLocationTC(M::Angle0, MToolBar::tabType);
+    QVERIFY(isToolBarFloating() == false);
+
+    m_subject->sceneManager()->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+    QVERIFY(isToolBarFloating());
 }
 
 MEscapeButtonPanel *Ut_MApplicationWindow::fetchEscapeButtonPanel(

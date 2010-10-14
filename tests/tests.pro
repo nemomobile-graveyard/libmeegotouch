@@ -10,13 +10,12 @@ SUBDIRS     =  \
     ft_mservicefwgen \
     ft_mstylesheetparser \
     ft_mstylesheet \
-    ft_mstylesheet_helper_app \
     ft_mdialog \
     ft_mprogressindicator \
     ft_mscenemanager \
     ft_mgconfitem \
     ft_theme \
-#    ft_mbutton \
+    ft_mbutton \
     ft_mslider \
     ft_mscalableimage \
     # ut_allwidgets \ // doesn't work
@@ -41,7 +40,7 @@ SUBDIRS     =  \
      ut_mlist \
      ut_mlistviewgroupheader \
      ut_mlistviewmulticolumn \
-#    ut_mlistviewseparators \ // it currently gets stuck
+     ut_mlistviewseparators \
      ut_mlistfilter \
      ut_mflowlayoutpolicy \
      ut_mfreestylelayoutpolicy \
@@ -59,6 +58,8 @@ SUBDIRS     =  \
      ut_mpositionindicator \
      ut_mpositionindicatorview \
      ut_mpopuplist \
+     ut_mprogressindicator \
+     ut_mprogressindicatorspinnerview \
      ut_mrichtextedit \
      ut_mscenemanager \
      ut_mseparator \

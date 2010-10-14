@@ -52,11 +52,6 @@ public:
      */
     virtual ~MWidgetSlideAnimation();
 
-    enum TransitionDirection {
-        In,
-        Out
-    };
-
     void setTransitionDirection(TransitionDirection direction);
 
     //! \reimp

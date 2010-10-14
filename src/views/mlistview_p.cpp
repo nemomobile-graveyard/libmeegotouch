@@ -24,7 +24,7 @@
 #include <MAbstractItemModel>
 
 #include <QItemSelectionModel>
-#include <QTimeLine>
+#include <QPropertyAnimation>
 
 #include "mcontentitem.h"
 #include "mlistindex.h"
@@ -54,11 +54,8 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     hseparatorHeight = 0;
     pannableViewport = NULL;
     clearVisibleOnRelayout = false;
-    frictionK = 0.67;
 
-    scrollToTimeLine = new QTimeLine(1000, this);
-    scrollToTimeLine->setLoopCount(0);
-    scrollToTimeLine->setFrameRange(0, 30);
+    scrollToAnimation = new QPropertyAnimation(this);
 
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
@@ -205,13 +202,8 @@ MWidget *MListViewPrivate::createCell(int row)
         QObject::connect(cell, SIGNAL(clicked()), q_ptr, SLOT(itemClick()), Qt::UniqueConnection);
     }
 
-    if (cell->metaObject()->indexOfSignal("longTapped(QPointF)") != -1) {
-        QObject::connect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)), Qt::UniqueConnection);
-    }
+    updateItemLongTapConnection(cell);
 
-    if (controllerModel->longTapEnabled()) {
-        cell->grabGesture(Qt::TapAndHoldGesture);
-    }
     return cell;
 }
 
@@ -266,6 +258,9 @@ void MListViewPrivate::connectPannableViewport()
 
         viewportTopLeft = pannableViewport->position() - listPosition;
         viewportVisibleHeight = pannableViewport->size().height();
+
+        scrollToAnimation->setTargetObject(pannableViewport);
+        scrollToAnimation->setPropertyName("position");
     }
 }
 
@@ -287,8 +282,7 @@ void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF 
         forceRepaint = false;
 
         viewportTopLeft = position;
-        if (viewportVisibleHeight < size.height())
-            viewportVisibleHeight = size.height();
+        viewportVisibleHeight = size.height();
 
         viewportRectChanged(QRectF(position, size));
 
@@ -356,11 +350,8 @@ void MListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRo
 
 void MListViewPrivate::disconnectSignalsFromModelToListView()
 {
-    if(model)
-    {
+    if (model)
         model->disconnect(q_ptr);
-        model->disconnect(scrollToTimeLine, SIGNAL(frameChanged(int)), q_ptr, SLOT(_q_moveViewportToNextPosition(int)));
-    }
 }
 
 void MListViewPrivate::connectSignalsFromModelToListView()
@@ -378,8 +369,24 @@ void MListViewPrivate::connectSignalsFromModelToListView()
         connect(model, SIGNAL(modelReset()), q_ptr, SLOT(modelReset()));
         connect(model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
 
-        connect(scrollToTimeLine, SIGNAL(frameChanged(int)), q_ptr, SLOT(_q_moveViewportToNextPosition(int)));
         connect(controller, SIGNAL(visibleChanged()), q_ptr, SLOT(_q_relayoutItemsIfNeeded()));
+    }
+}
+
+void MListViewPrivate::updateItemConnections()
+{
+    foreach (MWidget *cell, visibleItems) {
+        updateItemLongTapConnection(cell);
+    }
+}
+
+void MListViewPrivate::updateItemLongTapConnection(MWidget *cell)
+{
+    if (cell->metaObject()->indexOfSignal("longTapped(QPointF)") != -1) {
+        if (controllerModel->longTapEnabled())
+            QObject::connect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)), Qt::UniqueConnection);
+        else
+            QObject::disconnect(cell, SIGNAL(longTapped(QPointF)), q_ptr, SLOT(_q_itemLongTapped(QPointF)));
     }
 }
 
@@ -529,22 +536,6 @@ QPointF MListViewPrivate::locateScrollToPosition(const QModelIndex &index, MList
     return targetPosition;
 }
 
-void MListViewPrivate::_q_moveViewportToNextPosition(int frame)
-{
-    Q_UNUSED(frame);
-
-    if (pannableViewport) {
-        if (targetPosition.toPoint() != pannableViewport->position().toPoint()) {
-            pannableViewport->setPosition(calculateViewportNextPosition());
-        } else {
-            pannableViewport->setPosition(targetPosition);
-            scrollToTimeLine->stop();
-        }
-    } else {
-        scrollToTimeLine->stop();
-    }
-}
-
 void MListViewPrivate::_q_itemLongTapped(const QPointF &pos)
 {
     q_ptr->longTap(pos);
@@ -556,15 +547,19 @@ void MListViewPrivate::_q_relayoutItemsIfNeeded()
         q_ptr->relayoutItemsInViewportRect();
 }
 
-QPointF MListViewPrivate::calculateViewportNextPosition()
-{
-    return pannableViewport->position() + (targetPosition - pannableViewport->position()) * frictionK;
-}
-
 void MListViewPrivate::updateScrollToTargetPosition()
 {
-    if (scrollToTimeLine->state() == QTimeLine::Running)
-        targetPosition = locateScrollToPosition(controllerModel->scrollToIndex(), static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
+    if (scrollToAnimation->state() == QPropertyAnimation::Running)
+        scrollToAnimation->setEndValue(locateScrollToPosition(controllerModel->scrollToIndex(), static_cast<MList::ScrollHint>(controllerModel->scrollHint())));
+}
+
+void MListViewPrivate::scrollToPos(const QPointF &targetPosition)
+{
+    scrollToAnimation->setStartValue(pannableViewport->position());
+    scrollToAnimation->setEndValue(targetPosition);
+    scrollToAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    scrollToAnimation->setDuration(300);
+    scrollToAnimation->start();
 }
 
 void MListViewPrivate::updateListIndexVisibility()

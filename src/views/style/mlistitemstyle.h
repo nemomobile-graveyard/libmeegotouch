@@ -26,6 +26,8 @@ class M_EXPORT MListItemStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MListItemStyle)
+
+    M_STYLE_ATTRIBUTE(QString, downStateEffect, DownStateEffect)
 };
 
 class M_EXPORT MListItemStyleContainer : public MWidgetStyleContainer

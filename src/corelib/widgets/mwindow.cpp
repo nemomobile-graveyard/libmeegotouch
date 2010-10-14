@@ -28,7 +28,6 @@
 #include "mscene_p.h"
 #include "mapplication.h"
 #include "mapplication_p.h"
-#include "mapplicationwindow.h"
 #include "mcomponentcache.h"
 #include "morientationtracker.h"
 #include "mdeviceprofile.h"
@@ -45,6 +44,9 @@
 #include <QSettings>
 #include <QDir>
 #include <QTimer>
+#include <QDynamicPropertyChangeEvent>
+
+#include "morientationtracker_p.h"
 
 #ifdef Q_WS_X11
 # include <QX11Info>
@@ -57,6 +59,10 @@
 namespace {
     const QString ImagesPath(QDir::homePath() + "/MyDocs/.images");
     const int DisplayExitedDelay = 1000; //ms.
+#ifdef Q_WS_X11
+    const char* FollowsCurrentApplicationWindowOrientationPropertyName =
+            "followsCurrentApplicationWindowOrientation";
+#endif
 }
 
 /// Actual class
@@ -638,6 +644,9 @@ MWindow::MWindow(QWidget *parent)
 
 MWindow::~MWindow()
 {
+#ifdef Q_WS_X11
+    MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
+#endif
     MComponentData::unregisterWindow(this);
     delete d_ptr;
 }
@@ -731,6 +740,18 @@ void MWindowPrivate::setX11PrestartProperty(bool set)
             XDeleteProperty(dpy, q->winId(), prestartAtom);
         }
     }
+}
+
+void MWindowPrivate::setX11OrientationAngleProperty(M::OrientationAngle angle)
+{
+    Q_Q(MWindow);
+    //sometimes this class is used without valid x11 window
+    if (q->winId() == 0)
+        return;
+    Atom orientationAngleAtom = XInternAtom(QX11Info::display(),
+                                       "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
+    XChangeProperty(QX11Info::display(), q->winId(), orientationAngleAtom, XA_CARDINAL, 32,
+                    PropModeReplace, (unsigned char*)&angle, 1);
 }
 #endif
 
@@ -933,6 +954,9 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
             d->notifyWidgetsAboutOrientationChange();
             emit orientationAngleChanged(angle);
         }
+#ifdef Q_WS_X11
+        d->setX11OrientationAngleProperty(angle);
+#endif
     }
 }
 
@@ -1201,7 +1225,21 @@ bool MWindow::event(QEvent *event)
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
         return true;
     }
-
+#ifdef Q_WS_X11
+    else if (event->type() == QEvent::DynamicPropertyChange) {
+        QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
+        if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
+            //property was set, does not matter what value
+            if (property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid()) {
+                mDebug("MWindow") << "window follows current app window orientation";
+                MOrientationTracker::instance()->d_func()->startFollowingCurrentAppWindow(this);
+            }
+            //propery was unset
+            else
+                MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
+        }
+    }
+#endif
     return QGraphicsView::event(event);
 }
 

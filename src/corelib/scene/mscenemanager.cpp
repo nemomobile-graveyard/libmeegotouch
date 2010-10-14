@@ -1444,7 +1444,6 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
         case MSceneWindow::ApplicationMenu:
         case MSceneWindow::NavigationBar: {
             MWidgetSlideAnimation *slideInAnimation = new MWidgetSlideAnimation(sceneWindow);
-            slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
             animation = slideInAnimation;
             break;
         }
@@ -1454,14 +1453,11 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
                     new MWidgetZoomAnimation(sceneWindow);
 
             objectMenuAnimation->setOrigin(sceneWindow->boundingRect().center());
-            objectMenuAnimation->setTransitionDirection(MWidgetZoomAnimation::In);
-
             animation = objectMenuAnimation;
             break;
         }
         case MSceneWindow::StatusBar: {
             MWidgetSlideAnimation *slideInAnimation = new MWidgetSlideAnimation(sceneWindow);
-            slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
             animation = slideInAnimation;
 
             QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
@@ -1474,23 +1470,26 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             break;
         }
         case MSceneWindow::ObjectMenu: {
-            MWidgetZoomAnimation *objectMenuAnimation =
-                    new MWidgetZoomAnimation(sceneWindow);
-
-            MObjectMenu *objectMenu = static_cast<MObjectMenu*>(sceneWindow);
-            objectMenuAnimation->setOrigin(rootElement->mapFromScene(objectMenu->cursorPosition()));
-            objectMenuAnimation->setTransitionDirection(MWidgetZoomAnimation::In);
+            MAbstractWidgetAnimation *objectMenuAnimation =
+                    qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->objectMenuAnimation()));
+            if (objectMenuAnimation)
+                objectMenuAnimation->setParent(sceneWindow);
             animation = objectMenuAnimation;
             break;
         }
         default: {
             MWidgetFadeAnimation *fadeInAnimation = new MWidgetFadeAnimation(sceneWindow);
-            fadeInAnimation->setTransitionDirection(MWidgetFadeAnimation::In);
             animation = fadeInAnimation;
             break;
         }
     }
 
+    if (!animation) {
+        MWidgetFadeAnimation *fadeInAnimation = new MWidgetFadeAnimation(sceneWindow);
+        animation = fadeInAnimation;
+    }
+
+    animation->setTransitionDirection(MAbstractWidgetAnimation::In);
     animation->setTargetWidget(sceneWindow);
 
     MSceneWindow *effect = sceneWindow->d_func()->effect;
@@ -1513,7 +1512,6 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
         case MSceneWindow::ApplicationMenu:
         case MSceneWindow::NavigationBar: {
             MWidgetSlideAnimation *slideOutAnimation = new MWidgetSlideAnimation(sceneWindow);
-            slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
             animation = slideOutAnimation;
             break;
         }
@@ -1523,14 +1521,12 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
                     new MWidgetZoomAnimation(sceneWindow);
 
             zoomAnimation->setOrigin(sceneWindow->boundingRect().center());
-            zoomAnimation->setTransitionDirection(MWidgetZoomAnimation::Out);
 
             animation = zoomAnimation;
             break;
         }
         case MSceneWindow::StatusBar: {
             MWidgetSlideAnimation *slideOutAnimation = new MWidgetSlideAnimation(sceneWindow);
-            slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
             animation = slideOutAnimation;
 
             QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
@@ -1543,24 +1539,25 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             break;
         }
         case MSceneWindow::ObjectMenu: {
-            MWidgetZoomAnimation *zoomAnimation =
-                    new MWidgetZoomAnimation(sceneWindow);
-
-            MObjectMenu *objectMenu = static_cast<MObjectMenu*>(sceneWindow);
-            zoomAnimation->setOrigin(rootElement->mapFromScene(objectMenu->cursorPosition()));
-            zoomAnimation->setTransitionDirection(MWidgetZoomAnimation::Out);
-
-            animation = zoomAnimation;
+            MAbstractWidgetAnimation *objectMenuAnimation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->objectMenuAnimation()));
+            if (objectMenuAnimation)
+                objectMenuAnimation->setParent(sceneWindow);
+            animation = objectMenuAnimation;
             break;
         }
         default: {
             MWidgetFadeAnimation *fadeOutAnimation = new MWidgetFadeAnimation(sceneWindow);
-            fadeOutAnimation->setTransitionDirection(MWidgetFadeAnimation::Out);
             animation = fadeOutAnimation;
             break;
         }
     }
 
+    if (!animation) {
+        MWidgetFadeAnimation *fadeOutAnimation = new MWidgetFadeAnimation(sceneWindow);
+        animation = fadeOutAnimation;
+    }
+
+    animation->setTransitionDirection(MAbstractWidgetAnimation::Out);
     animation->setTargetWidget(sceneWindow);
 
     MSceneWindow *effect = sceneWindow->d_func()->effect;

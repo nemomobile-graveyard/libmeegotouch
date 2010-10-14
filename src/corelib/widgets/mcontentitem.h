@@ -346,8 +346,19 @@ protected:
     //! \internal
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-    MContentItem(MContentItemPrivate *dd, MContentItemModel *model, QGraphicsItem *parent);
+    MContentItem(MContentItemPrivate *dd, MContentItemModel *model, QGraphicsItem *parent);   
     //! \internal_end
+
+    /*!
+       Handler of notifications of new receivers connected to MContentItem signals.
+    */
+    virtual void connectNotify(const char *signal);
+
+    /*!
+       Handler of notifications of receivers disconnecting from MContentItem signals.
+    */
+    virtual void disconnectNotify(const char *signal);
+
 
 private:
     Q_DISABLE_COPY(MContentItem)

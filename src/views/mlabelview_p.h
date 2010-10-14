@@ -49,8 +49,34 @@ public:
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
-    Qt::TextFlag wrap() const;
     void initializeStaticText();
+
+    /**
+     * \param width Available width in pixels for the text.
+     * \return      Text that should be used for the rendering. Dependent on the available
+     *              width, the wrapping-policies, eliding-settings and multilength-status
+     *              adjustments are done.
+     */
+    QString textToRender(qreal width) const;
+
+    /**
+     * \param text  Text that should be rendered.
+     * \param width Available width in pixels for the text to render.
+     * \return      -1.0 (= unrestricted) is returned if no wrapping must be done. If
+     *              a wrapping is done it is assured that the returned width is not
+     *              larger than \a width.
+     */
+    qreal restrictedTextWidth(const QString &text, qreal width) const;
+
+    /**
+     * \return True, if the wrap-mode indicates that a wrapping should be done.
+     */
+    bool wrap() const;
+
+    /**
+     * \return Text flag for the current wrap-mode specified by the model.
+     */
+    Qt::TextFlag textFlagForWrapMode() const;
     
     /**
      * Helper method for initializeStaticText(): Adjusts the member variable
@@ -80,6 +106,7 @@ public:
     QRectF paintingRect;
     bool dirty;
     QStaticText staticText;
+    QString unconstraintText;
 };
 
 class MLabelViewRich : public MLabelViewSimple
@@ -194,8 +221,9 @@ public:
     const MLabelStyle *style() const;
     const QRectF boundingRect() const;
 
-    bool isRichText(QString text) const;
-
+    //Should label be rendered as rich text
+    bool displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const;
+    
     // need define this for there are overload functions in controller
     MLabel *controller;
 

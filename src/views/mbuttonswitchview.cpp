@@ -135,7 +135,7 @@ const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
             QPixmap backgroundsBlend = QPixmap(q->size().toSize());
             backgroundsBlend.fill(Qt::transparent);
             p.begin(&backgroundsBlend);
-            qreal opacity = ((qreal)thumbPos().x() - q->style()->thumbMargin() * 2) / ((qreal)q->size().toSize().width() - thumbSize().width());
+            qreal opacity = ((qreal)thumbPos().x() - q->style()->thumbMargin()) / (q->size().width() - thumbSize().width() - q->style()->thumbMargin() * 2.0);
             p.setOpacity(1.0 - opacity);
             p.drawPixmap(QRect(QPoint(), q->size().toSize()), *q->style()->sliderImage()->pixmap());
             p.setOpacity(opacity);

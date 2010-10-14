@@ -57,11 +57,18 @@ const QRectF MLabelViewPrivate::boundingRect() const
     return q->boundingRect();
 }
 
-bool MLabelViewPrivate::isRichText(QString text) const
+bool MLabelViewPrivate::displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const
 {
+    if (textFormat == Qt::RichText) {
+        return true;
+    } else if (textFormat == Qt::PlainText) {
+        return false;
+    }
+
     //Qt::mightBeRichText stops at the first line break
     text.replace("\n", " ");
-    return Qt::mightBeRichText(text);
+    
+    return Qt::mightBeRichText(text) || (numberOfHighlighters > 0);
 }
 
 MLabelView::MLabelView(MLabel *controller) :
@@ -138,15 +145,16 @@ void MLabelView::setupModel()
     MWidgetView::setupModel();
     Q_D(MLabelView);
 
-    bool isRichText = d->isRichText(model()->text());
+    bool shouldBeRich = d->displayAsRichText(model()->text(), model()->textFormat(), model()->highlighters().size());
 
     // Check has label type changed since last call to this method. Re-allocate label with correct type.
-    if (d->impl->isRich() != isRichText) {
-        delete d->impl;
-        if (isRichText)
+    if (d->impl->isRich() != shouldBeRich) {
+        MLabelViewSimple* oldView = d->impl;
+        if (shouldBeRich)
             d->impl = new MLabelViewRich(d);
         else
             d->impl = new MLabelViewSimple(d);
+        delete oldView;
     }
     d->impl->setupModel();
 
@@ -160,20 +168,21 @@ void MLabelView::updateData(const QList<const char *>& modifications)
 
     Q_D(MLabelView);
 
-    if (modifications.contains(MLabelModel::Text) || modifications.contains(MLabelModel::Highlighters)) {
-        bool isRichText = d->isRichText(model()->text());
-
+    if (modifications.contains(MLabelModel::Text) || modifications.contains(MLabelModel::Highlighters) ||
+        modifications.contains(MLabelModel::TextFormat)) {
         // Check has label type changed since last call to this method. Re-allocate label with correct type.
-        bool shouldBeRich = isRichText || model()->highlighters().size() > 0;
+
+        bool shouldBeRich = d->displayAsRichText(model()->text(), model()->textFormat(), model()->highlighters().size());
         bool shouldBeSimple = !shouldBeRich;
 
         if ((shouldBeRich && !d->impl->isRich()) || (shouldBeSimple && d->impl->isRich())) {
-            delete d->impl;
+            MLabelViewSimple* oldView = d->impl;
             if (shouldBeRich)
                 d->impl = new MLabelViewRich(d);
             else
                 d->impl = new MLabelViewSimple(d);
 
+            delete oldView;
             d->impl->setupModel();
         }
     }

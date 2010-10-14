@@ -122,6 +122,8 @@ class M_EXPORT MLabelModel : public MWidgetModel
     */
     M_MODEL_PROPERTY(QList<MLabelHighlighter *>, highlighters, Highlighters, true, QList<MLabelHighlighter *>())
 
+    M_MODEL_PROPERTY(Qt::TextFormat, textFormat, TextFormat, true, Qt::AutoText)
+
 public:
     void emitLinkActivated(const QString &link) const {
         Q_EMIT linkActivated(link);

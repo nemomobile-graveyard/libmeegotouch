@@ -41,6 +41,16 @@ MContentItemPrivate::~MContentItemPrivate()
         delete smallText;
 }
 
+void MContentItemPrivate::updateLongTapConnections()
+{
+    Q_Q(MContentItem);
+
+    if (q->receivers(SIGNAL(longTapped(QPointF))) > 0)
+        q->grabGesture(Qt::TapAndHoldGesture);
+    else
+        q->ungrabGesture(Qt::TapAndHoldGesture);
+}
+
 MContentItem::MContentItem(MContentItem::ContentItemStyle itemStyle, QGraphicsItem *parent)
     : MWidgetController(new MContentItemPrivate, new MContentItemModel, parent)
 {
@@ -243,6 +253,24 @@ void MContentItem::setSmallText(QString text)
         d->smallText->setAlignment( Qt::AlignRight );
         d->smallText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         model()->setSmallItem(d->smallText);
+    }
+}
+
+void MContentItem::connectNotify(const char *signal)
+{
+    Q_D(MContentItem);
+
+    if (QLatin1String(signal) == SIGNAL(longTapped(QPointF))) {
+        d->updateLongTapConnections();
+    }
+}
+
+void MContentItem::disconnectNotify(const char *signal)
+{
+    Q_D(MContentItem);
+
+    if (QLatin1String(signal) == SIGNAL(longTapped(QPointF))) {
+        d->updateLongTapConnections();
     }
 }
 

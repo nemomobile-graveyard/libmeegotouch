@@ -19,7 +19,7 @@
 
 #include <QList>
 #include <QVector>
-#include <QTimeLine>
+#include <QPropertyAnimation>
 #include <QStyleOptionGraphicsItem>
 
 #include <QGestureEvent>
@@ -108,6 +108,8 @@ void MListView::updateData(const QList<const char *>& modifications)
             longTap(model()->longTap());
         } else if (member == MListModel::ListIndexDisplayMode) {
             d_ptr->updateListIndexVisibility();
+        } else if (member == MListModel::LongTapEnabled) {
+            d_ptr->updateItemConnections();
         }
     }
 }
@@ -325,11 +327,10 @@ void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
 {
     if (index.isValid()) {
         if (d_ptr->pannableViewport) {
-            d_ptr->targetPosition = d_ptr->locateScrollToPosition(index, hint);
+            QPointF targetPosition = d_ptr->locateScrollToPosition(index, hint);
 
-            if (d_ptr->targetPosition != d_ptr->pannableViewport->position()) {
-                if (d_ptr->scrollToTimeLine->state() != QTimeLine::Running)
-                    d_ptr->scrollToTimeLine->start();
+            if (targetPosition != d_ptr->pannableViewport->position()) {
+                d_ptr->scrollToPos(targetPosition);
             }
         }
     }

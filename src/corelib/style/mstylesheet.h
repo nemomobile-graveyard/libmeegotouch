@@ -51,7 +51,16 @@ public:
     virtual ~MStyleSheet();
 
     /*!
-      \deprecated Please use the overloaded version instead.
+     * \internal
+     *
+     * \brief Creates and caches a new style object or retrieves existing from cache
+     * \param sheets            A list of stylesheets
+     * \param styleClassName    Name of the style class to be created
+     * \param objectName        Name of the target object, can be empty
+     * \param mode              Mode of the target object, can be empty
+     * \param type              Type of the target object, can be empty
+     * \param orientation       Orientation of this style
+     * \param parent            Parent object
      */
     static MStyle *style(const QList<const MStyleSheet *>& sheets,
                            const QString &styleClassName,
@@ -62,6 +71,9 @@ public:
                            const MWidgetController *parent);
 
     /*!
+     * \internal
+     * \deprecated Please look for the MTheme::style() functions instead.
+     *
      * \brief Creates and caches a new style object or retrieves existing from cache
      * \param sheets            A list of stylesheets
      * \param styleClassName    Name of the style class to be created
@@ -79,6 +91,7 @@ public:
                            const QString &type,
                            M::Orientation orientation,
                            const MWidgetController *parent);
+
 
     /*!
      * \brief Releases existing style object and removes it from cache if reference count drops to zero

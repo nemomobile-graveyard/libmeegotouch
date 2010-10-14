@@ -19,7 +19,7 @@
 
 #include "mwidgetzoomanimation.h"
 #include "mwidgetzoomanimation_p.h"
-#include <mobjectmenu.h>
+#include "manimationcreator.h"
 
 #include <QPropertyAnimation>
 #include <QPauseAnimation>
@@ -167,3 +167,5 @@ void MWidgetZoomAnimation::updateState(QAbstractAnimation::State newState,
 }
 
 #include "moc_mwidgetzoomanimation.cpp"
+
+M_REGISTER_ANIMATION(MWidgetZoomAnimation)
