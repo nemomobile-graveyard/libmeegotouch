@@ -87,6 +87,9 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
 
     # M_TARGETS_CONF_DIR defines the location of target device config files
     DEFINES += M_TARGETS_CONF_DIR=\\\"\"$$M_TARGETS_CONF_DIR\"\\\"
+
+    # Input method toolbar definition location
+    DEFINES += M_IM_TOOLBARS_DIR=\\\"\"$$M_IM_TOOLBARS_DIR\"\\\"
 }
 
 unix {

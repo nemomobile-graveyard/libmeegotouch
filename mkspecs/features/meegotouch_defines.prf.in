@@ -60,6 +60,8 @@ unix|win32 {
     M_SHADER_BINARY_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch/shaders
 
     M_TARGETS_CONF_DIR = $$M_INSTALL_DATA/meegotouch/targets
+
+    M_IM_TOOLBARS_DIR = $$M_INSTALL_DATA/meegotouch/imtoolbars
 }
 
 mac {
@@ -87,6 +89,8 @@ mac {
     M_SHADER_BINARY_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch/shaders
 
     M_TARGETS_CONF_DIR = $$M_INSTALL_DATA/meegotouch/targets
+
+    M_IM_TOOLBARS_DIR = $$M_INSTALL_DATA/meegotouch/imtoolbars
 }
 
 win32 {
