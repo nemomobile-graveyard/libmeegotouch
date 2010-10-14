@@ -36,9 +36,7 @@ class MApplicationService;
 class MWindow;
 class MApplicationWindow;
 class MDeviceProfile;
-#ifdef TESTABLE
 class TestabilityInterface;
-#endif
 
 class MComponentDataPrivate
 {
@@ -78,10 +76,7 @@ public:
     QString deviceName;
     QUrl syslogServer;
     MApplicationService *service;
-#ifdef TESTABLE
-    // member to hold reference to the testability plugin in order to destroy plugin when the application is destructed
     TestabilityInterface *testabilityInterface;
-#endif
 
 #ifdef Q_WS_X11
     static QStack<MComponentData::ChainData> chainData;
@@ -94,8 +89,8 @@ private:
     void registerDefaultService(const QString &appName);
     void registerNewService(MApplicationService *newService);
     void debugInit(bool levelSet);
+    void testabilityInit();
     bool initSyslogConnection(const QUrl &url);
 };
-
 
 #endif
