@@ -1691,7 +1691,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%b" // locale's abbreviated month name (e.g., Jan)
-            << "helmi"; // probably wrong! FIXME!!
+            << "helmi";
     QTest::newRow("fi_FI %c")
             << MLocale::GregorianCalendar
             << 2008
@@ -1746,7 +1746,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%h" // %h same as %b, locale's abbreviated month name (e.g., Jan)
-            << "helmi"; // probably wrong! FIXME!!!
+            << "helmi";
     QTest::newRow("fi_FI %j")
             << MLocale::GregorianCalendar
             << 2008
@@ -1878,7 +1878,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%A" // locale's full weekday name (e.g., Sunday)
-            << "sunnuntaina";
+            << "sunnuntai";
     QTest::newRow("fi_FI %B")
             << MLocale::GregorianCalendar
             << 2008
@@ -1889,7 +1889,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%B" // locale's full month name (e.g., January)
-            << "helmikuuta";
+            << "helmikuu";
     QTest::newRow("fi_FI %C")
             << MLocale::GregorianCalendar
             << 2008
@@ -2703,13 +2703,8 @@ void Ut_MCalendar::testPosixFormatPattern()
 //    qDebug() << "DateMedium TimeMedium" << locale.formatDateTime(datetime, MLocale::DateMedium, MLocale::TimeMedium, calendarType);
 //    qDebug() << "DateLong TimeLong" << locale.formatDateTime(datetime, MLocale::DateLong, MLocale::TimeLong, calendarType);
 //    qDebug() << "DateFull TimeFull" << locale.formatDateTime(datetime, MLocale::DateFull, MLocale::TimeFull, calendarType);
-    if ((format == "%b" || format == "%h") && result == "helmi") {
-        QEXPECT_FAIL("", "FIXME: ICU does %b and %h wrong for Finnish", Continue);
-        QVERIFY(false);
-    } else {
-        QCOMPARE(locale.formatDateTime(mcal, format), result);
-        QCOMPARE(locale.formatDateTime(datetime, format), result);
-    }
+    QCOMPARE(locale.formatDateTime(mcal, format), result);
+    QCOMPARE(locale.formatDateTime(datetime, format), result);
 }
 
 void Ut_MCalendar::testFormatDateTimeICU_data()

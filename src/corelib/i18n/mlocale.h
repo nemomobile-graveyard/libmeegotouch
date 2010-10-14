@@ -975,7 +975,7 @@ public:
                            const QString &formatString) const;
     // divergence: not implemented modified field descriptors (%Ec, %EC, %EY etc)
 
-    /**
+    /*!
     \brief Formats a date string based on ISO-14652 (draft) pattern
 
     \sa formatDateTime(const QDateTime &dateTime, const QString &formatString) const;
@@ -995,11 +995,15 @@ public:
 
     The pattern may contain the following symbols to be replaced with
     the corresponding information:
-     - \%a FDCC-set's abbreviated weekday name.
-     - \%A FDCC-set's full weekday name.
-     - \%b FDCC-set's abbreviated month name.
-     - \%B FDCC-set's full month name.
-     - \%c FDCC-set's appropriate date and time representation.
+     - \%a FDCC-set’s abbreviated weekday name.
+     - \%A FDCC-set’s stand-alone full weekday name.
+           “stand-alone” means that for example for “Thursday” in Finnish “torstai”
+           is returned and not the inflected form “torstaina”.
+     - \%b FDCC-set’s abbreviated month name.
+     - \%B FDCC-set’s stand-alone full month name.
+           “stand-alone” means that for example for “Oktober” in Finnish “lokakuu”
+           is returned and not the inflected form “lokakuuta”.
+     - \%c FDCC-set’s appropriate date and time representation.
      - \%C Century (a year divided by 100 and truncated to integer) as decimal number (00-99).
      - \%d Day of the month as a decimal number (01-31).
      - \%D Date in the format mm/dd/yy.
@@ -1014,7 +1018,7 @@ public:
      - \%m Month, as a decimal number (01-13).
      - \%M Minute, as a decimal number (00-59).
      - \%n A &lt;newline&gt; character.
-     - \%p FDCC-set's equivalent of either AM or PM.
+     - \%p FDCC-set’s equivalent of either AM or PM.
      - \%r locale specific 12-hour clock time using the AM/PM notation
            Similar to “%I:%M %p” but the exact format does depend more on
            the locale. E.g. for “en_GB” locale the result may look like
@@ -1043,8 +1047,8 @@ public:
      - \%W Week number of the year (Monday as the first day of the week), as a
        decimal number (00-53). All days in a new year preceding the first
        Monday are considered to be in week 0.
-     - \%x FDCC-set's appropriate date representation.
-     - \%X FDCC-set's appropriate time representation.
+     - \%x FDCC-set’s appropriate date representation.
+     - \%X FDCC-set’s appropriate time representation.
      - \%y Year within century (00-99).
      - \%Y Year with century, as a decimal number.
      - \%z The offset from UTC in the ISO 8601 format "-0430" (meaning 4 hours

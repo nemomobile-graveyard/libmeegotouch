@@ -2108,23 +2108,23 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
 
             case 'a':
                 // abbreviated weekday name
-                icuFormat.append("EEE");
+                icuFormat.append("ccc");
                 break;
 
             case 'A':
-                // full weekday name
-                icuFormat.append("EEEE");
+                // stand-alone full weekday name
+                icuFormat.append("cccc");
                 break;
 
             case 'b':
             case 'h':
                 // abbreviated month name
-                icuFormat.append("MMM");
+                icuFormat.append("LLL");
                 break;
 
             case 'B':
                 // full month name
-                icuFormat.append("MMMM");
+                icuFormat.append("LLLL");
                 break;
 
             case 'c': {
