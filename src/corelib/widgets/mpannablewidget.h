@@ -274,6 +274,7 @@ protected:
     virtual void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
     virtual void panGestureEvent(QGestureEvent *event, QPanGesture* state);
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
+    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     //! \reimp_end
 
 private:

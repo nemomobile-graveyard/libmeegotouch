@@ -555,6 +555,14 @@ void MPannableWidget::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGe
     }
 }
 
+void MPannableWidget::orientationChangeEvent(MOrientationChangeEvent *event)
+{
+    Q_D(MPannableWidget);
+    d->resetPhysics();
+
+    MWidgetController::orientationChangeEvent(event);
+}
+
 void MPannableWidget::glassTimerEvent(QTimerEvent *event)
 {
     Q_D(MPannableWidget);
