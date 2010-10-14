@@ -647,7 +647,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
     unsigned int sceneOrder = 0;
 
     // Traverse from the most generic to the most specific parent sheets
-    for (int i = parentsData.size() - 1; i > 0; i--) {
+    for (int i = parentsData.size() - 1; i >= 0; i--) {
         const ParentData &pd = parentsData[i];
         const QStringList &thisParentHierarchy = pd.hierarchy;
         const QList<const MStyleSheet *> &thisParentSheets = pd.sheets;
