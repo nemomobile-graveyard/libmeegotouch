@@ -279,33 +279,33 @@ void MSliderIndicator::setText(const QString &text)
     label->setText(text);
 
     if (text.isEmpty()) {
-	QSizeF emptySize(0, 0);
+        QSizeF emptySize(0, 0);
 
-	if (emptySize != label->minimumSize()) {
+        if (emptySize != label->minimumSize()) {
             label->setMinimumSize(0, 0);
-	    sizeHintChanged = true;
-	}
-	if (emptySize != label->preferredSize()) {
+            sizeHintChanged = true;
+        }
+        if (emptySize != label->preferredSize()) {
             label->setPreferredSize(0, 0);
-	    sizeHintChanged = true;
-	}
-	if (emptySize != label->maximumSize()) {
+            sizeHintChanged = true;
+        }
+        if (emptySize != label->maximumSize()) {
             label->setMaximumSize(0, 0);
-	    sizeHintChanged = true;
-	}
+            sizeHintChanged = true;
+        }
     } else {
-	if (label->sizeHint(Qt::PreferredSize) != label->minimumSize()) {
+        if (label->sizeHint(Qt::PreferredSize) != label->minimumSize()) {
             label->setMinimumSize(label->sizeHint(Qt::PreferredSize));
-	    sizeHintChanged = true;
-	}
-	if (label->sizeHint(Qt::PreferredSize) != label->preferredSize()) {
+            sizeHintChanged = true;
+        }
+        if (label->sizeHint(Qt::PreferredSize) != label->preferredSize()) {
             label->setPreferredSize(label->sizeHint(Qt::PreferredSize));
-	    sizeHintChanged = true;
-	}
-	if (label->sizeHint(Qt::PreferredSize) != label->maximumSize()) {
+            sizeHintChanged = true;
+        }
+        if (label->sizeHint(Qt::PreferredSize) != label->maximumSize()) {
             label->setMaximumSize(label->sizeHint(Qt::PreferredSize));
-	    sizeHintChanged = true;
-	}
+            sizeHintChanged = true;
+        }
     }
 
     if (label->sizeHint(Qt::PreferredSize) != label->size())
@@ -334,33 +334,33 @@ void MSliderIndicator::setImage(const QString &id)
     }
 
     if (id.isEmpty()) {
-	QSizeF emptySize(0, 0);
+        QSizeF emptySize(0, 0);
 
-	if (emptySize != image->minimumSize()) {
+        if (emptySize != image->minimumSize()) {
             image->setMinimumSize(0, 0);
-	    sizeHintChanged = true;
-	}
-	if (emptySize != image->preferredSize()) {
+            sizeHintChanged = true;
+        }
+        if (emptySize != image->preferredSize()) {
             image->setPreferredSize(0, 0);
-	    sizeHintChanged = true;
-	}
-	if (emptySize != image->maximumSize()) {
+            sizeHintChanged = true;
+        }
+        if (emptySize != image->maximumSize()) {
             image->setMaximumSize(0, 0);
-	    sizeHintChanged = true;
-	}
+            sizeHintChanged = true;
+        }
     } else {
-	if (image->sizeHint(Qt::PreferredSize) != image->minimumSize()) {
+        if (image->sizeHint(Qt::PreferredSize) != image->minimumSize()) {
             image->setMinimumSize(image->sizeHint(Qt::PreferredSize));
-	    sizeHintChanged = true;
-	}
-	if (image->sizeHint(Qt::PreferredSize) != image->preferredSize()) {
+            sizeHintChanged = true;
+        }
+        if (image->sizeHint(Qt::PreferredSize) != image->preferredSize()) {
             image->setPreferredSize(image->sizeHint(Qt::PreferredSize));
-	    sizeHintChanged = true;
-	}
-	if (image->sizeHint(Qt::PreferredSize) != image->maximumSize()) {
+            sizeHintChanged = true;
+        }
+        if (image->sizeHint(Qt::PreferredSize) != image->maximumSize()) {
             image->setMaximumSize(image->sizeHint(Qt::PreferredSize));
-	    sizeHintChanged = true;
-	}
+            sizeHintChanged = true;
+        }
     }
 
     if (image->sizeHint(Qt::PreferredSize) != label->size())
@@ -368,6 +368,14 @@ void MSliderIndicator::setImage(const QString &id)
 
     if (sizeHintChanged)
         updateGeometry();
+}
+
+bool MSliderIndicator::isEmpty() const
+{
+    if (label->text().isEmpty() && image->imageId().isEmpty())
+        return true;
+
+    return false;
 }
 
 QSizeF MSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -393,9 +401,8 @@ QSizeF MSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 
 MSliderHandleIndicator::MSliderHandleIndicator(QGraphicsItem* parent) :
     MWidget(parent),
+    arrowPos(0),
     orientation(Qt::Horizontal),
-    horizontalPolicy(0),
-    verticalPolicy(0),
     indicatorArrow(0),
     indicator(0)
 {
@@ -410,57 +417,29 @@ MSliderHandleIndicator::~MSliderHandleIndicator()
 {
 }
 
-void MSliderHandleIndicator::init()
-{
-    bool reverse = qApp->isRightToLeft();
-
-    MLayout *mainLayout = new MLayout;
-    setLayout(mainLayout);
-
-    horizontalPolicy = new MLinearLayoutPolicy(mainLayout, Qt::Horizontal);
-    horizontalPolicy->setSpacing(0);
-    horizontalPolicy->setContentsMargins(0, 0, 0, 0);
-
-    if (!reverse) {
-        horizontalPolicy->addItem(indicatorArrow, Qt::AlignCenter);
-        horizontalPolicy->addItem(indicator, Qt::AlignCenter);
-    } else {
-        horizontalPolicy->addItem(indicator, Qt::AlignCenter);
-        horizontalPolicy->addItem(indicatorArrow, Qt::AlignCenter);
-    }
-
-    verticalPolicy = new MLinearLayoutPolicy(mainLayout, Qt::Vertical);
-    verticalPolicy->setSpacing(0);
-    verticalPolicy->setContentsMargins(0, 0, 0, 0);
-
-    verticalPolicy->addItem(indicator, Qt::AlignCenter);
-    verticalPolicy->addItem(indicatorArrow, Qt::AlignCenter);
-}
-
 void MSliderHandleIndicator::setOrientation(Qt::Orientation orientation)
 {
     this->orientation = orientation;
     indicatorArrow->setOrientation(orientation);
 
-    MLayout *mainLayout = dynamic_cast<MLayout *>(layout());
-    if (!mainLayout || !horizontalPolicy || !verticalPolicy) {
-        mWarning("MSliderHandleIndicator") << "MSlider was not initialized properly";
-        return;
-    }
+    bool reverse = qApp->isRightToLeft();
 
-    //verticalPolicy will be active for Qt::Horizontal orientation
-    //(arrow under the label) and horizontalPolicy will be active
-    //for Qt::Vertical orientation (arrow on left or right side of label)
     if (orientation == Qt::Horizontal) {
-
-        if (mainLayout->policy() != verticalPolicy)
-            mainLayout->setPolicy(verticalPolicy);
+        indicator->setPos(0, 0);
+        qreal arrowX = qMax(qreal(0), arrowPos - indicatorArrow->rect().width() / 2);
+        indicatorArrow->setPos(arrowX, indicator->rect().bottom());
     }
+
     if (orientation == Qt::Vertical) {
-        if (mainLayout->policy() != horizontalPolicy)
-            mainLayout->setPolicy(horizontalPolicy);
+        qreal arrowY = qMax(qreal(0), arrowPos - indicatorArrow->rect().height() / 2);
+        if (!reverse) {
+            indicatorArrow->setPos(0, arrowY);
+            indicator->setPos(indicatorArrow->rect().right(), 0);
+        } else {
+            indicator->setPos(0, 0);
+            indicatorArrow->setPos(indicator->rect().right(), arrowY);
+        }
     }
-
     updateGeometry();
 }
 
@@ -480,13 +459,36 @@ void MSliderHandleIndicator::setPixmaps(const QPixmap *handleLabelArrowLeft,
 void MSliderHandleIndicator::setText(const QString &text)
 {
     indicator->setText(text);
+    indicatorArrow->setVisible(!indicator->isEmpty());
+
     updateGeometry();
 }
 
 void MSliderHandleIndicator::setImage(const QString &id)
 {
     indicator->setImage(id);
+    indicatorArrow->setVisible(!indicator->isEmpty());
+
     updateGeometry();
+}
+
+void MSliderHandleIndicator::setArrowPos(qreal pos)
+{
+    arrowPos = pos;
+    bool reverse = qApp->isRightToLeft();
+
+    if (orientation == Qt::Horizontal) {
+        qreal arrowX = qMax(qreal(0), arrowPos - indicatorArrow->rect().width() / 2);
+        indicatorArrow->setPos(arrowX, indicator->rect().bottom());
+    }
+
+    if (orientation == Qt::Vertical) {
+        qreal arrowY = qMax(qreal(0), arrowPos - indicatorArrow->rect().height() / 2);
+        if (!reverse)
+            indicatorArrow->setPos(0, arrowY);
+        else
+            indicatorArrow->setPos(indicator->rect().right(), arrowY);
+    }
 }
 
 void MSliderHandleIndicator::moveOnTopAllSiblings()
@@ -568,7 +570,6 @@ MSliderGroove::~MSliderGroove()
 void MSliderGroove::init(MSlider *controller)
 {
     this->controller = controller;
-    sliderHandleIndicator->init();
 }
 
 void MSliderGroove::setOrientation(Qt::Orientation orientation)
@@ -1107,13 +1108,17 @@ void MSliderGroove::updateHandleIndicatorPos()
         if (handleIndicatorPos.x() + sliderHandleIndicator->rect().width() > sliderBoundingRect.right() &&
                 handleIndicatorPos.x() > sliderBoundingRect.left())
             handleIndicatorPos.setX(sliderBoundingRect.right() - sliderHandleIndicator->rect().width());
+
+        sliderHandleIndicator->setArrowPos(sliderHandle->pos().x() + sliderHandle->rect().width() / 2 - handleIndicatorPos.x());
     }
     if (orientation == Qt::Vertical) {
-        if (handleIndicatorPos.y() < sliderHandleIndicator->rect().top())
+        if (handleIndicatorPos.y() < sliderBoundingRect.top())
             handleIndicatorPos.setY(sliderBoundingRect.top());
         if (handleIndicatorPos.y() + sliderHandleIndicator->rect().height() > sliderBoundingRect.bottom() &&
                 handleIndicatorPos.y() > sliderBoundingRect.top())
             handleIndicatorPos.setY(sliderBoundingRect.bottom() - sliderHandleIndicator->rect().height());
+
+        sliderHandleIndicator->setArrowPos(sliderHandle->pos().y() + sliderHandle->rect().height() / 2 - handleIndicatorPos.y());
     }
 
     QGraphicsItem *sliderHandleIndicatorParent = sliderHandleIndicator->parentItem();
@@ -1124,8 +1129,9 @@ void MSliderGroove::updateHandleIndicatorPos()
     //slider handle label position (and bounding rect)
     //will be changed only if it is really necessary
     QPointF newPos = grooveRelativePos + handleIndicatorPos;
-    if (newPos == pos())
+    if (newPos == pos()) {
         return;
+    }
 
     sliderHandleIndicator->setPos(newPos);
 

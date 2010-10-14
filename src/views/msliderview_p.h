@@ -108,6 +108,8 @@ public:
     void setText(const QString &text);
     void setImage(const QString &id);
 
+    bool isEmpty() const;
+
 protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
@@ -130,8 +132,6 @@ public:
     MSliderHandleIndicator(QGraphicsItem *parent = 0);
     virtual ~MSliderHandleIndicator();
 
-    void init();
-
     void setOrientation(Qt::Orientation);
     void setPixmaps(const QPixmap *handleLabelArrowLeft,
                     const QPixmap *handleLabelArrowRight,
@@ -140,20 +140,16 @@ public:
 
     void setText(const QString &text);
     void setImage(const QString &id);
+    void setArrowPos(qreal pos);
 
     void moveOnTopAllSiblings();
 
-protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
 private:
+    qreal arrowPos;
     Qt::Orientation orientation;
-
-    MLinearLayoutPolicy *horizontalPolicy;
-    MLinearLayoutPolicy *verticalPolicy;
-
     MSliderHandleIndicatorArrow* indicatorArrow;
-
     MSliderIndicator* indicator;
 };
 
