@@ -406,11 +406,6 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>Progress Indicator</source>
         <translation>مؤشرات التقدم</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_message_box_text">
-        <location filename="../singleselectiondialogspage.cpp" line="239"/>
-        <source>Hello World!</source>
-        <translation>مرحبا العالم!</translation>
-    </message>
     <message id="xx_single_selection_dialog_title">
         <location filename="../singleselectiondialogspage.cpp" line="253"/>
         <source>Single Selection Dialogs</source>

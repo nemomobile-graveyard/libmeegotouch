@@ -28,7 +28,6 @@
 #include <MList>
 #include <MLinearLayoutPolicy>
 #include <MMessageBox>
-#include <MTextEdit>
 
 #include <QGraphicsLinearLayout>
 #include <QStringListModel>
@@ -108,24 +107,15 @@ void QueryDialogsPage::itemClicked(const QModelIndex &index)
 {
     switch (index.row()) {
     case 0:
-        openQuestionDialog();
-        break;
-    case 1:
-        openEntryDialog();
-        break;
-    case 2:
-        openLongDialog();
-        break;
-    case 3:
         openMessageBox();
         break;
-    case 4:
+    case 1:
         openMessageBox(Icon);
         break;
-    case 5:
+    case 2:
         openMessageBox(LargeText);
         break;
-    case 6:
+    case 3:
         openMessageBox(LargeText | Icon);
         break;
     default:
@@ -158,100 +148,6 @@ void QueryDialogsPage::openMessageBox(MessageBoxOptions options)
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
-void QueryDialogsPage::openQuestionDialog()
-{
-    if (dialog)
-        return;
-
-    dialog = new MDialog(
-        //%  "Question Dialog Title"
-        qtTrId("xx_dialogs_and_notifications_question_dialog_title"),
-        M::YesButton | M::NoButton);
-    dialog->setCentralWidget(
-        //% "Lorem ipsum dolor sit amet?"
-        new MLabel(qtTrId("xx_dialogs_and_notifications_question_dialog_content")));
-
-    dialog->appear(MSceneWindow::DestroyWhenDone);
-}
-
-void QueryDialogsPage::openEntryDialog()
-{
-    if (dialog)
-        return;
-
-    MWidget *centralWidget = new MWidget;
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    //% "Name"
-    MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_entry_dialog_label"), centralWidget);
-    MTextEdit *textEdit = new MTextEdit(MTextEditModel::SingleLine,
-                                            QString(),
-                                            centralWidget);
-    centralWidget->setLayout(layout);
-
-    layout->addItem(label);
-    layout->addItem(textEdit);
-
-    //% "Please enter your name"
-    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),
-                           M::OkButton | M::ResetButton);
-    dialog->setCentralWidget(centralWidget);
-
-    dialog->appear(MSceneWindow::DestroyWhenDone);
-}
-
-void QueryDialogsPage::openLongDialog()
-{
-    if (dialog)
-        return;
-
-    MWidget *centralWidget = new MWidget;
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-
-    //% "Select printer"
-    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), M::CancelButton);
-    dialog->setCentralWidget(centralWidget);
-    MButton *button = 0;
-
-    centralWidget->setLayout(layout);
-
-#define ADD_PRINTER_BUTTON(NAME) \
-    button = new MButton(NAME, centralWidget); \
-    connect(button, SIGNAL(clicked()), dialog, SLOT(accept())); \
-    layout->addItem(button);
-
-    ADD_PRINTER_BUTTON("Lexmark A");
-    ADD_PRINTER_BUTTON("Lexmark B");
-    ADD_PRINTER_BUTTON("Lexmark C");
-    ADD_PRINTER_BUTTON("Lexmark D");
-    ADD_PRINTER_BUTTON("Canon Alpha");
-    ADD_PRINTER_BUTTON("Canon Beta");
-    ADD_PRINTER_BUTTON("Canon Gama");
-    ADD_PRINTER_BUTTON("Canon Zeta");
-    ADD_PRINTER_BUTTON("Brother 1");
-    ADD_PRINTER_BUTTON("Brother 2");
-    ADD_PRINTER_BUTTON("Brother 3");
-    ADD_PRINTER_BUTTON("Brother 4");
-    ADD_PRINTER_BUTTON("Xerox I");
-    ADD_PRINTER_BUTTON("Xerox II");
-    ADD_PRINTER_BUTTON("Xerox III");
-    ADD_PRINTER_BUTTON("Xerox IV");
-    ADD_PRINTER_BUTTON("Dell Roger");
-    ADD_PRINTER_BUTTON("Dell Charlie");
-    ADD_PRINTER_BUTTON("Dell Bravo");
-    ADD_PRINTER_BUTTON("Dell Tango");
-    ADD_PRINTER_BUTTON("HP X");
-    ADD_PRINTER_BUTTON("HP Y");
-    ADD_PRINTER_BUTTON("HP Z");
-    ADD_PRINTER_BUTTON("HP Plus");
-    ADD_PRINTER_BUTTON("Epson Stylus");
-    ADD_PRINTER_BUTTON("Epson Pro");
-    ADD_PRINTER_BUTTON("Epson Office");
-    ADD_PRINTER_BUTTON("Epson Extra");
-
-#undef ADD_PRINTER_BUTTON
-
-    dialog->appear(MSceneWindow::DestroyWhenDone);
-}
 
 void QueryDialogsPage::retranslateUi()
 {
@@ -261,12 +157,6 @@ void QueryDialogsPage::retranslateUi()
         return;
 
     QStringList queryDialogTypes;
-    //% "Question Dialog"
-    queryDialogTypes << qtTrId("xx_wg_multiple_selection_dialogs_page_question_dialog");
-    //% "Entry Dialog"
-    queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_entry_dialog");
-    //% "Long Dialog"
-    queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_long_dialog");
     //% "Small Query Dialog without Icon"
     queryDialogTypes << qtTrId("xx_wg_query_dialogs_small_query_dialog_without_icon");
     //% "Small Query Dialog with Icon"

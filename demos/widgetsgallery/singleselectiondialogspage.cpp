@@ -28,6 +28,7 @@
 #include <MList>
 #include <MLinearLayoutPolicy>
 #include <MMessageBox>
+#include <MTextEdit>
 
 #include <QGraphicsLinearLayout>
 #include <QStringListModel>
@@ -107,16 +108,28 @@ void SingleSelectionDialogsPage::populateLayout()
 
 void SingleSelectionDialogsPage::itemClicked(const QModelIndex &index)
 {
-    if (index.row() == 0)
-        openStackedDialogs();
-    else if (index.row() == 1)
+    switch (index.row()) {
+    case 0:
+        openEntryDialog();
+        break;
+    case 1:
+        openLongDialog();
+        break;
+    case 2:
         openSystemDialog();
-    else if (index.row() == 2)
+        break;
+    case 3:
         openSystemModalDialog();
-    else if (index.row() == 3)
+        break;
+    case 4:
         openDialogWithProgressIndicator();
-    else if (index.row() == 4)
-        openMessageBox();
+        break;
+    case 5:
+        openStackedDialogs();
+        break;
+    default:
+        break;
+    }
 }
 
 void SingleSelectionDialogsPage::openStackedDialogs()
@@ -230,13 +243,58 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
-void SingleSelectionDialogsPage::openMessageBox()
+void SingleSelectionDialogsPage::openEntryDialog()
 {
     if (dialog)
         return;
 
-    //% "Hello World!"
-    dialog = new MMessageBox(qtTrId("xx_dialogs_and_notifications_message_box_text"), M::OkButton);
+    MWidget *centralWidget = new MWidget;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    //% "Name"
+    MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_entry_dialog_label"), centralWidget);
+    MTextEdit *textEdit = new MTextEdit(MTextEditModel::SingleLine,
+                                            QString(),
+                                            centralWidget);
+    centralWidget->setLayout(layout);
+
+    layout->addItem(label);
+    layout->addItem(textEdit);
+
+    //% "Please enter your name"
+    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),
+                           M::OkButton | M::ResetButton);
+    dialog->setCentralWidget(centralWidget);
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
+}
+
+void SingleSelectionDialogsPage::openLongDialog()
+{
+    if (dialog)
+        return;
+
+    MWidget *centralWidget = new MWidget;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+
+    //% "Select printer"
+    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), M::CancelButton);
+    dialog->setCentralWidget(centralWidget);
+
+    centralWidget->setLayout(layout);
+
+    const char * printers[] = {"Lexmark A", "Lexmark A", "Lexmark B", "Lexmark C", "Lexmark D", "Canon Alpha", "Canon Beta", "Canon Gama",
+                          "Canon Zeta", "Brother 1", "Brother 2", "Brother 3", "Brother 4", "Xerox I", "Xerox II", "Xerox III",
+                          "Xerox IV", "Dell Roger", "Dell Charlie", "Dell Bravo", "Dell Tango", "HP X", "HP Y", "HP Z", "HP Plus", "Epson Stylus",
+                      "Epson Pro", "Epson Office", "Epson Extra", NULL};
+
+
+    for(int i = 0; printers[i] != NULL; i++) {
+        MBasicListItem *printerItem = new MBasicListItem;
+        printerItem->setTitle(printers[i]);
+        dialog->connect(printerItem, SIGNAL(clicked()), SLOT(accept()));
+        layout->addItem(printerItem);
+    }
+
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
@@ -255,16 +313,18 @@ void SingleSelectionDialogsPage::retranslateUi()
         return;
 
     QStringList singleSelectionDialogTypes;
-    //% "Stacked Dialogs"
-    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_stacked_dialogs");
+    //% "Entry Dialog"
+    singleSelectionDialogTypes << qtTrId("xx_wg_query_dialogs_page_entry_dialog");
+    //% "Long Dialog"
+    singleSelectionDialogTypes << qtTrId("xx_wg_query_dialogs_page_long_dialog");
     //% "System Dialog"
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_system_dialog");
     //% "System Modal Dialog"
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_system_modal_dialog");
     //% "Dialog with Progress Indicator"
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_dialog_with_progress_indicator");
-    //% "Message Box"
-    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_message_box");
+    //% "Stacked Dialogs"
+    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_stacked_dialogs");
 
     static_cast<QStringListModel *>(list->itemModel())->setStringList(singleSelectionDialogTypes);
 }

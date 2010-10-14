@@ -44,7 +44,8 @@ public:
     void openSystemDialog();
     void openSystemModalDialog();
     void openDialogWithProgressIndicator();
-    void openMessageBox();
+    void openEntryDialog();
+    void openLongDialog();
 
 protected:
     void retranslateUi();

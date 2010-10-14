@@ -401,11 +401,6 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>I&apos;m a system modal dialog.&lt;br&gt;You can&apos;t skip me as I&apos;m designed for&lt;br&gt;use cases that require immediate user attention.</source>
         <translation>I&apos;m a system modal dialog.&lt;br&gt;You can&apos;t skip me as I&apos;m designed for&lt;br&gt;use cases that require immediate user attention.</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_message_box_text">
-        <location filename="../singleselectiondialogspage.cpp" line="239"/>
-        <source>Hello World!</source>
-        <translation>Hello World!</translation>
-    </message>
     <message id="xx_single_selection_dialog_title">
         <location filename="../singleselectiondialogspage.cpp" line="253"/>
         <source>Single Selection Dialogs</source>

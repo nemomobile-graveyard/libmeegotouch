@@ -47,10 +47,6 @@ public:
     void createContent();
     void populateLayout();
 
-    void openQuestionDialog();
-    void openEntryDialog();
-    void openLongDialog();
-
     void openMessageBox(MessageBoxOptions options = Default);
 
 protected:
