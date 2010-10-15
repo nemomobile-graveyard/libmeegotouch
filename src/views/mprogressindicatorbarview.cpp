@@ -210,6 +210,9 @@ void MProgressIndicatorBarView::updateData(const QList<const char *>& modificati
 
     Q_D(MProgressIndicatorBarView);
 
+    if (!d->controller->isOnDisplay())
+	return;
+
     if(d->barBody.isNull()) {
         d->figureOutSizes();
         d->createMaskOnGeometry();
