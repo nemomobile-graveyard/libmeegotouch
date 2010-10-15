@@ -1,3 +1,9 @@
+libmeegotouch (0.20.48.2-1) unstable; urgency=low
+
+  * Fixes: NB#198501 - Device not locking to landscape mode when tv-out plugged in
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Fri, 15 Oct 2010 15:43:00 +0300
+
 libmeegotouch (0.20.48.1-1) unstable; urgency=low
 
   * Fixes: NB#196741 - Pin dialog ui is not displaying properly
