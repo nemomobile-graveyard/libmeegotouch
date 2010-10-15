@@ -286,8 +286,49 @@ package.
 
 \section security Platform security
 
-Harmattan platform security works fine with launcher. Note, that you
-must use <application_name>.launch as the name of the application binary in the Aegis file.
+If an application does not have an aegis manifest file, no actions are
+needed for platform security.
+
+If an application has a manifest file, an addition needs to be made
+there: everything that is requested for the application binary must be
+requested to the application launcher binary as well.
+
+For instance, manifest file for an application that needs only an
+automatically generated application ID:
+
+\code
+<aegis>
+  <request>
+    <for path="/usr/bin/application_name.launch" />
+    <for path="applauncherd-launcher::/usr/bin/applauncherd.bin" id="" />
+  </request>
+</aegis>
+\endcode
+
+If an application has a user-defined ID:
+
+\code
+<aegis>
+  <request>
+    <for path="/usr/bin/application_name.launch" id="myownid" />
+    <for path="applauncherd-launcher::/usr/bin/applauncherd.bin" id="myownid" />
+  </request>
+</aegis>
+\endcode
+
+Finally, if an application has some security tokens:
+
+\code
+<aegis>
+  <request>
+    <credential name="GlobalToken" />
+    <credential name="OwnToken" />
+    <credential name="package::OtherToken" />
+    <for path="/usr/bin/application_name.launch" />
+    <for path="applauncherd-launcher::/usr/bin/applauncherd.bin" id="" />
+  </request>
+</aegis>
+\endcode
 
 
 \section limitations Limitations and known issues
