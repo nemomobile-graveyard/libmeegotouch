@@ -165,15 +165,16 @@ void MButtonIconView::updateData(const QList<const char *>& modifications)
         if (member == MButtonModel::Down) {
             //start shrinking animation
             d->timelineShrink->setDirection(model()->down() ? QTimeLine::Forward : QTimeLine::Backward);
-            if (d->timelineShrink->state() == QTimeLine::NotRunning)
+            if (style()->shrinkDuration() > 0 && d->timelineShrink->state() == QTimeLine::NotRunning)
                 d->timelineShrink->start();
 
             //start glowing if the button was released
             if (!model()->down()) {
                 if (d->timelineGlow->state() == QTimeLine::Running)
                     d->timelineGlow->setCurrentTime(0);
-                else
+                else if (style()->glowDuration() > 0) {
                     d->timelineGlow->start();
+                }
             }
         }
     }
