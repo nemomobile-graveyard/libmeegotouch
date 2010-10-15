@@ -35,9 +35,11 @@ MOrientationTracker *MOrientationTrackerPrivate::tracker = 0;
 
 MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *controller) :
     currentAngle(M::Angle0),
-    currentIsCovered(false)
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    , currentIsKeyboardOpen(MKeyboardStateTracker::instance()->isOpen())
+    currentIsCovered(false),
+    currentIsTvConnected(false),
+    currentIsKeyboardOpen(MKeyboardStateTracker::instance()->isOpen())
+  #ifdef HAVE_CONTEXTSUBSCRIBER
+    , videoRouteProperty("com.nokia.policy.video_route")
     , topEdgeProperty("Screen.TopEdge")
     , isCoveredProperty("Screen.IsCovered")
 #endif
@@ -66,6 +68,8 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
             this, SLOT(updateOrientationAngle()));
     connect(&isCoveredProperty, SIGNAL(valueChanged()),
             this, SLOT(isCoveredChanged()));
+    connect(&videoRouteProperty, SIGNAL(valueChanged()),
+            this, SLOT(videoRouteChanged()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(updateOrientationAngle()));
 #endif
@@ -86,10 +90,24 @@ void MOrientationTrackerPrivate::initContextSubscriber()
     //waiting for properties to synchronize
     topEdgeProperty.waitForSubscription();
     isCoveredProperty.waitForSubscription();
+    videoRouteProperty.waitForSubscription();
 
     //initiating the variables to current orientation
     updateOrientationAngle();
     isCoveredChanged();
+    videoRouteChanged();
+#endif
+}
+
+void MOrientationTrackerPrivate::videoRouteChanged()
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    QString value = videoRouteProperty.value().toString();
+    mDebug("MOrientationTracker") << "VideoRoute:" << value;
+
+    currentIsTvConnected = (value == "tvout" ||
+                            value == "builtinandtvout");
+    updateOrientationAngle();
 #endif
 }
 
@@ -131,7 +149,8 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
     }
     currentIsKeyboardOpen = isKeyboardOpen;
 
-    if (edge == "top" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))) {
+    if (currentIsTvConnected || // TV forces landscape for now, no transformations
+        (edge == "top" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen)))) {
         angle = M::Angle0;
     } else if (edge == "left" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle270, isKeyboardOpen))) {
         angle = M::Angle270;

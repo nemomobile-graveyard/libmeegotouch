@@ -46,9 +46,10 @@ public:
     static MOrientationTracker *tracker;
     M::OrientationAngle currentAngle;
     bool currentIsCovered;
-
-#ifdef HAVE_CONTEXTSUBSCRIBER
+    bool currentIsTvConnected;
     bool currentIsKeyboardOpen;
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    ContextProperty videoRouteProperty;
     ContextProperty topEdgeProperty;
     ContextProperty isCoveredProperty;
 #endif
@@ -66,6 +67,7 @@ public:
 
 public slots:
     void isCoveredChanged();
+    void videoRouteChanged();
 
 protected:
     MOrientationTracker *q_ptr;
