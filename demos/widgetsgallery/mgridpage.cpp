@@ -242,7 +242,7 @@ void MGridPage::itemClicked()
             connect( page, SIGNAL(backButtonClicked()), this, SLOT(backButtonClicked()) );
             connect( page, SIGNAL(rate(MediaType::Rating,QString)), this, SIGNAL(rate(MediaType::Rating,QString)) );
 
-            page->appear(DestroyWhenDismissed);
+            page->appear(scene(), DestroyWhenDismissed);
 
             return;
         }
@@ -260,7 +260,7 @@ void MGridPage::itemClicked()
             page->setParent(this);
             connect( page, SIGNAL(backButtonClicked()), this, SLOT(backButtonClicked()) );
 
-            page->appear(DestroyWhenDismissed);
+            page->appear(scene(), DestroyWhenDismissed);
         }
 #endif
     }
