@@ -140,6 +140,8 @@ void MNavigationBarViewPrivate::toolBarChanged()
         if (nextToolBar == toolBar) return;
 
         toolBarLayout->removeItem(toolBar);
+        // previous toolBar is not ours anymore, so clean property we added
+        toolBar->setProperty("buttonAlignment", QVariant::Invalid);
         toolBar->setParentItem(NULL);
     }
 
