@@ -866,7 +866,7 @@ void MApplicationWindowPrivate::setupPageEscapeAuto()
         setupPageEscapeClose();
     } else {
         setupPageEscapeBack();
-        page->connect(navigationBar, SIGNAL(backButtonClicked()), SLOT(dismiss()));
+        page->connect(page, SIGNAL(backButtonClicked()), SLOT(dismiss()));
     }
 
     // We must update the wiring of our escape button if the application manually
@@ -891,7 +891,7 @@ void MApplicationWindowPrivate::tearDownPageEscape()
     QObject::disconnect(q->sceneManager(), SIGNAL(pageHistoryChanged()),
             q, SLOT(_q_updatePageEscapeAuto()));
 
-    QObject::disconnect(navigationBar, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
+    QObject::disconnect(page, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
 }
 
 void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
@@ -905,7 +905,7 @@ void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
     if (pageHistory.isEmpty() &&
             (navigationBar->escapeButtonMode() != MNavigationBarModel::EscapeButtonClose)) {
 
-        QObject::disconnect(navigationBar, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
+        QObject::disconnect(page, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
         // we don't want MEscapeButtonPanel::escapeModeChanged() to be intercepted
         // by the scene manager which would update close button geometry.
         // The geometry will be updated later on in connectPage().
@@ -917,7 +917,7 @@ void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
             (navigationBar->escapeButtonMode() != MNavigationBarModel::EscapeButtonBack)) {
 
         setupPageEscapeBack();
-        page->connect(navigationBar, SIGNAL(backButtonClicked()), SLOT(dismiss()));
+        page->connect(page, SIGNAL(backButtonClicked()), SLOT(dismiss()));
     }
 }
 
