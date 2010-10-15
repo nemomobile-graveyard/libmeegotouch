@@ -1,3 +1,9 @@
+libmeegotouch (0.20.48.1-1) unstable; urgency=low
+
+  * Fixes: NB#196741 - Pin dialog ui is not displaying properly
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Fri, 15 Oct 2010 11:56:00 +0300
+
 libmeegotouch (0.20.48-1) unstable; urgency=low
 
   * Fixes: List unit tests, due to new functionality like floating list index.
