@@ -191,7 +191,9 @@ void MNavigationBarViewPrivate::updateLayout()
 
         bool menuVisible = q->model()->arrowIconVisible();
 
-        if (menuVisible && escapeVisible) {
+        bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
+
+        if ((menuVisible && escapeVisible) || toolBarIsTabBar) {
             layout->setPolicy(escapeToolbarMenuPolicy);
         } else if (menuVisible && !escapeVisible) {
             layout->setPolicy(toolbarMenuPolicy);
@@ -219,7 +221,9 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
 
         bool menuVisible = q->model()->arrowIconVisible();
 
-        if (menuVisible && escapeVisible) {
+        bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
+
+        if ((menuVisible && escapeVisible) || toolBarIsTabBar) {
             alignment = Qt::AlignHCenter;
         } else if (menuVisible && !escapeVisible) {
             alignment = Qt::AlignLeft;
@@ -361,11 +365,11 @@ void MNavigationBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    //draw shadow under the actual navigationbar    
+    //draw shadow under the actual navigationbar
     if( style()->dropShadowImage() ) {
         style()->dropShadowImage()->draw(0, size().height(), boundingRect().width(),  style()->dropShadowImage()->pixmap()->size().height(), painter);
     }
-    
+
     MWidgetView::drawBackground(painter, option);
 }
 
