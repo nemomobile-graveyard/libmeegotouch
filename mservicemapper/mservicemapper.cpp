@@ -22,6 +22,8 @@
 #include <QDir>
 #include <QSettings>
 #include <QDebug>
+#include <QTimer>
+#include <QCoreApplication>
 
 #include "mservicemapper_p.h"
 
@@ -43,6 +45,12 @@ void MServiceMapper::init()
     connect(&d_ptr->m_watcher, SIGNAL(directoryChanged(QString)),
             this, SLOT(handleServiceChanged(QString)));
 
+    connect(
+        &d_ptr->m_timer, SIGNAL( timeout() ),
+        QCoreApplication::instance(), SLOT( quit() ) );
+
+    d_ptr->m_timer.start( d_ptr->m_timeOut );
+
     handleServiceChanged( QString() );
 }
 
@@ -53,6 +61,8 @@ MServiceMapper::~MServiceMapper()
 
 QString MServiceMapper::serviceName(const QString &interfaceName)
 {
+    d_ptr->m_timer.start();
+
     QStringList serviceNameList = serviceNames(interfaceName);
 
     QString serviceName;
@@ -70,6 +80,8 @@ QString MServiceMapper::serviceName(const QString &interfaceName)
 
 QStringList MServiceMapper::serviceNames(const QString &interfaceName)
 {
+    d_ptr->m_timer.start();
+
     d_ptr->m_serviceFileList[CurrList] = d_ptr->fillServiceFileList();
     int serviceFileNum = d_ptr->m_serviceFileList[CurrList].size();
 
@@ -89,6 +101,8 @@ QStringList MServiceMapper::serviceNames(const QString &interfaceName)
 
 void MServiceMapper::handleServiceChanged(const QString &path)
 {
+    d_ptr->m_timer.start();
+
     Q_UNUSED(path);   // we do not support changing of the service dir
     // on the fly for now.
 
@@ -144,6 +158,8 @@ void MServiceMapper::handleServiceChanged(const QString &path)
 
 QString MServiceMapper::servicePath(const QString &interfaceName) const
 {
+    d_ptr->m_timer.start();
+
     Q_UNUSED(interfaceName);
     // Iterate through installed services and return the preferred one
     // for now all services' object paths are "/"
@@ -152,6 +168,8 @@ QString MServiceMapper::servicePath(const QString &interfaceName) const
 
 QString MServiceMapper::interfaceName(const QString &serviceName) const
 {
+    d_ptr->m_timer.start();
+
     if (serviceName.isEmpty())
         return QString();
 
