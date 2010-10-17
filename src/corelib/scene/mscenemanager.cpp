@@ -141,6 +141,10 @@ void MSceneManagerPrivate::init(MScene *scene)
             SLOT(_q_onPageSwitchAnimationFinished()));
 
     setOrientationAngleWithoutAnimation(newAngle);
+
+#ifdef Q_WS_X11
+    statusBarGeometryPropertyWasSet = false;
+#endif
 }
 
 void MSceneManagerPrivate::initOrientationAngles()
@@ -794,29 +798,35 @@ bool MSceneManagerPrivate::windowIntersectsRect(const QRectF &rect, MSceneWindow
 
 void MSceneManagerPrivate::updateStatusBarGeometryProperty()
 {
-    QRectF statusBarGeometry;
-
-    if (statusBar) {
-        statusBarGeometry = statusBar->mapRectToScene(
-                QRectF(QPointF(), statusBar->geometry().size()));
-    }
+    if (!statusBar && !statusBarGeometryPropertyWasSet)
+        return;
 
     long data[4] = {0};
-    data[0] = statusBarGeometry.x();
-    data[1] = statusBarGeometry.y();
-    data[2] = statusBarGeometry.width();
-    data[3] = statusBarGeometry.height();
+
+    if (statusBar) {
+        QRectF statusBarGeometry = statusBar->mapRectToScene(
+                QRectF(QPointF(), statusBar->geometry().size()));
+
+        data[0] = statusBarGeometry.x();
+        data[1] = statusBarGeometry.y();
+        data[2] = statusBarGeometry.width();
+        data[3] = statusBarGeometry.height();
+    }
 
     Display *dpy = QX11Info::display();
 
     Atom a = XInternAtom(dpy, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY", False);
     foreach (QGraphicsView *view, scene->views()) {
         Window w = view->winId();
-        XChangeProperty(dpy, w, a, XA_CARDINAL, 32, PropModeReplace,
-                        (unsigned char*)data, 4);
+        if (!statusBar)
+            XDeleteProperty(dpy, w, a);
+        else
+            XChangeProperty(dpy, w, a, XA_CARDINAL, 32, PropModeReplace,
+                            (unsigned char*)data, 4);
     }
-}
 
+    statusBarGeometryPropertyWasSet = statusBar ? true : false;
+}
 #endif
 
 void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()

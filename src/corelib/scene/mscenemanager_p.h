@@ -262,6 +262,11 @@ public:
     MSceneEventEater *eventEater;
 
     MSceneManagerStyleContainer *styleContainer;
+
+#ifdef Q_WS_X11
+    bool statusBarGeometryPropertyWasSet;
+#endif
+
 };
 
 class MSceneManagerTestInterface : public QObject

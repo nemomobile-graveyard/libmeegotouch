@@ -1166,6 +1166,14 @@ static QVector<unsigned long> getX11Property(MWindow* window, const char *proper
     return result;
 }
 
+void setX11Property(MWindow* window, const char *propertyName, QVector<unsigned long> value)
+{
+    Atom a = XInternAtom(QX11Info::display(), propertyName, False);
+    XChangeProperty(QX11Info::display(), window->winId(), a, XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)value.data(), value.size());
+}
+
+
 static QVector<unsigned long> windowGeometry(MSceneWindow* window)
 {
     QRectF rect = window->mapRectToScene(QRectF(QPointF(), window->geometry().size()));
@@ -1194,7 +1202,16 @@ void Ut_MSceneManager::testStatusBarGeometryProperty()
 
     sceneManager->disappearSceneWindowNow(statusbar);
 
-    QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), QVector<unsigned long>(4,0));
+    // no statusbar - the property is deleted
+    QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), QVector<unsigned long>());
+
+    // set the property manually
+    setX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY", QVector<unsigned long>() << 1 << 2 << 30 << 40);
+
+    sceneManager->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+
+    // changing an orientation shouldn't affect the property if the window has no statusbar
+    QCOMPARE(getX11Property(window, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY"), QVector<unsigned long>() << 1 << 2 << 30 << 40);
 
     window->setSceneManager(0);
     delete window;
