@@ -168,7 +168,7 @@ void MAppletHandleViewPrivate::drawBrokenState()
         QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(tmp));
         QGraphicsBlurEffect* blur = new QGraphicsBlurEffect;
         blur->setBlurRadius(q->style()->brokenBlurRadius());
-        item->setGraphicsEffect(new QGraphicsBlurEffect);
+        item->setGraphicsEffect(blur);
         scene.addItem(item);
 
         brokenAppletPixmap = QPixmap(localPixmap.width(), localPixmap.height());

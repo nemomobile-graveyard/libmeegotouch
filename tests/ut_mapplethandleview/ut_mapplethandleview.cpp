@@ -21,6 +21,7 @@
 
 #include <QtTest/QtTest>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsEffect>
 #include <mappletcommunicator.h>
 #include <mapplication.h>
 #include <mprogressindicator.h>
@@ -100,10 +101,21 @@ void QGraphicsItem::setVisible(bool visible)
     }
 }
 
+static QGraphicsPixmapItem* gConstructedPixmapItem;
+QGraphicsPixmapItem::QGraphicsPixmapItem(const QPixmap &, QGraphicsItem*, QGraphicsScene*)
+{
+    gConstructedPixmapItem = this;
+}
+
+static QGraphicsItem* gQGraphicsItemInScene;
+void QGraphicsScene::addItem(QGraphicsItem* item)
+{
+    gQGraphicsItemInScene = item;
+}
+
 void QGraphicsLinearLayout::insertItem(int , QGraphicsLayoutItem *)
 {
 }
-
 
 // MWidgetController stubs
 void MWidgetController::setGeometry(const QRectF &)
@@ -259,6 +271,23 @@ void Ut_MAppletHandleView::testInstallationFailedDialog()
     QVERIFY(dialogShown);
     QCOMPARE(gMExtensionHandleStub->stubCallCount("reinit"), 0);
     QCOMPARE(gMAppletHandleStub->stubCallCount("removeApplet"), 1);
+}
+
+void Ut_MAppletHandleView::testBrokenAppletBlurring_NB191737()
+{
+    int targetRadius = 123;
+    handleView->modifiableStyle()->setBrokenBlurRadius(targetRadius);
+    handleView->modifiableModel()->setCurrentState(MExtensionHandleModel::BROKEN);
+    QList<const char *> m;
+    m << MExtensionHandleModel::CurrentState;
+    handleView->updateData(m);
+
+    QVERIFY(gQGraphicsItemInScene);
+    QVERIFY(gConstructedPixmapItem);
+    QCOMPARE(gQGraphicsItemInScene, gConstructedPixmapItem);
+    QGraphicsBlurEffect* blur = dynamic_cast<QGraphicsBlurEffect*>(gQGraphicsItemInScene->graphicsEffect());
+    QVERIFY(blur);
+    QCOMPARE((int)blur->blurRadius(), targetRadius);
 }
 
 QTEST_APPLESS_MAIN(Ut_MAppletHandleView)

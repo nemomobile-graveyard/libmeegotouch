@@ -24,14 +24,35 @@
 #include "mapplethandleview.h"
 #include "mapplethandleview_p.h"
 
+class Ut_MAppletHandleStyle : public MExtensionHandleStyle
+{
+};
+
+class Ut_MAppletHandleStyleContainer : public MExtensionHandleStyleContainer
+{
+};
+
 class MTestAppletHandleView : public MAppletHandleView
 {
-    M_VIEW(MAppletHandleModel, MAppletHandleStyle)
+    M_VIEW(MAppletHandleModel, Ut_MAppletHandleStyle)
 
 public:
     MTestAppletHandleView(MAppletHandle *handle);
     void click();
     MAppletHandleModel* modifiableModel();
+
+    MExtensionHandleStyle *modifiableStyle() {
+        MExtensionHandleStyleContainer &sc = style();
+        const MExtensionHandleStyle *const_s = sc.operator ->();
+        MExtensionHandleStyle *s = const_cast<MExtensionHandleStyle *>(const_s);
+        return s;
+    }
+
+    Ut_MAppletHandleStyleContainer& styleContainer() {
+        return style();
+    }
+
+    friend class Ut_MAppletHandleView;
 };
 
 // Test case must inherit QObject
@@ -56,5 +77,6 @@ private slots:
     void testSettingsDialog();
     void testBrokenAppletDialog();
     void testInstallationFailedDialog();
+    void testBrokenAppletBlurring_NB191737();
 };
 #endif // UT_MAPPLETHANDLEVIEW
