@@ -989,154 +989,125 @@ void Ft_Locales::checkAvailableLocales()
             + newLinePlusSupportedLocaleName + "\tCurrency value\t"
             + locale.formatCurrency(1234.56, "EUR")
             + newLinePlusSupportedLocaleName + "\tNegative Currency value\t"
-            + locale.formatCurrency(-1234.56, "EUR")
-            + newLinePlusSupportedLocaleName + "\tName of month 01 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 1)
-            + newLinePlusSupportedLocaleName + "\tName of month 02 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 2)
-            + newLinePlusSupportedLocaleName + "\tName of month 03 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 3)
-            + newLinePlusSupportedLocaleName + "\tName of month 04 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 4)
-            + newLinePlusSupportedLocaleName + "\tName of month 05 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 5)
-            + newLinePlusSupportedLocaleName + "\tName of month 06 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 6)
-            + newLinePlusSupportedLocaleName + "\tName of month 07 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 7)
-            + newLinePlusSupportedLocaleName + "\tName of month 08 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 8)
-            + newLinePlusSupportedLocaleName + "\tName of month 09 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 9)
-            + newLinePlusSupportedLocaleName + "\tName of month 10 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 10)
-            + newLinePlusSupportedLocaleName + "\tName of month 11 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 11)
-            + newLinePlusSupportedLocaleName + "\tName of month 12 (Gregorian Calendar)\t"
-            + locale.monthName(gregorianCalendar, 12)
-            + newLinePlusSupportedLocaleName + "\tName of month 01 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 1)
-            + newLinePlusSupportedLocaleName + "\tName of month 02 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 2)
-            + newLinePlusSupportedLocaleName + "\tName of month 03 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 3)
-            + newLinePlusSupportedLocaleName + "\tName of month 04 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 4)
-            + newLinePlusSupportedLocaleName + "\tName of month 05 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 5)
-            + newLinePlusSupportedLocaleName + "\tName of month 06 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 6)
-            + newLinePlusSupportedLocaleName + "\tName of month 07 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 7)
-            + newLinePlusSupportedLocaleName + "\tName of month 08 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 8)
-            + newLinePlusSupportedLocaleName + "\tName of month 09 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 9)
-            + newLinePlusSupportedLocaleName + "\tName of month 10 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 10)
-            + newLinePlusSupportedLocaleName + "\tName of month 11 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 11)
-            + newLinePlusSupportedLocaleName + "\tName of month 12 (Islamic Calendar)\t"
-            + locale.monthName(islamicCalendar, 12)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 01 (Gregorian Calendar), stand-alone, wide\t"
-            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 02 (Gregorian Calendar), stand-alone, wide\t"
-            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 03 (Gregorian Calendar), stand-alone, wide\t"
-            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 04 (Gregorian Calendar), stand-alone, wide\t"
-            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 05 (Gregorian Calendar), stand-alone, wide\t"
-            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 06 (Gregorian Calendar), stand-alone, wide\t"
-            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 07 (Gregorian Calendar), stand-alone, wide\t"
-            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 01 (Gregorian Calendar), stand-alone, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 02 (Gregorian Calendar), stand-alone, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 03 (Gregorian Calendar), stand-alone, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 04 (Gregorian Calendar), stand-alone, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 05 (Gregorian Calendar), stand-alone, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 06 (Gregorian Calendar), stand-alone, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 07 (Gregorian Calendar), stand-alone, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 01 (Gregorian Calendar), stand-alone, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 02 (Gregorian Calendar), stand-alone, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 03 (Gregorian Calendar), stand-alone, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 04 (Gregorian Calendar), stand-alone, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 05 (Gregorian Calendar), stand-alone, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 06 (Gregorian Calendar), stand-alone, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 07 (Gregorian Calendar), stand-alone, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 01 (Gregorian Calendar), format, wide\t"
-            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 02 (Gregorian Calendar), format, wide\t"
-            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 03 (Gregorian Calendar), format, wide\t"
-            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 04 (Gregorian Calendar), format, wide\t"
-            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 05 (Gregorian Calendar), format, wide\t"
-            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 06 (Gregorian Calendar), format, wide\t"
-            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 07 (Gregorian Calendar), format, wide\t"
-            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 01 (Gregorian Calendar), format, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 02 (Gregorian Calendar), format, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 03 (Gregorian Calendar), format, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 04 (Gregorian Calendar), format, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 05 (Gregorian Calendar), format, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 06 (Gregorian Calendar), format, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 07 (Gregorian Calendar), format, abbreviated\t"
-            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 01 (Gregorian Calendar), format, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 02 (Gregorian Calendar), format, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 03 (Gregorian Calendar), format, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 04 (Gregorian Calendar), format, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 05 (Gregorian Calendar), format, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 06 (Gregorian Calendar), format, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 07 (Gregorian Calendar), format, narrow\t"
-            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 01 (Islamic Calendar)\t"
-            + locale.weekdayName(islamicCalendar, 1)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 02 (Islamic Calendar)\t"
-            + locale.weekdayName(islamicCalendar, 2)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 03 (Islamic Calendar)\t"
-            + locale.weekdayName(islamicCalendar, 3)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 04 (Islamic Calendar)\t"
-            + locale.weekdayName(islamicCalendar, 4)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 05 (Islamic Calendar)\t"
-            + locale.weekdayName(islamicCalendar, 5)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 06 (Islamic Calendar)\t"
-            + locale.weekdayName(islamicCalendar, 6)
-            + newLinePlusSupportedLocaleName + "\tName of weekday 07 (Islamic Calendar)\t"
-            + locale.weekdayName(islamicCalendar, 7)
-            + newLinePlusSupportedLocaleName + "\tCollation sample\t"
+            + locale.formatCurrency(-1234.56, "EUR");
+        for (unsigned i = 0; i < 2; ++i) {
+            MLocale::CalendarType calendarType;
+            MCalendar calendar;
+            QString calendarTypeString;
+            switch (i) {
+            case 0:
+                calendarType = MLocale::GregorianCalendar;
+                calendarTypeString = "Gregorian calendar";
+                calendar = gregorianCalendar;
+                break;
+            case 1:
+                calendarType = MLocale::IslamicCalendar;
+                calendarTypeString = "Islamic calendar";
+                calendar = islamicCalendar;
+                break;
+            }
+            for (unsigned i = 0; i < 2; ++i) {
+                MLocale::DateSymbolContext dateSymbolContext;
+                QString dateSymbolContextString;
+                switch (i) {
+                case 0:
+                    dateSymbolContext = MLocale::DateSymbolStandalone;
+                    dateSymbolContextString = "stand-alone";
+                    break;
+                case 1:
+                    dateSymbolContext = MLocale::DateSymbolFormat;
+                    dateSymbolContextString = "format";
+                    break;
+                }
+                for (unsigned j = 0; j < 3; ++j) {
+                    MLocale::DateSymbolLength dateSymbolLength;
+                    QString dateSymbolLengthString;
+                    switch (j) {
+                    case 0:
+                        dateSymbolLength = MLocale::DateSymbolWide;
+                        dateSymbolLengthString = "wide";
+                        break;
+                    case 1:
+                        dateSymbolLength = MLocale::DateSymbolAbbreviated;
+                        dateSymbolLengthString = "abbreviated";
+                        break;
+                    case 2:
+                        dateSymbolLength = MLocale::DateSymbolNarrow;
+                        dateSymbolLengthString = "narrow";
+                        break;
+                    }
+                    for (int monthNumber = 1; monthNumber <= 12; ++monthNumber) {
+                        ft_localesTestOutput
+                            += newLinePlusSupportedLocaleName
+                            + "\tName of month " + QString("%1").arg(monthNumber, int(2), int(10), QLatin1Char('0'))
+                            + " (" + calendarTypeString + "), "
+                            + dateSymbolContextString + ", "
+                            + dateSymbolLengthString + "\t"
+                            + locale.monthName(calendar, monthNumber, dateSymbolContext, dateSymbolLength);
+                    }
+                }
+            }
+        }
+        for (unsigned i = 0; i < 2; ++i) {
+            MLocale::CalendarType calendarType;
+            MCalendar calendar;
+            QString calendarTypeString;
+            switch (i) {
+            case 0:
+                calendarType = MLocale::GregorianCalendar;
+                calendarTypeString = "Gregorian calendar";
+                calendar = gregorianCalendar;
+                break;
+            case 1:
+                calendarType = MLocale::IslamicCalendar;
+                calendarTypeString = "Islamic calendar";
+                calendar = islamicCalendar;
+                break;
+            }
+            for (unsigned i = 0; i < 2; ++i) {
+                MLocale::DateSymbolContext dateSymbolContext;
+                QString dateSymbolContextString;
+                switch (i) {
+                case 0:
+                    dateSymbolContext = MLocale::DateSymbolStandalone;
+                    dateSymbolContextString = "stand-alone";
+                    break;
+                case 1:
+                    dateSymbolContext = MLocale::DateSymbolFormat;
+                    dateSymbolContextString = "format";
+                    break;
+                }
+                for (unsigned j = 0; j < 3; ++j) {
+                    MLocale::DateSymbolLength dateSymbolLength;
+                    QString dateSymbolLengthString;
+                    switch (j) {
+                    case 0:
+                        dateSymbolLength = MLocale::DateSymbolWide;
+                        dateSymbolLengthString = "wide";
+                        break;
+                    case 1:
+                        dateSymbolLength = MLocale::DateSymbolAbbreviated;
+                        dateSymbolLengthString = "abbreviated";
+                        break;
+                    case 2:
+                        dateSymbolLength = MLocale::DateSymbolNarrow;
+                        dateSymbolLengthString = "narrow";
+                        break;
+                    }
+                    for (int weekDayNumber = 1; weekDayNumber <= 7; ++weekDayNumber) {
+                        ft_localesTestOutput
+                            += newLinePlusSupportedLocaleName
+                            + "\tName of weekday " + QString("%1").arg(weekDayNumber, int(2), int(10), QLatin1Char('0'))
+                            + " (" + calendarTypeString + "), "
+                            + dateSymbolContextString + ", "
+                            + dateSymbolLengthString + "\t"
+                            + locale.weekdayName(calendar, weekDayNumber, dateSymbolContext, dateSymbolLength);
+                    }
+                }
+            }
+        }
+        ft_localesTestOutput
+            += newLinePlusSupportedLocaleName + "\tCollation sample\t"
             + sortingTestList.join(" ")
             + newLinePlusSupportedLocaleName + "\tScripts used\t"
             + locale.localeScripts().join(" ")
