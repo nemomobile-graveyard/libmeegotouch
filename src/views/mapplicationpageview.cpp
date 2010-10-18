@@ -33,6 +33,9 @@
 
 #include <QGraphicsLinearLayout>
 
+const QString MApplicationPageViewPrivate::TopSpacerName = "TopSpacer";
+const QString MApplicationPageViewPrivate::BottomSpacerName = "BottomSpacer";
+
 MApplicationPageViewPrivate::MApplicationPageViewPrivate()
     : q_ptr(0),
     controller(0),
@@ -59,7 +62,9 @@ void MApplicationPageViewPrivate::init()
     mainWidget->setLayout(mainLayout);
 
     topSpacer = createSpacer(mainWidget);
+    topSpacer->setObjectName(MApplicationPageViewPrivate::TopSpacerName);
     bottomSpacer = createSpacer(mainWidget);
+    bottomSpacer->setObjectName(MApplicationPageViewPrivate::BottomSpacerName);
 
     setWidgetHeight(topSpacer, 0);
     setWidgetHeight(bottomSpacer, 0);

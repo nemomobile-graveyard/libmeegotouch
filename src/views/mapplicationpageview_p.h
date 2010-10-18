@@ -58,6 +58,9 @@ public:
     QPointer<QGraphicsWidget> centralWidget;
 
     QRectF exposedContentRect;
+
+    static const QString TopSpacerName;
+    static const QString BottomSpacerName;
 };
 
 #endif
