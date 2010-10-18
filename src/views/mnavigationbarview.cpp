@@ -296,6 +296,7 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
             toolBarAlignmentNeedsUpdate = true;
         } else if (member == MNavigationBarModel::ToolBar) {
             d->toolBarChanged();
+            layoutNeedsUpdate = true;
             toolBarAlignmentNeedsUpdate = true;
         } else if (member == MNavigationBarModel::EscapeButtonMode) {
             d->updateEscapeButton();
