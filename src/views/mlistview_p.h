@@ -95,7 +95,9 @@ public:
     void viewportRectChanged(const QRectF &viewportRect);
     void connectPannableViewport();
     void updateViewportRect(const QPointF &position, const QSizeF &size);
+
     void updatePannableViewportPosition();
+    QPointF calculatePannableViewportOffset(const QPointF &listPosition);
 
     void updateFirstVisibleRow(const QModelIndex &index);
     void updateLastVisibleRow(const QModelIndex &index);
@@ -195,7 +197,9 @@ public:
     bool moving;
     QTimer movingDetectorTimer;
     MPannableViewport *pannableViewport;
+
     QPointF listPosition;
+    QPointF listOffset;
 
     // Scroll animation
     QPropertyAnimation *scrollToAnimation;

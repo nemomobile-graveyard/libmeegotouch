@@ -30,6 +30,7 @@
 #include "mlistindex.h"
 #include "mabstractcellcreator.h"
 #include "mlistview_p.h"
+#include "mapplicationpageview_p.h"
 
 #include "mlistview.h"
 
@@ -295,10 +296,32 @@ void MListViewPrivate::updatePannableViewportPosition()
     if(!pannableViewport)
         connectPannableViewport();
 
-    if(pannableViewport && controller)
+    if(pannableViewport && controller) {
         listPosition = controller->mapToItem(pannableViewport->widget(), 0, 0);
+        listOffset = calculatePannableViewportOffset(listPosition);
+    }
     else
         listPosition = QPointF(0,0);
+}
+
+QPointF MListViewPrivate::calculatePannableViewportOffset(const QPointF &listPosition)
+{
+    QPointF listOffset = listPosition;
+
+    if (pannableViewport->widget() && pannableViewport->widget() != controller) {
+        QList<QGraphicsItem *> pannableViewportWidgetChildren = pannableViewport->widget()->childItems();
+        foreach (QGraphicsItem *item, pannableViewportWidgetChildren) {
+            if (item->isWidget()) {
+                MWidget *widget = dynamic_cast<MWidget *>(item);
+                if (widget && widget->objectName() == MApplicationPageViewPrivate::TopSpacerName) {
+                    listOffset.setY(listPosition.y() - widget->size().height());
+                    break;
+                }
+            }
+        }
+    }
+
+    return listOffset;
 }
 
 void MListViewPrivate::updateItemHeight()
@@ -506,22 +529,22 @@ QPointF MListViewPrivate::locateScrollToPosition(const QModelIndex &index, MList
     qreal pannableViewportHeight = pannableViewport->boundingRect().height();
     switch (hint) {
     case MList::PositionAtTopHint:
-        targetPosition.setY(controller->pos().y() + cellPosition);
+        targetPosition.setY(listOffset.y() + cellPosition);
         break;
 
     case MList::PositionAtBottomHint:
-        targetPosition.setY(cellPosition + itemHeight + listPosition.y() - pannableViewportHeight);
+        targetPosition.setY(cellPosition + itemHeight + listOffset.y() - pannableViewportHeight);
         break;
 
     case MList::PositionAtCenterHint:
-        targetPosition.setY(listPosition.y() + cellPosition + itemHeight / 2 - pannableViewportHeight / 2);
+        targetPosition.setY(listOffset.y() + cellPosition + itemHeight / 2 - pannableViewportHeight / 2);
         break;
 
     case MList::EnsureVisibleHint:
         if (cellPosition <= pannableViewport->position().y()) {
-           targetPosition.setY(controller->pos().y() + cellPosition);
+           targetPosition.setY(listOffset.y() + cellPosition);
         } else if (cellPosition + itemHeight > pannableViewport->position().y() + pannableViewportHeight) {
-           targetPosition.setY(cellPosition + itemHeight + listPosition.y() - pannableViewportHeight);
+           targetPosition.setY(cellPosition + itemHeight + listOffset.y() - pannableViewportHeight);
         }
         break;
     }
@@ -549,8 +572,11 @@ void MListViewPrivate::_q_relayoutItemsIfNeeded()
 
 void MListViewPrivate::updateScrollToTargetPosition()
 {
-    if (scrollToAnimation->state() == QPropertyAnimation::Running)
-        scrollToAnimation->setEndValue(locateScrollToPosition(controllerModel->scrollToIndex(), static_cast<MList::ScrollHint>(controllerModel->scrollHint())));
+    if (scrollToAnimation->state() == QPropertyAnimation::Running) {
+        QPointF targetPosition = locateScrollToPosition(controllerModel->scrollToIndex(), static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
+        if (targetPosition != scrollToAnimation->endValue().toPointF())
+            scrollToAnimation->setEndValue(targetPosition);
+    }
 }
 
 void MListViewPrivate::scrollToPos(const QPointF &targetPosition)

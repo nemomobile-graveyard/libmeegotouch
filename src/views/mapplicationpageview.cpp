@@ -33,8 +33,8 @@
 
 #include <QGraphicsLinearLayout>
 
-const QString MApplicationPageViewPrivate::TopSpacerName = "TopSpacer";
-const QString MApplicationPageViewPrivate::BottomSpacerName = "BottomSpacer";
+const QString MApplicationPageViewPrivate::TopSpacerName = "__mt_top_spacer";
+const QString MApplicationPageViewPrivate::BottomSpacerName = "__mt_bottom_spacer";
 
 MApplicationPageViewPrivate::MApplicationPageViewPrivate()
     : q_ptr(0),
