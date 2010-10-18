@@ -46,11 +46,6 @@ DEFINES += QT_STRICT_ITERATORS
 
 ## Features
 
-contains(M_BUILD_FEATURES, coverage) {
-  QMAKE_CXXFLAGS += --coverage
-  QMAKE_LFLAGS += --coverage
-}
-
 contains(M_BUILD_FEATURES, timestamps) {
   DEFINES += M_TIMESTAMP
 }

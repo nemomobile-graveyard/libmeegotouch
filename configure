@@ -552,6 +552,23 @@ if [ "$CFG_TIMESTAMPS" = "yes" ]; then
 fi
 
 if [ "$CFG_COVERAGE" = "yes" ]; then
+    which bcov > /dev/null
+    if [ $? -ne 0 ]; then
+        echo "You specified  -coverage but bcov was not found."
+        echo "Please install the bcov and lcov packages."
+        exit 1
+    fi
+    which lcov > /dev/null
+    if [ $? -ne 0 ]; then
+        echo "You specified  -coverage but lcov was not found."
+        echo "Please install the bcov and lcov packages."
+        exit 1
+    fi
+    if [ "$SBOX_USE_CCACHE" != "no" ]; then
+        echo "You specified  -coverage so the SBOX_USE_CCACHE has to be set to \"no\"."
+        exit 1
+    fi
+
     MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES coverage"
 fi
 

@@ -118,7 +118,8 @@ contains( M_BUILD_FEATURES, coverage ) {
 
     QMAKE_CLEAN += \
     *.gcda \
-    *.gcno
+    *.gcno \
+    *.gcov
 }
 
 
