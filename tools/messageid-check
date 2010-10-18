@@ -214,8 +214,8 @@ my @sourcePackagesToDownloadAndScan = (
     "meego-keyboard-zh",
     "meego-vkb-magnifier",
     "meegofeedback-reactionmaps",
+    "meegotouch-controlpanelapplets",
     "meegotouchhome",
-    "meegotouchhome-nokia",
 #    "meegotouchhome-nokia-ui-tests",
     "meegotouch-qt-style",
     "meegotouch-tests",
@@ -228,7 +228,7 @@ my @sourcePackagesToDownloadAndScan = (
     "msg-tracker-indexer",
     "music-suite",
     "mwelcome",
-    "mwts-security-tests",
+#    "mwts-security-tests",
     "nokia-maps",
     "nokiamessagingemail",
     "nokiamessagingsn",
@@ -284,6 +284,7 @@ my @sourcePackagesToDownloadAndScan = (
 #   - other ?
 my @sourcePackagesIgnore = (
     "libmeegotouch",
+    "meegotouchhome-nokia", # fails to download, 403 error, 2010-10-18
     "meegotouchhome-nokia-ui-tests", # fails to download, 403 error, 2010-10-11
     "nokia-maps", # fails to download, 403 error
     "adobe-flashplayer", # fails to downloadm, 403 error
