@@ -23,7 +23,8 @@
 #include <QPainter>
 
 MGraphicsClipEffectPrivate::MGraphicsClipEffectPrivate()
-    : margin(0)
+    : drawRectangle(0, 0, 0, 0),
+    margin(0)
 {
 }
 
@@ -41,6 +42,7 @@ MGraphicsClipEffect::MGraphicsClipEffect(QObject *parent)
 
 MGraphicsClipEffect::~MGraphicsClipEffect()
 {
+    delete d_ptr;
 }
 
 void MGraphicsClipEffect::setDrawRect(const QRect &rect)
