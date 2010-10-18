@@ -140,6 +140,7 @@ public:
                                     const QModelIndex &lastVisibleRow) = 0;
 
     virtual MWidget *createItem(int row) = 0;
+    virtual void replaceItem(MWidget* item, MWidget* newItem);
     virtual int totalHeight() = 0;
     virtual int hseparatorsCount() const = 0;
     virtual QModelIndex locateVisibleIndexAt(int pos) = 0;
@@ -252,6 +253,7 @@ public:
     virtual int totalHeight();
     virtual MWidget *createItem(int row);
     virtual QModelIndex locateLastVisibleIndexInRowAt(int pos);
+    virtual void replaceItem(MWidget* item, MWidget* newItem);
     virtual int locateVisibleRowAt(int y, int x = 0);
     virtual void updateItemSize();
     virtual void updateSeparatorSize();
@@ -366,6 +368,7 @@ public:
                                     const QModelIndex &lastVisibleRow);
     virtual MWidget *createItem(int row);
 
+    virtual void replaceItem(MWidget* item, MWidget* newItem);
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option);
 public:

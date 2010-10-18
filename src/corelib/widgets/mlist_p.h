@@ -60,6 +60,8 @@ public slots:
      */
     //void dataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
+private:
+    MList::ListOptimizationFlags optimizationFlags;
 };
 
 #endif

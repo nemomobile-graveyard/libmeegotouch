@@ -47,6 +47,7 @@ void MListPrivate::init()
 {
     Q_Q(MList);
 
+    q->setOptimizationFlags(MList::DontCallCreateCellDuringUpdate);
     q->setSelectionMode(MList::NoSelection);
     q->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)); //grow to available space in both directions
 }
@@ -319,4 +320,25 @@ void MList::disconnectNotify(const char *signal)
         QLatin1String(signal) == SIGNAL(itemLongTapped(QModelIndex,QPointF))) {
         d->updateLongTapConnections();
     }
+}
+
+MList::ListOptimizationFlags MList::optimizationFlags() const
+{
+    Q_D(const MList);
+    return ListOptimizationFlags(d->optimizationFlags);
+}
+
+void MList::setOptimizationFlag(ListOptimizationFlag optimizationFlag, bool enabled)
+{
+    Q_D(MList);
+    if (enabled)
+        setOptimizationFlags(ListOptimizationFlags(d->optimizationFlags) | optimizationFlag);
+    else
+        setOptimizationFlags(ListOptimizationFlags(d->optimizationFlags) & ~optimizationFlag);
+}
+
+void MList::setOptimizationFlags(ListOptimizationFlags optimizationFlags)
+{
+    Q_D(MList);
+    d->optimizationFlags = optimizationFlags;
 }

@@ -478,6 +478,13 @@ QModelIndex MListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
     return locateVisibleIndexAt(pos);
 }
 
+void MListViewPrivate::replaceItem(MWidget* item, MWidget* newItem)
+{
+    newItem->setPos(item->pos());
+    visibleItems.replace(visibleItems.indexOf(item), newItem);
+    deleteItem(item);
+}
+
 bool MListViewPrivate::isGroupHeader(const QModelIndex &index)
 {
     Q_UNUSED(index);
@@ -795,6 +802,13 @@ QModelIndex MPlainMultiColumnListViewPrivate::locateLastVisibleIndexInRowAt(int 
 {
     int lastVisibleFlatRow = locateVisibleRowAt(pos, viewWidth-1);
     return flatRowToIndex(lastVisibleFlatRow);
+}
+
+void MPlainMultiColumnListViewPrivate::replaceItem(MWidget* item, MWidget* newItem)
+{
+    MListViewPrivate::replaceItem(item, newItem);
+    widgetFlatRows[newItem] = widgetFlatRows[item];
+    widgetFlatRows[item] = 0;
 }
 
 int MPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
@@ -1586,6 +1600,13 @@ MWidget *MMultiColumnListViewPrivate::createItem(int row)
         int headerIndex = dFindLowerIndex(headersRows, row);
         return createHeader(headerIndex);
     }
+}
+
+void MMultiColumnListViewPrivate::replaceItem(MWidget* item, MWidget* newItem)
+{
+    MListViewPrivate::replaceItem(item, newItem);
+    widgetFlatRows[newItem] = widgetFlatRows[item];
+    widgetFlatRows[item] = 0;
 }
 
 int MMultiColumnListViewPrivate::groupSize(int headerIndex) const

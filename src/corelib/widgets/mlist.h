@@ -206,6 +206,15 @@ public:
         Floating
     };
 
+    enum ListOptimizationFlag {
+        /*!
+          MAbstractCellCreator::createCell() will be called only on new items. If items receives update
+          only MAbstractCellCreate::updateCell() will be called. Enabled by default.
+          */
+        DontCallCreateCellDuringUpdate = 0x1
+    };
+    Q_DECLARE_FLAGS(ListOptimizationFlags, ListOptimizationFlag)
+
     /*!
      * \brief Constructor for creating an empty object.
      * \param parent Parent object.
@@ -359,6 +368,22 @@ public:
      */
     MListFilter *filtering() const;
 
+    /*!
+      \return list's optimization flags.
+      */
+    ListOptimizationFlags optimizationFlags() const;
+
+    /*!
+      \brief Sets one optimization flag to enabled if \a enabled is true, otherwise to disabled.
+      */
+    void setOptimizationFlag(ListOptimizationFlag optimizationFlag, bool enabled = true);
+
+    /*!
+      \brief Sets the list optimization flags to \a flags. All flags in \a flags are enabled
+      and the others are disabled.
+      */
+    void setOptimizationFlags(ListOptimizationFlags optimizationFlags);
+
 public Q_SLOTS:
     /*!
         \brief Convenience function - Select the given item.
@@ -478,5 +503,7 @@ private:
     Q_DISABLE_COPY(MList)
     friend class MListView;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(MList::ListOptimizationFlags)
 
 #endif
