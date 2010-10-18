@@ -57,7 +57,7 @@ install_prf.files = \
 }
 
 # install Rich Text Editor xml file
-install_xmltoolbar.files = data/RichTextEditorToolbar1.xml
+install_xmltoolbar.files = data/RichTextEditorToolbar1.xml data/UrlContentToolbar.xml data/EmailContentToolbar.xml
 install_xmltoolbar.path = $$M_INSTALL_PREFIX/share/meegotouch/imtoolbars
 INSTALLS += install_xmltoolbar
 

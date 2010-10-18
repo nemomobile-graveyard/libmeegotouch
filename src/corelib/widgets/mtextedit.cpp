@@ -57,6 +57,13 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MTextEdit)
 
+
+namespace {
+    const char * const UrlContentToolbarFile("UrlContentToolbar.xml");
+    const char * const EmailContentToolbarFile("EmailContentToolbar.xml");
+}
+
+
 //! Helper class for arrow key navigation for focusable items.
 class MArrowKeyNavigator
 {
@@ -2323,12 +2330,18 @@ void MTextEdit::setContentType(M::TextContentType type)
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
         newHint = Qt::ImhEmailCharactersOnly;
+        if (attachedToolbar().isEmpty()) {
+            attachToolbar(QString(M_IM_TOOLBARS_DIR) + "/" + EmailContentToolbarFile);
+        }
         break;
 
     case M::UrlContentType:
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
         newHint = Qt::ImhUrlCharactersOnly;
+        if (attachedToolbar().isEmpty()) {
+            attachToolbar(QString(M_IM_TOOLBARS_DIR) + "/" + UrlContentToolbarFile);
+        }
         break;
 
     default:
