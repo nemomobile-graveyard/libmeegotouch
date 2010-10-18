@@ -135,20 +135,22 @@ void MNavigationBarViewPrivate::toolBarChanged()
 
     MToolBar *nextToolBar = q->model()->toolBar();
 
+    if (nextToolBar == toolBar)
+        return;
+
     // Make sure the last toolbar is removed first...
     if (toolBar) {
-        if (nextToolBar == toolBar) return;
-
         toolBarLayout->removeItem(toolBar);
         // previous toolBar is not ours anymore, so clean property we added
         toolBar->setProperty("buttonAlignment", QVariant::Invalid);
-        toolBar->setParentItem(NULL);
+        toolBar->setParentItem(0);
     }
 
     if (nextToolBar) {
         toolBarLayout->addItem(nextToolBar);
         nextToolBar->show();
     }
+
     toolBar = nextToolBar;
 }
 
