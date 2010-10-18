@@ -50,6 +50,7 @@ private slots:
     void testCopyPaste();
     void testCut();
     void testStyleOnPreedit();
+    void testSetHtml();
 };
 
 #endif

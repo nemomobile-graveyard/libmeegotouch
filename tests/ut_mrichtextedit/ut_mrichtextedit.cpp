@@ -309,5 +309,32 @@ void Ut_MRichTextEdit::testStyleOnPreedit()
     mouseEvent = 0;
 }
 
+/*!
+ * Test setting of Rich Text contents.
+ */
+void Ut_MRichTextEdit::testSetHtml()
+{
+    QString htmlText = "<b>bold </b><i>italic </i>";
+    QString plainText = "bold italic ";
+
+    m_subject->setHtml(htmlText);
+
+    QFont curFont = m_subject->currentFont();
+    bool curItalicStyle = curFont.italic();
+    QCOMPARE(curItalicStyle, true);
+
+    QString currentHtmlText = m_subject->toHtml();
+    m_subject->setHtml(currentHtmlText);
+
+    QTextCursor textcursor = m_subject->textCursor();
+    textcursor.setPosition(0);
+    const QTextCharFormat charFormat = textcursor.charFormat();
+    bool curBoldStyle = charFormat.fontWeight() > QFont::Normal;
+    QCOMPARE(curBoldStyle, true);
+
+    QString curPlainText = m_subject->text();
+    QCOMPARE(curPlainText, plainText);
+}
+
 QTEST_APPLESS_MAIN(Ut_MRichTextEdit);
 
