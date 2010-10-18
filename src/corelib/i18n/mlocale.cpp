@@ -2714,6 +2714,15 @@ void MLocale::installTrCatalog(const QString &name)
 {
     Q_D(MLocale);
 
+    // Make sure that previous installations of a catalog are removed
+    // first before trying to install a catalog.  There is no need to
+    // install the same catalog more then once with different
+    // priorities.  One could skip the installation altogether if the
+    // catalog is already installed, but it is better to remove the
+    // first instance, then the priorities make more sense.
+    // See https://projects.maemo.org/bugzilla/show_bug.cgi?id=198551
+    removeTrCatalog(name);
+
     MTranslationCatalog *catalog
         = new MTranslationCatalog(name);
     catalog->loadWith(this, MLocale::MLcMessages);

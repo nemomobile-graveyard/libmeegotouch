@@ -61,6 +61,7 @@ private slots:
     void testGettingTheDefaultLocaleFromTheEnvironment_data();
     void testGettingTheDefaultLocaleFromTheEnvironment();
     void testCreatingAndDestroyingLocales();
+    void testInstallTrCatalogMultipleTimes();
     void benchmarkMLocaleConstructorAndDelete();
     void benchmarkMLocaleConstructorAndDeleteStack();
     void benchmarkQLocaleConstructorAndDelete();

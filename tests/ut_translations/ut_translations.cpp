@@ -835,6 +835,32 @@ void Ut_Translations::testCreatingAndDestroyingLocales()
     }
 }
 
+void Ut_Translations::testInstallTrCatalogMultipleTimes()
+{
+    // see https://projects.maemo.org/bugzilla/show_bug.cgi?id=198551
+    MLocale locale;
+    QElapsedTimer timer;
+    int loopCount = 100;
+
+    timer.start();
+    for (int i = 0; i < loopCount; i++) {
+        locale.installTrCatalog("ut_translations-qttrid");
+        MLocale::setDefault(locale);
+    }
+    qint64 firstLoopTime = timer.restart();
+    qDebug() << "first loop time" << firstLoopTime << "milliseconds";
+    for (int i = 0; i < loopCount; i++) {
+        locale.installTrCatalog("ut_translations-qttrid");
+        MLocale::setDefault(locale);
+    }
+    qint64 secondLoopTime = timer.restart();
+    qDebug() << "second loop time" << secondLoopTime << "milliseconds";
+    qDebug() << "second loop time / first loop time" << double(secondLoopTime)/firstLoopTime;
+    QVERIFY2(double(secondLoopTime)/firstLoopTime < double(2.0),
+             "second loop took much longer than the first, this should not happen!");
+
+}
+
 void Ut_Translations::benchmarkMLocaleConstructorAndDelete()
 {
     QBENCHMARK {
