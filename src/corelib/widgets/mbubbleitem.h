@@ -271,12 +271,13 @@ public Q_SLOTS:
       Informational widgets are displayed as part of the message bubble main body.
       There are two pre-defined information widgets for the bubble: number of comments and thumbs up received.
 
-      Memory ownership of widget is not automatically transfered.  Set the QGraphicsObject::parentItem() to this bubble item
-      to have the widget automatically deleted when removed or when this bubble item is deleted.
+      The ownership of the widget is transfered to the item. If the widget must not be deleted by the item the 
+      caller must invoke removeInformationWidget() to remove the widget from the graphics hierarchy.
 
-      \sa informationWidgets()
+      \sa informationWidgets();
       \sa setCommentsString();
       \sa setThumbsUpString();
+      \sa removeInformationWidget();
      */
     void addInformationWidget(QGraphicsWidget *widget);
 
@@ -286,9 +287,13 @@ public Q_SLOTS:
       Informational widgets are displayed as part of the message bubble main body.
       There are two pre-defined information widgets for the bubble: number of comments and thumbs up received.
 
+      The parent item of the widget in graphics hierarchy is set to NULL, so the widget will not be displayed.
+      The ownership is transfered to caller.
+
       \sa informationWidgets()
       \sa setCommentsString();
       \sa setThumbsUpString();
+      \sa addInformationWidget();
      */
     void removeInformationWidget(QGraphicsWidget *widget);
 
