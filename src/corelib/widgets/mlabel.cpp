@@ -32,13 +32,13 @@ M_REGISTER_WIDGET(MLabel)
 MLabel::MLabel(QGraphicsItem *parent, MLabelModel *model) :
     MWidgetController(new MLabelPrivate, model == NULL ? new MLabelModel : model, parent)
 {
-    grabGesture(Qt::TapAndHoldGesture);
+    grabGesture(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureFinished);
 }
 
 MLabel::MLabel(QString const &text, QGraphicsItem *parent) :
     MWidgetController(new MLabelPrivate, new MLabelModel, parent)
 {
-    grabGesture(Qt::TapAndHoldGesture);
+    grabGesture(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureFinished);
     setText(text);
 }
 

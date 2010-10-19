@@ -115,6 +115,44 @@ public:
      */
     void setPaintOffset(const QPointF & offset);
 
+    /*!
+     * This enum contains possible values of a mouse event cancel policy.
+     *
+     * \li MouseEventNoCancel - the cancel event will not be sent if this widget receives a gesture.
+     * \li MouseEventCancelOnGestureStarted - the cancel event will be sent when
+     *     a gesture is being started and accepted by this widget.
+     * \li MouseEventCancelOnGestureFinished - the cancel event will be sent when
+     *     a gesture is being finished and was accepted by this widget.
+     *
+     * \sa grabGesture.
+     */
+    enum MouseEventCancelPolicy {
+        MouseEventNoCancel,
+        MouseEventCancelOnGestureStarted,
+        MouseEventCancelOnGestureFinished
+    };
+
+    /*!
+     Subscribes the widget to gestures events of a specific \a type. Allows definition
+     of cancel event handling policy for that gesture.
+
+     The meegotouch library can send cancel event to the current mouse grabber and
+     stop processing mouse events. This allows the UI to react to situation when
+     the user starts a gesture on top of interactive elements like buttons. In
+     a typical example, the user starts panning gesture over a button, which will
+     initially reach the pressed state. Then the user moves his finger and the button
+     will then be moved back to un-pressed state, without triggering actions connected
+     to it. Internally, the button will receive a cancel event and it will not receive
+     the release event.
+
+     This method is an overloaded version of grabGesture defined in QGraphicsWidget
+     which introduces \a cancelPolicy argument. It can be used to define the reaction
+     to started or finished gesture when it reaches the object of the MWidget.
+
+     \sa MouseEventCancelPolicy
+     */
+    void grabGesture(Qt::GestureType type, Qt::GestureFlags flags = Qt::GestureFlags(), MouseEventCancelPolicy cancelPolicy = MouseEventNoCancel);
+
     /*! \reimp
      *   We reimplement these to distinguish between the user hiding items
      *   explicitly, and the layout hiding them.

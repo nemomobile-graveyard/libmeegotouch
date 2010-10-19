@@ -7,6 +7,7 @@ INCLUDEPATH += $$MSRCDIR/corelib/style
 INCLUDEPATH += $$MSRCDIR/corelib/widgets
 INCLUDEPATH += $$MSRCDIR/corelib/widgets/core
 INCLUDEPATH += $$MSRCDIR/corelib/core
+INCLUDEPATH += $$MSRCDIR/corelib/scene
 
 STYLE_HEADERS += $$MSRCDIR/extensions/style/mappletinventorystyle.h
 MODEL_HEADERS += $$MSRCDIR/corelib/widgets/mwidgetmodel.h \
@@ -22,7 +23,8 @@ SOURCES += \
 SOURCES += \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller.cpp \
     $$MSRCDIR/corelib/widgets/core/mwidget.cpp \
-    $$MSRCDIR/corelib/widgets/mwidgetmodel.cpp
+    $$MSRCDIR/corelib/widgets/mwidgetmodel.cpp \
+    $$MSRCDIR/corelib/scene/mscene.cpp \
 
 # service classes
 SOURCES += \
@@ -42,6 +44,7 @@ HEADERS += \
     $$MSRCDIR/extensions/style/mappletinventorystyle.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel_p.h \
     $$MSRCDIR/corelib/widgets/mobjectmenu.h \
+    $$MSRCDIR/corelib/scene/mscene.h \
     $$MODEL_HEADERS \
     $$STYLE_HEADERS
 

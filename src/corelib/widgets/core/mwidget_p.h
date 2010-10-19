@@ -21,6 +21,7 @@
 #define MWIDGET_P_H
 
 #include <mwidget.h>
+#include <QMap>
 
 class M_CORE_EXPORT MWidgetPrivate
 {
@@ -45,6 +46,8 @@ protected:
     bool onDisplay;
     bool onDisplaySet;
     bool selected;
+
+    QMap<Qt::GestureType, MWidget::MouseEventCancelPolicy> cancelPolicies;
 };
 
 #endif // MWIDGET_P_H

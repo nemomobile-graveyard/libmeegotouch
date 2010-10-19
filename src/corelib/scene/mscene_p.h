@@ -27,6 +27,8 @@
 
 class MSceneManager;
 class MOnDisplayChangeEvent;
+class QGraphicsSceneMouseEvent;
+class QTouchEvent;
 
 class MScenePrivate
 {
@@ -71,22 +73,28 @@ public:
     bool eventEmulatePinch(QEvent *event);
     void fillMarginRectWithPattern(QPainter *painter, const QRectF& rect, int thickness);
 
-    void handleGestureEvent(QEvent* event);
+    void resetMouseGrabber();
+    void delayMousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void delayTouchEvent(QTouchEvent* touchEvent);
+    void forceSendingInitialEvents();
+    void sendCancelEvent();
 
-    /*
-     MeegoTouch needs to have widgets that stop
-     propagation of gestures. We implement that using
-     MSceneWindows, which are supposed to swallow all
-     gesture events. The scene windows on the other hand
-     need to inform the scene that they swallowed gesture
-     event and they use the notifyGestureCaughtByPanel
-     method.
-     */
-    void notifyGestureCaughtByPanel(Qt::GestureType gestureType);
+    void notifyChildRequestedMouseCancel();
+
+public Q_SLOTS:
+    void _q_initialPressDeliveryTimeout();
 
 protected:
     MScene *q_ptr;
     MSceneManager *manager;
+
+    QGraphicsWidget* eventEater;
+    bool cancelSent;
+    QTimer *initialPressTimer;
+    QGraphicsSceneMouseEvent mousePressEvent;
+    QTouchEvent touchBeginEvent;
+    bool pressPending;
+    bool touchPending;
 
     //Two finger gestures emulation variables
     QTouchEvent::TouchPoint emuPoint1, emuPoint2;
@@ -95,8 +103,9 @@ protected:
     Fps fps;
     FpsLog fpsLog;
 
-    QList<Qt::GestureType>   childrenAcceptedGestures;
-    QList<Qt::GestureType>   panelAcceptedGestures;
+#ifdef UNIT_TEST
+    friend class Ut_MScene;
+#endif // UNIT_TEST
 };
 
 #endif // MSCENE_P_H

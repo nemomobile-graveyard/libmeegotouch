@@ -26,7 +26,7 @@
 class MSwipeGesture;
 
 class QPointF;
-class QGraphicsSceneMouseEvent;
+class QMouseEvent;
 
 /*!
   Private class used by MSwipeRecognizer objects to
@@ -48,8 +48,8 @@ protected:
     bool isAngleDeltaBelowThreshold(qreal angle, qreal threshold);
     void snapToRightAngle(MSwipeGesture *swipeGesture);
 
-    QGestureRecognizer::Result startRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent);
-    QGestureRecognizer::Result updateRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent);
+    QGestureRecognizer::Result startRecognition(MSwipeGesture *swipeGesture, const QMouseEvent *mouseEvent);
+    QGestureRecognizer::Result updateRecognition(MSwipeGesture *swipeGesture, const QMouseEvent *mouseEvent);
     QGestureRecognizer::Result finishRecognition(MSwipeGesture *swipeGesture);
 
     MSwipeRecognizer* q_ptr;

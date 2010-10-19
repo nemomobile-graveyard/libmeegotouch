@@ -42,7 +42,8 @@
 #include <mcancelevent.h>
 #include <mondisplaychangeevent.h>
 #include <morientationchangeevent.h>
-#include <mscene.h>
+#include "mscene.h"
+#include "mscene_p.h"
 #include <mscenemanager.h>
 
 #include "mobjectmenu.h"
@@ -340,8 +341,18 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     }
 }
 
+void MWidget::grabGesture(Qt::GestureType type, Qt::GestureFlags flags, MouseEventCancelPolicy cancelPolicy)
+{
+    Q_D(MWidget);
+    QGraphicsWidget::grabGesture(type, flags);
+    if (cancelPolicy != MouseEventNoCancel)
+        d->cancelPolicies.insert(type,cancelPolicy);
+}
+
 void MWidget::gestureEvent(QGestureEvent *event)
 {
+    Q_D(MWidget);
+
     foreach(QGesture* gesture, event->gestures()) {
         if (Qt::TapAndHoldGesture == gesture->gestureType()) {
             QTapAndHoldGesture* tapAndHoldState = static_cast<QTapAndHoldGesture *>(gesture);
@@ -358,6 +369,26 @@ void MWidget::gestureEvent(QGestureEvent *event)
         } else if (Qt::SwipeGesture == gesture->gestureType()) {
             QSwipeGesture* swipeState = static_cast<QSwipeGesture *>(gesture);
             swipeGestureEvent(event,swipeState);
+        }
+
+        if (gesture->state() != Qt::GestureStarted || event->isAccepted(gesture)) {
+            // Gesture was accepted, let's see if we should cancel mouse event at this time.
+
+            bool initiateMouseCancel = false;
+
+            if (gesture->state() == Qt::GestureStarted &&
+                d->cancelPolicies.value(gesture->gestureType()) == MouseEventCancelOnGestureStarted)
+                initiateMouseCancel = true;
+
+            if (gesture->state() == Qt::GestureFinished &&
+                d->cancelPolicies.value(gesture->gestureType()) == MouseEventCancelOnGestureFinished)
+                initiateMouseCancel = true;
+
+            if (initiateMouseCancel)    {
+                MScene *mScene = qobject_cast<MScene *>(scene());
+                if (mScene)
+                    mScene->d_func()->notifyChildRequestedMouseCancel();
+            }
         }
     }
 }

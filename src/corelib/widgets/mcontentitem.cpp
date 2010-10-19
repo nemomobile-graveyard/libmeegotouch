@@ -46,7 +46,7 @@ void MContentItemPrivate::updateLongTapConnections()
     Q_Q(MContentItem);
 
     if (q->receivers(SIGNAL(longTapped(QPointF))) > 0)
-        q->grabGesture(Qt::TapAndHoldGesture);
+        q->grabGesture(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureFinished);
     else
         q->ungrabGesture(Qt::TapAndHoldGesture);
 }

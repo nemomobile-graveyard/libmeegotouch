@@ -22,7 +22,7 @@
 #include "mapplication.h"
 #include <QObject>
 #include <QtTest/QtTest>
-#include <mscene.h>
+#include "mscene.h"
 
 class Ut_MScene : public QObject
 {
@@ -35,7 +35,19 @@ private slots:
     void cleanupTestCase();
     void drawForeground();
 
+    void mousePressIsDelayed();
+    void touchBeginIsDelayed();
+
+    void mousePressAndReleaseAreDeliveredToGrabber();
+    void touchBeginAndEndAreDeliveredToGrabber();
+    void mouseMoveIsDelieveredToGrabberIfNoGestureIsRecognized();
+    void mouseReleaseResetsStateOfEventEater();
+
+    void panGestureCancelsMouseEvents();
+    void ignoredGestureShouldNotCancelMouseEvents();
+
 private:
+
     MApplication *app;
     MScene *m_subject;
 };

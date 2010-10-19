@@ -22,7 +22,8 @@
 MPanGesture::MPanGesture(QObject *parent) :
         QPanGesture(parent),
         startPos(QPointF()),
-        panDirection(0)
+        panDirection(0),
+        pressed(false)
 {
 }
 

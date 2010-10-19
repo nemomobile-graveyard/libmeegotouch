@@ -58,7 +58,11 @@ MPanRecognizer::~MPanRecognizer()
 
 QGesture* MPanRecognizer::create(QObject* target)
 {
-    Q_UNUSED(target);
+    if (target && target->isWidgetType() == false) {
+        return 0; // this assumes the target is a QGraphicsObject, so we return
+                  // NULL to indicate that the recognizer doesn't support graphicsobject and
+                  // graphicsscene events.
+    }
     return new MPanGesture;
 }
 
@@ -70,7 +74,7 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
     Q_D(MPanRecognizer);
 
     MPanGesture *panGesture = static_cast<MPanGesture*>(gesture);
-    const QGraphicsSceneMouseEvent *ev = static_cast<const QGraphicsSceneMouseEvent *>(event);
+    const QMouseEvent *ev = static_cast<const QMouseEvent *>(event);
     const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
     QGestureRecognizer::Result result = QGestureRecognizer::CancelGesture;
     qreal distX, distY;
@@ -87,47 +91,49 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
         }
         break;
 
-    case QEvent::GraphicsSceneMousePress:
-
-        panGesture->startPos = ev->scenePos();
-        panGesture->setHotSpot(ev->screenPos());
+    case QEvent::MouseButtonPress:
+        panGesture->startPos = ev->pos();
+        panGesture->setHotSpot(ev->globalPos());
+        panGesture->pressed = true;
 
         if (panGesture->state() != Qt::NoGesture) {
             result = QGestureRecognizer::TriggerGesture;
         } else {
             result = QGestureRecognizer::MayBeGesture;
         }
-        
         break;
 
-    case QEvent::GraphicsSceneMouseRelease:
+    case QEvent::MouseButtonRelease:
+        panGesture->pressed = false;
         if (panGesture->state() != Qt::NoGesture) {
             result = QGestureRecognizer::FinishGesture;
         } else {
             result = QGestureRecognizer::CancelGesture;
         }
-
         break;
 
-    case QEvent::GraphicsSceneMouseMove:
+    case QEvent::MouseMove:
+
+        if (panGesture->pressed == false) {
+            //Stray mouse move received;
+            result = QGestureRecognizer::Ignore;
+            break;
+        }
 
         panGesture->setLastOffset(panGesture->offset());
-        panGesture->setOffset(ev->scenePos() - panGesture->startPos);
+        panGesture->setOffset(ev->pos() - panGesture->startPos);
 
         distX = abs(panGesture->offset().x());
         distY = abs(panGesture->offset().y());
 
-        if (panGesture->state() == Qt::NoGesture) {
-
-            if (distX > d->style->distanceThreshold() || distY > d->style->distanceThreshold()) {
-                panGesture->panDirection = (distX > distY ? Qt::Horizontal : Qt::Vertical);
-                result = QGestureRecognizer::TriggerGesture;
-            } else {
-                result = QGestureRecognizer::MayBeGesture;
-            }
-
-        } else {
+        if (panGesture->state() != Qt::NoGesture) {
             result = QGestureRecognizer::TriggerGesture;
+        } else if (distX > d->style->distanceThreshold() ||
+                   distY > d->style->distanceThreshold()) {
+            panGesture->panDirection = (distX > distY ? Qt::Horizontal : Qt::Vertical);
+            result = QGestureRecognizer::TriggerGesture;
+        } else {
+            result = QGestureRecognizer::MayBeGesture;
         }
 
         if (panGesture->panDirection.testFlag(Qt::Vertical)) {
@@ -143,6 +149,7 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
         }
 
         break;
+
     default:
         result = QGestureRecognizer::Ignore;
         break;
@@ -157,6 +164,7 @@ void MPanRecognizer::reset(QGesture* gesture)
     panGesture->setLastOffset(QPointF());
     panGesture->startPos = QPointF();
     panGesture->panDirection = 0;
+    panGesture->pressed = false;
 
     QGestureRecognizer::reset(gesture);
 }

@@ -293,46 +293,6 @@ private:
     Q_DISABLE_COPY(MPannableWidget)
     Q_DECLARE_PRIVATE(MPannableWidget)
 
-    /*!
-     * \brief Method for handling the press events from the glass.
-     */
-    void glassMousePressEvent(QGraphicsSceneMouseEvent *event);
-
-    /*!
-     * \brief Method for handling the release events from the glass.
-     */
-    void glassMouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-    /*!
-     * \brief Method for handling the move events from the glass.
-     */
-    void glassMouseMoveEvent(QGraphicsSceneMouseEvent *event);
-
-    /*!
-     * \brief Method for delivering timer events.
-     */
-    void glassTimerEvent(QTimerEvent* event);
-
-    /*!
-     * \brief Method for checking if the event is on the resent list
-     * and should pass the glass when it hits it the second time.
-     */
-    bool checkForResent(QEvent *event);
-
-    /*!
-     * \brief Method for posting a captured event back to viewport.
-     */
-    void resendEvent(QGraphicsSceneMouseEvent *event);
-
-    /*!
-     * \brief Method for sending cancel event to viewport.
-     */
-    void sendCancel();
-
-    /*!
-     * \brief Init method.
-     */
-    void init();
 
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members

@@ -19,6 +19,7 @@
 
 #include <QList>
 #include <QGraphicsItem>
+#include <QGraphicsWidget>
 #include <QPainter>
 #include <QTime>
 #include <QTimer>
@@ -38,24 +39,61 @@
 #include "mdeviceprofile.h"
 #include "mcancelevent.h"
 
-const QFont     TextFont                = QFont("Sans", 10);
-const QSize     FpsBoxSize              = QSize(100, 40);
-const QColor    FpsTextColor            = QColor(0xFFFF00);
-const QFont     FpsFont                 = QFont("Sans", 15);
-const int       FpsRefreshInterval      = 1000;
-const QString   FpsBackgroundColor      = "#000000";
-const qreal     FpsBackgroundOpacity    = 0.35;
-const QString   BoundingRectLineColor   = "#00F000";
-const QString   BoundingRectFillColor   = "#00F000";
-const qreal     BoundingRectOpacity     = 0.1;
-const qreal     MarginBackgroundOpacity = 0.4;
-const QColor    MarginColor             = QColor(Qt::red);
-const int       MarginBorderWidth       = 2;
+static const QFont     TextFont                = QFont("Sans", 10);
+static const QSize     FpsBoxSize              = QSize(100, 40);
+static const QColor    FpsTextColor            = QColor(0xFFFF00);
+static const QFont     FpsFont                 = QFont("Sans", 15);
+static const int       FpsRefreshInterval      = 1000;
+static const QString   FpsBackgroundColor      = "#000000";
+static const qreal     FpsBackgroundOpacity    = 0.35;
+static const QString   BoundingRectLineColor   = "#00F000";
+static const QString   BoundingRectFillColor   = "#00F000";
+static const qreal     BoundingRectOpacity     = 0.1;
+static const qreal     MarginBackgroundOpacity = 0.4;
+static const QColor    MarginColor             = QColor(Qt::red);
+static const int       MarginBorderWidth       = 2;
+static const int       InitialPressTimeout     = 140; //msec
 
+void copyGraphicsSceneMouseEvent(QGraphicsSceneMouseEvent &target, const QGraphicsSceneMouseEvent &source)
+{
+
+    target.setPos(source.pos());
+    target.setScenePos(source.scenePos());
+    target.setScreenPos(source.screenPos());
+
+    target.setButtons(source.buttons());
+    Qt::MouseButtons buttons = source.buttons();
+    Qt::MouseButton buttonbit = (Qt::MouseButton)0x1;
+    while (buttons != 0x0) {
+        if (buttons & buttonbit) {
+            // Button pressed
+            target.setButtonDownPos(buttonbit, source.buttonDownPos(buttonbit));
+            target.setButtonDownScenePos(buttonbit, source.buttonDownScenePos(buttonbit));
+            target.setButtonDownScreenPos(buttonbit, source.buttonDownScreenPos(buttonbit));
+
+            // Unset button
+            buttons = buttons & ~buttonbit;
+        }
+        buttonbit = (Qt::MouseButton)(buttonbit << 1);
+    }
+
+    target.setLastPos(source.lastPos());
+    target.setLastScenePos(source.lastScenePos());
+    target.setLastScreenPos(source.lastScreenPos());
+    target.setButton(source.button());
+    target.setModifiers(source.modifiers());
+}
 
 MScenePrivate::MScenePrivate() :
         q_ptr(0),
         manager(0),
+        eventEater(new QGraphicsWidget),
+        cancelSent(false),
+        initialPressTimer(0),
+        mousePressEvent(QEvent::GraphicsSceneMousePress),
+        touchBeginEvent(QEvent::TouchBegin),
+        pressPending(false),
+        touchPending(false),
         emuPoint1(1),
         emuPoint2(2),
         pinchEmulationEnabled(false)
@@ -400,43 +438,85 @@ void MScenePrivate::fillMarginRectWithPattern(QPainter *painter, const QRectF& r
     painter->fillRect(rect, QBrush(Qt::black, Qt::BDiagPattern));
 }
 
-void MScenePrivate::handleGestureEvent(QEvent* event)
+void MScenePrivate::notifyChildRequestedMouseCancel()
+{
+    if (!cancelSent)
+        sendCancelEvent();
+}
+
+
+void MScenePrivate::resetMouseGrabber()
+{
+    if (cancelSent) {
+        eventEater->ungrabMouse();
+        cancelSent = false;
+     }
+}
+
+void MScenePrivate::sendCancelEvent()
 {
     Q_Q(MScene);
 
-    QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(event);
+    if (initialPressTimer->isActive()) {
+        //We still didn't send the initial press and touch.
+        //We can stop the timer and forget about them.
+        initialPressTimer->stop();
+        pressPending = false;
+        touchPending = false;
+        return;
+    }
 
-    foreach(QGesture* gesture, gestureEvent->gestures()) {
+    if (q->mouseGrabberItem()) {
+        MCancelEvent cancelEvent;
+        q->sendEvent(q->mouseGrabberItem(),&cancelEvent);
+    }
 
-        switch (gesture->state()) {
-        case Qt::GestureStarted:
-            if (panelAcceptedGestures.contains(gesture->gestureType()))
-                panelAcceptedGestures.removeAt(panelAcceptedGestures.indexOf(gesture->gestureType()));
-            else if (gestureEvent->isAccepted(gesture))
-                childrenAcceptedGestures.append(gesture->gestureType());
-            break;
-        case Qt::GestureCanceled:
-            if (childrenAcceptedGestures.contains(gesture->gestureType()))
-                childrenAcceptedGestures.removeAt(childrenAcceptedGestures.indexOf(gesture->gestureType()));
-            break;
-        case Qt::GestureFinished:
-                if (childrenAcceptedGestures.contains(gesture->gestureType())) {
-                    if (q->mouseGrabberItem()) {
-                        MCancelEvent cancelEvent;
-                        q->sendEvent(q->mouseGrabberItem(),&cancelEvent);
-                    }
-                    childrenAcceptedGestures.removeAt(childrenAcceptedGestures.indexOf(gesture->gestureType()));
-                }
-        default:
-            break;
-        }
+    if (q->mouseGrabberItem() != eventEater)
+        eventEater->grabMouse();
+
+    cancelSent = true;
+}
+
+void MScenePrivate::delayMousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
+{
+    copyGraphicsSceneMouseEvent(mousePressEvent, *mouseEvent);
+
+    if (!initialPressTimer->isActive())
+        initialPressTimer->start();
+
+    pressPending = true;
+}
+
+void MScenePrivate::delayTouchEvent(QTouchEvent* touchEvent)
+{
+    touchBeginEvent = *touchEvent;
+
+    if (!initialPressTimer->isActive())
+        initialPressTimer->start();
+
+    touchPending = true;
+}
+
+void MScenePrivate::forceSendingInitialEvents()
+{
+    if (initialPressTimer->isActive()) {
+        //Didn't send the press yet...
+        initialPressTimer->stop();
+        _q_initialPressDeliveryTimeout();
     }
 }
 
-void MScenePrivate::notifyGestureCaughtByPanel(Qt::GestureType gestureType)
+void MScenePrivate::_q_initialPressDeliveryTimeout()
 {
-    if (!panelAcceptedGestures.contains(gestureType))
-        panelAcceptedGestures.append(gestureType);
+    Q_Q(MScene);
+    if (touchPending) {
+        q->QGraphicsScene::event(&touchBeginEvent);
+        touchPending = false;
+    }
+    if (pressPending) {
+        q->QGraphicsScene::event(&mousePressEvent);
+        pressPending = false;
+    }
 }
 
 MScene::MScene(QObject *parent)
@@ -458,6 +538,13 @@ MScene::MScene(QObject *parent)
     d->boundingRectFillBrush = QBrush(boundingRectFillColor);
 
     setItemIndexMethod(QGraphicsScene::NoIndex);
+
+    d->eventEater->setParent(this);
+    addItem(d->eventEater);
+    d->initialPressTimer = new QTimer(this);
+    d->initialPressTimer->setSingleShot(true);
+    d->initialPressTimer->setInterval(InitialPressTimeout);
+    connect(d->initialPressTimer, SIGNAL(timeout()), this, SLOT(_q_initialPressDeliveryTimeout()));
 }
 
 MScene::~MScene()
@@ -476,14 +563,42 @@ bool MScene::event(QEvent *event)
 {
     Q_D(MScene);
 
-    if (d->eventEmulateTwoFingerGestures(event)) {
+    if (d->eventEmulateTwoFingerGestures(event))
         return true;
+
+    bool retValue = false;
+
+    switch (event->type())
+    {
+
+    case QEvent::TouchBegin:
+        d->delayTouchEvent(static_cast<QTouchEvent*>(event));
+        retValue = true;
+        break;
+    case QEvent::TouchUpdate:
+        retValue = (d->touchPending ? true : QGraphicsScene::event(event));
+        break;
+    case QEvent::TouchEnd:
+        d->forceSendingInitialEvents();
+        retValue = QGraphicsScene::event(event);
+        break;
+
+    case QEvent::GraphicsSceneMousePress:
+        d->delayMousePressEvent(static_cast<QGraphicsSceneMouseEvent*>(event));
+        retValue = true;
+        break;
+    case QEvent::GraphicsSceneMouseMove:
+        retValue = (d->pressPending ? true : QGraphicsScene::event(event));
+        break;
+    case QEvent::GraphicsSceneMouseRelease:
+        d->forceSendingInitialEvents();
+        retValue = QGraphicsScene::event(event);
+        d->resetMouseGrabber();
+        break;
+
+    default:
+        retValue = QGraphicsScene::event(event);
     }
-
-    bool retValue = QGraphicsScene::event(event);
-
-    if (event->type() == QEvent::Gesture)
-        d->handleGestureEvent(event);
 
     return retValue;
 }
@@ -635,3 +750,5 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
         painter->drawPixmap(d->emuPoint2.scenePos() - pixmapCenterDelta, *tapPixmap);
     }
 }
+
+#include "moc_mscene.cpp"

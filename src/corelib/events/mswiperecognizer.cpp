@@ -67,22 +67,22 @@ void MSwipeRecognizerPrivate::snapToRightAngle(MSwipeGesture *swipeGesture)
         swipeGesture->setSwipeAngle(270);
 }
 
-QGestureRecognizer::Result MSwipeRecognizerPrivate::startRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent)
+QGestureRecognizer::Result MSwipeRecognizerPrivate::startRecognition(MSwipeGesture *swipeGesture, const QMouseEvent *mouseEvent)
 {
     swipeGesture->time = QTime::currentTime();
-    swipeGesture->startPosition = mouseEvent->scenePos();
-    swipeGesture->setHotSpot(mouseEvent->screenPos());
+    swipeGesture->startPosition = mouseEvent->globalPos();
+    swipeGesture->setHotSpot(mouseEvent->globalPos());
 
     return QGestureRecognizer::MayBeGesture;
 }
 
-QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGesture *swipeGesture, const QGraphicsSceneMouseEvent *mouseEvent)
+QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGesture *swipeGesture, const QMouseEvent *mouseEvent)
 {
     QGestureRecognizer::Result result = QGestureRecognizer::CancelGesture;
-    qreal currentDistance = vectorLength(mouseEvent->scenePos() - swipeGesture->startPosition);
+    qreal currentDistance = vectorLength(mouseEvent->globalPos() - swipeGesture->startPosition);
 
     //Swipe angle is equal to the angle of a line between starting position and current position.
-    swipeGesture->setSwipeAngle(QLineF(swipeGesture->startPosition, mouseEvent->scenePos()).angle());
+    swipeGesture->setSwipeAngle(QLineF(swipeGesture->startPosition, mouseEvent->globalPos()).angle());
     int elapsedTime = swipeGesture->time.msecsTo(QTime::currentTime());
 
     if (swipeGesture->state() != Qt::NoGesture) {
@@ -146,7 +146,7 @@ QGestureRecognizer::Result MSwipeRecognizer::recognize(QGesture *state, QObject 
 {
     Q_D(MSwipeRecognizer);
 
-    const QGraphicsSceneMouseEvent *mouseEvent = static_cast<const QGraphicsSceneMouseEvent*>(event);
+    const QMouseEvent *mouseEvent = static_cast<const QMouseEvent*>(event);
     const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
     QGestureRecognizer::Result result;
 
@@ -162,15 +162,15 @@ QGestureRecognizer::Result MSwipeRecognizer::recognize(QGesture *state, QObject 
         result = swipeGesture->state() != Qt::NoGesture && touchEvent->touchPoints().count() > 1 ? CancelGesture : Ignore;
         break;
 
-    case QEvent::GraphicsSceneMousePress:
+    case QEvent::MouseButtonPress:
         result = d->startRecognition(swipeGesture, mouseEvent);
         break;
 
-    case QEvent::GraphicsSceneMouseMove:
+    case QEvent::MouseMove:
         result = d->updateRecognition(swipeGesture, mouseEvent);
         break;
 
-    case QEvent::GraphicsSceneMouseRelease:
+    case QEvent::MouseButtonRelease:
         result = d->finishRecognition(swipeGesture);
         break;
 
