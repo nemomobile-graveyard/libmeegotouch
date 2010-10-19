@@ -176,6 +176,7 @@ void MWindowPrivate::init()
     if(MApplication::isPrestarted()) {
         setX11PrestartProperty(true);
     }
+    setX11OrientationAngleProperty(angle);
 #endif
 
     q->setTranslucentBackground(false);
@@ -732,12 +733,18 @@ void MWindowPrivate::setX11PrestartProperty(bool set)
 void MWindowPrivate::setX11OrientationAngleProperty(M::OrientationAngle angle)
 {
     Q_Q(MWindow);
+    Display *display = QX11Info::display();
+
+    if (!display)
+        return;
+
     //sometimes this class is used without valid x11 window
     if (q->winId() == 0)
         return;
-    Atom orientationAngleAtom = XInternAtom(QX11Info::display(),
-                                       "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
-    XChangeProperty(QX11Info::display(), q->winId(), orientationAngleAtom, XA_CARDINAL, 32,
+
+    Atom orientationAngleAtom = XInternAtom(display, "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
+
+    XChangeProperty(display, q->winId(), orientationAngleAtom, XA_CARDINAL, 32,
                     PropModeReplace, (unsigned char*)&angle, 1);
 }
 #endif
