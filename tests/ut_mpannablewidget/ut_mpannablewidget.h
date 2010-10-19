@@ -42,24 +42,12 @@ private slots:
     void init();
     void cleanup();
 
-    void mousePressAndReleaseAreDeliveredToGrabber();
-    void mouseMoveIsDelieveredToGrabberIfNoPanningIsRecognized();
-    void mousePressWithNoLeftButtonIsIgnored();
-    void cancelEventStopPhysicsAndResetsStateOfWidget();
-    void pannableViewportInsidePannableViewportIgnoresMousePress();
-    void disabledWidgetShouldIgnoreMousePressAndPanEvents();
-
     void usingCustomPhysics();
     void settingNewPhysicsShouldEmitPhysicsChangeSignal();
     void settingPhysicsToNULLShouldNotBreakTheWidget();
 
     void panGestureMovesPhysicsPointer();
     void panGestureAgainstPanningDirectionIsIgnored();
-    void panGestureCancelsMouseEvents();
-    void ignoredPanGestureShouldNotCancelMouseEvents();
-
-    void tapAndHoldGestureShouldBeGrabbedIfViewportIsMoving();
-    void testPanThreshold();
 
 private:
     MPannableWidget *widget;

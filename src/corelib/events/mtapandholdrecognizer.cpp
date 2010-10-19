@@ -60,7 +60,6 @@ MTapAndHoldRecognizer::~MTapAndHoldRecognizer()
 
 QGesture* MTapAndHoldRecognizer::create(QObject* target)
 {
-    Q_UNUSED(target);
     if (target && target->isWidgetType() == false) {
         return 0; // this assumes the target is a QGraphicsObject, so we return
                   // NULL to indicate that the recognizer doesn't support graphicsobject and
