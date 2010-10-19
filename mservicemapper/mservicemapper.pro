@@ -4,12 +4,14 @@ TARGET = mservicemapper
 TEMPLATE = app
 SOURCES += \
     mservicemapperadaptor.cpp \
+    mservicemapperapplication.cpp \
     mservicemapper.cpp \
     mservicemapper_p.cpp \
     main.cpp \
 
 HEADERS += \
     mservicemapperadaptor.h \
+    mservicemapperapplication.h \
     mservicemapper.h \
     mservicemapper_p.h \
 

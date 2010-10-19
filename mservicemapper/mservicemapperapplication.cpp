@@ -17,29 +17,37 @@
 **
 ****************************************************************************/
 
-#include <QApplication>
 
-#include "mservicemapper.h"
-#include "mservicemapperadaptor.h"
 #include "mservicemapperapplication.h"
 
-int main(int argc, char **argv)
-{
-    MServiceMapperApplication app(argc, argv);
+#include <QDBusConnection>
 
+MServiceMapperApplication::MServiceMapperApplication( int & argc, char** argv )
+  : QCoreApplication( argc, argv )
+{
     QDBusConnection connection = QDBusConnection::sessionBus();
 
-    if ( ! connection.isConnected() )
+    // this signal is emitted, when the connection to the
+    // dbus daemon dies, e.g. when the dbus daemon gets killed.
+
+    bool ok = connection.connect(
+	    "",                            // service
+	    "/org/freedesktop/DBus/Local", // path
+	    "org.freedesktop.DBus.Local",  // interface
+	    "Disconnected",                // (signal) name
+	    this,
+	    SLOT( handleDBusServerDied() ) );
+
+    if ( ! ok )
     {
-        qWarning( "connecting to dbus failed, exiting." );
-        return -1;
+        qWarning( "dbus connect failed" );
     }
+}
 
-    const QString serviceFileDir(M_DBUS_SERVICES_DIR);
-    MServiceMapper service(serviceFileDir);
-    new MServiceMapperAdaptor(&service); // must be on the heap, must not be deleted see QDBusAbstractAdaptor man page
-    connection.registerService("com.nokia.MServiceFw");
-    connection.registerObject("/", &service);
+void MServiceMapperApplication::handleDBusServerDied()
+{
+    qWarning( "MServiceMapperApplication::handleDBusServerDied: exiting." );
 
-    return app.exec();
+    // quit the servicemapper gracefully
+    quit();
 }
