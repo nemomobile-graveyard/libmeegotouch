@@ -821,7 +821,8 @@ void MSliderGroove::lowerHandleIndicator()
 
 void MSliderGroove::ensureSafeClosing()
 {
-    sliderHandleIndicator->setParentItem(this);
+    delete sliderHandleIndicator;
+    sliderHandleIndicator = 0;
 }
 
 void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
