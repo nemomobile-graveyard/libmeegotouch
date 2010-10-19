@@ -34,3 +34,13 @@ contains(TEMPLATE, app) {
     }
     LIBS += -L$${M_LIB_DIR}
 }
+
+contains( CONFIG, coverage ) {
+    QMAKE_CXXFLAGS *= -ftest-coverage -fprofile-arcs
+    LIBS *= -lgcov
+
+    QMAKE_CLEAN *= \
+    *.gcda \
+    *.gcno \
+    *.gcov
+}

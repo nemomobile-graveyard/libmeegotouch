@@ -1,4 +1,4 @@
 DEPENDS=
-contains( M_BUILD_FEATURES, coverage ) {
+contains( CONFIG, coverage ) {
     include(coverage.pri)
 }

@@ -569,7 +569,7 @@ if [ "$CFG_COVERAGE" = "yes" ]; then
         exit 1
     fi
 
-    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES coverage"
+    MEEGOTOUCHCONFIG_CONFIG="$MEEGOTOUCHCONFIG_CONFIG coverage"
 fi
 
 if [ "$CFG_PCH" = "yes" ]; then
