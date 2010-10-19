@@ -165,6 +165,7 @@ my @sourcePackagesToDownloadAndScan = (
     "duihome",
     "energy-profiler",
     "facebook-ui",
+    "feedengine",
     "feedreader",
     "feedsettings",
     "fenix",
