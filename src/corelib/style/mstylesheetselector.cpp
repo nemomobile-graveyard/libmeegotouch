@@ -56,7 +56,7 @@ void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &oth
 MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
         const QString &className,
         const QString &classType,
-        const QString &orientation,
+        const Orientation orientation,
         const QString &mode,
         const QString &filename,
         const QString &parentName,
@@ -78,7 +78,7 @@ MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
 MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
         const QString &className,
         const QString &classType,
-        const QString &orientation,
+        const Orientation orientation,
         const QString &mode,
         const QString &filename,
         const QString &parentName,
@@ -150,7 +150,7 @@ QString MStyleSheetSelector::classType() const
     return d->clType;
 }
 
-QString MStyleSheetSelector::orientation() const
+MStyleSheetSelector::Orientation MStyleSheetSelector::orientation() const
 {
     Q_D(const MStyleSheetSelector);
     return d->screenOrientation;

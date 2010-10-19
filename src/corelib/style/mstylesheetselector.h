@@ -45,6 +45,12 @@ public:
         Child           = 0x1,
         ExactClassMatch = 0x2
     };
+
+    enum Orientation {
+	LandscapeOrientation = M::Landscape,
+	PortraitOrientation = M::Portrait,
+	UndefinedOrientation = 3
+    };
     /*!
      * MStyleSheetSelector constructor
      * \param objectName target object name of this selector, can be empty
@@ -64,7 +70,7 @@ public:
     explicit MStyleSheetSelector(const QString &objectName = "",
                                    const QString &className = "",
                                    const QString &classType = "",
-                                   const QString &orientation = "",
+                                   const Orientation orientation = UndefinedOrientation,
                                    const QString &mode = "",
                                    const QString &filename = "",
                                    const QString &parentName = "",
@@ -89,7 +95,7 @@ public:
     explicit MStyleSheetSelector(const QString &objectName,
                                    const QString &className,
                                    const QString &classType,
-                                   const QString &orientation,
+                                   const Orientation orientation,
                                    const QString &mode,
                                    const QString &filename,
                                    const QString &parentName,
@@ -139,7 +145,7 @@ public:
     /*!
      * \brief Returns the screen orientation for this selector.
      */
-    QString orientation() const;
+    Orientation orientation() const;
 
     /*!
      * \brief Returns the object mode for this selector.

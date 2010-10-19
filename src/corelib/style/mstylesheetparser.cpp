@@ -90,6 +90,9 @@ public:
     MStyleSheetSelector *readSelector(const QString &file, QDataStream &stream);
     void writeSelector(MStyleSheetSelector *selector, QDataStream &stream);
 
+    static QString getOrientationName(MStyleSheetSelector::Orientation orientation);
+    static MStyleSheetSelector::Orientation getOrientationFromName(const QString &name);
+
     bool binaryFileMode;
     QString binaryDirectory;
     MStyleSheetParser::SyntaxMode syntaxMode;
@@ -221,7 +224,7 @@ void outputSelector(MStyleSheetSelector *selector)
                                            << selector->className()
                                            << selector->classType()
                                            << selector->objectName()
-                                           << selector->orientation()
+                                           << MStyleSheetParserPrivate::getOrientationName(selector->orientation())
                                            << selector->mode()
                                            << selector->parentName()
                                            << selector->parentObjectName();
@@ -798,7 +801,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
         MStyleSheetSelector *selector = new MStyleSheetSelector(cachedString(objectName),
                 cachedString(className),
                 cachedString(classType),
-                cachedString(orientation),
+                getOrientationFromName(cachedString(orientation)),
                 cachedString(mode),
                 parsedFileName,
                 cachedString(parentName),
@@ -1038,7 +1041,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
         stream >> file_version;
 
         // This is how we read v0.12 files
-        if (file_version == FILE_VERSION(0, 12)) {
+        if (file_version == FILE_VERSION(0, 13)) {
             // read fileinfo
             MStyleSheetParser::StylesheetFileInfo *fileinfo = new MStyleSheetParser::StylesheetFileInfo;
             stream >> fileinfo->time_t;
@@ -1117,7 +1120,7 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
     QDataStream stream(&file);
 
     // write version number (32bit, 16 major, 16 minor)
-    stream << (int) FILE_VERSION(0, 12);
+    stream << (int) FILE_VERSION(0, 13);
     stream << info.time_t;
     stream << info.filename;
     stream << info.includes;
@@ -1150,8 +1153,8 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
 
 MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file, QDataStream &stream)
 {
-    QString parentName, parentObjectName, objectName, className, classType, orientation, mode;
-    int flags;
+    QString parentName, parentObjectName, objectName, className, classType, mode;
+    int flags, orientation;
 
     stream >> parentName;
     stream >> parentObjectName;
@@ -1166,13 +1169,12 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file,
     objectName = cachedString(objectName);
     className = cachedString(className);
     classType = cachedString(classType);
-    orientation = cachedString(orientation);
     mode = cachedString(mode);
 
     MStyleSheetSelector *selector = new MStyleSheetSelector(objectName,
             className,
             classType,
-            orientation,
+            (MStyleSheetSelector::Orientation) orientation,
             mode,
             file,
             parentName,
@@ -1218,7 +1220,7 @@ void MStyleSheetParserPrivate::writeSelector(MStyleSheetSelector *selector, QDat
     stream << selector->objectName();
     stream << selector->className();
     stream << selector->classType();
-    stream << selector->orientation();
+    stream << (int) selector->orientation();
     stream << selector->mode();
 
     stream << selector->attributes()->count();
@@ -1243,6 +1245,24 @@ void MStyleSheetParserPrivate::writeSelector(MStyleSheetSelector *selector, QDat
         stream << attributeIterator.value()->constValue;
         stream << attributeIterator.value()->position;
     }
+}
+
+QString MStyleSheetParserPrivate::getOrientationName(MStyleSheetSelector::Orientation orientation)
+{
+    if (orientation == MStyleSheetSelector::LandscapeOrientation)
+	return "Landscape";
+    if (orientation == MStyleSheetSelector::PortraitOrientation)
+	return "Portrait";
+    return "";
+}
+
+MStyleSheetSelector::Orientation MStyleSheetParserPrivate::getOrientationFromName(const QString &name)
+{
+    if (name == "Landscape")
+	return MStyleSheetSelector::LandscapeOrientation;
+    if (name == "Portrait")
+	return MStyleSheetSelector::PortraitOrientation;
+    return MStyleSheetSelector::UndefinedOrientation;
 }
 
 

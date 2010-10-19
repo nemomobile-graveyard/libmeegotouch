@@ -436,8 +436,9 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
             identifier += '[' + container->selector->classType() + ']';
         if (!container->selector->objectName().isEmpty())
             identifier += '#' + container->selector->objectName();
-        if (!container->selector->orientation().isEmpty())
-            identifier += '.' + container->selector->orientation();
+        if (container->selector->orientation() != MStyleSheetSelector::UndefinedOrientation)
+            identifier += '.' + container->selector->orientation() == MStyleSheetSelector::PortraitOrientation
+		          ? "Portrait" : "Landscape";
         if (!container->selector->mode().isEmpty())
             identifier += ':' + container->selector->mode();
         identifier += ')';
@@ -500,9 +501,8 @@ bool MStyleSheetPrivate::isHigherPriority(MOriginContainer *prev,
     }
 
     // Only other has orientation
-    int orientation = selector->orientation().length() - prev->selector->orientation().length();
-    if (orientation != 0)
-        return (orientation < 0) ? false : true;
+    if (selector->orientation() != prev->selector->orientation())
+	return selector->orientation() != MStyleSheetSelector::UndefinedOrientation;
 
     // Check the level of inheritance in class hierarchy for the existing entry for both entries
     inheritanceOrder = EXTRACT_INHERITANCEORDER(classPriority);
@@ -617,14 +617,9 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
     }
 
     // Check whether the orientation matches
-    if (selector->orientation().length() > 0) {
-        // Landscape vs. "Landscape"
-        if ((orientation == M::Landscape) && (selector->orientation() != "Landscape"))
-            return false;
-
-        // Portrait vs. "Portrait"
-        if ((orientation == M::Portrait) && (selector->orientation() != "Portrait"))
-            return false;
+    if (selector->orientation() != MStyleSheetSelector::UndefinedOrientation &&
+	orientation != static_cast<M::Orientation>(selector->orientation())) {
+	return false;
     }
 
     // Check whether the type matches

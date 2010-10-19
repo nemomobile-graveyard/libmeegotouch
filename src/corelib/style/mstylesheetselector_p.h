@@ -37,7 +37,7 @@ public:
     //! Type, represented by this selector.
     QString clType;
     //! Screen orientation type, represented by this selector.
-    QString screenOrientation;
+    MStyleSheetSelector::Orientation screenOrientation;
     //! Object mode, represented by this selector.
     QString objectMode;
     //! Attribute list of this selector (ClassName#ObjectName.Orientation:Mode).
