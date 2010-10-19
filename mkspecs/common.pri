@@ -112,16 +112,6 @@ contains(USE_CCACHE, "true") {
     QMAKE_CXX = ccache g++
 }
 
-contains( M_BUILD_FEATURES, coverage ) {
-    QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
-    LIBS += -lgcov
-
-    QMAKE_CLEAN += \
-    *.gcda \
-    *.gcno \
-    *.gcov
-}
-
 
 QMAKE_LIBDIR += $${M_BUILD_TREE}/lib
 

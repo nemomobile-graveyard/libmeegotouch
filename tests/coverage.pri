@@ -19,7 +19,7 @@ coverage-xml.depends = check-xml
 coverage-xml.commands = @../coverage.py $$srcList($$TEST_SOURCES) .obj 90
 
 
-QMAKE_CLEAN += *.gcda *.gcno *.gcov *.log 
+QMAKE_CLEAN += *.log
 #there are some xml files used in testing
 #*.xml
 QMAKE_DISTCLEAN += *.gcda *.gcno *.gcov *.log 
