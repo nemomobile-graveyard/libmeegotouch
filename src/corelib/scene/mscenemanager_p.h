@@ -119,6 +119,7 @@ public:
     void addUnmanagedSceneWindow(MSceneWindow *sceneWindow);
 
     bool isOnDisplay();
+    bool canHaveAnimatedTransitions();
     void produceMustBeResolvedDisplayEvent(MSceneWindow *sceneWindow);
     void produceFullyOffDisplayEvents(QGraphicsItem *item);
     void produceSceneWindowEvent(QEvent::Type type, MSceneWindow *sceneWindow,

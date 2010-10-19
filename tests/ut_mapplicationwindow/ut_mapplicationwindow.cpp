@@ -35,6 +35,7 @@
 
 #include <MSceneWindow>
 #include <MHomeButtonPanel>
+#include <mscenemanagertestbridge.h>
 
 #include <QSignalSpy>
 #include <QEvent>
@@ -199,10 +200,14 @@ void Ut_MApplicationWindow::testCurrentPage()
 
 void Ut_MApplicationWindow::testMenu()
 {
+    MSceneManagerTestBridge testBridge;
+    testBridge.setParent(m_subject->sceneManager());
+
     m_subject->d_func()->navigationBar->setArrowIconVisible(true);
 
     QCOMPARE(m_subject->isMenuOpen(), false);
     m_subject->openMenu();
+    testBridge.fastForwardSceneWindowTransitionAnimation(m_subject->d_func()->menu);
     QCOMPARE(m_subject->isMenuOpen(), true);
     m_subject->closeMenu();
     QCOMPARE(m_subject->isMenuOpen(), false);
@@ -315,6 +320,9 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
     MApplicationPage *page = new MApplicationPage;
     page->appear(m_subject);
 
+    MSceneManagerTestBridge testBridge;
+    testBridge.setParent(m_subject->sceneManager());
+
     MSceneWindow *homeButtonPanel = m_subject->d_func()->homeButtonPanel;
     MSceneWindow *navigationBar = m_subject->d_func()->navigationBar;
 
@@ -322,21 +330,29 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
+    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Disappeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
 
     page->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::Show);
+    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
 
     page->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::AutoHide);
+    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Disappeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Show);
+    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
@@ -364,7 +380,10 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
     QFETCH(QList<StatusBarTestOperation>, operations);
     QFETCH(bool, expectedVisibility);
 
-    const MSceneWindow *statusBar = 0;
+    MSceneManagerTestBridge testBridge;
+    testBridge.setParent(m_subject->sceneManager());
+
+    MSceneWindow *statusBar = 0;
 
     statusBar = m_subject->d_func()->statusBar;
 
@@ -395,6 +414,7 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
         }
     }
 
+    testBridge.fastForwardSceneWindowTransitionAnimation(statusBar);
     // This relies on status bar being out of display which means no animation
     // and change in QGraphicsItem visibility is immediate.
     QCOMPARE(statusBar->isVisible(), expectedVisibility);

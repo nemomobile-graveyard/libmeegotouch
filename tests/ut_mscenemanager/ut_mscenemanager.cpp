@@ -25,9 +25,11 @@
 #include <MSceneWindow>
 
 #include "ut_mscenemanager.h"
+#include <mscenemanagertestbridge.h>
 
 #include <MApplicationPage>
 #include <MWindow>
+#include <mwindow_p.h>
 #include <MNavigationBar>
 #include <MMessageBox>
 #include <MOverlay>
@@ -40,6 +42,8 @@
 #include <mapplicationwindow.h>
 #include <MDeviceProfile>
 #include "mstatusbar.h"
+
+#include "mondisplaychangeevent.h"
 
 #ifdef Q_WS_X11
 # include <QX11Info>
@@ -108,9 +112,8 @@ void Ut_MSceneManager::testConstructorWithSceneSpecified()
 void Ut_MSceneManager::testAddSceneWindow()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     testBridge.addSceneWindow(sceneWindow);
@@ -123,9 +126,8 @@ void Ut_MSceneManager::testAddSceneWindow()
 void Ut_MSceneManager::testRemoveSceneWindow()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     testBridge.addSceneWindow(sceneWindow);
@@ -157,9 +159,8 @@ void Ut_MSceneManager::testSceneWindowAppearNow()
 void Ut_MSceneManager::testSceneWindowAppear()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -194,9 +195,8 @@ void Ut_MSceneManager::testSceneWindowDisappearNow()
 void Ut_MSceneManager::testSceneWindowDisappear()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -385,9 +385,8 @@ void Ut_MSceneManager::testPageSwitchingOnAppearNow()
 
 void Ut_MSceneManager::testPageSwitchingOnAppear()
 {
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -403,16 +402,6 @@ void Ut_MSceneManager::testPageSwitchingOnAppear()
     QSignalSpy secondPageAppeared(secondPage, SIGNAL(appeared()));
 
     sm->appearSceneWindow(firstPage);
-
-    QCOMPARE(firstPageAppearing.count(), 1);
-    QCOMPARE(firstPageAppeared.count(), 0);
-    QCOMPARE(firstPageDisappearing.count(), 0);
-    QCOMPARE(firstPageDisappeared.count(), 0);
-    QCOMPARE(secondPageAppearing.count(), 0);
-    QCOMPARE(secondPageAppeared.count(), 0);
-    firstPageAppearing.clear();
-
-    testBridge.fastForwardPageSwitchAnimation();
 
     QCOMPARE(firstPageAppearing.count(), 0);
     QCOMPARE(firstPageAppeared.count(), 1);
@@ -701,10 +690,20 @@ void Ut_MSceneManager::testTransitionModeWhenOffDisplay()
     QObject testBridge;
     MSceneWindow *sceneWindow = new MSceneWindow;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = false;
+
+    // Have to send a visibility event to MWindow so
+    // that MWindowPrivate::onDisplaySet == true.
+    MOnDisplayChangeEvent event(false, QRectF());
+    QApplication::instance()->sendEvent(mWindow, &event);
+
+    // Force a timeout on mwindows internal timer so that the display change event
+    // gets processed immediately.
+    QTimerEvent timerEvt(mWindow->d_func()->displayExitedTimer.timerId());
+    QApplication::instance()->sendEvent(&(mWindow->d_func()->displayExitedTimer), &timerEvt);
+    QApplication::processEvents();
 
     QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappeared);
 
@@ -719,7 +718,6 @@ void Ut_MSceneManager::testTransitionModeWhenOnDisplay()
     QObject testBridge;
     MSceneWindow *sceneWindow = new MSceneWindow;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -738,7 +736,6 @@ void Ut_MSceneManager::testTransitionModeWhenNoWindow()
     MSceneWindow *sceneWindow = new MSceneWindow;
     MSceneManager sceneManager;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(&sceneManager);
 
     gMWindowIsOnDisplay = true;
@@ -756,14 +753,13 @@ void Ut_MSceneManager::testTransitionModeWhenNoWindow()
 
 void Ut_MSceneManager::testPageSwitchQueue()
 {
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
     MApplicationPage *thirdPage = new MApplicationPage;
     QSignalSpy firstPageAppeared(firstPage, SIGNAL(appeared()));
     QSignalSpy secondPageAppeared(secondPage, SIGNAL(appeared()));
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -774,22 +770,16 @@ void Ut_MSceneManager::testPageSwitchQueue()
 
     sm->appearSceneWindow(firstPage);
 
-    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE(firstPageAppeared.count(), 1);
 
     sm->appearSceneWindow(secondPage);
 
-    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Appearing);
-    QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Appearing);
 
     sm->appearSceneWindow(thirdPage);
 
-    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Appearing);
-    QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Disappeared);
-    QCOMPARE(thirdPage->sceneWindowState(), MSceneWindow::Disappeared);
-
-    testBridge.fastForwardPageSwitchAnimation();
-
-    QCOMPARE(firstPageAppeared.count(), 1);
     QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Disappearing);
     QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Appearing);
     QCOMPARE(thirdPage->sceneWindowState(), MSceneWindow::Disappeared);
@@ -812,9 +802,8 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearWhileAppearing()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
     QSignalSpy spyAppeared(sceneWindow, SIGNAL(appeared()));
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -841,9 +830,8 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearWhileAppearing()
 void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -868,12 +856,11 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearAndAppearWhileApp
     QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appeared);
 }
 
-void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing_ApplicationPage()
+void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearAndAppearWhileDisappearing_ApplicationPage()
 {
     MSceneWindow *sceneWindow = new MApplicationPage;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -881,30 +868,33 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearAndAppearWhileApp
 
     sm->appearSceneWindow(sceneWindow);
 
-    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appeared);
 
     sm->disappearSceneWindow(sceneWindow);
 
-    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappearing);
 
-    // That cancels out the previous disappear() that was queued, resulting
-    // in an empty transition queue.
     sm->appearSceneWindow(sceneWindow);
 
-    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappearing);
+
+    // That cancels the previous appear() that was queued, resulting
+    // in an empty transition queue.
+    sm->disappearSceneWindow(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappearing);
 
     testBridge.fastForwardSceneWindowTransitionAnimation(sceneWindow);
 
-    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappeared);
 }
 
 void Ut_MSceneManager::testSceneWindowTransitionQueue_appearWhileDisappearing()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
     QSignalSpy spyDisappeared(sceneWindow, SIGNAL(disappeared()));
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -932,9 +922,8 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_appearWhileDisappearing()
 void Ut_MSceneManager::testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -963,9 +952,8 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_appearAndDisappearWhileDis
 void Ut_MSceneManager::testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing_ApplicationPage()
 {
     MSceneWindow *sceneWindow = new MApplicationPage;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -995,9 +983,8 @@ void Ut_MSceneManager::testCallingAppearOnAppearingPageWhenTransitionQueueHasOth
 {
     MSceneWindow *page1 = new MApplicationPage;
     MSceneWindow *page2 = new MApplicationPage;
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -1042,14 +1029,13 @@ void Ut_MSceneManager::testCallingAppearOnAppearingPageWhenTransitionQueueHasOth
 
 void Ut_MSceneManager::testDismissPageThatIsReappearing()
 {
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
     MApplicationPage *thirdPage = new MApplicationPage;
     QSignalSpy firstPageAppeared(firstPage, SIGNAL(appeared()));
     QSignalSpy secondPageAppeared(secondPage, SIGNAL(appeared()));
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -1085,11 +1071,10 @@ void Ut_MSceneManager::testDismissPageThatIsReappearing()
 
 void Ut_MSceneManager::testDeletePageThatIsAppearing()
 {
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -1113,11 +1098,10 @@ void Ut_MSceneManager::testDeletePageThatIsAppearing()
 
 void Ut_MSceneManager::testDeletePageThatIsDisappearing()
 {
-    TestBridge testBridge;
+    MSceneManagerTestBridge testBridge;
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
 
-    testBridge.setObjectName("_m_testBridge");
     testBridge.setParent(sm);
 
     gMWindowIsOnDisplay = true;
@@ -1218,45 +1202,5 @@ void Ut_MSceneManager::testStatusBarGeometryProperty()
 }
 
 #endif
-
-TestBridge::TestBridge(QObject *parent)
-    : QObject(parent)
-{
-}
-
-void TestBridge::fastForwardPageSwitchAnimation()
-{
-    QObject *testInterface = children()[0];
-
-    QMetaObject::invokeMethod(testInterface, "fastForwardPageSwitchAnimation",
-            Qt::DirectConnection);
-}
-
-void TestBridge::fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow)
-{
-    QObject *testInterface = children()[0];
-
-    QMetaObject::invokeMethod(testInterface, "fastForwardSceneWindowTransitionAnimation",
-            Qt::DirectConnection,
-            Q_ARG(MSceneWindow*, sceneWindow));
-}
-
-void TestBridge::addSceneWindow(MSceneWindow *sceneWindow)
-{
-    QObject *testInterface = children()[0];
-
-    QMetaObject::invokeMethod(testInterface, "addSceneWindow",
-            Qt::DirectConnection,
-            Q_ARG(MSceneWindow*, sceneWindow));
-}
-
-void TestBridge::removeSceneWindow(MSceneWindow *sceneWindow)
-{
-    QObject *testInterface = children()[0];
-
-    QMetaObject::invokeMethod(testInterface, "removeSceneWindow",
-            Qt::DirectConnection,
-            Q_ARG(MSceneWindow*, sceneWindow));
-}
 
 QTEST_MAIN(Ut_MSceneManager);

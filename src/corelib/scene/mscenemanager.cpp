@@ -44,6 +44,7 @@
 #include "mescapebuttonpanel.h"
 #include "mapplication.h"
 #include "mwindow.h"
+#include "mwindow_p.h"
 #include "mapplicationwindow.h"
 #include "mapplicationwindow_p.h"
 #include "mpannableviewport.h"
@@ -934,6 +935,40 @@ bool MSceneManagerPrivate::isOnDisplay()
     return result;
 }
 
+bool MSceneManagerPrivate::canHaveAnimatedTransitions()
+{
+    Q_Q(MSceneManager);
+
+    QList<QGraphicsView *> viewsList = q->scene()->views();
+    MWindow *window = 0;
+    bool result = false;
+    int i = 0;
+
+    while (result == false && i < viewsList.count()) {
+
+        window = qobject_cast<MWindow *>(viewsList[i]);
+
+        // We can have animated transitions if the MWindow is on display or
+        // is still being initialized (didn't receive a visibility message
+        // from xserver or window manager yet, probably because it's not being
+        // backed up by a real top level X window yet).
+        //
+        // If it's visible in the switcher we don't animate as we shouldn't
+        // be using many resources in this situation and the FPS is likely
+        // to be limited to a fairly low number anyway.
+
+        if (window
+                && (window->isOnDisplay() || !window->d_ptr->onDisplaySet)
+                && !window->isInSwitcher()) {
+            result = true;
+        }
+
+        i++;
+    }
+
+    return result;
+}
+
 void MSceneManagerPrivate::produceMustBeResolvedDisplayEvent(MSceneWindow *sceneWindow)
 {
     Q_Q(MSceneManager);
@@ -1056,7 +1091,7 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
 
     setCurrentPage(page);
 
-    if (animatedTransition && pageSwitchAnimation) {
+    if (!pageHistory.empty() && animatedTransition && pageSwitchAnimation) {
         if (previousPage)
             setSceneWindowState(previousPage, MSceneWindow::Disappearing);
 
@@ -1919,9 +1954,7 @@ void MSceneManager::appearSceneWindow(MSceneWindow *window, MSceneWindow::Deleti
 
     d->addSceneWindow(window);
 
-    bool animatedTransition = d->isOnDisplay();
-
-    d->appearSceneWindow(window, policy, animatedTransition);
+    d->appearSceneWindow(window, policy, d->canHaveAnimatedTransitions());
 }
 
 void MSceneManager::appearSceneWindowNow(MSceneWindow *window, MSceneWindow::DeletionPolicy policy)
@@ -1976,10 +2009,8 @@ void MSceneManager::disappearSceneWindow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
 
-    bool animatedTransition = d->isOnDisplay();
-
     window->d_func()->dismissed = false;
-    d->disappearSceneWindow(window, animatedTransition);
+    d->disappearSceneWindow(window, d->canHaveAnimatedTransitions());
 }
 
 void MSceneManager::disappearSceneWindowNow(MSceneWindow *window)
@@ -1993,10 +2024,8 @@ void MSceneManager::dismissSceneWindow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
 
-    bool animatedTransition = d->isOnDisplay();
-
     window->d_func()->dismissed = true;
-    d->disappearSceneWindow(window, animatedTransition);
+    d->disappearSceneWindow(window, d->canHaveAnimatedTransitions());
 }
 
 void MSceneManager::dismissSceneWindowNow(MSceneWindow *window)
@@ -2055,26 +2084,8 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
             }
         }
     } else {
-        if (mode == AnimatedTransition) {
-            bool managesVisibleWindow = false;
-
-            // Only animate the rotation if it is actually visible to the user
-            QList<QGraphicsView *> viewsList = scene()->views();
-            for (int i = 0; i < viewsList.count(); ++i) {
-                MWindow *window = qobject_cast<MWindow *>(viewsList[i]);
-
-                if (window && window->isOnDisplay()) {
-                    if (!window->windowState().testFlag(Qt::WindowMinimized)) {
-                        managesVisibleWindow = true;
-                    }
-                    break;
-                }
-            }
-            if (managesVisibleWindow) {
-                d->rotateToAngle(angle);
-            } else {
-                d->setOrientationAngleWithoutAnimation(angle);
-            }
+        if (mode == AnimatedTransition && d->canHaveAnimatedTransitions()) {
+            d->rotateToAngle(angle);
         } else {
             d->setOrientationAngleWithoutAnimation(angle);
         }

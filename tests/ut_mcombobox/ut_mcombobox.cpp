@@ -35,6 +35,8 @@
 #include <MPopupList>
 #include <MLocale>
 
+#include <mscenemanagertestbridge.h>
+
 #include "ut_mcombobox.h"
 #include "mcancelevent.h"
 #include "mcomboboxview.h"
@@ -248,13 +250,18 @@ void Ut_MComboBox::testClickSlot()
 
 void Ut_MComboBox::testDismissSlot()
 {
+    MSceneManagerTestBridge testBridge;
+    testBridge.setParent(win->sceneManager());
+
     win->scene()->addItem(m_combobox);
     MComboBoxView *view = (MComboBoxView *)m_combobox->view();
     MComboBoxViewPrivate *viewPrivate = view->d_func();
     m_combobox->addItems(QStringList() << "Item1" << "Item2");
 
     QSignalSpy dismissedSpy(m_combobox, SIGNAL(dismissed()));
+    m_combobox->click();
     m_combobox->dismiss();
+    testBridge.fastForwardSceneWindowTransitionAnimation(viewPrivate->popuplist);
     QCOMPARE(dismissedSpy.count(), 1);
     dismissedSpy.clear();
 
@@ -263,7 +270,8 @@ void Ut_MComboBox::testDismissSlot()
     m_combobox->dismiss();
     QCOMPARE(dismissedSpy.count(), 1);
     QCOMPARE(rejectedSpy.count(), 1);
-    QVERIFY(!viewPrivate->popuplist->isVisible());
+    testBridge.fastForwardSceneWindowTransitionAnimation(viewPrivate->popuplist);
+    QCOMPARE(viewPrivate->popuplist->sceneWindowState(), MSceneWindow::Disappeared);
 
     win->scene()->removeItem(m_combobox);
 }

@@ -78,7 +78,7 @@ private slots:
     void testPageSwitchQueue();
     void testSceneWindowTransitionQueue_disappearWhileAppearing();
     void testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing();
-    void testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing_ApplicationPage();
+    void testSceneWindowTransitionQueue_disappearAndAppearWhileDisappearing_ApplicationPage();
     void testSceneWindowTransitionQueue_appearWhileDisappearing();
     void testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing();
     void testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing_ApplicationPage();
@@ -91,17 +91,6 @@ private slots:
 #endif
 private:
     MComponentData* m_componentData;
-};
-
-class TestBridge : public QObject
-{
-    Q_OBJECT
-public:
-    TestBridge(QObject *parent = 0);
-    void fastForwardPageSwitchAnimation();
-    void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
-    void addSceneWindow(MSceneWindow *sceneWindow);
-    void removeSceneWindow(MSceneWindow *sceneWindow);
 };
 
 #endif

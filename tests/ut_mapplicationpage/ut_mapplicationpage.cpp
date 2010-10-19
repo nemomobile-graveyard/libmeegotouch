@@ -335,6 +335,8 @@ void Ut_MApplicationPage::testIfPositionIndicatorGeometryFollowsExposedRect()
 
 void Ut_MApplicationPage::testContentIsCreatedOnEnteringAppearingState()
 {
+    MApplicationPage *page = new MApplicationPage;
+
     bool original_gMWindowIsOnDisplay = gMWindowIsOnDisplay;
     gMWindowIsOnDisplay = true;
 
@@ -347,6 +349,7 @@ void Ut_MApplicationPage::testContentIsCreatedOnEnteringAppearingState()
 
     QCOMPARE(m_subject->isContentCreated(), false);
 
+    page->appear(appWin); // first page appears "now" at all times
     m_subject->appear(appWin);
 
     QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Appearing);
@@ -356,6 +359,7 @@ void Ut_MApplicationPage::testContentIsCreatedOnEnteringAppearingState()
 
     // put it back to its original value
     gMWindowIsOnDisplay = original_gMWindowIsOnDisplay;
+    delete page;
 }
 
 void Ut_MApplicationPage::testContentIsCreatedOnEnteringAppearedState()

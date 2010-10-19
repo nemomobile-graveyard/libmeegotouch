@@ -31,7 +31,7 @@ class QGraphicsItem;
 class MApplicationWindow;
 class MApplicationPage;
 class MNavigationBar;
-
+class MSceneWindow;
 
 class Ut_MApplicationWindow : public QObject
 {
@@ -100,7 +100,6 @@ enum StatusBarTestOperation {
     MaximizePageArea,
     RestorePageArea
 };
-
 
 Q_DECLARE_METATYPE(MApplicationPage *);
 Q_DECLARE_METATYPE(QList<StatusBarTestOperation>);

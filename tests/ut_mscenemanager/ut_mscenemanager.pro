@@ -1,4 +1,6 @@
 include(../common_top.pri)
+include(../mscenemanagertestbridge/mscenemanagertestbridge.pri)
+
 INCLUDEPATH += \
     $$MSRCDIR/corelib/scene \
     $$MSRCDIR/corelib/widgets \

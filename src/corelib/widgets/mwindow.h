@@ -535,9 +535,11 @@ private:
 #endif
 
     friend class MApplicationPrivate;
+    friend class MSceneManagerPrivate;
 #ifdef UNIT_TEST
     // to call orientationAngleChanged()
     friend class Ut_MWindow;
+    friend class Ut_MSceneManager;
 #endif
 };
 
