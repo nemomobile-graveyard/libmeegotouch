@@ -29,5 +29,6 @@ SOURCES += ut_mlistviewseparators.cpp  \
         ../../src/views/.moc/moc_mlistindexview_p.cpp \
         ../../src/views/.gen/gen_mlistindexstyledata.cpp \
         ../../src/views/.gen/gen_mlistindextooltipstyledata.cpp \
+        $$MSRCDIR/views/mapplicationpageview.cpp \
 
 include(../common_bot.pri)
