@@ -17,6 +17,9 @@
 **
 ****************************************************************************/
 
+#include <sys/types.h>
+#include <sys/socket.h>
+
 #include "mthemedaemonserver.h"
 #include <theme/mthemedaemonclient.h>
 #include <MDebug>
@@ -26,10 +29,15 @@
 #include <QDir>
 #include <QTimer>
 #include <QSettings>
+#include <QApplication>
 
 using namespace M::MThemeDaemonProtocol;
 
 const int THEME_CHANGE_TIMEOUT = 3000;
+
+int MThemeDaemonServer::sighupFd[2];
+int MThemeDaemonServer::sigtermFd[2];
+int MThemeDaemonServer::sigintFd[2];
 
 MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     daemon(MThemeDaemon::RemoteDaemon),
@@ -40,6 +48,21 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     slowDown(false),
     sequenceCounter(0)
 {
+    // Create sockets and notifiers to handle unix signals
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sighupFd))
+        qFatal("Couldn't create HUP socketpair");
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigtermFd))
+        qFatal("Couldn't create TERM socketpair");
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigintFd))
+        qFatal("Couldn't create INT socketpair");
+
+    snHup = new QSocketNotifier(sighupFd[1], QSocketNotifier::Read, this);
+    connect(snHup, SIGNAL(activated(int)), this, SLOT(handleSigHup()));
+    snTerm = new QSocketNotifier(sigtermFd[1], QSocketNotifier::Read, this);
+    connect(snTerm, SIGNAL(activated(int)), this, SLOT(handleSigTerm()));
+    snInt = new QSocketNotifier(sigintFd[1], QSocketNotifier::Read, this);
+    connect(snInt, SIGNAL(activated(int)), this, SLOT(handleSigInt()));
+
     QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/themedaemonpriorities.conf";
     loadPriorities(filename);
 
@@ -643,4 +666,57 @@ bool MThemeDaemonServer::createCacheDir(const QString& path)
         }
     }
     return true;
+}
+
+void MThemeDaemonServer::hupSignalHandler(int)
+{
+    char a = 1;
+    ::write(sighupFd[0], &a, sizeof(a));
+}
+
+void MThemeDaemonServer::termSignalHandler(int)
+{
+    char a = 1;
+    ::write(sigtermFd[0], &a, sizeof(a));
+}
+
+void MThemeDaemonServer::intSignalHandler(int)
+{
+    char a = 1;
+    ::write(sigintFd[0], &a, sizeof(a));
+}
+
+void MThemeDaemonServer::handleSigTerm()
+{
+    snTerm->setEnabled(false);
+    char tmp;
+    ::read(sigtermFd[1], &tmp, sizeof(tmp));
+
+    // kill the daemon so that it can save it's current state (caches, refcounts, etc)
+    qApp->quit();
+
+    snTerm->setEnabled(true);
+}
+
+void MThemeDaemonServer::handleSigHup()
+{
+    snHup->setEnabled(false);
+    char tmp;
+    ::read(sighupFd[1], &tmp, sizeof(tmp));
+
+    themeChanged(true);
+
+    snHup->setEnabled(true);
+}
+
+void MThemeDaemonServer::handleSigInt()
+{
+    snInt->setEnabled(false);
+    char tmp;
+    ::read(sigintFd[1], &tmp, sizeof(tmp));
+
+    // kill the daemon so that it can save it's current state (caches, refcounts, etc)
+    qApp->quit();
+
+    snInt->setEnabled(true);
 }

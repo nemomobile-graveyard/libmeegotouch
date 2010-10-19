@@ -26,24 +26,38 @@
 #include "keypresswaiter.h"
 #endif
 
-void sigclose(int)
+static int setup_unix_signal_handlers()
 {
-    // kill the daemon so that it can save it's current state (caches, refcounts, etc)
-    qApp->quit();
-}
+    struct sigaction sighup, sigterm, sigint;
 
-MThemeDaemonServer *_server;
+    sighup.sa_handler = MThemeDaemonServer::hupSignalHandler;
+    sigemptyset(&sighup.sa_mask);
+    sighup.sa_flags = 0;
+    sighup.sa_flags |= SA_RESTART;
 
-void sighup(int)
-{
-    _server->themeChanged(true);
-}
+    if (sigaction(SIGHUP, &sighup, 0) > 0)
+        return 1;
+
+    sigterm.sa_handler = MThemeDaemonServer::termSignalHandler;
+    sigemptyset(&sigterm.sa_mask);
+    sigterm.sa_flags |= SA_RESTART;
+
+    if (sigaction(SIGTERM, &sigterm, 0) > 0)
+        return 2;
+
+    sigint.sa_handler = MThemeDaemonServer::intSignalHandler;
+    sigemptyset(&sigint.sa_mask);
+    sigint.sa_flags |= SA_RESTART;
+
+    if (sigaction(SIGINT, &sigint, 0) > 0)
+        return 3;
+
+     return 0;
+ }
 
 int main(int argc, char **argv)
 {
-    signal(SIGTERM, sigclose);
-    signal(SIGINT, sigclose);
-    signal(SIGHUP, sighup);
+    setup_unix_signal_handlers();
 
     // make sure we are not loading the maemo6 qt style which
     // could interfere with us
@@ -61,7 +75,6 @@ int main(int argc, char **argv)
     }
 
     MThemeDaemonServer server(serverAddress);
-    _server = &server;
 
 #ifdef CLOSE_ON_ENTER
     KeyPressWaiter keyWaiter;

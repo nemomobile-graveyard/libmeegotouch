@@ -25,6 +25,7 @@
 #include <QLocalServer>
 #include <MGConfItem>
 #include <QTimer>
+#include <QSocketNotifier>
 
 
 #include <mthemedaemon.h>
@@ -46,9 +47,18 @@ public:
     MThemeDaemonServer(const QString &serverAddress = QString());
     virtual ~MThemeDaemonServer();
 
+    static void hupSignalHandler(int unused);
+    static void termSignalHandler(int unused);
+    static void intSignalHandler(int unused);
+
 public slots:
     void themeChanged(bool forceReload = false);
     void setSlowDown(int slowDown);
+
+    // Qt signal handlers.
+    void handleSigHup();
+    void handleSigTerm();
+    void handleSigInt();
 
 private slots:
     void clientConnected();
@@ -87,6 +97,7 @@ private:
     void finalizeThemeChange();
 
     bool createCacheDir(const QString& path);
+
 private:
     struct QueueItem
     {
@@ -127,6 +138,13 @@ private:
 
     quint64 sequenceCounter;
     qint32 priorityForegroundApplication;
+
+    static int sighupFd[2];
+    static int sigtermFd[2];
+    static int sigintFd[2];
+    QSocketNotifier *snHup;
+    QSocketNotifier *snTerm;
+    QSocketNotifier *snInt;
 };
 //! \internal_end
 #endif
