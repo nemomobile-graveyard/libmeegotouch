@@ -531,7 +531,7 @@ QPointF MListViewPrivate::locateScrollToPosition(const QModelIndex &index, MList
     int cellPosition = locatePosOfItem(index);
     QPointF targetPosition = pannableViewport->position();
 
-    qreal pannableViewportHeight = pannableViewport->boundingRect().height();
+    qreal pannableViewportHeight = pannableViewport->boundingRect().height() - listOffset.y();
     switch (hint) {
     case MList::PositionAtTopHint:
         targetPosition.setY(listOffset.y() + cellPosition);
