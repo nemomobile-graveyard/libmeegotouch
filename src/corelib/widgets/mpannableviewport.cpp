@@ -180,25 +180,6 @@ void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
 
 void MPannableViewportPrivate::_q_pannedWidgetGeometryChanged()
 {
-    Q_Q(MPannableViewport);;
-    // If current position is bigger than new panned widget size (in panning direction) then
-    // position should be updated to avoid unnecessary panning animation.
-    qreal updatedPosition;
-    if (q->panDirection().testFlag(Qt::Vertical)
-        && (pannedWidget->size().height() - q->size().height()) < q->position().y()) {
-        updatedPosition = pannedWidget->size().height() - q->size().height();
-        if (updatedPosition < 0)
-            updatedPosition = 0;
-        q->setPosition(QPointF(q->position().x(), updatedPosition));
-    }
-    if (q->panDirection().testFlag(Qt::Horizontal)
-        && (pannedWidget->size().width() - q->size().width()) < q->position().x()) {
-        updatedPosition = pannedWidget->size().width() - q->size().width();
-        if (updatedPosition < 0)
-            updatedPosition = 0;
-        q->setPosition(QPointF(updatedPosition, q->position().y()));
-    }
-
     correctWidgetPositionAfterGeometryChange();
     ensureFocusedPannedWidgetIsVisible();
 }
