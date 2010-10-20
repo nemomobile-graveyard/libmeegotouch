@@ -91,9 +91,10 @@ MWindowPrivate::MWindowPrivate() :
     discardedPaintEvent(false),
     q_ptr(NULL)
 {
-#ifndef Q_WS_X11
+#ifdef Q_WS_X11
     removeWindowFromSwitcherInProgress = false;
     skipTaskbar = false;
+#else
     onDisplay = true; // For non X11, windows always visible
 #endif
 
