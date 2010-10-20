@@ -90,6 +90,9 @@ private:
     Q_PRIVATE_SLOT(d_func(), void videoReady())
     Q_PRIVATE_SLOT(d_func(), void frameReady())
     Q_PRIVATE_SLOT(d_func(), void stateChanged())
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_enableVisualUpdates())
+    Q_PRIVATE_SLOT(d_func(), void _q_disableVisualUpdates())        
 };
 
 #endif

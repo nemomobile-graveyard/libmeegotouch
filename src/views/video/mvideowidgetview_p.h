@@ -55,6 +55,9 @@ public:
 
     unsigned long currentWinId() const;
 
+    void _q_enableVisualUpdates();
+    void _q_disableVisualUpdates();
+
     bool m_useSingleYuvTexture;
     unsigned int m_textures[3];
 
@@ -71,6 +74,8 @@ public:
     bool m_fullscreen;
 
     MGstVideo* m_gstVideo;
+    
+    bool m_updateEnabled;
 };
 
 #endif

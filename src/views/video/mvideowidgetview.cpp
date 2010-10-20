@@ -39,7 +39,8 @@ MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()
         scaleOffsets(NULL),
         m_needFillBg(false),
         m_fullscreen(false),
-        m_gstVideo(new MGstVideo())
+        m_gstVideo(new MGstVideo()), 
+        m_updateEnabled(false)
 {
     m_textures[0] = 0;
     m_textures[1] = 0;
@@ -79,7 +80,8 @@ MVideoWidgetModel* MVideoWidgetViewPrivate::model()
 void MVideoWidgetViewPrivate::update()
 {
     Q_Q(MVideoWidgetView);
-    q->update();
+    if( m_updateEnabled ) 
+        q->update();
 }
 
 void MVideoWidgetViewPrivate::updateGeometry() 
@@ -101,32 +103,18 @@ void MVideoWidgetViewPrivate::frameReady()
 {
     model()->setPositionNoEmit(m_gstVideo->position());
 
-    if( MApplication::softwareRendering()) {
-        blitSwFrame();
-    } else {
-#ifdef M_USE_OPENGL
-        blitGLFrame();
-#else
-        blitSwFrame();
-#endif
+    if( m_updateEnabled ) {
+        if( MApplication::softwareRendering()) {
+            blitSwFrame();
+        } else {
+    #ifdef M_USE_OPENGL
+            blitGLFrame();
+    #else
+            blitSwFrame();
+    #endif
+        }
+        update();
     }
-
-    //FIXME This is a workaround for a situation where Qt's animations/timers 
-    //get broken when there are too much update calls coming (multiple video 
-    //widgets visible and playing at a same time). Do not call update() for 
-    //each videowidget's frame separately. This can be replaced with a single 
-    //update() call when Qt side is fixed.
-    static QTimer timer;
-    if( !timer.isActive() ) {
-        Q_Q(MVideoWidgetView);
-        timer.setSingleShot(true);
-        if( MApplication::activeApplicationWindow() )
-            q->connect(&timer, SIGNAL(timeout()),
-                       MApplication::activeApplicationWindow()->viewport(), SLOT(update()),
-                       Qt::UniqueConnection);
-        timer.start(0);
-    }
-    //update();
 }
 
 void MVideoWidgetViewPrivate::stateChanged()
@@ -443,6 +431,16 @@ unsigned long MVideoWidgetViewPrivate::currentWinId() const
     return MApplication::activeApplicationWindow()->viewport()->effectiveWinId();
 }
 
+void MVideoWidgetViewPrivate::_q_enableVisualUpdates()
+{
+    m_updateEnabled = true;
+}
+
+void MVideoWidgetViewPrivate::_q_disableVisualUpdates()
+{
+    m_updateEnabled = false;
+}
+
 MVideoWidgetView::MVideoWidgetView(MVideoWidget* controller) :
     MWidgetView(* new MVideoWidgetViewPrivate, controller)
 {
@@ -453,6 +451,9 @@ MVideoWidgetView::MVideoWidgetView(MVideoWidget* controller) :
             SLOT(frameReady()));
     connect(d->m_gstVideo, SIGNAL(stateChanged()),
             SLOT(stateChanged()));
+
+    connect(controller, SIGNAL(displayEntered()),SLOT(_q_enableVisualUpdates()));
+    connect(controller, SIGNAL(displayExited()), SLOT(_q_disableVisualUpdates()));
 }
 
 MVideoWidgetView::MVideoWidgetView(MVideoWidgetViewPrivate &dd, MVideoWidget *controller) :
@@ -465,6 +466,9 @@ MVideoWidgetView::MVideoWidgetView(MVideoWidgetViewPrivate &dd, MVideoWidget *co
             SLOT(frameReady()));
     connect(d->m_gstVideo, SIGNAL(stateChanged()),
             SLOT(stateChanged()));
+
+    connect(controller, SIGNAL(displayEntered()),SLOT(_q_enableVisualUpdates()));
+    connect(controller, SIGNAL(displayExited()), SLOT(_q_disableVisualUpdates()));
 }
 
 MVideoWidgetView::~MVideoWidgetView()
@@ -554,7 +558,7 @@ void MVideoWidgetView::applyStyle()
     
     MWidgetView::applyStyle();
 
-    update();
+    d->update();
 }
 
 void MVideoWidgetView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -590,7 +594,7 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
         }
         else if( member == MVideoWidgetModel::Position ) {
             d->m_gstVideo->seek(model()->position());
-            update();
+            d->update();
         }
         else if( member == MVideoWidgetModel::Looping ) {
             d->m_gstVideo->setLooping(model()->looping());
@@ -613,16 +617,16 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
             }
 
             updateGeometry();
-            update();
+            d->update();
         }
         else if( member == MVideoWidgetModel::ScaleMode ) {
             d->updateVideoGeometry();
-            update();
+            d->update();
         }
         else if( member == MVideoWidgetModel::AspectRatioMode ) {
             d->m_gstVideo->forceAspectRatio(model()->aspectRatioMode() == MVideoWidgetModel::AspectRatioOriginal);
             d->updateVideoGeometry();
-            update();
+            d->update();
         }                
     }
 }
@@ -649,7 +653,7 @@ void MVideoWidgetView::setupModel()
     d->m_gstVideo->open(model()->filename());
 
     updateGeometry();
-    update();
+    d->update();
 }
 
 M_REGISTER_VIEW_NEW(MVideoWidgetView, MVideoWidget)
