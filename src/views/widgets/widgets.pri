@@ -14,6 +14,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mcontainerheader_p.h \
     $$WIDGETS_SRC_DIR/mbubbleitembackground_p.h \
     $$WIDGETS_SRC_DIR/mlistindextooltip_p.h \
+    $$WIDGETS_SRC_DIR/mlistindex_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mapplicationmenubutton.cpp \

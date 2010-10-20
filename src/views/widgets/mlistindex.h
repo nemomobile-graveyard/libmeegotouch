@@ -87,7 +87,11 @@ protected:
    /*! \reimp_end */
 
 private:
+    Q_PRIVATE_SLOT(d_func(), void _q_updateVisibility())
+
     Q_DECLARE_PRIVATE(MListIndex)
+    MListIndexPrivate *d_ptr;
+
     Q_DISABLE_COPY(MListIndex)
 };
 

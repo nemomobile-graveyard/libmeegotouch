@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "mlistindex.h"
+#include "mlistindex_p.h"
 #include "mlistindexview.h"
 #include "mlistindexfloatingview.h"
 #include "mlist.h"
@@ -27,13 +28,56 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MListIndex)
 
-MListIndex::MListIndex(MList *parent) : MWidgetController(new MListIndexModel, parent)
+MListIndexPrivate::MListIndexPrivate()
+    : q_ptr(NULL)
 {
-    setView(new MListIndexView(this));
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    model()->setList(parent);
+}
 
-    grabGesture(Qt::TapAndHoldGesture);
+MListIndexPrivate::~MListIndexPrivate()
+{
+}
+
+void MListIndexPrivate::init()
+{
+    Q_Q(MListIndex);
+
+    q->setView(new MListIndexView(q));
+    q->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    q->grabGesture(Qt::TapAndHoldGesture);
+}
+
+void MListIndexPrivate::updateListConnections(MList *list)
+{
+    Q_Q(MListIndex);
+
+    q->disconnect(q->model()->list());
+
+    if (list)
+        q->connect(list, SIGNAL(visibleChanged()), q, SLOT(_q_updateVisibility()));
+}
+
+void MListIndexPrivate::_q_updateVisibility()
+{
+    Q_Q(MListIndex);
+
+    if (q->model()->list()) {
+        if (q->model()->list()->isVisible() && q->model()->displayMode() != MList::Hide)
+            q->show();
+        else
+            q->hide();
+    }
+}
+
+MListIndex::MListIndex(MList *parent)
+    : MWidgetController(new MListIndexModel, parent),
+    d_ptr(new MListIndexPrivate)
+{
+    Q_D(MListIndex);
+    d->q_ptr = this;
+    d->init();
+
+    setList(parent);
 }
 
 MListIndex::~MListIndex()
@@ -50,6 +94,9 @@ void MListIndex::setShortcuts(const QMap<QModelIndex, QString> &shortcuts)
 
 void MListIndex::setList(MList *list)
 {
+    Q_D(MListIndex);
+
+    d->updateListConnections(list);
     model()->setList(list);
 }
 
@@ -72,3 +119,5 @@ void MListIndex::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     event->accept();
 }
+
+#include "moc_mlistindex.cpp"
