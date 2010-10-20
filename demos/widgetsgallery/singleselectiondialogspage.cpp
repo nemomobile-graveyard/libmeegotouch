@@ -182,7 +182,6 @@ void SingleSelectionDialogsPage::openSystemDialog()
         //% "System Dialog"
         qtTrId("xx_dialogs_and_notifications_system_dialog_title"),
         M::OkButton);
-
     dialog->setCentralWidget(
         //% "I'm a system dialog.<br>"
         //% "You can skip me with the home button.<br>"
@@ -205,12 +204,19 @@ void SingleSelectionDialogsPage::openSystemModalDialog()
         //% "System Modal Dialog"
         qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"),
         M::OkButton);
+    //% "I'm a system modal dialog.<br>"
+    //% "You can't skip me as I'm designed for<br>"
+    //% "use cases that require immediate user attention."
 
-    dialog->setCentralWidget(
-        //% "I'm a system modal dialog.<br>"
-        //% "You can't skip me as I'm designed for<br>"
-        //% "use cases that require immediate user attention."
-        new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")));
+    MLabel *textSystemModal= new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label"));
+    textSystemModal->setStyleName("CommonBodyTextInverted");
+    textSystemModal->setAlignment(Qt::AlignCenter);
+
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    layout->addStretch();
+    layout->addItem(textSystemModal);
+    layout->addStretch();
+    dialog->centralWidget()->setLayout(layout);
 
     dialog->setSystem(true);
 
@@ -250,15 +256,23 @@ void SingleSelectionDialogsPage::openEntryDialog()
 
     MWidget *centralWidget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0,0,0,0);
+    layout->setSpacing(0);
     //% "Name"
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_entry_dialog_label"), centralWidget);
+    label->setStyleName("CommonTitleInverted");
     MTextEdit *textEdit = new MTextEdit(MTextEditModel::SingleLine,
                                             QString(),
                                             centralWidget);
+    textEdit->setStyleName("CommonSingleInputField");
+    MLabel *spacer = new MLabel();
+    spacer->setObjectName("CommonSpacer");
+
     centralWidget->setLayout(layout);
 
     layout->addItem(label);
     layout->addItem(textEdit);
+    layout->addItem(spacer);
 
     //% "Please enter your name"
     dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),

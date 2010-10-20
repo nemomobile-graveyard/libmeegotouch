@@ -135,6 +135,7 @@ void MDialogViewPrivate::createDialogBox()
     contentsViewport->setWidget(contents);
     contentsLayout = createLayout(Qt::Vertical);
     contentsLayout->setContentsMargins(0, 0, 0, 0);
+    contentsLayout->setSpacing(0);
     contents->setLayout(contentsLayout);
     q->connect(contentsViewport, SIGNAL(heightChanged()), SLOT(_q_updatePanning()));
 }
@@ -147,15 +148,19 @@ void MDialogViewPrivate::createButtonBox()
     buttonBoxLayoutPolicy = new MButtonGroupLayoutPolicy(buttonBoxLayout, Qt::Horizontal);
     buttonBoxLayout->setPolicy(buttonBoxLayoutPolicy);
     buttonBoxLayout->setContentsMargins(0, 0, 0, 0);
-    buttonBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    buttonBoxLayout->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    buttonBoxLayoutPolicy->setContentsMargins(0,0,0,0);
+    buttonBoxLayoutPolicy->setSpacing(0);
+
+    buttonBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    buttonBoxLayout->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     centerLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     buttonBox->setLayout(centerLayout);
     centerLayout->setContentsMargins(0, 0, 0, 0);
     centerLayout->setSpacing(0);
     buttonContainer = new MWidget;
-    buttonContainer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    buttonContainer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    buttonContainer->setContentsMargins(0,0,0,0);
     buttonContainer->setLayout(buttonBoxLayout);
     centerLayout->addItem(buttonContainer);
 }
@@ -196,7 +201,7 @@ void MDialogViewPrivate::createTitleBar()
     titleLabel = new MLabel(titleBar);
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setTextElide(true);
-    titleLabel->setObjectName("MDialogTitleLabel");
+    titleLabel->setObjectName("CommonGroupHeader");
     layout->addItem(titleLabel);
     layout->setAlignment(titleLabel, Qt::AlignCenter);
 
@@ -275,9 +280,9 @@ void MDialogView::applyStyle()
     // and the other unset (-1).
     d->dialogBox->setPreferredWidth(style()->dialogPreferredSize().width());
     d->dialogBox->setPreferredHeight(style()->dialogPreferredSize().height());
-    //d->buttonBox->setContentsMargins(0, 0, 0, 0);
+    d->buttonBox->setContentsMargins(0, 0, 0, 0);
 
-    d->buttonBox->setContentsMargins(0, style()->verticalSpacing(), 0, 0);
+   // d->buttonBox->setContentsMargins(0, style()->verticalSpacing(), 0, 0);
 
     d->buttonBoxLayoutPolicy->setButtonWidth(style()->dialogButtonFixedWidth());
     d->buttonBoxLayoutPolicy->setSpacing(style()->buttonSpacing());
@@ -289,6 +294,7 @@ void MDialogView::applyStyle()
         style()->dialogTopMargin(), /* top */
         style()->dialogRightMargin(), /* right */
         style()->dialogBottomMargin() /* bottom */);
+
 
     d->setupDialogVerticalAlignment();
 }
@@ -470,6 +476,7 @@ void MDialogViewPrivate::addButton(MButtonModel *buttonModel)
     M::ButtonRole currentButtonRole;
     MButton *newButton = new MButton(0, buttonModel);
     newButton->setObjectName(buttonModel->objectName());
+    newButton->setStyleName("CommonQueryButton");
     MButton *currButton = 0;
     bool buttonAdded = false;
     int i = 0;
@@ -542,6 +549,7 @@ void MDialogViewPrivate::setCentralWidget(QGraphicsWidget *newCentralWidget)
 
     // Place the new one
     if (newCentralWidget) {
+        newCentralWidget->setObjectName("MDialogContents");
         contentsLayout->insertItem(0, newCentralWidget);
         centralWidget = newCentralWidget;
     }

@@ -249,6 +249,7 @@ MPannableViewport::MPannableViewport(QGraphicsItem *parent)
     d->viewportLayout = new MPannableViewportLayout;
     d->viewportLayout->setPanningDirections(panDirection());
     d->viewportLayout->setContentsMargins(0, 0, 0, 0);
+    d->viewportLayout->setSpacing(0);
     setLayout(d->viewportLayout);
 
     connect(this,
