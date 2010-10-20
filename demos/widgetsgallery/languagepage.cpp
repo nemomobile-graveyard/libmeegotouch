@@ -165,7 +165,7 @@ void LanguagePage::retranslateUi()
     for (unsigned language = QLocale::C;
          language <= QLocale::LastLanguage;
          language++) {
-        foreach (QLocale::Country country,
+        foreach (const QLocale::Country &country,
                  QLocale::countriesForLanguage (QLocale::Language(language))) {
             localeNames << QLocale(QLocale::Language(language), country).name();
         }
@@ -179,7 +179,7 @@ void LanguagePage::retranslateUi()
             //% "None"
             << QString::fromUtf8("“”: ") + qtTrId("xx_locale_none")
             << "");
-    foreach (QString localeName, localeNames) {
+    foreach (const QString &localeName, localeNames) {
         QString localeNameDescription;
         MLocale locale(localeName);
         if (locale.textDirection() == Qt::RightToLeft)
