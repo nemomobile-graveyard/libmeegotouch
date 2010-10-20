@@ -28,11 +28,14 @@
     \class MLabelHighlighter
     \brief Abstract base class for label highlighter objects.
 
-    Class is used to highlight text fragments from MLabel. Class will also
-    receive user interaction events when clicking and long pressing a highlighted
+    Class is used to highlight text fragments from MLabel with the color specified in MLabel style.
+    Class will also receive user interaction events when clicking and long pressing a highlighted
     piece of text.
 
     \ingroup widgets
+
+    \sa MLabelStyle::highlightColor
+    \sa MLabelStyle::activeHighlightColor
 */
 class M_EXPORT MLabelHighlighter
 {
