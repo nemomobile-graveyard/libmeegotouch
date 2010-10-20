@@ -183,6 +183,30 @@ void MPannableViewportPrivate::_q_pannedWidgetGeometryChanged()
     ensureFocusedPannedWidgetIsVisible();
 }
 
+void MPannableViewportPrivate::_q_pannedWidgetHeightOutOfViewport()
+{
+    Q_Q(MPannableViewport);;
+    // If current position is bigger than new panned widget size (in panning direction) then
+    // position should be updated to avoid unnecessary panning animation.
+    if (q->panDirection().testFlag(Qt::Vertical)) {
+        qreal updatedPosition = pannedWidget->size().height() - q->size().height();
+        if(updatedPosition < q->position().y())
+            q->setPosition(QPointF(q->position().x(), qMax(0.0, updatedPosition)));
+    }
+}
+
+void MPannableViewportPrivate::_q_pannedWidgetWidthOutOfViewport()
+{
+    Q_Q(MPannableViewport);;
+    // If current position is bigger than new panned widget size (in panning direction) then
+    // position should be updated to avoid unnecessary panning animation.
+    if (q->panDirection().testFlag(Qt::Horizontal)) {
+        qreal updatedPosition = pannedWidget->size().width() - q->size().width();
+        if(updatedPosition < q->position().x())
+            q->setPosition(QPointF(qMax(0.0, updatedPosition), q->position().y()));
+    }
+}
+
 void MPannableViewportPrivate::correctWidgetPositionAfterGeometryChange()
 {
     Q_Q(MPannableViewport);
@@ -290,14 +314,19 @@ void MPannableViewport::setWidget(QGraphicsWidget *widget)
 {
     Q_D(MPannableViewport);
 
-    if (d->pannedWidget)
+    if (d->pannedWidget) {
         disconnect(d->pannedWidget, SIGNAL(geometryChanged()), this, SLOT(_q_pannedWidgetGeometryChanged()));
+        disconnect(d->pannedWidget, SIGNAL(heightChanged()), this, SLOT(_q_pannedWidgetHeightOutOfViewport()));
+        disconnect(d->pannedWidget, SIGNAL(widthChanged()), this, SLOT(_q_pannedWidgetWidthOutOfViewport()));
+    }
 
     d->pannedWidget = widget;
     d->viewportLayout->setWidget(widget);
 
     if (widget) {
         connect(widget, SIGNAL(geometryChanged()), this, SLOT(_q_pannedWidgetGeometryChanged()));
+        connect(widget, SIGNAL(heightChanged()), this, SLOT(_q_pannedWidgetHeightOutOfViewport()));
+        connect(widget, SIGNAL(widthChanged()), this, SLOT(_q_pannedWidgetWidthOutOfViewport()));
 
         widget->setPos(-position());
         widget->setZValue(ZValuePannedWidget);

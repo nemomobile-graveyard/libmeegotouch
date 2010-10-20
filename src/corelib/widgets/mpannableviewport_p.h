@@ -61,6 +61,8 @@ public:
     void _q_resolvePannedWidgetIsOnDisplay();
     void _q_positionIndicatorEnabledChanged();
     void _q_pannedWidgetGeometryChanged();
+    void _q_pannedWidgetWidthOutOfViewport();
+    void _q_pannedWidgetHeightOutOfViewport();
 
     void correctWidgetPositionAfterGeometryChange();
     void ensureFocusedPannedWidgetIsVisible();
