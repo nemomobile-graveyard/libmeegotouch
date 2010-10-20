@@ -22,22 +22,26 @@
 
 #include <QObject>
 #include <QHash>
+#include <QList>
 
 #include "maction.h"
 #include "mnamespace.h"
 
+class QGraphicsLayoutItem;
+class QGraphicsWidget;
+class QEvent;
+class QAction;
 class MToolBar;
 class MWidget;
 class MLinearLayoutPolicy;
-class QEvent;
 class MToolBarView;
-class QAction;
 class MButton;
 class MWidgetAction;
 class MLayout;
-class QGraphicsLayoutItem;
-class QGraphicsWidget;
-class ToolBarLayoutPolicy;
+class MToolBarLayoutPolicy;
+class MButtonGroup;
+class MAction;
+
 
 class MToolBarViewPrivate : public QObject
 {
@@ -53,11 +57,17 @@ public:
     void remove(QAction *action, bool hideOnly);
     void change(QAction *action);
 
+    void setCapacity(int newCapacity);
+    void setIconsEnabled(bool enabled);
+    void setLabelsEnabled(bool enabled);
+    void setSpacesEnabled(bool enabled);
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
     MWidget *createWidget(QAction *action);
 
-    int policyIndexForAddingAction(QAction *action, ToolBarLayoutPolicy *policy) const;
+    int policyIndexForAddingAction(QAction *action, MToolBarLayoutPolicy *policy) const;
+    void insert(MToolBarLayoutPolicy *policy, int index, QAction *action, MWidget *widget);
     bool isLocationValid(QAction *action, MAction::Location loc) const;
     bool releaseWidget(QAction *action, MWidget *widget) const;
     bool hasTextEditWidget(QAction *action) const;
@@ -67,18 +77,23 @@ protected:
     void setEnabledPreservingSelection(bool enabled);
     void _q_groupButtonClicked(bool);
     void _q_groupActionToggled(bool);
+    void setCapacity(int newCapacity, MToolBarLayoutPolicy *policy);
+    void addActionsFromLeftOvers();
+    void updateStyling(MButton *button) const;
+    virtual void updateWidgetAlignment();
+
 protected:
     MToolBarView *q_ptr;
     MToolBar *controller;
-    MWidget *widgetsContainer;
     MLayout *layout;
+    MToolBarLayoutPolicy *landscapePolicy;
+    MToolBarLayoutPolicy *portraitPolicy;
     QHash<QAction *, MWidget *> leasedWidgets;
     QHash<QAction *, MButton *> buttons;
-    /* If this is non-null, created buttons will be placed in this group */
-    MButtonGroup * buttonGroup;
-
-    ToolBarLayoutPolicy *landscapePolicy;
-    ToolBarLayoutPolicy *portraitPolicy;
+    MButtonGroup * buttonGroup; /* If this is non-null, created buttons will be placed in this group */
+    bool iconsEnabled;
+    bool labelsEnabled;
+    Qt::Alignment widgetAlignment;
 };
 
 #endif

@@ -10,4 +10,6 @@ SOURCES += \
 HEADERS += \
     ut_mtoolbarview.h
 
+support_files.files += ut_mtoolbarview.css
+
 include(../common_bot.pri)

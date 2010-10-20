@@ -1,0 +1,35 @@
+MToolbarStyle {
+    capacity: 4;
+    has-icons: true;
+    has-labels: false;
+}
+
+MToolbarStyle.Landscape {
+    capacity: 4;
+    has-icons: true;
+    has-labels: false;
+}
+
+MToolbarStyle.Portrait {
+    capacity: 3;
+    has-icons: false;
+    has-labels: true;
+}
+
+MToolbarTabStyle {
+    capacity: 4;
+    has-icons: true;
+    has-labels: true;
+}
+
+MToolbarTabStyle.Landscape {
+    capacity: 4;
+    has-icons: true;
+    has-labels: true;
+}
+
+MToolbarTabStyle.Portrait {
+    capacity: 5;
+    has-icons: true;
+    has-labels: true;
+}

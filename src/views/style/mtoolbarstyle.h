@@ -36,6 +36,26 @@ class M_EXPORT MToolbarStyle : public MWidgetStyle
     M_STYLE(MToolbarStyle)
 
     M_STYLE_PTR_ATTRIBUTE(MScalableImage*, dropShadowImage, DropShadowImage)
+
+    /*!
+     * \brief Max number of slots in the bar (-1 = unlimited)
+     */
+    M_STYLE_ATTRIBUTE(int, capacity, Capacity)
+
+    /*!
+     * \brief Tool bar buttons have icon or not
+     */
+    M_STYLE_ATTRIBUTE(bool, hasIcons, HasIcons)
+
+    /*!
+     * \brief Tool bar buttons have text label or not
+     */
+    M_STYLE_ATTRIBUTE(bool, hasLabels, HasLabels)
+
+    /*!
+     * \brief Tool bar buttons have spacers between them to layout them equally in the available space
+     */
+    M_STYLE_ATTRIBUTE(bool, hasSpaces, HasSpaces)
 };
 
 /*!

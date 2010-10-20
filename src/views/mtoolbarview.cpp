@@ -18,10 +18,9 @@
 ****************************************************************************/
 
 #include <QGraphicsLinearLayout>
-
 #include "mtoolbar.h"
 #include "mtoolbar_p.h"
-
+#include "mtoolbarlayoutpolicy.h"
 #include "mtheme.h"
 #include "mbutton.h"
 #include "mbuttongroup.h"
@@ -36,140 +35,16 @@
 #include "mscalableimage.h"
 #include "mscenemanager.h"
 
-const int maxSlots = 4;
-
-/* Make a layout policy for aligning widgets nicely by
- * adding spacers.
- * This is a very crude policy, and doesn't support most
- * of the functions of MLinearLayoutPolicy */
-class ToolBarLayoutPolicy : public MLinearLayoutPolicy
-{
-public:
-    explicit ToolBarLayoutPolicy(MLayout *layout) :
-        MLinearLayoutPolicy(layout, Qt::Horizontal) {
-            textEditIndex = -1;
-            insertSpacer(0);
-            setSpacing(0);
-        }
-    ~ToolBarLayoutPolicy() {
-        for(int i = widgetCount()-1; i >= 0; i--)
-            removeWidgetAt(i);
-        QGraphicsLayoutItem *item = MLinearLayoutPolicy::itemAt(0);
-        MLinearLayoutPolicy::removeAt(0);
-        delete item;
-    }
-    void insertWidgetAndRemoveOverflow(int index, QGraphicsLayoutItem *item)
-    {
-        index = qMin((uint)index, (uint)widgetCount());
-        //A ugly hack to try to cope with QTBUG-11134
-        item->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        Q_ASSERT(item);
-        Q_ASSERT(MLinearLayoutPolicy::count() % 2);
-        Q_ASSERT(MLinearLayoutPolicy::count() > index*2);
-
-        if(dynamic_cast<MTextEdit *>(item->graphicsItem())) {
-            if(textEditIndex != -1)  //Remove any previous text edit
-                removeWidgetAt(textEditIndex);
-            textEditIndex = index;
-        } else if(index <= textEditIndex)
-            textEditIndex++;
-
-        //Add an item and a spacer after the item
-        MLinearLayoutPolicy::insertItem(1 + index*2, item);
-
-        insertSpacer(2+index*2);
-        Q_ASSERT(MLinearLayoutPolicy::count() % 2);
-
-        //Prevent overflow - remove any that we've pushed off the end
-        while(takenSlots() > maxSlots) {
-            removeWidgetAt(widgetCount()-1);
-        }
-    }
-    bool roomForWidget(int index, bool textEdit) const {
-        index = qMin((uint)index, (uint)widgetCount());
-
-        if(textEdit) {
-            if(textEditIndex != -1 && index > textEditIndex) {
-                //If we come first, we push the old textedit out of the way
-                return false; //No room for us
-            } else if(index + 1 >= maxSlots) {
-                return false; //No room to add
-            }
-        }
-        else if(index >= maxSlots)
-            return false; //No room to add
-        else if(textEditIndex != -1 && index >= maxSlots -1)
-            return false; //No room to add because textedit takes up two spaces
-        return true;
-    }
-    void removeWidgetAt(int index)
-    {
-        if(index < 0 || index >= widgetCount())
-            return;
-        Q_ASSERT(MLinearLayoutPolicy::count() % 2);
-        Q_ASSERT(MLinearLayoutPolicy::count() > 2+index*2);
-
-        //Remove the item first
-        if(index == textEditIndex)
-            textEditIndex = -1;
-        else if(textEditIndex != -1 && index < textEditIndex)
-            textEditIndex--;
-        MLinearLayoutPolicy::removeAt(2+index*2);
-        MLinearLayoutPolicy::removeAt(1+index*2);
-    }
-
-    int widgetCount() const
-    {
-        return (MLinearLayoutPolicy::count()-1)/2;
-    }
-    int takenSlots() const
-    {
-        if(textEditIndex != -1)
-            return widgetCount() + 1;  //textedit counts for two slots
-        else
-            return widgetCount();
-    }
-    int widgetIndexOf(const QGraphicsLayoutItem *item) const {
-        for(int i = widgetCount() -1; i >= 0; i--) {
-            if(MLinearLayoutPolicy::itemAt(1+i*2) == item)
-                return i;
-        }
-        return -1;
-    }
-    void removeWidget(const QGraphicsLayoutItem *item)
-    {
-        removeWidgetAt(widgetIndexOf(item));
-    }
-
-protected:
-    /** Hide the normal functions since these include the spacers
-     *  and we want to encourage the user to only use our functions */
-    virtual int count() const { return MLinearLayoutPolicy::count(); }
-    virtual QGraphicsLayoutItem *itemAt(int index) const { return MLinearLayoutPolicy::itemAt(index); }
-    virtual void insertItem(int index, QGraphicsLayoutItem *item) { return MLinearLayoutPolicy::insertItem(index, item); }
-    void indexOf(const QGraphicsLayoutItem *item) const;
-    virtual void removeAt(int index) {
-        //This can be called by the layout, and we need to make sure that we delete the spacer as well
-        removeWidgetAt((index-1)/2);
-    }
-
-private:
-    int textEditIndex;
-
-    void insertSpacer(int position) {
-        //Create an item that will expand if necessary
-        QGraphicsWidget *item =  new QGraphicsWidget;
-        item->setPreferredSize(1,1); //Ugly hack around QTBUG-11134
-        item->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        MLinearLayoutPolicy::insertItem(position, item);
-    }
-};
 
 MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
     : QObject(),
       q_ptr(0),
       layout(0),
-      buttonGroup(0)
+      landscapePolicy(0),
+      portraitPolicy(0),
+      buttonGroup(0),
+      iconsEnabled(true),
+      labelsEnabled(false)
 {
     this->controller = controller;
     controller->installEventFilter(this);
@@ -201,10 +76,12 @@ void MToolBarViewPrivate::init()
     layout->setAnimation(NULL);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    landscapePolicy = new ToolBarLayoutPolicy(layout);
+    landscapePolicy = new MToolBarLayoutPolicy(layout);
+    landscapePolicy->setStyleName("ToolBarLandscapePolicy");
     layout->setLandscapePolicy(landscapePolicy);
 
-    portraitPolicy = new ToolBarLayoutPolicy(layout);
+    portraitPolicy = new MToolBarLayoutPolicy(layout);
+    portraitPolicy->setStyleName("ToolBarPortraitPolicy");
     layout->setPortraitPolicy(portraitPolicy);
 
     QGraphicsLinearLayout *controllerlayout = (QGraphicsLinearLayout *)(controller->layout());
@@ -214,9 +91,11 @@ void MToolBarViewPrivate::init()
     foreach(QAction *action, controller->actions()) {
         add(action);
     }
+
+    updateWidgetAlignment();
 }
 
-int MToolBarViewPrivate::policyIndexForAddingAction(QAction *action, ToolBarLayoutPolicy *policy) const {
+int MToolBarViewPrivate::policyIndexForAddingAction(QAction *action, MToolBarLayoutPolicy *policy) const {
     Q_Q(const MToolBarView);
     //We need to add the action's given widget to the policy
     //This is a bit complicated because we ideally want to add it in the right place,
@@ -261,6 +140,7 @@ void MToolBarViewPrivate::add(QAction *action)
         landscapePolicy->insertWidgetAndRemoveOverflow( landscapeIndex, widget );
     if (portraitIndex != -1)
         portraitPolicy->insertWidgetAndRemoveOverflow( portraitIndex, widget );
+
     updateWidgetFromAction(widget, action);
 }
 
@@ -295,9 +175,9 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
     //There might be space now any actions not already added.  Signal a change action which
     //will check if an item now has room to be shown
     foreach(QAction *action2, controller->actions()) {
-        if(action2 != action && action2->isVisible() &&
-                (isLocationValid(action2, MAction::ToolBarLandscapeLocation) ||
-                 isLocationValid(action2, MAction::ToolBarPortraitLocation)))
+        if (action2 != action && action2->isVisible() &&
+            (isLocationValid(action2, MAction::ToolBarLandscapeLocation) ||
+             isLocationValid(action2, MAction::ToolBarPortraitLocation)))
             change(action2);
     }
 }
@@ -373,11 +253,17 @@ void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *actio
         button->setChecked(action->isChecked());
 
         // Only update the text and icon if we created the button
-        if(buttons.contains(action)) {
+        if (buttons.contains(action)) {
             button->setText(action->text());
+            button->setTextVisible(labelsEnabled);
+
             MAction *mAction = qobject_cast<MAction *>(action);
-            if (mAction)
+            if (mAction) {
                 button->setIconID(mAction->iconID());
+                button->setIconVisible(iconsEnabled);
+            }
+
+            updateStyling(button);
         }
     }
 }
@@ -401,7 +287,8 @@ bool MToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
                 if (propertyEvent->propertyName() == _M_IsEnabledPreservingSelection) {
                     bool enabledPreservingSelection = obj->property(_M_IsEnabledPreservingSelection).toBool();
                     setEnabledPreservingSelection(enabledPreservingSelection);
-                }
+                } else if (propertyEvent->propertyName() == "widgetAlignment")
+                    updateWidgetAlignment();
             }
             break;
 
@@ -550,6 +437,100 @@ void MToolBarViewPrivate::_q_groupActionToggled(bool checked)
     }
 }
 
+void MToolBarViewPrivate::setCapacity(int newCapacity)
+{
+    if (newCapacity == -1)
+        newCapacity = MToolBarLayoutPolicy::unlimitedCapacity;
+
+    setCapacity(newCapacity, portraitPolicy);
+    setCapacity(newCapacity, landscapePolicy);
+}
+
+void MToolBarViewPrivate::setCapacity(int newCapacity, MToolBarLayoutPolicy *policy)
+{
+    if (policy->maxWidgetSlots() == newCapacity)
+        return;
+
+    bool newRoom = (policy->effectiveMaxWidgetSlots() < newCapacity && policy->freeWidgetSlots() == 0);
+
+    policy->setMaxWidgetSlots(newCapacity);
+
+    if (newRoom)
+        addActionsFromLeftOvers();
+}
+
+void MToolBarViewPrivate::addActionsFromLeftOvers()
+{
+    foreach (QAction *action, controller->actions()) {
+        if (action->isVisible() &&
+            (isLocationValid(action, MAction::ToolBarLandscapeLocation) ||
+             isLocationValid(action, MAction::ToolBarPortraitLocation)))
+            change(action);
+    }
+}
+
+void MToolBarViewPrivate::setIconsEnabled(bool enabled)
+{
+    iconsEnabled = enabled;
+
+    for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
+        MButton *button = bit.value();
+        if (button) {
+            button->setIconVisible(iconsEnabled);
+        }
+    }
+}
+
+void MToolBarViewPrivate::setLabelsEnabled(bool enabled)
+{
+    labelsEnabled = enabled;
+
+    for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
+        MButton *button = bit.value();
+        if (button) {
+            button->setTextVisible(labelsEnabled);
+            updateStyling(button);
+        }
+    }
+}
+
+void MToolBarViewPrivate::setSpacesEnabled(bool enabled)
+{
+    landscapePolicy->setSpacesBetween(enabled);
+    portraitPolicy->setSpacesBetween(enabled);
+}
+
+void MToolBarViewPrivate::updateStyling(MButton *button) const
+{
+    if (!button->text().isEmpty() && button->iconID().isEmpty()) {
+        // Only label -> could use different styling
+        button->setStyleName("ToolBarLabelOnlyButton");
+        button->setTextVisible(true); //In this case we will show label (as it is all we have)
+    } else {
+        button->setStyleName("ToolBarIconButton");
+        button->setTextVisible(labelsEnabled);
+    }
+}
+
+void MToolBarViewPrivate::updateWidgetAlignment()
+{
+    QVariant v = controller->property("widgetAlignment");
+    Qt::AlignmentFlag alignment = v.isValid() ? static_cast<Qt::AlignmentFlag>(v.toInt()) : Qt::AlignHCenter;
+
+    /* In here the Qt::Alignment is used like this:
+       Qt::Alignment is used like this:
+       AlignLeft = no prereserved slots on left
+       AlignRight = no prereserved slots on right
+       AlignJustify = no prereserved slots on left and right
+       AlignHCenter = preseserved slots on left and right */
+
+    landscapePolicy->setWidgetAlignment(alignment, v.isValid() ? true : false);
+    portraitPolicy->setWidgetAlignment(alignment, v.isValid() ? true : false);
+
+    if (alignment != Qt::AlignHCenter || !v.isValid())
+        addActionsFromLeftOvers();
+}
+
 MToolBarView::MToolBarView(MToolBar *controller) :
     MWidgetView(controller),
     d_ptr(new MToolBarViewPrivate(controller))
@@ -598,6 +579,18 @@ void MToolBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsI
         }
     }
     MWidgetView::drawBackground(painter, option);
+}
+
+void MToolBarView::applyStyle()
+{
+    Q_D(MToolBarView);
+
+    MWidgetView::applyStyle();
+
+    d->setSpacesEnabled(style()->hasSpaces());
+    d->setIconsEnabled(style()->hasIcons());
+    d->setLabelsEnabled(style()->hasLabels());
+    d->setCapacity(style()->capacity());
 }
 
 // bind view and controller together

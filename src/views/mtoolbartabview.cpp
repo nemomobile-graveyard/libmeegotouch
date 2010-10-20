@@ -42,11 +42,16 @@ MToolbarTabViewPrivate::MToolbarTabViewPrivate(MToolBar *controller) : MToolBarV
     buttonGroup->setExclusive(true);
 }
 
-
 MToolbarTabViewPrivate::~MToolbarTabViewPrivate()
 {
     //buttonGroup deleted by MToolBarView
 }
+
+void MToolbarTabViewPrivate::updateWidgetAlignment()
+{
+    //Widget alignment has no effect in tab bar
+}
+
 
 MToolbarTabView::MToolbarTabView(MToolBar *controller) :
     MToolBarView(*(new MToolbarTabViewPrivate(controller)), controller)

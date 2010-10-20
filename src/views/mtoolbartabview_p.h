@@ -33,6 +33,9 @@ class MToolbarTabViewPrivate : public MToolBarViewPrivate
 public:
     MToolbarTabViewPrivate(MToolBar *controller);
     virtual ~MToolbarTabViewPrivate();
+
+protected:
+   virtual void updateWidgetAlignment();
 };
 
 #endif

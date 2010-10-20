@@ -142,7 +142,7 @@ void MNavigationBarViewPrivate::toolBarChanged()
     if (toolBar) {
         toolBarLayout->removeItem(toolBar);
         // previous toolBar is not ours anymore, so clean property we added
-        toolBar->setProperty("buttonAlignment", QVariant::Invalid);
+        toolBar->setProperty("widgetAlignment", QVariant::Invalid);
         toolBar->setParentItem(0);
     }
 
@@ -234,7 +234,7 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
         }
     }
 
-    toolBar->setProperty("buttonAlignment", alignment);
+    toolBar->setProperty("widgetAlignment", alignment);
 }
 
 // --------------------------------------------------------------------------

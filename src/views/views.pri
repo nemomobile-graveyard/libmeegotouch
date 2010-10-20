@@ -64,7 +64,9 @@ PRIVATE_HEADERS += \
     mspinnerview_p.h \
     mlistview_p.h \
     mbuttongrouplayoutpolicy_p.h \
+    mtoolbarview_p.h \
     mtoolbartabview_p.h \
+    mtoolbarlayoutpolicy.h \
     mpannablewidgetview_p.h \
     mlistindexview_p.h \
     mlistindexfloatingview_p.h \
@@ -99,6 +101,7 @@ SOURCES += \
     mspinnerview.cpp \
     mstatusbarview.cpp \
     mtexteditview.cpp \
+    mtoolbarlayoutpolicy.cpp \
     mtoolbartabview.cpp \
     mtoolbarview.cpp \
     mseparatorview.cpp \

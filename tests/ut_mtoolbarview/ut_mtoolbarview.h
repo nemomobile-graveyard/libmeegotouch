@@ -27,6 +27,8 @@ class MToolBar;
 class MToolBarView;
 class MWidget;
 class MWidgetAction;
+class MAction;
+class MButton;
 
 class Ut_MToolBarView : public QObject
 {
@@ -55,12 +57,27 @@ private slots:
     void testMWidgetAction();
     void testAddToLandscapeWhenInPortrait();
     void testChangingLocation();
+    void testCapacityLimitedTo3();
+    void testCapacityLimitedTo3AndHidingAndShowingFirstButton();
+    void testCapacityIncreaseTo4WhenRotatedToLandscape();
+    void testCapacityDecreaseTo3WhenRotatedToPortrait();
+    void testTabBarCapacityLimitedTo5();
+    void testIconIsVisibleOnLandscape();
+    void testIconIsNotVisibleOnPortrait();
+    void testLabelIsNotVisibleOnLandscape();
+    void testLabelIsVisibleOnPortrait();
+    void testIconAndLabelAreVisible();
+    void testLabelOnlyButtonsHaveDifferentStylename();
 
 private:
     MToolBar *m_toolbar;
     MToolBarView *m_toolbarview;
 
     MWidgetAction *createTextEditAction(MWidget *parentWidget);
+
+    void createDummyActions(int count);
+    MAction *createAction();
+    bool isVisible(MButton *button);
 };
 
 #endif

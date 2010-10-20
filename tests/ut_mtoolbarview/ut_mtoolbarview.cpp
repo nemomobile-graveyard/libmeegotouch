@@ -45,6 +45,8 @@ void Ut_MToolBarView::initTestCase()
     static char *app_name[1] = { (char *) "./Ut_MToolBarView" };
     app = new MApplication(argc, app_name);
     appWin = new MApplicationWindow;
+
+    MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mtoolbarview.css");
 }
 
 void Ut_MToolBarView::cleanupTestCase()
@@ -770,6 +772,223 @@ void Ut_MToolBarView::testChangingLocation()
     button = dynamic_cast<const MButton *>(view->getWidget(action));
     QVERIFY(button);
     WAIT_VERIFY(button->isVisible());
+}
+
+
+void Ut_MToolBarView::createDummyActions(int count)
+{
+    for (int i=0; i<count; i++)
+        createAction();
+}
+
+MAction *Ut_MToolBarView::createAction()
+{
+    MAction *action = new MAction("icon-l-search", "action", m_toolbar);
+    action->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(action);
+    return action;
+}
+
+bool Ut_MToolBarView::isVisible(MButton *button)
+{
+    return (button && button->isVisible());
+}
+
+void Ut_MToolBarView::testCapacityLimitedTo3()
+{
+    appWin->setOrientationAngle(M::Angle90);
+
+    createDummyActions(3);
+
+    QPointer<MAction> action4 = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button4 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action4));
+
+    QCOMPARE(m_toolbar->actions().count(), 4);
+    QVERIFY(isVisible(button4) == false);
+}
+
+void Ut_MToolBarView::testCapacityLimitedTo3AndHidingAndShowingFirstButton()
+{
+    appWin->setOrientationAngle(M::Angle90);
+
+    QPointer<MAction> action1 = createAction();
+    createDummyActions(2);
+    QPointer<MAction> action4 = createAction();
+
+    action1->setVisible(false);
+
+    qApp->processEvents();
+
+    QPointer<MButton> button1 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action1));
+    QPointer<MButton> button4 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action4));
+
+    QCOMPARE(m_toolbar->actions().count(), 4);
+    QVERIFY(isVisible(button1) == false);
+    QVERIFY(isVisible(button4));
+
+    action1->setVisible(true);
+
+    qApp->processEvents();
+
+    QVERIFY(isVisible(button1));
+    QVERIFY(isVisible(button4) == false);
+
+}
+
+void Ut_MToolBarView::testCapacityIncreaseTo4WhenRotatedToLandscape()
+{
+    appWin->setOrientationAngle(M::Angle90);
+
+    createDummyActions(3);
+    QPointer<MAction> action4 = createAction();
+
+    QCOMPARE(m_toolbar->actions().count(), 4);
+
+    appWin->setOrientationAngle(M::Angle0);
+
+    qApp->processEvents();
+
+    QPointer<MButton> button4 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action4));
+
+    QVERIFY(isVisible(button4));
+}
+
+void Ut_MToolBarView::testCapacityDecreaseTo3WhenRotatedToPortrait()
+{
+    appWin->setOrientationAngle(M::Angle0);
+
+    createDummyActions(3);
+    QPointer<MAction> action4 = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button4 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action4));
+
+    QCOMPARE(m_toolbar->actions().count(), 4);
+    QVERIFY(isVisible(button4));
+
+    appWin->setOrientationAngle(M::Angle90);
+
+    qApp->processEvents();
+
+    QCOMPARE(m_toolbar->actions().count(), 4);
+    QVERIFY(isVisible(button4) == false);
+}
+
+void Ut_MToolBarView::testTabBarCapacityLimitedTo5()
+{
+    appWin->setOrientationAngle(M::Angle90);
+    MToolbarTabView* tabView = new MToolbarTabView(m_toolbar);
+    QVERIFY(tabView != 0);
+    m_toolbar->setView(tabView);
+
+    createDummyActions(4);
+    QPointer<MAction> action5 = createAction();
+    QPointer<MAction> action6 = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button5 = dynamic_cast<MButton*>(tabView->getWidget(action5));
+    QPointer<MButton> button6 = dynamic_cast<MButton*>(tabView->getWidget(action6));
+
+    QCOMPARE(m_toolbar->actions().count(), 6);
+    QVERIFY(isVisible(button5));
+    QVERIFY(isVisible(button6) == false);
+}
+
+void Ut_MToolBarView::testIconIsVisibleOnLandscape()
+{
+    appWin->setOrientationAngle(M::Angle0);
+
+    QPointer<MAction> action = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
+    QVERIFY(button);
+    QVERIFY(button->isIconVisible());
+}
+
+void Ut_MToolBarView::testIconIsNotVisibleOnPortrait()
+{
+    appWin->setOrientationAngle(M::Angle90);
+
+    QPointer<MAction> action = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
+    QVERIFY(button);
+    QVERIFY(button->isIconVisible() == false);
+}
+
+void Ut_MToolBarView::testLabelIsNotVisibleOnLandscape()
+{
+    appWin->setOrientationAngle(M::Angle0);
+
+    QPointer<MAction> action = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
+    QVERIFY(button);
+    QVERIFY(button->isTextVisible() == false);
+}
+
+void Ut_MToolBarView::testLabelIsVisibleOnPortrait()
+{
+    appWin->setOrientationAngle(M::Angle90);
+
+    QPointer<MAction> action = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
+    QVERIFY(button);
+    QVERIFY(button->isTextVisible());
+}
+
+void Ut_MToolBarView::testIconAndLabelAreVisible()
+{
+    MToolbarTabView* tabView = new MToolbarTabView(m_toolbar);
+    QVERIFY(tabView != 0);
+    m_toolbar->setView(tabView);
+
+    QPointer<MAction> action = createAction();
+
+    qApp->processEvents();
+
+    QPointer<MButton> button = dynamic_cast<MButton*>(tabView->getWidget(action));
+    QVERIFY(button);
+    QVERIFY(button->isIconVisible());
+    QVERIFY(button->isTextVisible());
+}
+
+void Ut_MToolBarView::testLabelOnlyButtonsHaveDifferentStylename()
+{
+    MAction *actionIconAndLabel = new MAction("icon-l-search", "action", m_toolbar);
+    actionIconAndLabel->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(actionIconAndLabel);
+
+    MAction *actionLabelOnly = new MAction("action", m_toolbar);
+    actionLabelOnly->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(actionLabelOnly);
+
+    qApp->processEvents();
+
+    QPointer<MButton> buttonIconAndLabel = dynamic_cast<MButton*>(m_toolbarview->getWidget(actionIconAndLabel));
+    QPointer<MButton> buttonLabelOnly = dynamic_cast<MButton*>(m_toolbarview->getWidget(actionLabelOnly));
+    QVERIFY(buttonIconAndLabel);
+    QVERIFY(buttonLabelOnly);
+
+    QString iconLabelStyleName = buttonIconAndLabel->styleName();
+    QVERIFY(iconLabelStyleName.isEmpty() == false);
+    QString labelOnlyStyleName = buttonLabelOnly->styleName();
+    QVERIFY(labelOnlyStyleName.isEmpty() == false);
+    QVERIFY(iconLabelStyleName != labelOnlyStyleName);
 }
 
 QTEST_APPLESS_MAIN(Ut_MToolBarView)
