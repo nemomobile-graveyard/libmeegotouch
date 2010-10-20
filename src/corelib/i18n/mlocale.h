@@ -417,6 +417,65 @@ public:
     MCollator collator() const;
 
     /*!
+     * \brief locale-aware and context-sensitive conversion to lowercase
+     * \param string the string to convert to lowercase
+     *
+     * returns the lowercased string.
+     *
+     * Use this instead of QString::toLower() if locale-aware and context-sensitive
+     * conversion to lowercase is required.
+     *
+     * This is implemented using libicu, if libmeegotouch is compiled
+     * without libicu, QString::toLower() is used as a fallback.
+     *
+     * <a
+     * href="http://doc.qt.nokia.com/qstring.html#toLower">QString::toLower()</a>
+     * is <b>not</b> locale-aware and not context-sensitive,
+     * i.e. neither the locale nor the context influence its
+     * behaviour.
+     *
+     * Therefore, it does not work correctly for Greek, where the
+     * character "Σ" (capital sigma) lowercases to either "ς" (small
+     * final sigma) or "σ" (small sigma) depending on whether the
+     * capital sigma is the last letter in a word. (It is
+     * context-dependent.)
+     *
+     * Neither does it work for Lithuanian and Turkic languages where
+     * a “combining dot above” character may need to be removed in
+     * certain cases. (It “contracts” and is language- and
+     * context-dependent.)
+     *
+     * For details see <a
+     * href="http://unicode.org/reports/tr21/">Unicode Case
+     * Mappings</a>.
+     *
+     * \sa toUpper()
+     */
+    QString toLower(const QString &string) const;
+
+    /*!
+     * \brief locale-aware, context-sensitive conversion to uppercase
+     * \param string the string to convert to uppercase
+     *
+     * returns the uppercased string.
+     *
+     * Use this instead of QString::toUpper() if locale-aware and
+     * context-sensitive conversion to lowercase is required.
+     *
+     * This is implemented using libicu, if libmeegotouch is compiled
+     * without libicu, QString::toUpper() is used as a fallback.
+     *
+     * <a
+     * href="http://doc.qt.nokia.com/qstring.html#toUpper">QString::toUpper()</a>
+     * is <b>not</b> locale-aware and not context-sensitive,
+     * i.e. neither the locale nor the context influence its
+     * behaviour.
+     *
+     * \sa toLower()
+     */
+    QString toUpper(const QString &string) const;
+
+    /*!
      * \brief Returns the endonym of the language of the locale
      *
      * The language <a href="http://en.wikipedia.org/wiki/Endonym">endonym</a> is the
@@ -1228,7 +1287,7 @@ public:
      * Note that the search for fallbacks for the real translation
      * stops at “foo_en”. This is slightly different from the
      * behaviour of <a
-     * href="http://qt.nokia.com/doc/4.6/qtranslator.html#load">QTranslator::load()</a>
+     * href="http://qt.nokia.com/doc/qtranslator.html#load">QTranslator::load()</a>
      * because proceeding to the fallback “foo.qm” would load
      * engineering English if “foo.qm” exists which is not what we
      * want when trying to load real translations because this might

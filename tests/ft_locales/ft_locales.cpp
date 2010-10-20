@@ -692,6 +692,317 @@ void Ft_Locales::testMLocaleLocaleScripts()
     QCOMPARE(locale.localeScripts(), localeScripts);
 }
 
+void Ft_Locales::testMLocaleToLower_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("testString");
+    QTest::addColumn<QString>("expectedMLocale");
+    QTest::addColumn<QString>("expectedQt");
+
+    QTest::newRow("de_DE")
+        << QString("de_DE")
+        << QString("Größe")
+        << QString("größe")
+        << QString("größe")
+        ;
+
+    QTest::newRow("de_CH")
+        << QString("de_CH") // no difference in behaviour to de_CH here
+        << QString("Größe")
+        << QString("größe")
+        << QString("größe")
+        ;
+
+    QTest::newRow("de_DE")
+        << QString("de_DE")
+        << QString("GRÖẞE")
+        << QString("größe")
+        << QString("gröẞe") // Qt bug?
+        ;
+
+    QTest::newRow("de_CH") // no difference in behaviour to de_CH here
+        << QString("de_CH")
+        << QString("GRÖẞE")
+        << QString("größe")
+        << QString("gröẞe") // Qt bug?
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("ITEM NAÏVE İ")
+        // last two chars are U+0069 (LATIN SMALL LETTER I) U+307 (COMBINING DOT ABOVE)
+        // both for Qt and MLocale here
+        << QString("item naïve i̇")
+        << QString("item naïve i̇")
+        ;
+
+    QTest::newRow("tr_TR")
+        << QString("tr_TR")
+        << QString("ITEM NAÏVE İ")
+        // I lowercases to ı in Turkish locale and İ to i
+        << QString("ıtem naïve i")
+        // Qt’s toLower is *not* locale aware
+        // last two chars are U+0069 (LATIN SMALL LETTER I) U+307 (COMBINING DOT ABOVE)
+        << QString("item naïve i̇")
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("de_GB")
+        << QString("ΣΙ")
+        << QString("σι")
+        << QString("σι")
+        ;
+
+    QTest::newRow("el_GR")
+        << QString("el_GR")
+        << QString("ΣΙ")
+        << QString("σι")
+        << QString("σι")
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("ΙΣ")
+        << QString("ις")
+        // Qt’s toLower is *not* locale aware and lowercases the final Σ
+        // the same way as a non-final one:
+        << QString("ισ")
+        ;
+
+    QTest::newRow("el_GR")
+        << QString("el_GR")
+        << QString("ΙΣ")
+        << QString("ις")
+        // Qt’s toLower is *not* locale aware and lowercases the final Σ
+        // the same way as a non-final one:
+        << QString("ισ")
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("Ì") // U+00CC (LATIN CAPITAL LETTER I WITH GRAVE)
+        << QString("ì") // U+00EC (LATIN SMALL LETTER I WITH GRAVE)
+        << QString("ì") // U+00EC (LATIN SMALL LETTER I WITH GRAVE)
+        ;
+
+    QTest::newRow("lt_LT")
+        << QString("lt_LT")
+        << QString("Ì") // U+00CC (LATIN CAPITAL LETTER I WITH GRAVE)
+        << QString("i̇̀") // U+0069 U+0307 U+0300
+        << QString("ì") // U+00EC (LATIN SMALL LETTER I WITH GRAVE)
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("Į") // U+012E (LATIN CAPITAL LETTER I WITH OGONEK)
+        << QString("į") // U+012F (LATIN SMALL LETTER I WITH OGONEK)
+        << QString("į") // U+012F (LATIN SMALL LETTER I WITH OGONEK)
+        ;
+
+    QTest::newRow("lt_LT")
+        << QString("lt_LT")
+        << QString("Į") // U+012E (LATIN CAPITAL LETTER I WITH OGONEK)
+        << QString("į") // U+012F (LATIN SMALL LETTER I WITH OGONEK)
+        << QString("į") // U+012F (LATIN SMALL LETTER I WITH OGONEK)
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("Į̃") // U+012E (LATIN CAPITAL LETTER I WITH OGONEK) U+0303 (COMBINING TILDE)
+        << QString("į̃") // U+012F U+0303
+        << QString("į̃") // U+012F U+0303
+        ;
+
+    QTest::newRow("lt_LT")
+        << QString("lt_LT")
+        << QString("Į̃") // U+012E (LATIN CAPITAL LETTER I WITH OGONEK) U+0303 (COMBINING TILDE)
+        << QString("į̇̃") // U+012F U+0307 U+0303
+        << QString("į̃") // U+012F U+0303
+        ;
+}
+
+void Ft_Locales::testMLocaleToLower()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, testString);
+    QFETCH(QString, expectedMLocale);
+    QFETCH(QString, expectedQt);
+
+    MLocale locale(localeName);
+    QString resultMLocale = locale.toLower(testString);
+    QString resultQt = testString.toLower();
+
+    QVector<uint> testStringUcs4 = testString.toUcs4();
+    QString testStringCodePoints;
+    for (int i = 0; i < testStringUcs4.size(); ++i) {
+        testStringCodePoints += " U+" + QString::number(testStringUcs4[i],16);
+    }
+    QVector<uint> expectedMLocaleUcs4 = expectedMLocale.toUcs4();
+    QString expectedMLocaleCodePoints;
+    for (int i = 0; i < expectedMLocaleUcs4.size(); ++i) {
+        expectedMLocaleCodePoints += " U+" + QString::number(expectedMLocaleUcs4[i],16);
+    }
+    QVector<uint> expectedQtUcs4 = expectedQt.toUcs4();
+    QString expectedQtCodePoints;
+    for (int i = 0; i < expectedQtUcs4.size(); ++i) {
+        expectedQtCodePoints += " U+" + QString::number(expectedQtUcs4[i],16);
+    }
+    QVector<uint> resultMLocaleUcs4 = resultMLocale.toUcs4();
+    QString resultMLocaleCodePoints;
+    for (int i = 0; i < resultMLocaleUcs4.size(); ++i) {
+        resultMLocaleCodePoints += " U+" + QString::number(resultMLocaleUcs4[i],16);
+    }
+    QVector<uint> resultQtUcs4 = resultQt.toUcs4();
+    QString resultQtCodePoints;
+    for (int i = 0; i < resultQtUcs4.size(); ++i) {
+        resultQtCodePoints += " U+" + QString::number(resultQtUcs4[i],16);
+    }
+#if 1
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "localeName      [" << localeName      << "]\n"
+        << "testString      [" << testString      << "]" << testStringCodePoints << "\n"
+        << "expectedMLocale [" << expectedMLocale << "]" << expectedMLocaleCodePoints <<"\n"
+        << "resultMLocale   [" << resultMLocale   << "]" << resultMLocaleCodePoints << "\n"
+        << "expectedQt      [" << expectedQt      << "]" << expectedQtCodePoints << "\n"
+        << "resultQt        [" << resultQt        << "]" << resultQtCodePoints << "\n"
+        ;
+#endif
+    QCOMPARE(resultMLocale, expectedMLocale);
+    QCOMPARE(resultQt, expectedQt);
+}
+
+void Ft_Locales::testMLocaleToUpper_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("testString");
+    QTest::addColumn<QString>("expectedMLocale");
+    QTest::addColumn<QString>("expectedQt");
+
+    QTest::newRow("de_DE")
+        << QString("de_DE")
+        << QString("Größe")
+        << QString("GRÖSSE")
+        << QString("GRÖSSE")
+        ;
+
+    QTest::newRow("de_CH")
+        << QString("de_CH") // no difference in behaviour to de_CH here
+        << QString("Größe")
+        << QString("GRÖSSE")
+        << QString("GRÖSSE")
+        ;
+
+    QTest::newRow("de_DE")
+        << QString("de_DE")
+        << QString("GRÖẞE")
+        << QString("GRÖẞE")
+        << QString("GRÖẞE")
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("item naïve ı")
+        << QString("ITEM NAÏVE I")
+        << QString("ITEM NAÏVE I")
+        ;
+
+    QTest::newRow("tr_TR")
+        << QString("tr_TR")
+        << QString("item naïve ı")
+        << QString("İTEM NAÏVE I")
+        << QString("ITEM NAÏVE I")
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("i̇") // U+0069 (LATIN SMALL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        ;
+
+    QTest::newRow("tr_TR")
+        << QString("tr_TR")
+        << QString("i̇") // U+0069 (LATIN SMALL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ̇") // U+0130 (LATIN CAPITAL LETTER I WITH DOT ABOVE) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("ı̇") // U+0131 (LATIN SMALL LETTER DOTLESS I) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        ;
+
+    QTest::newRow("tr_TR")
+        << QString("tr_TR")
+        << QString("ı̇") // U+0131 (LATIN SMALL LETTER DOTLESS I) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+        ;
+
+    QTest::newRow("en_GB")
+        << QString("en_GB")
+        << QString("ﬃ")
+        << QString("FFI")
+        << QString("FFI")
+        ;
+}
+
+void Ft_Locales::testMLocaleToUpper()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, testString);
+    QFETCH(QString, expectedMLocale);
+    QFETCH(QString, expectedQt);
+
+    MLocale locale(localeName);
+    QString resultMLocale = locale.toUpper(testString);
+    QString resultQt = testString.toUpper();
+
+    QVector<uint> testStringUcs4 = testString.toUcs4();
+    QString testStringCodePoints;
+    for (int i = 0; i < testStringUcs4.size(); ++i) {
+        testStringCodePoints += " U+" + QString::number(testStringUcs4[i],16);
+    }
+    QVector<uint> expectedMLocaleUcs4 = expectedMLocale.toUcs4();
+    QString expectedMLocaleCodePoints;
+    for (int i = 0; i < expectedMLocaleUcs4.size(); ++i) {
+        expectedMLocaleCodePoints += " U+" + QString::number(expectedMLocaleUcs4[i],16);
+    }
+    QVector<uint> expectedQtUcs4 = expectedQt.toUcs4();
+    QString expectedQtCodePoints;
+    for (int i = 0; i < expectedQtUcs4.size(); ++i) {
+        expectedQtCodePoints += " U+" + QString::number(expectedQtUcs4[i],16);
+    }
+    QVector<uint> resultMLocaleUcs4 = resultMLocale.toUcs4();
+    QString resultMLocaleCodePoints;
+    for (int i = 0; i < resultMLocaleUcs4.size(); ++i) {
+        resultMLocaleCodePoints += " U+" + QString::number(resultMLocaleUcs4[i],16);
+    }
+    QVector<uint> resultQtUcs4 = resultQt.toUcs4();
+    QString resultQtCodePoints;
+    for (int i = 0; i < resultQtUcs4.size(); ++i) {
+        resultQtCodePoints += " U+" + QString::number(resultQtUcs4[i],16);
+    }
+#if 1
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "localeName      [" << localeName      << "]\n"
+        << "testString      [" << testString      << "]" << testStringCodePoints << "\n"
+        << "expectedMLocale [" << expectedMLocale << "]" << expectedMLocaleCodePoints <<"\n"
+        << "resultMLocale   [" << resultMLocale   << "]" << resultMLocaleCodePoints << "\n"
+        << "expectedQt      [" << expectedQt      << "]" << expectedQtCodePoints << "\n"
+        << "resultQt        [" << resultQt        << "]" << resultQtCodePoints << "\n"
+        ;
+#endif
+    QCOMPARE(resultMLocale, expectedMLocale);
+    QCOMPARE(resultQt, expectedQt);
+}
+
 /*
  * To reduce the size of libicu, we customize the locale data included in
  * our package of libicu and include only what needs to be there.

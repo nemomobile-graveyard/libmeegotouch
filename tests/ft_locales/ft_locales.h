@@ -96,6 +96,11 @@ private slots:
     void testMLocaleLocaleScripts_data();
     void testMLocaleLocaleScripts();
 
+    void testMLocaleToLower_data();
+    void testMLocaleToLower();
+    void testMLocaleToUpper_data();
+    void testMLocaleToUpper();
+
     void checkAvailableLocales();
 };
 

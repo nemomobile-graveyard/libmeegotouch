@@ -1555,6 +1555,36 @@ MCollator MLocale::collator() const
 }
 #endif
 
+QString MLocale::toLower(const QString &string) const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    // we don’t have MLcCtype, MLcMessages comes closest
+    return MIcuConversions::unicodeStringToQString(
+        MIcuConversions::qStringToUnicodeString(string).toLower(
+            d->getCategoryLocale(MLcMessages)));
+#else
+    // QString::toLower() is *not* locale aware, this is only
+    // a “better than nothing” fallback.
+    return string.toLower();
+#endif
+}
+
+QString MLocale::toUpper(const QString &string) const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    // we don’t have MLcCtype, MLcMessages comes closest
+    return MIcuConversions::unicodeStringToQString(
+        MIcuConversions::qStringToUnicodeString(string).toUpper(
+            d->getCategoryLocale(MLcMessages)));
+#else
+    // QString::toUpper() is *not* locale aware, this is only
+    // a “better than nothing” fallback.
+    return string.toUpper();
+#endif
+}
+
 QString MLocale::language() const
 {
     return MLocalePrivate::parseLanguage(name());
