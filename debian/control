@@ -208,7 +208,7 @@ Description: Debug symbols of the demo application for application extensions
 Package: libmeegotouch-tests
 Section: extra
 Architecture: any
-Depends: ${shlibs:Depends}, testrunner, locales
+Depends: ${shlibs:Depends}, testrunner, locales, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good
 Description: libmeegotouch unit tests
  Unit testing binaries and shellscripts for testing libmeegotouch library
 
