@@ -116,7 +116,7 @@ void MListView::updateData(const QList<const char *>& modifications)
 
 void MListView::connectSelectionModel()
 {
-    if(d_ptr->selectionModel)
+    if (d_ptr->selectionModel)
         d_ptr->selectionModel->disconnect(this);
 
     if (model()->selectionModel()) {
@@ -228,8 +228,7 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
     if (!model()->firstVisibleItem().isValid() && !model()->lastVisibleItem().isValid())
         return;
 
-    if(d_ptr->controller->isVisible())
-    {
+    if (d_ptr->controller->isVisible()) {
         const MCellCreator *cellCreator = model()->cellCreator();
 
         int firstVisibleRow = d_ptr->indexToFlatRow(model()->firstVisibleItem());
