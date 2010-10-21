@@ -56,6 +56,7 @@ private slots:
     void panGestureMovesPhysicsPointer();
     void panGestureAgainstPanningDirectionIsIgnored();
     void panGestureCancelsMouseEvents();
+    void ignoredPanGestureShouldNotCancelMouseEvents();
 
 private:
     MPannableWidget *widget;
