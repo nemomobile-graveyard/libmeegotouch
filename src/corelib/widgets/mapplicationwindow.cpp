@@ -577,21 +577,42 @@ void MApplicationWindowPrivate::manageActions()
         checkedAction = findCheckedAction(q->actions());
     }
 
-    toolBar->clearActions();
+    bool pageHasVisibleToolbarActions = false;
+
+    foreach(QAction* qaction, page->actions()) {
+        if (qaction->isVisible()) {
+            MAction* maction = qobject_cast<MAction*>(qaction);
+            if (!maction || (maction->location() & MAction::ToolBarLocation)) {
+                pageHasVisibleToolbarActions = true;
+                break;
+            }
+        }
+    }
+
+    if (pageHasVisibleToolbarActions) {
+        toolBar->clearActions();
+
+        // add page actions
+        foreach(QAction* action, page->actions()) {
+            toolBar->insertAction(NULL, action);
+        }
+
+        // add window actions
+        foreach(QAction* action, q->actions()) {
+            toolBar->insertAction(NULL, action);
+        }
+    }
+
     menu->clearActions();
 
     // add page actions
-    QList<QAction *> actions = page->actions();
-    int actionsSize = actions.size();
-    for (int i = 0; i < actionsSize; ++i) {
-        distributeAction(actions[i], NULL);
+    foreach(QAction* action, page->actions()) {
+        menu->insertAction(NULL, action);
     }
 
     // add window actions
-    actions = q->actions();
-    actionsSize = actions.size();
-    for (int i = 0; i < actionsSize; ++i) {
-        distributeAction(actions[i], NULL);
+    foreach(QAction* action, q->actions()) {
+        menu->insertAction(NULL, action);
     }
 
     if (checkedAction) {
