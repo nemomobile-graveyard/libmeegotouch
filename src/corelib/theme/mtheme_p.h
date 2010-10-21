@@ -100,6 +100,7 @@ public:
 
     //stores pixmap identifier and corresponding daemon handle
     QHash<QString, CachedPixmap> pixmapIdentifiers;
+    QVector<const QPixmap *> releasedPixmaps;
 
     //stores pixmap identifier and corresponding daemon handle
     QHash<QString, CachedScalableImage> scalableImageIdentifiers;
@@ -168,6 +169,13 @@ public:
 
     void refreshLocalThemeConfiguration(const QStringList &themeInheritance);
     void reloadThemeLibraries(const QStringList& libraryNames);
+
+    QHash<QString, CachedPixmap>::iterator findCachedPixmap(const QPixmap *pixmap);
+    bool releasePixmapNow(const QPixmap *pixmap);
+    bool releasePixmapNow(QHash<QString, CachedPixmap>::iterator i);
+    bool releasePixmap(const QPixmap *pixmap);
+
+    void cleanupGarbage();
 
     /*!
      * Reinitializes the theme to correspond to the new application name

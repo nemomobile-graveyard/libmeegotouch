@@ -522,6 +522,7 @@ void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
     if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
         initSoftwareViewport();
         MComponentCache::cleanupCache();
+        MTheme::cleanupGarbage();
     } else if (event->oldState().testFlag(Qt::WindowMinimized)
                && !q->windowState().testFlag(Qt::WindowMinimized)) {
         if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {

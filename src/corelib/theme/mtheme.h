@@ -346,6 +346,8 @@ public:
      */
     static bool hasPendingRequests();
 
+    static void cleanupGarbage();
+
 Q_SIGNALS:
     /*!
      This signal is emitted when all pixmap requests have finished.

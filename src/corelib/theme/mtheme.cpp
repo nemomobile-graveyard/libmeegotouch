@@ -163,6 +163,7 @@ MTheme::~MTheme()
         delete i2.value().image;
     }
 
+    d_ptr->cleanupGarbage();
 
     // print identifiers from all pixmaps which were not released
     QHash<QString, CachedPixmap>::iterator i = d_ptr->pixmapIdentifiers.begin();
@@ -317,7 +318,6 @@ void MTheme::releaseScalableImage(const MScalableImage *image)
     }
 }
 
-
 void MTheme::releasePixmap(const QPixmap *pixmap)
 {
     // NULL pixmap, do nothing
@@ -329,28 +329,69 @@ void MTheme::releasePixmap(const QPixmap *pixmap)
         return;
     }
 
-    // find the pixmap from cache and decrease refcount + release if refcount = 0
-    // TODO: this could be optimized
-    QHash<QString, CachedPixmap>::iterator i = instance()->d_ptr->pixmapIdentifiers.begin();
-    QHash<QString, CachedPixmap>::iterator end = instance()->d_ptr->pixmapIdentifiers.end();
-    for (; i != end; ++i) {       // is this the pixmap which we should release?
-        if (i.value().pixmap == pixmap) {
-            if (!i.value().refcount.deref()) {
-                instance()->d_ptr->themeDaemon->releasePixmap(i.value().imageId, i.value().size);
-                if (i->addr) {
-                    munmap(i->addr, i->numBytes);
-                }
-                delete i.value().pixmap;
-                instance()->d_ptr->pixmapIdentifiers.erase(i);
-            }
-            return;
-        }
-    }
+    if (instance()->d_ptr->releasePixmap(pixmap))
+        return;
 
     // check if we didn't find the pixmap from our cache
     Q_ASSERT_X(false, "MTheme::releasePixmap", "Pixmap not found from the cache!");
 }
 
+QHash<QString, CachedPixmap>::iterator MThemePrivate::findCachedPixmap(const QPixmap *pixmap)
+{
+    // TODO: this could be optimized
+    QHash<QString, CachedPixmap>::iterator i = pixmapIdentifiers.begin();
+    QHash<QString, CachedPixmap>::iterator end = pixmapIdentifiers.end();
+    for (; i != end; ++i) {       // is this the pixmap which we should release?
+        if (i.value().pixmap == pixmap) {
+            return i;
+        }
+    }
+    return end;
+}
+
+bool MThemePrivate::releasePixmapNow(const QPixmap *pixmap)
+{
+    return releasePixmapNow(findCachedPixmap(pixmap));
+}
+
+bool MThemePrivate::releasePixmapNow(QHash<QString, CachedPixmap>::iterator i)
+{
+    if (i != pixmapIdentifiers.end()) {
+        if (!i.value().refcount || !i.value().refcount.deref()) {
+            themeDaemon->releasePixmap(i.value().imageId, i.value().size);
+            if (i->addr) {
+                munmap(i->addr, i->numBytes);
+            }
+            delete i.value().pixmap;
+            if (releasedPixmaps.contains(i.value().pixmap))
+                releasedPixmaps.remove(releasedPixmaps.indexOf(i.value().pixmap));
+            pixmapIdentifiers.erase(i);
+        }
+        return true;
+    }
+    return false;
+}
+
+bool MThemePrivate::releasePixmap(const QPixmap *pixmap)
+{
+    QHash<QString, CachedPixmap>::iterator i = findCachedPixmap(pixmap);
+
+    if (i != pixmapIdentifiers.end()) {
+        if (!i.value().refcount.deref()) {
+            releasedPixmaps.append(pixmap);
+        }
+        return true;
+    }
+    return false;
+}
+
+void MThemePrivate::cleanupGarbage()
+{
+    for (int i = releasedPixmaps.count(); i > 0; i--) {
+        const QPixmap *pixmap = releasedPixmaps[i - 1];
+        releasePixmapNow(pixmap);
+    }
+}
 
 void MThemePrivate::extractDataForStyleClass(const char *styleClassName,
                                              QList<const MStyleSheet *> &sheets,
@@ -626,6 +667,11 @@ bool MTheme::hasPendingRequests()
     return instance()->d_ptr->themeDaemon->hasPendingRequests();
 }
 
+void MTheme::cleanupGarbage()
+{
+    instance()->d_ptr->cleanupGarbage();
+}
+
 void MThemePrivate::reinit(const QString &newApplicationName)
 {
     delete application;
@@ -736,6 +782,8 @@ const QPixmap *MThemePrivate::fetchPixmapFromCache(const QString &identifier)
     // check if we already have this pixmap in cache
     if (i != pixmapIdentifiers.end()) {
         i.value().refcount.ref();
+        if (releasedPixmaps.contains(i.value().pixmap))
+            releasedPixmaps.remove(releasedPixmaps.indexOf(i.value().pixmap));
         return i.value().pixmap;
     }
 
