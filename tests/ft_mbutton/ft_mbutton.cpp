@@ -36,7 +36,7 @@ void Ft_MButton::initTestCase()
     static int argc = 1;
     static char *argv = (char *) "./ft_mbutton";
     app = new MApplication(argc, &argv);
-    qDebug() << "loadCSS " <<  MTheme::loadCSS("ft_mbutton.css");
+    qDebug() << "loadCSS " <<  MTheme::loadCSS(qApp->applicationDirPath() + "/ft_mbutton.css");
 }
 
 
