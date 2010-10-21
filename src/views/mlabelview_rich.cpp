@@ -290,10 +290,11 @@ bool MLabelViewRich::isRich()
 void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->ignore();
-    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit) + 1;
+    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
         cursor.setPosition(cursorPos);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
         QTextCharFormat format = cursor.charFormat();
         //highlighted anchor is pressed
         if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
@@ -317,10 +318,11 @@ void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     cleanupTiles();
     viewPrivate->controller->update();
     
-    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit) + 1;
+    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
         cursor.setPosition(cursorPos);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
         QTextCharFormat format = cursor.charFormat();
         //highlighted anchor is released
         if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
@@ -355,10 +357,11 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
     // the gesture was insid highlightable text.
     event->ignore(gesture);
 
-    int cursorPos = textDocument.documentLayout()->hitTest(viewPrivate->controller->mapFromScene(gesture->position()) - pixmapOffset, Qt::ExactHit) + 1;
+    int cursorPos = textDocument.documentLayout()->hitTest(viewPrivate->controller->mapFromScene(gesture->position()) - pixmapOffset, Qt::ExactHit);
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
         cursor.setPosition(cursorPos);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
         QTextCharFormat format = cursor.charFormat();
         if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
             event->accept(gesture);
