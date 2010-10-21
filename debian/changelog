@@ -1,8 +1,31 @@
-libmeegotouch (0.20.49~1) unstable; urgency=low
+libmeegotouch (0.20.49-1) unstable; urgency=low
 
-  * Unreleased
+  * Fixes: NB#199335 - MList : ScrollTo function scrolls to incorrect index.
+  * Fixes: NB#193541 - Slider causing a crash because of the internal widget reparenting on destruction.
+  * Fixes: MRichTextEdit toolbar file location
+  * Fixes: NB#186993 - API reference documentation missing for MBasicListItem
+  * Fixes: NB#186806 - documentation for MListModel missing
+  * Fixes: NB#197182 - MList::lastVisibleItem() does not report the partially visible items
+  * Fixes: NB#198551 - Catalog installation and setting default locale gets slower by every installation
+  * Fixes: Fix failing unit tests due to new dependency to application page view spacers.
+  * Fixes: NB#191737 - <MemLeak>Valgrind - Memory leak in mapplethandleview
+  * Fixes: NB#195670 -  Calling show() on a MWindow that is already visible unsets the _NET_WM_STATE_SKIP_TASKBAR property
+  * Fixes: NB#198684 - MList::scrollTo does not work correctly in a pannable viewport inside a pannable viewport
+  * Fixes: NB#198554 - <MemLeak> mgraphicsclipeffect.cpp:36
+  * Fixes: NB#196922 - MSceneManager sets _MEEGOTOUCH_MSTATUSBAR_GEOMETRY after rotation to 0, 0, 0, 0 if the MWindow has no MStatusBar
+  * Fixes: BMC#1766 - First letter of a highlighted label doesn't respond when click on it
+  * Fixes: NB#189611 - Incorrect Layout for MContentItem with small icon and small text
+  * Fixes: NB#198425 - widgetsgallery - Clicking on thumnail in Grid page does nothing in a second attempt
+  * Fixes: NB#194075 - Object menu shown on a wrong page after a page transition.
+  * Fixes: NB#180107 - System modal MDialog with DeletionPolicy KeepWhenDone should close its window when deleted
+  * Fixes: NB#194766 - HW keypad closed, screen not rotated back to portrait
+  * Fixes: NB#194778 - random videosuite crash in multiapps scenario at MApplicationPrivate::handleXPropertyEvent ()
+  * Fixes: NB#197889 - MAbstractCellCreator header contains dynamic_cast preventing application from using -fno-rtti when compiling.
+  * Fixes: NB#195503 - Pannable viewport size is not updated after orientation change.
+  * Fixes: NB#195438 - Boosters are not rotating in the background when orientation changes
+  * Fixes: Automate grabing tap and hold gesture for content items, like the list items do.
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Tue, 12 Oct 2010 12:58:03 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 21 Oct 2010 14:39:31 +0300
 
 libmeegotouch (0.20.48-1) unstable; urgency=low
 
