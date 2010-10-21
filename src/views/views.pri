@@ -35,19 +35,14 @@ PUBLIC_HEADERS += \
     mscenewindowview.h \
     mlabelview.h \
     mpositionindicatorview.h \
-    mapplicationmenubuttonview.h \
     mbuttonview.h \
     mimagewidgetview.h \
     mbuttoniconview.h \
     mbuttonswitchview.h \
     mcheckboxview.h \
     mcontainerview.h \
-    mdockwidgetview.h \
     mcontentitemview.h \
     mnavigationbarview.h \
-    mscenelayereffectdimview.h \
-    mlistindexview.h \
-    mlistindexfloatingview.h \
     mlistitemview.h \
     mbubbleitemview.h \
 
@@ -57,6 +52,7 @@ PRIVATE_HEADERS += \
     mextendingbackgroundview_p.h \
     mtexteditview_p.h \
     mapplicationmenuview_p.h \
+    mapplicationmenubuttonview.h \
     mobjectmenuview_p.h \
     mprogressindicatorbarview_p.h \
     mcompleterview_p.h \
@@ -75,6 +71,10 @@ PRIVATE_HEADERS += \
     mhomebuttonpanelview_p.h \
     mviewconstants.h \
     mdialoginternalbox_p.h \
+    mdockwidgetview.h \
+    mscenelayereffectdimview.h \
+    mlistindexview.h \
+    mlistindexfloatingview.h \
 
 SOURCES += \
     mapplicationpageview.cpp \
