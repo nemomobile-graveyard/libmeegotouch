@@ -637,10 +637,10 @@ void MWidgetView::drawBackground(QPainter *painter, const QStyleOptionGraphicsIt
     painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
 
     if (style()->backgroundTiles().isValid()) {
-        style()->backgroundTiles()[model()->layoutPosition()]->draw(0,0, currentSize.width(), currentSize.height(), painter);
+        style()->backgroundTiles()[model()->layoutPosition()]->draw(0.0,0.0, currentSize.width(), currentSize.height(), painter);
     }
     else if (style()->backgroundImage()) {
-        style()->backgroundImage()->draw(0, 0, currentSize.width(), currentSize.height(), painter);
+        style()->backgroundImage()->draw(0.0, 0.0, currentSize.width(), currentSize.height(), painter);
     } else if (style()->backgroundColor().isValid()) {
         painter->fillRect(boundingRect(), QBrush(style()->backgroundColor()));
     }

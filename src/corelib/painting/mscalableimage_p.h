@@ -50,10 +50,10 @@ public:
 
     void validateSize() const;
 
-    void drawScalable9(int x, int y, int w, int h, QPainter *painter) const;
-    void drawScalable1(int x, int y, int w, int h, QPainter *painter) const;
-    void drawScalable3H(int x, int y, int w, int h, QPainter *painter) const;
-    void drawScalable3V(int x, int y, int w, int h, QPainter *painter) const;
+    void drawScalable9(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
+    void drawScalable1(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
+    //void drawScalable3H(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
+    //void drawScalable3V(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
 
     void drawBorderPixmap(QPainter *painter,
                           const QRectF &targetRect,

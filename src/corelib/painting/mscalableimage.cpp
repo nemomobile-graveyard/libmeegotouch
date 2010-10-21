@@ -59,7 +59,7 @@ void MScalableImagePrivate::validateSize() const
         mWarning("MScalableImage") << QString("The size of the image '%1', %2x%3, is smaller than combined corner size %4x%5. This might cause rendering artifacts.").arg(pixmapId).arg(w).arg(h).arg(cornerWidth).arg(cornerHeight);
 }
 
-void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *painter) const
+void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const
 {
     QMargins margins = m_preferredMargins;
 
@@ -80,12 +80,12 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
     //use smaller border values than those set with setBorders API
     //call.
     if (w < cornerWidth) {
-        margins.setLeft(qMax(0, margins.left() - (cornerWidth - w + 1) / 2));
-        margins.setRight(qMax(0, margins.right() - (cornerWidth - w + 1) / 2));
+        margins.setLeft(qMax((qreal)0.0, margins.left() - (cornerWidth - w + 1) / 2));
+        margins.setRight(qMax((qreal)0.0, margins.right() - (cornerWidth - w + 1) / 2));
     }
     if (h < cornerHeight) {
-        margins.setTop(qMax(0, margins.top() - (cornerHeight - h + 1) / 2));
-        margins.setBottom(qMax(0, margins.bottom() - (cornerHeight - h + 1) / 2));
+        margins.setTop(qMax((qreal)0.0, margins.top() - (cornerHeight - h + 1) / 2));
+        margins.setBottom(qMax((qreal)0.0, margins.bottom() - (cornerHeight - h + 1) / 2));
     }
 
     if (w <= 0 || h <= 0) {
@@ -127,7 +127,7 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
             QPainter p;
             p.begin(&scaled);
             p.setRenderHint(QPainter::SmoothPixmapTransform);
-            qDrawBorderPixmap(&p, QRect(0, 0, w, h), margins, *m_image);
+            drawBorderPixmap(&p, QRectF(0, 0, w, h), margins, *m_image);
             p.end();
 
             // draw to screen
@@ -138,34 +138,34 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
             #if defined(M_OS_MAEMO5)
                 // don't use smooth pixmap transformation on the N900, as this
                 // decreases the performance
-                qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+                drawBorderPixmap(painter, QRectF(x, y, w, h), margins, *m_image);
             #else
                 bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
                 painter->setRenderHint(QPainter::SmoothPixmapTransform);
-                qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+                drawBorderPixmap(painter, QRectF(x, y, w, h), margins, *m_image);
                 painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
             #endif //defined(M_OS_MAEMO5)
         }
     }
 }
 
-void MScalableImagePrivate::drawScalable1(int x, int y, int w, int h, QPainter *painter) const
+void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const
 {
 #if defined(M_OS_MAEMO5)
     // don't use smooth pixmap transformation on the N900, as this
     // decreases the performance
-    painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
+    painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
 #else
     //the image is used in it's native size
     //no need to scale just draw it
-    if( m_image->size() == QSize(w, h) ) {
-        painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
+    if( m_image->size() == QSizeF(w, h) ) {
+        painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
     }
     //the image needs some scaling, draw the image using smooth scaling
     else {
         bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
         painter->setRenderHint(QPainter::SmoothPixmapTransform);
-        painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
+        painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
         painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
     }
 #endif //defined(M_OS_MAEMO5)
@@ -522,6 +522,21 @@ const QPixmap *MScalableImage::pixmap() const
 
 void MScalableImage::draw(int x, int y, int w, int h, QPainter *painter) const
 {
+    draw((qreal)x, (qreal)y, (qreal)w, (qreal)h, painter); 
+}
+
+void MScalableImage::draw(const QPoint &pos, const QSize &size, QPainter *painter) const
+{
+    draw(pos.x(), pos.y(), size.width(), size.height(), painter);
+}
+
+void MScalableImage::draw(const QRect &rect, QPainter *painter) const
+{
+    draw(rect.x(), rect.y(), rect.width(), rect.height(), painter);
+}
+
+void MScalableImage::draw(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const
+{
     Q_D(const MScalableImage);
 
     if (!d->m_image) {
@@ -542,12 +557,12 @@ void MScalableImage::draw(int x, int y, int w, int h, QPainter *painter) const
     }
 }
 
-void MScalableImage::draw(const QPoint &pos, const QSize &size, QPainter *painter) const
+void MScalableImage::draw(const QPointF &pos, const QSizeF &size, QPainter *painter) const
 {
     draw(pos.x(), pos.y(), size.width(), size.height(), painter);
 }
 
-void MScalableImage::draw(const QRect &rect, QPainter *painter) const
+void MScalableImage::draw(const QRectF &rect, QPainter *painter) const
 {
     draw(rect.x(), rect.y(), rect.width(), rect.height(), painter);
 }

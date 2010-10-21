@@ -25,10 +25,13 @@
 
 class MScalableImagePrivate;
 class QPoint;
+class QPointF;
 class QSize;
+class QSizeF;
+class QRect;
+class QRectF;
 class QPainter;
 class QPixmap;
-class QRect;
 
 
 /*!
@@ -132,6 +135,24 @@ public:
       \overload
      */
     void draw(const QRect &rect, QPainter *painter) const;
+
+    /*!
+      \brief Draws scalable image.
+      \overload
+     */
+    void draw(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
+
+    /*!
+      \brief Draws scalable image.
+      \overload
+     */
+    void draw(const QPointF &pos, const QSizeF &size, QPainter *painter) const;
+
+    /*!
+      \brief Draws scalable image.
+      \overload
+     */
+    void draw(const QRectF &rect, QPainter *painter) const;
 
     /*!
       \brief Enable/disable optimized rendering.

@@ -577,7 +577,7 @@ void MContentItemView::drawBackground(QPainter *painter, const QStyleOptionGraph
         const MScalableImage *itemBackground = ((*itemStyle).*func)();
 
         if( itemBackground )
-            itemBackground->draw(0, 0, size().width(), size().height(), painter);
+            itemBackground->draw(0.0, 0.0, size().width(), size().height(), painter);
     } else if (style()->backgroundColor().isValid()) {
         painter->fillRect(boundingRect(), QBrush(style()->backgroundColor()));
     }

@@ -101,9 +101,9 @@ void MStylableWidget::drawBackground(QPainter *painter, const QStyleOptionGraphi
 
     QSizeF s = size() - QSizeF(style()->marginLeft() + style()->marginRight(), style()->marginTop() + style()->marginBottom());
     if (style()->backgroundTiles().isValid()) {
-        style()->backgroundTiles()[model()->layoutPosition()]->draw(0,0, s.width(), s.height(), painter);
+        style()->backgroundTiles()[model()->layoutPosition()]->draw(0.0,0.0, s.width(), s.height(), painter);
     }else if (style()->backgroundImage()) {
-        style()->backgroundImage()->draw(0, 0, s.width(), s.height(), painter);
+        style()->backgroundImage()->draw(0.0, 0.0, s.width(), s.height(), painter);
     } else { //style background color must be valid
         painter->fillRect(QRectF(QPointF(0, 0), s), QBrush(style()->backgroundColor()));
     }

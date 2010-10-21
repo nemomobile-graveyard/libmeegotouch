@@ -222,9 +222,9 @@ void MContainerView::drawBackground(QPainter *painter, const QStyleOptionGraphic
     qreal oldOpacity = painter->opacity();
     painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
     if (style()->backgroundImage()) {
-        const QSize _size = d->controller->centralWidget()->geometry().size().toSize();
+        const QSizeF _size = d->controller->centralWidget()->geometry().size();
         const qreal headerHeight = d->header ? d->header->size().height() : 0;
-        style()->backgroundImage()->draw(0, headerHeight, _size.width(), _size.height(), painter);
+        style()->backgroundImage()->draw(0.0, headerHeight, _size.width(), _size.height(), painter);
     }
     painter->setOpacity(oldOpacity);
 }

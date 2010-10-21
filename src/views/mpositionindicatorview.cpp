@@ -148,9 +148,9 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         int railPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - railPixmapSizeX);
         int indicatorPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - indicatorPixmapSizeX);
 
-        rail->draw( railPositionX,
-                    0,
-                    railPixmapSizeX,
+        rail->draw((qreal)railPositionX,
+                    0.0,
+                    (qreal)railPixmapSizeX,
                     size().height(),
                     painter);
 
@@ -179,16 +179,16 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
             indicatorPositionX = 0;
         }
 
-        rail->draw( 0,
+        rail->draw( 0.0,
                     size().height() - railPixmapSizeY,
                     size().width(),
-                    railPixmapSizeY,
+                    (qreal)railPixmapSizeY,
                     painter);
 
-        indicator->draw(indicatorPositionX,
+        indicator->draw((qreal)indicatorPositionX,
                         size().height() - indicatorPixmapSizeY,
-                        indicatorWidth,
-                        indicatorPixmapSizeY,
+                        (qreal)indicatorWidth,
+                        (qreal)indicatorPixmapSizeY,
                         painter);
     }
 }
