@@ -25,7 +25,6 @@
 #include <QMap>
 #include <QList>
 #include <QFileSystemWatcher>
-#include <QTimer>
 
 class MServiceMapper;
 
@@ -47,8 +46,6 @@ public:
     QList<QStringList>         m_serviceFileList;
     QFileSystemWatcher         m_watcher;
     QString                    m_serviceFileDir;
-    QTimer                     m_timer;
-    static const int           m_timeOut = 10000; // milliseconds
 
 public:
     virtual QStringList fillServiceFileList() const;
