@@ -59,7 +59,7 @@ private:
     /*!
         \brief Number of pixmaps to keep in most used pixmaps cache
      */
-    static const qint32 CacheSize = 128;
+    static const qint32 CacheSize = 1024;
 
     /*!
         \brief Current minimum amount of requests for a pixmap to end up in cache
