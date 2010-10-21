@@ -335,14 +335,26 @@ void Ut_MLinearLayoutPolicy::testInsertingItems()
 void Ut_MLinearLayoutPolicy::testLayoutPositioning_data()
 {
     QTest::addColumn<bool>("isActivePolicy"); //Whether to make m_policy the active policy
+    QTest::addColumn<bool>("withStretchAtStart");
+    QTest::addColumn<bool>("withStretchInMiddle");
+    QTest::addColumn<bool>("withStretchAtEnd");
 
-    QTest::newRow("active") << true;
-    QTest::newRow("not active") << false;
-
+    for(int stretchAtStart = 0; stretchAtStart < 2; stretchAtStart++)
+        for(int stretchInMiddle = 0; stretchInMiddle < 2; stretchInMiddle++)
+            for(int stretchAtEnd = 0; stretchAtEnd < 2; stretchAtEnd++)
+                for(int active = 0; active < 2; active++) {
+                    QString description = (active?"active":"not active");
+                    if (stretchAtStart || stretchInMiddle || stretchAtEnd)
+                        description += QString(", with stretch at") + (stretchAtStart?" start":"") + (stretchInMiddle?" middle":"") + (stretchAtEnd?" end":"");
+                    QTest::newRow(description.toLatin1()) << (bool)active << (bool)stretchAtStart << (bool)stretchInMiddle << (bool)stretchAtEnd;
+                }
 }
 void Ut_MLinearLayoutPolicy::testLayoutPositioning()
 {
     QFETCH(bool, isActivePolicy);
+    QFETCH(bool, withStretchAtStart);
+    QFETCH(bool, withStretchInMiddle);
+    QFETCH(bool, withStretchAtEnd);
     MLinearLayoutPolicy *otherPolicy = new MLinearLayoutPolicy(m_mockLayout, Qt::Vertical);
     if(!isActivePolicy)
         otherPolicy->activate();
@@ -357,9 +369,19 @@ void Ut_MLinearLayoutPolicy::testLayoutPositioning()
     MWidgetController* c4 = new MWidgetController();
     MWidgetController* c5 = new MWidgetController();
 
+    if(withStretchAtStart) {
+        m_policy->addStretch();
+        otherPolicy->addStretch();
+    }
     m_policy->addItem(c0);
     otherPolicy->addItem(c0);
     QCOMPARE((int)c0->layoutPosition(), (int)M::DefaultPosition);
+   
+    if(withStretchInMiddle) {
+        m_policy->addStretch();
+        otherPolicy->addStretch();
+    }
+
     
     m_policy->addItem(c1);
     otherPolicy->addItem(c1);
@@ -382,7 +404,12 @@ void Ut_MLinearLayoutPolicy::testLayoutPositioning()
         QCOMPARE((int)c1->layoutPosition(), (int)M::DefaultPosition);
         QCOMPARE((int)c2->layoutPosition(), (int)M::DefaultPosition);
     }
-    
+
+    if(withStretchInMiddle) {
+        m_policy->addStretch();
+        otherPolicy->addStretch();
+    }
+
     m_policy->addItem(c3);
     otherPolicy->addItem(c3);
     if(isActivePolicy) {
@@ -395,6 +422,21 @@ void Ut_MLinearLayoutPolicy::testLayoutPositioning()
         QCOMPARE((int)c1->layoutPosition(), (int)M::DefaultPosition);
         QCOMPARE((int)c2->layoutPosition(), (int)M::DefaultPosition);
         QCOMPARE((int)c3->layoutPosition(), (int)M::DefaultPosition);
+    }
+    if(withStretchAtEnd) {
+        m_policy->addStretch();
+        otherPolicy->addStretch();
+        if(isActivePolicy) {
+            QCOMPARE((int)c0->layoutPosition(), (int)M::HorizontalLeftPosition);
+            QCOMPARE((int)c1->layoutPosition(), (int)M::HorizontalCenterPosition);
+            QCOMPARE((int)c2->layoutPosition(), (int)M::HorizontalCenterPosition);
+            QCOMPARE((int)c3->layoutPosition(), (int)M::HorizontalRightPosition);
+        } else {
+            QCOMPARE((int)c0->layoutPosition(), (int)M::DefaultPosition);
+            QCOMPARE((int)c1->layoutPosition(), (int)M::DefaultPosition);
+            QCOMPARE((int)c2->layoutPosition(), (int)M::DefaultPosition);
+            QCOMPARE((int)c3->layoutPosition(), (int)M::DefaultPosition);
+        }
     }
 
     m_policy->insertItem(0, c4);
@@ -579,5 +621,17 @@ void Ut_MLinearLayoutPolicy::testLayoutPositioning()
     delete c5;
 }
 
+void Ut_MLinearLayoutPolicy::testForLayoutCrashWithStretch()
+{
+    m_policy->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    m_policy->addStretch();
+
+    for(int i = 0; i < 4; i++)
+    {
+        MWidgetController* w = new MWidgetController();
+        m_policy->addItem(w);
+        m_policy->addStretch();
+    }
+}
 
 QTEST_APPLESS_MAIN(Ut_MLinearLayoutPolicy)

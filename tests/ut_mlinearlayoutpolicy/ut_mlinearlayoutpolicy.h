@@ -48,6 +48,8 @@ private slots:
     void testLayoutPositioning_data();
     void testLayoutPositioning();
 
+    void testForLayoutCrashWithStretch();
+
     void init();
     void cleanup();
 private:
