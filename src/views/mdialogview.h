@@ -121,7 +121,6 @@ protected slots:
     //! \reimp_end
 
 private:
-    Q_PRIVATE_SLOT(d_func(), void _q_updatePanning())
     Q_DECLARE_PRIVATE(MDialogView)
     Q_DISABLE_COPY(MDialogView)
 #ifdef UNIT_TEST

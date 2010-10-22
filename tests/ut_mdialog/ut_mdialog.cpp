@@ -27,6 +27,7 @@
 #include <MDialog>
 #include <MSceneWindow>
 #include <MLayout>
+#include <MPannableWidget>
 
 #include <mbuttonmodel.h>
 
@@ -146,6 +147,7 @@ void Ut_MDialog::initVals()
     QCOMPARE(dialog->clickedButton(), (MButtonModel *)NULL);
     QCOMPARE(dialog->isModal(), true);
     QCOMPARE(dialog->isSystem(), false);
+    QCOMPARE(dialog->contentsVerticalPanningPolicy(), MPannableWidget::PanningAsNeeded);
 }
 
 void Ut_MDialog::settersAndGetters()
@@ -199,6 +201,15 @@ void Ut_MDialog::settersAndGetters()
         QCOMPARE(dialog->centralWidget(), button1);
         dialog->setCentralWidget(button2);
         QCOMPARE(dialog->centralWidget(), button2);
+    }
+
+    {
+        dialog->setContentsVerticalPanningPolicy(MPannableWidget::PanningAlwaysOn);
+        QCOMPARE(dialog->contentsVerticalPanningPolicy(), MPannableWidget::PanningAlwaysOn);
+        dialog->setContentsVerticalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+        QCOMPARE(dialog->contentsVerticalPanningPolicy(), MPannableWidget::PanningAlwaysOff);
+        dialog->setContentsVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+        QCOMPARE(dialog->contentsVerticalPanningPolicy(), MPannableWidget::PanningAsNeeded);
     }
 }
 

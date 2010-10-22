@@ -23,6 +23,7 @@
 #include "mscenewindow.h"
 #include "mdialogmodel.h"
 #include <mnamespace.h>
+#include "mpannablewidget.h"
 
 class MButton;
 class MDialogPrivate;
@@ -210,6 +211,20 @@ class M_CORE_EXPORT MDialog : public MSceneWindow
     Q_PROPERTY(bool systemModal READ isSystemModal WRITE setSystemModal)
     //! \internal_end
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
+
+    /*!
+        \property MDialog::contentsVerticalPanningPolicy
+        \brief Panning policy for the dialog's contents.
+
+        The contents of a dialog are normally put inside a pannable viewport since they can
+        exceed the maximum height of a dialog.
+
+        This property defines the vertical panning policy to be used when a pannable
+        viewport is holding the dialog's contents.
+
+        By default its value is MPannableWidget::PanningAsNeeded.
+     */
+    Q_PROPERTY(MPannableWidget::PanningPolicy contentsVerticalPanningPolicy READ contentsVerticalPanningPolicy WRITE setContentsVerticalPanningPolicy)
 
 public:
 
@@ -504,6 +519,20 @@ public:
      * \param  centralWidget the central widget.
      */
     void setCentralWidget(QGraphicsWidget *centralWidget);
+
+    /**
+     * \brief Returns current vertical panning policy of dialog's contents
+     * \sa setContentsVerticalPanningPolicy()
+     */
+    MPannableWidget::PanningPolicy contentsVerticalPanningPolicy() const;
+
+    /**
+     * \brief Sets vertical panning policy of dialog's contents
+     *
+     * \param  policy Vertical panning policy
+     * \sa contentsVerticalPanningPolicy()
+     */
+    void setContentsVerticalPanningPolicy(MPannableWidget::PanningPolicy policy);
 
 public Q_SLOTS:
     /*!

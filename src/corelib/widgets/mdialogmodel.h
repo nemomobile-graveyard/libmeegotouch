@@ -21,6 +21,7 @@
 #define MDIALOGMODEL_H
 
 #include "mscenewindowmodel.h"
+#include "mpannablewidget.h"
 #include <mnamespace.h>
 
 #include <QList>
@@ -59,6 +60,14 @@ private:
     M_MODEL_PROPERTY(bool, modal, Modal, true, true)
     M_MODEL_PROPERTY(bool, systemModal, SystemModal, true, false)
     M_MODEL_PROPERTY(bool, alwaysPannable, AlwaysPannable, true, true)
+
+    /*!
+        \property MDialogModel::contentsVerticalPanningPolicy
+        \brief Vertical panning policy for MDialog's contents
+        \sa MPannableWidget::PanningPolicy
+
+     */
+    M_MODEL_PROPERTY(MPannableWidget::PanningPolicy, contentsVerticalPanningPolicy, ContentsVerticalPanningPolicy, true, MPannableWidget::PanningAsNeeded)
 
 
     /*!

@@ -609,4 +609,14 @@ void MDialog::dismissEvent(MDismissEvent *event)
     event->accept();
 }
 
+void MDialog::setContentsVerticalPanningPolicy(MPannableWidget::PanningPolicy policy)
+{
+    model()->setContentsVerticalPanningPolicy(policy);
+}
+
+MPannableWidget::PanningPolicy MDialog::contentsVerticalPanningPolicy() const
+{
+    return model()->contentsVerticalPanningPolicy();
+}
+
 #include "moc_mdialog.cpp"

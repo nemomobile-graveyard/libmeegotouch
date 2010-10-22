@@ -106,7 +106,6 @@ public:
     void updateButtonBox();
     void updateButtonBoxLayoutOrientation();
     void setSpinnerVisibility(bool visibility);
-    void _q_updatePanning();
     bool hasCloseButton();
 
     MDialog *controller;

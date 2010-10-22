@@ -117,7 +117,6 @@ QGraphicsLinearLayout *MDialogViewPrivate::createLayout(Qt::Orientation orientat
 
 void MDialogViewPrivate::createDialogBox()
 {
-    Q_Q(MDialogView);
     dialogBox = new QGraphicsWidget;
     dialogBox->setObjectName("MDialogBox");
     dialogBoxLayout = createLayout(Qt::Vertical);
@@ -137,7 +136,6 @@ void MDialogViewPrivate::createDialogBox()
     contentsLayout->setContentsMargins(0, 0, 0, 0);
     contentsLayout->setSpacing(0);
     contents->setLayout(contentsLayout);
-    q->connect(contentsViewport, SIGNAL(heightChanged()), SLOT(_q_updatePanning()));
 }
 
 void MDialogViewPrivate::createButtonBox()
@@ -596,6 +594,7 @@ void MDialogView::setupModel()
 
     d->setCentralWidget(model()->centralWidget());
     d->updateButtonBoxLayoutOrientation();
+    d->contentsViewport->setVerticalPanningPolicy(model()->contentsVerticalPanningPolicy());
 }
 
 void MDialogView::updateData(const QList<const char *> &modifications)
@@ -625,8 +624,8 @@ void MDialogView::updateData(const QList<const char *> &modifications)
             d->setCentralWidget(model()->centralWidget());
         } else if (member == MDialogModel::Buttons) {
             d->updateButtonBox();
-        } else if (member == MDialogModel::AlwaysPannable) {
-            d->_q_updatePanning();
+        } else if (member == MDialogModel::ContentsVerticalPanningPolicy) {
+            d->contentsViewport->setVerticalPanningPolicy(model()->contentsVerticalPanningPolicy());
         }
     }
 }
@@ -653,13 +652,6 @@ MPannableViewport *MDialogView::contentsViewport()
 {
     Q_D(MDialogView);
     return d->contentsViewport;
-}
-
-void MDialogViewPrivate::_q_updatePanning()
-{
-    Q_Q(MDialogView);
-    bool heightFits = contentsViewport->size().height() >= contentsViewport->childrenBoundingRect().height();
-    contentsViewport->setEnabled(!heightFits || q->model()->alwaysPannable());
 }
 
 bool MDialogViewPrivate::hasCloseButton() {
