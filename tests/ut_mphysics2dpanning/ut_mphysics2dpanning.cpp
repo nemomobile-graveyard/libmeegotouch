@@ -598,4 +598,52 @@ void Ut_MPhysics2DPanning::integrationShouldStopAfterReachingPositionInsideRange
     QVERIFY2(abs(physics->velocity().y()) < 1, "Velocity should be smaller than 1px");
 }
 
+void Ut_MPhysics2DPanning::testSetGetEnabled()
+{
+    QCOMPARE(physics->enabled(), true);
+    physics->setEnabled(false);
+    QCOMPARE(physics->enabled(), false);
+    physics->setEnabled(true);
+}
+
+void Ut_MPhysics2DPanning::testSetGetFriction()
+{
+    physics->setFriction(100);
+    QCOMPARE(physics->friction(), 100.0);
+}
+
+void Ut_MPhysics2DPanning::testSetGetBorderFriction()
+{
+    physics->setBorderFriction(200);
+    QCOMPARE(physics->borderFriction(), 200.0);
+}
+
+void Ut_MPhysics2DPanning::testSetGetBorderSpringK()
+{
+    physics->setBorderSpringK(300);
+    QCOMPARE(physics->borderSpringK(), 300.0);
+}
+
+void Ut_MPhysics2DPanning::testSetGetSlidingFriction()
+{
+    physics->setSlidingFriction(400);
+    QCOMPARE(physics->slidingFriction(),400.0);
+}
+
+void Ut_MPhysics2DPanning::testSetGetPointerSpringK()
+{
+    physics->setPointerSpringK(500);
+    QCOMPARE(physics->pointerSpringK(), 500.0);
+}
+
+void Ut_MPhysics2DPanning::testSetGetPanDirection()
+{
+    physics->setPanDirection(0);
+    QCOMPARE(physics->panDirection(), 0);
+    physics->setPanDirection(Qt::Horizontal);
+    QCOMPARE(physics->panDirection(), Qt::Horizontal);
+    physics->setPanDirection(Qt::Vertical | Qt::Horizontal);
+    QCOMPARE(physics->panDirection(), Qt::Vertical | Qt::Horizontal);
+}
+
 QTEST_APPLESS_MAIN(Ut_MPhysics2DPanning);

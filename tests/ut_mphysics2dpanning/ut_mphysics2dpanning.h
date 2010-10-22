@@ -91,6 +91,14 @@ private slots:
     void positionShouldReturnToEndRangeAfterMovingViewportBeyondEndRange();
     void integrationShouldStopAfterReachingPositionInsideRange();
 
+    // Testing setters and getters
+    void testSetGetEnabled();
+    void testSetGetFriction();
+    void testSetGetBorderFriction();
+    void testSetGetBorderSpringK();
+    void testSetGetSlidingFriction();
+    void testSetGetPointerSpringK();
+    void testSetGetPanDirection();
 };
 
 
