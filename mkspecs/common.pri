@@ -112,6 +112,7 @@ contains(USE_CCACHE, "true") {
     QMAKE_CXX = ccache g++
 }
 
+<<<<<<< HEAD
 contains( CONFIG, coverage ) {
     QMAKE_CXXFLAGS *= -ftest-coverage -fprofile-arcs
     LIBS *= -lgcov
@@ -121,6 +122,8 @@ contains( CONFIG, coverage ) {
     *.gcno \
     *.gcov
 }
+=======
+>>>>>>> 507ccca19d145aa4816e4622e0ce5f5d1a0b9e5d
 
 QMAKE_LIBDIR += $${M_BUILD_TREE}/lib
 

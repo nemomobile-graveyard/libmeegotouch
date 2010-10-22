@@ -36,10 +36,17 @@ contains(TEMPLATE, app) {
 }
 
 contains( CONFIG, coverage ) {
+<<<<<<< HEAD
     QMAKE_CXXFLAGS *= -ftest-coverage -fprofile-arcs
     LIBS *= -lgcov
 
     QMAKE_CLEAN *= \
+=======
+    QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
+    LIBS += -lgcov
+
+    QMAKE_CLEAN += \
+>>>>>>> 507ccca19d145aa4816e4622e0ce5f5d1a0b9e5d
     *.gcda \
     *.gcno \
     *.gcov
