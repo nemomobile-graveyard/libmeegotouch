@@ -60,6 +60,7 @@ Q_DECLARE_METATYPE(MTextEditModel::EditMode);
 Q_DECLARE_METATYPE(Ut_MTextEdit::PositionedTextEditList);
 Q_DECLARE_METATYPE(Ut_MTextEdit::KeyList);
 Q_DECLARE_METATYPE(Qt::KeyboardModifiers);
+Q_DECLARE_METATYPE(Qt::FocusReason);
 
 const QString Ut_MTextEdit::testString = QString("jallajalla");
 
@@ -263,6 +264,8 @@ void Ut_MTextEdit::initTestCase()
     validStrings << "normal" << "normal with spaces" << "specials: !@#$%^&*()_+=-[]{}"
                  << "A string that is probably too long to fit to one line and needs to be wrapped or scrolled.";
     // TODO: Invent more test strings
+
+    qRegisterMetaType<Qt::FocusReason>();
 }
 
 
@@ -1765,13 +1768,54 @@ void Ut_MTextEdit::testInputMethodHints()
     QVERIFY(m_subject->inputMethodAutoCapitalizationEnabled() == false);
 }
 
+void Ut_MTextEdit::testAttachToolbar_data()
+{
+    QTest::addColumn<bool>("isSipRequested");
+    QTest::addColumn<int>("expectedCallCount");
+
+    QTest::newRow("focused") << true << 2;
+    QTest::newRow("not focused") << false << 0;
+}
+
 void Ut_MTextEdit::testAttachToolbar()
 {
-    m_subject->attachToolbar("");
-    QVERIFY(m_subject->attachedToolbar().isEmpty());
+    QFETCH(bool, isSipRequested);
+    QFETCH(int, expectedCallCount);
+    AutoActivatedScene sc;
+    MTextEdit *subject = createFromSipHandling(&sc, isSipRequested);
+
+    m_sic->updateCallCount = 0;
+    subject->attachToolbar("");
+    QVERIFY(subject->attachedToolbar().isEmpty());
+    QCOMPARE(m_sic->updateCallCount, 0);
     const QString toolbar("testToolbar");
-    m_subject->attachToolbar(toolbar);
-    QCOMPARE(m_subject->attachedToolbar(), toolbar);
+    subject->attachToolbar(toolbar);
+    QCOMPARE(subject->attachedToolbar(), toolbar);
+
+    //MTextEdit::detachToolbar is called implicitly,
+    //so we should have two calls to QInputContext::update()
+    QCOMPARE(m_sic->updateCallCount, expectedCallCount);
+}
+
+void Ut_MTextEdit::testDetachToolbar_data()
+{
+    QTest::addColumn<bool>("isSipRequested");
+    QTest::addColumn<int>("expectedCallCount");
+
+    QTest::newRow("focused") << true << 1;
+    QTest::newRow("not focused") << false << 0;
+}
+
+void Ut_MTextEdit::testDetachToolbar()
+{
+    QFETCH(bool, isSipRequested);
+    QFETCH(int, expectedCallCount);
+    AutoActivatedScene sc;
+    MTextEdit *subject = createFromSipHandling(&sc, isSipRequested);
+
+    m_sic->updateCallCount = 0;
+    subject->detachToolbar();
+    QCOMPARE(m_sic->updateCallCount, expectedCallCount);
 }
 
 void Ut_MTextEdit::testPasswordEchoOnEditClearing()

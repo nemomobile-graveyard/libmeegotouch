@@ -119,6 +119,10 @@ public:
     //! \sa enableUpdateMicroFocus
     void updateMicroFocus();
 
+    //! Call QInputContext::update() if input context exists
+    //! and widget has focus
+    void icUpdate();
+
     bool pendingSoftwareInputPanelRequest;
 
     enum FocusEventStateType {

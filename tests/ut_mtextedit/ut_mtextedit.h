@@ -117,7 +117,10 @@ private slots:
 
     void testInputMethodHints();
 
+    void testAttachToolbar_data();
     void testAttachToolbar();
+    void testDetachToolbar_data();
+    void testDetachToolbar();
 
     void testPasswordEchoOnEditClearing();
 

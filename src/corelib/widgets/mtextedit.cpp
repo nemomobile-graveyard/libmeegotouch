@@ -1288,6 +1288,17 @@ void MTextEditPrivate::updateMicroFocus()
     }
 }
 
+void MTextEditPrivate::icUpdate()
+{
+    Q_Q(MTextEdit);
+    QInputContext *ic = qApp->inputContext();
+
+    if (!ic || !q->hasFocus()) {
+        return;
+    }
+
+    ic->update();
+}
 
 ///////////////////////////////////////////////
 // Actual class implementation
@@ -2722,10 +2733,12 @@ void MTextEdit::attachToolbar(const QString &name)
     d->registeredToolbarId = MInputMethodState::instance()->registerToolbar(name);
     model()->setToolbar(name);
     model()->setToolbarId(d->registeredToolbarId);
+    d->icUpdate();
 }
 
 void MTextEdit::attachToolbar(int id)
 {
+    Q_D(MTextEdit);
     if (attachedToolbarId() == id)
         return;
     detachToolbar();
@@ -2737,6 +2750,7 @@ void MTextEdit::attachToolbar(int id)
         // toolbar instances (two ids).
         model()->setToolbar(toolbar);
         model()->setToolbarId(id);
+        d->icUpdate();
     }
 }
 
@@ -2760,6 +2774,7 @@ void MTextEdit::detachToolbar()
     }
     model()->setToolbar(QString());
     model()->setToolbarId(-1);
+    d->icUpdate();
 }
 
 #include "moc_mtextedit.cpp"
