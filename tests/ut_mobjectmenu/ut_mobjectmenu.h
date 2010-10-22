@@ -40,7 +40,8 @@ private slots:
     void cleanupTestCase();
 
     void testConstructionAndDestruction();
-    void testActionsAddingAndRemoving();
+    void testActionsUsingTargetWidget();
+    void testActionsUsingObjectMenu();
     void testCursorPosition();
     void testTitle();
     void testIconId();

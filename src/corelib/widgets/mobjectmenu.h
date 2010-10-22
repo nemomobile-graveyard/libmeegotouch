@@ -29,14 +29,18 @@ class QGraphicsSceneContextMenuEvent;
 
 /*!
     \class MObjectMenu
-    \brief MObjectMenu is a context-menu like widget, which shows object menu actions from any widget.
+    \brief MObjectMenu is a context-menu like widget, which shows object menu 
+           actions from any widget or from itself.
 
     \ingroup widgets
 
-    This class is used by MWidget and will be launched automatically if the
-    widget gets a context menu event and the widget has some object menu
-    actions associated to it. To add context menu actions to a widget see the
-    code snippet below.
+    This class can be used with or without a MWidget as a source for the actions. 
+    If target widget is not defined the actions are gathered only from the 
+    object menu instance itself.
+    
+    Menu is launched automatically by MWidget when it gets a context menu event 
+    and it has some object menu actions associated to it. To add context menu 
+    actions to a widget see the code snippet below.
     \code
         // Create an action with title "Edit" and parent it to widget
         // so the action is freed when the widget gets destroyed.
@@ -49,18 +53,43 @@ class QGraphicsSceneContextMenuEvent;
         widget->addAction(action);
     \endcode
 
-    This class can also be used manually, but normally it's enough to just add
-    actions to a widget and let the system handle the menu.
+    When using this class without a target widget, the actions need to be added 
+    manually to the instance of MObjectMenu class. In this case, the menu needs to 
+    be shown manually as well.
+    \code
+        //manually initialized an instance of MObjectMenu
+        MObjectMenu* objectMenu = new MObjectMenu(NULL);
+        .
+        .
+        .       
+        // Create an action with title "Edit" and parent it to objecMenu
+        // so the action is freed when the menu gets destroyed.
+        MAction* action = new MAction("Edit", objectMenu);
+
+        // Associate this action to object menu.
+        action->setLocation(MAction::ObjectMenu);
+
+        // And add the action to object menu instance
+        objectMenu->addAction(action);
+        .
+        .
+        .
+        //manually show the object menu when needed
+        sceneManager()->appearSceneWindow(objectMenu);
+    \endcode
+    
+    Please notice that in most cases it should be enough to use the automatic 
+    object menu launching functionality provided by the MWidget.
 
     \section MObjectMenuOverview Overview
         Object Menu is a popup menu of commands attached to an element that
         contains functions related to it. It can be seen to be quite close to
         the idea of a context-sensitive menu ("right click menu").
 
-        Object menu is opened by long tapping the element. There is a visual
-        transition for opening the menu, starting after a certain time period.
-        When the menu is activated, the background is dimmed (including Home
-        and Back buttons).
+        Usually the object menu is opened by long tapping the element. There is 
+        a visual transition for opening the menu, starting after a certain time 
+        period. When the menu is activated, the background is dimmed (including 
+        Home and Back buttons).
 
     \section MObjectMenuUsageGuidlines Usage guidlines
         \li Object menu is a good place for shortcuts: for things that would
@@ -127,8 +156,10 @@ public:
     /*!
         \brief Constructs an object menu.
 
-        Object menu is associated to exactly one widget. The menu shows
-        automatically all object menu actions from the \a target widget.
+        Object menu can be associated with a \a target widget. If \a target 
+        widget is valid, menu will show automatically all the object menu 
+        actions from the specified widget. If \a target is 0, menu includes 
+        only the actions that will be added to the MObjectMenu instance itself.
      */
     explicit MObjectMenu(MWidget *target);
 

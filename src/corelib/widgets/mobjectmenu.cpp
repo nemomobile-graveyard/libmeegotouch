@@ -31,42 +31,49 @@ M_REGISTER_WIDGET_NO_CREATE(MObjectMenu)
 MObjectMenu::MObjectMenu(MWidget *target)
     : MSceneWindow(new MSceneWindowPrivate, new MObjectMenuModel, MSceneWindow::ObjectMenu)
 {
-    QList<QAction *> actionList = target->actions();
-    MActionList list;
-
-    // go trough all actions in the target widget and add the the actions
-    // which are associated to object menu to model.
-    const int actionListCount = actionList.count();
-    for (int i = 0; i < actionListCount; ++i) {
-        MAction *action = qobject_cast<MAction *>(actionList.at(i));
-        if (action && (action->location() & MAction::ObjectMenuLocation)) {
-            list.append(action);
+    if (target) {
+        // go trough all actions in the target widget and add the the actions
+        // which are associated to object menu to model.
+        QList<QAction *> actionList = target->actions();
+        MActionList list;
+        const int actionListCount = actionList.count();
+        for (int i = 0; i < actionListCount; ++i) {
+            MAction *action = qobject_cast<MAction *>(actionList.at(i));
+            if (action && (action->location() & MAction::ObjectMenuLocation)) {
+                list.append(action);
+            }
         }
+
+        model()->setActions(list);
+
+        QVariant v = target->property("contentURI");
+        if(v.isValid())
+            model()->setContentURI(v.toString());
+
+        v = target->property("objectMenuTitle");
+        if(v.isValid())
+            model()->setTitle(v.toString());
+
+        v = target->property("objectMenuIconId");
+        if(v.isValid())
+            model()->setIconId(v.toString());
+
+        // install event filter to the target widget, so we get notified
+        // when actions are added,removed or changed.
+        target->installEventFilter(this);
     }
-
-    model()->setActions(list);
-
-    QVariant v = target->property("contentURI");
-    if(v.isValid())
-        model()->setContentURI(v.toString());
-
-    v = target->property("objectMenuTitle");
-    if(v.isValid())
-        model()->setTitle(v.toString());
-
-    v = target->property("objectMenuIconId");
-    if(v.isValid())
-        model()->setIconId(v.toString());
-
-    // install event filter to the target widget, so we get notified
-    // when actions are added,removed or changed.
-    target->installEventFilter(this);
+    else {
+        // When there's no target widget, install event filter into itself to
+        // get notifications of added, removed or changed actions.
+        installEventFilter(this);
+    }
 }
 
 MObjectMenu::MObjectMenu(const QList<MAction *> &actionList)
     : MSceneWindow(new MSceneWindowPrivate, new MObjectMenuModel, MSceneWindow::ObjectMenu)
 {
     model()->setActions(actionList);
+    installEventFilter(this);
 }
 
 MObjectMenu::~MObjectMenu()

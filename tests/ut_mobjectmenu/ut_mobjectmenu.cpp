@@ -47,21 +47,24 @@ void Ut_MObjectMenu::cleanupTestCase()
 
 void Ut_MObjectMenu::testConstructionAndDestruction()
 {
+    //test construction and destruction with target widget
     MWidget *widget = new MWidget();
     MObjectMenu *menu = new MObjectMenu(widget);
     MObjectMenuModel *model = dynamic_cast<MObjectMenuModel *>(menu->model());
-
-    // check that the model has been created.
     QVERIFY(model != NULL);
-
-    // check that the action count is zero
     QVERIFY(model->actions().count() == 0);
-
     delete menu;
     delete widget;
+    
+    //test construction and destruction without target widget
+    menu = new MObjectMenu(NULL);
+    model = dynamic_cast<MObjectMenuModel *>(menu->model());
+    QVERIFY(model != NULL);
+    QVERIFY(model->actions().count() == 0);
+    delete menu;
 }
 
-void Ut_MObjectMenu::testActionsAddingAndRemoving()
+void Ut_MObjectMenu::testActionsUsingTargetWidget()
 {
     MWidget *widget = new MWidget();
     MAction *action1 = new MAction("Test1", widget);
@@ -117,7 +120,6 @@ void Ut_MObjectMenu::testActionsAddingAndRemoving()
     QCOMPARE(model->actions().at(0), action2);
     QCOMPARE(model->actions().at(1), action1);
 
-
     action1->setText("Test234");
     QCOMPARE(addedSpy.count(), 2);
     QCOMPARE(removedSpy.count(), 1);
@@ -125,6 +127,62 @@ void Ut_MObjectMenu::testActionsAddingAndRemoving()
     QCOMPARE(model->actions().count(), 2);
     QCOMPARE(model->actions().at(0), action2);
     QCOMPARE(model->actions().at(1), action1);
+    
+    delete widget;
+    delete menu;
+}
+
+void Ut_MObjectMenu::testActionsUsingObjectMenu() 
+{
+    MObjectMenu *menu = new MObjectMenu(NULL);
+    MObjectMenuModel *model = dynamic_cast<MObjectMenuModel *>(menu->model());
+    QCOMPARE(model->actions().count(), 0);
+
+    QSignalSpy addedSpy(model, SIGNAL(actionAdded(MAction *)));
+    QSignalSpy removedSpy(model, SIGNAL(actionRemoved(MAction *)));
+    QSignalSpy modifiedSpy(model, SIGNAL(actionModified(MAction *)));
+    
+    MAction *action1 = new MAction("Test1", menu);
+    MAction *action2 = new MAction("Test2", menu);
+
+    menu->addAction(action1);
+    QCOMPARE(addedSpy.count(), 1);
+    QCOMPARE(removedSpy.count(), 0);
+    QCOMPARE(modifiedSpy.count(), 0);
+    QCOMPARE(model->actions().count(), 1);
+    QCOMPARE(model->actions().at(0), action1);
+
+    menu->removeAction(action1);
+    QCOMPARE(addedSpy.count(), 1);
+    QCOMPARE(removedSpy.count(), 1);
+    QCOMPARE(modifiedSpy.count(), 0);
+    QCOMPARE(model->actions().count(), 0);
+    
+    menu->addAction(action1);
+    menu->addAction(action2);
+    QCOMPARE(addedSpy.count(), 3);
+    QCOMPARE(removedSpy.count(), 1);
+    QCOMPARE(modifiedSpy.count(), 0);
+    QCOMPARE(model->actions().count(), 2);
+    QCOMPARE(model->actions().at(0), action1);
+    QCOMPARE(model->actions().at(1), action2);
+    
+    action1->setText("Test234");
+    QCOMPARE(addedSpy.count(), 3);
+    QCOMPARE(removedSpy.count(), 1);
+    QCOMPARE(modifiedSpy.count(), 1);
+    QCOMPARE(model->actions().count(), 2);
+    QCOMPARE(model->actions().at(0), action1);
+    QCOMPARE(model->actions().at(1), action2);
+    
+    menu->removeAction(action1);
+    menu->removeAction(action2);
+    QCOMPARE(addedSpy.count(), 3);
+    QCOMPARE(removedSpy.count(), 3);
+    QCOMPARE(modifiedSpy.count(), 1);
+    QCOMPARE(model->actions().count(), 0);
+    
+    delete menu;
 }
 
 void Ut_MObjectMenu::testCursorPosition()
