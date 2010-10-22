@@ -63,6 +63,7 @@ MContainer::MContainer(const QString &title, QGraphicsItem *parent)
 
 MContainer::~MContainer()
 {
+    centralWidget()->setParentItem(0);
 }
 
 QGraphicsWidget *MContainer::centralWidget()
