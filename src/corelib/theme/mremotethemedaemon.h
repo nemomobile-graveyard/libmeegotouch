@@ -66,6 +66,7 @@ private:
     MRemoteThemeDaemonPrivate *const d_ptr;
 
     Q_PRIVATE_SLOT(d_func(), void connectionDataAvailable())
+    Q_PRIVATE_SLOT(d_func(), void emitThemeChangedSignal())
 
 #ifdef UNIT_TEST
     friend class Ut_MRemoteThemeDaemon;

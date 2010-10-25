@@ -26,6 +26,7 @@
 #include "mwindow.h"
 #include <QDir>
 #include <QTime>
+#include <QTimer>
 #include <QSettings>
 
 #ifndef Q_OS_WIN
@@ -356,6 +357,12 @@ void MRemoteThemeDaemonPrivate::connectionDataAvailable()
     socket.blockSignals(blocked);
 }
 
+void MRemoteThemeDaemonPrivate::emitThemeChangedSignal()
+{
+    Q_Q(MRemoteThemeDaemon);
+    emit q->themeChanged(themeInheritanceChain, themeLibraryNames);
+}
+
 void MRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)
 {
     Q_Q(MRemoteThemeDaemon);
@@ -375,7 +382,10 @@ void MRemoteThemeDaemonPrivate::themeChanged(const QStringList &themeInheritance
     mostUsedPixmaps.clear();
     this->themeInheritanceChain = themeInheritanceChain;
     this->themeLibraryNames = themeLibraryNames;
-    emit q->themeChanged(themeInheritanceChain, themeLibraryNames);
+
+    // Emitting the themeChanged() signal must be done asynchronously, otherwise
+    // nested waitForPacket() calls might get triggered.
+    QTimer::singleShot(0, q, SLOT(emitThemeChangedSignal()));
 }
 
 qint32 MRemoteThemeDaemonPrivate::priority()
