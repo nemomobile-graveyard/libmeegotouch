@@ -36,7 +36,7 @@ class MListItemPrivate;
     
     \sa MListItemView
 */
-class M_EXPORT MListItem : public MWidgetController
+class M_CORE_EXPORT MListItem : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MListItem)

@@ -29,7 +29,7 @@ class MProgressIndicator;
 
 class QGraphicsGridLayout;
 
-class M_EXPORT MAdvancedListItem : public MListItem
+class M_CORE_EXPORT MAdvancedListItem : public MListItem
 {
     Q_OBJECT
 

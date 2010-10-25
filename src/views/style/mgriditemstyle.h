@@ -37,7 +37,7 @@
     \sa MGridItemStyleContainer MWidgetStyle \ref styling MGridItem MGridItemView
 */
 
-class M_EXPORT MGridItemStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MGridItemStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MGridItemStyle)
@@ -62,7 +62,7 @@ class M_EXPORT MGridItemStyle : public MWidgetStyle
     \ingroup styles
     \sa MGridItemStyle
 */
-class M_EXPORT MGridItemStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MGridItemStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MGridItemStyle)
 };

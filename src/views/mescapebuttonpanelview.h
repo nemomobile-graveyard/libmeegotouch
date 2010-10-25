@@ -33,7 +33,7 @@ class MEscapeButtonPanel;
  *
  * It just draws an escape button on an otherwise empty scene window.
  */
-class M_EXPORT MEscapeButtonPanelView : public MSceneWindowView
+class M_VIEWS_EXPORT MEscapeButtonPanelView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MEscapeButtonPanelModel, MEscapeButtonPanelStyle)

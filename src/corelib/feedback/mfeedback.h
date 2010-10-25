@@ -37,7 +37,7 @@ class MFeedbackPrivate;
  *
  * \sa MFeedbackPlayer
  */
-class M_EXPORT MFeedback : public QObject
+class M_CORE_EXPORT MFeedback : public QObject
 {
     Q_OBJECT
 

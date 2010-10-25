@@ -21,8 +21,8 @@
 
 namespace M
 {
-    M_EXPORT const char* NoMStyle = "NoMStyle";
-    M_EXPORT const char* NoMNavigationBar = "NoMNavigationBar";
-    M_EXPORT const char* NoMStatusBar = "NoMStatusBar";
+    M_CORE_EXPORT const char* NoMStyle = "NoMStyle";
+    M_CORE_EXPORT const char* NoMNavigationBar = "NoMNavigationBar";
+    M_CORE_EXPORT const char* NoMStatusBar = "NoMStatusBar";
 }
 

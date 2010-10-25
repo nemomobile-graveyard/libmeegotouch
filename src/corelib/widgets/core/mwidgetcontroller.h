@@ -48,7 +48,7 @@ class MAbstractWidgetAnimation;
 
 */
 
-class M_EXPORT MWidgetController : public MWidget
+class M_CORE_EXPORT MWidgetController : public MWidget
 {
     Q_OBJECT
 

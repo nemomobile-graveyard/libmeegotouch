@@ -26,7 +26,7 @@
  * \internal
  */
 
-class M_EXPORT MBubbleItemStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MBubbleItemStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MBubbleItemStyle)
@@ -41,7 +41,7 @@ class M_EXPORT MBubbleItemStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString,                bubbleObjectName,   BubbleObjectName)
 };
 
-class M_EXPORT MBubbleItemStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MBubbleItemStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MBubbleItemStyle)
 

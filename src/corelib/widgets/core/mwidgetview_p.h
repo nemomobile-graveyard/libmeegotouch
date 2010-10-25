@@ -27,7 +27,7 @@ class QPixmap;
 class MScalableImage;
 class MAbstractWidgetAnimation;
 
-class M_EXPORT MWidgetViewPrivate
+class M_CORE_EXPORT MWidgetViewPrivate
 {
     Q_DECLARE_PUBLIC(MWidgetView)
 

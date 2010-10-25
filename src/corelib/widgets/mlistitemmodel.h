@@ -22,7 +22,7 @@
 
 #include <MWidgetModel>
 
-class M_EXPORT MListItemModel : public MWidgetModel
+class M_CORE_EXPORT MListItemModel : public MWidgetModel
 {
     M_MODEL(MListItemModel)
 };

@@ -25,7 +25,7 @@
 /*!
  * Style class for MExtendingBackgroundView
  */
-class M_EXPORT MExtendingBackgroundStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MExtendingBackgroundStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MExtendingBackgroundStyle)
@@ -34,7 +34,7 @@ class M_EXPORT MExtendingBackgroundStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, extendDirection, ExtendDirection)
 };
 
-class M_EXPORT MExtendingBackgroundStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MExtendingBackgroundStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MExtendingBackgroundStyle)
 };

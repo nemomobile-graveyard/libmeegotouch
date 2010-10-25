@@ -119,7 +119,7 @@ class QString;
         \endcode
     \sa MLabelModel MLabelStyle <a href="http://doc.trolltech.com/richtext-html-subset.html"> Supported HTML Subset</a>
 */
-class M_EXPORT MLabel : public MWidgetController
+class M_CORE_EXPORT MLabel : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MLabel)

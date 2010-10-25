@@ -88,7 +88,7 @@ class MAnimationPrivate;
  * \endcode
  *
  */
-class M_EXPORT MAnimation : public QAbstractAnimation
+class M_CORE_EXPORT MAnimation : public QAbstractAnimation
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MAnimation)

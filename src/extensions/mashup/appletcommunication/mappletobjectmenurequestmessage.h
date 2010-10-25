@@ -26,7 +26,7 @@
 /*!
  * Send Request to applet runner for a context menu.
  */
-class M_EXPORT MAppletObjectMenuRequestMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletObjectMenuRequestMessage : public MAppletMessage
 {
 private:
     /// position where the event occured

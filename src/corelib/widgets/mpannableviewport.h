@@ -69,7 +69,7 @@ class MPositionIndicator;
  * \sa MPannableWidget MPannableWidgetStyle
  *
  */
-class M_EXPORT MPannableViewport : public MPannableWidget
+class M_CORE_EXPORT MPannableViewport : public MPannableWidget
 {
     Q_OBJECT
     M_CONTROLLER(MPannableViewport)

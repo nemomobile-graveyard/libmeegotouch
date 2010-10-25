@@ -41,7 +41,7 @@
  *
  * This is the proxy for the MApplication QDBus service.
  */
-class M_EXPORT MApplicationIfProxy: public QDBusAbstractInterface
+class M_CORE_EXPORT MApplicationIfProxy: public QDBusAbstractInterface
 {
     Q_OBJECT
 

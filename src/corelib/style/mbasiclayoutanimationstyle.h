@@ -39,7 +39,7 @@ class MBasicLayoutAnimationStyle : public MLayoutAnimationStyle
 };
 
 // TODO: get rid of this container
-class M_EXPORT MBasicLayoutAnimationStyleContainer : public MLayoutAnimationStyleContainer
+class M_CORE_EXPORT MBasicLayoutAnimationStyleContainer : public MLayoutAnimationStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MBasicLayoutAnimationStyle)
 };

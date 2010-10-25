@@ -31,7 +31,7 @@
  * to choose one of both backend implementations at compile time
  * and to keep the number of needed "#ifdef" small.
  */
-class M_EXPORT MBreakIteratorIf
+class M_CORE_EXPORT MBreakIteratorIf
 {
 public:
     virtual ~MBreakIteratorIf() {};

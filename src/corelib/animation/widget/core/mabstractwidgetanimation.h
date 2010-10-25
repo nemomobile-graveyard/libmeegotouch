@@ -30,7 +30,7 @@ class MAbstractWidgetAnimationPrivate;
   \brief MAbstractWidgetAnimation class is a base class for all widget animations.
 
  */
-class M_EXPORT MAbstractWidgetAnimation : public MParallelAnimationGroup
+class M_CORE_EXPORT MAbstractWidgetAnimation : public MParallelAnimationGroup
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MAbstractWidgetAnimation)

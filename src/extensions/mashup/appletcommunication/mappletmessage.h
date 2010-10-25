@@ -29,7 +29,7 @@
  * applets and the host process. Messages can be serialized to a byte stream
  * so they can be communicated to another processes.
  */
-class M_EXPORT MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletMessage
 {
 public:
     /*!

@@ -32,7 +32,7 @@
     \sa MPopupListStyleContainer MDialogStyle \ref styling MPopupList MPopupListView
 */
 
-class M_EXPORT MPopupListStyle : public MDialogStyle
+class M_VIEWS_EXPORT MPopupListStyle : public MDialogStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MPopupListStyle)
@@ -48,7 +48,7 @@ class M_EXPORT MPopupListStyle : public MDialogStyle
     \ingroup styles
     \sa MPopupListStyle
 */
-class M_EXPORT MPopupListStyleContainer : public MDialogStyleContainer
+class M_VIEWS_EXPORT MPopupListStyleContainer : public MDialogStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MPopupListStyle)
 };

@@ -22,7 +22,7 @@
 
 #include <mwidget.h>
 
-class MWidgetPrivate
+class M_CORE_EXPORT MWidgetPrivate
 {
     Q_DECLARE_PUBLIC(MWidget)
 public:

@@ -27,7 +27,7 @@
 /*!
  * An applet message for setting the geometry of a \c QGraphicsLayoutItem.
  */
-class M_EXPORT MAppletSetGeometryMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletSetGeometryMessage : public MAppletMessage
 {
 private:
     //! The geometry property of the message.

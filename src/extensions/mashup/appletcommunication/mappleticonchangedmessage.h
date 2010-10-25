@@ -26,7 +26,7 @@
 /*!
  * Applet icon changed message.
  */
-class M_EXPORT MAppletIconChangedMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletIconChangedMessage : public MAppletMessage
 {
 private:
     QString _icon;

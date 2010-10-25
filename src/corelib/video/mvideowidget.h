@@ -54,7 +54,7 @@ class MVideoWidgetPrivate;
 
     \sa MVideoWidgetModel
 */
-class M_EXPORT MVideoWidget : public MWidgetController
+class M_CORE_EXPORT MVideoWidget : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MVideoWidget)

@@ -34,7 +34,7 @@ class MLayoutAnimationPrivate;
  *
  * \section custom_animation How to write a custom animation
  */
-class M_EXPORT MLayoutAnimation : public MAnimation
+class M_CORE_EXPORT MLayoutAnimation : public MAnimation
 {
 public:
     /*!

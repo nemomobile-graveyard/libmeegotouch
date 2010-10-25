@@ -38,7 +38,7 @@ class MOverlayPrivate;
  *
  * \sa MApplicationPage
  */
-class M_EXPORT MOverlay : public MSceneWindow
+class M_CORE_EXPORT MOverlay : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MSceneWindow)

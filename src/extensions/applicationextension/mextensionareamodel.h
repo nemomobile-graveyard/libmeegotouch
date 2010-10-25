@@ -29,7 +29,7 @@ typedef QMap<QGraphicsWidget *, MDataStore *> DataStoreMap;
 /*!
  * MExtensionAreaModel is the model class for MExtensionArea.
  */
-class M_EXPORT MExtensionAreaModel : public MWidgetModel
+class M_EXTENSIONS_EXPORT MExtensionAreaModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MExtensionAreaModel)

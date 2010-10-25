@@ -26,7 +26,7 @@
 /*!
  * Applet title changed message.
  */
-class M_EXPORT MAppletTitleChangedMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletTitleChangedMessage : public MAppletMessage
 {
 private:
     QString _title;

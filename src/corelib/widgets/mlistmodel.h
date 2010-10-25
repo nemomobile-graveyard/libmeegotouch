@@ -36,7 +36,7 @@
     \ingroup models
     \sa MList
 */
-class M_EXPORT MListModel : public MWidgetModel
+class M_CORE_EXPORT MListModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MListModel)

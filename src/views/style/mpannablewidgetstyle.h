@@ -47,7 +47,7 @@
 
     \sa MPannableWidget MWidgetStyle
 */
-class M_EXPORT MPannableWidgetStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MPannableWidgetStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MPannableWidgetStyle)
@@ -63,7 +63,7 @@ class M_EXPORT MPannableWidgetStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(qreal, maximumVelocity, MaximumVelocity)
 };
 
-class M_EXPORT MPannableWidgetStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MPannableWidgetStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MPannableWidgetStyle)
 };

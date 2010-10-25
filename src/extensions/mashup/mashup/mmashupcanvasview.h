@@ -32,7 +32,7 @@ class MContainer;
 /*!
  * A view class for the MMashupCanvas.
  */
-class M_EXPORT MMashupCanvasView : public MExtensionAreaView
+class M_EXTENSIONS_EXPORT MMashupCanvasView : public MExtensionAreaView
 {
     Q_OBJECT
     M_VIEW(MMashupCanvasModel, MMashupCanvasStyle)

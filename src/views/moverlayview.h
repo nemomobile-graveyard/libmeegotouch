@@ -25,7 +25,7 @@
 
 class MOverlay;
 
-class M_EXPORT MOverlayView : public MSceneWindowView
+class M_VIEWS_EXPORT MOverlayView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MSceneWindowModel, MOverlayStyle)

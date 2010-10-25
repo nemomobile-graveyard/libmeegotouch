@@ -62,7 +62,7 @@
 
 */
 
-class M_EXPORT MGConfItem : public QObject
+class M_CORE_EXPORT MGConfItem : public QObject
 {
     Q_OBJECT
 

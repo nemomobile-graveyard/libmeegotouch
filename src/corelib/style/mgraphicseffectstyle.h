@@ -22,13 +22,13 @@
 
 #include "mstyle.h"
 
-class M_EXPORT MGraphicsEffectStyle : public MStyle
+class M_CORE_EXPORT MGraphicsEffectStyle : public MStyle
 {
     Q_OBJECT
     M_STYLE(MGraphicsEffectStyle)
 };
 
-class M_EXPORT MGraphicsEffectStyleContainer : public MStyleContainer
+class M_CORE_EXPORT MGraphicsEffectStyleContainer : public MStyleContainer
 {
     M_STYLE_CONTAINER(MGraphicsEffectStyle)
 };

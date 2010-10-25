@@ -28,7 +28,7 @@ typedef MWidgetModel MSettingsLanguageWidgetModel;
 /*!
  * MSettingsLanguageWidget is a UI component that represents a MSettingsLanguageBinary node.
  */
-class M_EXPORT MSettingsLanguageWidget : public MWidgetController
+class M_SETTINGS_EXPORT MSettingsLanguageWidget : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MSettingsLanguageWidget)

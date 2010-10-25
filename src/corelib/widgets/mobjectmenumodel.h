@@ -34,7 +34,7 @@ typedef QList<MAction *> MActionList;
 
     \sa MObjectMenu
 */
-class M_EXPORT MObjectMenuModel : public MSceneWindowModel
+class M_CORE_EXPORT MObjectMenuModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MObjectMenuModel)

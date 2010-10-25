@@ -59,7 +59,7 @@ class QAbstractAnimation;
  server called \a mthemedaemon that shares assets using the X11 system. In case a theme server
  is not available, no sharing occurs and each graphical asset is duplicated for each application.
  */
-class M_EXPORT MTheme : public QObject
+class M_CORE_EXPORT MTheme : public QObject
 {
     Q_OBJECT
 

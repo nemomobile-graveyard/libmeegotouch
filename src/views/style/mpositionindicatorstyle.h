@@ -25,7 +25,7 @@
 
 class QPixmap;
 
-class M_EXPORT MPositionIndicatorStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MPositionIndicatorStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MPositionIndicatorStyle)
@@ -35,7 +35,7 @@ class M_EXPORT MPositionIndicatorStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int, hideTimeout, HideTimeout)
 };
 
-class M_EXPORT MPositionIndicatorStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MPositionIndicatorStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MPositionIndicatorStyle)
 };

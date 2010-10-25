@@ -22,7 +22,7 @@
 
 #include "mscenewindowmodel.h"
 
-class M_EXPORT MModalSceneWindowModel : public MSceneWindowModel
+class M_CORE_EXPORT MModalSceneWindowModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MModalSceneWindowModel)

@@ -22,7 +22,7 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MStatusBarStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MStatusBarStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE(MStatusBarStyle)
@@ -31,7 +31,7 @@ class M_EXPORT MStatusBarStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(int, swipeThreshold, SwipeThreshold)
 };
 
-class M_EXPORT MStatusBarStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MStatusBarStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER(MStatusBarStyle)
 };

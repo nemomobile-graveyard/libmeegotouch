@@ -34,7 +34,7 @@ class MSettingsLanguageParserPrivate;
  * This class can be used to read in a settings language description
  * and transfer it into a binary representation.
  */
-class M_EXPORT MSettingsLanguageParser
+class M_SETTINGS_EXPORT MSettingsLanguageParser
 {
 public:
     /*!

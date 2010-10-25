@@ -124,7 +124,7 @@ class MListFilter;
   See also MListView, MWidgetFactory.
  */
 
-class M_EXPORT MList : public MWidgetController
+class M_CORE_EXPORT MList : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MList)

@@ -36,7 +36,7 @@
  * factory. Actually you can't even create instances of it since the constructor is
  * hidden.
  */
-class M_EXPORT MAppletMessageFactory
+class M_EXTENSIONS_EXPORT MAppletMessageFactory
 {
 private:
     /// Hidden constructor to prevent instantiating.

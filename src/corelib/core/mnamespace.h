@@ -37,19 +37,19 @@ namespace M
      * setting a dynamic porperty to any QWidget or QApplication will cause the object
      * not to be styled like M does.
      */
-    M_EXPORT extern const char* NoMStyle;
+    M_CORE_EXPORT extern const char* NoMStyle;
 
     /*!
      * setting a dynamic property to QApplication named NoMNavigationBar will hide the
      * navigationbar from qt maemo 6 style
      */
-    M_EXPORT extern const char* NoMNavigationBar;
+    M_CORE_EXPORT extern const char* NoMNavigationBar;
 
     /*!
      * setting a dynamic property to QApplication named NoMStatusBar will hide the
      * statusbar from qt maemo 6 style
      */
-    M_EXPORT extern const char* NoMStatusBar;
+    M_CORE_EXPORT extern const char* NoMStatusBar;
 
     /*!
      * This enum contains values of the orientation angle of windows in the application.

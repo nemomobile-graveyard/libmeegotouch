@@ -32,7 +32,7 @@
  * Users can read and write key values using this interface. The user
  * also get notified when changes happen in the key values.
  */
-class M_EXPORT MDataAccess : public QObject
+class M_CORE_EXPORT MDataAccess : public QObject
 {
     Q_OBJECT
 

@@ -32,7 +32,7 @@ class MHomeButtonPanelViewPrivate;
  *
  * It just draws a home button on an otherwise empty scene window.
  */
-class M_EXPORT MHomeButtonPanelView : public MSceneWindowView
+class M_VIEWS_EXPORT MHomeButtonPanelView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MSceneWindowModel, MHomeButtonPanelStyle)

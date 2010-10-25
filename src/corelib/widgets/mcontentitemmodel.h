@@ -25,7 +25,7 @@
 class QPixmap;
 class QImage;
 
-class M_EXPORT MContentItemModel : public MWidgetModel
+class M_CORE_EXPORT MContentItemModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MContentItemModel)

@@ -29,7 +29,7 @@ class MStylableWidget;
 
 class QGraphicsGridLayout;
 
-class M_EXPORT MDetailedListItem : public MListItem
+class M_CORE_EXPORT MDetailedListItem : public MListItem
 {
 public:
     Q_OBJECT

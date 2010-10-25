@@ -52,7 +52,7 @@ class MToolbarTabViewPrivate;
     \sa MToolBar MToolbarTabStyle
 */
 
-class M_EXPORT MToolbarTabView : public MToolBarView
+class M_VIEWS_EXPORT MToolbarTabView : public MToolBarView
 {
     Q_OBJECT
     M_VIEW(MWidgetModel, MToolbarTabStyle)

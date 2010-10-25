@@ -24,7 +24,7 @@
 
 #include <QSize>
 
-class M_EXPORT MContainerStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MContainerStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MContainerStyle)
@@ -34,7 +34,7 @@ class M_EXPORT MContainerStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int,     internalItemSpacing, InternalItemSpacing)
 };
 
-class M_EXPORT MContainerStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MContainerStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MContainerStyle)
 };

@@ -61,7 +61,7 @@ class MComponentCachePrivate;
  * The ownership of the objects returned from the cache is passed to
  * the caller.
  */
-class M_EXPORT MComponentCache
+class M_CORE_EXPORT MComponentCache
 {
 public:
     //! Returns MApplication instance from the cache or creates a new one.

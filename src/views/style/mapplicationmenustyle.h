@@ -52,7 +52,7 @@ class MScalableImage;
     \sa MApplicationMenuStyleContainer MSceneWindowStyle \ref styling MApplicationMenu MApplicationMenuView
 */
 
-class M_EXPORT MApplicationMenuStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MApplicationMenuStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MApplicationMenuStyle)
@@ -137,7 +137,7 @@ class M_EXPORT MApplicationMenuStyle : public MSceneWindowStyle
     \ingroup styles
     \sa MApplicationMenuStyle
 */
-class M_EXPORT MApplicationMenuStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MApplicationMenuStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MApplicationMenuStyle)
 };

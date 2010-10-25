@@ -33,7 +33,7 @@ class QAbstractItemModel;
     \ingroup models
     \sa MComboBox
 */
-class M_EXPORT MComboBoxModel : public MWidgetModel
+class M_CORE_EXPORT MComboBoxModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MComboBoxModel)

@@ -35,7 +35,7 @@ class MToolBar;
  * navigation bar.
  */
 
-class M_EXPORT MNavigationBar : public MSceneWindow
+class M_CORE_EXPORT MNavigationBar : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MNavigationBar)

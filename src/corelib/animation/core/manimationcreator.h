@@ -33,7 +33,7 @@ class QAbstractAnimation;
    you can implement your own creator or use MAnimationCreator template class with
    M_REGISTER_ANIMATION-macro.
  */
-class M_EXPORT MAnimationCreatorBase
+class M_CORE_EXPORT MAnimationCreatorBase
 {
 public:
     /*!
@@ -56,7 +56,7 @@ public:
 };
 
 template<class ANIMATION>
-class M_EXPORT MAnimationCreator : public MAnimationCreatorBase
+class M_CORE_EXPORT MAnimationCreator : public MAnimationCreatorBase
 {
 public:
     MAnimationCreator(const char *animationClassName) :

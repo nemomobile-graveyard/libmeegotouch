@@ -52,7 +52,7 @@ class QGLContext;
  * -------------
  * This file is not part of the libmeegotouch API. It should only be used by applet runner developers.
  */
-class M_EXPORT MExtensionRunner : public QObject
+class M_EXTENSIONS_EXPORT MExtensionRunner : public QObject
 {
     Q_OBJECT
 

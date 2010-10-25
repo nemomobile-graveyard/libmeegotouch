@@ -192,7 +192,7 @@ class MButton;
         \endcode
 */
 
-class M_EXPORT MButtonGroup : public QObject
+class M_CORE_EXPORT MButtonGroup : public QObject
 {
     Q_OBJECT
 

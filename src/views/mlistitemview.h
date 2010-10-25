@@ -27,7 +27,7 @@
 
 class MListItemViewPrivate;
 
-class M_EXPORT MListItemView : public MWidgetView
+class M_VIEWS_EXPORT MListItemView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MListItemModel, MListItemStyle)

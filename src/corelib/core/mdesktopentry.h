@@ -40,7 +40,7 @@ class MDesktopEntryPrivate;
  * http://standards.freedesktop.org/desktop-entry-spec/latest/index.html
  *
  */
-class M_EXPORT MDesktopEntry
+class M_CORE_EXPORT MDesktopEntry
 {
 public:
     /*!

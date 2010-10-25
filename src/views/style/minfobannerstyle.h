@@ -22,7 +22,7 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MInfoBannerStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MInfoBannerStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MInfoBannerStyle)
@@ -31,7 +31,7 @@ class M_EXPORT MInfoBannerStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(QSize,                  iconSize,                 IconSize)
 };
 
-class M_EXPORT MInfoBannerStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MInfoBannerStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MInfoBannerStyle)
 };

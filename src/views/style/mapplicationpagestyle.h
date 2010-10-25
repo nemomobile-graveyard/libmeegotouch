@@ -23,7 +23,7 @@
 #include <mscenewindowstyle.h>
 
 
-class M_EXPORT MApplicationPageStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MApplicationPageStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MApplicationPageStyle)
@@ -35,7 +35,7 @@ class M_EXPORT MApplicationPageStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(bool, hasTitleLabel, HasTitleLabel)
 };
 
-class M_EXPORT MApplicationPageStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MApplicationPageStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MApplicationPageStyle)
 };

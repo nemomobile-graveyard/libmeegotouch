@@ -42,7 +42,7 @@ class QVariant;
  * This is the adaptor for the MApplication QDBus service.
  * Do not use this class directly.
  */
-class M_EXPORT MApplicationIfAdaptor: public QDBusAbstractAdaptor
+class M_CORE_EXPORT MApplicationIfAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "com.nokia.MApplicationIf")

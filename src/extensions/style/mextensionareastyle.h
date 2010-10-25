@@ -25,7 +25,7 @@
 /*!
  * MExtensionAreaStyle is the style class for MExtensionArea.
  */
-class M_EXPORT MExtensionAreaStyle : public MWidgetStyle
+class M_EXTENSIONS_EXPORT MExtensionAreaStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MExtensionAreaStyle)
@@ -37,7 +37,7 @@ class M_EXPORT MExtensionAreaStyle : public MWidgetStyle
 /*!
  * MExtensionAreaStyleContainer is the style container class for MExtensionArea.
  */
-class M_EXPORT MExtensionAreaStyleContainer : public MWidgetStyleContainer
+class M_EXTENSIONS_EXPORT MExtensionAreaStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MExtensionAreaStyle)
 };

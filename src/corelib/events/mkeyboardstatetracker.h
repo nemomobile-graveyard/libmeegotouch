@@ -31,7 +31,7 @@ class MKeyboardStateTrackerPrivate;
  * hardware keyboard or not. If hardware keyboard is supported, using isOpen() to query
  * its current state. Signal stateChanged will be emitted when hardware keyboard state is changed.
  */
-class M_EXPORT MKeyboardStateTracker : public QObject
+class M_CORE_EXPORT MKeyboardStateTracker : public QObject
 {
     Q_OBJECT
 public:

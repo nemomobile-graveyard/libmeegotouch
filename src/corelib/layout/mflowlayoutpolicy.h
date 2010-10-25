@@ -56,7 +56,7 @@ class MFlowLayoutPolicyPrivate;
  *  Every MButton in a MFlowLayoutPolicy will have the same width.
  *
  */
-class M_EXPORT MFlowLayoutPolicy : public MAbstractLayoutPolicy
+class M_CORE_EXPORT MFlowLayoutPolicy : public MAbstractLayoutPolicy
 {
 public:
     /*!

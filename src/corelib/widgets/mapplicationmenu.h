@@ -112,7 +112,7 @@ class MApplicationMenuPrivate;
 
 */
 
-class M_EXPORT MApplicationMenu : public MSceneWindow
+class M_CORE_EXPORT MApplicationMenu : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MApplicationMenu)

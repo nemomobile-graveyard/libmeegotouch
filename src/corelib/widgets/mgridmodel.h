@@ -29,7 +29,7 @@
 class QAbstractItemModel;
 class QGraphicsItem;
 
-class M_EXPORT MGridModel : public MWidgetModel
+class M_CORE_EXPORT MGridModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MGridModel)

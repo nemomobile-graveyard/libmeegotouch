@@ -29,7 +29,7 @@ class MExtensionAreaPrivate;
 /*!
  * MExtensionArea is a baseclass for widgets that can load application extensions
  */
-class M_EXPORT MExtensionArea : public MWidgetController
+class M_EXTENSIONS_EXPORT MExtensionArea : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MExtensionArea)

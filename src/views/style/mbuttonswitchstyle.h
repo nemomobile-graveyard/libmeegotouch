@@ -43,7 +43,7 @@
     \ingroup styles
     \sa MButtonSwitchStyleContainer MWidgetStyle MButtonStyle \ref styling MButton MButtonSwitchView
 */
-class M_EXPORT MButtonSwitchStyle : public MButtonStyle
+class M_VIEWS_EXPORT MButtonSwitchStyle : public MButtonStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MButtonSwitchStyle)
@@ -106,7 +106,7 @@ class M_EXPORT MButtonSwitchStyle : public MButtonStyle
     \ingroup styles
     \sa MButtonSwitchStyle
 */
-class M_EXPORT MButtonSwitchStyleContainer : public MButtonStyleContainer
+class M_VIEWS_EXPORT MButtonSwitchStyleContainer : public MButtonStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MButtonSwitchStyle)
 };

@@ -30,7 +30,7 @@ class MExtendingBackgroundViewPrivate;
  * The extending background view draws a background that can extend beyond
  * the edges of the bounding rectangle.
  */
-class M_EXPORT MExtendingBackgroundView : public MWidgetView
+class M_VIEWS_EXPORT MExtendingBackgroundView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MWidgetModel, MExtendingBackgroundStyle)

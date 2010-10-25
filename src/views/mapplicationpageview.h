@@ -27,7 +27,7 @@
 class MApplicationPage;
 class MApplicationPageViewPrivate;
 
-class M_EXPORT MApplicationPageView : public MSceneWindowView
+class M_VIEWS_EXPORT MApplicationPageView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MApplicationPageModel, MApplicationPageStyle)

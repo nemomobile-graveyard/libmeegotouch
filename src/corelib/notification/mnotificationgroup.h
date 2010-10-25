@@ -47,7 +47,7 @@ class MNotificationGroupPrivate;
         \sa \ref MNotification
         \sa \ref notifications
  */
-class M_EXPORT MNotificationGroup : public MNotification
+class M_CORE_EXPORT MNotificationGroup : public MNotification
 {
 public:
     /*!

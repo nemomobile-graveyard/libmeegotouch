@@ -38,7 +38,7 @@ class MImageWidget;
   The speech bubble supports avatar images, separate styling for incoming and
   outgoing messages, as well as an area for application specific widgets.
 */
-class M_EXPORT MBubbleItem : public MWidgetController
+class M_CORE_EXPORT MBubbleItem : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MBubbleItem)

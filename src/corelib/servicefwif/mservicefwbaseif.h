@@ -43,7 +43,7 @@ class MServiceFwBaseIfPrivate;
  * including service discovery and underlying IPC methods.
  */
 
-class M_EXPORT MServiceFwBaseIf : public QObject
+class M_CORE_EXPORT MServiceFwBaseIf : public QObject
 {
     Q_OBJECT
 public:

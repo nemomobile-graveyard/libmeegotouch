@@ -34,7 +34,7 @@
  *
  * \sa MHomeButtonPanel
  */
-class M_EXPORT MEscapeButtonPanel : public MSceneWindow
+class M_CORE_EXPORT MEscapeButtonPanel : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MEscapeButtonPanel)

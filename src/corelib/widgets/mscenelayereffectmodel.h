@@ -22,7 +22,7 @@
 
 #include <mscenewindowmodel.h>
 
-class M_EXPORT MSceneLayerEffectModel : public MSceneWindowModel
+class M_CORE_EXPORT MSceneLayerEffectModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MSceneLayerEffectModel)

@@ -28,7 +28,7 @@ class QAction;
 /*!
  * Object menu message which provides list of actions from applet.
  */
-class M_EXPORT MAppletObjectMenuMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletObjectMenuMessage : public MAppletMessage
 {
 private:
     /// The list of action names.

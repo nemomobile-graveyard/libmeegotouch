@@ -34,7 +34,7 @@
 //We need this to due to MOC generator limitations:
 using M::ButtonRole;
 
-class M_EXPORT MButtonModel : public MWidgetModel
+class M_CORE_EXPORT MButtonModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MButtonModel)

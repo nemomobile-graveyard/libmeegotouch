@@ -22,7 +22,7 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MBannerStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MBannerStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE(MBannerStyle)
@@ -31,7 +31,7 @@ class M_EXPORT MBannerStyle : public MSceneWindowStyle
 
 };
 
-class M_EXPORT MBannerStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MBannerStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER(MBannerStyle)
 };

@@ -26,7 +26,7 @@
 /*!
  * A helper service that invokes service actions.
  */
-class M_EXPORT MServiceInvoker : public QObject
+class M_CORE_EXPORT MServiceInvoker : public QObject
 {
     Q_OBJECT
 

@@ -28,13 +28,13 @@
  * \internal
  */
 
-class M_EXPORT MContainerHeaderStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MContainerHeaderStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MContainerHeaderStyle)
 };
 
-class M_EXPORT MContainerHeaderStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MContainerHeaderStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MContainerHeaderStyle)
     M_STYLE_MODE(Pressed)

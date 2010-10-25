@@ -62,7 +62,7 @@ class MBasicListItemPrivate;
     \li createLayout()
     \li clearLayout()
  */
-class M_EXPORT MBasicListItem : public MListItem
+class M_CORE_EXPORT MBasicListItem : public MListItem
 {
     Q_OBJECT
 

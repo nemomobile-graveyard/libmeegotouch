@@ -163,7 +163,7 @@ class MDismissEvent;
     \sa MDialogView, MDialogStyle
 
  */
-class M_EXPORT MDialog : public MSceneWindow
+class M_CORE_EXPORT MDialog : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MDialog)

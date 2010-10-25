@@ -33,7 +33,7 @@ class MBackgroundTilesPrivate;
   M::Position documents all the variations.
   \sa M::Position
 */
-class M_EXPORT MBackgroundTiles
+class M_CORE_EXPORT MBackgroundTiles
 {
 public:
     MBackgroundTiles();

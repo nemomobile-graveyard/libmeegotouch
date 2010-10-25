@@ -39,7 +39,7 @@ class MSceneWindowViewPrivate;
  * signal, which is propagated to the MSceneManager instance,
  * causing the window geometry and position to be recalculated.
  */
-class M_EXPORT MSceneWindowView : public MWidgetView
+class M_VIEWS_EXPORT MSceneWindowView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MSceneWindowModel, MSceneWindowStyle)

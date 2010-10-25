@@ -76,7 +76,7 @@ class MSceneWindow;
  * MApplicationService and override its methods.
  */
 
-class M_EXPORT MApplication : public QApplication
+class M_CORE_EXPORT MApplication : public QApplication
 {
     Q_OBJECT
 

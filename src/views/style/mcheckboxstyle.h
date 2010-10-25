@@ -36,7 +36,7 @@
     \ingroup styles
     \sa MCheckboxStyleContainer MWidgetStyle MButtonStyle \ref styling MButton MCheckboxView
 */
-class M_EXPORT MCheckboxStyle : public MButtonStyle
+class M_VIEWS_EXPORT MCheckboxStyle : public MButtonStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MCheckboxStyle)
@@ -79,7 +79,7 @@ class M_EXPORT MCheckboxStyle : public MButtonStyle
     \ingroup styles
     \sa MCheckboxStyle
 */
-class M_EXPORT MCheckboxStyleContainer : public MButtonStyleContainer
+class M_VIEWS_EXPORT MCheckboxStyleContainer : public MButtonStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MCheckboxStyle)
 };

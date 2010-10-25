@@ -24,7 +24,7 @@
 #include <QFont>
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MCompleterStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MCompleterStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MCompleterStyle)
@@ -38,7 +38,7 @@ class M_EXPORT MCompleterStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(int, yPositionOffset, YPositionOffset)
 };
 
-class M_EXPORT MCompleterStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MCompleterStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MCompleterStyle)
 };

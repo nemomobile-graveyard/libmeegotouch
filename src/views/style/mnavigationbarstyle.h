@@ -22,7 +22,7 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MNavigationBarStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MNavigationBarStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MNavigationBarStyle)
@@ -40,7 +40,7 @@ class M_EXPORT MNavigationBarStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(QString, closeButtonStyleName, CloseButtonStyleName)
 };
 
-class M_EXPORT MNavigationBarStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MNavigationBarStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MNavigationBarStyle)
     M_STYLE_MODE(Fullscreen)

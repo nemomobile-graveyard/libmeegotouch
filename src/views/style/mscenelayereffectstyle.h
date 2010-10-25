@@ -22,13 +22,13 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MSceneLayerEffectStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MSceneLayerEffectStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MSceneLayerEffectStyle)
 };
 
-class M_EXPORT MSceneLayerEffectStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MSceneLayerEffectStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MSceneLayerEffectStyle)
 };

@@ -26,7 +26,7 @@
 
 class MPreeditInjectionEventPrivate;
 
-class M_EXPORT MPreeditInjectionEvent : public QEvent
+class M_CORE_EXPORT MPreeditInjectionEvent : public QEvent
 {
 public:
     MPreeditInjectionEvent(const QString &preedit);

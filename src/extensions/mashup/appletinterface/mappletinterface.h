@@ -39,7 +39,7 @@ class MDataAccess;
  *
  * \see \ref appletdevelopment
  */
-class M_EXPORT MAppletInterface
+class M_EXTENSIONS_EXPORT MAppletInterface
 {
 public:
     /*!

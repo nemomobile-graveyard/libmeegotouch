@@ -53,7 +53,7 @@
     \ingroup styles
     \sa MButtonStyleContainer MWidgetStyle \ref styling MButton MButtonView
 */
-class M_EXPORT MButtonStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MButtonStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MButtonStyle)
@@ -163,7 +163,7 @@ class M_EXPORT MButtonStyle : public MWidgetStyle
     \ingroup styles
     \sa MButtonStyle
 */
-class M_EXPORT MButtonStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MButtonStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MButtonStyle)
 

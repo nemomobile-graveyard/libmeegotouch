@@ -109,7 +109,7 @@ class MApplicationWindow;
 class QAbstractItemModel;
 class QModelIndex;
 
-class M_EXPORT MCompleter : public MSceneWindow
+class M_CORE_EXPORT MCompleter : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MCompleter)

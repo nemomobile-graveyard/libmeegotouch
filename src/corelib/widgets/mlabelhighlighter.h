@@ -37,7 +37,7 @@
     \sa MLabelStyle::highlightColor
     \sa MLabelStyle::activeHighlightColor
 */
-class M_EXPORT MLabelHighlighter
+class M_CORE_EXPORT MLabelHighlighter
 {
 public:
 
@@ -81,7 +81,7 @@ public:
     \ingroup widgets
 */
 class MCommonLabelHighlighterPrivate;
-class M_EXPORT MCommonLabelHighlighter : public QObject, public MLabelHighlighter
+class M_CORE_EXPORT MCommonLabelHighlighter : public QObject, public MLabelHighlighter
 {
     Q_OBJECT
 

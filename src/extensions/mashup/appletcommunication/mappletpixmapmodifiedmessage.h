@@ -27,7 +27,7 @@
 /*!
  * An applet message for notifying the host that a part of the applet pixmap has been modified.
  */
-class M_EXPORT MAppletPixmapModifiedMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletPixmapModifiedMessage : public MAppletMessage
 {
 private:
     //! The geometry of the modified region.

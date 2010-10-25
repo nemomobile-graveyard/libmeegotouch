@@ -47,7 +47,7 @@ class MImageWidget;
 
  */
 
-class M_EXPORT MImageWidgetView : public MWidgetView
+class M_VIEWS_EXPORT MImageWidgetView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MImageWidgetModel, MImageWidgetStyle)

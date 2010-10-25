@@ -86,7 +86,7 @@ class MContainerPrivate;
  * \sa MContainerModel, MContainerView, \see \ref appletdevelopment
  */
 
-class M_EXPORT MContainer : public MWidgetController
+class M_CORE_EXPORT MContainer : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MContainer)

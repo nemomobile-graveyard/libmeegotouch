@@ -41,7 +41,7 @@ class MPositionIndicatorViewPrivate;
 
 */
 
-class M_EXPORT MPositionIndicatorView : public MWidgetView
+class M_VIEWS_EXPORT MPositionIndicatorView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MPositionIndicatorModel, MPositionIndicatorStyle)

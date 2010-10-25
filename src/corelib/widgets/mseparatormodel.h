@@ -30,7 +30,7 @@
     \sa MSeparator
 */
 
-class M_EXPORT MSeparatorModel : public MWidgetModel
+class M_CORE_EXPORT MSeparatorModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MSeparatorModel)

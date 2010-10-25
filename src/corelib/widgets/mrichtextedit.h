@@ -25,7 +25,7 @@
 
 class MRichTextEditPrivate;
 
-class M_EXPORT MRichTextEdit : public MTextEdit
+class M_CORE_EXPORT MRichTextEdit : public MTextEdit
 {
     Q_OBJECT
 

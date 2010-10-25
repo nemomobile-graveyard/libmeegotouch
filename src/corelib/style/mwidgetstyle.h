@@ -36,7 +36,7 @@ class MScalableImage;
     \brief MWidgetStyle implements a base for style objects for MVC views
 
  */
-class M_EXPORT MWidgetStyle : public MStyle
+class M_CORE_EXPORT MWidgetStyle : public MStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MWidgetStyle)
@@ -70,7 +70,7 @@ class M_EXPORT MWidgetStyle : public MStyle
     M_STYLE_ATTRIBUTE(MFeedback, cancelFeedback, CancelFeedback)
 };
 
-class M_EXPORT MWidgetStyleContainer : public MStyleContainer
+class M_CORE_EXPORT MWidgetStyleContainer : public MStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MWidgetStyle)
     M_STYLE_MODE(Disabled)

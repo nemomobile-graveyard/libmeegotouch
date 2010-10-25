@@ -152,7 +152,7 @@ class QGraphicsLayoutItem;
  *
  */
 
-class M_EXPORT MAbstractLayoutPolicy
+class M_CORE_EXPORT MAbstractLayoutPolicy
 {
 public:
     /** \brief Create a policy and associate it with the given layout

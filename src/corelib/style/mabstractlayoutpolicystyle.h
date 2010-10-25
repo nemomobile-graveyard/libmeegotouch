@@ -25,7 +25,7 @@
 /** \brief Defines a style for a MAbstractLayoutPolicy class and the policies that inherit from this
  *  This defines the attributes that are common to all MLayout policies
  */
-class M_EXPORT MAbstractLayoutPolicyStyle : public MStyle
+class M_CORE_EXPORT MAbstractLayoutPolicyStyle : public MStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MAbstractLayoutPolicyStyle)
@@ -46,7 +46,7 @@ class M_EXPORT MAbstractLayoutPolicyStyle : public MStyle
 
 };
 
-class M_EXPORT MAbstractLayoutPolicyStyleContainer : public MStyleContainer
+class M_CORE_EXPORT MAbstractLayoutPolicyStyleContainer : public MStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MAbstractLayoutPolicyStyle)
 };

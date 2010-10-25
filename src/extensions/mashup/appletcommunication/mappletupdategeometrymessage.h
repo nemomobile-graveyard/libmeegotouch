@@ -27,7 +27,7 @@
 /*!
  * Update geometry message.
  */
-class M_EXPORT MAppletUpdateGeometryMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletUpdateGeometryMessage : public MAppletMessage
 {
 private:
     // Size hints

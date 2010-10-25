@@ -101,7 +101,7 @@
 class MWidgetController;
 class MWidgetViewPrivate;
 
-class M_EXPORT MStyle : public QObject
+class M_CORE_EXPORT MStyle : public QObject
 {
     Q_OBJECT
     M_STYLE(MStyle)
@@ -116,7 +116,7 @@ protected:
     friend class MThemePrivate;
 };
 
-class M_EXPORT MStyleContainer
+class M_CORE_EXPORT MStyleContainer
 {
     M_STYLE_CONTAINER(MStyle)
     M_STYLE_MODE(Default)

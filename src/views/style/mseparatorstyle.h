@@ -36,7 +36,7 @@
     \sa MSeparatorStyleContainer MWidgetStyle \ref styling MSeparator
 */
 
-class M_EXPORT MSeparatorStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MSeparatorStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MSeparatorStyle)
@@ -55,7 +55,7 @@ class M_EXPORT MSeparatorStyle : public MWidgetStyle
     \ingroup styles
     \sa MSeparatorStyle
 */
-class M_EXPORT MSeparatorStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MSeparatorStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MSeparatorStyle)
     M_STYLE_MODE(Horizontal)

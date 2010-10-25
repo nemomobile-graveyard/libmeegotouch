@@ -31,7 +31,7 @@ class MAppletSharedMutexPrivate;
  * segment is attached. Destroying the mutex will detach from the shared
  * memory so that when all parties have detached the segment will be freed.
  */
-class M_EXPORT MAppletSharedMutex
+class M_EXTENSIONS_EXPORT MAppletSharedMutex
 {
     Q_DECLARE_PRIVATE(MAppletSharedMutex)
 

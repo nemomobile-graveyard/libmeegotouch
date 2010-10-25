@@ -30,7 +30,7 @@
     \sa MApplicationMenu
 */
 
-class M_EXPORT MApplicationMenuModel : public MSceneWindowModel
+class M_CORE_EXPORT MApplicationMenuModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MApplicationMenuModel)

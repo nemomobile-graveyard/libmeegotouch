@@ -34,7 +34,7 @@ class MAppletSettingsPrivate;
  * This class handles parsing of the applet instance and global settings files
  * and creation of settings binaries.
  */
-class M_EXPORT MAppletSettings
+class M_EXTENSIONS_EXPORT MAppletSettings
 {
 public:
     /*!

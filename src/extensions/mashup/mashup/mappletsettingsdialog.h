@@ -28,7 +28,7 @@
  * \brief MAppletSettingsDialog implements the applet settings dialog.
  * A dialog is constructed if an applet has any settings to show.
  */
-class M_EXPORT MAppletSettingsDialog
+class M_EXTENSIONS_EXPORT MAppletSettingsDialog
 {
 public:
     /*!

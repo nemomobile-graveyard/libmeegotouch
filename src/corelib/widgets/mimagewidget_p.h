@@ -24,7 +24,7 @@
 
 class MImageWidget;
 
-class M_EXPORT MImageWidgetPrivate : public MWidgetControllerPrivate
+class M_CORE_EXPORT MImageWidgetPrivate : public MWidgetControllerPrivate
 {
     Q_DECLARE_PUBLIC(MImageWidget)
 

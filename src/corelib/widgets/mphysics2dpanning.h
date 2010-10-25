@@ -53,7 +53,7 @@ class MPhysics2DPanningPrivate;
  *
  * By default, the kinetic action of the springs is enabled.
  */
-class M_EXPORT MPhysics2DPanning : public QObject
+class M_CORE_EXPORT MPhysics2DPanning : public QObject
 {
     Q_OBJECT
 

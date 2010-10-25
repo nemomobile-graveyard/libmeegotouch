@@ -75,7 +75,7 @@ class MOnDisplayChangeEvent;
       app.exec();
   \endcode
 */
-class M_EXPORT MWindow : public QGraphicsView
+class M_CORE_EXPORT MWindow : public QGraphicsView
 {
 
     Q_OBJECT

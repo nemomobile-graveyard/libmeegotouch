@@ -22,13 +22,13 @@
 
 #include <mstyle.h>
 
-class M_EXPORT MAnimationStyle : public MStyle
+class M_CORE_EXPORT MAnimationStyle : public MStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MAnimationStyle)
 };
 
-class M_EXPORT MAnimationStyleContainer : public MStyleContainer
+class M_CORE_EXPORT MAnimationStyleContainer : public MStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MAnimationStyle)
 };

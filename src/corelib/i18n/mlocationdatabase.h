@@ -29,7 +29,7 @@
 
 class MLocationDatabasePrivate;
 
-class M_EXPORT MLocationDatabase
+class M_CORE_EXPORT MLocationDatabase
 {
   public:
     MLocationDatabase();

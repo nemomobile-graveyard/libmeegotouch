@@ -32,7 +32,7 @@ class MSeparator;
     \brief MSeparatorView implements a view for the MSeparator
  */
 
-class M_EXPORT MSeparatorView : public MWidgetView
+class M_VIEWS_EXPORT MSeparatorView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MSeparatorModel, MSeparatorStyle)

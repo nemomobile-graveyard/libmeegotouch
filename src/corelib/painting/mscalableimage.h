@@ -51,7 +51,7 @@ class QRect;
   center block is scaled vertically and horizontally if needed. The size inputted
   into one the draw() methods cannot be smaller than the defined borders.
 */
-class M_EXPORT MScalableImage : public QObject
+class M_CORE_EXPORT MScalableImage : public QObject
 {
     Q_OBJECT
 

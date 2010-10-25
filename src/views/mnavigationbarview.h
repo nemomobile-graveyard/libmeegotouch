@@ -27,7 +27,7 @@
 class MNavigationBarViewPrivate;
 class MNavigationBar;
 
-class M_EXPORT MNavigationBarView : public MSceneWindowView
+class M_VIEWS_EXPORT MNavigationBarView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MNavigationBarModel, MNavigationBarStyle)

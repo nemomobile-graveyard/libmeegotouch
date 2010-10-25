@@ -33,7 +33,7 @@ class MMenuObjectViewPrivate;
  * \brief MMenuObjectView implements an object view for the MMenu widget
  */
 
-class M_EXPORT MMenuObjectView : public MSceneWindowView
+class M_VIEWS_EXPORT MMenuObjectView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MApplicationMenuModel, MApplicationMenuStyle)

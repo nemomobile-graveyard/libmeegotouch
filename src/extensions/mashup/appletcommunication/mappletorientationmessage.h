@@ -26,7 +26,7 @@
 /*!
  * Screen orientation change applet message.
  */
-class M_EXPORT MAppletOrientationMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletOrientationMessage : public MAppletMessage
 {
 private:
     /// The new orientation.

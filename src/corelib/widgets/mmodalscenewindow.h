@@ -39,7 +39,7 @@ class MModalSceneWindowPrivate;
  * alignment and offset, instantiate it, set a layout to it and
  * populate the layout with any components the use case requires.
  */
-class M_EXPORT MModalSceneWindow : public MSceneWindow
+class M_CORE_EXPORT MModalSceneWindow : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MModalSceneWindow)

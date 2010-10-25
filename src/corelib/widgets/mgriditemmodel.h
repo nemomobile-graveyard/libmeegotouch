@@ -29,7 +29,7 @@
     \ingroup models
     \sa MGridItem
 */
-class M_EXPORT MGridItemModel : public MWidgetModel
+class M_CORE_EXPORT MGridItemModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MGridItemModel)

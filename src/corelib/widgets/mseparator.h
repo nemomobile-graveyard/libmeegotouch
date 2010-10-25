@@ -30,7 +30,7 @@ class MSeparatorPrivate;
  * \class MSeparator
  * \brief MSeparator is a generic separator widget.
  */
-class M_EXPORT MSeparator : public MWidgetController
+class M_CORE_EXPORT MSeparator : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MSeparator)

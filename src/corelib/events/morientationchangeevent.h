@@ -41,7 +41,7 @@ class MOrientationChangeEventPrivate;
  *
  * \sa MWidget::orientationChangeEvent()
  */
-class M_EXPORT MOrientationChangeEvent : public QGraphicsSceneEvent
+class M_CORE_EXPORT MOrientationChangeEvent : public QGraphicsSceneEvent
 {
 public:
 

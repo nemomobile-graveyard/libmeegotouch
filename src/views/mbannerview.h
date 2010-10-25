@@ -27,7 +27,7 @@
 class MBanner;
 class MBannerViewPrivate;
 
-class M_EXPORT MBannerView : public MSceneWindowView
+class M_VIEWS_EXPORT MBannerView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MBannerModel, MBannerStyle)

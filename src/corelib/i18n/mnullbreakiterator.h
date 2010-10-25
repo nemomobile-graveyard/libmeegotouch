@@ -29,7 +29,7 @@
 class MNullBreakIteratorPrivate;
 
 //! \internal Used by MBreakIterator
-class M_EXPORT MNullBreakIterator : public MBreakIteratorIf
+class M_CORE_EXPORT MNullBreakIterator : public MBreakIteratorIf
 {
 public:
     MNullBreakIterator(const MLocale &locale,

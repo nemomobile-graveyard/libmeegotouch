@@ -25,7 +25,7 @@
     \ingroup models
     \sa MVideoWidget
 */
-class M_EXPORT MVideoWidgetModel : public MWidgetModel
+class M_CORE_EXPORT MVideoWidgetModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MVideoWidgetModel)

@@ -22,7 +22,7 @@
 
 #include <mwidgetmodel.h>
 
-class M_EXPORT MPannableWidgetModel : public MWidgetModel
+class M_CORE_EXPORT MPannableWidgetModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MPannableWidgetModel)

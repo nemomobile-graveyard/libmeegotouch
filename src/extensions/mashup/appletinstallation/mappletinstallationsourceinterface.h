@@ -51,7 +51,7 @@ virtual void instantiateAppletsInPackage(const QString &packageName) = 0;
  *
  * \see \ref appletinstallationsource
  */
-class M_EXPORT MAppletInstallationSourceInterface : public MApplicationExtensionInterface
+class M_EXTENSIONS_EXPORT MAppletInstallationSourceInterface : public MApplicationExtensionInterface
 {
     Q_INTERFACES(MApplicationExtensionInterface)
 

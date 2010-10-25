@@ -31,7 +31,7 @@ using namespace M::MThemeDaemonProtocol;
 QString M_themeName;
 MLocalThemeDaemon *M_localDaemon;
 
-void M_EXPORT M_changeTheme(const QString &theme)
+void M_CORE_EXPORT M_changeTheme(const QString &theme)
 {
     M_themeName = theme;
     QTimer::singleShot(0, M_localDaemon, SLOT(themeChangedSlot()));

@@ -29,7 +29,7 @@
     \ingroup styles
     \sa MSpinnerStyleContainer
 */
-class M_EXPORT MSpinnerStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MSpinnerStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MSpinnerStyle)
@@ -66,7 +66,7 @@ class M_EXPORT MSpinnerStyle : public MWidgetStyle
     \ingroup styles
     \sa MSpinnerStyle
 */
-class M_EXPORT MSpinnerStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MSpinnerStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MSpinnerStyle)
 };

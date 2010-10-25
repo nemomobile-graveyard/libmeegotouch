@@ -22,7 +22,7 @@
 
 #include <mwidgetmodel.h>
 
-class M_EXPORT MSceneWindowModel : public MWidgetModel
+class M_CORE_EXPORT MSceneWindowModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MSceneWindowModel)

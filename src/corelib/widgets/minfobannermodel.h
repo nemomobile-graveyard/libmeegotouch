@@ -22,7 +22,7 @@
 
 #include "mscenewindowmodel.h"
 
-class M_EXPORT MInfoBannerModel : public MSceneWindowModel
+class M_CORE_EXPORT MInfoBannerModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MInfoBannerModel)

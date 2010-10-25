@@ -27,7 +27,7 @@ class QPixmap;
 class QGraphicsWidget;
 class MImageWidget;
 
-class M_EXPORT MBubbleItemModel : public MWidgetModel
+class M_CORE_EXPORT MBubbleItemModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MBubbleItemModel)

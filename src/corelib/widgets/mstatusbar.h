@@ -34,7 +34,7 @@ class MStatusBarPrivate;
  *
  * MSceneManager does not accept more than one MStatusBar instance.
  */
-class M_EXPORT MStatusBar : public MSceneWindow
+class M_CORE_EXPORT MStatusBar : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MSceneWindow)

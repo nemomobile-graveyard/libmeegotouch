@@ -32,7 +32,7 @@ class MTextEditViewPrivate;
 * \class MTextEditView
 * \brief Standard view for MTextEdit widget
 */
-class M_EXPORT MTextEditView : public MWidgetView
+class M_VIEWS_EXPORT MTextEditView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MTextEditModel, MTextEditStyle)

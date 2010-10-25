@@ -55,7 +55,7 @@ class MWindowPrivate;
 
   \sa MWindow, MApplicationWindow
  */
-class M_EXPORT MScene : public QGraphicsScene
+class M_CORE_EXPORT MScene : public QGraphicsScene
 {
     Q_OBJECT
 

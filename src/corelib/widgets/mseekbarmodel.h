@@ -29,7 +29,7 @@
     \ingroup models
     \sa MSlider
 */
-class M_EXPORT MSeekBarModel : public MSliderModel
+class M_CORE_EXPORT MSeekBarModel : public MSliderModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MSeekBarModel)

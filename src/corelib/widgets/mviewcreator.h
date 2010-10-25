@@ -37,7 +37,7 @@ class MWidgetController;
 // base class for MViewCreators
 // you can implement your own creator or use MViewCreator template class with
 // M_REGISTER_VIEW-macro.
-class M_EXPORT MViewCreatorBase
+class M_CORE_EXPORT MViewCreatorBase
 {
 public:
     MViewCreatorBase(const char *viewClassName);
@@ -55,7 +55,7 @@ public:
 };
 
 template<class VIEW, class CONTROLLER>
-class M_EXPORT MViewCreator : public MViewCreatorBase
+class MViewCreator : public MViewCreatorBase
 {
 public:
     MViewCreator(const char *viewClassName) :

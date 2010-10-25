@@ -66,7 +66,7 @@ class MCheckboxViewPrivate;
 
     \sa MButton MButtonView MCheckboxStyle
 */
-class M_EXPORT MCheckboxView : public MButtonView
+class M_VIEWS_EXPORT MCheckboxView : public MButtonView
 {
     Q_OBJECT
     M_VIEW(MButtonModel, MCheckboxStyle)

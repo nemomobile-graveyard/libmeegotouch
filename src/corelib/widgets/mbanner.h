@@ -97,7 +97,7 @@
     \sa MNotification
 */
 
-class M_EXPORT MBanner : public MSceneWindow
+class M_CORE_EXPORT MBanner : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MBanner)

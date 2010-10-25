@@ -29,7 +29,7 @@
  *
  * A mouse event contains the position of the mouse pointer when the event occurred.
  */
-class M_EXPORT MAppletMouseMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletMouseMessage : public MAppletMessage
 {
 private:
     /// Location of the mouse pointer in the event.

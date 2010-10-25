@@ -89,7 +89,7 @@ class QModelIndex;
     \sa MPopupListModel MPopupListStyle
  */
 
-class M_EXPORT MPopupList : public MDialog
+class M_CORE_EXPORT MPopupList : public MDialog
 {
 
     Q_OBJECT

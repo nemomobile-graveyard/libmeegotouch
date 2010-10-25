@@ -40,7 +40,7 @@ class QAbstractItemModel;
     MPopupListView is used to visualize popupList.
  */
 
-class M_EXPORT MPopupListView : public MDialogView
+class M_VIEWS_EXPORT MPopupListView : public MDialogView
 {
     Q_OBJECT
     M_VIEW(MPopupListModel, MPopupListStyle)

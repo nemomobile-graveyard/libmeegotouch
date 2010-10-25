@@ -58,7 +58,7 @@ class QKeyEvent;
  * \endcode
  *
  */
-class M_EXPORT MListFilter : public QObject
+class M_CORE_EXPORT MListFilter : public QObject
 {
     Q_OBJECT
 

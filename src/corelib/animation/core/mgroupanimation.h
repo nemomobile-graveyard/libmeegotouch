@@ -28,7 +28,7 @@ class MGroupAnimationPrivate;
 
 /*! \brief MGroupAnimation provides an base class for groups of animations.
  */
-class M_EXPORT MGroupAnimation : public MAnimation
+class M_CORE_EXPORT MGroupAnimation : public MAnimation
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MGroupAnimation)

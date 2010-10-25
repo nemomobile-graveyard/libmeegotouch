@@ -24,7 +24,7 @@
 
 class MToolBar;
 
-class M_EXPORT MNavigationBarModel : public MSceneWindowModel
+class M_CORE_EXPORT MNavigationBarModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MNavigationBarModel)

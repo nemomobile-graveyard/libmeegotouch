@@ -27,7 +27,7 @@
 class MCompleter;
 class MCompleterViewPrivate;
 
-class M_EXPORT MCompleterView : public MSceneWindowView
+class M_VIEWS_EXPORT MCompleterView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MCompleterModel, MCompleterStyle)

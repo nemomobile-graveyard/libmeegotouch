@@ -42,7 +42,7 @@ class MStyleCreatorBasePrivate;
 // interface for MStyleGenerators
 // you can implement your own creator or use MStyleCreator template class with
 // M_REGISTER_STYLE-macro.
-class M_EXPORT MStyleCreatorBase
+class M_CORE_EXPORT MStyleCreatorBase
 {
 public:
     /*!
@@ -88,7 +88,7 @@ private:
 };
 
 template<class STYLE>
-class M_EXPORT MStyleCreator : public MStyleCreatorBase
+class MStyleCreator : public MStyleCreatorBase
 {
 public:
     MStyleCreator(const char *styleClassName,

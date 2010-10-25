@@ -50,7 +50,7 @@
     \sa MSeekBarModel MSliderStyle
 */
 
-class M_EXPORT MSeekBar : public MSlider
+class M_CORE_EXPORT MSeekBar : public MSlider
 {
     Q_OBJECT
     M_CONTROLLER(MSeekBar)

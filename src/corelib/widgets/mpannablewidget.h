@@ -52,7 +52,7 @@ class MOnDisplayChangeEvent;
  *
  * \sa MPhysics2DPanning, MPannableViewport
  */
-class M_EXPORT MPannableWidget : public MWidgetController
+class M_CORE_EXPORT MPannableWidget : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MPannableWidget)

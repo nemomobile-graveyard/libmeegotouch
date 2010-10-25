@@ -36,7 +36,7 @@
         Main purpose of this interface is to create and update data of widgets which has to be inserted
         into MList. Also MCellCreator returns size of a list item widget.
   */
-class M_EXPORT MCellCreator
+class M_CORE_EXPORT MCellCreator
 {
 public:
     /*!

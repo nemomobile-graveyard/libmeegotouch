@@ -48,7 +48,7 @@ class MGridItemPrivate;
      \deprecated Please use MContentItem, MBasicListItem, MAdvancedListItem, MDetailedListItem
  */
 
-class M_EXPORT MGridItem: public MWidgetController
+class M_CORE_EXPORT MGridItem: public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MGridItem)

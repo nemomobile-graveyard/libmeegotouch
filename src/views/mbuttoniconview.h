@@ -66,7 +66,7 @@ class MButton;
 
     \sa MButton MButtonView MButtonIconStyle
 */
-class M_EXPORT MButtonIconView : public MButtonView
+class M_VIEWS_EXPORT MButtonIconView : public MButtonView
 {
     Q_OBJECT
     M_VIEW(MButtonModel, MButtonIconStyle)

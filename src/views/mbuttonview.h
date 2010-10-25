@@ -102,7 +102,7 @@ class QGraphicsSceneResizeEvent;
     \sa MButton MButtonView MButtonStyle
 */
 
-class M_EXPORT MButtonView : public MWidgetView
+class M_VIEWS_EXPORT MButtonView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MButtonModel, MButtonStyle)

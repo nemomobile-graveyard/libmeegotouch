@@ -20,7 +20,7 @@
 #include <QSize>
 #include <MExport>
 
-class M_EXPORT MVideo : public QObject
+class M_CORE_EXPORT MVideo : public QObject
 {
     Q_OBJECT
 

@@ -22,13 +22,13 @@
 
 #include <MWidgetStyle>
 
-class M_EXPORT MStylableWidgetStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MStylableWidgetStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MStylableWidgetStyle)
 };
 
-class M_EXPORT MStylableWidgetStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MStylableWidgetStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MStylableWidgetStyle)
 };

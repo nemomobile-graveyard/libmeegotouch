@@ -27,7 +27,7 @@
 
 class MBreakIteratorPrivate;
 
-class M_EXPORT MBreakIterator
+class M_CORE_EXPORT MBreakIterator
 {
 public:
     enum Type {LineIterator, WordIterator}; // would also be supported: character, sentence, title

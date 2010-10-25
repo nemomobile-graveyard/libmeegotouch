@@ -59,7 +59,7 @@ class QTimerEvent;
     \sa MProgressIndicator MProgressIndicatorModel MSpinnerStyle
 */
 
-class M_EXPORT MSpinnerView : public MWidgetView
+class M_VIEWS_EXPORT MSpinnerView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MProgressIndicatorModel, MSpinnerStyle)

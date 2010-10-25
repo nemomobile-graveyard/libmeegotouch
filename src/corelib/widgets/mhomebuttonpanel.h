@@ -30,7 +30,7 @@
  * The home button is always visible and accessible, standing on top of all
  * application GUI, including MOverlay instances and modal dialogs.
  */
-class M_EXPORT MHomeButtonPanel : public MSceneWindow
+class M_CORE_EXPORT MHomeButtonPanel : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MSceneWindow)

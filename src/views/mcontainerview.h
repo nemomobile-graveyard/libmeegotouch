@@ -45,7 +45,7 @@ class MContainer;
  *
  * \sa MContainer, MContainerModel
  */
-class M_EXPORT MContainerView : public MWidgetView
+class M_VIEWS_EXPORT MContainerView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MContainerModel, MContainerStyle)

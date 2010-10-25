@@ -31,7 +31,7 @@ class MRemoteActionPrivate;
  * \brief MRemoteAction implements a MAction that executes a D-Bus call when triggered.
  *        The D-Bus related parameters can be serialized and unserialized into a string.
  */
-class M_EXPORT MRemoteAction : public MAction
+class M_CORE_EXPORT MRemoteAction : public MAction
 {
     Q_OBJECT
 

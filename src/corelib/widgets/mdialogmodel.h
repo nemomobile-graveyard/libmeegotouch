@@ -28,7 +28,7 @@
 class MButtonModel;
 typedef QList<MButtonModel *> MDialogButtonsList;
 
-class M_EXPORT MDialogModel : public MSceneWindowModel
+class M_CORE_EXPORT MDialogModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MDialogModel)

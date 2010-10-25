@@ -45,7 +45,7 @@ class MContentItemViewPrivate;
 
         \image html content-item-modes.png
   */
-class M_EXPORT MContentItemView : public MWidgetView
+class M_VIEWS_EXPORT MContentItemView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MContentItemModel, MContentItemStyle)

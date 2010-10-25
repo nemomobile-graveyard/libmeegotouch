@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-void M_EXPORT mTimestampStream(const QString &module, const QString &file, const QString &scope, const QString &msg)
+void M_CORE_EXPORT mTimestampStream(const QString &module, const QString &file, const QString &scope, const QString &msg)
 {
     static const QString format("%1.%2 MARK|%3|%4|%5");
     static const QChar fill('0');

@@ -42,7 +42,7 @@
     \sa MImageWidgetStyleContainer MWidgetStyle \ref styling MImageWidget MImageWidgetView
 */
 
-class M_EXPORT MImageWidgetStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MImageWidgetStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MImageWidgetStyle)
@@ -91,7 +91,7 @@ class M_EXPORT MImageWidgetStyle : public MWidgetStyle
     \ingroup styles
     \sa MImageWidgetStyle
 */
-class M_EXPORT MImageWidgetStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MImageWidgetStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MImageWidgetStyle)
 };

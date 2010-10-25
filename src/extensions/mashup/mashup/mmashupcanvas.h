@@ -87,7 +87,7 @@ class MMashupCanvasPrivate;
  *
  * \see \ref appletdevelopment
  */
-class M_EXPORT MMashupCanvas : public MExtensionArea
+class M_EXTENSIONS_EXPORT MMashupCanvas : public MExtensionArea
 {
     Q_OBJECT
     M_CONTROLLER(MMashupCanvas)

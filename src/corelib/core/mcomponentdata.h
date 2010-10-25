@@ -69,7 +69,7 @@ class MFeedbackPlayer;
  *
  */
 
-class M_EXPORT MComponentData : public QObject
+class M_CORE_EXPORT MComponentData : public QObject
 {
     Q_OBJECT
 

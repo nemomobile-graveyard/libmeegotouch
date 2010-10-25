@@ -29,7 +29,7 @@
  * The difference between this class and \c MDataAccess is that this interface
  * can also be used to create and remove keys.
  */
-class M_EXPORT MDataStore : public MDataAccess
+class M_CORE_EXPORT MDataStore : public MDataAccess
 {
     Q_OBJECT
 

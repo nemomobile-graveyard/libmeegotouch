@@ -31,7 +31,7 @@ class MPannableWidget;
  * \class MPannableWidgetView
  * \brief MPannableWidgetView implements the view for pannable widget
  */
-class M_EXPORT MPannableWidgetView : public MWidgetView
+class M_VIEWS_EXPORT MPannableWidgetView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MPannableWidgetModel, MPannableWidgetStyle)

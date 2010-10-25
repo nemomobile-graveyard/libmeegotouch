@@ -29,7 +29,7 @@ class MDataStore;
 /*!
  * MMashupCanvasModel is the model class for MMashupCanvas.
  */
-class M_EXPORT MMashupCanvasModel : public MExtensionAreaModel
+class M_EXTENSIONS_EXPORT MMashupCanvasModel : public MExtensionAreaModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MMashupCanvasModel)

@@ -51,7 +51,7 @@ class MGraphicsEffectPrivate;
 
  */
 
-class M_EXPORT MGraphicsEffect : public QGraphicsEffect
+class M_CORE_EXPORT MGraphicsEffect : public QGraphicsEffect
 {
 public:
     MGraphicsEffect(QObject *parent=0);

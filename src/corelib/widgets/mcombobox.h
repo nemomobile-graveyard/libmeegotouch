@@ -69,7 +69,7 @@ class MComboBoxPrivate;
         \endcode
  */
 
-class M_EXPORT MComboBox : public MWidgetController
+class M_CORE_EXPORT MComboBox : public MWidgetController
 {
 
     Q_OBJECT

@@ -33,7 +33,7 @@ class QAbstractItemModel;
     \sa MPopupListModel
 */
 
-class M_EXPORT MPopupListModel : public MDialogModel
+class M_CORE_EXPORT MPopupListModel : public MDialogModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MPopupListModel)

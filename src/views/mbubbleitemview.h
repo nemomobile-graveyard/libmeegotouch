@@ -41,7 +41,7 @@ class MBubbleItemViewPrivate;
 
         \image html bubble-item.png
   */
-class M_EXPORT MBubbleItemView : public MWidgetView
+class M_VIEWS_EXPORT MBubbleItemView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MBubbleItemModel, MBubbleItemStyle)

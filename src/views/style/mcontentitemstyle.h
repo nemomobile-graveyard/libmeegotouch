@@ -22,7 +22,7 @@
 
 #include <mwidgetstyle.h>
 
-class M_EXPORT MContentItemStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MContentItemStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MContentItemStyle)
@@ -52,7 +52,7 @@ class M_EXPORT MContentItemStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, optionalImageObjectName, OptionalImageObjectName)
 };
 
-class M_EXPORT MContentItemStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MContentItemStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MContentItemStyle)
 };

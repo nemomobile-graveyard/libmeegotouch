@@ -25,7 +25,7 @@
 class QAbstractItemModel;
 class MWidget;
 
-class M_EXPORT MCompleterModel : public MSceneWindowModel
+class M_CORE_EXPORT MCompleterModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MCompleterModel)

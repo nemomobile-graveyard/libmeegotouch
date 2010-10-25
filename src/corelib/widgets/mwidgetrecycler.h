@@ -72,7 +72,7 @@ class MWidget;
   widgets in recycler check setMaxItemsPerClass(int).
 */
 
-class M_EXPORT MWidgetRecycler
+class M_CORE_EXPORT MWidgetRecycler
 {
 public:
     static const char * RecycledObjectIdentifier;

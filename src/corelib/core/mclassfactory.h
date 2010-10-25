@@ -37,7 +37,7 @@ class QMetaObject;
 class MWidgetController;
 
 // MClassFactory
-class M_EXPORT MClassFactory
+class M_CORE_EXPORT MClassFactory
 {
 public:
     static MClassFactory *instance();

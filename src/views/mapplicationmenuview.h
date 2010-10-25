@@ -76,7 +76,7 @@ class MApplicationMenuViewPrivate;
 
 */
 
-class M_EXPORT MApplicationMenuView : public MSceneWindowView
+class M_VIEWS_EXPORT MApplicationMenuView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MApplicationMenuModel, MApplicationMenuStyle)

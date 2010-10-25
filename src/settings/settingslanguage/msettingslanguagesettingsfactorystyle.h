@@ -25,7 +25,7 @@
 /*!
  * MSettingsLanguageSettingsFactoryStyle is the style class for MSettingsLanguageSettingFactory.
  */
-class M_EXPORT MSettingsLanguageSettingsFactoryStyle : public MWidgetStyle
+class M_SETTINGS_EXPORT MSettingsLanguageSettingsFactoryStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MSettingsLanguageSettingsFactoryStyle)
@@ -56,7 +56,7 @@ class M_EXPORT MSettingsLanguageSettingsFactoryStyle : public MWidgetStyle
 /*!
  * MSettingsLanguageSettingsFactoryStyleContainer is the style container class for MSettingsLanguageSettingFactory.
  */
-class M_EXPORT MSettingsLanguageSettingsFactoryStyleContainer : public MWidgetStyleContainer
+class M_SETTINGS_EXPORT MSettingsLanguageSettingsFactoryStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MSettingsLanguageSettingsFactoryStyle)
 };

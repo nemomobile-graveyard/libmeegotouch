@@ -29,7 +29,7 @@
            In case of filtering does not filter out the group headers (oposite to default
            QSortFilterProxyModel behavior).
 */
-class M_EXPORT MSortFilterProxyModel : public QSortFilterProxyModel
+class M_CORE_EXPORT MSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 

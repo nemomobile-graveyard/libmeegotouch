@@ -25,7 +25,7 @@
 /*!
  * An applet message for notifying that the pixmap has been taken into use.
  */
-class M_EXPORT MAppletPixmapTakenIntoUseMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletPixmapTakenIntoUseMessage : public MAppletMessage
 {
 private:
     //! The X pixmap handle.

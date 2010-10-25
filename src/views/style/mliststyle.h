@@ -42,7 +42,7 @@
     \ingroup styles
     \sa MLabelStyleContainer MWidgetStyle MLabelStyle \ref styling MList
 */
-class M_EXPORT MListStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MListStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MListStyle)
@@ -83,7 +83,7 @@ class M_EXPORT MListStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, groupSeparatorObjectName, GroupSeparatorObjectName)
 };
 
-class M_EXPORT MListStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MListStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MListStyle)
 };

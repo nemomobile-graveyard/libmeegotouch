@@ -27,7 +27,7 @@
 class MModalSceneWindow;
 class MModalSceneWindowViewPrivate;
 
-class M_EXPORT MModalSceneWindowView : public MSceneWindowView
+class M_VIEWS_EXPORT MModalSceneWindowView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MModalSceneWindowModel, MModalSceneWindowStyle)

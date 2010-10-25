@@ -45,7 +45,7 @@ class MFeedbackPlayerPrivate;
  *
  * \deprecated Please use class MFeedback to play input feedbacks. Since 0.20.43
  */
-class M_EXPORT MFeedbackPlayer : public QObject
+class M_CORE_EXPORT MFeedbackPlayer : public QObject
 {
     Q_OBJECT
 

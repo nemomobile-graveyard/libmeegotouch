@@ -23,7 +23,7 @@
 #include <QPointF>
 #include <mwidgetstyle.h>
 
-class M_EXPORT MSceneWindowStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MSceneWindowStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MSceneWindowStyle)
@@ -40,7 +40,7 @@ class M_EXPORT MSceneWindowStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(MFeedback, appearFeedback, AppearFeedback)
 };
 
-class M_EXPORT MSceneWindowStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MSceneWindowStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MSceneWindowStyle)
 };

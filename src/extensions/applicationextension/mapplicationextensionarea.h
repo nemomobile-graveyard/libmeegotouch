@@ -36,7 +36,7 @@ class MApplicationExtensionInterface;
  *
  * \see \ref applicationextensions
  */
-class M_EXPORT MApplicationExtensionArea : public MExtensionArea
+class M_EXTENSIONS_EXPORT MApplicationExtensionArea : public MExtensionArea
 {
     Q_OBJECT
     M_CONTROLLER(MApplicationExtensionArea)

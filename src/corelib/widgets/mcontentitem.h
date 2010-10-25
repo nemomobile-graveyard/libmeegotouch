@@ -54,7 +54,7 @@ class MContentItemPrivate;
 
         \sa MContentItemView
   */
-class M_EXPORT MContentItem : public MWidgetController
+class M_CORE_EXPORT MContentItem : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MContentItem)

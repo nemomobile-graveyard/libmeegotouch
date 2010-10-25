@@ -22,7 +22,7 @@
 
 #include <mpannablewidgetmodel.h>
 
-class M_EXPORT MPannableViewportModel : public MPannableWidgetModel
+class M_CORE_EXPORT MPannableViewportModel : public MPannableWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MPannableViewportModel)

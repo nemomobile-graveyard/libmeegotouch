@@ -25,7 +25,7 @@
 #include <QTextDocument>
 #include "mnamespace.h"
 
-class M_EXPORT MTextEditModel : public MWidgetModel
+class M_CORE_EXPORT MTextEditModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MTextEditModel)

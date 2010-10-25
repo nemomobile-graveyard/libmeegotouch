@@ -64,7 +64,7 @@ class QGraphicsSceneResizeEvent;
     \sa MProgressIndicator MProgressIndicatorModel MProgressIndicatorStyle
 */
 
-class M_EXPORT MProgressIndicatorBarView : public MWidgetView
+class M_VIEWS_EXPORT MProgressIndicatorBarView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MProgressIndicatorModel, MProgressIndicatorStyle)

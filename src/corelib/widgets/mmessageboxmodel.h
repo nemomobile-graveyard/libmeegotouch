@@ -24,7 +24,7 @@
 
 #include <QMessageBox>
 
-class M_EXPORT MMessageBoxModel : public MDialogModel
+class M_CORE_EXPORT MMessageBoxModel : public MDialogModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MMessageBoxModel)

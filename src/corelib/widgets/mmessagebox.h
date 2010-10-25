@@ -35,7 +35,7 @@ class MMessageBoxPrivate;
   You can still add a central widget to it though, by calling setCentralWidget(). It will
   then be placed between the title bar and the message text.
  */
-class M_EXPORT MMessageBox : public MDialog
+class M_CORE_EXPORT MMessageBox : public MDialog
 {
     Q_OBJECT
     M_CONTROLLER(MMessageBox)

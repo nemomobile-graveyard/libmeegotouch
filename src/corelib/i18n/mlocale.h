@@ -89,7 +89,7 @@ class MStaticLocaleDestroyer;
  */
 
 
-class M_EXPORT MLocale : public QObject
+class M_CORE_EXPORT MLocale : public QObject
 {
     Q_OBJECT
 public:

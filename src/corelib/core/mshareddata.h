@@ -77,7 +77,7 @@
 
 class MSharedDataPrivate;
 
-class M_EXPORT MSharedData : public QObject
+class M_CORE_EXPORT MSharedData : public QObject
 {
     Q_OBJECT
 

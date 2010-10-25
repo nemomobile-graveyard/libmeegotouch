@@ -22,14 +22,14 @@
 
 #include <manimationstyle.h>
 
-class M_EXPORT MLayoutAnimationStyle : public MAnimationStyle
+class M_CORE_EXPORT MLayoutAnimationStyle : public MAnimationStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MLayoutAnimationStyle)
 };
 
 // TODO: get rid of this container
-class M_EXPORT MLayoutAnimationStyleContainer : public MAnimationStyleContainer
+class M_CORE_EXPORT MLayoutAnimationStyleContainer : public MAnimationStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MLayoutAnimationStyle)
 };

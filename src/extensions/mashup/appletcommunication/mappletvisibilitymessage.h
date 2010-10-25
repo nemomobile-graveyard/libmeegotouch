@@ -25,7 +25,7 @@
 /*!
  * An applet message for telling an applet when it gets visible/invisible.
  */
-class M_EXPORT MAppletVisibilityMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletVisibilityMessage : public MAppletMessage
 {
 private:
     //! Visible or invisible

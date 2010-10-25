@@ -73,7 +73,7 @@ class MOnDisplayChangeEvent;
    presence of the navigation bar and navigation controls (home button and escape button).
    The presence of those is set via MApplicationPage::setComponentsDisplayMode().
   */
-class M_EXPORT MApplicationWindow : public MWindow
+class M_CORE_EXPORT MApplicationWindow : public MWindow
 {
     Q_OBJECT
     Q_PROPERTY(MTheme::ViewType toolbarViewType READ toolbarViewType WRITE setToolbarViewType)

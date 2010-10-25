@@ -26,13 +26,13 @@
 #include <mwidgetstyle.h>
 #include "mtexteditstyle.h"
 
-class M_EXPORT MRichTextEditStyle : public MTextEditStyle
+class M_VIEWS_EXPORT MRichTextEditStyle : public MTextEditStyle
 {
     Q_OBJECT
     M_STYLE(MRichTextEditStyle)
 };
 
-class M_EXPORT MRichTextEditStyleContainer : public MTextEditStyleContainer
+class M_VIEWS_EXPORT MRichTextEditStyleContainer : public MTextEditStyleContainer
 {
     M_STYLE_CONTAINER(MRichTextEditStyle)
 };

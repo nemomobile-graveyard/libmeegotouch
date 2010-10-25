@@ -34,7 +34,7 @@ class MObjectMenuViewPrivate;
  * \brief MObjectMenuView implements an object view "frogfoot" for the MApplicationMenu widget
  */
 
-class M_EXPORT MObjectMenuView : public MSceneWindowView
+class M_VIEWS_EXPORT MObjectMenuView : public MSceneWindowView
 {
     Q_OBJECT
     Q_DISABLE_COPY(MObjectMenuView)

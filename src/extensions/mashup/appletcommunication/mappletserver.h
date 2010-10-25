@@ -29,7 +29,7 @@ class QLocalServer;
  * The MAppletServer implements a server for interprocess communication
  * between two processes (a host application and an applet).
  */
-class M_EXPORT MAppletServer : public MAppletCommunicator
+class M_EXTENSIONS_EXPORT MAppletServer : public MAppletCommunicator
 {
     Q_OBJECT
 

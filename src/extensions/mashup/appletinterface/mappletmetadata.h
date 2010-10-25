@@ -49,7 +49,7 @@
  *
  * \see \ref appletdevelopment
  */
-class M_EXPORT MAppletMetaData : public MDesktopEntry
+class M_EXTENSIONS_EXPORT MAppletMetaData : public MDesktopEntry
 {
 public:
     /*!

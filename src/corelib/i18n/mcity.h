@@ -34,7 +34,7 @@
 
 class MCityPrivate;
 
-class M_EXPORT MCity
+class M_CORE_EXPORT MCity
 {
   public:
     MCity();

@@ -40,7 +40,7 @@ class MLogicalValues;
  * This class extracts all the selectors from style sheet
  * and creates attributes into them.
  */
-class M_EXPORT MStyleSheetParser
+class M_CORE_EXPORT MStyleSheetParser
 {
     //! \brief Set the parser mode
     Q_PROPERTY(SyntaxMode syntaxMode READ syntaxMode WRITE setSyntaxMode)

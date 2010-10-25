@@ -107,7 +107,7 @@
     \brief MWidgetModel implements a base class for MVC
 
  */
-class M_EXPORT MWidgetModel : public QObject
+class M_CORE_EXPORT MWidgetModel : public QObject
 {
     Q_OBJECT
     M_MODEL_WITH_PRIVATE(MWidgetModel)
@@ -138,11 +138,11 @@ private:
      * increaseRefenceCount() and decreaseReferenceCount() */
     void setParent ( QObject * parent ) {Q_UNUSED(parent);}
 
-    friend M_EXPORT QDataStream &operator<<(QDataStream &stream, const MWidgetModel &model);
-    friend M_EXPORT QDataStream &operator>>(QDataStream &stream, MWidgetModel &model);
+    friend M_CORE_EXPORT QDataStream &operator<<(QDataStream &stream, const MWidgetModel &model);
+    friend M_CORE_EXPORT QDataStream &operator>>(QDataStream &stream, MWidgetModel &model);
 };
 
-M_EXPORT QDataStream &operator<<(QDataStream &stream, const MWidgetModel &model);
-M_EXPORT QDataStream &operator>>(QDataStream &stream, MWidgetModel &model);
+M_CORE_EXPORT QDataStream &operator<<(QDataStream &stream, const MWidgetModel &model);
+M_CORE_EXPORT QDataStream &operator>>(QDataStream &stream, MWidgetModel &model);
 
 #endif

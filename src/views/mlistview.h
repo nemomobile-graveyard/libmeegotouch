@@ -34,7 +34,7 @@ class MPlainMultiColumnListViewPrivate;
 class MGroupHeaderListViewPrivate;
 class MMultiColumnListViewPrivate;
 
-class M_EXPORT MListView : public MWidgetView
+class M_VIEWS_EXPORT MListView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MListModel, MListStyle)

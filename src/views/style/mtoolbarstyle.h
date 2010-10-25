@@ -30,7 +30,7 @@
     \sa MToolbarStyleContainer MWidgetStyle \ref styling MToolBar MToolBarView
 */
 
-class M_EXPORT MToolbarStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MToolbarStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MToolbarStyle)
@@ -65,7 +65,7 @@ class M_EXPORT MToolbarStyle : public MWidgetStyle
     \ingroup styles
     \sa MToolbarStyle
 */
-class M_EXPORT MToolbarStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MToolbarStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MToolbarStyle)
 };

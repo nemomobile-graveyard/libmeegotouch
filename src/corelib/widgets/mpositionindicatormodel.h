@@ -27,7 +27,7 @@
 #include <QRectF>
 #include <QPointF>
 
-class M_EXPORT MPositionIndicatorModel : public MWidgetModel
+class M_CORE_EXPORT MPositionIndicatorModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MPositionIndicatorModel)

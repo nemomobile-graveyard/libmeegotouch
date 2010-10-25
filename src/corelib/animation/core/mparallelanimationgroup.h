@@ -83,7 +83,7 @@ class MParallelAnimationGroupPrivate;
  \endcode
 
  */
-class M_EXPORT MParallelAnimationGroup : public QParallelAnimationGroup
+class M_CORE_EXPORT MParallelAnimationGroup : public QParallelAnimationGroup
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MParallelAnimationGroup)

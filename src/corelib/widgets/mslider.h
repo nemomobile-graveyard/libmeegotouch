@@ -65,7 +65,7 @@ class MSliderPrivate;
 
     \sa MSliderModel MSliderStyle
 */
-class M_EXPORT MSlider : public MWidgetController
+class M_CORE_EXPORT MSlider : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MSlider)

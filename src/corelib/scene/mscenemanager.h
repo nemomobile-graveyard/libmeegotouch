@@ -50,7 +50,7 @@ class QGraphicsWidget;
  *
  * \sa MSceneWindow
  */
-class M_EXPORT MSceneManager : public QObject
+class M_CORE_EXPORT MSceneManager : public QObject
 {
     Q_OBJECT
     friend class MSceneWindow;

@@ -39,7 +39,7 @@ class MGridItemViewPrivate;
     \deprecated
  */
 
-class M_EXPORT MGridItemView : public MWidgetView
+class M_VIEWS_EXPORT MGridItemView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MGridItemModel, MGridItemStyle)

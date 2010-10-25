@@ -38,7 +38,7 @@ class MStyleSheetPrivate;
  * This class reads style definitions from .css file, manages them
  * and provides easy interface to create a style data object from them.
  */
-class M_EXPORT MStyleSheet : public MStyleSheetParser
+class M_CORE_EXPORT MStyleSheet : public MStyleSheetParser
 {
 public:
     /*!

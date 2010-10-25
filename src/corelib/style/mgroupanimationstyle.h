@@ -22,13 +22,13 @@
 
 #include <manimationstyle.h>
 
-class M_EXPORT MGroupAnimationStyle : public MAnimationStyle
+class M_CORE_EXPORT MGroupAnimationStyle : public MAnimationStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MGroupAnimationStyle)
 };
 
-class M_EXPORT MGroupAnimationStyleContainer : public MAnimationStyleContainer
+class M_CORE_EXPORT MGroupAnimationStyleContainer : public MAnimationStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MGroupAnimationStyle)
 };

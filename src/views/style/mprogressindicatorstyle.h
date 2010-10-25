@@ -29,7 +29,7 @@
     \ingroup styles
     \sa MProgressIndicatorStyleContainer
 */
-class M_EXPORT MProgressIndicatorStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MProgressIndicatorStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MProgressIndicatorStyle)
@@ -115,7 +115,7 @@ class M_EXPORT MProgressIndicatorStyle : public MWidgetStyle
     \ingroup styles
     \sa MProgressIndicatorStyle
 */
-class M_EXPORT MProgressIndicatorStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MProgressIndicatorStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MProgressIndicatorStyle)
 };

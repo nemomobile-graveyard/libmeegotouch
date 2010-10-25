@@ -22,7 +22,7 @@
 
 #include <mwidgetstyle.h>
 
-class M_EXPORT MListItemStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MListItemStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MListItemStyle)
@@ -30,7 +30,7 @@ class M_EXPORT MListItemStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, downStateEffect, DownStateEffect)
 };
 
-class M_EXPORT MListItemStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MListItemStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MListItemStyle)
 };

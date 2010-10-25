@@ -26,7 +26,7 @@
 /*!
  * Send Response to applet with index of action selected from context menu actions displayed in host process
  */
-class M_EXPORT MAppletObjectMenuActionSelectedMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletObjectMenuActionSelectedMessage : public MAppletMessage
 {
 
 private:

@@ -27,7 +27,7 @@ class MButtonGroup;
 
 #include <QPointer>
 
-class M_EXPORT MButtonPrivate : protected MWidgetControllerPrivate
+class M_CORE_EXPORT MButtonPrivate : protected MWidgetControllerPrivate
 {
 public:
     Q_DECLARE_PUBLIC(MButton)

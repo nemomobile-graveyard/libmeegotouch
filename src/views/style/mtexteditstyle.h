@@ -25,7 +25,7 @@
 #include <QString>
 #include <mwidgetstyle.h>
 
-class M_EXPORT MTextEditStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MTextEditStyle)
@@ -73,7 +73,7 @@ class M_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(MFeedback, changeSelectionFeedback, ChangeSelectionFeedback)
 };
 
-class M_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MTextEditStyle)
 };

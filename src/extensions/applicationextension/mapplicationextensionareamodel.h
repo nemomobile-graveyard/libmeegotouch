@@ -26,7 +26,7 @@
 /*!
  * MApplicationExtensionAreaModel is the model class for MApplicationExtensionArea.
  */
-class M_EXPORT MApplicationExtensionAreaModel : public MExtensionAreaModel
+class M_EXTENSIONS_EXPORT MApplicationExtensionAreaModel : public MExtensionAreaModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MApplicationExtensionAreaModel)

@@ -25,7 +25,7 @@
 /*!
  * MMashupCanvasStyle is the style class for MMashupCanvas.
  */
-class M_EXPORT MMashupCanvasStyle : public MWidgetStyle
+class M_EXTENSIONS_EXPORT MMashupCanvasStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MMashupCanvasStyle)
@@ -37,7 +37,7 @@ class M_EXPORT MMashupCanvasStyle : public MWidgetStyle
 /*!
  * MMashupCanvasStyleContainer is the style container class for MMashupCanvas.
  */
-class M_EXPORT MMashupCanvasStyleContainer : public MWidgetStyleContainer
+class M_EXTENSIONS_EXPORT MMashupCanvasStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MMashupCanvasStyle)
 };

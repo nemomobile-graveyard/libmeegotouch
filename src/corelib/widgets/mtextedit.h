@@ -55,7 +55,7 @@ class MCompleter;
  * MLabel instead.
  *
  */
-class M_EXPORT MTextEdit : public MWidgetController
+class M_CORE_EXPORT MTextEdit : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MTextEdit)

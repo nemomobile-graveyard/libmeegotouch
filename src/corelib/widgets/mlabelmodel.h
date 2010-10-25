@@ -35,7 +35,7 @@ Q_DECLARE_METATYPE(QTextOption::WrapMode)
     \ingroup models
     \sa MLabel
 */
-class M_EXPORT MLabelModel : public MWidgetModel
+class M_CORE_EXPORT MLabelModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MLabelModel)

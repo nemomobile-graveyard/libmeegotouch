@@ -78,7 +78,7 @@ class MProgressIndicatorPrivate;
     \sa MProgressIndicatorModel MProgressIndicatorStyle
 */
 
-class M_EXPORT MProgressIndicator : public MWidgetController
+class M_CORE_EXPORT MProgressIndicator : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MProgressIndicator)

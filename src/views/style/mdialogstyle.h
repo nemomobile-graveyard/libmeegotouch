@@ -54,7 +54,7 @@
     \ingroup styles
     \sa MWidgetStyle MDialog MDialogView
 */
-class M_EXPORT MDialogStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MDialogStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MDialogStyle)
@@ -191,7 +191,7 @@ class M_EXPORT MDialogStyle : public MSceneWindowStyle
     \ingroup styles
     \sa MDialogStyle
 */
-class M_EXPORT MDialogStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MDialogStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MDialogStyle)
 };

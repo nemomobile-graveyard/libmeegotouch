@@ -22,7 +22,7 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MEscapeButtonPanelStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MEscapeButtonPanelStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MEscapeButtonPanelStyle)
@@ -35,7 +35,7 @@ class M_EXPORT MEscapeButtonPanelStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(QString, closeButtonIconId, CloseButtonIconId)
 };
 
-class M_EXPORT MEscapeButtonPanelStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MEscapeButtonPanelStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MEscapeButtonPanelStyle)
     M_STYLE_MODE(Fullscreen)

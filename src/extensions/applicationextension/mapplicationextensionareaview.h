@@ -31,7 +31,7 @@ class MContainer;
 /*!
  * A view class for the MApplicationExtensionArea.
  */
-class M_EXPORT MApplicationExtensionAreaView : public MExtensionAreaView
+class M_EXTENSIONS_EXPORT MApplicationExtensionAreaView : public MExtensionAreaView
 {
     Q_OBJECT
     M_VIEW(MApplicationExtensionAreaModel, MApplicationExtensionAreaStyle)

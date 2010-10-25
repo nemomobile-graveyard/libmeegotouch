@@ -29,7 +29,7 @@
     \ingroup styles
     \sa MComboBoxStyleContainer MWidgetStyle \ref styling MComboBox MComboBoxView
 */
-class M_EXPORT MComboBoxStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MComboBoxStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MComboBoxStyle)
@@ -100,7 +100,7 @@ class M_EXPORT MComboBoxStyle : public MWidgetStyle
     \ingroup styles
     \sa MComboBoxStyle
 */
-class M_EXPORT MComboBoxStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MComboBoxStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MComboBoxStyle)
 

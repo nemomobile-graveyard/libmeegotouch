@@ -23,13 +23,13 @@
 #include <mscenewindowstyle.h>
 
 //! \internal
-class M_EXPORT MDockWidgetStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MDockWidgetStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MDockWidgetStyle)
 };
 
-class M_EXPORT MDockWidgetStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MDockWidgetStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MDockWidgetStyle)
 };

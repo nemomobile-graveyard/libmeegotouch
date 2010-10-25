@@ -30,7 +30,7 @@ class MExtensionArea;
 /*!
  * A view class for the MExtensionArea.
  */
-class M_EXPORT MExtensionAreaView : public MWidgetView
+class M_EXTENSIONS_EXPORT MExtensionAreaView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MExtensionAreaModel, MExtensionAreaStyle)

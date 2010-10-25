@@ -26,7 +26,7 @@
  * \internal
  */
 
-class M_EXPORT MBubbleItemBackgroundStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MBubbleItemBackgroundStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MBubbleItemBackgroundStyle)
@@ -34,7 +34,7 @@ class M_EXPORT MBubbleItemBackgroundStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString,                mirroredObjectName,   MirroredObjectName)
 };
 
-class M_EXPORT MBubbleItemBackgroundStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MBubbleItemBackgroundStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MBubbleItemBackgroundStyle)
 

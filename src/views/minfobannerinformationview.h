@@ -112,7 +112,7 @@ class MInfoBannerInformationViewPrivate;
 
     \sa MNotification
 */
-class M_EXPORT MInfoBannerInformationView : public MSceneWindowView
+class M_VIEWS_EXPORT MInfoBannerInformationView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MInfoBannerModel, MInfoBannerStyle)

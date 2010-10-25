@@ -23,7 +23,7 @@
 #include <QString>
 #include "mexport.h"
 
-void M_EXPORT mTimestampStream(const QString &module, const QString &file, const QString &scope, const QString &msg);
+void M_CORE_EXPORT mTimestampStream(const QString &module, const QString &file, const QString &scope, const QString &msg);
 
 #if defined(QT_NO_WARNING_OUTPUT) || !defined(M_TIMESTAMP)
 #define mTimestamp(x, msg)

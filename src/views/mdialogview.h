@@ -82,7 +82,7 @@ class QGraphicsLinearLayout;
     \sa MDialog, MDialogStyle
 */
 
-class M_EXPORT MDialogView : public MSceneWindowView
+class M_VIEWS_EXPORT MDialogView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MDialogModel, MDialogStyle)

@@ -139,7 +139,7 @@ class MWidget;
 
     \sa MButtonModel MButtonStyle MButtonGroup
 */
-class M_EXPORT MButton : public MWidgetController
+class M_CORE_EXPORT MButton : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MButton)

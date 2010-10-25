@@ -60,7 +60,7 @@ class MDismissEventPrivate;
  *
  * \sa MSceneWindow::dismiss()
  */
-class M_EXPORT MDismissEvent : public QEvent
+class M_CORE_EXPORT MDismissEvent : public QEvent
 {
 public:
     /*!

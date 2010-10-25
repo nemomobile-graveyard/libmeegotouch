@@ -26,7 +26,7 @@
 class QString;
 class MCollatorPrivate;
 
-class M_EXPORT MCollator
+class M_CORE_EXPORT MCollator
 {
 public:
     MCollator();

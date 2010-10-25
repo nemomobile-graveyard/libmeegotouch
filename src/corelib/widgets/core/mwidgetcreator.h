@@ -46,7 +46,7 @@ class MWidgetCreatorBasePrivate;
     \brief Interface for MWidgetGenerators, you can implement your own creator or use
            MWidgetCreator template class with M_REGISTER_WIDGET-macro.
  */
-class M_EXPORT MWidgetCreatorBase
+class M_CORE_EXPORT MWidgetCreatorBase
 {
 public:
 
@@ -88,7 +88,7 @@ private:
 };
 
 template<class WIDGET>
-class M_EXPORT MWidgetCreator : public MWidgetCreatorBase
+class MWidgetCreator : public MWidgetCreatorBase
 {
 public:
 
@@ -111,7 +111,7 @@ public:
 };
 
 template<class WIDGET>
-class M_EXPORT MWidgetNullCreator : public MWidgetCreatorBase
+class MWidgetNullCreator : public MWidgetCreatorBase
 {
 public:
 

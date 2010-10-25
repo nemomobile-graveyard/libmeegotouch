@@ -31,7 +31,7 @@ class QDataStream;
  * The MAppletCommunicator is a base class for implementing interprocess
  * communication between two processes (a host application and an applet).
  */
-class M_EXPORT MAppletCommunicator : public QObject
+class M_EXTENSIONS_EXPORT MAppletCommunicator : public QObject
 {
     Q_OBJECT
 

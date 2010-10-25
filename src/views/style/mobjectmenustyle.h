@@ -24,13 +24,13 @@
 
 class MScalableImage;
 
-class M_EXPORT MObjectMenuStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MObjectMenuStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MObjectMenuStyle)
 };
 
-class M_EXPORT MObjectMenuStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MObjectMenuStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MObjectMenuStyle)
 };

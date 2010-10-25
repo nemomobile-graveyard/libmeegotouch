@@ -50,7 +50,7 @@ class MLibraryPrivate;
     MLibrary object. This object will be instantiated while the library gets loaded, and destroyed when
     the library gets unloaded.
  */
-class M_EXPORT MLibrary : public MAssembly
+class M_CORE_EXPORT MLibrary : public MAssembly
 {
 public:
 

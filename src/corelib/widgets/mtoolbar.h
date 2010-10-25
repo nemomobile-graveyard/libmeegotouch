@@ -113,7 +113,7 @@ class MToolBarPrivate;
     \sa MToolbarStyle
 */
 
-class M_EXPORT MToolBar : public MWidgetController
+class M_CORE_EXPORT MToolBar : public MWidgetController
 {
     Q_OBJECT
 

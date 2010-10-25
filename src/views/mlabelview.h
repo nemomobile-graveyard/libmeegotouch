@@ -70,7 +70,7 @@ class MCancelEvent;
     \sa MLabelStyle MWidgetView
 */
 
-class M_EXPORT MLabelView : public MWidgetView
+class M_VIEWS_EXPORT MLabelView : public MWidgetView
 {
     //FIXME
     //Temporary remove this when proper longPressEvents are coming to view.

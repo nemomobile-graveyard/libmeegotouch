@@ -90,7 +90,7 @@
     \code
         #include <MWidgetStyle>
 
-        class M_EXPORT MyStyle : public MWidgetStyle
+        class M_CORE_EXPORT MyStyle : public MWidgetStyle
         {
             Q_OBJECT
             M_STYLE(MyStyle)
@@ -100,7 +100,7 @@
             M_STYLE_ATTRIBUTE(QString, imageVertical, ImageVertical)
         };
 
-        class M_EXPORT MyStyleContainer : public MWidgetStyleContainer
+        class M_CORE_EXPORT MyStyleContainer : public MWidgetStyleContainer
         {
             M_STYLE_CONTAINER(MyStyle)
         };
@@ -116,7 +116,7 @@
                                    size() - QSizeF(style()->marginRight(),style()->marginBottom()));
     \endcode
 */
-class M_EXPORT MStylableWidget : public MWidgetController
+class M_CORE_EXPORT MStylableWidget : public MWidgetController
 {
     Q_OBJECT
 

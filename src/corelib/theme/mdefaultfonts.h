@@ -26,7 +26,7 @@
 class MDefaultFontsPrivate;
 class MLogicalValues;
 
-class M_EXPORT MDefaultFonts
+class M_CORE_EXPORT MDefaultFonts
 {
 public:
     MDefaultFonts(const MLogicalValues &);

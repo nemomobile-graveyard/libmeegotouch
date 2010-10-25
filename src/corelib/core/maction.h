@@ -30,7 +30,7 @@ class MActionPrivate;
    \class MAction
    \brief MAction implements an extension of the QAction for libmeegotouch
  */
-class M_EXPORT MAction : public QAction
+class M_CORE_EXPORT MAction : public QAction
 {
     Q_OBJECT
 

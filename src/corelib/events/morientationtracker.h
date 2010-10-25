@@ -36,7 +36,7 @@ class MOrientationTrackerPrivate;
  * Initially designed as singleton as MDeviceProfile might need to access some more information about
  * the concrete phone position, that is not available from fired events.
  */
-class M_EXPORT MOrientationTracker: public QObject
+class M_CORE_EXPORT MOrientationTracker: public QObject
 {
     Q_OBJECT
 public:

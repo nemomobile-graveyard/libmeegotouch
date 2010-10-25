@@ -83,7 +83,7 @@ class MSceneWindowPrivate;
  *
  * \sa MSceneManager
  */
-class M_EXPORT MSceneWindow : public MWidgetController
+class M_CORE_EXPORT MSceneWindow : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MSceneWindow)

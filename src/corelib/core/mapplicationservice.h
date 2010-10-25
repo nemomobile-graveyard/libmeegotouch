@@ -54,7 +54,7 @@ class MApplicationServicePrivate;
  * services appearing and disappearing when you run/kill multiple instances.
  *
  */
-class M_EXPORT MApplicationService : public QObject
+class M_CORE_EXPORT MApplicationService : public QObject
 {
     Q_OBJECT
 

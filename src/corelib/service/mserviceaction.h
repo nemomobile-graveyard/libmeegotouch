@@ -29,7 +29,7 @@ class MServiceActionPrivate;
 /*!
  * Base class for actions that can be used to launch services.
  */
-class M_EXPORT MServiceAction : public MAction
+class M_CORE_EXPORT MServiceAction : public MAction
 {
     Q_OBJECT
 

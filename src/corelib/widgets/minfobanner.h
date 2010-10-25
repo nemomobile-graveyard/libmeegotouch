@@ -84,7 +84,7 @@ class MInfoBannerPrivate;
     \deprecated MInfoBanner is deprecated, use MBanner for any component with banner requirements
 */
 
-class M_EXPORT MInfoBanner : public MSceneWindow
+class M_CORE_EXPORT MInfoBanner : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MInfoBanner)

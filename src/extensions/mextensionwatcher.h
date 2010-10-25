@@ -23,6 +23,7 @@
 #include <QFileSystemWatcher>
 #include <QHash>
 #include <QSharedPointer>
+#include "mexport.h"
 
 class MDesktopEntry;
 
@@ -38,7 +39,7 @@ class MDesktopEntry;
  * notification leads to undefined behaviour, because the target item of the
  * notification will not exist.
  */
-class MExtensionWatcher : public QObject
+class M_EXTENSIONS_EXPORT MExtensionWatcher : public QObject
 {
     Q_OBJECT
 

@@ -70,7 +70,7 @@ class QWidget;
  *
  * \sa \ref layout-qgraphicsgridlayout
  */
-class M_EXPORT MGridLayoutPolicy : public MAbstractLayoutPolicy
+class M_CORE_EXPORT MGridLayoutPolicy : public MAbstractLayoutPolicy
 {
 public:
     /*!

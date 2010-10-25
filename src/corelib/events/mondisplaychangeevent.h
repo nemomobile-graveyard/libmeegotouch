@@ -32,7 +32,7 @@ class MOnDisplayChangeEventPrivate;
  * with another window. Note that this differs from Qt's explicit hide()/show()
  * semantics. MWidget forwards this event to its children.
  */
-class M_EXPORT MOnDisplayChangeEvent : public QGraphicsSceneEvent
+class M_CORE_EXPORT MOnDisplayChangeEvent : public QGraphicsSceneEvent
 {
 public:
 

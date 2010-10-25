@@ -41,7 +41,7 @@ class MGConfDataStorePrivate;
  * \endcode
  *
  */
-class M_EXPORT MGConfDataStore : public MDataStore
+class M_EXTENSIONS_EXPORT MGConfDataStore : public MDataStore
 {
     Q_OBJECT
 

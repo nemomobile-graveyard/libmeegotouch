@@ -67,7 +67,7 @@ class QRect;
     uniform sampler2D textureX; //textures for each texture unit (eg. texture0, texture1 ...)
     \endcode
 */
-class M_EXPORT MGLES2Renderer
+class M_CORE_EXPORT MGLES2Renderer
 {
 public:
 

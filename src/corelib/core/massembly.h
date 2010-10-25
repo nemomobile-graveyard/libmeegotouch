@@ -33,7 +33,7 @@ class MLogicalValues;
    \class MAssembly
    \brief This class provides the assembly information to MTheme which uses it to load the correct .css & .conf files.
  */
-class M_EXPORT MAssembly
+class M_CORE_EXPORT MAssembly
 {
     MAssemblyPrivate *const d_ptr;
 public:

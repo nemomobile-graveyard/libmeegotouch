@@ -32,7 +32,7 @@
 #include <MWidgetController>
 #include <mwidgetmodel.h>
 
-class M_EXPORT TestWidgetModel : public MWidgetModel
+class TestWidgetModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL(TestWidgetModel)

@@ -116,7 +116,7 @@ class MPannableViewport;
     For information on this and other navigational patterns see \subpage pagenavigation.
 */
 
-class M_EXPORT MApplicationPage : public MSceneWindow
+class M_CORE_EXPORT MApplicationPage : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MApplicationPage)

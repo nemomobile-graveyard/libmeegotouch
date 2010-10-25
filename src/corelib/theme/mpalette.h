@@ -26,7 +26,7 @@
 class MPalettePrivate;
 class MLogicalValues;
 
-class M_EXPORT MPalette
+class M_CORE_EXPORT MPalette
 {
 public:
     MPalette(const MLogicalValues &);

@@ -30,7 +30,7 @@
     \sa MProgressIndicator
 */
 
-class M_EXPORT MProgressIndicatorModel : public MWidgetModel
+class M_CORE_EXPORT MProgressIndicatorModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MProgressIndicatorModel)

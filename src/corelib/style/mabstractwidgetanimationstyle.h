@@ -23,7 +23,7 @@
 #include <manimationstyle.h>
 #include <mexport.h>
 
-class M_EXPORT MAbstractWidgetAnimationStyle : public MAnimationStyle
+class M_CORE_EXPORT MAbstractWidgetAnimationStyle : public MAnimationStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MAbstractWidgetAnimationStyle)
@@ -31,7 +31,7 @@ class M_EXPORT MAbstractWidgetAnimationStyle : public MAnimationStyle
     M_STYLE_ATTRIBUTE(int, duration, Duration)
 };
 
-class M_EXPORT MAbstractWidgetAnimationStyleContainer : public MAnimationStyleContainer
+class M_CORE_EXPORT MAbstractWidgetAnimationStyleContainer : public MAnimationStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MAbstractWidgetAnimationStyle)
 };

@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QSize>
 
-class M_EXPORT MDeviceStyle : public MStyle
+class M_VIEWS_EXPORT MDeviceStyle : public MStyle
 {
     Q_OBJECT
     M_STYLE(MDeviceStyle)
@@ -34,7 +34,7 @@ class M_EXPORT MDeviceStyle : public MStyle
     M_STYLE_ATTRIBUTE(QSize, pixelsPerInch, PixelsPerInch)
 };
 
-class M_EXPORT MDeviceStyleContainer : public MStyleContainer
+class M_VIEWS_EXPORT MDeviceStyleContainer : public MStyleContainer
 {
     M_STYLE_CONTAINER(MDeviceStyle)
 };

@@ -40,7 +40,7 @@ class MInputMethodStatePrivate;
  * to link against libmeegotouch to get access to this class).  The input method area
  * can be used by the application to avoid obstructing the input method.
  */
-class M_EXPORT MInputMethodState : public QObject
+class M_CORE_EXPORT MInputMethodState : public QObject
 {
     Q_OBJECT
 

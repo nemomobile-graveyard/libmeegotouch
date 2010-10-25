@@ -29,7 +29,7 @@ class MCalendarPrivate;
 class QDateTime;
 class QDate;
 
-class M_EXPORT MCalendar
+class M_CORE_EXPORT MCalendar
 {
 public:
     explicit MCalendar(MLocale::CalendarType calendarType = MLocale::DefaultCalendar,

@@ -23,7 +23,7 @@
 #include "mscenewindowmodel.h"
 #include <QDateTime>
 
-class M_EXPORT MBannerModel : public MSceneWindowModel
+class M_CORE_EXPORT MBannerModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MBannerModel)

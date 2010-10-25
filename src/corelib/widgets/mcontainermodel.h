@@ -31,7 +31,7 @@ class QGraphicsWidget;
  * \sa MContainer, MContainerView
  */
 
-class M_EXPORT MContainerModel : public MWidgetModel
+class M_CORE_EXPORT MContainerModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MContainerModel)

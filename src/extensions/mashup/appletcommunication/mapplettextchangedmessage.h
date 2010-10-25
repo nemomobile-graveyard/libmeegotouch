@@ -26,7 +26,7 @@
 /*!
  * Applet text changed message.
  */
-class M_EXPORT MAppletTextChangedMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletTextChangedMessage : public MAppletMessage
 {
 private:
     QString _text;

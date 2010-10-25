@@ -31,7 +31,7 @@
  * The prefix or namespace as well as the underlying DataStore object are given at
  * construction time and they can't be changed after that.
  */
-class M_EXPORT MSubDataStore : public MDataStore
+class M_EXTENSIONS_EXPORT MSubDataStore : public MDataStore
 {
     Q_OBJECT
 

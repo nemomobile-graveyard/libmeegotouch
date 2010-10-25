@@ -30,7 +30,7 @@
  * This is the central access point class for the settings binary
  * interface.
  */
-class M_EXPORT MSettingsLanguageBinary : public MSettingsLanguageSettings
+class M_SETTINGS_EXPORT MSettingsLanguageBinary : public MSettingsLanguageSettings
 {
 public:
     /*!

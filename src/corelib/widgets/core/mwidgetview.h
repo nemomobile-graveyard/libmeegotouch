@@ -71,7 +71,7 @@ class QGraphicsSceneResizeEvent;
  * using MVC pattern can inherit their views
  */
 
-class M_EXPORT MWidgetView : public QObject
+class M_CORE_EXPORT MWidgetView : public QObject
 {
     Q_OBJECT
 

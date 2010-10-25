@@ -25,7 +25,7 @@
 /*!
  * Applet alive message.
  */
-class M_EXPORT MAppletAliveMessageResponse : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletAliveMessageResponse : public MAppletMessage
 {
 public:
     /*!

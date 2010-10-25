@@ -34,7 +34,7 @@ class MCancelEventPrivate;
  * to the widgets below pannable viewport, but it needs to be
  * "cancelled" if the user wanted to pan the viewport.
  */
-class M_EXPORT MCancelEvent : public QGraphicsSceneEvent
+class M_CORE_EXPORT MCancelEvent : public QGraphicsSceneEvent
 {
 public:
 

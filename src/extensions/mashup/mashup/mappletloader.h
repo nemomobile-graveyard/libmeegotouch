@@ -31,7 +31,7 @@ class MDataAccess;
 /*!
  * \brief A class that loads MeeGo Touch applets.
  */
-class M_EXPORT MAppletLoader
+class M_EXTENSIONS_EXPORT MAppletLoader
 {
 public:
     /*!

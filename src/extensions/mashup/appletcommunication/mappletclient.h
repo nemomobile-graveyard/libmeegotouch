@@ -28,7 +28,7 @@
  * The MAppletClient implements a client for interprocess communication
  * between two processes (a host application and an applet).
  */
-class M_EXPORT MAppletClient : public MAppletCommunicator
+class M_EXTENSIONS_EXPORT MAppletClient : public MAppletCommunicator
 {
     Q_OBJECT
 

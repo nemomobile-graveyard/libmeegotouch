@@ -23,7 +23,7 @@
 #include <manimationstyle.h>
 //#include <QEasingCurve>
 
-class M_EXPORT MSceneWindowAnimationStyle : public MAnimationStyle
+class M_CORE_EXPORT MSceneWindowAnimationStyle : public MAnimationStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MSceneWindowAnimationStyle)

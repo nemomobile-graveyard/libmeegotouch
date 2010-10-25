@@ -22,13 +22,13 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MOverlayStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MOverlayStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MOverlayStyle)
 };
 
-class M_EXPORT MOverlayStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MOverlayStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MOverlayStyle)
 };

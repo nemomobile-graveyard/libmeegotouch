@@ -22,13 +22,13 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MModalSceneWindowStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MModalSceneWindowStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MModalSceneWindowStyle)
 };
 
-class M_EXPORT MModalSceneWindowStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MModalSceneWindowStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MModalSceneWindowStyle)
 };

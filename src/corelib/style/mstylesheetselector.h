@@ -36,7 +36,7 @@ class MStyleSheetSelectorPrivate;
  * Later, when the style for the target object is requested, all known selectors are compared to
  * target object and the matching settings are stored to target object's style object.
  */
-class M_EXPORT MStyleSheetSelector
+class M_CORE_EXPORT MStyleSheetSelector
 {
     //friend class MStyleSheetParser;
 

@@ -80,7 +80,7 @@ class MInfoBannerEventViewPrivate;
     \sa MNotification
 */
 
-class M_EXPORT MInfoBannerEventView : public MSceneWindowView
+class M_VIEWS_EXPORT MInfoBannerEventView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MInfoBannerModel, MInfoBannerStyle)

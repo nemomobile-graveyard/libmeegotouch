@@ -38,7 +38,7 @@
     \ingroup styles
     \sa MLabelStyleContainer MWidgetStyle \ref styling MLabel
 */
-class M_EXPORT MLabelStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MLabelStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MLabelStyle)
@@ -81,7 +81,7 @@ class M_EXPORT MLabelStyle : public MWidgetStyle
     \ingroup styles
     \sa MLabelStyle
 */
-class M_EXPORT MLabelStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MLabelStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MLabelStyle)
 };

@@ -26,7 +26,7 @@
  * Cancel message sent to the applet when the previously
  * sent mouse press message needs to be cancelled.
  */
-class M_EXPORT MAppletCancelMessage : public MAppletMessage
+class M_EXTENSIONS_EXPORT MAppletCancelMessage : public MAppletMessage
 {
 
 public:

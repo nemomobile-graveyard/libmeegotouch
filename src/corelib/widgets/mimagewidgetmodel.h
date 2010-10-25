@@ -30,7 +30,7 @@
     \sa MImageWidget
 */
 
-class M_EXPORT MImageWidgetModel : public MWidgetModel
+class M_CORE_EXPORT MImageWidgetModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MImageWidgetModel)

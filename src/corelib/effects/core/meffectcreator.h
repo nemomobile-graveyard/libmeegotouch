@@ -33,7 +33,7 @@ class QGraphicsEffect;
    you can implement your own creator or use MEffectCreator template class with
    M_REGISTER_EFFECT-macro.
  */
-class M_EXPORT MEffectCreatorBase
+class M_CORE_EXPORT MEffectCreatorBase
 {
 public:
     /*!
@@ -56,7 +56,7 @@ public:
 };
 
 template<class EFFECT>
-class M_EXPORT MEffectCreator : public MEffectCreatorBase
+class MEffectCreator : public MEffectCreatorBase
 {
 public:
     MEffectCreator(const char *effectClassName) :

@@ -42,7 +42,7 @@ class MWidgetActionPrivate;
     \sa MAction
 */
 
-class M_EXPORT MWidgetAction : public MAction
+class M_CORE_EXPORT MWidgetAction : public MAction
 {
     Q_OBJECT
 

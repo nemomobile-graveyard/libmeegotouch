@@ -27,7 +27,7 @@
 class MMessageBox;
 class MMessageBoxViewPrivate;
 
-class M_EXPORT MMessageBoxView : public MDialogView
+class M_VIEWS_EXPORT MMessageBoxView : public MDialogView
 {
     Q_OBJECT
     M_VIEW(MMessageBoxModel, MMessageBoxStyle)

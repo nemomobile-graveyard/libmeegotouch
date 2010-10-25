@@ -26,7 +26,7 @@
 
 class MCountryPrivate;
 
-class M_EXPORT MCountry
+class M_CORE_EXPORT MCountry
 {
   public:
     MCountry();

@@ -55,7 +55,7 @@ class QGraphicsLayoutItem;
  * \until }
  * \sa \ref layout-qgraphicslinearlayout, \ref layout-qgraphicslayout
  */
-class M_EXPORT MLinearLayoutPolicy : public MAbstractLayoutPolicy
+class M_CORE_EXPORT MLinearLayoutPolicy : public MAbstractLayoutPolicy
 {
 public:
     /*!

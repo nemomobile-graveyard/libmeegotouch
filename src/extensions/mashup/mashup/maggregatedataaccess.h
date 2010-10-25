@@ -50,7 +50,7 @@ class MAggregateDataAccessPrivate;
  * exist whenever MAggregateDataAccess exists. For instance, MAggregateDataAccess object has to be destroyed before associated primary and secondary
  * data access objects are destroyed.
  */
-class M_EXPORT MAggregateDataAccess : public MDataAccess
+class M_EXTENSIONS_EXPORT MAggregateDataAccess : public MDataAccess
 {
     Q_OBJECT
 

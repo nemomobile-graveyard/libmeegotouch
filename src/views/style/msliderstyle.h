@@ -36,7 +36,7 @@ class MScalableImage;
     \ingroup styles
     \sa MSliderStyleContainer MWidgetStyle \ref styling MSliderView
 */
-class M_EXPORT MSliderStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MSliderStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MSliderStyle)
@@ -148,7 +148,7 @@ class M_EXPORT MSliderStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int, stepsPerFeedback, StepsPerFeedback)
 };
 
-class M_EXPORT MSliderStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MSliderStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MSliderStyle)
 };

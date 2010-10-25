@@ -31,7 +31,7 @@ class MBasicLayoutAnimationPrivate;
  * It animates the items geometry and opacity in a linear way, with every animation
  * taking the same amount of time.
  */
-class M_EXPORT MBasicLayoutAnimation : public MLayoutAnimation
+class M_CORE_EXPORT MBasicLayoutAnimation : public MLayoutAnimation
 {
     M_ANIMATION(MBasicLayoutAnimationStyle)
 public:

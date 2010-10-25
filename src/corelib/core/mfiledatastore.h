@@ -28,7 +28,7 @@ class MFileDataStorePrivate;
  * Concrete implementation of \c MDataStore interface. This class stores the data to the
  * filesystem. The file name is given as a constructor parameter.
  */
-class M_EXPORT MFileDataStore : public MDataStore
+class M_CORE_EXPORT MFileDataStore : public MDataStore
 {
     Q_OBJECT
 public:

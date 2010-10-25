@@ -85,7 +85,7 @@ class MImageWidgetPrivate;
 
  */
 
-class M_EXPORT MImageWidget : public MWidgetController
+class M_CORE_EXPORT MImageWidget : public MWidgetController
 {
     Q_OBJECT
     M_CONTROLLER(MImageWidget)

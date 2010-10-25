@@ -20,6 +20,6 @@
 #ifndef MEXPORT_H
 #define MEXPORT_H
 
-#define M_EXPORT
+#define M_CORE_EXPORT
 
 #endif // Header guard

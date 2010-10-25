@@ -22,13 +22,13 @@
 
 #include <mdialogstyle.h>
 
-class M_EXPORT MMessageBoxStyle : public MDialogStyle
+class M_VIEWS_EXPORT MMessageBoxStyle : public MDialogStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MMessageBoxStyle)
 };
 
-class M_EXPORT MMessageBoxStyleContainer : public MDialogStyleContainer
+class M_VIEWS_EXPORT MMessageBoxStyleContainer : public MDialogStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MMessageBoxStyle)
 };

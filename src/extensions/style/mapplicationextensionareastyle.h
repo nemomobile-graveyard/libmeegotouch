@@ -25,7 +25,7 @@
 /*!
  * MApplicationExtensionAreaStyle is the style class for MApplicationExtensionArea.
  */
-class M_EXPORT MApplicationExtensionAreaStyle : public MExtensionAreaStyle
+class M_EXTENSIONS_EXPORT MApplicationExtensionAreaStyle : public MExtensionAreaStyle
 {
     Q_OBJECT
     M_STYLE(MApplicationExtensionAreaStyle)
@@ -37,7 +37,7 @@ class M_EXPORT MApplicationExtensionAreaStyle : public MExtensionAreaStyle
 /*!
  * MApplicationExtensionAreaStyleContainer is the style container class for MApplicationExtensionArea.
  */
-class M_EXPORT MApplicationExtensionAreaStyleContainer : public MExtensionAreaStyleContainer
+class M_EXTENSIONS_EXPORT MApplicationExtensionAreaStyleContainer : public MExtensionAreaStyleContainer
 {
     M_STYLE_CONTAINER(MApplicationExtensionAreaStyle)
 };

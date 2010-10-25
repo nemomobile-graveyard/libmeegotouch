@@ -22,7 +22,7 @@
 
 #include <mscenewindowstyle.h>
 
-class M_EXPORT MHomeButtonPanelStyle : public MSceneWindowStyle
+class M_VIEWS_EXPORT MHomeButtonPanelStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MHomeButtonPanelStyle)
@@ -31,7 +31,7 @@ class M_EXPORT MHomeButtonPanelStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(QString, homeButtonIconId, HomeButtonIconId)
 };
 
-class M_EXPORT MHomeButtonPanelStyleContainer : public MSceneWindowStyleContainer
+class M_VIEWS_EXPORT MHomeButtonPanelStyleContainer : public MSceneWindowStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MHomeButtonPanelStyle)
     M_STYLE_MODE(Fullscreen)

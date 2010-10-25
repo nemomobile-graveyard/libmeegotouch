@@ -36,7 +36,7 @@
     \ingroup styles
     \sa MApplicationMenuButtonStyleContainer MButtonStyle \ref styling MApplicationMenuButton MApplicationMenuButtonView
 */
-class M_EXPORT MApplicationMenuButtonStyle : public MButtonStyle
+class M_VIEWS_EXPORT MApplicationMenuButtonStyle : public MButtonStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MApplicationMenuButtonStyle)
@@ -61,7 +61,7 @@ class M_EXPORT MApplicationMenuButtonStyle : public MButtonStyle
     \ingroup styles
     \sa MApplicationMenuButtonStyle
 */
-class M_EXPORT MApplicationMenuButtonStyleContainer : public MButtonStyleContainer
+class M_VIEWS_EXPORT MApplicationMenuButtonStyleContainer : public MButtonStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MApplicationMenuButtonStyle)
 };

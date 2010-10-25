@@ -29,7 +29,7 @@ class MAbstractItemModelPrivate;
     \class MAbstractItemModel
     \brief MAbstractItemModel implementation of a simple list data model.
 */
-class M_EXPORT MAbstractItemModel : public QAbstractItemModel
+class M_CORE_EXPORT MAbstractItemModel : public QAbstractItemModel
 {
     Q_OBJECT
     /*!

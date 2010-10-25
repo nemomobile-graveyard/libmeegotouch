@@ -31,7 +31,7 @@ class MDataStore;
 /*!
  * A factory for translating settings binaries to widgets.
  */
-class M_EXPORT MSettingsLanguageWidgetFactory
+class M_SETTINGS_EXPORT MSettingsLanguageWidgetFactory
 {
     /*!
      * Private constructor to prevent construction.

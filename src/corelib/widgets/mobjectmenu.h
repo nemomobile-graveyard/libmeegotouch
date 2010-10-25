@@ -114,7 +114,7 @@ class QGraphicsSceneContextMenuEvent;
     \sa MObjectMenuModel MObjectMenuStyle
  */
 
-class M_EXPORT MObjectMenu : public MSceneWindow
+class M_CORE_EXPORT MObjectMenu : public MSceneWindow
 {
     Q_OBJECT
     Q_DISABLE_COPY(MObjectMenu)

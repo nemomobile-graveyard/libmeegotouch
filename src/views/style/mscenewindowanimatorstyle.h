@@ -23,7 +23,7 @@
 #include <mstyle.h>
 #include <QPoint>
 
-class M_EXPORT MSceneWindowAnimatorStyle : public MStyle
+class M_VIEWS_EXPORT MSceneWindowAnimatorStyle : public MStyle
 {
     Q_OBJECT
     M_STYLE(MSceneWindowAnimatorStyle)
@@ -38,7 +38,7 @@ class M_EXPORT MSceneWindowAnimatorStyle : public MStyle
     M_STYLE_ATTRIBUTE(QPoint, transitionOutDestination, TransitionOutDestination)
 };
 
-class M_EXPORT MSceneWindowAnimatorStyleContainer : public MStyleContainer
+class M_VIEWS_EXPORT MSceneWindowAnimatorStyleContainer : public MStyleContainer
 {
     M_STYLE_CONTAINER(MSceneWindowAnimatorStyle)
 };

@@ -89,7 +89,7 @@ class QString;
         \note A QCoreApplication instance must be created before creating any persistent notifications.
 */
 
-class M_EXPORT MNotification : public QObject
+class M_CORE_EXPORT MNotification : public QObject
 {
     Q_OBJECT
 

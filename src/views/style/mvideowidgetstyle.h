@@ -35,7 +35,7 @@
     \ingroup styles
     \sa MVideoWidgetStyleContainer MWidgetStyle \ref styling MVideoWidget MVideoWidgetView
 */
-class M_EXPORT MVideoWidgetStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MVideoWidgetStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MVideoWidgetStyle)
@@ -54,7 +54,7 @@ class M_EXPORT MVideoWidgetStyle : public MWidgetStyle
     \ingroup styles
     \sa MVideoWidgetStyle
 */
-class M_EXPORT MVideoWidgetStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MVideoWidgetStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MVideoWidgetStyle)
 

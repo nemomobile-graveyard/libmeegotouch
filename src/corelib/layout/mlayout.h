@@ -145,7 +145,7 @@ class MLayoutAnimation;
  *
  * \sa \ref layouts, \ref layout-inside-layout, \ref example-calculator
  */
-class M_EXPORT MLayout : public QGraphicsLayout
+class M_CORE_EXPORT MLayout : public QGraphicsLayout
 {
 public:
 

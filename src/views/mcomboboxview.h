@@ -38,7 +38,7 @@ class MComboBoxViewPrivate;
     \sa MComboBox MComboBoxStyle
  */
 
-class M_EXPORT MComboBoxView : public MWidgetView
+class M_VIEWS_EXPORT MComboBoxView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MComboBoxModel, MComboBoxStyle)

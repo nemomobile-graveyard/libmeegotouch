@@ -30,7 +30,7 @@ class MDeviceProfilePrivate;
 /*! \brief The MDeviceProfile class holds physical and simulated properties of the target device
 
  */
-class M_EXPORT MDeviceProfile : public QObject
+class M_CORE_EXPORT MDeviceProfile : public QObject
 {
     Q_OBJECT
 

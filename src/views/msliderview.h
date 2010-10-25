@@ -55,7 +55,7 @@ class MSlider;
     \sa MSliderStyle MWidgetView
 */
 
-class M_EXPORT MSliderView : public MWidgetView
+class M_VIEWS_EXPORT MSliderView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MSliderModel, MSliderStyle)

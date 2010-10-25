@@ -23,7 +23,7 @@
 #include <QEasingCurve>
 #include <mscenelayereffectstyle.h>
 
-class M_EXPORT MSceneLayerEffectDimStyle : public MSceneLayerEffectStyle
+class M_VIEWS_EXPORT MSceneLayerEffectDimStyle : public MSceneLayerEffectStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MSceneLayerEffectDimStyle)
@@ -33,7 +33,7 @@ class M_EXPORT MSceneLayerEffectDimStyle : public MSceneLayerEffectStyle
     M_STYLE_ATTRIBUTE(int,          fadeDuration, FadeDuration)
 };
 
-class M_EXPORT MSceneLayerEffectDimStyleContainer : public MSceneLayerEffectStyleContainer
+class M_VIEWS_EXPORT MSceneLayerEffectDimStyleContainer : public MSceneLayerEffectStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MSceneLayerEffectDimStyle)
 };

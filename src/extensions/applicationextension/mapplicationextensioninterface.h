@@ -42,7 +42,7 @@ class QGraphicsWidget;
  *
  * \see \ref applicationextensions
  */
-class M_EXPORT MApplicationExtensionInterface
+class M_EXTENSIONS_EXPORT MApplicationExtensionInterface
 {
 public:
     /*!

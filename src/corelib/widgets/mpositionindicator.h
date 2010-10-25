@@ -45,7 +45,7 @@ class MPositionIndicatorPrivate;
 */
 
 
-class M_EXPORT MPositionIndicator : public MWidgetController
+class M_CORE_EXPORT MPositionIndicator : public MWidgetController
 {
     Q_OBJECT
 

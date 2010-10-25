@@ -43,7 +43,7 @@ class MFreestyleLayoutPolicyPrivate;
  *
  * \sa \link layout-mfreestylelayoutpolicy MFreestyleLayoutPolicy Example \endlink
  */
-class M_EXPORT MFreestyleLayoutPolicy : public MAbstractLayoutPolicy
+class M_CORE_EXPORT MFreestyleLayoutPolicy : public MAbstractLayoutPolicy
 {
 public:
     /*!

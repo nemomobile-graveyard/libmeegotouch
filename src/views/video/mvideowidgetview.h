@@ -40,7 +40,7 @@ class QGraphicsSceneResizeEvent;
 
     \sa MVideoWidget MVideoWidgetStyle
 */
-class M_EXPORT MVideoWidgetView : public MWidgetView
+class M_VIEWS_EXPORT MVideoWidgetView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MVideoWidgetModel, MVideoWidgetStyle)

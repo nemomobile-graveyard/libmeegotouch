@@ -40,7 +40,7 @@ class MOrientationChangeEvent;
 class MSceneManager;
 class MApplicationPage;
 
-class M_EXPORT MWidget : public QGraphicsWidget
+class M_CORE_EXPORT MWidget : public QGraphicsWidget
 {
     Q_OBJECT
 

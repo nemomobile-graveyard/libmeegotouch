@@ -47,7 +47,7 @@
  * }
  * \endcode
  */
-class M_EXPORT MApplicationExtensionMetaData : public MDesktopEntry
+class M_EXTENSIONS_EXPORT MApplicationExtensionMetaData : public MDesktopEntry
 {
 public:
     /*!
