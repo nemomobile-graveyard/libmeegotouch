@@ -6,15 +6,15 @@ STYLE_SRC_DIR=./style
 INCLUDEPATH+=./style
 
 PUBLIC_HEADERS += \
-    $$STYLE_SRC_DIR/mstylecreator.h \
-    $$STYLE_SRC_DIR/mstylesheet.h \
-    $$STYLE_SRC_DIR/mstylesheetparser.h \
-    $$STYLE_SRC_DIR/mstylesheetselector.h \
-    $$STYLE_SRC_DIR/mstylesheetattribute.h
+    $$STYLE_SRC_DIR/mstylecreator.h
 
 PRIVATE_HEADERS += \
     $$STYLE_SRC_DIR/mstyle_p.h \
     $$STYLE_SRC_DIR/mstylesheet_p.h \
+    $$STYLE_SRC_DIR/mstylesheetparser.h \
+    $$STYLE_SRC_DIR/mstylesheetselector.h \
+    $$STYLE_SRC_DIR/mstylesheetattribute.h \
+    $$STYLE_SRC_DIR/mstylesheet.h \
     $$STYLE_SRC_DIR/mstylesheetselector_p.h
 
 STYLE_HEADERS += \

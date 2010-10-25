@@ -33,6 +33,7 @@ class QTextStream;
 class QFile;
 class MLogicalValues;
 
+//! \internal
 /*!
  * Parser class for .css style sheets
  *
@@ -142,5 +143,6 @@ protected:
 
     friend class MStyleSheetAttribute;
 };
+//! \internal_end
 
 #endif

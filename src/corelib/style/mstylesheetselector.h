@@ -28,6 +28,7 @@
 
 class MStyleSheetSelectorPrivate;
 
+//! \internal
 /*!
  * Style sheet selector class.
  *
@@ -161,5 +162,6 @@ private:
     Q_DECLARE_PRIVATE(MStyleSheetSelector)
     MStyleSheetSelectorPrivate *const d_ptr;
 };
+//! \internal_end
 
 #endif

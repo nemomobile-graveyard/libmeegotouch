@@ -31,6 +31,7 @@
 class MLogicalValues;
 class MStyleSheetPrivate;
 
+//! \internal
 /*!
  * \brief This class represents all the selectors and attributes in a single CSS file.
  *
@@ -104,6 +105,7 @@ public:
      */
     static void cleanup(bool outputAndDelete);
 };
+//! \internal_end
 
 #endif // MSTYLESHEET_H
 
