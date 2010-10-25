@@ -165,7 +165,7 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
             if (mApplicationWindowInstance) {
                 Display *display = QX11Info::display();
                 if (display) {
-                    XSetCommand(display, mApplicationWindowInstance->winId(), argv, argc);
+                    XSetCommand(display, mApplicationWindowInstance->effectiveWinId(), argv, argc);
                 }
             }
 #endif

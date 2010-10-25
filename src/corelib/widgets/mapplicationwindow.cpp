@@ -151,7 +151,7 @@ void MApplicationWindowPrivate::init()
         isChained = true;
 
         // for compositor page animation
-        setWindowChainedProperty( chainParentWinId, q->winId() );
+        setWindowChainedProperty( chainParentWinId, q->effectiveWinId() );
     }
     addMStatusBarOverlayProperty();
     appendMApplicationWindowTypeProperty();
@@ -254,7 +254,7 @@ void MApplicationWindowPrivate::addMStatusBarOverlayProperty()
     Atom atomMStatusBarOverlay = XInternAtom(QX11Info::display(), "_DUI_STATUSBAR_OVERLAY", False);
     long propertyData = 1;
 
-    XChangeProperty(QX11Info::display(), q->winId(),
+    XChangeProperty(QX11Info::display(), q->effectiveWinId(),
             atomMStatusBarOverlay, XA_CARDINAL /* type */,
             32 /* format, in bits */, PropModeReplace,
             (unsigned char *) &propertyData, 1 /* number of elements */);
@@ -265,7 +265,7 @@ void MApplicationWindowPrivate::appendMApplicationWindowTypeProperty()
     Q_Q(MApplicationWindow);
 
     Atom atomWindowType = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_NET_WM_WINDOW_TYPE_MAPPLICATION", False);
-    XChangeProperty(QX11Info::display(), q->winId(),
+    XChangeProperty(QX11Info::display(), q->effectiveWinId(),
                     XInternAtom(QX11Info::display(), "_NET_WM_WINDOW_TYPE", False),
                     XA_ATOM, 32, PropModeAppend, (unsigned char*) &atomWindowType, 1);
 }
@@ -1053,7 +1053,7 @@ void MApplicationWindow::closeEvent(QCloseEvent *event)
 
         ev.xclient.type         = ClientMessage;
         ev.xclient.display      = dpy;
-        ev.xclient.window       = winId();
+        ev.xclient.window       = effectiveWinId();
         ev.xclient.message_type = XInternAtom(dpy, "_NET_CLOSE_WINDOW", False);
         ev.xclient.format       = 32;
         ev.xclient.data.l[0]    = CurrentTime;

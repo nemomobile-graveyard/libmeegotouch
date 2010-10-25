@@ -784,7 +784,7 @@ void MSceneManagerPrivate::_q_updateDecoratorButtonsProperty()
 
     Atom a = XInternAtom(dpy, "_MEEGOTOUCH_DECORATOR_BUTTONS", False);
     foreach(QGraphicsView *view, scene->views()) {
-        Window w = view->winId();
+        Window w = view->effectiveWinId();
         XChangeProperty(dpy, w, a, XA_CARDINAL, 32, PropModeReplace,
                         (unsigned char*)data, 8);
     }
@@ -817,7 +817,7 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
 
     Atom a = XInternAtom(dpy, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY", False);
     foreach (QGraphicsView *view, scene->views()) {
-        Window w = view->winId();
+        Window w = view->effectiveWinId();
         if (!statusBar)
             XDeleteProperty(dpy, w, a);
         else

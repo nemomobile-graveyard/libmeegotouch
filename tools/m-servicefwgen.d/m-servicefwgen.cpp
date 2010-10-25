@@ -1377,7 +1377,7 @@ void doChainTaskHandling( QString &line, bool& inChainTask, QTextStream& newProx
 \n\
         MWindow *win = MApplication::instance()->activeWindow();\n\
         if (win) {\n\
-            windowId = win->winId();\n\
+            windowId = win->effectiveWinId();\n\
         }\n\
 \n\
 " + line + "\n\

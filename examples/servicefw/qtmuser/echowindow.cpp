@@ -142,7 +142,7 @@ void EchoWindow::sendEcho()
             Q_ARG( bool, true ), // singleSelection
             Q_ARG( int, 0 ),    // filter
             Q_ARG( int, 0 ),    // sorting
-            Q_ARG( const uint, winId() ), // window id
+            Q_ARG( const uint, effectiveWinId() ), // window id
             Q_ARG( const QString, "WINDOW NAME" ) // window name
             );
 

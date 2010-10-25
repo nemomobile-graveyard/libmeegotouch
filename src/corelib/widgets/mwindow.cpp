@@ -292,23 +292,38 @@ void MWindowPrivate::playScreenshotEffect()
     QObject::connect(animation, SIGNAL(finished()), flash, SLOT(deleteLater()));
 }
 
+WId MWindowPrivate::robustEffectiveWinId() const
+{
+    Q_Q(const MWindow);
+    if (q->isVisible()) {
+        return q->effectiveWinId();
+    } else {
+        if (QWidget *parent = q->parentWidget()) {
+            while (parent->parentWidget()) {
+                parent = parent->parentWidget();
+            }
+            return parent->winId();
+        } else {
+            return  q->winId();
+        }
+    }
+}
+
 #ifdef Q_WS_X11
 void MWindowPrivate::appendVisibilityChangeMask()
 {
-    Q_Q(MWindow);
-
     XWindowAttributes existingAttributes;
     XSetWindowAttributes newAttributes;
     Status status;
 
-    status = XGetWindowAttributes(QX11Info::display(), q->winId(), &existingAttributes);
+   status = XGetWindowAttributes(QX11Info::display(), robustEffectiveWinId(), &existingAttributes);
     if (status == 0) {
         qFatal("MWindow: XGetWindowAttributes() failed!");
     }
 
     newAttributes.event_mask = existingAttributes.your_event_mask | VisibilityChangeMask;
 
-    XChangeWindowAttributes(QX11Info::display(), q->winId(), CWEventMask, &newAttributes);
+    XChangeWindowAttributes(QX11Info::display(), robustEffectiveWinId(), CWEventMask, &newAttributes);
 }
 #endif
 
@@ -541,7 +556,7 @@ void MWindowPrivate::closeEvent(QCloseEvent *event)
         MApplication::prestartMode() == M::LazyShutdown) {
 
 #ifdef Q_WS_X11
-        MApplicationPrivate::removeWindowFromSwitcher(q->winId(), true);
+        MApplicationPrivate::removeWindowFromSwitcher(q->effectiveWinId(), true);
 #endif
 
         // Check if all windows are closed. If so,
@@ -584,6 +599,7 @@ MWindow::MWindow(MWindowPrivate &dd, QWidget *parent)
       d_ptr(&dd)
 {
     Q_D(MWindow);
+
     d->q_ptr = this;
     d->init();
     MComponentData::registerWindow(this);
@@ -674,13 +690,13 @@ void MWindowPrivate::setX11Property(const char *propertyName, qreal value)
     Atom atom = XInternAtom(QX11Info::display(), propertyName, False);
 
     if (value < 0.0 || value >= 1.0) {
-        XDeleteProperty(QX11Info::display(), q->winId(), atom);
+        XDeleteProperty(QX11Info::display(), q->effectiveWinId(), atom);
     } else {
         // We use same conventions as _NET_WM_WINDOW_OPACITY so we could re-use
         // same code in the compositor
         unsigned int opacity = (unsigned int) (0xffffffff * value);
 
-        XChangeProperty(QX11Info::display(), q->winId(), atom, XA_CARDINAL, 32 ,
+        XChangeProperty(QX11Info::display(), q->effectiveWinId(), atom, XA_CARDINAL, 32 ,
                         PropModeReplace, (unsigned char *) &opacity, 1);
     }
 }
@@ -702,7 +718,7 @@ qreal MWindowPrivate::getX11Property(const char *propertyName) const
 
     Atom propertyAtom = XInternAtom(QX11Info::display(), propertyName, False);
 
-    int status = XGetWindowProperty(QX11Info::display(), q->winId(), propertyAtom,
+    int status = XGetWindowProperty(QX11Info::display(), q->effectiveWinId(), propertyAtom,
                                     0, 1, False, AnyPropertyType,
                                     &actualType, &actualFormat, &nitems,
                                     &bytes, &data.asUChar);
@@ -722,10 +738,10 @@ void MWindowPrivate::setX11PrestartProperty(bool set)
         Atom prestartAtom = XInternAtom(dpy, "_MEEGOTOUCH_PRESTARTED", False);
         unsigned char data=1;
         if (set) {
-            XChangeProperty(dpy, q->winId(), prestartAtom,
+            XChangeProperty(dpy, q->effectiveWinId(), prestartAtom,
                             XA_CARDINAL, 8, PropModeAppend, &data, 1);
         } else {
-            XDeleteProperty(dpy, q->winId(), prestartAtom);
+            XDeleteProperty(dpy, q->effectiveWinId(), prestartAtom);
         }
     }
 }
@@ -739,12 +755,12 @@ void MWindowPrivate::setX11OrientationAngleProperty(M::OrientationAngle angle)
         return;
 
     //sometimes this class is used without valid x11 window
-    if (q->winId() == 0)
+    if (q->effectiveWinId() == 0)
         return;
 
     Atom orientationAngleAtom = XInternAtom(display, "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
 
-    XChangeProperty(display, q->winId(), orientationAngleAtom, XA_CARDINAL, 32,
+    XChangeProperty(display, q->effectiveWinId(), orientationAngleAtom, XA_CARDINAL, 32,
                     PropModeReplace, (unsigned char*)&angle, 1);
 }
 #endif
@@ -1163,7 +1179,7 @@ bool MWindow::event(QEvent *event)
             updateNeeded = true;
         } else if (Qt::Key_P == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             QPixmap screenshot;
-            screenshot = QPixmap::grabWindow(winId());
+            screenshot = QPixmap::grabWindow(effectiveWinId());
 
             QString path;
             if (QDir(ImagesPath).exists())
@@ -1268,7 +1284,7 @@ void MWindow::setVisible(bool visible)
         }
 
 #ifdef Q_WS_X11
-        MApplicationPrivate::removeWindowFromSwitcher(winId(), false);
+        MApplicationPrivate::removeWindowFromSwitcher(effectiveWinId(), false);
 #endif
 
     } else {

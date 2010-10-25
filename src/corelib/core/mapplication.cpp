@@ -89,7 +89,7 @@ void MApplicationPrivate::setX11PrestartPropertyForWindows(bool set)
 void MApplicationPrivate::removeWindowsFromSwitcher(bool remove)
 {
     Q_FOREACH(MWindow * win, MApplication::windows()) {
-        removeWindowFromSwitcher(win->winId(), remove);
+        removeWindowFromSwitcher(win->effectiveWinId(), remove);
     }
 }
 
@@ -129,7 +129,7 @@ void MApplicationPrivate::removeWindowFromSwitcher(Window window, bool remove)
 MWindow * MApplicationPrivate::windowForId(Window window)
 {
     Q_FOREACH(MWindow * p, MComponentData::windows()) {
-        if (p && p->winId() == static_cast<unsigned int>(window)) {
+        if (p && p->effectiveWinId() == static_cast<unsigned int>(window)) {
             return p;
         }
     }

@@ -97,6 +97,19 @@ public:
     void configureViewport();
     void playScreenshotEffect();
 
+    /**
+      * Calling winId() on a QWidget makes this widget a native window.
+      * As the meego graphicssystem does not support native windows in native
+      * windows we should not call winId() but effectiveWinId() in MWindow.
+      * effectiveWinId() return the winId of the first native parent window.
+      * When we are not visible on the screen yet effectiveWinId() does always
+      * work and will simply return 0 in the worst case. Therefor we manually
+      * search for the topmost parent widget and return its winId.
+      * Use this method instead of effectiveWinId() when you are not sure if
+      * your window is visible yet.
+      */
+    WId robustEffectiveWinId() const;
+
     void _q_exitDisplayStabilized();
 
     bool onDisplay;

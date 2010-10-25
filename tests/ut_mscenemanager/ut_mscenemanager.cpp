@@ -1152,7 +1152,7 @@ static QVector<unsigned long> getX11Property(MWindow* window, const char *proper
 
     Atom propertyAtom = XInternAtom(QX11Info::display(), propertyName, False);
 
-    int status = XGetWindowProperty(QX11Info::display(), window->winId(), propertyAtom,
+    int status = XGetWindowProperty(QX11Info::display(), window->effectiveWinId(), propertyAtom,
                                     0, 4, False, AnyPropertyType,
                                     &actualType, &actualFormat, &nitems,
                                     &bytes, reinterpret_cast<unsigned char**>(&data));
@@ -1169,7 +1169,7 @@ static QVector<unsigned long> getX11Property(MWindow* window, const char *proper
 void setX11Property(MWindow* window, const char *propertyName, QVector<unsigned long> value)
 {
     Atom a = XInternAtom(QX11Info::display(), propertyName, False);
-    XChangeProperty(QX11Info::display(), window->winId(), a, XA_CARDINAL, 32, PropModeReplace,
+    XChangeProperty(QX11Info::display(), window->effectiveWinId(), a, XA_CARDINAL, 32, PropModeReplace,
                     (unsigned char*)value.data(), value.size());
 }
 
