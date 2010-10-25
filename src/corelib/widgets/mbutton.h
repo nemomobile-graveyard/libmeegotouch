@@ -414,6 +414,7 @@ protected:
 
     //! \reimp
     virtual void setupModel();
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     //! \reimp_end
 
 protected Q_SLOTS:
