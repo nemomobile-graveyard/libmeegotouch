@@ -2,7 +2,7 @@
 
 MOC_DIR = .moc
 M_MGEN_OUTDIR = .gen
-OBJECTS_DIR = .obj
+!win32:OBJECTS_DIR = .obj
 DESTDIR = $$M_BUILD_TREE/lib
 TEMPLATE = lib
 
@@ -134,7 +134,7 @@ check-xml.depends = $$DESTDIR/lib$${TARGET}.so.$$VERSION
 check-xml.commands = $$system(true)
 QMAKE_CLEAN += \
     *.gcov \
-    ./.obj/*.gcno \
-    ./.obj/*.gcda \
+    $$OBJECTS_DIR/*.gcno \
+    $$OBJECTS_DIR/*.gcda \
 
 target.path = $$M_INSTALL_LIBS

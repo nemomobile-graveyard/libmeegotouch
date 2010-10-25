@@ -1,6 +1,6 @@
 MOC_DIR = .moc
 MGEN_OUTDIR = .gen
-OBJECTS_DIR = .obj
+!win32:OBJECTS_DIR = .obj
 
 MROOT = ../..
 MLIB = $$MROOT/lib

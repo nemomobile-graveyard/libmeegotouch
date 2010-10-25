@@ -18,7 +18,7 @@ LIBS += $$mAddLibrary(meegotouchcore)
 TEMPLATE = app
 TARGET = animatedlayout
 target.path = $$M_INSTALL_BIN
-OBJECTS_DIR = ./.obj
+!win32:OBJECTS_DIR = ./.obj
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
 
