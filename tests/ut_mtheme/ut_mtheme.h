@@ -47,6 +47,8 @@ private slots:
 
     void testPixmapCaching();
 
+    void testApplicationPixmapDirs();
+
     void testScalableImage();
     void testView();
 

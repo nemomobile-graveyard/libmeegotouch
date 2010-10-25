@@ -10,5 +10,7 @@ SOURCES += \
 HEADERS += \
     ut_mtheme.h \
 
+support_files.files += \
+    ut_mtheme.svg \
 
 include(../common_bot.pri)

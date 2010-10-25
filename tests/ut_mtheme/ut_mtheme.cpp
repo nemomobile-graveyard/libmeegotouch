@@ -87,10 +87,10 @@ void Ut_MTheme::testThemeChangeCompleted()
 
     MGConfItem themeNameItem("/meegotouch/theme/name");
     const QString currentThemeName = themeNameItem.value().toString();
-    if (currentThemeName == QLatin1String("plankton")) {
+    if (currentThemeName == QLatin1String("base")) {
         themeNameItem.set("blanco");
     } else {
-        themeNameItem.set("plankton");
+        themeNameItem.set("base");
     }
 
     // Wait until the signal themeChangeCompleted() has been received
@@ -234,6 +234,27 @@ void Ut_MTheme::testPixmapCaching()
     m_theme->releasePixmap(unknownPixmap);
     QVERIFY(!isIconCached(UnknownIconId, QSize()));
     QCOMPARE(cachedIconCount(), 0);
+}
+
+void Ut_MTheme::testApplicationPixmapDirs()
+{
+    const QPixmap *unknownPixmap = m_theme->pixmap(UnknownIconId);
+    const QPixmap *custom;
+    
+    m_theme->addPixmapDirectory(qApp->applicationDirPath());
+    custom = m_theme->pixmap("ut_mtheme");
+    QVERIFY(custom != 0);
+    QVERIFY(unknownPixmap->toImage() != custom->toImage());
+    m_theme->releasePixmap(custom);
+
+    m_theme->clearPixmapDirectories();
+    custom = m_theme->pixmap("ut_mtheme");
+    m_theme->releasePixmap(custom);
+    QVERIFY(custom != 0);
+    QCOMPARE(unknownPixmap->toImage(), custom->toImage());
+    
+    m_theme->releasePixmap(unknownPixmap);
+
 }
 
 void Ut_MTheme::testScalableImage()
