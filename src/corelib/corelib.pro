@@ -1,6 +1,8 @@
 include(../common_top.pri)
 
-TARGET = meegotouchcore
+TARGET = $$qtLibraryTarget(meegotouchcore)
+
+DEFINES += M_BUILD_CORE
 
 include(animation/animation.pri)
 include(core/core.pri)

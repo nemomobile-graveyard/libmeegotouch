@@ -1,7 +1,8 @@
 include( ../common_top.pri )
 
-TARGET = meegotouchsettings
+TARGET = $$qtLibraryTarget(meegotouchsettings)
 QT += xml
+DEFINES += M_BUILD_SETTINGS
 
 INCLUDEPATH += \
     ../include \
