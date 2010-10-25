@@ -1752,11 +1752,6 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
         case MSceneWindow::Disappearing:
             {
-
-                if (isOnDisplay()) {
-                    produceFullyOffDisplayEvents(sceneWindow);
-                }
-
                 MAbstractWidgetAnimation *disappearanceAnimation =
                     sceneWindow->d_func()->disappearanceAnimation;
 
@@ -1773,10 +1768,6 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
             produceSceneWindowEvent(MSceneWindowEvent::eventTypeDisappear(),
                     sceneWindow, false);
             prepareWindowHide(sceneWindow);
-
-            if (isOnDisplay()) {
-                produceFullyOffDisplayEvents(sceneWindow);
-            }
             break;
 
         default:
@@ -1824,6 +1815,10 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
     if (sceneWindow->sceneWindowState() == MSceneWindow::Disappearing ||
             sceneWindow->sceneWindowState() == MSceneWindow::Appeared) {
+
+        if (isOnDisplay())
+            produceFullyOffDisplayEvents(sceneWindow);
+
         if ((sceneWindow->deletionPolicy() == MSceneWindow::DestroyWhenDone) ||
                 ((sceneWindow->deletionPolicy() == MSceneWindow::DestroyWhenDismissed)
                  && sceneWindow->d_func()->dismissed)) {
