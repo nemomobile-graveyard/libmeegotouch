@@ -21,6 +21,8 @@ win32-msvc*:{
 macx:CONFIG -= app_bundle
 CONFIG += \
     qt \
+    
+CONFIG += console
 
 SOURCES += \
     mmoc.cpp \
