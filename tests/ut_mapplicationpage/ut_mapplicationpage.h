@@ -63,6 +63,7 @@ private slots:
 
     void testInitialValues();
     void testProperties();
+    void testApplicationWindow();
     void testCentralWidget();
     void testIsContentCreated();
     void testPageTitleChanged();

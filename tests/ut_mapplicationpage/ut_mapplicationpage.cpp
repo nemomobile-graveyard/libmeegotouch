@@ -31,6 +31,7 @@
 #include <MGridLayoutPolicy>
 #include <MPannableViewport>
 #include <MPositionIndicator>
+#include <MScene>
 
 #include "mondisplaychangeevent.h"
 
@@ -129,6 +130,7 @@ void Ut_MApplicationPage::testProperties()
     bool autoMarginsForComponents = true;
     MApplicationPageModel::PageEscapeMode escapeMode = MApplicationPageModel::EscapeManualBack;
     bool rememberPosition = false;
+    bool isProgressIndicatorVisible = true;
 
     m_subject->setTitle(title);
     QCOMPARE(m_subject->title(), title);
@@ -142,6 +144,25 @@ void Ut_MApplicationPage::testProperties()
     QCOMPARE(m_subject->escapeMode(), escapeMode);
     m_subject->setRememberPosition(rememberPosition);
     QCOMPARE(m_subject->rememberPosition(), rememberPosition);
+    m_subject->setProgressIndicatorVisible(isProgressIndicatorVisible);
+    QCOMPARE(m_subject->isProgressIndicatorVisible(), isProgressIndicatorVisible);
+}
+
+void Ut_MApplicationPage::testApplicationWindow()
+{
+    MApplicationWindow *appWin2 = new MApplicationWindow;
+
+    QCOMPARE(m_subject->applicationWindow(), (MApplicationWindow*) 0);
+    m_subject->appear();
+    QCOMPARE(m_subject->applicationWindow(), appWin);
+    m_subject->disappear();
+    QCOMPARE(m_subject->applicationWindow(), appWin);
+    m_subject->appear(appWin2);
+    QCOMPARE(m_subject->applicationWindow(), appWin2);
+    m_subject->disappear();
+
+    appWin2->scene()->removeItem(m_subject);
+    delete appWin2;
 }
 
 void Ut_MApplicationPage::testCentralWidget()
