@@ -61,6 +61,7 @@ SUBDIRS     =  \
      ut_mpopuplist \
      ut_mprogressindicator \
      ut_mprogressindicatorspinnerview \
+     ut_mprogressindicatorbarview \
      ut_mrichtextedit \
      ut_mscenemanager \
      ut_mseparator \

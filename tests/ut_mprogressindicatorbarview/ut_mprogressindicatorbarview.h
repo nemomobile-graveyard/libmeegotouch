@@ -17,37 +17,32 @@
 **
 ****************************************************************************/
 
-#ifndef PROGRESSBARPAGE_H
-#define PROGRESSBARPAGE_H
+#ifndef UT_MPROGRESSINDICATORBARVIEW_H
+#define UT_MPROGRESSINDICATORBARVIEW_H
 
-#include "templatepage.h"
+#include <QObject>
+#include <QtTest/QtTest>
 
-class MGridLayoutPolicy;
 class MProgressIndicator;
-class MButton;
-class MLabel;
-class QPropertyAnimation;
+class MProgressIndicatorBarView;
 
-class ProgressBarPage : public TemplatePage
+class Ut_MProgressIndicatorBarView : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 public:
-    ProgressBarPage();
-    virtual ~ProgressBarPage();
-    virtual QString timedemoTitle();
-    virtual void createContent();
-protected:
-    virtual void retranslateUi();
+
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+
+    void testSpinnerZeroRange();
+
 private:
-    MButton* button1;
-    QPropertyAnimation* bar1ValueAnimation;
-    MProgressIndicator *bar1;
-    MProgressIndicator *bar2;
-    MLabel *label1;
-    MLabel *label2;
-    int position;
-private Q_SLOTS:
-    void animateProgressBar1();
+    QImage captureImage(MProgressIndicator *progressIndicator);
+
+    MProgressIndicator *m_progressIndicator;
+    MProgressIndicatorBarView *m_subject;
 };
 
-#endif // PROGRESSBARPAGE_H
+#endif
+

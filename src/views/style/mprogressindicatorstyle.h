@@ -38,7 +38,7 @@ class M_VIEWS_EXPORT MProgressIndicatorStyle : public MWidgetStyle
         \property MProgressIndicatorStyle::progressBarBackground
         \brief  Background image of the progress bar.
     */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, progressBarBackground, ProgressBarBackground)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, progressBarBackground, ProgressBarBackground)
 
     /*!
         \property MProgressIndicatorStyle::speed
@@ -102,9 +102,8 @@ class M_VIEWS_EXPORT MProgressIndicatorStyle : public MWidgetStyle
 
     /*!
         \property MProgressIndicator::refreshRate
-        \brief Refresh rate of unknown duration progress bar (interval between frames in msec, e.g. 50).
+        \brief Refresh rate (fps) of unknown duration progress bar
     */
-
     M_STYLE_ATTRIBUTE(int, refreshRate, RefreshRate)
 };
 
