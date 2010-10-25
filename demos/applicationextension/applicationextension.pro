@@ -9,19 +9,11 @@ INCLUDEPATH += . \
     $$MSRCINCLUDE \
     $$MSRC
 QMAKE_LIBDIR += $$MLIB
-win32|macx {
-    macx {
-        QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework \
-            m
-    }
-    win32:LIBS += -lmeegotouchcore0
-}
-else:LIBS += \
-    -lmeegotouchcore \
-    -lmeegotouchviews \
-    -lmeegotouchsettings \
-    -lmeegotouchextensions \
+
+LIBS += $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews) \
+        $$mAddLibrary(meegotouchsettings) \
+        $$mAddLibrary(meegotouchextensions)
 
 TEMPLATE = app
 TARGET = applicationextensiondemo

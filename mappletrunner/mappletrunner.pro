@@ -12,11 +12,10 @@ TEMPLATE = app
 TARGET =
 DEPENDPATH += .
 
-LIBS += \
-    -lmeegotouchcore \
-    -lmeegotouchviews \
-    -lmeegotouchsettings \
-    -lmeegotouchextensions \
+LIBS += $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews) \
+        $$mAddLibrary(meegotouchsettings) \
+        $$mAddLibrary(meegotouchextensions)
 
 QT += core \
     network \

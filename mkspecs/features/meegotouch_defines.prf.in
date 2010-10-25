@@ -108,3 +108,20 @@ win32 {
     M_DBUS_INTERFACES_DIR = /usr/share/dbus-1/interfaces
     M_DBUS_SERVICES_DIR = $$M_INSTALL_DATA/dbus-1/services
 }
+
+defineReplace(mAddLibrary) {
+    LIBRARY_NAME = $$1
+    macx {
+        QMAKE_LFLAGS *= -F $$M_BUILD_TREE/lib
+        return (-framework $$LIBRARY_NAME)
+    } else {
+        win32 {
+            CONFIG(debug, debug|release) {
+                return ("-l"$${LIBRARY_NAME}d$${M_MAJOR_VERSION})
+            } else {
+                return ("-l"$${LIBRARY_NAME}$${M_MAJOR_VERSION})
+            }
+        }
+        return (-l$$LIBRARY_NAME)
+    }
+}

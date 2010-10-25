@@ -30,9 +30,9 @@ SOURCES    = \
     echowindow.cpp \
     main.cpp \
 
+LIBS += $$mAddLibrary(meegotouchcore)
 LIBS += \
-    -lmeegotouchcore \
-    -ltextprocessor \
+    -ltextprocessor
 
 target.path = $$M_INSTALL_BIN
 

@@ -6,4 +6,4 @@ TARGET = pt_mprogressindicator
 SOURCES += pt_mprogressindicator.cpp
 HEADERS += pt_mprogressindicator.h
 
-LIBS += -lmeegotouchviews
+LIBS += $$mAddLibrary(meegotouchviews)

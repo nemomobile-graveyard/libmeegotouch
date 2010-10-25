@@ -1,4 +1,8 @@
-include( ../common.pri )
+include(../common.pri)
+
+
+LIBS += $$mAddLibrary(meegotouchcore)
+
 
 TEMPLATE = app
 TARGET = helloworld

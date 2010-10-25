@@ -14,9 +14,9 @@ win32 {
 
 include( ../../mkspecs/features/meegotouch_mgen.prf )
 
-LIBS += -lmeegotouchsettings
-LIBS += -lmeegotouchviews
-LIBS += -lmeegotouchextensions
+LIBS += $$mAddLibrary(meegotouchsettings) \
+        $$mAddLibrary(meegotouchviews) \
+        $$mAddLibrary(meegotouchextensions)
 
 TEMPLATE = app
 TARGET = testwidget

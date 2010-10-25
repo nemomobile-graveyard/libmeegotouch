@@ -1,14 +1,8 @@
 include(../common_top.pri)
 
-win32|macx {
-    macx {
-        QMAKE_LFLAGS -= -F../../lib
-        LIBS -= -framework m
-    }
-    win32:LIBS -= -lmeegotouchcore0 -lmeegotouchviews0
-} else {
-    LIBS -= -lmeegotouchcore -lmeegotouchviews
-}
+
+LIBS += $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews)
 
 INCLUDEPATH += \
     $$MSRCDIR/extensions/applicationextension \

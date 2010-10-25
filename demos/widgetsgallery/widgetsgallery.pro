@@ -9,20 +9,11 @@ INCLUDEPATH += . \
     $$MSRC/corelib
 
 QMAKE_LIBDIR += $$MLIB
-win32|macx {
-    macx {
-        QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework meegotouchcore \
-                -framework meegotouchviews
-    }
-    win32:LIBS += -lmeegotouchcore0 \
-                  -lmeegotouchviews0
-}
-else:LIBS += \
-    -lmeegotouchcore \
-    -lmeegotouchviews \
-    -lmeegotouchsettings \
-    -lmeegotouchextensions \
+
+LIBS += $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews) \
+        $$mAddLibrary(meegotouchsettings) \
+        $$mAddLibrary(meegotouchextensions)
 
 TEMPLATE = app
 TARGET = widgetsgallery

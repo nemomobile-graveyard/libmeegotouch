@@ -1,5 +1,5 @@
 INCLUDEPATH += \
     $$MSRCDIR/settings/settingslanguage \
 
-LIBS += -lmeegotouchsettings
+LIBS += $$mAddLibrary(meegotouchsettings)
 

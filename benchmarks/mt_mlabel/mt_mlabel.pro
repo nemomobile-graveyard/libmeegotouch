@@ -7,4 +7,4 @@ SOURCES += mt_mlabel.cpp
 HEADERS += mt_mlabel.h
 CONFIG += release
 
-LIBS += -lmeegotouchviews
+LIBS += $$mAddLibrary(meegotouchviews)

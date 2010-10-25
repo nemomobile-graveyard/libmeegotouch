@@ -1,5 +1,6 @@
 include(../common_top.pri)
-LIBS -= -lmeegotouchcore -lmeegotouchviews
+LIBS -= $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews)
 QT -= gui
 
 RESOURCES = \

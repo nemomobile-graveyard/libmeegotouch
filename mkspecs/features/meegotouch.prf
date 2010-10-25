@@ -1,13 +1,10 @@
 include(meegotouch_common.prf)
 
-macx {
-    LIBS += \
-        -framework meegotouchcore
-} else {
+LIBS += $$mAddLibrary(meegotouchcore)
+!macx {
     !contains(DEFINES, BUILD_M) {
         LIBS += \
-	    -lmeegotouchcore \
-	    -lmeegotouchsettings \
-	    -lmeegotouchextensions
+	    $$mAddLibrary(meegotouchsettings) \
+	    $$mAddLibrary(meegotouchextensions)
     }
 }

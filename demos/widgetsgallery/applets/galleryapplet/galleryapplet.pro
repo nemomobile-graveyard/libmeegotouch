@@ -13,18 +13,9 @@ INCLUDEPATH += . \
     $$MSRC/mashup/appletinterface
 
 QMAKE_LIBDIR += \
-    $$MLIB \
+    $$MLIB
 
-win32|macx {
-	macx {
-	        QMAKE_LFLAGS += -F$$MLIB
-	        LIBS += -framework m
-	     }
-        win32:LIBS += -lmeegotouchcore0
-} else {
-    LIBS += -lmeegotouchcore
-}
-					    
+LIBS += $$mAddLibrary(meegotouchcore)
 
 HEADERS       = galleryapplet.h \
                 gallery.h \

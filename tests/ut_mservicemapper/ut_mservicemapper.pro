@@ -1,6 +1,7 @@
 include(../common_top.pri)
 
-LIBS -= -lmeegotouchcore -lmeegotouchviews
+LIBS -= $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews)
 SFWDIR = ../../mservicemapper
 INCLUDEPATH += $$SFWDIR
 DEPENDPATH += $$INCLUDEPATH

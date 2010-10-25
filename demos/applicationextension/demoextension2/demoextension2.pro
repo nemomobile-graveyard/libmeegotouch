@@ -18,15 +18,7 @@ INCLUDEPATH += $$MSRCINCLUDE ../
 HEADERS = demoextension.h
 SOURCES = demoextension.cpp
 
-win32|macx {
-    macx {
-        QMAKE_LFLAGS += -F../../../lib
-        LIBS += -framework \
-            m
-    }
-    win32:LIBS += -lmeegotouchcore0
-}
-else:LIBS += -lmeegotouchcore
+LIBS += $$mAddLibrary(meegotouchcore)
 
 TARGET = $$qtLibraryTarget(applicationextensiondemo-demoextension2)
 DESTDIR = ../../../lib

@@ -21,7 +21,8 @@ contains(DEFINES, HAVE_DBUS) {
     include(style/style.pri)
 }
 
-LIBS += -lmeegotouchviews -lmeegotouchsettings -lmeegotouchcore
+
+LIBS += $$mAddLibrary(meegotouchcore) $$mAddLibrary(meegotouchsettings) $$mAddLibrary(meegotouchviews)
 
 SOURCES += mextensionwatcher.cpp \
            mextensionslibrary.cpp

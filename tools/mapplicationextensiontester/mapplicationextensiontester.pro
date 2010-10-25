@@ -6,11 +6,10 @@ DEPENDPATH += $$INCLUDEPATH
 TEMPLATE = app
 TARGET = mapplicationextensiontester
 
-LIBS += \
-    -lmeegotouchcore \
-    -lmeegotouchviews \
-    -lmeegotouchsettings \
-    -lmeegotouchextensions \
+LIBS += $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews) \
+        $$mAddLibrary(meegotouchsettings) \
+        $$mAddLibrary(meegotouchextensions)
 
 # Input
 HEADERS += mapplicationextensiontester.h

@@ -1,6 +1,8 @@
+include( ../common.pri )
+
 INCLUDEPATH += ../../../src/include
 QMAKE_LIBDIR += ../../../lib/
-LIBS += -lmeegotouchcore
+LIBS += $$mAddLibrary(meegotouchcore)
 
 DEPENDPATH += .
 INCLUDEPATH += .

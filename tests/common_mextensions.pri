@@ -8,4 +8,4 @@ INCLUDEPATH += \
     $$MSRCDIR/extensions/mashup/mashup \
     $$MSRCDIR/extensions/style \
 
-LIBS += -lmeegotouchextensions
+LIBS += $$mAddLibrary(meegotouchextensions)

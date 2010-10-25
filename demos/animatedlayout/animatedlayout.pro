@@ -13,12 +13,7 @@ INCLUDEPATH += \
 QMAKE_LIBDIR += \
     $$MLIB
 
-macx {
-    QMAKE_LFLAGS += -F../../lib
-    LIBS += -framework meegotouchcore
-} else {
-    LIBS += -lmeegotouchcore
-}
+LIBS += $$mAddLibrary(meegotouchcore)
 
 TEMPLATE = app
 TARGET = animatedlayout

@@ -1,8 +1,8 @@
 include( ../common.pri )
 
-LIBS += -lmeegotouchsettings
-LIBS += -lmeegotouchviews
-LIBS += -lmeegotouchextensions
+LIBS += $$mAddLibrary(meegotouchsettings) \
+        $$mAddLibrary(meegotouchviews) \
+        $$mAddLibrary(meegotouchextensions)
 
 TEMPLATE = app
 TARGET   = lifecycle

@@ -1,8 +1,5 @@
 include(../common_top.pri)
 
-#LIBS -= -lmeegotouchcore
-#LIBS -= -lmeegotouchviews
-
 TARGET = ut_mdesktopentry
 
 HEADERS += ut_mdesktopentry.h \

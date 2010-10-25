@@ -21,14 +21,7 @@ include(animations/animations.pri)
 include(style/style.pri)
 include(video/video.pri)
 
-win32|macx {
-    macx {
-        QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework meegotouchcore
-    }
-    win32:LIBS += -lmeegotouchcore0
-}
-else:LIBS += -lmeegotouchcore
+LIBS += $$mAddLibrary(meegotouchcore)
 
 SOURCES += mviewslibrary.cpp
 

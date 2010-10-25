@@ -28,15 +28,8 @@ DEFINES += UNIT_TEST
 target.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests
 INSTALLS += target
 
-win32|macx {
-    macx {
-        QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework meegotouchcore -framework meegotouchviews
-    }
-    win32:LIBS += -lmeegotouchcore0 -lmeegotouchviews0
-} else {
-    LIBS += -lmeegotouchcore -lmeegotouchviews
-}
+LIBS += $$mAddLibrary(meegotouchcore) \
+        $$mAddLibrary(meegotouchviews)
 
 support_files.files =
 support_files.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests
