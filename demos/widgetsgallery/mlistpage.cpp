@@ -72,6 +72,11 @@ MListPage::MListPage()
     currentSortingIndex(0),
     currentListModeIndex(0)
 {
+    liveFilteringTextChangeTimer.setInterval(500);
+    liveFilteringTextChangeTimer.setSingleShot(true);
+    liveFilteringTextChangeTimer.stop();
+
+    connect(&liveFilteringTextChangeTimer, SIGNAL(timeout()), this, SLOT(liveFilteringTextChangeTimeout()));
 }
 
 MListPage::~MListPage()
@@ -567,14 +572,32 @@ void MListPage::liveFilteringTextChanged()
     else if( !list->filtering()->editor()->text().isEmpty() && !list->filtering()->editor()->isOnDisplay())
         showTextEdit(true);
 
-    // Load images for items which match filtering
+    // Notice that list view has not been updated yet to match the new filtering.
+    // First and last visible item indexes are not up-to-date. This is why list page
+    // starts a timer for loading pictures
     imageLoader->stopLoadingPictures();
-    loadPicturesInVisibleItems();
+    resetLiveFilteringTextChangeTimer();
 
     // Highlighting matching live filtering text can be done by
-    // passing the text to cell creator and updating visible items
+    // passing the text to cell creator
     cellCreator->highlightByText(list->filtering()->editor()->text());
-    static_cast<PhoneBookModel*>(model)->updateData(list->firstVisibleItem(), list->lastVisibleItem());
+}
+
+void MListPage::resetLiveFilteringTextChangeTimer()
+{
+    if(liveFilteringTextChangeTimer.isActive()) {
+        liveFilteringTextChangeTimer.stop();
+    }
+    liveFilteringTextChangeTimer.start();
+}
+
+void MListPage::liveFilteringTextChangeTimeout()
+{
+    static_cast<PhoneBookModel*>(model)->updateData(
+        list->filtering()->proxy()->mapToSource(list->firstVisibleItem()),
+        list->filtering()->proxy()->mapToSource(list->lastVisibleItem()) );
+
+    loadPicturesInVisibleItems();
 }
 
 void MListPage::filteringVKB()
@@ -694,4 +717,3 @@ void MListPage::retranslateUi()
     // at the moment. If more qtTrId() calls are needed they should
     // be added here.
 }
-

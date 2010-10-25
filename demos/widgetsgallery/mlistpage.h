@@ -90,6 +90,8 @@ public slots:
     void editListItem();
 
     void liveFilteringTextChanged();
+    void resetLiveFilteringTextChangeTimer();
+    void liveFilteringTextChangeTimeout();
     void filteringVKB();
     void hideEmptyTextEdit();
 
@@ -121,7 +123,7 @@ private:
     MListContentItemCreator *cellCreator;
 
     QModelIndex longTappedIndex;
-
+    QTimer liveFilteringTextChangeTimer;
     int currentSortingIndex;
     int currentListModeIndex;
 };
