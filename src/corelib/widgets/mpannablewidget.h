@@ -215,8 +215,20 @@ public:
      * that direction is either PanningAlwaysOn or PanningAsNeeded.
      *
      * By default, the panning is enabled in Qt::Vertical direction.
+     *
+     * \deprecated Please use const version instead. Since 0.20.50
      */
     Qt::Orientations panDirection();
+
+    /*!
+     * \brief Returns the enabled panning directions.
+     *
+     * A panning direction is enabled if the policy of panning for
+     * that direction is either PanningAlwaysOn or PanningAsNeeded.
+     *
+     * By default, the panning is enabled in Qt::Vertical direction.
+     */
+    Qt::Orientations panDirection() const;
 
     /*!
      * \brief Deprecated since 0.20
