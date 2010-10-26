@@ -191,7 +191,7 @@ void MPannableViewportPrivate::_q_pannedWidgetHeightOutOfViewport()
     if (q->panDirection().testFlag(Qt::Vertical)) {
         qreal updatedPosition = pannedWidget->size().height() - q->size().height();
         if(updatedPosition < q->position().y())
-            q->setPosition(QPointF(q->position().x(), qMax(0.0, updatedPosition)));
+            q->setPosition(QPointF(q->position().x(), qMax((qreal)0, updatedPosition)));
     }
 }
 
@@ -203,7 +203,7 @@ void MPannableViewportPrivate::_q_pannedWidgetWidthOutOfViewport()
     if (q->panDirection().testFlag(Qt::Horizontal)) {
         qreal updatedPosition = pannedWidget->size().width() - q->size().width();
         if(updatedPosition < q->position().x())
-            q->setPosition(QPointF(qMax(0.0, updatedPosition), q->position().y()));
+            q->setPosition(QPointF(qMax((qreal)0, updatedPosition), q->position().y()));
     }
 }
 
