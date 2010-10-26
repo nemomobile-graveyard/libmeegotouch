@@ -18,7 +18,6 @@
 ****************************************************************************/
 
 #include "mondisplaychangeevent.h"
-#include <QtDBus/QtDBus>
 
 #include <MDebug>
 #include <mscenewindowevent_p.h>
@@ -47,10 +46,6 @@
 #include <QEvent>
 #include <QRectF>
 #include <QActionEvent>
-
-#ifdef HAVE_DBUS
-# include <QDBusConnection>
-#endif
 
 #ifdef Q_WS_X11
 # include <QX11Info>
