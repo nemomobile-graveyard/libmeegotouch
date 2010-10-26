@@ -55,7 +55,9 @@ void MProgressIndicatorBarViewPrivate::drawBar(QPainter* painter) const
     bool reverse = qApp->isRightToLeft();
     QRectF viewRect(q->rect());
 
-    if (q->style()->progressBarBackground() && q->style()->progressBarBackground()->pixmap() && !q->style()->progressBarBackground()->pixmap()->isNull())
+    if (q->style()->progressBarBackground() &&
+        q->style()->progressBarBackground()->pixmap() &&
+        !q->style()->progressBarBackground()->pixmap()->isNull())
         q->style()->progressBarBackground()->draw(q->rect().toRect(), painter);
 
     if (q->model()->unknownDuration()) {
@@ -94,7 +96,8 @@ void MProgressIndicatorBarViewPrivate::drawBar(QPainter* painter) const
     } else {
         qreal offset = 0;
         if (q->model()->maximum() != q->model()->minimum())
-            offset = static_cast<qreal>(q->model()->value() - q->model()->minimum()) / static_cast<qreal>(q->model()->maximum() - q->model()->minimum());
+            offset = static_cast<qreal>(q->model()->value() - q->model()->minimum()) /
+                     static_cast<qreal>(q->model()->maximum() - q->model()->minimum());
         if (offset > 0) {
             if (!reverse)
                 viewRect.setWidth(offset * viewRect.width());
@@ -217,14 +220,20 @@ void MProgressIndicatorBarViewPrivate::createBarImages()
     if (barImagesCreated())
         return;
 
-    if (!q->style()->progressBarMask() || !q->style()->progressBarMask()->pixmap() || q->style()->progressBarMask()->pixmap()->isNull())
+    if (!q->style()->progressBarMask() ||
+        !q->style()->progressBarMask()->pixmap() ||
+        q->style()->progressBarMask()->pixmap()->isNull())
         return;
 
     if (q->model()->unknownDuration()) {
-        if (!q->style()->unknownBarTexture() || !q->style()->unknownBarTexture()->pixmap() || q->style()->unknownBarTexture()->pixmap()->isNull())
+        if (!q->style()->unknownBarTexture() ||
+            !q->style()->unknownBarTexture()->pixmap() ||
+            q->style()->unknownBarTexture()->pixmap()->isNull())
             return;
     } else {
-        if (!q->style()->knownBarTexture() || !q->style()->knownBarTexture()->pixmap() || q->style()->knownBarTexture()->pixmap()->isNull())
+        if (!q->style()->knownBarTexture() ||
+            !q->style()->knownBarTexture()->pixmap() ||
+            q->style()->knownBarTexture()->pixmap()->isNull())
             return;
     }
 
@@ -255,9 +264,12 @@ void MProgressIndicatorBarViewPrivate::createBarImages()
 
     QImage canvas;
     if (q->model()->unknownDuration())
-        canvas = QImage(viewRect.width() + q->style()->unknownBarTexture()->pixmap()->width(), viewRect.height(), QImage::Format_ARGB32);
+        canvas = QImage(viewRect.width() + q->style()->unknownBarTexture()->pixmap()->width(),
+                    viewRect.height(),
+                    QImage::Format_ARGB32);
     else
-        canvas = QImage(viewRect.width() + q->style()->knownBarTexture()->pixmap()->width(), viewRect.height(), QImage::Format_ARGB32);
+        canvas = QImage(viewRect.width() + q->style()->knownBarTexture()->pixmap()->width(),
+                    viewRect.height(), QImage::Format_ARGB32);
 
     canvas.fill(Qt::transparent);
 
@@ -274,27 +286,39 @@ void MProgressIndicatorBarViewPrivate::createBarImages()
 
     // then cut out left end
     if (painter.begin(&leftEndMask)) {
-        painter.drawImage(QRect(QPoint(0, 0), leftEndMask.size()), canvas, QRect(QPoint(0, 0), QSize(left, canvas.rect().height())));
+        painter.drawImage(QRect(QPoint(0, 0),
+                            leftEndMask.size()),
+                            canvas,
+                            QRect(QPoint(0, 0),
+                            QSize(left, canvas.rect().height())));
         painter.end();
     }
 
     // and cut out right end
     if (painter.begin(&rightEndMask)) {
-        painter.drawImage(QRect(QPoint(0, 0), rightEndMask.size()), canvas, QRect(QPoint(canvas.rect().width()-right, 0), QSize(right, canvas.rect().height())));
+        painter.drawImage(QRect(QPoint(0, 0),
+                            rightEndMask.size()),
+                            canvas,
+                            QRect(QPoint(canvas.rect().width()-right, 0),
+                            QSize(right, canvas.rect().height())));
         painter.end();
     }
 
     if (q->model()->unknownDuration())
-        barMask = QImage(QSize(q->style()->unknownBarTexture()->pixmap()->width(), canvas.rect().height()), QImage::Format_ARGB32);
+        barMask = QImage(QSize(q->style()->unknownBarTexture()->pixmap()->width(),
+                        canvas.rect().height()),
+                        QImage::Format_ARGB32);
     else
-        barMask = QImage(QSize(q->style()->knownBarTexture()->pixmap()->width(), canvas.rect().height()), QImage::Format_ARGB32);
+        barMask = QImage(QSize(q->style()->knownBarTexture()->pixmap()->width(),
+                        canvas.rect().height()),
+                        QImage::Format_ARGB32);
 
     barMask.fill(Qt::transparent);
 
     // alpha blending is more correct in the middle
     QPoint centerTop(canvas.rect().center().x() - barMask.size().width()/2, canvas.rect().y());
     if (painter.begin(&barMask)) {
-        painter.drawImage(QRect(QPoint(0,0) ,barMask.size()), canvas, QRect(centerTop, barMask.size()));
+        painter.drawImage(QRect(QPoint(0, 0), barMask.size()), canvas, QRect(centerTop, barMask.size()));
         painter.end();
     }
 
@@ -347,8 +371,9 @@ void MProgressIndicatorBarViewPrivate::createBarImages()
     }
 }
 
- // creates a cache of animationCacheSize pixmaps to be drawn by drawContents in case width of unknown progress bar is 100%
- // cached images move into the scene from the left, thus single frames have width of bar + width of 1 tile
+ // creates a cache of animationCacheSize pixmaps to be drawn by drawContents
+ // in case width of unknown progress bar is 100% cached images move into the
+ // scene from the left, thus single frames have width of bar + width of 1 tile
  // animation moves x times per tile
  //
  //   tile + bar
@@ -362,7 +387,9 @@ void MProgressIndicatorBarViewPrivate::createAnimationCache()
     bool reverse = qApp->isRightToLeft();
     QRect viewRect = q->rect().toRect();
 
-    if (!q->style()->progressBarBackground() || !q->style()->progressBarBackground()->pixmap() || q->style()->progressBarBackground()->pixmap()->isNull())
+    if (!q->style()->progressBarBackground() ||
+        !q->style()->progressBarBackground()->pixmap() ||
+        q->style()->progressBarBackground()->pixmap()->isNull())
        return;
 
     if (barBodyImage.isNull())
@@ -418,7 +445,9 @@ void MProgressIndicatorBarViewPrivate::drawComposedRectangle(QPainter* painter, 
 
     if (drawnRect.width() >= 0) {
         painter->drawImage(drawnRect, barBodyImage, QRectF(QPointF(0, 0), drawnRect.size()));
-        painter->drawImage(QRectF(QPointF(drawnRect.topLeft().x() - leftEndImage.width(), 0), leftEndImage.size()), leftEndImage);
+        painter->drawImage(QRectF(QPointF(drawnRect.topLeft().x() - leftEndImage.width(), 0),
+                            leftEndImage.size()),
+                            leftEndImage);
         painter->drawImage(QRectF(drawnRect.topRight(), rightEndImage.size()), rightEndImage);
     }
 }
@@ -431,12 +460,18 @@ void MProgressIndicatorBarViewPrivate::drawTexture(QPainter* painter, const QRec
        if (q->style()->unknownBarTextureTiled())
            painter->drawTiledPixmap(rect, *q->style()->unknownBarTexture()->pixmap());
        else
-           painter->drawPixmap(rect, *q->style()->unknownBarTexture()->pixmap(), QRect(QPoint(0,0), q->style()->unknownBarTexture()->pixmap()->size()));
+           painter->drawPixmap(rect,
+                                *q->style()->unknownBarTexture()->pixmap(),
+                                QRect(QPoint(0,0),
+                                q->style()->unknownBarTexture()->pixmap()->size()));
     } else {
        if (q->style()->knownBarTextureTiled())
           painter->drawTiledPixmap(rect, *q->style()->knownBarTexture()->pixmap());
        else
-          painter->drawPixmap(rect, *q->style()->knownBarTexture()->pixmap(), QRect(QPoint(0,0), q->style()->knownBarTexture()->pixmap()->size()));
+          painter->drawPixmap(rect,
+                                *q->style()->knownBarTexture()->pixmap(),
+                                QRect(QPoint(0,0),
+                                q->style()->knownBarTexture()->pixmap()->size()));
     }
 }
 
