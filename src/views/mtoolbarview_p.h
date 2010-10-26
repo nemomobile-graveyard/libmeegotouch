@@ -81,6 +81,7 @@ protected:
     void addActionsFromLeftOvers();
     void updateStyling(MButton *button) const;
     virtual void updateWidgetAlignment();
+    void updateEmptinessProperty();
 
 protected:
     MToolBarView *q_ptr;

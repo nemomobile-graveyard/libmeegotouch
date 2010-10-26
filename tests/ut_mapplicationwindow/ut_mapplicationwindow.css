@@ -12,3 +12,23 @@ MApplicationWindowStyle.Portrait {
     floatable-tool-bar: false;
     floatable-tab-bar: true;
 }
+
+MNavigationBarStyle {
+    has-title: false;
+    has-close-button: false;
+}
+
+MNavigationBarStyle#closebtn {
+    has-title: false;
+    has-close-button: true;
+}
+
+MNavigationBarStyle#title {
+    has-title: true;
+    has-close-button: false;
+}
+
+MNavigationBarStyle#title_closebtn {
+    has-title: true;
+    has-close-button: true;
+}
