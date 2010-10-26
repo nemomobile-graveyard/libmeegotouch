@@ -1268,9 +1268,20 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
             setSceneWindowState(window, MSceneWindow::Appearing);
             if (!window->d_func()->appearanceAnimation)
                 createAppearanceAnimationForSceneWindow(window);
-            q->connect(window->d_func()->appearanceAnimation, SIGNAL(finished()),
-                    SLOT(_q_onSceneWindowAppearanceAnimationFinished()));
             window->d_func()->appearanceAnimation->start();
+            switch(window->windowType()) {
+                case MSceneWindow::PopupList:
+                case MSceneWindow::MessageBox:
+                case MSceneWindow::Dialog:
+                case MSceneWindow::ObjectMenu:
+                    freezeUIForAnimationDuration(window->d_func()->appearanceAnimation);
+                    // Fallthrough is intentional and freezeUIForAnimationDuration must be called
+                    // before following connect since order of slot execution is crutial here.
+                default:
+                    q->connect(window->d_func()->appearanceAnimation, SIGNAL(finished()),
+                               SLOT(_q_onSceneWindowAppearanceAnimationFinished()));
+            }
+
         } else {
             setSceneWindowState(window, MSceneWindow::Appeared);
             if (window->windowType() == MSceneWindow::StatusBar) {
