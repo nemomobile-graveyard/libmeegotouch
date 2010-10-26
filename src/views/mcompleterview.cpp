@@ -242,10 +242,12 @@ void MCompleterViewPrivate::createContents()
         //set button's visibility and label
         int total = q->model()->matchedModel()->rowCount();
         if (total > 1) {
+            // Workaround for NB#177781: MButton has different alignments for rich text and normal text in its label.
+            // Both completionLabel and completionsButton use rich text label to get same alignment
             if (total <= DefaultMaximumHits)
-                completionsButton->setText(QString("%1").arg(total));
+                completionsButton->setText(QString("<b></b>%1").arg(total));
             else
-                completionsButton->setText(QString(">%1").arg(DefaultMaximumHits));
+                completionsButton->setText(QString("<b></b>&gt;%1").arg(DefaultMaximumHits));
             completionsButton->setFocusProxy(controller->widget());
             completionsButton->setVisible(true);
             layout->addItem(completionsButton);
