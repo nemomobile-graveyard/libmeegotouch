@@ -8,6 +8,6 @@ MPixmapHandle::MPixmapHandle() :
 
 bool MPixmapHandle::isValid() const
 {
-    return (!size.isEmpty() && eglHandle && !shmHandle.isEmpty()) ^ reinterpret_cast<unsigned long>(xHandle);
+    return (!size.isEmpty() && eglHandle && !shmHandle.isEmpty()) ^ (unsigned long)xHandle;
 }
 
