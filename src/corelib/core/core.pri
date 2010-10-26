@@ -20,7 +20,9 @@ PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mgconfitem.h \
     $$CORE_SRC_DIR/mtimestamp.h \
     $$CORE_SRC_DIR/minputmethodstate.h \
-    $$CORE_SRC_DIR/minputwidgetrelocator.h \
+    $$CORE_SRC_DIR/mabstractscroller.h \
+    $$CORE_SRC_DIR/mscenewindowscroller.h \
+    $$CORE_SRC_DIR/mpannableviewportscroller.h \
     $$CORE_SRC_DIR/mdebug.h \
     $$CORE_SRC_DIR/mdataaccess.h \
     $$CORE_SRC_DIR/mdatastore.h \
@@ -31,6 +33,8 @@ PRIVATE_HEADERS += \
     $$CORE_SRC_DIR/massembly_p.h \
     $$CORE_SRC_DIR/mdesktopentry_p.h \
     $$CORE_SRC_DIR/minputmethodstate_p.h \
+    $$CORE_SRC_DIR/minputwidgetrelocator.h \
+    $$CORE_SRC_DIR/mscrollchain.h \
     $$CORE_SRC_DIR/mcpumonitor.h \
     $$CORE_SRC_DIR/mfiledatastore_p.h \
     $$CORE_SRC_DIR/msyslogclient.h \
@@ -65,6 +69,10 @@ SOURCES += \
     $$CORE_SRC_DIR/mtimestamp.cpp \
     $$CORE_SRC_DIR/minputmethodstate.cpp \
     $$CORE_SRC_DIR/minputwidgetrelocator.cpp \
+    $$CORE_SRC_DIR/mscrollchain.cpp \
+    $$CORE_SRC_DIR/mabstractscroller.cpp \
+    $$CORE_SRC_DIR/mscenewindowscroller.cpp \
+    $$CORE_SRC_DIR/mpannableviewportscroller.cpp \
     $$CORE_SRC_DIR/mfiledatastore.cpp \
     $$CORE_SRC_DIR/mnamespace.cpp \
     $$CORE_SRC_DIR/msyslogclient.cpp \

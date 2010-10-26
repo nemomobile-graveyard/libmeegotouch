@@ -33,6 +33,7 @@
 #include "morientationchangeevent.h"
 #include "mscenewindow.h"
 #include "mscenewindow_p.h"
+#include "mscenewindowscroller.h"
 #include "mdeviceprofile.h"
 #include "mdialog.h"
 #include "mscene.h"
@@ -48,8 +49,10 @@
 #include "mapplicationwindow.h"
 #include "mapplicationwindow_p.h"
 #include "mpannableviewport.h"
+#include "mpannableviewportscroller.h"
 #include "mtextedit.h"
 
+#include "mscrollchain.h"
 #include "minputwidgetrelocator.h"
 #include "minputmethodstate.h"
 
@@ -137,15 +140,7 @@ void MSceneManagerPrivate::init(MScene *scene)
     eventEater->setGeometry(QRectF(QPointF(0.0, 0.0), q->visibleSceneSize(M::Landscape)));
     createOrientationAnimation();
 
-    inputWidgetRelocator = QPointer<MInputWidgetRelocator>(new MInputWidgetRelocator(scene, rootElement, orientation(newAngle)));
-
-    // Connect signals for scene window displacement.
-    q->connect(inputWidgetRelocator, SIGNAL(sceneWindowDislocationRequest(MSceneWindow *, QPointF)),
-               q, SLOT(_q_dislocateSceneWindow(MSceneWindow *, QPointF)),
-               Qt::DirectConnection);
-    q->connect(inputWidgetRelocator, SIGNAL(sceneWindowUndoDislocationRequest(MSceneWindow *)),
-               q, SLOT(_q_undoSceneWindowDislocation(MSceneWindow *)),
-               Qt::DirectConnection);
+    initRelocator();
 
     pageSwitchAnimation = qobject_cast<MPageSwitchAnimation*>(MTheme::animation(style()->pageSwitchAnimation()));
     q->connect(pageSwitchAnimation, SIGNAL(finished()),
@@ -192,6 +187,28 @@ void MSceneManagerPrivate::createOrientationAnimation()
             SLOT(_q_applySceneWindowTransitionsQueuedDueToOrientationAnimation()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_updateOnDisplayVisibility()));
+}
+
+void MSceneManagerPrivate::initRelocator()
+{
+    Q_Q(MSceneManager);
+
+    inputWidgetRelocator = QPointer<MInputWidgetRelocator>(
+        new MInputWidgetRelocator(scene, rootElement, orientation(newAngle)));
+
+    // Register scene window scroller.
+    QSharedPointer<MSceneWindowScroller> sceneWindowScroller(new MSceneWindowScroller);
+    MScrollChain::registerScroller<MSceneWindow>(sceneWindowScroller);
+
+    // Connect signals for scene window displacement.
+    q->connect(sceneWindowScroller.data(), SIGNAL(sceneWindowDislocationRequest(MSceneWindow *, QPointF)),
+               q, SLOT(_q_dislocateSceneWindow(MSceneWindow *, QPointF)), Qt::DirectConnection);
+    q->connect(sceneWindowScroller.data(), SIGNAL(sceneWindowUndoDislocationRequest(MSceneWindow *)),
+               q, SLOT(_q_undoSceneWindowDislocation(MSceneWindow *)), Qt::DirectConnection);
+
+    // Register pannable viewport scroller.
+    QSharedPointer<MPannableViewportScroller> pannableViewportScroller(new MPannableViewportScroller);
+    MScrollChain::registerScroller<MPannableViewport>(pannableViewportScroller);
 }
 
 MSceneManagerPrivate::~MSceneManagerPrivate()
@@ -492,6 +509,10 @@ void MSceneManagerPrivate::_q_onPageSwitchAnimationFinished()
 void MSceneManagerPrivate::_q_dislocateSceneWindow(MSceneWindow *sceneWindow,
                                                    const QPointF &displacement)
 {
+    if (!windows.contains(sceneWindow)) {
+        return;
+    }
+
     if (sceneWindow->windowType() == MSceneWindow::LayerEffect) {
         // Not supported.
         return;
@@ -519,6 +540,10 @@ void MSceneManagerPrivate::_q_dislocateSceneWindow(MSceneWindow *sceneWindow,
 
 void MSceneManagerPrivate::_q_undoSceneWindowDislocation(MSceneWindow *sceneWindow)
 {
+    if (!windows.contains(sceneWindow)) {
+        return;
+    }
+
     // let's use an alias
     QGraphicsItem *&displacementItem = sceneWindow->d_func()->displacementItem;
 

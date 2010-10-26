@@ -40,6 +40,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
 
+
 MSceneWindowPrivate::MSceneWindowPrivate()
         : windowType(MSceneWindow::PlainSceneWindow),
         policy(MSceneWindow::KeepWhenDone),

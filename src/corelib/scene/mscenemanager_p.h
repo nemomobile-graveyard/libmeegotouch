@@ -149,6 +149,7 @@ public:
                                   MPageSwitchAnimation::TransitionDirection direction);
 
     void createOrientationAnimation();
+    void initRelocator();
 
     void createAppearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
     void createDisappearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);

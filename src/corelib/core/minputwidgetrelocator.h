@@ -29,6 +29,7 @@
 class MPannableViewport;
 class MRelocatorStyleContainer;
 class MSceneManager;
+class MScrollChain;
 class QGraphicsItem;
 class QGraphicsScene;
 class QGraphicsWidget;
@@ -41,6 +42,11 @@ Q_DECLARE_FLAGS(PostponeRelocationFlags, PostponeRelocationFlag)
 
 //! \internal
 
+/*!
+ * \brief Relocates focused input widget to a visible place in scene, for editing and viewing.
+ *
+ * There can be only one instance of relocator per scene.
+ */
 class MInputWidgetRelocator : public QObject
 {
     Q_OBJECT
@@ -95,60 +101,15 @@ public slots:
     void sceneWindowStateHasChanged(MSceneWindow *, MSceneWindow::SceneWindowState newState,
                                                     MSceneWindow::SceneWindowState oldState);
 
-signals:
-    //! This signal requests immediate displacement of the given scene window. The signal should be
-    //! connected to using Qt::DirectConnection, or similar, since after emitting it is assumed the
-    //! window has been moved.
-    void sceneWindowDislocationRequest(MSceneWindow *sceneWindow, const QPointF &displacement);
-
-    //! This signal requests undoing previous displacement of a given scene window.
-    void sceneWindowUndoDislocationRequest(MSceneWindow *sceneWindow);
-
 private slots:
     void handleKeyboardStateChange();
 
 private:
-    //! Supported relocation operation types.
-    enum RelocationOpType {
-        RelocationByMovingWindow,
-        RelocationByPanning
-    };
-
-    //! Relocation operation describes relocation made by one delegate widget.
-    struct RelocationOp {
-        RelocationOp(RelocationOpType type, QGraphicsWidget *delegate);
-
-        RelocationOpType type;
-        QGraphicsWidget *delegate;
-
-        //! This and further operations should not be carried out if input widget is already visible.
-        bool stopIfVisible;
-    };
-
     const MRelocatorStyleContainer &style() const;
 
     //! \brief Gets area of the scene where the input widget can in theory be moved to.
     //! The rect is returned in rotated scene coordinates.
     const QRect &exposedContentRect();
-
-    //! \brief Widgets optimal rectangle after relocating, in rotated scene coordinates.
-    void relocationRectangles(const QGraphicsWidget &inputWidget, const QRect &microFocusRect,
-                              QRect &targetRect, QRect &localRect);
-
-    void ensureTopmostViewportIsPannable();
-    void ensureInputWidgetVisible(const QGraphicsWidget &inputWidget);
-
-    void buildRelocationOpList(const QGraphicsWidget &inputWidget, QList<RelocationOp> &ops,
-                               bool widgetInitiallyVisible);
-
-    void relocate(const QGraphicsWidget &inputWidget,
-                  const QRect &targetRect, const QRect &localRect);
-    void relocateByPannableViewport(MPannableViewport *viewport, const QRect &targetRect,
-                                    const QPoint &originPoint);
-    void relocateBySceneWindow(MSceneWindow *sceneWindow, const QRect &targetRect,
-                               const QPoint &originPoint);
-
-    void restoreRelocations();
 
     bool needsMoreScreenArea() const;
     void updateScreenArea();
@@ -157,17 +118,23 @@ private:
 
     QGraphicsWidget *focusedWidget() const;
 
-    //! Micro focus rectangle of the input widget in rotated scene coordinates.
-    QRect microFocusRect() const;
+    //! Micro focus rectangle of the input widget in its local coordinates.
+    QRect microFocusRect(const QGraphicsWidget *inputWidget) const;
 
     //! Scene rectangle in rotated scene coordinates.
     QRect visibleSceneRect() const;
 
-    void moveRectInsideArea(const QRect &area, QRect &rect) const;
+    //! Returns scene window ancestor of \a child if it contains a toolbar. Otherwise returns NULL.
+    const MSceneWindow *toolbarParentSceneWindow(const QGraphicsWidget *child) const;
 
-    bool needsRelocating(const QGraphicsWidget &inputWidget, const QRect &localRect);
+    bool needsRelocation(const QGraphicsWidget *inputWidget,
+                         const QRect &localRect);
 
-    bool isObscured(const QGraphicsWidget &widget, const QRect &localRect);
+    bool isObscured(const QGraphicsWidget *widget, const QRect &localRect) const;
+
+    void centerContextWidgetToAnchorPoint(MScrollChain *newChain,
+                                          const QPoint &anchorPoint,
+                                          const QGraphicsWidget *inputWidget);
 
     void clearPostponeRelocationFlag(PostponeRelocationFlag flag);
 
@@ -179,12 +146,8 @@ private:
 
     QRect inputPanelRect;
     QRect cachedExposedRect;
-    MPannableViewport *cachedTopmostPannableViewport;
 
-    // Utilizing QObject's QPointer-awareness because these items can be destroyed before
-    // we try restoring them, i.e. relying on ~QObject() to set these to null.
-    QList< QPointer<MPannableViewport> > pannablesToRestore;
-    QList< QPointer<MSceneWindow> > sceneWindowsToRestore;
+    MScrollChain *oldChain;
 
     bool relocating;
     bool updatePending;

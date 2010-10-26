@@ -186,7 +186,7 @@ private:
     // Test unit is defined as a friend of production code to access private members
     friend class Ut_MPannableViewport;
 #endif
-    friend class MInputWidgetRelocator;
+    friend class MPannableViewportScroller;
 };
 
 #endif

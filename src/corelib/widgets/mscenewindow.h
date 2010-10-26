@@ -412,6 +412,7 @@ private:
     Q_DECLARE_PRIVATE(MSceneWindow)
 
     friend class MSceneWindowView;
+    friend class MInputWidgetRelocator; // Needed for alignment attribute.
     friend class MSceneManagerPrivate;
     friend class MApplicationWindowPrivate;
 

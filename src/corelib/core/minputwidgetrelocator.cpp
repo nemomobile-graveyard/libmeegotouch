@@ -1,5 +1,23 @@
-#include "minputwidgetrelocator.h"
+/***************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (directui@nokia.com)
+**
+** This file is part of libmeegotouch.
+**
+** If you have questions regarding the use of this file, please contact
+** Nokia at directui@nokia.com.
+**
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation
+** and appearing in the file LICENSE.LGPL included in the packaging
+** of this file.
+**
+****************************************************************************/
 
+#include "minputwidgetrelocator.h"
 #include "mapplication.h"
 #include "mapplicationpage.h"
 #include "mapplicationwindow.h"
@@ -7,18 +25,18 @@
 #include "mdeviceprofile.h"
 #include "minputmethodstate.h"
 #include "mkeyboardstatetracker.h"
-#include "mpannableviewport.h"
-#include "mpannableviewport_p.h"
 #include "mrelocatorstyle.h"
+#include "mscrollchain.h"
 
+#include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
 #include <QTimer>
 
 namespace {
-    bool widgetDoesNotSupportRelocation(QGraphicsWidget *widget)
+    bool widgetDoesNotWantToBeScrolled(const QGraphicsWidget *widget)
     {
-        // We don't know how to scroll QGraphicsWebView. We would only make things worse by trying.
+        // We don't know where to scroll QGraphicsWebView. We would only make things worse by trying.
         // Using QObject::inherits() instead of type cast to prevent dependency to QtWebKit.
         return widget->inherits("QGraphicsWebView");
     }
@@ -33,7 +51,7 @@ MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
       rootElement(rootElement),
       orientation(initialOrientation),
       cachedExposedRect(0, 0, -1, -1),
-      cachedTopmostPannableViewport(0),
+      oldChain(0),
       relocating(false),
       updatePending(false),
       numOfDisappearingSceneWindows(0),
@@ -60,6 +78,8 @@ MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
 
 MInputWidgetRelocator::~MInputWidgetRelocator()
 {
+    delete oldChain;
+    oldChain = 0;
 }
 
 const MRelocatorStyleContainer &MInputWidgetRelocator::style() const
@@ -99,15 +119,49 @@ void MInputWidgetRelocator::update()
     // Always update screen space
     updateScreenArea();
 
-    if (inputWidget) {
-        ensureInputWidgetVisible(*inputWidget);
-    } else {
-        restoreRelocations();
+    if (inputWidget
+        && rootElement->isAncestorOf(inputWidget)
+        && !widgetDoesNotWantToBeScrolled(inputWidget)) {
+
+        MScrollChain *newChain(new MScrollChain(inputWidget, rootElement));
+        if (oldChain) {
+            oldChain->restore(newChain);
+            delete oldChain;
+            oldChain = 0;
+        }
+
+        const QRect microRect(microFocusRect(inputWidget));
+
+        if (microRect.isValid() && newChain->count() > 0) {
+
+            // Check whether we need to do anything.
+            if (needsRelocation(inputWidget, microRect)) {
+
+                // Calculate anchor point in root coordinates
+                const QPoint anchorPoint(rootElement->mapFromItem(inputWidget, microRect.topLeft()).x(),
+                                         exposedContentRect().top() + style()->verticalAnchorPosition());
+
+                // First, center context widget to anchorPoint but ensure always top edge
+                // is within exposed content rect. The term "context widget" refers to the first
+                // scrollable parent widget of the input widget widget, and therefore it can be
+                // used to show user "context" or visibility around the focused input widget.
+                centerContextWidgetToAnchorPoint(newChain, anchorPoint, inputWidget);
+
+                const QRect targetRect(anchorPoint, microRect.size());
+                newChain->addBottomUpScroll(targetRect, microRect.topLeft());
+
+                newChain->applyScrolling();
+            }
+        }
+        oldChain = newChain;
+    } else if (oldChain) {
+        oldChain->restore();
+        delete oldChain;
+        oldChain = 0;
     }
 
     // Invalidate cache
     cachedExposedRect.setHeight(-1);
-    cachedTopmostPannableViewport = 0;
 
     relocating = false;
 }
@@ -116,63 +170,6 @@ void MInputWidgetRelocator::setCurrentPage(const QPointer<MSceneWindow> &page)
 {
     currentPage = page;
     cachedExposedRect.setHeight(-1);
-}
-
-void MInputWidgetRelocator::buildRelocationOpList(const QGraphicsWidget &inputWidget,
-                                                  QList<RelocationOp> &ops,
-                                                  bool widgetInitiallyVisible)
-{
-    ops.clear();
-
-    QGraphicsWidget *widget = inputWidget.parentWidget();
-    while (widget) {
-        if (qobject_cast<MPannableViewport *>(widget)) {
-            cachedTopmostPannableViewport = static_cast<MPannableViewport *>(widget);
-            ops.append(RelocationOp(RelocationByPanning, widget));
-        } else if (qobject_cast<MSceneWindow *>(widget)) {
-
-            RelocationOp op(RelocationByMovingWindow, widget);
-
-            MSceneWindow *sceneWindow = static_cast<MSceneWindow *>(widget);
-            if (sceneWindow->windowType() == MSceneWindow::Dialog) {
-                // Actual dialog box of a dialog is defined by its view, if it even has one.
-                // For this reason the geometry of a dialog box is not easily known. Still, we should
-                // use the unused space often left above small dialogs. To solve the problem scene
-                // window can be prepended to operations list.
-                ops.prepend(op);
-            } else if (widgetInitiallyVisible) {
-                // Not a dialog and we are initially visible. Let's not do anything.
-                // Dialogs are relocated because the visibility check is not good enough for them.
-                ops.clear();
-                break;
-            } else {
-                op.stopIfVisible = true;
-                ops.append(op);
-            }
-
-            // Stop on first MSceneWindow. This should suffice. Also, we skip any LayerEffect parent MSW's this way.
-            break;
-        } else if (widgetDoesNotSupportRelocation(widget)) {
-            ops.clear();
-            break;
-        }
-        widget = widget->parentWidget();
-    }
-}
-
-void MInputWidgetRelocator::ensureTopmostViewportIsPannable()
-{
-    MPannableViewport *pannable = cachedTopmostPannableViewport;
-
-    if (pannable && pannable->isEnabled()) {
-        // Topmost pannable viewport found. Set input method area so it knows how to adjust its range.
-        QRect coveringPanelArea = pannable->mapRectFromScene(inputPanelRect).toRect() & pannable->rect().toRect();
-        pannable->d_func()->setInputMethodArea(coveringPanelArea);
-        pannable->physics()->stop();
-        if (!pannablesToRestore.contains(pannable)) {
-            pannablesToRestore << pannable;
-        }
-    }
 }
 
 const QRect &MInputWidgetRelocator::exposedContentRect()
@@ -201,190 +198,6 @@ const QRect &MInputWidgetRelocator::exposedContentRect()
     return cachedExposedRect;
 }
 
-void MInputWidgetRelocator::relocationRectangles(const QGraphicsWidget &inputWidget,
-                                                 const QRect &microFocusRect,
-                                                 QRect &targetRect,
-                                                 QRect &localRect)
-{
-    const QPoint offset(0, exposedContentRect().top()
-                           + style()->verticalAnchorPosition()
-                           - microFocusRect.top());
-
-    targetRect = microFocusRect.translated(offset);
-    localRect = inputWidget.mapRectFromItem(rootElement, microFocusRect).toRect();
-}
-
-void MInputWidgetRelocator::ensureInputWidgetVisible(const QGraphicsWidget &inputWidget)
-{
-    const QRect microRect = microFocusRect();
-    // If the microfocus is invalid then the focused widget does not want to be relocated.
-    if (!microRect.isValid()) {
-        return;
-    }
-
-    // Get the optimal target position
-    QRect targetRect;
-    QRect localRect;
-    relocationRectangles(inputWidget, microRect,
-                         targetRect, localRect);
-
-    if (needsRelocating(inputWidget, localRect)) {
-        relocate(inputWidget, targetRect, localRect);
-    }
-}
-
-void MInputWidgetRelocator::relocate(const QGraphicsWidget &inputWidget,
-                                     const QRect &targetRect,
-                                     const QRect &localRect)
-{
-    bool isAlreadyVisible = !needsRelocating(inputWidget, localRect);
-
-    QList<RelocationOp> opList;
-    buildRelocationOpList(inputWidget, opList, isAlreadyVisible);
-
-    foreach (const RelocationOp &op, opList) {
-
-        if (isAlreadyVisible && op.stopIfVisible) {
-            break;
-        }
-
-        // Map target rectangle and origin point to delegate's local coordinates.
-        const QRect delegateTargetRect(op.delegate->mapRectFromItem(rootElement, targetRect).toRect());
-        const QPoint delegateOriginPoint(op.delegate->mapFromItem(&inputWidget, localRect.topLeft()).toPoint());
-
-        switch (op.type) {
-        case RelocationByMovingWindow:
-            relocateBySceneWindow(static_cast<MSceneWindow *>(op.delegate),
-                                  delegateTargetRect, delegateOriginPoint);
-            break;
-        case RelocationByPanning:
-            relocateByPannableViewport(static_cast<MPannableViewport *>(op.delegate),
-                                       delegateTargetRect, delegateOriginPoint);
-            break;
-        }
-
-        const QPoint resultingPos = inputWidget.mapToItem(rootElement, localRect.topLeft()).toPoint();
-
-        if (resultingPos == targetRect.topLeft()) {
-            break;
-        }
-
-        if (!isAlreadyVisible) {
-            isAlreadyVisible = !needsRelocating(inputWidget, localRect);
-        }
-    }
-}
-
-void MInputWidgetRelocator::moveRectInsideArea(const QRect &area, QRect &rect) const
-{
-    rect.moveLeft(qBound(area.left(), rect.x(), area.x() + area.width() - rect.width()));
-    rect.moveTop(qBound(area.top(), rect.top(), area.y() + area.height() - rect.height()));
-}
-
-void MInputWidgetRelocator::relocateByPannableViewport(MPannableViewport *viewport,
-                                                       const QRect &targetRect,
-                                                       const QPoint &originPoint)
-{
-    if (!viewport->isEnabled()) {
-        return;
-    }
-
-    if (viewport == cachedTopmostPannableViewport) {
-        // Have to update pannable viewport's range so that we can pan enough.
-        ensureTopmostViewportIsPannable();
-    }
-
-    // First ensure that target rectangle is inside of area of the pannable viewport.
-    // Note: We might even move against the wanted direction but this is required to
-    // ensure the visibility of the area marked by target rectangle.
-    QRect visibleTargetRect(targetRect);
-    moveRectInsideArea(viewport->contentsRect().toRect(), visibleTargetRect);
-
-    // Calculate how much pannable contents should be translated.
-    const QPoint contentsOffset(visibleTargetRect.topLeft() - originPoint);
-
-    // Calculate the new panning position, i.e. position of the pannable viewport
-    // in panned widget coordinates.
-    QPointF panningPos(viewport->position() - contentsOffset);
-
-    // Get allowed range for position to be used with MPannableWidget::setPosition().
-    QRectF posRange = viewport->range();
-
-    // ...and limit our panning accordingly.
-    panningPos.rx() = qBound(posRange.left(), panningPos.x(), posRange.right());
-    panningPos.ry() = qBound(posRange.top(), panningPos.y(), posRange.bottom());
-
-    viewport->setPosition(panningPos);
-
-    // Disables kinetic scrolling until next pointer event.
-    viewport->physics()->stop();
-}
-
-void MInputWidgetRelocator::relocateBySceneWindow(MSceneWindow *sceneWindow,
-                                                  const QRect &targetRect,
-                                                  const QPoint &originPoint)
-{
-    // Don't move navigation bar. Focus can also be in dock widget but because it can get
-    // obscured by input panel we need to move it.
-    if (sceneWindow->windowType() == MSceneWindow::NavigationBar) {
-        return;
-    }
-
-    // Moving currently only in vertical direction.
-
-    // Assuming panel is at the bottom of scene.
-
-    const QRect sceneWindowRect(rootElement->mapRectFromItem(sceneWindow, sceneWindow->rect()).toRect());
-    const QRect sceneRect(visibleSceneRect());
-
-    const int distanceFromBottom = sceneRect.height() - 1 - sceneWindowRect.bottom();
-
-    // Negative offset increases distance from bottom.
-    const QPoint offset(targetRect.topLeft() - originPoint);
-    int newDistanceFromBottom = distanceFromBottom - offset.y();
-
-    if (newDistanceFromBottom > 0) {
-        // Don't allow gap between panel top and bottom of scene window.
-        const QRect mappedPanelRect = rootElement->mapRectFromScene(inputPanelRect).toRect();
-        newDistanceFromBottom = qMin(newDistanceFromBottom, mappedPanelRect.height());
-    } else {
-        newDistanceFromBottom = 0;
-    }
-
-    const QPointF displacement(0, distanceFromBottom - newDistanceFromBottom);
-
-    emit sceneWindowDislocationRequest(sceneWindow, displacement);
-
-    // Save so we can restore it.
-    if (!sceneWindowsToRestore.contains(sceneWindow)) {
-        sceneWindowsToRestore << sceneWindow;
-    }
-
-    // If we have pannable viewport as a child we have also moved it relative to input panel.
-    // Make sure it's still fully pannable.
-    ensureTopmostViewportIsPannable();
-}
-
-void MInputWidgetRelocator::restoreRelocations()
-{
-    // Restore state only for those scene items that are not destroyed
-    // and are still in the same scene.
-
-    foreach (MPannableViewport *viewport, pannablesToRestore) {
-        if (viewport && viewport->scene() == scene) {
-            viewport->d_func()->setInputMethodArea(QRect());
-        }
-    }
-    pannablesToRestore.clear();
-
-    foreach (MSceneWindow *sceneWindow, sceneWindowsToRestore) {
-        if (sceneWindow && sceneWindow->scene() == scene) {
-            emit sceneWindowUndoDislocationRequest(sceneWindow);
-        }
-    }
-    sceneWindowsToRestore.clear();
-}
-
 void MInputWidgetRelocator::handleRotationBegin()
 {
     postponeFlags |= WaitForRotationFinished;
@@ -395,7 +208,6 @@ void MInputWidgetRelocator::handleRotationFinished(M::Orientation orientation)
     this->orientation = orientation;
     updatePending = true; // Update always after rotation.
     clearPostponeRelocationFlag(WaitForRotationFinished);
-
 }
 
 void MInputWidgetRelocator::sceneWindowStateHasChanged(MSceneWindow *,
@@ -455,10 +267,11 @@ QGraphicsWidget *MInputWidgetRelocator::focusedWidget() const
     return focused;
 }
 
-QRect MInputWidgetRelocator::microFocusRect() const
+QRect MInputWidgetRelocator::microFocusRect(const QGraphicsWidget *inputWidget) const
 {
+    // It is only possible to retrieve microfocus via scene. Need to map it back to input widget.
     const QRectF sceneRect = scene->inputMethodQuery(Qt::ImMicroFocus).toRectF();
-    return rootElement->mapRectFromScene(sceneRect).toRect();
+    return inputWidget->mapRectFromScene(sceneRect).toRect();
 }
 
 QRect MInputWidgetRelocator::visibleSceneRect() const
@@ -468,27 +281,76 @@ QRect MInputWidgetRelocator::visibleSceneRect() const
     return rootElement->mapRectFromScene(sceneRect).toRect();
 }
 
-bool MInputWidgetRelocator::needsRelocating(const QGraphicsWidget &inputWidget,
+const MSceneWindow *MInputWidgetRelocator::toolbarParentSceneWindow(const QGraphicsWidget *child) const
+{
+    const MSceneWindow *result = 0;
+    while(child) {
+        const MSceneWindow *candidate = qobject_cast<const MSceneWindow *>(child);
+        if (candidate) {
+            if (candidate->windowType() == MSceneWindow::NavigationBar
+                || candidate->windowType() == MSceneWindow::DockWidget) {
+                result = candidate;
+            }
+            // Already found one scene window. Don't look further.
+            break;
+        }
+        child = child->parentWidget();
+    }
+    return result;
+}
+
+bool MInputWidgetRelocator::needsRelocation(const QGraphicsWidget *inputWidget,
                                             const QRect &localRect)
 {
+    // In case we're relocating an MNavigationBar or an MDockWidget which
+    // has a toolbar we need some special handling:
+    // - nogo zones are not used
+    // - scene window always sits on top of software input panel (bottom-aligned),
+    //   or is not relocated at all (top-aligned)
+    const MSceneWindow *toolbarSceneWindow = toolbarParentSceneWindow(inputWidget);
+    if (toolbarSceneWindow) {
+        // Don't relocate top aligned scene windows, and for bottom aligned
+        // make sure they share the bottom edge with exposed content rectangle.
+        return ((toolbarSceneWindow->alignment() & Qt::AlignBottom)
+                && (rootElement->mapRectFromItem(toolbarSceneWindow,
+                                                 toolbarSceneWindow->rect()).toRect().bottom()
+                    != exposedContentRect().bottom()));
+    }
+
+    // The normal case. Check whether widget's rect fits inside allowed area,
+    // or whether it is obscured.
+
     const QRect allowedRect(exposedContentRect().adjusted(0, style()->topNoGoMargin(),
                                                           0, -style()->bottomNoGoMargin()));
 
-    const QRect rect(rootElement->mapRectFromItem(&inputWidget, localRect).toRect());
+    const QRect rect(rootElement->mapRectFromItem(inputWidget, localRect).toRect());
 
     return !allowedRect.contains(rect)
            || isObscured(inputWidget, localRect);
 }
 
-bool MInputWidgetRelocator::isObscured(const QGraphicsWidget &widget, const QRect &localRect)
+bool MInputWidgetRelocator::isObscured(const QGraphicsWidget *widget,
+                                       const QRect &localRect) const
 {
     // We need to know if widget is even partially obscured. Therefore split the
     // local rect into pieces.
     const QRect localTopRect(localRect.topLeft(), QSize(1, 1));
     const QRect localBottomRect(localRect.bottomLeft(), QSize(1, 1));
 
-    return widget.isObscured(localTopRect)
-           || widget.isObscured(localBottomRect);
+    return widget->isObscured(localTopRect)
+           || widget->isObscured(localBottomRect);
+}
+
+void MInputWidgetRelocator::centerContextWidgetToAnchorPoint(MScrollChain *newChain,
+                                                             const QPoint &anchorPoint,
+                                                             const QGraphicsWidget *inputWidget)
+{
+    const QGraphicsWidget *contextWidget = newChain->widgetAt(0);
+    const int yTarget = qMax<int>(exposedContentRect().top(),
+                                  anchorPoint.y() - contextWidget->size().height() / 2);
+    const QRect targetRect(QPoint(anchorPoint.x(), yTarget), contextWidget->size().toSize());
+    const QPoint originPoint(contextWidget->mapToItem(inputWidget, 0, 0).toPoint());
+    newChain->addBottomUpScroll(targetRect, originPoint, 1);
 }
 
 bool MInputWidgetRelocator::needsMoreScreenArea() const
@@ -550,11 +412,4 @@ void MInputWidgetRelocator::restoreScreenArea()
             appWnd->d_func()->restorePageArea();
         }
     }
-}
-
-MInputWidgetRelocator::RelocationOp::RelocationOp(RelocationOpType type, QGraphicsWidget *delegate)
-    : type(type),
-      delegate(delegate),
-      stopIfVisible(false)
-{
 }
