@@ -557,7 +557,7 @@ MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
     sliderHandle = new MSliderHandle(this);
     sliderHandle->setObjectName("MSliderHandle");
 
-    sliderHandleIndicator = new MSliderHandleIndicator(this);
+    sliderHandleIndicator = new MSliderHandleIndicator(0);
     sliderHandleIndicator->setObjectName("MSliderHandleLabel");
     sliderHandleIndicator->setVisible(false);
 }
