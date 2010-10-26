@@ -31,6 +31,7 @@
 #include <MSceneManager>
 #include <MToolBar>
 #include <MNavigationBar>
+#include <MApplicationMenu>
 
 #include <QSignalSpy>
 #include <QEvent>
@@ -173,6 +174,36 @@ void Ut_MApplicationWindow::testDeleteOnClose()
     win->setAttribute(Qt::WA_DeleteOnClose, true);
     win->show();
     win->close();
+}
+
+void Ut_MApplicationWindow::testCurrentPage()
+{
+    MApplicationPage *page = new MApplicationPage;
+
+    QCOMPARE(m_subject->currentPage(), (MApplicationPage*) 0);
+    m_subject->sceneManager()->appearSceneWindowNow(page);
+    QCOMPARE(m_subject->currentPage(), page);
+    delete page;
+}
+
+void Ut_MApplicationWindow::testMenu()
+{
+    m_subject->d_func()->navigationBar->setArrowIconVisible(true);
+
+    QCOMPARE(m_subject->isMenuOpen(), false);
+    m_subject->openMenu();
+    QCOMPARE(m_subject->isMenuOpen(), true);
+    m_subject->closeMenu();
+    QCOMPARE(m_subject->isMenuOpen(), false);
+}
+
+void Ut_MApplicationWindow::testIsMenuOpen()
+{
+    QCOMPARE(m_subject->isMenuOpen(), false);
+    m_subject->sceneManager()->appearSceneWindowNow(m_subject->d_func()->menu);
+    QCOMPARE(m_subject->isMenuOpen(), true);
+    m_subject->sceneManager()->disappearSceneWindowNow(m_subject->d_func()->menu);
+    QCOMPARE(m_subject->isMenuOpen(), false);
 }
 
 void Ut_MApplicationWindow::testDisplayExitedOnClose()

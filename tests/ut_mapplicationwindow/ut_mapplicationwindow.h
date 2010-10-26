@@ -54,6 +54,10 @@ private slots:
     void testWindowActivate();
     void testDeleteOnClose();
 
+    void testCurrentPage();
+    void testMenu();
+    void testIsMenuOpen();
+
     void testIsOnDisplay();
     void testPrestartNoPrestart();
     void testPrestartTerminateOnClose();
