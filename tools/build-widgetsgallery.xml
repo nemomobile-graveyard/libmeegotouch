@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
 <project name="widgetsgallery">
     <property name="build.root" value="../../.."/>
-    <property name="build.dir" value="${build.root}/duibuild"/>
+    <property name="build.dir" value="${build.root}/meegotouch-build"/>
     <property name="dist.dir" value="${build.root}/widgetsgallery"/>
-    <property name="libdui.dir" value="${build.dir}/libdui"/>
-    <property name="theme.dir" value="${build.dir}/libdui"/>
+    <property name="libdui.dir" value=".."/>
     <property name="widgetsgallery.dir" value="${libdui.dir}/demos/widgetsgallery"/>
     <property name="git" value="/opt/local/bin/git"/>
-    <property name="macdeployqt" value="/usr/bin/macdeployqt"/>
+    <property name="macdeployqt" value="macdeployqt"/>
     <property name="local.frameworks.dir" value="/Users/dubik/Library/Frameworks"/>
 
     <target name="dmg" depends="create-dmg">
@@ -16,6 +15,7 @@
     <target name="init">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${libdui.dir}"/>
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="${widgetsgallery.dir}/widgetsgallery.app"/>
         </delete>
@@ -36,13 +36,7 @@
         </exec>
     </target>
 
-    <target name="qmake" depends="configure">
-        <exec executable="qmake" dir="${libdui.dir}">
-            <arg line="-spec macx-g++ -r"/>
-        </exec>
-    </target>
-
-    <target name="compile" depends="qmake">
+    <target name="compile" depends="configure">
         <exec executable="make" failonerror="yes" dir="${libdui.dir}">
             <arg line="-j 2"/>
         </exec>
