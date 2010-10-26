@@ -52,7 +52,7 @@ public:
                        MStyleSheetSelector *selector,
                        unsigned int classPriority,
                        unsigned int parentPriority,
-                       const QString &file,
+                       const QByteArray &file,
                        const MStyleSheet *stylesheet) :
         value(val),
         selector(selector),
@@ -65,16 +65,16 @@ public:
     MStyleSheetSelector *selector;
     unsigned int classPriority;
     unsigned int parentPriority;
-    QString filename;
+    QByteArray filename;
     const MStyleSheet *stylesheet;
 };
 //! \endcond
 
-QHash<QString, MStyleSheetPrivate::CacheEntry *> MStyleSheetPrivate::EntryCache;
-QHash<QString, MStyle *> MStyleSheetPrivate::StyleCache;
+QHash<QByteArray, MStyleSheetPrivate::CacheEntry *> MStyleSheetPrivate::EntryCache;
+QHash<QByteArray, MStyle *> MStyleSheetPrivate::StyleCache;
 
 #ifdef M_THEMESYSTEM_PROFILING_SUPPORT
-int sizeOfString(const QString &string)
+int sizeOfString(const QByteArray &string)
 {
     int size = 0;
 
@@ -97,9 +97,9 @@ MStyleSheet::~MStyleSheet()
 MStyle *MStyleSheetPrivate::buildStyle(const StyleSpec &spec,
                                        const QList<const MStyleSheet *>& sheets,
                                        const QVector<ParentData> &parentsData,
-                                       const QString &parentStyleName)
+                                       const QByteArray &parentStyleName)
 {
-    MStyle *style = MClassFactory::instance()->createStyle(spec.className.toAscii().constData());
+    MStyle *style = MClassFactory::instance()->createStyle(spec.className);
     if (!style) {
         mWarning("mstylesheet.cpp") << "could not create style:" << spec.className;
         return NULL;
@@ -107,7 +107,7 @@ MStyle *MStyleSheetPrivate::buildStyle(const StyleSpec &spec,
 
     // We keep a second cache, the EntryCache, that stores raw data about styling, and which
     // doesn't take the scene information in account.
-    QString identifier = spec.entryCacheKey();
+    QByteArray identifier = spec.entryCacheKey();
     MStyleSheetPrivate::CacheEntry *entry = MStyleSheetPrivate::EntryCache.value(identifier, NULL);
 
     if (!entry) {
@@ -122,9 +122,9 @@ MStyle *MStyleSheetPrivate::buildStyle(const StyleSpec &spec,
     if (!MStyleSheetPrivate::combine(style, *entry, spec)) {
         qCritical("Failed to populate style for: %s#%s.%s:%s",
                   style->metaObject()->className(),
-                  qPrintable(spec.objectName),
+                  spec.objectName.constData(),
                   (spec.orientation == M::Landscape) ? "Landscape" : "Portrait",
-                  qPrintable(spec.mode));
+                  spec.mode.constData());
 
         delete style;
         exit(2);
@@ -155,7 +155,7 @@ QVector<MStyleSheetPrivate::ParentData> MStyleSheetPrivate::extractParentsData(c
             const QMetaObject *mobj = widget->metaObject();
 
             while (mobj->className() != QObject::staticMetaObject.className()) { // ###
-                pd.hierarchy.append(QString::fromAscii(mobj->className())); // ###
+                pd.hierarchy.append(mobj->className()); // ###
                 mobj = mobj->superClass();
             }
 
@@ -168,29 +168,29 @@ QVector<MStyleSheetPrivate::ParentData> MStyleSheetPrivate::extractParentsData(c
 }
 
 MStyle *MStyleSheet::style(const QList<const MStyleSheet *>& sheets,
-                           const QString &styleClassName,
-                           const QString &objectName,
-                           const QString &mode,
-                           const QString &type,
+                           const QByteArray &styleClassName,
+                           const QByteArray &objectName,
+                           const QByteArray &mode,
+                           const QByteArray &type,
                            M::Orientation orientation,
                            const MWidgetController *parent)
 {
     QVector<MStyleSheetPrivate::ParentData> parentsData = MStyleSheetPrivate::extractParentsData(parent);
     QList< QList<const MStyleSheet *> > parentsSheets;
-    QStringList styleMetaObjectHierarchy;
+    QList<QByteArray> styleMetaObjectHierarchy;
 
-    const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName.toAscii().constData());
+    const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
     do {
-        styleMetaObjectHierarchy.append(QString::fromAscii(mobj->className()));
+        styleMetaObjectHierarchy.append(mobj->className());
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
 
-    QString parentStyleName;
+    QByteArray parentStyleName;
     if (parent) {
         if (!parent->styleName().isNull())
-            parentStyleName = parent->styleName();
+            parentStyleName = parent->styleName().toAscii();
         else
-            parentStyleName = parent->objectName();
+            parentStyleName = parent->objectName().toAscii();
     }
 
     return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName, styleMetaObjectHierarchy, styleClassName, objectName, mode, type, orientation);
@@ -198,10 +198,10 @@ MStyle *MStyleSheet::style(const QList<const MStyleSheet *>& sheets,
 
 MStyle *MStyleSheet::style(const QList<const MStyleSheet *> &,
                            const QList<QPair<const QMetaObject*, QList<const MStyleSheet*> > > &,
-                           const QString &,
-                           const QString &,
-                           const QString &,
-                           const QString &,
+                           const QByteArray &,
+                           const QByteArray &,
+                           const QByteArray &,
+                           const QByteArray &,
                            M::Orientation,
                            const MWidgetController *)
 {
@@ -211,18 +211,18 @@ MStyle *MStyleSheet::style(const QList<const MStyleSheet *> &,
 
 MStyle *MStyleSheetPrivate::style(const QList<const MStyleSheet *> &sheets,
                                   const QVector<ParentData> &parentsData,
-                                  const QString &parentStyleName,
-                                  const QStringList &styleMetaObjectHierarchy,
-                                  const QString &styleClassName,
-                                  const QString &objectName,
-                                  const QString &mode,
-                                  const QString &type,
+                                  const QByteArray &parentStyleName,
+                                  const QList<QByteArray> &styleMetaObjectHierarchy,
+                                  const QByteArray &styleClassName,
+                                  const QByteArray &objectName,
+                                  const QByteArray &mode,
+                                  const QByteArray &type,
                                   M::Orientation orientation)
 {
     // TODO: check whether we can pass parentStyleName inside the
     // parentsData. It might enable us to support more cases in CSS if it is desired.
 
-    if (!MClassFactory::instance()->styleMetaObject(styleClassName.toAscii().constData()))
+    if (!MClassFactory::instance()->styleMetaObject(styleClassName))
         return NULL;
 
     StyleSpec spec(styleClassName, styleMetaObjectHierarchy, objectName, mode, type, orientation);
@@ -233,7 +233,7 @@ MStyle *MStyleSheetPrivate::style(const QList<const MStyleSheet *> &sheets,
     spec.setParentInfo(&sceneInfo);
 
     // Look in the cache first.
-    QString identifier = spec.styleCacheKey();
+    QByteArray identifier = spec.styleCacheKey();
     MStyle *style = MStyleSheetPrivate::StyleCache.value(identifier, NULL);
     if (style) {
         style->addReference();
@@ -253,8 +253,8 @@ MStyle *MStyleSheetPrivate::style(const QList<const MStyleSheet *> &sheets,
 void MStyleSheet::releaseStyle(const MStyle *style)
 {
     // TODO: Optimize this later
-    QHash<QString, MStyle *>::iterator end = MStyleSheetPrivate::StyleCache.end();
-    for (QHash<QString, MStyle *>::iterator iterator = MStyleSheetPrivate::StyleCache.begin();
+    QHash<QByteArray, MStyle *>::iterator end = MStyleSheetPrivate::StyleCache.end();
+    for (QHash<QByteArray, MStyle *>::iterator iterator = MStyleSheetPrivate::StyleCache.begin();
             iterator != end;
             ++iterator) {
 
@@ -280,8 +280,8 @@ void MStyleSheet::releaseStyle(const MStyle *style)
 void MStyleSheet::cleanup(bool)
 {
     // delete entry cache
-    QHash<QString, MStyleSheetPrivate::CacheEntry *>::iterator end = MStyleSheetPrivate::EntryCache.end();
-    for (QHash<QString, MStyleSheetPrivate::CacheEntry *>::iterator iterator = MStyleSheetPrivate::EntryCache.begin();
+    QHash<QByteArray, MStyleSheetPrivate::CacheEntry *>::iterator end = MStyleSheetPrivate::EntryCache.end();
+    for (QHash<QByteArray, MStyleSheetPrivate::CacheEntry *>::iterator iterator = MStyleSheetPrivate::EntryCache.begin();
             iterator != end;
             ++iterator) {
 
@@ -299,7 +299,7 @@ void MStyleSheet::cleanup(bool)
 MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<const MStyleSheet *>& sheets,
                                                                     const StyleSpec &spec,
                                                                     const QVector<ParentData> &parentsData,
-                                                                    const QString &parentStyleName)
+                                                                    const QByteArray &parentStyleName)
 {
     CacheEntry *entry = new CacheEntry;
 
@@ -319,7 +319,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                 MAttributeList::const_iterator attributesEnd = selector->attributes()->constEnd();
 
                 for (MAttributeList::const_iterator j = selector->attributes()->constBegin(); j != attributesEnd; ++j) {
-                    QString propertyName = j.key();
+                    QByteArray propertyName = j.key();
 
                     CacheEntry::iterator iter = (*entry).find(propertyName);
                     // Check if these settings are already in the list
@@ -395,7 +395,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
         bool propertyInitialized = false;
 
         // find matching attribute from hash
-        CacheEntry::iterator iterator = data.find(QString(style->metaObject()->property(i).name()));
+        CacheEntry::iterator iterator = data.find(QByteArray(style->metaObject()->property(i).name()));
         if (iterator != data.end()) {
 
             // get the attribute value
@@ -407,11 +407,11 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
 
             if (!attribute->writeAttribute(container->filename, style, style->metaObject()->property(i), spec.orientation)) {
                 qCritical("Failed to write attribute: %s to property %s. The stylesheet syntax might be invalid (%s:%s) in %s.",
-                          attribute->name.toStdString().c_str(),
+                          attribute->name.constData(),
                           style->metaObject()->property(i).name(),
-                          attribute->name.toStdString().c_str(),
-                          attribute->value.toStdString().c_str(),
-                          container->filename.toStdString().c_str());
+                          attribute->name.constData(),
+                          attribute->value.constData(),
+                          container->filename.constData());
 
                 result = container->stylesheet->syntaxMode() == MStyleSheet::RelaxedSyntax;
             } else {
@@ -431,7 +431,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
     foreach(MOriginContainer * container, data) {
 
         // build identifier for the unused selector block
-        QString identifier = '(' + container->selector->className();
+        QByteArray identifier = '(' + container->selector->className();
         if (!container->selector->classType().isEmpty())
             identifier += '[' + container->selector->classType() + ']';
         if (!container->selector->objectName().isEmpty())
@@ -521,7 +521,7 @@ bool MStyleSheetPrivate::isHigherPriority(MOriginContainer *prev,
 }
 
 // calculates "order" number (how far is in superclass inheritance tree)
-int MStyleSheetPrivate::orderNumber(const QString &n, const QString &sn, const QString &parentStyleName, const QStringList &parentHierarchy)
+int MStyleSheetPrivate::orderNumber(const QByteArray &n, const QByteArray &sn, const QByteArray &parentStyleName, const QList<QByteArray> &parentHierarchy)
 {
     // Exit imediately if the style name does not match
     // parent style (object) name.
@@ -530,19 +530,16 @@ int MStyleSheetPrivate::orderNumber(const QString &n, const QString &sn, const Q
 
     // Selectors class name may have "." in front of it, remove it
     if (n.startsWith('.')) {
-        // ### do we really need to use a QStringRef here, or the later conversion
-        // toString() will kill the optimization. And is this optimization really
-        // relevant?
-        QStringRef realClassName(&n, 1, n.length() - 1);
-        return parentHierarchy.indexOf(realClassName.toString());
+        QByteArray realClassName = QByteArray::fromRawData(n.constData() + 1, n.length() - 1);
+        return parentHierarchy.indexOf(realClassName);
     }
 
     return parentHierarchy.indexOf(n);
 }
 
 bool MStyleSheetPrivate::matchParent(const MStyleSheetSelector *selector,
-                                     const QStringList &parentHierarchy,
-                                     const QString &parentStyleName,
+                                     const QList<QByteArray> &parentHierarchy,
+                                     const QByteArray &parentStyleName,
                                      unsigned int sceneOrder,
                                      unsigned int &parentPriority)
 {
@@ -559,7 +556,7 @@ bool MStyleSheetPrivate::matchParent(const MStyleSheetSelector *selector,
 
 bool MStyleSheetPrivate::matchParents(const MStyleSheetSelector *selector,
                                       const QVector<ParentData> &parentsData,
-                                      const QString &parentStyleName,
+                                      const QByteArray &parentStyleName,
                                       unsigned int &parentPriority)
 {
     parentPriority = MAKE_PRIORITY(0xffff, 0xffff);
@@ -608,7 +605,7 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
                 return false;
         } else {
             // Early out: Make sure that we are a class of requested type or it's subclass
-            order = MStyleSheetPrivate::orderNumber(selector->className(), QString(), QString(), classHierarchy);
+            order = MStyleSheetPrivate::orderNumber(selector->className(), QByteArray(), QByteArray(), classHierarchy);
             if (order == -1)
                 return false;
         }
@@ -635,7 +632,7 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
 
 QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectorsWithParent(const QList<const MStyleSheet *> &sheets,
                                                                        const QVector<ParentData> &parentsData,
-                                                                       const QString &parentStyleName,
+                                                                       const QByteArray &parentStyleName,
                                                                        const StyleSpec &spec)
 {
     QList<SelectorInfo> results;
@@ -644,7 +641,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
     // Traverse from the most generic to the most specific parent sheets
     for (int i = parentsData.size() - 1; i >= 0; i--) {
         const ParentData &pd = parentsData[i];
-        const QStringList &thisParentHierarchy = pd.hierarchy;
+        const QList<QByteArray> &thisParentHierarchy = pd.hierarchy;
         const QList<const MStyleSheet *> &thisParentSheets = pd.sheets;
 
         foreach (const MStyleSheet *sheet, thisParentSheets) {

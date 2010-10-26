@@ -39,7 +39,7 @@ void MPalette::refresh()
 {
     Q_D(MPalette);
 
-    const QString PALETTE_GROUP_NAME("Palette");
+    const QByteArray PALETTE_GROUP_NAME("Palette");
 
     d->foregroundColor = d->values.color(PALETTE_GROUP_NAME, "COLOR_FOREGROUND");
     d->secondaryForegroundColor = d->values.color(PALETTE_GROUP_NAME, "COLOR_SECONDARY_FOREGROUND");

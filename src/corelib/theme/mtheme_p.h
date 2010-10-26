@@ -176,9 +176,9 @@ public:
 
     static void extractDataForStyleClass(const char *styleClassName,
                                          QList<const MStyleSheet *> &sheets,
-                                         QStringList &styleMetaObjectHierarchy);
+                                         QList<QByteArray> &styleMetaObjectHierarchy);
     static QList<const MStyleSheet *> extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,
-                                                                     const QStringList &parentHierarchy);
+                                                                     const QList<QByteArray> &parentHierarchy);
 
     static void registerStyleContainer(MStyleContainer *container);
     static void unregisterStyleContainer(MStyleContainer *container);

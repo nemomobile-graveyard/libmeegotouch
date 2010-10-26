@@ -168,6 +168,11 @@ public:
     MSharedData &operator<< (QString str);
 
     /*!
+     * Writes QByteArray to shared memory
+     */
+    MSharedData &operator<< (QByteArray array);
+
+    /*!
      * Reads integer from shared memory
      */
     MSharedData &operator>> (int &i);
@@ -196,6 +201,11 @@ public:
      * Reads QString from shared memory
      */
     MSharedData &operator>> (QString &str);
+
+    /*!
+     * Reads QByteArray from shared memory
+     */
+    MSharedData &operator>> (QByteArray &array);
 
 protected:
     MSharedDataPrivate *const d_ptr;

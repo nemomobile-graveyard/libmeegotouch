@@ -45,10 +45,10 @@ class MStyleSheetParserPrivate
 public:
     MStyleSheetParserPrivate(const MLogicalValues *logicalValues);
 
-    QChar read(QFile &stream, const QString &delimeters, QString &out);
-    QChar peek(QFile &stream, const QString &delimeters, QString &out);
+    QChar read(QFile &stream, const QByteArray &delimeters, QByteArray &out);
+    QChar peek(QFile &stream, const QByteArray &delimeters, QByteArray &out);
 
-    bool load(const QString &filename, QHash<QString, QString>* constants);
+    bool load(const QString &filename, QHash<QByteArray, QByteArray>* constants);
 
     /**
      \brief Parse a stylesheet \a file.
@@ -57,11 +57,12 @@ public:
     bool parse(QFile &file, const QFileInfo &fileInfo, bool validateOnly = false);
 
     MStyleSheetSelector *parseSelector(QFile &stream, bool *error, bool validateOnly);
-    QPair<QString, MStyleSheetAttribute *> parseAttribute(QFile &stream, QChar &endCharacter, bool validateOnly);
+    QPair<QByteArray, MStyleSheetAttribute *> parseAttribute(QFile &stream, QChar &endCharacter, bool validateOnly);
     bool parseAtToken(QFile &stream, bool validateOnly = false);
-    bool importFile(const QString &importedFileName, bool validateOnly = false);
-    bool hasConsts(const QString &value) const;
-    void setupConsts(QString &value) const;
+    bool importFile(const QByteArray &importedFileName, bool validateOnly = false);
+    bool hasConsts(const QByteArray &value) const;
+    int getMatchIndex(const QByteArray &str, const QByteArray &charList, int from = 0) const;
+    void setupConsts(QByteArray &value) const;
 
     /**
      \brief Get the \a file name for a binary stylesheet cache file corresponding to the
@@ -87,7 +88,7 @@ public:
      */
     bool dump(const MStyleSheetParser::StylesheetFileInfo &info, const QString &binaryFilename);
 
-    MStyleSheetSelector *readSelector(const QString &file, QDataStream &stream);
+    MStyleSheetSelector *readSelector(const QByteArray &file, QDataStream &stream);
     void writeSelector(MStyleSheetSelector *selector, QDataStream &stream);
 
     static QString getOrientationName(MStyleSheetSelector::Orientation orientation);
@@ -107,22 +108,22 @@ public:
 
     qint64 startReadPos;
     QFileInfo parsedFileInfo;
-    QString parsedFileName;
+    QByteArray parsedFileName;
     const MLogicalValues *logicalValues;
 
-    QHash<QString, QString>* globalConstants;
+    QHash<QByteArray, QByteArray>* globalConstants;
 
-    bool validName(const QString &name);
-    bool validValue(const QString &value);
+    bool validName(const QByteArray &name);
+    bool validValue(const QByteArray &value);
     
-    //cache for frequently used strings to reduce dynamic memory allocations made
-    //by strings in stylesheet (attributeName, attributeValue, className, selectorName etc.)
-    static QSet<QString> stringCache;
-    const QString& cachedString(const QString& str) const;
+    //cache for frequently used byte arrays to reduce dynamic memory allocations made
+    //by byte arrays in stylesheet (attributeName, attributeValue, className, selectorName etc.)
+    static QSet<QByteArray> stringCache;
+    const QByteArray& cachedString(const QByteArray& str) const;
 
 };
 
-QSet<QString> MStyleSheetParserPrivate::stringCache;
+QSet<QByteArray> MStyleSheetParserPrivate::stringCache;
 #endif
 
 MStyleSheetParserPrivate::MStyleSheetParserPrivate(const MLogicalValues *logicalValues) :
@@ -180,13 +181,13 @@ int MStyleSheetParserPrivate::getLineNum(QFile &stream, const qint64 &streamPos)
     }
 }
 
-bool MStyleSheetParserPrivate::validName(const QString &name)
+bool MStyleSheetParserPrivate::validName(const QByteArray &name)
 {
     static QRegExp regexp("[^()#*{}:;,\"]+");
     return regexp.exactMatch(name);
 }
 
-bool MStyleSheetParserPrivate::validValue(const QString &value)
+bool MStyleSheetParserPrivate::validValue(const QByteArray &value)
 {
     if (!value.isEmpty()) {
         //check if there is quotes
@@ -210,10 +211,10 @@ bool MStyleSheetParserPrivate::validValue(const QString &value)
     return true;
 }
 
-const QString& MStyleSheetParserPrivate::cachedString(const QString& str) const
+const QByteArray& MStyleSheetParserPrivate::cachedString(const QByteArray& str) const
 {
-    //insert string to cache and return the cached string
-    QSet<QString>::const_iterator i = stringCache.insert(str);
+    //insert the byte array to cache and return the cached one
+    QSet<QByteArray>::const_iterator i = stringCache.insert(str);
     return (i != stringCache.constEnd()) ? *i : str;
 }
 
@@ -264,7 +265,7 @@ void MStyleSheetParserPrivate::debugOutput()
     }
 }
 
-QChar MStyleSheetParserPrivate::read(QFile &stream, const QString &delimeters, QString &out)
+QChar MStyleSheetParserPrivate::read(QFile &stream, const QByteArray &delimeters, QByteArray &out)
 {
     QByteArray array;
     skipWhiteSpace(stream);
@@ -289,7 +290,7 @@ QChar MStyleSheetParserPrivate::read(QFile &stream, const QString &delimeters, Q
                 stream.read(in, 2);
                 in[1] = 0;
                 // multi-line comment
-                QString comment;
+                QByteArray comment;
 
                 // Read until we get "*/"
                 while (stream.atEnd() == false) {
@@ -333,7 +334,7 @@ QChar MStyleSheetParserPrivate::read(QFile &stream, const QString &delimeters, Q
                 // Found a delimeter?
                 if (character == delimeters[i]) {
                     // Trim the string and return
-                    out = QString::fromUtf8(array.data()).trimmed();
+                    out = array.trimmed();
                     return character;
                 }
             }
@@ -353,7 +354,7 @@ QChar MStyleSheetParserPrivate::read(QFile &stream, const QString &delimeters, Q
     return QChar(0);
 }
 
-QChar MStyleSheetParserPrivate::peek(QFile &stream, const QString &delimeters, QString &out)
+QChar MStyleSheetParserPrivate::peek(QFile &stream, const QByteArray &delimeters, QByteArray &out)
 {
     qint64 startPos = stream.pos();
     QChar result = read(stream, delimeters, out);
@@ -362,7 +363,7 @@ QChar MStyleSheetParserPrivate::peek(QFile &stream, const QString &delimeters, Q
     return result;
 }
 
-bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QString, QString>* constants)
+bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, QByteArray>* constants)
 {
     globalConstants = constants;
 
@@ -383,7 +384,7 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QString, QStr
         //mDebug("MStyleSheetParserPrivate") << "Loading ASCII css file" << filename;
 
         privateFileInfo = new MStyleSheetParser::StylesheetFileInfo;
-        privateFileInfo->filename = filename;
+        privateFileInfo->filename = filename.toAscii();
 
         bool result = parse(file, fileInfo);
         file.close();
@@ -415,12 +416,12 @@ bool MStyleSheetParserPrivate::parse(QFile &file, const QFileInfo &fileInfo, boo
 {
     bool result = true;
 
-    parsedFileName = fileInfo.absoluteFilePath();
+    parsedFileName = fileInfo.absoluteFilePath().toAscii();
     parsedFileInfo = fileInfo;
 
 
     char peek;
-    QString tmp;
+    QByteArray tmp;
 
     skipWhiteSpace(file);
     while (file.atEnd() == false) {
@@ -478,7 +479,7 @@ bool MStyleSheetParserPrivate::parseAtToken(QFile &stream, bool validateOnly)
     if (stream.read(&in, 1) == 0)
         return false;
 
-    QString filename;
+    QByteArray filename;
 
     //TODO this should be removed at some point
     //old style include
@@ -501,7 +502,7 @@ bool MStyleSheetParserPrivate::parseAtToken(QFile &stream, bool validateOnly)
     //@const CONSTANT: value(s);
     else {
         //read the keyword
-        QString word;
+        QByteArray word;
         if (read(stream, " \n", word) != ' ') {
             outputParseError(parsedFileName, "Invalid @ token.", getLineNum(stream, startReadPos));
             return false;
@@ -514,7 +515,7 @@ bool MStyleSheetParserPrivate::parseAtToken(QFile &stream, bool validateOnly)
         //@import url("filename");
         if (word == "import") {
             skipWhiteSpace(stream);
-            QString import;
+            QByteArray import;
             if (read(stream, ";", import) != 0) {
 
                 int idx0 = import.indexOf('\"');
@@ -558,10 +559,10 @@ bool MStyleSheetParserPrivate::parseAtToken(QFile &stream, bool validateOnly)
         //@const CONSTANT: value(s);
         else if (word == "const") {
             skipWhiteSpace(stream);
-            QString name;
+            QByteArray name;
             if (read(stream, ":\n", name) == ':' && validName(name)) {
                 skipWhiteSpace(stream);
-                QString value;
+                QByteArray value;
                 if (read(stream, ";\n", value) == ';' && validValue(value)) {
 		    if (validateOnly) {
 			return true;
@@ -596,13 +597,13 @@ bool MStyleSheetParserPrivate::parseAtToken(QFile &stream, bool validateOnly)
     return true;
 }
 
-bool MStyleSheetParserPrivate::importFile(const QString &filename, bool validateOnly)
+bool MStyleSheetParserPrivate::importFile(const QByteArray &filename, bool validateOnly)
 {
     if (validateOnly) {
 	return MStyleSheetParser::validate(parsedFileInfo.absolutePath() + QDir::separator() + filename);
     }
     // add imported file to include list
-    privateFileInfo->includes.push_back(parsedFileInfo.absolutePath() + QDir::separator() + filename);
+    privateFileInfo->includes.push_back(parsedFileInfo.absolutePath().toAscii() + QDir::separator().toAscii() + filename);
 
     // parse the file
     MStyleSheetParserPrivate parser(logicalValues);
@@ -622,35 +623,48 @@ bool MStyleSheetParserPrivate::importFile(const QString &filename, bool validate
     }
 }
 
-bool MStyleSheetParserPrivate::hasConsts(const QString &value) const
+bool MStyleSheetParserPrivate::hasConsts(const QByteArray &value) const
 {
     return value.contains('$');
 }
 
-void MStyleSheetParserPrivate::setupConsts(QString &value) const
+int MStyleSheetParserPrivate::getMatchIndex(const QByteArray &str,
+                                            const QByteArray &charList,
+                                            int from) const
+{
+    int minIndex = -1;
+    foreach(const char c, charList) {
+        int index = str.indexOf(c, from);
+        if (minIndex == -1 || (index < minIndex && index != -1))
+            minIndex = index;
+    }
+    return minIndex;
+}
+
+void MStyleSheetParserPrivate::setupConsts(QByteArray &value) const
 {
     if (value.isEmpty())
         return;
 
+    const QByteArray charsToMatch = " ,()\"";
     bool result = false;
     int idx1 = 0;
     while ((idx1 = value.indexOf('$')) != -1) {
-        static QRegExp regexp("[ ,()\"]");
-        int idx2 = value.indexOf(regexp, idx1);
+        int idx2 = getMatchIndex(value, charsToMatch, idx1);
         if (idx2 == -1)
             idx2 = value.count();
         idx2 -= 1;
         int num = idx2 - idx1;
-        QString constName = value.mid(idx1 + 1, num);
+        QByteArray constName = value.mid(idx1 + 1, num);
 
-        QHash<QString, QString>::const_iterator iterator = globalConstants->constFind(constName);
-        QString constValue = "";
+        QHash<QByteArray, QByteArray>::const_iterator iterator = globalConstants->constFind(constName);
+        QByteArray constValue = "";
         if (iterator != globalConstants->constEnd()) {
             constValue = (*iterator);
         } else {
             // try to search from logical values
             if (logicalValues) {
-                QString group;
+                QByteArray group;
                 logicalValues->findKey(constName, group, constValue);
             }
 
@@ -671,7 +685,7 @@ void MStyleSheetParserPrivate::setupConsts(QString &value) const
 
 MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool *error, bool validateOnly)
 {
-    QString parentName,
+    QByteArray parentName,
             parentObjectName,
             className,
             classType,
@@ -705,7 +719,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
         } else if (result == '#' && className.length() > 0) {
             // we may have the parent object name
             // so we peek and check it
-            QString tmp;
+            QByteArray tmp;
             peek(stream, "{", tmp);
 
             if (tmp.contains(' '))
@@ -803,7 +817,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
                 cachedString(classType),
                 getOrientationFromName(cachedString(orientation)),
                 cachedString(mode),
-                parsedFileName,
+                cachedString(parsedFileName),
                 cachedString(parentName),
                 parentObjectName,
                 (MStyleSheetSelector::Flags) flags);
@@ -831,7 +845,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
 
             // Parse attribute, if it fails, terminate
             QChar character;
-            QPair<QString, MStyleSheetAttribute *> result = parseAttribute(stream, character, validateOnly);
+            QPair<QByteArray, MStyleSheetAttribute *> result = parseAttribute(stream, character, validateOnly);
             if (!result.second) {
                 mWarning("MStyleSheetParserPrivate") << "Attribute read failed in selector: " <<
                         selector->className() + '[' + selector->classType() + "]#" + selector->objectName();
@@ -877,10 +891,10 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
     return NULL;
 }
 
-QPair<QString, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribute(QFile &stream, QChar &character, bool validateOnly)
+QPair<QByteArray, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribute(QFile &stream, QChar &character, bool validateOnly)
 {
-    QString name;
-    QString value;
+    QByteArray name;
+    QByteArray value;
 
     skipWhiteSpace(stream);
 
@@ -907,7 +921,7 @@ QPair<QString, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribute(
                 }
             }
 
-            return QPair<QString, MStyleSheetAttribute *>(result->name, result);
+            return QPair<QByteArray, MStyleSheetAttribute *>(result->name, result);
         } else {
             outputParseError(parsedFileName, "Parse attribute failed, ';' or '}' is missing after value or the value is invalid. Multiline attributes are not supported.", getLineNum(stream, startReadPos));
         }
@@ -915,7 +929,7 @@ QPair<QString, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribute(
         outputParseError(parsedFileName, "Parse attribute failed, ':' is missing after name or the name is invalid.", getLineNum(stream, startReadPos));
     }
 
-    return QPair<QString, MStyleSheetAttribute *> ("", NULL);
+    return QPair<QByteArray, MStyleSheetAttribute *> ("", NULL);
 }
 
 QString MStyleSheetParserPrivate::createBinaryFilename(const QFileInfo &fileInfo) const
@@ -981,7 +995,7 @@ bool MStyleSheetParser::load(const QString &filename)
 {
     Q_D(MStyleSheetParser);
 
-    QHash<QString, QString> constants;
+    QHash<QByteArray, QByteArray> constants;
     bool result = d->load(filename, &constants);
     // uncomment for debug output
     //d->debugOutput();
@@ -1041,7 +1055,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
         stream >> file_version;
 
         // This is how we read v0.12 files
-        if (file_version == FILE_VERSION(0, 13)) {
+        if (file_version == FILE_VERSION(0, 14)) {
             // read fileinfo
             MStyleSheetParser::StylesheetFileInfo *fileinfo = new MStyleSheetParser::StylesheetFileInfo;
             stream >> fileinfo->time_t;
@@ -1062,7 +1076,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
                 load(fileinfo->includes[i], globalConstants);
             }
 
-            QHashIterator<QString, QString> i(fileinfo->constants);
+            QHashIterator<QByteArray, QByteArray> i(fileinfo->constants);
             while (i.hasNext()) {
                 i.next();
                 if (globalConstants->contains(i.key())) {
@@ -1120,7 +1134,7 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
     QDataStream stream(&file);
 
     // write version number (32bit, 16 major, 16 minor)
-    stream << (int) FILE_VERSION(0, 13);
+    stream << (int) FILE_VERSION(0, 14);
     stream << info.time_t;
     stream << info.filename;
     stream << info.includes;
@@ -1151,9 +1165,9 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
 }
 
 
-MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QString &file, QDataStream &stream)
+MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QByteArray &file, QDataStream &stream)
 {
-    QString parentName, parentObjectName, objectName, className, classType, mode;
+    QByteArray parentName, parentObjectName, objectName, className, classType, mode;
     int flags, orientation;
 
     stream >> parentName;
@@ -1334,7 +1348,7 @@ void MStyleSheetParser::outputParseWarning(const QString &filename, const QStrin
 void MStyleSheetParser::cleanup()
 {
     //remove strings with only one reference from the cache
-    QSet<QString>::iterator i = MStyleSheetParserPrivate::stringCache.begin();
+    QSet<QByteArray>::iterator i = MStyleSheetParserPrivate::stringCache.begin();
     while( i !=  MStyleSheetParserPrivate::stringCache.end() ) {
         if( (*i).isDetached() ) {
             i = MStyleSheetParserPrivate::stringCache.erase(i);
@@ -1353,7 +1367,7 @@ bool MStyleSheetParser::validate(const QString &filename)
     QFileInfo fileInfo(filename);
     if (file.open(QFile::ReadOnly)) {
 	MStyleSheetParser::StylesheetFileInfo *privateFileInfo = new MStyleSheetParser::StylesheetFileInfo;
-        privateFileInfo->filename = filename;
+        privateFileInfo->filename = filename.toAscii();
 
         result = p->parse(file, fileInfo, true);
         file.close();

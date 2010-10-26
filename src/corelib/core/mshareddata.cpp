@@ -314,6 +314,24 @@ MSharedData &MSharedData::operator<< (QString str)
     return *this;
 }
 
+MSharedData &MSharedData::operator<< (QByteArray array)
+{
+    Q_D(MSharedData);
+
+    if (d->mode != MSharedData::Write) {
+        qDebug() << "cannot write. Buffer not open or ReadOnly";
+        return *this;
+    }
+
+    d->savePos();
+    d->dataStream << array;
+    if (d->pageOverflown()) {
+        d->dataStream << array;
+    }
+
+    return *this;
+}
+
 MSharedData &MSharedData::operator>> (int &i)
 {
     Q_D(MSharedData);
@@ -400,6 +418,21 @@ MSharedData &MSharedData::operator>> (QString &str)
 
     d->nextPage();
     d->dataStream >> str;
+
+    return *this;
+}
+
+MSharedData &MSharedData::operator>> (QByteArray &array)
+{
+    Q_D(MSharedData);
+
+    if (d->mode != MSharedData::ReadOnly) {
+        qDebug() << "cannot read. Buffer not open or open for writing";
+        return *this;
+    }
+
+    d->nextPage();
+    d->dataStream >> array;
 
     return *this;
 }

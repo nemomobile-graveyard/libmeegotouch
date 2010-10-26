@@ -36,6 +36,7 @@ class QMetaObject;
 
 class MWidgetController;
 
+//! \internal
 // MClassFactory
 class M_CORE_EXPORT MClassFactory
 {
@@ -49,13 +50,13 @@ public:
       Returns the name of the assembly where the given widget class was introduced.
       If the widget class was not found, returns NULL.
      */
-    QString widgetAssemblyName(const QString &controllerClassName) const;
+    QString widgetAssemblyName(const QByteArray &controllerClassName) const;
 
     /*!
       Returns the type of the assembly where the given widget class was introduced.
       If the widget class was not found, returns -1.
      */
-    M::AssemblyType widgetAssemblyType(const QString &widgetClassName) const;
+    M::AssemblyType widgetAssemblyType(const QByteArray &widgetClassName) const;
 
     //////////////////
     // view classes //
@@ -200,6 +201,7 @@ private:
     ~MClassFactory();
     class MClassFactoryPrivate *d_ptr;
 };
+//! \internal_end
 
 #endif
 

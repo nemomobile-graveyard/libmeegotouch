@@ -354,14 +354,14 @@ void MTheme::releasePixmap(const QPixmap *pixmap)
 
 void MThemePrivate::extractDataForStyleClass(const char *styleClassName,
                                              QList<const MStyleSheet *> &sheets,
-                                             QStringList &styleMetaObjectHierarchy)
+                                             QList<QByteArray> &styleMetaObjectHierarchy)
 {
     // Go through the inheritance chain and add stylesheets from each assembly
     const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
     Q_ASSERT(mobj);
 
     do {
-        styleMetaObjectHierarchy.append(QString::fromAscii(mobj->className()));
+        styleMetaObjectHierarchy.append(mobj->className());
 
         M::AssemblyType assemblyType = MClassFactory::instance()->styleAssemblyType(mobj->className());
         if (assemblyType == M::Application) {
@@ -388,11 +388,11 @@ void MThemePrivate::extractDataForStyleClass(const char *styleClassName,
 }
 
 QList<const MStyleSheet *> MThemePrivate::extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,
-                                                                         const QStringList &parentHierarchy)
+                                                                         const QList<QByteArray> &parentHierarchy)
 {
     QList<const MStyleSheet *> parentSheets;
 
-    foreach (const QString &className, parentHierarchy) {
+    foreach (const QByteArray &className, parentHierarchy) {
         M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(className);
         if (assemblyType == M::Application || assemblyType == M::AssemblyNone)
             continue;
@@ -432,7 +432,7 @@ const MStyle *MTheme::style(const char *styleClassName,
     // list containing all stylesheets from all assemblies from which this style is/inherits + app css
     QList<const MStyleSheet *> sheets;
 
-    QStringList styleMetaObjectHierarchy;
+    QList<QByteArray> styleMetaObjectHierarchy;
     d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy);
 
     // Get parent data by traversing the MWidgetController pointer we have
@@ -458,7 +458,9 @@ const MStyle *MTheme::style(const char *styleClassName,
             parentStyleName = parent->objectName();
     }
 
-    return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName, styleMetaObjectHierarchy, styleClassName, objectName, mode, type, orientation);
+    return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName.toAscii(),
+                                     styleMetaObjectHierarchy, styleClassName, objectName.toAscii(),
+                                     mode.toAscii(), type.toAscii(), orientation);
 }
 
 const MStyle *MTheme::style(const char *styleClassName,
@@ -479,14 +481,18 @@ const MStyle *MTheme::style(const char *styleClassName,
     // list containing all stylesheets from all assemblies from which this style is/inherits + app css
     QList<const MStyleSheet *> sheets;
 
-    QStringList styleMetaObjectHierarchy;
+    QList<QByteArray> styleMetaObjectHierarchy;
     d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy);
 
     // Get parent data based on the parentClassHierarchies parameter...
     QVector<MStyleSheetPrivate::ParentData> parentsData(parentClassHierarchies.size());
     for (int i = 0; i < parentClassHierarchies.size(); i++) {
         MStyleSheetPrivate::ParentData &pd = parentsData[i];
-        pd.hierarchy = parentClassHierarchies[i];
+        QList<QByteArray> parentClassHierarchiesConverted;
+        foreach (const QString &str, parentClassHierarchies[i]) {
+            parentClassHierarchiesConverted << str.toAscii();
+        }
+        pd.hierarchy = parentClassHierarchiesConverted;
         pd.sheets = d->extractSheetsForClassHierarchy(sheets, pd.hierarchy);
     }
 
@@ -498,7 +504,7 @@ const MStyle *MTheme::style(const char *styleClassName,
     if (d->customStylesheet)
         sheets.append(d->customStylesheet);
 
-    return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName, styleMetaObjectHierarchy, styleClassName, objectName, mode, type, orientation);
+    return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName.toAscii(), styleMetaObjectHierarchy, styleClassName, objectName.toAscii(), mode.toAscii(), type.toAscii(), orientation);
 }
 
 void MTheme::releaseStyle(const MStyle *style)

@@ -53,13 +53,13 @@ void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &oth
 }
 
 
-MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
-        const QString &className,
-        const QString &classType,
+MStyleSheetSelector::MStyleSheetSelector(const QByteArray &objectName,
+        const QByteArray &className,
+        const QByteArray &classType,
         const Orientation orientation,
-        const QString &mode,
-        const QString &filename,
-        const QString &parentName,
+        const QByteArray &mode,
+        const QByteArray &filename,
+        const QByteArray &parentName,
         Flags flags) :
     d_ptr(new MStyleSheetSelectorPrivate)
 {
@@ -71,18 +71,18 @@ MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
     d->objectMode = mode;
     d->filename = filename;
     d->parentName = parentName;
-    d->parentObjectName = QString();
+    d->parentObjectName = QByteArray();
     d->flags = flags;
 }
 
-MStyleSheetSelector::MStyleSheetSelector(const QString &objectName,
-        const QString &className,
-        const QString &classType,
+MStyleSheetSelector::MStyleSheetSelector(const QByteArray &objectName,
+        const QByteArray &className,
+        const QByteArray &classType,
         const Orientation orientation,
-        const QString &mode,
-        const QString &filename,
-        const QString &parentName,
-        const QString &parentObjectName,
+        const QByteArray &mode,
+        const QByteArray &filename,
+        const QByteArray &parentName,
+        const QByteArray &parentObjectName,
         Flags flags) :
     d_ptr(new MStyleSheetSelectorPrivate)
 {
@@ -120,31 +120,31 @@ MAttributeList *MStyleSheetSelector::attributes()
     return &d->data;
 }
 
-QString MStyleSheetSelector::parentName() const
+QByteArray MStyleSheetSelector::parentName() const
 {
     Q_D(const MStyleSheetSelector);
     return d->parentName;
 }
 
-QString MStyleSheetSelector::parentObjectName() const
+QByteArray MStyleSheetSelector::parentObjectName() const
 {
     Q_D(const MStyleSheetSelector);
     return d->parentObjectName;
 }
 
-QString MStyleSheetSelector::objectName() const
+QByteArray MStyleSheetSelector::objectName() const
 {
     Q_D(const MStyleSheetSelector);
     return d->objName;
 }
 
-QString MStyleSheetSelector::className() const
+QByteArray MStyleSheetSelector::className() const
 {
     Q_D(const MStyleSheetSelector);
     return d->clName;
 }
 
-QString MStyleSheetSelector::classType() const
+QByteArray MStyleSheetSelector::classType() const
 {
     Q_D(const MStyleSheetSelector);
     return d->clType;
@@ -156,7 +156,7 @@ MStyleSheetSelector::Orientation MStyleSheetSelector::orientation() const
     return d->screenOrientation;
 }
 
-QString MStyleSheetSelector::mode() const
+QByteArray MStyleSheetSelector::mode() const
 {
     Q_D(const MStyleSheetSelector);
     return d->objectMode;

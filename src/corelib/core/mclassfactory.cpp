@@ -31,7 +31,7 @@
 class MClassFactoryPrivate
 {
 public:
-    QHash<QString, MWidgetCreatorBase *> widgetCreators;
+    QHash<QByteArray, MWidgetCreatorBase *> widgetCreators;
     QHash<QString, MViewCreatorBase *> viewCreators;
     QHash<QString, MStyleCreatorBase *> styleCreators;
     QHash<QString, MAnimationCreatorBase *> animationCreators;
@@ -65,7 +65,7 @@ MClassFactory *MClassFactory::instance()
 ////////////
 void MClassFactory::registerWidgetCreator(MWidgetCreatorBase *creator, const char *widgetClassName)
 {
-    QString type(widgetClassName);
+    QByteArray type(widgetClassName);
     if (type.isEmpty())
         qFatal("MClassFactory cannot register MWidgetCreator with empty type identifier");
 
@@ -78,7 +78,7 @@ void MClassFactory::registerWidgetCreator(MWidgetCreatorBase *creator, const cha
 
 void MClassFactory::unregisterWidgetCreator(MWidgetCreatorBase *creator)
 {
-    QString widgetClassName = d_ptr->widgetCreators.key(creator);
+    QByteArray widgetClassName = d_ptr->widgetCreators.key(creator);
     if (widgetClassName.isEmpty()) {
         qWarning("MClassFactory cannot unregister MWidgetCreator which is not registered");
     } else {
@@ -86,7 +86,7 @@ void MClassFactory::unregisterWidgetCreator(MWidgetCreatorBase *creator)
     }
 }
 
-QString MClassFactory::widgetAssemblyName(const QString &widgetClassName) const
+QString MClassFactory::widgetAssemblyName(const QByteArray &widgetClassName) const
 {
     const MWidgetCreatorBase *widgetCreator = d_ptr->widgetCreators.value(widgetClassName, NULL);
     if (!widgetCreator) {
@@ -95,7 +95,7 @@ QString MClassFactory::widgetAssemblyName(const QString &widgetClassName) const
     return widgetCreator->assemblyName();
 }
 
-M::AssemblyType MClassFactory::widgetAssemblyType(const QString &widgetClassName) const
+M::AssemblyType MClassFactory::widgetAssemblyType(const QByteArray &widgetClassName) const
 {
     const MWidgetCreatorBase *widgetCreator = d_ptr->widgetCreators.value(widgetClassName, NULL);
     if (!widgetCreator) {

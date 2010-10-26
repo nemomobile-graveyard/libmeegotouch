@@ -16,7 +16,6 @@ PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mdesktopentry.h \
     $$CORE_SRC_DIR/mnamespace.h \
     $$CORE_SRC_DIR/mexport.h \
-    $$CORE_SRC_DIR/mclassfactory.h \
     $$CORE_SRC_DIR/mshareddata.h \
     $$CORE_SRC_DIR/mgconfitem.h \
     $$CORE_SRC_DIR/mtimestamp.h \
@@ -28,6 +27,7 @@ PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mfiledatastore.h \
 
 PRIVATE_HEADERS += \
+    $$CORE_SRC_DIR/mclassfactory.h \
     $$CORE_SRC_DIR/massembly_p.h \
     $$CORE_SRC_DIR/mdesktopentry_p.h \
     $$CORE_SRC_DIR/minputmethodstate_p.h \

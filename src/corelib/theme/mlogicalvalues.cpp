@@ -43,11 +43,11 @@ bool MLogicalValuesPrivate::parse(const QString &filename)
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
-    QString group = "General";
+    QByteArray group = "General";
     data.insert("General", Values());
 
     while (!file.atEnd()) {
-        QString line = file.readLine().trimmed();
+        QByteArray line = file.readLine().trimmed();
         // skip comments
         if (line.startsWith("[")) {
             // parse group header
@@ -62,14 +62,14 @@ bool MLogicalValuesPrivate::parse(const QString &filename)
         } else {
 
             // key/value pair
-            QString key, value;
-            QString *target = &key;
+            QByteArray key, value;
+            QByteArray *target = &key;
 
             // stores the last 'good' character
             int truncation = 0;
             // go through whole line
             for (int i = 0; i < line.length(); i++) {
-                QChar character = line[i];
+                QChar character = line.at(i);
                 if (character == ';') {
                     break;
                 } else if (character == '=') {
@@ -154,7 +154,7 @@ void MLogicalValues::load(const QStringList &themeInheritanceChain, const QStrin
     }
 }
 
-bool MLogicalValues::findKey(const QString &key, QString &group, QString &value) const
+bool MLogicalValues::findKey(const QByteArray &key, QByteArray &group, QByteArray &value) const
 {
     Q_D(const MLogicalValues);
 
@@ -175,7 +175,7 @@ bool MLogicalValues::findKey(const QString &key, QString &group, QString &value)
 }
 
 
-bool MLogicalValues::value(const QString &group, const QString &key, QString &value) const
+bool MLogicalValues::value(const QByteArray &group, const QByteArray &key, QByteArray &value) const
 {
     Q_D(const MLogicalValues);
     if (!d->data.contains(group)) {
@@ -195,9 +195,9 @@ bool MLogicalValues::value(const QString &group, const QString &key, QString &va
 }
 
 
-QColor MLogicalValues::color(const QString &group, const QString &key) const
+QColor MLogicalValues::color(const QByteArray &group, const QByteArray &key) const
 {
-    QString string;
+    QByteArray string;
     if (!value(group, key, string)) {
         return QColor();
     }
@@ -210,9 +210,9 @@ QColor MLogicalValues::color(const QString &group, const QString &key) const
     return color;
 }
 
-QFont MLogicalValues::font(const QString &group, const QString &key) const
+QFont MLogicalValues::font(const QByteArray &group, const QByteArray &key) const
 {
-    QString string;
+    QByteArray string;
     if (!value(group, key, string)) {
         return QFont();
     }

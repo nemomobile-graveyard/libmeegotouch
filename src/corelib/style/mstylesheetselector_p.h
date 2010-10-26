@@ -27,23 +27,23 @@ class MStyleSheetSelectorPrivate
 {
 public:
     //! Parent class name, represented by this selector.
-    QString parentName;
+    QByteArray parentName;
     //! Parent class object name, represented by this selector.
-    QString parentObjectName;
+    QByteArray parentObjectName;
     //! Object name, represented by this selector.
-    QString objName;
+    QByteArray objName;
     //! Class name, represented by this selector.
-    QString clName;
+    QByteArray clName;
     //! Type, represented by this selector.
-    QString clType;
+    QByteArray clType;
     //! Screen orientation type, represented by this selector.
     MStyleSheetSelector::Orientation screenOrientation;
     //! Object mode, represented by this selector.
-    QString objectMode;
+    QByteArray objectMode;
     //! Attribute list of this selector (ClassName#ObjectName.Orientation:Mode).
     MAttributeList data;
     //! Name of the css file where the selector was created.
-    QString filename;
+    QByteArray filename;
     //! Flags indicating whether this is a special kind of selector.
     MStyleSheetSelector::Flags flags;
 

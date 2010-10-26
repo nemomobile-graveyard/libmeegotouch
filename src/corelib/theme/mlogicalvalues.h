@@ -35,10 +35,10 @@ public:
     void load(const QStringList &themeInheritanceChain, const QString &locale = QString());
     bool append(const QString &filename);
 
-    bool findKey(const QString &key, QString &group, QString &value) const;
-    bool value(const QString &group, const QString &key, QString &value) const;
-    QColor color(const QString &group, const QString &key) const;
-    QFont font(const QString &group, const QString &key) const;
+    bool findKey(const QByteArray &key, QByteArray &group, QByteArray &value) const;
+    bool value(const QByteArray &group, const QByteArray &key, QByteArray &value) const;
+    QColor color(const QByteArray &group, const QByteArray &key) const;
+    QFont font(const QByteArray &group, const QByteArray &key) const;
 
 protected:
     MLogicalValuesPrivate *const d_ptr;

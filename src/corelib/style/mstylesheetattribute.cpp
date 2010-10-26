@@ -100,11 +100,11 @@ enum {
     NUM_UNITS
 };
 
-static const QString units[NUM_UNITS] = {
-    QString("px"),
-    QString("mm"),
-    QString("pt"),
-    QString('%')
+static const QByteArray units[NUM_UNITS] = {
+    QByteArray("px"),
+    QByteArray("mm"),
+    QByteArray("pt"),
+    QByteArray("%")
 };
 
 static const QByteArray types[NUM_TYPES] = {
@@ -133,14 +133,15 @@ static const QByteArray types[NUM_TYPES] = {
 #endif
 };
 
-static const QString values[NUM_VALUES] = {
-    QString('#'),
-    QString("image("),
-    QString("box("),
-    QString("scalable("),
-    QString("size("),
-    QString("pos("),
-    QString("font("),
+// These should be always in lower case
+static const QByteArray values[NUM_VALUES] = {
+    QByteArray("#"),
+    QByteArray("image("),
+    QByteArray("box("),
+    QByteArray("scalable("),
+    QByteArray("size("),
+    QByteArray("pos("),
+    QByteArray("font("),
 };
 
 Q_DECLARE_METATYPE(const QPixmap *)
@@ -164,15 +165,15 @@ Q_DECLARE_METATYPE(QEasingCurve)
 class QtDatatypeConverter
 {
 public:
-    QMap<QString, Qt::Alignment> ALIGNMENTS;
-    QMap<QString, Qt::Orientation> ORIENTATIONS;
-    QMap<QString, QTextCharFormat::UnderlineStyle> UNDERLINESTYLES;
-    QMap<QString, Qt::PenStyle> PENSTYLES;
-    QMap<QString, Qt::Axis> AXES;
-    QMap<QString, QFont::Weight> WEIGHTS;
-    QMap<QString, QFont::Capitalization> CAPITALIZATION;
+    QMap<QByteArray, Qt::Alignment> ALIGNMENTS;
+    QMap<QByteArray, Qt::Orientation> ORIENTATIONS;
+    QMap<QByteArray, QTextCharFormat::UnderlineStyle> UNDERLINESTYLES;
+    QMap<QByteArray, Qt::PenStyle> PENSTYLES;
+    QMap<QByteArray, Qt::Axis> AXES;
+    QMap<QByteArray, QFont::Weight> WEIGHTS;
+    QMap<QByteArray, QFont::Capitalization> CAPITALIZATION;
 #if QT_VERSION >= 0x040600
-    QMap<QString, QEasingCurve::Type> EASINGCURVETYPES;
+    QMap<QByteArray, QEasingCurve::Type> EASINGCURVETYPES;
 #endif
 
     QtDatatypeConverter() {
@@ -269,9 +270,9 @@ public:
 
 static QtDatatypeConverter DataTypeConverter;
 
-int MStyleSheetAttribute::attributeToInt(const QString &attribute, bool *conversionOk)
+int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conversionOk)
 {
-    QString value = attribute.trimmed();
+    QByteArray value = attribute.trimmed();
 
     if (attribute.endsWith(units[PIXELS_UNIT])) {
         // strip "px" from the end
@@ -296,9 +297,9 @@ int MStyleSheetAttribute::attributeToInt(const QString &attribute, bool *convers
     return value.toInt(conversionOk);
 }
 
-int MStyleSheetAttribute::attributeToInt(const QString &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation)
+int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation)
 {
-    QString value = attribute.trimmed();
+    QByteArray value = attribute.trimmed();
 
     if (attribute.endsWith(units[PERCENT_UNIT])) {
         int maximumValue = 0;
@@ -325,9 +326,9 @@ int MStyleSheetAttribute::attributeToInt(const QString &attribute, bool *convers
     }
 }
 
-qreal MStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *conversionOk)
+qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *conversionOk)
 {
-    QString value = attribute.trimmed();
+    QByteArray value = attribute.trimmed();
 
     if (attribute.endsWith(units[PIXELS_UNIT])) {
         // strip "px" from the end
@@ -352,9 +353,9 @@ qreal MStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *con
     return value.toFloat(conversionOk);
 }
 
-qreal MStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation)
+qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation)
 {
-    QString value = attribute.trimmed();
+    QByteArray value = attribute.trimmed();
 
     if (attribute.endsWith(units[PERCENT_UNIT])) {
         int maximumValue = 0;
@@ -381,13 +382,13 @@ qreal MStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *con
     }
 }
 
-bool MStyleSheetAttribute::booleanFromString(const QString &string, bool *conversionOk)
+bool MStyleSheetAttribute::booleanFromString(const QByteArray &string, bool *conversionOk)
 {
-    if (string.compare("true", Qt::CaseInsensitive) == 0) {
+    if (qstricmp(string, "true") == 0) {
         if (conversionOk)
             *conversionOk = true;
         return true;
-    } else if (string.compare("false", Qt::CaseInsensitive) == 0) {
+    } else if (qstricmp(string, "false") == 0) {
         if (conversionOk)
             *conversionOk = true;
         return false;
@@ -398,15 +399,15 @@ bool MStyleSheetAttribute::booleanFromString(const QString &string, bool *conver
     return bool();
 }
 
-QColor MStyleSheetAttribute::colorFromString(const QString &string, bool *conversionOk)
+QColor MStyleSheetAttribute::colorFromString(const QByteArray &string, bool *conversionOk)
 {
-    QColor color(string);
+    QColor color(string.data());
     if (conversionOk)
         *conversionOk = (string.length() > 0) ? color.isValid() : true;
     return color;
 }
 
-QFont MStyleSheetAttribute::fontFromString(const QString string, bool *conversionOk)
+QFont MStyleSheetAttribute::fontFromString(const QByteArray string, bool *conversionOk)
 {
     //font: "font family" 20px
     //font: "font family" bold 20px
@@ -429,16 +430,17 @@ QFont MStyleSheetAttribute::fontFromString(const QString string, bool *conversio
         conversionOk = &ok;
     *conversionOk = false;
 
-    QStringList list;
+    QList<QByteArray> list;
     if (string.startsWith('\"')) {
         int idx = string.indexOf('\"', 1);
         if (idx != -1) {
             //get quoted font family name
-            QString family = string.mid(1, idx - 1);
+            QByteArray family = string.mid(1, idx - 1);
 
             //split rest of the parameters
-            QString values = string.mid(idx + 1).trimmed();
-            list = values.split(' ', QString::SkipEmptyParts);
+            QByteArray values = string.mid(idx + 1).trimmed();
+            list = values.split(' ');
+            list.removeAll("");
 
             //insert family as first parameter
             list.insert(0, family);
@@ -520,8 +522,8 @@ QFont MStyleSheetAttribute::fontFromString(const QString string, bool *conversio
     return QFont();
 }
 
-QString MStyleSheetAttribute::attributeNameToPropertyName(const QString &attributeName) {
-    QString result;
+QByteArray MStyleSheetAttribute::attributeNameToPropertyName(const QByteArray &attributeName) {
+    QByteArray result;
     const int length = attributeName.length();
     for (int i = 0; i < length; ++i) {
         if (attributeName.at(i) == '-') {
@@ -578,17 +580,18 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //"image: "image id";"
         //"image: "image id" 64px 64px;"
 
-        QStringList list;
+        QList<QByteArray> list;
         if (value.startsWith('\"')) {
             //parse name inside quotes
             int idx = value.indexOf('\"', 1);
             if (idx != -1) {
                 //get quoted image_id
-                QString imageid = value.mid(1, idx - 1);
+                QByteArray imageid = value.mid(1, idx - 1);
 
                 //split rest of the parameters
-                QString values = value.mid(idx + 1).trimmed();
-                list = values.split(' ', QString::SkipEmptyParts);
+                QByteArray values = value.mid(idx + 1).trimmed();
+                list = values.split(' ');
+                list.removeAll("");
 
                 //insert image_id as first parameter
                 list.insert(0, imageid);
@@ -621,18 +624,18 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //"background: "image id" left right top bottom;"
         //"background: "image id";"
 
-        QStringList list;
+        QList<QByteArray> list;
         if (value.startsWith('\"')) {
             //parse name inside quotes
             int idx = value.indexOf('\"', 1);
             if (idx != -1) {
                 //get quoted image_id
-                QString imageid = value.mid(1, idx - 1);
+                QByteArray imageid = value.mid(1, idx - 1);
 
                 //split rest of the parameters
-                QString values = value.mid(idx + 1).trimmed();
-                list = values.split(' ', QString::SkipEmptyParts);
-
+                QByteArray values = value.mid(idx + 1).trimmed();
+                list = values.split(' ');
+                list.removeAll("");
                 //insert image_id as first parameter
                 list.insert(0, imageid);
             }
@@ -680,7 +683,8 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //size: 25px 25px;
 
         //just split into pieces and create QSize or QSizeF depending on the attributeType
-        QStringList list = value.split(' ', QString::SkipEmptyParts);
+        QList<QByteArray> list = value.split(' ');
+        list.removeAll("");
         if (list.size() == 2) {
             if (attributeType == types[SIZE_TYPE]) {
                 int width = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
@@ -696,7 +700,8 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //"point: 256px 123px;
 
         //just split into pieces and create QPoint or QPointF depending on the attributeType
-        QStringList list = value.split(' ', QString::SkipEmptyParts);
+        QList<QByteArray> list = value.split(' ');
+        list.removeAll("");
         if (list.size() == 2) {
             if (attributeType == types[POINT_TYPE]) {
                 int x = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
@@ -715,7 +720,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         }
     } else if (attributeType == types[STRING_TYPE]) {
         if (value.length() >= 2) {
-            if ((value[0] == 0x22) && (value[value.length()-1] == 0x22)) {
+            if ((value.at(0) == 0x22) && (value.at(value.length()-1) == 0x22)) {
                 return property.write(style, value.mid(1, value.length() - 2));
             }
         } else if (value.length() == 0) {
@@ -723,7 +728,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         }
     } else if (attributeType == types[CHAR_TYPE]) {
         if (value.length() == 3) {
-            if ((value[0] == QChar('\'')) && (value[2] == QChar('\''))) {
+            if ((value[0] == '\'') && (value[2] == '\'')) {
                 return property.write(style, static_cast<QChar>(value[1]));
             }
         }
@@ -755,7 +760,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
     else if (attributeType == types[EASINGCURVE_TYPE]) {
         QEasingCurve curve;
         // curve type
-        QStringList list = value.split(',');
+        QList<QByteArray> list = value.split(',');
         if (list.size() > 0) {
             if (DataTypeConverter.EASINGCURVETYPES.contains(list[0])) {
                 curve.setType(DataTypeConverter.EASINGCURVETYPES[list[0]]);
@@ -803,14 +808,14 @@ bool MStyleSheetAttribute::writeAttributeShm(MStyle *style,
         return property.write(style, qVariantFromValue((const QPixmap *) NULL));
 
     } else if (containerType == CONST_PIXMAP_TYPE_1) {
-        QString name;
+        QByteArray name;
         ds >> name;
 
         const QPixmap *pixmap = MTheme::pixmap(name);
         return property.write(style, qVariantFromValue(pixmap));
 
     } else if (containerType == CONST_PIXMAP_TYPE_3) {
-        QString name;
+        QByteArray name;
         int width, height;
         ds >> name >> width >> height;
 
@@ -821,13 +826,13 @@ bool MStyleSheetAttribute::writeAttributeShm(MStyle *style,
         property.write(style, qVariantFromValue((const MScalableImage *) NULL));
 
     }  else if (containerType == CONST_SCALABLE_TYPE_1) {
-        QString name;
+        QByteArray name;
         ds >> name;
         const MScalableImage *image = MTheme::scalableImage(name, 0, 0, 0, 0);
         return property.write(style, qVariantFromValue(image));
 
     }  else if (containerType == CONST_SCALABLE_TYPE_5) {
-        QString name;
+        QByteArray name;
         int left, right, top, bottom;
         ds >> name >> left >> right >> top >> bottom;
 
@@ -840,7 +845,7 @@ bool MStyleSheetAttribute::writeAttributeShm(MStyle *style,
         return property.write(style, font);
 
     } else if (containerType == FEEDBACK_TYPE) {
-        QString feedbackName;
+        QByteArray feedbackName;
         ds >> feedbackName;
         MFeedback feedback(feedbackName);
         return property.write(style, qVariantFromValue(feedback));
@@ -855,7 +860,7 @@ bool MStyleSheetAttribute::writeAttributeShm(MStyle *style,
         return property.write(style, value);
 
     } else if (containerType == SIZE_TYPE) {
-        QString widthStr, heightStr;
+        QByteArray widthStr, heightStr;
         ds >> widthStr >> heightStr;
 
         int width = MStyleSheetAttribute::attributeToInt(widthStr, &conversionOK, WidthAttribute, orientation);
@@ -863,7 +868,7 @@ bool MStyleSheetAttribute::writeAttributeShm(MStyle *style,
         return property.write(style, QSize(width, height));
 
     } else if (containerType == SIZEF_TYPE) {
-        QString widthStr, heightStr;
+        QByteArray widthStr, heightStr;
         ds >> widthStr >> heightStr;
 
         qreal width = MStyleSheetAttribute::attributeToFloat(widthStr, &conversionOK, WidthAttribute, orientation);
@@ -900,16 +905,16 @@ bool MStyleSheetAttribute::writeAttributeShm(MStyle *style,
 
 void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
         MSharedData &shm,
-        QString filename)
+        QByteArray filename)
 {
     bool conversionOK = false;
 
     const char *attributeType = property.typeName();
 
     if (attributeType == types[BOOL_TYPE]) {
-        if (value.compare("true", Qt::CaseInsensitive) == 0) {
+        if (qstricmp(value, "true") == 0) {
             shm << (int)BOOL_TYPE << qVariantFromValue(true);
-        } else if (value.compare("false", Qt::CaseInsensitive) == 0) {
+        } else if (qstricmp("false", value) == 0) {
             shm << (int)BOOL_TYPE << qVariantFromValue(false);
         }
     } else if (attributeType == types[INT_TYPE]) {
@@ -918,7 +923,7 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             shm << (int)INT_TYPE << qVariantFromValue(integer);
     } else if (attributeType == types[COLOR_TYPE]) {
         if (value.length() > 0) {
-            QColor color(value);
+            QColor color(value.data());
             if (color.isValid())
                 shm << (int)COLOR_TYPE << qVariantFromValue(color);
         } else
@@ -929,19 +934,20 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
         if (conversionOK)
             shm << (int)REAL_TYPE << real;
     } else if (attributeType == types[CONST_PIXMAP_TYPE]) {
-        if (value.startsWith(values[IMAGE_VALUE], Qt::CaseInsensitive)) {
+        if (value.startsWith(values[IMAGE_VALUE])) {
             //"image: image(image_id)"
             //"image: image(image_id, 64px, 64px);"
 
-            QString values = value.mid(6, value.length() - 7);
-            QStringList list = values.split(',');
+            QByteArray values = value.mid(6, value.length() - 7);
+            QList<QByteArray> list = values.split(',');
+            list.removeAll("");
             if (list.size() == 3) {
                 //since 0.11
                 qWarning("DEPRECATED: using \"image\" prefix for pixmap attributes is deprecated. Use following syntax instead:");
-                qWarning("%s: %s; => %s: \"%s\" %s %s; //<-- %s:%d", name.toLatin1().trimmed().data(), value.toLatin1().data(), name.toLatin1().trimmed().data(), list[0].toLatin1().trimmed().data(), list[1].toLatin1().trimmed().data(), list[2].toLatin1().trimmed().data(), filename.toLatin1().data(), MStyleSheetParser::getLineNum(filename, position));
+                qWarning("%s: %s; => %s: \"%s\" %s %s; //<-- %s:%d", name.trimmed().data(), value.data(), name.trimmed().data(), list[0].trimmed().data(), list[1].trimmed().data(), list[2].trimmed().data(), filename.data(), MStyleSheetParser::getLineNum(filename, position));
 
                 // Image with size parameters
-                QString name = list[0];
+                QByteArray name = list[0];
                 int width = MStyleSheetAttribute::attributeToInt(list[1], &conversionOK);
                 int height = MStyleSheetAttribute::attributeToInt(list[2], &conversionOK);
 
@@ -951,10 +957,10 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             else if (list.size() == 1) {
                 //since 0.11
                 qWarning("DEPRECATED: using \"image\" prefix for pixmap attributes is deprecated. Use following syntax instead:");
-                qWarning("%s: %s; => %s: \"%s\"; //<-- %s:%d", name.toLatin1().trimmed().data(), value.toLatin1().data(), name.toLatin1().trimmed().data(), list[0].toLatin1().trimmed().data(), filename.toLatin1().data(), MStyleSheetParser::getLineNum(filename, position));
+                qWarning("%s: %s; => %s: \"%s\"; //<-- %s:%d", name.trimmed().data(), value.data(), name.trimmed().data(), list[0].trimmed().data(), filename.data(), MStyleSheetParser::getLineNum(filename, position));
 
                 // Image without size specified
-                QString name = list[0];
+                QByteArray name = list[0];
                 shm << (int)CONST_PIXMAP_TYPE_1 << name;
             }
         } else {
@@ -963,18 +969,18 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             //"image: "image id";"
             //"image: "image id" 64px 64px;"
 
-            QStringList list;
+            QList<QByteArray> list;
             if (value.startsWith('\"')) {
                 //parse name inside quotes
                 int idx = value.indexOf('\"', 1);
                 if (idx != -1) {
                     //get quoted image_id
-                    QString imageid = value.mid(1, idx - 1);
+                    QByteArray imageid = value.mid(1, idx - 1);
 
                     //split rest of the parameters
-                    QString values = value.mid(idx + 1).trimmed();
-                    list = values.split(' ', QString::SkipEmptyParts);
-
+                    QByteArray values = value.mid(idx + 1).trimmed();
+                    list = values.split(' ');
+                    list.removeAll("");
                     //insert image_id as first parameter
                     list.insert(0, imageid);
                 }
@@ -1000,13 +1006,13 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             }
         }
     } else if (attributeType == types[CONST_SCALABLE_TYPE]) {
-        if (value.startsWith(values[SCALABLE_VALUE], Qt::CaseInsensitive)) {
+        if (value.toLower().startsWith(values[SCALABLE_VALUE])) {
             //"background: scalable(image_id, left, right, top, bottom);"
 
-            QString values = value.mid(9, value.length() - 10);
-            QStringList list = values.split(',');
+            QByteArray values = value.mid(9, value.length() - 10);
+            QList<QByteArray> list = values.split(',');
             if (list.size() == 5) {
-                QString name = list[0];
+                QByteArray name = list[0];
                 int left = MStyleSheetAttribute::attributeToInt(list[1], &conversionOK);
                 int right = MStyleSheetAttribute::attributeToInt(list[2], &conversionOK);
                 int top = MStyleSheetAttribute::attributeToInt(list[3], &conversionOK);
@@ -1014,9 +1020,9 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
 
                 //since 0.11
                 qWarning("DEPRECATED: using \"scalable\" prefix for images is deprecated. Use following syntax instead:");
-                qWarning("%s: %s; => %s: \"%s\" %s %s %s %s; //<-- %s:%d", name.toLatin1().trimmed().data(), value.toLatin1().data(), name.toLatin1().trimmed().data(), name.toLatin1().trimmed().data(), list[1].toLatin1().trimmed().data(), list[2].toLatin1().trimmed().data(), list[3].toLatin1().trimmed().data(), list[4].toLatin1().trimmed().data(), filename.toLatin1().data(), MStyleSheetParser::getLineNum(filename, position));
+                qWarning("%s: %s; => %s: \"%s\" %s %s %s %s; //<-- %s:%d", name.trimmed().data(), value.data(), name.trimmed().data(), name.trimmed().data(), list[1].trimmed().data(), list[2].trimmed().data(), list[3].trimmed().data(), list[4].trimmed().data(), filename.data(), MStyleSheetParser::getLineNum(filename, position));
                 if (left == 0 && right == 0 && top == 0 && bottom == 0)
-                    qWarning("%s: \"%s\";", name.toLatin1().trimmed().data(), name.toLatin1().trimmed().data());
+                    qWarning("%s: \"%s\";", name.trimmed().data(), name.trimmed().data());
                 shm << (int)CONST_SCALABLE_TYPE_5 << name << left << right << top << bottom;
             } else
                 shm << (int)CONST_SCALABLE_TYPE_0;
@@ -1026,17 +1032,18 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             //"background: "image id" left right top bottom;"
             //"background: "image id";"
 
-            QStringList list;
+            QList<QByteArray> list;
             if (value.startsWith('\"')) {
                 //parse name inside quotes
                 int idx = value.indexOf('\"', 1);
                 if (idx != -1) {
                     //get quoted image_id
-                    QString imageid = value.mid(1, idx - 1);
+                    QByteArray imageid = value.mid(1, idx - 1);
 
                     //split rest of the parameters
-                    QString values = value.mid(idx + 1).trimmed();
-                    list = values.split(' ', QString::SkipEmptyParts);
+                    QByteArray values = value.mid(idx + 1).trimmed();
+                    list = values.split(' ');
+                    list.removeAll("");
 
                     //insert image_id as first parameter
                     list.insert(0, imageid);
@@ -1061,7 +1068,7 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             else if (list.size() == 5) {
                 //image_id and the border parameters
 
-                QString name = list[0];
+                QByteArray name = list[0];
                 int left = MStyleSheetAttribute::attributeToInt(list[1], &conversionOK);
                 int right = MStyleSheetAttribute::attributeToInt(list[2], &conversionOK);
                 int top = MStyleSheetAttribute::attributeToInt(list[3], &conversionOK);
@@ -1073,15 +1080,15 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
     }
 
     else if (attributeType == types[SIZE_TYPE] || attributeType == types[SIZEF_TYPE]) {
-        if (value.startsWith(values[SIZE_VALUE], Qt::CaseInsensitive)) {
+        if (value.toLower().startsWith(values[SIZE_VALUE])) {
             //size: size(25px, 25px);
 
-            QString values = value.mid(5, value.length() - 6);
-            QStringList list = values.split(',');
+            QByteArray values = value.mid(5, value.length() - 6);
+            QList<QByteArray> list = values.split(',');
             if (list.size() == 2) {
                 //since 0.11
                 qWarning("DEPRECATED: using \"size\" prefix for size attributes is deprecated. Use following syntax instead:");
-                qWarning("%s: %s; => %s: %s %s; //<-- %s:%d", name.toLatin1().trimmed().data(), value.toLatin1().data(), name.toLatin1().trimmed().data(), list[0].toLatin1().trimmed().data(), list[1].toLatin1().trimmed().data(), filename.toLatin1().data(), MStyleSheetParser::getLineNum(filename, position));
+                qWarning("%s: %s; => %s: %s %s; //<-- %s:%d", name.trimmed().data(), value.data(), name.trimmed().data(), list[0].trimmed().data(), list[1].trimmed().data(), filename.data(), MStyleSheetParser::getLineNum(filename, position));
 
                 if (attributeType == types[SIZE_TYPE])
                     shm << (int)SIZE_TYPE << list[0] << list[1];
@@ -1092,7 +1099,8 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             //size: 25px 25px;
 
             //just split into pieces and create QSize or QSizeF depending on the attributeType
-            QStringList list = value.split(' ', QString::SkipEmptyParts);
+            QList<QByteArray> list = value.split(' ');
+            list.removeAll("");
             if (list.size() == 2) {
                 if (attributeType == types[SIZE_TYPE])
                     shm << (int)SIZE_TYPE << list[0] << list[1];
@@ -1103,15 +1111,15 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
 
     } else if (attributeType == types[POINT_TYPE] || attributeType == types[POINTF_TYPE]) {
 
-        if (value.startsWith(values[POS_VALUE], Qt::CaseInsensitive)) {
+        if (value.toLower().startsWith(values[POS_VALUE])) {
             //"point: pos(256px, 123px);"
 
-            QString values = value.mid(4, value.length() - 5);
-            QStringList list = values.split(',');
+            QByteArray values = value.mid(4, value.length() - 5);
+            QList<QByteArray> list = values.split(',');
             if (list.size() == 2) {
                 //since 0.11
                 qWarning("DEPRECATED: using \"pos\" prefix for position attributes is deprecated. Use following syntax instead:");
-                qWarning("%s: %s; => %s: %s %s; //<-- %s:%d", name.toLatin1().trimmed().data(), value.toLatin1().data(), name.toLatin1().trimmed().data(), list[0].toLatin1().trimmed().data(), list[1].toLatin1().trimmed().data(), filename.toLatin1().data(), MStyleSheetParser::getLineNum(filename, position));
+                qWarning("%s: %s; => %s: %s %s; //<-- %s:%d", name.trimmed().data(), value.data(), name.trimmed().data(), list[0].trimmed().data(), list[1].trimmed().data(), filename.data(), MStyleSheetParser::getLineNum(filename, position));
                 if (attributeType == types[POINT_TYPE]) {
                     int x = MStyleSheetAttribute::attributeToInt(list[0], &conversionOK);
                     int y = MStyleSheetAttribute::attributeToInt(list[1], &conversionOK);
@@ -1128,7 +1136,8 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             //"point: 256px 123px;
 
             //just split into pieces and create QPoint or QPointF depending on the attributeType
-            QStringList list = value.split(' ', QString::SkipEmptyParts);
+            QList<QByteArray> list = value.split(' ');
+            list.removeAll("");
             if (list.size() == 2) {
                 if (attributeType == types[POINT_TYPE]) {
                     int width = MStyleSheetAttribute::attributeToInt(list[0], &conversionOK);
@@ -1144,11 +1153,11 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             }
         }
     } else if (attributeType == types[FONT_TYPE]) {
-        if (value.startsWith(values[FONT_VALUE], Qt::CaseInsensitive)) {
+        if (value.toLower().startsWith(values[FONT_VALUE])) {
             //"font(sans, 10px);"
 
-            QString values = value.mid(5, value.length() - 6);
-            QStringList list = values.split(',');
+            QByteArray values = value.mid(5, value.length() - 6);
+            QList<QByteArray> list = values.split(',');
             if (list.size() == 2) {
                 float pixelSize = MStyleSheetAttribute::attributeToFloat(list[1], &conversionOK);
                 if (conversionOK) {
@@ -1156,7 +1165,7 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
                     font.setPixelSize(pixelSize);
                     //since 0.11
                     qWarning("DEPRECATED: using \"font\" prefix for font is deprecated. Use following syntax instead:");
-                    qWarning("%s: %s; => %s: \"%s\" %s; //<-- %s:%d", name.toLatin1().trimmed().data(), value.toLatin1().data(), name.toLatin1().trimmed().data(), list[0].toLatin1().trimmed().data(), list[1].toLatin1().trimmed().data(), filename.toLatin1().data(), MStyleSheetParser::getLineNum(filename, position));
+                    qWarning("%s: %s; => %s: \"%s\" %s; //<-- %s:%d", name.trimmed().constData(), value.constData(), name.trimmed().data(), list[0].trimmed().data(), list[1].trimmed().data(), filename.data(), MStyleSheetParser::getLineNum(filename, position));
 
                     shm << (int)FONT_TYPE << font;
                 }
@@ -1167,16 +1176,17 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
             //font: font_family 20px
             //font: font_family bold 20px
 
-            QStringList list;
+            QList<QByteArray> list;
             if (value.startsWith('\"')) {
                 int idx = value.indexOf('\"', 1);
                 if (idx != -1) {
                     //get quoted font family name
-                    QString family = value.mid(1, idx - 1);
+                    QByteArray family = value.mid(1, idx - 1);
 
                     //split rest of the parameters
-                    QString values = value.mid(idx + 1).trimmed();
-                    list = values.split(' ', QString::SkipEmptyParts);
+                    QByteArray values = value.mid(idx + 1).trimmed();
+                    list = values.split(' ');
+                    list.removeAll("");
 
                     //insert family as first parameter
                     list.insert(0, family);
@@ -1210,8 +1220,8 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
         }
     } else if (attributeType == types[STRING_TYPE]) {
         if (value.length() >= 2) {
-            if ((value[0] == 0x22) && (value[value.length()-1] == 0x22)) {
-                QString tmp =  value.mid(1, value.length() - 2);
+            if ((value.at(0) == 0x22) && (value.at(value.length()-1) == 0x22)) {
+                QByteArray tmp =  value.mid(1, value.length() - 2);
                 shm << (int)STRING_TYPE << qVariantFromValue(tmp);
             }
         } else if (value.length() == 0)
@@ -1240,7 +1250,7 @@ void MStyleSheetAttribute::writeAttribute(const QMetaProperty &property,
     else if (attributeType == types[EASINGCURVE_TYPE]) {
         QEasingCurve curve;
         // curve type
-        QStringList list = value.split(',');
+        QList<QByteArray> list = value.split(',');
         if (list.size() > 0) {
             if (DataTypeConverter.EASINGCURVETYPES.contains(list[0])) {
                 curve.setType(DataTypeConverter.EASINGCURVETYPES[list[0]]);

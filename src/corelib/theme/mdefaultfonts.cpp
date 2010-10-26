@@ -27,7 +27,7 @@ MDefaultFontsPrivate::MDefaultFontsPrivate(const MLogicalValues &values) : value
 
 void MDefaultFontsPrivate::reloadAllValues() const
 {
-    const QString FONT_GROUP_NAME = "Fonts";
+    const QByteArray FONT_GROUP_NAME = "Fonts";
 
     extraSmallFont = values.font(FONT_GROUP_NAME, "FONT_XSMALL");
     smallFont = values.font(FONT_GROUP_NAME, "FONT_SMALL");

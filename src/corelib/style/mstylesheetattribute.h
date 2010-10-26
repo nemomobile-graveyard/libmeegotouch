@@ -46,20 +46,20 @@ class MStyleSheetAttribute
     };
 
 public:
-    QString name;
-    QString value;
-    QString constValue; //original parsed value containing the $CONSTANT definitions
+    QByteArray name;
+    QByteArray value;
+    QByteArray constValue; //original parsed value containing the $CONSTANT definitions
     qint64 position;    //used for providing detailed css parse error output (linenumber)
 
-    static int attributeToInt(const QString &attribute, bool *conversionOk);
-    static int attributeToInt(const QString &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
-    static qreal attributeToFloat(const QString &attribute, bool *conversionOk);
-    static qreal attributeToFloat(const QString &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
+    static int attributeToInt(const QByteArray &attribute, bool *conversionOk);
+    static int attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
+    static qreal attributeToFloat(const QByteArray &attribute, bool *conversionOk);
+    static qreal attributeToFloat(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
 
-    static bool booleanFromString(const QString &string, bool *conversionOk);
-    static QColor colorFromString(const QString &string, bool *conversionOk);
-    static QFont fontFromString(const QString string, bool *conversionOk);
-    static QString attributeNameToPropertyName(const QString &attributeName);
+    static bool booleanFromString(const QByteArray &string, bool *conversionOk);
+    static QColor colorFromString(const QByteArray &string, bool *conversionOk);
+    static QFont fontFromString(const QByteArray string, bool *conversionOk);
+    static QByteArray attributeNameToPropertyName(const QByteArray &attributeName);
 
     bool writeAttribute(const QString &filename,
                         MStyle *style,
@@ -68,7 +68,7 @@ public:
 
     void writeAttribute(const QMetaProperty &property,
                         MSharedData &shm,
-                        QString filename);
+                        QByteArray filename);
 
     bool writeAttributeShm(MStyle *style,
                            QMetaProperty property,
@@ -76,7 +76,7 @@ public:
                            M::Orientation orientation);
 };
 
-typedef QMap<QString, MStyleSheetAttribute *> MAttributeList;
+typedef QMap<QByteArray, MStyleSheetAttribute *> MAttributeList;
 //! \internal_end
 
 #endif

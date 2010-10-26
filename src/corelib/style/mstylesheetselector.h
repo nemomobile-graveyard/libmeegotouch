@@ -23,7 +23,7 @@
 #include "mexport.h"
 #include "mstylesheetattribute.h"
 
-#include <QString>
+#include <QByteArray>
 #include <QVariant>
 
 class MStyleSheetSelectorPrivate;
@@ -68,13 +68,13 @@ public:
      * \deprecated Please use the new constructor
      */
 
-    explicit MStyleSheetSelector(const QString &objectName = "",
-                                   const QString &className = "",
-                                   const QString &classType = "",
+    explicit MStyleSheetSelector(const QByteArray &objectName = "",
+                                   const QByteArray &className = "",
+                                   const QByteArray &classType = "",
                                    const Orientation orientation = UndefinedOrientation,
-                                   const QString &mode = "",
-                                   const QString &filename = "",
-                                   const QString &parentName = "",
+                                   const QByteArray &mode = "",
+                                   const QByteArray &filename = "",
+                                   const QByteArray &parentName = "",
                                    Flags flags = (Flags) 0);
 
     /*!
@@ -93,14 +93,14 @@ public:
      * \param subclasses A flag indicating whether the su
      */
 
-    explicit MStyleSheetSelector(const QString &objectName,
-                                   const QString &className,
-                                   const QString &classType,
+    explicit MStyleSheetSelector(const QByteArray &objectName,
+                                   const QByteArray &className,
+                                   const QByteArray &classType,
                                    const Orientation orientation,
-                                   const QString &mode,
-                                   const QString &filename,
-                                   const QString &parentName,
-                                   const QString &parentObjectName,
+                                   const QByteArray &mode,
+                                   const QByteArray &filename,
+                                   const QByteArray &parentName,
+                                   const QByteArray &parentObjectName,
                                    Flags flags = (Flags) 0);
 
 
@@ -121,27 +121,27 @@ public:
     /*!
      * \brief Returns the parent class name for this selector.
      */
-    QString parentName() const;
+    QByteArray parentName() const;
 
     /*!
      * \brief Returns the parent class object name for this selector.
      */
-    QString parentObjectName() const;
+    QByteArray parentObjectName() const;
 
     /*!
      * \brief Returns the object name for this selector.
      */
-    QString objectName() const;
+    QByteArray objectName() const;
 
     /*!
      * \brief Returns the class name for this selector.
      */
-    QString className() const;
+    QByteArray className() const;
 
     /*!
      * \brief Returns the type for this selector.
      */
-    QString classType() const;
+    QByteArray classType() const;
 
     /*!
      * \brief Returns the screen orientation for this selector.
@@ -151,7 +151,7 @@ public:
     /*!
      * \brief Returns the object mode for this selector.
      */
-    QString mode() const;
+    QByteArray mode() const;
 
     /*!
      * \brief Returns flags of this selector.

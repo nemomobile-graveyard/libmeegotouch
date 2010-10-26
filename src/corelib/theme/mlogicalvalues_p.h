@@ -26,8 +26,8 @@ class MLogicalValuesPrivate
 {
 public:
 
-    typedef QHash<QString, QString> Values;
-    typedef QHash<QString, Values> Groups;
+    typedef QHash<QByteArray, QByteArray> Values;
+    typedef QHash<QByteArray, Values> Groups;
 
     bool parse(const QString &filename);
     Groups data;
