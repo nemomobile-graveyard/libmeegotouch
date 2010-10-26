@@ -28,6 +28,7 @@ SUBDIRS     =  \
      ut_mbasiclistitem \
      ut_mcomponentcache \
      ut_minputmethodstate \
+     ut_minputwidgetrelocator \
      ut_mbutton \
      ut_mbuttonview \
      ut_mbuttongroup \
