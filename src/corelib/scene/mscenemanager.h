@@ -330,6 +330,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_dislocateSceneWindow(MSceneWindow *, QPointF))
     Q_PRIVATE_SLOT(d_func(), void _q_undoSceneWindowDislocation(MSceneWindow *sceneWindow))
     Q_PRIVATE_SLOT(d_func(), void _q_updateRootElementsPositions())
+    Q_PRIVATE_SLOT(d_func(), void _q_updateOnDisplayVisibility())
 #ifdef Q_WS_X11
     Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
 #endif
@@ -338,6 +339,7 @@ private:
      Methods for testing purposes
      */
     void fastForwardPageSwitchAnimation();
+    void fastForwardOrientationChangeAnimation();
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
     void addSceneWindow(MSceneWindow *sceneWindow);
     void removeSceneWindow(MSceneWindow *sceneWindow);

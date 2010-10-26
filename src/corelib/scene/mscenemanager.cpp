@@ -191,6 +191,7 @@ void MSceneManagerPrivate::createOrientationAnimation()
     q->connect(orientationAnimation, SIGNAL(finished()),
             SLOT(_q_applySceneWindowTransitionsQueuedDueToOrientationAnimation()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_updateOnDisplayVisibility()));
 }
 
 MSceneManagerPrivate::~MSceneManagerPrivate()
@@ -387,6 +388,13 @@ void MSceneManagerPrivate::removeSceneWindowFromTransitionQueue(MSceneWindow *sc
         } else {
             ++i;
         }
+    }
+}
+
+void MSceneManagerPrivate::_q_updateOnDisplayVisibility()
+{
+    if (currentPage) {
+        produceMustBeResolvedDisplayEvent(currentPage);
     }
 }
 
@@ -929,6 +937,7 @@ void MSceneManagerPrivate::setOrientationAngleWithoutAnimation(M::OrientationAng
     }
 
     _q_emitOrientationChangeFinished();
+    _q_updateOnDisplayVisibility();
 }
 
 bool MSceneManagerPrivate::isOnDisplay()
@@ -1921,7 +1930,6 @@ void MSceneManagerPrivate::fastForwardSceneWindowTransitionAnimation(MSceneWindo
     }
 }
 
-
 MSceneManagerStyleContainer &MSceneManagerPrivate::style()
 {
     Q_Q(MSceneManager);
@@ -2203,6 +2211,12 @@ void MSceneManager::fastForwardPageSwitchAnimation()
 {
     Q_D(MSceneManager);
     d->pageSwitchAnimation->setCurrentTime(d->pageSwitchAnimation->duration());
+}
+
+void MSceneManager::fastForwardOrientationChangeAnimation()
+{
+    Q_D(MSceneManager);
+    d->orientationAnimation->setCurrentTime(d->orientationAnimation->duration());
 }
 
 void MSceneManager::fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow)

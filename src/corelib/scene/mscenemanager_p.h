@@ -199,6 +199,7 @@ public:
     void _q_onSceneWindowAppearanceAnimationFinished();
     void _q_onSceneWindowDisappearanceAnimationFinished();
     void _q_onPageSwitchAnimationFinished();
+    void _q_updateOnDisplayVisibility();
 
     void _q_unFreezeUI();
 

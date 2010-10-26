@@ -64,6 +64,21 @@ bool MWindow::isOnDisplay() const
     return gMWindowIsOnDisplay;
 }
 
+class EventTestPage : public MApplicationPage
+{
+public:
+    QRectF latestViewRect;
+    bool mustBeResolvedReceived;
+protected:
+    virtual void onDisplayChangeEvent(MOnDisplayChangeEvent * event) {
+        if (event->state() == MOnDisplayChangeEvent::MustBeResolved) {
+            mustBeResolvedReceived = true;
+            latestViewRect = event->viewRect();
+            MSceneWindow::onDisplayChangeEvent(event);
+        }
+    }
+};
+
 // Test class implementation
 
 void Ut_MSceneManager::initTestCase()
@@ -268,6 +283,55 @@ void Ut_MSceneManager::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
     QCOMPARE(orientationChangedSpy.count(), 0);
     QCOMPARE(angleChangedSpy.count(), 1);
     QCOMPARE(finishedSpy.count(), 1);
+}
+
+void Ut_MSceneManager::testOrientationChangeVisibility()
+{
+    gMWindowIsOnDisplay = true;
+
+    // Create page to catch MOnDisplayChangeEvent's
+    EventTestPage *win = new EventTestPage;
+    sm->appearSceneWindowNow(win);
+
+    // Init with landscape
+    sm->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+
+    const int height = win->geometry().height();
+    const int width  = win->geometry().width();
+
+    // Rotate to portrait, immediately
+    win->mustBeResolvedReceived = false;
+    sm->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+    QVERIFY(win->mustBeResolvedReceived == true);
+    QVERIFY(win->latestViewRect == QRectF(0, 0, height, width));
+
+    // Rotate to landscape, immediately
+    win->mustBeResolvedReceived = false;
+    sm->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+    QVERIFY(win->mustBeResolvedReceived == true);
+    QVERIFY(win->latestViewRect == QRectF(0, 0, width, height));
+
+    // Rotate back to portrait, immediately
+    win->mustBeResolvedReceived = false;
+    sm->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+    QVERIFY(win->mustBeResolvedReceived == true);
+    QVERIFY(win->latestViewRect == QRectF(0, 0, height, width));
+
+    // Rotate to landscape, animatedly
+    win->mustBeResolvedReceived = false;
+    sm->setOrientationAngle(M::Angle0);
+    QVERIFY(win->mustBeResolvedReceived == false);
+    sm->fastForwardOrientationChangeAnimation();
+    QVERIFY(win->mustBeResolvedReceived == true);
+    QVERIFY(win->latestViewRect == QRectF(0, 0, width, height));
+
+    // Rotate back to portrait, animatedly
+    win->mustBeResolvedReceived = false;
+    sm->setOrientationAngle(M::Angle90);
+    QVERIFY(win->mustBeResolvedReceived == false);
+    sm->fastForwardOrientationChangeAnimation();
+    QVERIFY(win->mustBeResolvedReceived == true);
+    QVERIFY(win->latestViewRect == QRectF(0, 0, height, width));
 }
 
 // Test uses non-exported symbol "MDockWidget".

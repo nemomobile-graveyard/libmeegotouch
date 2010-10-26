@@ -57,6 +57,7 @@ private slots:
     void testInitialOrientation();
     void testOrientationChangedSignal();
     void testNoOrientationChangedSignalWhenRotatingBy180Degrees();
+    void testOrientationChangeVisibility();
     //void testNavBarDockWidgetVisibility();
     void testAngleBoundaryCases();
     void testSceneSizes();
