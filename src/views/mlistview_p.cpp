@@ -1021,7 +1021,10 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
     }
 
     if (!controllerModel->headerCreator()) {
-        headersCreator = new MDefaultHeadersCreator(q_ptr->style()->groupHeaderObjectName());
+        if (!headersCreator)
+            headersCreator = new MDefaultHeadersCreator(q_ptr->style()->groupHeaderObjectName());
+        else
+            updateHeaders();
     }
 
     headersPositions.resize(this->headersCount());

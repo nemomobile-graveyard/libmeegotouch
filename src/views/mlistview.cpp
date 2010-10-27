@@ -53,8 +53,12 @@ void MListView::init()
 {
     Q_ASSERT(controller);
 
-    if(d_ptr)
+    MCellCreator *headersCreator = NULL;
+
+    if(d_ptr) {
         d_ptr->disconnectSignalsFromModelToListView();
+        headersCreator = d_ptr->headersCreator;
+    }
 
     delete d_ptr;
 
@@ -70,8 +74,11 @@ void MListView::init()
             d_ptr = new MPlainListViewPrivate;
     }
 
-    if (model()->showGroups() && model()->headerCreator()) {
-        d_ptr->setHeadersCreator(model()->headerCreator());
+    if (model()->showGroups()) {
+        if (model()->headerCreator())
+            d_ptr->setHeadersCreator(model()->headerCreator());
+        else
+            d_ptr->setHeadersCreator(headersCreator);
     }
 
     d_ptr->q_ptr = this;
