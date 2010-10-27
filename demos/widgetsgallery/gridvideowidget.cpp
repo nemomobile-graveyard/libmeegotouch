@@ -19,6 +19,8 @@
 
 #include "gridvideowidget.h"
 
+#include "mgridpage.h"
+
 #include <QGraphicsSceneMouseEvent>
 
 #ifdef HAVE_GSTREAMER
@@ -57,4 +59,10 @@ void GridVideoWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     emit longPressed();
 }
 
+void GridVideoWidget::setPage(MGridPage* page)
+{
+    if( receivers( SIGNAL(clicked()) ) > 0 )
+        return;
+    connect( this, SIGNAL(clicked()), page, SLOT(itemClicked()) );
+}
 #endif

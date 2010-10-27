@@ -105,20 +105,9 @@ public slots:
     void videoSliderValueChanged(int newValue);
 
     void buttonClicked();
-    void bBackButtonClicked();
-
-    void rateNoneButtonClicked();
-    void rateOneButtonClicked();
-    void rateTwoButtonClicked();
-    void rateThreeButtonClicked();
-    void rateFourButtonClicked();
-    void rateFiveButtonClicked();
-
     void updatePosition();
 
 signals:
-    void rate(MediaType::Rating rating, const QString& id);
-
 protected:
     virtual void retranslateUi();
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);

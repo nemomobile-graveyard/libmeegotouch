@@ -25,6 +25,7 @@
 #include <MVideoWidget>
 
 class QGraphicsSceneContextMenuEvent;
+class MGridPage;
 
 //video widget which emits clicked signal
 class GridVideoWidget : public MVideoWidget
@@ -35,6 +36,8 @@ class GridVideoWidget : public MVideoWidget
         GridVideoWidget(QGraphicsItem *parent = 0);
         void setId(const QString& id);
         QString id();
+
+        void setPage(MGridPage* page);
 
     Q_SIGNALS:
         void clicked();

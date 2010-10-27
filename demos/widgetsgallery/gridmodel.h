@@ -39,18 +39,8 @@ struct MediaType
         Image
     } type;
 
-    enum Rating {
-        NoStar,
-        OneStar,
-        TwoStars,
-        ThreeStars,
-        FourStars,
-        FiveStars
-    } rating;
-
     QString path;
     QImage image;
-    Rating rate;
 };
 
 Q_DECLARE_METATYPE(MediaType);
@@ -66,9 +56,6 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-public slots:
-    void rateImage(MediaType::Rating rating, const QString& id);
 
 private slots:
     void insertImage(QImage pixmap, int index);

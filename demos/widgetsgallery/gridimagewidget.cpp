@@ -18,13 +18,13 @@
 ****************************************************************************/
 
 #include "gridimagewidget.h"
+#include "mgridpage.h"
 
 #include <QGraphicsSceneMouseEvent>
 
 GridImageWidget::GridImageWidget(QGraphicsItem *parent)
     : MImageWidget(parent),
-    m_id(),
-    m_page(NULL)
+    m_id()
 {
 }
 
@@ -40,7 +40,7 @@ QString GridImageWidget::id()
 
 void GridImageWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    MImageWidget::mousePressEvent(event); emit rate(MediaType::OneStar, m_id);
+    MImageWidget::mousePressEvent(event);
     event->accept();
 }
 
@@ -48,4 +48,11 @@ void GridImageWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     MImageWidget::mouseReleaseEvent(event);
     emit clicked();
+}
+
+void GridImageWidget::setPage(MGridPage* page)
+{
+    if( receivers( SIGNAL(clicked()) ) > 0 )
+        return;
+    connect( this, SIGNAL(clicked()), page, SLOT(itemClicked()) );
 }

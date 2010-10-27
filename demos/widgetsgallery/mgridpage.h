@@ -55,14 +55,11 @@ public slots:
     void modifyRowsSliderHandle(int newValue);
 
 signals:
-    void rate(MediaType::Rating rating, const QString& id);
-
 protected:
     void retranslateUi();
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
 private slots:
-    void backButtonClicked();
     void configureGrid();
     void configureGrid(M::Orientation orientation);
 

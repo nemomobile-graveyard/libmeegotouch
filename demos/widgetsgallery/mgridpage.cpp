@@ -109,9 +109,7 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
 
         QFileInfo info(m.path);
         video->setId(info.absolutePath() + QDir::separator() + info.fileName()/*.remove("thumb-")*/);
-
-        QObject::connect(video, SIGNAL(clicked()), m_gridPage, SLOT(itemClicked()));
-
+        video->setPage(m_gridPage);
         return;
     }
 #endif
@@ -124,7 +122,7 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
         imageWidget->setImage(m.image);
         imageWidget->setId(m.path);
 
-        QObject::connect(imageWidget, SIGNAL(clicked()), m_gridPage, SLOT(itemClicked()));
+        imageWidget->setPage(m_gridPage);
         return;
     }
 }
@@ -138,7 +136,6 @@ MGridPage::MGridPage()
     : TemplatePage(TemplatePage::ListsGridsAndPopups),
       list(0),
       actionConfiguration(0),
-      pageShown(false),
       m_itemSize(10,10),
       m_columnsPortrait(2),
       m_columnsLandscape(4),
@@ -192,7 +189,6 @@ void MGridPage::createContent()
 
     GridModel *model = new GridModel(m_itemSize.toSize(), Utils::mediaArtDir());
     list->setItemModel(model);
-    connect(this, SIGNAL(rate(MediaType::Rating,QString)), model, SLOT(rateImage(MediaType::Rating,QString)));
 
     //% "Configuration"
     actionConfiguration = new MAction(this);
@@ -230,7 +226,6 @@ void MGridPage::videoReady()
 
 void MGridPage::itemClicked()
 {
-    if( !pageShown ) {
         //image clicked
         GridImageWidget* image = qobject_cast<GridImageWidget*>(sender());
         if( image ) {
@@ -239,9 +234,6 @@ void MGridPage::itemClicked()
             ItemDetailPage* page = new ItemDetailPage();
             page->setImageId(image->id());
             page->setParent(this);
-            connect( page, SIGNAL(backButtonClicked()), this, SLOT(backButtonClicked()) );
-            connect( page, SIGNAL(rate(MediaType::Rating,QString)), this, SIGNAL(rate(MediaType::Rating,QString)) );
-
             page->appear(scene(), DestroyWhenDismissed);
 
             return;
@@ -258,17 +250,10 @@ void MGridPage::itemClicked()
             videoID.remove("thumb-");
             page->setVideoId(videoID);
             page->setParent(this);
-            connect( page, SIGNAL(backButtonClicked()), this, SLOT(backButtonClicked()) );
 
             page->appear(scene(), DestroyWhenDismissed);
         }
 #endif
-    }
-}
-
-void MGridPage::backButtonClicked()
-{
-    pageShown = false;
 }
 
 void MGridPage::orientationChangeEvent(MOrientationChangeEvent *event)

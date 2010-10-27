@@ -35,9 +35,10 @@ public:
     void setId(const QString& id);
     QString id();
 
+    void setPage(MGridPage* page);
+
 Q_SIGNALS:
     void clicked();
-    void rate(MediaType::Rating rating, const QString& id);
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -45,7 +46,6 @@ protected:
 
 private:
     QString m_id;
-    MGridPage* m_page;
 };
 
 #endif

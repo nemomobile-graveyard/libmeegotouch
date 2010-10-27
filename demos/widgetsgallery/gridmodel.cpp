@@ -119,54 +119,9 @@ void GridModel::insertImage(QImage image, int index)
     if( m_items[index].canConvert<MediaType>() ) {
         MediaType m = m_items[index].value<MediaType>();
         m.image = image;
-        m.rating = MediaType::OneStar;
         m_items[index] = QVariant::fromValue(m);
 
         emit dataChanged(createIndex(index, 0), createIndex(index, 0));
-    }
-}
-
-void GridModel::rateImage(MediaType::Rating rating, const QString& id)
-{
-    int index = 0;
-    foreach(const QVariant& v, m_items) {
-        if( v.canConvert<MediaType>() ) {
-            MediaType m = m_items[index].value<MediaType>();
-
-            if(m.type == MediaType::Image) {
-                if(m.path == id) {
-                    m.rate = rating;
-
-                    int amount = 0;
-                    switch(rating) {
-                    case MediaType::NoStar:
-                        break;
-                    case MediaType::OneStar:
-                        amount = 1; break;
-                    case MediaType::TwoStars:
-                        amount = 2; break;
-                    case MediaType::ThreeStars:
-                        amount = 3; break;
-                    case MediaType::FourStars:
-                        amount = 4; break;
-                    case MediaType::FiveStars:
-                        amount = 5; break;
-                    default: amount = 0;
-                    }
-
-                    // get a fresh image without badge
-                    QImage image(id);
-                    m_loader->scaleImage( image );
-                    m.image = image;
-
-                    m_items[index] = QVariant::fromValue(m);
-
-                    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
-                    return;
-                }
-            }
-            index++;
-        }
     }
 }
 
