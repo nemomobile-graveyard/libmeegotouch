@@ -271,7 +271,7 @@ public:
     MLinearLayoutPolicy *horizontalPolicy;
     MLinearLayoutPolicy *verticalPolicy;
 
-    QPropertyAnimation *valueAnimation;
+    QPropertyAnimation *positionAnimation;
 
     QTime feedbackTimer;
     int valueWhenFeedback;
@@ -279,6 +279,8 @@ public:
     int pressTimerId;
 
     int valueWhenPressed;
+
+    int position;
 
     void init(MSlider *contoller);
 
@@ -293,6 +295,7 @@ public:
     void updateSliderGroove();
     void updateSeekBar();
     void playSliderMoveFeedback(int newValue);
+    QPropertyAnimation* createPositionAnimation();
 
 #ifdef UNIT_TEST
     friend class Ut_MSliderView;

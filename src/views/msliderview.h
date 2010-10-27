@@ -60,6 +60,10 @@ class M_VIEWS_EXPORT MSliderView : public MWidgetView
     Q_OBJECT
     M_VIEW(MSliderModel, MSliderStyle)
 
+    //! \internal
+    Q_PROPERTY(int position READ position WRITE setPosition)
+    //! \internal_end
+
 public:
     /*!
         \brief Constructs toolbar view.
@@ -154,6 +158,11 @@ protected:
 private:
     Q_DISABLE_COPY(MSliderView)
     Q_DECLARE_PRIVATE(MSliderView)
+
+    //! \internal
+    int position() const;
+    void setPosition(int position);
+    //! \internal_end
 
 private Q_SLOTS:
     /*!

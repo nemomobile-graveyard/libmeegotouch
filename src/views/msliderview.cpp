@@ -1194,10 +1194,11 @@ MSliderViewPrivate::MSliderViewPrivate() :
     maxIndicator(0),
     horizontalPolicy(0),
     verticalPolicy(0),
-    valueAnimation(0),
+    positionAnimation(0),
     valueWhenFeedback(0),
     pressTimerId(0),
-    valueWhenPressed(0)
+    valueWhenPressed(0),
+    position(0)
 {
 }
 
@@ -1205,7 +1206,7 @@ MSliderViewPrivate::~MSliderViewPrivate()
 {
     sliderGroove->ensureSafeClosing();
 
-    delete valueAnimation;
+    delete positionAnimation;
 }
 
 //intializes main layout and layout policies
@@ -1398,6 +1399,17 @@ bool MSliderViewPrivate::isCollision(QGraphicsSceneMouseEvent *event) const
     return (clickableRect.contains(event->pos()) || clickableHandleRect.contains(event->pos()));
 }
 
+QPropertyAnimation* MSliderViewPrivate::createPositionAnimation()
+{
+    Q_Q(MSliderView);
+
+    QPropertyAnimation *animation = positionAnimation = new QPropertyAnimation(q, "position", 0);
+    animation->setDuration(150);
+    animation->setEasingCurve(QEasingCurve::OutSine);
+
+    return animation;
+}
+
 //sets slider value to that one corresponding
 //to mouse cursor position
 int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
@@ -1432,17 +1444,15 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     //event position (for example when user clicks to slider groove
     //once it is called at mouse press and once at mouse release)
     if (newValue != q->model()->value()) {
+        controller->setValue(newValue);
         if (needAnimation) {
-            if (!valueAnimation) {
-                valueAnimation = new QPropertyAnimation(controller, "value", 0);
-                valueAnimation->setDuration(150);
-                valueAnimation->setEasingCurve(QEasingCurve::OutSine);
+            if (!positionAnimation) {
+                positionAnimation = createPositionAnimation();
             }
-
-            valueAnimation->setEndValue(newValue);
-            valueAnimation->start();
+            positionAnimation->setEndValue(newValue);
+            positionAnimation->start();
         } else
-            controller->setValue(newValue);
+            position = newValue;
     }
 
     return newValue;
@@ -1453,7 +1463,7 @@ void MSliderViewPrivate::updateSliderGroove()
 {
     Q_Q(MSliderView);
 
-    sliderGroove->setSliderValues(q->model()->minimum(), q->model()->maximum(), q->model()->value());
+    sliderGroove->setSliderValues(q->model()->minimum(), q->model()->maximum(), position);
     sliderGroove->setSliderState(q->model()->state());
 }
 
@@ -1524,8 +1534,17 @@ void MSliderView::updateData(const QList<const char *>& modifications)
             d->updateSliderGroove();
         else if (member == MSliderModel::Maximum)
             d->updateSliderGroove();
-        else if (member == MSliderModel::Value)
-            d->updateSliderGroove();
+        else if (member == MSliderModel::Value) {
+            if (!(d->controller->isVisible() && d->controller->isOnDisplay())) {
+                setPosition(model()->value());
+                continue;
+            }
+            if (!d->positionAnimation) {
+                d->positionAnimation = d->createPositionAnimation();
+            }
+            d->positionAnimation->setEndValue(model()->value());
+            d->positionAnimation->start();
+        }
         else if (member == MSliderModel::Steps)
             d->updateSliderGroove();
         else if (member == MSeekBarModel::LoadedContentMin)
@@ -1564,6 +1583,7 @@ void MSliderView::setupModel()
 
     Q_D(MSliderView);
 
+    setPosition(model()->value());
     d->minIndicator->setText(model()->minLabelText());
     d->maxIndicator->setText(model()->maxLabelText());
     d->sliderGroove->setIndicatorText(model()->handleLabelText());
@@ -1656,8 +1676,8 @@ void MSliderView::cancelEvent(MCancelEvent *event)
         d->pressTimerId = 0;
     }
 
-    if (d->valueAnimation)
-        d->valueAnimation->stop();
+    if (d->positionAnimation)
+        d->positionAnimation->stop();
 
     model()->setValue(d->valueWhenPressed);
     d->sliderGroove->lowerHandleIndicator();
@@ -1707,8 +1727,8 @@ void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 d->pressTimerId = 0;
             }
  
-            if (d->valueAnimation)
-                d->valueAnimation->stop();
+            if (d->positionAnimation)
+                d->positionAnimation->stop();
  
             d->sliderGroove->lowerHandleIndicator();
         }
@@ -1755,6 +1775,21 @@ void MSliderView::changeSliderHandleIndicatorVisibility()
 
     if (!d->controller->isVisible())
         lowerSliderHandleIndicator();
+}
+
+int MSliderView::position() const
+{
+    Q_D(const MSliderView);
+
+    return d->position;
+}
+
+void MSliderView::setPosition(int position)
+{
+    Q_D(MSliderView);
+
+    d->position = position;
+    d->updateSliderGroove();
 }
 
 M_REGISTER_VIEW_NEW(MSliderView, MSlider)
