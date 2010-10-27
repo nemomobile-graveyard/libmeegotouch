@@ -161,6 +161,7 @@ public:
         ensure updateX11Pixmap() is called to update its contents.
 
         \param pixmap specifies the X pixmap to be bound as a texture
+        \deprecated There is no replacing functionality
     */
     quint32 bindX11Pixmap(Qt::HANDLE pixmap);
 
@@ -171,6 +172,7 @@ public:
         of the pixmap bound as a texture
 
         \param pixmap specifies the X pixmap to be bound as a texture
+        \deprecated There is no replacing functionality
     */
     void unbindX11Pixmap(Qt::HANDLE pixmap);
 
@@ -180,6 +182,7 @@ public:
         Damage events.
 
         \param pixmap specifies the X pixmap to be bound as a texture
+        \deprecated There is no replacing functionality
     */
     void updateX11Pixmap(Qt::HANDLE pixmap);
 

@@ -42,13 +42,7 @@ namespace
     typedef QPair<QString, QString> MGLProgramKey;
     typedef QHash<MGLProgramKey, QGLShaderProgram *> MGLProgramCache;
 
-    static const EGLint pixmapAttribs[] = {
-        EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
-        EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGB,
-        EGL_NONE
-    };
-
-//M specific attribute array indices
+    //M specific attribute array indices
     static const GLuint M_ATTR_VERTEX = 0;
     static const GLuint M_ATTR_TCOORD = 1;
     static const GLuint M_ATTR_VCOLOR = 2;
@@ -97,18 +91,6 @@ public:
     MGLProgramCache m_programCache;
 
     QSize m_viewportSize;
-
-    struct TexturePixmap {
-        TexturePixmap(): eglpixmap(0), texture(0) {}
-        EGLSurface eglpixmap;
-        quint32   texture;
-    };
-
-    typedef QHash<Qt::HANDLE, TexturePixmap> PixmapHash;
-
-    EGLConfig config;
-    EGLDisplay dpy;
-    PixmapHash bound_pixmaps;
 
     static QMap<QGLContext *, MGLES2Renderer *> glRenderers;
     static MGLES2Renderer *activeRenderer;
@@ -173,7 +155,6 @@ void MGLES2RendererPrivate::init()
         indices[i*6+5] = 4 + (i * 4 + 3); //x2 y1 TR
     }
 
-    dpy = eglGetDisplay(EGLNativeDisplayType(QX11Info::display()));
     m_glContext->makeCurrent();
 
     //init the orthogonal projection matrix
@@ -194,12 +175,6 @@ void MGLES2RendererPrivate::init()
 MGLES2RendererPrivate::~MGLES2RendererPrivate()
 {
     qDeleteAll(m_programCache);
-
-    const PixmapHash::const_iterator bound_pixmaps_end = bound_pixmaps.constEnd();
-    for (PixmapHash::const_iterator i = bound_pixmaps.constBegin(); i != bound_pixmaps_end; ++i) {
-        eglDestroySurface(dpy, i->eglpixmap);
-        glDeleteTextures(1, &i->texture);
-    }
 }
 
 GLuint MGLES2RendererPrivate::setupVertices(const QSizeF &texSize, const QList<QRect>& sourceRects, const QList<QRect>& targetRects)
@@ -217,9 +192,9 @@ GLuint MGLES2RendererPrivate::setupVertices(const QSizeF &texSize, const QList<Q
         // setup vertices for the target rectangle
         const QRect &target = targetRects[i];
         const GLfloat x1 = target.left();
-        const GLfloat x2 = target.right();
+        const GLfloat x2 = target.left() + target.width();
         const GLfloat y1 = target.top();
-        const GLfloat y2 = target.bottom();
+        const GLfloat y2 = target.top() + target.height();
 
         vertices[8*i]     = x1; vertices[8*i + 1] = y1;
         vertices[8*i + 2] = x1; vertices[8*i + 3] = y2;
@@ -319,8 +294,10 @@ MGLES2Renderer *MGLES2Renderer::instance(QGLWidget *glWidget)
 
 void MGLES2Renderer::activate(QGLContext *glContext)
 {
-    if (glContext)
+    if (glContext) {
+        glContext->makeCurrent();
         MGLES2RendererPrivate::activeRenderer = MGLES2Renderer::instance(glContext);
+    }
     else
         MGLES2RendererPrivate::activeRenderer = NULL;
 }
@@ -344,7 +321,7 @@ void MGLES2Renderer::destroy(QGLContext *glContext)
 
 void MGLES2Renderer::destroy(QGLWidget *glWidget)
 {
-    return activate(const_cast<QGLContext*>(glWidget->context()));
+    return destroy(const_cast<QGLContext*>(glWidget->context()));
 }
 
 void MGLES2Renderer::destroyAll()
@@ -429,102 +406,20 @@ QGLShaderProgram *MGLES2Renderer::compileShaderProgram(const QString &frag, cons
     return 0;
 }
 
-quint32 MGLES2Renderer::bindX11Pixmap(Qt::HANDLE pixmap)
+quint32 MGLES2Renderer::bindX11Pixmap(Qt::HANDLE /*pixmap*/)
 {
-    EGLSurface eglpixmap = 0;
-
-    // If surface does not yet exist, initialize and find appropriates EGL surface
-    if (!d_ptr->config) {
-        EGLint ecfgs = 0;
-        EGLConfig configs[20];
-
-        static const EGLint pixmap_config[] = {
-            EGL_SURFACE_TYPE,       EGL_PIXMAP_BIT,
-            EGL_RENDERABLE_TYPE,    EGL_OPENGL_ES2_BIT,
-            EGL_DEPTH_SIZE,         0,
-            EGL_BIND_TO_TEXTURE_RGB, EGL_TRUE,
-            EGL_NONE
-        };
-
-        if (!eglChooseConfig(d_ptr->dpy, pixmap_config, configs,
-                             20, &ecfgs) || !ecfgs) {
-            mWarning("MGLES2Renderer") << "No appropriate EGL configuration for texture from pixmap!";
-            return 0;
-        }
-        for (EGLint i = 0; i < ecfgs; i++) {
-            eglpixmap = eglCreatePixmapSurface(d_ptr->dpy, configs[i],
-                                               (EGLNativePixmapType) pixmap,
-                                               pixmapAttribs);
-            if (eglpixmap == EGL_NO_SURFACE)
-                continue;
-            else {
-                d_ptr->config = configs[i];
-                break;
-            }
-        }
-    }
-
-    // Returns the cached texture if we have one already
-    MGLES2RendererPrivate::TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
-    if (tp.texture > 0)
-        return tp.texture;
-
-    // .. or create a new one
-    if (!eglpixmap)
-        eglpixmap = eglCreatePixmapSurface(d_ptr->dpy, d_ptr->config,
-                                           (EGLNativePixmapType) pixmap,
-                                           pixmapAttribs);
-    if (eglpixmap == EGL_NO_SURFACE) {
-        mWarning("MGLES2Renderer") << "Cannot create EGL surface:" << eglGetError();
-        return 0;
-    }
-    tp.eglpixmap = eglpixmap;
-
-    glGenTextures(1, &tp.texture);
-    d_ptr->bound_pixmaps[pixmap] = tp;
-    glBindTexture(GL_TEXTURE_2D, tp.texture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glEnable(GL_TEXTURE_2D);
-
-    return tp.texture;
+    mWarning("MGLES2Renderer") << Q_FUNC_INFO << "is deprecated.";
+    return 0;
 }
 
-void MGLES2Renderer::unbindX11Pixmap(Qt::HANDLE pixmap)
+void MGLES2Renderer::unbindX11Pixmap(Qt::HANDLE /*pixmap*/)
 {
-    MGLES2RendererPrivate::TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
-    if (!tp.texture)
-        return;
-
-    // free the pixmap and texture cache
-    eglDestroySurface(d_ptr->dpy, tp.eglpixmap);
-    tp.eglpixmap =  EGL_NO_SURFACE;
-    //XSync(QX11Info::display(), FALSE);
-    glDeleteTextures(1, &tp.texture);
-    d_ptr->bound_pixmaps.remove(pixmap);
+    mWarning("MGLES2Renderer") << Q_FUNC_INFO << "is deprecated.";
 }
 
-void MGLES2Renderer::updateX11Pixmap(Qt::HANDLE pixmap)
+void MGLES2Renderer::updateX11Pixmap(Qt::HANDLE /*pixmap*/)
 {
-    // catch updates to the pixmap here when they happen
-    MGLES2RendererPrivate::TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
-    if (!tp.texture)
-        return;
-
-    glBindTexture(GL_TEXTURE_2D, tp.texture);
-
-    if (eglReleaseTexImage(d_ptr->dpy, tp.eglpixmap,
-                           EGL_BACK_BUFFER) == EGL_FALSE)
-        mWarning("MGLES2Renderer: Update pixmap, cant release bound texture");
-    if (eglBindTexImage(d_ptr->dpy, tp.eglpixmap,
-                        EGL_BACK_BUFFER) == EGL_FALSE) {
-        mWarning("MGLES2Renderer: Update pixmap, can't bind EGL texture to pixmap:") << eglGetError();
-    }
-    glEnable(GL_TEXTURE_2D);
+    mWarning("MGLES2Renderer") << Q_FUNC_INFO << "is deprecated.";
 }
 
 void MGLES2Renderer::begin(QPainter *painter)
@@ -689,9 +584,9 @@ void MGLES2Renderer::draw(const QRect &rectangle)
 {
     GLfloat *vertices = d_ptr->m_vertices.data();
     vertices[0] = rectangle.left();  vertices[1] = rectangle.top();
-    vertices[2] = rectangle.left();  vertices[3] = rectangle.bottom();
-    vertices[4] = rectangle.right(); vertices[5] = rectangle.bottom();
-    vertices[6] = rectangle.right(); vertices[7] = rectangle.top();
+    vertices[2] = rectangle.left();  vertices[3] = rectangle.top() + rectangle.height();
+    vertices[4] = rectangle.left() + rectangle.width(); vertices[5] = rectangle.top() + rectangle.height();
+    vertices[6] = rectangle.left() + rectangle.width(); vertices[7] = rectangle.top();
 
     QTransform transform;
     GLfloat o = 1.0;

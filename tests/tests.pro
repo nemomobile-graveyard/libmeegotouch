@@ -194,7 +194,8 @@ SUBDIRS     =  \
     ut_mstylablewidget \
     ut_mdynamicpropertywatcher \
     ut_mtapstatemachine \
-    ut_mcommonpixmaps
+    ut_mcommonpixmaps \
+    ut_mgles2renderer \
 
 # enable only when we have icu available
 
