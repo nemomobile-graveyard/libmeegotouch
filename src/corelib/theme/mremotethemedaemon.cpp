@@ -215,6 +215,7 @@ void MRemoteThemeDaemonPrivate::pixmapHandle(const QString &imageId, const QSize
     MPixmapHandle handle = pixmapHandleFromMostUsed(imageId, size);
     if (handle.isValid()) {
         emit q->pixmapCreatedOrChanged(imageId, size, handle);
+        return;
     }
 
     const quint64 sequenceNumber = requestPixmap(imageId, size);
