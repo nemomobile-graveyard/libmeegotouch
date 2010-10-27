@@ -145,12 +145,12 @@ const QRect &MInputWidgetRelocator::exposedContentRect()
         return cachedExposedRect;
     }
 
+    cachedExposedRect = visibleSceneRect();
+
     // Focus may not be in the current page in case input widget is in toolbar or dialog, for example.
     if (!currentPage.isNull() && currentPage->focusItem()) {
         MApplicationPage *page = static_cast<MApplicationPage *>(currentPage.data());
-        cachedExposedRect = rootElement->mapRectFromItem(page, page->exposedContentRect()).toRect();
-    } else {
-        cachedExposedRect = visibleSceneRect();
+        cachedExposedRect &= rootElement->mapRectFromItem(page, page->exposedContentRect()).toRect();
     }
 
     // Map input panel rectangle to rootElement's orientation.
