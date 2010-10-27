@@ -22,6 +22,20 @@
 
 #include <QtCore/QtGlobal>
 
+// the M_EXPORT define is deprecated. it does not
+// make any sense to use it. we just keep it here
+// so that projects that are using it continue to
+// work as before.
+#if defined(M_EXPORTS)
+#  define M_EXPORT Q_DECL_EXPORT
+#else
+#  if defined (Q_OS_WIN)
+#    define M_EXPORT Q_DECL_IMPORT
+#  else
+#    define M_EXPORT Q_DECL_EXPORT
+#  endif
+#endif
+
 #ifdef M_BUILD_CORE
 #  define M_CORE_EXPORT Q_DECL_EXPORT
 #else
