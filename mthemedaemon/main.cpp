@@ -48,6 +48,9 @@ int main(int argc, char **argv)
     // make sure we are not loading the maemo6 qt style which
     // could interfere with us
     QApplication::setStyle("windows");
+#ifndef HAVE_MEEGOGRAPHICSSYSTEM
+    QApplication::setGraphicsSystem("native");
+#endif // HAVE_MEEGOGRAPHICSSYSTEM
     QApplication app(argc, argv);
 
     // Apply custom server address, if the "-address" has been passed as argument
