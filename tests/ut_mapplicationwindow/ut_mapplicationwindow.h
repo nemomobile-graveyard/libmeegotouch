@@ -54,6 +54,7 @@ private slots:
     void testWindowActivate();
     void testDeleteOnClose();
 
+    void testSetWindowIconID();
     void testCurrentPage();
     void testMenu();
     void testIsMenuOpen();
@@ -66,9 +67,12 @@ private slots:
     void testDisplayExitedOnClose();
     void testDisplayExitedOnCloseLazyShutdownApp();
 
+    void testPageEscape();
     void testPageEscapeAuto();
     void testPageEscapeAutoWhenAddingPageHistory();
     void testPageEscapeAutoWhenClearingPageHistory();
+
+    void testComponentsDisplayMode();
 
     void testStatusBarVisibility_data();
     void testStatusBarVisibility();

@@ -33,6 +33,9 @@
 #include <MNavigationBar>
 #include <MApplicationMenu>
 
+#include <MSceneWindow>
+#include <MHomeButtonPanel>
+
 #include <QSignalSpy>
 #include <QEvent>
 
@@ -176,6 +179,14 @@ void Ut_MApplicationWindow::testDeleteOnClose()
     win->close();
 }
 
+void Ut_MApplicationWindow::testSetWindowIconID()
+{
+    QString iconId("icon-id");
+
+    m_subject->setWindowIconID(iconId);
+    QCOMPARE(m_subject->d_func()->navigationBar->viewMenuIconID(), iconId);
+}
+
 void Ut_MApplicationWindow::testCurrentPage()
 {
     MApplicationPage *page = new MApplicationPage;
@@ -223,11 +234,28 @@ void Ut_MApplicationWindow::testDisplayExitedOnCloseLazyShutdownApp()
     QCOMPARE(spy.count(), 1);
 }
 
+void Ut_MApplicationWindow::testPageEscape()
+{
+    MApplicationPage *page = new MApplicationPage;
+    MNavigationBar *navigationBar = m_subject->d_func()->navigationBar;
+
+    page->setEscapeMode(MApplicationPageModel::EscapeManualBack);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonClose);
+
+    page->appear(m_subject);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonBack);
+
+    page->setEscapeMode(MApplicationPageModel::EscapeCloseWindow);
+    QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonClose);
+
+    delete page;
+}
+
 void Ut_MApplicationWindow::testPageEscapeAuto()
 {
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
-    MNavigationBar *navigationBar = fetchNavigationBar(m_subject->scene()->items());
+    MNavigationBar *navigationBar = m_subject->d_func()->navigationBar;
 
     QVERIFY(navigationBar != 0);
 
@@ -280,6 +308,38 @@ void Ut_MApplicationWindow::testPageEscapeAutoWhenClearingPageHistory()
     m_subject->sceneManager()->setPageHistory(pageHistory);
 
     QCOMPARE(navigationBar->escapeButtonMode(), MNavigationBarModel::EscapeButtonClose);
+}
+
+void Ut_MApplicationWindow::testComponentsDisplayMode()
+{
+    MApplicationPage *page = new MApplicationPage;
+    page->appear(m_subject);
+
+    MSceneWindow *homeButtonPanel = m_subject->d_func()->homeButtonPanel;
+    MSceneWindow *navigationBar = m_subject->d_func()->navigationBar;
+
+    QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
+
+    page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
+
+    QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
+
+    page->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::Show);
+
+    QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
+
+    page->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::AutoHide);
+
+    QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
+
+    page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Show);
+
+    QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 }
 
 void Ut_MApplicationWindow::testStatusBarVisibility_data()
