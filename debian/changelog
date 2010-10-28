@@ -1,8 +1,24 @@
-libmeegotouch (0.20.50~1) unstable; urgency=low
+libmeegotouch (0.20.50-1) unstable; urgency=low
 
-  * Unreleased
+  * Fixes: MContainer setCentralWidget unit test.
+  * Fixes: NB#171569 - (EveryLocation) Adding MAction with MAction::EveryLocation causes unexpected behavior.
+  * Fixes: NB#197803 - WidgetsGallery crashes when using Live Filtering in List widget
+  * Fixes: NB#200052 - <MemLeak> memory leaks when default header creator is used in list.
+  * Fixes: NB#197456 - signals in mthemedaemon use incorrectly
+  * Fixes: NB#193832 - Gtalk contact name is wrongly displayed/rendered on incoming event notifications
+  * Fixes: NB#199601 - Call, missed call the banner 'qtn_call_missed" "missed call' is cut
+  * Fixes: NB#193590 - Notification shows line feeds as boxes when receiving from IOP Messaging tool
+  * Fixes: NB#189289 - cut off text with incoming event banners
+  * Fixes: NB#193664 - Notification doesn't escape HTML in message notifications
+  * Fixes: NB#195924 - MVideoWidget does not work fullscreen with opengl or meego graphicssystem
+  * Fixes: NB#195978 - Pannable viewport animates when it shouldn't
+  * Fixes: NB#195051 - Destructor causes crash in buttons
+  * Fixes: NB#187732 - When switching application page, isOnDisplay() returns true after widget has exited the display
+  * Fixes: NB#187570 - Application crashes when adding buttons and stretch to MLinearLayoutPolicy when notifyAllWidgetsOfLayoutPosition is enabled
+  * Fixes: inform input context when toolbar is changed
+  * Fixes: NB#196936 -  mservicemapper does not die along its session bus
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 21 Oct 2010 14:59:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 28 Oct 2010 12:30:40 +0300
 
 libmeegotouch (0.20.49-1) unstable; urgency=low
 
