@@ -94,6 +94,7 @@ enum {
 enum {
     PIXELS_UNIT,
     MM_UNIT,
+    PT_UNIT,
     PERCENT_UNIT,
 
     NUM_UNITS
@@ -102,6 +103,7 @@ enum {
 static const QString units[NUM_UNITS] = {
     QString("px"),
     QString("mm"),
+    QString("pt"),
     QString('%')
 };
 
@@ -284,6 +286,13 @@ int MStyleSheetAttribute::attributeToInt(const QString &attribute, bool *convers
         return MDeviceProfile::instance()->mmToPixels(value.toFloat(conversionOk));
     }
 
+    if (attribute.endsWith(units[PT_UNIT])) {
+        // strip "pt" from the end
+        value.truncate(value.length() - 2);
+
+        return MDeviceProfile::instance()->ptToPixels(value.toFloat(conversionOk));
+    }
+
     return value.toInt(conversionOk);
 }
 
@@ -331,6 +340,13 @@ qreal MStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *con
         value.truncate(value.length() - 2);
 
         return MDeviceProfile::instance()->mmToPixelsF(value.toFloat(conversionOk));
+    }
+
+    if (attribute.endsWith(units[PT_UNIT])) {
+        // strip "pt" from the end
+        value.truncate(value.length() - 2);
+
+        return MDeviceProfile::instance()->ptToPixelsF(value.toFloat(conversionOk));
     }
 
     return value.toFloat(conversionOk);

@@ -43,6 +43,7 @@ namespace{
     static const QString pixmapProviderDbusService = "com.meego.core.MStatusBar";
 #endif
     static const qreal mmPerInch = 25.4;
+    static const qreal pointsPerInch = 72.0;
 }
 
 MDeviceProfilePrivate::MDeviceProfilePrivate()
@@ -118,7 +119,9 @@ bool MDeviceProfilePrivate::load(const QString& filename)
 
     pixelsPerMm = pixelsPerInch.width() / mmPerInch;
     pixelsPerMmF = pixelsPerInch.width() / mmPerInch;
-
+    pixelsPerPt = pixelsPerInch.height() / pointsPerInch;
+    pixelsPerPtF = pixelsPerInch.height() / pointsPerInch;
+    
     if (settings.value("/other/showStatusBar").toString() == "autodetect")
         showStatusBar = hasStatusbarProvider();
     else
@@ -255,4 +258,16 @@ qreal MDeviceProfile::mmToPixelsF(qreal mm)
     Q_D(const MDeviceProfile);
 
     return mm * d->pixelsPerMmF;
+}
+
+int MDeviceProfile::ptToPixels(qreal pt)
+{
+    Q_D(const MDeviceProfile);
+    return pt * d->pixelsPerPt;
+}
+
+qreal MDeviceProfile::ptToPixelsF(qreal pt) 
+{
+    Q_D(const MDeviceProfile);
+    return pt * d->pixelsPerPtF;
 }

@@ -63,6 +63,12 @@ public:
     //! Returns the number of pixels required to display a length of \a mm millimeters on this device using floating point precision.
     qreal mmToPixelsF(qreal mm);
 
+    //! Returns point size in pixels on this device.
+    int ptToPixels(qreal pt);
+
+    //! Returns point size in pixels using floating point precision on this device.
+    qreal ptToPixelsF(qreal pt);
+
 protected:
     MDeviceProfilePrivate *const d_ptr;
 

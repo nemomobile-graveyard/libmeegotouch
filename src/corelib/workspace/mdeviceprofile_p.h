@@ -48,6 +48,8 @@ protected:
 private:
     int pixelsPerMm;
     qreal pixelsPerMmF;
+    int pixelsPerPt;
+    qreal pixelsPerPtF;
 };
 
 #endif
