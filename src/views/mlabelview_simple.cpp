@@ -91,9 +91,19 @@ bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     QFontMetricsF fm(viewPrivate->controller->font());
 
+    QString text = viewPrivate->model()->text();
+
+    // If the text represents a multilength-string, only respect the first
+    // (= longest) text for the bounding rectangle.
+    const QChar multiLengthSeparator(0x9c, 0);
+    const int index = text.indexOf(multiLengthSeparator);
+    if (index >= 0) {
+        text = text.left(index);
+    }
+
     QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
                                 viewPrivate->textOptions.alignment() | textFlagForWrapMode(),
-                                viewPrivate->model()->text());
+                                text);
     if (bR.height() > fm.height()) {
         preferredSize = QSizeF(bR.width(), bR.height());
         return true;

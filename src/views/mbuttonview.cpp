@@ -152,6 +152,22 @@ void MButtonViewPrivate::refreshStyleMode()
     calcIconTextRects();
 }
 
+QSizeF MButtonViewPrivate::maxTextSize() const
+{
+    Q_Q(const MButtonView);
+
+    const QFontMetrics fm(q->style()->font());
+
+    QString text = q->model()->text();
+    const QChar multiLengthSeparator(0x9c, 0);
+    const int index = text.indexOf(multiLengthSeparator);
+    if (index >= 0) {
+        text = text.left(index);
+    }
+
+    return QSizeF(fm.width(text), fm.height());
+}
+
 void MButtonViewPrivate::calcIconTextRects()
 {
     Q_Q(const MButtonView);
@@ -175,8 +191,7 @@ void MButtonViewPrivate::calcIconTextRects()
                     contentRect.width() - hTextMargin,
                     contentRect.height() - vTextMargin);
 
-    QFontMetrics fm(q->style()->font());
-    QSize textSize = QSize(fm.width(q->model()->text()), fm.height());
+    QSizeF textSize = maxTextSize();
 
     //icon visible and valid?
     if (q->model()->iconVisible() && (icon || toggledIcon)) {
@@ -189,7 +204,7 @@ void MButtonViewPrivate::calcIconTextRects()
 
         //text visible and valid?
         if (q->model()->textVisible() && !q->model()->text().isEmpty()) {
-            textSize.setWidth(qMin(textSize.width(), (int)contentRect.width() - iconWidth - hTextMargin));
+            textSize.setWidth(qMin(textSize.width(), contentRect.width() - iconWidth - hTextMargin));
             switch (q->style()->iconAlign()) {
                 //icon on left and text on right
             case Qt::AlignLeft: {
@@ -593,8 +608,7 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 
     QSizeF textSize(0, 0);
     if (model()->textVisible() && !model()->text().isEmpty()) {
-        QFontMetricsF fm(style()->font());
-        textSize = fm.size(0, model()->text());
+        textSize = d->maxTextSize();
         textSize += QSizeF(style()->textMarginLeft() + style()->textMarginRight(), style()->textMarginTop() + style()->textMarginBottom());
     }
 

@@ -82,6 +82,12 @@ public:
     bool toggleState() const;
     void refreshStyleMode();
 
+    /**
+     * \return The text size in pixels for the button-text. If the text represents a multilength-string,
+     *         the size of the first (= longest per convention) string is returned.
+     */
+    QSizeF maxTextSize() const;
+
     void loadIcon(const QIcon &qIcon, const QSize &newIconSize);
     void loadIcon(const QString &newIconId, const QSize &newIconSize, QIcon::Mode mode = QIcon::Normal);
 
