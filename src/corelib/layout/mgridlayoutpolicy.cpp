@@ -20,6 +20,7 @@
 #include "mgridlayoutpolicy.h"
 #include "mgridlayoutpolicy_p.h"
 #include "mabstractlayoutpolicystyle.h"
+#include "mlayout.h"
 #include "mdebug.h"
 
 #include "mlayouthelper_p.h"
@@ -267,6 +268,9 @@ void MGridLayoutPolicy::removeAt(int index)
 QSizeF MGridLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MGridLayoutPolicy);
+
+    d->engine->setMinimumSize(QSizeF(-1, -1));
+    d->engine->setMaximumSize(QSizeF(-1, -1));
     const_cast<MGridLayoutPolicyPrivate *>(d)->refreshEngine();
     return d->engine->sizeHint(which, constraint);
 }
@@ -274,13 +278,13 @@ QSizeF MGridLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
 void MGridLayoutPolicy::relayout()
 {
     Q_D(MGridLayoutPolicy);
-
-    d->engine->invalidate();
-    d->refreshEngine();
+    d->engine->setMinimumSize(layout()->minimumSize());
+    d->engine->setMaximumSize(layout()->maximumSize());
+    d->refreshEngineAndWidget();
     d->engine->activate();
+
     if (!isActive())
         return;
-
     for (int i = d->engine->count() - 1; i >= 0; --i) {
         const QGraphicsLayoutItem *item = d->engine->itemAt(i);
         setItemGeometry(i, item->geometry());
@@ -290,12 +294,8 @@ void MGridLayoutPolicy::relayout()
 void MGridLayoutPolicy::invalidate()
 {
     Q_D(MGridLayoutPolicy);
-    //We need to invalidate the geometry of all the proxy items
-    for (int i = d->engine->count() - 1; i >= 0; --i) {
-        ProxyItem *item = static_cast<ProxyItem *>(d->engine->itemAt(i));
-        item->updateGeometry();
-    }
-    d->engine->invalidate();
+    d->refreshEngine();
+
     MAbstractLayoutPolicy::invalidate();
 }
 

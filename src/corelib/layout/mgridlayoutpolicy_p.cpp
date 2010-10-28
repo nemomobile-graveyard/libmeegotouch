@@ -43,7 +43,6 @@ void MGridLayoutPolicyPrivate::refreshEngine()
 
     //To properly relayout or get the size hint, we need to invalidate the size hints
     //of all the proxy items and set the geometry of the proxy layout (d->engine) to be the same
-    engine->invalidate();
     for (int i = engine->count() - 1; i >= 0; --i) {
         ProxyItem *item = static_cast<ProxyItem *>(engine->itemAt(i));
         item->refresh();
@@ -52,7 +51,13 @@ void MGridLayoutPolicyPrivate::refreshEngine()
     layout->getContentsMargins(&left, &top, &right, &bottom);
     engine->setContentsMargins(left, top, right, bottom);
 
-    engine->updateGeometry(); //Needed?
+    engine->updateGeometry();
+}
+
+void MGridLayoutPolicyPrivate::refreshEngineAndWidget()
+{
+    refreshEngine();
+
     //We need to make engine->geometry() equal the layout->geometry() so that the items are in the right place
     qreal topMargin = layout->geometry().top();
     qreal leftMargin = layout->geometry().left();

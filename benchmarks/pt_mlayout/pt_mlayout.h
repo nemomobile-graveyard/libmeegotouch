@@ -17,35 +17,36 @@
 **
 ****************************************************************************/
 
-#ifndef MGRIDLAYOUTPOLICY_P_H
-#define MGRIDLAYOUTPOLICY_P_H
+#ifndef PT_MLAYOUT_H
+#define PT_MLAYOUT_H
 
-#include "mabstractlayoutpolicy_p.h"
-#include "mgridlayoutpolicy.h"
+#include <QtTest/QtTest>
+#include <QObject>
 
-class MLayout;
 class QGraphicsWidget;
-class QGraphicsGridLayout;
-/**
-    This is the private implementation class for the grid layout policy.
-    The real work is done in the QGraphicsGridLayout to which a pointer is
-    held here.
-*/
-class MGridLayoutPolicyPrivate : public MAbstractLayoutPolicyPrivate
+class QGraphicsScene;
+
+class Pt_MLayout : public QObject
 {
-    Q_DECLARE_PUBLIC(MGridLayoutPolicy)
+    Q_OBJECT
 
 public:
-    /** Constructor */
-    explicit MGridLayoutPolicyPrivate(MLayout *l);
-    /** Destructor */
-    virtual ~MGridLayoutPolicyPrivate();
+    Pt_MLayout():m_form(NULL), m_scene(NULL) {};
 
-    void refreshEngine();
-    void refreshEngineAndWidget();
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+    void init();
+    void cleanup();
 
-    QGraphicsWidget *const engineWidget;
-    QGraphicsGridLayout *const engine;
+    void linearLayoutPerformance();
+    void linearLayoutPerformance_data();
+    void gridLayoutPerformance();
+    void gridLayoutPerformance_data();
+
+private:
+    QGraphicsWidget *m_form;
+    QGraphicsScene *m_scene;
 };
 
-#endif // Header Guard
+#endif
