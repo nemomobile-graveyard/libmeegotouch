@@ -70,8 +70,6 @@ void Ut_MContainer::setCentralWidget()
 
     // check that there exists centralWidget
     QVERIFY(m_subject->centralWidget() == tmp);
-
-    delete tmp;
 }
 
 void Ut_MContainer::title()
