@@ -200,7 +200,7 @@ void MLinearLayoutPolicy::relayout()
     Q_D(MLinearLayoutPolicy);
     d->engine->setMinimumSize(layout()->minimumSize());
     d->engine->setMaximumSize(layout()->maximumSize());
-    d->refreshEngine();
+    d->refreshEngineAndWidget();
     d->engine->activate();
 
     if (!isActive())
@@ -214,7 +214,10 @@ void MLinearLayoutPolicy::relayout()
 void MLinearLayoutPolicy::invalidate()
 {
     Q_D(MLinearLayoutPolicy);
-    d->engine->invalidate();
+    d->engine->setMinimumSize(QSizeF(-1, -1));
+    d->engine->setMaximumSize(QSizeF(-1, -1));
+    const_cast<MLinearLayoutPolicyPrivate *>(d)->refreshEngine();
+
     MAbstractLayoutPolicy::invalidate();
 }
 
