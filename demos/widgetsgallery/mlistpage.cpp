@@ -185,42 +185,66 @@ public:
             } else {
                 contentItem->setLayoutPosition(M::DefaultPosition);
             }
-        } else if (columns > 1) {
+        }
+        else if (columns > 1) {
             if (rows > 1) {
                 if (row == 0) {
                     if (column == 0)
                         contentItem->setLayoutPosition(M::TopLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
                         contentItem->setLayoutPosition(M::TopCenterPosition);
-                    else
-                        contentItem->setLayoutPosition(M::TopRightPosition);
-                } else if (row < rows - 1) {
+                    else {
+                        if (rows == 2 && (totalItems % columns))	//widget on row 1/2
+                            contentItem->setLayoutPosition(M::HorizontalRightPosition);
+                        else
+                            contentItem->setLayoutPosition(M::TopRightPosition);
+                    }
+                }	//end first row
+                else if (row < rows - 1) {
                     if (column == 0)
                         contentItem->setLayoutPosition(M::CenterLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
                         contentItem->setLayoutPosition(M::CenterPosition);
                     else if (flatRow + columns > totalItems)
                         contentItem->setLayoutPosition(M::BottomRightPosition);
+                    else {
+                        //correct decoration for last cell on next-to-last row
+                        if (row == rows - 2 && (totalItems % columns))
+                            contentItem->setLayoutPosition(M::BottomRightPosition);
+                        else
+                            contentItem->setLayoutPosition(M::CenterRightPosition);
+                    }
+                }	//end midsection
+                else {
+                    if (column == 0) {
+                        if (last)	//special case where the cell is the last cell
+                            contentItem->setLayoutPosition(M::VerticalBottomPosition);
+                        else
+                            contentItem->setLayoutPosition(M::BottomLeftPosition);
+                    } //end last row, first cell
+                    else {
+                        if (column > 0 && column < columns - 1 && !last)
+                            contentItem->setLayoutPosition(M::BottomCenterPosition);
+                        else
+                            contentItem->setLayoutPosition(M::BottomRightPosition);
+                    }
+                }	//end last row
+            }	//end multiple rows
+            else {
+                if (column == 0) {
+                    if (last)	//special case where the cell is the only cell
+                        contentItem->setLayoutPosition(M::DefaultPosition);
                     else
-                        contentItem->setLayoutPosition(M::CenterRightPosition);
+                        contentItem->setLayoutPosition(M::HorizontalLeftPosition);
                 }
                 else {
-                    if (column == 0)
-                        contentItem->setLayoutPosition(M::BottomLeftPosition);
-                    else if (column > 0 && column < columns - 1 && !last)
-                        contentItem->setLayoutPosition(M::BottomCenterPosition);
+                    if (column > 0 && column < columns - 1 && !last)
+                        contentItem->setLayoutPosition(M::HorizontalCenterPosition);
                     else
-                        contentItem->setLayoutPosition(M::BottomRightPosition);
+                        contentItem->setLayoutPosition(M::HorizontalRightPosition);
                 }
-            } else {
-                if (column == 0)
-                    contentItem->setLayoutPosition(M::HorizontalLeftPosition);
-                else if (column > 0 && column < columns - 1 && !last)
-                    contentItem->setLayoutPosition(M::HorizontalCenterPosition);
-                else
-                    contentItem->setLayoutPosition(M::HorizontalRightPosition);
-            }
-        }
+            }   //end single row
+        }	//end multiple columns
     }
 
     void setColumns(int columns) {
