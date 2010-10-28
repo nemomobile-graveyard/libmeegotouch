@@ -53,6 +53,11 @@
 # include <X11/Xlib.h>
 #endif
 
+#ifdef M_OS_MAEMO5
+#include <QDBusConnection>
+#include <QDBusMessage>
+#endif //M_OS_MAEMO5
+
 namespace {
     // TODO: this may be moved to some header if needed elsewhere
     // Returns the longest length variant of a translated string.
