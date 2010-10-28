@@ -151,6 +151,18 @@ void Ut_MWindow::testSetOrientationAngle()
     QCOMPARE(win->orientationAngle(), newAngle);
 }
 
+void Ut_MWindow::testSetOrientation()
+{
+    win->setLandscapeOrientation();
+    QVERIFY(win->orientationAngle() == M::Angle0 || win->orientationAngle() == M::Angle180);
+
+    win->setPortraitOrientation();
+    QVERIFY(win->orientationAngle() == M::Angle90 || win->orientationAngle() == M::Angle270);
+
+    win->setLandscapeOrientation();
+    QVERIFY(win->orientationAngle() == M::Angle0 || win->orientationAngle() == M::Angle180);
+}
+
 void Ut_MWindow::testSetOrientationAngleCalledFromSceneManager()
 {
     win->setSceneManager(new MSceneManager);
@@ -216,6 +228,44 @@ void Ut_MWindow::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
 
     QCOMPARE(orientationSpy.count(), 0);
     QCOMPARE(angleSpy.count(), 1);
+}
+
+void Ut_MWindow::testOrientationAngleLock()
+{
+    win->setOrientationAngleLocked(true);
+    QCOMPARE(true, win->d_func()->orientationAngleLocked);
+    QCOMPARE(true, win->isOrientationAngleLocked());
+
+    win->setOrientationAngleLocked(false);
+    QCOMPARE(false, win->d_func()->orientationAngleLocked);
+    QCOMPARE(false, win->isOrientationAngleLocked());
+
+    win->lockOrientationAngle();
+    QCOMPARE(true, win->d_func()->orientationAngleLocked);
+    QCOMPARE(true, win->isOrientationAngleLocked());
+
+    win->unlockOrientationAngle();
+    QCOMPARE(false, win->d_func()->orientationAngleLocked);
+    QCOMPARE(false, win->isOrientationAngleLocked());
+}
+
+void Ut_MWindow::testOrientationLock()
+{
+    win->setOrientationLocked(true);
+    QCOMPARE(true, win->d_func()->orientationLocked);
+    QCOMPARE(true, win->isOrientationLocked());
+
+    win->setOrientationLocked(false);
+    QCOMPARE(false, win->d_func()->orientationLocked);
+    QCOMPARE(false, win->isOrientationLocked());
+
+    win->lockOrientation();
+    QCOMPARE(true, win->d_func()->orientationLocked);
+    QCOMPARE(true, win->isOrientationLocked());
+
+    win->unlockOrientation();
+    QCOMPARE(false, win->d_func()->orientationLocked);
+    QCOMPARE(false, win->isOrientationLocked());
 }
 
 void Ut_MWindow::testIsOnDisplay()
