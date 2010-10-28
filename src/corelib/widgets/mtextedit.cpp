@@ -1494,6 +1494,21 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         moveDirection = QTextCursor::Up;
         break;
 
+    case Qt::Key_Home:
+        moveDirection = QTextCursor::StartOfLine;
+        break;
+
+    case Qt::Key_End:
+        moveDirection = QTextCursor::EndOfLine;
+        break;
+
+    case Qt::Key_PageDown:
+        moveDirection = QTextCursor::End;
+        break;
+
+    case Qt::Key_PageUp:
+        moveDirection = QTextCursor::Start;
+        break;
     }
 
     // if input was just movement, we're done

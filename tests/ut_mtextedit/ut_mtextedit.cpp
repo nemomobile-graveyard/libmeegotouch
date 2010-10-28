@@ -61,6 +61,7 @@ Q_DECLARE_METATYPE(Ut_MTextEdit::PositionedTextEditList);
 Q_DECLARE_METATYPE(Ut_MTextEdit::KeyList);
 Q_DECLARE_METATYPE(Qt::KeyboardModifiers);
 Q_DECLARE_METATYPE(Qt::FocusReason);
+Q_DECLARE_METATYPE(Qt::Key)
 
 const QString Ut_MTextEdit::testString = QString("jallajalla");
 
@@ -1979,56 +1980,67 @@ void Ut_MTextEdit::testCommitLineBreakAfterPreedit()
     QCOMPARE(returnPressedSpy.count(), expectedSignals);
 }
 
+void Ut_MTextEdit::testArrowKeys_data()
+{
+    QTest::addColumn<Qt::Key>("key");
+    QTest::addColumn<int>("initialCursorPosition");
+    QTest::addColumn<int>("finalCursorPosition");
+    QTest::addColumn<bool>("haveText");
+
+    // No text
+    QTest::newRow("empty, right") << Qt::Key_Right << 0 << 0 << false;
+    QTest::newRow("empty, left") << Qt::Key_Left << 0 << 0 << false;
+    QTest::newRow("empty, up") << Qt::Key_Up << 0 << 0 << false;
+    QTest::newRow("empty, down") << Qt::Key_Down << 0 << 0 << false;
+    QTest::newRow("empty, home") << Qt::Key_Home << 0 << 0 << false;
+    QTest::newRow("empty, end") << Qt::Key_End << 0 << 0 << false;
+    QTest::newRow("empty, pageup") << Qt::Key_PageUp << 0 << 0 << false;
+    QTest::newRow("empty, pagedown") << Qt::Key_PageDown << 0 << 0 << false;
+
+    // Text
+    QTest::newRow("text, right") << Qt::Key_Right << 0 << 1 << true;
+    QTest::newRow("text, right eol") << Qt::Key_Right << 3 << 4 << true;
+    QTest::newRow("text, left") << Qt::Key_Left << 1 << 0 << true;
+    QTest::newRow("text, left bol") << Qt::Key_Left << 4 << 3 << true;
+    QTest::newRow("text, up") << Qt::Key_Up << 5 << 1 << true;
+    QTest::newRow("text, down") << Qt::Key_Down << 1 << 5 << true;
+    QTest::newRow("text, home") << Qt::Key_Home << 8 << 4 << true;
+    QTest::newRow("text, end") << Qt::Key_End << 4 << 8 << true;
+    QTest::newRow("text, pageup") << Qt::Key_PageUp << 0xe << 0 << true;
+    QTest::newRow("text, pagedown") << Qt::Key_PageDown << 0 << 0xe << true;
+}
+
 void Ut_MTextEdit::testArrowKeys()
 {
-    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
+    QFETCH(Qt::Key, key);
+    QFETCH(int, initialCursorPosition);
+    QFETCH(int, finalCursorPosition);
+    QFETCH(bool, haveText);
+
+    MTextEdit subject(MTextEditModel::MultiLine);
+
+    MApplicationPage *page = new MApplicationPage();
+    page->setCentralWidget(&subject);
+    m_appWindow->sceneManager()->appearSceneWindowNow(page);
+
+    QSignalSpy copyAvailableSpy(&subject, SIGNAL(copyAvailable(bool)));
     QVERIFY(copyAvailableSpy.isValid());
 
-    QSignalSpy selectionChangedSpy(m_subject.get(), SIGNAL(selectionChanged()));
+    QSignalSpy selectionChangedSpy(&subject, SIGNAL(selectionChanged()));
     QVERIFY(selectionChangedSpy.isValid());
 
-    QString line(QString(1000, '1'));
-    QKeyEvent right(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier, QChar());
-    QKeyEvent left (QEvent::KeyPress, Qt::Key_Left , Qt::NoModifier, QChar());
-    QKeyEvent up   (QEvent::KeyPress, Qt::Key_Up   , Qt::NoModifier, QChar());
-    QKeyEvent down (QEvent::KeyPress, Qt::Key_Down , Qt::NoModifier, QChar());
+    QKeyEvent event(QEvent::KeyPress, key, Qt::NoModifier, QChar());
 
-    m_subject->keyPressEvent(&right);
-    QCOMPARE(m_subject->cursorPosition(), 0);
-    QVERIFY(!m_subject->hasSelectedText());
-    QCOMPARE(copyAvailableSpy.count(), 0);
-    QCOMPARE(selectionChangedSpy.count(), 0);
+    if (haveText) {
+        //               0123 45678 9abcde
+        subject.setText("foo\nquux\nxyzzy");
+    }
 
-    m_subject->keyPressEvent(&left);
-    QCOMPARE(m_subject->cursorPosition(), 0);
-    QVERIFY(!m_subject->hasSelectedText());
-    QCOMPARE(copyAvailableSpy.count(), 0);
-    QCOMPARE(selectionChangedSpy.count(), 0);
+    subject.setCursorPosition(initialCursorPosition);
 
-    m_subject->keyPressEvent(&up);
-    QCOMPARE(m_subject->cursorPosition(), 0);
-    QVERIFY(!m_subject->hasSelectedText());
-    QCOMPARE(copyAvailableSpy.count(), 0);
-    QCOMPARE(selectionChangedSpy.count(), 0);
-
-    m_subject->keyPressEvent(&down);
-    QCOMPARE(m_subject->cursorPosition(), 0);
-    QVERIFY(!m_subject->hasSelectedText());
-    QCOMPARE(copyAvailableSpy.count(), 0);
-    QCOMPARE(selectionChangedSpy.count(), 0);
-
-    m_subject->setText(line);
-    m_subject->setCursorPosition(0);
-
-    m_subject->keyPressEvent(&right);
-    QCOMPARE(m_subject->cursorPosition(), 1);
-    QVERIFY(!m_subject->hasSelectedText());
-    QCOMPARE(copyAvailableSpy.count(), 0);
-    QCOMPARE(selectionChangedSpy.count(), 0);
-
-    m_subject->keyPressEvent(&left);
-    QCOMPARE(m_subject->cursorPosition(), 0);
-    QVERIFY(!m_subject->hasSelectedText());
+    subject.keyPressEvent(&event);
+    QCOMPARE(subject.cursorPosition(), finalCursorPosition);
+    QVERIFY(!subject.hasSelectedText());
     QCOMPARE(copyAvailableSpy.count(), 0);
     QCOMPARE(selectionChangedSpy.count(), 0);
 }
