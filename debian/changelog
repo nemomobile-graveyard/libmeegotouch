@@ -1,3 +1,9 @@
+libmeegotouch (0.20.51~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 28 Oct 2010 12:35:40 +0300
+
 libmeegotouch (0.20.50-1) unstable; urgency=low
 
   * Fixes: MContainer setCentralWidget unit test.
