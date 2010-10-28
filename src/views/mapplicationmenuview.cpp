@@ -534,7 +534,6 @@ void MApplicationMenuViewPrivate::updateItemMode()
             widget->setLayoutPosition(calculateLayoutPosition(columnsCount, count, index));
         }
     }
-
 }
 
 M::Position MApplicationMenuViewPrivate::calculateLayoutPosition(
@@ -544,8 +543,8 @@ M::Position MApplicationMenuViewPrivate::calculateLayoutPosition(
 {
     M::Position pos = M::DefaultPosition;
 
-    // Single cell
-    if ( itemCount == 1) {
+    // Empty or single cell
+    if (itemCount <= 1 || columnsCount == 0) {
         pos = M::DefaultPosition;
     }
     // Single vertical column
@@ -555,7 +554,10 @@ M::Position MApplicationMenuViewPrivate::calculateLayoutPosition(
                                        M::VerticalCenterPosition;
     }
     else {
-        int rowCount = (double)itemCount/columnsCount + 0.5;
+        int rowCount = itemCount/columnsCount;
+        if (rowCount * columnsCount < itemCount) {
+            ++rowCount;
+        }
         // Single horizontal row
         if ( rowCount == 1) {
             pos = index == 0            ? M::HorizontalLeftPosition :
@@ -566,8 +568,8 @@ M::Position MApplicationMenuViewPrivate::calculateLayoutPosition(
         else {
             int row = index / columnsCount;
             int col = index % columnsCount;
-            pos = row == 0 && col == 0                       ? M::TopLeftPosition :
-                  row == 0 && col == columnsCount-1          ? M::TopRightPosition :
+            pos = row == 0          && col == 0              ? M::TopLeftPosition :
+                  row == 0          && col == columnsCount-1 ? M::TopRightPosition :
                   row == rowCount-1 && col == 0              ? M::BottomLeftPosition :
                   row == rowCount-1 && col == columnsCount-1 ? M::BottomRightPosition :
                   row == 0                                   ? M::TopCenterPosition :
@@ -577,7 +579,6 @@ M::Position MApplicationMenuViewPrivate::calculateLayoutPosition(
                                                                M::CenterPosition;
         } // 2-D layout
     }
-
     return pos;
 }
 
