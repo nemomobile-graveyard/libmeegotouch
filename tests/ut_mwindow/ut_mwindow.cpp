@@ -270,15 +270,22 @@ void Ut_MWindow::testOrientationLock()
 
 void Ut_MWindow::testIsOnDisplay()
 {
-    MOnDisplayChangeEvent ev1(false, QRectF(QPointF(0, 0), win->visibleSceneSize()));
-    win->event(&ev1);
-
+    // Should be initially false
     QVERIFY(win->isOnDisplay() == false);
 
     MOnDisplayChangeEvent ev2(true, QRectF(QPointF(0, 0), win->visibleSceneSize()));
     win->event(&ev2);
 
     QVERIFY(win->isOnDisplay() == true);
+
+    MOnDisplayChangeEvent ev1(false, QRectF(QPointF(0, 0), win->visibleSceneSize()));
+    win->event(&ev1);
+
+    // Sending displayExited should be delayed, wait a bit
+    sleep(1.2);
+    MApplication::processEvents();
+
+    QVERIFY(win->isOnDisplay() == false);
 }
 
 void Ut_MWindow::testEnterDisplayEventHandler()

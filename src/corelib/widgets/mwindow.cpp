@@ -95,8 +95,6 @@ MWindowPrivate::MWindowPrivate() :
 #ifdef Q_WS_X11
     removeWindowFromSwitcherInProgress = false;
     skipTaskbar = false;
-#else
-    onDisplay = true; // For non X11, windows always visible
 #endif
 
     MWindow *window = MApplication::activeWindow();
@@ -1269,7 +1267,16 @@ void MWindow::setVisible(bool visible)
         // prestarted state.
         if (MApplication::isPrestarted()) {
             return;
-        } else if (MTheme::hasPendingRequests()) {
+        }
+
+        // Set onDisplay if it's not already set, because
+        // it is used to discard paint events and we don't have
+        // time to wait for visibility notifies from compositor.
+        if (!d->onDisplaySet) {
+            d->onDisplay = true;
+        }
+
+        if (MTheme::hasPendingRequests()) {
             // The showing of the window gets delayed until the theme
             // has finished to load all pixmap requests. This prevents
             // a flickering of the application on startup and improves
