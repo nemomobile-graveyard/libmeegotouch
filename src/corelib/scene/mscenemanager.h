@@ -326,6 +326,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onPageSwitchAnimationFinished())
     Q_PRIVATE_SLOT(d_func(), void _q_dislocateSceneWindow(MSceneWindow *, QPointF))
     Q_PRIVATE_SLOT(d_func(), void _q_undoSceneWindowDislocation(MSceneWindow *sceneWindow))
+    Q_PRIVATE_SLOT(d_func(), void _q_updateRootElementsPositions())
 #ifdef Q_WS_X11
     Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
 #endif

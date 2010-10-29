@@ -184,10 +184,6 @@ void MApplicationWindowPrivate::init()
     q->connect(q, SIGNAL(switcherExited()),
                SLOT(_q_handleInSwitcherVisibilityChange()));
 
-    if (!MApplication::fullScreen() && statusBar) {
-        sceneManager->appearSceneWindowNow(statusBar);
-    }
-
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
 
@@ -197,6 +193,10 @@ void MApplicationWindowPrivate::init()
 
     if (needsDockWidget()) {
         sceneManager->appearSceneWindowNow(dockWidget);
+    }
+
+    if (!MApplication::fullScreen() && statusBar) {
+        sceneManager->appearSceneWindowNow(statusBar);
     }
 
     _q_placeToolBar();
