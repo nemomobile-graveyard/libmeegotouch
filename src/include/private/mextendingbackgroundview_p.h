@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../corelib/widgets/views/mextendingbackgroundview_p.h"
+#include "../views/mextendingbackgroundview_p.h"

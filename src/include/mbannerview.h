@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../corelib/widgets/mbannerview.h"
+#include "../views/mbannerview.h"
