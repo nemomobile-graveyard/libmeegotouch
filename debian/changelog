@@ -1,3 +1,9 @@
+libmeegotouch (0.20.49.1-1) unstable; urgency=low
+
+  * Changes: Fix resize problem with layouts
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Fri, 29 Oct 2010 16:22:00 +0300
+
 libmeegotouch (0.20.49-1) unstable; urgency=low
 
   * Fixes: NB#199335 - MList : ScrollTo function scrolls to incorrect index.
