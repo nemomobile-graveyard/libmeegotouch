@@ -21,7 +21,6 @@ SOURCES += ut_mlistviewseparators.cpp  \
         ../../src/views/.moc/moc_mlistview_p.cpp \
         $$MSRCDIR/views/widgets/mlistindex.cpp \
         $$MSRCDIR/views/widgets/mlistindextooltip.cpp \
-        ../../src/views/.moc/moc_mlistindex.cpp \
         ../../src/views/.gen/gen_mlistindexmodeldata.cpp \
         $$MSRCDIR/views/mlistindexview.cpp \
         $$MSRCDIR/views/mlistindexfloatingview.cpp \
