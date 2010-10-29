@@ -2,6 +2,7 @@ include(../mkspecs/common.pri)
 
 TEMPLATE = app
 TARGET = mmoc
+DESTDIR = $$M_BUILD_TREE/mmoc
 target.path = $$M_INSTALL_BIN
 INCLUDEPATH += .
 DEPENDPATH += $$INCLUDEPATH
@@ -12,10 +13,6 @@ DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
 # Check for mixing of const and non-const iterators, 
 # which can cause problems when built with some compilers:
 DEFINES += QT_STRICT_ITERATORS
-
-win32-msvc*:{
-    target.commands += copy release\mmoc.exe .
-}
 
 # Dont generate mmoc.app bundle for Mac OS X
 macx:CONFIG -= app_bundle
@@ -43,8 +40,8 @@ win32: {
 }
 
 win32 {
-    !exists ($$M_BUILD_TREE\mmoc\mmoc.pl) {
-        system (copy $$M_SOURCE_TREE\mmoc\mmoc.pl $$M_BUILD_TREE\mmoc\mmoc.pl)
+    !exists ($$M_BUILD_TREE/mmoc/mmoc.pl) {
+        system (copy $$M_SOURCE_TREE\\mmoc\\mmoc.pl $$M_BUILD_TREE\\mmoc\\mmoc.pl)
     }
 } else {
     !exists ($$M_BUILD_TREE/mmoc/mmoc.pl) {
