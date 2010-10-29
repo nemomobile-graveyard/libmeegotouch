@@ -39,6 +39,7 @@ private slots:
     void testSubTitle();
     void testIcon();
     void testTimeStamp();
+    void testUpdatingTimeStamp();
     void testBannerCreation();
     void testBannerClicking();
 

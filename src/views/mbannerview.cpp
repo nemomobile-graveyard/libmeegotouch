@@ -91,10 +91,12 @@ MLabel *MBannerViewPrivate::bannerTimeStamp()
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
         //TODO: giving opacity due to the property can't be set it in the CSS (yet)
         bannerTimeStampLabel->setOpacity(0.5);
-        if (bannerTimeStampData){
-            bannerTimeStampLabel->setText(bannerTimeStampData->toString("hh:mm ap"));
-        }
     }
+
+    if (bannerTimeStampData){
+        bannerTimeStampLabel->setText(bannerTimeStampData->toString("hh:mm ap"));
+    }
+
     return bannerTimeStampLabel;
 }
 

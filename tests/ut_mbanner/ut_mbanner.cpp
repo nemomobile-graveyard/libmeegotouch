@@ -88,6 +88,22 @@ void Ut_MBanner::testTimeStamp()
     QCOMPARE(m_subject->bannerTimeStamp(),time);
 }
 
+
+void Ut_MBanner::testUpdatingTimeStamp()
+{
+    QDateTime time = QDateTime::fromString("01:02:03", "hhmmss");
+    m_subject->setBannerTimeStamp(time);
+    QCOMPARE(m_subject->bannerTimeStamp(), time);
+
+    time = QDateTime::fromString("02:03:04", "hhmmss");
+    m_subject->setBannerTimeStamp(time);
+    QCOMPARE(m_subject->bannerTimeStamp(), time);
+
+    time = QDateTime::fromString("05:06:07", "hhmmss");
+    m_subject->setBannerTimeStamp(time);
+    QCOMPARE(m_subject->bannerTimeStamp(), time);
+}
+
 void Ut_MBanner::testBannerCreation()
 {
     /* Style configured as Event Banner */
