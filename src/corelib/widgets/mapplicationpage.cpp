@@ -199,13 +199,8 @@ Qt::Orientations MApplicationPage::panningDirection() const
 
 void MApplicationPage::actionEvent(QActionEvent *e)
 {
-    QAction *action = e->action();
     switch (e->type()) {
-    case QEvent::ActionRemoved: {
-        if (action)
-            action->disconnect(this);
-        //fall through is intentional.
-    }
+    case QEvent::ActionRemoved:
     case QEvent::ActionChanged:
     case QEvent::ActionAdded: {
         emit actionUpdated(e);
