@@ -58,6 +58,9 @@ private slots:
     void panGestureCancelsMouseEvents();
     void ignoredPanGestureShouldNotCancelMouseEvents();
 
+    void tapAndHoldGestureShouldBeGrabbedIfViewportIsMoving();
+    void testPanThreshold();
+
 private:
     MPannableWidget *widget;
 };

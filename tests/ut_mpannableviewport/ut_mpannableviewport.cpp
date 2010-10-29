@@ -315,4 +315,25 @@ void Ut_MPannableViewport::rangeOfViewportShouldBeSizeOfPannedWidgetMinusViewpor
     QCOMPARE(subject->range(), QRectF(0,0,500,700));
 }
 
+void Ut_MPannableViewport::testSetClipping()
+{
+    subject->setClipping(true);
+    QCOMPARE(subject->hasClipping(), true);
+    subject->setClipping(false);
+    QCOMPARE(subject->hasClipping(), false);
+}
+
+void Ut_MPannableViewport::testRangeSetting()
+{
+    subject->setAutoRange(false);
+    QCOMPARE(subject->autoRange(), false);
+
+    subject->setRange(QRectF(0,0,100,100));
+    QCOMPARE(subject->range(), QRectF(0,0,100,100));
+
+    subject->d_func()->setInputMethodArea(QRect(0,50,100,100));
+    QCOMPARE(subject->range(), QRectF(0,0,100,200));
+
+}
+
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)

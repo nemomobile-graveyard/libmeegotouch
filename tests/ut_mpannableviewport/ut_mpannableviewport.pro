@@ -12,9 +12,19 @@ TEST_SOURCES += \
 # unit test and unit classes
 SOURCES += \
     ut_mpannableviewport.cpp \
+    $$MSRCDIR/corelib/widgets/core/mwidgetcontroller.cpp \
+    $$MSRCDIR/corelib/widgets/core/mwidget.cpp \
+    $$MSRCDIR/corelib/widgets/mpannablewidget.cpp \
+    $$MSRCDIR/corelib/widgets/mpannableviewportlayout.cpp \
+    $$MSRCDIR/corelib/widgets/mpannableviewport.cpp \
 
 # unit test and unit classes
 HEADERS += \
     ut_mpannableviewport.h \
+    $$MSRCDIR/corelib/widgets/mpannablewidget.h \
+    $$MSRCDIR/corelib/widgets/mpannableviewportlayout.h \
+    $$MSRCDIR/corelib/widgets/mpannableviewport.h \
+    $$MSRCDIR/corelib/widgets/core/mwidgetcontroller_p.h \
+    $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
 
 include(../common_bot.pri)

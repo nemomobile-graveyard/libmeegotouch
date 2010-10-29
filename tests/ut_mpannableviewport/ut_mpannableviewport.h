@@ -52,6 +52,9 @@ private slots:
     void disabledViewportShouldNotAllowWigetToBeBiggerThanViewport();
     void rangeOfViewportShouldBeSizeOfPannedWidgetMinusViewportSize();
 
+    void testSetClipping();
+    void testRangeSetting();
+
 private:
     MPannableViewport *subject;
 };

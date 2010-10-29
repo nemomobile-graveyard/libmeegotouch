@@ -51,12 +51,14 @@ struct PhysicsState {
         pointerMoved = false;
         pointerReleased = false;
         physicsStopped = false;
+        physicsIsMoving = false;
     }
 
     bool pointerPressed;
     bool pointerMoved;
     bool pointerReleased;
     bool physicsStopped;
+    bool physicsIsMoving;
 };
 PhysicsState *physicsState = 0;
 
@@ -97,6 +99,11 @@ void MPhysics2DPanning::pointerMove(const QPointF& /*pos*/)
 void MPhysics2DPanning::pointerRelease()
 {
     physicsState->pointerReleased = true;
+}
+
+bool MPhysics2DPanning::inMotion() const
+{
+    return physicsState->physicsIsMoving;
 }
 
 //QGraphicsObject stubs:
@@ -552,6 +559,33 @@ void Ut_MPannableWidget::ignoredPanGestureShouldNotCancelMouseEvents()
     QCOMPARE(dummyItem->mouseReleaseReceived, true);
 
     QCOMPARE(dummyItem->cancelReceived, false);
+}
+
+void Ut_MPannableWidget::tapAndHoldGestureShouldBeGrabbedIfViewportIsMoving()
+{
+    QTapAndHoldGesture tapAndHoldGesture;
+
+    QList<QGesture*> gestureList;
+    gestureList.append(&tapAndHoldGesture);
+    QGestureEvent gestureEvent(gestureList);
+
+    physicsState->physicsIsMoving = true;
+
+    widget->d_func()->glass->tapAndHoldGestureEvent(&gestureEvent, &tapAndHoldGesture);
+
+    QCOMPARE(gestureEvent.isAccepted(&tapAndHoldGesture), true);
+
+    physicsState->physicsIsMoving = false;
+
+    widget->d_func()->glass->tapAndHoldGestureEvent(&gestureEvent, &tapAndHoldGesture);
+
+    QCOMPARE(gestureEvent.isAccepted(&tapAndHoldGesture), false);
+}
+
+void Ut_MPannableWidget::testPanThreshold()
+{
+    widget->setPanThreshold(100);
+    QCOMPARE(widget->panThreshold(), qreal(0));
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableWidget);
