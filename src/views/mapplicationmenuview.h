@@ -112,6 +112,7 @@ private:
 
 #ifdef UNIT_TEST
     friend class Pt_MApplicationMenu;
+    friend class Ut_MApplicationMenu;
 #endif
 
 };

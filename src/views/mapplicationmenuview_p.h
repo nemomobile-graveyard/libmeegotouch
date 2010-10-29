@@ -78,7 +78,7 @@ protected:
     bool hasWidget(QAction *action);
     bool isWidgetUsable(QAction *action);
     bool isWidgetUsable(MWidgetAction *widgetAction);
-    MWidget *getWidget(QAction *action);
+    MWidget *getWidget(QAction *action) const;
     bool canAddMoreActions(QAction *action) const;
     bool actionCountAndExists(QAction *action, bool isStyle, int &count) const;
     bool actionCountAndExists(QAction *action, QHash<QAction *, MWidget *> const &widgets,
@@ -111,6 +111,10 @@ protected:
     QHash<QAction *, MWidget *> buttons;
 
     MApplicationMenu *controller;
+
+#ifdef UNIT_TEST
+    friend class Ut_MApplicationMenu;
+#endif
 };
 
 #endif

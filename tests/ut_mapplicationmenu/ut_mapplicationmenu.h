@@ -43,6 +43,7 @@ private Q_SLOTS:
     void testAddAction();
     void testInsertAction();
     void testActionVisiblity();
+    void testOpeningAndClosingAppMenuWithDisabledAction();
     void testClear();
     void testPaint();
     void testEventsPassingThrough();

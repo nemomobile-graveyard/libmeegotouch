@@ -30,6 +30,7 @@
 #include <MButton>
 #include <MComboBox>
 #include "mapplicationmenu_p.h"
+#include "mapplicationmenuview_p.h"
 
 MApplication *app;
 MApplicationWindow *appWin;
@@ -213,6 +214,33 @@ void Ut_MApplicationMenu::testActionVisiblity()
 
     widgetAction->setVisible(false);
     QVERIFY(widgetAction->widget()->isVisible() == false);
+}
+
+void Ut_MApplicationMenu::testOpeningAndClosingAppMenuWithDisabledAction()
+{
+    m_subject->clearActions();
+    QVERIFY(m_subject->actions().count() == 0);
+
+    MAction *action = new MAction("action", m_subject);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    action->setEnabled(true);
+    m_subject->addAction(action);
+
+    const MApplicationMenuView *view = dynamic_cast<const MApplicationMenuView *>(m_subject->view());
+    QVERIFY(view);
+    const MApplicationMenuViewPrivate *viewPrivate = view->d_func();
+
+    MWidget *widget = viewPrivate->getWidget(action);
+    QVERIFY(widget);
+    QVERIFY(widget->isEnabled());
+
+    // Test opening and closing the app menu with the action disabled, it should remain disabled
+    action->setEnabled(false);
+    QVERIFY(!widget->isEnabled());
+    appWin->sceneManager()->appearSceneWindowNow(m_subject);
+    appWin->sceneManager()->dismissSceneWindowNow(m_subject);
+    QVERIFY(!widget->isEnabled());
+
 }
 
 void Ut_MApplicationMenu::actionSlot(bool checked)

@@ -355,11 +355,10 @@ bool MApplicationMenuViewPrivate::isWidgetUsable(MWidgetAction *widgetAction)
     return (!widgetAction->isWidgetInUse() || isWidgetInUseByView(widgetAction));
 }
 
-MWidget *MApplicationMenuViewPrivate::getWidget(QAction *action)
+MWidget *MApplicationMenuViewPrivate::getWidget(QAction *action) const
 {
     MWidget *button = buttons.value(action);
-    MWidget *leased = leasedWidgets.value(action);
-    return (button != 0) ? button : leased;
+    return button ? button : leasedWidgets.value(action);
 }
 
 bool MApplicationMenuViewPrivate::canAddMoreActions(QAction *action) const
