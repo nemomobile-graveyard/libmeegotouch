@@ -48,7 +48,7 @@ public Q_SLOTS: // METHODS
 
         MWindow *win = MApplication::instance()->activeWindow();
         if (win) {
-            windowId = win->winId();
+            windowId = win->effectiveWinId();
         }
 
         QList<QVariant> argumentList;
@@ -77,7 +77,7 @@ public Q_SLOTS: // METHODS
 
         MWindow *win = MApplication::instance()->activeWindow();
         if (win) {
-            windowId = win->winId();
+            windowId = win->effectiveWinId();
         }
 
         QList<QVariant> argumentList;
