@@ -40,6 +40,8 @@ private slots:
     void testDefaultConstructor();
     void testConstructor();
     void testSetText();
+    void testIconId();
+    void testDismissEvent();
 
 private:
     MMessageBox *m_subject;

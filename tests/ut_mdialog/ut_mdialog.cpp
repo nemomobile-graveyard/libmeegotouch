@@ -28,8 +28,10 @@
 #include <MSceneWindow>
 #include <MLayout>
 #include <MPannableWidget>
+#include <MDismissEvent>
 
 #include <mbuttonmodel.h>
+#include <mdialog_p.h>
 
 #include "ut_mdialog.h"
 
@@ -102,7 +104,8 @@ void Ut_MDialog::testStandardButtonsInConstructor()
                                    M::AbortButton | M::RetryButton | M::IgnoreButton |
                                    M::CloseButton | M::DiscardButton | M::ApplyButton |
                                    M::RestoreDefaultsButton |M::OkButton | M::CancelButton |
-                                   M::YesToAllButton | M::NoButton | M::ResetButton );
+                                   M::YesToAllButton | M::NoButton | M::ResetButton |
+                                   M::DoneButton);
 
     QVERIFY(dlg->button(M::SaveButton));
     QCOMPARE(dlg->button(M::SaveButton)->role(), M::AcceptRole);
@@ -117,7 +120,7 @@ void Ut_MDialog::testStandardButtonsInConstructor()
     QVERIFY(dlg->button(M::HelpButton));
     QCOMPARE(dlg->button(M::HelpButton)->role(), M::HelpRole);
     QVERIFY(dlg->button(M::OkButton));
-     QCOMPARE(dlg->button(M::OkButton)->role(), M::AcceptRole);
+    QCOMPARE(dlg->button(M::OkButton)->role(), M::AcceptRole);
     QVERIFY(dlg->button(M::CancelButton));
     QCOMPARE(dlg->button(M::CancelButton)->role(), M::RejectRole);
     QVERIFY(dlg->button(M::YesToAllButton));
@@ -140,6 +143,8 @@ void Ut_MDialog::testStandardButtonsInConstructor()
     QCOMPARE(dlg->button(M::ApplyButton)->role(), M::ApplyRole);
     QVERIFY(dlg->button(M::RestoreDefaultsButton));
     QCOMPARE(dlg->button(M::RestoreDefaultsButton)->role(), M::ResetRole);
+    QVERIFY(dlg->button(M::DoneButton));
+    QCOMPARE(dlg->button(M::DoneButton)->role(), M::AcceptRole);
 }
 
 void Ut_MDialog::initVals()
@@ -182,6 +187,24 @@ void Ut_MDialog::settersAndGetters()
         QCOMPARE(dialog->isCloseButtonVisible(), val);
     }
 
+    for (int i = 0; i < 4; i++) {
+        bool val = i % 2 ? false : true;
+        dialog->setSystem(val);
+        QCOMPARE(dialog->isSystem(), val);
+    }
+
+    for (int i = 0; i < 4; i++) {
+        bool val = i % 2 ? false : true;
+        dialog->setModal(val);
+        QCOMPARE(dialog->isModal(), val);
+    }
+
+    for (int i = 0; i < 4; i++) {
+        bool val = i % 2 ? false : true;
+        dialog->setSystemModal(val);
+        QCOMPARE(dialog->isSystemModal(), val);
+    }
+
     {
         QString val;
         val = QString("Test string 1");
@@ -218,12 +241,12 @@ void Ut_MDialog::checkStandardButtons()
     MButtonModel *b1 = dialog->addButton(M::OkButton);
     MButtonModel *b2 = dialog->addButton(M::CancelButton);
     MButtonModel *b3 = new MButtonModel;
-
-
+    MButtonModel *b4 = NULL;
 
     QCOMPARE(dialog->standardButton(b1), M::OkButton);
     QCOMPARE(dialog->standardButton(b2), M::CancelButton);
     QCOMPARE(dialog->standardButton(b3), M::NoStandardButton);
+    QCOMPARE(dialog->standardButton(b4), M::NoStandardButton);
 }
 
 void Ut_MDialog::addStandardButtons()
@@ -375,8 +398,6 @@ void Ut_MDialog::dismissDialog()
     QSignalSpy spyChanged2(dialog, SIGNAL(rejected()));
     QSignalSpy spyChanged3(dialog, SIGNAL(finished(int)));
 
-    //ABI FREEZE: Release this
-    //dialog->dismissNow();
     dialog->close();
 
     QCOMPARE(spyChanged1.count(), 0);
@@ -395,6 +416,40 @@ void Ut_MDialog::testRotation()
     QCOMPARE(dialog->preferredSize(), preferredSizeLandscape);
     appWin->setOrientationAngle(M::Angle90);
     QCOMPARE(dialog->preferredSize(), preferredSizePortrait);
+}
+
+void Ut_MDialog::testSystemDialog()
+{
+    QSignalSpy spyChanged1(dialog, SIGNAL(rejected()));
+    QSignalSpy spyChanged2(dialog, SIGNAL(finished(int)));
+
+    dialog->setSystem(true);
+    dialog->setModal(false);
+    dialog->appear(MSceneWindow::KeepWhenDone);
+    QVERIFY(dialog->d_func()->standAloneWindow);
+    dialog->dismissEvent(new MDismissEvent());
+
+    QCOMPARE(spyChanged1.count(), 1);
+    QCOMPARE(spyChanged2.count(), 1);
+}
+
+void Ut_MDialog::testSystemModalDialog()
+{
+    QSignalSpy spyChanged1(dialog, SIGNAL(rejected()));
+    QSignalSpy spyChanged2(dialog, SIGNAL(finished(int)));
+    QSignalSpy spyChanged3(dialog, SIGNAL(accepted()));
+
+    dialog->setSystem(true);
+    dialog->setModal(true);
+    dialog->appear();
+    QVERIFY(dialog->d_func()->standAloneWindow);
+    dialog->dismissEvent(new MDismissEvent());
+
+    QCOMPARE(spyChanged1.count(), 0);
+    QCOMPARE(spyChanged2.count(), 0);
+    QCOMPARE(spyChanged3.count(), 0);
+    dialog->accept();
+    QCOMPARE(spyChanged3.count(), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_MDialog);

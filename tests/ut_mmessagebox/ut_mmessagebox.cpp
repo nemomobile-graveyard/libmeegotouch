@@ -20,6 +20,8 @@
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
 
+#include <MDismissEvent>
+
 #include <mmessagebox.h>
 #include <mapplication.h>
 #include <mbuttonmodel.h>
@@ -80,6 +82,29 @@ void Ut_MMessageBox::testSetText()
     QString myText("myText");
     m_subject->setText(myText);
     QCOMPARE( m_subject->text(), myText );
+}
+
+void Ut_MMessageBox::testIconId()
+{
+    QString iconId("test_icon_id");
+    m_subject->setIconId(iconId);
+    QCOMPARE( m_subject->iconId(), iconId );
+}
+
+void Ut_MMessageBox::testDismissEvent()
+{
+    QSignalSpy spyChanged1(m_subject, SIGNAL(rejected()));
+    QSignalSpy spyChanged2(m_subject, SIGNAL(finished(int)));
+    QSignalSpy spyChanged3(m_subject, SIGNAL(accepted()));
+
+    m_subject->dismissEvent(new MDismissEvent());
+
+    QCOMPARE(spyChanged1.count(), 0);
+    QCOMPARE(spyChanged2.count(), 0);
+    QCOMPARE(spyChanged3.count(), 0);
+    m_subject->accept();
+    QCOMPARE(spyChanged3.count(), 1);
+
 }
 
 QTEST_APPLESS_MAIN(Ut_MMessageBox)

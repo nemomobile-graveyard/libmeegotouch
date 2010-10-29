@@ -698,6 +698,7 @@ private:
 
     friend class MDialogView;
     friend class MDialogViewPrivate;
+    friend class Ut_MDialog;
 };
 
 #endif

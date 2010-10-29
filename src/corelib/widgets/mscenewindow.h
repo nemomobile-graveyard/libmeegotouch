@@ -266,7 +266,7 @@ public Q_SLOTS:
      *
      * Please refer to MDismissEvent documentation for more information.
      *
-     * \sa dismissNow(), dismissEvent(), disappear(), deleteWhenDone(),
+     * \sa dismissEvent(), disappear(), deleteWhenDone(),
      *     MSceneManager::dismissSceneWindow()
      */
     bool dismiss();

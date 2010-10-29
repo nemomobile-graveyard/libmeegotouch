@@ -112,6 +112,7 @@ private:
 
     friend class MMessageBoxView;
     friend class MMessageBoxViewPrivate;
+    friend class Ut_MMessageBox;
 };
 
 #endif

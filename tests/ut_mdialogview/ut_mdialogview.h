@@ -41,6 +41,9 @@ private slots:
     void closeButtonVisibility();
     void titleBarVisibility();
     void spinnerVisibility();
+    void buttonBoxCentering();
+    void verticalAlignment();
+    void buttonsFromModel();
 
 private:
     QGraphicsWidget *fetchWidget(QGraphicsWidget &widget,

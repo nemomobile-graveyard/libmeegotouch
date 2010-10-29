@@ -20,8 +20,13 @@
 #include "ut_mdialogview.h"
 
 #include <mdialogstyle.h>
+#include "mdialogview_p.h"
+#include "mgridlayoutpolicy.h"
+//#include "mbuttongrouplayoutpolicy.h"
+#include "mbuttongrouplayoutpolicy_p.h"
 
 #include <QGraphicsLayout>
+#include "mlabel.h"
 
 void Ut_MDialogView::init()
 {
@@ -131,6 +136,44 @@ void Ut_MDialogView::spinnerVisibility()
 
     QCOMPARE(dialogSpinner->isVisible(), false);
 
+}
+
+void Ut_MDialogView::buttonBoxCentering()
+{
+    QGraphicsWidget *buttonBox = fetchWidget(*controller, "MDialogButtonBox");
+    MDialogStyle *dialogStyle = (MDialogStyle *)subject->style().operator->();
+    dialogStyle->setButtonBoxCentered(false);
+    subject->applyStyle();
+    QCOMPARE(buttonBox->layout()->count(), 1);
+    dialogStyle->setButtonBoxCentered(true);
+    subject->applyStyle();
+    QCOMPARE(buttonBox->layout()->count(), 3);
+    dialogStyle->setButtonBoxCentered(false);
+    subject->applyStyle();
+    QCOMPARE(buttonBox->layout()->count(), 1);
+}
+
+void Ut_MDialogView::verticalAlignment()
+{
+    MDialogStyle *dialogStyle = (MDialogStyle *)subject->style().operator->();
+    dialogStyle->setDialogVerticalAlignment(dialogStyle->dialogVerticalAlignment() & !Qt::AlignVCenter);
+    subject->applyStyle();
+    QVERIFY(!subject->d_func()->bottomSpacer);
+    dialogStyle->setDialogVerticalAlignment(dialogStyle->dialogVerticalAlignment() | Qt::AlignVCenter);
+    subject->applyStyle();
+    QVERIFY(subject->d_func()->bottomSpacer);
+    dialogStyle->setDialogVerticalAlignment(dialogStyle->dialogVerticalAlignment() & !Qt::AlignVCenter);
+    subject->applyStyle();
+    QVERIFY(!subject->d_func()->bottomSpacer);
+}
+
+void Ut_MDialogView::buttonsFromModel()
+{
+    model->addButton(M::OkButton);
+    model->addButton(M::CancelButton);
+    QVERIFY(subject->d_func()->buttonBoxLayoutPolicy->count()==2);
+    model->removeButton(model->button(M::CancelButton));
+    QVERIFY(subject->d_func()->buttonBoxLayoutPolicy->count()==1);
 }
 
 QGraphicsWidget *Ut_MDialogView::fetchWidget(QGraphicsWidget &widget,

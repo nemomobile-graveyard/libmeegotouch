@@ -60,6 +60,8 @@ private slots:
     void rejectDialogDirectly();
     void dismissDialog();
     void testRotation();
+    void testSystemDialog();
+    void testSystemModalDialog();
 };
 
 #endif
