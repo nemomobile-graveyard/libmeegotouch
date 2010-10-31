@@ -229,9 +229,9 @@ MButtonModel *MDialogModel::addButton(M::StandardButton buttonType)
 
         if (!buttonModel) {
             buttonModel = createStandardButton(buttonType);
+            buttonModel->setRole(roleFor(buttonType));
             addButton(buttonModel);
         }
-        buttonModel->setRole(roleFor(buttonType));
     }
 
     return buttonModel;
