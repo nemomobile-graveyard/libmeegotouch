@@ -99,13 +99,13 @@ void MApplicationPrivate::removeWindowFromSwitcher(Window window, bool remove)
     Atom stateAtom = XInternAtom(dpy, "_NET_WM_STATE", True);
     if (stateAtom != None) {
         Atom skipAtom = XInternAtom(dpy, "_NET_WM_STATE_SKIP_TASKBAR", True);
-	MWindow *win = windowForId(window);
+        MWindow *win = windowForId(window);
         if (remove) {
             win->d_ptr->removeWindowFromSwitcherInProgress = true;
             XChangeProperty(dpy, window, stateAtom,
                             XA_ATOM, 32, PropModeAppend,
                             reinterpret_cast<unsigned char *>(&skipAtom), 1);
-        } else if (!win->d_ptr->skipTaskbar) {
+        } else if (win && !win->d_ptr->skipTaskbar) {
             // Do not remove SKIP_TASKBAR if it was requested from outside
             XEvent ev;
             memset(&ev, 0, sizeof(ev));
