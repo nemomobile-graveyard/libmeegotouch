@@ -109,7 +109,7 @@ void Ft_Theme::init()
     makeFile(QString("theme1") + QDir::separator() + QString("meegotouch") + QDir::separator() + QString("constants.ini"), THEME_1_CONSTANTS_INI);
     makeFile(QString("theme2") + QDir::separator() + QString("meegotouch") + QDir::separator() + QString("constants.ini"), THEME_2_CONSTANTS_INI);
 
-    makeFile(QString("theme1") + QDir::separator() + QString("meegotouch") + QDir::separator() +  QString("locale") + QDir::separator() + QString("fi") + QDir::separator() + QString("constants.ini"), FINNISH_CONSTANTS_INI);
+    makeFile(QString("theme2") + QDir::separator() + QString("meegotouch") + QDir::separator() +  QString("locale") + QDir::separator() + QString("fi") + QDir::separator() + QString("constants.ini"), FINNISH_CONSTANTS_INI);
 
     // create view configuration files
     makeFile( QString("theme1") + QDir::separator()
