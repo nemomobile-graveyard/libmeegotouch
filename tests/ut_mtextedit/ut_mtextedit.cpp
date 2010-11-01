@@ -102,6 +102,7 @@ public:
     SimpleInputContext(QObject *parent = 0)
         : QInputContext(parent),
           updateCallCount(0),
+          resetCallCount(0),
           selectionAvailableAtLastUpdate(false),
           edit(0),
           m_visible(false)
@@ -123,7 +124,9 @@ public:
     }
 
     void reset()
-    {}
+    {
+        ++resetCallCount;
+    }
 
     bool isComposing() const
     {
@@ -160,6 +163,7 @@ public:
     }
 
     int updateCallCount;
+    int resetCallCount;
     bool selectionAvailableAtLastUpdate;
     QString selectedTextAtLastUpdate;
     MTextEdit *edit;
@@ -347,14 +351,21 @@ void Ut_MTextEdit::constraintTest(MTextEdit *subject, const QString &input,
  */
 void Ut_MTextEdit::testSetText()
 {
-    QTextDocument *document = m_subject->document();
+    AutoActivatedScene sc;
+    MTextEdit *subject(new MTextEdit(MTextEditModel::MultiLine, ""));
+    subject->setParentItem(sc.window()->box());
+    subject->setFocus();
+
+    int resetCallCount(0);
+    QTextDocument *document = subject->document();
     QSignalSpy mySpy(document, SIGNAL(contentsChanged()));
-    QSignalSpy mySpy2(m_subject.get(), SIGNAL(textChanged()));
+    QSignalSpy mySpy2(subject, SIGNAL(textChanged()));
 
     for (int i = 0; i < validStrings.size(); i++) {
         QString setText = validStrings.at(i);
-        m_subject->setText(setText);
-        QString getText = m_subject->text();
+        subject->setText(setText);
+        QCOMPARE(m_sic->resetCallCount, ++resetCallCount);
+        QString getText = subject->text();
 
         // Check that the signals were sent and texts match
         QCOMPARE(mySpy.count(), (i + 1) * 2); //one to clear old second to set the new
@@ -364,13 +375,15 @@ void Ut_MTextEdit::testSetText()
 
     // test with phone number content type so validator gets tested too.
     int currentSpyCount = mySpy2.count();
-    m_subject->setContentType(M::PhoneNumberContentType);
-    m_subject->setText("+358-"); // partial phone number
+    subject->setContentType(M::PhoneNumberContentType);
+    subject->setText("+358-"); // partial phone number
     QCOMPARE(mySpy2.count(), currentSpyCount + 1);
+    QCOMPARE(m_sic->resetCallCount, ++resetCallCount);
 
     currentSpyCount = mySpy2.count();
-    m_subject->setText(""); // empty string should be always ok
+    subject->setText(""); // empty string should be always ok
     QCOMPARE(mySpy2.count(), currentSpyCount + 1);
+    QCOMPARE(m_sic->resetCallCount, ++resetCallCount);
 }
 
 
@@ -1347,13 +1360,20 @@ void Ut_MTextEdit::testValidatorSelectionRemoval()
 
 void Ut_MTextEdit::testClear()
 {
+    AutoActivatedScene sc;
+    MTextEdit *subject(new MTextEdit(MTextEditModel::MultiLine, ""));
+    subject->setParentItem(sc.window()->box());
+    subject->setFocus();
+
     // test that clear() works. first set content and then test that after clear the state has reset
-    m_subject->setText("AsdfAsdfasD sdfdf asdf ");
-    m_subject->setSelection(3, 8, false);
-    m_subject->clear();
-    QCOMPARE(m_subject->cursorPosition(), 0);
-    QCOMPARE(m_subject->mode(), MTextEditModel::EditModeBasic);
-    QCOMPARE(m_subject->text(), QString(""));
+    subject->setText("AsdfAsdfasD sdfdf asdf ");
+    subject->setSelection(3, 8, false);
+    QCOMPARE(m_sic->resetCallCount, 1);
+    subject->clear();
+    QCOMPARE(m_sic->resetCallCount, 2);
+    QCOMPARE(subject->cursorPosition(), 0);
+    QCOMPARE(subject->mode(), MTextEditModel::EditModeBasic);
+    QCOMPARE(subject->text(), QString(""));
 }
 
 

@@ -1802,6 +1802,8 @@ bool MTextEdit::setText(const QString &text)
 {
     Q_D(MTextEdit);
 
+    d->safeReset();
+
     int cursorPosBefore = d->cursor()->position();
     bool wasSelecting = hasSelectedText();
     bool wasEmpty = (document()->characterCount() == 0);
