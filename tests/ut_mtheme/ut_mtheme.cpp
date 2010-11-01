@@ -127,6 +127,7 @@ void Ut_MTheme::testPixmap()
 
     // Release icon
     m_theme->releasePixmap(pixmap);
+    m_theme->cleanupGarbage();
     QVERIFY(!isIconCached(KnownIconId, QSize(100, 150)));
     QCOMPARE(cachedIconCount(), 0);
 }
@@ -146,6 +147,7 @@ void Ut_MTheme::testPixmapWithSize()
 
     // Release icon
     m_theme->releasePixmap(fixedSizePixmap);
+    m_theme->cleanupGarbage();
     QVERIFY(!isIconCached(KnownIconId, QSize(100, 150)));
     QCOMPARE(cachedIconCount(), 0);
 }
@@ -170,6 +172,7 @@ void Ut_MTheme::testUnknownPixmap()
 
     // Release icon
     m_theme->releasePixmap(unknownPixmap);
+    m_theme->cleanupGarbage();
     QVERIFY(!isIconCached(UnknownIconId, QSize(100, 150)));
     QCOMPARE(cachedIconCount(), 0);
 }
@@ -179,6 +182,7 @@ void Ut_MTheme::testPixmapCopy()
     QSignalSpy spy(m_theme, SIGNAL(pixmapRequestsFinished()));
 
     QPixmap *pixmap = m_theme->pixmapCopy(KnownIconId);
+    m_theme->cleanupGarbage();
     QVERIFY(pixmap != 0);
     QVERIFY(!pixmap->size().isEmpty());
     QCOMPARE(spy.count(), 1);
@@ -190,6 +194,7 @@ void Ut_MTheme::testPixmapCopyWithSize()
     QSignalSpy spy(m_theme, SIGNAL(pixmapRequestsFinished()));
     
     QPixmap *fixedSizePixmap = m_theme->pixmapCopy(KnownIconId, QSize(100, 150));
+    m_theme->cleanupGarbage();
     QVERIFY(fixedSizePixmap != 0);
     QCOMPARE(fixedSizePixmap->size(), QSize(100, 150));
     QCOMPARE(spy.count(), 1);
@@ -201,6 +206,7 @@ void Ut_MTheme::testUnknownPixmapCopy()
     QSignalSpy spy(m_theme, SIGNAL(pixmapRequestsFinished()));
 
     QPixmap *unknownPixmap = m_theme->pixmapCopy(UnknownIconId);
+    m_theme->cleanupGarbage();
     QVERIFY(unknownPixmap != 0);
     QCOMPARE(unknownPixmap->size(), QSize(50, 50));
     QCOMPARE(spy.count(), 1);
@@ -224,14 +230,17 @@ void Ut_MTheme::testPixmapCaching()
     QCOMPARE(cachedIconCount(), 3);
 
     m_theme->releasePixmap(pixmap);
+    m_theme->cleanupGarbage();
     QVERIFY(!isIconCached(KnownIconId, QSize()));
     QCOMPARE(cachedIconCount(), 2);
 
     m_theme->releasePixmap(fixedSizePixmap);
+    m_theme->cleanupGarbage();
     QVERIFY(!isIconCached(KnownIconId, QSize(100, 150)));
     QCOMPARE(cachedIconCount(), 1);
 
     m_theme->releasePixmap(unknownPixmap);
+    m_theme->cleanupGarbage();
     QVERIFY(!isIconCached(UnknownIconId, QSize()));
     QCOMPARE(cachedIconCount(), 0);
 }

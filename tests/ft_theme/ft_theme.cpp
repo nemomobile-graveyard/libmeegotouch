@@ -302,6 +302,7 @@ void Ft_Theme::testPixmaps()
         MTheme::releasePixmap(pixmap);
     }
 
+    MTheme::cleanupGarbage();
     // verify that all pixmaps were released
     QCOMPARE(testDaemon->pixmapCount(), 0);
 }
@@ -363,6 +364,7 @@ void Ft_Theme::testScalables()
         MTheme::releaseScalableImage(scalable);
     }
 
+    MTheme::cleanupGarbage();
     // verify that all pixmaps were released
     QCOMPARE(testDaemon->pixmapCount(), 0);
 }
