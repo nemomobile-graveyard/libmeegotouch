@@ -33,6 +33,7 @@ MAbstractLayoutPolicyPrivate::MAbstractLayoutPolicyPrivate(MLayout *l) :
     userSetContentsMargins(false),
     style(NULL),
     removingFromLayout(false),
+    hasHeightForWidth(false),
     q_ptr(NULL)
 {
     Q_ASSERT(0 != layout);

@@ -395,20 +395,18 @@ public:
     void removeItem(const QGraphicsLayoutItem *item);
 
     /*!
-     * \brief Return whether this policy's height depends on its width.
-     *
-     * By default this returns false.  Override in custom policies to return true if the sizeHint()
-     * changes depending on the width.
+     * \brief Returns whether this policy's height depends on its width even if it does not contain any height-for-width items.
      */
-    virtual bool hasHeightForWidth() const {
-        return false;
-    }
+    virtual bool hasHeightForWidth() const;
 
 protected:
     /*!
      * \brief Shared d_ptr setup constructor.
      */
     explicit MAbstractLayoutPolicy(MAbstractLayoutPolicyPrivate &);
+
+    /*! \brief Set whether this policy has a height which depends on its width */
+    void setHeightForWidth(bool hasHeightForWidth);
 
     /*!
      * \brief Insert an item in the policy at the given index.

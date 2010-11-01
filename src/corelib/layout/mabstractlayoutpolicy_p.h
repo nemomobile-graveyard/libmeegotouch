@@ -81,6 +81,9 @@ public:
     /** This is true if we are currently removing an item from the layout */
     bool removingFromLayout;
 
+    /** True if the height depends on the width */
+    bool hasHeightForWidth;
+
 protected:
     // Shared d_ptr related code:
     MAbstractLayoutPolicy *q_ptr;

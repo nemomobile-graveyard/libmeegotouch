@@ -22,9 +22,12 @@
 #include "mlayout.h"
 
 #include <QtGui/QWidget>
+
 MFlowLayoutPolicy::MFlowLayoutPolicy(MLayout *layout) :
     MAbstractLayoutPolicy(*(new MFlowLayoutPolicyPrivate(layout)))
-{ }
+{
+    setHeightForWidth(true);
+}
 
 MFlowLayoutPolicy::~MFlowLayoutPolicy()
 { }

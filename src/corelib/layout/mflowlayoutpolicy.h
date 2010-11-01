@@ -124,9 +124,6 @@ public:
     virtual void invalidate();
 protected:
     virtual void relayout();
-    virtual bool hasHeightForWidth() const {
-        return true;
-    }
     /*! \reimp_end */
 
 private:

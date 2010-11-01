@@ -363,3 +363,22 @@ void MAbstractLayoutPolicy::aboutToBeRemovedFromLayout(const QGraphicsLayoutItem
     d->aboutToBeRemovedFromLayout(layout()->indexOf(item));
 }
 
+void MAbstractLayoutPolicy::setHeightForWidth(bool hasHeightForWidth)
+{
+    Q_D(MAbstractLayoutPolicy);
+    if (d->hasHeightForWidth == hasHeightForWidth)
+        return;
+    d->hasHeightForWidth = hasHeightForWidth;
+    if (d->layout && d->layout->policy() == this) {
+        QSizePolicy newSizePolicy(d->layout->sizePolicy());
+        newSizePolicy.setHeightForWidth(hasHeightForWidth);
+        d->layout->setSizePolicy(newSizePolicy);
+    }
+    invalidatePolicyAndLayout();
+}
+
+bool MAbstractLayoutPolicy::hasHeightForWidth() const
+{
+    Q_D(const MAbstractLayoutPolicy);
+    return d->hasHeightForWidth;
+}
