@@ -360,6 +360,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     // -graphicssystem native  this we have to set in themedaemon or before MApplication()
     fullScreen = true;
     deviceName = "N900";
+    themeService = MTheme::LocalTheme;
 #endif //M_OS_MAEMO5
 
     parseArguments(argc, argv, themeService);
