@@ -35,10 +35,6 @@ MLayout::MLayout(QGraphicsLayoutItem *parent) :
     d_ptr(new MLayoutPrivate(this))
 {
     Q_ASSERT(0 != d_ptr);
-    // some policies have height for width, so set it for the whole layout
-    QSizePolicy newSizePolicy(sizePolicy());
-    newSizePolicy.setHeightForWidth(true);
-    setSizePolicy(newSizePolicy);
     d_ptr->recheckOrientation(false);
     // Disabling layout animations by default
     // new MBasicLayoutAnimation(this);
@@ -204,14 +200,8 @@ void MLayout::setGeometry(const QRectF &rect)
     //afterwards is not necessarily equal to the parameter 'rect'.
     QGraphicsLayout::setGeometry(rect);
 
-    if (d->current_policy) {
+    if (d->current_policy)
         d->current_policy->relayout();
-        //If the width really has changed and our height depends on the width, we need to recalculate
-        //the width.
-        if (d->current_policy->hasHeightForWidth() && previousGeometry.width() != geometry().width())
-            updateGeometry(); //Since the height sizeHint has changed, we need to invalidate the current size hint
-    }
-
 }
 
 int MLayout::addItem(QGraphicsLayoutItem *item)
@@ -294,6 +284,11 @@ void MLayout::setPolicy(MAbstractLayoutPolicy *policy)
         return;
 
     d->current_policy = policy;
+
+    QSizePolicy newSizePolicy(sizePolicy());
+    newSizePolicy.setHeightForWidth(d->current_policy?d->current_policy->hasHeightForWidth():false);
+    setSizePolicy(newSizePolicy);
+
     if (d->current_policy) {
         Q_ASSERT(d->policies.contains(policy));
         policy->activated();
