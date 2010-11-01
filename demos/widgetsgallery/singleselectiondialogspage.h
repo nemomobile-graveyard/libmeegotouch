@@ -59,6 +59,7 @@ private Q_SLOTS:
 private:
     MLinearLayoutPolicy *policy;
     MList *list;
+    static QGraphicsWidget *createSpacer();
 
     QPointer<MDialog> dialog;
     QPointer<MDialog> nestedDialog;

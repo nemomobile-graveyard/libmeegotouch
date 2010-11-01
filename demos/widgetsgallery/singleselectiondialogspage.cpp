@@ -137,11 +137,19 @@ void SingleSelectionDialogsPage::openStackedDialogs()
     if (dialog)
         return;
 
+    QGraphicsWidget *alignContainer = new QGraphicsWidget();
+    QGraphicsWidget *leftSpacer = createSpacer();
+    QGraphicsWidget *rightSpacer = createSpacer();
+    QGraphicsLinearLayout  *alignLayout = new QGraphicsLinearLayout(Qt::Horizontal, alignContainer);
+    alignLayout->addItem(leftSpacer);
+
     //% "Click to spawn a nested dialog"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_button"));
     //% "Stacked dialogs"
     dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), M::CancelButton);
-    dialog->setCentralWidget(button);
+    alignLayout->addItem(button);
+    alignLayout->addItem(rightSpacer);
+    dialog->setCentralWidget(alignContainer);
 
     connect(button, SIGNAL(clicked()), SLOT(openNestedDialog()));
 
@@ -153,11 +161,19 @@ void SingleSelectionDialogsPage::openNestedDialog()
     if (nestedDialog)
         return;
 
+    QGraphicsWidget *alignContainer = new QGraphicsWidget();
+    QGraphicsWidget *leftSpacer = createSpacer();
+    QGraphicsWidget *rightSpacer = createSpacer();
+    QGraphicsLinearLayout  *alignLayout = new QGraphicsLinearLayout(Qt::Horizontal, alignContainer);
+    alignLayout->addItem(leftSpacer);
+
     //% "Click to open a nested message box"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox"));
     //% "This is a nested dialog"
     nestedDialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), M::CancelButton);
-    nestedDialog->setCentralWidget(button);
+    alignLayout->addItem(button);
+    alignLayout->addItem(rightSpacer);
+    nestedDialog->setCentralWidget(alignContainer);
     connect(button, SIGNAL(clicked()), SLOT(openNestedMessageBox()));
 
     nestedDialog->appear(MSceneWindow::DestroyWhenDone);
@@ -341,4 +357,17 @@ void SingleSelectionDialogsPage::retranslateUi()
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_stacked_dialogs");
 
     static_cast<QStringListModel *>(list->itemModel())->setStringList(singleSelectionDialogTypes);
+}
+
+QGraphicsWidget *SingleSelectionDialogsPage::createSpacer()
+{
+    QGraphicsWidget *spacer = new QGraphicsWidget();
+    spacer->hide();
+    spacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    spacer->setMinimumSize(0, 0);
+    spacer->setPreferredSize(0, 0);
+    spacer->setFlag(QGraphicsItem::ItemHasNoContents, true);
+
+    return spacer;
+
 }
