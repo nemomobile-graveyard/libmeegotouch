@@ -19,6 +19,7 @@
 
 #include "mpannableviewportscroller.h"
 #include "mpannableviewport.h"
+#include "mpannableviewport_p.h"
 
 QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *widget,
                                                        const QRect &targetRect,
@@ -29,11 +30,6 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
     if (viewport->panDirection() == 0) {
         return QPoint(); // unable to scroll
     }
-/*
-    if (viewport == cachedTopmostPannableViewport) {
-        // Have to update pannable viewport's range so that we can pan enough.
-        ensureTopmostViewportIsPannable();
-    }*/
 
     // First ensure that target rectangle is inside of area of the pannable viewport.
     // Note: We might even move against the wanted direction but this is required to
@@ -53,23 +49,28 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
 
     // ...and limit our panning accordingly.
     panningPos.rx() = qBound(posRange.left(), panningPos.x(), posRange.right());
-    panningPos.ry() = qBound(posRange.top(), panningPos.y(), posRange.bottom());
+    panningPos.ry() = qMax(posRange.top(), panningPos.y()); // We can extend bottom limit.
 
-    return panningPos.toPoint() - contentsOffset;
+    const QPoint translation((viewport->position() - panningPos).toPoint());
+    return translation;
 }
 
 void MPannableViewportScroller::applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset)
 {
     MPannableViewport *viewport = static_cast<MPannableViewport *>(widget);
 
-    viewport->setPosition(viewport->position() - contentsOffset);
+    viewport->d_func()->scrollTo(viewport->position() - contentsOffset);
 
     // Disables kinetic scrolling until next pointer event.
     viewport->physics()->stop();
+
+    //TODO: After scrolling of every widget the topmost pannable viewport should make sure its range
+    // covers at least the sip.
 }
 
 void MPannableViewportScroller::restoreScrolling(QGraphicsWidget *widget)
 {
-    Q_UNUSED(widget);
+    MPannableViewport *viewport = static_cast<MPannableViewport *>(widget);
+    viewport->d_func()->setAutoScrollingExtension(0);
 }
 

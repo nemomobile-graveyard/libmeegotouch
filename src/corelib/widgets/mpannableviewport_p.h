@@ -39,7 +39,10 @@ public:
     QGraphicsWidget *pannedWidget;
     MPannableViewportLayout *viewportLayout;
     MPositionIndicator *positionIndicator;
-    int inputMethodAreaHeight;
+
+    qreal rangeExtension; // Amount of range extended vertically
+    qreal autoScrollingExtension;
+    qreal inputMethodAreaHeight; // Height of software input panel
 
     /*!
      * \brief Sets new value of the range attribute with emitting
@@ -53,7 +56,10 @@ public:
      */
     void recalculatePhysRange();
 
+    void setAutoScrollingExtension(qreal extension);
     void setInputMethodArea(const QRect &imArea);
+    void updateExtendedVerticalRange();
+    void scrollTo(const QPointF &panningPosition);
 
     void sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
             MOnDisplayChangeEvent *event);

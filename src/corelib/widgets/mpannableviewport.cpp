@@ -47,6 +47,8 @@ MPannableViewportPrivate::MPannableViewportPrivate()
       pannedWidget(0),
       viewportLayout(0),
       positionIndicator(0),
+      rangeExtension(0),
+      autoScrollingExtension(0),
       inputMethodAreaHeight(0)
 {
 }
@@ -57,15 +59,48 @@ MPannableViewportPrivate::~MPannableViewportPrivate()
 
 void MPannableViewportPrivate::setNewRange(const QRectF &newRange)
 {
-    // Make the viewport artifically larger so that panning is possible even
-    // if partially covered by the input method area.
-    // See NB#175181
-    QRectF actualRange = newRange.adjusted(0, 0, 0, inputMethodAreaHeight);
-
-    currentRange = actualRange;
+    currentRange = newRange.adjusted(0, 0, 0, rangeExtension);
     recalculatePhysRange();
 }
 
+void MPannableViewportPrivate::setAutoScrollingExtension(qreal extension)
+{
+    // Increase panning range to so that Intelligent Scrolling can scroll enough.
+    autoScrollingExtension = extension;
+    updateExtendedVerticalRange();
+}
+
+void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
+{
+    // Increase panning range to so that user can pan areas beneath
+    // software input panel visible.
+    inputMethodAreaHeight = imArea.height();
+    updateExtendedVerticalRange();
+}
+
+void MPannableViewportPrivate::updateExtendedVerticalRange()
+{
+    const QRectF restoredRange(currentRange.adjusted(0, 0, 0, -rangeExtension));
+
+    // Choose whichever is bigger.
+    rangeExtension = qMax<qreal>(inputMethodAreaHeight, autoScrollingExtension);
+
+    setNewRange(restoredRange);
+}
+
+void MPannableViewportPrivate::scrollTo(const QPointF &panningPosition)
+{
+    Q_Q(MPannableViewport);
+
+    // This privileged scrolling extends the range if necessary.
+    const qreal bottomRangeExtension = panningPosition.y()
+                                       + q->contentsRect().height()
+                                       - pannedWidget->size().height();
+    setAutoScrollingExtension(qMax<qreal>(0.0, bottomRangeExtension));
+
+    // TODO: Animate me!
+    q->setPosition(panningPosition);
+}
 
 void MPannableViewportPrivate::recalculatePhysRange()
 {
@@ -166,15 +201,6 @@ void MPannableViewportPrivate::_q_positionIndicatorEnabledChanged()
                       positionIndicator,
                       SLOT(setRange(QRectF)));
     }
-}
-
-void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
-{
-    const QRectF restoredRange(currentRange.adjusted(0, 0, 0, -inputMethodAreaHeight));
-
-    inputMethodAreaHeight = imArea.height();
-
-    setNewRange(restoredRange);
 }
 
 void MPannableViewportPrivate::_q_pannedWidgetGeometryChanged()
@@ -281,8 +307,6 @@ void MPannableViewport::setAutoRange(bool enable)
     model()->setAutoRange(enable);
 
     if (enable) {
-        d->inputMethodAreaHeight = 0;
-
         if (d->pannedWidget) {
             d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));
         } else {
