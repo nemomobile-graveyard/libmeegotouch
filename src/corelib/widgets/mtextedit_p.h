@@ -123,6 +123,9 @@ public:
     //! and widget has focus
     void icUpdate();
 
+    //! \brief Reset IC if we have focus.  Disable handling of input method events during reset().
+    void safeReset();
+
     bool pendingSoftwareInputPanelRequest;
 
     enum FocusEventStateType {

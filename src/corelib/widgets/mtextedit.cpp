@@ -807,15 +807,7 @@ void MTextEditPrivate::commitPreedit()
     setMode(MTextEditModel::EditModeBasic);
     updateMicroFocus();
 
-    if (q->hasFocus()) {
-        // make sure the committed preedit doesn't get left on the input context
-        QInputContext *ic = qApp->inputContext();
-        if (ic) {
-            omitInputMethodEvents = true;
-            ic->reset();
-            omitInputMethodEvents = false;
-        }
-    }
+    safeReset();
 
     emit q->textChanged();
 }
@@ -1298,6 +1290,20 @@ void MTextEditPrivate::icUpdate()
     }
 
     ic->update();
+}
+
+void MTextEditPrivate::safeReset()
+{
+    Q_Q(MTextEdit);
+
+    if (q->hasFocus()) {
+        QInputContext *ic = qApp->inputContext();
+        if (ic) {
+            omitInputMethodEvents = true;
+            ic->reset();
+            omitInputMethodEvents = false;
+        }
+    }
 }
 
 ///////////////////////////////////////////////
