@@ -1,6 +1,7 @@
 include(../common_top.pri)
 
-TARGET = $$qtLibraryTarget(meegotouchviews)
+TARGET = meegotouchviews
+
 DEFINES += M_BUILD_VIEWS
 
 INCLUDEPATH += \

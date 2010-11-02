@@ -1,6 +1,6 @@
 include(../common_top.pri)
 
-TARGET = $$qtLibraryTarget(meegotouchcore)
+TARGET = meegotouchcore
 
 DEFINES += M_BUILD_CORE
 
