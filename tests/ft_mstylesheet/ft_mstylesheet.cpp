@@ -386,7 +386,7 @@ void Ft_MStyleSheet::test_parent_stylenames()
     MStyleSheet::releaseStyle(style);
 }
 
-void Ft_MStyleSheet::test_wrong_attribute_value()
+void Ft_MStyleSheet::test_wrong_attribute_value_strict()
 {
     QString app = qApp->applicationFilePath();
     QStringList arguments;
@@ -396,9 +396,17 @@ void Ft_MStyleSheet::test_wrong_attribute_value()
     /* Testing with default syntax mode: strict */
     int exit = QProcess::execute(app, arguments);
     QCOMPARE(exit, 2);
+}
+
+void Ft_MStyleSheet::test_wrong_attribute_value_relaxed()
+{
+    QString app = qApp->applicationFilePath();
+    QStringList arguments;
+    arguments << "helper"
+            << qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_attribute.css";
 
     arguments << "relaxed";
-    exit = QProcess::execute(app, arguments);
+    int exit = QProcess::execute(app, arguments);
     QCOMPARE(exit, 0);
 }
 
