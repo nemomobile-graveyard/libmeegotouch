@@ -111,17 +111,17 @@ win32 {
 
 defineReplace(mAddLibrary) {
     LIBRARY_NAME = $$1
-    macx {
-        QMAKE_LFLAGS *= -F $$M_BUILD_TREE/lib
-        return (-framework $$LIBRARY_NAME)
-    } else {
-        win32 {
-            CONFIG(debug, debug|release) {
-                return ("-l"$${LIBRARY_NAME}d$${M_MAJOR_VERSION})
-            } else {
-                return ("-l"$${LIBRARY_NAME}$${M_MAJOR_VERSION})
-            }
+    win32 {
+        CONFIG(debug, debug|release) {
+            return ("-l"$${LIBRARY_NAME}d$${M_MAJOR_VERSION})
+        } else {
+            return ("-l"$${LIBRARY_NAME}$${M_MAJOR_VERSION})
         }
-        return (-l$$LIBRARY_NAME)
     }
+    macx {
+        CONFIG(debug, debug|release) {
+            return ("-l"$${LIBRARY_NAME}_debug)
+        }
+    }
+    return (-l$$LIBRARY_NAME)
 }

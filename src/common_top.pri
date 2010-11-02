@@ -22,7 +22,7 @@ QMAKE_STRIP = echo
 
 CONFIG += qt warn_on depend_includepath qmake_cache target_qt dll create_prl
 !win32:CONFIG += link_pkgconfig
-macx:CONFIG += lib_bundle
+macx:CONFIG -= lib_bundle
 
 QMAKE_CXXFLAGS += -DM_EXPORTS
 !win32-msvc*:QMAKE_CXXFLAGS += -Wno-long-long -pedantic

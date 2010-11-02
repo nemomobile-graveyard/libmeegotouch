@@ -11,8 +11,9 @@ INCLUDEPATH += . \
 QMAKE_LIBDIR += $$MLIB
 
 LIBS += $$mAddLibrary(meegotouchcore) \
-        $$mAddLibrary(meegotouchviews) \
-        $$mAddLibrary(meegotouchsettings) \
+        $$mAddLibrary(meegotouchviews)
+
+!macx:LIBS += $$mAddLibrary(meegotouchsettings) \
         $$mAddLibrary(meegotouchextensions)
 
 TEMPLATE = app

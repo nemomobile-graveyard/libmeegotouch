@@ -22,7 +22,6 @@ include(style/style.pri)
 include(video/video.pri)
 
 LIBS += $$mAddLibrary(meegotouchcore)
-
 SOURCES += mviewslibrary.cpp
 
 include(../common_bot.pri)
