@@ -33,7 +33,7 @@ class MComponentCachePrivate
 public:
     MComponentCachePrivate();
     virtual ~MComponentCachePrivate();
-    void populateForMApplication();
+    void populateForMApplication(bool populateGLWidget = true);
     void populateForWRTApplication();
     bool populating();
     MApplication* mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service);
