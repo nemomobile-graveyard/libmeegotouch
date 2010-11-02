@@ -54,6 +54,7 @@ public:
     void setVisible(bool visible);
     void _q_enablePaintUpdates();
     MSceneManager::TransitionMode orientationChangeTransitionMode();
+    void ensureOrientationAngleIsUpToDateBeforeShowing();
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();

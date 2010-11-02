@@ -506,6 +506,25 @@ void MWindowPrivate::_q_enablePaintUpdates()
     q->setUpdatesEnabled(true);
 }
 
+void MWindowPrivate::ensureOrientationAngleIsUpToDateBeforeShowing()
+{
+    Q_Q(MWindow);
+
+    if (!q->isVisible() && !q->isOrientationAngleLocked()
+        && MOrientationTracker::instance()->orientationAngle() != q->orientationAngle()) {
+
+        // We are about to be shown but our orientation angle is outdated.
+
+        MOrientationTracker::instance()->d_ptr->updateOrientationAngle();
+
+        MOnDisplayChangeEvent ev(true, QRectF(QPointF(0, 0), q->visibleSceneSize()));
+        MApplication::instance()->sendEvent(q, &ev);
+
+        q->setUpdatesEnabled(true);
+        q->update();
+    }
+}
+
 MSceneManager::TransitionMode MWindowPrivate::orientationChangeTransitionMode()
 {
     Q_Q(MWindow);
@@ -1300,6 +1319,10 @@ void MWindow::setVisible(bool visible)
         if (MApplication::isPrestarted()) {
             return;
         }
+
+        // Ensure that window is in a proper orientation angle before
+        // it gets displayed on screen.
+        d->ensureOrientationAngleIsUpToDateBeforeShowing();
 
         // Set onDisplay if it's not already set, because
         // it is used to discard paint events and we don't have

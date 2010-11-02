@@ -61,6 +61,7 @@ private:
     friend class MDeviceProfile;
     friend class MApplicationPrivate;
     friend class MWindow;
+    friend class MWindowPrivate;
 
     //! \reimp
     virtual void childEvent(QChildEvent *event);
