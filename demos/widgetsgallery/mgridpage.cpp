@@ -59,7 +59,7 @@ public:
 
     virtual MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
     {
-        MWidget *cell;
+        MWidget *cell = NULL;
         const QVariant data = index.data(Qt::DecorationRole);
 
         MediaType m;
