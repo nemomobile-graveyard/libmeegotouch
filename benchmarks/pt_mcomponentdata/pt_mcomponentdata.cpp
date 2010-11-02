@@ -35,7 +35,7 @@ void Pt_MComponentData::uncachedConstructor()
 {
     MComponentData *componentData = 0;
     MBENCHMARK_ONCE(
-        componentData = new MComponentData(argc, argv, argv[0]);
+        componentData = MComponentData::createInstance(argc, argv, argv[0]);
     )
     delete componentData;
 }
@@ -44,7 +44,7 @@ void Pt_MComponentData::cachedConstructor()
 {
     MComponentData *componentData = 0;
     MBENCHMARK_ONCE(
-        componentData = new MComponentData(argc, argv, argv[0]);
+        componentData = MComponentData::createInstance(argc, argv, argv[0]);
     )
     delete componentData;
 }

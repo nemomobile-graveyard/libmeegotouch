@@ -87,7 +87,7 @@ void Ut_MSceneManager::initTestCase()
         static int argc = 1;
         static char *argv[ 1 ];
         argv[ 0 ] = (char*)"./ut_mwindow";
-        m_componentData = new MComponentData(argc, argv);
+        m_componentData = MComponentData::createInstance(argc, argv);
     }
     qRegisterMetaType<M::Orientation>("M::Orientation");
     qRegisterMetaType<M::Orientation>("M::OrientationAngle");

@@ -83,14 +83,28 @@ public:
      * an empty string is given (the default) the application binary file
      * name is used.
      */
+    // \deprecated Ctor is deprecated for public usage and should be made protected during next API break.
     MComponentData(int &argc, char **argv, const QString &appIdentifier = QString(), MApplicationService *service = 0);
     explicit MComponentData(MApplicationService *service);
 
     //! Cleans up any window system resources that were allocated by this application.
     virtual ~MComponentData();
 
-    //! returns the MComponentData instance
+    //! returns the MComponentData instance or 0 if no instance is created yet
+    /*!
+     * \see createInstance()
+     */
     static MComponentData *instance();
+
+    //! returns the MComponentData instance
+    /*!
+     * always returns a MComponentData pointer
+     * if no instance was created yet, it creates a new instance and returns the pointer
+     * if an instance was already created it returns the pointer to the existing instance
+     * \see instance()
+     */
+    static MComponentData* createInstance(int &argc, char **argv, const QString &appIdentifier = QString(), MApplicationService *service = 0);
+    static MComponentData* createInstance(MApplicationService *service);
 
     //! Target device name
     static QString deviceName();

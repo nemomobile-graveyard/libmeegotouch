@@ -299,6 +299,23 @@ MComponentData *MComponentData::instance()
     return self;
 }
 
+MComponentData* MComponentData::createInstance(int &argc, char **argv, const QString &appIdentifier /*= QString()*/, MApplicationService *service /*= 0*/)
+{
+    if(!self) {
+        self = new MComponentData(argc, argv, appIdentifier, service);
+    }
+    return self;
+}
+
+MComponentData* MComponentData::createInstance(MApplicationService *service)
+{
+    if(!self) {
+        self = new MComponentData(service);
+    }
+    return self;
+}
+
+
 static MComponentDataPrivate *gMComponentDataPrivate = 0;
 
 MComponentData::MComponentData(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
@@ -308,8 +325,10 @@ MComponentData::MComponentData(int &argc, char **argv, const QString &appIdentif
     Q_D(MComponentData);
     d->q_ptr = this;
 
-    Q_ASSERT_X(!self, "MComponentData", "There should be one component data object only.");
-    MComponentData::self = this;
+    if(self)
+        qWarning() << "MComponentData instantiated although there is already an instance!\n Maybe you called the MComponentData Contructor directly, what is deprecated. Use MComponentData::createInstance() instead.";
+    
+    self = this;
 
     d->init(argc, argv, appIdentifier, service);
 }
@@ -321,8 +340,10 @@ MComponentData::MComponentData(MApplicationService *service) :
     Q_D(MComponentData);
     d->q_ptr = this;
 
-    Q_ASSERT_X(!self, "MComponentData", "There should be one component data object only.");
-    MComponentData::self = this;
+    if(self)
+        qWarning() << "MComponentData instantiated although there is already an instance!\n Maybe you called the MComponentData Contructor directly, what is deprecated. Use MComponentData::createInstance() instead.";
+    
+    self = this;
 
     int argc = 0;
     char *argv[] = {0};

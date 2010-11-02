@@ -63,7 +63,7 @@ void Ut_MSceneWindow::initTestCase()
         static int argc = 1;
         static char *argv[ 1 ];
         argv[ 0 ] = (char*)"./ut_mwindow";
-        m_componentData = new MComponentData(argc, argv);
+        m_componentData = MComponentData::createInstance(argc, argv);
     }
     window = new MWindow(new MSceneManager);
 

@@ -48,7 +48,7 @@ void Ut_MApplicationWindow::initTestCase()
         static char *argv[ 2 ];
         argv[ 0 ] = (char*)"./ut_mscenewindow";
         argv[ 1 ] = (char*)"-local-theme";
-        m_componentData = new MComponentData(argc, argv);
+        m_componentData = MComponentData::createInstance(argc, argv);
     }
     qRegisterMetaType<MApplicationPage *>("MApplicationPage*");
     qRegisterMetaType< QList<StatusBarTestOperation> >("QList<StatusBarTestOperation>");

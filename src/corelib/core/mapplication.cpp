@@ -225,7 +225,7 @@ MApplication::MApplication(int &argc, char **argv, MApplicationService *service)
 
 void MApplicationPrivate::init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
-    componentData = new MComponentData(argc, argv, appIdentifier, newService);
+    componentData = MComponentData::createInstance(argc, argv, appIdentifier, newService);
 }
 
 void MApplicationPrivate::releasePrestart()
