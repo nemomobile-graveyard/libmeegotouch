@@ -1,15 +1,14 @@
 /*! \page styling_concepts Basic concepts
 
-    A style in DirectUI is actually a container, which stores a set of styling attributes for any stylable 
-    object (view class, layout class etc.) A Styling attribute means a name-value pair that is being used 
-    when the stylable object needs to be drawn into the screen. A style attribute has always 3 properties: 
-    type name and value. As an example, a good style attribute could be something like pen color, margin or 
-    text font. Style attributes are defined in a source-code level and their values are defined in the style 
+    A style in MeeGo Touch contains key-value pairs ("attributes"), that are used when the stylable object
+    is drawn to the screen. A style attribute has always three properties:
+    Type, name, and value. As an example, a good style attribute could be something like pen color, margin or
+    text font. Style attributes are defined in the source code and their values are defined in the style
     sheet(s).
 
-    In DirectUI a style can be inherited from another. It means that the derived style can introduce new style 
-    attributes on top of the 'base' style and it can even override the the values for the attributes that are 
-    being derived. This behavior is defined in a source-code level by software designer.
+    MeeGo Touch styles can be inherited. It means that the derived style can introduce new style
+    attributes on top of the 'base' style and it can even override the values for the attributes that are
+    being derived. This behavior is defined on the source code level by software designers.
 
     Responsibilities of the style system components:
     - Theme provides styles for the stylable object
@@ -18,11 +17,12 @@
 
     \image html style_basic.png "The basic building blocks of the styling system."
 
-    Styling in DirectUI always includes at least two steps, these are:
-    - Defining the style in source code level
-    - Defining the values for the attributes in the style sheet(s) 
+    Styling in MeeGo Touch always includes at least three steps, these are:
+    - Defining the style in the source code
+    - Defining values for the attributes in the style sheet(s)
+    - Accessing the defined style values from within the source code
 
-    These two little steps ensure that you will have a configurable style for your stylable object. It provides 
-    a type-safe class for application developers to access the style, while allowing the UI designers to 
-    configure the styling as needed through the style sheets. This is the basic form of styling in DirectUI.
+    These steps ensure that you will have a configurable style for your stylable object. It provides
+    a type-safe class for application developers to access the style, while allowing the UI designers to
+    configure the styling as needed through the style sheets. This is the basic form of styling in MeeGo Touch.
 */

@@ -6,7 +6,7 @@
 <li><b>System theme directory/</b> <small>(/usr/share/themes)</small></li>
 <li>\c &nbsp;&nbsp;└ <b><a href="#theme">theme_x/</a></b> <small>(directory for theme-specific files)</small></li>
 <li>\c &nbsp;&nbsp;&nbsp;&nbsp;├ <a href="#theme_description">index.theme</a> <small>(theme description file)</small></li>
-<li>\c &nbsp;&nbsp;&nbsp;&nbsp;└ <b>dui/</b> <small>(directory for dui-specific theming files)</small></li>
+<li>\c &nbsp;&nbsp;&nbsp;&nbsp;└ <b>meegotouch/</b> <small>(directory for meegotouch-specific theming files)</small></li>
 <li>\c &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├ <a href="#theme_constants">constants.ini</a> <small>(theme specific constants)</small></li>
 <li>\c &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├ <b><a href="#feedbacks">feedbacks/</a></b> <small>(directory for common feedbacks)</small></li>
 <li>\c &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├ <b><a href="#theme_graphics">images/</a></b> <small>(directory for common pixmaps)</small></li>
@@ -32,7 +32,7 @@
 
 \subsection theme Theme Directory
 
-The system can have multiple themes and they are all located in /usr/share/themes/-path.
+The system can have multiple themes and they are all located in /usr/share/themes/.
 Each theme has one root direcory, which will contain all necessary files for the theme.
 So if you are developing a theme, you should start by creating a new directory under /usr/share/themes.
 
@@ -42,11 +42,11 @@ The description file is something every theme has to have. The file contains inf
 For example the index.theme file could look like this:
 \code
 [Desktop Entry]
-Type=X-DUI-Metatheme
+Type=X-MeeGoTouch-Metatheme
 Name=Very cool ThEMe
 Encoding=UTF-8
 
-[X-DUI-Metatheme]
+[X-MeeGoTouch-Metatheme]
 X-Inherits=base
 X-Icon = icon-theme-logo
 X-Visible=true
@@ -57,18 +57,18 @@ TODO: explain all key-value pairs
 \subsection theme_constants Theme Constants File (constants.ini)
 
 This file contains constant definitions for this theme. The constant set is predefined and can be found from /usr/share/themes/base/constants.ini.
-Constants are used in application code (DuiPalette, DuiDefaultFonts), and in stylesheets.
+Constants are used in application code (MPalette, MDefaultFonts), and in stylesheets.
 
 When creating a new theme, this file is the one to start with. Just create an empty constants.ini and add a few lines from base:constants.ini
 with modified values. Now your theme contains \ref theme_description "index.theme", and constants.ini; and is already a functional theme to be tried out!
-This is enough because DirectUI themes can inherit other themes. There is no need to copy some existing theme and
+This is enough because MeeGo Touch themes can inherit other themes. There is no need to copy some existing theme and
 start modifying it, instead it's recommended to inherit some theme and just change the parts you want.
-Here's a peek to one of the stylesheets in base-theme.
+Here's a peek into one of the stylesheets from the base-theme.
 \code
-DuiButtonStyle {
+MButtonStyle {
     font: $FONT_DEFAULT;
 
-    background-image: "duibutton-background" 10px 10px 10px 10px;
+    background-image: "meegotouch-button-background" 10px 10px 10px 10px;
     background-color: $COLOR_BACKGROUND;
     text-color: $COLOR_FOREGROUND;
 \endcode
@@ -87,28 +87,28 @@ COLOR_INVERTED_FOREGROUND           = #090909 ;text color
 COLOR_INVERTED_SECONDARY_FOREGROUND = #595959 ;secondary text
 COLOR_INVERTED_BACKGROUND           = #00ffff ;background
 \endcode
-Rest of the values for constants.ini will come from the theme from which you inherited your own.
+The rest of the values for constants.ini will come from the theme from which you inherited your own.
 
 \subsection theme_graphics Theme Graphics Directories
 
 There are three directories under each theme; images, svg and icons. These directories contains all common graphics for the theme.
-So if you're not pleased with your theme by just changing \ref theme_constants "constants.ini" you can always start doing some replacement
+So if you're not pleased with your theme by just changing \ref theme_constants "constants.ini" you can always start replacing
 graphics.
 
 ImageId is a unique name for a piece of graphic. This imageId can be used from application code and from stylesheets and is also a reason, why
 just by adding graphics to any of these three directories, you can modify your theme.
-Here's the same peek to one of the stylesheets in base-theme
+Here's the same peek into one of the stylesheets from the base-theme
 \code
-DuiButtonStyle {
+MButtonStyle {
     font: $FONT_DEFAULT;
 
-    background-image: "duibutton-background" 10px 10px 10px 10px;
+    background-image: "meegotouch-button-background" 10px 10px 10px 10px;
     background-color: $COLOR_BACKGROUND;
     text-color: $COLOR_FOREGROUND;
 \endcode
-We can see that "background-image" attribute for the button has a value "duibutton-background". This "duibutton-background" is the imageId. To override the background-image
-graphics in DuiButton, you just need to place the replacement in for example svg/ directory. The funky part is the imageId. Here's explanation that defines the imageIds for
-the three directories.
+We can see that the "background-image" attribute for the button has a value "meegotouch-button-background". This "meegotouch-button-background" is the imageId.
+To override the background-image graphics in MButton, you just need to place the replacement for example into the svg/ directory. The funky part is the imageId.
+Here's how the imageIds for the three directories are defined:
 
 \li The images/ directory can contain only pixmaps (for example .png and .jpg), so it's a place for wallpapers etc. In this folder the filename of the
 image (without the suffix) is the imageId.
@@ -119,34 +119,35 @@ one .svg file per component. The element names in the svg-files are used as imag
 \li The icons/ directory can contain only .svg files and difference to svg/ is that files in this directory are treated so that each file represents one imageId.
 filename of the .svg (without the suffix) is the imageId in this directory.
 
-So to create replacement for duibutton-background image, just create an svg called e.g. duibutton.svg and place it under svg/. Then add an element called
-duibutton-background and create your graphics there.
+So to create a replacement for the meegotouch-button-background image, just create an SVG called meegotouch-button.svg (for example) and place it under svg/.
+Then add an element called meegotouch-button-background and create your graphics there.
 
 \subsection library Library Directory
 
 Every library which provides some new components(widgets) has to also provide default styling attributes for those. Developers of the library will place the default
-attribute values to \ref library_style "/usr/share/themes/base/dui/&lt;libraryname&gt;/style/". Also if the library providing these components has made it possible to change
-the view part of the component, the developers of the library has placed the initial view configuration to \ref library_conf "/usr/share/themes/base/dui/&lt;libraryname&gt;/&lt;libraryname&gt;.conf".
+attribute values into \ref library_style "/usr/share/themes/base/meegotouch/&lt;libraryname&gt;/style/". Also, if the library providing these components has made it
+possible to change the view part of the component, the developer of the library has placed the initial view configuration into
+\ref library_conf "/usr/share/themes/base/meegotouch/&lt;libraryname&gt;/&lt;libraryname&gt;.conf".
 
-There is one directory for each library to be themed. Normally it's not necessary to create these library theming folders to your theme. In case you anyway need to
-change attibutes in stylesheets or you need to change the view part of a component, you must create a directory which has the same name as the library providing the
+There is one directory for each library to be themed. Normally it's not necessary to create these library theming folders for your theme. In case you need to
+change attibutes in stylesheets or you need to change the view part of a component anyway, you must create a directory which has the same name as the library providing the
 component (for example libnicewidgets-extras/).
 
 \subsection library_style Library Stylesheet Directory
 
 This directory can contain any number of stylesheet files. The recomendation is that every component(widget) in the library which can be styled would have it's own css-file.
-This directory must contain one css file which is the \ref library_css "entry point". More of the stylesheets can be found from \ref styling_stylesheets "Stylesheets".
+This directory must contain one css file which is the \ref library_css "entry point". More about stylesheets can be found under \ref styling_stylesheets "Stylesheets".
 
 \subsection library_css Library Main Stylesheet File
 
-This file is located to \ref library_style "style" directory, and it's name must follow the name of the library (for example libnicewidgets-extras.css).
+This file is located in the \ref library_style "style" directory, and its name must follow the name of the library (for example libnicewidgets-extras.css).
 This file will be the one which the system will read when reading style attributes for a class coming from this library. All other files in \ref library_style "style"
 should be \ref import_sheet "@imported" from this file so they will also get read.
 
 \subsection library_conf Library View Configuration File
 
 This file contains a component(widget) - view pairs. Normally you don't need to have this file in your theme, the default values are coming from the theme you're inheriting from.
-Anyway if you want to create for example a button with a better looks than is possible to do by changing just css and graphics, this is the place to do that.
+If, for example, you want to create a button with a better look than is possible by changing just css and graphics, than this is the place to do that.
 TODO: view libraries + link to view-config explanation
 
 \subsection application Application Directory
@@ -157,18 +158,18 @@ This directory can contain \ref application_graphics "graphics", \ref applicatio
 
 \subsection application_graphcis Application Graphics Directories
 
-Usually when creating a theme you don't have to override the base-theme definitions for applications (most of the applications probably doesn't even have any special styling).
-Anyway if you want some specific application to look different than the theme specifies, you can do it by creating application-specific styling.
-Applications can override themes default graphics by inserting files to images/, svg/ or icons/ directories. The graphics overriding works the same way as it works with theme inheritance, so see \ref theme_graphics "Theme Graphics" for more info.
+Usually when creating a theme you don't have to override the base-theme definitions for applications (most of the applications probably don't even have any special styling).
+If anyways you want some specific application to look different than the theme specifies, you can do it by creating application-specific styling.
+Applications can override theme default graphics by inserting files into the images/, svg/ or icons/ directories. The graphics overriding works the same way as it works with theme inheritance, so see \ref theme_graphics "Theme Graphics" for more info.
 
 \subsection application_style Application Stylesheet Directory
 
-Applications can override themes default stylesheet attribute values by creating a application stylesheet \ref application_css "entry point".
-Applications can override any attributes from any component. Everything that is not overridden will still come from theme, so the recommendation is that applications override as few attributes as possible.
+Applications can override the themes default stylesheet attribute values by creating an application stylesheet \ref application_css "entry point".
+Applications can override any attributes from any component. Everything that is not overridden will still come from the theme, so the recommendation is that applications override as few attributes as possible.
 
 \subsection application_css Application Main Stylesheet File
 
-This file is located to \ref application_style "style" directory, and the name of the file has to be the same which the application has.
+This file is located in the \ref application_style "style" directory, and the name of the file has to be equal to the application name.
 
 \subsection application_conf Application View Configuration File
 
@@ -176,9 +177,9 @@ TODO: explain more.
 
 \subsection feedbacks Feedbacks
 
-The feedbacks are stored in the subdirectory "feedbacks" next to "style", "svg" etc. on the same directory level in the themes. A directory is associated to each feedback under the subdirectory "feedbacks" whose name is the feedback name. For example feedback sample files for a common feedback named "press" of theme "base" should be located at directory "/usr/share/themes/base/meegotouch/feedback/press". The directory names are case sensitive and follow the icon name conventions of the FreeDesktop project (http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html). Therefore "all names may only contain lowercase letters, numbers, underscore, dash, or period characters. Spaces, colons, slashes, and backslashes are not allowed". If a directory name does not follow these rules then it is ignored. These subdirectories contain the feedback sample files which can be played by the backends.
+The feedbacks are stored in the subdirectory "feedbacks" next to "style", "svg" etc. on the same directory level in the themes. A directory is associated to each feedback under the subdirectory "feedbacks" whose name is the feedback name. For example, feedback sample files for a common feedback named "press" of the theme "base" should be located in the "/usr/share/themes/base/meegotouch/feedback/press" directory. The directory names are case sensitive and follow the icon name conventions of the FreeDesktop project (http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html). Therefore "all names may only contain lowercase letters, numbers, underscore, dash, or period characters. Spaces, colons, slashes, and backslashes are not allowed". If a directory name does not follow these rules then it is ignored. These subdirectories contain the feedback sample files which can be played by the backends.
 
-The common feedback directory of "base" theme contains all the common feedbacks for MeeGo Touch common components and external libraries. The "base" theme contains all of the common feedbacks. This means that new themes that derive from "base" theme can only override existing feedbacks that are already present in the "base" theme. Any new feedbacks that the derived themes introduce will be ignored.
+The common feedback directory of the "base" theme contains all the common feedbacks for MeeGo Touch common components and external libraries. The "base" theme contains all of the common feedbacks. This means that new themes that derive from the "base" theme can only override existing feedbacks that are already present in the "base" theme. Any new feedbacks that the derived themes introduce will be ignored.
 
 Application specific feedbacks are placed in the application specific feedback directory in the theme directory structure. Applications can override any existing common feedback in the base theme and can add new feedbacks as well. Any new feedbacks should be placed in the application specific feedback directory of the "base" theme. These feedbacks can be overridden by derived themes but here also derived themes cannot introduce any new feedbacks that are not present in the "base" theme.
 
@@ -186,17 +187,17 @@ Pulseaudio backend: This backend plays audio samples from the device speakers. I
 
 Vibra backend: This backend uses the Immersion TouchSense player to play vibra effects. A vibration effect file ("vibra.ivt") must be placed in the feedback directory.
 
-When an event happens (e.g. pressing on a button) then all feedback devices will play a sample at the same time (play an audio and vibra effect in parallel). If a feedback directory does not contain an effect file for a backend (e.g. "vibra.ivt") then there is a fallback mechanism to find a sample for the backend going back on the theme inheritance tree. One example of theme inheritance for a feedback could be: "base/feedbacks", "inherited1/feedbacks", "inherited2/feedbacks", "base/application/feedbacks", "inherited1/application/feedbacks", "inherited2/application/feedbacks". Here "base/feedbacks" means common feedback directory of "base" theme etc. The last directory in the list is the first place to look for the feedback. If a zero sized sample file (either "audio.wav" or "vibra.ivt") is placed somewhere in the inheritance tree that means that the feedback is not played for the backend that the sample file belongs to. If it is not possible to load some samples for a specific event (e.g. "press-loud") then it tries to fallback to a generic event name (e.g. "press-loud" -> "press") and load the missing sample(s). Please note that the fallback mechanism only works for the text before the first dash ('-'). For example fallback for feedbacks "press-really-loud" and "press-loud" is "press".
+When an event happens (e.g. pressing on a button), then all feedback devices will play a sample at the same time (play an audio and vibra effect in parallel). If a feedback directory does not contain an effect file for a backend (e.g. "vibra.ivt") then there is a fallback mechanism to find a sample for the backend going back on the theme inheritance tree. One example of theme inheritance for a feedback could be: "base/feedbacks", "inherited1/feedbacks", "inherited2/feedbacks", "base/application/feedbacks", "inherited1/application/feedbacks", "inherited2/application/feedbacks". Here "base/feedbacks" means common feedback directory of the "base" theme etc. The last directory in the list is the first place to look for the feedback. If a zero sized sample file (either "audio.wav" or "vibra.ivt") is placed somewhere in the inheritance tree, that means that the feedback is not played for the backend that the sample file belongs to. If it is not possible to load some samples for a specific event (e.g. "press-loud") then it tries to fallback to a generic event name (e.g. "press-loud" -> "press") and load the missing sample(s). Please note that the fallback mechanism only works for the text before the first dash ('-'). For example fallback for feedbacks "press-really-loud" and "press-loud" is "press".
 
 The feedbacks can be played on three different global volume levels. This is a global setting of the feedback daemon, but the feedbacks should be prepared for it. The Pulseaudio backend sets the appropriate playback volume for the audio, nothing should be done here. The vibra backend checks the "vibra.ivt" file for three specific timeline effects named "low", "medium" and "high" which refers to low, medium and high levels. If these timeline effects are not available in the effect file then the fallback logic uses the first effect from the file (its type does not matter in this case).
 
 \subsection locale Locales Directory
 
-This directory contains directories for different locales. All locales needing some special icons of constant definitions can have their own directory. For example ar/ (for Arabic) could have different icon set than the normal theme (as Arabic has right-to-left layouts). Another example could be zh_CN/ (for Simplified Chinese) having bigger fonts.
+This directory contains directories for different locales. All locales needing some special icons or constant definitions can have their own directory. For example ar/ (for Arabic) could have a different icon set than the normal theme (as Arabic has right-to-left layouts). Another example could be zh_CN/ (for Simplified Chinese) having bigger fonts.
 
 \subsection locale_l Locale Specific Directory
 
-This directory is located to /usr/share/themes/\<theme\>/dui/locale/\<locale\>/ where the \<locale\> is fi, en, etc. Definitions in this directory will be applied for \<theme\> when the \<locale\> matches the system locale.
+This directory is located at /usr/share/themes/\<theme\>/meegotouch/locale/\<locale\>/ where the \<locale\> is fi, en, etc. Definitions in this directory will be applied for \<theme\> when the \<locale\> matches the system locale.
 
 \subsection locale_constants Locale Specific Constants
 

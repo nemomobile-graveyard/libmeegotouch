@@ -69,20 +69,23 @@
     simple, non-MVC widgets which can be stylable at the same time.
 
     In order to use it, a new class should be inherited from MStylableWidget
-    and M_STYLABLE_WIDGET macro should be used to define the style
-    class for this widget:
+    and the M_STYLABLE_WIDGET macro should be used to define the style
+    class for this widget.
+
+    The Q_OBJECT macro must be used too.
 
     \code
         class MyStylableClass : public MStylableWidget
         {
+            Q_OBJECT
+            M_STYLABLE_WIDGET(MyStyle)
+
         public:
             MyStylableClass();
 
         protected:
             // Method to be overridden for custom painting operations.
             virtual void drawContents(QPainter* painter, const QStyleOptionGraphicsItem* option) const;
-        private:
-            M_STYLABLE_WIDGET(MyStyle)
         };
     \endcode
 
