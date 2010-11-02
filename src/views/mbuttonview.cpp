@@ -125,21 +125,26 @@ void MButtonViewPrivate::refreshStyleMode()
 {
     Q_Q(MButtonView);
 
-    if (q->model()->down()) {
-        if (styleModeChangeTimer->isActive()) {
+    if (controller->isEnabled()) {
+        if (q->model()->down()) {
+            if (styleModeChangeTimer->isActive()) {
+                styleModeChangeTimer->start(pressTimeout());
+                return;
+            }
             styleModeChangeTimer->start(pressTimeout());
-            return;
+            q->style().setModePressed();
+        } else if (q->model()->checked()) {
+            q->style().setModeSelected();
+        } else {
+            if (styleModeChangeTimer->isActive()) {
+                queuedStyleModeChange = true;
+                return;
+            }
+            q->style().setModeDefault();
         }
-        styleModeChangeTimer->start(pressTimeout());
-        q->style().setModePressed();
-    } else if (q->model()->checked()) {
-        q->style().setModeSelected();
     } else {
-        if (styleModeChangeTimer->isActive()) {
-            queuedStyleModeChange = true;
-            return;
-        }
-        q->style().setModeDefault();
+        styleModeChangeTimer->stop();
+        q->style().setModeDisabled();
     }
 
     label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
