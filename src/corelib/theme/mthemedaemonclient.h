@@ -31,7 +31,7 @@
 #include "mnamespace.h"
 
 class QLocalSocket;
-struct ImageResource;
+class ImageResource;
 class MImageDirectory;
 class MThemeImagesDirectory;
 

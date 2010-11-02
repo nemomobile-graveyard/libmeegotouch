@@ -32,7 +32,7 @@ class MEffectCreatorBase;
 class MWidgetView;
 class MStyle;
 class QAbstractAnimation;
-class QMetaObject;
+struct QMetaObject;
 
 class MWidgetController;
 

@@ -17,10 +17,10 @@
 
 class MWindow;
 class QGLContext;
-class PixmapCacheEntry;
+struct PixmapCacheEntry;
 class QImage;
 class QString;
-class MPixmapHandle;
+struct  MPixmapHandle;
 class QPixmap;
 class QSize;
 

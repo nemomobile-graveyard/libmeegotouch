@@ -37,7 +37,7 @@ class MCalendar;
 class MBreakIteratorPrivate;
 
 class MLocalePrivate;
-class MStaticLocaleDestroyer;
+struct MStaticLocaleDestroyer;
 
 /*!
  * \class MLocale
@@ -1527,7 +1527,7 @@ private:
 
     friend class MCalendar;
     friend class MCollator;
-    friend class MStaticLocaleDestroyer;
+    friend struct MStaticLocaleDestroyer;
     friend class MIcuBreakIteratorPrivate;
 
 private Q_SLOTS:
