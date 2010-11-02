@@ -45,6 +45,7 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif
 #ifdef Q_WS_X11
     , widCurrentAppWindow(0)
+    , originalEventMaskCurrentAppWindow(0)
 #endif //Q_WS_X11
     , q_ptr(controller)
 {
@@ -253,14 +254,22 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
 
 void MOrientationTrackerPrivate::handleCurrentAppWindowChange()
 {
-    //We stop listenieng to previous top window
-    XSelectInput(QX11Info::display(), widCurrentAppWindow, 0);
+    if (widCurrentAppWindow) {
+        //We stop listening to previous top window
+        XSelectInput(QX11Info::display(), widCurrentAppWindow, originalEventMaskCurrentAppWindow);
+    }
+
     widCurrentAppWindow = fetchWIdCurrentAppWindow();
     //if current window is invalid or not set then return
     if (widCurrentAppWindow == 0)
         return;
+
+    //Get current window original event mask
+    XWindowAttributes attributes;
+    XGetWindowAttributes(QX11Info::display(), widCurrentAppWindow, &attributes);
+    originalEventMaskCurrentAppWindow = attributes.your_event_mask;
     //And start listening to new top window
-    XSelectInput(QX11Info::display(), widCurrentAppWindow, PropertyChangeMask);
+    XSelectInput(QX11Info::display(), widCurrentAppWindow, originalEventMaskCurrentAppWindow | PropertyChangeMask);
 }
 
 WId MOrientationTrackerPrivate::fetchWIdCurrentAppWindow()
@@ -325,13 +334,18 @@ void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win)
     windowsFollowingCurrentAppWindow.append(win);
     M::OrientationAngle angle = fetchCurrentAppWindowOrientationAngle();
     win->setOrientationAngle(angle);
+
+    handleCurrentAppWindowChange();
 }
 
 void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win)
 {
     windowsFollowingCurrentAppWindow.removeAll(win);
-    if (windowsFollowingCurrentAppWindow.count() == 0)
-        XSelectInput(QX11Info::display(), widCurrentAppWindow, 0);
+    if (windowsFollowingCurrentAppWindow.count() == 0) {
+        XSelectInput(QX11Info::display(), widCurrentAppWindow, originalEventMaskCurrentAppWindow);
+        widCurrentAppWindow = 0;
+        originalEventMaskCurrentAppWindow = 0;
+    }
 }
 
 #endif //Q_WS_X11
