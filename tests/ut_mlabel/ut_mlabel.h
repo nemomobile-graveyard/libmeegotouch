@@ -60,6 +60,7 @@ private:
     int contentWidth(const QImage& image);
 
     QImage captureText(Qt::TextFormat textFormat, QString text);
+
     
 private slots:
     void initTestCase();
@@ -119,6 +120,9 @@ private slots:
     void testAutoTextModeRecognizesRichText();
 
     void testPlainAndRichTextModes();
+
+    //Regression test for bug 196025 -  MLabel with text ending in 'f'
+    void rightBearing();
 
 private:
     /**

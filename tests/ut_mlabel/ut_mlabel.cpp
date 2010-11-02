@@ -885,4 +885,18 @@ void Ut_MLabel::testPlainAndRichTextModes()
              "Plain text mode renders rich text differently");
 }
 
+void Ut_MLabel::rightBearing()
+{
+    label->setWordWrap(true);
+    label->setWrapMode(QTextOption::WrapAnywhere);
+    label->setFont(QFont("Times", 30, -1, true));
+    label->setText("f");
+    QImage f_image = captureImage(label);
+    label->setText("ff");
+    QImage ff_image = captureImage(label);
+    //label mustn't be wrapped, so height must be the same
+    QVERIFY(contentHeight(f_image) == contentHeight(ff_image));
+
+}
+
 QTEST_APPLESS_MAIN(Ut_MLabel);

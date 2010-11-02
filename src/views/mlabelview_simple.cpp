@@ -239,8 +239,7 @@ void MLabelViewSimple::initializeStaticText()
     unconstraintText = textToRender(QWIDGETSIZE_MAX);
     const QString text = textToRender(paintingRect.width());
 
-    const qreal textWidth = restrictedTextWidth(text, paintingRect.width());
-    staticText.setTextWidth(textWidth);
+    staticText.setTextWidth(paintingRect.width());
     staticText.setTextOption(viewPrivate->textOptions);
     staticText.setText(text);
     staticText.prepare(QTransform(), viewPrivate->controller->font());
@@ -295,7 +294,7 @@ qreal MLabelViewSimple::restrictedTextWidth(const QString &text, qreal width) co
     qreal textWidth = -1.0;
     if (wrap()) {
         const QFontMetricsF metrics(viewPrivate->controller->font());
-        textWidth = metrics.width(text);
+        textWidth = metrics.boundingRect(text).width();
         if (textWidth > width) {
             textWidth = width;
         }
