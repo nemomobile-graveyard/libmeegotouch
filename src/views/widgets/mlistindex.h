@@ -81,6 +81,9 @@ public:
 
     MList::DisplayMode displayMode();
 
+    void setOffset(const QPointF &offset);
+    QPointF offset() const;
+
 protected:
    /*! \reimp */
    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);

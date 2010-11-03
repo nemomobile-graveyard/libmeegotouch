@@ -50,6 +50,7 @@ protected:
     void cancelEvent(MCancelEvent *event);
 
     void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
+    void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);
     /*! \reimp_end */
 
 private:

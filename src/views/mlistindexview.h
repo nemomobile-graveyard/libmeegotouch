@@ -48,6 +48,7 @@ protected:
     virtual void cancelEvent(MCancelEvent *event);
 
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);
     //! \reimp_end
 
     //! \internal

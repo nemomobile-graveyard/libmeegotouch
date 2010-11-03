@@ -60,9 +60,11 @@ void MListIndexFloatingViewPrivate::configureController()
 
 void MListIndexFloatingViewPrivate::updateLayout()
 {
+    Q_Q(MListIndexFloatingView);
+
     if(container) {
-        controller->resize(controller->preferredWidth(), containerRect.height());
-        controller->setPos(containerRect.x() + containerRect.width() - controller->preferredWidth(), containerRect.y());
+        controller->resize(controller->preferredWidth(), containerRect.height() - q->model()->offset().y());
+        controller->setPos(containerRect.x() + containerRect.width() - controller->preferredWidth(), containerRect.y() + q->model()->offset().y());
     }
 }
 
@@ -269,6 +271,11 @@ void MListIndexFloatingView::cancelEvent(MCancelEvent *event)
 }
 
 void MListIndexFloatingView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    event->accept(gesture);
+}
+
+void MListIndexFloatingView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
 {
     event->accept(gesture);
 }
