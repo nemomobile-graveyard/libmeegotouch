@@ -137,7 +137,7 @@ void MCommonPixmaps::loadOne()
     // stop the timer, so we can adjust the frequency depending on the usage
     cpuMonitor.stop();
 
-    if (0 <= cpuMonitor.usage() || cpuMonitor.usage() < 10) {
+    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < 10)) {
         //check if there really is something to load
         if (!toLoadList.isEmpty()) {
             PixmapIdentifier id = *toLoadList.begin();
