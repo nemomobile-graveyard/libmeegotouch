@@ -1,0 +1,21 @@
+ms_BN{
+    calendar{
+        gregorian{
+            DateTimePatterns{
+                "H:mm:ss zzzz",
+                "H:mm:ss z",
+                "H:mm:ss",
+                "H:mm",
+                "dd MMMM y",
+                "y MMMM d",
+                "dd/MM/yyyy",
+                "yyyy-MM-dd",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+        }
+    }
+}

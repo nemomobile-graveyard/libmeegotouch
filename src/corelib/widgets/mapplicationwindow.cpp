@@ -617,6 +617,7 @@ void MApplicationWindowPrivate::refreshArrowIconVisibility()
         }
     }
     navigationBar->setArrowIconVisible(haveVisibleMenuAction);
+    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::setComponentDisplayMode(
@@ -631,6 +632,8 @@ void MApplicationWindowPrivate::setComponentDisplayMode(
         if (component == dockWidget) {
             // Dock widget is a special guy.
             updateDockWidgetVisibility();
+        } else if (component == navigationBar) {
+            updateNavigationBarVisibility();
         } else {
             component->appear(q);
         }
@@ -646,6 +649,8 @@ void MApplicationWindowPrivate::setComponentDisplayMode(
                 if (component == dockWidget) {
                     // Dock widget is a special guy.
                     updateDockWidgetVisibility();
+                } else if (component == navigationBar) {
+                    updateNavigationBarVisibility();
                 } else {
                     sceneManager->appearSceneWindowNow(component);
                 }
@@ -706,6 +711,24 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
     } else {
         sceneManager->disappearSceneWindowNow(dockWidget);
     }
+
+}
+
+void MApplicationWindowPrivate::updateNavigationBarVisibility()
+{
+    Q_Q(MApplicationWindow);
+
+    bool emptyNavigationbar = navigationBar->property("isEmpty").toBool();
+    bool emptyToolbar = false;
+    if (q->orientation() == M::Landscape)
+        emptyToolbar = toolBar->property("emptyInLandscape").toBool();
+    else
+        emptyToolbar = toolBar->property("emptyInPortrait").toBool();
+
+    if (emptyNavigationbar && (needsDockWidget() || emptyToolbar))
+       sceneManager->disappearSceneWindow(navigationBar);
+    else
+       sceneManager->appearSceneWindow(navigationBar);
 }
 
 void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
@@ -855,6 +878,8 @@ void MApplicationWindowPrivate::setupPageEscape()
         default:
             qFatal("MApplicationWindow: Invalid page escape mode");
     };
+
+    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::setupPageEscapeAuto()
@@ -931,6 +956,7 @@ void MApplicationWindowPrivate::setToolBarViewType(const MTheme::ViewType& viewT
 {
     toolBar->setViewType(viewType);
     _q_placeToolBar();
+    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::_q_updateStyle()
@@ -946,6 +972,7 @@ void MApplicationWindowPrivate::_q_updateStyle()
         style = newStyle;
 
         _q_placeToolBar();
+        updateNavigationBarVisibility();
 
     } else
         MTheme::releaseStyle(newStyle);
@@ -1264,6 +1291,8 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
             if (component == d->dockWidget) {
                 // Dock widget is a special guy.
                 d->updateDockWidgetVisibility();
+            } else if (component == d->navigationBar) {
+                d->updateNavigationBarVisibility();
             } else if (component->sceneWindowState() != MSceneWindow::Disappearing) {
                 component->appear(this);
             }

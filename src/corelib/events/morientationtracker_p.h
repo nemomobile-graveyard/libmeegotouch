@@ -60,6 +60,7 @@ public:
     WId fetchWIdCurrentAppWindow();
     M::OrientationAngle fetchCurrentAppWindowOrientationAngle();
     WId widCurrentAppWindow;
+    long originalEventMaskCurrentAppWindow;
     QList<MWindow* > windowsFollowingCurrentAppWindow;
     void startFollowingCurrentAppWindow(MWindow* win);
     void stopFollowingCurrentAppWindow(MWindow* win);

@@ -182,6 +182,8 @@ void MNavigationBarViewPrivate::updateLayout()
 {
     Q_Q(MNavigationBarView);
 
+    bool isEmpty = false;
+
     if (q->style()->hasTitle()) {
         layout->setPolicy(menuToolbarEscapePolicy);
     } else {
@@ -202,7 +204,11 @@ void MNavigationBarViewPrivate::updateLayout()
         } else if (!menuVisible && !escapeVisible) {
             layout->setPolicy(toolbarPolicy);
         }
+
+        isEmpty = !menuVisible && !escapeVisible;
     }
+
+    controller->setProperty("isEmpty", isEmpty);
 }
 
 void MNavigationBarViewPrivate::updateToolBarAlignment()

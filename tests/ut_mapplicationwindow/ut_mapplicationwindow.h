@@ -84,6 +84,12 @@ private slots:
     void testTabBarInPortraitIsFloating();
     void testTabBarMovesFromNavigationBarToFloatingWhenRotatedToPortrait();
 
+    void testNavigationBarVisibility_data();
+    void testNavigationBarVisibility();
+
+    void testNavigationBarVisibilityFloatableTabbar();
+    void testNavigationBarVisibilityDockedTabbar();
+
 private:
     MNavigationBar *fetchNavigationBar(const QList<QGraphicsItem *> &itemsList) const;
     MApplicationWindow *m_subject;
@@ -91,6 +97,7 @@ private:
 
     void initToolbarLocationTC(M::OrientationAngle angle, const QString &viewType);
     bool isToolBarFloating();
+    void fastForwardDisappearAppearAnimations(MSceneWindow* sceneWindow);
 };
 
 

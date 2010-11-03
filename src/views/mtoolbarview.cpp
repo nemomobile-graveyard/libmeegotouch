@@ -142,6 +142,7 @@ void MToolBarViewPrivate::add(QAction *action)
         portraitPolicy->insertWidgetAndRemoveOverflow( portraitIndex, widget );
 
     updateWidgetFromAction(widget, action);
+    updateEmptinessProperty();
 }
 
 void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
@@ -180,6 +181,7 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
              isLocationValid(action2, MAction::ToolBarPortraitLocation)))
             change(action2);
     }
+    updateEmptinessProperty();
 }
 
 void MToolBarViewPrivate::change(QAction *action)
@@ -531,6 +533,12 @@ void MToolBarViewPrivate::updateWidgetAlignment()
         addActionsFromLeftOvers();
 }
 
+void MToolBarViewPrivate::updateEmptinessProperty()
+{
+    controller->setProperty("emptyInLandscape", landscapePolicy->widgetCount() == 0);
+    controller->setProperty("emptyInPortrait", portraitPolicy->widgetCount() == 0);
+}
+
 MToolBarView::MToolBarView(MToolBar *controller) :
     MWidgetView(controller),
     d_ptr(new MToolBarViewPrivate(controller))
@@ -591,6 +599,7 @@ void MToolBarView::applyStyle()
     d->setIconsEnabled(style()->hasIcons());
     d->setLabelsEnabled(style()->hasLabels());
     d->setCapacity(style()->capacity());
+    d->updateEmptinessProperty();
 }
 
 // bind view and controller together

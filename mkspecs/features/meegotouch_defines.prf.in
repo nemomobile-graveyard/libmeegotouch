@@ -118,10 +118,6 @@ defineReplace(mAddLibrary) {
             return ("-l"$${LIBRARY_NAME}$${M_MAJOR_VERSION})
         }
     }
-    macx {
-        CONFIG(debug, debug|release) {
-            return ("-l"$${LIBRARY_NAME}_debug)
-        }
-    }
+
     return (-l$$LIBRARY_NAME)
 }

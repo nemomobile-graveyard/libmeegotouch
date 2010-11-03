@@ -32,6 +32,7 @@
 #include <MToolBar>
 #include <MNavigationBar>
 #include <MApplicationMenu>
+#include <MAction>
 
 #include <MSceneWindow>
 #include <MHomeButtonPanel>
@@ -318,6 +319,8 @@ void Ut_MApplicationWindow::testPageEscapeAutoWhenClearingPageHistory()
 void Ut_MApplicationWindow::testComponentsDisplayMode()
 {
     MApplicationPage *page = new MApplicationPage;
+    // add dummy action to ensure that navigationbar isn't empty
+    page->addAction(new QAction("Dummy action", page));
     page->appear(m_subject);
 
     MSceneManagerTestBridge testBridge;
@@ -327,6 +330,7 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
     MSceneWindow *navigationBar = m_subject->d_func()->navigationBar;
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
+    fastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
@@ -481,6 +485,235 @@ void Ut_MApplicationWindow::testTabBarMovesFromNavigationBarToFloatingWhenRotate
     m_subject->sceneManager()->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
     QVERIFY(isToolBarFloating());
 }
+
+void Ut_MApplicationWindow::fastForwardDisappearAppearAnimations(MSceneWindow *sceneWindow)
+{
+    MSceneManagerTestBridge testBridge;
+    testBridge.setParent(m_subject->sceneManager());
+
+    // we can have at most 1 ongoing and 1 queued disappearing/appearing animation
+    // ensure both animations are fast forwarded
+    testBridge.fastForwardSceneWindowTransitionAnimation(sceneWindow);
+    testBridge.fastForwardSceneWindowTransitionAnimation(sceneWindow);
+}
+
+void Ut_MApplicationWindow::testNavigationBarVisibility_data()
+{
+    QTest::addColumn<bool>("floatableTabbar");
+    QTest::addColumn<bool>("hasCloseButton");
+    QTest::addColumn<bool>("hasTitle");
+    QTest::addColumn<int>("pageEscapeMode");
+    QTest::addColumn<bool>("hasTabbarAction");
+    QTest::addColumn<bool>("hasMenuAction");
+
+    QTest::addColumn<bool>("navbarVisibility");
+
+    const int EscapeAuto = MApplicationPageModel::EscapeAuto;
+    const int EscapeManualBack = MApplicationPageModel::EscapeManualBack;
+
+    QTest::newRow("floatable tabbar, menu action")
+            << true  << false << false << EscapeAuto       << true  << true
+            << true;
+    QTest::newRow("floatable tabbar, manual back")
+            << true  << false << false << EscapeManualBack << true  << false
+            << true;
+    QTest::newRow("floatable tabbar, close button")
+            << true  << true  << false << EscapeAuto       << true  << false
+            << true;
+    QTest::newRow("floatable tabbar, has title")
+            << true  << false << true  << EscapeAuto       << true  << false
+            << true;
+    QTest::newRow("floatable tabbar, empty navigationbar")
+            << true  << false << false << EscapeAuto       << true  << false
+            << false;
+
+    QTest::newRow("docked tabbar, tabbar actions")
+            << false << false << false << EscapeAuto       << true  << false
+            << true;
+    QTest::newRow("docked tabbar, no tabbar actions")
+            << false << false << false << EscapeAuto       << false << false
+            << false;
+    QTest::newRow("docked tabbar, no tabbar actions, menu action")
+            << false << false << false << EscapeAuto       << false << true
+            << true;
+    QTest::newRow("docked tabbar, no tabbar actions, manual back")
+            << false << false << false << EscapeManualBack << false << false
+            << true;
+    QTest::newRow("docked tabbar, no tabbar actions, close button")
+            << false  << true  << false << EscapeAuto      << false << false
+            << true;
+    QTest::newRow("docked tabbar, no tabbar actions, has title")
+            << false  << false << true  << EscapeAuto      << false << false
+            << true;
+}
+
+void Ut_MApplicationWindow::testNavigationBarVisibility()
+{
+    QFETCH(bool, floatableTabbar);
+    QFETCH(bool, hasCloseButton);
+    QFETCH(bool, hasTitle);
+    QFETCH(int, pageEscapeMode);
+    QFETCH(bool, hasTabbarAction);
+    QFETCH(bool, hasMenuAction);
+    QFETCH(bool, navbarVisibility);
+
+    // in ut_mapplicationwindow.css tabbar is floatable in portrait
+    initToolbarLocationTC(floatableTabbar ? M::Angle270 : M::Angle0, MToolBar::tabType);
+
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+    if (!hasCloseButton && !hasTitle)
+        navigationBar->setStyleName("");
+    else if (hasCloseButton && !hasTitle)
+        navigationBar->setStyleName("closebtn");
+    else if (hasCloseButton && hasTitle)
+        navigationBar->setStyleName("title_closebtn");
+    else if (!hasCloseButton && hasTitle)
+        navigationBar->setStyleName("title");
+
+    MApplicationPage* page = new MApplicationPage;
+    page->setEscapeMode((MApplicationPageModel::PageEscapeMode)pageEscapeMode);
+    if (hasMenuAction) {
+        MAction* action = new MAction("Menu action", page);
+        action->setLocation(MAction::ApplicationMenuLocation);
+        page->addAction(action);
+    }
+
+    if (hasTabbarAction) {
+        MAction* action1 = new MAction("Tabbar action1", page);
+        action1->setCheckable(true);
+        action1->setLocation(MAction::ToolBarLocation);
+        MAction* action2 = new MAction("Tabbar action2", page);
+        action2->setCheckable(true);
+        action2->setChecked(true);
+        action2->setLocation(MAction::ToolBarLocation);
+
+        page->addAction(action1);
+        page->addAction(action2);
+    }
+
+    m_subject->sceneManager()->appearSceneWindow(page);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), navbarVisibility);
+
+    delete page;
+}
+
+void Ut_MApplicationWindow::testNavigationBarVisibilityFloatableTabbar()
+{
+    // floatable tabbar
+    initToolbarLocationTC(M::Angle270, MToolBar::tabType);
+
+    // no close button, no title
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+    navigationBar->setStyleName("");
+
+    MApplicationPage* page = new MApplicationPage;
+    MAction* action1 = new MAction("Tabbar action1", page);
+    action1->setCheckable(true);
+    action1->setLocation(MAction::ToolBarLocation);
+    MAction* action2 = new MAction("Tabbar action2", page);
+    action2->setCheckable(true);
+    action2->setChecked(true);
+    action2->setLocation(MAction::ToolBarLocation);
+    MAction* menuAction = new MAction("Menu action", page);
+    menuAction->setLocation(MAction::ApplicationMenuLocation);
+
+    page->addAction(action1);
+    page->addAction(action2);
+    page->setEscapeMode(MApplicationPageModel::EscapeAuto);
+
+    m_subject->sceneManager()->appearSceneWindowNow(page);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), false);
+
+    page->addAction(menuAction);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), true);
+
+    page->removeAction(menuAction);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), false);
+
+    page->setEscapeMode(MApplicationPageModel::EscapeManualBack);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), true);
+
+    page->setEscapeMode(MApplicationPageModel::EscapeAuto);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), false);
+
+    delete page;
+}
+
+void Ut_MApplicationWindow::testNavigationBarVisibilityDockedTabbar()
+{
+    // docked tabbar
+    initToolbarLocationTC(M::Angle0, MToolBar::tabType);
+
+    // no close button, no title
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+    navigationBar->setStyleName("");
+
+    MApplicationPage* page = new MApplicationPage;
+    MAction* action1 = new MAction("Tabbar action1", page);
+    action1->setCheckable(true);
+    action1->setLocation(MAction::ToolBarLocation);
+    MAction* action2 = new MAction("Tabbar action2", page);
+    action2->setCheckable(true);
+    action2->setChecked(true);
+    action2->setLocation(MAction::ToolBarLocation);
+    MAction* menuAction = new MAction("Menu action", page);
+    menuAction->setLocation(MAction::ApplicationMenuLocation);
+
+    page->addAction(action1);
+    page->addAction(action2);
+    page->setEscapeMode(MApplicationPageModel::EscapeAuto);
+
+    m_subject->sceneManager()->appearSceneWindowNow(page);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), true);
+
+    page->removeAction(action1);
+    page->removeAction(action2);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), false);
+
+    page->addAction(menuAction);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), true);
+
+    page->removeAction(menuAction);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), false);
+
+    page->setEscapeMode(MApplicationPageModel::EscapeManualBack);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), true);
+
+    page->setEscapeMode(MApplicationPageModel::EscapeAuto);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), false);
+
+    page->addAction(action1);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), true);
+
+    delete page;
+}
+
 
 MNavigationBar *Ut_MApplicationWindow::fetchNavigationBar(
         const QList<QGraphicsItem *> &itemsList) const

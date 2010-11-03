@@ -1,0 +1,88 @@
+cs{
+    calendar{
+        gregorian{
+            AmPmMarkers{
+                "dop.",
+                "odp.",
+            }
+            DateTimePatterns{
+                "H:mm:ss zzzz",
+                "H:mm:ss z",
+                "H:mm:ss",
+                "H:mm",
+                "EEEE, d. MMMM y",
+                "d. MMMM y",
+                "dd.MM.yyyy",
+                "dd.MM.yyyy",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+            monthNames{
+                format{
+                    wide{
+                        "ledna",
+                        "února",
+                        "března",
+                        "dubna",
+                        "května",
+                        "června",
+                        "července",
+                        "srpna",
+                        "září",
+                        "října",
+                        "listopadu",
+                        "prosince",
+                    }
+                }
+                stand-alone{
+                    abbreviated{
+                        "led",
+                        "úno",
+                        "bře",
+                        "dub",
+                        "kvě",
+                        "čer",
+                        "čvc",
+                        "srp",
+                        "zář",
+                        "říj",
+                        "lis",
+                        "pro",
+                    }
+                    narrow{
+                        "l",
+                        "ú",
+                        "b",
+                        "d",
+                        "k",
+                        "č",
+                        "č",
+                        "s",
+                        "z",
+                        "ř",
+                        "l",
+                        "p",
+                    }
+                    wide{
+                        "leden",
+                        "únor",
+                        "březen",
+                        "duben",
+                        "květen",
+                        "červen",
+                        "červenec",
+                        "srpen",
+                        "září",
+                        "říjen",
+                        "listopad",
+                        "prosinec",
+                    }
+                }
+            }
+        }
+    }
+}
+

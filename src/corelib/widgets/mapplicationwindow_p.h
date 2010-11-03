@@ -108,6 +108,8 @@ public:
      */
     void updateDockWidgetVisibility();
 
+    void updateNavigationBarVisibility();
+
     void sceneWindowAppearEvent(MSceneWindowEvent *ev);
     void sceneWindowDisappearEvent(MSceneWindowEvent *ev);
     void sceneWindowDismissEvent(MSceneWindowEvent *ev);
