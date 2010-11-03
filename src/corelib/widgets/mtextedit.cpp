@@ -1243,7 +1243,7 @@ bool MTextEditPrivate::copy()
     return true;
 }
 
-QString MTextEditPrivate::replaceLineBreaks(QString text, QChar replacement)
+QString MTextEditPrivate::replaceLineBreaks(QString text, QString replacement)
 {
     // FIXME: this implementation works quite slow if text or LineBreakSet is long
 
