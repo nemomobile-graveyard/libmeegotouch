@@ -1,3 +1,9 @@
+libmeegotouch (0.20.49.3-1) unstable; urgency=low
+
+  * Fixes: NB#201706 - MOrientationTracker discards current X input event mask
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 03 Nov 2010 15:31:31 +0300
+
 libmeegotouch (0.20.49.2-1) unstable; urgency=low
 
   * Fixes: NB#200994 -  MLinearLayoutPolicy::sizeHint() calls resize()
