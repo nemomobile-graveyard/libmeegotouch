@@ -102,7 +102,7 @@ public:
     MLabelViewPrivate *viewPrivate;
 
     QSizeF preferredSize;
-    QPoint textOffset;
+    QPointF textOffset;
     QRectF paintingRect;
     bool dirty;
     QStaticText staticText;
