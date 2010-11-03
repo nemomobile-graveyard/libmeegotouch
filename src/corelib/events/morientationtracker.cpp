@@ -25,6 +25,9 @@
 #include <QCoreApplication>
 #include <QVariant>
 #include <QTimer>
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#include "contextproperty.h"
+#endif
 
 #include <MDebug>
 
@@ -38,14 +41,14 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     currentIsCovered(false),
     currentIsTvConnected(false),
     currentIsKeyboardOpen(MKeyboardStateTracker::instance()->isOpen())
-  #ifdef HAVE_CONTEXTSUBSCRIBER
-    , videoRouteProperty("com.nokia.policy.video_route")
-    , topEdgeProperty("Screen.TopEdge")
-    , isCoveredProperty("Screen.IsCovered")
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    , videoRouteProperty(new ContextProperty("com.nokia.policy.video_route"))
+    , topEdgeProperty(new ContextProperty("Screen.TopEdge"))
+    , isCoveredProperty(new ContextProperty("Screen.IsCovered"))
 #endif
 #ifdef Q_WS_X11
     , widCurrentAppWindow(0)
-    , originalEventMaskCurrentAppWindow(0)
+    , currentAppWindowHadXPropertyChangeMask(false)
 #endif //Q_WS_X11
     , q_ptr(controller)
 {
@@ -65,11 +68,11 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     }
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    connect(&topEdgeProperty, SIGNAL(valueChanged()),
+    connect(topEdgeProperty, SIGNAL(valueChanged()),
             this, SLOT(updateOrientationAngle()));
-    connect(&isCoveredProperty, SIGNAL(valueChanged()),
+    connect(isCoveredProperty, SIGNAL(valueChanged()),
             this, SLOT(isCoveredChanged()));
-    connect(&videoRouteProperty, SIGNAL(valueChanged()),
+    connect(videoRouteProperty, SIGNAL(valueChanged()),
             this, SLOT(videoRouteChanged()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(updateOrientationAngle()));
@@ -85,13 +88,20 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif //Q_WS_X11
 }
 
+MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
+{
+    delete videoRouteProperty;
+    delete topEdgeProperty;
+    delete isCoveredProperty;
+}
+
 void MOrientationTrackerPrivate::initContextSubscriber()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     //waiting for properties to synchronize
-    topEdgeProperty.waitForSubscription();
-    isCoveredProperty.waitForSubscription();
-    videoRouteProperty.waitForSubscription();
+    topEdgeProperty->waitForSubscription();
+    isCoveredProperty->waitForSubscription();
+    videoRouteProperty->waitForSubscription();
 
     //initiating the variables to current orientation
     updateOrientationAngle();
@@ -103,7 +113,7 @@ void MOrientationTrackerPrivate::initContextSubscriber()
 void MOrientationTrackerPrivate::videoRouteChanged()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    QString value = videoRouteProperty.value().toString();
+    QString value = videoRouteProperty->value().toString();
     mDebug("MOrientationTracker") << "VideoRoute:" << value;
 
     currentIsTvConnected = (value == "tvout" ||
@@ -117,7 +127,7 @@ void MOrientationTrackerPrivate::isCoveredChanged()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_Q(MOrientationTracker);
 
-    bool isCovered = isCoveredProperty.value().toBool();
+    bool isCovered = isCoveredProperty->value().toBool();
 
     if (isCovered != currentIsCovered) {
         mDebug("MOrientationTracker") << "Covered:" << isCovered;
@@ -134,34 +144,44 @@ void MOrientationTrackerPrivate::isCoveredChanged()
 void MOrientationTrackerPrivate::updateOrientationAngle()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    M::OrientationAngle angle = M::Angle0;
-    M::Orientation orientation = M::Landscape;
-    QString edge = topEdgeProperty.value().toString();
+    M::OrientationAngle angle = currentAngle;
+    QString edge = topEdgeProperty->value().toString();
+    bool isDeviceFlat = false;
+    if (edge == "top")
+        angle = M::Angle0;
+    else if (edge == "left")
+        angle = M::Angle270;
+    else if (edge == "right")
+        angle = M::Angle90;
+    else if (edge == "bottom")
+        angle = M::Angle180;
+    else
+        isDeviceFlat = true;
+
     bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
 
+    doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, currentIsTvConnected);
+#endif
+}
+
+void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
+                                                          bool isDeviceFlat, bool tvIsConnected)
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
     //Check if the keyboard was just closed, old angle is supported and
     //if device is lying flat (like on the table)
     if (currentIsKeyboardOpen == true && isKeyboardOpen == false
         && MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen) &&
-        topEdgeProperty.value().isNull()) {
+        isDeviceFlat) {
         currentIsKeyboardOpen = isKeyboardOpen;
         //do nothing
         return;
     }
     currentIsKeyboardOpen = isKeyboardOpen;
 
-    if (currentIsTvConnected || // TV forces landscape for now, no transformations
-        (edge == "top" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen)))) {
+    if (tvIsConnected) // TV forces landscape for now, no transformations
         angle = M::Angle0;
-    } else if (edge == "left" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle270, isKeyboardOpen))) {
-        angle = M::Angle270;
-        orientation = M::Portrait;
-    } else if (edge == "right" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle90, isKeyboardOpen))) {
-        angle = M::Angle90;
-        orientation = M::Portrait;
-    } else if (edge == "bottom" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle180, isKeyboardOpen))) {
-        angle = M::Angle180;
-    } else {
+    else if (!MDeviceProfile::instance()->orientationAngleIsSupported(angle, isKeyboardOpen)) {
         //it seems that orientation does not match allowed for current kybrd state.
         //check if the previous one was ok:
         if (MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen)) {
@@ -181,6 +201,10 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
                 qFatal("MOrientationTrackerPrivate::updateOrientationAngle() - current keyboard state does not seem to be covered in target configuration file");
         }
     }
+
+    M::Orientation orientation = M::Landscape;
+    if (angle == M::Angle90 || angle == M::Angle270)
+        orientation = M::Portrait;
 
     if (angle != currentAngle) {
         currentAngle = angle;
@@ -227,6 +251,19 @@ M::OrientationAngle MOrientationTracker::orientationAngle() const
     return d->currentAngle;
 }
 
+void MOrientationTracker::childEvent(QChildEvent *event)
+{
+    Q_D(MOrientationTracker);
+
+    if (event->added() && event->child()->objectName() == "_m_testBridge") {
+        mDebug("MOrientationTracker::childEvent")<< "REGISTER DEBUG IF";
+        d->debugInterface = event->child();
+        new MOrientationTrackerTestInterface(d, d->debugInterface);
+    } else if (event->child()->objectName() == "_m_testBridge") {
+        d->debugInterface = 0;
+    }
+}
+
 #ifdef Q_WS_X11
 bool MOrientationTrackerPrivate::handleX11PropertyEvent(XPropertyEvent *event)
 {
@@ -254,22 +291,31 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
 
 void MOrientationTrackerPrivate::handleCurrentAppWindowChange()
 {
+    Display* display = QX11Info::display();
+    if(!display)
+        return;
+
+    XWindowAttributes attributes;
     if (widCurrentAppWindow) {
-        //We stop listening to previous top window
-        XSelectInput(QX11Info::display(), widCurrentAppWindow, originalEventMaskCurrentAppWindow);
+        XGetWindowAttributes(display, widCurrentAppWindow, &attributes);
+        //We unset PropertyChangeMask if it was not set before
+        if (!currentAppWindowHadXPropertyChangeMask)
+            attributes.your_event_mask &= ~PropertyChangeMask;
+        XSelectInput(display, widCurrentAppWindow, attributes.your_event_mask);
     }
 
+    //fetch ID of new current window
     widCurrentAppWindow = fetchWIdCurrentAppWindow();
-    //if current window is invalid or not set then return
+
+    //current window is invalid or not set then return
     if (widCurrentAppWindow == 0)
         return;
 
-    //Get current window original event mask
-    XWindowAttributes attributes;
-    XGetWindowAttributes(QX11Info::display(), widCurrentAppWindow, &attributes);
-    originalEventMaskCurrentAppWindow = attributes.your_event_mask;
-    //And start listening to new top window
-    XSelectInput(QX11Info::display(), widCurrentAppWindow, originalEventMaskCurrentAppWindow | PropertyChangeMask);
+    XGetWindowAttributes(display, widCurrentAppWindow, &attributes);
+    //remember if PropertyChangeMask is already set
+    currentAppWindowHadXPropertyChangeMask = (bool)(attributes.your_event_mask & PropertyChangeMask);
+    //set PropertyChangeMask for current app window if it is not set
+    XSelectInput(display, widCurrentAppWindow, attributes.your_event_mask | PropertyChangeMask);
 }
 
 WId MOrientationTrackerPrivate::fetchWIdCurrentAppWindow()
@@ -342,10 +388,41 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win)
 {
     windowsFollowingCurrentAppWindow.removeAll(win);
     if (windowsFollowingCurrentAppWindow.count() == 0) {
-        XSelectInput(QX11Info::display(), widCurrentAppWindow, originalEventMaskCurrentAppWindow);
-        widCurrentAppWindow = 0;
-        originalEventMaskCurrentAppWindow = 0;
+        if (widCurrentAppWindow) {
+            XWindowAttributes attributes;
+            XGetWindowAttributes(QX11Info::display(), widCurrentAppWindow, &attributes);
+            //We unset PropertyChangeMask if it was not set before
+            if (!currentAppWindowHadXPropertyChangeMask)
+                attributes.your_event_mask &= ~PropertyChangeMask;
+            XSelectInput(QX11Info::display(), widCurrentAppWindow, attributes.your_event_mask);
+            widCurrentAppWindow = 0;
+        }
+        currentAppWindowHadXPropertyChangeMask = false;
     }
 }
 
 #endif //Q_WS_X11
+
+MOrientationTrackerTestInterface::MOrientationTrackerTestInterface(
+        MOrientationTrackerPrivate *d, QObject *parent) :
+        QObject(parent), d(d)
+{
+}
+
+void MOrientationTrackerTestInterface::doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
+                                                           bool isDeviceFlat, bool tvIsConnected)
+{
+    d->doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, tvIsConnected);
+}
+
+#ifdef Q_WS_X11
+void MOrientationTrackerTestInterface::handleCurrentAppWindowChange()
+{
+    d->handleCurrentAppWindowChange();
+}
+
+void MOrientationTrackerTestInterface::handleCurrentAppWindowOrientationAngleChange()
+{
+    d->handleCurrentAppWindowOrientationAngleChange();
+}
+#endif
