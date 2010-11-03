@@ -50,6 +50,7 @@ public:
     void toolBarChanged();
     void updateEscapeButton();
     void updateMenuButton();
+    bool isEscapeVisible();
     void updateLayout();
     void updateToolBarAlignment();
 

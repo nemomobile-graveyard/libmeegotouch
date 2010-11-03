@@ -133,4 +133,14 @@ void MNavigationBar::setEscapeButtonEnabled(bool enabled)
     model()->setEscapeButtonEnabled(enabled);
 }
 
+bool MNavigationBar::escapeButtonVisible() const
+{
+    return model()->escapeButtonVisible();
+}
+
+void  MNavigationBar::setEscapeButtonVisible(bool visible)
+{
+    model()->setEscapeButtonVisible(visible);
+}
+
 #include "moc_mnavigationbar.cpp"

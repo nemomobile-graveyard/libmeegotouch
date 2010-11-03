@@ -48,6 +48,7 @@ private:
     M_MODEL_PROPERTY(MNavigationBarModel::EscapeButtonModeEnum, escapeButtonMode, EscapeButtonMode, true,
                      MNavigationBarModel::EscapeButtonClose)
     M_MODEL_PROPERTY(bool, escapeButtonEnabled, EscapeButtonEnabled, true, true)
+    M_MODEL_PROPERTY(bool, escapeButtonVisible, EscapeButtonVisible, true, true)
 };
 
 #endif

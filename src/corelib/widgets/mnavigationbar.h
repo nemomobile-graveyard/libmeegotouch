@@ -91,6 +91,11 @@ public:
     */
     bool escapeButtonEnabled() const;
 
+    /*!
+        \brief Returns true if escape button is visible.
+     */
+    bool escapeButtonVisible() const;
+
 public Q_SLOTS:
     /** \brief Trigger notification of the user via the navigation bar.
      *
@@ -137,6 +142,11 @@ public Q_SLOTS:
         \brief Enables or disables escape button.
     */
     void setEscapeButtonEnabled(bool enabled);
+
+    /*!
+        \brief Sets the visibility of escape button.
+     */
+    void  setEscapeButtonVisible(bool visible);
 
 Q_SIGNALS:
     //! \brief viewmenuButton was clicked

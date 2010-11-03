@@ -178,6 +178,15 @@ void MNavigationBarViewPrivate::updateMenuButton()
     }
 }
 
+bool MNavigationBarViewPrivate::isEscapeVisible()
+{
+    Q_Q(MNavigationBarView);
+
+    return q->model()->escapeButtonVisible() &&
+        (q->style()->hasCloseButton() ||
+         q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonBack);
+}
+
 void MNavigationBarViewPrivate::updateLayout()
 {
     Q_Q(MNavigationBarView);
@@ -187,12 +196,8 @@ void MNavigationBarViewPrivate::updateLayout()
     if (q->style()->hasTitle()) {
         layout->setPolicy(menuToolbarEscapePolicy);
     } else {
-
-        bool escapeVisible = q->style()->hasCloseButton()
-            || q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonBack;
-
+        bool escapeVisible = isEscapeVisible();
         bool menuVisible = q->model()->arrowIconVisible();
-
         bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
 
         if ((menuVisible && escapeVisible) || toolBarIsTabBar) {
@@ -221,12 +226,8 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
     QVariant alignment = QVariant::Invalid;
 
     if (!q->style()->hasTitle()) {
-
-        bool escapeVisible = q->style()->hasCloseButton()
-            || q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonBack;
-
+        bool escapeVisible = isEscapeVisible();
         bool menuVisible = q->model()->arrowIconVisible();
-
         bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
 
         if ((menuVisible && escapeVisible) || toolBarIsTabBar) {
@@ -310,6 +311,10 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
             toolBarAlignmentNeedsUpdate = true;
         } else if (member == MNavigationBarModel::EscapeButtonEnabled) {
             d->escapeButtonSlot->setEnabled(model()->escapeButtonEnabled());
+        } else if (member == MNavigationBarModel::EscapeButtonVisible) {
+            d->escapeButtonSlot->setVisible(model()->escapeButtonVisible());
+            layoutNeedsUpdate = true;
+            toolBarAlignmentNeedsUpdate = true;
         }
     }
 
@@ -328,6 +333,7 @@ void MNavigationBarView::setupModel()
     d->applicationMenuButton->setIconID(model()->viewMenuIconID());
     d->applicationMenuButton->setProgressIndicatorVisible(model()->progressIndicatorVisible());
     d->escapeButtonSlot->setEnabled(model()->escapeButtonEnabled());
+    d->escapeButtonSlot->setVisible(model()->escapeButtonVisible());
 }
 
 void MNavigationBarView::applyStyle()

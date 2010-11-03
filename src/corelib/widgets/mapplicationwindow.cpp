@@ -406,6 +406,12 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
                 // Display mode can be changed between "auto-hide" and "show" which does not
                 // affect appearance state. Need to update exposed rectangle explicitly.
                 _q_updatePageExposedContentRect();
+            } else if (member == MApplicationPageModel::EscapeButtonDisplayMode) {
+                bool escapeButtonVisible = page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
+                if (escapeButtonVisible != navigationBar->escapeButtonVisible()) {
+                    navigationBar->setEscapeButtonVisible(escapeButtonVisible);
+                    updateNavigationBarVisibility();
+                }
             }
         }
 
@@ -1149,6 +1155,9 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
 
     setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
     setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
+
+    bool escapeButtonVisible = page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
+    navigationBar->setEscapeButtonVisible(escapeButtonVisible);
 
     setupPageEscape();
 
