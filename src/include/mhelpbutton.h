@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../corelib/widgets/mhelpbutton.h"
+#include "../corelib/help/mhelpbutton.h"
