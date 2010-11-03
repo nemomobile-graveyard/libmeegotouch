@@ -25,10 +25,10 @@ $::anyParam = "(.+)";
 $::QT_MOC_PATH = find_moc ();
 
 if (! -x $::QT_MOC_PATH) {
-	print "Unable to find moc, or is not executable\n";
-	if ( "MSWin32" ne "$OSNAME" ) {
-		exit (1);
-	}
+        print "Unable to find moc, or is not executable\n";
+        if ( "MSWin32" ne "$OSNAME" ) {
+                exit (1);
+        }
 }
 
 chomp( $::QT_MOC_PATH );
@@ -37,30 +37,37 @@ exit main( @ARGV );
 
 sub find_moc
 {
-	my $mocpath;
+    my $mocpath;
 
-	if ($ENV{"QTDIR"} && -x "$ENV{\"QTDIR\"}/bin/moc")
-	{
-		return "$ENV{\"QTDIR\"}/bin/moc";
-	}
+    if ($ENV{"QTDIR"} && -x "$ENV{\"QTDIR\"}/bin/moc")
+    {
+        return "$ENV{\"QTDIR\"}/bin/moc";
+    }
 
-    # here we need to do things differently for windows
+    # windows case
+    if ($ENV{"QTDIR"} && -x "$ENV{\"QTDIR\"}/bin/moc.exe")
+    {
+        return "$ENV{\"QTDIR\"}/bin/moc.exe";
+    }
+
+    # unix case
     if ( "MSWin32" ne "$OSNAME" )
     {
-		$mocpath = `which moc 2>/dev/null`;
-		if ($? == 0) {
-			chomp $mocpath;
-			return $mocpath;
-		}
 
-		$mocpath = `which moc-qt4 2>/dev/null`;
-		if ($? == 0) {
-			chomp $mocpath;
-			return $mocpath;
-		}
+        $mocpath = `which moc 2>/dev/null`;
+        if ($? == 0) {
+            chomp $mocpath;
+            return $mocpath;
+        }
+
+        $mocpath = `which moc-qt4 2>/dev/null`;
+        if ($? == 0) {
+            chomp $mocpath;
+            return $mocpath;
+        }
     } else {
-		return "moc";
-	}
+        return "moc";
+    }
 }
 
 sub main
