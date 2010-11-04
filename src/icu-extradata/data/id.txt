@@ -13,7 +13,7 @@ id{
                 "EEEE, dd MMMM yyyy",
                 "d MMMM yyyy",
                 "d MMM yyyy",
-                "dd/MM/yy",
+                "d/M/yy",
                 "{1} {0}",
                 "{1} {0}",
                 "{1} {0}",
