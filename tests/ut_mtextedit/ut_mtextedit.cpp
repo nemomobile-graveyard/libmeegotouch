@@ -885,12 +885,9 @@ void Ut_MTextEdit::testBadData()
 
     //check single line with multi line input
     MTextEdit *subject = new MTextEdit(MTextEditModel::SingleLine, "");
-    subject->setText("I \n have \n more columns");
+    subject->setText("I\nhave\nmore\rand\r\nmore columns");
     QVERIFY(subject->lineMode() == MTextEditModel::SingleLine);
-    qDebug() << subject->text();
-
-    // Bug 1: Single line not handling \n properly
-    // QVERIFY(subject->text() == "I");
+    QCOMPARE(subject->text(), QString("I have more and more columns"));
 
     // check multi line with multi line input
     delete subject;

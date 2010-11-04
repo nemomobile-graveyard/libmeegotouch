@@ -289,7 +289,7 @@ namespace
     const QChar MinusSign('-');
 
     //! Character set for line break.
-    const QString LineBreakSet = QString("\n%1%2")
+    const QString LineBreakSet = QString("\r\n%1%2")
         .arg(QChar(0x2028))     // line separator
         .arg(QChar(0x2029));    // paragraph separator
 
@@ -1246,6 +1246,9 @@ bool MTextEditPrivate::copy()
 QString MTextEditPrivate::replaceLineBreaks(QString text, QChar replacement)
 {
     // FIXME: this implementation works quite slow if text or LineBreakSet is long
+
+    // First, handle \r\n sequences to avoid double replacement characters.
+    text.replace("\r\n", replacement);
     foreach (QChar lineBreak, LineBreakSet) {
         text.replace(lineBreak, replacement);
     }
