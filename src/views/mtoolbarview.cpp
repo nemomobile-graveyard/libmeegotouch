@@ -44,7 +44,8 @@ MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
       portraitPolicy(0),
       buttonGroup(0),
       iconsEnabled(true),
-      labelsEnabled(false)
+      labelsEnabled(false),
+      labelOnlyAsCommonButton(true)
 {
     this->controller = controller;
     controller->installEventFilter(this);
@@ -136,12 +137,14 @@ void MToolBarViewPrivate::add(QAction *action)
         return; //Cancel adding action
     MWidget *widget = createWidget(action);
     Q_ASSERT(widget);
+
+    updateWidgetFromAction(widget, action);
+
     if (landscapeIndex != -1)
         landscapePolicy->insertWidgetAndRemoveOverflow( landscapeIndex, widget );
     if (portraitIndex != -1)
         portraitPolicy->insertWidgetAndRemoveOverflow( portraitIndex, widget );
 
-    updateWidgetFromAction(widget, action);
     updateEmptinessProperty();
 }
 
@@ -231,6 +234,9 @@ void MToolBarViewPrivate::change(QAction *action)
         //We are showing it in portrait view but should not be
         portraitPolicy->removeWidgetAt(portraitIndex);
     }
+
+    updateWidgetFromAction(widget, action);
+
     if(validInLandscape && landscapeIndex == -1) {
         int index = policyIndexForAddingAction(action, landscapePolicy);
         if(index != -1)
@@ -241,8 +247,6 @@ void MToolBarViewPrivate::change(QAction *action)
         if(index != -1)
             portraitPolicy->insertWidgetAndRemoveOverflow( index, widget );
     }
-
-    updateWidgetFromAction(widget, action);
 }
 
 void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *action) const
@@ -265,7 +269,7 @@ void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *actio
                 button->setIconVisible(iconsEnabled);
             }
 
-            updateStyling(button);
+            updateViewAndStyling(button);
         }
     }
 }
@@ -322,15 +326,13 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
                 button->setObjectName(button->objectName() + "_" + action->objectName());
 
             if(buttonGroup) {
-                button->setViewType("toolbartab");
                 button->setCheckable(action->isCheckable());
                 //We can't set button->checked until we've added it to the scene
                 buttonGroup->addButton(button);
                 connect(button, SIGNAL(toggled(bool)), q, SLOT(_q_groupButtonClicked(bool)));
                 connect(action, SIGNAL(toggled(bool)), q, SLOT(_q_groupActionToggled(bool)));
-            } else {
-                button->setViewType("toolbar");
             }
+
             connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
 
             buttons.insert(action, button);
@@ -477,9 +479,8 @@ void MToolBarViewPrivate::setIconsEnabled(bool enabled)
 
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
         MButton *button = bit.value();
-        if (button) {
+        if (button)
             button->setIconVisible(iconsEnabled);
-        }
     }
 }
 
@@ -489,10 +490,10 @@ void MToolBarViewPrivate::setLabelsEnabled(bool enabled)
 
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
         MButton *button = bit.value();
-        if (button) {
+        if (isLabelOnly(button))
+            button->setTextVisible(true);
+        else if (button)
             button->setTextVisible(labelsEnabled);
-            updateStyling(button);
-        }
     }
 }
 
@@ -502,13 +503,25 @@ void MToolBarViewPrivate::setSpacesEnabled(bool enabled)
     portraitPolicy->setSpacesBetween(enabled);
 }
 
-void MToolBarViewPrivate::updateStyling(MButton *button) const
+void MToolBarViewPrivate::updateViewAndStyling(MButton *button) const
 {
-    if (!button->text().isEmpty() && button->iconID().isEmpty()) {
+    QString toolBarButtonDefaultViewType = buttonGroup ? "toolbartab" : "toolbar";
+
+    if (isLabelOnly(button)) {
         // Only label -> could use different styling
-        button->setStyleName("ToolBarLabelOnlyButton");
         button->setTextVisible(true); //In this case we will show label (as it is all we have)
+        if (labelOnlyAsCommonButton) {
+            if (button->viewType() != MButton::defaultType)
+                button->setViewType(MButton::defaultType);
+            button->setStyleName("ToolBarLabelOnlyCommonButton");
+        } else {
+            if (button->viewType() != toolBarButtonDefaultViewType)
+                button->setViewType(toolBarButtonDefaultViewType);
+            button->setStyleName("ToolBarLabelOnlyButton");
+        }
     } else {
+        if (button->viewType() != toolBarButtonDefaultViewType)
+            button->setViewType(toolBarButtonDefaultViewType);
         button->setStyleName("ToolBarIconButton");
         button->setTextVisible(labelsEnabled);
     }
@@ -538,6 +551,29 @@ void MToolBarViewPrivate::updateEmptinessProperty()
     controller->setProperty("emptyInLandscape", landscapePolicy->widgetCount() == 0);
     controller->setProperty("emptyInPortrait", portraitPolicy->widgetCount() == 0);
 }
+
+void MToolBarViewPrivate::setLabelOnlyAsCommonButton(bool enable)
+{
+    if (labelOnlyAsCommonButton == enable)
+        return;
+
+    labelOnlyAsCommonButton = enable;
+
+    for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
+        MButton *button = bit.value();
+        if (isLabelOnly(button))
+            updateViewAndStyling(button);
+    }
+
+    landscapePolicy->setLabelOnlyButtonCentering(labelOnlyAsCommonButton);
+    portraitPolicy->setLabelOnlyButtonCentering(labelOnlyAsCommonButton);
+}
+
+bool MToolBarViewPrivate::isLabelOnly(MButton *button) const
+{
+    return (button && !button->text().isEmpty() && button->iconID().isEmpty());
+}
+
 
 MToolBarView::MToolBarView(MToolBar *controller) :
     MWidgetView(controller),
@@ -598,6 +634,7 @@ void MToolBarView::applyStyle()
     d->setSpacesEnabled(style()->hasSpaces());
     d->setIconsEnabled(style()->hasIcons());
     d->setLabelsEnabled(style()->hasLabels());
+    d->setLabelOnlyAsCommonButton(style()->labelOnlyAsCommonButton());
     d->setCapacity(style()->capacity());
     d->updateEmptinessProperty();
 }

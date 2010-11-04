@@ -17,14 +17,23 @@
 **
 ****************************************************************************/
 
-#include "mtimestamp.h"
+#ifndef MHELPBUTTON_P_H
+#define MHELPBUTTON_P_H
 
-#include "mdebug.h"
-#include <QtCore/QTime>
+#include <QString>
+#include "mbutton_p.h"
 
-void M_CORE_EXPORT mTimestampStream(const QString &module, const QString &file, const QString &scope, const QString &msg)
+class M_EXPORT MHelpButtonPrivate: public MButtonPrivate
 {
-    static const QString format("MARK|%3|%4|%5");
-    QString output = format.arg(file).arg(scope).arg(msg);
-    mWarning(module) << QTime::currentTime() << output;
-}
+    Q_DECLARE_PUBLIC(MHelpButton)
+public:
+    MHelpButtonPrivate();
+    virtual ~MHelpButtonPrivate();
+
+    void _q_openHelp();
+
+    QString pageID;
+};
+
+
+#endif // MHELPBUTTON_P_H

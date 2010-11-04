@@ -35,6 +35,7 @@ public:
     M_MODEL_PROPERTY(QModelIndexList, shortcutIndexes, ShortcutIndexes, true, QModelIndexList())
     M_MODEL_PTR_PROPERTY(MList*, list, List, true, NULL)
     M_MODEL_PROPERTY(int, displayMode, DisplayMode, true, 0)
+    M_MODEL_PROPERTY(QPointF, offset, Offset, true, QPointF())
 };
 
 #endif

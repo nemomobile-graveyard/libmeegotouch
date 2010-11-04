@@ -47,7 +47,7 @@ public:
     void insertWidgetAndRemoveOverflow(int widgetIndex, QGraphicsLayoutItem *item);
 
     /*!
-     * \brief Remove the widget indicated by the index.
+     * \brief Remove the widget at indicated.
      */
     void removeWidgetAt(int widgetIndex);
 
@@ -116,6 +116,11 @@ public:
      */
     void setWidgetAlignment(Qt::Alignment alignment, bool affectCapacity);
 
+    /*!
+     * \brief Sets whether the buttons that have only label applied should be centered or not.
+     */
+    void setLabelOnlyButtonCentering(bool center);
+
 protected:
     /** Hide the normal functions since these include the spacers
      *  and we want to encourage the user to only use our functions */
@@ -139,6 +144,7 @@ private:
     QGraphicsWidget *rightSpacer;
     Qt::Alignment widgetAlignment;
     bool widgetAlignmentAffectsCapacity;
+    bool centerLabelOnlyButtons;
 
     /*!
      * \brief Converts index of widget to matching index in policy.
@@ -154,6 +160,11 @@ private:
      * \brief Inserts spacer to indicated policy index.
      */
     QGraphicsWidget *insertSpacer(int policyIndex);
+
+    /*!
+     * \brief Remove the widget at indicated index and preserves existing spacers.
+     */
+    void removeWidgetAtPreservingSpacers(int widgetIndex);
 
     /*!
      * \brief Removes widgets that don't to tool bar anymore.
@@ -176,19 +187,24 @@ private:
     bool isJustifiedAlignment() const;
 
     /*!
-     * \brief Updates spacers on the both sides.
+     * \brief Update all spacers.
      */
-    void updateSideSpacers();
+    void updateSpacers();
 
     /*!
-     * \brief Updates left side spacer.
+     * \brief Activates/deactivates left side spacer.
      */
-    void updateLeftSpacer();
+    void activateLeftSpacer(bool activate);
 
     /*!
-     * \brief Updates right side spacer.
+     * \brief Activates/deactivates right side spacer.
      */
-    void updateRightSpacer();
+    void activateRightSpacer(bool activate);
+
+    /*!
+     * \brief Activates/deactivates spacers in the middle i.e. between widgets.
+     */
+    void activateMiddleSpacers(bool activate);
 
     /*!
      * \brief Updates layout position of widgets at indicated index and those that its addition is affecting.
@@ -209,6 +225,11 @@ private:
      * \brief Sets layout position of widget at index.
      */
     void setLayoutPosition(int widgetIndex, M::Position position);
+
+    /*!
+     * \brief Number of label only buttons in the policy
+     */
+    int labelOnlyButtonCount() const;
 };
 //! \internal_end
 

@@ -2,6 +2,7 @@ MToolbarStyle {
     capacity: 4;
     has-icons: true;
     has-labels: false;
+    label-only-as-common-button: true;
 }
 
 MToolbarStyle.Landscape {
@@ -20,6 +21,7 @@ MToolbarTabStyle {
     capacity: 4;
     has-icons: true;
     has-labels: true;
+    label-only-as-common-button: false;
 }
 
 MToolbarTabStyle.Landscape {

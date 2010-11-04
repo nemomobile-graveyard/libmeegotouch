@@ -67,7 +67,9 @@ M_LIBRARY
 #include <X11/Xutil.h>
 #endif
 
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <sys/mman.h>
+#endif
 
 MTheme *gTheme = 0;
 
@@ -360,7 +362,9 @@ bool MThemePrivate::releasePixmapNow(QHash<QString, CachedPixmap>::iterator i)
         if (!i.value().refcount || !i.value().refcount.deref()) {
             themeDaemon->releasePixmap(i.value().imageId, i.value().size);
             if (i->addr) {
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
                 munmap(i->addr, i->numBytes);
+#endif
             }
             delete i.value().pixmap;
             if (releasedPixmaps.contains(i.value().pixmap))

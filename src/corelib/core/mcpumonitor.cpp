@@ -80,6 +80,7 @@ void MCpuMonitor::start(unsigned msec)
 {
     Q_D(MCpuMonitor);
 
+    d->getCpuUsageInformation(d->jiffies_total, d->jiffies_idle);
     d->timer.start(msec);
 }
 
@@ -105,10 +106,10 @@ void MCpuMonitor::timedOut()
         d->lastFrameUsage = 100 - 100 * (n_idle - d->jiffies_idle) / (n_tot - d->jiffies_total);
         d->usable = true;
 
-        emit newCpuFrameAvailable();
-
         d->jiffies_idle = n_idle;
         d->jiffies_total = n_tot;
+
+        emit newCpuFrameAvailable();
     }
 #endif
 }

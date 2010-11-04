@@ -33,7 +33,9 @@
 #include <mnamespace.h>
 #include <QDebug>
 
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <sys/mman.h>
+#endif
 
 class QPixmap;
 class QFileInfo;
@@ -53,7 +55,9 @@ struct PixmapCacheEntry {
             qCritical("Freeing PixmapCacheEntry with a non-zero reference count. This very likely leads to a crash.");
         }
         if (!handle.shmHandle.isEmpty()) {
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
             shm_unlink(qPrintable(handle.shmHandle));
+#endif
         }
         if (pixmap) {
             delete pixmap;

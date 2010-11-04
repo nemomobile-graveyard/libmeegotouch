@@ -45,6 +45,7 @@ void MListIndexPrivate::init()
     q->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     q->grabGesture(Qt::TapAndHoldGesture);
+    q->grabGesture(Qt::PanGesture);
 }
 
 void MListIndexPrivate::updateListConnections(MList *list)
@@ -113,6 +114,16 @@ void MListIndex::setDisplayMode(MList::DisplayMode displayMode)
 MList::DisplayMode MListIndex::displayMode()
 {
     return (MList::DisplayMode)model()->displayMode();
+}
+
+void MListIndex::setOffset(const QPointF &offset)
+{
+    model()->setOffset(offset);
+}
+
+QPointF MListIndex::offset() const
+{
+    return model()->offset();
 }
 
 void MListIndex::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)

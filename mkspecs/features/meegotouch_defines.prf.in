@@ -112,11 +112,12 @@ win32 {
 defineReplace(mAddLibrary) {
     LIBRARY_NAME = $$1
     win32 {
-        CONFIG(debug, debug|release) {
-            return ("-l"$${LIBRARY_NAME}d$${M_MAJOR_VERSION})
-        } else {
-            return ("-l"$${LIBRARY_NAME}$${M_MAJOR_VERSION})
-        }
+#        CONFIG(debug, debug|release) {
+#            return ("-l"$${LIBRARY_NAME}d$${M_MAJOR_VERSION})
+#        } else {
+#            return ("-l"$${LIBRARY_NAME}$${M_MAJOR_VERSION})
+#        }
+         return ("-l"$${LIBRARY_NAME}$${M_MAJOR_VERSION})
     }
 
     return (-l$$LIBRARY_NAME)

@@ -152,6 +152,7 @@ public:
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
     virtual void updateListIndexVisibility();
+    virtual void updateListIndexOffset();
 
     virtual void disconnectSignalsFromModelToListView();
     virtual void connectSignalsFromModelToListView();
@@ -322,6 +323,7 @@ public:
     virtual void drawGroupSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
     virtual void updateListIndexVisibility();
+    virtual void updateListIndexOffset();
 
 public:
     QVector<int> headersPositions;

@@ -299,6 +299,7 @@ void MListViewPrivate::updatePannableViewportPosition()
     if(pannableViewport && controller) {
         listPosition = controller->mapToItem(pannableViewport->widget(), 0, 0);
         listOffset = calculatePannableViewportOffset(listPosition);
+        updateListIndexOffset();
     }
     else
         listPosition = QPointF(0,0);
@@ -601,6 +602,10 @@ void MListViewPrivate::scrollToPos(const QPointF &targetPosition)
 }
 
 void MListViewPrivate::updateListIndexVisibility()
+{
+}
+
+void MListViewPrivate::updateListIndexOffset()
 {
 }
 
@@ -1335,8 +1340,14 @@ void MGroupHeaderListViewPrivate::drawGroupSeparator(const int row, QPainter *pa
 
 void MGroupHeaderListViewPrivate::updateListIndexVisibility()
 {
-    if(listIndexWidget)
+    if (listIndexWidget)
         listIndexWidget->setDisplayMode((MList::DisplayMode)controllerModel->listIndexDisplayMode());
+}
+
+void MGroupHeaderListViewPrivate::updateListIndexOffset()
+{
+    if (listIndexWidget)
+        listIndexWidget->setOffset(pannableViewport->pos());
 }
 
 ////////////

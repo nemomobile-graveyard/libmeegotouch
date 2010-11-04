@@ -31,6 +31,7 @@
 MListItemViewPrivate::MListItemViewPrivate(MWidgetController *controller) 
     : MWidgetViewPrivate(),
     down(false),
+    tapAndHoldStarted(false),
     queuedStyleModeChange(false),
     styleModeChangeTimer(0)
 {
@@ -60,6 +61,8 @@ void MListItemViewPrivate::updateStyleMode()
         }
         styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
         q->style().setModePressed();
+        if (tapAndHoldStarted && !q->style()->downStateEffect().isEmpty())
+            controller->setGraphicsEffect(MTheme::effect(q->style()->downStateEffect()));
     } else {
         if (controller->isSelected()) {
             q->style().setModeSelected();
@@ -71,6 +74,9 @@ void MListItemViewPrivate::updateStyleMode()
             q->style().setModeDefault();
         }
     }
+
+    if (!tapAndHoldStarted && controller->graphicsEffect())
+        controller->setGraphicsEffect(NULL);
 
     q->applyStyle();
     q->update();
@@ -118,6 +124,7 @@ void MListItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
     
     d->down = false;
+    d->tapAndHoldStarted = false;
     d->updateStyleMode();    
 
     QPointF touch = event->scenePos();
@@ -163,7 +170,10 @@ void MListItemView::cancelEvent(MCancelEvent *event)
         return;
 
     style()->cancelFeedback().play();
+
     d->down = false;
+    d->tapAndHoldStarted = false;
+
     d->updateStyleMode();
 }
 
@@ -171,15 +181,12 @@ void MListItemView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGest
 {
     Q_D(MListItemView);
 
-    if (gesture->state() == Qt::GestureStarted) {
-        if (!style()->downStateEffect().isEmpty())
-            d->controller->setGraphicsEffect(MTheme::effect(style()->downStateEffect()));
-    }
+    if (gesture->state() == Qt::GestureStarted)
+        d->tapAndHoldStarted = true;
 
     if (gesture->state() == Qt::GestureCanceled ||
-        gesture->state() == Qt::GestureFinished) {
-        d->controller->setGraphicsEffect(NULL);
-    }
+        gesture->state() == Qt::GestureFinished)
+        d->tapAndHoldStarted = false;
 
     if (gesture->state() == Qt::GestureFinished)
         d->longTap(gesture->position());

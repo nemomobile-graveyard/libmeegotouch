@@ -7,6 +7,10 @@ use File::Path;
 $inpath = Cwd::abs_path(dirname($0));
 $outpath = Cwd::getcwd;
 
+#makes sure the windows path are set correctly and compliant with windows standard
+$inpath  =~ s/^\/([a-z])/$1:/i; 
+$outpath =~ s/^\/([a-z])/$1:/i; 
+
 print "inpath : $inpath\n";
 print "outpath: $outpath\n";
 

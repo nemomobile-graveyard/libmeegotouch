@@ -467,11 +467,9 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
     // Interpretation of whether the navigation bar is covering the page
     // changes from "auto-hide" to "show". On "auto-hide" the navigation
     // bar doesn't count as covering the page since it does so only momentarily.
+    const bool navBarIsCovering = showingNavigationBar &&
+            page->componentDisplayMode(MApplicationPage::NavigationBar) != MApplicationPageModel::AutoHide;
 
-    // If page area is maximized it means that page's own component display mode
-    // is not currently applied and we cannot rely on it.
-    const bool navBarIsCovering = pageAreaMaximized ? showingNavigationBar :
-                                  (page->componentDisplayMode(MApplicationPage::NavigationBar) == MApplicationPageModel::Show);
     if (navBarIsCovering) {
         if (navigationBar->alignment().testFlag(Qt::AlignTop))
             topCoverage += navigationBar->size().height();
@@ -716,6 +714,13 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void MApplicationWindowPrivate::updateNavigationBarVisibility()
 {
+    if (!page || page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
+        || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide
+            && !autoHideComponentsTimer.isActive()))
+    {
+        return;
+    }
+
     Q_Q(MApplicationWindow);
 
     bool emptyNavigationbar = navigationBar->property("isEmpty").toBool();
@@ -1284,6 +1289,9 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
     MWindow::mouseReleaseEvent(event);
 
     if (d->componentsOnAutoHide.count() > 0) {
+        // restart timer
+        d->autoHideComponentsTimer.start();
+
         const int count = d->componentsOnAutoHide.count();
         for (int i = 0; i < count; ++i) {
             component = d->componentsOnAutoHide.at(i);
@@ -1298,8 +1306,6 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
             }
         }
 
-        // restart timer
-        d->autoHideComponentsTimer.start();
     }
 }
 

@@ -57,7 +57,6 @@ public:
 private:
     MLayout *createLayout();
 
-    MProgressIndicator *spinnerWidget();
     MLabel *landscapeTitleLabelWidget();
     MLabel *portraitTitleLabelWidget();
     MLabel *subtitleLabelWidget();
@@ -70,7 +69,6 @@ private:
     MGridLayoutPolicy *landscapePolicy;
     MLinearLayoutPolicy *portraitPolicy;
 
-    MProgressIndicator *spinner;
     MLabel *landscapeTitleLabel;
     MLabel *portraitTitleLabel;
     MLabel *subtitleLabel;

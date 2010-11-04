@@ -56,6 +56,11 @@ class M_VIEWS_EXPORT MToolbarStyle : public MWidgetStyle
      * \brief Tool bar buttons have spacers between them to layout them equally in the available space
      */
     M_STYLE_ATTRIBUTE(bool, hasSpaces, HasSpaces)
+
+    /*!
+     * \brief Tool bar actions that have only text applied are handled with default button view instead of custom tool or tab bar views.
+     */
+    M_STYLE_ATTRIBUTE(bool, labelOnlyAsCommonButton, LabelOnlyAsCommonButton)
 };
 
 /*!

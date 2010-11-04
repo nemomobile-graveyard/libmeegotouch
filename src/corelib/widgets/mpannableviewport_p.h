@@ -63,9 +63,7 @@ public:
     void _q_pannedWidgetGeometryChanged();
     void _q_pannedWidgetWidthOutOfViewport();
     void _q_pannedWidgetHeightOutOfViewport();
-
-    void correctWidgetPositionAfterGeometryChange();
-    void ensureFocusedPannedWidgetIsVisible();
+    void _q_ensureFocusedPannedWidgetIsVisible();
 };
 
 #endif

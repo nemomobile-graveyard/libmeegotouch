@@ -65,7 +65,7 @@ bool MSyslogClientSocket::connectToServer(const QUrl &url)
 {
     this->close();
 
-    if(url.isEmpty() or !url.isValid())
+    if(url.isEmpty() || !url.isValid())
         return false;
 
     if (url.scheme() == "file") {

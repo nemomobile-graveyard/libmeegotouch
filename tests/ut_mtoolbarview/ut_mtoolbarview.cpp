@@ -533,7 +533,7 @@ void Ut_MToolBarView::testSizeHint()
         QVERIFY(maximumSizes.at(i).isValid());
         QVERIFY(preferredSizes.at(i).isValid());
 
-        MAction *action = new MAction("action", m_toolbar);
+        MAction *action = new MAction("icon-l-search", "action", m_toolbar);
         if(landscape && portrait)
             action->setLocation(MAction::ToolBarLocation);
         else if(landscape)
@@ -989,6 +989,52 @@ void Ut_MToolBarView::testLabelOnlyButtonsHaveDifferentStylename()
     QString labelOnlyStyleName = buttonLabelOnly->styleName();
     QVERIFY(labelOnlyStyleName.isEmpty() == false);
     QVERIFY(iconLabelStyleName != labelOnlyStyleName);
+}
+
+void Ut_MToolBarView::testLabelOnlyAreCommonButtonsInToolBar()
+{
+    MAction *actionIconAndLabel = new MAction("icon-l-search", "action", m_toolbar);
+    actionIconAndLabel->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(actionIconAndLabel);
+
+    MAction *actionLabelOnly = new MAction("action", m_toolbar);
+    actionLabelOnly->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(actionLabelOnly);
+
+    qApp->processEvents();
+
+    QPointer<MButton> buttonIconAndLabel = dynamic_cast<MButton*>(m_toolbarview->getWidget(actionIconAndLabel));
+    QPointer<MButton> buttonLabelOnly = dynamic_cast<MButton*>(m_toolbarview->getWidget(actionLabelOnly));
+    QVERIFY(buttonIconAndLabel);
+    QVERIFY(buttonLabelOnly);
+
+    QVERIFY(buttonIconAndLabel->viewType() == "toolbar");
+    QVERIFY(buttonLabelOnly->viewType() == "default");
+}
+
+void Ut_MToolBarView::testLabelOnlyAreNotCommonButtonsInTabBar()
+{
+    MToolbarTabView* tabView = new MToolbarTabView(m_toolbar);
+    QVERIFY(tabView != 0);
+    m_toolbar->setView(tabView);
+
+    MAction *actionIconAndLabel = new MAction("icon-l-search", "action", m_toolbar);
+    actionIconAndLabel->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(actionIconAndLabel);
+
+    MAction *actionLabelOnly = new MAction("action", m_toolbar);
+    actionLabelOnly->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(actionLabelOnly);
+
+    qApp->processEvents();
+
+    QPointer<MButton> buttonIconAndLabel = dynamic_cast<MButton*>(tabView->getWidget(actionIconAndLabel));
+    QPointer<MButton> buttonLabelOnly = dynamic_cast<MButton*>(tabView->getWidget(actionLabelOnly));
+    QVERIFY(buttonIconAndLabel);
+    QVERIFY(buttonLabelOnly);
+
+    QVERIFY(buttonIconAndLabel->viewType() == "toolbartab");
+    QVERIFY(buttonLabelOnly->viewType() == "toolbartab");
 }
 
 QTEST_APPLESS_MAIN(Ut_MToolBarView)

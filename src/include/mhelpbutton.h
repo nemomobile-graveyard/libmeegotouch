@@ -17,14 +17,4 @@
 **
 ****************************************************************************/
 
-#include "mtimestamp.h"
-
-#include "mdebug.h"
-#include <QtCore/QTime>
-
-void M_CORE_EXPORT mTimestampStream(const QString &module, const QString &file, const QString &scope, const QString &msg)
-{
-    static const QString format("MARK|%3|%4|%5");
-    QString output = format.arg(file).arg(scope).arg(msg);
-    mWarning(module) << QTime::currentTime() << output;
-}
+#include "../corelib/help/mhelpbutton.h"

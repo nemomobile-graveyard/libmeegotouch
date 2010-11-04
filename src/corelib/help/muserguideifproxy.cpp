@@ -17,14 +17,29 @@
 **
 ****************************************************************************/
 
-#include "mtimestamp.h"
+/*
+ * automatically generated with the command line :
+ * m-servicefwgen -p MUserGuideIf
+ *
+ * m-servicefwgen is Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ *
+ * This is an auto-generated file.
+ * This file may have been hand-edited. Look for HAND-EDIT comments
+ * before re-generating it.
+ */
 
-#include "mdebug.h"
-#include <QtCore/QTime>
+#include "muserguideifproxy.h"
 
-void M_CORE_EXPORT mTimestampStream(const QString &module, const QString &file, const QString &scope, const QString &msg)
+/*
+ * Implementation of interface class MUserGuideIfProxy
+ */
+
+MUserGuideIfProxy::MUserGuideIfProxy(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)
+    : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)
 {
-    static const QString format("MARK|%3|%4|%5");
-    QString output = format.arg(file).arg(scope).arg(msg);
-    mWarning(module) << QTime::currentTime() << output;
 }
+
+MUserGuideIfProxy::~MUserGuideIfProxy()
+{
+}
+

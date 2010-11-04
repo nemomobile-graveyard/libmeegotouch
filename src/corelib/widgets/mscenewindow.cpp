@@ -100,6 +100,8 @@ MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
     grabGesture(Qt::PanGesture);
     grabGesture(Qt::TapGesture);
     grabGesture(Qt::TapAndHoldGesture);
+    grabGesture(Qt::PinchGesture);
+    grabGesture(Qt::SwipeGesture);
     setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 }
 
@@ -114,6 +116,8 @@ MSceneWindow::MSceneWindow(MSceneWindowPrivate *dd, MSceneWindowModel *model, MS
     grabGesture(Qt::PanGesture);
     grabGesture(Qt::TapGesture);
     grabGesture(Qt::TapAndHoldGesture);
+    grabGesture(Qt::PinchGesture);
+    grabGesture(Qt::SwipeGesture);
     setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 }
 

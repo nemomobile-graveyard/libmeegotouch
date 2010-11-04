@@ -31,11 +31,7 @@ win32 {
 
 # make sure mgen executable is found
 win32 {
-    debug {
-        M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/debug/mgen.exe
-    } else {
-        M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/release/mgen.exe
-    }
+    M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/mgen.exe
 } else {
     M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/mgen
 }

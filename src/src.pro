@@ -7,7 +7,7 @@ SUBDIRS += \
     extensions \
     translations
 
-win32|macx:SUBDIRS -= settings extensions
+macx:SUBDIRS -= settings extensions
 
 include(../mkspecs/common.pri)
 

@@ -40,6 +40,7 @@ public:
 
 private:
     bool down;
+    bool tapAndHoldStarted;
     MListItem *controller;
     bool queuedStyleModeChange;
     QTimer *styleModeChangeTimer;

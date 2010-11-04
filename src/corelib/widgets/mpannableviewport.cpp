@@ -179,8 +179,13 @@ void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
 
 void MPannableViewportPrivate::_q_pannedWidgetGeometryChanged()
 {
-    correctWidgetPositionAfterGeometryChange();
-    ensureFocusedPannedWidgetIsVisible();
+    Q_Q(MPannableViewport);
+
+    QPointF physicsPosition = q->position();
+    QPointF roundedP = QPointF(floor(physicsPosition.x()), floor(physicsPosition.y()));
+
+    if (roundedP != -pannedWidget->pos())
+        q->updatePosition(physicsPosition);
 }
 
 void MPannableViewportPrivate::_q_pannedWidgetHeightOutOfViewport()
@@ -193,6 +198,13 @@ void MPannableViewportPrivate::_q_pannedWidgetHeightOutOfViewport()
         if(updatedPosition < q->position().y())
             q->setPosition(QPointF(q->position().x(), qMax((qreal)0, updatedPosition)));
     }
+
+    // The heightChanged signal is called from an event handler. Singleshot timer
+    // will ensure that relocation will be triggered only after sizes of the viewport
+    // settle and correct microfocus is returned from scene. This is a workaround
+    // until we find out why we don't have the correct value of the microfocus rect
+    // returned while calling it from the height changed slot.
+    QTimer::singleShot(0, q, SLOT(_q_ensureFocusedPannedWidgetIsVisible()));
 }
 
 void MPannableViewportPrivate::_q_pannedWidgetWidthOutOfViewport()
@@ -207,18 +219,7 @@ void MPannableViewportPrivate::_q_pannedWidgetWidthOutOfViewport()
     }
 }
 
-void MPannableViewportPrivate::correctWidgetPositionAfterGeometryChange()
-{
-    Q_Q(MPannableViewport);
-
-    QPointF physicsPosition = q->position();
-    QPointF roundedP = QPointF(floor(physicsPosition.x()), floor(physicsPosition.y()));
-
-    if (roundedP != -pannedWidget->pos())
-        q->updatePosition(physicsPosition);
-}
-
-void MPannableViewportPrivate::ensureFocusedPannedWidgetIsVisible()
+void MPannableViewportPrivate::_q_ensureFocusedPannedWidgetIsVisible()
 {
     Q_Q(MPannableViewport);
 

@@ -122,10 +122,12 @@ void MListIndexViewPrivate::initLayout()
 
 void MListIndexViewPrivate::updateLayout()
 {
+    Q_Q(MListIndexView);
+
     if(container) {
         clearVisible();
-        controller->resize(controller->preferredWidth(), containerRect.height());
-        controller->setPos(containerRect.x() + containerRect.width() - controller->preferredWidth(), containerRect.y());
+        controller->resize(controller->preferredWidth(), containerRect.height() - q->model()->offset().y());
+        controller->setPos(containerRect.x() + containerRect.width() - controller->preferredWidth(), containerRect.y() + q->model()->offset().y());
     }
     updateVisible();
 }
@@ -169,10 +171,12 @@ void MListIndexViewPrivate::clearVisible()
 
 void MListIndexViewPrivate::updateVisible()
 {
+    Q_Q(MListIndexView);
+
     if (shortcutHeight == 0)
         return;
 
-    int fitCount = (controller->contentsRect().height()) / shortcutHeight;
+    int fitCount = (controller->contentsRect().height() - q->model()->offset().y()) / shortcutHeight;
 
     if (fitCount > 0 && fitCount != layout->count()) {
         int skipCount = qCeil((qreal)shortcutsCount / (qreal)fitCount);
@@ -368,6 +372,9 @@ void MListIndexView::updateData(const QList<const char *> &modifications)
         else if (member == MListIndexModel::DisplayMode) {
             d->updateDisplayMode();
         }
+        else if (member == MListIndexModel::Offset) {
+            d->updateLayout();
+        }
     }
 
     MWidgetView::updateData(modifications);
@@ -415,6 +422,11 @@ void MListIndexView::cancelEvent(MCancelEvent *event)
 }
 
 void MListIndexView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    event->accept(gesture);
+}
+
+void MListIndexView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
 {
     event->accept(gesture);
 }
