@@ -218,12 +218,28 @@ int main(int argc, char *argv[])
 
     // Calls notificationIdList from NotificationManager. Returns size of the list from main.
     if (listMode) {
-        QList<MNotification *> list = MNotification::notifications();
+        QList<MNotification*> list;
+        std::string itemName;
+        std::string itemNameCapital;
+        if (groupMode) {
+            QList<MNotificationGroup*> tmpList = MNotificationGroup::notificationGroups();
+            foreach (MNotificationGroup* group, tmpList) {
+                list.append(group);
+            }
+
+            itemName = "notification groups";
+            itemNameCapital = "Notification groups";
+        } else {
+            list = MNotification::notifications();
+            itemName = "notifications";
+            itemNameCapital = "Notifications";
+        }
+
         result = list.size();
-        std::cout << "\n" << list.size() << " notifications." << std::endl;
+        std::cout << list.size() << " " << itemName << "." << std::endl;
         if (list.size() > 0) {
-            std::cout << "Notifications:" << std::endl;
-            std::cout << "Id\tType\tSummary\tBody\tImage\tCount" << std::endl;
+            std::cout << itemNameCapital << ":" << std::endl;
+            std::cout << "Id\tType\tSummary\tBody\tImage\tCount\tIdentifier" << std::endl;
             foreach(MNotification *notification, list) {
                 MNotificationToolNotification *toolNotification = static_cast<MNotificationToolNotification *>(notification);
                 std::cout << toolNotification->id() << "\t" <<
