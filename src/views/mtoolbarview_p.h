@@ -61,6 +61,7 @@ public:
     void setIconsEnabled(bool enabled);
     void setLabelsEnabled(bool enabled);
     void setSpacesEnabled(bool enabled);
+    void setLabelOnlyAsCommonButton(bool enable);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
@@ -79,9 +80,10 @@ protected:
     void _q_groupActionToggled(bool);
     void setCapacity(int newCapacity, MToolBarLayoutPolicy *policy);
     void addActionsFromLeftOvers();
-    void updateStyling(MButton *button) const;
+    void updateViewAndStyling(MButton *button) const;
     virtual void updateWidgetAlignment();
     void updateEmptinessProperty();
+    bool isLabelOnly(MButton *button) const;
 
 protected:
     MToolBarView *q_ptr;
@@ -94,7 +96,7 @@ protected:
     MButtonGroup * buttonGroup; /* If this is non-null, created buttons will be placed in this group */
     bool iconsEnabled;
     bool labelsEnabled;
-    Qt::Alignment widgetAlignment;
+    bool labelOnlyAsCommonButton;
 };
 
 #endif

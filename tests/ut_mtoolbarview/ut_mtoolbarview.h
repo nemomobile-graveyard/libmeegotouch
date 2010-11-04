@@ -68,6 +68,8 @@ private slots:
     void testLabelIsVisibleOnPortrait();
     void testIconAndLabelAreVisible();
     void testLabelOnlyButtonsHaveDifferentStylename();
+    void testLabelOnlyAreCommonButtonsInToolBar();
+    void testLabelOnlyAreNotCommonButtonsInTabBar();
 
 private:
     MToolBar *m_toolbar;

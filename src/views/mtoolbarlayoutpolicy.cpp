@@ -22,6 +22,7 @@
 #include "mlinearlayoutpolicy.h"
 #include "mwidgetcontroller.h"
 #include "mtextedit.h"
+#include "mbutton.h"
 #include "mtoolbarlayoutpolicy.h"
 
 
@@ -34,16 +35,17 @@ MToolBarLayoutPolicy::MToolBarLayoutPolicy(MLayout *layout)
       leftSpacer(0),
       rightSpacer(0),
       widgetAlignment(Qt::AlignHCenter),
-      widgetAlignmentAffectsCapacity(false)
+      widgetAlignmentAffectsCapacity(false),
+      centerLabelOnlyButtons(true)
 {
     setSpacing(0);
-    updateSideSpacers();
+    updateSpacers();
 }
 
 MToolBarLayoutPolicy::~MToolBarLayoutPolicy()
 {
     for (int i = widgetCount()-1; i >= 0; i--)
-        removeWidgetAt(i);
+        removeWidgetAtPreservingSpacers(i);
 
     while (MLinearLayoutPolicy::count()) {
         // Remove left and right spacers
@@ -63,7 +65,7 @@ void MToolBarLayoutPolicy::insertWidgetAndRemoveOverflow(int widgetIndex, QGraph
 
     if (dynamic_cast<MTextEdit *>(item->graphicsItem())) {
         if (textEditIndex != -1)  //Remove any previous text edit
-            removeWidgetAt(textEditIndex);
+            removeWidgetAtPreservingSpacers(textEditIndex);
         textEditIndex = widgetIndex;
     } else if (widgetIndex <= textEditIndex)
         textEditIndex++;
@@ -85,16 +87,22 @@ void MToolBarLayoutPolicy::insertWidgetAndRemoveOverflow(int widgetIndex, QGraph
 
     updateLayoutPositionDueToInsert(widgetIndex);
     removeOverflownWidgets();
-    updateSideSpacers();
+    updateSpacers();
 }
 
 void MToolBarLayoutPolicy::removeOverflownWidgets()
 {
     while (takenSlots() > effectiveMaxWidgetSlots())
-        removeWidgetAt(widgetCount()-1);
+        removeWidgetAtPreservingSpacers(widgetCount()-1);
 }
 
 void MToolBarLayoutPolicy::removeWidgetAt(int widgetIndex)
+{
+    removeWidgetAtPreservingSpacers(widgetIndex);
+    updateSpacers();
+}
+
+void MToolBarLayoutPolicy::removeWidgetAtPreservingSpacers(int widgetIndex)
 {
     if (widgetIndex < 0 || widgetIndex > widgetCount())
         return;
@@ -115,8 +123,6 @@ void MToolBarLayoutPolicy::removeWidgetAt(int widgetIndex)
     MLinearLayoutPolicy::removeAt(policyIndex);
     if (!onlyItem)
         MLinearLayoutPolicy::removeAt(lastItem ? policyIndex-1 : policyIndex);
-
-    updateSideSpacers();
 }
 
 bool MToolBarLayoutPolicy::roomForWidget(int widgetIndex, bool textEdit) const
@@ -197,6 +203,7 @@ void MToolBarLayoutPolicy::setMaxWidgetSlots(int maxSlotCount)
     maxSlots = maxSlotCount;
 
     removeOverflownWidgets();
+    updateSpacers();
 }
 
 int MToolBarLayoutPolicy::freeWidgetSlots() const
@@ -211,12 +218,7 @@ void MToolBarLayoutPolicy::setSpacesBetween(bool enabled)
 
     spacesBetween = enabled;
 
-    int base = 1+(leftSpacer ? 1 : 0);
-    for (int i=base; i<MLinearLayoutPolicy::count()-1; i += 2) {
-        QGraphicsLayoutItem *item = MLinearLayoutPolicy::itemAt(i);
-        if (item)
-            item->setMaximumWidth(enabled ? -1 : 0);
-    }
+    updateSpacers();
 }
 
 void MToolBarLayoutPolicy::setWidgetAlignment(Qt::Alignment alignment, bool affectCapacity)
@@ -225,8 +227,14 @@ void MToolBarLayoutPolicy::setWidgetAlignment(Qt::Alignment alignment, bool affe
     widgetAlignmentAffectsCapacity = affectCapacity;
 
     removeOverflownWidgets();
+    updateSpacers();
+}
 
-    updateSideSpacers();
+void MToolBarLayoutPolicy::setLabelOnlyButtonCentering(bool center)
+{
+    centerLabelOnlyButtons = center;
+
+    updateSpacers();
 }
 
 int MToolBarLayoutPolicy::count() const
@@ -308,13 +316,27 @@ bool MToolBarLayoutPolicy::isJustifiedAlignment() const
     return (widgetAlignment.testFlag(Qt::AlignJustify));
 }
 
-void MToolBarLayoutPolicy::updateSideSpacers()
+void MToolBarLayoutPolicy::updateSpacers()
 {
-    updateLeftSpacer();
-    updateRightSpacer();
+    if (centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount()) {
+        //All widgets are labelonlybuttons and they should be centered
+        activateLeftSpacer(true);
+        activateRightSpacer(true);
+        activateMiddleSpacers(false);
+
+        return;
+    }
+
+    // Activate side spacer if there is just single widget in justified alignment
+    // or alignment is neither to that direction nor justified.
+    bool singleWidgetInJustified = (widgetCount() == 1 && isJustifiedAlignment());
+    activateLeftSpacer(singleWidgetInJustified || !isAlignedLeftOrJustified());
+    activateRightSpacer(singleWidgetInJustified || !isAlignedRightOrJustified());
+
+    activateMiddleSpacers(spacesBetween);
 }
 
-void MToolBarLayoutPolicy::updateLeftSpacer()
+void MToolBarLayoutPolicy::activateLeftSpacer(bool activate)
 {
     if (!leftSpacer) {
         leftSpacer = new QGraphicsWidget;
@@ -322,37 +344,46 @@ void MToolBarLayoutPolicy::updateLeftSpacer()
         MLinearLayoutPolicy::insertItem(0, leftSpacer);
     }
 
-    if (widgetCount() == 1 && isJustifiedAlignment()) {
-        // Single tool bar widget
+    if (activate) {
         leftSpacer->setMaximumWidth(-1);
         leftSpacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    } else if (isAlignedLeftOrJustified()) {
+    } else {
         leftSpacer->setMaximumWidth(0);
         leftSpacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    } else {
-        leftSpacer->setMaximumWidth(-1);
-        leftSpacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     }
 }
 
-void MToolBarLayoutPolicy::updateRightSpacer()
+void MToolBarLayoutPolicy::activateRightSpacer(bool activate)
 {
     if (!rightSpacer) {
         rightSpacer = new QGraphicsWidget;
-        rightSpacer->setPreferredSize(1,1);
+        rightSpacer->setPreferredSize(1,1); //QTBUG-11134
         MLinearLayoutPolicy::insertItem(count(), rightSpacer);
     }
 
-    if (widgetCount() == 1 && isJustifiedAlignment()) {
-        // Single tool bar widget
+    if (activate) {
         rightSpacer->setMaximumWidth(-1);
         rightSpacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    } else if (isAlignedRightOrJustified()) {
+    } else {
         rightSpacer->setMaximumWidth(0);
         rightSpacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    } else {
-        rightSpacer->setMaximumWidth(-1);
-        rightSpacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    }
+}
+
+void MToolBarLayoutPolicy::activateMiddleSpacers(bool activate)
+{
+    int base = 1+(leftSpacer ? 1 : 0);
+    for (int i=base; i<MLinearLayoutPolicy::count()-1; i += 2) {
+        QGraphicsLayoutItem *item = MLinearLayoutPolicy::itemAt(i);
+        if (item) {
+            if (activate) {
+                item->setMaximumWidth(-1);
+                item->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            } else {
+                item->setMaximumWidth(0);
+                item->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+            }
+        }
     }
 }
 
@@ -426,4 +457,17 @@ void MToolBarLayoutPolicy::setLayoutPosition(int widgetIndex, M::Position positi
     if (widget) {
         widget->setLayoutPosition(position);
     }
+}
+
+int MToolBarLayoutPolicy::labelOnlyButtonCount() const
+{
+    int cnt(0);
+
+    for (int i = 0; i < widgetCount(); i++) {
+        MButton *button = dynamic_cast<MButton *>(widgetAt(i));
+        if (button && !button->text().isEmpty() && button->iconID().isEmpty())
+            cnt++;
+    }
+
+    return cnt;
 }
