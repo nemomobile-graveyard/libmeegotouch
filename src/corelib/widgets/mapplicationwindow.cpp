@@ -188,6 +188,7 @@ void MApplicationWindowPrivate::init()
         sceneManager->appearSceneWindowNow(statusBar);
     }
 
+    sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
 
     // Initialize escape button to close mode.
