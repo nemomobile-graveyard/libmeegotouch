@@ -256,7 +256,9 @@ void MWindowPrivate::configureViewport()
     // background over of the window's previous state. This seems to be happening only
     // with softare rendering.
     q->setAttribute(Qt::WA_OpaquePaintEvent);
+    q->setAttribute(Qt::WA_NoSystemBackground);
     q->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+    q->viewport()->setAttribute(Qt::WA_NoSystemBackground);
 }
 
 
