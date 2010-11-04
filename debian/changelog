@@ -1,3 +1,9 @@
+libmeegotouch (0.20.52~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 04 Nov 2010 14:31:00 +0200
+
 libmeegotouch (0.20.51-1) unstable; urgency=low
 
   * Fixes: NB#202386 - MCpuMonitor does not return reliable results
