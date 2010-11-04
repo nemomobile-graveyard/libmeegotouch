@@ -1,8 +1,38 @@
-libmeegotouch (0.20.51~1) unstable; urgency=low
+libmeegotouch (0.20.51-1) unstable; urgency=low
 
-  * Unreleased
+  * Fixes: NB#202386 - MCpuMonitor does not return reliable results
+  * Fixes: NB#178290 - MLabel aligns text incorrectly when label size is fixed small enough
+  * Fixes: NB#202471 - The visual feedback of tap&hold in list items should be delayed
+  * Fixes: NB#198255 - Not able to scroll to the top of the message once scrolled down in Reply/Replyall/Forward editors.
+  * Fixes: NB#201292 - MAction in toolbar is not a button
+  * Fixes: NB#179964 - Transparent "Letters" column overlaps search field
+  * Fixes: Hiding empty navigationbar doesn't take ComponentDisplayMode into account.
+  * Fixes: NB#200469 -  Active MDialog should consume gestures by default
+  * Fixes: NB#194970 -  Calendar; Month: Short name of the month is not displayed in Czech language
+  * Revert "Fixes: NB#195051 - Destructor causes crash in buttons"
+  * Fixes: NB#201309 - [REG] Add New Contact overlays main application view after tapping back
+  * Fixes: NB#201345 - Setting MButton disabled does not change it's appearance
+  * Fixes: NB195207 -  Physics integration doesn't stop in MPhysics2DPanning if screen is rotated while holding a finger on the screen.
+  * Fixes: NB#194995 - Button in stacked dialogs is not having proper alignment in landscape mode.
+  * Fixes: NB#195559 - While using VKB in Conversational View, previously sent message is inserted before currently written text in Text Input field
+  * Fixes: NB#185825 - Fn+Arrow key navigation does not work
+  * Fixes: NB#201527 - widgetsgallery -fulscreen segfault in MApplicationPrivate::removeWindowFromSwitcher
+  * Fixes: Don't allow exposedContentRect to exceed scene rect dimensions in relocator.
+  * Fixes: NB#199625 - MDialog button order differs from documentation
+  * Fixes: NB#190476 - Inconsistency in Open/Close "Sync with device"dialog
+  * Fixes: NB#195236 - MWideoWidget renders even when invisible
+  * Fixes: NB#189822 - MWindow::isOnDisplay() returns false when application is starting
+  * Fixes: NB#193219 - Repeated orientation locking and unlocking leaves window in a wrong orientation
+  * Fixes: NB#197404 - Double tapping on reminder option from Create event view crashes calendar
+  * Fixes: NB#199168 - Multilength strings trigger loading of all the installed fonts -> huge memory usage from nokia/arabic ttf fonts
+  * Fixes: List unit tests build break.
+  * Fixes: NB#185523 - MDetailedListItem documentation is very poor
+  * Fixes: NB#198971 - System Dialog is not changing the orientation when orientation changed from landscape to portrait.
+  * Fixes: NB#188758 - MProgressIndicatorBarView paints even when invisible
+  * Fixes: NB#198565 - MSeekBar is not signalling correctly press, value changed and release
+  * Fixes: NB#168415 - MDialog should have a property for controlling its pannability
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 28 Oct 2010 12:35:40 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 04 Nov 2010 14:13:38 +0200
 
 libmeegotouch (0.20.50-1) unstable; urgency=low
 
