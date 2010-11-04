@@ -41,6 +41,7 @@ public:
     quint64 requestPixmap(const QString &imageId, const QSize &size);
     void pixmapUpdated(const M::MThemeDaemonProtocol::PixmapHandle &handle);
     void themeChanged(const QStringList &themeInheritanceChain, const QStringList &themeLibraryNames);
+    void emitThemeChangeCompletedSignal();
     bool waitForServer(const QString &serverAddress, int timeout);
     M::MThemeDaemonProtocol::Packet waitForPacket(quint64 sequenceNumber);
     void addMostUsedPixmaps(const QList<M::MThemeDaemonProtocol::PixmapHandle>& handles);
