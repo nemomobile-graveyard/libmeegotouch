@@ -25,7 +25,6 @@
 #include <mapplicationwindow.h>
 #include <mapplicationwindow_p.h>
 #include <mapplicationpage.h>
-#include <minputmethodstate.h>
 #include <MComponentData>
 #include <MScene>
 #include <MSceneManager>
