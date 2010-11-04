@@ -112,6 +112,9 @@ uint id = 0;
 // The notification/notification group ID to use
 uint count = 1;
 
+// The notification identifier to use
+QString identifier = QString();
+
 // Prints usage information
 int usage(const char *program)
 {
@@ -129,6 +132,7 @@ int usage(const char *program)
     std::cerr << std::setw(7) << "  -i, --id=ID                The notification/notification group ID to use." << std::endl;
     std::cerr << std::setw(7) << "  -c, --count=NUMBER         The number of notifications. This parameter has no effect when the action is 'remove'" << std::endl;
     std::cerr << std::setw(7) << "  -l, --list                 List all notifications that belong to this application. Returns a count of notifications as an exit value." << std::endl;
+    std::cerr << std::setw(7) << "  -I, --identifier           Notification identifier to use" << std::endl;
     std::cerr << std::setw(7) << "      --help     display this help and exit" << std::endl;
     return -1;
 }
@@ -145,10 +149,11 @@ int parseArguments(int argc, char *argv[])
             { "count", required_argument, NULL, 'c' },
             { "help", no_argument, NULL, 'h' },
             { "list", no_argument, NULL, 'l'},
+            { "identifier", required_argument, NULL, 'I'},
             { 0, 0, 0, 0 }
         };
 
-        int c = getopt_long(argc, argv, "a:gi:c:pl", long_options, &option_index);
+        int c = getopt_long(argc, argv, "a:gi:I:c:pl", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -176,6 +181,10 @@ int parseArguments(int argc, char *argv[])
             break;
         case 'h':
             return usage(argv[0]);
+            break;
+        case 'I':
+            identifier = optarg;
+            break;
         default:
             break;
         }
@@ -222,7 +231,8 @@ int main(int argc, char *argv[])
                              toolNotification->summary().toUtf8().constData() << "\t" <<
                              toolNotification->body().toUtf8().constData() << "\t" <<
                              toolNotification->image().toUtf8().constData() << "\t" <<
-                             toolNotification->count() << std::endl;
+                             toolNotification->count() << "\t" <<
+                             toolNotification->identifier().toUtf8().constData() << std::endl;
                 delete notification;
             }
         }
@@ -269,6 +279,7 @@ int main(int argc, char *argv[])
                 group.setImage(image);
                 group.setAction(*remoteAction);
                 group.setCount(count);
+                group.setIdentifier(identifier);
                 group.publish();
                 result = group.id();
             } else {
@@ -278,6 +289,7 @@ int main(int argc, char *argv[])
                     notification.setImage(image);
                     notification.setAction(*remoteAction);
                     notification.setCount(count);
+                    notification.setIdentifier(identifier);
                     notification.publish();
                     result = notification.id();
                 } else {
@@ -285,6 +297,7 @@ int main(int argc, char *argv[])
                     notification.setImage(image);
                     notification.setAction(*remoteAction);
                     notification.setCount(count);
+                    notification.setIdentifier(identifier);
                     notification.publish();
                     result = notification.id();
                 }
@@ -299,6 +312,7 @@ int main(int argc, char *argv[])
                 group.setImage(image);
                 group.setAction(*remoteAction);
                 group.setCount(count);
+                group.setIdentifier(identifier);
                 group.publish();
             } else {
                 MNotificationToolNotification notification(id);
@@ -308,6 +322,7 @@ int main(int argc, char *argv[])
                 notification.setImage(image);
                 notification.setAction(*remoteAction);
                 notification.setCount(count);
+                notification.setIdentifier(identifier);
                 notification.publish();
             }
         }
