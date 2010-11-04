@@ -59,6 +59,9 @@ public:
 
     //! The number of items inside this notification
     uint count;
+
+    //! The identifier of the notification set by the application
+    QString identifier;
 };
 
 #endif // MNOTIFICATION_P_H

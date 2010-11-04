@@ -64,16 +64,16 @@ bool MNotificationGroup::publish()
     bool success = false;
 
     if (d->id == 0) {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull()) {
-            d->id = MNotificationManager::instance()->addGroup(d->eventType, d->summary, d->body, d->action, d->image, d->count);
+        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
+            d->id = MNotificationManager::instance()->addGroup(d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
         } else {
             d->id = MNotificationManager::instance()->addGroup(d->eventType);
         }
 
         success = d->id != 0;
     } else {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull()) {
-            success = MNotificationManager::instance()->updateGroup(d->id, d->eventType, d->summary, d->body, d->action, d->image, d->count);
+        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
+            success = MNotificationManager::instance()->updateGroup(d->id, d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
         } else {
             success = MNotificationManager::instance()->updateGroup(d->id, d->eventType);
         }
@@ -96,7 +96,7 @@ bool MNotificationGroup::remove()
 
 QList<MNotificationGroup *> MNotificationGroup::notificationGroups()
 {
-    QList<MNotificationGroup> list = MNotificationManager::instance()->notificationGroupList();
+    QList<MNotificationGroup> list = MNotificationManager::instance()->notificationGroupListWithIdentifiers();
     QList<MNotificationGroup *> notificationGroups;
     foreach(const MNotificationGroup &group, list) {
         notificationGroups.append(new MNotificationGroup(group));
@@ -115,6 +115,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationGroup &gro
     argument << d->image;
     argument << d->action;
     argument << d->count;
+    argument << d->identifier;
     argument.endStructure();
     return argument;
 }
@@ -130,6 +131,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGrou
     argument >> d->image;
     argument >> d->action;
     argument >> d->count;
+    argument >> d->identifier;
     argument.endStructure();
     return argument;
 }

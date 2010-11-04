@@ -41,6 +41,10 @@ From the above example it comes obvious that notification actions are applicatio
 
 Specifies an image that is related to the notification. Usually this means that the image is shown in a graphical representation of the notification. The image parameter can be a logical name like 'Icon-messages' or an absolute path to an image file (e.g. <em>%/usr/share/pixmaps/foo.png</em>).
 
+\subsection identifier Identifier
+
+The identifier is a string that the application can use to identify a particular notification or a notification group. It can be any string, and is by default empty.
+
 \subsection persistence Persistence
 
 Notifications can be created as persistent, in which case the notification system stores the notifications and they are restored after a reboot. The user can get a list of stored notifications with a call to the static function \c MNotification::notifications() and the list of groups with \c MNotificationGroup::notificationGroups().

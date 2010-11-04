@@ -31,19 +31,19 @@ class MNotificationManagerStub : public StubBase
 public:
     virtual void MNotificationManagerConstructor();
     virtual void MNotificationManagerDestructor();
-    virtual uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    virtual uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
     virtual uint addGroup(const QString &eventType);
-    virtual uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    virtual uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
     virtual uint addNotification(uint groupId, const QString &eventType);
     virtual bool removeGroup(uint groupId);
     virtual bool removeNotification(uint notificationId);
-    virtual bool updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    virtual bool updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
     virtual bool updateGroup(uint groupId, const QString &eventType);
-    virtual bool updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    virtual bool updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
     virtual bool updateNotification(uint notificationId, const QString &eventType);
     virtual QList<uint> notificationIdList();
-    virtual QList<MNotification> notificationList();
-    virtual QList<MNotificationGroup> notificationGroupList();
+    virtual QList<MNotification> notificationListWithIdentifiers();
+    virtual QList<MNotificationGroup> notificationGroupListWithIdentifiers();
 };
 
 // 2. IMPLEMENT STUB
@@ -56,7 +56,7 @@ void MNotificationManagerStub::MNotificationManagerDestructor()
 
 }
 
-uint MNotificationManagerStub::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+uint MNotificationManagerStub::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<const QString & >(eventType));
@@ -65,6 +65,7 @@ uint MNotificationManagerStub::addGroup(const QString &eventType, const QString 
     params.append(new Parameter<const QString & >(action));
     params.append(new Parameter<const QString & >(imageURI));
     params.append(new Parameter<uint >(count));
+    params.append(new Parameter<const QString & >(identifier));
     stubMethodEntered("addGroup", params);
     return stubReturnValue<uint>("addGroup");
 }
@@ -77,7 +78,7 @@ uint MNotificationManagerStub::addGroup(const QString &eventType)
     return stubReturnValue<uint>("addGroup");
 }
 
-uint MNotificationManagerStub::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+uint MNotificationManagerStub::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<uint >(groupId));
@@ -87,6 +88,7 @@ uint MNotificationManagerStub::addNotification(uint groupId, const QString &even
     params.append(new Parameter<const QString & >(action));
     params.append(new Parameter<const QString & >(imageURI));
     params.append(new Parameter<uint >(count));
+    params.append(new Parameter<const QString & >(identifier));
     stubMethodEntered("addNotification", params);
     return stubReturnValue<uint>("addNotification");
 }
@@ -116,7 +118,7 @@ bool MNotificationManagerStub::removeNotification(uint notificationId)
     return stubReturnValue<bool>("removeNotification");
 }
 
-bool MNotificationManagerStub::updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+bool MNotificationManagerStub::updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<uint >(groupId));
@@ -126,6 +128,7 @@ bool MNotificationManagerStub::updateGroup(uint groupId, const QString &eventTyp
     params.append(new Parameter<const QString & >(action));
     params.append(new Parameter<const QString & >(imageURI));
     params.append(new Parameter<uint >(count));
+    params.append(new Parameter<const QString & >(identifier));
     stubMethodEntered("updateGroup", params);
     return stubReturnValue<bool>("updateGroup");
 }
@@ -139,7 +142,7 @@ bool MNotificationManagerStub::updateGroup(uint groupId, const QString &eventTyp
     return stubReturnValue<bool>("updateGroup");
 }
 
-bool MNotificationManagerStub::updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+bool MNotificationManagerStub::updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<uint >(notificationId));
@@ -149,6 +152,7 @@ bool MNotificationManagerStub::updateNotification(uint notificationId, const QSt
     params.append(new Parameter<const QString & >(action));
     params.append(new Parameter<const QString & >(imageURI));
     params.append(new Parameter<uint >(count));
+    params.append(new Parameter<const QString & >(identifier));
     stubMethodEntered("updateNotification", params);
     return stubReturnValue<bool>("updateNotification");
 }
@@ -168,16 +172,16 @@ QList<uint> MNotificationManagerStub::notificationIdList()
     return stubReturnValue<QList<uint> >("notificationIdList");
 }
 
-QList<MNotification> MNotificationManagerStub::notificationList()
+QList<MNotification> MNotificationManagerStub::notificationListWithIdentifiers()
 {
-    stubMethodEntered("notificationList");
-    return stubReturnValue<QList<MNotification> >("notificationList");
+    stubMethodEntered("notificationListWithIdentifiers");
+    return stubReturnValue<QList<MNotification> >("notificationListWithIdentifiers");
 }
 
-QList<MNotificationGroup> MNotificationManagerStub::notificationGroupList()
+QList<MNotificationGroup> MNotificationManagerStub::notificationGroupListWithIdentifiers()
 {
-    stubMethodEntered("notificationGroupList");
-    return stubReturnValue<QList<MNotificationGroup> >("notificationGroupList");
+    stubMethodEntered("notificationGroupListWithIdentifiers");
+    return stubReturnValue<QList<MNotificationGroup> >("notificationGroupListWithIdentifiers");
 }
 
 
@@ -205,9 +209,9 @@ MNotificationManager *MNotificationManager::instance()
     return &manager;
 }
 
-uint MNotificationManager::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+uint MNotificationManager::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
-    return gMNotificationManagerStub->addGroup(eventType, summary, body, action, imageURI, count);
+    return gMNotificationManagerStub->addGroup(eventType, summary, body, action, imageURI, count, identifier);
 }
 
 uint MNotificationManager::addGroup(const QString &eventType)
@@ -215,9 +219,9 @@ uint MNotificationManager::addGroup(const QString &eventType)
     return gMNotificationManagerStub->addGroup(eventType);
 }
 
-uint MNotificationManager::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+uint MNotificationManager::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
-    return gMNotificationManagerStub->addNotification(groupId, eventType, summary, body, action, imageURI, count);
+    return gMNotificationManagerStub->addNotification(groupId, eventType, summary, body, action, imageURI, count, identifier);
 }
 
 uint MNotificationManager::addNotification(uint groupId, const QString &eventType)
@@ -235,9 +239,9 @@ bool MNotificationManager::removeNotification(uint notificationId)
     return gMNotificationManagerStub->removeNotification(notificationId);
 }
 
-bool MNotificationManager::updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+bool MNotificationManager::updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
-    return gMNotificationManagerStub->updateGroup(groupId, eventType, summary, body, action, imageURI, count);
+    return gMNotificationManagerStub->updateGroup(groupId, eventType, summary, body, action, imageURI, count, identifier);
 }
 
 bool MNotificationManager::updateGroup(uint groupId, const QString &eventType)
@@ -245,9 +249,9 @@ bool MNotificationManager::updateGroup(uint groupId, const QString &eventType)
     return gMNotificationManagerStub->updateGroup(groupId, eventType);
 }
 
-bool MNotificationManager::updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
+bool MNotificationManager::updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
-    return gMNotificationManagerStub->updateNotification(notificationId, eventType, summary, body, action, imageURI, count);
+    return gMNotificationManagerStub->updateNotification(notificationId, eventType, summary, body, action, imageURI, count, identifier);
 }
 
 bool MNotificationManager::updateNotification(uint notificationId, const QString &eventType)
@@ -260,14 +264,14 @@ QList<uint> MNotificationManager::notificationIdList()
     return gMNotificationManagerStub->notificationIdList();
 }
 
-QList<MNotification> MNotificationManager::notificationList()
+QList<MNotification> MNotificationManager::notificationListWithIdentifiers()
 {
-    return gMNotificationManagerStub->notificationList();
+    return gMNotificationManagerStub->notificationListWithIdentifiers();
 }
 
-QList<MNotificationGroup> MNotificationManager::notificationGroupList()
+QList<MNotificationGroup> MNotificationManager::notificationGroupListWithIdentifiers()
 {
-    return gMNotificationManagerStub->notificationGroupList();
+    return gMNotificationManagerStub->notificationGroupListWithIdentifiers();
 }
 
 MNotificationManagerProxy::MNotificationManagerProxy(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)

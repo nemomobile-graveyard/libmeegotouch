@@ -117,6 +117,12 @@ class M_CORE_EXPORT MNotification : public QObject
      */
     Q_PROPERTY(uint count READ count WRITE setCount)
 
+    /*!
+      \property MNotification::identifier
+      \brief The identifier string of the notification. The identifier is empty by default.
+    */
+    Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier)
+
 public:
     /*!
      * Predefined event types. These are just the known types; applications
@@ -265,6 +271,21 @@ public:
      * \return the number of items represented by this notification
      */
     uint count() const;
+
+    /*!
+     * Sets an identifier for the notification. Can be any string the application
+     * needs to identify this particular notification.
+     *
+     * \param id the identifier
+     */
+    void setIdentifier(const QString &identifier);
+
+    /*!
+     * Gets the identifier of the notification.
+     *
+     * \return the identifier.
+     */
+    QString identifier() const;
 
     /*!
      * Publishes the notification. If the notification has not yet been

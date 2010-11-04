@@ -65,7 +65,7 @@ void Ut_MNotification::testGettingAllNotifications()
     notifications.append(TestNotification(3));
     notifications.append(TestNotification(42));
     notifications.append(TestNotification(100));
-    gDefaultMNotificationManagerStub.stubSetReturnValue("notificationList", notifications);
+    gDefaultMNotificationManagerStub.stubSetReturnValue("notificationListWithIdentifiers", notifications);
 
     QList<MNotification *> notificationList = MNotification::notifications();
     QCOMPARE(notificationList.count(), notifications.count());

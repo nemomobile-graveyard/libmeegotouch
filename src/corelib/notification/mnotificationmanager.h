@@ -67,9 +67,10 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this group
+     * \param identifier the identifier string of the notification
      * \return the ID of the new notification group
      */
-    uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
 
     /*!
      * Adds a new notification group.
@@ -89,9 +90,10 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this notification
+     * \param identifier the identifier string of the notification
      * \return the ID of the new notification
      */
-    uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1);
+    uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1, const QString &identifier = QString());
 
     /*!
      * Adds a new notification.
@@ -128,9 +130,10 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this group
+     * \param identifier the identifier string of the notification
      * \return true if the update succeeded, false otherwise
      */
-    bool updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    bool updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier = QString());
 
     /*!
      * Updates an existing notification group.
@@ -151,9 +154,10 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this notification
+     * \param identifier the identifier string of the notification
      * \return true if the update succeeded, false otherwise
      */
-    bool updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1);
+    bool updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1, const QString &identifier = QString());
 
     /*!
      * Updates an existing notification.
@@ -177,14 +181,14 @@ public:
      *
      * \return list of notifications
      */
-    QList<MNotification> notificationList();
+    QList<MNotification> notificationListWithIdentifiers();
 
     /*!
      * Returns a list of notification groups owned by this application
      *
      * \return list of notification groups
      */
-    QList<MNotificationGroup> notificationGroupList();
+    QList<MNotificationGroup> notificationGroupListWithIdentifiers();
 };
 
 //! \internal_end

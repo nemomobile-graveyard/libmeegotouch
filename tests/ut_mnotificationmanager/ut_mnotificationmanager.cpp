@@ -250,11 +250,13 @@ void Ut_MNotificationManager::testAddNotification()
     QCOMPARE(asyncCallMethods.count(), 0);
     notification2.setCount(42);
     QCOMPARE(asyncCallMethods.count(), 0);
+    notification2.setIdentifier("testidentifier");
+    QCOMPARE(asyncCallMethods.count(), 0);
     notification2.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 8);
+    QCOMPARE(asyncCallArguments.at(0).count(), 9);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(0));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
@@ -263,6 +265,7 @@ void Ut_MNotificationManager::testAddNotification()
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
     QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
+    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant("testidentifier"));
 }
 
 void Ut_MNotificationManager::testUpdateNotification()
@@ -279,11 +282,12 @@ void Ut_MNotificationManager::testUpdateNotification()
     notification.setImage("image");
     notification.setCount(42);
     notification.setAction(action);
+    notification.setIdentifier("testidentifier");
     notification.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("updateNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 8);
+    QCOMPARE(asyncCallArguments.at(0).count(), 9);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(notification.id()));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
@@ -292,6 +296,7 @@ void Ut_MNotificationManager::testUpdateNotification()
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
     QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
+    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant("testidentifier"));
 }
 
 void Ut_MNotificationManager::testRemoveNotification()
@@ -339,11 +344,13 @@ void Ut_MNotificationManager::testAddGroup()
     QCOMPARE(asyncCallMethods.count(), 0);
     group2.setCount(42);
     QCOMPARE(asyncCallMethods.count(), 0);
+    group2.setIdentifier("testidentifier");
+    QCOMPARE(asyncCallMethods.count(), 0);
     group2.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addGroup"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 7);
+    QCOMPARE(asyncCallArguments.at(0).count(), 8);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant("event"));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("summary"));
@@ -351,6 +358,7 @@ void Ut_MNotificationManager::testAddGroup()
     QCOMPARE(asyncCallArguments.at(0).at(4), QVariant(action.toString()));
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("42"));
+    QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("testidentifier"));
 }
 
 void Ut_MNotificationManager::testUpdateGroup()
@@ -367,11 +375,12 @@ void Ut_MNotificationManager::testUpdateGroup()
     group.setImage("image");
     group.setCount(42);
     group.setAction(action);
+    group.setIdentifier("testidentifier");
     group.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("updateGroup"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 8);
+    QCOMPARE(asyncCallArguments.at(0).count(), 9);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group.id()));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
@@ -380,6 +389,7 @@ void Ut_MNotificationManager::testUpdateGroup()
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
     QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
+    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant("testidentifier"));
 }
 
 void Ut_MNotificationManager::testRemoveGroup()
@@ -440,7 +450,7 @@ void Ut_MNotificationManager::testAddToGroup()
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 8);
+    QCOMPARE(asyncCallArguments.at(0).count(), 9);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group2.id()));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
@@ -449,6 +459,7 @@ void Ut_MNotificationManager::testAddToGroup()
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
     QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("1"));
+    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant(""));
 }
 
 void Ut_MNotificationManager::testNotificationIdList()
@@ -462,18 +473,18 @@ void Ut_MNotificationManager::testNotificationIdList()
 
 void Ut_MNotificationManager::testNotificationList()
 {
-    MNotificationManager::instance()->notificationList();
+    MNotificationManager::instance()->notificationListWithIdentifiers();
     QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("notificationList"));
+    QCOMPARE(asyncCallMethods.at(0), QString("notificationListWithIdentifiers"));
     QCOMPARE(asyncCallArguments.count(), 1);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
 }
 
 void Ut_MNotificationManager::testNotificationGroupList()
 {
-    MNotificationManager::instance()->notificationGroupList();
+    MNotificationManager::instance()->notificationGroupListWithIdentifiers();
     QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("notificationGroupList"));
+    QCOMPARE(asyncCallMethods.at(0), QString("notificationGroupListWithIdentifiers"));
     QCOMPARE(asyncCallArguments.count(), 1);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
 }

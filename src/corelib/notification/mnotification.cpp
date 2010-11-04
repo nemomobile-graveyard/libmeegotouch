@@ -173,22 +173,34 @@ uint MNotification::count() const
     return d->count;
 }
 
+void MNotification::setIdentifier(const QString &identifier)
+{
+    Q_D(MNotification);
+    d->identifier = identifier;
+}
+
+QString MNotification::identifier() const
+{
+    Q_D(const MNotification);
+    return d->identifier;
+}
+
 bool MNotification::publish()
 {
     Q_D(MNotification);
 
     bool success = false;
     if (d->id == 0) {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull()) {
-            d->id = MNotificationManager::instance()->addNotification(d->groupId, d->eventType, d->summary, d->body, d->action, d->image, d->count);
+        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
+            d->id = MNotificationManager::instance()->addNotification(d->groupId, d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
         } else {
             d->id = MNotificationManager::instance()->addNotification(d->groupId, d->eventType);
         }
 
         success = d->id != 0;
     } else {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull()) {
-            success = MNotificationManager::instance()->updateNotification(d->id, d->eventType, d->summary, d->body, d->action, d->image, d->count);
+        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
+            success = MNotificationManager::instance()->updateNotification(d->id, d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
         } else {
             success = MNotificationManager::instance()->updateNotification(d->id, d->eventType);
         }
@@ -219,7 +231,7 @@ bool MNotification::isPublished() const
 
 QList<MNotification *> MNotification::notifications()
 {
-    QList<MNotification> list = MNotificationManager::instance()->notificationList();
+    QList<MNotification> list = MNotificationManager::instance()->notificationListWithIdentifiers();
     QList<MNotification *> notifications;
     foreach(const MNotification &notification, list) {
         notifications.append(new MNotification(notification));
@@ -239,6 +251,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const MNotification &notifica
     argument << d->image;
     argument << d->action;
     argument << d->count;
+    argument << d->identifier;
     argument.endStructure();
     return argument;
 }
@@ -255,6 +268,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotification &no
     argument >> d->image;
     argument >> d->action;
     argument >> d->count;
+    argument >> d->identifier;
     argument.endStructure();
     return argument;
 }
@@ -271,5 +285,6 @@ MNotification &MNotification::operator=(const MNotification &notification)
     d->image = dn->image;
     d->action = dn->action;
     d->count = dn->count;
+    d->identifier = dn->identifier;
     return *this;
 }
