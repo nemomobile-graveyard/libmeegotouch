@@ -793,6 +793,8 @@ void Ut_MTextEdit::testMaxLength()
 
     MTextEdit subject(lineMode);
     const int initialMaxLength = subject.maxLength();
+    // If maxLength is negative, it should have the same effect as zero.
+    const int resultMaxLength(qMax(0, maxLength));
 
     for (int i = 0; i < 3; ++i) {
         qDebug() << "case nr." << i << ".................";
@@ -825,21 +827,16 @@ void Ut_MTextEdit::testMaxLength()
             expectedText.replace(QChar('\n'), QChar(' '));
         }
 
-        // If maxLength is negative, treat as if zero.
-        if (maxLength < 0) {
-            maxLength = 0;
-        }
-
         // Check that correct value was stored.
-        QCOMPARE(subject.maxLength(), maxLength);
+        QCOMPARE(subject.maxLength(), resultMaxLength);
 
         // This is what should happen to the text.
-        expectedText.truncate(maxLength);
+        expectedText.truncate(resultMaxLength);
 
         QCOMPARE(subject.text(), expectedText);
 
         // Length must always be equal or less than maxLength.
-        QVERIFY(subject.text().length() <= maxLength);
+        QVERIFY(subject.text().length() <= resultMaxLength);
     }
 }
 
