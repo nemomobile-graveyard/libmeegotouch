@@ -33,7 +33,6 @@ PhoneBookCell::PhoneBookCell()
     layout(NULL),
     landscapePolicy(NULL),
     portraitPolicy(NULL),
-    spinner(NULL),
     landscapeTitleLabel(NULL),
     portraitTitleLabel(NULL),
     subtitleLabel(NULL),
@@ -43,9 +42,6 @@ PhoneBookCell::PhoneBookCell()
 
 PhoneBookCell::~PhoneBookCell()
 {
-    if (spinner)
-        delete spinner;
-
     if (icon)
         delete icon;
 }
@@ -62,12 +58,7 @@ MLayout *PhoneBookCell::createLayout()
     landscapePolicy->setSpacing(0);
 
     // add to layout
-    if (!imageWidget()->pixmap())
-        landscapePolicy->addItem(spinnerWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-    else
-        landscapePolicy->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-
-
+    landscapePolicy->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
     landscapePolicy->addItem(landscapeTitleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
     landscapePolicy->addItem(subtitleLabelWidget(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
     landscapePolicy->addItem(new QGraphicsWidget(this), 2, 1);
@@ -76,28 +67,13 @@ MLayout *PhoneBookCell::createLayout()
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
 
-    if (!imageWidget()->pixmap())
-        portraitPolicy->addItem(spinnerWidget(), Qt::AlignLeft | Qt::AlignVCenter);
-    else
-        portraitPolicy->addItem(imageWidget(), Qt::AlignLeft | Qt::AlignVCenter);
-
+    portraitPolicy->addItem(imageWidget(), Qt::AlignLeft | Qt::AlignVCenter);
     portraitPolicy->addItem(portraitTitleLabelWidget(), Qt::AlignLeft | Qt::AlignVCenter);
 
     layout->setPortraitPolicy(portraitPolicy);
     layout->setLandscapePolicy(landscapePolicy);
 
     return layout;
-}
-
-MProgressIndicator *PhoneBookCell::spinnerWidget()
-{
-    if (!spinner) {
-        // spinner
-        spinner = new MProgressIndicator(NULL, MProgressIndicator::spinnerType);
-        spinner->setUnknownDuration(true);
-        spinner->setObjectName("CommonSpinner");
-    }
-    return spinner;
 }
 
 MLabel *PhoneBookCell::landscapeTitleLabelWidget()
@@ -137,7 +113,7 @@ MImageWidget *PhoneBookCell::imageWidget()
         // icon
         icon = new MImageWidget();
         icon->setObjectName("CommonMainIcon");
-        icon->setVisible(false);
+        icon->setImage("icon-m-content-avatar-placeholder");
     }
     return icon;
 }
@@ -179,29 +155,9 @@ QImage PhoneBookCell::image()
 
 void PhoneBookCell::setImage(const QImage &iconImage)
 {
-    if (layout && (iconImage.isNull() || imageWidget()->image().isEmpty())) {
-        if (layout->policy() == landscapePolicy) {
-            if (landscapePolicy->itemAt(0, 0) == spinnerWidget() && !iconImage.isNull()) {
-                landscapePolicy->removeItem(spinnerWidget());
-                landscapePolicy->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            } else if (landscapePolicy->itemAt(0, 0) == imageWidget() && iconImage.isNull()) {
-                landscapePolicy->removeItem(imageWidget());
-                landscapePolicy->addItem(spinnerWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            }
-        } else if (layout->policy() == portraitPolicy) {
-            if (portraitPolicy->itemAt(0) == imageWidget() && iconImage.isNull()) {
-                portraitPolicy->removeAt(0);
-                portraitPolicy->insertItem(0, spinnerWidget(), Qt::AlignLeft | Qt::AlignVCenter);
-            } else if (portraitPolicy->itemAt(0) == spinnerWidget() && !iconImage.isNull()) {
-                portraitPolicy->removeAt(0);
-                portraitPolicy->insertItem(0, imageWidget(), Qt::AlignLeft | Qt::AlignVCenter);
-            }
-        }
-    }
-
-    if (!iconImage.isNull()) {
+    if (!iconImage.isNull())
         imageWidget()->setImage(iconImage);
-        imageWidget()->setVisible(true);
-    }
+    else
+        imageWidget()->setImage("icon-m-content-avatar-placeholder");
 }
 
