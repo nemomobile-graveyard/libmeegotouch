@@ -1687,7 +1687,9 @@ QList<QGraphicsWidget*> MSceneManagerPrivate::findRootElementsForMoveAnimation(M
 
     foreach(QGraphicsWidget *rootElement, rootElements) {
         foreach(QGraphicsItem *item, rootElement->childItems()) {
-            MSceneWindow *win = static_cast<MSceneWindow*>(item);
+            // Item may not be MSceneWindow when scene window dislocation is in progress.
+            QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
+            MSceneWindow *win = qobject_cast<MSceneWindow *>(widget);
             if (win && animatedSceneWindowTypes.contains(win->windowType())) {
                 if ((win->alignment() & Qt::AlignVertical_Mask) ==
                     (sceneWindow->alignment() & Qt::AlignVertical_Mask))
