@@ -54,6 +54,7 @@ public:
     void updateExtendedVerticalRange();
     void applyAutoRange();
     void scrollTo(const QPointF &panningPosition);
+    bool isTopmostVerticallyPannableViewport() const;
 
     void sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
             MOnDisplayChangeEvent *event);
@@ -64,6 +65,7 @@ public:
     void _q_pannedWidgetWidthOutOfViewport();
     void _q_pannedWidgetHeightOutOfViewport();
     void _q_ensureFocusedPannedWidgetIsVisible();
+    void _q_handleInputMethodAreaChanged(const QRect &);
 };
 
 #endif

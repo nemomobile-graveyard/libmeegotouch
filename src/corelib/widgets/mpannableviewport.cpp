@@ -27,6 +27,8 @@
 #include "mpannableviewport_p.h"
 #include "mpannableviewportlayout.h"
 
+#include "minputmethodstate.h"
+
 #include <mscenemanager.h>
 #include <mondisplaychangeevent.h>
 
@@ -88,9 +90,15 @@ void MPannableViewportPrivate::setAutoScrollingExtension(qreal extension)
 
 void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
 {
+    Q_Q(MPannableViewport);
+
+    // Assume only bottom part of pannable area is covered by SIP.
+    const int overlappingHeight = (q->mapRectFromScene(imArea).toRect()
+                                   & q->contentsRect().toRect()).height();
+
     // Increase panning range to so that user can pan areas beneath
     // software input panel visible.
-    inputMethodAreaHeight = imArea.height();
+    inputMethodAreaHeight = overlappingHeight;
     updateExtendedVerticalRange();
 }
 
@@ -259,6 +267,28 @@ void MPannableViewportPrivate::_q_ensureFocusedPannedWidgetIsVisible()
     }
 }
 
+bool MPannableViewportPrivate::isTopmostVerticallyPannableViewport() const
+{
+    Q_Q(const MPannableViewport);
+    const QGraphicsWidget* parentWidget = q->parentWidget();
+
+    while(parentWidget) {
+        const MPannableViewport *viewport = qobject_cast<const MPannableViewport *>(parentWidget);
+        if (viewport && (viewport->panDirection() & Qt::Vertical)) {
+            return false;
+        }
+        parentWidget = parentWidget->parentWidget();
+    }
+    return true;
+}
+
+void MPannableViewportPrivate::_q_handleInputMethodAreaChanged(const QRect &newArea)
+{
+    if (isTopmostVerticallyPannableViewport()) {
+        setInputMethodArea(newArea);
+    }
+}
+
 MPannableViewport::MPannableViewport(QGraphicsItem *parent)
     : MPannableWidget(new MPannableViewportPrivate(), new MPannableViewportModel, parent)
 {
@@ -287,6 +317,8 @@ MPannableViewport::MPannableViewport(QGraphicsItem *parent)
             SIGNAL(panningStopped()),
             SLOT(_q_resolvePannedWidgetIsOnDisplay()));
 
+    connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
+            this, SLOT(_q_handleInputMethodAreaChanged(QRect)));
 }
 
 MPannableViewport::~MPannableViewport()

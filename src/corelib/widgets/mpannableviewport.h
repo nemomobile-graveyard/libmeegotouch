@@ -182,6 +182,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_pannedWidgetWidthOutOfViewport())
     Q_PRIVATE_SLOT(d_func(), void _q_pannedWidgetHeightOutOfViewport())
     Q_PRIVATE_SLOT(d_func(), void _q_ensureFocusedPannedWidgetIsVisible())
+    Q_PRIVATE_SLOT(d_func(), void _q_handleInputMethodAreaChanged(const QRect &))
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members
     friend class Ut_MPannableViewport;
