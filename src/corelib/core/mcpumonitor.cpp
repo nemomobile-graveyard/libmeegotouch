@@ -79,8 +79,9 @@ int MCpuMonitor::usage()
 void MCpuMonitor::start(unsigned msec)
 {
     Q_D(MCpuMonitor);
-
+#ifdef __linux__
     d->getCpuUsageInformation(d->jiffies_total, d->jiffies_idle);
+#endif
     d->timer.start(msec);
 }
 
