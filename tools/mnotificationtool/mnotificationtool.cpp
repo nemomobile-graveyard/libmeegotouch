@@ -193,7 +193,7 @@ int parseArguments(int argc, char *argv[])
     if (!listMode) {
         if (toolAction == Undefined ||
                 (toolAction == Add && argc < optind + 1) ||
-                (toolAction == Update && argc < optind + 4) ||
+                (toolAction == Update && argc < optind + 1) ||
                 (toolAction == Update && id == 0)) {
             return usage(argv[0]);
         }
