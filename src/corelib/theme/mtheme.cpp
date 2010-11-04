@@ -397,13 +397,14 @@ void MThemePrivate::cleanupGarbage()
     }
 }
 
-void MThemePrivate::extractDataForStyleClass(const char *styleClassName,
+bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
                                              QList<const MStyleSheet *> &sheets,
                                              QList<QByteArray> &styleMetaObjectHierarchy)
 {
     // Go through the inheritance chain and add stylesheets from each assembly
     const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
-    Q_ASSERT(mobj);
+    if (!mobj)
+        return false;
 
     do {
         styleMetaObjectHierarchy.append(mobj->className());
@@ -430,6 +431,8 @@ void MThemePrivate::extractDataForStyleClass(const char *styleClassName,
         }
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
+
+    return true;
 }
 
 QList<const MStyleSheet *> MThemePrivate::extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,
@@ -478,7 +481,8 @@ const MStyle *MTheme::style(const char *styleClassName,
     QList<const MStyleSheet *> sheets;
 
     QList<QByteArray> styleMetaObjectHierarchy;
-    d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy);
+    if (!d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy))
+         return 0;
 
     // Get parent data by traversing the MWidgetController pointer we have
     QVector<MStyleSheetPrivate::ParentData> parentsData = MStyleSheetPrivate::extractParentsData(parent);
@@ -527,7 +531,9 @@ const MStyle *MTheme::style(const char *styleClassName,
     QList<const MStyleSheet *> sheets;
 
     QList<QByteArray> styleMetaObjectHierarchy;
-    d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy);
+    if (!d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy))
+         return 0;
+
 
     // Get parent data based on the parentClassHierarchies parameter...
     QVector<MStyleSheetPrivate::ParentData> parentsData(parentClassHierarchies.size());
