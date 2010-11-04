@@ -384,6 +384,12 @@ void Ut_MTextEdit::testSetText()
     subject->setText(""); // empty string should be always ok
     QCOMPARE(mySpy2.count(), currentSpyCount + 1);
     QCOMPARE(m_sic->resetCallCount, ++resetCallCount);
+
+    // Test line break filtering with a single line text edit
+    const QString input(QString("1\n2") + QChar(0x2028) +"3" + QChar(0x2029) + "4\r5\r\n");
+    MTextEdit singleLineSubject(MTextEditModel::SingleLine);
+    singleLineSubject.setText(input);
+    QCOMPARE(singleLineSubject.text(), QString("1 2 3 4 5 "));
 }
 
 

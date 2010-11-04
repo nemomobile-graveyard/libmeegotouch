@@ -1827,7 +1827,7 @@ bool MTextEdit::setText(const QString &text)
     filteredText.truncate(maxLength());
 
     if (lineMode() == MTextEditModel::SingleLine) {
-        filteredText.replace(QChar('\n'), QChar(' '));
+        filteredText = d->replaceLineBreaks(filteredText, QChar(' '));
     }
 
     d->cursor()->insertText(filteredText);
