@@ -12,5 +12,6 @@ HEADERS += \
 
 support_files.files += \
     ut_mtheme.svg \
+    ut_mtheme_second.svg \
 
 include(../common_bot.pri)
