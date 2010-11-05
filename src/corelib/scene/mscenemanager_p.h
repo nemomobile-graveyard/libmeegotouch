@@ -75,8 +75,10 @@ class MSceneManagerPrivate
 
 public:
 
-    void init(MScene *scene);
+    MSceneManagerPrivate();
     virtual ~MSceneManagerPrivate();
+
+    void init(MScene *scene);
 
     enum WindowTypeZ {
         PlainSceneWindow = 0,

@@ -94,22 +94,31 @@ namespace
     }
 }
 
+MSceneManagerPrivate::MSceneManagerPrivate()
+    :scene(0)
+    ,rootElement(0)
+    ,homeButtonRootElement(0)
+    ,navigationBarRootElement(0)
+    ,dockWidgetRootElement(0)
+    ,orientationAnimation(0)
+    ,pageSwitchAnimation(0)
+    ,angle(M::Angle0)
+    ,newAngle(M::Angle0)
+    ,pendingRotation(0)
+    ,q_ptr(0)
+    ,eventEater(0)
+    ,styleContainer(0)
+#ifdef Q_WS_X11
+    ,statusBarGeometryPropertyWasSet(false)
+#endif
+{
+}
+
 void MSceneManagerPrivate::init(MScene *scene)
 {
     Q_Q(MSceneManager);
 
     this->scene = scene;
-
-    currentPage = 0;
-
-    alteredSceneWindow = 0;
-    sceneWindowTranslation = QPoint();
-
-    statusBar = 0;
-
-    pendingRotation = 0;
-
-    styleContainer = 0;
 
     initOrientationAngles();
 
@@ -145,10 +154,6 @@ void MSceneManagerPrivate::init(MScene *scene)
     setOrientationAngleWithoutAnimation(newAngle);
 
     q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()), q, SLOT(_q_updateRootElementsPositions()));
-
-#ifdef Q_WS_X11
-    statusBarGeometryPropertyWasSet = false;
-#endif
 }
 
 void MSceneManagerPrivate::initOrientationAngles()
