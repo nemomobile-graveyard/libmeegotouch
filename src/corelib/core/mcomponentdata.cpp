@@ -591,6 +591,10 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
     if (!useSoftwareRendering.isNull())
         softwareRendering = true;
 
+    QByteArray useShowCursor = qgetenv("M_USE_SHOW_CURSOR");
+    if (!useShowCursor.isNull())
+        showCursor = true;
+
     // Configure application according to switches
     for (int i = 1; i < argc; ++i) {
         QString s(argv[i]);
