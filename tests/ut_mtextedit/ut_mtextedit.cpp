@@ -2348,46 +2348,50 @@ void Ut_MTextEdit::testCloseSipOnHide()
 void Ut_MTextEdit::testInsertMultiLineText_data()
 {
     QTest::addColumn<MTextEditModel::LineMode>("lineMode");
-    QTest::addColumn<QString>("text");
-    QTest::addColumn<QString>("expectedText");
-    QTest::addColumn<QString>("expectedText2");
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("output");
+    QTest::addColumn<QString>("outputCommit");
+    QTest::addColumn<QString>("outputPreedit");
 
     const QString sampleText(QString("1") + QChar('\n') + "2" + QChar(0x2028) +"3" + QChar(0x2029));
 
-    QTest::newRow("single line entry") << MTextEditModel::SingleLine << sampleText << QString("1 2 3 ")    << QString("12 3 ");
-    QTest::newRow("multi line entry")  << MTextEditModel::MultiLine  << sampleText << QString("1\n2\n3\n") << QString("1\n2\n3\n");
+    QTest::newRow("single line entry") << MTextEditModel::SingleLine << sampleText
+                                       << QString("1 2 3 ") << QString("1 2 3")    << QString("1 2 3 ");
+    QTest::newRow("multi line entry")  << MTextEditModel::MultiLine  << sampleText
+                                       << QString("1\n2\n3\n") << QString("1\n2\n3\n") << QString("1 2 3 ");
 }
 
 void Ut_MTextEdit::testInsertMultiLineText()
 {
     QFETCH(MTextEditModel::LineMode, lineMode);
-    QFETCH(QString, text);
-    QFETCH(QString, expectedText);
-    QFETCH(QString, expectedText2);
+    QFETCH(QString, input);
+    QFETCH(QString, output);
+    QFETCH(QString, outputCommit);
+    QFETCH(QString, outputPreedit);
 
     MTextEdit subject(lineMode);
 
     QClipboard *clipboard = QApplication::clipboard();
     QVERIFY(clipboard != 0);
 
-    clipboard->setText(text);
+    clipboard->setText(input);
     subject.paste();
-    QCOMPARE(subject.text(), expectedText);
+    QCOMPARE(subject.text(), output);
 
     subject.clear();
-    QInputMethodEvent preeditEvent(text, QList<QInputMethodEvent::Attribute>());
+    QInputMethodEvent preeditEvent(input, QList<QInputMethodEvent::Attribute>());
     subject.inputMethodEvent(&preeditEvent);
-    QCOMPARE(subject.text(), expectedText2);
+    QCOMPARE(subject.text(), outputPreedit);
 
     subject.clear();
     QInputMethodEvent commitEvent("", QList<QInputMethodEvent::Attribute>());
-    commitEvent.setCommitString(text);
-    subject.inputMethodEvent(&preeditEvent);
-    QCOMPARE(subject.text(), expectedText2);
+    commitEvent.setCommitString(input);
+    subject.inputMethodEvent(&commitEvent);
+    QCOMPARE(subject.text(), outputCommit);
 
     subject.clear();
-    subject.insert(text);
-    QCOMPARE(subject.text(), expectedText);
+    subject.insert(input);
+    QCOMPARE(subject.text(), output);
 }
 
 void Ut_MTextEdit::testArrowKeyNavigation_data()

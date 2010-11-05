@@ -2148,14 +2148,22 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     QString commitString = event->commitString();
     bool emitReturnPressed = false;
 
-    if (lineMode() == MTextEditModel::SingleLine) {
+    preedit = d->replaceLineBreaks(preedit, " ");
+
+    if ((lineMode() == MTextEditModel::SingleLine) && !commitString.isEmpty()) {
         // FIXME: remove \n-check once VKB has been changed to send \r as return
         emitReturnPressed = commitString.contains('\n') || commitString.contains('\r');
 
-        preedit.remove('\n');
-        commitString.remove('\n');
+        // Remove trailing line breaks
+        int i = commitString.length() - 1;
+        for (; i >= 0; --i) {
+            if (!LineBreakSet.contains(commitString[i])) {
+                break;
+            }
+        }
+        commitString.truncate(i + 1);
 
-        preedit = d->replaceLineBreaks(preedit, QChar(' '));
+        // Replace other line breaks with space
         commitString = d->replaceLineBreaks(commitString, QChar(' '));
     } else if (lineMode() == MTextEditModel::MultiLine) {
         commitString.replace("\r", "\n");
