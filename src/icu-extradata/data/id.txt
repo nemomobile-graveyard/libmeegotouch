@@ -10,7 +10,7 @@ id{
                 "HH.mm.ss z",
                 "HH.mm.ss",
                 "HH.mm",
-                "EEEE, dd MMMM yyyy",
+                "EEEE, d MMMM yyyy",
                 "d MMMM yyyy",
                 "d MMM yyyy",
                 "d/M/yy",
