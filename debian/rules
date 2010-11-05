@@ -69,10 +69,11 @@ else
      MAKEDOCS = 0
 endif
 
-# uncomment this once the meego graphicssystem should be used
-#ifeq ($(DEB_BUILD_ARCH),armel)
-#     OPTIONS += -meegographicssystem
-#endif
+ifeq ($(DEB_BUILD_ARCH),armel)
+    ifneq (,$(findstring meegographicssystem,$(DEB_BUILD_OPTIONS)))
+         OPTIONS += -meegographicssystem
+    endif
+endif
 
 # Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
 ifneq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
