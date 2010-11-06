@@ -90,9 +90,11 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 
 MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     delete videoRouteProperty;
     delete topEdgeProperty;
     delete isCoveredProperty;
+#endif
 }
 
 void MOrientationTrackerPrivate::initContextSubscriber()
@@ -222,6 +224,11 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
             }
         }
     }
+#else
+    Q_UNUSED(angle);
+    Q_UNUSED(isKeyboardOpen);
+    Q_UNUSED(isDeviceFlat);
+    Q_UNUSED(tvIsConnected);
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
 
