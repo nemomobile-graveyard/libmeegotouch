@@ -121,14 +121,34 @@ void MButtonViewPrivate::_q_applyQueuedStyleModeChange()
     }
 }
 
+void MButtonViewPrivate::_q_finishBlinkEffect()
+{
+    Q_Q(MButtonView);
+
+    q->style().setModePressed();
+    updateItemsAfterModeChange();
+    q->update();
+
+    styleModeChangeTimer->start(pressTimeout());
+}
+
 void MButtonViewPrivate::refreshStyleMode()
 {
     Q_Q(MButtonView);
 
     if (controller->isEnabled()) {
         if (q->model()->down()) {
+            if (blinkTimer->isActive()) {
+                // very unlikely to happen, but check it anyway
+                return;
+            }
             if (styleModeChangeTimer->isActive()) {
-                styleModeChangeTimer->start(pressTimeout());
+                styleModeChangeTimer->stop();
+                q->style().setModeDefault();
+                updateItemsAfterModeChange();
+                q->update();
+
+                blinkTimer->start(M_PRESS_BLINK_TIMEOUT);
                 return;
             }
             styleModeChangeTimer->start(pressTimeout());
@@ -146,6 +166,13 @@ void MButtonViewPrivate::refreshStyleMode()
         styleModeChangeTimer->stop();
         q->style().setModeDisabled();
     }
+
+    updateItemsAfterModeChange();
+}
+
+void MButtonViewPrivate::updateItemsAfterModeChange()
+{
+    Q_Q(MButtonView);
 
     label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
     label->setFont(q->style()->font());
@@ -379,6 +406,10 @@ MButtonView::MButtonView(MButton *controller) :
     d->styleModeChangeTimer = new QTimer(this);
     d->styleModeChangeTimer->setSingleShot(true);
     connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
+
+    d->blinkTimer = new QTimer(this);
+    d->blinkTimer->setSingleShot(true);
+    connect(d->blinkTimer, SIGNAL(timeout()), SLOT(_q_finishBlinkEffect()));
 }
 
 MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
@@ -394,6 +425,10 @@ MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
     d->styleModeChangeTimer = new QTimer(this);
     d->styleModeChangeTimer->setSingleShot(true);
     connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
+
+    d->blinkTimer = new QTimer(this);
+    d->blinkTimer->setSingleShot(true);
+    connect(d->blinkTimer, SIGNAL(timeout()), SLOT(_q_finishBlinkEffect()));
 }
 
 MButtonView::~MButtonView()

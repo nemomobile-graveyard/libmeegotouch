@@ -30,4 +30,8 @@
 // a widget is maintained
 #define M_PRESS_STYLE_TIMEOUT 250
 
+// Time in milliseconds for how long a button will go to unpressed state when
+// it's clicked again before the pressed animation gets finished
+#define M_PRESS_BLINK_TIMEOUT 50
+
 #endif

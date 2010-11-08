@@ -71,6 +71,7 @@ public:
 
     MLabel *label;
     QTimer *styleModeChangeTimer;
+    QTimer *blinkTimer;
 
     IconOrigin iconOrigin;
     IconOrigin toggledIconOrigin;
@@ -92,6 +93,9 @@ public:
     void loadIcon(const QString &newIconId, const QSize &newIconSize, QIcon::Mode mode = QIcon::Normal);
 
     void _q_applyQueuedStyleModeChange();
+    void _q_finishBlinkEffect();
+
+    void updateItemsAfterModeChange();
 
     int pressTimeout() const;
 };
