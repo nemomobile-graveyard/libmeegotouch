@@ -58,7 +58,7 @@ public:
      *  QGraphicsLinearLayout does not expose this information to us.  This is
      *  basically q->count() + the number of stretches added/inserted. */
     int rowCount;
-    
+
     bool notifyWidgetsOfLayoutPositionEnabled;
 };
 

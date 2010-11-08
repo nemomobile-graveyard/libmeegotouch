@@ -27,9 +27,6 @@
 MGridLayoutPolicyPrivate::MGridLayoutPolicyPrivate(MLayout *l) :
     MAbstractLayoutPolicyPrivate(l), engineWidget(new QGraphicsWidget), engine(new QGraphicsGridLayout(engineWidget))
 {
-    engineWidget->setContentsMargins(0, 0, 0, 0);
-    engineWidget->setMinimumSize(0, 0);
-    engineWidget->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 }
 
 MGridLayoutPolicyPrivate::~MGridLayoutPolicyPrivate()
