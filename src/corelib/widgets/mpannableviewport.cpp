@@ -43,11 +43,10 @@ namespace
 
 MPannableViewportPrivate::MPannableViewportPrivate()
     : MPannableWidgetPrivate(),
-      currentRange(QRectF()),
       pannedWidget(0),
       viewportLayout(0),
       positionIndicator(0),
-      rangeExtension(0),
+      rangeHeightExtension(0),
       autoScrollingExtension(0),
       inputMethodAreaHeight(0)
 {
@@ -59,8 +58,25 @@ MPannableViewportPrivate::~MPannableViewportPrivate()
 
 void MPannableViewportPrivate::setNewRange(const QRectF &newRange)
 {
-    currentRange = newRange.adjusted(0, 0, 0, rangeExtension);
-    recalculatePhysRange();
+    Q_Q(MPannableViewport);
+
+    QSizeF physRangeSize(newRange.size());
+
+    if (physRangeSize.width() < 0.0) {
+        physRangeSize.setWidth(0.0);
+    }
+
+    if (physRangeSize.height() < 0.0) {
+        physRangeSize.setHeight(0.0);
+    }
+
+    const QRectF physRange(newRange.topLeft(),
+                           physRangeSize + QSizeF(0, rangeHeightExtension));
+
+    if (physRange != q->physics()->range()) {
+        q->physics()->setRange(physRange);
+        emit q->rangeChanged(q->range());
+    }
 }
 
 void MPannableViewportPrivate::setAutoScrollingExtension(qreal extension)
@@ -80,12 +96,25 @@ void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
 
 void MPannableViewportPrivate::updateExtendedVerticalRange()
 {
-    const QRectF restoredRange(currentRange.adjusted(0, 0, 0, -rangeExtension));
+    Q_Q(MPannableViewport);
+    const QRectF restoredRange(q->range().adjusted(0, 0, 0, -rangeHeightExtension));
 
     // Choose whichever is bigger.
-    rangeExtension = qMax<qreal>(inputMethodAreaHeight, autoScrollingExtension);
+    rangeHeightExtension = qMax<qreal>(0.0, qMax<qreal>(inputMethodAreaHeight, autoScrollingExtension));
 
     setNewRange(restoredRange);
+}
+
+void MPannableViewportPrivate::applyAutoRange()
+{
+    Q_Q(MPannableViewport);
+    if (q->autoRange()) {
+        if (pannedWidget) {
+            setNewRange(QRectF(QPointF(), pannedWidget->size() - q->size()));
+        } else {
+            setNewRange(QRectF());
+        }
+    }
 }
 
 void MPannableViewportPrivate::scrollTo(const QPointF &panningPosition)
@@ -100,31 +129,6 @@ void MPannableViewportPrivate::scrollTo(const QPointF &panningPosition)
 
     // TODO: Animate me!
     q->setPosition(panningPosition);
-}
-
-void MPannableViewportPrivate::recalculatePhysRange()
-{
-    Q_Q(MPannableViewport);
-
-    // Recalculates the range of the physics. Takes into consideration
-    // the current size of the viewport and the current range
-
-    QSizeF physicsRangeSize = currentRange.size() - q->size();
-
-    if (physicsRangeSize.width() < 0.0) {
-        physicsRangeSize.setWidth(0.0);
-    }
-
-    if (physicsRangeSize.height() < 0.0) {
-        physicsRangeSize.setHeight(0.0);
-    }
-
-    QRectF physRange(currentRange.topLeft(), physicsRangeSize);
-
-    if (physRange != q->physics()->range()) {
-        q->physics()->setRange(physRange);
-        emit q->rangeChanged(q->range());
-    }
 }
 
 void MPannableViewportPrivate::sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
@@ -303,16 +307,8 @@ MPannableViewport::~MPannableViewport()
 void MPannableViewport::setAutoRange(bool enable)
 {
     Q_D(MPannableViewport);
-
     model()->setAutoRange(enable);
-
-    if (enable) {
-        if (d->pannedWidget) {
-            d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));
-        } else {
-            d->setNewRange(QRectF());
-        }
-    }
+    d->applyAutoRange();
 }
 
 bool MPannableViewport::autoRange() const
@@ -358,13 +354,7 @@ void MPannableViewport::setWidget(QGraphicsWidget *widget)
         widget->setZValue(ZValuePannedWidget);
     }
 
-    if (autoRange()) {
-        if (widget) {
-            d->setNewRange(QRectF(QPointF(), widget->size()));
-        } else {
-            d->setNewRange(QRectF());
-        }
-    }
+    d->applyAutoRange();
 }
 
 QGraphicsWidget *MPannableViewport::widget() const
@@ -391,13 +381,7 @@ void MPannableViewport::resizeEvent(QGraphicsSceneResizeEvent *event)
     Q_D(MPannableViewport);
     Q_UNUSED(event);
 
-    if (autoRange()) {
-        if (d->pannedWidget) {
-            d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));
-        } else {
-            d->setNewRange(QRectF());
-        }
-    }
+    d->applyAutoRange();
 
     emit viewportSizeChanged(event->newSize());
 
@@ -440,13 +424,7 @@ void MPannableViewport::updateGeometry()
 {
     Q_D(MPannableViewport);
 
-    if (autoRange()) {
-        if (d->pannedWidget) {
-            d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));
-        } else {
-            d->setNewRange(QRectF());
-        }
-    }
+    d->applyAutoRange();
 
     updatePosition(position());
 

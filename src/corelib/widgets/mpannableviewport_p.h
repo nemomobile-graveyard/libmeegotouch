@@ -35,12 +35,11 @@ public:
     MPannableViewportPrivate();
     virtual ~MPannableViewportPrivate();
 
-    QRectF currentRange;
     QGraphicsWidget *pannedWidget;
     MPannableViewportLayout *viewportLayout;
     MPositionIndicator *positionIndicator;
 
-    qreal rangeExtension; // Amount of range extended vertically
+    qreal rangeHeightExtension; // Amount of range extended vertically
     qreal autoScrollingExtension;
     qreal inputMethodAreaHeight; // Height of software input panel
 
@@ -50,15 +49,10 @@ public:
      */
     void setNewRange(const QRectF &newRange);
 
-    /*!
-     * \brief Recalculates the range of the base class (i.e. range of
-     * the physics).
-     */
-    void recalculatePhysRange();
-
     void setAutoScrollingExtension(qreal extension);
     void setInputMethodArea(const QRect &imArea);
     void updateExtendedVerticalRange();
+    void applyAutoRange();
     void scrollTo(const QPointF &panningPosition);
 
     void sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
