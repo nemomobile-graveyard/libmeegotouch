@@ -142,6 +142,7 @@ public:
 
       \note This method is only for benchmarking purposes and may be removed
             in the future.
+      \deprecated            
      */
     void enableOptimizedRendering(bool enable);
 

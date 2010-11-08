@@ -33,12 +33,15 @@ public:
 private slots:
     void init();
     void cleanup();
+
     void initTestCase();
     void cleanupTestCase();
-    void test_construction();
+
+    void test_draw_scalable9();
+    void test_draw_scalable1();
 
 private:
-
+    void verifyResult(const QImage& image, const QSize& paintSize);
     class MScalableImage *m_subject;
 };
 

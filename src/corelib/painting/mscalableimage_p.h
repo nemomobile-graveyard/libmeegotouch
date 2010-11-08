@@ -53,8 +53,6 @@ public:
 
     const QPixmap *m_image;
 
-    bool m_useGLRenderer;
-
     QMargins m_preferredMargins;
 
     QString pixmapId;

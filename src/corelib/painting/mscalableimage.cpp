@@ -31,7 +31,7 @@
 
 MScalableImagePrivate::MScalableImagePrivate()
     : m_imageType(MScalable9), m_image(NULL),
-      m_useGLRenderer(false), q_ptr(NULL)
+      q_ptr(NULL)
 {
 }
 
@@ -294,8 +294,7 @@ void MScalableImage::draw(const QRect &rect, QPainter *painter) const
 
 void MScalableImage::enableOptimizedRendering(bool enable)
 {
-    Q_D(MScalableImage);
-    d->m_useGLRenderer = enable;
+    Q_UNUSED(enable);
 }
 
 void MScalableImage::draw(const QRect &rect, const QPoint& pixmapOffset, const QPixmap* pixmap, QPainter *painter) const
@@ -317,6 +316,7 @@ void MScalableImage::draw(const QRect &rect, const QPoint& pixmapOffset, const Q
 
     // post process the resulting image (add mask)
     QImage fillImage = pixmap->toImage();
+    fillImage = fillImage.convertToFormat(QImage::Format_ARGB32);
     int sourceWidth = fillImage.width();
     int sourceHeight = fillImage.height();
 
@@ -327,7 +327,7 @@ void MScalableImage::draw(const QRect &rect, const QPoint& pixmapOffset, const Q
         // target scanline
         uint* target = (uint *) image.scanLine(y);
         // source scanline (tiled)
-        const uint* source = (const uint *) fillImage.scanLine(pixmapOffset.y() + (y % sourceHeight));
+        const uint* source = (const uint *) fillImage.scanLine((pixmapOffset.y() + y) % sourceHeight);
         for (int x = 0; x < width; ++x) {
             // tile the x coordinate
             uint color = *(source + ((pixmapOffset.x() + x) % sourceWidth));
