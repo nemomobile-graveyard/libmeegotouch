@@ -27,8 +27,8 @@
 
 void Ft_MWindow::initTestCase()
 {
-    int argc = 1;
-    char *argv[] = {(char *) "./ft_mwindow", NULL };
+    static int argc = 1;
+    static char *argv[] = {(char *) "./ft_mwindow", NULL };
     app = new MApplication(argc, argv);
 }
 
