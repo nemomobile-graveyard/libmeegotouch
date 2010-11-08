@@ -69,6 +69,7 @@ Description: MeeGo Touch binary files
                   Framework that controls which service the clients use.
                   Also exposes the services to the Qt Service Framework.
  mappletrunner  - launcher process for MeeGo Touch applets.
+ mapplicationextensionrunner - launcher process for MeeGo Touch application extensions.
 
 Package: libmeegotouch-bin-dbg
 Architecture: any
