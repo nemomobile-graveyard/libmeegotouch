@@ -42,7 +42,7 @@ public:
     virtual ~MGridLayoutPolicyPrivate();
 
     void refreshEngine();
-    void refreshEngineAndWidget();
+    void refreshWidget();
 
     QGraphicsWidget *const engineWidget;
     QGraphicsGridLayout *const engine;

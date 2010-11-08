@@ -278,13 +278,13 @@ QSizeF MGridLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
 void MGridLayoutPolicy::relayout()
 {
     Q_D(MGridLayoutPolicy);
-    d->engine->setMinimumSize(layout()->minimumSize());
-    d->engine->setMaximumSize(layout()->maximumSize());
-    d->refreshEngineAndWidget();
-    d->engine->activate();
-
     if (!isActive())
         return;
+
+    d->engine->setMinimumSize(layout()->minimumSize());
+    d->engine->setMaximumSize(layout()->maximumSize());
+    d->refreshWidget();
+
     for (int i = d->engine->count() - 1; i >= 0; --i) {
         const QGraphicsLayoutItem *item = d->engine->itemAt(i);
         setItemGeometry(i, item->geometry());
@@ -294,7 +294,7 @@ void MGridLayoutPolicy::relayout()
 void MGridLayoutPolicy::invalidate()
 {
     Q_D(MGridLayoutPolicy);
-    d->refreshEngine();
+    d->engine->invalidate();
 
     MAbstractLayoutPolicy::invalidate();
 }

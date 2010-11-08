@@ -46,7 +46,7 @@ public:
 
     void fixIndex(int *index) const;
     void refreshEngine();
-    void refreshEngineAndWidget();
+    void refreshWidget();
 
     void notifyWidgetOfLayoutPosition(int index, M::Position position);
     void notifyAffectedWidgetsOfLayoutPosition(int index, bool add);

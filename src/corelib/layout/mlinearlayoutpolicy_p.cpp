@@ -52,7 +52,10 @@ void MLinearLayoutPolicyPrivate::fixIndex(int *index) const
 
 void MLinearLayoutPolicyPrivate::refreshEngine()
 {
-    engineWidget->setLayoutDirection(layout->layoutDirection());   //Make sure that we have our RTL/LTR correct
+    //Make sure that we have our RTL/LTR correct
+    bool directionChanged = engineWidget->layoutDirection() != layout->layoutDirection();
+    if (directionChanged)
+        engineWidget->setLayoutDirection(layout->layoutDirection());
 
     for (int i = engine->count() - 1; i >= 0; --i) {
         ProxyItem *item = static_cast<ProxyItem *>(engine->itemAt(i));
@@ -63,11 +66,12 @@ void MLinearLayoutPolicyPrivate::refreshEngine()
     engine->setContentsMargins(left, top, right, bottom);
 
     engine->updateGeometry();
-}
-void MLinearLayoutPolicyPrivate::refreshEngineAndWidget() {
-    bool directionChanged = engineWidget->layoutDirection() != layout->layoutDirection();
-    refreshEngine();
 
+    if (directionChanged && notifyWidgetsOfLayoutPositionEnabled)
+        notifyAllWidgetsOfLayoutPosition();
+}
+void MLinearLayoutPolicyPrivate::refreshWidget()
+{
     //We need to make engine->geometry() equal the layout->geometry() so that the items are in the right place
     qreal topMargin = layout->geometry().top();
     qreal leftMargin = layout->geometry().left();
@@ -76,9 +80,6 @@ void MLinearLayoutPolicyPrivate::refreshEngineAndWidget() {
     qreal width = layout->geometry().right();
     qreal height = layout->geometry().bottom();
     engineWidget->resize(width, height);
-    //update layout positions here only if layout direction has changed
-    if( directionChanged && notifyWidgetsOfLayoutPositionEnabled )
-        notifyAllWidgetsOfLayoutPosition();
 }
 
 void MLinearLayoutPolicyPrivate::notifyWidgetOfLayoutPosition(int index, M::Position position)
