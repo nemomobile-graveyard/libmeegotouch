@@ -29,6 +29,7 @@
 #include <QGraphicsAnchorLayout>
 #include <QPropertyAnimation>
 #include <QTimer>
+#include <MDeviceProfile>
 #include <limits>
 
 #include "mdebug.h"
@@ -1243,11 +1244,14 @@ MSliderViewPrivate::MSliderViewPrivate() :
     horizontalPolicy(0),
     verticalPolicy(0),
     positionAnimation(0),
-    valueWhenFeedback(0),
+    previousValue(0),
+    feedbackPlayedFor(0),
     pressTimerId(0),
     valueWhenPressed(0),
     position(0)
 {
+    timeOnFeedback.invalidate();
+    timeOnMove.invalidate();
 }
 
 MSliderViewPrivate::~MSliderViewPrivate()
@@ -1528,16 +1532,52 @@ void MSliderViewPrivate::updateSeekBar()
         sliderGroove->setSeekBarValues(true, seekBarModel->loadedContentMin(), seekBarModel->loadedContentMax());
 }
 
-void MSliderViewPrivate::playSliderMoveFeedback(int newValue)
+void MSliderViewPrivate::updateMoveFeedbackData(int newValue)
 {
     Q_Q(MSliderView);
 
-    if (qAbs(newValue - valueWhenFeedback) >= q->style()->stepsPerFeedback() &&
-        feedbackTimer.elapsed() > q->style()->minimumFeedbackInterval()) {
-        q->style()->moveFeedback().play();
-        feedbackTimer.restart();
-        valueWhenFeedback = newValue;
+    // Find a number closest to slider value which is divisible by
+    // steps-per-feedback. This is the slider value which will trigger
+    // a feedback when crossed.
+    feedbackPlayedFor = q->style()->stepsPerFeedback() * qRound(static_cast<qreal>(newValue) / q->style()->stepsPerFeedback());
+}
+
+void MSliderViewPrivate::playSliderMoveFeedback(int newValue, const QPointF& newPosition)
+{
+    Q_Q(MSliderView);
+
+    if (newValue != previousValue) {
+        int moveLimit, moveAmount;
+
+        moveLimit = MDeviceProfile::instance()->mmToPixels(q->style()->feedbackSpeedLimit()) * timeOnMove.restart();
+        if (q->model()->orientation() == Qt::Horizontal) {
+            moveAmount = qAbs(previousPosition.x() - newPosition.x()) * 1000;
+        } else {
+            moveAmount = qAbs(previousPosition.y() - newPosition.y()) * 1000;
+        }
+
+        // Consider playing feedback if slider is moving slow enough
+        if (moveAmount < moveLimit) {
+            // Play feedback if:
+            //  - Enough time has elapsed since previous playing of feedback
+            //  - Slider value crosses a value that is divisible by steps-per-feedback
+            if (timeOnFeedback.isValid() &&
+                timeOnFeedback.elapsed() > q->style()->minimumFeedbackInterval() &&
+                (qAbs(feedbackPlayedFor - newValue) >= q->style()->stepsPerFeedback() ||
+                (newValue <= feedbackPlayedFor && previousValue > feedbackPlayedFor) ||
+                (newValue >= feedbackPlayedFor && previousValue < feedbackPlayedFor))) {
+                q->style()->moveFeedback().play();
+                timeOnFeedback.start();
+                updateMoveFeedbackData(newValue);
+            }
+        } else {
+            updateMoveFeedbackData(newValue);
+        }
+
+        previousValue = newValue;
     }
+
+    previousPosition = newPosition;
 }
 
 MSliderView::MSliderView(MSlider *controller):
@@ -1713,10 +1753,12 @@ void MSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (d->isCollision(event)) {
             d->valueWhenPressed = model()->value();
             d->controller->setState(MSliderModel::Pressed);
-            d->valueWhenFeedback = d->valueWhenPressed;
-            d->feedbackTimer.start();
             style()->pressFeedback().play();
-            d->updateValue(event);
+            d->timeOnFeedback.start();
+            d->timeOnMove.start();
+            d->previousPosition = event->pos();
+            d->previousValue = d->updateValue(event);
+            d->updateMoveFeedbackData(d->previousValue);
             d->pressTimerId = startTimer(100);
         }
     }
@@ -1770,7 +1812,8 @@ void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     if (d->controller->isVisible() && d->controller->isOnDisplay()) {
         if (d->controller->state() == MSliderModel::Pressed) {
-            d->playSliderMoveFeedback(d->updateValue(event));
+            int newValue = d->updateValue(event);
+            d->playSliderMoveFeedback(newValue, event->pos());
 
             if (model()->handleLabelVisible())
                 d->sliderGroove->raiseHandleIndicator();

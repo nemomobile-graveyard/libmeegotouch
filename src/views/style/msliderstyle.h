@@ -186,6 +186,11 @@ class M_VIEWS_EXPORT MSliderStyle : public MWidgetStyle
         \brief Fixed width of the maximum label of the slider, if not empty
       */
     M_STYLE_ATTRIBUTE(qreal, maxLabelFixedWidth, MaxLabelFixedWidth)
+    /*!
+        \property MSlider::feedbackSpeedLimit
+        \brief When slider is moved over this speed there will be no feedback (in mm/s)
+      */
+    M_STYLE_ATTRIBUTE(int, feedbackSpeedLimit, FeedbackSpeedLimit)
 };
 
 class M_VIEWS_EXPORT MSliderStyleContainer : public MWidgetStyleContainer

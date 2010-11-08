@@ -291,8 +291,11 @@ public:
 
     QPropertyAnimation *positionAnimation;
 
-    QElapsedTimer feedbackTimer;
-    int valueWhenFeedback;
+    QElapsedTimer timeOnFeedback;
+    QElapsedTimer timeOnMove;
+    QPointF previousPosition;
+    int previousValue;
+    int feedbackPlayedFor;
 
     int pressTimerId;
 
@@ -312,7 +315,8 @@ public:
     int updateValue(QGraphicsSceneMouseEvent *event);
     void updateSliderGroove();
     void updateSeekBar();
-    void playSliderMoveFeedback(int newValue);
+    void playSliderMoveFeedback(int newValue, const QPointF& newPosition);
+    void updateMoveFeedbackData(int newValue);
     QPropertyAnimation* createPositionAnimation();
 
 #ifdef UNIT_TEST
