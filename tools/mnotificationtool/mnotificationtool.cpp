@@ -212,18 +212,20 @@ int main(int argc, char *argv[])
         QList<MNotification *> list = MNotification::notifications();
         result = list.size();
         std::cout << "\n" << list.size() << " notifications." << std::endl;
-        std::cout << "Notifications:" << std::endl;
-        foreach(MNotification *notification, list) {
-            MNotificationToolNotification *toolNotification = static_cast<MNotificationToolNotification *>(notification);
-            std::cout << toolNotification->id() << "\t" <<
-                         toolNotification->eventType().toUtf8().constData() << "\t" <<
-                         toolNotification->summary().toUtf8().constData() << "\t" <<
-                         toolNotification->body().toUtf8().constData() << "\t" <<
-                         toolNotification->image().toUtf8().constData() << "\t" <<
-                         toolNotification->count() << std::endl;
-            delete notification;
+        if (list.size() > 0) {
+            std::cout << "Notifications:" << std::endl;
+            std::cout << "Id\tType\tSummary\tBody\tImage\tCount" << std::endl;
+            foreach(MNotification *notification, list) {
+                MNotificationToolNotification *toolNotification = static_cast<MNotificationToolNotification *>(notification);
+                std::cout << toolNotification->id() << "\t" <<
+                             toolNotification->eventType().toUtf8().constData() << "\t" <<
+                             toolNotification->summary().toUtf8().constData() << "\t" <<
+                             toolNotification->body().toUtf8().constData() << "\t" <<
+                             toolNotification->image().toUtf8().constData() << "\t" <<
+                             toolNotification->count() << std::endl;
+                delete notification;
+            }
         }
-        list.clear();
     }
 
     // Execute the desired action
@@ -323,15 +325,21 @@ int main(int argc, char *argv[])
                 notification.remove();
             }
         } else {
-            // Remove all the notifications for this user
-            QList<MNotification *> list = MNotification::notifications();
-            foreach(MNotification *notification, list) {
-                notification->remove();
-                delete notification;
+            if (groupMode) {
+                // Remove all the notifications for this user
+                QList<MNotificationGroup*> list = MNotificationGroup::notificationGroups();
+                foreach (MNotificationGroup *notificationGroup, list) {
+                    notificationGroup->remove();
+                    delete notificationGroup;
+                }
+            } else {
+                // Remove all the notifications for this user
+                QList<MNotification *> list = MNotification::notifications();
+                foreach (MNotification *notification, list) {
+                    notification->remove();
+                    delete notification;
+                }
             }
-            list.clear();
-
-            // There's no way to query the groups of the user, so there's no way to remove all the groups either :(
         }
         break;
     default:

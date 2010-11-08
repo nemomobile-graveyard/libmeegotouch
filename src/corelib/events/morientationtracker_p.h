@@ -20,13 +20,9 @@
 #ifndef MORIENTATIONTRACKER_P_H
 #define MORIENTATIONTRACKER_P_H
 
-#ifdef HAVE_CONTEXTSUBSCRIBER
-#include "contextproperty.h"
-#endif
-
 #include <QObject>
 #include <mnamespace.h>
-
+#include <QPointer>
 
 /* Must be last, as it conflicts with some of the Qt defined types */
 #ifdef Q_WS_X11
@@ -37,21 +33,27 @@
 
 class MOrientationTracker;
 class MWindow;
+#ifdef HAVE_CONTEXTSUBSCRIBER
+class ContextProperty;
+#endif
 
 class MOrientationTrackerPrivate : public QObject
 {
     Q_OBJECT
 public:
     MOrientationTrackerPrivate(MOrientationTracker *controller);
+    ~MOrientationTrackerPrivate();
     static MOrientationTracker *tracker;
     M::OrientationAngle currentAngle;
     bool currentIsCovered;
     bool currentIsTvConnected;
     bool currentIsKeyboardOpen;
+    void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
+                                  bool isDeviceFlat, bool tvIsConnected);
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    ContextProperty videoRouteProperty;
-    ContextProperty topEdgeProperty;
-    ContextProperty isCoveredProperty;
+    ContextProperty *videoRouteProperty;
+    ContextProperty *topEdgeProperty;
+    ContextProperty *isCoveredProperty;
 #endif
 #ifdef Q_WS_X11
     bool handleX11PropertyEvent(XPropertyEvent* event);
@@ -60,7 +62,7 @@ public:
     WId fetchWIdCurrentAppWindow();
     M::OrientationAngle fetchCurrentAppWindowOrientationAngle();
     WId widCurrentAppWindow;
-    long originalEventMaskCurrentAppWindow;
+    bool currentAppWindowHadXPropertyChangeMask;
     QList<MWindow* > windowsFollowingCurrentAppWindow;
     void startFollowingCurrentAppWindow(MWindow* win);
     void stopFollowingCurrentAppWindow(MWindow* win);
@@ -69,20 +71,37 @@ public:
 public slots:
     void isCoveredChanged();
     void videoRouteChanged();
+    void updateOrientationAngle();
 
 protected:
     MOrientationTracker *q_ptr;
 
 private slots:
     void initContextSubscriber();
-    void updateOrientationAngle();
 
 private:
+    QPointer<QObject> debugInterface;
 #ifdef Q_WS_X11
     Atom orientationAngleAtom;
     Atom currentAppWindowAtom;
 #endif
     Q_DECLARE_PUBLIC(MOrientationTracker)
+};
+
+class MOrientationTrackerTestInterface : public QObject
+{
+    Q_OBJECT
+public:
+    MOrientationTrackerTestInterface(MOrientationTrackerPrivate *d, QObject * parent = 0);
+public Q_SLOTS:
+    void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
+                                  bool isDeviceFlat, bool tvIsConnected);
+#ifdef Q_WS_X11
+    void handleCurrentAppWindowChange();
+    void handleCurrentAppWindowOrientationAngleChange();
+#endif
+private:
+    MOrientationTrackerPrivate *d;
 };
 
 #endif // MORIENTATIONTRACKER_P_H

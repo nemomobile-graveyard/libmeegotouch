@@ -61,6 +61,14 @@ private:
     friend class MDeviceProfile;
     friend class MApplicationPrivate;
     friend class MWindow;
+
+    //! \reimp
+    virtual void childEvent(QChildEvent *event);
+    //! \reimp_end
+
+#ifdef UNIT_TEST
+    friend class Ut_MOrientationTracker;
+#endif
 };
 
 //! \internal_end

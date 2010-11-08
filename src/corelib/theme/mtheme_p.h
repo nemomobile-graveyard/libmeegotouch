@@ -182,7 +182,7 @@ public:
      */
     void reinit(const QString &applicationName);
 
-    static void extractDataForStyleClass(const char *styleClassName,
+    static bool extractDataForStyleClass(const char *styleClassName,
                                          QList<const MStyleSheet *> &sheets,
                                          QList<QByteArray> &styleMetaObjectHierarchy);
     static QList<const MStyleSheet *> extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,

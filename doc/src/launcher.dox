@@ -276,10 +276,21 @@ normal execution there is
 Exec=/usr/bin/invoker --delay <seconds> --type=m /usr/bin/<application_name>.launch
 \endcode
 
-Note: when launching through D-Bus, it is important to add enough delay to invoker so that it won't exit
+Note 1: when launching through D-Bus, it is important to add enough delay to invoker so that it won't exit
 before the launched application gets its D-Bus service registered. Otherwise D-Bus daemon may think that
 the application just died. Another option is to use --wait-term which forces invoker to wait until
 the launched application exits.
+
+Note 2: There is a slight difference in application startup time if using
+script instead of the actual binary in Exec-field of .desktop and .service files. 
+Therefore it is recommended always use the actual invoker call with the binary name
+as presented above. 
+
+Note 3: When .desktop file contains X-Maemo-Service -field application will
+be started by default through D-Bus. This might cause some delay for
+application startup time. Therefore it is recommended not to have
+X-Maemo-Service -field inside .desktop files with launched applications,
+unless it is really needed for some other reason.
 
 Application packages that use the launcher depend on the applauncherd
 package.

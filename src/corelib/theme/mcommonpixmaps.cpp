@@ -137,7 +137,7 @@ void MCommonPixmaps::loadOne()
     // stop the timer, so we can adjust the frequency depending on the usage
     cpuMonitor.stop();
 
-    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < 10)) {
+    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < 30)) {
         //check if there really is something to load
         if (!toLoadList.isEmpty()) {
             PixmapIdentifier id = *toLoadList.begin();
@@ -154,9 +154,13 @@ void MCommonPixmaps::loadOne()
 
             if (!toLoadList.isEmpty()) {
                 // there's still items in the list, so start the timer with small delay
-                cpuMonitor.start(250);
-            } else {
-                // all common pixmaps loaded - notify clients
+                cpuMonitor.start(100);
+            }
+
+            if (toLoadList.isEmpty() || toLoadList.count() % 100 == 0) {
+                // notify clients when all common pixmaps have been loaded
+                // additional notify roughly every 100 loaded pixmaps. if the list is very large
+                // or the system not idle we might otherwise not keep apps up to date
                 MostUsedPixmaps mostUsed;
                 mostUsed.addedHandles = mostUsedPixmapHandles();
                 emit mostUsedPixmapsChanged(mostUsed);
@@ -164,7 +168,7 @@ void MCommonPixmaps::loadOne()
         }
     } else {
         // the cpu usage was too high, so start start the timer with longer delay
-        cpuMonitor.start(2000);
+        cpuMonitor.start(1000);
     }
 }
 

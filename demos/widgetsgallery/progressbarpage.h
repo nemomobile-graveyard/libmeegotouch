@@ -22,11 +22,11 @@
 
 #include "templatepage.h"
 
-
 class MGridLayoutPolicy;
 class MProgressIndicator;
 class MButton;
 class MLabel;
+class QPropertyAnimation;
 
 class ProgressBarPage : public TemplatePage
 {
@@ -39,11 +39,15 @@ public:
 protected:
     virtual void retranslateUi();
 private:
+    MButton* button1;
+    QPropertyAnimation* bar1ValueAnimation;
     MProgressIndicator *bar1;
     MProgressIndicator *bar2;
     MLabel *label1;
     MLabel *label2;
     int position;
+private Q_SLOTS:
+    void animateProgressBar1();
 };
 
 #endif // PROGRESSBARPAGE_H

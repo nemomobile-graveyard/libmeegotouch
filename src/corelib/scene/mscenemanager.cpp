@@ -66,6 +66,7 @@
 #include <mwidgetfadeanimation.h>
 #include <mwidgetzoomanimation.h>
 #include <mwidgetmoveanimation.h>
+#include <mtheme.h>
 
 #ifdef Q_WS_X11
 # include <QX11Info>
@@ -93,22 +94,31 @@ namespace
     }
 }
 
+MSceneManagerPrivate::MSceneManagerPrivate()
+    :scene(0)
+    ,rootElement(0)
+    ,homeButtonRootElement(0)
+    ,navigationBarRootElement(0)
+    ,dockWidgetRootElement(0)
+    ,orientationAnimation(0)
+    ,pageSwitchAnimation(0)
+    ,angle(M::Angle0)
+    ,newAngle(M::Angle0)
+    ,pendingRotation(0)
+    ,q_ptr(0)
+    ,eventEater(0)
+    ,styleContainer(0)
+#ifdef Q_WS_X11
+    ,statusBarGeometryPropertyWasSet(false)
+#endif
+{
+}
+
 void MSceneManagerPrivate::init(MScene *scene)
 {
     Q_Q(MSceneManager);
 
     this->scene = scene;
-
-    currentPage = 0;
-
-    alteredSceneWindow = 0;
-    sceneWindowTranslation = QPoint();
-
-    statusBar = 0;
-
-    pendingRotation = 0;
-
-    styleContainer = 0;
 
     initOrientationAngles();
 
@@ -143,9 +153,7 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     setOrientationAngleWithoutAnimation(newAngle);
 
-#ifdef Q_WS_X11
-    statusBarGeometryPropertyWasSet = false;
-#endif
+    q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()), q, SLOT(_q_updateRootElementsPositions()));
 }
 
 void MSceneManagerPrivate::initOrientationAngles()
@@ -1320,10 +1328,9 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
         } else {
             setSceneWindowState(window, MSceneWindow::Appeared);
             if (window->windowType() == MSceneWindow::StatusBar) {
-                qreal y = window->y() + window->geometry().height();
-                navigationBarRootElement->setPos(0, y);
-                dockWidgetRootElement->setPos(0, y);
-                homeButtonRootElement->setPos(0, y);
+                qreal y = window->effectiveSizeHint(Qt::PreferredSize).height();
+                foreach(QGraphicsWidget *widget, findRootElementsForMoveAnimation(window))
+                    widget->setPos(0, y);
             }
         }
     }
@@ -1470,9 +1477,8 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
     } else {
         setSceneWindowState(window, MSceneWindow::Disappeared);
         if (window->windowType() == MSceneWindow::StatusBar) {
-            navigationBarRootElement->setPos(0, 0);
-            dockWidgetRootElement->setPos(0, 0);
-            homeButtonRootElement->setPos(0, 0);
+            foreach(QGraphicsWidget *widget, findRootElementsForMoveAnimation(window))
+                widget->setPos(0, 0);
         }
     }
 }
@@ -1520,7 +1526,7 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             foreach(QGraphicsWidget *widget, list) {
                 MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                 moveAnimation->setWidget(widget);
-                moveAnimation->setFinalPos(QPointF(widget->x(), widget->y() + sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
+                moveAnimation->setFinalPos(QPointF(0, sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
                 animation->addAnimation(moveAnimation);
             }
             break;
@@ -1589,7 +1595,7 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             foreach(QGraphicsWidget *widget, list) {
                 MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                 moveAnimation->setWidget(widget);
-                moveAnimation->setFinalPos(QPointF(widget->x(), widget->y() - sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
+                moveAnimation->setFinalPos(QPointF(0, 0));
                 animation->addAnimation(moveAnimation);
             }
             break;
@@ -1650,6 +1656,21 @@ QList<QGraphicsWidget*> MSceneManagerPrivate::findRootElementsForMoveAnimation(M
     }
 
     return list;
+}
+
+void MSceneManagerPrivate::_q_updateRootElementsPositions()
+{
+    QList<QGraphicsWidget*> rootElements;
+    rootElements << navigationBarRootElement << dockWidgetRootElement << homeButtonRootElement;
+
+    foreach(QGraphicsWidget *rootElement, rootElements)
+        rootElement->setPos(0, 0);
+
+    if (statusBar) {
+        qreal y = statusBar->effectiveSizeHint(Qt::PreferredSize).height();
+        foreach(QGraphicsWidget *rootElement, findRootElementsForMoveAnimation(statusBar))
+            rootElement->setPos(0, y);
+    }
 }
 
 void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,

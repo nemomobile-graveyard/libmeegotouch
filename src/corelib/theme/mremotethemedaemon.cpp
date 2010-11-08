@@ -318,7 +318,7 @@ void MRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
     } break;
 
     case Packet::ThemeChangeCompletedPacket: {
-        emit q->themeChangeCompleted();
+        QTimer::singleShot(0, q, SLOT(emitThemeChangeCompletedSignal()));
     } break;
 
     case Packet::MostUsedPixmapsPacket: {
@@ -361,6 +361,12 @@ void MRemoteThemeDaemonPrivate::emitThemeChangedSignal()
 {
     Q_Q(MRemoteThemeDaemon);
     emit q->themeChanged(themeInheritanceChain, themeLibraryNames);
+}
+
+void MRemoteThemeDaemonPrivate::emitThemeChangeCompletedSignal()
+{
+    Q_Q(MRemoteThemeDaemon);
+    emit q->themeChangeCompleted();
 }
 
 void MRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)

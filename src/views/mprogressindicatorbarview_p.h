@@ -21,85 +21,59 @@
 #define MPROGRESSINDICATORBARVIEW_P_H
 
 #include <QObject>
-#include <QElapsedTimer>
-
 #include "mprogressindicatorbarview.h"
 
 class MStyle;
 class MProgressIndicator;
+class MScalableImage;
 class QPropertyAnimation;
 class QTimer;
-
 
 class MProgressIndicatorBarViewPrivate : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PUBLIC(MProgressIndicatorBarView)
 
-    QImage leftEndImage;
-    QImage rightEndImage;
-    QImage rightEndMask;
-    QImage leftEndMask;
-
-    QImage barMask;
-
-    int leftWidth, rightWidth, top, bottom;
-
-    bool textureTiled() const;
-    void setupAnimation();
-
-protected:
-    MProgressIndicatorBarView *q_ptr;
-
-public Q_SLOTS:
-    void setPosition();
-
 public:
     MProgressIndicatorBarViewPrivate();
     ~MProgressIndicatorBarViewPrivate();
 
-    void resetBarComposition();
-    void setupBarBody();
-    void updateBarPosition();
-    void createMaskOnGeometry();
+    void drawBar(QPainter* painter) const;
 
-    void compositeBarForUnknownDuration();
-    void figureOutSizes();
-    void buildAnimationCache();
+    void clearBarImages();
+    void clearAnimationCache();
+
+    const QImage* getCurrentCachedImage() const;
+
     bool fullWidth() const;
-
-    qreal getPosition();
+    bool barImagesCreated() const;
 
     void animate(bool);
-    void updateAnimation();
+    void setupAnimation();
+    void setupBarImages();
 
     MProgressIndicator *controller;
 
-    float elementSize;
-    int activeElementCount;
-    int position;
-    int width;
-    bool paused;
+public Q_SLOTS:
+    void setAnimationCacheIndex();
 
-    QTimer* timer;
-    QElapsedTimer fpsUpperBoundTimer;
+protected:
+    MProgressIndicatorBarView *q_ptr;
 
-    QImage barBody;
+private:
+    void createBarImages();
+    void createAnimationCache();
+    void drawComposedRectangle(QPainter* painter, const QRectF& rect) const;
+    void drawTexture(QPainter* painter, const QRectF& rect) const;
 
-    QImage rightEnd;
-    QImage leftEnd;
+    QTimer* animationTimer;
 
-    QRectF rightEndRect;
-    QRectF leftEndRect;
-
-    QPixmap barComposition;
-    QPainter* backgroundPainter;
-    int previousValue;
-
-    MScalableImage* scalableBarImage;
+    QImage leftEndImage;
+    QImage rightEndImage;
+    QImage barBodyImage;
 
     QList<QImage*> animationCache;
-    int animationCacheSize;
+    int animationCacheIndex;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

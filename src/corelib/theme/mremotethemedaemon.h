@@ -67,6 +67,7 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void connectionDataAvailable())
     Q_PRIVATE_SLOT(d_func(), void emitThemeChangedSignal())
+    Q_PRIVATE_SLOT(d_func(), void emitThemeChangeCompletedSignal())
 
 #ifdef UNIT_TEST
     friend class Ut_MRemoteThemeDaemon;

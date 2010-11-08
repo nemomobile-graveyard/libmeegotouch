@@ -90,6 +90,7 @@ private slots:
     void positionShouldReturnToStartRangeAfterMovingViewportBeyondStartRange();
     void positionShouldReturnToEndRangeAfterMovingViewportBeyondEndRange();
     void integrationShouldStopAfterReachingPositionInsideRange();
+    void maximumSlidingSpeedShouldNotExceedAllowedMaximumVelocity();
 
     // Testing setters and getters
     void testSetGetEnabled();

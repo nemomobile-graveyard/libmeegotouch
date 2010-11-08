@@ -83,25 +83,61 @@ public:
 
 private Q_SLOTS:
 
+    /*!
+      \brief Called when underlying controller object visibility changed
+     */
     void visibilityChangedSlot();
 
+    /*!
+      \brief Called when underlying progress bar animation is resumed (when progressbar enters display)
+     */
     void resumeAnimation();
+
+    /*!
+      \brief Called when underlying progress bar animation is paused (when progressbar exits display)
+     */
     void pauseAnimation();
 
 protected:
     //! \reimp
+    /*!
+     * Draws the contents for this view.
+     */
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+
+    /*!
+        \brief Updates MSpinnerView class instance when current model is changed.
+     */
     virtual void setupModel();
+
+    /*!
+        \brief Updates MProgressIndicatorBarView class instance when current style is changed.
+
+        Called when MProgressIndicatorStyle class instance is changed (usually)
+        during initialization.
+     */
+    virtual void applyStyle();
+
+    /*!
+      \brief Called when underlying controller object is resized
+     */
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
-    virtual void changeEvent(QEvent *event);
-    //! \reimp_end
+
+    /*!
+      \brief Called when direction of layout containing underlying controller changed (LTR / RTL order)
+     */
+    virtual void changeEvent(QEvent *event);   
+
     MProgressIndicatorBarViewPrivate *const d_ptr;
 
 
 protected Q_SLOTS:
-    //! \reimp
+    /*!
+        \brief Updates MSpinnerView class instance when some component
+                   of underlying model is modified.
+        \param modifications List containing the names of modified model components.
+    */
     virtual void updateData(const QList<const char *>& modifications);
-    //! \reimp_end
 
 private:
     Q_DISABLE_COPY(MProgressIndicatorBarView)

@@ -189,11 +189,11 @@ bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy po
         if(!q->model()->title().isEmpty())
             standAloneWindow->setWindowTitle(q->model()->title());
 #ifdef Q_WS_X11
-        // System Dialog (unlike System Modal Dialog) has to be treated as a separate
-        // window, in order to be able to reside in task switcher
-        if (q->isSystem() && q->isModal()) {
+        if (q->isSystem()) {
             standAloneWindow->setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
-            standAloneWindow->setWindowModality(Qt::WindowModal);
+            if (q->isModal()) {
+                standAloneWindow->setWindowModality(Qt::WindowModal);
+            }
         }
 #endif
         q->connect(q, SIGNAL(disappeared()), SLOT(_q_onStandAloneDialogDisappeared()));

@@ -75,8 +75,10 @@ class MSceneManagerPrivate
 
 public:
 
-    void init(MScene *scene);
+    MSceneManagerPrivate();
     virtual ~MSceneManagerPrivate();
+
+    void init(MScene *scene);
 
     enum WindowTypeZ {
         PlainSceneWindow = 0,
@@ -205,6 +207,9 @@ public:
     void _q_triggerAsyncPendingOrientationChange();
 
     void _q_applyPendingOrientationChange();
+
+    void _q_updateRootElementsPositions();
+
 #ifdef Q_WS_X11
     void _q_updateDecoratorButtonsProperty();
     void updateStatusBarGeometryProperty();
@@ -267,7 +272,6 @@ public:
 #ifdef Q_WS_X11
     bool statusBarGeometryPropertyWasSet;
 #endif
-
 };
 
 class MSceneManagerTestInterface : public QObject

@@ -18,6 +18,7 @@ SUBDIRS     =  \
     ft_mbutton \
     ft_mslider \
     ft_mscalableimage \
+    ft_mwindow \
     # ut_allwidgets \ // doesn't work
 #     ut_mapplication \ // Depends on private class
      ut_madvancedlistitem \
@@ -52,6 +53,7 @@ SUBDIRS     =  \
      ut_mapplicationmenu \
      ut_mapplicationmenuview \
      ut_mobjectmenu \
+     ut_morientationtracker \
      ut_moverlay \
      ut_mpannableviewport \
      ut_mpannablewidget \
@@ -60,6 +62,7 @@ SUBDIRS     =  \
      ut_mpopuplist \
      ut_mprogressindicator \
      ut_mprogressindicatorspinnerview \
+     ut_mprogressindicatorbarview \
      ut_mrichtextedit \
      ut_mscenemanager \
      ut_mseparator \

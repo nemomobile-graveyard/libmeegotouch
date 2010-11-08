@@ -136,7 +136,6 @@ void MGraphicsSystemHelper::switchToHardwareRendering(MWindow *window, QGLContex
         if (translucent) {
             QMeeGoGraphicsSystemHelper::setTranslucent(true);
         }
-        window->setAttribute(Qt::WA_NoSystemBackground);
         *glContext = const_cast<QGLContext*>(QGLContext::currentContext());
     } else
 #endif // HAVE_MEEGOGRAPHICSSYSTEM

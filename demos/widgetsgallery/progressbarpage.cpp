@@ -26,11 +26,13 @@
 #include <MLinearLayoutPolicy>
 #include <MGridLayoutPolicy>
 #include <MProgressIndicator>
-#include <MSceneManager>
 #include <QPropertyAnimation>
+#include <MSceneManager>
 
 ProgressBarPage::ProgressBarPage() :
     TemplatePage(TemplatePage::SimpleWidgets),
+    button1(0),
+    bar1ValueAnimation(0),
     bar1(0),
     bar2(0),
     label1(0),
@@ -61,6 +63,14 @@ void ProgressBarPage::createContent()
     bar1->setValue(0);
     containerPolicy->addItem(bar1);
 
+    bar1ValueAnimation = new QPropertyAnimation(bar1, "value", this);
+    bar1ValueAnimation->setEasingCurve(QEasingCurve::OutInQuad);
+
+    button1 = new MButton();
+    button1->setIconID("icon-m-common-play");
+    containerPolicy->addItem(button1, Qt::AlignHCenter);
+    containerPolicy->setVerticalSpacing(10);
+
     label2 = new MLabel();
     containerPolicy->addItem(label2);
 
@@ -69,15 +79,7 @@ void ProgressBarPage::createContent()
     bar2->setUnknownDuration(true);
     containerPolicy->addItem(bar2);
 
-    QPropertyAnimation* animation = new QPropertyAnimation(bar1, "value", this);
-    // loop forever
-    animation->setLoopCount(-1);
-    // start and end value should match bar1's range
-    animation->setStartValue(0);
-    animation->setEndValue(1000);
-    // 10 seconds to fill the bar
-    animation->setDuration(10000);
-    animation->start();
+    connect(button1, SIGNAL(clicked()), this, SLOT(animateProgressBar1()));
 
     retranslateUi();
 }
@@ -97,5 +99,14 @@ void ProgressBarPage::retranslateUi()
     label2->setText(qtTrId("xx_progressindicator_unknown_duration_bar"));
 }
 
-
-
+void ProgressBarPage::animateProgressBar1()
+{
+    if (bar1ValueAnimation->state() != QAbstractAnimation::Running) {
+        // start and end value should match bar1's range
+        bar1ValueAnimation->setStartValue(bar1->minimum());
+        bar1ValueAnimation->setEndValue(bar1->maximum());
+        // 10 seconds to fill the bar
+        bar1ValueAnimation->setDuration(10000);
+        bar1ValueAnimation->start();
+    }
+}

@@ -598,6 +598,26 @@ void Ut_MPhysics2DPanning::integrationShouldStopAfterReachingPositionInsideRange
     QVERIFY2(abs(physics->velocity().y()) < 1, "Velocity should be smaller than 1px");
 }
 
+void Ut_MPhysics2DPanning::maximumSlidingSpeedShouldNotExceedAllowedMaximumVelocity()
+{
+    physics->setRange(QRectF(10, 10, 1000, 1000));
+    physics->setPosition(QPointF(10, 10));
+
+    QPointF pos;
+
+    pos = QPointF(100.0, 100.0);
+    physics->pointerPress(pos);
+
+    pos = QPointF(100.0, 0.0);
+    physics->pointerMove(pos);
+
+    physics->pointerRelease();
+
+    physics->d_ptr->_q_integrator(1);
+
+    QCOMPARE(physics->velocity().y(), qreal(70.0));
+}
+
 void Ut_MPhysics2DPanning::testSetGetEnabled()
 {
     QCOMPARE(physics->enabled(), true);
