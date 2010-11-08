@@ -54,6 +54,8 @@ private slots:
 
     void testSetClipping();
     void testRangeSetting();
+    void testExtendedRange_data();
+    void testExtendedRange();
 
 private:
     MPannableViewport *subject;

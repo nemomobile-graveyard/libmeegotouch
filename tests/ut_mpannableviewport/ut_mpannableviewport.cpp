@@ -306,10 +306,62 @@ void Ut_MPannableViewport::testRangeSetting()
 
     subject->setRange(QRectF(0,0,100,100));
     QCOMPARE(subject->range(), QRectF(0,0,100,100));
+}
 
-    subject->d_func()->setInputMethodArea(QRect(0,50,100,100));
-    QCOMPARE(subject->range(), QRectF(0,0,100,200));
+void Ut_MPannableViewport::testExtendedRange_data()
+{
+    QTest::addColumn<qreal>("autoScrollHeightExtension");
+    QTest::addColumn<qreal>("sipHeightExtension");
+    QTest::addColumn<qreal>("verticalRange");
+    QTest::addColumn<qreal>("expectedVerticalRange");
 
+    QTest::newRow("Zero range") << 0.0 << 0.0 << 0.0 << 0.0;
+    QTest::newRow("autoscroll extension") << 1.0 << 0.0 << 0.0 << 1.0;
+    QTest::newRow("sip extension") << 0.0 << 1.0 << 0.0 << 1.0;
+    QTest::newRow("autoscroll & sip #1") << 1.0 << 1.0 << 0.0 << 1.0;
+    QTest::newRow("autoscroll & sip #2") << 5.0 << 1.0 << 0.0 << 5.0;
+    QTest::newRow("autoscroll & sip #3") << 1.0 << 5.0 << 0.0 << 5.0;
+    QTest::newRow("autoscroll & sip #4") << 1.0 << 5.0 << 2.0 << 7.0;
+}
+
+void Ut_MPannableViewport::testExtendedRange()
+{
+    QFETCH(qreal, autoScrollHeightExtension);
+    QFETCH(qreal, sipHeightExtension);
+    QFETCH(qreal, verticalRange);
+    QFETCH(qreal, expectedVerticalRange);
+
+    QGraphicsScene scene;
+    scene.addItem(subject);
+
+    const QSizeF viewportSize(100, 100);
+    subject->resize(viewportSize);
+    subject->setMinimumSize(viewportSize);
+    subject->setMaximumSize(viewportSize);
+    subject->setAutoRange(false);
+
+    QGraphicsWidget *widget = new QGraphicsWidget();
+    widget->setMinimumSize(1000,1000);
+    subject->setWidget(widget);
+
+    subject->adjustSize();
+
+    subject->setRange(QRectF(QPointF(), QSizeF(0, verticalRange)));
+
+    // Set autoscrolling extension
+    subject->d_func()->setAutoScrollingExtension(autoScrollHeightExtension);
+
+    // Set area occupied by input method area.
+    const QRect imArea(subject->geometry().adjusted(0, (viewportSize.height() - sipHeightExtension),
+                                                    0, 0).toRect());
+    subject->d_func()->setInputMethodArea(imArea);
+
+    const qreal actualVerticalRange = subject->range().height();
+
+    // Remove from scene before possible return/fail from QCOMPARE.
+    scene.removeItem(subject);
+
+    QCOMPARE(actualVerticalRange, expectedVerticalRange);
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)
