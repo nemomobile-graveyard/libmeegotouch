@@ -171,16 +171,6 @@ void Ut_MApplicationWindow::testPageChanged()
     delete page2;
 }
 
-void Ut_MApplicationWindow::testDeleteOnClose()
-{
-    qDebug() << "if the test crashes here, "
-             << "Qt::WA_DeleteOnClose is broken for MApplicationWindow";
-    MApplicationWindow *win = new MApplicationWindow;
-    win->setAttribute(Qt::WA_DeleteOnClose, true);
-    win->show();
-    win->close();
-}
-
 void Ut_MApplicationWindow::testSetWindowIconID()
 {
     QString iconId("icon-id");
@@ -282,7 +272,7 @@ void Ut_MApplicationWindow::testPageEscapeAutoWhenAddingPageHistory()
 {
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
-    MNavigationBar *navigationBar = fetchNavigationBar(m_subject->scene()->items());
+    MNavigationBar *navigationBar = m_subject->d_func()->navigationBar;
     QList<MSceneWindow *> pageHistory;
 
     QVERIFY(navigationBar != 0);
@@ -301,7 +291,7 @@ void Ut_MApplicationWindow::testPageEscapeAutoWhenClearingPageHistory()
 {
     MApplicationPage *firstPage = new MApplicationPage;
     MApplicationPage *secondPage = new MApplicationPage;
-    MNavigationBar *navigationBar = fetchNavigationBar(m_subject->scene()->items());
+    MNavigationBar *navigationBar = m_subject->d_func()->navigationBar;
     QList<MSceneWindow *> pageHistory;
 
     QVERIFY(navigationBar != 0);
@@ -731,29 +721,6 @@ void Ut_MApplicationWindow::testNavigationBarVisibilityHideToolbarAction()
     action->setVisible(false);
     fastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
-}
-
-
-MNavigationBar *Ut_MApplicationWindow::fetchNavigationBar(
-        const QList<QGraphicsItem *> &itemsList) const
-{
-    int i = 0;
-    int itemsCount = itemsList.count();
-    QGraphicsItem *item;
-    QGraphicsWidget *widget;
-    MNavigationBar *navigationBar = 0;
-
-    while (navigationBar == 0 && i < itemsCount) {
-        item = itemsList.at(i);
-        if (item->isWidget()) {
-            widget = static_cast<QGraphicsWidget *>(item);
-            navigationBar = qobject_cast<MNavigationBar*>(widget);
-        }
-
-        ++i;
-    }
-
-    return navigationBar;
 }
 
 QTEST_MAIN(Ut_MApplicationWindow)

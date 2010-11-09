@@ -52,7 +52,6 @@ private slots:
     void testConstructorWithScene();
     void testPageChanged();
     void testWindowActivate();
-    void testDeleteOnClose();
 
     void testSetWindowIconID();
     void testCurrentPage();
@@ -92,7 +91,6 @@ private slots:
     void testNavigationBarVisibilityHideToolbarAction();
 
 private:
-    MNavigationBar *fetchNavigationBar(const QList<QGraphicsItem *> &itemsList) const;
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;
 
