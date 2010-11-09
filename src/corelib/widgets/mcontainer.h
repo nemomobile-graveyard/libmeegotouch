@@ -133,6 +133,11 @@ public:
 
     /*!
      * \brief Sets the central widget for container.
+     * By default MContainer takes ownership of the centralWidget.
+     *
+     * When centralWidget is replaced and destroy parameter is passed as false, the old
+     * centralWidget is removed from graphics hierarchy and scene, and it's ownership of
+     * is passed to caller.
      */
     void setCentralWidget(QGraphicsWidget *centralWidget, bool destroy = true);
 

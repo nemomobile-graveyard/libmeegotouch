@@ -72,16 +72,20 @@ QGraphicsWidget *MContainer::centralWidget()
 
 void MContainer::setCentralWidget(QGraphicsWidget *centralWidget, bool destroy)
 {
-    if (centralWidget != NULL) {
-        const QGraphicsWidget *oldCentralWidget = model()->centralWidget();
+    QGraphicsWidget *oldCentralWidget = model()->centralWidget();
 
-        // Set the new central widget
-        model()->setCentralWidget(centralWidget);
+    // Set the new central widget
+    model()->setCentralWidget(centralWidget);
 
-        // Destroy the old central widget if requested
-        if (destroy) {
-            delete oldCentralWidget;
-        }
+    // Destroy the old central widget if requested
+    if (destroy) {
+        delete oldCentralWidget;
+    } else {
+        // pass the ownership back to the caller.
+        oldCentralWidget->setParentItem(0);
+        oldCentralWidget->setParent(0);
+        if (scene())
+            scene()->removeItem(oldCentralWidget);
     }
 }
 

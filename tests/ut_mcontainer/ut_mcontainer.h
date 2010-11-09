@@ -39,6 +39,8 @@ private slots:
 
     void centralWidget();
     void setCentralWidget();
+    void replaceCentralWidget();
+    void replaceCentralWidgetWithoutDestroying();
 
     void title();
     void text();
