@@ -55,6 +55,8 @@ MApplicationPrivate::MApplicationPrivate():
 #ifdef Q_WS_X11
     visibleAtom = XInternAtom(QX11Info::display(),
                               "_MEEGOTOUCH_VISIBLE_IN_SWITCHER", False);
+    minimizeAnimationAtom = XInternAtom(QX11Info::display(),
+                                        "_MEEGOTOUCH_MINIMIZE_ANIMATION", False);
 #endif
 }
 
@@ -429,6 +431,23 @@ bool MApplication::x11EventFilter(XEvent *event)
     } else if (event->type == PropertyNotify) {
         XPropertyEvent *xevent = (XPropertyEvent *) event;
         d->handleXPropertyEvent(xevent);
+    } else if (event->type == ClientMessage) {
+        XClientMessageEvent *e = (XClientMessageEvent*) event;
+        if (e->message_type == d->minimizeAnimationAtom) {
+            switch (e->data.l[0]) {
+            case 0:   // minimizing was cancelled
+                emit minimizingCanceled();
+                break;
+            case 1:   // minimizing started
+                emit minimizing();
+                break;
+            case 100: // minimizing finished
+                emit minimized();
+                break;
+            default:
+                break;
+            }
+        }
     }
 #ifdef HAVE_XDAMAGE
     else if (event->type == d->xDamageEventBase + XDamageNotify) {

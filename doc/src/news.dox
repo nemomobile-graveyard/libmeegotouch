@@ -1,5 +1,10 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02052 0.20.52
+
+\subsection New
+- MApplication: added minimizing(), minimized() and minimizingCanceled() signals
+
 \section v02049 0.20.49
 
 \subsection New

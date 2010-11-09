@@ -252,6 +252,27 @@ Q_SIGNALS:
 
 #ifdef Q_WS_X11
     /*!
+     * Signal that is emitted when the application is being minimized to switcher
+     * and the minimize animation started.
+     */
+    void minimizing();
+
+    /*!
+     * Signal that is emitted when the application is being minimized to switcher
+     * and the minimize animation finished.
+     */
+    void minimized();
+
+    /*!
+     * Signal that is emitted when the application is being minimized to switcher
+     * and the minimize animation was canceled (the window wasn't minimized).
+     *
+     * \note This signal is useful only when the window manager provides minimize animation
+     *       that's capable of being canceled.
+     */
+    void minimizingCanceled();
+
+    /*!
      * Signal application about a changed X pixmap
      */
     void damageEvent(Qt::HANDLE &damage, short &x, short &y, unsigned short &width, unsigned short &height);
