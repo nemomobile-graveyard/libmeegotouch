@@ -44,6 +44,35 @@ void Pt_MLocationDatabase::cleanup()
 {
 }
 
+void Pt_MLocationDatabase::benchmarkMLocationDatabaseConstructorDestructor()
+{
+    QBENCHMARK {
+        MLocationDatabase *db = new MLocationDatabase;
+        delete db;
+    }
+}
+
+void Pt_MLocationDatabase::benchmarkTimeZone()
+{
+    MLocationDatabase db;
+    QList<MCity> cities = db.cities();
+
+    // do only run the benchmark if we were able to load
+    // some cities from the meegotouch-cities-*
+    // package.
+    if (cities.count() < 10) {
+        qWarning( "loading of city list failed, skipping test" );
+        return;
+    }
+
+    qDebug() << "number of cities = " << cities.count();
+    QBENCHMARK {
+        foreach (MCity city, cities) {
+            city.timeZone();
+        }
+    }
+}
+
 void Pt_MLocationDatabase::benchmarkMatchingCities()
 {
     QString pattern("ber");

@@ -37,6 +37,8 @@ private slots:
     void init();
     void cleanup();
 
+    void benchmarkMLocationDatabaseConstructorDestructor();
+    void benchmarkTimeZone();
     void benchmarkMatchingCities();
 };
 
