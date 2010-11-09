@@ -27,6 +27,7 @@
 #include <QRect>
 
 class MPannableViewport;
+class MRelocatorStyleContainer;
 class MSceneManager;
 class QGraphicsItem;
 class QGraphicsScene;
@@ -103,6 +104,9 @@ signals:
     //! This signal requests undoing previous displacement of a given scene window.
     void sceneWindowUndoDislocationRequest(MSceneWindow *sceneWindow);
 
+private slots:
+    void handleKeyboardStateChange();
+
 private:
     //! Supported relocation operation types.
     enum RelocationOpType {
@@ -120,6 +124,8 @@ private:
         //! This and further operations should not be carried out if input widget is already visible.
         bool stopIfVisible;
     };
+
+    const MRelocatorStyleContainer &style() const;
 
     //! \brief Gets area of the scene where the input widget can in theory be moved to.
     //! The rect is returned in rotated scene coordinates.
@@ -159,6 +165,8 @@ private:
 
     void moveRectInsideArea(const QRect &area, QRect &rect) const;
 
+    bool needsRelocating(const QGraphicsWidget &inputWidget, const QRect &localRect);
+
     bool isObscured(const QGraphicsWidget &widget, const QRect &localRect);
 
     void clearPostponeRelocationFlag(PostponeRelocationFlag flag);
@@ -185,6 +193,8 @@ private:
     int numOfAppearingSceneWindows;
 
     PostponeRelocationFlags postponeFlags;
+
+    QScopedPointer<MRelocatorStyleContainer> styleContainer;
 };
 
 //! \internal_end

@@ -9,6 +9,7 @@
 #include "mkeyboardstatetracker.h"
 #include "mpannableviewport.h"
 #include "mpannableviewport_p.h"
+#include "mrelocatorstyle.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
@@ -37,7 +38,8 @@ MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
       updatePending(false),
       numOfDisappearingSceneWindows(0),
       numOfAppearingSceneWindows(0),
-      postponeFlags(0)
+      postponeFlags(0),
+      styleContainer(new MRelocatorStyleContainer())
 {
     Q_ASSERT(rootElement);
 
@@ -46,11 +48,33 @@ MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
             this, SLOT(update()));
 
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
-            this, SLOT(update()));
+            this, SLOT(handleKeyboardStateChange()));
+
+    styleContainer->initialize(objectName(), "", 0);
+
+    // Set initial style mode if needed.
+    if (MKeyboardStateTracker::instance()->isOpen()) {
+        styleContainer->setModePhysicalKeyboard();
+    }
 }
 
 MInputWidgetRelocator::~MInputWidgetRelocator()
 {
+}
+
+const MRelocatorStyleContainer &MInputWidgetRelocator::style() const
+{
+    return *styleContainer;
+}
+
+void MInputWidgetRelocator::handleKeyboardStateChange()
+{
+    if (MKeyboardStateTracker::instance()->isOpen()) {
+        styleContainer->setModePhysicalKeyboard();
+    } else {
+        styleContainer->setModeDefault();
+    }
+    update();
 }
 
 void MInputWidgetRelocator::update()
@@ -182,11 +206,9 @@ void MInputWidgetRelocator::relocationRectangles(const QGraphicsWidget &inputWid
                                                  QRect &targetRect,
                                                  QRect &localRect)
 {
-    // The optimal position could be asked from the input widget itself with
-    // custom inputMethodQuery. The widget should know the exposedRect for this.
-
-    // For now, we just center the micro focus rectangle.
-    const QPoint offset(exposedContentRect().center() - microFocusRect.center());
+    const QPoint offset(0, exposedContentRect().top()
+                           + style()->verticalAnchorPosition()
+                           - microFocusRect.top());
 
     targetRect = microFocusRect.translated(offset);
     localRect = inputWidget.mapRectFromItem(rootElement, microFocusRect).toRect();
@@ -206,14 +228,16 @@ void MInputWidgetRelocator::ensureInputWidgetVisible(const QGraphicsWidget &inpu
     relocationRectangles(inputWidget, microRect,
                          targetRect, localRect);
 
-    relocate(inputWidget, targetRect, localRect);
+    if (needsRelocating(inputWidget, localRect)) {
+        relocate(inputWidget, targetRect, localRect);
+    }
 }
 
 void MInputWidgetRelocator::relocate(const QGraphicsWidget &inputWidget,
                                      const QRect &targetRect,
                                      const QRect &localRect)
 {
-    bool isAlreadyVisible = !isObscured(inputWidget, localRect);
+    bool isAlreadyVisible = !needsRelocating(inputWidget, localRect);
 
     QList<RelocationOp> opList;
     buildRelocationOpList(inputWidget, opList, isAlreadyVisible);
@@ -246,7 +270,7 @@ void MInputWidgetRelocator::relocate(const QGraphicsWidget &inputWidget,
         }
 
         if (!isAlreadyVisible) {
-            isAlreadyVisible = !isObscured(inputWidget, localRect);
+            isAlreadyVisible = !needsRelocating(inputWidget, localRect);
         }
     }
 }
@@ -444,17 +468,26 @@ QRect MInputWidgetRelocator::visibleSceneRect() const
     return rootElement->mapRectFromScene(sceneRect).toRect();
 }
 
+bool MInputWidgetRelocator::needsRelocating(const QGraphicsWidget &inputWidget,
+                                            const QRect &localRect)
+{
+    const QRect allowedRect(exposedContentRect().adjusted(0, style()->topNoGoMargin(),
+                                                          0, -style()->bottomNoGoMargin()));
+
+    const QRect rect(rootElement->mapRectFromItem(&inputWidget, localRect).toRect());
+
+    return !allowedRect.contains(rect)
+           || isObscured(inputWidget, localRect);
+}
+
 bool MInputWidgetRelocator::isObscured(const QGraphicsWidget &widget, const QRect &localRect)
 {
-    const QRect originRect(widget.mapRectToItem(rootElement, localRect).toRect());
-
     // We need to know if widget is even partially obscured. Therefore split the
     // local rect into pieces.
     const QRect localTopRect(localRect.topLeft(), QSize(1, 1));
     const QRect localBottomRect(localRect.bottomLeft(), QSize(1, 1));
 
-    return !exposedContentRect().contains(originRect, true)
-           || widget.isObscured(localTopRect)
+    return widget.isObscured(localTopRect)
            || widget.isObscured(localBottomRect);
 }
 

@@ -41,6 +41,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mapplicationwindowstyle.h \
     $$STYLE_SRC_DIR/mgraphicseffectstyle.h \
     $$STYLE_SRC_DIR/mwidgetrectangularclipanimationstyle.h \
+    $$STYLE_SRC_DIR/mrelocatorstyle.h
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \
