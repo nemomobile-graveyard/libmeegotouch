@@ -1009,7 +1009,11 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
             hint.setWidth(QWIDGETSIZE_MAX);
         }
         if (hint.height() < 0) {
-            hint.setHeight(QWIDGETSIZE_MAX);
+            if (model()->line() == MTextEditModel::SingleLine) {
+                hint.setHeight(minLineHeight);
+            } else {
+                hint.setHeight(QWIDGETSIZE_MAX);
+            }
         }
         break;
     default:
