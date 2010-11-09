@@ -24,6 +24,10 @@
 #include <QStringMatcher>
 #include <QDebug>
 
+#ifdef HAVE_ICU
+#include <unicode/timezone.h>
+#endif
+
 const QString path = "/usr/share/meegotouch/locationdatabase/";
 
 class MLocationDatabasePrivate
@@ -32,6 +36,7 @@ public:
     MLocationDatabasePrivate();
     bool loadCountries();
     bool loadCities();
+    QString canonicalizeTimeZoneId(QString timeZoneId);
 
     QHash<QString, MCity> cities;
     QHash<QString, MCountry> countries;
@@ -158,7 +163,7 @@ bool MLocationDatabasePrivate::loadCities()
         city.setLocalName( tmpEl.text() );
 
         tmpEl = e.elementsByTagName( "timezone" ).at( 0 ).toElement();
-        city.setTimeZone( tmpEl.text() );
+        city.setTimeZone (canonicalizeTimeZoneId(tmpEl.text()));
 
         tmpEl = e.elementsByTagName( "countrykey" ).at( 0 ).toElement();
         QString countryKey = tmpEl.text();
@@ -184,6 +189,29 @@ bool MLocationDatabasePrivate::loadCities()
     return true;
 }
 
+QString MLocationDatabasePrivate::canonicalizeTimeZoneId(QString timeZoneId)
+{
+#ifdef HAVE_ICU
+    UErrorCode status = U_ZERO_ERROR;
+    icu::UnicodeString canonicalId;
+    icu::UnicodeString id = static_cast<const UChar *>(timeZoneId.utf16());
+    TimeZone::getCanonicalID (id, canonicalId, status);
+    if (U_FAILURE(status)) {
+        qWarning() << "TimeZone::getCanonicalID failed with error"
+                   << u_errorName(status);
+        return QString();
+    }
+    QString canonicalTimeZoneId =
+        QString(reinterpret_cast<const QChar *>(canonicalId.getBuffer()), canonicalId.length());
+    if (canonicalTimeZoneId.isEmpty()) {
+        qWarning() << "TimeZone::getCanonicalID failed. Id is empty.";
+        return QString();
+    }
+    return canonicalTimeZoneId;
+#else
+    return timeZoneId;
+#endif
+}
 
 MLocationDatabase::MLocationDatabase()
     : d_ptr( new MLocationDatabasePrivate )
@@ -248,6 +276,36 @@ QList<MCity> MLocationDatabase::citiesInCountry( const QString& countryKey )
         }
     }
 
+    return list;
+}
+
+QList<MCity> MLocationDatabase::citiesInTimeZone(const QString& timeZoneId)
+{
+    Q_D(MLocationDatabase);
+    QList<MCity> list;
+    QString canonicalTimeZoneId = d->canonicalizeTimeZoneId(timeZoneId);
+    if(canonicalTimeZoneId.isEmpty())
+        return list;
+    // Cut out last section of timezone id, for example cut out
+    // “Tell_City” out of “America/Indiana/Tell_City” In case of
+    // canonical time zone ids, the part after the last / seems to be
+    // a city in almost all cases. Although there seems to be the
+    // weird exception “America/North_Dakota/Center”. There are many
+    // non-canonical time zone ids which do not have a city name in
+    // the last part, for example “US/Pacific”.
+    QString canonicalCity = canonicalTimeZoneId.section('/', -1);
+    canonicalCity.replace('_', ' ');
+
+    foreach(const MCity& city, d->cities) {
+        // city.timeZone is already canonical
+        if (city.timeZone() == canonicalTimeZoneId) {
+            QString englishName = city.englishName();
+            if(englishName.contains(canonicalCity))
+                list.prepend(city);
+            else
+                list.append(city);
+        }
+    }
     return list;
 }
 

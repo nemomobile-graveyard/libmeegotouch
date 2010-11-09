@@ -22,13 +22,6 @@
 
 #include <QDateTime>
 
-#ifdef HAVE_ICU
-#include <unicode/umachine.h>
-#include <unicode/datefmt.h>
-#include <unicode/dtfmtsym.h>
-#include "micuconversions.h"
-#endif
-
 #include "mexport.h"
 #include "mcountry.h"
 

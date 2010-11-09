@@ -51,6 +51,20 @@ class M_CORE_EXPORT MLocationDatabase
     QList<MCity> citiesInCountry( const QString& countryKey );
 
     /**
+     * \brief returns a list with all cities in a time zone
+     * \param timeZoneId the Olson id of the timezone
+     *
+     * Time zone ids are “canonicalized” when comparing, i.e.
+     * citiesInTimeZone("US/Pacific") and
+     * citiesInTimeZone("America/Los_Angeles") will return the same
+     * list.
+     *
+     * For invalid time zone ids like "Oz/Emerald_City", an empty list
+     * is returned.
+     */
+    QList<MCity> citiesInTimeZone(const QString& timeZoneId);
+
+    /**
      * \brief returns a list with all cities that contain the given searchString
      */
     QList<MCity> matchingCities( const QString& searchString );

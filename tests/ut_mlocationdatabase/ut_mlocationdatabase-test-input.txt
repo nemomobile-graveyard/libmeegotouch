@@ -24,7 +24,7 @@ qtn_clk_city_usa_hatford	English Name	Hartford, Connecticut
 qtn_clk_city_usa_hatford	Country English Name	USA
 qtn_clk_city_usa_hatford	Latitude	41.767
 qtn_clk_city_usa_hatford	Longitude	-72.677
-qtn_clk_city_usa_hatford	Time zone id	US/Eastern
+qtn_clk_city_usa_hatford	Time zone id	America/New_York
 qtn_clk_city_usa_hatford	Canonical time zone id	America/New_York
 qtn_clk_city_usa_hatford	Time zone raw offset in hours	-5
 qtn_clk_city_usa_hatford	Time zone dst offset summer in hours	1
@@ -35,7 +35,7 @@ qtn_clk_city_usa_milwaukee	English Name	Milwaukee, Wisconsin
 qtn_clk_city_usa_milwaukee	Country English Name	USA
 qtn_clk_city_usa_milwaukee	Latitude	43.05
 qtn_clk_city_usa_milwaukee	Longitude	-87.95
-qtn_clk_city_usa_milwaukee	Time zone id	US/Central
+qtn_clk_city_usa_milwaukee	Time zone id	America/Chicago
 qtn_clk_city_usa_milwaukee	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_milwaukee	Time zone raw offset in hours	-6
 qtn_clk_city_usa_milwaukee	Time zone dst offset summer in hours	1
@@ -57,7 +57,7 @@ qtn_clk_city_usa_miami	English Name	Miami, Florida
 qtn_clk_city_usa_miami	Country English Name	USA
 qtn_clk_city_usa_miami	Latitude	25.7877
 qtn_clk_city_usa_miami	Longitude	-80.2241
-qtn_clk_city_usa_miami	Time zone id	US/Eastern
+qtn_clk_city_usa_miami	Time zone id	America/New_York
 qtn_clk_city_usa_miami	Canonical time zone id	America/New_York
 qtn_clk_city_usa_miami	Time zone raw offset in hours	-5
 qtn_clk_city_usa_miami	Time zone dst offset summer in hours	1
@@ -145,7 +145,7 @@ qtn_clk_city_canada_charlottetown	English Name	Charlottetown
 qtn_clk_city_canada_charlottetown	Country English Name	Canada
 qtn_clk_city_canada_charlottetown	Latitude	46.2333
 qtn_clk_city_canada_charlottetown	Longitude	-63.15
-qtn_clk_city_canada_charlottetown	Time zone id	Canada/Atlantic
+qtn_clk_city_canada_charlottetown	Time zone id	America/Halifax
 qtn_clk_city_canada_charlottetown	Canonical time zone id	America/Halifax
 qtn_clk_city_canada_charlottetown	Time zone raw offset in hours	-4
 qtn_clk_city_canada_charlottetown	Time zone dst offset summer in hours	1
@@ -178,7 +178,7 @@ qtn_clk_city_usa_billings	English Name	Billings, Montana
 qtn_clk_city_usa_billings	Country English Name	USA
 qtn_clk_city_usa_billings	Latitude	45.7867
 qtn_clk_city_usa_billings	Longitude	-108.537
-qtn_clk_city_usa_billings	Time zone id	US/Mountain
+qtn_clk_city_usa_billings	Time zone id	America/Denver
 qtn_clk_city_usa_billings	Canonical time zone id	America/Denver
 qtn_clk_city_usa_billings	Time zone raw offset in hours	-7
 qtn_clk_city_usa_billings	Time zone dst offset summer in hours	1
@@ -299,7 +299,7 @@ qtn_clk_city_bosnia_sarajevo	English Name	Sarajevo
 qtn_clk_city_bosnia_sarajevo	Country English Name	Bosnia and Herzegovina
 qtn_clk_city_bosnia_sarajevo	Latitude	43.8667
 qtn_clk_city_bosnia_sarajevo	Longitude	18.4167
-qtn_clk_city_bosnia_sarajevo	Time zone id	Europe/Sarajevo
+qtn_clk_city_bosnia_sarajevo	Time zone id	Europe/Belgrade
 qtn_clk_city_bosnia_sarajevo	Canonical time zone id	Europe/Belgrade
 qtn_clk_city_bosnia_sarajevo	Time zone raw offset in hours	1
 qtn_clk_city_bosnia_sarajevo	Time zone dst offset summer in hours	1
@@ -431,7 +431,7 @@ qtn_clk_city_usa_charlotte_amalie	English Name	Charlotte Amalie, United States V
 qtn_clk_city_usa_charlotte_amalie	Country English Name	USA
 qtn_clk_city_usa_charlotte_amalie	Latitude	18.35
 qtn_clk_city_usa_charlotte_amalie	Longitude	-64.95
-qtn_clk_city_usa_charlotte_amalie	Time zone id	America/Virgin
+qtn_clk_city_usa_charlotte_amalie	Time zone id	America/St_Thomas
 qtn_clk_city_usa_charlotte_amalie	Canonical time zone id	America/St_Thomas
 qtn_clk_city_usa_charlotte_amalie	Time zone raw offset in hours	-4
 qtn_clk_city_usa_charlotte_amalie	Time zone dst offset summer in hours	0
@@ -442,7 +442,7 @@ qtn_clk_city_usa_minneap	English Name	Minneapolis, Minnesota
 qtn_clk_city_usa_minneap	Country English Name	USA
 qtn_clk_city_usa_minneap	Latitude	44.9801
 qtn_clk_city_usa_minneap	Longitude	-93.2519
-qtn_clk_city_usa_minneap	Time zone id	US/Central
+qtn_clk_city_usa_minneap	Time zone id	America/Chicago
 qtn_clk_city_usa_minneap	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_minneap	Time zone raw offset in hours	-6
 qtn_clk_city_usa_minneap	Time zone dst offset summer in hours	1
@@ -453,7 +453,7 @@ qtn_clk_city_seychelles_victoria	English Name	Victoria
 qtn_clk_city_seychelles_victoria	Country English Name	Seychelles
 qtn_clk_city_seychelles_victoria	Latitude	-4.6167
 qtn_clk_city_seychelles_victoria	Longitude	55.45
-qtn_clk_city_seychelles_victoria	Time zone id	Australia/Victoria
+qtn_clk_city_seychelles_victoria	Time zone id	Australia/Melbourne
 qtn_clk_city_seychelles_victoria	Canonical time zone id	Australia/Melbourne
 qtn_clk_city_seychelles_victoria	Time zone raw offset in hours	10
 qtn_clk_city_seychelles_victoria	Time zone dst offset summer in hours	0
@@ -497,7 +497,7 @@ qtn_clk_city_usa_boise	English Name	Boise, Idaho
 qtn_clk_city_usa_boise	Country English Name	USA
 qtn_clk_city_usa_boise	Latitude	43.6137
 qtn_clk_city_usa_boise	Longitude	-116.238
-qtn_clk_city_usa_boise	Time zone id	US/Mountain
+qtn_clk_city_usa_boise	Time zone id	America/Denver
 qtn_clk_city_usa_boise	Canonical time zone id	America/Denver
 qtn_clk_city_usa_boise	Time zone raw offset in hours	-7
 qtn_clk_city_usa_boise	Time zone dst offset summer in hours	1
@@ -541,7 +541,7 @@ qtn_clk_city_canada_calgar	English Name	Calgary
 qtn_clk_city_canada_calgar	Country English Name	Canada
 qtn_clk_city_canada_calgar	Latitude	51.045
 qtn_clk_city_canada_calgar	Longitude	-114.057
-qtn_clk_city_canada_calgar	Time zone id	Canada/Mountain
+qtn_clk_city_canada_calgar	Time zone id	America/Edmonton
 qtn_clk_city_canada_calgar	Canonical time zone id	America/Edmonton
 qtn_clk_city_canada_calgar	Time zone raw offset in hours	-7
 qtn_clk_city_canada_calgar	Time zone dst offset summer in hours	1
@@ -618,7 +618,7 @@ qtn_clk_city_usa_sanfranci	English Name	San Francisco, California
 qtn_clk_city_usa_sanfranci	Country English Name	USA
 qtn_clk_city_usa_sanfranci	Latitude	37.7793
 qtn_clk_city_usa_sanfranci	Longitude	-122.419
-qtn_clk_city_usa_sanfranci	Time zone id	US/Pacific
+qtn_clk_city_usa_sanfranci	Time zone id	America/Los_Angeles
 qtn_clk_city_usa_sanfranci	Canonical time zone id	America/Los_Angeles
 qtn_clk_city_usa_sanfranci	Time zone raw offset in hours	-8
 qtn_clk_city_usa_sanfranci	Time zone dst offset summer in hours	1
@@ -783,7 +783,7 @@ qtn_clk_city_usa_boston	English Name	Boston, Massachusetts
 qtn_clk_city_usa_boston	Country English Name	USA
 qtn_clk_city_usa_boston	Latitude	42.3578
 qtn_clk_city_usa_boston	Longitude	-71.0617
-qtn_clk_city_usa_boston	Time zone id	US/Eastern
+qtn_clk_city_usa_boston	Time zone id	America/New_York
 qtn_clk_city_usa_boston	Canonical time zone id	America/New_York
 qtn_clk_city_usa_boston	Time zone raw offset in hours	-5
 qtn_clk_city_usa_boston	Time zone dst offset summer in hours	1
@@ -871,7 +871,7 @@ qtn_clk_city_nzealand_welling	English Name	Wellington
 qtn_clk_city_nzealand_welling	Country English Name	New Zealand
 qtn_clk_city_nzealand_welling	Latitude	-41.2889
 qtn_clk_city_nzealand_welling	Longitude	174.777
-qtn_clk_city_nzealand_welling	Time zone id	NZ
+qtn_clk_city_nzealand_welling	Time zone id	Pacific/Auckland
 qtn_clk_city_nzealand_welling	Canonical time zone id	Pacific/Auckland
 qtn_clk_city_nzealand_welling	Time zone raw offset in hours	12
 qtn_clk_city_nzealand_welling	Time zone dst offset summer in hours	0
@@ -926,7 +926,7 @@ qtn_clk_city_usa_losange	English Name	Los Angeles, California
 qtn_clk_city_usa_losange	Country English Name	USA
 qtn_clk_city_usa_losange	Latitude	34.05
 qtn_clk_city_usa_losange	Longitude	-118.25
-qtn_clk_city_usa_losange	Time zone id	US/Pacific
+qtn_clk_city_usa_losange	Time zone id	America/Los_Angeles
 qtn_clk_city_usa_losange	Canonical time zone id	America/Los_Angeles
 qtn_clk_city_usa_losange	Time zone raw offset in hours	-8
 qtn_clk_city_usa_losange	Time zone dst offset summer in hours	1
@@ -1025,7 +1025,7 @@ qtn_clk_city_usa_augusta	English Name	Augusta, Maine
 qtn_clk_city_usa_augusta	Country English Name	USA
 qtn_clk_city_usa_augusta	Latitude	44.3235
 qtn_clk_city_usa_augusta	Longitude	-69.7653
-qtn_clk_city_usa_augusta	Time zone id	US/Eastern
+qtn_clk_city_usa_augusta	Time zone id	America/New_York
 qtn_clk_city_usa_augusta	Canonical time zone id	America/New_York
 qtn_clk_city_usa_augusta	Time zone raw offset in hours	-5
 qtn_clk_city_usa_augusta	Time zone dst offset summer in hours	1
@@ -1146,7 +1146,7 @@ qtn_clk_city_usa_hawaii	English Name	Honolulu, Hawaii
 qtn_clk_city_usa_hawaii	Country English Name	USA
 qtn_clk_city_usa_hawaii	Latitude	21.3089
 qtn_clk_city_usa_hawaii	Longitude	-157.826
-qtn_clk_city_usa_hawaii	Time zone id	US/Hawaii
+qtn_clk_city_usa_hawaii	Time zone id	Pacific/Honolulu
 qtn_clk_city_usa_hawaii	Canonical time zone id	Pacific/Honolulu
 qtn_clk_city_usa_hawaii	Time zone raw offset in hours	-10
 qtn_clk_city_usa_hawaii	Time zone dst offset summer in hours	0
@@ -1245,7 +1245,7 @@ qtn_clk_city_slove_ljubljana	English Name	Ljubljana
 qtn_clk_city_slove_ljubljana	Country English Name	Slovenia
 qtn_clk_city_slove_ljubljana	Latitude	46.05
 qtn_clk_city_slove_ljubljana	Longitude	14.5167
-qtn_clk_city_slove_ljubljana	Time zone id	Europe/Ljubljana
+qtn_clk_city_slove_ljubljana	Time zone id	Europe/Belgrade
 qtn_clk_city_slove_ljubljana	Canonical time zone id	Europe/Belgrade
 qtn_clk_city_slove_ljubljana	Time zone raw offset in hours	1
 qtn_clk_city_slove_ljubljana	Time zone dst offset summer in hours	1
@@ -1278,7 +1278,7 @@ qtn_clk_city_usa_bismarck	English Name	Bismarck, North Dakota
 qtn_clk_city_usa_bismarck	Country English Name	USA
 qtn_clk_city_usa_bismarck	Latitude	46.8133
 qtn_clk_city_usa_bismarck	Longitude	-100.779
-qtn_clk_city_usa_bismarck	Time zone id	US/Central
+qtn_clk_city_usa_bismarck	Time zone id	America/Chicago
 qtn_clk_city_usa_bismarck	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_bismarck	Time zone raw offset in hours	-6
 qtn_clk_city_usa_bismarck	Time zone dst offset summer in hours	1
@@ -1289,7 +1289,7 @@ qtn_clk_city_usa_desmoines	English Name	Des Moines, Iowa
 qtn_clk_city_usa_desmoines	Country English Name	USA
 qtn_clk_city_usa_desmoines	Latitude	41.5908
 qtn_clk_city_usa_desmoines	Longitude	-93.6208
-qtn_clk_city_usa_desmoines	Time zone id	US/Central
+qtn_clk_city_usa_desmoines	Time zone id	America/Chicago
 qtn_clk_city_usa_desmoines	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_desmoines	Time zone raw offset in hours	-6
 qtn_clk_city_usa_desmoines	Time zone dst offset summer in hours	1
@@ -1333,7 +1333,7 @@ qtn_clk_city_canada_creighton	English Name	Creighton
 qtn_clk_city_canada_creighton	Country English Name	Canada
 qtn_clk_city_canada_creighton	Latitude	54.7561
 qtn_clk_city_canada_creighton	Longitude	-101.897
-qtn_clk_city_canada_creighton	Time zone id	Canada/Saskatchewan
+qtn_clk_city_canada_creighton	Time zone id	America/Regina
 qtn_clk_city_canada_creighton	Canonical time zone id	America/Regina
 qtn_clk_city_canada_creighton	Time zone raw offset in hours	-6
 qtn_clk_city_canada_creighton	Time zone dst offset summer in hours	0
@@ -1377,7 +1377,7 @@ qtn_clk_city_canada_lloydminster	English Name	Lloydminster
 qtn_clk_city_canada_lloydminster	Country English Name	Canada
 qtn_clk_city_canada_lloydminster	Latitude	53.2781
 qtn_clk_city_canada_lloydminster	Longitude	-110.006
-qtn_clk_city_canada_lloydminster	Time zone id	Canada/Mountain
+qtn_clk_city_canada_lloydminster	Time zone id	America/Edmonton
 qtn_clk_city_canada_lloydminster	Canonical time zone id	America/Edmonton
 qtn_clk_city_canada_lloydminster	Time zone raw offset in hours	-7
 qtn_clk_city_canada_lloydminster	Time zone dst offset summer in hours	1
@@ -1399,7 +1399,7 @@ qtn_clk_city_usa_philadelp	English Name	Philadelphia, Pennsylvania
 qtn_clk_city_usa_philadelp	Country English Name	USA
 qtn_clk_city_usa_philadelp	Latitude	39.9533
 qtn_clk_city_usa_philadelp	Longitude	-75.17
-qtn_clk_city_usa_philadelp	Time zone id	US/Eastern
+qtn_clk_city_usa_philadelp	Time zone id	America/New_York
 qtn_clk_city_usa_philadelp	Canonical time zone id	America/New_York
 qtn_clk_city_usa_philadelp	Time zone raw offset in hours	-5
 qtn_clk_city_usa_philadelp	Time zone dst offset summer in hours	1
@@ -1408,8 +1408,8 @@ qtn_clk_city_usa_philadelp	Time zone total offset summer in hours	-4
 qtn_clk_city_usa_philadelp	Time zone total offset winter in hours	-5
 qtn_clk_city_china_beijing	English Name	Beijing
 qtn_clk_city_china_beijing	Country English Name	China
-qtn_clk_city_china_beijing	Latitude	31.2333
-qtn_clk_city_china_beijing	Longitude	121.467
+qtn_clk_city_china_beijing	Latitude	39.9139
+qtn_clk_city_china_beijing	Longitude	116.392
 qtn_clk_city_china_beijing	Time zone id	Asia/Shanghai
 qtn_clk_city_china_beijing	Canonical time zone id	Asia/Shanghai
 qtn_clk_city_china_beijing	Time zone raw offset in hours	8
@@ -1476,7 +1476,7 @@ qtn_clk_city_usa_saltlakec	English Name	Salt Lake City, Utah
 qtn_clk_city_usa_saltlakec	Country English Name	USA
 qtn_clk_city_usa_saltlakec	Latitude	40.75
 qtn_clk_city_usa_saltlakec	Longitude	-111.883
-qtn_clk_city_usa_saltlakec	Time zone id	US/Mountain
+qtn_clk_city_usa_saltlakec	Time zone id	America/Denver
 qtn_clk_city_usa_saltlakec	Canonical time zone id	America/Denver
 qtn_clk_city_usa_saltlakec	Time zone raw offset in hours	-7
 qtn_clk_city_usa_saltlakec	Time zone dst offset summer in hours	1
@@ -1564,7 +1564,7 @@ qtn_clk_city_usa_oklahoma	English Name	Oklahoma City, Oklahoma
 qtn_clk_city_usa_oklahoma	Country English Name	USA
 qtn_clk_city_usa_oklahoma	Latitude	35.4823
 qtn_clk_city_usa_oklahoma	Longitude	-97.5352
-qtn_clk_city_usa_oklahoma	Time zone id	US/Central
+qtn_clk_city_usa_oklahoma	Time zone id	America/Chicago
 qtn_clk_city_usa_oklahoma	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_oklahoma	Time zone raw offset in hours	-6
 qtn_clk_city_usa_oklahoma	Time zone dst offset summer in hours	1
@@ -1575,7 +1575,7 @@ qtn_clk_city_usa_sioux_falls	English Name	Sioux Falls, South Dakota
 qtn_clk_city_usa_sioux_falls	Country English Name	USA
 qtn_clk_city_usa_sioux_falls	Latitude	43.5364
 qtn_clk_city_usa_sioux_falls	Longitude	-96.7317
-qtn_clk_city_usa_sioux_falls	Time zone id	US/Central
+qtn_clk_city_usa_sioux_falls	Time zone id	America/Chicago
 qtn_clk_city_usa_sioux_falls	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_sioux_falls	Time zone raw offset in hours	-6
 qtn_clk_city_usa_sioux_falls	Time zone dst offset summer in hours	1
@@ -1586,7 +1586,7 @@ qtn_clk_city_canada_ottawa	English Name	Ottawa
 qtn_clk_city_canada_ottawa	Country English Name	Canada
 qtn_clk_city_canada_ottawa	Latitude	45.417
 qtn_clk_city_canada_ottawa	Longitude	-75.7
-qtn_clk_city_canada_ottawa	Time zone id	Canada/Eastern
+qtn_clk_city_canada_ottawa	Time zone id	America/Toronto
 qtn_clk_city_canada_ottawa	Canonical time zone id	America/Toronto
 qtn_clk_city_canada_ottawa	Time zone raw offset in hours	-5
 qtn_clk_city_canada_ottawa	Time zone dst offset summer in hours	1
@@ -1597,7 +1597,7 @@ qtn_clk_city_vatican_vatican_city	English Name	Vatican City
 qtn_clk_city_vatican_vatican_city	Country English Name	Vatican
 qtn_clk_city_vatican_vatican_city	Latitude	41.9
 qtn_clk_city_vatican_vatican_city	Longitude	12.45
-qtn_clk_city_vatican_vatican_city	Time zone id	Europe/Vatican
+qtn_clk_city_vatican_vatican_city	Time zone id	Europe/Rome
 qtn_clk_city_vatican_vatican_city	Canonical time zone id	Europe/Rome
 qtn_clk_city_vatican_vatican_city	Time zone raw offset in hours	1
 qtn_clk_city_vatican_vatican_city	Time zone dst offset summer in hours	1
@@ -1619,7 +1619,7 @@ qtn_clk_city_usa_evansville	English Name	Evansville, Indiana
 qtn_clk_city_usa_evansville	Country English Name	USA
 qtn_clk_city_usa_evansville	Latitude	37.9772
 qtn_clk_city_usa_evansville	Longitude	-87.5506
-qtn_clk_city_usa_evansville	Time zone id	US/Central
+qtn_clk_city_usa_evansville	Time zone id	America/Chicago
 qtn_clk_city_usa_evansville	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_evansville	Time zone raw offset in hours	-6
 qtn_clk_city_usa_evansville	Time zone dst offset summer in hours	1
@@ -1630,7 +1630,7 @@ qtn_clk_city_usa_providence	English Name	Providence, Rhode Island
 qtn_clk_city_usa_providence	Country English Name	USA
 qtn_clk_city_usa_providence	Latitude	41.8236
 qtn_clk_city_usa_providence	Longitude	-71.4222
-qtn_clk_city_usa_providence	Time zone id	US/Eastern
+qtn_clk_city_usa_providence	Time zone id	America/New_York
 qtn_clk_city_usa_providence	Canonical time zone id	America/New_York
 qtn_clk_city_usa_providence	Time zone raw offset in hours	-5
 qtn_clk_city_usa_providence	Time zone dst offset summer in hours	1
@@ -1652,7 +1652,7 @@ qtn_clk_city_viet_hanoi	English Name	Hanoi
 qtn_clk_city_viet_hanoi	Country English Name	Vietnam
 qtn_clk_city_viet_hanoi	Latitude	10.75
 qtn_clk_city_viet_hanoi	Longitude	106.667
-qtn_clk_city_viet_hanoi	Time zone id	Asia/Ho_Chi_Minh
+qtn_clk_city_viet_hanoi	Time zone id	Asia/Saigon
 qtn_clk_city_viet_hanoi	Canonical time zone id	Asia/Saigon
 qtn_clk_city_viet_hanoi	Time zone raw offset in hours	7
 qtn_clk_city_viet_hanoi	Time zone dst offset summer in hours	0
@@ -1685,7 +1685,7 @@ qtn_clk_city_usa_seattle	English Name	Seattle, Washington
 qtn_clk_city_usa_seattle	Country English Name	USA
 qtn_clk_city_usa_seattle	Latitude	47.6097
 qtn_clk_city_usa_seattle	Longitude	-122.333
-qtn_clk_city_usa_seattle	Time zone id	US/Pacific
+qtn_clk_city_usa_seattle	Time zone id	America/Los_Angeles
 qtn_clk_city_usa_seattle	Canonical time zone id	America/Los_Angeles
 qtn_clk_city_usa_seattle	Time zone raw offset in hours	-8
 qtn_clk_city_usa_seattle	Time zone dst offset summer in hours	1
@@ -1729,7 +1729,7 @@ qtn_clk_city_usa_montpelier	English Name	Montpelier, Vermont
 qtn_clk_city_usa_montpelier	Country English Name	USA
 qtn_clk_city_usa_montpelier	Latitude	44.2664
 qtn_clk_city_usa_montpelier	Longitude	-72.5719
-qtn_clk_city_usa_montpelier	Time zone id	US/Eastern
+qtn_clk_city_usa_montpelier	Time zone id	America/New_York
 qtn_clk_city_usa_montpelier	Canonical time zone id	America/New_York
 qtn_clk_city_usa_montpelier	Time zone raw offset in hours	-5
 qtn_clk_city_usa_montpelier	Time zone dst offset summer in hours	1
@@ -1784,7 +1784,7 @@ qtn_clk_city_usa_columbus	English Name	Columbus, Ohio
 qtn_clk_city_usa_columbus	Country English Name	USA
 qtn_clk_city_usa_columbus	Latitude	39.9833
 qtn_clk_city_usa_columbus	Longitude	-82.9833
-qtn_clk_city_usa_columbus	Time zone id	US/Eastern
+qtn_clk_city_usa_columbus	Time zone id	America/New_York
 qtn_clk_city_usa_columbus	Canonical time zone id	America/New_York
 qtn_clk_city_usa_columbus	Time zone raw offset in hours	-5
 qtn_clk_city_usa_columbus	Time zone dst offset summer in hours	1
@@ -1905,7 +1905,7 @@ qtn_clk_city_usa_phoenix	English Name	Phoenix, Arizona
 qtn_clk_city_usa_phoenix	Country English Name	USA
 qtn_clk_city_usa_phoenix	Latitude	33.4485
 qtn_clk_city_usa_phoenix	Longitude	-112.074
-qtn_clk_city_usa_phoenix	Time zone id	US/Arizona
+qtn_clk_city_usa_phoenix	Time zone id	America/Phoenix
 qtn_clk_city_usa_phoenix	Canonical time zone id	America/Phoenix
 qtn_clk_city_usa_phoenix	Time zone raw offset in hours	-7
 qtn_clk_city_usa_phoenix	Time zone dst offset summer in hours	0
@@ -2004,7 +2004,7 @@ qtn_clk_city_usa_birmingham	English Name	Birmingham, Alabama
 qtn_clk_city_usa_birmingham	Country English Name	USA
 qtn_clk_city_usa_birmingham	Latitude	33.5248
 qtn_clk_city_usa_birmingham	Longitude	-86.8127
-qtn_clk_city_usa_birmingham	Time zone id	US/Central
+qtn_clk_city_usa_birmingham	Time zone id	America/Chicago
 qtn_clk_city_usa_birmingham	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_birmingham	Time zone raw offset in hours	-6
 qtn_clk_city_usa_birmingham	Time zone dst offset summer in hours	1
@@ -2059,7 +2059,7 @@ qtn_clk_city_usa_richmond	English Name	Richmond, Virginia
 qtn_clk_city_usa_richmond	Country English Name	USA
 qtn_clk_city_usa_richmond	Latitude	37.541
 qtn_clk_city_usa_richmond	Longitude	-77.4329
-qtn_clk_city_usa_richmond	Time zone id	US/Eastern
+qtn_clk_city_usa_richmond	Time zone id	America/New_York
 qtn_clk_city_usa_richmond	Canonical time zone id	America/New_York
 qtn_clk_city_usa_richmond	Time zone raw offset in hours	-5
 qtn_clk_city_usa_richmond	Time zone dst offset summer in hours	1
@@ -2081,7 +2081,7 @@ qtn_clk_city_canada_stjohns	English Name	St. John's
 qtn_clk_city_canada_stjohns	Country English Name	Canada
 qtn_clk_city_canada_stjohns	Latitude	47.5675
 qtn_clk_city_canada_stjohns	Longitude	-52.7072
-qtn_clk_city_canada_stjohns	Time zone id	Canada/Newfoundland
+qtn_clk_city_canada_stjohns	Time zone id	America/St_Johns
 qtn_clk_city_canada_stjohns	Canonical time zone id	America/St_Johns
 qtn_clk_city_canada_stjohns	Time zone raw offset in hours	-3
 qtn_clk_city_canada_stjohns	Time zone dst offset summer in hours	1
@@ -2103,7 +2103,7 @@ qtn_clk_city_usa_jackson	English Name	Jackson, Mississippi
 qtn_clk_city_usa_jackson	Country English Name	USA
 qtn_clk_city_usa_jackson	Latitude	32.2989
 qtn_clk_city_usa_jackson	Longitude	-90.1847
-qtn_clk_city_usa_jackson	Time zone id	US/Central
+qtn_clk_city_usa_jackson	Time zone id	America/Chicago
 qtn_clk_city_usa_jackson	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_jackson	Time zone raw offset in hours	-6
 qtn_clk_city_usa_jackson	Time zone dst offset summer in hours	1
@@ -2202,7 +2202,7 @@ qtn_clk_city_croatia_zagreb	English Name	Zagreb
 qtn_clk_city_croatia_zagreb	Country English Name	Croatia
 qtn_clk_city_croatia_zagreb	Latitude	45.8
 qtn_clk_city_croatia_zagreb	Longitude	15.9667
-qtn_clk_city_croatia_zagreb	Time zone id	Europe/Zagreb
+qtn_clk_city_croatia_zagreb	Time zone id	Europe/Belgrade
 qtn_clk_city_croatia_zagreb	Canonical time zone id	Europe/Belgrade
 qtn_clk_city_croatia_zagreb	Time zone raw offset in hours	1
 qtn_clk_city_croatia_zagreb	Time zone dst offset summer in hours	1
@@ -2235,7 +2235,7 @@ qtn_clk_city_montenegro_podgorica	English Name	Podgorica
 qtn_clk_city_montenegro_podgorica	Country English Name	Montenegro
 qtn_clk_city_montenegro_podgorica	Latitude	42.4333
 qtn_clk_city_montenegro_podgorica	Longitude	19.2667
-qtn_clk_city_montenegro_podgorica	Time zone id	Europe/Podgorica
+qtn_clk_city_montenegro_podgorica	Time zone id	Europe/Belgrade
 qtn_clk_city_montenegro_podgorica	Canonical time zone id	Europe/Belgrade
 qtn_clk_city_montenegro_podgorica	Time zone raw offset in hours	1
 qtn_clk_city_montenegro_podgorica	Time zone dst offset summer in hours	1
@@ -2257,7 +2257,7 @@ qtn_clk_city_usa_denver	English Name	Denver, Colorado
 qtn_clk_city_usa_denver	Country English Name	USA
 qtn_clk_city_usa_denver	Latitude	39.7392
 qtn_clk_city_usa_denver	Longitude	-104.985
-qtn_clk_city_usa_denver	Time zone id	US/Mountain
+qtn_clk_city_usa_denver	Time zone id	America/Denver
 qtn_clk_city_usa_denver	Canonical time zone id	America/Denver
 qtn_clk_city_usa_denver	Time zone raw offset in hours	-7
 qtn_clk_city_usa_denver	Time zone dst offset summer in hours	1
@@ -2389,7 +2389,7 @@ qtn_clk_city_usa_portland	English Name	Portland, Oregon
 qtn_clk_city_usa_portland	Country English Name	USA
 qtn_clk_city_usa_portland	Latitude	45.52
 qtn_clk_city_usa_portland	Longitude	-122.682
-qtn_clk_city_usa_portland	Time zone id	US/Pacific
+qtn_clk_city_usa_portland	Time zone id	America/Los_Angeles
 qtn_clk_city_usa_portland	Canonical time zone id	America/Los_Angeles
 qtn_clk_city_usa_portland	Time zone raw offset in hours	-8
 qtn_clk_city_usa_portland	Time zone dst offset summer in hours	1
@@ -2400,7 +2400,7 @@ qtn_clk_city_slova_bratislava	English Name	Bratislava
 qtn_clk_city_slova_bratislava	Country English Name	Slovakia
 qtn_clk_city_slova_bratislava	Latitude	48.15
 qtn_clk_city_slova_bratislava	Longitude	17.1167
-qtn_clk_city_slova_bratislava	Time zone id	Europe/Bratislava
+qtn_clk_city_slova_bratislava	Time zone id	Europe/Prague
 qtn_clk_city_slova_bratislava	Canonical time zone id	Europe/Prague
 qtn_clk_city_slova_bratislava	Time zone raw offset in hours	1
 qtn_clk_city_slova_bratislava	Time zone dst offset summer in hours	1
@@ -2411,7 +2411,7 @@ qtn_clk_city_usa_wichita	English Name	Wichita, Kansas
 qtn_clk_city_usa_wichita	Country English Name	USA
 qtn_clk_city_usa_wichita	Latitude	37.6889
 qtn_clk_city_usa_wichita	Longitude	-97.3361
-qtn_clk_city_usa_wichita	Time zone id	US/Central
+qtn_clk_city_usa_wichita	Time zone id	America/Chicago
 qtn_clk_city_usa_wichita	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_wichita	Time zone raw offset in hours	-6
 qtn_clk_city_usa_wichita	Time zone dst offset summer in hours	1
@@ -2433,7 +2433,7 @@ qtn_clk_city_usa_juneau	English Name	Juneau, Alaska
 qtn_clk_city_usa_juneau	Country English Name	USA
 qtn_clk_city_usa_juneau	Latitude	58.3833
 qtn_clk_city_usa_juneau	Longitude	-134.183
-qtn_clk_city_usa_juneau	Time zone id	US/Alaska
+qtn_clk_city_usa_juneau	Time zone id	America/Anchorage
 qtn_clk_city_usa_juneau	Canonical time zone id	America/Anchorage
 qtn_clk_city_usa_juneau	Time zone raw offset in hours	-9
 qtn_clk_city_usa_juneau	Time zone dst offset summer in hours	1
@@ -2466,7 +2466,7 @@ qtn_clk_city_india_chennai	English Name	Chennai
 qtn_clk_city_india_chennai	Country English Name	India
 qtn_clk_city_india_chennai	Latitude	22.5333
 qtn_clk_city_india_chennai	Longitude	88.3667
-qtn_clk_city_india_chennai	Time zone id	Asia/Kolkata
+qtn_clk_city_india_chennai	Time zone id	Asia/Calcutta
 qtn_clk_city_india_chennai	Canonical time zone id	Asia/Calcutta
 qtn_clk_city_india_chennai	Time zone raw offset in hours	5
 qtn_clk_city_india_chennai	Time zone dst offset summer in hours	0
@@ -2554,7 +2554,7 @@ qtn_clk_city_usa_baltimore	English Name	Baltimore, Maryland
 qtn_clk_city_usa_baltimore	Country English Name	USA
 qtn_clk_city_usa_baltimore	Latitude	39.2833
 qtn_clk_city_usa_baltimore	Longitude	-76.6167
-qtn_clk_city_usa_baltimore	Time zone id	US/Eastern
+qtn_clk_city_usa_baltimore	Time zone id	America/New_York
 qtn_clk_city_usa_baltimore	Canonical time zone id	America/New_York
 qtn_clk_city_usa_baltimore	Time zone raw offset in hours	-5
 qtn_clk_city_usa_baltimore	Time zone dst offset summer in hours	1
@@ -2620,7 +2620,7 @@ qtn_clk_city_usa_dover	English Name	Dover, Delaware
 qtn_clk_city_usa_dover	Country English Name	USA
 qtn_clk_city_usa_dover	Latitude	39.1619
 qtn_clk_city_usa_dover	Longitude	-75.5267
-qtn_clk_city_usa_dover	Time zone id	US/Eastern
+qtn_clk_city_usa_dover	Time zone id	America/New_York
 qtn_clk_city_usa_dover	Canonical time zone id	America/New_York
 qtn_clk_city_usa_dover	Time zone raw offset in hours	-5
 qtn_clk_city_usa_dover	Time zone dst offset summer in hours	1
@@ -2741,7 +2741,7 @@ qtn_clk_city_usa_washington	English Name	Washington, District of Columbia
 qtn_clk_city_usa_washington	Country English Name	USA
 qtn_clk_city_usa_washington	Latitude	38.8951
 qtn_clk_city_usa_washington	Longitude	-77.0367
-qtn_clk_city_usa_washington	Time zone id	US/Eastern
+qtn_clk_city_usa_washington	Time zone id	America/New_York
 qtn_clk_city_usa_washington	Canonical time zone id	America/New_York
 qtn_clk_city_usa_washington	Time zone raw offset in hours	-5
 qtn_clk_city_usa_washington	Time zone dst offset summer in hours	1
@@ -2807,7 +2807,7 @@ qtn_clk_city_bvi_road_town	English Name	Road Town
 qtn_clk_city_bvi_road_town	Country English Name	British Virgin Islands
 qtn_clk_city_bvi_road_town	Latitude	18.4314
 qtn_clk_city_bvi_road_town	Longitude	-64.6231
-qtn_clk_city_bvi_road_town	Time zone id	America/Virgin
+qtn_clk_city_bvi_road_town	Time zone id	America/St_Thomas
 qtn_clk_city_bvi_road_town	Canonical time zone id	America/St_Thomas
 qtn_clk_city_bvi_road_town	Time zone raw offset in hours	-4
 qtn_clk_city_bvi_road_town	Time zone dst offset summer in hours	0
@@ -2851,7 +2851,7 @@ qtn_clk_city_eritrea_asmara	English Name	Asmara
 qtn_clk_city_eritrea_asmara	Country English Name	Eritrea
 qtn_clk_city_eritrea_asmara	Latitude	15.3333
 qtn_clk_city_eritrea_asmara	Longitude	38.8833
-qtn_clk_city_eritrea_asmara	Time zone id	Africa/Asmara
+qtn_clk_city_eritrea_asmara	Time zone id	Africa/Asmera
 qtn_clk_city_eritrea_asmara	Canonical time zone id	Africa/Asmera
 qtn_clk_city_eritrea_asmara	Time zone raw offset in hours	3
 qtn_clk_city_eritrea_asmara	Time zone dst offset summer in hours	0
@@ -2862,7 +2862,7 @@ qtn_clk_city_india_calcut	English Name	Kolkata
 qtn_clk_city_india_calcut	Country English Name	India
 qtn_clk_city_india_calcut	Latitude	22.5333
 qtn_clk_city_india_calcut	Longitude	88.3667
-qtn_clk_city_india_calcut	Time zone id	Asia/Kolkata
+qtn_clk_city_india_calcut	Time zone id	Asia/Calcutta
 qtn_clk_city_india_calcut	Canonical time zone id	Asia/Calcutta
 qtn_clk_city_india_calcut	Time zone raw offset in hours	5
 qtn_clk_city_india_calcut	Time zone dst offset summer in hours	0
@@ -2884,7 +2884,7 @@ qtn_clk_city_usa_dallas	English Name	Dallas, Texas
 qtn_clk_city_usa_dallas	Country English Name	USA
 qtn_clk_city_usa_dallas	Latitude	32.7828
 qtn_clk_city_usa_dallas	Longitude	-96.8039
-qtn_clk_city_usa_dallas	Time zone id	US/Central
+qtn_clk_city_usa_dallas	Time zone id	America/Chicago
 qtn_clk_city_usa_dallas	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_dallas	Time zone raw offset in hours	-6
 qtn_clk_city_usa_dallas	Time zone dst offset summer in hours	1
@@ -2895,7 +2895,7 @@ qtn_clk_city_usa_neworlea	English Name	New Orleans, Louisiana
 qtn_clk_city_usa_neworlea	Country English Name	USA
 qtn_clk_city_usa_neworlea	Latitude	29.9667
 qtn_clk_city_usa_neworlea	Longitude	-90.05
-qtn_clk_city_usa_neworlea	Time zone id	US/Central
+qtn_clk_city_usa_neworlea	Time zone id	America/Chicago
 qtn_clk_city_usa_neworlea	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_neworlea	Time zone raw offset in hours	-6
 qtn_clk_city_usa_neworlea	Time zone dst offset summer in hours	1
@@ -3005,7 +3005,7 @@ qtn_clk_city_usa_ny	English Name	New York City, New York
 qtn_clk_city_usa_ny	Country English Name	USA
 qtn_clk_city_usa_ny	Latitude	40.7167
 qtn_clk_city_usa_ny	Longitude	-74
-qtn_clk_city_usa_ny	Time zone id	US/Eastern
+qtn_clk_city_usa_ny	Time zone id	America/New_York
 qtn_clk_city_usa_ny	Canonical time zone id	America/New_York
 qtn_clk_city_usa_ny	Time zone raw offset in hours	-5
 qtn_clk_city_usa_ny	Time zone dst offset summer in hours	1
@@ -3148,7 +3148,7 @@ qtn_clk_city_india_newdel	English Name	New Delhi
 qtn_clk_city_india_newdel	Country English Name	India
 qtn_clk_city_india_newdel	Latitude	22.5333
 qtn_clk_city_india_newdel	Longitude	88.3667
-qtn_clk_city_india_newdel	Time zone id	Asia/Kolkata
+qtn_clk_city_india_newdel	Time zone id	Asia/Calcutta
 qtn_clk_city_india_newdel	Canonical time zone id	Asia/Calcutta
 qtn_clk_city_india_newdel	Time zone raw offset in hours	5
 qtn_clk_city_india_newdel	Time zone dst offset summer in hours	0
@@ -3170,7 +3170,7 @@ qtn_clk_city_usa_charleston	English Name	Charleston, West Virginia
 qtn_clk_city_usa_charleston	Country English Name	USA
 qtn_clk_city_usa_charleston	Latitude	38.3472
 qtn_clk_city_usa_charleston	Longitude	-81.6333
-qtn_clk_city_usa_charleston	Time zone id	US/Eastern
+qtn_clk_city_usa_charleston	Time zone id	America/New_York
 qtn_clk_city_usa_charleston	Canonical time zone id	America/New_York
 qtn_clk_city_usa_charleston	Time zone raw offset in hours	-5
 qtn_clk_city_usa_charleston	Time zone dst offset summer in hours	1
@@ -3214,7 +3214,7 @@ qtn_clk_city_usa_chicago	English Name	Chicago, Illinois
 qtn_clk_city_usa_chicago	Country English Name	USA
 qtn_clk_city_usa_chicago	Latitude	41.8369
 qtn_clk_city_usa_chicago	Longitude	-87.6844
-qtn_clk_city_usa_chicago	Time zone id	US/Central
+qtn_clk_city_usa_chicago	Time zone id	America/Chicago
 qtn_clk_city_usa_chicago	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_chicago	Time zone raw offset in hours	-6
 qtn_clk_city_usa_chicago	Time zone dst offset summer in hours	1
@@ -3225,7 +3225,7 @@ qtn_clk_city_usa_concord	English Name	Concord, New Hampshire
 qtn_clk_city_usa_concord	Country English Name	USA
 qtn_clk_city_usa_concord	Latitude	43.2067
 qtn_clk_city_usa_concord	Longitude	-71.5381
-qtn_clk_city_usa_concord	Time zone id	US/Eastern
+qtn_clk_city_usa_concord	Time zone id	America/New_York
 qtn_clk_city_usa_concord	Canonical time zone id	America/New_York
 qtn_clk_city_usa_concord	Time zone raw offset in hours	-5
 qtn_clk_city_usa_concord	Time zone dst offset summer in hours	1
@@ -3236,7 +3236,7 @@ qtn_clk_city_canada_cranbrook	English Name	Cranbrook
 qtn_clk_city_canada_cranbrook	Country English Name	Canada
 qtn_clk_city_canada_cranbrook	Latitude	49.5136
 qtn_clk_city_canada_cranbrook	Longitude	-115.769
-qtn_clk_city_canada_cranbrook	Time zone id	Canada/Mountain
+qtn_clk_city_canada_cranbrook	Time zone id	America/Edmonton
 qtn_clk_city_canada_cranbrook	Canonical time zone id	America/Edmonton
 qtn_clk_city_canada_cranbrook	Time zone raw offset in hours	-7
 qtn_clk_city_canada_cranbrook	Time zone dst offset summer in hours	1
@@ -3269,7 +3269,7 @@ qtn_clk_city_argen_buenos	English Name	Buenos Aires
 qtn_clk_city_argen_buenos	Country English Name	Argentina
 qtn_clk_city_argen_buenos	Latitude	-34.6
 qtn_clk_city_argen_buenos	Longitude	-58.45
-qtn_clk_city_argen_buenos	Time zone id	America/Argentina/Buenos_Aires
+qtn_clk_city_argen_buenos	Time zone id	America/Buenos_Aires
 qtn_clk_city_argen_buenos	Canonical time zone id	America/Buenos_Aires
 qtn_clk_city_argen_buenos	Time zone raw offset in hours	-3
 qtn_clk_city_argen_buenos	Time zone dst offset summer in hours	0
@@ -3291,7 +3291,7 @@ qtn_clk_city_usa_pensacola	English Name	Pensacola, Florida
 qtn_clk_city_usa_pensacola	Country English Name	USA
 qtn_clk_city_usa_pensacola	Latitude	30.4333
 qtn_clk_city_usa_pensacola	Longitude	-87.2
-qtn_clk_city_usa_pensacola	Time zone id	US/Central
+qtn_clk_city_usa_pensacola	Time zone id	America/Chicago
 qtn_clk_city_usa_pensacola	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_pensacola	Time zone raw offset in hours	-6
 qtn_clk_city_usa_pensacola	Time zone dst offset summer in hours	1
@@ -3302,7 +3302,7 @@ qtn_clk_city_canada_atikokan	English Name	Atikokan
 qtn_clk_city_canada_atikokan	Country English Name	Canada
 qtn_clk_city_canada_atikokan	Latitude	48.7586
 qtn_clk_city_canada_atikokan	Longitude	-91.6217
-qtn_clk_city_canada_atikokan	Time zone id	America/Atikokan
+qtn_clk_city_canada_atikokan	Time zone id	America/Coral_Harbour
 qtn_clk_city_canada_atikokan	Canonical time zone id	America/Coral_Harbour
 qtn_clk_city_canada_atikokan	Time zone raw offset in hours	-5
 qtn_clk_city_canada_atikokan	Time zone dst offset summer in hours	0
@@ -3357,7 +3357,7 @@ qtn_clk_city_ireland_belfast	English Name	Belfast
 qtn_clk_city_ireland_belfast	Country English Name	Northern Ireland
 qtn_clk_city_ireland_belfast	Latitude	54.597
 qtn_clk_city_ireland_belfast	Longitude	-5.93
-qtn_clk_city_ireland_belfast	Time zone id	Europe/Belfast
+qtn_clk_city_ireland_belfast	Time zone id	Europe/London
 qtn_clk_city_ireland_belfast	Canonical time zone id	Europe/London
 qtn_clk_city_ireland_belfast	Time zone raw offset in hours	0
 qtn_clk_city_ireland_belfast	Time zone dst offset summer in hours	1
@@ -3412,7 +3412,7 @@ qtn_clk_city_israel_telaviv	English Name	Tel Aviv
 qtn_clk_city_israel_telaviv	Country English Name	Israel
 qtn_clk_city_israel_telaviv	Latitude	32.0667
 qtn_clk_city_israel_telaviv	Longitude	34.7833
-qtn_clk_city_israel_telaviv	Time zone id	Asia/Tel_Aviv
+qtn_clk_city_israel_telaviv	Time zone id	Asia/Jerusalem
 qtn_clk_city_israel_telaviv	Canonical time zone id	Asia/Jerusalem
 qtn_clk_city_israel_telaviv	Time zone raw offset in hours	2
 qtn_clk_city_israel_telaviv	Time zone dst offset summer in hours	1
@@ -3511,7 +3511,7 @@ qtn_clk_city_makedo_skopje	English Name	Skopje
 qtn_clk_city_makedo_skopje	Country English Name	Macedonia
 qtn_clk_city_makedo_skopje	Latitude	41.9833
 qtn_clk_city_makedo_skopje	Longitude	21.4333
-qtn_clk_city_makedo_skopje	Time zone id	Europe/Skopje
+qtn_clk_city_makedo_skopje	Time zone id	Europe/Belgrade
 qtn_clk_city_makedo_skopje	Canonical time zone id	Europe/Belgrade
 qtn_clk_city_makedo_skopje	Time zone raw offset in hours	1
 qtn_clk_city_makedo_skopje	Time zone dst offset summer in hours	1
@@ -3599,7 +3599,7 @@ qtn_clk_city_usa_albuquer	English Name	Albuquerque, New Mexico
 qtn_clk_city_usa_albuquer	Country English Name	USA
 qtn_clk_city_usa_albuquer	Latitude	35.1107
 qtn_clk_city_usa_albuquer	Longitude	-106.61
-qtn_clk_city_usa_albuquer	Time zone id	US/Mountain
+qtn_clk_city_usa_albuquer	Time zone id	America/Denver
 qtn_clk_city_usa_albuquer	Canonical time zone id	America/Denver
 qtn_clk_city_usa_albuquer	Time zone raw offset in hours	-7
 qtn_clk_city_usa_albuquer	Time zone dst offset summer in hours	1
@@ -3621,7 +3621,7 @@ qtn_clk_city_usa_adak	English Name	Adak, Alaska
 qtn_clk_city_usa_adak	Country English Name	USA
 qtn_clk_city_usa_adak	Latitude	51.872
 qtn_clk_city_usa_adak	Longitude	-176.636
-qtn_clk_city_usa_adak	Time zone id	US/Aleutian
+qtn_clk_city_usa_adak	Time zone id	America/Adak
 qtn_clk_city_usa_adak	Canonical time zone id	America/Adak
 qtn_clk_city_usa_adak	Time zone raw offset in hours	-10
 qtn_clk_city_usa_adak	Time zone dst offset summer in hours	1
@@ -3632,7 +3632,7 @@ qtn_clk_city_usa_memphis	English Name	Memphis, Tennessee
 qtn_clk_city_usa_memphis	Country English Name	USA
 qtn_clk_city_usa_memphis	Latitude	35.1174
 qtn_clk_city_usa_memphis	Longitude	-89.9711
-qtn_clk_city_usa_memphis	Time zone id	US/Central
+qtn_clk_city_usa_memphis	Time zone id	America/Chicago
 qtn_clk_city_usa_memphis	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_memphis	Time zone raw offset in hours	-6
 qtn_clk_city_usa_memphis	Time zone dst offset summer in hours	1
@@ -3687,7 +3687,7 @@ qtn_clk_city_turk_ankara	English Name	Ankara
 qtn_clk_city_turk_ankara	Country English Name	Turkey
 qtn_clk_city_turk_ankara	Latitude	39.875
 qtn_clk_city_turk_ankara	Longitude	32.8333
-qtn_clk_city_turk_ankara	Time zone id	Asia/Istanbul
+qtn_clk_city_turk_ankara	Time zone id	Europe/Istanbul
 qtn_clk_city_turk_ankara	Canonical time zone id	Europe/Istanbul
 qtn_clk_city_turk_ankara	Time zone raw offset in hours	2
 qtn_clk_city_turk_ankara	Time zone dst offset summer in hours	1
@@ -3709,7 +3709,7 @@ qtn_clk_city_usa_charlotte	English Name	Charlotte, North Carolina
 qtn_clk_city_usa_charlotte	Country English Name	USA
 qtn_clk_city_usa_charlotte	Latitude	35.2269
 qtn_clk_city_usa_charlotte	Longitude	-80.8433
-qtn_clk_city_usa_charlotte	Time zone id	US/Eastern
+qtn_clk_city_usa_charlotte	Time zone id	America/New_York
 qtn_clk_city_usa_charlotte	Canonical time zone id	America/New_York
 qtn_clk_city_usa_charlotte	Time zone raw offset in hours	-5
 qtn_clk_city_usa_charlotte	Time zone dst offset summer in hours	1
@@ -3830,7 +3830,7 @@ qtn_clk_city_india_mumbai	English Name	Mumbai
 qtn_clk_city_india_mumbai	Country English Name	India
 qtn_clk_city_india_mumbai	Latitude	22.5333
 qtn_clk_city_india_mumbai	Longitude	88.3667
-qtn_clk_city_india_mumbai	Time zone id	Asia/Kolkata
+qtn_clk_city_india_mumbai	Time zone id	Asia/Calcutta
 qtn_clk_city_india_mumbai	Canonical time zone id	Asia/Calcutta
 qtn_clk_city_india_mumbai	Time zone raw offset in hours	5
 qtn_clk_city_india_mumbai	Time zone dst offset summer in hours	0
@@ -3841,7 +3841,7 @@ qtn_clk_city_usa_stluis	English Name	St. Louis, Missouri
 qtn_clk_city_usa_stluis	Country English Name	USA
 qtn_clk_city_usa_stluis	Latitude	38.63
 qtn_clk_city_usa_stluis	Longitude	-90.2
-qtn_clk_city_usa_stluis	Time zone id	US/Central
+qtn_clk_city_usa_stluis	Time zone id	America/Chicago
 qtn_clk_city_usa_stluis	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_stluis	Time zone raw offset in hours	-6
 qtn_clk_city_usa_stluis	Time zone dst offset summer in hours	1
@@ -3896,7 +3896,7 @@ qtn_clk_city_bra_acre	English Name	Acre
 qtn_clk_city_bra_acre	Country English Name	Brazil
 qtn_clk_city_bra_acre	Latitude	-9.97472
 qtn_clk_city_bra_acre	Longitude	-67.81
-qtn_clk_city_bra_acre	Time zone id	Brazil/Acre
+qtn_clk_city_bra_acre	Time zone id	America/Rio_Branco
 qtn_clk_city_bra_acre	Canonical time zone id	America/Rio_Branco
 qtn_clk_city_bra_acre	Time zone raw offset in hours	-4
 qtn_clk_city_bra_acre	Time zone dst offset summer in hours	0
@@ -4028,7 +4028,7 @@ qtn_clk_city_usa_omaha	English Name	Omaha, Nebraska
 qtn_clk_city_usa_omaha	Country English Name	USA
 qtn_clk_city_usa_omaha	Latitude	41.25
 qtn_clk_city_usa_omaha	Longitude	-96
-qtn_clk_city_usa_omaha	Time zone id	US/Central
+qtn_clk_city_usa_omaha	Time zone id	America/Chicago
 qtn_clk_city_usa_omaha	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_omaha	Time zone raw offset in hours	-6
 qtn_clk_city_usa_omaha	Time zone dst offset summer in hours	1
@@ -4094,7 +4094,7 @@ qtn_clk_city_usa_cheyenne	English Name	Cheyenne, Wyoming
 qtn_clk_city_usa_cheyenne	Country English Name	USA
 qtn_clk_city_usa_cheyenne	Latitude	41.1456
 qtn_clk_city_usa_cheyenne	Longitude	-104.802
-qtn_clk_city_usa_cheyenne	Time zone id	US/Mountain
+qtn_clk_city_usa_cheyenne	Time zone id	America/Denver
 qtn_clk_city_usa_cheyenne	Canonical time zone id	America/Denver
 qtn_clk_city_usa_cheyenne	Time zone raw offset in hours	-7
 qtn_clk_city_usa_cheyenne	Time zone dst offset summer in hours	1
@@ -4105,7 +4105,7 @@ qtn_clk_city_usa_columbia	English Name	Columbia, South Carolina
 qtn_clk_city_usa_columbia	Country English Name	USA
 qtn_clk_city_usa_columbia	Latitude	34.0006
 qtn_clk_city_usa_columbia	Longitude	-81.0442
-qtn_clk_city_usa_columbia	Time zone id	US/Eastern
+qtn_clk_city_usa_columbia	Time zone id	America/New_York
 qtn_clk_city_usa_columbia	Canonical time zone id	America/New_York
 qtn_clk_city_usa_columbia	Time zone raw offset in hours	-5
 qtn_clk_city_usa_columbia	Time zone dst offset summer in hours	1
@@ -4124,7 +4124,7 @@ qtn_clk_city_hung_budapest	Time zone dst offset winter in hours	0
 qtn_clk_city_hung_budapest	Time zone total offset summer in hours	2
 qtn_clk_city_hung_budapest	Time zone total offset winter in hours	1
 qtn_clk_city_israel_jerusalem	English Name	Jerusalem
-qtn_clk_city_israel_jerusalem	Country English Name	Israel
+qtn_clk_city_israel_jerusalem	Country English Name	Jerusalem
 qtn_clk_city_israel_jerusalem	Latitude	31.7667
 qtn_clk_city_israel_jerusalem	Longitude	35.2333
 qtn_clk_city_israel_jerusalem	Time zone id	Asia/Jerusalem
@@ -4204,7 +4204,7 @@ qtn_clk_city_usa_atlanta	English Name	Atlanta, Georgia
 qtn_clk_city_usa_atlanta	Country English Name	USA
 qtn_clk_city_usa_atlanta	Latitude	33.755
 qtn_clk_city_usa_atlanta	Longitude	-84.39
-qtn_clk_city_usa_atlanta	Time zone id	US/Eastern
+qtn_clk_city_usa_atlanta	Time zone id	America/New_York
 qtn_clk_city_usa_atlanta	Canonical time zone id	America/New_York
 qtn_clk_city_usa_atlanta	Time zone raw offset in hours	-5
 qtn_clk_city_usa_atlanta	Time zone dst offset summer in hours	1
@@ -4226,7 +4226,7 @@ qtn_clk_city_usa_gary	English Name	Gary, Indiana
 qtn_clk_city_usa_gary	Country English Name	USA
 qtn_clk_city_usa_gary	Latitude	41.5956
 qtn_clk_city_usa_gary	Longitude	-87.3453
-qtn_clk_city_usa_gary	Time zone id	US/Central
+qtn_clk_city_usa_gary	Time zone id	America/Chicago
 qtn_clk_city_usa_gary	Canonical time zone id	America/Chicago
 qtn_clk_city_usa_gary	Time zone raw offset in hours	-6
 qtn_clk_city_usa_gary	Time zone dst offset summer in hours	1
@@ -4270,7 +4270,7 @@ qtn_clk_city_usa_indiana	English Name	Indianapolis, Indiana
 qtn_clk_city_usa_indiana	Country English Name	USA
 qtn_clk_city_usa_indiana	Latitude	39.7683
 qtn_clk_city_usa_indiana	Longitude	-86.1581
-qtn_clk_city_usa_indiana	Time zone id	America/Indiana/Indianapolis
+qtn_clk_city_usa_indiana	Time zone id	America/Indianapolis
 qtn_clk_city_usa_indiana	Canonical time zone id	America/Indianapolis
 qtn_clk_city_usa_indiana	Time zone raw offset in hours	-5
 qtn_clk_city_usa_indiana	Time zone dst offset summer in hours	1
@@ -4303,7 +4303,7 @@ qtn_clk_city_aus_canberra	English Name	Canberra
 qtn_clk_city_aus_canberra	Country English Name	Australia
 qtn_clk_city_aus_canberra	Latitude	-35.3081
 qtn_clk_city_aus_canberra	Longitude	149.124
-qtn_clk_city_aus_canberra	Time zone id	Australia/Canberra
+qtn_clk_city_aus_canberra	Time zone id	Australia/Sydney
 qtn_clk_city_aus_canberra	Canonical time zone id	Australia/Sydney
 qtn_clk_city_aus_canberra	Time zone raw offset in hours	10
 qtn_clk_city_aus_canberra	Time zone dst offset summer in hours	0
@@ -4325,7 +4325,7 @@ qtn_clk_city_usa_lasvega	English Name	Las Vegas, Nevada
 qtn_clk_city_usa_lasvega	Country English Name	USA
 qtn_clk_city_usa_lasvega	Latitude	36.176
 qtn_clk_city_usa_lasvega	Longitude	-115.137
-qtn_clk_city_usa_lasvega	Time zone id	US/Pacific
+qtn_clk_city_usa_lasvega	Time zone id	America/Los_Angeles
 qtn_clk_city_usa_lasvega	Canonical time zone id	America/Los_Angeles
 qtn_clk_city_usa_lasvega	Time zone raw offset in hours	-8
 qtn_clk_city_usa_lasvega	Time zone dst offset summer in hours	1
@@ -4336,7 +4336,7 @@ qtn_clk_city_san_marino	English Name	San Marino
 qtn_clk_city_san_marino	Country English Name	San Marino
 qtn_clk_city_san_marino	Latitude	43.9167
 qtn_clk_city_san_marino	Longitude	12.4667
-qtn_clk_city_san_marino	Time zone id	Europe/San_Marino
+qtn_clk_city_san_marino	Time zone id	Europe/Rome
 qtn_clk_city_san_marino	Canonical time zone id	Europe/Rome
 qtn_clk_city_san_marino	Time zone raw offset in hours	1
 qtn_clk_city_san_marino	Time zone dst offset summer in hours	1
@@ -4347,7 +4347,7 @@ qtn_clk_city_usa_louisville	English Name	Louisville, Kentucky
 qtn_clk_city_usa_louisville	Country English Name	USA
 qtn_clk_city_usa_louisville	Latitude	38.2542
 qtn_clk_city_usa_louisville	Longitude	-85.7603
-qtn_clk_city_usa_louisville	Time zone id	US/Eastern
+qtn_clk_city_usa_louisville	Time zone id	America/New_York
 qtn_clk_city_usa_louisville	Canonical time zone id	America/New_York
 qtn_clk_city_usa_louisville	Time zone raw offset in hours	-5
 qtn_clk_city_usa_louisville	Time zone dst offset summer in hours	1

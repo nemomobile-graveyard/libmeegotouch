@@ -22,6 +22,12 @@
 #include "mcity.h"
 #include "mcountry.h"
 
+#ifdef HAVE_ICU
+#include <unicode/timezone.h>
+#endif
+
+#define VERBOSE_OUTPUT
+
 class TestLocationDatabase : public MLocationDatabase
 {
 };
@@ -177,6 +183,168 @@ void Ut_MLocationDatabase::testMatchingCities()
     foreach (QString expectedMatch, someExpectedMatches) {
         qDebug() << "expected match:" << expectedMatch;
         QVERIFY2(matchingCitiesNames.contains(expectedMatch),
+                 "expected match not found");
+    }
+}
+
+void Ut_MLocationDatabase::testCitiesInTimeZone_data()
+{
+    QTest::addColumn<QString>("timeZoneId");
+    QTest::addColumn<QStringList>("keysOfSomeExpectedMatches");
+
+    QTest::newRow("America/Guayaquil")
+        << "America/Guayaquil"
+        << (QStringList()
+            << "qtn_clk_city_ecuad_quito"
+            );
+    QTest::newRow("America/Los_Angeles")
+        << "America/Los_Angeles"
+        << (QStringList()
+            << "qtn_clk_city_usa_losange"
+            << "qtn_clk_city_usa_sanfranci"
+            << "qtn_clk_city_usa_seattle"
+            << "qtn_clk_city_usa_portland"
+            << "qtn_clk_city_usa_lasvega"
+            );
+    QTest::newRow("US/Pacific")
+        << "US/Pacific" // canonical is "America/Los_Angeles"
+        << (QStringList()
+            << "qtn_clk_city_usa_losange"
+            << "qtn_clk_city_usa_sanfranci"
+            << "qtn_clk_city_usa_seattle"
+            << "qtn_clk_city_usa_portland"
+            << "qtn_clk_city_usa_lasvega"
+            );
+    QTest::newRow("Europe/Belgrade")
+        << "Europe/Belgrade"
+        << (QStringList()
+            << "qtn_clk_city_serb_belgrade"
+            << "qtn_clk_city_bosnia_sarajevo"
+            << "qtn_clk_city_slove_ljubljana"
+            << "qtn_clk_city_croatia_zagreb"
+            << "qtn_clk_city_montenegro_podgorica"
+            << "qtn_clk_city_makedo_skopje"
+            );
+    QTest::newRow("Europe/Zagreb")
+        << "Europe/Zagreb" // canonical is "Europe/Belgrade"
+        << (QStringList()
+            << "qtn_clk_city_serb_belgrade"
+            << "qtn_clk_city_bosnia_sarajevo"
+            << "qtn_clk_city_slove_ljubljana"
+            << "qtn_clk_city_croatia_zagreb"
+            << "qtn_clk_city_montenegro_podgorica"
+            << "qtn_clk_city_makedo_skopje"
+            );
+    QTest::newRow("Europe/Vatican")
+        << "Europe/Vatican" // canonical is "Europe/Rome"
+        << (QStringList()
+            << "qtn_clk_city_italy_rome"
+            << "qtn_clk_city_vatican_vatican_city"
+            << "qtn_clk_city_san_marino"
+            );
+    QTest::newRow("Europe/Monaco")
+        << "Europe/Monaco" // canonical
+        << (QStringList()
+            << "qtn_clk_city_mona_monaco"
+            );
+    QTest::newRow("Europe/Paris")
+        << "Europe/Paris" // canonical
+        << (QStringList()
+            << "qtn_clk_city_fra_paris"
+            );
+    QTest::newRow("Oz/Emerald_City")
+        << "Oz/Emerald_City" // nonsense
+        << QStringList(); // no city here. OK.
+    QTest::newRow("Asia/Taipei")
+        << "Asia/Taipei"
+        << (QStringList()
+            << "qtn_clk_city_taiw_taipei"
+            );
+    QTest::newRow("America/Belem")
+        << "America/Belem"
+        << (QStringList()
+            << "qtn_clk_city_bra_belem"
+            << "qtn_clk_city_bra_sao_luis"
+            );
+    QTest::newRow("America/Argentina/Buenos_Aires")
+        << "America/Argentina/Buenos_Aires"
+        << (QStringList()
+            << "qtn_clk_city_argen_buenos"
+            );
+    QTest::newRow("America/Buenos_Aires")
+        << "America/Buenos_Aires"
+        << (QStringList()
+            << "qtn_clk_city_argen_buenos"
+            );
+    QTest::newRow("America/Argentina/Catamarca")
+        << "America/Argentina/Catamarca"
+        << QStringList(); // no city here. Problem?
+    QTest::newRow("America/Argentina/Rio_Gallegos")
+        << "America/Argentina/Rio_Gallegos"
+        << QStringList(); // no city here. Problem?
+    QTest::newRow("America/New_York")
+        << "America/New_York"
+        << (QStringList()
+            << "qtn_clk_city_usa_ny"
+            << "qtn_clk_city_usa_boston"
+            );
+    QTest::newRow("America/North_Dakota/Center")
+        << "America/North_Dakota/Center"
+        << QStringList(); // no city here. Problem?
+    QTest::newRow("US/Arizona")
+        << "US/Arizona" // canonical is "America/Phoenix"
+        << (QStringList()
+            << "qtn_clk_city_usa_phoenix"
+            );
+}
+
+void Ut_MLocationDatabase::testCitiesInTimeZone()
+{
+    QFETCH(QString, timeZoneId);
+    QFETCH(QStringList, keysOfSomeExpectedMatches);
+
+    MLocationDatabase db;
+    QList<MCountry> countries = db.countries();
+
+    // do only run the tests, if we were able to load
+    // some countries from the meegotouch-cities-*
+    // package.
+    if (countries.count() < 10) {
+        qWarning( "loading of country list failed, skipping test" );
+        return;
+    }
+    QList<MCity> citiesInTimeZone = db.citiesInTimeZone(timeZoneId);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream << "number of cities in time zone "
+                << timeZoneId << ' '
+                << citiesInTimeZone.size() << '\n';
+#endif
+    if(citiesInTimeZone.size() == 0 || keysOfSomeExpectedMatches.size() == 0) {
+        QCOMPARE(citiesInTimeZone.size(), keysOfSomeExpectedMatches.size());
+        return;
+    }
+    QStringList citiesInTimeZoneNames;
+    QStringList citiesInTimeZoneKeys;
+    foreach (const MCity &city, citiesInTimeZone) {
+#if defined(VERBOSE_OUTPUT)
+        debugStream << "Found: key="
+                    << city.key() << "\tEnglish name="
+                    << city.englishName() << '\n';
+#endif
+        citiesInTimeZoneKeys << city.key();
+        citiesInTimeZoneNames << city.englishName();
+    }
+    // check first match, the first match should be the "best" match:
+    QCOMPARE(citiesInTimeZoneKeys[0], keysOfSomeExpectedMatches[0]);
+    // check all matches, order is not important:
+    foreach (const QString &expectedMatch, keysOfSomeExpectedMatches) {
+#if defined(VERBOSE_OUTPUT)
+        debugStream << "Expected match: " << expectedMatch << '\n';
+        debugStream.flush();
+#endif
+        QVERIFY2(citiesInTimeZoneKeys.contains(expectedMatch),
                  "expected match not found");
     }
 }
@@ -427,6 +595,12 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
         if (cityCanonicalTimeZone.isEmpty())
             cityCanonicalTimeZone = "***error: invalid";
 
+        if (city.timeZone() != cityCanonicalTimeZone)
+            qWarning() << city.key()
+                       << "time zone not canonical:"
+                       << city.timeZone()
+                       << "canonical:"
+                       << cityCanonicalTimeZone;
         qint32 timeZoneRawOffsetHours = city.timeZoneRawOffset() / 1000 / 3600;
         qint32 timeZoneDstOffsetHoursWinter = city.timeZoneDstOffset(winterDateTime) / 1000 / 3600;
         qint32 timeZoneDstOffsetHoursSummer = city.timeZoneDstOffset(summerDateTime) / 1000 / 3600;

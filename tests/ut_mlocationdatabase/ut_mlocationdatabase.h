@@ -50,6 +50,9 @@ private slots:
     void testMatchingCities_data();
     void testMatchingCities();
 
+    void testCitiesInTimeZone_data();
+    void testCitiesInTimeZone();
+
     void testCities_data();
     void testCities();
 
