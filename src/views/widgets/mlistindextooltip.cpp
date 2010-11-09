@@ -98,14 +98,15 @@ void MListIndexTooltipPrivate::_q_updateSizeToCentralWidget()
 
 void MListIndexTooltipPrivate::clearIndexes()
 {
-    for (int i = indexLabels.count(); i > 0; i++) {
-        delete indexLabels[i];
-    }
+    qDeleteAll(indexLabels);
     indexLabels.clear();
 }
 
 void MListIndexTooltipPrivate::createIndexes(int count)
 {
+    if (count == indexLabels.count())
+        return;
+
     clearIndexes();
     for (int i = 0; i < count; i++) {
         MLabel *label = new MLabel(panel);
