@@ -247,6 +247,8 @@ void MToolBarViewPrivate::change(QAction *action)
         if(index != -1)
             portraitPolicy->insertWidgetAndRemoveOverflow( index, widget );
     }
+
+    updateEmptinessProperty();
 }
 
 void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *action) const
@@ -548,8 +550,15 @@ void MToolBarViewPrivate::updateWidgetAlignment()
 
 void MToolBarViewPrivate::updateEmptinessProperty()
 {
-    controller->setProperty("emptyInLandscape", landscapePolicy->widgetCount() == 0);
-    controller->setProperty("emptyInPortrait", portraitPolicy->widgetCount() == 0);
+    MToolBarLayoutPolicy* currentPolicy;
+
+    // MLayout may not have orientationChanged processed yet, so try to take orientation from MSceneManager
+    if (controller->sceneManager())
+        currentPolicy = controller->sceneManager()->orientation() == M::Landscape ? landscapePolicy : portraitPolicy;
+    else
+        currentPolicy = static_cast<MToolBarLayoutPolicy*>(layout->policy());
+
+    controller->setProperty("isEmpty", currentPolicy->widgetCount() == 0);
 }
 
 void MToolBarViewPrivate::setLabelOnlyAsCommonButton(bool enable)

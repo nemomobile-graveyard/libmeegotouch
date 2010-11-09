@@ -182,6 +182,10 @@ void MApplicationWindowPrivate::init()
     q->connect(q, SIGNAL(switcherEntered()),
                SLOT(_q_handleInSwitcherVisibilityChange()));
 
+    QObject* eventFilter = new MApplicationWindowEventFilter(this, q);
+    navigationBar->installEventFilter(eventFilter);
+    toolBar->installEventFilter(eventFilter);
+
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
 
@@ -623,7 +627,6 @@ void MApplicationWindowPrivate::refreshArrowIconVisibility()
         }
     }
     navigationBar->setArrowIconVisible(haveVisibleMenuAction);
-    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::setComponentDisplayMode(
@@ -717,26 +720,19 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
     } else {
         sceneManager->disappearSceneWindowNow(dockWidget);
     }
-
 }
 
 void MApplicationWindowPrivate::updateNavigationBarVisibility()
 {
-    if (!page || page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
+    if (page && (page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
         || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide
-            && !autoHideComponentsTimer.isActive()))
+            && !autoHideComponentsTimer.isActive())))
     {
         return;
     }
 
-    Q_Q(MApplicationWindow);
-
     bool emptyNavigationbar = navigationBar->property("isEmpty").toBool();
-    bool emptyToolbar = false;
-    if (q->orientation() == M::Landscape)
-        emptyToolbar = toolBar->property("emptyInLandscape").toBool();
-    else
-        emptyToolbar = toolBar->property("emptyInPortrait").toBool();
+    bool emptyToolbar = toolBar->property("isEmpty").toBool();
 
     if (emptyNavigationbar && (needsDockWidget() || emptyToolbar))
        sceneManager->disappearSceneWindow(navigationBar);
@@ -891,8 +887,6 @@ void MApplicationWindowPrivate::setupPageEscape()
         default:
             qFatal("MApplicationWindow: Invalid page escape mode");
     };
-
-    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::setupPageEscapeAuto()
@@ -969,7 +963,6 @@ void MApplicationWindowPrivate::setToolBarViewType(const MTheme::ViewType& viewT
 {
     toolBar->setViewType(viewType);
     _q_placeToolBar();
-    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::_q_updateStyle()
@@ -985,10 +978,33 @@ void MApplicationWindowPrivate::_q_updateStyle()
         style = newStyle;
 
         _q_placeToolBar();
-        updateNavigationBarVisibility();
 
     } else
         MTheme::releaseStyle(newStyle);
+}
+
+MApplicationWindowEventFilter::MApplicationWindowEventFilter(MApplicationWindowPrivate* appWinPrivate, QObject* parent)
+    : QObject(parent),
+      d(appWinPrivate),
+      navigationBarEmpty(false),
+      toolBarEmpty(true)
+{}
+
+bool MApplicationWindowEventFilter::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::DynamicPropertyChange &&
+        static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName() == "isEmpty")
+    {
+        bool newValue = watched->property("isEmpty").toBool();
+        if (watched == d->navigationBar && newValue != navigationBarEmpty) {
+            navigationBarEmpty = newValue;
+            d->updateNavigationBarVisibility();
+        } else if (watched == d->toolBar && newValue != toolBarEmpty) {
+            toolBarEmpty = newValue;
+            d->updateNavigationBarVisibility();
+        }
+    }
+    return QObject::eventFilter(watched, event);
 }
 
 
