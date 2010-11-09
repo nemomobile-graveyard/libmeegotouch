@@ -24,11 +24,7 @@
 
 class MStyle;
 class MProgressIndicator;
-class QTimer;
 class QPixmap;
-class QBrush;
-class QPen;
-class QRect;
 class QPropertyAnimation;
 
 class MSpinnerViewPrivate
@@ -39,21 +35,28 @@ protected:
     MSpinnerView *q_ptr;
 
 public:
-
     MSpinnerViewPrivate();
     virtual ~MSpinnerViewPrivate();
 
+    void refreshStyle();
+    void refreshModel();
+
+    QPropertyAnimation *createAnimation();
     void resumeAnimation();
     void pauseAnimation();
 
+    void reloadFrames();
+    void releaseUsedPixmaps();
+
+    void _q_pauseAnimation();
+    void _q_resumeAnimation();
+    void _q_pauseOrResumeAnimation();
+
     MProgressIndicator *controller;
 
-    mutable QBrush pieBrush;
-    mutable QPen piePen;
-
     QPropertyAnimation* positionAnimation;
-    int angle;
-    QElapsedTimer elapsedTime;
+    int currentFrame;
+    QList<const QPixmap *> animationPixmaps;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

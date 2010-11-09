@@ -30,30 +30,97 @@
 MSpinnerViewPrivate::MSpinnerViewPrivate()
     :  q_ptr(NULL),
        controller(NULL),
-       pieBrush(Qt::NoBrush),
-       piePen(Qt::NoPen),
        positionAnimation(NULL),
-       angle(0)
+       currentFrame(0)
 {
 }
 
 MSpinnerViewPrivate::~MSpinnerViewPrivate()
 {
     delete positionAnimation;
+    releaseUsedPixmaps();
 }
 
-void MSpinnerViewPrivate::resumeAnimation()
+QPropertyAnimation *MSpinnerViewPrivate::createAnimation()
 {
-    if (controller->unknownDuration()) {
+    Q_Q(MSpinnerView);
+
+    QPropertyAnimation *animation = new QPropertyAnimation(q, "currentFrame", q);
+    animation->setLoopCount(-1);
+
+    return animation;
+}
+
+void MSpinnerViewPrivate::refreshStyle()
+{
+    Q_Q(MSpinnerView);
+
+    positionAnimation->setDuration(q->style()->period());
+    positionAnimation->setStartValue(0);
+    positionAnimation->setEndValue(q->style()->numberOfFrames() - 1);
+    reloadFrames();
+}
+
+void MSpinnerViewPrivate::refreshModel()
+{
+    Q_Q(MSpinnerView);
+
+    if (q->model()->unknownDuration()) {
+        if (positionAnimation->state() == QPropertyAnimation::Paused)
+            positionAnimation->resume();
+        else
+            positionAnimation->start();
+    } else {
+        if (positionAnimation->state() == QPropertyAnimation::Running)
+            positionAnimation->pause();
+    }
+}
+
+void MSpinnerViewPrivate::reloadFrames()
+{
+    Q_Q(MSpinnerView);
+
+    releaseUsedPixmaps();
+    // Starts from 1 because that's the agreed convention
+    // for the image file names
+    for (int i = 1; i <= q->style()->numberOfFrames(); i++) {
+        QString frame_name = QString("%1_%2_%3").arg(q->style()->baseImageName())\
+                                                .arg(q->style()->baseImageSize())\
+                                                .arg(i);
+        const QPixmap *p = MTheme::pixmap(frame_name);
+        animationPixmaps << p;
+    }
+}
+
+void MSpinnerViewPrivate::releaseUsedPixmaps()
+{
+    foreach(const QPixmap *p, animationPixmaps)
+        MTheme::releasePixmap(p);
+    animationPixmaps.clear();
+}
+
+void MSpinnerViewPrivate::_q_resumeAnimation()
+{
+    Q_Q(MSpinnerView);
+
+    if (q->model()->unknownDuration()) {
         if (positionAnimation->state() == QPropertyAnimation::Paused)
             positionAnimation->resume();
     }
 }
 
-void MSpinnerViewPrivate::pauseAnimation()
+void MSpinnerViewPrivate::_q_pauseAnimation()
 {
     if (positionAnimation->state() == QPropertyAnimation::Running)
         positionAnimation->pause();
+}
+
+void MSpinnerViewPrivate::_q_pauseOrResumeAnimation()
+{
+    if (controller->isVisible() && controller->isOnDisplay())
+        _q_resumeAnimation();
+    else
+        _q_pauseAnimation();
 }
 
 MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
@@ -63,11 +130,12 @@ MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
     Q_D(MSpinnerView);
     d->q_ptr = this;
     d->controller = controller;
+    d->positionAnimation = d->createAnimation();
 
-    connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChangedSlot()));
+    connect(controller, SIGNAL(visibleChanged()), this, SLOT(_q_pauseOrResumeAnimation()));
 
-    connect(controller, SIGNAL(displayEntered()), this, SLOT(displayEnteredSlot()));
-    connect(controller, SIGNAL(displayExited()), this, SLOT(displayExitedSlot()));
+    connect(controller, SIGNAL(displayEntered()), this, SLOT(_q_pauseOrResumeAnimation()));
+    connect(controller, SIGNAL(displayExited()), this, SLOT(_q_pauseOrResumeAnimation()));
 }
 
 
@@ -76,80 +144,47 @@ MSpinnerView::~MSpinnerView()
     delete d_ptr;
 }
 
-void MSpinnerView::setupAnimation()
-{
-    Q_D(MSpinnerView);
-
-    if (!d->positionAnimation) {
-        d->positionAnimation = new QPropertyAnimation(this, "angle", 0);
-        d->positionAnimation->setDuration(style()->period());
-        d->positionAnimation->setStartValue(0);
-        d->positionAnimation->setEndValue(360);
-        d->positionAnimation->setLoopCount(-1);
-        d->elapsedTime.start();
-    }
-
-    if (model()->unknownDuration()) {
-        if (d->positionAnimation->state() == QPropertyAnimation::Paused)
-            d->positionAnimation->resume();
-        else
-            d->positionAnimation->start();
-    } else {
-        if (d->positionAnimation->state() == QPropertyAnimation::Running)
-            d->positionAnimation->pause();
-    }
-}
-
-int MSpinnerView::angle() const
+int MSpinnerView::currentFrame() const
 {
     Q_D(const MSpinnerView);
 
-    return d->angle;
+    return d->currentFrame;
 }
 
-void MSpinnerView::setAngle(int angle)
+void MSpinnerView::setCurrentFrame(int currentFrame)
 {
     Q_D(MSpinnerView);
 
-    d->angle = angle;
-
-    if (d->elapsedTime.elapsed() > style()->refreshRate()) {
-        d->elapsedTime.start();
-        update();
-    }
+    d->currentFrame = currentFrame;
+    update();
 }
 
 void MSpinnerView::updateData(const QList<const char *>& modifications)
 {
+    Q_D(MSpinnerView);
     MWidgetView::updateData(modifications);
 
     foreach(const char * member, modifications) {
         if (member == MProgressIndicatorModel::UnknownDuration)
-            setupAnimation();
+            d->refreshModel();
     }
-
     update();
 }
 
 void MSpinnerView::applyStyle()
 {
-     MWidgetView::applyStyle();
+    Q_D(MSpinnerView);
+    MWidgetView::applyStyle();
 
-     Q_D(MSpinnerView);
-
-     if (d->positionAnimation)
-         d->positionAnimation->setDuration(style()->period());
-
-     update();
+    d->refreshStyle();
 }
 
 void MSpinnerView::setupModel()
 {
+    Q_D(MSpinnerView);
     MWidgetView::setupModel();
-                    
-    setupAnimation();
 
-    update();
+    d->refreshModel();
 }
 
 void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -157,74 +192,11 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
     Q_UNUSED(option);
     Q_D(const MSpinnerView);
 
-    bool reverse = (d->controller->layoutDirection() == Qt::RightToLeft);
+    if (d->animationPixmaps.isEmpty())
+        return;
 
-    //drawing background
-    if (style()->bgPixmap() && !style()->bgPixmap()->isNull())
-        painter->drawPixmap(0, 0, *style()->bgPixmap());
-
-    // calculated values input into rendering
-    qreal startAngle = 0.0;
-    qreal endAngle = 0.0;
-
-    // calculate values depending on mode
-    // (from spinner ring is visible that part where is no pie)
-    if (model()->unknownDuration()) {
-        if (!reverse) {
-            startAngle = angle();
-            endAngle = startAngle + 90;
-        } else {
-            startAngle = -angle();
-            endAngle = startAngle - 90;
-        }
-    } else {
-        if (model()->maximum() != model()->minimum()) {
-            if (!reverse) {
-                startAngle = 0.0;
-                endAngle = 360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
-            } else {
-                startAngle = 0.0;
-                endAngle =  -360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
-            }
-        } else {
-            startAngle = 0.0;
-            endAngle = 0.0;
-        }
-    }
-
-    //drawing foreground (pie)
-    if (style()->progressPixmap() && !style()->progressPixmap()->isNull()) {
-        d->pieBrush.setTexture(*style()->progressPixmap());
-
-        painter->setBrush(d->pieBrush);
-        painter->setPen(d->piePen);
-        painter->drawPie(QRect(0, 0, style()->progressPixmap()->width(), style()->progressPixmap()->height()),
-                          (90 - endAngle) * 16,
-                          (endAngle - startAngle) * 16);
-    }
-}
-
-void MSpinnerView::visibilityChangedSlot()
-{
-    Q_D(MSpinnerView);
-    if (d->controller->isVisible() && d->controller->isOnDisplay())
-        d->resumeAnimation();
-    else
-        d->pauseAnimation();
-}
-
-void MSpinnerView::displayEnteredSlot()
-{
-    Q_D(MSpinnerView);
-
-    if (d->controller->isVisible())
-        d->resumeAnimation();
-}
-
-void MSpinnerView::displayExitedSlot()
-{
-    Q_D(MSpinnerView);
-    d->pauseAnimation();
+    const QPixmap *p = d->animationPixmaps[d->currentFrame];
+    painter->drawPixmap(QRectF(QPointF(0, 0), size()), *p, QRectF(p->rect()));
 }
 
 #include "moc_mspinnerview.cpp"

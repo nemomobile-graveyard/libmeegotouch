@@ -26,8 +26,6 @@
 
 class MSpinnerViewPrivate;
 class MProgressIndicator;
-class QGraphicsSceneResizeEvent;
-class QTimerEvent;
 
 /*!
     \class MSpinnerView
@@ -64,7 +62,10 @@ class M_VIEWS_EXPORT MSpinnerView : public MWidgetView
     Q_OBJECT
     M_VIEW(MProgressIndicatorModel, MSpinnerStyle)
 
-    Q_PROPERTY(int angle READ angle WRITE setAngle)
+    //! \internal
+    Q_PROPERTY(int currentFrame READ currentFrame WRITE setCurrentFrame)
+    //! \internal_end
+
 public:
     /*!
      * \brief Constructor
@@ -108,18 +109,15 @@ protected Q_SLOTS:
     virtual void updateData(const QList<const char *>& modifications);
 
 private:
-
-    /*!
-      \brief Creates or destroys animation depending on whether spinner
-             is of unknown or know duration
-     */
-   void setupAnimation();
-
-   int angle() const;
-   void setAngle(int angle);
+    int currentFrame() const;
+    void setCurrentFrame(int frameIndex);
 
     Q_DISABLE_COPY(MSpinnerView)
     Q_DECLARE_PRIVATE(MSpinnerView)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_pauseAnimation())
+    Q_PRIVATE_SLOT(d_func(), void _q_resumeAnimation())
+    Q_PRIVATE_SLOT(d_func(), void _q_pauseOrResumeAnimation())
 
 private Q_SLOTS:
     /*!

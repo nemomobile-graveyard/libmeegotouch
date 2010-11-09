@@ -35,28 +35,29 @@ class M_VIEWS_EXPORT MSpinnerStyle : public MWidgetStyle
     M_STYLE(MSpinnerStyle)
 
     /*!
-        \property MSpinnerStyle:bgImage
-        \brief  Image of background of spinner
+        \property MSpinnerStyle::baseImageName
+        \brief The base name of the images that will compose the spinner animation
     */
-    M_STYLE_PTR_ATTRIBUTE(QPixmap *, bgPixmap, BgPixmap)
+    M_STYLE_ATTRIBUTE(QString, baseImageName, BaseImageName)
 
     /*!
-        \property MSpinnerStyle::progressImage
-        \brief  Image of progress bar for spinner
+        \property MSpinnerStyle::baseImageSize
+        \brief The size the base images should have (should be the same for the width and height).
     */
-    M_STYLE_PTR_ATTRIBUTE(QPixmap *, progressPixmap, ProgressPixmap)
+    M_STYLE_ATTRIBUTE(int, baseImageSize, BaseImageSize)
 
     /*!
-        \property MSpinnerStyle::speed
+        \property MSpinnerStyle::period
         \brief Period of unknown duration spinner (duration of one full spin in msec).
     */
     M_STYLE_ATTRIBUTE(int, period, Period)
 
     /*!
-        \property MSpinnerStyle::refreshRate
-        \brief Refresh rate of unknown duration spinner (interval between frames in msec).
+        \property MSpinnerStyle::numberOfFrames
+        \brief Number of frames (images) that compose the spinner
     */
-    M_STYLE_ATTRIBUTE(int, refreshRate, RefreshRate)
+    M_STYLE_ATTRIBUTE(int, numberOfFrames, NumberOfFrames)
+
 };
 
 /*!
