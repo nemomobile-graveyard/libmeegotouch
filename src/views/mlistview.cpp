@@ -105,7 +105,14 @@ void MListView::updateData(const QList<const char *>& modifications)
             member == MListModel::HeaderCreator) {
             if (model()->itemModel()) {
                 init();
-                QTimer::singleShot(0, d_ptr, SLOT(updateListGeometry()));
+                if (d_ptr->pannableViewport) {
+                    d_ptr->updateListGeometry();
+                } else {
+                    // Postpone the update of the list geometry to the next
+                    // event loop, otherwise too many cells get created without
+                    // having a pannable viewport.
+                    QTimer::singleShot(0, d_ptr, SLOT(updateListGeometry()));
+                }
             }
         } else if (member == MListModel::SelectionModel) {
             connectSelectionModel();
