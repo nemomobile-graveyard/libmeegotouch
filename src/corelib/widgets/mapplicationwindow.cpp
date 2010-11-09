@@ -181,8 +181,6 @@ void MApplicationWindowPrivate::init()
                q, SLOT(_q_menuDisappeared()));
     q->connect(q, SIGNAL(switcherEntered()),
                SLOT(_q_handleInSwitcherVisibilityChange()));
-    q->connect(q, SIGNAL(switcherExited()),
-               SLOT(_q_handleInSwitcherVisibilityChange()));
 
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
@@ -216,24 +214,7 @@ void MApplicationWindowPrivate::init()
 
 void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
 {
-    if (isInSwitcher) {
-        navigationBar->hide();
-        dockWidget->hide();
-        homeButtonPanel->hide();
-        closeMenu();
-    } else {
-        if (navigationBar->sceneWindowState() == MSceneWindow::Appeared ||
-                navigationBar->sceneWindowState() == MSceneWindow::Appearing)
-            navigationBar->show();
-
-        if (dockWidget->sceneWindowState() == MSceneWindow::Appeared ||
-                dockWidget->sceneWindowState() == MSceneWindow::Appearing)
-            dockWidget->show();
-
-        if (homeButtonPanel->sceneWindowState() == MSceneWindow::Appeared ||
-                homeButtonPanel->sceneWindowState() == MSceneWindow::Appearing)
-            homeButtonPanel->show();
-    }
+    closeMenu();
 }
 
 #ifdef Q_WS_X11
