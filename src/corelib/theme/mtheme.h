@@ -385,6 +385,12 @@ Q_SIGNALS:
      */
     void themeChangeCompleted();
 
+
+    /*!
+     This signal is emitted when the style has been modifed.
+     */
+    void styleModified();
+
 protected:
 
     /*!

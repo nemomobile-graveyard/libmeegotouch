@@ -634,6 +634,8 @@ bool MTheme::loadCSS(const QString &filename, InsertMode mode)
                 const_cast<MWidgetView *>(view)->applyStyle();
             }
         }
+
+        emit instance()->styleModified();
         return true;
     }
 
@@ -963,6 +965,8 @@ void MTheme::rebuildViewsForWidgets()
             }
         }
     }
+
+    emit instance()->styleModified();
 }
 
 void MThemePrivate::registerStyleContainer(MStyleContainer *container)

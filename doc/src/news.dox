@@ -1,5 +1,10 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02054 0.20.54
+
+\subsection New
+- MTheme::styleModified() signal, emitted when MTheme::loadCSS() was called or the theme has changed.
+
 \section v02053 0.20.53
 
 \subsection New

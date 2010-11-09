@@ -95,7 +95,6 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingStatusBar(false)
     , showingNavigationBar(false)
     , showingDockWidget(false)
-    , style(0)
 {
     if(MDeviceProfile::instance()->showStatusbar())    {
         statusBar = new MStatusBar;
@@ -118,9 +117,6 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
     delete homeButtonPanel;
     homeButtonPanel = 0;
 
-    MTheme::releaseStyle(style);
-    style = 0;
-
     if (statusBar) {
         delete statusBar;
         statusBar = 0;
@@ -131,10 +127,8 @@ void MApplicationWindowPrivate::init()
 {
     Q_Q(MApplicationWindow);
 
-    style = static_cast<const MApplicationWindowStyle *>(MTheme::style("MApplicationWindowStyle", "", "", "", q->orientation()));
-
     q->connect(q, SIGNAL(orientationChanged(M::Orientation)), q, SLOT(_q_updateStyle()));
-    q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()), q, SLOT(_q_updateStyle()));
+    q->connect(MTheme::instance(), SIGNAL(styleModified()), q, SLOT(_q_updateStyle()));
 
     q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
@@ -212,7 +206,7 @@ void MApplicationWindowPrivate::init()
 #endif
     q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
             SLOT(_q_updatePageExposedContentRect()));
-    q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()),
+    q->connect(MTheme::instance(), SIGNAL(styleModified()),
                SLOT(_q_updatePageExposedContentRect()));
 }
 
@@ -967,20 +961,9 @@ void MApplicationWindowPrivate::setToolBarViewType(const MTheme::ViewType& viewT
 
 void MApplicationWindowPrivate::_q_updateStyle()
 {
-    Q_Q(MApplicationWindow);
-
-    const MApplicationWindowStyle *newStyle =
-        static_cast<const MApplicationWindowStyle *>(MTheme::style(
-                   "MApplicationWindowStyle", "", "", "", q->orientation()));
-
-    if (style != newStyle) {
-        MTheme::releaseStyle(style);
-        style = newStyle;
-
-        _q_placeToolBar();
-
-    } else
-        MTheme::releaseStyle(newStyle);
+    _q_placeToolBar();
+    updateNavigationBarVisibility();
+    initAutoHideComponentsTimer();
 }
 
 MApplicationWindowEventFilter::MApplicationWindowEventFilter(MApplicationWindowPrivate* appWinPrivate, QObject* parent)
@@ -1334,6 +1317,19 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
         }
 
     }
+}
+
+QString MApplicationWindow::styleName() const
+{
+    Q_D(const MApplicationWindow);
+    return d->style.objectName();
+}
+
+void MApplicationWindow::setStyleName(const QString &name)
+{
+    Q_D(MApplicationWindow);
+    d->style.setObjectName(name);
+    d->_q_updateStyle();
 }
 
 #include "moc_mapplicationwindow.cpp"

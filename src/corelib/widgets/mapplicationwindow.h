@@ -129,6 +129,11 @@ public:
     bool isChained() const;
 #endif
 
+    /*!
+      Returns the style name of the application page.
+     */
+    QString styleName() const;
+
 Q_SIGNALS:
     /*!
      This signal is emitted after \page has become shown.
@@ -159,6 +164,17 @@ public Q_SLOTS:
      * \sa MToolBar
      */
     void setToolbarViewType(const MTheme::ViewType& viewType);
+
+    /*!
+      Set the style name to \a name.
+
+      This function sets the style name property of the application window to \a name
+      and reloads application window style. The style name is used to select a style with
+      a matching name from the theme.
+
+      \sa styleName()
+    */
+    void setStyleName(const QString &name);
 
 protected:
     //! \internal
