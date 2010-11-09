@@ -14,6 +14,15 @@
 #include <QGraphicsWidget>
 #include <QTimer>
 
+namespace {
+    bool widgetDoesNotSupportRelocation(QGraphicsWidget *widget)
+    {
+        // We don't know how to scroll QGraphicsWebView. We would only make things worse by trying.
+        // Using QObject::inherits() instead of type cast to prevent dependency to QtWebKit.
+        return widget->inherits("QGraphicsWebView");
+    }
+}
+
 Q_DECLARE_OPERATORS_FOR_FLAGS(PostponeRelocationFlags)
 
 MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
@@ -118,6 +127,9 @@ void MInputWidgetRelocator::buildRelocationOpList(const QGraphicsWidget &inputWi
             }
 
             // Stop on first MSceneWindow. This should suffice. Also, we skip any LayerEffect parent MSW's this way.
+            break;
+        } else if (widgetDoesNotSupportRelocation(widget)) {
+            ops.clear();
             break;
         }
         widget = widget->parentWidget();
