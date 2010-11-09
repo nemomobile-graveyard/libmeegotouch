@@ -67,6 +67,7 @@ MLabel *MMessageBoxViewPrivate::textLabelWidget()
         textLabel = new MLabel(controller);
         textLabel->setStyleName("CommonQueryText");
         textLabel->setWordWrap(true);
+        textLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         textLabel->setAlignment(Qt::AlignCenter);
     }
     return textLabel;
