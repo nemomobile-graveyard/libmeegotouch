@@ -709,6 +709,15 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
 
     QPointF p = calculateSceneWindowPosition(window);
     window->setGeometry( QRectF(p, window->preferredSize()) );
+
+    // restart running navigationbar appearance animation to update animation endValues
+    MAbstractWidgetAnimation* animation = window->d_func()->appearanceAnimation;
+    if (window->windowType() == MSceneWindow::NavigationBar &&
+        animation && animation->state() == QAbstractAnimation::Running)
+    {
+        animation->stop();
+        animation->start();
+    }
 }
 
 #ifdef Q_WS_X11

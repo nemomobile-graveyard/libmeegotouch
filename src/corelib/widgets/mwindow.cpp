@@ -1065,15 +1065,15 @@ void MWindow::paintEvent(QPaintEvent *event)
     }
 #endif // M_USE_OPENGL
 
+    if (!isOnDisplay()) {
+        mWarning("MWindow::paintEvent") << "Application is not visible. Paint event discarded. Make sure the application does not paint in the first place.";
+        event->accept();
+        d->discardedPaintEvent = true;
+        return;
+    }
+
     if (isInSwitcher()) {
-        if (!isOnDisplay()) {
-            // TODO: also do this check for the foreground app not visible in the switcher once onDisplay is immediately
-            // true when starting an application. right now during startup the first frames would be discarded
-            mWarning("MWindow::paintEvent") << "Application is not visible. Paint event discarded. Make sure the application does not paint in the first place.";
-            event->accept();
-            d->discardedPaintEvent = true;
-            return;
-        } else if (!d->timeSinceLastPaintInSwitcher.isValid()) {
+        if (!d->timeSinceLastPaintInSwitcher.isValid()) {
             d->timeSinceLastPaintInSwitcher.start();
             d->updateIsPending = false;
         } else {

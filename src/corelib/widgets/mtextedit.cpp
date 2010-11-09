@@ -289,9 +289,9 @@ namespace
     const QChar MinusSign('-');
 
     //! Character set for line break.
-    const QString LineBreakSet = QString("\n%1%2")
-        .arg(QChar(0x2028))
-        .arg(QChar(0x2029));
+    const QString LineBreakSet = QString("\r\n%1%2")
+        .arg(QChar(0x2028))     // line separator
+        .arg(QChar(0x2029));    // paragraph separator
 
     MArrowKeyNavigator gArrowKeyNav;
 }
@@ -1243,9 +1243,12 @@ bool MTextEditPrivate::copy()
     return true;
 }
 
-QString MTextEditPrivate::replaceLineBreaks(QString text, QChar replacement)
+QString MTextEditPrivate::replaceLineBreaks(QString text, QString replacement)
 {
     // FIXME: this implementation works quite slow if text or LineBreakSet is long
+
+    // First, handle \r\n sequences to avoid double replacement characters.
+    text.replace("\r\n", replacement);
     foreach (QChar lineBreak, LineBreakSet) {
         text.replace(lineBreak, replacement);
     }
@@ -1824,7 +1827,7 @@ bool MTextEdit::setText(const QString &text)
     filteredText.truncate(maxLength());
 
     if (lineMode() == MTextEditModel::SingleLine) {
-        filteredText.replace(QChar('\n'), QChar(' '));
+        filteredText = d->replaceLineBreaks(filteredText, QChar(' '));
     }
 
     d->cursor()->insertText(filteredText);
@@ -2145,13 +2148,25 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     QString commitString = event->commitString();
     bool emitReturnPressed = false;
 
-    if (lineMode() == MTextEditModel::SingleLine) {
-        emitReturnPressed = commitString.contains('\n');
-        preedit.remove('\n');
-        commitString.remove('\n');
+    preedit = d->replaceLineBreaks(preedit, " ");
 
-        preedit = d->replaceLineBreaks(preedit, QChar(' '));
+    if ((lineMode() == MTextEditModel::SingleLine) && !commitString.isEmpty()) {
+        // FIXME: remove \n-check once VKB has been changed to send \r as return
+        emitReturnPressed = commitString.contains('\n') || commitString.contains('\r');
+
+        // Remove trailing line breaks
+        int i = commitString.length() - 1;
+        for (; i >= 0; --i) {
+            if (!LineBreakSet.contains(commitString[i])) {
+                break;
+            }
+        }
+        commitString.truncate(i + 1);
+
+        // Replace other line breaks with space
         commitString = d->replaceLineBreaks(commitString, QChar(' '));
+    } else if (lineMode() == MTextEditModel::MultiLine) {
+        commitString.replace("\r", "\n");
     }
 
     // get and remove the current selection

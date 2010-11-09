@@ -386,7 +386,7 @@ void Ft_MStyleSheet::test_parent_stylenames()
     MStyleSheet::releaseStyle(style);
 }
 
-void Ft_MStyleSheet::test_wrong_attribute_value()
+void Ft_MStyleSheet::test_wrong_attribute_value_strict()
 {
     QString app = qApp->applicationFilePath();
     QStringList arguments;
@@ -396,10 +396,30 @@ void Ft_MStyleSheet::test_wrong_attribute_value()
     /* Testing with default syntax mode: strict */
     int exit = QProcess::execute(app, arguments);
     QCOMPARE(exit, 2);
+}
+
+void Ft_MStyleSheet::test_wrong_attribute_value_relaxed()
+{
+    QString app = qApp->applicationFilePath();
+    QStringList arguments;
+    arguments << "helper"
+            << qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_attribute.css";
 
     arguments << "relaxed";
-    exit = QProcess::execute(app, arguments);
+    int exit = QProcess::execute(app, arguments);
     QCOMPARE(exit, 0);
+}
+
+void Ft_MStyleSheet::test_wrong_attribute_value_with_parent()
+{
+    QString app = qApp->applicationFilePath();
+    QStringList arguments;
+    arguments << "helper"
+            << qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_attribute_with_parent.css";
+
+    arguments << "parent";
+    int exit = QProcess::execute(app, arguments);
+    QVERIFY(exit == 0);
 }
 
 void Ft_MStyleSheet::test_wrong_syntax()
@@ -477,9 +497,15 @@ int main_stylesheet_helper_app(const QStringList &arguments)
     QList<const MStyleSheet *> sheets;
     sheets.append(&sheet);
 
-    TestObjectStyle *style = (TestObjectStyle *) MStyleSheet::style(sheets, "TestObjectStyle", "", "", "", M::Landscape, NULL);
 
+    TestWidget *w = 0;
+    if (arguments.indexOf("parent") > 0) {
+        w = new TestWidget;
+    }
+
+    TestObjectStyle *style = (TestObjectStyle *) MStyleSheet::style(sheets, "TestObjectStyle", "", "", "", M::Landscape, w);
     MStyleSheet::releaseStyle(style);
+    delete w;
 
     return 0;
 }

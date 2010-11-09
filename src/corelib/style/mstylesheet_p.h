@@ -44,6 +44,7 @@ public:
         MStyleSheetSelector *selector;
         int classPriority;
         int parentPriority;
+        const MStyleSheet *stylesheet;
     };
 
     // Aggregates the (non-parent) data that specifies which style we want to obtain
