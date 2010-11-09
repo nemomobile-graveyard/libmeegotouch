@@ -36,6 +36,7 @@ class MBasicLayoutAnimationStyle : public MLayoutAnimationStyle
     M_STYLE_ATTRIBUTE(QEasingCurve, opacityEasingCurve, OpacityEasingCurve)
     M_STYLE_ATTRIBUTE(qreal, initialShowingOpacity, InitialShowingOpacity)
     M_STYLE_ATTRIBUTE(qreal, finalHidingOpacity, FinalHidingOpacity)
+    M_STYLE_ATTRIBUTE(bool, animateOpacity, AnimateOpacity)
 };
 
 // TODO: get rid of this container

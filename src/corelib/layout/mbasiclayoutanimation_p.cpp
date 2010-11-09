@@ -106,7 +106,8 @@ void MBasicLayoutAnimationPrivate::doItemHiddenAnimation(MItemState *itemstate)
 {
     Q_Q(MBasicLayoutAnimation);
     Q_ASSERT(itemstate->item());
-
+    if (!q->style()->animateOpacity())
+        return;
     QGraphicsItem *graphicsItem = itemstate->item()->graphicsItem();
     if (graphicsItem) {
         qreal finalOpacity = q->style()->finalHidingOpacity();
@@ -119,6 +120,8 @@ void MBasicLayoutAnimationPrivate::doItemShownAnimation(MItemState *itemstate)
     Q_Q(MBasicLayoutAnimation);
     Q_ASSERT(itemstate->item());
     q->showItemNow(itemstate->item());
+    if (!q->style()->animateOpacity())
+        return;
     QGraphicsItem *graphicsItem = itemstate->item()->graphicsItem();
     if(!graphicsItem)
         return;
@@ -131,7 +134,7 @@ void MBasicLayoutAnimationPrivate::doItemShownAnimation(MItemState *itemstate)
     }
 
     qreal initialOpacity = q->style()->initialShowingOpacity();
-    if (initialOpacity != 1.0) {
+    if (initialOpacity >= 0 && initialOpacity < 1) { //If it ==1 there's no need to do anything
         graphicsItem->setOpacity(initialOpacity);
         itemstate->setTargetOpacity(1);
     }

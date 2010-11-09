@@ -3190,8 +3190,12 @@ void Ut_MLayout::testAddingRemovingAddingToPolicy()
 void Ut_MLayout::testExplicitlyHidingItems_data()
 {
     QTest::addColumn<bool>("withAnimation");
-    QTest::newRow("Without Animation") << false;
-    QTest::newRow("With Animation") << true;
+    QTest::addColumn<bool>("withOpacityAnimation");
+    QTest::addColumn<bool>("withInvalidOpacityAnimation");
+    QTest::newRow("Without Animation") << false << false << false;
+    QTest::newRow("With geometry and opacity animation") << true << true << false;
+    QTest::newRow("With geometry and invalid opacity animation") << true << false << true;
+    QTest::newRow("With geometry only animation") << true << false << false;
 }
 void Ut_MLayout::testExplicitlyHidingItems()
 {
@@ -3200,17 +3204,25 @@ void Ut_MLayout::testExplicitlyHidingItems()
      * Note that this only works for a MWidget */
 
     QFETCH(bool, withAnimation);
+    QFETCH(bool, withOpacityAnimation);
+    QFETCH(bool, withInvalidOpacityAnimation);
 
     QGraphicsWidget *form = new QGraphicsWidget;
     m_scene->addItem(form);
     MLayout *layout = new MLayoutTest(form);
     if (!withAnimation)
         layout->setAnimation(NULL);
+    if (withAnimation && !withOpacityAnimation)
+        layout->animation()->setObjectName("withoutOpacity");
+    else if(withInvalidOpacityAnimation)
+        layout->animation()->setObjectName("withInvalidOpacity");
+
     MFlowLayoutPolicy *flowPolicy = new MFlowLayoutPolicy(layout);
     MLinearLayoutPolicy *linearPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     MGridLayoutPolicy *gridPolicy = new MGridLayoutPolicy(layout);
 
     MWidget *widget = new MWidget;
+    widget->setOpacity(0.5); //Set it to 0.5 to see if we do or do not change it
     widget->hide();  //Explicitly hide it
     flowPolicy->addItem(widget);
     linearPolicy->addItem(widget);
@@ -3244,7 +3256,10 @@ void Ut_MLayout::testExplicitlyHidingItems()
     while (withAnimation && layout->animation()->isAnimating())
         QTest::qWait(50);
     QCOMPARE(widget->isVisible(), true);
-    QCOMPARE(widget->opacity(), qreal(1.0));
+    if (!withOpacityAnimation)
+        QCOMPARE(widget->opacity(), qreal(0.5));
+    else
+        QCOMPARE(widget->opacity(), qreal(1.0));
     gridPolicy->activate();
     qApp->processEvents();
     while (withAnimation && layout->animation()->isAnimating())
@@ -3270,12 +3285,18 @@ void Ut_MLayout::testExplicitlyHidingItems()
     while (withAnimation && layout->animation()->isAnimating())
         QTest::qWait(50);
     QCOMPARE(widget->isVisible(), true);
-    QCOMPARE(widget->opacity(), qreal(1.0));
+    if (!withOpacityAnimation)
+        QCOMPARE(widget->opacity(), qreal(0.5));
+    else
+        QCOMPARE(widget->opacity(), qreal(1.0));
 
     // Switch to a policy without the item and remove it.  It should be still visible
     layout->removeItem(widget);
     QCOMPARE(widget->isVisible(), true);
-    QCOMPARE(widget->opacity(), qreal(1.0));
+    if (!withOpacityAnimation)
+        QCOMPARE(widget->opacity(), qreal(0.5));
+    else
+        QCOMPARE(widget->opacity(), qreal(1.0));
 
     // Readd - linear is currently activated
     flowPolicy->addItem(widget);
@@ -3287,7 +3308,10 @@ void Ut_MLayout::testExplicitlyHidingItems()
     while (withAnimation && layout->animation()->isAnimating())
         QTest::qWait(50);
     QCOMPARE(widget->isVisible(), true);
-    QCOMPARE(widget->opacity(), qreal(1.0));
+    if (!withOpacityAnimation)
+        QCOMPARE(widget->opacity(), qreal(0.5));
+    else
+        QCOMPARE(widget->opacity(), qreal(1.0));
 
     //Remove from current policy (linear), forcing it to hide
     linearPolicy->removeItem(widget);
@@ -3295,7 +3319,10 @@ void Ut_MLayout::testExplicitlyHidingItems()
     while (withAnimation && layout->animation()->isAnimating())
         QTest::qWait(50);
     QCOMPARE(widget->isVisible(), false);
-    QCOMPARE(widget->opacity(), qreal(1.0));
+    if (!withOpacityAnimation)
+        QCOMPARE(widget->opacity(), qreal(0.5));
+    else
+        QCOMPARE(widget->opacity(), qreal(1.0));
 
     delete form;
 }

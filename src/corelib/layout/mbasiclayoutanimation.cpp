@@ -73,7 +73,8 @@ void MBasicLayoutAnimation::setItemGeometry(int index, const QRectF &geometry) {
     }
 
     if (state.isAnimationDone()) {//Set the geometry anyway, so that it can refresh
-        state.item()->setOpacity(1);
+        if (style()->animateOpacity() && state.targetOpacity() != -1)
+            state.item()->setOpacity(1);
         state.item()->setTransform( QTransform() );
     } else
         start();
@@ -89,9 +90,10 @@ void MBasicLayoutAnimation::hideItem(int index) {
         return; //It's already hiding/hidden.  Nothing to do
     }
     state.hide();
-    if(!state.item()->isVisibleTo(NULL)) {
+    if (!state.item()->isVisibleTo(NULL)) {
         //It is not visible, so do not bother animating
-        state.item()->setOpacity(1); //Restore the opacity to 1, since we are hiding it now anyway
+        if (style()->animateOpacity() && state.targetOpacity() != -1)
+            state.item()->setOpacity(1); //Restore the opacity to 1 if we have changed it, since we are hiding it now anyway
         hideItemNow(state.item());
         state.animationDone();
     }
