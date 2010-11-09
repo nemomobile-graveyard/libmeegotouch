@@ -34,10 +34,12 @@ class MLinearLayoutPolicy;
 class QGraphicsLinearLayout;
 class MButton;
 class MEscapeButtonSlot;
+class MNavigationBarView;
 
 class MNavigationBarViewPrivate : public MSceneWindowViewPrivate
 {
     Q_DECLARE_PUBLIC(MNavigationBarView)
+
 public:
     MNavigationBarViewPrivate();
     virtual ~MNavigationBarViewPrivate();
@@ -73,10 +75,15 @@ public:
     MEscapeButtonSlot* escapeButtonSlot;
     MButton *backButton;
     MButton *closeButton;
+
+ protected:
+    MNavigationBarView *q_ptr;
 };
 
 class MEscapeButtonSlot : public MStylableWidget
 {
+  Q_OBJECT
+
 public:
     MEscapeButtonSlot(QGraphicsItem *parent = 0) : MStylableWidget(parent) {}
 private:

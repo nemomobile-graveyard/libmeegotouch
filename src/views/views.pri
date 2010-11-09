@@ -75,6 +75,7 @@ PRIVATE_HEADERS += \
     mscenelayereffectdimview.h \
     mlistindexview.h \
     mlistindexfloatingview.h \
+    mnavigationbarview_p.h \
 
 SOURCES += \
     mapplicationpageview.cpp \

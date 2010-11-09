@@ -51,7 +51,8 @@ MNavigationBarViewPrivate::MNavigationBarViewPrivate()
       toolBar(0),
       escapeButtonSlot(0),
       backButton(0),
-      closeButton(0)
+      closeButton(0),
+      q_ptr(0)
 {
 }
 
@@ -252,6 +253,7 @@ MNavigationBarView::MNavigationBarView(MNavigationBar *controller) :
     MSceneWindowView(*(new MNavigationBarViewPrivate()), controller)
 {
     Q_D(MNavigationBarView);
+    d->q_ptr = this;
     d->init();
 }
 
