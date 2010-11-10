@@ -42,7 +42,7 @@
         </exec>
     </target>
 
-    <target name="macdeployqt" depends="deploy-meego-touch-framework">
+    <target name="macdeployqt" depends="compile">
         <exec executable="${macdeployqt}" dir="${widgetsgallery.dir}">
             <arg line="widgetsgallery.app"/>
             <arg line="-verbose=2"/>
@@ -52,15 +52,6 @@
             <fileset dir="${local.frameworks.dir}/meegotouchcore.framework" includes="**/*"/>
             <fileset dir="${local.frameworks.dir}/meegotouchviews.framework" includes="**/*"/>
         </delete>
-    </target>
-
-    <target name="deploy-meego-touch-framework" depends="compile">
-        <copy todir="${local.frameworks.dir}/meegotouchcore.framework">
-            <fileset dir="${libdui.dir}/lib/meegotouchcore.framework"/>
-        </copy>
-        <copy todir="${local.frameworks.dir}/meegotouchviews.framework">
-            <fileset dir="${libdui.dir}/lib/meegotouchviews.framework"/>
-        </copy>
     </target>
 
     <target name="copy-widgetsgallery" depends="macdeployqt">
