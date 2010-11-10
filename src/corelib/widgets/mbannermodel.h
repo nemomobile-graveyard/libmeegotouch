@@ -29,27 +29,33 @@ class M_CORE_EXPORT MBannerModel : public MSceneWindowModel
     M_MODEL_INTERNAL(MBannerModel)
 
     /*!
-        \property Icon in banner.
+        \property Icon in mbanner.
     */
     M_MODEL_PROPERTY(QString, iconID, IconID, true, QString())
 
     /*!
-        \property Title for event banner
+        \property Title for mbanner
     */
 
     M_MODEL_PROPERTY(QString, title, Title, true, QString())
 
     /*!
-        \property Subtitle for event banner
+        \property Subtitle for mbanner
     */
 
     M_MODEL_PROPERTY(QString, subtitle, Subtitle, true, QString())
 
     /*!
-        \property Datetime
+        \property Timestamp
     */
 
     M_MODEL_PROPERTY(QDateTime, bannerTimeStamp, BannerTimeStamp, true, QDateTime())
+
+    /*!
+        \property Prefix timestamp mbanner
+    */
+
+    M_MODEL_PROPERTY(QString, prefixTimeStamp, PrefixTimeStamp, true, QString())
 };
 
 #endif

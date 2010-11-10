@@ -100,6 +100,18 @@ MLabel *MBannerViewPrivate::bannerTimeStamp()
     return bannerTimeStampLabel;
 }
 
+MLabel *MBannerViewPrivate::prefixTimeStamp()
+{
+    if (!prefixTimeStampLabel) {
+        prefixTimeStampLabel = new MLabel(controller);
+        //Banners can't have html
+        prefixTimeStampLabel->setTextFormat(Qt::PlainText);
+        prefixTimeStampLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        prefixTimeStampLabel->setTextElide(true);
+    }
+    return prefixTimeStampLabel;
+}
+
 void MBannerViewPrivate::setTitle(const QString &string)
 {
     title()->setText(string);
@@ -118,6 +130,11 @@ void MBannerViewPrivate::setIcon(const QString &i, const QSize &s)
 void MBannerViewPrivate::setBannerTimeStamp(const QDateTime &date)
 {
     bannerTimeStampData = new QDateTime(date);
+}
+
+void MBannerViewPrivate::setPrefixTimeStamp(const QString &string)
+{
+    prefixTimeStamp()->setText(string);
 }
 
 MLayout *MBannerViewPrivate::createLayout()
@@ -248,6 +265,8 @@ void MBannerViewPrivate::layoutGenericBanner(){
 
 void MBannerViewPrivate::layoutEventLockScreen()
 {
+    Q_Q(MBannerView);
+
     gridBanner = createGrid();
 
     icon()->setStyleName("Icon");
@@ -255,26 +274,48 @@ void MBannerViewPrivate::layoutEventLockScreen()
     title()->setTextElide(true);
     subtitle()->setStyleName("Body");
     bannerTimeStamp()->setStyleName("TimeStamp");
+    prefixTimeStamp()->setStyleName("PrefixTimeStamp");
 
     gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     gridBanner->addItem(title(), 0 , 1, Qt::AlignTop);
     gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
-    gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+
+    if (!q->model()->prefixTimeStamp().isEmpty()) {
+        QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
+        layoutStamp->addItem(prefixTimeStamp());
+        layoutStamp->addItem(bannerTimeStamp());
+        layoutStamp->addStretch();
+        gridBanner->addItem(layoutStamp, 2, 1,Qt::AlignTop);
+    } else {
+        gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+    }
 }
 
 void MBannerViewPrivate::layoutEventScreen()
 {
+    Q_Q(MBannerView);
+
     gridBanner = createGrid();
 
     icon()->setStyleName("IconScreen");
     title()->setStyleName("HeadLine");
     subtitle()->setStyleName("Body");
+    prefixTimeStamp()->setStyleName("PrefixTimeStamp");
     bannerTimeStamp()->setStyleName("TimeStamp");
 
     gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
     gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
-    gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+
+    if (!q->model()->prefixTimeStamp().isEmpty()) {
+        QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
+        layoutStamp->addItem(prefixTimeStamp());
+        layoutStamp->addItem(bannerTimeStamp());
+        layoutStamp->addStretch();
+        gridBanner->addItem(layoutStamp, 2, 1,Qt::AlignTop);
+    } else {
+        gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+    }
 }
 
 void MBannerViewPrivate::initDynamicLayout()
@@ -294,7 +335,7 @@ void MBannerViewPrivate::initDynamicLayout()
     } else if (q->model()->styleName()=="InformationBanner") {
         layoutInformationBanner();
     } else {
-        //If empty or no styleName == generic banner
+        //If wrong or empty styleName == generic banner
         layoutGenericBanner();
     }
     QObject::connect(controller, SIGNAL(clicked()), controller, SLOT(dismiss()));
@@ -354,7 +395,9 @@ void MBannerView::setupModel()
         d->setIcon(model()->iconID(),style()->iconSize());
     if (!model()->bannerTimeStamp().isNull())
         d->setBannerTimeStamp(model()->bannerTimeStamp());
-
+    if(!model()->prefixTimeStamp().isEmpty()){
+        d->setPrefixTimeStamp(model()->prefixTimeStamp());
+    }
     d->initDynamicLayout();
 }
 
@@ -383,6 +426,9 @@ void MBannerView::updateData(const QList<const char *>& modifications)
             updateLayout=true;
         } else if (member == MBannerModel::BannerTimeStamp) {
             d->setBannerTimeStamp(model()->bannerTimeStamp());
+            updateLayout=true;
+        } else if (member == MBannerModel::PrefixTimeStamp) {
+            d->setPrefixTimeStamp(model()->prefixTimeStamp());
             updateLayout=true;
         }
     }

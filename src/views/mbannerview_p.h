@@ -23,6 +23,8 @@
 #include "mscenewindowview_p.h"
 #include "mbannerview.h"
 #include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
+#include <MLocale>
 
 class MLabel;
 class MLayout;
@@ -43,15 +45,18 @@ public:
 
     void initDynamicLayout();
 
-    MLabel * title();
-    MLabel * subtitle();
-    MImageWidget * icon();
+    MLabel *title();
+    MLabel *subtitle();
+    MImageWidget *icon();
     MLabel *bannerTimeStamp();
+    MLabel *prefixTimeStamp();
+
 
     void setTitle(const QString& string);
     void setSubtitle(const QString& string);
     void setIcon(const QString& id, const QSize &s);
     void setBannerTimeStamp(const QDateTime& date);
+    void setPrefixTimeStamp(const QString& string);
 
 protected:
 
@@ -77,6 +82,7 @@ protected:
     MLabel *titleLabel;
     MLabel *subtitleLabel;
     MLabel *bannerTimeStampLabel;
+    MLabel *prefixTimeStampLabel;
     QDateTime *bannerTimeStampData;
 
     MBanner *controller;

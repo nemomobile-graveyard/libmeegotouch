@@ -81,7 +81,8 @@
         \code
            MBanner *infoBanner = new MBanner();
            infoBanner->setStyleName("InformationBanner");
-           infoBanner->setSubtitle("Info banner with so much information that the text wraps in portrait");
+           infoBanner->setIconID("icon-m-telephony-call-answer");
+           infoBanner->setTitle("Info banner with so much information that the text wraps in portrait");
            infoBanner->appear(MSceneWindow::DestroyWhenDone);
         \endcode
 
@@ -89,8 +90,7 @@
         \code
           MBanner *systemBanner = new MBanner();
           systemBanner->setStyleName("SystemBanner");
-          systemBanner->setIconID("icon-m-telephony-call-answer");
-          systemBanner->setSubtitle("System banner");
+          systemBanner->setTitle("System banner");
           systemBanner->appear(MSceneWindow::DestroyWhenDone);
         \endcode
 
@@ -104,28 +104,34 @@ class M_CORE_EXPORT MBanner : public MSceneWindow
 public:
 
     /*!
-        \property MInfoBanner::iconID
+        \property MBanner::iconID
         \brief Icon for banner.
     */
     Q_PROPERTY(QString iconID READ iconID WRITE setIconID)
 
     /*!
-        \property MContentItem::title
-        \brief See MContentItemModel::title
+        \property MBanner::title
+        \brief See MBanner::title
     */
     Q_PROPERTY(QString title READ title WRITE setTitle)
 
     /*!
-        \property MContentItem::subtitle
-        \brief See MContentItemModel::subtitle
+        \property MBanner::subtitle
+        \brief See MBanner::subtitle
     */
     Q_PROPERTY(QString subtitle READ subtitle WRITE setSubtitle)
 
     /*!
-        \property MContentItem::subtitle
-        \brief See MContentItemModel::subtitle
+        \property MBanner::bannerTimeStamp
+        \brief See MBanner::bannerTimeStamp
     */
     Q_PROPERTY(QDateTime bannerTimeStamp READ bannerTimeStamp WRITE setBannerTimeStamp)
+
+    /*!
+        \property MBanner::prefixTimeStamp
+        \brief See MBanner::prefixTimeStamp
+    */
+    Q_PROPERTY(QString prefixTimeStamp READ prefixTimeStamp WRITE setPrefixTimeStamp)
 
 public:
 
@@ -146,7 +152,7 @@ public:
     QString iconID() const;
 
     /*!
-        \brief clicks info banner
+        \brief clicks mbanner
     */
     void click();
 
@@ -161,9 +167,14 @@ public:
     QString subtitle() const;
 
     /*!
-        \brief Get the subtitle.
+        \brief Get the timestamp.
      */
     QDateTime bannerTimeStamp() const;
+
+    /*!
+        \brief Get the prefix of the timestamp.
+     */
+    QString prefixTimeStamp() const;
 
 Q_SIGNALS:
 
@@ -193,10 +204,16 @@ public Q_SLOTS:
     void setSubtitle(const QString &text);
 
     /**
-        \brief Set subtitle text. This is second line.
+        \brief Set timestamp text. This is third line.
         \param text text.
      */
     void setBannerTimeStamp(const QDateTime &date);
+
+    /**
+        \brief Set prefix timestamp text. This is third line.
+        \param text text.
+     */
+    void setPrefixTimeStamp(const QString &text);
 
 private:
     Q_DISABLE_COPY(MBanner)

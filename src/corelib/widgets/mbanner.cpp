@@ -61,6 +61,11 @@ QDateTime MBanner::bannerTimeStamp() const
     return model()->bannerTimeStamp();
 }
 
+QString MBanner::prefixTimeStamp() const
+{
+    return model()->prefixTimeStamp();
+}
+
 void MBanner::setIconID(const QString &iconId)
 {
     model()->setIconID(iconId);
@@ -79,4 +84,9 @@ void MBanner::setSubtitle(const QString &text)
 void MBanner::setBannerTimeStamp(const QDateTime &date)
 {
     model()->setBannerTimeStamp(date);
+}
+
+void MBanner::setPrefixTimeStamp(const QString &text)
+{
+    model()->setPrefixTimeStamp(text);
 }
