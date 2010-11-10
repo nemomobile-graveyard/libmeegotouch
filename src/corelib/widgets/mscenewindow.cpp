@@ -97,6 +97,7 @@ MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
     Q_D(MSceneWindow);
 
     d->windowType = PlainSceneWindow;
+    setAcceptTouchEvents(true);
     grabGesture(Qt::PanGesture);
     grabGesture(Qt::TapGesture);
     grabGesture(Qt::TapAndHoldGesture);
@@ -113,6 +114,7 @@ MSceneWindow::MSceneWindow(MSceneWindowPrivate *dd, MSceneWindowModel *model, MS
     setViewType(viewType);
 
     d->windowType = windowType;
+    setAcceptTouchEvents(true);
     grabGesture(Qt::PanGesture);
     grabGesture(Qt::TapGesture);
     grabGesture(Qt::TapAndHoldGesture);
