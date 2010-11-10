@@ -64,7 +64,15 @@ int main(int argc, char **argv)
     QApplication::setStyle("windows");
 #ifndef HAVE_MEEGOGRAPHICSSYSTEM
     QApplication::setGraphicsSystem("native");
+#else
+    // For the moment we use the native graphicssystem to share X pixmaps if
+    // nothing else is specified explicitly.
+    // Later we use the shiny new meego graphicssystem features by default.
+    if (qApp->arguments().indexOf("-graphicssystem") == -1) {
+        QApplication::setGraphicsSystem("native");
+    }
 #endif // HAVE_MEEGOGRAPHICSSYSTEM
+
     QApplication app(argc, argv);
 
     // Apply custom server address, if the "-address" has been passed as argument
