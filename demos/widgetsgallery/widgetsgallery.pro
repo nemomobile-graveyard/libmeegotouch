@@ -77,6 +77,8 @@ SOURCES += main.cpp \
     phonebookheader.cpp \
     phonebookmodel.cpp \
     drilldownlistitem.cpp \
+    customnavigationbarpage.cpp \
+    mynavbarcontent.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -126,6 +128,8 @@ HEADERS += templatepage.h \
     phonebookheader.h \
     phonebookmodel.h \
     drilldownlistitem.h \
+    customnavigationbarpage.h \
+    mynavbarcontent.h \
 
 # theme
 include(theme/theme.pri)

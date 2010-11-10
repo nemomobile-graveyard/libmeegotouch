@@ -61,6 +61,13 @@ MNavigationBarViewPrivate::~MNavigationBarViewPrivate()
     if (toolBar) {
         toolBarLayout->removeItem(toolBar);
         toolBar->setParentItem(0);
+        if (qobject_cast<MNavigationBar *>(controller) && controller->scene())
+            controller->scene()->removeItem(toolBar);
+    }
+
+    // Check if the controller is also being destroyed.
+    if (qobject_cast<MNavigationBar *>(controller)) {
+        setCustomContent(0); // avoid customContent from being deleted along with the view.
     }
 
     delete applicationMenuButton;
@@ -118,6 +125,9 @@ void MNavigationBarViewPrivate::init()
     toolbarMenuPolicy->setSpacing(0);
     toolbarMenuPolicy->addItem(toolBarSlot);
     toolbarMenuPolicy->addItem(applicationMenuButton);
+
+    customContentPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    customContentPolicy->setSpacing(0);
 
     // Connects button signals
     QObject::connect(applicationMenuButton, SIGNAL(clicked()), controller, SIGNAL(viewmenuTriggered()));
@@ -194,7 +204,10 @@ void MNavigationBarViewPrivate::updateLayout()
 
     bool isEmpty = false;
 
-    if (q->style()->hasTitle()) {
+    if (q->model()->customContent() != 0) {
+        layout->setPolicy(customContentPolicy);
+        currentCustomContent.data()->show();
+    } else if (q->style()->hasTitle()) {
         layout->setPolicy(menuToolbarEscapePolicy);
     } else {
         bool escapeVisible = isEscapeVisible();
@@ -243,6 +256,34 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
     }
 
     toolBar->setProperty("widgetAlignment", alignment);
+}
+
+void MNavigationBarViewPrivate::setCustomContent(QGraphicsWidget *customContent)
+{
+    if (customContent == currentCustomContent.data())
+        return;
+
+    if (!currentCustomContent.isNull()) {
+        Q_ASSERT(customContentPolicy->count() == 1);
+
+        customContentPolicy->removeItem(currentCustomContent.data());
+        layout->removeItem(currentCustomContent.data());
+
+        currentCustomContent.data()->setParent(0);
+        currentCustomContent.data()->setParentItem(0);
+
+
+        if (controller->scene()) {
+            controller->scene()->removeItem(currentCustomContent.data());
+        }
+
+        currentCustomContent.clear();
+    }
+
+    if (customContent) {
+        customContentPolicy->addItem(customContent);
+        currentCustomContent = customContent;
+    }
 }
 
 // --------------------------------------------------------------------------
@@ -317,6 +358,9 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
             d->escapeButtonSlot->setVisible(model()->escapeButtonVisible());
             layoutNeedsUpdate = true;
             toolBarAlignmentNeedsUpdate = true;
+        } else if (member == MNavigationBarModel::CustomContent) {
+            d->setCustomContent(model()->customContent());
+            layoutNeedsUpdate = true;
         }
     }
 
@@ -336,6 +380,7 @@ void MNavigationBarView::setupModel()
     d->applicationMenuButton->setProgressIndicatorVisible(model()->progressIndicatorVisible());
     d->escapeButtonSlot->setEnabled(model()->escapeButtonEnabled());
     d->escapeButtonSlot->setVisible(model()->escapeButtonVisible());
+    d->setCustomContent(model()->customContent());
 }
 
 void MNavigationBarView::applyStyle()

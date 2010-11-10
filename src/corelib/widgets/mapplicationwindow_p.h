@@ -188,6 +188,7 @@ public:
     void _q_enablePaintUpdates();
     void _q_handleInSwitcherVisibilityChange();
     void _q_updateStyle();
+    void _q_setupNavigationBarCustomContent();
 
     friend class MApplicationWindowEventFilter;
 };

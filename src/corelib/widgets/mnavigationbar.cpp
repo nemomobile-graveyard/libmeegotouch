@@ -143,4 +143,14 @@ void  MNavigationBar::setEscapeButtonVisible(bool visible)
     model()->setEscapeButtonVisible(visible);
 }
 
+void MNavigationBar::setCustomContent(QGraphicsWidget *customContent)
+{
+    model()->setCustomContent(customContent);
+}
+
+QGraphicsWidget *MNavigationBar::customContent()
+{
+    return model()->customContent();
+}
+
 #include "moc_mnavigationbar.cpp"

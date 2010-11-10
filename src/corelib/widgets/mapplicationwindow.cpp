@@ -1191,6 +1191,10 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
 
     navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
 
+    _q_setupNavigationBarCustomContent();
+    q->connect(page, SIGNAL(customNavigationBarContentChanged()),
+               SLOT(_q_setupNavigationBarCustomContent()));
+
     emit q->pageChanged(page);
 }
 
@@ -1207,12 +1211,16 @@ void MApplicationWindowPrivate::disconnectPage(MApplicationPage *pageToDisconnec
     QObject::disconnect(page->model(), SIGNAL(modified(QList<const char *>)),
                         q, SLOT(_q_handlePageModelModifications(QList<const char *>)));
 
+    QObject::disconnect(page, SIGNAL(customNavigationBarContentChanged()),
+                        q, SLOT(_q_setupNavigationBarCustomContent()));
+
     tearDownPageEscape();
     QObject::disconnect(navigationBar, SIGNAL(backButtonClicked()), page, 0);
     QObject::disconnect(navigationBar, SIGNAL(closeButtonClicked()), page, 0);
 
-
     removePageActions();
+
+    navigationBar->setCustomContent(0);
 
     page = 0;
 }
@@ -1260,6 +1268,21 @@ QAction* MApplicationWindowPrivate::findCheckedAction(const QList<QAction *> &ac
         }
     }
     return checkedAction;
+}
+
+void MApplicationWindowPrivate::_q_setupNavigationBarCustomContent()
+{
+    Q_ASSERT(page != 0);
+
+    // Make sure the page has already created its content.
+    // It can perfectly be creating its navigation bar custom content from
+    // within MApplicationPage::createContent()
+    if (!page->d_func()->contentCreated) {
+        page->createContent();
+        page->d_func()->contentCreated = true;
+    }
+
+    navigationBar->setCustomContent(page->customNavigationBarContent());
 }
 
 QString MApplicationWindow::windowIconID() const

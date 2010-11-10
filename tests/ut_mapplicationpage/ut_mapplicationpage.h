@@ -78,6 +78,9 @@ private slots:
     void testIfPositionIndicatorGeometryFollowsExposedRect();
     void testContentIsCreatedOnEnteringAppearingState();
     void testContentIsCreatedOnEnteringAppearedState();
+    void testCustomNavigationBarContentSetterAndGetter();
+    void testCustomNavigationBarContentOwnershipOnPageDeletion();
+    void testCustomNavigationBarContentChangedSignal();
 
 private:
     MApplicationPage *m_subject;

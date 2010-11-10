@@ -58,6 +58,8 @@ protected Q_SLOTS:
 private:
     Q_DISABLE_COPY(MNavigationBarView)
     Q_DECLARE_PRIVATE(MNavigationBarView)
+
+    friend class Ut_MNavigationBarView;
 };
 
 #endif

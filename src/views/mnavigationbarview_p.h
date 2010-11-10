@@ -55,16 +55,17 @@ public:
     bool isEscapeVisible();
     void updateLayout();
     void updateToolBarAlignment();
+    void setCustomContent(QGraphicsWidget *customContent);
 
     MLayout *layout;
 
     // parts of policy name describe which components are visible and in what order
     MLinearLayoutPolicy *menuToolbarEscapePolicy;
-
     MLinearLayoutPolicy *escapeToolbarMenuPolicy;
     MLinearLayoutPolicy *escapeToolbarPolicy;
     MLinearLayoutPolicy *toolbarPolicy;
     MLinearLayoutPolicy *toolbarMenuPolicy;
+    MLinearLayoutPolicy *customContentPolicy;
 
     QGraphicsWidget *toolBarSlot;
     QGraphicsLinearLayout *toolBarLayout;
@@ -75,6 +76,8 @@ public:
     MEscapeButtonSlot* escapeButtonSlot;
     MButton *backButton;
     MButton *closeButton;
+
+    QWeakPointer<QGraphicsWidget> currentCustomContent;
 
  protected:
     MNavigationBarView *q_ptr;

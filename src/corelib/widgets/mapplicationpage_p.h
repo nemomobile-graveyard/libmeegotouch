@@ -23,6 +23,7 @@
 #include <mapplicationpage.h>
 #include <mscenewindow_p.h>
 #include <QRect>
+#include <QWeakPointer>
 
 class MPannableViewport;
 
@@ -43,6 +44,8 @@ public:
     Qt::Orientations panDirection;
 
     bool contentCreated;
+
+    QWeakPointer<QGraphicsWidget> customNavigationBarContent;
 
     void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState newState,
                                       MSceneWindow::SceneWindowState oldState);

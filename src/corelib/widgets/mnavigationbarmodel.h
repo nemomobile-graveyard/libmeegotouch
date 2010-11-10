@@ -49,6 +49,10 @@ private:
                      MNavigationBarModel::EscapeButtonClose)
     M_MODEL_PROPERTY(bool, escapeButtonEnabled, EscapeButtonEnabled, true, true)
     M_MODEL_PROPERTY(bool, escapeButtonVisible, EscapeButtonVisible, true, true)
+
+    //! \internal
+    M_MODEL_PTR_PROPERTY(QGraphicsWidget *, customContent, CustomContent, true, 0)
+    //! \internal_end
 };
 
 #endif

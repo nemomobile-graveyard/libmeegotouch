@@ -90,6 +90,8 @@ private slots:
     void testNavigationBarVisibilityDockedTabbar();
     void testNavigationBarVisibilityHideToolbarAction();
 
+    void testFirstPageWithCustomNavigationBarContent();
+
 private:
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;

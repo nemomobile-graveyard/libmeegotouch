@@ -373,6 +373,64 @@ public:
      */
     QRectF exposedContentRect() const;
 
+    /*!
+      \brief Sets custom content for the navigation bar
+
+      If set with a valid widget (i.e., pointer different then 0), all navigation
+      bar content will be replaced by the given widget. This is useful for cases
+      that demand more flexibility than what tool buttons added via MAction can
+      provide.
+
+      This means the application developer is responsible for adding any navigation
+      control (back button, close button, menu button, etc) himself.
+
+      The navigation bar will then be composed by its regular background with
+      \a navigationBarContent on top of it, taking the entire area of the navigation
+      bar.
+
+      When a navigation bar has custom content, any MAction that would normally
+      be represented by some widget on it (such as a tool button) will no longer
+      have any effect. MActions located in the application menu will still work, but
+      you will have to summon the menu yourself by calling:
+
+      \code
+      applicationWindow()->openMenu()
+      \endcode
+
+      A typical \a customNavigationBarContent will be a widget with an internal layout
+      of subwidgets (such as buttons). If you want the text buttons of your custom
+      navigation bar content to have a native look & feel you should set their
+      syle names to "ToolBarLabelOnlyCommonButton".
+
+      The custom navigation bar content of a page is fetched when that page is about to
+      start appearing (i.e. transitioning from MSceneWindow::Disappeared to
+      MSceneWindow::Appearing or from MSceneWindow::Disappeared to MSceneWindow::Appeared).
+      Therefore you should have your customNavigationBarContent() set either when your page
+      is constructed or inside its createContent() method. Changing the
+      customNavigationBarContent() of a page while it's being displayed (its state is
+      different than MSceneWindow::Disappeared) is not supported and leads to undefined
+      behavior.
+
+      While a page is being displayed, the widget returned by customNavigationBarContent()
+      will be reparented to the navigation bar. When a page is leaving the screen,
+      customNavigationBarContent() will be removed from the scene and will have its
+      parent set to zero (null).
+
+      The widget pointed by customNavigationBarContent() is deleted by MApplicationPage's
+      destructor. Any previously set customNavigationBarContent will be deleted and
+      replaced by \a customNavigationBarContent.
+
+      \sa customNavigationBarContent()
+     */
+    void setCustomNavigationBarContent(QGraphicsWidget *customNavigationBarContent);
+
+    /*!
+     \brief Returns the custom content for the navigation bar
+     By default it returns 0 (null).
+     \sa setCustomNavigationBarContent()
+     */
+    QGraphicsWidget *customNavigationBarContent();
+
 Q_SIGNALS:
     //! Signal emitted when back button called
     void backButtonClicked();
@@ -408,6 +466,12 @@ Q_SIGNALS:
         \sa exposedContentRect()
      */
     void exposedContentRectChanged();
+
+    /*!
+      \brief Emitted when a different custom navigation bar content widget is set.
+      \sa setCustomNavigationBarContent()
+     */
+    void customNavigationBarContentChanged();
 
 public Q_SLOTS:
     /*!

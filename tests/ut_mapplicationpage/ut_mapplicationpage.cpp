@@ -33,6 +33,8 @@
 #include <MPositionIndicator>
 #include <MScene>
 
+#include <QWeakPointer>
+
 #include "mondisplaychangeevent.h"
 
 bool gMWindowIsOnDisplay = false;
@@ -375,6 +377,52 @@ void Ut_MApplicationPage::testContentIsCreatedOnEnteringAppearedState()
     QCOMPARE(m_subject->isContentCreated(), true);
     QCOMPARE(dummyObject.onApplicationPageAppearedWasCalled, true);
     QCOMPARE(dummyObject.pageContentWasAlreadyCreatedInAppeared, true);
+}
+
+void Ut_MApplicationPage::testCustomNavigationBarContentSetterAndGetter()
+{
+    QGraphicsWidget *customNavigationBarContent = new QGraphicsWidget;
+    QWeakPointer<QGraphicsWidget> customNavigationBarContentPointer = customNavigationBarContent;
+
+    QVERIFY(m_subject->customNavigationBarContent() == 0);
+
+    m_subject->setCustomNavigationBarContent(customNavigationBarContent);
+
+    QVERIFY(m_subject->customNavigationBarContent() == customNavigationBarContent);
+
+    m_subject->setCustomNavigationBarContent(0);
+
+    QVERIFY(m_subject->customNavigationBarContent() == 0);
+
+    // Page should have deleted the old widget when replacing it with the 0 (null) one.
+    QVERIFY(customNavigationBarContentPointer.isNull());
+}
+
+void Ut_MApplicationPage::testCustomNavigationBarContentOwnershipOnPageDeletion() {
+    QGraphicsWidget *customNavigationBarContent = new QGraphicsWidget;
+    QWeakPointer<QGraphicsWidget> customNavigationBarContentPointer = customNavigationBarContent;
+
+    m_subject->setCustomNavigationBarContent(customNavigationBarContent);
+
+    delete m_subject;
+    m_subject = 0;
+
+    QVERIFY(customNavigationBarContentPointer.isNull());
+}
+
+void Ut_MApplicationPage::testCustomNavigationBarContentChangedSignal()
+{
+    QGraphicsWidget *customNavigationBarContent = new QGraphicsWidget;
+    QGraphicsWidget *otherCustomNavigationBarContent = new QGraphicsWidget;
+    QSignalSpy customNavigationBarContentChangedSignalSpy(m_subject, SIGNAL(customNavigationBarContentChanged()));
+
+    m_subject->setCustomNavigationBarContent(customNavigationBarContent);
+
+    QCOMPARE(customNavigationBarContentChangedSignalSpy.count(), 1);
+
+    m_subject->setCustomNavigationBarContent(otherCustomNavigationBarContent);
+
+    QCOMPARE(customNavigationBarContentChangedSignalSpy.count(), 2);
 }
 
 QTEST_APPLESS_MAIN(Ut_MApplicationPage)

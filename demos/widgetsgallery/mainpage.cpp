@@ -48,6 +48,7 @@
 #include "bannerspage.h"
 #include "bubblepage.h"
 #include "drilldownlistitem.h"
+#include "customnavigationbarpage.h"
 
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
@@ -97,6 +98,8 @@ public:
         addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_display_modes"), new DisplayModesPage());
         //% "Toolbar (including Tab Bar)"
         addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_toolbar_incl_tab_bar"), new ToolBarPage());
+        //% "Custom Navigation Bar"
+        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_custom_navigation_bar"), new CustomNavigationBarPage());
 
 
         //% "Simple Widgets"

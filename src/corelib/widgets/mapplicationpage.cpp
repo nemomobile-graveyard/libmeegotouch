@@ -86,7 +86,18 @@ MApplicationPage::MApplicationPage(QGraphicsItem *parent)
 
 MApplicationPage::~MApplicationPage()
 {
+    Q_D(MApplicationPage);
     setCentralWidget(0);
+
+    // If the application quits while this page is being displayed, it might happen
+    // that MNavigationBar gets destroyed before this page. In that case, since
+    // the custom content will be a child of MNavigationBar in the scene graph, it
+    // could have been detroyed along with it.
+    // Therefore, we only delete the custom content if we still have it.
+    if (!d->customNavigationBarContent.isNull()) {
+        delete d->customNavigationBarContent.data();
+        d->customNavigationBarContent.clear();
+    }
 }
 
 void MApplicationPage::setCentralWidget(QGraphicsWidget *centralWidget)
@@ -310,6 +321,31 @@ MPannableViewport * MApplicationPage::pannableViewport()
     Q_D(MApplicationPage);
 
     return d->pannableViewport;
+}
+
+void MApplicationPage::setCustomNavigationBarContent(QGraphicsWidget *customNavigationBarContent)
+{
+    Q_D(MApplicationPage);
+    QGraphicsWidget *oldCustomNavigationBarContent = 0;
+
+    if (customNavigationBarContent == d->customNavigationBarContent.data())
+        return;
+
+    oldCustomNavigationBarContent = d->customNavigationBarContent.data();
+
+    d->customNavigationBarContent = customNavigationBarContent;
+
+    // Let MApplicationWindow remove this content from the navigation bar
+    emit customNavigationBarContentChanged();
+
+    if (oldCustomNavigationBarContent)
+        delete oldCustomNavigationBarContent;
+}
+
+QGraphicsWidget *MApplicationPage::customNavigationBarContent()
+{
+    Q_D(MApplicationPage);
+    return d->customNavigationBarContent.data();
 }
 
 #include "moc_mapplicationpage.cpp"

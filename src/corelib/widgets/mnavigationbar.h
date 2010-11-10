@@ -96,6 +96,11 @@ public:
      */
     bool escapeButtonVisible() const;
 
+    //! \internal
+    void setCustomContent(QGraphicsWidget *customContent);
+    QGraphicsWidget *customContent();
+    //! \internal_end
+
 public Q_SLOTS:
     /** \brief Trigger notification of the user via the navigation bar.
      *

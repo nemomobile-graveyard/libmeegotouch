@@ -212,6 +212,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_navigationBarStateChanged(MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState))
     Q_PRIVATE_SLOT(d_func(), void _q_handleInSwitcherVisibilityChange())
     Q_PRIVATE_SLOT(d_func(), void _q_updateStyle())
+    Q_PRIVATE_SLOT(d_func(), void _q_setupNavigationBarCustomContent())
 };
 
 #endif

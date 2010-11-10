@@ -723,4 +723,27 @@ void Ut_MApplicationWindow::testNavigationBarVisibilityHideToolbarAction()
     QCOMPARE(navigationBar->isVisible(), false);
 }
 
+void Ut_MApplicationWindow::testFirstPageWithCustomNavigationBarContent()
+{
+    MSceneManagerTestBridge testBridge;
+    testBridge.setParent(m_subject->sceneManager());
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+    MApplicationPage* page = new MApplicationPage;
+    QGraphicsWidget *customNavBarContent = new QGraphicsWidget;
+
+    page->setCustomNavigationBarContent(customNavBarContent);
+
+    m_subject->show();
+
+    m_subject->sceneManager()->appearSceneWindow(page);
+
+    QVERIFY(navigationBar->customContent() == customNavBarContent);
+
+    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
+
+    m_subject->sceneManager()->dismissSceneWindow(page);
+
+    QVERIFY(navigationBar->customContent() == 0);
+}
+
 QTEST_MAIN(Ut_MApplicationWindow)
