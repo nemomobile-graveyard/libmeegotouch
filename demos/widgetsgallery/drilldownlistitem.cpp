@@ -44,7 +44,7 @@ QGraphicsLayout *DrillDownListItem::createLayout()
     titleLabelWidget()->setStyleName("CommonSingleTitle");
     layout->addItem(titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
-    imageWidget()->setStyleName("CommonMainIcon");
+    imageWidget()->setStyleName("CommonDrillDownIcon");
     imageWidget()->setImage("icon-m-common-drilldown-arrow");
     layout->addItem(imageWidget(), 0, 1, Qt::AlignCenter);
 
