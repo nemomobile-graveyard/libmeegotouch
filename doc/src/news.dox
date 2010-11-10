@@ -1,9 +1,10 @@
 /*! \page news What's New in MeeGo Touch
 
-\section v02052 0.20.52
+\section v02053 0.20.53
 
 \subsection New
 - MApplication: added minimizing(), minimized() and minimizingCanceled() signals
+- Notification users can set their own identifier to notifications and notification groups to distinquish their notifications.
 
 \section v02049 0.20.49
 
