@@ -59,7 +59,7 @@ Out-of-process
 #ifndef DEMOEXTENSIONINTERFACE_H
 #define DEMOEXTENSIONINTERFACE_H
 
-#include <duiapplicationextensioninterface.h>
+#include <mapplicationextensioninterface.h>
 
 class DemoExtensionInterface : public MApplicationExtensionInterface
 {
@@ -149,7 +149,7 @@ In the application that wants to use the extensions implementing the com.meego.c
 the application should create an application extension area like this:
 
 \code
-#include <duiapplicationextensionarea.h>
+#include <mapplicationextensionarea.h>
 #include <demoextensioninterface.h>
 
 ...
@@ -203,7 +203,7 @@ Application extensions extend the specification by defining a new type \b MAppli
 </tr>
 <tr>
   <td>Extension</td>
-  <td>Defines the application extension binary. This binary needs to be located in \c /usr/lib/dui/applicationextensions/ - directory.</td>
+  <td>Defines the application extension binary. This binary needs to be located in \c /usr/lib/meegotouch/applicationextensions/ - directory.</td>
   <td>string</td>
   <td>YES</td>
 </tr>
@@ -266,13 +266,13 @@ The property and signal names must be as stated above. The property access funct
 Every application extension has an application extension identifier string that uniquely identifies the application extension.
 
 The application extension identifier is determined like this:
-- if an identifier (<tt>DUIApplicationExtension-Identifier</tt>) is specified in the  \ref appextensiondesktopfile desktop file (and it is valid), that is used
+- if an identifier (<tt>MApplicationExtension-Identifier</tt>) is specified in the  \ref appextensiondesktopfile desktop file (and it is valid), that is used
 - otherwise, an identifier is extracted from the application extension shared library name:
   assuming your application extension is packaged to a shared library called <tt>lib<strong>exampleapplicationextension</strong>.so</tt>, the identifier will be <strong>exampleapplicationextension</strong>.
 
 \subsection appextensionstyling Application extension styling
 
-Application extensions can define their own styles just like any other application in the DUI world.
+Application extensions can define their own styles just like any other application in the MeeGo Touch world.
 Styling is done with style sheets and images in the \ref styling "usual way".
 The only important thing with application extensions is the location of the style resources.
 
@@ -292,19 +292,19 @@ MApplicationExtensionAreaStyle {
 \endcode
 
 \section appextensiontools Tools to help development
-The <tt>dui-dev-tools</tt> package includes a tool called <tt>duiapplicationextensiontester</tt>. This tool can be used to test application extensions that have an UI.
+The <tt>meegotouch-dev-tools</tt> package includes a tool called <tt>mapplicationextensiontester</tt>. This tool can be used to test application extensions that have an UI.
 The tool loads application extensions implementing a specified interface to a window where they can be tested by interacting with them and visually checking the results.
 It's also easy to run the extension in a debugger with this tool.
 
 You can load an application extension with the tool by giving the command:
 
 \code
-duiapplicationextensiontester <interfacename>
+mapplicationextensiontester <interfacename>
 \endcode
 
 where &lt;interfacename&gt; is the interface the extensions to be loaded must implement.
 
-\b Note that the application extensions must be installed to the system before \c duiapplicationextensiontester can use them.
+\b Note that the application extensions must be installed to the system before \c mapplicationextensiontester can use them.
 
 
 */

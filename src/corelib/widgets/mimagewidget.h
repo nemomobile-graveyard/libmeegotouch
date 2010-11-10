@@ -38,6 +38,11 @@ class MImageWidgetPrivate;
         Image supports scale, crop, zoom operations.
 
     \section MImageWidgetUseGuidelines Usage guidelines
+        NOTE: The images passed to MImageWidget are converted internally to OpenGL textures, thus their
+        maximum size is limited by the GPU driver. Consult the documentation of the GPU unit for the actual
+        maximum texture size. If the image exceeds the maximum supported size, it shall not be
+        drawn.
+
         Images can be used by themselves to decorate the UI (background images, frames etc.)
         and also combined as part of other components (grids, lists, buttons etc.).
 

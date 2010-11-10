@@ -27,9 +27,6 @@
 MGridLayoutPolicyPrivate::MGridLayoutPolicyPrivate(MLayout *l) :
     MAbstractLayoutPolicyPrivate(l), engineWidget(new QGraphicsWidget), engine(new QGraphicsGridLayout(engineWidget))
 {
-    engineWidget->setContentsMargins(0, 0, 0, 0);
-    engineWidget->setMinimumSize(0, 0);
-    engineWidget->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 }
 
 MGridLayoutPolicyPrivate::~MGridLayoutPolicyPrivate()
@@ -54,10 +51,8 @@ void MGridLayoutPolicyPrivate::refreshEngine()
     engine->updateGeometry();
 }
 
-void MGridLayoutPolicyPrivate::refreshEngineAndWidget()
+void MGridLayoutPolicyPrivate::refreshWidget()
 {
-    refreshEngine();
-
     //We need to make engine->geometry() equal the layout->geometry() so that the items are in the right place
     qreal topMargin = layout->geometry().top();
     qreal leftMargin = layout->geometry().left();

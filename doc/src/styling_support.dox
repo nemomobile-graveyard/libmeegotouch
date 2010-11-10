@@ -1,30 +1,30 @@
 /*! \page styling_support Theming support for applications & external libraries
 
 \section applications Theming support for external libraries
-    External libraries can enable theming support through DUI_LIBRARY macro. This macro creates static DuiLibrary object, 
-    which gets initialized when the library is loaded. During the construction phase, the DuiLibrary object registers itself 
-    to the DuiTheme, making the theme aware of the need for theming support for this particular library. Later on when the
-    library gets unloaded, the DuiLibrary object is destroyed automatically and it unregisters the library from the DuiTheme.
+    External libraries can enable theming support through the M_LIBRARY macro. This macro creates a static MLibrary object,
+    which gets initialized when the library is loaded. During the construction phase, the MLibrary object registers itself
+    to the MTheme, making the theme aware of the need for theming support for this particular library. Later on when the
+    library gets unloaded, the MLibrary object is destroyed automatically and it unregisters the library from the MTheme.
 
-    Theming support allows library to:
+    Theming support allows a library to:
     - Register widgets, views, styles & animations
     - Provide view configuration for the widgets, declared in that library
     - Provide stylesheets for the styles, declared in that library
 
-    The registration name of the library will be the build target name, defined in the library .pro file. It is necessary to 
-    use CONFIG += dui to enable the functionality described above. Here's a simple example of a library .pro file.
+    The registration name of the library will be the build target name, defined in the library .pro file. It is necessary to
+    use CONFIG += meegotouch to enable the functionality described above. Here's a simple example of a library .pro file:
 
     \code
-    DUIGEN_OUTDIR = ./.gen
+    MGEN_OUTDIR = ./.gen
     MOC_DIR = ./.moc
     OBJECTS_DIR = ./.obj
-    CONFIG += dui
+    CONFIG += meegotouch
     TARGET = mywidgets
     TEMPLATE = lib
 
     include(widgets/widgets.pri)
 
-    # mywidgets.cpp is a good place for the DUI_LIBRARY macro
+    # mywidgets.cpp is a good place for the M_LIBRARY macro
     SOURCES += mywidgets.cpp
 
     HEADERS += \
@@ -35,51 +35,76 @@
     \endcode
 
     \subsection lib_registration Widget, view & style registration
-        Widgets can be registered to the system using DUI_REGISTER_WIDGET(classname) macro. It is necessary to register widget to the
-        system to be able to provide theming support for it. 
-            Widget registration allows system to:
+        Widgets can be registered to the system using the M_REGISTER_WIDGET(classname) macro. It is necessary to register widgets to the
+        system to be able to provide theming support for them.
+            Widget registration allows the system to:
             - Determine the origin (application or library) of the widget
-            - Determine the proper view configuration file & create view for it
+            - Determine the proper view configuration file & create a view for it
             - (Later on, provide declarative UI support for this particular widget type)
 
-        Views can be registered to the system using DUI_REGISTER_VIEW(viewclass, controllerclass) macro. It is necessary to register views
-        to the system to be able to provide theming support for it.
-            View registration allows system to:
-            - Construct an instance of the view after it's type has been resolved from the view configuration
+    \note M_REGISTER_WIDGET does not have to be called when the widget is created as a subclass of the MStylableWidget convenience class.
+
+        Views can be registered to the system using the M_REGISTER_VIEW(viewclass, controllerclass) macro. It is necessary to register views
+        to the system to be able to provide theming support for them.
+            View registration allows the system to:
+            - Construct an instance of the view after its type has been resolved from the view configuration
             - Determine the proper style class for the view
 
-        Styles can be registered to the system using DUI_REGISTER_STYLE(styleclass) macro. It is necessary to register styles
-        to the system to be able to provide theming support for it. Note that if you use automatic style class generation through
-        the duigen/duimoc, the generated style class will be automatically registered to the system.
-            Style registration allows system to:
-            - Construct an instance of the style after it's type has been resolved from the view class
+        Styles can be registered to the system using the M_REGISTER_STYLE(styleclass) macro. It is necessary to register styles
+        to the system to be able to provide theming support for them. Note that if you use automatic style class generation through
+        mgen/mmoc, the generated style class will be automatically registered to the system.
+            Style registration allows the system to:
+            - Construct an instance of the style after its type has been resolved from the view class
             - Determine the origin (application or library) for the style
             - Determine the proper stylesheet(s) for the style class
 
     \subsection lib_themefiles Providing view configuration & stylesheets for the widgets
-        External library can provide stylesheets & view configuration for it's own widgets. Stylesheets contain the actual values for the
-        styling attributes and the view configuration file allows the library to define what kind of view class is used per widget. For 
-        example it is possible to have a simple view for some widget in one theme and more advanced version of that view in another theme. 
+        External libraries can provide stylesheets & view configuration for their own widgets. Stylesheets contain the actual values for the
+        styling attributes and the view configuration file allows the library to define what kind of view class is used per widget. For
+        example, it is possible to have a simple view for some widget in one theme and a more advanced version of that view in another theme.
         The view configuration file is a pretty simple .conf file, see example below.
-
 
     \code
     [MyCustomWidget]
     default = MyCustomWidgetView
 
-    [MyAnotherCustomWidget]
-    default = MyAnotherCustomWidgetView
+    [MyOtherCustomWidget]
+    default = MyOtherCustomWidgetView
     \endcode
 
+        ATTENTION: It is not possible to override styles that are not provided by the library, unless they are referenced as children of a widget that is
+        provided by the library. Even object name selectors do not work unless the parent is specified, because the same name could be
+        used at different places.
 
-    \sa \ref theme_structure "Where to install the library spesific theme files"
+        For example, if a library provides a custom widget called "MyCustomWidget" with a standard button children, and you want to change the
+        style of this button by overriding MButtonStyle, you have to specify the parent widget in the CSS like this:
+
+    \code
+    MyCustomWidget MButtonStyle#myObjectName {
+        some-attribute: some-value;
+    }
+    \endcode
+
+        Just specifying the object name like this does NOT work:
+
+    \code
+    MButtonStyle#myObjectName {
+        /* DOES NOT WORK */
+        some-attribute: some-value;
+    }
+    \endcode
+
+    \note Do not use MTheme->loadCSS() to work around this limitation, as this is slow and can lead to impossible to detect side-effects.
+
+    \sa \ref parent_child_in_stylesheet "Parent-child relationship in stylesheet"
+    \sa \ref theme_structure "Where to install the library specific theme files"
 
 \section application_theme_support Theming support for applications
-    Theming support for application works in a similar way that it works for external libraries with one big exception. The library is only able to
-    configure the widgets it declares, but the application can override pretty much anything when it comes to theming & styling. Application can provide 
-    it's own stylesheet & view configuration files, it can also register it's own widgets, views & styles to the system and provide theming for them. 
-    It has pretty much full control for it's own look & feel. 
+    Theming support for application works in a similar way that it works for external libraries with one big exception. Libraries are only able to
+    configure the widgets they declare, but applications can override pretty much anything when it comes to theming & styling. Applications can provide
+    their own stylesheet & view configuration files, they can also register their own widgets, views & styles to the system and provide theming for them.
+    Applications have pretty much full control over their own look & feel.
     \sa \ref theme_structure "Where to install the application specific theme files."
 
-    \note As a library or application developer, you should always provide basic theming for your widgets in fallback theme.
+    \note As a library or application developer, you should always provide basic theming for your widgets as a fallback theme.
 */

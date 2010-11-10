@@ -714,6 +714,25 @@ void Ut_MApplicationWindow::testNavigationBarVisibilityDockedTabbar()
     delete page;
 }
 
+void Ut_MApplicationWindow::testNavigationBarVisibilityHideToolbarAction()
+{
+    // docked tabbar
+    initToolbarLocationTC(M::Angle0, MToolBar::tabType);
+
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+
+    MAction* action = new MAction("Action", m_subject);
+    action->setLocation(MAction::ToolBarLocation);
+    m_subject->addAction(action);
+
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), true);
+
+    action->setVisible(false);
+    fastForwardDisappearAppearAnimations(navigationBar);
+    QCOMPARE(navigationBar->isVisible(), false);
+}
+
 
 MNavigationBar *Ut_MApplicationWindow::fetchNavigationBar(
         const QList<QGraphicsItem *> &itemsList) const

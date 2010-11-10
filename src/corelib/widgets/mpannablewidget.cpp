@@ -698,6 +698,11 @@ void MPannableWidget::setPanDirection(const Qt::Orientations &panDirection)
 
 Qt::Orientations MPannableWidget::panDirection()
 {
+    return static_cast<const MPannableWidget *>(this)->panDirection();
+}
+
+Qt::Orientations MPannableWidget::panDirection() const
+{
     Qt::Orientations directions(0);
 
     if (verticalPanningPolicy() != PanningAlwaysOff)

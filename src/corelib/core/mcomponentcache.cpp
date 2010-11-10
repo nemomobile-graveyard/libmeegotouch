@@ -69,7 +69,7 @@ bool MComponentCachePrivate::populating()
     return cacheBeingPopulated;
 }
 
-void MComponentCachePrivate::populateForMApplication()
+void MComponentCachePrivate::populateForMApplication(bool populateGLWidget)
 {
     static const char *const appName = "componentcache_pre_initialized_mapplication";
     static const char *const emptyString = "";
@@ -90,7 +90,7 @@ void MComponentCachePrivate::populateForMApplication()
         qFatal("MComponentCache::populateForMApplication() - Cache is already populated.");
     }
 
-    if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+    if (MGraphicsSystemHelper::isRunningNativeGraphicssystem() && populateGLWidget) {
         glWidgetOfmApplicationWindowInstance = createNewGlWidget();
     }
 
@@ -101,9 +101,8 @@ void MComponentCachePrivate::populateForMApplication()
 
 void MComponentCachePrivate::populateForWRTApplication()
 {
-    cacheBeingPopulated = true; // reset and unset in populateForMApplication
     MApplication::setGraphicsSystem("raster");
-    populateForMApplication();
+    populateForMApplication(false);
 }
 
 QGLWidget* MComponentCachePrivate::createNewGlWidget(const QGLFormat* format)

@@ -569,7 +569,7 @@ QString MApplication::binaryName()
 
 void MApplicationPrivate::stdExit(int status)
 {
-    std::exit(status);
+    qApp->exit(status);
 }
 
 void MApplication::setPrestartMode(M::PrestartMode mode)

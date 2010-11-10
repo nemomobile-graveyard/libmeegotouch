@@ -372,15 +372,15 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
         // check all the attributes of this selector against the cached entry
         foreach(MStyleSheetAttribute * attribute, *(info.selector->attributes())) {
             MOriginContainer *old = data.value(attribute->name, NULL);
-            if (old) {
-                // check which one has higher priority
-                if (!isHigherPriority(old, info.selector, info.classPriority, info.parentPriority)) {
+            if (old && !isHigherPriority(old, info.selector, info.classPriority, info.parentPriority)) {
                     continue;
-                }
             }
 
             // override
-            MOriginContainer *tempMOriginCont =   new MOriginContainer(attribute, info.selector, info.classPriority, info.parentPriority, info.filename, old->stylesheet);
+            MOriginContainer *tempMOriginCont =   new MOriginContainer(attribute, info.selector,
+                                                                       info.classPriority,
+                                                                       info.parentPriority,
+                                                                       info.filename, info.stylesheet);
             data[attribute->name] = tempMOriginCont;
             tempMOriginContainers.append(tempMOriginCont);
         }
@@ -656,6 +656,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
                         info.selector = selector;
                         info.classPriority = classPriority;
                         info.parentPriority = parentPriority;
+                        info.stylesheet = sheet;
                         results.append(info);
                     }
                 }
@@ -679,6 +680,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
                     info.selector = selector;
                     info.classPriority = classPriority;
                     info.parentPriority = parentPriority;
+                    info.stylesheet = sheet;
                     results.append(info);
                 }
             }

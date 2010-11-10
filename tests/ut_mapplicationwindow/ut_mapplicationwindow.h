@@ -89,6 +89,7 @@ private slots:
 
     void testNavigationBarVisibilityFloatableTabbar();
     void testNavigationBarVisibilityDockedTabbar();
+    void testNavigationBarVisibilityHideToolbarAction();
 
 private:
     MNavigationBar *fetchNavigationBar(const QList<QGraphicsItem *> &itemsList) const;

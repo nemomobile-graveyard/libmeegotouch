@@ -35,7 +35,7 @@
 
 namespace {
     const char *KnownIconId = "meegotouch-combobox-indicator";
-    const char *UnknownIconId = "xxx-unknown-icon-id";
+    const char *UnknownIconId = "whatever";
 };
 
 void Ut_MTheme::initTestCase()
@@ -192,7 +192,7 @@ void Ut_MTheme::testPixmapCopy()
 void Ut_MTheme::testPixmapCopyWithSize()
 {
     QSignalSpy spy(m_theme, SIGNAL(pixmapRequestsFinished()));
-    
+
     QPixmap *fixedSizePixmap = m_theme->pixmapCopy(KnownIconId, QSize(100, 150));
     m_theme->cleanupGarbage();
     QVERIFY(fixedSizePixmap != 0);
@@ -247,24 +247,46 @@ void Ut_MTheme::testPixmapCaching()
 
 void Ut_MTheme::testApplicationPixmapDirs()
 {
-    QSKIP("Skipping due to crashes themedaemon...", SkipAll);
-    const QPixmap *unknownPixmap = m_theme->pixmap(UnknownIconId);
-    const QPixmap *custom;
-    
+    const QPixmap *pixmap1;
+    const QPixmap *pixmap2;
+
     m_theme->addPixmapDirectory(qApp->applicationDirPath());
-    custom = m_theme->pixmap("ut_mtheme");
-    QVERIFY(custom != 0);
-    QVERIFY(unknownPixmap->toImage() != custom->toImage());
-    m_theme->releasePixmap(custom);
 
+    QString pixmap1_id="ut_mtheme";
+    QString pixmap2_id="ut_mtheme_second";
+
+    /*!
+     * We request to local pixmap (ut_mtheme folder)
+     */
+    pixmap1 = m_theme->pixmap("ut_mtheme");
+    pixmap2 = m_theme->pixmap("ut_mtheme_second");
+    /*!
+     * Checking if the pixmaps are different (expected)
+     */
+    QVERIFY(pixmap1->toImage() != pixmap2->toImage());
+    QVERIFY(pixmap1->size() != pixmap2->size());
+    /*!
+     * Releasing pixmaps
+     */
+    m_theme->releasePixmap(pixmap1);
+    m_theme->releasePixmap(pixmap2);
+    /*!
+     * We released but pixmap still in cached (no clean applied yet)
+     */
+    QVERIFY(isIconCached(pixmap1_id, QSize()));
+    QVERIFY(isIconCached(pixmap2_id, QSize()));
+
+    /*!
+     * Cleaning released pixmaps
+     */
+    m_theme->cleanupGarbage();
+    /*!
+     * The local pixmaps shouldn't be cached
+     */
+    QCOMPARE(cachedIconCount(), 0);
+    QVERIFY(!isIconCached(pixmap1_id, QSize()));
+    QVERIFY(!isIconCached(pixmap2_id, QSize()));
     m_theme->clearPixmapDirectories();
-    custom = m_theme->pixmap("ut_mtheme");
-    m_theme->releasePixmap(custom);
-    QVERIFY(custom != 0);
-    QCOMPARE(unknownPixmap->toImage(), custom->toImage());
-    
-    m_theme->releasePixmap(unknownPixmap);
-
 }
 
 void Ut_MTheme::testScalableImage()

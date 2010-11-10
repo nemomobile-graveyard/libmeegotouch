@@ -21,6 +21,7 @@
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QSignalSpy>
+#include <QWeakPointer>
 
 #include <mcontainer.h>
 #include "mcontainer_p.h"
@@ -70,6 +71,42 @@ void Ut_MContainer::setCentralWidget()
 
     // check that there exists centralWidget
     QVERIFY(m_subject->centralWidget() == tmp);
+}
+
+void Ut_MContainer::replaceCentralWidget()
+{
+    QGraphicsWidget *widget = new QGraphicsWidget;
+    QWeakPointer<QGraphicsWidget> widgetPointer(widget);
+
+    m_subject->setCentralWidget(widget);
+
+    QVERIFY(m_subject->centralWidget() == widget);
+
+    m_subject->setCentralWidget(0);
+
+    QVERIFY(m_subject->centralWidget() == 0);
+    QCOMPARE(widgetPointer.isNull(), true);
+}
+
+void Ut_MContainer::replaceCentralWidgetWithoutDestroying()
+{
+    QGraphicsWidget *widget = new QGraphicsWidget;
+    QWeakPointer<QGraphicsWidget> widgetPointer(widget);
+
+    m_subject->setCentralWidget(widget);
+
+    QVERIFY(m_subject->centralWidget() == widget);
+
+    m_subject->setCentralWidget(0, false);
+
+    QVERIFY(m_subject->centralWidget() == 0);
+    QCOMPARE(widgetPointer.isNull(), false);
+    QVERIFY(widget->parentItem() == 0);
+    QVERIFY(widget->parent() == 0);
+    QVERIFY(widget->scene() == 0);
+
+    // clean up
+    delete widget;
 }
 
 void Ut_MContainer::title()

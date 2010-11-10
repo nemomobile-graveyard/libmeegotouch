@@ -384,6 +384,12 @@ void Ut_MTextEdit::testSetText()
     subject->setText(""); // empty string should be always ok
     QCOMPARE(mySpy2.count(), currentSpyCount + 1);
     QCOMPARE(m_sic->resetCallCount, ++resetCallCount);
+
+    // Test line break filtering with a single line text edit
+    const QString input(QString("1\n2") + QChar(0x2028) +"3" + QChar(0x2029) + "4\r5\r\n");
+    MTextEdit singleLineSubject(MTextEditModel::SingleLine);
+    singleLineSubject.setText(input);
+    QCOMPARE(singleLineSubject.text(), QString("1 2 3 4 5 "));
 }
 
 
@@ -765,14 +771,18 @@ void Ut_MTextEdit::testMaxLength_data()
     QString longText(
         "This test checks that maxLength property of MTextEdit trims\n\n"
         "the text as expected.\nasdfasdf\n\nasdfasd");
-    MTextEditModel::LineMode lineModes[2] = {MTextEditModel::SingleLine, MTextEditModel::MultiLine};
-    for (int i = 0; i < 2; ++i) {
-        QTest::newRow("too short") << lineModes[i] << -5 << longText;
-        QTest::newRow("zero")      << lineModes[i] <<  0 << longText;
-        QTest::newRow("short")     << lineModes[i] <<  5 << longText;
-        QTest::newRow("long")      << lineModes[i] << (longText.length() - 5) << longText;
-        QTest::newRow("too long")  << lineModes[i] << (longText.length() + 5) << longText;
-    }
+
+    QTest::newRow("sl: too short") << MTextEditModel::SingleLine << -5 << longText;
+    QTest::newRow("sl: zero")      << MTextEditModel::SingleLine <<  0 << longText;
+    QTest::newRow("sl: short")     << MTextEditModel::SingleLine <<  5 << longText;
+    QTest::newRow("sl: long")      << MTextEditModel::SingleLine << (longText.length() - 5) << longText;
+    QTest::newRow("sl: too long")  << MTextEditModel::SingleLine << (longText.length() + 5) << longText;
+
+    QTest::newRow("ml: too short") << MTextEditModel::MultiLine << -5 << longText;
+    QTest::newRow("ml: zero")      << MTextEditModel::MultiLine <<  0 << longText;
+    QTest::newRow("ml: short")     << MTextEditModel::MultiLine <<  5 << longText;
+    QTest::newRow("ml: long")      << MTextEditModel::MultiLine << (longText.length() - 5) << longText;
+    QTest::newRow("ml: too long")  << MTextEditModel::MultiLine << (longText.length() + 5) << longText;
 }
 
 void Ut_MTextEdit::testMaxLength()
@@ -783,8 +793,11 @@ void Ut_MTextEdit::testMaxLength()
 
     MTextEdit subject(lineMode);
     const int initialMaxLength = subject.maxLength();
+    // If maxLength is negative, it should have the same effect as zero.
+    const int resultMaxLength(qMax(0, maxLength));
 
     for (int i = 0; i < 3; ++i) {
+        qDebug() << "case nr." << i << ".................";
         subject.clear();
         subject.setMaxLength(initialMaxLength);
 
@@ -814,21 +827,16 @@ void Ut_MTextEdit::testMaxLength()
             expectedText.replace(QChar('\n'), QChar(' '));
         }
 
-        // If maxLength is negative, treat as if zero.
-        if (maxLength < 0) {
-            maxLength = 0;
-        }
-
         // Check that correct value was stored.
-        QCOMPARE(subject.maxLength(), maxLength);
+        QCOMPARE(subject.maxLength(), resultMaxLength);
 
         // This is what should happen to the text.
-        expectedText.truncate(maxLength);
+        expectedText.truncate(resultMaxLength);
 
         QCOMPARE(subject.text(), expectedText);
 
         // Length must always be equal or less than maxLength.
-        QVERIFY(subject.text().length() <= maxLength);
+        QVERIFY(subject.text().length() <= resultMaxLength);
     }
 }
 
@@ -885,12 +893,9 @@ void Ut_MTextEdit::testBadData()
 
     //check single line with multi line input
     MTextEdit *subject = new MTextEdit(MTextEditModel::SingleLine, "");
-    subject->setText("I \n have \n more columns");
+    subject->setText("I\nhave\nmore\rand\r\nmore columns");
     QVERIFY(subject->lineMode() == MTextEditModel::SingleLine);
-    qDebug() << subject->text();
-
-    // Bug 1: Single line not handling \n properly
-    // QVERIFY(subject->text() == "I");
+    QCOMPARE(subject->text(), QString("I have more and more columns"));
 
     // check multi line with multi line input
     delete subject;
@@ -1863,13 +1868,21 @@ void Ut_MTextEdit::testReturnKeyPressed_data()
     QTest::addColumn<MTextEditModel::LineMode>("lineMode");
     QTest::addColumn<QValidator::State>("validatorState");
     QTest::addColumn<int>("expectedSignals");
+    QTest::addColumn<QString>("returnString");
 
-    QTest::newRow("single line, invalid")      << MTextEditModel::SingleLine << QValidator::Invalid      << 0;
-    QTest::newRow("single line, intermediate") << MTextEditModel::SingleLine << QValidator::Intermediate << 0;
-    QTest::newRow("single line, acceptable")   << MTextEditModel::SingleLine << QValidator::Acceptable   << 1;
-    QTest::newRow("multi line,  invalid")      << MTextEditModel::MultiLine  << QValidator::Invalid      << 0;
-    QTest::newRow("multi line,  intermediate") << MTextEditModel::MultiLine  << QValidator::Intermediate << 0;
-    QTest::newRow("multi line,  acceptable")   << MTextEditModel::MultiLine  << QValidator::Acceptable   << 0;
+    QTest::newRow("single line, invalid, \\n")      << MTextEditModel::SingleLine << QValidator::Invalid      << 0 << "\n";
+    QTest::newRow("single line, intermediate, \\n") << MTextEditModel::SingleLine << QValidator::Intermediate << 0 << "\n";
+    QTest::newRow("single line, acceptable, \\n")   << MTextEditModel::SingleLine << QValidator::Acceptable   << 1 << "\n";
+    QTest::newRow("multi line,  invalid, \\n")      << MTextEditModel::MultiLine  << QValidator::Invalid      << 0 << "\n";
+    QTest::newRow("multi line,  intermediate, \\n") << MTextEditModel::MultiLine  << QValidator::Intermediate << 0 << "\n";
+    QTest::newRow("multi line,  acceptable, \\n")   << MTextEditModel::MultiLine  << QValidator::Acceptable   << 0 << "\n";
+
+    QTest::newRow("single line, invalid, \\r")      << MTextEditModel::SingleLine << QValidator::Invalid      << 0 << "\r";
+    QTest::newRow("single line, intermediate, \\r") << MTextEditModel::SingleLine << QValidator::Intermediate << 0 << "\r";
+    QTest::newRow("single line, acceptable, \\r")   << MTextEditModel::SingleLine << QValidator::Acceptable   << 1 << "\r";
+    QTest::newRow("multi line,  invalid, \\r")      << MTextEditModel::MultiLine  << QValidator::Invalid      << 0 << "\r";
+    QTest::newRow("multi line,  intermediate, \\r") << MTextEditModel::MultiLine  << QValidator::Intermediate << 0 << "\r";
+    QTest::newRow("multi line,  acceptable, \\r")   << MTextEditModel::MultiLine  << QValidator::Acceptable   << 0 << "\r";
 }
 
 /*!
@@ -1883,11 +1896,12 @@ void Ut_MTextEdit::testReturnKeyPressed()
     QFETCH(MTextEditModel::LineMode, lineMode);
     QFETCH(QValidator::State, validatorState);
     QFETCH(int, expectedSignals);
+    QFETCH(QString, returnString);
 
     MTextEdit subject(lineMode);
 
     SimpleValidator validator;
-    QKeyEvent event(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "\n");
+    QKeyEvent event(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, returnString);
     QSignalSpy returnPressedSpy(&subject, SIGNAL(returnPressed()));
 
     validator.state = validatorState;
@@ -1909,18 +1923,26 @@ void Ut_MTextEdit::testLineBreakSent_data()
     QTest::newRow("single line, preedit, no line break") << MTextEditModel::SingleLine << "preedit" << "" << M::FreeTextContentType << 0;
     QTest::newRow("single line, commit, no line break")  << MTextEditModel::SingleLine << "" << "commit" << M::FreeTextContentType << 0;
     QTest::newRow("single line, preedit, line break") << MTextEditModel::SingleLine << "preedit\n" << "" << M::FreeTextContentType << 0;
+    QTest::newRow("single line, preedit, line break \\r") << MTextEditModel::SingleLine << "preedit\r" << "" << M::FreeTextContentType << 0;
     QTest::newRow("single line, commit, line break")  << MTextEditModel::SingleLine << "" << "commit\n" << M::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, line break \\r")  << MTextEditModel::SingleLine << "" << "commit\r" << M::FreeTextContentType << 1;
     QTest::newRow("single line, commit, line break only")  << MTextEditModel::SingleLine << "" << "\n" << M::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, line break \\r only")  << MTextEditModel::SingleLine << "" << "\r" << M::FreeTextContentType << 1;
     QTest::newRow("single line, commit, multiple line breaks")  << MTextEditModel::SingleLine << "" << "commit\n\n\n" << M::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, multiple \\r line breaks")  << MTextEditModel::SingleLine << "" << "commit\r\r\r" << M::FreeTextContentType << 1;
     QTest::newRow("single line, invalid number") << MTextEditModel::SingleLine << "" << "abc\n" << M::NumberContentType << 0;
-    QTest::newRow("single line, valid number") << MTextEditModel::SingleLine << "" << "123\n" << M::NumberContentType << 1;
+    QTest::newRow("single line, valid number, line break") << MTextEditModel::SingleLine << "" << "123\n" << M::NumberContentType << 1;
+    QTest::newRow("single line, valid number, line break \\r") << MTextEditModel::SingleLine << "" << "123\r" << M::NumberContentType << 1;
 
     QTest::newRow("multi line, empty") << MTextEditModel::MultiLine << "" << "" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, preedit, no line break") << MTextEditModel::MultiLine << "preedit" << "" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, no line break")  << MTextEditModel::MultiLine << "" << "commit" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, preedit, line break") << MTextEditModel::MultiLine << "preedit\n" << "" << M::FreeTextContentType << 0;
+    QTest::newRow("multi line, preedit, line break \\r") << MTextEditModel::MultiLine << "preedit\r" << "" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, line break only")  << MTextEditModel::MultiLine << "" << "\n" << M::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, line break \\r only")  << MTextEditModel::MultiLine << "" << "\r" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, line break")  << MTextEditModel::MultiLine << "" << "commit\n" << M::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, line break \\r")  << MTextEditModel::MultiLine << "" << "commit\r" << M::FreeTextContentType << 0;
     QTest::newRow("multi line, commit, multiple line breaks")  << MTextEditModel::MultiLine << "" << "commit\n\n\n" << M::FreeTextContentType << 0;
 }
 
@@ -1961,9 +1983,17 @@ void Ut_MTextEdit::testCommitLineBreakAfterPreedit_data()
     QTest::newRow("123\\n, intermediate") << QValidator::Intermediate << "123\n" << 0;
     QTest::newRow("123\\n, acceptable")   << QValidator::Acceptable   << "123\n" << 1;
 
+    QTest::newRow("123\\r, invalid")      << QValidator::Invalid      << "123\r" << 0;
+    QTest::newRow("123\\r, intermediate") << QValidator::Intermediate << "123\r" << 0;
+    QTest::newRow("123\\r, acceptable")   << QValidator::Acceptable   << "123\r" << 1;
+
     QTest::newRow("\\n, invalid")      << QValidator::Invalid      << "\n" << 0;
     QTest::newRow("\\n, intermediate") << QValidator::Intermediate << "\n" << 0;
     QTest::newRow("\\n, acceptable")   << QValidator::Acceptable   << "\n" << 1;
+
+    QTest::newRow("\\r, invalid")      << QValidator::Invalid      << "\r" << 0;
+    QTest::newRow("\\r, intermediate") << QValidator::Intermediate << "\r" << 0;
+    QTest::newRow("\\r, acceptable")   << QValidator::Acceptable   << "\r" << 1;
 }
 
 /*!
@@ -2320,46 +2350,50 @@ void Ut_MTextEdit::testCloseSipOnHide()
 void Ut_MTextEdit::testInsertMultiLineText_data()
 {
     QTest::addColumn<MTextEditModel::LineMode>("lineMode");
-    QTest::addColumn<QString>("text");
-    QTest::addColumn<QString>("expectedText");
-    QTest::addColumn<QString>("expectedText2");
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("output");
+    QTest::addColumn<QString>("outputCommit");
+    QTest::addColumn<QString>("outputPreedit");
 
     const QString sampleText(QString("1") + QChar('\n') + "2" + QChar(0x2028) +"3" + QChar(0x2029));
 
-    QTest::newRow("single line entry") << MTextEditModel::SingleLine << sampleText << QString("1 2 3 ")    << QString("12 3 ");
-    QTest::newRow("multi line entry")  << MTextEditModel::MultiLine  << sampleText << QString("1\n2\n3\n") << QString("1\n2\n3\n");
+    QTest::newRow("single line entry") << MTextEditModel::SingleLine << sampleText
+                                       << QString("1 2 3 ") << QString("1 2 3")    << QString("1 2 3 ");
+    QTest::newRow("multi line entry")  << MTextEditModel::MultiLine  << sampleText
+                                       << QString("1\n2\n3\n") << QString("1\n2\n3\n") << QString("1 2 3 ");
 }
 
 void Ut_MTextEdit::testInsertMultiLineText()
 {
     QFETCH(MTextEditModel::LineMode, lineMode);
-    QFETCH(QString, text);
-    QFETCH(QString, expectedText);
-    QFETCH(QString, expectedText2);
+    QFETCH(QString, input);
+    QFETCH(QString, output);
+    QFETCH(QString, outputCommit);
+    QFETCH(QString, outputPreedit);
 
     MTextEdit subject(lineMode);
 
     QClipboard *clipboard = QApplication::clipboard();
     QVERIFY(clipboard != 0);
 
-    clipboard->setText(text);
+    clipboard->setText(input);
     subject.paste();
-    QCOMPARE(subject.text(), expectedText);
+    QCOMPARE(subject.text(), output);
 
     subject.clear();
-    QInputMethodEvent preeditEvent(text, QList<QInputMethodEvent::Attribute>());
+    QInputMethodEvent preeditEvent(input, QList<QInputMethodEvent::Attribute>());
     subject.inputMethodEvent(&preeditEvent);
-    QCOMPARE(subject.text(), expectedText2);
+    QCOMPARE(subject.text(), outputPreedit);
 
     subject.clear();
     QInputMethodEvent commitEvent("", QList<QInputMethodEvent::Attribute>());
-    commitEvent.setCommitString(text);
-    subject.inputMethodEvent(&preeditEvent);
-    QCOMPARE(subject.text(), expectedText2);
+    commitEvent.setCommitString(input);
+    subject.inputMethodEvent(&commitEvent);
+    QCOMPARE(subject.text(), outputCommit);
 
     subject.clear();
-    subject.insert(text);
-    QCOMPARE(subject.text(), expectedText);
+    subject.insert(input);
+    QCOMPARE(subject.text(), output);
 }
 
 void Ut_MTextEdit::testArrowKeyNavigation_data()

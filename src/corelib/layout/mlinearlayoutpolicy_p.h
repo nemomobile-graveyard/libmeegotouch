@@ -46,7 +46,7 @@ public:
 
     void fixIndex(int *index) const;
     void refreshEngine();
-    void refreshEngineAndWidget();
+    void refreshWidget();
 
     void notifyWidgetOfLayoutPosition(int index, M::Position position);
     void notifyAffectedWidgetsOfLayoutPosition(int index, bool add);
@@ -58,7 +58,7 @@ public:
      *  QGraphicsLinearLayout does not expose this information to us.  This is
      *  basically q->count() + the number of stretches added/inserted. */
     int rowCount;
-    
+
     bool notifyWidgetsOfLayoutPositionEnabled;
 };
 

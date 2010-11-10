@@ -1,8 +1,37 @@
-libmeegotouch (0.20.52~1) unstable; urgency=low
+libmeegotouch (0.20.53~1) unstable; urgency=low
 
   * Unreleased
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 04 Nov 2010 14:31:00 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 09 Nov 2010 17:25:25 +0200
+
+libmeegotouch (0.20.52-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#202548 - MToolbar is not hidden in portrait mode in blanco when action is hidden
+  * Fixes: NB#201073 - styling documentation does not explain how to create css files for external libraries
+  * Fixes: NB#198866 -  wrt booster keeps OpenGl context
+  * Fixes: NB#200879 - Accounts-UI crashes after closing
+  * Fixes: NB#200522 - The recents view does not show application toolbars
+  * Fixes: NB#185520 - MAdvancedListItem documentation is very poor
+  * Fixes: NB#181399 - Incremental layouting during startup
+  * Fixes: NB#201180 - Portrait mode: Toolbar buttons move to middle of screen after playback completion
+  * Fixes: NB#195013 -  mstartup crash.
+  * Fixes: NB#200716 - Crash when assigning custom font size by CSS
+  * Fixes: NB#159706 - Blocking of background application paints not working
+  * Fixes: NB#178847 - Flicker when switching between tabs in the Music app
+  * Fixes: NB#200810 - There's a 'back' arrow in the Phone toolbar.
+  * Fixes: NB#195670 -  Calling show() on a MWindow that is already visible unsets the _NET_WM_STATE_SKIP_TASKBAR property
+  * Fixes: NB#185046 - Progress bar doesn't work in Progress Bar widget until device orientation changed
+  * Fixes: NB#190383 - <MemLeak> Valgrind leak in mpositionindicatorview.cpp
+  * Fixes: NB#190432 - Progress bar doesn't show any progress while taking backup.
+  * Fixes: NB#193447 - <UninitVar> mprogressindicatorbarview.cpp
+  * Fixes: NB#202749 -  MCompositor animates the windows for system modal dialogs
+  * Fixes: NB#200580 - Mlocal; Settings; Date format is wrong in Indonesian for all application framework
+  * Fixes: NB#202568 - <UninitVar> mscenemanager.cpp
+  * Fixes: NB#193775 - White flash is shown for a while, when a background application is invoked from content manager
+  * Fixes: NB#199409 - Bottom toolbar in portrait mode is not located properly
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 09 Nov 2010 15:03:00 +0200
 
 libmeegotouch (0.20.51-1) unstable; urgency=low
 

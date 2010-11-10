@@ -181,8 +181,10 @@ void MApplicationWindowPrivate::init()
                q, SLOT(_q_menuDisappeared()));
     q->connect(q, SIGNAL(switcherEntered()),
                SLOT(_q_handleInSwitcherVisibilityChange()));
-    q->connect(q, SIGNAL(switcherExited()),
-               SLOT(_q_handleInSwitcherVisibilityChange()));
+
+    QObject* eventFilter = new MApplicationWindowEventFilter(this, q);
+    navigationBar->installEventFilter(eventFilter);
+    toolBar->installEventFilter(eventFilter);
 
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
@@ -216,24 +218,7 @@ void MApplicationWindowPrivate::init()
 
 void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
 {
-    if (isInSwitcher) {
-        navigationBar->hide();
-        dockWidget->hide();
-        homeButtonPanel->hide();
-        closeMenu();
-    } else {
-        if (navigationBar->sceneWindowState() == MSceneWindow::Appeared ||
-                navigationBar->sceneWindowState() == MSceneWindow::Appearing)
-            navigationBar->show();
-
-        if (dockWidget->sceneWindowState() == MSceneWindow::Appeared ||
-                dockWidget->sceneWindowState() == MSceneWindow::Appearing)
-            dockWidget->show();
-
-        if (homeButtonPanel->sceneWindowState() == MSceneWindow::Appeared ||
-                homeButtonPanel->sceneWindowState() == MSceneWindow::Appearing)
-            homeButtonPanel->show();
-    }
+    closeMenu();
 }
 
 #ifdef Q_WS_X11
@@ -406,6 +391,12 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
                 // Display mode can be changed between "auto-hide" and "show" which does not
                 // affect appearance state. Need to update exposed rectangle explicitly.
                 _q_updatePageExposedContentRect();
+            } else if (member == MApplicationPageModel::EscapeButtonDisplayMode) {
+                bool escapeButtonVisible = page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
+                if (escapeButtonVisible != navigationBar->escapeButtonVisible()) {
+                    navigationBar->setEscapeButtonVisible(escapeButtonVisible);
+                    updateNavigationBarVisibility();
+                }
             }
         }
 
@@ -571,21 +562,42 @@ void MApplicationWindowPrivate::manageActions()
         checkedAction = findCheckedAction(q->actions());
     }
 
-    toolBar->clearActions();
+    bool pageHasVisibleToolbarActions = false;
+
+    foreach(QAction* qaction, page->actions()) {
+        if (qaction->isVisible()) {
+            MAction* maction = qobject_cast<MAction*>(qaction);
+            if (!maction || (maction->location() & MAction::ToolBarLocation)) {
+                pageHasVisibleToolbarActions = true;
+                break;
+            }
+        }
+    }
+
+    if (pageHasVisibleToolbarActions) {
+        toolBar->clearActions();
+
+        // add page actions
+        foreach(QAction* action, page->actions()) {
+            toolBar->insertAction(NULL, action);
+        }
+
+        // add window actions
+        foreach(QAction* action, q->actions()) {
+            toolBar->insertAction(NULL, action);
+        }
+    }
+
     menu->clearActions();
 
     // add page actions
-    QList<QAction *> actions = page->actions();
-    int actionsSize = actions.size();
-    for (int i = 0; i < actionsSize; ++i) {
-        distributeAction(actions[i], NULL);
+    foreach(QAction* action, page->actions()) {
+        menu->insertAction(NULL, action);
     }
 
     // add window actions
-    actions = q->actions();
-    actionsSize = actions.size();
-    for (int i = 0; i < actionsSize; ++i) {
-        distributeAction(actions[i], NULL);
+    foreach(QAction* action, q->actions()) {
+        menu->insertAction(NULL, action);
     }
 
     if (checkedAction) {
@@ -615,7 +627,6 @@ void MApplicationWindowPrivate::refreshArrowIconVisibility()
         }
     }
     navigationBar->setArrowIconVisible(haveVisibleMenuAction);
-    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::setComponentDisplayMode(
@@ -709,26 +720,19 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
     } else {
         sceneManager->disappearSceneWindowNow(dockWidget);
     }
-
 }
 
 void MApplicationWindowPrivate::updateNavigationBarVisibility()
 {
-    if (!page || page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
+    if (page && (page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
         || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide
-            && !autoHideComponentsTimer.isActive()))
+            && !autoHideComponentsTimer.isActive())))
     {
         return;
     }
 
-    Q_Q(MApplicationWindow);
-
     bool emptyNavigationbar = navigationBar->property("isEmpty").toBool();
-    bool emptyToolbar = false;
-    if (q->orientation() == M::Landscape)
-        emptyToolbar = toolBar->property("emptyInLandscape").toBool();
-    else
-        emptyToolbar = toolBar->property("emptyInPortrait").toBool();
+    bool emptyToolbar = toolBar->property("isEmpty").toBool();
 
     if (emptyNavigationbar && (needsDockWidget() || emptyToolbar))
        sceneManager->disappearSceneWindow(navigationBar);
@@ -883,8 +887,6 @@ void MApplicationWindowPrivate::setupPageEscape()
         default:
             qFatal("MApplicationWindow: Invalid page escape mode");
     };
-
-    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::setupPageEscapeAuto()
@@ -961,7 +963,6 @@ void MApplicationWindowPrivate::setToolBarViewType(const MTheme::ViewType& viewT
 {
     toolBar->setViewType(viewType);
     _q_placeToolBar();
-    updateNavigationBarVisibility();
 }
 
 void MApplicationWindowPrivate::_q_updateStyle()
@@ -977,10 +978,33 @@ void MApplicationWindowPrivate::_q_updateStyle()
         style = newStyle;
 
         _q_placeToolBar();
-        updateNavigationBarVisibility();
 
     } else
         MTheme::releaseStyle(newStyle);
+}
+
+MApplicationWindowEventFilter::MApplicationWindowEventFilter(MApplicationWindowPrivate* appWinPrivate, QObject* parent)
+    : QObject(parent),
+      d(appWinPrivate),
+      navigationBarEmpty(false),
+      toolBarEmpty(true)
+{}
+
+bool MApplicationWindowEventFilter::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::DynamicPropertyChange &&
+        static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName() == "isEmpty")
+    {
+        bool newValue = watched->property("isEmpty").toBool();
+        if (watched == d->navigationBar && newValue != navigationBarEmpty) {
+            navigationBarEmpty = newValue;
+            d->updateNavigationBarVisibility();
+        } else if (watched == d->toolBar && newValue != toolBarEmpty) {
+            toolBarEmpty = newValue;
+            d->updateNavigationBarVisibility();
+        }
+    }
+    return QObject::eventFilter(watched, event);
 }
 
 
@@ -1149,6 +1173,9 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
 
     setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
     setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
+
+    bool escapeButtonVisible = page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
+    navigationBar->setEscapeButtonVisible(escapeButtonVisible);
 
     setupPageEscape();
 

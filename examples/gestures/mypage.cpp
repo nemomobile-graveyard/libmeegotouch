@@ -1,5 +1,6 @@
 #include <MDebug>
 #include <MImageWidget>
+#include <MMessageBox>
 #include <QImage>
 #include <QPinchGesture>
 #include <QSwipeGesture>
@@ -33,6 +34,8 @@ MyPage::MyPage(QGraphicsItem *parent)
     // area, even if it holds multiple widgets. In case of multiple widgets,
     // you can determine the target of the gesture using the event's hotSpot
     // property.
+    grabGesture(Qt::TapGesture);
+    grabGesture(Qt::TapAndHoldGesture);
     grabGesture(Qt::PinchGesture);
     grabGesture(Qt::SwipeGesture);
 
@@ -99,7 +102,47 @@ void MyPage::hideImagesExceptCurrent()
     }
 }
 
+void MyPage::showImageInfo()
+{
+    MMessageBox *msgBox = new MMessageBox("Image info");
+
+    QString text("Name: %1\nSize: %2");
+    QString size("%1x%2");
+
+    MImageWidget *currentImage = images[currentImageNumber];
+    int width = currentImage->pixmap()->width() * currentImage->scale();
+    int height = currentImage->pixmap()->height() * currentImage->scale();
+
+    msgBox->setText(text.arg(currentImage->imageId()).arg(size.arg(width).arg(height)));
+    msgBox->appear(MMessageBox::DestroyWhenDone);
+}
+
 // The gesture handlers:
+
+// Tap handler
+void MyPage::tapGestureEvent(QGestureEvent *event,
+                             QTapGesture *gesture)
+{
+    mDebug("tapGestureEvent")
+            << "State:" << gesture->state()
+            << "Position:" << gesture->position();
+
+    event->accept(Qt::TapGesture);
+}
+
+// Tap And Hold handler
+void MyPage::tapAndHoldGestureEvent(QGestureEvent *event,
+                                    QTapAndHoldGesture *gesture)
+{
+    mDebug("tapAndHoldGestureEvent")
+            << "State:" << gesture->state()
+            << "Position:" << gesture->position();
+
+    event->accept(Qt::TapAndHoldGesture);
+
+    if (gesture->state() == Qt::GestureFinished)
+        showImageInfo();
+}
 
 // Pinch handler
 void MyPage::pinchGestureEvent(QGestureEvent *event,

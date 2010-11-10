@@ -128,9 +128,10 @@ void MListIndexFloatingViewPrivate::updateTooltipData()
     int shortcutCount = q->model()->shortcutIndexes().count();
     int shortcutIndex = q->model()->shortcutIndexes().indexOf(currentScrollToIndex);
 
-    int startIndex = qMax(shortcutIndex - q->style()->floatingIndexCount() + 2, 0);
-    int endIndex = qMin(startIndex + q->style()->floatingIndexCount() - 1, shortcutCount - 1);
-    startIndex = qMin(startIndex, shortcutCount - q->style()->floatingIndexCount());
+    int floatingIndexCount = qMin(q->style()->floatingIndexCount(), shortcutCount);
+    int startIndex = qMax(shortcutIndex - floatingIndexCount + 2, 0);
+    int endIndex = qMin(startIndex + floatingIndexCount - 1, shortcutCount - 1);
+    startIndex = qMin(startIndex, shortcutCount - floatingIndexCount);
 
     for (int i = startIndex; i <= endIndex; i++) {
         tooltip()->setIndexText(i - startIndex, q->model()->shortcutLabels().at(i));
@@ -198,6 +199,7 @@ void MListIndexFloatingView::setupModel()
     QList<const char*> modifications;
     modifications << MListIndexModel::List;
     modifications << MListIndexModel::ShortcutLabels;
+    modifications << MListIndexModel::ShortcutIndexes;
     updateData(modifications);
 }
 
@@ -213,6 +215,8 @@ void MListIndexFloatingView::updateData(const QList<const char *> &modifications
         if (member == MListIndexModel::List) {
             if (model()->list())
                 d->initLayout();
+        } else if (member == MListIndexModel::ShortcutIndexes) {
+            d->tooltip()->setIndexCount(qMin(style()->floatingIndexCount(), model()->shortcutIndexes().count()));
         }
     }
 }

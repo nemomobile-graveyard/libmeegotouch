@@ -103,7 +103,7 @@ public:
     void insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount);
     void clearUnusedPreeditStyling(int currentListIndex, int currentCount);
     virtual bool copy();
-    QString replaceLineBreaks(QString text, QChar replacement);
+    QString replaceLineBreaks(QString text, QString replacement);
     void _q_confirmCompletion(const QString &);
 
     //! \brief Disable MTextEdit::updateMicroFocus().

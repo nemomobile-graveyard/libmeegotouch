@@ -23,8 +23,15 @@ public slots:
     void showPreviousImage(bool stopCurrentAnimation = false);
     void showNextImage(bool stopCurrentAnimation = false);
     void hideImagesExceptCurrent();
+    void showImageInfo();
 
 protected:
+    virtual void tapGestureEvent(QGestureEvent *event,
+                                 QTapGesture *gesture);
+
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event,
+                                        QTapAndHoldGesture *gesture);
+
     virtual void pinchGestureEvent(QGestureEvent *event,
                                    QPinchGesture *gesture);
 

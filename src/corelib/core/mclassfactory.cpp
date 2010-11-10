@@ -28,9 +28,22 @@
 #include <QString>
 #include <MDebug>
 
+void mMessageHandler(QtMsgType type, const char *msg);
+
 class MClassFactoryPrivate
 {
 public:
+    static void registerDefaultMessageHandler()
+    {
+        // The MClassFactory::unregister*() methods are called
+        // when static objects are destroyed.
+        // Before they can use qDebug() they must register a
+        // message handler as the original one could already
+        // be destroyed at this point in time which leads to
+        // a crash.
+        qInstallMsgHandler(mMessageHandler);
+    }
+
     QHash<QByteArray, MWidgetCreatorBase *> widgetCreators;
     QHash<QString, MViewCreatorBase *> viewCreators;
     QHash<QString, MStyleCreatorBase *> styleCreators;
@@ -80,6 +93,7 @@ void MClassFactory::unregisterWidgetCreator(MWidgetCreatorBase *creator)
 {
     QByteArray widgetClassName = d_ptr->widgetCreators.key(creator);
     if (widgetClassName.isEmpty()) {
+        MClassFactoryPrivate::registerDefaultMessageHandler();
         qWarning("MClassFactory cannot unregister MWidgetCreator which is not registered");
     } else {
         d_ptr->widgetCreators.remove(widgetClassName);
@@ -124,6 +138,7 @@ void MClassFactory::unregisterViewCreator(MViewCreatorBase *creator)
 {
     QString viewClassName = d_ptr->viewCreators.key(creator);
     if (viewClassName.isEmpty()) {
+        MClassFactoryPrivate::registerDefaultMessageHandler();
         qWarning("MClassFactory cannot unregister MViewCreator which is not registered");
     } else {
         d_ptr->viewCreators.remove(viewClassName);
@@ -170,6 +185,7 @@ void MClassFactory::unregisterStyleCreator(MStyleCreatorBase *creator)
 {
     QString styleClassName = d_ptr->styleCreators.key(creator);
     if (styleClassName.isEmpty()) {
+        MClassFactoryPrivate::registerDefaultMessageHandler();
         qWarning("MClassFactory cannot unregister MStyleCreator which is not registered");
     } else {
         d_ptr->styleCreators.remove(styleClassName);
@@ -247,6 +263,7 @@ void MClassFactory::unregisterAnimationCreator(MAnimationCreatorBase *creator)
 {
     QString animationClassName = d_ptr->animationCreators.key(creator);
     if (animationClassName.isEmpty()) {
+        MClassFactoryPrivate::registerDefaultMessageHandler();
         qWarning("MClassFactory cannot unregister MAnimationCreator which is not registered");
     } else {
         d_ptr->animationCreators.remove(animationClassName);
@@ -284,6 +301,7 @@ void MClassFactory::unregisterEffectCreator(MEffectCreatorBase *creator)
 {
     QString effectClassName = d_ptr->effectCreators.key(creator);
     if (effectClassName.isEmpty()) {
+        MClassFactoryPrivate::registerDefaultMessageHandler();
         qWarning("MClassFactory cannot unregister MEffectCreator which is not registered");
     } else {
         d_ptr->effectCreators.remove(effectClassName);
