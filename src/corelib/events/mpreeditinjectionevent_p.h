@@ -23,10 +23,11 @@
 class MPreeditInjectionEventPrivate
 {
 public:
-    MPreeditInjectionEventPrivate(const QString &preedit);
+    MPreeditInjectionEventPrivate(const QString &preedit, int eventCursorPos);
     virtual ~MPreeditInjectionEventPrivate();
 
     QString preedit;
+    int eventCursorPosition;
 };
 
 #endif

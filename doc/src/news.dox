@@ -5,6 +5,7 @@
 \subsection New
 - MApplication: added minimizing(), minimized() and minimizingCanceled() signals
 - Notification users can set their own identifier to notifications and notification groups to distinquish their notifications.
+- MPreeditInjectEvent: new constructor and eventCursorPosition()
 
 \section v02049 0.20.49
 

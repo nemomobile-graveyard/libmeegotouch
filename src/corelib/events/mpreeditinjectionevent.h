@@ -26,13 +26,47 @@
 
 class MPreeditInjectionEventPrivate;
 
+/*!
+ * \brief The MPreeditInjectionEvent class provides the information about preedit text.
+ *
+ * MPreeditInjectionEvent should be sent from text edit to input context and offer the word as preedit.
+ */
 class M_CORE_EXPORT MPreeditInjectionEvent : public QEvent
 {
 public:
+    /*!
+     * \brief Default constructor.
+     * \param preedit The word offered as preedit.
+     */
     MPreeditInjectionEvent(const QString &preedit);
+
+    /*!
+     * \brief Constructor.
+     * \param preedit The word offered as preedit.
+     * \param eventCursorPosition The expected cursor position inside preedit. The valid value is from
+     * 0 (at the beginning of the preedit) to the length of preedit (at the end of preedit).
+     */
+    MPreeditInjectionEvent(const QString &preedit, int eventCursorPosition);
+
+    /*!
+     *\brief Destructor
+     */
     virtual ~MPreeditInjectionEvent();
 
+    /*!
+     * \brief Returns the offered preedit text.
+     */
     QString preedit() const;
+
+    /*!
+     * \brief Returns the expected cursor position inside preedit.
+     *
+     * Note the eventCursorPosition is not the real cursor position, while it is the cursor position inside
+     * preedit which this event expects. The input context will decide whether and where to display cursor.
+     * The valid value is from 0 (at the beginning of the preedit) to the length of preedit (at the end
+     * of preedit). Other values indicate the cursor position unknown.
+     */
+    int eventCursorPosition() const;
 
     static QEvent::Type eventNumber();
 
