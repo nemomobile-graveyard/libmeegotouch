@@ -286,6 +286,10 @@ void MPannableViewportPrivate::_q_handleInputMethodAreaChanged(const QRect &newA
 {
     if (isTopmostVerticallyPannableViewport()) {
         setInputMethodArea(newArea);
+    } else if (inputMethodAreaHeight != 0) {
+        // This is not the topmost pannable viewport anymore.
+        inputMethodAreaHeight = 0;
+        updateExtendedVerticalRange();
     }
 }
 
