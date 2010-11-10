@@ -47,7 +47,7 @@ public:
 
 public slots:
     void videoReady();
-    void itemClicked();
+    void itemClicked(const QModelIndex &index);
 
     void showGridConfigurationDialog();
 
@@ -66,7 +66,6 @@ private slots:
 private:
     MList *list;
     MAction *actionConfiguration;
-    bool pageShown;
     QSizeF m_itemSize;
 
     int m_columnsPortrait;

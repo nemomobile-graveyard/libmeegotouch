@@ -26,6 +26,8 @@
 
 class MGridPage;
 
+class QPropertyAnimation;
+
 class GridImageWidget : public MImageWidget
 {
     Q_OBJECT
@@ -35,8 +37,6 @@ public:
     void setId(const QString& id);
     QString id();
 
-    void setPage(MGridPage* page);
-
 Q_SIGNALS:
     void clicked();
 
@@ -44,8 +44,11 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+    void showAnimated();
+
 private:
     QString m_id;
+    QPropertyAnimation *opacityAnimation;
 };
 
 #endif

@@ -27,6 +27,8 @@ namespace Utils
     QString contactsDir();
     QString imagesDir();
     QString mediaArtDir();
+
+    QString picturesDir();
 }
 
 #endif

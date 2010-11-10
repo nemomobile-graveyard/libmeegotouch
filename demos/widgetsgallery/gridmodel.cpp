@@ -23,25 +23,33 @@
 #include <QPixmap>
 #include <QPainter>
 
-GridModel::GridModel(const QSize &size, const QString &dir)
+#define THREAD_COUNT 5
+
+GridModel::GridModel(const QSize &size, const QStringList &dirs)
     : QAbstractTableModel(),
-      m_loader(new Loader(size)),
-      m_dir(dir)
+      m_dirs(dirs)
 {
     qRegisterMetaType<MediaType>("MediaType");
 
-    m_loader->start(QThread::LowestPriority);
-    QObject::connect(m_loader, SIGNAL(imageReady(QImage, int)), this, SLOT(insertImage(QImage, int)));
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        Loader *loader = new Loader(size);
+        loader->start(QThread::LowestPriority);
+        connect(loader, SIGNAL(imageReady(QImage, int)), this, SLOT(insertImage(QImage, int)));
+        m_loaders.append(loader);
+    }
 
     createItems();
 }
 
 GridModel::~GridModel()
 {
-    m_loader->stop();
-    m_loader->wait();
-
-    delete m_loader;
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        Loader *loader = m_loaders[i];
+        loader->stop();
+        loader->wait();
+    }
+    qDeleteAll(m_loaders);
+    m_loaders.clear();
 }
 
 int GridModel::rowCount(const QModelIndex &parent) const
@@ -66,12 +74,15 @@ QVariant GridModel::data(const QModelIndex &index, int role) const
 
     MediaType m;
 
-    if( m_items[ index.row() ].canConvert<MediaType>() )
+    if (m_items[ index.row() ].canConvert<MediaType>())
         m = m_items[ index.row() ].value<MediaType>();
 
-    if (role == Qt::DecorationRole) {
-        return m_items[ index.row() ];
-    }
+    if (role == Qt::DisplayRole)
+        return m_items[index.row()];
+    else if (role == GridModel::Type)
+        return m.type;
+    else if (role == GridModel::ImageId || role == GridModel::VideoId)
+        return m.path;
 
     return QVariant();
 }
@@ -80,43 +91,46 @@ void GridModel::createItems()
 {
     int index = 0;
 
-    QDir mediaDir(m_dir);
-    mediaDir.setFilter(QDir::Files | QDir::NoSymLinks);
-    mediaDir.setSorting(QDir::NoSort);
-    mediaDir.setNameFilters(QStringList() << "*.jpeg" << "*.jpg" << "*.mp4" << "*.mov");
-    const QStringList videoTypes(QStringList() << "mp4" << "mov");
-    const QFileInfoList fileList = mediaDir.entryInfoList();
+    foreach (const QString &dir, m_dirs) {
+        QDir mediaDir(dir);
+        mediaDir.setFilter(QDir::Files | QDir::NoSymLinks);
+        mediaDir.setSorting(QDir::Name);
+        mediaDir.setNameFilters(QStringList() << "*.jpeg" << "*.jpg" << "*.mp4" << "*.mov" << "*.png");
+        const QStringList videoTypes(QStringList() << "mp4" << "mov");
+        const QFileInfoList fileList = mediaDir.entryInfoList();
 
-    foreach(const QFileInfo & file, fileList) {
-        const QString path = file.absoluteFilePath();
-        MediaType m;
+        foreach (const QFileInfo & file, fileList) {
+            const QString path = file.absoluteFilePath();
+            MediaType m;
 
-        if( videoTypes.contains( file.suffix() )) {
-#ifdef HAVE_GSTREAMER
-            if( file.fileName().startsWith( QLatin1String( "thumb-" ) ) ) {
-                m.path = path;
-                m.type = MediaType::Video;
-            } else {
+            if (videoTypes.contains(file.suffix())) {
+    #ifdef HAVE_GSTREAMER
+                if (file.fileName().startsWith(QLatin1String("thumb-"))) {
+                    m.path = path;
+                    m.type = MediaType::Video;
+                } else {
+                    continue;
+                }
+    #else
                 continue;
+    #endif
+            } else {
+                m.type = MediaType::Image;
+                m.path = path;
+                m.image = QImage();
+                Loader *loader = m_loaders[index % THREAD_COUNT];
+                loader->pushImage(path,index);
             }
-#else
-            continue;
-#endif
-        } else {
-            m.type = MediaType::Image;
-            m.path = path;
-            m.image = QImage();
-            m_loader->pushImage(path,index);
-        }
 
-        m_items[index] = QVariant::fromValue(m);
-        index++;
+            m_items[index] = QVariant::fromValue(m);
+            index++;
+        }
     }
 }
 
 void GridModel::insertImage(QImage image, int index)
 {
-    if( m_items[index].canConvert<MediaType>() ) {
+    if (m_items[index].canConvert<MediaType>()) {
         MediaType m = m_items[index].value<MediaType>();
         m.image = image;
         m_items[index] = QVariant::fromValue(m);
@@ -141,25 +155,21 @@ void Loader::run()
 
         BacklogItem backlogItem = backlog.takeFirst();
         mutex.unlock();
-        const QFileInfo file( backlogItem.first );
-        QDir dir(file.absolutePath());
-        dir.cd(".." + QString(QDir::separator()) + "thumbnails");
+        const QFileInfo file(backlogItem.first);
         int index = backlogItem.second;
 
-        QImage image(dir.path() + QDir::separator() + file.fileName());
+        QImage image(file.absoluteFilePath());
 
-        if(!image.isNull()) {
+        if (!image.isNull()) {
             scaleImage(image);
             emit imageReady(image, index);
-        } else {
-            pushImage(backlogItem.first, index);
         }
     }
 }
 
 void Loader::scaleImage(QImage& image) const
 {
-    image = image.scaled(size, Qt::KeepAspectRatioByExpanding);
+    image = image.scaled(size, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     if (image.size() != size) {
         QPoint start((image.width() - size.width()) / 2, (image.height() - size.height()) / 2);
         image = image.copy(QRect(start, size));

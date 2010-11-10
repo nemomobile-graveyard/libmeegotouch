@@ -22,6 +22,8 @@
 #include <QCoreApplication>
 #include <QDir>
 
+#include <QDesktopServices>
+
 namespace Utils
 {
 
@@ -76,6 +78,11 @@ namespace Utils
 #else
         return QString(MEDIA_DIR);
 #endif
+    }
+
+    QString picturesDir()
+    {
+        return QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
     }
 
 }

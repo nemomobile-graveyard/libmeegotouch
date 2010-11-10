@@ -59,6 +59,43 @@ Q_SIGNALS:
     private:
 };
 
+class MyImageWidget : public QGraphicsWidget
+{
+    Q_OBJECT
+
+public:
+    MyImageWidget(QGraphicsItem *parent=0);
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    void setImage(const QImage &image);
+
+    void setZoomFactor(qreal zoom);
+    qreal zoomFactor();
+
+    inline void setOffset(qreal x, qreal y) {
+        setOffset(QPointF(x, y));
+    }
+
+    void setOffset(const QPointF &offset);
+    QPointF offset();
+
+protected:
+    void resizeEvent(QGraphicsSceneResizeEvent *event);
+
+    void calculateDrawRect(const QSizeF &imageSize);
+    QSizeF calculateSourceSize(const QSizeF &imageSize);
+    void calculateSourceRect(const QSizeF &imageSize);
+    void updateImageGeometry();
+
+private:
+    QImage image;
+    QRect sourceRect;
+    QRect targetRect;
+    qreal scaleK;
+    QPointF paintOffset;
+};
+
 //container widget for the video playback controls
 class MyVideoOverlayToolbar : public MWidgetController
 {
@@ -114,6 +151,10 @@ protected:
 
     virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
 
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
+
 private:
 
     void  relayout();
@@ -123,7 +164,7 @@ private:
 
     MSlider* slider;
     MButton* button;
-    MImageWidget* image;
+    MyImageWidget *image;
 
 #ifdef HAVE_GSTREAMER
     MyVideoWidget* video;
@@ -142,8 +183,11 @@ private:
 
     QTimer inactivityTimer;
 
-    qreal scaleFactor;
     qreal lastScaleFactor;
+
+    bool pinching;
+
+    QPointF lastMousePosition;
 };
 
 #endif

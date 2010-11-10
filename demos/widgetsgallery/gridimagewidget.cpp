@@ -21,15 +21,22 @@
 #include "mgridpage.h"
 
 #include <QGraphicsSceneMouseEvent>
+#include <QPropertyAnimation>
 
 GridImageWidget::GridImageWidget(QGraphicsItem *parent)
     : MImageWidget(parent),
-    m_id()
+    m_id(),
+    opacityAnimation(0)
 {
+    opacityAnimation = new QPropertyAnimation(this, "opacity", this);
+    opacityAnimation->setStartValue(0.0);
+    opacityAnimation->setEndValue(1.0);
+    opacityAnimation->setDuration(150);
 }
 
 void GridImageWidget::setId(const QString& id)
 {
+    showAnimated();
     m_id = id;
 }
 
@@ -50,9 +57,7 @@ void GridImageWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     emit clicked();
 }
 
-void GridImageWidget::setPage(MGridPage* page)
+void GridImageWidget::showAnimated()
 {
-    if( receivers( SIGNAL(clicked()) ) > 0 )
-        return;
-    connect( this, SIGNAL(clicked()), page, SLOT(itemClicked()) );
+    opacityAnimation->start();
 }

@@ -37,8 +37,6 @@ class GridVideoWidget : public MVideoWidget
         void setId(const QString& id);
         QString id();
 
-        void setPage(MGridPage* page);
-
     Q_SIGNALS:
         void clicked();
         void longPressed();

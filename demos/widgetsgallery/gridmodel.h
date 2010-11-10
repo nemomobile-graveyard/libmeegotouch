@@ -50,7 +50,14 @@ class GridModel: public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit GridModel(const QSize &size, const QString &dir = QDir::currentPath());
+    enum Role {
+        ImageId = Qt::UserRole + 1,
+        VideoId,
+        Type
+    };
+
+
+    explicit GridModel(const QSize &size, const QStringList &dirs);
     ~GridModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -64,8 +71,8 @@ private:
     void createItems();
     QMap<int, QVariant> m_items;
 
-    Loader* m_loader;
-    QString m_dir;
+    QList<Loader*> m_loaders;
+    QStringList m_dirs;
 };
 
 typedef QPair<QString, int> BacklogItem;
@@ -79,10 +86,13 @@ public:
     void pushImage(const QString &path, int index);
     void stop();
     void scaleImage(QImage& image) const;
+
 signals:
     void imageReady(QImage pixmap, int index);
+
 protected:
     void run();
+
 private:
     QMutex mutex;
     QWaitCondition haveWork;

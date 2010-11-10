@@ -60,27 +60,24 @@ public:
     virtual MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
     {
         MWidget *cell = NULL;
-        const QVariant data = index.data(Qt::DecorationRole);
 
-        MediaType m;
-        if( data.canConvert<MediaType>() )
-           m = data.value<MediaType>();
+        MediaType m = index.data(Qt::DisplayRole).value<MediaType>();
 
-        if( m.type == MediaType::Video )
-        {
-#ifdef HAVE_GSTREAMER
-            cell = MListCellCreatorHelper<GridVideoWidget>::createCell(recycler, "", "");
-
-            GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
-            video->open( m.path );
-            video->setMuted(true);
-            QObject::connect(video, SIGNAL(videoReady()), m_gridPage, SLOT(videoReady()));
-            updateCell(index, cell);
-#endif
-        } else {
+        if (m.type == MediaType::Image) {
             cell = MListCellCreatorHelper<GridImageWidget>::createCell(recycler, "", "");
             updateCell(index, cell);
         }
+#ifdef HAVE_GSTREAMER
+        else if (m.type == MediaType::Video) {
+            cell = MListCellCreatorHelper<GridVideoWidget>::createCell(recycler, "", "");
+
+            GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
+            video->open(m.path);
+            video->setMuted(true);
+            m_gridPage->connect(video, SIGNAL(videoReady()), m_gridPage, SLOT(videoReady()));
+            updateCell(index, cell);
+        }
+#endif
         return cell;
     }
 
@@ -94,37 +91,29 @@ private:
 
 void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) const
 {
-    if(!cell)
+    if (!cell)
         return;
 
-    const QVariant data = index.data(Qt::DecorationRole);
-    MediaType m;
+    MediaType m = index.data(Qt::DisplayRole).value<MediaType>();
 
-    if( data.canConvert<MediaType>() )
-        m = data.value<MediaType>();
+    if (m.type == MediaType::Image) {
+        GridImageWidget *imageWidget = qobject_cast<GridImageWidget*>(cell);
 
+        imageWidget->setStyleName("gridItem");
+        imageWidget->setImage(m.image);
+        imageWidget->setId(m.path);
+        return;
+    }
 #ifdef HAVE_GSTREAMER
-    if( m.type == MediaType::Video ) {
+    else if (m.type == MediaType::Video) {
         GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
 
         QFileInfo info(m.path);
-        video->setId(info.absolutePath() + QDir::separator() + info.fileName()/*.remove("thumb-")*/);
-        video->setPage(m_gridPage);
+        video->setId(info.absolutePath() + QDir::separator() + info.fileName());
         return;
     }
 #endif
 
-    if( m.type == MediaType::Image ) {
-        GridImageWidget *imageWidget = qobject_cast<GridImageWidget*>(cell);
-
-        imageWidget->setObjectName("gridItem");
-
-        imageWidget->setImage(m.image);
-        imageWidget->setId(m.path);
-
-        imageWidget->setPage(m_gridPage);
-        return;
-    }
 }
 
 QSizeF ContentItemCreator::cellSize() const
@@ -137,14 +126,14 @@ MGridPage::MGridPage()
       list(0),
       actionConfiguration(0),
       m_itemSize(10,10),
-      m_columnsPortrait(2),
-      m_columnsLandscape(4),
+      m_columnsPortrait(4),
+      m_columnsLandscape(6),
       m_columnsLandscapeSlider(0),
       m_columnsPortraitSlider(0),
       m_columnsLandscapeLabel(0),
       m_columnsPortraitLabel(0)
 {
-    setObjectName("gridPage");
+    setStyleName("gridPage");
 }
 
 MGridPage::~MGridPage()
@@ -187,8 +176,13 @@ void MGridPage::createContent()
     ContentItemCreator *cellCreator = new ContentItemCreator(this);
     list->setCellCreator(cellCreator);
 
-    GridModel *model = new GridModel(m_itemSize.toSize(), Utils::mediaArtDir());
+    QStringList mediaDirs;
+    mediaDirs << Utils::picturesDir();
+    mediaDirs << Utils::mediaArtDir();
+    GridModel *model = new GridModel(m_itemSize.toSize(), mediaDirs);
     list->setItemModel(model);
+
+    connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
 
     //% "Configuration"
     actionConfiguration = new MAction(this);
@@ -219,40 +213,33 @@ void MGridPage::videoReady()
 {
 #ifdef HAVE_GSTREAMER
     GridVideoWidget* video = qobject_cast<GridVideoWidget*>(sender());
-    if( video )
+    if (video)
         video->play();
 #endif
 }
 
-void MGridPage::itemClicked()
+void MGridPage::itemClicked(const QModelIndex &index)
 {
-        //image clicked
-        GridImageWidget* image = qobject_cast<GridImageWidget*>(sender());
-        if( image ) {
-            pageShown = true;
+    //image clicked
+    MediaType::Type type = (MediaType::Type)index.data(GridModel::Type).toInt();
 
-            ItemDetailPage* page = new ItemDetailPage();
-            page->setImageId(image->id());
-            page->setParent(this);
-            page->appear(scene(), DestroyWhenDismissed);
+    if (type == MediaType::Image) {
+        QString imageId = index.data(GridModel::ImageId).toString();
 
-            return;
-        }
-
+        ItemDetailPage* page = new ItemDetailPage();
+        page->setImageId(imageId);
+        page->appear(scene(), DestroyWhenDismissed);
+    }
 #ifdef HAVE_GSTREAMER
-        //video clicked
-        GridVideoWidget* video = qobject_cast<GridVideoWidget*>(sender());
-        if( video ) {
-            pageShown = true;
+    //video clicked
+    else if (type == MediaType::Video) {
+        QString videoId = index.data(GridModel::VideoId).toString();
+        videoId.remove("thumb-");
 
-            ItemDetailPage* page = new ItemDetailPage();
-            QString videoID(video->id());
-            videoID.remove("thumb-");
-            page->setVideoId(videoID);
-            page->setParent(this);
-
-            page->appear(scene(), DestroyWhenDismissed);
-        }
+        ItemDetailPage* page = new ItemDetailPage();
+        page->setVideoId(videoId);
+        page->appear(scene(), DestroyWhenDismissed);
+    }
 #endif
 }
 
@@ -339,9 +326,9 @@ void MGridPage::showGridConfigurationDialog()
     potraitPolicy->addItem(m_columnsPortraitSlider);
 
     if (dialog->exec() == MDialog::Accepted) {
-            m_columnsLandscape = m_columnsLandscapeSlider->value();
-            m_columnsPortrait = m_columnsPortraitSlider->value();
-            configureGrid();
+        m_columnsLandscape = m_columnsLandscapeSlider->value();
+        m_columnsPortrait = m_columnsPortraitSlider->value();
+        configureGrid();
     }
 
     delete dialog;
@@ -352,6 +339,7 @@ void MGridPage::modifyColumnsSliderHandle(int newValue)
     m_columnsLandscapeSlider->setHandleLabel(QString::number(newValue));
     m_columnsLandscapeLabel->setText(QString::number(newValue));
 }
+
 void MGridPage::modifyRowsSliderHandle(int newValue)
 {
     m_columnsPortraitSlider->setHandleLabel(QString::number(newValue));

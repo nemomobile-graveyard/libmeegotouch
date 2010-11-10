@@ -39,7 +39,7 @@
 #include <MLinearLayoutPolicy>
 #include <MGridLayoutPolicy>
 #include <MLayout>
-#include <MDebug>
+#include <MComponentData>
 
 const int ANIMATION_TIME = 1000;
 const int INACTIVITY_TIMEOUT = 5000;
@@ -61,6 +61,179 @@ void MyVideoWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     MVideoWidget::mouseReleaseEvent(event);
     emit clicked();
+}
+
+MyImageWidget::MyImageWidget(QGraphicsItem *parent)
+    : QGraphicsWidget(parent),
+    scaleK(0.0)
+{
+
+}
+
+void MyImageWidget::setImage(const QImage &image)
+{
+    this->image = image;
+    sourceRect = image.rect();
+
+    updateImageGeometry();
+}
+
+void MyImageWidget::updateImageGeometry()
+{
+    QSizeF imageSize = image.size();
+
+    calculateDrawRect(imageSize);
+    calculateSourceRect(imageSize);
+}
+
+void MyImageWidget::setZoomFactor(qreal zoom)
+{
+    if (zoom > 50)
+        zoom = 50;
+    if (zoom < 0.02)
+        zoom = 0.02;
+    scaleK = zoom;
+    updateImageGeometry();
+}
+
+qreal MyImageWidget::zoomFactor()
+{
+    if (scaleK == 0) {
+        scaleK = qMin(size().width() / image.width(), size().height() / image.height());
+    }
+    return scaleK;
+}
+
+void MyImageWidget::setOffset(const QPointF &offset)
+{
+    paintOffset = offset;
+    updateImageGeometry();
+}
+
+QPointF MyImageWidget::offset()
+{
+    return paintOffset;
+}
+
+void MyImageWidget::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    QGraphicsWidget::resizeEvent(event);
+    updateImageGeometry();
+}
+
+void MyImageWidget::calculateDrawRect(const QSizeF &imageSize)
+{
+    // no image, return
+    if (imageSize.isEmpty())
+        return;
+
+    // get target size, bounded by widget size
+    QSizeF widgetSize = size();
+    QSizeF targetSize = widgetSize;
+    QSizeF t;
+
+    // get the image display size
+    qreal fx = zoomFactor(), fy = zoomFactor();
+
+
+    t.setWidth(imageSize.width()*fx);
+    t.setHeight(imageSize.height()*fy);
+
+    // limited by target size
+    t = targetSize.boundedTo(t);
+
+    // calculate the rectangle of draw
+    qreal dx = (widgetSize.width() - t.width()) / 2.0;
+    qreal dy = (widgetSize.height() - t.height()) / 2.0;
+
+    // calculate draw rect   
+    targetRect.setRect(dx, dy, t.width(), t.height());
+
+    if (dx > 0)
+        paintOffset.setX(0);
+    if (dy > 0)
+        paintOffset.setY(0);
+}
+
+QSizeF MyImageWidget::calculateSourceSize(const QSizeF &imageSize)
+{
+    QSizeF sourceSize = imageSize;
+    QSizeF targetSize = size();
+
+    // protection codes
+    if (sourceSize.width() < 1.0)
+        sourceSize.setWidth(1.0);
+    if (sourceSize.height() < 1.0)
+        sourceSize.setHeight(1.0);
+
+    QSizeF t;
+
+    // get the image display size
+    qreal fx = zoomFactor(), fy = zoomFactor();
+
+    t.setWidth(imageSize.width()*fx);
+    t.setHeight(imageSize.height()*fy);
+
+    // update sourceSize for crop section by compare with targetSize, simulate zoom effect
+    qreal value;
+    if (t.width() > targetSize.width()) {
+        value = sourceSize.width();
+        sourceSize.setWidth(qRound(value * targetSize.width() / t.width()));
+    }
+    if (t.height() > targetSize.height()) {
+        value = sourceSize.height();
+        sourceSize.setHeight(qRound(value * targetSize.height() / t.height()));
+    }
+
+    return sourceSize;
+}
+
+void MyImageWidget::calculateSourceRect(const QSizeF &imageSize)
+{
+    QSizeF originalSize = image.size();
+    QSizeF sourceSize = calculateSourceSize(imageSize);
+
+    // calculate default crop section
+    qreal dx = (originalSize.width() - sourceSize.width()) / 2.0;
+    qreal dy = (originalSize.height() - sourceSize.height()) / 2.0;
+
+    qreal xOffset = paintOffset.x() / zoomFactor();
+    qreal yOffset = paintOffset.y() / zoomFactor();
+
+    if (dx + sourceSize.width() + xOffset > originalSize.width()) {
+        xOffset = originalSize.width() - dx - sourceSize.width();
+    }
+
+    if (dx + xOffset > 0)
+        dx += xOffset;
+    else {
+        xOffset = -dx;
+        dx = 0;
+    }
+
+    if (dy + sourceSize.height() + yOffset > originalSize.height()) {
+        yOffset = originalSize.height() - dy - sourceSize.height();
+    }
+
+    if (dy + yOffset > 0)
+        dy += yOffset;
+    else {
+        yOffset = -dy;
+        dy = 0;
+    }
+
+    paintOffset.setX(xOffset * zoomFactor());
+    paintOffset.setY(yOffset * zoomFactor());
+
+    sourceRect = QRect(dx, dy, sourceSize.width(), sourceSize.height());
+}
+
+void MyImageWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(widget);
+    Q_UNUSED(option);
+
+    painter->drawImage(targetRect, image, sourceRect);
 }
 
 MyVideoOverlayToolbar::MyVideoOverlayToolbar(QGraphicsItem *parent)
@@ -124,8 +297,8 @@ ItemDetailPage::ItemDetailPage() :
 
       inactivityTimer(),
 
-      scaleFactor(10.0),
-      lastScaleFactor(1.0)
+      lastScaleFactor(1.0),
+      pinching(false)
 {
     setObjectName("itemDetailPage");
 }
@@ -136,7 +309,6 @@ ItemDetailPage::~ItemDetailPage()
     delete video;
 #endif
     delete slider;
-    delete image;
 
     delete hideAnimation;
     delete showAnimation;
@@ -149,8 +321,6 @@ QString ItemDetailPage::timedemoTitle()
 
 void ItemDetailPage::createContent()
 {
-    mWarning("ItemDetailPage::createContent()");
-
     inactivityTimer.setInterval(INACTIVITY_TIMEOUT);
     connect(&inactivityTimer, SIGNAL(timeout()),
                this, SLOT(hideOverlay()),
@@ -161,7 +331,7 @@ void ItemDetailPage::createContent()
     layout->setContentsMargins(0, 0, 0, 0);
 
 #ifdef HAVE_GSTREAMER
-    if( !videoId.isEmpty() ) {
+    if (!videoId.isEmpty()) {
         QFileInfo info(videoId);
         setTitle(info.fileName());
 
@@ -199,7 +369,7 @@ void ItemDetailPage::createContent()
         MButton* bBack = new MButton(panel);
         bBack->setViewType(MButton::iconType);
         bBack->setObjectName("MNavigationBarBackButton");
-        connect(bBack, SIGNAL(clicked(bool)), this, SLOT(bBackButtonClicked()));
+        connect(bBack, SIGNAL(clicked(bool)), this, SLOT(dismiss()));
 
         slider = new MSlider(panel);
         slider->setObjectName("video-player-slider");
@@ -273,16 +443,34 @@ void ItemDetailPage::createContent()
         showAnimation->addAnimation(animation);
 
         relayout();
+        ungrabKeyboard();
+        ungrabGesture(Qt::PinchGesture);
     } else if( !imageId.isEmpty() ) {
 #else
-    if( !imageId.isEmpty() ) {
+    if (!imageId.isEmpty()) {
 #endif
+        setPannable(false);
+
         policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
         policy->setSpacing(0.0);
         layout->setPolicy(policy);
 
-        image = new MImageWidget(panel);
-        image->setImage(QImage(imageId));
+        QImage realImage(imageId);
+
+#ifdef QT_OPENGL_LIB
+        int maxTextureSize = -1;
+        if (!MComponentData::softwareRendering()) {
+            glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+        }
+
+        if (!MComponentData::softwareRendering() && (realImage.size().width() > maxTextureSize || realImage.size().height() > maxTextureSize))
+            realImage = realImage.scaled(QSize(maxTextureSize, maxTextureSize), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+#endif
+        image = new MyImageWidget(centralWidget());
+        image->setImage(realImage);
+
+        image->setZoomFactor(qMin(size().width() / realImage.width(), size().height() / realImage.height()));
+
         policy->addItem(image);
 
         setTitle(QFileInfo(imageId).fileName());
@@ -290,6 +478,8 @@ void ItemDetailPage::createContent()
         // go fullscreen
         setComponentsDisplayMode(MApplicationPage::NavigationBar,
                                        MApplicationPageModel::AutoHide);
+        grabKeyboard();        
+        grabGesture(Qt::PinchGesture);
     }
     retranslateUi();
 }
@@ -306,22 +496,53 @@ void ItemDetailPage::resizeEvent(QGraphicsSceneResizeEvent *event)
 
 void ItemDetailPage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
 {
+    if (!image)
+        return;
+
     if (gesture->state() == Qt::GestureStarted) {
         lastScaleFactor = 1.0;
+        pinching = true;
     }
 
-    image->setZoomFactor(scaleFactor / 10.0);
-    image->update();
-    scaleFactor = scaleFactor * (gesture->scaleFactor() - lastScaleFactor + 1);
+    if (gesture->state() == Qt::GestureFinished || gesture->state() == Qt::GestureCanceled)
+        pinching = false;
+
+    qreal scale = image->zoomFactor() * (gesture->scaleFactor() - lastScaleFactor + 1);
+    // FIXME: Once the updated pinch gesture arrives replace the above calcuation with the one below.
+    // qreal scale = image->zoomFactor() * gesture->scaleFactor();
+    image->setZoomFactor(scale);
 
     lastScaleFactor = gesture->scaleFactor();
-
-    if (scaleFactor < 1)
-        scaleFactor = 1;
-    else if (scaleFactor > 50)
-        scaleFactor = 50;
-
     event->accept(gesture);
+}
+
+void ItemDetailPage::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    lastMousePosition = event->pos();
+}
+
+void ItemDetailPage::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (!image && pinching)
+        return;
+
+    QPointF delta = -(event->pos() - lastMousePosition);
+    lastMousePosition = event->pos();
+    image->setOffset(image->offset() + delta);
+    image->update();
+}
+
+void ItemDetailPage::keyPressEvent(QKeyEvent *event)
+{
+    if (!image)
+        return;
+
+    if (event->key() == Qt::Key_Plus)
+        image->setZoomFactor(image->zoomFactor() * 1.5);
+    else if (event->key() == Qt::Key_Minus)
+        image->setZoomFactor(image->zoomFactor() / 1.5);
+
+    image->update();
 }
 
 void ItemDetailPage::relayout()
@@ -413,12 +634,6 @@ void ItemDetailPage::videoSliderValueChanged(int newValue)
 #else
     Q_UNUSED(newValue)
 #endif
-}
-
-void ItemDetailPage::bBackButtonClicked()
-{
-    emit backButtonClicked();
-    dismiss();
 }
 
 void ItemDetailPage::buttonClicked()
