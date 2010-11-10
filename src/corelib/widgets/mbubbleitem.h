@@ -287,8 +287,7 @@ public Q_SLOTS:
       Informational widgets are displayed as part of the message bubble main body.
       There are two pre-defined information widgets for the bubble: number of comments and thumbs up received.
 
-      The parent item of the widget in graphics hierarchy is set to NULL, so the widget will not be displayed.
-      The ownership is transfered to caller.
+      The removed widget is removed from the scene hierarchy and the ownership is transfered to caller.
 
       \sa informationWidgets()
       \sa setCommentsString();

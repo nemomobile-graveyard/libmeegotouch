@@ -256,6 +256,10 @@ void MBubbleItem::addInformationWidget(QGraphicsWidget *widget)
 void MBubbleItem::removeInformationWidget(QGraphicsWidget *widget)
 {
     widget->setParentItem(0);
+    widget->setParent(0);
+    if (scene())
+        scene()->removeItem(widget);
+
     QStack<QGraphicsWidget*> stack = model()->informationWidgets();
     int index = stack.indexOf(widget);
     if (index >= 0) {
