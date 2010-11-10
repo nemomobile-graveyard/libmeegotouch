@@ -128,6 +128,8 @@ public:
     QElapsedTimer timeSinceLastPaintInSwitcher;
     bool updateIsPending;
     bool discardedPaintEvent;
+    int invisiblePaintCounter;
+    const int allowedPaintEventsWhenInvisible;
 
 protected:
     MWindow *q_ptr;

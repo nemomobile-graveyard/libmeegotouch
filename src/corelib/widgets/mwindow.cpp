@@ -90,6 +90,8 @@ MWindowPrivate::MWindowPrivate() :
     minimizedSoftwareSwitch(false),
     updateIsPending(false),
     discardedPaintEvent(false),
+    invisiblePaintCounter(0),
+    allowedPaintEventsWhenInvisible(5),
     q_ptr(NULL)
 {
 #ifdef Q_WS_X11
@@ -431,6 +433,7 @@ void MWindowPrivate::doEnterDisplayEvent()
         // we discarded a paint event while beeing invisible
         // make sure the screen is up to date
         discardedPaintEvent = false;
+        invisiblePaintCounter = 0;
         QTimer::singleShot(0, q->viewport(), SLOT(update()));
     }
 }
@@ -1066,10 +1069,17 @@ void MWindow::paintEvent(QPaintEvent *event)
 #endif // M_USE_OPENGL
 
     if (!isOnDisplay()) {
-        mWarning("MWindow::paintEvent") << "Application is not visible. Paint event discarded. Make sure the application does not paint in the first place.";
-        event->accept();
-        d->discardedPaintEvent = true;
-        return;
+        // we allow some paint events when we are not visible as we might have a race between
+        // the visibility information and the paint events
+        if (d->invisiblePaintCounter < d->allowedPaintEventsWhenInvisible) {
+            mDebug("MWindow::paintEvent") << "Application is not visible. Paint event allowed nevertheless.";
+            ++d->invisiblePaintCounter;
+        } else {
+            mWarning("MWindow::paintEvent") << "Application is not visible. Paint event discarded. Make sure the application does not paint in the first place.";
+            event->accept();
+            d->discardedPaintEvent = true;
+            return;
+        }
     }
 
     if (isInSwitcher()) {
