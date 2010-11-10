@@ -90,6 +90,7 @@ private:
     M_MODEL_PROPERTY(MTextEditModel::EchoMode, echo, Echo, true, MTextEditModel::Normal)
     M_MODEL_PROPERTY(bool, isAutoSipEnabled, AutoSipEnabled, true, true)
 
+    M_MODEL_PROPERTY(int, preeditCursor, PreeditCursor, true, -1)
 public:
     void updateCursor()   {
         memberModified(MTextEditModel::Cursor);

@@ -350,8 +350,17 @@ QAbstractTextDocumentLayout::PaintContext MTextEditViewPrivate::paintContext() c
         selection.format = selectionFormat;
         paintContext.selections.append(selection);
 
-    } else if ((focused == true) && (q->model()->edit() == MTextEditModel::EditModeBasic)) {
-        paintContext.cursorPosition = cursor.position();
+    } else if (focused == true) {
+        if ( q->model()->edit() == MTextEditModel::EditModeBasic) {
+            paintContext.cursorPosition = cursor.position();
+
+        } else if (q->model()->edit() == MTextEditModel::EditModeActive
+                   && q->model()->preeditCursor() >= 0) {
+            // the absolute position for preedit cursor is the relative
+            // preeditCursor + preedit start (selection start).
+            paintContext.cursorPosition = cursor.selectionStart() + q->model()->preeditCursor();
+
+        }
     }
 
     return paintContext;

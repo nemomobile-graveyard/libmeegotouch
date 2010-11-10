@@ -696,8 +696,9 @@ bool MTextEditPrivate::validateCurrentBlock()
   * \brief sets preedit to given parameters with given formatting attributes
   */
 void MTextEditPrivate::setPreeditText(const QString &text,
-                                        const QList<QInputMethodEvent::Attribute> &attributes)
+                                      const QList<QInputMethodEvent::Attribute> &attributes)
 {
+    Q_Q(MTextEdit);
     QTextCursor *textCursor = cursor();
 
     // Remove old pre-edit text
@@ -710,6 +711,8 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 
     QList<QTextLayout::FormatRange> preeditStyles;
 
+    // set preeditCursor to -1 to hide cursor for preedit by default
+    int preeditCursor = -1;
     // parse attributes
     const int size = attributes.size();
     for (int i = 0; i < size; ++i) {
@@ -724,9 +727,14 @@ void MTextEditPrivate::setPreeditText(const QString &text,
                 style.format = format;
                 preeditStyles.append(style);
             }
+        } else if (attribute.type == QInputMethodEvent::Cursor) {
+            if (attribute.length > 0) {
+                preeditCursor = attribute.start;
+                //TODO: should honor cursor color
+            }
         }
-        // TODO: should honor Cursor attribute too
     }
+    q->model()->setPreeditCursor(preeditCursor);
 
     // set the preedit styling as additional format of the current qtextlayout.
     // preedit is implemented as selected normal text with additional formatting on current
@@ -1962,7 +1970,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                 bool injectionAccepted = false;
 
                 if (ic) {
-                    MPreeditInjectionEvent event(preedit);
+                    MPreeditInjectionEvent event(preedit, eventCursorPosition - start);
                     QCoreApplication::sendEvent(ic, &event);
 
                     injectionAccepted = event.isAccepted();
