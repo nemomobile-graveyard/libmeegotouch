@@ -198,6 +198,11 @@ void ItemDetailPage::createContent()
         bNext->setIconID("icon-m-toolbar-mediacontrol-next");
         connect(bNext, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
 
+        MButton* bBack = new MButton(panel);
+        bBack->setViewType(MButton::iconType);
+        bBack->setObjectName("MNavigationBarBackButton");
+        connect(bBack, SIGNAL(clicked(bool)), this, SLOT(bBackButtonClicked()));
+
         slider = new MSlider(panel);
         slider->setObjectName("video-player-slider");
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(videoSliderValueChanged(int)));
@@ -215,6 +220,7 @@ void ItemDetailPage::createContent()
         cContainer->setGeometry(QRect(0,0,100,100));
 
         bContainer = new MyVideoOverlayToolbar(panel);
+        bContainer->addItem(bBack);
         bContainer->addItem(slider);
         bContainer->setObjectName("bottom-overlay-container");
         bContainer->setViewType("background");
@@ -409,6 +415,12 @@ void ItemDetailPage::videoSliderValueChanged(int newValue)
 #else
     Q_UNUSED(newValue)
 #endif
+}
+
+void ItemDetailPage::bBackButtonClicked()
+{
+    emit backButtonClicked();
+    dismiss();
 }
 
 void ItemDetailPage::buttonClicked()

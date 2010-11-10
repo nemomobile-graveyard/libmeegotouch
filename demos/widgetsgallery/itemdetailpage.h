@@ -105,6 +105,7 @@ public slots:
     void videoSliderValueChanged(int newValue);
 
     void buttonClicked();
+    void bBackButtonClicked();
 
     void rateNoneButtonClicked();
     void rateOneButtonClicked();
