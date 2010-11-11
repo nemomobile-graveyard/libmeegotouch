@@ -265,7 +265,7 @@ namespace {
 
 static QtDatatypeConverter DataTypeConverter;
 
-MStyleSheetAttribute::MStyleSheetAttribute(const QByteArray& name, const QByteArray& value, qint64 position)
+MStyleSheetAttribute::MStyleSheetAttribute(MUniqueStringCache::Index name, const QByteArray& value, qint64 position)
     : name(name), value(value), position(position)
 {
 }
@@ -278,6 +278,11 @@ MStyleSheetAttribute::MStyleSheetAttribute(const MStyleSheetAttribute &other)
 }
 
 QByteArray MStyleSheetAttribute::getName()
+{
+    return MUniqueStringCache::indexToString(name);
+}
+
+MUniqueStringCache::Index MStyleSheetAttribute::getNameID()
 {
     return name;
 }
@@ -811,7 +816,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         }
     }
 
-    MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(property.typeName()) + "): " + name + ": " + value, MStyleSheetParser::getLineNum(filename, position));
+    MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(property.typeName()) + "): " + MUniqueStringCache::indexToString(name) + " : " + value, MStyleSheetParser::getLineNum(filename, position));
     return false;
 }
 

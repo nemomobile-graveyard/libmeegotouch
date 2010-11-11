@@ -22,6 +22,7 @@
 
 #include "mexport.h"
 #include "mstylesheetattribute.h"
+#include "muniquestringcache.h"
 
 #include <QByteArray>
 #include <QVariant>
@@ -67,15 +68,14 @@ public:
      * \param subclasses A flag indicating whether the su
      * \deprecated Please use the new constructor
      */
-
-    explicit MStyleSheetSelector(const QByteArray &objectName = "",
-                                   const QByteArray &className = "",
-                                   const QByteArray &classType = "",
+    explicit MStyleSheetSelector(MUniqueStringCache::Index objectName = MUniqueStringCache::UndefinedIndex,
+                                   MUniqueStringCache::Index className = MUniqueStringCache::UndefinedIndex,
+                                   MUniqueStringCache::Index classType = MUniqueStringCache::UndefinedIndex,
                                    const Orientation orientation = UndefinedOrientation,
-                                   const QByteArray &mode = "",
-                                   const QByteArray &filename = "",
-                                   const QByteArray &parentName = "",
+                                   MUniqueStringCache::Index mode = MUniqueStringCache::UndefinedIndex,
+                                   MUniqueStringCache::Index parentName = MUniqueStringCache::UndefinedIndex,
                                    Flags flags = (Flags) 0);
+
 
     /*!
      * MStyleSheetSelector constructor
@@ -93,16 +93,20 @@ public:
      * \param subclasses A flag indicating whether the su
      */
 
-    explicit MStyleSheetSelector(const QByteArray &objectName,
-                                   const QByteArray &className,
-                                   const QByteArray &classType,
+    explicit MStyleSheetSelector(MUniqueStringCache::Index objectName,
+                                   MUniqueStringCache::Index className,
+                                   MUniqueStringCache::Index classType,
                                    const Orientation orientation,
-                                   const QByteArray &mode,
-                                   const QByteArray &filename,
-                                   const QByteArray &parentName,
-                                   const QByteArray &parentObjectName,
+                                   MUniqueStringCache::Index mode,
+                                   MUniqueStringCache::Index parentName,
+                                   MUniqueStringCache::Index parentObjectName,
                                    Flags flags = (Flags) 0);
-
+    MUniqueStringCache::Index objectNameID() const;
+    MUniqueStringCache::Index classNameID() const;
+    MUniqueStringCache::Index classTypeID() const;
+    MUniqueStringCache::Index modeID() const;
+    MUniqueStringCache::Index parentNameID() const;
+    MUniqueStringCache::Index parentObjectNameID() const;
 
     /*!
      * Copy constructor
