@@ -1,3 +1,9 @@
+libmeegotouch (0.20.54~1) unstable; urgency=low
+
+  * Unreleased
+
+-- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 11 Nov 2010 14:53:50 +0200
+
 libmeegotouch (0.20.53-1) unstable; urgency=low
 
   * Fixes: NB#195013 -  mstartup crash.
@@ -8,14 +14,6 @@ libmeegotouch (0.20.53-1) unstable; urgency=low
   * Fixes: NB#201968 - MContainer should either take ownership of the centralWidget or not.
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 11 Nov 2010 14:53:50 +0200
-
-libmeegotouch (0.20.53~1) unstable; urgency=low
-
-  * Unreleased
-  * Implemented: SWP#DUI-4255 - Add support for user-defined identifier on a notification and notification group
-  * Fixes: NB#195013 -  mstartup crash.
-
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 09 Nov 2010 17:25:25 +0200
 
 libmeegotouch (0.20.52-1) unstable; urgency=low
 
