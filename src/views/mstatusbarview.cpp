@@ -257,6 +257,7 @@ void MStatusBarView::sharedPixmapHandleReceived(QDBusPendingCallWatcher * call)
     sharedPixmap = QPixmap::fromX11Pixmap(tmp, QPixmap::ExplicitlyShared);
     updateSharedPixmap();
     call->deleteLater();
+    update();
 }
 
 void MStatusBarView::handlePixmapProviderOnline()
