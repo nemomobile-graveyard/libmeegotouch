@@ -24,8 +24,11 @@
 #include "mapplicationwindow.h"
 #include "mcomponentdata.h"
 #include "mgraphicssystemhelper.h"
-
 #include "mthemedaemon.h"
+#ifndef UNIT_TEST
+#include "mtheme_p.h"
+#include "mlibrary.h"
+#endif
 
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
@@ -70,6 +73,12 @@ void MComponentCachePrivate::populateForMApplication()
 
     if (mApplicationInstance == 0) {
         mApplicationInstance = new MApplication(initialArgc, initialArgv, 0);
+#ifndef UNIT_TEST
+        // force libraries to load their stylesheets
+        foreach (const MLibrary *lib, *MTheme::instance()->d_ptr->libraries) {
+            lib->stylesheet();
+        }
+#endif
     } else {
         cacheBeingPopulated = false;
         qFatal("MComponentCache::populateForMApplication() - Cache is already populated.");

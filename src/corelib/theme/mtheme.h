@@ -408,6 +408,7 @@ private:
 
     friend class MApplicationPrivate;
     friend class MAssemblyPrivate;
+    friend class MComponentCachePrivate;
     friend class MComponentData;
     friend class MWidgetController;
     friend class MStyle;
