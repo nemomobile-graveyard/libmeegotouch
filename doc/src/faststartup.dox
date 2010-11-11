@@ -1,7 +1,7 @@
 /*! \page faststart Fast application startup
 
-There are three features that enable improving MApplication startup
-times:
+There are three features that enable directly improving MApplication 
+startup times:
 
 \li The \subpage launcher "application launcher" is the
 primary alternative for shortening application startup times. It will
@@ -32,10 +32,19 @@ of applications that take advantage of prestarting already.
 
 An application can use any combination of the above features.
 
+In addition to these three features there are ways to improve startup
+experience for the user: 
+
+\li When loading very heavy application GUIs, the developer can implement
+the GUI loading to happen in several phases so that the user can see 
+some \subpage responsivewindow "initial GUI" fast when starting the application.
+
 \section links Documentation links 
 
     \li \ref launcher "How to write launchable applications"
 
     \li \ref prestart "How to write prestartable and lazy shutdownable applications"
+
+    \li \ref responsivewindow "How to show responsive window fast in meegotouch application"
 
 */
