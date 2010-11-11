@@ -25,6 +25,7 @@
 #include "massembly_p.h"
 #include "mdebug.h"
 #include "mwidgetcontroller.h"
+#include "mtheme_p.h"
 
 bool MAssemblyPrivate::loadViewConfiguration(const QStringList &themeInheritance)
 {
@@ -57,7 +58,7 @@ bool MAssemblyPrivate::loadViewConfiguration(const QStringList &themeInheritance
     return true;
 }
 
-void MAssemblyPrivate::loadStylesheet(const QString &filename, const MLogicalValues &logicalValues)
+void MAssemblyPrivate::loadStylesheet(const QString &filename, const MLogicalValues &logicalValues) const
 {
     mDebug("MAssemblyPrivate") << "load stylesheet from" << qPrintable(filename);
     // load stylesheet to new sheet
@@ -81,10 +82,13 @@ void MAssemblyPrivate::loadStylesheet(const QString &filename, const MLogicalVal
     }
 }
 
-void MAssemblyPrivate::loadStylesheets(const QStringList &themeInheritance, const MLogicalValues &logicalValues)
+void MAssemblyPrivate::loadStylesheets() const
 {
     delete stylesheet;
     stylesheet = NULL;
+    styleSheetsLoaded = true;
+
+    const MLogicalValues &logicalValues = MTheme::instance()->d_ptr->logicalValues;
 
     // load in reverse order, base first
     for (int j = themeInheritance.count() - 1; j >= 0; --j) {
@@ -149,16 +153,29 @@ QString MAssembly::viewType(const MWidgetController *widget, bool &exactMatch) c
 
 MStyleSheet *MAssembly::stylesheet() const
 {
+    if (!d_ptr->styleSheetsLoaded) {
+        d_ptr->loadStylesheets();
+    }
+
     return d_ptr->stylesheet;
 }
 
-void MAssembly::themeChanged(const QStringList &themeInheritance, const MLogicalValues &logicalValues)
+void MAssembly::themeChanged(const QStringList &themeInheritance, const MLogicalValues &)
+{
+    themeChanged(themeInheritance);
+}
+
+void MAssembly::themeChanged(const QStringList &themeInheritance)
 {
     // (re)load view configuration
     d_ptr->loadViewConfiguration(themeInheritance);
 
-    // (re)load stylesheet
-    d_ptr->loadStylesheets(themeInheritance, logicalValues);
+    // unload stylesheet - will be reloaded when stylesheet() is called the next time
+    d_ptr->styleSheetsLoaded = false;
+    delete d_ptr->stylesheet;
+    d_ptr->stylesheet = NULL;
+
+    d_ptr->themeInheritance = themeInheritance;
 }
 
 

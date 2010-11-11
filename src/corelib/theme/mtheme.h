@@ -407,6 +407,7 @@ private:
 #endif
 
     friend class MApplicationPrivate;
+    friend class MAssemblyPrivate;
     friend class MComponentData;
     friend class MWidgetController;
     friend class MStyle;

@@ -21,6 +21,7 @@
 #define MASSEMBLY_P_H
 
 #include <QHash>
+#include <QStringList>
 #include "mstylesheet.h"
 
 class MWidgetController;
@@ -32,11 +33,13 @@ public:
 
     QString name;
     QHash<QString, QString> viewConfiguration;
-    MStyleSheet *stylesheet;
+    mutable MStyleSheet *stylesheet;
+    mutable bool styleSheetsLoaded;
+    QStringList themeInheritance;
 
     bool loadViewConfiguration(const QStringList &themeInheritance);
-    void loadStylesheet(const QString &stylesheet, const MLogicalValues &logicalValues);
-    void loadStylesheets(const QStringList &themeInheritance, const MLogicalValues &logicalValues);
+    void loadStylesheet(const QString &stylesheet, const MLogicalValues &logicalValues) const;
+    void loadStylesheets() const;
 };
 
 #endif

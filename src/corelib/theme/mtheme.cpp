@@ -688,7 +688,7 @@ void MThemePrivate::reinit(const QString &newApplicationName)
     applicationName = newApplicationName;
     application = new MAssembly(applicationName);
     themeDaemon->registerApplicationName(newApplicationName);
-    application->themeChanged(themeDaemon->themeInheritanceChain(), logicalValues);
+    application->themeChanged(themeDaemon->themeInheritanceChain());
 }
 
 MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeService themeService) :
@@ -827,11 +827,11 @@ void MThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInher
 
     // load all css-files from all libraries from all themes.
     foreach(MLibrary * lib, *libraries) {
-        lib->themeChanged(themeInheritance, logicalValues);
+        lib->themeChanged(themeInheritance);
     }
 
     // refresh application theme data
-    application->themeChanged(themeInheritance, logicalValues);
+    application->themeChanged(themeInheritance);
 
     // cached data is no more valid
     MStyleSheet::cleanup(false);
@@ -878,10 +878,9 @@ void MThemePrivate::registerLibrary(MLibrary *library)
     MThemePrivate::libraries->insert(library->name(), library);
 
     // Load theme-specific content of this library (in case the lib was loaded after startup).
-    // TODO: load/unload the stylesheets of this library, this only handles view configuration atm.
     if (gTheme) {
         MThemePrivate *d = MTheme::instance()->d_ptr;
-        library->themeChanged(d->themeDaemon->themeInheritanceChain(), d->logicalValues);
+        library->themeChanged(d->themeDaemon->themeInheritanceChain());
     }
 }
 

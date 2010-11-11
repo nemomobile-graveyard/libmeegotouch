@@ -63,10 +63,13 @@ public:
      */
     MStyleSheet *stylesheet() const;
 
+    //! \deprecated Use themeChanged(const QStringList&) instead. Sice 0.20.54.
+    Q_DECL_DEPRECATED void themeChanged(const QStringList &themeInheritance, const MLogicalValues &);
+
     /*!
        \brief Reloads all theme-related data
      */
-    void themeChanged(const QStringList &themeInheritance, const MLogicalValues &logicalValues);
+    void themeChanged(const QStringList &themeInheritance);
 };
 
 #endif
