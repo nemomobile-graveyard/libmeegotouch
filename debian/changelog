@@ -1,3 +1,14 @@
+libmeegotouch (0.20.53-1) unstable; urgency=low
+
+  * Fixes: NB#195013 -  mstartup crash.
+  * Fixes: NB#202338 - Application requires signal to indicate when minimizing starts
+  * Fixes: NB#182815 -  Pannable widget is not transparent wrt. passing focus to child widgets
+  * Fixes: NB#203431 - Floating list index is crashing when group count is less than floating index count style property.
+  * Fixes: NB#190835 - MImageWidget is displayed black when image size is bigger than maximum supported size
+  * Fixes: NB#201968 - MContainer should either take ownership of the centralWidget or not.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 11 Nov 2010 14:53:50 +0200
+
 libmeegotouch (0.20.53~1) unstable; urgency=low
 
   * Unreleased
