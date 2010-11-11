@@ -1174,8 +1174,15 @@ static QString
 cleanLanguageCountryPosix(QString &localeString)
 {
     // we do not need the encoding and therefore use non-capturing
-    // parentheses for the encoding part here:
-    QRegExp regexp("([a-z]{2,3})(_([A-Z]{2,2}))?(?:.(?:[a-zA-Z0-9-]+))?(@([A-Z][a-z]+))?");
+    // parentheses for the encoding part here.
+    // The country part is usually a 2 letter uppercase code
+    // as in the above example, but there is the exception
+    // es_419, i.e. Spanish in Latin America where the “country code”
+    // is “419”. es_419 isn’t really a valid value for LANG, but for consistency
+    // let’s make this behave the same way as the icu locale names work for es_419,
+    // we only use LANG as a fallback to specify a locale when gconf isn’t available
+    // or doesn’t work.
+    QRegExp regexp("([a-z]{2,3})(_([A-Z]{2,2}|419))?(?:.(?:[a-zA-Z0-9-]+))?(@([A-Z][a-z]+))?");
 
     if (regexp.indexIn(localeString) == 0 &&
             regexp.capturedTexts().size() == 6) { // size of regexp pattern above
