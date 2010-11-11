@@ -19,9 +19,9 @@ The extension gets the name of the interface as a parameter. The extension can b
 The boolean return value should indicate whether the initialization was successful or not.
 
 The interface also has an method for returning the widget used for the UI of the application extension:
-\code MWidget *widget() \endcode
-In this method you need to return a pointer to the \c MWidget of your application extension. In case an UI is not required, this method can be left out.
-\b Note: The ownership of the \c MWidget is left to the application extension, so you should destroy the widget yourself in the destructor of the extension.
+\code QGraphicsWidget *widget() \endcode
+In this method you need to return a pointer to the \c QGraphicsWidget of your application extension. In case an UI is not required, this method can be left out.
+\b Note: The ownership of the \c QGraphicsWidget is left to the application extension, so you should destroy the widget yourself in the destructor of the extension.
 
 To use application extensions of particular interface in an application, an instance of \c MApplicationExtensionArea is created:
 
@@ -69,7 +69,7 @@ public:
     virtual void demoExtensionSpecificOperation() = 0;
 };
 
-Q_DECLARE_INTERFACE(DemoExtensionInterface, "com.meego.core.DemoExtensionInterface/1.0")
+Q_DECLARE_INTERFACE(DemoExtensionInterface, "com.meego.DemoExtensionInterface/1.0")
 
 #endif
 \endcode
@@ -145,18 +145,18 @@ MWidget *DemoApplicationExtension::widget()
 
 \endcode
 
-In the application that wants to use the extensions implementing the com.meego.core.DemoExtensionInterface/1.0 defined above,
+In the application that wants to use the extensions implementing the com.meego.DemoExtensionInterface/1.0 defined above,
 the application should create an application extension area like this:
 
 \code
-#include <mapplicationextensionarea.h>
+#include <MApplicationExtensionArea>
 #include <demoextensioninterface.h>
 
 ...
 void DemoApp::createExtensionArea()
 {
     MApplicationExtensionArea *extensionArea =
-        new MApplicationExtensionArea("com.meego.core.DemoApplicationExtensionInterface/1.0");
+        new MApplicationExtensionArea("com.meego.DemoApplicationExtensionInterface/1.0");
     extensionArea->setInProcessFilter(QRegExp("/demoapp-demoextension2?\\.desktop$"));
     extensionArea->init();
     layout->addItem(extensionArea);
@@ -203,7 +203,7 @@ Application extensions extend the specification by defining a new type \b MAppli
 </tr>
 <tr>
   <td>Extension</td>
-  <td>Defines the application extension binary. This binary needs to be located in \c /usr/lib/meegotouch/applicationextensions/ - directory.</td>
+  <td>Defines the application extension binary. This binary needs to be located in the directory \c /usr/lib/meegotouch/applicationextensions/.</td>
   <td>string</td>
   <td>YES</td>
 </tr>
@@ -225,7 +225,7 @@ Name=ExampleExtension
 Exec=mapplicationextensionrunner
 
 [X-MeeGoApplicationExtension]
-Interface=com.meego.core.DemoExtensionInterface/1.0
+Interface=com.meego.DemoExtensionInterface/1.0
 Extension=libdemoapplication-demoextension.so
 \endcode
 
@@ -266,7 +266,7 @@ The property and signal names must be as stated above. The property access funct
 Every application extension has an application extension identifier string that uniquely identifies the application extension.
 
 The application extension identifier is determined like this:
-- if an identifier (<tt>MApplicationExtension-Identifier</tt>) is specified in the  \ref appextensiondesktopfile desktop file (and it is valid), that is used
+- if an identifier (<tt>Identifier</tt>) is specified in the <tt>X-MeeGoApplicationExtension</tt> group of the \ref appextensiondesktopfile desktop file (and it is valid), that is used
 - otherwise, an identifier is extracted from the application extension shared library name:
   assuming your application extension is packaged to a shared library called <tt>lib<strong>exampleapplicationextension</strong>.so</tt>, the identifier will be <strong>exampleapplicationextension</strong>.
 
