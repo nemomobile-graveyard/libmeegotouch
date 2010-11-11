@@ -49,15 +49,10 @@
 #include "mswiperecognizer.h"
 #include "msyslogclient.h"
 #include <MDebug>
-
-#ifdef TESTABLE
-/// for testability plugin
 #include <QtPlugin>
 #include <QPluginLoader>
 #include <QLibraryInfo>
 #include "testabilityinterface.h"
-// end testability
-#endif
 
 #ifdef Q_WS_X11
 #include <QX11Info>
@@ -192,16 +187,37 @@ MComponentDataPrivate::MComponentDataPrivate()
     binaryName(),
     deviceName(),
     syslogServer(),
-    service(0)
-#ifdef TESTABLE
-    ,
-    testabilityInterface(0)
-#endif
-    ,
+    service(0),
+    testabilityInterface(0),
     q_ptr(NULL)
 {
 
-#ifdef TESTABLE
+}
+
+MComponentDataPrivate::~MComponentDataPrivate()
+{
+    //remove the testability plugin if it exists
+    //makes sure that all resources used by the plugin
+    //are free when the application exits
+    if (testabilityInterface) {
+        delete testabilityInterface;
+    }
+
+    delete theme;
+    theme = 0;
+
+    delete feedbackPlayer;
+    feedbackPlayer = 0;
+
+    delete service;
+    service = 0;
+
+    delete deviceProfile;
+    deviceProfile = 0;
+}
+
+void MComponentDataPrivate::testabilityInit()
+{
     // Activate testability plugin if exists
     QString testabilityPluginPostfix = ".so";
     QString testabilityPlugin = "testability/libtestability";
@@ -224,32 +240,6 @@ MComponentDataPrivate::MComponentDataPrivate()
         mDebug("MComponentData") << QString("Testability plugin %1 load failed with error: %2")
                                      .arg(testabilityPlugin).arg(loader.errorString());
     }
-//end testability
-#endif
-}
-
-MComponentDataPrivate::~MComponentDataPrivate()
-{
-#ifdef TESTABLE
-    //remove the testability plugin if it exists
-    //makes sure that all resources used by the plugin
-    //are free when the application exits
-    if (testabilityInterface) {
-        delete testabilityInterface;
-    }
-#endif
-
-    delete theme;
-    theme = 0;
-
-    delete feedbackPlayer;
-    feedbackPlayer = 0;
-
-    delete service;
-    service = 0;
-
-    delete deviceProfile;
-    deviceProfile = 0;
 }
 
 void MComponentDataPrivate::debugInit(bool levelSet)
@@ -286,6 +276,17 @@ void MComponentDataPrivate::debugInit(bool levelSet)
                 g_debug_level = QtCriticalMsg;
             }
         }
+    }
+
+    // If there was already a message handler, remove
+    // own message handler again. If our message handler
+    // was installed succesfully, initiate the connection to
+    // syslog, if syslogServer is not the empty string.
+    QtMsgHandler handler(qInstallMsgHandler(mMessageHandler));
+    if (handler != 0) {
+        qInstallMsgHandler(handler);
+    } else if (!syslogServer.isEmpty()) {
+        initSyslogConnection(syslogServer);
     }
 }
 
@@ -364,16 +365,10 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
     parseArguments(argc, argv, themeService);
 
-    // If there was already a message handler, remove
-    // own message handler again. If our message handler
-    // was installed succesfully, initiate the connection to
-    // syslog, if syslogServer is not the empty string.
-    QtMsgHandler handler(qInstallMsgHandler(mMessageHandler));
-    if (handler != 0) {
-        qInstallMsgHandler(handler);
-    } else if (!syslogServer.isEmpty()) {
-        initSyslogConnection(syslogServer);
-    }
+#ifdef TESTABLE
+    if (!MComponentCache::populating())
+        testabilityInit();
+#endif //TESTABLE
 
     QFileInfo fileInfo(argv[0]);
     QString themeIdentifier = fileInfo.fileName();
@@ -763,6 +758,8 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
         QFileInfo fileInfo(argv[0]);
         d->appName = fileInfo.fileName();
     }
+
+    d->testabilityInit();
 
     MLocale systemLocale;
     systemLocale.installTrCatalog(d->appName);
