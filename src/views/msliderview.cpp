@@ -402,6 +402,7 @@ QSizeF MSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 MSliderHandleIndicator::MSliderHandleIndicator(QGraphicsItem* parent) :
     MWidget(parent),
     arrowPos(0),
+    arrowMargin(0),
     orientation(Qt::Horizontal),
     indicatorArrow(0),
     indicator(0)
@@ -478,17 +479,36 @@ void MSliderHandleIndicator::setArrowPos(qreal pos)
     bool reverse = qApp->isRightToLeft();
 
     if (orientation == Qt::Horizontal) {
-        qreal arrowX = qMax(qreal(0), arrowPos - indicatorArrow->rect().width() / 2);
+        qreal rightLimit = indicator->rect().width() - indicatorArrow->rect().width() - arrowMargin;
+        qreal arrowX;
+        if (arrowMargin <= rightLimit)
+            arrowX = qBound(arrowMargin, arrowPos - indicatorArrow->rect().width() / 2, rightLimit);
+        else
+            arrowX = indicator->rect().width() / 2 - indicatorArrow->rect().width() / 2;
+
         indicatorArrow->setPos(arrowX, indicator->rect().bottom());
     }
 
     if (orientation == Qt::Vertical) {
-        qreal arrowY = qMax(qreal(0), arrowPos - indicatorArrow->rect().height() / 2);
+        qreal bottomLimit = indicator->rect().height() - indicatorArrow->rect().height() - arrowMargin;
+        qreal arrowY;
+        if (arrowMargin <= bottomLimit)
+            arrowY = qBound(arrowMargin, arrowPos - indicatorArrow->rect().height() / 2, bottomLimit);
+        else
+            arrowY = indicator->rect().height() / 2 - indicatorArrow->rect().height() / 2;
+
         if (!reverse)
             indicatorArrow->setPos(0, arrowY);
         else
             indicatorArrow->setPos(indicator->rect().right(), arrowY);
     }
+}
+
+void MSliderHandleIndicator::setArrowMargin(qreal margin)
+{
+    arrowMargin = margin;
+
+    updateGeometry();
 }
 
 void MSliderHandleIndicator::moveOnTopAllSiblings()
@@ -552,7 +572,8 @@ MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
     sliderHandleIndicator(0),
     preferredLength(0),
     minimumLength(0),
-    maximumLength(0)
+    maximumLength(0),
+    indicatorMargin(0)
 {
     sliderHandle = new MSliderHandle(this);
     sliderHandle->setObjectName("MSliderHandle");
@@ -636,6 +657,20 @@ void MSliderGroove::setGrooveLength(qreal prefLength, qreal minLength, qreal max
     preferredLength = prefLength;
     minimumLength = minLength;
     maximumLength = maxLength;
+
+    updateGeometry();
+}
+
+void MSliderGroove::setIndicatorMargin(qreal margin)
+{
+    indicatorMargin = margin;
+
+    updateGeometry();
+}
+
+void MSliderGroove::setHandleIndicatorArrowMargin(qreal margin)
+{
+    sliderHandleIndicator->setArrowMargin(margin);
 
     updateGeometry();
 }
@@ -1104,21 +1139,27 @@ void MSliderGroove::updateHandleIndicatorPos()
     sliderBoundingRect.translate(-groovePos);
 
     if (orientation == Qt::Horizontal) {
-        if (handleIndicatorPos.x() < sliderBoundingRect.left())
-            handleIndicatorPos.setX(sliderBoundingRect.left());
-        if (handleIndicatorPos.x() + sliderHandleIndicator->rect().width() > sliderBoundingRect.right() &&
-                handleIndicatorPos.x() > sliderBoundingRect.left())
-            handleIndicatorPos.setX(sliderBoundingRect.right() - sliderHandleIndicator->rect().width());
-
+        qreal leftLimit = qMax(sliderBoundingRect.left(),
+                               (sliderHandle->rect().width() - grooveThickness) / 2 + indicatorMargin);
+        qreal rightLimit = qMin(sliderBoundingRect.right(),
+                                rect().width() - sliderHandleIndicator->rect().width() - (sliderHandle->rect().width() - grooveThickness) / 2 - indicatorMargin);
+        if (leftLimit <= rightLimit)
+            handleIndicatorPos.setX(qBound(leftLimit, handleIndicatorPos.x(), rightLimit));
+        else
+            handleIndicatorPos.setX(qMax(sliderBoundingRect.left(),
+                                         rect().width() / 2 - sliderHandleIndicator->rect().width() / 2));
         sliderHandleIndicator->setArrowPos(sliderHandle->pos().x() + sliderHandle->rect().width() / 2 - handleIndicatorPos.x());
     }
     if (orientation == Qt::Vertical) {
-        if (handleIndicatorPos.y() < sliderBoundingRect.top())
-            handleIndicatorPos.setY(sliderBoundingRect.top());
-        if (handleIndicatorPos.y() + sliderHandleIndicator->rect().height() > sliderBoundingRect.bottom() &&
-                handleIndicatorPos.y() > sliderBoundingRect.top())
-            handleIndicatorPos.setY(sliderBoundingRect.bottom() - sliderHandleIndicator->rect().height());
-
+        qreal topLimit = qMax(sliderBoundingRect.top(),
+                              (sliderHandle->rect().height() - grooveThickness) / 2 + indicatorMargin);
+        qreal bottomLimit = qMin(sliderBoundingRect.bottom(),
+                                 rect().height() - sliderHandleIndicator->rect().height() - (sliderHandle->rect().height() - grooveThickness) / 2 - indicatorMargin);
+        if (topLimit <= bottomLimit)
+            handleIndicatorPos.setY(qBound(topLimit, handleIndicatorPos.y(), bottomLimit));
+        else
+            handleIndicatorPos.setY(qMax(sliderBoundingRect.top(),
+                                         rect().height() / 2 - sliderHandleIndicator->rect().height() / 2));
         sliderHandleIndicator->setArrowPos(sliderHandle->pos().y() + sliderHandle->rect().height() / 2 - handleIndicatorPos.y());
     }
 
@@ -1636,6 +1677,9 @@ void MSliderView::applyStyle()
     d->sliderGroove->setGrooveLength(style()->groovePreferredLength(),
                                      style()->grooveMinimumLength(),
                                      style()->grooveMaximumLength());
+
+    d->sliderGroove->setIndicatorMargin(style()->handleLabelMargin());
+    d->sliderGroove->setHandleIndicatorArrowMargin(style()->handleLabelArrowMargin());
 
     d->updateOrientation();
 

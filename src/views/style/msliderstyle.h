@@ -146,6 +146,16 @@ class M_VIEWS_EXPORT MSliderStyle : public MWidgetStyle
         \brief Steps needed before giving haptic feedback when moving slider
       */
     M_STYLE_ATTRIBUTE(int, stepsPerFeedback, StepsPerFeedback)
+    /*!
+        \property MSlider::handleLabelMargin
+        \brief Minimum margin between handle indicator and slider edge
+      */
+    M_STYLE_ATTRIBUTE(qreal, handleLabelMargin, HandleLabelMargin)
+    /*!
+        \property MSlider::handleLabelArrowMargin
+        \brief Minimum margin between arrow and handle indicator edge
+      */
+    M_STYLE_ATTRIBUTE(qreal, handleLabelArrowMargin, HandleLabelArrowMargin)
 };
 
 class M_VIEWS_EXPORT MSliderStyleContainer : public MWidgetStyleContainer

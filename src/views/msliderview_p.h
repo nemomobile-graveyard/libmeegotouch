@@ -141,6 +141,7 @@ public:
     void setText(const QString &text);
     void setImage(const QString &id);
     void setArrowPos(qreal pos);
+    void setArrowMargin(qreal margin);
 
     void moveOnTopAllSiblings();
 
@@ -148,6 +149,7 @@ public:
 
 private:
     qreal arrowPos;
+    qreal arrowMargin;
     Qt::Orientation orientation;
     MSliderHandleIndicatorArrow* indicatorArrow;
     MSliderIndicator* indicator;
@@ -180,6 +182,9 @@ public:
                    const MScalableImage *backgroundVerticalReceived);
     void setGrooveThickness(qreal thickness);
     void setGrooveLength(qreal prefLength, qreal minLength, qreal maxLength);
+    void setIndicatorMargin(qreal margin);
+
+    void setHandleIndicatorArrowMargin(qreal margin);
 
     void setSliderValues(int min, int max, int val);
     void setSeekBarValues(bool show, int loadedContentMin = 0, int loadedContentMax = 0);
@@ -235,7 +240,6 @@ private:
     int loadedContentMaximum;
     bool showSeekBar;
 
-
     MSliderHandle *sliderHandle;
     MSliderHandleIndicator *sliderHandleIndicator;
 
@@ -244,6 +248,7 @@ private:
     qreal preferredLength;
     qreal minimumLength;
     qreal maximumLength;
+    qreal indicatorMargin;
 
 #ifdef UNIT_TEST
     friend class Ut_MSliderView;
