@@ -26,6 +26,11 @@
 #include "keypresswaiter.h"
 #endif
 
+namespace
+{
+    QtMsgType outputLevel = QtDebugMsg;
+}
+
 static int setup_unix_signal_handlers()
 {
     struct sigaction sighup, sigterm, sigint;
@@ -55,6 +60,39 @@ static int setup_unix_signal_handlers()
      return 0;
  }
 
+static QtMsgType getOutputLevelFromArgs(QStringList arguments)
+{
+    QString argLevel;
+    int index = arguments.indexOf("-output-level") + 1;
+    if (index > 0 && index < arguments.length()) {
+        argLevel = arguments[index];
+    }
+
+    if (argLevel == "debug")
+        return QtDebugMsg;
+    if (argLevel == "warning")
+        return QtWarningMsg;
+    if (argLevel == "critical")
+        return QtCriticalMsg;
+
+#ifdef __arm__
+    return QtCriticalMsg;
+#else
+    return QtWarningMsg;
+#endif
+}
+
+static void mMessageHandler(QtMsgType type, const char *msg)
+{
+    if (type < outputLevel)
+        return;
+
+   fprintf(stderr, "%s\n", msg);
+
+   if (type == QtFatalMsg)
+       abort();
+}
+
 int main(int argc, char **argv)
 {
     setup_unix_signal_handlers();
@@ -74,6 +112,9 @@ int main(int argc, char **argv)
 #endif // HAVE_MEEGOGRAPHICSSYSTEM
 
     QApplication app(argc, argv);
+
+    outputLevel = getOutputLevelFromArgs(app.arguments());
+    qInstallMsgHandler(mMessageHandler);
 
     // Apply custom server address, if the "-address" has been passed as argument
     QString serverAddress;
