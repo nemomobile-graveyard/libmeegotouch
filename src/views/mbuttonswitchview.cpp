@@ -68,23 +68,23 @@ MButtonSwitchViewPrivate::~MButtonSwitchViewPrivate()
     delete m_handleAnimation;
 }
 
-QSize MButtonSwitchViewPrivate::thumbSize() const
+QSizeF MButtonSwitchViewPrivate::thumbSize() const
 {
     Q_Q(const MButtonSwitchView);
 
-    QSize thumb = q->style()->thumbImage()->pixmap()->size();
+    QSizeF thumb = q->style()->thumbImage()->pixmap()->size();
     QSizeF view = q->size();
 
     //scale the thumb to fit inside the view, aspect ratio is kept the same
     if (thumb.height() != view.height()) {
-        float f = view.height() / thumb.height();
+        qreal f = view.height() / thumb.height();
         thumb = thumb * f;
-        return QSize(thumb.width() - q->style()->thumbMargin() * 2, thumb.height() - q->style()->thumbMargin() * 2);
+        return QSizeF(thumb.width() - q->style()->thumbMargin() * 2.0, thumb.height() - q->style()->thumbMargin() * 2.0);
     } else
         return thumb;
 }
 
-QPoint MButtonSwitchViewPrivate::thumbPos() const
+QPointF MButtonSwitchViewPrivate::thumbPos() const
 {
     Q_Q(const MButtonSwitchView);
 
@@ -98,15 +98,15 @@ QPoint MButtonSwitchViewPrivate::thumbPos() const
     }
 }
 
-QPoint MButtonSwitchViewPrivate::thumbEndPos(bool checked) const
+QPointF MButtonSwitchViewPrivate::thumbEndPos(bool checked) const
 {
     Q_Q(const MButtonSwitchView);
-    QSize thumb = thumbSize();
-    int h = (q->size().height() / 2) - (thumb.height() / 2);
+    QSizeF thumb = thumbSize();
+    qreal h = (q->size().height() / 2) - (thumb.height() / 2);
     if( checked )
-        return QPoint(q->size().width() - thumb.width() - q->style()->thumbMargin(), h);
+        return QPointF(q->size().width() - thumb.width() - q->style()->thumbMargin(), h);
     else
-        return QPoint(q->style()->thumbMargin(), h);
+        return QPointF(q->style()->thumbMargin(), h);
 }
 
 
@@ -183,7 +183,7 @@ void MButtonSwitchView::drawContents(QPainter *painter, const QStyleOptionGraphi
     Q_UNUSED(option);
     Q_D(const MButtonSwitchView);
 
-    painter->drawPixmap(QRect(QPoint(0, 0), size().toSize()), d->maskedSliderImage());
+    painter->drawPixmap(QRectF(QPointF(0, 0), size()), d->maskedSliderImage(), QRectF(QPointF(0,0), d->maskedSliderImage().size()));
     style()->thumbImage()->draw(d->thumbPos(), d->thumbSize(), painter);
 }
 

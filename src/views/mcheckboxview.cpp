@@ -53,7 +53,8 @@ void MCheckboxView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 
     if (style()->checkmarkImage() && model()->checked()) {
         QSizeF pos = (size() / 2) - (style()->checkmarkImage()->size() / 2);
-        painter->drawPixmap(pos.width(), pos.height(), *style()->checkmarkImage());
+        painter->drawPixmap(QRectF(QPointF(pos.width(), pos.height()), size()), *style()->checkmarkImage(),
+                            QRectF(QPointF(0,0), style()->checkmarkImage()->size()));
     }
 }
 

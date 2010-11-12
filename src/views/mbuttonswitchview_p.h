@@ -33,9 +33,9 @@ public:
     MButtonSwitchViewPrivate();
     ~MButtonSwitchViewPrivate();
 
-    QSize thumbSize() const;
-    QPoint thumbPos() const;
-    QPoint thumbEndPos(bool checked) const;
+    QSizeF thumbSize() const;
+    QPointF thumbPos() const;
+    QPointF thumbEndPos(bool checked) const;
 
     const QPixmap& maskedSliderImage() const;
     
@@ -46,7 +46,7 @@ public:
     bool m_thumbDown;
     bool m_thumbDragged;
     bool m_feedbackOnPlayed;
-    QPoint m_thumbPos;
+    QPointF m_thumbPos;
     bool m_thumbPosValid;
     
     //mutable so that image can be recreated in the drawContents() const 
