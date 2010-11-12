@@ -94,7 +94,7 @@ which is taken before any initial content can be shown.
 
 To minimize this time it is important:
 
-   \li Avoid any unnecessary linking of shared libraries to the application code
+   \li Avoid any unnecessary linking of shared libraries to the application code. It is also recommended to consider to use <a href="http://www.gentoo.org/proj/en/qa/asneeded.xml"> --as-needed </a> parameter for the linker, to avoid these kind of problems.
 
    \li If possible, load the plugin-libraries after the initial content of the GUI is shown.
 
