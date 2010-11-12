@@ -259,19 +259,18 @@ void Ut_MButtonGroup::exclusive()
     QVERIFY(m_subject->exclusive() == true);
 }
 
-void Ut_MButtonGroup::switchModes()
+void Ut_MButtonGroup::testMakePopulatedGroupExclusive()
 {
-    MButton b1;
-    MButton b2;
-    MButton b3;
-    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
-    b1.setCheckable(true);
-    b2.setCheckable(true);
-    b3.setCheckable(true);
-
     //Case: Add unchecked buttons to a group with non-exclusive
     //mode, and then change the mode to exclusive.
     //This should result in first button as checked.
+
+    MButton b1;
+    MButton b2;
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    b1.setCheckable(true);
+    b2.setCheckable(true);
+
     m_subject->setExclusive(false);
     b1.setChecked(false);
     b2.setChecked(false);
@@ -281,13 +280,23 @@ void Ut_MButtonGroup::switchModes()
 
     QVERIFY(b1.isChecked() == true);
     QVERIFY(b2.isChecked() == false);
+}
 
+void Ut_MButtonGroup::testMakePopulatedGroupWithTwoCkeckedButtonsExclusive()
+{
     //Case: make more than one button in non-exclusive
     //mode as checked, and then change the mode to exclusive
     //This should result in unchecking all the buttons
     //except the first checked button.
-    m_subject->removeButton(&b1);
-    m_subject->removeButton(&b2);
+
+    MButton b1;
+    MButton b2;
+    MButton b3;
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    b1.setCheckable(true);
+    b2.setCheckable(true);
+    b3.setCheckable(true);
+
     m_subject->setExclusive(false);
     m_subject->addButton(&b1, 1);
     m_subject->addButton(&b2, 2);
@@ -300,12 +309,20 @@ void Ut_MButtonGroup::switchModes()
     QVERIFY(b1.isChecked() == false);
     QVERIFY(b2.isChecked() == true);
     QVERIFY(b3.isChecked() == false);
+}
 
-    //Case: remove checked button in exclusive
-    //mode.This should result in first (checkable) button as checked.
-    m_subject->removeButton(&b1);
-    m_subject->removeButton(&b2);
-    m_subject->removeButton(&b3);
+void Ut_MButtonGroup::testRemoveCheckedButton()
+{
+    //Case: remove checked button in exclusive mode.
+    //This should result in first (checkable) button as checked.
+
+    MButton b1;
+    MButton b2;
+    MButton b3;
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    b1.setCheckable(true);
+    b2.setCheckable(true);
+    b3.setCheckable(true);
 
     m_subject->setExclusive(true);
     b1.setChecked(false);
@@ -319,15 +336,27 @@ void Ut_MButtonGroup::switchModes()
 
     QVERIFY(b1.isChecked() == true);
     QVERIFY(b3.isChecked() == false);
+}
 
+void Ut_MButtonGroup::testNonCheckableButtonMadeChecked()
+{
     //Case: non-checkable button made checked
-    m_subject->removeButton(&b1);
-    m_subject->removeButton(&b2);
-    m_subject->removeButton(&b3);
+
+    MButton b1;
+    MButton b2;
+    MButton b3;
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    b1.setCheckable(true);
+    b2.setCheckable(true);
+    b3.setCheckable(true);
+
+    m_subject->setExclusive(true);
 
     b1.setCheckable(false);
     m_subject->addButton(&b1, 1);
     b1.model()->setChecked(true);
+
+    // I guess we are only checking whether it's going to crash?
 }
 
 void Ut_MButtonGroup::id()

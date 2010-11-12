@@ -50,7 +50,10 @@ private slots:
 
     void exclusive();
 
-    void switchModes();
+    void testMakePopulatedGroupExclusive();
+    void testMakePopulatedGroupWithTwoCkeckedButtonsExclusive();
+    void testRemoveCheckedButton();
+    void testNonCheckableButtonMadeChecked();
 
     void id();
 
