@@ -130,7 +130,7 @@ public:
 #endif
 
     /*!
-      Returns the style name of the application page.
+      Returns the style name of the application window.
      */
     QString styleName() const;
 
