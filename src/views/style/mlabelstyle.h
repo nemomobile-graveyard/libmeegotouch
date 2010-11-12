@@ -72,6 +72,13 @@ class M_VIEWS_EXPORT MLabelStyle : public MWidgetStyle
         See QColor::setNamedColor for possbile values.
     */
     M_STYLE_ATTRIBUTE(QColor, activeHighlightColor, ActiveHighlightColor)
+
+    /*!
+        \property MLabelStyle::labelOpacity
+        \brief Opacity for the label
+    */
+
+    M_STYLE_ATTRIBUTE(qreal, textOpacity, textOpacity)
 };
 
 /*!

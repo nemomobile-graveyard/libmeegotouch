@@ -96,10 +96,17 @@ void MLabelView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem 
     Q_D(const MLabelView);
     Q_UNUSED(option);
 
+    //Opacity for the label
+    qreal oldOpacity = painter->opacity();
+    if (style()->textOpacity() >= 0.0)
+        painter->setOpacity(d->controller->effectiveOpacity() * style()->textOpacity());
+
     //give size adjusted with padding to the actual implementation class
     QSizeF padding(style()->paddingLeft() + style()->paddingRight(),
                    style()->paddingTop() + style()->paddingBottom());
     d->impl->drawContents(painter, size() - padding);
+
+    painter->setOpacity(oldOpacity);
 }
 
 void MLabelView::resizeEvent(QGraphicsSceneResizeEvent *event)
