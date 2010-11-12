@@ -504,7 +504,7 @@ void MWindowPrivate::_q_enablePaintUpdates()
     q->setUpdatesEnabled(true);
 }
 
-void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
+void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event)
 {
     Q_Q(MWindow);
 
@@ -541,7 +541,7 @@ void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
 #endif
 }
 
-void MWindowPrivate::closeEvent(QCloseEvent *event)
+void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
 {
     Q_Q(MWindow);
 
@@ -1115,9 +1115,9 @@ bool MWindow::event(QEvent *event)
     if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);
     } else if (event->type() == QEvent::WindowStateChange) {
-        d->windowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
+        d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
     } else if (event->type() == QEvent::Close) {
-        d->closeEvent(static_cast<QCloseEvent *>(event));
+        d->handleCloseEvent(static_cast<QCloseEvent *>(event));
         // closeEvent() already called.
         return true;
     } else if (QEvent::KeyPress == event->type()) {

@@ -47,10 +47,10 @@ public:
 
     void handleApplicationLayoutDirectionChangeEvent(QGraphicsItem *item);
     void handleLanguageChangeEvent(QGraphicsItem *item);
+    void handleWindowStateChangeEvent(QWindowStateChangeEvent *event);
+    void handleCloseEvent(QCloseEvent *event);
     M::Orientation orientation(M::OrientationAngle angle) const;
     bool debugShortcutModifiersPresent(Qt::KeyboardModifiers modifiers) const;
-    void windowStateChangeEvent(QWindowStateChangeEvent *event);
-    void closeEvent(QCloseEvent *event);
     void setVisible(bool visible);
     void _q_enablePaintUpdates();
 
