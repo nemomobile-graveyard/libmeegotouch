@@ -20,16 +20,21 @@
 #ifndef MLOGICALVALUES_P_H
 #define MLOGICALVALUES_P_H
 
-#include <QSettings>
+#include <QHash>
+
+class QFileInfo;
+class QByteArray;
+
+typedef QHash<QByteArray, QByteArray> Values;
+typedef QHash<QByteArray, Values> Groups;
 
 class MLogicalValuesPrivate
 {
 public:
-
-    typedef QHash<QByteArray, QByteArray> Values;
-    typedef QHash<QByteArray, Values> Groups;
-
-    bool parse(const QString &filename);
+    bool parse(const QString &filename, Groups &groups);
+    bool loadFromBinaryCache(const QString &filename, Groups &groups);
+    bool saveToBinaryCache(const QString &filename, const Groups &groups) const;
+    QString createBinaryFilename(const QFileInfo &fileInfo) const;
     Groups data;
 };
 

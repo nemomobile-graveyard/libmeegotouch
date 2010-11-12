@@ -26,6 +26,11 @@
 #include <QFile>
 #include <QStringList>
 #include <QTextCodec>
+#include <QDateTime>
+
+namespace {
+    const unsigned int CACHE_VERSION = 1;
+}
 
 MLogicalValues::MLogicalValues() :
     d_ptr(new MLogicalValuesPrivate)
@@ -37,14 +42,14 @@ MLogicalValues::~MLogicalValues()
     delete d_ptr;
 }
 
-bool MLogicalValuesPrivate::parse(const QString &filename)
+bool MLogicalValuesPrivate::parse(const QString &filename, Groups &groups)
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
     QByteArray group = "General";
-    data.insert("General", Values());
+    groups.insert("General", Values());
 
     while (!file.atEnd()) {
         QByteArray line = file.readLine().trimmed();
@@ -99,10 +104,7 @@ bool MLogicalValuesPrivate::parse(const QString &filename)
                     return false;
                 }
                 // store
-                if (!data.contains(group))
-                    data.insert(group, Values());
-
-                Values &values = data[group];
+                Values &values = groups[group];
 
                 if (!values.contains(key)) {
                     values.insert(key, value);
@@ -111,8 +113,78 @@ bool MLogicalValuesPrivate::parse(const QString &filename)
         }
     }
 
+    saveToBinaryCache(filename, groups);
     file.close();
     return true;
+}
+
+bool MLogicalValuesPrivate::loadFromBinaryCache(const QString &filename, Groups &groups) {
+    QFileInfo fileInfo(filename);
+    const QString cacheFileName = createBinaryFilename(fileInfo);
+
+    if (QFile::exists(cacheFileName)) {
+        QFile file(cacheFileName);
+        if (file.open(QFile::ReadOnly)) {
+            QDataStream stream(&file);
+            uint version;
+            stream >> version;
+            if (version != CACHE_VERSION) {
+                // will be replaced with up to date version
+                file.close();
+                return false;
+            }
+            uint timestamp;
+            stream >> timestamp;
+            if (timestamp != fileInfo.lastModified().toTime_t()) {
+                // will be replaced with up to date version
+                file.close();
+                return false;
+            }
+
+            stream >> groups;
+
+            file.close();
+            return true;
+        } else {
+            mDebug("MLogicalValuesPrivate") << "Failed to load values from cache" << cacheFileName;
+        }
+    }
+
+    return false;
+}
+
+bool MLogicalValuesPrivate::saveToBinaryCache(const QString &filename, const Groups &groups) const {
+    QFileInfo fileInfo(filename);
+    const QString cacheFileName = createBinaryFilename(fileInfo);
+
+    QFile file(cacheFileName);
+    if (!file.open(QFile::WriteOnly)) {
+        //Maybe it failed because the directory doesn't exist
+        QDir().mkpath(QFileInfo(cacheFileName).absolutePath());
+        if (!file.open(QFile::WriteOnly)) {
+            mDebug("MLogicalValuesPrivate") << "Failed to save cache file for" << filename << "to" << cacheFileName;
+            return false;
+        }
+    }
+
+    QDataStream stream(&file);
+    stream << CACHE_VERSION;
+    stream << fileInfo.lastModified().toTime_t();
+    stream << groups;
+
+    file.close();
+    return true;
+}
+
+QString MLogicalValuesPrivate::createBinaryFilename(const QFileInfo &fileInfo) const {
+    QString binaryDirectory = QString(CACHEDIR) + "logicalValues/";
+    QString binaryFilename(binaryDirectory);
+
+    QString absoluteFilePathEncoded(fileInfo.absoluteFilePath());
+    absoluteFilePathEncoded.replace('_', "__");
+    absoluteFilePathEncoded.replace('/', "_.");
+    binaryFilename += absoluteFilePathEncoded;
+    return binaryFilename;
 }
 
 bool MLogicalValues::append(const QString &filename)
@@ -123,9 +195,19 @@ bool MLogicalValues::append(const QString &filename)
     if (!QFile(filename).exists())
         return false;
 
-    // load it
-    if (!d->parse(filename))
-        return false;
+    Groups groups;
+    if (!d->loadFromBinaryCache(filename, groups)) {
+        if (!d->parse(filename, groups)) {
+            return false;
+        }
+    }
+
+    Groups::const_iterator i = groups.constBegin();
+    while (i != groups.constEnd()) {
+        Values &values = d->data[i.key()];
+        values.unite(i.value());
+        ++i;
+    }
 
     return true;
 }
@@ -134,22 +216,18 @@ void MLogicalValues::load(const QStringList &themeInheritanceChain, const QStrin
 {
     Q_D(MLogicalValues);
 
-    // clear existing config
     d->data.clear();
 
     // load locale-specific constant definitions
     if (!locale.isEmpty()) {
-
         // go through whole inheritance hierarchy
         foreach(QString path, themeInheritanceChain) {
-
             append(path + QString("meegotouch") + QDir::separator() + QString("locale") + QDir::separator() + locale + QDir::separator() + QString("constants.ini"));
         }
     }
 
     // go through whole inheritance hierarchy
     foreach(QString path, themeInheritanceChain) {
-
         append(path + QString("meegotouch") + QDir::separator() + QString("constants.ini"));
     }
 }
@@ -159,9 +237,9 @@ bool MLogicalValues::findKey(const QByteArray &key, QByteArray &group, QByteArra
     Q_D(const MLogicalValues);
 
     // search from every group
-    for (MLogicalValuesPrivate::Groups::const_iterator iterator = d->data.begin(); iterator != d->data.end(); iterator++) {
+    for (Groups::const_iterator iterator = d->data.begin(); iterator != d->data.end(); iterator++) {
         // get values from this group
-        const MLogicalValuesPrivate::Values &values = iterator.value();
+        const Values &values = iterator.value();
 
         // check if this group contains the key
         if (values.contains(key)) {
@@ -183,7 +261,7 @@ bool MLogicalValues::value(const QByteArray &group, const QByteArray &key, QByte
         return false;
     }
 
-    const MLogicalValuesPrivate::Values &values = d->data[group];
+    const Values &values = d->data[group];
 
     if (!values.contains(key)) {
         mWarning("MLogicalValues") << "No such key:" << group << '/' << key;
