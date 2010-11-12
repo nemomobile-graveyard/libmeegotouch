@@ -27,10 +27,16 @@
 
 #include "mscalableimage.h"
 
+#include <qdrawutil.h>
+#include <QVarLengthArray>
+#include <QPainter>
+
 class MScalableImagePrivate
 {
     Q_DECLARE_PUBLIC(MScalableImage)
 public:
+
+    typedef QVarLengthArray<QPainter::PixmapFragment, 16> QPixmapFragmentsArray;
 
     enum MScalableImageType {
         MScalable9,
@@ -48,6 +54,25 @@ public:
     void drawScalable1(int x, int y, int w, int h, QPainter *painter) const;
     void drawScalable3H(int x, int y, int w, int h, QPainter *painter) const;
     void drawScalable3V(int x, int y, int w, int h, QPainter *painter) const;
+
+    void drawBorderPixmap(QPainter *painter,
+                          const QRectF &targetRect,
+                          const QMargins &targetMargins,
+                          const QPixmap &pixmap,
+                          const QRect &sourceRect,
+                          const QMargins &sourceMargins,
+                          const QTileRules &rules = QTileRules(),
+                          QDrawBorderPixmap::DrawingHints hints = 0
+                          );
+
+    inline void drawBorderPixmap(QPainter *painter,
+                                 const QRectF &target,
+                                 const QMargins &margins,
+                                 const QPixmap &pixmap) const
+    {
+        const_cast<MScalableImagePrivate*>(this)->drawBorderPixmap(painter, target, margins, pixmap, pixmap.rect(), margins);
+    }
+
 
     MScalableImageType m_imageType;
 
