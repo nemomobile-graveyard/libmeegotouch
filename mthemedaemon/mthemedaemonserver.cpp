@@ -671,26 +671,30 @@ bool MThemeDaemonServer::createCacheDir(const QString& path)
 void MThemeDaemonServer::hupSignalHandler(int)
 {
     char a = 1;
-    ::write(sighupFd[0], &a, sizeof(a));
+    ssize_t writtenBytes = ::write(sighupFd[0], &a, sizeof(a));
+    Q_UNUSED(writtenBytes);
 }
 
 void MThemeDaemonServer::termSignalHandler(int)
 {
     char a = 1;
-    ::write(sigtermFd[0], &a, sizeof(a));
+    ssize_t writtenBytes = ::write(sigtermFd[0], &a, sizeof(a));
+    Q_UNUSED(writtenBytes);
 }
 
 void MThemeDaemonServer::intSignalHandler(int)
 {
     char a = 1;
-    ::write(sigintFd[0], &a, sizeof(a));
+    ssize_t writtenBytes = ::write(sigintFd[0], &a, sizeof(a));
+    Q_UNUSED(writtenBytes);
 }
 
 void MThemeDaemonServer::handleSigTerm()
 {
     snTerm->setEnabled(false);
     char tmp;
-    ::read(sigtermFd[1], &tmp, sizeof(tmp));
+    ssize_t readBytes = ::read(sigtermFd[1], &tmp, sizeof(tmp));
+    Q_UNUSED(readBytes);
 
     // kill the daemon so that it can save it's current state (caches, refcounts, etc)
     qApp->quit();
@@ -702,7 +706,8 @@ void MThemeDaemonServer::handleSigHup()
 {
     snHup->setEnabled(false);
     char tmp;
-    ::read(sighupFd[1], &tmp, sizeof(tmp));
+    ssize_t readBytes = ::read(sighupFd[1], &tmp, sizeof(tmp));
+    Q_UNUSED(readBytes);
 
     themeChanged(true);
 
@@ -713,7 +718,8 @@ void MThemeDaemonServer::handleSigInt()
 {
     snInt->setEnabled(false);
     char tmp;
-    ::read(sigintFd[1], &tmp, sizeof(tmp));
+    ssize_t readBytes = ::read(sigintFd[1], &tmp, sizeof(tmp));
+    Q_UNUSED(readBytes);
 
     // kill the daemon so that it can save it's current state (caches, refcounts, etc)
     qApp->quit();
