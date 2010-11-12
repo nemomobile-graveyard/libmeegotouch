@@ -227,6 +227,8 @@ void SingleSelectionDialogsPage::openSystemModalDialog()
     MLabel *textSystemModal= new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label"));
     textSystemModal->setStyleName("CommonBodyTextInverted");
     textSystemModal->setAlignment(Qt::AlignCenter);
+    textSystemModal->setWordWrap(true);
+    textSystemModal->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->addStretch();
