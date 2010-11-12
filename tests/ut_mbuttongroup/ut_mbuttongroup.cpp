@@ -343,12 +343,8 @@ void Ut_MButtonGroup::testNonCheckableButtonMadeChecked()
     //Case: non-checkable button made checked
 
     MButton b1;
-    MButton b2;
-    MButton b3;
     QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
     b1.setCheckable(true);
-    b2.setCheckable(true);
-    b3.setCheckable(true);
 
     m_subject->setExclusive(true);
 
