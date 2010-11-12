@@ -325,8 +325,8 @@ void MTextEditViewPrivate::setMouseTarget(const QPointF &point)
 {
     Q_Q(MTextEditView);
 
-    mouseTarget.setX(qBound<qreal>(0.0, q->geometry().width(), point.x()));
-    mouseTarget.setY(qBound<qreal>(0.0, q->geometry().height(), point.y()));
+    mouseTarget.setX(qBound<qreal>(0.0, point.x(), q->geometry().width()));
+    mouseTarget.setY(qBound<qreal>(0.0, point.y(), q->geometry().height()));
 }
 
 
