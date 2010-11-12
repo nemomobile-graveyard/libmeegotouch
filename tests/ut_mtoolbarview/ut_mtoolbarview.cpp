@@ -316,6 +316,8 @@ void Ut_MToolBarView::testTabActionExclusivity()
     QVERIFY(button2->isChecked());
 
     action2->setVisible(false);
+    // validation of checked button is deferred to a separate event
+    QCoreApplication::processEvents();
 
     QVERIFY(action0->isChecked() == true);
     QVERIFY(action1->isChecked() == false);

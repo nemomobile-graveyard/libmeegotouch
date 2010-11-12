@@ -333,6 +333,8 @@ void Ut_MButtonGroup::testRemoveCheckedButton()
     m_subject->addButton(&b3, 3);
 
     m_subject->removeButton(&b2);
+    // validation of checked button is deferred to a separate event
+    QCoreApplication::processEvents();
 
     QVERIFY(b1.isChecked() == true);
     QVERIFY(b3.isChecked() == false);

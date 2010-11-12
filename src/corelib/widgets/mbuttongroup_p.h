@@ -48,6 +48,7 @@ public slots:
     void buttonPress();
     void buttonRelease();
     void buttonToggle(bool);
+    void enforceExclusivity();
 };
 
 #endif

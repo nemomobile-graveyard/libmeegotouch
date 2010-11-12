@@ -19,6 +19,7 @@
 
 #include <MDebug>
 #include <QList>
+#include <QTimer>
 
 #include "mbutton.h"
 #include "mbuttongroup.h"
@@ -96,6 +97,44 @@ void MButtonGroupPrivate::buttonToggle(bool checked)
         /* If a button is unchecked and its same as checkedButton, then
            checkedButton should be reset as well */
         checkedButton = 0;
+    }
+}
+
+void MButtonGroupPrivate::enforceExclusivity()
+{
+    if (!exclusive)
+        return;
+
+    /* In case of exclusive mode:
+    case 1: If there is no button checked, find the first checkable
+    button check it.
+    case 2: If there is more than one button checked,
+    uncheck all buttons except the first checked one
+    */
+    MButton *checkableButton = 0;
+    MButton *newCheckedButton = 0;
+    QList<MButton *>::iterator i = buttonList.begin();
+    while (i != buttonList.end()) {
+        MButton *b = *i;
+        /* Get the first checkable button */
+        if (b->isCheckable() && checkableButton == 0) {
+            checkableButton = b;
+        }
+        /* Set the first checked button and uncheck the rest */
+        if (b->isChecked()) {
+            if (newCheckedButton == 0) {
+                newCheckedButton = b;
+                checkedButton = b;
+            } else {
+                b->setChecked(false);
+            }
+        }
+        ++i;
+    }
+    if (checkedButton == 0 && checkableButton != 0) {
+        /* Make sure that exactly one button is checked */
+        checkableButton->setChecked(true);
+        checkedButton = checkableButton;
     }
 }
 
@@ -186,7 +225,7 @@ void MButtonGroup::setExclusive(bool exclusive)
 {
     Q_D(MButtonGroup);
     d->exclusive = exclusive;
-    validateExclusivity();
+    d->enforceExclusivity();
 }
 
 int MButtonGroup::id(MButton *button) const
@@ -208,7 +247,13 @@ void MButtonGroup::removeButton(MButton *button)
 
         if (d->checkedButton == button) {
             d->checkedButton = 0;
-            validateExclusivity();
+            // Wait until we reach the event loop to do the validation
+            // as removeButton() could have been called because the parent
+            // widget controller is being destroyed and, therefore, it's
+            // taking all its children (our buttons) along with him.
+            // If we validate immediatelly it will trigger the styling system
+            // needlessly for every single button removal.
+            QTimer::singleShot(0, d, SLOT(enforceExclusivity()));
         }
     }
 }
@@ -223,44 +268,5 @@ void MButtonGroup::setId(MButton *button, int id)
             d->buttonIdMap[button] = id;
     } else {
         mWarning("MButtonGroup") << "setId(): button(" << (void *)button << ") is not in the group.";
-    }
-}
-
-void MButtonGroup::validateExclusivity()
-{
-    Q_D(MButtonGroup);
-
-    if (exclusive()) {
-        /* In case of exclusive mode:
-        case 1: If there is no button checked, find the first checkable
-        button to be checked and set it checked
-        case 2: If there are more than one buttons that are checked,
-        uncheck all the buttons except the first checked one
-        */
-        MButton *checkableButton = 0;
-        MButton *checkedButton = 0;
-        QList<MButton *>::iterator i = d->buttonList.begin();
-        while (i != d->buttonList.end()) {
-            MButton *b = *i;
-            /* Get the first checkable button */
-            if (b->isCheckable() && checkableButton == 0) {
-                checkableButton = b;
-            }
-            /* Set the first checked button and uncheck the rest */
-            if (b->isChecked()) {
-                if (checkedButton == 0) {
-                    checkedButton = b;
-                    d->checkedButton = b;
-                } else {
-                    b->setChecked(false);
-                }
-            }
-            ++i;
-        }
-        if (d->checkedButton == 0 && checkableButton != 0) {
-            /* Make sure that exactly one button is checked */
-            checkableButton->setChecked(true);
-            d->checkedButton = checkableButton;
-        }
     }
 }

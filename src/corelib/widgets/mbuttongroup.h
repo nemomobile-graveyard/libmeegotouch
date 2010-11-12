@@ -36,12 +36,12 @@ class MButton;
     \section MButtonGroupOverview Overview
 
         MButtonGroup does not provide a visual representation of this grouping,
-        instead it manages the states of each of the buttons in the group. If 
-        visual representation for the buttons in a group is needed, 
-        MLinearLayoutPolicy::setNotifyWidgetsOfLayoutPositionEnabled() method 
-        can be used to enable the layout to automatically set background graphics 
+        instead it manages the states of each of the buttons in the group. If
+        visual representation for the buttons in a group is needed,
+        MLinearLayoutPolicy::setNotifyWidgetsOfLayoutPositionEnabled() method
+        can be used to enable the layout to automatically set background graphics
         for the buttons depending on their position.
-        
+
         An exclusive button group switches off all checkable (toggle) buttons
         except the one that was clicked. By default, a button group is exclusive.
         The buttons in a button group are usually checkable buttons. Non-checkable
@@ -165,10 +165,10 @@ class MButton;
         MButtonGroup* buttonGroup = new MButtonGroup();
         MLayout* layout = new MLayout;
         MLinearLayoutPolicy* policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-        
+
         //make the policy to set the backgrounds of the buttons
         policy->setNotifyWidgetsOfLayoutPositionEnabled(true);
-        
+
         //add buttons to group and layout
         MButton* buttons[5];
         for( int i=0; i < 5; ++i) {
@@ -341,12 +341,6 @@ private:
 
     Q_DISABLE_COPY(MButtonGroup)
     Q_DECLARE_PRIVATE(MButtonGroup)
-
-private:
-    //! \internal
-    void validateExclusivity();
-    //! \internal_end
-
 };
 
 #endif
