@@ -1,3 +1,10 @@
+libmeegotouch (0.20.52-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#202799 - Application registration is broken
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 12 Nov 2010 14:03:46 +0200
+
 libmeegotouch (0.20.52-1) unstable; urgency=low
 
   * New version
