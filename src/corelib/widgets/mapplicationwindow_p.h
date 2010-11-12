@@ -159,7 +159,7 @@ public:
     void setToolBarViewType(const MTheme::ViewType& viewType);
 
 private:
-    MApplicationWindowStyleContainer style;
+    const MApplicationWindowStyle *style;
 
     void init();
     void initAutoHideComponentsTimer();
