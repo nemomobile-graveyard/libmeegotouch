@@ -60,9 +60,8 @@ public:
     QPair<QByteArray, MStyleSheetAttribute *> parseAttribute(QFile &stream, QChar &endCharacter, bool validateOnly);
     bool parseAtToken(QFile &stream, bool validateOnly = false);
     bool importFile(const QByteArray &importedFileName, bool validateOnly = false);
-    bool hasConsts(const QByteArray &value) const;
     int getMatchIndex(const QByteArray &str, const QByteArray &charList, int from = 0) const;
-    void setupConsts(QByteArray &value) const;
+    bool replaceConsts(QByteArray &value) const;
 
     /**
      \brief Get the \a file name for a binary stylesheet cache file corresponding to the
@@ -623,11 +622,6 @@ bool MStyleSheetParserPrivate::importFile(const QByteArray &filename, bool valid
     }
 }
 
-bool MStyleSheetParserPrivate::hasConsts(const QByteArray &value) const
-{
-    return value.contains('$');
-}
-
 int MStyleSheetParserPrivate::getMatchIndex(const QByteArray &str,
                                             const QByteArray &charList,
                                             int from) const
@@ -641,15 +635,15 @@ int MStyleSheetParserPrivate::getMatchIndex(const QByteArray &str,
     return minIndex;
 }
 
-void MStyleSheetParserPrivate::setupConsts(QByteArray &value) const
+bool MStyleSheetParserPrivate::replaceConsts(QByteArray &value) const
 {
     if (value.isEmpty())
-        return;
+        return false;
 
     const QByteArray charsToMatch = " ,()\"";
-    bool result = false;
     int idx1 = 0;
-    while ((idx1 = value.indexOf('$')) != -1) {
+    bool replacementHappened = false;
+    while ((idx1 = value.indexOf('$'), idx1) != -1) {
         int idx2 = getMatchIndex(value, charsToMatch, idx1);
         if (idx2 == -1)
             idx2 = value.count();
@@ -672,15 +666,11 @@ void MStyleSheetParserPrivate::setupConsts(QByteArray &value) const
                 outputParseWarning(parsedFileName, "Unknown constant variable: " + constName, 0);
             }
         }
-
+        replacementHappened = true;
         value.replace(idx1, num + 1, constValue);
-        result = true;
     }
 
-    // we replaced something, it may be another const string, so we need to process it again
-    if (result == true) {
-        setupConsts(value);
-    }
+    return replacementHappened;
 }
 
 MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool *error, bool validateOnly)
@@ -910,11 +900,11 @@ QPair<QByteArray, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribu
             result->constValue = cachedString("");
             result->position = startReadPos;
 
-            if (!validateOnly && hasConsts(result->value)) {
-                //if value contains const references save the original value
-                //string before replacing const references with real values
-                result->constValue = result->value;
-                setupConsts(result->value);
+            //if value contains const references save the original value
+            //string before replacing const references with real values
+            QByteArray tmpConst = result->value;
+            if (!validateOnly && replaceConsts(result->value)) {
+                result->constValue = tmpConst;
                 result->value = cachedString(result->value);
                 if (!validValue(result->value)) {
                     outputParseError(parsedFileName, "Invalid constant reference in value: " + value, getLineNum(stream, startReadPos));
@@ -1214,7 +1204,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QByteArray &fi
         //we need to recreate them
         if (!attribute->constValue.isEmpty()) {
             attribute->value = attribute->constValue;
-            setupConsts(attribute->value);
+            replaceConsts(attribute->value);
             attribute->value = cachedString(attribute->value);
             //if( !validValue(attribute->value) )
             //    outputParseError(fileinfo->filename, "Invalid constant reference in value: " + attribute->value, 0);
