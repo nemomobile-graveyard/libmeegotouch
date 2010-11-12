@@ -43,7 +43,8 @@ private slots:
     void linearLayoutPerformance_data();
     void gridLayoutPerformance();
     void gridLayoutPerformance_data();
-
+    void heightForWidthPerformance_data();
+    void heightForWidthPerformance();
 private:
     QGraphicsWidget *m_form;
     QGraphicsScene *m_scene;
