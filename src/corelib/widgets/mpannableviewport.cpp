@@ -219,17 +219,6 @@ void MPannableViewportPrivate::_q_positionIndicatorEnabledChanged()
     }
 }
 
-void MPannableViewportPrivate::_q_pannedWidgetGeometryChanged()
-{
-    Q_Q(MPannableViewport);
-
-    QPointF physicsPosition = q->position();
-    QPointF roundedP = QPointF(floor(physicsPosition.x()), floor(physicsPosition.y()));
-
-    if (roundedP != -pannedWidget->pos())
-        q->updatePosition(physicsPosition);
-}
-
 void MPannableViewportPrivate::_q_pannedWidgetHeightOutOfViewport()
 {
     Q_Q(MPannableViewport);;
@@ -386,7 +375,6 @@ void MPannableViewport::setWidget(QGraphicsWidget *widget)
     Q_D(MPannableViewport);
 
     if (d->pannedWidget) {
-        disconnect(d->pannedWidget, SIGNAL(geometryChanged()), this, SLOT(_q_pannedWidgetGeometryChanged()));
         disconnect(d->pannedWidget, SIGNAL(heightChanged()), this, SLOT(_q_pannedWidgetHeightOutOfViewport()));
         disconnect(d->pannedWidget, SIGNAL(widthChanged()), this, SLOT(_q_pannedWidgetWidthOutOfViewport()));
     }
@@ -395,11 +383,10 @@ void MPannableViewport::setWidget(QGraphicsWidget *widget)
     d->viewportLayout->setWidget(widget);
 
     if (widget) {
-        connect(widget, SIGNAL(geometryChanged()), this, SLOT(_q_pannedWidgetGeometryChanged()));
         connect(widget, SIGNAL(heightChanged()), this, SLOT(_q_pannedWidgetHeightOutOfViewport()));
         connect(widget, SIGNAL(widthChanged()), this, SLOT(_q_pannedWidgetWidthOutOfViewport()));
 
-        widget->setPos(-position());
+        d->viewportLayout->invalidate();
         widget->setZValue(ZValuePannedWidget);
     }
 
@@ -451,7 +438,7 @@ void MPannableViewport::updatePosition(const QPointF &p)
     // panning.
 
     if (d->pannedWidget && d->pannedWidget->pos() != -roundedP) {
-        d->pannedWidget->setPos(-roundedP);
+        d->viewportLayout->setPanningPosition(-roundedP);
         emit positionChanged(roundedP);
     }
 }

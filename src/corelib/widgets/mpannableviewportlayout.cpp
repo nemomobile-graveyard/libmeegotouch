@@ -24,7 +24,8 @@
 MPannableViewportLayout::MPannableViewportLayout(QGraphicsLayoutItem *parent)
     : QGraphicsLinearLayout(parent),
       pannedWidget(0),
-      directions(0)
+      directions(0),
+      panningPos(QPointF())
 {
 }
 
@@ -51,9 +52,18 @@ void MPannableViewportLayout::setWidget(QGraphicsWidget *widget)
     }
 }
 
+void MPannableViewportLayout::setPanningPosition(const QPointF &newPos)
+{
+    if (newPos != panningPos) {
+        panningPos = newPos;
+        invalidate();
+    }
+}
+
 void MPannableViewportLayout::setGeometry(const QRectF &rect)
 {
     QRectF unboundedRect = rect;
+    unboundedRect.moveTo(panningPos);
 
     if (pannedWidget) {
         switch (directions) {

@@ -32,6 +32,7 @@ public:
     Qt::Orientations panningDirections() const;
 
     void setWidget(QGraphicsWidget *widget);
+    void setPanningPosition(const QPointF& newPos);
 
     //! \reimp
     void setGeometry(const QRectF &rect);
@@ -40,6 +41,7 @@ public:
 private:
     QGraphicsWidget *pannedWidget;
     Qt::Orientations directions;
+    QPointF panningPos;
 };
 //! \internal_end
 

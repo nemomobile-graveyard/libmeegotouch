@@ -178,7 +178,6 @@ private:
     Q_DECLARE_PRIVATE(MPannableViewport)
     Q_PRIVATE_SLOT(d_func(), void _q_resolvePannedWidgetIsOnDisplay())
     Q_PRIVATE_SLOT(d_func(), void _q_positionIndicatorEnabledChanged())
-    Q_PRIVATE_SLOT(d_func(), void _q_pannedWidgetGeometryChanged())
     Q_PRIVATE_SLOT(d_func(), void _q_pannedWidgetWidthOutOfViewport())
     Q_PRIVATE_SLOT(d_func(), void _q_pannedWidgetHeightOutOfViewport())
     Q_PRIVATE_SLOT(d_func(), void _q_ensureFocusedPannedWidgetIsVisible())

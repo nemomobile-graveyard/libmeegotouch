@@ -156,6 +156,7 @@ void Ut_MPannableViewport::updatePosition()
     QSignalSpy spy(subject, SIGNAL(positionChanged(QPointF)));
 
     subject->physics()->setPosition(QPointF(0,75));
+    subject->layout()->activate();
 
     QCOMPARE(static_cast<MPannableViewportPrivate *>(subject->d_ptr)->pannedWidget->pos(), -QPointF(0, 75));
 
