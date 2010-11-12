@@ -26,37 +26,27 @@
 class MComponentCache;
 class MApplication;
 class MApplicationWindow;
-class QGLWidget;
 
 class MComponentCachePrivate
 {
 public:
     MComponentCachePrivate();
     virtual ~MComponentCachePrivate();
-    void populateForMApplication(bool populateGLWidget = true);
+    void populateForMApplication();
     void populateForWRTApplication();
     bool populating();
     MApplication* mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service);
     MApplicationWindow* mApplicationWindow();
-    QGLWidget* glWidget(const QGLFormat* format = NULL);
 
     bool canUseCachedApp(int &argc, char **argv, const QString &appIdentifier);
     bool hasExtraParams(int &argc, char **argv, const QString &appIdentifier);
 
-    QGLWidget* createNewGlWidget(const QGLFormat* format = NULL);
-
     static const int ARGV_LIMIT;
     MApplication *mApplicationInstance;
     MApplicationWindow *mApplicationWindowInstance;
-    QGLWidget *glWidgetOfmApplicationWindowInstance;
     bool cacheBeingPopulated;
     int initialArgc;
     char **initialArgv;
-
-#ifdef QT_OPENGL_LIB
-    typedef QPair<QGLFormat,QGLWidget*> FormatWidgetPair;
-    QList<FormatWidgetPair> shareWidgetsCache;
-#endif
 
 #ifdef UNIT_TEST
     friend class Ut_MComponentCache;

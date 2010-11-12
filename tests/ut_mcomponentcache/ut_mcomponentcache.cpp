@@ -24,7 +24,6 @@
 #include <MApplication>
 #include <MApplicationService>
 #include <MApplicationService>
-#include <QGLWidget>
 
 class MThemeDaemon
 {
@@ -111,8 +110,6 @@ void  Ut_MComponentCache::cleanupCache()
     delete (MComponentCache::d_ptr->mApplicationInstance);
     MComponentCache::d_ptr->mApplicationInstance = 0;
     MComponentCache::d_ptr->mApplicationWindowInstance = 0;
-    /* MComponentCache::d_ptr->glWidgetInstance = 0; */
-
 }
 
 QTEST_APPLESS_MAIN(Ut_MComponentCache);

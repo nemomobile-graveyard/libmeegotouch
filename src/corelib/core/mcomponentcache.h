@@ -27,8 +27,6 @@
 class MApplication;
 class MApplicationWindow;
 class MApplicationService;
-class QGLWidget;
-class QGLFormat;
 class MComponentCachePrivate;
 
 /*!
@@ -86,8 +84,6 @@ public:
     //! Returns true if cache is currently being populated, otherwise false.
     static bool populating();
 
-    static void cleanupCache();
-
 protected:
 
     static MComponentCachePrivate* const d_ptr;
@@ -98,9 +94,6 @@ private:
 
     MComponentCache();
 
-    /* QGLWidget object returned by glWidget is owned by the caller */
-    static QGLWidget* glWidget();
-    static QGLWidget* glWidget(const QGLFormat& format);
     friend class MApplicationWindow;
     friend class MGraphicsSystemHelper;
 

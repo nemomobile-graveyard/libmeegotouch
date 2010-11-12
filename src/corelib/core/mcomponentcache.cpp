@@ -17,10 +17,6 @@
  **
  ****************************************************************************/
 
-#ifdef QT_OPENGL_LIB
-#include "mgles2renderer.h"
-#endif
-
 #include "mcomponentcache.h"
 #include "mcomponentcache_p.h"
 #include "mapplication.h"
@@ -30,11 +26,6 @@
 #include "mgraphicssystemhelper.h"
 
 #include "mthemedaemon.h"
-
-#ifdef QT_OPENGL_LIB
-#include <QGLFormat>
-#include <QGLWidget>
-#endif
 
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
@@ -46,7 +37,6 @@ const int MComponentCachePrivate::ARGV_LIMIT = 32;
 MComponentCachePrivate::MComponentCachePrivate() :
     mApplicationInstance(0),
     mApplicationWindowInstance(0),
-    glWidgetOfmApplicationWindowInstance(0),
     cacheBeingPopulated(false),
     initialArgc(ARGV_LIMIT),
     initialArgv(new char* [initialArgc])
@@ -55,13 +45,8 @@ MComponentCachePrivate::MComponentCachePrivate() :
 
 MComponentCachePrivate::~MComponentCachePrivate()
 {
-#ifdef QT_OPENGL_LIB
-    delete glWidgetOfmApplicationWindowInstance;
-#endif
     delete mApplicationWindowInstance;
     delete[] initialArgv;
-
-    MComponentCache::cleanupCache();
 }
 
 bool MComponentCachePrivate::populating()
@@ -69,7 +54,7 @@ bool MComponentCachePrivate::populating()
     return cacheBeingPopulated;
 }
 
-void MComponentCachePrivate::populateForMApplication(bool populateGLWidget)
+void MComponentCachePrivate::populateForMApplication()
 {
     static const char *const appName = "componentcache_pre_initialized_mapplication";
     static const char *const emptyString = "";
@@ -90,10 +75,6 @@ void MComponentCachePrivate::populateForMApplication(bool populateGLWidget)
         qFatal("MComponentCache::populateForMApplication() - Cache is already populated.");
     }
 
-    if (MGraphicsSystemHelper::isRunningNativeGraphicssystem() && populateGLWidget) {
-        glWidgetOfmApplicationWindowInstance = createNewGlWidget();
-    }
-
     mApplicationWindowInstance = new MApplicationWindow();
 
     cacheBeingPopulated = false;
@@ -102,42 +83,9 @@ void MComponentCachePrivate::populateForMApplication(bool populateGLWidget)
 void MComponentCachePrivate::populateForWRTApplication()
 {
     MApplication::setGraphicsSystem("raster");
-    populateForMApplication(false);
+    populateForMApplication();
 }
 
-QGLWidget* MComponentCachePrivate::createNewGlWidget(const QGLFormat* format)
-{
-#ifdef QT_OPENGL_LIB
-    QGLFormat fmt;
-
-    if (!format) {
-        // disable multisampling, is enabled by default in Qt
-        fmt.setSampleBuffers(false);
-        fmt.setSamples(0);
-    }
-    else {
-        fmt = *format;
-    }
-
-    QGLWidget* shareWidget = NULL;
-    foreach(FormatWidgetPair pair, shareWidgetsCache) {
-        if (pair.first == fmt)  {
-            shareWidget = pair.second;
-            break;
-        }
-    }
-
-    if (!shareWidget) {
-       shareWidget = new QGLWidget(fmt);
-       shareWidgetsCache.append(qMakePair(fmt, shareWidget));
-    }
-
-    return new QGLWidget(fmt, NULL, shareWidget);
-#else
-    Q_UNUSED(format);
-    return 0;
-#endif
-}
 
 MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
 {
@@ -268,25 +216,6 @@ MApplicationWindow* MComponentCachePrivate::mApplicationWindow()
     return returnValue;
 }
 
-QGLWidget* MComponentCachePrivate::glWidget(const QGLFormat* format)
-{
-#ifdef QT_OPENGL_LIB
-    QGLWidget *returnValue;
-    if (glWidgetOfmApplicationWindowInstance != 0
-        && (!format || glWidgetOfmApplicationWindowInstance->format() == *format))
-    {
-        returnValue = glWidgetOfmApplicationWindowInstance;
-        glWidgetOfmApplicationWindowInstance = 0;
-    } else {
-        returnValue = createNewGlWidget(format);
-    }
-    return returnValue;
-#else
-    Q_UNUSED(format);
-    return 0;
-#endif
-}
-
 MComponentCache::MComponentCache()
 {
 }
@@ -306,16 +235,6 @@ bool MComponentCache::populating()
     return d_ptr->populating();
 }
 
-void MComponentCache::cleanupCache()
-{
-#ifdef QT_OPENGL_LIB
-    while (!d_ptr->shareWidgetsCache.isEmpty()) {
-        MComponentCachePrivate::FormatWidgetPair pair = d_ptr->shareWidgetsCache.takeFirst();
-        delete pair.second;
-    }
-#endif
-}
-
 MApplication* MComponentCache::mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
 {    
     return d_ptr->mApplication(argc, argv, appIdentifier, service);
@@ -326,12 +245,3 @@ MApplicationWindow* MComponentCache::mApplicationWindow()
     return d_ptr->mApplicationWindow();
 }
 
-QGLWidget* MComponentCache::glWidget()
-{
-    return d_ptr->glWidget();
-}
-
-QGLWidget* MComponentCache::glWidget(const QGLFormat& format)
-{
-    return d_ptr->glWidget(&format);
-}

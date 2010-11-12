@@ -156,9 +156,9 @@ void MGraphicsSystemHelper::switchToHardwareRendering(MWindow *window, QGLContex
             fmt.setSamples(0);
             fmt.setAlpha(true); // Workaround for NB#153625
 
-            glWidget = MComponentCache::glWidget(fmt);
+            glWidget = new QGLWidget(fmt);
         } else {
-            glWidget = MComponentCache::glWidget();
+            glWidget = new QGLWidget();
         }
 
         window->setViewport(glWidget);
