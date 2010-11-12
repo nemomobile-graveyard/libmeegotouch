@@ -42,9 +42,9 @@ MLogicalValues::~MLogicalValues()
     delete d_ptr;
 }
 
-bool MLogicalValuesPrivate::parse(const QString &filename, Groups &groups)
+bool MLogicalValuesPrivate::parse(const QFileInfo &fileInfo, Groups &groups)
 {
-    QFile file(filename);
+    QFile file(fileInfo.filePath());
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
@@ -113,13 +113,12 @@ bool MLogicalValuesPrivate::parse(const QString &filename, Groups &groups)
         }
     }
 
-    saveToBinaryCache(filename, groups);
+    saveToBinaryCache(fileInfo, groups);
     file.close();
     return true;
 }
 
-bool MLogicalValuesPrivate::loadFromBinaryCache(const QString &filename, Groups &groups) {
-    QFileInfo fileInfo(filename);
+bool MLogicalValuesPrivate::loadFromBinaryCache(const QFileInfo &fileInfo, Groups &groups) {
     const QString cacheFileName = createBinaryFilename(fileInfo);
 
     if (QFile::exists(cacheFileName)) {
@@ -153,8 +152,7 @@ bool MLogicalValuesPrivate::loadFromBinaryCache(const QString &filename, Groups 
     return false;
 }
 
-bool MLogicalValuesPrivate::saveToBinaryCache(const QString &filename, const Groups &groups) const {
-    QFileInfo fileInfo(filename);
+bool MLogicalValuesPrivate::saveToBinaryCache(const QFileInfo &fileInfo, const Groups &groups) const {
     const QString cacheFileName = createBinaryFilename(fileInfo);
 
     QFile file(cacheFileName);
@@ -162,7 +160,7 @@ bool MLogicalValuesPrivate::saveToBinaryCache(const QString &filename, const Gro
         //Maybe it failed because the directory doesn't exist
         QDir().mkpath(QFileInfo(cacheFileName).absolutePath());
         if (!file.open(QFile::WriteOnly)) {
-            mDebug("MLogicalValuesPrivate") << "Failed to save cache file for" << filename << "to" << cacheFileName;
+            mDebug("MLogicalValuesPrivate") << "Failed to save cache file for" << fileInfo.fileName() << "to" << cacheFileName;
             return false;
         }
     }
@@ -187,20 +185,23 @@ QString MLogicalValuesPrivate::createBinaryFilename(const QFileInfo &fileInfo) c
     return binaryFilename;
 }
 
-bool MLogicalValues::append(const QString &filename)
+bool MLogicalValues::append(const QString &fileName)
 {
     Q_D(MLogicalValues);
 
     // make sure that the file exists
-    if (!QFile(filename).exists())
+    if (!QFile(fileName).exists())
         return false;
 
     Groups groups;
-    if (!d->loadFromBinaryCache(filename, groups)) {
-        if (!d->parse(filename, groups)) {
+    QFileInfo fileInfo(fileName);
+    if (!d->loadFromBinaryCache(fileInfo, groups)) {
+        if (!d->parse(fileInfo, groups)) {
             return false;
         }
     }
+
+    d->timestamps << fileInfo.lastModified().toTime_t();
 
     Groups::const_iterator i = groups.constBegin();
     while (i != groups.constEnd()) {
@@ -217,6 +218,7 @@ void MLogicalValues::load(const QStringList &themeInheritanceChain, const QStrin
     Q_D(MLogicalValues);
 
     d->data.clear();
+    d->timestamps.clear();
 
     // load locale-specific constant definitions
     if (!locale.isEmpty()) {
@@ -302,3 +304,10 @@ QFont MLogicalValues::font(const QByteArray &group, const QByteArray &key) const
     }
     return font;
 }
+
+QList<uint> MLogicalValues::timestamps() const
+{
+    Q_D(const MLogicalValues);
+    return d->timestamps;
+}
+

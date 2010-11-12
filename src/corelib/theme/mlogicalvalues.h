@@ -33,12 +33,13 @@ public:
     ~MLogicalValues();
 
     void load(const QStringList &themeInheritanceChain, const QString &locale = QString());
-    bool append(const QString &filename);
+    bool append(const QString &fileName);
 
     bool findKey(const QByteArray &key, QByteArray &group, QByteArray &value) const;
     bool value(const QByteArray &group, const QByteArray &key, QByteArray &value) const;
     QColor color(const QByteArray &group, const QByteArray &key) const;
     QFont font(const QByteArray &group, const QByteArray &key) const;
+    QList<uint> timestamps() const;
 
 protected:
     MLogicalValuesPrivate *const d_ptr;

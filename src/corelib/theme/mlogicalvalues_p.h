@@ -21,6 +21,7 @@
 #define MLOGICALVALUES_P_H
 
 #include <QHash>
+#include <QList>
 
 class QFileInfo;
 class QByteArray;
@@ -31,11 +32,12 @@ typedef QHash<QByteArray, Values> Groups;
 class MLogicalValuesPrivate
 {
 public:
-    bool parse(const QString &filename, Groups &groups);
-    bool loadFromBinaryCache(const QString &filename, Groups &groups);
-    bool saveToBinaryCache(const QString &filename, const Groups &groups) const;
+    bool parse(const QFileInfo &fileInfo, Groups &groups);
+    bool loadFromBinaryCache(const QFileInfo &fileInfo, Groups &groups);
+    bool saveToBinaryCache(const QFileInfo &fileInfo, const Groups &groups) const;
     QString createBinaryFilename(const QFileInfo &fileInfo) const;
     Groups data;
+    QList<uint> timestamps;
 };
 
 #endif
