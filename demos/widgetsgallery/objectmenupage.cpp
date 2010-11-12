@@ -84,6 +84,12 @@ void ObjectMenuPage::createContent()
         // set content uri to dummy contact.
         item->setProperty("contentURI", QString("a.contact"));
 
+        item->setProperty("objectMenuTitle", QString(names[i]));
+        if( i == 0 )
+            item->setProperty("objectMenuIconId", QString(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]));
+        else if( i == 1 )
+            item->setProperty("objectMenuIconId", QString("icon-m-messaging-smiley-sarcastic"));
+
         if (imageContacts.size() > 0) {
             item->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]));
         }
@@ -120,6 +126,8 @@ void ObjectMenuPage::createContent()
 
         // set content uri to dummy album
         image->setProperty("contentURI", QString("a.album"));
+
+        image->setProperty("objectMenuTitle", QString("Album%1").arg(i));
 
         if (imageContacts.size() > 0) {
             image->setImage(QImage(contactsDir + QDir::separator() + imageContacts[(i+5) % imageContacts.size()]));

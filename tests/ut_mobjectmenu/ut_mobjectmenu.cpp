@@ -145,6 +145,30 @@ void Ut_MObjectMenu::testCursorPosition()
     delete widget;
 }
 
+void Ut_MObjectMenu::testTitle()
+{
+    MWidget *widget = new MWidget();
+    MObjectMenu *menu = new MObjectMenu(widget);
+
+    QCOMPARE(menu->title(), QString(""));
+    
+    menu->setTitle("title");
+    QCOMPARE(menu->title(), QString("title"));
+    
+    widget->setProperty("objectMenuTitle", QString("property title"));
+    QCOMPARE(menu->title(), QString("title"));
+    
+    delete menu;
+
+    menu = new MObjectMenu(widget);
+    QCOMPARE(menu->title(), QString("property title"));
+
+    menu->setTitle("");
+    QCOMPARE(menu->title(), QString(""));
+
+    delete menu;
+    delete widget;
+}
 
 
 QTEST_APPLESS_MAIN(Ut_MObjectMenu)

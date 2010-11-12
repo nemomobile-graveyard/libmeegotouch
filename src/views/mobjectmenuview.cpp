@@ -21,6 +21,8 @@
 
 #include "mobjectmenuview_p.h"
 #include "mbutton.h"
+#include "mimagewidget.h"
+#include "mlabel.h"
 #include "mviewcreator.h"
 #include "mobjectmenu.h"
 
@@ -42,11 +44,62 @@ MObjectMenuViewPrivate::~MObjectMenuViewPrivate()
 {
 }
 
+
 void MObjectMenuViewPrivate::init()
 {
     layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setSpacing(0);
     controller->setLayout(layout);
+
+    //create title bar
+    QGraphicsLinearLayout* titleLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    titleLayout->setSpacing(0);
+    titleArea = new MObjectMenuTitleArea(controller);
+    titleArea->setStyleName("ObjectMenuTitleArea");
+    titleArea->setLayout(titleLayout);
+    
+    //create and add spinner
+    titleIcon = new MImageWidget(titleArea);
+    titleLayout->addItem(titleIcon);
+    
+    //create and add title label
+    titleLabel = new MLabel("", titleArea);
+    titleLabel->setTextElide(true);
+    titleLayout->addItem(titleLabel);
+}
+
+void MObjectMenuViewPrivate::updateIcon()
+{
+    Q_Q(MObjectMenuView);
+
+    //setup the icon, first try to load it from filesystem, 
+    //if it fails load it from theme, if iconId is "" hide 
+    //the image widget
+    if( !q->model()->iconId().isEmpty() ) {
+        QPixmap pm(q->model()->iconId());
+        if( !pm.isNull() )
+            titleIcon->setPixmap(pm);
+        else
+            titleIcon->setImage(q->model()->iconId());
+        titleIcon->show();
+    } else {
+        titleIcon->setImage(q->model()->iconId());
+        titleIcon->hide();
+    }
+}
+
+void MObjectMenuViewPrivate::updateTitleAreaVisibility()
+{
+    Q_Q(MObjectMenuView);
+    
+    //hide whole title area if title == "" and icon is not visible            
+    if( q->model()->title().isEmpty() && q->model()->iconId().isEmpty() ) {
+        layout->removeItem(titleArea);
+        titleArea->hide();            
+    } else if( layout->itemAt(0) != titleArea ) {
+        layout->insertItem(0, titleArea);
+        titleArea->show();
+    }
 }
 
 
@@ -107,13 +160,14 @@ void MObjectMenuView::actionAdded(MAction *action)
 
         button->setEnabled(action->isEnabled());
         d->layout->addItem(button);
-        if(d->layout->count() == 1) {
+        int buttonCount = d->layout->itemAt(0) == d->titleArea ? d->layout->count()-1 : d->layout->count();
+        if(buttonCount == 1) {
             // make the only button to use "single button" background
             button->setLayoutPosition(M::DefaultPosition);
-        } else {
-            MButton* prev = (MButton*)d->layout->itemAt(d->layout->count() -2);
+        } else if( buttonCount > 1 ) {
+            MButton* prev = (MButton*)d->layout->itemAt(d->layout->count() - 2);
             // we have more than one in layout
-            if(d->layout->count() == 2) {
+            if(buttonCount == 2) {
                 prev->setLayoutPosition(M::VerticalTopPosition);
             } else {
                 prev->setLayoutPosition(M::VerticalCenterPosition);
@@ -192,6 +246,12 @@ void MObjectMenuView::updateData(const QList<const char *> &modifications)
                 actionAdded(action);
             }
 #endif
+        } else if (member == MObjectMenuModel::Title ) {
+            d->titleLabel->setText(model()->title());
+            d->updateTitleAreaVisibility();
+        } else if (member == MObjectMenuModel::IconId ) {
+            d->updateIcon();            
+            d->updateTitleAreaVisibility();
         }
     }
 }
@@ -242,6 +302,10 @@ void MObjectMenuView::setupModel()
         actionAdded(action);
     }
 #endif
+
+    d->titleLabel->setText(model()->title());
+    d->updateIcon();
+    d->updateTitleAreaVisibility();
 }
 
 void MObjectMenuView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -276,3 +340,4 @@ void MObjectMenuViewPrivate::contentActionTriggered()
 
 M_REGISTER_VIEW_NEW(MObjectMenuView, MObjectMenu)
 #include "moc_mobjectmenuview.cpp"
+

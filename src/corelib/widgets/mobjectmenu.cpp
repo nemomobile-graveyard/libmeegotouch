@@ -46,9 +46,17 @@ MObjectMenu::MObjectMenu(MWidget *target)
 
     model()->setActions(list);
 
-    QVariant contentURI = target->property("contentURI");
-    if(contentURI.isValid())
-        model()->setContentURI(contentURI.toString());
+    QVariant v = target->property("contentURI");
+    if(v.isValid())
+        model()->setContentURI(v.toString());
+
+    v = target->property("objectMenuTitle");
+    if(v.isValid())
+        model()->setTitle(v.toString());
+
+    v = target->property("objectMenuIconId");
+    if(v.isValid())
+        model()->setIconId(v.toString());
 
     // install event filter to the target widget, so we get notified
     // when actions are added,removed or changed.
@@ -110,3 +118,24 @@ void MObjectMenu::setCursorPosition(const QPointF &pos)
 {
     model()->setCursorPosition(pos);
 }
+
+QString MObjectMenu::title() const
+{
+    return model()->title();
+}
+
+void MObjectMenu::setTitle(const QString& title)
+{
+    model()->setTitle(title);
+}
+
+QString MObjectMenu::iconId() const
+{
+    return model()->iconId();
+}
+
+void MObjectMenu::setIconId(const QString& iconId)
+{
+    model()->setIconId(iconId);
+}
+

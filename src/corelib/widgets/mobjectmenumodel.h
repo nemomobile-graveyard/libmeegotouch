@@ -56,6 +56,18 @@ class M_CORE_EXPORT MObjectMenuModel : public MSceneWindowModel
     */
     M_MODEL_PROPERTY(QPointF, cursorPosition, CursorPosition, true, QPointF())
 
+    /*!
+        \property MObjectMenuModel::title
+        \brief Title/header text for the object menu.
+    */
+    M_MODEL_PROPERTY(QString, title, Title, true, QString())
+
+    /*!
+        \property MObjectMenuModel::title
+        \brief Title/header text for the object menu.
+    */
+    M_MODEL_PROPERTY(QString, iconId, IconId, true, QString())
+
 public:
     /*!
         \brief Adds the \a action to the actions list.

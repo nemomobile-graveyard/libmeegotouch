@@ -19,8 +19,9 @@
 
 #ifndef MOBJECTMENUVIEW_P_H
 #define MOBJECTMENUVIEW_P_H
-
 #include "mobjectmenuview.h"
+#include "mstylablewidgetstyle.h"
+#include "mstylablewidget.h"
 
 #ifdef HAVE_CONTENTACTION
 #include <contentaction/contentaction.h>
@@ -29,6 +30,8 @@
 class MButton;
 class MAction;
 class QGraphicsLinearLayout;
+class MLabel;
+class MImageWidget;
 
 class MObjectMenuViewPrivate
 {
@@ -43,6 +46,9 @@ public:
 
     void init();
 
+    void updateIcon();
+    void updateTitleAreaVisibility();
+
     QHash<MAction *, MButton *> buttons;
 
 #ifdef HAVE_CONTENTACTION
@@ -53,8 +59,20 @@ public:
 
     MObjectMenu *controller;
 
+    MWidgetController* titleArea;
+    MLabel* titleLabel;
+    MImageWidget* titleIcon;
+
 private:
     void contentActionTriggered();
 };
 
+class MObjectMenuTitleArea : public MStylableWidget
+{
+    Q_OBJECT
+public:
+    MObjectMenuTitleArea(QGraphicsItem *parent = 0) : MStylableWidget(parent) {}
+private:
+    M_STYLABLE_WIDGET(MStylableWidgetStyle)
+};
 #endif
