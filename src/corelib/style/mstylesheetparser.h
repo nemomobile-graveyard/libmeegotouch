@@ -48,12 +48,12 @@ class M_CORE_EXPORT MStyleSheetParser
 public:
     //! \internal
     struct StylesheetFileInfo {
-        QByteArray                     filename;
-        QVector<QByteArray>            includes;
-        QList<MStyleSheetSelector *>   selectors;
-        QList<MStyleSheetSelector *>   parentSelectors;
-        QHash<QByteArray, QByteArray>  constants;
-        uint                            time_t;
+        QByteArray filename;
+        QVector<QPair<QByteArray, uint> > includes;
+        QList<MStyleSheetSelector *> selectors;
+        QList<MStyleSheetSelector *> parentSelectors;
+        QHash<QByteArray, QByteArray> constants;
+        uint time_t;
     };
     //! \internal_end
 

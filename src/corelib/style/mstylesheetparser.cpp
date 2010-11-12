@@ -38,7 +38,10 @@
 
 #include <sys/stat.h>
 
-#define FILE_VERSION(major, minor) (int)((major<<16)|minor)
+namespace {
+    const unsigned int FILE_VERSION = 16;
+}
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 class MStyleSheetParserPrivate
 {
@@ -48,7 +51,7 @@ public:
     QChar read(QFile &stream, const QByteArray &delimeters, QByteArray &out);
     QChar peek(QFile &stream, const QByteArray &delimeters, QByteArray &out);
 
-    bool load(const QString &filename, QHash<QByteArray, QByteArray>* constants);
+    bool load(const QFileInfo &fileInfo, QHash<QByteArray, QByteArray>* constants);
 
     /**
      \brief Parse a stylesheet \a file.
@@ -362,28 +365,25 @@ QChar MStyleSheetParserPrivate::peek(QFile &stream, const QByteArray &delimeters
     return result;
 }
 
-bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, QByteArray>* constants)
+bool MStyleSheetParserPrivate::load(const QFileInfo &fileInfo, QHash<QByteArray, QByteArray>* constants)
 {
     globalConstants = constants;
 
-    QFileInfo fileInfo(filename);
     const QString binaryFilename = createBinaryFilename(fileInfo);
     if (binaryFileMode) {
         // If binary file mode is enabled, we'll check if there's binary
         // file available instead of the ASCII css to speed-up the loading process
-
-        if (fileInfo.exists() && loadBinary(filename, binaryFilename))
+        if (fileInfo.exists() && loadBinary(fileInfo, binaryFilename))
             return true;
     }
 
-
-    QFile file(filename);
+    QFile file(fileInfo.filePath());
     if (file.open(QFile::ReadOnly)) {
 
         //mDebug("MStyleSheetParserPrivate") << "Loading ASCII css file" << filename;
 
         privateFileInfo = new MStyleSheetParser::StylesheetFileInfo;
-        privateFileInfo->filename = filename.toAscii();
+        privateFileInfo->filename = qPrintable(fileInfo.filePath());
 
         bool result = parse(file, fileInfo);
         file.close();
@@ -406,7 +406,7 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
         }
     }
 
-    mWarning("MStyleSheetParserPrivate") << "Failed to open stylesheet file:" << filename;
+    mWarning("MStyleSheetParserPrivate") << "Failed to open stylesheet file:" << fileInfo.filePath();
 
     return false;
 }
@@ -415,7 +415,7 @@ bool MStyleSheetParserPrivate::parse(QFile &file, const QFileInfo &fileInfo, boo
 {
     bool result = true;
 
-    parsedFileName = fileInfo.absoluteFilePath().toAscii();
+    parsedFileName = qPrintable(fileInfo.absoluteFilePath());
     parsedFileInfo = fileInfo;
 
 
@@ -563,9 +563,9 @@ bool MStyleSheetParserPrivate::parseAtToken(QFile &stream, bool validateOnly)
                 skipWhiteSpace(stream);
                 QByteArray value;
                 if (read(stream, ";\n", value) == ';' && validValue(value)) {
-		    if (validateOnly) {
-			return true;
-		    }
+                    if (validateOnly) {
+                        return true;
+                    }
                     //add the constant to this file's constant list
                     if (privateFileInfo->constants.contains(name)) {
                         outputParseWarning(parsedFileName, "Multiple definition of constant \"" + name + "\". Ignoring redefinition.", getLineNum(stream, startReadPos));
@@ -599,16 +599,18 @@ bool MStyleSheetParserPrivate::parseAtToken(QFile &stream, bool validateOnly)
 bool MStyleSheetParserPrivate::importFile(const QByteArray &filename, bool validateOnly)
 {
     if (validateOnly) {
-	return MStyleSheetParser::validate(parsedFileInfo.absolutePath() + QDir::separator() + filename);
+        return MStyleSheetParser::validate(parsedFileInfo.absolutePath() + QDir::separator() + filename);
     }
     // add imported file to include list
-    privateFileInfo->includes.push_back(parsedFileInfo.absolutePath().toAscii() + QDir::separator().toAscii() + filename);
+    QByteArray includeFileName = parsedFileInfo.absolutePath().toAscii() + QDir::separator().toAscii() + filename;
+    uint lastModified = QFileInfo(includeFileName).lastModified().toTime_t();
+    privateFileInfo->includes.push_back(QPair<QByteArray, uint>(includeFileName, lastModified));
 
     // parse the file
     MStyleSheetParserPrivate parser(logicalValues);
     parser.binaryDirectory = binaryDirectory;
     parser.binaryFileMode = binaryFileMode;
-    if (parser.load(parsedFileInfo.absolutePath() + QDir::separator() + filename, globalConstants) ||
+    if (parser.load(QFileInfo(parsedFileInfo.absolutePath() + QDir::separator() + filename), globalConstants) ||
         syntaxMode == MStyleSheetParser::RelaxedSyntax) {
         // add all the new file infos into the list of parsed files
         while (parser.fileInfoList.count() > 0) {
@@ -897,14 +899,11 @@ QPair<QByteArray, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribu
             MStyleSheetAttribute *result = new MStyleSheetAttribute;
             result->name = cachedString(MStyleSheetAttribute::attributeNameToPropertyName(name));
             result->value = cachedString(value);
-            result->constValue = cachedString("");
             result->position = startReadPos;
 
             //if value contains const references save the original value
             //string before replacing const references with real values
-            QByteArray tmpConst = result->value;
             if (!validateOnly && replaceConsts(result->value)) {
-                result->constValue = tmpConst;
                 result->value = cachedString(result->value);
                 if (!validValue(result->value)) {
                     outputParseError(parsedFileName, "Invalid constant reference in value: " + value, getLineNum(stream, startReadPos));
@@ -986,7 +985,7 @@ bool MStyleSheetParser::load(const QString &filename)
     Q_D(MStyleSheetParser);
 
     QHash<QByteArray, QByteArray> constants;
-    bool result = d->load(filename, &constants);
+    bool result = d->load(QFileInfo(filename), &constants);
     // uncomment for debug output
     //d->debugOutput();
     return result;
@@ -1040,12 +1039,10 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
         // Create readable datastream
         QDataStream stream(&file);
 
-        // read version number (32bit, 16 major, 16 minor)
-        int file_version;
+        unsigned int file_version;
         stream >> file_version;
 
-        // This is how we read v0.12 files
-        if (file_version == FILE_VERSION(0, 14)) {
+        if (file_version == FILE_VERSION) {
             // read fileinfo
             MStyleSheetParser::StylesheetFileInfo *fileinfo = new MStyleSheetParser::StylesheetFileInfo;
             stream >> fileinfo->time_t;
@@ -1058,12 +1055,24 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
             stream >> fileinfo->filename;
             stream >> fileinfo->includes;
             stream >> fileinfo->constants;
+
+            QList<uint> logicalTimestamps;
+            stream >> logicalTimestamps;
+            if (logicalTimestamps != logicalValues->timestamps()) {
+                // the logical values have been updated. our constants may have changed
+                return false;
+            }
             
             // load includes
             const int includesCount = fileinfo->includes.count();
             for (int i = 0; i < includesCount; ++i) {
-                fileinfo->includes[i] = cachedString(fileinfo->includes[i]);
-                load(fileinfo->includes[i], globalConstants);
+                fileinfo->includes[i].first = cachedString(fileinfo->includes[i].first);
+                QFileInfo fileInfo(fileinfo->includes[i].first);
+                if (fileinfo->includes[i].second != fileInfo.lastModified().toTime_t()) {
+                    // timestamp of included file changed, contants may have changed.
+                    return false;
+                }
+                load(fileInfo, globalConstants);
             }
 
             QHashIterator<QByteArray, QByteArray> i(fileinfo->constants);
@@ -1102,7 +1111,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
         return result;
     }
 
-    mWarning("MStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << cssFileInfo.fileName();
+    mWarning("MStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << cssFileInfo.filePath();
 
     return false;
 }
@@ -1123,12 +1132,12 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
     // Create writable datastream
     QDataStream stream(&file);
 
-    // write version number (32bit, 16 major, 16 minor)
-    stream << (int) FILE_VERSION(0, 14);
+    stream << FILE_VERSION;
     stream << info.time_t;
     stream << info.filename;
     stream << info.includes;
     stream << info.constants;
+    stream << logicalValues->timestamps();
 
     // write number of selectors
     stream << info.selectors.count();
@@ -1196,19 +1205,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QByteArray &fi
         MStyleSheetAttribute *attribute = new MStyleSheetAttribute;
         stream >> attribute->name; attribute->name = cachedString(attribute->name);
         stream >> attribute->value; attribute->value = cachedString(attribute->value);
-        stream >> attribute->constValue; attribute->constValue = cachedString(attribute->constValue);
         stream >> attribute->position;
-
-        //check if the value has used constants
-        //the constants might have changed so
-        //we need to recreate them
-        if (!attribute->constValue.isEmpty()) {
-            attribute->value = attribute->constValue;
-            replaceConsts(attribute->value);
-            attribute->value = cachedString(attribute->value);
-            //if( !validValue(attribute->value) )
-            //    outputParseError(fileinfo->filename, "Invalid constant reference in value: " + attribute->value, 0);
-        }
 
         selector->attributes()->insert(attribute->name, attribute);
     }
@@ -1246,7 +1243,6 @@ void MStyleSheetParserPrivate::writeSelector(MStyleSheetSelector *selector, QDat
 
         stream << attributeIterator.value()->name;
         stream << attributeIterator.value()->value;
-        stream << attributeIterator.value()->constValue;
         stream << attributeIterator.value()->position;
     }
 }

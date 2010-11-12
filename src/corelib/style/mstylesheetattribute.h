@@ -48,7 +48,6 @@ class MStyleSheetAttribute
 public:
     QByteArray name;
     QByteArray value;
-    QByteArray constValue; //original parsed value containing the $CONSTANT definitions
     qint64 position;    //used for providing detailed css parse error output (linenumber)
 
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk);

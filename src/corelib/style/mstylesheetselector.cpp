@@ -44,7 +44,6 @@ void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &oth
         MStyleSheetAttribute *copy = new MStyleSheetAttribute();
         copy->name = source->name;
         copy->value = source->value;
-        copy->constValue = source->constValue;
         copy->position = source->position;
 
         // add copy of attribute to data list
