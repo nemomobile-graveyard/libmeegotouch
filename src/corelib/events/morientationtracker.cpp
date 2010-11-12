@@ -45,6 +45,7 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , videoRouteProperty(new ContextProperty("com.nokia.policy.video_route"))
     , topEdgeProperty(new ContextProperty("Screen.TopEdge"))
     , isCoveredProperty(new ContextProperty("Screen.IsCovered"))
+    , isFlatProperty(new ContextProperty("Position.IsFlat"))
 #endif
 #ifdef Q_WS_X11
     , widCurrentAppWindow(0)
@@ -74,6 +75,8 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
             this, SLOT(isCoveredChanged()));
     connect(videoRouteProperty, SIGNAL(valueChanged()),
             this, SLOT(videoRouteChanged()));
+    connect(isFlatProperty, SIGNAL(valueChanged()),
+            this, SLOT(updateOrientationAngle()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(updateOrientationAngle()));
 #endif
@@ -94,6 +97,7 @@ MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
     delete videoRouteProperty;
     delete topEdgeProperty;
     delete isCoveredProperty;
+    delete isFlatProperty;
 #endif
 }
 
@@ -104,9 +108,9 @@ void MOrientationTrackerPrivate::initContextSubscriber()
     topEdgeProperty->waitForSubscription();
     isCoveredProperty->waitForSubscription();
     videoRouteProperty->waitForSubscription();
+    isFlatProperty->waitForSubscription();
 
     //initiating the variables to current orientation
-    updateOrientationAngle();
     isCoveredChanged();
     videoRouteChanged();
 #endif
@@ -148,17 +152,10 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     M::OrientationAngle angle = currentAngle;
     QString edge = topEdgeProperty->value().toString();
-    bool isDeviceFlat = false;
-    if (edge == "top")
-        angle = M::Angle0;
-    else if (edge == "left")
-        angle = M::Angle270;
-    else if (edge == "right")
-        angle = M::Angle90;
-    else if (edge == "bottom")
-        angle = M::Angle180;
-    else
-        isDeviceFlat = true;
+
+    angle = angleForTopEdge(edge);
+
+    bool isDeviceFlat = isFlatProperty->value().toBool();
 
     bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
 
@@ -231,6 +228,20 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
     Q_UNUSED(tvIsConnected);
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+M::OrientationAngle MOrientationTrackerPrivate::angleForTopEdge(QString topEdge) const
+{
+    if (topEdge == "left")
+        return M::Angle270;
+    else if (topEdge == "right")
+        return M::Angle90;
+    else if (topEdge == "bottom")
+        return M::Angle180;
+    else
+        return M::Angle0;
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
 
 MOrientationTracker::MOrientationTracker() :
     d_ptr(new MOrientationTrackerPrivate(this))

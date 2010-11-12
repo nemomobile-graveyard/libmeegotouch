@@ -23,6 +23,7 @@
 #include <QObject>
 #include <mnamespace.h>
 #include <QPointer>
+#include <QString>
 
 /* Must be last, as it conflicts with some of the Qt defined types */
 #ifdef Q_WS_X11
@@ -51,9 +52,11 @@ public:
     void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
                                   bool isDeviceFlat, bool tvIsConnected);
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    M::OrientationAngle angleForTopEdge(const QString topEdge) const;
     ContextProperty *videoRouteProperty;
     ContextProperty *topEdgeProperty;
     ContextProperty *isCoveredProperty;
+    ContextProperty *isFlatProperty;
 #endif
 #ifdef Q_WS_X11
     bool handleX11PropertyEvent(XPropertyEvent* event);
