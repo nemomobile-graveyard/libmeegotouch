@@ -730,8 +730,8 @@ QRect MTextEditViewPrivate::cursorRect() const
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
 
-    rect = QRect((layoutPos.x() + x - hscroll + q->style()->paddingLeft()),
-                 (layoutPos.y() + currentLine.y() - vscroll + q->style()->paddingTop()),
+    rect = QRect((q->style()->paddingLeft() + layoutPos.x() + x - hscroll),
+                 (q->style()->paddingTop() + layoutPos.y() + currentLine.y() - vscroll),
                  cursorWidth, cursorHeight);
 
     return rect;
