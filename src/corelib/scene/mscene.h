@@ -80,8 +80,6 @@ public:
      */
     MSceneManager *sceneManager();
 
-    void sendCancel();
-
 protected:
     //! \reimp
     bool event(QEvent *event);    
@@ -95,7 +93,6 @@ protected:
 private:
     Q_DISABLE_COPY(MScene)
     Q_DECLARE_PRIVATE(MScene)
-    Q_PRIVATE_SLOT(d_func(), void _q_initialPressDeliveryTimeout())
 
 #ifdef UNIT_TEST
     friend class Ut_MScene;
@@ -104,7 +101,6 @@ private:
     friend class MSceneManager;
     friend class MWindowPrivate;
     friend class MSceneWindow;
-    friend class MWidget;
 };
 
 #endif

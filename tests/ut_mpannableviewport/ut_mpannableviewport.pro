@@ -1,7 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH +=  \
-    $$MSRCDIR/corelib/widgets \
-    $$MSRCDIR/corelib/scene \
+INCLUDEPATH += $$MSRCDIR/corelib/widgets
 TARGET = ut_mpannableviewport
 
 
@@ -19,7 +17,6 @@ SOURCES += \
     $$MSRCDIR/corelib/widgets/mpannablewidget.cpp \
     $$MSRCDIR/corelib/widgets/mpannableviewportlayout.cpp \
     $$MSRCDIR/corelib/widgets/mpannableviewport.cpp \
-    $$MSRCDIR/corelib/scene/mscene.cpp \
 
 # unit test and unit classes
 HEADERS += \
@@ -29,6 +26,5 @@ HEADERS += \
     $$MSRCDIR/corelib/widgets/mpannableviewport.h \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller_p.h \
     $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
-    $$MSRCDIR/corelib/scene/mscene.h \
 
 include(../common_bot.pri)

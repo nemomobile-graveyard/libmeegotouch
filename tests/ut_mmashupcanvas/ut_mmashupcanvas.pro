@@ -3,8 +3,7 @@ include(../common_mextensions.pri)
 
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets \
-    $$MSRCDIR/corelib/style \
-    $$MSRCDIR/corelib/scene \
+    $$MSRCDIR/corelib/style
 
 # unit test and unit classes
 SOURCES += \
@@ -12,8 +11,7 @@ SOURCES += \
     $$MSRCDIR/extensions/mashup/mashup/mmashupcanvas.cpp \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller.cpp \
     $$MSRCDIR/corelib/widgets/core/mwidget.cpp \
-    $$MSRCDIR/extensions/applicationextension/mextensionarea.cpp \
-    $$MSRCDIR/corelib/scene/mscene.cpp \
+    $$MSRCDIR/extensions/applicationextension/mextensionarea.cpp
 
 # service classes
 SOURCES += \
@@ -27,7 +25,6 @@ HEADERS += \
    $$MSRCDIR/extensions/mashup/mashup/mappletid.h \
    $$MSRCDIR/corelib/widgets/core/mwidgetcontroller_p.h \
    $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
-   $$MSRCDIR/corelib/widgets/mobjectmenu.h \
-   $$MSRCDIR/corelib/scene/mscene.h \
+   $$MSRCDIR/corelib/widgets/mobjectmenu.h
 
 include(../common_bot.pri)

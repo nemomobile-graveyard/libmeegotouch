@@ -43,6 +43,9 @@ public:
     virtual QRectF boundingRect() const;
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void timerEvent(QTimerEvent* event);
     virtual void cancelEvent(MCancelEvent *event);
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
 
@@ -62,14 +65,63 @@ public:
 
     MPhysics2DPanning *physics;
     MPannableWidgetGlass *glass;
+    QGraphicsItem *mouseGrabber;
 
+    struct resentItem {
+        QEvent::Type     type;
+        QPoint           screenPos;
+        Qt::MouseButton  button;
+    };
+
+    QList<struct resentItem> resentList;
+
+    int pressDeliveryTimerId;
     bool panGestureCausedCancelEvent;
 public:
+
+    /*!
+     * \brief Internal method necessary to correctly handle event positions.
+     */
+    void translateEventToItemCoordinates(const QGraphicsItem *srcItem,
+                                         const QGraphicsItem *destItem,
+                                         QGraphicsSceneMouseEvent *event);
 
     /*!
      * \brief Method used for resetting state of the physics engine.
      */
     void resetPhysics();
+
+    /*!
+     * \brief Method used for resetting glass and mouse grabber.
+     */
+    void resetMouseGrabber();
+
+    /*!
+     * \brief Method used for delivering event to interested widget.
+     */
+    void deliverMouseEvent(QGraphicsSceneMouseEvent *event);
+
+    /*!
+     * \brief Method used for delivering initial mouse press. It will set
+     * the mouseGrabber if it is necessary at this point.
+     */
+    void deliverPressEvent();
+
+    /*!
+     * \brief Method used to start a timer which will trigger the delivery
+     * of initial mouse press event.
+     */
+    void initialPressStartTimer();
+
+    /*!
+     * \brief Method used for cancelling the mouse press delivery timer.
+     */
+    void initialPressStopTimer();
+
+    /*!
+     * \brief Method used for getting an enabled parent pannable widget.
+     */
+    MPannableWidget* parentPannableWidget();
 };
 
 #endif

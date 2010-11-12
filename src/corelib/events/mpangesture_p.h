@@ -51,7 +51,6 @@ private:
      */
     QPointF             startPos;
     Qt::Orientations    panDirection;
-    bool                pressed;
 
     friend class MPanRecognizer;
 };

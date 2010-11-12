@@ -19,7 +19,6 @@
 
 #include <QList>
 #include <QGraphicsItem>
-#include <QGraphicsWidget>
 #include <QPainter>
 #include <QTime>
 #include <QTimer>
@@ -53,43 +52,10 @@ const qreal     MarginBackgroundOpacity = 0.4;
 const QColor    MarginColor             = QColor(Qt::red);
 const int       MarginBorderWidth       = 2;
 
-void copyGraphicsSceneMouseEvent(QGraphicsSceneMouseEvent &target, const QGraphicsSceneMouseEvent &source)
-{
-
-    target.setPos(source.pos());
-    target.setScenePos(source.scenePos());
-    target.setScreenPos(source.screenPos());
-
-    target.setButtons(source.buttons());
-    Qt::MouseButtons buttons = source.buttons();
-    Qt::MouseButton buttonbit = (Qt::MouseButton)0x1;
-    while (buttons != 0x0) {
-        if (buttons & buttonbit) {
-            // Button pressed
-            target.setButtonDownPos(buttonbit, source.buttonDownPos(buttonbit));
-            target.setButtonDownScenePos(buttonbit, source.buttonDownScenePos(buttonbit));
-            target.setButtonDownScreenPos(buttonbit, source.buttonDownScreenPos(buttonbit));
-
-            // Unset button
-            buttons = buttons & ~buttonbit;
-        }
-        buttonbit = (Qt::MouseButton)(buttonbit << 1);
-    }
-
-    target.setLastPos(source.lastPos());
-    target.setLastScenePos(source.lastScenePos());
-    target.setLastScreenPos(source.lastScreenPos());
-    target.setButton(source.button());
-    target.setModifiers(source.modifiers());
-}
 
 MScenePrivate::MScenePrivate() :
         q_ptr(0),
         manager(0),
-        eventEater(new QGraphicsWidget),
-        cancelSent(false),
-        initialPressTimer(0),
-        mousePressEvent(QEvent::GraphicsSceneMousePress),
         emuPoint1(1),
         emuPoint2(2),
         pinchEmulationEnabled(false)
@@ -98,28 +64,6 @@ MScenePrivate::MScenePrivate() :
 
 MScenePrivate::~MScenePrivate()
 {
-}
-
-void MScenePrivate::init()
-{
-    Q_Q(MScene);
-
-    QColor fpsBackgroundColor(FpsBackgroundColor);
-    fpsBackgroundColor.setAlphaF(FpsBackgroundOpacity);
-    fpsBackgroundBrush = QBrush(fpsBackgroundColor);
-
-    QColor boundingRectLineColor(BoundingRectLineColor);
-    boundingRectLinePen = QPen(boundingRectLineColor);
-
-    QColor boundingRectFillColor(BoundingRectFillColor);
-    boundingRectFillBrush = QBrush(boundingRectFillColor);
-
-    initialPressTimer = new QTimer(q);
-    initialPressTimer->setSingleShot(true);
-    initialPressTimer->setInterval(100);
-
-    q->addItem(eventEater);
-    q->connect(initialPressTimer, SIGNAL(timeout()), SLOT(_q_initialPressDeliveryTimeout()));
 }
 
 void MScenePrivate::setSceneManager(MSceneManager *sceneManager)
@@ -455,6 +399,8 @@ void MScenePrivate::handleGestureEvent(QEvent* event)
         case Qt::GestureStarted:
             if (panelAcceptedGestures.contains(gesture->gestureType()))
                 panelAcceptedGestures.removeAt(panelAcceptedGestures.indexOf(gesture->gestureType()));
+            else if (gestureEvent->isAccepted(gesture))
+                childrenAcceptedGestures.append(gesture->gestureType());
             break;
         case Qt::GestureCanceled:
             if (childrenAcceptedGestures.contains(gesture->gestureType()))
@@ -462,8 +408,10 @@ void MScenePrivate::handleGestureEvent(QEvent* event)
             break;
         case Qt::GestureFinished:
                 if (childrenAcceptedGestures.contains(gesture->gestureType())) {
-                    if (q->mouseGrabberItem() && cancelSent != true)
-                        q->sendCancel();
+                    if (q->mouseGrabberItem()) {
+                        MCancelEvent cancelEvent;
+                        q->sendEvent(q->mouseGrabberItem(),&cancelEvent);
+                    }
                     childrenAcceptedGestures.removeAt(childrenAcceptedGestures.indexOf(gesture->gestureType()));
                 }
         default:
@@ -478,18 +426,6 @@ void MScenePrivate::notifyGestureCaughtByPanel(Qt::GestureType gestureType)
         panelAcceptedGestures.append(gestureType);
 }
 
-void MScenePrivate::notifyGestureAcceptedByChild(Qt::GestureType gestureType)
-{
-    if (!childrenAcceptedGestures.contains(gestureType))
-        childrenAcceptedGestures.append(gestureType);
-}
-
-void MScenePrivate::_q_initialPressDeliveryTimeout()
-{
-    Q_Q(MScene);
-    q->QGraphicsScene::event(&mousePressEvent);
-}
-
 MScene::MScene(QObject *parent)
     : QGraphicsScene(parent),
       d_ptr(new MScenePrivate)
@@ -497,7 +433,17 @@ MScene::MScene(QObject *parent)
     Q_D(MScene);
 
     d->q_ptr = this;
-    d->init();
+    d->manager = 0;
+    QColor fpsBackgroundColor(FpsBackgroundColor);
+    fpsBackgroundColor.setAlphaF(FpsBackgroundOpacity);
+    d->fpsBackgroundBrush = QBrush(fpsBackgroundColor);
+
+    QColor boundingRectLineColor(BoundingRectLineColor);
+    d->boundingRectLinePen = QPen(boundingRectLineColor);
+
+    QColor boundingRectFillColor(BoundingRectFillColor);
+    d->boundingRectFillBrush = QBrush(boundingRectFillColor);
+
     setItemIndexMethod(QGraphicsScene::NoIndex);
 }
 
@@ -513,18 +459,6 @@ MSceneManager *MScene::sceneManager()
     return d->manager;
 }
 
-void MScene::sendCancel()
-{
-    Q_D(MScene);
-
-    if (mouseGrabberItem()) {
-        MCancelEvent cancelEvent;
-        sendEvent(mouseGrabberItem(),&cancelEvent);
-    }
-    d->eventEater->grabMouse();
-    d->cancelSent = true;
-}
-
 bool MScene::event(QEvent *event)
 {
     Q_D(MScene);
@@ -533,36 +467,10 @@ bool MScene::event(QEvent *event)
         return true;
     }
 
-    bool retValue = false;
+    bool retValue = QGraphicsScene::event(event);
 
-    if (event->type() == QEvent::GraphicsSceneMousePress) {
-
-        QGraphicsSceneMouseEvent *mouseEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
-        copyGraphicsSceneMouseEvent(d->mousePressEvent, *mouseEvent);
-
-        d->initialPressTimer->start();
-        retValue = true;
-    } else if (event->type() == QEvent::GraphicsSceneMouseMove) {
-        retValue = QGraphicsScene::event(event);
-    } else if (event->type() == QEvent::GraphicsSceneMouseRelease) {
-        if (d->initialPressTimer->isActive()) {
-            //Didn't send the press yet...
-            d->initialPressTimer->stop();
-            d->_q_initialPressDeliveryTimeout();
-        }
-        retValue = QGraphicsScene::event(event);
-        if (d->cancelSent) {
-            d->eventEater->ungrabMouse();
-            d->cancelSent = false;
-            retValue = true;
-         }
-    } else {
-        retValue = QGraphicsScene::event(event);
-    }
-
-    if (event->type() == QEvent::Gesture) {
+    if (event->type() == QEvent::Gesture)
         d->handleGestureEvent(event);
-    }
 
     return retValue;
 }
@@ -713,5 +621,3 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
         painter->drawPixmap(d->emuPoint2.screenPos() - pixmapCenterDelta, *tapPixmap);
     }
 }
-
-#include "moc_mscene.cpp"

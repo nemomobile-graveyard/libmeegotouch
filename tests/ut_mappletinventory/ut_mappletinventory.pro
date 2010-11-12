@@ -4,7 +4,6 @@ include(../common_mextensions.pri)
 INCLUDEPATH += \
     $$MSRCDIR/include \
     $$MSRCDIR/corelib/widgets \
-    $$MSRCDIR/corelib/scene \
     $$MSRCDIR/events
 
 MODEL_HEADERS += \
@@ -17,8 +16,7 @@ SOURCES += \
     $$MSRCDIR/extensions/mashup/appletinstallation/mappletinstantiator.cpp \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller.cpp \
     $$MSRCDIR/corelib/widgets/core/mwidget.cpp \
-    $$MSRCDIR/corelib/widgets/mwidgetmodel.cpp \
-    $$MSRCDIR/corelib/scene/mscene.cpp \
+    $$MSRCDIR/corelib/widgets/mwidgetmodel.cpp
 
 # service classes
 SOURCES += \
@@ -38,7 +36,6 @@ HEADERS += \
     $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel_p.h \
     $$MSRCDIR/corelib/widgets/mobjectmenu.h \
-    $$MSRCDIR/corelib/scene/mscene.h \
     $$MODEL_HEADERS
 
 include(../common_bot.pri)

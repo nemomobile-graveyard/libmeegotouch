@@ -42,8 +42,7 @@
 #include <mcancelevent.h>
 #include <mondisplaychangeevent.h>
 #include <morientationchangeevent.h>
-#include "mscene.h"
-#include "mscene_p.h"
+#include <mscene.h>
 #include <mscenemanager.h>
 
 #include "mobjectmenu.h"
@@ -359,11 +358,6 @@ void MWidget::gestureEvent(QGestureEvent *event)
         } else if (Qt::SwipeGesture == gesture->gestureType()) {
             QSwipeGesture* swipeState = static_cast<QSwipeGesture *>(gesture);
             swipeGestureEvent(event,swipeState);
-        }
-        if (event->isAccepted(gesture)) {
-            MScene *mScene = qobject_cast<MScene *>(scene());
-            if (mScene)
-                mScene->d_func()->notifyGestureAcceptedByChild(gesture->gestureType());
         }
     }
 }

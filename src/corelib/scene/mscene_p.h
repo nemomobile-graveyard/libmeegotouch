@@ -27,7 +27,6 @@
 
 class MSceneManager;
 class MOnDisplayChangeEvent;
-class QGraphicsSceneMouseEvent;
 
 class MScenePrivate
 {
@@ -49,8 +48,6 @@ class MScenePrivate
 public:
     MScenePrivate();
     virtual ~MScenePrivate();
-
-    void init();
     void setSceneManager(MSceneManager *sceneManager);
 
     void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
@@ -86,19 +83,10 @@ public:
      method.
      */
     void notifyGestureCaughtByPanel(Qt::GestureType gestureType);
-    void notifyGestureAcceptedByChild(Qt::GestureType gestureType);
-
-public Q_SLOTS:
-    void _q_initialPressDeliveryTimeout();
 
 protected:
     MScene *q_ptr;
     MSceneManager *manager;
-
-    QGraphicsWidget* eventEater;
-    bool cancelSent;
-    QTimer *initialPressTimer;
-    QGraphicsSceneMouseEvent mousePressEvent;
 
     //Two finger gestures emulation variables
     QTouchEvent::TouchPoint emuPoint1, emuPoint2;
