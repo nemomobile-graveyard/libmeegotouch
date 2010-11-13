@@ -634,4 +634,27 @@ void Ut_MLinearLayoutPolicy::testForLayoutCrashWithStretch()
     }
 }
 
+void Ut_MLinearLayoutPolicy::testRtl()
+{
+    m_form->setLayoutDirection(Qt::LeftToRight);
+    m_policy->setSpacing(0);
+    m_policy->addItem(m_mockItem100);
+    m_policy->addItem(m_mockItem200);
+    m_policy->setOrientation(Qt::Horizontal);
+    m_mockLayout->activate();
+    qApp->processEvents(); //let relayout happen
+    // now m_mockItem100 should be on the left side and
+    // m_mockItem200 on the right side:
+    QCOMPARE(m_mockItem100->geometry(), QRectF(QPointF(0.0, 0.0), QSize(100.0, 100.0)));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(QPointF(100.0, 0.0), QSizeF(200.0, 200.0)));
+
+    m_form->setLayoutDirection(Qt::RightToLeft);
+    qApp->processEvents(); //let relayout happen
+    // now the two items should have reversed their order,
+    // i.e. now m_mockItem100 should be on the right side and
+    // m_mockItem200 on the left side:
+    QCOMPARE(m_mockItem100->geometry(), QRectF(QPointF(200.0, 0.0), QSize(100.0, 100.0)));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(QPointF(0.0, 0.0), QSizeF(200.0, 200.0)));
+}
+
 QTEST_APPLESS_MAIN(Ut_MLinearLayoutPolicy)

@@ -51,6 +51,7 @@ private slots:
     void testAlignment();
     void testAlignmentSubLayouts();
     void testRowCount();
+    void testRtl();
 private:
 
     MLayout *m_mockLayout;

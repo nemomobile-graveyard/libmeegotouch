@@ -51,8 +51,10 @@ void MLinearLayoutPolicyPrivate::refreshEngine()
 {
     //Make sure that we have our RTL/LTR correct
     bool directionChanged = engineWidget->layoutDirection() != layout->layoutDirection();
-    if (directionChanged)
+    if (directionChanged) {
         engineWidget->setLayoutDirection(layout->layoutDirection());
+        engine->setGeometry(engine->geometry()); //Force the layout to refresh the layout direction
+    }
 
     for (int i = engine->count() - 1; i >= 0; --i) {
         ProxyItem *item = static_cast<ProxyItem *>(engine->itemAt(i));

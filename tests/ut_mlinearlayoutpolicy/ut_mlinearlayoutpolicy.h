@@ -52,6 +52,7 @@ private slots:
 
     void init();
     void cleanup();
+    void testRtl();
 private:
 
     MLayout *m_mockLayout;

@@ -36,7 +36,11 @@ MGridLayoutPolicyPrivate::~MGridLayoutPolicyPrivate()
 
 void MGridLayoutPolicyPrivate::refreshEngine()
 {
-    engineWidget->setLayoutDirection(layout->layoutDirection());   //Make sure that we have our RTL/LTR correct
+    bool directionChanged = engineWidget->layoutDirection() != layout->layoutDirection();
+    if (directionChanged) {
+        engineWidget->setLayoutDirection(layout->layoutDirection());
+        engine->setGeometry(engine->geometry()); //Force the layout to refresh the layout direction
+    }
 
     //To properly relayout or get the size hint, we need to invalidate the size hints
     //of all the proxy items and set the geometry of the proxy layout (d->engine) to be the same
