@@ -1,6 +1,7 @@
 libmeegotouch (0.20.54~1) unstable; urgency=low
 
   * Unreleased
+  * Fixes: NB#202957 - Application extensions are not loaded if the application extension interface specific directory is missing
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 11 Nov 2010 14:53:50 +0200
 

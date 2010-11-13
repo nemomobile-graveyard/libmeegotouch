@@ -299,7 +299,7 @@ bool MApplicationExtensionManager::createDataStore()
     bool dataPathExists = QDir::root().exists(dataPath);
 
     // Create the user data directory if it doesn't exist yet
-    if (!QFile::exists(dataStoreFileName) && !dataPathExists) {
+    if (!dataPathExists) {
         dataPathExists = QDir::root().mkpath(dataPath);
     }
     if (dataPathExists) {
