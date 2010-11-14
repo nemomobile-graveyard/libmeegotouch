@@ -41,14 +41,43 @@
     \li An information banner is a MBanner with a subtitle (only one label)
     \li An system banner is a MBanner with an icon an subtitle
 
-     You should set the stylename through setStyleName() with one of the following names:
-        -"EventBanner": used for events as emails, sms, etc.
-        -"InformationBanner": used to show generic information without icons.
-        -"SystemBanner": reserved for system notifications as battery, USB, updates, etc.
 
-    If you create a MBanner without styleName it will have a default style.
+     You should set the stylename through setStyleName() with one of the following names:
+    \li "EventBanner": used for events as emails, sms, etc. Icon, title and subtitle.
+    \li "InformationBanner": used to show generic information with icons.
+    \li "SystemBanner": reserved for system notifications, only text.
+
+    If you create a MBanner without styleName it will have a default style, and it will have the
+    capability to show any property: title, subtitle, etc.
     In case that your banner contains any combination above mentioned, the styleName will
     be configured automatically by the library.
+
+    Due to the MBanner has the capability to be shown at the events/lock screen, it comes with two
+    styles for this use case:
+
+    \li EventScreen
+    \li LockScreen
+
+    MBanner can switch to different styles in anytime only switching the stylename.
+    Note that some styles contain some specific layouts in which some properties are not show.
+
+    For instance if you create a Event Banner:
+       \code
+           MBanner *eventBanner = new MBanner();
+           eventBanner->setStyleName("EventBanner");
+           eventBanner->setIconID("icon-l-settings");
+           eventBanner->setTitle("New updates waiting to install");
+           eventBanner->setSubtitle("130 files");
+           eventBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
+       \endcode
+
+    If you want show the look and feel of this MBanner in the event screen you only need switch
+    the stylename:
+       \code
+           eventBanner->setStyleName("EventScreen");
+       \endcode
+
+    The MBanner layout will be styled with the EventScreen's layout automatically.
 
     Is highly recommended use a styleName contemplated in the mentioned categories. As
     a good practice <b>you should setup one of the mentioned stylenames</b> to avoid conflicts
@@ -74,7 +103,7 @@
            eventBanner->setIconID("icon-l-settings");
            eventBanner->setTitle("New updates waiting to install");
            eventBanner->setSubtitle("130 files");
-           eventBanner->appear(MSceneWindow::DestroyWhenDone);
+           eventBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
         \endcode
 
         Here's how to launch an information banner from code:
@@ -83,7 +112,7 @@
            infoBanner->setStyleName("InformationBanner");
            infoBanner->setIconID("icon-m-telephony-call-answer");
            infoBanner->setTitle("Info banner with so much information that the text wraps in portrait");
-           infoBanner->appear(MSceneWindow::DestroyWhenDone);
+           infoBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
         \endcode
 
         Here's how to launch a system banner from code:
@@ -91,7 +120,7 @@
           MBanner *systemBanner = new MBanner();
           systemBanner->setStyleName("SystemBanner");
           systemBanner->setTitle("System banner");
-          systemBanner->appear(MSceneWindow::DestroyWhenDone);
+          systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
         \endcode
 
     \sa MNotification
@@ -111,25 +140,26 @@ public:
 
     /*!
         \property MBanner::title
-        \brief See MBanner::title
+        \brief MBanner has a title, is the primary text
     */
     Q_PROPERTY(QString title READ title WRITE setTitle)
 
     /*!
         \property MBanner::subtitle
-        \brief See MBanner::subtitle
+        \brief MBanner can have a subtitle, is the secondary text
     */
     Q_PROPERTY(QString subtitle READ subtitle WRITE setSubtitle)
 
     /*!
         \property MBanner::bannerTimeStamp
-        \brief See MBanner::bannerTimeStamp
+        \brief MBanner can have a timestamp
     */
     Q_PROPERTY(QDateTime bannerTimeStamp READ bannerTimeStamp WRITE setBannerTimeStamp)
 
     /*!
         \property MBanner::prefixTimeStamp
-        \brief See MBanner::prefixTimeStamp
+        \brief MBanner can have the capability to setup a prefix before the timestamp
+         Example: Yesterday: 18:00 PM
     */
     Q_PROPERTY(QString prefixTimeStamp READ prefixTimeStamp WRITE setPrefixTimeStamp)
 
@@ -193,25 +223,25 @@ public Q_SLOTS:
 
     /**
         \brief Set title text. This is first line.
-        \param text text.
+        \param Title text.
      */
     void setTitle(const QString &text);
 
     /**
         \brief Set subtitle text. This is second line.
-        \param text text.
+        \param Subtitle text.
      */
     void setSubtitle(const QString &text);
 
     /**
         \brief Set timestamp text. This is third line.
-        \param text text.
+        \param Timestamp QDateTime.
      */
     void setBannerTimeStamp(const QDateTime &date);
 
     /**
-        \brief Set prefix timestamp text. This is third line.
-        \param text text.
+        \brief Set prefix timestamp text. This is third line before the timestamp.
+        \param Prefix text.
      */
     void setPrefixTimeStamp(const QString &text);
 
