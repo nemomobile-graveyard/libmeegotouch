@@ -62,16 +62,21 @@ void MAdvancedListItemPrivate::createLayout()
             panelLayout->setSpacing(0);
             panel->setLayout(panelLayout);
 
+            q->sideTopImageWidget()->setParentItem(panel);
+            q->sideBottomImageWidget()->setParentItem(panel);
+
             panelLayout->addItem(q->sideTopImageWidget());
             panelLayout->addItem(q->sideBottomImageWidget());
 
             layout()->addItem(panel, 0, 2, 3, 1, Qt::AlignVCenter);
-
             layout()->addItem(new QGraphicsWidget(q), 2, 1);
 
             break;
         }
     case MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon: {
+            q->sideTopImageWidget()->setParentItem(q);
+            q->sideBottomImageWidget()->setParentItem(q);
+
             layout()->addItem(q->imageWidget(), 0, 0, 3, 1);
             layout()->addItem(q->titleLabelWidget(), 0, 1);
             layout()->addItem(q->progressIndicator(), 1, 1, 1, 2);

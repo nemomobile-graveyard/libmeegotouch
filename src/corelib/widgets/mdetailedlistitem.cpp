@@ -104,6 +104,9 @@ void MDetailedListItemPrivate::createLayout()
             panelLayout->setSpacing(0);
             panel->setLayout(panelLayout);
 
+            q->sideTopImageWidget()->setParentItem(panel);
+            q->sideBottomImageWidget()->setParentItem(panel);
+
             panelLayout->addItem(q->sideTopImageWidget());
             panelLayout->addItem(q->sideBottomImageWidget());
 
@@ -126,11 +129,13 @@ void MDetailedListItemPrivate::createLayout()
             panelLayout->setSpacing(0);
             panel->setLayout(panelLayout);
 
+            q->sideTopImageWidget()->setParentItem(panel);
+            q->sideBottomImageWidget()->setParentItem(panel);
+
             panelLayout->addItem(q->sideTopImageWidget());
             panelLayout->addItem(q->sideBottomImageWidget());
 
             layout()->addItem(panel, 0, 2, 3, 1, Qt::AlignVCenter);
-
             layout()->addItem(new QGraphicsWidget(q), 2, 1);
             break;
         }
