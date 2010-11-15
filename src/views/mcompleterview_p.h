@@ -50,7 +50,13 @@ protected slots:
 
     void showPopup();
 
+    void refocusPopup();
+
     void organizeContents();
+
+    void handlePopupAppearing();
+
+    void handlePopupDisappeared();
 
 protected:
     void init();

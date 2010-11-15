@@ -289,6 +289,8 @@ void MCompleterViewPrivate::showPopup()
     if (!popup) {
         popup = new MPopupList();
         popup->setItemModel(q->model()->matchedModel());
+        connect(popup, SIGNAL(appearing()), this, SLOT(handlePopupAppearing()));
+        connect(popup, SIGNAL(disappeared()), this, SLOT(handlePopupDisappeared()));
     }
 
     if (popup->currentIndex().row() < 0)
@@ -297,11 +299,26 @@ void MCompleterViewPrivate::showPopup()
     //if the label of the button is ">10", should query all before showing popup
     if (completionsButton->text() == QString(">%1").arg(DefaultMaximumHits))
         controller->queryAll();
+    controller->sceneManager()->appearSceneWindow(popup);
+}
+
+void MCompleterViewPrivate::handlePopupAppearing()
+{
+    Q_Q(MCompleterView);
+    q->model()->setPopupActive(true);
     //hide completion widget before showing popup
     controller->hideCompleter();
-    q->model()->setPopupActive(true);
     controller->widget()->clearFocus();
-    if (controller->sceneManager()->execDialog(popup) == MDialog::Accepted) {
+    connect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
+            this, SLOT(refocusPopup()), Qt::UniqueConnection);
+}
+
+void MCompleterViewPrivate::handlePopupDisappeared()
+{
+    Q_Q(MCompleterView);
+    disconnect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
+               this, SLOT(refocusPopup()));
+    if (popup->result() == MDialog::Accepted) {
         //only confirm when accept
         controller->scene()->setFocusItem(controller->widget());
         q->model()->setMatchedIndex(popup->currentIndex().row());
@@ -312,6 +329,17 @@ void MCompleterViewPrivate::showPopup()
     q->model()->setPopupActive(false);
 }
 
+void MCompleterViewPrivate::refocusPopup()
+{
+    Q_Q(MCompleterView);
+    // if text widget gains focus again when popup list is still
+    // visibile, should transfer the focus to popup list.
+    if (popup && q->model()->popupActive()) {
+        controller->widget()->clearFocus();
+        controller->scene()->setFocusItem(popup);
+        controller->setActive(true);
+    }
+}
 
 MCompleterView::MCompleterView(MCompleter *controller)
     : MSceneWindowView(controller),
