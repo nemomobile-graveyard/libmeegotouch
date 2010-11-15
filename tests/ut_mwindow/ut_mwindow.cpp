@@ -26,6 +26,8 @@
 
 #include "ut_mwindow.h"
 
+Q_DECLARE_METATYPE(MSceneManager::TransitionMode)
+
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
     Q_UNUSED(isKeyboardOpen);
@@ -467,6 +469,49 @@ void Ut_MWindow::testSetPortraitOrientation()
     win->setOrientationAngle(initialAngle);
     win->setPortraitOrientation();
     QCOMPARE(win->orientationAngle(), portraitAngle);
+}
+
+void Ut_MWindow::testAnimatedOrientationChangeProperty_data()
+{
+    QTest::addColumn<bool>("defineAnimatedOrientationChangeProperty");
+    QTest::addColumn<bool>("propertyValue");
+    QTest::addColumn<bool>("setVisibleValue");
+    QTest::addColumn<MSceneManager::TransitionMode>("expectedTransitionMode");
+
+    QTest::newRow("invisible window, undefined property")
+            << false << false << false << MSceneManager::ImmediateTransition;
+
+    QTest::newRow("invisible window, property false")
+            << true << false << false << MSceneManager::ImmediateTransition;
+
+    QTest::newRow("invisible window, property true")
+            << true << true << false << MSceneManager::ImmediateTransition;
+
+    QTest::newRow("visible window, property true")
+            << true << true << true << MSceneManager::AnimatedTransition;
+
+    QTest::newRow("visible window, property false")
+            << true << false << true << MSceneManager::ImmediateTransition;
+
+    QTest::newRow("visible window, property undefined")
+            << false << false << true << MSceneManager::AnimatedTransition;
+}
+
+void Ut_MWindow::testAnimatedOrientationChangeProperty()
+{
+    QFETCH(bool, defineAnimatedOrientationChangeProperty);
+    QFETCH(bool, propertyValue);
+    QFETCH(bool, setVisibleValue);
+    QFETCH(MSceneManager::TransitionMode, expectedTransitionMode);
+
+    if (defineAnimatedOrientationChangeProperty)
+        win->setProperty("animatedOrientationChange", propertyValue);
+
+    win->setVisible(setVisibleValue);
+
+    MSceneManager::TransitionMode actualTransitionMode =
+            static_cast<MSceneManager::TransitionMode>(win->orientationChangeTransitionMode());
+    QCOMPARE(actualTransitionMode, expectedTransitionMode);
 }
 
 QTEST_MAIN(Ut_MWindow);

@@ -65,6 +65,8 @@ namespace {
     const char* FollowsCurrentApplicationWindowOrientationPropertyName =
             "followsCurrentApplicationWindowOrientation";
 #endif
+    const char* AnimatedOrientationChangePropertyName =
+            "animatedOrientationChange";
 }
 
 /// Actual class
@@ -502,6 +504,27 @@ void MWindowPrivate::_q_enablePaintUpdates()
     Q_Q(MWindow);
 
     q->setUpdatesEnabled(true);
+}
+
+MSceneManager::TransitionMode MWindowPrivate::orientationChangeTransitionMode()
+{
+    Q_Q(MWindow);
+    MSceneManager::TransitionMode transitionMode;
+
+    bool animatedOrientationChange = true;
+
+
+    if (q->property(AnimatedOrientationChangePropertyName).isValid()) {
+        animatedOrientationChange = q->property(AnimatedOrientationChangePropertyName).toBool();
+    }
+
+    if (animatedOrientationChange && q->isVisible()) {
+        transitionMode = MSceneManager::AnimatedTransition;
+    } else {
+        transitionMode = MSceneManager::ImmediateTransition;
+    }
+
+    return transitionMode;
 }
 
 void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event)
@@ -964,11 +987,8 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
         d->angle = angle;
 
         if (d->sceneManager) {
-            MSceneManager::TransitionMode mode = isVisible() ?
-                MSceneManager::AnimatedTransition :
-                MSceneManager::ImmediateTransition;
-
-            d->sceneManager->setOrientationAngle(angle, mode);
+            d->sceneManager->setOrientationAngle(angle,
+                                                 d->orientationChangeTransitionMode());
         } else {
             // first notify widgets, then emit the signal (in case someone
             // would like to connect to the signal and get correct size hints for widgets)
@@ -1334,6 +1354,12 @@ bool MWindow::closeOnLazyShutdown() const
     Q_D(const MWindow);
 
     return d->closeOnLazyShutdown;
+}
+
+int MWindow::orientationChangeTransitionMode()
+{
+    Q_D(MWindow);
+    return d->orientationChangeTransitionMode();
 }
 
 #include "moc_mwindow.cpp"

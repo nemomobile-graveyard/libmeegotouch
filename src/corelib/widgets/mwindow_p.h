@@ -53,6 +53,7 @@ public:
     bool debugShortcutModifiersPresent(Qt::KeyboardModifiers modifiers) const;
     void setVisible(bool visible);
     void _q_enablePaintUpdates();
+    MSceneManager::TransitionMode orientationChangeTransitionMode();
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
@@ -138,7 +139,5 @@ private:
     Q_DECLARE_PUBLIC(MWindow)
 
 };
-
-
 
 #endif

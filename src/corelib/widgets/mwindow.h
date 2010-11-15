@@ -534,6 +534,12 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_updateMinimizedSoftwareSwitch())
 #endif
 
+    /*
+        For testing purposes.
+        Returns a MSceneManager::TransitionMode
+    */
+    int orientationChangeTransitionMode();
+
     friend class MApplicationPrivate;
     friend class MSceneManagerPrivate;
 #ifdef UNIT_TEST

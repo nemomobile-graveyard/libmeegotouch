@@ -118,6 +118,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mpopuplist_p.h \
     $$WIDGETS_SRC_DIR/mscenewindow_p.h \
     $$WIDGETS_SRC_DIR/mstatusbar_p.h \
+    $$WIDGETS_SRC_DIR/mwindow_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \

@@ -24,6 +24,7 @@
 #include <QObject>
 #include <MNamespace>
 #include <MComponentData>
+#include <MSceneManager>
 
 class MWindow;
 class MApplication;
@@ -71,6 +72,9 @@ private slots:
     void testSetLandscapeOrientation();
     void testSetPortraitOrientation_data();
     void testSetPortraitOrientation();
+
+    void testAnimatedOrientationChangeProperty_data();
+    void testAnimatedOrientationChangeProperty();
 
 public slots:
     void onDisplayTestSlot();
