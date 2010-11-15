@@ -1518,16 +1518,16 @@ void Ft_Numbers::testToFloat_data()
         << QString("1,234,567.125");
 
     // FLT_MAX:
-    QTest::newRow("en_GB 3.40282e+38")
+    QTest::newRow("en_GB 3.40282E+38")
         << QString("en_GB")
-        << QString("3.40282e+38")
+        << QString("3.40282E+38")
         << true
-        << float(3.40282e+38)
+        << float(3.40282E+38)
         << QString("340,282,001,837,566,000,000,000,000,000,000,000,000");
     // FLT_MAX * 10:
-    QTest::newRow("en_GB 3.40282e+39")
+    QTest::newRow("en_GB 3.40282E+39")
         << QString("en_GB")
-        << QString("3.40282e+39")
+        << QString("3.40282E+39")
         << false
         << float(0)
         << QString("0");
