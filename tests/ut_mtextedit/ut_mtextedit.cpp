@@ -37,6 +37,7 @@
 #include <QTextEdit>
 #include <QInputContext>
 #include <QInputContextFactory>
+#include <MPreeditInjectionEvent>
 
 #include <mtextedit.h>
 #include <mtexteditview.h>
@@ -62,6 +63,7 @@ Q_DECLARE_METATYPE(Ut_MTextEdit::KeyList);
 Q_DECLARE_METATYPE(Qt::KeyboardModifiers);
 Q_DECLARE_METATYPE(Qt::FocusReason);
 Q_DECLARE_METATYPE(Qt::Key)
+Q_DECLARE_METATYPE(Qt::TextInteractionFlag);
 
 const QString Ut_MTextEdit::testString = QString("jallajalla");
 
@@ -151,6 +153,15 @@ public:
         }
 
         return false;
+    }
+
+    bool event(QEvent *event)
+    {
+        if (event->type() == MPreeditInjectionEvent::eventNumber()) {
+            event->accept();
+            return true;
+        }
+        return QInputContext::event(event);
     }
 
     void update()
@@ -1167,6 +1178,85 @@ void Ut_MTextEdit::testSelection()
 }
 
 
+void Ut_MTextEdit::testDoubleClick_data()
+{
+    QTest::addColumn<Qt::TextInteractionFlag>("interactionFlag");
+
+    QTest::newRow("selectionEnabled") << Qt::TextSelectableByMouse;
+    QTest::newRow("selectionDisabled") << Qt::NoTextInteraction;
+}
+
+
+void Ut_MTextEdit::testDoubleClick()
+{
+    QFETCH(Qt::TextInteractionFlag, interactionFlag);
+    const bool enabled(interactionFlag & Qt::TextSelectableByMouse);
+
+    m_subject->setTextInteractionFlags(interactionFlag);
+
+    QSignalSpy copyAvailableSpy(m_subject.get(), SIGNAL(copyAvailable(bool)));
+    m_subject->setText("xyzzy quux");
+
+    QGraphicsSceneMouseEvent dummyEvent;
+
+    // Double click the first word
+    m_subject->handleMousePress(2, &dummyEvent, NULL);
+    m_subject->handleMouseRelease(2, &dummyEvent, NULL);
+    {
+        QInputMethodEvent event("xyzzy", QList<QInputMethodEvent::Attribute>());
+        m_subject->inputMethodEvent(&event);
+    }
+    m_subject->handleMousePress(3, &dummyEvent, NULL);
+    m_subject->handleMouseRelease(3, &dummyEvent, NULL);
+
+    QCOMPARE(copyAvailableSpy.count(), enabled ? 1 : 0);
+    if (enabled) {
+        QCOMPARE(copyAvailableSpy.first().count(), 1);
+        QVERIFY(copyAvailableSpy.first().first().toBool());
+    }
+    copyAvailableSpy.clear();
+
+    // Click the 2nd. word to loose the selection
+    m_subject->handleMousePress(8, &dummyEvent, NULL);
+    m_subject->handleMouseRelease(8, &dummyEvent, NULL);
+    {
+        QInputMethodEvent event("quux", QList<QInputMethodEvent::Attribute>());
+        m_subject->inputMethodEvent(&event);
+    }
+    QCOMPARE(copyAvailableSpy.count(), enabled ? 1 : 0);
+    if (enabled) {
+        QCOMPARE(copyAvailableSpy.first().count(), 1);
+        QVERIFY(!copyAvailableSpy.first().first().toBool());
+    }
+    copyAvailableSpy.clear();
+
+    // Click too slowly -> no selection
+    m_subject->handleMousePress(2, &dummyEvent, NULL);
+    m_subject->handleMouseRelease(2, &dummyEvent, NULL);
+    {
+        QInputMethodEvent event("xyzzy", QList<QInputMethodEvent::Attribute>());
+        m_subject->inputMethodEvent(&event);
+    }
+    QTest::qWait(QApplication::doubleClickInterval()*2);
+    m_subject->handleMousePress(3, &dummyEvent, NULL);
+    m_subject->handleMouseRelease(3, &dummyEvent, NULL);
+
+    QCOMPARE(copyAvailableSpy.count(), 0);
+
+    // Click fast, but different words -> no selection
+    m_subject->handleMousePress(8, &dummyEvent, NULL);
+    m_subject->handleMouseRelease(8, &dummyEvent, NULL);
+    {
+        QInputMethodEvent event("quux", QList<QInputMethodEvent::Attribute>());
+        m_subject->inputMethodEvent(&event);
+    }
+    m_subject->handleMousePress(2, &dummyEvent, NULL);
+    m_subject->handleMouseRelease(2, &dummyEvent, NULL);
+
+    QCOMPARE(copyAvailableSpy.count(), 0);
+}
+
+
 void Ut_MTextEdit::testAutoSelection()
 {
     Qt::TextInteractionFlag testSelection[] = {
@@ -1184,7 +1274,7 @@ void Ut_MTextEdit::testAutoSelection()
     for (unsigned n = 0; n < sizeof(testSelection) / sizeof(testSelection[0]); ++n) {
         qDebug() << n << testSelection[n];
         m_subject->setTextInteractionFlags(testSelection[n]);
-
+        
         m_subject->setAutoSelectionEnabled(false);
         QVERIFY(m_subject->isAutoSelectionEnabled() == false);
 

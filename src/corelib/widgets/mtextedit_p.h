@@ -24,6 +24,7 @@
 #include <QString>
 #include <QList>
 #include <QInputMethodEvent>
+#include <QTime>
 
 class QGraphicsSceneMouseEvent;
 class QValidator;
@@ -153,6 +154,14 @@ private:
 
     int updateMicroFocusDisabled;
     bool pendingMicroFocusUpdate;
+    QTime lastMousePressTime;
+    // was the last mouse press event a double click event?
+    bool doubleClick;
+    // start and end indices of the word over which the mouse was released the last time
+    int previousReleaseWordStart;
+    int previousReleaseWordEnd;
+    // the last time when double click selection was done
+    QTime doubleClickSelectionTime;
 };
 
 #endif

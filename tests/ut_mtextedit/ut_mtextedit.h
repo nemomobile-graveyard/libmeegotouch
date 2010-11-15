@@ -95,6 +95,8 @@ private slots:
     //void testFeedback();
     void testBadData();
     void testSelection();
+    void testDoubleClick_data();
+    void testDoubleClick();
     void testAutoSelection();
     void testPrompt();
     void testValidator();
