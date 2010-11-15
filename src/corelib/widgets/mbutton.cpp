@@ -253,7 +253,6 @@ void MButton::setupModel()
 void MButton::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     MWidgetController::contextMenuEvent(event);
-    event->accept();
 }
 
 void MButton::updateData(const QList<const char *>& modifications)
