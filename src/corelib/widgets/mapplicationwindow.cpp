@@ -95,6 +95,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingStatusBar(false)
     , showingNavigationBar(false)
     , showingDockWidget(false)
+    , styleContainer(0)
 {
     if(MDeviceProfile::instance()->showStatusbar())    {
         statusBar = new MStatusBar;
@@ -257,7 +258,7 @@ void MApplicationWindowPrivate::appendMApplicationWindowTypeProperty()
 
 void  MApplicationWindowPrivate::initAutoHideComponentsTimer()
 {
-    autoHideComponentsTimer.setInterval(style->autoHideTimeout());
+    autoHideComponentsTimer.setInterval(style()->autoHideTimeout());
     autoHideComponentsTimer.setSingleShot(true);
 }
 
@@ -949,14 +950,35 @@ void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
 
 bool MApplicationWindowPrivate::needsDockWidget()
 {
-    return ((toolBar->viewType() == MToolBar::defaultType && style->floatableToolBar())
-            || (toolBar->viewType() == MToolBar::tabType && style->floatableTabBar()));
+    return ((toolBar->viewType() == MToolBar::defaultType && style()->floatableToolBar())
+            || (toolBar->viewType() == MToolBar::tabType && style()->floatableTabBar()));
 }
 
 void MApplicationWindowPrivate::setToolBarViewType(const MTheme::ViewType& viewType)
 {
     toolBar->setViewType(viewType);
     _q_placeToolBar();
+}
+
+
+MApplicationWindowStyleContainer& MApplicationWindowPrivate::style()
+{
+    Q_Q(MApplicationWindow);
+    if (!styleContainer) {
+        styleContainer = createStyleContainer();
+        styleContainer->initialize(q->objectName(), "", NULL);
+    }
+    return *styleContainer;
+}
+
+const MApplicationWindowStyleContainer& MApplicationWindowPrivate::style() const
+{
+    return const_cast<MApplicationWindowPrivate*>(this)->style();
+}
+
+MApplicationWindowStyleContainer* MApplicationWindowPrivate::createStyleContainer() const
+{
+    return new MApplicationWindowStyleContainer();
 }
 
 void MApplicationWindowPrivate::_q_updateStyle()
@@ -1321,13 +1343,13 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
 QString MApplicationWindow::styleName() const
 {
     Q_D(const MApplicationWindow);
-    return d->style.objectName();
+    return d->style().objectName();
 }
 
 void MApplicationWindow::setStyleName(const QString &name)
 {
     Q_D(MApplicationWindow);
-    d->style.setObjectName(name);
+    d->style().setObjectName(name);
     d->_q_updateStyle();
 }
 
