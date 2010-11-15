@@ -35,7 +35,21 @@
 
 #ifdef Q_WS_X11
 #include <QX11Info>
+#include <X11/Xlib.h>
 #endif
+
+static void destroySharedXPixmap(QPixmap *qPixmap)
+{
+    if (qPixmap != NULL) {
+#ifdef Q_WS_X11
+        Pixmap xPixmap = qPixmap->handle();
+        delete qPixmap;
+        if (xPixmap != 0) {
+            XFreePixmap(QX11Info::display(), xPixmap);
+        }
+#endif
+    }
+}
 
 MExtensionHandleViewPrivate::MExtensionHandleViewPrivate(MExtensionHandle *handle) :
     controller(handle),
@@ -69,11 +83,11 @@ void MExtensionHandleViewPrivate::connectSignals()
 void MExtensionHandleViewPrivate::destroyPixmaps()
 {
     if (pixmapTakenIntoUse != NULL) {
-        delete pixmapTakenIntoUse;
+        destroySharedXPixmap(pixmapTakenIntoUse);
         pixmapTakenIntoUse = NULL;
     }
     if (pixmapToBeTakenIntoUse != NULL) {
-        delete pixmapToBeTakenIntoUse;
+        destroySharedXPixmap(pixmapToBeTakenIntoUse);
         pixmapToBeTakenIntoUse = NULL;
     }
 }
@@ -135,9 +149,13 @@ void MExtensionHandleViewPrivate::sizeChanged(QSizeF size)
 
 void MExtensionHandleViewPrivate::allocatePixmapToBeTakenIntoUse(QSizeF size)
 {
+#ifdef Q_WS_X11
     // Allocate a new pixmap to be taken into use
     QSizeF pixmapSize = size.expandedTo(QSizeF(1, 1));
-    pixmapToBeTakenIntoUse = new QPixmap(pixmapSize.width(), pixmapSize.height());
+    Pixmap pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), pixmapSize.width(), pixmapSize.height(), QX11Info::appDepth());
+    QApplication::syncX();
+    pixmapToBeTakenIntoUse = new QPixmap();
+    *pixmapToBeTakenIntoUse = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
     pixmapToBeTakenIntoUse->setAlphaChannel(*pixmapToBeTakenIntoUse);
 
     // Clear the pixmap
@@ -145,11 +163,6 @@ void MExtensionHandleViewPrivate::allocatePixmapToBeTakenIntoUse(QSizeF size)
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
     painter.fillRect(pixmapToBeTakenIntoUse->rect(), QColor(0, 0, 0, 0));
 
-    // Synchronize X to make sure the pixmap handle is now valid
-    QApplication::syncX();
-
-// handle() is X11 specific
-#ifdef Q_WS_X11
     // Communicate the new geometry and pixmap handle to be taken into use to the runner
     handle->sendGeometryMessage(QRectF(QPointF(), pixmapSize), pixmapToBeTakenIntoUse->handle());
 #endif
@@ -336,8 +349,10 @@ void MExtensionHandleView::pixmapTakenIntoUse(Qt::HANDLE)
 {
     Q_D(MExtensionHandleView);
 
-    // Delete the pixmap that was in use, mark the new one as taken into use
-    delete d->pixmapTakenIntoUse;
+    // Delete the pixmap that was in use
+    destroySharedXPixmap(d->pixmapTakenIntoUse);
+
+    // Mark the new one as taken into use
     d->pixmapTakenIntoUse = d->pixmapToBeTakenIntoUse;
     d->pixmapToBeTakenIntoUse = NULL;
     d->localPixmap = d->pixmapTakenIntoUse->copy();

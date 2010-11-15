@@ -2,6 +2,7 @@ libmeegotouch (0.20.54~1) unstable; urgency=low
 
   * Unreleased
   * Fixes: NB#202957 - Application extensions are not loaded if the application extension interface specific directory is missing
+  * Implemented: SWP#DUI-4160 Mandatory support for meegographicssystem on application extensions
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 11 Nov 2010 14:53:50 +0200
 
