@@ -1572,10 +1572,10 @@ void Ft_Locales::checkAvailableLocales()
     QString ft_localesTestInputFileName;
     if (runFullTest)
         ft_localesTestInputFileName =
-            qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-full-icu-" + U_ICU_VERSION + ".txt";
+            qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-full-icu-" + U_ICU_VERSION_SHORT + ".txt";
     else
         ft_localesTestInputFileName =
-            qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-icu-" + U_ICU_VERSION + ".txt";
+            qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-icu-" + U_ICU_VERSION_SHORT + ".txt";
     QFile ft_localesTestInputFile(ft_localesTestInputFileName);
     if (!ft_localesTestInputFile.open(QIODevice::ReadOnly))
         QFAIL(qPrintable("could not open file " + ft_localesTestInputFileName));
