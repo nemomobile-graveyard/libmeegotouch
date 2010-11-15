@@ -55,6 +55,10 @@ public:
     //void drawScalable3H(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
     //void drawScalable3V(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
 
+    /*!
+        \note The method is reimplementation of Qt's method qDrawBorderPixmap with floating point target rect support.
+        see Qt src/gui/painting/qdrawutil.[cpp,h].
+    */
     void drawBorderPixmap(QPainter *painter,
                           const QRectF &targetRect,
                           const QMargins &targetMargins,

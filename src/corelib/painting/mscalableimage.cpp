@@ -180,6 +180,11 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
                                              const QTileRules &rules,
                                              QDrawBorderPixmap::DrawingHints hints)
 {
+    //
+    // The method is reimplementation of Qt's method qDrawBorderPixmap with floating point target rect support.
+    // see Qt src/gui/painting/qdrawutil.[cpp,h].
+    //
+
     QPainter::PixmapFragment d;
     d.opacity = 1.0;
     d.rotation = 0.0;
