@@ -144,6 +144,10 @@ protected:
     */
     MToolBar(MToolBarPrivate *dd, MWidgetModel *model, QGraphicsItem *parent);
 
+    //! \reimp
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    //! \reimp_end
+
     Q_DECLARE_PRIVATE(MToolBar)
 
 private:

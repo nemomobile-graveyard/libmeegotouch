@@ -22,6 +22,7 @@
 
 #include <MDebug>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsSceneContextMenuEvent>
 
 #include "mtheme.h"
 #include "mwidgetaction.h"
@@ -69,5 +70,10 @@ MToolBar::MToolBar(MToolBarPrivate *dd, MWidgetModel *model, QGraphicsItem *pare
 
 MToolBar::~MToolBar()
 {
+}
+
+void MToolBar::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    event->ignore();
 }
 
