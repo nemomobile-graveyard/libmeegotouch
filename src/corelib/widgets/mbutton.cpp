@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QGraphicsSceneContextMenuEvent>
 #include <QSettings>
 #include "mbuttongroup.h"
 #include "mbutton.h"
@@ -247,6 +248,12 @@ void MButton::setupModel()
     MWidgetController::setupModel();
 
     connect(model(), SIGNAL(clicked()), SLOT(modelClick()));
+}
+
+void MButton::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    MWidgetController::contextMenuEvent(event);
+    event->accept();
 }
 
 void MButton::updateData(const QList<const char *>& modifications)
