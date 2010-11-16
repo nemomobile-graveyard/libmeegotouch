@@ -21,11 +21,6 @@ Automatically prestarted applications can use lazy shutdown as well.
 - \b Launch - user action that aims to start an application so that
   its UI is shown (tapping the application icon, for instance).
 
-- \b LazyShutdown and \b LazyShutdownMultiWindow - prestart modes in
-  which an application process returns from the running state to the
-  prestarted state when it is closed by the user or by the \c close()
-  method in the D-Bus interface.
-
 - \b Prestarted \b state - the state where an application waits for
   launching. From the user's point of view, the application is not running, but
   it can be started up (switched to the running state) much faster
@@ -36,13 +31,17 @@ Automatically prestarted applications can use lazy shutdown as well.
   what happens to the application when it is closed. If it is not set, the
   application does not support prestarting.
 
-- \b Running \b state - the state when an application is running (from the user's point of view).
+- \b LazyShutdown and \b LazyShutdownMultiWindow - prestart modes in
+  which an application process returns from the running state to the
+  prestarted state when it is closed by the user or by the \c close()
+  method in the D-Bus interface.
 
-- \b TerminateOnClose and \b TerminateOnCloseMultiWindow- prestart
+- \b TerminateOnClose and \b TerminateOnCloseMultiWindow - prestart
   modes in which an application process is terminated when the
   application is closed by the user or by the \c close() method in the
   D-Bus interface.
 
+- \b Running \b state - the state when an application is running (from the user's point of view).
 
 \section prestarting Prestarting an application
 
