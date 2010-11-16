@@ -184,7 +184,8 @@ void MWidgetView::setModel(MWidgetModel *model)
 
     MWidgetController *parent = NULL;
     QGraphicsItem *p = d->controller->parentItem();
-    while (p && !(parent = dynamic_cast<MWidgetController *>(p))) {
+    while (p && !(p->isWidget() &&
+                  (parent = qobject_cast<MWidgetController *>(static_cast<QGraphicsWidget *>(p))))) {
         p = p->parentItem();
     }
 
