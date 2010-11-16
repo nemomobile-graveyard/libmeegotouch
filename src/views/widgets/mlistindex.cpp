@@ -83,6 +83,7 @@ MListIndex::MListIndex(MList *parent)
 
 MListIndex::~MListIndex()
 {
+    delete d_ptr;
 }
 
 void MListIndex::setShortcuts(const QMap<QModelIndex, QString> &shortcuts)
