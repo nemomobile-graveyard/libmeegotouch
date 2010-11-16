@@ -64,15 +64,6 @@ public:
                         MStyle *style,
                         const QMetaProperty &property,
                         M::Orientation orientation);
-
-    void writeAttribute(const QMetaProperty &property,
-                        MSharedData &shm,
-                        QByteArray filename);
-
-    bool writeAttributeShm(MStyle *style,
-                           QMetaProperty property,
-                           MSharedData &ds,
-                           M::Orientation orientation);
 };
 
 typedef QMap<QByteArray, MStyleSheetAttribute *> MAttributeList;
