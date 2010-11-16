@@ -454,9 +454,7 @@ void MButtonView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem
     Q_UNUSED(option);
 
     Q_D(const MButtonView);
-    mTimestamp("MButtonView", QString("start text=%1").arg(model()->text()));
     drawIcon(painter, d->iconRect);
-    mTimestamp("MButtonView", QString("end text=%1").arg(model()->text()));
 }
 
 void MButtonView::drawIcon(QPainter *painter, const QRectF &iconRect) const

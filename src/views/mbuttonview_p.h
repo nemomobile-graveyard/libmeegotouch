@@ -95,7 +95,7 @@ public:
     void _q_applyQueuedStyleModeChange();
     void _q_finishBlinkEffect();
 
-    void updateItemsAfterModeChange();
+    virtual void updateItemsAfterModeChange();
 
     int pressTimeout() const;
 };

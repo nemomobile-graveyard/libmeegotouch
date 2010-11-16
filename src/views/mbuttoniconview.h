@@ -38,31 +38,15 @@ class MButton;
         using the same styling attributes. However this view adds some animations
         when interacting with a button:
 
-        - When pressing button down it starts to shrink the graphics so it
-          looks like the button is actually pressed down.
-          MButtonIconStyle::shrinkDuration and MButtonIconStyle::shrinkFactor
-          attributes are used the define the outlook for the shrinking animation.
-        - When releasing button it starts to glow and grow back to it's normal
-          size. MButtonIconStyle::glowColor, MButtonIconStyle::glowDuration
-          and MButtonIconStyle::glowRadius style attributes can be used to
-          change the visualization of the glow.
-
-
+        - When pressing button down the content is drawn with style defined opacity.
+        - When releasing button the icon and label opacity is reset.
 
  * MButtonIconView supports the following CSS features:
  *
- * glowColor (type: QColor e.g. #ff0000) : sets the color of the glow effect<br>
- * glowDuration (type: int) : sets the time in ms for the glow effect to last<br>
- * glowRadius (type: int) : sets the extent of the glow effect<br>
- * shrinkDuration (type: int) : time how long the shrink effect takes<br>
- * shrinkFactor (type: float) : how much smaller should the shrunk button be?<br>
+ * content-opacity (type: qreal e.g. 0.75) : sets the opacity of the icon and text label<br>
 
     \section MButtonIconViewInteractions Interactions
         See \ref MButtonViewInteractions.
-
-    \section MButtonIconViewOpenIssues Open issues
-        - The outlook of the whole icon button: are glow and shrinking really
-          used in this?
 
     \sa MButton MButtonView MButtonIconStyle
 */
@@ -89,25 +73,8 @@ protected:
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void applyStyle();
-    //! \reimp_end
-
-protected Q_SLOTS:
-
-    //! \reimp
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
-
-private Q_SLOTS:
-
-    /*!
-        \brief Receives signals from scale timeline
-     */
-    void scaleValueChanged(qreal value);
-
-    /*!
-        \brief Receives signals from glow timeline
-     */
-    void glowValueChanged(qreal value);
 
 private:
     Q_DISABLE_COPY(MButtonIconView)

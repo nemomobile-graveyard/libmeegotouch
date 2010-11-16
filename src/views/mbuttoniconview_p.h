@@ -32,16 +32,9 @@ public:
     MButtonIconViewPrivate();
     ~MButtonIconViewPrivate();
 
-    void drawGlowIcon(QPainter *painter, const QRectF &iconRect) const;
-    const QImage& glowIcon(const QPixmap* pm, int radius, const QColor &color);
-    
-    QTimeLine* timelineShrink;
-    QTimeLine* timelineGlow;
-    
-    qint64 glowCacheKey;
-    QImage glowImage;
-    int glowRadius;
-    QColor glowColor;
+    void updateItemsAfterModeChange();
+
+    qreal opacity;
 };
 
 #endif
