@@ -371,7 +371,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
 
         // check all the attributes of this selector against the cached entry
         foreach(MStyleSheetAttribute * attribute, *(info.selector->attributes())) {
-            MOriginContainer *old = data.value(attribute->name, NULL);
+            MOriginContainer *old = data.value(attribute->getName(), NULL);
             if (old && !isHigherPriority(old, info.selector, info.classPriority, info.parentPriority)) {
                     continue;
             }
@@ -381,7 +381,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
                                                                        info.classPriority,
                                                                        info.parentPriority,
                                                                        info.filename, info.stylesheet);
-            data[attribute->name] = tempMOriginCont;
+            data[attribute->getName()] = tempMOriginCont;
             tempMOriginContainers.append(tempMOriginCont);
         }
     }
@@ -407,10 +407,10 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
 
             if (!attribute->writeAttribute(container->filename, style, style->metaObject()->property(i), spec.orientation)) {
                 qCritical("Failed to write attribute: %s to property %s. The stylesheet syntax might be invalid (%s:%s) in %s.",
-                          attribute->name.constData(),
+                          attribute->getName().data(),
                           style->metaObject()->property(i).name(),
-                          attribute->name.constData(),
-                          attribute->value.constData(),
+                          attribute->getName().data(),
+                          attribute->getValue().data(),
                           container->filename.constData());
 
                 result = container->stylesheet->syntaxMode() == MStyleSheet::RelaxedSyntax;
@@ -443,7 +443,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
             identifier += ':' + container->selector->mode();
         identifier += ')';
 
-        mWarning("mstylesheet.cpp") << "unused attribute in" << container->filename << container->value->name << identifier;
+        mWarning("mstylesheet.cpp") << "unused attribute in" << container->filename << container->value->getName() << identifier;
     }
 
     // cleaning up temporary data so "data" variable  is useless after that!

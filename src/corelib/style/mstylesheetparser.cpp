@@ -235,7 +235,7 @@ void outputSelector(MStyleSheetSelector *selector)
     for (MAttributeList::const_iterator i = selector->attributes()->constBegin();
             i != attributesEnd;
             ++i) {
-        mDebug("MStyleShetParserPrivate") << "     attribute:" << i.value()->name << "=" << i.value()->value;
+        mDebug("MStyleShetParserPrivate") << "     attribute:" << i.value()->getName() << "=" << i.value()->getValue();
     }
 }
 
@@ -896,10 +896,10 @@ QPair<QByteArray, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribu
         character = read(stream, ";}", value);
 
         if (((character == ';') || (character == '}'))  && validValue(value)) {
-            MStyleSheetAttribute *result = new MStyleSheetAttribute;
-            result->name = cachedString(MStyleSheetAttribute::attributeNameToPropertyName(name));
-            result->value = cachedString(value);
-            result->position = startReadPos;
+            MStyleSheetAttribute *result = new MStyleSheetAttribute(
+                cachedString(MStyleSheetAttribute::attributeNameToPropertyName(name)),
+                cachedString(value),
+                startReadPos);
 
             //if value contains const references save the original value
             //string before replacing const references with real values
@@ -1201,11 +1201,17 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QByteArray &fi
 
     // read attributes one by one
     for (int attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex) {
+        QByteArray name;
+        stream >> name;
+        QByteArray value;
+        stream >> value;
+        qint64 position;
+        stream >> position;
 
-        MStyleSheetAttribute *attribute = new MStyleSheetAttribute;
-        stream >> attribute->name; attribute->name = cachedString(attribute->name);
-        stream >> attribute->value; attribute->value = cachedString(attribute->value);
-        stream >> attribute->position;
+        MStyleSheetAttribute *attribute = new MStyleSheetAttribute(
+            cachedString(name),
+            cachedString(value),
+            position);
 
         selector->attributes()->insert(attribute->name, attribute);
     }

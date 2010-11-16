@@ -270,6 +270,34 @@ public:
 
 static QtDatatypeConverter DataTypeConverter;
 
+MStyleSheetAttribute::MStyleSheetAttribute(const QByteArray& name, const QByteArray& value, qint64 position)
+    : name(name), value(value), position(position)
+{
+}
+
+MStyleSheetAttribute::MStyleSheetAttribute(const MStyleSheetAttribute &other)
+{
+    this->name = other.name;
+    this->value = other.value;
+    this->cachedVariant = other.cachedVariant;
+    this->position = position;
+}
+
+QByteArray MStyleSheetAttribute::getName()
+{
+    return name;
+}
+
+QByteArray MStyleSheetAttribute::getValue()
+{
+    return value;
+}
+
+qint64 MStyleSheetAttribute::getPosition()
+{
+    return position;
+}
+
 int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conversionOk)
 {
     QByteArray value = attribute.trimmed();
