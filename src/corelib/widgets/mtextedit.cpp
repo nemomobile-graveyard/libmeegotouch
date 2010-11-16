@@ -1051,12 +1051,12 @@ QEvent::Type MTextEditPrivate::translateGraphicsSceneMouseTypeToQMouse(QEvent::T
  */
 void MTextEditPrivate::storePreeditTextStyling(int start, int end)
 {
-    QTextCursor *textCursor = cursor();
-    int cursorPosition = textCursor->position();
+    Q_Q(MTextEdit);
+    QTextCursor textCursor(q->document());
 
     for (int i = start + 1; i <= end; ++i) {
-        textCursor->setPosition(i, QTextCursor::KeepAnchor);
-        QTextCharFormat charFormat = textCursor->charFormat();
+        textCursor.setPosition(i, QTextCursor::KeepAnchor);
+        const QTextCharFormat charFormat = textCursor.charFormat();
 
         if (preeditStyling.isEmpty() == false) {
             styleData &currentStyle = preeditStyling.last();
@@ -1078,8 +1078,6 @@ void MTextEditPrivate::storePreeditTextStyling(int start, int end)
             preeditStyling.push_back(newStyle);
         }
     }
-
-    textCursor->setPosition(cursorPosition, QTextCursor::KeepAnchor);
 }
 
 
