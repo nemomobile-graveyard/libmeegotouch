@@ -1109,7 +1109,7 @@ void MApplicationWindow::closeEvent(QCloseEvent *event)
 
 #ifdef Q_WS_X11
 
-    if (testAttribute(Qt::WA_QuitOnClose) && windowState().testFlag(Qt::WindowNoState)) {
+    if (testAttribute(Qt::WA_QuitOnClose) && windowState().testFlag(Qt::WindowNoState) && !event->spontaneous()) {
         XEvent ev;
         Display *dpy = QX11Info::display();
         memset(&ev, 0, sizeof(ev));
