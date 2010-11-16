@@ -28,7 +28,6 @@
 class MWindow;
 //class MApplication;
 class MComponentData;
-class MOrientationTrackerTestBridge;
 
 #define MAX_PARAMS 10
 class Ut_MOrientationTracker: public QObject
@@ -74,7 +73,6 @@ private:
     bool isMCompositor;
 #endif
     MOrientationTracker *mTracker;
-    MOrientationTrackerTestBridge *mTrackerBridge;
     MComponentData* m_componentData;
 
     MWindow *window1;

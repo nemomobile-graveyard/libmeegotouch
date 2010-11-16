@@ -2195,39 +2195,30 @@ void MSceneManager::setPageHistory(const QList<MSceneWindow *> &list)
 
 void MSceneManager::childEvent(QChildEvent *event)
 {
+    Q_UNUSED(event);
+}
+
+void MSceneManager::fastForwardPageSwitchAnimation()
+{
     Q_D(MSceneManager);
-
-    if (event->added() && event->child()->objectName() == "_m_testBridge") {
-        d->debugInterface = event->child();
-        new MSceneManagerTestInterface(d, d->debugInterface);
-    } else if (event->child()->objectName() == "_m_testBridge") {
-        d->debugInterface = 0;
-    }
-}
-
-MSceneManagerTestInterface::MSceneManagerTestInterface(
-        MSceneManagerPrivate *d, QObject *parent)
-    : QObject(parent), d(d)
-{
-}
-
-void MSceneManagerTestInterface::fastForwardPageSwitchAnimation()
-{
     d->pageSwitchAnimation->setCurrentTime(d->pageSwitchAnimation->duration());
 }
 
-void MSceneManagerTestInterface::fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow)
+void MSceneManager::fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow)
 {
+    Q_D(MSceneManager);
     d->fastForwardSceneWindowTransitionAnimation(sceneWindow);
 }
 
-void MSceneManagerTestInterface::addSceneWindow(MSceneWindow *sceneWindow)
+void MSceneManager::addSceneWindow(MSceneWindow *sceneWindow)
 {
+    Q_D(MSceneManager);
     d->addSceneWindow(sceneWindow);
 }
 
-void MSceneManagerTestInterface::removeSceneWindow(MSceneWindow *sceneWindow)
+void MSceneManager::removeSceneWindow(MSceneWindow *sceneWindow)
 {
+    Q_D(MSceneManager);
     d->removeSceneWindow(sceneWindow);
 }
 

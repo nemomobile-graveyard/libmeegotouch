@@ -83,28 +83,11 @@ private slots:
     void initContextSubscriber();
 
 private:
-    QPointer<QObject> debugInterface;
 #ifdef Q_WS_X11
     Atom orientationAngleAtom;
     Atom currentAppWindowAtom;
 #endif
     Q_DECLARE_PUBLIC(MOrientationTracker)
-};
-
-class MOrientationTrackerTestInterface : public QObject
-{
-    Q_OBJECT
-public:
-    MOrientationTrackerTestInterface(MOrientationTrackerPrivate *d, QObject * parent = 0);
-public Q_SLOTS:
-    void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
-                                  bool isDeviceFlat, bool tvIsConnected);
-#ifdef Q_WS_X11
-    void handleCurrentAppWindowChange();
-    void handleCurrentAppWindowOrientationAngleChange();
-#endif
-private:
-    MOrientationTrackerPrivate *d;
 };
 
 #endif // MORIENTATIONTRACKER_P_H

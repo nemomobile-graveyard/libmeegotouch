@@ -261,8 +261,6 @@ public:
     };
     Rotation* pendingRotation;
 
-    QPointer<QObject> debugInterface;
-
     MSceneManager *q_ptr;
 
     MSceneEventEater *eventEater;
@@ -273,20 +271,4 @@ public:
     bool statusBarGeometryPropertyWasSet;
 #endif
 };
-
-class MSceneManagerTestInterface : public QObject
-{
-    Q_OBJECT
-public:
-    MSceneManagerTestInterface(MSceneManagerPrivate *d, QObject *parent = 0);
-public Q_SLOTS:
-    void fastForwardPageSwitchAnimation();
-    void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
-    void addSceneWindow(MSceneWindow *sceneWindow);
-    void removeSceneWindow(MSceneWindow *sceneWindow);
-
-public:
-    MSceneManagerPrivate *d;
-};
-
 #endif

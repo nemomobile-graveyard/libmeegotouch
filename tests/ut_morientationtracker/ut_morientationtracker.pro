@@ -1,5 +1,4 @@
 include(../common_top.pri)
-include(../morientationtrackertestbridge/morientationtrackertestbridge.pri)
 
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets \

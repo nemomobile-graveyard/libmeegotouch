@@ -18,7 +18,6 @@
 ****************************************************************************/
 
 #include "ut_morientationtracker.h"
-#include <morientationtrackertestbridge.h>
 
 #include <mdeviceprofile.h>
 
@@ -47,7 +46,7 @@ bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool
 }
 
 void Ut_MOrientationTracker::init()
-{    
+{
     window1 = new MWindow;
     window2 = new MWindow;
 }
@@ -70,8 +69,7 @@ void Ut_MOrientationTracker::initTestCase()
     m_componentData = new MComponentData(argc, argv);
 
     mTracker = MOrientationTracker::instance();
-    mTrackerBridge = new MOrientationTrackerTestBridge();
-    mTrackerBridge->setParent(mTracker);
+
 #ifdef Q_WS_X11
     checkIfMCompositorIsRunning();
 #endif
@@ -107,7 +105,7 @@ void Ut_MOrientationTracker::testOrientationPolicyWithoutConstraints()
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
-    mTrackerBridge->doUpdateOrientationAngle(newAngle, newKeyboardState, false, false);
+    mTracker->doUpdateOrientationAngle(newAngle, newKeyboardState, false, false);
 
     QCOMPARE(window1->orientationAngle(), newAngle);
     QCOMPARE(window2->orientationAngle(), newAngle);
@@ -135,7 +133,7 @@ void Ut_MOrientationTracker::testOrientationPolicyWithTVConnectedConstraint()
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
-    mTrackerBridge->doUpdateOrientationAngle(newAngle, newKeyboardState, false, true);
+    mTracker->doUpdateOrientationAngle(newAngle, newKeyboardState, false, true);
 
     QCOMPARE(window1->orientationAngle(), M::Angle0);
     QCOMPARE(window2->orientationAngle(), M::Angle0);
@@ -161,10 +159,10 @@ void Ut_MOrientationTracker::testOrientationPolicyDeviceFlatAndKeyboardJustClose
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
     //set in normal way
-    mTrackerBridge->doUpdateOrientationAngle(firstAngle, true, false, false);
+    mTracker->doUpdateOrientationAngle(firstAngle, true, false, false);
 
     //emulate state - keyboard just closed while device flat - no rotation
-    mTrackerBridge->doUpdateOrientationAngle(secondAngle, false, true, false);
+    mTracker->doUpdateOrientationAngle(secondAngle, false, true, false);
 
     QCOMPARE(window1->orientationAngle(), firstAngle);
     QCOMPARE(window2->orientationAngle(), firstAngle);
@@ -189,7 +187,7 @@ void Ut_MOrientationTracker::testOrientationPolicyDeviceProfileConstraints()
     supportedAnglesStubLists[KeyboardOpen] << allowedAngle;
     supportedAnglesStubLists[KeyboardClosed] << allowedAngle;
 
-    mTrackerBridge->doUpdateOrientationAngle(sensorAngle, true, false, false);
+    mTracker->doUpdateOrientationAngle(sensorAngle, true, false, false);
 
     QCOMPARE(window1->orientationAngle(), allowedAngle);
     QCOMPARE(window2->orientationAngle(), allowedAngle);
@@ -222,7 +220,7 @@ void Ut_MOrientationTracker::testWindowOrientationAngleLock()
     window2->setOrientationAngle(lockedAngle2);
     window2->lockOrientationAngle();
 
-    mTrackerBridge->doUpdateOrientationAngle(sensorAngle, true, false, false);
+    mTracker->doUpdateOrientationAngle(sensorAngle, true, false, false);
 
     QCOMPARE(window1->orientationAngle(), lockedAngle1);
     QCOMPARE(window2->orientationAngle(), lockedAngle2);
@@ -259,7 +257,7 @@ void Ut_MOrientationTracker::testWindowOrientationLock()
     M::Orientation orientation2 = (lockedAngle2 == M::Angle90 || lockedAngle2 == M::Angle270)?
                                   M::Portrait : M::Landscape;
 
-    mTrackerBridge->doUpdateOrientationAngle(sensorAngle, true, false, false);
+    mTracker->doUpdateOrientationAngle(sensorAngle, true, false, false);
 
     QCOMPARE(window1->orientation(), orientation1);
     QCOMPARE(window2->orientation(), orientation2);
@@ -293,12 +291,12 @@ void Ut_MOrientationTracker::testFollowCurrentWindow()
     setCurrentWindowXPropertyOnRootWindow(appWindow.effectiveWinId());
 
     //since there is no MApplication instance we have to run this handler manualy
-    mTrackerBridge->handleCurrentAppWindowChange();
+    mTracker->handleCurrentAppWindowChange();
 
-    mTrackerBridge->doUpdateOrientationAngle(firstAngle, true, false, false);
+    mTracker->doUpdateOrientationAngle(firstAngle, true, false, false);
 
     //since there is no MApplication instance we have to run this handler manualy
-    mTrackerBridge->handleCurrentAppWindowOrientationAngleChange();
+    mTracker->handleCurrentAppWindowOrientationAngleChange();
 
     QCOMPARE(window1->orientationAngle(), firstAngle);
     QCOMPARE(window2->orientationAngle(), firstAngle);
@@ -306,7 +304,7 @@ void Ut_MOrientationTracker::testFollowCurrentWindow()
     appWindow.setOrientationAngle(secondAngle);
 
     //since there is no MApplication instance we have to run this handler manualy
-    mTrackerBridge->handleCurrentAppWindowOrientationAngleChange();
+    mTracker->handleCurrentAppWindowOrientationAngleChange();
 
     QCOMPARE(window1->orientationAngle(), firstAngle);
     QCOMPARE(window2->orientationAngle(), secondAngle);
@@ -317,7 +315,7 @@ void Ut_MOrientationTracker::testFollowCurrentWindow()
     //since there is no MApplication instance we have to run this handler manualy
     appWindow.setOrientationAngle(firstAngle);
 
-    mTrackerBridge->handleCurrentAppWindowOrientationAngleChange();
+    mTracker->handleCurrentAppWindowOrientationAngleChange();
 
     QCOMPARE(window2->orientationAngle(), secondAngle);
 
@@ -347,7 +345,7 @@ void Ut_MOrientationTracker::testXEventMaskPreservationWhenChangingCurrentAppWin
 
     setCurrentWindowXPropertyOnRootWindow(appWindow1.effectiveWinId());
     //since there is no MApplication instance we have to run this handler manualy
-    mTrackerBridge->handleCurrentAppWindowChange();
+    mTracker->handleCurrentAppWindowChange();
 
     XGetWindowAttributes(dpy, appWindow1.effectiveWinId(), &att);
     QCOMPARE(att.your_event_mask, win1Mask | PropertyChangeMask);
@@ -356,7 +354,7 @@ void Ut_MOrientationTracker::testXEventMaskPreservationWhenChangingCurrentAppWin
 
     setCurrentWindowXPropertyOnRootWindow(appWindow2.effectiveWinId());
     //since there is no MApplication instance we have to run this handler manualy
-    mTrackerBridge->handleCurrentAppWindowChange();
+    mTracker->handleCurrentAppWindowChange();
 
     XGetWindowAttributes(dpy, appWindow1.effectiveWinId(), &att);
     QCOMPARE(att.your_event_mask, win1Mask);

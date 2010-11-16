@@ -69,6 +69,14 @@ private:
 #ifdef UNIT_TEST
     friend class Ut_MOrientationTracker;
 #endif
+
+    // For testing purposes
+    void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
+                                  bool isDeviceFlat, bool tvIsConnected);
+#ifdef Q_WS_X11
+    void handleCurrentAppWindowChange();
+    void handleCurrentAppWindowOrientationAngleChange();
+#endif
 };
 
 //! \internal_end

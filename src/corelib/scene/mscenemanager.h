@@ -55,8 +55,11 @@ class M_CORE_EXPORT MSceneManager : public QObject
     Q_OBJECT
     friend class MSceneWindow;
     friend class MWindow;
+
 #ifdef UNIT_TEST
     friend class Ut_MSceneManager;
+    friend class Ut_MApplicationWindow;
+    friend class Ut_MComboBox;
 #endif
 
 public:
@@ -330,6 +333,14 @@ private:
 #ifdef Q_WS_X11
     Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
 #endif
+
+    /*
+     Methods for testing purposes
+     */
+    void fastForwardPageSwitchAnimation();
+    void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
+    void addSceneWindow(MSceneWindow *sceneWindow);
+    void removeSceneWindow(MSceneWindow *sceneWindow);
 };
 
 #endif

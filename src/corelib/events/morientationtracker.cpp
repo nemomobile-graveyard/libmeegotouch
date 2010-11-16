@@ -271,18 +271,32 @@ M::OrientationAngle MOrientationTracker::orientationAngle() const
 
 void MOrientationTracker::childEvent(QChildEvent *event)
 {
-    Q_D(MOrientationTracker);
-
-    if (event->added() && event->child()->objectName() == "_m_testBridge") {
-        mDebug("MOrientationTracker::childEvent")<< "REGISTER DEBUG IF";
-        d->debugInterface = event->child();
-        new MOrientationTrackerTestInterface(d, d->debugInterface);
-    } else if (event->child()->objectName() == "_m_testBridge") {
-        d->debugInterface = 0;
-    }
+    Q_UNUSED(event);
 }
 
+void MOrientationTracker::doUpdateOrientationAngle(
+        M::OrientationAngle angle, bool isKeyboardOpen,
+        bool isDeviceFlat, bool tvIsConnected)
+{
+    Q_D(MOrientationTracker);
+    d->doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, tvIsConnected);
+}
+
+
 #ifdef Q_WS_X11
+
+void MOrientationTracker::handleCurrentAppWindowChange()
+{
+    Q_D(MOrientationTracker);
+    d->handleCurrentAppWindowChange();
+}
+
+void MOrientationTracker::handleCurrentAppWindowOrientationAngleChange()
+{
+    Q_D(MOrientationTracker);
+    d->handleCurrentAppWindowOrientationAngleChange();
+}
+
 bool MOrientationTrackerPrivate::handleX11PropertyEvent(XPropertyEvent *event)
 {
     //handle only if there are any windows registered  to follow Current Window
@@ -420,27 +434,3 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win)
 }
 
 #endif //Q_WS_X11
-
-MOrientationTrackerTestInterface::MOrientationTrackerTestInterface(
-        MOrientationTrackerPrivate *d, QObject *parent) :
-        QObject(parent), d(d)
-{
-}
-
-void MOrientationTrackerTestInterface::doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
-                                                           bool isDeviceFlat, bool tvIsConnected)
-{
-    d->doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, tvIsConnected);
-}
-
-#ifdef Q_WS_X11
-void MOrientationTrackerTestInterface::handleCurrentAppWindowChange()
-{
-    d->handleCurrentAppWindowChange();
-}
-
-void MOrientationTrackerTestInterface::handleCurrentAppWindowOrientationAngleChange()
-{
-    d->handleCurrentAppWindowOrientationAngleChange();
-}
-#endif

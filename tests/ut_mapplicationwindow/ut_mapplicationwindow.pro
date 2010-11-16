@@ -1,5 +1,4 @@
 include(../common_top.pri)
-include(../mscenemanagertestbridge/mscenemanagertestbridge.pri)
 
 TARGET = ut_mapplicationwindow
 

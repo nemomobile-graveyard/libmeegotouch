@@ -36,7 +36,6 @@
 
 #include <MSceneWindow>
 #include <MHomeButtonPanel>
-#include <mscenemanagertestbridge.h>
 
 #include <QSignalSpy>
 #include <QEvent>
@@ -191,14 +190,11 @@ void Ut_MApplicationWindow::testCurrentPage()
 
 void Ut_MApplicationWindow::testMenu()
 {
-    MSceneManagerTestBridge testBridge;
-    testBridge.setParent(m_subject->sceneManager());
-
     m_subject->d_func()->navigationBar->setArrowIconVisible(true);
 
     QCOMPARE(m_subject->isMenuOpen(), false);
     m_subject->openMenu();
-    testBridge.fastForwardSceneWindowTransitionAnimation(m_subject->d_func()->menu);
+    m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(m_subject->d_func()->menu);
     QCOMPARE(m_subject->isMenuOpen(), true);
     m_subject->closeMenu();
     QCOMPARE(m_subject->isMenuOpen(), false);
@@ -313,8 +309,7 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
     page->addAction(new QAction("Dummy action", page));
     page->appear(m_subject);
 
-    MSceneManagerTestBridge testBridge;
-    testBridge.setParent(m_subject->sceneManager());
+    MSceneManager *sceneManager = m_subject->sceneManager();
 
     MSceneWindow *homeButtonPanel = m_subject->d_func()->homeButtonPanel;
     MSceneWindow *navigationBar = m_subject->d_func()->navigationBar;
@@ -324,29 +319,29 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
-    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
-    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Disappeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
 
     page->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::Show);
-    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
-    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
 
     page->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::AutoHide);
-    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
-    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Disappeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Show);
-    testBridge.fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
-    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
@@ -373,9 +368,6 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
 {
     QFETCH(QList<StatusBarTestOperation>, operations);
     QFETCH(bool, expectedVisibility);
-
-    MSceneManagerTestBridge testBridge;
-    testBridge.setParent(m_subject->sceneManager());
 
     MSceneWindow *statusBar = 0;
 
@@ -408,7 +400,7 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
         }
     }
 
-    testBridge.fastForwardSceneWindowTransitionAnimation(statusBar);
+    m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(statusBar);
     // This relies on status bar being out of display which means no animation
     // and change in QGraphicsItem visibility is immediate.
     QCOMPARE(statusBar->isVisible(), expectedVisibility);
@@ -478,13 +470,10 @@ void Ut_MApplicationWindow::testTabBarMovesFromNavigationBarToFloatingWhenRotate
 
 void Ut_MApplicationWindow::fastForwardDisappearAppearAnimations(MSceneWindow *sceneWindow)
 {
-    MSceneManagerTestBridge testBridge;
-    testBridge.setParent(m_subject->sceneManager());
-
     // we can have at most 1 ongoing and 1 queued disappearing/appearing animation
     // ensure both animations are fast forwarded
-    testBridge.fastForwardSceneWindowTransitionAnimation(sceneWindow);
-    testBridge.fastForwardSceneWindowTransitionAnimation(sceneWindow);
+    m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(sceneWindow);
+    m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(sceneWindow);
 }
 
 void Ut_MApplicationWindow::testNavigationBarVisibility_data()
@@ -725,8 +714,7 @@ void Ut_MApplicationWindow::testNavigationBarVisibilityHideToolbarAction()
 
 void Ut_MApplicationWindow::testFirstPageWithCustomNavigationBarContent()
 {
-    MSceneManagerTestBridge testBridge;
-    testBridge.setParent(m_subject->sceneManager());
+    MSceneManager *sceneManager = m_subject->sceneManager();
     MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
     MApplicationPage* page = new MApplicationPage;
     QGraphicsWidget *customNavBarContent = new QGraphicsWidget;
@@ -735,13 +723,13 @@ void Ut_MApplicationWindow::testFirstPageWithCustomNavigationBarContent()
 
     m_subject->show();
 
-    m_subject->sceneManager()->appearSceneWindow(page);
+    sceneManager->appearSceneWindow(page);
 
     QVERIFY(navigationBar->customContent() == customNavBarContent);
 
-    testBridge.fastForwardSceneWindowTransitionAnimation(navigationBar);
+    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
 
-    m_subject->sceneManager()->dismissSceneWindow(page);
+    sceneManager->dismissSceneWindow(page);
 
     QVERIFY(navigationBar->customContent() == 0);
 }
