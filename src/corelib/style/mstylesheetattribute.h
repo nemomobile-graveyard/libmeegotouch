@@ -77,7 +77,6 @@ private:
     QByteArray name;
     QByteArray value;
     qint64 position;    //used for providing detailed css parse error output (linenumber)
-    QVariant cachedVariant;
 
     friend class MStyleSheetParserPrivate;
 };

@@ -266,6 +266,12 @@ public:
 #endif
     }
 };
+
+// global has for already parsed variants
+// the first has contains values as keys, the second one the variant types
+namespace {
+    static QHash<QByteArray, QHash<QByteArray, QVariant> > variantCache;
+}
 //! \internal_end
 
 static QtDatatypeConverter DataTypeConverter;
@@ -279,7 +285,6 @@ MStyleSheetAttribute::MStyleSheetAttribute(const MStyleSheetAttribute &other)
 {
     this->name = other.name;
     this->value = other.value;
-    this->cachedVariant = other.cachedVariant;
     this->position = position;
 }
 
@@ -572,12 +577,9 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         const QMetaProperty &property,
         M::Orientation orientation)
 {
+    QVariant cachedVariant = variantCache[value][property.typeName()];
     if (cachedVariant.isValid()) {
-        if (cachedVariant.type() != property.type()) {
-            qCritical() << "MStyleSheetAttribute::writeAttribute(): attribute" << name << "has been requested with two different property types. Former:" << cachedVariant.typeName() << "Current:" << property.typeName();
-        } else {
-            return property.write(style, cachedVariant);
-        }
+        return property.write(style, cachedVariant);
     }
 
     bool conversionOK = false;
@@ -827,9 +829,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
 bool MStyleSheetAttribute::fillProperty(const QMetaProperty &property, MStyle *style, const QVariant &variant, bool cache)
 {
     if (cache && variant.isValid()) {
-        cachedVariant = variant;
-        // when we cache the variant we can free the memory used by the string representation
-        value = QByteArray();
+        variantCache[value][property.typeName()] = variant;
     }
 
     return property.write(style, variant);
