@@ -6,12 +6,6 @@ SUBDIRS     =  \
     widgetsgallery \
     widgetsgallery/translations \
 
-!contains(M_BUILD_FEATURES, minimal) {
-    SUBDIRS += \
-    animatedlayout \
-    animatedlayout/translations
-}
-
 # we do not have compiled QtDBusd4
 !macx:!win32 {
     contains(DEFINES, HAVE_DBUS) {

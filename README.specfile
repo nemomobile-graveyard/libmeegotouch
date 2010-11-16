@@ -181,7 +181,6 @@ packages:
 
   - meegotouch-demos-widgetsgallery: Widget gallery demo
   - meegotouch-demos-widgetsgallery-tests
-  - meegotouch-demos-animatedlayout
   - meegotouch-demos-appletinstallationsource
   - meegotouch-demos-applicationextension
 
@@ -216,15 +215,6 @@ packages:
   - meegotouch-demos-widgetsgallery-l10n-hu
   - meegotouch-demos-widgetsgallery-l10n-ur
   - meegotouch-demos-widgetsgallery-l10n-zh-cn
-
-- meegotouch-demos-animatedlayout-l10n- packages: Messages / translations for
-  user-visible strings in the "animated layout" demo.
-
-  - meegotouch-demos-animatedlayout-l10n-eng-en
-  - meegotouch-demos-animatedlayout-l10n-de
-  - meegotouch-demos-animatedlayout-l10n-en
-  - meegotouch-demos-animatedlayout-l10n-ja
-
 
 RPM spec file cheat sheet
 =========================
