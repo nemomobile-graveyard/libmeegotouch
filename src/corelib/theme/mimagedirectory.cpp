@@ -223,6 +223,11 @@ QImage ImageResource::loadFromFsCache(const QSize& size)
 
 void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
 {
+    static bool failedCacheSaveAttempt = false;
+
+    if (failedCacheSaveAttempt)
+        return;
+
     const QString cacheFileName = createCacheFilename(size);
     const QString cacheMetaFileName = cacheFileName + ".meta";
     if (cacheFileName.isEmpty()) {
@@ -235,7 +240,11 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
         //Maybe it failed because the directory doesn't exist
         QDir().mkpath(QFileInfo(cacheMetaFileName).absolutePath());
         if (!meta.open(QFile::WriteOnly) || !cache.open(QFile::WriteOnly)) {
-            mWarning("ImageResource") << "Failed to save cache file for" << absoluteFilePath() << "to" << cacheFileName;
+            mWarning("ImageResource") <<
+                     "Wrong permissions for cache directory" <<
+                     MThemeDaemon::systemThemeCacheDirectory() <<
+                     ". Cache is disabled.";
+            failedCacheSaveAttempt = true;
             return;
         }
     }
