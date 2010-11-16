@@ -61,16 +61,22 @@ class M_VIEWS_EXPORT MButtonSwitchStyle : public MButtonStyle
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *, sliderImageSelected, SliderImageSelected)
 
     /*!
-        \property MButtonSwitchStyle::sliderMask
-        \brief Image for masking the sliding background.
-    */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, sliderMask, SliderMask)
-
-    /*!
         \property MButtonSwitchStyle::thumbImage
         \brief Image for the thumb of the switch.
     */
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  thumbImage, ThumbImage)
+
+    /*!
+        \property MButtonSwitchStyle::thumbImageShadow
+        \brief Image for the shadow of the thumb of the switch.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  thumbImageShadow, ThumbImageShadow)
+
+    /*!
+        \property MButtonSwitchStyle::thumbShadowOffset
+        \brief The offset of the shadow of the thumb of the switch.
+    */
+    M_STYLE_ATTRIBUTE(QPointF,  thumbShadowOffset, ThumbShadowOffset)
 
     /*!
         \property MButtonSwitchStyle::pressOnFeedback

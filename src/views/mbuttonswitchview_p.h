@@ -35,11 +35,11 @@ public:
 
     QSizeF thumbSize() const;
     QPointF thumbPos() const;
-    QPointF thumbEndPos(bool checked) const;
-
-    const QPixmap& maskedSliderImage() const;
-    
+    QPointF thumbEndPos(bool checked) const;  
     void updateHandle();
+
+    void drawSwitchSlider(QPainter *painter) const;
+    void drawSwitchThumb(QPainter *painter) const;
 
     int mouseOffset;
 
@@ -49,11 +49,6 @@ public:
     QPointF m_thumbPos;
     bool m_thumbPosValid;
     
-    //mutable so that image can be recreated in the drawContents() const 
-    //method if needed, other solution would need a timer because of the 
-    //asynchronous pixmap loading
-    mutable QPixmap m_maskedSliderPm;
-
     QVariantAnimation* m_handleAnimation;
     int m_animationSpeed; //pixels per sec
 };
