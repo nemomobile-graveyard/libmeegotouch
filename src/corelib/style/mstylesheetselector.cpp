@@ -41,10 +41,7 @@ void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &oth
         MStyleSheetAttribute *source = *iterator;
 
         // copy of attribute
-        MStyleSheetAttribute *copy = new MStyleSheetAttribute();
-        copy->name = source->name;
-        copy->value = source->value;
-        copy->position = source->position;
+        MStyleSheetAttribute *copy = new MStyleSheetAttribute(*source);
 
         // add copy of attribute to data list
         data.insert(iterator.key(), copy);

@@ -1058,7 +1058,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
 
             QList<uint> logicalTimestamps;
             stream >> logicalTimestamps;
-            if (logicalTimestamps != logicalValues->timestamps()) {
+            if (logicalValues && logicalTimestamps.length() > 0 && logicalTimestamps != logicalValues->timestamps()) {
                 // the logical values have been updated. our constants may have changed
                 return false;
             }
@@ -1137,7 +1137,12 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
     stream << info.filename;
     stream << info.includes;
     stream << info.constants;
-    stream << logicalValues->timestamps();
+    if (logicalValues) {
+        stream << logicalValues->timestamps();
+    } else {
+        stream << QList<uint>();
+    }
+
 
     // write number of selectors
     stream << info.selectors.count();
