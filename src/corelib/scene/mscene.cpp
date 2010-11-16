@@ -175,38 +175,50 @@ void MScenePrivate::touchPointCopyPosToLastPos(QTouchEvent::TouchPoint &point)
 
 void MScenePrivate::touchPointCopyMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
 {
-    point.setPos(event->scenePos());
+    point.setPos(event->pos());
     point.setScenePos(event->scenePos());
-    point.setScreenPos(event->scenePos());
+    point.setScreenPos(event->screenPos());
 }
 
 void MScenePrivate::touchPointCopyMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
 {
-    point.setStartPos(event->scenePos());
+    point.setStartPos(event->pos());
     point.setStartScenePos(event->scenePos());
-    point.setStartScreenPos(event->scenePos());
+    point.setStartScreenPos(event->screenPos());
 }
 
 void MScenePrivate::touchPointMirrorMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
 {
-    QSize resolution = MDeviceProfile::instance()->resolution();
-    QPointF centerPoint(resolution.width() / 2, resolution.height() / 2);
-    QPointF mirrorPoint = centerPoint + (centerPoint - event->scenePos());
+    Q_Q(MScene);
 
-    point.setPos(mirrorPoint);
-    point.setScenePos(mirrorPoint);
-    point.setScreenPos(mirrorPoint);
+    if (q->views().size() > 0) {
+        QPointF windowPos(q->views().at(0)->pos());
+        QSize resolution = MDeviceProfile::instance()->resolution();
+        QPointF centerPoint(resolution.width() / 2, resolution.height() / 2);
+
+        QPointF mirrorPoint = centerPoint + (centerPoint - event->screenPos() + windowPos);
+
+        point.setPos(mirrorPoint);
+        point.setScenePos(mirrorPoint);
+        point.setScreenPos(mirrorPoint + windowPos);
+    }
 }
 
 void MScenePrivate::touchPointMirrorMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
 {
-    QSize resolution = MDeviceProfile::instance()->resolution();
-    QPointF centerPoint(resolution.width() / 2, resolution.height() / 2);
-    QPointF mirrorPoint = centerPoint + (centerPoint - event->scenePos());
+    Q_Q(MScene);
 
-    point.setStartPos(mirrorPoint);
-    point.setStartScenePos(mirrorPoint);
-    point.setStartScreenPos(mirrorPoint);
+    if (q->views().size() > 0) {
+        QPointF windowPos(q->views().at(0)->pos());
+        QSize resolution = MDeviceProfile::instance()->resolution();
+        QPointF centerPoint(resolution.width() / 2, resolution.height() / 2);
+
+        QPointF mirrorPoint = centerPoint + (centerPoint - event->screenPos() + windowPos);
+
+        point.setStartPos(mirrorPoint);
+        point.setStartScenePos(mirrorPoint);
+        point.setStartScreenPos(mirrorPoint + windowPos);
+    }
 }
 
 bool MScenePrivate::eventEmulateTwoFingerGestures(QEvent *event)
@@ -230,7 +242,7 @@ bool MScenePrivate::eventEmulatePinch(QEvent *event)
     Qt::TouchPointState touchPointState;
 
     if (QEvent::GraphicsSceneMousePress == event->type()) {
-        if (Qt::LeftButton == e->button() && Qt::ControlModifier == e->modifiers()) {
+        if (Qt::LeftButton == e->button() && e->modifiers().testFlag(Qt::ControlModifier)) {
             pinchEmulationEnabled = true;
 
             touchPointMirrorMousePosToPointPos(emuPoint1,e);
@@ -285,7 +297,8 @@ bool MScenePrivate::eventEmulatePinch(QEvent *event)
         touchList.append(emuPoint2);
 
         QTouchEvent touchEvent(touchEventType, QTouchEvent::TouchPad, Qt::NoModifier, touchPointState, touchList);
-        QApplication::sendEvent(q, &touchEvent);
+        if (q->views().size()>0)
+            QApplication::sendEvent(q->views().at(0), &touchEvent);
         q->update();
         return true;
     }
@@ -617,7 +630,7 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
         static const QPixmap *tapPixmap = MTheme::pixmap("meegotouch-tap");
         QPointF pixmapCenterDelta(tapPixmap->width() / 2, tapPixmap->height() / 2);
 
-        painter->drawPixmap(d->emuPoint1.screenPos() - pixmapCenterDelta, *tapPixmap);
-        painter->drawPixmap(d->emuPoint2.screenPos() - pixmapCenterDelta, *tapPixmap);
+        painter->drawPixmap(d->emuPoint1.scenePos() - pixmapCenterDelta, *tapPixmap);
+        painter->drawPixmap(d->emuPoint2.scenePos() - pixmapCenterDelta, *tapPixmap);
     }
 }

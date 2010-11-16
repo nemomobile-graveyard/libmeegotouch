@@ -243,11 +243,11 @@ void MWindowPrivate::configureViewport()
 {
     Q_Q(MWindow);
 
-    q->viewport()->grabGesture(Qt::TapAndHoldGesture);
-    q->viewport()->grabGesture(Qt::PinchGesture);
-    q->viewport()->grabGesture(Qt::PanGesture);
-    q->viewport()->grabGesture(Qt::SwipeGesture);
-    q->viewport()->grabGesture(Qt::TapGesture);
+    q->grabGesture(Qt::TapAndHoldGesture);
+    q->grabGesture(Qt::PinchGesture);
+    q->grabGesture(Qt::PanGesture);
+    q->grabGesture(Qt::SwipeGesture);
+    q->grabGesture(Qt::TapGesture);
 
     q->setAttribute(Qt::WA_AcceptTouchEvents);
 
