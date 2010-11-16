@@ -4,53 +4,54 @@
 
 MeeGo Touch is a cross-platform application and UI framework library built on top of
 <a href="http://qt.nokia.com">Qt</a>. The framework library makes use of the very
-latest Qt features to implement a specific UI style primarily targeting touch screen
+latest Qt features to implement a specific UI style which is primarily intended for touch screen
 devices.
 
-Using MeeGo Touch makes it easy to implement good looking, fully finger optimized applications
-that automatically take advantage of multitouch, device sensors, animations and transitions
+Using MeeGo Touch makes it easy to implement good-looking, fully finger-optimised applications
+that automatically take advantage of multipoint touch, device sensors, animations and transitions
 to create an iconic user experience on a range of platforms from handhelds to the desktop.
 
-\section style The MeeGo Touch style
+\section style MeeGo Touch style
 
 The core of the MeeGo Touch style can be summarised as "direct manipulation of content". This places
-the focus of the applications squarely on the users' content, be that created by himself such as
-photos taken with the device itself, or content that is coming from the network. In a typical MeeGo Touch
-application the content therefore occupies the majority of the view, with the rest of the UI
-elements being de-emphasized.
+the focus of the applications squarely on the content that the users either create themselves (such 
+as photos taken with the device itself) or is retrieved from the network. Therefore, in a typical MeeGo 
+Touch application, the content occupies the major part of the view, and the rest of the UI elements are 
+de-emphasised.
 
-The MeeGo Touch style discards many well known concepts from the desktop world such as file
+The MeeGo Touch style discards many well-known concepts from the desktop world such as file
 selection dialogs, scrollbars, tabs and so on. Due to the focus on touch, the user experience is
-highly tacticle with panning, flicking, dragging and pinching being common operations on wide
-variety of content. Instead of applications consisting of multiple windows as on a desktop,
-a MeeGo Touch application is typically divided into views and transitions between these.
+highly tactile with panning, flicking, dragging and pinching being common operations on a wide
+variety of content. A MeeGo Touch application is typically divided into views and transitions 
+between the views, instead of multiple windows as on a desktop.
 
-Core to the concept of the MeeGo Touch style is the application canvas, a 2D pannable virtual area that
-extends beyond the physical borders of the screen. The use of a canvas as the foundation on which
-everything else is built breaks the limitations associated with traditional static UIs, be they
-Qt based or created with some other framework. For instance, any object on the canvas can be arbitrarily
-transformed, including rotated, scaled or perspective adjusted. Every object on the scene exposes a
-set of properties that can be animated, such as its current position, size, and opacity. Objects
-on the scene are also free to overlap and can be grouped into layers. All of this allows for the creation
-of highly fluid user interfaces where objects smoothly transition in and out of view, or where certain
-objects can detach from the rest of UI and stay pinned on the screen while all other content is replaced.
+The application canvas is the core of the MeeGo Touch style. It is a 2D pannable virtual area that
+extends beyond the physical borders of the screen. Using the canvas as the foundation on which
+everything else is built overcomes the limitations associated with traditional static UIs, be they
+Qt-based or created with some other framework. For instance, any object on the canvas can be arbitrarily
+transformed, including rotated, scaled or perspective-adjusted. Every object on the canvas exposes a
+set of properties, such as the current position, size, and opacity, that can be 
+animated. Objects on the canvas can also freely overlap and be grouped into layers. These features 
+enable highly fluid user interfaces where objects smoothly transition in and out of view, or where 
+certain objects can detach from the rest of UI and stay pinned on the screen while all other content 
+is replaced.
 
-MeeGo Touch presents a programming interface that will seem familiar to developers with other
-UI frameworks such as Qt, most of the time it is therefore not necessary to understand the workings
-of the underlying canvas itself. However, if the developer so chooses he has the possibility of
-going beyond the ready made components provided in the MeeGo Touch style and taking direct advantage of
-the canvas in his application. In such cases MeeGo Touch also offers a set of lower level enablers to
-make his application themable and stylable for the scene.
+MeeGo Touch presents a programming interface that is similar to other UI frameworks such as Qt. Most 
+of the time it is, therefore, not necessary to understand the workings of the underlying canvas 
+itself. However, developers can also go beyond the ready-made components provided by the MeeGo 
+Touch style and take direct advantage of the canvas in their applications. In such cases MeeGo 
+Touch also offers a set of lower-level enablers to make an application themable and stylable for the 
+scene.
 
 \section qt Relationship with Qt
 
 <a href="http://qt.nokia.com">Qt</a> by itself is already a mature cross-platform framework,
-providing a full set of traditional widgets that have been used in a number of successfull
-applications. In addition to this, Qt provides much of the necessary functionality for writing
+providing a full set of traditional widgets that have been used in a number of successful
+applications. In addition to this, Qt provides many essential functionalities for writing
 cross-platform applications in general, such as I/O, SQL & XML programming, threading,
-internationalization and so on.
+internationalisation and so on.
 
-In addition to this, Qt has recently come out with a number of new subsystems:
+In addition to this, Qt has recently released a number of new subsystems:
 
  - <a href="http://doc.trolltech.com/4.6/graphicsview.html">The Graphics View Framework</a>
  - <a href="http://doc.trolltech.com/4.6/animation-overview.html">The Animation Framework</a>
@@ -58,21 +59,21 @@ In addition to this, Qt has recently come out with a number of new subsystems:
  - <a href="http://doc.trolltech.com/4.6/painting-3d.html">Low-level 3D enablers</a>
 
 These new technologies serve as the basic enablers for next-generation user interfaces. However,
-as of Qt 4.6 these elements by themselves are still fairly low level and lacking the ties to any
-ready made UI components, including the existing Qt ones. MeeGo Touch takes these cutting edge
-components and implements a particular UI style optimized for touch devices and then, combined with
+as of Qt 4.6, these elements by themselves are still fairly low-level and lack the ties to any
+ready-made UI components, including the existing Qt components. MeeGo Touch takes these cutting edge
+components and implements a particular UI style that is optimised for touch devices and then, combined with
 a number of additional enablers that makes creating scene based applications easier, packages it
 together as a coherent UI framework library.
 
 MeeGo Touch, like Qt, is also a cross-platform framework, capable of running wherever Qt does.
-From the point of view of a developer that wants to create a touch optimized application in
+From the point of view of a developer that wants to create a touch optimised application in
 the MeeGo Touch style, both Qt and MeeGo Touch are typically directly used; Qt for the application
-logic and MeeGo Touch for the scene based UI style.
+logic and MeeGo Touch for the scene-based UI style.
 
 \image html duiplatform.png Qt and MeeGo Touch, two complementary frameworks
 
-The MeeGo Touch offering includes a set of ready made widgets implementing the MeeGo Touch style that
-specifically targets the Graphics View Framework, a set of pre-defined transitions and
+The MeeGo Touch offering includes a set of ready-made widgets implementing the MeeGo Touch style that
+specifically target the Graphics View Framework, a set of pre-defined transitions and
 animations that can be themed and styled, and a set of features that makes writing scene
 based applications easier in general, such as automatic management of in-scene dialogs and
 windows, implicitly animated scene layouts and device orientation tracking. In addition to this

@@ -1,18 +1,18 @@
-/*! \page rotation Screen Rotation
+/*! \page rotation Screen rotation
 
-MeeGo Touch applications can be used in both landscape and portrait orientations. Applications can be rotated to four different orientation angles: 0 (landscape), 90 (portrait), 180 (landscape) and 270 degrees clockwise (portrait). For details on coordinate systems and what those angles are relative to please read \subpage sceneandscenewindows.
+MeeGo Touch applications can be used in both landscape and portrait orientations. You can rotate applications to four different orientation angles: 0 (landscape), 90 (portrait), 180 (landscape) and 270 degrees clockwise (portrait). For more information on coordinate systems and related angles, see \subpage sceneandscenewindows.
 
-By default, MeeGo Touch applications will automatically rotate to the appropriate orientation angle when needed. It just works.
+By default, MeeGo Touch applications automatically rotate to the appropriate orientation angle when needed. It just works.
 
 \section rotation_getset Checking or setting the current orientation
 
-In some applications it might be needed to get or manually set the current orientation.
-To accomplish that the following methods and signals are provided by MWindow:
+Some applications may need to allow checking or manually setting the current orientation. MWindow provides 
+the following methods and signals for this purpose:
 
 <table>
   <tr>
     <td>MWindow::orientation()</td>
-    <td>Returns the current orientation (i.e. portrait or landscape) of the GUI.</td>
+    <td>Returns the current orientation (portrait or landscape) of the GUI.</td>
   </tr>
   <tr>
     <td>MWindow::setLandscapeOrientation()</td>
@@ -38,7 +38,8 @@ To accomplish that the following methods and signals are provided by MWindow:
   </tr>
 </table>
 
-You can also deal with orientation angles directly, although you should take into consideration which angles make sense for the host device. More on that later.
+You can also deal with orientation angles directly. However, take into consideration which angles 
+are relevant for the host device. For more information, see the following sections.
 
 <table>
   <tr>
@@ -58,29 +59,34 @@ You can also deal with orientation angles directly, although you should take int
   </tr>
 </table>
 
-MSceneManager provides a similar API. If an MWindow has a scene manager, all the methods and sinals mentioned above will simply mirror those of its scene manager. That's because what's actually rotating is not the MWindow itself but the items (i.e., scene windows) in the scene visualized by it. For more information please read \subpage sceneandscenewindows.
+MSceneManager provides a similar API. If an MWindow has a scene manager, all the methods and signals mentioned above simply mirror those of its scene manager. This is due to the fact that MWindow itself is not rotated but the items (in other words, scene windows) in the displayed scene. For more information, see \subpage sceneandscenewindows.
 
-When the orientation changes a MOrientationChangeEvent event is also sent to all affected widgets. To easily handle this event in your widget you can reimplement the following method:
+When the orientation changes, an MOrientationChangeEvent event is also sent to all affected widgets. To easily handle this event in your widget, reimplement the following method:
 
 MWidget::orientationChangeEvent(MOrientationChangeEvent *event)
 
 \section rotation_supportedangles Orientation angles supported by the host device
 
-Different devices allow a diferent number of orientation angles. A mobile phone, for instance, might support angle 270 but not 90, therefore probably meaning that 270 is the portrait orientation angle that puts its earpiece on top of the GUI and its mouthpiece below the GUI.
+Different devices allow different orientation angles. A mobile phone, for instance, can support the angle 270 but not 90, which probably means that 270 is the portrait orientation angle that puts its earpiece on top of the GUI and its mouthpiece below the GUI.
 
-If a device has a hardware keyboard, its set of allowed angles will also depend on whether this keyboard is open or not. For example: some device might support angles 0 and 270 when its hardware keyboard is closed but only angle 0 when it is open.
+If a device has a hardware keyboard, the allowed angles also depend on whether the keyboard is open 
+or not. For example, a device supports angles 0 and 270 when its hardware keyboard is closed and 
+only angle 0 when it is open.
 
-To check whether a given orientation angle is supported by the host device (i.e., makes sense for it) you can use the following method:
+To check whether a given orientation angle is supported by the host device (and is relevant for it),
+you can use the following method:
 
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen);
 
-\section rotation_deviceorientation Following (or not) the orientation of the host device
+\section rotation_deviceorientation Overriding automatic rotation
 
-When the orientation of a device changes (within its set of supported orientation angles), the orientation of its MeeGo Touch application will automatically follow accordingly.
+When the orientation of a device changes (within its set of supported orientation angles), the 
+orientation is automatically applied to its MeeGo Touch application.
 
-An application can override those automatic rotations by locking its GUI into a specific angle or orientation. You can lock the GUI into any orientation angle regardless of whether it's allowed by the device. Note that jutst setting a orientation (using a method such as MWindow::setOrientationAngle()) without locking it won't stop your GUI from following the device orientation when it changes afterwards.
+You can override automatic rotation by locking the GUI of the application to a specific angle 
+or orientation. You can lock the GUI to any orientation angle whether it is supported by the device or not. Note that if you just set an orientation (using a method such as MWindow::setOrientationAngle()) without locking it, the orientation of your GUI changes according to the device orientation.
 
-For locking the GUI into a given orientation (portrait or landscape), the following methods are available:
+To lock the GUI to a specific orientation (portrait or landscape), use the following methods:
 
 <table>
   <tr>
@@ -90,8 +96,8 @@ For locking the GUI into a given orientation (portrait or landscape), the follow
   <tr>
     <td>MWindow::unlockOrientation()</td>
     <td>
-        Unlocks the GUI into from its current orientation. Changes in the device
-        orientation after this point will be followed by the GUI.
+        Unlocks the GUI from its current orientation. If the device
+        orientation changes after this point, the orientation of the GUI changes accordingly.
     </td>
   </tr>
   <tr>
@@ -100,22 +106,22 @@ For locking the GUI into a given orientation (portrait or landscape), the follow
   </tr>
   <tr>
     <td>MWindow::setOrientationLocked()</td>
-    <td>Locks the GUI into its current orientation or unlocks the GUI from it.</td>
+    <td>Locks the GUI into its current orientation or unlocks the GUI orientation.</td>
   </tr>
 </table>
 
-It's also possible to be more restrictive and lock the GUI into a specific angle.
+To be more restrictive and lock the GUI to a specific angle:
 
 <table>
   <tr>
     <td>MWindow::lockOrientationAngle()</td>
-    <td>Locks the GUI into its current orientation angle.</td>
+    <td>Locks the GUI to its current orientation angle.</td>
   </tr>
   <tr>
     <td>MWindow::unlockOrientationAngle()</td>
     <td>
-        Unlocks the GUI into from its current orientation angle. Changes in the device
-        orientation after this point will be followed by the GUI.
+        Unlocks the GUI from its current orientation angle. If the device
+        orientation changes after this point, the orientation of the GUI changes accordingly.
     </td>
   </tr>
   <tr>
@@ -124,27 +130,32 @@ It's also possible to be more restrictive and lock the GUI into a specific angle
   </tr>
   <tr>
     <td>MWindow::setOrientationAngleLocked()</td>
-    <td>Locks the GUI into its current orientation angle or unlocks the GUI from it.</td>
+    <td>Locks the GUI to its current orientation angle or unlocks the GUI orientation angle.</td>
   </tr>
 </table>
 
-Locking the orientation is discouraged as it breaks expected behavior and usability (e.g. "why this app doesn't rotate like the others?") and limits the flexibility of your GUI, although it can be useful and valid for applications whose GUI is meant to be used (or makes sense) only in one specific orientation or angle.
+Locking the orientation is not recommended because it breaks expected behaviour and usability. For 
+example, users might wonder why the application does not rotate like the others. It also limits the 
+flexibility of your GUI. However, locking the orientation of the GUI can be useful and valid if it 
+is intended to be used in only one specific orientation or angle.
 
-\section rotation_stepbystep A rotation animation, step-by-step
+\section rotation_stepbystep Creating rotation animation
 
--# MSceneManager::setOrientationAngle() gets called (e.g., due to a change in the device's orientation angle)
+To create a rotation animation, do the following:
+
+-# MSceneManager::setOrientationAngle() is called (for example, due to a change in the device's orientation angle)
 -# MSceneManager starts a rotation animation
--# At some point during the rotation animation MSceneManager does, in the following order:
+-# During the rotation animation MSceneManager does the following:
     -# Emission of MSceneManager::orientationAboutToChange().
     -# Sending of MOrientationChangeEvent to all widgets in the scene.
-        - Will cause MWidgetView::applyStyle() to be called on views of all affected widgets.
-        - Will cause MLayouts to switch to the layout policy of the new orientation.
+        - Causes MWidgetView::applyStyle() to be called on views of all affected widgets.
+        - Causes MLayouts to switch to the layout policy of the new orientation.
     -# Resizing and repositioning of all scene windows to the new orientation.
     -# Emission of MSceneManager::orientationChanged() (if applicable).
-        - Will trigger the emission of MWindow::orientationChanged()
+        - Triggers the emission of MWindow::orientationChanged()
     -# Emission of MSceneManager::orientationAngleChanged().
-        - Will trigger the emission of MWindow::orientationAngleChanged()
--# MSceneManager's rotation animation finishes. MSceneManager::orientationChangeFinished() is emited.
-    - Will trigger the emission of MWindow::orientationChangeFinished()
+        - Triggers the emission of MWindow::orientationAngleChanged()
+-# MSceneManager's rotation animation finishes. MSceneManager::orientationChangeFinished() is emitted.
+    - Triggers the emission of MWindow::orientationChangeFinished()
 
 */

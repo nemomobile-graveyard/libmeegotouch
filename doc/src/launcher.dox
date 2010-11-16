@@ -1,41 +1,36 @@
-/*! \page launcher How to write launchable applications
+/*! \page launcher Writing launchable applications
 
-Launcher enables starting up various types of applications very
-fast. Launcher uses different <em>booster</em> for each of the
-application types. This page concentrates on launching MeeGo Touch
+Launcher makes it possible to start up various types of applications very
+quickly. Launcher uses a different <em>booster</em> for each of the
+application types. This section concentrates on launching MeeGo Touch
 applications with the MeeGo Touch booster, but also other boosters are
-briefly introduced at the bottom of the page.
+briefly introduced at the end of the section.
 
 \section intro Introduction
 
-In order to be started up with the launcher, an application needs to
+The launcher can start an application if the following pre-requisites are met:
 
-\li take MApplication and MApplicationWindow instances into use from
+\li MApplication and MApplicationWindow instances are taken into use from
 MComponentCache
 
-\li be compiled and linked to a position independent binary
+\li application is compiled and linked to a position independent binary
 (executable or library)
 
-\li be started with the \c invoker command instead of executing the
+\li application is started with the \c invoker command instead of executing the
 executable file.
-
-In the following we will explain how the launcher works and then
-explain how to fulfill the requirements above.
-
 
 \section howitworks How the launcher works
 
-Applauncherd daemon helps launching applications faster by two
-means. First, it preloads a number of libraries, including MeeGo Touch
-and Qt libraries. This allows faster loading of application binaries
-when needed. Second, it initializes certain components before an
+Applauncherd daemon makes it possible to launch applications faster. First of all, it preloads a number of 
+libraries, including MeeGo Touch and Qt libraries. This makes it faster to load application binaries
+when needed. Secondly, it initialises certain components before an
 application is loaded and makes the results available to applications
 when they start.
 
 More technically, applauncherd forks a will-be-application process,
-a.k.a booster, before knowing which application is going to be
+also called a booster, before knowing which application is 
 launched next. Booster processes do application-type specific
-initializations. For instance, the MeeGo Touch booster instantiates
+initialisations. For instance, the MeeGo Touch booster instantiates
 MApplication and MApplicationWindow objects and stores them to
 MComponentCache. Then the booster process waits for a connection from
 the \c invoker.
@@ -43,7 +38,7 @@ the \c invoker.
 An application is invoked with the \c invoker. The invoker sends the
 booster process the name and location of the application binary and
 data on its running environment. This triggers the booster process to
-load the binary, to initialize its environment, and finally to call
+load the binary, to initialise its environment, and finally to call
 the \c main() function in the binary.
 
 Boosted MeeGo Touch applications pick up and use the already
@@ -51,28 +46,27 @@ instantiated MApplication and MApplicationWindow objects from
 MComponentCache instead of creating new ones.
 
 
-\section source Source code modifications
+\section source Modifying source code
 
 MApplication instance must be taken from the MComponentCache. It is
-recommended to take MApplicationWindow from the cache as well. That
-is, the main program should have:
+recommended to take MApplicationWindow from the cache as well. Thus, the main program should have:
 
 \code
 MApplication* application = MComponentCache::mApplication(argc, argv);
 MApplicationWindow* window = MComponentCache::mApplicationWindow();
 \endcode
 
-Note that applications that use MComponentCache can be run without the
-launcher/invoker as well. In that case MComponentCache will
-instantiate new MApplication and MApplicationWindow objects on the
+Note: Applications that use MComponentCache can be run without the
+launcher/invoker as well. In that case, MComponentCache 
+instantiates new MApplication and MApplicationWindow objects on the
 fly.
 
 The launcher needs to find the symbol \c main in an application binary
 in order to start executing the application. However, unnecessary
 symbols in the application binary cause unnecessary overhead, so the
-recommended flags for compiling for the launcher make symbols hidden
+recommended flags for compiling for the launcher hide symbols 
 by default. When the flags are used, the main function must be
-explicitly exported. It can be done as follows:
+explicitly exported as follows:
 
 \code
 #include <MExport>
@@ -84,13 +78,13 @@ M_EXPORT int main(int argc, char **argv)
 \endcode
 
 
-\section compilation Compilation and Linking
+\section compilation Compiling and linking
 
-Binaries intended to be run with applauncherd should be compiled with
-\c -fPIC option to produce position independent code. In order to
-produce a position independent executable, \c -pie option and \c
--rdynamic options can be used in linking. This allows the result to be
-executed both traditionally and with the invoker.
+To compile binaries that can be run with applauncherd, use
+\c -fPIC option to produce position-independent code. To
+produce a position-independent executable, \c -pie option and \c
+-rdynamic options can be used in linking. This makes it possible to execute the result both 
+traditionally and with the invoker.
 
 To improve linking and load times of shared object libraries the size
 of dynamic export table it is encouraged to hide the unnecessary
@@ -99,10 +93,10 @@ symbols from the resulting binary by using \c -fvisibility=hidden and
 
 \subsection qmaketips Building with QMake
 
-\subsubsection qmakepreferred The preferred way
+\subsubsection qmakepreferred Building in the preferred way
 
-Once you have installed the \c libmeegotouch-dev package,
-you can simply use QMake configuration option \c meegotouch-boostable:
+Once you have installed the \c libmeegotouch-dev package, simply use QMake configuration option 
+\c meegotouch-boostable:
 
 \code
 CONFIG += meegotouch-boostable
@@ -112,24 +106,23 @@ This tells qmake to use the \c meegotouch-boostable feature, which
 includes the \c meegotouch feature and ultimately uses \c pkg-config for the
 flags. Unfortunately qmake does not complain if you add the line but
 have not installed \c libmeegotouch-dev, so if the QMake magic does
-not seem to work, double check that the package is indeed installed.
+not seem to work, double-check that the package is indeed installed.
 
-\subsubsection qmakeother The pkg-config way
+\subsubsection qmakeother Building with pkg-config
 
-You can also use \c pkg-config to get the correct flags:
+Use the \c pkg-config to get the correct flags:
 
 \code
 QMAKE_CXXFLAGS += `pkg-config --cflags meegotouch-boostable`
 QMAKE_LFLAGS += `pkg-config --libs meegotouch-boostable`
 \endcode
 
-If \c libmeegotouch-dev is not installed, \c pkg-config will
-complain when you run \c make.
+If \c libmeegotouch-dev is not installed, \c pkg-config 
+complains when you run \c make.
 
 \subsubsection qmakelastresort The last resort
 
-It's also possible to manually define the following variables
-in the .pro file:
+Manually define the following variables in the .pro file:
 
 \code
 QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
@@ -141,13 +134,13 @@ required compiler and linker flags.
 
 \subsection cmaketips Building with CMake
 
-You can utilize \c pkg-config in CMake by including \c FindPkgConfig in \c CMakeLists.txt:
+1. Use \c pkg-config in CMake by including \c FindPkgConfig in \c CMakeLists.txt:
 
 \code
 include(FindPkgConfig) 
 \endcode
 
-To obtain the compiler and linker flags, add the following lines:
+2. To obtain the compiler and linker flags, add the following lines:
 
 \code
 pkg_check_modules(MEEGOTOUCH_BOOSTABLE REQUIRED meegotouch-boostable)
@@ -155,7 +148,7 @@ add_definitions(${MEEGOTOUCH_BOOSTABLE_CFLAGS})
 link_libraries(${MEEGOTOUCH_BOOSTABLE_LDFLAGS})
 \endcode  
 
-In order to install the application binary with a \c .launch filename extension, use the following
+3. To install the application binary with a \c .launch filename extension, use the following
 line:
 
 \code
@@ -163,26 +156,27 @@ install(PROGRAMS myapplication DESTINATION /usr/bin RENAME myapplication.launch)
 \endcode
 
 If you do not want to use \c pkg-config for some reason, you can manually add the
-compiler and linker flags like this:
+compiler and linker flags as follows:
 
 \code
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fvisibility=hidden -fvisibility-inlines-hidden")
 set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic")
 \endcode  
 
-Again, this requires you to update the flags if something changes.
+Again, you need to update the flags if something changes.
 
 \subsection pkgconfig Obtaining flags with pkg-config
 
 The package \c libmeegotouch-dev provides the necessary files for
 \c pkg-config to get the appropriate compiler and linker flags.
-To get the compiler flags, use
+
+1. To get the compiler flags, use the following:
 
 \code
 pkg-config --cflags meegotouch-boostable
 \endcode
 
-and to get the linker flags use
+2. To get the linker flags, use the following:
 
 \code
 pkg-config --libs meegotouch-boostable
@@ -191,7 +185,7 @@ pkg-config --libs meegotouch-boostable
 \section running Running boosted application
 
 Check that applauncherd package is installed and applancherd daemon is
-running. You can now run your application as usual like
+running. You can now run your application as usual as
 /usr/bin/application_binary, or use the mboosted launching by running:
 
 \code
@@ -201,15 +195,17 @@ invoker --type=m /usr/bin/application_binary
 
 \section debugging Debugging
 
-In order to debug launched application, the debugger must be attached
-to already running booster process. For instance, first run
+To debug a launched application, the debugger must be attached
+to an already running booster process. For instance: 
+
+1. Run the following command:
 
 \code
 gdb /usr/bin/applauncherd.bin $(pgrep booster-m)
 \endcode
 
-then set a breakpoint to the application code and let the process
-continue to that point
+2. Set a breakpoint to the application code and let the process
+continue to that point:
 
 \code
 (gdb) break main.cpp:42
@@ -221,8 +217,8 @@ Breakpoint 1 (main.cpp:42) pending.
 Continuing.
 \endcode
 
-Finally invoke the application with the booster to which the debugger
-is attached to
+3. Invoke the application with the booster to which the debugger
+is attached:
 
 \code
 invoker --type=m /usr/bin/application_binary
@@ -230,17 +226,17 @@ invoker --type=m /usr/bin/application_binary
 
 \subsection pie-binaries PIE binaries and debugging
 
-Using \c pkg-config when building your binaries makes them
+If you use the \c pkg-config when building your binaries, they are
 linked with the \c -pie flag. The \c -pie flag  makes your binaries
 \e position \e independent \e executables. This means that the executables
-can be either used as a normal shared library or run from e.g.
+can be either used as a normal shared library or run, for example, from
 the command line.
 
 This creates problems when debugging your application with gdb older than
 version 7.1 which introduced the support for PIE binaries.
 
-The solution when using gdb 7.0 or earlier is to link your binaries as
-libraries i.e. using \c -shared instead of \c -pie. After this, you can't
+To use gdb 7.0 or earlier, link your binaries as
+libraries by using \c -shared instead of \c -pie. After this, you cannot
 execute your binaries directly, you have to use \c invoker.
 
 Setting correct linker flags with QMake:
@@ -265,31 +261,31 @@ application is:
 exec /usr/bin/invoker --type=m $0.launch "$@"
 \endcode
 
-Note that even if the binary is renamed to <application_name>.launch,
+Note: Even if the binary is renamed to <application_name>.launch,
 application identifier does not change (optional parameter of
 MComponentCache::mApplication).
 
-\c .desktop and D-Bus \c .service files can be modified so that instead of
-normal execution there is
+\c .desktop and D-Bus \c .service files can be modified so that 
+normal execution is replaced with the following:
 
 \code
 Exec=/usr/bin/invoker --delay <seconds> --type=m /usr/bin/<application_name>.launch
 \endcode
 
-Note 1: when launching through D-Bus, it is important to add enough delay to invoker so that it won't exit
-before the launched application gets its D-Bus service registered. Otherwise D-Bus daemon may think that
+Note 1: When launching through D-Bus, it is important to add enough delay to invoker so that it does not exit
+before the launched application gets its D-Bus service registered. Otherwise, D-Bus daemon may think that
 the application just died. Another option is to use --wait-term which forces invoker to wait until
 the launched application exits.
 
-Note 2: There is a slight difference in application startup time if using
+Note 2: There is a slight difference in the application start-up time if you use a
 script instead of the actual binary in Exec-field of .desktop and .service files. 
-Therefore it is recommended always use the actual invoker call with the binary name
+Therefore, it is recommended that you always use the actual invoker call with the binary name
 as presented above. 
 
-Note 3: When .desktop file contains X-Maemo-Service -field application will
-be started by default through D-Bus. This might cause some delay for
-application startup time. Therefore it is recommended not to have
-X-Maemo-Service -field inside .desktop files with launched applications,
+Note 3: When .desktop file contains the X-Maemo-Service field, the application 
+is started by default through D-Bus. This might cause some delay for
+application start-up time. Therefore it is recommended not to have the 
+X-Maemo-Service field inside .desktop files with launched applications,
 unless it is really needed for some other reason.
 
 Application packages that use the launcher depend on the applauncherd
@@ -341,14 +337,13 @@ Finally, if an application has some security tokens:
 </aegis>
 \endcode
 
-
 \section limitations Limitations and known issues
 
 \subsection issue-cmdline Issues with command line arguments
 
-Current launcher implementation does not support following Qt and
-MeeGo Touch command line options (see QApplication and MApplication
-docs for more information about command options usage):
+Current launcher implementation does not support the following Qt and
+MeeGo Touch command line options. For more information about using command options, see 
+QApplication and MApplication documentation. 
 
 \li  \c -style
 \li  \c -stylesheet
@@ -378,10 +373,9 @@ docs for more information about command options usage):
 \li  \c -fullscreen
 \li  \c -disable-m-input-context
 
-QCoreApplication::arguments() returns a QStringList that containing at
-most 32 arguments and drops the rest. The full list of arguments is
-accessible through \c argc and \c argv. They can be converted into
-QStringList similar to returned by QCoreApplication::arguments() as
+QCoreApplication::arguments() returns a QStringList which contains 32 arguments at the most and 
+drops the rest. The full list of arguments is accessible through \c argc and \c argv. They can be 
+converted into QStringList similar to returned by QCoreApplication::arguments() as
 follows:
 
 \code
@@ -397,15 +391,15 @@ M_EXPORT int main(int argc, char **argv) {
 
 By default, invoker processes terminate before or right after booster
 processes have called main(). This may confuse shell scripts and
-process monitoring in D-Bus daemon and Upstart, for instance. To help
-solving these issues invoker accepts parameters
+process monitoring in D-Bus daemon and Upstart, for instance. To solve these issues, the invoker 
+accepts the following parameters:
 
 \li \c --delay \c 10 invoker waits for 10 seconds before terminating
-\li \c --wait-term invoker will not terminate until the launched
-application terminates. Invoker will return the same return value as
-the application did, or it will be terminated by the same signal as
-the launched application. Signals received by the invoker process will
-be forwarded to the launched application.
+\li \c --wait-term invoker does not terminate until the launched
+application terminates. Invoker returns the same return value as
+the application did, or it is terminated by the same signal as
+the launched application. Signals received by the invoker process are forwarded to the launched 
+application.
 
 
 \section sample Sample MeeGo Touch launchable application
@@ -434,17 +428,16 @@ M_EXPORT int main(int argc, char ** argv)
 
 \section otherboosters Other boosters
 
-Warning: behavior of these boosters is subject to change.
+Warning: Behaviour of these boosters is subject to change.
 
 Qt booster is a no-operation booster. It can be used by calling \c
 invoker \c --type=qt. Qt booster requires only the M_EXPORT source
 modification. Any MeeGo Touch boostable application can be launched
-with this booster type as well, but it will result in a slower start
-up because of empty cache.
+with this booster type as well, but it results in a slower start-up because of empty cache.
 
 Wrt booster, used with \c invoker \c --type=wrt, populates
 MComponentCache with MApplication and MApplicationWindow, just like
 the MeeGo Touch booster. However, in this case MApplication uses a
-graphics system which suits better for rendering web content.
+graphics system which is more suitable for rendering web content.
 
 */

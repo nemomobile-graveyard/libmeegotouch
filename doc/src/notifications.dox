@@ -1,45 +1,45 @@
-/*! \page notifications Notifications System
+/*! \page notifications Notification system
 
-The MeeGo Touch environment offers a notification system framework. Applications and other processes can use the notification system to inform the user about specific events. For example, the notification system can be used to inform the user about
+The MeeGo Touch environment offers a notification system framework. Applications and other processes can use the notification system to inform the user about specific events such as:
 
 - incoming emails
 - new instant messages
 - missed calls
 
-The notification system should not be used for temporary situations like various error cases. A simple \c MInfoBanner is more suitable for the following situations (for example):
+The notification system should not be used for temporary situations like various error cases. A simple \c MInfoBanner is more suitable for situations, such as:
 
 - the user interacts with an application in a way that leads to an error case
-- message to the user after the user has done something (e.g. "file deleted successfully")
+- message to the user after the user has done something (for example, "file deleted successfully")
 
-A notification is usually represented to the user with for example graphical, aural or tactile feedback - or a combination of these. The MeeGo Touch notification API hides these details under the unified API. The system determines what kind of feedback should be used to present the notifications to the user. This means that the user of the notification system doesn't have exact control over how the notification is actually presented to the user.
+A notification is usually represented to the user, for example, with graphical, aural or tactile feedback - or a combination of these. The MeeGo Touch notification API hides these details under the unified API. The system determines what kind of feedback is used to present the notifications to the user. This means that the user of the notification system cannot directly control how the notification is actually presented to the user.
 
-The notifications can be grouped. It is up to the underlying system how grouped notifications will be shown. A usual way is to for example show one visual banner to the user representing a group of notifications. A notification group can have almost the same parameters - and hence e.g. visualisation - that single notifications have.
+The notifications can be grouped. It is up to the underlying system how grouped notifications are shown. It is common that, for example, a group of notifications is displayed with one visual banner. A notification group can have almost the same parameters - including, for instance, visualisation - as single notifications.
 
 The relevant classes to developers are \c MNotification and \c MNotificationGroup. A notification can be created by constructing an object of type \c MNotification and a notification group can be created by constructing an object of type \c MNotificationGroup. After the relevant parameters have been set the notifications and the notification groups must be published before they appear by calling the publish() function. The notification group must be published before a notification can be placed into it.
 
 \section parameters Notification parameters
 
-There are similar parameters associated with both of these classes. Some of them are explained here.
+This section describes some of the parameters associated with the \c MNotification and \c MNotificationGroup classes. There are similar parameters related to both classes.
 
 \subsection eventType Event type
 
-Notifications' presentation to the user is affected by the notification's event type. For example some specific sound could be played when a new e-mail arrives. The e-mail application would only set the correct event type for the notification and the notification system would take care of the rest. Similarly other parameters such as icons and images can be selected according to the event type.
+This parameter determines how the notification is presented to the user. For example, a specific sound can be played when a new e-mail arrives. The e-mail application only sets the correct event type for the notification and the notification system takes care of the rest. Similarly, other parameters, such as icons and images, can be selected according to the event type.
 
-Users of the notification system should always set the event type correctly. Users must not set the event type wrongly just to try to get some specific feedback (e.g. sound). For this the user can provide its own event type configuration as the event type system supports 3rd party event types. The event type naming follows the <a href="http://www.galago-project.org/specs/notification/0.9/x211.html">Category</a> naming in the <a href="http://www.galago-project.org/specs/notification/0.9/index.html">Desktop Notifications Specification</a>.
+Users of the notification system must always set the event type correctly. They should not set an incorrect event type to get a specific feedback (for example, sound). To get a specific feedback, you can provide your own event type configuration as the event type system supports 3rd party event types. The event type naming follows the <a href="http://www.galago-project.org/specs/notification/0.9/x211.html">Category</a> naming in the <a href="http://www.galago-project.org/specs/notification/0.9/index.html">Desktop Notifications Specification</a>.
 
 The predefined event types that are guaranteed to exist in the system are defined in the \c MNotification documentation under Static Public Attributes.
 
 \subsection action Action
 
-The action parameter specifies an action related to the notification. The action is usually triggered by something the user does. The action is returned to the application that sent the notification.
+This parameter specifies an action related to the notification. The action is usually triggered by something the user does. The action is returned to the application that sent the notification.
 
-A typical user scenario would be for example the following. An e-mail application receives a new e-mail and sends a notification about this. The user sees a graphical notification on the screen and clicks it. The action related to the notification is triggered which commands the e-mail application to show the recently received e-mail.
+For example, an e-mail application receives a new e-mail and sends a notification about this. The user sees a graphical notification on the screen and taps it. The notification-related action is triggered and it causes the e-mail application to show the recently received e-mail.
 
-From the above example it comes obvious that notification actions are application specific.
+As illustrated in the above example, notification actions are application-specific.
 
 \subsection image Image
 
-Specifies an image that is related to the notification. Usually this means that the image is shown in a graphical representation of the notification. The image parameter can be a logical name like 'Icon-messages' or an absolute path to an image file (e.g. <em>%/usr/share/pixmaps/foo.png</em>).
+This parameter specifies an image related to the notification. Usually this means that the image is shown in a graphical representation of the notification. The image parameter can be a logical name (such as 'Icon-messages') or an absolute path to an image file (such as <em>%/usr/share/pixmaps/foo.png</em>).
 
 \subsection identifier Identifier
 
@@ -47,7 +47,7 @@ The identifier is a string that the application can use to identify a particular
 
 \subsection persistence Persistence
 
-Notifications can be created as persistent, in which case the notification system stores the notifications and they are restored after a reboot. The user can get a list of stored notifications with a call to the static function \c MNotification::notifications() and the list of groups with \c MNotificationGroup::notificationGroups().
+This parameter specifies that the notification system stores the notifications and they are restored after a reboot. The user can get a list of stored notifications with a call to the static function \c MNotification::notifications() and the list of groups with \c MNotificationGroup::notificationGroups().
 
 \see
 

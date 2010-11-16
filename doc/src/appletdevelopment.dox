@@ -1,40 +1,40 @@
-/*! \page appletdevelopment Applet development How-To
+/*! \page appletdevelopment Developing applets
 
-An applet is a small program ran in an applet runner process that can be embedded to a Mashup canvas (a.k.a. Experience canvas).
+An applet is a small program which runs in an applet runner process that can be embedded to a mashup canvas (also called Experience canvas).
 
 \section appletterminology Terminology
 
-- \b Applet - is the package installed to the system that contains the binary and resources that offers the functionality of the applet
-- \b Applet \b instance - is a running process of some applet. There can be multiple instances of an applet running simultaneously
+- \b Applet - package installed to the system that contains the binary and resources that provide the functionality of the applet.
+- \b Applet \b instance - running process of an applet. Multiple instances of an applet can run simultaneously.
 - Applet lifecycle:
-  - \b Add - A new applet instance is placed on the applet canvas (i.e. Desktop). Homescreen initiates an instance construction from applet binary. The same operation occurs when already added applet instance is restored after homescreen has been closed and reopened (e.g. when device has been turned off and back on). When applet instance is added for the first time to the canvas the applet instance specific data is empty. When applet instance is restored the applet instance specific data is restored from pre-closed state.
-  - \b Close -An applet instance is closed. This might occur for instance when homescreen is shut down (e.g. when device is turned off). It's good to make a distinction between this and \b remove.
-  - \b Remove - This occurs when an applet instance is removed from applet canvas. All applet instance specific data is removed. Also applet developer should remove any data it has stored for this particular applet instance. This means that applet instance is not added to the applet canvas again when homescreen is restarted the next time.
+  - \b Add - A new applet instance is placed on the applet canvas (in other words, Desktop). The homescreen initiates an instance construction from the applet binary. The same operation occurs when an already added applet instance is restored after the homescreen has been closed and reopened (for example, when a device has been turned off and back on). When an applet instance is added to the canvas for the first time, the applet instance specific data is empty. When an applet instance is restored, the applet instance specific data is restored from the pre-closed state.
+  - \b Close -An applet instance is closed. This might occur, for instance, when the homescreen is shut down (for example, when a device is turned off). Note: This state is different from \b remove.
+  - \b Remove - An applet instance is removed from applet canvas. All applet instance specific data is removed. The applet developer should remove any data stored for this particular applet instance. The applet instance is not added to the applet canvas when the homescreen is restarted.
 
 \section appletdevenv Development environment
 
-For developing applets you need:
-- libdui-dev
+To develop applets, you need:
+- libmeegotouch-dev 
 
 \section appletdevelopment Developing an applet
 
-From a developers point of view an applet consists of a shared library, a metadata file and possibly some resources (such as images). All of these are put into a debian package to enable installation of applets to devices.
+From the developer's point of view, an applet consists of a shared library, a metadata file, and possibly resources (such as images). All the contents are packaged into a Debian package so that the applets can be installed to a device.
 
 \image html appletdevelopment.png "Applet development classes"
 
-\subsection appletclasses What classes to implement
+\subsection appletclasses Classes to implement
 
-From the user interface point of view an applet is a \c MWidget. So construct a \c MWidget class in whatever way fits your purposes: use one of the existing derived classes in libdui, do your own widget or whatever. This is the UI part of your applet.
+From the user interface point of view, an applet is a \c MWidget. Construct a \c MWidget class as you like, for instance, by using one of the existing derived classes in libmeegotouch or by creating your own widget. This is the UI part of your applet.
 
-Whatever approach you chose for constructing your applet \c MWidget, you need to offer a connection point for the host process to get a handle to it. For this you need to implement an interface called \c MAppletInterface. There is only a single method in this interface you need to implement:
+Regardless of the approach chosen for constructing your applet \c MWidget, you need to provide a connection point for the host process. For this, you need to implement an interface called \c MAppletInterface. You only need to implement one method in this interface:
 
 \c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&)
 
 In this method you need to return a pointer to the \c MWidget of your applet.
 
-\b Note: The ownership of the \c MWidget is transformed to the caller of this method, so \b you \b mustn't \b destroy the widget yourself.
+\b Note: The ownership of the \c MWidget is transformed to the caller of this method, so \b you \b must not \b destroy the widget yourself.
 
-You also need to use a couple of Qt macros to get things working. A complete example follows:
+You also need to use a couple of Qt macros. For example:
 
 \code
 // myapplet.h
@@ -64,11 +64,11 @@ MWidget* MyApplet::constructWidget(const MAppletMetaData &metadata, MDataStore& 
 }
 \endcode
 
-\subsection appletmetadata Create applet metadata
+\subsection appletmetadata Creating applet metadata
 
-Applet metadata is defined in \c .desktop files following <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>. Applet metadata extends \c .desktop entry specification by defining a new type \b X-MeeGoApplet. Applet metadata specification follows desktop entry specification so that required keys (\em Type, \em Name and \em Exec) have to be defined in the applet metadata.
+Applet metadata is defined in \c .desktop files according to <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>. Applet metadata extends the \c .desktop entry specification by defining a new type \b X-MeeGoApplet. Thus, the required keys (\em Type, \em Name and \em Exec) have to be defined in the applet metadata.
 
-\b Exec key in applet metadata defines the runner binary which is launched in separate process to run the applet binary. This key needs to be defined but can be left empty. If \b Exec key is left empty the applet is ran inside the host process.
+\b Exec key in applet metadata defines the runner binary which is launched in a separate process to run the applet binary. This key needs to be defined but can be left empty. If \b Exec key is left empty, the applet runs inside the host process.
 
 Applet metadata extends the desktop specification with the following new keys. These keys need to be defined under group X-MeeGoApplet.
 
@@ -81,84 +81,86 @@ Applet metadata extends the desktop specification with the following new keys. T
 </tr>
 <tr>
   <td>Applet</td>
-  <td>Defines the applet binary that will be loaded using the runner defined by the Exec key. This binary needs to be located in \c /usr/lib/dui/applets/ - directory.</td>
+  <td>Defines the applet binary that is loaded using the runner defined by the Exec key. This binary needs to be located in \c /usr/lib/meegotouch/applets/ - directory.</td>
   <td>string</td>
   <td>YES</td>
 </tr>
 <tr>
   <td>Identifier</td>
-  <td>Defines an identifier for the applet. The identifier is used for example defining the applet specific style resource locations.</td>
+  <td>Defines an identifier for the applet. The identifier is used, for example, to define the applet-specific style resource locations.</td>
   <td>string (can contain characters [a-zA-Z0-9_-])</td>
   <td>NO</td>
 </tr>
 </table>
 
-Following is an example of applet metadata specification:
+The following example illustrates an applet metadata specification:
 
 \code
 [Desktop Entry]
 Type=X-MeeGoApplet
 Name=ExampleApplet
 Icon=icon-l-music
-Exec=duiappletrunner
+Exec=mappletrunner
 
 [X-MeeGoApplet]
 Applet=libexampleapplet.so
 \endcode
 
-\subsection appletinstallation Install
+\subsection appletinstallation Installing the applet 
 
-The shared library must be installed to \c /usr/lib/dui/applets/.
+To install the applet:
 
-The metadata \c .desktop file must be installed to \c /usr/share/dui/applets/.
+1. Install the shared library to \c /usr/lib/meegotouch/applets/.
+
+2. Install the metadata \c .desktop file to \c /usr/share/meegotouch/applets/.
 
 \subsection appletpackaging Packaging
 
-Each Debian package can only contain one applet. If applets need to be bundled a meta package that depends on individual applet packages must be created.
+Each Debian package can only contain one applet. If applets need to be bundled, create a meta package that depends on individual applet packages.
 
-The applet package must contain the following meta data:
+The applet package must contain the following metadata:
 
 \code
-Maemo-Desktop-File: /usr/share/dui/applets/your-applet-desktop-file.desktop
+Maemo-Desktop-File: /usr/share/meegotouch/applets/your-applet-desktop-file.desktop
 \endcode
 
-To add this to an applet package modify your \c debian/control file so that the section for the binary package of the applet contains
+To add the metadata to an applet package, modify the section for the applet binary package in your \c debian/control file to include the following:
 
 \code
-XB-Maemo-Desktop-File: /usr/share/dui/applets/your-applet-desktop-file.desktop
+XB-Maemo-Desktop-File: /usr/share/meegotouch/applets/your-applet-desktop-file.desktop
 \endcode
 
 \section appletservices Other services offered to applets
 
 \subsection appletinstancedata Applet instance data
 
-The applet system provides the applet instances with an object that can be used to store applet instance specific data to a permanent storage. Instance specific data is something that is not needed anymore when the applet instance is removed. Instance specific data includes any data that the applet needs to restore an instance. The instance data object is an object that implements the \c MDataStore interface.
+The applet system provides the applet instances with an object that can be used to store applet instance specific data in a permanent storage. When the applet instance is removed, the instance-specific data is not needed anymore. Instance-specific data includes the data that the applet needs to restore an instance. The instance data object implements the \c MDataStore interface.
 
-Applets don't create their own objects of the instance data classes but instead they are provided with one that they should use. The instance data object is provided to the applets via the \c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&) call as the second argument.
+Applets do not create their own objects of the instance data classes. Instead, the applets are provided with the required instance data object through the \c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&) call as the second argument.
 
-Whenever the state of an applet instance changes in a way that affects on how the applet instance would be restored, the applet should update the data.
+Whenever the state of an applet instance changes in a way that affects the restoration of the applet instance, the applet should update the data. 
 
 \subsection appletsettings Applet settings
 
-Applets can have settings which can be accessed by the user from the settings dialog. There are two different kinds of settings: \b global and \b instance settings. Global settings affect all running instances of a given applet. Instance settings on the other hand only affect the applet instance that they are associated with.
+There can be applet settings that users can access through the settings dialog. There are two kinds of settings: \b global and \b instance settings. Global settings affect all running instances of a given applet. Instance settings, on the other hand, only affect the applet instance that they are associated with.
 
-The settings can be accessed by the applet code through the interface offered via the \c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&) call as the third argument.
+The settings can be accessed by the applet code through the interface offered by the \c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&) call as the third argument.
 
-The instance and global settings are both accessed through this same interface. The user of the settings object can't really tell the difference between instance and global settings - they are intermixed.
+The instance and global settings are both accessed through this same interface. The user of the settings object cannot distinguish between instance and global settings - they are intermixed.
 
-\b Important: if there is a setting defined with the same name in both the global and instance settings, the global setting gets shadowed by the instance setting. It's the applet developers responsibility to avoid such situations. So as an applet developer: don't specify any settings in both global and instance settings with the same name.
+\b Important: Do not specify settings in both global and instance settings with the same name. If a setting is defined with the same name in both the global and instance settings, the global setting is shadowed by the instance setting. 
 
-The settings of an applet are defined with a <a href="settingslanguageschema.html">settings language</a>. The global and instance settings are defined in separate files. An applet can have both of the settings files present, either one or neither. It is totally up to the applet's use case what kind of settings it needs to have.
+The settings of an applet are defined with a <a href="settingslanguageschema.html">settings language</a>. The global and instance settings are defined in separate files. An applet can contain one or both settings files, or no settings file at all. The settings depend entirely on the use case of the applet.
 
-The titles of the various settings can be localized, by providing a translation id as the value for the title attribute in the settings xml file. If localization of a title is not required, it can be written as such in the attribute. This requires that the translation catalogs contain only ids with some prefix so they don't conflict with common words.
+The titles of the various settings can be localised by providing a translation ID as the value for the title attribute in the settings XML file. If a title does not need to be localised, it can be written as such in the attribute. The translation catalogs must only contain IDs with a specific prefix so they do not conflict with common words.
 
-A part of the names of the settings files is taken from the applet metadata file basename. For example, if the applet's metadata file is <tt>myapplet.desktop</tt>, it's  basename is \c myapplet. The corresponding file names for the settings files would be \b myapplet-instance.xml and \b myapplet-global.xml for instance and global settings respectively.
+The settings file names are partly taken from the applet metadata file basename. For example, if the applet's metadata file is <tt>myapplet.desktop</tt>, its  basename is \c myapplet. The corresponding settings file names would be \b myapplet-instance.xml for instance settings and \b myapplet-global.xml for global settings.
 
-The installation location for both of these files is the <tt>/usr/share/dui/applets/settings</tt> directory.
+Both files are installed in the <tt>/usr/share/meegotouch/applets/settings</tt> directory.
 
-\subsection appletcontainer Container communication API
+\subsection appletcontainer Using MContainer
 
-Applet may be reparented to a MContainer by MMashupCanvas. MContainer can expose optional applet information on its titlebar, including icon, title and additional informative text.To make an applet reside in a container, set the container-mode property in style sheet of the mashup canvas. An example taken from base style sheet of mashup canvas looks like 
+Applets may be reparented to an MContainer by MMashupCanvas. MContainer can include optional applet information on its title bar, such as the icon, title and additional informative text. To place an applet in a container, set the container-mode property in the style sheet of the mashup canvas. The following example illustrates the base style sheet of the mashup canvas:
 
 \code
 MMashupCanvasStyle {
@@ -166,11 +168,11 @@ MMashupCanvasStyle {
 }
 \endcode
 
-As shown above, default settings for container-mode property is true. When the container-mode property is true(default), an applet is embedded as shown \image html containermodeon.png "Container mode on(default)" 
+As shown above, default settings for container-mode property are true. When the container-mode property is true(default), an applet is embedded, see \image html containermodeon.png "Container mode on(default)" 
 
-When container-mode property to false applet looks like: \image html containermodeoff.png "Container mode off" 
+The following figure illustrates an applet when container-mode property is false: \image html containermodeoff.png "Container mode off" 
 
-Use following properties and signals in your applet widget class to communicate applet information:
+Use the following properties and signals in your applet widget class to provide applet information:
 
 \code
 Q_PROPERTY(QString appletIcon READ icon WRITE setIcon)
@@ -192,81 +194,83 @@ The property and signal names must be as stated above. The property access funct
 
 \subsection appletidentifier Applet identifier
 
-Every applet has an applet identifier that is used in a few places in the applet system. The applet identifier is a string that uniquely identifies the applet. Note however that the applet identifier is not an applet instance specific identifier.
+Every applet has an applet identifier that is used in several places in the applet system. The applet identifier is a string that uniquely identifies the applet. Note: The applet identifier is not specific to an applet instance.
 
 The applet identifier is determined like this:
-- If an identifier (<tt>Identifier</tt>) is specified in the \ref appletmetadata "applet metadata" (and it is valid), that is used
-  - If the identifier in the metadata is not specified or it can't be used (e.g. it is ill-formed) an identifier is extracted from the applet shared library name:
-    - Assuming your applet is packaged to a shared library called <tt>lib<strong>exampleapplet</strong>.so</tt>, the identifier will be <strong>exampleapplet</strong>.
+- If an identifier (<tt>Identifier</tt>) is specified in the \ref appletmetadata "applet metadata" (and it is valid), the identifier is used.
+  - If the identifier in the metadata is not specified or it cannot be used (for example, if it is ill-formed), an identifier is extracted from the applet shared library name:
+    - For example, if your applet is packaged to a shared library called <tt>lib<strong>exampleapplet</strong>.so</tt>, the identifier is <strong>exampleapplet</strong>.
 
 \subsection appletstyling Applet styling
 
-Applets can define their own styles just like any other applications in the MeeGo Touch world. Styling is done with style sheets and images in the \ref styling "usual way". The only important thing with applets is the location of the style resources.
+Applets can define their own styles just like any other applications in the MeeGo Touch world. You can use style sheets and images for \ref styling "in the usual way". In applet styling, the location of the style resources is important.
 
-The \ref appletidentifier "applet identifier" is used in the construction of the resource location. The applet identifier is used as the application name in the directory name. See \ref theme_structure for more information about the directory locations.
+The \ref appletidentifier "applet identifier" is used in the construction of the resource location. The applet identifier is used as the application name in the directory name. For more information on the directory locations, see \ref theme_structure. 
 
 \subsection appletinternationalisation Applet internationalisation
 
-For the most part all \ref i18n "internationalisation guidelines" apply to applets as well. The only thing to notice is that the \ref appletidentifier "applet identifier" is used as the translation catalog name.
+For the most part, all \ref i18n "internationalisation guidelines" apply to applets as well. However, the \ref appletidentifier "applet identifier" is used as the translation catalog name.
 
 \section applettools Tools to help development
 
-The <tt>dui-dev-tools</tt> package includes a tool called <tt>duiapplettester</tt>. This tool can be used to test applets. The tool loads an applet to a window where it can be tested by interacting with it and visually checking the results. It's also easy to run the applet in a debugger tool with this tool.
+The <tt>meegotouch-dev-tools</tt> package includes a tool called <tt>mapplettester</tt> which can be used to test applets. The tool loads an applet to a window where you can interact with it and visually check the results. You can also use this tool for debugging the applet.
 
-You can load an applet with duiapplettester by commanding:
+To load an applet with mapplettester, use the following command:
 
 \code
-duiapplettester <metadatafile>
+mapplettester <metadatafile>
 \endcode
 
 where &lt;metadatafile&gt; is the metadata file name of the applet.
 
-\b Note that the applet must be installed to the system before \em duiapplettester can use it.
+\b Note: The applet must be installed to the system before \em mapplettester can use it.
 
-The \em duiapplettester also supports applet settings. The settings can be accessed by opening the context menu for the applet (right mouse button clicking the applet on an environment that has a mouse).
+The \em mapplettester also supports applet settings. The settings can be accessed by opening the 
+context menu for the applet (for instance, by right-clicking the applet).
 
-\section appletenablers Applet enablers
+\section appletenablers Enabling applets
 
-You don't necessarily need to write your own applet from scratch. You can use one of the general purpose "enabling applets" such as the WWF (Web Widget Framework) or Python applet.
+You do not necessarily need to write your own applet from the very beginning. You can use one of the 
+general-purpose enabling applets such as the WWF (Web Widget Framework) or Python applet.
 
 \section appletpreconfiguring Preconfiguring applets on a mashup canvas
 
-The following information is only meant for application developers who want to preconfigure
-which applets will appear on the mashup canvas by default. Applet developers do not need this
+The following section is only meant for application developers who want to preconfigure
+which applets appear on the mashup canvas by default. Applet developers do not need this
 information.
 
 Each mashup canvas stores information about the applets instantiated on that particular canvas
 in the ~user/.config/appname/canvasname.data file. If this file does not exist when the mashup
-canvas is instantiated the global defaults are copied from /etc/xdg/appname/canvasname.data if
+canvas is instantiated, the global defaults are copied from /etc/xdg/appname/canvasname.data if
 that file exists. This file should be supplied by the application developer if there is a need
 to define which applets should be instantiated on a particular canvas by default.
 
-An example data file follows:
+The following example illustrates the data file:
 
 \code
 [1]
-desktopFile=/usr/share/dui/applets/myapplet.desktop
+desktopFile=/usr/share/meegotouch/applets/myapplet.desktop
 private\layoutIndex=0
 
 [2]
-desktopFile=/usr/share/dui/applets/someotherapplet.desktop
+desktopFile=/usr/share/meegotouch/applets/someotherapplet.desktop
 private\layoutIndex=1
 \endcode
 
 The value in brackets is a canvas specific applet identifier, which is an unsigned integer
 starting from 1. The value of the desktopFile key defines the .desktop file which contains
-the information for this particular applets. The private\\layoutIndex key contains the
+the information for this particular applet. The private\\layoutIndex key contains the
 applet's location in the layout (which is currently just an index - this will change in the
 future).
   
-To be able to define different configurations for different purposes the application package
-should not contain this file. Instead, there should be a settings template package for the
-application which can be instantiated for different configurations. For an example how to
-achieve this refer to the duihomescreen-settings-template package. It contains example
-ConfML, XSLT and GCFML files for the MeeGo Touch Home Screen package in the conf directory, the
-necessary debian packaging files in the debian directory and tests in the tests directory.
-An instantiated version of the template, duihomescreen-settings-default, which also contains
-the sources, can be fetched with apt-get source duihomescreen-settings-default.
+If the application package contains this file, it is not possible to define different configurations for 
+different purposes. Instead, there should be a settings template package for the application which 
+can be instantiated for different configurations. For an example, see the 
+mhomescreen-settings-template package. It contains example ConfML, XSLT and GCFML files for the 
+MeeGo Touch Home Screen package in the conf directory, the necessary debian packaging files in the 
+debian directory and tests in the tests directory. An instantiated version of the template, 
+mhomescreen-settings-default, which also contains the sources, can be fetched with apt-get source 
+mhomescreen-settings-default.
 
 \see
 

@@ -1,4 +1,4 @@
-/*! \page debugginginfo Debugging Information
+/*! \page debugginginfo Debugging functions
 
 \section intro_sec Introduction
 
@@ -14,7 +14,7 @@ Qt provides four functions for writing out warning and debug text:
 <li><a href="http://doc.qt.nokia.com/4.6/qtglobal.html#qFatal">qFatal()</a> is used for writing fatal error messages shortly before exiting.</li>
 </ul>
 
-In MeeGo Touch instead of qDebug() and qWarning() the functions mDebug() and mWarning() should be used, as mDebug() and mWarning() have been extended by a module name. This module name allows filtering of messages (see \ref outputprefix).
+In MeeGo Touch, use the functions mDebug() and mWarning() instead of qDebug() and qWarning(). The mDebug() and mWarning() functions have been extended by a module name which allows message filtering (see \ref outputprefix).
 
 Example:
 \verbatim
@@ -22,54 +22,54 @@ mDebug("MComponentData") << "Testability plugin loaded successfully";
 mWarning("MComponentData::setActiveWindow()") << "Attempting to activate unregistered window";
 \endverbatim
 
-Usually the module name is the name of the class with an optional method prefix.
+The module name is usually the name of the class with an optional method prefix.
 
-\section usage Usage
+\section usage Using debugging functions
 
-General guidelines:
+Use the debugging functions according to the following guidelines:
 <ul>
-<li>Try to use the debugging function with the lowest possible severity: mDebug() < mWarning() < qCritical() < qFatal(). E. g. do not use mWarning() for a custom debugging output.</li>
+<li>It is recommended that you use the debugging function with the lowest possible severity: mDebug() < mWarning() < qCritical() < qFatal(). For example, do not use mWarning() for a custom debugging output.</li>
 <li>Use debugging functions rarely.</li>
-<li>The text of the output should be basically understandable also for developers that do not maintain the module where the output has been triggered.
+<li>The text of the output should also be understandable for developers that do not maintain the module where the output has been triggered.
 </ul>
 
 \subsection mdebug mDebug()
 
-Is used for writing custom debug output. Consider to add only mDebug() statements that might be useful for future debugging. Remove all mDebug() statements that have been added for just fixing a current issue.
+Writes custom debug output. Add only mDebug() statements that are useful for future debugging. Remove all mDebug() statements that have only been added for fixing a current issue.
 
 \subsection mwarning mWarning()
 
-Is used to report warnings and recoverable errors. Only report a warning, if something unexpected happened that is not reported already by the API. E. g. do not report a warning if the parsing of some data failed and this failure is already reported by a return value. A warning is useful, if for example a caching mechanism cannot get activated and hence the performance might slow down dramatically. In this case the warning gives a hint about the root cause.
+Reports warnings and recoverable errors. Only report a warning for unexpected events that are not already reported by the API. For example, do not report a warning if the parsing of some data failed and the failure is already reported by a return value. A warning is useful, for example, if a caching mechanism cannot be activated and this may considerably slow down the performance. In this case, the warning gives a hint about the root cause.
 
 \subsection qcritical qCritical()
 
-Is used for writing critical error messages and reporting system errors. qCritical() instead of mWarning() should be used, if the functionality of the overall system might get harmed.
+Writes critical error messages and reports system errors. Use qCritical() instead of mWarning(), if the functionality of the overall system is at risk.
 
 \subsection qfatal qFatal()
 
-Is used for writing fata error messages shortly before exiting. Should only be used, if it is impossible to continue with the execution of further code (qFatal() will throw an exception).
+Writes fatal error messages shortly before exiting. Use this function only if it is impossible to continue with the execution of further code. The qFatal() throws an exception.
 
-\section controlling Controlling the Output
+\section controlling Controlling debugging output
 
-MeeGo Touch allows to control which messages are shown and to optionally stream the messages into a file.
+MeeGo Touch allows you to control which messages are shown and optionally stream the messages into a file.
 
 \subsection outputlevel -output-level
 
-Which messages are shown is specified by adding <em>-output-level {debug|warning|critical}</em> as parameter when starting an application or by setting the environment variable M_OUTPUT_LEVEL.
+To specify which messages are shown, add <em>-output-level {debug|warning|critical}</em> as parameter when starting an application or set the environment variable M_OUTPUT_LEVEL.
 <ul>
 <li>debug: Messages from qDebug(), mDebug(), qWarning(), mWarning(), qCritical() and qFatal() are shown.</li>
 <li>warning: Messages from qWarning(), mWarning(), qCritical() and qFatal() are shown.</li>
 <li>critical: Messages from qCritical() and qFatal() are shown.</li>
 </ul>
 
-If no output-level has been specified, on ARM environments <em>critical</em> is used as default value. In other environments <em>warning</em> is used as default.
+If no output-level has been specified, on ARM environments <em>critical</em> is used as the default value. In other environments <em>warning</em> is used as default.
 
 \subsection outputfile -output-file
 
-Per default the output is written to <em>stderr</em>. To stream the output into a file use <em>-output-file {filename}</em>.
+By default, the output is written to <em>stderr</em>. To stream the output into a file, use <em>-output-file {filename}</em>.
 
 \subsection outputprefix -output-prefix, -no-output-prefix
 
-It is possible to specify a whitelist or a blacklist of outputs with a specific prefix. The whitelist is specified by <em>-output-prefix {prefix}</em>, the blacklist is specified by <em>-no-output-prefix {prefix}</em>. The prefix is the given module name.
+You can specify a whitelist or blacklist for outputs with a specific prefix. To specify a whitelist, use <em>-output-prefix {prefix}</em>. To specify a blacklist, use <em>-no-output-prefix {prefix}</em>. The prefix is the given module name.
 
 */

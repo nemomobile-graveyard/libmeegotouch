@@ -1,6 +1,6 @@
 /*! \page installation Installing MeeGo Touch
 
-\note You may be able to use one of the ready made packages for your platform.
+\note You may be able to use one of the ready-made packages for your platform.
 
 \section commonreqs MeeGo Touch common requirements
 
@@ -10,8 +10,9 @@ MeeGo Touch requires <a href="http://qt.nokia.com">Qt version 4.7</a> or later. 
 Qt 4.7, you can <a href="http://qt.nokia.com/downloads">download the SDK for free</a> for a number of
 systems.
 
-If you have installed the Qt SDK to your home directory in Linux, you must set the following
-environment variables before building the MeeGo Touch modules by running the commands:
+If you have installed the Qt SDK to your home directory in Linux, you must set the required
+environment variables before building the MeeGo Touch modules. 
+To set the variables, run the following commands:
 
 <pre>
 export QTDIR=/home/[your home directory]/qtsdk-2010.01/qt/
@@ -20,12 +21,12 @@ export PATH=${QTDIR}/bin:${PATH}
 
 \subsection MeeGo Touch Theme
 
-A theme is required to be installed for MeeGo Touch applications to function. The MeeGo Touch
-development theme is freely available for download in the <a href="http://meego.gitorious.org/meegotouch/meegotouch-theme">meegotouch-theme module</a>
+You need to install a theme for MeeGo Touch applications to function. The MeeGo Touch
+development theme is freely available for downloading in the <a href="http://meego.gitorious.org/meegotouch/meegotouch-theme">meegotouch-theme module</a>
 of the code repository. On Mac OS X and Windows, the theme is already by default embedded into the
-MeeGo Touch distribution file .
+MeeGo Touch distribution file.
 
-On Linux, the following commands will build and install the default theme from the source module:
+On Linux, use the following commands to build and install the default theme from the source module:
 <pre>
 cd meegotouch-theme
 qmake
@@ -34,14 +35,14 @@ sudo make install
 
 \section linuxreqs MeeGo Touch on Linux build requirements
 
-MeeGo Touch will build on a Linux desktop machine using only the tools and development
+MeeGo Touch builds on a Linux desktop machine using only the tools and development
 packages provided by a typical Linux distribution:
 
  - Build essentials, such as libc, gcc, g++ and make
  - Mesa OpenGL development headers (or vendor specific equivalent)
  - X11 development headers, specifically the X damage extension
 
-Taking any recent version of Ubuntu Linux as an example, all the necessary packages can be installed with the following command:
+In all recent versions of Ubuntu Linux, all the necessary packages can be installed with the following command:
 
 <pre>
 sudo apt-get install build-essential libgl1-mesa-dev libglu1-mesa-dev libxdamage-dev
@@ -49,32 +50,35 @@ sudo apt-get install build-essential libgl1-mesa-dev libglu1-mesa-dev libxdamage
 
 \section linux Building MeeGo Touch on Linux
 
-1. Get the source code for libmeegotouch from a source package or straight from the
+1. Get the source code for libmeegotouch from a source package or directly from the
 <a href="http://meego.gitorious.org/meegotouch/libmeegotouch>code repository</a>.
 
-2. To configure the library for your machine, run the ./configure script in the source directory.
-By default libmeegotouch will be installed under the /usr/local/ directory, but this can be
-changed by giving the configure script the -prefix option.  Type ./configure -help to get a list
-of all available options.
+2. To configure the library for your computer, run the ./configure script in the source directory:
 
 <pre>
 cd libmeegotouch
 ./configure
 </pre>
 
-To build the library, tools and demos, type:
+By default, libmeegotouch is installed under the /usr/local/ directory, but you can change this
+by giving the configure script the -prefix option.  To get a list of all available options, run the 
+following command:
+
+<pre>./configure -help</pre>
+
+3. To build the library, tools and demos, use the following command:
 
 <pre>
 make
 </pre>
 
-If you want to install the tools and libraries to your system, type:
+4. To install the tools and libraries to your system, use the following command:
 
 <pre>
 sudo make install
 </pre>
 
-Note that the demos and examples can be run from inside the build directory without installing the
+Note: You can run the demos and examples inside the build directory without installing the
 library to the system. Simply append the build's <i>lib</i> directory to the LD_LIBRARY_PATH
 environment variable before running the program:
 

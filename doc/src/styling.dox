@@ -1,38 +1,38 @@
-/*! \page styling Overview
+/*! \page styling Styling
 
-MeeGo Touch provides a powerful styling engine for applications to customize their look & feel. It provides following functionality to application development:
 
-    \li Style sheets & style sheet parser
-    \li Type safe styling parameters
-    \li Automatic tools to populate the instantiated styles according to definitions in style sheets
-    \li Simple and robust interface for application developers to access the styling parameters
-    \li Flexible but simple way to define and use style parameters using inheritance, modes etc. 
+MeeGo Touch provides a powerful styling engine for applications to customise their look and feel. As an application developer, you can:
 
-\section responsibilities People involved & their responsibilities 
+    \li Use style sheets and style sheet parser.
+    \li Use type-safe styling parameters.
+    \li Use automatic tools to populate the instantiated styles according to definitions in style sheets.
+    \li Use simple and robust interface for application developers to access the styling parameters.
+    \li Define and use style parameters in a simple and flexible way, for instance, by using inheritance and modes.
 
-    Styling involves several people to work tightly together. This is important since otherwise there is no 
-    way to ensure that the style is working properly and the way it is implemented is consistent in all 
-    the projects.
+\section responsibilities Roles and responsibilities 
 
-    - UI Designer
-        - Has an idea how the widget should look and how it needs to be styled.
-        - Provides design for the styling and answers to questions about it.
-    - Software Developer
+    Styling involves several people who work tightly together. Otherwise, there is no way to ensure 
+	that the style works properly and its implementation is consistent in all projects.
+
+    - UI designer
+        - Knows how the widget should look and how it needs to be styled.
+        - Provides design for the styling and answers questions about it.
+    - Software developer
         - Implements the stylable object (widget, layout, etc..).
-        - Creates enablers for the styling on the source code level.
-        - Creates initial version of the stylesheet for testing.
+        - Creates enablers for the styling at the source code level.
+        - Creates initial version of the style sheet for testing.
     - Tester
-        - Tests that the styling is actually working according to the design.
-    - UI Designer / Theme Implementor
+        - Tests that the styling matches the design.
+    - UI designer / Theme implementer
         - Updates the style sheet to contain proper values for the application.
-        - Ensures that the final version of the style sheet that ships out with the product matches
+        - Ensures that the final version of the style sheet accompanying the product matches
           the requirements.
 
-\section links Documentation links 
+\section links For more information on styling, see: 
     \li \subpage styling_concepts "Basic concepts of styling"
-    \li \subpage styling_features "Features"
-    \li \subpage styling_support "Styling support for applications & external libraries"
-    \li \subpage styling_stylesheets "Stylesheet syntax reference & examples"
-    \li \subpage styling_in_code "Architecture & code examples"
+    \li \subpage styling_features "Styling features"
+    \li \subpage styling_support "Theming support for applications and external libraries"
+    \li \subpage styling_stylesheets "Styling with style sheets"
+    \li \subpage styling_in_code "Styling in application code"
 
 */

@@ -2,49 +2,49 @@
 
 <table class="mainIndex" class="indextable" cellspacing="1" cellpadding="2" border="0" align="center" width="95%">
   <tr>
-    <th>Getting Started</th>
-    <th>API Reference</th>
-    <th>Developer References</th>
+    <th>Getting started</th>
+    <th>API reference</th>
+    <th>Developer references</th>
   </tr>
   <tr>
     <td>
       <ul>
        <li><strong><a href="introduction.html">Introduction to MeeGo Touch</a></strong></li>
        <li><a href="installation.html">Installing MeeGo Touch</a></li>
-       <li><strong><a href="tutorial.html">Your first MeeGo Touch application</a></strong></li>
-       <li><strong><a href="news.html">What's New in MeeGo Touch</a></strong></li>
+       <li><strong><a href="tutorial.html">Creating your first MeeGo Touch application</a></strong></li>
+       <li><strong><a href="news.html">What's new in MeeGo Touch</a></strong></li>
       </ul>
     </td>
     <td>
       <ul>
-       <li><strong><a href="mainclasses.html">Main Classes</a></strong></li>
-       <li><a href="classes.html">All Classes</a></li>
-       <li><a href="annotated.html">Annotated Classes</a></li>
-       <li><a href="namespaces.html">All Namespaces</a></li>
-       <li><a href="hierarchy.html">Inheritance Hierarchy</a></li>
-       <li><a href="deprecated.html">Deprecated List</a></li>
+       <li><strong><a href="mainclasses.html">Main classes</a></strong></li>
+       <li><a href="classes.html">All classes</a></li>
+       <li><a href="annotated.html">Annotated classes</a></li>
+       <li><a href="namespaces.html">All namespaces</a></li>
+       <li><a href="hierarchy.html">Inheritance hierarchy</a></li>
+       <li><a href="deprecated.html">Deprecated list</a></li>
       </ul>
     </td>
     <td>
       <ul>
        <li><strong><a href="http://meego.gitorious.org/meegotouch/libmeegotouch">Code repository</a></strong></li>
        <li><a href="http://meego.gitorious.org/meegotouch/pages/Home">MeeGo Touch Wiki</a></li>
-       <li><a href="bugreporting.html">How to Report a Bug</a></li>
+       <li><a href="bugreporting.html">Reporting a bug</a></li>
        <li><a href="credits.html">Credits</a></li>
-       <li><a href="license.html">License</a></li>
+       <li><a href="license.html">Licence</a></li>
       </ul>
     </td>
   </tr>
 
   <tr>
-    <th colspan=3>MeeGo Touch Overviews</th>
+    <th colspan=3>MeeGo Touch overviews</th>
   </tr>
   <tr>
     <td>
       <ul>
        <li><a href="commoncomponents.html">Common components</a>
-       <li><a href="layouts.html">Layouts</a></li>
-       <li><a href="i18n.html">Internationalization</a></li>
+       <li><a href="layouts.html">Layout and policies</a></li>
+       <li><a href="i18n.html">Internationalisation</a></li>
        <li><a href="styling.html">Styling</a></li>
        <li><a href="gestures.html">Gestures</a></li>
       </ul>
@@ -52,19 +52,19 @@
     <td>
       <ul>
        <li>\subpage rotation</li>
-       <li><a href="faststart.html">Fast application startup</a></li>
-       <li><a href="notifications.html">Notifications</a></li>
-       <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
+       <li><a href="faststart.html">Reducing application start-up time</a></li>
+       <li><a href="notifications.html">Notification system</a></li>
+       <li>\subpage sceneandscenewindows "Scene and scene windows"</li>
        <li>\subpage input_feedback "Input feedback"</li>
       </ul>
     </td>
     <td>
       <ul>
-       <li><a href="applicationextensions.html">Application extensions</a></li>
+       <li><a href="applicationextensions.html">Developing application extensions</a></li>
        <li><a href="settingslanguageschema.html">Settings language reference</a></li>
        <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
-       <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
-       <li><a href="debugginginfo.html">MeeGo Touch Debugging Information</a></li>
+       <li><a href="servicefw.html">Service framework</a></li>
+       <li><a href="debugginginfo.html">MeeGo Touch debugging functions</a></li>
       </ul>
     </td>
   </tr>

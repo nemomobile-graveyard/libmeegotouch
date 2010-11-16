@@ -1,32 +1,27 @@
-/*! \page  i18n  Internationalisation Guidelines
+/*! \page  i18n  Internationalisation
 
 \htmlinclude i18n-toc.html
 
 \section  intro  Introduction
 
-This document provides guidelines on developing locale-aware
-applications for the MeeGo Touch UI Framework. Developers, translators, and
-user interface designers are the main target audience of this
-document.
+This section provides guidelines for developing locale-aware applications for the MeeGo Touch UI 
+Framework. The guidelines are mainly intended for developers, translators, and user interface 
+designers.
 
-Generally, as the MeeGo Touch UI Framework uses Qt as it’s base, some
-of the Qt internationalisation practices also apply. However, the
-MeeGo Touch UI Framework provides additional functionalities, hence it
-is recommended that developers always use MeeGo Touch UI Framework
-classes to achieve full internationalisation support in their
-applications.
+Generally, as the MeeGo Touch UI Framework uses Qt as its base, some of the Qt 
+internationalisation practices also apply. However, since the MeeGo Touch UI Framework provides 
+additional functionalities, it is recommended that developers always use MeeGo Touch UI Framework
+classes to achieve full internationalisation support in their applications.
 
-This document discusses several general internationalisation
-guidelines for user interface designers. They are general enough and
-may also be applicable in another projects and vice versa.
+The general internationalisation guidelines for user interface designers can also be applied 
+to other projects.
 
 \section  architecture  Architecture
 \image html i18n-class.png "" 
 
-\section  supportedlanguages  Supported Languages and calendar systems
+\section  supportedlanguages  Supported languages and calendar systems
 
-Below is the list of officially supported languages both for writing
-systems and text rendering:
+The following languages are officially supported both for writing systems and text rendering:
 
 - <a href="http://en.wikipedia.org/wiki/American_english">American English</a>
 - <a href="http://en.wikipedia.org/wiki/Arabic_language">Arabic</a>
@@ -83,102 +78,91 @@ The MeeGo Touch UI locale system uses the following main settings:
   </caption>
   <tr>
      <th>gconf key</th>
-     <th>description</th>
-     <th>example value</th>
+     <th>Description</th>
+     <th>Example value</th>
   </tr>
   <tr>
   <td>/meegotouch/i18n/language</td>
-  <td>main language setting</td>
+  <td>Main language</td>
   <td>en_US</td>
   <tr>
   <td>/meegotouch/i18n/lc_time</td>
-  <td>for date, time, and calendar</td>
+  <td>Date, time, and calendar</td>
   <td>ar\@calendar=islamic</td>
   </tr>
   <tr>
   <td>/meegotouch/i18n/lc_collate</td>
-  <td>for sorting</td>
+  <td>Sorting</td>
   <td>de_DE\@collation=phonebook</td>
   </tr>
   <tr>
   <td>/meegotouch/i18n/lc_numeric</td>
-  <td>formatting of numbers</td>
+  <td>Number format</td>
   <td>hi</td>
   </tr>
   <tr>
   <td>/meegotouch/i18n/lc_monetary</td>
-  <td>for formatting of amounts of money</td>
+  <td>Currency format</td>
   <td>fi_FI\@currency=EUR</td>
   </tr>
 </table>
 
-Each of these settings can be set to a ICU locale specifier as
-described in the <a href="http://userguide.icu-project.org/locale">ICU
-User Guide</a>.
+Each of these settings can be set to an ICU locale specifier. For instructions, see <a href="http://userguide.icu-project.org/locale">ICU User Guide</a>.
 
-The value of \c /meegotouch/i18n/language  (“Language”) tells the locale system
-about the UI language of the device. This affects all UI texts,
-writing direction and widget layouts (It does not affect the user
-content, i.e.  it does not affect things like the browser content
-language etc.).
+The value of \c /meegotouch/i18n/language  (“Language”) tells the locale system the UI language of the device. This affects all UI texts, the
+writing direction and widget layouts. However, it does not affect the user content, such as the language for the browser content.
 
 “Language” is also used as the default for time, date, calendar,
-sorting, number formatting, and currency formatting if the more
+sorting, number format, and currency format if the more
 specific settings are empty.
 
-“LcTime” selects how time and date are formatted. If it is left empty
-the value of “Language” is used. Examples: \c ar\@calendar=islamic  means
-to format date and time the Arabic way using Islamic calendar,
-\c ar\@calendar=gregorian  would use Arabic formatting but with Gregorian
-calendar, \c fi_FI  would use Finnish formatting rules for time and
-date.
+“LcTime” selects how time and date are formatted. If it is left empty,
+the value of “Language” is used. For example, \c ar\@calendar=islamic uses Arabic date and time 
+formats with the Islamic calendar, \c ar\@calendar=gregorian uses Arabic date and time formats with 
+the Gregorian calendar, and \c fi_FI uses Finnish formatting rules for time and date.
 
-“LcCollate” selects how textual data is sorted. If it is left empty
-the value of “Language” is used. Examples: \c de_DE\@collation=phonebook
-sorts the way German phone books are sorted,
-\c de_DE\@collation=standard  (or \c de_DE ) sorts the “normal” way German
+“LcCollate” selects how textual data is sorted. If it is left empty, the value of “Language” 
+is used. Examples: \c de_DE\@collation=phonebook sorts in the way German phone books are sorted,
+\c de_DE\@collation=standard  (or \c de_DE ) sorts in the “normal” way German
 dictionaries are sorted. \c zh_CN\@collation=pinyin  sorts Chinese
 according to the pinyin phonetics, \c zh_CN\@collation=stroke  sorts
 Chinese according to the stroke count of the characters.
 
-“LcNumeric” selects how numbers are formatted. If it is left empty the
-value of “Language” is used. Examples: \c hi  formats numbers according
-to the rules for the Hindi language, using localized digits, i.e. <a
+“LcNumeric” selects how numbers are formatted. If it is left empty, the
+value of “Language” is used. Examples: \c hi  formats numbers according to the rules for the Hindi language, using localised digits. In other words, <a
 href="http://en.wikipedia.org/wiki/Indian_numerals">Devanagari
-numerals</a> (०,१,२,३,४,५,६,७,८,९), \c ar  formats numbers
-using <a
+numerals</a> (०,१,२,३,४,५,६,७,८,९) \c ar  formats numbers using <a
 href="http://en.wikipedia.org/wiki/Eastern_Arabic_numerals">Eastern
-Arabic numerals</a> (٠,١,٢,٣,٤,٥,٦,٧,٨,٩), \c de_CH  formats the Swiss
-German way with apostrophes as thousands separators (12'345'670.89),
+Arabic numerals</a> (٠,١,٢,٣,٤,٥,٦,٧,٨,٩), \c de_CH  formats according to Swiss German by using apostrophes to separate thousands (12'345'670.89),
 and \c en_US  formats the American English way (12,345,670.89).
 
 “LcMonetary” selects how currency amounts are formatted. If it is left
-empty the value of “Language” is used.
+empty, the value of “Language” is used.
 
 \subsection  localesysteminitialisation  Initialisation
 
-A MeeGo Touch UI application is normally using the system default MLocale object;
+A MeeGo Touch UI application normally uses the system default MLocale object:
 
 \code
 MLocale myLocale; // get the current locale
 \endcode
 
 If the application needs to use different locale settings than the
-system locale, then a MLocale is created by making an instance of a
-MLocale object:
+system locale, an MLocale is created by making an instance of a
+MLocale object. For example:
 
 \code
 MLocale locale ("fi_FI");
 \endcode
-where "fi" and "FI" mean to use Finnish language in Finland.
+where "fi" and "FI" define that the Finnish language in used in Finland.
 
 \subsection Collator Collator
-To do collation, get the comparator with \c MLocale::collator()  method or create it MCollator() for default locale collator. This object acts as a functor and can be passed to Qt's \c qSort()  or any other sorting methods. 
-The comparator basically does the comparison of two items as "lessThan" function and returns true if the first parameter should come before the second one. 
+To collate, get the comparator with \c MLocale::collator() method or create it MCollator() for default locale collator. This object acts as a functor and can be passed to Qt's \c qSort() or any other sorting methods. 
+The comparator basically compares two items as "lessThan" function and returns true if the first parameter should come before the second one. 
 
-If other collation system than the locale's default is needed, then use \c setCollation()  method before getting the comparator. After all are set then the sorting can be started by using Qt's \c qSort()  function.
+If some other collation system than the locale's default is needed, use \c setCollation() method before getting the comparator. To start sorting, use Qt's \c qSort()  function.
 
-To use the default collation:
+To use the default collation system:
 \code
 QStringList sl; // This contains the strings which need to be sorted
 ...
@@ -189,7 +173,7 @@ qSort(sl.begin, sl.end, c); // start to sort!
 ...
 \endcode
 
-To use the different collation:
+To use a different collation system:
 \code
 QStringList sl; // This contains the strings which need to be sorted
 ...
@@ -205,11 +189,11 @@ qSort(sl.begin, sl.end, c); // start to sort!
 
 MeeGo Touch UI comes with several formatters for several data
 types. (Almost) Always use the formatters before displaying
-locale-dependant data to the screen to achieve uniformity and
-consistency of the data presentation.
+locale-dependant data on the screen to achieve uniformity and
+consistency in the data presentation.
 
 \subsubsection  numbers  Numbers
-To format a number use \c formatNumber()  method. It works with \c qlonglong, \c short, \c int, \c double, and \c float  data types.
+Use \c formatNumber()  method to format numbers. It works with \c qlonglong, \c short, \c int, \c double, and \c float  data types.
 
 \code
 ...
@@ -221,7 +205,7 @@ QString formattedNumber = myLocale.formatNumber(number); // format the number, t
 \endcode
 
 \subsubsection  dateandtime  Date and time
-Use \c formatDateTime()  to format the date and time.
+Use \c formatDateTime()  method to format the date and time.
 \code
 ...
 MLocale myLocale; // get the current locale
@@ -245,7 +229,7 @@ QString formattedDateTime = myLocale.formatDateTime(now, MLocale::IslamicCalenda
 Custom formatting is supported with ISO-14652 format (also used in libc's \c strftime ) by using \c formatDateTime() .
 
 \subsubsection  percentage  Percentage
-\c formatPercent()  is used to format a percentage value.
+Use \c formatPercent()  method to format a percentage value.
 \code
 ...
 MLocale myLocale; // get the current locale
@@ -257,7 +241,7 @@ QString formattedPercentage = myLocale.formatPercent(percent, decimals);
 \endcode
 
 \subsubsection Currency Currency
-To format any amount of money with a currency, use \c formatCurrency()  method.
+Use \c formatCurrency()  method to format amounts of money.
 
 
 \code
@@ -277,7 +261,7 @@ Use MName class to populate the name information, and use \c MLocale::formatName
 Use MAddress class to populate the address information, and use \c format()  method to format the name using the format specified as parameter.
 
 \subsection Calendar Calendar
-MLocale provides Gregorian as well as non-Gregorian calendar support. Use \c formatDateTime()  to format the date according to the custom of the selected calendar.
+MLocale provides Gregorian as well as non-Gregorian calendar support. Use \c formatDateTime()  method to format the date according to the selected calendar.
 To set another calendar than the default Gregorian calendar, use \c setCalendarType()  method.
 
 \code
@@ -287,10 +271,10 @@ myLocale.setCalendarType(MLocale::IslamicCalendar); // set the calendar to use I
 ...
 \endcode
 
-Further date manipulations can be done using MCalendar object.
+To change other calendar settings, use the MCalendar object.
 
 \subsection  iteratingwords  Iterating words
-On general case iterating words in a string is not possible by searching whitespace: e.g. thai language just concatenates words and in chinese language a character is a word. For this need a MBreakIterator class can be used. It is constructed with a locale and a string and provides an interface for iterating word boundaries. Following example iterates word boundaries from beginning to the end:
+In general, it is not possible to iterate words in a string by searching whitespace. For example, the Thai language just concatenates words and in the Chinese language one character is a word. Thus, an MBreakIterator class can be used. It is constructed with a locale and a string, and it provides an interface for iterating word boundaries. The following example iterates word boundaries from beginning to end:
 
 \code
 MLocale myLocale; // current locale
@@ -306,20 +290,18 @@ while (iterator.hasNext()) {
 \subsection  logicalidandengineeringenglish  Logical ID and engineering English
 
 The MeeGo Touch UI Framework can use both the Qt standard \c tr()  method or the
-idbased
+ID-based
 <a href="http://qt.nokia.com/doc/qtglobal.html#qtTrId">qtTrId()</a>
 method. For the Nokia internal localisation process, only \c qtTrId() 
 should be used.  Other parties using logical IDs instead of
-engineering English IDs for the UI messages might also find \c qtTrId() 
+engineering English IDs for the UI messages may also find \c qtTrId() 
 useful.
 
-Contrary to the approach of using engineering English as the message
-ids, which is commonly used in the open source community, the
-logical ID approach uses message ids which are guaranteed to be
-globally unique.
+Engineering English is commonly used as the message IDs in the open source community. However, the
+logical ID approach uses message IDs which are guaranteed to be globally unique.
 
 With \c qtTrId(), the logical ID is an argument of the function and the
-engineering English is supplied as a comment above. See the example in
+engineering English is supplied as a comment above. For an example, see
 the Qt documentation of
 <a href="http://qt.nokia.com/doc/4.6-snapshot/qtglobal.html#qtTrId">qtTrId()</a>,
 reproduced here for convenience:
@@ -330,17 +312,17 @@ reproduced here for convenience:
    QString text = qtTrId("qtn_foo_bar", n);
 \endcode
 
-\subsection  generatingengineeringenglish Generating the engineering English .qm files
+\subsection  generatingengineeringenglish Generating engineering English .qm files
 
-If no translation files at all are available, \c qtTrId() would return
-the logical ID which looks pretty ugly and is not nice for testing the
-user interface.
+If there are no translation files available at all, \c qtTrId()  returns
+the logical ID. However, this does not look good and makes testing the
+user interface more difficult.
 
-But from code which uses \c qtTrId() with the special engineering
+However, if the code uses \c qtTrId() with the special engineering
 English comments, \c .qm files with engineering English translations
-can be generated automatically. This can be done as follows:
+can be generated automatically. To generate files automatically:
 
-Create a subdirectory \c translations/ somewhere in your source tree.
+1. Create a subdirectory \c translations/ somewhere in your source tree.
 In that folder, create a \c translations.pro file with the contents:
 
 \code
@@ -352,10 +334,9 @@ In that folder, create a \c translations.pro file with the contents:
     include($$[QT_INSTALL_DATA]/mkspecs/features/meegotouch_translations.prf)
 \endcode
 
-Introducing the extra \c translations/translations.pro file makes it
-necessary to add the \c translations/ directory to the
-list of sub-directories in a .pro file higher up in the directory
-hierarchy. I.e. you usually need something like 
+2. After creating the extra \c translations/translations.pro file, add the \c translations/ 
+directory to the list of sub-directories in a .pro file higher up in the directory hierarchy. 
+For example:
 
 \code
    SUBDIRS = \
@@ -364,30 +345,28 @@ hierarchy. I.e. you usually need something like
        ...
 \endcode
 
-After doing that, a \c foobar.ts and a \c foobar.qm file which
-contain the engineering English translations will be automatically
-generated when calling “make” for your project. And “make install”
-will install \c foobar.qm to the usual place as described
-in section \ref translationdatastorage.
+A \c foobar.ts and a \c foobar.qm file which contain the engineering English translations are 
+automatically generated when calling “make” for your project. Additionally, “make 
+install” installs \c foobar.qm to the usual place. For more information, 
+see \ref translationdatastorage.
 
 Minor detail: with the above setup, when creating \c foobar.qm from \c
 foobar.ts, lrelease uses the option \c -markuntranslated to prepend
 the string “!! ” at the beginning of each engineering English
-string. I.e.  if the engineering English string in the source code is
-“Hello”, it will be written as “!! Hello” into the \c foobar.qm file
-and will be displayed as “!! Hello” at runtime. This is to make it
+string. This means that if the engineering English string in the source code is
+“Hello”, it is written as “!! Hello” into the \c foobar.qm file
+and displayed as “!! Hello” at runtime. Thus, it makes it
 obvious that engineering English for testing purposes is displayed and
-not the “real” English which is done by the translators.
+not “real” English translations.
 
-\subsection  translationsystemsetup  Translation system setup
+\subsection  translationsystemsetup  Setting up a translation system
 
-To setup the translation system using \c qtTrId(), you
+To set up a translation system using \c qtTrId(), you
 can use the following code snippets in your main function:
 
 By default, the system uses the name of the application executable
-(without the directory path) as the name for the file of the
-translation catalog and loads this catalog automatically. So you can
-start using \c qtTrId()  immediately:
+(without the directory path) as the name for the translation catalog file and loads this catalog 
+automatically. Thus, you can immediately start using \c qtTrId():
 
 \code
 ...
@@ -402,15 +381,14 @@ int main(int argc, char** argv){
 ...
 \endcode
 
-In the above example, if the application executable is for example
-\c /usr/bin/foo, i.e. the base file name of the executable is \c foo, the
-translation catalog \c &lt;top-directory&gt;/foo_&lt;locale-code&gt;.qm  will be
+In the above example, if the application executable is, for example,
+\c /usr/bin/foo, which means that the base file name of the executable is \c foo, the
+translation catalog \c &lt;top-directory&gt;/foo_&lt;locale-code&gt;.qm is
 used.
 
-If you need to specify a file for the translation catalog wich differs
-from the name of the executable you can use the optional third
-parameter \c appIdentifier  of the MApplication constructor as in this
-example:
+If you need to specify a file for the translation catalog which does not have the same
+name as the executable, you can use the optional third parameter \c appIdentifier of the 
+MApplication constructor. For example:
 
 \code
 ...
@@ -426,18 +404,16 @@ int main(int argc, char** argv){
 \endcode
 
 In the above example, the translation catalog
-\c &lt;top-directory&gt;/bar_&lt;locale-code&gt;.qm will be used no matter
-what the file name of the application executable is.
+\c &lt;top-directory&gt;/bar_&lt;locale-code&gt;.qm is used, regardless of the file name of the 
+application executable.
 
-But note that the \c appIdentifier  is used not only for localization
-files but also for themes. I.e. changing the appIdentifier
-will also affect themes. Usually this should be no problem because
+Note: In addition to localisation files, the \c appIdentifier is also for themes. This means that 
+if you change the appIdentifier, it also affects themes. This is usually not a problem because
 in most cases these should be kept the same, if possible.
 
-When it is not possible to use the \c appIdentifier to specify the
-translation catalog which should be loaded, one can use the
-\c installTrCatalog()  function to load a translation catalog with a
-completely different name as in this example:
+When it is not possible to use the \c appIdentifier to specify which translation catalog is 
+loaded, use the \c installTrCatalog()  function to load a translation catalog with a completely 
+different name. For example:
 
 \code
 ...
@@ -471,9 +447,8 @@ int main(int argc, char** argv){
 ...
 \endcode
 
-To setup your translation using the \c tr()  method known from regular Qt
-programs, you can use the \c installTrCatalog()  method as in the
-following example:
+To set up your translation using the \c tr()  method used in regular Qt
+programs, you can use the \c installTrCatalog()  method. For example:
 
 \code
 ...
@@ -502,16 +477,13 @@ int main(int argc, char** argv){
 ...
 \endcode
 
-\subsection translationsystemsetupinlibraries Translation system setup in libraries
+\subsection translationsystemsetupinlibraries Setting up a translation system in a library
 
-Let’s say there is an MApplication “foo” which uses a library “libbar”.
-And the library “libbar” also uses the MeeGo Touch Framwork and has
-some translations of its own which are in files like \c libbar_<locale_name>.qm.
+This section provides an example of setting up a translation system in a library. In this example, MApplication “foo” uses a library “libbar”, which also uses the MeeGo Touch Framework and has its own translations in files such as \c libbar_<locale_name>.qm.
 
-Now the question is how to load the “libbar” translation catalog.
+There are several ways to load the “libbar” translation catalog.
 
-On way to do it would be to let the application “foo” load it, i.e.
-“foo” would do something like 
+For example, you can let the application “foo” load it:
 
 \code
 ...
@@ -547,13 +519,11 @@ int main(int argc, char** argv){
 ...
 \endcode
 
-The disadvantage of this way of doing it is that the application “foo”
-needs to know how the translation catalog of “libbar” is called and
-maybe even require an packages like “libbar-l10n-*”. That creates
-unnecessary dependencies between “foo” and “libbar”. To avoid this,
-the recommended way of loading the “libbar” translations is letting
-the “libbar” library take care of this. I.e. “libbar” somewhere has
-an initialization function like
+However, the application “foo” needs to know how the translation catalog of “libbar” is 
+called and may even require packages such as “libbar-l10n-*”, which creates unnecessary 
+dependencies between “foo” and “libbar”. Thus, it is recommended that you let
+the “libbar” library load the “libbar” translations. This means that “libbar” includes 
+the following initialisation function:
 
 \code
 ...
@@ -569,7 +539,7 @@ void libbar_init() {
 ...
 \endcode
 
-The application “foo” then does not have to load the translations for “libbar”
+Thus, the application “foo” does not have to load the translations for “libbar”
 and only does:
 
 \code
@@ -598,10 +568,10 @@ int main(int argc, char** argv){
 ...
 \endcode
 
-Instead of having a public initialization function in “libbar” one could also
-make “libbar” call some internal initialization code when any public
-function of “libbar” is used for the first time, i.e. one could design
-“libbar” to make the following code already work:
+Instead of having a public initialisation function in “libbar”, you can also
+make “libbar” call some internal initialisation code when any public
+function of “libbar” is used for the first time. This means that you can design
+“libbar” so that the following code works:
 
 \code
 ...
@@ -627,8 +597,8 @@ int main(int argc, char** argv){
 ...
 \endcode
 
-Whether a special initialization function is used or not, the important
-thing is that “libbar” does the installing of its translation catalog
+Whether a special initialisation function is used or not, the important
+thing is that “libbar” installs its translation catalog
 into the system default locale. The application “foo” then does
 not need to know how the catalog is called and does not need to require
 translation packages of “libbar”. “libbar” should require its translation
@@ -650,42 +620,38 @@ n. In addition, depending on \c n’s value, the translation text may
 vary.
 
 The difference between \%Ln and \%n is that \%Ln may be replaced using
-localized numerals like Arabic-Indic numerals in Arabic locales
+localised numerals such as Arabic-Indic numerals in Arabic locales,
 whereas \%n is always replaced using Arabic (= Western) numerals.
 
 <a
 href="http://qt.nokia.com/doc/qtglobal.html#qtTrId">qtTrId()</a>
-is useful only if the project is using logical names as the UI
-message. If your project is using English string then use \c tr()
+is useful only if the project is using logical names such as the UI
+message. If your project is using an English string, use \c tr()
 instead.
 
 \subsection parametersintranslations Parameters in translations
 
 The positional parameters \%1 to \%99 and \%L1 to \%L99 which are used in
 QString can also be used in translations for the MeeGo Touch UI
-Framework.
-For a description of \%L1 to \%L99 see also the documentation
+Framework. For a description of \%L1 to \%L99, see also the documentation
 of QLocale.
 
-For parameters which are integer numbers, \%L1 to \%L99 is a better
+For parameters which are integer numbers, \%L1 to \%L99 are a better
 choice than \%1 to \%99 because \%L1 to \%L99 automatically do locale
 specific number formatting which achieves the same results
 as using MLocale’s formatNumber() for the current system locale.
 
-Let’s illustrate the behaviour in detail with an example.  We assume
-that an application is running with the language locale settings set
-to Arabic to get Arabic translations (for example if the gconf key
+For example, if an application is running with the language locale settings set
+to Arabic to get Arabic translations (for example, if the gconf key
 “/meegotouch/i18n/language” is set to “ar”) and the numeric locale
 settings are also set to Arabic to get Arabic number formatting (for
-example if the gconf key “/meegotouch/i18n/lc_numeric” is also set
-to “ar” or is empty and this the numeric locale settings are
+example, if the gconf key “/meegotouch/i18n/lc_numeric” is also set
+to “ar” or is empty and the numeric locale settings are
 inherited from the language settings).
 
-Now a message id is translated using qtTrId("xx_some_message_id"). And
-let’s assume that the Arabic translation of this happens to be “\%L1 \%2”.
-
-The following example code illustrates how numbers used as parameters
-would be formatted in that case:
+If a message ID is translated using qtTrId("xx_some_message_id"), and the Arabic translation of 
+this is “\%L1 \%2”, the following example code illustrates how numbers used as parameters
+are formatted:
 
 \code
     QString translation = qtTrId("xx_some_message_id");
@@ -724,20 +690,19 @@ would be formatted in that case:
     // Therefore, no further formatting is done by %L1 and %2.
 \endcode
 
-Passing an integer number as the argument from %L1 and letting QLocale
-format that number always gives the same result as passing the the
+If you pass an integer number as the argument from %L1 and let QLocale
+format that number, this always gives the same result as if you pass the
 result of formatNumber() using the system MLocale for that integer.
-The reason is that the MeegoTouch framework always sets QLocale to the
+The reason is that the MeeGo Touch Framework always sets QLocale to the
 value of the numeric setting of the system default MLocale and both
 the number formatter in MLocale and the number formatter in QLocale
 use the CLDR data for the number format.
 
-\subsection placeholdersinmessageids Place holders in message ids
+\subsection placeholdersinmessageids Placeholders in message IDs
 
-Message ids do not have to indicate whether the translation for this
-id contains place holders or not. For example if the message id is
-“xx_greet_user" and the English translation is “Hello %1”,
-then the following code works fine:
+Message IDs do not have to indicate whether the translation for this
+ID contains placeholders or not. For example, if the message ID is
+“xx_greet_user" and the English translation is “Hello %1”, the following code works fine:
 
 \code
    // The following returns “Hello Joe” if the translation is “Hello %1”.
@@ -745,10 +710,10 @@ then the following code works fine:
    qTrId("xx_greet_user").arg("Joe");
 \endcode
 
-It is possible to include place holders in message ids,
-for example if the message id for the translation
-were “xx_greet_user_%1”, the following code would
-work just as well:
+It is possible to include placeholders in message IDs.
+For example, if the message ID for the translation
+is “xx_greet_user_%1”, the following code 
+works just as well:
 
 \code
    // The following returns “Hello Joe” if the translation is “Hello %1”
@@ -756,22 +721,22 @@ work just as well:
    qTrId("xx_greet_user_%1").arg("Joe");
 \endcode
 
-So it doesn’t matter whether a message id for a translation which
-contains place holders contains these place holders itself or not.
+Thus, it does not matter whether the placeholders are included in the actual message ID for a translation that
+contains the placeholders.
 
-Although place holders in message ids are possible, the message ids
-used by MeeGo Touch never contain any place holders. The message
-ids used in MeeGo Touch only use lowercase letters
+Although placeholders in message IDs are possible, the message IDs
+used by MeeGo Touch never contain any placeholders. The message
+IDs used in MeeGo Touch only use lowercase letters
 from “a” to “z” and underscores “_”. 
 
 This is perfectly OK and does not cause any problems for
-translations which use place holders.
+translations which use placeholders.
 
 \subsection  pluralmessages  Plural messages
 
 In a plural message, pass the number to select the correct
-plural translation as the second argument \c n  in \c qtTrId()
-(This works the same way with qtTrId() as it does with \c tr()).
+plural translation as the second argument \c n  in \c qtTrId().
+This works the same way with qtTrId() as it does with \c tr().
 
 \code
    int n = messages.count();
@@ -779,22 +744,20 @@ plural translation as the second argument \c n  in \c qtTrId()
    showMessage(qtTrId("xx_messages_saved", n));
 \endcode
 
-Usually, the number of different translations used for plural, among
-which the parameter “n” selects the appropriate one, depends on the
-language, see also the <a
+Some languages have several plural forms. For these languages, the parameter “n” selects the appropriate translation. For more information, see the <a
 href="http://qt.nokia.com/doc/i18n-plural-rules.html">“Qt
 Translation Rules for Plurals”</a> and the <a
 href="http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html">“CLDR
 Language Plural Rules”</a>.
 
-However, for the Meego Touch UI framework, it has been decided to use
-only 2 plural forms and only English rules. I.e.  the .ts translation
-files used by the Meego Touch UI framework <b>always</b> contain
+However, for the MeeGo Touch UI Framework, it has been decided to use
+only 2 plural forms and only English rules. This means that the .ts translation
+files used by the MeeGo Touch UI Framework <b>always</b> contain
 <b>only two</b> different translations for plural and are
 <b>always</b> marked in the xml as English language translation files,
 even if the language is not English.
 
-For example if a .ts file for English translation contains something like
+For example, if a .ts file for the English translation contains the following:
 
 \code
 <?xml version="1.0" encoding="UTF-8"?>
@@ -822,8 +785,7 @@ For example if a .ts file for English translation contains something like
 </TS>
 \endcode
 
-the corresponding Russian translation file might contain
-something like:
+The corresponding Russian translation file contains the following:
 
 \code
 <?xml version="1.0" encoding="UTF-8"?>
@@ -851,34 +813,33 @@ something like:
 </TS>
 \endcode
 
-Note that this Russian translation file has “language="en"”
-in the header and thus English rules are used to select
-the plural forms, i.e. the first plural form is selected
-if “n” is equal to 1, the second plural form for all
+Note: This Russian translation file has “language="en"”
+in the header. Thus, English rules are used to select
+the plural forms. This means that the first plural form is selected
+if “n” is equal to 1, and the second plural form is selected for all
 other cases.
 
-Usually, Russian would use one plural form for　“n” in 1, 21, 31,
+Usually, Russian uses one plural form for　“n” in 1, 21, 31,
 41, 51, 61…, another one for “n” in 2-4, 22-24, 32-34…, and yet
 another one for “n” in 0, 5-20, 25-30, 35-40….
 
-If only 2 forms with English rules are used as above, i.e.
-only “n” equal to 1 is special cased, the second plural
+If only 2 forms with English rules are used as above, this means that
+only “n” equal to 1 is special cased and the second plural
 form has to be translated in a way that it is acceptable
 for all other values of “n”.
 
-In the Russian example translation file above this is in one case
-achieved by abbreviating, i.e. using “\%Ln дн.” for all “n” not
-equal to one and thus hide the different plural forms with the
-abbreviation dot. In the other case, the number is grammatically
-“detached”, i.e. by writing “Событий: \%Ln” the part of the
-translation before the “:” is detached from the part with the number
-and thus the word “Событий” does not need to change for
-different values of “n”.
+In the Russian example translation file above, this is, first of all,
+achieved by abbreviating. In other words, “\%Ln дн.” is used for all “n” that are not
+equal to one, thus hiding the different plural forms with the
+abbreviation dot. Secondly, the number is grammatically
+“detached”. This means that if you write “Событий: \%Ln”, the part of the
+translation before the “:” is detached from the part with the number, and the word 
+“Событий” does not need to change for different values of “n”.
 
-\subsubsection percent_ln_percent_l1 \%Ln versus \%L1 in plural messages
+\subsubsection percent_ln_percent_l1 \%Ln and \%L1 in plural messages
 
-Messages using plural should use the place holder \%Ln
-and not \%L1, i.e. the source code should should look like
+Use the placeholder \%Ln and not \%L1 if a message is in plural form. The source 
+code should be as follows:
 
 \code
    int n = messages.count();
@@ -886,7 +847,7 @@ and not \%L1, i.e. the source code should should look like
    showMessage(qtTrId("xx_messages_saved", n));
 \endcode
 
-and the .ts file with the translations should look like:
+The .ts file with the translations should be as follows:
 
 \code
 <?xml version="1.0" encoding="UTF-8"?>
@@ -906,77 +867,71 @@ and the .ts file with the translations should look like:
 </TS>
 \endcode
 
-The second parameter “n” of qtTrId() does two things:
+The second parameter “n” of qtTrId():
 
 <ul>
 <li>
-It selects the correct translation for this value of “n”
-(note that if no translation exists and the engineering
-English fallback is used, the same message will be displayed
-for all values of “n” because there is only one
-version of the engineering English. I.e. in
-the above example “1 message(s) saved” would be shown
-if “n” is 1 and “2 message(s) saved” if “n” is 2).
+Selects the correct translation for this value of “n”. Note: If no translation exists 
+and the engineering English fallback is used, the same message is displayed for all values of 
+“n” because there is only one version of the engineering English. In other words, in the above 
+example “1 message(s) saved” is shown if “n” is 1 and “2 message(s) saved” if “n” is 
+2).
 </li>
 <li>
-It replaces the place holder \%Ln with the value of
-the number “n”, formatted in the locale specific way,
-possibly using localized numerals (\%n would also be
+Replaces the placeholder \%Ln with the value of
+the number “n”, formatted in the locale-specific way,
+possibly using localised numerals. \%n would also be
 replaced by the value of “n” but would not be formatted
-in a locale specific way).
+in a locale-specific way.
 </li>
 </ul>
 
-If \%L1 were used instead of \%Ln in the translation,
-the second parameter of qtTrId() would still select
-the correct translation for the value of “n” but would
-not replace \%L1, i.e. in this case the code 
+If \%L1 is used instead of \%Ln in the translation,
+the second parameter of qtTrId() still selects
+the correct translation for the value of “n” but does
+not replace \%L1. In this case the following code displays “\%L1 messages saved.”:
 
 \code
    showMessage(qtTrId("xx_messages_saved", 2));
 \endcode
 
-would display “\%L1 messages saved.”. If it is known 
-that the plural translations mistakenly use \%L1 instead
-of \%Ln, one can work around the issue by using an
-extra .arg() in the code like this:
+If you know that the plural translations mistakenly use \%L1 instead
+of \%Ln, you can work around the issue by using an
+extra .arg() in the code as follows:
 
 \code
    showMessage(qtTrId("xx_messages_saved", 2).arg(2));
 \endcode
 
 In this example, the “2” used as the second parameter
-of would select that correct plural form, i.e.
+ selects the correct plural form, which means that
 “\%L1 messages saved.” and the .arg(2) would replace
 the \%L1 with 2 so the final result would
 be “2 messages saved.” as desired. But as soon as the translation
 is fixed to use the correct \%Ln this code prints
-a warning
+a warning:
 
 \verbatim
    QString::arg: Argument missing: "2 messages saved." , 2 
 \endverbatim
 
-because the .arg(2) tries to replace a \%L1 which is not there.
+The reason for this is that the .arg(2) tries to replace a missing \%L1.
 
 \subsection  translationdatastorage  Translation data storage
 
-The convention for the path to store the compiled translation data (in
-.qm format) on the device is:
+The following path is used to store the compiled translation data (in
+.qm format) on the device:
 
 \code
    <top-directory>/<catalog-name>_<locale-code>.qm
 \endcode
 
-\c top-directory  can be anywhere on the device. \c locale-code  is
-something like \c en_US  for US-English, \c en_GB  for Britisch English,
-\c zh_CN  for Simplified Chinese, \c de_DE  for German in Germany, \c de_CH 
-for Swiss German, etc. <catalog-name> is usually the name of the
-application. If a translation for a more specific locale name like
-\c en_US  cannot be found, a less specific locale name like \c en  is
-tried. For example, if the application name is \c foo  and the locale
-name is \c en_US, the first one of the following files which exists
-is used:
+\c top-directory  can be anywhere on the device. \c locale-code  is, for example, \c en_US  for 
+US English, \c en_GB  for British English, \c zh_CN  for Simplified Chinese, \c de_DE  for German 
+in Germany, and \c de_CH for Swiss German. <catalog-name> is usually the name of the application. If a 
+translation for a more specific locale name such as \c en_US  cannot be found, a less specific 
+locale name such as \c en is tried. For example, if the application name is \c foo  and the locale
+name is \c en_US, the first existing file from the following list is used:
 
 \code
 <top-directory>/foo_en_US.qm
@@ -987,25 +942,24 @@ is used:
 <top-directory>/foo
 \endcode
 
-See also the documentation of
+For more information, see the documentation of
 <a href="http://doc.trolltech.com/4.5/qtranslator.html#load">QTranslator::load()</a>.
 
-The \c top-directory  used by default is \c /usr/share/l10n/meegotouch (This is
+The \c top-directory used by default is \c /usr/share/l10n/meegotouch. This is
 defined as \c M_TRANSLATION_DIR  in \c meegotouch_defines.prf which
 can be found in \c ./mkspecs/features/meegotouch_defines.prf` in the 
-libmeegotouch source code).
+libmeegotouch source code.
 
 `/usr/share/l10n/meegotouch` is also the default directory used by
 translation packages to store the .qm files. Applications can set
 additional search paths by using \c MLocale::setTranslationPaths() 
 and \c MLocale::addTranslationPath() . This supports the variability
-needed for over-the-air translation installation as well as for user
-defined translations.
+needed for over-the-air translation installation and user-defined translations.
 
 \subsection  translationdatapackaging  Translation data packaging
 
-The packaging of translations into debian packages is illustrated here
-using the demo application “widgetsgallery” as an example.
+The following example illustrates the packaging of translations into debian packages 
+using the demo application “widgetsgallery”:
 
 <table border="1">
   <caption>
@@ -1055,12 +1009,12 @@ using the demo application “widgetsgallery” as an example.
      </tr>
 </table>
 
-Every application needing translations should supply also a debian
+Every application that requires translations should also supply a debian
 package containing the “engineering English” translations.  The
 package name for the engineering English translations should end with
 -l10n-engineering-english as in the above example.  The package name
 “...-engineering-english” should make it clear that these are not real
-translations, instead they are completely auto-generated from the
+translations, but instead they are completely auto-generated from the
 source code.
 
 In the above example, the package
@@ -1071,65 +1025,59 @@ automatically generated from the source code using
 “lupdate”. “widgetsgallery.qm” is automatically generated from
 “widgetsgallery.ts” using “lrelease”. The make files in the
 application source code should contain support to do this
-automatically when building the application without extra effort (The
-current source code of widgetsgallery already gives an example how
-this can be done).
+automatically when building the application without extra effort. The
+current source code of widgetsgallery already illustrates how to do this.
 
-The “widgetsgallery.qm” file serves several purposes:
+The “widgetsgallery.qm” file:
 
 <ol>
 <li>
 
-It is used at runtime by the application to display engineering
-English instead of message ids to make testing the application easier
-while no real translations are available yet.
+Is used at runtime by the application to display engineering
+English instead of message IDs to facilitate application testing 
+when no real translations are available yet.
 
 </li>
 <li>
 
-It supplies fallback engineering English when real translations are
-available but incomplete. Of course this should never happen in the
-final product but it will happen during the development and testing
-and then this fallback engineering English is useful.
+Supplies fallback engineering English when real translations are available but incomplete. Even if 
+this should never occur with the final product, it can happen during development and testing. In 
+that case, it is useful to have fallback engineering English available.
 
 </li>
 <li>
 
-It gives us an easy way to extract a list of ids which are actually
-used in the source code. Using the tool “lconvert” one can easily
-extract all ids from a .qm file. If all meegotouch applications supply
-“...-l10n-engineering-english” packages, one can easily install all
-these packages (for example with “apt-get”) and then extract all ids
-which are actually used. Then these ids can be used for cross-checking
-with the ids used in the specifications and in the real translations.
+Allows you to easily extract a list of IDs which are actually used in the source code. You 
+can use the “lconvert” tool to extract all IDs from a .qm file. If all MeeGo Touch applications 
+supply “...-l10n-engineering-english” packages, you can easily install all the packages (for 
+example with “apt-get”) and extract all the IDs which are actually used. You can then 
+cross-check the IDs with the IDs used in the specifications and real translations.
 
 </li>
 </ol>
 
 “widgetsgallery” is only a test application used by the libmeegotouch
 developers for testing and demos. Therefore, the localisation
-department will not supply translations for “widgetsgallery”.  The
+department does not supply translations for “widgetsgallery”.  The
 libmeegotouch developers supply some demo translations for “widgetsgallery”
 to test their code and to make sure the system works.
 
-Only because of this, “widgetsgallery” has some “real” translation
-packages like “meegotouch-demos-widgetsgallery-l10n-zh-cn” containing
+For this reason, “widgetsgallery” has some “real” translation
+packages such as “meegotouch-demos-widgetsgallery-l10n-zh-cn” containing
 “/usr/share/l10n/meegotouch/widgetsgallery_zh_CN.qm” (see the table above).
 In that respect, “widgetsgallery” is an exception.
 
-For a “real” application, say “camera” which is intended to be shipped
+For a “real” application, such as “camera”, which is intended to be shipped
 to the customer, the “real” translation packages are supplied by the
-translation department, not by the developers. I.e. the developers
-will only supply “camera-l10n-engineering-english” and all the other
-packages “camera-l10n-ar”, “camera-l10n-zh-cn”, ..., will be supplied
-by the translation department.
+translator, not by the developers. The developers only supply 
+“camera-l10n-engineering-english” and the translator supplies all the other 
+packages, such as “camera-l10n-ar”, “camera-l10n-zh-cn”, and so on.
 
 As long as the real translations are still missing, the engineering
 English is displayed. As soon as the real translations are available
-and installed, they are used automatically. As can be seen in the
-above table, there is no file conflict between the engineering English
-packages and the real translations, they can both be installed at the
-same time without problems.
+and installed, they are used automatically. As the table above illustrates, there is no file 
+conflict between the engineering English packages and the real translations. They can both be 
+installed at the same time without problems.
 
 For the final product, the engineering English packages can be
 omitted. If it has been verified during the testing phase that the
@@ -1138,15 +1086,16 @@ needed anymore.
 
 \subsection  translationfordotdesktop  Translation for .desktop files
 
-The translation of .desktop files for MeeGo Touch UI differs a bit from the usual
-practise of Freedesktop.org. The rationale behind it is that we
+The translation of .desktop files for MeeGo Touch UI differs slightly from the usual
+practice of Freedesktop.org. The reason for this is that we
 have different localisation processes which make it impossible to
-modify the source of .desktop files during build time. To accommodate
-the special needs of our localisation processes, the .desktop file
-shall contain at least two extra (key, value) pairs:
+modify the source of .desktop files during the build time. Thus, the .desktop file must 
+contain at least two extra (key, value) pairs:
 
-- X-MeeGo-Logical-Id=&lt;logical name&gt;: The value for this key provides the logical name of the section name
-- X-MeeGo-Translation-Catalog=&lt;catalog name&gt;: The value for this key provides the catalog where the logical name exists
+- X-MeeGo-Logical-Id=&lt;logical name&gt;: The value for this key provides the logical name of the 
+section name
+- X-MeeGo-Translation-Catalog=&lt;catalog name&gt;: The value for this key provides the catalog 
+where the logical name exists
 
 For example:
 \code
@@ -1159,7 +1108,7 @@ X-MeeGo-Logical-Id=xx_setting_something
 X-MeeGo-Translation-Catalog=meegotouchsettings
 \endcode
 
-For the freedesktop specification of the .desktop files see
+For the freedesktop specification of the .desktop files, see
 
 <a href="http://standards.freedesktop.org/desktop-entry-spec/latest/">http://standards.freedesktop.org/desktop-entry-spec/latest/</a>
 
@@ -1176,74 +1125,64 @@ system can immediately use the new downloaded data.
 \subsection  localechange  Reacting to changes in the locale settings
 
 The current language setting is stored in the gconf key
-\c /meegotouch/i18n/language . From the command line, the current language can
-be queried using \c gconftool-2  like this:
+\c /meegotouch/i18n/language . You can use \c gconftool-2 to query the 
+current language from the command line:
 
 \code
     ~$ gconftool-2 -g /meegotouch/i18n/language
     ar
 \endcode
 
-In the above example, the current language is Arabic. Setting
-the current language from the command line can of course also be
-done with \c gconftool-2 :
+In the above example, the current language is Arabic. 
+
+You can also change the current language from the command line. For example, to set the current 
+language to simplified Chinese, you can use \c gconftool-2 :
 
 \code
     ~$ gconftool-2 -t string -s /meegotouch/i18n/language zh_CN
 \endcode
 
-The above command sets the current language to simplified Chinese.
-
-The preferred way to query the current language from a \c MApplication 
-works like this:
+To query the current language from a \c MApplication, use the following:
 
 \code
     MLocale currentLocale;
     QString language = currentLocale.name();
 \endcode
 
-\c MLocale currentLocale; gets a copy of the system default locale
-which is connected to the gconf settings and follows the gconf
+\c MLocale currentLocale; retrieves a copy of the system default locale
+that is connected to the gconf settings and follows the gconf
 settings.
 
-Alternatively it is possible to read the gconf settings directly:
+You can also read the gconf settings directly:
 
 \code
     MGConfItem languageItem("/meegotouch/i18n/language");
     QString language = languageItem.value().toString();
 \endcode
 
-This has the same effect as getting the current system locale and
-using \c currentLocale.name().
-
-Setting the current language permanently from a \c MApplication  works like
-this:
+To set the current language permanently from a \c MApplication, use the following:
 
 \code
     MGConfItem languageItem("/meegotouch/i18n/language");
     languageItem.set("zh_CN");
 \endcode
 
-One can also set a new current language temporarily from a \c MApplication 
-by doing:
+To set a new current language temporarily from a \c MApplication, use the following:
 
 \code
     MLocale newLocale("zh_CN");
     MLocale::setDefault(newLocale);
 \endcode
 
-This does not change the gconf settings and therefore this change will
-be lost as soon as one of the locale related gconf keys changes
-again. And it will be lost when the application restarts. Nevertheless
-this can be useful for temporary changes for testing and it is
-currently the only way to change the current language on systems
-without gconf like <a
+This does not change the gconf settings and, therefore, this change is lost as soon as one of the 
+locale related gconf keys changes again and when the application restarts. Nevertheless, this can be 
+useful for temporary changes for testing and it is currently the only way to change the current 
+language on systems without gconf, such as <a
 href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> or
 <a href="http://en.wikipedia.org/wiki/Mac_OSX">Mac OS X</a>.
 
-If a the system locale changes, either because a locale related gconf
-key changed or because \c MLocale::setDefault()  has been called
-explicitly by the application, the following things happen:
+If a system locale changes, either because a locale-related gconf key changed or because 
+\c MLocale::setDefault()  has been called explicitly by the application:
 
 <ul>
 <li>
@@ -1251,37 +1190,35 @@ All translation catalogs are reloaded according to the new locale
 settings
 </li>
 <li>
-\c QEvent::LanguageChange  will be sent to the Application, if
-necessary. \c MWindow  will propagate a \c QEvent::LanguageChange  to all
+\c QEvent::LanguageChange  is sent to the Application, if
+necessary. \c MWindow  propagates a \c QEvent::LanguageChange  to all
 \c MWidgets  on the scene. A \c MWidget  which receives this event by
 calls its \c retranslateUi()  method.
 </li>
 <li>
-\c QEvent::ApplicationLayoutDirectionChange  will be sent to the
-Application, if necessary.  \c MWindow  will propagate a
+\c QEvent::ApplicationLayoutDirectionChange  is sent to the
+Application, if necessary.  \c MWindow  propagates a
 \c QEvent::LayoutDirectionChange  to all \c MWidgets  as appropriate to
 enable the widgets to change their layout on the fly.
 </li>
 <li>
-The signal \c settingsChanged()  will be emitted by the locale.
+The signal \c settingsChanged() is emitted by the locale.
 </li>
 <li>
-The signal \c localeSettingsChanged()  will be emitted by the
+The signal \c localeSettingsChanged() is emitted by the
 \c MApplication .
 </li>
 </ul>
 
-In most cases, an application doesn’t have to use the above signals
+In most cases, an application does not have to use the above signals
 \c settingsChanged()  and \c localeSettingsChanged()  because most
-stuff like reloading the translation catalogs already happens
+events such as reloading the translation catalogs already occur
 automatically. If \c retranslateUi()  methods are implemented
 for the widgets used in the application, the language of the
-user interface will already change automatically.
+user interface changes automatically.
 
-Optionally, an application can use these signals though, if it
-wants to do additional special things which do not happen
-automatically.
-For example:
+However, an application can use these signals optionally to perform special actions that do not occur 
+automatically. For example:
 
 \code
 main.cpp:
@@ -1297,7 +1234,7 @@ main.cpp:
     }
 \endcode
 
-where the FooHandleLocaleChange class looks like:
+where the FooHandleLocaleChange class is:
 
 \code
 foohandlelocalechange.h:
@@ -1339,7 +1276,7 @@ virtual method
 \endcode
 
 \c MWidgets  can reimplement this \c retranslateUi()  method to do whatever
-is necessary to retranslate itself, as in the following example:
+is necessary to retranslate itself. For example:
 
 \code
 foopage.h
@@ -1381,233 +1318,34 @@ locale settings change.
 <!-- reimplementing \c retranslateUi()  not necessary in many cases. -->
 
 \subsection  widgetmirroring  Widget mirroring and layout direction
-Widget mirroring is the automatic behaviour of putting the widgets in the reverse direction when the language is switched to Right-to-left languages (such as Arabic or Hebrew). In this direction, the widgets are put following the natural flow of text writing direction. Widget mirroring works automatically when the widgets are arranged using QGraphicsLayout or MLayout, with some exceptions with the specialist MLayout policies.
+Widget mirroring refers to automatically reversing the direction of the widgets when the language is 
+switched to right-to-left languages (such as Arabic or Hebrew). The widgets are arranged according 
+to the natural flow of written text. Widget mirroring works automatically when the widgets are 
+arranged using QGraphicsLayout or MLayout, with some exceptions with the specialist MLayout 
+policies.
 
-The layout direction will be automatically set to the correct value by MApplication when the language is changed. The current layout direction can be obtained from \c MApplication::layoutDirection() . Note that during the application lifetime, the direction may change if the user changes it from the global setting.
+The layout direction is automatically set to the correct value by MApplication when the language is 
+changed. The current layout direction can be obtained from \c MApplication::layoutDirection() . 
+Note: During the application lifetime, the user can change the direction from the global setting.
 
-If you are developing a widget in which it does not make sense for the layout to be reversed (for example, a number keypad), then use \c QGraphicsWidget::setLayoutDirection()  to override the layout direction.  If you need to paint your widget differently in right-to-left mode, simply call `qApp->layoutDirection()` and draw as appropriate.  If you are implementing a custom MAbstractLayoutPolicy, however, you should use the \c MLayout::layoutDirection() function instead so that the user can override it.
+If reversing the layout is not applicable for the widget that you are developing (for example, a 
+number keypad), use \c QGraphicsWidget::setLayoutDirection()  to override the layout direction.  If 
+you need to paint your widget differently in the right-to-left mode, simply call 
+`qApp->layoutDirection()` and draw it accordingly.  However, to implement a custom 
+MAbstractLayoutPolicy, use the \c MLayout::layoutDirection() function instead so that the user can 
+override it.
 
-In advanced situations you can handle the \c QEvent::ApplicationLayoutDirectionChange()  event directly in your widget's event handler.
+In advanced situations you can handle the \c QEvent::ApplicationLayoutDirectionChange()  event 
+directly in your widget's event handler.
 
-\section  currentstatusrtlsupportinmeegotouchwidgets  Current status of RTL support in MWidgets
-<table border="1">
-  <caption>
-  <big><b>
-    Current status of RTL support in MWidgets
-  </b></big>
-  </caption>
-    <tr>
-      <td><b>Widget</b></td>
-      <td><b>Works with RTL</b></td>
-      <td><b>Comments</b></td>
-    </tr>
-    <tr>
-      <td>MAnimatedIcon</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MApplicationMenu</td>
-      <td>broken?</td>
-      <td>
-In widgetsgallery, click "Application Menu", then click "Application
-Menu" in the navigation bar. A menu with offering the names "Plato",
-"Twain", "Einstein", "Adams" is openened. Hit Control-D to change the
-layout direction, you see that the these names which were originally
-"almost" centred are aligned right in RTL mode. They should be aligned
-in a mirrored way, i.e. if they are a bit left of the centre in LTR
-mode, they should be a bit right of the centre in RTL mode.
-Is this a problem with MApplicationMenu or with MAction?
-      </td>
-    </tr>
-    <tr>
-      <td>MApplicationPage</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MApplicationWindow</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MButton</td>
-      <td>OK</td>
-      <td>
-But the switches in the switchpage of widgetsgallery (which are
-MButtons) do not reverse the alignment of their ON/OFF texts.
-Problem in MButton or somewhere else?
-      </td>
-    </tr>
-    <tr>
-      <td>MButtonGroup</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MComboBox</td>
-      <td>OK</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>MContainer</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MDialog</td>
-      <td>OK</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>MDockWidget</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MEscapeButtonPanel</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MGrid</td>
-      <td>broken</td>
-      <td>
-
-There seems to be a grid with gray squares in the background and blue
-buttons in the foreground in the widgetsgallery grid page. In LTR
-mode, the gray squares align with the blue buttons, i.e. on top of
-each gray square is a blue button. In LTR mode, the two arrays
-are shifted against each other. This doesn't look right. 
-
-      </td>
-    </tr>
-    <tr>
-      <td>MHomeButtonPanel</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MImage</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MInfoBanner</td>
-      <td>broken</td>
-      <td>
-Always slides in from the left side, see "Dialogs and Notifications"
-page in widgetsgallery.
-      </td>
-    </tr>
-    <tr>
-      <td>MLabel</td>
-      <td>OK</td>
-      <td>
-It did not change alignment on the fly until recently but this is
-fixed now, see <a
-href="https://projects.maemo.org/bugzilla/show_bug.cgi?id=144377">NB#144377</a>
-      </td>
-    </tr>
-    <tr>
-      <td>MMessageBox</td>
-      <td>OK</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>MModalSceneWindow</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MNavigationBar</td>
-      <td>broken</td>
-      <td>Icon in the navigation bar is always on the left side</td>
-    </tr>
-    <tr>
-      <td>MObjectMenu</td>
-      <td>probably OK</td>
-      <td>Where is this used?</td>
-    </tr>
-    <tr>
-      <td>MPannableViewport</td>
-      <td>OK</td>
-      <td>Position indicator correctly changes side</td>
-    </tr>
-    <tr>
-      <td>MPannableWidget</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MPopupList</td>
-      <td>OK</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>MProgressIndicator</td>
-      <td>OK</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>MPositionIndicator</td>
-      <td>broken</td>
-      <td>
-Is always on the right side. Can be seen on the start page
-of Widgetsgallery.
-      </td>
-    </tr>
-    <tr>
-      <td>MSeekBar</td>
-      <td>broken</td>
-      <td>
-slides correctly from the right in RTL mode but the black
-area showing the "already" downloaded stuff is only visible in LTR mode.
-      </td>
-    </tr>
-    <tr>
-      <td>MSeparator</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MSlider</td>
-      <td>OK</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>MSlideShow</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-    <tr>
-      <td>MTextEdit</td>
-      <td>OK</td>
-      <td>
-<a href="https://projects.maemo.org/bugzilla/show_bug.cgi?id=104397">NB#104397</a>
-is very obvious here, but this is not the fault of MTextEdit.
-      </td>
-    </tr>
-    <tr>
-      <td>MToolBar</td>
-      <td>OK</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>MWindow</td>
-      <td>OK</td>
-      <td>Nothing to do for RTL</td>
-    </tr>
-</table>
-
-\section  charsetconversion  Charset Conversions
+\section  charsetconversion  Charset conversions
 
 The MeeGo Touch UI Framework uses the Qt character set conversion
 mechanisms directly. Therefore, developers can follow the Qt
 documentation to find out how to use the character set conversion
 functionalities.
 
-\section  generalchecklist  General Checklist
+\section  generalchecklist  General checklist
 
 \subsection General General
 \subsubsection  fontsize  Fonts size
@@ -1617,8 +1355,8 @@ English text. This may impact the layout design.
 
 \subsubsection Plural Plural
 
-Some languages use plural and some do not. Some other languages use
-more than one form of plurals.
+Some languages use plural and some do not. There are also languages that use more than one plural 
+form.
 
 \subsubsection Sorting Sorting
 
@@ -1628,11 +1366,10 @@ MeeGo Touch UI collator to sort the strings.
 \subsubsection  wordboundaries  Word boundaries
 
 In some languages there is no space between words. In most cases the
-line wrapping will work and the system will break the sentence into
-smaller chunks. If it fails, translators shall use whitespace to force
-word boundaries.
+line wrapping works and the system breaks the sentence into smaller chunks. If it fails, translators 
+can use whitespace to force word boundaries.
 
-\subsubsection  wordorder  Word order, variables
+\subsubsection  wordorder  Word order and variables
 
 When a sentence contains several variables, the order of the words in
 other languages may be different. Use QString place marker to define
@@ -1644,12 +1381,11 @@ the order of the variables.
                    .arg(packageName).arg(repository).arg(size);
 \endcode
 
-When translating, translators shall also keep the place markers and
-put them in the correct places.
+When translating, translators must also keep the place markers and put them in the correct places.
 
 Note how %L3 was used for the size parameter which is a number.  Using
-%L3 instead of just %3 has the advantage that localized numerals may
-be used. For example if the language of the locale is Arabic and the
+%L3 instead of just %3 has the advantage that localised numerals may
+be used. For example, if the language of the locale is Arabic and the
 numeric settings of the locale do not override it, %L3 causes
 Arabic-Indic numerals to be used. If the translator wants to disable
 this behaviour for this particular message and force usage of Arabic
@@ -1670,17 +1406,16 @@ MeeGo Touch UI collation system instead.
 
 \subsubsection  avoidhardcoding  Avoid hardcoding
 
-Some data such as graphics, icons, sounds, etc sometimes need to be
-correctly loaded dependent on the regional setting. In this case,
-never hard code the data directory, instead use the regional setting
+Some data types, such as graphics, icons, and sounds, sometimes need to be loaded according to  
+the regional setting. In these cases, never hard code the data directory, instead use the regional setting
 information to build the string to point to the correct directory
 containing the data.
 
 \subsubsection  neverconcatstrings  Never concatenate strings
 
-If you need to construct a string involving variables, never concate
-the UI strings. The string order is never guaranteed to the same in
-all languages. Never do this:
+If you need to construct a string involving variables, never concatenate
+the UI strings. It can never be guaranteed that the string order is the same in
+all languages. Do not use the following:
 
 \code
    QString message = "You have " + numMessages + " messages";
@@ -1694,86 +1429,75 @@ Instead use a variable when constructing the string:
 
 \subsubsection  dataformat  Data formatting
 
-Date, time, numbers, name, address, currency data are required to be
-formatted before displayed on the screen. Never display unformatted
-data as it breaks the data presentation consistency. Formatted data
-always use the correct presentation according to the regional
-setting. Special case for address data, it shall be formatted
-according to the customary of the country which stated in the address.
+Date, time, numbers, name, address, and currency data require formatting before they can be 
+displayed on the screen. Never display unformatted data as it breaks the data presentation 
+consistency. The data format should always follow the regional setting. Address data is 
+an exception because it must be formatted according to the conventions of the country stated in the 
+address.
 
 \subsection  uidesign  UI Designers
 \subsubsection Abbreviations Abbreviations
 
-In general, avoid using abbreviations as part of the UI string. The
-abbreviations ofter are misleading and confuse the
-translators. Instead, allow for more text expansion
+In general, avoid using abbreviations as part of the UI string. Abbreviations are often misleading 
+and confuse translators. Instead, increase the available space for the text.
 
 \subsubsection Emphasis Emphasis
 
-Never use casing when indicating functionality or emphasis. Some
-languages do not observe distinction between lowercase and
-uppercase. The translator may have difficulties to find out how to
-emphasise the string when the original English string uses uppercase for
-the emphasis.
+Never use case to indicate functionality or emphasis. Some languages do not observe a distinction 
+between lower-case and upper-case letters. Using upper case to indicate emphasis in the original 
+English string may cause difficulties when translating the string into other languages.
 
-Other methods such as using certain typeface to show emphasis also
-discouraged as not all writing systems support them.
+You should also avoid using certain typeface and other similar methods to show emphasis because they 
+are not supported by all writing systems.
 
-\subsubsection  characterrepertoire  Character repertoire
+\subsubsection  characterrepertoire  Character range
 
-Never use characters outside the ASCII repertoire as part of original
+Never use characters outside the ASCII range as part of original
 English strings. The font needed to display the character may not
 available in the device variant used for other languages.
 
 \subsubsection Compounds Compounds
 
-Some languages create words by combining a few words together. The
+Some languages create words by combining several words together. The
 resulting words are often longer than the original English
 string. Make sure that the UI allows the text expansion in these
 languages.
 
 \subsubsection Digits Digits
 
-Some languages use their own digits (term: national digits) to show
-the numbers. Allow the usage of national digits in some cases (for
-example when displaying general strings containing numbers) and force
-the UI to only use the Latin digits in other cases (for example when
+Some languages use their own digits (term: national digits) for numbers. Allow the usage of national 
+digits in some cases (for example, when displaying general strings containing numbers) and force
+the UI to only use the Latin digits in other cases (for example, when
 displaying IP addresses).
 
 \subsubsection  writingdirection  Writing direction
 
-Some languages use different writing direction than the Latin based
-languages. The UI presentation generally follows the natural flow of
-the writing direction. Therefore, the widget layout and composition is
-mirrored when the device language is set to the languages which use
-the right-to-left writing direction. The mirroring is done
-automatically by the MeeGo Touch UI Framework. If the automatic mirroring is
-not sufficient then consult the developers to support different layout
-for right-to-left direction.
+Some languages use a different writing direction than Latin-based languages. The UI presentation 
+generally follows the natural flow of the writing direction. Therefore, the widget layout and 
+composition is mirrored when a language written from right to left is set as the device language. 
+The mirroring is performed automatically  by the MeeGo Touch UI Framework. 
 
-MeeGo Touch UI Framework currently only supports left-to-right and
-right-to-left writing directions.
+MeeGo Touch UI Framework currently only supports left-to-right and right-to-left writing directions.
 
 \subsubsection Gender Gender
 
-Some languages use gender when referring to objects or words. 
+Some languages distinguish between grammatical genders when referring to nouns. 
 
 \subsubsection  colorandgraphics  Colour and graphics
 
 Colours often have different meanings and connotations in different
-cultures. In Western culture, red is often used to indicate stop or
+cultures. In the Western culture, red is often used to indicate stop or
 danger. In China, red is symbolic of celebration, luck and
-prosperity. White signifies purity, virginity, or death. In Western
+prosperity. White signifies purity, virginity, or death. In the Western
 culture it is the colour worn at weddings. In parts of Japan and China
-the colour worn at funerals.
+white is worn in funerals.
 
-Never embed text and/or numbers in graphics, otherwise the graphics
-need to be translated and it may be difficult and expensive.
+Never embed text and/or numbers in graphics. Translating graphics may be difficult and expensive.
 
-Some icons or drawings considered offensive in some cultures. 
+Some icons or drawings are considered offensive in some cultures. 
 
-\subsubsection  slitstrings  Split strings when containing date and time format
+\subsubsection  slitstrings  Split strings that contain date and time format
 
-See section "Translation involving date/time format" above.
+See section "Date and time" above.
 
 */

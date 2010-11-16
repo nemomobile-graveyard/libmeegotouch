@@ -1,34 +1,30 @@
-/*! \page faststart Fast application startup
+/*! \page faststart Reducing application start-up time
 
-There are three features that enable directly improving MApplication 
-startup times:
+You can directly improve MApplication start-up times with the following features:
 
 \li The \subpage launcher "application launcher" is the
-primary alternative for shortening application startup times. It will
-preload large libraries and instantiate e.g. MApplication and
-MApplicationWindow objects to so called component cache before the
-main() of the application is started. The application will then use
+primary alternative for reducing application start-up times. It 
+preloads large libraries and instantiates, for example, MApplication and
+MApplicationWindow objects to a so-called component cache before the
+main() of the application is started. The application then uses
 the already created instances from the component cache. However, there
-are some limitations to launcher usage. For instance it does not
-support some MeeGoTouch and Qt command line options.
+are some limitations to launcher usage. For instance, it does not
+support some MeeGo Touch and Qt command line options.
 
 \li \subpage prestart "Application prestarting" is meant for
-applications that cannot avoid slow initializations before they can be
-used. Prestarting enables starting up those applications to a state
-where they do not show UI. From that state they can show a window in
-no time when requested. This will provide the fastest results, but the
-drawback is the high memory usage due to prestarted applications as
-well as some unexpected maintenance tasks that the system may do for
-prestarted application processes. <strong>In Harmattan UI framework
+applications with slow initialisation times. Prestarting the applications brings them to a state
+where they do not show the UI. In that state the application window can be displayed immediately when requested. This provides the fastest results, but the
+drawback is the high memory usage caused by the prestarted applications. There may also be unexpected system maintenance tasks for the
+prestarted application processes. <strong>In the MeeGo Touch UI framework
 prestarting is limited to a small set of critical applications. This
 feature cannot be used without support from the system
 configuration.</strong>
 
 \li \ref prestart "Lazy shutdown" allows applications to
-be closed without terminating. This allows an application to show its
-window very quickly when it is needed next time. Lazy shutdown does
-not speed up the first startup at all, but it improves the performance
-of applications that take advantage of prestarting already.
+be closed without terminating them. The next time when the application is needed, the application 
+window is displayed very quickly. Lazy shutdown does
+not speed up the first start-up at all, but it improves the performance
+of applications that already take advantage of prestarting.
 
 An application can use any combination of the above features.
 
@@ -41,10 +37,10 @@ some \subpage responsivewindow "initial GUI" fast when starting the application.
 
 \section links Documentation links 
 
-    \li \ref launcher "How to write launchable applications"
+    \li \ref launcher "Writing launchable applications"
 
-    \li \ref prestart "How to write prestartable and lazy shutdownable applications"
+    \li \ref prestart "Writing prestartable and lazy shutdown applications"
 
-    \li \ref responsivewindow "How to show responsive window fast in meegotouch application"
+    \li \ref responsivewindow "Showing a responsive window quickly in a MeeGo Touch application"
 
 */

@@ -1,25 +1,20 @@
-/*! \page styling_stylesheets Stylesheets
+/*! \page styling_stylesheets Styling with style sheets
 
-    As stated earlier in this documentation, the application developer adds the style to the system
-    (for e.g. some widget) and a set of attributes are defined for the style. These attributes are defined by
-    UI-Designers and they can be customized using the style sheets. Style sheets provide an easier way to
-    customize the look and feel of the system, without a need to re-compile the system all over again if
-    something needs to be changed. Style sheets are also intuitive and they are simple to use. When the
-    system starts up, the style sheets are loaded and the styles are automatically initialized according
+    The application developer adds the style to the system (for instance, for a widget) and a set of attributes are defined for the style. These attributes are defined by UI designers, and they can be customised with style sheets. Style sheets provide an easier way to
+    customise the look and feel of the system, without a need to re-compile the system all over again if
+    something needs to be changed. Style sheets are also intuitive and simple to use. When the
+    system starts up, style sheets are loaded and the styles are automatically initialised according
     to the values defined in the style sheets.
 
     \section syntax_reference Syntax reference
-    This section describes the syntax for stylesheet files. The following chapters contain the building blocks
-    for the styleheet definition from top to bottom. Most of the syntax follows the basic CSS rules but there
-    are also some MeeGo-specific additions.
+    This section describes the syntax for style sheet files. The following sections describe the building blocks for the style sheet definition from top to bottom. Most of the syntax follows the basic CSS rules, but there are also some MeeGo-specific additions.
 
         \subsection import_sheet Import
             Syntax: \@import ""; or \@import url("");
 
-            Description: Makes it possible to import other stylesheet files and in this way combine multiple
-            stylesheets as one.
+            Description: Imports additional style sheet files and, in this way, combines multiple style sheets into one.
 
-            Details: All the import statements must reside at the top of the .css file, before any selectors are defined.
+            Details: All the import statements must reside at the top of the CSS file, before any selectors are defined.
 
             \code
             @import "commonstylesheet.css";
@@ -40,12 +35,12 @@
 
             Description: Groups attributes for a defined style
             
-            Details: Selectors group attributes of the same category together. In MeeGo Touch stylesheets, it
-            basically means having one selector for each style class. Selector attributes follow the general
-            inheritance rules, so if you declare base class selectors, their contents will by default, inherit
-            to the subclasses. If you want to break this inheritance chain, you can add a dot character (.) in
+            Details: Selectors group attributes of the same category together. In MeeGo Touch style sheets, it
+            basically means that there is one selector for each style class. Selector attributes follow the general
+            inheritance rules, so if you declare base class selectors, their contents inherit
+            to the subclasses by default. If you want to break this inheritance chain, you can add a dot character (.) in
             front of the class name, meaning that those attributes are not derived to the subclasses but used
-            only for that class. As a general rule, most of the attributes should derive and therefore you
+            only for that class. As a general rule, most of the attributes should derive. Therefore, you
             should consider before using the dot in front of the class name.
 
             \code
@@ -73,8 +68,8 @@
             Application developers define them in the style header file, according to instructions from the UI
             designer.
 
-            The attribute naming between C++ code and stylesheets follows the pattern where camelcase names are
-            converted into lowercase strings with hyphens. See the example below.
+            The attribute naming between C++ code and style sheets follows the pattern where camelcase names are
+            converted into lower-case strings with hyphens. See the example below.
 
             <table border="1" cellpadding="3">
             <tr>
@@ -129,11 +124,11 @@
         \subsection constants Constants
             Syntax: \@const constant-name: constant-value;
 
-            Description: Makes it possible define constant values in stylesheets, avoiding the need to maintain
-            duplicated data that is spread around the stylesheet.
+            Description: Defines constant values in a style sheet, so you do not need to maintain
+            duplicated data that is spread around the style sheet.
 
             Details: Constant variables are defined using a syntax similar to attributes. Constant
-            definitions support the same types and suffices as attributes do. Constants are assigned to
+            definitions support the same types and suffixes as attributes. Constants are assigned to
             attributes using the '$' character as prefix.
 
             \code
@@ -150,18 +145,18 @@
             \endcode
 
 
-    \section advanced_styling_with_stylesheets Advanced styling with stylesheets
+    \section advanced_styling_with_stylesheets Advanced styling with style sheets
 
-        \subsection parent_child_in_stylesheet Parent-child relationship in stylesheet
+        \subsection parent_child_in_stylesheet Parent-child relationship in style sheets
             Syntax: parentclassname styleclassname { }
 
-            Description: Makes it possible to define a set of attributes if the widget's parent is a 
-                         certain widget.
+            Description: Defines a set of attributes for a widget that has a certain widget as a 
+			parent.
 
             Details: The parent is defined using the name of the widget class, not a style class. This is because the look
                      and feel of the parent is not important. It is not possible to add any other parameters to the parent.
                      Note that when styling from libraries, specifying a custom parent class is the only way to affect the
-                     styling of widgets external to the library (i.e. common widgets). See
+                     styling of widgets external to the library, in other words, common widgets. See
                      \ref lib_themefiles "Providing view configuration & stylesheets for the widgets" for details.
 
             \code
@@ -177,10 +172,10 @@
             }
             \endcode
 
-        \subsection mode_in_stylesheet Mode in stylesheets
+        \subsection mode_in_stylesheet Mode in style sheets
             Syntax: styleclassname:mode { }
 
-            Description: Makes it possible to define a set of attributes for a certain mode.
+            Description: Defines a set of attributes for a certain mode.
 
             Details: The mode parameter is separated by a colon and it must be the last one in the selector
                      definition.
@@ -199,21 +194,22 @@
             }
             \endcode
 
-        \subsection object_names_in_stylesheet Object names in stylesheets
+        \subsection object_names_in_stylesheet Object names in style sheets
             Syntax: styleclassname#name { }
 
-            Description: Makes it possible to define a set of attributes for named object.
+            Description: Defines a set of attributes for a named object.
 
-            Details: The name parameter is separated by the '#' character and it must follow the class name and
-            type when defining the selector. The actual name is bound to a widget on source code level by the
-            software developer as instructed by the UI Designer. This allows the person who creates the
-            stylesheet to assign a custom style for the named widget. Consult your UI Designer for the
+            Details: The name parameter is separated by the '#' character, and it must follow the class name and
+            type when defining the selector. The software developer binds the 
+			actual name to the widget at the source-code level according to the instructions from 
+			the UI designer. This allows the person who creates the
+            style sheet to assign a custom style for the named widget. Consult your UI designer for the
             object names in the application you are developing.
 
-            Here are some rules for how the system assigns named attributes:
-            - The system automatically takes care that the named attributes are assigned to objects which are named in a similar way
-            - Attributes that are not named are always assigned to the object, even if a widget has a name
-            - Named attributes always override attributes which are not named
+            The system assigns named attributes as follows:
+            - The system automatically ensures that the named attributes are assigned to objects which are named in a similar way
+            - Unnamed attributes are always assigned to an object, even if a widget has a name
+            - Named attributes always override unnamed attributes
 
             \code
             MyWidgetStyle#fancynamedwidget
@@ -223,12 +219,12 @@
             }
             \endcode
 
-        \subsection orientation_in_stylesheet Orientation in stylesheets
+        \subsection orientation_in_stylesheet Orientation in style sheets
             Syntax: styleclassname.orientation { }
 
-            Description: Makes it possible to define a set of attributes depending on device orientation.
+            Description: Defines a set of attributes depending on the device orientation.
 
-            Details: The orientation parameter is separated by a dot character and it must follow the
+            Details: The orientation parameter is separated by a dot character, and it must follow the
             object name when defining the selector. Two orientations can be defined, "Portrait" and
             "Landscape".
 
@@ -252,11 +248,11 @@
             }
             \endcode
 
-            Here are some rules for how the orientation parameter affects the styling:
-            - The system automatically takes care that you will receive the proper attribute values from correct orientation
-            - If the orientation is not specified for the style, the attributes will be used in both orientations
-            - Style definitions with orientation parameter defined, override the definitions which have no orientation parameter defined
+            The orientation parameter affects styling as follows:
+            - The system automatically ensures that you receive the proper attribute values from correct orientation.
+            - If the orientation is not specified for the style, the attributes are used in both orientations.
+            - If the orientation parameter has been defined for a style definition, it overrides a definition with no defined orientation parameter.
 
-        \subsection type_in_stylesheet Type in stylesheet
+        \subsection type_in_stylesheet Type in style sheets
             \todo add documentation
 */

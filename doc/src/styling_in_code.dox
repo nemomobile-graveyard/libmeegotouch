@@ -3,55 +3,54 @@
 \section styling_in_application_code Styling in application code
 
     \subsection architecture Architecture
-        In MeeGo Touch Framework, the theme acts as a base for all the styling. If the theme is changed in
+        In MeeGo Touch Framework, the theme is the basis for all styling. If you change the theme in the 
         runtime, the look and feel for the whole system can radically change. The following figure shows
         the basic building blocks of the MeeGo Touch style system. It also illustrates how the styling is
         integrated with the widgets.
 
-        \image html widgets_style.png "Architecture of the MeeGo Touch styling system."
+        \image html widgets_style.png "Architecture of the MeeGo Touch styling system"
 
     \subsection mtheme MTheme
         All the style objects are used by the theme class. Theme class provides services to create a new style
-        object and to release it. It reference counts all the style objects and provides a cache, which allows
-        multiple widgets to share same style objects, therefore optimizing the speed and memory consumption of
+        object and release it. It reference counts all the style objects and provides a cache, which allows
+        multiple widgets to share same style objects, therefore optimising the speed and memory consumption of
         the system.
 
     \subsection mstylesheetparser MStyleSheetParser
-        This class parses style sheets. It reads stylesheet files and converts them to data
-        structure in memory. It also provides services to dump the whole data structure to disk and to read it
-        back into memory. This is a huge optimization since the whole parsing process can be bypassed after the
-        stylesheet has been processed once.
+        This class parses style sheets. It reads style sheet files and converts them to the data
+        structure in the memory. It also provides services for dumping the whole data structure to disk and reading it
+        back into the memory. This is a huge optimisation since the whole parsing process can be bypassed after the
+        style sheet has been processed once.
 
     \subsection mstylesheet MStyleSheet
         This class provides support for the actual cascading process when the style sheet is being processed
-        runtime. It is responsible of populating the style classes and to handle all the style attributes in a
+        runtime. It is responsible for populating the style classes and handling all the style attributes in a
         type-safe manner.
 
     \subsection mstyle MStyle
         MStyle class is the actual container for all the style attributes. The attributes are stored as Qt
-        properties and they can be therefore accessed easily and also they can be later on animated using
+        properties and they can be therefore accessed easily and animated later on using
         property animators. MStyle is a base class for all the styles.
 
     \subsection style_classes MWidgetStyle, MButtonStyle, MLabelStyle
         These are MStyle-derived classes, providing a set of attributes for the same type of widget.
-        Basically there is one style class per one stylable component in the MeeGo Touch Framework.
+        Basically there is one style class for each stylable component in the MeeGo Touch Framework.
 
     \subsection mstylecontainer MStyleContainer
         MStyleContainer class groups multiple MStyle instances together. It provides services like
-        indicating the mode of the stylable object to the style system; or later on, even animating attribute
+        indicating the mode of the stylable object to the style system or, later on, even animating attribute
         values between different styles. The style is always accessed through the container.
 
     \subsection creating_new_style_class Creating a new style class
-        Creating a new style class is a pretty simple process. Basically what you do is just derive from the style
-        class you want to inherit from and add the attributes you need. In this example, a new style is created for a
-        custom widget, therefore we start by deriving the new style class from the MWidgetStyle class.
+        Creating a new style class is a relatively simple process. Basically, you just derive from the style
+        class that you want to inherit from and add the attributes you need. In this example, since a new style is created for a
+        custom widget, you start by deriving the new style class from the MWidgetStyle class.
 
-        An important thing to note is that when declaring a new style class, either the M_STYLE or M_STYLE_INTERNAL
+        Note: When declaring a new style class, either the M_STYLE or M_STYLE_INTERNAL
         macro needs to be declared inside the class in the header file. Use M_STYLE when you inherit your style
         class from a style class which is defined outside of your library/application. Use M_STYLE_INTERNAL when
         you inherit from a style class which is defined in the same library/application you are working with. The
-        macro will create a private data member to your class, which will later on during the process store the real
-        attribute data of your style class.
+        macro creates a private data member to your class, which stores the real attribute data of your style class later on during the process.
 
         \code
         class MyWidgetStyle : public MWidgetStyle
@@ -62,16 +61,17 @@
         \endcode
 
         \subsection defining_style_attributes Defining attributes for the style
-            Attributes are declared by using the M_STYLE_ATTRIBUTE(type, name, Name) macro. This macro will
-            generate accessor methods to your attribute and it will also create Q_PROPERTY definition for it,
-            making your attribute exist in the Qt's meta object. M_STYLE_ATTRIBUTE has three parameters. The
-            first one is the datatype of the attribute (int, qreal etc..) the other two concentrate on naming
-            of the attribute and accessor methods.
+            Attributes are declared by using the M_STYLE_ATTRIBUTE(type, name, Name) macro. This macro 
+            generates accessor methods to your attribute and it also creates Q_PROPERTY definition for it,
+            making your attribute exist in the Qt's meta object. M_STYLE_ATTRIBUTE has the following parameters:
+            - data type of the attribute (such as int or qreal)
+            - attribute name
+            - accessor method
 
-            The name parameter of the macro will be converted to style sheet-attribute name so that every
-            camelcase letter is converted to dash and lowercase letter (e.g. marginLeft becomes margin-left).
+            The name parameter of the macro is converted to style sheet-attribute name so that every
+            camelcase letter is converted to dash and lower-case letter (for example, marginLeft becomes margin-left).
 
-            Here is an example of our new style class, with two attributes defined:
+            The following example illustrates a new style class with two defined attributes:
             \code
             class MyWidgetStyle : public MWidgetStyle
             {
@@ -82,20 +82,19 @@
             };
             \endcode
 
-            Next step is to create a container class for the style objects of this type. Style container
-            provides access to the actual style data and it also makes it possible to indicate to the style system
-            that your stylable object has changed from one mode into another. Once again there are two macros:
+            Next, you can create a container class for the style objects of this type. Style container
+            provides access to the actual style data and also makes it possible to indicate to the style system
+            that your stylable object has changed from one mode into another. The following macros are available:
 
             - M_STYLE_CONTAINER(style class name)
             - M_STYLE_CONTAINER_INTERNAL(style class name)
 
-            If you used M_STYLE in the style class you must use M_STYLE_CONTAINER in the container class.
-            If you used M_STYLE_INTERNAL in the style class you must use M_STYLE_CONTAINER_INTERNAL in the
-            container class. This macro will automatically generate an accessor operator and reloading of the
-            style data if the mode changes while the application is running. Note that the parameter of the macro
-            needs to be the type of the style class you created above.
+            If you used M_STYLE in the style class, you must use M_STYLE_CONTAINER in the container class.
+            If you used M_STYLE_INTERNAL in the style class, you must use M_STYLE_CONTAINER_INTERNAL in the
+            container class. This macro automatically generates an accessor operator and reloads the
+            style data if the mode changes while the application is running. Note: You must use the type of the style class that you created as the parameter of the macro.
 
-            The style container needs to be inherited from the corresponding container class, here's an example:
+            The following example illustrates how the style container needs to be inherited from the corresponding container class:
             \code
             MyWidgetStyleContainer : public MWidgetStyleContainer
             {
@@ -103,15 +102,15 @@
             };
             \endcode
 
-            \image html style_macros.png "A diagram showing how macros are used in different libraries & executables."
+            \image html style_macros.png "Macros used in different libraries and executables"
 
         \subsection defining_modes_for_style Defining modes for the style
             If you decide to support modes in your style class, those can be defined with the M_STYLE_MODE macro.
-            This macro will expand to a method, which will set the corresponding mode enabled. For example,
-            M_STYLE_MODE(Indexing) will expand to a setModeIndexing() method, which can be called to start
+            This macro expands to a method, which enables the corresponding mode. For example,
+            M_STYLE_MODE(Indexing) expands to a setModeIndexing() method, which can be called to start
             retrieving attribute values from that mode.
 
-            Here's an example to add a few modes to the container
+            The following example illustrates how to add modes to the container:
             \code
             MyWidgetStyleContainer : public MWidgetStyleContainer
             {
@@ -121,14 +120,13 @@
             };
             \endcode
 
-            The new style class is now ready to be configured through the style sheets, see Styling with
-            stylesheets for more details about that subject.
+            The new style class is now ready to be configured through the style sheets. For more information, see Styling with style sheets.
 
         \subsection accessing_style_attributes Accessing the style attributes
         MeeGo Touch provides a simple way to access the style attributes by providing a style instance for the
-        stylable object. This class contains simple accessor methods which allows one to read the values of the
+        stylable object. This class contains simple accessor methods which allow you to read the values of the
         attributes. The name of the accessor method is defined by the second parameter in the M_STYLE_ATTRIBUTE
-        macro. See an example of accessing the style below.
+        macro. The following example illustrates how to access the style:
 
         \code
         // assuming that widget is using MyWidgetStyle
@@ -147,7 +145,7 @@
         \subsection runtime_style_changes Runtime style change for widgets
             When the style changes in runtime, the MWidgetView::applyStyle method will be called. It means
             that the attributes are reloaded with new values and they are ready to be used. This method is
-            virtual and it can be overridden in the derived classes. See the example below.
+            virtual and it can be overridden in the derived classes. See the following example:
 
             \code
             // in MyWidgetView.h
@@ -175,31 +173,33 @@
             \endcode
 
 \section using_helper_tools Using helper tools
-    There are two helper tools which make the creation of new style classes easier. These tools are mgen and
-    mmoc. It is important to note that one doesn't have to use these tools, everything can be done without
+    There are two helper tools which facilitate the creation of new style classes. These tools are mgen and
+    mmoc. It is important to note that you do not have to use these tools, everything can be done without
     them. So if you decide to bypass the toolchain, it means that you have to write all the private classes and
-    attribute accessor methods by yourself. Writing all of those files is a lot of work and you also get the
-    responsibility to maintain all of those files. The toolchain does most of that stuff in compile time, so
-    it is worth having a closer look at it.
+    attribute accessor methods by yourself. Writing all the files requires a lot of work and makes 
+	you responsible for maintaining the files. Since the toolchain carries out most of the work  
+	during the compilation process, you should consider using it.
 
     \subsection mgen mgen
         mgen generates private data classes and their content for all the styles. It also generates the
-        constructor/destructor code to your style class among with all the needed necessary accessor methods.
+        constructor/destructor code to your style class along with all the required accessor methods.
         Everything is generated and compiled during the make process.
 
     \subsection mmoc mmoc
-        mmoc is a pretty simple script. Because Qt's moc doesn't know how to expand macros there needs to be
+        mmoc is a pretty simple script. Because Qt's moc doesn't know how to expand macros, there needs to be
         a way to expand the M_STYLE_ATTRIBUTE macros for it. The mmoc tool expands them to Qt's Moccer so that
-        the Q_PROPERTY macro gets translated by the Qt Moc.
+        the Q_PROPERTY macro is translated by the Qt Moc.
     
-    \image html toolchain.png "Graph showing how mgen & mmoc are integrated into the build process."
+    \image html toolchain.png "Integration of mgen and mmoc into the build process"
     
     \subsection configuring_project_to_use_helper_tools Configuring your project to use helper tools
-        In order to use the helper tools automatically, you need to add CONFIG += meegotouch to your .pro file. In
-        addition, you must declare your model & style header files to be processed by adding them into the
-        MODEL_HEADERS and STYLE_HEADERS. Note that your style & model headers must also exist in the common HEADER
-        section. See the example .pro file below for how to do that.
+        To use the helper tools automatically:
+		
+        1. Add CONFIG += meegotouch to your .pro file. 
+		2. To declare your model and style header files to be processed, add them into the 
+        MODEL_HEADERS and STYLE_HEADERS.
 
+		Note: Your style and model headers must also exist in the common HEADER section, see the following example:
         \code
         TEMPLATE = app
         TARGET = mywidget
@@ -217,19 +217,17 @@
 \section advanced_styling_in_app Advanced styling in application code
 
     \subsection parent_child_relationship_in_app Parent-child relationship in application
-        Using parent-child relationship in styling needs nothing more than assigning a parent to the widget
+        To use parent-child relationship in styling, assign a parent to the widget
         which needs to be styled. This can be achieved by calling QGraphicsItem::setParentItem method for the
-        MWidgetController. After that the system is aware of the widgets parent, therefore being able to
+        MWidgetController. After that, the system is aware of the widget's parent, and is thus able to
         assign a proper style for it.
 
     \subsection mode_in_app Mode in application
         If the state of your stylable changes, you need to inform the styling system about it. This is done
         by calling the corresponding method in the MStyleContainer class. For example, if you have defined
         a mode 'Selected' to your style container class, you can call the setModeSelected() method to enable that
-        kind of styling. The styling system uses the mode as a parameter in MTheme::style calls when it
-        reloads the styles.
-
-        Here's an example:
+       styling. The styling system uses the mode as a parameter in MTheme::style calls when it
+        reloads the styles, see the following example:
         \code
         // assume that this is defined in the MWidgetStyleContainer class
         M_STYLE_MODE(Selected)
@@ -242,13 +240,11 @@
         \endcode
 
     \subsection named_objects_in_app Styling based on object naming
-        By assigning an object name to the stylable object, the system identifies that the object will need
-        unique styling. If this styling is defined in the style sheet, it will be automatically applied by
+        By assigning an object name to the stylable object, the system identifies that the object needs
+        unique styling. If this styling is defined in the style sheet, it is automatically applied by
         the system. The object name is assigned to the stylable object by using the QObject::setObjectName method.
         The styling system uses the object name as a parameter in MTheme::style calls when it reloads the
-        styles.
-
-        Here's an example:
+        styles, see the following example:
         \code
         // Assume that this is created earlier somewhere
         MButton* button;
@@ -258,8 +254,8 @@
         \endcode
 
     \subsection orientation_in_app Orientation in application
-        Style changes & reloading during the device orientation change is a somewhat automatic process, at least
-        for the widgets. Basically all the styles get reloaded automatically and the styling system uses the
+        Style changes and reloading during the device orientation change is a relatively automatic process, at least
+        for the widgets. Basically, all the styles are reloaded automatically and the styling system uses the
         device orientation as a parameter in MTheme::style calls.
 
     \subsection type_in_app Type in application

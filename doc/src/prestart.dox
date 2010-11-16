@@ -1,19 +1,19 @@
-/*! \page prestart How to write prestartable and lazily shutdownable applications
+/*! \page prestart Writing prestartable and lazy shutdown applications
 
-A prestarted (or lazily shutdowned) application can show its window almost without a delay when getting released from the prestarted state. MeeGo Touch supports prestarting and lazy shutdown
-of application services, that is, applications that are started by
+An application that has been prestarted (or lazily shut down) can show its window almost without 
+a delay when it is released from the prestarted state. MeeGo Touch supports prestarting and lazy 
+shutdown of application services, that is, applications that are started by
 calling \c launch() (or some other application-specific method) in their
 D-Bus interface.
 
 Prestarted applications are started to a special \b prestarted \b
-state during boot by a daemon called \b Applifed. In that state they are running
-in the background in their mainloop but not showing nor doing anything. If
-application gets terminated, Applifed re-prestarts it automatically.
+state during boot by a daemon called \b Applifed. In that state, they are running
+in the background in their mainloop but do not show or do anything. If an
+application gets terminated, Applifed prestarts it again automatically.
 
-Lazy shutdown allows an application to enter the \b prestarted \b
-state instead of terminating when closed by the user. This makes the next
-application startup very fast. Automatically prestarted applications
-can use lazy shutdown as well.
+When the user closes an application, lazy shutdown allows an application to enter the \b prestarted \b
+state instead of terminating it. This allows the next application to start up very quickly. 
+Automatically prestarted applications can use lazy shutdown as well.
 
  
 \section terminology Terminology
@@ -27,17 +27,16 @@ can use lazy shutdown as well.
   method in the D-Bus interface.
 
 - \b Prestarted \b state - the state where an application waits for
-  launching. In user point of view the application is not running, but
+  launching. From the user's point of view, the application is not running, but
   it can be started up (switched to the running state) much faster
-  than executing it from scratch. Attempts to show a window in this
+  than if it is executed from scratch. Attempts to show a window in this
   state are suppressed.
 
 - \b Prestart \b mode - the property of an application that defines
-  what happens to the application when it is closed. If not set,
+  what happens to the application when it is closed. If it is not set, the
   application does not support prestarting.
 
-- \b Running \b state - the state where an application is running in
-  the user point of view.
+- \b Running \b state - the state when an application is running (from the user's point of view).
 
 - \b TerminateOnClose and \b TerminateOnCloseMultiWindow- prestart
   modes in which an application process is terminated when the
@@ -49,9 +48,9 @@ can use lazy shutdown as well.
 
 If an application supports prestarting, it must set the prestart mode
 with \c MApplication::setPrestartMode(), regardless of the
-commandline parameters and before using any other parts of the
-prestarting API. A recommended place to do this is during or right
-after instantiating the \c MApplication class.
+command line parameters, before using any other parts of the
+prestarting API. It is recommended to do this during or immediately after instantiating 
+the \c MApplication class.
 
 Example:
 
@@ -83,7 +82,7 @@ $ ./example -prestart &
 An application enters the prestarted state if it is started with the
 \c -prestart commandline argument \b and it sets the prestart mode
 before showing any windows. If either one of these conditions does not
-hold, the application will enter to the running state.
+hold, the application enters the running state.
 
 The \c MApplicationWindow::show() method can be called even if the
 application is in the prestarted state. The window will not become
@@ -96,12 +95,13 @@ application is currently in the prestarted state.
 \section launching Releasing application from the prestarted state
 
 If the \c launch() method in MApplication's D-Bus interface is called
-(because of user tapping the application icon, for instance) and the
+(for instance, when the user taps the application icon) and the
 application is in the prestarted state, the application is released
 from the prestarted state and allowed to continue to the running
-state. Make sure that the application registers exactly the same D-Bus service that is defined in the corresponding .service file. Contradictory services may lead to longer startup times.
+state. Make sure that the application registers exactly the same D-Bus service that is defined in 
+the corresponding .service file. Contradictory services may lead to longer start-up times.
 
-The default launch from the application grid can be simulated, for example, like this:
+The default launch from the application grid can be simulated. For example:
 
 \code
 $ dbus-send --dest=com.nokia.example --print-reply --type="method_call" /org/maemo/m com.nokia.MApplicationIf.launch
@@ -113,18 +113,17 @@ The application can also be released from the prestarted state in the code by ca
 The application can react to the launch by connecting the \c
 MApplication::prestartReleased() signal, or by overriding
 MApplication::releasePrestart() handler. The default handler shows
-the active application window of a single-window application, if there
-is such a thing.
+the active window of a single-window application, if one exists.
 
-For multiwindow applications the default handler does nothing. They
-must explicitely release the application from the prestarted by
+For multi-window applications, the default handler does nothing. They
+must explicitly release the application from the prestarted state by
 calling \c MApplication::setPrestarted(false) and show the window
 after that. 
 
 
 \section lazyshutdown Returning to the prestarted state
 
-An application returns from the running state to the prestarted state
+An application returns from running to prestarted state
 if its prestarted mode is set to \c M::LazyShutdown or \c
 M::LazyShutdownMultiWindow and its last window is closed.
 
@@ -134,14 +133,14 @@ overriding the \c MApplication::restorePrestart() event handler.
 The default implementation of \c MApplication::restorePrestart() hides all the open windows.
 
 The application can also return to the prestarted state in the code by calling
-\c MApplication::setPrestarted(true). This is will effectively call the 
+\c MApplication::setPrestarted(true). This effectively calls the 
 \c MApplication::restorePrestart() event handler if one of the lazy shutdown
 modes is set. 
 
 
 \section automaticprestart Prestarting during boot and enabling lazy shutdown
 
-In order to enable lazy shutdown of the application or make the
+To enable lazy shutdown of the application or make the
 application prestartable during device boot, \c -prestart must be
 added to the \b .service \b-file of the application:
 
@@ -151,41 +150,39 @@ Name=com.nokia.example
 Exec=/usr/bin/example -prestart
 \endcode
 
-Note: modifying the service file will not cause starting up and prestarting the
-application at boot, it only makes it possible.
+Note: The above modification enables starting up and prestarting the 
+application. It does not cause the application to start up or prestart at boot. 
 
 If \b Applifed is used for prestarting applications at boot, its configuration file is located in \c
 /etc/prestart. This file contains the names of the prestartable D-Bus services and the
-prestarting priority among some other things, like CPU-load thresholds.
+prestarting priority among other things, such as CPU-load thresholds.
 
-Boot time prestart configuration is typically part of
-platform-specific configurations, and is \b not provided in application
-packages.
+Boot time prestart configuration is typically part of the platform-specific configurations, and 
+is \b not provided in application packages.
 
 
 \section killing Sudden deaths in the prestarted state
 
 Applications in the prestarted state never interact with the user.
-Neither should they take care of any critical tasks, because whether
-or not the applications will be prestarted at all is up to the
-configuration politics.
-
-These facts make the applications in the prestarted state as number
-one candidates for suspending and killing when the system resources
-run low. Therefore, application developers must be aware that an
-application in the prestarted state may be killed with KILL signal at
-any time without any warning.
+They should not take care of any critical tasks, since configuration politics determine whether
+or not the applications is prestarted at all. Thus, the applications in the prestarted state are ideal candidates for 
+suspending and  killing when the system resources run low. Therefore, application developers must 
+be aware that an application in the prestarted state may be killed with KILL signal at any time 
+without any warning.
 
 
-\section multiwindow Prestarting multiwindow applications
+\section multiwindow Prestarting multi-window applications
 
 Multi-window applications can be prestarted by using
-LazyShutdownMultiWindow and TerminateOnCloseMultiWindow modes. The
-difference to the single-window applications is that no window is
-shown by default when the launch() method is called from the D-Bus
-interface. The window should be shown by the code that handles the
-D-Bus call, and the code should release the application from the
-prestarted state before that. See the following example:
+LazyShutdownMultiWindow and TerminateOnCloseMultiWindow modes. As opposed to single-window 
+applications, no window is shown by default when the launch() method is called from the D-Bus
+interface. The window is shown as follows:
+
+1. The code releases the application from the prestarted state. 
+
+2. The code that handles the D-Bus call shows the window.
+
+See the following example:
 
 \code
 void MultiWindowApplication::activateWindow(int index)
@@ -213,11 +210,9 @@ void MultiWindowApplication::activateWindow(int index)
 }
 \endcode
 
-A multi-window application enters the prestarted state when all of its
-windows are closed. The cleanup for the closed windows can be done, for
-instance, on the closeEvent handler of each window, or on restoring
-the prestarted state when all windows are closed.
-
+A multi-window application enters the prestarted state when all its
+windows are closed. Closed windows can be cleaned up, for instance, by the closeEvent handler of 
+each window, or when restoring the prestarted state if all windows are closed.
 
 \section windowclose Controlling window closing on lazy shutdown
 
@@ -226,10 +221,8 @@ mode. On LazyShutdown and LazyShutdownMultiWindow windows are hidden
 by default. On TerminateOnClose and TerminateOnCloseMultWindow windows
 are really closed, just like when application has not been prestarted.
 
-The default closing behavior can changed by overriding the closeEvent
-handler of the window and using \c
-MWindow::setCloseOnLazyShutdown. This is demonstrated in the
-following example.
+To change the default closing behaviour, override the closeEvent handler of the window and use \c
+MWindow::setCloseOnLazyShutdown. See the following example:
 
 \code
 #include <MApplication>
@@ -299,15 +292,13 @@ int main(int argc, char **argv)
 \endcode
 
 
-\section example Example on using handlers
+\section example Example of using handlers
 
-The following example presents a skeleton of a single window
-application. If application is started with the \c -prestart
-commandline argument, it connects the signal about restoring the
-prestarted state to the slot that resets the page displayed on the
-window. Note that showing and hiding the window does not require any
-actions from the application developer in the single window
-applications (see the default event handlers above).
+The following example shows a skeleton of a single-window application. If \c -prestart command line 
+argument starts an application, it connects the signal for restoring the prestarted state to the 
+slot that resets the page displayed in the window.  Note: Showing and hiding the window does not require any 
+actions from the application developer in single-window applications. For more information, see the 
+default event handlers above.
 
 
 \code

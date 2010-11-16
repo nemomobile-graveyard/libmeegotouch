@@ -1,57 +1,51 @@
-/*! \page responsivewindow How to show a responsive window fast in a MeeGo Touch application
+/*! \page responsivewindow Showing a responsive window quickly in a MeeGo Touch application
 
-In some cases with heavy applications using the 
-\subpage launcher "application launcher" will not give fast enough 
-startup for the application. This being the case, the developer 
-should consider implementing his application so that loading 
-the GUI content of the application happens in several phases. The 
-main point of this approach is to show the window with a minimal 
-content as fast as possible when
-the user starts the application, and after that update the application
-page with the "real" content. This will make the startup experience
-for the user more pleasant than waiting longer for the complete GUI content 
-appearing to the screen. 
+Sometimes when heavy applications use the \subpage launcher, the "application 
+launcher" does not start up the application fast enough. In these cases, 
+consider implementing your application so that loading the GUI content of the 
+application occurs in several phases. This approach enables the application 
+to show the window with minimal content as fast as possible when the user 
+starts the application, and, after that, update the application page 
+with the "real" content. This makes the start-up experience more pleasant 
+for the users, since they do not have to wait until the complete GUI content 
+appears on the screen. 
 
-The purpose of this document is to give some ideas on how the 
-developer can implement this feature in his application using 
-means provided by Qt and how to avoid general problems with this
-kind of approach. 
+This section describes how to implement this feature in your application using 
+means provided by Qt and how to avoid general problems with this approach. 
 
 \section implementation Implementation basics
 
-The basic implementation goes simply like this:
+To implement this feature:
 
     \li Make the application use MBooster (see \ref launcher) 
 
-    \li Show a temporary application page while loading/building up the actual content of the GUI on the background Note!!: This won't work without the application launcher and booster, because then the launch would be too slow.
+    \li Show a temporary application page while loading/building up the actual content of the GUI on the background. Note: This does not work without the application launcher and booster because the launch would be too slow.
 
-In practice this can be achieved by creating the initial GUI content 
-inside the constructor of the application's main page and defining 
-a new public slot createFinalContent() which takes care of loading
-the actual content of the application's GUI:
+In practice, you need to create the initial GUI content inside the constructor 
+of the application's main page and define a new public slot createFinalContent() 
+which loads the actual content of the application's GUI:
 
 \code
 MainPage::MainPage() 
 {
-    // Create the initial content in here
+    // Create the initial content here
 
 }
 
 void MainPage::createFinalContent()
 {
 
-    // Create the actual content in here
+    // Create the actual content here
 
 }
 \endcode
 
-In application's main() one can now create the main page (with the
-initial content inside it) and make it appear. After this we can
+In application's main() you can now create the main page (with the
+initial content inside it) and display it. After this, 
 connect MApplicationWindow::displayEntered() to 
-MainPage::createFinalContent(), which will take care of creating
-the actual GUI of the application. This connection ensures that we 
-will start loading the actual GUI content right after the initial content
-has become visible on the display:
+MainPage::createFinalContent(), which creates the actual GUI of the application. 
+This connection ensures that the loading of the actual GUI content starts immediately 
+after the initial content has become visible on the display:
 
 
 \code
@@ -70,10 +64,8 @@ M_EXPORT int main(int argc, char **argv)
 }
 \endcode
 
-The final thing to remember is to disconnect the signal as a first 
-step inside function MainPage::createFinalContent(). This 
-ensures that the slot is called only once when starting the
-application:
+Finally, disconnect the signal as a first step inside function MainPage::createFinalContent(). 
+This ensures that the slot is called only once when starting the application:
 
 \code
 void MainPage::createFinalContent()
@@ -86,59 +78,54 @@ void MainPage::createFinalContent()
 
 \section problems Possible problems
 
-\subsection dlopen Minimize the time used for loading shared libraries
+\subsection dlopen Minimising loading time for shared libraries
 
-Shared libraries are loaded during the application start-up and 
-that can take a lot of time. This time it's unfortunately affecting also the time
-which is taken before any initial content can be shown.
+Shared libraries are loaded during the application start-up, which can take a lot of time. 
+Unfortunately, the loading time also causes delay before any initial content can be shown.
 
-To minimize this time it is important:
+To minimise the loading time:
 
-   \li Avoid any unnecessary linking of shared libraries to the application code. It is also recommended to consider to use <a href="http://www.gentoo.org/proj/en/qa/asneeded.xml"> --as-needed </a> parameter for the linker, to avoid these kind of problems.
+   \li Avoid any unnecessary linking of shared libraries to the application code. It is also recommended to consider using <a href="http://www.gentoo.org/proj/en/qa/asneeded.xml"> --as-needed </a> parameter for the linker.
 
-   \li If possible, load the plugin-libraries after the initial content of the GUI is shown.
+   \li If possible, load the plug-in libraries after the initial content of the GUI is shown.
 
    \li If own shared libraries are used, the loading time of those should be optimized
 
-Here is a few tips how to optimize loading time for your own shared
+Here are some tips for optimising loading time for your own shared
 libraries:
-   \li Don't do heavy initializations at the loading phase.
+   \li Do not perform heavy initialisations during the loading phase.
    \li All static constructors are executed when loading the library. Therefore, try to avoid the use of static constructors when implementing the library.
-   \li Execute the initializations by calling separate method after the application window is shown.
+   \li Execute the initialisations by calling a separate method after the application window is shown.
 
 
-\subsection responsive Keeping the GUI Responsive
+\subsection responsive Keeping the GUI responsive
 
-When performing heavy operations in meegotouch applications it is 
+When performing heavy operations in MeeGo Touch applications, it is 
 important that the GUI of the application still remains responsive. 
 This is a common issue in Qt applications and there are different 
-ways to avoid it, depending on the situation. 
+ways to maintain the responsiveness, depending on the situation. 
 
 Loading the actual application content after
-showing the initial GUI might be a time consuming operation. Usually 
+showing the initial GUI can be a time-consuming operation. Usually 
 the initial content itself does not contain interactive items which 
-should be responsive, but still we should take into account, 
-for example, that the user may want to close the application during the 
-time the real content is being built up. 
+should be responsive. However, take into account that the user 
+may, for example, want to close the application while the real content is being built up. 
 
-As said, this a known issue in Qt application development in general and 
-there is very good 
+Since this a known issue in Qt application development in general, there is very good 
 <a href="http://doc.trolltech.com/qq/qq27-responsive-guis.html">
-documentation </a> available which presents a range of 
-possible solutions to avoid freezing the GUI during long operations. 
-In this documentation we have picked up two possible ways to 
-go around this problem when implementing the GUI content loading in phases.
+documentation </a> available which presents a range of possible solutions to avoid 
+freezing the GUI during long operations. This section presents two possible ways to 
+avoid this problem when implementing the GUI content loading in phases.
 
-\subsubsection processevents Process events manually
+\subsubsection processevents Processing events manually
 
-The simplest solution to avoid freezing is to handle pending events from 
-time to time manually while creating the content of the actual application
-page. In practice this means calling MApplication::processEvents()
-periodically whenever possible. 
+The simplest solution to avoid freezing is handling pending events manually from 
+time to time while creating the content of the actual application
+page. In practice, this means calling MApplication::processEvents() periodically 
+whenever possible. 
 
-For example, if you need to load and scale all the
-images in the /root directory and show them in the actual application page
-you keep GUI responsive as follows:
+For example, if you need to load and scale all the images in the /root directory and 
+show them in the actual application page, keep the GUI responsive as follows:
 
 \code 
 QDir dir("/root");
@@ -150,25 +137,25 @@ Q_FOREACH(QString file, dir.entryList(QStringList("*.jpg"))) {
 \endcode
 
 There are still some problems in this approach. Events are handled
-only after loading and scaling each individual image. In practice 
+only after loading and scaling each individual image. In practice, 
 this means that GUI stays quite responsive as long as loading and
-scaling one image is not taking too much time. When trying this example
-with very large size image files, these operations can take even several
+scaling one image does not take too much time. When trying this example
+with very large image files, the operations can take even several
 seconds per image. This means that if the user tries to close the application
-during that time, the GUI responses to the close event only after a delay 
-of several seconds. Therefore, in general the "processEvents()"-approach
-should be used only in cases where several short operations are executed.
+during that time, the GUI responds to the close event only after a delay 
+of several seconds. Therefore, in general the "processEvents()" approach
+should be used only in cases when several short operations are executed.
 
 \subsubsection threadin Building the actual GUI in a separate thread
 
-Another way to keep things responsive is to build the actual content inside
+Another way to keep responsiveness is to build the actual content inside
 a separate thread. The main advantage of this approach is that the event
-loop stays running virtually without any interrupts and thus the
-GUI stays also responsive for user actions. The main disadvantage is that
+loop stays running virtually without any interrupts and, thus, the
+GUI also stays responsive for user actions. The main disadvantage is that
 this approach is a bit more complex to implement than simply calling processEvents() here and there.
 
-Here is the same image loader example, but now with a worker class
-inherited from QThread taking care of the heavy stuff:
+Here is the same image loader example with a worker class
+inherited from QThread which takes care of the heavy stuff:
 
 \code
 Worker::Worker(MApplicationWindow * window) :
@@ -205,7 +192,7 @@ This signal connection is now needed in main():
     app->connect(worker, SIGNAL(finished()), mainPage, SLOT(showContent()));
 \endcode
 
-Now, in main page's showContent() we can just use the already loaded and
+Now, in main page's showContent() just use the already loaded and
 scaled images from Worker class:
 
 \code
@@ -226,14 +213,14 @@ void MainPage::showContent()
 
 \endcode
 
-Note that MImageWidget's cannot be created in the worker thread due to
-thread safety issues. Qt would throw some warnings if tried.
+Note: MImageWidget's cannot be created in the worker thread due to
+thread safety issues. If you try this, Qt throws some warnings.
 
 \subsection rotation Rotation
 
-As with the normal application GUI's, it is important to notice possible
-screen orientation changes when the window is visible. In practice this
-means that we have to define both landscape and portrait policies for the
+As with the normal application GUI, it is important to notice possible
+screen orientation changes when the window is visible. In practice, this
+means that you have to define both landscape and portrait policies for the
 initial GUI layout.
 
 */

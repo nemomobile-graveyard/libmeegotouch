@@ -1,27 +1,29 @@
-/*! \page pagenavigation_tab_example Tab Bar Navigational Pattern Code Example
+/*! \page pagenavigation_tab_example Example of a tab bar navigation pattern
 
-Those are the four main points for implementing this navigational pattern:
-  - We want the toolbar to show actions as tabs. I.e., be a tab bar. Therefore set the view type of your application window's toolbar to tab.
+There are four steps in the implementation process of this navigation pattern:
+
+1. Set your application to display actions as tabs in the toolbar, in other words, in a tab bar: 
 \code
 setToolbarViewType(MToolBar::tabType);
 \endcode
 
-  - Add actions to the MApplicationWindow and have their locations set to MAction::ToolBarLocation so that they appear in the toolbar.
+2.  Add actions to the MApplicationWindow and set their locations to MAction::ToolBarLocation so that they appear in the toolbar.
 \code
 action->setLocation(MAction::ToolBarLocation);
 applicationWindow->addAction(action);
 \endcode
 
-  - Connect the triggered() signal of those actions to slots that make the corresponding pages appear.
+3.  Connect the triggered() signal of the actions to slots that display the corresponding pages.
 \code
 window->connect(settingsAction, SIGNAL(triggered()), SLOT(showSettingsPage()));
 \endcode
-  - Have the MApplicationPage::escapeMode() of your pages set to MApplicationPageModel::EscapeCloseWindow, otherwise the escape button will behave like in a drill down navigational pattern.
+
+4. Set the MApplicationPage::escapeMode() of your pages to MApplicationPageModel::EscapeCloseWindow, otherwise the Escape button behaves as in a drill-down navigational pattern.
 \code
 page->setEscapeMode(MApplicationPageModel::EscapeCloseWindow);
 \endcode
 
-In this example the actions were grouped in a QActionGroup only because I wanted the same method to be called whenever any of those actions are triggered.
+In this example, the actions are grouped in a QActionGroup so that the same method is called whenever any of the actions is triggered.
 
 All files can be found at:
 \verbatim

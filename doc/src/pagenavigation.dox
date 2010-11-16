@@ -1,27 +1,27 @@
-/*! \page pagenavigation Navigation within your applications
+/*! \page pagenavigation Navigation patterns for applications
 
-Applications may vary in navigational patterns. Three main templates have
-been created to help support the application's main functional goals.
+Applications can have different navigation patterns. There are three main templates available to suit the
+functional goals of your application.
 
-\section pagenavigation_drilldown Drill Down
+\section pagenavigation_drilldown Drill-down template
 
-This is the most scalable template, used when access to all application navigation structure is needed on the top level. Layouts are not restricted to lists. The Close button gets replaced by a Back button, as the user drills down the structure.
+This template is the most scalable option. Use the drill-down template when you need access to the entire application navigation structure on the top level. Layouts are not restricted to lists. The Close button is replaced with a Back button when the user drills down the structure.
 
 \image html "pagenavigation_drilldown.png"
 
 \subpage pagenavigation_drilldown_example
 
-\section pagenavigation_menu Navigation in Application Menu
+\section pagenavigation_menu Application menu template
 
-This template is for flat experiences, prioritizing content over navigation structure. Application Menu is used for hopping between navigational options. This allows for many navigational options, as opposed to the Tab Bar template (below). As all these navigation points work as the top level of the application, the close button remains even after a navigational change.
+This template is intended for flat experiences, and prioritises content over navigation structure. Application menu is used for hopping between navigation options. There are many navigation options, as opposed to the tab bar template described in the following section. As all the navigation points work as the top level of the application, the Close button remains even after a navigation change.
 
 \image html "pagenavigation_menu.png"
 
 \subpage pagenavigation_menu_example
 
-\section pagenavigation_tab Tab Bar
+\section pagenavigation_tab Tab bar template
 
-This template is for quick access between distinct areas or modes. Be careful about mixing actions (like “Create New Message”) with navigational links in the Tab Bar. Use buttons within the content area for actions, if necessary, in this layout. This model is limited to maximum 4 navigation options. Navigational options in an application should not change over time.
+This template is intended for quick access between distinct areas or modes. Be careful about mixing actions (like “Create New Message”) with navigation links in the tab bar. Use buttons within the content area for actions, if necessary, in this layout. This model is limited to a maximum of 4 navigation options. Navigation options in an application should not change over time.
 
 \image html "pagenavigation_tab.png"
 

@@ -1,25 +1,26 @@
-/*! \page pagenavigation_menu_example Application Menu Navigational Pattern Code Example
+/*! \page pagenavigation_menu_example Example of an application menu navigation pattern
 
-Those are the three main points for implementing this navigational pattern:
-  - Add actions to the MApplicationWindow and have their locations set to MAction::ApplicationMenuLocation so that they appear in the application menu.
+There are three steps in the implementation process of this navigation pattern:
+
+1. Add actions to the MApplicationWindow and set their locations to MAction::ApplicationMenuLocation so that they appear in the application menu.
 \code
 action->setLocation(MAction::ApplicationMenuLocation);
 applicationWindow->addAction(action);
 \endcode
 
-  - Connect the triggered() signal of those actions to slots that make the corresponding pages appear.
+2. Connect the triggered() signal of the actions to the slots that display the corresponding pages.
 \code
 window->connect(settingsAction, SIGNAL(triggered()), SLOT(showSettingsPage()));
 \endcode
 
-  - Have the MApplicationPage::escapeMode() of your pages set to MApplicationPageModel::EscapeCloseWindow, otherwise the escape button will behave like in a drill down navigational pattern.
+3. Set the MApplicationPage::escapeMode() of your pages to MApplicationPageModel::EscapeCloseWindow. Otherwise the Escape button behaves as in a drill-down navigation pattern.
 \code
 page->setEscapeMode(MApplicationPageModel::EscapeCloseWindow);
 \endcode
 
-Optionally, as was done in this example, you could hide or disable the menu option (i.e. MApplicationWindow action whose location is set to ApplicationMenu) that corresponds to the page that is currently being displayed.
+You can optionally hide or disable the menu option (in other words, MApplicationWindow action located in the application menu) that corresponds to the currently displayed page.
 
-In this example the actions were grouped in a QActionGroup only because I wanted the same method to be called whenever any of those actions are triggered.
+In this example, the actions are grouped in a QActionGroup so that the same method is called whenever any of the actions is triggered.
 
 All files can be found at:
 \verbatim

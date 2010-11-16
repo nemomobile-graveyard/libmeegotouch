@@ -2,38 +2,37 @@
 
 \section graphics Graphics
 
-A <em>logical ID</em> is a way to unambiguously refer to a particular piece of graphics from
-the <em>theme</em>. Each and every asset from the theme, be it an icon, a background image, or a piece
-of a widget graphics, has such an ID.
+A <em>logical ID</em> is a way to unambiguously refer to graphics from the <em>theme</em>. Each and 
+every asset from the theme, be it an icon, a background image, or a widget graphics object, has such an ID.
 
-The ID abstracts the actual format of the graphic from the application developer, and allows
+The ID abstracts the actual graphics format from the application developer, and allows
 MeeGo Touch to automatically switch the graphics when the theme changes to match the new look.
 
 \section logicalid_usage Using logical IDs
 
-Logical IDs are typically used in the following ways:
+Logical IDs are typically used:
 
-- In MeeGo Touch widget methods that take an ID
-- Requesting a piece of graphic directly from the theme system
+- In MeeGo Touch widget methods that require an ID
+- To request graphics directly from the theme system
 - In the CSS files of applications and libraries
 
-Examples of methods that accept an logical ID include:
+Examples of methods that accept a logical ID:
 
  - MImageWidget::setImage(const QString &id, const QSize &size)
  - MAction::setIconID(const QString &id)
  - MComboBox::setIconID(const QString &id)
  - MContentItem::setImageID(const QString &id, const QSize &size)
 
-\note If a size is not provided when requesting a graphic by logical ID, whatever size the graphics
-was created with in the theme itself is used which can produce unexpected results. You should
+\note If a size is not provided when requesting graphics by logical ID, the size in which the 
+graphics were created in the theme itself is used, which can produce unexpected results. You should
 therefore always provide a size, the only exception being MAction and MComboBox type of APIs where
 the component itself already knows the exact size of the graphics.
 
-By providing a logical ID instead of a QPixmap or QImage to a widget, you can be sure that the widget
-will be updated when the theme changes.
+To ensure that a widget is updated when the theme changes, provide a logical ID to the widget instead of a 
+QPixmap or QImage.
 
-In case you are implementing a widget yourself, or you require a direct handle to the graphics for
-some other reason, it is possible to request a QPixmap containing a particular themed graphics
+In case you are implementing a widget yourself or you require a direct handle to the graphics for
+some other reason, you can request a QPixmap containing particular themed graphics
 using MTheme::pixmap(const QString &id, const QSize &size).
 
 In MeeGo Touch CSS files, a logical ID can be provided for style attributes that are of MScalaleImage or QPixmap types:
@@ -46,13 +45,13 @@ MButtonSwitchStyle {
 }
 \endcode
 
-\section logicalid_mapping Mapping graphics to Logical IDs
+\section logicalid_mapping Mapping graphics to logical IDs
 
-A themed graphical asset may be either a static image on the filesystem, or a single element
-or group inside a SVG document. The rules for mapping a logical ID to a piece of graphics is as follows:
+A themed graphical asset may be either a static image on the file system, or a single element
+or group inside an SVG document. The rules for mapping a logical ID to graphics are:
 
-- The \ref theme_structure "Theme Structure" is searched for graphical assets (SVG's, PNG, JPEGs, etc.)
-- If a static image's <em>filename</em> without the suffix (PNG, JPEG, etc.) matches the logical ID, it is selected.
+- The \ref theme_structure "Theme Structure" is searched for graphical assets (SVGs, PNG, JPEGs, and so on).
+- If a static image's <em>filename</em> without the suffix (PNG, JPEG, and so one) matches the logical ID, it is selected.
 - If a single element's or a group's <em>Object ID</em> in an SVG document matches the logical ID, it is selected.
   - The filename of the actual SVG is not relevant to the selection
   - A single SVG file can contain any number of themed graphical elements

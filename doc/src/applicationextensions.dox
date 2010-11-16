@@ -1,57 +1,56 @@
-/*! \page applicationextensions Application extension development How-To
+/*! \page applicationextensions Developing application extensions
 
-Application extensions are plugins that can be embedded into an application extension area. They can be run either in the same process as the application or a separate process in the application extension runner. An application extension can optionally have an UI.
+Application extensions are plug-ins that can be embedded into an application extension area. They can be run either in the same process as the application or a separate process in the application extension runner. An application extension can optionally have a UI.
 
 \section appextensiondevenv Development environment
 
-For developing application extensions you need:
+To develop application extensions, you need:
 - libmeegotouch-dev
 
 \section appextensiondevelopment Developing application extensions and applications that use them
 
-From a developers point of view an application extension consists of a shared library, a desktop entry file and possibly some resources (such as images).
-All of these are put into a debian package to enable installation of application extensions to devices.
+From the developer's point of view, an application extension consists of a shared library, a desktop entry file, and possibly resources (such as images).
+All the contents are packaged into a Debian package so that the application extensions can be installed to devices.
 
-An application extension is implemented as a Qt plugin. It is a good practice to name the shared library so that the related application is mentioned in the name in addition to the extension name (for example libmyapplication-myextension.so). The interface class used as the base class of all application extensions is \c MApplicationExtensionInterface.
-The interface provides a method for initializing the plugin, which must be implemented by the application extension:
+An application extension is implemented as a Qt plug-in. It is recommended that the shared library name should include the related application and the extension name (for example, libmyapplication-myextension.so). The interface class used as the base class of all application extensions is \c MApplicationExtensionInterface.
+The interface provides a method for initialising the plug-in, which must be implemented by the application extension:
 \code bool MApplicationExtensionInterface::initialize(const QString &interface) \endcode
-The extension gets the name of the interface as a parameter. The extension can but does not need to use this information for any purpose.
-The boolean return value should indicate whether the initialization was successful or not.
+The extension gets the name of the interface as a parameter. The extension can use this information, but does not need it for any purpose.
+The boolean return value should indicate whether the initialisation was successful or not.
 
-The interface also has an method for returning the widget used for the UI of the application extension:
+The interface also has a method for returning the widget used for the UI of the application extension:
 \code QGraphicsWidget *widget() \endcode
-In this method you need to return a pointer to the \c QGraphicsWidget of your application extension. In case an UI is not required, this method can be left out.
+In this method you need to return a pointer to the \c QGraphicsWidget of your application extension. In case a UI is not required, this method can be left out.
 \b Note: The ownership of the \c QGraphicsWidget is left to the application extension, so you should destroy the widget yourself in the destructor of the extension.
 
-To use application extensions of particular interface in an application, an instance of \c MApplicationExtensionArea is created:
+To use application extensions of a particular interface in an application, an instance of \c MApplicationExtensionArea is created:
 
 \code
 new MApplicationExtensionArea(interface, parent);
 \endcode
 
-where interface is the name of the interface the extensions in the area implement and parent is the parent QGraphicsItem. The area will only
-be populated after init() is called.
+where interface refers to the interface implemented by the extensions in the area and parent is the parent QGraphicsItem. The area is only
+populated after init() is called.
 
-It is possible to define which extensions are allowed to be loaded in the same process as the extension area and which extensions are ran in separate
-processes using setInProcessFilter() and setOutOfProcessFilter() before calling init(). These take QRegExp objects as their parameter, so it is for
-example possible to use QRegExp("$^") to allow no extensions, QRegExp("/test(1|A).desktop$") to allow extensions test1.desktop and testA.desktop and
+To define which extensions can be loaded in the same process as the extension area and which extensions run in separate
+processes, use setInProcessFilter() and setOutOfProcessFilter() before calling init(). Since these methods take QRegExp objects as their parameter, you can, for example, use QRegExp("$^") to allow no extensions, QRegExp("/test(1|A).desktop$") to allow extensions test1.desktop and testA.desktop and
 QRegExp() to allow all extensions.
 
 \subsection appextensionprocdiff Differences between in-process and out-of-process application extensions
 
-Developing application extensions and the application that uses them is done differently depending whether the extensions can be run in-process or out-of-process.
+Application extensions and applications that use them are developed differently depending on whether they are run in-process or out-of-process.
 
-In-process
+In-process extensions:
 - direct communication between application and extension supported by subclassing MApplicationExtensionInterface
 - the extension can open dialogs and views
 - the extension can extend the applications UI
 - the extension can crash the host application
 
-Out-of-process
+Out-of-process extensions:
 - direct communication between application and extension not supported
-- the extension can not open dialogs or views
-- the extension can not draw outside the extensions area
-- the extension can not crash the host application
+- the extension cannot open dialogs or views
+- the extension cannot draw outside the extensions area
+- the extension cannot crash the host application
 
 \subsection appextensionexample Example of an in-process extension
 \code
@@ -106,7 +105,7 @@ private:
 #endif
 \endcode
 
-\b Note that the Q_INTERFACES list must include both the demo specific interface DemoExtensionInterface and the base interface MApplicationExtensionInterface.
+\b Note: The Q_INTERFACES list must include both the demo-specific interface DemoExtensionInterface and the base interface MApplicationExtensionInterface.
 
 \code
  // demoextension.cpp
@@ -145,8 +144,8 @@ MWidget *DemoApplicationExtension::widget()
 
 \endcode
 
-In the application that wants to use the extensions implementing the com.meego.DemoExtensionInterface/1.0 defined above,
-the application should create an application extension area like this:
+In an application that wants to use the extensions implementing the com.meego.DemoExtensionInterface/1.0 defined above,
+the application should create the following application extension area:
 
 \code
 #include <MApplicationExtensionArea>
@@ -182,11 +181,11 @@ void DemoApp::addExtension(MApplicationExtensionInterface *extension)
 \subsection appextensiondesktopfile Application extension desktop file
 
 Application extension must have a \c .desktop file written according to <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>.
-It is a good practice to name the file in a similar manner to naming the shared library (for example myapplication-myextension.desktop).
+It is recommended to name the file in a similar manner as the shared library (for example, myapplication-myextension.desktop).
 The keys \c Type and \c Name are required as specified in the desktop entry specification. The type must be \c X-MeeGoApplicationExtension.
-The \c Exec key is optionally used to specify a runner binary (usually mapplicationextensionrunner) which is launched in separate process to run the application extension binary. If the key is not used, the application extension is run inside the host process.
+The \c Exec key is optionally used to specify a runner binary (usually mapplicationextensionrunner) which is launched in a separate process to run the application extension binary. If the key is not used, the application extension runs inside the host process.
 
-Application extensions extend the specification by defining a new type \b MApplicationExtension and the following new keys that are put inside the X-MeeGoApplicationExtension group:
+Application extensions extend the specification by defining a new type \b MApplicationExtension and the following new keys which are placed into the X-MeeGoApplicationExtension group:
 
 <table>
 <tr>
@@ -210,13 +209,13 @@ Application extensions extend the specification by defining a new type \b MAppli
 <tr>
   <td>Identifier</td>
   <td>Defines an identifier for the application extension.
-  The identifier is used for example defining the application extension specific style resource locations when it's run as out-of-process.</td>
+  The identifier is used, for example, for defining the application extension specific style resource locations when the extension is run out-of-process.</td>
   <td>string (can contain characters [a-zA-Z0-9_-])</td>
   <td>NO</td>
 </tr>
 </table>
 
-Following is an example of application extension desktop file:
+The following example illustrates an application extension desktop file:
 
 \code
 [Desktop Entry]
@@ -229,11 +228,11 @@ Interface=com.meego.DemoExtensionInterface/1.0
 Extension=libdemoapplication-demoextension.so
 \endcode
 
-\subsection appextensioncontainer Container communication API
+\subsection appextensioncontainer Using MContainer
 
-Application extension widgets are by default reparented to a MContainer.
-MContainer can expose optional application extension information on its titlebar, including icon, title and additional informative text.
-To make an application extension not reside in a container, set the container-mode property of the application extension area to false:
+Application extension widgets are reparented to an MContainer by default.
+MContainer can include optional application extension information on its title bar, such as icon, title and additional informative text.
+If you do not want an application extension to reside in a container, set the container-mode property of the application extension area to false:
 
 \code
 MApplicationExtensionAreaStyle {
@@ -241,7 +240,7 @@ MApplicationExtensionAreaStyle {
 }
 \endcode
 
-Use following properties and signals in your application extension widget class to communicate container information:
+Use following properties and signals in your application extension widget class to provide container information:
 
 \code
 Q_PROPERTY(QString applicationExtensionIcon  READ icon  WRITE setIcon)
@@ -268,22 +267,22 @@ Every application extension has an application extension identifier string that 
 The application extension identifier is determined like this:
 - if an identifier (<tt>Identifier</tt>) is specified in the <tt>X-MeeGoApplicationExtension</tt> group of the \ref appextensiondesktopfile desktop file (and it is valid), that is used
 - otherwise, an identifier is extracted from the application extension shared library name:
-  assuming your application extension is packaged to a shared library called <tt>lib<strong>exampleapplicationextension</strong>.so</tt>, the identifier will be <strong>exampleapplicationextension</strong>.
+  For example, if your application extension is packaged to a shared library called <tt>lib<strong>exampleapplicationextension</strong>.so</tt>, the identifier is <strong>exampleapplicationextension</strong>.
 
 \subsection appextensionstyling Application extension styling
 
 Application extensions can define their own styles just like any other application in the MeeGo Touch world.
+
 Styling is done with style sheets and images in the \ref styling "usual way".
 The only important thing with application extensions is the location of the style resources.
 
-The \ref appextensionidentifier "application extension identifier" is used in the construction of the resource location when the application extension is run as out-of-process.
-The application extension identifier is used as the application name in the directory name.
+When the application extension is run out-of-process, the resource location is constructed from the \ref appextensionidentifier "application extension identifier". The application extension identifier is used as the application name in the directory name.
 
-When the application extension is run as in-process, the resource location is constructed from the library name.
+When the application extension is run in-process, the resource location is constructed from the library name.
 
-See \ref theme_structure for more information about the directory locations.
+For more information about the directory locations, see \ref theme_structure.
 
-The layout orientation of the application extension area can be modified using the layout-orientation style parameter:
+You can modify the layout orientation of the application extension area with the layout-orientation style parameter:
  
 \code
 MApplicationExtensionAreaStyle {
@@ -293,16 +292,16 @@ MApplicationExtensionAreaStyle {
 
 \section appextensiontools Tools to help development
 The <tt>meegotouch-dev-tools</tt> package includes a tool called <tt>mapplicationextensiontester</tt>. This tool can be used to test application extensions that have an UI.
-The tool loads application extensions implementing a specified interface to a window where they can be tested by interacting with them and visually checking the results.
-It's also easy to run the extension in a debugger with this tool.
+The tool loads application extensions implementing a specified interface to a window where you can interact with it and visually check the results. 
+It is also easy to run the extension in a debugger with this tool.
 
-You can load an application extension with the tool by giving the command:
+To load an application extension with the tool, use the following command:
 
 \code
 mapplicationextensiontester <interfacename>
 \endcode
 
-where &lt;interfacename&gt; is the interface the extensions to be loaded must implement.
+where &lt;interfacename&gt; is the interface that the loaded extensions must implement.
 
 \b Note that the application extensions must be installed to the system before \c mapplicationextensiontester can use them.
 

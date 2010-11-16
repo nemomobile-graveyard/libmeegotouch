@@ -1,18 +1,18 @@
-/*! \page styling_support Theming support for applications & external libraries
+/*! \page styling_support Theming support for applications and external libraries
 
 \section applications Theming support for external libraries
     External libraries can enable theming support through the M_LIBRARY macro. This macro creates a static MLibrary object,
-    which gets initialized when the library is loaded. During the construction phase, the MLibrary object registers itself
-    to the MTheme, making the theme aware of the need for theming support for this particular library. Later on when the
-    library gets unloaded, the MLibrary object is destroyed automatically and it unregisters the library from the MTheme.
+    which is initialised when the library is loaded. During the construction phase, the MLibrary object registers itself
+    to the MTheme, making the theme aware of the need for theming support for this particular library. Later on, when the
+    library is unloaded, the MLibrary object is destroyed automatically and it unregisters the library from the MTheme.
 
     Theming support allows a library to:
     - Register widgets, views, styles & animations
-    - Provide view configuration for the widgets, declared in that library
-    - Provide stylesheets for the styles, declared in that library
+    - Provide view configuration for the widgets declared in that library
+    - Provide style sheets for the styles declared in that library
 
-    The registration name of the library will be the build target name, defined in the library .pro file. It is necessary to
-    use CONFIG += meegotouch to enable the functionality described above. Here's a simple example of a library .pro file:
+    The registration name of the library is the build target name defined in the library .pro file. It is necessary to
+    use CONFIG += meegotouch to enable the functionality described above. The following example illustrates a simple library .pro file:
 
     \code
     MGEN_OUTDIR = ./.gen
@@ -52,17 +52,18 @@
 
         Styles can be registered to the system using the M_REGISTER_STYLE(styleclass) macro. It is necessary to register styles
         to the system to be able to provide theming support for them. Note that if you use automatic style class generation through
-        mgen/mmoc, the generated style class will be automatically registered to the system.
+        mgen/mmoc, the generated style class is automatically registered to the system.
+
             Style registration allows the system to:
             - Construct an instance of the style after its type has been resolved from the view class
             - Determine the origin (application or library) for the style
-            - Determine the proper stylesheet(s) for the style class
+            - Determine the proper style sheet(s) for the style class
 
-    \subsection lib_themefiles Providing view configuration & stylesheets for the widgets
-        External libraries can provide stylesheets & view configuration for their own widgets. Stylesheets contain the actual values for the
-        styling attributes and the view configuration file allows the library to define what kind of view class is used per widget. For
-        example, it is possible to have a simple view for some widget in one theme and a more advanced version of that view in another theme.
-        The view configuration file is a pretty simple .conf file, see example below.
+    \subsection lib_themefiles Providing view configuration and style sheets for the widgets
+        External libraries can provide style sheets and view configuration for their own widgets. Style sheets contain the actual values for the
+        styling attributes, and the view configuration file allows the library to define the view class used for each widget. For
+        example, it is possible to have a simple view for a widget in one theme and a more advanced version of the view in another theme.
+        The view configuration file is a relatively simple .conf file, see the following example:
 
     \code
     [MyCustomWidget]
@@ -94,17 +95,17 @@
     }
     \endcode
 
-    \note Do not use MTheme->loadCSS() to work around this limitation, as this is slow and can lead to impossible to detect side-effects.
+    \note Do not use MTheme->loadCSS() to work around this limitation, as this is slow and can lead to side effects that are impossible to detect.
 
-    \sa \ref parent_child_in_stylesheet "Parent-child relationship in stylesheet"
-    \sa \ref theme_structure "Where to install the library specific theme files"
+    \sa \ref parent_child_in_stylesheet "Parent-child relationship in style sheet"
+    \sa \ref theme_structure "Where to install the library-specific theme files?"
 
 \section application_theme_support Theming support for applications
-    Theming support for application works in a similar way that it works for external libraries with one big exception. Libraries are only able to
-    configure the widgets they declare, but applications can override pretty much anything when it comes to theming & styling. Applications can provide
-    their own stylesheet & view configuration files, they can also register their own widgets, views & styles to the system and provide theming for them.
-    Applications have pretty much full control over their own look & feel.
-    \sa \ref theme_structure "Where to install the application specific theme files."
+    Theming support for application works in a similar way as for external libraries. The only difference is that libraries are only able to
+    configure the widgets they declare, whereas applications can override nearly anything related to theming and styling. Applications can provide
+    their own style sheet and view configuration files, and register their own widgets, views and styles to the system and provide theming for them.
+    Applications have almost full control over their own look and feel.
+    \sa \ref theme_structure "Where to install the application-specific theme files?"
 
     \note As a library or application developer, you should always provide basic theming for your widgets as a fallback theme.
 */

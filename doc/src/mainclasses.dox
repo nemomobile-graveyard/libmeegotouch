@@ -1,4 +1,4 @@
-/*! \page mainclasses Main Classes
+/*! \page mainclasses Main classes
 
 Core application classes
 <ul>
@@ -7,19 +7,19 @@ Core application classes
 <li>MApplicationWindow
 </ul>
 
-Action extensions
+Action extension classes
 <ul>
 <li>MAction
 <li>MWidgetAction
 </ul>
 
-Notifications
+Notification classes
 <ul>
 <li>MNotification
 <li>MNotificationGroup
 </ul>
 
-Widgets
+Widget classes
 <ul>
 <li>MButton
 <li>MComboBox
@@ -47,7 +47,7 @@ Widgets
 <li>MTextEdit
 </ul>
 
-Layouting and grouping
+Layouting and grouping classes
 <ul>
 <li>MButtonGroup
 <li>MLayout

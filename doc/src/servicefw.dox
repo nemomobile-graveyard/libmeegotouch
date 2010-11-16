@@ -1,58 +1,58 @@
-/*! \page servicefw Service Framework
+/*! \page servicefw Service framework
 
 \section intro_sec Introduction
 
-The service framework is an IPC mechanism that allows applications to simply either use or serve an interface. For the purposes of this documentation, the interface user process is referred to as 'user' and the interface provider process is referred to as the 'provider'.
+The service framework is an IPC mechanism that simply allows applications to either use or serve an interface. In this section, the interface user process is referred to as 'user' and the interface provider process is referred to as the 'provider'.
 
-The objectives of the service framework are :
+The service framework:
 <ol>
-<li> to provide an IPC mechanism that is simple to use,</li>
-<li> to ensure there is no run time binary dependancy between the service user and provider,</li>
-<li> to allow the user to just use an interface and not worry about the logic of choosing or connecting to an interface,</li>
-<li> to allow the user to query a list of providers and choose one of them.</li>
+<li> Provides an IPC mechanism that is simple to use.</li>
+<li> Ensures there is no run-time binary dependency between the service user and provider.</li>
+<li> Allows the user to use an interface without worrying about the logic of choosing or connecting to an interface.</li>
+<li> Allows the user to query a list of providers and choose one of them.</li>
 </ol>
 
-    \image html sfw_mechanism.png "The basic service framework mechanism."
+    \image html sfw_mechanism.png "Basic service framework mechanism"
 
 The above diagram shows what happens behind the scenes when a Service User (SU) uses an Interface (IF).
 
 <ol>
-<li> The service user instantiates an interface which causes the interface to ask the servicemapper (a dedicated dbus service) for the name of a service provider that implements that interface.
-<li> The service mapper has been maintaining a map of services<->interfaces (by watching the dbus services directory, typically /usr/share/dbus-1/services) and has rules to determine which one to pick. It picks a service and returns the name to the interface in SU.
-<li> The interface in SU then makes a regular dbus connection to the given service name and calls the appropriate method.
+<li> The service user instantiates an interface which causes the interface to ask the service mapper (a dedicated dbus service) for the name of a service provider that implements that interface.
+<li> The service mapper maintains a map of services and interfaces (by watching the dbus services directory, typically /usr/share/dbus-1/services) and has rules for choosing a service. It selects a service and returns the name to the interface in SU.
+<li> The interface in SU makes a regular dbus connection to the given service name and calls the appropriate method.
 </ol>
 
-The service mapper will send signals to the corresponding SU interfaces to inform them when there is a new SP for the IF, or if there are no more SPs for the IF. The application should connect to the signals in the IF in order to tell when these events occur and to take appropriate action. For example, a gallery application may wish to allow a user to send a photo via email and it might listen to the 'no more SP for IF' signal in order to tell when to disable the option.
+The service mapper sends signals to the corresponding SU interfaces to inform them when there is a new SP for the IF, or if there are no more SPs for the IF. The application should connect to the signals in the IF in order to tell when these events occur and to take appropriate action. For example, if a gallery application allows a user to send a photo by e-mail, it listens to the 'no more SP for IF' signal to know when to disable the option.
 
-\section whywhen Typical usecases for the Service Framework
+\section whywhen Typical use cases for the service framework
 
 <ol>
 <li> Launch/Display a certain view of an application from another application or applet in experience canvas
 <li> Get a list/thumbnails of available video content on the device
-<li> Launch a web-browser displaying a certain web-page
+<li> Launch a web browser displaying a certain web page
 <li> Choose/Display some image from available content
 <li> Show recent contacts
-<li> Show calendar appointments for 13. friday 2042
+<li> Show calendar appointments for Friday, 13 June 2042
 </ol>
 
-Service Framework should not be used for generic IPC communication purposes or, for example, communication between applets. This should be done using other means like using a data backend that provides notifications of changes to values like MValueSpace.
+Do not use the service framework for generic IPC communication purposes or, for example, for communication between applets. For this purpose, use other means, such as a data backend that provides notifications of changes to values such as MValueSpace.
 
-\section usage Using the Service Framework
+\section usage Using the service framework
 
 \subsection usagesp As a Service Provider (SP)
 
-Two things are required of the developer of an SP :
+The following are required of an SP developer:
 
 <dl>
 <dt>Binary</dt>
-<dd>This is the binary that will be launched (if it is not already running) when a Service User application tries to connect to the service.</dd>
+<dd>Launched (if it is not already running) when a Service User application tries to connect to the service.</dd>
 <dt>Interface</dt>
-<dd>This consists of the files needed by the developer of a Service User application. It consists of :
+<dd>Consists of the files needed by the developer of a Service User application. It consists of:
 <ul>
 <li>mservicefwbaseif.h/cpp files that are common to all interfaces.<br/>
-The mservicefwbaseif.h file is part of the libmeegotouch-dev package and the mservicefwbaseif.cpp is compiled into libmeegotouch itself and so is part of the libmeegotouchcore0 package.</li>
+The mservicefwbaseif.h file is part of the libmeegotouch-dev package. The mservicefwbaseif.cpp is compiled into libmeegotouch itself and is, thus, part of the libmeegotouchcore0 package.</li>
 <li>XML file, header files, a library and a .service file for the interface being supplied.<br/>
-The interface specific header files should be made part of the maemo-interfaces-dev package along with the interface's XML file, and the corresponding cpp files compiled into interface specific libs that are made part of the maemo-interfaces package. The .service file should also be made part of the maemo-interfaces package.</li>
+The interface-specific header files must be included in the maemo-interfaces-dev package along with the interface's XML file. The corresponding cpp files must be compiled into interface-specific libs included in the maemo-interfaces package. The .service file should also be included in the maemo-interfaces package.</li>
 </dd>
 </ul>
 </dl>
@@ -62,8 +62,8 @@ The interface specific header files should be made part of the maemo-interfaces-
 <ul>
 <li>Create an XML file that defines the interface.</li>
 
-      If you wish a method to be chained to the current application, you can add a 'chainTask="true"' attribute to the method tag.
-      If you wish a method to be asynchronous, you can add an 'asyncTask="true"' attribute to the method tag. Note that such methods must not have any 'out' parameters.
+      To chain a method to the current application, add a 'chainTask="true"' attribute to the method tag.
+      To create an asynchronous method, add an 'asyncTask="true"' attribute to the method tag. Note: The asynchronous methods must not have any 'out' parameters.
 
       For example:
 
@@ -82,7 +82,7 @@ The interface specific header files should be made part of the maemo-interfaces-
 </node>
 \endverbatim
 
-<li>Run the m-servicefwgen tool to generate the adaptor h and cpp files, for example : </li>
+<li>Run the m-servicefwgen tool to generate the adaptor h and cpp files. For example: </li>
 
 \verbatim
 m-servicefwgen -a com.nokia.TextProcessorInterface
@@ -90,10 +90,10 @@ m-servicefwgen -a com.nokia.TextProcessorInterface
 
 <li>Change your code.</li>
 
-      There are three steps that are illustrated in the following code snippet :
+      The following code snippet illustrates three steps:
 
 \verbatim
-// 1. Make an instance of the class that has methods that implement the interface functionality
+// 1. Make an instance of the class that has methods which implement the interface functionality
 MyService myService;
 
 // 2. Make an adaptor to link the dbus methods with the methods in myService
@@ -113,11 +113,11 @@ return app.exec();
 
 \subsubsection interface Interface
 
-There are three steps to defining an interface.
+To define an interface:
 
 <ul>
 <li>Create an XML file defining the interface - this is the same XML file as described above.</li>
-<li>Run the m-servicefwgen tool to generate the proxy header and cpp files, and the wrapper header file. For example : </li>
+<li>Run the m-servicefwgen tool to generate the proxy header, cpp files, and the wrapper header file. For example : </li>
 
 \verbatim
 m-servicefwgen -p com.nokia.TextProcessorInterface
@@ -126,9 +126,9 @@ m-servicefwgen -p com.nokia.TextProcessorInterface
 <li>You need to generate the service libraries.</li>
 </ul>
 
-The above files should be made part of the maemo-interfaces package. The library should be in maemo-interfaces, and the header and xml files should be in maemo-interfaces-dev.
+The above files should be included in the maemo-interfaces package. The library should be in maemo-interfaces, and the header and XML files should be in maemo-interfaces-dev.
 
-Documentation for an interface and its methods can be added between '<doc>' and '</doc>' tags, as follows :
+Documentation for an interface and its methods can be added between '<doc>' and '</doc>' tags. For example:
 
 \verbatim
     <interface name="com.nokia.someserviceinterface">
@@ -152,7 +152,7 @@ Documentation for an interface and its methods can be added between '<doc>' and 
 
 <ol>
 <li>Install the libmeegotouch-dev and libmeegotouch-bin debian packages. This gives you the service mapper dbus daemon, headers, and lib.</li>
-<li>Install the maemo-meegotouch-interfaces-dev package (incudes the proxy header and lib, and the wrapper header file).</li>
+<li>Install the maemo-meegotouch-interfaces-dev package (includes the proxy header and lib, and the wrapper header file).</li>
 <li>Add -lmeegotouch and -l<interfacename> to LIBS in your project file.</li>
 <li>In your source, include the interface header file and create an instance of the interface and call method serviceName() to get the provider for the interface.</li>
 <li>Check to see if the service was found OK using the 'isValid()' method.</li>
@@ -162,15 +162,15 @@ Documentation for an interface and its methods can be added between '<doc>' and 
 
 \section demos Demos and example code
 
-In libmeegotouch/demos/servicefw/ there is example code showing three service providers and a service user. The com.nokia.textprocessor and org.maemo.textprocessor services both implement the same interface - com.nokia.TextProcessorInterface. There are two services so that we are able to remove services and see that the service user is switched from one service to another/etc. There is one script tools/m-servicefwgen, which is used to generate the source files that are used to define the interface to the service user. To run this demo :</li>
+In libmeegotouch/demos/servicefw/ there is example code showing three service providers and a service user. The com.nokia.textprocessor and org.maemo.textprocessor services both implement the same interface - com.nokia.TextProcessorInterface. There are two services that enable you to remove services and see that the service user is switched from one service to another, and so on. There is one script tools/m-servicefwgen, which is used to generate the source files used to define the interface to the service user. To run this demo:</li>
 <ul>
 <li>cd libmeegotouch</li>
 <li>qmake && make && make install (or at least do a make install in the mservicemapper directory)</li>
 <li>cd demos/servicefw</li>
-<li>pushd misc; sudo ./INSTALL; popd (this will install the relevant dbus service files into /usr/share/dbus-1/services)</li>
+<li>pushd misc; sudo ./INSTALL; popd (this installs the relevant dbus service files into /usr/share/dbus-1/services)</li>
 <li>LD_LIBRARY_PATH=lib bin/user</li>
-<li>This will open a small window that will allow you to enter text which will be sent through the interface to a service which will return the reversed text.</li>
+<li>This opens a small window that allows you to enter text which is sent through the interface to a service which returns the reversed text.</li>
 </ul>
-In this demo, you can remove the various service files from /usr/share/dbus-1/services to simulate the service being removed (and added again) and see that the service user application 'does the right thing'.</li>
+In this demo, you can remove the various service files from /usr/share/dbus-1/services to simulate the service being removed (and added again) and see that the service user application functions correctly.</li>
 
 */
