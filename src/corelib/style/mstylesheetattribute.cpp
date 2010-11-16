@@ -636,6 +636,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         } else {
             //no quotes, just split the parameters
             list = value.split(' ');
+            list.removeAll("");
         }
 
         //only image_id
