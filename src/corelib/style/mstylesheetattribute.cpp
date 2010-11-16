@@ -544,6 +544,13 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         const QMetaProperty &property,
         M::Orientation orientation)
 {
+    if (cachedVariant.isValid()) {
+        if (cachedVariant.type() != property.type()) {
+            qCritical() << "MStyleSheetAttribute::writeAttribute(): attribute" << name << "has been requested with two different property types. Former:" << cachedVariant.typeName() << "Current:" << property.typeName();
+        } else {
+            return property.write(style, cachedVariant);
+        }
+    }
 
     bool conversionOK = false;
 
@@ -551,29 +558,29 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
     if (attributeType == types[BOOL_TYPE]) {
         bool result = booleanFromString(value, &conversionOK);
         if (conversionOK) {
-            return property.write(style, result);
+            return fillProperty(property, style, result);
         }
     } else if (attributeType == types[INT_TYPE]) {
         int integer = attributeToInt(value, &conversionOK);
         if (conversionOK) {
-            return property.write(style, integer);
+            return fillProperty(property, style, integer);
         }
     } else if (attributeType == types[COLOR_TYPE]) {
         if(value == "none")
-            return property.write(style, QColor());
+            return fillProperty(property, style, QColor());
 
         QColor color = colorFromString(value, &conversionOK);
         if (conversionOK) {
-            return property.write(style, color);
+            return fillProperty(property, style, color);
         }
     } else if (attributeType == types[REAL_TYPE]) {
         qreal real = attributeToFloat(value, &conversionOK);
         if (conversionOK) {
-            return property.write(style, real);
+            return fillProperty(property, style, real);
         }
     } else if (attributeType == types[CONST_PIXMAP_TYPE]) {
         if(value == "none")
-            return property.write(style, qVariantFromValue((const QPixmap *) NULL));
+            return fillProperty(property, style, qVariantFromValue((const QPixmap *) NULL));
 
         //"image: image_id;"
         //"image: image_id 64px 64px;"
@@ -604,19 +611,19 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //only image_id
         if (list.size() == 1) {
             const QPixmap *pixmap = MTheme::pixmap(list[0]);
-            return property.write(style, qVariantFromValue(pixmap));
+            return fillProperty(property, style, qVariantFromValue(pixmap));
         }
         //image_id + width + height
         else if (list.size() == 3) {
             int width = attributeToInt(list[1], &conversionOK, WidthAttribute, orientation);
             int height = attributeToInt(list[2], &conversionOK, HeightAttribute, orientation);
             const QPixmap *pixmap = MTheme::pixmap(list[0], QSize(width, height));
-            return property.write(style, qVariantFromValue(pixmap));
+            return fillProperty(property, style, qVariantFromValue(pixmap));
         }
         //no parameters
         else if (list.size() == 0) {
             //init null pixmap which is ok if someone does not want to use it
-            return property.write(style, qVariantFromValue((const QPixmap *) NULL));
+            return fillProperty(property, style, qVariantFromValue((const QPixmap *) NULL));
         }
     } else if (attributeType == types[CONST_SCALABLE_TYPE] || attributeType == types[SCALABLE_IMAGE_TILES_TYPE]) {
         //"background: image_id left right top bottom;"
@@ -648,17 +655,17 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         if (value.isEmpty() || value == "none") {
             //init null image which is ok if someone does not want to use it
             if(attributeType == types[CONST_SCALABLE_TYPE])
-                return property.write(style, qVariantFromValue((const MScalableImage *) NULL));
+                return fillProperty(property, style, qVariantFromValue((const MScalableImage *) NULL));
             else
-                return property.write(style, QVariant::fromValue(MBackgroundTiles()));
+                return fillProperty(property, style, QVariant::fromValue(MBackgroundTiles()));
         }
         //only image_id
         else if (list.size() == 1) {
             if(attributeType == types[CONST_SCALABLE_TYPE]) {
                 const MScalableImage *image = MTheme::scalableImage(list[0], 0, 0, 0, 0);
-                return property.write(style, qVariantFromValue(image));
+                return fillProperty(property, style, qVariantFromValue(image), false);
             } else {
-                return property.write(style, QVariant::fromValue(MBackgroundTiles(list[0], 0,0,0,0)));
+                return fillProperty(property, style, QVariant::fromValue(MBackgroundTiles(list[0], 0,0,0,0)));
             }
         }
         //image_id + border width paramaters
@@ -670,9 +677,9 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
                                                 attributeToInt(list[2], &conversionOK),
                                                 attributeToInt(list[3], &conversionOK),
                                                 attributeToInt(list[4], &conversionOK));
-                return property.write(style, qVariantFromValue(image));
+                return fillProperty(property, style, qVariantFromValue(image), false);
             } else {
-                return property.write(style, QVariant::fromValue(MBackgroundTiles(list[0],
+                return fillProperty(property, style, QVariant::fromValue(MBackgroundTiles(list[0],
                                                                 attributeToInt(list[1], &conversionOK),
                                                                 attributeToInt(list[2], &conversionOK),
                                                                 attributeToInt(list[3], &conversionOK),
@@ -689,11 +696,11 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             if (attributeType == types[SIZE_TYPE]) {
                 int width = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
                 int height = attributeToInt(list[1], &conversionOK, HeightAttribute, orientation);
-                return property.write(style, QSize(width, height));
+                return fillProperty(property, style, QSize(width, height));
             } else {
                 qreal width = attributeToFloat(list[0], &conversionOK, WidthAttribute, orientation);
                 qreal height = attributeToFloat(list[1], &conversionOK, HeightAttribute, orientation);
-                return property.write(style, QSizeF(width, height));
+                return fillProperty(property, style, QSizeF(width, height));
             }
         }
     } else if (attributeType == types[POINT_TYPE] || attributeType == types[POINTF_TYPE]) {
@@ -706,55 +713,55 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             if (attributeType == types[POINT_TYPE]) {
                 int x = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
                 int y = attributeToInt(list[1], &conversionOK, HeightAttribute, orientation);
-                return property.write(style, QPoint(x, y));
+                return fillProperty(property, style, QPoint(x, y));
             } else {
                 qreal x = attributeToFloat(list[0], &conversionOK, WidthAttribute, orientation);
                 qreal y = attributeToFloat(list[1], &conversionOK, HeightAttribute, orientation);
-                return property.write(style, QPointF(x, y));
+                return fillProperty(property, style, QPointF(x, y));
             }
         }
     } else if (attributeType == types[FONT_TYPE]) {
         QFont font = fontFromString(value, &conversionOK);
         if (conversionOK) {
-            return property.write(style, font);
+            return fillProperty(property, style, font);
         }
     } else if (attributeType == types[STRING_TYPE]) {
         if (value.length() >= 2) {
             if ((value.at(0) == 0x22) && (value.at(value.length()-1) == 0x22)) {
-                return property.write(style, value.mid(1, value.length() - 2));
+                return fillProperty(property, style, QString(value.mid(1, value.length() - 2)));
             }
         } else if (value.length() == 0) {
-            return property.write(style, QString());
+            return fillProperty(property, style, QString());
         }
     } else if (attributeType == types[CHAR_TYPE]) {
         if (value.length() == 3) {
             if ((value[0] == '\'') && (value[2] == '\'')) {
-                return property.write(style, static_cast<QChar>(value[1]));
+                return fillProperty(property, style, static_cast<QChar>(value[1]));
             }
         }
     } else if (attributeType == types[ALIGNMENT_TYPE]) {
         if (DataTypeConverter.ALIGNMENTS.contains(value)) {
-            return property.write(style, QVariant(DataTypeConverter.ALIGNMENTS[value]));
+            return fillProperty(property, style, QVariant(DataTypeConverter.ALIGNMENTS[value]));
         }
     } else if (attributeType == types[ORIENTATION_TYPE]) {
         if (DataTypeConverter.ORIENTATIONS.contains(value)) {
-            return property.write(style, QVariant(DataTypeConverter.ORIENTATIONS[value]));
+            return fillProperty(property, style, QVariant(DataTypeConverter.ORIENTATIONS[value]));
         }
     } else if (attributeType == types[UNDERLINESTYLE_TYPE]) {
         if (DataTypeConverter.UNDERLINESTYLES.contains(value)) {
-            return property.write(style, qVariantFromValue(DataTypeConverter.UNDERLINESTYLES[value]));
+            return fillProperty(property, style, qVariantFromValue(DataTypeConverter.UNDERLINESTYLES[value]));
         }
     } else if (attributeType == types[PENSTYLE_TYPE]) {
         if (DataTypeConverter.PENSTYLES.contains(value)) {
-            return property.write(style, qVariantFromValue(DataTypeConverter.PENSTYLES[value]));
+            return fillProperty(property, style, qVariantFromValue(DataTypeConverter.PENSTYLES[value]));
         }
     } else if (attributeType == types[AXIS_TYPE]) {
         if (DataTypeConverter.AXES.contains(value)) {
-            return property.write(style, qVariantFromValue(DataTypeConverter.AXES[value]));
+            return fillProperty(property, style, qVariantFromValue(DataTypeConverter.AXES[value]));
         }
     } else if (attributeType == types[FEEDBACK_TYPE]) {
         MFeedback feedback(value);
-        return property.write(style, qVariantFromValue(feedback));
+        return fillProperty(property, style, qVariantFromValue(feedback));
     }
 #if QT_VERSION >= 0x040600
     else if (attributeType == types[EASINGCURVE_TYPE]) {
@@ -776,7 +783,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
                         }
                     }
                 }
-                return property.write(style, qVariantFromValue(curve));
+                return fillProperty(property, style, qVariantFromValue(curve));
             }
         }
     }
@@ -787,4 +794,15 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
 
     MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(attributeType) + "): " + name + ": " + value, MStyleSheetParser::getLineNum(filename, position));
     return false;
+}
+
+bool MStyleSheetAttribute::fillProperty(const QMetaProperty &property, MStyle *style, const QVariant &variant, bool cache)
+{
+    if (cache && variant.isValid()) {
+        cachedVariant = variant;
+        // when we cache the variant we can free the memory used by the string representation
+        value = QByteArray();
+    }
+
+    return property.write(style, variant);
 }

@@ -49,6 +49,7 @@ public:
     QByteArray name;
     QByteArray value;
     qint64 position;    //used for providing detailed css parse error output (linenumber)
+    QVariant cachedVariant;
 
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk);
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
@@ -64,6 +65,11 @@ public:
                         MStyle *style,
                         const QMetaProperty &property,
                         M::Orientation orientation);
+
+    // Fills a property with a variant and caches the variant if possible.
+    // Pointer types cannot be cached as the ownership is transfered to the property.
+    // Caching must be disabled for them.
+    bool fillProperty(const QMetaProperty &property, MStyle *style, const QVariant &variant, bool cache = true);
 };
 
 typedef QMap<QByteArray, MStyleSheetAttribute *> MAttributeList;
