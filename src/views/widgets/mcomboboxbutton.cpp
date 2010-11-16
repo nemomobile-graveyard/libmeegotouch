@@ -82,8 +82,8 @@ MGridLayoutPolicy* MComboBoxButton::layoutPolicy(int f)
 
         } else if (!(f&TitleShown) && !(f&ProgressShown)) {
             policy[f] = new MGridLayoutPolicy(mlayout);
-            policy[f]->addItem(subtitleWidget(), 0, 0);
-            policy[f]->addItem(indicatorWidget(), 0, 1, 2, 1, Qt::AlignVCenter);
+            policy[f]->addItem(subtitleWidget(), 0, 0, Qt::AlignVCenter);
+            policy[f]->addItem(indicatorWidget(), 0, 1, Qt::AlignVCenter);
 
         } else if (!(f&TitleShown) && (f&ProgressShown)) {
             policy[f] = new MGridLayoutPolicy(mlayout);
