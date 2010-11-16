@@ -657,4 +657,37 @@ void Ut_MLinearLayoutPolicy::testRtl()
     QCOMPARE(m_mockItem200->geometry(), QRectF(QPointF(0.0, 0.0), QSizeF(200.0, 200.0)));
 }
 
+void Ut_MLinearLayoutPolicy::testLayoutInLayoutRefresh()
+{
+    m_policy->setSpacing(0);
+    m_policy->setOrientation(Qt::Vertical);
+    m_mockLayout->activate();
+
+    MWidget *widget = new MWidget;
+    MLayout *layout = new MLayout(widget);
+    layout->setContentsMargins(0,0,0,0);
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    m_policy->addItem(widget);
+
+    QGraphicsWidget *leftSpacerWithWidget = new QGraphicsWidget;
+    policy->addItem(leftSpacerWithWidget);
+    policy->addItem(m_mockItem100);
+    policy->addItem(new QGraphicsWidget);
+    policy->addItem(m_mockItem200);
+
+    m_form->resize(400,200);
+    
+    qApp->processEvents();
+    qApp->processEvents();
+    
+    QCOMPARE(m_mockItem100->geometry(), QRectF(50,0,100,100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
+
+    leftSpacerWithWidget->setMaximumWidth(0);
+
+    qApp->processEvents();
+
+    QCOMPARE(m_mockItem100->geometry(), QRectF(0,0,100,100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
+}
 QTEST_APPLESS_MAIN(Ut_MLinearLayoutPolicy)

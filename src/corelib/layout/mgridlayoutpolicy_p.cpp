@@ -36,11 +36,7 @@ MGridLayoutPolicyPrivate::~MGridLayoutPolicyPrivate()
 
 void MGridLayoutPolicyPrivate::refreshEngine()
 {
-    bool directionChanged = engineWidget->layoutDirection() != layout->layoutDirection();
-    if (directionChanged) {
-        engineWidget->setLayoutDirection(layout->layoutDirection());
-        engine->setGeometry(engine->geometry()); //Force the layout to refresh the layout direction
-    }
+    engineWidget->setLayoutDirection(layout->layoutDirection());
 
     //To properly relayout or get the size hint, we need to invalidate the size hints
     //of all the proxy items and set the geometry of the proxy layout (d->engine) to be the same
@@ -64,5 +60,6 @@ void MGridLayoutPolicyPrivate::refreshWidget()
     qreal height = layout->geometry().bottom();
     engineWidget->setContentsMargins(leftMargin, topMargin, 0, 0);
     engineWidget->resize(width, height);
+    engine->setGeometry(engine->geometry()); //We need to call this to make sure the layout actually updates contents margins and RTL
 }
 

@@ -51,10 +51,8 @@ void MLinearLayoutPolicyPrivate::refreshEngine()
 {
     //Make sure that we have our RTL/LTR correct
     bool directionChanged = engineWidget->layoutDirection() != layout->layoutDirection();
-    if (directionChanged) {
+    if (directionChanged)
         engineWidget->setLayoutDirection(layout->layoutDirection());
-        engine->setGeometry(engine->geometry()); //Force the layout to refresh the layout direction
-    }
 
     for (int i = engine->count() - 1; i >= 0; --i) {
         ProxyItem *item = static_cast<ProxyItem *>(engine->itemAt(i));
@@ -79,6 +77,7 @@ void MLinearLayoutPolicyPrivate::refreshWidget()
     qreal width = layout->geometry().right();
     qreal height = layout->geometry().bottom();
     engineWidget->resize(width, height);
+    engine->setGeometry(engine->geometry()); //We need to call this to make sure the layout actually updates contents margins and RTL
 }
 
 void MLinearLayoutPolicyPrivate::notifyWidgetOfLayoutPosition(int index, M::Position position)

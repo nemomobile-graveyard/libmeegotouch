@@ -435,4 +435,37 @@ void Ut_MGridLayoutPolicy::testRtl()
     QCOMPARE(m_mockItem100->geometry(), QRectF(QPointF(200.0, 0.0), QSize(100.0, 100.0)));
     QCOMPARE(m_mockItem200->geometry(), QRectF(QPointF(0.0, 0.0), QSizeF(200.0, 200.0)));
 }
+
+void Ut_MGridLayoutPolicy::testLayoutInLayoutRefresh()
+{
+    m_policy->setSpacing(0);
+    m_mockLayout->activate();
+
+    QGraphicsWidget *widget = new QGraphicsWidget;
+    MLayout *layout = new MLayout(widget);
+    layout->setContentsMargins(0,0,0,0);
+    MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
+    m_policy->addItem(widget,0,0);
+
+    QGraphicsWidget *leftSpacerWithWidget = new QGraphicsWidget;
+    policy->addItem(leftSpacerWithWidget, 0, 0);
+    policy->addItem(m_mockItem100, 0, 1);
+    policy->addItem(new QGraphicsWidget, 0, 2);
+    policy->addItem(m_mockItem200, 0, 3);
+
+    m_form->resize(400,200);
+    
+    qApp->processEvents();
+    qApp->processEvents();
+    
+    QCOMPARE(m_mockItem100->geometry(), QRectF(50,0,100,100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
+
+    leftSpacerWithWidget->setMaximumWidth(0);
+
+    qApp->processEvents();
+
+    QCOMPARE(m_mockItem100->geometry(), QRectF(0,0,100,100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
+}
 QTEST_APPLESS_MAIN(Ut_MGridLayoutPolicy)
