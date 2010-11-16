@@ -185,6 +185,22 @@ QString MLogicalValuesPrivate::createBinaryFilename(const QFileInfo &fileInfo) c
     return binaryFilename;
 }
 
+void MLogicalValuesPrivate::mergeGroups(const Groups &groups)
+{
+    Groups::const_iterator i = groups.constBegin();
+    while (i != groups.constEnd()) {
+        Values &values = data[i.key()];
+        Values::const_iterator j = i.value().constBegin();
+        while (j != i.value().constEnd()) {
+            if (!values.contains(j.key())) {
+                values.insert(j.key(), j.value());
+            }
+            ++j;
+        }
+        ++i;
+    }
+}
+
 bool MLogicalValues::append(const QString &fileName)
 {
     Q_D(MLogicalValues);
@@ -203,12 +219,7 @@ bool MLogicalValues::append(const QString &fileName)
 
     d->timestamps << fileInfo.lastModified().toTime_t();
 
-    Groups::const_iterator i = groups.constBegin();
-    while (i != groups.constEnd()) {
-        Values &values = d->data[i.key()];
-        values.unite(i.value());
-        ++i;
-    }
+    d->mergeGroups(groups);
 
     return true;
 }

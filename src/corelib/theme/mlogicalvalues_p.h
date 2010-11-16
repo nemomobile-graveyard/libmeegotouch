@@ -36,6 +36,7 @@ public:
     bool loadFromBinaryCache(const QFileInfo &fileInfo, Groups &groups);
     bool saveToBinaryCache(const QFileInfo &fileInfo, const Groups &groups) const;
     QString createBinaryFilename(const QFileInfo &fileInfo) const;
+    void mergeGroups(const Groups &groups);
     Groups data;
     QList<uint> timestamps;
 };
