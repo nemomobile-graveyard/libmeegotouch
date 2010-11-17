@@ -696,9 +696,10 @@ void MSceneManagerPrivate::setSceneWindowGeometries()
 
     for (int i = 0; i < size; ++i) {
         sceneWindow = windows.at(i);
-        if (sceneWindow->sceneWindowState() != MSceneWindow::Disappeared)
+        if (sceneWindow->sceneWindowState() != MSceneWindow::Disappeared) {
             _q_undoSceneWindowDislocation(sceneWindow);
             setSceneWindowGeometry(sceneWindow);
+        }
     }
 }
 
