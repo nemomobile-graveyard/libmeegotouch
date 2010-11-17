@@ -274,9 +274,10 @@ private:
 namespace
 {
     //! character set for Number field type
-    const QString NumberCharacterSet = QString("[\\+\\-]{0,1}([0-9%1-%2]+(\\.[0-9%1-%2]*){0,1}){1,1}")
+    const QString NumberCharacterSet = QString("[\\+\\-]{0,1}([0-9%1-%2]+([\\.,%3][0-9%1-%2]*){0,1}){1,1}")
         .arg(QChar(0x0660)) // Arabic numbers begin
-        .arg(QChar(0x0669)); // Arabic numbers end
+        .arg(QChar(0x0669)) // Arabic numbers end
+        .arg(QChar(0x066B)); // Arabic decimal separator
 
     //! character set for Phone Number field type
     const QString PhoneNumberCharacterSet = QString("[\\+0-9%1-%2#\\*\\-\\+pw.\\/() ]+")
