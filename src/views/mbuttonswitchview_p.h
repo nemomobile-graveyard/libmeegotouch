@@ -36,10 +36,12 @@ public:
     QSizeF thumbSize() const;
     QPointF thumbPos() const;
     QPointF thumbEndPos(bool checked) const;  
-    void updateHandle();
+    void update();
 
     void drawSwitchSlider(QPainter *painter) const;
     void drawSwitchThumb(QPainter *painter) const;
+
+    void _q_toggleCheck();
 
     int mouseOffset;
 
@@ -48,8 +50,10 @@ public:
     bool m_feedbackOnPlayed;
     QPointF m_thumbPos;
     bool m_thumbPosValid;
+    bool toggleOnAnimationFinish;
+    bool checkStateOnAnimationFinish;
     
-    QVariantAnimation* m_handleAnimation;
+    QVariantAnimation* m_thumbAnimation;
     int m_animationSpeed; //pixels per sec
 };
 

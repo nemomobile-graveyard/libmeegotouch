@@ -25,9 +25,7 @@
 #include <MGridLayoutPolicy>
 #include <MLinearLayoutPolicy>
 #include <MButton>
-#include <MButtonGroup>
-#include <MDebug>
-#include <MApplication>
+#include <MMessageBox>
 #include <QGraphicsLinearLayout>
 
 SwitchPage::SwitchPage() :
@@ -68,6 +66,7 @@ void SwitchPage::createContent()
     l->setAlignment(switch1, Qt::AlignCenter);
     //l->setAlignment(label1, Qt::AlignRight);
     containerPolicy->addItem(l);
+    connect(switch1, SIGNAL(toggled(bool)), this, SLOT(switchToggled(bool)));
 
     switch2 = new MButton();
     switch2->setViewType(MButton::switchType);
@@ -148,4 +147,15 @@ void SwitchPage::retranslateUi()
     label5->setText(qtTrId("xx_switch_page_switch5"));
 }
 
+void SwitchPage::switchToggled(bool toggle)
+{
+    MMessageBox *msgBox = new MMessageBox();
+
+    if (toggle)
+        msgBox->setText("The feature was enabled");
+    else
+        msgBox->setText("The feature was disabled");
+
+    msgBox->appear(MDialog::DestroyWhenDone);
+}
 

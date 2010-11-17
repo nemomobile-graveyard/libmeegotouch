@@ -30,20 +30,19 @@
 #include <QVariantAnimation>
 
 //! \internal
-class HandleAnimation : public QVariantAnimation
+class ThumbAnimation : public QVariantAnimation
 {
     public:
-        HandleAnimation(MButtonSwitchViewPrivate* viewPrivate, QObject * parent = 0)
+        ThumbAnimation(MButtonSwitchViewPrivate* viewPrivate, QObject * parent = 0)
             : QVariantAnimation(parent), m_viewPrivate(viewPrivate)
-            {
-            }
+        {
+        }
 
     protected:
-
         virtual void updateCurrentValue(const QVariant& value)
         {
             m_viewPrivate->m_thumbPos.setX(value.toPoint().x());
-            m_viewPrivate->updateHandle();
+            m_viewPrivate->update();
         }
 
     private:
@@ -58,14 +57,15 @@ MButtonSwitchViewPrivate::MButtonSwitchViewPrivate() :
     m_feedbackOnPlayed(false),
     m_thumbPos(),
     m_thumbPosValid(false),
-    m_handleAnimation(new HandleAnimation(this)),
+    toggleOnAnimationFinish(false),
+    m_thumbAnimation(new ThumbAnimation(this)),
     m_animationSpeed(500)
 {
 }
 
 MButtonSwitchViewPrivate::~MButtonSwitchViewPrivate()
 {
-    delete m_handleAnimation;
+    delete m_thumbAnimation;
 }
 
 QSizeF MButtonSwitchViewPrivate::thumbSize() const
@@ -92,7 +92,7 @@ QPointF MButtonSwitchViewPrivate::thumbPos() const
     Q_Q(const MButtonSwitchView);
 
     //when thumb is not dragged it is on another end of the view
-    if (!m_thumbDown && m_handleAnimation->state() == QAbstractAnimation::Stopped) {
+    if (!m_thumbDown && m_thumbAnimation->state() == QAbstractAnimation::Stopped) {
         return thumbEndPos(q->model()->checked());
     }
     //return dragged thumb position
@@ -112,9 +112,8 @@ QPointF MButtonSwitchViewPrivate::thumbEndPos(bool checked) const
         return QPointF(q->style()->thumbMargin(), h);
 }
 
-void MButtonSwitchViewPrivate::updateHandle()
+void MButtonSwitchViewPrivate::update()
 {
-    //invalidate masked slider image and request redraw
     Q_Q(MButtonSwitchView);
     q->update();
 }
@@ -128,10 +127,10 @@ void MButtonSwitchViewPrivate::drawSwitchSlider(QPainter *painter) const
     qreal opacity = ((qreal)thumbPos().x() - q->style()->thumbMargin()) / (q->size().width() - thumbSize().width() - q->style()->thumbMargin() * 2.0);
     painter->setOpacity(1.0 - opacity);
     if (q->style()->sliderImage())
-        q->style()->sliderImage()->draw(QRectF(QPointF(0,0), q->size()), painter);
+        q->style()->sliderImage()->draw(QPoint(0,0), q->size(), painter);
     painter->setOpacity(opacity);
     if (q->style()->sliderImageSelected())
-        q->style()->sliderImageSelected()->draw(QRectF(QPointF(0,0), q->size()), painter);
+        q->style()->sliderImageSelected()->draw(QPoint(0,0), q->size(), painter);
 
     painter->setOpacity(oldOpacity);
 }
@@ -145,9 +144,22 @@ void MButtonSwitchViewPrivate::drawSwitchThumb(QPainter *painter) const
         q->style()->thumbImage()->draw(thumbPos(), thumbSize(), painter);
 }
 
+void MButtonSwitchViewPrivate::_q_toggleCheck()
+{
+    Q_Q(MButtonSwitchView);
+
+    if (toggleOnAnimationFinish)
+        q->model()->click();
+
+    q->model()->setChecked(checkStateOnAnimationFinish);
+    toggleOnAnimationFinish = false;
+}
+
 MButtonSwitchView::MButtonSwitchView(MButton *controller) :
     MButtonView(* new MButtonSwitchViewPrivate, controller)
 {
+    Q_D(MButtonSwitchView);
+    connect(d->m_thumbAnimation, SIGNAL(finished()), this, SLOT(_q_toggleCheck()));
 }
 
 MButtonSwitchView::~MButtonSwitchView()
@@ -176,13 +188,11 @@ void MButtonSwitchView::applyStyle()
 void MButtonSwitchView::updateData(const QList<const char *>& modifications)
 {
     MButtonView::updateData(modifications);
-    update();
 }
 
 void MButtonSwitchView::setupModel()
 {
     MButtonView::setupModel();
-    update();
 }
 
 void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -195,7 +205,7 @@ void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Q_D(MButtonSwitchView);
 
     //stop ongoing animation if any
-    d->m_handleAnimation->stop();
+    d->m_thumbAnimation->stop();
 
     //honor MWidgetView's style and play press feedback
     style()->pressFeedback().play();
@@ -249,22 +259,25 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
         //set the state depending which side the thumb currently is
         if (d->m_thumbPos.x() + (d->thumbSize().width() / 2)  > (size().width() / 2)) {
-            model()->setChecked(true);
+            d->checkStateOnAnimationFinish = true;
         } else {
-            model()->setChecked(false);
+            d->checkStateOnAnimationFinish = false;
         }
     }
     //user just clicked the switch, act like normal checkable button
     else {
         d->m_thumbDown = false;
         d->m_thumbDragged = false;
+        d->toggleOnAnimationFinish = false;
 
         QPointF touch = event->scenePos();
         QRectF rect = d->controller->sceneBoundingRect();
         rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
                     M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
-        if (rect.contains(touch))
-            model()->click();
+        if (rect.contains(touch)) {
+            d->toggleOnAnimationFinish = true;
+            d->checkStateOnAnimationFinish = !model()->checked();
+        }
 
         if (model()->checked() == true) {
             style()->releaseOnFeedback().play();
@@ -274,11 +287,11 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     }
 
     //start animating the thumb from current position to proper end position
-    int delta = d->m_thumbPos.x() - d->thumbEndPos(model()->checked()).x();
-    d->m_handleAnimation->setStartValue(d->m_thumbPos);
-    d->m_handleAnimation->setEndValue(d->thumbEndPos(model()->checked()));
-    d->m_handleAnimation->setDuration(abs(delta) / (d->m_animationSpeed/1000.0));
-    d->m_handleAnimation->start();
+    int delta = d->m_thumbPos.x() - d->thumbEndPos(d->checkStateOnAnimationFinish).x();
+    d->m_thumbAnimation->setStartValue(d->m_thumbPos);
+    d->m_thumbAnimation->setEndValue(d->thumbEndPos(d->checkStateOnAnimationFinish));
+    d->m_thumbAnimation->setDuration(abs(delta) / (d->m_animationSpeed/1000.0));
+    d->m_thumbAnimation->start();
 }
 
 void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

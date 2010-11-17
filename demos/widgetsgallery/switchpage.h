@@ -39,8 +39,13 @@ public:
     virtual ~SwitchPage();
     virtual QString timedemoTitle();
     virtual void createContent();
+
 protected:
     virtual void retranslateUi();
+
+protected Q_SLOTS:
+    void switchToggled(bool toggle);
+
 private:
     MButton *switch1;
     MButton *switch2;

@@ -87,7 +87,6 @@ class M_VIEWS_EXPORT MButtonSwitchView : public MButtonView
     M_VIEW(MButtonModel, MButtonSwitchStyle)
 
 public:
-
     /*!
         \brief Constructs the view.
         \param Pointer to the controller.
@@ -112,27 +111,19 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
-    //! \reimp_end
-
-protected slots:
-
-    //! \reimp
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 
-private slots:
-
-
+private:
+    Q_PRIVATE_SLOT(d_func(), void _q_toggleCheck())
 
 private:
-
     Q_DISABLE_COPY(MButtonSwitchView)
     Q_DECLARE_PRIVATE(MButtonSwitchView)
     
 #ifdef UNIT_TEST
     friend class Ut_MButtonSwitchView;
 #endif
-
 };
 
 #endif
