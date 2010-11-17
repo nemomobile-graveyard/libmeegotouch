@@ -1159,15 +1159,11 @@ void MTextEditView::informPasteFailed()
     d->infoBanner = new MInfoBanner(MInfoBanner::Information);
     d->infoBanner->setImageID(iconName);
     d->infoBanner->setBodyText(
-        //~ uispec-document DirectUI_Virtual_Keyboard_UI_Specification_0.30.doc
-        //: Information banner to indicate that no
-        //: characters could be pasted from the
-        //: clipboard to this text field.
-        //: Is shown when user tries to paste
-        //: non-numeric text to a numeric or phone
-        //: number text field.
+        //: Information banner to indicate that no characters could be pasted from the
+        //: clipboard to this text field. Is shown when user tries to paste
+        //: non-numeric text to a numeric or phone number text field.
         //% "Cannot paste text here"
-        qtTrId("qtn_vkb_cantpaste"));
+        qtTrId("qtn_comm_cantpaste"));
 
     d->controller->sceneManager()->appearSceneWindow(d->infoBanner, MSceneWindow::DestroyWhenDone);
     d->hideInfoBannerTimer->setInterval(duration);
