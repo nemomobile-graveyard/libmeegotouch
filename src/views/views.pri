@@ -27,6 +27,7 @@ PUBLIC_HEADERS += \
     msliderview.h \
     mspinnerview.h \
     mtexteditview.h \
+    mtextmagnifier.h \
     mtoolbartabview.h \
     mtoolbarview.h \
     mseparatorview.h \
@@ -45,6 +46,7 @@ PUBLIC_HEADERS += \
     mnavigationbarview.h \
     mlistitemview.h \
     mbubbleitemview.h \
+
 
 PRIVATE_HEADERS += \
     mstylablewidgetview_p.h \
@@ -103,6 +105,7 @@ SOURCES += \
     mspinnerview.cpp \
     mstatusbarview.cpp \
     mtexteditview.cpp \
+    mtextmagnifier.cpp \
     mtoolbarlayoutpolicy.cpp \
     mtoolbartabview.cpp \
     mtoolbarview.cpp \

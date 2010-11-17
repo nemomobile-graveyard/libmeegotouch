@@ -40,6 +40,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/msliderstyle.h \
     $$STYLE_SRC_DIR/mspinnerstyle.h \
     $$STYLE_SRC_DIR/mtexteditstyle.h \
+    $$STYLE_SRC_DIR/mtextmagnifierstyle.h \
     $$STYLE_SRC_DIR/mcompleterstyle.h \
     $$STYLE_SRC_DIR/mtoolbartabstyle.h \
     $$STYLE_SRC_DIR/mtoolbarstyle.h \

@@ -28,13 +28,13 @@
 #include "mtexteditview.h"
 
 class MTextEdit;
+class MTextMagnifier;
 class QGraphicsSceneMouseEvent;
 class QColor;
 class QTextDocument;
 class QTimer;
 class QTimeLine;
 class MInfoBanner;
-
 
 //! \internal
 class MTextEditViewPrivate : public QObject
@@ -70,6 +70,7 @@ protected slots:
     void handleDocumentUpdate(int position, int charsRemoved, int charsAdded);
     void handleDocumentSizeChange(const QSizeF &newSize);
     void playTextFieldSelectionFeedback();
+    void updateMagnifierPosition();
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
@@ -127,6 +128,8 @@ protected:
     bool editActive; // true if editing started and having focus
 
     QTimer *hideInfoBannerTimer;
+
+    QScopedPointer<MTextMagnifier> magnifier;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

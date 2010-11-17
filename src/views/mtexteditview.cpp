@@ -19,6 +19,7 @@
 
 #include "mtexteditview.h"
 #include "mtexteditview_p.h"
+#include "mtextmagnifier.h"
 #include "mcompleter.h"
 
 #include <QPainter>
@@ -110,6 +111,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
     QObject::connect(maskTimer, SIGNAL(timeout()), this, SLOT(hideUnmaskedText()));
+    QObject::connect(control, SIGNAL(cursorPositionChanged()),
+                     this, SLOT(updateMagnifierPosition()));
 }
 
 
@@ -737,6 +740,13 @@ QRect MTextEditViewPrivate::cursorRect() const
     return rect;
 }
 
+void MTextEditViewPrivate::updateMagnifierPosition()
+{
+    if (magnifier) {
+        QPointF magpos = cursorRect().center();
+        magnifier->setMagnifiedPosition(magpos);
+    }
+}
 
 //////////////////////
 //// Actual class ////
@@ -770,10 +780,10 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     painter->save();
 
     // set clipping rectangle to draw text inside the border
-    QRectF clipping(boundingRect().left() + style()->paddingLeft(),
-                    boundingRect().top() + style()->paddingTop(),
-                    boundingRect().width() - style()->paddingLeft() - style()->paddingRight(),
-                    boundingRect().height() - style()->paddingTop() - style()->paddingBottom());
+    QRectF clipping(boundingRect().adjusted(style()->paddingLeft(),
+                                            style()->paddingTop(),
+                                            -style()->paddingRight(),
+                                            -style()->paddingBottom()));
     painter->setClipRect(clipping, Qt::IntersectClip);
 
     // If text does not fit inside widget, it may have to be scrolled
@@ -841,8 +851,6 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     // start timer to check if still holding mouse after a while
     d->longPressTimer->start();
 
-    event->accept();
-
     // whether mouse movement should initiate selection at all
     if (d->inAutoSelectionClick == true) {
         d->ignoreSelection = true;
@@ -878,7 +886,10 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     Q_D(MTextEditView);
 
     MTextEdit::TextFieldLocationType location;
-    event->accept();
+
+    if (d->magnifier) {
+        d->magnifier->disappear();
+    }
 
     if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
         // Honor MWidgetView's style and play release feedback
@@ -914,8 +925,10 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void MTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    event->accept();
-    updateCursorPosition(event, true);
+    Q_D(MTextEditView);
+    // Only update selection if magnifier is not in use.
+    const bool updateSelection = !(d->magnifier && d->magnifier->isAppeared());
+    updateCursorPosition(event, updateSelection);
 }
 
 void MTextEditView::updateCursorPosition(QGraphicsSceneMouseEvent *event, const bool updateSelection)
@@ -1054,6 +1067,9 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
     style()->cancelFeedback().play();
 
     // restore state before as before mouse press
+    if (d->magnifier) {
+        d->magnifier->disappear();
+    }
     d->selecting = false;
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
@@ -1172,6 +1188,20 @@ void MTextEditView::informPasteFailed()
 
 void MTextEditView::handleLongPress()
 {
+    Q_D(MTextEditView);
+
+    // Bring up magnifier on long press.
+    if (!d->magnifier) {
+        d->magnifier.reset(new MTextMagnifier(*d->controller));
+    }
+    // Make fake mouse event to update cursor position.
+    QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseMove);
+    mouseEvent.setPos(d->mouseTarget);
+    updateCursorPosition(&mouseEvent, false);
+
+    // Set magnified position before appearing.
+    d->magnifier->setMagnifiedPosition(d->cursorRect().center());
+    d->magnifier->appear();
 }
 
 void MTextEditView::hideInfoBanner()
