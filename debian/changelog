@@ -1,10 +1,30 @@
-libmeegotouch (0.20.54~1) unstable; urgency=low
+libmeegotouch (0.20.54-1) unstable; urgency=low
 
-  * Unreleased
   * Fixes: NB#202957 - Application extensions are not loaded if the application extension interface specific directory is missing
+  * Fixes: NB#203272 - MEscapeButtonSlot causes warning message "MClassFactory cannot register/unregister MWidgetCreator which is not registered"
+  * Fixes: NB#202799 - Application registration is broken
+  * Fixes: NB#202329 - mthemedaemon spews out lots of useless debug to syslog
+  * Fixes: NB#203958 - mdecorator doesn't always draw statusbar
+  * Fixes: NB#194992 - Text in System Modal Dialog in Widget Gallery is not displaying properly in Portrait mode
+  * Fixes: NB#202148 - Cannot return from fullscreen video page in widgetsgallery Grid Page
+  * Fixes: NB#195051 - Destructor causes crash in buttons
+  * Fixes: NB#202957 - Application extensions are not loaded if the application extension interface specific directory is missing
+  * Fixes: NB#199367 - Inconsistent behavior for screen orientation, launcher and launched app orientation disagree
+  * Fixes: NB#194478 - MApplicationWindow doesn't give possiblity to change style on the fly
+  * Fixes: NB#163790 - Unexpected thin gap between buttons in button group
+  * Fixes: NB#196301 - Switch and checkbox button not "crisp"
+  * Fixes: NB#183705 - MPannable viewport doesn't resize correctly with height-for-width layouts
+  * Fixes: NB#201081 - layout animation resets widget opacity
+  * Fixes: NB#203504 - Not possible to disable orientation change animation in MWindow
+  * Fixes: NB#203502 - VKB is poping up top of the email suggestion list in a scenario
+  * Fixes: NB#204009 - MStyleSheetAttribute::writeAttribute() should cache once calculated variants
+  * Fixes: NB#202039 - Reproducible ***** crashs when 'Open link in new tab' button is pressed from CSM
+  * Fixes: NB#204180 - Themed MCheckbox reacts unexpected if no pixmap is defined, defined color for pressed mode not taken
+  * Fixes: NB#204381 - Crash in MWidgetView::setModel when app is compiled without rtti
+  * Fixes: NB#198347 - Remove Animated layout demos
   * Implemented: SWP#DUI-4160 Mandatory support for meegographicssystem on application extensions
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 11 Nov 2010 14:53:50 +0200
+ -- Tobias Koch <tobias.koch@nokia.com>  Wed, 17 Nov 2010 16:00:55 +0200
 
 libmeegotouch (0.20.53-1) unstable; urgency=low
 
