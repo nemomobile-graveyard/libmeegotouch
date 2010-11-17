@@ -500,14 +500,18 @@ MTheme::ViewType MWidgetController::viewType() const
 void MWidgetController::setGeometry(const QRectF &rect)
 {
     Q_D(MWidgetController);
-    MWidget::setGeometry(rect);
+    // Round the geometry so the widget would be pixel aligned.
+    QRect newRect(rect.x(), rect.y(), rect.width(), rect.height());
+
+    MWidget::setGeometry(newRect);
     // check if we have, or if we can create a view
     if (view()) {
         QRect margins = d->view->margins();
         // create a new smaller rect with topLeft-corner translated towards center
         // and bottomRight corner translated also towards center.
-        QRectF viewGeom(rect.topLeft() + margins.topLeft(),
-                        rect.bottomRight() - QPointF(margins.width(), margins.height()));
+        QRect viewGeom(newRect.topLeft() + margins.topLeft(),
+                        newRect.bottomRight() - QPoint(margins.width(), margins.height()));
+        // Round the geometry so the widget would be pixel aligned.
         d->view->setGeometry(viewGeom);
     }
 }
@@ -573,7 +577,8 @@ QSizeF MWidgetController::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
         combineSize(sh, widgetSize);
     }
 
-    return sh;
+    // Round the size hint
+    return sh.toSize();
 }
 
 void MWidgetController::resizeEvent(QGraphicsSceneResizeEvent *event)
@@ -585,8 +590,9 @@ void MWidgetController::resizeEvent(QGraphicsSceneResizeEvent *event)
         QSizeF marginSize(margins.x() + margins.width(),
                           margins.top() + margins.height());
 
-        event->setOldSize(event->oldSize() - marginSize);
-        event->setNewSize(event->newSize() - marginSize);
+        // Round the incoming resize event values.
+        event->setOldSize(event->oldSize().toSize() - marginSize);
+        event->setNewSize(event->newSize().toSize() - marginSize);
 
         // forward the event to the view
         d->view->resizeEvent(event);

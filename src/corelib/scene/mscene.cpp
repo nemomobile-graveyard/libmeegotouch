@@ -556,7 +556,8 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
 
             if (MApplication::showSize()) {
                 QPointF bottomRight = ((*item)->mapToScene(br.bottomRight()));
-                QString sizeStr = QString("%1x%2").arg(br.width()).arg(br.height());
+                QPointF pos = (*item)->mapToScene(br.topLeft());
+                QString sizeStr = QString("%1x%2 (%3,%4)").arg(br.width()).arg(br.height()).arg(pos.x()).arg(pos.y());
                 painter->setPen(Qt::black);
                 painter->drawText(bottomRight -= QPointF(metrics.width(sizeStr), 2), sizeStr);
                 painter->setPen(Qt::white);
