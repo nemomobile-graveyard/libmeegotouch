@@ -72,7 +72,8 @@ private:
     // Fills a property with a variant and caches the variant if possible.
     // Pointer types cannot be cached as the ownership is transfered to the property.
     // Caching must be disabled for them.
-    bool fillProperty(const QMetaProperty &property, MStyle *style, const QVariant &variant, bool cache = true);
+    bool fillProperty(const QMetaProperty &property, MStyle *style, M::Orientation cacheOrientation,
+        const QVariant &variant, bool cache = true);
 
     QByteArray name;
     QByteArray value;
