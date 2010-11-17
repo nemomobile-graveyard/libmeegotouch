@@ -584,7 +584,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
 
     bool conversionOK = false;
     // most types are the same in landscape and portrait
-    M::Orientation cacheOrientation = M::Orientation(M::Landscape | M::Portrait);
+    CacheOrientationFlags cacheOrientation = CacheOrientationFlags(PortraitFlag | LandscapeFlag);
 
     const char *attributeType = property.typeName();
     if (attributeType == types[BOOL_TYPE]) {
@@ -651,7 +651,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             int width = attributeToInt(list[1], &conversionOK, WidthAttribute, orientation);
             int height = attributeToInt(list[2], &conversionOK, HeightAttribute, orientation);
             const QPixmap *pixmap = MTheme::pixmap(list[0], QSize(width, height));
-            cacheOrientation = orientation;
+            cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap));
         }
         //no parameters
@@ -727,7 +727,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         QList<QByteArray> list = value.split(' ');
         list.removeAll("");
         if (list.size() == 2) {
-            cacheOrientation = orientation;
+            cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             if (attributeType == types[SIZE_TYPE]) {
                 int width = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
                 int height = attributeToInt(list[1], &conversionOK, HeightAttribute, orientation);
@@ -745,7 +745,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         QList<QByteArray> list = value.split(' ');
         list.removeAll("");
         if (list.size() == 2) {
-            cacheOrientation = orientation;
+            cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             if (attributeType == types[POINT_TYPE]) {
                 int x = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
                 int y = attributeToInt(list[1], &conversionOK, HeightAttribute, orientation);
@@ -832,15 +832,15 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
     return false;
 }
 
-bool MStyleSheetAttribute::fillProperty(const QMetaProperty &property, MStyle *style, M::Orientation cacheOrientation, const QVariant &variant, bool cache)
+bool MStyleSheetAttribute::fillProperty(const QMetaProperty &property, MStyle *style, CacheOrientationFlags cacheOrientation, const QVariant &variant, bool cache)
 {
     if (cache && variant.isValid()) {
         // most variants will be cahced in landscape and portrait.
         // this should not really increase memory usage as QVariants are implicitly shared
-        if (cacheOrientation & M::Portrait) {
+        if (cacheOrientation & PortraitFlag) {
             variantCache[M::Portrait][value][property.typeName()] = variant;
         }
-        if (cacheOrientation & M::Landscape) {
+        if (cacheOrientation & LandscapeFlag) {
             variantCache[M::Landscape][value][property.typeName()] = variant;
         }
     }
