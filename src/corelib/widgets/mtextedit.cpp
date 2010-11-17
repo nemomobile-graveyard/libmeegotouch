@@ -280,7 +280,7 @@ namespace
         .arg(QChar(0x066B)); // Arabic decimal separator
 
     //! character set for Phone Number field type
-    const QString PhoneNumberCharacterSet = QString("[\\+0-9%1-%2#\\*\\-\\+pw.\\/() ]+")
+    const QString PhoneNumberCharacterSet = QString("[\\+0-9%1-%2#\\*\\-\\+pw() ]+")
         .arg(QChar(0x0660)) // Arabic numbers begin
         .arg(QChar(0x0669)); // Arabic numbers end
 

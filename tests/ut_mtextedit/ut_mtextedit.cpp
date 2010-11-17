@@ -711,7 +711,7 @@ void Ut_MTextEdit::testConstraints()
     // Test phone number
     singleLine.setContentType(M::PhoneNumberContentType);
     QCOMPARE(singleLine.contentType(), M::PhoneNumberContentType);
-    constraintTest(&singleLine, testInput, "1234*/+-#()");
+    constraintTest(&singleLine, testInput, "1234*+-#()");
 
     // Test email address
     singleLine.setContentType(M::EmailContentType);
