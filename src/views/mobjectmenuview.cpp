@@ -32,11 +32,19 @@
 #include "mscenemanager.h"
 #include "mapplication.h"
 #include "mapplicationwindow.h"
+#include "mpannableviewport.h"
 
 MObjectMenuViewPrivate::MObjectMenuViewPrivate() :
       q_ptr(0),
-      layout(0),
-      controller(0)
+      mainLayout(0),
+      actionLayout(0),
+      titleLayout(0),
+      controller(0), 
+      titleArea(0),
+      titleLabel(0),
+      titleIcon(0),
+      actionViewport(0),
+      actionWidget(0)
 {
 }
 
@@ -47,25 +55,40 @@ MObjectMenuViewPrivate::~MObjectMenuViewPrivate()
 
 void MObjectMenuViewPrivate::init()
 {
-    layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setSpacing(0);
-    controller->setLayout(layout);
+    mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    mainLayout->setContentsMargins(0.0,0.0,0.0,0.0);
+    mainLayout->setSpacing(0);
+    controller->setLayout(mainLayout);
 
     //create title bar
-    QGraphicsLinearLayout* titleLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    titleLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     titleLayout->setSpacing(0);
+    titleLayout->setContentsMargins(0.0,0.0,0.0,0.0);
     titleArea = new MObjectMenuTitleArea(controller);
     titleArea->setStyleName("ObjectMenuTitleArea");
     titleArea->setLayout(titleLayout);
     
-    //create and add spinner
+    //create and add title icon
     titleIcon = new MImageWidget(titleArea);
     titleLayout->addItem(titleIcon);
-    
+    titleLayout->setAlignment(titleIcon, Qt::AlignCenter);    
+        
     //create and add title label
     titleLabel = new MLabel("", titleArea);
     titleLabel->setTextElide(true);
     titleLayout->addItem(titleLabel);
+    titleLayout->setAlignment(titleLabel, Qt::AlignCenter);
+
+    //setup pannable viewport for the action buttons
+    actionLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    actionLayout->setSpacing(0);
+    actionLayout->setContentsMargins(0.0,0.0,0.0,0.0);
+    actionWidget = new QGraphicsWidget(controller);
+    actionWidget->setLayout(actionLayout);
+    actionViewport = new MPannableViewport(controller);
+    actionViewport->setWidget(actionWidget);
+    actionViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+    mainLayout->addItem(actionViewport);
 }
 
 void MObjectMenuViewPrivate::updateIcon()
@@ -82,9 +105,13 @@ void MObjectMenuViewPrivate::updateIcon()
         else
             titleIcon->setImage(q->model()->iconId());
         titleIcon->show();
+        titleLayout->insertItem(0, titleIcon);
+        titleLayout->setAlignment(titleIcon, Qt::AlignCenter);    
     } else {
+        
         titleIcon->setImage(q->model()->iconId());
         titleIcon->hide();
+        titleLayout->removeItem(titleIcon);
     }
 }
 
@@ -94,10 +121,10 @@ void MObjectMenuViewPrivate::updateTitleAreaVisibility()
     
     //hide whole title area if title == "" and icon is not visible            
     if( q->model()->title().isEmpty() && q->model()->iconId().isEmpty() ) {
-        layout->removeItem(titleArea);
-        titleArea->hide();            
-    } else if( layout->itemAt(0) != titleArea ) {
-        layout->insertItem(0, titleArea);
+        mainLayout->removeItem(titleArea);
+        titleArea->hide();
+    } else if( mainLayout->itemAt(0) != titleArea ) {
+        mainLayout->insertItem(0, titleArea);
         titleArea->show();
     }
 }
@@ -153,19 +180,19 @@ void MObjectMenuView::actionAdded(MAction *action)
     if (action->isVisible()) {
 
         // create button for this action
-        MButton *button = new MButton(action->iconID(), action->text(), d->controller);
+        MButton *button = new MButton(action->iconID(), action->text(), d->actionWidget);
 
         d->controller->connect(button, SIGNAL(clicked(bool)), SLOT(dismiss()));
         QObject::connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
 
         button->setEnabled(action->isEnabled());
-        d->layout->addItem(button);
-        int buttonCount = d->layout->itemAt(0) == d->titleArea ? d->layout->count()-1 : d->layout->count();
+        d->actionLayout->addItem(button);
+        int buttonCount = d->actionLayout->count();
         if(buttonCount == 1) {
             // make the only button to use "single button" background
             button->setLayoutPosition(M::DefaultPosition);
         } else if( buttonCount > 1 ) {
-            MButton* prev = (MButton*)d->layout->itemAt(d->layout->count() - 2);
+            MButton* prev = (MButton*)d->actionLayout->itemAt(buttonCount - 2);
             // we have more than one in layout
             if(buttonCount == 2) {
                 prev->setLayoutPosition(M::VerticalTopPosition);
@@ -176,6 +203,9 @@ void MObjectMenuView::actionAdded(MAction *action)
         }
 
         d->buttons.insert(action, button);
+        
+        //viewport doesnt update its size without this
+        d->actionViewport->setWidget(d->actionWidget);
     }
 }
 

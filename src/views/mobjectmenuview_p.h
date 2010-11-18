@@ -32,6 +32,7 @@ class MAction;
 class QGraphicsLinearLayout;
 class MLabel;
 class MImageWidget;
+class MPannableViewport;
 
 class MObjectMenuViewPrivate
 {
@@ -55,13 +56,18 @@ public:
     QHash<MAction*, ContentAction::Action> contentActions;
 #endif
 
-    QGraphicsLinearLayout *layout;
+    QGraphicsLinearLayout* mainLayout;
+    QGraphicsLinearLayout* actionLayout;
+    QGraphicsLinearLayout* titleLayout;
 
     MObjectMenu *controller;
 
     MWidgetController* titleArea;
     MLabel* titleLabel;
     MImageWidget* titleIcon;
+
+    MPannableViewport* actionViewport;
+    QGraphicsWidget* actionWidget;
 
 private:
     void contentActionTriggered();
