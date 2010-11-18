@@ -14,9 +14,6 @@ AlbumPage::AlbumPage(const Album *album, QGraphicsItem *parent)
 {
     setTitle(album->title);
     connect(this, SIGNAL(appeared()), SLOT(fadeInAlbumCover()));
-
-    setAcceptTouchEvents(true);
-    grabGesture(Qt::PinchGesture);
 }
 
 void AlbumPage::createContent()

@@ -49,9 +49,6 @@ ImagePage::ImagePage() :
     sliderValues[ImageZoom] = 10;
     sliderValues[ImageTransparency] = 0;
     sliderValues[ImageCrop] = 0;
-
-    setAcceptTouchEvents(true);
-    grabGesture(Qt::PinchGesture);
 }
 
 ImagePage::~ImagePage()

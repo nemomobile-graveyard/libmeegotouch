@@ -242,19 +242,7 @@ MeeGo Touch supports multipoint touch screens. Therefore, interactions such as p
 
 The following example illustrates how to include gestures in the applications. In the example, the album cover image in the AlbumPage of our Music Catalogue application is made to support pinching gestures. By pinching the cover image you can zoom in and out.
 
-1. Tell the framework that AlbumPage is interested in getting touch events and subscribe the AlbumPage to receive pinching gestures:
-
-\code
-AlbumPage::AlbumPage(const Album *album, QGraphicsItem *parent)
-    : MApplicationPage(parent), album(album), albumCover(0)
-{
-    ...
-    setAcceptTouchEvents(true);
-    grabGesture(Qt::PinchGesture);
-}
-\endcode
-
-2. Reimplement the virtual method <code>MWidget::pinchGestureEvent()</code> to handle the pinching gestures. 
+We just have to reimplement the virtual method <code>MWidget::pinchGestureEvent()</code> to handle the pinching gestures.
 
 Add the following to <code>albumpage.h</code>:
 \code

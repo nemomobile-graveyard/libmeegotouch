@@ -18,27 +18,6 @@ MyPage::MyPage(QGraphicsItem *parent)
 {
     setTitle("Gestures example");
 
-    // This enables delivery of low-level touch events to the widget.
-    // While we aren't directly interested in these, on a multitouch
-    // capable system the pinch gesture is recognized by the touch events.
-    setAcceptTouchEvents(true);
-
-    // The grabGesture methods enables delivery of the high-level gesture
-    // events (QPinchGesture and QSwipeGesture in our case) to the widget.
-    //
-    // The reason the gestures are handled by the page instead of the
-    // actual image widget, is that we want the entire page area to
-    // function as a single pinching/rotating/swiping surface.
-    //
-    // In general, you should handle gestures on the largest possible
-    // area, even if it holds multiple widgets. In case of multiple widgets,
-    // you can determine the target of the gesture using the event's hotSpot
-    // property.
-    grabGesture(Qt::TapGesture);
-    grabGesture(Qt::TapAndHoldGesture);
-    grabGesture(Qt::PinchGesture);
-    grabGesture(Qt::SwipeGesture);
-
     // Setting up our animations
 
     swipeAnimation = new QParallelAnimationGroup(this);

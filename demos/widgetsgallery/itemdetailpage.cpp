@@ -128,8 +128,6 @@ ItemDetailPage::ItemDetailPage() :
       lastScaleFactor(1.0)
 {
     setObjectName("itemDetailPage");
-    setAcceptTouchEvents(true);
-    grabGesture(Qt::PinchGesture);
 }
 
 ItemDetailPage::~ItemDetailPage()
