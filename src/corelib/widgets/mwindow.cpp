@@ -546,20 +546,38 @@ MSceneManager::TransitionMode MWindowPrivate::orientationChangeTransitionMode()
     return transitionMode;
 }
 
+void MWindowPrivate::doSwitcherExited()
+{
+    Q_Q(MWindow);
+
+    if (isInSwitcher) {
+        isInSwitcher = false;
+        emit q->switcherExited();
+    }
+}
+
+void MWindowPrivate::doSwitcherEntered()
+{
+    Q_Q(MWindow);
+
+    if (!isInSwitcher) {
+        isInSwitcher = true;
+        emit q->switcherEntered();
+    }
+}
+
 void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event)
 {
     Q_Q(MWindow);
 
     // Check if window has entered / left the switcher
     if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
-        isInSwitcher = true;
-        emit q->switcherEntered();
+        doSwitcherEntered();
     }
     else if (event->oldState().testFlag(Qt::WindowMinimized) &&
              !q->windowState().testFlag(Qt::WindowMinimized)) {
-        isInSwitcher = false;
+        doSwitcherExited();
         timeSinceLastPaintInSwitcher.invalidate();
-        emit q->switcherExited();
     }
 
 #ifdef QT_OPENGL_LIB
@@ -597,6 +615,7 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
     isLogicallyClosed = true;
 
     sendExitDisplayEvent(false);
+    doSwitcherExited();
 
     if (MApplication::prestartMode() == M::LazyShutdownMultiWindow ||
         MApplication::prestartMode() == M::LazyShutdown) {

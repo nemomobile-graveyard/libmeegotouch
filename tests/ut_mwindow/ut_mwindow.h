@@ -64,6 +64,8 @@ private slots:
     void testDisplayExitedSignal();
     void testDisplayExitedOnClose();
     void testDisplayExitedOnCloseLazyShutdownApp();
+    void testSwitcherExitedOnClose();
+    void testIsInSwitcher();
     void testCloseOnLazyShutdown();
     void testGlobalAlpha();
     void testVideoGlobalAlpha();

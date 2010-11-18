@@ -89,6 +89,8 @@ public:
 
     void doEnterDisplayEvent();
     void doExitDisplayEvent();
+    void doSwitcherEntered();
+    void doSwitcherExited();
     void sendExitDisplayEvent(bool delayedSending);
 
     MOnDisplayChangeEvent *delayedMOnDisplayChangeEvent;

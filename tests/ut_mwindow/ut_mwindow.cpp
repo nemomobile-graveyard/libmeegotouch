@@ -379,6 +379,39 @@ void Ut_MWindow::testDisplayExitedOnCloseLazyShutdownApp()
     QCOMPARE(spy.count(), 1);
 }
 
+void Ut_MWindow::testSwitcherExitedOnClose()
+{
+    // Test that switcherExited() is sent when
+    // a minimized application is closed
+    win->showMinimized();
+    QSignalSpy spy(win, SIGNAL(switcherExited()));
+    win->close();
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(win->isInSwitcher() == false);
+
+    // Test that switcherExited() is NOT sent when
+    // a maximized application is closed
+    win->show();
+    QSignalSpy spy2(win, SIGNAL(switcherExited()));
+    win->close();
+    QCOMPARE(spy2.count(), 0);
+}
+
+void Ut_MWindow::testIsInSwitcher()
+{
+    win->show();
+
+    QSignalSpy spy(win, SIGNAL(switcherEntered()));
+    win->showMinimized();
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(win->isInSwitcher() == true);
+
+    QSignalSpy spy2(win, SIGNAL(switcherExited()));
+    win->showMaximized();
+    QCOMPARE(spy2.count(), 1);
+    QVERIFY(win->isInSwitcher() == false);
+}
+
 void Ut_MWindow::testCloseOnLazyShutdown()
 {
     win->setCloseOnLazyShutdown(true);
