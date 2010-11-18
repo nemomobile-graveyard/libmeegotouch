@@ -1,5 +1,10 @@
 /*! \page news What's new in MeeGo Touch
 
+\section v02055 0.20.55
+
+\subsection New
+- MApplicationWindow::navigationBarOpacity propery. Navigation bar can now be made transparent on the fly.
+
 \section v02054 0.20.54
 
 \subsection New

@@ -91,6 +91,7 @@ private slots:
     void testNavigationBarVisibilityHideToolbarAction();
 
     void testFirstPageWithCustomNavigationBarContent();
+    void testNavigationBarOpacity();
 
 private:
     MApplicationWindow *m_subject;

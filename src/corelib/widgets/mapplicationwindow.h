@@ -77,6 +77,7 @@ class M_CORE_EXPORT MApplicationWindow : public MWindow
 {
     Q_OBJECT
     Q_PROPERTY(MTheme::ViewType toolbarViewType READ toolbarViewType WRITE setToolbarViewType)
+    Q_PROPERTY(qreal navigationBarOpacity READ navigationBarOpacity WRITE setNavigationBarOpacity)
 
 public:
     /*!
@@ -134,6 +135,13 @@ public:
      */
     QString styleName() const;
 
+    /*!
+      Returns current opacity of the navigation bar.
+
+      \sa QGraphicsItem::opacity()
+    */
+    qreal navigationBarOpacity() const;
+
 Q_SIGNALS:
     /*!
      This signal is emitted after \page has become shown.
@@ -175,6 +183,13 @@ public Q_SLOTS:
       \sa styleName()
     */
     void setStyleName(const QString &name);
+
+    /*!
+      Sets the opacity of the navigation bar.
+
+      \sa QGraphicsItem::setOpacity()
+    */
+    void setNavigationBarOpacity(qreal opacity);
 
 protected:
     //! \internal

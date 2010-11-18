@@ -54,6 +54,7 @@ public slots:
     void changeEscapeButtonDisplayMode(int index);
     void changeHomeButtonDisplayMode(int index);
     void changeFullScreenMode(bool fullScreen);
+    void changeNavigationBarTransparency(bool transparent);
 
 protected:
     virtual void retranslateUi();
@@ -71,6 +72,9 @@ private:
     MButton *checkboxFullScreen;
     MLabel *lblFullScreen;
     QGraphicsLinearLayout *fullScreenCheckboxLayout;
+    MButton *checkboxNavigationBarTransparency;
+    MLabel *lblNavigationBarTransparency;
+    QGraphicsLinearLayout* navigationBarTransparencyLayout;
 };
 
 #endif // NAVIGATIONBARPAGE_H

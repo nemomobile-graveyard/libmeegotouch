@@ -32,6 +32,7 @@
 #include <QGraphicsLinearLayout>
 #include <QStringList>
 #include <QTimer>
+#include <QPropertyAnimation>
 
 DisplayModesPage::DisplayModesPage()
     : TemplatePage(TemplatePage::ApplicationView),
@@ -42,7 +43,10 @@ DisplayModesPage::DisplayModesPage()
       lblWindowState(0),
       checkboxFullScreen(0),
       lblFullScreen(0),
-      fullScreenCheckboxLayout(0)
+      fullScreenCheckboxLayout(0),
+      checkboxNavigationBarTransparency(0),
+      lblNavigationBarTransparency(0),
+      navigationBarTransparencyLayout(0)
 {
 }
 
@@ -86,11 +90,12 @@ void DisplayModesPage::createContent()
     connect(comboHomeButtonDisplayMode, SIGNAL(currentIndexChanged(int)),
             SLOT(changeHomeButtonDisplayMode(int)));
 
+    createWindowStateWidgets();
+
     lytButtons->addItem(comboNavigationBarDisplayMode);
+    lytButtons->addItem(navigationBarTransparencyLayout);
     lytButtons->addItem(comboHomeButtonDisplayMode);
     lytButtons->addItem(comboEscapeButtonDisplayMode);
-
-    createWindowStateWidgets();
 
     lytMain->addItem(lblDisplayMode);
     lytMain->addItem(lytButtons);
@@ -127,6 +132,19 @@ void DisplayModesPage::createWindowStateWidgets()
     fullScreenCheckboxLayout->addItem(lblFullScreen);
     fullScreenCheckboxLayout->setAlignment(checkboxFullScreen, Qt::AlignCenter);
     fullScreenCheckboxLayout->setAlignment(lblFullScreen, Qt::AlignCenter);
+
+    checkboxNavigationBarTransparency = new MButton;
+    checkboxNavigationBarTransparency->setViewType(MButton::checkboxType);
+    checkboxNavigationBarTransparency->setCheckable(true);
+    connect(checkboxNavigationBarTransparency, SIGNAL(toggled(bool)), SLOT(changeNavigationBarTransparency(bool)));
+
+    lblNavigationBarTransparency = new MLabel;
+
+    navigationBarTransparencyLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    navigationBarTransparencyLayout->addItem(checkboxNavigationBarTransparency);
+    navigationBarTransparencyLayout->addItem(lblNavigationBarTransparency);
+    navigationBarTransparencyLayout->setAlignment(checkboxNavigationBarTransparency, Qt::AlignCenter);
+    navigationBarTransparencyLayout->setAlignment(lblNavigationBarTransparency, Qt::AlignCenter);
 }
 
 void DisplayModesPage::addExampleActions()
@@ -160,6 +178,9 @@ void DisplayModesPage::retranslateUi()
 
     //% "Full Screen"
     lblFullScreen->setText(qtTrId("xx_displaymodes_full_screen"));
+
+    //% "Navigation Bar Transparency"
+    lblNavigationBarTransparency->setText(qtTrId("xx_displaymodes_navigation_bar_transparency"));
 
     retranslateDisplayModeComboBox(comboNavigationBarDisplayMode);
     retranslateDisplayModeComboBox(comboHomeButtonDisplayMode);
@@ -238,4 +259,16 @@ void DisplayModesPage::changeFullScreenMode(bool fullScreen)
     } else {
         window->showNormal();
     }
+}
+
+void DisplayModesPage::changeNavigationBarTransparency(bool transparent)
+{
+    QPropertyAnimation *animation = new QPropertyAnimation(this);
+    animation->setDuration(800);
+    animation->setEasingCurve(QEasingCurve::InOutCubic);
+    animation->setTargetObject(applicationWindow());
+    animation->setPropertyName("navigationBarOpacity");
+    animation->setStartValue(applicationWindow()->navigationBarOpacity());
+    animation->setEndValue(transparent ? 0.5 : 1.0);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }

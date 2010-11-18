@@ -734,4 +734,17 @@ void Ut_MApplicationWindow::testFirstPageWithCustomNavigationBarContent()
     QVERIFY(navigationBar->customContent() == 0);
 }
 
+void Ut_MApplicationWindow::testNavigationBarOpacity()
+{
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+
+    QCOMPARE(m_subject->navigationBarOpacity(), (qreal)1.0);
+    QCOMPARE(navigationBar->opacity(), (qreal)1.0);
+
+    m_subject->setNavigationBarOpacity((qreal)0.5);
+
+    QCOMPARE(m_subject->navigationBarOpacity(), (qreal)0.5);
+    QCOMPARE(navigationBar->opacity(), (qreal)0.5);
+}
+
 QTEST_MAIN(Ut_MApplicationWindow)

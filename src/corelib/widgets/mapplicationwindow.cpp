@@ -1374,4 +1374,16 @@ void MApplicationWindow::setStyleName(const QString &name)
     d->_q_updateStyle();
 }
 
+qreal MApplicationWindow::navigationBarOpacity() const
+{
+    Q_D(const MApplicationWindow);
+    return d->navigationBar->opacity();
+}
+
+void MApplicationWindow::setNavigationBarOpacity(qreal opacity)
+{
+    Q_D(MApplicationWindow);
+    d->navigationBar->setOpacity(opacity);
+}
+
 #include "moc_mapplicationwindow.cpp"
