@@ -27,6 +27,7 @@ class MDataStore;
 class MAppletInstanceManager;
 class MMashupCanvasPrivate;
 
+//! \internal
 /*!
  * MMashupCanvas is a widget which can be populated with applet instances.
  * A MMashupCanvas can be placed on any view that wants to leverage applet support.
@@ -153,5 +154,7 @@ private:
     Q_DECLARE_PRIVATE(MMashupCanvas)
     Q_DISABLE_COPY(MMashupCanvas)
 };
+//! \internal_end
+
 
 #endif // MMASHUPCANVAS_H

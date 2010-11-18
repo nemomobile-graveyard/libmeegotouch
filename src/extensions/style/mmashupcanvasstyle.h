@@ -22,6 +22,7 @@
 
 #include <MWidgetStyle>
 
+//! \internal
 /*!
  * MMashupCanvasStyle is the style class for MMashupCanvas.
  */
@@ -41,5 +42,6 @@ class M_EXTENSIONS_EXPORT MMashupCanvasStyleContainer : public MWidgetStyleConta
 {
     M_STYLE_CONTAINER(MMashupCanvasStyle)
 };
+//! \internal_end
 
 #endif /* MMASHUPCANVASSTYLE_H_ */

@@ -19,7 +19,6 @@
 
 #include "containerpage.h"
 #include <MApplicationPage>
-#include <MMashupCanvas>
 #include <MContainer>
 #include <MButton>
 #include <MLocale>
@@ -46,14 +45,6 @@ void ContainerPage::createContent()
 
     QGraphicsLinearLayout *vbox = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(vbox);
-
-#ifdef HAVE_DBUS
-    MMashupCanvas *canvas = new MMashupCanvas("ContainerPage");
-
-    // canvas->setContainerMode(false);
-
-    vbox->addItem(canvas);
-#endif
 
     retranslateUi();
 }

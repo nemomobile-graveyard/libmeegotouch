@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=X-MeeGoApplet
-Name=Gallery
-Icon=
-Exec=mappletrunner
-
-[X-MeeGoApplet]
-Applet=libgalleryapplet.so
-Identifier=galleryappletres

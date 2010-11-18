@@ -29,6 +29,7 @@ class MMashupCanvasViewPrivate;
 class MMashupCanvas;
 class MContainer;
 
+//! \internal
 /*!
  * A view class for the MMashupCanvas.
  */
@@ -105,5 +106,6 @@ private:
     Q_DISABLE_COPY(MMashupCanvasView)
     Q_DECLARE_PRIVATE(MMashupCanvasView)
 };
+//! \internal_end
 
 #endif /* MMASHUPCANVASVIEW_H_ */

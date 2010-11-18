@@ -26,6 +26,7 @@
 class MWidget;
 class MDataStore;
 
+//! \internal
 /*!
  * MMashupCanvasModel is the model class for MMashupCanvas.
  */
@@ -38,5 +39,6 @@ public:
     //! A list of names of the applet categories to show in this mashup canvas
     M_MODEL_PROPERTY(QStringList, categories, Categories, true, QStringList())
 };
+//! \internal_end
 
 #endif /* MMASHUPCANVASMODEL_H_ */
