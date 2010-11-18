@@ -125,18 +125,22 @@ void MPannableViewportPrivate::applyAutoRange()
     }
 }
 
-void MPannableViewportPrivate::scrollTo(const QPointF &panningPosition)
+void MPannableViewportPrivate::scrollTo(const QPointF &endPosition)
 {
     Q_Q(MPannableViewport);
 
     // This privileged scrolling extends the range if necessary.
-    const qreal bottomRangeExtension = panningPosition.y()
+    const qreal bottomRangeExtension = endPosition.y()
                                        + q->contentsRect().height()
                                        - pannedWidget->size().height();
     setAutoScrollingExtension(qMax<qreal>(0.0, bottomRangeExtension));
 
-    // TODO: Animate me!
-    q->setPosition(panningPosition);
+    scrollToAnimation.stop();
+    scrollToAnimation.setStartValue(q->position());
+    scrollToAnimation.setEndValue(endPosition);
+    scrollToAnimation.setEasingCurve(QEasingCurve::OutCubic);
+    scrollToAnimation.setDuration(500);
+    scrollToAnimation.start();
 }
 
 void MPannableViewportPrivate::sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
@@ -323,6 +327,9 @@ MPannableViewport::MPannableViewport(QGraphicsItem *parent)
 
     connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
             this, SLOT(_q_handleInputMethodAreaChanged(QRect)));
+
+    d->scrollToAnimation.setTargetObject(this);
+    d->scrollToAnimation.setPropertyName("position");
 }
 
 MPannableViewport::~MPannableViewport()

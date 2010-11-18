@@ -22,6 +22,8 @@
 
 #include "mpannablewidget_p.h"
 
+#include <QPropertyAnimation>
+
 class QGraphicsWidget;
 class MStyle;
 class MPositionIndicator;
@@ -42,6 +44,8 @@ public:
     qreal rangeHeightExtension; // Amount of range extended vertically
     qreal autoScrollingExtension;
     qreal inputMethodAreaHeight; // Height of software input panel
+
+    QPropertyAnimation scrollToAnimation;
 
     /*!
      * \brief Sets new value of the range attribute with emitting
