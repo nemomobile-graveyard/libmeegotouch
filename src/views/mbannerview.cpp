@@ -56,9 +56,6 @@ MLabel *MBannerViewPrivate::title()
         titleLabel = new MLabel(controller);
         //Banners can't have html
         titleLabel->setTextFormat(Qt::PlainText);
-        titleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-        titleLabel->setWordWrap(true);
-        titleLabel->setTextElide(true);
     }
     return titleLabel;
 }
@@ -70,6 +67,7 @@ MLabel *MBannerViewPrivate::subtitle()
         //Banners can't have html
         subtitleLabel->setTextFormat(Qt::PlainText);
         subtitleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        subtitleLabel->setWordWrap(true);
         subtitleLabel->setTextElide(true);
     }
     return subtitleLabel;
