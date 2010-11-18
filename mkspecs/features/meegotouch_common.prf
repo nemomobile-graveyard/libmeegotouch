@@ -22,9 +22,7 @@ contains(TEMPLATE, app) {
     M_INC_DIR = $$M_PREFIX/include/meegotouch
     M_LIB_DIR = $$M_LIBDIR
 
-    GSTREAMER_INC = /usr/include/gstreamer-0.10 /usr/include/glib-2.0 /usr/lib/glib-2.0/include /usr/include/libxml2
-
-    INCLUDEPATH += $${M_INC_DIR} $${GSTREAMER_INC}
+    INCLUDEPATH += $${M_INC_DIR}
     DEPENDPATH += $${M_INC_DIR}
 
     LIBS += -L$${M_LIB_DIR}

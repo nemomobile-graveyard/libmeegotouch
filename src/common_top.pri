@@ -85,16 +85,6 @@ contains(DEFINES, HAVE_CONTENTACTION) {
     PKGCONFIG += contentaction-0.1
 }
 
-contains(DEFINES, HAVE_GSTREAMER) {
-    PKGCONFIG += gstreamer-0.10
-    # TODO: Is this  necessary?
-    LIBS += -lgstbase-0.10 -lgstinterfaces-0.10 -lgstvideo-0.10
-
-    # On Mac, GStreamer can be also in /opt if installed via macports.org or /usr/local if installed from sources
-    macx:INCLUDEPATH += /opt/local/include/gstreamer-0.10 /opt/local/include/glib-2.0 /opt/local/lib/glib-2.0/include/ /opt/local/include/libxml2
-    macx:LIBS += -L/opt/local/lib -lgstreamer-0.10.0 -lgstbase-0.10.0 -lgstinterfaces-0.10.0 -lgstvideo-0.10.0 -lglib-2.0.0 -lgobject-2.0.0
-}
-
 contains(DEFINES, HAVE_GCONF) {
     PKGCONFIG += gconf-2.0
     # TODO: Why is this necessary? 

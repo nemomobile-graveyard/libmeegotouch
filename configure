@@ -74,7 +74,6 @@ CFG_MEEGOGRAPHICSSYSTEM=no
 HAVE_ICU=no
 HAVE_CONTEXTSUBSCRIBER=no
 HAVE_GCONF=no
-HAVE_GSTREAMER=no
 HAVE_DBUS=no
 HAVE_CONTENTACTION=no
 HAVE_XDAMAGE=no
@@ -407,11 +406,6 @@ if [ $? -eq 0 ]; then
         fi
     fi
 
-    pkg-config --exists gstreamer-0.10
-    if [ $? -eq 0 ]; then
-	HAVE_GSTREAMER=yes
-    fi
-
     # Test for DBus
     if [ "$CFG_DBUS" != "no" ]; then
         pkg-config --exists QtDBus
@@ -619,10 +613,6 @@ fi
 
 if [ "$HAVE_GCONF" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_GCONF"
-fi
-
-if [ "$HAVE_GSTREAMER" = "yes" ]; then
-    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_GSTREAMER"
 fi
 
 if [ "$HAVE_DBUS" = "yes" ]; then
@@ -834,7 +824,6 @@ echo "ICU ............................. $HAVE_ICU"
 echo "Context Subscriber 1.0 .......... $HAVE_CONTEXTSUBSCRIBER"
 echo "Content Action 0.1 .............. $HAVE_CONTENTACTION"
 echo "GConf 2.0 ....................... $HAVE_GCONF"
-echo "GStreamer 0.10 .................. $HAVE_GSTREAMER"
 echo "DBus (incl. QtDBus) ............. $HAVE_DBUS"
 echo "XDamage ......................... $HAVE_XDAMAGE"
 echo "Qt Mobility Service Framework ... $HAVE_QTM_SERVICEFRAMEWORK"

@@ -12,7 +12,6 @@ INCLUDEPATH += \
     ../corelib/widgets/views \
     ../corelib/widgets \
     ../corelib/core \
-    ../corelib/video \
     ../corelib/.gen \
 
 include(effects/effects.pri)
@@ -20,7 +19,6 @@ include(views.pri)
 include(widgets/widgets.pri)
 include(animations/animations.pri)
 include(style/style.pri)
-include(video/video.pri)
 
 LIBS += $$mAddLibrary(meegotouchcore)
 SOURCES += mviewslibrary.cpp

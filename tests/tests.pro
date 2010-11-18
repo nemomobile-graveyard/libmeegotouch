@@ -175,7 +175,6 @@ SUBDIRS     =  \
     ut_mextensionhandle \
     ut_mextensionhandleview \
     ut_mtapandholdrecognizer \
-    ut_mvideowidget \
     ut_mservicefwgen \
     ut_mpanrecognizer \
     ut_mstatusbarview \
