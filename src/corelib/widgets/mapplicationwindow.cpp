@@ -557,19 +557,17 @@ void MApplicationWindowPrivate::manageActions()
         checkedAction = findCheckedAction(q->actions());
     }
 
-    bool pageHasVisibleToolbarActions = false;
+    bool pageHasToolbarActions = false;
 
     foreach(QAction* qaction, page->actions()) {
-        if (qaction->isVisible()) {
-            MAction* maction = qobject_cast<MAction*>(qaction);
-            if (!maction || (maction->location() & MAction::ToolBarLocation)) {
-                pageHasVisibleToolbarActions = true;
-                break;
-            }
+        MAction* maction = qobject_cast<MAction*>(qaction);
+        if (!maction || (maction->location() & MAction::ToolBarLocation)) {
+            pageHasToolbarActions = true;
+            break;
         }
     }
 
-    if (pageHasVisibleToolbarActions) {
+    if (pageHasToolbarActions) {
         toolBar->clearActions();
 
         // add page actions
