@@ -51,12 +51,19 @@ public:
     bool currentIsKeyboardOpen;
     void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
                                   bool isDeviceFlat, bool tvIsConnected);
+    void resolveIfOrientationUpdatesRequired();
+    void rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window);
 #ifdef HAVE_CONTEXTSUBSCRIBER
     M::OrientationAngle angleForTopEdge(const QString topEdge) const;
+    void subscribeToSensorProperies();
+    void unsubscribeToSensorProperties();
+    void waitForSensorPropertiesToSubscribe();
     ContextProperty *videoRouteProperty;
     ContextProperty *topEdgeProperty;
     ContextProperty *isCoveredProperty;
     ContextProperty *isFlatProperty;
+    bool isSubscribed;
+    bool hasJustSubscribed;
 #endif
 #ifdef Q_WS_X11
     bool handleX11PropertyEvent(XPropertyEvent* event);
@@ -66,9 +73,16 @@ public:
     M::OrientationAngle fetchCurrentAppWindowOrientationAngle();
     WId widCurrentAppWindow;
     bool currentAppWindowHadXPropertyChangeMask;
-    QList<MWindow* > windowsFollowingCurrentAppWindow;
-    void startFollowingCurrentAppWindow(MWindow* win);
-    void stopFollowingCurrentAppWindow(MWindow* win);
+    //windows from this list follow _MEEGOTOUCH_CURRENT_APP_WINDOW (set by meego window manager).
+    //by default it includes modal dialogs.
+    QList<QPointer<MWindow> > windowsFollowingCurrentAppWindow;
+    //windows from this list will follow _MEEGOTOUCH_CURRENT_APP_WINDOW but with
+    //regard to restrictions as orientation lock or device profile data.
+    //This list includes windows off display which do not get iconic state (WM_STATE),
+    //and windows which have _MEEGOTOUCH_ALWAYS_MAPPED property set to 1 or 2.
+    QList<QPointer<MWindow> > windowsFollowingWithConstraintsCurrentAppWindow;
+    void startFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
+    void stopFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
 #endif
 
 public slots:
@@ -78,9 +92,6 @@ public slots:
 
 protected:
     MOrientationTracker *q_ptr;
-
-private slots:
-    void initContextSubscriber();
 
 private:
 #ifdef Q_WS_X11

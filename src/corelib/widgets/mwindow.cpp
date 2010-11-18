@@ -98,6 +98,12 @@ MWindowPrivate::MWindowPrivate() :
     allowedPaintEventsWhenInvisible(5),
     q_ptr(NULL)
 {
+#ifdef Q_WS_X11
+    removeWindowFromSwitcherInProgress = false;
+    skipTaskbar = false;
+    isIconicState = false;
+    isAlwaysMapped = false;
+#endif
 
     MWindow *window = MApplication::activeWindow();
 
@@ -391,6 +397,19 @@ void MWindowPrivate::applyStartupWindowBackground()
 
     MTheme::releaseStyle(style);
 }
+
+void MWindowPrivate::resolveOrientationRules() {
+    Q_Q(MWindow);
+
+    if ((!isIconicState || isAlwaysMapped) && !q->isOnDisplay()) {
+        MOrientationTracker::instance()->d_ptr->startFollowingCurrentAppWindow(q, true);
+    } else {
+        MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
+    }
+
+    MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
+
+}
 #endif
 
 void MWindowPrivate::_q_onPixmapRequestsFinished()
@@ -492,6 +511,9 @@ void MWindowPrivate::doEnterDisplayEvent()
     q->enterDisplayEvent();
     emit q->displayEntered();
 
+    MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
+    MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
+
     if (discardedPaintEvent) {
         // we discarded a paint event while beeing invisible
         // make sure the screen is up to date
@@ -510,6 +532,9 @@ void MWindowPrivate::doExitDisplayEvent()
 
     q->exitDisplayEvent();
     emit q->displayExited();
+#ifdef Q_WS_X11
+    resolveOrientationRules();
+#endif
 
     if (q->scene() && delayedMOnDisplayChangeEvent != 0) {
         propagateMOnDisplayChangeEventToScene(delayedMOnDisplayChangeEvent);
@@ -770,7 +795,8 @@ MWindow::MWindow(QWidget *parent)
 MWindow::~MWindow()
 {
 #ifdef Q_WS_X11
-    MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
+    MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this, true);
+    MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this, false);
 #endif
     MComponentData::unregisterWindow(this);
     delete d_ptr;
@@ -1453,4 +1479,20 @@ int MWindow::orientationChangeTransitionMode()
     return d->orientationChangeTransitionMode();
 }
 
+#ifdef Q_WS_X11
+void MWindow::setWindowIconicState(bool isIconic)
+{
+    Q_D(MWindow);
+    d->isIconicState = isIconic;
+}
+
+void MWindow::setWindowAlwaysMapped(bool alwaysMapped)
+{
+    Q_D(MWindow);
+    d->isAlwaysMapped = alwaysMapped;
+}
+#endif
+
+#ifndef UNIT_TEST
 #include "moc_mwindow.cpp"
+#endif

@@ -53,7 +53,10 @@ private slots:
     void testWindowOrientationAngleLock();
     void testWindowOrientationLock_data();
     void testWindowOrientationLock();
+
 #ifdef Q_WS_X11
+    void testOffDisplaySpecialWindows_data();
+    void testOffDisplaySpecialWindows();
     void testFollowCurrentWindow_data();
     void testFollowCurrentWindow();
 

@@ -36,6 +36,7 @@
 #include <QX11Info>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <X11/Xutil.h>
 #endif //Q_WS_X11
 
 #ifdef HAVE_XDAMAGE
@@ -57,6 +58,9 @@ MApplicationPrivate::MApplicationPrivate():
                               "_MEEGOTOUCH_VISIBLE_IN_SWITCHER", False);
     minimizeAnimationAtom = XInternAtom(QX11Info::display(),
                                         "_MEEGOTOUCH_MINIMIZE_ANIMATION", False);
+    mtAlwaysMappedAtom = XInternAtom(QX11Info::display(),
+                                     "_MEEGOTOUCH_ALWAYS_MAPPED", True);
+    wmStateAtom = XInternAtom(QX11Info::display(), "WM_STATE", True);
 #endif
 }
 
@@ -93,6 +97,104 @@ MWindow * MApplicationPrivate::windowForId(Window window)
         }
     }
     return NULL;
+}
+
+bool MApplicationPrivate::hasXStateAtom(Window window, Atom atom)
+{
+    Atom type;
+    int format;
+    bool found;
+    long max_len = 1024;
+    unsigned long nItems;
+    unsigned long bytesAfter;
+    unsigned char *data = NULL;
+
+    static Atom stateAtom = XInternAtom(QX11Info::display(),
+                                        "_NET_WM_STATE", True);
+
+    if (XGetWindowProperty(QX11Info::display(), window, stateAtom, 0, max_len, False,
+                           XA_ATOM, &type, &format, &nItems, &bytesAfter,
+                           &data) == Success && data) {
+        found = false;
+        for (unsigned long i = 0; !found && i < nItems; i++) {
+            if (data[i] == atom) {
+                found = true;
+            }
+        }
+        XFree (data);
+        return found;
+    } else {
+
+        return false;
+    }
+}
+
+void MApplicationPrivate::updateWindowIconicState(Window window)
+{
+    Atom type;
+    int format;
+    unsigned long nItems;
+    unsigned long bytesAfter;
+
+    union {
+        unsigned char* asUChar;
+        unsigned long* asULong;
+    } data = {0};
+
+    int status = XGetWindowProperty(QX11Info::display(), window, wmStateAtom, 0, 1, False,
+                                    AnyPropertyType, &type, &format, &nItems, &bytesAfter,
+                                    &data.asUChar);
+
+    if(status == Success && nItems == 1) {
+        MWindow * win = MApplicationPrivate::windowForId(window);
+        if (win) {
+            switch (data.asULong[0]) {
+            case IconicState:
+                win->d_func()->isIconicState = true;
+                break;
+            case NormalState:
+            default:
+                win->d_func()->isIconicState = false;
+            }
+            win->d_func()->resolveOrientationRules();
+        }
+    }
+
+    if (status == Success)
+        XFree(data.asUChar);
+}
+
+void MApplicationPrivate::updateWindowIsAlwaysMapped(Window window)
+{
+    Atom type;
+    int format;
+    unsigned long nItems;
+    unsigned long bytesAfter;
+
+    union {
+        unsigned char* asUChar;
+        unsigned long* asULong;
+    } data = {0};
+
+    int status = XGetWindowProperty(QX11Info::display(), window, mtAlwaysMappedAtom, 0, 1, False,
+                                    XA_CARDINAL, &type, &format, &nItems, &bytesAfter,
+                                    &data.asUChar);
+
+    if(status == Success && nItems == 1 && type == XA_CARDINAL) {
+        MWindow * win = MApplicationPrivate::windowForId(window);
+        switch(data.asULong[0]) {
+        case 1:
+        case 2:
+            win->d_func()->isAlwaysMapped = true;
+            break;
+        default:
+            win->d_func()->isAlwaysMapped = false;
+        }
+        win->d_func()->resolveOrientationRules();
+    }
+
+    if (status == Success)
+        XFree(data.asUChar);
 }
 #endif
 
@@ -454,6 +556,8 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
         unsigned long  nItems;
         unsigned long  bytesAfter;
         unsigned char *data = NULL;
+        static Atom netWmStateAtom = XInternAtom(QX11Info::display(),
+                                            "_NET_WM_STATE", True);
 
         if (xevent->atom == visibleAtom) {
             // Read value of the property. Should be 1 or 0.
@@ -472,6 +576,21 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
 
                 XFree(data);
             }
+        } else if (xevent->atom == netWmStateAtom) {
+            /* Check if it comes from MTF itself */
+            if (window->d_ptr->removeWindowFromSwitcherInProgress) {
+                window->d_ptr->removeWindowFromSwitcherInProgress = false;
+            } else {
+                /* Check if SKIP_TASKBAR was set or removed */
+                window->d_ptr->skipTaskbar = MApplicationPrivate::hasXStateAtom(xevent->window,
+                                                                                XInternAtom(QX11Info::display(),
+                                                                                            "_NET_WM_STATE_SKIP_TASKBAR",
+                                                                                            True));
+            }
+        } else if (xevent->atom == wmStateAtom) {
+            updateWindowIconicState(xevent->window);
+        } else if (xevent->atom == mtAlwaysMappedAtom) {
+            updateWindowIsAlwaysMapped(xevent->window);
         }
     }
 }

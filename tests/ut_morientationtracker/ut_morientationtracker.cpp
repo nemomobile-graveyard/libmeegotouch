@@ -24,6 +24,7 @@
 #include <MComponentData>
 #include <MWindow>
 #include <MApplicationWindow>
+#include <MOnDisplayChangeEvent>
 
 #ifdef Q_WS_X11
 # include <QX11Info>
@@ -264,6 +265,49 @@ void Ut_MOrientationTracker::testWindowOrientationLock()
 }
 
 #ifdef Q_WS_X11
+void Ut_MOrientationTracker::testOffDisplaySpecialWindows_data()
+{
+    QTest::addColumn<M::OrientationAngle>("firstAngle");
+    QTest::addColumn<M::OrientationAngle>("secondAngle");
+
+    QTest::newRow("Angle0 -> 90") << M::Angle0 << M::Angle90;
+    QTest::newRow("Angle90 -> 180") << M::Angle90 << M::Angle180;
+    QTest::newRow("Angle180 -> 270") << M::Angle180 << M::Angle270;
+    QTest::newRow("Angle270 -> 0") << M::Angle270 << M::Angle0;
+}
+
+void Ut_MOrientationTracker::testOffDisplaySpecialWindows()
+{
+    QFETCH(M::OrientationAngle, firstAngle);
+    QFETCH(M::OrientationAngle, secondAngle);
+
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    window1->setOrientationAngle(firstAngle);
+    window2->setOrientationAngle(firstAngle);
+    window1->setWindowAlwaysMapped(true);
+    QMetaObject::invokeMethod(window1, "_q_exitDisplayStabilized");
+    QMetaObject::invokeMethod(window2, "_q_exitDisplayStabilized");
+
+    MApplicationWindow appWindow;
+    setCurrentWindowXPropertyOnRootWindow(appWindow.effectiveWinId());
+
+    //since there is no MApplication instance we have to run this handler manualy
+    mTracker->handleCurrentAppWindowChange();
+
+    appWindow.setOrientationAngle(secondAngle);
+
+    //since there is no MApplication instance we have to run this handler manualy
+    mTracker->handleCurrentAppWindowOrientationAngleChange();
+
+    QCOMPARE(window1->orientationAngle(), secondAngle);
+    QCOMPARE(window2->orientationAngle(), secondAngle);
+
+    cleanCurrentWindowXPropertyOnRootWindow();
+
+}
+
 void Ut_MOrientationTracker::testFollowCurrentWindow_data()
 {
     QTest::addColumn<M::OrientationAngle>("firstAngle");
@@ -286,7 +330,7 @@ void Ut_MOrientationTracker::testFollowCurrentWindow()
     //make window2 start following _MEEGOTOUCH_CURRENT_APP_WINDOW
     window2->setProperty("followsCurrentApplicationWindowOrientation", 1);
 
-    //create app window and set it as _MEEGOTOUCH_CURRENT_APP_WINDOW
+    //create app window and set it as _MEEGOTOUCH_CURRENT_APP_WINDOW;
     MApplicationWindow appWindow;
     setCurrentWindowXPropertyOnRootWindow(appWindow.effectiveWinId());
 
