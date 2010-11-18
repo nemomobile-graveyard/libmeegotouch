@@ -57,15 +57,18 @@ public:
         }
 
         QByteArray entryCacheKey() const {
-            QByteArray orientationAsString((orientation == M::Landscape) ? "Landscape" : "Portrait");
-            QByteArray result = className + "[" + type + "]" + "#" + objectName + "." + orientationAsString + ":" + mode;
-            return result;
+            if (!entryKey.isEmpty()) {
+                return entryKey;
+            }
+            QByteArray orientationAsString((orientation == M::Landscape) ? "L" : "P");
+            const_cast<StyleSpec*>(this)->entryKey = className + "[" + type + "]" + "#" + objectName + "." + orientationAsString + ":" + mode;
+            return entryKey;
         }
 
         QByteArray styleCacheKey() const {
             QByteArray result = entryCacheKey();
 
-            if (parentInfo) {
+            if (parentInfo && !parentInfo->isEmpty()) {
                 result +=  + "{";
                 for (QList<SelectorInfo>::const_iterator iterator = parentInfo->begin(); iterator != parentInfo->constEnd(); ++iterator) {
                     if (iterator != parentInfo->constBegin()) {
@@ -88,6 +91,8 @@ public:
         const QByteArray mode;
         const QByteArray type;
         M::Orientation orientation;
+
+        QByteArray entryKey;
 
         const QList<SelectorInfo> *parentInfo;
     };
