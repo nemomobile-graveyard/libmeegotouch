@@ -1731,8 +1731,6 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MSliderView);
 
-    d->controller->setState(MSliderModel::Released);
-
     if (d->controller->isVisible() && d->controller->isOnDisplay()) {
         style()->releaseFeedback().play();
 
@@ -1744,6 +1742,8 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         killTimer(d->pressTimerId);
         d->pressTimerId = 0;
     }
+
+    d->controller->setState(MSliderModel::Released);
 
     d->sliderGroove->lowerHandleIndicator();
 }
