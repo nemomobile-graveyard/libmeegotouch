@@ -1,8 +1,16 @@
-libmeegotouch (0.20.55~1) unstable; urgency=low
+libmeegotouch (0.20.55-1) unstable; urgency=low
 
-  * unreleased
+  * Fixes: NB#201296 - Prestarted/Minimized apps must ensure correct rotation, before calling raise() on "launch"-dbus message
+  * Fixes: NB#189389 - AppMenuView row count calculation is incorrect
+  * Fixes: NB#204735 - Emulation of pinch gesture not working
+  * Fixes: NB195318 - First tapgesture is not received after leaving a page with a MList on it
+  * Fixes: NB#203550 - Navigation bar with buttons is not displayed in any of gallery's view unless the orientation is changed
+  * Fixes: NB#203781 - Name of the sender is not displayed in Notification banner in case of long messages
+  * Fixes: NB#177434 - Long MMessageBox text is cropped from both ends
+  * Fixes: NB#180049 - Unable to paste has !! marks
+  * Fixes: NB#196070 - Phone number text edit allows extra characters to be inserted
 
- -- Tobias Koch <tobias.koch@nokia.com>  Wed, 17 Nov 2010 16:15:22 +0200
+ -- Tobias Koch <tobias.koch@nokia.com>  Thu, 18 Nov 2010 15:58:07 +0200
 
 libmeegotouch (0.20.54-1) unstable; urgency=low
 
