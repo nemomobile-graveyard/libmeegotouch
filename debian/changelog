@@ -1,3 +1,9 @@
+libmeegotouch (0.20.56~1) unstable; urgency=low
+
+  * unreleased
+
+ -- Tobias Koch <tobias.koch@nokia.com>  Thu, 18 Nov 2010 16:09:17 +0200
+
 libmeegotouch (0.20.55-1) unstable; urgency=low
 
   * Fixes: NB#201296 - Prestarted/Minimized apps must ensure correct rotation, before calling raise() on "launch"-dbus message
