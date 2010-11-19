@@ -32,20 +32,20 @@ MApplication *app;
 
 void Ut_MPannableViewport::initTestCase()
 {
-    static int argc = 1;
-    static char *app_name[1] = { (char *) "./ut_mpannableviewport" };
-    app = new MApplication(argc, app_name);
 }
 
 
 void Ut_MPannableViewport::cleanupTestCase()
 {
-    delete app;
 }
 
 
 void Ut_MPannableViewport::init()
 {
+    static int argc = 1;
+    static char *app_name[] = { (char *) "./ut_mpannableviewport" };
+
+    app = new MApplication(argc, app_name);
     subject = new MPannableViewport();
 }
 
@@ -53,6 +53,7 @@ void Ut_MPannableViewport::cleanup()
 {
     delete subject;
     subject = 0;
+    delete app;
 }
 
 void Ut_MPannableViewport::constructor()
@@ -71,14 +72,6 @@ void Ut_MPannableViewport::setWidget()
     QCOMPARE(static_cast<MPannableViewportPrivate *>(subject->d_ptr)->pannedWidget, widget);
     QCOMPARE(static_cast<MPannableViewportPrivate *>(subject->d_ptr)->pannedWidget->parentItem(), subject);
 
-    /* There is a bug in mpannableviewport that causes this testcase to crash
-     * randomly, deleting widget and setting it to 0 seems to make this
-     * testcase to work but it might hide the actual bug from test! So, this
-     * code is here just for a reference - Jani Mikkonen
-     *
-     * delete widget;
-     * widget = 0;
-     * */
 }
 
 void Ut_MPannableViewport::setGeometry_data()
@@ -106,15 +99,6 @@ void Ut_MPannableViewport::setGeometry()
     subject->setGeometry(QRectF(QPointF(), viewportSize));
 
     QCOMPARE(subject->physics()->range().size(), physicsRange);
-
-    /* There is a bug in mpannableviewport that causes this testcase to crash
-     * randomly, deleting widget and setting it to 0 seems to make this
-     * testcase to work but it might hide the actual bug from test! So, this
-     * code is here just for a reference - Jani Mikkonen
-     *
-     * delete widget;
-     * widget = 0;
-     * */
 }
 
 void Ut_MPannableViewport::event_data()
@@ -175,14 +159,6 @@ void Ut_MPannableViewport::updatePosition()
 
     QCOMPARE(spy.count(), 1);
 
-    /* There is a bug in mpannableviewport that causes this testcase to crash
-     * randomly, deleting widget and setting it to 0 seems to make this
-     * testcase to work but it might hide the actual bug from test! So, this
-     * code is here just for a reference - Jani Mikkonen
-     *
-     * delete widget;
-     * widget = 0;
-     * */
 }
 
 void Ut_MPannableViewport::updateSamePosition()
