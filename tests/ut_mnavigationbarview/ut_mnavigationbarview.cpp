@@ -23,13 +23,23 @@
 
 #include <QGraphicsLayout>
 #include <MLinearLayoutPolicy>
+#include <mnavigationbarstyle.h>
+#include <MToolBar>
+
+Q_DECLARE_METATYPE(MNavigationBarModel::EscapeButtonModeEnum)
 
 void Ut_MNavigationBarView::init()
 {
+    controller = new MNavigationBar();
+    subject = new MNavigationBarView(controller);
+    controller->setView(subject);
+    model = controller->model();
 }
 
 void Ut_MNavigationBarView::cleanup()
 {
+    delete controller;
+    controller = 0;
 }
 
 void Ut_MNavigationBarView::initTestCase()
@@ -38,17 +48,11 @@ void Ut_MNavigationBarView::initTestCase()
     static char *app_name[1] = { (char *) "./ut_mnavigationbarview" };
     app = new MApplication(argc, app_name);
 
-    controller = new MNavigationBar();
-    subject = new MNavigationBarView(controller);
-    controller->setView(subject);
-    model = controller->model();
+
 }
 
 void Ut_MNavigationBarView::cleanupTestCase()
 {
-    delete controller;
-    controller = 0;
-
     delete app;
     app = 0;
 }
@@ -90,6 +94,145 @@ void Ut_MNavigationBarView::testCustomContentPolicySelection()
 
     // Clean up
     delete customContent;
+}
+
+void Ut_MNavigationBarView::testIsEmptyProperty_data()
+{
+    QTest::addColumn<bool>("hasTitle");
+    QTest::addColumn<bool>("hasCloseButton");
+    QTest::addColumn<bool>("hasToolBar");
+    QTest::addColumn<bool>("toolBarIsEmpty");
+    QTest::addColumn<MNavigationBarModel::EscapeButtonModeEnum>("escapeButtonMode");
+    QTest::addColumn<bool>("hasCustomContent");
+    QTest::addColumn<bool>("isEmptyExpectedValue");
+
+    QTest::newRow("not empty when with custom content")
+            << false // hasTitle
+            << false // hasCloseButton
+            << false // hasToolBar
+            << true // toolBarIsEmpty
+            << MNavigationBarModel::EscapeButtonClose // escapeButtonMode
+            << true // hasCustomContent
+            << false /* isEmptyExpectedValue */;
+
+    QTest::newRow("not empty when it has only a title")
+            << true // hasTitle
+            << false // hasCloseButton
+            << false // hasToolBar
+            << true // toolBarIsEmpty
+            << MNavigationBarModel::EscapeButtonClose // escapeButtonMode
+            << false // hasCustomContent
+            << false /* isEmptyExpectedValue */;
+
+    QTest::newRow("empty when there's not even a close button")
+            << false // hasTitle
+            << false // hasCloseButton
+            << false // hasToolBar
+            << true // toolBarIsEmpty
+            << MNavigationBarModel::EscapeButtonClose // escapeButtonMode
+            << false // hasCustomContent
+            << true /* isEmptyExpectedValue */;
+
+    QTest::newRow("not empty when there's no close button but we are in back mode")
+            << false // hasTitle
+            << false // hasCloseButton
+            << false // hasToolBar
+            << true // toolBarIsEmpty
+            << MNavigationBarModel::EscapeButtonBack // escapeButtonMode
+            << false // hasCustomContent
+            << false /* isEmptyExpectedValue */;
+
+    QTest::newRow("not empty when there's only a populated tool bar")
+            << false // hasTitle
+            << false // hasCloseButton
+            << true // hasToolBar
+            << false // toolBarIsEmpty
+            << MNavigationBarModel::EscapeButtonClose // escapeButtonMode
+            << false // hasCustomContent
+            << true /* isEmptyExpectedValue */;
+
+    QTest::newRow("empty when there's only an empty tool bar")
+            << false // hasTitle
+            << false // hasCloseButton
+            << true // hasToolBar
+            << true // toolBarIsEmpty
+            << MNavigationBarModel::EscapeButtonClose // escapeButtonMode
+            << false // hasCustomContent
+            << true /* isEmptyExpectedValue */;
+}
+
+void Ut_MNavigationBarView::testIsEmptyProperty()
+{
+    MToolBar *toolBar = 0;
+    QFETCH(bool, hasTitle);
+    QFETCH(bool, hasCloseButton);
+    QFETCH(bool, hasToolBar);
+    QFETCH(bool, toolBarIsEmpty);
+    QFETCH(MNavigationBarModel::EscapeButtonModeEnum, escapeButtonMode);
+    QFETCH(bool, hasCustomContent);
+    QFETCH(bool, isEmptyExpectedValue);
+
+    MNavigationBarStyle *style = (MNavigationBarStyle *)subject->style().operator->();
+
+    style->setHasTitle(hasTitle);
+    style->setHasCloseButton(hasCloseButton);
+    subject->applyStyle();
+
+    if (hasToolBar) {
+        toolBar = new MToolBar;
+        toolBar->setProperty("isEmpty", toolBarIsEmpty);
+        model->setToolBar(toolBar);
+    }
+
+    model->setEscapeButtonMode(escapeButtonMode);
+
+    if (hasCustomContent) {
+        model->setCustomContent(new QGraphicsWidget);
+    } else {
+        model->setCustomContent(0);
+    }
+
+    QCOMPARE(controller->property("isEmpty").toBool(), isEmptyExpectedValue);
+
+    // clean up
+    if (toolBar) {
+        model->setToolBar(0);
+        delete toolBar;
+    }
+}
+
+void Ut_MNavigationBarView::testDockedToolBarChangingItsIsEmptyProperty()
+{
+    MToolBar *toolBar = new MToolBar;
+    MNavigationBarStyle *style = (MNavigationBarStyle *)subject->style().operator->();
+
+    style->setHasTitle(false);
+    style->setHasCloseButton(false);
+    subject->applyStyle();
+
+    model->setToolBar(toolBar);
+    model->setEscapeButtonMode(MNavigationBarModel::EscapeButtonClose);
+
+    // Since navigation bar is populated only by its docked toolbar, its isEmpty
+    // property will follow toolbar's one.
+
+    toolBar->setProperty("isEmpty", true);
+    QCOMPARE(controller->property("isEmpty").toBool(), true);
+
+    toolBar->setProperty("isEmpty", false);
+    QCOMPARE(controller->property("isEmpty").toBool(), false);
+
+    toolBar->setProperty("isEmpty", true);
+    QCOMPARE(controller->property("isEmpty").toBool(), true);
+
+    model->setToolBar(0);
+    toolBar->setProperty("isEmpty", false);
+
+    // tool bar is no longer docked, thus navigation bar should no longer follow it
+    QCOMPARE(controller->property("isEmpty").toBool(), true);
+
+    // clean up
+    delete toolBar;
 }
 
 QTEST_APPLESS_MAIN(Ut_MNavigationBarView)

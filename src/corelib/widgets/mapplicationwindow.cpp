@@ -28,6 +28,7 @@
 #include "mapplicationpage_p.h"
 #include "mnavigationbar.h"
 #include "mapplicationmenu.h"
+#include <mdynamicpropertywatcher.h>
 #include "mtoolbar.h"
 #include "mtoolbar_p.h"
 #include "mdockwidget.h"
@@ -177,9 +178,11 @@ void MApplicationWindowPrivate::init()
     q->connect(q, SIGNAL(switcherEntered()),
                SLOT(_q_handleInSwitcherVisibilityChange()));
 
-    QObject* eventFilter = new MApplicationWindowEventFilter(this, q);
-    navigationBar->installEventFilter(eventFilter);
-    toolBar->installEventFilter(eventFilter);
+    MDynamicPropertyWatcher *navigationBarIsEmptyPropertyWatcher = new MDynamicPropertyWatcher(q);
+    navigationBarIsEmptyPropertyWatcher->watch(navigationBar);
+    navigationBarIsEmptyPropertyWatcher->setPropertyName("isEmpty");
+    q->connect(navigationBarIsEmptyPropertyWatcher, SIGNAL(propertyChanged()),
+               SLOT(_q_updateNavigationBarVisibility()));
 
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
@@ -390,7 +393,7 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
                 bool escapeButtonVisible = page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
                 if (escapeButtonVisible != navigationBar->escapeButtonVisible()) {
                     navigationBar->setEscapeButtonVisible(escapeButtonVisible);
-                    updateNavigationBarVisibility();
+                    _q_updateNavigationBarVisibility();
                 }
             }
         }
@@ -635,7 +638,7 @@ void MApplicationWindowPrivate::setComponentDisplayMode(
             // Dock widget is a special guy.
             updateDockWidgetVisibility();
         } else if (component == navigationBar) {
-            updateNavigationBarVisibility();
+            _q_updateNavigationBarVisibility();
         } else {
             component->appear(q);
         }
@@ -652,7 +655,7 @@ void MApplicationWindowPrivate::setComponentDisplayMode(
                     // Dock widget is a special guy.
                     updateDockWidgetVisibility();
                 } else if (component == navigationBar) {
-                    updateNavigationBarVisibility();
+                    _q_updateNavigationBarVisibility();
                 } else {
                     sceneManager->appearSceneWindowNow(component);
                 }
@@ -715,7 +718,7 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
     }
 }
 
-void MApplicationWindowPrivate::updateNavigationBarVisibility()
+void MApplicationWindowPrivate::_q_updateNavigationBarVisibility()
 {
     if (page && (page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
         || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide
@@ -724,10 +727,9 @@ void MApplicationWindowPrivate::updateNavigationBarVisibility()
         return;
     }
 
-    bool emptyNavigationbar = navigationBar->property("isEmpty").toBool();
-    bool emptyToolbar = toolBar->property("isEmpty").toBool();
+    bool navigationBarIsEmpty = navigationBar->property("isEmpty").toBool();
 
-    if (emptyNavigationbar && (needsDockWidget() || emptyToolbar))
+    if (navigationBarIsEmpty)
        sceneManager->disappearSceneWindow(navigationBar);
     else
        sceneManager->appearSceneWindow(navigationBar);
@@ -984,31 +986,6 @@ void MApplicationWindowPrivate::_q_updateStyle()
     _q_placeToolBar();
     initAutoHideComponentsTimer();
 }
-
-MApplicationWindowEventFilter::MApplicationWindowEventFilter(MApplicationWindowPrivate* appWinPrivate, QObject* parent)
-    : QObject(parent),
-      d(appWinPrivate),
-      navigationBarEmpty(false),
-      toolBarEmpty(true)
-{}
-
-bool MApplicationWindowEventFilter::eventFilter(QObject* watched, QEvent* event)
-{
-    if (event->type() == QEvent::DynamicPropertyChange &&
-        static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName() == "isEmpty")
-    {
-        bool newValue = watched->property("isEmpty").toBool();
-        if (watched == d->navigationBar && newValue != navigationBarEmpty) {
-            navigationBarEmpty = newValue;
-            d->updateNavigationBarVisibility();
-        } else if (watched == d->toolBar && newValue != toolBarEmpty) {
-            toolBarEmpty = newValue;
-            d->updateNavigationBarVisibility();
-        }
-    }
-    return QObject::eventFilter(watched, event);
-}
-
 
 MApplicationWindow::MApplicationWindow(MApplicationWindowPrivate &dd, QWidget *parent)
     : MWindow(dd, new MSceneManager, parent)
@@ -1352,7 +1329,7 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
                 // Dock widget is a special guy.
                 d->updateDockWidgetVisibility();
             } else if (component == d->navigationBar) {
-                d->updateNavigationBarVisibility();
+                d->_q_updateNavigationBarVisibility();
             } else if (component->sceneWindowState() != MSceneWindow::Disappearing) {
                 component->appear(this);
             }

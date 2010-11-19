@@ -17,38 +17,38 @@
 **
 ****************************************************************************/
 
-#ifndef UT_MNAVIGATIONBARVIEW_H
-#define UT_MNAVIGATIONBARVIEW_H
+#ifndef MDYNAMICPROPERTYWATCHER_P_H
+#define MDYNAMICPROPERTYWATCHER_P_H
 
-#include <QtTest/QtTest>
+//! \internal
+
 #include <QObject>
+#include <QVariant>
 
-#include <views/mnavigationbarview.h>
-#include <MNavigationBar>
-#include <MApplication>
-
-class Ut_MNavigationBarView : public QObject
+/*
+ Only tells that a dynamic property has changed when its actual value
+ has changed.
+ */
+class MDynamicPropertyWatcher : public QObject
 {
     Q_OBJECT
+public:
+    MDynamicPropertyWatcher(QObject* parent = 0);
 
-private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
-    void testCustomContentOwnershipTransfer();
-    void testCustomContentPolicySelection();
+    void watch(QObject *object);
+    void setPropertyName(QString propertyName);
 
-    // test "isEmpty" property
-    void testIsEmptyProperty();
-    void testIsEmptyProperty_data();
-    void testDockedToolBarChangingItsIsEmptyProperty();
+    bool eventFilter(QObject* watched, QEvent* event);
+
+Q_SIGNALS:
+    void propertyChanged();
 
 private:
-    MNavigationBarView *subject;
-    MNavigationBar *controller;
-    MNavigationBarModel *model;
-    MApplication *app;
+    QVariant lastPropertyValue;
+    QObject *watchedObject;
+    QString propertyName;
 };
+
+//! \internal_end
 
 #endif

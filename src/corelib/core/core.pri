@@ -35,6 +35,7 @@ PRIVATE_HEADERS += \
     $$CORE_SRC_DIR/mfiledatastore_p.h \
     $$CORE_SRC_DIR/msyslogclient.h \
     $$CORE_SRC_DIR/mgraphicssystemhelper.h \
+    $$CORE_SRC_DIR/mdynamicpropertywatcher.h \
 
 contains(DEFINES, HAVE_DBUS) {
     PUBLIC_HEADERS += \
@@ -68,6 +69,7 @@ SOURCES += \
     $$CORE_SRC_DIR/mnamespace.cpp \
     $$CORE_SRC_DIR/msyslogclient.cpp \
     $$CORE_SRC_DIR/mgraphicssystemhelper.cpp \
+    $$CORE_SRC_DIR/mdynamicpropertywatcher.cpp \
 
 contains(DEFINES, HAVE_DBUS) {
   SOURCES += \

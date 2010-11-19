@@ -108,7 +108,7 @@ public:
      */
     void updateDockWidgetVisibility();
 
-    void updateNavigationBarVisibility();
+    void _q_updateNavigationBarVisibility();
 
     void sceneWindowAppearEvent(MSceneWindowEvent *ev);
     void sceneWindowDisappearEvent(MSceneWindowEvent *ev);
@@ -189,21 +189,6 @@ public:
     void _q_handleInSwitcherVisibilityChange();
     void _q_updateStyle();
     void _q_setupNavigationBarCustomContent();
-
-    friend class MApplicationWindowEventFilter;
-};
-
-class MApplicationWindowEventFilter : public QObject
-{
-public:
-    MApplicationWindowEventFilter(MApplicationWindowPrivate* applicationWindowPrivate, QObject* parent = 0);
-
-    bool eventFilter(QObject* watched, QEvent* event);
-
-private:
-    MApplicationWindowPrivate* d;
-    bool navigationBarEmpty;
-    bool toolBarEmpty;
 };
 
 #endif

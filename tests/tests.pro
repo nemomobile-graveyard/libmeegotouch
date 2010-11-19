@@ -186,6 +186,7 @@ SUBDIRS     =  \
     ut_mremotethemedaemon \
     ut_mswiperecognizer \
     ut_mstylablewidget \
+    ut_mdynamicpropertywatcher \
 
 # enable only when we have icu available
 

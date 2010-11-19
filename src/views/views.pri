@@ -76,6 +76,7 @@ PRIVATE_HEADERS += \
     mlistindexview.h \
     mlistindexfloatingview.h \
     mnavigationbarview_p.h \
+    ../corelib/core/mdynamicpropertywatcher.h \ # an internal helper class that is also needed by the view lib
 
 SOURCES += \
     mapplicationpageview.cpp \
@@ -131,3 +132,4 @@ SOURCES += \
     mlistindexfloatingview.cpp \
     mlistitemview.cpp \
     mbubbleitemview.cpp \
+    ../corelib/core/mdynamicpropertywatcher.cpp \ # an internal helper class that is also needed by the view lib

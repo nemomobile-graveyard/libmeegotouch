@@ -73,10 +73,13 @@ MNavigationBarViewPrivate::~MNavigationBarViewPrivate()
     delete applicationMenuButton;
     delete escapeButtonSlot;
     delete toolBarSlot;
+    delete toolBarIsEmptyWatcher;
 }
 
 void MNavigationBarViewPrivate::init()
 {
+    Q_Q(MNavigationBarView);
+
     applicationMenuButton = new MApplicationMenuButton(controller);
     applicationMenuButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -133,6 +136,11 @@ void MNavigationBarViewPrivate::init()
     QObject::connect(applicationMenuButton, SIGNAL(clicked()), controller, SIGNAL(viewmenuTriggered()));
     QObject::connect(closeButton, SIGNAL(clicked()), controller, SIGNAL(closeButtonClicked()));
     QObject::connect(backButton, SIGNAL(clicked()), controller, SIGNAL(backButtonClicked()));
+
+    toolBarIsEmptyWatcher = new MDynamicPropertyWatcher;
+    toolBarIsEmptyWatcher->setPropertyName("isEmpty");
+    q->connect(toolBarIsEmptyWatcher, SIGNAL(propertyChanged()),
+               SLOT(_q_updateIsEmptyProperty()));
 }
 
 void MNavigationBarViewPrivate::notificationFlagChanged()
@@ -140,7 +148,7 @@ void MNavigationBarViewPrivate::notificationFlagChanged()
     // FIXME: Add notification support!
 }
 
-void MNavigationBarViewPrivate::toolBarChanged()
+void MNavigationBarViewPrivate::updateDockedToolBar()
 {
     Q_Q(MNavigationBarView);
 
@@ -151,6 +159,8 @@ void MNavigationBarViewPrivate::toolBarChanged()
 
     // Make sure the last toolbar is removed first...
     if (toolBar) {
+        toolBarIsEmptyWatcher->watch(0);
+
         toolBarLayout->removeItem(toolBar);
         // previous toolBar is not ours anymore, so clean property we added
         toolBar->setProperty("widgetAlignment", QVariant::Invalid);
@@ -160,6 +170,7 @@ void MNavigationBarViewPrivate::toolBarChanged()
     if (nextToolBar) {
         toolBarLayout->addItem(nextToolBar);
         nextToolBar->show();
+        toolBarIsEmptyWatcher->watch(nextToolBar);
     }
 
     toolBar = nextToolBar;
@@ -189,7 +200,7 @@ void MNavigationBarViewPrivate::updateMenuButton()
     }
 }
 
-bool MNavigationBarViewPrivate::isEscapeVisible()
+bool MNavigationBarViewPrivate::isEscapeButtonVisible()
 {
     Q_Q(MNavigationBarView);
 
@@ -202,15 +213,13 @@ void MNavigationBarViewPrivate::updateLayout()
 {
     Q_Q(MNavigationBarView);
 
-    bool isEmpty = false;
-
     if (q->model()->customContent() != 0) {
         layout->setPolicy(customContentPolicy);
         currentCustomContent.data()->show();
     } else if (q->style()->hasTitle()) {
         layout->setPolicy(menuToolbarEscapePolicy);
     } else {
-        bool escapeVisible = isEscapeVisible();
+        bool escapeVisible = isEscapeButtonVisible();
         bool menuVisible = q->model()->arrowIconVisible();
         bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
 
@@ -223,11 +232,22 @@ void MNavigationBarViewPrivate::updateLayout()
         } else if (!menuVisible && !escapeVisible) {
             layout->setPolicy(toolbarPolicy);
         }
-
-        isEmpty = !menuVisible && !escapeVisible;
     }
+}
 
-    controller->setProperty("isEmpty", isEmpty);
+void MNavigationBarViewPrivate::_q_updateIsEmptyProperty()
+{
+    Q_Q(MNavigationBarView);
+    bool hasContent;
+    bool menuButtonVisible = q->model()->arrowIconVisible();
+
+    hasContent = q->model()->customContent() != 0
+                 || q->style()->hasTitle()
+                 || isEscapeButtonVisible()
+                 || menuButtonVisible
+                 || (toolBar && !toolBar->property("isEmpty").toBool());
+
+    controller->setProperty("isEmpty", !hasContent);
 }
 
 void MNavigationBarViewPrivate::updateToolBarAlignment()
@@ -240,7 +260,7 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
     QVariant alignment = QVariant::Invalid;
 
     if (!q->style()->hasTitle()) {
-        bool escapeVisible = isEscapeVisible();
+        bool escapeVisible = isEscapeButtonVisible();
         bool menuVisible = q->model()->arrowIconVisible();
         bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
 
@@ -345,7 +365,7 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
             layoutNeedsUpdate = true;
             toolBarAlignmentNeedsUpdate = true;
         } else if (member == MNavigationBarModel::ToolBar) {
-            d->toolBarChanged();
+            d->updateDockedToolBar();
             layoutNeedsUpdate = true;
             toolBarAlignmentNeedsUpdate = true;
         } else if (member == MNavigationBarModel::EscapeButtonMode) {
@@ -364,8 +384,10 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
         }
     }
 
-    if (layoutNeedsUpdate)
+    if (layoutNeedsUpdate) {
         d->updateLayout();
+        d->_q_updateIsEmptyProperty();
+    }
     if (toolBarAlignmentNeedsUpdate)
         d->updateToolBarAlignment();
 }
@@ -396,8 +418,9 @@ void MNavigationBarView::applyStyle()
 
     d->updateEscapeButton();
     d->updateMenuButton();
+    d->updateDockedToolBar();
     d->updateLayout();
-    d->toolBarChanged();
+    d->_q_updateIsEmptyProperty();
     d->updateToolBarAlignment();
 }
 
@@ -435,3 +458,4 @@ void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGra
 
 M_REGISTER_VIEW_NEW(MNavigationBarView, MNavigationBar)
 
+#include "moc_mnavigationbarview.cpp"

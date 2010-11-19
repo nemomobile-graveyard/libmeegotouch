@@ -25,6 +25,7 @@
 #include <QPointer>
 #include "mstylablewidgetstyle.h"
 #include "mstylablewidget.h"
+#include <mdynamicpropertywatcher.h>
 
 class MNavigationBar;
 class MApplicationMenuButton;
@@ -49,11 +50,12 @@ public:
     void finalizeEscapeButtonTransition();
 
     void notificationFlagChanged();
-    void toolBarChanged();
+    void updateDockedToolBar();
     void updateEscapeButton();
     void updateMenuButton();
-    bool isEscapeVisible();
+    bool isEscapeButtonVisible();
     void updateLayout();
+    void _q_updateIsEmptyProperty();
     void updateToolBarAlignment();
     void setCustomContent(QGraphicsWidget *customContent);
 
@@ -78,6 +80,8 @@ public:
     MButton *closeButton;
 
     QWeakPointer<QGraphicsWidget> currentCustomContent;
+
+    MDynamicPropertyWatcher *toolBarIsEmptyWatcher;
 
  protected:
     MNavigationBarView *q_ptr;

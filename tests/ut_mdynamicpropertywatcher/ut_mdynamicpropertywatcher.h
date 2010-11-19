@@ -17,38 +17,21 @@
 **
 ****************************************************************************/
 
-#ifndef UT_MNAVIGATIONBARVIEW_H
-#define UT_MNAVIGATIONBARVIEW_H
+#ifndef UT_MDYNAMICPROPERTYWATCHER_H
+#define UT_MDYNAMICPROPERTYWATCHER_H
 
 #include <QtTest/QtTest>
 #include <QObject>
 
-#include <views/mnavigationbarview.h>
-#include <MNavigationBar>
-#include <MApplication>
-
-class Ut_MNavigationBarView : public QObject
+class Ut_MDynamicPropertyWatcher : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
-    void testCustomContentOwnershipTransfer();
-    void testCustomContentPolicySelection();
-
-    // test "isEmpty" property
-    void testIsEmptyProperty();
-    void testIsEmptyProperty_data();
-    void testDockedToolBarChangingItsIsEmptyProperty();
+    void testDontEmitSignalIfPropertySetToSameValue();
+    void testEmitSignalIfPropertySetToDifferentValue();
 
 private:
-    MNavigationBarView *subject;
-    MNavigationBar *controller;
-    MNavigationBarModel *model;
-    MApplication *app;
 };
 
 #endif
