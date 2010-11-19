@@ -1,3 +1,10 @@
+libmeegotouch (0.20.55.1-1) unstable; urgency=low
+
+  * Fixes: NB#205880 - Widgets Gallery crashes on exit when List widget was accessed
+  * Fixes: NB#205782 - AP News crashing on exit
+
+ -- Tobias Koch <tobias.koch@nokia.com>  Fri, 19 Nov 2010 14:22:37 +0200
+
 libmeegotouch (0.20.55-1) unstable; urgency=low
 
   * Fixes: NB#201296 - Prestarted/Minimized apps must ensure correct rotation, before calling raise() on "launch"-dbus message
