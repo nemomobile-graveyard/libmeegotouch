@@ -691,7 +691,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             if(attributeType == types[CONST_SCALABLE_TYPE])
                 return fillProperty(property, style, cacheOrientation, qVariantFromValue((const MScalableImage *) NULL));
             else
-                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles()));
+                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles()), false);
         }
         //only image_id
         else if (list.size() == 1) {
@@ -699,7 +699,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
                 const MScalableImage *image = MTheme::scalableImage(list[0], 0, 0, 0, 0);
                 return fillProperty(property, style, cacheOrientation, qVariantFromValue(image), false);
             } else {
-                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list[0], 0,0,0,0)));
+                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list[0], 0,0,0,0)), false);
             }
         }
         //image_id + border width paramaters
@@ -717,7 +717,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
                                                                 attributeToInt(list[1], &conversionOK),
                                                                 attributeToInt(list[2], &conversionOK),
                                                                 attributeToInt(list[3], &conversionOK),
-                                                                attributeToInt(list[4], &conversionOK))));
+                                                                attributeToInt(list[4], &conversionOK))), false);
             }
         }
     } else if (attributeType == types[SIZE_TYPE] || attributeType == types[SIZEF_TYPE]) {
