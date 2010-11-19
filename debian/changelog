@@ -1,6 +1,8 @@
 libmeegotouch (0.20.56~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#205880 - Widgets Gallery crashes on exit when List widget was accessed
+  * Fixes: NB#205782 - AP News crashing on exit
 
  -- Tobias Koch <tobias.koch@nokia.com>  Thu, 18 Nov 2010 16:09:17 +0200
 
