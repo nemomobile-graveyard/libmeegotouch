@@ -588,7 +588,28 @@ QString MApplication::binaryName()
 
 void MApplicationPrivate::stdExit(int status)
 {
-    qApp->exit(status);
+    /*
+      This exit function can be reached either from
+      the MApplication constructor or from the event loop,
+      since the MComponentCache was introduced.
+
+      If this function is called from the event loop, we
+      want to make sure that we use qApp->exit() so that
+      qt can tear down itself correctly, see NB#195013
+      for problems that can arise here.
+
+      But when this function is called without a running
+      event loop ( i.e. from the constructor ), then
+      qApp->exit() does nothing, see its documentation for
+      reference. To really exit in this case, we call
+      the c exit() function.
+     */
+
+    // exit when an event loop is running
+    qApp->exit( status );
+
+    // exit when no event loop is running
+    exit( status );
 }
 
 void MApplication::setPrestartMode(M::PrestartMode mode)
