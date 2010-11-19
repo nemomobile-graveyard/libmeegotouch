@@ -1,10 +1,13 @@
-libmeegotouch (0.20.56~1) unstable; urgency=low
+libmeegotouch (0.20.56-1) unstable; urgency=low
 
-  * unreleased
-  * Fixes: NB#205880 - Widgets Gallery crashes on exit when List widget was accessed
+  * Fixes: NB#203831 - There is no easy way to change the opacity of MNavigationBar
+  * Fixes: NB#204226 - MApplicationWindow::closeEvent() sends _NET_CLOSE_WINDOW message always
+  * Fixes: NM#205880 - Widgets Gallery crashes on exit when List widget was accessed
   * Fixes: NB#205782 - AP News crashing on exit
+  * Fixes: NB#204940 - Multiple music windows displayed in active applications grid
+  * Fixes: NB#205543 - Multiple instances of the applications are running when launched multiple times from launch screen
 
- -- Tobias Koch <tobias.koch@nokia.com>  Thu, 18 Nov 2010 16:09:17 +0200
+ -- Tobias Koch <tobias.koch@nokia.com>  Fri, 19 Nov 2010 15:48:36 +0200
 
 libmeegotouch (0.20.55-1) unstable; urgency=low
 
