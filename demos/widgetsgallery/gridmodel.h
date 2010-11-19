@@ -35,8 +35,7 @@ class Loader;
 struct MediaType
 {
     enum Type {
-        Video = 0,
-        Image
+        Image = 0
     } type;
 
     QString path;
@@ -52,7 +51,6 @@ class GridModel: public QAbstractTableModel
 public:
     enum Role {
         ImageId = Qt::UserRole + 1,
-        VideoId,
         Type
     };
 

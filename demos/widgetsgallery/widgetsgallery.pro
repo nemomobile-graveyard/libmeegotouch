@@ -64,7 +64,6 @@ SOURCES += main.cpp \
     staticpagebenchmark.cpp \
     gridimagewidget.cpp \
     itemdetailpage.cpp \
-    gridvideowidget.cpp \
     swaphook.cpp \
     maincategorypage.cpp \
     contentitemspage.cpp \
@@ -115,7 +114,6 @@ HEADERS += templatepage.h \
     staticpagebenchmark.h \
     gridimagewidget.h \
     itemdetailpage.h \
-    gridvideowidget.h \
     swaphook.h \
     maincategorypage.h \
     contentitemspage.h \

@@ -21,7 +21,6 @@
 #define MGRIDPAGE_H
 
 #include <MList>
-#include <MVideoWidget>
 
 #include "templatepage.h"
 #include "gridmodel.h"
@@ -45,8 +44,7 @@ public:
         return m_itemSize;
     }
 
-public slots:
-    void videoReady();
+public Q_SLOTS:
     void itemClicked(const QModelIndex &index);
 
     void showGridConfigurationDialog();

@@ -43,7 +43,6 @@
 #include "gridmodel.h"
 
 #include "gridimagewidget.h"
-#include "gridvideowidget.h"
 #include "itemdetailpage.h"
 
 class ContentItemCreator : public MAbstractCellCreator<MWidgetController>
@@ -67,17 +66,6 @@ public:
             cell = MListCellCreatorHelper<GridImageWidget>::createCell(recycler, "", "");
             updateCell(index, cell);
         }
-#ifdef HAVE_GSTREAMER
-        else if (m.type == MediaType::Video) {
-            cell = MListCellCreatorHelper<GridVideoWidget>::createCell(recycler, "", "");
-
-            GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
-            video->open(m.path);
-            video->setMuted(true);
-            m_gridPage->connect(video, SIGNAL(videoReady()), m_gridPage, SLOT(videoReady()));
-            updateCell(index, cell);
-        }
-#endif
         return cell;
     }
 
@@ -104,15 +92,6 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
         imageWidget->setId(m.path);
         return;
     }
-#ifdef HAVE_GSTREAMER
-    else if (m.type == MediaType::Video) {
-        GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
-
-        QFileInfo info(m.path);
-        video->setId(info.absolutePath() + QDir::separator() + info.fileName());
-        return;
-    }
-#endif
 
 }
 
@@ -209,15 +188,6 @@ QString MGridPage::timedemoTitle()
     return "Grid";
 }
 
-void MGridPage::videoReady()
-{
-#ifdef HAVE_GSTREAMER
-    GridVideoWidget* video = qobject_cast<GridVideoWidget*>(sender());
-    if (video)
-        video->play();
-#endif
-}
-
 void MGridPage::itemClicked(const QModelIndex &index)
 {
     //image clicked
@@ -230,17 +200,6 @@ void MGridPage::itemClicked(const QModelIndex &index)
         page->setImageId(imageId);
         page->appear(scene(), DestroyWhenDismissed);
     }
-#ifdef HAVE_GSTREAMER
-    //video clicked
-    else if (type == MediaType::Video) {
-        QString videoId = index.data(GridModel::VideoId).toString();
-        videoId.remove("thumb-");
-
-        ItemDetailPage* page = new ItemDetailPage();
-        page->setVideoId(videoId);
-        page->appear(scene(), DestroyWhenDismissed);
-    }
-#endif
 }
 
 void MGridPage::orientationChangeEvent(MOrientationChangeEvent *event)

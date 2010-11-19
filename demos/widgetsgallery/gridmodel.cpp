@@ -81,7 +81,7 @@ QVariant GridModel::data(const QModelIndex &index, int role) const
         return m_items[index.row()];
     else if (role == GridModel::Type)
         return m.type;
-    else if (role == GridModel::ImageId || role == GridModel::VideoId)
+    else if (role == GridModel::ImageId)
         return m.path;
 
     return QVariant();
@@ -95,32 +95,18 @@ void GridModel::createItems()
         QDir mediaDir(dir);
         mediaDir.setFilter(QDir::Files | QDir::NoSymLinks);
         mediaDir.setSorting(QDir::Name);
-        mediaDir.setNameFilters(QStringList() << "*.jpeg" << "*.jpg" << "*.mp4" << "*.mov" << "*.png");
-        const QStringList videoTypes(QStringList() << "mp4" << "mov");
+        mediaDir.setNameFilters(QStringList() << "*.jpeg" << "*.jpg" << "*.png");
         const QFileInfoList fileList = mediaDir.entryInfoList();
 
         foreach (const QFileInfo & file, fileList) {
             const QString path = file.absoluteFilePath();
             MediaType m;
 
-            if (videoTypes.contains(file.suffix())) {
-    #ifdef HAVE_GSTREAMER
-                if (file.fileName().startsWith(QLatin1String("thumb-"))) {
-                    m.path = path;
-                    m.type = MediaType::Video;
-                } else {
-                    continue;
-                }
-    #else
-                continue;
-    #endif
-            } else {
-                m.type = MediaType::Image;
-                m.path = path;
-                m.image = QImage();
-                Loader *loader = m_loaders[index % THREAD_COUNT];
-                loader->pushImage(path,index);
-            }
+            m.type = MediaType::Image;
+            m.path = path;
+            m.image = QImage();
+            Loader *loader = m_loaders[index % THREAD_COUNT];
+            loader->pushImage(path,index);
 
             m_items[index] = QVariant::fromValue(m);
             index++;

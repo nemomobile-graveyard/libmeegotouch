@@ -23,41 +23,14 @@
 #include "timedemopage.h"
 #include "gridmodel.h"
 
-#include <MContainer>
 #include <MImageWidget>
-#ifdef HAVE_GSTREAMER
-#include <MVideoWidget>
-#endif
 #include <MWidgetController>
 #include <MWidgetModel>
 #include <QTimer>
 
 class MLayout;
-class MSlider;
-class MButton;
 class MLinearLayoutPolicy;
 class MGridLayoutPolicy;
-class QParallelAnimationGroup;
-
-#ifdef HAVE_GSTREAMER
-
-//video widget which emits clicked signal
-class MyVideoWidget : public MVideoWidget
-{
-    Q_OBJECT
-
-    public:
-        MyVideoWidget(QGraphicsItem *parent = 0);
-Q_SIGNALS:
-        void clicked();
-
-    protected:
-
-         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-    private:
-};
 
 class MyImageWidget : public QGraphicsWidget
 {
@@ -96,24 +69,6 @@ private:
     QPointF paintOffset;
 };
 
-//container widget for the video playback controls
-class MyVideoOverlayToolbar : public MWidgetController
-{
-public:
-    M_CONTROLLER(MWidget)
-
-    MyVideoOverlayToolbar(QGraphicsItem *parent = 0);
-    virtual ~MyVideoOverlayToolbar();
-
-    void addItem(QGraphicsLayoutItem *button);
-
-    private:
-        MGridLayoutPolicy  *landscapePolicy;
-        MGridLayoutPolicy  *portraitPolicy;
-};
-
-#endif
-
 //page for showing video or image in it's native size
 class ItemDetailPage  : public TimedemoPage
 {
@@ -124,31 +79,11 @@ public:
     virtual ~ItemDetailPage();
 
     virtual QString timedemoTitle();
-
-    void setVideoId(const QString& id) {videoId = id; imageId = "";}
-    void setImageId(const QString& id) {imageId = id; videoId = "";}
+    void setImageId(const QString& id) {imageId = id;}
 
     virtual void createContent();
 
-public slots:
-
-    void showOverlay();
-    void hideOverlay();
-
-    void videoReady();
-
-    void sliderPressed();
-    void sliderReleased();
-    void videoSliderValueChanged(int newValue);
-
-    void buttonClicked();
-    void updatePosition();
-
-signals:
 protected:
-    virtual void retranslateUi();
-    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
-
     virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -161,32 +96,11 @@ private:
 
     MLayout* layout;
     MLinearLayoutPolicy* policy;
-
-    MSlider* slider;
-    MButton* button;
     MyImageWidget *image;
 
-#ifdef HAVE_GSTREAMER
-    MyVideoWidget* video;
-    MyVideoOverlayToolbar* cContainer;
-    MyVideoOverlayToolbar* lContainer;
-    MyVideoOverlayToolbar* rContainer;
-    MyVideoOverlayToolbar* tContainer;
-    MyVideoOverlayToolbar* bContainer;
-#endif
-
-    QParallelAnimationGroup* hideAnimation;
-    QParallelAnimationGroup* showAnimation;
-
     QString imageId;
-    QString videoId;
-
-    QTimer inactivityTimer;
-
-    qreal lastScaleFactor;
-
     bool pinching;
-
+    qreal lastScaleFactor;
     QPointF lastMousePosition;
 };
 
