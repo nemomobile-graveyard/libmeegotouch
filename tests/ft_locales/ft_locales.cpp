@@ -1210,6 +1210,11 @@ void Ft_Locales::checkAvailableLocales()
     supportedLocaleNames << "es_419";
     // add some variants with different sort rules:
     supportedLocaleNames << "de_DE@collation=phonebook";
+    supportedLocaleNames << "zh_CN";
+    supportedLocaleNames << "zh_SG";
+    supportedLocaleNames << "zh_HK";
+    supportedLocaleNames << "zh_MO";
+    supportedLocaleNames << "zh_TW";
     supportedLocaleNames << "zh_CN@collation=pinyin";
     supportedLocaleNames << "zh_CN@collation=stroke";
     bool runFullTest = false;

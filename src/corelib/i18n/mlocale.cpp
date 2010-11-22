@@ -2597,6 +2597,23 @@ QString MLocale::languageEndonym() const
             return this->name();
         }
         QString keyLocaleName = this->name();
+        // it’s not nice if “zh_CN”, “zh_HK”, “zh_MO”, “zh_TW” all fall back to
+        // “zh” for the language endonym and display only “中文”.
+        // This should be better:
+        // “zh” → “中文”
+        // “zh_CN”, “zh_SG” → “中文（简体）”
+        // “zh_HK”, “zh_MO”, “zh_TW” → “繁體中文”
+        // Workaround to achieve this:
+        if (keyLocaleName.startsWith(QLatin1String("zh_CN")))
+            keyLocaleName = "zh_Hans_CN";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_SG")))
+            keyLocaleName = "zh_Hans_SG";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_HK")))
+            keyLocaleName = "zh_Hant_HK";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_MO")))
+            keyLocaleName = "zh_Hant_MO";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_TW")))
+            keyLocaleName = "zh_Hant_TW";
         do {
             int len;
             status = U_ZERO_ERROR;

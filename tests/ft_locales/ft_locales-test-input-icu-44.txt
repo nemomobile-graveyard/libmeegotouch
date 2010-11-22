@@ -12022,7 +12022,7 @@ ur_PK	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, 
 ur_PK	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	EEEE, d, MMMM y H:mm:ss z -> پير, 18, رجب 1429 14:31:00 GMT+00:00
 ur_PK	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	EEEE, d, MMMM y h:mm:ss a zzzz -> پير, 18, رجب 1429 2:31:00 PM GMT+00:00
 ur_PK	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE, d, MMMM y H:mm:ss zzzz -> پير, 18, رجب 1429 14:31:00 GMT+00:00
-zh_CN@collation=pinyin	Language endonym	中文
+zh_CN@collation=pinyin	Language endonym	中文（简体）
 zh_CN@collation=pinyin	Country endonym	中国
 zh_CN@collation=pinyin	Floating Point Number	-123,456,789.012
 zh_CN@collation=pinyin	Percent value	-1,234.5679%
@@ -12356,7 +12356,7 @@ zh_CN@collation=pinyin	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12
 zh_CN@collation=pinyin	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzH时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+000014时31分00秒
 zh_CN@collation=pinyin	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+0000下午2时31分00秒
 zh_CN@collation=pinyin	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+000014时31分00秒
-zh_CN@collation=stroke	Language endonym	中文
+zh_CN@collation=stroke	Language endonym	中文（简体）
 zh_CN@collation=stroke	Country endonym	中国
 zh_CN@collation=stroke	Floating Point Number	-123,456,789.012
 zh_CN@collation=stroke	Percent value	-1,234.5679%
