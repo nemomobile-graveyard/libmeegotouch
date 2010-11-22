@@ -89,6 +89,8 @@ void MContainerViewPrivate::init()
 
 void MContainerViewPrivate::createHeader()
 {
+    Q_Q(MContainerView);
+
     if (!header) {
         header = new MContainerHeader();
 
@@ -103,6 +105,7 @@ void MContainerViewPrivate::createHeader()
         text = new MLabel();
 
         title->setObjectName("MContainerTitle");
+        title->setStyleName(q->style()->titleStyleName());
         text->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 
         headerLayout->addItem(title);
@@ -190,6 +193,7 @@ MContainerView::MContainerView(MContainer *controller) :
     MWidgetView(*new MContainerViewPrivate, controller)
 {
     Q_D(MContainerView);
+    d->q_ptr = this;
     d->controller = controller;
 
     // setup main infrastructure
@@ -202,6 +206,7 @@ MContainerView::MContainerView(MContainerViewPrivate &dd, MContainer *controller
     MWidgetView(dd, controller)
 {
     Q_D(MContainerView);
+    d->q_ptr = this;
     d->controller = controller;
 
     d->init();
@@ -234,6 +239,10 @@ void MContainerView::applyStyle()
     Q_D(MContainerView);
 
     MWidgetView::applyStyle();
+
+    if (d->title) {
+        d->title->setStyleName(style()->titleStyleName());
+    }
 
     //  get background from style
     d->background = style()->backgroundImage();

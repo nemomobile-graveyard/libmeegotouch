@@ -29,9 +29,10 @@ class M_VIEWS_EXPORT MContainerStyle : public MWidgetStyle
     Q_OBJECT
     M_STYLE(MContainerStyle)
 
-    M_STYLE_ATTRIBUTE(QSize,   iconSize,           IconSize)
-    M_STYLE_ATTRIBUTE(int,     internalMargins,    InternalMargins)
+    M_STYLE_ATTRIBUTE(QSize,   iconSize,            IconSize)
+    M_STYLE_ATTRIBUTE(int,     internalMargins,     InternalMargins)
     M_STYLE_ATTRIBUTE(int,     internalItemSpacing, InternalItemSpacing)
+    M_STYLE_ATTRIBUTE(QString, titleStyleName,      TitleStyleName)
 };
 
 class M_VIEWS_EXPORT MContainerStyleContainer : public MWidgetStyleContainer
