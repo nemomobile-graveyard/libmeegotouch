@@ -229,6 +229,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_updateStyle())
     Q_PRIVATE_SLOT(d_func(), void _q_setupNavigationBarCustomContent())
     Q_PRIVATE_SLOT(d_func(), void _q_updateNavigationBarVisibility())
+    Q_PRIVATE_SLOT(d_func(), void _q_scheduleNavigationBarVisibilityUpdate())
 };
 
 #endif

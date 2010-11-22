@@ -1,6 +1,10 @@
 include(../common_top.pri)
 
-INCLUDEPATH += $$MSRCDIR/corelib/widgets $$MSRCDIR/corelib/style $$MSRCDIR/views
+INCLUDEPATH += \
+    $$MSRCDIR/corelib/core \
+    $$MSRCDIR/corelib/widgets \
+    $$MSRCDIR/corelib/style \
+    $$MSRCDIR/views
 
 TARGET = ut_mnavigationbarview
 

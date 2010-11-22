@@ -178,11 +178,19 @@ void MApplicationWindowPrivate::init()
     q->connect(q, SIGNAL(switcherEntered()),
                SLOT(_q_handleInSwitcherVisibilityChange()));
 
+    // We wanna do it later since this navigation bar emptiness might be a momentary state
+    // during the setup of a page switch.
+    // E.g. The navigation bar gets empty by the detachment of the current page but when the
+    // new page is finally connected the nav bar might get populated by a
+    // toolbar, menu button, etc and therefore it won't be empty anymore.
+    //
+    // So doing it later ensures that the navigation bar visibility is updated only once
+    // per page switch.
     MDynamicPropertyWatcher *navigationBarIsEmptyPropertyWatcher = new MDynamicPropertyWatcher(q);
     navigationBarIsEmptyPropertyWatcher->watch(navigationBar);
     navigationBarIsEmptyPropertyWatcher->setPropertyName("isEmpty");
     q->connect(navigationBarIsEmptyPropertyWatcher, SIGNAL(propertyChanged()),
-               SLOT(_q_updateNavigationBarVisibility()));
+               SLOT(_q_scheduleNavigationBarVisibilityUpdate()));
 
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
@@ -212,6 +220,11 @@ void MApplicationWindowPrivate::init()
             SLOT(_q_updatePageExposedContentRect()));
     q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()),
                SLOT(_q_updatePageExposedContentRect()));
+
+    navigationBarVisibilityUpdateTimer.setSingleShot(true);
+    navigationBarVisibilityUpdateTimer.setInterval(0);
+    q->connect(&navigationBarVisibilityUpdateTimer, SIGNAL(timeout()),
+               SLOT(_q_updateNavigationBarVisibility()));
 }
 
 void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
@@ -720,6 +733,11 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void MApplicationWindowPrivate::_q_updateNavigationBarVisibility()
 {
+    // remove any pending update since we're doing it right now.
+    if (navigationBarVisibilityUpdateTimer.isActive()) {
+        navigationBarVisibilityUpdateTimer.stop();
+    }
+
     if (page && (page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
         || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide
             && !autoHideComponentsTimer.isActive())))
@@ -733,6 +751,13 @@ void MApplicationWindowPrivate::_q_updateNavigationBarVisibility()
        sceneManager->disappearSceneWindow(navigationBar);
     else
        sceneManager->appearSceneWindow(navigationBar);
+}
+
+void MApplicationWindowPrivate::_q_scheduleNavigationBarVisibilityUpdate()
+{
+    if (!navigationBarVisibilityUpdateTimer.isActive()) {
+        navigationBarVisibilityUpdateTimer.start();
+    }
 }
 
 void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)

@@ -315,7 +315,7 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
     MSceneWindow *navigationBar = m_subject->d_func()->navigationBar;
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
@@ -468,8 +468,12 @@ void Ut_MApplicationWindow::testTabBarMovesFromNavigationBarToFloatingWhenRotate
     QVERIFY(isToolBarFloating());
 }
 
-void Ut_MApplicationWindow::fastForwardDisappearAppearAnimations(MSceneWindow *sceneWindow)
+void Ut_MApplicationWindow::processEventsAndFastForwardDisappearAppearAnimations(MSceneWindow *sceneWindow)
 {
+    // For the navigation bar case, updates on its scene window state based on its "isEmpty"
+    // property are deferred to a separate event.
+    QCoreApplication::processEvents();
+
     // we can have at most 1 ongoing and 1 queued disappearing/appearing animation
     // ensure both animations are fast forwarded
     m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(sceneWindow);
@@ -572,7 +576,7 @@ void Ut_MApplicationWindow::testNavigationBarVisibility()
 
     m_subject->sceneManager()->appearSceneWindow(page);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), navbarVisibility);
 
     delete page;
@@ -604,27 +608,27 @@ void Ut_MApplicationWindow::testNavigationBarVisibilityFloatableTabbar()
 
     m_subject->sceneManager()->appearSceneWindowNow(page);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
 
     page->addAction(menuAction);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), true);
 
     page->removeAction(menuAction);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
 
     page->setEscapeMode(MApplicationPageModel::EscapeManualBack);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), true);
 
     page->setEscapeMode(MApplicationPageModel::EscapeAuto);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
 
     delete page;
@@ -656,38 +660,38 @@ void Ut_MApplicationWindow::testNavigationBarVisibilityDockedTabbar()
 
     m_subject->sceneManager()->appearSceneWindowNow(page);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), true);
 
     page->removeAction(action1);
     page->removeAction(action2);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
 
     page->addAction(menuAction);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), true);
 
     page->removeAction(menuAction);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
 
     page->setEscapeMode(MApplicationPageModel::EscapeManualBack);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), true);
 
     page->setEscapeMode(MApplicationPageModel::EscapeAuto);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
 
     page->addAction(action1);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), true);
 
     delete page;
@@ -704,11 +708,11 @@ void Ut_MApplicationWindow::testNavigationBarVisibilityHideToolbarAction()
     action->setLocation(MAction::ToolBarLocation);
     m_subject->addAction(action);
 
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), true);
 
     action->setVisible(false);
-    fastForwardDisappearAppearAnimations(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->isVisible(), false);
 }
 
@@ -745,6 +749,33 @@ void Ut_MApplicationWindow::testNavigationBarOpacity()
 
     QCOMPARE(m_subject->navigationBarOpacity(), (qreal)0.5);
     QCOMPARE(navigationBar->opacity(), (qreal)0.5);
+}
+
+// Regression test for NB#205177
+// https://projects.maemo.org/bugzilla/show_bug.cgi?id=205177
+void Ut_MApplicationWindow::testGoingBackDoesntMakeNavigationBarDisappearAndReappear()
+{
+    MApplicationPage *rootPage = new MApplicationPage;
+    MApplicationPage *subPage = new MApplicationPage;
+    MAction *action;
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+    MSceneManager *sceneManager = m_subject->sceneManager();
+
+    action = new MAction(rootPage);
+    action->setText("foo bar");
+    action->setLocation(MAction::ApplicationMenuLocation);
+    rootPage->addAction(action);
+
+    sceneManager->appearSceneWindowNow(rootPage);
+    sceneManager->appearSceneWindowNow(subPage);
+
+    QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
+
+    sceneManager->dismissSceneWindow(subPage);
+
+    // Navigation bar shouldn't go away since the root page needs the navigation
+    // bar to at least display a application menu button.
+    QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 }
 
 QTEST_MAIN(Ut_MApplicationWindow)

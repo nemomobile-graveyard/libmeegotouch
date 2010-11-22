@@ -82,6 +82,8 @@ public:
     bool showingNavigationBar;
     bool showingDockWidget;
 
+    QTimer navigationBarVisibilityUpdateTimer;
+
     void manageActions();
     void distributeAction(QAction *action, QAction *before);
     void refreshArrowIconVisibility();
@@ -109,6 +111,9 @@ public:
     void updateDockWidgetVisibility();
 
     void _q_updateNavigationBarVisibility();
+
+    // Update the navigation bar visibility at a subsequent event.
+    void _q_scheduleNavigationBarVisibilityUpdate();
 
     void sceneWindowAppearEvent(MSceneWindowEvent *ev);
     void sceneWindowDisappearEvent(MSceneWindowEvent *ev);

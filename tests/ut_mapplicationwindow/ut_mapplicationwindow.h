@@ -93,13 +93,15 @@ private slots:
     void testFirstPageWithCustomNavigationBarContent();
     void testNavigationBarOpacity();
 
+    void testGoingBackDoesntMakeNavigationBarDisappearAndReappear();
+
 private:
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;
 
     void initToolbarLocationTC(M::OrientationAngle angle, const QString &viewType);
     bool isToolBarFloating();
-    void fastForwardDisappearAppearAnimations(MSceneWindow* sceneWindow);
+    void processEventsAndFastForwardDisappearAppearAnimations(MSceneWindow* sceneWindow);
 };
 
 
