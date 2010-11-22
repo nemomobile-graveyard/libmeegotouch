@@ -74,9 +74,9 @@ void Pt_MLayout::linearLayoutPerformance()
     QFETCH(bool, qtOnly);
     QFETCH(bool, testSizeHint);
 
-    QGraphicsLinearLayout *qlayout;
-    MLayout *layout;
-    MLinearLayoutPolicy *policy;
+    QGraphicsLinearLayout *qlayout(NULL);
+    MLayout *layout(NULL);
+    MLinearLayoutPolicy *policy(NULL);
     if(qtOnly) {
         qlayout = new QGraphicsLinearLayout(Qt::Vertical, m_form);
     } else {
@@ -128,9 +128,9 @@ void Pt_MLayout::gridLayoutPerformance()
     QFETCH(bool, qtOnly);
     QFETCH(bool, testSizeHint);
 
-    QGraphicsGridLayout *qlayout;
-    MLayout *layout;
-    MGridLayoutPolicy *policy;
+    QGraphicsGridLayout *qlayout(NULL);
+    MLayout *layout(NULL);
+    MGridLayoutPolicy *policy(NULL);
     if(qtOnly) {
         qlayout = new QGraphicsGridLayout(m_form);
     } else {
