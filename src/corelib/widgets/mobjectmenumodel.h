@@ -63,8 +63,8 @@ class M_CORE_EXPORT MObjectMenuModel : public MSceneWindowModel
     M_MODEL_PROPERTY(QString, title, Title, true, QString())
 
     /*!
-        \property MObjectMenuModel::title
-        \brief Title/header text for the object menu.
+        \property MObjectMenuModel::iconId
+        \brief IconId for the icon for the object menu.
     */
     M_MODEL_PROPERTY(QString, iconId, IconId, true, QString())
 
@@ -114,4 +114,3 @@ private:
 };
 
 #endif
-

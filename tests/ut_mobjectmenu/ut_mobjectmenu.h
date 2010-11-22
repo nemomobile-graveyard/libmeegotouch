@@ -43,6 +43,7 @@ private slots:
     void testActionsAddingAndRemoving();
     void testCursorPosition();
     void testTitle();
+    void testIconId();
 
 private:
 };

@@ -170,5 +170,30 @@ void Ut_MObjectMenu::testTitle()
     delete widget;
 }
 
+void Ut_MObjectMenu::testIconId()
+{
+    MWidget *widget = new MWidget();
+    MObjectMenu *menu = new MObjectMenu(widget);
+
+    QCOMPARE(menu->iconId(), QString(""));
+
+    menu->setIconId("someIconId");
+    QCOMPARE(menu->iconId(), QString("someIconId"));
+
+    widget->setProperty("objectMenuIconId", QString("propertyIconId"));
+    QCOMPARE(menu->iconId(), QString("someIconId"));
+
+    delete menu;
+
+    menu = new MObjectMenu(widget);
+    QCOMPARE(menu->iconId(), QString("propertyIconId"));
+
+    menu->setIconId("");
+    QCOMPARE(menu->iconId(), QString(""));
+
+    delete menu;
+    delete widget;
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MObjectMenu)

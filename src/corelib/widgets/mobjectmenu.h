@@ -121,6 +121,7 @@ class M_CORE_EXPORT MObjectMenu : public MSceneWindow
     M_CONTROLLER(MObjectMenu)
 
     Q_PROPERTY(QPointF cursorPosition READ cursorPosition WRITE setCursorPosition)
+    Q_PROPERTY(QString iconId READ iconId WRITE setIconId)
     Q_PROPERTY(QString title READ title WRITE setTitle)
 public:
     /*!
@@ -152,19 +153,24 @@ public:
     /*!
         \brief Set the title string.
 
-        Alternatively, the title can be defined by setting the dynamic property 
-        named "objectMenuTitle" for the target widget that is given to constructor.
+        Alternatively, the title can be defined by setting the dynamic property
+        named "objectMenuTitle" for the target widget that is given to the
+        constructor of this class before constructing this MObjectMenu.
      */
-    void setTitle(const QString& title);    
+    void setTitle(const QString& title);
 
     /*!
-        \brief Returns true if progress indicator is visible
+        \brief Get the current icon id.
     */
     QString iconId() const;
 
     /*!
-      \brief Show or hide progress indicator.
-    */
+      \brief Set the icon id.
+
+        Alternatively, the icon id can be defined by setting the dynamic property
+        named "objectMenuIconId" for the target widget that is given to the
+        constructor of this class before constructing this MObjectMenu.
+     */
     void setIconId(const QString& iconId);
 
 
