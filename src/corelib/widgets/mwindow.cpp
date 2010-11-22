@@ -1001,6 +1001,10 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
         targetAngle = orientationAngle();
 
     if (targetAngle != angle) {
+        //reset invisible paint counter
+        //because orientation change will require repaint
+        d->invisiblePaintCounter = 0;
+
         d->oldOrientation = orientation();
         d->angle = angle;
 
