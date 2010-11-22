@@ -28,6 +28,7 @@ MGraphicsEffectPrivate::MGraphicsEffectPrivate()
 
 MGraphicsEffectPrivate::~MGraphicsEffectPrivate()
 {
+    delete styleContainer;
 }
 
 MGraphicsEffect::MGraphicsEffect(QObject *parent)
@@ -40,8 +41,8 @@ MGraphicsEffect::MGraphicsEffect(QObject *parent)
 
 MGraphicsEffect::~MGraphicsEffect()
 {
+    delete d_ptr;
 }
-
 
 MGraphicsEffectStyleContainer &MGraphicsEffect::style()
 {
