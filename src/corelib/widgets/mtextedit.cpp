@@ -338,7 +338,12 @@ void MTextEditPrivate::init()
     Q_ASSERT_X((q->model() != 0), "MTextEditPrivate::init()", "No model found!");
 
     QTextOption option = q->document()->defaultTextOption();
-    option.setTextDirection(q->layoutDirection());
+    // Do not use qApp->->layoutDirection() here, the
+    // default text direction should be determined from the
+    // contents of the string, not from the layout direction
+    // of the application. This is achieved by using
+    // Qt::LayoutDirectionAuto.
+    option.setTextDirection(Qt::LayoutDirectionAuto);
 
     if (q->model()->line() == MTextEditModel::SingleLine) {
         option.setWrapMode(QTextOption::NoWrap);
@@ -2287,12 +2292,6 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
 void MTextEdit::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::LayoutDirectionChange) {
-        QTextOption option = document()->defaultTextOption();
-        option.setTextDirection(layoutDirection());
-        document()->setDefaultTextOption(option);
-    }
-
     MWidgetController::changeEvent(event);
 }
 

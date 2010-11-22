@@ -1028,21 +1028,7 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
 
 void MTextEditView::changeEvent(QEvent *event)
 {
-    Q_D(MTextEditView);
-
-    if (event->type() == QEvent::LayoutDirectionChange) {
-        // controller takes care of adjusting layout of the model, we need to update
-        // our own QTextDocument instances
-        if (d->maskedTextDocument != 0) {
-            QTextOption option = d->maskedTextDocument->defaultTextOption();
-            option.setTextDirection(d->controller->layoutDirection());
-            d->maskedTextDocument->setDefaultTextOption(option);
-        }
-
-        QTextOption option = d->promptTextDocument->defaultTextOption();
-        option.setTextDirection(d->controller->layoutDirection());
-        d->promptTextDocument->setDefaultTextOption(option);
-    }
+    Q_UNUSED(event);
 }
 
 
