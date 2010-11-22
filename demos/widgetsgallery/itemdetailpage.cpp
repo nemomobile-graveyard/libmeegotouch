@@ -24,6 +24,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPinchGesture>
 
+#ifdef QT_OPENGL_LIB
+#include <QtOpenGL>
+#endif
+
 #include <MImageWidget>
 #include <MLabel>
 #include <MButton>
