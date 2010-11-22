@@ -68,6 +68,18 @@ MButtonStyle#SignInButton {
 }
 \endcode
 
+The equivalent source code with this example:
+
+\code
+// Create a button
+MButton* button = new MButton();
+....
+// Create a "huge-feedback" feedback
+MFeedback* feedback = new MFeedback("huge-feedback");
+// Connect the press event of the button to play the "huge-feedback".
+connect(button, SIGNAL(press()), feedback, SLOT(play()));
+\endcode
+
 As shown above, the styling rules are written between the curly brackets.
 
 \section mfeedback MFeedback
@@ -220,6 +232,40 @@ int main(int argc, char* argv[])
   // Clean up
   delete feedback;
 }
+\endcode
+
+\section custom_widgets Custom widgets
+
+The MWidget has limited support for haptic feedback, the press and the release events of the derived widgets can be styled by default. To add more stylable feedback events, the following steps should be followed:
+
+- Inherit your own custom style class for your widget and add the new (input feedback) property to the style sheet format. The M_STYLE_ATTRIBUTE() macro's first parameter must be MFeedback:
+
+\code
+class MyWidgetStyle : public MWidgetStyle
+{
+    Q_OBJECT
+    M_STYLE(MyWidgetStyle)
+    M_STYLE_ATTRIBUTE(MFeedback, gestureFeedback, GestureFeedback)
+};
+\endcode
+
+- For convenience, use the style helper tools mgen and mmoc to generate the needed source files for styling in the qmake build files of your project.
+- You can style your widget for the new feedback event. For example, the MyWidget gets the "gesture-click" effect for this new "gesture" property:
+
+\code
+MyWidgetStyle {
+  gesture-feedback: gesture-click;
+}
+\endcode
+
+- The input feedback effect can be triggered by an event or it can be played manually in the source code:
+
+\code
+// Connect a signal to play the gesture feedback effect
+connect(this, SIGNAL(customGesture()), &style()->gestureFeedback(), SLOT(play()));
+...
+// Gesture effect played manually
+style()->gestureFeedback().play();
 \endcode
 
 \section feedback_use_case1 Styling use case 1: Override a default feedback for an application
