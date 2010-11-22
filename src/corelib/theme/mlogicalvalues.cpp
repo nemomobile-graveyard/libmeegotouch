@@ -175,7 +175,7 @@ bool MLogicalValuesPrivate::saveToBinaryCache(const QFileInfo &fileInfo, const G
 }
 
 QString MLogicalValuesPrivate::createBinaryFilename(const QFileInfo &fileInfo) const {
-    QString binaryDirectory = QString(CACHEDIR) + "logicalValues/";
+    QString binaryDirectory = QString(CACHEDIR) + "/logicalValues/";
     QString binaryFilename(binaryDirectory);
 
     QString absoluteFilePathEncoded(fileInfo.absoluteFilePath());

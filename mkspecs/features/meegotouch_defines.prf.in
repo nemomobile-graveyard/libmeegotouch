@@ -62,6 +62,8 @@ unix|win32 {
     M_TARGETS_CONF_DIR = $$M_INSTALL_DATA/meegotouch/targets
 
     M_IM_TOOLBARS_DIR = $$M_INSTALL_DATA/meegotouch/imtoolbars
+
+    M_CACHE_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch
 }
 
 mac {
@@ -91,6 +93,8 @@ mac {
     M_TARGETS_CONF_DIR = $$M_INSTALL_DATA/meegotouch/targets
 
     M_IM_TOOLBARS_DIR = $$M_INSTALL_DATA/meegotouch/imtoolbars
+
+    M_CACHE_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch
 }
 
 win32 {
@@ -100,6 +104,7 @@ win32 {
     M_INSTALL_SYSCONF = $$M_PREFIX/etc
     M_INSTALL_XSESSION = $$M_INSTALL_SYSCONF/X11
     M_INSTALL_LOCALSTATE = $$M_PREFIX/var
+    M_CACHE_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch
 
     M_THEME_PRELOAD_DIR = $$M_INSTALL_LOCALSTATE/lib/meegotouch/theme/preload.d
     M_THEME_POST_PRELOAD_DIR = $$M_INSTALL_LOCALSTATE/lib/meegotouch/theme/preload.post

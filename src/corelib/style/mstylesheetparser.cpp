@@ -937,7 +937,7 @@ MStyleSheetParser::MStyleSheetParser(const MLogicalValues *logicalValues) :
     Q_D(MStyleSheetParser);
     d->privateFileInfo = 0;
 #ifdef Q_WS_X11
-    d->binaryDirectory = QString(CACHEDIR) + "css/";
+    d->binaryDirectory = QString(CACHEDIR) + "/css/";
 #else
     d->binaryDirectory = QDir::tempPath() + QDir::separator();
 #endif

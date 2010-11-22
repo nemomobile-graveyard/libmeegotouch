@@ -90,10 +90,11 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
 
     # Input method toolbar definition location
     DEFINES += M_IM_TOOLBARS_DIR=\\\"\"$$M_IM_TOOLBARS_DIR\"\\\"
+
+    DEFINES += CACHEDIR=\\\"\"$$M_CACHE_DIR\"\\\"
 }
 
 unix {
-   DEFINES += CACHEDIR=\\\"\"/var/cache/meegotouch/\"\\\"
    # drop unneeded dependencies
    !macx {
       QMAKE_LFLAGS += "-Wl,--as-needed"

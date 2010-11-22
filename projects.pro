@@ -33,7 +33,7 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
        SUBDIRS += \
                   mmoc \
                   mgen \
-                  tools/m-servicefwgen.d/ \
+                  tools/m-servicefwgen.d \
                   src \
 
        contains(DEFINES, HAVE_DBUS) {

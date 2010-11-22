@@ -78,7 +78,7 @@ QString MThemeDaemon::systemThemeDirectory()
 QString MThemeDaemon::systemThemeCacheDirectory()
 {
 #ifdef Q_WS_X11
-    return QString(CACHEDIR) + "themedaemon/";
+    return QString(CACHEDIR) + "/themedaemon/";
 #else
     return QDir::tempPath();
 #endif

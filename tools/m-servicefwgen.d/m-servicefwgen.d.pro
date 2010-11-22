@@ -1,7 +1,8 @@
 include(../../mkspecs/common.pri)
 
 TEMPLATE = app
-TARGET = ../m-servicefwgen
+TARGET = m-servicefwgen
+DESTDIR = $$M_BUILD_TREE/tools
 
 QT += xml
 
