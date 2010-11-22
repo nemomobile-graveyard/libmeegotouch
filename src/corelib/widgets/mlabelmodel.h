@@ -71,8 +71,10 @@ class M_CORE_EXPORT MLabelModel : public MWidgetModel
     /*!
         \property MLabelModel::textDirection
         \brief Text direction of the label.
+
+        The default text direction is autodetected from the text contents
     */
-    M_MODEL_PROPERTY(Qt::LayoutDirection, textDirection, TextDirection, true, qApp->layoutDirection())
+    M_MODEL_PROPERTY(Qt::LayoutDirection, textDirection, TextDirection, true, Qt::LayoutDirectionAuto)
 
     /*!
         \property MLabelModel::textElide

@@ -62,8 +62,6 @@ void MLabel::changeEvent(QEvent *event)
     //     changing of the direction through model so will use that
     //     for now.
     MWidgetController::changeEvent(event);
-    if (event->type() == QEvent::LayoutDirectionChange)
-        model()->setTextDirection(layoutDirection());
 }
 
 void MLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
