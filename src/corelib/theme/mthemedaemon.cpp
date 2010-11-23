@@ -68,6 +68,7 @@ QString MThemeDaemon::systemThemeDirectory()
 #ifdef Q_OS_WIN
     QDir appDir(QCoreApplication::applicationDirPath());
     appDir.cdUp();
+    appDir.cd("share");
     appDir.cd("themes");
     return appDir.absolutePath();
 #else

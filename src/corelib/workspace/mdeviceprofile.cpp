@@ -60,9 +60,11 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
     appDir.cd("meegotouch");
     appDir.cd("targets");
     if(targetname.isEmpty())
-        filename = appDir.path().append("Default.conf");
+        filename = appDir.path().append(QDir::separator())
+                                .append("Default.conf");
     else
-        filename = appDir.path().append(targetname).append(".conf");
+        filename = appDir.path().append(QDir::separator())
+                                .append(targetname).append(".conf");
 #else //!Q_OS_WIN
 
     if (targetname.isEmpty()) {
