@@ -1,3 +1,9 @@
+libmeegotouch (0.20.57~1) unstable; urgency=low
+
+  * Fixes: NB#196936 - mservicemapper does not die along its session bus
+
+ -- Holger Schröder <holger.schroeder.ext@basyskom.de>  Tue, 23 Nov 2010 14:48:36 +0200
+
 libmeegotouch (0.20.56-1) unstable; urgency=low
 
   * Fixes: NB#203831 - There is no easy way to change the opacity of MNavigationBar
