@@ -286,6 +286,10 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 
+    //if button is non-checkable prevent the state change
+    if (!model()->checkable())
+        d->checkStateOnAnimationFinish = model()->checked();
+
     //start animating the thumb from current position to proper end position
     int delta = d->m_thumbPos.x() - d->thumbEndPos(d->checkStateOnAnimationFinish).x();
     d->m_thumbAnimation->setStartValue(d->m_thumbPos);
