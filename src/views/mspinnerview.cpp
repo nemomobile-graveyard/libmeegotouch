@@ -57,7 +57,7 @@ void MSpinnerViewPrivate::refreshStyle()
 
     positionAnimation->setDuration(q->style()->period());
     positionAnimation->setStartValue(0);
-    positionAnimation->setEndValue(q->style()->numberOfFrames() - 1);
+    positionAnimation->setEndValue(q->style()->numberOfFrames());
     reloadFrames();
 }
 
@@ -154,6 +154,9 @@ int MSpinnerView::currentFrame() const
 void MSpinnerView::setCurrentFrame(int currentFrame)
 {
     Q_D(MSpinnerView);
+
+    if (currentFrame >= d->animationPixmaps.length())
+        currentFrame %= d->animationPixmaps.length();
 
     d->currentFrame = currentFrame;
     update();
