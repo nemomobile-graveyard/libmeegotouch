@@ -53,17 +53,6 @@ Section "MainSection" SEC01
   ; dui files
   File /r "..\..\inst\*.*"
 
-  ; qt files
-  SetOutPath "$INSTDIR\bin"
-  File "..\..\qtlibs\libgcc_s_dw2-1.dll"
-  File "..\..\qtlibs\QtCored4.dll"
-  File "..\..\qtlibs\QtGuid4.dll"
-  File "..\..\qtlibs\QtNetworkd4.dll"
-  File "..\..\qtlibs\QtOpenGLd4.dll"
-  File "..\..\qtlibs\QtSvgd4.dll"
-  File "..\..\qtlibs\QtXmld4.dll"
-  File "..\..\qtlibs\mingwm10.dll"
-
   CreateDirectory "$SMPROGRAMS\Widgets Gallery"
   CreateShortCut "$SMPROGRAMS\Widgets Gallery\Widgets Gallery.lnk" "$INSTDIR\bin\widgetsgallery.exe"
   CreateShortCut "$DESKTOP\Widgets Gallery.lnk" "$INSTDIR\bin\widgetsgallery.exe"
