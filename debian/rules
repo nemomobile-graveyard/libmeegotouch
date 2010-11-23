@@ -69,8 +69,9 @@ else
      MAKEDOCS = 0
 endif
 
+# Option to disable usage of meegographics system
 ifeq ($(DEB_BUILD_ARCH),armel)
-    ifneq (,$(findstring meegographicssystem,$(DEB_BUILD_OPTIONS)))
+    ifeq (,$(findstring nomeegographicssystem,$(DEB_BUILD_OPTIONS)))
          OPTIONS += -meegographicssystem
     endif
 endif
