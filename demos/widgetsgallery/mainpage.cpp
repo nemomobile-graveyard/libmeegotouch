@@ -34,7 +34,6 @@
 #include "mgridpage.h"
 #include "sliderpage.h"
 #include "comboboxpage.h"
-#include "containerpage.h"
 #include "progressbarpage.h"
 #include "spinnerpage.h"
 #include "checkboxpage.h"
@@ -110,8 +109,6 @@ public:
         addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_image"), new ImagePage());
         //% "Progress Bar"
         addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_progress_bar"), new ProgressBarPage());
-        //% "Container"
-        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_container"), new ContainerPage());
         //% "Spinner"
         addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_spinner"), new SpinnerPage());
 

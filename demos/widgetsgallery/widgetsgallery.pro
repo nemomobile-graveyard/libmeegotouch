@@ -50,7 +50,6 @@ SOURCES += main.cpp \
     progressbarpage.cpp \
     spinnerpage.cpp \
     checkboxpage.cpp \
-    containerpage.cpp \
     objectmenupage.cpp \
     displaymodespage.cpp \
     languagepage.cpp \
@@ -100,7 +99,6 @@ HEADERS += templatepage.h \
     progressbarpage.h \
     spinnerpage.h \
     checkboxpage.h \
-    containerpage.h \
     objectmenupage.h \
     displaymodespage.h \
     languagepage.h \
