@@ -132,20 +132,18 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
     QRectF  pRange = model()->range().adjusted(0, 0, vpSize.width(), vpSize.height());
     QPointF pPos   = model()->position();
 
-    const MScalableImage *indicator = style()->indicatorImage();
-    if (!indicator) {
-        mWarning("MPositionIndicatorView") << "could not get \"indicator-image\"";
-        return;
-    }
-
-    const MScalableImage *rail = style()->backgroundImage();
-    if (!rail) {
-        mWarning("MPositionIndicatorView") << "could not get \"background-image\"";
-        return;
-    }
-
-
     if ((int)pRange.height() > (int)vpSize.height()) {
+        const MScalableImage *indicator = style()->indicatorImage();
+        if (!indicator) {
+            mWarning("MPositionIndicatorView") << "could not get \"indicator-image\"";
+            return;
+        }
+
+        const MScalableImage *rail = style()->backgroundImage();
+        if (!rail) {
+            mWarning("MPositionIndicatorView") << "could not get \"background-image\"";
+            return;
+        }
 
         int indicatorPixmapSizeX = indicator->pixmap()->width();
         int railPixmapSizeX = rail->pixmap()->width();
@@ -181,6 +179,17 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
     }
 
     if ((int)pRange.width() > (int)vpSize.width()) {
+        const MScalableImage *indicator = style()->indicatorImageHorizontal();
+        if (!indicator) {
+            mWarning("MPositionIndicatorView") << "could not get \"indicator-image-horizontal\"";
+            return;
+        }
+
+        const MScalableImage *rail = style()->backgroundImageHorizontal();
+        if (!rail) {
+            mWarning("MPositionIndicatorView") << "could not get \"background-image-horizontal\"";
+            return;
+        }
 
         int indicatorPixmapSizeY = indicator->pixmap()->height();
         int railPixmapSizeY = rail->pixmap()->height();

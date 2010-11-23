@@ -31,6 +31,8 @@ class M_VIEWS_EXPORT MPositionIndicatorStyle : public MWidgetStyle
     M_STYLE(MPositionIndicatorStyle)
 
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *, indicatorImage, IndicatorImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, indicatorImageHorizontal, IndicatorImageHorizontal)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, backgroundImageHorizontal, BackgroundImageHorizontal)
     M_STYLE_ATTRIBUTE(int, minIndicatorSize, MinIndicatorSize)
     M_STYLE_ATTRIBUTE(int, hideTimeout, HideTimeout)
 };
@@ -41,4 +43,3 @@ class M_VIEWS_EXPORT MPositionIndicatorStyleContainer : public MWidgetStyleConta
 };
 
 #endif
-
