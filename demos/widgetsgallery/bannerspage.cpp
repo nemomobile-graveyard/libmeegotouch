@@ -114,7 +114,7 @@ void BannersPage::itemClicked(const QModelIndex &index)
 void BannersPage::showEventBanner()
 {
     MBanner *banner = new MBanner();
-    banner->setStyleName("EventBanner");
+    banner->setStyleName("ShortEventBanner");
     banner->setIconID("icon-s-status-sms");
     banner->setTitle("John Milles");
     banner->setSubtitle("Voicemail");
@@ -126,7 +126,7 @@ void BannersPage::showInformationBanner()
     MBanner *banner = new MBanner();
     banner->setStyleName("InformationBanner");
     banner->setIconID("icon-m-camera-scene-landscape-selected");
-    banner->setTitle("Call");
+    banner->setTitle("You have 6 meetings in your Agenda");
     banner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 

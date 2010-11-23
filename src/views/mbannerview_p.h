@@ -71,11 +71,11 @@ protected:
     //Layouts
     MLayout *createLayout();
     QGraphicsGridLayout *createGrid();
-    void layoutEventBanner();
+    void layoutShortEventBanner();
+    void layoutPrivateEventBanner();
+    void layoutFullEventBanner();
     void layoutInformationBanner();
     void layoutSystemBanner();
-    void layoutEventScreen();
-    void layoutEventLockScreen();
     void layoutGenericBanner();
 
     MImageWidget *iconId;

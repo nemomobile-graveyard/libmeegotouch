@@ -38,13 +38,13 @@
     Although we haven't defined different views for the MBanner, we consider those three types:
 
     \li An event banner is a MBanner with an icon, title and subtitle.
-    \li An information banner is a MBanner with a subtitle (only one label)
-    \li An system banner is a MBanner with an icon an subtitle
+    \li An information banner is a MBanner with a title and icon
+    \li An system banner is a MBanner with a title (only one label)
 
 
      You should set the stylename through setStyleName() with one of the following names:
-    \li "EventBanner": used for events as emails, sms, etc. Icon, title and subtitle.
-    \li "InformationBanner": used to show generic information with icons.
+    \li "ShortEventBanner": used for events as emails, sms, etc. Icon, title and subtitle.
+    \li "InformationBanner": used to show generic information for apps with icons.
     \li "SystemBanner": reserved for system notifications, only text.
 
     If you create a MBanner without styleName it will have a default style, and it will have the
@@ -55,16 +55,19 @@
     Due to the MBanner has the capability to be shown at the events/lock screen, it comes with two
     styles for this use case:
 
-    \li EventScreen
-    \li LockScreen
+    \li FullEventBanner
+    \li PrivateEventBanner
+
+    The difference between FullEventBanner and PrivateEventBanner is that the second doesn't show
+    the subtitle due to privacy reasons.
 
     MBanner can switch to different styles in anytime only switching the stylename.
     Note that some styles contain some specific layouts in which some properties are not show.
 
-    For instance if you create a Event Banner:
+    For instance if you create a Short Event Banner:
        \code
            MBanner *eventBanner = new MBanner();
-           eventBanner->setStyleName("EventBanner");
+           eventBanner->setStyleName("ShortEventBanner");
            eventBanner->setIconID("icon-l-settings");
            eventBanner->setTitle("New updates waiting to install");
            eventBanner->setSubtitle("130 files");
@@ -74,10 +77,10 @@
     If you want show the look and feel of this MBanner in the event screen you only need switch
     the stylename:
        \code
-           eventBanner->setStyleName("EventScreen");
+           eventBanner->setStyleName("FullEventBanner");
        \endcode
 
-    The MBanner layout will be styled with the EventScreen's layout automatically.
+    The MBanner layout will be styled with the FullEventBanner's layout automatically.
 
     Is highly recommended use a styleName contemplated in the mentioned categories. As
     a good practice <b>you should setup one of the mentioned stylenames</b> to avoid conflicts
@@ -99,7 +102,7 @@
         Here's how to launch an event banner from code:
         \code
            MBanner *eventBanner = new MBanner();
-           eventBanner->setStyleName("EventBanner");
+           eventBanner->setStyleName("ShortEventBanner");
            eventBanner->setIconID("icon-l-settings");
            eventBanner->setTitle("New updates waiting to install");
            eventBanner->setSubtitle("130 files");
@@ -121,6 +124,17 @@
           systemBanner->setStyleName("SystemBanner");
           systemBanner->setTitle("System banner");
           systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
+        \endcode
+
+        Here's how to launch a event full banner from code:
+        \code
+          MBanner *fullEventBanner = new MBanner();
+          fullEventBanner->setStyleName("FullEventBanner");
+          fullEventBanner->setIconID("icon-m-camera-scene-landscape-selected");
+          fullEventBanner->setTitle("Call");
+          fullEventBanner->setSubtitle("Brianna Edwards");
+          fullEventBanner->setPrefixTimeStamp("Yesterday:");
+          fullEventBanner->setBannerTimeStamp(QDateTime::currentDateTime());
         \endcode
 
     \sa MNotification
