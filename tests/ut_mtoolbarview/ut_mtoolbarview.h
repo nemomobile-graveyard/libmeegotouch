@@ -55,6 +55,9 @@ private slots:
     void testButtons();
     void testMWidgetAction_data();
     void testMWidgetAction();
+    void testSetWidgetAfterWidgetActionIsAdded();
+    void testChangeWidgetInWidgetAction();
+    void testRemoveWidgetFromWidgetAction();
     void testAddToLandscapeWhenInPortrait();
     void testChangingLocation();
     void testCapacityLimitedTo3();

@@ -724,6 +724,74 @@ void Ut_MToolBarView::testMWidgetAction()
     }
 }
 
+void Ut_MToolBarView::testSetWidgetAfterWidgetActionIsAdded()
+{
+    QPointer<MWidgetAction> action = new MWidgetAction(m_toolbar);
+    action->setLocation(MAction::ToolBarLocation);
+
+    m_toolbar->addAction(action);
+    QVERIFY(m_toolbar->actions().count() == 1);
+
+    QPointer<MTextEdit> widget = new MTextEdit;
+    action->setWidget(widget);
+
+    QPointer<MTextEdit> widgetInToolBar = dynamic_cast<MTextEdit*>(m_toolbarview->getWidget(action));
+    QVERIFY(widgetInToolBar);
+
+    qApp->processEvents();
+
+    QVERIFY(widgetInToolBar->isVisible());
+}
+
+void Ut_MToolBarView::testChangeWidgetInWidgetAction()
+{
+    QPointer<MWidgetAction> action = new MWidgetAction(m_toolbar);
+    action->setLocation(MAction::ToolBarLocation);
+    QPointer<MTextEdit> widget = new MTextEdit;
+    action->setWidget(widget);
+    m_toolbar->addAction(action);
+
+    QPointer<MTextEdit> editInToolBar = dynamic_cast<MTextEdit*>(m_toolbarview->getWidget(action));
+    QVERIFY(editInToolBar);
+
+    MWidget *widgetInAction = action->widget();
+    QVERIFY(editInToolBar == widgetInAction);
+    action->releaseWidget(editInToolBar);
+
+    QPointer<MButton> button = new MButton;
+    action->setWidget(button);
+
+    QPointer<MButton> widgetInToolBar = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
+    QVERIFY(widgetInToolBar);
+
+    widgetInAction = action->widget();
+    QVERIFY(widgetInToolBar == widgetInAction);
+
+    qApp->processEvents();
+
+    QVERIFY(widgetInToolBar->isVisible());
+}
+
+void Ut_MToolBarView::testRemoveWidgetFromWidgetAction()
+{
+    QPointer<MWidgetAction> action = new MWidgetAction(m_toolbar);
+    action->setLocation(MAction::ToolBarLocation);
+    QPointer<MTextEdit> widget = new MTextEdit;
+    action->setWidget(widget);
+    m_toolbar->addAction(action);
+
+    QPointer<MTextEdit> widgetInToolBar = dynamic_cast<MTextEdit*>(m_toolbarview->getWidget(action));
+    QVERIFY(widgetInToolBar);
+
+    MWidget *widgetInAction = action->widget();
+    action->releaseWidget(widgetInAction);
+
+    action->setWidget(0);
+
+    QVERIFY(!m_toolbarview->getWidget(action));
+    QVERIFY(m_toolbar->actions().count() == 1);
+}
+
 void Ut_MToolBarView::testAddToLandscapeWhenInPortrait()
 {
     QVERIFY(m_toolbar->actions().isEmpty());

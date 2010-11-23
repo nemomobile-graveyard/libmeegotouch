@@ -60,17 +60,18 @@ void MWidgetAction::setWidget(MWidget *widget)
 
     // set new default widget
     d->widget = widget;
-    if (!widget)
-        return;
+    if (widget) {
+        setVisible(widget->isVisible());
 
-    setVisible(widget->isVisible());
+        d->widget->hide();
+        d->widget->setParentItem(0);
+        d->widgetInUse = false;
 
-    d->widget->hide();
-    d->widget->setParentItem(0);
-    d->widgetInUse = false;
+        if (! isEnabled())
+            d->widget->setEnabled(false);
+    }
 
-    if (! isEnabled())
-        d->widget->setEnabled(false);
+    d->sendDataChanged();
 }
 
 MWidget *MWidgetAction::widget() const

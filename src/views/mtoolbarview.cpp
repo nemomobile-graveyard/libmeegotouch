@@ -135,8 +135,10 @@ void MToolBarViewPrivate::add(QAction *action)
 
     if (landscapeIndex == -1 && portraitIndex == -1)
         return; //Cancel adding action
+
     MWidget *widget = createWidget(action);
-    Q_ASSERT(widget);
+    if (!widget)
+        return;
 
     updateWidgetFromAction(widget, action);
 
@@ -190,6 +192,18 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
 void MToolBarViewPrivate::change(QAction *action)
 {
     Q_Q(MToolBarView);
+
+    MWidgetAction *widgetAction = qobject_cast<MWidgetAction *>(action);
+    if (widgetAction && leasedWidgets.contains(action) &&
+        (widgetAction->widget() != leasedWidgets.value(action))) {
+        // Widget in action is changed
+        if (!widgetAction->widget()) {
+            remove(action, false);
+            return;
+        }
+        leasedWidgets.remove(action);
+    }
+
     if(hasUnusableWidget(action))
         return;
     if(!action->isVisible()) {
@@ -317,8 +331,10 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
         MWidgetAction *widgetAction = qobject_cast<MWidgetAction *>(action);
         if (widgetAction) {
             widget = widgetAction->requestWidget(NULL);
-            leasedWidgets.insert(action, widget);
-            widget->show();
+            if (widget) {
+                leasedWidgets.insert(action, widget);
+                widget->show();
+            }
         } else {
             MButton *button = new MButton;
             button->setMinimumSize(0,0);
@@ -341,7 +357,7 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
             widget = button;
         }
     }
-    Q_ASSERT(widget);
+
     return widget;
 }
 bool MToolBarViewPrivate::isLocationValid(QAction *action, MAction::Location loc) const
