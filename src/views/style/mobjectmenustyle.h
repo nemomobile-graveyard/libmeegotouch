@@ -28,6 +28,10 @@ class M_VIEWS_EXPORT MObjectMenuStyle : public MSceneWindowStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MObjectMenuStyle)
+    M_STYLE_ATTRIBUTE(QString, titleStyleName, TitleStyleName)
+    M_STYLE_ATTRIBUTE(QString, titleIconStyleName, TitleIconStyleName)
+    M_STYLE_ATTRIBUTE(QString, titleLabelStyleName, TitleLabelStyleName)
+    M_STYLE_ATTRIBUTE(QString, titleSeparatorStyleName, TitleSeparatorStyleName)
 };
 
 class M_VIEWS_EXPORT MObjectMenuStyleContainer : public MSceneWindowStyleContainer

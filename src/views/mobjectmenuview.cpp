@@ -23,9 +23,11 @@
 #include "mbutton.h"
 #include "mimagewidget.h"
 #include "mlabel.h"
+#include "mseparator.h"
 #include "mviewcreator.h"
 #include "mobjectmenu.h"
 
+#include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 
 #include "mwidgetaction.h"
@@ -39,10 +41,11 @@ MObjectMenuViewPrivate::MObjectMenuViewPrivate() :
       mainLayout(0),
       actionLayout(0),
       titleLayout(0),
-      controller(0), 
+      controller(0),
       titleArea(0),
       titleLabel(0),
       titleIcon(0),
+      titleSeparator(0),
       actionViewport(0),
       actionWidget(0)
 {
@@ -61,23 +64,27 @@ void MObjectMenuViewPrivate::init()
     controller->setLayout(mainLayout);
 
     //create title bar
-    titleLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    titleLayout = new QGraphicsGridLayout();
     titleLayout->setSpacing(0);
     titleLayout->setContentsMargins(0.0,0.0,0.0,0.0);
     titleArea = new MObjectMenuTitleArea(controller);
-    titleArea->setStyleName("ObjectMenuTitleArea");
     titleArea->setLayout(titleLayout);
-    
+
     //create and add title icon
     titleIcon = new MImageWidget(titleArea);
-    titleLayout->addItem(titleIcon);
-    titleLayout->setAlignment(titleIcon, Qt::AlignCenter);    
-        
+    titleLayout->addItem(titleIcon, 0, 0);
+    titleLayout->setAlignment(titleIcon, Qt::AlignCenter);
+
     //create and add title label
     titleLabel = new MLabel("", titleArea);
     titleLabel->setTextElide(true);
-    titleLayout->addItem(titleLabel);
+    titleLayout->addItem(titleLabel, 0, 1);
     titleLayout->setAlignment(titleLabel, Qt::AlignCenter);
+
+    //create and add title separator
+    titleSeparator = new MSeparator(titleArea);
+    titleLayout->addItem(titleSeparator, 1, 0, 1, 2);
+    titleLayout->setAlignment(titleSeparator, Qt::AlignCenter);
 
     //setup pannable viewport for the action buttons
     actionLayout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -95,8 +102,8 @@ void MObjectMenuViewPrivate::updateIcon()
 {
     Q_Q(MObjectMenuView);
 
-    //setup the icon, first try to load it from filesystem, 
-    //if it fails load it from theme, if iconId is "" hide 
+    //setup the icon, first try to load it from filesystem,
+    //if it fails load it from theme, if iconId is "" hide
     //the image widget
     if( !q->model()->iconId().isEmpty() ) {
         QPixmap pm(q->model()->iconId());
@@ -105,21 +112,20 @@ void MObjectMenuViewPrivate::updateIcon()
         else
             titleIcon->setImage(q->model()->iconId());
         titleIcon->show();
-        titleLayout->insertItem(0, titleIcon);
-        titleLayout->setAlignment(titleIcon, Qt::AlignCenter);    
+        titleLayout->addItem(titleIcon, 0, 0);
+        titleLayout->setAlignment(titleIcon, Qt::AlignCenter);
     } else {
-        
         titleIcon->setImage(q->model()->iconId());
         titleIcon->hide();
-        titleLayout->removeItem(titleIcon);
+        titleLayout->removeAt(0);
     }
 }
 
 void MObjectMenuViewPrivate::updateTitleAreaVisibility()
 {
     Q_Q(MObjectMenuView);
-    
-    //hide whole title area if title == "" and icon is not visible            
+
+    //hide whole title area if title == "" and icon is not visible
     if( q->model()->title().isEmpty() && q->model()->iconId().isEmpty() ) {
         mainLayout->removeItem(titleArea);
         titleArea->hide();
@@ -203,7 +209,7 @@ void MObjectMenuView::actionAdded(MAction *action)
         }
 
         d->buttons.insert(action, button);
-        
+
         //viewport doesnt update its size without this
         d->actionViewport->setWidget(d->actionWidget);
     }
@@ -280,7 +286,7 @@ void MObjectMenuView::updateData(const QList<const char *> &modifications)
             d->titleLabel->setText(model()->title());
             d->updateTitleAreaVisibility();
         } else if (member == MObjectMenuModel::IconId ) {
-            d->updateIcon();            
+            d->updateIcon();
             d->updateTitleAreaVisibility();
         }
     }
@@ -332,6 +338,10 @@ void MObjectMenuView::setupModel()
         actionAdded(action);
     }
 #endif
+    d->titleArea->setStyleName(style()->titleStyleName());
+    d->titleIcon->setStyleName(style()->titleIconStyleName());
+    d->titleLabel->setStyleName(style()->titleLabelStyleName());
+    d->titleSeparator->setStyleName(style()->titleSeparatorStyleName());
 
     d->titleLabel->setText(model()->title());
     d->updateIcon();

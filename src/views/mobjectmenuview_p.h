@@ -29,9 +29,11 @@
 
 class MButton;
 class MAction;
+class QGraphicsGridLayout;
 class QGraphicsLinearLayout;
 class MLabel;
 class MImageWidget;
+class MSeparator;
 class MPannableViewport;
 
 class MObjectMenuViewPrivate
@@ -58,13 +60,14 @@ public:
 
     QGraphicsLinearLayout* mainLayout;
     QGraphicsLinearLayout* actionLayout;
-    QGraphicsLinearLayout* titleLayout;
+    QGraphicsGridLayout* titleLayout;
 
     MObjectMenu *controller;
 
     MWidgetController* titleArea;
     MLabel* titleLabel;
     MImageWidget* titleIcon;
+    MSeparator* titleSeparator;
 
     MPannableViewport* actionViewport;
     QGraphicsWidget* actionWidget;
