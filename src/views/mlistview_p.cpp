@@ -297,7 +297,11 @@ void MListViewPrivate::updatePannableViewportPosition()
         connectPannableViewport();
 
     if(pannableViewport && controller) {
-        listPosition = controller->mapToItem(pannableViewport->widget(), 0, 0);
+        QPointF oldListPosition = listPosition;
+
+        listPosition = controller->mapToItem(pannableViewport->widget(), 0, 0);        
+        viewportTopLeft += (oldListPosition - listPosition);
+
         listOffset = calculatePannableViewportOffset(listPosition);
         updateListIndexOffset();
     }
