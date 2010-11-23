@@ -24,7 +24,6 @@
 #include <MDebug>
 #include <MDismissEvent>
 #include <MHomeButtonPanel>
-#include <mstatusbar.h>
 #include <MLocale>
 #include <MScene>
 #include <MWindow>
@@ -49,7 +48,6 @@ MDialogPrivate::MDialogPrivate()
     dumbMode(false),
     standAloneWindow(0),
     homeButtonPanel(0),
-    statusBar(0),
     suicideAfterDestroyingStandAloneWindow(false)
 {
 }
@@ -136,16 +134,13 @@ void MDialogPrivate::updateStandAloneHomeButtonVisibility()
     if (q->isSystem() && q->isModal()) {
         // Remove the home button if it's there.
         removeSceneWindowFromStandaloneScene(homeButtonPanel);
-        removeSceneWindowFromStandaloneScene(statusBar);
     } else {
         // Put a home button on the system modal window
         homeButtonPanel = new MHomeButtonPanel;
+        homeButtonPanel->setStyleName("systemDialog");
         standAloneWindow->connect(homeButtonPanel,
                                   SIGNAL(buttonClicked()), SLOT(showMinimized()));
 
-        statusBar = new MStatusBar;
-
-        standAloneWindow->sceneManager()->appearSceneWindowNow(statusBar);
         standAloneWindow->sceneManager()->appearSceneWindowNow(homeButtonPanel);
     }
 }
@@ -158,7 +153,6 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
     q->disconnect(SIGNAL(disappeared()), q, SLOT(_q_onStandAloneDialogDisappeared()));
 
     removeSceneWindowFromStandaloneScene(homeButtonPanel);
-    removeSceneWindowFromStandaloneScene(statusBar);
 
     standAloneWindow->close();
     standAloneWindow->setScene(0);

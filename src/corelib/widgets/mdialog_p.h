@@ -60,7 +60,6 @@ public:
     // top-level MWindow)
     MWindow *standAloneWindow;
     MHomeButtonPanel *homeButtonPanel;
-    MStatusBar *statusBar;
     bool suicideAfterDestroyingStandAloneWindow;
 };
 
