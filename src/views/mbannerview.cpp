@@ -42,6 +42,7 @@ MBannerViewPrivate::MBannerViewPrivate() :
     titleLabel(NULL),
     subtitleLabel(NULL),
     bannerTimeStampLabel(NULL),
+    prefixTimeStampLabel(NULL),
     bannerTimeStampData(NULL)
 {
 }
@@ -87,8 +88,6 @@ MLabel *MBannerViewPrivate::bannerTimeStamp()
     if (!bannerTimeStampLabel) {
         bannerTimeStampLabel = new MLabel(controller);
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
-        //TODO: giving opacity due to the property can't be set it in the CSS (yet)
-        bannerTimeStampLabel->setOpacity(0.5);
     }
 
     if (bannerTimeStampData){
