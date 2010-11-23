@@ -689,8 +689,14 @@ QRect MTextEditViewPrivate::preeditRectangle() const
 
 QRect MTextEditViewPrivate::cursorRect() const
 {
+    Q_Q(const MTextEditView);
     QRect rect;
     int position = controller->cursorPosition();
+    if (q->model()->edit() == MTextEditModel::EditModeActive
+        && q->model()->preeditCursor() >= 0) {
+        position = controller->textCursor().selectionStart() + q->model()->preeditCursor();
+    }
+
     const QTextBlock currentBlock = document()->findBlock(position);
     if (!currentBlock.isValid())
         return rect;
@@ -717,7 +723,8 @@ QRect MTextEditViewPrivate::cursorRect() const
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
 
-    rect = QRect((layoutPos.x() + x - hscroll), (layoutPos.y() + currentLine.y() - vscroll),
+    rect = QRect((layoutPos.x() + x - hscroll + q->style()->paddingLeft()),
+                 (layoutPos.y() + currentLine.y() - vscroll + q->style()->paddingTop()),
                  cursorWidth, cursorHeight);
 
     return rect;
