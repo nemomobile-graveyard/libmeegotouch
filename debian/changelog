@@ -1,8 +1,17 @@
-libmeegotouch (0.20.57~1) unstable; urgency=low
+libmeegotouch (0.20.57-1) unstable; urgency=low
 
+  * Fixes: NB#205385 - MSlider emits valueChanged multiple times after setting value in sliderReleased
+  * Fixes: NB#196025 - MLabel with text ending in 'f'
   * Fixes: NB#196936 - mservicemapper does not die along its session bus
+  * Fixes: NB#191603 - Container option of Widgets Gallery behaves weird.
+  * Fixes: NB#206327 - System dialog doesn't dim status area
+  * Fixes: NB#198570 - libmeegotouch libraries force gstreamer to every application
+  * Fixes: NB#206374 - MButton::switchType - possible to set is as 'checked' when setCheckable() is false.
+  * Fixes: NB#205177 - Navigation bar unnecessarily disappears and reappears when switching pages
+  * Fixes: NB#205895 - Homescreen displayed in portrait mode for a while after app was minimized (given scenario)
+  * Fixes: NB#202779 - <MemLeak> mgraphicseffect.cpp
 
- -- Holger Schröder <holger.schroeder.ext@basyskom.de>  Tue, 23 Nov 2010 14:48:36 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 23 Nov 2010 15:52:33 +0000
 
 libmeegotouch (0.20.56-1) unstable; urgency=low
 
