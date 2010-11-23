@@ -139,6 +139,7 @@ private slots:
 
     // Test that removing an extension during runtime will be noticed by the manager
     void testMonitorRemoveExtension();
+    void testMonitorRemoveExtensionWithTwoExtensionInstancesFromTheSameExtension();
 
     // Test that instantating an inexisting extension fails
     void testInstantiateInProcessExtensionWhichDoesNotExist();
@@ -182,6 +183,8 @@ private slots:
     void testRemoveWidgetInProcessExtension();
     // Test removing out of porcess extension
     void testRemoveOutOfProcessExtension();
+
+    void testInstantiatingTwoInProcessExtensionsFromTheSameSource();
 };
 
 #endif // UT_MAPPLICATIONEXTENSIONMANAGER

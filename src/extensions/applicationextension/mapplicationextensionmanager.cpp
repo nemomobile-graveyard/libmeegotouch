@@ -44,8 +44,9 @@ MApplicationExtensionManager::~MApplicationExtensionManager()
     foreach (MExtensionHandle* handle, outOfProcessHandles) {
         delete handle;
     }
-    foreach (InProcessExtensionData extension, inProcessExtensions) {
-        delete extension.first;
+
+    foreach (const MApplicationExtensionMetaData* metaData, inProcessExtensions.keys()) {
+        removeInProcessExtension(*metaData);
     }
 }
 
@@ -197,7 +198,6 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(QSharedPointer<
                 if (success) {
                     QGraphicsWidget *widget = extension->widget();
                     if (widget) {
-                        QString tmp = metadata->fileName();
                         QSharedPointer<MDataStore> dataStore =
                             createSubDataStore(*metadata);
                         inProcessDataStores[metadata.data()] = dataStore;
@@ -205,6 +205,7 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(QSharedPointer<
                     }
                     // Store the instantiated extension
                     inProcessExtensions[metadata.data()] = qMakePair(extension, widget);
+                    inProcessExtensionUsageCounts[extension]++;
                     // Inform interested parties about the new extension
                     emit extensionInstantiated(extension);
                 }
@@ -259,9 +260,14 @@ void MApplicationExtensionManager::removeInProcessExtension(
             emit widgetRemoved(extension.second);
         }
         inProcessDataStores.remove(&metadata);
-        delete extension.first;
-        QPluginLoader loader(metadata.extensionBinary());
-        loader.unload();
+
+        inProcessExtensionUsageCounts[extension.first]--;
+        if (inProcessExtensionUsageCounts[extension.first] == 0) {
+            delete extension.first;
+            QPluginLoader loader(metadata.extensionBinary());
+            loader.unload();
+            inProcessExtensionUsageCounts.remove(extension.first);
+        }
     }
 }
 

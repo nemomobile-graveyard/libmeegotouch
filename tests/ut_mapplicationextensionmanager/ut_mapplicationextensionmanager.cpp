@@ -236,6 +236,34 @@ void Ut_MApplicationExtensionManager::testMonitorRemoveExtension()
     QCOMPARE(signalListener.removedExtensions.at(0).second, QString("2nd extension"));
 }
 
+void Ut_MApplicationExtensionManager::testMonitorRemoveExtensionWithTwoExtensionInstancesFromTheSameExtension()
+{
+    gDesktopEntryList.clear();
+
+    // Fire up a couple of extensions
+    gDesktopEntryList << "test1.desktop" << "test2.desktop";
+
+    gDefaultMApplicationExtensionMetaDataStub.stubSetReturnValue("isValid", true);
+    gDefaultMApplicationExtensionMetaDataStub.stubSetReturnValue("interface", interfaceName);
+    gMApplicationExtensionMetaDataStub->stubSetReturnValue("extensionBinary", QString("test"));
+    setupGoodExtension(true, NULL, "extension");
+    // Put the same extension a second time to the list
+    gQPluginLoaderInstances.append(gQPluginLoaderInstances.first());
+
+    setupTestSubject();
+
+    // Remove one extension from the file system
+    gDesktopEntryList.clear();
+    gDesktopEntryList << "test1.desktop";
+
+    // Notify about a file system change
+    emit directoryChanged(APPLICATION_EXTENSION_DATA_DIR);
+
+    // Observe that the correct extension was removed
+    QCOMPARE(signalListener.removedExtensions.count(), 1);
+    QCOMPARE(signalListener.removedExtensions.at(0).second, QString("extension"));
+}
+
 void Ut_MApplicationExtensionManager::testInstantiateInProcessExtensionWhichDoesNotExist()
 {
     QSharedPointer<const MApplicationExtensionMetaData> metaData(
@@ -501,6 +529,22 @@ void Ut_MApplicationExtensionManager::testRemoveOutOfProcessExtension()
     manager->removeOutOfProcessExtension(*metaData);
     QCOMPARE(signalListener.removedWidgets.count(), 1);
     QCOMPARE(signalListener.removedWidgets.at(0), handle);
+}
+
+void Ut_MApplicationExtensionManager::testInstantiatingTwoInProcessExtensionsFromTheSameSource()
+{
+    setupGoodExtension();
+    // Put the same extension a second time to the list
+    gQPluginLoaderInstances.append(gQPluginLoaderInstances.first());
+
+    QSharedPointer<const MApplicationExtensionMetaData> metaData1(new MApplicationExtensionMetaData("test1"));
+    QCOMPARE(manager->instantiateInProcessExtension(metaData1), true);
+    QSharedPointer<const MApplicationExtensionMetaData> metaData2(new MApplicationExtensionMetaData("test2"));
+    QCOMPARE(manager->instantiateInProcessExtension(metaData2), true);
+
+    QCOMPARE(signalListener.instantiatedExtensions.count(), 2);
+    QCOMPARE(signalListener.instantiatedExtensions.at(0), extensions.at(0));
+    QCOMPARE(signalListener.instantiatedExtensions.at(1), extensions.at(0));
 }
 
 QTEST_MAIN(Ut_MApplicationExtensionManager)

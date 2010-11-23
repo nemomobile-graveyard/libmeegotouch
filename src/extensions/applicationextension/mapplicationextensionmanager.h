@@ -166,16 +166,18 @@ private:
     //! Filter for extensions allowed to be loaded out-of-process
     QRegExp outOfProcessFilter;
 
-    typedef QPair<MApplicationExtensionInterface*, QGraphicsWidget*> InProcessExtensionData;
-
     //! The order in which the extensions should appear
     QStringList extensionOrder;
 
     //! The index where the extensions go when their order is unspecified
     int unorderedExtensionsIndex;
 
+    typedef QPair<MApplicationExtensionInterface*, QGraphicsWidget*> InProcessExtensionData;
     //! In-process extensions and datastores
     QHash<const MApplicationExtensionMetaData*, InProcessExtensionData> inProcessExtensions;
+
+    //! Keeps track how many times a given extension is in use
+    QHash<MApplicationExtensionInterface*, uint> inProcessExtensionUsageCounts;
 
     QHash<const MApplicationExtensionMetaData*,
       QSharedPointer<MDataStore> > inProcessDataStores;

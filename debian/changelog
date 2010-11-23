@@ -1,6 +1,7 @@
 libmeegotouch (0.20.58~1) unstable; urgency=low
 
   * unreleased 
+  * Fixes: NB#203288 - COREWEB: /usr/bin/music-suite '__libc_message malloc_printerr __libc_free'
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 23 Nov 2010 16:12:38 +0000
 
