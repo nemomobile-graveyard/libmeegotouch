@@ -118,22 +118,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_pauseAnimation())
     Q_PRIVATE_SLOT(d_func(), void _q_resumeAnimation())
     Q_PRIVATE_SLOT(d_func(), void _q_pauseOrResumeAnimation())
-
-private Q_SLOTS:
-    /*!
-      \brief Called when underlying controller object visibility changed
-     */
-    void visibilityChangedSlot();
-
-    /*!
-      \brief Called when underlying controller object enters display
-     */
-    void displayEnteredSlot();
-
-    /*!
-      \brief Called when underlying controller object enters display
-     */
-    void displayExitedSlot();
 };
 
 #endif // MSPINNERVIEW_H
