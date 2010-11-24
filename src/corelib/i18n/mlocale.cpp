@@ -52,7 +52,7 @@
 namespace
 {
     const char *const BackupNameFormatString = "%d%t%g%t%m%t%f";
-    const QString RtlLanguages("am:ar:fa:he:ps:ur:");
+    const QString RtlLanguages("ar:fa:he:ps:ur:");
     const char *const Languages = "Languages";
     const char *const Countries = "Countries";
 
