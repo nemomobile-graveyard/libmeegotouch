@@ -182,15 +182,24 @@ void LanguagePage::retranslateUi()
     foreach (const QString &localeName, localeNames) {
         QString localeNameDescription;
         MLocale locale(localeName);
+        QString directionMarker;
         if (locale.textDirection() == Qt::RightToLeft)
-            localeNameDescription += QChar(0x200F); // U+200F RIGHT-TO-LEFT MARK
+            directionMarker = QChar(0x200F); // U+200F RIGHT-TO-LEFT MARK
+        else
+            directionMarker = QChar(0x200E); // U+200E LEFT-TO-RIGHT MARK
         QString languageEndonym = locale.languageEndonym();
         if (!languageEndonym.isEmpty())
             languageEndonym[0] = languageEndonym.at(0).toUpper();
         localeNameDescription +=
-            localeName + ": " + languageEndonym;
+            localeName + ": "
+            + directionMarker
+            + languageEndonym
+            + directionMarker;
         if (!locale.countryEndonym().isEmpty())
-            localeNameDescription += " (" + locale.countryEndonym() + ')';
+            localeNameDescription +=
+                directionMarker
+                + " (" + locale.countryEndonym() + ')'
+                + directionMarker;
         rowsLocale
             << (QStringList()
                 << localeNameDescription
