@@ -21,7 +21,9 @@ greaterThan(ICUVERSION, 4.4) {
                  data/lang/id.txt \
                  data/lang/ms.txt \
                  data/lang/pt.txt \
-                 data/lang/pt_PT.txt
+                 data/lang/pt_PT.txt \
+                 data/lang/zh.txt \
+                 data/lang/zh_Hant.txt
     REGIONTXT  = 
 } else {
     # old icu version, just do nothing
