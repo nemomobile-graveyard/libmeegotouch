@@ -160,8 +160,8 @@ void MyPage::pinchGestureEvent(QGestureEvent *event,
 
         // Same deal for the scale as above, the current scale of the widget is
         // adjusted while the absolute scale value of the gesture is not important.
-        qreal scaleDelta = gesture->scaleFactor() - gesture->lastScaleFactor();
-        qreal newScale = currentImage->scale() + scaleDelta;
+        // The scaleFactor() methods provides us the delta value since last gesture event.
+        qreal newScale = currentImage->scale() * gesture->scaleFactor();
         // Let's limit the range the image can be scaled: Shrink by 80%, grow by 400%
         if (newScale > 0.2f && newScale < 4.0f)
             currentImage->setScale(newScale);

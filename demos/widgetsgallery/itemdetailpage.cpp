@@ -285,9 +285,7 @@ void ItemDetailPage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gest
     if (gesture->state() == Qt::GestureFinished || gesture->state() == Qt::GestureCanceled)
         pinching = false;
 
-    qreal scale = image->zoomFactor() * (gesture->scaleFactor() - lastScaleFactor + 1);
-    // FIXME: Once the updated pinch gesture arrives replace the above calcuation with the one below.
-    // qreal scale = image->zoomFactor() * gesture->scaleFactor();
+    qreal scale = image->zoomFactor() * gesture->scaleFactor();
     image->setZoomFactor(scale);
 
     lastScaleFactor = gesture->scaleFactor();

@@ -216,7 +216,7 @@ void ImagePage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
         if (originalScaleFactor == 0) originalScaleFactor = 1;
     }
 
-    slider->setValue(originalScaleFactor * gesture->scaleFactor());
+    slider->setValue(originalScaleFactor * gesture->totalScaleFactor());
 
     event->accept(gesture);
 
