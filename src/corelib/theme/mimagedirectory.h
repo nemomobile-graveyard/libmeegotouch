@@ -72,9 +72,7 @@ struct PixmapCacheEntry {
 class ImageResource
 {
 public:
-    ImageResource(const QString& absoluteFilePath)
-        : filePath(absoluteFilePath) {}
-
+    ImageResource(const QString& absoluteFilePath);
     virtual ~ImageResource() {}
 
     // creates a cache entry if there's no such yet, otherwise just increase the refCount
@@ -105,6 +103,9 @@ private:
     void saveToFsCache(const QImage pixmap, const QSize& size);
     QString createCacheFilename(const QSize& size);
 
+#ifdef  Q_WS_X11
+    bool convertToX11;
+#endif
     QString filePath;
     // pixmaps created from this image resource
     QHash<QSize, PixmapCacheEntry*> cachedPixmaps;

@@ -43,6 +43,21 @@ uint qHash(const QSize &size)
     return (size.width() & 0x0000ffff) | (size.height() << 16);
 }
 
+ImageResource::ImageResource(const QString& absoluteFilePath) :
+#ifdef  Q_WS_X11
+    convertToX11(false),
+#endif
+    filePath(absoluteFilePath)
+{
+#ifdef  Q_WS_X11
+    // When starting an application, the X11 window must be filled with a default background
+    // image in a fast way. The filling can only be done fast if the background image is available
+    // as X11 pixmap.
+    convertToX11 = MGraphicsSystemHelper::isRunningMeegoCompatibleGraphicssystem()
+                   && absoluteFilePath.contains("forcex11");
+#endif
+}
+
 MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
 {
     QHash<QSize, PixmapCacheEntry*>::iterator it = cachedPixmaps.find(size);
@@ -65,7 +80,24 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
             }
         }
 
+#ifdef  Q_WS_X11
+        if (convertToX11) {
+            Pixmap x11Pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
+                                             image.width(), image.height(), 16);
+            cacheEntry->pixmap = new QPixmap(QPixmap::fromX11Pixmap(x11Pixmap));
+
+            QPainter painter(cacheEntry->pixmap);
+            painter.drawImage(0, 0, image);
+            painter.end();
+
+            XSync(QX11Info::display(), false);
+            cacheEntry->handle.xHandle = cacheEntry->pixmap->handle();
+        } else {
+            MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
+        }
+#else
         MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
+#endif
     } else  {
         cacheEntry = *it;
     }
@@ -334,7 +366,7 @@ ImageResource *MThemeImagesDirectory::findImage(const QString &imageId)
             localizedImageResources.insert(imageId, resource);
         }
     }
-    
+
     if (!resource) {
         // Check if we have this id already resolved
         resource = imageResources.value(imageId, NULL);
@@ -371,7 +403,7 @@ void MThemeImagesDirectory::reloadLocalizedResources(const QString &locale)
     }
 
     //try to find a matching directory for the specified locale, if exactly matching
-    //directory is not found we try to truncate the locale string to find next matching 
+    //directory is not found we try to truncate the locale string to find next matching
     //directory ("ar_SA" ==> "ar", "en_GB" ==> "en" etc. )
     QString localePath;
     m_locale = locale;
@@ -452,7 +484,7 @@ void MThemeImagesDirectory::readImageResources(const QString& path, bool localiz
         if (!dir.exists()) {
             continue;
         }
-        
+
         // go through all files in this directory.
         QFileInfoList fileInfoList = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot);
         QFileInfoList::const_iterator i = fileInfoList.constBegin();
@@ -477,7 +509,7 @@ void MThemeImagesDirectory::readSvgResources(const QString& path, bool localized
         if (!dir.exists()) {
             continue;
         }
-        
+
         // go through all files in this directory.
         QFileInfoList fileInfoList = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot);
         QFileInfoList::const_iterator i = fileInfoList.constBegin();
@@ -497,8 +529,8 @@ void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool loc
     if( !localized ) {
         //only one image resource from the theme with a same name is allowed
         if (imageResources.contains(fileInfo.baseName())) {
-            mWarning("MThemeDaemon") << "Multiple reference of " << fileInfo.baseName() 
-                                     << "Using " << imageResources.value(fileInfo.baseName())->absoluteFilePath() 
+            mWarning("MThemeDaemon") << "Multiple reference of " << fileInfo.baseName()
+                                     << "Using " << imageResources.value(fileInfo.baseName())->absoluteFilePath()
                                      << "instead of" << fileInfo.absoluteFilePath();
         } else {
             //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
@@ -506,13 +538,13 @@ void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool loc
         }
     }
     else {
-        //add localized image resource only if same named resource was found from the original theme 
+        //add localized image resource only if same named resource was found from the original theme
         if (!imageResources.contains(fileInfo.baseName()) && !idsInSvgImages.contains(fileInfo.baseName())) {
             mWarning("MThemeDaemon") << "Ignoring localized image resource" << fileInfo.absoluteFilePath() << "because it was not found from the original theme!";
         } else {
             //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
             localizedImageResources.insert(fileInfo.baseName(), fileInfo.suffix() == QLatin1String("svg") ? (ImageResource*) new IconImageResource(fileInfo.absoluteFilePath()) : (ImageResource*) new PixmapImageResource(fileInfo.absoluteFilePath()));
-        }    
+        }
     }
 }
 
@@ -531,7 +563,7 @@ void MThemeImagesDirectory::addSvgResource(const QFileInfo& fileInfo, bool local
             while ((pos = idRegexp.indexIn(content, pos)) != -1) {
                 QString id = idRegexp.cap(2);
                 svgIds.insert(id, fileInfo.absoluteFilePath());
-                
+
                 pos += idRegexp.matchedLength();
                 ids << id;
             }

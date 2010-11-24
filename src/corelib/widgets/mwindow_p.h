@@ -58,6 +58,7 @@ public:
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
+    void applyWindowBackground();
     void setX11Property(const char *propertyName, qreal value);
     qreal getX11Property(const char *propertyName) const;
     void setX11PrestartProperty(bool set);
@@ -99,6 +100,7 @@ public:
     void initGLViewport();
     void initSoftwareViewport();
     void configureViewport();
+    void disableAutomaticBackgroundRepainting();
     void playScreenshotEffect();
 
     /**
@@ -132,6 +134,7 @@ public:
     QElapsedTimer timeSinceLastPaintInSwitcher;
     bool updateIsPending;
     bool discardedPaintEvent;
+    bool beforeFirstPaintEvent;
     int invisiblePaintCounter;
     const int allowedPaintEventsWhenInvisible;
 

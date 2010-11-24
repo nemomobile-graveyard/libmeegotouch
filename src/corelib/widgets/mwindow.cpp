@@ -40,6 +40,7 @@
 #include "mgconfitem.h"
 #include "mlocale.h"
 #include "mgraphicssystemhelper.h"
+#include "mwindowstyle.h"
 
 #include <QPropertyAnimation>
 #include <QSettings>
@@ -92,6 +93,7 @@ MWindowPrivate::MWindowPrivate() :
     minimizedSoftwareSwitch(false),
     updateIsPending(false),
     discardedPaintEvent(false),
+    beforeFirstPaintEvent(true),
     invisiblePaintCounter(0),
     allowedPaintEventsWhenInvisible(5),
     q_ptr(NULL)
@@ -217,6 +219,11 @@ void MWindowPrivate::initGLViewport()
     bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);
 
     MGraphicsSystemHelper::switchToHardwareRendering(q, &glContext);
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    if (beforeFirstPaintEvent && !translucent) {
+        applyWindowBackground();
+    }
+#endif
 
     if (translucent) {
         QPalette palette;
@@ -251,14 +258,23 @@ void MWindowPrivate::configureViewport()
 
     q->setAttribute(Qt::WA_AcceptTouchEvents);
 
-    // If we don't set this flag, the technique of discarding paintEvent() calls
+    if (!beforeFirstPaintEvent) {
+        disableAutomaticBackgroundRepainting();
+    }
+}
+
+void MWindowPrivate::disableAutomaticBackgroundRepainting()
+{
+    Q_Q(MWindow);
+
+    // If we don't set these flags, the technique of discarding paintEvent() calls
     // for limiting the framerate (e.g. because window is a thumbnail in the
     // application switcher) will cause the window to flicker between its regular
     // appearance and a blank window.
     // That's because even though we avoided the actual rendering of the contents,
     // by the time paintEvent() is called Qt might have already painted the system
     // background over of the window's previous state. This seems to be happening only
-    // with softare rendering.
+    // with software rendering.
     q->setAttribute(Qt::WA_OpaquePaintEvent);
     q->setAttribute(Qt::WA_NoSystemBackground);
     q->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
@@ -329,6 +345,38 @@ void MWindowPrivate::appendVisibilityChangeMask()
     newAttributes.event_mask = existingAttributes.your_event_mask | VisibilityChangeMask;
 
     XChangeWindowAttributes(QX11Info::display(), robustEffectiveWinId(), CWEventMask, &newAttributes);
+}
+
+void MWindowPrivate::applyWindowBackground()
+{
+    Q_Q(const MWindow);
+
+    const WId windowId = robustEffectiveWinId();
+    const MWindowStyle *style =
+            static_cast<const MWindowStyle *>(MTheme::style("MWindowStyle",
+                                                            QString(), QString(), QString(),
+                                                            q->orientation()));
+    if (!style) {
+        mWarning("MWindow") << "No MWindowStyle found";
+        return;
+    }
+
+    const QString backgroundId = style->backgroundImage();
+    if (backgroundId.isEmpty()) {
+        // TODO: Mapping an arbitrary RGB-color to X11 requires some effort. Currently
+        // black is used until it is decided whether using a color as background should
+        // be supported.
+        XSetWindowBackground(QX11Info::display(), windowId, BlackPixel(QX11Info::display(), QX11Info::appScreen()));
+    } else {
+        const QPixmap *background = MTheme::pixmap(backgroundId);
+        if (background) {
+            XSetWindowBackgroundPixmap(QX11Info::display(), windowId, background->handle());
+        } else {
+            mWarning("MWindow") << "No valid MWindowStyle::backgroundImage found";
+        }
+    }
+    XClearWindow(QX11Info::display(), windowId);
+    MTheme::releaseStyle(style);
 }
 #endif
 
@@ -1128,6 +1176,10 @@ void MWindow::paintEvent(QPaintEvent *event)
         MGLES2Renderer::activate(d->glContext);
     }
 #endif // M_USE_OPENGL
+    if (d->beforeFirstPaintEvent) {
+        d->beforeFirstPaintEvent = false;
+        d->disableAutomaticBackgroundRepainting();
+    }
 
     if (!isOnDisplay()) {
         // we allow some paint events when we are not visible as we might have a race between
