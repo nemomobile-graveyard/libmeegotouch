@@ -467,11 +467,11 @@ void Ft_Locales::testMLocaleTextDirection_data()
     QTest::addColumn<int>("direction");
 
     QTest::newRow("fi") << QString("fi") << (int) Qt::LeftToRight;
+    QTest::newRow("am") << QString("am") << (int) Qt::LeftToRight;
     QTest::newRow("ar") << QString("ar") << (int) Qt::RightToLeft;
     QTest::newRow("he") << QString("he") << (int) Qt::RightToLeft;
     QTest::newRow("ur") << QString("ur") << (int) Qt::RightToLeft;
     QTest::newRow("fa") << QString("fa") << (int) Qt::RightToLeft;
-    QTest::newRow("am") << QString("am") << (int) Qt::RightToLeft;
     QTest::newRow("ps") << QString("ps") << (int) Qt::RightToLeft;
     QTest::newRow("snd") << QString("snd_Arab_AF") << (int) Qt::RightToLeft;
     QTest::newRow("snd") << QString("snd_Arab_AF_XXX") << (int) Qt::RightToLeft;
