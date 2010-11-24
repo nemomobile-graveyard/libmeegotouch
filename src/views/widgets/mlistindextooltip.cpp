@@ -28,9 +28,6 @@
 #include <QGraphicsLinearLayout>
 #include <QPropertyAnimation>
 
-#include <MWidgetCreator>
-M_REGISTER_WIDGET(MListIndexTooltip)
-
 MListIndexTooltipPrivate::MListIndexTooltipPrivate()
     : layout(NULL),
     arrowOffset(0.0),
@@ -45,6 +42,8 @@ MListIndexTooltipPrivate::MListIndexTooltipPrivate()
 
 MListIndexTooltipPrivate::~MListIndexTooltipPrivate()
 {
+    delete snapAnimation;
+    delete arrowOffsetAnimation;
 }
 
 void MListIndexTooltipPrivate::initLayout()
@@ -74,7 +73,6 @@ void MListIndexTooltipPrivate::initAnimations()
     snapAnimation->setTargetObject(panel);
     snapAnimation->setPropertyName("pos");
 
-    arrowOffsetAnimation->setParent(q);
     arrowOffsetAnimation->setTargetObject(q);
     arrowOffsetAnimation->setPropertyName("arrowOffset");
     arrowOffsetAnimation->setEndValue(0);
@@ -176,6 +174,7 @@ MListIndexTooltip::MListIndexTooltip(QGraphicsItem *parent)
 
 MListIndexTooltip::~MListIndexTooltip()
 {
+    delete d_ptr;
 }
 
 void MListIndexTooltip::setIndexCount(int count)
