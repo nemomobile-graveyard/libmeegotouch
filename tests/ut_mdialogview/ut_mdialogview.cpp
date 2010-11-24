@@ -20,6 +20,8 @@
 #include "ut_mdialogview.h"
 
 #include <mdialogstyle.h>
+#include <mlayout.h>
+#include <mlinearlayoutpolicy.h>
 #include "mdialogview_p.h"
 #include "mgridlayoutpolicy.h"
 //#include "mbuttongrouplayoutpolicy.h"
@@ -115,6 +117,7 @@ void Ut_MDialogView::titleBarVisibility()
 void Ut_MDialogView::spinnerVisibility()
 {
     QGraphicsWidget *dialogSpinner = 0;
+    QGraphicsWidget *titleBar = 0;
 
     dialogSpinner = fetchWidget(*controller, "MDialogProgressIndicator");
 
@@ -126,15 +129,18 @@ void Ut_MDialogView::spinnerVisibility()
     dialogSpinner = fetchWidget(*controller, "MDialogProgressIndicator");
 
     // after changing visibility to true spinner should be
-    // created and visible
+    // created and included in titleBar's layout
     QVERIFY(dialogSpinner != 0);
-    QCOMPARE(dialogSpinner->isVisible(), true);
+    titleBar = fetchWidget(*controller, "MDialogTitleBar");
+    QVERIFY(titleBar != 0);
+    MLayout *titleBarLayout = (MLayout*)titleBar->layout();
+    QVERIFY(titleBarLayout->policy()->itemAt(0)==dialogSpinner);
 
-    // after changing visibility to false spinner should
-    // be hidden
+    // after changing visibility to false spinner shouldn't be
+    // present in titleBar layout
     model->setProgressIndicatorVisible(false);
+    QVERIFY(titleBarLayout->policy()->itemAt(0)!=dialogSpinner);
 
-    QCOMPARE(dialogSpinner->isVisible(), false);
 
 }
 

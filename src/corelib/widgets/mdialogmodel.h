@@ -87,6 +87,7 @@ private:
         \brief List of buttons int the button box.
     */
     M_MODEL_PROPERTY(MDialogButtonsList, buttons, Buttons, true, MDialogButtonsList())
+    M_MODEL_PROPERTY(QString, titleBarIconId, TitleBarIconId, true, QString())
 
 public:
 

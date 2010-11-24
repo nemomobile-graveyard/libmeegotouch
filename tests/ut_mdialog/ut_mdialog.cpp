@@ -217,6 +217,17 @@ void Ut_MDialog::settersAndGetters()
     }
 
     {
+        QString val;
+        val = QString("Test string 1");
+        dialog->setTitleBarIconId(val);
+        QCOMPARE(dialog->titleBarIconId(), val);
+
+        val = QString("Something else");
+        dialog->setTitleBarIconId(val);
+        QCOMPARE(dialog->titleBarIconId(), val);
+    }
+
+    {
         MButton *button1 = new MButton();
         MButton *button2 = new MButton();
 

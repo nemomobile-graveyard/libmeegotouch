@@ -613,4 +613,14 @@ MPannableWidget::PanningPolicy MDialog::contentsVerticalPanningPolicy() const
     return model()->contentsVerticalPanningPolicy();
 }
 
+QString MDialog::titleBarIconId() const
+{
+    return model()->titleBarIconId();
+}
+
+void MDialog::setTitleBarIconId(const QString &iconId)
+{
+    model()->setTitleBarIconId(iconId);
+}
+
 #include "moc_mdialog.cpp"

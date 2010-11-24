@@ -36,6 +36,8 @@ class MProgressIndicator;
 class MLayout;
 class MButtonGroupLayoutPolicy;
 class MGridLayoutPolicy;
+class MImageWidget;
+class MLinearLayoutPolicy;
 
 /*
 Widget hierarchy:
@@ -106,6 +108,8 @@ public:
     void updateButtonBox();
     void updateButtonBoxLayoutOrientation();
     void setSpinnerVisibility(bool visibility);
+    void updateTitleBarIconVisibility();
+    void updateTitleBarLayoutPolicy();
     bool hasCloseButton();
 
     MDialog *controller;
@@ -148,6 +152,15 @@ public:
     MWidgetController *buttonBox;
     MLayout *buttonBoxLayout;
     MButtonGroupLayoutPolicy *buttonBoxLayoutPolicy;
+    MImageWidget *titleBarIconImage;
+    MLinearLayoutPolicy *policyTitle;
+    MLinearLayoutPolicy *policyTitleClose;
+    MLinearLayoutPolicy *policyIconTitleClose;
+    MLinearLayoutPolicy *policySpinnerTitleClose;
+    MLinearLayoutPolicy *policyIconTitle;
+    MLinearLayoutPolicy *policySpinnerTitle;
+
+
 };
 
 class MTransparentWidget : public QGraphicsWidget {

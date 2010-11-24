@@ -1,9 +1,14 @@
 /*! \page news What's new in MeeGo Touch
 
+\section v02059 0.20.59
+
+\subsection New
+- MDialog::titleBarIconId() property. MDialog can now have an icon in the left corner at the titlebar.
+
 \section v02056 0.20.56
 
 \subsection New
-- MApplicationWindow::navigationBarOpacity propery. Navigation bar can now be made transparent on the fly.
+- MApplicationWindow::navigationBarOpacity property. Navigation bar can now be made transparent on the fly.
 
 \section v02054 0.20.54
 

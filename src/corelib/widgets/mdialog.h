@@ -534,6 +534,21 @@ public:
      */
     void setContentsVerticalPanningPolicy(MPannableWidget::PanningPolicy policy);
 
+    /*!
+     * \brief Returns the dialog's title bar icon id.
+     * \return Icon being displayed in dialog's title bar.
+     * \sa setTitleBarIconId()
+     */
+    QString titleBarIconId() const;
+
+    /*!
+     * \brief Sets the dialog's title bar icon.
+     *
+     * \param iconId Logical icon id to be displayed in title bar.
+     * \sa titleBarIconId()
+     */
+    void setTitleBarIconId(const QString &iconId);
+
 public Q_SLOTS:
     /*!
      * Shows the dialog on the currently active window and registers it in the

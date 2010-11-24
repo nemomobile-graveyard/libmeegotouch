@@ -25,6 +25,7 @@
 #include "mviewcreator.h"
 #include "mpannableviewport.h"
 #include "mscenemanager.h"
+#include "mimagewidget.h"
 #include <MLabel>
 #include <MButton>
 #include <MProgressIndicator>
@@ -60,7 +61,14 @@ MDialogViewPrivate::MDialogViewPrivate()
       closeButton(0),
       buttonBox(0),
       buttonBoxLayout(0),
-      buttonBoxLayoutPolicy(0)
+      buttonBoxLayoutPolicy(0),
+      titleBarIconImage(0),
+      policyTitle(0),
+      policyTitleClose(0),
+      policyIconTitleClose(0),
+      policySpinnerTitleClose(0),
+      policyIconTitle(0),
+      policySpinnerTitle(0)
 {
 }
 
@@ -185,8 +193,8 @@ void MDialogViewPrivate::realignButtonBox()
 
 void MDialogViewPrivate::createTitleBar()
 {
-    QGraphicsLinearLayout *layout = createLayout(Qt::Horizontal);
-
+    MLayout *layout = new MLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
 
     // OBS: Need any simple class whose styling works.
     //      For some reason neither MWidgetController nor MStylableWidget get its
@@ -200,15 +208,22 @@ void MDialogViewPrivate::createTitleBar()
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setTextElide(true);
     titleLabel->setObjectName("CommonGroupHeader");
-    layout->addItem(titleLabel);
-    layout->setAlignment(titleLabel, Qt::AlignCenter);
 
     closeButton = new MButton(titleBar);
     closeButton->setObjectName("MDialogCloseButton");
     closeButton->setViewType("icon");
     closeButton->setIconID("icon-m-framework-close");
-    layout->addItem(closeButton);
-    layout->setAlignment(closeButton, Qt::AlignVCenter | Qt::AlignHCenter);
+    policyTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policyTitle->setSpacing(0);
+    policyTitle->addItem(titleLabel);
+
+    policyTitleClose = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policyTitleClose->setSpacing(0);
+    policyTitleClose->addItem(titleLabel);
+    policyTitleClose->addItem(closeButton);
+
+    layout->setPolicy(policyTitleClose);
+
     QObject::connect(closeButton, SIGNAL(clicked()), controller, SLOT(reject()));
 }
 
@@ -295,6 +310,7 @@ void MDialogView::applyStyle()
 
 
     d->setupDialogVerticalAlignment();
+    d->updateTitleBarLayoutPolicy();
 }
 
 void MDialogViewPrivate::setupDialogVerticalAlignment()
@@ -410,7 +426,7 @@ void MDialogViewPrivate::updateButtonBoxLayoutOrientation()
     if (q->style()->maximumHorizontalButtons() < buttonBoxLayoutPolicy->count())
             buttonBoxLayoutPolicy->setOrientation(Qt::Vertical);
 
-    if(q->model()->buttons().count()==0) {
+    if (q->model()->buttons().count()==0) {
         buttonBox->setPreferredHeight(0);
     } else if (buttonBoxLayoutPolicy->orientation()==Qt::Horizontal) {
         buttonBox->setPreferredHeight(buttonBox->minimumHeight() + q->style()->verticalSpacing());
@@ -555,20 +571,81 @@ void MDialogViewPrivate::setCentralWidget(QGraphicsWidget *newCentralWidget)
 
 void MDialogViewPrivate::setSpinnerVisibility(bool visibility)
 {
-    if (spinner) {
-        spinner->setVisible(visibility);
-    } else {
-        if (visibility) {
-            spinner = new MProgressIndicator(titleBar, MProgressIndicator::spinnerType);
-            spinner->setUnknownDuration(true);
-            spinner->setObjectName("MDialogProgressIndicator");
-            QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout *>(titleBar->layout());
-            layout->insertItem(0, spinner);
-            spinner->setVisible(true);
-        }
+    MLayout *layout = static_cast<MLayout *>(titleBar->layout());
+    if (!spinner) {
+        if (!visibility) return;
+        spinner = new MProgressIndicator(titleBar, MProgressIndicator::spinnerType);
+        spinner->setUnknownDuration(true);
+        spinner->setObjectName("MDialogProgressIndicator");
     }
 
+    if (!policySpinnerTitle) {
+        policySpinnerTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+        policySpinnerTitle->addItem(spinner);
+        policySpinnerTitle->addItem(titleLabel);
+    }
+
+    if (!policySpinnerTitleClose) {
+        policySpinnerTitleClose = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+        policySpinnerTitleClose->addItem(spinner);
+        policySpinnerTitleClose->addItem(titleLabel);
+        policySpinnerTitleClose->addItem(closeButton);
+    }
+    updateTitleBarLayoutPolicy();
 }
+
+void MDialogViewPrivate::updateTitleBarIconVisibility()
+{
+    Q_Q(MDialogView);
+    MLayout *layout = static_cast<MLayout *>(titleBar->layout());
+
+    if(!titleBarIconImage)
+        titleBarIconImage = new MImageWidget(controller);
+    titleBarIconImage->setStyleName("CommonTitleIcon");
+    titleBarIconImage->setImage(q->model()->titleBarIconId());
+
+    if (!policyIconTitle) {
+        policyIconTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+        policyIconTitle->addItem(titleBarIconImage);
+        policyIconTitle->addItem(titleLabel);
+    }
+
+    if (!policyIconTitleClose) {
+        policyIconTitleClose = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+        policyIconTitleClose->addItem(titleBarIconImage);
+        policyIconTitleClose->addItem(titleLabel);
+        policyIconTitleClose->addItem(closeButton);
+    }
+
+    updateTitleBarLayoutPolicy();
+}
+
+void MDialogViewPrivate::updateTitleBarLayoutPolicy()
+{
+    Q_Q(MDialogView);
+    MLayout *layout = static_cast<MLayout *>(titleBar->layout());
+    if (q->model()->progressIndicatorVisible()) {
+        if (hasCloseButton()) {
+            layout->setPolicy(policySpinnerTitleClose);
+        } else {
+            layout->setPolicy(policySpinnerTitle);
+        }
+
+    } else if (!q->model()->titleBarIconId().isEmpty()) {
+        if(hasCloseButton()) {
+            layout->setPolicy(policyIconTitleClose);
+        } else {
+            layout->setPolicy(policyIconTitle);
+        }
+    } else {
+        if (hasCloseButton()) {
+            layout->setPolicy(policyTitleClose);
+        } else {
+            layout->setPolicy(policyTitle);
+        }
+    }
+}
+
 
 void MDialogView::setupModel()
 {
@@ -595,6 +672,7 @@ void MDialogView::setupModel()
     d->setCentralWidget(model()->centralWidget());
     d->updateButtonBoxLayoutOrientation();
     d->contentsViewport->setVerticalPanningPolicy(model()->contentsVerticalPanningPolicy());
+    d->updateTitleBarIconVisibility();
 }
 
 void MDialogView::updateData(const QList<const char *> &modifications)
@@ -626,6 +704,8 @@ void MDialogView::updateData(const QList<const char *> &modifications)
             d->updateButtonBox();
         } else if (member == MDialogModel::ContentsVerticalPanningPolicy) {
             d->contentsViewport->setVerticalPanningPolicy(model()->contentsVerticalPanningPolicy());
+        } else if (member == MDialogModel::TitleBarIconId) {
+            d->updateTitleBarIconVisibility();
         }
     }
 }
