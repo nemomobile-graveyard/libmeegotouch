@@ -70,15 +70,17 @@ private slots:
 
     void testTextAlignment_data();
     void testLayoutDirection_data();
+    void testTextDirection_data();
     void testTextWordWrap_data();
     void testTextElide_data();
-    
+
     void testClear_data();
     void testPlainTextColor_data();
 
     void testTestConstruction();
     void testTextAlignment();
     void testLayoutDirection();
+    void testTextDirection();
     void testTextWordWrap();
     void testTextElide();
     void testRichTextElide_data();

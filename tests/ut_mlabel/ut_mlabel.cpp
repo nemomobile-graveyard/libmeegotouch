@@ -181,8 +181,10 @@ void Ut_MLabel::testLayoutDirection_data()
 {
     QTest::addColumn<QString>("text");
 
-    QTest::newRow("plain") << "this is plain text!";
-    QTest::newRow("rich") << "<b>this is rich text!</b>";
+    QTest::newRow("english-plain") << "this is plain English text!";
+    QTest::newRow("english-rich") << "<b>this is rich English text!</b>";
+    QTest::newRow("arabic-plain") << QString::fromUtf8("العربية");
+    QTest::newRow("arabic-rich") << QString::fromUtf8("<b>العربية</b>");
 }
 
 void Ut_MLabel::testLayoutDirection()
@@ -199,8 +201,46 @@ void Ut_MLabel::testLayoutDirection()
     QVERIFY(label->layoutDirection() == Qt::RightToLeft);
     QImage rtl = captureImage(label);
 
-    //ltr.save("ltr", "PNG");
-    //rtl.save("rtl", "PNG");
+#if 0
+    ltr.save("layoutdirection-" + QString(QTest::currentDataTag()) + "-ltr.png");
+    rtl.save("layoutdirection-" + QString(QTest::currentDataTag()) + "-rtl.png");
+#endif
+
+    QVERIFY(ltr == rtl);
+}
+
+void Ut_MLabel::testTextDirection_data()
+{
+    QTest::addColumn<QString>("text");
+
+    QTest::newRow("english-arabic-english-plain")
+        << QString::fromUtf8("Englishالعربيةlanguage");
+    QTest::newRow("english-arabic-english-rich")
+        << QString::fromUtf8("<b>Englishالعربيةlanguage</b>");
+    QTest::newRow("arabic-english-arabic-plain")
+        << QString::fromUtf8("العرEnglishبية");
+    QTest::newRow("arabic-english-arabic-rich")
+        << QString::fromUtf8("<b>العرEnglishبية</b>");
+}
+
+void Ut_MLabel::testTextDirection()
+{
+    QFETCH(QString, text);
+    label->setText(text);
+    QVERIFY(text == label->text());
+
+    label->model()->setTextDirection(Qt::LeftToRight);
+    QVERIFY(label->model()->textDirection() == Qt::LeftToRight);
+    QImage ltr = captureImage(label);
+
+    label->model()->setTextDirection(Qt::RightToLeft);
+    QVERIFY(label->model()->textDirection() == Qt::RightToLeft);
+    QImage rtl = captureImage(label);
+
+#if 0
+    ltr.save("textdirection-" + QString(QTest::currentDataTag()) + "-ltr.png");
+    rtl.save("textdirection-" + QString(QTest::currentDataTag()) + "-rtl.png");
+#endif
 
     QVERIFY(ltr != rtl);
 }
