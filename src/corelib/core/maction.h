@@ -136,4 +136,6 @@ private:
 #endif
 };
 
+Q_DECLARE_OPERATORS_FOR_FLAGS(MAction::Locations)
+
 #endif
