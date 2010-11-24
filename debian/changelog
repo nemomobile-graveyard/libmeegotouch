@@ -1,9 +1,14 @@
-libmeegotouch (0.20.58~1) unstable; urgency=low
+libmeegotouch (0.20.58-1) unstable; urgency=low
 
-  * unreleased 
+  * New version
+  * Fixes: NB#206679 - MAction header uses Q_FLAGS, but Q_DECLARE_OPERATORS_FOR_FLAGS is missing
+  * Fixes: changing scaleFactor/totalScaleFactor uses in widgetsgallery and gestures example to follow new semantics
   * Fixes: NB#203288 - COREWEB: /usr/bin/music-suite '__libc_message malloc_printerr __libc_free'
+  * Fixes: NB#173119, Bidirectional Text Rendering in Arabic language is broken with Latin characters
+  * Fixes: NB#200931 - MButton fails to give feedback when tapped multiple times in quick succession
+  * Fixes: NB#203999 - delay loading of library CSS files if possible 
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 23 Nov 2010 16:12:38 +0000
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 24 Nov 2010 15:23:08 +0000
 
 libmeegotouch (0.20.57-1) unstable; urgency=low
 
