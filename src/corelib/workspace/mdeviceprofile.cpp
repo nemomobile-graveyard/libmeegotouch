@@ -109,13 +109,23 @@ bool MDeviceProfilePrivate::load(const QString& filename)
     else
         resolution.setHeight(settings.value("/resolution/Y", 0).toInt());
 
-    if (settings.value("/ppi/X").toString() == "autodetect")
-        pixelsPerInch.setWidth(QApplication::desktop()->physicalDpiX());
+    if (settings.value("/ppi/X").toString() == "autodetect") {
+        int widthMM = QApplication::desktop()->widthMM();
+        if(widthMM){
+            int autodetectedPpiX = mmPerInch * QApplication::desktop()->screenGeometry().size().width() / widthMM;
+            pixelsPerInch.setWidth(autodetectedPpiX);
+        }
+    }
     else
         pixelsPerInch.setWidth(settings.value("/ppi/X", 0).toInt());
 
-    if (settings.value("/ppi/Y") == "autodetect")
-        pixelsPerInch.setHeight(QApplication::desktop()->physicalDpiY());
+    if (settings.value("/ppi/Y") == "autodetect") {
+        int heightMM = QApplication::desktop()->heightMM();
+        if(heightMM){
+            int autodetectedPpiY =  mmPerInch * QApplication::desktop()->screenGeometry().size().height() / heightMM;
+            pixelsPerInch.setWidth(autodetectedPpiY);
+        }
+    }
     else
         pixelsPerInch.setHeight(settings.value("/ppi/Y", 0).toInt());
 
