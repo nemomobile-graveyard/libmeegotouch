@@ -410,8 +410,9 @@ void MSceneManagerPrivate::removeSceneWindowFromTransitionQueue(MSceneWindow *sc
 
 void MSceneManagerPrivate::_q_updateOnDisplayVisibility()
 {
-    if (currentPage) {
-        produceMustBeResolvedDisplayEvent(currentPage);
+    foreach(MSceneWindow* sceneWindow, windows) {
+        if (sceneWindow && sceneWindow->sceneWindowState() != MSceneWindow::Disappeared)
+            produceMustBeResolvedDisplayEvent(sceneWindow);
     }
 }
 
