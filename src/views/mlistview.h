@@ -83,7 +83,7 @@ protected:
 private:
     void init();
     void connectSelectionModel();
-    void scrollTo(const QModelIndex &index, MList::ScrollHint hint);
+    void scrollTo(const QModelIndex &index, MList::ScrollHint hint, MList::AnimationMode mode);
     void longTap(const QPointF &pos);
 
     Q_PRIVATE_SLOT(d_func(), void _q_itemLongTapped(QPointF))

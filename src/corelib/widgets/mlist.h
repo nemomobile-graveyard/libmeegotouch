@@ -206,6 +206,17 @@ public:
         Floating
     };
 
+    enum AnimationMode {
+        /*!
+          \brief The method shall be not animated.
+        */
+        NonAnimated = 0,
+        /*!
+          \brief The method shall be animated.
+        */
+        Animated = 1
+    };
+
     enum ListOptimizationFlag {
         /*!
           MAbstractCellCreator::createCell() will be called only on new items. If items receives update
@@ -405,13 +416,31 @@ public Q_SLOTS:
     /*!
         \brief Scrolls list to a specific index. Call to function will ensure
         that item with specified index becomes visible.
+
+        \deprecated Please use the MList::scrollTo(QModelIndex, AnimationMode).
       */
     void scrollTo(const QModelIndex &index);
 
     /*!
+        \brief Scrolls list to a specific index. Call to function will ensure
+        that item with specified index becomes visible. The scroll to might be
+        executed animated or non-animated.
+    */
+
+    void scrollTo(const QModelIndex &index, AnimationMode mode);
+
+    /*!
         \brief Scrolls list to a specific index with specified hint.
+
+        \deprecated Please use the MList::scrollTo(QModelIndex, ScrollHint, AnimationMode).
       */
     void scrollTo(const QModelIndex &index, ScrollHint hint);
+
+    /*!
+        \brief Scrolls list to a specific index with specified hint. The method is executed
+        either animated or non-animated.
+    */
+    void scrollTo(const QModelIndex &index, ScrollHint hint, AnimationMode mode);
 
     /*!
       \brief Specifies whether the list index for a grouped model should be visible or not.

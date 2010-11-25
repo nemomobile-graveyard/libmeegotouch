@@ -592,13 +592,17 @@ void MListViewPrivate::updateScrollToTargetPosition()
     }
 }
 
-void MListViewPrivate::scrollToPos(const QPointF &targetPosition)
+void MListViewPrivate::scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode)
 {
-    scrollToAnimation->setStartValue(pannableViewport->position());
-    scrollToAnimation->setEndValue(targetPosition);
-    scrollToAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    scrollToAnimation->setDuration(300);
-    scrollToAnimation->start();
+    if (mode == MList::Animated) {
+        scrollToAnimation->setStartValue(pannableViewport->position());
+        scrollToAnimation->setEndValue(targetPosition);
+        scrollToAnimation->setEasingCurve(QEasingCurve::OutCubic);
+        scrollToAnimation->setDuration(300);
+        scrollToAnimation->start();
+    }
+    else
+        pannableViewport->setPosition(targetPosition);
 }
 
 void MListViewPrivate::updateListIndexVisibility()

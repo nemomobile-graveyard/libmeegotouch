@@ -107,7 +107,7 @@ public:
     QPointF locateScrollToPosition(const QModelIndex &index, MList::ScrollHint hint);
     void updateScrollToTargetPosition();
 
-    void scrollToPos(const QPointF &targetPosition);
+    void scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode);
 
     void deleteVisibleItemsArray();
 

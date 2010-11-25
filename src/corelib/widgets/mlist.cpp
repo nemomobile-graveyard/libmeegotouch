@@ -122,16 +122,27 @@ QAbstractItemModel *MList::itemModel() const
 
 void MList::scrollTo(const QModelIndex &index)
 {
-    scrollTo(index, MList::EnsureVisibleHint);
+    scrollTo(index, MList::EnsureVisibleHint, MList::Animated);
+}
+
+void MList::scrollTo(const QModelIndex &index, AnimationMode mode)
+{
+    scrollTo(index, MList::EnsureVisibleHint, mode);
 }
 
 void MList::scrollTo(const QModelIndex &index, ScrollHint hint)
+{
+    scrollTo(index, hint, MList::Animated);
+}
+
+void MList::scrollTo(const QModelIndex &index, ScrollHint hint, AnimationMode mode)
 {
     emit scrollToIndex(index);
 
     model()->beginTransaction();
     model()->setScrollHint(hint);
     model()->setScrollToIndex(index);
+    model()->setAnimationMode(mode);
     model()->commitTransaction();
 }
 

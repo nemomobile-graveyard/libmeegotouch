@@ -110,6 +110,13 @@ private:
     M_MODEL_PROPERTY(int, scrollHint, ScrollHint, true, 0)
 
     /*!
+        \property MListModel::animationMode
+        \brief Indicates if a method executed on list should be animated or non-animated.
+        \sa MList::AnimationMode
+     */
+    M_MODEL_PROPERTY(int, animationMode, AnimationMode, true, 0)
+
+    /*!
         \property MListModel::longTap
         \brief Coordinates of long tap.
      */

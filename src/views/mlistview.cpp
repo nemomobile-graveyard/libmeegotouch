@@ -117,7 +117,8 @@ void MListView::updateData(const QList<const char *>& modifications)
         } else if (member == MListModel::SelectionModel) {
             connectSelectionModel();
         } else if (member == MListModel::ScrollToIndex) {
-            scrollTo(model()->scrollToIndex(), static_cast<MList::ScrollHint>(model()->scrollHint()));
+            scrollTo(model()->scrollToIndex(), static_cast<MList::ScrollHint>(model()->scrollHint()),
+                     static_cast<MList::AnimationMode>(model()->animationMode()));
         } else if (member == MListModel::LongTap) {
             longTap(model()->longTap());
         } else if (member == MListModel::ListIndexDisplayMode) {
@@ -341,15 +342,14 @@ void MListView::itemClick()
         d_ptr->cellClicked(senderWidget);
 }
 
-void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
+void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint, MList::AnimationMode mode)
 {
     if (index.isValid()) {
         if (d_ptr->pannableViewport) {
             QPointF targetPosition = d_ptr->locateScrollToPosition(index, hint);
 
-            if (targetPosition != d_ptr->pannableViewport->position()) {
-                d_ptr->scrollToPos(targetPosition);
-            }
+            if (targetPosition != d_ptr->pannableViewport->position())
+                d_ptr->scrollToPos(targetPosition, mode);
         }
     }
 }
