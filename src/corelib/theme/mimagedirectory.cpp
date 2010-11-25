@@ -54,7 +54,7 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
         // try to load it from filesystem cache
         QImage image;
         if (shouldBeCached()) {
-            loadFromFsCache(size);
+            image = loadFromFsCache(size);
         }
 
         if (image.isNull()) {
