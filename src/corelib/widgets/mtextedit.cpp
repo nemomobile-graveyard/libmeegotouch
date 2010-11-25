@@ -1908,7 +1908,8 @@ void MTextEdit::handleMousePress(int cursorPosition, QGraphicsSceneMouseEvent *e
 {
     Q_D(MTextEdit);
 
-    MBreakIterator breakIterator(document()->toPlainText());
+    QString content = document()->toPlainText();
+    MBreakIterator breakIterator(content);
     d->doubleClick = d->lastMousePressTime.isValid()
         && (d->lastMousePressTime.elapsed() < QApplication::doubleClickInterval())
         && (breakIterator.previousInclusive(cursorPosition) == d->previousReleaseWordStart)
