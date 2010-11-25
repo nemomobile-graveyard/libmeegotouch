@@ -199,7 +199,8 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
         return;
 
     const QPixmap *p = d->animationPixmaps[d->currentFrame];
-    painter->drawPixmap(QRectF(QPointF(0, 0), size()), *p, QRectF(p->rect()));
+    if (p && !p->isNull())
+        painter->drawPixmap(QRectF(QPointF(0, 0), size()), *p, QRectF(p->rect()));
 }
 
 #include "moc_mspinnerview.cpp"
