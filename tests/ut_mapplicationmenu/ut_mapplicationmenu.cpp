@@ -146,6 +146,60 @@ void Ut_MApplicationMenu::testInsertAction()
 
 }
 
+void Ut_MApplicationMenu::testSetWidgetAfterWidgetActionIsAdded()
+{
+    MWidgetAction *action = new MWidgetAction(m_subject);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    m_subject->addAction(action);
+    QVERIFY(m_subject->actions().count() == 1);
+
+    MComboBox *widgetInAction = new MComboBox;
+    action->setWidget(widgetInAction);
+
+    const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
+    QVERIFY(viewPrivate);
+    MWidget *widgetInMenu = viewPrivate->getWidget(action);
+    QVERIFY(widgetInMenu == widgetInAction);
+}
+
+void Ut_MApplicationMenu::testChangeWidgetInWidgetAction()
+{
+    MWidgetAction *action = new MWidgetAction(m_subject);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    MComboBox *widgetInAction = new MComboBox;
+    action->setWidget(widgetInAction);
+    m_subject->addAction(action);
+
+    action->releaseWidget(widgetInAction);
+
+    MButton *newWidgetInAction = new MButton;
+    action->setWidget(newWidgetInAction);
+
+    const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
+    QVERIFY(viewPrivate);
+    MWidget *widgetInMenu = viewPrivate->getWidget(action);
+    QVERIFY(widgetInMenu == newWidgetInAction);
+}
+
+void Ut_MApplicationMenu::testRemoveWidgetFromWidgetAction()
+{
+    MWidgetAction *action = new MWidgetAction(m_subject);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    MComboBox *widgetInAction = new MComboBox;
+    action->setWidget(widgetInAction);
+    m_subject->addAction(action);
+
+    action->releaseWidget(widgetInAction);
+
+    action->setWidget(0);
+
+    const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
+    QVERIFY(viewPrivate);
+    MWidget *widgetInMenu = viewPrivate->getWidget(action);
+    QVERIFY(widgetInMenu);
+    QVERIFY(widgetInMenu != widgetInAction);
+}
+
 void Ut_MApplicationMenu::testActionVisiblity()
 {
 
@@ -226,10 +280,8 @@ void Ut_MApplicationMenu::testOpeningAndClosingAppMenuWithDisabledAction()
     action->setEnabled(true);
     m_subject->addAction(action);
 
-    const MApplicationMenuView *view = dynamic_cast<const MApplicationMenuView *>(m_subject->view());
-    QVERIFY(view);
-    const MApplicationMenuViewPrivate *viewPrivate = view->d_func();
-
+    const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
+    QVERIFY(viewPrivate);
     MWidget *widget = viewPrivate->getWidget(action);
     QVERIFY(widget);
     QVERIFY(widget->isEnabled());
@@ -241,6 +293,15 @@ void Ut_MApplicationMenu::testOpeningAndClosingAppMenuWithDisabledAction()
     appWin->sceneManager()->dismissSceneWindowNow(m_subject);
     QVERIFY(!widget->isEnabled());
 
+}
+
+const MApplicationMenuViewPrivate* Ut_MApplicationMenu::menuViewPrivate()
+{
+    const MApplicationMenuView *view = dynamic_cast<const MApplicationMenuView *>(m_subject->view());
+    if (!view)
+        return 0;
+    const MApplicationMenuViewPrivate *viewPrivate = view->d_func();
+    return viewPrivate;
 }
 
 void Ut_MApplicationMenu::actionSlot(bool checked)

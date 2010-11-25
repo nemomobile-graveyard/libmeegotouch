@@ -25,6 +25,7 @@
 
 class MAction;
 class MApplicationMenu;
+class MApplicationMenuViewPrivate;
 
 class Ut_MApplicationMenu : public QObject
 {
@@ -42,6 +43,9 @@ private Q_SLOTS:
     void testDestructor();
     void testAddAction();
     void testInsertAction();
+    void testSetWidgetAfterWidgetActionIsAdded();
+    void testChangeWidgetInWidgetAction();
+    void testRemoveWidgetFromWidgetAction();
     void testActionVisiblity();
     void testOpeningAndClosingAppMenuWithDisabledAction();
     void testClear();
@@ -55,6 +59,8 @@ private:
 
     MAction  *senderAction;
     bool        testValue;
+
+    const MApplicationMenuViewPrivate* menuViewPrivate();
 };
 
 #endif

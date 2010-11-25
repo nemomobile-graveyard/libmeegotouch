@@ -441,6 +441,23 @@ bool MApplicationMenuViewPrivate::changeLocation(QAction *action)
 
 void MApplicationMenuViewPrivate::changeData(QAction *action)
 {
+    MWidgetAction *widgetAction = qobject_cast<MWidgetAction *>(action);
+    if (widgetAction && widgetAction->widget() != leasedWidgets.value(action)) {
+        // Widget in widgetAction is changed
+        MWidget *widget = buttons.value(action);
+        if (widget) {
+            buttons.remove(action);
+            delete widget;
+        } else if (leasedWidgets.value(action))
+            leasedWidgets.remove(action);
+
+        disconnect(action, SIGNAL(triggered()), controller, SLOT(disappear()));
+
+        add(action, 0);
+
+        return;
+    }
+
     MWidget *widget = buttons.value(action);
     MButton *button = qobject_cast<MButton *>(widget);
 
