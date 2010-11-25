@@ -1225,7 +1225,7 @@ bool MWindow::event(QEvent *event)
 {
     Q_D(MWindow);
 
-    if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate) {
+    if ((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);
     } else if (event->type() == QEvent::WindowStateChange) {
         d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));

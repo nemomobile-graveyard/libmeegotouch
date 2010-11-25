@@ -78,6 +78,8 @@ private slots:
     void testAnimatedOrientationChangeProperty_data();
     void testAnimatedOrientationChangeProperty();
 
+    void testActiveWindow();
+
 public slots:
     void onDisplayTestSlot();
 

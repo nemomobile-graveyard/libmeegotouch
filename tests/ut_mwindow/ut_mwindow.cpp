@@ -547,4 +547,20 @@ void Ut_MWindow::testAnimatedOrientationChangeProperty()
     QCOMPARE(actualTransitionMode, expectedTransitionMode);
 }
 
+void  Ut_MWindow::testActiveWindow()
+{
+    QCOMPARE(MApplication::activeWindow(), win);
+    MWindow *win2 = new MWindow;
+    MWindow *win3 = new MWindow;
+
+    win2->show();
+    QCOMPARE(MApplication::activeWindow(), win2);
+
+    win3->showMinimized();
+    QCOMPARE(MApplication::activeWindow(), win2);
+
+    delete win2;
+    delete win3;
+}
+
 QTEST_MAIN(Ut_MWindow);
