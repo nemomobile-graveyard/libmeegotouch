@@ -75,6 +75,7 @@ void MSceneWindowPrivate::setSceneWindowState(MSceneWindow::SceneWindowState new
             break;
 
         case MSceneWindow::Appeared:
+            startDisappearTimeout();
             emit q->appeared();
             break;
 
@@ -88,6 +89,17 @@ void MSceneWindowPrivate::setSceneWindowState(MSceneWindow::SceneWindowState new
 
         default:
             break;
+    }
+}
+
+void MSceneWindowPrivate::startDisappearTimeout()
+{
+    Q_Q(MSceneWindow);
+
+    if (q->view()) {
+        if (q->model()->disappearTimeout() != 0) {
+            QTimer::singleShot(q->model()->disappearTimeout(), q, SLOT(disappear()));
+        }
     }
 }
 
@@ -170,12 +182,6 @@ void MSceneWindow::appear(QGraphicsScene *scene, MSceneWindow::DeletionPolicy po
     if (!mScene || !mScene->sceneManager()) {
         mWarning("MSceneWindow") << Q_FUNC_INFO << "scene has no scene manager.";
         return;
-    }
-
-    if (view()) {
-        if (model()->disappearTimeout() != 0) {
-            QTimer::singleShot(model()->disappearTimeout(), this, SLOT(disappear()));
-        }
     }
 
     mScene->sceneManager()->appearSceneWindow(this, policy);

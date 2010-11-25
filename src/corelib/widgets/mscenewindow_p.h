@@ -40,6 +40,9 @@ public:
     // Called by MSceneManagerPrivate
     void setSceneWindowState(MSceneWindow::SceneWindowState newState);
 
+    // Shoot for the disappear timeout
+    void startDisappearTimeout();
+
     MSceneWindow::WindowType      windowType;
     MSceneWindow::DeletionPolicy  policy;
 
