@@ -609,7 +609,7 @@ void Ft_Locales::testMLocaleLanguageEndonym_data()
             << QString("日本語");
     QTest::newRow("zh_CN")
             << QString("zh_CN")
-            << QString("中文（简体）");
+            << QString("中文 (中国大陆)");
 }
 
 void Ft_Locales::testMLocaleLanguageEndonym()
