@@ -1,3 +1,17 @@
+libmeegotouch (0.20.59-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#206875 - Frequent application crashes @QPixmap::isNull ()/isNull () with SIG11
+  * Fixes: NB#201768 - MWindow::isInSwitcher() returns true for closed prestarted applications.
+  * Fixes: NB#200233 - MList emits panning signals when list is filtered
+  * Fixes: NB#201744 - USB: Truncation: The note §qtn_usb_change_incorrect§ is truncated.
+  * Fixes: NB#206017 - Short Event banner is displayed in Incoming Events Area
+  * Fixes: NB#206551 - Floating Fast Scroll Indicator gets displayed when list is empty.
+  * Fixes: NB#206766, All Chinese language names should be distinguishable
+  * Fixes: NB#205694 - Wrong reordering of Bidi Text in MLabels
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 25 Nov 2010 15:31:42 +0000
+
 libmeegotouch (0.20.58-1) unstable; urgency=low
 
   * New version
