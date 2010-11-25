@@ -244,6 +244,11 @@ void MListIndexFloatingView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MListIndexFloatingView);
 
+    if (model()->shortcutIndexes().isEmpty()) {
+        event->ignore();
+        return;
+    }
+
     MWidgetView::mousePressEvent(event);
 
     d->scrollToGroupHeader(event->pos().y());
