@@ -5,7 +5,8 @@ TARGET = ut_mapplicationmenu
 INCLUDEPATH += $$MSRCDIR/corelib/widgets \
                $$MSRCDIR/corelib/style \
                $$MSRCDIR/scene \
-               $$MSRCDIR/views
+               $$MSRCDIR/views \
+               ../../src/views/.moc
 
 SOURCES += \
     ut_mapplicationmenu.cpp \

@@ -25,9 +25,9 @@
 #include <QHash>
 #include "maction.h"
 #include "mnamespace.h"
-#include "mapplicationmenuview.h"
 
 class MApplicationMenu;
+class MApplicationMenuView;
 class MPannableViewport;
 class QGraphicsLayoutItem;
 class MAbstractLayoutPolicy;
@@ -59,6 +59,8 @@ public:
     virtual void add(QAction *action, QAction *before);
     virtual void remove(QAction *action);
     virtual void change(QAction *action);
+
+    void _q_displayEntered();
 
     static M::Position calculateLayoutPosition(int columnsCount, int itemCount, int index);
 
@@ -111,6 +113,8 @@ protected:
     QHash<QAction *, MWidget *> buttons;
 
     MApplicationMenu *controller;
+
+    MPannableViewport* actionCommandViewport;
 
 #ifdef UNIT_TEST
     friend class Ut_MApplicationMenu;

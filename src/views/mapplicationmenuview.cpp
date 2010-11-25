@@ -20,8 +20,8 @@
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneEvent>
 
-#include "mapplicationmenuview_p.h"
 #include "mapplicationmenuview.h"
+#include "mapplicationmenuview_p.h"
 #include "mapplicationmenu.h"
 #include "mbutton.h"
 #include "mbuttongroup.h"
@@ -40,8 +40,8 @@
 #include "mbasiclistitem.h"
 #include "mcombobox.h"
 
-const int maxCommandActions = 8;
 const int maxCommandActionsWithStyle = 6;
+const int maxColumns = 1;
 
 MApplicationMenuViewPrivate::MApplicationMenuViewPrivate(MApplicationMenu *menu)
     : q_ptr(0),
@@ -54,31 +54,36 @@ MApplicationMenuViewPrivate::MApplicationMenuViewPrivate(MApplicationMenu *menu)
       styleButtonGroup(0),
       leasedWidgets(),
       buttons(),
-      controller(0)
+      controller(menu)
 {
-    controller = menu;
-
+    //mainlayout for the application menu
     controllerLayout = new QGraphicsLinearLayout(Qt::Vertical, controller);
     controllerLayout->setContentsMargins(0, 0, 0, 0);
     controllerLayout->setSpacing(0);
 
+    //pannable layout for the action commmands
     actionCommandLayout = new MLayout();
     actionCommandLayout->setContentsMargins(0, 0, 0, 0);
-    actionCommandLayout->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+    actionCommandLayout->setMinimumSize(0,0);
+    QGraphicsWidget* actionWidget = new QGraphicsWidget(controller);
+    actionWidget->setLayout(actionCommandLayout);
+    actionCommandViewport = new MPannableViewport(controller);
+    actionCommandViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+    actionCommandViewport->setWidget(actionWidget);
 
+    //layout for the style commands
     styleCommandLayout = new MLayout();
     styleCommandLayout->setContentsMargins(0, 0, 0, 0);
-    styleCommandLayout->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
-
-    controllerLayout->addItem(styleCommandLayout);
-    controllerLayout->addItem(actionCommandLayout);
-
     stylePolicy = new MLinearLayoutPolicy(styleCommandLayout, Qt::Horizontal);
     stylePolicy->setContentsMargins(0, 0, 0, 0);
     stylePolicy->setSpacing(0);
-
     styleButtonGroup = new MButtonGroup();
     styleButtonGroup->setExclusive(true);
+
+    //add sublayouts to the mainlayout
+    controllerLayout->addItem(styleCommandLayout);
+    controllerLayout->addItem(actionCommandViewport);
+    controllerLayout->setAlignment(actionCommandViewport, Qt::AlignCenter);
 
     controller->installEventFilter(this);
 }
@@ -93,10 +98,14 @@ MApplicationMenuViewPrivate::~MApplicationMenuViewPrivate()
 
 void MApplicationMenuViewPrivate::init()
 {
+    Q_Q(MApplicationMenuView);
+    
     createPolicy(M::Landscape);
     createPolicy(M::Portrait);
 
     addActions();
+    
+    q->connect(controller, SIGNAL(displayEntered()), SLOT(_q_displayEntered()));
 }
 
 void MApplicationMenuViewPrivate::createPolicy(M::Orientation orientation)
@@ -167,6 +176,11 @@ void MApplicationMenuViewPrivate::change(QAction *action)
     changeData(action);
     changeVisibility(action);
     changeStyleAttribute(action);
+}
+
+void MApplicationMenuViewPrivate::_q_displayEntered()
+{
+    actionCommandViewport->setPosition(QPointF(0,0));
 }
 
 bool MApplicationMenuViewPrivate::eventFilter(QObject *obj, QEvent *e)
@@ -374,7 +388,7 @@ bool MApplicationMenuViewPrivate::canAddMoreActions(QAction *action) const
     else { // is Command Action
         int count = 0;
         if (!actionCountAndExists(action, false, count)) {
-            canAdd = count < maxCommandActions;
+            canAdd = true;
         }
     } // Command action
 
@@ -506,7 +520,7 @@ void MApplicationMenuViewPrivate::refreshLandscapePolicy()
         action = acts.at(i);
         MWidget *w = getWidget(action);
         if (w && action->isVisible() && !isStyleAction(action)) {
-            landscapePolicy->addItem(w, index / 2, index % 2);
+            landscapePolicy->addItem(w, index / maxColumns, index % maxColumns);
             index++;
         }
     }
@@ -517,7 +531,7 @@ void MApplicationMenuViewPrivate::updateItemMode()
 {
 
     MAbstractLayoutPolicy *policy = landscapePolicy;
-    int columnsCount = 2;
+    int columnsCount = maxColumns;
     MWindow *window = MApplication::instance()->activeWindow();
     if (window && M::Portrait == window->orientation()) {
             policy = portraitPolicy;
@@ -657,12 +671,29 @@ void MApplicationMenuViewPrivate::makeLandscapePolicyColumnsEqual()
                  q->style()->marginLeft() - q->style()->marginRight() -
                  q->style()->paddingLeft() - q->style()->paddingRight() -
                  l - r) ;
-    if (landscapePolicy->count()  > 1) {
-        landscapePolicy->setColumnFixedWidth(0, width/2);
-        landscapePolicy->setColumnFixedWidth(1, width/2);
+
+    if (landscapePolicy->count() >= maxColumns) {
+        int columnWidth = width/maxColumns;
+        int c = 0;
+        for (; c < maxColumns; ++c) {
+            landscapePolicy->setColumnFixedWidth(c, columnWidth);
+        }
+        for (; c < landscapePolicy->columnCount(); ++c) {          
+            landscapePolicy->setColumnPreferredWidth(c, 0);      
+        }        
+    } else if( landscapePolicy->count() > 0 ){
+        int columnWidth = width/landscapePolicy->count();
+        int c = 0;
+        for (; c < landscapePolicy->count(); ++c) {
+            landscapePolicy->setColumnPreferredWidth(c, columnWidth);
+        }
+        for (; c < landscapePolicy->columnCount(); ++c) {          
+            landscapePolicy->setColumnPreferredWidth(c, 0);      
+        }
     } else {
-        landscapePolicy->setColumnPreferredWidth(0, width);
-        landscapePolicy->setColumnPreferredWidth(1, 0);
+        for (int c = 0; c < landscapePolicy->columnCount(); ++c) {          
+            landscapePolicy->setColumnPreferredWidth(c, 0);      
+        }
     }
 }
 
@@ -696,12 +727,9 @@ void MApplicationMenuView::drawBackground(QPainter *painter, const QStyleOptionG
     Q_D(const MApplicationMenuView);
 
     if (style()->canvasOpacity() > 0.0) {
-        // draw canvas
+        // draw canvas as a background of the pannable area
         painter->setOpacity(d->controller->effectiveOpacity() * style()->canvasOpacity());
-
-        QRectF layoutGeometry = d->controllerLayout->geometry();
-        layoutGeometry.setHeight(d->styleCommandLayout->geometry().height() +
-                                 d->actionCommandLayout->geometry().height());
+        QRectF layoutGeometry = d->actionCommandViewport->geometry();
         if (style()->canvasImage()) {
             style()->canvasImage()->draw(layoutGeometry.toRect(), painter);
         } else {
@@ -727,4 +755,4 @@ void MApplicationMenuView::applyStyle()
 }
 
 M_REGISTER_VIEW_NEW(MApplicationMenuView, MApplicationMenu)
-
+#include "moc_mapplicationmenuview.cpp"

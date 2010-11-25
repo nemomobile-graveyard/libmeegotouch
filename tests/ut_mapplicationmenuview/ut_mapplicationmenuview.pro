@@ -3,7 +3,8 @@ TARGET = ut_mapplicationmenuview
 
 INCLUDEPATH += $$MSRCDIR/corelib/widgets \
                $$MSRCDIR/corelib/style \
-               $$MSRCDIR/views
+               $$MSRCDIR/views \
+               ../../src/views/.moc
 
 # unit test and unit
 SOURCES += \
