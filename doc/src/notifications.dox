@@ -6,7 +6,7 @@ The MeeGo Touch environment offers a notification system framework. Applications
 - new instant messages
 - missed calls
 
-The notification system should not be used for temporary situations like various error cases. A simple \c MInfoBanner is more suitable for situations, such as:
+The notification system should not be used for temporary situations like various error cases. A simple \c MBanner is more suitable for situations, such as:
 
 - the user interacts with an application in a way that leads to an error case
 - message to the user after the user has done something (for example, "file deleted successfully")
