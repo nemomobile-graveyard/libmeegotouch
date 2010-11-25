@@ -25,6 +25,15 @@ void Ft_Numbers::initTestCase()
     static char *argv[1] = { (char *) "" };
     qap = new QCoreApplication(argc, argv);
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QProcess process;
+    process.start("sh -c \"dpkg -s libicu44 | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
+    if (!process.waitForFinished()) {
+        qDebug() << "cannot run process to check libicu44 package version , exiting ...";
+        exit(1);
+    }
+    icuPackageVersion = process.readAllStandardOutput();
+    icuPackageVersion.replace("\n", "");
+    qDebug() << "libicu44 package version is:" << icuPackageVersion;
 }
 
 void Ft_Numbers::cleanup()
@@ -1516,6 +1525,39 @@ void Ft_Numbers::testToFloat_data()
         << true
         << float(1234567.1234567)
         << QString("1,234,567.125");
+
+    QTest::newRow("en_GB 1E+9")
+        << QString("en_GB")
+        << QString("1E+9")
+        << true
+        << float(1.0E+9)
+        << QString("1,000,000,000");
+
+    if (icuPackageVersion < "4.4.2-0maemo3") {
+        qDebug() << "NB#206085 not yet fixed, some exponents parsed wrong.";
+        QTest::newRow("en_GB 1E+10")
+            << QString("en_GB")
+            << QString("1E+10")
+            << true
+            << float(0)
+            << QString("0");
+    }
+    else {
+        qDebug() << "NB#206085 fixed, exponent parsing corrected.";
+        QTest::newRow("en_GB 1E+10")
+            << QString("en_GB")
+            << QString("1E+10")
+            << true
+            << float(1.0E+10)
+            << QString("10,000,000,000");
+    }
+
+    QTest::newRow("en_GB 1E+38")
+        << QString("en_GB")
+        << QString("1E+38")
+        << true
+        << float(1.0E+38)
+        << QString("99,999,996,802,856,900,000,000,000,000,000,000,000");
 
     // FLT_MAX:
     QTest::newRow("en_GB 3.40282E+38")

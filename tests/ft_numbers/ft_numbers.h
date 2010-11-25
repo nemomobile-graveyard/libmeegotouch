@@ -23,6 +23,7 @@
 #include <QtTest/QtTest>
 #include <QObject>
 #include <QTextStream>
+#include <QProcess>
 #include <MLocale>
 
 Q_DECLARE_METATYPE(MLocale);
@@ -35,6 +36,7 @@ class Ft_Numbers : public QObject
 
 private:
     QCoreApplication *qap;
+    QString icuPackageVersion;
 
 private slots:
     void initTestCase();
