@@ -53,8 +53,6 @@ void MInfoBannerInformationViewPrivate::init()
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    //Temporal modification to detect old InfoBanners
-    label->setColor("#FF0080");
     layout->addItem(image, 0, 0);
     layout->addItem(label, 0, 1);
 
@@ -166,8 +164,7 @@ void MInfoBannerInformationView::setupModel()
     QObject::connect(d->button, SIGNAL(clicked()), d->banner, SIGNAL(buttonClicked()));
     QObject::connect(d->button, SIGNAL(clicked()), d->banner, SLOT(dismiss()));
 
-    //Temporal modification to detect old InfoBanners
-    d->label->setText(model()->bodyText()+"****DEPRECATED****");
+    d->label->setText(model()->bodyText());
     d->setButtonText(model()->buttonText());
 
     if (!model()->imageID().isEmpty()) {

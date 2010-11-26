@@ -56,8 +56,7 @@ void MInfoBannerEventViewPrivate::init()
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     controller->setLayout(layout);
-    //Temporal modification to detect old InfoBanners
-    label->setColor("#FF0080");
+
     layout->addItem(image);
     layout->addItem(label);
     layout->addItem(icon);
@@ -131,8 +130,7 @@ void MInfoBannerEventView::setupModel()
 
     Q_D(MInfoBannerEventView);
 
-    //Temporal modification to detect old InfoBanners
-    d->label->setText(model()->bodyText()+"****DEPRECATED****");
+    d->label->setText(model()->bodyText());
     d->icon->setImage(model()->iconID(), style()->iconSize());
 
     if (!model()->imageID().isEmpty()) {
