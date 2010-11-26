@@ -155,6 +155,12 @@ void Ft_Numbers::testToLongLong_data()
     QTest::addColumn<qlonglong>("parsedLongLong");
     QTest::addColumn<QString>("formattedAgainLongLong");
 
+    QTest::newRow("fi_FI \"\"")
+        << QString("fi_FI")
+        << QString("")
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("fi_FI 0")
         << QString("fi_FI")
         << QString("0")
@@ -170,39 +176,39 @@ void Ft_Numbers::testToLongLong_data()
     QTest::newRow("fi_FI 0,1")
         << QString("fi_FI")
         << QString("0,1")
-        << true
+        << false
         << qlonglong(0)
         << QString("0");
     QTest::newRow("en_GB 0.1")
         << QString("en_GB")
         << QString("0.1")
-        << true
+        << false
         << qlonglong(0)
         << QString("0");
     QTest::newRow("fi_FI 1 234,1")
         << QString("fi_FI")
         << QString("1 234,1")
-        << true
-        << qlonglong(1234)
-        << QString("1 234");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("en_GB 1,234.1")
         << QString("en_GB")
         << QString("1,234.1")
-        << true
-        << qlonglong(1234)
-        << QString("1,234");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("fi_FI 1 234 567,12")
         << QString("fi_FI")
         << QString("1 234 567,12")
-        << true
-        << qlonglong(1234567)
-        << QString("1 234 567");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("en_GB 1,234,567.12")
         << QString("en_GB")
         << QString("1,234,567.12")
-        << true
-        << qlonglong(1234567)
-        << QString("1,234,567");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("en_GB 8,446,744,073,709,551,615")
         << QString("en_GB")
         << QString("8,446,744,073,709,551,615")
@@ -226,33 +232,33 @@ void Ft_Numbers::testToLongLong_data()
     QTest::newRow("de_DE 1'234,56")
         << QString("de_DE")
         << QString("1'234,56")
-        << true
-        << qlonglong(1)
-        << QString("1");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234,56")
         << QString("de_CH")
         << QString("1'234,56")
-        << true
-        << qlonglong(1234)
-        << QString("1'234");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234.56")
         << QString("de_CH")
         << QString("1'234.56")
-        << true
-        << qlonglong(1234)
-        << QString("1'234");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("de_DE 1.234,56X")
         << QString("de_DE")
         << QString("1.234,56X")
-        << true
-        << qlonglong(1234)
-        << QString("1.234");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("de_DE 1.23X4,56")
         << QString("de_DE")
         << QString("1.23X4,56X")
-        << true
-        << qlonglong(123)    // weird result, roundtrip fails
-        << QString("123");
+        << false
+        << qlonglong(0)
+        << QString("0");
     QTest::newRow("de_DE X1.234,56")
         << QString("de_DE")
         << QString("X1.234,56")
@@ -265,18 +271,30 @@ void Ft_Numbers::testToLongLong_data()
         << false
         << qlonglong(0)
         << QString("0");
-    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+    QTest::newRow("ar_SA ١٢٣٤")
         << QString("ar_SA")
-        << QString("١٢٣٤٫١٢٣")
+        << QString("١٢٣٤")
         << true
         << qlonglong(1234)
         << QString("١٢٣٤");
-    QTest::newRow("hi_HI ४,५६७.१२३")
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣")
+        << false
+        << qlonglong(0)
+        << QString("٠");
+    QTest::newRow("hi_HI ४,५६७")
         << QString("hi_HI")
-        << QString("४,५६७.१२३")
+        << QString("४,५६७")
         << true
         << qlonglong(4567)
         << QString("४,५६७");
+    QTest::newRow("hi_HI ४,५६७.१२३")
+        << QString("hi_HI")
+        << QString("४,५६७.१२३")
+        << false
+        << qlonglong(0)
+        << QString("०");
 }
 
 void Ft_Numbers::testToLongLong()
@@ -400,6 +418,12 @@ void Ft_Numbers::testToShort_data()
     QTest::addColumn<short>("parsedShort");
     QTest::addColumn<QString>("formattedAgainShort");
 
+    QTest::newRow("fi_FI \"\"")
+        << QString("fi_FI")
+        << QString("")
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("fi_FI 0")
         << QString("fi_FI")
         << QString("0")
@@ -415,27 +439,27 @@ void Ft_Numbers::testToShort_data()
     QTest::newRow("fi_FI 0,1")
         << QString("fi_FI")
         << QString("0,1")
-        << true
+        << false
         << short(0)
         << QString("0");
     QTest::newRow("en_GB 0.1")
         << QString("en_GB")
         << QString("0.1")
-        << true
+        << false
         << short(0)
         << QString("0");
     QTest::newRow("fi_FI 1 234,1")
         << QString("fi_FI")
         << QString("1 234,1")
-        << true
-        << short(1234)
-        << QString("1 234");
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("en_GB 1,234.1")
         << QString("en_GB")
         << QString("1,234.1")
-        << true
-        << short(1234)
-        << QString("1,234");
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("fi_FI 1 234 567,12")
         << QString("fi_FI")
         << QString("1 234 567,12")
@@ -463,33 +487,33 @@ void Ft_Numbers::testToShort_data()
     QTest::newRow("de_DE 1'234,56")
         << QString("de_DE")
         << QString("1'234,56")
-        << true
-        << short(1)
-        << QString("1");
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234,56")
         << QString("de_CH")
         << QString("1'234,56")
-        << true
-        << short(1234)
-        << QString("1'234");
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234.56")
         << QString("de_CH")
         << QString("1'234.56")
-        << true
-        << short(1234)
-        << QString("1'234");
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("de_DE 1.234,56X")
         << QString("de_DE")
         << QString("1.234,56X")
-        << true
-        << short(1234)
-        << QString("1.234");
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("de_DE 1.23X4,56")
         << QString("de_DE")
         << QString("1.23X4,56X")
-        << true
-        << short(123)    // weird result, roundtrip fails
-        << QString("123");
+        << false
+        << short(0)
+        << QString("0");
     QTest::newRow("de_DE X1.234,56")
         << QString("de_DE")
         << QString("X1.234,56")
@@ -502,12 +526,18 @@ void Ft_Numbers::testToShort_data()
         << false
         << short(0)
         << QString("0");
-    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+    QTest::newRow("ar_SA ١٢٣٤")
         << QString("ar_SA")
-        << QString("١٢٣٤٫١٢٣")
+        << QString("١٢٣٤")
         << true
         << short(1234)
         << QString("١٢٣٤");
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣")
+        << false
+        << short(0)
+        << QString("٠");
     QTest::newRow("ar_SA ١٢٣٤-")
         << QString("ar_SA")
         << QString("١٢٣٤-")
@@ -517,15 +547,21 @@ void Ft_Numbers::testToShort_data()
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣-")
         << QString("ar_SA")
         << QString("١٢٣٤٫١٢٣-")
-        << true
-        << short(-1234)
-        << QString("١٢٣٤-");
-    QTest::newRow("hi_HI ४,५६७.१२३")
+        << false
+        << short(0)
+        << QString("٠");
+    QTest::newRow("hi_HI ४,५६७")
         << QString("hi_HI")
-        << QString("४,५६७.१२३")
+        << QString("४,५६७")
         << true
         << short(4567)
         << QString("४,५६७");
+    QTest::newRow("hi_HI ४,५६७.१२३")
+        << QString("hi_HI")
+        << QString("४,५६७.१२३")
+        << false
+        << short(0)
+        << QString("०");
 }
 
 void Ft_Numbers::testToShort()
@@ -650,6 +686,12 @@ void Ft_Numbers::testToInt_data()
     QTest::addColumn<int>("parsedInt");
     QTest::addColumn<QString>("formattedAgainInt");
 
+    QTest::newRow("fi_FI \"\"")
+        << QString("fi_FI")
+        << QString("")
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("fi_FI 0")
         << QString("fi_FI")
         << QString("0")
@@ -665,27 +707,27 @@ void Ft_Numbers::testToInt_data()
     QTest::newRow("fi_FI 0,1")
         << QString("fi_FI")
         << QString("0,1")
-        << true
+        << false
         << int(0)
         << QString("0");
     QTest::newRow("en_GB 0.1")
         << QString("en_GB")
         << QString("0.1")
-        << true
+        << false
         << int(0)
         << QString("0");
     QTest::newRow("fi_FI 1 234,1")
         << QString("fi_FI")
         << QString("1 234,1")
-        << true
-        << int(1234)
-        << QString("1 234");
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("en_GB 1,234.1")
         << QString("en_GB")
         << QString("1,234.1")
-        << true
-        << int(1234)
-        << QString("1,234");
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("en_GB 8,446,744,073,709,551,615")
         << QString("en_GB")
         << QString("8,446,744,073,709,551,615")
@@ -701,33 +743,33 @@ void Ft_Numbers::testToInt_data()
     QTest::newRow("de_DE 1'234,56")
         << QString("de_DE")
         << QString("1'234,56")
-        << true
-        << int(1)
-        << QString("1");
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234,56")
         << QString("de_CH")
         << QString("1'234,56")
-        << true
-        << int(1234)
-        << QString("1'234");
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234.56")
         << QString("de_CH")
         << QString("1'234.56")
-        << true
-        << int(1234)
-        << QString("1'234");
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("de_DE 1.234,56X")
         << QString("de_DE")
         << QString("1.234,56X")
-        << true
-        << int(1234)
-        << QString("1.234");
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("de_DE 1.23X4,56")
         << QString("de_DE")
         << QString("1.23X4,56X")
-        << true
-        << int(123)    // weird result, roundtrip fails
-        << QString("123");
+        << false
+        << int(0)
+        << QString("0");
     QTest::newRow("de_DE X1.234,56")
         << QString("de_DE")
         << QString("X1.234,56")
@@ -740,18 +782,30 @@ void Ft_Numbers::testToInt_data()
         << false
         << int(0)
         << QString("0");
-    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+    QTest::newRow("ar_SA ١٢٣٤")
         << QString("ar_SA")
-        << QString("١٢٣٤٫١٢٣")
+        << QString("١٢٣٤")
         << true
         << int(1234)
         << QString("١٢٣٤");
-    QTest::newRow("hi_HI ४,५६७.१२३")
+    QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
+        << QString("ar_SA")
+        << QString("١٢٣٤٫١٢٣")
+        << false
+        << int(0)
+        << QString("٠");
+    QTest::newRow("hi_HI ४,५६७")
         << QString("hi_HI")
-        << QString("४,५६७.१२३")
+        << QString("४,५६७")
         << true
         << int(4567)
         << QString("४,५६७");
+    QTest::newRow("hi_HI ४,५६७.१२३")
+        << QString("hi_HI")
+        << QString("४,५६७.१२३")
+        << false
+        << int(0)
+        << QString("०");
 }
 
 void Ft_Numbers::testToInt()
@@ -928,6 +982,12 @@ void Ft_Numbers::testToDouble_data()
     QTest::addColumn<double>("parsedDouble");
     QTest::addColumn<QString>("formattedAgainDouble");
 
+    QTest::newRow("fi_FI \"\"")
+        << QString("fi_FI")
+        << QString("")
+        << false
+        << double(0)
+        << QString("0");
     QTest::newRow("fi_FI 0")
         << QString("fi_FI")
         << QString("0")
@@ -1124,15 +1184,15 @@ void Ft_Numbers::testToDouble_data()
     QTest::newRow("de_DE 1'234,56")
         << QString("de_DE")
         << QString("1'234,56")
-        << true
-        << double(1)      // weird result, roundtrip fails
-        << QString("1");
+        << false
+        << double(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234,56")
         << QString("de_CH")
         << QString("1'234,56")
-        << true
-        << double(1234)   // weird result, roundtrip fails
-        << QString("1'234");
+        << false
+        << double(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234.56")
         << QString("de_CH")
         << QString("1'234.56")
@@ -1142,15 +1202,15 @@ void Ft_Numbers::testToDouble_data()
     QTest::newRow("de_DE 1.234,56X")
         << QString("de_DE")
         << QString("1.234,56X")
-        << true
-        << double(1234.56)
-        << QString("1.234,56");
+        << false
+        << double(0)
+        << QString("0");
     QTest::newRow("de_DE 1.23X4,56")
         << QString("de_DE")
         << QString("1.23X4,56X")
-        << true
-        << double(123)    // weird result, roundtrip fails
-        << QString("123");
+        << false
+        << double(0)
+        << QString("0");
     QTest::newRow("de_DE X1.234,56")
         << QString("de_DE")
         << QString("X1.234,56")
@@ -1339,6 +1399,12 @@ void Ft_Numbers::testToFloat_data()
     QTest::addColumn<float>("parsedFloat");
     QTest::addColumn<QString>("formattedAgainFloat");
 
+    QTest::newRow("fi_FI \"\"")
+        << QString("fi_FI")
+        << QString("")
+        << false
+        << float(0)
+        << QString("0");
     QTest::newRow("fi_FI 0")
         << QString("fi_FI")
         << QString("0")
@@ -1526,6 +1592,20 @@ void Ft_Numbers::testToFloat_data()
         << float(1234567.1234567)
         << QString("1,234,567.125");
 
+    QTest::newRow("en_GB f4")
+        << QString("en_GB")
+        << QString("f4")
+        << false
+        << float(0)
+        << QString("0");
+
+    QTest::newRow("en_GB 4f")
+        << QString("en_GB")
+        << QString("4f")
+        << false
+        << float(0)
+        << QString("0");
+
     QTest::newRow("en_GB 1E+9")
         << QString("en_GB")
         << QString("1E+9")
@@ -1574,6 +1654,12 @@ void Ft_Numbers::testToFloat_data()
         << float(0)
         << QString("0");
 
+    QTest::newRow("fr_FR 1234 56")
+        << QString("fr_FR")
+        << QString("1234 56")
+        << true // With QLocale this fails
+        << float(123456) // ICU gives a weird result
+        << QString("123 456");
     QTest::newRow("de_DE 1234.56")
         << QString("de_DE")
         << QString("1234.56")
@@ -1583,15 +1669,15 @@ void Ft_Numbers::testToFloat_data()
     QTest::newRow("de_DE 1'234,56")
         << QString("de_DE")
         << QString("1'234,56")
-        << true
-        << float(1)      // weird result, roundtrip fails
-        << QString("1");
+        << false
+        << float(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234,56")
         << QString("de_CH")
         << QString("1'234,56")
-        << true
-        << float(1234)   // weird result, roundtrip fails
-        << QString("1'234");
+        << false
+        << float(0)
+        << QString("0");
     QTest::newRow("de_CH 1'234.56")
         << QString("de_CH")
         << QString("1'234.56")
@@ -1601,15 +1687,15 @@ void Ft_Numbers::testToFloat_data()
     QTest::newRow("de_DE 1.234,56X")
         << QString("de_DE")
         << QString("1.234,56X")
-        << true
-        << float(1234.56)
-        << QString("1.234,56");
+        << false
+        << float(0)
+        << QString("0");
     QTest::newRow("de_DE 1.23X4,56")
         << QString("de_DE")
         << QString("1.23X4,56X")
-        << true
-        << float(123)    // weird result, roundtrip fails
-        << QString("123");
+        << false
+        << float(0)
+        << QString("0");
     QTest::newRow("de_DE X1.234,56")
         << QString("de_DE")
         << QString("X1.234,56")

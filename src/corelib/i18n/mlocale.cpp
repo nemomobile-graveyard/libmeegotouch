@@ -1665,20 +1665,33 @@ QString MLocale::formatNumber(qlonglong i) const
 
 qlonglong MLocale::toLongLong(const QString &s, bool *ok) const
 {
+    if (s.length() == 0) {
+        if (ok != NULL)
+            *ok = false;
+        return (int(0));
+    }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    UErrorCode status = U_ZERO_ERROR;
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
     icu::Formattable formattable;
+    icu::ParsePosition parsePosition;
     qint64 result;
-    d->_numberFormat->parse(str, formattable, status);
-    if (!U_SUCCESS(status)) {
+    icu::DecimalFormat *decimalFormat
+        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
+    if (!decimalFormat->isParseIntegerOnly()) {
+        decimalFormat->setParseIntegerOnly(true);
+        decimalFormat->parse(str, formattable, parsePosition);
+        decimalFormat->setParseIntegerOnly(false);
+    }
+    else
+        decimalFormat->parse(str, formattable, parsePosition);
+    if (parsePosition.getIndex() < str.length()) {
         if (ok != NULL)
             *ok = false;
         return (qlonglong(0));
     }
     else {
-        status = U_ZERO_ERROR;
+        UErrorCode status = U_ZERO_ERROR;
         result = formattable.getInt64(status);
         if (!U_SUCCESS(status)) {
             if (ok != NULL)
@@ -1712,20 +1725,33 @@ QString MLocale::formatNumber(short i) const
 
 short MLocale::toShort(const QString &s, bool *ok) const
 {
+    if (s.length() == 0) {
+        if (ok != NULL)
+            *ok = false;
+        return (int(0));
+    }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    UErrorCode status = U_ZERO_ERROR;
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
     icu::Formattable formattable;
+    icu::ParsePosition parsePosition;
     qint64 result;
-    d->_numberFormat->parse(str, formattable, status);
-    if (!U_SUCCESS(status)) {
+    icu::DecimalFormat *decimalFormat
+        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
+    if (!decimalFormat->isParseIntegerOnly()) {
+        decimalFormat->setParseIntegerOnly(true);
+        decimalFormat->parse(str, formattable, parsePosition);
+        decimalFormat->setParseIntegerOnly(false);
+    }
+    else
+        decimalFormat->parse(str, formattable, parsePosition);
+    if (parsePosition.getIndex() < str.length()) {
         if (ok != NULL)
             *ok = false;
         return (short(0));
     }
     else {
-        status = U_ZERO_ERROR;
+        UErrorCode status = U_ZERO_ERROR;
         result = formattable.getInt64(status);
         if (!U_SUCCESS(status)) {
             if (ok != NULL)
@@ -1766,20 +1792,33 @@ QString MLocale::formatNumber(int i) const
 
 int MLocale::toInt(const QString &s, bool *ok) const
 {
+    if (s.length() == 0) {
+        if (ok != NULL)
+            *ok = false;
+        return (int(0));
+    }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    UErrorCode status = U_ZERO_ERROR;
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
     icu::Formattable formattable;
+    icu::ParsePosition parsePosition;
     qint64 result;
-    d->_numberFormat->parse(str, formattable, status);
-    if (!U_SUCCESS(status)) {
+    icu::DecimalFormat *decimalFormat
+        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
+    if (!decimalFormat->isParseIntegerOnly()) {
+        decimalFormat->setParseIntegerOnly(true);
+        decimalFormat->parse(str, formattable, parsePosition);
+        decimalFormat->setParseIntegerOnly(false);
+    }
+    else
+        decimalFormat->parse(str, formattable, parsePosition);
+    if (parsePosition.getIndex() < str.length()) {
         if (ok != NULL)
             *ok = false;
         return (int(0));
     }
     else {
-        status = U_ZERO_ERROR;
+        UErrorCode status = U_ZERO_ERROR;
         result = formattable.getInt64(status);
         if (!U_SUCCESS(status)) {
             if (ok != NULL)
@@ -1841,20 +1880,33 @@ QString MLocale::formatNumber(double i, int prec) const
 
 double MLocale::toDouble(const QString &s, bool *ok) const
 {
+    if (s.length() == 0) {
+        if (ok != NULL)
+            *ok = false;
+        return (int(0));
+    }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    UErrorCode status = U_ZERO_ERROR;
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
     icu::Formattable formattable;
+    icu::ParsePosition parsePosition;
     double result;
-    d->_numberFormat->parse(str, formattable, status);
-    if (!U_SUCCESS(status)) {
+    icu::DecimalFormat *decimalFormat
+        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
+    if (decimalFormat->isParseIntegerOnly()) {
+        decimalFormat->setParseIntegerOnly(false);
+        decimalFormat->parse(str, formattable, parsePosition);
+        decimalFormat->setParseIntegerOnly(true);
+    }
+    else
+        decimalFormat->parse(str, formattable, parsePosition);
+    if (parsePosition.getIndex() < str.length()) {
         if (ok != NULL)
             *ok = false;
         return (double(0.0));
     }
     else {
-        status = U_ZERO_ERROR;
+        UErrorCode status = U_ZERO_ERROR;
         result = formattable.getDouble(status);
         if (!U_SUCCESS(status)) {
             if (ok != NULL)
@@ -1889,20 +1941,33 @@ QString MLocale::formatNumber(float i) const
 
 float MLocale::toFloat(const QString &s, bool *ok) const
 {
+    if (s.length() == 0) {
+        if (ok != NULL)
+            *ok = false;
+        return (int(0));
+    }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    UErrorCode status = U_ZERO_ERROR;
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
     icu::Formattable formattable;
+    icu::ParsePosition parsePosition;
     double result;
-    d->_numberFormat->parse(str, formattable, status);
-    if (!U_SUCCESS(status)) {
+    icu::DecimalFormat *decimalFormat
+        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
+    if (decimalFormat->isParseIntegerOnly()) {
+        decimalFormat->setParseIntegerOnly(false);
+        decimalFormat->parse(str, formattable, parsePosition);
+        decimalFormat->setParseIntegerOnly(true);
+    }
+    else
+        decimalFormat->parse(str, formattable, parsePosition);
+    if (parsePosition.getIndex() < str.length()) {
         if (ok != NULL)
             *ok = false;
         return (float(0.0));
     }
     else {
-        status = U_ZERO_ERROR;
+        UErrorCode status = U_ZERO_ERROR;
         result = formattable.getDouble(status);
         if (!U_SUCCESS(status)) {
             if (ok != NULL)

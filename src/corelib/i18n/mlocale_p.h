@@ -30,6 +30,7 @@
 #ifdef HAVE_ICU
 #include <unicode/datefmt.h>
 #include <unicode/numfmt.h>
+#include <unicode/decimfmt.h>
 #include <unicode/unistr.h>
 #include <unicode/dtfmtsym.h>
 #endif
