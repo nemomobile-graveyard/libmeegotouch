@@ -26,8 +26,6 @@
 #include <QPainter>
 #include <QPixmapCache>
 #include <MDebug>
-#include <MComponentData>
-#include <MDebug>
 
 MScalableImagePrivate::MScalableImagePrivate()
     : m_imageType(MScalable9), m_image(NULL),
@@ -105,7 +103,8 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
     else {
         //the image doesn't fit directly into the required size.
         //check whether or not we're allowed to cache
-        bool docache = MComponentData::softwareRendering();
+        bool docache = painter->paintEngine()->type() != QPaintEngine::OpenGL
+                    && painter->paintEngine()->type() != QPaintEngine::OpenGL2;
 
         if (docache) {
             //software rendering is not fast when scaling pixmaps, so we use the
