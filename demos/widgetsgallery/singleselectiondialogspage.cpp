@@ -254,6 +254,7 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
 
     //% "Progress Indicator"
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_progress_indicator"));
+    label->setStyleName("CommonTitleInverted");
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->addStretch();
