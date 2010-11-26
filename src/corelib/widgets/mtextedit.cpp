@@ -2222,12 +2222,11 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     // get and remove the current selection
     const bool wasSelecting = hasSelectedText();
-    QTextDocumentFragment selectedFragment;
+    QTextDocumentFragment selectedFragment = d->cursor()->selection();
     int selectionStart = -1;
 
     if (wasSelecting == true) {
         selectionStart = d->cursor()->selectionStart();
-        selectedFragment = d->cursor()->selection();
         d->cursor()->removeSelectedText();
     }
 
@@ -2277,7 +2276,13 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     if (changed) {
         d->updateMicroFocus();
-        emit textChanged();
+
+        // no signal if committing existing preedit as is
+        if (!(wasPreediting && commitString == selectedFragment.toPlainText()
+              && preedit.isEmpty())) {
+            emit textChanged();
+        }
+
         emit cursorPositionChanged();
     }
 

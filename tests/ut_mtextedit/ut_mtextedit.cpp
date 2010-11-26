@@ -601,12 +601,15 @@ void Ut_MTextEdit::testInputMethodEvent()
     // Confirm that widget moved to pre-editing mode
     QVERIFY(m_subject->mode() == MTextEditModel::EditModeActive);
 
+    QInputMethodEvent preeditEvent(testString2, QList<QInputMethodEvent::Attribute>());
+    m_subject->inputMethodEvent(&preeditEvent);
+
     QInputMethodEvent commitEvent;
     commitEvent.setCommitString(testString2);
     m_subject->inputMethodEvent(&commitEvent);
 
     QCOMPARE(m_subject->text(), testString2);
-    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.count(), 1); // optimization with preedit == commit
     spy.clear();
 }
 
