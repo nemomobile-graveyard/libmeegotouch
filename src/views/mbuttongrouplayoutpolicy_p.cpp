@@ -22,6 +22,7 @@
 #include <MButton>
 #include <MLayout>
 #include <MApplication>
+#include <MDeviceProfile>
 
 MButtonGroupLayoutPolicy::MButtonGroupLayoutPolicy(MLayout *layout, Qt::Orientation orientation)
     : MLinearLayoutPolicy(layout, orientation),
@@ -82,7 +83,11 @@ void MButtonGroupLayoutPolicy::setButtonViewType(int index, const MTheme::ViewTy
             button->setMaximumWidth(buttonWidth);
             button->setMinimumWidth(buttonWidth);
         } else {
-            button->setMaximumWidth(-1);
+            button->setMinimumWidth(-1);
+            button->setMaximumWidth(qMax(MDeviceProfile::instance()->resolution().width(),
+                                         MDeviceProfile::instance()->resolution().height()));
+            button->setPreferredWidth(-1);
+
         }
     } else {
         qWarning("Only MButton should be added to MButtonGroupLayoutPolicy.");
@@ -91,4 +96,5 @@ void MButtonGroupLayoutPolicy::setButtonViewType(int index, const MTheme::ViewTy
 
 void MButtonGroupLayoutPolicy::setButtonWidth(qreal width){
     buttonWidth = width;
+    updateButtonsViewTypes();
 }

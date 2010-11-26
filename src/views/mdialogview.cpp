@@ -183,7 +183,7 @@ void MDialogViewPrivate::realignButtonBox()
         delete rightButtonSpacer;
         rightButtonSpacer = 0;
     }
-    if (q_func()->style()->buttonBoxCentered()) {
+    if (q_func()->style()->buttonBoxCentered() && q_func()->style()->dialogButtonFixedWidth()>0) {
         leftButtonSpacer = createSpacer();
         centerLayout->insertItem(0, leftButtonSpacer);
         rightButtonSpacer = createSpacer();
