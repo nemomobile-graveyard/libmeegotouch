@@ -38,7 +38,7 @@ M_REGISTER_WIDGET(MCompleter)
 namespace
 {
     //! default delimiters are comma and semicolon.
-    const QString DefaultDelimiters(",;");
+    const QString DefaultDelimiters(QString(",;") + QString(QChar::ObjectReplacementCharacter));
     //! default match regular expression
     const QString DefaultMatchRegularExpression("(%1.*)||(.*\\W%1.*)");
     //! default maximum hits is 10
@@ -225,34 +225,7 @@ void MCompleterPrivate::_q_complete()
 
     emit q->startCompleting(q->model()->completionPrefix(),
                             completionModel->index(q->model()->matchedIndex(), q->valueColumnIndex()));
-
-    // TODO #1: remove check for one of those signals once they have been merged.
-    // TODO #2: Change the "<= 1" back to "<= 0", because this is only needed for
-    //          the current signal forwarding!
-    if ((q->receivers(SIGNAL(startCompleting(QString))) <= 0) &&
-        (q->receivers(SIGNAL(startCompleting(QString, QModelIndex))) <= 1)) {
-        //if no customized match slot, then use default match rule
-        //limit the max hits to DefaultMaximumHits + 1 (+1 allow it to be larger than DefaultMaximumHits)
-        match(DefaultMaximumHits + 1);
-    } else {
-        //if customized, then think all items inside model are matched
-        matchedIndexList.clear();
-        const int rowCount = completionModel->rowCount();
-        for (int i = 0; i < rowCount; ++i)
-            matchedIndexList << i;
-        matchedModel->setMatchedList(matchedIndexList);
-    }
-
-    if (matchedModel->rowCount() > 0) {
-        q->model()->setMatchedIndex(0);
-        q->model()->setActive(true);
-        q->widget()->sceneManager()->appearSceneWindow(q);
-        emit q->shown();
-    } else if (q->isActive()) {
-        reset();
-        q->hideCompleter();
-        resetFocus();
-    }
+    pollModel(true);
 }
 
 QString MCompleterPrivate::trim(const QString &s)
@@ -284,8 +257,7 @@ void MCompleterPrivate::setCompletionModel(QAbstractItemModel *m, bool own)
         return;
 
     if (completionModel) {
-        QObject::disconnect(completionModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-                            q, SLOT(_q_modelUpdate()));
+        QObject::disconnect(completionModel, 0, q, 0);
     }
     if (hasOwnModel && completionModel) {
         matchedIndexList.clear();
@@ -300,15 +272,101 @@ void MCompleterPrivate::setCompletionModel(QAbstractItemModel *m, bool own)
     q->model()->setValueColumnIndex(completionModel->columnCount() - 1);
     QObject::connect(completionModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
                      q, SLOT(_q_modelUpdate()));
+    QObject::connect(completionModel, SIGNAL(modelAboutToBeReset()),
+                     q, SLOT(_q_modelAboutToBeReset()));
+    QObject::connect(completionModel, SIGNAL(modelReset()),
+                     q, SLOT(_q_pollModel()));
+    QObject::connect(completionModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
+                     q, SLOT(_q_pollModel()));
+    QObject::connect(completionModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
+                     q, SLOT(_q_rowsRemoved(QModelIndex, int, int)));
+
     _q_modelUpdate();
+}
+
+void MCompleterPrivate::pollModel(bool isResetFocus)
+{
+    Q_Q(MCompleter);
+
+    // TODO #1: remove check for one of those signals once they have been merged.
+    // TODO #2: Change the "<= 1" back to "<= 0", because this is only needed for
+    //          the current signal forwarding!
+    if ((q->receivers(SIGNAL(startCompleting(QString))) <= 0) &&
+        (q->receivers(SIGNAL(startCompleting(QString, QModelIndex))) <= 1)) {
+        //if no customized match slot, then use default match rule
+        //limit the max hits to DefaultMaximumHits + 1 (+1 allow it to be larger than DefaultMaximumHits)
+        match(DefaultMaximumHits + 1);
+    } else {
+        //if customized, then think all items inside model are matched
+        matchedIndexList.clear();
+        const int rowCount = completionModel->rowCount();
+        for (int i = 0; i < rowCount; ++i)
+            matchedIndexList << i;
+        matchedModel->setMatchedList(matchedIndexList);
+    }
+    updateScene(isResetFocus);
+}
+
+void MCompleterPrivate::updateScene(bool isResetFocus)
+{
+    Q_Q(MCompleter);
+
+    if (matchedModel->rowCount() > 0) {
+        q->model()->setMatchedIndex(0);
+        q->model()->setActive(true);
+        q->widget()->sceneManager()->appearSceneWindow(q);
+        emit q->shown();
+    } else if (q->isActive()) {
+        reset();
+        q->hideCompleter();
+        if (isResetFocus)
+            resetFocus();
+    }
 }
 
 void MCompleterPrivate::_q_modelUpdate()
 {
+    Q_Q(MCompleter);
     if (!completionModel)
         return;
     matchedIndexList.clear();
     matchedModel->setMatchedList(matchedIndexList);
+    if (q->isActive())
+        pollModel(false);
+}
+
+void MCompleterPrivate::_q_pollModel()
+{
+    pollModel(false);
+}
+
+void MCompleterPrivate::_q_modelAboutToBeReset()
+{
+    Q_Q(MCompleter);
+    reset();
+    q->hideCompleter();
+}
+
+void MCompleterPrivate::_q_rowsRemoved(const QModelIndex& parent, int start, int end)
+{
+    Q_UNUSED(parent);
+    Q_Q(MCompleter);
+    if (start < 0 || end < 0 || start > end) {
+        qDebug() << "[MCompleterPrivate::onRowsRemoved] Invalid parameters!";
+        return;
+    }
+
+    for (int i = start; i <= end; i++) {
+        for (QList<int>::iterator it = matchedIndexList.begin(); it != matchedIndexList.end(); ++it) {
+            if (*it == i) {
+                matchedIndexList.erase(it);
+                break;
+            }
+        }
+    }
+    matchedModel->setMatchedList(matchedIndexList);
+    if (q->isActive())
+        updateScene(true);
 }
 
 void MCompleterPrivate::resetFocus()

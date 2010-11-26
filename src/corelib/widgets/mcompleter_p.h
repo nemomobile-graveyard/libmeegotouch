@@ -46,6 +46,9 @@ public:
     void _q_modelUpdate();
 
     void _q_complete();
+    void _q_pollModel();
+    void _q_modelAboutToBeReset();
+    void _q_rowsRemoved(const QModelIndex &parent, int start, int end);
 
 protected:
     void fetchPrefix();
@@ -61,6 +64,10 @@ protected:
     QString trim(const QString &);
 
     void resetFocus();
+
+    void pollModel(bool isResetFocus);
+
+    void updateScene(bool isResetFocus);
 
 private:
     QString delimiters;
