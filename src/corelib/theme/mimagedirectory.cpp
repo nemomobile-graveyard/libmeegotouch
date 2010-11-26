@@ -35,7 +35,7 @@
 
 namespace {
     const unsigned int ID_CACHE_VERSION = 1;
-    const unsigned int IMAGE_CACHE_VERSION = 2;
+    const unsigned int IMAGE_CACHE_VERSION = 3;
 }
 
 uint qHash(const QSize &size)
@@ -47,7 +47,9 @@ ImageResource::ImageResource(const QString& absoluteFilePath) :
 #ifdef  Q_WS_X11
     convertToX11(false),
 #endif
-    filePath(absoluteFilePath)
+    filePath(absoluteFilePath),
+    buffer(0),
+    cacheFile(0)
 {
 #ifdef  Q_WS_X11
     // When starting an application, the X11 window must be filled with a default background
@@ -104,7 +106,16 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
 
     ++cacheEntry->refCount;
 
+
     return cacheEntry->handle;
+}
+
+ImageResource::~ImageResource()
+{
+    if (cacheFile) {
+        cacheFile->unmap(buffer);
+        delete cacheFile;
+    }
 }
 
 void ImageResource::releasePixmap(const QSize &size)
@@ -156,19 +167,22 @@ MPixmapHandle ImageResource::pixmapHandle(const QSize &size)
 QImage ImageResource::loadFromFsCache(const QSize& size)
 {
     const QString cacheFileName = createCacheFilename(size);
+    const QString cacheMetaFileName = cacheFileName + ".meta";
+
     if (cacheFileName.isEmpty()) {
         return QImage();
     }
 
-    if (QFile::exists(cacheFileName)) {
-        QFile file(cacheFileName);
-        if (file.open(QFile::ReadOnly)) {
-            QDataStream stream(&file);
+    if (QFile::exists(cacheFileName) && QFile::exists(cacheMetaFileName)) {
+        QFile meta(cacheMetaFileName);
+
+        if (meta.open(QFile::ReadOnly)) {
+            QDataStream stream(&meta);
             uint version;
             stream >> version;
             if (version != IMAGE_CACHE_VERSION) {
                 // will be replaced with up to date version
-                file.close();
+                meta.close();
                 return QImage();
             }
             uint timestamp;
@@ -176,14 +190,28 @@ QImage ImageResource::loadFromFsCache(const QSize& size)
             QFileInfo fileInfo(absoluteFilePath());
             if (timestamp != fileInfo.lastModified().toTime_t()) {
                 // will be replaced with up to date version
-                file.close();
+                meta.close();
                 return QImage();
             }
 
-            QImage image;
-            stream >> image;
+            QSize imageSize;
+            int imageFormat;
 
-            file.close();
+            stream >> imageSize;
+            stream >> imageFormat;
+            meta.close();
+
+            cacheFile = new QFile(cacheFileName);
+            if (!cacheFile->open(QFile::ReadOnly)) {
+                delete cacheFile;
+                cacheFile = 0;
+                return QImage();
+            }
+
+            buffer = cacheFile->map(0, cacheFile->size());
+            QImage image((const uchar*)buffer, imageSize.width(), imageSize.height(), (QImage::Format)imageFormat);
+
+            cacheFile->close();
             return image;
         } else {
             mWarning("ImageResource") << "Failed to load pixmap from cache" << cacheFileName;
@@ -196,27 +224,37 @@ QImage ImageResource::loadFromFsCache(const QSize& size)
 void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
 {
     const QString cacheFileName = createCacheFilename(size);
+    const QString cacheMetaFileName = cacheFileName + ".meta";
     if (cacheFileName.isEmpty()) {
         return;
     }
 
-    QFile file(cacheFileName);
-    if (!file.open(QFile::WriteOnly)) {
+    QFile meta(cacheMetaFileName);
+    QFile cache(cacheFileName);
+    if (!meta.open(QFile::WriteOnly) || !cache.open(QFile::WriteOnly)) {
         //Maybe it failed because the directory doesn't exist
-        QDir().mkpath(QFileInfo(cacheFileName).absolutePath());
-        if (!file.open(QFile::WriteOnly)) {
+        QDir().mkpath(QFileInfo(cacheMetaFileName).absolutePath());
+        if (!meta.open(QFile::WriteOnly) || !cache.open(!QFile::WriteOnly)) {
             mWarning("ImageResource") << "Failed to save cache file for" << absoluteFilePath() << "to" << cacheFileName;
-        return;
+            return;
         }
     }
 
-    QDataStream stream(&file);
+    if (pixmap.format() != QImage::Format_ARGB32 || pixmap.format() != QImage::Format_ARGB32_Premultiplied) {
+        pixmap = pixmap.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    }
+
+    QDataStream stream(&meta);
     stream << IMAGE_CACHE_VERSION;
     QFileInfo fileInfo(absoluteFilePath());
     stream << fileInfo.lastModified().toTime_t();
-    stream << pixmap;
+    stream << pixmap.size();
+    stream << pixmap.format();
 
-    file.close();
+    cache.write((const char*)pixmap.constBits(), pixmap.byteCount());
+
+    meta.close();
+    cache.close();
 }
 
 QString ImageResource::createCacheFilename(const QSize& size)

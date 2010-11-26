@@ -39,6 +39,7 @@
 
 class QPixmap;
 class QFileInfo;
+class QFile;
 
 
 typedef QPixmap RenderSurface;
@@ -73,7 +74,7 @@ class ImageResource
 {
 public:
     ImageResource(const QString& absoluteFilePath);
-    virtual ~ImageResource() {}
+    virtual ~ImageResource();
 
     // creates a cache entry if there's no such yet, otherwise just increase the refCount
     MPixmapHandle fetchPixmap(const QSize &size);
@@ -109,6 +110,9 @@ private:
     QString filePath;
     // pixmaps created from this image resource
     QHash<QSize, PixmapCacheEntry*> cachedPixmaps;
+
+    uchar *buffer;
+    QFile *cacheFile;
 };
 
 class IconImageResource : public ImageResource
