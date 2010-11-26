@@ -1,3 +1,17 @@
+libmeegotouch (0.20.60-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#207681 - Text in Dialog with Progress Indicator is barely
+  * Fixes: NB#207292 - Unable to resize MDialog Buttons using styling
+  * Fixes: NB#189908 - MAction: signal needs to be connected again, if the action is removed and added again.
+  * Fixes: NB#206885 - MApplication::activeWindow() doesn't return topmost window after showMinimized()
+  * Fixes: NB#206632 - <MemLeak> mlistindextooltip.cpp:43, 168
+  * Fixes: NB#206036 - When minimized combobox shows some additional lines.
+  * Fixes: 207388 - <Safety> Invalid read in MTextEdit::handleMousePress
+  * Fixes: NB#205911 - MBanners "dissapear-timer" starts counting in "appear" function instead of "appeared" function.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 26 Nov 2010 18:05:56 +0000
+
 libmeegotouch (0.20.59-1) unstable; urgency=low
 
   * New version
