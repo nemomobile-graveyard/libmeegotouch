@@ -152,6 +152,10 @@ void Ut_MDialogView::buttonBoxCentering()
     subject->applyStyle();
     QCOMPARE(buttonBox->layout()->count(), 1);
     dialogStyle->setButtonBoxCentered(true);
+    dialogStyle->setDialogButtonFixedWidth(-1);
+    subject->applyStyle();
+    QCOMPARE(buttonBox->layout()->count(), 1);
+    dialogStyle->setDialogButtonFixedWidth(40.0);
     subject->applyStyle();
     QCOMPARE(buttonBox->layout()->count(), 3);
     dialogStyle->setButtonBoxCentered(false);
