@@ -101,6 +101,8 @@ public:
     void initSoftwareViewport();
     void configureViewport();
     void disableAutomaticBackgroundRepainting();
+
+    void takeScreenshot();
     void playScreenshotEffect();
 
     /**

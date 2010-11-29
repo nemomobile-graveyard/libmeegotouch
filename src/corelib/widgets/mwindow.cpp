@@ -296,6 +296,25 @@ class ScreenshotEffect : public QGraphicsWidget
 };
 //! \internal_end
 
+void MWindowPrivate::takeScreenshot()
+{
+    QPixmap screenshot;
+    screenshot = QPixmap::grabWindow(effectiveWinId());
+
+    QString path;
+    if (QDir(ImagesPath).exists())
+        path = ImagesPath;
+    else
+        path = QDir::homePath();
+
+    if (!screenshot.save(QString("%1/%2-%3.png").arg(path)
+        .arg(QDate::currentDate().toString("yyyyMMdd"))
+        .arg(QTime::currentTime().toString("hhmmss"))))
+        mWarning("MWindow") << "Could not save screenshot to" << path;
+
+    playScreenshotEffect();
+}
+
 void MWindowPrivate::playScreenshotEffect()
 {
     Q_Q(MWindow);
@@ -1309,21 +1328,7 @@ bool MWindow::event(QEvent *event)
 
             updateNeeded = true;
         } else if (Qt::Key_P == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
-            QPixmap screenshot;
-            screenshot = QPixmap::grabWindow(effectiveWinId());
-
-            QString path;
-            if (QDir(ImagesPath).exists())
-                path = ImagesPath;
-            else
-                path = QDir::homePath();
-
-            if (!screenshot.save(QString("%1/%2-%3.png").arg(path)
-                .arg(QDate::currentDate().toString("yyyyMMdd"))
-                .arg(QTime::currentTime().toString("hhmmss"))))
-                mWarning("MWindow") << "Could not save screenshot to" << path;
-
-            d->playScreenshotEffect();
+            d->takeScreenshot();
         } else if (Qt::Key_Q == k->key() && (k->modifiers() & Qt::ControlModifier)) {
             foreach(MWindow* window, MApplication::windows())
                 window->close();
