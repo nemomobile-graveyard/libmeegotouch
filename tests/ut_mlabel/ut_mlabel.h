@@ -126,6 +126,8 @@ private slots:
     //Regression test for bug 196025 -  MLabel with text ending in 'f'
     void rightBearing();
 
+    void testTextFormat();
+
 private:
     /**
      * Helper method for testSizeHint().

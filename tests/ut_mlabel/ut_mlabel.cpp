@@ -939,4 +939,14 @@ void Ut_MLabel::rightBearing()
 
 }
 
+void Ut_MLabel::testTextFormat()
+{
+    label->setText("Hello world!");
+    label->setTextFormat(Qt::RichText);
+    QCOMPARE(label->textFormat(), Qt::RichText);
+
+    label->setTextFormat(Qt::PlainText);
+    QCOMPARE(label->textFormat(), Qt::PlainText);
+}
+
 QTEST_APPLESS_MAIN(Ut_MLabel);
