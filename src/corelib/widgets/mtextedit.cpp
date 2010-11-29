@@ -716,9 +716,8 @@ void MTextEditPrivate::setPreeditText(const QString &text,
     int preeditTextLength = text.count();
 
     QTextBlock block = textCursor->block();
-    QTextLayout *layout = block.layout();
 
-    QList<QTextLayout::FormatRange> preeditStyles;
+    QList<MTextEditFormatRange> additionalFormats;
 
     // set preeditCursor to -1 to hide cursor for preedit by default
     int preeditCursor = -1;
@@ -730,11 +729,11 @@ void MTextEditPrivate::setPreeditText(const QString &text,
             const QTextCharFormat format = attribute.value.value<QTextFormat>().toCharFormat();
 
             if (format.isValid()) {
-                QTextLayout::FormatRange style;
-                style.start = attribute.start + textCursor->position() - block.position();
-                style.length = attribute.length;
-                style.format = format;
-                preeditStyles.append(style);
+                MTextEditFormatRange formatRange;
+                formatRange.start = attribute.start + textCursor->position() - block.position();
+                formatRange.length = attribute.length;
+                formatRange.format = format;
+                additionalFormats.append(formatRange);
             }
         } else if (attribute.type == QInputMethodEvent::Cursor) {
             if (attribute.length > 0) {
@@ -745,18 +744,19 @@ void MTextEditPrivate::setPreeditText(const QString &text,
     }
     q->model()->setPreeditCursor(preeditCursor);
 
-    // set the preedit styling as additional format of the current qtextlayout.
-    // preedit is implemented as selected normal text with additional formatting on current
-    // QTextLayout. Using the additional formats here seems a bit dangerous. In principle Qt
-    // says the layout from a block shouldn't be changed except from
-    // QAbstractTextDocumentLayout::documentChanged(), but in reality e.g. QTextEdit
-    // uses it like this, and even sets the preedit to the layout.
-    // If this becomes problematic, we should move this formatting to paintContext of the view.
-    layout->setAdditionalFormats(preeditStyles);
+    //MTextEditView formats the pre-edit text depending on the values set here. 
+    //
+    //An alternative implementation would be to use QTextLayout::setAdditionalFormats.
+    //But this would cause problems in MTextEditView because calling QTextLayout::setAdditionalFormats
+    //causes a contentChange signal covering the whole text to be emitted.
+
+    q->model()->setAdditionalFormats(additionalFormats);
 
     int listIndex = 0;
     int count = 0;
+
     insertTextWithPreeditStyling(text, listIndex, count);
+
     clearUnusedPreeditStyling(listIndex, count);
 
     // mark preedit as selection
@@ -809,8 +809,8 @@ void MTextEditPrivate::commitPreedit()
 
     // clear styling
     QTextBlock block = textCursor->block();
-    QTextLayout *layout = block.layout();
-    layout->clearAdditionalFormats();
+
+    q->model()->setAdditionalFormats(QList<MTextEditFormatRange>());
 
     if (validateCurrentBlock() == true) {
         // make preedit selection part of the normal text
@@ -835,13 +835,14 @@ void MTextEditPrivate::commitPreedit()
  */
 void MTextEditPrivate::removePreedit()
 {
+    Q_Q(MTextEdit);
+
     if (isPreediting() == false) {
         return;
     }
 
     QTextBlock block = cursor()->block();
-    QTextLayout *layout = block.layout();
-    layout->clearAdditionalFormats();
+    q->model()->setAdditionalFormats(QList<MTextEditFormatRange>());
 
     cursor()->removeSelectedText();
 }
@@ -1294,6 +1295,7 @@ MTextEdit::MTextEdit(MTextEditModel::LineMode type, const QString &text,
 
     model()->setDocument(new QTextDocument(text, this->model()));
     model()->setLine(type);
+
     d->init();
 }
 
