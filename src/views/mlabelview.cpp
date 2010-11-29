@@ -163,6 +163,7 @@ void MLabelView::setupModel()
             d->impl = new MLabelViewSimple(d);
         delete oldView;
     }
+
     d->impl->setupModel();
 
     d->impl->markDirty();
@@ -237,11 +238,3 @@ void MLabelView::orientationChangeEvent(MOrientationChangeEvent *event)
 }
 
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
-
-
-
-
-
-
-
-

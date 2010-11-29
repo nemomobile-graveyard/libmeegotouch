@@ -219,6 +219,8 @@ void MLabelViewSimple::orientationChangeEvent(MOrientationChangeEvent *event)
 
 void MLabelViewSimple::applyStyle()
 {
+    if (viewPrivate->model()->alignmentFromStyle())
+        const_cast<MLabelModel*>(viewPrivate->model())->setAlignment(viewPrivate->style()->horizontalAlignment() | viewPrivate->style()->verticalAlignment());
 }
 
 void MLabelViewSimple::initializeStaticText()
@@ -231,7 +233,7 @@ void MLabelViewSimple::initializeStaticText()
 
     const MLabelStyle *style = viewPrivate->style();
 
-    paintingRect = (viewPrivate->textOptions.alignment() == Qt::LeftToRight)
+    paintingRect = (viewPrivate->textOptions.textDirection() == Qt::LeftToRight)
         ? viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom())
         : viewPrivate->boundingRect().adjusted(style->paddingRight(), style->paddingTop(), -style->paddingLeft(), -style->paddingBottom());
     textOffset = paintingRect.topLeft().toPoint();

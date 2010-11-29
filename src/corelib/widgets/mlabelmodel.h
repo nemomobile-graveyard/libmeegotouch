@@ -69,6 +69,12 @@ class M_CORE_EXPORT MLabelModel : public MWidgetModel
     M_MODEL_PROPERTY(Qt::Alignment, alignment, Alignment, true, Qt::AlignLeft | Qt::AlignVCenter)
 
     /*!
+      \property MLabelModel::alignmentFromStyle
+      \brief Alignment of the label is done by style.
+    */
+    M_MODEL_PROPERTY(bool, alignmentFromStyle, AlignmentFromStyle, true, true)
+
+    /*!
         \property MLabelModel::textDirection
         \brief Text direction of the label.
 

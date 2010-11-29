@@ -77,7 +77,10 @@ void MLabel::setText(const QString &text)
 
 void MLabel::setAlignment(Qt::Alignment alignment)
 {
+    model()->beginTransaction();
     model()->setAlignment(alignment);
+    model()->setAlignmentFromStyle(false);
+    model()->commitTransaction();
 }
 
 Qt::Alignment MLabel::alignment() const

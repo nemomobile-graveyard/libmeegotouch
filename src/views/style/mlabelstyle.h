@@ -79,6 +79,19 @@ class M_VIEWS_EXPORT MLabelStyle : public MWidgetStyle
     */
 
     M_STYLE_ATTRIBUTE(qreal, textOpacity, textOpacity)
+
+    /*!
+      \property MLabelStyle::horizontalAlignment
+      \brief Horizontal alignment of the label.
+    */
+    M_STYLE_ATTRIBUTE(Qt::Alignment, horizontalAlignment, HorizontalAlignment)
+
+    /*!
+      \property MLabelStyle::verticalAlignment
+      \brief Vertical alignment of the label.
+    */
+    M_STYLE_ATTRIBUTE(Qt::Alignment, verticalAlignment, VerticalAlignment)
+
 };
 
 /*!
