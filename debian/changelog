@@ -108,6 +108,7 @@ libmeegotouch (0.20.54-1) unstable; urgency=low
 
 libmeegotouch (0.20.53-1) unstable; urgency=low
 
+  * Implemented: SWP#DUI-4255 - Add support for user-defined identifier on a notification and notification group
   * Fixes: NB#195013 -  mstartup crash.
   * Fixes: NB#202338 - Application requires signal to indicate when minimizing starts
   * Fixes: NB#182815 -  Pannable widget is not transparent wrt. passing focus to child widgets
