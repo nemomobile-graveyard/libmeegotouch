@@ -47,7 +47,7 @@ public:
     virtual ~MTextEditViewPrivate();
 
     int cursorPosition(QGraphicsSceneMouseEvent *event);
-    int cursorPosition(QPointF event);
+    int cursorPosition(const QPointF &point, Qt::HitTestAccuracy accuracy = Qt::FuzzyHit);
 
     QTextDocument *document() const;
     QTextDocument *promptDocument() const;

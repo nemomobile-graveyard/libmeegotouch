@@ -87,6 +87,14 @@ protected:
      */
     int cursorPosition(const QPointF &hitPoint);
 
+    /*!
+     * \brief Returns cursor position from a mouse position
+     * \param hitPoint mouse position
+     * \param accuracy specified accuracy
+     * \return cursor position as characters from start of document
+     */
+    int cursorPosition(const QPointF &hitPoint, Qt::HitTestAccuracy accuracy);
+
 protected Q_SLOTS:
     /*!
      * \brief Set view focused

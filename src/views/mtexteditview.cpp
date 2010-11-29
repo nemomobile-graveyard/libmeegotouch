@@ -148,11 +148,12 @@ int MTextEditViewPrivate::cursorPosition(QGraphicsSceneMouseEvent *event)
  * \param hitPoint mouse position
  * \return cursor position as characters from start of document
  */
-int MTextEditViewPrivate::cursorPosition(QPointF hitPoint)
+int MTextEditViewPrivate::cursorPosition(const QPointF &point, Qt::HitTestAccuracy accuracy)
 {
     Q_Q(MTextEditView);
 
     // adjust widget position to textdocument position
+    QPointF hitPoint = point;
     hitPoint.rx() += hscroll;
     hitPoint.ry() += vscroll;
     hitPoint.rx() -= q->style()->paddingLeft();
@@ -180,7 +181,7 @@ int MTextEditViewPrivate::cursorPosition(QPointF hitPoint)
         hitPoint.setY(maxY);
     }
 
-    return activeDocument()->documentLayout()->hitTest(hitPoint, Qt::FuzzyHit);
+    return activeDocument()->documentLayout()->hitTest(hitPoint, accuracy);
 }
 
 
@@ -468,7 +469,13 @@ const QPointF &MTextEditView::mouseTarget() const
 int MTextEditView::cursorPosition(const QPointF &hitPoint)
 {
     Q_D(MTextEditView);
-    return d->cursorPosition(hitPoint);
+    return d->cursorPosition(hitPoint, Qt::FuzzyHit);
+}
+
+int MTextEditView::cursorPosition(const QPointF &hitPoint, Qt::HitTestAccuracy accuracy)
+{
+    Q_D(MTextEditView);
+    return d->cursorPosition(hitPoint, accuracy);
 }
 
 void MTextEditViewPrivate::hideUnmaskedText()
