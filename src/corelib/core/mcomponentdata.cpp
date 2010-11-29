@@ -53,6 +53,7 @@
 #include <QPluginLoader>
 #include <QLibraryInfo>
 #include "testabilityinterface.h"
+#include "mgraphicssystemhelper.h"
 
 #ifdef Q_WS_X11
 #include <QX11Info>
@@ -535,6 +536,10 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
         } else if (s == "-remote-theme") {
             themeService = MTheme::RemoteTheme;
         } else if (s == "-local-theme") {
+            if (softwareRendering && MGraphicsSystemHelper::isRunningMeegoCompatibleGraphicssystem()) {
+                qCritical("-local-theme in combination with -software is not supported with the MeeGo graphicssystem. Please either drop one of the parameters or use a different graphicssystem.");
+                exit(EXIT_FAILURE);
+            }
             themeService = MTheme::LocalTheme;
         } else if (s == "-output-level") {
             if (i < (argc - 1)) {
