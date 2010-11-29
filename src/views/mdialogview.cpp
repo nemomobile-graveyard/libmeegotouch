@@ -207,7 +207,7 @@ void MDialogViewPrivate::createTitleBar()
     titleLabel = new MLabel(titleBar);
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setTextElide(true);
-    titleLabel->setObjectName("CommonGroupHeader");
+    titleLabel->setObjectName("CommonDialogHeader");
 
     closeButton = new MButton(titleBar);
     closeButton->setObjectName("MDialogCloseButton");
