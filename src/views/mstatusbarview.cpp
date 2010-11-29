@@ -46,6 +46,7 @@ namespace{
     const QString PIXMAP_PROVIDER_DBUS_PATH = "/statusbar";
     const QString PIXMAP_PROVIDER_DBUS_INTERFACE = "com.meego.core.MStatusBar";
     const QString PIXMAP_PROVIDER_DBUS_SHAREDPIXMAP_CALL = "sharedPixmapHandle";
+    const qreal SharedPixmapHeight = 30;
 }
 #endif // HAVE_DBUS
 
@@ -71,6 +72,7 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
             this, SLOT(disablePixmapUpdates()));
     connect(controller, SIGNAL(displayEntered()),
             this, SLOT(enablePixmapUpdates()));
+    controller->setProperty("sharedPixmapHeight", SharedPixmapHeight);
 
 
     if (controller->scene() && !controller->scene()->views().isEmpty()) {
@@ -124,18 +126,12 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
         return;
 
     QRectF sourceRect;
-    if (controller->sceneManager()->orientation() == M::Landscape) {
-        sourceRect.setX(0);
-        sourceRect.setY(0);
-        sourceRect.setWidth(size().width());
-        sourceRect.setHeight(size().height());
-    } else {
-        sourceRect.setX(0);
-        sourceRect.setY(size().height());
-        sourceRect.setWidth(size().width());
-        sourceRect.setHeight(size().height());
-    }
-    
+
+    sourceRect.setX(0);
+    sourceRect.setY(controller->sceneManager()->orientation() == M::Landscape ? 0 : SharedPixmapHeight);
+    sourceRect.setWidth(size().width());
+    sourceRect.setHeight(SharedPixmapHeight);
+
     painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
 #else
     Q_UNUSED(painter);
