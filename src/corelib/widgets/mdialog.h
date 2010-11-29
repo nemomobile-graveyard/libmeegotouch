@@ -212,6 +212,19 @@ class M_CORE_EXPORT MDialog : public MSceneWindow
     //! \internal_end
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
 
+
+    /*!
+        \property MDialog::titleBarIconId
+        \brief Id of Icon to be displayed in dialog's title bar.
+
+        Icon with supplied Id appears leftmost in dialog's title bar. If icon Id is set
+        and dialog's progress indicator is shown, then the progress indicator replaces the
+        icon.
+
+        By default its value is empty QString.
+     */
+    Q_PROPERTY(QString titleBarIconId READ titleBarIconId WRITE setTitleBarIconId)
+
     /*!
         \property MDialog::contentsVerticalPanningPolicy
         \brief Panning policy for the dialog's contents.
@@ -536,7 +549,7 @@ public:
 
     /*!
      * \brief Returns the dialog's title bar icon id.
-     * \return Icon being displayed in dialog's title bar.
+     * \return Id of icon being displayed in dialog's title bar.
      * \sa setTitleBarIconId()
      */
     QString titleBarIconId() const;
@@ -544,7 +557,7 @@ public:
     /*!
      * \brief Sets the dialog's title bar icon.
      *
-     * \param iconId Logical icon id to be displayed in title bar.
+     * \param iconId Logical id of icon to be displayed in title bar.
      * \sa titleBarIconId()
      */
     void setTitleBarIconId(const QString &iconId);

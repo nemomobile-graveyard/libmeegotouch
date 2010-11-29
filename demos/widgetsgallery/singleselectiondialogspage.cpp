@@ -127,6 +127,9 @@ void SingleSelectionDialogsPage::itemClicked(const QModelIndex &index)
     case 5:
         openStackedDialogs();
         break;
+    case 6:
+        openDialogWithIcon();
+        break;
     default:
         break;
     }
@@ -268,6 +271,33 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
+void SingleSelectionDialogsPage::openDialogWithIcon()
+{
+    if (dialog)
+        return;
+
+    MButton *button = new MButton();
+    button->setViewType(MButton::switchType);
+    button->setCheckable(true);
+    button->setChecked(true);
+    connect(button, SIGNAL(toggled(bool)), this, SLOT(setDialogIconVisible(bool)));
+
+    //% "Progress Indicator"
+    MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_icon"));
+    label->setStyleName("CommonTitleInverted");
+
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    layout->addStretch();
+    layout->addItem(label);
+    layout->addItem(button);
+    layout->addStretch();
+
+    dialog = new MDialog("Lorem ipsum", M::NoStandardButton);
+    dialog->centralWidget()->setLayout(layout);
+    dialog->setTitleBarIconId("icon-l-default-application");
+    dialog->appear(MSceneWindow::DestroyWhenDone);
+}
+
 void SingleSelectionDialogsPage::openEntryDialog()
 {
     if (dialog)
@@ -338,6 +368,17 @@ void SingleSelectionDialogsPage::setDialogProgressIndicatorVisible(bool visible)
     }
 }
 
+
+void SingleSelectionDialogsPage::setDialogIconVisible(bool visible)
+{
+    if (dialog) {
+        if(visible)
+            dialog->setTitleBarIconId("icon-l-default-application");
+        else
+            dialog->setTitleBarIconId("");
+    }
+}
+
 void SingleSelectionDialogsPage::retranslateUi()
 {
     //% "Single Selection Dialogs"
@@ -358,6 +399,8 @@ void SingleSelectionDialogsPage::retranslateUi()
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_dialog_with_progress_indicator");
     //% "Stacked Dialogs"
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_stacked_dialogs");
+    //% "Dialog with Icon"
+    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_dialog_with_icon");
 
     static_cast<QStringListModel *>(list->itemModel())->setStringList(singleSelectionDialogTypes);
 }

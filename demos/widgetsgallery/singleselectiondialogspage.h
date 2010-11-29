@@ -44,6 +44,7 @@ public:
     void openSystemDialog();
     void openSystemModalDialog();
     void openDialogWithProgressIndicator();
+    void openDialogWithIcon();
     void openEntryDialog();
     void openLongDialog();
 
@@ -55,6 +56,7 @@ private Q_SLOTS:
     void openNestedDialog();
     void openNestedMessageBox();
     void setDialogProgressIndicatorVisible(bool visible);
+    void setDialogIconVisible(bool visible);
 
 private:
     MLinearLayoutPolicy *policy;
