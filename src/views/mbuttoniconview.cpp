@@ -129,8 +129,11 @@ void MButtonIconView::applyStyle()
 
     MButtonView::applyStyle();
 
-    d->timelineShrink->setDuration(style()->shrinkDuration());
-    d->timelineGlow->setDuration(style()->glowDuration());
+    if (style()->shrinkDuration() > 0)
+        d->timelineShrink->setDuration(style()->shrinkDuration());
+
+    if (style()->glowDuration() > 0)
+        d->timelineGlow->setDuration(style()->glowDuration());
 }
 
 void MButtonIconView::scaleValueChanged(qreal value)
