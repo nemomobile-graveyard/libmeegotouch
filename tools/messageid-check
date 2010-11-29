@@ -94,6 +94,8 @@ my @engineeringEnglishPackagesIgnore = (
 my @engineeringEnglishPackagesBroken = (
     # this one is empty. Why?:
     "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
+    # this one is empty. Why?:
+    "libvideodolbysettings-l10n-engineering-english",
    );
 
 my @engineeringEnglishPackages = ();
