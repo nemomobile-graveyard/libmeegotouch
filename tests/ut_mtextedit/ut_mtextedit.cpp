@@ -261,9 +261,8 @@ public:
  */
 void Ut_MTextEdit::initTestCase()
 {
-    static int dummyArgc = 3;
-    static char *dummyArgv[3] = { (char *) "./ut_mtextedit",
-                                  (char *) "-local-theme",
+    static int dummyArgc = 2;
+    static char *dummyArgv[2] = { (char *) "./ut_mtextedit",
                                   (char *) "-software"};
 
     // prevent loading of minputcontext because we don't need it
