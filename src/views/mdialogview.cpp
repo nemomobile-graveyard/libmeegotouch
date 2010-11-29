@@ -134,7 +134,7 @@ void MDialogViewPrivate::createDialogBox()
     dialogBoxLayout->addItem(titleBar);
 
     contentsViewport = new MPannableViewport;
-    contentsViewport->setObjectName("MDialogContentsViewport");
+    contentsViewport->setStyleName("MDialogContentsViewport");
     dialogBoxLayout->addItem(contentsViewport);
 
     contents = new QGraphicsWidget();
@@ -149,7 +149,7 @@ void MDialogViewPrivate::createDialogBox()
 void MDialogViewPrivate::createButtonBox()
 {
     buttonBox = new MLabel;
-    buttonBox->setObjectName("MDialogButtonBox");
+    buttonBox->setStyleName("MDialogButtonBox");
     buttonBoxLayout = new MLayout();
     buttonBoxLayoutPolicy = new MButtonGroupLayoutPolicy(buttonBoxLayout, Qt::Horizontal);
     buttonBoxLayout->setPolicy(buttonBoxLayoutPolicy);
@@ -200,17 +200,17 @@ void MDialogViewPrivate::createTitleBar()
     //      For some reason neither MWidgetController nor MStylableWidget get its
     //      style loaded.
     titleBar = new MDialogInternalBox;
-    titleBar->setObjectName("MDialogTitleBar");
+    titleBar->setStyleName("MDialogTitleBar");
     titleBar->setLayout(layout);
     titleBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     titleLabel = new MLabel(titleBar);
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setTextElide(true);
-    titleLabel->setObjectName("CommonDialogHeader");
+    titleLabel->setStyleName("CommonDialogHeader");
 
     closeButton = new MButton(titleBar);
-    closeButton->setObjectName("MDialogCloseButton");
+    closeButton->setStyleName("MDialogCloseButton");
     closeButton->setViewType("icon");
     closeButton->setIconID("icon-m-framework-close");
     policyTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
@@ -576,7 +576,7 @@ void MDialogViewPrivate::setSpinnerVisibility(bool visibility)
         if (!visibility) return;
         spinner = new MProgressIndicator(titleBar, MProgressIndicator::spinnerType);
         spinner->setUnknownDuration(true);
-        spinner->setObjectName("MDialogProgressIndicator");
+        spinner->setStyleName("MDialogProgressIndicator");
     }
 
     if (!policySpinnerTitle) {
