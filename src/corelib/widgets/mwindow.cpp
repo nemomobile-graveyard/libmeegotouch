@@ -298,8 +298,10 @@ class ScreenshotEffect : public QGraphicsWidget
 
 void MWindowPrivate::takeScreenshot()
 {
+    Q_Q(MWindow);
+
     QPixmap screenshot;
-    screenshot = QPixmap::grabWindow(effectiveWinId());
+    screenshot = QPixmap::grabWindow(q->effectiveWinId());
 
     QString path;
     if (QDir(ImagesPath).exists())
