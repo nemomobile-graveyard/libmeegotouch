@@ -1,5 +1,10 @@
 /*! \page news What's new in MeeGo Touch
 
+\section v02061 0.20.61
+
+\subsection Changed
+- MComponentData doesn't load MInputContext explicitly anymore. Use QT_IM_MODULE=MInputContext environment variable.
+
 \section v02059 0.20.59
 
 \subsection New
