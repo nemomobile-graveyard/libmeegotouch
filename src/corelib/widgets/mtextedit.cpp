@@ -305,8 +305,7 @@ namespace
  * \param type widget type (single line or multiline)
  */
 MTextEditPrivate::MTextEditPrivate()
-    : pendingSoftwareInputPanelRequest(false),
-      focusEventState(NoFocusEventReceivedYet),
+    : focusEventState(NoFocusEventReceivedYet),
       validator(0),
       ownValidator(false),
       completer(0),
@@ -931,47 +930,24 @@ void MTextEditPrivate::requestSip()
     inputContext->setFocusWidget(focusedGraphicsView);
 
     MInputMethodState::requestSoftwareInputPanel();
-    pendingSoftwareInputPanelRequest = false;
-
-    Q_Q(MTextEdit);
-
-    if (q->sceneManager()) {
-        q->sceneManager()->ensureCursorVisible();
-    }
 }
 
-void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
+void MTextEditPrivate::requestAutoSip()
 {
     Q_Q(MTextEdit);
 
-    if (!q->isAutoSipEnabled()) {
-        return;
-    }
-
-    if (fr == Qt::MouseFocusReason) {
-        // Wait for the mouse release event instead so that the window relocation that might
-        // happen does not change the mouse position *before* the button is released.
-        pendingSoftwareInputPanelRequest = true;
-    } else {
+    if (q->isAutoSipEnabled()) {
         requestSip();
     }
-}
-
-void MTextEditPrivate::closeSip()
-{
-    MInputMethodState::closeSoftwareInputPanel();
-    pendingSoftwareInputPanelRequest = false;
 }
 
 void MTextEditPrivate::closeAutoSip()
 {
     Q_Q(MTextEdit);
 
-    if (!q->isAutoSipEnabled()) {
-        return;
+    if (q->isAutoSipEnabled()) {
+        MInputMethodState::closeSoftwareInputPanel();
     }
-
-    closeSip();
 }
 
 /*!
@@ -1679,15 +1655,14 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     }
 }
 
-
 void MTextEdit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_D(MTextEdit);
     MWidgetController::mouseReleaseEvent(event);
 
-    // Widget was focused-in on corresponding mouse press event:
-    if (d->pendingSoftwareInputPanelRequest) {
-        d->requestSip();
+    // Make sure cursor is visible. This is done here so we don't do
+    // unnecessary scrolling if panning is started.
+    if (sceneManager()) {
+        sceneManager()->ensureCursorVisible();
     }
 }
 
@@ -1708,7 +1683,12 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
                 sceneManager(), SLOT(ensureCursorVisible()),
                 Qt::UniqueConnection);
 
-        d->requestAutoSip(event->reason());
+        if (event->reason() != Qt::MouseFocusReason) {
+            // For mouse reason, this is done on mouse release.
+            sceneManager()->ensureCursorVisible();
+        }
+
+        d->requestAutoSip();
     }
 
     if (model()->autoSelectionEnabled() == true) {
@@ -1762,7 +1742,6 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     }
 
     MInputMethodState::closeSoftwareInputPanel();
-    d->pendingSoftwareInputPanelRequest = false;
 }
 
 bool MTextEdit::insert(const QString &text)

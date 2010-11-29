@@ -73,8 +73,7 @@ public:
     bool isPreediting() const;
 
     void requestSip();
-    void requestAutoSip(Qt::FocusReason fr);
-    void closeSip();
+    void requestAutoSip();
     void closeAutoSip();
 
     void setMode(MTextEditModel::EditMode mode);
@@ -126,8 +125,6 @@ public:
 
     //! \brief Reset IC if we have focus.  Disable handling of input method events during reset().
     void safeReset();
-
-    bool pendingSoftwareInputPanelRequest;
 
     enum FocusEventStateType {
         NoFocusEventReceivedYet,
