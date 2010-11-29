@@ -30,6 +30,11 @@ M_REGISTER_WIDGET(MBanner)
 MBanner::MBanner() :
         MSceneWindow(new MSceneWindowPrivate, new MBannerModel, MSceneWindow::NotificationEvent)
 {
+    ungrabGesture(Qt::PanGesture);
+    ungrabGesture(Qt::TapGesture);
+    ungrabGesture(Qt::TapAndHoldGesture);
+    ungrabGesture(Qt::PinchGesture);
+    ungrabGesture(Qt::SwipeGesture);
 }
 
 MBanner::~MBanner()
