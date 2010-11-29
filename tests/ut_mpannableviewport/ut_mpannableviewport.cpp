@@ -32,20 +32,23 @@ MApplication *app;
 
 void Ut_MPannableViewport::initTestCase()
 {
+    static int argc = 1;
+    static char *app_name[] = { (char *) "./ut_mpannableviewport" };
+
+    app = new MApplication(argc, app_name);
 }
 
 
 void Ut_MPannableViewport::cleanupTestCase()
 {
+    // We do not delete the app on purpose. Due to some weird (toolchain?) problem
+    // this can cause a crash when libraries are unregistered later.
+    //delete app;
 }
 
 
 void Ut_MPannableViewport::init()
 {
-    static int argc = 1;
-    static char *app_name[] = { (char *) "./ut_mpannableviewport" };
-
-    app = new MApplication(argc, app_name);
     subject = new MPannableViewport();
 }
 
@@ -53,7 +56,6 @@ void Ut_MPannableViewport::cleanup()
 {
     delete subject;
     subject = 0;
-    delete app;
 }
 
 void Ut_MPannableViewport::constructor()
