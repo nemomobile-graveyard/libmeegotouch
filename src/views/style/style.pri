@@ -57,6 +57,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mstylablewidgetstyle.h \
     $$STYLE_SRC_DIR/mlistindextooltipstyle.h \
     $$STYLE_SRC_DIR/mgraphicshighlighteffectstyle.h \
+    $$STYLE_SRC_DIR/mlistheaderstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \

@@ -31,6 +31,7 @@
 #include <MList>
 #include "mabstractcellcreator.h"
 #include "private/mwidgetview_p.h"
+#include "mlistheader.h"
 
 class MWidget;
 class MListView;
@@ -379,11 +380,11 @@ public:
     int vseparatorWidth;
 };
 
-class MDefaultHeadersCreator : public MAbstractCellCreator<MLabel>
+class MDefaultHeadersCreator : public MAbstractCellCreator<MListHeader>
 {
 public:
-    MDefaultHeadersCreator(const QString &headerObjectName) {
-        setHeaderObjectName(headerObjectName);
+    MDefaultHeadersCreator(const QString &headerStyleName) {
+        setHeaderStyleName(headerStyleName);
     }
 
     virtual ~MDefaultHeadersCreator() {
@@ -391,10 +392,10 @@ public:
     }
 
     virtual MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
-        MLabel *header = dynamic_cast<MLabel *>(recycler.take(MLabel::staticMetaObject.className()));
+        MListHeader *header = qobject_cast<MListHeader *>(recycler.take(MLabel::staticMetaObject.className()));
         if (header == NULL) {
-            header = new MLabel;
-            header->setObjectName(headerObjectName);
+            header = new MListHeader;
+            header->setStyleName(headerStyleName);
         }
         updateCell(index, header);
 
@@ -402,17 +403,17 @@ public:
     }
 
     virtual void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MLabel *header = dynamic_cast<MLabel *>(cell);
+        MListHeader *header = qobject_cast<MListHeader *>(cell);
         QString title = index.data(Qt::DisplayRole).toString();
         header->setText(title);
     }
 
-    virtual void setHeaderObjectName(const QString &headerObjectName) {
-        this->headerObjectName = headerObjectName;
+    virtual void setHeaderStyleName(const QString &headerStyleName) {
+        this->headerStyleName = headerStyleName;
     }
 
 private:
-    QString headerObjectName;
+    QString headerStyleName;
 };
 
 #endif

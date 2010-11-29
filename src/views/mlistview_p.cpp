@@ -102,7 +102,7 @@ void MListViewPrivate::updateHeaders()
 {
     MDefaultHeadersCreator *defaultCreator = dynamic_cast<MDefaultHeadersCreator*>(headersCreator);
     if (defaultCreator)
-        defaultCreator->setHeaderObjectName(q_ptr->style()->groupHeaderObjectName());
+        defaultCreator->setHeaderStyleName(q_ptr->style()->groupHeaderObjectName());
 }
 
 void MListViewPrivate::updateHeaderHeight()

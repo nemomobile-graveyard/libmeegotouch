@@ -15,6 +15,8 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mbubbleitembackground_p.h \
     $$WIDGETS_SRC_DIR/mlistindextooltip_p.h \
     $$WIDGETS_SRC_DIR/mlistindex_p.h \
+    $$WIDGETS_SRC_DIR/mlistheader_p.h \
+    $$WIDGETS_SRC_DIR/mlistheader.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mapplicationmenubutton.cpp \
@@ -23,3 +25,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mbubbleitembackground.cpp \
     $$WIDGETS_SRC_DIR/mcomboboxbutton.cpp \
     $$WIDGETS_SRC_DIR/mlistindextooltip.cpp \
+    $$WIDGETS_SRC_DIR/mlistheader.cpp \
