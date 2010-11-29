@@ -88,6 +88,16 @@ void Ut_MBanner::testTimeStamp()
     QCOMPARE(m_subject->bannerTimeStamp(),time);
 }
 
+void Ut_MBanner::testPrefixTimeStamp()
+{
+    QString tempPrefix= "Yesterday";
+    m_subject->setPrefixTimeStamp(tempPrefix);
+    QCOMPARE(m_subject->prefixTimeStamp(), tempPrefix);
+
+    tempPrefix= "Two days ago";
+    m_subject->setPrefixTimeStamp(tempPrefix);
+    QCOMPARE(m_subject->prefixTimeStamp(), tempPrefix);
+}
 
 void Ut_MBanner::testUpdatingTimeStamp()
 {
