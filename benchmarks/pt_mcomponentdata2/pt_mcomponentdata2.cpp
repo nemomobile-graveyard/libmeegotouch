@@ -46,10 +46,10 @@
 #include <QDBusConnection>
 #include "testabilityinterface.h"
 
-#ifdef Q_WS_X11
+#ifdef HAVE_XFIXES
 #include <QX11Info>
 #include <X11/extensions/Xfixes.h>
-#endif
+#endif // HAVE_XFIXES
 
 void mMessageHandler(QtMsgType, const char *) {}
 
@@ -188,7 +188,7 @@ void Pt_MComponentData2::registerDefaultService()
 void Pt_MComponentData2::showCursor()
 {
     MBENCHMARK_ONCE(
-#ifdef Q_WS_X11
+#ifdef HAVE_XFIXES
         XFixesShowCursor(QX11Info::display(), QX11Info::appRootWindow());
 #else
         qApp->restoreOverrideCursor();

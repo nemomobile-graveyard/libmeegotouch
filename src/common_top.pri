@@ -73,6 +73,11 @@ contains(DEFINES, HAVE_XDAMAGE) {
     PKGCONFIG += xdamage
 }
 
+# list pkg-config dependencies here
+contains(DEFINES, HAVE_XFIXES) {
+    PKGCONFIG += xfixes
+}
+
 contains(DEFINES, HAVE_ICU) {
     LIBS += -licui18n -licuuc -licudata
 }

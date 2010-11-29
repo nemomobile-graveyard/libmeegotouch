@@ -77,6 +77,7 @@ HAVE_GCONF=no
 HAVE_DBUS=no
 HAVE_CONTENTACTION=no
 HAVE_XDAMAGE=no
+HAVE_XFIXES=no
 HAVE_QTM_SERVICEFRAMEWORK=no
 IS_MAEMO5=no
 HAVE_MEEGOGRAPHICSSYSTEM=no
@@ -430,6 +431,10 @@ if [ $? -eq 0 ]; then
         HAVE_XDAMAGE=yes
     fi
 
+    pkg-config --exists xfixes
+    if [ $? -eq 0 ]; then
+        HAVE_XFIXES=yes
+    fi
     # For Scratchbox and  For OBS/MeeGo
     if [ ! -z "`uname -m | grep arm`" ]; then   
     	IS_ARMEL=yes  
@@ -605,6 +610,10 @@ fi
 
 if [ "$HAVE_XDAMAGE" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_XDAMAGE"
+fi
+
+if [ "$HAVE_XFIXES" = "yes" ]; then
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_XFIXES"
 fi
 
 if [ "$HAVE_CONTEXTSUBSCRIBER" = "yes" ]; then
@@ -826,6 +835,7 @@ echo "Content Action 0.1 .............. $HAVE_CONTENTACTION"
 echo "GConf 2.0 ....................... $HAVE_GCONF"
 echo "DBus (incl. QtDBus) ............. $HAVE_DBUS"
 echo "XDamage ......................... $HAVE_XDAMAGE"
+echo "XFixes .......................... $HAVE_XFIXES"
 echo "Qt Mobility Service Framework ... $HAVE_QTM_SERVICEFRAMEWORK"
 echo "MeeGo graphicssystem ............ $HAVE_MEEGOGRAPHICSSYSTEM"
 

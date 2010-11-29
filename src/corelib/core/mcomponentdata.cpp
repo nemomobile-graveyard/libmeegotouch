@@ -56,9 +56,11 @@
 #include "mgraphicssystemhelper.h"
 
 #ifdef Q_WS_X11
+#ifdef HAVE_XDAMAGE
 #include <QX11Info>
 #include <X11/extensions/Xfixes.h>
-#endif
+#endif // HAVE_XFIXES
+#endif // Q_WS_X11
 
 namespace
 {
@@ -980,13 +982,13 @@ void MComponentData::setShowCursor(bool show)
     }
 
     if (show) {
-#ifdef Q_WS_X11
+#ifdef HAVE_XFIXES
         XFixesShowCursor(QX11Info::display(), QX11Info::appRootWindow());
 #else
         qApp->restoreOverrideCursor();
 #endif
     } else {
-#ifdef Q_WS_X11
+#ifdef HAVE_XFIXES
         XFixesHideCursor(QX11Info::display(), QX11Info::appRootWindow());
 #else
         QPixmap cursor(QSize(1, 1));
