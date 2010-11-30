@@ -194,8 +194,10 @@ void DisplayModesPage::retranslateDisplayModeComboBox(MComboBox *combo)
     combo->clear();
     //% "Show"
     combo->insertItem(ComboShow, qtTrId("xx_displaymode_show"));
-    //% "Auto Hide"
-    combo->insertItem(ComboAutoHide, qtTrId("xx_displaymode_autohide"));
+    if (combo != comboEscapeButtonDisplayMode) {
+        //% "Auto Hide"
+        combo->insertItem(ComboAutoHide, qtTrId("xx_displaymode_autohide"));
+    }
     //% "Hide"
     combo->insertItem(ComboHide, qtTrId("xx_displaymode_hide"));
 
@@ -224,9 +226,6 @@ void DisplayModesPage::changeEscapeButtonDisplayMode(int index)
     switch (index) {
     case ComboShow:
         setComponentsDisplayMode(EscapeButton, MApplicationPageModel::Show);
-        break;
-    case ComboAutoHide:
-        setComponentsDisplayMode(EscapeButton, MApplicationPageModel::AutoHide);
         break;
     default:
         setComponentsDisplayMode(EscapeButton, MApplicationPageModel::Hide);
