@@ -1,3 +1,25 @@
+libmeegotouch (0.20.61-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#205648 - mthome prints errors to console on startup
+  * Fixes: Use qBound correctly in MTextEditView
+  * Fixes: MTextEditView cursor rectangle lacked padding offset.
+  * Fixes: NB#207139 - In Widgets Gallery, Escape button is displaying in the toolbar even when Auto Hide option is selected
+  * Fixes: NB#206027 - _MEEGOTOUCH_VISIBLE_IN_SWITCHER set to true when device in portrait even if switcher not visible.
+  * Fixes: Crash when hiding status bar.
+  * Fixes: MPannableViewport::setRange() used its argument incorrectly.
+  * Fixes: NB#207657 - Swiping on the top of the email event does not change the home screen
+  * Fixes: NB#207150, Invalid entries are ignored when the pasted value starts with valid number
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 30 Nov 2010 17:17:56 +0000
+
+libmeegotouch (0.20.60-2) unstable; urgency=low
+
+  * New version
+  * Changes: release 0.20.60 with meegographicssystem disabled
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com> Tue, 30 Nov 2010 15:22:24 +0000
+
 libmeegotouch (0.20.60-1) unstable; urgency=low
 
   * New version
