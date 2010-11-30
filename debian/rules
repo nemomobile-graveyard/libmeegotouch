@@ -70,11 +70,11 @@ else
 endif
 
 # Option to disable usage of meegographics system
-ifeq ($(DEB_BUILD_ARCH),armel)
-    ifeq (,$(findstring nomeegographicssystem,$(DEB_BUILD_OPTIONS)))
-         OPTIONS += -meegographicssystem
-    endif
-endif
+#ifeq ($(DEB_BUILD_ARCH),armel)
+#    ifeq (,$(findstring nomeegographicssystem,$(DEB_BUILD_OPTIONS)))
+#         OPTIONS += -meegographicssystem
+#    endif
+#endif
 
 # Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
 ifneq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
