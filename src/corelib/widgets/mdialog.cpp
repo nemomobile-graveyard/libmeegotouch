@@ -154,21 +154,20 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
 
     removeSceneWindowFromStandaloneScene(homeButtonPanel);
 
-    standAloneWindow->close();
-    standAloneWindow->setScene(0);
-    standAloneWindow->deleteLater();
-    standAloneWindow = 0;
-
     // Remove dialog from scene otherwise scene will delete dialog
     // on scene's destructor
     if (q->scene()) {
         q->scene()->removeItem(q);
     }
 
-
     if (suicideAfterDestroyingStandAloneWindow) {
         q->deleteLater();
     }
+
+    standAloneWindow->close();
+    standAloneWindow->setScene(0);
+    standAloneWindow->deleteLater();
+    standAloneWindow = 0;
 }
 
 bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy policy)

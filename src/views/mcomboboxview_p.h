@@ -20,6 +20,8 @@
 #ifndef MCOMBOBOXVIEW_P_H
 #define MCOMBOBOXVIEW_P_H
 
+#include <QPointer>
+
 class MLayout;
 class MLinearLayoutPolicy;
 class MComboBox;
@@ -55,7 +57,7 @@ public:
 
     MComboBox    *controller;
     MComboBoxButton *button;
-    MPopupList   *popuplist;
+    QPointer<MPopupList> popuplist;
     MLabel *title;
     MLayout *layout;
     MLinearLayoutPolicy *separateTitle;
