@@ -31,6 +31,8 @@
 #include <QTextLayout>
 #include <QAbstractTextDocumentLayout>
 #include <QTimer>
+#include <QStyleOptionGraphicsItem>
+#include <QDebug>
 
 #include "mfeedback.h"
 #include "mtextedit.h"
@@ -773,10 +775,9 @@ MTextEditView::~MTextEditView()
 
 void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    Q_UNUSED(option);
     Q_D(const MTextEditView);
 
-    mTimestamp("MTextEditView", QString("start text=%1").arg(d->document()->toPlainText()));
+    // mTimestamp("MTextEditView", QString("start text=%1").arg(d->document()->toPlainText()));
     painter->save();
 
     // set clipping rectangle to draw text inside the border
@@ -784,6 +785,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
                                             style()->paddingTop(),
                                             -style()->paddingRight(),
                                             -style()->paddingBottom()));
+    clipping = clipping.intersected(option->exposedRect);
     painter->setClipRect(clipping, Qt::IntersectClip);
 
     // If text does not fit inside widget, it may have to be scrolled
@@ -801,11 +803,12 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     } else {
         // normal painting
         QAbstractTextDocumentLayout::PaintContext paintContext = d->paintContext();
+        paintContext.clip = option->exposedRect;
         d->activeDocument()->documentLayout()->draw(painter, paintContext);
     }
 
     painter->restore();
-    mTimestamp("MTextEditView", QString("end text=%1").arg(d->document()->toPlainText()));
+    // mTimestamp("MTextEditView", QString("end text=%1").arg(d->document()->toPlainText()));
 }
 
 
