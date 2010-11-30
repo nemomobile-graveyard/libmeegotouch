@@ -41,6 +41,10 @@
 #include <QtTest/QtTest>
 #include <QGraphicsLinearLayout>
 
+#ifdef Q_WS_X11
+#include <X11/Xlib.h>
+#endif
+
 // MWindow stubs (to prevent crashing)
 MWindow::MWindow(QWidget *parent)
     : QGraphicsView(parent),
@@ -277,13 +281,21 @@ void Ut_MExtensionRunner::testPaintingOnPixmap()
     m_instance->init("servername");
 
     // Create target pixmap and fill it with full opaque white
-    QPixmap targetPixmap(150, 100);
+    QRectF targetRect(0, 0, 150, 100);
+#ifdef Q_WS_X11
+    // create a 32bit pixmap with enabled alpha channel
+    Pixmap pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), targetRect.width(), targetRect.height(), 32);
+    QApplication::syncX();
+    QPixmap targetPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+#else
+    QPixmap targetPixmap(targetRect.width(), targetRect.height());
     // Painting with transparent will activate the alpha channel in the pixmap
     targetPixmap.fill(Qt::transparent);
+#endif
     targetPixmap.fill(Qt::white);
 
     // Assign the pixmap to the applet runner to be painted to.
-    MAppletSetGeometryMessage msg(QRectF(0, 0, 150, 100), targetPixmap.handle());
+    MAppletSetGeometryMessage msg(targetRect, targetPixmap.handle());
     emit sendMessage(msg);
 
     // Update subregion of the pixmap
@@ -335,10 +347,17 @@ void Ut_MExtensionRunner::testSceneChanged()
     m_instance->init("servername");
 
     // Create target pixmap
-    QPixmap targetPixmap(30, 30);
+    QRectF targetRect(0, 0, 30, 30);
+#ifdef Q_WS_X11
+    Pixmap pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), targetRect.width(), targetRect.height(), QX11Info::appDepth());
+    QApplication::syncX();
+    QPixmap targetPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+#else
+    QPixmap targetPixmap(targetRect.width(), targetRect.height());
+#endif
 
     // Assign the pixmap to the applet runner to be painted to.
-    MAppletSetGeometryMessage msg(QRectF(0, 0, 30, 30), targetPixmap.handle());
+    MAppletSetGeometryMessage msg(targetRect, targetPixmap.handle());
     emit sendMessage(msg);
 
     // Update subregion of the pixmap
