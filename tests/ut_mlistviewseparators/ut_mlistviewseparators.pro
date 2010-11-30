@@ -14,6 +14,7 @@ HEADERS += ut_mlistviewseparators.h \
         $$MSRCDIR/views/widgets/mlistindexmodel.h \
         $$MSRCDIR/views/style/mlistindexstyle.h \
         $$MSRCDIR/views/style/mlistindextooltipstyle.h \
+        $$MSRCDIR/views/style/mlistheaderstyle.h \
 
 SOURCES += ut_mlistviewseparators.cpp  \
         ../mlistviewcommon/myindexedmodel.cpp \
@@ -29,5 +30,8 @@ SOURCES += ut_mlistviewseparators.cpp  \
         ../../src/views/.gen/gen_mlistindexstyledata.cpp \
         ../../src/views/.gen/gen_mlistindextooltipstyledata.cpp \
         $$MSRCDIR/views/mapplicationpageview.cpp \
+        $$MSRCDIR/views/widgets/mlistheader.cpp \
+        ../../src/views/.moc/moc_mlistheader.cpp \
+        ../../src/views/.gen/gen_mlistheaderstyledata.cpp \
 
 include(../common_bot.pri)
