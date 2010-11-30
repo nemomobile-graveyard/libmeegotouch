@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "mfiledatastore.h"
 #include "mfiledatastore_p.h"
 #include <QTemporaryFile>
@@ -87,7 +86,8 @@ static void addPathsToWatcher(const QString &filePath,
 {
     QFileInfo fileInfo(filePath);
     QString directory;
-    if (fileInfo.exists()) {
+    bool fileExists = fileInfo.exists();
+    if (fileExists) {
         // If the file exists, we can take the canonical path directly
         directory = fileInfo.canonicalPath();
     } else {
@@ -107,7 +107,7 @@ static void addPathsToWatcher(const QString &filePath,
     }
 
     // Watch the file itself if it's not being watched yet
-    if (!watcher->files().contains(filePath)) {
+    if (fileExists && !watcher->files().contains(filePath)) {
         watcher->addPath(filePath);
     }
 }

@@ -30,7 +30,7 @@ QMap<QString, QVariant> * settingsMapForNextQSettingsInstance;
 // Indicator whether QSettings object has been synchronized.
 bool gIsSynchronized;
 // File in which the data will be stored.
-QString gStoreFile;
+QList<QString> gStoreFile;
 // Status of the QSettings
 QSettings::Status gQSettingsStatus;
 // Whether QSettings is writable or not
@@ -39,16 +39,21 @@ bool gQSettingsIsWritable;
 bool gSynchronize;
 // Whether a sync fails
 bool gQSettingsSyncFails;
+//QSettings original file index
+static const int ORIGINAL_SETTINGS_FILE_INDEX = 0;
 
 // QMap for storing the settings object and the map for using settings values
 QMap<const QSettings *, QMap<QString, QVariant> *> mapForQSettingsInstance;
+
+//File path to data file
+static const QString DATA_FILE_PATH("/tmp/store.data");
 
 // Stubs of QSettings methods
 QSettings::QSettings(const QString &fileName, Format format, QObject *parent)
 {
     Q_UNUSED(format);
     Q_UNUSED(parent);
-    gStoreFile = fileName;
+    gStoreFile.append(fileName);
     mapForQSettingsInstance.insert(this, settingsMapForNextQSettingsInstance);
 }
 QSettings::~QSettings()
@@ -113,12 +118,20 @@ bool QSettings::isWritable() const
 }
 QString QSettings::fileName() const
 {
-    return gStoreFile;
+    return gStoreFile.at(ORIGINAL_SETTINGS_FILE_INDEX);
+}
+
+static bool fileExists = true;
+bool QFileInfo::exists() const
+{
+    return fileExists;
 }
 
 //! QFileSystemWatcher stubs
-void QFileSystemWatcher::addPath(const QString &)
+static QList<QString> watcherPaths;
+void QFileSystemWatcher::addPath(const QString & path)
 {
+    watcherPaths.append(path);
 }
 
 //! Signal Receptor class
@@ -130,6 +143,8 @@ void SignalReceptor::valueChanged(const QString &key, QVariant value)
 
 void Ut_MFileDataStore::init()
 {
+    fileExists = true;
+    watcherPaths.clear();
     gQSettingsSyncFails = false;
     gIsSynchronized = false;
     gSynchronize = false;
@@ -139,7 +154,7 @@ void Ut_MFileDataStore::init()
 
     originalSettingsMap = new QMap<QString, QVariant>;
     settingsMapForNextQSettingsInstance = originalSettingsMap;
-    m_subject = new MFileDataStore(QString("/tmp/store.data"));
+    m_subject = new MFileDataStore(DATA_FILE_PATH);
 }
 
 void Ut_MFileDataStore::cleanup()
@@ -151,11 +166,36 @@ void Ut_MFileDataStore::cleanup()
     originalSettingsMap = NULL;
 }
 
+void Ut_MFileDataStore::testDataFileDoesNotExists()
+{
+    fileExists = false;
+    delete m_subject;
+    watcherPaths.clear();
+    m_subject = new MFileDataStore(DATA_FILE_PATH);
+    QCOMPARE((bool)watcherPaths.contains(DATA_FILE_PATH), false);
+}
+
+void Ut_MFileDataStore::testDataFileExists()
+{
+    QCOMPARE((bool)watcherPaths.contains(DATA_FILE_PATH), true);
+}
+
 void Ut_MFileDataStore::testFileOpening()
 {
     QCOMPARE(m_subject->isReadable(), true);
     QCOMPARE(m_subject->isWritable(), true);
-    QCOMPARE(gStoreFile, QString("/tmp/store.data"));
+    QCOMPARE(gStoreFile.at(ORIGINAL_SETTINGS_FILE_INDEX), DATA_FILE_PATH);
+}
+
+void Ut_MFileDataStore::testValueSettingDataFileAddedToWatch()
+{
+    fileExists = false;
+    delete m_subject;
+    watcherPaths.clear();
+    m_subject = new MFileDataStore(DATA_FILE_PATH);
+    fileExists = true;
+    m_subject->createValue("key", "value");
+    QCOMPARE((bool)watcherPaths.contains(DATA_FILE_PATH), true);
 }
 
 void Ut_MFileDataStore::testValueSetting()
@@ -315,7 +355,7 @@ void Ut_MFileDataStore::testSettingsFileModifiedExternally()
 
     // Now signal emitted with correct file name. This will remove "key",
     // and add "key1" and "key2"
-    emit fileChanged(gStoreFile);
+    emit fileChanged(gStoreFile.at(ORIGINAL_SETTINGS_FILE_INDEX));
     QCOMPARE(valueSpy.count(), 3);
     QCOMPARE(m_subject->contains("key"), false);
     QCOMPARE(m_subject->contains("key1"), true);
@@ -323,13 +363,13 @@ void Ut_MFileDataStore::testSettingsFileModifiedExternally()
 
     // removal of a key from the file
     changedSettingsMap->remove("key1");
-    emit fileChanged(gStoreFile);
+    emit fileChanged(gStoreFile.at(ORIGINAL_SETTINGS_FILE_INDEX));
     QCOMPARE(valueSpy.count(), 4);
     QCOMPARE(m_subject->contains("key1"), false);
 
     // change of a value in the file
     (*changedSettingsMap)["key2"] = "newValue";
-    emit fileChanged(gStoreFile);
+    emit fileChanged(gStoreFile.at(ORIGINAL_SETTINGS_FILE_INDEX));
     QCOMPARE(valueSpy.count(), 5);
     QCOMPARE(m_subject->contains("key2"), true);
     QCOMPARE(m_subject->value("key2").toString(), QString("newValue"));

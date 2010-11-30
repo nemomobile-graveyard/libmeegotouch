@@ -52,7 +52,10 @@ private slots:
     void init();
     void cleanup();
 
+    void testDataFileDoesNotExists();
+    void testDataFileExists();
     void testFileOpening();
+    void testValueSettingDataFileAddedToWatch();
     void testValueSetting();
     void testValueReading();
     void testGettingAllKeys();

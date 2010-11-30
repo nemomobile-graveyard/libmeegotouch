@@ -294,6 +294,21 @@ QList<MApplicationExtensionInterface*> MApplicationExtensionManager::extensions(
     return extensions;
 }
 
+/*!
+ * Creates the data path if it does not exists.
+ * \param dataPath points to data directory
+ * \return true if exist or was created successfully
+ */
+static inline bool ensureDataPathExists(const QString &dataPath)
+{
+    bool dataDirExists = QDir::root().exists(dataPath);
+    // Create the user data directory if it doesn't exist yet
+    if (!dataDirExists) {
+        dataDirExists = QDir::root().mkpath(dataPath);
+    }
+    return dataDirExists;
+}
+
 bool MApplicationExtensionManager::createDataStore()
 {
     if (!extensionDataStore.isNull()) {
@@ -302,13 +317,9 @@ bool MApplicationExtensionManager::createDataStore()
 
     QString dataPath = this->dataPath();
     QString dataStoreFileName = dataPath + ".data";
-    bool dataPathExists = QDir::root().exists(dataPath);
+    bool dataPathsExist = ensureDataPathExists(dataPath);
 
-    // Create the user data directory if it doesn't exist yet
-    if (!dataPathExists) {
-        dataPathExists = QDir::root().mkpath(dataPath);
-    }
-    if (dataPathExists) {
+    if (dataPathsExist) {
         extensionDataStore = QSharedPointer<MFileDataStore>(new MFileDataStore(dataStoreFileName));
         return true;
     } else {
