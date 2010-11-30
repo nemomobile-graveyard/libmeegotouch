@@ -421,8 +421,11 @@ M_EXPORT int main(int argc, char ** argv)
 
     mainPage.setTitle("Hello World! (Now supports Launcher)");
     mainPage.appear();
-  
-    return app->exec();
+ 
+    int ret = app->exec();
+    delete app;
+ 
+    return ret;
 }
 \endcode
 
