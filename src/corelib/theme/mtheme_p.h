@@ -188,6 +188,9 @@ public:
     static QList<const MStyleSheet *> extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,
                                                                      const QList<QByteArray> &parentHierarchy);
 
+    static void appendAllLibraryStyleSheets(QList<const MStyleSheet *> &sheets);
+    static bool appendLibraryStyleSheet(QList<const MStyleSheet *> &sheets, const QString &assemblyName);
+
     static void registerStyleContainer(MStyleContainer *container);
     static void unregisterStyleContainer(MStyleContainer *container);
 

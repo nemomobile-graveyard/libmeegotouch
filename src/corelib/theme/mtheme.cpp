@@ -406,6 +406,15 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
     if (!mobj)
         return false;
 
+    // Exception: For MWidgetStyle we should search in all libraries css'es,
+    // otherwise the views styles (including common styles) are not installable
+    // on MWidgetController and MStylableWidget.
+    if (mobj->className() == MWidgetStyle::staticMetaObject.className()) {
+        styleMetaObjectHierarchy.append(mobj->className());
+        appendAllLibraryStyleSheets(sheets);
+        return true;
+    }
+
     do {
         styleMetaObjectHierarchy.append(mobj->className());
 
@@ -417,17 +426,8 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
         QString assemblyName = MClassFactory::instance()->styleAssemblyName(mobj->className());
 
         // find proper library
-        MLibrary *library = libraries->value(assemblyName, NULL);
-        if (library) {
-            // use stylesheet from this library if there is one
-            if (library->stylesheet()) {
-                if (!sheets.contains(library->stylesheet())) {
-                    sheets.insert(0, library->stylesheet());
-                }
-            }
-        } else {
+        if (!MThemePrivate::appendLibraryStyleSheet(sheets, assemblyName)) {
             mWarning("MTheme") << "Cannot find library. You must register your library to theming using M_LIBRARY macro." << '(' << assemblyName << ')';
-            Q_ASSERT_X(library, "MTheme", "Failed to find library");
         }
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
@@ -455,6 +455,26 @@ QList<const MStyleSheet *> MThemePrivate::extractSheetsForClassHierarchy(const Q
     }
 
     return parentSheets;
+}
+
+void MThemePrivate::appendAllLibraryStyleSheets(QList<const MStyleSheet *> &sheets)
+{
+    foreach(QString assemblyName, libraries->keys())
+        MThemePrivate::appendLibraryStyleSheet(sheets, assemblyName);
+}
+
+bool MThemePrivate::appendLibraryStyleSheet(QList<const MStyleSheet *> &sheets, const QString &assemblyName)
+{
+    MLibrary *library = libraries->value(assemblyName, NULL);
+    if (library) {
+        if (library->stylesheet()) {
+            if (!sheets.contains(library->stylesheet()))
+                sheets.insert(0, library->stylesheet());
+        }
+        return true;
+    }
+
+    return false;
 }
 
 const MStyle *MTheme::style(const char *styleClassName,
