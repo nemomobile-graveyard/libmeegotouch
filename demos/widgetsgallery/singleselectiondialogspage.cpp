@@ -282,7 +282,7 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
     button->setChecked(true);
     connect(button, SIGNAL(toggled(bool)), this, SLOT(setDialogIconVisible(bool)));
 
-    //% "Progress Indicator"
+    //% "Title Bar Icon"
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_icon"));
     label->setStyleName("CommonTitleInverted");
 
