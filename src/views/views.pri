@@ -40,6 +40,7 @@ PUBLIC_HEADERS += \
     mimagewidgetview.h \
     mbuttoniconview.h \
     mbuttonswitchview.h \
+    mbuttontabview.h \
     mcheckboxview.h \
     mcontainerview.h \
     mcontentitemview.h \
@@ -122,6 +123,7 @@ SOURCES += \
     mpositionindicatorview.cpp \
     mapplicationmenubuttonview.cpp \
     mbuttonview.cpp \
+    mbuttontabview.cpp \
     mimagewidgetview.cpp \
     mbuttoniconview.cpp \
     mbuttonswitchview.cpp \
