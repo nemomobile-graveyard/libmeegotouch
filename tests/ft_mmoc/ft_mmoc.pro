@@ -1,5 +1,9 @@
 include(../common_top.pri)
 
+# no need to link against qtgui for this command line app test
+CONFIG -= meegotouch
+QT -= gui
+
 TARGET = ft_mmoc
 
 SOURCES += \

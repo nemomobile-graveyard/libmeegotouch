@@ -41,7 +41,9 @@ void Ft_MMoc::initTestCase()
     m_binaryMmoc = "/usr/bin/mmoc";
     m_binaryMmocFound = QFileInfo( m_binaryMmoc ).exists();
 
-    if ( !m_binaryMmocFound && !m_perlMmocFound ) {
+    if ( ( ! m_qtMocFound )
+         || ( !m_binaryMmocFound && !m_perlMmocFound )
+       ) {
         QSKIP( "need development environment", SkipAll );
     }
 }
@@ -77,7 +79,7 @@ void Ft_MMoc::doMMoc_data()
     QTest::addColumn<QString>("fileName");
 
     // test all .h files in samples subdir.
-    QStringList files( QDir(QApplication::applicationDirPath() + "/ft_mmoc-samples" ).
+    QStringList files( QDir(QCoreApplication::applicationDirPath() + "/ft_mmoc-samples" ).
                        entryList( QStringList("*.h") ) );
     foreach ( QString file, files )
     {
@@ -99,7 +101,7 @@ void Ft_MMoc::doMMoc()
   QFETCH( QString, mocPath );
   QFETCH( QString, fileName );
 
-  QString path = QApplication::applicationDirPath() + "/ft_mmoc-samples/";
+  QString path = QCoreApplication::applicationDirPath() + "/ft_mmoc-samples/";
 
   qWarning( "testing: moc: %s file: %s",
             qPrintable( mocPath ),
