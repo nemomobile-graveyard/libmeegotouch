@@ -39,6 +39,27 @@ class M_VIEWS_EXPORT MButtonIconStyle : public MButtonStyle
         \brief Content opacity.
     */
     M_STYLE_ATTRIBUTE(qreal, contentOpacity, contentOpacity)
+
+    /*!
+      \deprecated Not in use.
+    */
+    M_STYLE_ATTRIBUTE(QColor, glowColor,          GlowColor)
+    /*!
+      \deprecated Not in use.
+    */
+    M_STYLE_ATTRIBUTE(int,    glowDuration,       GlowDuration)
+    /*!
+      \deprecated Not in use.
+    */
+    M_STYLE_ATTRIBUTE(int,    glowRadius,         GlowRadius)
+    /*!
+      \deprecated Not in use.
+    */
+    M_STYLE_ATTRIBUTE(int,    shrinkDuration,     ShrinkDuration)
+    /*!
+      \deprecated Not in use.
+    */
+    M_STYLE_ATTRIBUTE(qreal,  shrinkFactor,       ShrinkFactor)
 };
 
 /*!
