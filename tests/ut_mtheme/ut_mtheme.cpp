@@ -31,7 +31,6 @@
 #include <QtTest>
 #include <QString>
 #include <QProcess>
-#include <QSignalSpy>
 
 namespace {
     const char *KnownIconId = "meegotouch-combobox-indicator";
@@ -50,6 +49,80 @@ void Ut_MTheme::initTestCase()
     }
 
     m_theme = MTheme::instance();
+}
+
+QSettings *themeFile(const QString &theme)
+{
+    // Determine whether this is a m theme:
+    // step 1: we need to have index.theme file
+    QDir themeDir(THEMEDIR);
+    const QString themeIndexFileName = themeDir.absolutePath() + QDir::separator() + theme + QDir::separator() + "index.theme";
+    if (!QFile::exists(themeIndexFileName))
+        return NULL;
+
+    // step 2: it needs to be a valid ini file
+    QSettings *themeIndexFile = new QSettings(themeIndexFileName, QSettings::IniFormat);
+    if (themeIndexFile->status() != QSettings::NoError) {
+        delete themeIndexFile;
+        return NULL;
+    }
+
+    // step 3: we need to have X-MeeGoTouch-Metatheme group in index.theme
+
+    // remove the X-DUI-Metatheme statement again when duitheme is phased out.
+    if ((!themeIndexFile->childGroups().contains(QString("X-MeeGoTouch-Metatheme")))
+        &&(!themeIndexFile->childGroups().contains(QString("X-DUI-Metatheme"))))
+    {
+        delete themeIndexFile;
+        return NULL;
+    }
+    return themeIndexFile;
+}
+
+struct ThemeInfo {
+    QString theme;
+    QString themeName;
+    QString themeIcon;
+};
+
+QList<ThemeInfo> findAvailableThemes()
+{
+    QList<ThemeInfo> themes;
+
+    // find all directories under the theme directory
+    QDir themeDir(THEMEDIR);
+    const QFileInfoList directories = themeDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach(const QFileInfo & dir, directories) {
+        ThemeInfo info;
+
+        const QSettings *themeIndexFile = themeFile(dir.baseName());
+        if (!themeIndexFile)
+            continue;
+
+        // check if this theme is visible
+        if (!themeIndexFile->value("X-MeeGoTouch-Metatheme/X-Visible", true).toBool()) {
+            delete themeIndexFile;
+            continue;
+        }
+
+        info.theme = dir.baseName();
+        info.themeName = themeIndexFile->value("Desktop Entry/Name", "").toString();
+        info.themeIcon = themeIndexFile->value("X-MeeGoTouch-Metatheme/X-Icon", "").toString();
+
+        // remove this again, when duitheme is phased out
+        if ( info.themeIcon.isEmpty() )
+        {
+            info.themeIcon = themeIndexFile->value("X-DUI-Metatheme/X-Icon", "").
+                toString();
+        }
+        // end remove
+
+        // ok it's a valid theme. Add it to list of themes
+        themes.append(info);
+        delete themeIndexFile;
+    }
+
+    return themes;
 }
 
 void Ut_MTheme::cleanupTestCase()
@@ -83,28 +156,35 @@ void Ut_MTheme::testStyle()
 
 void Ut_MTheme::testThemeChangeCompleted()
 {
-    QSignalSpy spy(m_theme, SIGNAL(themeChangeCompleted()));
+    QList<ThemeInfo> themes = findAvailableThemes();
 
     MGConfItem themeNameItem("/meegotouch/theme/name");
-    const QString currentThemeName = themeNameItem.value().toString();
-    if (currentThemeName == QLatin1String("base")) {
-        themeNameItem.set("blanco");
-    } else {
-        themeNameItem.set("base");
-    }
 
-    // Wait until the signal themeChangeCompleted() has been received
+    QSignalSpy themeChange(m_theme, SIGNAL(themeChangeCompleted()));
+
     QEventLoop eventLoop;
+
+    const QString initialTheme = themeNameItem.value().toString();
+
     connect(m_theme, SIGNAL(themeChangeCompleted()), &eventLoop, SLOT(quit()));
-    QTimer::singleShot(30000, &eventLoop, SLOT(quit())); // fallback if themeChangeCompleted() is not send
-    eventLoop.exec();
 
-    QCOMPARE(spy.count(), 1);
+    //This time should be same as: THEME_CHANGE_TIMEOUT at mthemedaemon (3 seconds)
+    QTimer::singleShot(3000, &eventLoop, SLOT(quit()));
 
-    // Reset theme again
-    themeNameItem.set(currentThemeName);
+    for (int i = 0; i < themes.size(); i++) {
+        //We set every theme available except the current one
+        if (m_theme->currentTheme() != themes[i].theme) {
+            themeNameItem.set(themes[i].theme);
+            QVERIFY(themeNameItem.value().toString() == themes[i].theme);
+            eventLoop.exec();
+        }
+    }
+    //Coming back to the initial theme
+    themeNameItem.set(initialTheme);
     eventLoop.exec();
-    QCOMPARE(spy.count(), 2);
+    QVERIFY(themeNameItem.value().toString() == initialTheme);
+    //After all we should have so many signals as themes installed due to we go through all the themes
+    QCOMPARE(themeChange.count(), themes.size());
 }
 
 void Ut_MTheme::testPixmap()
