@@ -150,6 +150,7 @@ void MDialogViewPrivate::createButtonBox()
 {
     buttonBox = new MLabel;
     buttonBox->setStyleName("MDialogButtonBox");
+    buttonBox->setObjectName(buttonBox->styleName());
     buttonBoxLayout = new MLayout();
     buttonBoxLayoutPolicy = new MButtonGroupLayoutPolicy(buttonBoxLayout, Qt::Horizontal);
     buttonBoxLayout->setPolicy(buttonBoxLayoutPolicy);
@@ -201,6 +202,7 @@ void MDialogViewPrivate::createTitleBar()
     //      style loaded.
     titleBar = new MDialogInternalBox;
     titleBar->setStyleName("MDialogTitleBar");
+    titleBar->setObjectName(titleBar->styleName());
     titleBar->setLayout(layout);
     titleBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
@@ -211,6 +213,7 @@ void MDialogViewPrivate::createTitleBar()
 
     closeButton = new MButton(titleBar);
     closeButton->setStyleName("MDialogCloseButton");
+    closeButton->setObjectName(closeButton->styleName());
     closeButton->setViewType("icon");
     closeButton->setIconID("icon-m-framework-close");
     policyTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
@@ -577,6 +580,7 @@ void MDialogViewPrivate::setSpinnerVisibility(bool visibility)
         spinner = new MProgressIndicator(titleBar, MProgressIndicator::spinnerType);
         spinner->setUnknownDuration(true);
         spinner->setStyleName("MDialogProgressIndicator");
+        spinner->setObjectName(spinner->styleName());
     }
 
     if (!policySpinnerTitle) {
