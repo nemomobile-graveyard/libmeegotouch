@@ -13024,7 +13024,7 @@ zh_Hans_CN	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	y
 zh_Hans_CN	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzH时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+000014时31分00秒
 zh_Hans_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+0000下午2时31分00秒
 zh_Hans_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+000014时31分00秒
-zh_Hant_TW	Language endonym	中文(台灣)
+zh_Hant_TW	Language endonym	中文 (台灣)
 zh_Hant_TW	Country endonym	台灣
 zh_Hant_TW	Floating Point Number	-123,456,789.012
 zh_Hant_TW	Percent value	-1,234.5679%

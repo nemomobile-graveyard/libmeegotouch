@@ -1215,6 +1215,7 @@ void Ft_Locales::checkAvailableLocales()
     supportedLocaleNames << "zh_HK";
     supportedLocaleNames << "zh_MO";
     supportedLocaleNames << "zh_TW";
+    supportedLocaleNames << "zh_Hans_TW";
     supportedLocaleNames << "zh_CN@collation=pinyin";
     supportedLocaleNames << "zh_CN@collation=stroke";
     bool runFullTest = false;

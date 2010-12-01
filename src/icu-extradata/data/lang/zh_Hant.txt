@@ -500,14 +500,23 @@ zh_Hant{
         zbl{"布列斯符號"}
         zen{"澤納加文"}
         zh{"中文"}
+        zh_CN{"中文 (中国大陆)"}
+        zh_Hans_CN{"中文 (中国大陆)"}
+        zh_Hant_CN{"中文 (中國大陸)"}
+        zh_SG{"中文(新加坡)"}
+        zh_Hans_SG{"中文 (新加坡)"}
+        zh_Hant_SG{"中文 (新加坡)"}
         zh_HK{"中文 (香港)"}
+        zh_Hans_HK{"中文 (香港)"}
         zh_Hant_HK{"中文 (香港)"}
-        zh_MO{"中文（澳门）"}
-        zh_Hant_MO{"中文（澳门）"}
-        zh_TW{"中文(台灣)"}
-        zh_Hant_TW{"中文(台灣)"}
-        zh_Hans{"簡體中文"}
-        zh_Hant{"繁體中文"}
+        zh_MO{"中文 (澳門)"}
+        zh_Hans_MO{"中文 (澳门)"}
+        zh_Hant_MO{"中文 (澳門)"}
+        zh_TW{"中文 (台灣)"}
+        zh_Hans_TW{"中文 (台湾)"}
+        zh_Hant_TW{"中文 (台灣)"}
+        zh_Hans{"中文 (简体)"}
+        zh_Hant{"中文 (繁体)"}
         znd{"贊德文"}
         zu{"祖魯文"}
         zun{"祖尼文"}
