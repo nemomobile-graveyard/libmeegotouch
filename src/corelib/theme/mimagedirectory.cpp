@@ -55,7 +55,7 @@ ImageResource::ImageResource(const QString& absoluteFilePath) :
     // When starting an application, the X11 window must be filled with a default background
     // image in a fast way. The filling can only be done fast if the background image is available
     // as X11 pixmap.
-    convertToX11 = MGraphicsSystemHelper::isRunningMeegoCompatibleGraphicssystem()
+    convertToX11 = MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()
                    && absoluteFilePath.contains("forcex11");
 #endif
 }

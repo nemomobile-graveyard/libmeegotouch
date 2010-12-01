@@ -207,7 +207,7 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
     Q_UNUSED(addr);
     Q_UNUSED(numBytes);
 #else
-    if (MGraphicsSystemHelper::isRunningMeegoCompatibleGraphicssystem() && pixmapHandle.eglHandle) {
+    if (MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem() && pixmapHandle.eglHandle) {
         int fd = shm_open(qPrintable(pixmapHandle.shmHandle), O_RDONLY, 0444);
         if (fd == -1) {
             qFatal("Failed to open shared memory: %s, %s", strerror(errno), qPrintable(pixmapHandle.shmHandle));
@@ -236,7 +236,7 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
   * Returns true when the native graphicssystem is used.
   * If there is no support for the MeeGo graphicssystem true is always returned.
   */
-bool MGraphicsSystemHelper::isRunningNativeGraphicssystem() {
+bool MGraphicsSystemHelper::isRunningNativeGraphicsSystem() {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
     return QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("native");
 #else
@@ -244,7 +244,7 @@ bool MGraphicsSystemHelper::isRunningNativeGraphicssystem() {
 #endif
 }
 
-bool MGraphicsSystemHelper::isRunningMeegoCompatibleGraphicssystem() {
+bool MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem() {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
     if (QMeeGoGraphicsSystemHelper::isRunningRuntime()) {
         if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("meego") ||
@@ -258,3 +258,11 @@ bool MGraphicsSystemHelper::isRunningMeegoCompatibleGraphicssystem() {
 #endif
 }
 
+bool MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem() {
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    if (QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
+        return true;
+    }
+#endif
+    return false;
+}

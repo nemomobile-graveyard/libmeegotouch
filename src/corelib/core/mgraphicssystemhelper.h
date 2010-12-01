@@ -34,8 +34,9 @@ public:
     static void pixmapFromImage(PixmapCacheEntry *cacheEntry, const QImage& image, const QString &uniqueKey, const QSize &requestedSize);
     static QPixmap pixmapFromHandle(const MPixmapHandle& pixmapHandle, void **addr, int *numBytes);
 
-    static bool isRunningNativeGraphicssystem();
-    static bool isRunningMeegoCompatibleGraphicssystem();
+    static bool isRunningNativeGraphicsSystem();
+    static bool isRunningMeeGoCompatibleGraphicsSystem();
+    static bool isRunningMeeGoGraphicsSystem();
 };
 
 

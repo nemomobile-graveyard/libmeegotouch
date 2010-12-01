@@ -185,7 +185,6 @@ void MWindowPrivate::init()
 #endif
 
     q->setTranslucentBackground(false);
-
     if (MApplication::fullScreen())
         q->showFullScreen();
 }
@@ -658,11 +657,11 @@ void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event
         MTheme::cleanupGarbage();
     } else if (event->oldState().testFlag(Qt::WindowMinimized)
                && !q->windowState().testFlag(Qt::WindowMinimized)) {
-        if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+        if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
             q->setUpdatesEnabled(false);
         }
         initGLViewport();
-        if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+        if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
             QTimer::singleShot(700, q, SLOT(_q_enablePaintUpdates()));
         }
     }
@@ -806,7 +805,7 @@ void MWindow::setTranslucentBackground(bool enable)
 
     // when the gl widget is not initialized yet we will also not initialize it
     if (MApplication::softwareRendering() || MApplication::isPrestarted() ||
-        (MGraphicsSystemHelper::isRunningNativeGraphicssystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
+        (MGraphicsSystemHelper::isRunningNativeGraphicsSystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
         d->initSoftwareViewport();
     } else {
         d->initGLViewport();
@@ -1423,7 +1422,7 @@ void MWindow::setVisible(bool visible)
             return;
         } else {
             if (!windowState().testFlag(Qt::WindowMinimized) && !MApplication::softwareRendering()) {
-                if (MGraphicsSystemHelper::isRunningNativeGraphicssystem()) {
+                if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
                     if (!dynamic_cast<QGLWidget*>(viewport())) {
                         d->initGLViewport();
                     }

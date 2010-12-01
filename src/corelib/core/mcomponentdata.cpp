@@ -536,7 +536,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
         } else if (s == "-remote-theme") {
             themeService = MTheme::RemoteTheme;
         } else if (s == "-local-theme") {
-            if (softwareRendering && MGraphicsSystemHelper::isRunningMeegoCompatibleGraphicssystem()) {
+            if (softwareRendering && MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
                 qCritical("-local-theme in combination with -software is not supported with the MeeGo graphicssystem. Please either drop one of the parameters or use a different graphicssystem.");
                 exit(EXIT_FAILURE);
             }
