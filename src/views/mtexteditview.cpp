@@ -1199,9 +1199,10 @@ void MTextEditView::handleLongPress()
     mouseEvent.setPos(d->mouseTarget);
     updateCursorPosition(&mouseEvent, false);
 
-    // Set magnified position before appearing.
-    d->magnifier->setMagnifiedPosition(d->cursorRect().center());
+    // Appear before setting magnifier position. Appearing can move the magnifier's
+    // relative position to the text edit.
     d->magnifier->appear();
+    d->magnifier->setMagnifiedPosition(d->cursorRect().center());
 }
 
 void MTextEditView::hideInfoBanner()
