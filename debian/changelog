@@ -1,8 +1,20 @@
-libmeegotouch (0.20.62~1) unstable; urgency=low
+libmeegotouch (0.20.62-1) unstable; urgency=low
 
-  * unreleased
+  * New version 
+  * Changes: MeeGo Graphics System Disabled
+  * Fixes: NB#206766, All Chinese language names should be distinguishable
+  * Fixes: NB#208559 - ut_mtheme fails
+  * Fixes: NB#196347 - (appmenu_no_button) MApplicationMenu: the MButton is not added to the menu if it has been shown previously
+  * Fixes: NB#205990 - MWidgetAction - calling setWidget() AFTER adding action to the toolbar causes a crash.
+  * Fixes: NB#200520 - for action added with MApplicationPage::addAction() - setEnabled() is not working properly
+  * Fixes: ut_mpannableviewport on arm
+  * Fixes: ut_mscene with meego graphicssystem
+  * Fixes: ut_mtextedit when running with meego graphicssystem
+  * Fixes: ut_mpannableviewport with meego graphicssystem
+  * Fixes: ut_mextensionrunner with meego graphicssystem
+  * Fixes: NB#208549 - ft_mmoc aborts
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 30 Nov 2010 17:53:17 +0000
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 01 Dec 2010 19:03:19 +0000
 
 libmeegotouch (0.20.61-1) unstable; urgency=low
 
