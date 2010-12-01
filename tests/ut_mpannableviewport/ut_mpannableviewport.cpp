@@ -317,13 +317,13 @@ void Ut_MPannableViewport::testExtendedRange_data()
     QTest::addColumn<qreal>("verticalRange");
     QTest::addColumn<qreal>("expectedVerticalRange");
 
-    QTest::newRow("Zero range") << 0.0 << 0.0 << 0.0 << 0.0;
-    QTest::newRow("autoscroll extension") << 1.0 << 0.0 << 0.0 << 1.0;
-    QTest::newRow("sip extension") << 0.0 << 1.0 << 0.0 << 1.0;
-    QTest::newRow("autoscroll & sip #1") << 1.0 << 1.0 << 0.0 << 1.0;
-    QTest::newRow("autoscroll & sip #2") << 5.0 << 1.0 << 0.0 << 5.0;
-    QTest::newRow("autoscroll & sip #3") << 1.0 << 5.0 << 0.0 << 5.0;
-    QTest::newRow("autoscroll & sip #4") << 1.0 << 5.0 << 2.0 << 7.0;
+    QTest::newRow("Zero range") << (qreal)0.0 << (qreal)0.0 << (qreal)0.0 << (qreal)0.0;
+    QTest::newRow("autoscroll extension") << (qreal)1.0 << (qreal)0.0 << (qreal)0.0 << (qreal)1.0;
+    QTest::newRow("sip extension") << (qreal)0.0 << (qreal)1.0 << (qreal)0.0 << (qreal)1.0;
+    QTest::newRow("autoscroll & sip #1") << (qreal)1.0 << (qreal)1.0 << (qreal)0.0 << (qreal)1.0;
+    QTest::newRow("autoscroll & sip #2") << (qreal)5.0 << (qreal)1.0 << (qreal)0.0 << (qreal)5.0;
+    QTest::newRow("autoscroll & sip #3") << (qreal)1.0 << (qreal)5.0 << (qreal)0.0 << (qreal)5.0;
+    QTest::newRow("autoscroll & sip #4") << (qreal)1.0 << (qreal)5.0 << (qreal)2.0 << (qreal)7.0;
 }
 
 void Ut_MPannableViewport::testExtendedRange()
