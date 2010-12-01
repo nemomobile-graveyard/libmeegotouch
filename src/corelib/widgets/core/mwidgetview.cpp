@@ -417,9 +417,11 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
     Q_D(MWidgetView);
     if (change == QGraphicsItem::ItemEnabledHasChanged) {
         d->setEnabled(d->controller->isEnabled());
+        applyStyle();
     } else if (change == QGraphicsItem::ItemSelectedHasChanged) {
         if (d->controller->isEnabled()) {
             d->setSelected(d->controller->isSelected());
+            applyStyle();
         }
     } else if (change == QGraphicsItem::ItemParentHasChanged) {
         MWidgetController *parent = NULL;
