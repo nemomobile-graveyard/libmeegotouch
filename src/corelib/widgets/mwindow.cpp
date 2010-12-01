@@ -1201,7 +1201,8 @@ void MWindow::paintEvent(QPaintEvent *event)
         d->disableAutomaticBackgroundRepainting();
     }
 
-    if (!isOnDisplay()) {
+    // FIXME: disabled for the meego graphicssystem right now until we have a solution for NB#205680
+    if (!isOnDisplay() && !MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem()) {
         // we allow some paint events when we are not visible as we might have a race between
         // the visibility information and the paint events
         if (d->invisiblePaintCounter < d->allowedPaintEventsWhenInvisible) {
