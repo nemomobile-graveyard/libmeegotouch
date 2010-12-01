@@ -25,7 +25,8 @@
 
 QPoint MSceneWindowScroller::queryScrollingAmount(const QGraphicsWidget *widget,
                                                   const QRect &targetRect,
-                                                  const QPoint &originPoint)
+                                                  const QPoint &originPoint,
+                                                  const QPoint &currentOffset)
 {
     const MSceneWindow *sceneWindow = static_cast<const MSceneWindow *>(widget);
 
@@ -35,7 +36,7 @@ QPoint MSceneWindowScroller::queryScrollingAmount(const QGraphicsWidget *widget,
     const QRect sceneRect(QRect(QPoint(), sceneWindow->sceneManager()->visibleSceneSize(M::Landscape)));
     const QRect mappedSceneRect(sceneWindow->mapRectFromScene(sceneRect).toRect());
 
-    const int distanceFromBottom = mappedSceneRect.bottom() - sceneWindow->rect().toRect().bottom();
+    const int distanceFromBottom = (mappedSceneRect.bottom() - currentOffset.y()) - sceneWindow->rect().toRect().bottom();
 
     // Negative offset increases distance from bottom.
     const QPoint offset(targetRect.topLeft() - originPoint);

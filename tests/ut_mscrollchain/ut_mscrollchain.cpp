@@ -78,7 +78,8 @@ public:
 
     virtual QPoint queryScrollingAmount(const QGraphicsWidget *widget,
                                         const QRect &targetRect,
-                                        const QPoint &originPoint)
+                                        const QPoint &originPoint,
+                                        const QPoint &)
     {
         const QRect boundaries(widget->boundingRect().toRect());
 

@@ -23,7 +23,8 @@
 
 QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *widget,
                                                        const QRect &targetRect,
-                                                       const QPoint &originPoint)
+                                                       const QPoint &originPoint,
+                                                       const QPoint &)
 {
     const MPannableViewport *viewport = static_cast<const MPannableViewport *>(widget);
 

@@ -54,10 +54,12 @@ public:
      *  \param widget The scrollable widget in question.
      *  \param targetRect Target rectangle of the area of interest, in local widget coordinates.
      *  \param originPoint Current position (top left) of the area to be moved to targetRect, in local widget coordinates.
+     *  \param currentOffset The amount that \a widget is already planned to be scrolled but not yet applied.
      */
     virtual QPoint queryScrollingAmount(const QGraphicsWidget *widget,
                                         const QRect &targetRect,
-                                        const QPoint &originPoint) = 0;
+                                        const QPoint &originPoint,
+                                        const QPoint &currentOffset) = 0;
 
     //! \brief Scrolls the contents of given \a widget by the amount of \a contentsOffset.
     virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset) = 0;

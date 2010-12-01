@@ -42,7 +42,8 @@ signals:
 public:
     virtual QPoint queryScrollingAmount(const QGraphicsWidget *widget,
                                         const QRect &targetRect,
-                                        const QPoint &originPoint);
+                                        const QPoint &originPoint,
+                                        const QPoint &currentOffset);
     virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset);
     virtual void restoreScrolling(QGraphicsWidget *widget);
 };

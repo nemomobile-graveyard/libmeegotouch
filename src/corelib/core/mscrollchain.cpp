@@ -228,7 +228,7 @@ MScrollChain::ScrollChainItem::ScrollChainItem(QSharedPointer<MAbstractScroller>
 void MScrollChain::ScrollChainItem::calculateScrolling(const QRect &targetRect,
                                                        const QPoint &originPoint)
 {
-    contentsTranslation += scroller->queryScrollingAmount(widget, targetRect, originPoint);
+    contentsTranslation += scroller->queryScrollingAmount(widget, targetRect, originPoint, contentsTranslation);
 }
 
 void MScrollChain::ScrollChainItem::applyScrolling()
