@@ -26,6 +26,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mscenewindowanimationstyle.h \
     $$STYLE_SRC_DIR/mbasiclayoutanimationstyle.h \
     $$STYLE_SRC_DIR/mcrossfadedorientationanimationstyle.h \
+    $$STYLE_SRC_DIR/mdialoganimationstyle.h \
     $$STYLE_SRC_DIR/mgroupanimationstyle.h \
     $$STYLE_SRC_DIR/mlayoutanimationstyle.h \
     $$STYLE_SRC_DIR/mwidgetfadeanimationstyle.h \

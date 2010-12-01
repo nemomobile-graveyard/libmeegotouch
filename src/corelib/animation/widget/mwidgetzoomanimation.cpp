@@ -116,6 +116,13 @@ void MWidgetZoomAnimation::setOrigin(const QPointF &pos)
     d->origin = pos;
 }
 
+QPointF MWidgetZoomAnimation::origin() const
+{
+    Q_D(const MWidgetZoomAnimation);
+
+    return d->origin;
+}
+
 void MWidgetZoomAnimation::updateState(QAbstractAnimation::State newState,
                                              QAbstractAnimation::State oldState)
 {

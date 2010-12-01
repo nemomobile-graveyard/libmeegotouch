@@ -135,6 +135,7 @@ void MDialogViewPrivate::createDialogBox()
 
     contentsViewport = new MPannableViewport;
     contentsViewport->setStyleName("MDialogContentsViewport");
+    contentsViewport->setObjectName(contentsViewport->styleName());
     dialogBoxLayout->addItem(contentsViewport);
 
     contents = new MWidgetController();
@@ -430,7 +431,7 @@ void MDialogViewPrivate::updateButtonBoxLayoutOrientation()
             buttonBoxLayoutPolicy->setOrientation(Qt::Vertical);
 
     if (q->model()->buttons().count()==0) {
-        buttonBox->setPreferredHeight(0);
+        buttonBox->setPreferredHeight(q->style()->verticalSpacing());
     } else if (buttonBoxLayoutPolicy->orientation()==Qt::Horizontal) {
         buttonBox->setPreferredHeight(buttonBox->minimumHeight() + q->style()->verticalSpacing());
     } else {

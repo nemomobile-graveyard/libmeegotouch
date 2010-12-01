@@ -70,6 +70,8 @@ void MObjectMenuViewPrivate::init()
     titleLayout->setSpacing(0);
     titleLayout->setContentsMargins(0.0,0.0,0.0,0.0);
     titleArea = new MObjectMenuTitleArea(controller);
+    titleArea->setStyleName("ObjectMenuTitleArea");
+    titleArea->setObjectName(titleArea->styleName());
     titleArea->setLayout(titleLayout);
 
     //create and add title icon
@@ -97,6 +99,7 @@ void MObjectMenuViewPrivate::init()
     actionViewport = new MPannableViewport(controller);
     actionViewport->setWidget(actionWidget);
     actionViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+    actionViewport->setObjectName("ObjectMenuActionViewport");
     mainLayout->addItem(actionViewport);
 }
 

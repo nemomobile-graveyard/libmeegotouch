@@ -8,6 +8,7 @@ include(core/core.pri)
 ANIMATIONS_WIDGET_SRC_DIR=./animation/widget
 
 PUBLIC_HEADERS += \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mdialoganimation.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeanimation.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetmoveanimation.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideanimation.h \
@@ -16,6 +17,7 @@ PUBLIC_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mcontentfadeandslideanimation.h \
 
 PRIVATE_HEADERS += \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mdialoganimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetmoveanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideanimation_p.h \
@@ -24,6 +26,7 @@ PRIVATE_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mcontentfadeandslideanimation_p.h \
 
 SOURCES += \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mdialoganimation.cpp \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeanimation.cpp \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetmoveanimation.cpp \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideanimation.cpp \

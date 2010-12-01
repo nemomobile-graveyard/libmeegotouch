@@ -152,6 +152,7 @@ MMessageBoxView::MMessageBoxView(MMessageBox *controller) :
 {
     Q_D(MMessageBoxView);
     d->controller = qobject_cast<MMessageBox*>(controller);
+    d->buttonBox->setStyleName("MMessageBoxButtonBox");
 }
 
 MMessageBoxView::~MMessageBoxView()

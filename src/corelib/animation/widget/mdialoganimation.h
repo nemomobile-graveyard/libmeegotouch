@@ -17,42 +17,42 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETZOOMANIMATION_H
-#define MWIDGETZOOMANIMATION_H
+#ifndef MDIALOGANIMATION_H
+#define MDIALOGANIMATION_H
 
 #include "mabstractwidgetanimation.h"
-#include <mwidgetzoomanimationstyle.h>
+#include <mdialoganimationstyle.h>
 
 #include <QPointF>
 
 //! \internal
 
-class MWidgetZoomAnimationPrivate;
+class MDialogAnimationPrivate;
 
-class MWidgetZoomAnimation : public MAbstractWidgetAnimation
+class MDialogAnimation : public MAbstractWidgetAnimation
 {
     Q_OBJECT
     Q_PROPERTY(QPointF origin READ origin WRITE setOrigin)
-    M_ANIMATION_GROUP(MWidgetZoomAnimationStyle)
+    M_ANIMATION_GROUP(MDialogAnimationStyle)
 
 public:
-    MWidgetZoomAnimation(QObject *parent = NULL);
+    MDialogAnimation(QObject *parent = NULL);
 
-    virtual void setTargetWidget(MWidgetController *widget);
     virtual void restoreTargetWidgetState();
 
     void setTransitionDirection(TransitionDirection direction);
-    void setOrigin(const QPointF &pos);
+
     QPointF origin() const;
+    void setOrigin(const QPointF &pos);
 
 protected:
-    MWidgetZoomAnimation(MWidgetZoomAnimationPrivate *dd, QObject *parent = NULL);
+    MDialogAnimation(MDialogAnimationPrivate *dd, QObject *parent = NULL);
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
 private:
-    Q_DECLARE_PRIVATE(MWidgetZoomAnimation)
+    Q_DECLARE_PRIVATE(MDialogAnimation)
 };
 
 //! \internal_end
 
-#endif // MWIDGETZOOMANIMATION_H
+#endif // MDIALOGANIMATION_H
