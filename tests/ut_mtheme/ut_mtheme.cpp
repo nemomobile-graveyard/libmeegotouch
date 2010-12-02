@@ -450,4 +450,57 @@ void Ut_MTheme::waitForPendingThemeRequests()
     }
 }
 
+void Ut_MTheme::testAddPixmapDirectory() {
+
+    const QPixmap *invalid;
+    const QPixmap *valid;
+    QString pixmapId="ut_mtheme";
+    QSize validPixmapSize(20,20);
+    QSize invalidPixmapSize(50,50);
+
+    /* Request a pixmap not available. This will return the 50x50 red pixmap */
+    invalid = m_theme->pixmap(pixmapId, validPixmapSize);
+    QVERIFY(invalid->size() == invalidPixmapSize);
+    m_theme->releasePixmap(invalid);
+    m_theme->cleanupGarbage();
+
+    /* Add current directory so the pixmap can be found */
+    m_theme->addPixmapDirectory(qApp->applicationDirPath());
+
+    /* And then request the pixmap again, which will return the right one */
+    valid = m_theme->pixmap(pixmapId, validPixmapSize);
+    QVERIFY(valid->size() == validPixmapSize);
+    m_theme->releasePixmap(valid);
+    m_theme->cleanupGarbage();
+    QCOMPARE(cachedIconCount(), 0);
+    QVERIFY(!isIconCached(pixmapId, QSize()));
+}
+
+void Ut_MTheme::testClearPixmapDirectories() {
+
+    const QPixmap *invalid;
+    const QPixmap *valid;
+    QSize validPixmapSize(20,20);
+    QSize invalidPixmapSize(50,50);
+    QString pixmapId="ut_mtheme";
+
+    /* Add current dir to the list */
+    m_theme->addPixmapDirectory(qApp->applicationDirPath());
+
+    /* Request a pixmap available */
+    valid = m_theme->pixmap(pixmapId, validPixmapSize);
+    QVERIFY(valid->size() == validPixmapSize);
+    m_theme->releasePixmap(valid);
+    m_theme->cleanupGarbage();
+
+    /* clear pixmap directories */
+    m_theme->clearPixmapDirectories();
+
+    /* And request it again to get the invalid pixmap */
+    invalid = m_theme->pixmap(pixmapId, validPixmapSize);
+    QVERIFY(invalid->size() == invalidPixmapSize);
+    m_theme->releasePixmap(invalid);
+    m_theme->cleanupGarbage();
+}
+
 QTEST_APPLESS_MAIN(Ut_MTheme)

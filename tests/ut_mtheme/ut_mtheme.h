@@ -52,6 +52,9 @@ private slots:
     void testScalableImage();
     void testView();
 
+    void testAddPixmapDirectory();
+    void testClearPixmapDirectories();
+
 private:
     /**
      * @return True, if the given icon has been cached in the theme daemon.
