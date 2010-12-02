@@ -57,6 +57,7 @@ public:
     void setIcon(const QString& id, const QSize &s);
     void setBannerTimeStamp(const QDateTime& date);
     void setPrefixTimeStamp(const QString& string);
+    void updateDateFormat() const;
 
 protected:
 

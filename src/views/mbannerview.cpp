@@ -43,7 +43,8 @@ MBannerViewPrivate::MBannerViewPrivate() :
     subtitleLabel(NULL),
     bannerTimeStampLabel(NULL),
     prefixTimeStampLabel(NULL),
-    bannerTimeStampData(NULL)
+    bannerTimeStampData(NULL),
+    controller(0)
 {
 }
 
@@ -58,6 +59,7 @@ MLabel *MBannerViewPrivate::title()
         //Banners can't have html
         titleLabel->setTextFormat(Qt::PlainText);
     }
+
     return titleLabel;
 }
 
@@ -67,10 +69,12 @@ MLabel *MBannerViewPrivate::subtitle()
         subtitleLabel = new MLabel(controller);
         //Banners can't have html
         subtitleLabel->setTextFormat(Qt::PlainText);
+        subtitleLabel->setVisible(true);
         subtitleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         subtitleLabel->setWordWrap(true);
         subtitleLabel->setTextElide(true);
     }
+
     return subtitleLabel;
 }
 
@@ -80,6 +84,7 @@ MImageWidget *MBannerViewPrivate::icon()
         iconId = new MImageWidget(controller);
         iconId->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
+
     return iconId;
 }
 
@@ -88,10 +93,6 @@ MLabel *MBannerViewPrivate::bannerTimeStamp()
     if (!bannerTimeStampLabel) {
         bannerTimeStampLabel = new MLabel(controller);
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
-    }
-
-    if (bannerTimeStampData){
-        bannerTimeStampLabel->setText(bannerTimeStampData->toString("hh:mm ap"));
     }
 
     return bannerTimeStampLabel;
@@ -106,6 +107,7 @@ MLabel *MBannerViewPrivate::prefixTimeStamp()
         prefixTimeStampLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         prefixTimeStampLabel->setTextElide(true);
     }
+
     return prefixTimeStampLabel;
 }
 
@@ -126,12 +128,36 @@ void MBannerViewPrivate::setIcon(const QString &i, const QSize &s)
 
 void MBannerViewPrivate::setBannerTimeStamp(const QDateTime &date)
 {
-    bannerTimeStampData = new QDateTime(date);
+    if (!bannerTimeStampData && date.isValid()) {
+        bannerTimeStampData = new QDateTime();
+    }
+
+    if (date.isValid()) {
+        bannerTimeStampData->setMSecsSinceEpoch(date.toMSecsSinceEpoch());
+    }
 }
 
 void MBannerViewPrivate::setPrefixTimeStamp(const QString &string)
 {
     prefixTimeStamp()->setText(string);
+}
+
+void MBannerViewPrivate::updateDateFormat() const
+{
+    Q_Q(const MBannerView);
+
+    if (bannerTimeStampData) {
+        //If the datetime is less than 24 hours TimeShort format if not DateShort
+        if (q->model()->bannerTimeStamp().daysTo(QDateTime::currentDateTime()) < 1) {
+            bannerTimeStampLabel->setText(MLocale().formatDateTime(
+                    q->model()->bannerTimeStamp().toLocalTime(),
+                    MLocale::DateNone, MLocale::TimeShort));
+        } else {
+            bannerTimeStampLabel->setText(MLocale().formatDateTime(
+                    q->model()->bannerTimeStamp().toLocalTime(),
+                    MLocale::DateShort, MLocale::TimeNone));
+        }
+    }
 }
 
 MLayout *MBannerViewPrivate::createLayout()
@@ -172,20 +198,27 @@ void MBannerViewPrivate::layoutShortEventBanner()
 
     if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("ShortEventBannerIcon");
+        icon()->setVisible(true);
         landscapePolicy->addItem(icon(), Qt::AlignTop);
         portraitPolicy->addItem(icon(), Qt::AlignTop);
     }
+
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("ShortEventBannerTitle");
+        title()->setVisible(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
 
     if (!q->model()->subtitle().isEmpty()) {
         subtitle()->setStyleName("ShortEventBannerSubtitle");
+        subtitle()->setVisible(true);
         landscapePolicy->addItem(subtitle(), Qt::AlignTop);
         portraitPolicy->addItem(subtitle(), Qt::AlignTop);
     }
+
+    prefixTimeStamp()->setVisible(false);
+    bannerTimeStamp()->setVisible(false);
     landscapePolicy->addStretch();
     portraitPolicy->addStretch();
 }
@@ -198,15 +231,21 @@ void MBannerViewPrivate::layoutInformationBanner()
 
     if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("InformationBannerIcon");
+        icon()->setVisible(true);
         landscapePolicy->addItem(icon(), Qt::AlignTop);
         portraitPolicy->addItem(icon(), Qt::AlignTop);
     }
+
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("InformationBannerTitle");
+        title()->setVisible(true);
         title()->setWordWrap(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
+
+    prefixTimeStamp()->setVisible(false);
+    bannerTimeStamp()->setVisible(false);
 }
 
 void MBannerViewPrivate::layoutSystemBanner()
@@ -217,11 +256,16 @@ void MBannerViewPrivate::layoutSystemBanner()
 
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("SystemBannerTitle");
+        title()->setVisible(true);
         title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         title()->setWordWrap(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
+
+    icon()->setVisible(false);
+    prefixTimeStamp()->setVisible(false);
+    bannerTimeStamp()->setVisible(false);
 }
 
 void MBannerViewPrivate::layoutGenericBanner(){
@@ -234,24 +278,34 @@ void MBannerViewPrivate::layoutGenericBanner(){
 
     if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("GenericBannerIcon");
+        icon()->setVisible(true);
         landscapePolicy->addItem(icon(), Qt::AlignTop);
         portraitPolicy->addItem(icon(), Qt::AlignTop);
     }
+
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("GenericBannerTitle");
+        title()->setVisible(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
+
     if (!q->model()->subtitle().isEmpty()) {
         subtitle()->setStyleName("GenericBannerSubtitle");
         landscapePolicy->addItem(subtitle(), Qt::AlignTop);
         portraitPolicy->addItem(subtitle(), Qt::AlignTop);
     }
+
     if (q->model()->bannerTimeStamp().isValid()) {
         bannerTimeStamp()->setStyleName("GenericBannerTimeStamp");
+        bannerTimeStamp()->setVisible(true);
         landscapePolicy->addItem(bannerTimeStamp(), Qt::AlignTop);
         portraitPolicy->addItem(bannerTimeStamp(), Qt::AlignTop);
+    } else {
+        prefixTimeStamp()->setVisible(false);
+        bannerTimeStamp()->setVisible(false);
     }
+
     landscapePolicy->addStretch();
     portraitPolicy->addStretch();
     qWarning() << "You are using a generic MBanner. Consider use System Banner,Information Banner or Event Banner";
@@ -265,34 +319,43 @@ void MBannerViewPrivate::layoutFullEventBanner()
 
     if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("FullEventBannerIcon");
+        icon()->setVisible(true);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     }
 
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("FullEventBannerTitle");
+        title()->setVisible(true);
         gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
     }
 
     if (!q->model()->subtitle().isEmpty()) {
         subtitle()->setStyleName("FullEventBannerSubtitle");
+        subtitle()->setVisible(true);
         gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
     }
 
     //Prefix is not show if it doesn't come with a valid datetime
-    if (!q->model()->prefixTimeStamp().isEmpty() && !q->model()->bannerTimeStamp().isNull()) {
+    if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
         layoutStamp->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("FullEventBannerPrefixTimeStamp");
+        prefixTimeStamp()->setVisible(true);
         bannerTimeStamp()->setStyleName("FullEventBannerTimeStamp");
+        bannerTimeStamp()->setVisible(true);
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
         gridBanner->addItem(layoutStamp, 2, 1,Qt::AlignTop);
-    } else if (!q->model()->bannerTimeStamp().isValid()) {
+    } else if (q->model()->bannerTimeStamp().isValid()) {
+        prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("FullEventBannerTimeStamp");
         gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+    } else {
+        prefixTimeStamp()->setVisible(false);
+        bannerTimeStamp()->setVisible(false);
     }
 }
 
@@ -309,35 +372,47 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
 
     if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("PrivateBannerIcon");
+        icon()->setVisible(true);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     }
 
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("PrivateBannerTitle");
+        title()->setVisible(true);
         gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
     }
 
+    subtitle()->setVisible(false);
+
     //Prefix is not show if it doesn't come with a valid datetime
-    if (!q->model()->prefixTimeStamp().isEmpty() && !q->model()->bannerTimeStamp().isNull()) {
+    if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
         layoutStamp->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("PrivateBannerPrefixTimeStamp");
+        prefixTimeStamp()->setVisible(true);
+        prefixTimeStamp()->setAlignment(Qt::AlignTop);
         bannerTimeStamp()->setStyleName("PrivateBannerTimeStamp");
+        bannerTimeStamp()->setVisible(true);
+        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
         gridBanner->addItem(layoutStamp, 1, 1,Qt::AlignTop);
-    } else if (!q->model()->bannerTimeStamp().isValid()) {
+    } else if (q->model()->bannerTimeStamp().isValid()) {
+        prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("PrivateBannerTimeStamp");
         gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
+    } else {
+        prefixTimeStamp()->setVisible(false);
+        bannerTimeStamp()->setVisible(false);
     }
 }
+
 void MBannerViewPrivate::initDynamicLayout()
 {
     Q_Q(MBannerView);
-
 
     if (q->model()->styleName()=="ShortEventBanner") {
         layoutShortEventBanner();
@@ -353,6 +428,7 @@ void MBannerViewPrivate::initDynamicLayout()
         //If wrong or empty styleName == generic banner
         layoutGenericBanner();
     }
+
     QObject::connect(controller, SIGNAL(clicked()), controller, SLOT(dismiss()));
 }
 
@@ -410,15 +486,27 @@ void MBannerView::setupModel()
         d->setIcon(model()->iconID(),style()->iconSize());
     if (!model()->bannerTimeStamp().isNull())
         d->setBannerTimeStamp(model()->bannerTimeStamp());
-    if(!model()->prefixTimeStamp().isEmpty()){
+    if (!model()->prefixTimeStamp().isEmpty()){
         d->setPrefixTimeStamp(model()->prefixTimeStamp());
     }
+
     d->initDynamicLayout();
 }
 
 void MBannerView::applyStyle()
 {
     MSceneWindowView::applyStyle();
+}
+
+void MBannerView::drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    Q_D(const MBannerView);
+
+    Q_UNUSED(painter);
+    Q_UNUSED(option);
+
+    if (d->bannerTimeStampLabel)
+        d->updateDateFormat();
 }
 
 void MBannerView::updateData(const QList<const char *>& modifications)
