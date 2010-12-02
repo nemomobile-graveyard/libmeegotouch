@@ -494,8 +494,6 @@ QString MLocalePrivate::icuFormatString(MLocale::DateType dateType,
 #endif
 
 #ifdef HAVE_ICU
-static QCache<QString, icu::DateFormat> _dateFormatCache;
-
 icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
                                                   MLocale::TimeType timeType,
                                                   MLocale::CalendarType calendarType,
@@ -507,8 +505,8 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
         .arg(calendarType)
         .arg(timeFormat24h)
         .arg(categoryName(MLocale::MLcTime));
-    if (_dateFormatCache.contains(key))
-        return _dateFormatCache.object(key);
+    if (_dateFormatCache && _dateFormatCache->contains(key))
+        return _dateFormatCache->object(key);
     // Create calLocale which has the time pattern we want to use
     icu::Locale calLocale = MIcuConversions::createLocale(
         categoryName(MLocale::MLcTime),
@@ -544,7 +542,9 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
             break;
         }
     }
-    _dateFormatCache.insert(key, df);
+    if (!_dateFormatCache)
+        _dateFormatCache = new QCache<QString, icu::DateFormat>;
+    _dateFormatCache->insert(key, df);
     return df;
 }
 #endif
@@ -560,6 +560,7 @@ MLocalePrivate::MLocalePrivate()
 #ifdef HAVE_ICU
       _numberFormat(0),
       _numberFormatLcTime(0),
+      _dateFormatCache(0),
 #endif
 #ifdef HAVE_GCONF
       currentLanguageItem(SettingsLanguage),
@@ -597,6 +598,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
 #ifdef HAVE_ICU
       _numberFormat(0),
       _numberFormatLcTime(0),
+      _dateFormatCache(0),
 #endif
       _messageTranslations(other._messageTranslations),
       _timeTranslations(other._timeTranslations),
@@ -667,6 +669,7 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
     } else {
         _numberFormatLcTime = 0;
     }
+    delete _dateFormatCache;
 #endif
 
     return *this;
