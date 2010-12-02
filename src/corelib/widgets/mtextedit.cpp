@@ -2248,11 +2248,20 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         changed = true;
     }
 
+    QList<QInputMethodEvent::Attribute> attributes = event->attributes();
     if (!preedit.isEmpty()) {
-        QList<QInputMethodEvent::Attribute> attributes = event->attributes();
         d->setPreeditText(preedit, attributes);
         d->setMode(MTextEditModel::EditModeActive);
         changed = true;
+    }
+
+    foreach (const QInputMethodEvent::Attribute &attribute, attributes) {
+        if (attribute.type == QInputMethodEvent::Selection) {
+            // attribute.start is related to block start, while setSelection() is
+            // using start which is related to plain text, need to do map.
+            int start = attribute.start + d->cursor()->block().position();
+            setSelection(start, attribute.length);
+        }
     }
 
     if (changed) {
