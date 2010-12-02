@@ -590,7 +590,7 @@ bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
     int textPosition = 0;
     int filteredTextLength = filteredText.length();
     int snippetLength = -1;
-    int listIndex = -1;
+    int listIndex = 0;
     int count = 0;
 
     do {
@@ -755,7 +755,7 @@ void MTextEditPrivate::setPreeditText(const QString &text,
     // If this becomes problematic, we should move this formatting to paintContext of the view.
     layout->setAdditionalFormats(preeditStyles);
 
-    int listIndex = -1;
+    int listIndex = 0;
     int count = 0;
     insertTextWithPreeditStyling(text, listIndex, count);
     clearUnusedPreeditStyling(listIndex, count);
@@ -1094,63 +1094,44 @@ void MTextEditPrivate::storePreeditTextStyling(int start, int end)
  */
 void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount)
 {
-    QTextCursor *textCursor = cursor();
-    const int textLength = text.length();
-    int listIndex = currentListIndex;
-    int count = currentCount;
-    int preeditStyleSize = preeditStyling.size();
-    int currentIndex = textLength;
-
-    QTextCharFormat format = textCursor->charFormat();
-
-    styleData newStyle;
-    newStyle.charFormat = format;
-    newStyle.count = 1;
-
-    if (preeditStyleSize == 0) {
-        preeditStyling.push_back(newStyle);
-        preeditStyleSize++;
+    if (text.isEmpty()) {
+        return;
     }
 
-    for (int i = 0; i < textLength; ++i) {
-        if (preeditStyling.isEmpty() != true) {
-            if (count == 0) {
-                listIndex++;
-                if (listIndex == preeditStyleSize) {
-                    QTextCharFormat charFormat = preeditStyling.at(preeditStyleSize - 1).charFormat;
-                    textCursor->setCharFormat(charFormat);
-                    currentIndex = i;
-                    listIndex = preeditStyleSize - 1;
-                    break;
-                }
+    QTextCursor &textCursor(*cursor());
 
-                count = preeditStyling.at(listIndex).count;
-            }
+    if (preeditStyling.size() == 0) {
+        Q_ASSERT(currentListIndex == 0);
+        Q_ASSERT(currentCount == 0);
 
-            if (count == 0) {
-                styleData &lastStyle = preeditStyling[listIndex];
-                lastStyle.count++;
-                count = 1;
-            }
+        styleData defaultStyle;
+        defaultStyle.charFormat = textCursor.charFormat();
+        defaultStyle.count = text.length();
+        preeditStyling.push_back(defaultStyle);
+    }
 
-            QTextCharFormat charFormat = preeditStyling.at(listIndex).charFormat;
-            textCursor->setCharFormat(charFormat);
-            count--;
+    const int textLength(text.length());
+    const int numStyles(preeditStyling.size());
+    int textIndex(0);
+
+    Q_ASSERT((currentListIndex < numStyles) && (currentListIndex >= 0));
+    Q_ASSERT(currentCount <= preeditStyling[currentListIndex].count);
+
+    --currentListIndex;
+
+    do {
+        ++currentListIndex;
+        const int remainingTextLength(textLength - textIndex);
+        if ((currentListIndex == (numStyles - 1))
+            && (preeditStyling[currentListIndex].count < (currentCount + remainingTextLength))) {
+            preeditStyling[currentListIndex].count = remainingTextLength + currentCount;
         }
-
-        textCursor->insertText(text.at(i));
-    }
-
-    for (int i = currentIndex; i < textLength; ++i) {
-        if (preeditStyling.isEmpty() != true) {
-            styleData &newStyle = preeditStyling[listIndex];
-            newStyle.count++;
-        }
-        textCursor->insertText(text.at(i));
-    }
-
-    currentListIndex = listIndex;
-    currentCount = count;
+        const int insertLength(qMin(preeditStyling[currentListIndex].count - currentCount,
+                                    remainingTextLength));
+        currentCount = (currentCount + insertLength) % preeditStyling[currentListIndex].count;
+        textCursor.insertText(text.mid(textIndex, insertLength), preeditStyling[currentListIndex].charFormat);
+        textIndex += insertLength;
+    } while (currentListIndex < (numStyles - 1) && (textIndex < textLength));
 }
 
 
