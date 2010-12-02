@@ -36,7 +36,8 @@ MToolBarLayoutPolicy::MToolBarLayoutPolicy(MLayout *layout)
       rightSpacer(0),
       widgetAlignment(Qt::AlignHCenter),
       widgetAlignmentAffectsCapacity(false),
-      centerLabelOnlyButtons(true)
+      centerLabelOnlyButtons(true),
+      centerOffset(0.0)
 {
     setSpacing(0);
     updateSpacers();
@@ -237,6 +238,16 @@ void MToolBarLayoutPolicy::setLabelOnlyButtonCentering(bool center)
     updateSpacers();
 }
 
+void MToolBarLayoutPolicy::setCenterOffset(qreal offset)
+{
+    if (offset == centerOffset)
+        return;
+
+    centerOffset = offset;
+
+    updateContentsMargins();
+}
+
 int MToolBarLayoutPolicy::count() const
 {
     return MLinearLayoutPolicy::count();
@@ -318,6 +329,8 @@ bool MToolBarLayoutPolicy::isJustifiedAlignment() const
 
 void MToolBarLayoutPolicy::updateSpacers()
 {
+    updateContentsMargins();
+
     if (centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount()) {
         //All widgets are labelonlybuttons and they should be centered
         activateLeftSpacer(true);
@@ -384,6 +397,21 @@ void MToolBarLayoutPolicy::activateMiddleSpacers(bool activate)
                 item->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
             }
         }
+    }
+}
+
+void MToolBarLayoutPolicy::updateContentsMargins()
+{
+    if (centerOffset != 0.0 && centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount()) {
+        //All widgets are labelonlybuttons and they should be centered if needed
+        qreal margin = qAbs(centerOffset*2);
+        setContentsMargins(centerOffset < 0.0 ? margin : -1, -1,
+                           centerOffset > 0.0 ? margin : -1, -1);
+    } else {
+        qreal left(-1), right(-1);
+        getContentsMargins(&left, 0, &right, 0);
+        if (left != -1 || right != -1)
+            setContentsMargins(-1, -1, -1, -1);
     }
 }
 

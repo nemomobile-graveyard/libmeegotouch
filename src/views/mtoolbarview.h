@@ -76,6 +76,7 @@ public:
 
     //! \reimp
     virtual QRectF boundingRect() const;
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     //! \reimp_end
 
 protected:

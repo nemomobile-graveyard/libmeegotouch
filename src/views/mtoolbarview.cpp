@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QGraphicsLinearLayout>
+#include <QGraphicsSceneResizeEvent>
 #include "mtoolbar.h"
 #include "mtoolbar_p.h"
 #include "mtoolbarlayoutpolicy.h"
@@ -45,7 +46,8 @@ MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
       buttonGroup(0),
       iconsEnabled(true),
       labelsEnabled(false),
-      labelOnlyAsCommonButton(true)
+      labelOnlyAsCommonButton(true),
+      widgetAlignment(Qt::AlignHCenter)
 {
     this->controller = controller;
     controller->installEventFilter(this);
@@ -548,20 +550,33 @@ void MToolBarViewPrivate::updateViewAndStyling(MButton *button) const
 void MToolBarViewPrivate::updateWidgetAlignment()
 {
     QVariant v = controller->property("widgetAlignment");
-    Qt::AlignmentFlag alignment = v.isValid() ? static_cast<Qt::AlignmentFlag>(v.toInt()) : Qt::AlignHCenter;
+    widgetAlignment = v.isValid() ? static_cast<Qt::AlignmentFlag>(v.toInt()) : Qt::AlignHCenter;
 
     /* In here the Qt::Alignment is used like this:
-       Qt::Alignment is used like this:
        AlignLeft = no prereserved slots on left
        AlignRight = no prereserved slots on right
        AlignJustify = no prereserved slots on left and right
-       AlignHCenter = preseserved slots on left and right */
+       AlignHCenter = prereserved slots on left and right */
 
-    landscapePolicy->setWidgetAlignment(alignment, v.isValid() ? true : false);
-    portraitPolicy->setWidgetAlignment(alignment, v.isValid() ? true : false);
+    landscapePolicy->setWidgetAlignment(widgetAlignment, v.isValid() ? true : false);
+    portraitPolicy->setWidgetAlignment(widgetAlignment, v.isValid() ? true : false);
 
-    if (alignment != Qt::AlignHCenter || !v.isValid())
+    if (widgetAlignment != Qt::AlignHCenter || !v.isValid())
         addActionsFromLeftOvers();
+}
+
+void MToolBarViewPrivate::updateCenterOffset(const QSizeF &size)
+{
+    qreal offset = 0.0;
+
+    if ((widgetAlignment == Qt::AlignLeft || widgetAlignment == Qt::AlignRight) &&
+        controller->sceneManager() && controller->sceneManager()->orientation() == M::Landscape) {
+        qreal widthDiff = controller->sceneManager()->visibleSceneSize(M::Landscape).width() - size.width();
+        offset = (widgetAlignment == Qt::AlignRight) ? widthDiff/2 : -widthDiff/2;
+    }
+
+    landscapePolicy->setCenterOffset(offset);
+    portraitPolicy->setCenterOffset(0.0); // Offset has no effect in portrait
 }
 
 void MToolBarViewPrivate::updateEmptinessProperty()
@@ -662,6 +677,15 @@ void MToolBarView::applyStyle()
     d->setLabelOnlyAsCommonButton(style()->labelOnlyAsCommonButton());
     d->setCapacity(style()->capacity());
     d->updateEmptinessProperty();
+}
+
+void MToolBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    Q_D(MToolBarView);
+
+    MWidgetView::resizeEvent(event);
+
+    d->updateCenterOffset(event->newSize());
 }
 
 // bind view and controller together

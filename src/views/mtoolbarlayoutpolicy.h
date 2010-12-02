@@ -121,6 +121,11 @@ public:
      */
     void setLabelOnlyButtonCentering(bool center);
 
+    /*!
+     * \brief Sets offset of the center (i.e how much layout content needs to be adjusted to make it center).
+     */
+    void setCenterOffset(qreal offset);
+
 protected:
     /** Hide the normal functions since these include the spacers
      *  and we want to encourage the user to only use our functions */
@@ -145,6 +150,7 @@ private:
     Qt::Alignment widgetAlignment;
     bool widgetAlignmentAffectsCapacity;
     bool centerLabelOnlyButtons;
+    qreal centerOffset;
 
     /*!
      * \brief Converts index of widget to matching index in policy.
@@ -205,6 +211,11 @@ private:
      * \brief Activates/deactivates spacers in the middle i.e. between widgets.
      */
     void activateMiddleSpacers(bool activate);
+
+    /*!
+     * \brief Updates contents margins to make buttons centered if needed.
+     */
+    void updateContentsMargins();
 
     /*!
      * \brief Updates layout position of widgets at indicated index and those that its addition is affecting.

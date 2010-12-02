@@ -82,6 +82,7 @@ protected:
     void addActionsFromLeftOvers();
     void updateViewAndStyling(MButton *button) const;
     virtual void updateWidgetAlignment();
+    void updateCenterOffset(const QSizeF &size);
     void updateEmptinessProperty();
     bool isLabelOnly(MButton *button) const;
 
@@ -97,6 +98,7 @@ protected:
     bool iconsEnabled;
     bool labelsEnabled;
     bool labelOnlyAsCommonButton;
+    Qt::AlignmentFlag widgetAlignment;
 };
 
 #endif
