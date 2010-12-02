@@ -488,18 +488,27 @@ QString MLocalePrivate::icuFormatString(MLocale::DateType dateType,
         icu::UnicodeString icuFormatString;
         static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
         icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
-        delete df;
     }
     return icuFormatQString;
 }
 #endif
 
 #ifdef HAVE_ICU
+static QCache<QString, icu::DateFormat> _dateFormatCache;
+
 icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
                                                   MLocale::TimeType timeType,
                                                   MLocale::CalendarType calendarType,
                                                   MLocale::TimeFormat24h timeFormat24h) const
 {
+    QString key = QString("%1_%2_%3_%4_%5")
+        .arg(dateType)
+        .arg(timeType)
+        .arg(calendarType)
+        .arg(timeFormat24h)
+        .arg(categoryName(MLocale::MLcTime));
+    if (_dateFormatCache.contains(key))
+        return _dateFormatCache.object(key);
     // Create calLocale which has the time pattern we want to use
     icu::Locale calLocale = MIcuConversions::createLocale(
         categoryName(MLocale::MLcTime),
@@ -521,20 +530,21 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     // symbols with the public API
     static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
 #endif
-    if (timeType == MLocale::TimeNone)
-        return df;
-    switch (timeFormat24h) {
-    case(MLocale::TwelveHourTimeFormat24h):
-        MLocalePrivate::dateFormatTo12h(df);
-        break;
-    case(MLocale::TwentyFourHourTimeFormat24h):
-        MLocalePrivate::dateFormatTo24h(df);
-        break;
-    case(MLocale::LocaleDefaultTimeFormat24h):
-        break;
-    default:
-        break;
+    if (timeType != MLocale::TimeNone) {
+        switch (timeFormat24h) {
+        case(MLocale::TwelveHourTimeFormat24h):
+            MLocalePrivate::dateFormatTo12h(df);
+            break;
+        case(MLocale::TwentyFourHourTimeFormat24h):
+            MLocalePrivate::dateFormatTo24h(df);
+            break;
+        case(MLocale::LocaleDefaultTimeFormat24h):
+            break;
+        default:
+            break;
+        }
     }
+    _dateFormatCache.insert(key, df);
     return df;
 }
 #endif
@@ -2081,8 +2091,8 @@ QString MLocale::formatDateTime(const MCalendar &mcalendar,
     icu::DateFormat *df = d->createDateFormat(datetype, timetype,
                                               mcalendar.type(),
                                               d->_timeFormat24h);
-    df->format(*cal, resString, pos);
-    delete df;
+    if(df)
+        df->format(*cal, resString, pos);
     return MIcuConversions::unicodeStringToQString(resString);
 }
 #endif
@@ -2531,8 +2541,11 @@ QDateTime MLocale::parseDateTime(const QString &dateTime, DateType dateType,
                                               mcalendar.type(),
                                               d->_timeFormat24h);
     icu::ParsePosition pos(0);
-    UDate parsedDate = df->parse(text, pos);
-    delete df;
+    UDate parsedDate;
+    if (df)
+        parsedDate = df->parse(text, pos);
+    else
+        return QDateTime();
 
     UErrorCode status = U_ZERO_ERROR;
     icu::Calendar *cal = mcalendar.d_ptr->_calendar;
