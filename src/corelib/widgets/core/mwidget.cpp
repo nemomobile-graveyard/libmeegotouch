@@ -54,7 +54,6 @@ MWidgetPrivate::MWidgetPrivate() :
     layoutHidden(false),
     q_ptr(NULL),
     onDisplay(false),
-    onDisplaySet(false),
     selected(false)
 {
 }
@@ -98,22 +97,26 @@ void MWidgetPrivate::doEnterDisplayEvent()
 {
     Q_Q(MWidget);
 
-    onDisplay = true;
-    onDisplaySet = true;
+    if (!onDisplay && q->isVisible()) {
 
-    q->enterDisplayEvent();
-    emit q->displayEntered();
+        onDisplay = true;
+
+        q->enterDisplayEvent();
+        emit q->displayEntered();
+    }
 }
 
 void MWidgetPrivate::doExitDisplayEvent()
 {
     Q_Q(MWidget);
 
-    onDisplay = false;
-    onDisplaySet = true;
+    if (onDisplay) {
 
-    q->exitDisplayEvent();
-    emit q->displayExited();
+        onDisplay = false;
+
+        q->exitDisplayEvent();
+        emit q->displayExited();
+    }
 }
 
 void MWidgetPrivate::sendOnDisplayChangeEvent(MWidget *widget, const QRectF *visibleSceneRect)
@@ -198,15 +201,11 @@ void MWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
         // If the widget has not previously gotten enterDisplayEvent
         // and it hasn't been hidden by hide() (setVisible(false)),
         // consider this event as entering the display.
-        if ((!d->onDisplay || !d->onDisplaySet) && isVisible()) {
-            d->doEnterDisplayEvent();
-        }
+        d->doEnterDisplayEvent();
         break;
 
     case MOnDisplayChangeEvent::FullyOffDisplay:
-        if (d->onDisplay || !d->onDisplaySet) {
-            d->doExitDisplayEvent();
-        }
+        d->doExitDisplayEvent();
         break;
 
     case MOnDisplayChangeEvent::MustBeResolved: {

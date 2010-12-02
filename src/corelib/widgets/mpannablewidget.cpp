@@ -308,10 +308,9 @@ void MPannableWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
     switch (event->state()) {
     case MOnDisplayChangeEvent::MustBeResolved:
     case MOnDisplayChangeEvent::FullyOnDisplay:
-        if (!d->onDisplay || !d->onDisplaySet) {
+        if (!d->onDisplay) {
 
             d->onDisplay = true;
-            d->onDisplaySet = true;
 
             // Call the virtual handler and emit the signal
             enterDisplayEvent();

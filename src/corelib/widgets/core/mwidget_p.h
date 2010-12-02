@@ -44,7 +44,6 @@ public:
 protected:
     MWidget *q_ptr;
     bool onDisplay;
-    bool onDisplaySet;
     bool selected;
 
     QMap<Qt::GestureType, MWidget::MouseEventCancelPolicy> cancelPolicies;

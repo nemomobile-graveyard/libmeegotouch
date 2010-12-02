@@ -36,7 +36,6 @@ MWidgetPrivate::MWidgetPrivate() :
         layoutHidden(false),
         q_ptr(NULL),
         onDisplay(false),
-        onDisplaySet(false),
         selected(false)
 {
 }
