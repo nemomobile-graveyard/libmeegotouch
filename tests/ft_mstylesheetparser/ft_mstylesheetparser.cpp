@@ -723,24 +723,4 @@ void Ft_MStyleSheetParser::test_binary_speed()
     qDebug() << "Total reading time:" << TOTAL_TIME << "microseconds (" << TOTAL_TIME / 1000000.0 << "seconds)";
 }
 
-void Ft_MStyleSheetParser::test_set_binary_file_directory()
-{
-    MStyleSheetParser parser;
-    QString binaryPath = qApp->applicationDirPath();
-    QString cssPath = qApp->applicationDirPath() + QDir::separator() + "ft_mstylesheetparser_test.css";
-
-    parser.setBinaryFileGenerationEnabled(true);
-    parser.setBinaryFileDirectory(binaryPath);
-    parser.load(cssPath);
-
-    QString binaryFilename = cssPath;
-    binaryFilename.replace(QLatin1Char('_'), "__");
-    binaryFilename.replace(QLatin1Char('/'), "_.");
-
-    /* Check that binary file was created in the right dir */
-    QVERIFY(QFile::exists(binaryPath + QDir::separator() + binaryFilename));
-
-    /* remove the created file */
-    QFile::remove(binaryPath + QDir::separator() + binaryFilename);
-}
 QTEST_APPLESS_MAIN(Ft_MStyleSheetParser)

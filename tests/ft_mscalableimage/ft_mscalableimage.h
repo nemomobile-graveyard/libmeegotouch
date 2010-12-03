@@ -40,8 +40,6 @@ private slots:
     void test_draw_scalable9();
     void test_draw_scalable1();
 
-    void testEnableOptimizedRendering();
-
 private:
     void verifyResult(const QImage& image, const QSize& paintSize);
     class MScalableImage *m_subject;
