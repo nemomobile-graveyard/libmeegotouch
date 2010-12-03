@@ -70,6 +70,7 @@ public:
      */
     QString viewMenuIconID() const;
 
+    //! \deprecated do not use
     /**
      * Returns if the progress indicator is visible
      */
@@ -126,6 +127,7 @@ public Q_SLOTS:
      */
     void setViewMenuIconID(const QString &id);
 
+    //! \deprecated do not use
     /**
      * Sets the visible of progress indicator
      * \param bool visible

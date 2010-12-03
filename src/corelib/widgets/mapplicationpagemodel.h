@@ -92,6 +92,7 @@ private:
     M_MODEL_PROPERTY(MApplicationPageModel::PageEscapeMode, escapeMode, EscapeMode, true, MApplicationPageModel::EscapeAuto)
 
     /*!
+        \deprecated do not use
         \property MApplicationPageModel::progressIndicatorVisible
         \brief Whether the progress indicator is visible.
     */

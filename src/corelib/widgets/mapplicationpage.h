@@ -198,6 +198,7 @@ class M_CORE_EXPORT MApplicationPage : public MSceneWindow
     Q_PROPERTY(bool rememberPosition READ rememberPosition WRITE setRememberPosition)
 
     /*!
+        \deprecated do not use
         \property MApplicationPage::progressIndicatorVisible
         \brief Defines whether progress indicator is visible
 
@@ -343,6 +344,7 @@ public:
      */
     const QString title() const;
 
+    //! \deprecated do not use
     /**
      * \brief Returns whether progress indicator is visible
      * \return <code>true</code> if the progress indicator is visible, otherwise <code>false</code>
@@ -513,6 +515,7 @@ public Q_SLOTS:
      */
     void setPanningDirection(Qt::Orientations directions);
 
+    //! \deprecated do not use
     /*!
      * Sets the visibility of progress indicator
      * \param bool visible

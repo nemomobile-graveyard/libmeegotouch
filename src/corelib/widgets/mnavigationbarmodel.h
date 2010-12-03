@@ -42,6 +42,7 @@ private:
     M_MODEL_PROPERTY(bool, notifyUser, NotifyUser, true, false)
     M_MODEL_PROPERTY(QString, viewMenuDescription, ViewMenuDescription, true, "Menu")
     M_MODEL_PROPERTY(QString, viewMenuIconID, ViewMenuIconID, true, QString())
+    //! \deprecated do not use
     M_MODEL_PROPERTY(bool, progressIndicatorVisible, ProgressIndicatorVisible, true, false)
     M_MODEL_PROPERTY(bool, arrowIconVisible, ArrowIconVisible, true, false)
     M_MODEL_PTR_PROPERTY(MToolBar *, toolBar, ToolBar, true, 0)
