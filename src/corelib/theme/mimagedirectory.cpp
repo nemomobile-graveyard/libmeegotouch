@@ -234,7 +234,7 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
     if (!meta.open(QFile::WriteOnly) || !cache.open(QFile::WriteOnly)) {
         //Maybe it failed because the directory doesn't exist
         QDir().mkpath(QFileInfo(cacheMetaFileName).absolutePath());
-        if (!meta.open(QFile::WriteOnly) || !cache.open(!QFile::WriteOnly)) {
+        if (!meta.open(QFile::WriteOnly) || !cache.open(QFile::WriteOnly)) {
             mWarning("ImageResource") << "Failed to save cache file for" << absoluteFilePath() << "to" << cacheFileName;
             return;
         }
