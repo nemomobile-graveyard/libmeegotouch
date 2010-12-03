@@ -138,6 +138,9 @@ public:
 #endif
 
     void setupPageEscape();
+#ifdef Q_WS_X11
+    bool setupPageEscapeChainedApplication();
+#endif
     void setupPageEscapeAuto();
     void setupPageEscapeBack();
     void setupPageEscapeClose();

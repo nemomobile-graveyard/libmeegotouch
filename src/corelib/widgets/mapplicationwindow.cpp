@@ -773,23 +773,6 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
         case MSceneWindow::ApplicationPage:
             {
                 applicationPageAppearEvent(event);
-
-#ifdef Q_WS_X11
-                Q_Q(MApplicationWindow);
-                if ( isChained && sceneManager ) {
-                    bool pageWindowIsFirstOne = sceneManager->pageHistory().isEmpty();
-                    if ( pageWindowIsFirstOne ) {
-                        MApplicationPage *page = static_cast<MApplicationPage *>(sceneWindow);
-                        if ( page ) {
-                            page->setEscapeMode( MApplicationPageModel::EscapeManualBack );
-                            QObject::connect( page, SIGNAL( backButtonClicked() ), q, SLOT( close() ) );
-
-                            // for title in task switcher
-                            page->setTitle( chainTaskTitle );
-                        }
-                    }
-                }
-#endif
             }
             break;
 
@@ -868,6 +851,16 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
 
     connectPage(pageFromEvent);
     _q_updatePageExposedContentRect();
+
+#ifdef Q_WS_X11
+    if (pageFromEvent && isChained && sceneManager) {
+        bool isFirstPage = sceneManager->pageHistory().isEmpty();
+        if (isFirstPage) {
+            // for title in task switcher
+            page->setTitle(chainTaskTitle);
+        }
+    }
+#endif
 }
 
 void MApplicationWindowPrivate::applicationPageDisappearEvent(MSceneWindowEvent *event)
@@ -884,6 +877,8 @@ void MApplicationWindowPrivate::applicationPageDisappearEvent(MSceneWindowEvent 
 
 void MApplicationWindowPrivate::setupPageEscape()
 {
+    bool setupDone = false;
+
     if (!page) {
         // Nothing to be done.
         return;
@@ -892,23 +887,56 @@ void MApplicationWindowPrivate::setupPageEscape()
     // Tear down any previous page escape setup.
     tearDownPageEscape();
 
-    switch (page->escapeMode()) {
-        case MApplicationPageModel::EscapeAuto:
-            setupPageEscapeAuto();
-            break;
+#ifdef Q_WS_X11
+    setupDone = setupPageEscapeChainedApplication();
+#endif
 
-        case MApplicationPageModel::EscapeManualBack:
-            setupPageEscapeBack();
-            break;
+    if (!setupDone) {
+        switch (page->escapeMode()) {
+            case MApplicationPageModel::EscapeAuto:
+                setupPageEscapeAuto();
+                break;
 
-        case MApplicationPageModel::EscapeCloseWindow:
-            setupPageEscapeClose();
-            break;
+            case MApplicationPageModel::EscapeManualBack:
+                setupPageEscapeBack();
+                break;
 
-        default:
-            qFatal("MApplicationWindow: Invalid page escape mode");
-    };
+            case MApplicationPageModel::EscapeCloseWindow:
+                setupPageEscapeClose();
+                break;
+
+            default:
+                qFatal("MApplicationWindow: Invalid page escape mode");
+        };
+
+        setupDone = true;
+    }
+
+    Q_ASSERT(setupDone);
 }
+
+#ifdef Q_WS_X11
+bool MApplicationWindowPrivate::setupPageEscapeChainedApplication()
+{
+    Q_Q(MApplicationWindow);
+    Q_ASSERT(page);
+
+    bool setupDone = false;
+
+    // The root page of a chained application has a special escape setup
+
+    if (isChained && sceneManager) {
+        bool isFirstPage = sceneManager->pageHistory().isEmpty();
+        if (isFirstPage) {
+            setupPageEscapeBack();
+            q->connect(page, SIGNAL(backButtonClicked()), SLOT(close()));
+            setupDone = true;
+        }
+    }
+
+    return setupDone;
+}
+#endif
 
 void MApplicationWindowPrivate::setupPageEscapeAuto()
 {
@@ -1321,7 +1349,7 @@ bool MApplicationWindow::isChained() const
 void MApplicationWindow::mousePressEvent(QMouseEvent *event)
 {
     Q_D(MApplicationWindow);
-    
+
     //check if the navigation or toolbar is pressed
     if (d->navigationBar->boundingRect().contains(d->navigationBar->mapFromScene(event->pos().x(), event->pos().y()))
         || d->toolBar->boundingRect().contains(d->toolBar->mapFromScene(event->pos().x(), event->pos().y()))) {
