@@ -69,11 +69,12 @@ else
      MAKEDOCS = 0
 endif
 
-# MeeGo Graphics System option (disabled by default) integration issues
-ifneq (,$(findstring meegographicssystem,$(DEB_BUILD_OPTIONS)))
-     OPTIONS += -meegographicssystem
+# MeeGo Graphics System option (disabled by default) integration issues (only arm)
+ifeq ($(DEB_BUILD_ARCH),armel)
+	ifneq (,$(findstring meegographicssystem,$(DEB_BUILD_OPTIONS)))
+	    OPTIONS += -meegographicssystem
+	endif
 endif
-
 # Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
 ifneq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
      MAKEDOCS = 0
