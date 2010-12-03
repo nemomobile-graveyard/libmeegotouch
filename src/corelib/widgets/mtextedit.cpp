@@ -1967,9 +1967,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                     QInputContext *ic = qApp->inputContext();
                     if (ic) {
                         MPreeditInjectionEvent event(preedit, eventCursorPosition - start);
-                        QCoreApplication::sendEvent(ic, &event);
-
-                        injectionAccepted = event.isAccepted();
+                        injectionAccepted = ic->filterEvent(&event);
                     }
 
                     // if injection wasn't supported, put the text back and fall back to cursor changing
