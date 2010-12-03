@@ -1,8 +1,16 @@
-libmeegotouch (0.20.63~1) unstable; urgency=low
+libmeegotouch (0.20.63-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#206822 - application crashes when it is minimized
+  * Fixes: NB#202160 - Spinner is not visible when In Application Menu Selected.
+  * Fixes: Text magnifier is initially shown at wrong position.
+  * Fixes: NB#204938 - List view private is destroyed while the event loop is processed.
+  * Fixes: NB#208580 - Widgetsgallery: tool bar page shows content with wrong borders
+  * Fixes: NB#201472 - ImageResource: Failed to save cache file for.... appears too often in console and makes it unusable
+  * Fixes: ut_mtoolbar (random) bus error
+  * Fixes: NB#206357, Calling MLocale::formatDateTime() takes over 7msec
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 01 Dec 2010 19:12:54 +0000
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 03 Dec 2010 17:46:37 +0000
 
 libmeegotouch (0.20.62-1) unstable; urgency=low
 
