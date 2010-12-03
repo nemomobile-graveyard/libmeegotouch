@@ -53,8 +53,9 @@ void Ut_MToolBar::initTestCase()
 
 void Ut_MToolBar::cleanupTestCase()
 {
-    delete app;
-    app = NULL;
+    // We do not delete the app on purpose as it seems to cause some random bus errors
+    //delete app;
+    //app = NULL;
 }
 
 void Ut_MToolBar::testConstructor()
