@@ -98,10 +98,6 @@ MWindowPrivate::MWindowPrivate() :
     allowedPaintEventsWhenInvisible(5),
     q_ptr(NULL)
 {
-#ifdef Q_WS_X11
-    removeWindowFromSwitcherInProgress = false;
-    skipTaskbar = false;
-#endif
 
     MWindow *window = MApplication::activeWindow();
 
@@ -687,10 +683,6 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
 
     if (MApplication::prestartMode() == M::LazyShutdownMultiWindow ||
         MApplication::prestartMode() == M::LazyShutdown) {
-
-#ifdef Q_WS_X11
-        MApplicationPrivate::removeWindowFromSwitcher(q->effectiveWinId(), true);
-#endif
 
         // Check if all windows are closed. If so,
         // return to the prestarted state.
@@ -1433,10 +1425,6 @@ void MWindow::setVisible(bool visible)
             }
             d->isLogicallyClosed = false;
         }
-
-#ifdef Q_WS_X11
-        MApplicationPrivate::removeWindowFromSwitcher(effectiveWinId(), false);
-#endif
 
     } else {
         MOnDisplayChangeEvent ev(false, sceneRect());

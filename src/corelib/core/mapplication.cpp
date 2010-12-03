@@ -84,49 +84,6 @@ void MApplicationPrivate::setX11PrestartPropertyForWindows(bool set)
     }
 }
 
-void MApplicationPrivate::removeWindowsFromSwitcher(bool remove)
-{
-    Q_FOREACH(MWindow * win, MApplication::windows()) {
-        removeWindowFromSwitcher(win->effectiveWinId(), remove);
-    }
-}
-
-void MApplicationPrivate::removeWindowFromSwitcher(Window window, bool remove)
-{
-    static Atom stateAtom = XInternAtom(QX11Info::display(),
-                                        "_NET_WM_STATE", True);
-    static Atom skipAtom = XInternAtom(QX11Info::display(),
-                                       "_NET_WM_STATE_SKIP_TASKBAR", True);
-
-    Display *dpy  = QX11Info::display();
-    if (stateAtom != None) {
-        MWindow *win = windowForId(window);
-
-        if (remove) {
-            win->d_ptr->removeWindowFromSwitcherInProgress = true;
-            XChangeProperty(dpy, window, stateAtom,
-                            XA_ATOM, 32, PropModeAppend,
-                            reinterpret_cast<unsigned char *>(&skipAtom), 1);
-        } else if (win && !win->d_ptr->skipTaskbar && hasXStateAtom(window, skipAtom)) {
-            // Do not remove SKIP_TASKBAR if it was requested from outside
-            XEvent ev;
-            memset(&ev, 0, sizeof(ev));
-            ev.xclient.type         = ClientMessage;
-            ev.xclient.display      = dpy;
-            ev.xclient.window       = window;
-            ev.xclient.message_type = XInternAtom(dpy, "_NET_WM_STATE", False);
-            ev.xclient.format       = 32;
-            ev.xclient.data.l[0]    = 0;
-            ev.xclient.data.l[1]    = skipAtom;
-            ev.xclient.data.l[2]    = 0;
-
-            win->d_ptr->removeWindowFromSwitcherInProgress = true;
-            XSendEvent(dpy, QX11Info::appRootWindow(), False, SubstructureRedirectMask | SubstructureNotifyMask,
-                       &ev);
-            XSync(dpy, False);
-        }
-    }
-}
 
 MWindow * MApplicationPrivate::windowForId(Window window)
 {
@@ -137,37 +94,6 @@ MWindow * MApplicationPrivate::windowForId(Window window)
     }
     return NULL;
 }
-
-bool MApplicationPrivate::hasXStateAtom(Window window, Atom atom)
-{
-    Atom type;
-    int format;
-    bool found;
-    long max_len = 1024;
-    unsigned long nItems;
-    unsigned long bytesAfter;
-    unsigned char *data = NULL;
-
-    static Atom stateAtom = XInternAtom(QX11Info::display(),
-                                        "_NET_WM_STATE", True);
-
-    if (XGetWindowProperty(QX11Info::display(), window, stateAtom, 0, max_len, False,
-                           XA_ATOM, &type, &format, &nItems, &bytesAfter,
-                           &data) == Success && data) {
-        found = false;
-        for (unsigned long i = 0; !found && i < nItems; i++) {
-            if (data[i] == atom) {
-                found = true;
-            }
-        }
-        XFree (data);
-        return found;
-    } else {
-
-        return false;
-    }
-}
-
 #endif
 
 MApplication *MApplication::instance()
@@ -214,10 +140,6 @@ void MApplicationPrivate::releasePrestart()
         }
 
 #ifdef Q_WS_X11
-        // Ensure that windows are visible in the switcher again
-        if (prestartModeIsLazyShutdown()) {
-            removeWindowsFromSwitcher(false);
-        }
         setX11PrestartPropertyForWindows(false);
 #endif
     }
@@ -237,9 +159,6 @@ void MApplicationPrivate::restorePrestart()
         }
 
 #ifdef Q_WS_X11
-        // Explicitly remove windows from the switcher because they
-        // are hidden but should look like closed
-        removeWindowsFromSwitcher(true);
         setX11PrestartPropertyForWindows(true);
 #endif
     }
@@ -529,9 +448,6 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
     // flag for corresponding window because we need to combine this
     // information with VisibilityNotify's.
 
-    // Applications can set themselves _NET_WM_STATE_SKIP_TASKBAR to avoid window
-    // being displayed in taskbar. We need to handle this situation too.
-
     MWindow *window = windowForId(xevent->window);
     if (window && xevent->state == PropertyNewValue) {
         Atom           type;
@@ -539,8 +455,6 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
         unsigned long  nItems;
         unsigned long  bytesAfter;
         unsigned char *data = NULL;
-        static Atom stateAtom = XInternAtom(QX11Info::display(),
-                                            "_NET_WM_STATE", True);
 
         if (xevent->atom == visibleAtom) {
             // Read value of the property. Should be 1 or 0.
@@ -558,17 +472,6 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
                 }
 
                 XFree(data);
-            }
-        } else if (xevent->atom == stateAtom) {
-            /* Check if it comes from MTF itself */
-            if (window->d_ptr->removeWindowFromSwitcherInProgress) {
-                window->d_ptr->removeWindowFromSwitcherInProgress = false;
-            } else {
-                /* Check if SKIP_TASKBAR was set or removed */
-                window->d_ptr->skipTaskbar = MApplicationPrivate::hasXStateAtom(xevent->window,
-                                                                                XInternAtom(QX11Info::display(),
-                                                                                            "_NET_WM_STATE_SKIP_TASKBAR",
-                                                                                            True));
             }
         }
     }

@@ -63,9 +63,6 @@ public:
     qreal getX11Property(const char *propertyName) const;
     void setX11PrestartProperty(bool set);
     void setX11OrientationAngleProperty(M::OrientationAngle angle);
-
-    bool removeWindowFromSwitcherInProgress;
-    bool skipTaskbar;
 #endif
 
     void _q_onPixmapRequestsFinished();
