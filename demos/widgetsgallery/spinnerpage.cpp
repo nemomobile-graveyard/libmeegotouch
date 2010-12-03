@@ -51,7 +51,6 @@ SpinnerPage::SpinnerPage() :
     imageContainerPolicy(0),
     actionInMainArea(0),
     actionInContainerHeader(0),
-    actionInAppMenu(0),
     actionInDialog(0)
 {
 }
@@ -78,11 +77,6 @@ void SpinnerPage::createContent()
     actionInContainerHeader->setLocation(MAction::ApplicationMenuLocation);
     connect(actionInContainerHeader, SIGNAL(triggered()), this, SLOT(inContainerHeader()));
     addAction(actionInContainerHeader);
-
-    actionInAppMenu = new MAction(this);
-    actionInAppMenu->setLocation(MAction::ApplicationMenuLocation);
-    connect(actionInAppMenu, SIGNAL(triggered()), this, SLOT(inApplicationMenu()));
-    addAction(actionInAppMenu);
 
     actionInDialog = new MAction(this);
     actionInDialog->setLocation(MAction::ApplicationMenuLocation);
@@ -112,8 +106,6 @@ void SpinnerPage::retranslateUi()
     actionInMainArea->setText(qtTrId("xx_spinner_page_application_main_area"));
     //% "In container header"
     actionInContainerHeader->setText(qtTrId("xx_spinner_page_container_header"));
-    //% "In application menu"
-    actionInAppMenu->setText(qtTrId("xx_spinner_page_menu"));
     //% "In dialog"
     actionInDialog->setText(qtTrId("xx_spinner_page_dialog"));
 }
@@ -204,20 +196,6 @@ void SpinnerPage::timeout()
     }
 }
 
-void SpinnerPage::inApplicationMenu()
-{
-    reset();
-    view = Menu;
-
-    description = new MLabel(centralWidget());
-    //% "Spinner in the application menu area indicates that the whole view is pending for update."
-    description->setText("<a></a>" + qtTrId("xx_spinner_page_application_menu_description"));
-    description->setWordWrap(true);
-    containerPolicy->addItem(description);
-    setProgressIndicatorVisible(true);
-
-}
-
 void SpinnerPage::inDialog()
 {
     reset();
@@ -281,13 +259,6 @@ void SpinnerPage::reset()
         delete container;
         delete description;
         container = NULL;
-        description = NULL;
-    } break;
-
-    case Menu: {
-        setProgressIndicatorVisible(false);
-        containerPolicy->removeItem(description);
-        delete description;
         description = NULL;
     } break;
 

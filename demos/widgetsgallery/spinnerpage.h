@@ -37,7 +37,6 @@ class SpinnerPage : public TemplatePage
         Unknown,
         ApplicationMainArea,
         ContainerHeader,
-        Menu,
         Dialog
     };
 
@@ -49,7 +48,6 @@ public:
 public slots:
     void inApplicationMainArea();
     void inContainerHeader();
-    void inApplicationMenu();
     void inDialog();
     void launchDialog();
 
@@ -71,7 +69,6 @@ private:
     MFlowLayoutPolicy *imageContainerPolicy;
     MAction *actionInMainArea;
     MAction *actionInContainerHeader;
-    MAction *actionInAppMenu;
     MAction *actionInDialog;
 };
 
