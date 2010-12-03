@@ -111,6 +111,7 @@ public:
     void scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode);
 
     void deleteVisibleItemsArray();
+    void destroy();
 
 public:
     virtual void createSeparators();
@@ -207,6 +208,9 @@ public:
 
     // Scroll animation
     QPropertyAnimation *scrollToAnimation;
+
+    //
+    bool isDeleted;
 };
 
 class MPlainListViewPrivate : public MListViewPrivate

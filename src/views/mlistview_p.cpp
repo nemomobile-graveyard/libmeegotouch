@@ -57,6 +57,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     clearVisibleOnRelayout = false;
 
     scrollToAnimation = new QPropertyAnimation(this);
+    isDeleted = false;
 
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
@@ -139,6 +140,12 @@ void MListViewPrivate::deleteVisibleItemsArray()
     visibleItems.clear();
 }
 
+void MListViewPrivate::destroy()
+{
+    isDeleted = true;
+    deleteLater();
+}
+
 void MListViewPrivate::clearFirstAndLastVisibleRows()
 {
     updateFirstVisibleRow(QModelIndex());
@@ -210,6 +217,9 @@ MWidget *MListViewPrivate::createCell(int row)
 
 void MListViewPrivate::viewportRectChanged(const QRectF &viewportRect)
 {
+    if (isDeleted)
+        return;
+
     if (viewportRect.topLeft() != oldViewportRectPosition) {
         movingDetectorTimer.start(MOVINGDETECTORTIMEOUT);
 
@@ -224,11 +234,17 @@ void MListViewPrivate::viewportRectChanged(const QRectF &viewportRect)
 
 void MListViewPrivate::viewportPositionChanged(const QPointF &position)
 {
+    if (isDeleted)
+        return;
+
     updateViewportRect(position - listPosition, QSizeF(viewWidth, pannableViewport->size().height()));
 }
 
 void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
 {
+    if (isDeleted)
+        return;
+
     updateViewportRect(viewportTopLeft, QSizeF(viewWidth, size.height()));
     updateScrollToTargetPosition();
 }
@@ -236,6 +252,9 @@ void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
 void MListViewPrivate::viewportRangeChanged(const QRectF &range)
 {
     Q_UNUSED(range);
+
+    if (isDeleted)
+        return;
 
     updateScrollToTargetPosition();
 }
@@ -279,6 +298,9 @@ void MListViewPrivate::updateListGeometry()
 
 void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF &size)
 {
+    if (isDeleted)
+        return;
+
     if ((viewportTopLeft != position) || (viewportVisibleHeight < size.height()) || (forceRepaint)) {
         forceRepaint = false;
 
@@ -583,6 +605,9 @@ void MListViewPrivate::_q_itemLongTapped(const QPointF &pos)
 
 void MListViewPrivate::_q_relayoutItemsIfNeeded()
 {
+    if (isDeleted)
+        return;
+
     if (controller->isVisible())
         q_ptr->relayoutItemsInViewportRect();
 }

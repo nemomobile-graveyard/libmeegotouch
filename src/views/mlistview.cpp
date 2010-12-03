@@ -58,9 +58,10 @@ void MListView::init()
     if(d_ptr) {
         d_ptr->disconnectSignalsFromModelToListView();
         headersCreator = d_ptr->headersCreator;
-    }
 
-    delete d_ptr;
+        // Schedule deletion as we might have some events pending for delivery.
+        d_ptr->destroy();
+    }
 
     if (model()->columns() > 1) {
         if (model()->showGroups())
@@ -154,7 +155,7 @@ void MListView::applyStyle()
 {
     MWidgetView::applyStyle();
 
-    if (d_ptr) {
+    if (d_ptr) {        
         d_ptr->clearVisibleItemsArray();
         d_ptr->updateItemHeight();
         d_ptr->updateSeparators();
