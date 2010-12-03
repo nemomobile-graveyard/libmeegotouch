@@ -102,6 +102,12 @@ class M_CORE_EXPORT MWindow : public QGraphicsView
     */
     Q_PROPERTY(qreal videoGlobalAlpha READ videoGlobalAlpha WRITE setVideoGlobalAlpha)
 
+    /*!
+     \property notificationPreviewsVisible
+     Are notification preview banners shown on top of the window.
+    */
+    Q_PROPERTY(bool notificationPreviewsVisible READ notificationPreviewsVisible WRITE setNotificationPreviewsVisible)
+
 public:
     /*!
      \brief Creates a MWindow without a scene manager.
@@ -379,6 +385,21 @@ public:
     //! Returns true if window closes on lazy shutdown.
     bool closeOnLazyShutdown() const;
 
+    /*!
+      Controls whether notification preview banners are shown on top of the window.
+
+      \note Banners for system notifications (e.g. battery low) are not disabled.
+     */
+    void setNotificationPreviewsVisible(bool visible);
+
+    /*!
+     * Returns true if application notification preview banners are shown over
+     * this window
+     *
+     * The value is true by default.
+     */
+    bool notificationPreviewsVisible() const;
+
 public Q_SLOTS:
     /*!
      Sets the orientation \a angle of the window.
@@ -440,6 +461,20 @@ public Q_SLOTS:
      \sa setOrientationLocked(), lockOrientation()
      */
     void unlockOrientation();
+
+    /*!
+     Allows notification preview banners to appear over this window. Equal to calling setNotificationPreviewsVisible(true).
+
+     \sa setNotificationPreviewsVisible(), notificationPreviewsVisible()
+     */
+    void enableNotificationPreviews();
+
+    /*!
+     Prevents notification preview banners from appearing over this window. Equal to calling setNotificationPreviewsVisible(false).
+
+     \sa setNotificationPreviewsVisible(), notificationPreviewsVisible()
+     */
+    void disableNotificationPreviews();
 
 Q_SIGNALS:
     /*!

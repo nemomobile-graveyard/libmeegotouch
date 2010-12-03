@@ -563,4 +563,18 @@ void  Ut_MWindow::testActiveWindow()
     delete win3;
 }
 
+void Ut_MWindow::testNotificationPreviewsDisabled()
+{
+    bool visible = win->notificationPreviewsVisible();
+    QVERIFY( visible );
+
+    win->setNotificationPreviewsVisible(false);
+    visible = win->notificationPreviewsVisible();
+    QVERIFY( !visible );
+
+    win->setNotificationPreviewsVisible(true);
+    visible = win->notificationPreviewsVisible();
+    QVERIFY( visible );
+}
+
 QTEST_MAIN(Ut_MWindow);

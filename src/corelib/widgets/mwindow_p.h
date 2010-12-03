@@ -64,6 +64,8 @@ public:
     void setX11PrestartProperty(bool set);
     void setX11OrientationAngleProperty(M::OrientationAngle angle);
     void resolveOrientationRules();
+    void setX11NotificationPreviewsDisabledProperty(bool set);
+    bool getX11NotificationPreviewsDisabledProperty() const;
 
     bool removeWindowFromSwitcherInProgress;
     bool skipTaskbar;

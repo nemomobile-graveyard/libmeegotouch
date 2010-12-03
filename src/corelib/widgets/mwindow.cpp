@@ -920,6 +920,55 @@ void MWindowPrivate::setX11OrientationAngleProperty(M::OrientationAngle angle)
     XChangeProperty(display, q->effectiveWinId(), orientationAngleAtom, XA_CARDINAL, 32,
                     PropModeReplace, (unsigned char*)&angle, 1);
 }
+
+void MWindowPrivate::setX11NotificationPreviewsDisabledProperty(bool set)
+{
+    Q_Q(MWindow);
+    Display *dpy  = QX11Info::display();
+    if (dpy) {
+        Atom atom  = XInternAtom(dpy, "_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED", False);
+        unsigned char data=1;
+        if (set) {
+            XChangeProperty(dpy, q->effectiveWinId(), atom,
+                            XA_INTEGER, 8, PropModeReplace, &data, 1);
+        } else {
+            XDeleteProperty(dpy, q->effectiveWinId(), atom);
+        }
+    }
+}
+
+bool MWindowPrivate::getX11NotificationPreviewsDisabledProperty() const
+{
+    Q_Q(const MWindow);
+
+    Atom actualType = 0;
+    int actualFormat = 0;
+    unsigned long nitems = 0;
+    unsigned long bytes = 0;
+
+    union {
+        unsigned char* asUChar;
+        unsigned long* asULong;
+    } data = {0};
+
+    bool previewsDisabled = false;
+
+    Display *dpy  = QX11Info::display();
+
+    if (dpy) {
+        Atom atom = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED", False);
+
+        int status = XGetWindowProperty(dpy, q->effectiveWinId(), atom,
+                                        0L, 1L, False, XA_INTEGER,
+                                        &actualType, &actualFormat, &nitems, &bytes, &data.asUChar);
+        if (status == Success && nitems) {
+            previewsDisabled = data.asULong != 0;
+            XFree(data.asUChar);
+        }
+    }
+
+    return previewsDisabled;
+}
 #endif
 
 void MWindow::setGlobalAlpha(qreal level)
@@ -1486,6 +1535,35 @@ int MWindow::orientationChangeTransitionMode()
 {
     Q_D(MWindow);
     return d->orientationChangeTransitionMode();
+}
+
+void MWindow::setNotificationPreviewsVisible(bool visible)
+{
+#ifdef Q_WS_X11
+    Q_D(MWindow);
+    d->setX11NotificationPreviewsDisabledProperty(!visible);
+#else
+#endif
+}
+
+bool MWindow::notificationPreviewsVisible() const
+{
+#ifdef Q_WS_X11
+    Q_D(const MWindow);
+    return !d->getX11NotificationPreviewsDisabledProperty();
+#else
+    return false;
+#endif
+}
+
+void MWindow::enableNotificationPreviews()
+{
+    setNotificationPreviewsVisible(true);
+}
+
+void MWindow::disableNotificationPreviews()
+{
+    setNotificationPreviewsVisible(false);
 }
 
 #ifdef Q_WS_X11

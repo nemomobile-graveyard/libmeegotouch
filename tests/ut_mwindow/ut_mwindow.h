@@ -80,6 +80,8 @@ private slots:
 
     void testActiveWindow();
 
+    void testNotificationPreviewsDisabled();
+
 public slots:
     void onDisplayTestSlot();
 
