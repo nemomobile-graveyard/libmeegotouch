@@ -644,7 +644,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //only image_id
         if (list.size() == 1) {
             const QPixmap *pixmap = MTheme::pixmap(list[0]);
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap));
+            return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap), false);
         }
         //image_id + width + height
         else if (list.size() == 3) {
@@ -652,7 +652,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             int height = attributeToInt(list[2], &conversionOK, HeightAttribute, orientation);
             const QPixmap *pixmap = MTheme::pixmap(list[0], QSize(width, height));
             cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap));
+            return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap), false);
         }
         //no parameters
         else if (list.size() == 0) {
