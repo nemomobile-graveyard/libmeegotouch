@@ -7,8 +7,6 @@
 #include <MPhysics2DPanning>
 
 #include <QTimer>
-#include <qdebug.h>
-
 
 namespace {
     const int updateInterval = 20; // ms
@@ -67,7 +65,7 @@ void PanningBenchmark::waitBeforePanning()
 void PanningBenchmark::panDown()
 {
     if (!timingStarted) {
-        timedemo->startTiming();
+        timedemo->startTiming(this);
         timingStarted = true;
         formerPosition = pannableViewport->physics()->position();
         timer.start();
@@ -87,7 +85,7 @@ void PanningBenchmark::panDown()
 
 void PanningBenchmark::terminateBenchmark()
 {
-    timedemo->stopTiming();
+    timedemo->stopTiming(this);
     pannableViewport->physics()->setPosition(formerPosition);
     emit finished();
 }

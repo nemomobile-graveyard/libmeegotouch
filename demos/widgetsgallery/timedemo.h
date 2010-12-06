@@ -75,12 +75,12 @@ public:
     /**
       * Every TimedemoBenchmark must call this method once the benchmarking phase starts.
       */
-    void startTiming();
+    void startTiming(const TimedemoBenchmark *activeBenchmark);
 
     /**
       * Every TimedemoBenchmark must call this method once the benchmarking phase is finished.
       */
-    void stopTiming();
+    void stopTiming(const TimedemoBenchmark *activeBenchmark);
 
 private:
     void displayBenchmarkResults();

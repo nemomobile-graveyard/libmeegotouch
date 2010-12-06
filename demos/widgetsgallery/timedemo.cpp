@@ -67,8 +67,12 @@ void Timedemo::setFramelog(const QString &filename)
     framelogFilename = filename;
 }
 
-void Timedemo::startTiming()
+void Timedemo::startTiming(const TimedemoBenchmark *activeBenchmark)
 {
+    QSharedPointer<TimedemoBenchmark> benchmark = demoPages[m_currentPageIndex]->benchmarks()[m_currentBenchmarkIndex];
+    if (activeBenchmark != benchmark) {
+        qFatal("Only the currently running benchmark can stop the timing.");
+    }
     if (timingStopped || timingStarted) {
         qFatal("New timing started, but old one not processed yet.");
     }
@@ -77,15 +81,18 @@ void Timedemo::startTiming()
     SwapHook::instance()->startLurking();
 }
 
-void Timedemo::stopTiming()
+void Timedemo::stopTiming(const TimedemoBenchmark *activeBenchmark)
 {
+    QSharedPointer<TimedemoBenchmark> benchmark = demoPages[m_currentPageIndex]->benchmarks()[m_currentBenchmarkIndex];
+    if (activeBenchmark != benchmark) {
+        qFatal("Only the currently running benchmark can stop the timing.");
+    }
     if (timingStopped || !timingStarted) {
         qFatal("Timing already processed or not running yet.");
     }
 
     SwapHook::instance()->stopLurking();
 
-    QSharedPointer<TimedemoBenchmark> benchmark = demoPages[m_currentPageIndex]->benchmarks()[m_currentBenchmarkIndex];
     BenchmarkResult currentResult(SwapHook::instance()->timestamps(), benchmark->type());
     benchmarkResults[m_currentPageIndex].insert(benchmark->name(), currentResult);
 

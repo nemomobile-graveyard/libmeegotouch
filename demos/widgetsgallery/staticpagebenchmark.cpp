@@ -42,12 +42,12 @@ void StaticPageBenchmark::stabilizeFps() {
 
 void StaticPageBenchmark::waitPageDuration()
 {
-    timedemo->startTiming();
+    timedemo->startTiming(this);
     QTimer::singleShot(pageDuration, this, SLOT(terminateBenchmark()));
 }
 
 void StaticPageBenchmark::terminateBenchmark()
 {
-    timedemo->stopTiming();
+    timedemo->stopTiming(this);
     emit finished();
 }
