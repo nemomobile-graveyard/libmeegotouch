@@ -271,12 +271,30 @@ void Ft_Numbers::testToLongLong_data()
         << false
         << qlonglong(0)
         << QString("0");
-    QTest::newRow("ar_SA ١٢٣٤")
+    QTest::newRow("ar_SA ١٢٣٤") // ar_SA does not use thousands separators
         << QString("ar_SA")
         << QString("١٢٣٤")
         << true
         << qlonglong(1234)
         << QString("١٢٣٤");
+    QTest::newRow("ar_EG ١٢٣٤") // ar_EG uses thousands separators
+        << QString("ar_EG")
+        << QString("١٢٣٤")
+        << true
+        << qlonglong(1234)
+        << QString("١٬٢٣٤");
+    QTest::newRow("ar_EG ١٬٢٣٤") // ar_EG uses thousands separators
+        << QString("ar_EG")
+        << QString("١٬٢٣٤")
+        << true
+        << qlonglong(1234)
+        << QString("١٬٢٣٤");
+    QTest::newRow("fa_IR ۱٬۰۰۰")
+        << QString("fa_IR")
+        << QString("۱٬۰۰۰")
+        << true
+        << qlonglong(1000)
+        << QString("۱٬۰۰۰");
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
         << QString("ar_SA")
         << QString("١٢٣٤٫١٢٣")
@@ -1630,6 +1648,118 @@ void Ft_Numbers::testToFloat_data()
             << true
             << float(1.0E+10)
             << QString("10,000,000,000");
+
+        QTest::newRow("en_GB 1E+10")
+            << QString("en_GB")
+            << QString("1E+10")
+            << true // should this really be case sensitive??
+            << float(1E+10)
+            << QString("10,000,000,000");
+
+        QTest::newRow("en_GB 1e+10")
+            << QString("en_GB")
+            << QString("1e+10")
+            << false // should this really be case sensitive??
+            << float(0)
+            << QString("0");
+
+        QTest::newRow("el_GR 1E+10")
+            << QString("el_GR")
+            << QString("1E+10")
+            << false // should this really be case sensitive??
+            << float(0)
+            << QString("0");
+
+        QTest::newRow("el_GR 1e+10")
+            << QString("el_GR")
+            << QString("1e+10")
+            << true // should this really be case sensitive??
+            << float(1E+10)
+            << QString("10.000.000.000");
+
+        QTest::newRow("sv_SE 1E+10")
+            << QString("sv_SE")
+            << QString("1E+10")
+            << false // OK not to parse this in Swedish?
+            << float(0)
+            << QString("0");
+
+        QTest::newRow("sv_SE 1e+10")
+            << QString("sv_SE")
+            << QString("1e+10")
+            << false // OK not to parse this in Swedish?
+            << float(0)
+            << QString("0");
+
+        QTest::newRow("sv_SE 1×10^10")
+            << QString("sv_SE")
+            << QString("1×10^10")
+            << true
+            << float(1E+10)
+            << QString("10 000 000 000");
+
+        QTest::newRow("ar_SA ١اس+١٠") // ar_SA does not use thousands separators
+            << QString("ar_SA")
+            << QString("١اس+١٠")
+            << true
+            << float(1E+10)
+             << QString("١٠٠٠٠٠٠٠٠٠٠");
+
+        QTest::newRow("ar_SA ١٠٠٠") // ar_SA does not use thousands separators
+            << QString("ar_SA")
+            << QString("١٠٠٠")
+            << true
+            << float(1000.0)
+             << QString("١٠٠٠");
+
+        QTest::newRow("ar_SA ١٬٠٠٠") // ar_SA does not use thousands separators
+            << QString("ar_SA")
+            << QString("١٬٠٠٠")
+            << false
+            << float(0.0)
+            << QString("٠");
+
+        QTest::newRow("ar_EG ١اس+١٠") // ar_EG does not use thousands separators
+            << QString("ar_EG")
+            << QString("١اس+١٠")
+            << true
+            << float(1E+10)
+            << QString("١٠٬٠٠٠٬٠٠٠٬٠٠٠");
+
+        QTest::newRow("ar_EG ١٠٠٠") // ar_EG does not use thousands separators
+            << QString("ar_EG")
+            << QString("١٠٠٠")
+            << true
+            << float(1000.0)
+            << QString("١٬٠٠٠");
+
+        QTest::newRow("ar_EG ١٬٠٠٠") // ar_EG does not use thousands separators
+            << QString("ar_EG")
+            << QString("١٬٠٠٠")
+            << true
+            << float(1000.0)
+            << QString("١٬٠٠٠");
+
+        QTest::newRow("fa_IR ١×۱۰^١۰")
+            << QString("fa_IR")
+            << QString("۱×۱۰^۱۰")
+            << true
+            << float(1E+10)
+            << QString("۱۰٬۰۰۰٬۰۰۰٬۰۰۰");
+
+        QTest::newRow("fa_IR ۱۰۰۰")
+            << QString("fa_IR")
+            << QString("۱۰۰۰")
+            << true
+            << float(1000.0)
+            << QString("۱٬۰۰۰");
+
+        QTest::newRow("fa_IR ۱٬۰۰۰")
+            << QString("fa_IR")
+            << QString("۱٬۰۰۰")
+            << true
+            << float(1000.0)
+            << QString("۱٬۰۰۰");
     }
 
     QTest::newRow("en_GB 1E+38")
@@ -1732,6 +1862,18 @@ void Ft_Numbers::testToFloat()
 
     MLocale locale(localeName);
     float result = locale.toFloat(formattedFloat);
+#if 0
+    QTextStream stream(stdout);
+    stream.setCodec("UTF-8");
+    stream << localeName
+           << " formattedFloat: " << formattedFloat
+           << " parsable: " << parsable
+           << " result: " << result
+           << " parsedFloat: " << parsedFloat
+           << " locale.formatNumber(result): " << locale.formatNumber(result)
+           << " formattedAgainFloat" << formattedAgainFloat
+           << "\n";
+#endif
     QCOMPARE(result, parsedFloat);
     QCOMPARE(locale.toFloat(formattedFloat, NULL), parsedFloat);
     bool ok;
