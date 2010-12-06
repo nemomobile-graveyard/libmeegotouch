@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include "staticpagebenchmark.h"
+#include "rotationbenchmark.h"
 #include "timedemo.h"
 
 #include <MApplication>
@@ -25,26 +25,19 @@
 
 #include <QTimer>
 
-namespace
-{
-    const int pageDuration = 3000;
-}
-
-StaticPageBenchmark::StaticPageBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle)
+RotationBenchmark::RotationBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle)
     : TimedemoBenchmark(applicationPage, timedemo)
     , targetOrientationAngle(targetOrientationAngle)
 {
 }
 
-QString StaticPageBenchmark::name()
+QString RotationBenchmark::name()
 {
-    return QString("StaticPageBenchmark (%1)").arg(QString::number(targetOrientationAngle));
+    return QString("RotationBenchmark (%1)").arg(QString::number(targetOrientationAngle));
 }
 
-void StaticPageBenchmark::start()
+void RotationBenchmark::start()
 {
-    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
-    MApplication::activeWindow()->setOrientationAngleLocked(true);
     if (!applicationPage->isOnDisplay()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(stabilizeFps()));
         applicationPage->appear(MApplication::activeWindow());
@@ -54,19 +47,22 @@ void StaticPageBenchmark::start()
     }
 }
 
-void StaticPageBenchmark::stabilizeFps() {
+void RotationBenchmark::stabilizeFps() {
     verifyAppearanceTimer->stop();
-    QTimer::singleShot(1000, this, SLOT(waitPageDuration()));
+    QTimer::singleShot(1000, this, SLOT(rotate()));
 }
 
-void StaticPageBenchmark::waitPageDuration()
+void RotationBenchmark::rotate()
 {
     timedemo->startTiming(this);
-    QTimer::singleShot(pageDuration, this, SLOT(terminateBenchmark()));
+    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
+    MApplication::activeWindow()->setOrientationAngleLocked(true);
+    connect(MApplication::activeWindow(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(terminateBenchmark()));
 }
 
-void StaticPageBenchmark::terminateBenchmark()
+void RotationBenchmark::terminateBenchmark()
 {
     timedemo->stopTiming(this);
+    disconnect(MApplication::activeWindow(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(terminateBenchmark()));
     emit finished();
 }

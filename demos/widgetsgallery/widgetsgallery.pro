@@ -77,6 +77,7 @@ SOURCES += main.cpp \
     drilldownlistitem.cpp \
     customnavigationbarpage.cpp \
     mynavbarcontent.cpp \
+    rotationbenchmark.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -126,6 +127,7 @@ HEADERS += templatepage.h \
     drilldownlistitem.h \
     customnavigationbarpage.h \
     mynavbarcontent.h \
+    rotationbenchmark.h \
 
 # theme
 include(theme/theme.pri)
