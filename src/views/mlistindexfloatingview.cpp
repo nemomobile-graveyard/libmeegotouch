@@ -230,6 +230,12 @@ void MListIndexFloatingView::drawBackground(QPainter *painter, const QStyleOptio
 void MListIndexFloatingView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MListIndexFloatingView);
+
+    if (model()->shortcutIndexes().isEmpty()) {
+        event->ignore();
+        return;
+    }
+
     MWidgetView::mousePressEvent(event);
 
     d->scrollToGroupHeader(event->pos().y());
