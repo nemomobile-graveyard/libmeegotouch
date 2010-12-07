@@ -130,7 +130,8 @@ private:
     bool needsRelocation(const QGraphicsWidget *inputWidget,
                          const QRect &localRect);
 
-    bool isObscured(const QGraphicsWidget *widget, const QRect &localRect) const;
+    bool isWidgetRectFullyVisible(const QGraphicsWidget *widget,
+                                  const QRect &localRect) const;
 
     void centerContextWidgetToAnchorPoint(MScrollChain *newChain,
                                           const QPoint &anchorPoint,

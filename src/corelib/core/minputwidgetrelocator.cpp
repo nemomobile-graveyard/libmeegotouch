@@ -326,19 +326,15 @@ bool MInputWidgetRelocator::needsRelocation(const QGraphicsWidget *inputWidget,
     const QRect rect(rootElement->mapRectFromItem(inputWidget, localRect).toRect());
 
     return !allowedRect.contains(rect)
-           || isObscured(inputWidget, localRect);
+           || !isWidgetRectFullyVisible(inputWidget, localRect);
 }
 
-bool MInputWidgetRelocator::isObscured(const QGraphicsWidget *widget,
-                                       const QRect &localRect) const
+bool MInputWidgetRelocator::isWidgetRectFullyVisible(const QGraphicsWidget *widget,
+                                                     const QRect &localRect) const
 {
-    // We need to know if widget is even partially obscured. Therefore split the
-    // local rect into pieces.
-    const QRect localTopRect(localRect.topLeft(), QSize(1, 1));
-    const QRect localBottomRect(localRect.bottomLeft(), QSize(1, 1));
-
-    return widget->isObscured(localTopRect)
-           || widget->isObscured(localBottomRect);
+    // Widget can be clipped by a nested pannable viewport.
+    return !widget->isClipped()
+           || widget->clipPath().contains(localRect);
 }
 
 void MInputWidgetRelocator::centerContextWidgetToAnchorPoint(MScrollChain *newChain,
