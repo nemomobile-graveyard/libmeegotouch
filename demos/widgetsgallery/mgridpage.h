@@ -61,8 +61,12 @@ private slots:
     void configureGrid();
     void configureGrid(M::Orientation orientation);
 
+    void pauseLoaders();
+    void resumeLoaders();
+
 private:
     MList *list;
+    GridModel *model;
     MAction *actionConfiguration;
     QSizeF m_itemSize;
 

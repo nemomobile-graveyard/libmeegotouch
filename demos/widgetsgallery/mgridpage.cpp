@@ -103,6 +103,7 @@ QSizeF ContentItemCreator::cellSize() const
 MGridPage::MGridPage()
     : TemplatePage(TemplatePage::ListsGridsAndPopups),
       list(0),
+      model(0),
       actionConfiguration(0),
       m_itemSize(10,10),
       m_columnsPortrait(4),
@@ -158,7 +159,8 @@ void MGridPage::createContent()
     QStringList mediaDirs;
     mediaDirs << Utils::picturesDir();
     mediaDirs << Utils::mediaArtDir();
-    GridModel *model = new GridModel(m_itemSize.toSize(), mediaDirs);
+
+    model = new GridModel(m_itemSize.toSize(), mediaDirs);
     list->setItemModel(model);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
@@ -168,6 +170,12 @@ void MGridPage::createContent()
     actionConfiguration->setLocation(MAction::ApplicationMenuLocation);
     connect(actionConfiguration, SIGNAL(triggered()), this, SLOT(showGridConfigurationDialog()));
     addAction(actionConfiguration);
+
+    connect(this, SIGNAL(disappearing()), this, SLOT(pauseLoaders()));
+    connect(this, SIGNAL(appeared()), this, SLOT(resumeLoaders()));
+
+    connect(list, SIGNAL(panningStarted()), this, SLOT(pauseLoaders()));
+    connect(list, SIGNAL(panningStopped()), this, SLOT(resumeLoaders()));
 
     retranslateUi();
 }
@@ -303,4 +311,15 @@ void MGridPage::modifyRowsSliderHandle(int newValue)
 {
     m_columnsPortraitSlider->setHandleLabel(QString::number(newValue));
     m_columnsPortraitLabel->setText(QString::number(newValue));
+}
+
+void MGridPage::pauseLoaders()
+{
+    model->pauseLoaders();
+}
+
+void MGridPage::resumeLoaders()
+{
+    if (MApplication::instance()->activeApplicationWindow()->currentPage() == this)
+        model->resumeLoaders(list->firstVisibleItem().row());
 }

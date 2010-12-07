@@ -33,7 +33,6 @@ GridModel::GridModel(const QSize &size, const QStringList &dirs)
 
     for (int i = 0; i < THREAD_COUNT; i++) {
         Loader *loader = new Loader(size);
-        loader->start(QThread::LowestPriority);
         connect(loader, SIGNAL(imageReady(QImage, int)), this, SLOT(insertImage(QImage, int)));
         m_loaders.append(loader);
     }
@@ -87,6 +86,29 @@ QVariant GridModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+void GridModel::pauseLoaders()
+{
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        Loader *loader = m_loaders[i];
+        if (loader->isRunning())
+            loader->stop();
+    }
+}
+
+void GridModel::resumeLoaders(int offset)
+{
+    if (offset < 0)
+        offset = 0;
+    else
+        offset = offset / THREAD_COUNT;
+
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        Loader *loader = m_loaders[i];
+        if (!loader->isRunning() && loader->hasWork())
+            loader->resume(offset);
+    }
+}
+
 void GridModel::createItems()
 {
     int index = 0;
@@ -112,6 +134,7 @@ void GridModel::createItems()
             index++;
         }
     }
+    resumeLoaders();
 }
 
 void GridModel::insertImage(QImage image, int index)
@@ -133,22 +156,46 @@ void Loader::run()
             mutex.unlock();
             return;
         }
-        if (backlog.isEmpty()) {
-            haveWork.wait(&mutex);
-            mutex.unlock();
-            continue;
+
+        int offset = loadOffset;
+
+        BacklogItem *backlogItem = NULL;
+        if (offset >= backlog.count())
+            offset = backlog.count() - 1;
+
+        if (backlog.count() > offset) {
+            backlogItem = backlog.at(offset);
+
+            // Try to find next item in backlog to load
+            int nextOffset = offset;
+            while (backlogItem->loaded && nextOffset < backlog.count())
+                backlogItem = backlog.at(nextOffset++);
+
+            // If we did not find, try to load previous in backlog
+            int prevOffset = offset;
+            while (backlogItem->loaded && prevOffset > 0)
+                backlogItem = backlog.at(prevOffset--);
+
+            // Everything is loaded, stop.
+            if (backlogItem->loaded) {
+                mutex.unlock();
+                stop();
+                return;
+            }
         }
 
-        BacklogItem backlogItem = backlog.takeFirst();
+        backlogItem->loaded = true;
+        const QFileInfo file(backlogItem->path);
+        int index = backlogItem->index;
         mutex.unlock();
-        const QFileInfo file(backlogItem.first);
-        int index = backlogItem.second;
 
         QImage image(file.absoluteFilePath());
 
         if (!image.isNull()) {
             scaleImage(image);
             emit imageReady(image, index);
+            // Sleep for 8ms to let other threads do their job.
+            msleep(8);
         }
     }
 }
@@ -162,20 +209,39 @@ void Loader::scaleImage(QImage& image) const
     }
 }
 
+bool Loader::hasWork()
+{
+    mutex.lock();
+    bool result = false;
+    int i = 0;
+    while (!result && i < backlog.count())
+        result = (!backlog.at(i++)->loaded);
+    mutex.unlock();
+    return result;
+}
+
 void Loader::pushImage(const QString &path, int index)
 {
-    BacklogItem backlogItem(path, index);
-    mutex.lock();
+    BacklogItem *backlogItem = new BacklogItem;
+    backlogItem->path = path;
+    backlogItem->index = index;
+    backlogItem->loaded = false;
 
+    mutex.lock();
     backlog.append(backlogItem);
     mutex.unlock();
-    haveWork.wakeAll();
+}
+
+void Loader::resume(int offset)
+{
+    loadOffset = offset;
+    stopWork = false;
+    start(QThread::LowestPriority);
 }
 
 void Loader::stop()
 {
     mutex.lock();
     stopWork = true;
-    haveWork.wakeAll();
     mutex.unlock();
 }

@@ -62,6 +62,9 @@ public:
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
+    void pauseLoaders();
+    void resumeLoaders(int offset = 0);
+
 private slots:
     void insertImage(QImage pixmap, int index);
 
@@ -73,17 +76,26 @@ private:
     QStringList m_dirs;
 };
 
-typedef QPair<QString, int> BacklogItem;
+struct BacklogItem {
+    QString path;
+    int index;
+    bool loaded;
+};
 
 class Loader : public QThread
 {
     Q_OBJECT
 public:
     explicit Loader (const QSize &s)
-        : QThread(), mutex(), haveWork(), backlog(), size(s), stopWork(false) { }
+        : QThread(), mutex(), backlog(), size(s), stopWork(false), loadOffset(0) { }
     void pushImage(const QString &path, int index);
+
+    void resume(int offset);
     void stop();
+
     void scaleImage(QImage& image) const;
+
+    bool hasWork();
 
 signals:
     void imageReady(QImage pixmap, int index);
@@ -93,10 +105,10 @@ protected:
 
 private:
     QMutex mutex;
-    QWaitCondition haveWork;
-    QList<BacklogItem> backlog;
+    QList<BacklogItem*> backlog;
     QSize size;
     bool stopWork;
+    int loadOffset;
 };
 
 #endif
