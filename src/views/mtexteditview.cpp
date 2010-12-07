@@ -62,6 +62,7 @@ namespace
 
     // How long notification will stay visible
     const int NotificationDuration = 3000;
+    const int BinaryTextVariantSeparator = 0x9c;
 }
 
 
@@ -1133,7 +1134,10 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
             }
 
         } else if (member == MTextEditModel::Prompt) {
-            d->promptTextDocument->setPlainText(model()->prompt());
+            // Note: only using the first length variant now
+            QString promptText = model()->prompt();
+            promptText = promptText.left(promptText.indexOf(QChar(BinaryTextVariantSeparator)));
+            d->promptTextDocument->setPlainText(promptText);
 
             if (d->document()->isEmpty() == true) {
                 viewChanged = true;
