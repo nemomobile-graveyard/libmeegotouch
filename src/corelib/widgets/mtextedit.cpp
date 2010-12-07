@@ -2448,11 +2448,23 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     QTextBlock block = d->cursor()->block();
 
     switch ((int)query) {
-    case Qt::ImCursorPosition:
-        return QVariant(cursorPosition() - block.position());
+    case Qt::ImCursorPosition: {
+            int pos = cursorPosition() - block.position();
+            if (d->isPreediting()) {
+                pos = d->cursor()->anchor();
+            }
+            return QVariant(pos);
+        }
 
-    case Qt::ImSurroundingText:
-        return QVariant(block.text());
+    case Qt::ImSurroundingText: {
+            QString surroundingText = block.text();
+            if (d->isPreediting()) {
+                int start = d->cursor()->anchor();
+                int end = d->cursor()->position();
+                surroundingText.remove(start, end - start);
+            }
+            return QVariant(surroundingText);
+        }
 
     case Qt::ImCurrentSelection:
         return QVariant(selectedText());
