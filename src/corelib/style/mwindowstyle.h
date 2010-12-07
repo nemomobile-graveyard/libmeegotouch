@@ -23,6 +23,8 @@
 #include <mstyle.h>
 #include <QColor>
 
+class QPixmap;
+
 //! \internal
 
 /** \brief Defines a style for a MWindow class.
@@ -33,14 +35,19 @@ class MWindowStyle : public MStyle
     M_STYLE_INTERNAL(MWindowStyle)
 
     /*!
-     \brief Sets the default background color when opening a window.
-     */
-    M_STYLE_ATTRIBUTE(QColor, backgroundColor, BackgroundColor)
+     Sets the default background color when opening a window. If
+     x11StartupPixmap is defined the color will be ignored.
+    */
+    M_STYLE_ATTRIBUTE(QColor, startupFillColor, StartupFillColor)
 
     /*!
-     \brief Sets the default background image when opening a window.
+     The pixmap used to initially fill the window before it is shown.
+     The pixmap needs to be an X11 pixmap, to ensure this make sure it has
+     forcex11 in its filename.
      */
-    M_STYLE_ATTRIBUTE(QString, backgroundImage, BackgroundImage)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap *, x11StartupPixmap, X11StartupPixmap)
+
+
 };
 
 class MWindowStyleContainer : public MStyleContainer

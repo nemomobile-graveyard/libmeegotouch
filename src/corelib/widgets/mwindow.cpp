@@ -183,6 +183,10 @@ void MWindowPrivate::init()
     q->setTranslucentBackground(false);
     if (MApplication::fullScreen())
         q->showFullScreen();
+
+    if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+        applyStartupWindowBackground();
+    }
 }
 
 void MWindowPrivate::initSoftwareViewport()
@@ -214,11 +218,6 @@ void MWindowPrivate::initGLViewport()
     bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);
 
     MGraphicsSystemHelper::switchToHardwareRendering(q, &glContext);
-#ifdef HAVE_MEEGOGRAPHICSSYSTEM
-    if (beforeFirstPaintEvent && !translucent) {
-        applyWindowBackground();
-    }
-#endif
 
     if (translucent) {
         QPalette palette;
@@ -363,11 +362,10 @@ void MWindowPrivate::appendVisibilityChangeMask()
     XChangeWindowAttributes(QX11Info::display(), robustEffectiveWinId(), CWEventMask, &newAttributes);
 }
 
-void MWindowPrivate::applyWindowBackground()
+void MWindowPrivate::applyStartupWindowBackground()
 {
-    Q_Q(const MWindow);
+    Q_Q(MWindow);
 
-    const WId windowId = robustEffectiveWinId();
     const MWindowStyle *style =
             static_cast<const MWindowStyle *>(MTheme::style("MWindowStyle",
                                                             QString(), QString(), QString(),
@@ -377,21 +375,18 @@ void MWindowPrivate::applyWindowBackground()
         return;
     }
 
-    const QString backgroundId = style->backgroundImage();
-    if (backgroundId.isEmpty()) {
-        // TODO: Mapping an arbitrary RGB-color to X11 requires some effort. Currently
-        // black is used until it is decided whether using a color as background should
-        // be supported.
-        XSetWindowBackground(QX11Info::display(), windowId, BlackPixel(QX11Info::display(), QX11Info::appScreen()));
+    WId windowId = robustEffectiveWinId();
+    const QPixmap *startupPixmap = style->x11StartupPixmap();
+    const QColor startupFillColor = style->startupFillColor();
+    if (startupPixmap) {
+        XSetWindowBackgroundPixmap(QX11Info::display(), windowId, startupPixmap->handle());
+    } else if (startupFillColor.isValid()) {
+        XSetWindowBackground(QX11Info::display(), windowId,
+                             QColormap::instance().pixel(startupFillColor));
     } else {
-        const QPixmap *background = MTheme::pixmap(backgroundId);
-        if (background) {
-            XSetWindowBackgroundPixmap(QX11Info::display(), windowId, background->handle());
-        } else {
-            mWarning("MWindow") << "No valid MWindowStyle::backgroundImage found";
-        }
+        disableAutomaticBackgroundRepainting();
     }
-    XClearWindow(QX11Info::display(), windowId);
+
     MTheme::releaseStyle(style);
 }
 #endif
@@ -792,6 +787,9 @@ void MWindow::setTranslucentBackground(bool enable)
         // not in scratchbox and supposingly its a candidate for
         // filing bug against Qt when confirmed
         d->appendVisibilityChangeMask();
+        if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+            d->disableAutomaticBackgroundRepainting();
+        }
 #endif
     }
 
@@ -1387,7 +1385,6 @@ void MWindow::setVisible(bool visible)
     Q_D(MWindow);
 
     if (visible) {
-
         // This effectively overrides call to show() when in
         // prestarted state.
         if (MApplication::isPrestarted()) {

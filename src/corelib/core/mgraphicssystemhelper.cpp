@@ -128,8 +128,8 @@ void MGraphicsSystemHelper::switchToHardwareRendering(MWindow *window, QGLContex
 {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
     if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() != QLatin1String("native")) {
-        mDebug("MGraphicsSystemHelper") << "hardware rendering with meego enabled";
         if (!QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
+            mDebug("MGraphicsSystemHelper") << "Switching to hardware rendering with meego graphicssystem";
             QMeeGoGraphicsSystemHelper::switchToMeeGo();
         }
         *glContext = const_cast<QGLContext*>(QGLContext::currentContext());
@@ -257,7 +257,7 @@ bool MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem() {
 
 bool MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem() {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
-    if (QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
+    if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("meego")) {
         return true;
     }
 #endif

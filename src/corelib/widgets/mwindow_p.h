@@ -58,7 +58,7 @@ public:
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
-    void applyWindowBackground();
+    void applyStartupWindowBackground();
     void setX11Property(const char *propertyName, qreal value);
     qreal getX11Property(const char *propertyName) const;
     void setX11PrestartProperty(bool set);
