@@ -581,7 +581,10 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_tooltip_entry0">
         <location filename="../textentrypage.cpp" line="601"/>
         <source>Enter text here</source>
-        <translation>Enter text here</translation>
+        <translation variants="yes">
+          <lengthvariant>Enter text here</lengthvariant>
+          <lengthvariant>Enter text</lengthvariant>
+        </translation>
     </message>
     <message id="xx_tooltip_entry1">
         <location filename="../textentrypage.cpp" line="604"/>
