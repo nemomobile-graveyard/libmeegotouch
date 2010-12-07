@@ -631,6 +631,13 @@ void MSceneManagerPrivate::removeSceneWindow(MSceneWindow *sceneWindow)
 
     Q_ASSERT(windows.contains(sceneWindow));
 
+    if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+        if (currentPage == sceneWindow)
+            popPage(false);
+        else
+            pageHistory.removeOne(sceneWindow);
+    }
+
     sceneWindow->d_func()->policy = MSceneWindow::KeepWhenDone;
     setSceneWindowState(sceneWindow, MSceneWindow::Disappeared);
 
