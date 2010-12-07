@@ -12,6 +12,8 @@ TEMPLATE = subdirs
 }
 
 include(mkspecs/common.pri)
+include(mkspecs/features/meegotouch_coverage.prf)
+
 isEqual( IN_PWD, $${OUT_PWD} ) {
     IS_OUT_OF_SOURCE = 0
 } else {
