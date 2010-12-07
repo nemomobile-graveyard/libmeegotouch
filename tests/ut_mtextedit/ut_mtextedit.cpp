@@ -610,6 +610,16 @@ void Ut_MTextEdit::testInputMethodEvent()
     QCOMPARE(m_subject->text(), testString2);
     QCOMPARE(spy.count(), 1); // optimization with preedit == commit
     spy.clear();
+
+    m_subject->setText(testString);
+    int start = 0;
+    int length = 1;
+    QList<QInputMethodEvent::Attribute> attributes;
+    attributes << QInputMethodEvent::Attribute(QInputMethodEvent::Selection, start,
+                                               length, QVariant());
+    QInputMethodEvent selectionEvent("", attributes);
+    m_subject->inputMethodEvent(&selectionEvent);
+    QCOMPARE(m_subject->selectedText(), testString.mid(0, 1));
 }
 
 
