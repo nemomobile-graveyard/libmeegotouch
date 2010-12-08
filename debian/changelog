@@ -1,8 +1,13 @@
-libmeegotouch (0.20.64~1) unstable; urgency=low
+libmeegotouch (0.20.64-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#204882 - Prestarted applications not visible in the switcher after launching it more than once
+  * Fixes: NB#199156 - inexplicit libmeegotouchcore dependency on libXfixes; fails to compile under Ubuntu Mint
+  * Fixes: Repaint only visible part of MTextEdit
+  * Fixes: NB#209140 - Unnecessary floating label displayed when taping in fast scroll area
+  * Fixes: NB#199685 - Tab-switching is sluggish - actions react on button-release
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 06 Dec 2010 14:02:15 +0000
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 08 Dec 2010 15:36:15 +0000
 
 libmeegotouch (0.20.63-1) unstable; urgency=low
 
