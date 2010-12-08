@@ -512,7 +512,7 @@ void MApplicationPrivate::stdExit(int status)
     qApp->exit( status );
 
     // exit when no event loop is running
-    exit( status );
+    _exit( status );
 }
 
 void MApplication::setPrestartMode(M::PrestartMode mode)
