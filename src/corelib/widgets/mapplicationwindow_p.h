@@ -56,11 +56,11 @@ public:
     virtual ~MApplicationWindowPrivate();
 
     QPointer<MApplicationPage> page;
-    MNavigationBar *navigationBar;
-    MToolBar *toolBar;
-    MDockWidget *dockWidget;
-    MHomeButtonPanel *homeButtonPanel;
-    MApplicationMenu *menu;
+    QPointer<MNavigationBar> navigationBar;
+    QPointer<MToolBar> toolBar;
+    QPointer<MDockWidget> dockWidget;
+    QPointer<MHomeButtonPanel> homeButtonPanel;
+    QPointer<MApplicationMenu> menu;
     QPointer<MSceneWindow> statusBar;
     QTimer autoHideComponentsTimer;
     QList<MSceneWindow *> componentsOnAutoHide;

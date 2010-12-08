@@ -109,17 +109,27 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
 
 MApplicationWindowPrivate::~MApplicationWindowPrivate()
 {
-    delete dockWidget;
-    dockWidget = 0;
-    delete toolBar;
-    toolBar = 0;
-    delete menu;
-    menu = 0;
-    delete navigationBar;
-    navigationBar = 0;
-    delete homeButtonPanel;
-    homeButtonPanel = 0;
-
+    if (dockWidget) {
+        delete dockWidget;
+        dockWidget = 0;
+    }
+    if (toolBar) {
+        delete toolBar;
+        toolBar = 0;
+    }
+    
+    if (menu) {
+        delete menu;
+        menu = 0;
+    }
+    if (navigationBar) {
+        delete navigationBar;
+        navigationBar = 0;
+    }
+    if (homeButtonPanel) {
+        delete homeButtonPanel;
+        homeButtonPanel = 0;
+    }
     if (statusBar) {
         delete statusBar;
         statusBar = 0;
