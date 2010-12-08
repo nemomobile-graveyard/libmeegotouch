@@ -163,9 +163,9 @@ public:
 
 };
 
-class MTransparentWidget : public QGraphicsWidget {
+class MTransparentWidget : public MWidgetController {
     public:
-    MTransparentWidget() : QGraphicsWidget() {
+    MTransparentWidget() : MWidgetController() {
         setFlag(QGraphicsItem::ItemHasNoContents, true);
     }
     QPainterPath shape() const {

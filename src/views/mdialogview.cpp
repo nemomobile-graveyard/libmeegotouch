@@ -105,7 +105,7 @@ void MDialogViewPrivate::createWidgetHierarchy()
 
 QGraphicsWidget *MDialogViewPrivate::createSpacer()
 {
-    QGraphicsWidget *spacer = new MTransparentWidget();
+    MWidgetController *spacer = new MTransparentWidget();
 
     spacer->hide();
     spacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -125,7 +125,7 @@ QGraphicsLinearLayout *MDialogViewPrivate::createLayout(Qt::Orientation orientat
 
 void MDialogViewPrivate::createDialogBox()
 {
-    dialogBox = new QGraphicsWidget;
+    dialogBox = new MWidgetController;
     dialogBox->setObjectName("MDialogBox");
     dialogBoxLayout = createLayout(Qt::Vertical);
     dialogBox->setLayout(dialogBoxLayout);
@@ -137,7 +137,7 @@ void MDialogViewPrivate::createDialogBox()
     contentsViewport->setStyleName("MDialogContentsViewport");
     dialogBoxLayout->addItem(contentsViewport);
 
-    contents = new QGraphicsWidget();
+    contents = new MWidgetController();
     contents->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     contentsViewport->setWidget(contents);
     contentsLayout = createLayout(Qt::Vertical);
