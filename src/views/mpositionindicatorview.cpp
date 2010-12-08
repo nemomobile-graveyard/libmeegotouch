@@ -128,7 +128,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
     const MScalableImage *rail = style()->backgroundImage();
 
 
-    if (pRange.height() > vpSize.height()) {
+    if ((int)pRange.height() > (int)vpSize.height()) {
 
         int indicatorPixmapSizeX = indicator->pixmap()->width();
         int railPixmapSizeX = rail->pixmap()->width();
@@ -163,7 +163,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
                         painter);
     }
 
-    if (pRange.width() > vpSize.width()) {
+    if ((int)pRange.width() > (int)vpSize.width()) {
 
         int indicatorPixmapSizeY = indicator->pixmap()->height();
         int railPixmapSizeY = rail->pixmap()->height();
