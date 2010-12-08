@@ -1542,10 +1542,18 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
         if (!window->d_func()->disappearanceAnimation)
             createDisappearanceAnimationForSceneWindow(window);
 
-        q->connect(window->d_func()->disappearanceAnimation, SIGNAL(finished()),
-                SLOT(_q_onSceneWindowDisappearanceAnimationFinished()));
-
         window->d_func()->disappearanceAnimation->start();
+
+        switch(window->windowType()) {
+            case MSceneWindow::PopupList:
+            case MSceneWindow::MessageBox:
+            case MSceneWindow::Dialog:
+            case MSceneWindow::ObjectMenu:
+                freezeUIForAnimationDuration(window->d_func()->disappearanceAnimation);
+            default:
+                q->connect(window->d_func()->disappearanceAnimation, SIGNAL(finished()),
+                        SLOT(_q_onSceneWindowDisappearanceAnimationFinished()));
+        }
     } else {
         setSceneWindowState(window, MSceneWindow::Disappeared);
         if (window->windowType() == MSceneWindow::StatusBar) {
