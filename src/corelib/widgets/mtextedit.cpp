@@ -2136,7 +2136,6 @@ M::TextContentType MTextEdit::contentType() const
 
 void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 {
-    // FIXME: replacement info not honored.
     Q_D(MTextEdit);
 
     QString preedit = event->preeditString();
@@ -2204,6 +2203,13 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     d->editActive = true;
 
     bool insertionSuccess = false;
+
+    if (event->replacementLength()) {
+        d->cursor()->setPosition(d->cursor()->position() + event->replacementStart());
+        d->cursor()->setPosition(d->cursor()->position() + event->replacementLength(),
+                                 QTextCursor::KeepAnchor);
+        d->cursor()->removeSelectedText();
+    }
 
     // append possible commit string
     if (commitString.isEmpty() == false) {
