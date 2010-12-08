@@ -128,9 +128,11 @@ void MObjectMenuViewPrivate::updateTitleAreaVisibility()
     //hide whole title area if title == "" and icon is not visible
     if( q->model()->title().isEmpty() && q->model()->iconId().isEmpty() ) {
         mainLayout->removeItem(titleArea);
+        actionViewport->setStyleName("objectMenuViewportWithoutTitle");
         titleArea->hide();
     } else if( mainLayout->itemAt(0) != titleArea ) {
         mainLayout->insertItem(0, titleArea);
+        actionViewport->setStyleName("objectMenuViewportWithTitle");
         titleArea->show();
     }
 }
