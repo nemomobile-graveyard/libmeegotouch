@@ -33,6 +33,8 @@
 #include "mapplicationwindow.h"
 #include "mclassfactory.h"
 
+#include "mdebug.h"
+
 #include <QGestureEvent>
 #include <QTapAndHoldGesture>
 #include <QPanGesture>
@@ -432,6 +434,7 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
 
         style().setParent(parent);
         if (value.value<QGraphicsItem*>() != NULL) {
+            mPerformanceWarning("MWidgetView::reloadChildItemsStyles") << "Styles are recursively reloaded due to parent change :" << d->controller;
             d->reloadChildItemsStyles(d->controller);
             applyStyle();
         }
@@ -538,7 +541,6 @@ void MWidgetView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_UNUSED(event);
 }
-
 
 void MWidgetView::changeEvent(QEvent *event)
 {

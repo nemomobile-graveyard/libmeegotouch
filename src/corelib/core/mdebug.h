@@ -22,6 +22,55 @@
 
 #include <QDebug>
 
+//! \internal
+
+class MWidgetController;
+
+class MDebug
+{
+public:
+    typedef void (*MMsgHandler)(int, const char *);
+
+    enum Type {
+        Debug,
+        Warning,
+        Fatal,
+        Critical,
+        System,
+        Performance,
+
+        User = 0xFF
+    };
+
+    MDebug(int type = Debug);
+    MDebug(const MDebug &debug);
+    ~MDebug();
+
+    MDebug &operator<<(const QString &string);
+    MDebug &operator<<(const MWidgetController *controller);
+
+    static void installMessageHandler(MMsgHandler handler);
+    static MMsgHandler messageHandler();
+
+private:
+    void flush();
+    QtMsgType convertMsgType(int type);
+
+    struct Stream {
+        Stream(int type) : ts(&buffer, QIODevice::WriteOnly), ref(1), type(type), output(true) {}
+
+        QTextStream ts;
+        QString buffer;
+        int ref;
+        int type;
+        bool output;
+    };
+
+    Stream *stream;
+};
+
+//! \internal_end
+
 /*!
  * \brief Redirects all debugging output from qDebug, qWarning, qCritical and qFatal
  * to specified file.
@@ -67,6 +116,7 @@ inline QDebug mDebugStream(const QString &module)
  * as QString to categorize the output.
  *
  * \sa mDebug(const QString &)
+ * \sa mPerformanceWarning(const QString &)
  */
 inline QDebug mWarningStream(const QString &module)
 {
@@ -76,6 +126,13 @@ inline QDebug mWarningStream(const QString &module)
 
 #define mWarning(x) mWarningStream(x)
 #endif // QT_NO_WARNING_OUTPUT
+
+#define mPerformanceWarning(x) mPerformanceWarningStream(x)
+
+inline MDebug mPerformanceWarningStream(const QString &module)
+{
+    return MDebug(MDebug::Performance) << qPrintable(QString("%1:").arg(module));
+}
 
 #endif
 

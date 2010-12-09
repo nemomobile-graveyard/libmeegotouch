@@ -68,6 +68,7 @@ namespace
     QStringList g_debug_prefixes;
     bool g_has_debug_whitelist(false);
     bool g_has_debug_blacklist(false);
+    bool g_show_performance_messages(false);
 #ifdef __arm__
     QtMsgType g_debug_level(QtCriticalMsg);
 #else
@@ -110,6 +111,27 @@ bool mRedirectOutput(const QString &filename)
     return debugingOutput != 0;
 }
 
+void m_output_message(const char* msg)
+{
+    FILE *out = debugingOutput;
+    if (!out) {
+        out = stderr;
+    }
+    fprintf(out, "%s\n", msg);
+}
+
+void mMessageHandler(int type, const char *msg)
+{
+    switch (type) {
+    case MDebug::Performance:
+        if (g_show_performance_messages)
+            m_output_message(msg);
+        break;
+    default:
+        break;
+    };
+}
+
 void mMessageHandler(QtMsgType type, const char *msg)
 {
     if (type < g_debug_level)
@@ -138,11 +160,7 @@ void mMessageHandler(QtMsgType type, const char *msg)
         }
     }
 
-    FILE *out = debugingOutput;
-    if (!out) {
-        out = stderr;
-    }
-    fprintf(out, "%s\n", msg);
+    m_output_message(msg);
 
     if (g_syslogSocket) {
         g_syslogSocket->sendMsg(type, msg);
@@ -292,6 +310,7 @@ void MComponentDataPrivate::debugInit(bool levelSet)
     } else if (!syslogServer.isEmpty()) {
         initSyslogConnection(syslogServer);
     }
+    MDebug::installMessageHandler(mMessageHandler);
 }
 
 MComponentData *MComponentData::instance()
@@ -299,7 +318,7 @@ MComponentData *MComponentData::instance()
     return self;
 }
 
-MComponentData* MComponentData::createInstance(int &argc, char **argv, const QString &appIdentifier /*= QString()*/, MApplicationService *service /*= 0*/)
+MComponentData* MComponentData::createInstance(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
 {
     if(!self) {
         self = new MComponentData(argc, argv, appIdentifier, service);
@@ -627,6 +646,8 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                           argv[0]);
                 exit(EXIT_FAILURE);
             }
+        } else if (s == "-performance-debug") {
+            g_show_performance_messages = true;
         } else if (s == "-syslog-server") {
             if (i < (argc -1)) {
                 i++;
@@ -713,6 +734,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-output-level debug|warning|critical] Only show messages of given output level or above\n"
                                          << "  [-output-prefix <prefix>] Only show debug messages that start with the given prefix\n"
                                          << "  [-no-output-prefix <prefix>] Only show debug messages that do not start with the given prefix\n"
+                                         << "  [-performance-debug] Show debug messages affecting performance\n"
                                          << "  [-syslog-server <server>] Log debug output to a local or remote syslog server instance.\n"
                                          << "      To send messages over the network, specify server as udp://hostname[:port].\n"
                                          << "      To log locally, use the keyword 'local', which is an alias for file:///dev/log,\n"

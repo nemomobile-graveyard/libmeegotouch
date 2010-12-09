@@ -80,6 +80,7 @@ SOURCES += \
     $$CORE_SRC_DIR/msyslogclient.cpp \
     $$CORE_SRC_DIR/mgraphicssystemhelper.cpp \
     $$CORE_SRC_DIR/mdynamicpropertywatcher.cpp \
+    $$CORE_SRC_DIR/mdebug.cpp \
 
 contains(DEFINES, HAVE_DBUS) {
   SOURCES += \
@@ -97,4 +98,3 @@ contains(DEFINES, HAVE_GCONF) {
 } else {
     SOURCES += $$CORE_SRC_DIR/mgconfitem_stub.cpp
 }
-

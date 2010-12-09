@@ -141,6 +141,28 @@ bool MSyslogClientSocket::connectToServer(const QUrl &url)
 
 qint64 MSyslogClientSocket::sendMsg(QtMsgType type, const char *msg)
 {
+    // we log to facility 'user' (1)
+    QString syslogMsg = QString("<%1>%2: %3")
+        .arg((1 << 3) + severityMap[type])
+        .arg(syslogId())
+        .arg(msg);
+
+    return m_socket->write(syslogMsg.toUtf8().data());
+}
+
+qint64 MSyslogClientSocket::sendMsg(const char *msg)
+{
+    // we log to facility 'user' (1)
+    QString syslogMsg = QString("<%1>%2: %3")
+        .arg((1 << 3) + severityMap[QtDebugMsg])
+        .arg(syslogId())
+        .arg(msg);
+
+    return m_socket->write(syslogMsg.toUtf8().data());
+}
+
+const QString &MSyslogClientSocket::syslogId()
+{
     // generate identifier
     if (m_syslogId.isEmpty()) {
         if (!MApplication::binaryName().isEmpty()) {
@@ -150,12 +172,5 @@ qint64 MSyslogClientSocket::sendMsg(QtMsgType type, const char *msg)
         }
     }
 
-    // we log to facility 'user' (1)
-    QString syslogMsg = QString("<%1>%2: %3")
-        .arg((1 << 3) + severityMap[type])
-        .arg(m_syslogId)
-        .arg(msg);
-
-    return m_socket->write(syslogMsg.toUtf8().data());
+    return m_syslogId;
 }
-

@@ -33,9 +33,14 @@ class MSyslogClientSocket
         virtual ~MSyslogClientSocket();
         bool connectToServer(const QUrl &url);
         void close();
+
         qint64 sendMsg(QtMsgType type, const char * data);
+        qint64 sendMsg(const char * data);
+
+        const QString &syslogId();
 
     private:
+
         QMap<QtMsgType, int> severityMap;
         QIODevice * m_socket;
         QString m_syslogId;
