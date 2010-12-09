@@ -12,6 +12,7 @@ empty :=
 space := $(empty) $(empty)
 
 MAKEDOCS = 1
+MAKEDEMOS = 1
 
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
     INSTALL_PROGRAM += -s
@@ -53,6 +54,23 @@ endif
 # Disable building of demos by setting DEB_BUILD_OPTION=nodemos,...
 ifneq (,$(filter nodemos,$(TMP_BUILD_OPTS)))
     OPTIONS += -nomake demos
+    EXCLUSIONS += --no-package=meegotouch-demos
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-dbg
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-tests
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-engineering-english
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-ar
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-de
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-en
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-fi
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-hu
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-ur
+    EXCLUSIONS += --no-package=meegotouch-demos-widgetsgallery-l10n-zh-cn
+    EXCLUSIONS += --no-package=meegotouch-demos-applicationextension
+    EXCLUSIONS += --no-package=meegotouch-demos-applicationextension-dbg
+    EXCLUSIONS += --no-package=meegotouch-demos-appletinstallationsource
+    EXCLUSIONS += --no-package=meegotouch-demos-appletinstallationsource-dbg
+    MAKEDEMOS = 0
 endif
 
 # When doing official releases, set TESTABILITY to off. Defaults to on now
@@ -66,6 +84,8 @@ ifeq (,$(findstring minimal,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -make "tests benchmarks examples"
 else
      OPTIONS += -minimal
+     EXCLUSIONS += --no-package=meegotouch-examples
+     EXCLUSIONS += --no-package=meegotouch-examples-dbg
      MAKEDOCS = 0
 endif
 
@@ -118,7 +138,7 @@ ifeq (,$(filter maemo5,$(TMP_BUILD_OPTS))) #fremantle debhelper is older..
 else
 	dh_clean -k
 endif
-	dh_installdirs
+	dh_installdirs $(EXCLUSIONS)
 
 	# Add here commands to install the package into debian/tmp
 
@@ -129,8 +149,9 @@ endif
 
 	cd $(BUILD_DIR) && INSTALL_ROOT=$(CURDIR)/debian/tmp GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 make $(PARALLEL_MAKEFLAGS) install
 
+ifneq (0,$(MAKEDEMOS))
 	install -m 644 -D -p $(BUILD_DIR)/demos/widgetsgallery/translations/widgetsgallery.ts $(CURDIR)/debian/tmp/usr/share/doc/meegotouch-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts
-
+endif
 	install -m 644 -D -p $(BUILD_DIR)/src/translations/libmeegotouch.ts $(CURDIR)/debian/tmp/usr/share/doc/libmeegotouch-l10n-engineering-english/libmeegotouch.ts
 
 # Build architecture-independent files here.
@@ -139,33 +160,35 @@ binary-indep: build install
 
 # Build architecture-dependent files here.
 binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-	dh_install --sourcedir=debian/tmp -v
+	dh_testdir $(EXCLUSIONS)
+	dh_testroot $(EXCLUSIONS)
+	dh_installchangelogs $(EXCLUSIONS)
+	dh_installdocs $(EXCLUSIONS)
+	dh_install --sourcedir=debian/tmp $(EXCLUSIONS) -v
 	# print warnings for not installed files
-	dh_install --sourcedir=debian/tmp/ --list-missing
-	dh_link
+	dh_install --sourcedir=debian/tmp/ $(EXCLUSIONS) --list-missing
+	dh_link $(EXCLUSIONS)
 	dh_strip -p libmeegotouchcore0 --dbg-package=libmeegotouchcore0
 	dh_strip -p libmeegotouchextensions0 --dbg-package=libmeegotouchextensions0
 	dh_strip -p libmeegotouchsettings0 --dbg-package=libmeegotouchsettings0
 	dh_strip -p libmeegotouchviews0 --dbg-package=libmeegotouchviews0
 	dh_strip -p libmeegotouch-bin --dbg-package=libmeegotouch-bin
 	dh_strip -p meegotouch-dev-tools --dbg-package=meegotouch-dev-tools
+	dh_strip -p libmeegotouch-tests --dbg-package=libmeegotouch-tests
+	dh_strip -p libmeegotouch-benchmarks --dbg-package=libmeegotouch-benchmarks
+ifneq (0,$(MAKEDEMOS))
 	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery
 	dh_strip -p meegotouch-demos-appletinstallationsource --dbg-package=meegotouch-demos-appletinstallationsource
 	dh_strip -p meegotouch-demos-applicationextension --dbg-package=meegotouch-demos-applicationextension
-	dh_strip -p libmeegotouch-tests --dbg-package=libmeegotouch-tests
-	dh_strip -p libmeegotouch-benchmarks --dbg-package=libmeegotouch-benchmarks
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps -V
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb --destdir=$(DEBDIR)
+endif
+	dh_compress $(EXCLUSIONS)
+	dh_fixperms $(EXCLUSIONS)
+	dh_makeshlibs $(EXCLUSIONS)
+	dh_installdeb $(EXCLUSIONS)
+	dh_shlibdeps $(EXCLUSIONS) -V
+	dh_gencontrol $(EXCLUSIONS)
+	dh_md5sums $(EXCLUSIONS)
+	dh_builddeb --destdir=$(DEBDIR) $(EXCLUSIONS)
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure
