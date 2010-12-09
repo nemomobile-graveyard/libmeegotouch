@@ -327,7 +327,11 @@ public Q_SLOTS:
 
       If the MContentItem is used outside MList, the user needs to
       invoke item->grabGesture(Qt::TapAndHoldGesture) to start
-      receiving longTapped() signal.
+      receiving longTapped() signal. You might also be interested in
+      using cancel event with that gesture, please see also
+      MWidget::grabGestureWithCancelPolicy() method.
+
+      \sa MWidget::grabGestureWithCancelPolicy.
     */
     void longTap(const QPointF &pos);
 

@@ -341,7 +341,7 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     }
 }
 
-void MWidget::grabGesture(Qt::GestureType type, Qt::GestureFlags flags, MouseEventCancelPolicy cancelPolicy)
+void MWidget::grabGestureWithCancelPolicy(Qt::GestureType type, Qt::GestureFlags flags, MouseEventCancelPolicy cancelPolicy)
 {
     Q_D(MWidget);
     QGraphicsWidget::grabGesture(type, flags);

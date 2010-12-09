@@ -37,7 +37,7 @@ void MListItemPrivate::updateLongTapConnections()
 {
     Q_Q(MListItem);
     if (q->receivers(SIGNAL(longTapped(QPointF))) > 0)
-        q->grabGesture(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureFinished);
+        q->grabGestureWithCancelPolicy(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureFinished);
     else
         q->ungrabGesture(Qt::TapAndHoldGesture);
 }

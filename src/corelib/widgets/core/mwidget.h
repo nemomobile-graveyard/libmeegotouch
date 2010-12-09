@@ -124,7 +124,7 @@ public:
      * \li MouseEventCancelOnGestureFinished - the cancel event will be sent when
      *     a gesture is being finished and was accepted by this widget.
      *
-     * \sa grabGesture.
+     * \sa grabGestureWithCancelPolicy.
      */
     enum MouseEventCancelPolicy {
         MouseEventNoCancel,
@@ -151,7 +151,7 @@ public:
 
      \sa MouseEventCancelPolicy
      */
-    void grabGesture(Qt::GestureType type, Qt::GestureFlags flags = Qt::GestureFlags(), MouseEventCancelPolicy cancelPolicy = MouseEventNoCancel);
+    void grabGestureWithCancelPolicy(Qt::GestureType type, Qt::GestureFlags flags = Qt::GestureFlags(), MouseEventCancelPolicy cancelPolicy = MouseEventNoCancel);
 
     /*! \reimp
      *   We reimplement these to distinguish between the user hiding items
