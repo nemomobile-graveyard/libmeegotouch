@@ -1895,12 +1895,20 @@ double MLocale::toDouble(const QString &s, bool *ok) const
     }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    icu::DecimalFormat *decimalFormat
+        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
+    const icu::DecimalFormatSymbols *decimalFormatSymbols
+        = decimalFormat->getDecimalFormatSymbols();
+    QString exponentialSymbol
+        = MIcuConversions::unicodeStringToQString(
+            decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
+    QString parseInput = s;
+    // parse the exponential symbol in the input case insensitive:
+    parseInput.replace(exponentialSymbol, exponentialSymbol, Qt::CaseInsensitive);
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
     double result;
-    icu::DecimalFormat *decimalFormat
-        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
     if (decimalFormat->isParseIntegerOnly()) {
         decimalFormat->setParseIntegerOnly(false);
         decimalFormat->parse(str, formattable, parsePosition);
@@ -1956,12 +1964,20 @@ float MLocale::toFloat(const QString &s, bool *ok) const
     }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    icu::DecimalFormat *decimalFormat
+        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
+    const icu::DecimalFormatSymbols *decimalFormatSymbols
+        = decimalFormat->getDecimalFormatSymbols();
+    QString exponentialSymbol
+        = MIcuConversions::unicodeStringToQString(
+            decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
+    QString parseInput = s;
+    // parse the exponential symbol in the input case insensitive:
+    parseInput.replace(exponentialSymbol, exponentialSymbol, Qt::CaseInsensitive);
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
     double result;
-    icu::DecimalFormat *decimalFormat
-        = static_cast<icu::DecimalFormat *>(d->_numberFormat);
     if (decimalFormat->isParseIntegerOnly()) {
         decimalFormat->setParseIntegerOnly(false);
         decimalFormat->parse(str, formattable, parsePosition);

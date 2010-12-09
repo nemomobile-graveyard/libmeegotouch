@@ -1192,6 +1192,157 @@ void Ft_Numbers::testToDouble_data()
         << true
         << double(1234567.1234567)
         << QString("1,234,567.1234567");
+    QTest::newRow("en_GB f4")
+        << QString("en_GB")
+        << QString("f4")
+        << false
+        << double(0)
+        << QString("0");
+
+    QTest::newRow("en_GB 4f")
+        << QString("en_GB")
+        << QString("4f")
+        << false
+        << double(0)
+        << QString("0");
+
+    QTest::newRow("en_GB 1E+9")
+        << QString("en_GB")
+        << QString("1E+9")
+        << true
+        << double(1.0E+9)
+        << QString("1,000,000,000");
+
+    if (icuPackageVersion < "4.4.2-0maemo3") {
+        qDebug() << "NB#206085 not yet fixed, some exponents parsed wrong.";
+        QTest::newRow("en_GB 1E+10")
+            << QString("en_GB")
+            << QString("1E+10")
+            << true
+            << double(0)
+            << QString("0");
+    }
+    else {
+        qDebug() << "NB#206085 fixed, exponent parsing corrected.";
+        QTest::newRow("en_GB 1E+10")
+            << QString("en_GB")
+            << QString("1E+10")
+            << true
+            << double(1.0E+10)
+            << QString("10,000,000,000");
+
+        QTest::newRow("en_GB 1E+10")
+            << QString("en_GB")
+            << QString("1E+10")
+            << true // exponential symbol is case insensitive now.
+            << double(1E+10)
+            << QString("10,000,000,000");
+
+        QTest::newRow("en_GB 1e+10")
+            << QString("en_GB")
+            << QString("1e+10")
+            << true // exponential symbol is case insensitive now.
+            << double(1e+10)
+            << QString("10,000,000,000");
+
+        QTest::newRow("el_GR 1E+10")
+            << QString("el_GR")
+            << QString("1E+10")
+            << true // exponential symbol is case insensitive now.
+            << double(1e+10)
+            << QString("10.000.000.000");
+
+        QTest::newRow("el_GR 1e+10")
+            << QString("el_GR")
+            << QString("1e+10")
+            << true // exponential symbol is case insensitive now.
+            << double(1E+10)
+            << QString("10.000.000.000");
+
+        QTest::newRow("sv_SE 1E+10")
+            << QString("sv_SE")
+            << QString("1E+10")
+            << false // OK not to parse this in Swedish?
+            << double(0)
+            << QString("0");
+
+        QTest::newRow("sv_SE 1e+10")
+            << QString("sv_SE")
+            << QString("1e+10")
+            << false // OK not to parse this in Swedish?
+            << double(0)
+            << QString("0");
+
+        QTest::newRow("sv_SE 1×10^10")
+            << QString("sv_SE")
+            << QString("1×10^10")
+            << true
+            << double(1E+10)
+            << QString("10 000 000 000");
+
+        QTest::newRow("ar_SA ١اس+١٠") // ar_SA does not use thousands separators
+            << QString("ar_SA")
+            << QString("١اس+١٠")
+            << true
+            << double(1E+10)
+             << QString("١٠٠٠٠٠٠٠٠٠٠");
+
+        QTest::newRow("ar_SA ١٠٠٠") // ar_SA does not use thousands separators
+            << QString("ar_SA")
+            << QString("١٠٠٠")
+            << true
+            << double(1000.0)
+             << QString("١٠٠٠");
+
+        QTest::newRow("ar_SA ١٬٠٠٠") // ar_SA does not use thousands separators
+            << QString("ar_SA")
+            << QString("١٬٠٠٠")
+            << false
+            << double(0.0)
+            << QString("٠");
+
+        QTest::newRow("ar_EG ١اس+١٠") // ar_EG does not use thousands separators
+            << QString("ar_EG")
+            << QString("١اس+١٠")
+            << true
+            << double(1E+10)
+            << QString("١٠٬٠٠٠٬٠٠٠٬٠٠٠");
+
+        QTest::newRow("ar_EG ١٠٠٠") // ar_EG does not use thousands separators
+            << QString("ar_EG")
+            << QString("١٠٠٠")
+            << true
+            << double(1000.0)
+            << QString("١٬٠٠٠");
+
+        QTest::newRow("ar_EG ١٬٠٠٠") // ar_EG does not use thousands separators
+            << QString("ar_EG")
+            << QString("١٬٠٠٠")
+            << true
+            << double(1000.0)
+            << QString("١٬٠٠٠");
+
+        QTest::newRow("fa_IR ١×۱۰^١۰")
+            << QString("fa_IR")
+            << QString("۱×۱۰^۱۰")
+            << true
+            << double(1E+10)
+            << QString("۱۰٬۰۰۰٬۰۰۰٬۰۰۰");
+
+        QTest::newRow("fa_IR ۱۰۰۰")
+            << QString("fa_IR")
+            << QString("۱۰۰۰")
+            << true
+            << double(1000.0)
+            << QString("۱٬۰۰۰");
+
+        QTest::newRow("fa_IR ۱٬۰۰۰")
+            << QString("fa_IR")
+            << QString("۱٬۰۰۰")
+            << true
+            << double(1000.0)
+            << QString("۱٬۰۰۰");
+    }
 
     QTest::newRow("de_DE 1234.56")
         << QString("de_DE")
@@ -1652,28 +1803,28 @@ void Ft_Numbers::testToFloat_data()
         QTest::newRow("en_GB 1E+10")
             << QString("en_GB")
             << QString("1E+10")
-            << true // should this really be case sensitive??
+            << true // exponential symbol is case insensitive now.
             << float(1E+10)
             << QString("10,000,000,000");
 
         QTest::newRow("en_GB 1e+10")
             << QString("en_GB")
             << QString("1e+10")
-            << false // should this really be case sensitive??
-            << float(0)
-            << QString("0");
+            << true // exponential symbol is case insensitive now.
+            << float(1e+10)
+            << QString("10,000,000,000");
 
         QTest::newRow("el_GR 1E+10")
             << QString("el_GR")
             << QString("1E+10")
-            << false // should this really be case sensitive??
-            << float(0)
-            << QString("0");
+            << true // exponential symbol is case insensitive now.
+            << float(1e+10)
+            << QString("10.000.000.000");
 
         QTest::newRow("el_GR 1e+10")
             << QString("el_GR")
             << QString("1e+10")
-            << true // should this really be case sensitive??
+            << true // exponential symbol is case insensitive now.
             << float(1E+10)
             << QString("10.000.000.000");
 
