@@ -350,6 +350,7 @@ void MProgressIndicatorBarViewPrivate::createBarImages()
 
     // draw the right end
     rightEndImage = QImage(rightEndRect.size(), QImage::Format_ARGB32);
+    rightEndImage.fill(0);
 
     if (painter.begin(&rightEndImage)) {
         drawTexture(&painter, rightEndRect);
@@ -361,6 +362,7 @@ void MProgressIndicatorBarViewPrivate::createBarImages()
 
     // draw the left end
     leftEndImage = QImage(leftEndRect.size(), QImage::Format_ARGB32);
+    leftEndImage.fill(0);
 
     if (painter.begin(&leftEndImage)) {
         drawTexture(&painter, leftEndRect);
