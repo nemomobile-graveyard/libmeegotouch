@@ -481,12 +481,18 @@ void MListViewPrivate::updateSeparatorSize()
 
 void MListViewPrivate::updateFirstVisibleRow(const QModelIndex &index)
 {
-    controllerModel->setFirstVisibleItem(index);
+    if (isDeleted)
+        return;
+
+    q_ptr->model()->setFirstVisibleItem(index);
 }
 
 void MListViewPrivate::updateLastVisibleRow(const QModelIndex &index)
 {
-    controllerModel->setLastVisibleItem(index);
+    if (isDeleted)
+        return;
+
+    q_ptr->model()->setLastVisibleItem(index);
 }
 
 void MListViewPrivate::createVisibleItems()
