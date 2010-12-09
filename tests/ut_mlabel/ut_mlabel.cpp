@@ -934,9 +934,11 @@ void Ut_MLabel::rightBearing()
     QImage f_image = captureImage(label);
     label->setText("ff");
     QImage ff_image = captureImage(label);
-    //label mustn't be wrapped, so height must be the same
-    QVERIFY(contentHeight(f_image) == contentHeight(ff_image));
-
+    //Check that the "ff" label is not wrapped by comparing its height
+    //with the minimum height needed to put f's in two lines (the real height
+    //needed is more than 2 * contentHeight(f_image), because of the space
+    //between lines, so this test is more restrictive)
+    QVERIFY(contentHeight(ff_image) < 2 * contentHeight(f_image));
 }
 
 void Ut_MLabel::testTextFormat()
