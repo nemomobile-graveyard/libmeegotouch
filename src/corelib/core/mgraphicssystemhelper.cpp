@@ -126,15 +126,11 @@ void MGraphicsSystemHelper::switchToSoftwareRendering(MWindow *window)
 #ifdef QT_OPENGL_LIB
 void MGraphicsSystemHelper::switchToHardwareRendering(MWindow *window, QGLContext **glContext)
 {
-    bool translucent = window->testAttribute(Qt::WA_TranslucentBackground);
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
     if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() != QLatin1String("native")) {
         mDebug("MGraphicsSystemHelper") << "hardware rendering with meego enabled";
         if (!QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
             QMeeGoGraphicsSystemHelper::switchToMeeGo();
-        }
-        if (translucent) {
-            QMeeGoGraphicsSystemHelper::setTranslucent(true);
         }
         *glContext = const_cast<QGLContext*>(QGLContext::currentContext());
     } else
@@ -149,6 +145,7 @@ void MGraphicsSystemHelper::switchToHardwareRendering(MWindow *window, QGLContex
         // a crash.
         // This QGLWidget is owned by the viewport so previous one
         // actually gets deleted if we overwrite it with a new one
+        bool translucent = window->testAttribute(Qt::WA_TranslucentBackground);
         if (translucent) {
             QGLFormat fmt;
             // disable multisampling, is enabled by default in Qt
