@@ -49,9 +49,9 @@ MApplicationPrivate::MApplicationPrivate():
         xDamageErrorBase(0),
         q_ptr(NULL)
 {
-#ifdef HAVE_XDAMAGE
+#if defined(HAVE_XDAMAGE) && defined(Q_WS_X11)
     XDamageQueryExtension(QX11Info::display(), &xDamageEventBase, &xDamageErrorBase);
-#endif //HAVE_XDAMAGE
+#endif //HAVE_XDAMAGE && Q_WS_X11
 
 #ifdef Q_WS_X11
     visibleAtom = XInternAtom(QX11Info::display(),

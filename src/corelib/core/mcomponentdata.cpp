@@ -984,13 +984,13 @@ void MComponentData::setShowCursor(bool show)
     }
 
     if (show) {
-#ifdef HAVE_XFIXES
+#if defined(HAVE_XFIXES) && defined(Q_WS_X11)
         XFixesShowCursor(QX11Info::display(), QX11Info::appRootWindow());
 #else
         qApp->restoreOverrideCursor();
 #endif
     } else {
-#ifdef HAVE_XFIXES
+#if defined(HAVE_XFIXES) && defined(Q_WS_X11)
         XFixesHideCursor(QX11Info::display(), QX11Info::appRootWindow());
 #else
         QPixmap cursor(QSize(1, 1));
