@@ -69,6 +69,13 @@ public:
     //! Returns point size in pixels using floating point precision on this device.
     qreal ptToPixelsF(qreal pt);
 
+    //! Returns the result of pixels to points conversion
+    int pixelsToPt(int pixels);
+    
+    //! Returns the result of pixels to points conversion
+    qreal pixelsToPtF(qreal pixels);
+
+
 protected:
     MDeviceProfilePrivate *const d_ptr;
 

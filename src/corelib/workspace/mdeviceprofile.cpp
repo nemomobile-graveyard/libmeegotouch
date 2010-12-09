@@ -273,3 +273,16 @@ qreal MDeviceProfile::ptToPixelsF(qreal pt)
     Q_D(const MDeviceProfile);
     return pt * d->pixelsPerPtF;
 }
+
+int MDeviceProfile::pixelsToPt(int pixels)
+{
+    Q_D(const MDeviceProfile);
+    return pixels / d->pixelsPerPt;
+}
+
+qreal MDeviceProfile::pixelsToPtF(qreal pixels)
+{
+    Q_D(const MDeviceProfile);
+    return pixels / d->pixelsPerPtF;
+}
+
