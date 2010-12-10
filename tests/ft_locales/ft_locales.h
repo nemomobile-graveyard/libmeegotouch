@@ -60,6 +60,7 @@ private slots:
     void init();
     void cleanup();
 
+    void testBug210881();
     void testBug169305();
     void testSettingsChanged();
     void testMLocaleConstructor();

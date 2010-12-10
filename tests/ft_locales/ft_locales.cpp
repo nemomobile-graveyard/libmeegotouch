@@ -44,6 +44,19 @@ void Ft_Locales::cleanup()
 {
 }
 
+void Ft_Locales::testBug210881()
+{
+    // see
+    // https://projects.maemo.org/bugzilla/show_bug.cgi?id=210881
+    MLocale locale;
+    MLocale locale1;
+    locale1.formatDateTime(QDateTime(),
+                           MLocale::DateFull, MLocale::TimeFull,
+                           MLocale::GregorianCalendar);
+    locale1 = locale;
+    locale1 = locale;
+}
+
 void Ft_Locales::testBug169305()
 {
     // see
