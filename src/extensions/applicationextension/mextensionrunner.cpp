@@ -64,6 +64,9 @@
 #ifdef QT_OPENGL_LIB
 #include <QGLWidget>
 #endif
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#include "contextproperty.h"
+#endif
 
 #include <typeinfo>
 
@@ -101,6 +104,10 @@ MExtensionRunner::MExtensionRunner() :
     widget(NULL),
     scene(NULL),
     view(NULL),
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    screenBlankProperty(new ContextProperty("Session.State", this)),
+#endif
+    displayBlanked(false),
 #ifdef QT_OPENGL_LIB
     context(NULL),
 #endif
@@ -113,6 +120,9 @@ MExtensionRunner::MExtensionRunner() :
     connect(communicator, SIGNAL(messageReceived(MAppletMessage)), this, SLOT(messageReceived(MAppletMessage)));
     connect(aliveTimer, SIGNAL(timeout()), this, SLOT(hostProcessNotAlive()));
     connect(communicator, SIGNAL(connectionLost()), this, SLOT(hostProcessNotAlive()));
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    connect(screenBlankProperty, SIGNAL(valueChanged()), this, SLOT(updateDisplayState()));
+#endif
 }
 
 MExtensionRunner::~MExtensionRunner()
@@ -170,6 +180,24 @@ bool MExtensionRunner::init(const QString &serverName)
     return true;
 }
 
+void MExtensionRunner::updateDisplayState()
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    bool blanked = screenBlankProperty->value().toString() == "blanked";
+
+    if(displayBlanked != blanked) {
+        displayBlanked = blanked;
+
+        if(blanked) {
+            aliveTimer->stop();
+        } else {
+            aliveTimer->start(ALIVE_TIMER_TIMEOUT);
+        }
+    }
+#endif
+}
+
+
 void MExtensionRunner::teardown()
 {
     delete scene;
@@ -193,7 +221,9 @@ void MExtensionRunner::messageReceived(const MAppletMessage &message)
     }
 
     aliveTimer->stop();
-    aliveTimer->start(ALIVE_TIMER_TIMEOUT);
+    if(!displayBlanked) {
+        aliveTimer->start(ALIVE_TIMER_TIMEOUT);
+    }
 
     switch (message.type()) {
     case MAppletMessage::MousePressMessage:

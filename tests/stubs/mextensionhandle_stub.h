@@ -63,6 +63,7 @@ class MExtensionHandleStub : public StubBase {
   virtual void remoteActionTriggered();
   virtual void setBrokenState();
   virtual void displayContextMenu(QList<QString> actions);
+  virtual void updateDisplayState();
 };
 
 // 2. IMPLEMENT STUB
@@ -93,6 +94,10 @@ void MExtensionHandleStub::kill() {
 
 void MExtensionHandleStub::reinit() {
   stubMethodEntered("reinit");
+}
+
+void MExtensionHandleStub::updateDisplayState() {
+  stubMethodEntered("updateDisplayState");
 }
 
 void MExtensionHandleStub::setAliveResponseTimeout(uint timeout) {
@@ -394,5 +399,8 @@ void MExtensionHandle::displayContextMenu(QList<QString> actions) {
   gMExtensionHandleStub->displayContextMenu(actions);
 }
 
+void MExtensionHandle::updateDisplayState() {
+  gMExtensionHandleStub->updateDisplayState();
+}
 
 #endif

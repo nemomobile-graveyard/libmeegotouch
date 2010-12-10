@@ -6,6 +6,11 @@ INCLUDEPATH += \
     $$MSRCDIR/corelib/style
 QT += xml
 
+contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += contextsubscriber-1.0
+}
+        
 MODEL_HEADERS += \
     $$MSRCDIR/corelib/widgets/mwidgetmodel.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandlemodel.h \

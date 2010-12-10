@@ -41,8 +41,21 @@
 #include <QtTest/QtTest>
 #include <QGraphicsLinearLayout>
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#include "contextproperty.h"
+#endif
+
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
+#endif
+
+// ContextProperty stubs
+#ifdef HAVE_CONTEXTSUBSCRIBER
+QString gContextPropertyValue = "";
+QVariant ContextProperty::value() const
+{
+    return gContextPropertyValue;
+}
 #endif
 
 // MWindow stubs (to prevent crashing)
@@ -56,11 +69,26 @@ MWindow::~MWindow()
 }
 
 // QTimer stubs (used by MExtensionRunner)
-void QTimer::start(int)
+QList<QTimer*> gQTimerStartCalls;
+void QTimer::start()
 {
+    gQTimerStartCalls.append(this);
+    id = 1;
     if (Ut_MExtensionRunner::timerImmediateTimeout) {
         emit timeout();
     }
+}
+
+void QTimer::start(int)
+{
+    start();
+}
+
+QList<QTimer*> gQTimerStopCalls;
+void QTimer::stop()
+{
+    gQTimerStopCalls.append(this);
+    id = -1;
 }
 
 // QCoreApplication stubs (used by MExtensionRunner)
@@ -147,6 +175,8 @@ void Ut_MExtensionRunner::init()
     connect(this, SIGNAL(sendMessage(MAppletMessage)), m_instance, SLOT(messageReceived(MAppletMessage)));
 
     timerImmediateTimeout = false;
+    gQTimerStartCalls.clear();
+    gQTimerStopCalls.clear();
     quitCalled = false;
     gMAppletSharedMutexStub->stubReset();
     gMAppletSharedMutexStub->stubSetReturnValue("init", true);
@@ -159,6 +189,10 @@ void Ut_MExtensionRunner::init()
     MAppletCommunicator_sentUpdateGeometryMessageSizeHints = QVector<QSizeF>(Qt::NSizeHints);
     sceneRenderCalled = false;
     gMAppletSettingsStub->stubReset();
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    gContextPropertyValue = "";
+#endif
 }
 
 void Ut_MExtensionRunner::cleanup()
@@ -485,5 +519,23 @@ void Ut_MExtensionRunner::testObjectMenuRequestMessageGetsPropagated()
     QCOMPARE(MAppletCommunicator_sentObjectMenuActionList.size(), 1);
     QCOMPARE(MAppletCommunicator_sentObjectMenuActionList.at(0), QString("correct_action"));
 }
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void Ut_MExtensionRunner::testWhenDisplayBlankedThenAliveCheckingStops()
+{
+    gContextPropertyValue = "blanked";
+    gQTimerStopCalls.clear();
+    m_instance->updateDisplayState();
+    QVERIFY(qFind(gQTimerStopCalls, m_instance->aliveTimer) != gQTimerStopCalls.end());
+
+    gQTimerStartCalls.clear();
+    m_instance->messageReceived(MAppletAliveMessageRequest());
+    QCOMPARE(gQTimerStartCalls.count(), 0);
+
+    gContextPropertyValue = "";
+    m_instance->updateDisplayState();
+    QVERIFY(qFind(gQTimerStartCalls, m_instance->aliveTimer) != gQTimerStartCalls.end());
+}
+#endif
 
 QTEST_MAIN(Ut_MExtensionRunner)

@@ -1,6 +1,7 @@
 libmeegotouch (0.20.65~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#208330 - meegotouchhome process causing high wakeups when device is in idle state
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 08 Dec 2010 15:56:30 +0200
 

@@ -91,6 +91,9 @@ private slots:
     void testInstallationOperationCompleteWithError();
     void testAppletInstallationProgess();
     void testSetSizeHints();
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    void testWhenDisplayBlankedThenAliveCheckingStops();
+#endif
 
 signals:
     void messageReceived(const MAppletMessage &message);

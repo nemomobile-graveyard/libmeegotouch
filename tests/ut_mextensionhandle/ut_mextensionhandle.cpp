@@ -55,6 +55,10 @@
 #include <mappletid_stub.h>
 #include <mscenemanager.h>
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#include "contextproperty.h"
+#endif
+
 MApplication *app;
 
 bool visibility;
@@ -73,6 +77,15 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 {
     Ut_MExtensionHandle::contextMenuOpened = true;
 }
+
+// ContextProperty stubs
+#ifdef HAVE_CONTEXTSUBSCRIBER
+QString gContextPropertyValue = "";
+QVariant ContextProperty::value() const
+{
+    return gContextPropertyValue;
+}
+#endif
 
 // MSceneManager stubs (used by MExtensionHandle)
 void MSceneManager::appearSceneWindow(MSceneWindow *, MSceneWindow::DeletionPolicy)
@@ -163,11 +176,26 @@ bool MAppletCommunicator::sendMessage(const MAppletMessage &message)
 }
 
 // QTimer stubs
-bool timerCalled = false;
+QList<QTimer*> gQTimerStartCalls;
+void QTimer::start()
+{
+    gQTimerStartCalls.append(this);
+    id = 1;
+}
+
+void QTimer::start(int)
+{
+    start();
+}
+
+bool gQTimerStopCalled = false;
+QList<QTimer*> gQTimerStopCalls;
 
 void QTimer::stop()
 {
-    timerCalled = true;
+    gQTimerStopCalled = true;
+    gQTimerStopCalls.append(this);
+    id = -1;
 }
 
 int elapsedQTime = 0;
@@ -234,7 +262,13 @@ void Ut_MExtensionHandle::init()
 
     listenForConnection = true;
     elapsedQTime = 0;
-    timerCalled = false;
+    gQTimerStartCalls.clear();
+    gQTimerStopCalled = false;
+    gQTimerStopCalls.clear();
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    gContextPropertyValue = "";
+#endif
 
     gStartQProcess = true;
 
@@ -405,7 +439,7 @@ void Ut_MExtensionHandle::testAppletCommunication()
     handle->init("/bin/true", "metaDataFileName");
     MAppletAliveMessageResponse message;
     handle->messageReceivedFromRunner(message);
-    QCOMPARE(timerCalled, true);
+    QCOMPARE(gQTimerStopCalled, true);
 }
 
 void Ut_MExtensionHandle::testRelayingMousePress()
@@ -643,5 +677,28 @@ void Ut_MExtensionHandle::testSetSizeHints()
     handle->setSizeHints(sizeHints);
     QCOMPARE(handle->model()->sizeHints(), sizeHints);
 }
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void Ut_MExtensionHandle::testWhenDisplayBlankedThenAliveCheckingStops()
+{
+    handle->init("/bin/true", "metaDataFileName");
+    emit connectionFromRunnerEstablished();
+    QVERIFY(qFind(gQTimerStartCalls, &handle->privateClass()->aliveTimer) != gQTimerStartCalls.end());
+    QVERIFY(qFind(gQTimerStartCalls, &handle->privateClass()->communicationTimer) != gQTimerStartCalls.end());
+
+    gContextPropertyValue = "blanked";
+    gQTimerStopCalls.clear();
+    handle->updateDisplayState();
+    QVERIFY(qFind(gQTimerStopCalls, &handle->privateClass()->aliveTimer) != gQTimerStopCalls.end());
+    QVERIFY(qFind(gQTimerStopCalls, &handle->privateClass()->communicationTimer) != gQTimerStopCalls.end());
+
+    gContextPropertyValue = "";
+    gQTimerStartCalls.clear();
+    handle->updateDisplayState();
+    QVERIFY(qFind(gQTimerStartCalls, &handle->privateClass()->aliveTimer) != gQTimerStartCalls.end());
+    QVERIFY(qFind(gQTimerStartCalls, &handle->privateClass()->communicationTimer) != gQTimerStartCalls.end());
+}
+#endif
+
 
 QTEST_APPLESS_MAIN(Ut_MExtensionHandle)

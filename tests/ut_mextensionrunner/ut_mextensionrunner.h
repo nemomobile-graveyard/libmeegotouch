@@ -76,6 +76,9 @@ private slots:
     void testSceneChanged();
     void testObjectMenuRequestMessage();
     void testObjectMenuRequestMessageGetsPropagated();
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    void testWhenDisplayBlankedThenAliveCheckingStops();
+#endif
 
 signals:
     void sendMessage(const MAppletMessage &message);

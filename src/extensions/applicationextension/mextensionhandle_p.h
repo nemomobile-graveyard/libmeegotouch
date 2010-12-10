@@ -30,6 +30,10 @@
 
 class MAction;
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+class ContextProperty;
+#endif
+
 /*!
  * A private data class for MExtensionHandle.
  */
@@ -90,6 +94,11 @@ public:
 
     //! A list of remote actions
     QList<MAction *> remoteActions;
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    //! Context property for getting the screen blanking status
+    ContextProperty *screenBlankProperty;
+#endif
 
     //! D-Bus service of the Package Manager
     static const QString PACKAGE_MANAGER_DBUS_SERVICE;

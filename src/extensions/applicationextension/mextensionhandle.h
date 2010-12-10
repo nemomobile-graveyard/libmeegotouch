@@ -242,6 +242,11 @@ protected slots:
      */
     void remoteActionTriggered();
 
+    /*!
+     * \brief Stops or starts the alive timer depending on the display blanking state
+     */
+    void updateDisplayState();
+
 signals:
     /*!
      * \brief Signals that a pixmap has been taken into use by the runner
@@ -255,6 +260,9 @@ signals:
 
 private:
     Q_DECLARE_PRIVATE(MExtensionHandle)
+
+    //! Initializes the object
+    void initialize();
 
     //! Sets the state to BROKEN and restarts if this is the first time
     void setBrokenState();

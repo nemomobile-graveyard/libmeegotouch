@@ -42,6 +42,9 @@ class QAction;
 #ifdef QT_OPENGL_LIB
 class QGLContext;
 #endif
+#ifdef HAVE_CONTEXTSUBSCRIBER
+class ContextProperty;
+#endif
 
 //! \internal
 /**
@@ -108,6 +111,11 @@ protected slots:
      */
     virtual void hostProcessNotAlive();
 
+    /*!
+     * \brief Stops or starts the alive timer depending on the display blanking state
+     */
+    void updateDisplayState();
+
 protected:
     //! AppletClient for communicating between the runner and the host processes.
     MAppletClient *communicator;
@@ -130,6 +138,14 @@ protected:
 
     //! List to hold object menu actions received from widget.
     QList<QAction *> widgetObjectMenuActions;
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    //! Context property for getting the screen blanking status
+    ContextProperty *screenBlankProperty;
+#endif
+
+    //! True if the display is currently blanked
+    bool displayBlanked;
 
 #ifdef QT_OPENGL_LIB
     //! OpenGL context

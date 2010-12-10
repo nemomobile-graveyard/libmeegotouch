@@ -57,6 +57,10 @@
 #include <MAction>
 #include <mobjectmenu.h>
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#include "contextproperty.h"
+#endif
+
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MExtensionHandle)
 
@@ -66,12 +70,18 @@ const QString MExtensionHandlePrivate::PACKAGE_MANAGER_DBUS_PATH = "/com/nokia/p
 //! D-Bus interface of the Package Manager
 const QString MExtensionHandlePrivate::PACKAGE_MANAGER_DBUS_INTERFACE = "com.nokia.package_manager";
 
+//! Interval for checking that the extension is alive
+static const uint ALIVE_TIMER_INTERVAL = 5000;
+
 MExtensionHandlePrivate::MExtensionHandlePrivate() :
     restartCount(0),
     aliveResponseTimeout(3000),
     runnerConnectionTimeout(20000),
     applicationVisible(true),
     remoteActions(),
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    screenBlankProperty(new ContextProperty("Session.State", this)),
+#endif
     q_ptr(NULL)
 {
     communicationTimer.setSingleShot(true);
@@ -116,29 +126,20 @@ MExtensionHandle::MExtensionHandle(QGraphicsItem *parent) :
     MWidgetController(new MExtensionHandleModel, parent),
     d_ptr(new MExtensionHandlePrivate())
 {
-    Q_D(MExtensionHandle);
-
-    if (d)
-        d->q_ptr = this;
-
-    // TODO: FIXME - this needs to have the scene specified,
-    // temporarily uses currently active MWindow's scene.
-    connect(MApplication::activeWindow(),
-            SIGNAL(orientationChanged(M::Orientation)),
-            this, SLOT(orientationEvent(M::Orientation)));
-
-    connect(this, SIGNAL(visibleChanged()), this, SLOT(visibilityChanged()));
-
-    // Configure the timers
-    connect(&d->aliveTimer, SIGNAL(timeout()), this, SLOT(sendAliveMessageRequest()));
-    connect(&d->communicationTimer, SIGNAL(timeout()), this, SLOT(communicationTimerTimeout()));
+    initialize();
 }
 
 MExtensionHandle::MExtensionHandle(MExtensionHandlePrivate *dd, MExtensionHandleModel *model, QGraphicsItem *parent) :
     MWidgetController(model, parent),
     d_ptr(dd)
 {
+    initialize();
+}
+
+void MExtensionHandle::initialize()
+{
     Q_D(MExtensionHandle);
+
     if (d)
         d->q_ptr = this;
 
@@ -153,11 +154,34 @@ MExtensionHandle::MExtensionHandle(MExtensionHandlePrivate *dd, MExtensionHandle
     // Configure the timers
     connect(&d->aliveTimer, SIGNAL(timeout()), this, SLOT(sendAliveMessageRequest()));
     connect(&d->communicationTimer, SIGNAL(timeout()), this, SLOT(communicationTimerTimeout()));
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    connect(d->screenBlankProperty, SIGNAL(valueChanged()), this, SLOT(updateDisplayState()));
+#endif
 }
 
 MExtensionHandle::~MExtensionHandle()
 {
     kill();
+}
+
+void MExtensionHandle::updateDisplayState()
+{
+    Q_D(MExtensionHandle);
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if(state() == MExtensionHandleModel::RUNNING) {
+        bool blanked = d->screenBlankProperty->value().toString() == "blanked";
+
+        if(blanked && d->aliveTimer.isActive()) {
+            d->aliveTimer.stop();
+            d->communicationTimer.stop();
+        } else if(!d->aliveTimer.isActive()) {
+            d->aliveTimer.start(ALIVE_TIMER_INTERVAL);
+            sendAliveMessageRequest();
+        }
+    }
+#endif
 }
 
 void MExtensionHandle::initPlaceHolder(const QString &packageName, const QString &installationError)
@@ -279,9 +303,12 @@ void MExtensionHandle::connectionEstablished()
     // Set the state to running
     model()->setCurrentState(MExtensionHandleModel::RUNNING);
 
-    // Send alive request every 5 seconds. Send the first alive request immediately.
-    d->aliveTimer.start(5000);
+    // Send alive requests at certain interval. Send the first alive request immediately.
+    d->aliveTimer.start(ALIVE_TIMER_INTERVAL);
     sendAliveMessageRequest();
+
+    // Set the current display state
+    updateDisplayState();
 
     // Send the visibility changed message to the runner
     d->visibilityChanged();
