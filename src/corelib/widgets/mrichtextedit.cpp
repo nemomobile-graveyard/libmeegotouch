@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <MInputMethodState>
+#include <MDeviceProfile>
 #include "mrichtextedit.h"
 #include "mrichtextedit_p.h"
 #include "mrichtexteditdialogsmanager_p.h"
@@ -145,10 +146,13 @@ void MRichTextEditPrivate::showTextStylingOptions()
 
     q->connect(dialogsManager, SIGNAL(fontFamilySelected(QString)),
                SLOT(_q_setFontFamily(QString)));
+    q->connect(dialogsManager, SIGNAL(fontSizeSelected(int)),
+               SLOT(_q_setFontSize(int)));
 
     QString fontFamily;
+    int fontPointSize = -1;
 
-    textStyleValues(&fontFamily);
+    textStyleValues(&fontFamily, &fontPointSize);
 
     int startPos = -1;
     int endPos  = -1;
@@ -168,19 +172,20 @@ void MRichTextEditPrivate::showTextStylingOptions()
         q->setSelection(startPos, endPos - startPos);
     }
 
-    dialogsManager->showTextStylingDialog(fontFamily);
+    dialogsManager->showTextStylingDialog(fontFamily, fontPointSize);
     q->setFocus();
 
     q->disconnect(dialogsManager, 0, q, 0);
 }
 
 
-void MRichTextEditPrivate::textStyleValues(QString *fontfamily)
+void MRichTextEditPrivate::textStyleValues(QString *fontfamily, int *fontPointSize)
 {
     Q_Q(MRichTextEdit);
 
     QTextCursor textcursor = q->textCursor();
     *fontfamily = textcursor.charFormat().font().family();
+    *fontPointSize = MDeviceProfile::instance()->pixelsToPt(textcursor.charFormat().font().pixelSize());
 
     if (!q->hasSelectedText()) {
         return;
@@ -190,7 +195,9 @@ void MRichTextEditPrivate::textStyleValues(QString *fontfamily)
     int startPos = textcursor.selectionStart();
     int endPos  = textcursor.selectionEnd();
     bool familyDiffers = false;
+    bool sizeDiffers = false;
 
+    int fontPixelSize = textcursor.charFormat().font().pixelSize();
     // Starting from startPos + 1 to get the style that would be used when
     // text is inserted in the positions
     for (int i = startPos + 1; i <= endPos; i++) {
@@ -199,6 +206,15 @@ void MRichTextEditPrivate::textStyleValues(QString *fontfamily)
         if (!familyDiffers && (fontfamily != textcursor.charFormat().font().family())) {
             familyDiffers = true;
             fontfamily->clear();
+        }
+
+        if (!sizeDiffers && (fontPixelSize != textcursor.charFormat().font().pixelSize())) {
+            sizeDiffers = true;
+            *fontPointSize = -1;
+        }
+
+        if (familyDiffers && sizeDiffers) {
+            break;
         }
     }
 }
@@ -214,6 +230,60 @@ void MRichTextEditPrivate::_q_setFontFamily(const QString &fontFamily)
     format.setFontFamily(fontFamily);
     textcursor.mergeCharFormat(format);
     q->setTextCursor(textcursor);
+}
+
+
+void MRichTextEditPrivate::_q_setFontSize(int fontPointSize)
+{
+    Q_Q(MRichTextEdit);
+
+    QTextCursor textcursor = q->textCursor();
+    const bool hasSelectedText = q->hasSelectedText();
+    int pixelSize = MDeviceProfile::instance()->ptToPixels(fontPointSize);
+
+    // Since the QTextCharFormat doesn't have method for setting the font pixel size, updating the
+    // font pixel size using QFont::setPixelSize
+    if (!hasSelectedText) {
+        QTextCharFormat curFormat = textcursor.charFormat();
+        QFont font = curFormat.font();
+        font.setPixelSize(pixelSize);
+
+        // QTextCharFormat::setFontPointSize() is required to retain font size during copy/paste
+        curFormat.setFontPointSize(fontPointSize);
+        curFormat.setFont(font);
+
+        textcursor.setCharFormat(curFormat);
+        q->setTextCursor(textcursor);
+        return;
+    }
+
+    // To avoid losing style, processing each character in the selection individually
+    int startPos = textcursor.selectionStart();
+    int endPos  = textcursor.selectionEnd();
+    for (int i = startPos; i < endPos; i++) {
+        textcursor.setPosition(i);
+        // Setting the char format atBlockEnd applies it to the whole block, it is causing problem when the
+        // block has different styles, just skipping to set there.
+        if (textcursor.atBlockEnd()) {
+            continue;
+        }
+        // Selecting the current character. QTextCharFormat::setCharFormat doesn't applies the
+        // char format to an existing character if it is not selected.
+        textcursor.setPosition(i + 1, QTextCursor::KeepAnchor);
+        QTextCharFormat curFormat = textcursor.charFormat();
+        QFont font = curFormat.font();
+        font.setPixelSize(pixelSize);
+
+        curFormat.setFontPointSize(fontPointSize);
+        curFormat.setFont(font);
+        textcursor.setCharFormat(curFormat);
+    }
+
+    q->setTextCursor(textcursor);
+
+    if (hasSelectedText) {
+        q->setSelection(startPos, endPos - startPos);
+    }
 }
 
 ///////////////////////////////////////////////

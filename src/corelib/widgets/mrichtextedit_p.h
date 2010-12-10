@@ -71,9 +71,11 @@ public:
     /*!
      * \brief gets the current text style values to be shown in the text styling ui
      */
-    void  textStyleValues(QString *fontfamily);
+    void  textStyleValues(QString *fontfamily, int *fontPointSize);
 
     void _q_setFontFamily(const QString &fontFamily);
+
+    void _q_setFontSize(int fontPointSize);
 };
 
 #endif
