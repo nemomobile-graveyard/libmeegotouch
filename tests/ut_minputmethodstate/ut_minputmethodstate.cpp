@@ -104,6 +104,11 @@ void Ut_MInputMethodState::testToolbars()
     // make a modification
     state->setToolbarItemAttribute(id, "itemName", "attributeName", 42);
     QCOMPARE(changeSpy.count(), 1);
+
+    // check that setting value doesn't make signals if value does not change
+    state->setToolbarItemAttribute(id, "itemName", "attributeName", 42);
+    QCOMPARE(changeSpy.count(), 1);
+
     changeSpy.clear();
 
     // another toolbar with one item containing two attributes, and second containing one

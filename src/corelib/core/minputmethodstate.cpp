@@ -175,8 +175,12 @@ void MInputMethodState::setToolbarItemAttribute(int id, const QString &item,
     }
 
     ToolbarInfo *toolbar = d->toolbars[id];
-    toolbar->items[item][attribute] = value;
-    emit toolbarItemAttributeChanged(id, item, attribute, value);
+    bool changed = (value != toolbar->items[item][attribute]);
+
+    if (changed) {
+        toolbar->items[item][attribute] = value;
+        emit toolbarItemAttributeChanged(id, item, attribute, value);
+    }
 }
 
 QString MInputMethodState::toolbar(int id) const
