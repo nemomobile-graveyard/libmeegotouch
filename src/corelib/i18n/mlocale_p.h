@@ -26,7 +26,6 @@
 #include <QStringList>
 #include <QExplicitlySharedDataPointer>
 #include <QLocale>
-#include <QCache>
 
 #ifdef HAVE_ICU
 #include <unicode/datefmt.h>
