@@ -183,7 +183,6 @@ public:
     // number format caching for better performance.
     icu::NumberFormat *_numberFormat;
     icu::NumberFormat *_numberFormatLcTime;
-    mutable QCache<QString, icu::DateFormat> *_dateFormatCache;
 #endif
 
     // translations for two supported translation categories
