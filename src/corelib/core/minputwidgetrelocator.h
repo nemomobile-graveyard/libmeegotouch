@@ -133,6 +133,12 @@ private:
     bool isWidgetRectFullyVisible(const QGraphicsWidget *widget,
                                   const QRect &localRect) const;
 
+    //! If chain contains a dockable widget, dock it and return true.
+    //! Otherwise return false.
+    bool scrollDockedWidget(MScrollChain *chain,
+                            const QGraphicsWidget *inputWidget,
+                            const QRect &microRect);
+
     void centerContextWidgetToAnchorPoint(MScrollChain *newChain,
                                           const QPoint &anchorPoint,
                                           const QGraphicsWidget *inputWidget);
