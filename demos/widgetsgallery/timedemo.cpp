@@ -32,6 +32,7 @@
 #include <QXmlStreamWriter>
 #include <QFile>
 #include <QTimer>
+#include <QDebug>
 
 namespace
 {
@@ -115,11 +116,15 @@ void Timedemo::showFirstPage()
             }
             if (page) {
                 demoPages.append(page);
+            } else {
+                qWarning() << "Did not find a page for" << title;
             }
         }
     }
 
     if (demoPages.count() == 0) {
+        qWarning() << "No valid demopages found.";
+        exit(EXIT_FAILURE);
         return;
     }
 
