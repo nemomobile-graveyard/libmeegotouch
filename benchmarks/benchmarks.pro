@@ -32,6 +32,7 @@ SUBDIRS     = \
  pt_mtheme \
  pt_mtoolbar \
  pt_widgetsgallery \
+ pt_mwidgetcontroller \
 
 contains(DEFINES, HAVE_ICU) {
 SUBDIRS += \
