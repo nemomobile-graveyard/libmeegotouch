@@ -93,12 +93,15 @@ int main(int argc, char **argv)
         return ERROR_APPLICATION_EXTENSION_INIT_FAILED;
     }
 
-    MApplication app(argc, argv, metadata.resourceIdentifier(), new MyApplicationService());
+    MApplication *app = new MApplication(argc, argv, metadata.resourceIdentifier(), new MyApplicationService());
     MApplicationExtensionRunner runner;
     if (!runner.init(argv[1], metadata)) {
         qWarning() << "Application extension initialization failed";
         return ERROR_APPLICATION_EXTENSION_INIT_FAILED;
     }
 
-    return app.exec();
+    int returnValue = app->exec();
+
+    delete app;
+    return returnValue;
 }
