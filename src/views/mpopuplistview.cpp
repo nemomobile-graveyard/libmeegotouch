@@ -29,6 +29,7 @@
 #include "mlinearlayoutpolicy.h"
 
 #include <QGraphicsLinearLayout>
+#include <QIcon>
 
 MPopupListItem::MPopupListItem(QGraphicsItem* parent)
     : MListItem(parent),
@@ -68,17 +69,37 @@ void MPopupListItem::setTitle(const QString &text)
     updateLayout();
 }
 
+MImageWidget* MPopupListItem::iconWidget()
+{
+    if (!icon) {
+        icon = new MImageWidget(this);
+        icon->setStyleName("CommonMainIcon");
+    }
+    return icon;
+}
+
 void MPopupListItem::setIconID(const QString& id)
 {
     if (id.isEmpty()) {
         itemStyle = SingleTitle;
+        if (icon)
+            icon->setPixmap(QPixmap());
     } else {
         itemStyle = IconTitle;
-        if (!icon) {
-            icon = new MImageWidget(this);
-            icon->setStyleName("CommonMainIcon");
-        }
-        icon->setImage(id);
+        iconWidget()->setImage(id);
+    }
+    updateLayout();
+}
+
+void MPopupListItem::setPixmap(const QPixmap &pixmap)
+{
+    if (pixmap.isNull()) {
+        itemStyle = SingleTitle;
+        if (icon)
+            icon->setPixmap(QPixmap());
+    } else {
+        itemStyle = IconTitle;
+        iconWidget()->setPixmap(pixmap);
     }
     updateLayout();
 }
@@ -115,20 +136,19 @@ void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell)
 {
     MPopupListItem* item = static_cast<MPopupListItem*>(cell);
 
-    QString title;
-    QString iconID;
-    QVariant value;
+    QVariant variant = list->itemModel()->data(index, Qt::DisplayRole);
+    item->setTitle(variant.toString());
 
-    value = list->itemModel()->data(index, Qt::DisplayRole);
-    if (value.isValid())
-        title = value.toString();
-
-    value = list->itemModel()->data(index, Qt::DecorationRole);
-    if (value.isValid())
-        iconID = value.toString();
-
-    item->setTitle(title);
-    item->setIconID(iconID);
+    variant = list->itemModel()->data(index, Qt::DecorationRole);
+    if (variant.canConvert<QString>()) {
+        item->setIconID(variant.toString());
+    } else if (variant.canConvert<QIcon>()) {
+        QIcon icon = variant.value<QIcon>();
+        const QList<QSize>& sizes = icon.availableSizes();
+        item->setPixmap(sizes.isEmpty() ? QPixmap() : icon.pixmap(sizes[0]));
+    } else {
+        item->setPixmap(variant.value<QPixmap>());
+    }
 
     if (list->selectionModel()->isSelected(index))
         item->setSelected(true);

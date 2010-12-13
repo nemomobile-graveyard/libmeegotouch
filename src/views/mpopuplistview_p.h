@@ -38,9 +38,11 @@ public:
     explicit MPopupListItem(QGraphicsItem *parent = NULL);
     void setTitle(const QString &title);
     void setIconID(const QString& id);
+    void setPixmap(const QPixmap& pixmap);
 
 private:
     void updateLayout();
+    MImageWidget* iconWidget();
 
     enum ItemStyle {
         SingleTitle,

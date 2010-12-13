@@ -155,6 +155,62 @@ void Ut_MPopupList::testSetItemIconID()
     delete list;
 }
 
+void Ut_MPopupList::testSetItemPixmap()
+{
+    MList* list = new MList();
+    QStandardItemModel *itemModel = new QStandardItemModel(list);
+    MPopupListCellCreator *cellCreator = new MPopupListCellCreator(list);
+    list->setCellCreator(cellCreator);
+    list->setItemModel(itemModel);
+
+    MPopupListItem *item;
+    MWidgetRecycler recycler;
+
+    // First add item with text to model and build it
+    itemModel->appendRow(new QStandardItem("Item"));
+    item = (MPopupListItem *)(cellCreator->createCell(itemModel->index(0, 0), recycler));
+    QVERIFY(item->icon == 0);
+
+    const QPixmap* pixmap = MTheme::pixmap("icon-l-music");
+
+    // Add icon to previously set item
+    itemModel->setData(itemModel->index(0, 0), *pixmap, Qt::DecorationRole);
+    cellCreator->updateCell(itemModel->index(0,0), item);
+    QVERIFY(item->icon != 0);
+    QCOMPARE(*item->icon->pixmap(), *pixmap);
+
+    delete item;
+    delete list;
+
+    MTheme::releasePixmap(pixmap);
+}
+
+void Ut_MPopupList::testQStandardItemWithIcon()
+{
+    MList* list = new MList();
+    QStandardItemModel *itemModel = new QStandardItemModel(list);
+    MPopupListCellCreator *cellCreator = new MPopupListCellCreator(list);
+    list->setCellCreator(cellCreator);
+    list->setItemModel(itemModel);
+
+    MPopupListItem *item;
+    MWidgetRecycler recycler;
+
+    const QPixmap* pixmap = MTheme::pixmap("icon-l-music");
+
+    // add item with icon and text
+    itemModel->appendRow(new QStandardItem(*pixmap, "Item"));
+    item = (MPopupListItem *)(cellCreator->createCell(itemModel->index(0, 0), recycler));
+    QCOMPARE(item->title->text(), QString("Item"));
+    QVERIFY(item->icon != 0);
+    QCOMPARE(*item->icon->pixmap(), *pixmap);
+
+    delete item;
+    delete list;
+
+    MTheme::releasePixmap(pixmap);
+}
+
 void Ut_MPopupList::testScrollTo()
 {
     MPopupListViewPrivate *view = new MPopupListViewPrivate;
