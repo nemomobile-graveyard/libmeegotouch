@@ -9920,103 +9920,103 @@ pt_PT	Name of weekday 06 (Islamic calendar), format, narrow	S
 pt_PT	Name of weekday 07 (Islamic calendar), format, narrow	D
 pt_PT	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 pt_PT	Scripts used	Latn
-pt_PT	%r (locale specific 12 hour “TimeShort”)	02:31 Depois do meio-dia
+pt_PT	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 pt_PT	%R (locale specific 24 hour “TimeShort”)	14:31
-pt_PT	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 Depois do meio-dia
+pt_PT	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 pt_PT	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
-pt_PT	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 Depois do meio-dia
+pt_PT	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
 pt_PT	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm:ss -> 14:31:00
-pt_PT	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a z -> 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a z -> 02h31min00s PM GMT+00:00
 pt_PT	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	HH'h'mm'min'ss's' z -> 14h31min00s GMT+00:00
-pt_PT	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a zzzz -> 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a zzzz -> 02h31min00s PM GMT+00:00
 pt_PT	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	HH'h'mm'min'ss's' zzzz -> 14h31min00s GMT+00:00
 pt_PT	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy -> 21/07/08
 pt_PT	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy -> 21/07/08
-pt_PT	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm a -> 21/07/08 02:31 Depois do meio-dia
+pt_PT	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm a -> 21/07/08 02:31 PM
 pt_PT	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm -> 21/07/08 14:31
-pt_PT	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a -> 21/07/08 02:31:00 Depois do meio-dia
+pt_PT	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a -> 21/07/08 02:31:00 PM
 pt_PT	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss -> 21/07/08 14:31:00
-pt_PT	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a z -> 21/07/08 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a z -> 21/07/08 02h31min00s PM GMT+00:00
 pt_PT	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' z -> 21/07/08 14h31min00s GMT+00:00
-pt_PT	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a zzzz -> 21/07/08 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a zzzz -> 21/07/08 02h31min00s PM GMT+00:00
 pt_PT	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' zzzz -> 21/07/08 14h31min00s GMT+00:00
 pt_PT	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy -> 21 de Jul de 2008
 pt_PT	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy -> 21 de Jul de 2008
-pt_PT	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm a -> 21 de Jul de 2008 02:31 Depois do meio-dia
+pt_PT	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm a -> 21 de Jul de 2008 02:31 PM
 pt_PT	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm -> 21 de Jul de 2008 14:31
-pt_PT	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm:ss a -> 21 de Jul de 2008 02:31:00 Depois do meio-dia
+pt_PT	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm:ss a -> 21 de Jul de 2008 02:31:00 PM
 pt_PT	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm:ss -> 21 de Jul de 2008 14:31:00
-pt_PT	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a z -> 21 de Jul de 2008 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a z -> 21 de Jul de 2008 02h31min00s PM GMT+00:00
 pt_PT	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' z -> 21 de Jul de 2008 14h31min00s GMT+00:00
-pt_PT	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a zzzz -> 21 de Jul de 2008 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a zzzz -> 21 de Jul de 2008 02h31min00s PM GMT+00:00
 pt_PT	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' zzzz -> 21 de Jul de 2008 14h31min00s GMT+00:00
 pt_PT	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y -> 21 de Julho de 2008
 pt_PT	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y -> 21 de Julho de 2008
-pt_PT	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm a -> 21 de Julho de 2008 02:31 Depois do meio-dia
+pt_PT	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm a -> 21 de Julho de 2008 02:31 PM
 pt_PT	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH:mm -> 21 de Julho de 2008 14:31
-pt_PT	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm:ss a -> 21 de Julho de 2008 02:31:00 Depois do meio-dia
+pt_PT	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm:ss a -> 21 de Julho de 2008 02:31:00 PM
 pt_PT	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH:mm:ss -> 21 de Julho de 2008 14:31:00
-pt_PT	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> 21 de Julho de 2008 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> 21 de Julho de 2008 02h31min00s PM GMT+00:00
 pt_PT	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH'h'mm'min'ss's' z -> 21 de Julho de 2008 14h31min00s GMT+00:00
-pt_PT	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> 21 de Julho de 2008 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> 21 de Julho de 2008 02h31min00s PM GMT+00:00
 pt_PT	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> 21 de Julho de 2008 14h31min00s GMT+00:00
 pt_PT	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y -> Segunda-feira, 21 de Julho de 2008
 pt_PT	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y -> Segunda-feira, 21 de Julho de 2008
-pt_PT	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm a -> Segunda-feira, 21 de Julho de 2008 02:31 Depois do meio-dia
+pt_PT	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm a -> Segunda-feira, 21 de Julho de 2008 02:31 PM
 pt_PT	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH:mm -> Segunda-feira, 21 de Julho de 2008 14:31
-pt_PT	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm:ss a -> Segunda-feira, 21 de Julho de 2008 02:31:00 Depois do meio-dia
+pt_PT	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm:ss a -> Segunda-feira, 21 de Julho de 2008 02:31:00 PM
 pt_PT	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH:mm:ss -> Segunda-feira, 21 de Julho de 2008 14:31:00
-pt_PT	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> Segunda-feira, 21 de Julho de 2008 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> Segunda-feira, 21 de Julho de 2008 02h31min00s PM GMT+00:00
 pt_PT	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' z -> Segunda-feira, 21 de Julho de 2008 14h31min00s GMT+00:00
-pt_PT	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> Segunda-feira, 21 de Julho de 2008 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> Segunda-feira, 21 de Julho de 2008 02h31min00s PM GMT+00:00
 pt_PT	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> Segunda-feira, 21 de Julho de 2008 14h31min00s GMT+00:00
-pt_PT	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 Depois do meio-dia
+pt_PT	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 pt_PT	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
-pt_PT	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 Depois do meio-dia
+pt_PT	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
 pt_PT	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm:ss -> 14:31:00
-pt_PT	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a z -> 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a z -> 02h31min00s PM GMT+00:00
 pt_PT	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	HH'h'mm'min'ss's' z -> 14h31min00s GMT+00:00
-pt_PT	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a zzzz -> 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	hh'h'mm'min'ss's' a zzzz -> 02h31min00s PM GMT+00:00
 pt_PT	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	HH'h'mm'min'ss's' zzzz -> 14h31min00s GMT+00:00
 pt_PT	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy -> 18/07/29
 pt_PT	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy -> 18/07/29
-pt_PT	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm a -> 18/07/29 02:31 Depois do meio-dia
+pt_PT	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm a -> 18/07/29 02:31 PM
 pt_PT	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm -> 18/07/29 14:31
-pt_PT	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a -> 18/07/29 02:31:00 Depois do meio-dia
+pt_PT	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a -> 18/07/29 02:31:00 PM
 pt_PT	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss -> 18/07/29 14:31:00
-pt_PT	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a z -> 18/07/29 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a z -> 18/07/29 02h31min00s PM GMT+00:00
 pt_PT	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' z -> 18/07/29 14h31min00s GMT+00:00
-pt_PT	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a zzzz -> 18/07/29 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a zzzz -> 18/07/29 02h31min00s PM GMT+00:00
 pt_PT	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' zzzz -> 18/07/29 14h31min00s GMT+00:00
 pt_PT	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy -> 18 de Raj. de 1429
 pt_PT	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy -> 18 de Raj. de 1429
-pt_PT	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm a -> 18 de Raj. de 1429 02:31 Depois do meio-dia
+pt_PT	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm a -> 18 de Raj. de 1429 02:31 PM
 pt_PT	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm -> 18 de Raj. de 1429 14:31
-pt_PT	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm:ss a -> 18 de Raj. de 1429 02:31:00 Depois do meio-dia
+pt_PT	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm:ss a -> 18 de Raj. de 1429 02:31:00 PM
 pt_PT	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm:ss -> 18 de Raj. de 1429 14:31:00
-pt_PT	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a z -> 18 de Raj. de 1429 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a z -> 18 de Raj. de 1429 02h31min00s PM GMT+00:00
 pt_PT	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' z -> 18 de Raj. de 1429 14h31min00s GMT+00:00
-pt_PT	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a zzzz -> 18 de Raj. de 1429 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a zzzz -> 18 de Raj. de 1429 02h31min00s PM GMT+00:00
 pt_PT	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' zzzz -> 18 de Raj. de 1429 14h31min00s GMT+00:00
 pt_PT	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y -> 18 de Rajab de 1429
 pt_PT	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y -> 18 de Rajab de 1429
-pt_PT	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm a -> 18 de Rajab de 1429 02:31 Depois do meio-dia
+pt_PT	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm a -> 18 de Rajab de 1429 02:31 PM
 pt_PT	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH:mm -> 18 de Rajab de 1429 14:31
-pt_PT	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm:ss a -> 18 de Rajab de 1429 02:31:00 Depois do meio-dia
+pt_PT	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm:ss a -> 18 de Rajab de 1429 02:31:00 PM
 pt_PT	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH:mm:ss -> 18 de Rajab de 1429 14:31:00
-pt_PT	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> 18 de Rajab de 1429 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt_PT	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH'h'mm'min'ss's' z -> 18 de Rajab de 1429 14h31min00s GMT+00:00
-pt_PT	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> 18 de Rajab de 1429 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt_PT	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> 18 de Rajab de 1429 14h31min00s GMT+00:00
 pt_PT	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y -> Segunda-feira, 18 de Rajab de 1429
 pt_PT	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y -> Segunda-feira, 18 de Rajab de 1429
-pt_PT	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm a -> Segunda-feira, 18 de Rajab de 1429 02:31 Depois do meio-dia
+pt_PT	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm a -> Segunda-feira, 18 de Rajab de 1429 02:31 PM
 pt_PT	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH:mm -> Segunda-feira, 18 de Rajab de 1429 14:31
-pt_PT	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm:ss a -> Segunda-feira, 18 de Rajab de 1429 02:31:00 Depois do meio-dia
+pt_PT	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh:mm:ss a -> Segunda-feira, 18 de Rajab de 1429 02:31:00 PM
 pt_PT	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH:mm:ss -> Segunda-feira, 18 de Rajab de 1429 14:31:00
-pt_PT	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> Segunda-feira, 18 de Rajab de 1429 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a z -> Segunda-feira, 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt_PT	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' z -> Segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
-pt_PT	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> Segunda-feira, 18 de Rajab de 1429 02h31min00s Depois do meio-dia GMT+00:00
+pt_PT	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d 'de' MMMM 'de' y hh'h'mm'min'ss's' a zzzz -> Segunda-feira, 18 de Rajab de 1429 02h31min00s PM GMT+00:00
 pt_PT	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> Segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
 ru_RU	Language endonym	русский
 ru_RU	Country endonym	Россия

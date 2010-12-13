@@ -14,7 +14,8 @@ greaterThan(ICUVERSION, 4.4) {
                  data/fi.txt \
                  data/id.txt \
                  data/it.txt \
-                 data/ms_BN.txt
+                 data/ms_BN.txt \
+                 data/pt_PT.txt
     LANGTXT    = data/lang/en.txt \
                  data/lang/es.txt \
                  data/lang/fr.txt \
