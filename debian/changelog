@@ -1,9 +1,16 @@
-libmeegotouch (0.20.65~1) unstable; urgency=low
+libmeegotouch (0.20.65-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#203139 - Timestamp is not displayed in the full event banner of Home screen Events page.
+  * Fixes: NB#210881 - calendar app crashing on trying to add new event
+  * Fixes: NB#207856 - Wrong size of status bar tap area
+  * Fixes: NB#207113 - mixing transparent and non-transparent windows is not possible with meego graphicssystem
+  * Fixes: NB#209350 - Backup Framework crashes when trying to launch again while backup is going on
+  * Fixes: NB#207822 - SceneWindow is relocated too much.
+  * Fixes: NB#182815 - Pannable widget is not transparent wrt. passing focus to child widgets
   * Fixes: NB#208330 - meegotouchhome process causing high wakeups when device is in idle state
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 08 Dec 2010 15:56:30 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 13 Dec 2010 17:49:30 +0200
 
 libmeegotouch (0.20.64-1) unstable; urgency=low
 
