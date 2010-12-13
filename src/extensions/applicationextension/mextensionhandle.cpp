@@ -167,9 +167,9 @@ MExtensionHandle::~MExtensionHandle()
 
 void MExtensionHandle::updateDisplayState()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     Q_D(MExtensionHandle);
 
-#ifdef HAVE_CONTEXTSUBSCRIBER
     if(state() == MExtensionHandleModel::RUNNING) {
         bool blanked = d->screenBlankProperty->value().toString() == "blanked";
 
