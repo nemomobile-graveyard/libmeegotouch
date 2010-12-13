@@ -28,12 +28,13 @@
 #include "mrelocatorstyle.h"
 #include "mscrollchain.h"
 
-#include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
-#include <QTimer>
 
 namespace {
+
+    const char * const BottomDockingProperty = "dockBottom";
+
     bool widgetDoesNotWantToBeScrolled(const QGraphicsWidget *widget)
     {
         // We don't know where to scroll QGraphicsWebView. We would only make things worse by trying.
@@ -133,9 +134,11 @@ void MInputWidgetRelocator::update()
         const QRect microRect(microFocusRect(inputWidget));
 
         if (microRect.isValid() && newChain->count() > 0) {
+            const bool widgetWasDocked = scrollDockedWidget(newChain, inputWidget, microRect);
 
-            // Check whether we need to do anything.
-            if (needsRelocation(inputWidget, microRect)) {
+            // If widget was not docked then use the regular rules with nogo zones
+            // and an anchor point.
+            if (!widgetWasDocked && needsRelocation(inputWidget, microRect)) {
 
                 // Calculate anchor point in root coordinates
                 const QPoint anchorPoint(rootElement->mapFromItem(inputWidget, microRect.topLeft()).x(),
@@ -334,7 +337,68 @@ bool MInputWidgetRelocator::isWidgetRectFullyVisible(const QGraphicsWidget *widg
 {
     // Widget can be clipped by a nested pannable viewport.
     return !widget->isClipped()
-           || widget->clipPath().contains(localRect);
+           || widget->clipPath().boundingRect().contains(localRect);
+}
+
+bool MInputWidgetRelocator::scrollDockedWidget(MScrollChain *chain,
+                                               const QGraphicsWidget *inputWidget,
+                                               const QRect &microRect)
+{
+    // Find if we have scroller that wants to be docked to bottom.
+    const QGraphicsWidget *dockWidget = 0;
+    int dockWidgetId = -1;
+    for (int i = 0; i < chain->count(); ++i) {
+        QVariant dockBottom(chain->widgetAt(i)->property(BottomDockingProperty));
+        if (dockBottom.isValid()
+            && dockBottom.toBool()) {
+            dockWidgetId = i;
+            dockWidget = chain->widgetAt(i);
+            break;
+        }
+    }
+
+    if (!dockWidget) {
+        return false;
+    }
+
+    // This is the rectangle we need to dock and preferably even keep it fully visible.
+    const QRect dockWidgetRect(dockWidget->rect().toRect());
+
+    // Origin of the rectangle has to be given to the chain in inputWidget coordinates.
+    const QPoint originPoint = inputWidget->mapFromItem(dockWidget,
+                                                        dockWidgetRect.topLeft()).toPoint();
+
+    // Calculate target rectangle for the widget to be docked.
+    QRect targetRect = rootElement->mapRectFromItem(dockWidget, dockWidgetRect).toRect();
+
+    bool chainChanged = false;
+
+    // Dock the widget if only it's not already at correct position.
+    if (targetRect.bottom() != exposedContentRect().bottom()
+        || !isWidgetRectFullyVisible(dockWidget, dockWidgetRect)) {
+
+        // Move it to bottom of exposed content rectangle.
+        targetRect.moveBottom(exposedContentRect().bottom());
+
+        // Docking is done by parents of the dockWidget, therefore start at the next scroller.
+        chain->addBottomUpScroll(targetRect, originPoint, dockWidgetId + 1);
+
+        chainChanged = true;
+    }
+
+    // We still need to bring cursor visible, although we cannot guarantee it because
+    // docking at a right place is of higher priority. Use dockWidget and its children
+    // scrollers to scroll cursor rectangle visible. Don't touch parents of dockWidget.
+    if (!isWidgetRectFullyVisible(inputWidget, microRect)) {
+        chain->addMinimalScroll(microRect, 0, dockWidgetId);
+        chainChanged = true;
+    }
+
+    if (chainChanged) {
+        chain->applyScrolling();
+    }
+
+    return true;
 }
 
 void MInputWidgetRelocator::centerContextWidgetToAnchorPoint(MScrollChain *newChain,
@@ -345,6 +409,7 @@ void MInputWidgetRelocator::centerContextWidgetToAnchorPoint(MScrollChain *newCh
     const int yTarget = qMax<int>(exposedContentRect().top(),
                                   anchorPoint.y() - contextWidget->size().height() / 2);
     const QRect targetRect(QPoint(anchorPoint.x(), yTarget), contextWidget->size().toSize());
+
     const QPoint originPoint(contextWidget->mapToItem(inputWidget, 0, 0).toPoint());
     newChain->addBottomUpScroll(targetRect, originPoint, 1);
 }

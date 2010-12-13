@@ -73,6 +73,15 @@ public:
                            const QPoint &originPoint,
                            int startingIndex = 0);
 
+    /*! \brief Scrolls the chain with minimal change in child-to-parent order.
+     *
+     *  Calling this ensures that the given \localRect is made visible with
+     *  minimal scrolling.
+     */
+    void addMinimalScroll(const QRect &localRect,
+                          int startingIndex,
+                          int untilIndex);
+
     /*! \brief Applies the planned scrolling
      *
      *  Widgets are not expected to have finished their scrolling when this returns.
@@ -142,6 +151,8 @@ private:
     QRect mapToChainItemFromRoot(const ScrollChainItem &item, const QRect &rect) const;
     QPoint mapToChainItemFromRoot(const ScrollChainItem &item, const QPoint &point) const;
     QPoint mapToChainItemFromScrollTarget(const ScrollChainItem &item, const QPoint &point);
+    QRect mapToChainItemFromScrollTarget(const ScrollChainItem &item,
+                                         const QRect &rect);
 
 private:
     typedef QMap<const QMetaObject *, QSharedPointer<MAbstractScroller> > ScrollerDelegateMap;
