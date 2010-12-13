@@ -44,11 +44,15 @@ endif
 # Disable building of tests by setting DEB_BUILD_OPTION=notests,...
 ifneq (,$(filter notests,$(TMP_BUILD_OPTS)))
     OPTIONS += -nomake tests
+    EXCLUSIONS += --no-package=libmeegotouch-tests
+    EXCLUSIONS += --no-package=libmeegotouch-tests-dbg
 endif
 
 # Disable building of benchmarks by setting DEB_BUILD_OPTION=nobenchmarks,...
 ifneq (,$(filter nobenchmarks,$(TMP_BUILD_OPTS)))
     OPTIONS += -nomake benchmarks
+    EXCLUSIONS += --no-package=libmeegotouch-benchmarks
+    EXCLUSIONS += --no-package=libmeegotouch-benchmarks-dbg
 endif
 
 # Disable building of demos by setting DEB_BUILD_OPTION=nodemos,...
@@ -98,6 +102,7 @@ endif
 # Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
 ifneq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
      MAKEDOCS = 0
+     EXCLUSIONS += --no-package=libmeegotouch-doc
 endif
 
 
