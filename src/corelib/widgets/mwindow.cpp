@@ -184,9 +184,11 @@ void MWindowPrivate::init()
     if (MApplication::fullScreen())
         q->showFullScreen();
 
+#ifdef Q_WS_X11
     if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
         applyStartupWindowBackground();
     }
+#endif //Q_WS_X11
 }
 
 void MWindowPrivate::initSoftwareViewport()
