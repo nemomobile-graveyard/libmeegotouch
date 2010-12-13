@@ -61,6 +61,24 @@ void MScrollChain::addBottomUpScroll(const QRect &targetRect,
     }
 }
 
+void MScrollChain::addMinimalScroll(const QRect &localRect,
+                                    int startingIndex,
+                                    int untilIndex)
+{
+    untilIndex = qBound<int>(0, untilIndex, chainItems.count() - 1);
+    startingIndex = qBound<int>(0, startingIndex, untilIndex);
+
+    for (int i = startingIndex; i <= untilIndex; ++i) {
+        ScrollChainItem &chainItem(chainItems[i]);
+
+        // Map target rectangle and origin point to delegate widget's local coordinates.
+        QRect delegateRect = mapToChainItemFromScrollTarget(chainItem, localRect);
+
+        // Scroll the chain item.
+        chainItem.calculateScrolling(delegateRect, delegateRect.topLeft());
+    }
+}
+
 void MScrollChain::applyScrolling()
 {
     for (ChainItemList::iterator item = chainItems.begin(); item != chainItems.end(); ++item) {
@@ -196,6 +214,15 @@ QPoint MScrollChain::mapToChainItemFromScrollTarget(const ScrollChainItem &item,
         }
     }
     return mappedPoint;
+}
+
+
+QRect MScrollChain::mapToChainItemFromScrollTarget(const ScrollChainItem &item,
+                                                   const QRect &rect)
+{
+    QRect moved = rect;
+    moved.moveTo(mapToChainItemFromScrollTarget(item, rect.topLeft()));
+    return moved;
 }
 
 QSharedPointer<MAbstractScroller> MScrollChain::findScrollerDelegate(const QGraphicsWidget *widget) const

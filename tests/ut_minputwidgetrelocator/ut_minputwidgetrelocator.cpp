@@ -380,6 +380,15 @@ void MScrollChain::addBottomUpScroll(const QRect &targetRect, const QPoint &orig
     Q_UNUSED(index);
 }
 
+void MScrollChain::addMinimalScroll(const QRect &localRect,
+                                    int startingIndex,
+                                    int untilIndex)
+{
+    Q_UNUSED(localRect);
+    Q_UNUSED(startingIndex);
+    Q_UNUSED(untilIndex);
+}
+
 void MScrollChain::applyScrolling()
 {
     ++gScrollCallCount;
