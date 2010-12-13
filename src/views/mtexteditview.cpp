@@ -335,22 +335,12 @@ void MTextEditViewPrivate::setMouseTarget(const QPointF &point)
     mouseTarget.setY(qBound<qreal>(0.0, point.y(), q->geometry().height()));
 }
 
+
 QAbstractTextDocumentLayout::PaintContext MTextEditViewPrivate::paintContext() const
 {
     Q_Q(const MTextEditView);
 
     QAbstractTextDocumentLayout::PaintContext paintContext;
-
-    foreach (MTextEditFormatRange formatRange, q->model()->additionalFormats()) {
-        QTextCursor cursor(activeDocument());
-        cursor.setPosition(formatRange.start, QTextCursor::MoveAnchor);                                                          
-        cursor.setPosition(formatRange.start + formatRange.length, QTextCursor::KeepAnchor);      
-        QAbstractTextDocumentLayout::Selection selection;
-        selection.cursor = cursor;
-        selection.format = formatRange.format;
-        paintContext.selections.append(selection);
-    }
-        
     paintContext.palette.setColor(QPalette::Text, q->style()->textColor());
     QTextCursor cursor = controller->textCursor();
     MTextEditModel::EchoMode echoMode = q->model()->echo();
@@ -806,7 +796,6 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     if (d->focused == false && d->activeDocument()->isEmpty() == true) {
         // with no focus and content we show the prompt text
         QAbstractTextDocumentLayout::PaintContext paintContext;
-
         QColor promptColor = style()->promptColor();
         paintContext.palette.setColor(QPalette::Text, promptColor);
 
