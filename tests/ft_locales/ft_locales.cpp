@@ -1287,6 +1287,16 @@ void Ft_Locales::checkAvailableLocales()
     QStringList sortingTestList;
     sortingTestList
         // Han:
+        << "あ" << "内山" << "うちやま"
+        << "か" << "小中" << "こなか"
+        << "さ" << "沙紀" << "さき" << "ジョン"
+        << "た" << "竹山" << "竹山" << "ティロー"
+        << "な" << "中村" << "なかむら" << "ナターシャ"
+        << "は" << "鳩山" << "はとやま" << "ヘンリー"
+        << "ま" << "松下" << "まつした" << "マイケル"
+        << "や" << "山田" << "やまだ" << "ヤングマン"
+        << "ら" << "楽谷" << "らくたに" << "ラースロ"
+        << "わ" << "若山" << "わかやま" << "ワトソン"
         << "一" << "二" << "三" << "中" << "正"
         << "爱" << "播" << "此" << "得" << "俄" << "攀"
         // Cyrillic:
@@ -1298,7 +1308,11 @@ void Ft_Locales::checkAvailableLocales()
         // Hebrew:
         << "א" << "ב" << "ג" << "ש" << "ת"
         // Latin:
-        << "a" << "ä" << "å" << "á" << "b" << "öfgh" << "oegh" << "z";
+        << "A" << "a" << "Ä" << "ä" << "Å" << "å" << "Á" << "á"
+        << "b" << "ch" << "Ch" << "CH" << "h" << "H" << "i" << "I"
+        << "öfgh" << "oegh"
+        << "U" << "ú" << "Ů" << "ů" << "N" << "Ň" << "ň"
+        << "z";
     QString ft_localesTestOutput = "";
     foreach(QString supportedLocaleName, supportedLocaleNames) {
         MLocale locale(supportedLocaleName);
