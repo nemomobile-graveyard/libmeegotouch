@@ -505,6 +505,7 @@ void MProgressIndicatorBarView::updateData(const QList<const char *>& modificati
 
     foreach(const char * member, modifications) {
         if (member == MProgressIndicatorModel::UnknownDuration) {
+            d->clearBarImages();
             d->clearAnimationCache();
             d->setupAnimation();
         } else {
