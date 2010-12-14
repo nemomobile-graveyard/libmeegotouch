@@ -92,21 +92,21 @@ void MSliderHandle::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     QRect handleRect = rect().toRect();
     if (sliderState == MSliderModel::Pressed) {
-        if (orientation == Qt::Horizontal)
+        if (orientation == Qt::Horizontal && handlePressedPixmap != 0)
             painter->drawPixmap((handleRect.width() - handlePressedPixmap->width()) / 2,
                                 (handleRect.height() - handlePressedPixmap->height()) / 2,
                                 *handlePressedPixmap);
-        if (orientation == Qt::Vertical)
+        if (orientation == Qt::Vertical && handleVerticalPressedPixmap != 0)
             painter->drawPixmap((handleRect.width() - handleVerticalPressedPixmap->width()) / 2,
                                 (handleRect.height() - handleVerticalPressedPixmap->height()) / 2,
                                 *handleVerticalPressedPixmap);
     }
     if (sliderState == MSliderModel::Released) {
-        if (orientation == Qt::Horizontal)
+        if (orientation == Qt::Horizontal && handlePixmap != 0)
             painter->drawPixmap((handleRect.width() - handlePixmap->width()) / 2,
                                 (handleRect.height() - handlePixmap->height()) / 2,
                                 *handlePixmap);
-        if (orientation == Qt::Vertical)
+        if (orientation == Qt::Vertical && handleVerticalPixmap != 0)
             painter->drawPixmap((handleRect.width() - handleVerticalPixmap->width()) / 2,
                                 (handleRect.height() - handleVerticalPixmap->height()) / 2,
                                 *handleVerticalPixmap);
@@ -198,19 +198,22 @@ void MSliderHandleIndicatorArrow::paint(QPainter *painter, const QStyleOptionGra
     bool reverse = qApp->isRightToLeft();
 
     QRect handleRect = rect().toRect();
-    if (orientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal && handleLabelArrowDownPixmap != 0)
         painter->drawPixmap((handleRect.width() - handleLabelArrowDownPixmap->width()) / 2,
                             (handleRect.height() - handleLabelArrowDownPixmap->height()) / 2,
                             *handleLabelArrowDownPixmap);
      if (orientation == Qt::Vertical) {
-         if (!reverse)
-            painter->drawPixmap((handleRect.width() - handleLabelArrowLeftPixmap->width()) / 2,
-                                (handleRect.height() - handleLabelArrowLeftPixmap->height()) / 2,
-                                *handleLabelArrowLeftPixmap);
-         else
-             painter->drawPixmap((handleRect.width() - handleLabelArrowRightPixmap->width()) / 2,
-                                 (handleRect.height() - handleLabelArrowRightPixmap->height()) / 2,
-                                 *handleLabelArrowRightPixmap);
+         if (!reverse) {
+             if (handleLabelArrowLeftPixmap != 0)
+                 painter->drawPixmap((handleRect.width() - handleLabelArrowLeftPixmap->width()) / 2,
+                                     (handleRect.height() - handleLabelArrowLeftPixmap->height()) / 2,
+                                     *handleLabelArrowLeftPixmap);
+         } else {
+             if (handleLabelArrowRightPixmap != 0)
+                 painter->drawPixmap((handleRect.width() - handleLabelArrowRightPixmap->width()) / 2,
+                                     (handleRect.height() - handleLabelArrowRightPixmap->height()) / 2,
+                                     *handleLabelArrowRightPixmap);
+         }
     }
 }
 
