@@ -28,9 +28,12 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
 {
     const MPannableViewport *viewport = static_cast<const MPannableViewport *>(widget);
 
-    if (viewport->panDirection() == 0) {
+    if (viewport->verticalPanningPolicy() == MPannableViewport::PanningAlwaysOff) {
         return QPoint(); // unable to scroll
     }
+
+    // We won't be scrolling horizontally currently to prevent movement caused by
+    // errors in container widget margins etc. It's straightforward to add if needed.
 
     // First ensure that target rectangle is inside of area of the pannable viewport.
     // Note: We might even move against the wanted direction but this is required to
@@ -49,10 +52,9 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
     QRectF posRange = viewport->range();
 
     // ...and limit our panning accordingly.
-    panningPos.rx() = qBound(posRange.left(), panningPos.x(), posRange.right());
     panningPos.ry() = qMax(posRange.top(), panningPos.y()); // We can extend bottom limit.
 
-    const QPoint translation((viewport->position() - panningPos).toPoint());
+    const QPoint translation(0, viewport->position().y() - panningPos.y());
     return translation;
 }
 
