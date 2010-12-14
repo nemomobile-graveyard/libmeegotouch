@@ -82,9 +82,10 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
             this, SLOT(updateOrientationAngle()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(updateOrientationAngle()));
-#endif
 
     waitForSensorPropertiesToSubscribe();
+#endif //HAVE_CONTEXTSUBSCRIBER
+
     isCoveredChanged();
     videoRouteChanged();
 
