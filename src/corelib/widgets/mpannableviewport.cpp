@@ -236,9 +236,15 @@ void MPannableViewportPrivate::_q_pannedWidgetHeightOutOfViewport()
     // If current position is bigger than new panned widget size (in panning direction) then
     // position should be updated to avoid unnecessary panning animation.
     if (q->panDirection().testFlag(Qt::Vertical)) {
-        qreal updatedPosition = pannedWidget->size().height() - q->size().height();
-        if(updatedPosition < q->position().y())
-            q->setPosition(QPointF(q->position().x(), qMax((qreal)0, updatedPosition)));
+
+        // Need to update range so we can use it here.
+        applyAutoRange();
+
+        // Note that range also contains the height extension.
+        const qreal rangeBottomLimit = q->range().bottom();
+        if (rangeBottomLimit < q->position().y()) {
+            q->setPosition(QPointF(q->position().x(), rangeBottomLimit));
+        }
     }
 
     // The heightChanged signal is called from an event handler. Singleshot timer
