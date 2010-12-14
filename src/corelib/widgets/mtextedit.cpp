@@ -1546,7 +1546,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
 
     // first input made with PasswordEchoOnEdit clears the previous contents
     if (echoMode() == MTextEditModel::PasswordEchoOnEdit && d->editActive == false) {
-        clear();
+        document()->clear();
     }
 
     d->editActive = true;
@@ -2197,7 +2197,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
             echoMode() == MTextEditModel::PasswordEchoOnEdit &&
             (commitString.isEmpty() == false || preedit.isEmpty() == false)) {
         // in this mode, clear the contents before starting editing and doing new input
-        clear();
+        document()->clear();
     }
 
     d->editActive = true;
