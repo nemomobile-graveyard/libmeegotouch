@@ -1,3 +1,13 @@
+libmeegotouch (0.20.66-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#204526 - First character is removed in Select Internet Connection dialog
+  * Fixes: NB#200329 - All windows are rotating when device rotates
+  * Fixes: NB#203650 - displayEntered() not emitted when switching between two windows in the same app
+  * Fixes: NB#210772 - Hour digits are cut in alarm notification when region is set to Portugal
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 15 Dec 2010 15:58:41 +0200
+
 libmeegotouch (0.20.65-1) unstable; urgency=low
 
   * New version
