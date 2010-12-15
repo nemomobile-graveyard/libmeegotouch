@@ -340,6 +340,17 @@ QAbstractTextDocumentLayout::PaintContext MTextEditViewPrivate::paintContext() c
     Q_Q(const MTextEditView);
 
     QAbstractTextDocumentLayout::PaintContext paintContext;
+
+    foreach (MTextEditFormatRange formatRange, q->model()->additionalFormats()) {
+        QTextCursor cursor(activeDocument());
+        cursor.setPosition(formatRange.start, QTextCursor::MoveAnchor);
+        cursor.setPosition(formatRange.start + formatRange.length, QTextCursor::KeepAnchor);
+        QAbstractTextDocumentLayout::Selection selection;
+        selection.cursor = cursor;
+        selection.format = formatRange.format;
+        paintContext.selections.append(selection);
+    }
+
     paintContext.palette.setColor(QPalette::Text, q->style()->textColor());
     QTextCursor cursor = controller->textCursor();
     MTextEditModel::EchoMode echoMode = q->model()->echo();
@@ -786,11 +797,12 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
                                             -style()->paddingBottom()));
     clipping = clipping.intersected(option->exposedRect);
     painter->setClipRect(clipping, Qt::IntersectClip);
-
     // If text does not fit inside widget, it may have to be scrolled
-    painter->translate(-d->hscroll + style()->paddingLeft(), -d->vscroll + style()->paddingTop());
-
+    const qreal dx = -d->hscroll + style()->paddingLeft();
+    const qreal dy = -d->vscroll + style()->paddingTop();
+    painter->translate(dx, dy);
     // draw actual text to the screen
+
     if (d->focused == false && d->activeDocument()->isEmpty() == true) {
         // with no focus and content we show the prompt text
         QAbstractTextDocumentLayout::PaintContext paintContext;
@@ -803,6 +815,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         // normal painting
         QAbstractTextDocumentLayout::PaintContext paintContext = d->paintContext();
         paintContext.clip = option->exposedRect;
+        paintContext.clip.translate(-dx, -dy);
         d->activeDocument()->documentLayout()->draw(painter, paintContext);
     }
 

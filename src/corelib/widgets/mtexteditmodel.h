@@ -23,7 +23,21 @@
 #include <mwidgetmodel.h>
 #include <limits>
 #include <QTextDocument>
+#include <QTextCharFormat>
 #include "mnamespace.h"
+
+class MTextEditFormatRange
+{
+ public:
+    bool operator ==(const MTextEditFormatRange& other) const
+    {
+        return (start == other.start && length == other.length && format == other.format);
+    }
+    
+    int start;
+    int length;
+    QTextCharFormat format;
+};
 
 class M_CORE_EXPORT MTextEditModel : public MWidgetModel
 {
@@ -89,8 +103,8 @@ private:
     M_MODEL_PROPERTY(int, toolbarId, ToolbarId, true, -1)
     M_MODEL_PROPERTY(MTextEditModel::EchoMode, echo, Echo, true, MTextEditModel::Normal)
     M_MODEL_PROPERTY(bool, isAutoSipEnabled, AutoSipEnabled, true, true)
-
     M_MODEL_PROPERTY(int, preeditCursor, PreeditCursor, true, -1)
+    M_MODEL_PROPERTY(QList<MTextEditFormatRange>, additionalFormats, AdditionalFormats, true, QList<MTextEditFormatRange>())
 public:
     void updateCursor()   {
         memberModified(MTextEditModel::Cursor);
