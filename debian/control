@@ -179,7 +179,7 @@ Description: Demo application for MeeGo Touch
 Package: meegotouch-demos-widgetsgallery-tests
 Section: devel
 Architecture: any
-Depends: ${shlibs:Depends}, meegotestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
+Depends: ${shlibs:Depends}, meegotouch-demos-widgetsgallery (= ${Source-Version})
 Description: Demo application for MeeGo Touch
 
 Package: meegotouch-demos-appletinstallationsource
@@ -209,7 +209,7 @@ Description: Debug symbols of the demo application for application extensions
 Package: libmeegotouch-tests
 Section: extra
 Architecture: any
-Depends: ${shlibs:Depends}, testrunner, locales, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good
+Depends: ${shlibs:Depends}, locales, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good
 Description: libmeegotouch unit tests
  Unit testing binaries and shellscripts for testing libmeegotouch library
 
