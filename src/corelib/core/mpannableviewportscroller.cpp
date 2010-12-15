@@ -24,7 +24,7 @@
 QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *widget,
                                                        const QRect &targetRect,
                                                        const QPoint &originPoint,
-                                                       const QPoint &)
+                                                       const QPoint &currentOffset)
 {
     const MPannableViewport *viewport = static_cast<const MPannableViewport *>(widget);
 
@@ -39,14 +39,17 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
     // Note: We might even move against the wanted direction but this is required to
     // ensure the visibility of the area marked by target rectangle.
     QRect visibleTargetRect(targetRect);
-    moveRectInsideArea(viewport->contentsRect().toRect(), visibleTargetRect);
+    moveRectInsideArea(viewport->rect().toRect(), visibleTargetRect);
 
     // Calculate how much pannable contents should be translated.
     const QPoint contentsOffset(visibleTargetRect.topLeft() - originPoint);
 
+    // Take into consideration how much we have already promised to scroll.
+    const QPointF currentPosition = viewport->position() - currentOffset;
+
     // Calculate the new panning position, i.e. position of the pannable viewport
     // in panned widget coordinates.
-    QPointF panningPos(viewport->position() - contentsOffset);
+    QPointF panningPos(currentPosition - contentsOffset);
 
     // Get allowed range for position to be used with MPannableWidget::setPosition().
     QRectF posRange = viewport->range();
@@ -54,7 +57,7 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
     // ...and limit our panning accordingly.
     panningPos.ry() = qMax(posRange.top(), panningPos.y()); // We can extend bottom limit.
 
-    const QPoint translation(0, viewport->position().y() - panningPos.y());
+    const QPoint translation(0, currentPosition.y() - panningPos.y());
     return translation;
 }
 
