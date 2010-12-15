@@ -511,8 +511,10 @@ void MWindowPrivate::doEnterDisplayEvent()
     q->enterDisplayEvent();
     emit q->displayEntered();
 
+#ifdef Q_WS_X11
     MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
     MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
+#endif //Q_WS_X11
 
     if (discardedPaintEvent) {
         // we discarded a paint event while beeing invisible
