@@ -229,6 +229,8 @@ public:
 
     MLabelViewSimple *impl;
     QTextOption textOptions;
+
+    QSizeF previousStaticTextSize;
 };
 
 #endif
