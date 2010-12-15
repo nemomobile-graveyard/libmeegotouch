@@ -45,7 +45,8 @@ public:
     enum DataRole {
         Page = Qt::UserRole,
         PageName,
-        PageTimedemoName
+        PageTimedemoName,
+        PageType
     };
 
 public:
@@ -62,7 +63,6 @@ public:
     void setInitialPageToShow(const QString& initialPageToShow);
 
 public slots:
-    void handleListItemClick();
     void showThemeSelectionDialog();
     void showOrientationSelectionDialog();
     void toggleFps();
@@ -92,6 +92,7 @@ private:
     QHash<MButton *, TemplatePage *> buttons;
 
     QString initialPageToShow;
+    bool createEmpty;
 };
 
 #endif

@@ -81,6 +81,38 @@ class WidgetsGalleryDataModel : public QAbstractItemModel {
 public:
     typedef QList<TemplatePage*> TemplatePageList;
     typedef QList<QString> TemplatePageNameList;
+    typedef QList<int> TemplatePageTypeList;
+
+    enum PageType {
+        MainCategoryPageType,
+        ApplicationMenuPageType,
+        DisplayModesPageType,
+        ToolBarPageType,
+        CustomNavigationBarPageType,
+        LabelPageType,
+        ImagePageType,
+        ProgressBarPageType,
+        SpinnerPageType,
+        PushButtonPageType,
+        IconButtonPageType,
+        SwitchPageType,
+        CheckboxPageType,
+        ButtonGroupPageType,
+        SingleSelectionDialogsPageType,
+        QueryDialogsPageType,
+        BannersPageType,
+        MListPageType,
+        MGridPageType,
+        ObjectMenuPageType,
+        ComboBoxPageType,
+        ContentItemsPageType,
+        BubblePageType,
+        TextEntryPageType,
+        TextEntryNavigationPageType,
+        SliderPageType,
+        FeedbackPageType
+    };
+
 public:
     WidgetsGalleryDataModel()
         : QAbstractItemModel(),
@@ -90,75 +122,74 @@ public:
           galleryPageNames()
     {
         //% "Application View"
-        addCategory(qtTrId("xx_wg_categories_application_view"), new MainCategoryPage(this, createIndex(0,0)));
+        addCategory(qtTrId("xx_wg_categories_application_view"));
         //% "Application Menu"
-        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_view_menu"), new ApplicationMenuPage());
+        addGalleryPage(0, qtTrId("xx_wg_application_view_view_menu"), WidgetsGalleryDataModel::ApplicationMenuPageType);
         //% "Display Modes"
-        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_display_modes"), new DisplayModesPage());
+        addGalleryPage(0, qtTrId("xx_wg_application_view_display_modes"), WidgetsGalleryDataModel::DisplayModesPageType);
         //% "Toolbar (including Tab Bar)"
-        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_toolbar_incl_tab_bar"), new ToolBarPage());
+        addGalleryPage(0, qtTrId("xx_wg_application_view_toolbar_incl_tab_bar"), WidgetsGalleryDataModel::ToolBarPageType);
         //% "Custom Navigation Bar"
-        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_custom_navigation_bar"), new CustomNavigationBarPage());
-
+        addGalleryPage(0, qtTrId("xx_wg_application_view_custom_navigation_bar"), WidgetsGalleryDataModel::CustomNavigationBarPageType);
 
         //% "Simple Widgets"
-        addCategory(qtTrId("xx_wg_categories_simple_widgets"), new MainCategoryPage(this, createIndex(1,0)));
+        addCategory(qtTrId("xx_wg_categories_simple_widgets"));
         //% "Labels"
-        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_labels"), new LabelPage());
+        addGalleryPage(1, qtTrId("xx_wg_simple_widgets_labels"), WidgetsGalleryDataModel::LabelPageType);
         //% "Image"
-        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_image"), new ImagePage());
+        addGalleryPage(1, qtTrId("xx_wg_simple_widgets_image"), WidgetsGalleryDataModel::ImagePageType);
         //% "Progress Bar"
-        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_progress_bar"), new ProgressBarPage());
+        addGalleryPage(1, qtTrId("xx_wg_simple_widgets_progress_bar"), WidgetsGalleryDataModel::ProgressBarPageType);
         //% "Spinner"
-        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_spinner"), new SpinnerPage());
+        addGalleryPage(1, qtTrId("xx_wg_simple_widgets_spinner"), WidgetsGalleryDataModel::SpinnerPageType);
 
         //% "Buttons"
-        addCategory(qtTrId("xx_wg_categories_buttons"), new MainCategoryPage(this, createIndex(2,0)));
+        addCategory(qtTrId("xx_wg_categories_buttons"));
         //% "Push Button"
-        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_push_button"), new PushButtonPage());
+        addGalleryPage(2, qtTrId("xx_wg_buttons_push_button"), WidgetsGalleryDataModel::PushButtonPageType);
         //% "Icon Button"
-        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_icon_button"), new IconButtonPage());
+        addGalleryPage(2, qtTrId("xx_wg_buttons_icon_button"), WidgetsGalleryDataModel::IconButtonPageType);
         //% "Switch"
-        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_switch"), new SwitchPage());
+        addGalleryPage(2, qtTrId("xx_wg_buttons_switch"), WidgetsGalleryDataModel::SwitchPageType);
         //% "Checkbox"
-        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_checkbox"), new CheckboxPage());
+        addGalleryPage(2, qtTrId("xx_wg_buttons_checkbox"), WidgetsGalleryDataModel::CheckboxPageType);
         //% "Button Group"
-        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_buttongroup"), new ButtonGroupPage());
+        addGalleryPage(2, qtTrId("xx_wg_buttons_buttongroup"), WidgetsGalleryDataModel::ButtonGroupPageType);
 
         //% "Dialogs and Banners"
-        addCategory(qtTrId("xx_wg_categories_dialogs_and_banners"), new MainCategoryPage(this, createIndex(3,0)));
+        addCategory(qtTrId("xx_wg_categories_dialogs_and_banners"));
         //% "Single Selection Dialog"
-        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_single_selection_dialog"), new SingleSelectionDialogsPage());
+        addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_single_selection_dialog"), WidgetsGalleryDataModel::SingleSelectionDialogsPageType);
         //% "Query Dialog"
-        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_query_dialog"), new QueryDialogsPage());
+        addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_query_dialog"), WidgetsGalleryDataModel::QueryDialogsPageType);
         //% "Banner"
-        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_banner"), new BannersPage());
+        addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_banner"), WidgetsGalleryDataModel::BannersPageType);
 
         //% "Lists, Grids and Popups"
-        addCategory(qtTrId("xx_wg_categories_lists_grids_and_popups"), new MainCategoryPage(this, createIndex(4,0)));
+        addCategory(qtTrId("xx_wg_categories_lists_grids_and_popups"));
         //% "List"
-        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_list"), new MListPage());
+        addGalleryPage(4, qtTrId("xx_wg_lists_grids_and_popups_list"), WidgetsGalleryDataModel::MListPageType);
         //% "Grid"
-        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_grid"), new MGridPage());
+        addGalleryPage(4, qtTrId("xx_wg_lists_grids_and_popups_grid"), WidgetsGalleryDataModel::MGridPageType);
         //% "Object Menu"
-        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_object_menu"), new ObjectMenuPage());
+        addGalleryPage(4, qtTrId("xx_wg_lists_grids_and_popups_object_menu"), WidgetsGalleryDataModel::ObjectMenuPageType);
         //% "ComboBox"
-        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_combobox"), new ComboBoxPage());
+        addGalleryPage(4, qtTrId("xx_wg_lists_grids_and_popups_combobox"), WidgetsGalleryDataModel::ComboBoxPageType);
         //% "ContentItems"
-        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_contentitems"), new ContentItemsPage());
+        addGalleryPage(4, qtTrId("xx_wg_lists_grids_and_popups_contentitems"), WidgetsGalleryDataModel::ContentItemsPageType);
         //% "Speech bubble"
-        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_bubble"), new BubblePage());
+        addGalleryPage(4, qtTrId("xx_wg_lists_grids_and_popups_bubble"), WidgetsGalleryDataModel::BubblePageType);
 
         //% "User Input"
-        addCategory(qtTrId("xx_wg_categories_user_input"), new MainCategoryPage(this, createIndex(5,0)));
+        addCategory(qtTrId("xx_wg_categories_user_input"));
         //% "Text Entries"
-        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_text_entries"), new TextEntryPage());
+        addGalleryPage(5, qtTrId("xx_wg_user_input_text_entries"), WidgetsGalleryDataModel::TextEntryPageType);
         //% "Text Entries Navigation"
-        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_text_entries_navigation"), new TextEntryNavigationPage());
+        addGalleryPage(5, qtTrId("xx_wg_user_input_text_entries_navigation"), WidgetsGalleryDataModel::TextEntryNavigationPageType);
         //% "Slider"
-        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_slider"), new SliderPage());
+        addGalleryPage(5, qtTrId("xx_wg_user_input_slider"), WidgetsGalleryDataModel::SliderPageType);
         //% "Input Feedback"
-        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_input_feedback"), new FeedbackPage());
+        addGalleryPage(5, qtTrId("xx_wg_user_input_input_feedback"), WidgetsGalleryDataModel::FeedbackPageType);
 
     }
 
@@ -200,9 +231,11 @@ public:
             if (role == Qt::DisplayRole || role == MainPage::PageName) {
                 return getName(index);
             } else if (role == MainPage::Page) {
-                return QVariant::fromValue((void *)getPage(index));
+                return QVariant::fromValue((void *)const_cast<WidgetsGalleryDataModel*>(this)->getPage(index));
             } else if (role == MainPage::PageTimedemoName) {
                 return getTimedemoName(index);
+            } else if (role == MainPage::PageType) {
+                return getPageType(index);
             }
         }
 
@@ -210,23 +243,122 @@ public:
     }
 
 private:
-    void addCategory(const QString &name, MainCategoryPage *page) {
-        page->setTitle(name);
+    void addCategory(const QString &name) {
+        createIndex(categoryPages.count(), 0);
 
         categoryPageNames.append(name);
-        categoryPages.append(page);
+        categoryPages.append(NULL);
     }
 
-    void addGalleryPage(const QModelIndex &parent, const QString &name, TemplatePage *page) {
-        galleryPageNames[parent.row()].append(name);
-        galleryPages[parent.row()].append(page);
+    void addGalleryPage(int category, const QString &name, PageType pageType) {
+        galleryPageNames[category].append(name);
+        galleryPages[category].append(NULL);
+        galleryPageTypes[category].append((int)pageType);
     }
 
-    MApplicationPage *getPage(const QModelIndex &index) const {
-        if (index.parent().isValid())
+    MApplicationPage *getPage(const QModelIndex &index) {
+        if (index.parent().isValid()) {
+            if (!galleryPages[index.parent().row()].at(index.row())) {
+                MApplicationPage *page = NULL;
+                switch (getPageType(index)) {
+                //category 0
+                case ApplicationMenuPageType:
+                    page = new ApplicationMenuPage();
+                    break;
+                case DisplayModesPageType:
+                    page = new DisplayModesPage();
+                    break;
+                case ToolBarPageType:
+                    page = new ToolBarPage();
+                    break;
+                case CustomNavigationBarPageType:
+                    page = new CustomNavigationBarPage();
+                    break;
+                //category 1
+                case LabelPageType:
+                    page = new LabelPage();
+                    break;
+                case ImagePageType:
+                    page = new ImagePage();
+                    break;
+                case ProgressBarPageType:
+                    page = new ProgressBarPage();
+                    break;
+                case SpinnerPageType:
+                    page = new SpinnerPage();
+                    break;
+                //category 2
+                case PushButtonPageType:
+                    page = new PushButtonPage();
+                    break;
+                case IconButtonPageType:
+                    page = new IconButtonPage();
+                    break;
+                case SwitchPageType:
+                    page = new SwitchPage();
+                    break;
+                case CheckboxPageType:
+                    page = new CheckboxPage();
+                    break;
+                case ButtonGroupPageType:
+                    page = new ButtonGroupPage();
+                    break;
+                //category 3
+                case SingleSelectionDialogsPageType:
+                    page = new SingleSelectionDialogsPage();
+                    break;
+                case QueryDialogsPageType:
+                    page = new QueryDialogsPage();
+                    break;
+                case BannersPageType:
+                    page = new BannersPage();
+                    break;
+                //category 4
+                case MListPageType:
+                    page = new MListPage();
+                    break;
+                case MGridPageType:
+                    page = new MGridPage();
+                    break;
+                case ObjectMenuPageType:
+                    page = new ObjectMenuPage();
+                    break;
+                case ComboBoxPageType:
+                    page = new ComboBoxPage();
+                    break;
+                case ContentItemsPageType:
+                    page = new ContentItemsPage();
+                    break;
+                case BubblePageType:
+                    page = new BubblePage();
+                    break;
+                //category 5
+                case TextEntryPageType:
+                    page = new TextEntryPage();
+                    break;
+                case TextEntryNavigationPageType:
+                    page = new TextEntryNavigationPage();
+                    break;
+                case SliderPageType:
+                    page = new SliderPage();
+                    break;
+                case FeedbackPageType:
+                    page = new FeedbackPage();
+                    break;
+                default:
+                    break;
+                }
+
+                galleryPages[index.parent().row()].replace(index.row(), (TemplatePage*)page);
+            }
             return galleryPages[index.parent().row()].at(index.row());
-        else
+        } else {
+            if (!categoryPages[index.row()])
+                categoryPages[index.row()] = new MainCategoryPage(this, index);
             return categoryPages[index.row()];
+        }
+
+        return NULL;
     }
 
     const QString &getName(const QModelIndex &index) const {
@@ -236,11 +368,18 @@ private:
             return categoryPageNames[index.row()];
     }
 
-     QString getTimedemoName(const QModelIndex &index) const {
+    QString getTimedemoName(const QModelIndex &index) const {
         if (index.parent().isValid())
-            return galleryPages[index.parent().row()].at(index.row())->timedemoTitle();
+            return ((TimedemoPage*)const_cast<WidgetsGalleryDataModel*>(this)->getPage(index))->timedemoTitle();
 
         return QString();
+    }
+
+    int getPageType(const QModelIndex &index) const {
+        if (index.parent().isValid())
+            return galleryPageTypes[index.parent().row()].at(index.row());
+
+        return -1;
     }
 
 private:
@@ -248,6 +387,7 @@ private:
     QList<MainCategoryPage*> categoryPages;
     QMap<int, TemplatePageList> galleryPages;
     QMap<int, TemplatePageNameList> galleryPageNames;
+    QHash<int, TemplatePageTypeList> galleryPageTypes;
 };
 
 class WidgetGalleryCategoryCellCreator : public MAbstractCellCreator<DrillDownListItem>
@@ -289,11 +429,15 @@ MainPage::MainPage(const QString &title)
       policy(0),
       languageSettingsPage(0),
       buttons(),
-      initialPageToShow()
+      initialPageToShow(),
+      createEmpty(false)
 {
-    setTitle(title);
-
-    connect(this, SIGNAL(appeared()), this, SLOT(showInitialPage()));
+    if (qApp->arguments().indexOf("-exitimmediately") >= 0)
+        createEmpty = true;
+    else {
+        setTitle(title);
+        connect(this, SIGNAL(appeared()), this, SLOT(showInitialPage()));
+    }
 }
 
 MainPage::~MainPage()
@@ -308,6 +452,8 @@ QString MainPage::timedemoTitle()
 void MainPage::createContent()
 {
     MApplicationPage::createContent();
+    if (createEmpty)
+        return;
 
     QGraphicsWidget *panel = centralWidget();
 
@@ -345,6 +491,9 @@ void MainPage::createContent()
 
 void MainPage::retranslateUi()
 {
+    if (createEmpty)
+        return;
+
     //% "Widgets Gallery"
     setTitle(qtTrId("xx_application_title"));
 
@@ -375,19 +524,6 @@ void MainPage::populateLayout()
     policy->addItem(list, Qt::AlignCenter);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(categoryItemClicked(QModelIndex)));
-}
-
-void MainPage::handleListItemClick()
-{
-    QObject *sender_object = sender();
-    if (sender_object)   {
-        MButton *button = qobject_cast<MButton *>(sender_object);
-
-        if (button) {
-            MApplicationPage *page = buttons.value(button);
-            showPage(page);
-        }
-    }
 }
 
 void MainPage::showPage(MApplicationPage *page)
