@@ -49,7 +49,11 @@ void MSceneLayerEffectDimView::paint(QPainter *painter, const QStyleOptionGraphi
     Q_UNUSED(widget);
     Q_UNUSED(option);
 
+    qreal oldOpacity = painter->opacity();
+    qreal opacity = d_ptr->controller->effectiveOpacity() * style()->opacity();
+    painter->setOpacity(opacity);
     painter->fillRect(boundingRect(), QColor(0, 0, 0));
+    painter->setOpacity(oldOpacity);
 }
 
 QRectF MSceneLayerEffectDimView::boundingRect() const
@@ -60,11 +64,7 @@ QRectF MSceneLayerEffectDimView::boundingRect() const
 
 void MSceneLayerEffectDimView::applyStyle()
 {
-    Q_D(MSceneLayerEffectDimView);
-
     MSceneWindowView::applyStyle();
-
-    d->controller->setOpacity(style()->opacity());
 }
 
 M_REGISTER_VIEW_NEW(MSceneLayerEffectDimView, MSceneLayerEffect)
