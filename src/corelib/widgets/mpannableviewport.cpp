@@ -129,8 +129,8 @@ void MPannableViewportPrivate::scrollTo(const QPointF &endPosition)
     scrollToAnimation.stop();
     scrollToAnimation.setStartValue(q->position());
     scrollToAnimation.setEndValue(endPosition);
-    scrollToAnimation.setEasingCurve(QEasingCurve::OutCubic);
-    scrollToAnimation.setDuration(500);
+    scrollToAnimation.setEasingCurve(QEasingCurve::InOutCubic);
+    scrollToAnimation.setDuration(300);
     scrollToAnimation.start();
 }
 
