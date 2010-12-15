@@ -51,8 +51,11 @@ public slots:
       */
     void terminateOnEmptyMainLoop2();
 
+    void quit();
+
 private:
     TerminationType terminationType;
+    bool readyToQuit;
 };
 
 #endif // EMPTYMAINLOOPHELPER_H

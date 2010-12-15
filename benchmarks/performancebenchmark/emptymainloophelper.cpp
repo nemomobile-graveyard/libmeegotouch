@@ -38,6 +38,7 @@
 EmptyMainLoopHelper::EmptyMainLoopHelper() :
     terminationType( QuitOnEmpty )
 {
+    readyToQuit = false;
 }
 
 void EmptyMainLoopHelper::triggerTermination(TerminationType type)
@@ -49,7 +50,7 @@ void EmptyMainLoopHelper::triggerTermination(TerminationType type)
 void EmptyMainLoopHelper::terminateOnEmptyMainLoop()
 {
     qApp->processEvents();
-    if (qApp->hasPendingEvents() || MTheme::hasPendingRequests()) {
+    if ((qApp->hasPendingEvents() || MTheme::hasPendingRequests()) && !readyToQuit) {
         QTimer::singleShot(0, this, SLOT(terminateOnEmptyMainLoop()));
     } else {
         QTimer::singleShot(20, this, SLOT(terminateOnEmptyMainLoop2()));
@@ -58,7 +59,7 @@ void EmptyMainLoopHelper::terminateOnEmptyMainLoop()
 
 void EmptyMainLoopHelper::terminateOnEmptyMainLoop2()
 {
-    if (qApp->hasPendingEvents()) {
+    if (qApp->hasPendingEvents() && !readyToQuit) {
         QTimer::singleShot(0, this, SLOT(terminateOnEmptyMainLoop()));
     } else {
         if (terminationType == ExitOnEmpty) {
@@ -73,9 +74,13 @@ void EmptyMainLoopHelper::terminateOnEmptyMainLoop2()
                    .arg((int)t.tv_sec)
                    .arg((int)(t.tv_usec % 1000000), 6, 10, (const QChar)'0');
 #endif
-
             qApp->quit();
         }
     }
+}
+
+void EmptyMainLoopHelper::quit()
+{
+    readyToQuit = true;
 }
 
