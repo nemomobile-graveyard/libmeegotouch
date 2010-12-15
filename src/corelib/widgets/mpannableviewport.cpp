@@ -94,7 +94,7 @@ void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
 
     // Assume only bottom part of pannable area is covered by SIP.
     const int overlappingHeight = (q->mapRectFromScene(imArea).toRect()
-                                   & q->contentsRect().toRect()).height();
+                                   & q->rect().toRect()).height();
 
     // Increase panning range to so that user can pan areas beneath
     // software input panel visible.
@@ -131,7 +131,7 @@ void MPannableViewportPrivate::scrollTo(const QPointF &endPosition)
 
     // This privileged scrolling extends the range if necessary.
     const qreal bottomRangeExtension = endPosition.y()
-                                       + q->contentsRect().height()
+                                       + q->size().height()
                                        - pannedWidget->size().height();
     setAutoScrollingExtension(qMax<qreal>(0.0, bottomRangeExtension));
 
