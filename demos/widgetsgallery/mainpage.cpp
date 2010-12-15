@@ -49,6 +49,8 @@
 #include "drilldownlistitem.h"
 #include "customnavigationbarpage.h"
 
+#include "../../benchmarks/performancebenchmark/emptymainloophelper.h"
+
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
@@ -385,8 +387,8 @@ private:
 private:
     QList<QString> categoryPageNames;
     QList<MainCategoryPage*> categoryPages;
-    QMap<int, TemplatePageList> galleryPages;
-    QMap<int, TemplatePageNameList> galleryPageNames;
+    QHash<int, TemplatePageList> galleryPages;
+    QHash<int, TemplatePageNameList> galleryPageNames;
     QHash<int, TemplatePageTypeList> galleryPageTypes;
 };
 
@@ -438,6 +440,7 @@ MainPage::MainPage(const QString &title)
         setTitle(title);
         connect(this, SIGNAL(appeared()), this, SLOT(showInitialPage()));
     }
+    mainLoopHelper = 0;
 }
 
 MainPage::~MainPage()
@@ -510,11 +513,22 @@ void MainPage::retranslateUi()
     actionLanguage->setText(qtTrId("xx_mainpage_language_settings"));
 }
 
+void MainPage::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    TimedemoPage::paint(painter, option, widget);
+    if (mainLoopHelper)
+        mainLoopHelper->quit();
+}
+
 void MainPage::setInitialPageToShow(const QString& initialPageToShow)
 {
     this->initialPageToShow = initialPageToShow;
 }
 
+void MainPage::setMainLoopHelper(EmptyMainLoopHelper *helper)
+{
+    mainLoopHelper = helper;
+}
 
 void MainPage::populateLayout()
 {

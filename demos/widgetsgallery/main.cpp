@@ -105,6 +105,7 @@ int main(int argc, char **argv)
     // -exitimmediately will skip creating the content of the main page
     if (qApp->arguments().indexOf("-quitimmediately") >= 0 || qApp->arguments().indexOf("-exitimmediately") >= 0) {
         // terminate widgetsgallery as soon as the content is shown and main loop is idle
+        mainPage.setMainLoopHelper(&mainLoopHelper);
         mainLoopHelper.triggerTermination(EmptyMainLoopHelper::QuitOnEmpty);
     }
 

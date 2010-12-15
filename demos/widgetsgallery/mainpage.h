@@ -34,6 +34,7 @@ class MButton;
 class QSettings;
 
 class LanguagePage;
+class EmptyMainLoopHelper;
 
 class MainPage : public TimedemoPage
 {
@@ -61,6 +62,7 @@ public:
     void showPageByTimedemoTitle(const QString& name);
 
     void setInitialPageToShow(const QString& initialPageToShow);
+    void setMainLoopHelper(EmptyMainLoopHelper *helper);
 
 public slots:
     void showThemeSelectionDialog();
@@ -73,6 +75,7 @@ public slots:
 
 protected:
     virtual void retranslateUi();
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
     void populateLayout();
@@ -93,6 +96,7 @@ private:
 
     QString initialPageToShow;
     bool createEmpty;
+    EmptyMainLoopHelper *mainLoopHelper;
 };
 
 #endif
