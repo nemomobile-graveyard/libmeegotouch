@@ -29,7 +29,8 @@
 
 MScalableImagePrivate::MScalableImagePrivate()
     : m_imageType(MScalable9), m_image(NULL),
-      q_ptr(NULL)
+      q_ptr(NULL),
+      downscaleWarningPrinted(false)
 {
 }
 
@@ -141,6 +142,8 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             // remember the key so that the entry can be removed on-demand
             const_cast<MScalableImagePrivate*>(this)->cachedImageKey = key;
         } else {
+            if (!downscaleWarningPrinted && (w < m_image->size().width() || h < m_image->size().height()))
+                outputDownscaleWarning("MScalableImage9", w, h);
             // caching isn't permitted for this case; scale and render direct to screen.
             qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
 
@@ -166,12 +169,23 @@ void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QP
     }
     //the image needs some scaling, draw the image using smooth scaling
     else {
+        if (!downscaleWarningPrinted && (w < m_image->size().width() || h < m_image->size().height()))
+            outputDownscaleWarning("MScalableImage1", w, h);
         bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
         painter->setRenderHint(QPainter::SmoothPixmapTransform);
         painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
         painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
     }
 #endif //defined(M_OS_MAEMO5)
+}
+
+void MScalableImagePrivate::outputDownscaleWarning(const QString& origin, qreal w, qreal h) const
+{
+    mPerformanceWarning(origin) << QString("Downscaling is slow and should be avoided. %1 (%2x%3) => (%4x%5)")
+                                                .arg(pixmapId)
+                                                .arg(m_image->size().width()).arg(m_image->size().height())
+                                                .arg(w).arg(h);
+    const_cast<MScalableImagePrivate*>(this)->downscaleWarningPrinted = true;
 }
 
 MScalableImage::MScalableImage()
@@ -253,6 +267,7 @@ void MScalableImage::setPixmap(const QPixmap *pixmap)
 
     d->m_image = pixmap;
     d->pixmapId = "";
+    d->downscaleWarningPrinted = false;
 
     d->validateSize();
 }
