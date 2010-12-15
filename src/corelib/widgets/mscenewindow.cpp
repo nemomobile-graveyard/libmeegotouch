@@ -316,20 +316,9 @@ void MSceneWindow::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGestu
 
         if (contextEvent.isAccepted() && d->waitingForContextMenuEvent) {
             //Event has been accepted by some widget on top of this scenewindow.
-            if ((scene() == NULL) || (scene()->views().size() == 0)) {
-                // If this widget has been removed from the scene and/or there
-                // is no view, return
-                return;
-            }
-
-            MCancelEvent cancelEvent;
-            QList<QGraphicsItem*> affectedItems = scene()->items(gesture->hotSpot());
-            QGraphicsItem *item = 0;
-
-            foreach(item, affectedItems) {
-                if (scene()->items().contains(item))
-                    scene()->sendEvent(item, &cancelEvent);
-            }
+            MScene *mScene = qobject_cast<MScene *>(scene());
+            if (mScene)
+                mScene->d_func()->notifyChildRequestedMouseCancel();
         }
         d->waitingForContextMenuEvent = false;
 
