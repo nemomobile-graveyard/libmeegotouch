@@ -188,6 +188,7 @@ SUBDIRS     =  \
     ut_mswiperecognizer \
     ut_mstylablewidget \
     ut_mdynamicpropertywatcher \
+    ut_mcommonpixmaps \
 
 # enable only when we have icu available
 
