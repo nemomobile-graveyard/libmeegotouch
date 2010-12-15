@@ -128,6 +128,9 @@ public:
 #endif
     bool showAsyncRequests;
 
+    typedef QHash<QString, QString> MStringHash;
+    QHash<QString, MStringHash> controllerViewCache;
+
 public:
     /*!
      * Check if the theme has defined a view for this controller, if not, go towards base class

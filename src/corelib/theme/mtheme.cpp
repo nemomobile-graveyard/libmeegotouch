@@ -770,6 +770,11 @@ QString MThemePrivate::determineViewClassForController(const MWidgetController *
 {
     bool exactMatch = false;
 
+    QString controllerClassName = controller->metaObject()->className();
+    QString cachedViewClass = controllerViewCache[controllerClassName].value(controller->viewType(), QString::null);
+    if (!cachedViewClass.isNull())
+        return cachedViewClass;
+
     // first search from application view configuration
     QString bestMatch = application->viewType(controller, exactMatch);
     if (exactMatch)
@@ -794,13 +799,16 @@ QString MThemePrivate::determineViewClassForController(const MWidgetController *
         // try to get view type for the widget
         QString viewClassName = library->viewType(controller, exactMatch);
         if (exactMatch) {
-            return viewClassName;
+            bestMatch = viewClassName;
+            break;
         }
 
         if (bestMatch.isEmpty()) {
             bestMatch = viewClassName;
         }
     }
+
+    controllerViewCache[controllerClassName].insert(controller->viewType(), bestMatch);
 
     return bestMatch;
 }
@@ -961,6 +969,9 @@ void MTheme::rebuildViewsForWidgets()
     for (MThemePrivate::RegisteredStyleContainers::iterator iterator = d->styleContainers.begin(); iterator != d->styleContainers.end(); ++iterator) {
         iterator.value()->reloadStyles();
     }
+
+    // Clear controller -> view cache
+    d_ptr->controllerViewCache.clear();
 
     // go trough all widgets, replace views
     QSet<MWidgetController *>::iterator end = MWidgetControllerPrivate::allSystemWidgets.end();
