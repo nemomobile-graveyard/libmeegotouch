@@ -2,6 +2,7 @@ include(../common_top.pri)
 INCLUDEPATH +=  \
     $$MSRCDIR/corelib/widgets \
     $$MSRCDIR/corelib/scene \
+
 TARGET = ut_mpannableviewport
 
 
