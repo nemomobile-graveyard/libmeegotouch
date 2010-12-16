@@ -357,7 +357,12 @@ public:
      */
     void setOrientationLocked(bool locked);
 
-    //! Returns the current visibility state of the window.
+    /*! Returns true if user can see the window.
+     *  This is different from QWidget::isVisible(), which is always
+     *  explicitly set in the application. QWidget::isVisible() doesn't
+     *  know if the window is e.g. covered by another window and cannot be
+     *  seen.
+     */
     bool isOnDisplay() const;
 
     /*! Returns true if the window is currently minimized to the switcher.
@@ -475,16 +480,22 @@ Q_SIGNALS:
     void orientationChangeFinished(M::Orientation);
 
     /*!
-     This signal is emitted when the window is shown or is not obscured anymore by another window.
+     This signal is emitted when:
+     - the window becomes visible
+     - is not obscured anymore by another window
 
-     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     Calling show() will emit displayEntered() when the window becomes
+     visible.
      */
     void displayEntered();
 
     /*!
-     A signal that is emitted when the window gets obscured by another window.
+     A signal that is emitted when:
+     - the window has been obscured by another window approximately for one second
+     - the window gets hidden
+     - the window gets closed
 
-     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     Calling close() will immediately emit displayExited().
      */
     void displayExited();
 
@@ -513,16 +524,12 @@ protected:
     virtual void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
 
     /*!
-     A handler that is called when the window is shown or is not obscured anymore by another window.
-
-     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     * A handler that is called just before displayEntered() is emitted.
      */
     virtual void enterDisplayEvent();
 
     /*!
-     A handler that is called when the window gets obscured by another window.
-
-     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     * A handler that is called just before displayExited() is emitted.
      */
     virtual void exitDisplayEvent();
 
