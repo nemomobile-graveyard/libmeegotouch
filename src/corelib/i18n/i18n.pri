@@ -24,6 +24,8 @@ contains(DEFINES, HAVE_ICU) {
     PUBLIC_HEADERS += \
         $$I18N_SRC_DIR/mcalendar.h \
         $$I18N_SRC_DIR/mcollator.h \
+        $$I18N_SRC_DIR/mcharsetdetector.h \
+        $$I18N_SRC_DIR/mcharsetmatch.h \
 
     PRIVATE_HEADERS += \
         $$I18N_SRC_DIR/micubreakiterator.h \
@@ -33,7 +35,10 @@ contains(DEFINES, HAVE_ICU) {
         $$I18N_SRC_DIR/mcalendar.cpp \
         $$I18N_SRC_DIR/mcollator.cpp \
         $$I18N_SRC_DIR/micubreakiterator.cpp \
-        $$I18N_SRC_DIR/micuconversions.cpp
+        $$I18N_SRC_DIR/micuconversions.cpp \
+        $$I18N_SRC_DIR/mcharsetdetector.cpp \
+        $$I18N_SRC_DIR/mcharsetmatch.cpp \
+
 } else {
     PRIVATE_HEADERS += \
         $$I18N_SRC_DIR/mnullbreakiterator.h \
