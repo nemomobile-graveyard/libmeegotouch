@@ -125,7 +125,6 @@ void BannersPage::showInformationBanner()
 {
     MBanner *banner = new MBanner();
     banner->setStyleName("InformationBanner");
-    banner->setIconID("icon-m-camera-scene-landscape-selected");
     banner->setTitle("You have 6 meetings in your Agenda");
     banner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
@@ -134,6 +133,7 @@ void BannersPage::showSystemInformationBanner()
 {
     MBanner *systemBanner = new MBanner();
     systemBanner->setStyleName("SystemBanner");
+    systemBanner->setIconID("icon-m-common-usb");
     systemBanner->setTitle("Unable to continue video editing. USB disconnected.");
     systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }

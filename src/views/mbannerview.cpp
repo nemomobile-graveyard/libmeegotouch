@@ -229,13 +229,6 @@ void MBannerViewPrivate::layoutInformationBanner()
 
     layout = createLayout();
 
-    if (!q->model()->iconID().isEmpty()) {
-        icon()->setStyleName("InformationBannerIcon");
-        icon()->setVisible(true);
-        landscapePolicy->addItem(icon(), Qt::AlignTop);
-        portraitPolicy->addItem(icon(), Qt::AlignTop);
-    }
-
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("InformationBannerTitle");
         title()->setVisible(true);
@@ -244,6 +237,8 @@ void MBannerViewPrivate::layoutInformationBanner()
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
 
+    icon()->setVisible(false);
+    subtitle()->setVisible(false);
     prefixTimeStamp()->setVisible(false);
     bannerTimeStamp()->setVisible(false);
 }
@@ -254,6 +249,13 @@ void MBannerViewPrivate::layoutSystemBanner()
 
     layout = createLayout();
 
+    if (!q->model()->iconID().isEmpty()) {
+        icon()->setStyleName("SystemBannerTitleIcon");
+        icon()->setVisible(true);
+        landscapePolicy->addItem(icon(), Qt::AlignTop);
+        portraitPolicy->addItem(icon(), Qt::AlignTop);
+    }
+
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("SystemBannerTitle");
         title()->setVisible(true);
@@ -263,7 +265,7 @@ void MBannerViewPrivate::layoutSystemBanner()
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
 
-    icon()->setVisible(false);
+    subtitle()->setVisible(false);
     prefixTimeStamp()->setVisible(false);
     bannerTimeStamp()->setVisible(false);
 }

@@ -38,8 +38,8 @@
     Although we haven't defined different views for the MBanner, we consider those three types:
 
     \li An event banner is a MBanner with an icon, title and subtitle.
-    \li An information banner is a MBanner with a title and icon
-    \li An system banner is a MBanner with a title (only one label)
+    \li An information banner is a MBanner with a title
+    \li An system banner is a MBanner with a title and an icon
 
 
      You should set the stylename through setStyleName() with one of the following names:
@@ -113,7 +113,6 @@
         \code
            MBanner *infoBanner = new MBanner();
            infoBanner->setStyleName("InformationBanner");
-           infoBanner->setIconID("icon-m-telephony-call-answer");
            infoBanner->setTitle("Info banner with so much information that the text wraps in portrait");
            infoBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
         \endcode
@@ -122,6 +121,7 @@
         \code
           MBanner *systemBanner = new MBanner();
           systemBanner->setStyleName("SystemBanner");
+          systemBanner->setIconID("icon-m-common-usb");
           systemBanner->setTitle("System banner");
           systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
         \endcode
