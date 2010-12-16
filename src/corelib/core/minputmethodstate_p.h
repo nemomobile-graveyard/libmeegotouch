@@ -53,8 +53,11 @@ public:
     //! Current input method area
     QRect region;
 
-    //! Current orientation of application's active window
-    M::OrientationAngle orientation;
+    //! Current orientation angle of application's active window
+    M::OrientationAngle orientationAngle;
+
+    //! Indicate during rotation changing.
+    bool rotationInProgress;
 
     QMap<int, ToolbarInfo*> toolbars;
 

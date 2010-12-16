@@ -798,6 +798,23 @@ void MComponentDataPrivate::registerDefaultService(const QString &appIdentifier)
 #endif
 }
 
+void MComponentDataPrivate::_q_notifyInputMethodActiveWindowOrientationChangeStarted()
+{
+    MWindow *activeWindow = MComponentData::activeWindow();
+    MSceneManager *sceneManager = (activeWindow) ? activeWindow->sceneManager() : NULL;
+    if (sceneManager) {
+        MInputMethodState::instance()->startActiveWindowOrientationAngleChange(sceneManager->orientationAngle());
+    }
+}
+
+void MComponentDataPrivate::_q_notifyInputMethodActiveWindowOrientationChangeFinished()
+{
+    MWindow *activeWindow = MComponentData::activeWindow();
+    if (activeWindow) {
+        MInputMethodState::instance()->setActiveWindowOrientationAngle(activeWindow->orientationAngle());
+    }
+}
+
 void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
     Q_D(MComponentData);
@@ -1117,17 +1134,30 @@ void MComponentData::setActiveWindow(MWindow *w)
     }
 
     MWindow *activeWindow = MComponentData::activeWindow();
+    MSceneManager *oldSceneManager = (activeWindow) ? activeWindow->sceneManager() : NULL;
+    MSceneManager *newSceneManager = (w) ? w->sceneManager() : NULL;
 
-    if (activeWindow) {
-        QObject::disconnect(activeWindow,
-                            SIGNAL(orientationAngleChanged(M::OrientationAngle)),
-                            MInputMethodState::instance(),
-                            SLOT(setActiveWindowOrientationAngle(M::OrientationAngle)));
+    if (oldSceneManager) {
+        QObject::disconnect(oldSceneManager,
+                            SIGNAL(orientationAboutToChange(M::Orientation)),
+                            MComponentData::instance(),
+                            SLOT(_q_notifyInputMethodActiveWindowOrientationChangeStarted()));
+        QObject::disconnect(oldSceneManager,
+                            SIGNAL(orientationChangeFinished(M::Orientation)),
+                            MComponentData::instance(),
+                            SLOT(_q_notifyInputMethodActiveWindowOrientationChangeFinished()));
     }
-    if (w) {
-        QObject::connect(w, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
-                         MInputMethodState::instance(),
-                         SLOT(setActiveWindowOrientationAngle(M::OrientationAngle)));
+    if (newSceneManager) {
+        QObject::connect(newSceneManager,
+                         SIGNAL(orientationAboutToChange(M::Orientation)),
+                         MComponentData::instance(),
+                         SLOT(_q_notifyInputMethodActiveWindowOrientationChangeStarted()),
+                         Qt::DirectConnection);
+        QObject::connect(newSceneManager,
+                         SIGNAL(orientationChangeFinished(M::Orientation)),
+                         MComponentData::instance(),
+                         SLOT(_q_notifyInputMethodActiveWindowOrientationChangeFinished()),
+                         Qt::DirectConnection);
         MInputMethodState::instance()->setActiveWindowOrientationAngle(w->orientationAngle());
     }
     int oldIndex = gMComponentDataPrivate->windows.indexOf(w);
@@ -1315,3 +1345,6 @@ bool MComponentData::chainDataStackIsEmpty()
     return retVal;
 }
 #endif // Q_WS_X11
+
+
+#include "moc_mcomponentdata.cpp"

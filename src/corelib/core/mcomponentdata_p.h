@@ -49,6 +49,9 @@ public:
     void parseArguments(int &argc, char **argv, 
                         MTheme::ThemeService &themeService);
 
+    void _q_notifyInputMethodActiveWindowOrientationChangeStarted();
+    void _q_notifyInputMethodActiveWindowOrientationChangeFinished();
+
     bool softwareRendering;
     bool fullScreen;
     bool showBoundingRect;

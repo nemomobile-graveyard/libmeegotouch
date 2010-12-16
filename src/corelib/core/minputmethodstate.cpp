@@ -28,7 +28,8 @@
 
 
 MInputMethodStatePrivate::MInputMethodStatePrivate()
-    : orientation(M::Angle0),
+    : orientationAngle(M::Angle0),
+      rotationInProgress(false),
       q_ptr(NULL)
 {
 }
@@ -79,13 +80,28 @@ QRect MInputMethodState::inputMethodArea() const
     return d->region;
 }
 
-void MInputMethodState::setActiveWindowOrientationAngle(M::OrientationAngle newOrientation)
+void MInputMethodState::startActiveWindowOrientationAngleChange(M::OrientationAngle newOrientationAngle)
 {
     Q_D(MInputMethodState);
 
-    if (d->orientation != newOrientation) {
-        d->orientation = newOrientation;
-        emit activeWindowOrientationAngleChanged(newOrientation);
+    if (d->orientationAngle != newOrientationAngle) {
+        d->orientationAngle = newOrientationAngle;
+        d->rotationInProgress = true;
+        emit activeWindowOrientationAngleAboutToChange(newOrientationAngle);
+    }
+}
+
+void MInputMethodState::setActiveWindowOrientationAngle(M::OrientationAngle newOrientationAngle)
+{
+    Q_D(MInputMethodState);
+
+    if (d->orientationAngle != newOrientationAngle) {
+        d->orientationAngle = newOrientationAngle;
+        d->rotationInProgress = true;
+    }
+    if (d->rotationInProgress) {
+        d->rotationInProgress = false;
+        emit activeWindowOrientationAngleChanged(newOrientationAngle);
     }
 }
 
@@ -93,7 +109,7 @@ M::OrientationAngle MInputMethodState::activeWindowOrientationAngle() const
 {
     Q_D(const MInputMethodState);
 
-    return d->orientation;
+    return d->orientationAngle;
 }
 
 void MInputMethodState::requestSoftwareInputPanel()

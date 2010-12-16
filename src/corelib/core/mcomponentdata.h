@@ -255,6 +255,8 @@ private:
 
     Q_DECLARE_PRIVATE(MComponentData)
     Q_DISABLE_COPY(MComponentData)
+    Q_PRIVATE_SLOT(d_func(), void _q_notifyInputMethodActiveWindowOrientationChangeStarted())
+    Q_PRIVATE_SLOT(d_func(), void _q_notifyInputMethodActiveWindowOrientationChangeFinished())
 
     friend class MWindow;
     friend class MApplicationWindow;

@@ -89,8 +89,19 @@ public:
     //! \internal_end
 
 public Q_SLOTS:
-    //! \brief Set the orientation of application's active window to \a newOrientation
-    void setActiveWindowOrientationAngle(M::OrientationAngle newOrientation);
+    /*!
+     * \brief Application's active window start to rotate to \a newOrientationAngle.
+     *
+     * \note This method should be called when active window start rotation animation.
+     */
+    void startActiveWindowOrientationAngleChange(M::OrientationAngle newOrientationAngle);
+
+    /*!
+     * \brief Set the orientation angle of application's active window to \a newOrientationAngle
+     *
+     * \note This method should be called when active window already finished the rotation animation.
+     */
+    void setActiveWindowOrientationAngle(M::OrientationAngle newOrientationAngle);
 
     //! \brief Set input method area to \a newRegion
     void setInputMethodArea(const QRect &newRegion);
@@ -125,9 +136,21 @@ Q_SIGNALS:
     //! \param region new input method area
     void inputMethodAreaChanged(const QRect &region);
 
-    //! Emitted when the orientation of application's active window is changed
-    //! \param orientation new orientation angle
-    void activeWindowOrientationAngleChanged(M::OrientationAngle orientation);
+    /*!
+     * \brief This signal is emitted before the orientation angle of the application's active window is changed.
+     * \param orientationAngle New orientation angle which is about to change.
+     *
+     * \note It is emitted at the start of the rotation animation.
+     */
+    void activeWindowOrientationAngleAboutToChange(M::OrientationAngle orientationAngle);
+
+    /*!
+     * \brief This signal is emitted when the orientation angle of application's active window is changed
+     * \param orientationAngle new orientation angle
+     *
+     * \note It's emitted with every orientation angle change finished.
+     */
+    void activeWindowOrientationAngleChanged(M::OrientationAngle orientationAngle);
 
     //! Emitted when an input method toolbar which is defined in \a fileName with an unique identifier \a id is registered.
     void toolbarRegistered(int id, const QString &fileName);
