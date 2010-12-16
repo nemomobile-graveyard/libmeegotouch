@@ -29,7 +29,7 @@ Widget classes
     <li>MMessageBox
   </ul>
 <li>MImageWidget
-<li>MInfoBanner
+<li>MBanner
 <li>MLabel
 <li>MList
   <ul>
