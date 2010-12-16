@@ -331,6 +331,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_undoSceneWindowDislocation(MSceneWindow *sceneWindow))
     Q_PRIVATE_SLOT(d_func(), void _q_updateRootElementsPositions())
     Q_PRIVATE_SLOT(d_func(), void _q_updateOnDisplayVisibility())
+    Q_PRIVATE_SLOT(d_func(), void _q_setOrientationAngleForWindow())
 #ifdef Q_WS_X11
     Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
 #endif

@@ -187,6 +187,7 @@ void MSceneManagerPrivate::createOrientationAnimation()
             SLOT(_q_applySceneWindowTransitionsQueuedDueToOrientationAnimation()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_updateOnDisplayVisibility()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_setOrientationAngleForWindow()));
 }
 
 void MSceneManagerPrivate::initRelocator()
@@ -971,6 +972,25 @@ void MSceneManagerPrivate::setOrientationAngleWithoutAnimation(M::OrientationAng
 
     _q_emitOrientationChangeFinished();
     _q_updateOnDisplayVisibility();
+    _q_setOrientationAngleForWindow();
+}
+
+//we need to update MWindow orienentation angle
+void MSceneManagerPrivate::_q_setOrientationAngleForWindow()
+{
+    Q_Q(MSceneManager);
+
+    foreach(QGraphicsView *view, q->scene()->views()) {
+        if(!view)
+            continue;
+        MWindow* win = qobject_cast<MWindow *>(view);
+        if(win && win->d_func()->angle !=angle) {
+            win->d_func()->angle = angle;
+#ifdef Q_WS_X11
+            win->d_func()->setX11OrientationAngleProperty(angle);
+#endif
+        }
+    }
 }
 
 bool MSceneManagerPrivate::isOnDisplay()

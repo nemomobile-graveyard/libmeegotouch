@@ -211,6 +211,7 @@ public:
     void _q_applyPendingOrientationChange();
 
     void _q_updateRootElementsPositions();
+    void _q_setOrientationAngleForWindow();
 
 #ifdef Q_WS_X11
     void _q_updateDecoratorButtonsProperty();
