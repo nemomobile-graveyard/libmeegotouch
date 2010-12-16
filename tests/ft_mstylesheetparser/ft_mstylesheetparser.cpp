@@ -504,23 +504,8 @@ void Ft_MStyleSheetParser::test_constants_binary()
     QCOMPARE(m_subject->fileInfoList().count(), 3);
 
     MStyleSheetParser::StylesheetFileInfo *info = m_subject->fileInfoList()[0];
-    QCOMPARE(info->constants.count(), 5);
-    QCOMPARE(info->constants["cWidth"], QByteArray("10px"));
-    QCOMPARE(info->constants["cHeight"], QByteArray("15px"));
-    QCOMPARE(info->constants["cFontFamily"], QByteArray("sans"));
-    QCOMPARE(info->constants["cFontSize"], QByteArray("12px"));
-    QCOMPARE(info->constants["cColor"], QByteArray("#0abba0"));
-    info = m_subject->fileInfoList()[1];
+    // the binary files do not contain any constants
     QCOMPARE(info->constants.count(), 0);
-    info = m_subject->fileInfoList()[2];
-    QCOMPARE(info->constants.count(), 7);
-    QCOMPARE(info->constants["cInt"], QByteArray("10"));
-    QCOMPARE(info->constants["cReal"], QByteArray("1.0"));
-    QCOMPARE(info->constants["cName"], QByteArray("\"name\""));
-    QCOMPARE(info->constants["cColor"], QByteArray("#0dead0"));
-    QCOMPARE(info->constants["cBool"], QByteArray("true"));
-    QCOMPARE(info->constants["cPoint"], QByteArray("17px 11px"));
-    QCOMPARE(info->constants["cFont"], QByteArray("arial 10px"));
 
     //check that there are right number of attributes
     info = m_subject->fileInfoList()[0];
@@ -593,8 +578,8 @@ void Ft_MStyleSheetParser::test_binary_equality()
     QList<MStyleSheetParser::StylesheetFileInfo *>::iterator binaryFi = binary.fileInfoList().begin();
 
     for (int i = 0; i < parser.fileInfoList().count(); i++) {
-        // check that there is equal count of constants
-        QCOMPARE((*parserFi)->constants.count(), (*binaryFi)->constants.count());
+        // NOTE: (*parserFi)->constants.count() will differ from (*binaryFi)->constants.count()
+        // as the binary files do not contain any constants
 
         // check that there is equal count of selectors
         QCOMPARE((*parserFi)->selectors.count(), (*binaryFi)->selectors.count());

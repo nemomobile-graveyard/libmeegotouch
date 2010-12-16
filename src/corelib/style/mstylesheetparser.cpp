@@ -39,7 +39,7 @@
 #include <sys/stat.h>
 
 namespace {
-    const unsigned int FILE_VERSION = 16;
+    const unsigned int FILE_VERSION = 17;
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -51,7 +51,7 @@ public:
     QChar read(QFile &stream, const QByteArray &delimeters, QByteArray &out);
     QChar peek(QFile &stream, const QByteArray &delimeters, QByteArray &out);
 
-    bool load(const QFileInfo &fileInfo, QHash<QByteArray, QByteArray>* constants);
+    bool load(const QString &filename, QHash<QByteArray, QByteArray>* constants, bool toplevel);
 
     /**
      \brief Parse a stylesheet \a file.
@@ -69,26 +69,26 @@ public:
     /**
      \brief Get the \a file name for a binary stylesheet cache file corresponding to the
       original stylesheet file.
-     \param fileInfo a QFileInfo for the filename, reused if possible to avoid unnecessary file IO.
      */
-    QString createBinaryFilename(const QFileInfo &fileInfo) const;
+    QString createBinaryFilename(const QString &filename) const;
 
     QList<MStyleSheetParser::StylesheetFileInfo *>     fileInfoList;
     MStyleSheetParser::StylesheetFileInfo            *privateFileInfo;
 
     /**
      \brief Load a previously-cached binary version of the style.
-     \param cssFileInfo The file info of the opened stylesheet file.
      \param binaryFilename The binary stylesheet file.
      */
-    bool loadBinary(const QFileInfo &cssFileInfo, const QString &binaryFilename);
+    bool loadBinary(const QString &binaryFilename);
 
     /**
-     \brief Write the binary stylesheet data to a file on disk.
-     \param info The parsed stylesheet data.
+     \brief Write all binary stylesheet data to a file on disk.
      \param binaryFilename The file to create.
      */
-    bool dump(const MStyleSheetParser::StylesheetFileInfo &info, const QString &binaryFilename);
+    bool dump(const QString &binaryFilename);
+
+    void writeStylesheetFileInfo(MStyleSheetParser::StylesheetFileInfo *selector, QDataStream &stream);
+    MStyleSheetParser::StylesheetFileInfo * readStylesheetFileInfo(QDataStream &stream);
 
     MStyleSheetSelector *readSelector(const QByteArray &file, QDataStream &stream);
     void writeSelector(MStyleSheetSelector *selector, QDataStream &stream);
@@ -124,6 +124,18 @@ public:
     const QByteArray& cachedString(const QByteArray& str) const;
 
 };
+
+// faster than QFileInfo::lastModified().toTime_t()
+time_t modificationTime(const char* filename)
+{
+    struct stat fileInfo;
+    int result = stat(filename, &fileInfo);
+    if (result != 0) {
+        return 0;
+    } else {
+        return fileInfo.st_mtime;
+    }
+}
 
 QSet<QByteArray> MStyleSheetParserPrivate::stringCache;
 #endif
@@ -365,27 +377,28 @@ QChar MStyleSheetParserPrivate::peek(QFile &stream, const QByteArray &delimeters
     return result;
 }
 
-bool MStyleSheetParserPrivate::load(const QFileInfo &fileInfo, QHash<QByteArray, QByteArray>* constants)
+bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, QByteArray>* constants, bool toplevel)
 {
     globalConstants = constants;
 
-    const QString binaryFilename = createBinaryFilename(fileInfo);
+    const QString binaryFilename = createBinaryFilename(filename);
     if (binaryFileMode) {
         // If binary file mode is enabled, we'll check if there's binary
         // file available instead of the ASCII css to speed-up the loading process
-        if (fileInfo.exists() && loadBinary(fileInfo, binaryFilename))
+        if (toplevel && loadBinary(binaryFilename)) {
             return true;
+        }
     }
 
-    QFile file(fileInfo.filePath());
+    QFile file(filename);
     if (file.open(QFile::ReadOnly)) {
 
         //mDebug("MStyleSheetParserPrivate") << "Loading ASCII css file" << filename;
 
         privateFileInfo = new MStyleSheetParser::StylesheetFileInfo;
-        privateFileInfo->filename = qPrintable(fileInfo.filePath());
+        privateFileInfo->filename = qPrintable(filename);
 
-        bool result = parse(file, fileInfo);
+        bool result = parse(file, filename);
         file.close();
 
         if (result || syntaxMode == MStyleSheetParser::RelaxedSyntax) {
@@ -393,8 +406,10 @@ bool MStyleSheetParserPrivate::load(const QFileInfo &fileInfo, QHash<QByteArray,
 
             // dump this file to the disk for faster access in future?
             if (binaryFileMode) {
-                privateFileInfo->time_t = fileInfo.lastModified().toTime_t();
-                dump(*privateFileInfo, binaryFilename);
+                privateFileInfo->time_t = modificationTime(qPrintable(filename));
+                if (toplevel) {
+                    dump(binaryFilename);
+                }
             }
 
             privateFileInfo = NULL;
@@ -406,7 +421,7 @@ bool MStyleSheetParserPrivate::load(const QFileInfo &fileInfo, QHash<QByteArray,
         }
     }
 
-    mWarning("MStyleSheetParserPrivate") << "Failed to open stylesheet file:" << fileInfo.filePath();
+    mWarning("MStyleSheetParserPrivate") << "Failed to open stylesheet file:" << filename;
 
     return false;
 }
@@ -603,14 +618,14 @@ bool MStyleSheetParserPrivate::importFile(const QByteArray &filename, bool valid
     }
     // add imported file to include list
     QByteArray includeFileName = parsedFileInfo.absolutePath().toAscii() + QDir::separator().toAscii() + filename;
-    uint lastModified = QFileInfo(includeFileName).lastModified().toTime_t();
+    uint lastModified = modificationTime(includeFileName.constData());
     privateFileInfo->includes.push_back(QPair<QByteArray, uint>(includeFileName, lastModified));
 
     // parse the file
     MStyleSheetParserPrivate parser(logicalValues);
     parser.binaryDirectory = binaryDirectory;
     parser.binaryFileMode = binaryFileMode;
-    if (parser.load(QFileInfo(parsedFileInfo.absolutePath() + QDir::separator() + filename), globalConstants) ||
+    if (parser.load(parsedFileInfo.absolutePath() + QDir::separator() + filename, globalConstants, false) ||
         syntaxMode == MStyleSheetParser::RelaxedSyntax) {
         // add all the new file infos into the list of parsed files
         while (parser.fileInfoList.count() > 0) {
@@ -921,10 +936,10 @@ QPair<QByteArray, MStyleSheetAttribute *> MStyleSheetParserPrivate::parseAttribu
     return QPair<QByteArray, MStyleSheetAttribute *> ("", NULL);
 }
 
-QString MStyleSheetParserPrivate::createBinaryFilename(const QFileInfo &fileInfo) const
+QString MStyleSheetParserPrivate::createBinaryFilename(const QString &filename) const
 {
     QString binaryFilename(binaryDirectory);
-    QString absoluteFilePathEncoded(fileInfo.absoluteFilePath());
+    QString absoluteFilePathEncoded(filename);
     absoluteFilePathEncoded.replace('_', "__");
     absoluteFilePathEncoded.replace('/', "_.");
     binaryFilename += absoluteFilePathEncoded;
@@ -985,7 +1000,7 @@ bool MStyleSheetParser::load(const QString &filename)
     Q_D(MStyleSheetParser);
 
     QHash<QByteArray, QByteArray> constants;
-    bool result = d->load(QFileInfo(filename), &constants);
+    bool result = d->load(filename, &constants, true);
     // uncomment for debug output
     //d->debugOutput();
     return result;
@@ -1023,20 +1038,13 @@ MStyleSheetParser::SyntaxMode MStyleSheetParser::syntaxMode() const
     return d->syntaxMode;
 }
 
-bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QString &binaryFilename)
+bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
 {
-    // Check that the file exists:
     if (!QFile::exists(binaryFilename))
         return false;
 
-    // all ok, proceed to loading phase
     QFile file(binaryFilename);
     if (file.open(QFile::ReadOnly)) {
-
-        //mDebug("MStyleSheetParserPrivate") << "Loading binary css file" << binaryFilename;
-        bool result = false;
-
-        // Create readable datastream
         QDataStream stream(&file);
 
         unsigned int file_version;
@@ -1044,130 +1052,135 @@ bool MStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QS
 
         if (file_version == FILE_VERSION) {
             // read fileinfo
-            MStyleSheetParser::StylesheetFileInfo *fileinfo = new MStyleSheetParser::StylesheetFileInfo;
-            stream >> fileinfo->time_t;
-            if (fileinfo->time_t != cssFileInfo.lastModified().toTime_t()) {
-                // date of binary file does not match the one of the css
-                // binary file needs to be recreated
-                return false;
-            }
+            QList<QPair<QByteArray, qint64> > timestamps;
+            stream >> timestamps;
+            QListIterator<QPair<QByteArray, qint64> >  it(timestamps);
 
-            stream >> fileinfo->filename;
-            stream >> fileinfo->includes;
-            stream >> fileinfo->constants;
+            while (it.hasNext()) {
+                QPair<QByteArray, qint64> ts = it.next();
+
+                time_t current = modificationTime(ts.first.constData());
+                if (current != ts.second) {
+                    mDebug("MStyleSheetParserPrivate") << "Timestamp for" << ts.first << "changed. Recreating" << binaryFilename;
+                    return false;
+                }
+            }
 
             QList<uint> logicalTimestamps;
             stream >> logicalTimestamps;
-            if (logicalValues && logicalTimestamps.length() > 0 && logicalTimestamps != logicalValues->timestamps()) {
+            if (logicalValues && logicalTimestamps != logicalValues->timestamps()) {
                 // the logical values have been updated. our constants may have changed
+                mDebug("MStyleSheetParserPrivate") << "Recreating" << binaryFilename << "as constants changed";
                 return false;
             }
-            
-            // load includes
-            const int includesCount = fileinfo->includes.count();
-            for (int i = 0; i < includesCount; ++i) {
-                fileinfo->includes[i].first = cachedString(fileinfo->includes[i].first);
-                QFileInfo fileInfo(fileinfo->includes[i].first);
-                if (fileinfo->includes[i].second != fileInfo.lastModified().toTime_t()) {
-                    // timestamp of included file changed, contants may have changed.
-                    return false;
-                }
-                load(fileInfo, globalConstants);
+
+            int nrOfFiles;
+            stream >> nrOfFiles;
+            for (int i = 0; i < nrOfFiles; ++i) {
+                MStyleSheetParser::StylesheetFileInfo *fi = readStylesheetFileInfo(stream);
+                fileInfoList.append(fi);
             }
-
-            QHashIterator<QByteArray, QByteArray> i(fileinfo->constants);
-            while (i.hasNext()) {
-                i.next();
-                if (globalConstants->contains(i.key())) {
-                    outputParseWarning(fileinfo->filename, "Multiple definition of constant \"" + i.key() + "\". Ignoring redefinition.", 0);
-                } else {
-                    globalConstants->insert(cachedString(i.key()), cachedString(i.value()));
-                }
-            }
-
-            // parse the rest of the file
-            int selectorCount;
-
-            // read all selectors
-            stream >> selectorCount;
-            for (int i = 0; i < selectorCount; ++i) {
-                MStyleSheetSelector *selector = readSelector(fileinfo->filename, stream);
-                fileinfo->selectors.push_back(selector);
-            }
-
-            // read all selectors with parent
-            stream >> selectorCount;
-            for (int i = 0; i < selectorCount; ++i) {
-                MStyleSheetSelector *selector = readSelector(fileinfo->filename, stream);
-                fileinfo->parentSelectors.push_back(selector);
-            }
-
-            fileInfoList.push_back(fileinfo);
-
-            result = true;
+            return true;
         }
         file.close();
-
-        return result;
+        return true;
     }
 
-    mWarning("MStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << cssFileInfo.filePath();
-
+    mWarning("MStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << binaryFilename;
     return false;
 }
 
-bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo &info, const QString &binaryFilename)
+bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
 {
     QFile file(binaryFilename);
 
     if (!file.open(QFile::WriteOnly)) {
         //Maybe it failed because the directory doesn't exist
-        QDir().mkpath( QFileInfo(binaryFilename).absolutePath() );
+        QDir().mkpath(QFileInfo(binaryFilename).absolutePath() );
         if (!file.open(QFile::WriteOnly)) {
-            mDebug("MStyleSheetParserPrivate") << "Failed to dump stylesheet file:" << info.filename << "to" << binaryFilename;
+            mDebug("MStyleSheetParserPrivate") << "Failed to dump stylesheet file:" << binaryFilename;
             return false;
         }
     }
 
-    // Create writable datastream
-    QDataStream stream(&file);
+    // collect timestamps
+    QList<QPair<QByteArray, qint64> > timestamps;
+    QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fileInfoListEnd = fileInfoList.constEnd();
+    for (QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fi = fileInfoList.constBegin();
+            fi != fileInfoListEnd;
+            ++fi) {
+        timestamps.append(QPair<QByteArray, qint64>((*fi)->filename, (*fi)->time_t));
+    }
 
+    QDataStream stream(&file);
     stream << FILE_VERSION;
-    stream << info.time_t;
-    stream << info.filename;
-    stream << info.includes;
-    stream << info.constants;
+    stream << timestamps;
     if (logicalValues) {
         stream << logicalValues->timestamps();
     } else {
         stream << QList<uint>();
     }
 
+    stream << fileInfoList.count();
 
-    // write number of selectors
-    stream << info.selectors.count();
+    for (QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fi = fileInfoList.constBegin();
+            fi != fileInfoListEnd;
+            ++fi) {
+        writeStylesheetFileInfo(*fi, stream);
+    }
 
-    // write all selectors
-    QList<MStyleSheetSelector *>::const_iterator infoSelectorsEnd = info.selectors.constEnd();
-    for (QList<MStyleSheetSelector *>::const_iterator iterator = info.selectors.constBegin();
+    return true;
+}
+
+void MStyleSheetParserPrivate::writeStylesheetFileInfo(MStyleSheetParser::StylesheetFileInfo *fi, QDataStream &stream)
+{
+    stream << fi->filename;
+    stream << fi->time_t;
+
+    stream << fi->selectors.count();
+    // write all selectors without parent
+    QList<MStyleSheetSelector *>::const_iterator infoSelectorsEnd = fi->selectors.constEnd();
+    for (QList<MStyleSheetSelector *>::const_iterator iterator = fi->selectors.constBegin();
             iterator != infoSelectorsEnd;
             ++iterator) {
         writeSelector(*iterator, stream);
     }
 
     // write all selectors with parent
-    stream << info.parentSelectors.count();
-    infoSelectorsEnd = info.parentSelectors.constEnd();
-    for (QList<MStyleSheetSelector *>::const_iterator iterator = info.parentSelectors.constBegin();
+    stream << fi->parentSelectors.count();
+    infoSelectorsEnd = fi->parentSelectors.constEnd();
+    for (QList<MStyleSheetSelector *>::const_iterator iterator = fi->parentSelectors.constBegin();
             iterator != infoSelectorsEnd;
             ++iterator) {
         writeSelector(*iterator, stream);
     }
-
-    file.close();
-    return true;
 }
 
+
+MStyleSheetParser::StylesheetFileInfo * MStyleSheetParserPrivate::readStylesheetFileInfo(QDataStream &stream)
+{
+    MStyleSheetParser::StylesheetFileInfo *fi = new MStyleSheetParser::StylesheetFileInfo;
+
+    stream >> fi->filename;
+    stream >> fi->time_t;
+
+    int selectorCount;
+    stream >> selectorCount;
+    // read all selectors without parent
+    for (int i = 0; i < selectorCount; ++i) {
+        MStyleSheetSelector *selector = readSelector(fi->filename, stream);
+        fi->selectors.push_back(selector);
+    }
+
+    // read all selectors with parent
+    stream >> selectorCount;
+    for (int i = 0; i < selectorCount; ++i) {
+        MStyleSheetSelector *selector = readSelector(fi->filename, stream);
+        fi->parentSelectors.push_back(selector);
+    }
+
+    return fi;
+}
 
 MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(const QByteArray &file, QDataStream &stream)
 {
@@ -1275,7 +1288,6 @@ MStyleSheetSelector::Orientation MStyleSheetParserPrivate::getOrientationFromNam
 	return MStyleSheetSelector::PortraitOrientation;
     return MStyleSheetSelector::UndefinedOrientation;
 }
-
 
 void MStyleSheetParser::operator += (const MStyleSheetParser &stylesheet)
 {
