@@ -714,6 +714,7 @@ void MThemePrivate::reinit(const QString &newApplicationName)
 MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeService themeService) :
     applicationName(applicationName),
     customStylesheet(NULL),
+    invalidPixmap(0),
     application(new MAssembly(applicationName)),
     palette(logicalValues),
     fonts(logicalValues)
@@ -742,9 +743,6 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
         }
     } break;
     }
-
-    invalidPixmap = new QPixmap(50, 50);
-    invalidPixmap->fill(QColor(255, 64, 64, 255));
 
     // this loads the current theme
     reloadThemeLibraries(themeDaemon->themeLibraryNames());
@@ -948,6 +946,10 @@ void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSi
 
     if (!pixmapHandle.isValid()) {
         mWarning("MThemePrivate") << "pixmapChangedSlot - pixmap reload failed (null handle):" << identifier;
+        if (!invalidPixmap) {
+            invalidPixmap = new QPixmap(50, 50);
+            invalidPixmap->fill(QColor(255, 64, 64, 255));
+        }
         *pixmap = *invalidPixmap;
 
         pixmapRequestFinished();
