@@ -33,7 +33,6 @@ class MKeyboardStateTrackerPrivate
 public:
     MKeyboardStateTrackerPrivate(MKeyboardStateTracker *controller);
 
-protected:
     static MKeyboardStateTracker *tracker;
 #ifdef HAVE_CONTEXTSUBSCRIBER
     ContextProperty keyboardOpenProperty;
@@ -42,8 +41,9 @@ protected:
 #endif
     MKeyboardStateTracker *q_ptr;
 
-private:
     void initContextSubscriber();
+    void unsubscribe();
+    void subscribe();
 
     bool present;
     Q_DECLARE_PUBLIC(MKeyboardStateTracker)

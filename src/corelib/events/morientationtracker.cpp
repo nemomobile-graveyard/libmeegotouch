@@ -34,6 +34,7 @@
 
 #include "morientationtracker.h"
 #include "morientationtracker_p.h"
+#include "mkeyboardstatetracker_p.h"
 
 MOrientationTracker *MOrientationTrackerPrivate::tracker = 0;
 
@@ -83,7 +84,6 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(updateOrientationAngle()));
 
-    waitForSensorPropertiesToSubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
 
     isCoveredChanged();
@@ -166,8 +166,6 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     if (!isSubscribed) {
-        mWarning("MOrientationTrackerPrivate::updateOrientationAngle") << "orientation update requested"
-                << " when unsubscribed";
         return;
     }
 
@@ -315,6 +313,7 @@ void MOrientationTrackerPrivate::subscribeToSensorProperies()
         isCoveredProperty->subscribe();
         videoRouteProperty->subscribe();
         isFlatProperty->subscribe();
+        MKeyboardStateTracker::instance()->d_ptr->subscribe();
         waitForSensorPropertiesToSubscribe();
     }
     updateOrientationAngle();
@@ -328,6 +327,8 @@ void MOrientationTrackerPrivate::unsubscribeToSensorProperties()
         isCoveredProperty->unsubscribe();
         videoRouteProperty->unsubscribe();
         isFlatProperty->unsubscribe();
+        MKeyboardStateTracker::instance()->d_ptr->unsubscribe();
+        MKeyboardStateTracker::instance()->d_ptr->present = false;
     }
 }
 
@@ -337,6 +338,7 @@ void MOrientationTrackerPrivate::waitForSensorPropertiesToSubscribe()
     isCoveredProperty->waitForSubscription();
     videoRouteProperty->waitForSubscription();
     isFlatProperty->waitForSubscription();
+    MKeyboardStateTracker::instance()->d_ptr->initContextSubscriber();
     isSubscribed = true;
     hasJustSubscribed = true;
 }

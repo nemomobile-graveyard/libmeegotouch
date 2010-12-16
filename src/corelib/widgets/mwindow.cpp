@@ -110,7 +110,9 @@ MWindowPrivate::MWindowPrivate() :
     if (window)
         angle = window->orientationAngle();
     else
-        angle = MOrientationTracker::instance()->orientationAngle();
+        //only create instance of orientation tracker at the moment
+        MOrientationTracker::instance();
+
 
     timeSinceLastPaintInSwitcher.invalidate();
 }
@@ -401,11 +403,13 @@ void MWindowPrivate::applyStartupWindowBackground()
 void MWindowPrivate::resolveOrientationRules() {
     Q_Q(MWindow);
 
+#ifdef Q_WS_X11
     if ((!isIconicState || isAlwaysMapped) && !q->isOnDisplay()) {
         MOrientationTracker::instance()->d_ptr->startFollowingCurrentAppWindow(q, true);
     } else {
         MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
     }
+#endif //Q_WS_X11
 
     MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
 
@@ -603,7 +607,7 @@ void MWindowPrivate::ensureOrientationAngleIsUpToDateBeforeShowing()
 
         // We are about to be shown but our orientation angle is outdated.
 
-        MOrientationTracker::instance()->d_ptr->updateOrientationAngle();
+        MOrientationTracker::instance()->d_ptr->subscribeToSensorProperies();
 
         MOnDisplayChangeEvent ev(true, QRectF(QPointF(0, 0), q->visibleSceneSize()));
         MApplication::instance()->sendEvent(q, &ev);
@@ -1265,6 +1269,9 @@ void MWindow::paintEvent(QPaintEvent *event)
 bool MWindow::event(QEvent *event)
 {
     Q_D(MWindow);
+    if(event->type() == QEvent::Show) {
+        MOrientationTracker::instance()->d_func()->waitForSensorPropertiesToSubscribe();
+    }
 
     if ((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);

@@ -44,8 +44,6 @@ MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker
     QObject::connect(&keyboardOpenConf, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
 #endif
-
-    initContextSubscriber();
 }
 
 void MKeyboardStateTrackerPrivate::initContextSubscriber()
@@ -58,6 +56,16 @@ void MKeyboardStateTrackerPrivate::initContextSubscriber()
 #elif defined(M_OS_MAEMO5)
     present = true;
 #endif
+}
+
+void MKeyboardStateTrackerPrivate::subscribe()
+{
+    keyboardOpenProperty.subscribe();
+}
+
+void MKeyboardStateTrackerPrivate::unsubscribe()
+{
+    keyboardOpenProperty.unsubscribe();
 }
 
 MKeyboardStateTracker::MKeyboardStateTracker() :
@@ -91,9 +99,12 @@ bool MKeyboardStateTracker::isOpen() const
     bool val = false;
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_D(const MKeyboardStateTracker);
-    if (isPresent()) {
-        val = d->keyboardOpenProperty.value().toBool();
+    MKeyboardStateTrackerPrivate* trackerPriv = const_cast<MKeyboardStateTrackerPrivate*>(d);
+    if (!isPresent()) {
+        trackerPriv->subscribe();
+        trackerPriv->initContextSubscriber();
     }
+    val = d->keyboardOpenProperty.value().toBool();
 #elif defined(M_OS_MAEMO5)
     Q_D(const MKeyboardStateTracker);
     val = d->keyboardOpenConf.value().toBool();

@@ -65,6 +65,8 @@ private:
 
     Q_DISABLE_COPY(MKeyboardStateTracker)
     Q_DECLARE_PRIVATE(MKeyboardStateTracker)
+
+    friend class MOrientationTrackerPrivate;
 };
 
 #endif // MKEYBOARDSTATETRACKER_H

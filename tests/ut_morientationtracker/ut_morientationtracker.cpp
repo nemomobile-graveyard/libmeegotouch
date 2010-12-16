@@ -49,7 +49,9 @@ bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool
 void Ut_MOrientationTracker::init()
 {
     window1 = new MWindow;
+    window1->show();
     window2 = new MWindow;
+    window2->show();
 }
 
 void Ut_MOrientationTracker::cleanup()
