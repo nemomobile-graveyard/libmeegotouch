@@ -403,11 +403,18 @@ MGConfItem::~MGConfItem()
             QByteArray k = convertKey(priv->key);
             gconf_client_notify_remove(client, priv->notify_id);
             GError *error = NULL;
+
+            // Use the same dir as in ctor
+            int index = k.lastIndexOf('/');
+            if (index > 0) {
+                k = k.left(index);
+            }
             gconf_client_remove_dir(client, k.data(), &error);
+
             if(error) {
                 mWarning("MGConfItem") << error->message;
                 g_error_free(error);
-                return;
+                //return; // or priv not deleted
             }
         }
     }
