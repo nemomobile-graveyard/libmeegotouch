@@ -54,17 +54,11 @@ void MBasicListItemPrivate::createLayout()
 
     switch (listItemStyle) {
     case MBasicListItem::SingleTitle: {
-            q->imageWidget()->setVisible(false);
-            q->titleLabelWidget()->setVisible(true);
-            q->subtitleLabelWidget()->setVisible(false);
             q->titleLabelWidget()->setObjectName("CommonSingleTitle");
             layout()->addItem(q->titleLabelWidget(), 0, 0);
             break;
         }
     case MBasicListItem::TitleWithSubtitle: {
-            q->imageWidget()->setVisible(false);
-            q->titleLabelWidget()->setVisible(true);
-            q->subtitleLabelWidget()->setVisible(true);
             q->titleLabelWidget()->setObjectName("CommonTitle");
             layout()->addItem(q->titleLabelWidget(), 0, 0);
             layout()->addItem(q->subtitleLabelWidget(), 1, 0);
@@ -72,18 +66,12 @@ void MBasicListItemPrivate::createLayout()
             break;
         }
     case MBasicListItem::IconWithTitle: {
-            q->imageWidget()->setVisible(true);
-            q->titleLabelWidget()->setVisible(true);
-            q->subtitleLabelWidget()->setVisible(false);
             q->titleLabelWidget()->setObjectName("CommonSingleTitle");
             layout()->addItem(q->imageWidget(), 0, 0);
             layout()->addItem(q->titleLabelWidget(), 0, 1);
             break;
         }
     case MBasicListItem::IconWithTitleAndSubtitle: {
-            q->imageWidget()->setVisible(true);
-            q->titleLabelWidget()->setVisible(true);
-            q->subtitleLabelWidget()->setVisible(true);
             q->titleLabelWidget()->setObjectName("CommonTitle");
             layout()->addItem(q->imageWidget(), 0, 0, 3, 1);
             layout()->addItem(q->titleLabelWidget(), 0, 1);
@@ -166,13 +154,8 @@ void MBasicListItem::setItemStyle(ItemStyle itemStyle)
         return;
 
     d->listItemStyle = itemStyle;
-
-    if (!layout()) {
-        d->isLayoutInitialized = false;
-        initLayout();
-    } else {
-        d->createLayout();
-    }
+    d->isLayoutInitialized = false;
+    initLayout();
 }
 
 MBasicListItem::ItemStyle MBasicListItem::itemStyle() const
