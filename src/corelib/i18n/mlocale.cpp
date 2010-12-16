@@ -2777,6 +2777,48 @@ QString MLocale::countryEndonym() const
 }
 
 #ifdef HAVE_ICU
+QStringList MLocale::exemplarCharactersIndex() const
+{
+    Q_D(const MLocale);
+    QString collationLocaleName = d->categoryName(MLcCollate);
+    QStringList exemplarCharactersIndex;
+
+    UErrorCode status = U_ZERO_ERROR;
+    UResourceBundle *res =
+        ures_open(NULL, collationLocaleName.toUtf8().constData(), &status);
+
+    if (U_FAILURE(status)) {
+        mDebug("MLocale") << "Error ures_open"
+                          << collationLocaleName << u_errorName(status);
+        ures_close(res);
+        return exemplarCharactersIndex;
+    }
+
+    qint32 len;
+    status = U_ZERO_ERROR;
+    const UChar *val = ures_getStringByKey(res,
+                                           "ExemplarCharactersIndex",
+                                           &len, &status);
+    if (U_FAILURE(status)) {
+        mDebug("MLocale") << "Error ures_getStringByKey"
+                          << collationLocaleName << u_errorName(status);
+        ures_close(res);
+        return exemplarCharactersIndex;
+    }
+
+    QString charStr = QString::fromUtf16(val, len);
+    ures_close(res);
+    charStr.remove('[');
+    charStr.remove(']');
+    charStr.remove('{');
+    charStr.remove('}');
+    exemplarCharactersIndex = charStr.split(QLatin1String(" "),
+                                            QString::SkipEmptyParts);
+    return exemplarCharactersIndex;
+}
+#endif
+
+#ifdef HAVE_ICU
 QStringList MLocale::localeScripts() const
 {
     Q_D(const MLocale);

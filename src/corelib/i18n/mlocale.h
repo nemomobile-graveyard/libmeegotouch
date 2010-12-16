@@ -569,6 +569,32 @@ public:
     QStringList localeScripts() const;
 
     /*!
+     * \brief Returns a list of character or strings to be used in indices
+     *
+     * This returns an QStringList of characters (or character
+     * sequences) which can be used as index characters in user
+     * interfaces. Which index characters are useful depends on the
+     * locale set in lc_collation as the collation (sorting) rules
+     * depend on the locale.
+     *
+     * For example, if lc_collation is set to Czech locale (i.e. if
+     * MLocale::categoryName(MLocale::MLcCollate) returns “cs_CZ”)
+     * this will return a list like:
+     *
+     *     “A B C Č D E F G H CH I J K L M N O P Q R Ř S Š T U V W X Y Z Ž”
+     *
+     * Note that this also contains the character sequence “CH” as
+     * an index “character” because in Czech CH is sorted as if it
+     * were a single character after H. Therefore, CH deserves its own
+     * entry in a collation index for Czech.
+     *
+     * For more details about such index characters see:
+     * <a href="http://www.unicode.org/reports/tr35/#Character_Elements">
+     *
+     */
+    QStringList exemplarCharactersIndex() const;
+
+    /*!
      * \brief Returns the language code of the locale in ISO-639 format
      *
      * If the language code cannot be parsed out of the locale name

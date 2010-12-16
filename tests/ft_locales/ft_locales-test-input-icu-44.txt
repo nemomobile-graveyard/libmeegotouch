@@ -233,6 +233,7 @@ ar_SA	Name of weekday 05 (Islamic calendar), format, narrow	ج
 ar_SA	Name of weekday 06 (Islamic calendar), format, narrow	س
 ar_SA	Name of weekday 07 (Islamic calendar), format, narrow	ح
 ar_SA	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+ar_SA	Exemplar characters index	[ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي]
 ar_SA	Scripts used	Arab
 ar_SA	%r (locale specific 12 hour “TimeShort”)	٢:٣١ م
 ar_SA	%R (locale specific 24 hour “TimeShort”)	١٤:٣١
@@ -567,6 +568,7 @@ ca_ES	Name of weekday 05 (Islamic calendar), format, narrow	v
 ca_ES	Name of weekday 06 (Islamic calendar), format, narrow	s
 ca_ES	Name of weekday 07 (Islamic calendar), format, narrow	g
 ca_ES	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+ca_ES	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 ca_ES	Scripts used	Latn
 ca_ES	%r (locale specific 12 hour “TimeShort”)	2:31 p.m.
 ca_ES	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -901,6 +903,7 @@ da_DK	Name of weekday 05 (Islamic calendar), format, narrow	F
 da_DK	Name of weekday 06 (Islamic calendar), format, narrow	L
 da_DK	Name of weekday 07 (Islamic calendar), format, narrow	S
 da_DK	Collation sample	A a Á á b CH Ch ch H h I i N Ň ň oegh U ú Ů ů z Ä ä öfgh Å å Α α Β β Ω ω А а Б б В в Г г Ѐ Я я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+da_DK	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å]
 da_DK	Scripts used	Latn
 da_DK	%r (locale specific 12 hour “TimeShort”)	02.31 e.m.
 da_DK	%R (locale specific 24 hour “TimeShort”)	14.31
@@ -1235,6 +1238,7 @@ de_CH	Name of weekday 05 (Islamic calendar), format, narrow	F
 de_CH	Name of weekday 06 (Islamic calendar), format, narrow	S
 de_CH	Name of weekday 07 (Islamic calendar), format, narrow	S
 de_CH	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+de_CH	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 de_CH	Scripts used	Latn
 de_CH	%r (locale specific 12 hour “TimeShort”)	02:31 nachm.
 de_CH	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -1569,6 +1573,7 @@ de_DE	Name of weekday 05 (Islamic calendar), format, narrow	F
 de_DE	Name of weekday 06 (Islamic calendar), format, narrow	S
 de_DE	Name of weekday 07 (Islamic calendar), format, narrow	S
 de_DE	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+de_DE	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 de_DE	Scripts used	Latn
 de_DE	%r (locale specific 12 hour “TimeShort”)	02:31 nachm.
 de_DE	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -1903,6 +1908,7 @@ de_DE@collation=phonebook	Name of weekday 05 (Islamic calendar), format, narrow	
 de_DE@collation=phonebook	Name of weekday 06 (Islamic calendar), format, narrow	S
 de_DE@collation=phonebook	Name of weekday 07 (Islamic calendar), format, narrow	S
 de_DE@collation=phonebook	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň öfgh oegh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+de_DE@collation=phonebook	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 de_DE@collation=phonebook	Scripts used	Latn
 de_DE@collation=phonebook	%r (locale specific 12 hour “TimeShort”)	02:31 nachm.
 de_DE@collation=phonebook	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -2237,6 +2243,7 @@ el_GR	Name of weekday 05 (Islamic calendar), format, narrow	Π
 el_GR	Name of weekday 06 (Islamic calendar), format, narrow	Σ
 el_GR	Name of weekday 07 (Islamic calendar), format, narrow	Κ
 el_GR	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+el_GR	Exemplar characters index	[Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω]
 el_GR	Scripts used	Grek
 el_GR	%r (locale specific 12 hour “TimeShort”)	2:31 μ.μ.
 el_GR	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -2571,6 +2578,7 @@ en	Name of weekday 05 (Islamic calendar), format, narrow	F
 en	Name of weekday 06 (Islamic calendar), format, narrow	S
 en	Name of weekday 07 (Islamic calendar), format, narrow	S
 en	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+en	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 en	Scripts used	Latn
 en	%r (locale specific 12 hour “TimeShort”)	2:31 PM
 en	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -2905,6 +2913,7 @@ en_BE	Name of weekday 05 (Islamic calendar), format, narrow	F
 en_BE	Name of weekday 06 (Islamic calendar), format, narrow	S
 en_BE	Name of weekday 07 (Islamic calendar), format, narrow	S
 en_BE	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+en_BE	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 en_BE	Scripts used	Latn
 en_BE	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 en_BE	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -3239,6 +3248,7 @@ en_GB	Name of weekday 05 (Islamic calendar), format, narrow	F
 en_GB	Name of weekday 06 (Islamic calendar), format, narrow	S
 en_GB	Name of weekday 07 (Islamic calendar), format, narrow	S
 en_GB	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+en_GB	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 en_GB	Scripts used	Latn
 en_GB	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 en_GB	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -3573,6 +3583,7 @@ en_US	Name of weekday 05 (Islamic calendar), format, narrow	F
 en_US	Name of weekday 06 (Islamic calendar), format, narrow	S
 en_US	Name of weekday 07 (Islamic calendar), format, narrow	S
 en_US	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+en_US	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 en_US	Scripts used	Latn
 en_US	%r (locale specific 12 hour “TimeShort”)	2:31 PM
 en_US	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -3907,6 +3918,7 @@ en_US_POSIX	Name of weekday 05 (Islamic calendar), format, narrow	F
 en_US_POSIX	Name of weekday 06 (Islamic calendar), format, narrow	S
 en_US_POSIX	Name of weekday 07 (Islamic calendar), format, narrow	S
 en_US_POSIX	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+en_US_POSIX	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 en_US_POSIX	Scripts used	Latn
 en_US_POSIX	%r (locale specific 12 hour “TimeShort”)	2:31 PM
 en_US_POSIX	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -4241,6 +4253,7 @@ es_419	Name of weekday 05 (Islamic calendar), format, narrow	V
 es_419	Name of weekday 06 (Islamic calendar), format, narrow	S
 es_419	Name of weekday 07 (Islamic calendar), format, narrow	D
 es_419	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+es_419	Exemplar characters index	[A B C D E F G H I J K L M N Ñ O P Q R S T U V W X Y Z]
 es_419	Scripts used	Latn
 es_419	%r (locale specific 12 hour “TimeShort”)	02:31 p.m.
 es_419	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -4575,6 +4588,7 @@ eu_ES	Name of weekday 05 (Islamic calendar), format, narrow	6
 eu_ES	Name of weekday 06 (Islamic calendar), format, narrow	7
 eu_ES	Name of weekday 07 (Islamic calendar), format, narrow	1
 eu_ES	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+eu_ES	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 eu_ES	Scripts used	Latn
 eu_ES	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 eu_ES	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -4909,6 +4923,7 @@ fa_IR	Name of weekday 05 (Islamic calendar), format, narrow	ج
 fa_IR	Name of weekday 06 (Islamic calendar), format, narrow	ش
 fa_IR	Name of weekday 07 (Islamic calendar), format, narrow	ی
 fa_IR	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+fa_IR	Exemplar characters index	[]
 fa_IR	Scripts used	Arab
 fa_IR	%r (locale specific 12 hour “TimeShort”)	۲:۳۱ بعد از ظهر
 fa_IR	%R (locale specific 24 hour “TimeShort”)	۱۴:۳۱
@@ -5243,6 +5258,7 @@ fi_FI	Name of weekday 05 (Islamic calendar), format, narrow	P
 fi_FI	Name of weekday 06 (Islamic calendar), format, narrow	L
 fi_FI	Name of weekday 07 (Islamic calendar), format, narrow	S
 fi_FI	Collation sample	a A á Á b ch Ch CH h H i I N ň Ň oegh U ú ů Ů z å Å ä Ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+fi_FI	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö]
 fi_FI	Scripts used	Latn
 fi_FI	%r (locale specific 12 hour “TimeShort”)	2:31 ip.
 fi_FI	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -5577,6 +5593,7 @@ fr_FR	Name of weekday 05 (Islamic calendar), format, narrow	V
 fr_FR	Name of weekday 06 (Islamic calendar), format, narrow	S
 fr_FR	Name of weekday 07 (Islamic calendar), format, narrow	D
 fr_FR	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+fr_FR	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 fr_FR	Scripts used	Latn
 fr_FR	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 fr_FR	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -5911,6 +5928,7 @@ gl_ES	Name of weekday 05 (Islamic calendar), format, narrow	V
 gl_ES	Name of weekday 06 (Islamic calendar), format, narrow	S
 gl_ES	Name of weekday 07 (Islamic calendar), format, narrow	D
 gl_ES	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+gl_ES	Exemplar characters index	[]
 gl_ES	Scripts used	Latn
 gl_ES	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 gl_ES	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -6245,6 +6263,7 @@ he_IL	Name of weekday 05 (Islamic calendar), format, narrow	ו
 he_IL	Name of weekday 06 (Islamic calendar), format, narrow	ש
 he_IL	Name of weekday 07 (Islamic calendar), format, narrow	א
 he_IL	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+he_IL	Exemplar characters index	[א ב ג ד ה ו ז ח ט י כ ל מ נ ס ע פ צ ק ר ש ת]
 he_IL	Scripts used	Hebr
 he_IL	%r (locale specific 12 hour “TimeShort”)	02:31 אחה״צ
 he_IL	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -6579,6 +6598,7 @@ hi_IN	Name of weekday 05 (Islamic calendar), format, narrow	शु
 hi_IN	Name of weekday 06 (Islamic calendar), format, narrow	श
 hi_IN	Name of weekday 07 (Islamic calendar), format, narrow	र
 hi_IN	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+hi_IN	Exemplar characters index	[अ आ इ ई उ ऊ ऋ ए ऐ ओ औ क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न प फ ब भ म य र ल व श ष स ह]
 hi_IN	Scripts used	Deva
 hi_IN	%r (locale specific 12 hour “TimeShort”)	२:३१ अपराह्न
 hi_IN	%R (locale specific 24 hour “TimeShort”)	१४:३१
@@ -6913,6 +6933,7 @@ id_ID	Name of weekday 05 (Islamic calendar), format, narrow	J
 id_ID	Name of weekday 06 (Islamic calendar), format, narrow	S
 id_ID	Name of weekday 07 (Islamic calendar), format, narrow	M
 id_ID	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+id_ID	Exemplar characters index	[]
 id_ID	Scripts used	Latn
 id_ID	%r (locale specific 12 hour “TimeShort”)	02.31 malam
 id_ID	%R (locale specific 24 hour “TimeShort”)	14.31
@@ -7247,6 +7268,7 @@ it_IT	Name of weekday 05 (Islamic calendar), format, narrow	V
 it_IT	Name of weekday 06 (Islamic calendar), format, narrow	S
 it_IT	Name of weekday 07 (Islamic calendar), format, narrow	D
 it_IT	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+it_IT	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 it_IT	Scripts used	Latn
 it_IT	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 it_IT	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -7581,6 +7603,7 @@ ja_JP	Name of weekday 05 (Islamic calendar), format, narrow	金
 ja_JP	Name of weekday 06 (Islamic calendar), format, narrow	土
 ja_JP	Name of weekday 07 (Islamic calendar), format, narrow	日
 ja_JP	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 俄 楽谷 此 沙紀 三 山田 若山 小中 松下 正 竹山 竹山 中 中村 得 内山 二 播 鳩山 攀 爱
+ja_JP	Exemplar characters index	[あ か さ た な は ま や ら わ]
 ja_JP	Scripts used	Kana Hira Hani
 ja_JP	%r (locale specific 12 hour “TimeShort”)	午後2:31
 ja_JP	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -7915,6 +7938,7 @@ ms_MY	Name of weekday 05 (Islamic calendar), format, narrow	6
 ms_MY	Name of weekday 06 (Islamic calendar), format, narrow	7
 ms_MY	Name of weekday 07 (Islamic calendar), format, narrow	1
 ms_MY	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+ms_MY	Exemplar characters index	[]
 ms_MY	Scripts used	Latn
 ms_MY	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 ms_MY	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -8249,6 +8273,7 @@ nb_NO	Name of weekday 05 (Islamic calendar), format, narrow	F
 nb_NO	Name of weekday 06 (Islamic calendar), format, narrow	L
 nb_NO	Name of weekday 07 (Islamic calendar), format, narrow	S
 nb_NO	Collation sample	a A á Á b ch Ch CH h H i I N ň Ň oegh U ú ů Ů z ä Ä öfgh å Å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+nb_NO	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å]
 nb_NO	Scripts used	Latn
 nb_NO	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 nb_NO	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -8583,6 +8608,7 @@ nl_NL	Name of weekday 05 (Islamic calendar), format, narrow	V
 nl_NL	Name of weekday 06 (Islamic calendar), format, narrow	Z
 nl_NL	Name of weekday 07 (Islamic calendar), format, narrow	Z
 nl_NL	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+nl_NL	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 nl_NL	Scripts used	Latn
 nl_NL	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 nl_NL	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -8917,6 +8943,7 @@ nn_NO	Name of weekday 05 (Islamic calendar), format, narrow	F
 nn_NO	Name of weekday 06 (Islamic calendar), format, narrow	L
 nn_NO	Name of weekday 07 (Islamic calendar), format, narrow	S
 nn_NO	Collation sample	a A á Á b ch Ch CH h H i I N ň Ň oegh U ú ů Ů z ä Ä öfgh å Å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+nn_NO	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å]
 nn_NO	Scripts used	Latn
 nn_NO	%r (locale specific 12 hour “TimeShort”)	02:31 ettermiddag
 nn_NO	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -9251,6 +9278,7 @@ no_NO	Name of weekday 05 (Islamic calendar), format, narrow	F
 no_NO	Name of weekday 06 (Islamic calendar), format, narrow	L
 no_NO	Name of weekday 07 (Islamic calendar), format, narrow	S
 no_NO	Collation sample	a A á Á b ch Ch CH h H i I N ň Ň oegh U ú ů Ů z ä Ä öfgh å Å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+no_NO	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å]
 no_NO	Scripts used	Latn
 no_NO	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 no_NO	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -9585,6 +9613,7 @@ pt_BR	Name of weekday 05 (Islamic calendar), format, narrow	S
 pt_BR	Name of weekday 06 (Islamic calendar), format, narrow	S
 pt_BR	Name of weekday 07 (Islamic calendar), format, narrow	D
 pt_BR	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+pt_BR	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 pt_BR	Scripts used	Latn
 pt_BR	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 pt_BR	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -9919,6 +9948,7 @@ pt_PT	Name of weekday 05 (Islamic calendar), format, narrow	S
 pt_PT	Name of weekday 06 (Islamic calendar), format, narrow	S
 pt_PT	Name of weekday 07 (Islamic calendar), format, narrow	D
 pt_PT	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+pt_PT	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 pt_PT	Scripts used	Latn
 pt_PT	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 pt_PT	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -10253,6 +10283,7 @@ ru_RU	Name of weekday 05 (Islamic calendar), format, narrow	П
 ru_RU	Name of weekday 06 (Islamic calendar), format, narrow	С
 ru_RU	Name of weekday 07 (Islamic calendar), format, narrow	В
 ru_RU	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+ru_RU	Exemplar characters index	[А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ы Э Ю Я]
 ru_RU	Scripts used	Cyrl
 ru_RU	%r (locale specific 12 hour “TimeShort”)	2:31 PM
 ru_RU	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -10587,6 +10618,7 @@ sv_SE	Name of weekday 05 (Islamic calendar), format, narrow	F
 sv_SE	Name of weekday 06 (Islamic calendar), format, narrow	L
 sv_SE	Name of weekday 07 (Islamic calendar), format, narrow	S
 sv_SE	Collation sample	a A á Á b ch Ch CH h H i I N ň Ň oegh U ú ů Ů z å Å ä Ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+sv_SE	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö]
 sv_SE	Scripts used	Latn
 sv_SE	%r (locale specific 12 hour “TimeShort”)	02:31 em
 sv_SE	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -10921,6 +10953,7 @@ th_TH	Name of weekday 05 (Islamic calendar), format, narrow	ศ
 th_TH	Name of weekday 06 (Islamic calendar), format, narrow	ส
 th_TH	Name of weekday 07 (Islamic calendar), format, narrow	อ
 th_TH	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+th_TH	Exemplar characters index	[ก ข ฃ ค ฅ ฆ ง จ ฉ ช ซ ฌ ญ ฎ ฏ ฐ ฑ ฒ ณ ด ต ถ ท ธ น บ ป ผ ฝ พ ฟ ภ ม ย ร ฤ ล ฦ ว ศ ษ ส ห ฬ อ ฮ]
 th_TH	Scripts used	Thai
 th_TH	%r (locale specific 12 hour “TimeShort”)	2:31 หลังเที่ยง
 th_TH	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -11255,6 +11288,7 @@ tr_TR	Name of weekday 05 (Islamic calendar), format, narrow	C
 tr_TR	Name of weekday 06 (Islamic calendar), format, narrow	C
 tr_TR	Name of weekday 07 (Islamic calendar), format, narrow	P
 tr_TR	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H I i N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+tr_TR	Exemplar characters index	[A B C Ç D E F G Ğ H I İ J K L M N O Ö P Q R S Ş T U Ü V W X Y Z]
 tr_TR	Scripts used	Latn
 tr_TR	%r (locale specific 12 hour “TimeShort”)	02:31 PM
 tr_TR	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -11589,6 +11623,7 @@ uk_UA	Name of weekday 05 (Islamic calendar), format, narrow	П
 uk_UA	Name of weekday 06 (Islamic calendar), format, narrow	С
 uk_UA	Name of weekday 07 (Islamic calendar), format, narrow	Н
 uk_UA	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+uk_UA	Exemplar characters index	[А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ю Я]
 uk_UA	Scripts used	Cyrl
 uk_UA	%r (locale specific 12 hour “TimeShort”)	02:31 пп
 uk_UA	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -11923,6 +11958,7 @@ ur_PK	Name of weekday 05 (Islamic calendar), format, narrow	6
 ur_PK	Name of weekday 06 (Islamic calendar), format, narrow	7
 ur_PK	Name of weekday 07 (Islamic calendar), format, narrow	1
 ur_PK	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
+ur_PK	Exemplar characters index	[]
 ur_PK	Scripts used	Arab
 ur_PK	%r (locale specific 12 hour “TimeShort”)	2:31 PM
 ur_PK	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -12257,6 +12293,7 @@ zh_CN@collation=pinyin	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_CN@collation=pinyin	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_CN@collation=pinyin	Name of weekday 07 (Islamic calendar), format, narrow	日
 zh_CN@collation=pinyin	Collation sample	á Á a A å Å ä Ä b ch Ch CH h H i I ň Ň N oegh öfgh ú U ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 爱 播 此 得 俄 二 鳩山 楽谷 内山 攀 若山 三 沙紀 山田 松下 小中 一 正 中 中村 竹山 竹山
+zh_CN@collation=pinyin	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 zh_CN@collation=pinyin	Scripts used	Hani
 zh_CN@collation=pinyin	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_CN@collation=pinyin	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -12591,6 +12628,7 @@ zh_CN@collation=stroke	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_CN@collation=stroke	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_CN@collation=stroke	Name of weekday 07 (Islamic calendar), format, narrow	日
 zh_CN@collation=stroke	Collation sample	á Á a A å Å ä Ä b ch Ch CH h H i I ň Ň N oegh öfgh ú U ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 正 此 竹山 竹山 沙紀 松下 俄 若山 得 鳩山 播 攀 内山 楽谷 爱
+zh_CN@collation=stroke	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 zh_CN@collation=stroke	Scripts used	Hani
 zh_CN@collation=stroke	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_CN@collation=stroke	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -12925,6 +12963,7 @@ zh_Hans_CN	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_Hans_CN	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_Hans_CN	Name of weekday 07 (Islamic calendar), format, narrow	日
 zh_Hans_CN	Collation sample	á Á a A å Å ä Ä b ch Ch CH h H i I ň Ň N oegh öfgh ú U ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 爱 播 此 得 俄 二 鳩山 楽谷 内山 攀 若山 三 沙紀 山田 松下 小中 一 正 中 中村 竹山 竹山
+zh_Hans_CN	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 zh_Hans_CN	Scripts used	Hani
 zh_Hans_CN	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_Hans_CN	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -13259,6 +13298,7 @@ zh_Hant_TW	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_Hant_TW	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_Hant_TW	Name of weekday 07 (Islamic calendar), format, narrow	日
 zh_Hant_TW	Collation sample	á Á a A å Å ä Ä b ch Ch CH h H i I ň Ň N oegh öfgh ú U ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 正 此 竹山 竹山 沙紀 松下 俄 若山 得 鳩山 播 攀 内山 楽谷 爱
+zh_Hant_TW	Exemplar characters index	[一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 勸 儷 儼 囌 囑 廳]
 zh_Hant_TW	Scripts used	Hani Bopo
 zh_Hant_TW	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_Hant_TW	%R (locale specific 24 hour “TimeShort”)	14:31

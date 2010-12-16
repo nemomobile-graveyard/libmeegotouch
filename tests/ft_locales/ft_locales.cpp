@@ -1453,6 +1453,8 @@ void Ft_Locales::checkAvailableLocales()
         ft_localesTestOutput
             += newLinePlusSupportedLocaleName + "\tCollation sample\t"
             + sortingTestList.join(" ")
+            + newLinePlusSupportedLocaleName + "\tExemplar characters index\t"
+            + '[' + locale.exemplarCharactersIndex().join(" ") + ']'
             + newLinePlusSupportedLocaleName + "\tScripts used\t"
             + locale.localeScripts().join(" ")
             + newLinePlusSupportedLocaleName + "\t%r (locale specific 12 hour “TimeShort”)\t"
