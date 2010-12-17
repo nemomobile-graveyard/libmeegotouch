@@ -11,11 +11,15 @@ greaterThan(ICUVERSION, 4.4) {
     # derb -c -i /usr/share/meegotouch/icu/usrdt44l/ lang/en_GB.res
     LOCALESTXT = data/cs.txt \
                  data/en_SG.txt \
+                 data/fa.txt \
                  data/fi.txt \
+                 data/gl.txt \
                  data/id.txt \
                  data/it.txt \
+                 data/ms.txt \
                  data/ms_BN.txt \
-                 data/pt_PT.txt
+                 data/pt_PT.txt \
+                 data/ur.txt
     LANGTXT    = data/lang/en.txt \
                  data/lang/es.txt \
                  data/lang/fr.txt \
