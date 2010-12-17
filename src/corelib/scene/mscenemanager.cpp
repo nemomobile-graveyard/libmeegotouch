@@ -870,7 +870,7 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
         data[0] = statusBarGeometry.x();
         data[1] = statusBarGeometry.y();
         data[2] = statusBarGeometry.width();
-        data[3] = statusBarGeometry.height();
+        data[3] = statusBar->property("sharedPixmapHeight").value<qreal>();
     }
 
     Display *dpy = QX11Info::display();
