@@ -708,7 +708,16 @@ void MThemePrivate::reinit(const QString &newApplicationName)
     applicationName = newApplicationName;
     application = new MAssembly(applicationName);
     themeDaemon->registerApplicationName(newApplicationName);
+
+    // refresh default fonts & palette
+    palette.refresh();
+    fonts.refresh();
+
+    // refresh application theme data
     application->themeChanged(themeDaemon->themeInheritanceChain());
+
+    // cached data is no more valid
+    MStyleSheet::cleanup(false);
 }
 
 MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeService themeService) :
