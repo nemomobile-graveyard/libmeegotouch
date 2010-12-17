@@ -71,6 +71,7 @@
 #include <mwidgetzoomanimation.h>
 #include <mwidgetmoveanimation.h>
 #include <mdialoganimation.h>
+#include <mwidgetscalefadeanimation.h>
 #include <mtheme.h>
 
 #ifdef Q_WS_X11
@@ -1621,12 +1622,15 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     // TODO: Get this from theme/CSS
     switch(sceneWindow->windowType()) {
     case MSceneWindow::NotificationInformation:
-    case MSceneWindow::NotificationEvent:
         animation = new MWidgetSlideAnimation(sceneWindow);
         break;
     case MSceneWindow::NavigationBar:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
                 MTheme::animation(style()->navigationBarAnimation()));
+        break;
+    case MSceneWindow::NotificationEvent:
+        animation = (sceneWindow->styleName() == "SystemBanner") ? qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation())) : 
+                                                                   qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->notificationEventAnimation()));
         break;
     case MSceneWindow::ApplicationMenu:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
@@ -1687,12 +1691,15 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     // TODO: Get this from theme/CSS
     switch(sceneWindow->windowType()) {
     case MSceneWindow::NotificationInformation:
-    case MSceneWindow::NotificationEvent:
         animation = new MWidgetSlideAnimation(sceneWindow);
         break;
     case MSceneWindow::NavigationBar:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
                 MTheme::animation(style()->navigationBarAnimation()));
+        break;
+    case MSceneWindow::NotificationEvent:
+         animation = (sceneWindow->styleName() == "SystemBanner") ? qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation())) :
+                                                                    qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->notificationEventAnimation()));
         break;
     case MSceneWindow::ApplicationMenu:
         animation = qobject_cast<MAbstractWidgetAnimation*>(

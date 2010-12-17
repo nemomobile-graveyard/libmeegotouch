@@ -16,6 +16,7 @@ PUBLIC_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoomanimation.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetrectangularclipanimation.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mcontentfadeandslideanimation.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetscalefadeanimation.h \
 
 PRIVATE_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mapplicationmenuanimation_p.h \
@@ -26,6 +27,7 @@ PRIVATE_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoomanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetrectangularclipanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mcontentfadeandslideanimation_p.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetscalefadeanimation_p.h \
 
 SOURCES += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mapplicationmenuanimation.cpp \
@@ -36,3 +38,4 @@ SOURCES += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoomanimation.cpp \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetrectangularclipanimation.cpp \
     $$ANIMATIONS_WIDGET_SRC_DIR/mcontentfadeandslideanimation.cpp \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetscalefadeanimation.cpp \

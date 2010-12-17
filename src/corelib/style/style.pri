@@ -34,6 +34,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mwidgetmoveanimationstyle.h \
     $$STYLE_SRC_DIR/mwidgetslideanimationstyle.h \
     $$STYLE_SRC_DIR/mwidgetzoomanimationstyle.h \
+    $$STYLE_SRC_DIR/mwidgetscalefadeanimationstyle.h \
     $$STYLE_SRC_DIR/mpageswitchanimationstyle.h \
     $$STYLE_SRC_DIR/mbasicorientationanimationstyle.h \
     $$STYLE_SRC_DIR/mscenemanagerstyle.h \
