@@ -1231,6 +1231,7 @@ void Ft_Locales::checkAvailableLocales()
     supportedLocaleNames << "zh_Hans_TW";
     supportedLocaleNames << "zh_CN@collation=pinyin";
     supportedLocaleNames << "zh_CN@collation=stroke";
+    supportedLocaleNames << "ko_KR";
     bool runFullTest = false;
     if (!runFullTest) {
         supportedLocaleNames.clear();
@@ -1255,6 +1256,7 @@ void Ft_Locales::checkAvailableLocales()
         supportedLocaleNames << "id_ID";       // "Indonesian (Indonesia)"
         supportedLocaleNames << "it_IT";       // "Italian (Italy)"
         supportedLocaleNames << "ja_JP";       // "Japanese (Japan)"
+        supportedLocaleNames << "ko_KR";       // "Korean (Korea)"
         supportedLocaleNames << "ms_MY";       // "Malay (Malaysia)"
         supportedLocaleNames << "nb_NO";       // "Norwegian Bokml (Norway)"
         supportedLocaleNames << "nl_NL";       // "Dutch (Netherlands)"

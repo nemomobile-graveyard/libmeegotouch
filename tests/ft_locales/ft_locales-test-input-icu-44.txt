@@ -7703,6 +7703,341 @@ ja_JP	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	y年M�
 ja_JP	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	y年M月d日EEEEH:mm:ss z -> 1429年7月18日月曜日14:31:00 GMT+00:00
 ja_JP	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	y年M月d日EEEEah時mm分ss秒 zzzz -> 1429年7月18日月曜日午後2時31分00秒 GMT+00:00
 ja_JP	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y年M月d日EEEEH時mm分ss秒 zzzz -> 1429年7月18日月曜日14時31分00秒 GMT+00:00
+ko_KR	Language endonym	한국어
+ko_KR	Country endonym	대한민국
+ko_KR	Floating Point Number	-123,456,789.012
+ko_KR	Percent value	-1,234.5679%
+ko_KR	Currency value	€1,234.56
+ko_KR	Negative Currency value	-€1,234.56
+ko_KR	Name of month 01 (Gregorian calendar), stand-alone, wide	1월
+ko_KR	Name of month 02 (Gregorian calendar), stand-alone, wide	2월
+ko_KR	Name of month 03 (Gregorian calendar), stand-alone, wide	3월
+ko_KR	Name of month 04 (Gregorian calendar), stand-alone, wide	4월
+ko_KR	Name of month 05 (Gregorian calendar), stand-alone, wide	5월
+ko_KR	Name of month 06 (Gregorian calendar), stand-alone, wide	6월
+ko_KR	Name of month 07 (Gregorian calendar), stand-alone, wide	7월
+ko_KR	Name of month 08 (Gregorian calendar), stand-alone, wide	8월
+ko_KR	Name of month 09 (Gregorian calendar), stand-alone, wide	9월
+ko_KR	Name of month 10 (Gregorian calendar), stand-alone, wide	10월
+ko_KR	Name of month 11 (Gregorian calendar), stand-alone, wide	11월
+ko_KR	Name of month 12 (Gregorian calendar), stand-alone, wide	12월
+ko_KR	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	1월
+ko_KR	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	2월
+ko_KR	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	3월
+ko_KR	Name of month 04 (Gregorian calendar), stand-alone, abbreviated	4월
+ko_KR	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	5월
+ko_KR	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	6월
+ko_KR	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	7월
+ko_KR	Name of month 08 (Gregorian calendar), stand-alone, abbreviated	8월
+ko_KR	Name of month 09 (Gregorian calendar), stand-alone, abbreviated	9월
+ko_KR	Name of month 10 (Gregorian calendar), stand-alone, abbreviated	10월
+ko_KR	Name of month 11 (Gregorian calendar), stand-alone, abbreviated	11월
+ko_KR	Name of month 12 (Gregorian calendar), stand-alone, abbreviated	12월
+ko_KR	Name of month 01 (Gregorian calendar), stand-alone, narrow	1월
+ko_KR	Name of month 02 (Gregorian calendar), stand-alone, narrow	2월
+ko_KR	Name of month 03 (Gregorian calendar), stand-alone, narrow	3월
+ko_KR	Name of month 04 (Gregorian calendar), stand-alone, narrow	4월
+ko_KR	Name of month 05 (Gregorian calendar), stand-alone, narrow	5월
+ko_KR	Name of month 06 (Gregorian calendar), stand-alone, narrow	6월
+ko_KR	Name of month 07 (Gregorian calendar), stand-alone, narrow	7월
+ko_KR	Name of month 08 (Gregorian calendar), stand-alone, narrow	8월
+ko_KR	Name of month 09 (Gregorian calendar), stand-alone, narrow	9월
+ko_KR	Name of month 10 (Gregorian calendar), stand-alone, narrow	10월
+ko_KR	Name of month 11 (Gregorian calendar), stand-alone, narrow	11월
+ko_KR	Name of month 12 (Gregorian calendar), stand-alone, narrow	12월
+ko_KR	Name of month 01 (Gregorian calendar), format, wide	1월
+ko_KR	Name of month 02 (Gregorian calendar), format, wide	2월
+ko_KR	Name of month 03 (Gregorian calendar), format, wide	3월
+ko_KR	Name of month 04 (Gregorian calendar), format, wide	4월
+ko_KR	Name of month 05 (Gregorian calendar), format, wide	5월
+ko_KR	Name of month 06 (Gregorian calendar), format, wide	6월
+ko_KR	Name of month 07 (Gregorian calendar), format, wide	7월
+ko_KR	Name of month 08 (Gregorian calendar), format, wide	8월
+ko_KR	Name of month 09 (Gregorian calendar), format, wide	9월
+ko_KR	Name of month 10 (Gregorian calendar), format, wide	10월
+ko_KR	Name of month 11 (Gregorian calendar), format, wide	11월
+ko_KR	Name of month 12 (Gregorian calendar), format, wide	12월
+ko_KR	Name of month 01 (Gregorian calendar), format, abbreviated	1월
+ko_KR	Name of month 02 (Gregorian calendar), format, abbreviated	2월
+ko_KR	Name of month 03 (Gregorian calendar), format, abbreviated	3월
+ko_KR	Name of month 04 (Gregorian calendar), format, abbreviated	4월
+ko_KR	Name of month 05 (Gregorian calendar), format, abbreviated	5월
+ko_KR	Name of month 06 (Gregorian calendar), format, abbreviated	6월
+ko_KR	Name of month 07 (Gregorian calendar), format, abbreviated	7월
+ko_KR	Name of month 08 (Gregorian calendar), format, abbreviated	8월
+ko_KR	Name of month 09 (Gregorian calendar), format, abbreviated	9월
+ko_KR	Name of month 10 (Gregorian calendar), format, abbreviated	10월
+ko_KR	Name of month 11 (Gregorian calendar), format, abbreviated	11월
+ko_KR	Name of month 12 (Gregorian calendar), format, abbreviated	12월
+ko_KR	Name of month 01 (Gregorian calendar), format, narrow	1월
+ko_KR	Name of month 02 (Gregorian calendar), format, narrow	2월
+ko_KR	Name of month 03 (Gregorian calendar), format, narrow	3월
+ko_KR	Name of month 04 (Gregorian calendar), format, narrow	4월
+ko_KR	Name of month 05 (Gregorian calendar), format, narrow	5월
+ko_KR	Name of month 06 (Gregorian calendar), format, narrow	6월
+ko_KR	Name of month 07 (Gregorian calendar), format, narrow	7월
+ko_KR	Name of month 08 (Gregorian calendar), format, narrow	8월
+ko_KR	Name of month 09 (Gregorian calendar), format, narrow	9월
+ko_KR	Name of month 10 (Gregorian calendar), format, narrow	10월
+ko_KR	Name of month 11 (Gregorian calendar), format, narrow	11월
+ko_KR	Name of month 12 (Gregorian calendar), format, narrow	12월
+ko_KR	Name of month 01 (Islamic calendar), stand-alone, wide	Muharram
+ko_KR	Name of month 02 (Islamic calendar), stand-alone, wide	Safar
+ko_KR	Name of month 03 (Islamic calendar), stand-alone, wide	Rabiʻ I
+ko_KR	Name of month 04 (Islamic calendar), stand-alone, wide	Rabiʻ II
+ko_KR	Name of month 05 (Islamic calendar), stand-alone, wide	Jumada I
+ko_KR	Name of month 06 (Islamic calendar), stand-alone, wide	Jumada II
+ko_KR	Name of month 07 (Islamic calendar), stand-alone, wide	Rajab
+ko_KR	Name of month 08 (Islamic calendar), stand-alone, wide	Shaʻban
+ko_KR	Name of month 09 (Islamic calendar), stand-alone, wide	Ramadan
+ko_KR	Name of month 10 (Islamic calendar), stand-alone, wide	Shawwal
+ko_KR	Name of month 11 (Islamic calendar), stand-alone, wide	Dhuʻl-Qiʻdah
+ko_KR	Name of month 12 (Islamic calendar), stand-alone, wide	Dhuʻl-Hijjah
+ko_KR	Name of month 01 (Islamic calendar), stand-alone, abbreviated	Muh.
+ko_KR	Name of month 02 (Islamic calendar), stand-alone, abbreviated	Saf.
+ko_KR	Name of month 03 (Islamic calendar), stand-alone, abbreviated	Rab. I
+ko_KR	Name of month 04 (Islamic calendar), stand-alone, abbreviated	Rab. II
+ko_KR	Name of month 05 (Islamic calendar), stand-alone, abbreviated	Jum. I
+ko_KR	Name of month 06 (Islamic calendar), stand-alone, abbreviated	Jum. II
+ko_KR	Name of month 07 (Islamic calendar), stand-alone, abbreviated	Raj.
+ko_KR	Name of month 08 (Islamic calendar), stand-alone, abbreviated	Sha.
+ko_KR	Name of month 09 (Islamic calendar), stand-alone, abbreviated	Ram.
+ko_KR	Name of month 10 (Islamic calendar), stand-alone, abbreviated	Shaw.
+ko_KR	Name of month 11 (Islamic calendar), stand-alone, abbreviated	Dhuʻl-Q.
+ko_KR	Name of month 12 (Islamic calendar), stand-alone, abbreviated	Dhuʻl-H.
+ko_KR	Name of month 01 (Islamic calendar), stand-alone, narrow	1
+ko_KR	Name of month 02 (Islamic calendar), stand-alone, narrow	2
+ko_KR	Name of month 03 (Islamic calendar), stand-alone, narrow	3
+ko_KR	Name of month 04 (Islamic calendar), stand-alone, narrow	4
+ko_KR	Name of month 05 (Islamic calendar), stand-alone, narrow	5
+ko_KR	Name of month 06 (Islamic calendar), stand-alone, narrow	6
+ko_KR	Name of month 07 (Islamic calendar), stand-alone, narrow	7
+ko_KR	Name of month 08 (Islamic calendar), stand-alone, narrow	8
+ko_KR	Name of month 09 (Islamic calendar), stand-alone, narrow	9
+ko_KR	Name of month 10 (Islamic calendar), stand-alone, narrow	10
+ko_KR	Name of month 11 (Islamic calendar), stand-alone, narrow	11
+ko_KR	Name of month 12 (Islamic calendar), stand-alone, narrow	12
+ko_KR	Name of month 01 (Islamic calendar), format, wide	Muharram
+ko_KR	Name of month 02 (Islamic calendar), format, wide	Safar
+ko_KR	Name of month 03 (Islamic calendar), format, wide	Rabiʻ I
+ko_KR	Name of month 04 (Islamic calendar), format, wide	Rabiʻ II
+ko_KR	Name of month 05 (Islamic calendar), format, wide	Jumada I
+ko_KR	Name of month 06 (Islamic calendar), format, wide	Jumada II
+ko_KR	Name of month 07 (Islamic calendar), format, wide	Rajab
+ko_KR	Name of month 08 (Islamic calendar), format, wide	Shaʻban
+ko_KR	Name of month 09 (Islamic calendar), format, wide	Ramadan
+ko_KR	Name of month 10 (Islamic calendar), format, wide	Shawwal
+ko_KR	Name of month 11 (Islamic calendar), format, wide	Dhuʻl-Qiʻdah
+ko_KR	Name of month 12 (Islamic calendar), format, wide	Dhuʻl-Hijjah
+ko_KR	Name of month 01 (Islamic calendar), format, abbreviated	Muh.
+ko_KR	Name of month 02 (Islamic calendar), format, abbreviated	Saf.
+ko_KR	Name of month 03 (Islamic calendar), format, abbreviated	Rab. I
+ko_KR	Name of month 04 (Islamic calendar), format, abbreviated	Rab. II
+ko_KR	Name of month 05 (Islamic calendar), format, abbreviated	Jum. I
+ko_KR	Name of month 06 (Islamic calendar), format, abbreviated	Jum. II
+ko_KR	Name of month 07 (Islamic calendar), format, abbreviated	Raj.
+ko_KR	Name of month 08 (Islamic calendar), format, abbreviated	Sha.
+ko_KR	Name of month 09 (Islamic calendar), format, abbreviated	Ram.
+ko_KR	Name of month 10 (Islamic calendar), format, abbreviated	Shaw.
+ko_KR	Name of month 11 (Islamic calendar), format, abbreviated	Dhuʻl-Q.
+ko_KR	Name of month 12 (Islamic calendar), format, abbreviated	Dhuʻl-H.
+ko_KR	Name of month 01 (Islamic calendar), format, narrow	1
+ko_KR	Name of month 02 (Islamic calendar), format, narrow	2
+ko_KR	Name of month 03 (Islamic calendar), format, narrow	3
+ko_KR	Name of month 04 (Islamic calendar), format, narrow	4
+ko_KR	Name of month 05 (Islamic calendar), format, narrow	5
+ko_KR	Name of month 06 (Islamic calendar), format, narrow	6
+ko_KR	Name of month 07 (Islamic calendar), format, narrow	7
+ko_KR	Name of month 08 (Islamic calendar), format, narrow	8
+ko_KR	Name of month 09 (Islamic calendar), format, narrow	9
+ko_KR	Name of month 10 (Islamic calendar), format, narrow	10
+ko_KR	Name of month 11 (Islamic calendar), format, narrow	11
+ko_KR	Name of month 12 (Islamic calendar), format, narrow	12
+ko_KR	Name of weekday 01 (Gregorian calendar), stand-alone, wide	월요일
+ko_KR	Name of weekday 02 (Gregorian calendar), stand-alone, wide	화요일
+ko_KR	Name of weekday 03 (Gregorian calendar), stand-alone, wide	수요일
+ko_KR	Name of weekday 04 (Gregorian calendar), stand-alone, wide	목요일
+ko_KR	Name of weekday 05 (Gregorian calendar), stand-alone, wide	금요일
+ko_KR	Name of weekday 06 (Gregorian calendar), stand-alone, wide	토요일
+ko_KR	Name of weekday 07 (Gregorian calendar), stand-alone, wide	일요일
+ko_KR	Name of weekday 01 (Gregorian calendar), stand-alone, abbreviated	월
+ko_KR	Name of weekday 02 (Gregorian calendar), stand-alone, abbreviated	화
+ko_KR	Name of weekday 03 (Gregorian calendar), stand-alone, abbreviated	수
+ko_KR	Name of weekday 04 (Gregorian calendar), stand-alone, abbreviated	목
+ko_KR	Name of weekday 05 (Gregorian calendar), stand-alone, abbreviated	금
+ko_KR	Name of weekday 06 (Gregorian calendar), stand-alone, abbreviated	토
+ko_KR	Name of weekday 07 (Gregorian calendar), stand-alone, abbreviated	일
+ko_KR	Name of weekday 01 (Gregorian calendar), stand-alone, narrow	월
+ko_KR	Name of weekday 02 (Gregorian calendar), stand-alone, narrow	화
+ko_KR	Name of weekday 03 (Gregorian calendar), stand-alone, narrow	수
+ko_KR	Name of weekday 04 (Gregorian calendar), stand-alone, narrow	목
+ko_KR	Name of weekday 05 (Gregorian calendar), stand-alone, narrow	금
+ko_KR	Name of weekday 06 (Gregorian calendar), stand-alone, narrow	토
+ko_KR	Name of weekday 07 (Gregorian calendar), stand-alone, narrow	일
+ko_KR	Name of weekday 01 (Gregorian calendar), format, wide	월요일
+ko_KR	Name of weekday 02 (Gregorian calendar), format, wide	화요일
+ko_KR	Name of weekday 03 (Gregorian calendar), format, wide	수요일
+ko_KR	Name of weekday 04 (Gregorian calendar), format, wide	목요일
+ko_KR	Name of weekday 05 (Gregorian calendar), format, wide	금요일
+ko_KR	Name of weekday 06 (Gregorian calendar), format, wide	토요일
+ko_KR	Name of weekday 07 (Gregorian calendar), format, wide	일요일
+ko_KR	Name of weekday 01 (Gregorian calendar), format, abbreviated	월
+ko_KR	Name of weekday 02 (Gregorian calendar), format, abbreviated	화
+ko_KR	Name of weekday 03 (Gregorian calendar), format, abbreviated	수
+ko_KR	Name of weekday 04 (Gregorian calendar), format, abbreviated	목
+ko_KR	Name of weekday 05 (Gregorian calendar), format, abbreviated	금
+ko_KR	Name of weekday 06 (Gregorian calendar), format, abbreviated	토
+ko_KR	Name of weekday 07 (Gregorian calendar), format, abbreviated	일
+ko_KR	Name of weekday 01 (Gregorian calendar), format, narrow	월
+ko_KR	Name of weekday 02 (Gregorian calendar), format, narrow	화
+ko_KR	Name of weekday 03 (Gregorian calendar), format, narrow	수
+ko_KR	Name of weekday 04 (Gregorian calendar), format, narrow	목
+ko_KR	Name of weekday 05 (Gregorian calendar), format, narrow	금
+ko_KR	Name of weekday 06 (Gregorian calendar), format, narrow	토
+ko_KR	Name of weekday 07 (Gregorian calendar), format, narrow	일
+ko_KR	Name of weekday 01 (Islamic calendar), stand-alone, wide	월요일
+ko_KR	Name of weekday 02 (Islamic calendar), stand-alone, wide	화요일
+ko_KR	Name of weekday 03 (Islamic calendar), stand-alone, wide	수요일
+ko_KR	Name of weekday 04 (Islamic calendar), stand-alone, wide	목요일
+ko_KR	Name of weekday 05 (Islamic calendar), stand-alone, wide	금요일
+ko_KR	Name of weekday 06 (Islamic calendar), stand-alone, wide	토요일
+ko_KR	Name of weekday 07 (Islamic calendar), stand-alone, wide	일요일
+ko_KR	Name of weekday 01 (Islamic calendar), stand-alone, abbreviated	월
+ko_KR	Name of weekday 02 (Islamic calendar), stand-alone, abbreviated	화
+ko_KR	Name of weekday 03 (Islamic calendar), stand-alone, abbreviated	수
+ko_KR	Name of weekday 04 (Islamic calendar), stand-alone, abbreviated	목
+ko_KR	Name of weekday 05 (Islamic calendar), stand-alone, abbreviated	금
+ko_KR	Name of weekday 06 (Islamic calendar), stand-alone, abbreviated	토
+ko_KR	Name of weekday 07 (Islamic calendar), stand-alone, abbreviated	일
+ko_KR	Name of weekday 01 (Islamic calendar), stand-alone, narrow	월
+ko_KR	Name of weekday 02 (Islamic calendar), stand-alone, narrow	화
+ko_KR	Name of weekday 03 (Islamic calendar), stand-alone, narrow	수
+ko_KR	Name of weekday 04 (Islamic calendar), stand-alone, narrow	목
+ko_KR	Name of weekday 05 (Islamic calendar), stand-alone, narrow	금
+ko_KR	Name of weekday 06 (Islamic calendar), stand-alone, narrow	토
+ko_KR	Name of weekday 07 (Islamic calendar), stand-alone, narrow	일
+ko_KR	Name of weekday 01 (Islamic calendar), format, wide	월요일
+ko_KR	Name of weekday 02 (Islamic calendar), format, wide	화요일
+ko_KR	Name of weekday 03 (Islamic calendar), format, wide	수요일
+ko_KR	Name of weekday 04 (Islamic calendar), format, wide	목요일
+ko_KR	Name of weekday 05 (Islamic calendar), format, wide	금요일
+ko_KR	Name of weekday 06 (Islamic calendar), format, wide	토요일
+ko_KR	Name of weekday 07 (Islamic calendar), format, wide	일요일
+ko_KR	Name of weekday 01 (Islamic calendar), format, abbreviated	월
+ko_KR	Name of weekday 02 (Islamic calendar), format, abbreviated	화
+ko_KR	Name of weekday 03 (Islamic calendar), format, abbreviated	수
+ko_KR	Name of weekday 04 (Islamic calendar), format, abbreviated	목
+ko_KR	Name of weekday 05 (Islamic calendar), format, abbreviated	금
+ko_KR	Name of weekday 06 (Islamic calendar), format, abbreviated	토
+ko_KR	Name of weekday 07 (Islamic calendar), format, abbreviated	일
+ko_KR	Name of weekday 01 (Islamic calendar), format, narrow	월
+ko_KR	Name of weekday 02 (Islamic calendar), format, narrow	화
+ko_KR	Name of weekday 03 (Islamic calendar), format, narrow	수
+ko_KR	Name of weekday 04 (Islamic calendar), format, narrow	목
+ko_KR	Name of weekday 05 (Islamic calendar), format, narrow	금
+ko_KR	Name of weekday 06 (Islamic calendar), format, narrow	토
+ko_KR	Name of weekday 07 (Islamic calendar), format, narrow	일
+ko_KR	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي 鳩山 得 攀 沙紀 山田 三 小中 松下 俄 若山 二 一 正 竹山 竹山 中 中村 此 播 あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 内山 楽谷 爱
+ko_KR	Exemplar characters index	[ᄀ ᄂ ᄃ ᄅ ᄆ ᄇ ᄉ ᄋ ᄌ ᄎ ᄏ ᄐ ᄑ ᄒ]
+ko_KR	Scripts used	Hang Hani
+ko_KR	%r (locale specific 12 hour “TimeShort”)	오후 2:31
+ko_KR	%R (locale specific 24 hour “TimeShort”)	 14:31
+ko_KR	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	a h:mm -> 오후 2:31
+ko_KR	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24          	 H:mm ->  14:31
+ko_KR	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12 (default)	a h:mm:ss -> 오후 2:31:00
+ko_KR	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24          	 H:mm:ss ->  14:31:00
+ko_KR	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)	a h시 m분 s초 z -> 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24          	 H시 m분 s초 z ->  14시 31분 0초 GMT+00:00
+ko_KR	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	a h시 m분 s초 zzzz -> 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24          	 H시 m분 s초 zzzz ->  14시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12 (default)	yy. M. d. -> 08. 7. 21.
+ko_KR	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24          	yy. M. d. -> 08. 7. 21.
+ko_KR	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h:mm -> 08. 7. 21. 오후 2:31
+ko_KR	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24          	yy. M. d. H:mm -> 08. 7. 21. 14:31
+ko_KR	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h:mm:ss -> 08. 7. 21. 오후 2:31:00
+ko_KR	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24          	yy. M. d. H:mm:ss -> 08. 7. 21. 14:31:00
+ko_KR	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h시 m분 s초 z -> 08. 7. 21. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24          	yy. M. d. H시 m분 s초 z -> 08. 7. 21. 14시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h시 m분 s초 zzzz -> 08. 7. 21. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24          	yy. M. d. H시 m분 s초 zzzz -> 08. 7. 21. 14시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. -> 2008. 7. 21.
+ko_KR	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24          	yyyy. M. d. -> 2008. 7. 21.
+ko_KR	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h:mm -> 2008. 7. 21. 오후 2:31
+ko_KR	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24          	yyyy. M. d. H:mm -> 2008. 7. 21. 14:31
+ko_KR	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h:mm:ss -> 2008. 7. 21. 오후 2:31:00
+ko_KR	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24          	yyyy. M. d. H:mm:ss -> 2008. 7. 21. 14:31:00
+ko_KR	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h시 m분 s초 z -> 2008. 7. 21. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24          	yyyy. M. d. H시 m분 s초 z -> 2008. 7. 21. 14시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h시 m분 s초 zzzz -> 2008. 7. 21. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24          	yyyy. M. d. H시 m분 s초 zzzz -> 2008. 7. 21. 14시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 -> 2008년 7월 21일
+ko_KR	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 -> 2008년 7월 21일
+ko_KR	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h:mm -> 2008년 7월 21일 오후 2:31
+ko_KR	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 H:mm -> 2008년 7월 21일 14:31
+ko_KR	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h:mm:ss -> 2008년 7월 21일 오후 2:31:00
+ko_KR	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 H:mm:ss -> 2008년 7월 21일 14:31:00
+ko_KR	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h시 m분 s초 z -> 2008년 7월 21일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 H시 m분 s초 z -> 2008년 7월 21일 14시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h시 m분 s초 zzzz -> 2008년 7월 21일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 H시 m분 s초 zzzz -> 2008년 7월 21일 14시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE -> 2008년 7월 21일 월요일
+ko_KR	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE -> 2008년 7월 21일 월요일
+ko_KR	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h:mm -> 2008년 7월 21일 월요일 오후 2:31
+ko_KR	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H:mm -> 2008년 7월 21일 월요일 14:31
+ko_KR	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h:mm:ss -> 2008년 7월 21일 월요일 오후 2:31:00
+ko_KR	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H:mm:ss -> 2008년 7월 21일 월요일 14:31:00
+ko_KR	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h시 m분 s초 z -> 2008년 7월 21일 월요일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H시 m분 s초 z -> 2008년 7월 21일 월요일 14시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h시 m분 s초 zzzz -> 2008년 7월 21일 월요일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H시 m분 s초 zzzz -> 2008년 7월 21일 월요일 14시 31분 0초 GMT+00:00
+ko_KR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	a h:mm -> 오후 2:31
+ko_KR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	 H:mm ->  14:31
+ko_KR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	a h:mm:ss -> 오후 2:31:00
+ko_KR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24          	 H:mm:ss ->  14:31:00
+ko_KR	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	a h시 m분 s초 z -> 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24          	 H시 m분 s초 z ->  14시 31분 0초 GMT+00:00
+ko_KR	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	a h시 m분 s초 zzzz -> 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24          	 H시 m분 s초 zzzz ->  14시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12 (default)	yy. M. d. -> 29. 7. 18.
+ko_KR	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24          	yy. M. d. -> 29. 7. 18.
+ko_KR	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h:mm -> 29. 7. 18. 오후 2:31
+ko_KR	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24          	yy. M. d. H:mm -> 29. 7. 18. 14:31
+ko_KR	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h:mm:ss -> 29. 7. 18. 오후 2:31:00
+ko_KR	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24          	yy. M. d. H:mm:ss -> 29. 7. 18. 14:31:00
+ko_KR	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h시 m분 s초 z -> 29. 7. 18. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24          	yy. M. d. H시 m분 s초 z -> 29. 7. 18. 14시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	yy. M. d. a h시 m분 s초 zzzz -> 29. 7. 18. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24          	yy. M. d. H시 m분 s초 zzzz -> 29. 7. 18. 14시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. -> 1429. 7. 18.
+ko_KR	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24          	yyyy. M. d. -> 1429. 7. 18.
+ko_KR	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h:mm -> 1429. 7. 18. 오후 2:31
+ko_KR	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24          	yyyy. M. d. H:mm -> 1429. 7. 18. 14:31
+ko_KR	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h:mm:ss -> 1429. 7. 18. 오후 2:31:00
+ko_KR	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24          	yyyy. M. d. H:mm:ss -> 1429. 7. 18. 14:31:00
+ko_KR	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h시 m분 s초 z -> 1429. 7. 18. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24          	yyyy. M. d. H시 m분 s초 z -> 1429. 7. 18. 14시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy. M. d. a h시 m분 s초 zzzz -> 1429. 7. 18. 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24          	yyyy. M. d. H시 m분 s초 zzzz -> 1429. 7. 18. 14시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 -> 1429년 7월 18일
+ko_KR	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 -> 1429년 7월 18일
+ko_KR	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h:mm -> 1429년 7월 18일 오후 2:31
+ko_KR	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 H:mm -> 1429년 7월 18일 14:31
+ko_KR	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h:mm:ss -> 1429년 7월 18일 오후 2:31:00
+ko_KR	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 H:mm:ss -> 1429년 7월 18일 14:31:00
+ko_KR	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h시 m분 s초 z -> 1429년 7월 18일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 H시 m분 s초 z -> 1429년 7월 18일 14시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 a h시 m분 s초 zzzz -> 1429년 7월 18일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 H시 m분 s초 zzzz -> 1429년 7월 18일 14시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE -> 1429년 7월 18일 월요일
+ko_KR	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE -> 1429년 7월 18일 월요일
+ko_KR	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h:mm -> 1429년 7월 18일 월요일 오후 2:31
+ko_KR	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H:mm -> 1429년 7월 18일 월요일 14:31
+ko_KR	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h:mm:ss -> 1429년 7월 18일 월요일 오후 2:31:00
+ko_KR	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H:mm:ss -> 1429년 7월 18일 월요일 14:31:00
+ko_KR	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h시 m분 s초 z -> 1429년 7월 18일 월요일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H시 m분 s초 z -> 1429년 7월 18일 월요일 14시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y년 M월 d일 EEEE a h시 m분 s초 zzzz -> 1429년 7월 18일 월요일 오후 2시 31분 0초 GMT+00:00
+ko_KR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y년 M월 d일 EEEE H시 m분 s초 zzzz -> 1429년 7월 18일 월요일 14시 31분 0초 GMT+00:00
 ms_MY	Language endonym	Melayu
 ms_MY	Country endonym	Malaysia
 ms_MY	Floating Point Number	-123,456,789.012
