@@ -1703,6 +1703,13 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     emit gainedFocus(event->reason());
 }
 
+// KLUDGE WARNING: Qt doesn't remove subfocus when losing focus by clicking outside 
+// the widget. Workaround by accessing private method this way. Remove when Qt is fixed.
+// http://bugreports.qt.nokia.com/browse/QTBUG-16014
+class QGraphicsItemPrivate {
+public:
+    void clearSubFocus(QGraphicsItem *rootItem = 0, QGraphicsItem *stopItem = 0);
+};
 
 void MTextEdit::focusOutEvent(QFocusEvent *event)
 {
@@ -1722,6 +1729,9 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 
     d->commitPreedit();
     deselect();
+
+    // kludge warning!
+    QGraphicsItem::d_ptr->clearSubFocus();
 
     if (d->completer) {
         //hide completer when focus out
