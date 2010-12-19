@@ -1,3 +1,12 @@
+libmeegotouch (0.20.65-3) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#210352 - "New text message" view moves while entering text to "qtn_re_text_edit_promt_to" field
+  * Fixes: NB#210713 - Text Input Field is "jumping"
+  * Fixes: NB#210697 - [REG] Text Input Field is moved up while focus is set
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Sun, 19 Dec 2010 09:38:56 +0200
+
 libmeegotouch (0.20.65-2) unstable; urgency=low
 
   * New version
