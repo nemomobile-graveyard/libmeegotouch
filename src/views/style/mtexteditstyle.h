@@ -36,6 +36,7 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QColor,       selectionBackgroundColor, SelectionBackgroundColor)
     M_STYLE_ATTRIBUTE(qreal,        selectionThreshold,       SelectionThreshold)
     M_STYLE_ATTRIBUTE(bool,         allowViewReposition,      AllowViewReposition)
+    M_STYLE_ATTRIBUTE(bool,         disableMagnifier,         DisableMagnifier)
     M_STYLE_ATTRIBUTE(QString,      maskString,               MaskString)
     M_STYLE_ATTRIBUTE(QColor,       promptColor,              PromptColor)
     M_STYLE_ATTRIBUTE(QString,      pasteFailedIcon,          PasteFailedIcon)

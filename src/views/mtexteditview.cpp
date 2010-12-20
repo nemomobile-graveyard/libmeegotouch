@@ -1196,6 +1196,12 @@ void MTextEditView::informPasteFailed()
 void MTextEditView::handleLongPress()
 {
     Q_D(MTextEditView);
+    
+    if ((model()->echo() != MTextEditModel::Normal
+         && model()->echo() != MTextEditModel::PasswordEchoOnEdit)
+        || style()->disableMagnifier()) {
+        return;
+    }
 
     // Bring up magnifier on long press.
     if (!d->magnifier) {
