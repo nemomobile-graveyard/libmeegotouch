@@ -37,22 +37,21 @@ static int setup_unix_signal_handlers()
 
     sighup.sa_handler = MThemeDaemonServer::hupSignalHandler;
     sigemptyset(&sighup.sa_mask);
-    sighup.sa_flags = 0;
-    sighup.sa_flags |= SA_RESTART;
+    sighup.sa_flags = SA_RESTART;
 
     if (sigaction(SIGHUP, &sighup, 0) > 0)
         return 1;
 
     sigterm.sa_handler = MThemeDaemonServer::termSignalHandler;
     sigemptyset(&sigterm.sa_mask);
-    sigterm.sa_flags |= SA_RESTART;
+    sigterm.sa_flags = SA_RESTART;
 
     if (sigaction(SIGTERM, &sigterm, 0) > 0)
         return 2;
 
     sigint.sa_handler = MThemeDaemonServer::intSignalHandler;
     sigemptyset(&sigint.sa_mask);
-    sigint.sa_flags |= SA_RESTART;
+    sigint.sa_flags = SA_RESTART;
 
     if (sigaction(SIGINT, &sigint, 0) > 0)
         return 3;
