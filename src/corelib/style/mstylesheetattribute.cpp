@@ -274,7 +274,7 @@ MStyleSheetAttribute::MStyleSheetAttribute(const MStyleSheetAttribute &other)
 {
     this->name = other.name;
     this->value = other.value;
-    this->position = position;
+    this->position = other.position;
 }
 
 QByteArray MStyleSheetAttribute::getName()

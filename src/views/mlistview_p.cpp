@@ -514,7 +514,9 @@ QModelIndex MListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
 void MListViewPrivate::replaceItem(MWidget* item, MWidget* newItem)
 {
     newItem->setPos(item->pos());
-    visibleItems.replace(visibleItems.indexOf(item), newItem);
+    int itemIndex = visibleItems.indexOf(item);
+    if (itemIndex >= 0)
+        visibleItems.replace(itemIndex, newItem);
     deleteItem(item);
 }
 

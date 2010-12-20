@@ -124,10 +124,11 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             scaled = QPixmap(requiredSize);
             scaled.fill(Qt::transparent);
             QPainter p;
-            p.begin(&scaled);
-            p.setRenderHint(QPainter::SmoothPixmapTransform);
-            drawBorderPixmap(&p, QRectF(0, 0, w, h), margins, *m_image);
-            p.end();
+            if (p.begin(&scaled)) {
+                p.setRenderHint(QPainter::SmoothPixmapTransform);
+                drawBorderPixmap(&p, QRectF(0, 0, w, h), margins, *m_image);
+                p.end();
+            }
 
             // draw to screen
             painter->drawPixmap(x, y, scaled);

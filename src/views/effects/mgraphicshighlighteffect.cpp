@@ -92,14 +92,15 @@ void MGraphicsHighlightEffectPrivate::drawComposedImage(QPoint offset, QPainter 
         composer = new QPainter();
 
     composed->fill(0);
-    composer->begin(composed);
-    composer->setCompositionMode(QPainter::CompositionMode_Source);
-    composer->drawPixmap(QRect(QPoint(0, 0), pixmap->size()), *pixmap);
-    composer->setCompositionMode(QPainter::CompositionMode_SourceAtop);
-    composer->setOpacity(strength);
-    composer->fillRect(QRect(QPoint(0, 0), pixmap->size()), highlightColor);
-    composer->setOpacity(1.0);
-    composer->end();
+    if (composer->begin(composed)) {
+        composer->setCompositionMode(QPainter::CompositionMode_Source);
+        composer->drawPixmap(QRect(QPoint(0, 0), pixmap->size()), *pixmap);
+        composer->setCompositionMode(QPainter::CompositionMode_SourceAtop);
+        composer->setOpacity(strength);
+        composer->fillRect(QRect(QPoint(0, 0), pixmap->size()), highlightColor);
+        composer->setOpacity(1.0);
+        composer->end();
+    }
 
     painter->drawImage(offset, *composed);
 }
