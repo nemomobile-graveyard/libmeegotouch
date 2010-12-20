@@ -38,6 +38,8 @@ public:
 
     QGraphicsGridLayout *layout();
 
+    void updateWidgetVisiblity();
+
 private:
     Q_DECLARE_PUBLIC(MBasicListItem)
 

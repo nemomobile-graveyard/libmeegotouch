@@ -41,16 +41,21 @@ MBasicListItemPrivate::MBasicListItemPrivate(MBasicListItem::ItemStyle style)
 
 MBasicListItemPrivate::~MBasicListItemPrivate()
 {
+    delete image;
+    delete titleLabel;
+    delete subtitleLabel;
 }
 
 void MBasicListItemPrivate::createLayout()
 {
     Q_Q(MBasicListItem);
 
-    layoutGrid = new QGraphicsGridLayout(q);
-    layoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    layoutGrid->setContentsMargins(0, 0, 0, 0);
-    layoutGrid->setSpacing(0);
+    if (!layoutGrid) {
+        layoutGrid = new QGraphicsGridLayout(q);
+        layoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        layoutGrid->setContentsMargins(0, 0, 0, 0);
+        layoutGrid->setSpacing(0);
+    }
 
     switch (listItemStyle) {
     case MBasicListItem::SingleTitle: {
@@ -87,14 +92,40 @@ void MBasicListItemPrivate::createLayout()
 void MBasicListItemPrivate::clearLayout()
 {
     if (layout()) {
-        for (int i = 0; i < layout()->count(); i++) {
-            QGraphicsLayoutItem *item = layout()->itemAt(0);
+        for (int i = 0; i < layout()->count(); i++)
             layout()->removeAt(0);
-            delete item;
+    }
+    updateWidgetVisiblity();
+}
+
+void MBasicListItemPrivate::updateWidgetVisiblity()
+{
+    Q_Q(MBasicListItem);
+
+    if (!q->scene())
+        return;
+
+    switch (listItemStyle) {
+    case MBasicListItem::SingleTitle: {
+            if (image)
+                q->scene()->removeItem(image);
+            if (subtitleLabel)
+                q->scene()->removeItem(subtitleLabel);
+            break;
         }
-        image = NULL;
-        titleLabel = NULL;
-        subtitleLabel = NULL;
+    case MBasicListItem::TitleWithSubtitle: {
+            if (image)
+                q->scene()->removeItem(image);
+            break;
+        }
+    case MBasicListItem::IconWithTitle: {
+            if (subtitleLabel)
+                q->scene()->removeItem(subtitleLabel);
+            break;
+        }
+    case MBasicListItem::IconWithTitleAndSubtitle:
+    default:
+        break;
     }
 }
 
