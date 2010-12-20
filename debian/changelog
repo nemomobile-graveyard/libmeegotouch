@@ -1,3 +1,10 @@
+libmeegotouch (0.20.66-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#212602 - Tapping the status area for the status menu makes the device struck
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 20 Dec 2010 15:15:29 +0100
+
 libmeegotouch (0.20.66-1) unstable; urgency=low
 
   * New version
