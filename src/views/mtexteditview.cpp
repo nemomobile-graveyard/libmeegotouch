@@ -1324,9 +1324,13 @@ void MTextEditView::applyStyle()
     d->document()->setDocumentMargin(InternalMargin);
     d->promptTextDocument->setDocumentMargin(InternalMargin);
 
+    // Note: using non-documented property
+    d->document()->documentLayout()->setProperty("cursorWidth", style()->cursorWidth());
+
     if (d->maskedTextDocument != 0) {
         d->maskedTextDocument->setDefaultFont(style()->font());
         d->maskedTextDocument->setDocumentMargin(InternalMargin);
+        d->maskedTextDocument->documentLayout()->setProperty("cursorWidth", style()->cursorWidth());
     }
 
     // font etc might affect size

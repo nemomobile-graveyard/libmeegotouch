@@ -42,6 +42,7 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString,      pasteFailedIcon,          PasteFailedIcon)
     M_STYLE_ATTRIBUTE(int,          pasteFailedDuration,      PasteFailedDuration)
     M_STYLE_ATTRIBUTE(int,          maskingDelay,             MaskingDelay)
+    M_STYLE_ATTRIBUTE(int,          cursorWidth,              CursorWidth)
 
     /*!
         \property MTextEditStyle::pressBoundaryFeedback
