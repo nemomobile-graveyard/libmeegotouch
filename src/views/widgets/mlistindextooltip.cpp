@@ -29,7 +29,8 @@
 #include <QPropertyAnimation>
 
 MListIndexTooltipPrivate::MListIndexTooltipPrivate()
-    : layout(NULL),
+    : q_ptr(0),
+    layout(NULL),
     arrowOffset(0.0),
     arrowOffsetAnimation(NULL),
     snapAnimation(NULL),

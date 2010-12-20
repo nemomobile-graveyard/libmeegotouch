@@ -73,6 +73,7 @@ namespace {
 /// Actual class
 
 MWindowPrivate::MWindowPrivate() :
+    glWidget(0),
     glContext(0),
     sceneManager(0),
     oldOrientation(M::Landscape), // the initial value is not used at all

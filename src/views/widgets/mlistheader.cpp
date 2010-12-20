@@ -25,7 +25,8 @@
 #include <QGraphicsLinearLayout>
 
 MListHeaderPrivate::MListHeaderPrivate()
-    : layout(0),
+    : q_ptr(0),
+    layout(0),
     titleLabel(0)
 {
 }

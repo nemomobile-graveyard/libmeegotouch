@@ -23,8 +23,9 @@
 #include <QPainter>
 
 MGraphicsClipEffectPrivate::MGraphicsClipEffectPrivate()
-    : drawRectangle(0, 0, 0, 0),
-    margin(0)
+    : q_ptr(0),
+      drawRectangle(0, 0, 0, 0),
+      margin(0)
 {
 }
 

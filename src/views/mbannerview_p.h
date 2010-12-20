@@ -60,9 +60,6 @@ public:
     void updateDateFormat() const;
 
 protected:
-
-    int MBannerStyle;
-
     MLayout * layout;
     MLinearLayoutPolicy *landscapePolicy;
     MLinearLayoutPolicy *portraitPolicy;

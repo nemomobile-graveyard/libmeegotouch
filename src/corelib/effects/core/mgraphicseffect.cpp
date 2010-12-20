@@ -22,7 +22,8 @@
 #include "mgraphicseffect_p.h"
 
 MGraphicsEffectPrivate::MGraphicsEffectPrivate()
-    : styleContainer(NULL)
+    : q_ptr(0),
+      styleContainer(0)
 {
 }
 

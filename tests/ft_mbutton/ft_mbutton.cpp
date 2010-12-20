@@ -28,6 +28,7 @@
 
 
 Ft_MButton::Ft_MButton()
+    : app(0)
 {
 }
 

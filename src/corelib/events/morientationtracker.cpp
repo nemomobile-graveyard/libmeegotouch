@@ -56,6 +56,10 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , currentAppWindowHadXPropertyChangeMask(false)
 #endif //Q_WS_X11
     , q_ptr(controller)
+#ifdef Q_WS_X11
+    , orientationAngleAtom(0)
+    , currentAppWindowAtom(0)
+#endif //Q_WS_X11
 {
     if (MComponentData::isOrientationForced()) {
         M::Orientation orientation = M::Landscape;

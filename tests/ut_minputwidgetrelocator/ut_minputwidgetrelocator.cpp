@@ -349,7 +349,7 @@ void Ut_MInputWidgetRelocator::updateStubbedStyleValues(M::Orientation orientati
 // Stubbing MScrollChain
 
 MScrollChain::MScrollChain(const QGraphicsItem *, const QGraphicsItem *)
-    : scrollTarget(0)
+    : rootItem(0), scrollTarget(0)
 {
 }
 
