@@ -20,16 +20,17 @@
 #ifndef UT_MINPUTWIDGETRELOCATOR_H
 #define UT_MINPUTWIDGETRELOCATOR_H
 
+#include <QGraphicsWidget>
 #include <QtTest/QtTest>
 #include <QObject>
 #include "mapplication.h"
 
 class MInputWidgetRelocator;
 
-class QGraphicsWidget;
 class QGraphicsScene;
 class QGraphicsView;
 class InputWidget;
+class ScrollableWidget;
 
 class Ut_MInputWidgetRelocator : public QObject
 {
@@ -66,6 +67,8 @@ private slots:
     void testPostponeAndUpdate();
     void testTargetPosition_data();
     void testTargetPosition();
+    void testDockBottom_data();
+    void testDockBottom();
 
 private:
     QRect allowedZone(const QRect &exposedContentRect, M::Orientation orientation) const;
@@ -82,6 +85,39 @@ private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     QGraphicsWidget *rootElement;
+    QPointer<ScrollableWidget> parentScrollableWidget;
+    QPointer<ScrollableWidget> childScrollableWidget;
+    QPointer<InputWidget> inputWidget;
+};
+
+class InputWidget : public QGraphicsWidget
+{
+public:
+    InputWidget(QGraphicsItem *parent = 0)
+        :QGraphicsWidget(parent)
+    {
+        setFlag(QGraphicsItem::ItemIsFocusable, true);
+        setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
+        resize(100, 20);
+    }
+
+    virtual ~InputWidget()
+    {
+    }
+
+    QRect microFocusRect() const
+    {
+        return rect().toRect(); // only height is important at the moment
+    }
+
+protected:
+    QVariant inputMethodQuery(Qt::InputMethodQuery query) const
+    {
+        if (query == Qt::ImMicroFocus) {
+            return microFocusRect();
+        }
+        return QGraphicsWidget::inputMethodQuery(query);
+    }
 };
 
 #endif // UT_MINPUTWIDGETRELOCATOR_H

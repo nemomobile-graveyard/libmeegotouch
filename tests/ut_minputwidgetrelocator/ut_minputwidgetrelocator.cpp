@@ -25,14 +25,12 @@
 #include "minputwidgetrelocator.h"
 #include "mkeyboardstatetracker.h"
 #include "ut_minputwidgetrelocator.h"
+#include "scrollablewidget.h"
+#include "scroller.h"
 
 #include <QGraphicsView>
 
 namespace {
-    QRect gLastTargetRect;
-    int gScrollCallCount = 0;
-    QPointer<QGraphicsWidget> gDummyWidget;
-
     // Stubbed style values. These are what subject sees as values read from MRelocatorStyle.
     qreal gStyleVerticalAnchorPosition = 0.0;
     qreal gStyleTopNoGoMargin = 0.0;
@@ -41,37 +39,6 @@ namespace {
 
 Q_DECLARE_METATYPE(Ut_MInputWidgetRelocator::Operations);
 Q_DECLARE_METATYPE(Ut_MInputWidgetRelocator::Zone);
-
-
-class InputWidget : public QGraphicsWidget
-{
-public:
-    InputWidget(QGraphicsItem *parent = 0)
-        :QGraphicsWidget(parent)
-    {
-        setFlag(QGraphicsItem::ItemIsFocusable, true);
-        setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
-        resize(100, 20);
-    }
-
-    virtual ~InputWidget()
-    {
-    }
-
-    QRect microFocusRect() const
-    {
-        return rect().toRect(); // only height is important at the moment
-    }
-
-protected:
-    QVariant inputMethodQuery(Qt::InputMethodQuery query) const
-    {
-        if (query == Qt::ImMicroFocus) {
-            return microFocusRect();
-        }
-        return QGraphicsWidget::inputMethodQuery(query);
-    }
-};
 
 void Ut_MInputWidgetRelocator::initTestCase()
 {
@@ -98,8 +65,8 @@ void Ut_MInputWidgetRelocator::initTestCase()
     rootElement->setFlag(QGraphicsItem::ItemHasNoContents, true);
     scene->addItem(rootElement);
 
-    gDummyWidget = QPointer<QGraphicsWidget>(new QGraphicsWidget);
-    scene->addItem(gDummyWidget);
+    Scroller::maximumOffset = QPoint(1000, 1000);
+    MScrollChain::registerScroller<ScrollableWidget>(QSharedPointer<Scroller>(new Scroller));
 }
 
 void Ut_MInputWidgetRelocator::cleanupTestCase()
@@ -115,10 +82,23 @@ void Ut_MInputWidgetRelocator::cleanupTestCase()
 void Ut_MInputWidgetRelocator::init()
 {
     subject = new MInputWidgetRelocator(scene, rootElement, M::Landscape);
+
+    parentScrollableWidget = QPointer<ScrollableWidget>(new ScrollableWidget(rootElement));
+    parentScrollableWidget->resize(1000, 1000);
+    childScrollableWidget = QPointer<ScrollableWidget>(new ScrollableWidget);
+    childScrollableWidget->resize(1000, 1000);
+    inputWidget = QPointer<InputWidget>(new InputWidget);
+
+    parentScrollableWidget->setContentItem(childScrollableWidget);
+    childScrollableWidget->setContentItem(inputWidget);
 }
 
 void Ut_MInputWidgetRelocator::cleanup()
 {
+    delete inputWidget;
+    delete childScrollableWidget;
+    delete parentScrollableWidget;
+
     delete subject;
     subject = 0;
 }
@@ -126,54 +106,50 @@ void Ut_MInputWidgetRelocator::cleanup()
 void Ut_MInputWidgetRelocator::testPostponeAndUpdate_data()
 {
     QTest::addColumn<Operations>("operations");
-    QTest::addColumn<int>("numberOfUpdates");
+    QTest::addColumn<bool>("updated");
 
     // Operations RotationEnd, HwKbChange, and SipChange always sets an update pending.
 
-    QTest::newRow("begin rotation") << (Operations() << RotationBegin) << 0;
-    QTest::newRow("end rotation") << (Operations() << RotationEnd) << 1;
-    QTest::newRow("begin scene window animation") << (Operations() << SceneWindowAppearing) << 0;
+    QTest::newRow("begin rotation") << (Operations() << RotationBegin) << false;
+    QTest::newRow("end rotation") << (Operations() << RotationEnd) << true;
+    QTest::newRow("begin scene window animation") << (Operations() << SceneWindowAppearing) << false;
     QTest::newRow("begin and end scene window animation")
-            << (Operations() << SceneWindowAppearing << SceneWindowAppeared) << 0;
+            << (Operations() << SceneWindowAppearing << SceneWindowAppeared) << false;
 
     QTest::newRow("rotation during animation, animation not finished")
-            << (Operations() << SceneWindowAppearing << RotationBegin << RotationEnd) << 0;
+            << (Operations() << SceneWindowAppearing << RotationBegin << RotationEnd) << false;
     QTest::newRow("rotation during animation, animation finished")
             << (Operations() << SceneWindowAppearing
                              << RotationBegin << RotationEnd
-                             << SceneWindowAppeared) << 1;
+                             << SceneWindowAppeared) << true;
 
-    QTest::newRow("hwkb changed state") << (Operations() << HwKbChange) << 1;
-    QTest::newRow("hwkb changed state but animating") << (Operations() << SceneWindowAppearing << HwKbChange) << 0;
-    QTest::newRow("hwkb changed state but rotating") << (Operations() << RotationBegin << HwKbChange) << 0;
+    QTest::newRow("hwkb changed state") << (Operations() << HwKbChange) << true;
+    QTest::newRow("hwkb changed state but animating") << (Operations() << SceneWindowAppearing << HwKbChange) << false;
+    QTest::newRow("hwkb changed state but rotating") << (Operations() << RotationBegin << HwKbChange) << false;
 
-    QTest::newRow("sip changed") << (Operations() << SipChange) << 1;
-    QTest::newRow("sip changed but animating") << (Operations() << SceneWindowAppearing << SipChange) << 0;
-    QTest::newRow("sip changed but rotating") << (Operations() << RotationBegin << SipChange) << 0;
+    QTest::newRow("sip changed") << (Operations() << SipChange) << true;
+    QTest::newRow("sip changed but animating") << (Operations() << SceneWindowAppearing << SipChange) << false;
+    QTest::newRow("sip changed but rotating") << (Operations() << RotationBegin << SipChange) << false;
 
     QTest::newRow("sip changed, rotation finished but animation didn't")
             << (Operations() << RotationBegin << SceneWindowAppearing
-                             << SipChange << RotationEnd) << 0;
+                             << SipChange << RotationEnd) << false;
     QTest::newRow("sip changed, rotation and animation finished")
             << (Operations() << RotationBegin << SceneWindowAppearing
-                             << SipChange << RotationEnd << SceneWindowAppeared) << 1;
+                             << SipChange << RotationEnd << SceneWindowAppeared) << true;
 }
 
 void Ut_MInputWidgetRelocator::testPostponeAndUpdate()
 {
     QFETCH(Operations, operations);
-    QFETCH(int, numberOfUpdates);
+    QFETCH(bool, updated);
 
     const QRect sipRect(QPoint(0, 300), scene->sceneRect().size().toSize());
     MInputMethodState::instance()->setInputMethodArea(sipRect);
 
-    // Only create input widget to be able to follow MScrollChain::run().
-    InputWidget widget(rootElement);
-    moveWidgetToZone(&widget, UpperNoGoZone, scene->sceneRect().toRect(), M::Landscape);
-    widget.setPos(-100, -100); // Position somewhere beyond nogo zones so relocation takes place.
-    widget.setFocus();
-
-    gScrollCallCount = 0;
+    const QPointF invalidPos(-1000, -1000);
+    inputWidget->setPos(invalidPos); // Position somewhere beyond nogo zones so relocation takes place.
+    inputWidget->setFocus();
 
     foreach (Operation op, operations) {
         switch (op) {
@@ -205,7 +181,10 @@ void Ut_MInputWidgetRelocator::testPostponeAndUpdate()
         }
     }
 
-    QCOMPARE(gScrollCallCount, numberOfUpdates);
+    const QPointF actualPos = rootElement->mapFromItem(inputWidget, 0, 0);
+    qDebug() << "actual: " << actualPos << ", invalid Pos: " << invalidPos;
+    bool actualUpdated = actualPos != invalidPos;
+    QCOMPARE(actualUpdated, updated);
 }
 
 void Ut_MInputWidgetRelocator::testTargetPosition_data()
@@ -255,15 +234,12 @@ void Ut_MInputWidgetRelocator::testTargetPosition()
         exposedContentRect.setBottom(sipRect.top());
     }
 
-    InputWidget widget(rootElement);
-    moveWidgetToZone(&widget, initialZone, exposedContentRect, orientation);
-    widget.setFocus();
+    moveWidgetToZone(inputWidget, initialZone, exposedContentRect, orientation);
+    inputWidget->setFocus();
 
-    // Set target rect of stub first as invalid.
-    const QRect invalidRect(-10, -10, -10, -10);
-    gLastTargetRect = invalidRect;
-
+    QRectF actualRectBefore = rootElement->mapRectFromItem(inputWidget, inputWidget->rect());
     subject->update();
+    QRectF actualRectAfter = rootElement->mapRectFromItem(inputWidget, inputWidget->rect());
 
     // Test two cases here:
     // 1) If widget was initially beyond nogo zones the new position should be at anchor point.
@@ -272,15 +248,86 @@ void Ut_MInputWidgetRelocator::testTargetPosition()
     switch (initialZone) {
     case UpperNoGoZone:
     case LowerNoGoZone:
-        QCOMPARE(static_cast<qreal>(gLastTargetRect.y()), verticalAnchorPosition(orientation));
-        QVERIFY(allowedZone(exposedContentRect, orientation).contains(gLastTargetRect));
+        QCOMPARE(actualRectAfter.y(), verticalAnchorPosition(orientation));
+        QVERIFY(allowedZone(exposedContentRect, orientation).contains(actualRectAfter.toRect()));
         break;
     case AllowedZone:
         // Already in allowed zone. Shouldn't have moved.
-        QCOMPARE(gLastTargetRect, invalidRect);
+        QCOMPARE(actualRectAfter, actualRectBefore);
         break;
     }
 }
+
+void Ut_MInputWidgetRelocator::testDockBottom_data()
+{
+    QTest::addColumn<M::Orientation>("orientation");
+    QTest::addColumn<QRect>("sipRect");
+    QTest::addColumn<Zone>("initialZone");
+
+    // Sip rectangle is given in scene coordinates.
+    const QSize screenSize(MDeviceProfile::instance()->resolution());
+    const QRect sipRect(0, screenSize.height() / 2,
+                        screenSize.height() - (screenSize.height() / 2),
+                        screenSize.width());
+
+    QTest::newRow("no sip, widget at upper nogo zone")   << M::Landscape << QRect() << UpperNoGoZone;
+    QTest::newRow("no sip, widget already visible")    << M::Landscape << QRect() << AllowedZone;
+    QTest::newRow("no sip, widget at lower nogo zone")   << M::Landscape << QRect() << LowerNoGoZone;
+    QTest::newRow("with sip, widget at upper nogo zone") << M::Landscape << sipRect << UpperNoGoZone;
+    QTest::newRow("with sip, widget already visible")  << M::Landscape << sipRect << AllowedZone;
+    QTest::newRow("with sip, widget at lower nogo zone") << M::Landscape << sipRect << LowerNoGoZone;
+
+    QTest::newRow("PT, no sip, widget at upper nogo zone")   << M::Portrait << QRect() << UpperNoGoZone;
+    QTest::newRow("PT, no sip, widget already visible")    << M::Portrait << QRect() << AllowedZone;
+    QTest::newRow("PT, no sip, widget at lower nogo zone")   << M::Portrait << QRect() << LowerNoGoZone;
+    QTest::newRow("PT, with sip, widget at upper nogo zone") << M::Portrait << sipRect << UpperNoGoZone;
+    QTest::newRow("PT, with sip, widget already visible")  << M::Portrait << sipRect << AllowedZone;
+    QTest::newRow("PT, with sip, widget at lower nogo zone") << M::Portrait << sipRect << LowerNoGoZone;
+}
+
+void Ut_MInputWidgetRelocator::testDockBottom()
+{
+    QFETCH(M::Orientation, orientation);
+    QFETCH(QRect, sipRect);
+    QFETCH(Zone, initialZone);
+
+    // Apply orientation
+    subject->handleRotationBegin();
+    subject->handleRotationFinished(orientation);
+
+    updateStubbedStyleValues(orientation);
+
+    MInputMethodState::instance()->setInputMethodArea(sipRect);
+    QRect exposedContentRect(rootElement->mapRectFromScene(scene->sceneRect()).toRect());
+    if (!sipRect.isNull()) {
+        sipRect = rootElement->mapRectFromScene(sipRect).toRect();
+        // Assume sip comes from bottom of screen.
+        exposedContentRect.setBottom(sipRect.top());
+    }
+
+    // We will dock childScrollableWidget.
+    childScrollableWidget->setProperty("dockBottom", QVariant(true));
+    childScrollableWidget->resize(10, 10);
+
+    moveWidgetToZone(inputWidget, initialZone, exposedContentRect, orientation);
+    inputWidget->setFocus();
+
+    subject->update();
+    const QRectF dockedRectAfter = rootElement->mapRectFromItem(childScrollableWidget,
+                                                                childScrollableWidget->rect());
+
+    qDebug() << "docked rect bottom: " << dockedRectAfter.toRect().bottom()
+            << " vs. exposed content rectangle bottom: " << exposedContentRect.bottom();
+
+    // No matter where the input widget was it should always dock to bottom.
+    // FIXME: Since the scrolling system does not play with qreals we might get rounding errors here.
+    //        Allow 1 pixel error.
+    qreal error = dockedRectAfter.bottom()
+                  - static_cast<qreal>(exposedContentRect.bottom());
+    QVERIFY(qAbs<qreal>(error) <= 1.0);
+}
+
+// Helper methods
 
 QRect Ut_MInputWidgetRelocator::allowedZone(const QRect &exposedContentRect, M::Orientation orientation) const
 {
@@ -344,54 +391,6 @@ void Ut_MInputWidgetRelocator::updateStubbedStyleValues(M::Orientation orientati
     gStyleVerticalAnchorPosition = verticalAnchorPosition(orientation);
     gStyleTopNoGoMargin = topNoGoMargin(orientation);
     gStyleBottomNoGoMargin = bottomNoGoMargin(orientation);
-}
-
-// Stubbing MScrollChain
-
-MScrollChain::MScrollChain(const QGraphicsItem *, const QGraphicsItem *)
-    : rootItem(0), scrollTarget(0)
-{
-}
-
-MScrollChain::~MScrollChain()
-{
-}
-
-int MScrollChain::count() const
-{
-    return 1;
-}
-
-const QGraphicsWidget *MScrollChain::widgetAt(int index) const
-{
-    Q_UNUSED(index);
-    return gDummyWidget;
-}
-
-void MScrollChain::restore(const MScrollChain *excludeChain)
-{
-    Q_UNUSED(excludeChain);
-}
-
-void MScrollChain::addBottomUpScroll(const QRect &targetRect, const QPoint &originPoint, int index)
-{
-    gLastTargetRect = targetRect;
-    Q_UNUSED(originPoint);
-    Q_UNUSED(index);
-}
-
-void MScrollChain::addMinimalScroll(const QRect &localRect,
-                                    int startingIndex,
-                                    int untilIndex)
-{
-    Q_UNUSED(localRect);
-    Q_UNUSED(startingIndex);
-    Q_UNUSED(untilIndex);
-}
-
-void MScrollChain::applyScrolling()
-{
-    ++gScrollCallCount;
 }
 
 QTEST_APPLESS_MAIN(Ut_MInputWidgetRelocator)

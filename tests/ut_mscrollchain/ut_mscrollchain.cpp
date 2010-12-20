@@ -21,98 +21,15 @@
 #include "mabstractscroller.h"
 #include "mscrollchain.h"
 
+#include "scroller.h"
+#include "scrollablewidget.h"
+
 #include <MDeviceProfile>
 #include <QGraphicsWidget>
 #include <QGraphicsScene>
 
 
 Q_DECLARE_METATYPE(QList<int>);
-
-ScrollableWidget::ScrollableWidget(QGraphicsItem *parent)
-    : QGraphicsWidget(parent),
-      mContentItem(0)
-{
-    // Not really needed but illustrates the use of this widget.
-    setFlag(QGraphicsItem::ItemClipsChildrenToShape, true);
-}
-ScrollableWidget::~ScrollableWidget() {}
-
-void ScrollableWidget::setContentItem(QGraphicsItem *item)
-{
-    delete mContentItem;
-    mContentItem = item;
-    item->setParentItem(this);
-    item->setPos(QPointF());
-}
-
-const QGraphicsItem *ScrollableWidget::contentItem() const
-{
-    return mContentItem;
-}
-
-void ScrollableWidget::scrollContents(const QPoint &offset)
-{
-    if (mContentItem) {
-        mContentItem->setPos(mContentItem->pos() + offset);
-    }
-}
-
-void ScrollableWidget::clearScroll()
-{
-    if (mContentItem) {
-        mContentItem->setPos(QPointF());
-    }
-}
-
-class Scroller : public MAbstractScroller
-{
-public:
-    Scroller() {}
-    virtual ~Scroller(){}
-
-    virtual QPoint queryScrollingAmount(const QGraphicsWidget *widget,
-                                        const QRect &targetRect,
-                                        const QPoint &originPoint,
-                                        const QPoint &currentOffset)
-    {
-        const ScrollableWidget *scrollable = dynamic_cast<const ScrollableWidget *>(widget);
-        if (!scrollable) {
-            return QPoint();
-        }
-
-        const QRect boundaries(scrollable->boundingRect().toRect());
-
-        QRect movedTargetRect(targetRect);
-        moveRectInsideArea(boundaries, movedTargetRect);
-
-        const QPoint offset(movedTargetRect.topLeft() - originPoint);
-        const QPoint lowerBound(-maximumOffset - currentOffset);
-        const QPoint upperBound(maximumOffset - currentOffset);
-        const QPoint limitedOffset(qBound(lowerBound.x(), offset.x(), upperBound.x()),
-                                   qBound(lowerBound.y(), offset.y(), upperBound.y()));
-        return limitedOffset;
-    }
-
-    virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset)
-    {
-        ScrollableWidget *scrollableWidget = dynamic_cast<ScrollableWidget *>(widget);
-        if (scrollableWidget) {
-            scrollableWidget->scrollContents(contentsOffset);
-        }
-    }
-
-    virtual void restoreScrolling(QGraphicsWidget *widget)
-    {
-        ScrollableWidget *scrollableWidget = dynamic_cast<ScrollableWidget *>(widget);
-        if (scrollableWidget) {
-            scrollableWidget->clearScroll();
-        }
-    }
-
-    static QPoint maximumOffset; // absolute offset values
-};
-
-QPoint Scroller::maximumOffset;
 
 void Ut_MScrollChain::initTestCase()
 {
