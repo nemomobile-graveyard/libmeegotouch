@@ -102,6 +102,7 @@ public:
     void addStyleToPreeditStyling(StyleType currentStyleType, bool setValue);
     void insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount);
     void clearUnusedPreeditStyling(int currentListIndex, int currentCount);
+    int currentPreeditStylingIndex(int &currentStyleLastCharIndex) const;
     virtual bool copy();
     QString replaceLineBreaks(QString text, QString replacement);
     void _q_confirmCompletion(const QString &);
