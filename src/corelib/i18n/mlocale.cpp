@@ -474,6 +474,66 @@ void MLocalePrivate::dateFormatTo12h(icu::DateFormat *df) const
 #endif
 
 #ifdef HAVE_ICU
+void MLocalePrivate::replaceDigitsFromLcTimeToLcNumeric(QString *dateTimeString) const
+{
+    Q_Q(const MLocale);
+    QString lcTimeLanguage = q->categoryLanguage(MLocale::MLcTime);
+    QString lcNumericLanguage = q->categoryLanguage(MLocale::MLcNumeric);
+    if (lcTimeLanguage == "ar") {
+        if (lcNumericLanguage == "ar")
+            return;
+        else {
+            dateTimeString->replace(QChar(0x0660), '0'); // ٠
+            dateTimeString->replace(QChar(0x0661), '1'); // ١
+            dateTimeString->replace(QChar(0x0662), '2'); // ٢
+            dateTimeString->replace(QChar(0x0663), '3'); // ٣
+            dateTimeString->replace(QChar(0x0664), '4'); // ٤
+            dateTimeString->replace(QChar(0x0665), '5'); // ٥
+            dateTimeString->replace(QChar(0x0666), '6'); // ٦
+            dateTimeString->replace(QChar(0x0667), '7'); // ٧
+            dateTimeString->replace(QChar(0x0668), '8'); // ٨
+            dateTimeString->replace(QChar(0x0669), '9'); // ٩
+            return;
+        }
+    }
+    else if (lcTimeLanguage == "fa") {
+        if(lcNumericLanguage == "fa")
+            return;
+        else {
+            dateTimeString->replace(QChar(0x06F0), '0'); // ٠
+            dateTimeString->replace(QChar(0x06F1), '1'); // ۱
+            dateTimeString->replace(QChar(0x06F2), '2'); // ۲
+            dateTimeString->replace(QChar(0x06F3), '3'); // ۳
+            dateTimeString->replace(QChar(0x06F4), '4'); // ۴
+            dateTimeString->replace(QChar(0x06F5), '5'); // ۵
+            dateTimeString->replace(QChar(0x06F6), '6'); // ۶
+            dateTimeString->replace(QChar(0x06F7), '7'); // ۷
+            dateTimeString->replace(QChar(0x06F8), '8'); // ۸
+            dateTimeString->replace(QChar(0x06F9), '9'); // ۹
+            return;
+        }
+    }
+    else if (lcTimeLanguage == "hi") {
+        if(lcNumericLanguage == "hi")
+            return;
+        else {
+            dateTimeString->replace(QChar(0x0966), '0'); // ०
+            dateTimeString->replace(QChar(0x0967), '1'); // १
+            dateTimeString->replace(QChar(0x0968), '2'); // २
+            dateTimeString->replace(QChar(0x0969), '3'); // ३
+            dateTimeString->replace(QChar(0x096A), '4'); // ४
+            dateTimeString->replace(QChar(0x096B), '5'); // ५
+            dateTimeString->replace(QChar(0x096C), '6'); // ६
+            dateTimeString->replace(QChar(0x096D), '7'); // ७
+            dateTimeString->replace(QChar(0x096E), '8'); // ८
+            dateTimeString->replace(QChar(0x096F), '9'); // ९
+            return;
+        }
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
 QString MLocalePrivate::icuFormatString(MLocale::DateType dateType,
                                         MLocale::TimeType timeType,
                                         MLocale::CalendarType calendarType,
@@ -2088,7 +2148,6 @@ QString MLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
 #endif
 }
 
-
 #ifdef HAVE_ICU
 QString MLocale::formatDateTime(const MCalendar &mcalendar,
                                   DateType datetype, TimeType timetype) const
@@ -2107,7 +2166,9 @@ QString MLocale::formatDateTime(const MCalendar &mcalendar,
                                               d->_timeFormat24h);
     if(df)
         df->format(*cal, resString, pos);
-    return MIcuConversions::unicodeStringToQString(resString);
+    QString result = MIcuConversions::unicodeStringToQString(resString);
+    d->replaceDigitsFromLcTimeToLcNumeric(&result);
+    return result;
 }
 #endif
 
@@ -2163,8 +2224,9 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
     icu::UnicodeString resString;
 
     formatter.format(*mCalendar.d_ptr->_calendar, resString, pos);
-
-    return MIcuConversions::unicodeStringToQString(resString);
+    QString result = MIcuConversions::unicodeStringToQString(resString);
+    d->replaceDigitsFromLcTimeToLcNumeric(&result);
+    return result;
 }
 #endif
 
