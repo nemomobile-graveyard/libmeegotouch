@@ -203,6 +203,7 @@ void MApplicationWindowPrivate::init()
     q->connect(navigationBarIsEmptyPropertyWatcher, SIGNAL(propertyChanged()),
                SLOT(_q_scheduleNavigationBarVisibilityUpdate()));
 
+    navigationBar->setStyleName(style()->navigationBarStyleName());
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
 
@@ -1049,6 +1050,7 @@ MApplicationWindowStyleContainer* MApplicationWindowPrivate::createStyleContaine
 
 void MApplicationWindowPrivate::_q_updateStyle()
 {
+    navigationBar->setStyleName(style()->navigationBarStyleName());
     _q_placeToolBar();
     initAutoHideComponentsTimer();
 }

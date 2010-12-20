@@ -45,6 +45,11 @@ class MApplicationWindowStyle : public MStyle
       \brief Whether the tab bar prefers to be displayed as a separate, independent, scene window.
     */
     M_STYLE_ATTRIBUTE(bool, floatableTabBar, FloatableTabBar)
+
+    /*!
+      \brief This allows to customize the style of toolbar for an specific app
+    */
+    M_STYLE_ATTRIBUTE(QString, navigationBarStyleName, NavigationBarStyleName)
 };
 
 class MApplicationWindowStyleContainer : public MStyleContainer
