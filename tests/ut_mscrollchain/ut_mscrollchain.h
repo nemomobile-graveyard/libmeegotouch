@@ -26,9 +26,28 @@
 #include "mapplication.h"
 
 class MScrollChain;
+class MSceneWindow;
 
-class QGraphicsWidget;
 class QGraphicsScene;
+
+#include <QGraphicsWidget>
+
+class ScrollableWidget : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    ScrollableWidget(QGraphicsItem *parent = 0);
+    virtual ~ScrollableWidget();
+
+    void setContentItem(QGraphicsItem *item);
+    const QGraphicsItem *contentItem() const;
+
+    void scrollContents(const QPoint &offset);
+    void clearScroll();
+
+private:
+    QGraphicsItem *mContentItem;
+};
 
 class Ut_MScrollChain : public QObject
 {
@@ -47,6 +66,8 @@ private slots:
     void testPointScroll_data();
     void testPointScroll();
     void testRestore();
+    void testMultiplePointScrolls_data();
+    void testMultiplePointScrolls();
 
 private:
     void addBottomUpScroll(QGraphicsWidget *widget, const QPoint &offset);

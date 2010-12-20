@@ -25,50 +25,44 @@
 #include <QGraphicsWidget>
 #include <QGraphicsScene>
 
-class ScrollableWidget : public QGraphicsWidget
+
+Q_DECLARE_METATYPE(QList<int>);
+
+ScrollableWidget::ScrollableWidget(QGraphicsItem *parent)
+    : QGraphicsWidget(parent),
+      mContentItem(0)
 {
-public:
-    ScrollableWidget(QGraphicsItem *parent = 0)
-        : QGraphicsWidget(parent),
-          mContentItem(0)
-    {
-        // Not really needed but illustrates the use of this widget.
-        setFlag(QGraphicsItem::ItemClipsChildrenToShape, true);
+    // Not really needed but illustrates the use of this widget.
+    setFlag(QGraphicsItem::ItemClipsChildrenToShape, true);
+}
+ScrollableWidget::~ScrollableWidget() {}
+
+void ScrollableWidget::setContentItem(QGraphicsItem *item)
+{
+    delete mContentItem;
+    mContentItem = item;
+    item->setParentItem(this);
+    item->setPos(QPointF());
+}
+
+const QGraphicsItem *ScrollableWidget::contentItem() const
+{
+    return mContentItem;
+}
+
+void ScrollableWidget::scrollContents(const QPoint &offset)
+{
+    if (mContentItem) {
+        mContentItem->setPos(mContentItem->pos() + offset);
     }
-    virtual ~ScrollableWidget() {}
+}
 
-    void setContentItem(QGraphicsItem *item)
-    {
-        delete mContentItem;
-        mContentItem = item;
-        item->setParentItem(this);
-        item->setPos(QPointF());
+void ScrollableWidget::clearScroll()
+{
+    if (mContentItem) {
+        mContentItem->setPos(QPointF());
     }
-
-    const QGraphicsItem *contentItem() const
-    {
-        return mContentItem;
-    }
-
-    void scrollContents(const QPoint &offset)
-    {
-        if (mContentItem) {
-            mContentItem->setPos(mContentItem->pos() + offset);
-        }
-    }
-
-    void clearScroll()
-    {
-        if (mContentItem) {
-            mContentItem->setPos(QPointF());
-        }
-    }
-
-private:
-    QGraphicsItem *mContentItem;
-};
-
-
+}
 
 class Scroller : public MAbstractScroller
 {
@@ -79,30 +73,40 @@ public:
     virtual QPoint queryScrollingAmount(const QGraphicsWidget *widget,
                                         const QRect &targetRect,
                                         const QPoint &originPoint,
-                                        const QPoint &)
+                                        const QPoint &currentOffset)
     {
-        const QRect boundaries(widget->boundingRect().toRect());
+        const ScrollableWidget *scrollable = dynamic_cast<const ScrollableWidget *>(widget);
+        if (!scrollable) {
+            return QPoint();
+        }
+
+        const QRect boundaries(scrollable->boundingRect().toRect());
 
         QRect movedTargetRect(targetRect);
         moveRectInsideArea(boundaries, movedTargetRect);
 
         const QPoint offset(movedTargetRect.topLeft() - originPoint);
-        const QPoint limitedOffset(qBound(-maximumOffset.x(), offset.x(), maximumOffset.x()),
-                                   qBound(-maximumOffset.y(), offset.y(), maximumOffset.y()));
-
+        const QPoint lowerBound(-maximumOffset - currentOffset);
+        const QPoint upperBound(maximumOffset - currentOffset);
+        const QPoint limitedOffset(qBound(lowerBound.x(), offset.x(), upperBound.x()),
+                                   qBound(lowerBound.y(), offset.y(), upperBound.y()));
         return limitedOffset;
     }
 
     virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset)
     {
-        ScrollableWidget *scrollableWidget = static_cast<ScrollableWidget *>(widget);
-        scrollableWidget->scrollContents(contentsOffset);
+        ScrollableWidget *scrollableWidget = dynamic_cast<ScrollableWidget *>(widget);
+        if (scrollableWidget) {
+            scrollableWidget->scrollContents(contentsOffset);
+        }
     }
 
     virtual void restoreScrolling(QGraphicsWidget *widget)
     {
-        ScrollableWidget *scrollableWidget = static_cast<ScrollableWidget *>(widget);
-        scrollableWidget->clearScroll();
+        ScrollableWidget *scrollableWidget = dynamic_cast<ScrollableWidget *>(widget);
+        if (scrollableWidget) {
+            scrollableWidget->clearScroll();
+        }
     }
 
     static QPoint maximumOffset; // absolute offset values
@@ -112,6 +116,8 @@ QPoint Scroller::maximumOffset;
 
 void Ut_MScrollChain::initTestCase()
 {
+    qRegisterMetaType< QList<int> >("QList<int>");
+
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mscrollchain" };
     MApplication::setLoadMInputContext(false);
@@ -234,11 +240,67 @@ void Ut_MScrollChain::testRestore()
     }
 }
 
+void Ut_MScrollChain::testMultiplePointScrolls_data()
+{
+    // This test checks that scroll chain gives correct information
+    // about the current widget offset in subsequent scroll requests.
+
+    // how much the test widget can scroll to each direction
+    QTest::addColumn<int>("maxAbsoluteOffset");
+
+    // list defines increments to target point rectangle sitting at (0, 0)
+    QTest::addColumn< QList<int> >("increments");
+    QTest::addColumn<int>("actualIncrement");
+
+    QTest::newRow("zero scrolls") << 10 << (QList<int>() << 0 << 0 << 0) << 0;
+    QTest::newRow("scrolling 0, 1, 0") << 10 << (QList<int>() << 0 << 1 << 0) << 1;
+    QTest::newRow("scrolling 1, 1, 1") << 3 << (QList<int>() << 1 << 1 << 1) << 3;
+
+    // Viewport clipping prevents scrolling in these
+    QTest::newRow("viewport limit 1") << 10 << (QList<int>() << -1 << 0 << 0) << 0;
+    QTest::newRow("viewport limit 2") << 10 << (QList<int>() << 1 << 1 << -3) << 0;
+    QTest::newRow("viewport limit 3") << 10 << (QList<int>() << -10 << 11) << 1;
+
+    // Test maximum value can be honored
+    QTest::newRow("max scroll 2") << 10 << (QList<int>() << 10 << 10) << 10;
+    QTest::newRow("max scroll 3") << 10 << (QList<int>() << 3 << 3 << 3 << 3) << 10;
+}
+
+void Ut_MScrollChain::testMultiplePointScrolls()
+{
+    QFETCH(int, maxAbsoluteOffset);
+    QFETCH(QList<int>, increments);
+    QFETCH(int, actualIncrement);
+
+    ScrollableWidget scrollable;
+    QGraphicsWidget child;
+    scrollable.setContentItem(&child);
+    child.resize(1, 1);
+
+    subject.reset(new MScrollChain(&child));
+
+    // big enough so it doesn't get to our way
+    scrollable.resize(100, 100);
+
+    Scroller::maximumOffset = QPoint(0, maxAbsoluteOffset);
+
+    QRect target(0, 0, 1, 1);
+
+    foreach (int increment, increments) {
+        target.moveTop(target.top() + increment);
+        subject->addBottomUpScroll(target, QPoint());
+    }
+    subject->applyScrolling();
+
+    QCOMPARE(child.pos().toPoint().y(), actualIncrement);
+}
+
 void Ut_MScrollChain::addBottomUpScroll(QGraphicsWidget *widget, const QPoint &offset)
 {
     const QRect widgetRect = subject->root()->mapRectFromItem(widget, widget->rect()).toRect();
     const QRect targetRect(widgetRect.topLeft() + offset, widgetRect.size());
     subject->addBottomUpScroll(targetRect, QPoint());
 }
+
 
 QTEST_APPLESS_MAIN(Ut_MScrollChain)
