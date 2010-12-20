@@ -100,6 +100,7 @@ public:
 
     void storePreeditTextStyling(int start, int end);
     void addStyleToPreeditStyling(StyleType currentStyleType, bool setValue);
+    QTextCharFormat currentPreeditCharFormat() const;
     void insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount);
     void clearUnusedPreeditStyling(int currentListIndex, int currentCount);
     int currentPreeditStylingIndex(int &currentStyleLastCharIndex) const;

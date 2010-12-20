@@ -121,7 +121,12 @@ void MRichTextEditPrivate::_q_updateStyle()
     Q_Q(MRichTextEdit);
 
     QTextCursor cursor = q->textCursor();
-    QTextCharFormat format = cursor.charFormat();
+    QTextCharFormat format;
+    if (isPreediting()) {
+        format = currentPreeditCharFormat();
+    } else {
+        format = cursor.charFormat();
+    }
 
     MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
                                                            "Bold",
@@ -483,9 +488,16 @@ void MRichTextEdit::setFontBold(bool bold)
 
 QFont MRichTextEdit::currentFont()
 {
-    QTextCursor textcursor = textCursor();
+    Q_D(MRichTextEdit);
 
-    return textcursor.charFormat().font();
+    QFont font;
+    if (d->isPreediting() == true) {
+        font = d->currentPreeditCharFormat().font();
+    } else {
+        QTextCursor textcursor = textCursor();
+        font = textcursor.charFormat().font();
+    }
+    return font;
 }
 
 

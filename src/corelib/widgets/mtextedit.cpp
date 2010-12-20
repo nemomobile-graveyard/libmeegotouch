@@ -1164,6 +1164,21 @@ void MTextEditPrivate::addStyleToPreeditStyling(StyleType currentStyleType, bool
     }
 }
 
+/*!
+ * \brief returns the cursor's current character format in the stored preedit styling
+ */
+QTextCharFormat MTextEditPrivate::currentPreeditCharFormat() const
+{
+    QTextCharFormat format;
+    const QString preedit = cursor()->selectedText();
+    int currentStyleLastCharIndex = 0;
+    int currentStyleIndex = currentPreeditStylingIndex(currentStyleLastCharIndex);
+    if (currentStyleIndex >= 0) {
+        format = preeditStyling.at(currentStyleIndex).charFormat;
+    }
+    return format;
+
+}
 
 /*!
  * \brief clears the unused styling from stored preedit styling information
