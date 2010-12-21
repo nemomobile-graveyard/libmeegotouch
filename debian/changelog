@@ -1,3 +1,26 @@
+libmeegotouch (0.20.67-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#212602 - Tapping the status area makes the device struck
+  * Fixes: NB#208077 - MNotification doesn't show specified image
+  * Fixes: NB#211512 - clipboard has GL context
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 21 Dec 2010 14:35:57 +0100
+
+libmeegotouch (0.20.66-3) unstable; urgency=low
+
+  * New version
+  * Special release for integration
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 21 Dec 2010 10:31:17 +0100
+
+libmeegotouch (0.20.66-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#212602 - Tapping the status area for the status menu makes the device struck
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 20 Dec 2010 15:15:29 +0100
+
 libmeegotouch (0.20.66-1) unstable; urgency=low
 
   * New version
@@ -7,6 +30,22 @@ libmeegotouch (0.20.66-1) unstable; urgency=low
   * Fixes: NB#210772 - Hour digits are cut in alarm notification when region is set to Portugal
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 15 Dec 2010 15:58:41 +0200
+
+libmeegotouch (0.20.65-3) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#210352 - "New text message" view moves while entering text to "qtn_re_text_edit_promt_to" field
+  * Fixes: NB#210713 - Text Input Field is "jumping"
+  * Fixes: NB#210697 - [REG] Text Input Field is moved up while focus is set
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Sun, 19 Dec 2010 09:38:56 +0200
+
+libmeegotouch (0.20.65-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#211964 - Additional click is emitted when accessing object menu
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 16 Dec 2010 11:47:55 +0200
 
 libmeegotouch (0.20.65-1) unstable; urgency=low
 
