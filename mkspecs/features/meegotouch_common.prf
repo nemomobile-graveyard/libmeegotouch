@@ -2,8 +2,8 @@ include(meegotouch_defines.prf)
 include(meegotouch_mgen.prf)
 include(meegotouch_mmoc.prf)
 
-contains(DEFINES, HAVE_DBUS) {
-    QT += dbus
+contains(MEEGOTOUCHCONFIG_DEPS, HAVE_DBUS) {
+    QT *= dbus
 }
 
 macx {

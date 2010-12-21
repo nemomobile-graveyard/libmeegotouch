@@ -11,6 +11,10 @@ M_VERSION=$${M_MAJOR_VERSION}.$${M_MINOR_VERSION}.$${M_PATCH_VERSION}
 
 # first set default value for meegotouch prefix
 # the @@...@@ variable is filled from the libmeegotouch/configure script.
+
+#info how the libmeegotouch was configured
+MEEGOTOUCHCONFIG_DEPS = @@MEEGOTOUCHCONFIG_DEPS@@
+
 unix {
     M_PREFIX = @@M_UNIX_INSTALL_PREFIX@@
     M_SYSCONFDIR = @@M_UNIX_INSTALL_SYSCONFDIR@@

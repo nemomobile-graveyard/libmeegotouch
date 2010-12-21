@@ -705,6 +705,7 @@ cat "$relpath/mkspecs/features/meegotouch_defines.prf.in" \
 | sed -e "s,@@M_UNIX_INSTALL_PREFIX@@,$M_INSTALL_PREFIX,g" \
 | sed -e "s,@@M_UNIX_INSTALL_SYSCONFDIR@@,$M_INSTALL_SYSCONFDIR,g" \
 | sed -e "s,@@M_UNIX_INSTALL_LIBDIR@@,$M_INSTALL_LIBDIR,g" \
+| sed -e "s,@@MEEGOTOUCHCONFIG_DEPS@@,$MEEGOTOUCHCONFIG_DEPS,g" \
 > "$MEEGOTOUCH_DEFINES_PRF.tmp"
 
 # replace meegotouch_defines.prf if it differs from the newly created temp file
