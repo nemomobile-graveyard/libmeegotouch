@@ -23,6 +23,7 @@
 #include "mexport.h"
 
 #include <QObject>
+#include <QMetaType>
 #include <QString>
 
 class MFeedbackPrivate;
@@ -135,5 +136,7 @@ protected:
     Q_DECLARE_PRIVATE(MFeedback)
     MFeedbackPrivate *const d_ptr;
 };
+
+Q_DECLARE_METATYPE(MFeedback)
 
 #endif

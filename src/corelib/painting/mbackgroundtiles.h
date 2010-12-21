@@ -55,5 +55,6 @@ private:
     Q_DECLARE_PRIVATE(MBackgroundTiles)
 };
 
-#endif
+Q_DECLARE_METATYPE(MBackgroundTiles)
 
+#endif

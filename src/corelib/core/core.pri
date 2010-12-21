@@ -40,6 +40,7 @@ PRIVATE_HEADERS += \
     $$CORE_SRC_DIR/msyslogclient.h \
     $$CORE_SRC_DIR/mgraphicssystemhelper.h \
     $$CORE_SRC_DIR/mdynamicpropertywatcher.h \
+    $$CORE_SRC_DIR/mmetatypes.h \
 
 contains(DEFINES, HAVE_DBUS) {
     PUBLIC_HEADERS += \

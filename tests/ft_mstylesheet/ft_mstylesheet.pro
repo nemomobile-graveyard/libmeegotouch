@@ -1,7 +1,10 @@
 include(../common_top.pri)
 TARGET = ft_mstylesheet
 QT += dbus svg network
+
 LIBRARYPATH += $$MSRCDIR
+
+INCLUDEPATH += $$MSRCDIR/corelib/core/
 
 STYLE_HEADERS += testobjectstyle.h testobject2style.h testobject3style.h
 

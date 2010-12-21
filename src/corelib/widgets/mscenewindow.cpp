@@ -37,6 +37,8 @@
 #include "mdialog.h"
 #include "mcancelevent.h"
 
+#include "mmetatypes.h"
+
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
 
@@ -234,12 +236,7 @@ Qt::Alignment MSceneWindow::alignment() const
     // There is an implicit property interface between the controller and the views
     // The controller expects the view to provide an "alignment" property.
     if (view()) {
-        QVariant v = view()->property("alignment");
-        if (v.isValid()) {
-            result = Qt::Alignment(v.toInt());
-        }
-        else {
-        }
+        result = view()->property("alignment").value<Qt::Alignment>();
     }
 
     if (layoutDirection() == Qt::RightToLeft) {

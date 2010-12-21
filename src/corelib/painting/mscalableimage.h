@@ -21,6 +21,7 @@
 #define MSCALABLEIMAGE_H
 
 #include <QObject>
+#include <QMetaType>
 #include "mexport.h"
 
 class MScalableImagePrivate;
@@ -184,6 +185,8 @@ private:
     Q_DECLARE_PRIVATE(MScalableImage)
     Q_DISABLE_COPY(MScalableImage)
 };
+
+Q_DECLARE_METATYPE(const MScalableImage *)
 
 #endif
 

@@ -3,6 +3,8 @@ TARGET = ft_mstylesheetparser
 QT += dbus svg network
 LIBRARYPATH += $$MSRCDIR
 
+INCLUDEPATH += $$MSRCDIR/corelib/core/
+
 SOURCES += \
 	ft_mstylesheetparser.cpp \
     $$MSRCDIR/corelib/theme/mlogicalvalues.cpp \

@@ -3,6 +3,8 @@ TARGET = ut_mlogicalvalues
 QT += dbus svg network
 LIBRARYPATH += $$MSRCDIR
 
+INCLUDEPATH += $$MSRCDIR/corelib/core/
+
 SOURCES += \
 	ut_mlogicalvalues.cpp \
     $$MSRCDIR/corelib/theme/mlogicalvalues.cpp \
