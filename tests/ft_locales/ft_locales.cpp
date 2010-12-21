@@ -1016,6 +1016,230 @@ void Ft_Locales::testMLocaleToUpper()
     QCOMPARE(resultQt, expectedQt);
 }
 
+
+void Ft_Locales::testMLocaleIndexBucket_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcCollate");
+    QTest::addColumn<QStringList>("stringsSorted");
+    QTest::addColumn<QStringList>("expectedBuckets");
+
+    QTest::newRow("de_DE")
+        <<"ja_JP"
+        <<"de_DE"
+        <<(QStringList()<<"cote"<<"coté"<<"côte"<<"côté"<<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"<<"s"<<"S"<<"ß"<<"ẞ"<<"test"<<"Test"<<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"<<"沙紀")
+        <<(QStringList()<<"C"   <<"C"   <<"C"   <<"C"   <<"O"<<"O"<<"O" <<"O" <<"O" <<"S"<<"S"<<"S"<<"S"<<"T"   <<"T"   <<"Z"<<"Z"<<"Z" <<"Z" <<"Z" <<"沙");
+    QTest::newRow("fr_FR")
+        <<"ja_JP"
+        <<"fr_FR"
+        <<(QStringList()<<"cote"<<"côte"<<"coté"<<"côté"<<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"<<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"<<"沙紀")
+        <<(QStringList()<<"C"   <<"C"   <<"C"   <<"C"   <<"O"<<"O"<<"O" <<"O" <<"O" <<"Z"<<"Z"<<"Z" <<"Z" <<"Z" <<"沙");
+    QTest::newRow("cs_CZ")
+        <<"ja_JP"
+        <<"cs_CZ"
+        <<(QStringList()<<"c"<<"Cc"<<"CC"<<"č"<<"č"<<"Č"<<"h"<<"H"<<"ch"<<"cH"<<"Ch"<<"CH"<<"i"<<"I"<<"ů"<<"Ů"<<"α"<<"Α"<<"ワタシ"<<"沙紀")
+        <<(QStringList()<<"C"<<"C" <<"C" <<"Č"<<"Č"<<"Č"<<"H"<<"H"<<"CH"<<"CH"<<"CH"<<"CH"<<"I"<<"I"<<"U"<<"U"<<"Α"<<"Α"<<"ワ"   <<"沙");
+    QTest::newRow("ar_SA")
+        <<"ja_JP"
+        <<"ar_SA"
+        <<(QStringList()<<"arabia"<<"zero"<<"ه")
+        <<(QStringList()<<"A"     <<"Z"   <<"ه");
+    QTest::newRow("fa_IR")
+        <<"ja_JP"
+        <<"fa_IR"
+        <<(QStringList()<<"ه")
+        <<(QStringList()<<"ه");
+    QTest::newRow("ja_JP@collation=standard")
+        <<"de_DE"
+        <<"ja_JP@collation=standard" // collation=standard is default for ja_JP
+        <<(QStringList()
+           <<"゙"<<"゛"<<"・"<<"﹅"<<"㈠"<<"㈱"<<"※"<<"∮"<<"♨"<<"〒"<<"ー"<<"ヾ"
+           <<"Ａ"<<"ｊｏｈｎ"<<"john"<<"Ｊｏｈｎ"<<"John"<<"ｓａｋｉ"<<"saki"<<"Saki"<<"Ｓａｋｉ"
+           <<"あ"<<"㋐"<<"い"<<"イ"<<"ゔ"<<"ヴ"<<"ゕ"<<"ヵ"
+           <<"か"<<"㋕"<<"ㇰ"<<"く"<<"ク"<<"ゖ"<<"ヶ"<<"㋘"<<"こ"<<"ご"<<"ご"<<"ヿ"
+           <<"さ"<<"㋚"<<"さき"<<"サキ"<<"じょん"<<"ジョン"<<"せ"<<"セ"<<"せ1"<<"セ1"<<"せ2"<<"セ2"<<"セあセ"<<"せいせ"
+           <<"た"<<"㋟"<<"っ"<<"ッ"<<"と"<<"ト"
+           <<"な"<<"ㇵ"
+           <<"は"<<"㋩"
+           <<"ま"
+           <<"や"
+           <<"ら"
+           <<"ヷ"<<"わたし"<<"ワタシ"
+           <<"ゐ"<<"ヰ"<<"ヸ"<<"ヹ"<<"を"<<"ヲ"<<"ヺ"<<"ん"<<"ン"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"一"<<"沙紀"<<"丁"<<"頻"<<"隆"<<"廳"<<"⼀"<<"㊀"<<"㆒"<<"龢"<<"㺃"<<"䵷")
+        <<(QStringList()
+           <<"゙"<<"゛"<<"・"<<"﹅"<<"㈠"<<"㈱"<<"※"<<"∮"<<"♨"<<"〒"<<"ー"<<"ヾ"
+           <<"Ａ"<<"Ｊ"<<"J"<<"Ｊ"<<"J"<<"Ｓ"<<"S"<<"S"<<"Ｓ"
+           <<"あ"<<"あ"<<"あ"<<"あ"<<"あ"<<"あ"<<"あ"<<"あ"
+           <<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"
+           <<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"
+           <<"た"<<"た"<<"た"<<"た"<<"た"<<"た"
+           <<"な"<<"な"
+           <<"は"<<"は"
+           <<"ま"
+           <<"や"
+           <<"ら"
+           <<"わ"<<"わ"<<"わ"
+           <<"ゐ"<<"ヰ"<<"ヸ"<<"ヹ"<<"を"<<"ヲ"<<"ヺ"<<"ん"<<"ン"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"一"<<"沙"<<"丁"<<"頻"<<"隆"<<"廳"<<"⼀"<<"㊀"<<"㆒"<<"龢"<<"㺃"<<"䵷");
+    QTest::newRow("zh_TW@collation=stroke") 
+        <<"ja_JP"
+        <<"zh_TW@collation=stroke" // collation=stroke is default for zh_TW
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"Ａ"<<"john"<<"ｊｏｈｎ"<<"John"<<"Ｊｏｈｎ"<<"saki"<<"ｓａｋｉ"<<"Saki"<<"Ｓａｋｉ"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"一"<<"乙" // 1 stroke
+           <<"丁"<<"二" // 2
+           <<"三"<<"川" // 3
+           <<"丑"<<"木" // 4
+           <<"丙"<<"宁驰" // 5
+           <<"丞"<<"羊" // 6
+           <<"串"<<"君蘅 柳"<<"李"<<"沙紀" // 7
+           <<"並"<<"炒" //  8
+           <<"亟"<<"威"<<"柳" //  9
+           <<"乘"<<"髟" // 10
+           <<"乾"<<"雪" // 11
+           <<"傢"<<"隆" // 12
+           <<"亂"<<"罪" // 13
+           <<"僧"<<"蜻" // 14
+           <<"億"<<"蝙" // 15
+           <<"儒"<<"頻" // 16
+           <<"優"<<"曙" // 17
+           <<"叢"<<"鮹" // 18
+           <<"嚥"<<"譏" // 19
+           <<"勸"<<"霰"<<"襦" // 20
+           <<"儷"<<"驃" // 21
+           <<"儼"<<"龢" // 22
+           <<"囌"<<"鷲" // 23
+           <<"囑"<<"鷺" // 24
+           <<"廳" // 25 last official bucket
+           <<"躡" // 25
+           <<"鑽" // 27
+           <<"鬱" // 29
+           <<"驫" // 30
+           <<"⼀"<<"㊀"<<"㆒"<<"张威"<<"邉"<<"釡"<<"閇"<<"驰"<<"㺃"<<"䵷"
+            )
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"Ａ"<<"J"<<"Ｊ"<<"J"<<"Ｊ"<<"S"<<"Ｓ"<<"S"<<"Ｓ"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"一"<<"一" //  1 stroke
+           <<"丁"<<"丁" //  2
+           <<"三"<<"三" //  3
+           <<"丑"<<"丑" //  4
+           <<"丙"<<"丙" //  5
+           <<"丞"<<"丞" //  6
+           <<"串"<<"串"<<"串"<<"串" //  7
+           <<"並"<<"並" //  8
+           <<"亟"<<"亟"<<"亟" //  9
+           <<"乘"<<"乘" // 10
+           <<"乾"<<"乾" // 11
+           <<"傢"<<"傢" // 12
+           <<"亂"<<"亂" // 13
+           <<"僧"<<"僧" // 14
+           <<"億"<<"億" // 15
+           <<"儒"<<"儒" // 16
+           <<"優"<<"優" // 17
+           <<"叢"<<"叢" // 18
+           <<"嚥"<<"嚥" // 19
+           <<"勸"<<"勸"<<"勸" // 20
+           <<"儷"<<"儷" // 21
+           <<"儼"<<"儼" // 22
+           <<"囌"<<"囌" // 23
+           <<"囑"<<"囑" // 24
+           <<"廳" // 25 last official bucket 
+           <<"躡" // 25
+           <<"鑽" // 27
+           <<"鬱" // 29
+           <<"驫" // 30
+           <<"⼀"<<"㊀"<<"㆒"<<"张"<<"邉"<<"釡"<<"閇"<<"驰"<<"㺃"<<"䵷"
+            );
+    QTest::newRow("zh_CN@collation=pinyin")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyin" // collation=pinyin is default for zh_CN
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"Ａ"<<"john"<<"ｊｏｈｎ"<<"John"<<"Ｊｏｈｎ"<<"saki"<<"ｓａｋｉ"<<"Saki"<<"Ｓａｋｉ"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"阿" // a1
+           <<"驰" // chi2
+           <<"峠" // quia3 Japanese kokuji, mountain pass, variant of 卡
+           <<"蘅" // heng2
+           <<"君" // jun1
+           <<"卡" // ka3
+           <<"李" // li5
+           <<"柳" // liu3
+           <<"宁" // ning2
+           <<"威" // wei1
+           <<"张" // zhang1
+            )
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"A"<<"J"<<"J"<<"J"<<"J"<<"S"<<"S"<<"S"<<"S"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"阿" // a1
+           <<"驰" // chi2
+           <<"峠" // qia3 Japanese kokuji, mountain pass, variant of 卡
+           <<"蘅" // heng2
+           <<"君" // jun1
+           <<"卡" // ka3
+           <<"李" // li5
+           <<"柳" // liu3
+           <<"宁" // ning2
+           <<"威" // wei1
+           <<"张" // zhang1
+            );
+}
+
+void Ft_Locales::testMLocaleIndexBucket()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, lcCollate);
+    QFETCH(QStringList, stringsSorted);
+    QFETCH(QStringList, expectedBuckets);
+
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    MLocale locale(localeName);
+    MLocale localeEn("en_US");
+    locale.setCategoryLocale(MLocale::MLcCollate, lcCollate);
+    QStringList stringsSortedCopy = stringsSorted;
+    qSort (stringsSortedCopy.begin(), stringsSortedCopy.end(),
+           localeEn.collator());
+    qSort (stringsSortedCopy.begin(), stringsSortedCopy.end(),
+           locale.collator());
+#if 1
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream << "\tlcCollate: " << lcCollate
+                << "\n\tbuckets\tbuckets\tstrings\tstrings"
+                << "\n\texpect \tfound  \torig   \tsorted\n";
+    for (int i = 0; i < stringsSorted.size(); ++i)
+        debugStream
+            << "\t" << expectedBuckets[i]
+            << "\t" << locale.indexBucket(stringsSorted[i])
+            << "\t" << stringsSorted[i]
+            << "\t" << stringsSortedCopy[i]
+            << "\n";
+#endif
+    QCOMPARE(stringsSortedCopy, stringsSorted);
+    for (int i = 0; i < stringsSorted.size(); ++i)
+        QCOMPARE(locale.indexBucket(stringsSorted[i]),
+                 expectedBuckets[i]);
+}
+
 /*
  * To reduce the size of libicu, we customize the locale data included in
  * our package of libicu and include only what needs to be there.

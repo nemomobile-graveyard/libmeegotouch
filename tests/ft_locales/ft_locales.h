@@ -102,6 +102,9 @@ private slots:
     void testMLocaleToUpper_data();
     void testMLocaleToUpper();
 
+    void testMLocaleIndexBucket_data();
+    void testMLocaleIndexBucket();
+
     void checkAvailableLocales();
 };
 

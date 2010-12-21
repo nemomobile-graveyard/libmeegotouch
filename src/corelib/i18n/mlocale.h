@@ -595,6 +595,138 @@ public:
     QStringList exemplarCharactersIndex() const;
 
     /*!
+     * \brief Returns the name of an appropriate sort bucket for a string
+     *
+     * This function is useful to get index titles when sorting a large
+     * amount of strings like in a telephone book, a list of videos etc.
+     * The list of useful index titles is language specific, for example
+     * for Czech (“cs_CZ” locale) it is
+     *
+     *    “A B C Č D E F G H CH I J K L M N O P Q R Ř S Š T U V W X Y Z Ž”
+     *
+     * for Japanese (“ja_JP@collation=standard” locale, same as “ja_JP”) it is
+     *
+     *    “あ か さ た な は ま や ら わ”
+     *
+     * and for traditional Chinese (“zh_TW@collation=stroke”, same as “zh_TW”) locale it is
+     *
+     *    “一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 勸 儷 儼 囌 囑 廳”
+     *
+     * This function is helpful to find out which bucket a string will be
+     * sorted into when sorting locale aware.
+     *
+     * Examples for “cs_CZ” locale:
+     *
+     * <table border="1">
+     * <caption>
+     *   <big><b>
+     *     Strings to sort and buckets for “cs_CZ” locale
+     *   </b></big>
+     * </caption>
+     * <tr>
+     *   <th>String</th>
+     *   <th>Bucket</th>
+     * </tr>
+     * <tr>
+     *   <td>cesta</td>
+     *   <td>C</td>
+     * </tr>
+     * <tr>
+     *   <td>češtinǎ</td>
+     *   <td>Č</td>
+     * </tr>
+     * <tr>
+     *   <td>chemie</td>
+     *   <td>CH</td>
+     * </tr>
+     * <tr>
+     *   <td>ů</td>
+     *   <td>U</td>
+     * </tr>
+     * <tr>
+     *   <td>α</td>
+     *   <td>Α</td>
+     * </tr>
+     * <tr>
+     *   <td>Α</td>
+     *   <td>Α</td>
+     * </tr>
+     * <tr>
+     *   <td>沙紀</td>
+     *   <td>沙</td>
+     * </tr>
+     * </table>
+     *
+     * Examples for “ja_JP@collation=standard” locale:
+     *
+     * <table border="1">
+     * <caption>
+     *   <big><b>
+     *     Strings to sort and buckets for “ja_JP@collation=standard” locale
+     *   </b></big>
+     * </caption>
+     * <tr>
+     *   <th>String</th>
+     *   <th>Bucket</th>
+     * </tr>
+     * <tr>
+     *   <td>richard</td>
+     *   <td>R</td>
+     * </tr>
+     * <tr>
+     *   <td>さき</td>
+     *   <td>さ</td>
+     * </tr>
+     * <tr>
+     *   <td>ジョン</td>
+     *   <td>さ</td>
+     * </tr>
+     * <tr>
+     *   <td>はなこ</td>
+     *   <td>は</td>
+     * </tr>
+     * </table>
+     *
+     * Examples for “zh_TW@collation=stroke” locale:
+     *
+     * <table border="1">
+     * <caption>
+     *   <big><b>
+     *     Strings to sort and buckets for “zh_TW@collation=stroke” locale
+     *   </b></big>
+     * </caption>
+     * <tr>
+     *   <th>String</th>
+     *   <th>Bucket</th>
+     * </tr>
+     * <tr>
+     *   <td>John</td>
+     *   <td>J</td>
+     * </tr>
+     * <tr>
+     *   <td>宁驰</td>
+     *   <td>丙</td>
+     * </tr>
+     * <tr>
+     *   <td>柳 君蘅</td>
+     *   <td>亟</td>
+     * </tr>
+     * </table>
+     *
+     * As can be seen in the above examples, this function tries to
+     * return useful extra buckets for strings which sort out of the
+     * range of the bucket list of the language of the current locale.
+     * For example if one is running in Czech locale but has also some
+     * Japanese and some Greek names in the contact list these foreign
+     * strings sort outside of the range of the Czech bucket list.
+     * This function tries to create useful extra buckets for these
+     * foreign strings.
+     *
+     * \sa exemplarCharactersIndex()
+     */
+    QString indexBucket(const QString &str) const;
+
+    /*!
      * \brief Returns the language code of the locale in ISO-639 format
      *
      * If the language code cannot be parsed out of the locale name

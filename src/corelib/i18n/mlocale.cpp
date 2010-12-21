@@ -2819,6 +2819,30 @@ QStringList MLocale::exemplarCharactersIndex() const
 #endif
 
 #ifdef HAVE_ICU
+QString MLocale::indexBucket(const QString &str) const
+{
+    if (str.isEmpty())
+        return str;
+    QStringList buckets = exemplarCharactersIndex();
+    if (buckets.last() == QString::fromUtf8("わ"))
+        buckets << QString::fromUtf8("ゐ"); // to force ワ into the わ bucket
+    QString strUpperCase = toUpper(str);
+    MCollator coll = this->collator();
+    for (int i = 0; i < buckets.size(); ++i) {
+        if (coll(strUpperCase, buckets[i])) {
+            if (i == 0) {
+                return toUpper(str[0]);
+            }
+            else {
+                return buckets[i-1];
+            }
+        }
+    }
+    return toUpper(str[0]);
+}
+#endif
+
+#ifdef HAVE_ICU
 QStringList MLocale::localeScripts() const
 {
     Q_D(const MLocale);
