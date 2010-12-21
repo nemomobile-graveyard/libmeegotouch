@@ -186,9 +186,6 @@ public:
     //! Sets whether MComponentData should automatically load m input context
     static void setLoadMInputContext(bool enable);
 
-    //! Returns whether MCompositor is present
-    static bool isMeeGoWindowManagerRunning();
-
     //! \internal
     static M::OrientationAngle forcedOrientationAngle();
 

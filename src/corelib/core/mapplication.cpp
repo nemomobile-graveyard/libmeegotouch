@@ -507,35 +507,36 @@ bool MApplication::x11EventFilter(XEvent *event)
 
 void MApplicationPrivate::handleXVisibilityEvent(XVisibilityEvent *xevent)
 {
-    static const bool wmRunning = MComponentData::isMeeGoWindowManagerRunning();
-
-    // Listen only to synthetic events if window
-    // manager is running.
-    if (xevent->send_event || !wmRunning) {
-
-        MWindow * window = MApplicationPrivate::windowForId(xevent->window);
-
-        switch (xevent->state) {
-        case VisibilityFullyObscured:
+    switch (xevent->state) {
+    case VisibilityFullyObscured:
+        // Listen only to synthetic events by compositor
+        if (xevent->send_event)
+        {
+            MWindow * window = MApplicationPrivate::windowForId(xevent->window);
             if (window) {
                 window->d_ptr->fullyObscured = true;
                 if (!window->d_ptr->visibleInSwitcher) {
                     setWindowVisibility(window, false);
                 }
             }
-            break;
+        }
+        break;
 
-        case VisibilityUnobscured:
-        case VisibilityPartiallyObscured:
+        // Always listen to these events, because if compositor is not running
+        // we are not getting any synthetic events at all and the window would never get
+        // the display entered signal.
+    case VisibilityUnobscured:
+    case VisibilityPartiallyObscured:
+        {
+            MWindow * window = MApplicationPrivate::windowForId(xevent->window);
             if (window) {
                 window->d_ptr->fullyObscured = false;
                 setWindowVisibility(window, true);
             }
-            break;
-
-        default:
-            break;
         }
+        break;
+    default:
+        break;
     }
 }
 
