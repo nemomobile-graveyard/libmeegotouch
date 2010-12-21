@@ -667,7 +667,10 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "Compile time:" <<  __DATE__  << __TIME__ << "\n"
                                          << "QT verison  :" << QT_VERSION_STR << "\n";
             exit(EXIT_SUCCESS);
-        } else if (s == "-h" || s.startsWith("-help") || s.startsWith("--help")) {
+
+        } else if (s == "-prestart") {
+            prestarted = true;
+        } else if (s == "-h" || s.startsWith("-help") || s.startsWith("--help") || s.length() > 0) {
             mDebug("MComponentData") << "Usage: " << argv[0] << "\n"
                                          << "  [-software] Enable software rendering\n"
                                          << "  [-fullscreen] Make the application fullscreen\n"
@@ -697,9 +700,6 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "      This overrides keyboard state, as well as a device profile"
                                          << "\n";
             exit(0);
-
-        } else if (s == "-prestart") {
-            prestarted = true;
         } else {
             usedArguments[i] = false;
         }
