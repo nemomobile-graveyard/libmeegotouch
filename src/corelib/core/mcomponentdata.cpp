@@ -56,8 +56,8 @@
 #include "mgraphicssystemhelper.h"
 
 #ifdef Q_WS_X11
-#ifdef HAVE_XDAMAGE
 #include <QX11Info>
+#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xfixes.h>
 #endif // HAVE_XFIXES
 #endif // Q_WS_X11
@@ -1169,6 +1169,12 @@ bool MComponentData::isOrientationForced()
         qFatal("MComponentData::allowedOrientations() - MComponentData instance not yet created.");
     }
     return gMComponentDataPrivate->isOrientationForced;
+}
+
+bool MComponentData::isMeeGoWindowManagerRunning()
+{
+    qWarning("MComponentData::isMeeGoWindowManagerRunning() - not implemented yet");
+    return false;
 }
 
 #ifdef Q_WS_X11
