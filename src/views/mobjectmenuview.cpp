@@ -53,8 +53,10 @@ MObjectMenuViewPrivate::MObjectMenuViewPrivate() :
 
 MObjectMenuViewPrivate::~MObjectMenuViewPrivate()
 {
+    if (!titleArea->parentItem() && !titleArea->parentLayoutItem()) {
+        delete titleArea;
+    }
 }
-
 
 void MObjectMenuViewPrivate::init()
 {
@@ -90,7 +92,7 @@ void MObjectMenuViewPrivate::init()
     actionLayout = new QGraphicsLinearLayout(Qt::Vertical);
     actionLayout->setSpacing(0);
     actionLayout->setContentsMargins(0.0,0.0,0.0,0.0);
-    actionWidget = new QGraphicsWidget(controller);
+    actionWidget = new QGraphicsWidget;
     actionWidget->setLayout(actionLayout);
     actionViewport = new MPannableViewport(controller);
     actionViewport->setWidget(actionWidget);
@@ -130,6 +132,10 @@ void MObjectMenuViewPrivate::updateTitleAreaVisibility()
         mainLayout->removeItem(titleArea);
         actionViewport->setStyleName("objectMenuViewportWithoutTitle");
         titleArea->hide();
+        if (controller->scene()) {
+            //Remove from the scene as otherwise it might distract appear/disappear animation
+            controller->scene()->removeItem(titleArea);
+        }
     } else if( mainLayout->itemAt(0) != titleArea ) {
         mainLayout->insertItem(0, titleArea);
         actionViewport->setStyleName("objectMenuViewportWithTitle");
