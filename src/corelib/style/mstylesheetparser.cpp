@@ -1083,7 +1083,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
             return true;
         }
         file.close();
-        return true;
+        return false;
     }
 
     mWarning("MStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << binaryFilename;
