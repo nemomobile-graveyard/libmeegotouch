@@ -107,7 +107,7 @@ public:
 
     MStyleSheet *customStylesheet;
 
-    QPixmap *invalidPixmap;
+    QPixmap *invalidPixmapPtr;
 
     MTheme *q_ptr;
 
@@ -154,6 +154,11 @@ public:
      * Finalize pixmap change or creation by updating the scene and/or emitting a signal
      */
     void pixmapRequestFinished();
+
+    /*!
+     * Creates or returns already created invalid pixmap.
+     */
+    QPixmap *invalidPixmap();
 
     /*!
      * Theme daemon notifies pixmap updates to to this slot

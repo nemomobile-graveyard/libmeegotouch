@@ -238,7 +238,7 @@ const QPixmap *MThemePrivate::pixmap(const QString &id, bool async, const QSize 
 {
     if (id.isEmpty()) {
         mWarning("MTheme") << "requested pixmap without id";
-        return invalidPixmap;
+        return invalidPixmap();
     }
 
     // TODO: check if needed
@@ -327,7 +327,7 @@ void MTheme::releasePixmap(const QPixmap *pixmap)
         return;
 
     // invalidPixmap, no need to release it
-    if (pixmap == instance()->d_ptr->invalidPixmap) {
+    if (pixmap == instance()->d_ptr->invalidPixmap()) {
         return;
     }
 
@@ -714,7 +714,7 @@ void MThemePrivate::reinit(const QString &newApplicationName)
 MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeService themeService) :
     applicationName(applicationName),
     customStylesheet(NULL),
-    invalidPixmap(0),
+    invalidPixmapPtr(0),
     application(new MAssembly(applicationName)),
     palette(logicalValues),
     fonts(logicalValues)
@@ -758,7 +758,7 @@ MThemePrivate::~MThemePrivate()
 {
     delete application;
     delete themeDaemon;
-    delete invalidPixmap;
+    delete invalidPixmapPtr;
     delete customStylesheet;
 
     // TODO: check if we need to release QPixmaps from pixmapHandles
@@ -932,6 +932,15 @@ void MThemePrivate::pixmapRequestFinished()
     }
 }
 
+QPixmap *MThemePrivate::invalidPixmap()
+{
+    if (!invalidPixmapPtr) {
+        invalidPixmapPtr = new QPixmap(50, 50);
+        invalidPixmapPtr->fill(QColor(255, 64, 64, 255));
+    }
+    return invalidPixmapPtr;
+}
+
 void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, const MPixmapHandle& pixmapHandle)
 {
     QString identifier = defaultPixmapCacheId(imageId, size.width(), size.height());
@@ -946,11 +955,7 @@ void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSi
 
     if (!pixmapHandle.isValid()) {
         mWarning("MThemePrivate") << "pixmapChangedSlot - pixmap reload failed (null handle):" << identifier;
-        if (!invalidPixmap) {
-            invalidPixmap = new QPixmap(50, 50);
-            invalidPixmap->fill(QColor(255, 64, 64, 255));
-        }
-        *pixmap = *invalidPixmap;
+        *pixmap = *invalidPixmap();
 
         pixmapRequestFinished();
         return;
