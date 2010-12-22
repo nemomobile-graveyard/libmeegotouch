@@ -37,24 +37,23 @@ MCollatorPrivate::MCollatorPrivate()
     // nothing
 }
 
-
 MCollatorPrivate::~MCollatorPrivate()
 {
     delete _coll;
 }
-
 
 // allocates an icu collator based on locale
 void MCollatorPrivate::initCollator(const icu::Locale &locale)
 {
     UErrorCode status = U_ZERO_ERROR;
     _coll = icu::Collator::createInstance(locale, status);
+    _coll->setStrength(icu::Collator::QUATERNARY);
+    // This is default already in Japanese locales:
+    // _coll->setAttribute(UCOL_HIRAGANA_QUATERNARY_MODE, UCOL_ON, status);
 }
-
 
 //////////////////////
 // Actual MCollator
-
 
 /*!
   \class MCollator
@@ -90,7 +89,6 @@ MCollator::MCollator()
     d->initCollator(icuLocale);
 }
 
-
 //! Constructor, creates a collator based on given MLocale
 MCollator::MCollator(const MLocale &locale)
     : d_ptr(new MCollatorPrivate)
@@ -102,7 +100,6 @@ MCollator::MCollator(const MLocale &locale)
     d->initCollator(icuLocale);
 }
 
-
 //! Copy constructor
 MCollator::MCollator(const MCollator &other)
     : d_ptr(new MCollatorPrivate)
@@ -111,7 +108,6 @@ MCollator::MCollator(const MCollator &other)
 
     d->_coll = other.d_ptr->_coll->safeClone();
 }
-
 
 MCollator::~MCollator()
 {
@@ -135,7 +131,6 @@ bool MCollator::operator()(const QString &s1, const QString &s2) const
     }
 }
 
-
 //! Compares two strings with the default MLocale
 MLocale::Comparison MCollator::compare(const QString &first,
         const QString &second)
@@ -143,7 +138,6 @@ MLocale::Comparison MCollator::compare(const QString &first,
     MLocale defaultLocale;
     return compare(defaultLocale, first, second);
 }
-
 
 //! Compares two strings using the given locale
 MLocale::Comparison MCollator::compare(MLocale &locale, const QString &first,
@@ -153,10 +147,12 @@ MLocale::Comparison MCollator::compare(MLocale &locale, const QString &first,
     icu::Locale icuLocale
     = locale.d_ptr->getCategoryLocale(MLocale::MLcCollate);
     icu::Collator *collator = icu::Collator::createInstance(icuLocale, status);
-
     if (!U_SUCCESS(status)) {
         return MLocale::Equal; // ERROR
     }
+    collator->setStrength(icu::Collator::QUATERNARY);
+    // This is default already in Japanese locales:
+    // collator->setAttribute(UCOL_HIRAGANA_QUATERNARY_MODE, UCOL_ON, status);
 
     const icu::UnicodeString us1 = MIcuConversions::qStringToUnicodeString(first);
     const icu::UnicodeString us2 = MIcuConversions::qStringToUnicodeString(second);
