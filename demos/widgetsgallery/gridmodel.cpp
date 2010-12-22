@@ -163,25 +163,23 @@ void Loader::run()
         if (offset >= backlog.count())
             offset = backlog.count() - 1;
 
-        if (backlog.count() > offset) {
-            backlogItem = backlog.at(offset);
+        backlogItem = backlog.at(offset);
 
-            // Try to find next item in backlog to load
-            int nextOffset = offset;
-            while (backlogItem->loaded && nextOffset < backlog.count())
-                backlogItem = backlog.at(nextOffset++);
+        // Try to find next item in backlog to load
+        int nextOffset = offset;
+        while (backlogItem->loaded && nextOffset < backlog.count())
+            backlogItem = backlog.at(nextOffset++);
 
-            // If we did not find, try to load previous in backlog
-            int prevOffset = offset;
-            while (backlogItem->loaded && prevOffset > 0)
-                backlogItem = backlog.at(prevOffset--);
+        // If we did not find, try to load previous in backlog
+        int prevOffset = offset;
+        while (backlogItem->loaded && prevOffset > 0)
+            backlogItem = backlog.at(prevOffset--);
 
-            // Everything is loaded, stop.
-            if (backlogItem->loaded) {
-                mutex.unlock();
-                stop();
-                return;
-            }
+        // Everything is loaded, stop.
+        if (backlogItem->loaded) {
+            mutex.unlock();
+            stop();
+            return;
         }
 
         backlogItem->loaded = true;

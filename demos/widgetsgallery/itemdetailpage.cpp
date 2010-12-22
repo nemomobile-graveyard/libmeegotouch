@@ -304,8 +304,11 @@ void ItemDetailPage::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF delta = -(event->pos() - lastMousePosition);
     lastMousePosition = event->pos();
-    image->setOffset(image->offset() + delta);
-    image->update();
+
+    if (image) {
+        image->setOffset(image->offset() + delta);
+        image->update();
+    }
 }
 
 void ItemDetailPage::keyPressEvent(QKeyEvent *event)
