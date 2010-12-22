@@ -57,7 +57,6 @@
 
 #ifdef Q_WS_X11
 #include <QX11Info>
-#include <X11/Xatom.h>
 #ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xfixes.h>
 #endif // HAVE_XFIXES
@@ -1172,60 +1171,10 @@ bool MComponentData::isOrientationForced()
     return gMComponentDataPrivate->isOrientationForced;
 }
 
-#ifdef Q_WS_X11
-static int handleXError(Display *, XErrorEvent *)
-{
-    return 0;
-}
-#endif // Q_WS_X11
-
 bool MComponentData::isMeeGoWindowManagerRunning()
 {
-    bool retValue = false;
-
-#ifdef Q_WS_X11
-
-    Display       *dpy = QX11Info::display();
-    Window         rootw = RootWindow(dpy, XDefaultScreen(dpy));
-    Atom           wmSupportAtom = XInternAtom(dpy, "_NET_SUPPORTING_WM_CHECK", False);
-    Atom           type;
-    int            format;
-    unsigned long  numItems;
-    unsigned long  bytesAfter;
-    unsigned char *data = 0;
-
-    if (XGetWindowProperty(dpy, rootw, wmSupportAtom, 0, 1, False, XA_WINDOW,
-                           &type, &format, &numItems, &bytesAfter, &data) == Success) {
-        if (data) {
-
-            Window wid = *(reinterpret_cast<Window *>(data));
-            XFree(data);
-            data = 0;
-
-            Atom wmNameAtom = XInternAtom(dpy, "WM_NAME", False);
-
-            // Set error handler because window wid we got might not exist and
-            // the following name query would fail.
-            int (*previousHandler)(Display *, XErrorEvent *) = XSetErrorHandler(handleXError);
-
-            if (XGetWindowProperty(dpy, wid, wmNameAtom, 0, 16, False, XA_STRING,
-                                   &type, &format, &numItems, &bytesAfter, &data) == Success) {
-                if (data) {
-                    if (strcmp(reinterpret_cast<const char *>(data), "MCompositor") == 0) {
-                        retValue = true;
-                    }
-
-                    XFree(data);
-                    data = 0;
-                }
-            }
-
-            XSetErrorHandler(previousHandler);
-        }
-    }
-#endif  // Q_WS_X11
-
-    return retValue;
+    qWarning("MComponentData::isMeeGoWindowManagerRunning() - not implemented yet");
+    return false;
 }
 
 #ifdef Q_WS_X11
