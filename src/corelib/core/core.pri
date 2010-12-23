@@ -52,6 +52,7 @@ contains(DEFINES, HAVE_DBUS) {
     PRIVATE_HEADERS += \
         $$CORE_SRC_DIR/mapplicationservice_p.h \
         $$CORE_SRC_DIR/mdbusservicewaiter_p.h \
+        $$CORE_SRC_DIR/mdbusinterface.h \
 
 }
 
@@ -88,6 +89,7 @@ contains(DEFINES, HAVE_DBUS) {
     $$CORE_SRC_DIR/mapplicationifproxy.cpp \
     $$CORE_SRC_DIR/mremoteaction.cpp \
     $$CORE_SRC_DIR/mdbusservicewaiter.cpp \
+    $$CORE_SRC_DIR/mdbusinterface.cpp \
 }
 
 contains(DEFINES, HAVE_GCONF) {
