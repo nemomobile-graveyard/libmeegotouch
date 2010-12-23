@@ -63,6 +63,8 @@ public:
 
     QTextDocument *activeDocument() const;
 
+    qreal heightForWidth(qreal width) const;
+
 protected slots:
     void scrolling();
     void hideUnmaskedText();

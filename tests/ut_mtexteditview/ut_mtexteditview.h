@@ -47,6 +47,7 @@ private slots:
     void testStyleUpdated();
     void testResizeEvent();
     void testGrowing();
+    void testMultilineGrowsOnWordWrap();
     void testInputMethodQuery();
     void testMaskedCharacters();
     void testUpdateScrollWhenTextChanged();

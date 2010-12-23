@@ -19,6 +19,7 @@
 
 #include "ut_mtexteditview.h"
 
+#include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QMetaType>
 #include <QSignalSpy>
@@ -149,6 +150,58 @@ void Ut_MTextEditView::testGrowing()
     newSize = m_subject->sizeHint(Qt::PreferredSize);
     QCOMPARE(newSize.height(), oldSize.height());
 }
+
+void Ut_MTextEditView::testMultilineGrowsOnWordWrap()
+{
+    // Initialize multiline text edit with one row and that row full of text.
+    // Then insert one character so that text edit wraps into two lines.
+    // This test verifies a fix for a bug where the text edit did not grow even though
+    // QTextDocument was updated correctly.
+
+    QString fullRowContent = "full row content";
+    m_controller->setText(fullRowContent);
+
+    const qreal horizontalPadding = m_subject->style()->paddingLeft() + m_subject->style()->paddingRight();
+    QFontMetrics fm(m_controller->document()->defaultFont());
+    qreal totalWidth = fm.width(fullRowContent)
+                       + horizontalPadding
+                       + m_controller->document()->documentMargin() * 2;
+
+    m_controller->setPreferredWidth(totalWidth);
+
+    QSizePolicy policy(m_controller->sizePolicy());
+    policy.setVerticalPolicy(QSizePolicy::Preferred);
+    m_controller->setSizePolicy(policy);
+
+    // Create container widget with vertical layout.
+    QGraphicsWidget container;
+    container.resize(totalWidth, 200); // vertically: enough
+
+    QGraphicsLinearLayout *vlayout = new QGraphicsLinearLayout(Qt::Vertical, &container);
+    vlayout->setContentsMargins(0,0,0,0);
+    vlayout->addItem(m_controller);
+    vlayout->addStretch();
+
+    // Activate layout before retrieving size.
+    vlayout->activate();
+    const QSizeF beforeInserting = m_controller->size();
+
+    // This causes word wrap to take place.
+    m_controller->textCursor().insertText("w");
+
+    // Activate layout before retrieving size.
+    vlayout->activate();
+    const QSizeF afterInserting = m_controller->size();
+
+    // Detach from parent
+    vlayout->removeItem(m_controller);
+    m_controller->setParentItem(0);
+    m_controller->setLayout(0);
+
+    qDebug() << "Size " << beforeInserting << " after inserting one extra character: " << afterInserting;
+    QVERIFY(afterInserting != beforeInserting);
+}
+
 
 void Ut_MTextEditView::testInputMethodQuery()
 {

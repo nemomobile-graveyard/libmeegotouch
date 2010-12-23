@@ -32,7 +32,6 @@
 #include <QAbstractTextDocumentLayout>
 #include <QTimer>
 #include <QStyleOptionGraphicsItem>
-#include <QDebug>
 
 #include "mfeedback.h"
 #include "mtextedit.h"
@@ -453,7 +452,6 @@ QTextDocument *MTextEditViewPrivate::activeDocument() const
             (echoMode == MTextEditModel::PasswordEchoOnEdit && editActive == true) ||
             maskedTextDocument == 0) {
         return document();
-
     } else {
         return maskedTextDocument;
     }
@@ -1010,20 +1008,7 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
             } else {
                 // multi line
                 if (hint.width() > 0) {
-                    /* To find out the preferred height, we need to set the text document width
-                     * to the given constraint width.  But we don't want this to trigger
-                     * a documentsSizeChanged so we disconnect that signal and reconnect afterwards
-                     */
-                    qreal oldWidth = d->document()->textWidth();
-                    disconnect(d->document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
-                            d, SLOT(handleDocumentSizeChange(QSizeF)));
-                    d->document()->setTextWidth(hint.width());
-                    hint.setHeight(d->document()->size().height() +
-                        style()->paddingTop() + style()->paddingBottom());
-                    d->document()->setTextWidth(oldWidth);
-                    connect(d->document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
-                            d, SLOT(handleDocumentSizeChange(QSizeF)));
-
+                    hint.setHeight(d->heightForWidth(hint.width()));
                 } else {
                     //Use the current document width if we are given no constraints
                     hint.setWidth(d->document()->size().width() +
@@ -1056,6 +1041,31 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
     return hint;
 }
 
+qreal MTextEditViewPrivate::heightForWidth(qreal width) const
+{
+    Q_Q(const MTextEditView);
+    /* To find out the preferred height, we need to set the text document width
+     * to the given constraint width.  But we don't want this to trigger
+     * a documentsSizeChanged so we disconnect that signal and reconnect afterwards
+     */
+    const qreal oldDocumentWidth = document()->textWidth();
+    const qreal horizontalPadding = q->style()->paddingLeft() + q->style()->paddingRight();
+    const qreal verticalPadding = q->style()->paddingTop() + q->style()->paddingBottom();
+
+    // Disconnect size change signal
+    disconnect(document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
+               this, SLOT(handleDocumentSizeChange(QSizeF)));
+
+    // Set temporary width to document and read in corresponding height for widget.
+    document()->setTextWidth(width - horizontalPadding);
+    const qreal height = document()->size().height() + verticalPadding;
+
+    // Restore
+    document()->setTextWidth(oldDocumentWidth);
+    connect(document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
+            this, SLOT(handleDocumentSizeChange(QSizeF)));
+    return height;
+}
 
 void MTextEditView::changeEvent(QEvent *event)
 {
@@ -1087,7 +1097,6 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
     QObject::disconnect(d->controller, SIGNAL(selectionChanged()),
                         d, SLOT(playTextFieldSelectionFeedback()));
 }
-
 
 QVariant MTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const
 {
