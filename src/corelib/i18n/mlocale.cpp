@@ -2825,12 +2825,16 @@ QString MLocale::indexBucket(const QString &str) const
     if (str.isEmpty())
         return str;
     QStringList buckets = exemplarCharactersIndex();
+    // Special hack for the last Japanese bucket:
     if (buckets.last() == QString::fromUtf8("わ")) {
         buckets << QString::fromUtf8("ん"); // to get ワ, ゐ,ヰ,ヸ, ヹ, を, ヲ, ヺ, into the わ bucket
         // ン sorts after ん but should go into the ん bucket:
         if (str.startsWith(QString::fromUtf8("ン")))
             return QString::fromUtf8("ん");
     }
+    // Special hack for the last Korean bucket:
+    if (buckets.last() == QString::fromUtf8("ᄒ"))
+        buckets << QString::fromUtf8("あ"); // to get 학,  學, ... ᄒ bucket
     QString strUpperCase =
         MIcuConversions::unicodeStringToQString(
             MIcuConversions::qStringToUnicodeString(str).toUpper(
