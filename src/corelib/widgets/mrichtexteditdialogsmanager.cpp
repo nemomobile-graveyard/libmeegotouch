@@ -26,9 +26,11 @@
 #include <MBasicListItem>
 #include <MComboBox>
 #include <MDialog>
+#include <MImageWidget>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MSceneManager>
+#include <MTheme>
 #include "mrichtexteditdialogsmanager_p.h"
 
 MRichTextEditDialogsManager *MRichTextEditDialogsManager::dialogsManager = 0;
@@ -159,10 +161,72 @@ void MRichTextEditFontSizeWidget::setActiveSize(int size)
 }
 
 
+MRichTextEditFontColorWidget::MRichTextEditFontColorWidget(const QList<QColor> &fontColorValues,
+                                                           QGraphicsItem *parent)
+    : MRichTextEditFontStyleWidget(parent),
+      colorValues(fontColorValues),
+      activeIndex(-1)
+{
+}
+
+
+MRichTextEditFontColorWidget::~MRichTextEditFontColorWidget()
+{
+}
+
+void MRichTextEditFontColorWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                                         QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    int size = items.size();
+    for (int index = 0; index < size; index++) {
+        QBrush brush(colorValues[index], Qt::SolidPattern);
+
+        if (activeIndex == index) {
+            painter->setBrush(brush);
+            painter->drawRect(items[index]);
+        } else {
+            painter->fillRect(items[index], brush);
+        }
+    }
+}
+
+
+void MRichTextEditFontColorWidget::selectItem(int index)
+{
+    if (index >= 0 && index < colorValues.size()) {
+        activeIndex = index;
+        emit fontColorSelected(colorValues[index]);
+    }
+}
+
+
+void MRichTextEditFontColorWidget::updateOrientation(M::Orientation orientation)
+{
+    // Update the size of the items in the ui when the orientation changes
+    if (orientation == M::Landscape) {
+        updateSize(colorValues.size() / 5, 5);
+    } else if (orientation == M::Portrait) {
+        updateSize(colorValues.size() / 3, 3);
+    }
+}
+
+
+void MRichTextEditFontColorWidget::setActiveColor(const QColor &color)
+{
+    activeIndex = colorValues.indexOf(color);
+}
+
+
 MRichTextEditDialogsManager::MRichTextEditDialogsManager()
     : fontFamilyCombo(0),
       fontSizeListItem(0),
-      fontSizeWidget(0)
+      fontSizeWidget(0),
+      fontColorListItem(0),
+      fontColorWidget(0),
+      fontColorPixmap(0)
 {
 }
 
@@ -171,6 +235,12 @@ MRichTextEditDialogsManager::~MRichTextEditDialogsManager()
 {
     delete dialogs.textStyles.first;
     delete dialogs.fontSize.first;
+
+    if (fontColorPixmap) {
+        MTheme::releasePixmap(fontColorPixmap);
+        fontColorPixmap = 0;
+    }
+    delete dialogs.fontColor.first;
 }
 
 
@@ -227,6 +297,31 @@ void MRichTextEditDialogsManager::initTextStylingDialog()
     connect(fontSizeListItem, SIGNAL(clicked()),
             this, SLOT(showFontSizeDialog()));
     policy->addItem(fontSizeListItem);
+
+    fontColorData.colorValues << QColor(0, 0, 0) << QColor(0, 128, 0) << QColor(107, 142, 35)
+                              << QColor(0, 0, 128) << QColor(128, 0, 128) << QColor(0, 128, 128)
+                              << Qt::gray << QColor(192, 192, 192) << Qt::red
+                              << QColor(0, 255, 0) << Qt::yellow << Qt::blue
+                              << QColor(255, 0, 255) << QColor(0, 255, 255) << QColor(255, 255, 255);
+
+    fontColorData.iconIds << "icon-m-common-black" << "icon-m-common-green" << "icon-m-common-olive"
+                          << "icon-m-common-navy" << "icon-m-common-purple" << "icon-m-common-teal"
+                          << "icon-m-common-gray" << "icon-m-common-silver" << "icon-m-common-red"
+                          << "icon-m-common-lime" <<  "icon-m-common-yellow" << "icon-m-common-blue"
+                          << "icon-m-common-fuchsia" << "icon-m-common-aqua" << "icon-m-common-white";
+
+    //% "Font color"
+    fontColorData.titleName = qtTrId("qtn_comm_font_color");
+
+    fontColorListItem = new MBasicListItem(MBasicListItem::IconWithTitle, centralWidget);
+    fontColorListItem->setTitle(fontColorData.titleName);
+
+    MImageWidget *imageWidget = fontColorListItem->imageWidget();
+    imageWidget->setPixmap(QPixmap());
+
+    connect(fontColorListItem, SIGNAL(clicked()),
+            this, SLOT(showFontColorDialog()));
+    policy->addItem(fontColorListItem);
 }
 
 
@@ -318,7 +413,103 @@ void MRichTextEditDialogsManager::setFontSize(int fontSize)
 }
 
 
-void MRichTextEditDialogsManager::setTextStyleValues(const QString &fontfamily, int fontPointSize)
+void MRichTextEditDialogsManager::initFontColorDialog()
+{
+    if (dialogs.fontColor.first) {
+        return;
+    }
+
+    dialogs.fontColor.first = new MDialog();
+    dialogs.fontColor.first->setTitle(fontColorData.titleName);
+    dialogs.fontColor.second = false;
+
+    QGraphicsWidget *centralWidget = dialogs.fontColor.first->centralWidget();
+    MLayout *layout = new MLayout(centralWidget);
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+
+    fontColorWidget = new MRichTextEditFontColorWidget(fontColorData.colorValues, centralWidget);
+    policy->addItem(fontColorWidget);
+
+    connect(fontColorWidget, SIGNAL(fontColorSelected(QColor)),
+            SLOT(setFontColor(QColor)));
+}
+
+
+void MRichTextEditDialogsManager::showFontColorDialog()
+{
+    initFontColorDialog();
+
+    Q_ASSERT(MApplication::activeApplicationWindow());
+
+    const MSceneManager *sceneManager = MApplication::activeApplicationWindow()->sceneManager();
+
+    // Orientation could be changing when the font color widget is not active, so
+    // update the orientation change before showing the widget
+    updateFontColorWidgetOrientation(sceneManager->orientation());
+
+    Q_ASSERT(fontColorWidget);
+
+    int activeColorIndex = fontColorData.activeColorIndex;
+    if (activeColorIndex >= 0 &&
+        activeColorIndex < fontColorData.colorValues.size()) {
+        fontColorWidget->setActiveColor(fontColorData.colorValues[activeColorIndex]);
+    } else {
+        fontColorWidget->setActiveColor(QColor());
+    }
+
+    // For getting the orientation change when the font color widget is active
+    connect(sceneManager, SIGNAL(orientationChanged(M::Orientation)),
+            SLOT(updateFontColorWidgetOrientation(M::Orientation)));
+
+    execDialog(&dialogs.fontColor);
+
+    disconnect(sceneManager, SIGNAL(orientationChanged(M::Orientation)),
+               this, SLOT(updateFontColorWidgetOrientation(M::Orientation)));
+}
+
+
+void MRichTextEditDialogsManager::updateFontColorWidgetOrientation(M::Orientation orientation)
+{
+    Q_ASSERT(fontColorWidget);
+
+    if (dialogs.fontColor.first) {
+        fontColorWidget->setMinimumSize(dialogs.fontColor.first->maximumSize());
+        fontColorWidget->setMaximumSize(dialogs.fontColor.first->maximumSize());
+        fontColorWidget->updateOrientation(orientation);
+    }
+}
+
+
+void MRichTextEditDialogsManager::setFontColor(const QColor &color)
+{
+    Q_ASSERT(fontColorListItem);
+
+    fontColorData.activeColorIndex = fontColorData.colorValues.indexOf(color);
+    MImageWidget *imageWidget = fontColorListItem->imageWidget();
+
+    if (fontColorPixmap) {
+        MTheme::releasePixmap(fontColorPixmap);
+        fontColorPixmap = 0;
+    }
+
+    if (fontColorData.activeColorIndex >= 0 &&
+        fontColorData.activeColorIndex < fontColorData.iconIds.size()) {
+        fontColorPixmap = const_cast<QPixmap *>(MTheme::pixmap(fontColorData.iconIds[fontColorData.activeColorIndex]));
+        imageWidget->setPixmap(*fontColorPixmap);
+    } else {
+        imageWidget->setPixmap(QPixmap());
+    }
+
+    if (dialogs.fontColor.first) {
+        dialogs.fontColor.first->done(MDialog::Accepted);
+    }
+
+    emit fontColorSelected(color);
+}
+
+
+void MRichTextEditDialogsManager::setTextStyleValues(const QString &fontfamily, int fontPointSize,
+                                                     const QColor &fontColor)
 {
     Q_ASSERT(fontFamilyCombo);
 
@@ -341,6 +532,24 @@ void MRichTextEditDialogsManager::setTextStyleValues(const QString &fontfamily, 
     } else {
         fontSizeListItem->setSubtitle(QString());
     }
+
+    Q_ASSERT(fontColorListItem);
+
+    fontColorData.activeColorIndex = fontColorData.colorValues.indexOf(fontColor);
+    MImageWidget *imageWidget = fontColorListItem->imageWidget();
+
+    if (fontColorPixmap) {
+        MTheme::releasePixmap(fontColorPixmap);
+        fontColorPixmap = 0;
+    }
+
+    if (fontColorData.activeColorIndex >= 0 &&
+        fontColorData.activeColorIndex < fontColorData.iconIds.size()) {
+        fontColorPixmap = const_cast<QPixmap *>(MTheme::pixmap(fontColorData.iconIds[fontColorData.activeColorIndex]));
+        imageWidget->setPixmap(*fontColorPixmap);
+    } else {
+        imageWidget->setPixmap(QPixmap());
+    }
 }
 
 
@@ -355,10 +564,11 @@ void MRichTextEditDialogsManager::execDialog(ActiveDialog *activeDialog)
     }
 }
 
-void MRichTextEditDialogsManager::showTextStylingDialog(const QString &fontfamily, int fontPointSize)
+void MRichTextEditDialogsManager::showTextStylingDialog(const QString &fontfamily, int fontPointSize,
+                                                        const QColor &fontColor)
 {
     initTextStylingDialog();
-    setTextStyleValues(fontfamily, fontPointSize);
+    setTextStyleValues(fontfamily, fontPointSize, fontColor);
     execDialog(&dialogs.textStyles);
 }
 

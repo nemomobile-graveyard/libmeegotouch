@@ -148,11 +148,14 @@ void MRichTextEditPrivate::showTextStylingOptions()
                SLOT(_q_setFontFamily(QString)));
     q->connect(dialogsManager, SIGNAL(fontSizeSelected(int)),
                SLOT(_q_setFontSize(int)));
+    q->connect(dialogsManager, SIGNAL(fontColorSelected(QColor)),
+               SLOT(_q_setFontColor(QColor)));
 
     QString fontFamily;
     int fontPointSize = -1;
+    QColor fontColor;
 
-    textStyleValues(&fontFamily, &fontPointSize);
+    textStyleValues(&fontFamily, &fontPointSize, &fontColor);
 
     int startPos = -1;
     int endPos  = -1;
@@ -172,20 +175,21 @@ void MRichTextEditPrivate::showTextStylingOptions()
         q->setSelection(startPos, endPos - startPos);
     }
 
-    dialogsManager->showTextStylingDialog(fontFamily, fontPointSize);
+    dialogsManager->showTextStylingDialog(fontFamily, fontPointSize, fontColor);
     q->setFocus();
 
     q->disconnect(dialogsManager, 0, q, 0);
 }
 
 
-void MRichTextEditPrivate::textStyleValues(QString *fontfamily, int *fontPointSize)
+void MRichTextEditPrivate::textStyleValues(QString *fontfamily, int *fontPointSize, QColor *fontColor)
 {
     Q_Q(MRichTextEdit);
 
     QTextCursor textcursor = q->textCursor();
     *fontfamily = textcursor.charFormat().font().family();
     *fontPointSize = MDeviceProfile::instance()->pixelsToPt(textcursor.charFormat().font().pixelSize());
+    *fontColor = textcursor.charFormat().foreground().color();
 
     if (!q->hasSelectedText()) {
         return;
@@ -196,6 +200,7 @@ void MRichTextEditPrivate::textStyleValues(QString *fontfamily, int *fontPointSi
     int endPos  = textcursor.selectionEnd();
     bool familyDiffers = false;
     bool sizeDiffers = false;
+    bool colorDiffers = false;
 
     int fontPixelSize = textcursor.charFormat().font().pixelSize();
     // Starting from startPos + 1 to get the style that would be used when
@@ -213,7 +218,12 @@ void MRichTextEditPrivate::textStyleValues(QString *fontfamily, int *fontPointSi
             *fontPointSize = -1;
         }
 
-        if (familyDiffers && sizeDiffers) {
+        if (!colorDiffers && (*fontColor != textcursor.charFormat().foreground().color())) {
+            colorDiffers = true;
+            *fontColor = QColor();
+        }
+
+        if (familyDiffers && sizeDiffers && colorDiffers) {
             break;
         }
     }
@@ -284,6 +294,19 @@ void MRichTextEditPrivate::_q_setFontSize(int fontPointSize)
     if (hasSelectedText) {
         q->setSelection(startPos, endPos - startPos);
     }
+}
+
+
+void MRichTextEditPrivate::_q_setFontColor(const QColor &fontColor)
+{
+    Q_Q(MRichTextEdit);
+
+    QTextCursor textcursor = q->textCursor();
+    QTextCharFormat format;
+
+    format.setForeground(fontColor);
+    textcursor.mergeCharFormat(format);
+    q->setTextCursor(textcursor);
 }
 
 ///////////////////////////////////////////////

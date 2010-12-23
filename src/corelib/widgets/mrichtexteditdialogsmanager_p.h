@@ -92,6 +92,39 @@ private:
     int activeIndex;
 };
 
+class MRichTextEditFontColorWidget : public MRichTextEditFontStyleWidget
+{
+    Q_OBJECT
+
+public:
+    MRichTextEditFontColorWidget(const QList<QColor> &fontColorValues, QGraphicsItem *parent = 0);
+
+    ~MRichTextEditFontColorWidget();
+
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+
+    virtual void updateOrientation(M::Orientation orientation);
+
+    // Sets the current font color will be used for highlighting the corresponding item in the ui
+    void setActiveColor(const QColor &color);
+
+protected:
+
+    virtual void selectItem(int index);
+
+Q_SIGNALS:
+    /**
+     *  \brief Emitted whenever a font color is selected
+     */
+    void fontColorSelected(const QColor &color);
+
+private:
+    // List of font color values shown in the ui
+    QList<QColor> colorValues;
+    // Active item index used for highlighting
+    int activeIndex;
+};
+
 class MRichTextEditDialogsManager : public QObject
 {
     Q_OBJECT
@@ -104,7 +137,8 @@ public:
     /*!
      * \brief shows the text styling dialog with the current style
      */
-    void showTextStylingDialog(const QString &fontfamily = "", int fontPointSize = -1);
+    void showTextStylingDialog(const QString &fontfamily = "", int fontPointSize = -1,
+                               const QColor &fontColor = QColor());
 
 Q_SIGNALS:
 
@@ -118,11 +152,20 @@ Q_SIGNALS:
      */
     void fontSizeSelected(int fontPointSize);
 
+    /**
+     *  \brief Emitted whenever a font color is selected
+     */
+    void fontColorSelected(const QColor &color);
+
 private Q_SLOTS:
 
     void setFontSize(int fontSize);
     void showFontSizeDialog();
     void updateFontSizeWidgetOrientation(M::Orientation orientation);
+
+    void setFontColor(const QColor &color);
+    void showFontColorDialog();
+    void updateFontColorWidgetOrientation(M::Orientation orientation);
 
 private:
     // QPointer<MDialog> in ActiveDialog will hold a dialog
@@ -146,9 +189,13 @@ private:
      */
     void initFontSizeDialog();
     /*!
+     * \brief initializes the FontColor dialog
+     */
+    void initFontColorDialog();
+    /*!
      * \brief updates the ui components of the TextStyles dialog to show the current style
      */
-    void setTextStyleValues(const QString &fontfamily, int fontPointSize);
+    void setTextStyleValues(const QString &fontfamily, int fontPointSize, const QColor &fontColor);
     /*!
      * \brief launches the dialog of given type
      */
@@ -160,6 +207,7 @@ private:
     {
         ActiveDialog textStyles;
         ActiveDialog fontSize;
+        ActiveDialog fontColor;
     };
     Dialogs dialogs;
 
@@ -171,9 +219,21 @@ private:
     };
     FontSizeData fontSizeData;
 
+    struct FontColorData
+    {
+        QList<QColor> colorValues;
+        QList<QString> iconIds;
+        QString titleName;
+        int activeColorIndex;
+    };
+    FontColorData fontColorData;
+
     MComboBox *fontFamilyCombo;
     MBasicListItem *fontSizeListItem;
     MRichTextEditFontSizeWidget *fontSizeWidget;
+    MBasicListItem *fontColorListItem;
+    MRichTextEditFontColorWidget *fontColorWidget;
+    QPixmap *fontColorPixmap;
 };
 
 #endif
