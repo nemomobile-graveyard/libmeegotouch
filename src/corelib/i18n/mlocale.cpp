@@ -2824,8 +2824,12 @@ QString MLocale::indexBucket(const QString &str) const
     if (str.isEmpty())
         return str;
     QStringList buckets = exemplarCharactersIndex();
-    if (buckets.last() == QString::fromUtf8("わ"))
-        buckets << QString::fromUtf8("ゐ"); // to force ワ into the わ bucket
+    if (buckets.last() == QString::fromUtf8("わ")) {
+        buckets << QString::fromUtf8("ん"); // to get ワ, ゐ,ヰ,ヸ, ヹ, を, ヲ, ヺ, into the わ bucket
+        // ン sorts after ん but should go into the ん bucket:
+        if (str.startsWith(QString::fromUtf8("ン")))
+            return QString::fromUtf8("ん");
+    }
     QString strUpperCase = toUpper(str);
     MCollator coll = this->collator();
     for (int i = 0; i < buckets.size(); ++i) {
