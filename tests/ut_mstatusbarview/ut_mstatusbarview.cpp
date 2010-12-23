@@ -176,7 +176,7 @@ void Ut_MStatusBarView::testWhenMouseMovesAboveThresholdStatusIndicatorMenuAppea
     mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD + 1));
     QCOMPARE(dbusCallMade, true);
     QCOMPARE(dbusService, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE);
-    QCOMPARE(dbusInterface, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE);
+    QCOMPARE(dbusInterface, QString(MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE));
     QCOMPARE(dbusPath, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH);
     QCOMPARE(callMode, QDBus::NoBlock);
     QCOMPARE(dbusMethod, QString("open"));
@@ -224,7 +224,7 @@ void Ut_MStatusBarView::testTapFunctionality()
     mouseUpWorker(START_POINT + QPointF(5,5));
     QCOMPARE(dbusCallMade, true);
     QCOMPARE(dbusService, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE);
-    QCOMPARE(dbusInterface, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE);
+    QCOMPARE(dbusInterface, QString(MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE));
     QCOMPARE(dbusPath, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH);
     QCOMPARE(callMode, QDBus::NoBlock);
     QCOMPARE(dbusMethod, QString("open"));
