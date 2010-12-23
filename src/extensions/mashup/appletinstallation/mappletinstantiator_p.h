@@ -50,10 +50,10 @@ public:
     static const QString PACKAGE_MANAGER_DBUS_PATH;
 
     //! D-Bus interface of the Package Manager
-    static const QString PACKAGE_MANAGER_DBUS_INTERFACE;
+    static const char *PACKAGE_MANAGER_DBUS_INTERFACE;
 
     //! Name of the MAppletInstanceManager D-Bus Interface
-    static const QString APPLET_INSTANCE_MANAGER_DBUS_INTERFACE;
+    static const char *APPLET_INSTANCE_MANAGER_DBUS_INTERFACE;
 
     /*!
      * Informs the canvas about the installation of a package.

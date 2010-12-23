@@ -31,7 +31,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #ifdef HAVE_DBUS
-#include <QDBusInterface>
+#include <mdbusinterface.h>
 #include <QDBusServiceWatcher> 
 #include <QDBusConnectionInterface>
 #endif // HAVE_DBUS
@@ -44,7 +44,7 @@
 namespace{
     const QString PIXMAP_PROVIDER_DBUS_SERVICE = "com.meego.core.MStatusBar";
     const QString PIXMAP_PROVIDER_DBUS_PATH = "/statusbar";
-    const QString PIXMAP_PROVIDER_DBUS_INTERFACE = "com.meego.core.MStatusBar";
+    const char *  PIXMAP_PROVIDER_DBUS_INTERFACE = "com.meego.core.MStatusBar";
     const QString PIXMAP_PROVIDER_DBUS_SHAREDPIXMAP_CALL = "sharedPixmapHandle";
     const qreal SharedPixmapHeight = 30;
 }
@@ -52,7 +52,7 @@ namespace{
 
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE = "com.meego.core.MStatusIndicatorMenu";
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH = "/statusindicatormenu";
-const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE = "com.meego.core.MStatusIndicatorMenu";
+const char *  MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE = "com.meego.core.MStatusIndicatorMenu";
 
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
@@ -233,7 +233,7 @@ void MStatusBarView::querySharedPixmapFromProvider()
 {
     if ((!updatesEnabled)||(!isPixmapProviderOnline) || isInSwitcher)
         return;
-    QDBusInterface interface(PIXMAP_PROVIDER_DBUS_SERVICE, PIXMAP_PROVIDER_DBUS_PATH, PIXMAP_PROVIDER_DBUS_INTERFACE,
+    MDBusInteface interface(PIXMAP_PROVIDER_DBUS_SERVICE, PIXMAP_PROVIDER_DBUS_PATH, PIXMAP_PROVIDER_DBUS_INTERFACE,
                              QDBusConnection::sessionBus());
     QDBusPendingCall asyncCall =  interface.asyncCall(PIXMAP_PROVIDER_DBUS_SHAREDPIXMAP_CALL);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(asyncCall, this);
@@ -287,7 +287,7 @@ void MStatusBarView::handleSwitcherExited()
 void MStatusBarView::showStatusIndicatorMenu()
 {
 #ifdef HAVE_DBUS
-    QDBusInterface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
+    MDBusInteface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
     interface.call(QDBus::NoBlock, "open");
 #endif // HAVE_DBUS
 }

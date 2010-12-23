@@ -33,12 +33,13 @@
 #include "mscenemanager.h"
 #include "morientationtracker.h"
 #include "maction.h"
+#include "mdbusinterface.h"
 #include "mextensionwatcher.h"
 #include <algorithm>
 
 const QString MAppletInstanceManager::PACKAGE_MANAGER_DBUS_SERVICE = "com.nokia.package_manager";
 const QString MAppletInstanceManager::PACKAGE_MANAGER_DBUS_PATH = "/com/nokia/package_manager";
-const QString MAppletInstanceManager::PACKAGE_MANAGER_DBUS_INTERFACE = "com.nokia.package_manager";
+const char *  MAppletInstanceManager::PACKAGE_MANAGER_DBUS_INTERFACE = "com.nokia.package_manager";
 
 MAppletInstanceManager::MAppletInstanceManager(const QString &mashupCanvasName, MDataStore *dataStore) :
     dataStore(NULL),
@@ -348,7 +349,7 @@ void MAppletInstanceManager::instantiateAppletPlaceHolder(MAppletInstanceData *d
 
 void MAppletInstanceManager::queryInstallationStatus(MAppletInstanceData *data)
 {
-    QDBusInterface interface(MAppletInstanceManager::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_PATH, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
+    MDBusInteface interface(MAppletInstanceManager::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_PATH, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
     QDBusPendingCall call = interface.asyncCall("Operation", data->packageName);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
     watcher->setProperty("appletId", data->appletId.toString());

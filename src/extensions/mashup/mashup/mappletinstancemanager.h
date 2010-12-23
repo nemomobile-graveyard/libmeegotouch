@@ -403,7 +403,7 @@ private:
     static const QString PACKAGE_MANAGER_DBUS_PATH;
 
     //! D-Bus interface of the Package Manager
-    static const QString PACKAGE_MANAGER_DBUS_INTERFACE;
+    static const char *  PACKAGE_MANAGER_DBUS_INTERFACE;
 
     Q_DISABLE_COPY(MAppletInstanceManager)
 };

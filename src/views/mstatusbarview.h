@@ -68,7 +68,7 @@ private:
     static const QString STATUS_INDICATOR_MENU_DBUS_PATH;
 
     //! The name of the status indicator menu D-Bus interface
-    static const QString STATUS_INDICATOR_MENU_DBUS_INTERFACE;
+    static const char *  STATUS_INDICATOR_MENU_DBUS_INTERFACE;
 
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
     QPointF firstPos, lastPos;

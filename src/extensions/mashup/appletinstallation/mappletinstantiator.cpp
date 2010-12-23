@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <QDBusInterface>
+#include <mdbusinterface.h>
 #include <QDBusPendingReply>
 #include <QDBusPendingCallWatcher>
 #include <QFileInfo>
@@ -27,8 +27,8 @@
 
 const QString MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_SERVICE = "com.nokia.package_manager";
 const QString MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_PATH = "/com/nokia/package_manager";
-const QString MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_INTERFACE = "com.nokia.package_manager";
-const QString MAppletInstantiatorPrivate::APPLET_INSTANCE_MANAGER_DBUS_INTERFACE = "com.meego.core.MAppletInstanceManager";
+const char *  MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_INTERFACE = "com.nokia.package_manager";
+const char *  MAppletInstantiatorPrivate::APPLET_INSTANCE_MANAGER_DBUS_INTERFACE = "com.meego.core.MAppletInstanceManager";
 
 MAppletInstantiatorPrivate::MAppletInstantiatorPrivate()
 {
@@ -60,7 +60,8 @@ void MAppletInstantiator::instantiateAppletsInPackage(const QString &packageName
         Q_D(MAppletInstantiator);
 
         // Query the meta data of the package
-        QDBusInterface interface(MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_PATH, MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
+        MDBusInteface interface(MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_PATH,
+                                MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
         QDBusPendingCallWatcher *watcher;
         if (packageName.contains('/')) {
             // Get metadata for a local file
@@ -91,13 +92,13 @@ void MAppletInstantiatorPrivate::receivePackageData(QDBusPendingCallWatcher *wat
             informCanvasAboutPackageInstallation(packageName, reply.argumentAt<0>(), canvasDBusAddress);
 
             // Start the installation of the package
-            QDBusInterface interface(PACKAGE_MANAGER_DBUS_SERVICE, PACKAGE_MANAGER_DBUS_PATH, PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
+            MDBusInteface interface(PACKAGE_MANAGER_DBUS_SERVICE, PACKAGE_MANAGER_DBUS_PATH, PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
             if (packageName.contains('/')) {
                 // Install from a local file
-                interface.call(QDBus::NoBlock, "InstallFile", packageName);
+                interface.asyncCall("InstallFile", packageName);
             } else {
                 // Install from a remote file
-                interface.call(QDBus::NoBlock, "Install", packageName);
+                interface.asyncCall("Install", packageName);
             }
         } else {
             // An error occurred so don't start installation but inform the canvas anyway without metadata in order to display the error
@@ -114,8 +115,8 @@ void MAppletInstantiatorPrivate::informCanvasAboutPackageInstallation(const QStr
     QString path = canvasDBusAddress.mid(pathSeparatorIndex);
 
     // Call the instantiateApplet method of the target mashup canvas
-    QDBusInterface interface(service, path, APPLET_INSTANCE_MANAGER_DBUS_INTERFACE);
-    interface.call(QDBus::NoBlock, "instantiateAppletFromPackage", packageName, metaData);
+    MDBusInteface interface(service, path, APPLET_INSTANCE_MANAGER_DBUS_INTERFACE);
+    interface.asyncCall("instantiateAppletFromPackage", packageName, metaData);
 }
 
 #include "moc_mappletinstantiator.cpp"

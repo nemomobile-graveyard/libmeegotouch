@@ -19,7 +19,9 @@
 
 #include "mremoteaction.h"
 #include "mremoteaction_p.h"
-#include <QDBusInterface>
+#include "mdbusinterface.h"
+
+#include <QDBusPendingCall>
 #include <QBuffer>
 
 MRemoteActionPrivate::MRemoteActionPrivate() :
@@ -126,6 +128,6 @@ void MRemoteAction::call()
 {
     Q_D(MRemoteAction);
 
-    QDBusInterface interface(d->serviceName, d->objectPath, d->interface);
-    interface.callWithArgumentList(QDBus::NoBlock, d->methodName, d->arguments);
+    MDBusInteface interface(d->serviceName, d->objectPath, d->interface.toAscii());
+    interface.asyncCallWithArgumentList(d->methodName, d->arguments);
 }
