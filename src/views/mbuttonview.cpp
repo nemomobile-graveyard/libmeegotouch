@@ -163,7 +163,10 @@ void MButtonViewPrivate::refreshStyleMode()
             q->style().setModeDefault();
         }
     } else {
-        styleModeChangeTimer->stop();
+        if (styleModeChangeTimer->isActive()) {
+            queuedStyleModeChange = true;
+            return;
+        }
         q->style().setModeDisabled();
     }
 
