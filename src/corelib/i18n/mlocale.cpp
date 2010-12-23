@@ -2821,6 +2821,7 @@ QStringList MLocale::exemplarCharactersIndex() const
 #ifdef HAVE_ICU
 QString MLocale::indexBucket(const QString &str) const
 {
+    Q_D(const MLocale);
     if (str.isEmpty())
         return str;
     QStringList buckets = exemplarCharactersIndex();
@@ -2830,19 +2831,22 @@ QString MLocale::indexBucket(const QString &str) const
         if (str.startsWith(QString::fromUtf8("ン")))
             return QString::fromUtf8("ん");
     }
-    QString strUpperCase = toUpper(str);
+    QString strUpperCase =
+        MIcuConversions::unicodeStringToQString(
+            MIcuConversions::qStringToUnicodeString(str).toUpper(
+                d->getCategoryLocale(MLcCollate)));
     MCollator coll = this->collator();
     for (int i = 0; i < buckets.size(); ++i) {
         if (coll(strUpperCase, buckets[i])) {
             if (i == 0) {
-                return toUpper(str[0]);
+                return QString(strUpperCase[0]);
             }
             else {
                 return buckets[i-1];
             }
         }
     }
-    return toUpper(str[0]);
+    return QString(strUpperCase[0]);
 }
 #endif
 

@@ -1027,28 +1027,92 @@ void Ft_Locales::testMLocaleIndexBucket_data()
     QTest::newRow("de_DE")
         <<"ja_JP"
         <<"de_DE"
-        <<(QStringList()<<"cote"<<"coté"<<"côte"<<"côté"<<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"<<"s"<<"S"<<"ß"<<"ẞ"<<"test"<<"Test"<<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"<<"沙紀")
-        <<(QStringList()<<"C"   <<"C"   <<"C"   <<"C"   <<"O"<<"O"<<"O" <<"O" <<"O" <<"S"<<"S"<<"S"<<"S"<<"T"   <<"T"   <<"Z"<<"Z"<<"Z" <<"Z" <<"Z" <<"沙");
+        <<(QStringList()
+           <<"ç"<<"Ç"<<"cote"<<"coté"<<"côte"<<"côté"
+           <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
+           <<"s"<<"S"<<"ß"<<"ẞ"<<"test"<<"Test"<<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"<<"沙紀")
+        <<(QStringList()
+           <<"C"<<"C"<<"C"<<"C"<<"C"<<"C"
+           <<"O"<<"O"<<"O" <<"O" <<"O"
+           <<"S"<<"S"<<"S"<<"S"
+           <<"T"<<"T"
+           <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
+           <<"沙");
+    QTest::newRow("tr_TR")
+        <<"ja_JP"
+        <<"tr_TR"
+        <<(QStringList()
+           <<"cote"<<"coté"<<"côte"<<"côté"
+           <<"ç"<<"Ç"
+           <<"ı"<<"I"<<"i"<<"İ"
+           <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
+           <<"s"<<"S"<<"ß"<<"ẞ"
+           <<"test"<<"Test"
+           <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
+           <<"沙紀")
+        <<(QStringList()
+           <<"C"<<"C"<<"C"<<"C"
+           <<"Ç"<<"Ç"
+           <<"I"<<"I"<<"İ"<<"İ"
+           <<"Ö"<<"Ö"<<"Ö"<<"Ö"<<"Ö"
+           <<"S"<<"S"<<"S"<<"S"
+           <<"T"<<"T"
+           <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
+           <<"沙");
     QTest::newRow("fr_FR")
         <<"ja_JP"
         <<"fr_FR"
-        <<(QStringList()<<"cote"<<"côte"<<"coté"<<"côté"<<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"<<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"<<"沙紀")
-        <<(QStringList()<<"C"   <<"C"   <<"C"   <<"C"   <<"O"<<"O"<<"O" <<"O" <<"O" <<"Z"<<"Z"<<"Z" <<"Z" <<"Z" <<"沙");
+        <<(QStringList()
+           <<"cote"<<"côte"<<"coté"<<"côté"
+           <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
+           <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
+           <<"沙紀")
+        <<(QStringList()
+           <<"C"<<"C"<<"C"<<"C"
+           <<"O"<<"O"<<"O"<<"O"<<"O"
+           <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
+           <<"沙");
     QTest::newRow("cs_CZ")
         <<"ja_JP"
         <<"cs_CZ"
-        <<(QStringList()<<"c"<<"Cc"<<"CC"<<"č"<<"č"<<"Č"<<"h"<<"H"<<"ch"<<"cH"<<"Ch"<<"CH"<<"i"<<"I"<<"ů"<<"Ů"<<"α"<<"Α"<<"ワタシ"<<"沙紀")
-        <<(QStringList()<<"C"<<"C" <<"C" <<"Č"<<"Č"<<"Č"<<"H"<<"H"<<"CH"<<"CH"<<"CH"<<"CH"<<"I"<<"I"<<"U"<<"U"<<"Α"<<"Α"<<"ワ"   <<"沙");
+        <<(QStringList()
+           <<"c"<<"Cc"<<"CC"
+           <<"č"<<"č"<<"Č"
+           <<"h"<<"H"
+           <<"ch"<<"cH"<<"Ch"<<"CH"
+           <<"i"<<"I"
+           <<"ů"<<"Ů"
+           <<"α"<<"Α"
+           <<"ワタシ"
+           <<"沙紀")
+        <<(QStringList()
+           <<"C"<<"C"<<"C"
+           <<"Č"<<"Č"<<"Č"
+           <<"H"<<"H"
+           <<"CH"<<"CH"<<"CH"<<"CH"
+           <<"I"<<"I"
+           <<"U"<<"U"
+           <<"Α"<<"Α"
+           <<"ワ"
+           <<"沙");
     QTest::newRow("ar_SA")
         <<"ja_JP"
         <<"ar_SA"
-        <<(QStringList()<<"arabia"<<"zero"<<"ه")
-        <<(QStringList()<<"A"     <<"Z"   <<"ه");
+        <<(QStringList()
+           <<"arabia"
+           <<"zero"
+           <<"ه")
+        <<(QStringList()
+           <<"A"
+           <<"Z"
+           <<"ه");
     QTest::newRow("fa_IR")
         <<"ja_JP"
         <<"fa_IR"
-        <<(QStringList()<<"ه")
-        <<(QStringList()<<"ه");
+        <<(QStringList()
+           <<"ه")
+        <<(QStringList()
+           <<"ه");
     QTest::newRow("ja_JP@collation=standard")
         <<"de_DE"
         <<"ja_JP@collation=standard" // collation=standard is default for ja_JP
