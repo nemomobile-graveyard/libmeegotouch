@@ -1024,20 +1024,52 @@ void Ft_Locales::testMLocaleIndexBucket_data()
     QTest::addColumn<QStringList>("stringsSorted");
     QTest::addColumn<QStringList>("expectedBuckets");
 
+    QTest::newRow("en_US")
+        <<"ja_JP"
+        <<"en_US"
+        <<(QStringList()
+           <<"ç"<<"Ç"<<"cote"<<"coté"<<"côte"<<"côté"
+           <<"f"<<"F"<<"ff"<<"ﬀ"<<"Ff"<<"ffi"<<"ﬃ"<<"Ffi"<<"ﬄ"<<"ﬁ"<<"ﬂ"
+           <<"i"<<"I"<<"ï"<<"Ï"<<"İ"<<"ı"
+           <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
+           <<"s"<<"S"<<"ſ"<<"ß"<<"ẞ"
+           <<"test"<<"Test"
+           <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
+           <<"沙紀"
+            )
+        <<(QStringList()
+           <<"C"<<"C"<<"C"<<"C"<<"C"<<"C"
+           <<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"
+           <<"I"<<"I"<<"I"<<"I"<<"I"<<"I"
+           <<"O"<<"O"<<"O" <<"O" <<"O"
+           <<"S"<<"S"<<"S"<<"S"<<"S"
+           <<"T"<<"T"
+           <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
+           <<"沙"
+            );
     QTest::newRow("de_DE")
         <<"ja_JP"
         <<"de_DE"
         <<(QStringList()
            <<"ç"<<"Ç"<<"cote"<<"coté"<<"côte"<<"côté"
+           <<"f"<<"F"<<"ff"<<"ﬀ"<<"Ff"<<"ffi"<<"ﬃ"<<"Ffi"<<"ﬄ"<<"ﬁ"<<"ﬂ"
+           <<"i"<<"I"<<"ï"<<"Ï"<<"İ"<<"ı"
            <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
-           <<"s"<<"S"<<"ß"<<"ẞ"<<"test"<<"Test"<<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"<<"沙紀")
+           <<"s"<<"S"<<"ſ"<<"ß"<<"ẞ"
+           <<"test"<<"Test"
+           <<"z"<<"Z"<<"zx"<<"Zx"<<"ZX"
+           <<"沙紀"
+            )
         <<(QStringList()
            <<"C"<<"C"<<"C"<<"C"<<"C"<<"C"
+           <<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"
+           <<"I"<<"I"<<"I"<<"I"<<"I"<<"I"
            <<"O"<<"O"<<"O" <<"O" <<"O"
-           <<"S"<<"S"<<"S"<<"S"
+           <<"S"<<"S"<<"S"<<"S"<<"S"
            <<"T"<<"T"
            <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
-           <<"沙");
+           <<"沙"
+            );
     QTest::newRow("tr_TR")
         <<"ja_JP"
         <<"tr_TR"
@@ -1093,6 +1125,45 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"I"<<"I"
            <<"U"<<"U"
            <<"Α"<<"Α"
+           <<"ワ"
+           <<"沙");
+    QTest::newRow("ru_RU")
+        <<"ja_JP"
+        <<"ru_RU"
+        <<(QStringList()
+           <<"c"<<"č"<<"č"
+           <<"Č"
+           <<"Cc"<<"CC"<<"ch"<<"cH"<<"Ch"<<"CH"
+           <<"h"<<"H"
+           <<"i"<<"I"
+           <<"ů"<<"Ů"
+           <<"α"<<"Α"
+           <<"дерево"<<"Дерево"
+           <<"еж"<<"Еж"<<"ёж"<<"Ёж"<<"ежи"<<"Ежи"<<"елка"<<"Елка"<<"ёлка"<<"Ёлка"<<"ель"<<"Ель"
+           <<"живот"<<"Живот"
+           <<"идти"<<"Идти"
+           <<"й"<<"Й"
+           <<"школа"<<"Школа"
+           <<"Ъ"
+           <<"Ы"<<"Ь"
+           <<"ワタシ"
+           <<"沙紀")
+        <<(QStringList()
+           <<"C"<<"C"<<"C"
+           <<"Č"
+           <<"C"<<"C"<<"C"<<"C"<<"C"<<"C"
+           <<"H"<<"H"
+           <<"I"<<"I"
+           <<"Ů"<<"Ů"
+           <<"Α"<<"Α"
+           <<"Д"<<"Д"
+           <<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"<<"Ё"
+           <<"Ж"<<"Ж"
+           <<"И"<<"И"
+           <<"Й"<<"Й"
+           <<"Ш"<<"Ш"
+           <<"Щ"
+           <<"Ы"<<"Ы"
            <<"ワ"
            <<"沙");
     QTest::newRow("ar_SA")
@@ -1239,6 +1310,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"ㄎ"
            <<"阿" // a1
            <<"驰" // chi2
+           <<"馳" // chi2, traditional version
            <<"峠" // quia3 Japanese kokuji, mountain pass, variant of 卡
            <<"蘅" // heng2
            <<"君" // jun1
@@ -1248,6 +1320,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"宁" // ning2
            <<"威" // wei1
            <<"张" // zhang1
+           <<"張" // zhang1, traditional version
             )
         <<(QStringList()
            <<"∮"<<"♨"
@@ -1257,6 +1330,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"ㄎ"
            <<"阿" // a1
            <<"驰" // chi2
+           <<"馳" // chi2, traditional version
            <<"峠" // qia3 Japanese kokuji, mountain pass, variant of 卡
            <<"蘅" // heng2
            <<"君" // jun1
@@ -1266,6 +1340,178 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"宁" // ning2
            <<"威" // wei1
            <<"张" // zhang1
+           <<"張" // zhang1, traditional version
+            );
+    QTest::newRow("ko_KR@collation=standard")
+        <<"ja_JP"
+        <<"ko_KR@collation=standard"
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"
+           <<"Ａ"
+           <<"f"<<"F"<<"ff"<<"ﬀ"<<"Ff"<<"ffi"<<"ﬃ"<<"Ffi"<<"ﬄ"<<"ﬁ"<<"ﬂ"
+           <<"john"
+           <<"ｊｏｈｎ"
+           <<"John"
+           <<"Ｊｏｈｎ"
+           <<"saki"
+           <<"ｓａｋｉ"
+           <<"Saki"
+           <<"Ｓａｋｉ"
+           <<"α"<<"Α"
+           <<"дерево"<<"Дерево"
+           <<"א"
+           <<"ת"
+           <<"ا"
+           <<"ي"
+           <<"अ"
+           <<"ह"
+           <<"ཀ"
+           <<"ཧ"
+
+           <<"ᄀ" // U+1100 HANGUL CHOSEONG KIYEOK
+           <<"교" // U+AD50 HANGUL SYLLABLE GYO
+           <<"校" // Korean Pronunciation: KYO HYO
+           <<"君" // Korean Pronunciation: KWUN
+
+           <<"ᄂ" // U+1102 HANGUL CHOSEONG NIEUN
+
+           <<"ᄃ" // U+1103 HANGUL CHOSEONG TIKEUT
+           <<"대"
+           <<"大"
+
+           <<"ᄅ" // U+1105 HANGUL CHOSEONG RIEUL
+           <<"柳" // Korean Pronunciation: LYU
+           <<"李" // Korean Pronunciation: LI
+
+           <<"ᄆ" // U+1106 HANGUL CHOSEONG MIEUM
+
+           <<"ᄇ" // U+1107 HANGUL CHOSEONG PIEUP
+           <<"부"
+           <<"釜"
+
+           <<"ᄉ" // U+1109 HANGUL CHOSEONG SIOS
+           <<"산" // U+C0B0 HANGUL SYLLABLE SAN
+           <<"山" // Korean Pronunciation: SAN
+           <<"峠" // Korean Pronunciation: SANG
+           <<"식" // U+C2DD HANGUL SYLLABLE SIG
+           <<"신" // U+C2E0 HANGUL SYLLABLE SIN
+
+           <<"ᄋ" // U+110B HANGUL CHOSEONG IEUNG
+           <<"阿" // Korean Pronunciation: A OK
+           <<"威" // Korean Pronunciation: WI
+
+           <<"ᄌ" // U+110C HANGUL CHOSEONG CIEUC
+           <<"卡" // Korean Pronunciation: CAP
+           <<"張" // Korean Pronunciation: CANG
+           <<"宁" // Korean Pronunciation: CE
+           <<"정" // U+C815 HANGUL SYLLABLE JEONG
+
+           <<"ᄎ" // U+110E HANGUL CHOSEONG CHIEUCH
+           <<"馳" // Korean Pronunciation: CHI
+
+           <<"ᄏ" // U+110F HANGUL CHOSEONG KHIEUKH
+
+           <<"ᄐ" // U+1110 HANGUL CHOSEONG THIEUTH
+
+           <<"ᄑ" // U+1111 HANGUL CHOSEONG PHIEUPH
+
+           <<"ᄒ" // U+1112 HANGUL CHOSEONG HIEUH
+           <<"학" // U+D559 HANGUL SYLLABLE HAG
+           <<"學" // Korean Pronunciation: HAK
+
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"ꀀ"
+           <<"ꆶ"
+           <<"张" // No Korean Pronunciation
+           <<"蘅" // No Korean Pronunciation
+           <<"驰" // No Korean Pronunciation
+            )
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"
+           <<"Ａ"
+           <<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"<<"F"
+           <<"J"
+           <<"Ｊ"
+           <<"J"
+           <<"Ｊ"
+           <<"S"
+           <<"Ｓ"
+           <<"S"
+           <<"Ｓ"
+           <<"Α"<<"Α"
+           <<"Д"<<"Д"
+           <<"א"
+           <<"ת"
+           <<"ا"
+           <<"ي"
+           <<"अ"
+           <<"ह"
+           <<"ཀ"
+           <<"ཧ"
+
+           <<"ᄀ" // U+1100 HANGUL CHOSEONG KIYEOK
+           <<"ᄀ" // U+1100 HANGUL CHOSEONG KIYEOK
+           <<"ᄀ" // U+1100 HANGUL CHOSEONG KIYEOK
+           <<"ᄀ" // U+1100 HANGUL CHOSEONG KIYEOK
+
+           <<"ᄂ" // U+1102 HANGUL CHOSEONG NIEUN
+
+           <<"ᄃ" // U+1103 HANGUL CHOSEONG TIKEUT
+           <<"ᄃ" // U+1103 HANGUL CHOSEONG TIKEUT
+           <<"ᄃ" // U+1103 HANGUL CHOSEONG TIKEUT
+
+           <<"ᄅ" // U+1105 HANGUL CHOSEONG RIEUL
+           <<"ᄅ" // U+1105 HANGUL CHOSEONG RIEUL
+           <<"ᄅ" // U+1105 HANGUL CHOSEONG RIEUL
+
+           <<"ᄆ" // U+1106 HANGUL CHOSEONG MIEUM
+
+           <<"ᄇ" // U+1107 HANGUL CHOSEONG PIEUP
+           <<"ᄇ" // U+1107 HANGUL CHOSEONG PIEUP
+           <<"ᄇ" // U+1107 HANGUL CHOSEONG PIEUP
+
+           <<"ᄉ" // U+1109 HANGUL CHOSEONG SIOS
+           <<"ᄉ" // U+1109 HANGUL CHOSEONG SIOS
+           <<"ᄉ" // U+1109 HANGUL CHOSEONG SIOS
+           <<"ᄉ" // U+1109 HANGUL CHOSEONG SIOS
+           <<"ᄉ" // U+1109 HANGUL CHOSEONG SIOS
+           <<"ᄉ" // U+1109 HANGUL CHOSEONG SIOS
+
+           <<"ᄋ" // U+110B HANGUL CHOSEONG IEUNG
+           <<"ᄋ" // U+110B HANGUL CHOSEONG IEUNG
+           <<"ᄋ" // U+110B HANGUL CHOSEONG IEUNG
+
+           <<"ᄌ" // U+110C HANGUL CHOSEONG CIEUC
+           <<"ᄌ" // U+110C HANGUL CHOSEONG CIEUC
+           <<"ᄌ" // U+110C HANGUL CHOSEONG CIEUC
+           <<"ᄌ" // U+110C HANGUL CHOSEONG CIEUC
+           <<"ᄌ" // U+110C HANGUL CHOSEONG CIEUC
+
+           <<"ᄎ" // U+110E HANGUL CHOSEONG CHIEUCH
+           <<"ᄎ" // U+110E HANGUL CHOSEONG CHIEUCH
+
+           <<"ᄏ" // U+110F HANGUL CHOSEONG KHIEUKH
+
+           <<"ᄐ" // U+1110 HANGUL CHOSEONG THIEUTH
+
+           <<"ᄑ" // U+1111 HANGUL CHOSEONG PHIEUPH
+
+           <<"ᄒ" // U+1112 HANGUL CHOSEONG HIEUH
+           <<"ᄒ" // U+1112 HANGUL CHOSEONG HIEUH
+           <<"ᄒ" // U+1112 HANGUL CHOSEONG HIEUH
+
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"ꀀ"
+           <<"ꆶ"
+           <<"张"
+           <<"蘅"
+           <<"驰"
             );
 }
 
