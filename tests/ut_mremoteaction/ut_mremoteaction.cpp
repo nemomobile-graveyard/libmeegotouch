@@ -18,9 +18,10 @@
 ****************************************************************************/
 
 #include "ut_mremoteaction.h"
-#include <QDBusInterface>
+#include "mdbusinterface.h"
 #include <maction_stub.h>
 #include "maction_p.h"
+#include <QDBusPendingCall>
 
 bool Ut_MRemoteAction::captureCalls = false;
 QString Ut_MRemoteAction::callServiceName;
@@ -39,27 +40,27 @@ MActionPrivate::~MActionPrivate()
 {
 }
 
-// QDBusInterface stubs (used by MRemoteAction)
-QDBusInterface::QDBusInterface(const QString &service, const QString &path, const QString &interface, const QDBusConnection &connection, QObject *parent) : QDBusAbstractInterface(service, path, interface.toUtf8().constData(), connection, parent)
+// MDBusInterface stubs (used by MRemoteAction)
+MDBusInteface::MDBusInteface(const QString &service, const QString &path, const char *interface, const QDBusConnection &connection, QObject *parent) : QDBusAbstractInterface(service, path, interface, connection, parent)
 {
     Ut_MRemoteAction::callServiceName = service;
     Ut_MRemoteAction::callObjectPath = path;
     Ut_MRemoteAction::callInterface = interface;
 }
 
-QDBusInterface::~QDBusInterface()
+MDBusInteface::~MDBusInteface()
 {
 }
 
 // QDBusAbstractInterface stubs (used by MRemoteAction)
-QDBusMessage QDBusAbstractInterface::callWithArgumentList(QDBus::CallMode, const QString &method, const QList<QVariant> &args)
+QDBusPendingCall QDBusAbstractInterface::asyncCallWithArgumentList(const QString &method, const QList<QVariant> &args)
 {
     if (Ut_MRemoteAction::captureCalls) {
         Ut_MRemoteAction::callMethods.append(method);
         Ut_MRemoteAction::callArguments.append(args);
     }
 
-    return QDBusMessage();
+    return QDBusPendingCall::fromCompletedCall(QDBusMessage());
 }
 
 void Ut_MRemoteAction::init()
