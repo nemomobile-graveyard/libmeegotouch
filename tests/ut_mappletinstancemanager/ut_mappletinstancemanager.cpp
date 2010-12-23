@@ -20,7 +20,7 @@
 #include <QtTest/QtTest>
 #include <QDataStream>
 #include <QLocalSocket>
-#include <QDBusInterface>
+#include "mdbusinterface.h"
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 
@@ -52,14 +52,15 @@ QStringList removedFiles;
 QString pluginLoaderFileName;
 
 // QDBusInterface stubs (used by MRemoteAction)
-QDBusInterface::QDBusInterface(const QString &service, const QString &path, const QString &interface, const QDBusConnection &connection, QObject *parent) : QDBusAbstractInterface("service", "path", "interface", connection, parent)
+MDBusInteface::MDBusInteface(const QString &service, const QString &path, const char *interface, const QDBusConnection &connection, QObject *parent) :
+        QDBusAbstractInterface("service", "path", "interface", connection, parent)
 {
     Ut_MAppletInstanceManager::callServiceName = service;
     Ut_MAppletInstanceManager::callObjectPath = path;
     Ut_MAppletInstanceManager::callInterface = interface;
 }
 
-QDBusInterface::~QDBusInterface()
+MDBusInteface::~MDBusInteface()
 {
 }
 
