@@ -70,7 +70,7 @@ public:
     void handleCurrentAppWindowOrientationAngleChange();
     void handleCurrentAppWindowChange();
     WId fetchWIdCurrentAppWindow();
-    M::OrientationAngle fetchCurrentAppWindowOrientationAngle();
+    M::OrientationAngle fetchCurrentAppWindowOrientationAngle(int* error = NULL);
     WId widCurrentAppWindow;
     bool currentAppWindowHadXPropertyChangeMask;
     //windows from this list follow _MEEGOTOUCH_CURRENT_APP_WINDOW (set by meego window manager).

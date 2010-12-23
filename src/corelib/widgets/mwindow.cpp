@@ -1407,8 +1407,11 @@ bool MWindow::event(QEvent *event)
     else if (event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
+            int error = 0;
+            MOrientationTracker::instance()->d_func()->fetchCurrentAppWindowOrientationAngle(&error);
+
             //property was set, does not matter what value
-            if (property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid()) {
+            if (property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid() && error == Success) {
                 mDebug("MWindow") << "window follows current app window orientation";
                 MOrientationTracker::instance()->d_func()->startFollowingCurrentAppWindow(this);
             }

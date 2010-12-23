@@ -445,7 +445,7 @@ WId MOrientationTrackerPrivate::fetchWIdCurrentAppWindow()
     return currentWindowId;
 }
 
-M::OrientationAngle MOrientationTrackerPrivate::fetchCurrentAppWindowOrientationAngle()
+M::OrientationAngle MOrientationTrackerPrivate::fetchCurrentAppWindowOrientationAngle(int* error)
 {
     M::OrientationAngle angle = M::Angle0;
     Atom actualType = 0;
@@ -473,6 +473,10 @@ M::OrientationAngle MOrientationTrackerPrivate::fetchCurrentAppWindowOrientation
 
     if (status == Success)
         XFree(data.asUChar);
+
+    if (error)
+        *error = status;
+
     return angle;
 }
 
