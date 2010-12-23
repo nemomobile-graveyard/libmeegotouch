@@ -17,21 +17,22 @@
 **
 ****************************************************************************/
 
-#include <QDBusInterface>
+#include <mdbusinterface.h>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 #include "ut_mappletinstantiator.h"
 #include "mappletinstantiator.h"
 
 // QDBusInterface stubs (used by MRemoteAction)
-QDBusInterface::QDBusInterface(const QString &service, const QString &path, const QString &interface, const QDBusConnection &connection, QObject *parent) : QDBusAbstractInterface(service, path, interface.toUtf8().constData(), connection, parent)
+MDBusInteface::MDBusInteface(const QString &service, const QString &path, const char *interface, const QDBusConnection &connection, QObject *parent) :
+        QDBusAbstractInterface(service, path, interface, connection, parent)
 {
     Ut_MAppletInstantiator::callServiceNames.append(service);
     Ut_MAppletInstantiator::callObjectPaths.append(path);
     Ut_MAppletInstantiator::callInterfaces.append(interface);
 }
 
-QDBusInterface::~QDBusInterface()
+MDBusInteface::~MDBusInteface()
 {
 }
 
@@ -245,7 +246,7 @@ void Ut_MAppletInstantiator::testReceivePackageData()
     QCOMPARE(callObjectPaths.first(), QString("/path/to/canvas"));
     QCOMPARE(callInterfaces.first(), QString("com.meego.core.MAppletInstanceManager"));
     QVERIFY(callMethods.count() > 1);
-    QCOMPARE(callMethods.first(), QString("instantiateAppletFromPackage"));
+    QCOMPARE(callMethods.first(), QString("com.meego.core.MAppletInstanceManager.instantiateAppletFromPackage"));
     QCOMPARE(callArguments.first().count(), 2);
     QCOMPARE(callArguments.first().at(0).type(), QVariant::String);
     QCOMPARE(callArguments.first().at(0).toString(), TEST_PACKAGE_NAME);
@@ -256,7 +257,7 @@ void Ut_MAppletInstantiator::testReceivePackageData()
     QCOMPARE(callServiceNames.last(), QString("com.nokia.package_manager"));
     QCOMPARE(callObjectPaths.last(), QString("/com/nokia/package_manager"));
     QCOMPARE(callInterfaces.last(), QString("com.nokia.package_manager"));
-    QCOMPARE(callMethods.last(), QString("Install"));
+    QCOMPARE(callMethods.last(), QString("com.nokia.package_manager.Install"));
     QCOMPARE(callArguments.last().count(), 1);
     QCOMPARE(callArguments.last().at(0).type(), QVariant::String);
     QCOMPARE(callArguments.last().at(0).toString(), TEST_PACKAGE_NAME);
@@ -282,7 +283,7 @@ void Ut_MAppletInstantiator::testReceivePackageDataFromLocalFile()
     QCOMPARE(callServiceNames.last(), QString("com.nokia.package_manager"));
     QCOMPARE(callObjectPaths.last(), QString("/com/nokia/package_manager"));
     QCOMPARE(callInterfaces.last(), QString("com.nokia.package_manager"));
-    QCOMPARE(callMethods.last(), QString("InstallFile"));
+    QCOMPARE(callMethods.last(), QString("com.nokia.package_manager.InstallFile"));
     QCOMPARE(callArguments.last().count(), 1);
     QCOMPARE(callArguments.last().at(0).type(), QVariant::String);
     QCOMPARE(callArguments.last().at(0).toString(), TEST_PACKAGE_NAME);
@@ -308,7 +309,7 @@ void Ut_MAppletInstantiator::testReceivePackageDataWithError()
     QCOMPARE(callObjectPaths.first(), QString("/path/to/canvas"));
     QCOMPARE(callInterfaces.first(), QString("com.meego.core.MAppletInstanceManager"));
     QVERIFY(callMethods.count() > 1);
-    QCOMPARE(callMethods.first(), QString("instantiateAppletFromPackage"));
+    QCOMPARE(callMethods.first(), QString("com.meego.core.MAppletInstanceManager.instantiateAppletFromPackage"));
     QCOMPARE(callArguments.first().count(), 2);
     QCOMPARE(callArguments.first().at(0).type(), QVariant::String);
     QCOMPARE(callArguments.first().at(0).toString(), TEST_PACKAGE_NAME);
