@@ -1,8 +1,11 @@
-libmeegotouch (0.20.68~1) unstable; urgency=low
+libmeegotouch (0.20.68-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#209041 - Application window style is missing navigation bar style property.
+  * Fixes: NB#203650 - displayEntered() not emitted when switching between two windows in the same app
+  * Fixes: NB#211200 - [+request] API needed for enabling/disabling text magnifier in text entries
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 21 Dec 2010 16:24:15 +0100
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 23 Dec 2010 09:41:44 +0100
 
 libmeegotouch (0.20.67-1) unstable; urgency=low
 
