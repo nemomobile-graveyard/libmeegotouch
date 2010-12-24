@@ -60,12 +60,16 @@ void MKeyboardStateTrackerPrivate::initContextSubscriber()
 
 void MKeyboardStateTrackerPrivate::subscribe()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     keyboardOpenProperty.subscribe();
+#endif
 }
 
 void MKeyboardStateTrackerPrivate::unsubscribe()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     keyboardOpenProperty.unsubscribe();
+#endif
 }
 
 MKeyboardStateTracker::MKeyboardStateTracker() :
