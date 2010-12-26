@@ -208,10 +208,19 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(QSharedPointer<
                     inProcessExtensionUsageCounts[extension]++;
                     // Inform interested parties about the new extension
                     emit extensionInstantiated(extension);
+                } else {
+                    mWarning("MApplicationExtensionManager") << "Application extension" << metadata->fileName() << "could not be initialized.";
                 }
+            } else {
+                mWarning("MApplicationExtensionManager") << "Application extension" << metadata->fileName() << "could not be instantiated. The extension does not implement MApplicationExtensionInterface.";
             }
+        } else {
+            mWarning("MApplicationExtensionManager") << "Application extension" << metadata->fileName() << "could not be instantiated. The extension does not inherit" << interface;
         }
+    } else {
+        mWarning("MApplicationExtensionManager") << "Application extension" << metadata->fileName() << "could not be loaded." << loader.errorString();
     }
+
     if (!success) {
         delete object;
     }

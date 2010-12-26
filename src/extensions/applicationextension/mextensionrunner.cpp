@@ -45,6 +45,7 @@
 #include <MScene>
 #include <MSceneManager>
 #include <MAction>
+#include <MDebug>
 #include <QGraphicsView>
 #include <QLocalSocket>
 #include <QPluginLoader>
@@ -54,7 +55,6 @@
 #include <QFileInfo>
 #include <QMetaProperty>
 #include <QTimer>
-#include <QDebug>
 #include <QAction>
 #include <QGraphicsLinearLayout>
 #ifdef Q_WS_X11
@@ -140,7 +140,7 @@ bool MExtensionRunner::init(const QString &serverName)
     // Take shared memory into use
     pixmapMutex = new MAppletSharedMutex;
     if (!pixmapMutex->init(serverName)) {
-        qWarning() << "Unable to attach to shared memory.";
+        mWarning("MExtensionRunner") << "Unable to attach to shared memory.";
         return false;
     }
 
@@ -354,7 +354,7 @@ void MExtensionRunner::messageReceived(const MAppletMessage &message)
     }
 
     default:
-        qWarning() << __func__  << "Unrecognized event id received: " << message.type();
+        mWarning("MExtensionRunner") << "Unrecognized event id received: " << message.type();
         break;
     }
 }

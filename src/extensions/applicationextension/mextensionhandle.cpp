@@ -288,7 +288,7 @@ void MExtensionHandle::connectionEstablished()
     Q_D(MExtensionHandle);
 
     if (state() != MExtensionHandleModel::STARTING) {
-        qWarning() << "MExtensionHandle::connectionEstablished() - Internal error, MExtensionHandle state differs from MExtensionHandleModel::STARTING";
+        mWarning("MExtensionHandle") << "Internal error: MExtensionHandle state differs from MExtensionHandleModel::STARTING";
         return;
     }
 
@@ -414,7 +414,7 @@ void MExtensionHandle::messageReceived(const MAppletMessage &message)
         break;
     }
     default:
-        qWarning() << "IPC protocol error! Got message type:" << message.type();
+        mWarning("MExtensionHandle") << "IPC protocol error! Got message type:" << message.type();
         break;
     }
 }

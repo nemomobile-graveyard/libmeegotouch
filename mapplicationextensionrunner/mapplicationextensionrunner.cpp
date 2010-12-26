@@ -23,7 +23,7 @@
 #include <mapplicationextensioninterface.h>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsWidget>
-#include <QDebug>
+#include <MDebug>
 
 MApplicationExtensionRunner::MApplicationExtensionRunner() :
         MExtensionRunner(),
@@ -39,7 +39,7 @@ bool MApplicationExtensionRunner::init(const QString &serverName, MApplicationEx
 {
     // Check whether the metadata is valid
     if (!metaData.isValid()) {
-        qWarning() << "Extension metadata is not valid.";
+        mWarning("MApplicationExtensionRunner") << "Application extension" << metaData.fileName() << "metadata is not valid.";
         return false;
     }
 
@@ -57,7 +57,11 @@ bool MApplicationExtensionRunner::init(const QString &serverName, MApplicationEx
                     success = true;
                 }
             }
+        } else {
+            mWarning("MApplicationExtensionRunner") << "Application extension" << metaData.fileName() << "could not be loaded.";
         }
+    } else {
+        mWarning("MApplicationExtensionRunner") << "Application extension" << metaData.fileName() << "could not be initialized.";
     }
 
     return success;

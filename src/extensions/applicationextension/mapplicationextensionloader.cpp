@@ -20,6 +20,7 @@
 #include "mapplicationextensionloader.h"
 #include "mapplicationextensioninterface.h"
 #include "mapplicationextensionmetadata.h"
+#include <MDebug>
 #include <QPluginLoader>
 
 MApplicationExtensionLoader::MApplicationExtensionLoader()
@@ -37,10 +38,18 @@ MApplicationExtensionInterface *MApplicationExtensionLoader::loadExtension(const
             if (extension != NULL) {
                 if (extension->initialize(metadata.interface())) {
                     return extension;
+                } else {
+                    mWarning("MApplicationExtensionLoader") << "Application extension" << metadata.fileName() << "could not be initialized.";
                 }
+            } else {
+                mWarning("MApplicationExtensionLoader") << "Application extension" << metadata.fileName() << "could not be instantiated. The extension does not implement MApplicationExtensionInterface.";
             }
+        } else {
+            mWarning("MApplicationExtensionLoader") << "Application extension" << metadata.fileName() << "could not be instantiated. The extension does not inherit" << metadata.interface();
         }
         delete object;
+    } else {
+        mWarning("MApplicationExtensionLoader") << "Application extension" << metadata.fileName() << "could not be loaded." << loader.errorString();
     }
 
     return false;
