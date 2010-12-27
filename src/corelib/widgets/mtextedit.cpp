@@ -2576,7 +2576,7 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case Qt::ImCursorPosition: {
             int pos = cursorPosition() - block.position();
             if (d->isPreediting()) {
-                pos = d->cursor()->anchor();
+                pos = d->cursor()->anchor() - block.position();
             }
             return QVariant(pos);
         }
