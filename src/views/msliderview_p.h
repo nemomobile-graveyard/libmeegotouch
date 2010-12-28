@@ -105,6 +105,7 @@ public:
     MSliderIndicator(bool isMinMax, QGraphicsItem *parent = 0);
     virtual ~MSliderIndicator();
 
+    void setLabelStyleName(const QString &stylename);
     void setText(const QString &text);
     void setImage(const QString &id);
 
@@ -138,6 +139,7 @@ public:
                     const QPixmap *handleLabelArrowUp,
                     const QPixmap *handleLabelArrowDown);
 
+    void setStyleName(const QString &stylename);
     void setText(const QString &text);
     void setImage(const QString &id);
     void setArrowPos(qreal pos);
@@ -185,6 +187,11 @@ public:
     void setIndicatorMargin(qreal margin);
 
     void setHandleIndicatorArrowMargin(qreal margin);
+
+    void setElapsedOffset(qreal offset);
+    void setIndicatorOffset(qreal offset);
+
+    void setIndicatorStyleName(const QString &stylename);
 
     void setSliderValues(int min, int max, int val);
     void setSeekBarValues(bool show, int loadedContentMin = 0, int loadedContentMax = 0);
@@ -249,6 +256,10 @@ private:
     qreal minimumLength;
     qreal maximumLength;
     qreal indicatorMargin;
+    qreal elapsedOffset;
+    qreal indicatorOffset;
+
+    QString indicatorStyleName;
 
 #ifdef UNIT_TEST
     friend class Ut_MSliderView;

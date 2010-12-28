@@ -156,6 +156,26 @@ class M_VIEWS_EXPORT MSliderStyle : public MWidgetStyle
         \brief Minimum margin between arrow and handle indicator edge
       */
     M_STYLE_ATTRIBUTE(qreal, handleLabelArrowMargin, HandleLabelArrowMargin)
+    /*!
+        \property MSlider::elapsedOffset
+        \brief How much the elapsed background draws over the value point
+      */
+    M_STYLE_ATTRIBUTE(qreal, elapsedOffset, ElapsedOffset)
+    /*!
+        \property MSlider::grooveMargin
+        \brief Margin between the ends of the groove and widget
+      */
+    M_STYLE_ATTRIBUTE(qreal, grooveMargin, GrooveMargin)
+    /*!
+        \property MSlider::indicatorOffset
+        \brief Adjusts the position of the indicator handle
+      */
+    M_STYLE_ATTRIBUTE(qreal, indicatorOffset, IndicatorOffset)
+    /*!
+        \property MSlider::indicatorStyleName
+        \brief Style name of the indicator label
+      */
+    M_STYLE_ATTRIBUTE(QString, indicatorStyleName, IndicatorStyleName)
 };
 
 class M_VIEWS_EXPORT MSliderStyleContainer : public MWidgetStyleContainer
