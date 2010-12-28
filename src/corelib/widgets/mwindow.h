@@ -108,10 +108,11 @@ public:
 
      \a parent is passed to QGraphicsView's constructor.
 
-     A scene manager can be assigned later by calling setSceneManager(),
-     however a default scene manager will be automatically created as
-     needed unless explicitly set whenever any scene management is required
-     (adding a managed class like MDialog to the application).
+     By default MWindow doesn't create a scene manager. It can be assigned
+     later by calling setSceneManager(). Also, a default scene manager
+     will be automatically created as needed unless explicitly set whenever
+     any scene management is required (adding a managed class like MDialog
+     to the application).
 
      \sa setSceneManager(), sceneManager()
      */
@@ -220,6 +221,11 @@ public:
      \a sceneManager. The new \a sceneManager can be 0.
 
      MWindow will take ownership of the given scene manager.
+
+     \note  Scene manager takes over orientation angle management of a window.
+            If window orientation angle was changed manually before creating
+            a scene manager, the scene manager will override this setting.
+
      */
     void setSceneManager(MSceneManager *sceneManager);
 
@@ -239,6 +245,12 @@ public:
      The scene manager is responsible for positioning, animating and
      generally managing MSceneWindows such as MDialog and MApplicationPage
      inside the window's scene.
+
+     \note  Scene manager takes over orientation angle management of a window.
+            If window orientation angle was changed manually before creating
+            a scene manager, the scene manager will override this setting.
+
+     \sa setSceneManager()
      */
     MSceneManager *sceneManager();
 
