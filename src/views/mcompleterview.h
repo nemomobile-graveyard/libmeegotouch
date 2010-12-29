@@ -46,6 +46,12 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     //! \reimp_end
 
+protected Q_SLOTS:
+
+    //! \reimp
+    virtual void updateData(const QList<const char *>& modifications);
+    //! \reimp_end
+
 private:
     MCompleterViewPrivate *const d_ptr;
 

@@ -442,8 +442,10 @@ QAbstractItemModel *MCompleter::matchedCandidateModel() const
 void MCompleter::hideCompleter()
 {
     if (isActive()) {
-        widget()->sceneManager()->disappearSceneWindow(this);
+        // change active state to false before really hidden to notify view
+        // to do necessary clear.
         model()->setActive(false);
+        widget()->sceneManager()->disappearSceneWindow(this);
         emit hidden();
     }
 }

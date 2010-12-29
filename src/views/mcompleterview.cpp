@@ -93,7 +93,6 @@ void MCompleterViewPrivate::init()
 {
     connect(completionsButton, SIGNAL(clicked()), this, SLOT(showPopup()));
     connect(controller, SIGNAL(shown()), this, SLOT(createContents()));
-    connect(controller, SIGNAL(hidden()), this, SLOT(clear()));
     if (controller->widget()) {
         connect(controller->widget()->sceneManager(),
                 SIGNAL(orientationChangeFinished(const M::Orientation &)),
@@ -390,6 +389,20 @@ void MCompleterView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (d->controller && d->controller->isVisible())
         d->controller->confirm();
     event->accept();
+}
+
+void MCompleterView::updateData(const QList<const char *>& modifications)
+{
+    Q_D(MCompleterView);
+
+    if (modifications.contains(MCompleterModel::Active)) {
+        if (!model()->active()) {
+            // clear focus proxy when control become inactive (before really hidden
+            // to avoid focus out)
+            d->clear();
+        }
+    }
+    MSceneWindowView::updateData(modifications);
 }
 
 M_REGISTER_VIEW_NEW(MCompleterView, MCompleter)
