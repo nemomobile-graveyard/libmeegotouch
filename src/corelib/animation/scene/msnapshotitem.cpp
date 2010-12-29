@@ -23,7 +23,11 @@ QRectF MSnapshotItem::boundingRect() const
 void MSnapshotItem::updateSnapshot()
 {
     if (scene() && scene()->views().count() > 0)
+#if defined(Q_WS_MAC) || defined(Q_WS_WIN)
+        pixmap = QPixmap::grabWidget(scene()->views().at(0));
+#else
         pixmap = QPixmap::grabWindow(scene()->views().at(0)->effectiveWinId());
+#endif
 }
 
 void MSnapshotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
