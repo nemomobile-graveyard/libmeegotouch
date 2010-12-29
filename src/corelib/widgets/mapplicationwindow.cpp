@@ -42,6 +42,7 @@
 #include "mstatusbar.h"
 #include "mdeviceprofile.h"
 #include "mcomponentdata.h"
+#include "mcontentfadeandslideanimation.h"
 
 #include <QList>
 #include <QEvent>
@@ -97,6 +98,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingNavigationBar(false)
     , showingDockWidget(false)
     , navigationBarPressed(false)
+    , navigationBarAnimation(0)
     , styleContainer(0)
 {
     if(MDeviceProfile::instance()->showStatusbar())    {
@@ -117,7 +119,7 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
         delete toolBar;
         toolBar = 0;
     }
-    
+
     if (menu) {
         delete menu;
         menu = 0;
@@ -206,6 +208,12 @@ void MApplicationWindowPrivate::init()
     navigationBar->setStyleName(style()->navigationBarStyleName());
     sceneManager->appearSceneWindowNow(navigationBar);
     sceneManager->appearSceneWindowNow(homeButtonPanel);
+
+    navigationBarAnimation = new MContentFadeAndSlideAnimation(q);
+    navigationBarAnimation->setTargetWidget(navigationBar);
+    // when pageHistoryChange is emitted it's last chance to grab previous navigationBar contents
+    q->connect(q->sceneManager(), SIGNAL(pageHistoryChanged()),
+               navigationBarAnimation, SLOT(takeContentSnapshot()));
 
     // Initialize escape button to close mode.
     navigationBar->setEscapeButtonMode(MNavigationBarModel::EscapeButtonClose);
@@ -864,6 +872,12 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
 
     connectPage(pageFromEvent);
     _q_updatePageExposedContentRect();
+
+    // very fast user can switch page before animation finishes
+    navigationBarAnimation->stop();
+
+    if (event->animatedTransition())
+        navigationBarAnimation->start();
 
 #ifdef Q_WS_X11
     if (pageFromEvent && isChained && sceneManager) {

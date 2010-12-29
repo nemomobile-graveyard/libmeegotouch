@@ -59,6 +59,8 @@ public:
     void updateToolBarAlignment();
     void setCustomContent(QGraphicsWidget *customContent);
 
+    QGraphicsWidget* content;
+
     MLayout *layout;
 
     // parts of policy name describe which components are visible and in what order

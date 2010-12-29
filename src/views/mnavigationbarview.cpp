@@ -39,7 +39,8 @@
 // --------------------------------------------------------------------------
 
 MNavigationBarViewPrivate::MNavigationBarViewPrivate()
-    : layout(0),
+    : content(0),
+      layout(0),
       menuToolbarEscapePolicy(0),
       escapeToolbarMenuPolicy(0),
       escapeToolbarPolicy(0),
@@ -92,9 +93,15 @@ void MNavigationBarViewPrivate::init()
     backButton = new MButton(escapeButtonSlot);
     backButton->setViewType("icon");
 
+    QGraphicsLinearLayout* contentLayout = new QGraphicsLinearLayout(controller);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
+    content = new QGraphicsWidget;
+    content->setObjectName("ContentToAnimate");
+    contentLayout->addItem(content);
+
     layout = new MLayout;
     layout->setContentsMargins(0, 0, 0, 0);
-    controller->setLayout(layout);
+    content->setLayout(layout);
 
     toolBarSlot = new QGraphicsWidget(controller);
     toolBarSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

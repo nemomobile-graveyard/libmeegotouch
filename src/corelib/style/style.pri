@@ -43,6 +43,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mwidgetrectangularclipanimationstyle.h \
     $$STYLE_SRC_DIR/mrelocatorstyle.h \
     $$STYLE_SRC_DIR/mwindowstyle.h \
+    $$STYLE_SRC_DIR/mcontentfadeandslideanimationstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \
