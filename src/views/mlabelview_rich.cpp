@@ -610,12 +610,14 @@ void MLabelViewRich::updateTilesPosition()
         // The top tile got invisible, use it as bottom tile for the next iteration
         top->y = bottom->y + tileHeight;
         updateTilePixmap(*top);
+        viewPrivate->controller->update();
     } else if (sceneY + top->y > 0.0) {
         // The bottom tile got invisible, use it as top tile for the next iteration
         bottom->y = top->y - tileHeight;
         if (bottom->y >= 0.0) {
             updateTilePixmap(*bottom);
         }
+        viewPrivate->controller->update();
     }
 }
 
