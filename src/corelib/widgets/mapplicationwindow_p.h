@@ -88,6 +88,7 @@ public:
     bool navigationBarPressed;
 
     MContentFadeAndSlideAnimation* navigationBarAnimation;
+    QString previousToolBarViewType;
 
     void manageActions();
     void distributeAction(QAction *action, QAction *before);

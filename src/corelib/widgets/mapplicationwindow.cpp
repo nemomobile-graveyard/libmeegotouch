@@ -873,11 +873,12 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
     connectPage(pageFromEvent);
     _q_updatePageExposedContentRect();
 
-    // very fast user can switch page before animation finishes
-    navigationBarAnimation->stop();
-
-    if (event->animatedTransition())
+    if (event->animatedTransition() &&
+        (toolBar->viewType() == MToolBar::defaultType ||
+         previousToolBarViewType == MToolBar::defaultType))
+    {
         navigationBarAnimation->start();
+    }
 
 #ifdef Q_WS_X11
     if (pageFromEvent && isChained && sceneManager) {
@@ -892,6 +893,8 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
 
 void MApplicationWindowPrivate::applicationPageDisappearEvent(MSceneWindowEvent *event)
 {
+   previousToolBarViewType = toolBar->viewType();
+
     MApplicationPage *pageFromEvent = static_cast<MApplicationPage *>(event->sceneWindow());
 
     // Page is going away. Let's disconnect it if it's the current page.
