@@ -114,7 +114,6 @@ private:
     MComboBox *comboListMode;
 
     MObjectMenu *objectMenu;
-    QList<MAction *> objectMenuActions;
 
     MAction *actionAdvancedConfiguration;
     QPointer<MDialog> dialogAdvancedConfiguration;

@@ -375,17 +375,17 @@ void MListPage::createActions()
 
 void MListPage::createObjectMenuActions()
 {
+    objectMenu = new MObjectMenu(NULL);
+
     //% "Remove"
     MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), this);
-    objectMenuActions.append(action);
+    objectMenu->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
 
     //% "Edit"
     action = new MAction(qtTrId("xx_listpage_list_edit"), this);
-    objectMenuActions.append(action);
+    objectMenu->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(editListItem()));
-
-    objectMenu = new MObjectMenu(objectMenuActions);
 }
 
 void MListPage::scrollToBottom()
@@ -557,6 +557,9 @@ void MListPage::itemClick(const QModelIndex &index)
 void MListPage::itemLongTapped(const QModelIndex &index, const QPointF &position)
 {
     objectMenu->setCursorPosition(position);
+
+    objectMenu->setTitle(index.data(PhoneBookModel::PhoneBookFilterRole).toString());
+
     if (index.parent().isValid()) {
         mDebug("MListPage::itemLongTapped") << "Row: " << index.row() << " Group: " << index.parent().row();
         sceneManager()->appearSceneWindow(objectMenu);
