@@ -399,7 +399,7 @@ public:
     /*!
      * \brief Attaches a custom toolbar named \a name.
      *  \param name is the absolute file name of a custom toolbar, or the relative file under
-     *      /usr/share/meegotouch/imtoolbars/.
+     *      /usr/share/meegoimframework/imtoolbars/ (relative path deprecated).
      * Note if another toolbar is already attached, detachToolbar() will be automatically called.
      *
      * This method is provided for convenience. Equals with widget uses MInputMethodState::registerToolbar()

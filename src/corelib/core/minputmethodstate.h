@@ -98,7 +98,7 @@ public Q_SLOTS:
     /*!
      * \brief Register an input method toolbar which is defined in \a fileName.
      *  \param \a fileName is the absolute file name of a custom toolbar, or the relative file under
-     *      /usr/share/meegotouch/imtoolbars/.
+     *      /usr/share/meegoimframework/imtoolbars/ (relative path deprecated).
      *  \return the registered unique identifier of this toolbar.
      */
     int registerToolbar(const QString &fileName);
