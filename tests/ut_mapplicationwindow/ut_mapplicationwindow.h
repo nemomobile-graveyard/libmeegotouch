@@ -95,6 +95,9 @@ private slots:
 
     void testGoingBackDoesntMakeNavigationBarDisappearAndReappear();
 
+    void testNavigationBarInOutAnimations_data();
+    void testNavigationBarInOutAnimations();
+
 private:
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;

@@ -777,4 +777,114 @@ void Ut_MApplicationWindow::testGoingBackDoesntMakeNavigationBarDisappearAndReap
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 }
 
+void Ut_MApplicationWindow::testNavigationBarInOutAnimations_data()
+{
+    //init data
+    QTest::addColumn<bool>("hasRootPage");
+    QTest::addColumn<int>("rootPageNavBarDisplayMode");
+    QTest::addColumn<bool>("hasSubPage");
+    QTest::addColumn<int>("subPageNavBarDisplayMode");
+    QTest::addColumn<bool>("windowHasActions");
+    //results
+    QTest::addColumn<MSceneWindow::SceneWindowState>("initialNavBarState");
+    QTest::addColumn<MSceneWindow::SceneWindowState>("subPageNavBarState");
+    QTest::addColumn<MSceneWindow::SceneWindowState>("finalNavBarState");
+
+    // first page no actions, second page back button > no navbar, navbar slides in
+    QTest::newRow("1st page no actions, 2nd back button")
+            << true  << (int)MApplicationPageModel::Show << true << (int)MApplicationPageModel::Show << false
+            << MSceneWindow::Disappeared << MSceneWindow::Appearing << MSceneWindow::Appeared;
+
+    // first page no actions, second page back button and navbar hidden > no navbar, no navbar
+    QTest::newRow("1st page no actions, 2nd back button and navbar hidden")
+            << true  << (int)MApplicationPageModel::Show << true << (int)MApplicationPageModel::Hide << false
+            << MSceneWindow::Disappeared << MSceneWindow::Disappeared << MSceneWindow::Disappeared;
+
+    // first page one action (hidden before appear),
+    // second page back button and navbar hidden in create contents > no navbar, no navbar
+    QTest::newRow("1st page one action (hidden), 2nd + back button and navbar hidden")
+            << true  << (int)MApplicationPageModel::Hide << true << (int)MApplicationPageModel::Hide << true
+            << MSceneWindow::Disappeared << MSceneWindow::Disappeared << MSceneWindow::Disappeared;
+
+    // first page one action (hidden before appear),
+    // second page + back button > no navbar, navbar slides in
+    QTest::newRow("1st page one action, 2nd page + back button")
+            << true  << (int)MApplicationPageModel::Hide << true << (int)MApplicationPageModel::Show << true
+            << MSceneWindow::Disappeared << MSceneWindow::Appearing << MSceneWindow::Appeared;
+
+    // first page one action (hiiden before appear) > no navbar
+    QTest::newRow("1st page one action (hidden before appear)")
+            << true  << (int)MApplicationPageModel::Hide << false << (int)MApplicationPageModel::Show << true
+            << MSceneWindow::Disappeared << MSceneWindow::Disappeared << MSceneWindow::Disappeared;
+
+    // app window no page, no actions > no navbar
+    QTest::newRow("app window no page, no actions")
+            << false << (int)MApplicationPageModel::Show << false << (int)MApplicationPageModel::Show << false
+            << MSceneWindow::Disappeared << MSceneWindow::Disappeared << MSceneWindow::Disappeared;
+
+    // app window no page, one action > initial navbar
+    QTest::newRow("app window no page, one action")
+            << false << (int)MApplicationPageModel::Show << false << (int)MApplicationPageModel::Show << true
+            << MSceneWindow::Appeared << MSceneWindow::Disappeared << MSceneWindow::Appeared;
+
+    // 1st page with actions > initial navbar
+    QTest::newRow("1st page with actions")
+            << true << (int)MApplicationPageModel::Show << false << (int)MApplicationPageModel::Show << true
+            << MSceneWindow::Appeared << MSceneWindow::Disappeared << MSceneWindow::Appeared;
+
+    // 1st page with actions, navbar hidden  > no navbar
+    QTest::newRow("1st page with actions, navbar hidden")
+            << true << (int)MApplicationPageModel::Hide << false << (int)MApplicationPageModel::Show << true
+            << MSceneWindow::Disappeared << MSceneWindow::Disappeared << MSceneWindow::Disappeared;
+
+    // 1st page one action, 2nd page + back button (hidden before appear)
+    //          > initial navbar, navbar slides out
+    QTest::newRow("1st page with actions, 2nd page navbar hidden")
+            << true << (int)MApplicationPageModel::Show << true << (int)MApplicationPageModel::Hide << true
+            << MSceneWindow::Appeared << MSceneWindow::Disappearing << MSceneWindow::Disappeared;
+
+
+}
+
+void Ut_MApplicationWindow::testNavigationBarInOutAnimations()
+{
+    QFETCH(bool, hasRootPage);
+    QFETCH(int,rootPageNavBarDisplayMode);
+    QFETCH(bool, hasSubPage);
+    QFETCH(int,subPageNavBarDisplayMode);
+    QFETCH(bool, windowHasActions);
+    QFETCH(MSceneWindow::SceneWindowState,initialNavBarState);
+    QFETCH(MSceneWindow::SceneWindowState,subPageNavBarState);
+    QFETCH(MSceneWindow::SceneWindowState,finalNavBarState);
+
+    MApplicationPage *rootPage = new MApplicationPage;
+    MApplicationPage *subPage = new MApplicationPage;
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+    MSceneManager *sceneManager = m_subject->sceneManager();
+
+    if(windowHasActions) {
+        MAction* action = new MAction("window action", m_subject);
+        action->setLocation(MAction::ApplicationMenuLocation);
+        m_subject->addAction(action);
+    }
+
+    if(hasRootPage) {
+        rootPage->setComponentsDisplayMode(MApplicationPage::AllComponents, (MApplicationPageModel::ComponentDisplayMode) rootPageNavBarDisplayMode);
+        rootPage->appear();
+    }
+
+    m_subject->show();
+    QCoreApplication::processEvents();
+    QCOMPARE(navigationBar->sceneWindowState(), initialNavBarState);
+
+    if(hasSubPage) {
+        subPage->setComponentsDisplayMode(MApplicationPage::AllComponents, (MApplicationPageModel::ComponentDisplayMode) subPageNavBarDisplayMode);
+        subPage->appear();
+        QCOMPARE(navigationBar->sceneWindowState(), subPageNavBarState);
+    }
+
+    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
+    QCOMPARE(navigationBar->sceneWindowState(), finalNavBarState);
+}
+
 QTEST_MAIN(Ut_MApplicationWindow)

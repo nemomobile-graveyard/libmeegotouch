@@ -83,6 +83,7 @@ public:
     bool showingNavigationBar;
     bool showingDockWidget;
 
+    bool animateNavigationBarTransitions;
     QTimer navigationBarVisibilityUpdateTimer;
 
     bool navigationBarPressed;

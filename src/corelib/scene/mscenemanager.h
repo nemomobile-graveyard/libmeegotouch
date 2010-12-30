@@ -55,6 +55,7 @@ class M_CORE_EXPORT MSceneManager : public QObject
     Q_OBJECT
     friend class MSceneWindow;
     friend class MWindow;
+    friend class MApplicationWindowPrivate;
 
 #ifdef UNIT_TEST
     friend class Ut_MSceneManager;

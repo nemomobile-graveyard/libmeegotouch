@@ -97,6 +97,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingStatusBar(false)
     , showingNavigationBar(false)
     , showingDockWidget(false)
+    , animateNavigationBarTransitions(false)
     , navigationBarPressed(false)
     , navigationBarAnimation(0)
     , styleContainer(0)
@@ -206,7 +207,12 @@ void MApplicationWindowPrivate::init()
                SLOT(_q_scheduleNavigationBarVisibilityUpdate()));
 
     navigationBar->setStyleName(style()->navigationBarStyleName());
-    sceneManager->appearSceneWindowNow(navigationBar);
+ 
+    // Create the view to get the "isEmpty" property updates.
+    navigationBar->view();
+    navigationBar->setVisible(false);
+    sceneManager->addSceneWindow(navigationBar);
+
     sceneManager->appearSceneWindowNow(homeButtonPanel);
 
     navigationBarAnimation = new MContentFadeAndSlideAnimation(q);
@@ -770,9 +776,13 @@ void MApplicationWindowPrivate::_q_updateNavigationBarVisibility()
     bool navigationBarIsEmpty = navigationBar->property("isEmpty").toBool();
 
     if (navigationBarIsEmpty)
-       sceneManager->disappearSceneWindow(navigationBar);
-    else
-       sceneManager->appearSceneWindow(navigationBar);
+        sceneManager->disappearSceneWindow(navigationBar);
+    else {
+        if (animateNavigationBarTransitions)
+            sceneManager->appearSceneWindow(navigationBar);
+        else
+            sceneManager->appearSceneWindowNow(navigationBar);
+    }
 }
 
 void MApplicationWindowPrivate::_q_scheduleNavigationBarVisibilityUpdate()
@@ -860,6 +870,7 @@ void MApplicationWindowPrivate::sceneWindowDismissEvent(MSceneWindowEvent *event
 void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *event)
 {
     MApplicationPage *pageFromEvent = static_cast<MApplicationPage *>(event->sceneWindow());
+    animateNavigationBarTransitions = event->animatedTransition();
 
     // It cannot be the current page
     Q_ASSERT(pageFromEvent != page);
@@ -1410,6 +1421,9 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
     d->navigationBarPressed = false;
 
     MWindow::mouseReleaseEvent(event);
+
+    // This is for skipping appearing of auto hide elements on page switch
+    if (d->page && d->page->sceneWindowState() == MSceneWindow::Appearing) return;
 
     if (d->componentsOnAutoHide.count() > 0) {
         // restart timer
