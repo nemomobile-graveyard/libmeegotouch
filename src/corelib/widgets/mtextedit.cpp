@@ -162,19 +162,16 @@ private:
         QGraphicsItem *nextItem = 0;
         int distance = INT_MAX;
 
-        const QPoint center = focusItem->mapToScene(focusItem->pos() +
-                                                    focusItem->boundingRect().center())
-                              .toPoint();
+        const QPoint center = focusItem->mapToScene(focusItem->boundingRect().center()).toPoint();
 
-        foreach(QGraphicsItem *item, focusItem->scene()->items()) {
+        foreach (QGraphicsItem *item, focusItem->scene()->items()) {
 
             // TODO: Make it work for other focusable items, not just those who accept IM:
             if (item != focusItem &&
                 item->flags().testFlag(QGraphicsItem::ItemAcceptsInputMethod) &&
                 isChildOfSceneWindow(dynamic_cast<QGraphicsWidget *>(item), sm)) {
                 bool found = false;
-                const QPoint targetCenter = item->mapToScene(item->pos() +
-                                                             item->boundingRect().center())
+                const QPoint targetCenter = item->mapToScene(item->boundingRect().center())
                                             .toPoint();
 
                 switch(key) {
