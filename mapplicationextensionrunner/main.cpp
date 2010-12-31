@@ -31,6 +31,7 @@
 #include <QApplication>
 #include <QStringList>
 #include <QProcess>
+#include <QFile>
 
 #include "mapplicationextensionrunner.h"
 #include <MApplication>
@@ -79,6 +80,12 @@ public:
  */
 int main(int argc, char **argv)
 {
+    // Set the out of memory adjustment value
+    QFile file("/proc/self/oom_adj");
+    file.open(QIODevice::WriteOnly);
+    file.write("-1");
+    file.close();
+
     // Check for correct number of arguments
     if (argc != 3) {
         mWarning("MApplicationExtensionRunner") << "Invalid number of arguments";
