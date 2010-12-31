@@ -34,8 +34,8 @@
 #include <mtextedit.h>
 #include <mtexteditview.h>
 
-#include "../../src/corelib/widgets/mtextedit_p.h"
-#include "../../src/views/mtexteditview_p.h"
+#include "corelib/widgets/mtextedit_p.h"
+#include "views/mtexteditview_p.h"
 
 void Ut_MTextEditView::initTestCase()
 {

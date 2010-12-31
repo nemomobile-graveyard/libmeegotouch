@@ -27,7 +27,6 @@
 class MTextEdit;
 class MTextEditViewPrivate;
 
-
 /*!
 * \class MTextEditView
 * \brief Standard view for MTextEdit widget
