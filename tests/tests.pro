@@ -75,6 +75,7 @@ SUBDIRS     =  \
      ut_msliderview \
     ut_mtextedit \
     ut_mtexteditview \
+    ut_mtextmagnifier \
      ut_mthemedaemonprotocol \
     ut_mtheme \
     ut_mtoolbar \

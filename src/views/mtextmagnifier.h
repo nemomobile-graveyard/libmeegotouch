@@ -24,7 +24,24 @@
 
 #include <MOverlay>
 
+#include <MSceneManager>
+#include <QDebug>
+#include <QPanGesture>
+
 //! \internal
+
+//! Overlay widget to allow magnifier to stay on top of other widgets.
+class MagnifierOverlay : public MOverlay
+{
+public:
+    MagnifierOverlay();
+    bool isAppeared() const;
+
+protected:
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture *panGesture);
+    friend class Ut_MTextMagnifier;
+};
+
 /*! \brief Magnifier widget to magnify text.
  *
  *  The class magnifies contents of a certain source item.
@@ -74,10 +91,13 @@ private:
     QScopedPointer<QPixmap> offscreenSurface;
     QScopedPointer<QBitmap> mask;
 
-    MOverlay overlay;
+    MagnifierOverlay overlay;
 
     M_STYLABLE_WIDGET(MTextMagnifierStyle)
+
+    friend class Ut_MTextMagnifier;
 };
+
 //! \internal_end
 
 #endif

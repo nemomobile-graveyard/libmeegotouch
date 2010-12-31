@@ -26,11 +26,11 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
+
 MTextMagnifier::MTextMagnifier(const QGraphicsItem &sourceItem)
     : MStylableWidget(0),
       sourceItem(sourceItem)
 {
-    overlay.setFlag(QGraphicsItem::ItemHasNoContents, true);
     setParentItem(&overlay);
 }
 
@@ -44,10 +44,12 @@ void MTextMagnifier::appear()
 {
     // Appear in the scene of the source item.
     overlay.appear(sourceItem.scene());
+    overlay.grabGesture(Qt::PanGesture);
 }
 
 void MTextMagnifier::disappear()
 {
+    overlay.ungrabGesture(Qt::PanGesture);
     overlay.disappear();
 }
 
@@ -58,7 +60,7 @@ void MTextMagnifier::setMagnifiedPosition(const QPointF &sourceItemPos)
 
 bool MTextMagnifier::isAppeared() const
 {
-    return (overlay.sceneWindowState() != MSceneWindow::Disappeared);
+    return overlay.isAppeared();
 }
 
 void MTextMagnifier::drawContents(QPainter *painter,
@@ -97,11 +99,14 @@ void MTextMagnifier::drawContents(QPainter *painter,
     const_cast<QGraphicsItem *>(&sourceItem)->paint(&offscreenPainter, &sourceItemOption);
 
     offscreenPainter.resetTransform();
-    offscreenPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-    offscreenPainter.drawPixmap(offscreenSurface->rect(), *style()->magnifierMask());
-
-    offscreenPainter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    offscreenPainter.drawPixmap(offscreenSurface->rect(), *style()->magnifierFrame());
+    if (style()->magnifierMask()) {
+        offscreenPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        offscreenPainter.drawPixmap(offscreenSurface->rect(), *style()->magnifierMask());
+    }
+    if (style()->magnifierFrame()) {
+        offscreenPainter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+        offscreenPainter.drawPixmap(offscreenSurface->rect(), *style()->magnifierFrame());
+    }
     offscreenPainter.end();
 
     // Paint the result to screen
@@ -115,6 +120,9 @@ void MTextMagnifier::drawContents(QPainter *painter,
 
 void MTextMagnifier::applyStyle()
 {
+    if (!style()->magnifierFrame()) {
+        return;
+    }
     // Update bounding rectangle.
     prepareGeometryChange();
     QSize magnifierSize(style()->magnifierFrame()->size());
@@ -143,4 +151,36 @@ void MTextMagnifier::prepareOffscreenSurface(const QSize &size)
         return;
     }
     offscreenSurface.reset(new QPixmap(size));
+}
+
+
+// Magnifier overlay widget
+
+MagnifierOverlay::MagnifierOverlay()
+{
+    setFlag(QGraphicsItem::ItemHasNoContents, true);
+
+    // Occupy whole screen to be able to catch panning gestures. The size does not really matter
+    // as long as it covers whole screen in portrait and landscape.
+    setManagedManually(true);
+    const QSizeF visibleSceneSize = sceneManager()->visibleSceneSize(M::Landscape);
+    const qreal size = qMax<qreal>(visibleSceneSize.width(), visibleSceneSize.height());
+    setPreferredSize(size, size);
+}
+
+bool MagnifierOverlay::isAppeared() const
+{
+    return sceneWindowState() != MSceneWindow::Disappeared;
+}
+
+void MagnifierOverlay::panGestureEvent(QGestureEvent *event, QPanGesture *panGesture)
+{
+    // Accept gesture if magnifier is appeared. This is done to prevent panning of
+    // application page but will of course prevent other uses of pan gestures as well.
+    if (panGesture->state() == Qt::GestureStarted
+        && isAppeared()) {
+        event->accept(panGesture);
+    } else {
+        event->ignore(panGesture);
+    }
 }
