@@ -2,21 +2,21 @@ interface: libmeegotouchcore
 type: library
 libs-pkg: libmeegotouchcore0
 dev-pkg: libmeegotouch-dev
-state: unstable
+state: stable
 scope: Platform
 
 interface: libmeegotouchextensions
 type: library
 libs-pkg: libmeegotouchextensions0
 dev-pkg: libmeegotouch-dev
-state: unstable
+state: stable
 scope: Platform
 
 interface: libmeegotouchsettings
 type: library
 libs-pkg: libmeegotouchsettings0
 dev-pkg: libmeegotouch-dev
-state: unstable
+state: stable
 scope: Platform
 
 interface: libmeegotouchviews
