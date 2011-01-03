@@ -1,17 +1,6 @@
 <gconfschemafile>
   <schemalist>
     <schema>
-      <key>/schemas/meegotouch/theme/name</key>
-      <applyto>/meegotouch/theme/name</applyto>
-      <owner>libmeegotouch</owner>
-      <type>string</type>
-      <default>base</default>
-      <locale name="C">
-        <short></short>
-        <long></long>
-      </locale>
-    </schema>
-    <schema>
       <key>/schemas/meegotouch/i18n/language</key>
       <applyto>/meegotouch/i18n/language</applyto>
       <owner>libmeegotouch</owner>
