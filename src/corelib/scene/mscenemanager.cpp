@@ -335,16 +335,26 @@ void MSceneManagerPrivate::_q_emitOrientationChangeFinished()
     inputWidgetRelocator->handleRotationFinished(q->orientation());
 }
 
-void MSceneManagerPrivate::_q_unFreezeUI()
+void MSceneManagerPrivate::_q_unfreezeUI(QAbstractAnimation::State newState,
+                                         QAbstractAnimation::State oldState)
 {
     Q_Q(MSceneManager);
+    Q_UNUSED(oldState);
+
+    if (newState == QAbstractAnimation::Running)
+        return;
+
     eventEater->hide();
 
     QAbstractAnimation *animation = dynamic_cast<QAbstractAnimation *>(q->sender());
     if (animation == 0)
         return;
 
-    QObject::disconnect(animation, SIGNAL(finished()), q, SLOT(_q_unFreezeUI()));
+    QObject::disconnect(animation,
+                        SIGNAL(stateChanged(QAbstractAnimation::State,
+                                            QAbstractAnimation::State)),
+                        q, SLOT(_q_unfreezeUI(QAbstractAnimation::State,
+                                              QAbstractAnimation::State)));
 }
 
 void MSceneManagerPrivate::_q_applySceneWindowTransitionsQueuedDueToOrientationAnimation()
@@ -1571,7 +1581,11 @@ void MSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *anim
     eventEater->show();
 
     if (animation->state() == QAbstractAnimation::Running) {
-        QObject::connect(animation, SIGNAL(finished()), q, SLOT(_q_unFreezeUI()));
+        QObject::connect(animation,
+                         SIGNAL(stateChanged(QAbstractAnimation::State,
+                                             QAbstractAnimation::State)),
+                         q, SLOT(_q_unfreezeUI(QAbstractAnimation::State,
+                                               QAbstractAnimation::State)));
     }
 }
 

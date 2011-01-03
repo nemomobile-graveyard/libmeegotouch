@@ -202,7 +202,8 @@ public:
     void _q_onPageSwitchAnimationFinished();
     void _q_updateOnDisplayVisibility();
 
-    void _q_unFreezeUI();
+    void _q_unfreezeUI(QAbstractAnimation::State newState,
+                       QAbstractAnimation::State oldState);
 
     void _q_applySceneWindowTransitionsQueuedDueToOrientationAnimation();
 
