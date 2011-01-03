@@ -24,14 +24,14 @@
 #include <QPointF>
 
 //! \internal
-class M_CORE_EXPORT MContentFadeAndSlideAnimationStyle : public MAbstractWidgetAnimationStyle
+class MContentFadeAndSlideAnimationStyle : public MAbstractWidgetAnimationStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MContentFadeAndSlideAnimationStyle)
 
     M_STYLE_ATTRIBUTE(QString, contentObjectName, ContentObjectName)
 
-    M_STYLE_ATTRIBUTE(int, fadeOutDuration, fadeOutDuration)
+    M_STYLE_ATTRIBUTE(int, fadeOutDuration, FadeOutDuration)
     M_STYLE_ATTRIBUTE(QEasingCurve, fadeOutEasingCurve, FadeOutEasingCurve)
 
     M_STYLE_ATTRIBUTE(QPointF, slideOutDisplacement, SlideOutDisplacement)
