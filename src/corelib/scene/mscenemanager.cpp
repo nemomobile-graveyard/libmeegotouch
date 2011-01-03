@@ -866,13 +866,14 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
     long data[4] = {0};
 
     if (statusBar) {
-        QRectF statusBarGeometry = statusBar->mapRectToScene(
-                QRectF(QPointF(), statusBar->geometry().size()));
+        QRectF statusBarGeometry = statusBar->geometry();
+        statusBarGeometry.setHeight(statusBar->property("sharedPixmapHeight").value<qreal>());
 
-        data[0] = statusBarGeometry.x();
-        data[1] = statusBarGeometry.y();
-        data[2] = statusBarGeometry.width();
-        data[3] = statusBar->property("sharedPixmapHeight").value<qreal>();
+        QRectF mappedStatusBarGeometry = statusBar->mapRectToScene(statusBarGeometry);
+        data[0] = mappedStatusBarGeometry.x();
+        data[1] = mappedStatusBarGeometry.y();
+        data[2] = mappedStatusBarGeometry.width();
+        data[3] = mappedStatusBarGeometry.height();
     }
 
     Display *dpy = QX11Info::display();
