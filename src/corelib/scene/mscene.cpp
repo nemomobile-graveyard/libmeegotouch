@@ -576,6 +576,8 @@ bool MScene::event(QEvent *event)
         retValue = true;
         break;
     case QEvent::TouchUpdate:
+        if ((static_cast<QTouchEvent*>(event))->touchPoints().size() > 1)
+            d->forceSendingInitialEvents();
         retValue = (d->touchPending ? true : QGraphicsScene::event(event));
         break;
     case QEvent::TouchEnd:
