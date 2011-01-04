@@ -39,6 +39,7 @@
 #include "mgridlayoutpolicy.h"
 #include "mbasiclistitem.h"
 #include "mcombobox.h"
+#include "mstylablewidget.h"
 
 const int maxCommandActionsWithStyle = 6;
 const int maxColumns = 1;
@@ -54,7 +55,9 @@ MApplicationMenuViewPrivate::MApplicationMenuViewPrivate(MApplicationMenu *menu)
       styleButtonGroup(0),
       leasedWidgets(),
       buttons(),
-      controller(menu)
+      controller(menu),
+      actionCommandViewport(0),
+      topArea(0)
 {
     //mainlayout for the application menu
     controllerLayout = new QGraphicsLinearLayout(Qt::Vertical, controller);
@@ -68,6 +71,8 @@ MApplicationMenuViewPrivate::MApplicationMenuViewPrivate(MApplicationMenu *menu)
     QGraphicsWidget* actionWidget = new QGraphicsWidget(controller);
     actionWidget->setLayout(actionCommandLayout);
     actionCommandViewport = new MPannableViewport(controller);
+    actionCommandViewport->setStyleName("MApplicationMenuActionViewport");
+    actionCommandViewport->setObjectName(actionCommandViewport->styleName());
     actionCommandViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
     actionCommandViewport->setWidget(actionWidget);
 
@@ -80,7 +85,14 @@ MApplicationMenuViewPrivate::MApplicationMenuViewPrivate(MApplicationMenu *menu)
     styleButtonGroup = new MButtonGroup();
     styleButtonGroup->setExclusive(true);
 
+    //top decoration area
+    topArea = new MStylableWidget;
+    topArea->setStyleName("MApplicationMenuTopArea");
+    topArea->setObjectName(topArea->styleName());
+
     //add sublayouts to the mainlayout
+    controllerLayout->addItem(topArea);
+    controllerLayout->setAlignment(topArea, Qt::AlignCenter);
     controllerLayout->addItem(styleCommandLayout);
     controllerLayout->addItem(actionCommandViewport);
     controllerLayout->setAlignment(actionCommandViewport, Qt::AlignCenter);

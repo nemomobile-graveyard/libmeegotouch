@@ -26,7 +26,7 @@
 class QPropertyAnimation;
 class QPauseAnimation;
 
-class MDialogAnimationPrivate : MAbstractWidgetAnimationPrivate
+class MDialogAnimationPrivate : public MAbstractWidgetAnimationPrivate
 {
     Q_DECLARE_PUBLIC(MDialogAnimation)
 public:
@@ -35,14 +35,14 @@ public:
 
     void findComponentsForAnimation();
     QGraphicsWidget* findDialogBox(QGraphicsItem *parentItem);
-    void setupDurations();
-    void setupEasingCurves();
+    virtual void setupDurations();
+    virtual void setupEasingCurves();
 
     void setupTitleBarAnimation();
     void setupContentsViewportAnimation();
     void setupButtonBoxAnimation();
 
-    QPointF setupPositionAnimation(const QPointF &widgetPos);
+    virtual QPointF setupPositionAnimation(const QPointF &widgetPos);
 
     MDialogAnimation::TransitionDirection direction;
     QPointF origin;

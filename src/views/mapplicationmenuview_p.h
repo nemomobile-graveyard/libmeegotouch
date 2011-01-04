@@ -42,6 +42,8 @@ class MButtonGroup;
 class MWidget;
 class MBasicListItem;
 class MComboBox;
+class MWidgetController;
+class MStylableWidget;
 
 class MApplicationMenuViewPrivate : public QObject
 {
@@ -115,6 +117,7 @@ protected:
     MApplicationMenu *controller;
 
     MPannableViewport* actionCommandViewport;
+    MStylableWidget *topArea;
 
 #ifdef UNIT_TEST
     friend class Ut_MApplicationMenu;

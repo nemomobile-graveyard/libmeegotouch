@@ -1598,9 +1598,12 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     switch(sceneWindow->windowType()) {
     case MSceneWindow::NotificationInformation:
     case MSceneWindow::NotificationEvent:
-    case MSceneWindow::ApplicationMenu:
     case MSceneWindow::NavigationBar:
         animation = new MWidgetSlideAnimation(sceneWindow);
+        break;
+    case MSceneWindow::ApplicationMenu:
+        animation = qobject_cast<MAbstractWidgetAnimation*>(
+                MTheme::animation(style()->applicationMenuAnimation()));
         break;
     case MSceneWindow::PopupList:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
@@ -1658,9 +1661,12 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     switch(sceneWindow->windowType()) {
     case MSceneWindow::NotificationInformation:
     case MSceneWindow::NotificationEvent:
-    case MSceneWindow::ApplicationMenu:
     case MSceneWindow::NavigationBar:
         animation = new MWidgetSlideAnimation(sceneWindow);
+        break;
+    case MSceneWindow::ApplicationMenu:
+        animation = qobject_cast<MAbstractWidgetAnimation*>(
+                MTheme::animation(style()->applicationMenuAnimation()));
         break;
     case MSceneWindow::PopupList:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
