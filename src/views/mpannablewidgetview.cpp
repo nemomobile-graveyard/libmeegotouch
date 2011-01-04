@@ -21,6 +21,8 @@
 #include "mpannablewidgetview_p.h"
 
 #include <QPainter>
+#include <QDebug>
+#include <QGraphicsLayout>
 
 #include "mtheme.h"
 #include "mpannablewidget.h"
@@ -78,6 +80,34 @@ void MPannableWidgetView::applyStyle()
 
     d->_q_applyStyleToPhysics();
     MWidgetView::applyStyle();
+}
+
+QSizeF MPannableWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+{
+    Q_D(const MPannableWidgetView);
+
+    Qt::Orientations panDirection = d->controller->panDirection();
+
+    // The preferred and maximum size is equal to the preferred size of the central widget.
+    // The minimum size depends on whether we can pan or not.
+    if (panDirection == 0 || which != Qt::MinimumSize)
+        return QSizeF(-1,-1);
+
+    Q_ASSERT(which == Qt::MinimumSize);
+
+    // If we can pan in both directions, then the minimum size is 0,0
+    if (panDirection == (Qt::Vertical | Qt::Horizontal) || !d->controller->layout())
+        return QSizeF(0,0);  //MWidgetController will merge this with the constraint for us
+
+    Q_ASSERT(d->controller->layout());
+    QSizeF size = d->controller->layout()->effectiveSizeHint(which, constraint);
+
+    if (panDirection == Qt::Vertical) {
+        return QSizeF(size.width(), 0);
+    } else {
+        Q_ASSERT(panDirection == Qt::Horizontal);
+        return QSizeF(0, size.width());
+    }
 }
 
 M_REGISTER_VIEW_NEW(MPannableWidgetView, MPannableWidget)

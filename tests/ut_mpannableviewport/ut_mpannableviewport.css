@@ -1,0 +1,24 @@
+MPannableWidgetStyle#noCssSize {
+    minimum-size: -1 -1;
+    preferred-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+MPannableWidgetStyle#width50 {
+    minimum-size: -1 -1;
+    preferred-size: 50 -1;
+    maximum-size: -1 -1;
+}
+
+MPannableWidgetStyle#height50 {
+    minimum-size: -1 -1;
+    preferred-size: -1 50;
+    maximum-size: -1 -1;
+}
+
+MPannableWidgetStyle#size50 {
+    minimum-size: -1 -1;
+    preferred-size: 50 50;
+    maximum-size: -1 -1;
+}
+

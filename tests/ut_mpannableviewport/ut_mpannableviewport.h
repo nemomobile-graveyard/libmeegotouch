@@ -56,6 +56,8 @@ private slots:
     void testRangeSetting();
     void testExtendedRange_data();
     void testExtendedRange();
+    void testSizeHint_data();
+    void testSizeHint();
 
 private:
     MPannableViewport *subject;

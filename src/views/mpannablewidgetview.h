@@ -42,6 +42,7 @@ public:
 
 protected:
     //! \reimp
+    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void applyStyle();
     //! \reimp_end

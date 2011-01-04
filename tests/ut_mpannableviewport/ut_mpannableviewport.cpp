@@ -25,6 +25,7 @@
 #include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
 #include <QTest>
+#include <QDebug>
 #include <mapplication.h>
 #include <mwidgetview.h>
 
@@ -36,6 +37,7 @@ void Ut_MPannableViewport::initTestCase()
     static char *app_name[] = { (char *) "./ut_mpannableviewport" };
 
     app = new MApplication(argc, app_name);
+    MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mpannableviewport.css");
 }
 
 
@@ -365,6 +367,81 @@ void Ut_MPannableViewport::testExtendedRange()
     scene.removeItem(subject);
 
     QCOMPARE(actualVerticalRange, expectedVerticalRange);
+}
+
+void Ut_MPannableViewport::testSizeHint_data() {
+    QTest::addColumn<QString>("cssName");
+    QTest::addColumn<qreal>("width");
+    QTest::addColumn<qreal>("height");
+
+    QTest::newRow("No CSS size") << QString("noCssSize") << (qreal)100 << (qreal)100;
+    QTest::newRow("CSS width of 50") << QString("width50") << (qreal)50 << (qreal)50;
+    QTest::newRow("CSS height of 50") << QString("height50") << (qreal)100 << (qreal)50;
+    QTest::newRow("CSS width and height of 50") << QString("size50") << (qreal)50 << (qreal)50;
+}
+
+void Ut_MPannableViewport::testSizeHint()
+{
+    struct SquareWidget : public QGraphicsWidget
+    {
+        SquareWidget() {
+            QSizePolicy policy = sizePolicy();
+            policy.setHeightForWidth(true);
+            setSizePolicy(policy);
+        }
+        QSizeF sizeHint ( Qt::SizeHint which, const QSizeF & constraint = QSizeF() ) const {
+           if (which != Qt::PreferredSize || constraint.width() == -1)
+              return QGraphicsWidget::sizeHint(which, constraint);
+           else
+              return QSizeF( constraint.width(), constraint.width() ); 
+        }
+    };
+
+    QFETCH(QString, cssName);
+    QFETCH(qreal, width);
+    QFETCH(qreal, height);
+
+    QGraphicsWidget *widget = new SquareWidget();
+    widget->setPreferredWidth(100);
+    subject->setWidget(widget);
+    subject->setObjectName(cssName);
+
+    QCOMPARE(widget->preferredSize(), QSizeF(100,100));
+    QCOMPARE(widget->effectiveSizeHint(Qt::PreferredSize, QSizeF(200,-1)), QSizeF(200,200));
+
+    QCOMPARE(subject->layout()->preferredSize(), QSizeF(100,100));
+    QCOMPARE(subject->layout()->effectiveSizeHint(Qt::PreferredSize, QSizeF(200,-1)), QSizeF(200,200));
+
+    QCOMPARE(subject->preferredSize(), QSizeF(width,height));
+    if (cssName == "noCssSize")
+        QCOMPARE(subject->effectiveSizeHint(Qt::PreferredSize, QSizeF(200,-1)), QSizeF(200,200));
+
+    // Test that the minimum and maximum size of the viewport is the same as the widget if we cannot pan in that direction
+    widget->setMinimumSize(30,30);
+    widget->setMaximumSize(200,200);
+
+    QCOMPARE(subject->maximumSize(), QSizeF(200,200));
+
+    subject->setPanDirection(0); //Can't pan in either direction
+    QCOMPARE(subject->minimumSize(), QSizeF(30,30));
+    subject->setPanDirection(Qt::Vertical);
+    QCOMPARE(subject->minimumSize(), QSizeF(30,0));
+    subject->setPanDirection(Qt::Horizontal);
+    QCOMPARE(subject->minimumSize(), QSizeF(0,30));
+    subject->setPanDirection(Qt::Horizontal | Qt::Vertical);
+    QCOMPARE(subject->minimumSize(), QSizeF(0,0));
+
+    for (int panDirection = 0; panDirection <= (Qt::Vertical | Qt::Horizontal); ++panDirection) {
+        subject->setPanDirection((Qt::Orientations)panDirection);
+        QCOMPARE(subject->preferredSize(), QSizeF(width,height));
+        QCOMPARE(subject->maximumSize(), QSizeF(200,200));
+        subject->setPreferredWidth(200);
+        if (cssName == "noCssSize" || cssName == "width50")
+            QCOMPARE(subject->preferredSize(), QSizeF(200,200));
+        else
+            QCOMPARE(subject->preferredSize(), QSizeF(200,50));
+        subject->setPreferredWidth(-1);
+    }
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)
