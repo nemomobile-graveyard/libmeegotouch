@@ -552,8 +552,8 @@ void MGLES2Renderer::begin(QPainter *painter, QGLShaderProgram *program)
     GLfloat w = d_ptr->m_viewportSize.width() == -1 ?  d_ptr->m_glContext->device()->width() :  d_ptr->m_viewportSize.width();
     GLfloat h = d_ptr->m_viewportSize.height() == -1 ? d_ptr->m_glContext->device()->height() : d_ptr->m_viewportSize.height();
     glViewport(0, 0, w, h);
-    d_ptr->m_matProj[0][0] =  2.0 / w;
-    d_ptr->m_matProj[1][1] = -2.0 / h;
+    d_ptr->m_matProj[0][0] =  2.f / w;
+    d_ptr->m_matProj[1][1] = -2.f / h;
 
     //setup shader program
     d_ptr->m_activeProgram = program;

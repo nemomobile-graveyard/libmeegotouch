@@ -661,7 +661,7 @@ void MTextEditViewPrivate::checkStartOfSelection(QGraphicsSceneMouseEvent *event
     qreal dy = qAbs(event->buttonDownPos(Qt::LeftButton).y() - event->pos().y());
 
     // approximates sqrt(dx^2 + dy^2)
-    if (0.7 *(dx + dy) < selectionThreshold)
+    if (0.7f *(dx + dy) < selectionThreshold)
         return;
 
     // if movement is more vertical than horizontal we handle this movement as scrolling

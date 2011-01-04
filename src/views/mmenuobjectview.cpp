@@ -213,14 +213,14 @@ void MMenuObjectViewPrivate::refreshLayout()
     // center the widgets, first the linear layout
     qreal height = visibleSceneSize.height();
     qreal offset = height - ((qreal)linearPolicy->count() * (qreal)q->style()->itemHeight());
-    linearPolicy->setContentsMargins(0, offset / 2.0, 0, offset / 2.0);
+    linearPolicy->setContentsMargins(0, offset / 2.f, 0, offset / 2.f);
 
     visibleSceneSize.transpose();
 
     // and the custom one
     height = visibleSceneSize.height();
-    offset = height - ((qreal)customPolicyCount / 2.0 * (qreal)q->style()->itemHeight());
-    customPolicy->setContentsMargins(0, offset / 2.0, 0, offset / 2.0);
+    offset = height - ((qreal)customPolicyCount / 2.f * (qreal)q->style()->itemHeight());
+    customPolicy->setContentsMargins(0, offset / 2.f, 0, offset / 2.f);
 }
 
 void MMenuObjectViewPrivate::addWidget(QAction *action)

@@ -134,7 +134,7 @@ void MSceneManagerPrivate::init(MScene *scene)
     navigationBarRootElement->setZValue(zForWindowType(MSceneWindow::NavigationBar));
     dockWidgetRootElement = new QGraphicsWidget(rootElement);
     dockWidgetRootElement->setZValue(zForWindowType(MSceneWindow::DockWidget));
-    rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
+    rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.f, q->visibleSceneSize().height() / 2.f));
     scene->addItem(rootElement);
 
     eventEater = new MSceneEventEater();

@@ -64,8 +64,8 @@ void MyImageWidget::setZoomFactor(qreal zoom)
 {
     if (zoom > 50)
         zoom = 50;
-    if (zoom < 0.02)
-        zoom = 0.02;
+    if (zoom < 0.02f)
+        zoom = 0.02f;
     scaleK = zoom;
     updateImageGeometry();
 }
@@ -117,8 +117,8 @@ void MyImageWidget::calculateDrawRect(const QSizeF &imageSize)
     t = targetSize.boundedTo(t);
 
     // calculate the rectangle of draw
-    qreal dx = (widgetSize.width() - t.width()) / 2.0;
-    qreal dy = (widgetSize.height() - t.height()) / 2.0;
+    qreal dx = (widgetSize.width() - t.width()) / 2.f;
+    qreal dy = (widgetSize.height() - t.height()) / 2.f;
 
     // calculate draw rect   
     targetRect.setRect(dx, dy, t.width(), t.height());
@@ -168,8 +168,8 @@ void MyImageWidget::calculateSourceRect(const QSizeF &imageSize)
     QSizeF sourceSize = calculateSourceSize(imageSize);
 
     // calculate default crop section
-    qreal dx = (originalSize.width() - sourceSize.width()) / 2.0;
-    qreal dy = (originalSize.height() - sourceSize.height()) / 2.0;
+    qreal dx = (originalSize.width() - sourceSize.width()) / 2.f;
+    qreal dy = (originalSize.height() - sourceSize.height()) / 2.f;
 
     qreal xOffset = paintOffset.x() / zoomFactor();
     qreal yOffset = paintOffset.y() / zoomFactor();
@@ -217,7 +217,7 @@ ItemDetailPage::ItemDetailPage() :
       image(0),
       imageId(),
       pinching(false),
-      lastScaleFactor(1.0)
+      lastScaleFactor(1.f)
 {
     setObjectName("itemDetailPage");
 }
@@ -241,7 +241,7 @@ void ItemDetailPage::createContent()
         setPannable(false);
 
         policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-        policy->setSpacing(0.0);
+        policy->setSpacing(0.f);
         layout->setPolicy(policy);
 
         QImage realImage(imageId);
@@ -278,7 +278,7 @@ void ItemDetailPage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gest
         return;
 
     if (gesture->state() == Qt::GestureStarted) {
-        lastScaleFactor = 1.0;
+        lastScaleFactor = 1.f;
         pinching = true;
     }
 

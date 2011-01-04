@@ -272,8 +272,8 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
 
     // corners
     if (targetMargins.top() > 0 && targetMargins.left() > 0 && sourceMargins.top() > 0 && sourceMargins.left() > 0) { // top left
-        d.x = (0.5 * (xTarget[1] + xTarget[0]));
-        d.y = (0.5 * (yTarget[1] + yTarget[0]));
+        d.x = (0.5f * (xTarget[1] + xTarget[0]));
+        d.y = (0.5f * (yTarget[1] + yTarget[0]));
         d.sourceLeft = sourceRect.left();
         d.sourceTop = sourceRect.top();
         d.width = sourceMargins.left();
@@ -286,8 +286,8 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
             translucentData.append(d);
     }
     if (targetMargins.top() > 0 && targetMargins.right() > 0 && sourceMargins.top() > 0 && sourceMargins.right() > 0) { // top right
-        d.x = (0.5 * (xTarget[columns] + xTarget[columns - 1]));
-        d.y = (0.5 * (yTarget[1] + yTarget[0]));
+        d.x = (0.5f * (xTarget[columns] + xTarget[columns - 1]));
+        d.y = (0.5f * (yTarget[1] + yTarget[0]));
         d.sourceLeft = sourceCenterRight;
         d.sourceTop = sourceRect.top();
         d.width = sourceMargins.right();
@@ -300,8 +300,8 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
             translucentData.append(d);
     }
     if (targetMargins.bottom() > 0 && targetMargins.left() > 0 && sourceMargins.bottom() > 0 && sourceMargins.left() > 0) { // bottom left
-        d.x = (0.5 * (xTarget[1] + xTarget[0]));
-        d.y =(0.5 * (yTarget[rows] + yTarget[rows - 1]));
+        d.x = (0.5f * (xTarget[1] + xTarget[0]));
+        d.y =(0.5f * (yTarget[rows] + yTarget[rows - 1]));
         d.sourceLeft = sourceRect.left();
         d.sourceTop = sourceCenterBottom;
         d.width = sourceMargins.left();
@@ -314,8 +314,8 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
             translucentData.append(d);
     }
     if (targetMargins.bottom() > 0 && targetMargins.right() > 0 && sourceMargins.bottom() > 0 && sourceMargins.right() > 0) { // bottom right
-        d.x = (0.5 * (xTarget[columns] + xTarget[columns - 1]));
-        d.y = (0.5 * (yTarget[rows] + yTarget[rows - 1]));
+        d.x = (0.5f * (xTarget[columns] + xTarget[columns - 1]));
+        d.y = (0.5f * (yTarget[rows] + yTarget[rows - 1]));
         d.sourceLeft = sourceCenterRight;
         d.sourceTop = sourceCenterBottom;
         d.width = sourceMargins.right();
@@ -336,11 +336,11 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
             d.sourceTop = sourceRect.top();
             d.width = sourceCenterWidth;
             d.height = sourceMargins.top();
-            d.y = (0.5 * (yTarget[1] + yTarget[0]));
+            d.y = (0.5f * (yTarget[1] + yTarget[0]));
             d.scaleX = dx / d.width;
             d.scaleY = qreal(yTarget[1] - yTarget[0]) / d.height;
             for (int i = 1; i < columns - 1; ++i) {
-                d.x = (0.5 * (xTarget[i + 1] + xTarget[i]));
+                d.x = (0.5f * (xTarget[i + 1] + xTarget[i]));
                 data.append(d);
             }
             if (rules.horizontal == Qt::RepeatTile)
@@ -352,11 +352,11 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
             d.sourceTop = sourceCenterBottom;
             d.width = sourceCenterWidth;
             d.height = sourceMargins.bottom();
-            d.y = (0.5 * (yTarget[rows] + yTarget[rows - 1]));
+            d.y = (0.5f * (yTarget[rows] + yTarget[rows - 1]));
             d.scaleX = dx / d.width;
             d.scaleY = qreal(yTarget[rows] - yTarget[rows - 1]) / d.height;
             for (int i = 1; i < columns - 1; ++i) {
-                d.x = (0.5 * (xTarget[i + 1] + xTarget[i]));
+                d.x = (0.5f * (xTarget[i + 1] + xTarget[i]));
                 data.append(d);
             }
             if (rules.horizontal == Qt::RepeatTile)
@@ -372,11 +372,11 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
             d.sourceTop = sourceCenterTop;
             d.width = sourceMargins.left();
             d.height = sourceCenterHeight;
-            d.x = (0.5 * (xTarget[1] + xTarget[0]));
+            d.x = (0.5f * (xTarget[1] + xTarget[0]));
             d.scaleX = qreal(xTarget[1] - xTarget[0]) / d.width;
             d.scaleY = dy / d.height;
             for (int i = 1; i < rows - 1; ++i) {
-                d.y = (0.5 * (yTarget[i + 1] + yTarget[i]));
+                d.y = (0.5f * (yTarget[i + 1] + yTarget[i]));
                 data.append(d);
             }
             if (rules.vertical == Qt::RepeatTile)
@@ -388,11 +388,11 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
             d.sourceTop = sourceCenterTop;
             d.width = sourceMargins.right();
             d.height = sourceCenterHeight;
-            d.x = (0.5 * (xTarget[columns] + xTarget[columns - 1]));
+            d.x = (0.5f * (xTarget[columns] + xTarget[columns - 1]));
             d.scaleX = qreal(xTarget[columns] - xTarget[columns - 1]) / d.width;
             d.scaleY = dy / d.height;
             for (int i = 1; i < rows - 1; ++i) {
-                d.y = (0.5 * (yTarget[i + 1] + yTarget[i]));
+                d.y = (0.5f * (yTarget[i + 1] + yTarget[i]));
                 data.append(d);
             }
             if (rules.vertical == Qt::RepeatTile)
@@ -414,9 +414,9 @@ void MScalableImagePrivate::drawBorderPixmap(QPainter *painter,
         qreal repeatHeight = (yTarget[rows - 1] - yTarget[rows - 2]) / d.scaleY;
 
         for (int j = 1; j < rows - 1; ++j) {
-            d.y = (0.5 * (yTarget[j + 1] + yTarget[j]));
+            d.y = (0.5f * (yTarget[j + 1] + yTarget[j]));
             for (int i = 1; i < columns - 1; ++i) {
-                d.x = (0.5 * (xTarget[i + 1] + xTarget[i]));
+                d.x = (0.5f * (xTarget[i + 1] + xTarget[i]));
                 data.append(d);
             }
             if (rules.horizontal == Qt::RepeatTile)

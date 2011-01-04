@@ -235,7 +235,7 @@ void MFlowLayoutPolicy::relayout()
                 qreal expand_by = qMin(leftover_space / num_expandable, maxSize.width() - size.width());
                 size.setWidth(size.width() + expand_by);
                 leftover_space -= expand_by;
-                Q_ASSERT(leftover_space >= -0.00001); //slight rounding errors can results in the number being just slightly less than 0
+                Q_ASSERT(leftover_space >= -0.00001f); //slight rounding errors can results in the number being just slightly less than 0
                 --num_expandable;
             }
 

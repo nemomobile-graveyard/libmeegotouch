@@ -80,7 +80,7 @@ QSizeF MButtonSwitchViewPrivate::thumbSize() const
         if (thumb.height() != view.height()) {
             qreal f = view.height() / thumb.height();
             thumb = thumb * f;
-            return QSizeF(thumb.width() - q->style()->thumbMargin() * 2.0, thumb.height() - q->style()->thumbMargin() * 2.0);
+            return QSizeF(thumb.width() - q->style()->thumbMargin() * 2.f, thumb.height() - q->style()->thumbMargin() * 2.f);
         } else
             return thumb;
     }
@@ -124,8 +124,8 @@ void MButtonSwitchViewPrivate::drawSwitchSlider(QPainter *painter) const
 
     qreal oldOpacity = painter->opacity();
 
-    qreal opacity = ((qreal)thumbPos().x() - q->style()->thumbMargin()) / (q->size().width() - thumbSize().width() - q->style()->thumbMargin() * 2.0);
-    painter->setOpacity(1.0 - opacity);
+    qreal opacity = ((qreal)thumbPos().x() - q->style()->thumbMargin()) / (q->size().width() - thumbSize().width() - q->style()->thumbMargin() * 2.f);
+    painter->setOpacity(1.f - opacity);
     if (q->style()->sliderImage())
         q->style()->sliderImage()->draw(QPoint(0,0), q->size(), painter);
     painter->setOpacity(opacity);
@@ -294,7 +294,7 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     int delta = d->m_thumbPos.x() - d->thumbEndPos(d->checkStateOnAnimationFinish).x();
     d->m_thumbAnimation->setStartValue(d->m_thumbPos);
     d->m_thumbAnimation->setEndValue(d->thumbEndPos(d->checkStateOnAnimationFinish));
-    d->m_thumbAnimation->setDuration(abs(delta) / (d->m_animationSpeed/1000.0));
+    d->m_thumbAnimation->setDuration(abs(delta) / (d->m_animationSpeed/1000.f));
     d->m_thumbAnimation->start();
 }
 

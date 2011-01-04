@@ -71,12 +71,12 @@ void MTextMagnifier::drawContents(QPainter *painter,
         return;
     }
 
-    const qreal scaleFactor = 1.0 + style()->magnification();
+    const qreal scaleFactor = 1.f + style()->magnification();
 
     // Source rectangle in local item coordinates.
     const QSizeF sourceSize(size() / scaleFactor);
-    const QRectF sourceRect(QPointF(-sourceSize.width() / 2.0,
-                                    -sourceSize.height() / 2.0),
+    const QRectF sourceRect(QPointF(-sourceSize.width() / 2.f,
+                                    -sourceSize.height() / 2.f),
                             sourceSize);
 
     // Source rectangle in source item coordinates.

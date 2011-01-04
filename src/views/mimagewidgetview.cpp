@@ -67,8 +67,8 @@ void MImageWidgetViewPrivate::calculateDrawRect(const QSizeF &imageSize)
     t = targetSize.boundedTo(t);
 
     // calculate the rectangle of draw
-    qreal dx = (widgetSize.width() - t.width()) / 2.0;
-    qreal dy = (widgetSize.height() - t.height()) / 2.0;
+    qreal dx = (widgetSize.width() - t.width()) / 2.f;
+    qreal dy = (widgetSize.height() - t.height()) / 2.f;
 
     // calculate draw rect
     drawRect.setRect(dx, dy, t.width(), t.height());
@@ -81,9 +81,9 @@ QSizeF MImageWidgetViewPrivate::calculateSourceSize(const QSizeF &imageSize)
 
     // protection codes
     if (sourceSize.width() < 1.0)
-        sourceSize.setWidth(1.0);
+        sourceSize.setWidth(1.f);
     if (sourceSize.height() < 1.0)
-        sourceSize.setHeight(1.0);
+        sourceSize.setHeight(1.f);
 
     QSizeF t;
 
@@ -116,8 +116,8 @@ void MImageWidgetViewPrivate::calculateSourceRect(const QSizeF &imageSize)
 
     if (topLeft == QPointF(-1.0, -1.0)) {
         // calculate default crop section
-        qreal dx = (originalSize.width() - sourceSize.width()) / 2.0;
-        qreal dy = (originalSize.height() - sourceSize.height()) / 2.0;
+        qreal dx = (originalSize.width() - sourceSize.width()) / 2.f;
+        qreal dy = (originalSize.height() - sourceSize.height()) / 2.f;
 
         sourceRect = QRectF(dx, dy, sourceSize.width(), sourceSize.height());
     } else {

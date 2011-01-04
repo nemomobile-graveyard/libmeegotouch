@@ -219,7 +219,7 @@ qreal MListIndexViewPrivate::delayTimelineDuration()
 qreal MListIndexViewPrivate::timelineDuration()
 {
     Q_Q(MListIndexView);
-    return q->style()->appearDelay() * 2.0 + q->style()->appearDuration();
+    return q->style()->appearDelay() * 2.f + q->style()->appearDuration();
 }
 
 void MListIndexViewPrivate::updateDisplayMode()

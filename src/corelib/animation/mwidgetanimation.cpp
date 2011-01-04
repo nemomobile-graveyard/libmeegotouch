@@ -184,11 +184,11 @@ void MWidgetAnimation::setKeyFrames(QGraphicsWidget *widget, const QString &prop
     if (valuesSize == 0)
         return;
     else if (valuesSize == 1) {
-        d->getAnimation(widget, property)->setKeyValueAt(1.0, values.last());
+        d->getAnimation(widget, property)->setKeyValueAt(1.f, values.last());
     }
 
     QPropertyAnimation *a = d->getAnimation(widget, property);
-    const qreal step = 1.0 / (valuesSize - 1);
+    const qreal step = 1.f / (valuesSize - 1);
     for (int i = 0; i < valuesSize - 1; ++i) {
         a->setKeyValueAt(i * step, values[i]);
     }

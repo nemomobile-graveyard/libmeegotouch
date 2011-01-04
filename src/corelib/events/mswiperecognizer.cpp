@@ -41,7 +41,7 @@ MSwipeRecognizerPrivate::~MSwipeRecognizerPrivate()
 
 qreal MSwipeRecognizerPrivate::vectorLength(const QPointF &vector)
 {
-    return 0.7 *(vector.x()*vector.x() + vector.y()*vector.y());
+    return 0.7f *(vector.x()*vector.x() + vector.y()*vector.y());
 }
 
 bool MSwipeRecognizerPrivate::isAngleDeltaBelowThreshold(qreal angleDelta, qreal threshold)

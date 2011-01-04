@@ -263,7 +263,7 @@ void MImageWidget::zoomIn()
     qreal fx(0), fy(0);
 
     zoomFactor(&fx, &fy);
-    setZoomFactor(fx * 2.0, fy * 2.0);
+    setZoomFactor(fx * 2.f, fy * 2.f);
 }
 
 void MImageWidget::zoomOut()
@@ -271,7 +271,7 @@ void MImageWidget::zoomOut()
     qreal fx(0), fy(0);
 
     zoomFactor(&fx, &fy);
-    setZoomFactor(fx / 2.0, fy / 2.0);
+    setZoomFactor(fx / 2.f, fy / 2.f);
 }
 
 void MImageWidget::setAspectRatioMode(Qt::AspectRatioMode mode)

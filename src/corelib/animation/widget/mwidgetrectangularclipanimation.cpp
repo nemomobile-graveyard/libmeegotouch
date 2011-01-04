@@ -107,7 +107,7 @@ void MWidgetRectangularClipAnimation::updateState(QAbstractAnimation::State newS
     else if (d->transitionDirection == MWidgetRectangularClipAnimation::Out)
         style().setObjectName("Out");
 
-    QRect startRect = QRect(0.0, targetWidget()->size().height() / 2.0, targetWidget()->size().width(), 0.0);
+    QRect startRect = QRect(0.0, targetWidget()->size().height() / 2.f, targetWidget()->size().width(), 0.0);
     QRect endRect = QRect(0.0, 0.0, targetWidget()->size().width(), targetWidget()->size().height());
 
     d->clipEffect->setClipMargin(style()->clipMargin());

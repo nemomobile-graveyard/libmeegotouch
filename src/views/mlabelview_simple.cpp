@@ -341,14 +341,14 @@ void MLabelViewSimple::adjustTextOffset()
 
     // Adjust x-position dependent on the horizontal alignment
     if (alignment & Qt::AlignHCenter) {
-        textOffset.rx() += (paintingRect.width() - staticText.size().width()) / 2.0;
+        textOffset.rx() += (paintingRect.width() - staticText.size().width()) / 2.f;
     } else if (alignment & Qt::AlignRight) {
         textOffset.setX(paintingRect.right() - staticText.size().width());
     }
 
     // Adjust y-position dependent on the vertical alignment
     if (alignment & Qt::AlignVCenter) {
-        textOffset.ry() += (paintingRect.height() - staticText.size().height()) / 2.0;
+        textOffset.ry() += (paintingRect.height() - staticText.size().height()) / 2.f;
     } else if (alignment & Qt::AlignBottom) {
         textOffset.setY(paintingRect.bottom() - staticText.size().height());
     }

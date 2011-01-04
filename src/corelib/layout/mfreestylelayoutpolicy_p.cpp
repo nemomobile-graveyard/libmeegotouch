@@ -104,9 +104,9 @@ bool MFreestyleLayoutPolicyPrivate::placeItem(int indexToPlace,
     }
 
     // now that everything is moved away, simply place the item
-    Q_ASSERT(target.top()  + 0.00001 >= topLeft.y()); //add a small amount for rounding errors
-    Q_ASSERT(target.left() + 0.00001 >= topLeft.x());
-    Q_ASSERT(target.right() - 0.00001 <= topLeft.x() + width || target.width() > width); //make sure it doesn't go outside the right hand side, unless
+    Q_ASSERT(target.top()  + 0.00001f >= topLeft.y()); //add a small amount for rounding errors
+    Q_ASSERT(target.left() + 0.00001f >= topLeft.x());
+    Q_ASSERT(target.right() - 0.00001f <= topLeft.x() + width || target.width() > width); //make sure it doesn't go outside the right hand side, unless
 
     return true;
 }

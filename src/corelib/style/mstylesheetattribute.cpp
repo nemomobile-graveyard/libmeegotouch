@@ -342,7 +342,7 @@ int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conv
 
         // convert to integer value
         qreal v = value.toFloat(conversionOk);
-        return(v / 100.0 * (float)maximumValue);
+        return(v / 100.f * (float)maximumValue);
     } else {
         return attributeToInt(attribute, conversionOk);
     }
@@ -398,7 +398,7 @@ qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *
 
         // convert to integer value
         qreal v = value.toFloat(conversionOk);//myAtof(value, conversionOk);
-        return(v / 100.0 * (float) maximumValue);
+        return(v / 100.f * (float) maximumValue);
     } else {
         return attributeToFloat(attribute, conversionOk);
     }

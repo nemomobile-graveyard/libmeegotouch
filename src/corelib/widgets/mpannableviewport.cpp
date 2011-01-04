@@ -428,7 +428,7 @@ void MPannableViewport::updatePosition(const QPointF &p)
 {
     Q_D(MPannableViewport);
 
-    QPointF roundedP = QPointF(floor(p.x()), floor(p.y()));
+    QPointF roundedP = QPointF(floorf(p.x()), floorf(p.y()));
 
     // Parameter p is in the local coordinate system of pannedWidget but
     // pannedWidget position is in pannable viewport's coordinate system.
