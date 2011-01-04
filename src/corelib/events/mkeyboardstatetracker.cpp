@@ -44,13 +44,15 @@ MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker
     QObject::connect(&keyboardOpenConf, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
 #endif
+
+    initContextSubscriber();
 }
 
 void MKeyboardStateTrackerPrivate::initContextSubscriber()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     //waiting for properties to synchronize
-    keyboardOpenProperty.waitForSubscription();
+    keyboardOpenProperty.waitForSubscription(true);
     // TODO: use actual ContextProperty for present, which is still unready.
     present = true;
 #elif defined(M_OS_MAEMO5)

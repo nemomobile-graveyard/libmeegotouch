@@ -389,7 +389,7 @@ fi
 which pkg-config > /dev/null
 if [ $? -eq 0 ]; then
 
-    pkg-config --exists contextsubscriber-1.0
+    pkg-config --atleast-version=0.5.25 contextsubscriber-1.0
     if [ $? -eq 0 ]; then
         HAVE_CONTEXTSUBSCRIBER=yes
     fi
