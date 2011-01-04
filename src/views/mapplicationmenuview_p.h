@@ -91,7 +91,7 @@ protected:
     void changeData(QAction *action);
     void changeVisibility(QAction *action);
     void changeStyleAttribute(QAction *action);
-    void refreshPolicies(bool refresh);
+    void refreshPolicies();
     void clearPolicy(MAbstractLayoutPolicy *policy);
     void refreshLandscapePolicy();
     void updateItemMode();

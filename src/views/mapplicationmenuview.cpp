@@ -177,7 +177,6 @@ void MApplicationMenuViewPrivate::remove(QAction *action)
         leasedWidgets.remove(action);
     }
     disconnect(action, SIGNAL(triggered()), controller, SLOT(disappear()));
-    refreshPolicies(true);
 }
 
 void MApplicationMenuViewPrivate::change(QAction *action)
@@ -320,8 +319,7 @@ bool MApplicationMenuViewPrivate::isLocationValid(QAction *action, MAction::Loca
 
 bool MApplicationMenuViewPrivate::isVisible(QAction *action)
 {
-    return action &&
-           action->isVisible();
+    return action && action->isVisible();
 }
 
 void MApplicationMenuViewPrivate::clearWidgets(QHash<QAction *, MWidget *>& widgets)
@@ -503,10 +501,25 @@ void MApplicationMenuViewPrivate::changeVisibility(QAction *action)
         bool wasVisible = (landscapePolicy->indexOf(widget) >= 0) ||
                           (portraitPolicy->indexOf(widget) >= 0);
         //Check if visibility has been changed
-        bool visibilityChanged = (!action->isVisible() && wasVisible) ||
-                                 (action->isVisible() && !wasVisible);
+        if (wasVisible && !action->isVisible()) {
+            landscapePolicy->removeItem(widget);
+            portraitPolicy->removeItem(widget);
+        } else if (!wasVisible && action->isVisible()) {
+            widget->setVisible(true);
+            //Find the widget that will be after this in order
+            QList<QAction *> actions = controller->actions();
+            int index = actions.indexOf(action)+1;
+            while (index < actions.size()) {
+                MWidget *w = getWidget(actions.at(index));
+                if (w && portraitPolicy->indexOf(w) >= 0) {
+                    addActionCommandWidget(widget, w);
+                    return;
+                }
+                index++;
+            }
 
-        refreshPolicies(visibilityChanged);
+            addActionCommandWidget(widget, 0); //Add to the end
+        }
     }
 }
 
@@ -515,25 +528,19 @@ void MApplicationMenuViewPrivate::changeStyleAttribute(QAction *action)
     MWidget *widget = getWidget(action);
     if (widget) {
         bool wasStyleCommand = (stylePolicy->indexOf(widget) >= 0);
-
         //Check if style attribute has been changed
-        bool isStyleCommand = isStyleAction(action);
-        bool changed = (wasStyleCommand && !isStyleCommand) ||
-                       (!wasStyleCommand && isStyleCommand);
-
-        refreshPolicies(changed);
+        if (wasStyleCommand != isStyleAction(action))
+            refreshPolicies();
     }
 }
 
-void MApplicationMenuViewPrivate::refreshPolicies(bool refresh)
+void MApplicationMenuViewPrivate::refreshPolicies()
 {
-    if (refresh) {
-        clearPolicy(landscapePolicy);
-        clearPolicy(portraitPolicy);
-        clearPolicy(stylePolicy);
-        addActions();
-        updateItemMode();
-    }
+    clearPolicy(landscapePolicy);
+    clearPolicy(portraitPolicy);
+    clearPolicy(stylePolicy);
+    addActions();
+    updateItemMode();
 }
 
 void MApplicationMenuViewPrivate::clearPolicy(MAbstractLayoutPolicy *policy)
@@ -563,14 +570,13 @@ void MApplicationMenuViewPrivate::refreshLandscapePolicy()
 
 void MApplicationMenuViewPrivate::updateItemMode()
 {
-
     MAbstractLayoutPolicy *policy = landscapePolicy;
     int columnsCount = maxColumns;
     MWindow *window = MApplication::instance()->activeWindow();
     if (window && M::Portrait == window->orientation()) {
-            policy = portraitPolicy;
-            columnsCount = 1;
-     }
+        policy = portraitPolicy;
+        columnsCount = 1;
+    }
     int count = policy->count();
 
     for (int index = 0; index < count; index++) {
@@ -659,9 +665,15 @@ void MApplicationMenuViewPrivate::addActionCommandWidget(MWidget *widget, MWidge
     }
     portraitPolicy->insertItem(portIndex, widget);
 
-    //For landscape policy, there is no way to insert the items at any position
-    //in the grid. So have to remove them first and then re-add them all
-    refreshLandscapePolicy();
+    if (before) {
+        //For landscape policy, there is no way to insert the items at any position
+        //in the grid. So have to remove them first and then re-add them all
+        refreshLandscapePolicy();
+    } else {
+        int count = landscapePolicy->count();
+        landscapePolicy->addItem(widget, count / maxColumns, count % maxColumns);
+        updateItemMode();
+    }
 }
 
 void MApplicationMenuViewPrivate::removeStyleWidget(MWidget *widget)
