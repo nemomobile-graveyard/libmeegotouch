@@ -111,9 +111,7 @@ MWindowPrivate::MWindowPrivate() :
     if (window)
         angle = window->orientationAngle();
     else
-        //only create instance of orientation tracker at the moment
-        MOrientationTracker::instance();
-
+        angle = MOrientationTracker::instance()->orientationAngle();
 
     timeSinceLastPaintInSwitcher.invalidate();
 }
@@ -608,7 +606,7 @@ void MWindowPrivate::ensureOrientationAngleIsUpToDateBeforeShowing()
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
         // We are about to be shown but our orientation angle is outdated.
-        MOrientationTracker::instance()->d_ptr->subscribeToSensorProperies();
+        MOrientationTracker::instance()->d_ptr->updateOrientationAngle();
 #endif
 
         MOnDisplayChangeEvent ev(true, QRectF(QPointF(0, 0), q->visibleSceneSize()));
@@ -1271,11 +1269,6 @@ void MWindow::paintEvent(QPaintEvent *event)
 bool MWindow::event(QEvent *event)
 {
     Q_D(MWindow);
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    if(event->type() == QEvent::Show) {
-        MOrientationTracker::instance()->d_func()->waitForSensorPropertiesToSubscribe();
-    }
-#endif
 
     if ((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);

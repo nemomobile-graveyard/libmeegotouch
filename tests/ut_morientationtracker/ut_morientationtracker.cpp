@@ -49,9 +49,7 @@ bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool
 void Ut_MOrientationTracker::init()
 {
     window1 = new MWindow;
-    window1->show();
     window2 = new MWindow;
-    window2->show();
 }
 
 void Ut_MOrientationTracker::cleanup()
@@ -329,12 +327,12 @@ void Ut_MOrientationTracker::testFollowCurrentWindow()
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
-    //make window2 start following _MEEGOTOUCH_CURRENT_APP_WINDOW
-    window2->setProperty("followsCurrentApplicationWindowOrientation", 1);
-
     //create app window and set it as _MEEGOTOUCH_CURRENT_APP_WINDOW;
     MApplicationWindow appWindow;
     setCurrentWindowXPropertyOnRootWindow(appWindow.effectiveWinId());
+
+    //make window2 start following _MEEGOTOUCH_CURRENT_APP_WINDOW
+    window2->setProperty("followsCurrentApplicationWindowOrientation", 1);
 
     //since there is no MApplication instance we have to run this handler manualy
     mTracker->handleCurrentAppWindowChange();
