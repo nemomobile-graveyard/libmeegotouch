@@ -287,12 +287,14 @@ protected:
     virtual void panGestureEvent(QGestureEvent *event, QPanGesture* state);
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     //! \reimp_end
 
 private:
     Q_DISABLE_COPY(MPannableWidget)
     Q_DECLARE_PRIVATE(MPannableWidget)
 
+    Q_PRIVATE_SLOT(d_func(), void _q_resetPhysics())
 
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members

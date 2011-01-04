@@ -58,7 +58,7 @@ public:
 
 
     void init();
-    void resetPhysics();
+    void _q_resetPhysics();
     void glassMousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:

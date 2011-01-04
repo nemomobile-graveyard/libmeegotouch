@@ -25,6 +25,7 @@
 #include "mpannablewidget_p.h"
 #include "mtheme.h"
 #include "mcancelevent.h"
+#include "mscenemanager.h"
 
 #include "mondisplaychangeevent.h"
 
@@ -96,14 +97,14 @@ void MPannableWidgetPrivate::glassMousePressEvent(QGraphicsSceneMouseEvent *mous
     if (q->isEnabled() && physics->inMotion()) {
         // The viewport is still moving,
         // let's swallow this event
-        resetPhysics();
+        _q_resetPhysics();
         mouseEvent->accept();
     } else {
         mouseEvent->ignore();
     }
 }
 
-void MPannableWidgetPrivate::resetPhysics()
+void MPannableWidgetPrivate::_q_resetPhysics()
 {
     physics->pointerRelease();
     physics->stop();
@@ -173,7 +174,7 @@ void MPannableWidget::setVerticalPanningPolicy(PanningPolicy policy)
     d->physics->setPanDirection(panDirection());
 
     if (policy == PanningAlwaysOff)
-        d->resetPhysics();
+        d->_q_resetPhysics();
 }
 
 MPannableWidget::PanningPolicy MPannableWidget::verticalPanningPolicy() const
@@ -189,7 +190,7 @@ void MPannableWidget::setHorizontalPanningPolicy(PanningPolicy policy)
     d->physics->setPanDirection(panDirection());
 
     if (policy == PanningAlwaysOff)
-        d->resetPhysics();
+        d->_q_resetPhysics();
 }
 
 MPannableWidget::PanningPolicy MPannableWidget::horizontalPanningPolicy() const
@@ -334,10 +335,7 @@ void MPannableWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 
 void MPannableWidget::orientationChangeEvent(MOrientationChangeEvent *event)
 {
-    Q_D(MPannableWidget);
-
-    d->resetPhysics();
-    MWidgetController::orientationChangeEvent(event);
+    Q_UNUSED(event);
 }
 
 void MPannableWidget::setPanDirection(const Qt::Orientations &panDirection)
@@ -380,3 +378,16 @@ qreal MPannableWidget::panThreshold()
 {
     return 0;
 }
+
+QVariant MPannableWidget::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    //we connect here because there was no scene manager before
+    if(change == ItemSceneHasChanged && sceneManager()) {
+        QObject::disconnect(this, SLOT(_q_resetPhysics()));
+        connect(sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)),
+                this, SLOT(_q_resetPhysics()));
+    }
+    return MWidgetController::itemChange(change, value);
+}
+
+#include "moc_mpannablewidget.cpp"
