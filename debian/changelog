@@ -1,6 +1,7 @@
 libmeegotouch (0.20.72~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#216289 - COREWEB: /usr/lib/meegotouch/applicationextensions/mapplicationextensionrunner 'QGraphicsScene::~QGraphicsScene MScene::~MScene MExtensionRunner::teardown MExtensionRunner::~MExtensionRunner MApplicationExtensionRunner::~MApplicationExtensionRunner'
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 05 Jan 2011 14:40:52 +0100
 

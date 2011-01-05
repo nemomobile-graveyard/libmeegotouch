@@ -103,15 +103,18 @@ int main(int argc, char **argv)
     if (getenv("M_OUTPUT_LEVEL") == NULL) {
         setenv("M_OUTPUT_LEVEL", "warning", 0);
     }
+
+    int returnValue = 0;
     MApplication *app = new MApplication(argc, argv, metadata.resourceIdentifier(), new MyApplicationService());
-    MApplicationExtensionRunner runner;
-    if (!runner.init(argv[1], metadata)) {
+    MApplicationExtensionRunner *runner = new MApplicationExtensionRunner;
+    if (!runner->init(argv[1], metadata)) {
         mWarning("MApplicationExtensionRunner") << "Application extension" << argv[2] << "initialization failed.";
-        return ERROR_APPLICATION_EXTENSION_INIT_FAILED;
+        returnValue = ERROR_APPLICATION_EXTENSION_INIT_FAILED;
+    } else {
+        returnValue = app->exec();
     }
-
-    int returnValue = app->exec();
-
+    delete runner;
     delete app;
+
     return returnValue;
 }
