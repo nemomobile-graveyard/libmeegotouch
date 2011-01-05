@@ -34,7 +34,7 @@ MApplicationExtensionInterface *MApplicationExtensionLoader::loadExtension(const
 
     if (object != NULL) {
         if (object->inherits(metadata.interface().toUtf8().constData())) {
-            MApplicationExtensionInterface *extension = qobject_cast<MApplicationExtensionInterface *>(object);
+            MApplicationExtensionInterface *extension = dynamic_cast<MApplicationExtensionInterface *>(object);
             if (extension != NULL) {
                 if (extension->initialize(metadata.interface())) {
                     return extension;
