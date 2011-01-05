@@ -168,7 +168,7 @@ void BubblePage::bubbleLinkActivated(QString url)
 
 void BubblePage::speechBubbleClicked()
 {
-    //% "Speech buuble clicked"
+    //% "Speech bubble clicked"
     messageBox = new MMessageBox(qtTrId("xx_wg_bubblepage_bubbleclicked"));
     messageBox->appear(MSceneWindow::DestroyWhenDone);
 }
