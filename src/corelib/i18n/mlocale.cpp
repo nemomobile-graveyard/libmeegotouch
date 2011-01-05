@@ -259,7 +259,7 @@ QStringList MLocalePrivate::translationPaths;
 QStringList MLocalePrivate::dataPaths;
 
 #ifdef HAVE_ICU
-bool MLocalePrivate::truncateLocaleName(QString *localeName) const
+bool MLocalePrivate::truncateLocaleName(QString *localeName)
 {
     // according to http://userguide.icu-project.org/locale the separators
     // that specify the parts of a locale are "_", "@", and ";", e.g.
@@ -3085,6 +3085,99 @@ QStringList MLocale::dataPaths()
 {
     return MLocalePrivate::dataPaths;
 }
+
+
+#ifdef HAVE_ICU
+QString MLocale::localeScript(const QString &locale)
+{
+    QString s = MLocalePrivate::parseScript(locale);
+
+    if(!s.isEmpty())
+        return s;
+
+    UErrorCode status = U_ZERO_ERROR;
+    UResourceBundle *res = ures_open(NULL, qPrintable(locale), &status);
+    if(U_FAILURE(status)) // TODO: error handling++
+        return QString();
+
+    res = ures_getByKey(res, "LocaleScript", res, &status);
+    if(U_FAILURE(status)) {
+        ures_close(res);
+        return QString();
+    }
+
+    QString ret("Zyyy");
+
+    qint32 len;
+    const UChar *v;
+    v = ures_getNextString(res, &len, NULL, &status);
+    if(v && U_SUCCESS(status))
+        ret = QString::fromUtf16(v, len);
+
+    ures_close(res);
+
+    return ret;
+}
+
+QString MLocale::languageEndonym(const QString &locale)
+{
+    QString resourceBundleLocaleName = locale;
+
+    do {
+        // Trying several resource bundles is a workaround for
+        // http://site.icu-project.org/design/resbund/issues
+        UErrorCode status = U_ZERO_ERROR;
+        UResourceBundle *res = ures_open(U_ICUDATA_NAME "-lang",
+                                         qPrintable(resourceBundleLocaleName),
+                                         &status);
+        if (U_FAILURE(status)) {
+            mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+            ures_close(res);
+            return locale;
+        }
+        res = ures_getByKey(res, Languages, res, &status);
+        if (U_FAILURE(status)) {
+            mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
+            ures_close(res);
+            return locale;
+        }
+        QString keyLocaleName = locale;
+        // it’s not nice if “zh_CN”, “zh_HK”, “zh_MO”, “zh_TW” all fall back to
+        // “zh” for the language endonym and display only “中文”.
+        // To make the fallbacks work better, insert the script:
+        if (keyLocaleName.startsWith(QLatin1String("zh_CN")))
+            keyLocaleName = "zh_Hans_CN";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_SG")))
+            keyLocaleName = "zh_Hans_SG";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_HK")))
+            keyLocaleName = "zh_Hant_HK";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_MO")))
+            keyLocaleName = "zh_Hant_MO";
+        else if (keyLocaleName.startsWith(QLatin1String("zh_TW")))
+            keyLocaleName = "zh_Hant_TW";
+        do { // FIXME: this loop should probably be somewhere else
+            int len;
+            status = U_ZERO_ERROR;
+            const UChar *val = ures_getStringByKey(res,
+                                                   qPrintable(keyLocaleName),
+                                                   &len,
+                                                   &status);
+            if (U_SUCCESS(status)) {
+                // found language endonym, return it:
+                ures_close(res);
+                return QString::fromUtf16(val, len);
+            }
+        } while (MLocalePrivate::truncateLocaleName(&keyLocaleName));
+        // no language endonym found in this resource bundle and there
+        // is no way to shorten keyLocaleName, try the next resource
+        // bundle:
+        ures_close(res);
+    } while (MLocalePrivate::truncateLocaleName(&resourceBundleLocaleName));
+    // no language endonym found at all, no other keys or resource
+    // bundles left to try, return the full locale name as a fallback:
+    return locale;
+}
+#endif
 
 ///////
 // the static convenience methods for translation

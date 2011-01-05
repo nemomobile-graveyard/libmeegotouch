@@ -1656,6 +1656,22 @@ public:
      */
     void disconnectSettings();
 
+    /*!
+     * \brief Static method to obtain primary script of locale.
+     * Can be used to obtain primary script without instantiating MLocale,
+     * useful when obtaining a list of scripts for a lot of languages. Primary
+     * script means a script returned by script() or first item in
+     * languageScripts().
+     */
+    static QString localeScript(const QString &locale);
+
+    /*!
+     * \bried Static method to obtain endonym for locale.
+     * Can be used to obtain endonym without instantiating MLocale, useful
+     * when obtaining a list of endonyms for a lot of languages.
+     */
+    static QString languageEndonym(const QString &locale);
+
 Q_SIGNALS:
     void settingsChanged();
     /*!

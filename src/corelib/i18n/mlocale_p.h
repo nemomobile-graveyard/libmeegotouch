@@ -109,7 +109,7 @@ public:
      * as the parameter is left unchanged. I.e. if false is returned
      * there are no fallbacks left to try.
      */
-    bool truncateLocaleName(QString *localeName) const;
+    static bool truncateLocaleName(QString *localeName);
 
     // creates an icu::Locale for specific category
     icu::Locale getCategoryLocale(MLocale::Category category) const;
