@@ -58,6 +58,7 @@ public:
     void setBannerTimeStamp(const QDateTime& date);
     void setPrefixTimeStamp(const QString& string);
     void updateDateFormat() const;
+    void refreshStyleMode();
 
 protected:
     MLayout * layout;
@@ -82,6 +83,7 @@ protected:
     MLabel *bannerTimeStampLabel;
     MLabel *prefixTimeStampLabel;
     QDateTime *bannerTimeStampData;
+    bool down;
 
     MBanner *controller;
 };

@@ -44,6 +44,7 @@ MBannerViewPrivate::MBannerViewPrivate() :
     bannerTimeStampLabel(NULL),
     prefixTimeStampLabel(NULL),
     bannerTimeStampData(NULL),
+    down(false),
     controller(0)
 {
 }
@@ -140,6 +141,20 @@ void MBannerViewPrivate::setBannerTimeStamp(const QDateTime &date)
 void MBannerViewPrivate::setPrefixTimeStamp(const QString &string)
 {
     prefixTimeStamp()->setText(string);
+}
+
+void MBannerViewPrivate::refreshStyleMode()
+{
+    Q_Q(MBannerView);
+
+    if (down) {
+        q->style().setModePressed();
+    } else {
+        q->style().setModeDefault();
+    }
+
+    q->applyStyle();
+    q->update();
 }
 
 void MBannerViewPrivate::updateDateFormat() const
@@ -460,18 +475,32 @@ MBannerView::~MBannerView()
 void MBannerView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
+
+    Q_D(MBannerView);
+
+    if (d->down)
+        return;
+
+    d->down = true;
+    d->refreshStyleMode();
 }
 
 void MBannerView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MBannerView);
 
-     QPointF touch = event->scenePos();
-     QRectF rect  = d->controller->sceneBoundingRect();
+    if (!d->down)
+        return;
 
-     if (rect.contains(touch)) {
-         d->controller->click();
-     }
+    d->down = false;
+    d->refreshStyleMode();
+
+    QPointF touch = event->scenePos();
+    QRectF rect  = d->controller->sceneBoundingRect();
+
+    if (rect.contains(touch)) {
+        d->controller->click();
+    }
 }
 
 void MBannerView::setupModel()
