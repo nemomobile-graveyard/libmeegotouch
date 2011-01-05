@@ -156,7 +156,6 @@ void MExtensionHandleViewPrivate::allocatePixmapToBeTakenIntoUse(QSizeF size)
     QApplication::syncX();
     pixmapToBeTakenIntoUse = new QPixmap();
     *pixmapToBeTakenIntoUse = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
-    pixmapToBeTakenIntoUse->setAlphaChannel(*pixmapToBeTakenIntoUse);
 
     // Clear the pixmap
     QPainter painter(pixmapToBeTakenIntoUse);
