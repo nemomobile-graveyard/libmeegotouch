@@ -226,14 +226,20 @@ void MThemeDaemonServer::clientDataAvailable()
                                  new String("You must send registration packet before requesting anything else!"));
             } else {
                 // we got the registration packet so register the client, and continue normally
-                client = new MThemeDaemonClient(socket, static_cast<const String *>(packet.data())->string, daemon.themeInheritanceChain());
-                registeredClients.insert(socket, client);
-                daemon.addClient(client);
-                client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
-                                           new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
-                client->stream() << Packet(Packet::MostUsedPixmapsPacket, ++sequenceCounter,
-                                           new MostUsedPixmaps(daemon.mostUsedPixmaps.mostUsedPixmapHandles(), QList<PixmapIdentifier>()));
-                break;
+                const QString clientName = static_cast<const String *>(packet.data())->string;
+                if (clientName.isEmpty()) {
+                    stream << Packet(Packet::ErrorPacket, packet.sequenceNumber(),
+                                     new String("The registration packet must provide a name for the client"));
+                } else {
+                    client = new MThemeDaemonClient(socket, clientName, daemon.themeInheritanceChain());
+                    registeredClients.insert(socket, client);
+                    daemon.addClient(client);
+                    client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
+                                               new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+                    client->stream() << Packet(Packet::MostUsedPixmapsPacket, ++sequenceCounter,
+                                               new MostUsedPixmaps(daemon.mostUsedPixmaps.mostUsedPixmapHandles(), QList<PixmapIdentifier>()));
+                    break;
+                }
             }
         }
     }
