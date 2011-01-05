@@ -6,6 +6,7 @@ ANIMATION_SRC_DIR=./animation
 INCLUDEPATH+=./animation ./animation/core ./animation/scene ./animation/widget ./animation/widget/core
 
 include(core/core.pri)
+include(easingcurves/easingcurves.pri)
 include(scene/scene.pri)
 include(widget/widget.pri)
 

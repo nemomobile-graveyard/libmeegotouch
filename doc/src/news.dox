@@ -1,5 +1,8 @@
 /*! \page news What's new in MeeGo Touch
 
+\section v02070 0.20.70
+- MOvershotBezierEasingCurve - an easing curve class using a custom bezier easing function. For use in animations in libmeegotouch-based applications.
+
 \section v02061 0.20.61
 
 \subsection Changed
