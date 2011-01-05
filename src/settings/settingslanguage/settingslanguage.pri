@@ -1,3 +1,5 @@
+INCLUDEPATH += .
+
 STYLE_HEADERS += \
     settingslanguage/msettingslanguagesettingsfactorystyle.h
 

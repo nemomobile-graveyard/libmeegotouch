@@ -20,6 +20,7 @@
 #include "msettingslanguageinteger.h"
 #include "msettingslanguageintegerfactory.h"
 #include "msettingslanguageintegercontroller.h"
+#include "msettingslanguagewidget.h"
 
 #include <MWidgetView>
 #include <MLabel>

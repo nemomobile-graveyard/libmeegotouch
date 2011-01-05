@@ -21,6 +21,7 @@
 #include "msettingslanguagetextcontroller.h"
 #include "msettingslanguagebinary.h"
 #include "msettingslanguagetext.h"
+#include "msettingslanguagewidget.h"
 
 #include <MWidgetView>
 #include <MLabel>

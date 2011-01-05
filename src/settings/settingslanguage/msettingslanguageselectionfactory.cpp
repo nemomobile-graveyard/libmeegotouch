@@ -21,6 +21,7 @@
 #include "msettingslanguageselectioncontroller.h"
 #include "msettingslanguageselection.h"
 #include "msettingslanguageoption.h"
+#include "msettingslanguagewidget.h"
 
 #include <MWidgetView>
 #include <MLayout>

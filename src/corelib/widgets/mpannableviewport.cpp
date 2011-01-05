@@ -475,7 +475,7 @@ void MPannableViewport::updateData(const QList<const char *> &modifications)
     foreach(member, modifications) {
         if (member == MPannableWidgetModel::VerticalPanningPolicy) {
             if (verticalPanningPolicy() == PanningAlwaysOff) {
-                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() & !Qt::Vertical);
+                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() & ~Qt::Vertical);
             } else {
                 d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() | Qt::Vertical);
             }
@@ -483,7 +483,7 @@ void MPannableViewport::updateData(const QList<const char *> &modifications)
 
         if (member == MPannableWidgetModel::HorizontalPanningPolicy) {
             if (horizontalPanningPolicy() == PanningAlwaysOff) {
-                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() & !Qt::Horizontal);
+                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() & ~Qt::Horizontal);
             } else {
                 d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() | Qt::Horizontal);
             }

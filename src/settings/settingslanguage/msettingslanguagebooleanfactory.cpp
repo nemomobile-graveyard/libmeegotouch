@@ -20,6 +20,7 @@
 #include "msettingslanguagebooleanfactory.h"
 #include "msettingslanguagebooleancontroller.h"
 #include "msettingslanguageboolean.h"
+#include "msettingslanguagewidget.h"
 
 #include <MWidgetView>
 #include <MLayout>

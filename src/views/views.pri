@@ -3,6 +3,8 @@
 # This module contains all classes implemeting widget views.
 ###############################################################################
 
+INCLUDEPATH += .
+
 PUBLIC_HEADERS += \
     mapplicationpageview.h \
     mcomboboxview.h \

@@ -28,10 +28,10 @@ win32 {
     }
 
 contains(TEMPLATE, app) {
-    DEFINES += M_APPLICATION_NAME=\\\"${QMAKE_TARGET}\\\"
+    DEFINES += M_APPLICATION_NAME=\\\"$(QMAKE_TARGET)\\\"
 } else {
     contains(TEMPLATE, lib) {
-        DEFINES += M_LIBRARY_NAME=\\\"lib${QMAKE_TARGET}\\\"
+        DEFINES += M_LIBRARY_NAME=\\\"lib$(QMAKE_TARGET)\\\"
     } else {
         # error(Unknown template)
     }
