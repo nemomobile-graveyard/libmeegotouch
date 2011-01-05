@@ -56,6 +56,12 @@ class M_CORE_EXPORT MBannerModel : public MSceneWindowModel
     */
 
     M_MODEL_PROPERTY(QString, prefixTimeStamp, PrefixTimeStamp, true, QString())
+
+    /*!
+        \property Pixmap in MBanner
+    */
+
+    M_MODEL_PROPERTY(QPixmap, pixmap, Pixmap, false, QPixmap())
 };
 
 #endif

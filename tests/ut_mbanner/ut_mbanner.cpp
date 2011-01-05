@@ -164,4 +164,11 @@ void Ut_MBanner::testBannerClicking()
     delete banner;
 }
 
+void Ut_MBanner::testPixmap()
+{
+    QPixmap pixmapTest("bannerpixmap.png");
+    m_subject->setPixmap(pixmapTest);
+    QCOMPARE(pixmapTest, m_subject->pixmap());
+}
+
 QTEST_APPLESS_MAIN(Ut_MBanner)

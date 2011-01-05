@@ -17,37 +17,16 @@
 **
 ****************************************************************************/
 
-#ifndef UT_MBANNER_H
-#define UT_MBANNER_H
+#include "mbannermodel.h"
 
-#include <QtTest/QtTest>
-#include <QObject>
-#include <QDateTime>
-#include "mbanner.h"
-
-class Ut_MBanner : public QObject
+const QPixmap& MBannerModel::pixmap() const
 {
-    Q_OBJECT
+    return _pixmap();
+}
 
-private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
+void MBannerModel::setPixmap(const QPixmap &pixmap)
+{
+    _pixmap() = pixmap;
+    memberModified(Pixmap);
+}
 
-    void testTitle();
-    void testSubTitle();
-    void testIcon();
-    void testTimeStamp();
-    void testPrefixTimeStamp();
-    void testUpdatingTimeStamp();
-    void testBannerCreation();
-    void testBannerClicking();
-    void testPixmap();
-
-private:
-    MBanner *m_subject;
-    MBanner *m_tmp;
-};
-
-#endif

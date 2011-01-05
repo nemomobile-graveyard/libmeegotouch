@@ -146,6 +146,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mlistfilter.cpp \
     $$WIDGETS_SRC_DIR/mgriditem.cpp \
     $$WIDGETS_SRC_DIR/minfobannermodel.cpp \
+    $$WIDGETS_SRC_DIR/mbannermodel.cpp \
     $$WIDGETS_SRC_DIR/mapplicationmenu.cpp \
     $$WIDGETS_SRC_DIR/mmessagebox.cpp \
     $$WIDGETS_SRC_DIR/mnavigationbar.cpp \

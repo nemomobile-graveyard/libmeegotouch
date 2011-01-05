@@ -50,7 +50,7 @@ public:
     MImageWidget *icon();
     MLabel *bannerTimeStamp();
     MLabel *prefixTimeStamp();
-
+    MImageWidget *pixmap();
 
     void setTitle(const QString& string);
     void setSubtitle(const QString& string);
@@ -59,6 +59,7 @@ public:
     void setPrefixTimeStamp(const QString& string);
     void updateDateFormat() const;
     void refreshStyleMode();
+    void setPixmap(const QPixmap& pixmapTemp);
 
 protected:
     MLayout * layout;
@@ -84,6 +85,7 @@ protected:
     MLabel *prefixTimeStampLabel;
     QDateTime *bannerTimeStampData;
     bool down;
+    MImageWidget *pixmapBanner;
 
     MBanner *controller;
 };

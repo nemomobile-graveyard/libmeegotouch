@@ -71,6 +71,11 @@ QString MBanner::prefixTimeStamp() const
     return model()->prefixTimeStamp();
 }
 
+QPixmap MBanner::pixmap() const
+{
+    return model()->pixmap();
+}
+
 void MBanner::setIconID(const QString &iconId)
 {
     model()->setIconID(iconId);
@@ -94,4 +99,9 @@ void MBanner::setBannerTimeStamp(const QDateTime &date)
 void MBanner::setPrefixTimeStamp(const QString &text)
 {
     model()->setPrefixTimeStamp(text);
+}
+
+void MBanner::setPixmap(const QPixmap &pixmap)
+{
+    model()->setPixmap(pixmap);
 }

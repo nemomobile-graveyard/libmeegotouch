@@ -23,6 +23,9 @@
 #include <mscenewindow.h>
 #include <mbannermodel.h>
 
+class MBannerPrivate;
+
+
 /*!
     \class MBanner
     \brief A class that represents in-process notification banner.
@@ -220,6 +223,11 @@ public:
      */
     QString prefixTimeStamp() const;
 
+    /*!
+        \brief Get the pixmap of the mbanner
+    */
+    QPixmap pixmap() const;
+
 Q_SIGNALS:
 
     /*!
@@ -259,8 +267,15 @@ public Q_SLOTS:
      */
     void setPrefixTimeStamp(const QString &text);
 
+    /**
+        \brief Sets a pixmap for the banner.
+        \param pixmap
+    */
+    void setPixmap(const QPixmap &pixmap);
+
 private:
     Q_DISABLE_COPY(MBanner)
+    Q_DECLARE_PRIVATE(MBanner)
 
 #ifdef UNIT_TEST
     friend class Ut_MBanner;
