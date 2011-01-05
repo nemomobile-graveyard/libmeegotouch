@@ -245,8 +245,13 @@ MWidget *MApplicationMenuViewPrivate::createWidget(QAction *action)
             if (widget) {
                 MComboBox *comboBox = qobject_cast<MComboBox *>(widget);
                 if (comboBox) {
-                    comboBox->setStyleName("menucomboboxcommand");
+                    if (comboBox->styleName().isEmpty())
+                        comboBox->setStyleName("menucomboboxcommand");
                     connect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
+                } else {
+                    MWidgetController *widgetCtrl = qobject_cast<MWidgetController *>(widget);
+                    if (widgetCtrl && widgetCtrl->styleName().isEmpty())
+                        widgetCtrl->setStyleName("menuwidgetcommand");
                 }
                 leasedWidgets.insert(action, widget);
             }

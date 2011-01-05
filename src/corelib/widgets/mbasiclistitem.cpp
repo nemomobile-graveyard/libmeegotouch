@@ -253,6 +253,7 @@ MLabel *MBasicListItem::subtitleLabelWidget()
 
     if (!d->subtitleLabel) {
         d->subtitleLabel = new MLabel(this);
+        d->subtitleLabel->setTextElide(true);
         d->subtitleLabel->setObjectName("CommonSubTitle");
     }
 
