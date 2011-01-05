@@ -69,7 +69,7 @@ public:
     int restartCount;
 
     //! Time since the process was started, for checking how long the remote process could run before breaking
-    QElapsedTimer processStartTime;
+    QTime processStartTime;
 
     //! A server for IPC communication between the processes
     MAppletServer communicator;
