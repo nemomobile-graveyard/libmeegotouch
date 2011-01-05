@@ -40,6 +40,7 @@
 #include <MDialog>
 #include <MSceneManager>
 #include <MObjectMenu>
+#include <MNavigationBar>
 
 #include <MComboBox>
 #include <MDebug>
@@ -690,6 +691,7 @@ void MListPage::showAdvancedConfigurationDialog()
         dialogAdvancedConfiguration->centralWidget()->setLayout(layout);
     }
 
+    connect(dialogAdvancedConfiguration, SIGNAL(disappeared()), this, SLOT(setFocusToList()));
     dialogAdvancedConfiguration->appear(MSceneWindow::DestroyWhenDismissed);
 }
 
@@ -708,6 +710,28 @@ void MListPage::showTextEdit(bool show)
         layout->removeAt(0);
         textEdit->setText("");
     }
+}
+
+MNavigationBar* MListPage::navigationBar()
+{
+    MNavigationBar *navBar = NULL;
+
+    int i = 0;
+    QList<QGraphicsItem *> sceneItems = scene()->items();
+    while (!navBar && i < sceneItems.count()) {
+        QGraphicsItem *item = sceneItems.at(i++);
+        if (item->isWidget()) {
+            QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
+            navBar = qobject_cast<MNavigationBar*>(widget);
+        }
+    }
+
+    return navBar;
+}
+
+void MListPage::setFocusToList()
+{
+    list->setFocus();
 }
 
 void MListPage::createContent()
@@ -731,6 +755,14 @@ void MListPage::createContent()
     connect(list, SIGNAL(itemLongTapped(QModelIndex,QPointF)), this, SLOT(itemLongTapped(QModelIndex,QPointF)));
 
     connect(sceneManager(), SIGNAL(orientationChanged(M::Orientation)), this, SLOT(loadPicturesInVisibleItems()));
+
+    MNavigationBar *bar = navigationBar();
+    if (bar) {
+        connect(bar, SIGNAL(viewmenuTriggered()), this, SLOT(setFocusToList()));
+        connect(bar, SIGNAL(closeButtonClicked()), this, SLOT(setFocusToList()));
+        connect(bar, SIGNAL(backButtonClicked()), this, SLOT(setFocusToList()));
+    }
+    connect(objectMenu, SIGNAL(disappeared()), this, SLOT(setFocusToList()));
 
     retranslateUi();
 }
