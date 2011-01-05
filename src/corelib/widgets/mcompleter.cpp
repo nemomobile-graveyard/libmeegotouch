@@ -314,7 +314,7 @@ void MCompleterPrivate::updateScene(bool isResetFocus)
     if (matchedModel->rowCount() > 0) {
         q->model()->setMatchedIndex(0);
         q->model()->setActive(true);
-        q->widget()->sceneManager()->appearSceneWindow(q);
+        q->widget()->sceneManager()->appearSceneWindowNow(q);
         emit q->shown();
     } else if (q->isActive()) {
         reset();
@@ -445,7 +445,7 @@ void MCompleter::hideCompleter()
         // change active state to false before really hidden to notify view
         // to do necessary clear.
         model()->setActive(false);
-        widget()->sceneManager()->disappearSceneWindow(this);
+        widget()->sceneManager()->disappearSceneWindowNow(this);
         emit hidden();
     }
 }
