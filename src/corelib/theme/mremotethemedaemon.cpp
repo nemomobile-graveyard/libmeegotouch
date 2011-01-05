@@ -25,7 +25,7 @@
 #include "mapplication.h"
 #include "mwindow.h"
 #include <QDir>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QTimer>
 #include <QSettings>
 
@@ -109,8 +109,8 @@ void MRemoteThemeDaemon::clearPixmapSearchList()
 
 bool MRemoteThemeDaemonPrivate::waitForServer(const QString &serverAddress, int timeout)
 {
-    QTime time;
-    time.start();
+    QElapsedTimer timer;
+    timer.start();
 
     while (1) {
         // try to connect
@@ -119,10 +119,8 @@ bool MRemoteThemeDaemonPrivate::waitForServer(const QString &serverAddress, int 
             return true;
 
         // check for timeout
-        if (timeout != -1) {
-            if (time.elapsed() >= timeout) {
-                return false;
-            }
+        if (timeout != -1 && timeout <= timer.elapsed()) {
+            return false;
         }
 
         qCritical() << "Failed to connect to remote themedaemon. Retrying in one second.";
