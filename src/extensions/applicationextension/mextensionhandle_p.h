@@ -24,7 +24,7 @@
 #include "private/mwidgetcontroller_p.h"
 #include "mappletserver.h"
 
-#include <QTime>
+#include <QElapsedTimer>
 #include <QTimer>
 #include <QProcess>
 
@@ -69,7 +69,7 @@ public:
     int restartCount;
 
     //! Time since the process was started, for checking how long the remote process could run before breaking
-    QTime processStartTime;
+    QElapsedTimer processStartTime;
 
     //! A server for IPC communication between the processes
     MAppletServer communicator;

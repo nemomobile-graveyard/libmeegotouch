@@ -31,8 +31,7 @@ MBasicLayoutAnimationPrivate::~MBasicLayoutAnimationPrivate()
 void MBasicLayoutAnimationPrivate::tick()
 {
     Q_Q(MBasicLayoutAnimation);
-    recordedTimeSinceLastUpdate = timeSinceLastUpdate.elapsed();
-    timeSinceLastUpdate.restart();
+    recordedTimeSinceLastUpdate = timeSinceLastUpdate.restart();
     bool layout_is_done(true);
     for(int i = states.count() - 1; i >= 0; --i) {
         MItemState &state = states[i];

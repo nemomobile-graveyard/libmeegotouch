@@ -38,7 +38,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QPointer>
-#include <QTime>
+#include <QElapsedTimer>
 
 #include "mapplication.h"
 #include "mapplicationwindow.h"
@@ -139,7 +139,7 @@ public:
     }
 
 private:
-    QTime time;
+    QElapsedTimer time;
     bool skipNext;
     bool haveSeenAnyKeyEvent;
 

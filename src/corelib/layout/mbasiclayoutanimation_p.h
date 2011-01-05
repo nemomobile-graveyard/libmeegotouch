@@ -24,7 +24,7 @@
 #include "mlayoutanimation_p.h"
 #include "mitemstate_p.h"
 
-#include <QtCore/QTime>
+#include <QElapsedTimer>
 
 /** Private animator class. */
 class MBasicLayoutAnimationPrivate : public MLayoutAnimationPrivate
@@ -68,7 +68,7 @@ public:
     /** Keep track of the time elapsed since the last update.
       * This is used because we may miss some timer events.
       */
-    QTime timeSinceLastUpdate;
+    QElapsedTimer timeSinceLastUpdate;
     /** The number of milliseconds elapsed since last update
      *
      * This records the value of timeSinceLastUpdate when an update happens

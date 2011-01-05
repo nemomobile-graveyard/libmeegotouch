@@ -23,7 +23,7 @@
 #include "msliderview.h"
 
 #include <MWidget>
-#include <QTime>
+#include <QElapsedTimer>
 #include "mslidermodel.h"
 
 class MSlider;
@@ -289,7 +289,7 @@ public:
 
     QPropertyAnimation *positionAnimation;
 
-    QTime feedbackTimer;
+    QElapsedTimer feedbackTimer;
     int valueWhenFeedback;
 
     int pressTimerId;

@@ -23,7 +23,7 @@
 #include <QLocalSocket>
 #include <QMap>
 #include <QTimer>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QDataStream>
 #include <QObject>
 
@@ -64,7 +64,7 @@ public:
 
     // Contains time (in milliseconds) from the previous successfull connection
     // to the feedback daemon.
-    QTime previousSuccessfullConnection;
+    QElapsedTimer previousSuccessfullConnection;
 
     // Contains number of successive successfull connections to feedback daemon
     // that have happened in less than fastReconnectionTime.
