@@ -429,11 +429,7 @@ MButtonView::~MButtonView()
 
 void MButtonView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    Q_D(MButtonView);
-
     MWidgetView::resizeEvent(event);
-
-    d->calcIconTextRects();
 }
 
 void MButtonView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -549,6 +545,14 @@ void MButtonView::cancelEvent(MCancelEvent *event)
     model()->setDown(false);
 }
 
+void MButtonView::setGeometry(const QRectF &rect)
+{
+    Q_D(MButtonView);
+    MWidgetView::setGeometry(rect);
+
+    d->calcIconTextRects();
+}
+
 void MButtonView::updateData(const QList<const char *>& modifications)
 {
     Q_D(MButtonView);
@@ -556,29 +560,29 @@ void MButtonView::updateData(const QList<const char *>& modifications)
     MWidgetView::updateData(modifications);
     const char *member;
 
-    bool mustCalcIconTextRects = false;
+    bool mustUpdateGeometry = false;
     bool mustUpdateIcon = false;
     bool mustUpdateToggledIcon = false;
 
     foreach(member, modifications) {
         if (member == MButtonModel::Text) {
             d->label->setText(model()->text());
-            mustCalcIconTextRects = true;
+            mustUpdateGeometry = true;
         } else if (member == MButtonModel::TextVisible) {
             d->label->setVisible(model()->textVisible());
-            mustCalcIconTextRects = true;
+            mustUpdateGeometry = true;
         } else if (member == MButtonModel::IconID) {
             mustUpdateIcon = true;
-            mustCalcIconTextRects = true;
+            mustUpdateGeometry = true;
         } else if (member == MButtonModel::ToggledIconID) {
             mustUpdateToggledIcon = true;
-            mustCalcIconTextRects = true;
+            mustUpdateGeometry = true;
         } else if (member == MButtonModel::Icon) {
             mustUpdateIcon = true;
             mustUpdateToggledIcon = true;
-            mustCalcIconTextRects = true;
+            mustUpdateGeometry = true;
         } else if (member == MButtonModel::IconVisible) {
-            mustCalcIconTextRects = true;
+            mustUpdateGeometry = true;
         } else if (member == MButtonModel::Down || member == MButtonModel::Checked ||
                    member == MButtonModel::Checkable) {
             d->refreshStyleMode();
@@ -593,8 +597,8 @@ void MButtonView::updateData(const QList<const char *>& modifications)
         d->updateToggledIcon();
     }
 
-    if (mustCalcIconTextRects) {
-        d->calcIconTextRects();
+    if (mustUpdateGeometry) {
+        updateGeometry();
     }
 
     update();
