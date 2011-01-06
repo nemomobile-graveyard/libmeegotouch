@@ -92,8 +92,8 @@ void MBasicListItemPrivate::createLayout()
 void MBasicListItemPrivate::clearLayout()
 {
     if (layout()) {
-        for (int i = 0; i < layout()->count(); i++)
-            layout()->removeAt(0);
+        for (int i = layout()->count() - 1; i >= 0; i--)
+            layout()->removeAt(i);
     }
     updateWidgetVisiblity();
 }
