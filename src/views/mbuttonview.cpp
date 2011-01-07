@@ -180,6 +180,7 @@ void MButtonViewPrivate::updateItemsAfterModeChange()
     label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
     label->setFont(q->style()->font());
     label->setColor(q->style()->textColor());
+    label->setOpacity(q->style()->contentOpacity());
 
     updateIcon();
     updateToggledIcon();
@@ -455,9 +456,12 @@ void MButtonView::drawIcon(QPainter *painter, const QRectF &iconRect) const
             pixmap = d->toggledIcon->pixmap;
         else if (d->icon)
             pixmap = d->icon->pixmap;
-
-        if (pixmap)
+        if( pixmap && style()->contentOpacity() >= 0.0 ) {
+            qreal formerOpacity = painter->opacity();
+            painter->setOpacity(d->controller->effectiveOpacity() * style()->contentOpacity());
             painter->drawPixmap(iconRect, *pixmap, QRectF(pixmap->rect()));
+            painter->setOpacity(formerOpacity);
+        }
     }
 }
 

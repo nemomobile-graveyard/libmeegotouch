@@ -154,6 +154,12 @@ class M_VIEWS_EXPORT MButtonStyle : public MWidgetStyle
 
     */
     M_STYLE_ATTRIBUTE(int,                    pressTimeout,         PressTimeout)
+    
+    /*!
+        \property MButtonStyle::contentOpacity
+        \brief Content opacity.
+    */
+    M_STYLE_ATTRIBUTE(qreal, contentOpacity, contentOpacity)    
 };
 
 /*!

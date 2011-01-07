@@ -35,8 +35,7 @@ class M_VIEWS_EXPORT MButtonIconStyle : public MButtonStyle
     M_STYLE_INTERNAL(MButtonIconStyle)
 
     /*!
-        \property MButtonStyle::contentOpacity
-        \brief Content opacity.
+      \deprecated Property was added to MButtonStyle.
     */
     M_STYLE_ATTRIBUTE(qreal, contentOpacity, contentOpacity)
 

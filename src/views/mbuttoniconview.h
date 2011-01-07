@@ -24,7 +24,6 @@
 #include <mbuttonmodel.h>
 #include <mbuttoniconstyle.h>
 
-class MButtonIconViewPrivate;
 class MButton;
 
 /*!
@@ -34,16 +33,9 @@ class MButton;
     \ingroup views
 
     \section MButtonIconViewOverview Overview
-        MButtonIconView draws an icon and text similarly as MButtonView
-        using the same styling attributes. However this view adds some animations
-        when interacting with a button:
-
-        - When pressing button down the content is drawn with style defined opacity.
-        - When releasing button the icon and label opacity is reset.
-
- * MButtonIconView supports the following CSS features:
- *
- * content-opacity (type: qreal e.g. 0.75) : sets the opacity of the icon and text label<br>
+        MButtonIconView is used for drawing buttons without a background.
+        The icon and the text are rendered similarly as in the MButtonView
+        using the same styling attributes.
 
     \section MButtonIconViewInteractions Interactions
         See \ref MButtonViewInteractions.
@@ -69,16 +61,15 @@ public:
     virtual ~MButtonIconView();
 
 protected:
+
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void applyStyle();
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
-
 private:
     Q_DISABLE_COPY(MButtonIconView)
-    Q_DECLARE_PRIVATE(MButtonIconView)
 
 #ifdef UNIT_TEST
     friend class Ut_MButtonIconView;
