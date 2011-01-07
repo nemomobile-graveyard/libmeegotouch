@@ -22,6 +22,8 @@
 #include "mstylesheetattribute.h"
 #include "mstylesheetparser.h"
 
+#include <algorithm>
+
 void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &other)
 {
     objectName = other.objectName;
@@ -33,43 +35,15 @@ void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &oth
     parentObjectName = other.parentObjectName;
     flags = other.flags;
 
-    // copy attributes
-    MAttributeList::const_iterator otherAttributesEnd = other.attributes.constEnd();
-
-    for (MAttributeList::const_iterator iterator = other.attributes.begin(); iterator != otherAttributesEnd; ++iterator) {
-        // attribute to copy
-        MStyleSheetAttribute *source = *iterator;
-
-        // copy of attribute
-        MStyleSheetAttribute *copy = new MStyleSheetAttribute(*source);
-
-        // add copy of attribute to data list
-        attributes.insert(iterator.key(), copy);
-    }
+    // the attributes are supposed to come from mapped memory. we can simply reuse the pointer
+    attributeList = other.attributeList;
+    attributeCount = other.attributeCount;
 }
 
-
-MStyleSheetSelector::MStyleSheetSelector(const MUniqueStringCache::Index objectName,
-        const MUniqueStringCache::Index className,
-        const MUniqueStringCache::Index classType,
-        const Orientation orientation,
-        const MUniqueStringCache::Index mode,
-        const MUniqueStringCache::Index parentName,
-        Flags flags) :
-    d_ptr(new MStyleSheetSelectorPrivate)
-{
-    Q_D(MStyleSheetSelector);
-    d->objectName = objectName;
-    d->className = className;
-    d->classType = classType;
-    d->screenOrientation = orientation;
-    d->objectMode = mode;
-    d->parentName = parentName;
-    d->parentObjectName = MUniqueStringCache::UndefinedIndex;
-    d->flags = flags;
-}
-
-MStyleSheetSelector::MStyleSheetSelector(const MUniqueStringCache::Index objectName,
+MStyleSheetSelector::MStyleSheetSelector(
+        MStyleSheetAttribute *attributeList,
+        int attributeCount,
+        const MUniqueStringCache::Index objectName,
         const MUniqueStringCache::Index className,
         const MUniqueStringCache::Index classType,
         const Orientation orientation,
@@ -80,6 +54,8 @@ MStyleSheetSelector::MStyleSheetSelector(const MUniqueStringCache::Index objectN
     d_ptr(new MStyleSheetSelectorPrivate)
 {
     Q_D(MStyleSheetSelector);
+    d->attributeList = attributeList;
+    d->attributeCount = attributeCount;
     d->objectName = objectName;
     d->className = className;
     d->classType = classType;
@@ -98,18 +74,31 @@ MStyleSheetSelector::MStyleSheetSelector(const MStyleSheetSelector &other) :
 
 MStyleSheetSelector::~MStyleSheetSelector()
 {
-    Q_D(MStyleSheetSelector);
-
-    qDeleteAll(d->attributes);
-    d->attributes.clear();
     delete d_ptr;
 }
 
-
-MAttributeList *MStyleSheetSelector::attributes()
+MStyleSheetAttribute* MStyleSheetSelector::attributeList() const
 {
-    Q_D(MStyleSheetSelector);
-    return &d->attributes;
+    Q_D(const MStyleSheetSelector);
+    return d->attributeList;
+}
+
+MStyleSheetAttribute* MStyleSheetSelector::attributeByName(MUniqueStringCache::Index name) const
+{
+    MStyleSheetAttribute *attributes = attributeList();
+    MStyleSheetAttributeComparator comp;
+    MStyleSheetAttribute *attribute = std::lower_bound(attributes, attributes + attributeCount(), name, comp);
+    if (attribute == &attributes[attributeCount()]) {
+        return 0;
+    } else {
+        return attribute;
+    }
+}
+
+int MStyleSheetSelector::attributeCount() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->attributeCount;
 }
 
 QByteArray MStyleSheetSelector::parentName() const

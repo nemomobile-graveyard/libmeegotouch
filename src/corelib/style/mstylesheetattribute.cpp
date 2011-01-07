@@ -277,22 +277,27 @@ MStyleSheetAttribute::MStyleSheetAttribute(const MStyleSheetAttribute &other)
     this->position = other.position;
 }
 
-QByteArray MStyleSheetAttribute::getName()
+QByteArray MStyleSheetAttribute::getName() const
 {
     return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(name);
 }
 
-MUniqueStringCache::Index MStyleSheetAttribute::getNameID()
+MUniqueStringCache::Index MStyleSheetAttribute::getNameID() const
 {
     return name;
 }
 
-QByteArray MStyleSheetAttribute::getValue()
+QByteArray MStyleSheetAttribute::getValue() const
 {
     return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(value);
 }
 
-qint64 MStyleSheetAttribute::getPosition()
+MUniqueStringCache::Index MStyleSheetAttribute::getValueID() const
+{
+    return value;
+}
+
+qint64 MStyleSheetAttribute::getPosition() const
 {
     return position;
 }

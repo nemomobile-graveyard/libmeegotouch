@@ -49,10 +49,11 @@ public:
     MStyleSheetAttribute(MUniqueStringCache::Index name, MUniqueStringCache::Index value, qint64 position);
     MStyleSheetAttribute(const MStyleSheetAttribute &other);
 
-    QByteArray getName();
-    MUniqueStringCache::Index getNameID();
-    QByteArray getValue();
-    qint64 getPosition();
+    QByteArray getName() const;
+    MUniqueStringCache::Index getNameID() const;
+    QByteArray getValue() const;
+    MUniqueStringCache::Index getValueID() const;
+    qint64 getPosition() const;
 
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk);
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
@@ -70,6 +71,9 @@ public:
                         M::Orientation orientation);
 
 private:
+    // needed by MStyleSheetParserPrivate
+    MStyleSheetAttribute() {}
+
     // Fills a property with a variant and caches the variant if possible.
     // Pointer types cannot be cached as the ownership is transfered to the property.
     // Caching must be disabled for them.
@@ -87,7 +91,14 @@ private:
     friend class MStyleSheetParserPrivate;
 };
 
-typedef QMap<MUniqueStringCache::Index, MStyleSheetAttribute *> MAttributeList;
+struct MStyleSheetAttributeComparator
+{
+    bool operator()(const MStyleSheetAttribute& a1, MUniqueStringCache::Index name)
+    {
+        return a1.getNameID() < name;
+    }
+};
+
 //! \internal_end
 
 #endif

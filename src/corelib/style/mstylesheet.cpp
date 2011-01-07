@@ -314,10 +314,10 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                 }
 
                 // None of the early out tests failed, so we're happy with these settings, loop 'em through and copy them to list
-                MAttributeList::const_iterator attributesEnd = selector->attributes()->constEnd();
-
-                for (MAttributeList::const_iterator j = selector->attributes()->constBegin(); j != attributesEnd; ++j) {
-                    MUniqueStringCache::Index propertyName = j.key();
+                MStyleSheetAttribute *attributes = selector->attributeList();
+                int attributeCount = selector->attributeCount();
+                for (int i = 0; i < attributeCount; ++i) {
+                    MUniqueStringCache::Index propertyName = attributes[i].getNameID();
 
                     CacheEntry::iterator iter = (*entry).find(propertyName);
                     // Check if these settings are already in the list
@@ -332,12 +332,12 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                             existing->classPriority = classPriority;
                             existing->parentPriority = parentPriority;
                             existing->filename = fi->filename;
-                            existing->value = j.value();
+                            existing->value = &attributes[i];
                             existing->stylesheet = sheet;
                         }
                     } else {
                         // New settings, just add them to the hash
-                        (*entry)[propertyName] = new MOriginContainer(j.value(),
+                        (*entry)[propertyName] = new MOriginContainer(&attributes[i],
                                 selector,
                                 classPriority,
                                 parentPriority,
@@ -364,22 +364,25 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
     // match parent selectors to cached data
     foreach(const SelectorInfo & info, *spec.parentInfo) {
 
-        if (!info.selector->attributes())
+        if (info.selector->attributeCount() == 0)
             continue;
 
         // check all the attributes of this selector against the cached entry
-        foreach(MStyleSheetAttribute * attribute, *(info.selector->attributes())) {
-            MOriginContainer *old = data.value(attribute->getNameID(), NULL);
+
+        MStyleSheetAttribute *attributes = info.selector->attributeList();
+        int attributeCount = info.selector->attributeCount();
+        for (int i = 0; i < attributeCount; ++i) {
+            MOriginContainer *old = data.value(attributes[i].getNameID(), NULL);
             if (old && !isHigherPriority(old, info.selector, info.classPriority, info.parentPriority)) {
                     continue;
             }
 
             // override
-            MOriginContainer *tempMOriginCont =   new MOriginContainer(attribute, info.selector,
+            MOriginContainer *tempMOriginCont =   new MOriginContainer(&attributes[i], info.selector,
                                                                        info.classPriority,
                                                                        info.parentPriority,
                                                                        info.filename, info.stylesheet);
-            data[attribute->getNameID()] = tempMOriginCont;
+            data[attributes[i].getNameID()] = tempMOriginCont;
             tempMOriginContainers.append(tempMOriginCont);
         }
     }

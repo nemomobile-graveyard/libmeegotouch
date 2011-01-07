@@ -26,6 +26,10 @@
 class MStyleSheetSelectorPrivate
 {
 public:
+    //! Attribute list of this selector (ClassName#ObjectName.Orientation:Mode).
+    MStyleSheetAttribute *attributeList;
+    int attributeCount;
+
     //! Parent class name, represented by this selector.
     MUniqueStringCache::Index parentName;
     //! Parent class object name, represented by this selector.
@@ -40,8 +44,6 @@ public:
     MStyleSheetSelector::Orientation screenOrientation;
     //! Object mode, represented by this selector.
     MUniqueStringCache::Index objectMode;
-    //! Attribute list of this selector (ClassName#ObjectName.Orientation:Mode).
-    MAttributeList attributes;
     //! Name of the css file where the selector was created.
     MUniqueStringCache::Index fileName;
     //! Flags indicating whether this is a special kind of selector.

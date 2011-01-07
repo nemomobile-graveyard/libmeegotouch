@@ -39,43 +39,17 @@ class MStyleSheetSelectorPrivate;
  */
 class M_CORE_EXPORT MStyleSheetSelector
 {
-    //friend class MStyleSheetParser;
-
 public:
-
     enum Flags {
         Child           = 0x1,
         ExactClassMatch = 0x2
     };
 
     enum Orientation {
-	LandscapeOrientation = M::Landscape,
-	PortraitOrientation = M::Portrait,
-	UndefinedOrientation = 3
+        LandscapeOrientation = M::Landscape,
+        PortraitOrientation = M::Portrait,
+        UndefinedOrientation = 3
     };
-    /*!
-     * MStyleSheetSelector constructor
-     * \param objectName target object name of this selector, can be empty
-     * \param className target class name for this selector, can be empty
-     * \param classType class type
-     * \param orientation target orientation for this selector, can be empty
-     * \param mode target mode for this selector, can be empty
-     * \param filename Name of the css file where this selector was parsed, can be empty.
-              Parameter is used for providing detailed css parsing errors.
-     * \param parentName Name of parent
-     * \param child A flag indicating whether this selector represents a descendant or
-              direct child of the parent.
-     * \param subclasses A flag indicating whether the su
-     * \deprecated Please use the new constructor
-     */
-    explicit MStyleSheetSelector(MUniqueStringCache::Index objectName = MUniqueStringCache::UndefinedIndex,
-                                   MUniqueStringCache::Index className = MUniqueStringCache::UndefinedIndex,
-                                   MUniqueStringCache::Index classType = MUniqueStringCache::UndefinedIndex,
-                                   const Orientation orientation = UndefinedOrientation,
-                                   MUniqueStringCache::Index mode = MUniqueStringCache::UndefinedIndex,
-                                   MUniqueStringCache::Index parentName = MUniqueStringCache::UndefinedIndex,
-                                   Flags flags = (Flags) 0);
-
 
     /*!
      * MStyleSheetSelector constructor
@@ -93,14 +67,18 @@ public:
      * \param subclasses A flag indicating whether the su
      */
 
-    explicit MStyleSheetSelector(MUniqueStringCache::Index objectName,
-                                   MUniqueStringCache::Index className,
-                                   MUniqueStringCache::Index classType,
-                                   const Orientation orientation,
-                                   MUniqueStringCache::Index mode,
-                                   MUniqueStringCache::Index parentName,
-                                   MUniqueStringCache::Index parentObjectName,
-                                   Flags flags = (Flags) 0);
+    explicit MStyleSheetSelector(
+            MStyleSheetAttribute *attributeList,
+            int attributeCount,
+            MUniqueStringCache::Index objectName,
+            MUniqueStringCache::Index className,
+            MUniqueStringCache::Index classType,
+            const Orientation orientation,
+            MUniqueStringCache::Index mode,
+            MUniqueStringCache::Index parentName,
+            MUniqueStringCache::Index parentObjectName,
+            Flags flags = (Flags) 0);
+
     MUniqueStringCache::Index objectNameID() const;
     MUniqueStringCache::Index classNameID() const;
     MUniqueStringCache::Index classTypeID() const;
@@ -120,7 +98,17 @@ public:
     /*!
      * \brief Provides access for the attributes of this selector.
      */
-    MAttributeList *attributes();
+    MStyleSheetAttribute* attributeList() const;
+
+    /*!
+     * \brief Return attribute with a given name.
+     */
+    MStyleSheetAttribute* attributeByName(MUniqueStringCache::Index name) const;
+
+    /*!
+     * \brief Provides access for the attributes of this selector.
+     */
+    int attributeCount() const;
 
     /*!
      * \brief Returns the parent class name for this selector.

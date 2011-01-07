@@ -50,6 +50,7 @@ class M_CORE_EXPORT MStyleSheetParser
 public:
     //! \internal
     struct StylesheetFileInfo {
+        StylesheetFileInfo();
         ~StylesheetFileInfo();
         QByteArray filename;
         QVector<QPair<QByteArray, uint> > includes;
@@ -57,6 +58,7 @@ public:
         QList<MStyleSheetSelector *> parentSelectors;
         QHash<QByteArray, QByteArray> constants;
         uint time_t;
+        bool fromMapedMemory;
     };
     //! \internal_end
 
