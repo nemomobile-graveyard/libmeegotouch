@@ -35,6 +35,16 @@ bool MUserGuideIf::pageByPath( const QString &path )
     return qobject_cast<MUserGuideIfProxy*>(interfaceProxy())->pageByPath( path ).value();
 }
 
+bool MUserGuideIf::pageByPathChained( const QString &path )
+{
+    return pageByPathChained( path, QString() );
+}
+
+bool MUserGuideIf::pageByPathChained( const QString &path, const QString &_taskTitle )
+{
+    return qobject_cast<MUserGuideIfProxy*>(interfaceProxy())->pageByPathChained( path, _taskTitle ).value();
+}
+
 MUserGuideIf::MUserGuideIf( const QString& preferredService, QObject* parent )
     : MServiceFwBaseIf( MUserGuideIfProxy::staticInterfaceName(), parent )
 {

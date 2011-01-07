@@ -42,7 +42,7 @@ void MHelpButtonPrivate::_q_openHelp()
         mWarning("HelpButton") << "userguide service unavailable";
         return;
     }
-    bool success = iface.pageByPath(pageID);
+    bool success = iface.pageByPathChained(pageID);
     if (!success) {
         mWarning("HelpButton") << "userguide experienced an error when trying to "
             "open the page id";

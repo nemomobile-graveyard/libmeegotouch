@@ -52,7 +52,7 @@ public:
      *
      * Constructs a help button with a pageID.
      *
-     * \param pageID The id of the page to be openned when the button is clicked.
+     * \param pageID The id of the page to be opened when the button is clicked.
      * \param parent The parent of the widget.
      *
      * \sa setPageID about how to specify the page.

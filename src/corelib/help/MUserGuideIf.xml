@@ -15,6 +15,16 @@
             <arg name="path" type="s" direction="in"/>
             <arg name="" type="b" direction="out"/>
         </method>
+
+        <!--
+            Opens a page of the current userguide application chained to the
+            application which requests it.
+         -->
+        <method name="pageByPathChained" chainTask="true">
+            <arg name="path" type="s" direction="in"/>
+            <arg name="" type="b" direction="out"/>
+        </method>
+
     </interface>
 </node>
 

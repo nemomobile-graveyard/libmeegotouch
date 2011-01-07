@@ -37,6 +37,8 @@ Q_OBJECT
 public:
     bool mainPage();
     bool pageByPath( const QString &path );
+    bool pageByPathChained( const QString &path );
+    bool pageByPathChained( const QString &path, const QString &_taskTitle );
 
 public:
     /*!
