@@ -125,7 +125,11 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
         delete menu;
         menu = 0;
     }
+
     if (navigationBar) {
+        // MNavigationBarView is not destroyed until MNavigationBar destructor chain reaches ~MWidgetController
+        // so we have to notify the view earlier that the toolbar is already destroyed.
+        navigationBar->undockToolBar();
         delete navigationBar;
         navigationBar = 0;
     }

@@ -46,6 +46,9 @@ private:
     M_MODEL_PROPERTY(bool, progressIndicatorVisible, ProgressIndicatorVisible, true, false)
     M_MODEL_PROPERTY(bool, arrowIconVisible, ArrowIconVisible, true, false)
     M_MODEL_PTR_PROPERTY(MToolBar *, toolBar, ToolBar, true, 0)
+    // in the line above we should have something like:
+    // M_MODEL_PROPERTY(QPointer<MToolbar>, toolBar, ToolBar, true, 0)
+    // but it causes a potential ABI break.
     M_MODEL_PROPERTY(MNavigationBarModel::EscapeButtonModeEnum, escapeButtonMode, EscapeButtonMode, true,
                      MNavigationBarModel::EscapeButtonClose)
     M_MODEL_PROPERTY(bool, escapeButtonEnabled, EscapeButtonEnabled, true, true)
