@@ -2729,62 +2729,7 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
 QString MLocale::languageEndonym() const
 {
 #ifdef HAVE_ICU
-    Q_D(const MLocale);
-    QString resourceBundleLocaleName = this->name();
-
-    do {
-        // Trying several resource bundles is a workaround for
-        // http://site.icu-project.org/design/resbund/issues
-        UErrorCode status = U_ZERO_ERROR;
-        UResourceBundle *res = ures_open(U_ICUDATA_NAME "-lang",
-                                         qPrintable(resourceBundleLocaleName),
-                                         &status);
-        if (U_FAILURE(status)) {
-            mDebug("MLocale") << "Error ures_open" << u_errorName(status);
-            ures_close(res);
-            return this->name();
-        }
-        res = ures_getByKey(res, Languages, res, &status);
-        if (U_FAILURE(status)) {
-            mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
-            ures_close(res);
-            return this->name();
-        }
-        QString keyLocaleName = this->name();
-        // it’s not nice if “zh_CN”, “zh_HK”, “zh_MO”, “zh_TW” all fall back to
-        // “zh” for the language endonym and display only “中文”.
-        // To make the fallbacks work better, insert the script:
-        if (keyLocaleName.startsWith(QLatin1String("zh_CN")))
-            keyLocaleName = "zh_Hans_CN";
-        else if (keyLocaleName.startsWith(QLatin1String("zh_SG")))
-            keyLocaleName = "zh_Hans_SG";
-        else if (keyLocaleName.startsWith(QLatin1String("zh_HK")))
-            keyLocaleName = "zh_Hant_HK";
-        else if (keyLocaleName.startsWith(QLatin1String("zh_MO")))
-            keyLocaleName = "zh_Hant_MO";
-        else if (keyLocaleName.startsWith(QLatin1String("zh_TW")))
-            keyLocaleName = "zh_Hant_TW";
-        do {
-            int len;
-            status = U_ZERO_ERROR;
-            const UChar *val = ures_getStringByKey(res,
-                                                   qPrintable(keyLocaleName),
-                                                   &len,
-                                                   &status);
-            if (U_SUCCESS(status)) {
-                // found language endonym, return it:
-                ures_close(res);
-                return QString::fromUtf16(val, len);
-            }
-        } while (d->truncateLocaleName(&keyLocaleName));
-        // no language endonym found in this resource bundle and there
-        // is no way to shorten keyLocaleName, try the next resource
-        // bundle:
-        ures_close(res);
-    } while (d->truncateLocaleName(&resourceBundleLocaleName));
-    // no language endonym found at all, no other keys or resource
-    // bundles left to try, return the full locale name as a fallback:
-    return this->name();
+    return languageEndonym(this->name());
 #else
     Q_D(const MLocale);
     return QLocale::languageToString(d->createQLocale(MLcMessages).language());

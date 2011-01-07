@@ -1666,7 +1666,7 @@ public:
     static QString localeScript(const QString &locale);
 
     /*!
-     * \bried Static method to obtain endonym for locale.
+     * \brief Static method to obtain endonym for locale.
      * Can be used to obtain endonym without instantiating MLocale, useful
      * when obtaining a list of endonyms for a lot of languages.
      */
