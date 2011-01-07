@@ -127,6 +127,12 @@ void Ut_MSwipeRecognizer::testFastTap()
     QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
 }
 
+qint64 elapsedTime = 0;
+qint64 QElapsedTimer::elapsed() const
+{
+    return elapsedTime;
+}
+
 void Ut_MSwipeRecognizer::testTimedout()
 {
     QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(0,0), QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
@@ -136,10 +142,12 @@ void Ut_MSwipeRecognizer::testTimedout()
     currentState = recognizer->recognize(swipeGesture, 0, &pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
 
-    swipeGesture->time = QTime().currentTime().addSecs(-3);
+    elapsedTime = 3000;
 
     currentState = recognizer->recognize(swipeGesture, 0, &moveEvent);
     QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
+
+    elapsedTime = 0;
 
 }
 

@@ -21,6 +21,7 @@
 #define MSWIPEGESTURE_P_H
 
 #include <QSwipeGesture>
+#include <QElapsedTimer>
 
 //! \internal
 
@@ -66,7 +67,7 @@ private:
     /*!
      Time of the initial mousepress used to check if the swipe gesture is fast enough.
      */
-    QTime time;
+    QElapsedTimer timer;
 
     friend class MSwipeRecognizer;
     friend class MSwipeRecognizerPrivate;

@@ -26,7 +26,7 @@
 #include "mtheme.h"
 
 #include <QEvent>
-#include <QBasicTimer>
+#include <QElapsedTimer>
 #include <QGraphicsSceneMouseEvent>
 #include <QTouchEvent>
 #include <QLineF>
@@ -69,7 +69,7 @@ void MSwipeRecognizerPrivate::snapToRightAngle(MSwipeGesture *swipeGesture)
 
 QGestureRecognizer::Result MSwipeRecognizerPrivate::startRecognition(MSwipeGesture *swipeGesture, const QMouseEvent *mouseEvent)
 {
-    swipeGesture->time = QTime::currentTime();
+    swipeGesture->timer.start();
     swipeGesture->startPosition = mouseEvent->globalPos();
     swipeGesture->setHotSpot(mouseEvent->globalPos());
 
@@ -83,7 +83,7 @@ QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGest
 
     //Swipe angle is equal to the angle of a line between starting position and current position.
     swipeGesture->setSwipeAngle(QLineF(swipeGesture->startPosition, mouseEvent->globalPos()).angle());
-    int elapsedTime = swipeGesture->time.msecsTo(QTime::currentTime());
+    int elapsedTime = swipeGesture->timer.elapsed();
 
     if (swipeGesture->state() != Qt::NoGesture) {
         //The gesture has already been recognized, check if the user didn't change direction.
@@ -189,7 +189,7 @@ void MSwipeRecognizer::reset(QGesture* state)
     swipeGesture->recognizedAngle = 0;
     swipeGesture->prevDistance = 0;
     swipeGesture->startPosition = QPointF();
-    swipeGesture->time = QTime();
+    swipeGesture->timer.invalidate();
 
     QGestureRecognizer::reset(swipeGesture);
 }
