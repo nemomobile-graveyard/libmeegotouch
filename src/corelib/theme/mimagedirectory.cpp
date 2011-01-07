@@ -278,7 +278,7 @@ QString ImageResource::createCacheFilename(const QSize& size)
     cacheKey.replace(QLatin1Char('/'), QLatin1String("_."));
     cacheKey += '(' + QString::number(size.width()) + QLatin1Char(',') + QString::number(size.height()) + QLatin1Char(')');
 
-    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("images/") + cacheKey;
+    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("images") + QDir::separator() + cacheKey;
 }
 
 bool ImageResource::shouldBeCached()
@@ -683,7 +683,7 @@ QString MThemeImagesDirectory::createIdCacheFilename(const QString &filePath) co
     QString filePathEncoded(filePath);
     filePathEncoded.replace(QLatin1Char('_'), QLatin1String("__"));
     filePathEncoded.replace(QLatin1Char('/'), QLatin1String("_."));
-    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("ids/") + filePathEncoded;
+    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("ids") + QDir::separator() + filePathEncoded;
 }
 
 MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursionMode)

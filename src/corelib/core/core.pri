@@ -41,6 +41,7 @@ PRIVATE_HEADERS += \
     $$CORE_SRC_DIR/mgraphicssystemhelper.h \
     $$CORE_SRC_DIR/mdynamicpropertywatcher.h \
     $$CORE_SRC_DIR/mmetatypes.h \
+    $$CORE_SRC_DIR/msystemdirectories.h \
 
 contains(DEFINES, HAVE_DBUS) {
     PUBLIC_HEADERS += \
@@ -81,6 +82,7 @@ SOURCES += \
     $$CORE_SRC_DIR/mgraphicssystemhelper.cpp \
     $$CORE_SRC_DIR/mdynamicpropertywatcher.cpp \
     $$CORE_SRC_DIR/mdebug.cpp \
+    $$CORE_SRC_DIR/msystemdirectories.cpp \
 
 contains(DEFINES, HAVE_DBUS) {
   SOURCES += \

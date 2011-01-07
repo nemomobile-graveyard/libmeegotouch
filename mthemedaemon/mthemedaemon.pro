@@ -42,6 +42,7 @@ SOURCES += main.cpp \
            ../src/corelib/theme/mthemedaemonprotocol.cpp \
            ../src/corelib/core/mcpumonitor.cpp \
            ../src/corelib/core/mgraphicssystemhelper.cpp \
+           ../src/corelib/core/msystemdirectories.cpp \
 
 contains(DEFINES, HAVE_GCONF) {
     PKGCONFIG += gconf-2.0
@@ -61,6 +62,7 @@ HEADERS += \
            ../src/corelib/core/mgconfitem.h \
            ../src/corelib/core/mcpumonitor.h \
            ../src/corelib/core/mgraphicssystemhelper.h \
+           ../src/corelib/core/msystemdirectories.h \
            keypresswaiter.h \
 
 QMAKE_EXTRA_TARGETS += check

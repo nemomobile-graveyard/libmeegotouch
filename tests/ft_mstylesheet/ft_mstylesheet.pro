@@ -11,7 +11,8 @@ STYLE_HEADERS += testobjectstyle.h testobject2style.h testobject3style.h
 SOURCES += \
 	ft_mstylesheet.cpp \
     $$MSRCDIR/corelib/theme/mlogicalvalues.cpp \
-    $$MSRCDIR/corelib/style/mstylesheetattribute.cpp
+    $$MSRCDIR/corelib/style/mstylesheetattribute.cpp \
+    $$MSRCDIR/corelib/core/msystemdirectories.cpp \
 
 HEADERS += \
 	ft_mstylesheet.h \
@@ -23,6 +24,7 @@ HEADERS += \
     testwidget3.h \
     $$MSRCDIR/corelib/theme/mlogicalvalues.h \
     $$MSRCDIR/corelib/style/mstylesheetattribute.h \
+    $$MSRCDIR/corelib/core/msystemdirectories.cpp \
     $$STYLE_HEADERS
 
 support_files.files += \

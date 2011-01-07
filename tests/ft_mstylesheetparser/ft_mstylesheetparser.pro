@@ -8,13 +8,15 @@ INCLUDEPATH += $$MSRCDIR/corelib/core/
 SOURCES += \
 	ft_mstylesheetparser.cpp \
     $$MSRCDIR/corelib/theme/mlogicalvalues.cpp \
-    $$MSRCDIR/corelib/style/mstylesheetattribute.cpp
+    $$MSRCDIR/corelib/style/mstylesheetattribute.cpp \
+    $$MSRCDIR/corelib/core/msystemdirectories.cpp \
 
 
 HEADERS += \
-	ft_mstylesheetparser.h \
+        ft_mstylesheetparser.h \
         $$MSRCDIR/corelib/theme/mlogicalvalues.h \
-        $$MSRCDIR/corelib/style/mstylesheetattribute.h
+        $$MSRCDIR/corelib/style/mstylesheetattribute.h \
+        $$MSRCDIR/corelib/core/msystemdirectories.h \
 
 support_files.files += \
         *.css \

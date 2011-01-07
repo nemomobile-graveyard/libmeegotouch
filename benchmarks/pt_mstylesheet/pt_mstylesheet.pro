@@ -8,7 +8,9 @@ TARGET = pt_mstylesheet
 SOURCES += pt_mstylesheet.cpp \
            mlogicalvalues.cpp \
            mstylesheetattribute.cpp \
+           $$MSRCDIR/corelib/core/msystemdirectories.cpp \
 
 HEADERS += pt_mstylesheet.h \
            mlogicalvalues.h \
            mstylesheetattribute.h \
+           $$MSRCDIR/corelib/core/msystemdirectories.h \

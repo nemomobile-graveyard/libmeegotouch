@@ -22,6 +22,7 @@
 #include "mclassfactory.h"
 #include "mstylesheetattribute.h"
 #include "mlogicalvalues.h"
+#include "msystemdirectories.h"
 
 #include <QFile>
 #include <QTextStream>
@@ -954,11 +955,7 @@ MStyleSheetParser::MStyleSheetParser(const MLogicalValues *logicalValues) :
 {
     Q_D(MStyleSheetParser);
     d->privateFileInfo = 0;
-#ifdef Q_WS_X11
-    d->binaryDirectory = QString(CACHEDIR) + "/css/";
-#else
-    d->binaryDirectory = QDir::tempPath() + QDir::separator();
-#endif
+    d->binaryDirectory = MSystemDirectories::cacheDirectory() + QLatin1String("css") + QDir::separator();
     d->binaryFileMode = true;
 
     setSyntaxMode(StrictSyntax);

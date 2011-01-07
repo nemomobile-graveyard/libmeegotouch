@@ -21,6 +21,7 @@
 #include "mlogicalvalues_p.h"
 #include "mstylesheetattribute.h"
 #include "mdebug.h"
+#include "msystemdirectories.h"
 
 #include <QDir>
 #include <QFile>
@@ -176,19 +177,7 @@ bool MLogicalValuesPrivate::saveToBinaryCache(const QFileInfo &fileInfo, const G
 }
 
 QString MLogicalValuesPrivate::createBinaryFilename(const QFileInfo &fileInfo) const {
-    QString binaryDirectory;
-#ifdef Q_OS_WIN
-    QDir appDir(QCoreApplication::applicationDirPath());
-    appDir.cdUp();
-
-    binaryDirectory = appDir.absolutePath()
-      + QDir::separator() + "var"
-      + QDir::separator() + "cache"
-      + QDir::separator() + "meegotouch"
-      + QDir::separator() + "logicalvalues";
-#else
-    binaryDirectory = QString(CACHEDIR) + "/logicalValues/";
-#endif
+    QString binaryDirectory = MSystemDirectories::cacheDirectory() + QLatin1String("logicalValues") + QDir::separator();
     QString binaryFilename(binaryDirectory);
 
     QString absoluteFilePathEncoded(fileInfo.absoluteFilePath());
