@@ -43,7 +43,9 @@ public:
     }
     void refresh() {
         updateGeometry();
-        setSizePolicy(item->sizePolicy());
+        QSizePolicy p = item->sizePolicy();
+        p.setHeightForWidth(true);
+        setSizePolicy(p);
     }
 private:
     QGraphicsLayoutItem *item;

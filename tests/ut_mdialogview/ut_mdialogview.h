@@ -44,6 +44,7 @@ private slots:
     void buttonBoxCentering();
     void verticalAlignment();
     void buttonsFromModel();
+    void testSizeHint();
 
 private:
     QGraphicsWidget *fetchWidget(QGraphicsWidget &widget,

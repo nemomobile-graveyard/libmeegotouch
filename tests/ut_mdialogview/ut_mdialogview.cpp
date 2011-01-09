@@ -22,6 +22,7 @@
 #include <mdialogstyle.h>
 #include <mlayout.h>
 #include <mlinearlayoutpolicy.h>
+#include <QGraphicsLinearLayout>
 #include "mdialogview_p.h"
 #include "mgridlayoutpolicy.h"
 //#include "mbuttongrouplayoutpolicy.h"
@@ -223,6 +224,23 @@ QGraphicsWidget *Ut_MDialogView::fetchWidget(QGraphicsLayout &layout,
     }
 
     return targetWidget;
+}
+void Ut_MDialogView::testSizeHint()
+{
+    MLabel *label = new MLabel("Hello");
+    controller->setCentralWidget(label);
+
+    QSizeF preferredSize = controller->preferredSize();
+    QSizeF contentsPreferredSize = subject->contentsLayout()->preferredSize();
+
+    label->setText("This is a long set of text.  This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text.");
+
+    // The preferred width is set by the CSS so this shouldn't change
+    QCOMPARE( controller->preferredSize().width(), preferredSize.width());
+    QCOMPARE( subject->contentsLayout()->preferredSize().width(), contentsPreferredSize.width());
+    // Now that we have a long text, the height should have grown
+    QVERIFY( subject->contentsLayout()->preferredSize().height() > contentsPreferredSize.height());
+    QVERIFY( controller->preferredSize().height() > preferredSize.height());
 }
 
 QTEST_APPLESS_MAIN(Ut_MDialogView)

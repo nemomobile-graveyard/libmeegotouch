@@ -53,6 +53,8 @@ private slots:
     void testRowCount();
     void testRtl();
     void testLayoutInLayoutRefresh();
+    void testHeightForWidthInSubLayout_data();
+    void testHeightForWidthInSubLayout();
 private:
 
     MLayout *m_mockLayout;

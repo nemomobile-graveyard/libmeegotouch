@@ -42,6 +42,7 @@ private slots:
     void testSetText();
     void testIconId();
     void testDismissEvent();
+    void testSizeHint();
 
 private:
     MMessageBox *m_subject;

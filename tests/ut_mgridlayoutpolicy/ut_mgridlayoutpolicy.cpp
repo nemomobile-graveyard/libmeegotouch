@@ -22,8 +22,10 @@
 #include <mapplication.h>
 #include <mlayout.h>
 #include <mgridlayoutpolicy.h>
+#include <mlinearlayoutpolicy.h>
 
 #include <QtGui/QGraphicsGridLayout>
+#include <QtGui/QGraphicsLinearLayout>
 #include <QtGui/QGraphicsWidget>
 
 /**
@@ -454,10 +456,10 @@ void Ut_MGridLayoutPolicy::testLayoutInLayoutRefresh()
     policy->addItem(m_mockItem200, 0, 3);
 
     m_form->resize(400,200);
-    
+
     qApp->processEvents();
     qApp->processEvents();
-    
+
     QCOMPARE(m_mockItem100->geometry(), QRectF(50,0,100,100));
     QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
 
@@ -468,4 +470,122 @@ void Ut_MGridLayoutPolicy::testLayoutInLayoutRefresh()
     QCOMPARE(m_mockItem100->geometry(), QRectF(0,0,100,100));
     QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
 }
+
+QGraphicsWidget *createSpacer()
+{
+    QGraphicsWidget *spacer = new QGraphicsWidget();
+
+    spacer->hide();
+    spacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    spacer->setMinimumSize(0, 0);
+    spacer->setPreferredSize(0, 0);
+
+    return spacer;
+}
+
+//A widget that likes to have a square shape
+class SquareWidget : public QGraphicsWidget
+{
+    public:
+        SquareWidget() {
+            QSizePolicy p = sizePolicy();
+            p.setHeightForWidth(true);
+            setSizePolicy(p);
+        }
+    protected:
+        virtual QSizeF sizeHint ( Qt::SizeHint which, const QSizeF & constraint = QSizeF() ) const
+        {
+            if (which != Qt::PreferredSize)
+                return QGraphicsWidget::sizeHint(which, constraint);
+            if (constraint.width() >= 0)
+                return QSizeF(constraint.width(), constraint.width());
+            else
+                return QSizeF(500,500);
+        }
+};
+
+void Ut_MGridLayoutPolicy::testHeightForWidthInSubLayout_data()
+{
+    QTest::addColumn<bool>("useMLayout"); //Whether to MLayout or QGraphicsGridLayout
+    QTest::addColumn<bool>("useInnerMLayout"); //Whether to MLayout or QGraphicsGridLayout
+    QTest::addColumn<bool>("putInnerWidgetInWidget"); //Whether to put the square widget inside of another widget
+
+    QTest::newRow("Use MLayouts only") << true << true << false;
+    QTest::newRow("Use MLayouts with inner widget") << true << true << true;
+    QTest::newRow("Use QGraphicsLayouts only") << false << false << false;
+    QTest::newRow("Use QGraphicsLayouts with inner widget") << false << false << true;
+    QTest::newRow("Use outer MLayouts with inner QGraphicsLayout") << true << false << false;
+    QTest::newRow("Use outer MLayouts with inner QGraphicsLayout and inner widget") << true << false << true;
+    QTest::newRow("Use outer QGraphicsLayout with inner MLayout") << false << true << false;
+    QTest::newRow("Use outer QGraphicsLayout with inner MLayout and inner widget") << false << true << true;
+
+}
+void Ut_MGridLayoutPolicy::testHeightForWidthInSubLayout()
+{
+    QFETCH(bool, useMLayout);
+    QFETCH(bool, useInnerMLayout);
+    QFETCH(bool, putInnerWidgetInWidget);
+
+    QGraphicsWidget *form = new QGraphicsWidget;
+
+
+    MGridLayoutPolicy *mpolicy = NULL;
+    QGraphicsGridLayout *qlayout = NULL;
+
+    if (useMLayout) {
+        MLayout *mlayout = new MLayout(form);
+        mlayout->setContentsMargins(0, 0, 0, 0);
+        mpolicy = new MGridLayoutPolicy(mlayout);
+        mpolicy->setSpacing(0);
+    } else {
+        qlayout = new QGraphicsGridLayout(form);
+        qlayout->setContentsMargins(0, 0, 0, 0);
+        qlayout->setSpacing(0);
+    }
+
+    QGraphicsWidget *topSpacer = createSpacer();
+    QGraphicsWidget *leftSpacer = createSpacer();
+    QGraphicsWidget *rightSpacer = createSpacer();
+    leftSpacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    rightSpacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+    QGraphicsWidget *square = new SquareWidget;
+
+    QGraphicsLayout *innerLayout = NULL;
+    if (useInnerMLayout) {
+        innerLayout = new MLayout();
+        MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(static_cast<MLayout *>(innerLayout), Qt::Horizontal);
+        policy->addItem(square);
+    } else {
+        innerLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+        static_cast<QGraphicsLinearLayout *>(innerLayout)->addItem(square);
+    }
+    innerLayout->setContentsMargins(0,0,0,0);
+
+    QGraphicsLayoutItem *innerItem;
+    if (putInnerWidgetInWidget) {
+        QGraphicsWidget *innerWidget = new QGraphicsWidget;
+        innerWidget->setLayout(innerLayout);
+        innerItem = innerWidget;
+    } else {
+        innerItem = innerLayout;
+    }
+
+    if (useMLayout) {
+        mpolicy->addItem(topSpacer, 0, 1);
+        mpolicy->addItem(leftSpacer, 1, 0);
+        mpolicy->addItem(rightSpacer, 1, 2);
+        mpolicy->addItem(innerItem, 1, 1);
+    } else {
+        qlayout->addItem(topSpacer, 0, 1);
+        qlayout->addItem(leftSpacer, 1, 0);
+        qlayout->addItem(rightSpacer, 1, 2);
+        qlayout->addItem(innerItem, 1, 1);
+    }
+
+
+    QCOMPARE(form->preferredSize(), QSizeF(500,500));
+    QCOMPARE(form->effectiveSizeHint(Qt::PreferredSize, QSizeF(100,-1)), QSizeF(100,100));
+}
+
 QTEST_APPLESS_MAIN(Ut_MGridLayoutPolicy)

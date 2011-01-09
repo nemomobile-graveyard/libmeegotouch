@@ -19,9 +19,9 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsLayout>
 
-#include <MDismissEvent>
-
+#include <mdismissevent.h>
 #include <mmessagebox.h>
 #include <mapplication.h>
 #include <mbuttonmodel.h>
@@ -105,6 +105,22 @@ void Ut_MMessageBox::testDismissEvent()
     m_subject->accept();
     QCOMPARE(spyChanged3.count(), 1);
 
+}
+
+void Ut_MMessageBox::testSizeHint()
+{
+    m_subject->setText("Hi.");
+    QSizeF preferredSize = m_subject->preferredSize();
+    QSizeF originalContentsSize = m_subject->QGraphicsWidget::layout()->effectiveSizeHint(Qt::PreferredSize, QSizeF(preferredSize.width(), -1));
+    m_subject->setText("This is a long set of text.  This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text. This is a long set of text.");
+
+    // The messagebox itself fills the screen, so that the contents can be centered.  So the preferred size shouldn't have changed.
+    // If this breaks, the CSS has been changed
+    QCOMPARE( m_subject->preferredSize(), preferredSize);
+
+    //But the contents should have grown in height
+    QSizeF newContentsSize = m_subject->QGraphicsWidget::layout()->effectiveSizeHint(Qt::PreferredSize, QSizeF(preferredSize.width(), -1));
+    QVERIFY( newContentsSize.height() > originalContentsSize.height());
 }
 
 QTEST_APPLESS_MAIN(Ut_MMessageBox)
