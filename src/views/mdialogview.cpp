@@ -610,7 +610,7 @@ void MDialogViewPrivate::updateTitleBarIconVisibility()
     MLayout *layout = static_cast<MLayout *>(titleBar->layout());
 
     if(!titleBarIconImage)
-        titleBarIconImage = new MImageWidget(controller);
+        titleBarIconImage = new MImageWidget(titleBar);
     titleBarIconImage->setStyleName("CommonTitleIcon");
     titleBarIconImage->setImage(q->model()->titleBarIconId());
 

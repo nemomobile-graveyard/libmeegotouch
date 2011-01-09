@@ -45,7 +45,7 @@ MMessageBoxViewPrivate::~MMessageBoxViewPrivate()
 MImageWidget *MMessageBoxViewPrivate::iconImageWidget()
 {
     if (!iconImage) {
-        iconImage = new MImageWidget(controller);
+        iconImage = new MImageWidget(contents);
         iconImage->setStyleName("CommonQueryIcon");
     }
     return iconImage;
@@ -54,7 +54,7 @@ MImageWidget *MMessageBoxViewPrivate::iconImageWidget()
 MLabel *MMessageBoxViewPrivate::titleLabelWidget()
 {
     if (!titleLabel) {
-        titleLabel = new MLabel(controller);
+        titleLabel = new MLabel(contents);
         titleLabel->setStyleName("CommonQueryTitle");
         titleLabel->setTextElide(true);
         titleLabel->setAlignment(Qt::AlignCenter);
@@ -65,7 +65,7 @@ MLabel *MMessageBoxViewPrivate::titleLabelWidget()
 MLabel *MMessageBoxViewPrivate::textLabelWidget()
 {
     if (!textLabel) {
-        textLabel = new MLabel(controller);
+        textLabel = new MLabel(contents);
         textLabel->setStyleName("CommonQueryText");
         textLabel->setWordWrap(true);
         textLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
