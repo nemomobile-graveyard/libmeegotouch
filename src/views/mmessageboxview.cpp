@@ -100,6 +100,14 @@ void MMessageBoxViewPrivate::updateLayout()
         contentsLayout->insertItem(0, iconImage);
         contentsLayout->setAlignment(iconImage, Qt::AlignCenter);
     }
+
+    /* Update the geometry of the parents immediately.  This simply makes the layout have the correct sizehint
+     * immediatelyimmediately instead of one frame later, removing a single frame of 'flicker'.
+     */
+    QGraphicsLayoutItem *item = contents;
+    do {
+        item->updateGeometry();
+    } while( (item = item->parentLayoutItem()) );
 }
 
 void MMessageBoxViewPrivate::clearLayout()
