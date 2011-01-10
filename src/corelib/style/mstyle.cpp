@@ -22,7 +22,7 @@
 #include "mstyle_p.h"
 #include "mtheme.h"
 #include "mtheme_p.h"
-#include "mapplication.h"
+#include "mcomponentdata.h"
 #include "mapplicationwindow.h"
 
 // TODO: get rid of this include, make MStyle not to use mgen
@@ -200,7 +200,7 @@ const MStyle *MStyleContainer::currentStyle() const
 {
     M::Orientation orientation = M::Landscape;
 
-    const MWindow *activeWindow = MApplication::activeWindow();
+    const MWindow *activeWindow = MComponentData::activeWindow();
     if (activeWindow)
         orientation = activeWindow->orientation();
 

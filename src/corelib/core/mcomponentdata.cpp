@@ -203,6 +203,7 @@ MComponentDataPrivate::MComponentDataPrivate()
     theme(0),
     deviceProfile(0),
     windows(),
+    firstWindow(0),
     feedbackPlayer(0),
     locale(),
     appName(),
@@ -1097,10 +1098,7 @@ MWindow *MComponentData::activeWindow()
         qFatal("MComponentData::activeWindow() - MComponentData instance not yet created.");
     }
 
-    if (gMComponentDataPrivate->windows.isEmpty())
-        return 0;
-
-    return gMComponentDataPrivate->windows.at(0);
+    return gMComponentDataPrivate->firstWindow;
 }
 
 MApplicationWindow *MComponentData::activeApplicationWindow()
@@ -1136,8 +1134,10 @@ void MComponentData::setActiveWindow(MWindow *w)
 
     if (oldIndex == -1)
         mWarning("MComponentData::setActiveWindow()") << "attempting to activate unregistered window";
-    else
+    else {
         gMComponentDataPrivate->windows.move(oldIndex, 0);
+        gMComponentDataPrivate->firstWindow = w;
+    }
 }
 
 void MComponentData::registerWindow(MWindow *w)
@@ -1145,7 +1145,11 @@ void MComponentData::registerWindow(MWindow *w)
     if (!gMComponentDataPrivate) {
         qFatal("MComponentData::registerWindow() - MComponentData instance not yet created.");
     }
-    if (!gMComponentDataPrivate->windows.contains(w)) {
+    if (gMComponentDataPrivate->windows.isEmpty()) {
+        gMComponentDataPrivate->windows.append(w);
+        gMComponentDataPrivate->firstWindow = w;
+    }
+    else if (!gMComponentDataPrivate->windows.contains(w)) {
         gMComponentDataPrivate->windows.append(w);
     }
 }
@@ -1156,6 +1160,14 @@ void MComponentData::unregisterWindow(MWindow *w)
         qFatal("MComponentData::unregisterWindow() - MComponentData instance not yet created.");
     }
     gMComponentDataPrivate->windows.removeAll(w);
+    if (gMComponentDataPrivate->firstWindow == w) {
+        if (gMComponentDataPrivate->windows.isEmpty()) {
+            gMComponentDataPrivate->firstWindow = 0;
+        }
+        else {
+            gMComponentDataPrivate->firstWindow = gMComponentDataPrivate->windows.at(0);
+        }
+    }
 }
 
 MFeedbackPlayer *MComponentData::feedbackPlayer()

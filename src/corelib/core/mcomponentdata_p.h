@@ -69,6 +69,7 @@ public:
     MTheme *theme;
     MDeviceProfile *deviceProfile;
     QList<MWindow *> windows;
+    MWindow *firstWindow;
     MFeedbackPlayer *feedbackPlayer;
     MLocale locale;
     QString appName;
