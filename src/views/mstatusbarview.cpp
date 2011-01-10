@@ -56,7 +56,8 @@ const char *  MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE = "com.meego.
 
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
-    controller(controller)
+    controller(controller),
+    pressDown(false)
 #ifdef Q_WS_X11
     , updatesEnabled(true)
     , isInSwitcher(false)
@@ -133,6 +134,14 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     sourceRect.setHeight(SharedPixmapHeight);
 
     painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
+
+    if (pressDown) {
+        painter->save();
+        painter->setOpacity(style()->pressDimFactor());
+        painter->fillRect(QRectF(QPointF(0.0, 0.0), sourceRect.size()), Qt::black);
+        painter->restore();
+    }
+
 #else
     Q_UNUSED(painter);
 #endif // Q_WS_X11
@@ -142,6 +151,12 @@ void MStatusBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     firstPos = event->pos();
     playHapticsFeedback();
+
+    if (pressDown)
+        return;
+
+    pressDown = true;
+    update();
 }
 
 void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -157,6 +172,12 @@ void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void MStatusBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!pressDown)
+        return;
+
+    pressDown = false;
+    update();
+
     if (style()->useSwipeGesture()) {
         return;
     }

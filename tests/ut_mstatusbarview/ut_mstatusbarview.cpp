@@ -22,6 +22,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDBusPendingReply>
 #include <MApplication>
+#include <MSceneManager>
+#include <MScene>
 
 #include <mstatusbar.h>
 #include "mstatusbar_p.h"
@@ -105,6 +107,40 @@ void MFeedback::play() const
 {
     hapticsDone = true;
 }
+
+qreal gTestOpacity;
+QRectF gFilledRect;
+QColor gFillColor;
+QRectF gPixmapTargetRect;
+QRectF gPixmapSourceRect;
+
+void QPainter::setOpacity(qreal opacity)
+{
+    gTestOpacity = opacity;
+}
+
+void QPainter::fillRect(const QRectF &rectangle, const QColor &color)
+{
+    gFilledRect = rectangle;
+    gFillColor = color;
+}
+
+void QPainter::drawPixmap(const QRectF &target, const QPixmap &pixmap, const QRectF &source)
+{
+    Q_UNUSED(pixmap);
+
+    gPixmapTargetRect = target;
+    gPixmapSourceRect = source;
+}
+
+void QPainter::save()
+{
+}
+
+void QPainter::restore()
+{
+}
+
 
 Ut_MStatusBarView::Ut_MStatusBarView():
         m_subject(0),
@@ -228,6 +264,49 @@ void Ut_MStatusBarView::testTapFunctionality()
     QCOMPARE(dbusPath, MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH);
     QCOMPARE(callMode, QDBus::NoBlock);
     QCOMPARE(dbusMethod, QString("open"));
+}
+
+
+void Ut_MStatusBarView::testPressDimming()
+{
+    qreal styleDimCSS = m_subject->modifiableStyle()->pressDimFactor();
+    QCOMPARE(styleDimCSS, m_subject->modifiableStyle()->pressDimFactor());
+
+    m_subject->modifiableStyle()->setPressDimFactor(0.6);
+
+    m_subject->sharedPixmap = QPixmap(50, 50);
+    MSceneManager sceneManager;
+    m_statusbar->appear(sceneManager.scene());
+
+    QPainter painter;
+
+    gTestOpacity = -1;
+    gFillColor = -1;
+    gFilledRect = QRectF();
+
+    // Check that the dimming rectangle isn't being drawn by default
+    m_subject->drawContents(&painter, NULL);
+    QVERIFY(gFilledRect.isNull());
+
+    mouseDownWorker(START_POINT);
+    // Now the dimmer should be drawn
+    m_subject->drawContents(&painter, NULL);
+
+    QCOMPARE(gTestOpacity, m_subject->modifiableStyle()->pressDimFactor());
+    QCOMPARE(gFillColor, QColor(Qt::black));
+    QCOMPARE(gFilledRect.size(), gPixmapSourceRect.size());
+    QCOMPARE(gFilledRect.topLeft(), gPixmapTargetRect.topLeft());
+
+    // Release the mouse button and verify that the dimmer disappers
+    mouseUpWorker(START_POINT);
+
+    gFilledRect = QRectF();
+    m_subject->drawContents(&painter, NULL);
+    QVERIFY(gFilledRect.isNull());
+
+    // These are owned by the scene now
+    m_statusbar = NULL;
+    m_subject = NULL;
 }
 
 

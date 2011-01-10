@@ -74,6 +74,8 @@ private slots:
     void testWhenUsingTapSwipeDoesNothing();
     // Thest that the tap functionality works
     void testTapFunctionality();
+    // Test that the status bar is dimmed when pressed
+    void testPressDimming();
 
 private:
     void mouseDownWorker(QPointF downAt);

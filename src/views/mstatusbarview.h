@@ -73,6 +73,9 @@ private:
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
     QPointF firstPos, lastPos;
 
+    //! Used to track whether a mouse button is currently being pressed
+    bool pressDown;
+
 #ifdef Q_WS_X11
     bool updatesEnabled;
     bool isInSwitcher;
