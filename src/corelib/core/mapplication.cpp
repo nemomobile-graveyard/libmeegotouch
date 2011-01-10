@@ -156,7 +156,6 @@ void MApplicationPrivate::updateWindowIconicState(Window window)
             default:
                 win->d_func()->isIconicState = false;
             }
-            win->d_func()->resolveOrientationRules();
         }
     }
 
