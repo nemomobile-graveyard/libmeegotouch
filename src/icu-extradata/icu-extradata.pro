@@ -10,6 +10,7 @@ greaterThan(ICUVERSION, 4.4) {
     # with commands like:
     # derb -c -i /usr/share/meegotouch/icu/usrdt44l/ lang/en_GB.res
     LOCALESTXT = data/cs.txt \
+                 data/da.txt \
                  data/en_GB.txt \
                  data/en_SG.txt \
                  data/fa.txt \

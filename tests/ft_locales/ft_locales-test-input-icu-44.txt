@@ -905,104 +905,104 @@ da_DK	Name of weekday 07 (Islamic calendar), format, narrow	S
 da_DK	Collation sample	A a Á á b CH Ch ch H h I i N Ň ň oegh U ú Ů ů z Ä ä öfgh Å å Α α Β β Ω ω А а Б б В в Г г Ѐ Я я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
 da_DK	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å]
 da_DK	Scripts used	Latn
-da_DK	%r (locale specific 12 hour “TimeShort”)	02.31 e.m.
-da_DK	%R (locale specific 24 hour “TimeShort”)	14.31
-da_DK	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh.mm a -> 02.31 e.m.
-da_DK	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	HH.mm -> 14.31
-da_DK	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh.mm.ss a -> 02.31.00 e.m.
-da_DK	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	HH.mm.ss -> 14.31.00
-da_DK	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh.mm.ss a z -> 02.31.00 e.m. GMT+00.00
-da_DK	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	HH.mm.ss z -> 14.31.00 GMT+00.00
-da_DK	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	hh.mm.ss a zzzz -> 02.31.00 e.m. GMT+00.00
-da_DK	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	HH.mm.ss zzzz -> 14.31.00 GMT+00.00
+da_DK	%r (locale specific 12 hour “TimeShort”)	02:31 e.m.
+da_DK	%R (locale specific 24 hour “TimeShort”)	14:31
+da_DK	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 e.m.
+da_DK	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
+da_DK	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 e.m.
+da_DK	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm:ss -> 14:31:00
+da_DK	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a z -> 02:31:00 e.m. GMT+00.00
+da_DK	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm:ss z -> 14:31:00 GMT+00.00
+da_DK	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a zzzz -> 02:31:00 e.m. GMT+00.00
+da_DK	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm:ss zzzz -> 14:31:00 GMT+00.00
 da_DK	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy -> 21/07/08
 da_DK	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy -> 21/07/08
-da_DK	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm a -> 21/07/08 02.31 e.m.
-da_DK	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm -> 21/07/08 14.31
-da_DK	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a -> 21/07/08 02.31.00 e.m.
-da_DK	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss -> 21/07/08 14.31.00
-da_DK	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a z -> 21/07/08 02.31.00 e.m. GMT+00.00
-da_DK	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss z -> 21/07/08 14.31.00 GMT+00.00
-da_DK	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a zzzz -> 21/07/08 02.31.00 e.m. GMT+00.00
-da_DK	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss zzzz -> 21/07/08 14.31.00 GMT+00.00
+da_DK	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm a -> 21/07/08 02:31 e.m.
+da_DK	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm -> 21/07/08 14:31
+da_DK	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a -> 21/07/08 02:31:00 e.m.
+da_DK	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss -> 21/07/08 14:31:00
+da_DK	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a z -> 21/07/08 02:31:00 e.m. GMT+00.00
+da_DK	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss z -> 21/07/08 14:31:00 GMT+00.00
+da_DK	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a zzzz -> 21/07/08 02:31:00 e.m. GMT+00.00
+da_DK	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss zzzz -> 21/07/08 14:31:00 GMT+00.00
 da_DK	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy -> 21/07/2008
 da_DK	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy -> 21/07/2008
-da_DK	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm a -> 21/07/2008 02.31 e.m.
-da_DK	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm -> 21/07/2008 14.31
-da_DK	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm.ss a -> 21/07/2008 02.31.00 e.m.
-da_DK	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm.ss -> 21/07/2008 14.31.00
-da_DK	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm.ss a z -> 21/07/2008 02.31.00 e.m. GMT+00.00
-da_DK	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm.ss z -> 21/07/2008 14.31.00 GMT+00.00
-da_DK	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm.ss a zzzz -> 21/07/2008 02.31.00 e.m. GMT+00.00
-da_DK	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm.ss zzzz -> 21/07/2008 14.31.00 GMT+00.00
+da_DK	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm a -> 21/07/2008 02:31 e.m.
+da_DK	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm -> 21/07/2008 14:31
+da_DK	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a -> 21/07/2008 02:31:00 e.m.
+da_DK	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss -> 21/07/2008 14:31:00
+da_DK	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a z -> 21/07/2008 02:31:00 e.m. GMT+00.00
+da_DK	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss z -> 21/07/2008 14:31:00 GMT+00.00
+da_DK	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a zzzz -> 21/07/2008 02:31:00 e.m. GMT+00.00
+da_DK	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss zzzz -> 21/07/2008 14:31:00 GMT+00.00
 da_DK	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y -> 21. jul. 2008
 da_DK	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y -> 21. jul. 2008
-da_DK	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh.mm a -> 21. jul. 2008 02.31 e.m.
-da_DK	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm -> 21. jul. 2008 14.31
-da_DK	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh.mm.ss a -> 21. jul. 2008 02.31.00 e.m.
-da_DK	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm.ss -> 21. jul. 2008 14.31.00
-da_DK	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh.mm.ss a z -> 21. jul. 2008 02.31.00 e.m. GMT+00.00
-da_DK	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm.ss z -> 21. jul. 2008 14.31.00 GMT+00.00
-da_DK	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh.mm.ss a zzzz -> 21. jul. 2008 02.31.00 e.m. GMT+00.00
-da_DK	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm.ss zzzz -> 21. jul. 2008 14.31.00 GMT+00.00
+da_DK	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh:mm a -> 21. jul. 2008 02:31 e.m.
+da_DK	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm -> 21. jul. 2008 14:31
+da_DK	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh:mm:ss a -> 21. jul. 2008 02:31:00 e.m.
+da_DK	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm:ss -> 21. jul. 2008 14:31:00
+da_DK	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh:mm:ss a z -> 21. jul. 2008 02:31:00 e.m. GMT+00.00
+da_DK	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm:ss z -> 21. jul. 2008 14:31:00 GMT+00.00
+da_DK	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d. MMM y hh:mm:ss a zzzz -> 21. jul. 2008 02:31:00 e.m. GMT+00.00
+da_DK	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm:ss zzzz -> 21. jul. 2008 14:31:00 GMT+00.00
 da_DK	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y -> mandag den 21. juli 2008
 da_DK	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y -> mandag den 21. juli 2008
-da_DK	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm a -> mandag den 21. juli 2008 02.31 e.m.
-da_DK	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm -> mandag den 21. juli 2008 14.31
-da_DK	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm.ss a -> mandag den 21. juli 2008 02.31.00 e.m.
-da_DK	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm.ss -> mandag den 21. juli 2008 14.31.00
-da_DK	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm.ss a z -> mandag den 21. juli 2008 02.31.00 e.m. GMT+00.00
-da_DK	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm.ss z -> mandag den 21. juli 2008 14.31.00 GMT+00.00
-da_DK	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm.ss a zzzz -> mandag den 21. juli 2008 02.31.00 e.m. GMT+00.00
-da_DK	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm.ss zzzz -> mandag den 21. juli 2008 14.31.00 GMT+00.00
-da_DK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh.mm a -> 02.31 e.m.
-da_DK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm -> 14.31
-da_DK	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a -> 02.31.00 e.m.
-da_DK	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm.ss -> 14.31.00
-da_DK	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a z -> 02.31.00 e.m. GMT+00.00
-da_DK	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm.ss z -> 14.31.00 GMT+00.00
-da_DK	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a zzzz -> 02.31.00 e.m. GMT+00.00
-da_DK	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm.ss zzzz -> 14.31.00 GMT+00.00
+da_DK	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm a -> mandag den 21. juli 2008 02:31 e.m.
+da_DK	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm -> mandag den 21. juli 2008 14:31
+da_DK	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm:ss a -> mandag den 21. juli 2008 02:31:00 e.m.
+da_DK	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm:ss -> mandag den 21. juli 2008 14:31:00
+da_DK	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm:ss a z -> mandag den 21. juli 2008 02:31:00 e.m. GMT+00.00
+da_DK	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm:ss z -> mandag den 21. juli 2008 14:31:00 GMT+00.00
+da_DK	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm:ss a zzzz -> mandag den 21. juli 2008 02:31:00 e.m. GMT+00.00
+da_DK	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm:ss zzzz -> mandag den 21. juli 2008 14:31:00 GMT+00.00
+da_DK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 e.m.
+da_DK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
+da_DK	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 e.m.
+da_DK	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm:ss -> 14:31:00
+da_DK	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a z -> 02:31:00 e.m. GMT+00.00
+da_DK	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm:ss z -> 14:31:00 GMT+00.00
+da_DK	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a zzzz -> 02:31:00 e.m. GMT+00.00
+da_DK	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm:ss zzzz -> 14:31:00 GMT+00.00
 da_DK	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy -> 18/07/29
 da_DK	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy -> 18/07/29
-da_DK	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm a -> 18/07/29 02.31 e.m.
-da_DK	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm -> 18/07/29 14.31
-da_DK	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a -> 18/07/29 02.31.00 e.m.
-da_DK	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss -> 18/07/29 14.31.00
-da_DK	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a z -> 18/07/29 02.31.00 e.m. GMT+00.00
-da_DK	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss z -> 18/07/29 14.31.00 GMT+00.00
-da_DK	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh.mm.ss a zzzz -> 18/07/29 02.31.00 e.m. GMT+00.00
-da_DK	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH.mm.ss zzzz -> 18/07/29 14.31.00 GMT+00.00
+da_DK	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm a -> 18/07/29 02:31 e.m.
+da_DK	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm -> 18/07/29 14:31
+da_DK	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a -> 18/07/29 02:31:00 e.m.
+da_DK	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss -> 18/07/29 14:31:00
+da_DK	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a z -> 18/07/29 02:31:00 e.m. GMT+00.00
+da_DK	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss z -> 18/07/29 14:31:00 GMT+00.00
+da_DK	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh:mm:ss a zzzz -> 18/07/29 02:31:00 e.m. GMT+00.00
+da_DK	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH:mm:ss zzzz -> 18/07/29 14:31:00 GMT+00.00
 da_DK	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy -> 18/07/1429
 da_DK	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy -> 18/07/1429
-da_DK	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm a -> 18/07/1429 02.31 e.m.
-da_DK	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm -> 18/07/1429 14.31
-da_DK	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm.ss a -> 18/07/1429 02.31.00 e.m.
-da_DK	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm.ss -> 18/07/1429 14.31.00
-da_DK	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm.ss a z -> 18/07/1429 02.31.00 e.m. GMT+00.00
-da_DK	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm.ss z -> 18/07/1429 14.31.00 GMT+00.00
-da_DK	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh.mm.ss a zzzz -> 18/07/1429 02.31.00 e.m. GMT+00.00
-da_DK	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH.mm.ss zzzz -> 18/07/1429 14.31.00 GMT+00.00
+da_DK	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm a -> 18/07/1429 02:31 e.m.
+da_DK	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm -> 18/07/1429 14:31
+da_DK	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a -> 18/07/1429 02:31:00 e.m.
+da_DK	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss -> 18/07/1429 14:31:00
+da_DK	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a z -> 18/07/1429 02:31:00 e.m. GMT+00.00
+da_DK	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss z -> 18/07/1429 14:31:00 GMT+00.00
+da_DK	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a zzzz -> 18/07/1429 02:31:00 e.m. GMT+00.00
+da_DK	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss zzzz -> 18/07/1429 14:31:00 GMT+00.00
 da_DK	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d. MMM y -> 18. Raj. 1429
 da_DK	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y -> 18. Raj. 1429
-da_DK	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh.mm a -> 18. Raj. 1429 02.31 e.m.
-da_DK	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm -> 18. Raj. 1429 14.31
-da_DK	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh.mm.ss a -> 18. Raj. 1429 02.31.00 e.m.
-da_DK	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm.ss -> 18. Raj. 1429 14.31.00
-da_DK	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh.mm.ss a z -> 18. Raj. 1429 02.31.00 e.m. GMT+00.00
-da_DK	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm.ss z -> 18. Raj. 1429 14.31.00 GMT+00.00
-da_DK	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh.mm.ss a zzzz -> 18. Raj. 1429 02.31.00 e.m. GMT+00.00
-da_DK	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH.mm.ss zzzz -> 18. Raj. 1429 14.31.00 GMT+00.00
+da_DK	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh:mm a -> 18. Raj. 1429 02:31 e.m.
+da_DK	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm -> 18. Raj. 1429 14:31
+da_DK	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh:mm:ss a -> 18. Raj. 1429 02:31:00 e.m.
+da_DK	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm:ss -> 18. Raj. 1429 14:31:00
+da_DK	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh:mm:ss a z -> 18. Raj. 1429 02:31:00 e.m. GMT+00.00
+da_DK	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm:ss z -> 18. Raj. 1429 14:31:00 GMT+00.00
+da_DK	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMM y hh:mm:ss a zzzz -> 18. Raj. 1429 02:31:00 e.m. GMT+00.00
+da_DK	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMM y HH:mm:ss zzzz -> 18. Raj. 1429 14:31:00 GMT+00.00
 da_DK	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y -> mandag den 18. Rajab 1429
 da_DK	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y -> mandag den 18. Rajab 1429
-da_DK	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm a -> mandag den 18. Rajab 1429 02.31 e.m.
-da_DK	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm -> mandag den 18. Rajab 1429 14.31
-da_DK	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm.ss a -> mandag den 18. Rajab 1429 02.31.00 e.m.
-da_DK	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm.ss -> mandag den 18. Rajab 1429 14.31.00
-da_DK	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm.ss a z -> mandag den 18. Rajab 1429 02.31.00 e.m. GMT+00.00
-da_DK	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm.ss z -> mandag den 18. Rajab 1429 14.31.00 GMT+00.00
-da_DK	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh.mm.ss a zzzz -> mandag den 18. Rajab 1429 02.31.00 e.m. GMT+00.00
-da_DK	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH.mm.ss zzzz -> mandag den 18. Rajab 1429 14.31.00 GMT+00.00
+da_DK	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm a -> mandag den 18. Rajab 1429 02:31 e.m.
+da_DK	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm -> mandag den 18. Rajab 1429 14:31
+da_DK	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm:ss a -> mandag den 18. Rajab 1429 02:31:00 e.m.
+da_DK	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm:ss -> mandag den 18. Rajab 1429 14:31:00
+da_DK	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm:ss a z -> mandag den 18. Rajab 1429 02:31:00 e.m. GMT+00.00
+da_DK	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm:ss z -> mandag den 18. Rajab 1429 14:31:00 GMT+00.00
+da_DK	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE 'den' d. MMMM y hh:mm:ss a zzzz -> mandag den 18. Rajab 1429 02:31:00 e.m. GMT+00.00
+da_DK	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE 'den' d. MMMM y HH:mm:ss zzzz -> mandag den 18. Rajab 1429 14:31:00 GMT+00.00
 de_CH	Language endonym	Schweizer Hochdeutsch
 de_CH	Country endonym	Schweiz
 de_CH	Floating Point Number	-123'456'789.012
