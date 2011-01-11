@@ -20,6 +20,7 @@ greaterThan(ICUVERSION, 4.4) {
                  data/ms.txt \
                  data/ms_BN.txt \
                  data/pt_PT.txt \
+                 data/uk.txt \
                  data/ur.txt
     LANGTXT    = data/lang/en.txt \
                  data/lang/es.txt \

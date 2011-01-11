@@ -11960,103 +11960,103 @@ uk_UA	Name of weekday 07 (Islamic calendar), format, narrow	Н
 uk_UA	Collation sample	a A á Á å Å ä Ä b ch Ch CH h H i I N ň Ň oegh öfgh U ú ů Ů z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 三 中 中村 二 俄 内山 小中 山田 得 播 攀 松下 楽谷 正 此 沙紀 爱 竹山 竹山 若山 鳩山
 uk_UA	Exemplar characters index	[А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ю Я]
 uk_UA	Scripts used	Cyrl
-uk_UA	%r (locale specific 12 hour “TimeShort”)	02:31 пп
+uk_UA	%r (locale specific 12 hour “TimeShort”)	02:31 p.m.
 uk_UA	%R (locale specific 24 hour “TimeShort”)	14:31
-uk_UA	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 пп
+uk_UA	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 p.m.
 uk_UA	dateNone, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
-uk_UA	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 пп
+uk_UA	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 p.m.
 uk_UA	dateNone, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm:ss -> 14:31:00
-uk_UA	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a z -> 02:31:00 пп GMT+00:00
+uk_UA	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a z -> 02:31:00 p.m. GMT+00:00
 uk_UA	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm:ss z -> 14:31:00 GMT+00:00
-uk_UA	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a zzzz -> 02:31:00 пп GMT+00:00
+uk_UA	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12          	hh:mm:ss a zzzz -> 02:31:00 p.m. GMT+00:00
 uk_UA	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	HH:mm:ss zzzz -> 14:31:00 GMT+00:00
 uk_UA	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy -> 21.07.08
 uk_UA	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	dd.MM.yy -> 21.07.08
-uk_UA	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm a -> 21.07.08 02:31 пп
+uk_UA	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm a -> 21.07.08 02:31 p.m.
 uk_UA	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm -> 21.07.08 14:31
-uk_UA	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a -> 21.07.08 02:31:00 пп
+uk_UA	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a -> 21.07.08 02:31:00 p.m.
 uk_UA	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm:ss -> 21.07.08 14:31:00
-uk_UA	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a z -> 21.07.08 02:31:00 пп GMT+00:00
+uk_UA	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a z -> 21.07.08 02:31:00 p.m. GMT+00:00
 uk_UA	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm:ss z -> 21.07.08 14:31:00 GMT+00:00
-uk_UA	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a zzzz -> 21.07.08 02:31:00 пп GMT+00:00
+uk_UA	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a zzzz -> 21.07.08 02:31:00 p.m. GMT+00:00
 uk_UA	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm:ss zzzz -> 21.07.08 14:31:00 GMT+00:00
 uk_UA	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d MMM y -> 21 лип. 2008
 uk_UA	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM y -> 21 лип. 2008
-uk_UA	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm a -> 21 лип. 2008 02:31 пп
+uk_UA	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm a -> 21 лип. 2008 02:31 p.m.
 uk_UA	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm -> 21 лип. 2008 14:31
-uk_UA	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a -> 21 лип. 2008 02:31:00 пп
+uk_UA	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a -> 21 лип. 2008 02:31:00 p.m.
 uk_UA	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm:ss -> 21 лип. 2008 14:31:00
-uk_UA	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a z -> 21 лип. 2008 02:31:00 пп GMT+00:00
+uk_UA	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a z -> 21 лип. 2008 02:31:00 p.m. GMT+00:00
 uk_UA	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm:ss z -> 21 лип. 2008 14:31:00 GMT+00:00
-uk_UA	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a zzzz -> 21 лип. 2008 02:31:00 пп GMT+00:00
+uk_UA	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a zzzz -> 21 лип. 2008 02:31:00 p.m. GMT+00:00
 uk_UA	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm:ss zzzz -> 21 лип. 2008 14:31:00 GMT+00:00
 uk_UA	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. -> 21 липня 2008 р.
 uk_UA	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. -> 21 липня 2008 р.
-uk_UA	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm a -> 21 липня 2008 р. 02:31 пп
+uk_UA	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm a -> 21 липня 2008 р. 02:31 p.m.
 uk_UA	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm -> 21 липня 2008 р. 14:31
-uk_UA	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a -> 21 липня 2008 р. 02:31:00 пп
+uk_UA	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a -> 21 липня 2008 р. 02:31:00 p.m.
 uk_UA	dateLong, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm:ss -> 21 липня 2008 р. 14:31:00
-uk_UA	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a z -> 21 липня 2008 р. 02:31:00 пп GMT+00:00
+uk_UA	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a z -> 21 липня 2008 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm:ss z -> 21 липня 2008 р. 14:31:00 GMT+00:00
-uk_UA	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a zzzz -> 21 липня 2008 р. 02:31:00 пп GMT+00:00
+uk_UA	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a zzzz -> 21 липня 2008 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm:ss zzzz -> 21 липня 2008 р. 14:31:00 GMT+00:00
 uk_UA	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. -> Понеділок, 21 липня 2008 р.
 uk_UA	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. -> Понеділок, 21 липня 2008 р.
-uk_UA	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm a -> Понеділок, 21 липня 2008 р. 02:31 пп
+uk_UA	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm a -> Понеділок, 21 липня 2008 р. 02:31 p.m.
 uk_UA	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm -> Понеділок, 21 липня 2008 р. 14:31
-uk_UA	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a -> Понеділок, 21 липня 2008 р. 02:31:00 пп
+uk_UA	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a -> Понеділок, 21 липня 2008 р. 02:31:00 p.m.
 uk_UA	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm:ss -> Понеділок, 21 липня 2008 р. 14:31:00
-uk_UA	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a z -> Понеділок, 21 липня 2008 р. 02:31:00 пп GMT+00:00
+uk_UA	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a z -> Понеділок, 21 липня 2008 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm:ss z -> Понеділок, 21 липня 2008 р. 14:31:00 GMT+00:00
-uk_UA	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a zzzz -> Понеділок, 21 липня 2008 р. 02:31:00 пп GMT+00:00
+uk_UA	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a zzzz -> Понеділок, 21 липня 2008 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm:ss zzzz -> Понеділок, 21 липня 2008 р. 14:31:00 GMT+00:00
-uk_UA	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 пп
+uk_UA	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 p.m.
 uk_UA	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
-uk_UA	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 пп
+uk_UA	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 p.m.
 uk_UA	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm:ss -> 14:31:00
-uk_UA	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a z -> 02:31:00 пп GMT+00:00
+uk_UA	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a z -> 02:31:00 p.m. GMT+00:00
 uk_UA	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm:ss z -> 14:31:00 GMT+00:00
-uk_UA	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a zzzz -> 02:31:00 пп GMT+00:00
+uk_UA	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a zzzz -> 02:31:00 p.m. GMT+00:00
 uk_UA	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm:ss zzzz -> 14:31:00 GMT+00:00
 uk_UA	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy -> 18.07.29
 uk_UA	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	dd.MM.yy -> 18.07.29
-uk_UA	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm a -> 18.07.29 02:31 пп
+uk_UA	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm a -> 18.07.29 02:31 p.m.
 uk_UA	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm -> 18.07.29 14:31
-uk_UA	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a -> 18.07.29 02:31:00 пп
+uk_UA	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a -> 18.07.29 02:31:00 p.m.
 uk_UA	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm:ss -> 18.07.29 14:31:00
-uk_UA	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a z -> 18.07.29 02:31:00 пп GMT+00:00
+uk_UA	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a z -> 18.07.29 02:31:00 p.m. GMT+00:00
 uk_UA	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm:ss z -> 18.07.29 14:31:00 GMT+00:00
-uk_UA	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a zzzz -> 18.07.29 02:31:00 пп GMT+00:00
+uk_UA	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd.MM.yy hh:mm:ss a zzzz -> 18.07.29 02:31:00 p.m. GMT+00:00
 uk_UA	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd.MM.yy HH:mm:ss zzzz -> 18.07.29 14:31:00 GMT+00:00
 uk_UA	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d MMM y -> 18 Raj. 1429
 uk_UA	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM y -> 18 Raj. 1429
-uk_UA	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm a -> 18 Raj. 1429 02:31 пп
+uk_UA	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm a -> 18 Raj. 1429 02:31 p.m.
 uk_UA	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm -> 18 Raj. 1429 14:31
-uk_UA	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a -> 18 Raj. 1429 02:31:00 пп
+uk_UA	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a -> 18 Raj. 1429 02:31:00 p.m.
 uk_UA	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm:ss -> 18 Raj. 1429 14:31:00
-uk_UA	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a z -> 18 Raj. 1429 02:31:00 пп GMT+00:00
+uk_UA	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a z -> 18 Raj. 1429 02:31:00 p.m. GMT+00:00
 uk_UA	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm:ss z -> 18 Raj. 1429 14:31:00 GMT+00:00
-uk_UA	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a zzzz -> 18 Raj. 1429 02:31:00 пп GMT+00:00
+uk_UA	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMM y hh:mm:ss a zzzz -> 18 Raj. 1429 02:31:00 p.m. GMT+00:00
 uk_UA	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d MMM y HH:mm:ss zzzz -> 18 Raj. 1429 14:31:00 GMT+00:00
 uk_UA	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. -> 18 Раджаб 1429 р.
 uk_UA	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. -> 18 Раджаб 1429 р.
-uk_UA	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm a -> 18 Раджаб 1429 р. 02:31 пп
+uk_UA	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm a -> 18 Раджаб 1429 р. 02:31 p.m.
 uk_UA	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm -> 18 Раджаб 1429 р. 14:31
-uk_UA	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a -> 18 Раджаб 1429 р. 02:31:00 пп
+uk_UA	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a -> 18 Раджаб 1429 р. 02:31:00 p.m.
 uk_UA	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm:ss -> 18 Раджаб 1429 р. 14:31:00
-uk_UA	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a z -> 18 Раджаб 1429 р. 02:31:00 пп GMT+00:00
+uk_UA	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a z -> 18 Раджаб 1429 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm:ss z -> 18 Раджаб 1429 р. 14:31:00 GMT+00:00
-uk_UA	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a zzzz -> 18 Раджаб 1429 р. 02:31:00 пп GMT+00:00
+uk_UA	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'р'. hh:mm:ss a zzzz -> 18 Раджаб 1429 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM y 'р'. HH:mm:ss zzzz -> 18 Раджаб 1429 р. 14:31:00 GMT+00:00
 uk_UA	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. -> Понеділок, 18 Раджаб 1429 р.
 uk_UA	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. -> Понеділок, 18 Раджаб 1429 р.
-uk_UA	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm a -> Понеділок, 18 Раджаб 1429 р. 02:31 пп
+uk_UA	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm a -> Понеділок, 18 Раджаб 1429 р. 02:31 p.m.
 uk_UA	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm -> Понеділок, 18 Раджаб 1429 р. 14:31
-uk_UA	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a -> Понеділок, 18 Раджаб 1429 р. 02:31:00 пп
+uk_UA	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a -> Понеділок, 18 Раджаб 1429 р. 02:31:00 p.m.
 uk_UA	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm:ss -> Понеділок, 18 Раджаб 1429 р. 14:31:00
-uk_UA	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a z -> Понеділок, 18 Раджаб 1429 р. 02:31:00 пп GMT+00:00
+uk_UA	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a z -> Понеділок, 18 Раджаб 1429 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm:ss z -> Понеділок, 18 Раджаб 1429 р. 14:31:00 GMT+00:00
-uk_UA	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a zzzz -> Понеділок, 18 Раджаб 1429 р. 02:31:00 пп GMT+00:00
+uk_UA	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d MMMM y 'р'. hh:mm:ss a zzzz -> Понеділок, 18 Раджаб 1429 р. 02:31:00 p.m. GMT+00:00
 uk_UA	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d MMMM y 'р'. HH:mm:ss zzzz -> Понеділок, 18 Раджаб 1429 р. 14:31:00 GMT+00:00
 ur_PK	Language endonym	اردو
 ur_PK	Country endonym	پاکستان
