@@ -1543,6 +1543,7 @@ void MWindow::setNotificationPreviewsVisible(bool visible)
     Q_D(MWindow);
     d->setX11NotificationPreviewsDisabledProperty(!visible);
 #else
+    Q_UNUSED(visible);
 #endif
 }
 
