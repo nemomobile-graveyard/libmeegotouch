@@ -770,7 +770,10 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
         return;
 
     QPointF p = calculateSceneWindowPosition(window);
-    window->setGeometry( QRectF(p, window->preferredSize()) );
+    //If the preferred size returned from sizeHint is larger than the maximum size, it will get reduced.
+    //But this means that we need to get the new height for the new width..
+    QSizeF size = window->effectiveSizeHint(Qt::PreferredSize, QSizeF(window->preferredWidth(), -1));
+    window->setGeometry( QRectF(p, size) );
 
     // restart running navigationbar appearance animation to update animation endValues
     MAbstractWidgetAnimation* animation = window->d_func()->appearanceAnimation;
