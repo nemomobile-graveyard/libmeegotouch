@@ -139,6 +139,8 @@ void MNavigationBarViewPrivate::init()
     customContentPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     customContentPolicy->setSpacing(0);
 
+    layout->setPolicy(toolbarPolicy);
+
     // Connects button signals
     QObject::connect(applicationMenuButton, SIGNAL(clicked()), controller, SIGNAL(viewmenuTriggered()));
     QObject::connect(closeButton, SIGNAL(clicked()), controller, SIGNAL(closeButtonClicked()));
