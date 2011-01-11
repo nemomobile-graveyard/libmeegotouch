@@ -75,6 +75,7 @@ private:
     void updateWindowIsAlwaysMapped(Window window);
     void handleXVisibilityEvent(XVisibilityEvent *xevent);
     void handleXPropertyEvent(XPropertyEvent *xevent);
+    void handleXMapNotify(XMapEvent *xevent);
     Atom visibleAtom;
     Atom minimizeAnimationAtom;
     Atom wmStateAtom;

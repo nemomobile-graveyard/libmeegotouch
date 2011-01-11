@@ -497,10 +497,11 @@ bool MApplication::x11EventFilter(XEvent *event)
 
         return true;
     }
-#else //HAVE_XDAMAGE
-    Q_UNUSED(d);
 #endif //HAVE_XDAMAGE
-
+    else if (event->type == MapNotify) {
+        XMapEvent * xevent = (XMapEvent*) event;
+        d->handleXMapNotify(xevent);
+    }
     return false;
 }
 
@@ -589,6 +590,15 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
         } else if (xevent->atom == mtAlwaysMappedAtom) {
             updateWindowIsAlwaysMapped(xevent->window);
         }
+    }
+}
+
+void MApplicationPrivate::handleXMapNotify(XMapEvent *xevent)
+{
+    MWindow* win = windowForId(xevent->window);
+    if(win && win->d_func()->settingXPropertiesDelayed) {
+        win->d_func()->setX11OrientationAngleProperty(win->orientationAngle());
+        win->d_func()->settingXPropertiesDelayed = false;
     }
 }
 

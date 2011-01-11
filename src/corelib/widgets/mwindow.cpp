@@ -104,6 +104,7 @@ MWindowPrivate::MWindowPrivate() :
     skipTaskbar = false;
     isIconicState = false;
     isAlwaysMapped = false;
+    settingXPropertiesDelayed = false;
 #endif
 
     MWindow *window = MApplication::activeWindow();
@@ -912,8 +913,11 @@ void MWindowPrivate::setX11OrientationAngleProperty(M::OrientationAngle angle)
         return;
 
     //sometimes this class is used without valid x11 window
-    if (q->effectiveWinId() == 0)
+    if (q->effectiveWinId() == 0) {
+        settingXPropertiesDelayed = true;
         return;
+    }
+    settingXPropertiesDelayed = false;
 
     Atom orientationAngleAtom = XInternAtom(display, "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
 

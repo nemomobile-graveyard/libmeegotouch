@@ -71,6 +71,7 @@ public:
     bool skipTaskbar;
     bool isIconicState;
     bool isAlwaysMapped;
+    bool settingXPropertiesDelayed;
 #endif
 
     void _q_onPixmapRequestsFinished();
