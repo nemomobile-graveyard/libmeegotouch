@@ -29,14 +29,34 @@ class Pt_MScalableImage : public QObject
 
 private slots:
     void init();
+    void cleanup();
+
     void initTestCase();
     void cleanupTestCase();
 
     void paintScalablePerformance();
     void paintScalablePerformance_data();
 
+    void paintPOTScalablePerformance();
+    void paintPOTScalablePerformance_data();
+
+    void paintHugeScalablePerformance();
+    void paintHugeScalablePerformance_data();
+
     void paintPixmapPerformance();
     void paintPixmapPerformance_data();
+
+    void paintHugePixmapPerformance();
+    void paintHugePixmapPerformance_data();
+
+    void paintSmoothPixmapPerformance();
+    void paintSmoothPixmapPerformance_data();
+
+    void paintSmoothHugePixmapPerformance();
+    void paintSmoothHugePixmapPerformance_data();
+
+    void paintBorderPixmapPerformance();
+    void paintBorderPixmapPerformance_data();
 
 };
 

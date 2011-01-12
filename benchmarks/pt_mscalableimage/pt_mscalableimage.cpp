@@ -19,37 +19,32 @@
 
 #include <QObject>
 #include <MApplication>
+#include <MApplicationWindow>
 #include <MScalableImage>
 #include <MTheme>
+#include <MWindow>
+#include <MComponentCache>
 #include <QPainter>
-#include "mglrenderer.h"
 
 #include "pt_mscalableimage.h"
-
-#ifdef M_USE_OPENGL
 #include <QGLWidget>
-#endif
 
 MApplication *app;
-#ifdef M_USE_OPENGL
-QGLWidget *glw  = NULL;
-#endif
+MApplicationWindow *window;
+
 void Pt_MScalableImage::initTestCase()
 {
     int argc = 1;
     char *app_name = (char *) "./pt_mscalableimage";
     app = new MApplication(argc, &app_name);
-#ifdef M_USE_OPENGL
-    glw = new QGLWidget();
-    MGLRenderer::instance()->initGL(glw);
-#endif
+
+    window = new MApplicationWindow();
+    window->show();
 }
 
 void Pt_MScalableImage::cleanupTestCase()
 {
-#ifdef M_USE_OPENGL
-    delete glw;
-#endif
+    delete window;
     delete app;
 }
 
@@ -62,16 +57,26 @@ void Pt_MScalableImage::init()
     }
 }
 
+void Pt_MScalableImage::cleanup()
+{
+    QCoreApplication::processEvents();
+}
+
 void Pt_MScalableImage::paintScalablePerformance_data()
 {
     QTest::addColumn<qint32>("width");
     QTest::addColumn<qint32>("height");
     QTest::addColumn<bool>("HW");
-    QTest::addColumn<bool>("useGLRenderer");
 
-    QTest::newRow("300x300 SW") << 300 << 300 << false << false;
-    QTest::newRow("300x300 HW !MGLRenderer") << 300 << 300 << true << false;
-    QTest::newRow("300x300 HW MGLRenderer") << 300 << 300 << true << true;
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
 }
 
 void Pt_MScalableImage::paintScalablePerformance()
@@ -79,26 +84,16 @@ void Pt_MScalableImage::paintScalablePerformance()
     QFETCH(qint32, width);
     QFETCH(qint32, height);
     QFETCH(bool, HW);
-    QFETCH(bool, useGLRenderer);
 
-    MScalableImage *image = const_cast<MScalableImage *>(MTheme::scalableImage("stretchbutton", 11, 11, 11, 11));
-    image->enableOptimizedRendering(useGLRenderer);
+    MScalableImage *image = const_cast<MScalableImage *>(MTheme::scalableImage("meegotouch-button-background", 11, 11, 11, 11));
 
     QPainter painter;
     QPixmap *pixmap = NULL;
     if (!HW) {
         pixmap = new QPixmap(width, height);
-        pixmap->fill(QColor(255, 255, 255, 255));
         painter.begin(pixmap);
     } else {
-#ifdef M_USE_OPENGL
-        glw->resize(width, height);
-        MGLRenderer::instance()->initGL(glw);
-        painter.begin(glw);
-        painter.fillRect(0, 0, width, height, QColor(255, 255, 255, 255));
-#else
-        qWarning("Cannot run HW test.");
-#endif
+        painter.begin(window->viewport());
     }
 
     // actual benchmark
@@ -108,19 +103,100 @@ void Pt_MScalableImage::paintScalablePerformance()
         }
         painter.end();
     }
-    // save a shot (for debugging)
-#define SCREENSHOT
-#ifdef SCREENSHOT
-    QString kuva;
-    kuva.sprintf("scalable_%d_%d_%d_%d.png", width, height, HW, useGLRenderer);
-    if (pixmap)
-        pixmap->save(kuva, "png", -1);
-    else {
-#ifdef M_USE_OPENGL
-        glw->grabFrameBuffer().save(kuva, "png", -1);
-#endif
+    delete pixmap;
+    MTheme::releaseScalableImage(image);
+}
+
+void Pt_MScalableImage::paintPOTScalablePerformance_data()
+{
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<bool>("HW");
+
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
+}
+
+void Pt_MScalableImage::paintPOTScalablePerformance()
+{
+    QFETCH(qint32, width);
+    QFETCH(qint32, height);
+    QFETCH(bool, HW);
+
+    const QPixmap *imagePixmap = MTheme::pixmap("meegotouch-button-background", QSize(32, 32));
+    MScalableImage *image = new MScalableImage(imagePixmap, 11, 11, 11, 11);
+
+    QPainter painter;
+    QPixmap *pixmap = NULL;
+    if (!HW) {
+        pixmap = new QPixmap(width, height);
+        pixmap->fill(QColor(255, 255, 255, 255));
+        painter.begin(pixmap);
+    } else {
+        painter.begin(window->viewport());
+        painter.fillRect(0, 0, width, height, QColor(255, 255, 255, 255));
     }
-#endif
+
+    // actual benchmark
+    if (painter.isActive()) {
+        QBENCHMARK {
+            image->draw(0, 0, width, height, &painter);
+        }
+        painter.end();
+    }
+    delete pixmap;
+    MTheme::releaseScalableImage(image);
+}
+
+void Pt_MScalableImage::paintHugeScalablePerformance_data()
+{
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<bool>("HW");
+
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
+}
+
+void Pt_MScalableImage::paintHugeScalablePerformance()
+{
+    QFETCH(qint32, width);
+    QFETCH(qint32, height);
+    QFETCH(bool, HW);
+
+    const QPixmap *imagePixmap = MTheme::pixmap("meegotouch-button-background", QSize(500, 500));
+    MScalableImage *image = new MScalableImage(imagePixmap, 11, 11, 11, 11);
+
+    QPainter painter;
+    QPixmap *pixmap = NULL;
+    if (!HW) {
+        pixmap = new QPixmap(width, height);
+        painter.begin(pixmap);
+    } else {
+        painter.begin(window->viewport());
+    }
+
+    // actual benchmark
+    if (painter.isActive()) {
+        QBENCHMARK {
+            image->draw(0, 0, width, height, &painter);
+        }
+        painter.end();
+    }
     delete pixmap;
     MTheme::releaseScalableImage(image);
 }
@@ -130,43 +206,33 @@ void Pt_MScalableImage::paintPixmapPerformance_data()
     QTest::addColumn<qint32>("width");
     QTest::addColumn<qint32>("height");
     QTest::addColumn<bool>("HW");
-    QTest::addColumn<bool>("useGLRenderer");
 
-    QTest::newRow("300x300 SW") << 300 << 300 << false << false;
-    QTest::newRow("300x300 HW !MGLRenderer") << 300 << 300 << true << false;
-    QTest::newRow("300x300 HW MGLRenderer") << 300 << 300 << true << true;
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
 }
-
 
 void Pt_MScalableImage::paintPixmapPerformance()
 {
     QFETCH(qint32, width);
     QFETCH(qint32, height);
     QFETCH(bool, HW);
-    QFETCH(bool, useGLRenderer);
 
-    const QPixmap *image = MTheme::pixmap("stretchbutton", QSize(width, height));
-    //glw->bindTexture(*image);
-    //((MyScalable*)image)->setUseMGLRenderer(useGLRenderer);
-    //wait for the resource loading to finish
-    while (MTheme::instance()->hasPendingRequests()) {
-        usleep(100);
-        QCoreApplication::processEvents();
-    }
+    const QPixmap *image = MTheme::pixmap("meegotouch-button-background");
+
     QPainter painter;
     QPixmap *pixmap = NULL;
     if (!HW) {
         pixmap = new QPixmap(width, height);
-        pixmap->fill(QColor(255, 255, 255, 255));
         painter.begin(pixmap);
     } else {
-#ifdef M_USE_OPENGL
-        glw->resize(width, height);
-        painter.begin(glw);
-        painter.fillRect(0, 0, width, height, QColor(255, 255, 255, 255));
-#else
-        qWarning("Cannot run HW test.");
-#endif
+        painter.begin(window->viewport());
     }
 
     //warmup
@@ -174,33 +240,213 @@ void Pt_MScalableImage::paintPixmapPerformance()
 
     // actual benchmark
     if (painter.isActive()) {
-        if (useGLRenderer) {
-#ifdef M_USE_OPENGL
-            QBENCHMARK {
-                MGLRenderer::instance()->drawPixmap(painter.combinedTransform(), *image, 1.0);
-            }
-#endif
-        } else {
-            QBENCHMARK {
-                painter.drawPixmap(0, 0, *image);
-            }
+        QBENCHMARK {
+            painter.drawPixmap(0, 0, width, height, *image);
         }
         painter.end();
     }
-    // save a shot (for debugging)
-#define SCREENSHOT
-#ifdef SCREENSHOT
-    QString kuva;
-    kuva.sprintf("pixmap_%d_%d_%d_%d.png", width, height, HW, useGLRenderer);
-    if (pixmap)
-        pixmap->save(kuva, "png", -1);
-    else {
-#ifdef M_USE_OPENGL
-        glw->grabFrameBuffer().save(kuva, "png", -1);
-#endif
-    }
-#endif
     delete pixmap;
     MTheme::releasePixmap(image);
 }
+
+void Pt_MScalableImage::paintHugePixmapPerformance_data()
+{
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<bool>("HW");
+
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
+}
+
+void Pt_MScalableImage::paintHugePixmapPerformance()
+{
+    QFETCH(qint32, width);
+    QFETCH(qint32, height);
+    QFETCH(bool, HW);
+
+    const QPixmap *image = MTheme::pixmap("meegotouch-button-background", QSize(500, 500));
+
+    QPainter painter;
+    QPixmap *pixmap = NULL;
+    if (!HW) {
+        pixmap = new QPixmap(width, height);
+        painter.begin(pixmap);
+    } else {
+        painter.begin(window->viewport());
+    }
+
+    //warmup
+    //painter.drawPixmap(0, 0, *image);
+
+    // actual benchmark
+    if (painter.isActive()) {
+        QBENCHMARK {
+            painter.drawPixmap(0, 0, width, height, *image);
+        }
+        painter.end();
+    }
+    delete pixmap;
+    MTheme::releasePixmap(image);
+}
+
+void Pt_MScalableImage::paintSmoothPixmapPerformance_data()
+{
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<bool>("HW");
+
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
+}
+
+void Pt_MScalableImage::paintSmoothPixmapPerformance()
+{
+    QFETCH(qint32, width);
+    QFETCH(qint32, height);
+    QFETCH(bool, HW);
+
+    const QPixmap *image = MTheme::pixmap("meegotouch-button-background");
+
+    QPainter painter;
+    QPixmap *pixmap = NULL;
+    if (!HW) {
+        pixmap = new QPixmap(width, height);
+        painter.begin(pixmap);
+    } else {
+        painter.begin(window->viewport());
+    }
+
+    //warmup
+    //painter.drawPixmap(0, 0, *image);
+
+    // actual benchmark
+    if (painter.isActive()) {
+        bool enabled = painter.renderHints() & QPainter::SmoothPixmapTransform;
+        painter.setRenderHint(QPainter::SmoothPixmapTransform);
+        QBENCHMARK {
+            painter.drawPixmap(0, 0, width, height, *image);
+        }
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, enabled);
+        painter.end();
+    }
+    delete pixmap;
+    MTheme::releasePixmap(image);
+}
+
+void Pt_MScalableImage::paintSmoothHugePixmapPerformance_data()
+{
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<bool>("HW");
+
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
+}
+
+void Pt_MScalableImage::paintSmoothHugePixmapPerformance()
+{
+    QFETCH(qint32, width);
+    QFETCH(qint32, height);
+    QFETCH(bool, HW);
+
+    const QPixmap *image = MTheme::pixmap("meegotouch-button-background", QSize(500, 500));
+
+    QPainter painter;
+    QPixmap *pixmap = NULL;
+    if (!HW) {
+        pixmap = new QPixmap(width, height);
+        painter.begin(pixmap);
+    } else {
+        painter.begin(window->viewport());
+    }
+
+    //warmup
+    //painter.drawPixmap(0, 0, *image);
+
+    // actual benchmark
+    if (painter.isActive()) {
+        bool enabled = painter.renderHints() & QPainter::SmoothPixmapTransform;
+        painter.setRenderHint(QPainter::SmoothPixmapTransform);
+        QBENCHMARK {
+            painter.drawPixmap(0, 0, width, height, *image);
+        }
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, enabled);
+        painter.end();
+    }
+    delete pixmap;
+    MTheme::releasePixmap(image);
+}
+
+void Pt_MScalableImage::paintBorderPixmapPerformance_data()
+{
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<bool>("HW");
+
+    QTest::newRow("51x51 SW") << 51 << 51 << false;
+    QTest::newRow("32x32 SW") << 32 << 32 << false;
+    QTest::newRow("64x64 SW") << 64 << 64 << false;
+    QTest::newRow("500x500 SW") << 500 << 500 << false;
+
+    QTest::newRow("51x51 HW") << 51 << 51 << true;
+    QTest::newRow("32x32 HW") << 32 << 32 << true;
+    QTest::newRow("64x64 HW") << 64 << 64 << true;
+    QTest::newRow("500x500 HW") << 500 << 500 << true;
+}
+
+void Pt_MScalableImage::paintBorderPixmapPerformance()
+{
+    QFETCH(qint32, width);
+    QFETCH(qint32, height);
+    QFETCH(bool, HW);
+
+    const QPixmap *image = MTheme::pixmap("meegotouch-button-background");
+
+    QPainter painter;
+    QPixmap *pixmap = NULL;
+    if (!HW) {
+        pixmap = new QPixmap(width, height);
+        painter.begin(pixmap);
+    } else {
+        painter.begin(window->viewport());
+    }
+
+    //warmup
+    //painter.drawPixmap(0, 0, *image);
+
+    // actual benchmark
+    if (painter.isActive()) {
+        QRect rect(0, 0, width, height);
+        QMargins margins(11, 11, 11, 11);
+        QBENCHMARK {
+            qDrawBorderPixmap(&painter, rect, margins, *image);
+        }
+        painter.end();
+    }
+    delete pixmap;
+    MTheme::releasePixmap(image);
+}
+
 QTEST_APPLESS_MAIN(Pt_MScalableImage)
