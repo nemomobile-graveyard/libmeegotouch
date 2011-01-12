@@ -1815,8 +1815,10 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     d->commitPreedit();
     deselect();
 
+#if QT_VERSION >= 0x040702 // 4.7.1 was missing stopItem parameter
     // kludge warning!
     QGraphicsItem::d_ptr->clearSubFocus();
+#endif
 
     if (d->completer) {
         //hide completer when focus out
