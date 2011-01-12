@@ -2586,6 +2586,11 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
             return QVariant(pos);
         }
 
+    case Qt::ImAnchorPosition: {
+            int pos = d->cursor()->anchor() - block.position();
+            return QVariant(pos);
+        }
+
     case Qt::ImSurroundingText: {
             QString surroundingText = block.text();
             if (d->isPreediting()) {
