@@ -20,7 +20,9 @@
 #include "mcomponentcache.h"
 #include "mcomponentcache_p.h"
 #include "mapplication.h"
+#ifdef HAVE_DBUS
 #include "mapplicationservice.h"
+#endif //HAVE_DBUS
 #include "mapplicationwindow.h"
 #include "mcomponentdata.h"
 #include "mgraphicssystemhelper.h"

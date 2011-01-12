@@ -38,8 +38,8 @@
 #ifdef HAVE_DBUS
 #include "mapplicationifproxy.h"
 #include "mapplicationifadaptor.h"
-#endif //HAVE_DBUS
 #include "mapplicationservice.h"
+#endif //HAVE_DBUS
 #include "mcomponentcache.h"
 #include "mcomponentdata_p.h"
 #include "mwindow.h"
@@ -1168,6 +1168,7 @@ QString MComponentData::binaryName()
 
 QString MComponentData::serviceName()
 {
+#ifdef HAVE_DBUS
     if (!gMComponentDataPrivate) {
         qFatal("MComponentData::serviceName() - MComponentData instance not yet created.");
     } else if (!gMComponentDataPrivate->service) {
@@ -1175,6 +1176,8 @@ QString MComponentData::serviceName()
     }
 
     return gMComponentDataPrivate->service->registeredName();
+#endif // HAVE_DBUS
+    return QString();
 }
 
 M::OrientationAngle MComponentData::forcedOrientationAngle()
