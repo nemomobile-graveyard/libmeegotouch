@@ -148,7 +148,6 @@ void MLabelViewSimple::setupModel()
     } else {
         viewPrivate->textOptions.setWrapMode(QTextOption::NoWrap);
     }
-    viewPrivate->previousStaticTextSize = staticText.size();
 }
 
 bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
@@ -161,8 +160,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
     foreach(member, modifications) {
         if (member == MLabelModel::Text) {
             preferredSize = QSizeF(-1, -1);
-            needUpdate = viewPrivate->previousStaticTextSize != staticText.size();
-            viewPrivate->previousStaticTextSize = staticText.size();
+            needUpdate = true;
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
         } else if(member == MLabelModel::WrapMode) {
