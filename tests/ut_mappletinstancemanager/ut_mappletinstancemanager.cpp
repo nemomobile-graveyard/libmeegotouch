@@ -273,10 +273,16 @@ bool QFile::copy(const QString &fileName, const QString &newName)
 QStringList existingFiles;
 bool QFile::exists(const QString &fileName)
 {
-    if(fileName.endsWith("devices.conf"))
+    if (existingFiles.contains(fileName))
         return true;
 
-    return existingFiles.contains(fileName);
+    // Do what the real QFile::exists(const QString&) does
+    return QFileInfo(fileName).exists();
+}
+
+bool QFile::exists() const
+{
+    return QFile::exists(fileName());
 }
 
 // QDir stubs (used by MAppletInstanceManager)
@@ -297,28 +303,6 @@ bool QDir::mkpath(const QString &dirPath) const
 {
     dirMkpath = dirPath;
     return true;
-}
-
-// QFileInfo stubs (used by MAppletMetaData)
-bool QFileInfo::exists() const
-{
-    return true;
-}
-
-bool QFileInfo::isFile() const
-{
-    return true;
-}
-
-bool QFileInfo::isExecutable() const
-{
-    return true;
-}
-
-// QFile stubs
-bool QFile::exists() const
-{
-    return existingFiles.contains(fileName());
 }
 
 MTestAppletInstanceManager::MTestAppletInstanceManager(const QString &identifier, MDataStore *dataStore) :
