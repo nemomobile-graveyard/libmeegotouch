@@ -30,6 +30,7 @@
 #include <QStringList>
 #include <MGConfItem>
 #include <QPainter>
+#include <QDesktopServices>
 #include "mthemedaemonclient.h"
 #include "mimagedirectory.h"
 #include "mthemedaemonprotocol.h"
@@ -78,11 +79,38 @@ QString MThemeDaemon::systemThemeDirectory()
 
 QString MThemeDaemon::systemThemeCacheDirectory()
 {
-#ifdef Q_WS_X11
-    return QString(CACHEDIR) + "/themedaemon/";
+    static QString cacheDir;
+    if (cacheDir.isEmpty()) {
+        // first check if we can write to CACHEDIR
+#ifdef Q_OS_WIN
+	QDir appDir(QCoreApplication::applicationDirPath());
+
+	appDir.cdUp();
+
+	cacheDir = appDir.absolutePath()
+	  + QDir::separator() + "var"
+	  + QDir::separator() + "cache"
+	  + QDir::separator() + "meegotouch";
 #else
-    return QDir::tempPath();
+        cacheDir = CACHEDIR;
 #endif
+        QDir().mkpath(cacheDir);
+        QFile testFile(cacheDir + QDir::separator() + "permission_test_file");
+        if (!testFile.open(QFile::WriteOnly)) {
+            // now we try a standard cache location
+            cacheDir = QDesktopServices::storageLocation(QDesktopServices::CacheLocation)
+	      + QDir::separator() + QLatin1String("meegotouch");
+            QDir().mkpath(cacheDir);
+            testFile.setFileName(cacheDir + QDir::separator() + "permission_test_file");
+            if (!testFile.open(QFile::WriteOnly)) {
+                exit(EXIT_FAILURE);
+            }
+        }
+        testFile.remove();
+        testFile.close();
+    }
+
+    return cacheDir + QDir::separator() + QLatin1String("themedaemon");
 }
 
 void MThemeDaemon::addClient(MThemeDaemonClient *client)

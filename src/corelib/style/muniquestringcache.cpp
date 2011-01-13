@@ -28,6 +28,7 @@
 #include <QHash>
 #include <QByteArray>
 #include <QElapsedTimer>
+#include <QCoreApplication>
 
 const int MAX_CACHE_SIZE = 1024*1024;
 #define CACHE_NAME "MTF_UNIQUE_STRING_CACHE"
@@ -109,7 +110,23 @@ private:
     }
 
     QString createCacheFileName() {
-        return QString(CACHEDIR) + "/css/" + CACHE_NAME;
+        QString cacheDir;
+#ifdef Q_OS_WIN
+	QDir appDir(QCoreApplication::applicationDirPath());
+	appDir.cdUp();
+
+	cacheDir = appDir.absolutePath()
+	  + QDir::separator() + "var"
+	  + QDir::separator() + "cache"
+	  + QDir::separator() + "meegotouch";
+#else
+	cacheDir = QString(CACHEDIR);
+#endif
+        cacheDir = cacheDir
+	  + QDir::separator() + "css"
+	  + QDir::separator() + CACHE_NAME;
+
+        return cacheDir;
     }
 
     QFile cacheFile;

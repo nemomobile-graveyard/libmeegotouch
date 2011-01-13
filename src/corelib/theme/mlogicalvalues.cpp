@@ -27,6 +27,7 @@
 #include <QStringList>
 #include <QTextCodec>
 #include <QDateTime>
+#include <QCoreApplication>
 
 namespace {
     const unsigned int CACHE_VERSION = 1;
@@ -175,7 +176,19 @@ bool MLogicalValuesPrivate::saveToBinaryCache(const QFileInfo &fileInfo, const G
 }
 
 QString MLogicalValuesPrivate::createBinaryFilename(const QFileInfo &fileInfo) const {
-    QString binaryDirectory = QString(CACHEDIR) + "/logicalValues/";
+    QString binaryDirectory;
+#ifdef Q_OS_WIN
+    QDir appDir(QCoreApplication::applicationDirPath());
+    appDir.cdUp();
+
+    binaryDirectory = appDir.absolutePath()
+      + QDir::separator() + "var"
+      + QDir::separator() + "cache"
+      + QDir::separator() + "meegotouch"
+      + QDir::separator() + "logicalvalues";
+#else
+    binaryDirectory = QString(CACHEDIR) + "/logicalValues/";
+#endif
     QString binaryFilename(binaryDirectory);
 
     QString absoluteFilePathEncoded(fileInfo.absoluteFilePath());

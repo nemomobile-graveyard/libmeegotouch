@@ -376,6 +376,8 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
 #ifdef __arm__
     MTheme::ThemeService themeService = MTheme::RemoteTheme;
+#elif defined Q_OS_WIN
+    MTheme::ThemeService themeService = MTheme::LocalTheme;
 #else
     MTheme::ThemeService themeService = MTheme::AnyTheme;
 #endif
@@ -458,11 +460,13 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
         }
     }
 
+#ifndef Q_OS_WIN
     feedbackPlayer = new MFeedbackPlayer();
     if (!feedbackPlayer->d_ptr->init(themeIdentifier)) {
         delete feedbackPlayer;
         feedbackPlayer = 0;
     }
+#endif
 
     // register dbus service
     appName = themeIdentifier;

@@ -631,7 +631,22 @@ MLocalePrivate::MLocalePrivate()
       q_ptr(0)
 {
     if (translationPaths.isEmpty())
+    {
+#ifdef Q_OS_WIN
+        // walk to translation dir relative to bin dir
+        QDir appDir(QCoreApplication::applicationDirPath());
+
+	appDir.cdUp();
+	appDir.cd("share");
+	appDir.cd("l10n");
+	appDir.cd("meegotouch");
+
+        translationPaths = (QStringList() << appDir.absolutePath());
+#else
         translationPaths = (QStringList() << QString(TRANSLATION_DIR));
+#endif
+    }
+
     if (dataPaths.isEmpty())
         MLocale::setDataPath(M_ICUEXTRADATA_DIR);
 }

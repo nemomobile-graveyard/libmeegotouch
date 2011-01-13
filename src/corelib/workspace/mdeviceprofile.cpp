@@ -55,7 +55,6 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
 #ifdef Q_OS_WIN
     QDir appDir(QCoreApplication::applicationDirPath());
     appDir.cdUp();
-    appDir.cd("usr");
     appDir.cd("share");
     appDir.cd("meegotouch");
     appDir.cd("targets");
