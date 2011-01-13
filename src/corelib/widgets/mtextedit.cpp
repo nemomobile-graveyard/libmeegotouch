@@ -352,6 +352,9 @@ void MTextEditPrivate::init()
     }
 
     q->document()->setDefaultTextOption(option);
+    if (!q->model()->cursor()) {
+        q->model()->setCursor(new QTextCursor(q->document()));
+    }
     q->model()->cursor()->movePosition(QTextCursor::End);
     q->setFocusPolicy(Qt::ClickFocus);
     q->setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
