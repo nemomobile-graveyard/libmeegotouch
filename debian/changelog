@@ -1,3 +1,11 @@
+libmeegotouch (0.20.71-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#217067
+  * Fixes: NB#217676 - Unableto open picture from search results.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 13 Jan 2011 13:40:03 +0200
+
 libmeegotouch (0.20.71-1) unstable; urgency=low
 
   * New version
