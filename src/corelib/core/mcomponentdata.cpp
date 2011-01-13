@@ -1176,8 +1176,9 @@ QString MComponentData::serviceName()
     }
 
     return gMComponentDataPrivate->service->registeredName();
-#endif // HAVE_DBUS
+#else
     return QString();
+#endif // HAVE_DBUS
 }
 
 M::OrientationAngle MComponentData::forcedOrientationAngle()
