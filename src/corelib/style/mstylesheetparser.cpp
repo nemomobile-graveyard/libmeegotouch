@@ -942,6 +942,9 @@ QString MStyleSheetParserPrivate::createBinaryFilename(const QString &filename) 
     QString absoluteFilePathEncoded(filename);
     absoluteFilePathEncoded.replace('_', "__");
     absoluteFilePathEncoded.replace('/', "_.");
+    // also replace windows directory separators and the drive letter separator
+    absoluteFilePathEncoded.replace('\\', "_.");
+    absoluteFilePathEncoded.replace(':', "_.");
     binaryFilename += absoluteFilePathEncoded;
     return binaryFilename;
 }
