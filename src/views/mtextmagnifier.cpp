@@ -20,17 +20,28 @@
 #include "mtextmagnifier.h"
 #include "mdebug.h"
 
-#include <QBitmap>
 #include <QGraphicsItem>
 #include <QGraphicsSceneResizeEvent>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+#include <QGraphicsScene>
 
+namespace {
+    //! Magnifier overlay should be on top of every widget, even status bar.
+    //! Therefore we set the z value of this top level widget to 1.0 which
+    //! is more than default Z of root element in MScene.
+    const qreal MagnifierOverlayZValue = 1.0f;
+}
 
-MTextMagnifier::MTextMagnifier(const QGraphicsItem &sourceItem)
+MTextMagnifier::MTextMagnifier(const MWidget &sourceWidget,
+                               const QSizeF &keepVisibleSize)
     : MStylableWidget(0),
-      sourceItem(sourceItem)
+      sourceWidget(sourceWidget),
+      keepVisibleSize(keepVisibleSize),
+      overlay(sourceWidget.sceneManager())
 {
+    overlay.hide();
+    sourceWidget.scene()->addItem(&overlay);
     setParentItem(&overlay);
 }
 
@@ -43,19 +54,24 @@ MTextMagnifier::~MTextMagnifier()
 void MTextMagnifier::appear()
 {
     // Appear in the scene of the source item.
-    overlay.appear(sourceItem.scene());
+    overlay.show();
     overlay.grabGesture(Qt::PanGesture);
 }
 
 void MTextMagnifier::disappear()
 {
     overlay.ungrabGesture(Qt::PanGesture);
-    overlay.disappear();
+    overlay.hide();
 }
 
-void MTextMagnifier::setMagnifiedPosition(const QPointF &sourceItemPos)
+void MTextMagnifier::setMagnifiedPosition(const QPointF &sourceWidgetPos)
 {
-    setPos(sourceItem.mapToItem(parentItem(), sourceItemPos));
+    // Map position to overlay's coordinate system.
+    setPos(sourceWidget.mapToItem(parentItem(), sourceWidgetPos));
+
+    // Position has changed, we might have to move magnifier offset
+    // to stay inside screen area.
+    updateMagnifierOffset();
 }
 
 bool MTextMagnifier::isAppeared() const
@@ -74,15 +90,15 @@ void MTextMagnifier::drawContents(QPainter *painter,
     const qreal scaleFactor = 1.f + style()->magnification();
 
     // Source rectangle in local item coordinates.
-    const QSizeF sourceSize(size() / scaleFactor);
-    const QRectF sourceRect(QPointF(-sourceSize.width() / 2.f,
-                                    -sourceSize.height() / 2.f),
+    const QSizeF sourceSize(frameSize() / scaleFactor);
+    const QRectF sourceRect(QPointF(-sourceSize.width() / 2.0f,
+                                    -sourceSize.height() / 2.0f),
                             sourceSize);
 
     // Source rectangle in source item coordinates.
-    const QRectF sourceItemRect(mapRectToItem(&sourceItem, sourceRect));
+    const QRectF sourceWidgetRect(mapRectToItem(&sourceWidget, sourceRect));
 
-    // Paint sourceItem onto offscreen surface.
+    // Paint sourceWidget onto offscreen surface.
     offscreenSurface->fill(Qt::transparent);
     QPainter offscreenPainter(offscreenSurface.data());
 
@@ -91,12 +107,12 @@ void MTextMagnifier::drawContents(QPainter *painter,
 
     // Scale and then translate in scaled coordinates.
     offscreenPainter.scale(scaleFactor, scaleFactor);
-    offscreenPainter.translate(-sourceItemRect.topLeft());
+    offscreenPainter.translate(-sourceWidgetRect.topLeft());
 
-    QStyleOptionGraphicsItem sourceItemOption = *option;
-    sourceItemOption.exposedRect = sourceItemRect;
+    QStyleOptionGraphicsItem sourceWidgetOption = *option;
+    sourceWidgetOption.exposedRect = sourceWidgetRect;
     offscreenPainter.setCompositionMode(QPainter::CompositionMode_Source);
-    const_cast<QGraphicsItem *>(&sourceItem)->paint(&offscreenPainter, &sourceItemOption);
+    const_cast<MWidget *>(&sourceWidget)->paint(&offscreenPainter, &sourceWidgetOption);
 
     offscreenPainter.resetTransform();
     if (style()->magnifierMask()) {
@@ -141,7 +157,47 @@ void MTextMagnifier::resizeEvent(QGraphicsSceneResizeEvent *event)
 QRectF MTextMagnifier::boundingRect() const
 {
     // Put origo to center and apply offset from style.
-    return QRectF(-rect().center() + style()->visualOffset(), size());
+    const QRectF frameRect(QPointF(), frameSize());
+    return QRectF(-frameRect.center()
+                  + offsetFromCenter, size());
+}
+
+QSizeF MTextMagnifier::frameSize() const
+{
+    // Assume that magnifier frame is always square. The picture
+    // includes shadow and is therefore a bit larger in height.
+    return QSizeF(size().width(),
+                  size().width());
+}
+
+void MTextMagnifier::updateMagnifierOffset()
+{
+    // This method recalculates offsetFromCenter variable which is used
+    // by boundingRect().
+    prepareGeometryChange();
+
+    const qreal scaleFactor = 1.0f + style()->magnification();
+    const QSizeF magnifiedKeepVisibleSize(qMin<qreal>(keepVisibleSize.width() * scaleFactor,
+                                                      frameSize().width()),
+                                          qMin<qreal>(keepVisibleSize.height() * scaleFactor,
+                                                      frameSize().height()));
+    const QSizeF margins = (frameSize() - magnifiedKeepVisibleSize) / 2.0f;
+    const QRectF constraint(overlay.rect().adjusted(-margins.width(), -margins.height(),
+                                                    margins.width(), margins.height()));
+
+    // Apply the constraint to bounding rect.
+    // Note: following bounding rectangles are handled in parent coordinates.
+    offsetFromCenter = style()->visualOffset();
+    QRectF br(pos() + boundingRect().topLeft(), boundingRect().size());
+    const QPointF newBrPos(qBound<qreal>(constraint.left(),
+                                         br.left(),
+                                         constraint.right() - br.width()),
+                           qBound<qreal>(constraint.top(),
+                                         br.top(),
+                                         constraint.bottom() - br.height()));
+
+    // Offset by the amount that bounding rect was moved by applying constraint.
+    offsetFromCenter += newBrPos - br.topLeft();
 }
 
 void MTextMagnifier::prepareOffscreenSurface(const QSize &size)
@@ -156,21 +212,20 @@ void MTextMagnifier::prepareOffscreenSurface(const QSize &size)
 
 // Magnifier overlay widget
 
-MagnifierOverlay::MagnifierOverlay()
+MagnifierOverlay::MagnifierOverlay(const MSceneManager *sceneManager)
+    : sceneManager(sceneManager)
 {
     setFlag(QGraphicsItem::ItemHasNoContents, true);
+    setZValue(MagnifierOverlayZValue);
 
-    // Occupy whole screen to be able to catch panning gestures. The size does not really matter
-    // as long as it covers whole screen in portrait and landscape.
-    setManagedManually(true);
-    const QSizeF visibleSceneSize = sceneManager()->visibleSceneSize(M::Landscape);
-    const qreal size = qMax<qreal>(visibleSceneSize.width(), visibleSceneSize.height());
-    setPreferredSize(size, size);
+    rotateAndResizeToFullscreen(sceneManager->orientationAngle());
+    QObject::connect(sceneManager, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
+                     this, SLOT(rotateAndResizeToFullscreen(M::OrientationAngle)));
 }
 
 bool MagnifierOverlay::isAppeared() const
 {
-    return sceneWindowState() != MSceneWindow::Disappeared;
+    return isVisible();
 }
 
 void MagnifierOverlay::panGestureEvent(QGestureEvent *event, QPanGesture *panGesture)
@@ -183,4 +238,19 @@ void MagnifierOverlay::panGestureEvent(QGestureEvent *event, QPanGesture *panGes
     } else {
         event->ignore(panGesture);
     }
+}
+
+void MagnifierOverlay::rotateAndResizeToFullscreen(M::OrientationAngle orientationAngle)
+{
+    // Set geometry to new fullscreen and center it for rotation.
+    // Need to occupy whole screen to be able to catch panning gestures.
+    const QRectF landscapeRect(QPointF(), sceneManager->visibleSceneSize(M::Landscape));
+    QRectF newRect(QPointF(), sceneManager->visibleSceneSize());
+    newRect.moveTopLeft(landscapeRect.center() - newRect.center());
+    setGeometry(newRect);
+
+    // Rotate with pivot at center.
+    const qreal angle = static_cast<qreal>(orientationAngle);
+    setTransformOriginPoint(rect().center()); // Origin point is given in local coordinates.
+    setRotation(angle);
 }

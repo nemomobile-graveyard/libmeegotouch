@@ -26,7 +26,7 @@
 class MApplication;
 class MApplicationWindow;
 class MTextMagnifier;
-class QGraphicsWidget;
+class MWidget;
 
 class Ut_MTextMagnifier : public QObject
 {
@@ -41,11 +41,17 @@ private slots:
     void testMagnifierConsumesPanGesture_data();
     void testMagnifierConsumesPanGesture();
 
+    void testOverlayGeometry_data();
+    void testOverlayGeometry();
+
+    void testOutOfScreen_data();
+    void testOutOfScreen();
+
 private:
     MApplication *m_app;
     MApplicationWindow *m_appWindow;
     MTextMagnifier *subject;
-    QGraphicsWidget *magnifiedWidget;
+    MWidget *magnifiedWidget;
 };
 
 #endif

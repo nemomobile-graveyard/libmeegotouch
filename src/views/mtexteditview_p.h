@@ -63,6 +63,8 @@ public:
 
     qreal heightForWidth(qreal width) const;
 
+    void showMagnifier();
+    void hideMagnifier();
 protected slots:
     void scrolling();
     void hideUnmaskedText();

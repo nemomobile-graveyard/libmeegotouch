@@ -31,14 +31,24 @@
 //! \internal
 
 //! Overlay widget to allow magnifier to stay on top of other widgets.
-class MagnifierOverlay : public MOverlay
+class MagnifierOverlay : public QGraphicsWidget
 {
+    Q_OBJECT
 public:
-    MagnifierOverlay();
+    explicit MagnifierOverlay(const MSceneManager *sceneManager);
     bool isAppeared() const;
 
 protected:
+    //! \reimp
     virtual void panGestureEvent(QGestureEvent *event, QPanGesture *panGesture);
+    //! \reimp_end
+
+private slots:
+    void rotateAndResizeToFullscreen(M::OrientationAngle angle);
+
+private:
+    const MSceneManager * const sceneManager;
+
     friend class Ut_MTextMagnifier;
 };
 
@@ -57,7 +67,14 @@ class MTextMagnifier : protected MStylableWidget
 {
     Q_OBJECT
 public:
-    explicit MTextMagnifier(const QGraphicsItem &sourceItem);
+    /*! \brief Constructs magnifier that magnifies \a sourceWidget.
+     *  \param sourceWidget The contents of this widget is magnified.
+     *  \param keepVisibleSize Size of centered rectangle in magnifier
+     *         which is guaranteed to be kept within screen limits. This is
+     *         given in unmagnified, \a sourceWidget, units.
+     */
+    explicit MTextMagnifier(const MWidget &sourceWidget,
+                            const QSizeF &keepVisibleSize);
     virtual ~MTextMagnifier();
 
     //! Show the magnifier. You should call \a setMagnifiedPosition before this.
@@ -68,7 +85,7 @@ public:
 
     //! Set magnified position in source item coordinates.
     //! Magnifier is drawn at this position unless offset is defined in style.
-    void setMagnifiedPosition(const QPointF &sourceItemPos);
+    void setMagnifiedPosition(const QPointF &sourceWidgetPos);
 
     //! Tells whether magnifier is visible at the moment.
     bool isAppeared() const;
@@ -86,10 +103,13 @@ private:
     MTextMagnifier();
 
     void prepareOffscreenSurface(const QSize &size);
+    QSizeF frameSize() const;
+    void updateMagnifierOffset();
 
-    const QGraphicsItem &sourceItem;
+    const MWidget &sourceWidget;
+    const QSizeF keepVisibleSize;
+    QPointF offsetFromCenter;
     QScopedPointer<QPixmap> offscreenSurface;
-    QScopedPointer<QBitmap> mask;
 
     MagnifierOverlay overlay;
 

@@ -464,6 +464,25 @@ QTextDocument *MTextEditViewPrivate::activeDocument() const
 }
 
 
+void MTextEditViewPrivate::showMagnifier()
+{
+    if (!magnifier) {
+        magnifier.reset(new MTextMagnifier(*controller,
+                                           cursorRect().size()));
+    }
+
+    updateMagnifierPosition();
+    magnifier->appear();
+}
+
+void MTextEditViewPrivate::hideMagnifier()
+{
+    if (magnifier) {
+        magnifier->disappear();
+        magnifier.reset();
+    }
+}
+
 // notifies this and the possible derived classes about an update
 void MTextEditView::doUpdate()
 {
@@ -750,7 +769,7 @@ QRect MTextEditViewPrivate::cursorRect() const
 void MTextEditViewPrivate::updateMagnifierPosition()
 {
     if (magnifier) {
-        QPointF magpos = cursorRect().center();
+        const QPointF magpos = cursorRect().center();
         magnifier->setMagnifiedPosition(magpos);
     }
 }
@@ -897,9 +916,7 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     MTextEdit::TextFieldLocationType location;
 
-    if (d->magnifier) {
-        d->magnifier->disappear();
-    }
+    d->hideMagnifier();
 
     if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
         // Honor MWidgetView's style and play release feedback
@@ -1089,9 +1106,7 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
     style()->cancelFeedback().play();
 
     // restore state before as before mouse press
-    if (d->magnifier) {
-        d->magnifier->disappear();
-    }
+    d->hideMagnifier();
     d->selecting = false;
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
@@ -1110,18 +1125,27 @@ QVariant MTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const
 {
     Q_D(const MTextEditView);
 
-    if (query == Qt::ImFont) {
-        return QVariant(); // FIXME: return currently used font
+    QVariant result;
 
-    } else if (query == Qt::ImMicroFocus) {
-        return QVariant(d->cursorRect());
-    } else if (static_cast<int>(query) == M::VisualizationPriorityQuery) {
-        return QVariant(false);
-    } else if (static_cast<int>(query) == M::PreeditRectangleQuery) {
-        return QVariant(d->preeditRectangle());
-    } else {
-        return QVariant();
+    switch (static_cast<int>(query)) {
+    case Qt::ImMicroFocus:
+        result = QVariant(d->cursorRect());
+        break;
+
+    case M::VisualizationPriorityQuery:
+        result = QVariant(false);
+        break;
+
+    case M::PreeditRectangleQuery:
+        result = QVariant(d->preeditRectangle());
+        break;
+
+    case Qt::ImFont: // FIXME: return currently used font
+    default:
+        break;
     }
+
+    return result;
 }
 
 
@@ -1214,23 +1238,18 @@ void MTextEditView::handleLongPress()
     
     if ((model()->echo() != MTextEditModel::Normal
          && model()->echo() != MTextEditModel::PasswordEchoOnEdit)
-        || style()->disableMagnifier()) {
+        || style()->disableMagnifier()
+        || d->controller->text().isEmpty()) {
         return;
     }
 
-    // Bring up magnifier on long press.
-    if (!d->magnifier) {
-        d->magnifier.reset(new MTextMagnifier(*d->controller));
-    }
     // Make fake mouse event to update cursor position.
     QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseMove);
     mouseEvent.setPos(d->mouseTarget);
     updateCursorPosition(&mouseEvent, false);
 
-    // Appear before setting magnifier position. Appearing can move the magnifier's
-    // relative position to the text edit.
-    d->magnifier->appear();
-    d->magnifier->setMagnifiedPosition(d->cursorRect().center());
+    // Bring up magnifier on long press.
+    d->showMagnifier();
 }
 
 void MTextEditView::hideInfoBanner()
