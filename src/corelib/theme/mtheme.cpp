@@ -881,7 +881,12 @@ void MThemePrivate::reloadThemeLibraries(const QStringList& libraryNames)
     openedThemeLibraries.clear();
     foreach(const QString& libname, libraryNames) {
         QLibrary* library = new QLibrary(libname + libsuffix);
-        if(library->load()) {
+        if(!library->load()) {
+            library->setFileNameAndVersion(libname + libsuffix, M_MAJOR_VERSION);
+            library->load();
+        }
+
+        if (library->isLoaded()) {
             openedThemeLibraries.insert(library);
         } else {
             mWarning("MTheme") << "Failed to open theme library:" << libname;
