@@ -271,6 +271,11 @@ void MDialogView::applyStyle()
         return;
     }
 
+    d->contentsViewport->setStyleName(style()->contentsViewportStyleName());
+    d->buttonBox->setStyleName(style()->buttonBoxStyleName());
+    d->titleBar->setStyleName(style()->titleBarStyleName());
+    d->titleLabel->setStyleName(style()->titleLabelStyleName());
+
     MSceneWindowView::applyStyle();
     d->realignButtonBox();
 

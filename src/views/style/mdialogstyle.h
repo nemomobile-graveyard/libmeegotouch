@@ -48,6 +48,11 @@
 
             has-close-button: true;
             has-title-bar: true;
+
+            contents-viewport-style-name: "MDialogContentsViewport";
+            button-box-style-name: "MDialogButtonBox";
+            title-bar-style-name: "MDialogTItleBar";
+            title-label-style-name: "CommonDialogHeader";
         }
     \endcode
 
@@ -182,6 +187,26 @@ class M_VIEWS_EXPORT MDialogStyle : public MSceneWindowStyle
        rejecting the dialog and discarding all changes.
     */
     M_STYLE_ATTRIBUTE(bool, hasCloseButton, HasCloseButton)
+    /*!
+        \property MDialogStyle::contentsViewportStyleName
+        \brief Style name of the pannable viewport.
+    */
+    M_STYLE_ATTRIBUTE(QString, contentsViewportStyleName, ContentsViewportStyleName)
+    /*!
+        \property MDialogStyle::buttonBoxStyleName
+        \brief Style name of the button box.
+    */
+    M_STYLE_ATTRIBUTE(QString, buttonBoxStyleName, ButtonBoxStyleName)
+    /*!
+        \property MDialogStyle::titleBarStyleName
+        \brief Style name of the title bar.
+    */
+    M_STYLE_ATTRIBUTE(QString, titleBarStyleName, TitleBarStyleName)
+    /*!
+        \property MDialogStyle::titleLabelStyleName
+        \brief Style name of the title bar label.
+    */
+    M_STYLE_ATTRIBUTE(QString, titleLabelStyleName, TitleLabelStyleName)
 };
 
 /*!
