@@ -231,6 +231,7 @@ void MPositionIndicatorView::changeEvent(QEvent *event)
 
     if (event->type() == QEvent::EnabledChange) {
         if (d->controller->isEnabled()) {
+            resetHideTimer();
             d->controller->setVisible(true);
         } else {
             d->controller->setVisible(false);
