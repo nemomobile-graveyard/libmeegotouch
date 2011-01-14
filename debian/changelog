@@ -1,3 +1,10 @@
+libmeegotouch (0.20.71-3) unstable; urgency=low
+
+  * New version
+  * Changes: MeeGo Graphics System enabled by default
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 14 Jan 2011 11:56:50 +0200
+
 libmeegotouch (0.20.71-2) unstable; urgency=low
 
   * New version
