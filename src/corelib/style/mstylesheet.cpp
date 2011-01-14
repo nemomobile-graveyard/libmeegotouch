@@ -319,7 +319,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                 MAttributeList::const_iterator attributesEnd = selector->attributes()->constEnd();
 
                 for (MAttributeList::const_iterator j = selector->attributes()->constBegin(); j != attributesEnd; ++j) {
-                    MUniqueStringCache::Index propertyName = j.key();
+                    QByteArray propertyName = j.key();
 
                     CacheEntry::iterator iter = (*entry).find(propertyName);
                     // Check if these settings are already in the list
@@ -371,7 +371,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
 
         // check all the attributes of this selector against the cached entry
         foreach(MStyleSheetAttribute * attribute, *(info.selector->attributes())) {
-            MOriginContainer *old = data.value(attribute->getNameID(), NULL);
+            MOriginContainer *old = data.value(attribute->getName(), NULL);
             if (old && !isHigherPriority(old, info.selector, info.classPriority, info.parentPriority)) {
                     continue;
             }
@@ -381,7 +381,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
                                                                        info.classPriority,
                                                                        info.parentPriority,
                                                                        info.filename, info.stylesheet);
-            data[attribute->getNameID()] = tempMOriginCont;
+            data[attribute->getName()] = tempMOriginCont;
             tempMOriginContainers.append(tempMOriginCont);
         }
     }
@@ -395,7 +395,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
         bool propertyInitialized = false;
 
         // find matching attribute from hash
-        CacheEntry::iterator iterator = data.find(MUniqueStringCache::stringToIndex(style->metaObject()->property(i).name()));
+        CacheEntry::iterator iterator = data.find(QByteArray(style->metaObject()->property(i).name()));
         if (iterator != data.end()) {
 
             // get the attribute value
@@ -461,32 +461,20 @@ bool MStyleSheetPrivate::isHigherPriority(MOriginContainer *prev,
 {
     // At this stage we either have a correct object name or we don't have object name at all.
     // So, select the one which has it. If both have same name or neither one has it, go further.
-
-    if (selector->objectNameID() != prev->selector->objectNameID()) {
-        if (selector->objectNameID() != MUniqueStringCache::EmptyStringIndex) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    int objectName = selector->objectName().length() - prev->selector->objectName().length();
+    if (objectName != 0)
+        return (objectName < 0) ? false : true;
 
     // Only other has mode, mode is more important than orientation
-    if (selector->modeID() != prev->selector->modeID()) {
-        if (selector->modeID() != MUniqueStringCache::EmptyStringIndex) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    int mode = selector->mode().length() - prev->selector->mode().length();
+    if (mode != 0)
+        return (mode < 0) ? false : true;
 
     // Other one has class type and another doesn't have it
-    if (selector->classTypeID() != prev->selector->classTypeID()) {
-        if (selector->classTypeID() != MUniqueStringCache::EmptyStringIndex) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    int classType = selector->classType().length() - prev->selector->classType().length();
+    if (classType != 0)
+        return (classType < 0) ? false : true;
+
 
     // The closer one in the scene chain has more priority, 0xffff means no match
     unsigned int sceneOrder = EXTRACT_SCENEORDER(parentPriority);
