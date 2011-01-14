@@ -246,6 +246,7 @@ MSliderIndicator::MSliderIndicator(bool isMinMax, QGraphicsItem *parent) :
     MWidget(parent),
     label(0),
     image(0),
+    fixedWidth(0),
     layout(0)
 {
     layout = new QGraphicsAnchorLayout;
@@ -264,6 +265,7 @@ MSliderIndicator::MSliderIndicator(bool isMinMax, QGraphicsItem *parent) :
     image->setObjectName("MSliderImage");
 
     layout->addAnchor(layout, Qt::AnchorVerticalCenter, label, Qt::AnchorVerticalCenter);
+    layout->addAnchor(layout, Qt::AnchorHorizontalCenter, label, Qt::AnchorHorizontalCenter);
     layout->addAnchor(layout, Qt::AnchorVerticalCenter, image, Qt::AnchorVerticalCenter);
 
     label->resize(0, 0);
@@ -400,11 +402,21 @@ QSizeF MSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     }
 
     if (label && !label->text().isEmpty()) {
-        width = qMax(width, label->sizeHint(Qt::PreferredSize).width());
+        if (fixedWidth) {
+            width = fixedWidth;
+        } else {
+            width = qMax(width, label->sizeHint(Qt::PreferredSize).width());
+        }
         height = qMax(height, label->sizeHint(Qt::PreferredSize).height());
     }
 
     return QSizeF(width, height);
+}
+
+void MSliderIndicator::setLabelFixedWidth(const qreal width)
+{
+    fixedWidth = width;
+    updateGeometry();
 }
 
 MSliderHandleIndicator::MSliderHandleIndicator(QGraphicsItem* parent) :
@@ -1681,6 +1693,9 @@ void MSliderView::applyStyle()
 
     d->horizontalPolicy->setSpacing(style()->grooveMargin());
     d->verticalPolicy->setSpacing(style()->grooveMargin());
+
+    d->minIndicator->setLabelFixedWidth(style()->minLabelFixedWidth());
+    d->maxIndicator->setLabelFixedWidth(style()->maxLabelFixedWidth());
 
     d->updateOrientation();
 

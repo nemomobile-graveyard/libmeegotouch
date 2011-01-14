@@ -108,6 +108,7 @@ public:
     void setLabelStyleName(const QString &stylename);
     void setText(const QString &text);
     void setImage(const QString &id);
+    void setLabelFixedWidth(const qreal width);
 
     bool isEmpty() const;
 
@@ -118,6 +119,7 @@ private:
     MLabel *label;
     MImageWidget *image;
     QString imageName;
+    qreal fixedWidth;
 
     QGraphicsAnchorLayout *layout;
 

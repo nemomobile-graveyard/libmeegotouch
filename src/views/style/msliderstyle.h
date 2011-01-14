@@ -176,6 +176,16 @@ class M_VIEWS_EXPORT MSliderStyle : public MWidgetStyle
         \brief Style name of the indicator label
       */
     M_STYLE_ATTRIBUTE(QString, indicatorStyleName, IndicatorStyleName)
+    /*!
+        \property MSlider::minLabelFixedWidth
+        \brief Fixed width of the minimum label of the slider, if not empty
+      */
+    M_STYLE_ATTRIBUTE(qreal, minLabelFixedWidth, MinLabelFixedWidth)
+    /*!
+        \property MSlider::maxLabelFixedWidth
+        \brief Fixed width of the maximum label of the slider, if not empty
+      */
+    M_STYLE_ATTRIBUTE(qreal, maxLabelFixedWidth, MaxLabelFixedWidth)
 };
 
 class M_VIEWS_EXPORT MSliderStyleContainer : public MWidgetStyleContainer
