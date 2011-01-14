@@ -1,3 +1,19 @@
+libmeegotouch (0.20.73-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#210125 - Meegotouch should output warning message when style reloading happens
+  * Fixes: NB#218298 - MPositionIndicator does not momentarily appear after it has been enabled
+  * Fixes: NB#213582 - Connection dialog shown in wrong orientation
+  * Fixes: If the development views shared object is not installed the library is not found.
+  * Fixes: NB#217067
+  * Fixes: worng cursor position when there is preediting text
+  * Fixes: correct preedit styles when cursor is inside
+  * Fixes: MTextEdit: pre-edit injection event passing in the presence of QMultiInputContext
+  * Fixes: NB#215465 - When minimizing application in portrait mode Launcher is always shown in landscape mode first
+  * Fixes: NB#214856 - Application view is not in portrait mode when HW keyboard not open
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 14 Jan 2011 16:58:32 +0200
+
 libmeegotouch (0.20.72-1) unstable; urgency=low
 
   * New version
