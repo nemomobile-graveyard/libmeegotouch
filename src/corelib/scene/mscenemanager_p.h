@@ -38,6 +38,7 @@ class MSceneManager;
 class MNavigationBar;
 class MOrientationAnimation;
 class MPageSwitchSlideAnimation;
+class MContentFadeAndSlideAnimation;
 class MWindow;
 class MSceneEventEater;
 
@@ -230,6 +231,7 @@ public:
 
     MOrientationAnimation *orientationAnimation;
     MPageSwitchAnimation *pageSwitchAnimation;
+    MContentFadeAndSlideAnimation* navigationBarAnimation;
 
     QList<MSceneWindow *> windows;
     QList<MSceneWindow *> blockingWindows;

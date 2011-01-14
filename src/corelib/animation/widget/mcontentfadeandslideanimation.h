@@ -37,6 +37,7 @@ public:
     virtual ~MContentFadeAndSlideAnimation();
 
     virtual void setTargetWidget(MWidgetController *widget);
+    virtual void setTransitionDirection(MAbstractWidgetAnimation::TransitionDirection direction);
 
 public slots:
     void takeContentSnapshot();
@@ -47,7 +48,6 @@ protected:
     //! \reimp_end
 
     virtual void restoreTargetWidgetState();
-    virtual void setTransitionDirection(MAbstractWidgetAnimation::TransitionDirection direction);
 };
 //! \internal_end
 

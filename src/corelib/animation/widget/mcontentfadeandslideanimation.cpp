@@ -108,6 +108,26 @@ void MContentFadeAndSlideAnimationPrivate::init()
     q->addAnimation(currentWithDelay);
 }
 
+void MContentFadeAndSlideAnimationPrivate::findContentItem()
+{
+    Q_Q(MContentFadeAndSlideAnimation);
+
+    contentItem = 0;
+
+    if (!targetWidget || q->style()->contentObjectName().isEmpty())
+        return;
+
+    foreach(QGraphicsItem* item, targetWidget->childItems()) {
+        if (!item->isWidget())
+            continue;
+        QGraphicsWidget *widget = static_cast<QGraphicsWidget*>(item);
+        if (widget->objectName() == q->style()->contentObjectName()) {
+            contentItem = widget;
+            break;
+        }
+    }
+}
+
 
 MContentFadeAndSlideAnimation::MContentFadeAndSlideAnimation(QObject *parent) :
     MAbstractWidgetAnimation(new MContentFadeAndSlideAnimationPrivate, parent)
@@ -127,8 +147,18 @@ MContentFadeAndSlideAnimation::~MContentFadeAndSlideAnimation()
 void MContentFadeAndSlideAnimation::restoreTargetWidgetState()
 {}
 
-void MContentFadeAndSlideAnimation::setTransitionDirection(MAbstractWidgetAnimation::TransitionDirection /*direction*/)
-{}
+void MContentFadeAndSlideAnimation::setTransitionDirection(MAbstractWidgetAnimation::TransitionDirection direction)
+{
+    Q_D(MContentFadeAndSlideAnimation);
+
+    if (direction == MAbstractWidgetAnimation::In)
+        style().setObjectName("In");
+    else
+        style().setObjectName("Out");
+
+    // contentObjectName might change so we must search for content again
+    d->findContentItem();
+}
 
 void MContentFadeAndSlideAnimation::takeContentSnapshot()
 {
@@ -140,25 +170,11 @@ void MContentFadeAndSlideAnimation::takeContentSnapshot()
 
 void MContentFadeAndSlideAnimation::setTargetWidget(MWidgetController *targetWidget)
 {
-    MAbstractWidgetAnimation::setTargetWidget(targetWidget);
-
     Q_D(MContentFadeAndSlideAnimation);
 
-    d->contentItem = 0;
+    MAbstractWidgetAnimation::setTargetWidget(targetWidget);
 
-    if (!targetWidget)
-        return;
-
-    foreach(QGraphicsItem* item, targetWidget->childItems()) {
-        if (!item->isWidget())
-            continue;
-        QGraphicsWidget *widget = static_cast<QGraphicsWidget*>(item);
-        if (widget->objectName() == style()->contentObjectName()) {
-            d->contentItem = widget;
-            break;
-        }
-    }
-
+    d->findContentItem();
 }
 
 void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState)
@@ -171,8 +187,8 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
     if (oldState == QAbstractAnimation::Stopped &&
         newState == QAbstractAnimation::Running)
     {
-        d->fadeOut->setStartValue(d->contentItem->opacity());
-        d->fadeOut->setEndValue(0.0);
+        d->fadeOut->setStartValue(1.0);
+        d->fadeOut->setEndValue(style()->fadeOutOpacity());
         d->fadeOut->setDuration(style()->fadeOutDuration());
         d->fadeOut->setEasingCurve(style()->fadeOutEasingCurve());
         d->fadeOut->setTargetObject(d->snapshotItem);
@@ -188,7 +204,7 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
 
         d->delay->setDuration(style()->delay());
 
-        d->fadeIn->setStartValue(0.0);
+        d->fadeIn->setStartValue(style()->fadeInOpacity());
         d->fadeIn->setEndValue(d->contentItem->opacity());
         d->fadeIn->setDuration(style()->fadeInDuration());
         d->fadeIn->setEasingCurve(style()->fadeInEasingCurve());

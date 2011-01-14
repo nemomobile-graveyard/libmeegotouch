@@ -63,6 +63,7 @@
 #include "mcrossfadedorientationanimation.h"
 #include "mabstractwidgetanimation.h"
 #include "mpageswitchanimation.h"
+#include "mcontentfadeandslideanimation.h"
 #include "msceneeventeater.h"
 
 #include <mwidgetslideanimation.h>
@@ -146,6 +147,9 @@ void MSceneManagerPrivate::init(MScene *scene)
     pageSwitchAnimation = qobject_cast<MPageSwitchAnimation*>(MTheme::animation(style()->pageSwitchAnimation()));
     q->connect(pageSwitchAnimation, SIGNAL(finished()),
             SLOT(_q_onPageSwitchAnimationFinished()));
+
+    navigationBarAnimation = new MContentFadeAndSlideAnimation(q);
+    pageSwitchAnimation->addAnimation(navigationBarAnimation);
 
     setOrientationAngleWithoutAnimation(newAngle);
 
@@ -606,6 +610,9 @@ void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
     sceneWindow->setZValue(zForWindowType(sceneWindow->windowType()));
 
     sceneWindow->hide();
+
+    if (sceneWindow->windowType() == MSceneWindow::NavigationBar)
+        navigationBarAnimation->setTargetWidget(sceneWindow);
 }
 
 void MSceneManagerPrivate::addSceneWindow(MSceneWindow *sceneWindow)
@@ -1162,6 +1169,9 @@ void MSceneManagerPrivate::startPageSwitchAnimation(MSceneWindow *newPage,
 {
     Q_ASSERT(pageSwitchAnimation);
 
+    navigationBarAnimation->setTransitionDirection(direction == MPageSwitchAnimation::ToChildPage ?
+                                                       MAbstractWidgetAnimation::In : MAbstractWidgetAnimation::Out);
+
     pageSwitchAnimation->setNewPage(newPage);
     pageSwitchAnimation->setOldPage(oldPage);
     pageSwitchAnimation->setTransitionDirection(direction);
@@ -1174,6 +1184,13 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
 {
     Q_Q(MSceneManager);
     MSceneWindow *previousPage = 0;
+
+    // last chance to take a snapshot of navigationBar contents before it changes
+    // due to eiter a change in the escape button state or presence (triggered from a
+    // change in the page history, if the escape mode is in "auto") or finally due
+    // to a change in the current page, which will cause the nav bar to be repopulated.
+    if (navigationBarAnimation)
+        navigationBarAnimation->takeContentSnapshot();
 
     if (currentPage && currentPage != page) {
         previousPage = currentPage;
@@ -1203,6 +1220,13 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
     Q_Q(MSceneManager);
     MSceneWindow *previousPage = 0;
     bool pageHistoryChanged = false;
+
+    // last chance to take a snapshot of navigationBar contents before it changes
+    // due to eiter a change in the escape button state or presence (triggered from a
+    // change in the page history, if the escape mode is in "auto") or finally due
+    // to a change in the current page, which will cause the nav bar to be repopulated.
+    if (navigationBarAnimation)
+        navigationBarAnimation->takeContentSnapshot();
 
     // Pages in the history might have been deleted overtime.
     while (previousPage == 0 && !pageHistory.isEmpty()) {

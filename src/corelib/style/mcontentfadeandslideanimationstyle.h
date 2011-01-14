@@ -31,6 +31,7 @@ class MContentFadeAndSlideAnimationStyle : public MAbstractWidgetAnimationStyle
 
     M_STYLE_ATTRIBUTE(QString, contentObjectName, ContentObjectName)
 
+    M_STYLE_ATTRIBUTE(qreal, fadeOutOpacity, FadeOutOpacity)
     M_STYLE_ATTRIBUTE(int, fadeOutDuration, FadeOutDuration)
     M_STYLE_ATTRIBUTE(QEasingCurve, fadeOutEasingCurve, FadeOutEasingCurve)
 
@@ -40,6 +41,7 @@ class MContentFadeAndSlideAnimationStyle : public MAbstractWidgetAnimationStyle
 
     M_STYLE_ATTRIBUTE(int, delay, Delay)
 
+    M_STYLE_ATTRIBUTE(qreal, fadeInOpacity, FadeInOpacity)
     M_STYLE_ATTRIBUTE(int, fadeInDuration, FadeInDuration)
     M_STYLE_ATTRIBUTE(QEasingCurve, fadeInEasingCurve, FadeInEasingCurve)
 

@@ -42,7 +42,6 @@
 #include "mstatusbar.h"
 #include "mdeviceprofile.h"
 #include "mcomponentdata.h"
-#include "mcontentfadeandslideanimation.h"
 
 #include <QList>
 #include <QEvent>
@@ -99,7 +98,6 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingDockWidget(false)
     , animateNavigationBarTransitions(false)
     , navigationBarPressed(false)
-    , navigationBarAnimation(0)
     , styleContainer(0)
 {
     if(MDeviceProfile::instance()->showStatusbar())    {
@@ -218,12 +216,6 @@ void MApplicationWindowPrivate::init()
     sceneManager->addSceneWindow(navigationBar);
 
     sceneManager->appearSceneWindowNow(homeButtonPanel);
-
-    navigationBarAnimation = new MContentFadeAndSlideAnimation(q);
-    navigationBarAnimation->setTargetWidget(navigationBar);
-    // when pageHistoryChange is emitted it's last chance to grab previous navigationBar contents
-    q->connect(q->sceneManager(), SIGNAL(pageHistoryChanged()),
-               navigationBarAnimation, SLOT(takeContentSnapshot()));
 
     // Initialize escape button to close mode.
     navigationBar->setEscapeButtonMode(MNavigationBarModel::EscapeButtonClose);
@@ -888,13 +880,6 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
     connectPage(pageFromEvent);
     _q_updatePageExposedContentRect();
 
-    if (event->animatedTransition() &&
-        (toolBar->viewType() == MToolBar::defaultType ||
-         previousToolBarViewType == MToolBar::defaultType))
-    {
-        navigationBarAnimation->start();
-    }
-
 #ifdef Q_WS_X11
     if (pageFromEvent && isChained && sceneManager) {
         bool isFirstPage = sceneManager->pageHistory().isEmpty();
@@ -908,8 +893,6 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
 
 void MApplicationWindowPrivate::applicationPageDisappearEvent(MSceneWindowEvent *event)
 {
-   previousToolBarViewType = toolBar->viewType();
-
     MApplicationPage *pageFromEvent = static_cast<MApplicationPage *>(event->sceneWindow());
 
     // Page is going away. Let's disconnect it if it's the current page.

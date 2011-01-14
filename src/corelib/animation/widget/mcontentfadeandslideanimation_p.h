@@ -46,6 +46,7 @@ public:
     MContentFadeAndSlideAnimationPrivate();
 
     void init();
+    void findContentItem();
 
     QPointer<SnapshotItem> snapshotItem;
     QGraphicsWidget* contentItem;

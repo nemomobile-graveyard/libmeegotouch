@@ -46,7 +46,6 @@ class MApplicationPageInfo;
 class MApplicationWindow;
 class MSceneWindowEvent;
 class QActionEvent;
-class MContentFadeAndSlideAnimation;
 
 class MApplicationWindowPrivate : public MWindowPrivate
 {
@@ -87,9 +86,6 @@ public:
     QTimer navigationBarVisibilityUpdateTimer;
 
     bool navigationBarPressed;
-
-    MContentFadeAndSlideAnimation* navigationBarAnimation;
-    QString previousToolBarViewType;
 
     void manageActions();
     void distributeAction(QAction *action, QAction *before);
