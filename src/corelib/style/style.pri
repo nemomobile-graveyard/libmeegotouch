@@ -15,8 +15,7 @@ PRIVATE_HEADERS += \
     $$STYLE_SRC_DIR/mstylesheetselector.h \
     $$STYLE_SRC_DIR/mstylesheetattribute.h \
     $$STYLE_SRC_DIR/mstylesheet.h \
-    $$STYLE_SRC_DIR/mstylesheetselector_p.h \
-    $$STYLE_SRC_DIR/muniquestringcache.h
+    $$STYLE_SRC_DIR/mstylesheetselector_p.h
 
 STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mstyle.h \
@@ -49,7 +48,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mcontentfadeandslideanimationstyle.h \
 
 PUBLIC_HEADERS += \
-    $$STYLE_HEADERS
+    $$STYLE_HEADERS \
 
 SOURCES += \
     $$STYLE_SRC_DIR/mstyle.cpp \
@@ -57,6 +56,4 @@ SOURCES += \
     $$STYLE_SRC_DIR/mstylesheet.cpp \
     $$STYLE_SRC_DIR/mstylesheetparser.cpp \
     $$STYLE_SRC_DIR/mstylesheetselector.cpp \
-    $$STYLE_SRC_DIR/mstylesheetattribute.cpp \
-    $$STYLE_SRC_DIR/muniquestringcache.cpp \
-
+    $$STYLE_SRC_DIR/mstylesheetattribute.cpp
