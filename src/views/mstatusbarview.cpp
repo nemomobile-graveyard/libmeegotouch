@@ -40,15 +40,15 @@
 #include <X11/extensions/Xdamage.h>
 #endif //HAVE_XDAMAGE
 
-#ifdef HAVE_DBUS
 namespace{
+#ifdef HAVE_DBUS
     const QString PIXMAP_PROVIDER_DBUS_SERVICE = "com.meego.core.MStatusBar";
     const QString PIXMAP_PROVIDER_DBUS_PATH = "/statusbar";
     const char *  PIXMAP_PROVIDER_DBUS_INTERFACE = "com.meego.core.MStatusBar";
     const QString PIXMAP_PROVIDER_DBUS_SHAREDPIXMAP_CALL = "sharedPixmapHandle";
+#endif // HAVE_DBUS
     const qreal SharedPixmapHeight = 30;
 }
-#endif // HAVE_DBUS
 
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE = "com.meego.core.MStatusIndicatorMenu";
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH = "/statusindicatormenu";
