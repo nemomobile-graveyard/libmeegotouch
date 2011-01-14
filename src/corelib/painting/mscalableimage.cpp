@@ -35,6 +35,10 @@ MScalableImagePrivate::MScalableImagePrivate()
 
 MScalableImagePrivate::~MScalableImagePrivate()
 {
+    if (!cachedImageKey.isEmpty()) {
+        QPixmapCache::remove(cachedImageKey);
+        cachedImageKey.clear();
+    }
 }
 
 void MScalableImagePrivate::validateSize() const
@@ -133,6 +137,9 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             // draw to screen
             painter->drawPixmap(x, y, scaled);
             QPixmapCache::insert(key, scaled);
+
+            // remember the key so that the entry can be removed on-demand
+            const_cast<MScalableImagePrivate*>(this)->cachedImageKey = key;
         } else {
             // caching isn't permitted for this case; scale and render direct to screen.
             #if defined(M_OS_MAEMO5)
@@ -145,6 +152,11 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
                 drawBorderPixmap(painter, QRectF(x, y, w, h), margins, *m_image);
                 painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
             #endif //defined(M_OS_MAEMO5)
+
+            if (!cachedImageKey.isEmpty()) {
+                QPixmapCache::remove(cachedImageKey);
+                const_cast<MScalableImagePrivate*>(this)->cachedImageKey.clear();
+            }
         }
     }
 }

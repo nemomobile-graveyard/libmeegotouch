@@ -86,6 +86,8 @@ public:
 
     QString pixmapId;
 
+    QString cachedImageKey;
+
 protected:
     MScalableImage *q_ptr;
 };
