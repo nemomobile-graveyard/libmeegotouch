@@ -99,6 +99,7 @@ protected:
     bool labelsEnabled;
     bool labelOnlyAsCommonButton;
     Qt::AlignmentFlag widgetAlignment;
+    bool itemsEnabled;
 };
 
 #endif

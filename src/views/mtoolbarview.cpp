@@ -47,7 +47,8 @@ MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
       iconsEnabled(true),
       labelsEnabled(false),
       labelOnlyAsCommonButton(true),
-      widgetAlignment(Qt::AlignHCenter)
+      widgetAlignment(Qt::AlignHCenter),
+      itemsEnabled(true)
 {
     this->controller = controller;
     controller->installEventFilter(this);
@@ -271,7 +272,8 @@ void MToolBarViewPrivate::change(QAction *action)
 
 void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *action) const
 {
-    widget->setEnabled(action->isEnabled());
+    widget->setEnabled(action->isEnabled() && itemsEnabled);
+
     MButton *button = qobject_cast<MButton *>(widget);
     if (button) {
         // Update button data accordingly
@@ -419,6 +421,8 @@ void MToolBarViewPrivate::setEnabledPreservingSelection(bool enabled)
 {
     // To ensure that buttons/widgets are restored correctly to their original state,
     // AND the state of their associated actions with the enabled parameter
+
+    itemsEnabled = enabled;
 
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
         QAction *action = bit.key();
@@ -689,6 +693,7 @@ void MToolBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     d->updateCenterOffset(event->newSize());
 }
+
 
 // bind view and controller together
 M_REGISTER_VIEW_NEW(MToolBarView, MToolBar)
