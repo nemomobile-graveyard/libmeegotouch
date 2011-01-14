@@ -564,17 +564,23 @@ public:
 
 public Q_SLOTS:
     /*!
-     * Shows the dialog on the currently active window and registers it in the
-     * associated MSceneManager. Uses an animation to show the window.
+     * \brief Shows the dialog on the currently active window or seperately on its own.
      *
-     * If systemModal property is true, it will be displayed as a separate top level
-     * MWindow regardless of whether there's an active window and the user
-     * won't be able to switch to any other application or to the home screen until
-     * the dialog is closed (the home button won't be accessible).
+     * If isSystem() is true, it will be displayed as a separate top level
+     * MWindow regardless of whether there's an active window and if isModal()
+     * is true as well the user also won't be able to switch to any other
+     * application or to the home screen until that dialog is closed
+     * (the home button won't be accessible).
+     *
+     * \attention If your application has multiple MWindows and isSystem() is false,
+     * usage of this method is strongly discouraged since it can make a dialog
+     * appear in an MWindow different from the intended one. That's due to the fact
+     * that it depends on which MWindow happens to be active when this method is called.
+     * In such scenarios use either appear(MWindow*) or appear(QGraphicsScene*).
      *
      * \param policy    Deletion policy, defines the ownership for this window
      *
-     * \sa setSystemModal()
+     * \sa isSystem(), isModal()
      */
     virtual void appear(MSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
