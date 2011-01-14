@@ -32,6 +32,8 @@ new MApplicationExtensionArea(interface, parent);
 where interface refers to the interface implemented by the extensions in the area and parent is the parent QGraphicsItem. The area is only
 populated after init() is called.
 
+\b Note: To be able to dynamically type cast from MApplicationExtensionInterface to a interface subclass implemented in extension, "-Wl,-E" flags are needed in executables linker flags ('QMAKE_LFLAGS += -Wl,-E'), see <a href="http://gcc.gnu.org/faq.html#dso">GCC faq about dynamic cast and shared libs</a>
+
 To define which extensions can be loaded in the same process as the extension area and which extensions run in separate
 processes, use setInProcessFilter() and setOutOfProcessFilter() before calling init(). Since these methods take QRegExp objects as their parameter, you can, for example, use QRegExp("$^") to allow no extensions, QRegExp("/test(1|A).desktop$") to allow extensions test1.desktop and testA.desktop and
 QRegExp() to allow all extensions.
@@ -146,6 +148,14 @@ MWidget *DemoApplicationExtension::widget()
 
 In an application that wants to use the extensions implementing the com.meego.DemoExtensionInterface/1.0 defined above,
 the application should create the following application extension area:
+\code
+ //demoapp.pro
+...
+TEMPLATE = app
+
+QMAKE_LFLAGS = -Wl,-E,--as-needed
+...
+\endcode
 
 \code
 #include <MApplicationExtensionArea>
@@ -169,10 +179,11 @@ void DemoApp::createExtensionArea()
 
 void DemoApp::addExtension(MApplicationExtensionInterface *extension)
 {
-    DemoExtensionInterface *demoExtension = static_cast<DemoExtensionInterface *>(extension);
-
-    // do some extension interface specific things with the extension
-    demoExtension->demoExtensionSpecificOperation();
+    DemoExtensionInterface *demoExtension = dynamic_cast<DemoExtensionInterface *>(extension);
+    if (demoExtension) {
+        // do some extension interface specific things with the extension
+        demoExtension->demoExtensionSpecificOperation();
+    }
 }
 ...
 

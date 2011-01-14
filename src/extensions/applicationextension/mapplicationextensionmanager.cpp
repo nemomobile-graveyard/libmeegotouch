@@ -187,6 +187,7 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(QSharedPointer<
 {
     QString binary = metadata->extensionBinary();
     QPluginLoader loader(binary);
+    loader.setLoadHints(QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint);
     QObject *object = loader.instance();
 
     bool success = false;

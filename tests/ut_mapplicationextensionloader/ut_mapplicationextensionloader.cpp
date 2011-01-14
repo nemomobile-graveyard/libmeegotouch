@@ -77,6 +77,12 @@ QObject *QPluginLoader::instance()
     return QPluginLoader_instance_return;
 }
 
+QLibrary::LoadHints gPluginLoaderHints;
+void QPluginLoader::setLoadHints(QLibrary::LoadHints loadHints)
+{
+    gPluginLoaderHints = loadHints;
+}
+
 void Ut_MApplicationExtensionLoader::init()
 {
     gQPluginLoaderFileName.clear();
@@ -95,6 +101,7 @@ void Ut_MApplicationExtensionLoader::cleanup()
 
 void Ut_MApplicationExtensionLoader::initTestCase()
 {
+    gPluginLoaderHints = 0;
 }
 
 void Ut_MApplicationExtensionLoader::cleanupTestCase()
@@ -139,6 +146,17 @@ void Ut_MApplicationExtensionLoader::testExtensionLoadingFailWrongInterfaceExten
     QPluginLoader_instance_return = new BadExtension;
     MApplicationExtensionInterface *extension = MApplicationExtensionLoader::loadExtension(*metadata);
     QVERIFY(extension == NULL);
+}
+
+void Ut_MApplicationExtensionLoader::testExtensionLoadingUsesCorrectLoaderHints()
+{
+    GoodExtension *goodExtension = new GoodExtension;
+    goodExtension->success = true;
+    QPluginLoader_instance_return = goodExtension;
+
+    MApplicationExtensionLoader::loadExtension(*metadata);
+
+    QCOMPARE(gPluginLoaderHints, (QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint));
 }
 
 QTEST_MAIN(Ut_MApplicationExtensionLoader)

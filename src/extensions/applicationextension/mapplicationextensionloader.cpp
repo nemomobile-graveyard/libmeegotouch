@@ -30,6 +30,7 @@ MApplicationExtensionLoader::MApplicationExtensionLoader()
 MApplicationExtensionInterface *MApplicationExtensionLoader::loadExtension(const MApplicationExtensionMetaData &metadata)
 {
     QPluginLoader loader(metadata.extensionBinary());
+    loader.setLoadHints(QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint);
     QObject *object = loader.instance();
 
     if (object != NULL) {

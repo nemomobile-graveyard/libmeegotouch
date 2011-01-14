@@ -66,6 +66,7 @@ private slots:
     void testAppletLoading();
     void testAppletLoadingFailNullAppletObject();
     void testAppletLoadingFailWrongTypeAppletObject();
+    void testAppletLoadingUsesCorrectLoaderHints();
 };
 
 #endif

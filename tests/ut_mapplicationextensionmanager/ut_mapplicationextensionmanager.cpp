@@ -50,6 +50,12 @@ QObject *QPluginLoader::instance()
     }
 }
 
+QLibrary::LoadHints gPluginLoaderHints;
+void QPluginLoader::setLoadHints(QLibrary::LoadHints loadHints)
+{
+    gPluginLoaderHints = loadHints;
+}
+
 // QDir stubs
 QStringList gDesktopEntryList;
 QStringList QDir::entryList(const QStringList &nameFilters, Filters filters, SortFlags sort) const
@@ -137,6 +143,8 @@ void Ut_MApplicationExtensionManager::initTestCase()
 
     gDefaultMApplicationExtensionMetaDataStub.stubReset();
     gDefaultMDesktopEntryStub.stubSetReturnValue("type", QString("X-MeeGoApplicationExtension"));
+
+    gPluginLoaderHints = 0;
 }
 
 void Ut_MApplicationExtensionManager::cleanupTestCase()
@@ -545,6 +553,17 @@ void Ut_MApplicationExtensionManager::testInstantiatingTwoInProcessExtensionsFro
     QCOMPARE(signalListener.instantiatedExtensions.count(), 2);
     QCOMPARE(signalListener.instantiatedExtensions.at(0), extensions.at(0));
     QCOMPARE(signalListener.instantiatedExtensions.at(1), extensions.at(0));
+}
+
+void Ut_MApplicationExtensionManager::testInstantiatingInProcessExtensionUsesCorrectLoaderHints()
+{
+    QGraphicsWidget extensionWidget;
+    setupGoodExtension(true, &extensionWidget);
+    QSharedPointer<const MApplicationExtensionMetaData> metaData(
+        new MApplicationExtensionMetaData("test"));
+    manager->instantiateInProcessExtension(metaData);
+
+    QCOMPARE(gPluginLoaderHints, (QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint));
 }
 
 QTEST_MAIN(Ut_MApplicationExtensionManager)

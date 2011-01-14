@@ -84,6 +84,7 @@ private slots:
     void testExtensionLoadingFailNullExtensionObject();
     void testExtensionLoadingFailWrongTypeExtensionObject();
     void testExtensionLoadingFailWrongInterfaceExtensionObject();
+    void testExtensionLoadingUsesCorrectLoaderHints();
 
 private:
     MApplicationExtensionMetaData *metadata;

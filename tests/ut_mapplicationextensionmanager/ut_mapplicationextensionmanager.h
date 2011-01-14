@@ -185,6 +185,8 @@ private slots:
     void testRemoveOutOfProcessExtension();
 
     void testInstantiatingTwoInProcessExtensionsFromTheSameSource();
+
+    void testInstantiatingInProcessExtensionUsesCorrectLoaderHints();
 };
 
 #endif // UT_MAPPLICATIONEXTENSIONMANAGER

@@ -31,6 +31,7 @@ MAppletLoader::MAppletLoader()
 QGraphicsWidget *MAppletLoader::loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings)
 {
     QPluginLoader loader(metadata.appletBinary());
+    loader.setLoadHints(QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint);
     QObject *object = loader.instance();
 
     MAppletInterface *applet = qobject_cast<MAppletInterface *>(object);

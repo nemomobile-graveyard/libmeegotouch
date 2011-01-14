@@ -95,6 +95,12 @@ QObject *QPluginLoader::instance()
     return QPluginLoader_instance_return;
 }
 
+QLibrary::LoadHints gPluginLoaderHints;
+void QPluginLoader::setLoadHints(QLibrary::LoadHints loadHints)
+{
+    gPluginLoaderHints = loadHints;
+}
+
 void Ut_MAppletLoader::init()
 {
     gLastConstructedWidget = NULL;
@@ -121,6 +127,7 @@ void Ut_MAppletLoader::cleanup()
 
 void Ut_MAppletLoader::initTestCase()
 {
+    gPluginLoaderHints = 0;
 }
 
 void Ut_MAppletLoader::cleanupTestCase()
@@ -156,6 +163,14 @@ void Ut_MAppletLoader::testAppletLoadingFailWrongTypeAppletObject()
     QVERIFY(widget == NULL);
     // Ensure that the loader still deletes the object even though it was of a wrong type
     QCOMPARE(SomeQObject_destructor_called, true);
+}
+
+void Ut_MAppletLoader::testAppletLoadingUsesCorrectLoaderHints()
+{
+    QPluginLoader_instance_return = new TestApplet;
+    MAppletLoader::loadApplet(*metadata, *dataStore, *appletSettingsInterface);
+
+    QCOMPARE(gPluginLoaderHints, (QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint));
 }
 
 QTEST_APPLESS_MAIN(Ut_MAppletLoader)
