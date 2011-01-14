@@ -29,6 +29,7 @@
 #include <QInputContext>
 #include <QTimer>
 
+#include "mcancelevent.h"
 #include "mondisplaychangeevent.h"
 #include "morientationchangeevent.h"
 #include "mscenewindow.h"
@@ -1460,6 +1461,7 @@ void MSceneManagerPrivate::prepareWindowHide(MSceneWindow *window)
 {
     Q_Q(MSceneManager);
 
+    sendCancelEvent(window);
     QObject::disconnect(window, SIGNAL(repositionNeeded()),
                         q, SLOT(_q_setSenderGeometry()));
     orientationAnimation->removeSceneWindow(window);
@@ -2026,6 +2028,20 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
                  && sceneWindow->d_func()->dismissed)) {
             sceneWindow->deleteLater();
         }
+    }
+}
+
+void MSceneManagerPrivate::sendCancelEvent(MSceneWindow *window)
+{
+    Q_Q(MSceneManager);
+
+    QGraphicsItem *mouseGrabber;
+    mouseGrabber = q->scene()->mouseGrabberItem();
+
+    if (mouseGrabber
+        && (window == mouseGrabber || window->isAncestorOf(mouseGrabber))) {
+        MCancelEvent cancelEvent;
+        q->scene()->sendEvent(mouseGrabber, &cancelEvent);
     }
 }
 

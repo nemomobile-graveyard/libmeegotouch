@@ -177,6 +177,8 @@ public:
     void onSceneWindowEnteringDisappearingState(MSceneWindow *sceneWindow);
     void onSceneWindowEnteringDisappearedState(MSceneWindow *sceneWindow);
 
+    void sendCancelEvent(MSceneWindow *window);
+
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
     QList<QGraphicsWidget*> findRootElementsForMoveAnimation(MSceneWindow *sceneWindow);
 
