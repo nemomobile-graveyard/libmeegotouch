@@ -231,8 +231,10 @@ MComponentDataPrivate::~MComponentDataPrivate()
     delete feedbackPlayer;
     feedbackPlayer = 0;
 
+#ifdef HAVE_DBUS
     delete service;
     service = 0;
+#endif
 
     delete deviceProfile;
     deviceProfile = 0;
