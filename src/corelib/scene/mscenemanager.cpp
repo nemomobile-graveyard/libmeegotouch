@@ -1622,8 +1622,11 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     switch(sceneWindow->windowType()) {
     case MSceneWindow::NotificationInformation:
     case MSceneWindow::NotificationEvent:
-    case MSceneWindow::NavigationBar:
         animation = new MWidgetSlideAnimation(sceneWindow);
+        break;
+    case MSceneWindow::NavigationBar:
+        animation = qobject_cast<MAbstractWidgetAnimation*>(
+                MTheme::animation(style()->navigationBarAnimation()));
         break;
     case MSceneWindow::ApplicationMenu:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
@@ -1685,8 +1688,11 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     switch(sceneWindow->windowType()) {
     case MSceneWindow::NotificationInformation:
     case MSceneWindow::NotificationEvent:
-    case MSceneWindow::NavigationBar:
         animation = new MWidgetSlideAnimation(sceneWindow);
+        break;
+    case MSceneWindow::NavigationBar:
+        animation = qobject_cast<MAbstractWidgetAnimation*>(
+                MTheme::animation(style()->navigationBarAnimation()));
         break;
     case MSceneWindow::ApplicationMenu:
         animation = qobject_cast<MAbstractWidgetAnimation*>(

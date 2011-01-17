@@ -36,6 +36,7 @@ class MSceneManagerStyle : public MStyle
     M_STYLE_ATTRIBUTE(QString, messageBoxAnimation, MessageBoxAnimation)
     M_STYLE_ATTRIBUTE(QString, statusBarAnimation, StatusBarAnimation)
     M_STYLE_ATTRIBUTE(QString, objectMenuAnimation, ObjectMenuAnimation)
+    M_STYLE_ATTRIBUTE(QString, navigationBarAnimation, NavigationBarAnimation)
 };
 
 class MSceneManagerStyleContainer : public MStyleContainer
