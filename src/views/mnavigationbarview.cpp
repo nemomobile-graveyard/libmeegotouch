@@ -169,7 +169,7 @@ void MNavigationBarViewPrivate::updateDockedToolBar()
     // Make sure the last toolbar is removed first...
     if (toolBar) {
         toolBarIsEmptyWatcher->watch(0);
-
+        q->disconnect(toolBar->model(), SIGNAL(modified(QList<const char*>)));
         toolBarLayout->removeItem(toolBar);
         // previous toolBar is not ours anymore, so clean property we added
         toolBar->setProperty("widgetAlignment", QVariant::Invalid);
@@ -180,6 +180,8 @@ void MNavigationBarViewPrivate::updateDockedToolBar()
         toolBarLayout->addItem(nextToolBar);
         nextToolBar->show();
         toolBarIsEmptyWatcher->watch(nextToolBar);
+        q->connect(nextToolBar->model(), SIGNAL(modified(QList<const char*>)),
+                   SLOT(_q_toolBarModelChanged(QList<const char*>)));
     }
 
     toolBar = nextToolBar;
@@ -257,6 +259,14 @@ void MNavigationBarViewPrivate::_q_updateIsEmptyProperty()
                  || (toolBar && !toolBar->property("isEmpty").toBool());
 
     controller->setProperty("isEmpty", !hasContent);
+}
+
+void MNavigationBarViewPrivate::_q_toolBarModelChanged(const QList<const char*>& modifications)
+{
+    if (modifications.contains(MWidgetModel::ViewType)) {
+        updateLayout();
+        updateToolBarAlignment();
+    }
 }
 
 void MNavigationBarViewPrivate::updateToolBarAlignment()

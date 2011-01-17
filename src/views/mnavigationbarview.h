@@ -59,6 +59,7 @@ private:
     Q_DISABLE_COPY(MNavigationBarView)
     Q_DECLARE_PRIVATE(MNavigationBarView)
     Q_PRIVATE_SLOT(d_func(), void _q_updateIsEmptyProperty())
+    Q_PRIVATE_SLOT(d_func(), void _q_toolBarModelChanged(QList<const char *>))
 
     friend class Ut_MNavigationBarView;
 };
