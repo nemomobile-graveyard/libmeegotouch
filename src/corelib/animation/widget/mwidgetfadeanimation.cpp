@@ -118,3 +118,5 @@ void MWidgetFadeAnimation::updateState(QAbstractAnimation::State newState, QAbst
         d->opacityAnimation->setDuration(style()->duration());
     }
 }
+
+M_REGISTER_ANIMATION(MWidgetFadeAnimation)
