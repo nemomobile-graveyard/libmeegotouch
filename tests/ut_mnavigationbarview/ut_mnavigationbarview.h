@@ -43,6 +43,7 @@ private slots:
     void testIsEmptyProperty();
     void testIsEmptyProperty_data();
     void testDockedToolBarChangingItsIsEmptyProperty();
+    void testToolBarViewTypeChange();
 
 private:
     MNavigationBarView *subject;

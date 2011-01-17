@@ -25,6 +25,7 @@
 #include <MLinearLayoutPolicy>
 #include <mnavigationbarstyle.h>
 #include <MToolBar>
+#include <MLayout>
 
 Q_DECLARE_METATYPE(MNavigationBarModel::EscapeButtonModeEnum)
 
@@ -232,6 +233,29 @@ void Ut_MNavigationBarView::testDockedToolBarChangingItsIsEmptyProperty()
     QCOMPARE(controller->property("isEmpty").toBool(), true);
 
     // clean up
+    delete toolBar;
+}
+
+void Ut_MNavigationBarView::testToolBarViewTypeChange()
+{
+    MToolBar *toolBar = new MToolBar;
+
+    model->setToolBar(toolBar);
+    model->setEscapeButtonVisible(false);
+    model->setArrowIconVisible(false);
+
+    QCOMPARE(toolBar->property("widgetAlignment").toInt(), (int)Qt::AlignJustify);
+    QCOMPARE(subject->d_func()->layout->policy(), subject->d_func()->toolbarPolicy);
+
+    toolBar->setViewType(MToolBar::tabType);
+
+    QCOMPARE(toolBar->property("widgetAlignment").toInt(), (int)Qt::AlignHCenter);
+    QCOMPARE(subject->d_func()->layout->policy(), subject->d_func()->escapeToolbarMenuPolicy);
+
+    model->setToolBar(0);
+    QCOMPARE(toolBar->property("widgetAlignment").isValid(), false);
+    QCOMPARE(subject->d_func()->layout->policy(), subject->d_func()->toolbarPolicy);
+
     delete toolBar;
 }
 
