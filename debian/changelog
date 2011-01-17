@@ -1,9 +1,32 @@
-libmeegotouch (0.20.72~1) unstable; urgency=low
+libmeegotouch (0.20.73-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#210125 - Meegotouch should output warning message when style reloading happens
+  * Fixes: NB#218298 - MPositionIndicator does not momentarily appear after it has been enabled
+  * Fixes: NB#213582 - Connection dialog shown in wrong orientation
+  * Fixes: If the development views shared object is not installed the library is not found.
+  * Fixes: NB#217067
+  * Fixes: worng cursor position when there is preediting text
+  * Fixes: correct preedit styles when cursor is inside
+  * Fixes: MTextEdit: pre-edit injection event passing in the presence of QMultiInputContext
+  * Fixes: NB#215465 - When minimizing application in portrait mode Launcher is always shown in landscape mode first
+  * Fixes: NB#214856 - Application view is not in portrait mode when HW keyboard not open
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 14 Jan 2011 16:58:32 +0200
+
+libmeegotouch (0.20.72-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#217105
+  * Fixes: NB#213582 - Connection dialog shown in wrong orientation
+  * Fixes: NB#215654 - Crash in MNavigationBarViewPrivate::updateDockedToolBar during application shutdown.
+  * Fixes: NB#216528 - MSwipeRecognizer should use QElapsedTimer instead of QTime
+  * Fixes: NB#215078 - meegotouchhome leaks Xresources/pixmaps on feedreader reload operation
+  * Fixes: NB#188610 Masked texts are revealed when character is entered from HKB
   * Fixes: NB#216289 - COREWEB: /usr/lib/meegotouch/applicationextensions/mapplicationextensionrunner 'QGraphicsScene::~QGraphicsScene MScene::~MScene MExtensionRunner::teardown MExtensionRunner::~MExtensionRunner MApplicationExtensionRunner::~MApplicationExtensionRunner'
+  * Fixes: NB#216517 - MRemoteThemeDaemonPrivate should use QElapsedTimer instead of QTime
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 05 Jan 2011 14:40:52 +0100
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 14 Jan 2011 13:20:19 +0200
 
 libmeegotouch (0.20.71-1) unstable; urgency=low
 

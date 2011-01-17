@@ -93,7 +93,13 @@ else
      MAKEDOCS = 0
 endif
 
-# MeeGo Graphics System option (disabled by default) integration issues (only arm)
+# MeeGo Graphics System option (enabled by default) only arm
+ifeq ($(DEB_BUILD_ARCH),armel)
+	ifeq (,$(findstring nomeegographicssystem,$(DEB_BUILD_OPTIONS)))
+	OPTIONS += -meegographicssystem
+	endif
+endif
+
 ifeq ($(DEB_BUILD_ARCH),armel)
 	ifneq (,$(findstring meegographicssystem,$(DEB_BUILD_OPTIONS)))
 	    OPTIONS += -meegographicssystem
