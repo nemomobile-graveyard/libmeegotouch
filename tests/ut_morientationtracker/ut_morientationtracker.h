@@ -59,6 +59,8 @@ private slots:
     void testOffDisplaySpecialWindows();
     void testFollowCurrentWindow_data();
     void testFollowCurrentWindow();
+    void testFollowNonLMTCurrentWindow_data();
+    void testFollowNonLMTCurrentWindow();
 
     void testXEventMaskPreservationWhenChangingCurrentAppWindow();
 #endif

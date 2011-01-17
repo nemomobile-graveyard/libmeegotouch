@@ -366,6 +366,68 @@ void Ut_MOrientationTracker::testFollowCurrentWindow()
     cleanCurrentWindowXPropertyOnRootWindow();
 }
 
+void Ut_MOrientationTracker::testFollowNonLMTCurrentWindow_data()
+{
+    QTest::addColumn<M::OrientationAngle>("firstAngle");
+    QTest::addColumn<M::OrientationAngle>("secondAngle");
+
+    QTest::newRow("Angle0 -> 90") << M::Angle0 << M::Angle90;
+    QTest::newRow("Angle90 -> 180") << M::Angle90 << M::Angle180;
+    QTest::newRow("Angle180 -> 270") << M::Angle180 << M::Angle270;
+    QTest::newRow("Angle270 -> 0") << M::Angle270 << M::Angle0;
+}
+
+void Ut_MOrientationTracker::testFollowNonLMTCurrentWindow()
+{
+    QFETCH(M::OrientationAngle, firstAngle);
+    QFETCH(M::OrientationAngle, secondAngle);
+
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    //create app window and set it as _MEEGOTOUCH_CURRENT_APP_WINDOW;
+    MApplicationWindow appWindow;
+    setCurrentWindowXPropertyOnRootWindow(appWindow.effectiveWinId());
+
+    MApplicationWindow nonLMTWindow;
+
+    //make window1 start following _MEEGOTOUCH_CURRENT_APP_WINDOW
+    window1->setProperty("followsCurrentApplicationWindowOrientation", 1);
+
+    //since there is no MApplication instance we have to run this handler manualy
+    mTracker->handleCurrentAppWindowChange();
+
+    mTracker->doUpdateOrientationAngle(firstAngle, true, false, false);
+
+    //since there is no MApplication instance we have to run this handler manualy
+    mTracker->handleCurrentAppWindowOrientationAngleChange();
+
+    QCOMPARE(window1->orientationAngle(), firstAngle);
+
+    //delete _MEEGOTOUCH_ORIENTATION_ANGLE on app window to emulate non-lmt app
+    Atom orientationAtom = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
+    XDeleteProperty(QX11Info::display(), nonLMTWindow.effectiveWinId(), orientationAtom);
+
+    //change window to non lmt one;
+    setCurrentWindowXPropertyOnRootWindow(nonLMTWindow.effectiveWinId());
+
+    mTracker->handleCurrentAppWindowChange();
+    mTracker->handleCurrentAppWindowOrientationAngleChange();
+
+    QCOMPARE(window1->orientationAngle(), M::Angle0);
+
+    nonLMTWindow.setOrientationAngle(secondAngle);
+    //delete _MEEGOTOUCH_ORIENTATION_ANGLE on that window to emulate non-lmt app
+    XDeleteProperty(QX11Info::display(), nonLMTWindow.effectiveWinId(), orientationAtom);
+
+    //since there is no MApplication instance we have to run this handler manualy
+    mTracker->handleCurrentAppWindowOrientationAngleChange();
+
+    QCOMPARE(window1->orientationAngle(), M::Angle0);
+
+    cleanCurrentWindowXPropertyOnRootWindow();
+}
+
 void Ut_MOrientationTracker::testXEventMaskPreservationWhenChangingCurrentAppWindow()
 {
     MApplicationWindow appWindow1;

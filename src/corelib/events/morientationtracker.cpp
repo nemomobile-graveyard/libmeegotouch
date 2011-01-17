@@ -371,6 +371,7 @@ bool MOrientationTrackerPrivate::handleX11PropertyEvent(XPropertyEvent *event)
             return true;
         } else if (event->atom == currentAppWindowAtom) {
             handleCurrentAppWindowChange();
+            handleCurrentAppWindowOrientationAngleChange();
             return true;
         }
     }
