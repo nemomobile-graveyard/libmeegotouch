@@ -152,6 +152,10 @@ public:
             break;
         }
 
+        if (ev->type() == MPreeditInjectionEvent::eventNumber()) {
+            return true;
+        }
+
         return false;
     }
 
