@@ -2030,42 +2030,50 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
             }
             d->previousReleaseWordStart = breakIterator.previousInclusive(eventCursorPosition);
             d->previousReleaseWordEnd = breakIterator.next(eventCursorPosition);
-            if (inputMethodCorrectionEnabled() || d->doubleClick) {
-                // clicks on words remove them from the normal contents and makes them preedit.
-                const int start(d->previousReleaseWordStart);
-                const int end(d->previousReleaseWordEnd);
-                QString preedit = text.mid(start, end - start);
 
-                d->cursor()->setPosition(start);
-                d->cursor()->setPosition(end, QTextCursor::KeepAnchor);
-                if (d->doubleClick) { // select the word
+            if (d->doubleClick) {
+                // select the word if flags allow, otherwise omit the gesture
+                if (textInteractionFlags() & Qt::TextSelectableByMouse) {
+                    const int start(d->previousReleaseWordStart);
+                    const int end(d->previousReleaseWordEnd);
+
+                    d->cursor()->setPosition(start);
+                    d->cursor()->setPosition(end, QTextCursor::KeepAnchor);
                     d->setMode(MTextEditModel::EditModeSelect);
                     model()->updateCursor();
                     emit selectionChanged();
                     d->sendCopyAvailable(true);
                     d->doubleClickSelectionTime = QTime::currentTime();
-                } else {        // activate pre-edit
-                    d->storePreeditTextStyling(start, end);
-                    QTextDocumentFragment preeditFragment = d->cursor()->selection();
-                    d->cursor()->removeSelectedText();
+                }
+            } else if (inputMethodCorrectionEnabled()) {
+                // clicks on words remove them from the normal contents and makes them preedit.
+                const int start(d->previousReleaseWordStart);
+                const int end(d->previousReleaseWordEnd);
 
-                    // offer the word to input context as preedit. if the input context accepts it and
-                    // plays nicely, it should offer the preedit right back, changing the mode to
-                    // active.
-                    bool injectionAccepted = false;
+                d->cursor()->setPosition(start);
+                d->cursor()->setPosition(end, QTextCursor::KeepAnchor);
 
-                    QInputContext *ic = qApp->inputContext();
-                    if (ic) {
-                        MPreeditInjectionEvent event(preedit, eventCursorPosition - start);
-                        injectionAccepted = ic->filterEvent(&event);
-                    }
+                d->storePreeditTextStyling(start, end);
+                QTextDocumentFragment preeditFragment = d->cursor()->selection();
+                d->cursor()->removeSelectedText();
 
-                    // if injection wasn't supported, put the text back and fall back to cursor changing
-                    if (injectionAccepted == false) {
-                        d->cursor()->insertFragment(preeditFragment);
-                        d->setCursorPosition(eventCursorPosition);
-                        d->preeditStyling.clear();
-                    }
+                // offer the word to input context as preedit. if the input context accepts it and
+                // plays nicely, it should offer the preedit right back, changing the mode to
+                // active.
+                bool injectionAccepted = false;
+
+                QInputContext *ic = qApp->inputContext();
+                if (ic) { 
+                    QString preedit = text.mid(start, end - start);
+                    MPreeditInjectionEvent event(preedit, eventCursorPosition - start);
+                    injectionAccepted = ic->filterEvent(&event);
+                }
+
+                // if injection wasn't supported, put the text back and fall back to cursor changing
+                if (injectionAccepted == false) {
+                    d->cursor()->insertFragment(preeditFragment);
+                    d->setCursorPosition(eventCursorPosition);
+                    d->preeditStyling.clear();
                 }
             } else {
                 d->setCursorPosition(eventCursorPosition);
@@ -2076,6 +2084,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
         if (location) {
             *location = MTextEdit::Word;
         }
+
         d->notifyInputContextMouseHandler(eventCursorPosition, event);
     }
 
