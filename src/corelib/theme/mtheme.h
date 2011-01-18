@@ -228,7 +228,8 @@ public:
 
      The requested pixmap is loaded asynchronously. The returned pixmap can be one of the following:
      - The real pixmap if the pixmap was already loaded by the system.
-     - A transparent 1x1 or \a size sized pixmap, serving as a placeholder while the pixmap data is loading.
+     - A transparent (or green, if GConf key /meegotouch/debug/show_async_requests is set to true),
+       \a size sized (QSize(0,0) by default) pixmap, serving as a placeholder while the pixmap data is loading.
      - A red pixmap of 50x50 size, indicating that the pixmap with the requested id was not found in the theme.
 
      In the first two cases, the pixmap data can be changed at any time by the theme. This may happen when
