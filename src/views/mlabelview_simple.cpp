@@ -37,7 +37,7 @@
 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
-    viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText()
+    viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
 {
     staticText.setTextFormat(Qt::PlainText);
 }
@@ -50,23 +50,15 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 {
     Q_UNUSED(size);
 
-    initializeStaticText();
+    initializeTextProperties();
     if (staticText.text().isEmpty() || paintingRect.isEmpty()) {
         return;
     }
 
-    const MLabelModel *model = viewPrivate->model();
-    const MLabelStyle *style = viewPrivate->style();
-
-    painter->setPen(model->color().isValid() ? model->color() : style->color());
-    painter->setFont(viewPrivate->controller->font());
+    painter->setPen(pen);
+    painter->setFont(font);
     painter->setRenderHint(QPainter::TextAntialiasing);
-    painter->setLayoutDirection(model->textDirection());
-
-    const bool clip =    textOffset.x() < paintingRect.x()
-                      || textOffset.y() < paintingRect.y()
-                      || textOffset.x() + staticText.size().width()  > paintingRect.right()
-                      || textOffset.y() + staticText.size().height() > paintingRect.bottom();
+    painter->setLayoutDirection(viewPrivate->model()->textDirection());
 
     if (clip) {
         painter->save();
@@ -223,7 +215,7 @@ void MLabelViewSimple::applyStyle()
         const_cast<MLabelModel*>(viewPrivate->model())->setAlignment(viewPrivate->style()->horizontalAlignment() | viewPrivate->style()->verticalAlignment());
 }
 
-void MLabelViewSimple::initializeStaticText()
+void MLabelViewSimple::initializeTextProperties()
 {
     if (!dirty) {
         return;
@@ -247,6 +239,15 @@ void MLabelViewSimple::initializeStaticText()
     staticText.prepare(QTransform(), viewPrivate->controller->font());
 
     adjustTextOffset();
+    
+    clip =  textOffset.x() < paintingRect.x()
+           || textOffset.y() < paintingRect.y()
+           || textOffset.x() + staticText.size().width()  > paintingRect.right()
+           || textOffset.y() + staticText.size().height() > paintingRect.bottom();
+
+    const QColor& color = viewPrivate->model()->color();
+    pen = QPen(color.isValid() ? color : style->color());
+    font = QFont(viewPrivate->controller->font());
 }
 
 QString MLabelViewSimple::textToRender(qreal width) const
@@ -360,7 +361,7 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width) const
         width = -1.0;
     }
 
-    const_cast<MLabelViewSimple*>(this)->initializeStaticText();
+    const_cast<MLabelViewSimple*>(this)->initializeTextProperties();
 
     const bool equalWidth = (width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth();
     if (equalWidth && staticText.text() == unconstraintText) {
@@ -373,7 +374,7 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width) const
     if (staticText2.text() != unconstraintText) {
         staticText2.setText(unconstraintText);
     }
-    staticText2.prepare(QTransform(), viewPrivate->controller->font());
+    staticText2.prepare(QTransform(), font);
 
     return staticText2.size();
 }

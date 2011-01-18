@@ -88,6 +88,8 @@ void MLabelView::applyStyle()
     Q_D(MLabelView);
     d->impl->markDirty();
     d->impl->applyStyle();
+    const MLabelStyle* labelStyle = d->style();
+    d->paddedSize = size() - QSizeF(labelStyle->paddingLeft() + labelStyle->paddingRight(), labelStyle->paddingTop() + labelStyle->paddingBottom());
     updateGeometry();
 }
 
@@ -98,13 +100,12 @@ void MLabelView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem 
 
     //Opacity for the label
     qreal oldOpacity = painter->opacity();
-    if (style()->textOpacity() >= 0.0)
-        painter->setOpacity(d->controller->effectiveOpacity() * style()->textOpacity());
+    const MLabelStyle* labelStyle = d->style();
+    if (labelStyle->textOpacity() >= 0.0)
+        painter->setOpacity(d->controller->effectiveOpacity() * labelStyle->textOpacity());
 
     //give size adjusted with padding to the actual implementation class
-    QSizeF padding(style()->paddingLeft() + style()->paddingRight(),
-                   style()->paddingTop() + style()->paddingBottom());
-    d->impl->drawContents(painter, size() - padding);
+    d->impl->drawContents(painter, d->paddedSize);
 
     painter->setOpacity(oldOpacity);
 }
@@ -115,12 +116,13 @@ void MLabelView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     Q_D(MLabelView);
     d->impl->markDirty();
-
-    QSizeF padding(style()->paddingLeft() + style()->paddingRight(),
-                   style()->paddingTop() + style()->paddingBottom());
+    const MLabelStyle* labelStyle = d->style();
+    QSizeF padding(labelStyle->paddingLeft() + labelStyle->paddingRight(),
+                   labelStyle->paddingTop() + labelStyle->paddingBottom());
+    d->paddedSize = event->newSize() - QSizeF(labelStyle->paddingLeft() + labelStyle->paddingRight(), labelStyle->paddingTop() + labelStyle->paddingBottom());
 
     event->setOldSize(event->oldSize() - padding);
-    event->setNewSize(event->newSize() - padding);
+    event->setNewSize(d->paddedSize);
 
     if (d->impl->resizeEvent(event))  {
         updateGeometry();

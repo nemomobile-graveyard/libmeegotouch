@@ -49,7 +49,7 @@ public:
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
-    void initializeStaticText();
+    void initializeTextProperties();
 
     /**
      * \param width Available width in pixels for the text.
@@ -107,6 +107,10 @@ public:
     bool dirty;
     QStaticText staticText;
     QString unconstraintText;
+    
+    bool clip;
+    QPen pen;
+    QFont font;
 };
 
 class MLabelViewRich : public MLabelViewSimple
@@ -229,6 +233,8 @@ public:
 
     MLabelViewSimple *impl;
     QTextOption textOptions;
+
+    QSizeF paddedSize;
 };
 
 #endif
