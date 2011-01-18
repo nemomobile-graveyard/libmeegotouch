@@ -56,6 +56,7 @@ MLabel *MMessageBoxViewPrivate::titleLabelWidget()
     if (!titleLabel) {
         titleLabel = new MLabel(controller);
         titleLabel->setStyleName("CommonQueryTitle");
+        titleLabel->setTextElide(true);
         titleLabel->setAlignment(Qt::AlignCenter);
     }
     return titleLabel;
