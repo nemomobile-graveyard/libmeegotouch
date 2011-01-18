@@ -638,6 +638,14 @@ void Ut_MTextEdit::testInputMethodEvent()
     m_subject->inputMethodEvent(&commitEvent);
     int countAfterCommit = spy.count();
     QCOMPARE(countAfterPreedit, countAfterCommit);
+
+    // check that doing preedit on full field doesn't actually signal anything
+    m_subject->clear();
+    m_subject->setMaxLength(1);
+    m_subject->setText("a");
+    spy.clear();
+    m_subject->inputMethodEvent(&preeditEvent);
+    QCOMPARE(spy.count(), 0);
 }
 
 void Ut_MTextEdit::testText()

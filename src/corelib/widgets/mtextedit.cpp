@@ -2404,10 +2404,22 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     }
 
     QList<QInputMethodEvent::Attribute> attributes = event->attributes();
+
+    // special case for omitting preedit if already at max length.
+    // rationale: max length commonly used without word correction so keyboards
+    // do input character at a time. commonly cannot know how much space preedit would
+    // use when committed, but full entry can be known not to accept anything.
+    const bool atMaxLength = ((maxLength() >= 0)
+                              && (d->realCharacterCount() == maxLength()));
+
     if (!preedit.isEmpty()) {
-        d->setPreeditText(preedit, attributes);
-        d->setMode(MTextEditModel::EditModeActive);
-        changed = true;
+        if (!atMaxLength) {
+            d->setPreeditText(preedit, attributes);
+            d->setMode(MTextEditModel::EditModeActive);
+            changed = true;
+        } else {
+            d->safeReset();
+        }
     }
 
     foreach (const QInputMethodEvent::Attribute &attribute, attributes) {
