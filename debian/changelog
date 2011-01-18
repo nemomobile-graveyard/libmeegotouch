@@ -1,3 +1,10 @@
+libmeegotouch (0.20.71-4) unstable; urgency=low
+
+  * Increasing tag version for integration
+  * Basement tag: 0.20.71-2
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 18 Jan 2011 10:06:48 +0200
+
 libmeegotouch (0.20.71-2) unstable; urgency=low
 
   * New version
