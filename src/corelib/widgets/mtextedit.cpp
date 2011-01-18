@@ -1067,7 +1067,10 @@ void MTextEditPrivate::storePreeditTextStyling(int start, int end)
 /*!
  * \brief inserts text by applying the stored preedit styling information
  * \param currentListIndex styling list index to start reading from the stored styling
- * \param currentCount character index within the current styling list index
+ * \param currentCount character index within the current styling list index.  In other
+ * words, currentCount is the number of characters that have already been used from the
+ * number indicated by preeditStyling[currentListIndex].count.  Warning: this is
+ * exactly the opposite of what it used to be originally.
  */
 void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount)
 {
@@ -1105,14 +1108,14 @@ void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &cu
         }
         const int insertLength(qMin(preeditStyling[currentListIndex].count - currentCount,
                                     remainingTextLength));
-        if (preeditStyling[currentListIndex].count)
-            currentCount = (currentCount + insertLength) % preeditStyling[currentListIndex].count;
-        else {
-            currentCount = (currentCount + insertLength);
-        }
+        currentCount = (currentCount + insertLength) % preeditStyling[currentListIndex].count;
         textCursor.insertText(text.mid(textIndex, insertLength), preeditStyling[currentListIndex].charFormat);
         textIndex += insertLength;
     } while (currentListIndex < (numStyles - 1) && (textIndex < textLength));
+
+    if (currentCount == 0) {    // we used all of the last style?
+        currentCount = preeditStyling[currentListIndex].count;
+    }
 }
 
 
@@ -1190,25 +1193,21 @@ QTextCharFormat MTextEditPrivate::currentPreeditCharFormat() const
  * \brief clears the unused styling from stored preedit styling information
  * \param currentListIndex styling list index to start erasing from the stored styling
  * \param currentCount character index within the current styling list index
+ * \sa MTextEditPrivate::insertTextWithPreeditStyling
  */
 void MTextEditPrivate::clearUnusedPreeditStyling(int currentListIndex, int currentCount)
 {
-    int preeditTextStyleSize = preeditStyling.size();
-
-    if ((currentListIndex < 0) || (currentListIndex >= preeditTextStyleSize)) {
+    if ((currentListIndex < 0) || (currentListIndex >= preeditStyling.size())) {
         return;
     }
 
-    styleData &style = preeditStyling[currentListIndex];
-    style.count -= currentCount;
+    // Truncate the count of the last used style to what was actually used up and...
+    styleData &lastUsedStyle = preeditStyling[currentListIndex];
+    lastUsedStyle.count = qMin(lastUsedStyle.count, currentCount);
 
-    for (int i = currentListIndex + 1; i < preeditTextStyleSize; i++) {
-        preeditStyling.removeAt(i);
-    }
-
-    if (style.count == 0) {
-        preeditStyling.removeAt(currentListIndex);
-    }
+    // ...remove it, if nothing was used, and the rest of the style entries.
+    preeditStyling.erase(preeditStyling.begin() + currentListIndex + (lastUsedStyle.count ? 1 : 0),
+                         preeditStyling.end());
 }
 
 /*!
