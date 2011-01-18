@@ -1,3 +1,15 @@
+libmeegotouch (0.20.73-4) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#219187 - Dynamic cast of MApplicationExtensionInterface to extension interface fails
+  * Fixes: BMC#5828, MTheme::pixmap() returns invalid pixmap while async is happening.
+  * Fixes: NB#208270 - Status area is displayed in portrait orientation when application is in landscape and vice-verse.
+  * Fixes: NB#217904 - mdialogstyle.css specifies too small maximum size.
+  * Fixes: NB#215183 - <Performance> floating point compiler optimization has no effect
+  * Fixes: NB#218550 - navigation bar animates to the wrong direction when drilling down
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 18 Jan 2011 15:24:03 +0200
+
 libmeegotouch (0.20.73-1) unstable; urgency=low
 
   * New version
