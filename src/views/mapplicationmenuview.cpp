@@ -106,18 +106,22 @@ MApplicationMenuViewPrivate::~MApplicationMenuViewPrivate()
     clearWidgets(buttons);
     removeEventFilter(controller);
     delete styleButtonGroup;
+
+    while (!delayedActionEvents.isEmpty())
+        delete delayedActionEvents.takeFirst();
 }
 
 void MApplicationMenuViewPrivate::init()
 {
     Q_Q(MApplicationMenuView);
-    
+
     createPolicy(M::Landscape);
     createPolicy(M::Portrait);
 
     addActions();
-    
+
     q->connect(controller, SIGNAL(displayEntered()), SLOT(_q_displayEntered()));
+    q->connect(controller, SIGNAL(disappeared()), SLOT(_q_processDelayedActionEvents()));
 }
 
 void MApplicationMenuViewPrivate::createPolicy(M::Orientation orientation)
@@ -196,29 +200,44 @@ void MApplicationMenuViewPrivate::_q_displayEntered()
 
 bool MApplicationMenuViewPrivate::eventFilter(QObject *obj, QEvent *e)
 {
-    switch (e->type()) {
-        case QEvent::ActionRemoved: {
-            QActionEvent *actionEvent = static_cast<QActionEvent *>(e);
-            remove(actionEvent->action());
-            makeLandscapePolicyColumnsEqual();
-            break;
-        }
-        case QEvent::ActionAdded: {
-            QActionEvent *actionEvent = static_cast<QActionEvent *>(e);
-            add(actionEvent->action(), actionEvent->before());
-            makeLandscapePolicyColumnsEqual();
-            break;
-        }
-        case QEvent::ActionChanged: {
-            QActionEvent *actionEvent = static_cast<QActionEvent *>(e);
-            change(actionEvent->action());
-            break;
-        }
-        default: {
-            break;
+    if (e->type() == QEvent::ActionRemoved ||
+        e->type() == QEvent::ActionAdded ||
+        e->type() == QEvent::ActionChanged)
+    {
+        QActionEvent *actionEvent = static_cast<QActionEvent *>(e);
+
+        if (controller->sceneWindowState() == MSceneWindow::Disappeared) {
+            processActionEvent(actionEvent);
+        } else {
+            // The menu is currently being displayed. Let's delay its update until it goes
+            // away. Otherwise menu actions that trigger page switches would
+            // cause the menu contents to be swapped while the menu is still disappearing.
+            delayedActionEvents.append(new QActionEvent(actionEvent->type(),
+                                                        actionEvent->action(),
+                                                        actionEvent->before()));
         }
     }
+
     return QObject::eventFilter(obj, e);
+}
+
+void MApplicationMenuViewPrivate::processActionEvent(QActionEvent* actionEvent)
+{
+    switch (actionEvent->type()) {
+    case QEvent::ActionRemoved:
+        remove(actionEvent->action());
+        makeLandscapePolicyColumnsEqual();
+        break;
+    case QEvent::ActionAdded:
+        add(actionEvent->action(), actionEvent->before());
+        makeLandscapePolicyColumnsEqual();
+        break;
+    case QEvent::ActionChanged:
+        change(actionEvent->action());
+        break;
+    default:
+        break;
+    }
 }
 
 void MApplicationMenuViewPrivate::addActions()
@@ -519,6 +538,9 @@ void MApplicationMenuViewPrivate::changeVisibility(QAction *action)
             }
 
             addActionCommandWidget(widget, 0); //Add to the end
+        } else if (wasVisible && action->isVisible()) {
+            // Widget should remain there. Just make sure it's visible.
+            widget->setVisible(true);
         }
     }
 }
@@ -724,22 +746,31 @@ void MApplicationMenuViewPrivate::makeLandscapePolicyColumnsEqual()
         for (; c < maxColumns; ++c) {
             landscapePolicy->setColumnFixedWidth(c, columnWidth);
         }
-        for (; c < landscapePolicy->columnCount(); ++c) {          
-            landscapePolicy->setColumnPreferredWidth(c, 0);      
-        }        
+        for (; c < landscapePolicy->columnCount(); ++c) {
+            landscapePolicy->setColumnPreferredWidth(c, 0);
+        }
     } else if( landscapePolicy->count() > 0 ){
         int columnWidth = width/landscapePolicy->count();
         int c = 0;
         for (; c < landscapePolicy->count(); ++c) {
             landscapePolicy->setColumnPreferredWidth(c, columnWidth);
         }
-        for (; c < landscapePolicy->columnCount(); ++c) {          
-            landscapePolicy->setColumnPreferredWidth(c, 0);      
+        for (; c < landscapePolicy->columnCount(); ++c) {
+            landscapePolicy->setColumnPreferredWidth(c, 0);
         }
     } else {
-        for (int c = 0; c < landscapePolicy->columnCount(); ++c) {          
-            landscapePolicy->setColumnPreferredWidth(c, 0);      
+        for (int c = 0; c < landscapePolicy->columnCount(); ++c) {
+            landscapePolicy->setColumnPreferredWidth(c, 0);
         }
+    }
+}
+
+void MApplicationMenuViewPrivate::_q_processDelayedActionEvents()
+{
+    while (!delayedActionEvents.isEmpty()) {
+        QActionEvent* action = delayedActionEvents.takeFirst();
+        processActionEvent(action);
+        delete action;
     }
 }
 

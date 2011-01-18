@@ -111,6 +111,7 @@ private:
     Q_DECLARE_PRIVATE(MApplicationMenuView)
 
     Q_PRIVATE_SLOT(d_func(), void _q_displayEntered())
+    Q_PRIVATE_SLOT(d_func(), void _q_processDelayedActionEvents())
 
 #ifdef UNIT_TEST
     friend class Pt_MApplicationMenu;
