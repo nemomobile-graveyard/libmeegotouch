@@ -33,12 +33,14 @@
 #include <QDir>
 #include <QDateTime>
 #include <QList>
+#include <QSystemSemaphore>
 
 #ifndef Q_OS_WIN
 #include <utime.h>
 #endif
 
 #include <sys/stat.h>
+#include <sys/file.h>
 
 namespace {
     const unsigned int FILE_VERSION = 19;
@@ -87,10 +89,24 @@ public:
     bool replaceConsts(QByteArray &value) const;
 
     /**
-     \brief Get the \a file name for a binary stylesheet cache file corresponding to the
-      original stylesheet file.
+     \brief Convert an absolute path into a filename by replacing
+     line separators and such.
      */
     QString createBinaryFilename(const QString &filename) const;
+
+    /**
+      * \brief Return the newest binary CSS cache file for a given
+      * CSS file.
+      */
+    QString currentBinaryCacheFile(const QString &filename) const;
+
+    /**
+      * \brief When we have to update an existing binary cache file we
+      * may not overwride existing files as they may be mapped by another
+      * application. Instead we increase the number at the end of the cache
+      * filename. This function calculates the proper name for a new cache file.
+      */
+    QString nextBinaryCacheFile(const QString &filename) const;
 
     QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> > fileInfoList;
     QSharedPointer<MStyleSheetParser::StylesheetFileInfo> privateFileInfo;
@@ -132,6 +148,7 @@ public:
     QFileInfo parsedFileInfo;
     QByteArray parsedFileName;
     const MLogicalValues *logicalValues;
+    QSystemSemaphore cssSemaphore;
 
     QHash<QByteArray, QByteArray>* globalConstants;
 
@@ -151,11 +168,55 @@ time_t modificationTime(const char* filename)
     }
 }
 
+class MFileLocker {
+public:
+    static bool readLock(const QFile& file)
+    {
+        bool result = (flock(file.handle(), LOCK_SH) == 0);
+        if (!result) {
+            mWarning("MFileLocker") << "Could not read lock" << file.fileName();
+        }
+        return result;
+    }
+
+    static bool writeLock(const QFile& file)
+    {
+        bool result = (flock(file.handle(), LOCK_EX) == 0);
+        if (!result) {
+            mWarning("MFileLocker") << "Could not write lock" << file.fileName();
+        }
+        return result;
+    }
+
+    static bool readLockNB(const QFile& file)
+    {
+        bool result = (flock(file.handle(), LOCK_SH | LOCK_NB) == 0);
+        return result;
+    }
+
+    static bool writeLockNB(const QFile& file)
+    {
+        bool result = (flock(file.handle(), LOCK_EX | LOCK_NB) == 0);
+        return result;
+    }
+
+    static bool unlock(const QFile& file)
+    {
+        bool result = flock(file.handle(), LOCK_UN);
+        if (!result) {
+            mWarning("MFileLocker") << "Could not unlock" << file.fileName();
+        }
+        return result;
+    }
+};
+
 #endif
 
 MStyleSheetParserPrivate::MStyleSheetParserPrivate(const MLogicalValues *logicalValues) :
     privateFileInfo(0), binaryFileMode(true), syntaxMode(MStyleSheetParser::StrictSyntax),
-    startReadPos(0), logicalValues(logicalValues), globalConstants(NULL)
+    startReadPos(0), logicalValues(logicalValues),
+    cssSemaphore("MSTYLESHEET_PARSER_CSS_GUARD", 1),
+    globalConstants(NULL)
 {
 }
 
@@ -386,11 +447,11 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
 {
     globalConstants = constants;
 
-    const QString binaryFilename = createBinaryFilename(filename);
-    if (binaryFileMode) {
+    const QString binaryFilename = currentBinaryCacheFile(filename);
+    if (toplevel && binaryFileMode) {
         // If binary file mode is enabled, we'll check if there's binary
         // file available instead of the ASCII css to speed-up the loading process
-        if (toplevel && loadBinary(binaryFilename)) {
+        if (!binaryFilename.isEmpty() && loadBinary(binaryFilename)) {
             return true;
         }
     }
@@ -428,7 +489,13 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
             if (binaryFileMode) {
                 privateFileInfo->time_t = modificationTime(qPrintable(filename));
                 if (toplevel) {
-                    dump(binaryFilename);
+                    // make sure two applications try to write cache files at once
+                    if (!cssSemaphore.acquire()) {
+                        mWarning("MStyleSheetParser::load") << "Failed to acquire css guard semaphore.";
+                        return false;
+                    }
+                    dump(nextBinaryCacheFile(filename));
+                    cssSemaphore.release();
                 }
             }
 
@@ -955,15 +1022,55 @@ MStyleSheetAttribute* MStyleSheetParserPrivate::parseAttribute(QFile &stream, QC
 
 QString MStyleSheetParserPrivate::createBinaryFilename(const QString &filename) const
 {
-    QString binaryFilename(binaryDirectory);
     QString absoluteFilePathEncoded(filename);
-    absoluteFilePathEncoded.replace('_', "__");
-    absoluteFilePathEncoded.replace('/', "_.");
+    absoluteFilePathEncoded.replace(QLatin1Char('_'), QLatin1String("__"));
+    absoluteFilePathEncoded.replace(QLatin1Char('/'), QLatin1String("_."));
     // also replace windows directory separators and the drive letter separator
-    absoluteFilePathEncoded.replace('\\', "_.");
-    absoluteFilePathEncoded.replace(':', "_.");
-    binaryFilename += absoluteFilePathEncoded;
-    return binaryFilename;
+    absoluteFilePathEncoded.replace(QLatin1Char('\\'), QLatin1String("_."));
+    absoluteFilePathEncoded.replace(QLatin1Char(':'), QLatin1String("_."));
+    absoluteFilePathEncoded.append(QLatin1Char('#'));
+    return absoluteFilePathEncoded;
+}
+
+QString MStyleSheetParserPrivate::currentBinaryCacheFile(const QString &filename) const
+{
+    const QString filter = createBinaryFilename(filename).append(QLatin1Char('*'));
+    const QDir cacheDir(binaryDirectory, filter, QDir::Name, QDir::Files);
+    const QStringList files = cacheDir.entryList();
+    if (files.isEmpty()) {
+        return QString();
+    } else {
+        // we extract the index from all cache files and return the cache file with the
+        // highest index to make sure we are sorting by number and not alphanumeric.
+        // we want #1, #2, #10, #20 and not #1, #10, #2, #20
+        int highestIndex  = -1;
+        QString currentFile;
+        foreach (const QString &file, files) {
+            int indexOfHash = file.lastIndexOf(QLatin1Char('#'));
+            int index = file.right(file.size() - indexOfHash - 1).toInt();
+            if (index > highestIndex) {
+                highestIndex = index;
+                currentFile = file;
+            }
+        }
+
+        return binaryDirectory + currentFile;
+    }
+}
+
+QString MStyleSheetParserPrivate::nextBinaryCacheFile(const QString &filename) const
+{
+    const QString binaryFilename = createBinaryFilename(filename);
+    const QString currentFile = currentBinaryCacheFile(filename);
+    if (currentFile.isEmpty()) {
+        return binaryDirectory + binaryFilename + QLatin1String("000");
+    } else {
+        int indexOfHash = currentFile.lastIndexOf(QLatin1Char('#'));
+        int currentIndex = currentFile.right(currentFile.size() - indexOfHash - 1).toInt();
+        QString newIndex;
+        newIndex.setNum(currentIndex + 1);
+        return binaryDirectory + binaryFilename + newIndex.rightJustified(3, QLatin1Char('0'));
+    }
 }
 
 MStyleSheetParser::MStyleSheetParser(const MLogicalValues *logicalValues) :
@@ -1035,6 +1142,16 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
 
     QFile file(binaryFilename);
     if (file.open(QFile::ReadOnly)) {
+        if (!MFileLocker::readLock(file)) {
+            return false;
+        }
+        if (file.size() == 0) {
+            // we managed to win a race here. another process is trying to fill the cache file
+            // while we managed to acquire the lock before the writing process could acquire the lock.
+            // as this should nearly never happen we simply return false for simplicity.
+            return false;
+        }
+
         QDataStream stream(&file);
 
         unsigned int file_version;
@@ -1051,7 +1168,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
 
                 time_t current = modificationTime(ts.first.constData());
                 if (current != ts.second) {
-                    mDebug("MStyleSheetParserPrivate") << "Timestamp for" << ts.first << "changed. Recreating" << binaryFilename;
+                    mDebug("MStyleSheetParserPrivate") << "Timestamp for" << ts.first << "changed. Recreating cache file";
                     return false;
                 }
             }
@@ -1091,6 +1208,11 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
             mDebug("MStyleSheetParserPrivate") << "Failed to dump stylesheet file:" << binaryFilename;
             return false;
         }
+    }
+
+    if (!MFileLocker::writeLockNB(file)) {
+        mDebug("MStyleSheetParserPrivate") << "Failed to write lock stylesheet file:" << binaryFilename;
+        return false;
     }
 
     // collect timestamps
