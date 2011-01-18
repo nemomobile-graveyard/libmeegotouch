@@ -1,4 +1,4 @@
-libmeegotouch (0.20.73-4) unstable; urgency=low
+libmeegotouch (0.20.74-1) unstable; urgency=low
 
   * New version
   * Fixes: NB#219187 - Dynamic cast of MApplicationExtensionInterface to extension interface fails
