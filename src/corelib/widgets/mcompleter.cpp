@@ -271,7 +271,7 @@ void MCompleterPrivate::setCompletionModel(QAbstractItemModel *m, bool own)
     //default value column is the last column
     q->model()->setValueColumnIndex(completionModel->columnCount() - 1);
     QObject::connect(completionModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-                     q, SLOT(_q_modelUpdate()));
+                     q, SLOT(_q_pollModel()));
     QObject::connect(completionModel, SIGNAL(modelAboutToBeReset()),
                      q, SLOT(_q_modelAboutToBeReset()));
     QObject::connect(completionModel, SIGNAL(modelReset()),
@@ -497,7 +497,7 @@ void MCompleter::complete()
 void MCompleter::confirm()
 {
     Q_D(MCompleter);
-    if (!widget() || (!isActive() && !model()->popupActive()))
+    if (!widget() || !isActive())
         return;
 
     //fetch prefix again, ensure the prefix is not null
@@ -536,7 +536,7 @@ void MCompleter::setAcceptMultipleEntries(bool enable)
 
 bool MCompleter::isActive() const
 {
-    return model()->active();
+    return model()->active() || model()->popupActive();
 }
 
 void MCompleter::queryAll()
@@ -591,7 +591,7 @@ bool MCompleter::eventFilter(QObject *object, QEvent *e)
 {
     Q_D(MCompleter);
     bool eaten = false;
-    if (isActive() && object == widget()) {
+    if (model()->active() && object == widget()) {
         switch (e->type()) {
         case QEvent::GraphicsSceneMouseRelease:
             //User relocates the cursor by tapping the text entry will hide completer
