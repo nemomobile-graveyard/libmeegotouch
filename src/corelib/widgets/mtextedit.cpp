@@ -711,14 +711,24 @@ void MTextEditPrivate::setPreeditText(const QString &text,
                                       const QList<QInputMethodEvent::Attribute> &attributes)
 {
     Q_Q(MTextEdit);
-    QTextCursor *textCursor = cursor();
+    QTextCursor &textCursor(*cursor());
 
-    // Remove old pre-edit text
-    removePreedit();
+    const bool append(isPreediting() && !text.isEmpty() && text.startsWith(textCursor.selectedText()));
 
-    int preeditTextLength = text.count();
+    if (!append) {
+        removePreedit();
+    }
 
-    QTextBlock block = textCursor->block();
+    const int preeditTextLength(text.length());
+    const int oldPreeditLength(append ? textCursor.selectedText().length() : 0);
+
+    QTextCursor preeditStartCursor(textCursor);
+    preeditStartCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::MoveAnchor, oldPreeditLength);
+
+    if (isPreediting()) {
+        // destroys character format even if there is no selection, so only do this when pre-editing
+        textCursor.clearSelection();
+    }
 
     QList<MTextEditFormatRange> additionalFormats;
 
@@ -733,11 +743,10 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 
             if (format.isValid()) {
                 MTextEditFormatRange formatRange;
-                formatRange.start = attribute.start + textCursor->position();
+                formatRange.start = attribute.start + preeditStartCursor.position();
                 formatRange.length = attribute.length;
                 formatRange.format = format;
                 additionalFormats.append(formatRange);
-
             }
         } else if (attribute.type == QInputMethodEvent::Cursor) {
             if (attribute.length > 0) {
@@ -754,17 +763,17 @@ void MTextEditPrivate::setPreeditText(const QString &text,
     //But this would cause problems in MTextEditView because calling QTextLayout::setAdditionalFormats
     //causes a contentChange signal covering the whole text to be emitted.
     q->model()->setAdditionalFormats(additionalFormats);
-    
-    int listIndex = 0;
-    int count = 0;
-    insertTextWithPreeditStyling(text, listIndex, count);
+
+    int listIndex(append ? preeditStyling.size() - 1 : 0);
+    int count(append ? preeditStyling[listIndex].count : 0);
+    insertTextWithPreeditStyling(text.mid(oldPreeditLength), listIndex, count);
     clearUnusedPreeditStyling(listIndex, count);
 
     // mark preedit as selection
-    int position = textCursor->position();
-    textCursor->movePosition(QTextCursor::PreviousCharacter, QTextCursor::MoveAnchor,
+    int position = textCursor.position();
+    textCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::MoveAnchor,
                              preeditTextLength);
-    textCursor->setPosition(position, QTextCursor::KeepAnchor);
+    textCursor.setPosition(position, QTextCursor::KeepAnchor);
 }
 
 
@@ -2327,8 +2336,6 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         }
     }
 
-    d->removePreedit();
-
     if (d->editActive == false &&
             echoMode() == MTextEditModel::PasswordEchoOnEdit &&
             (commitString.isEmpty() == false || preedit.isEmpty() == false)) {
@@ -2341,6 +2348,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     bool insertionSuccess = false;
 
     if (event->replacementLength()) {
+        d->removePreedit();
         // store styles of replaced text to preedit styles.
         const int start = d->cursor()->position() + event->replacementStart();
         const int end = start + event->replacementLength();
@@ -2367,6 +2375,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     // append possible commit string
     if (commitString.isEmpty() == false) {
+        d->removePreedit();
         insertionSuccess = d->doTextInsert(commitString, true);
 
         if (insertionSuccess == false && wasSelecting == true) {
@@ -2387,6 +2396,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     if (insertionSuccess || (preedit.isEmpty() && wasPreediting)) {
         // return to basic mode on insertion or removed preedit
+        if (!insertionSuccess) {
+            d->removePreedit();
+        }
         d->setMode(MTextEditModel::EditModeBasic);
         changed = true;
     }
