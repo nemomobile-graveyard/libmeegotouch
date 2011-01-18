@@ -1,3 +1,10 @@
+libmeegotouch (0.20.71-5) unstable; urgency=low
+
+  * Increasing version for integration, base version 0.20.71-3
+  * Fixes: NB#219249 - MGS should be enabled
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 18 Jan 2011 14:24:43 +0200
+
 libmeegotouch (0.20.71-3) unstable; urgency=low
 
   * New version
