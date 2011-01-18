@@ -722,8 +722,8 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 
     QList<MTextEditFormatRange> additionalFormats;
 
-    // set preeditCursor to -1 to hide cursor for preedit by default
-    int preeditCursor = -1;
+    // set preeditCursorPos to -1 to hide cursor for preedit by default
+    int preeditCursorPos = -1;
     // parse attributes
     const int size = attributes.size();
     for (int i = 0; i < size; ++i) {
@@ -741,13 +741,13 @@ void MTextEditPrivate::setPreeditText(const QString &text,
             }
         } else if (attribute.type == QInputMethodEvent::Cursor) {
             if (attribute.length > 0) {
-                preeditCursor = attribute.start;
+                preeditCursorPos = attribute.start;
                 //TODO: should honor cursor color
             }
         }
     }
-    q->model()->setPreeditCursor(preeditCursor);
-    
+    q->model()->setPreeditCursor(preeditCursorPos);
+
     //MTextEditView formats the pre-edit text depending on the values set here.
     //
     //An alternative implementation would be to use QTextLayout::setAdditionalFormats.
