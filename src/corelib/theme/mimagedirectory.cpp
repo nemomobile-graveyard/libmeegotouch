@@ -759,3 +759,7 @@ ImageResource *MImageDirectory::findImage(const QString &imageId)
     return resource;
 }
 
+QStringList MImageDirectory::activeImageIds() const
+{
+    return imageResources.keys();
+}

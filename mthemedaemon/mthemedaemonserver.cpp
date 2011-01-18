@@ -157,6 +157,7 @@ void MThemeDaemonServer::clientDisconnected()
         if (client) {
             daemon.removeClient(client);
             registeredClients.remove(socket);
+	    clearCustomDirectoriesQueue.removeAll(client);
 
             // remove all queued pixmap requests
             QMap<qint32, QQueue<QueueItem> >::iterator prioIter = loadPixmapsQueue.begin();
@@ -281,7 +282,9 @@ void MThemeDaemonServer::clientDataAvailable()
         } break;
 
         case Packet::RequestClearPixmapDirectoriesPacket: {
-            client->removeAddedImageDirectories();
+	    clearCustomDirectoriesQueue.enqueue(client);
+	    if (!processQueueTimer.isActive())
+		processQueueTimer.start();
         } break;
 
         case Packet::RequestNewPixmapDirectoryPacket: {
@@ -455,9 +458,19 @@ void MThemeDaemonServer::processOneQueueItem()
             item.client->stream() << Packet(Packet::ErrorPacket, item.sequenceNumber,
                                             new String(message));
         }
+    } else if (!clearCustomDirectoriesQueue.isEmpty()) {
+	MThemeDaemonClient *client = clearCustomDirectoriesQueue.dequeue();
+	QStringList stillActiveIds = client->removeAddedImageDirectories();
+	if (!stillActiveIds.isEmpty()) {
+	    QString message = "unable clear custom directories as the client still has handles to pixmaps:";
+	    foreach(QString id, stillActiveIds) {
+		message.append(" "+id);
+	    }
+	    client->stream() << Packet(Packet::ErrorPacket, 0, new String(message));
+	}
     }
 
-    if (loadPixmapsQueue.isEmpty() && releasePixmapsQueue.isEmpty()) {
+    if (loadPixmapsQueue.isEmpty() && releasePixmapsQueue.isEmpty() && clearCustomDirectoriesQueue.isEmpty()) {
         processQueueTimer.stop();
     }
 }

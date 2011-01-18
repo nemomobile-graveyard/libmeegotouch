@@ -99,10 +99,17 @@ void MThemeDaemonClient::addCustomImageDirectory(const QString &path, M::Recursi
     customImageDirs.insert(0, new MImageDirectory(path, recursionMode));
 }
 
-void MThemeDaemonClient::removeAddedImageDirectories()
+QStringList MThemeDaemonClient::removeAddedImageDirectories()
 {
-    qDeleteAll(customImageDirs);
-    customImageDirs.clear();
+    QStringList stillActiveIds;
+    foreach(MImageDirectory * imdir, customImageDirs) {
+	stillActiveIds.append(imdir->activeImageIds());
+    }
+    if(stillActiveIds.isEmpty()) {
+	qDeleteAll(customImageDirs);
+	customImageDirs.clear();
+    }
+    return stillActiveIds;
 }
 
 void MThemeDaemonClient::themeChangeApplied()

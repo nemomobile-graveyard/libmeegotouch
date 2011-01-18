@@ -57,7 +57,7 @@ public:
     void reloadImagePaths(const QStringList &themes);
 
     void addCustomImageDirectory(const QString &path, M::RecursionMode recursionMode);
-    void removeAddedImageDirectories();
+    QStringList removeAddedImageDirectories();
 
     void themeChangeApplied();
 

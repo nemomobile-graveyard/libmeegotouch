@@ -209,6 +209,8 @@ public:
     ~MImageDirectory();
 
     ImageResource *findImage(const QString &imageId);
+
+    QStringList activeImageIds() const;
 private:
 
     // image id => image resource

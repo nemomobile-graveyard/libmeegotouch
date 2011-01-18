@@ -128,6 +128,7 @@ private:
 
     QMap<qint32, QQueue<QueueItem> > loadPixmapsQueue;
     QQueue<QueueItem> releasePixmapsQueue;
+    QQueue<MThemeDaemonClient*> clearCustomDirectoriesQueue;
     QTimer processQueueTimer;
 
     QList<MThemeDaemonClient*> clientsThatHaveNotYetAppliedThemeChange;
