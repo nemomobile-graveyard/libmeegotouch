@@ -46,6 +46,9 @@ private slots:
     void panGestureCancelsMouseEvents();
     void ignoredGestureShouldNotCancelMouseEvents();
 
+    void touchPointCopyPosToLastPos();
+    void touchPointCopyMousePosToPointPos();
+    void touchPointCopyMousePosToPointStartPos();
 private:
 
     MApplication *app;

@@ -464,4 +464,79 @@ void Ut_MScene::ignoredGestureShouldNotCancelMouseEvents()
     QCOMPARE(eventTester->cancelReceived, false);
 }
 
+void Ut_MScene::touchPointCopyPosToLastPos()
+{
+    qreal  xy1 = 0.1,xy2 = 0.2,xy3 = 0.3;
+    QPointF  pos(xy1,xy1),scenePos(xy2,xy2),screenPos(xy3,xy3);
+
+    QTouchEvent::TouchPoint  touchPoint;
+
+    touchPoint.setPos(pos);
+    touchPoint.setScenePos(scenePos);
+    touchPoint.setScreenPos(screenPos);  
+
+    MScenePrivate  mscenePrivate;
+    mscenePrivate.touchPointCopyPosToLastPos(touchPoint);
+
+    QVERIFY(qFuzzyCompare ( touchPoint.lastPos().rx(), xy1 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.lastPos().ry(), xy1 ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.lastScenePos().rx(), xy2 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.lastScenePos().ry(), xy2 ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.lastScreenPos().rx(), xy3 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.lastScreenPos().ry(), xy3 ));
+}
+
+void Ut_MScene::touchPointCopyMousePosToPointPos()
+{
+    qreal  xy1 = 1,xy2 = 2,xy3 = 3;
+    QPoint  pos(xy1,xy1),scenePos(xy2,xy2),screenPos(xy3,xy3);
+
+    QTouchEvent::TouchPoint  touchPoint;
+
+    QGraphicsSceneMouseEvent mousePress(QEvent::GraphicsSceneMousePress);
+    mousePress.setPos(pos);
+    mousePress.setScenePos(scenePos);
+    mousePress.setScreenPos(screenPos);
+
+
+    MScenePrivate  mscenePrivate;
+    mscenePrivate.touchPointCopyMousePosToPointPos(touchPoint,&mousePress);
+
+    QVERIFY(qFuzzyCompare ( touchPoint.pos().rx(), xy1 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.pos().ry(), xy1 ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.scenePos().rx(), xy2 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.scenePos().ry(), xy2 ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.screenPos().rx(), xy3 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.screenPos().ry(), xy3 ));      
+}
+
+void Ut_MScene::touchPointCopyMousePosToPointStartPos()
+{
+    qreal  xy1 = 1,xy2 = 2,xy3 = 3;
+    QPoint  pos(xy1,xy1),scenePos(xy2,xy2),screenPos(xy3,xy3);
+
+    QTouchEvent::TouchPoint  touchPoint;
+
+    QGraphicsSceneMouseEvent mousePress(QEvent::GraphicsSceneMousePress);
+    mousePress.setPos(pos);
+    mousePress.setScenePos(scenePos);
+    mousePress.setScreenPos(screenPos);
+
+
+    MScenePrivate  mscenePrivate;
+    mscenePrivate.touchPointCopyMousePosToPointStartPos(touchPoint,&mousePress);
+
+    QVERIFY(qFuzzyCompare ( touchPoint.startPos().rx(), xy1 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.startPos().ry(), xy1 ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.startScenePos().rx(), xy2 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.startScenePos().ry(), xy2 ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().rx(), xy3 ));
+    QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().ry(), xy3 ));      
+}
 QTEST_APPLESS_MAIN(Ut_MScene)
