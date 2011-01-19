@@ -92,7 +92,27 @@ class M_CORE_EXPORT MSceneWindow : public MWidgetController
 
 public:
     /*!
-     * This enum defines how to handle scene window after hiding it using disappear() or dismiss().
+       \brief This enum defines how to handle scene window after hiding it using disappear() or dismiss().
+
+        We have both DestroyWhenDone + disappear() and DestroyWhenDismissed + dismiss() to
+        cover the use case where you want your scene windows to be deleted \b only when
+        they are no longer in the page history.
+
+        Example:
+
+        When drilling down (from root page to sub page and then to sub-sub page) you
+        want your previous pages (root page and sub page) to be kept alive since the
+        user might go back to them by pressing a back button (which calls dismiss()
+        on current page). But once the user have moved away from a page for good
+        (pressed back on sub-sub page, reaching sub page), that page can be deleted
+        (sub-sub page gets deleted). You will get that for free by using DestroyWhenDismissed.
+
+        If you use DestroyWhenDone for your pages you will never be able to go back to
+        them in a drill down navigational pattern as they will be deleted as soon as
+        they leave the screen. If you use DestroyWhenDismissed they will only be
+        deleted if they get dismissed, for instance, by the user via the back button.
+
+        \sa appear()
      */
     enum DeletionPolicy {
         KeepWhenDone,    //!< Window is kept alive after being dismissed or disappeared.
@@ -248,7 +268,11 @@ public Q_SLOTS:
      * This is the same as calling:
      * <code>sceneWindow->sceneManager()->disappearSceneWindow(sceneWindow);</code>
      *
-     * \sa MSceneManager::disappearSceneWindow()
+     * If DestroyWhenDone was used on the last appear() call, the scene window will
+     * be deleted after its disappearance is finished. Note that nothing will happen
+     * if the scene window is already in Disappeared state.
+     *
+     * \sa MSceneManager::disappearSceneWindow(), SceneWindowState
      */
     virtual void disappear();
 
@@ -258,16 +282,16 @@ public Q_SLOTS:
      * Returns true if the scene window was dismissed; otherwise returns false.
      * This slot will first send a MDismissEvent to the widget, which may or may
      * not accept the event. If the event was ignored, nothing happens. If the event
-     * was accepted, it will disappear() the scene window.
+     * was accepted, it will call MSceneManager::dismissSceneWindow().
      *
-     * If DestroyWhenDone was used on the last appear() call and
-     * the event was accepted, the scene window will be deleted after its
-     * disappearance is finished.
+     * If DestroyWhenDismissed or DestroyWhenDone was used on the last appear()
+     * call and the event was accepted, the scene window will be deleted after its
+     * disappearance is finished. Note that nothing will happen if the scene window
+     * is already in Disappeared state.
      *
      * Please refer to MDismissEvent documentation for more information.
      *
-     * \sa dismissEvent(), disappear(), deleteWhenDone(),
-     *     MSceneManager::dismissSceneWindow()
+     * \sa dismissEvent(), disappear(), SceneWindowState, MSceneManager::dismissSceneWindow()
      */
     bool dismiss();
 
