@@ -82,6 +82,10 @@ contains(DEFINES, HAVE_XFIXES) {
     PKGCONFIG += xfixes
 }
 
+contains(DEFINES, HAVE_XCOMPOSITE) {
+    PKGCONFIG += xcomposite
+}
+
 contains(DEFINES, HAVE_ICU) {
     LIBS += -licui18n -licuuc -licudata
 }
