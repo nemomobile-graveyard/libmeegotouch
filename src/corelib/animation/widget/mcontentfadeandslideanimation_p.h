@@ -49,7 +49,7 @@ public:
     void findContentItem();
 
     QPointer<SnapshotItem> snapshotItem;
-    QGraphicsWidget* contentItem;
+    QPointer<QGraphicsWidget> contentItem;
 
     QParallelAnimationGroup* previous;
     QPropertyAnimation* fadeOut;

@@ -41,6 +41,9 @@ void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
 
     QPainter painter(&pixmap);
 
+    if (!painter.isActive())
+        return;
+
     const QPointF oldPos(target->pos());
     // move target far away so nothing is below
     target->setPos(farFarAway);
