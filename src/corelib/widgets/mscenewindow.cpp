@@ -325,6 +325,11 @@ bool MSceneWindow::event(QEvent *event)
         if (childEvent->child()->objectName() == "_m_testBridge") {
             new MSceneWindowTestInterface(d, childEvent->child());
         }
+    } else if (event->type() == QEvent::WindowBlocked) {
+        // blocked scene windows must lose focus
+        if (focusItem()) {
+            focusItem()->clearFocus();
+        }
     }
 
     return MWidgetController::event(event);
