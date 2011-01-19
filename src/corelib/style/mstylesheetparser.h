@@ -33,6 +33,7 @@ class MStyleSheetSelector;
 class QTextStream;
 class QFile;
 class MLogicalValues;
+class MUniqueStringCache;
 
 //! \internal
 /*!
@@ -128,14 +129,28 @@ public:
      */
     void setSyntaxMode(SyntaxMode syntaxMode);
 
+    /*!
+     * Return a MUniqueStringCache which can be used to map unique ids.
+     * Only when the cache is filled MUniqueStringCache::stringToIndex() may
+     * be called on this cache. The rational is to avoid creating unnecessary
+     * QByteArrays.
+     * Use stringCacheWithReverseLookup() when you also need to do
+     * string to id lookups.
+     */
+    static MUniqueStringCache* stringCacheWithoutReverseLookup();
+
+    /*!
+     * Return a MUniqueStringCache which can be used to map strings to unique ids
+     * and back.
+     */
+    static MUniqueStringCache* stringCacheWithReverseLookup();
+
 protected:
     static void outputParseError(const QString &filename, const QString &description, int lineNum);
     static void outputParseWarning(const QString &filename, const QString &description, int lineNum);
 
     static int getLineNum(const QString &filename, const qint64 &streamPos);
     static int getLineNum(QFile &stream, const qint64 &streamPos = -1);
-
-    static void cleanup();
 
 private:
     Q_DISABLE_COPY(MStyleSheetParser)

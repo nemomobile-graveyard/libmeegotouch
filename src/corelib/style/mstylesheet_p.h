@@ -27,6 +27,8 @@
 #define EXTRACT_SCENEORDER(priority)                    (priority >> 16)
 #define EXTRACT_INHERITANCEORDER(priority)              (priority & 0xffff)
 
+#include "muniquestringcache.h"
+
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -115,7 +117,7 @@ public:
                          const QByteArray &type,
                          M::Orientation orientation);
 
-    typedef QHash<QByteArray, MOriginContainer *> CacheEntry;
+    typedef QHash<MUniqueStringCache::Index, MOriginContainer *> CacheEntry;
     static QHash<QByteArray, CacheEntry *> EntryCache;
     static QHash<QByteArray, MStyle *> StyleCache;
 

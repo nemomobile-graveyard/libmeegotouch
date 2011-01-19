@@ -259,13 +259,13 @@ public:
 // global array with hashes for already parsed variants in landscape and portrait
 // the first has contains values as keys, the second one the variant types
 namespace {
-    static QHash<QByteArray, QHash<int, QVariant> > variantCache[2];
+    static QHash<MUniqueStringCache::Index, QHash<int, QVariant> > variantCache[2];
 }
 //! \internal_end
 
 static QtDatatypeConverter DataTypeConverter;
 
-MStyleSheetAttribute::MStyleSheetAttribute(const QByteArray& name, const QByteArray& value, qint64 position)
+MStyleSheetAttribute::MStyleSheetAttribute(MUniqueStringCache::Index name, MUniqueStringCache::Index value, qint64 position)
     : name(name), value(value), position(position)
 {
 }
@@ -279,12 +279,17 @@ MStyleSheetAttribute::MStyleSheetAttribute(const MStyleSheetAttribute &other)
 
 QByteArray MStyleSheetAttribute::getName()
 {
+    return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(name);
+}
+
+MUniqueStringCache::Index MStyleSheetAttribute::getNameID()
+{
     return name;
 }
 
 QByteArray MStyleSheetAttribute::getValue()
 {
-    return value;
+    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(value);
 }
 
 qint64 MStyleSheetAttribute::getPosition()
@@ -575,32 +580,34 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
     // most types are the same in landscape and portrait
     CacheOrientationFlags cacheOrientation = CacheOrientationFlags(PortraitFlag | LandscapeFlag);
 
+    QByteArray valueString = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(value);
+
     const int attributeType = property.userType();
     if (attributeType == QMetaType::Bool) {
-        bool result = booleanFromString(value, &conversionOK);
+        bool result = booleanFromString(valueString, &conversionOK);
         if (conversionOK) {
             return fillProperty(property, style, cacheOrientation, result);
         }
     } else if (attributeType == QMetaType::Int) {
-        int integer = attributeToInt(value, &conversionOK);
+        int integer = attributeToInt(valueString, &conversionOK);
         if (conversionOK) {
             return fillProperty(property, style, cacheOrientation, integer);
         }
     } else if (attributeType == QMetaType::QColor) {
-        if(value == "none")
+        if(valueString == "none")
             return fillProperty(property, style, cacheOrientation, QColor());
 
-        QColor color = colorFromString(value, &conversionOK);
+        QColor color = colorFromString(valueString, &conversionOK);
         if (conversionOK) {
             return fillProperty(property, style, cacheOrientation, color);
         }
     } else if (attributeType == QMetaType::QReal) {
-        qreal real = attributeToFloat(value, &conversionOK);
+        qreal real = attributeToFloat(valueString, &conversionOK);
         if (conversionOK) {
             return fillProperty(property, style, cacheOrientation, real);
         }
     } else if (attributeType == qMetaTypeId<const QPixmap*>()) {
-        if(value == "none")
+        if(valueString == "none")
             return fillProperty(property, style, cacheOrientation, qVariantFromValue((const QPixmap *) NULL));
 
         //"image: image_id;"
@@ -609,15 +616,15 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //"image: "image id" 64px 64px;"
 
         QList<QByteArray> list;
-        if (value.startsWith('\"')) {
+        if (valueString.startsWith('\"')) {
             //parse name inside quotes
-            int idx = value.indexOf('\"', 1);
+            int idx = valueString.indexOf('\"', 1);
             if (idx != -1) {
                 //get quoted image_id
-                QByteArray imageid = value.mid(1, idx - 1);
+                QByteArray imageid = valueString.mid(1, idx - 1);
 
                 //split rest of the parameters
-                QByteArray values = value.mid(idx + 1).trimmed();
+                QByteArray values = valueString.mid(idx + 1).trimmed();
                 list = values.split(' ');
                 list.removeAll("");
 
@@ -626,7 +633,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             }
         } else {
             //no quotes, just split the parameters
-            list = value.split(' ');
+            list = valueString.split(' ');
             list.removeAll("");
         }
 
@@ -655,15 +662,15 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //"background: "image id";"
 
         QList<QByteArray> list;
-        if (value.startsWith('\"')) {
+        if (valueString.startsWith('\"')) {
             //parse name inside quotes
-            int idx = value.indexOf('\"', 1);
+            int idx = valueString.indexOf('\"', 1);
             if (idx != -1) {
                 //get quoted image_id
-                QByteArray imageid = value.mid(1, idx - 1);
+                QByteArray imageid = valueString.mid(1, idx - 1);
 
                 //split rest of the parameters
-                QByteArray values = value.mid(idx + 1).trimmed();
+                QByteArray values = valueString.mid(idx + 1).trimmed();
                 list = values.split(' ');
                 list.removeAll("");
                 //insert image_id as first parameter
@@ -671,12 +678,12 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             }
         } else {
             //no quotes, just split the parameters
-            list = value.split(' ');
+            list = valueString.split(' ');
             list.removeAll("");
         }
 
         //no parameters
-        if (value.isEmpty() || value == "none") {
+        if (valueString.isEmpty() || valueString == "none") {
             //init null image which is ok if someone does not want to use it
             if(attributeType == qMetaTypeId<const MScalableImage*>())
                 return fillProperty(property, style, cacheOrientation, qVariantFromValue((const MScalableImage *) NULL));
@@ -714,7 +721,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //size: 25px 25px;
 
         //just split into pieces and create QSize or QSizeF depending on the attributeType
-        QList<QByteArray> list = value.split(' ');
+        QList<QByteArray> list = valueString.split(' ');
         list.removeAll("");
         if (list.size() == 2) {
             cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
@@ -732,7 +739,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //"point: 256px 123px;
 
         //just split into pieces and create QPoint or QPointF depending on the attributeType
-        QList<QByteArray> list = value.split(' ');
+        QList<QByteArray> list = valueString.split(' ');
         list.removeAll("");
         if (list.size() == 2) {
             cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
@@ -747,51 +754,51 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             }
         }
     } else if (attributeType == QMetaType::QFont) {
-        QFont font = fontFromString(value, &conversionOK);
+        QFont font = fontFromString(valueString, &conversionOK);
         if (conversionOK) {
             return fillProperty(property, style, cacheOrientation, font);
         }
     } else if (attributeType == QMetaType::QString) {
-        if (value.length() >= 2) {
-            if ((value.at(0) == 0x22) && (value.at(value.length()-1) == 0x22)) {
-                return fillProperty(property, style, cacheOrientation, QString(value.mid(1, value.length() - 2)));
+        if (valueString.length() >= 2) {
+            if ((valueString.at(0) == 0x22) && (valueString.at(valueString.length()-1) == 0x22)) {
+                return fillProperty(property, style, cacheOrientation, QString(valueString.mid(1, valueString.length() - 2)));
             }
-        } else if (value.length() == 0) {
+        } else if (valueString.length() == 0) {
             return fillProperty(property, style, cacheOrientation, QString());
         }
     } else if (attributeType == QMetaType::QChar) {
-        if (value.length() == 3) {
-            if ((value[0] == '\'') && (value[2] == '\'')) {
-                return fillProperty(property, style, cacheOrientation, static_cast<QChar>(value[1]));
+        if (valueString.length() == 3) {
+            if ((valueString[0] == '\'') && (valueString[2] == '\'')) {
+                return fillProperty(property, style, cacheOrientation, static_cast<QChar>(valueString[1]));
             }
         }
     } else if (attributeType == qMetaTypeId<Qt::Alignment>()) {
-        if (DataTypeConverter.ALIGNMENTS.contains(value)) {
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.ALIGNMENTS[value]));
+        if (DataTypeConverter.ALIGNMENTS.contains(valueString)) {
+            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.ALIGNMENTS[valueString]));
         }
     } else if (attributeType == qMetaTypeId<Qt::Orientation>()) {
-        if (DataTypeConverter.ORIENTATIONS.contains(value)) {
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.ORIENTATIONS[value]));
+        if (DataTypeConverter.ORIENTATIONS.contains(valueString)) {
+            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.ORIENTATIONS[valueString]));
         }
     } else if (attributeType == qMetaTypeId<QTextCharFormat::UnderlineStyle>()) {
-        if (DataTypeConverter.UNDERLINESTYLES.contains(value)) {
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.UNDERLINESTYLES[value]));
+        if (DataTypeConverter.UNDERLINESTYLES.contains(valueString)) {
+            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.UNDERLINESTYLES[valueString]));
         }
     } else if (attributeType == qMetaTypeId<Qt::PenStyle>()) {
-        if (DataTypeConverter.PENSTYLES.contains(value)) {
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.PENSTYLES[value]));
+        if (DataTypeConverter.PENSTYLES.contains(valueString)) {
+            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.PENSTYLES[valueString]));
         }
     } else if (attributeType == qMetaTypeId<Qt::Axis>()) {
-        if (DataTypeConverter.AXES.contains(value)) {
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.AXES[value]));
+        if (DataTypeConverter.AXES.contains(valueString)) {
+            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.AXES[valueString]));
         }
     } else if (attributeType == qMetaTypeId<MFeedback>()) {
-        MFeedback feedback(value);
+        MFeedback feedback(valueString);
         return fillProperty(property, style, cacheOrientation, qVariantFromValue(feedback));
     } else if (attributeType == QMetaType::QEasingCurve) {
         QEasingCurve curve;
         // curve type
-        QList<QByteArray> list = value.split(',');
+        QList<QByteArray> list = valueString.split(',');
         if (list.size() > 0) {
             if (DataTypeConverter.EASINGCURVETYPES.contains(list[0])) {
                 curve.setType(DataTypeConverter.EASINGCURVETYPES[list[0]]);
@@ -812,7 +819,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         }
     }
 
-    MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(property.typeName()) + "): " + name + ": " + value, MStyleSheetParser::getLineNum(filename, position));
+    MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(property.typeName()) + "): " + MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(name) + " : " + valueString, MStyleSheetParser::getLineNum(filename, position));
     return false;
 }
 

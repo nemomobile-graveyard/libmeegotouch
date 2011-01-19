@@ -13,6 +13,7 @@ SOURCES += \
     $$MSRCDIR/corelib/theme/mlogicalvalues.cpp \
     $$MSRCDIR/corelib/style/mstylesheetattribute.cpp \
     $$MSRCDIR/corelib/core/msystemdirectories.cpp \
+    $$MSRCDIR/corelib/style/muniquestringcache.cpp
 
 HEADERS += \
 	ft_mstylesheet.h \
@@ -25,6 +26,7 @@ HEADERS += \
     $$MSRCDIR/corelib/theme/mlogicalvalues.h \
     $$MSRCDIR/corelib/style/mstylesheetattribute.h \
     $$MSRCDIR/corelib/core/msystemdirectories.cpp \
+    $$MSRCDIR/corelib/style/muniquestringcache.h \
     $$STYLE_HEADERS
 
 support_files.files += \

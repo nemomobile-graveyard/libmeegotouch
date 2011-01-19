@@ -29,7 +29,7 @@
 #include "mnamespace.h"
 #include "mstyle.h"
 #include "mshareddata.h"
-
+#include "muniquestringcache.h"
 
 //! \internal
 /*! An attribute of a style sheet selector.
@@ -46,10 +46,11 @@ class MStyleSheetAttribute
     };
 
 public:
-    MStyleSheetAttribute(const QByteArray& name, const QByteArray& value, qint64 position);
+    MStyleSheetAttribute(MUniqueStringCache::Index name, MUniqueStringCache::Index value, qint64 position);
     MStyleSheetAttribute(const MStyleSheetAttribute &other);
 
     QByteArray getName();
+    MUniqueStringCache::Index getNameID();
     QByteArray getValue();
     qint64 getPosition();
 
@@ -79,14 +80,14 @@ private:
     bool fillProperty(const QMetaProperty &property, MStyle *style, CacheOrientationFlags cacheOrientation,
         const QVariant &variant, bool cache = true);
 
-    QByteArray name;
-    QByteArray value;
+    MUniqueStringCache::Index name;
+    MUniqueStringCache::Index value;
     qint64 position;    //used for providing detailed css parse error output (linenumber)
 
     friend class MStyleSheetParserPrivate;
 };
 
-typedef QMap<QByteArray, MStyleSheetAttribute *> MAttributeList;
+typedef QMap<MUniqueStringCache::Index, MStyleSheetAttribute *> MAttributeList;
 //! \internal_end
 
 #endif

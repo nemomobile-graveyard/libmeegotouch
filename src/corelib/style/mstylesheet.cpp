@@ -292,8 +292,6 @@ void MStyleSheet::cleanup(bool)
     MStyleSheetPrivate::EntryCache.clear();
 
     MStyleSheetPrivate::StyleCache.clear();
-    
-    MStyleSheetParser::cleanup();
 }
 
 MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<const MStyleSheet *>& sheets,
@@ -319,7 +317,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                 MAttributeList::const_iterator attributesEnd = selector->attributes()->constEnd();
 
                 for (MAttributeList::const_iterator j = selector->attributes()->constBegin(); j != attributesEnd; ++j) {
-                    QByteArray propertyName = j.key();
+                    MUniqueStringCache::Index propertyName = j.key();
 
                     CacheEntry::iterator iter = (*entry).find(propertyName);
                     // Check if these settings are already in the list
@@ -371,7 +369,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
 
         // check all the attributes of this selector against the cached entry
         foreach(MStyleSheetAttribute * attribute, *(info.selector->attributes())) {
-            MOriginContainer *old = data.value(attribute->getName(), NULL);
+            MOriginContainer *old = data.value(attribute->getNameID(), NULL);
             if (old && !isHigherPriority(old, info.selector, info.classPriority, info.parentPriority)) {
                     continue;
             }
@@ -381,7 +379,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
                                                                        info.classPriority,
                                                                        info.parentPriority,
                                                                        info.filename, info.stylesheet);
-            data[attribute->getName()] = tempMOriginCont;
+            data[attribute->getNameID()] = tempMOriginCont;
             tempMOriginContainers.append(tempMOriginCont);
         }
     }
@@ -395,7 +393,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
         bool propertyInitialized = false;
 
         // find matching attribute from hash
-        CacheEntry::iterator iterator = data.find(QByteArray(style->metaObject()->property(i).name()));
+        CacheEntry::iterator iterator = data.find(MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(style->metaObject()->property(i).name()));
         if (iterator != data.end()) {
 
             // get the attribute value
@@ -461,20 +459,20 @@ bool MStyleSheetPrivate::isHigherPriority(MOriginContainer *prev,
 {
     // At this stage we either have a correct object name or we don't have object name at all.
     // So, select the one which has it. If both have same name or neither one has it, go further.
-    int objectName = selector->objectName().length() - prev->selector->objectName().length();
-    if (objectName != 0)
-        return (objectName < 0) ? false : true;
+
+    if (selector->objectNameID() != prev->selector->objectNameID()) {
+        return selector->objectNameID() != MUniqueStringCache::EmptyStringIndex;
+    }
 
     // Only other has mode, mode is more important than orientation
-    int mode = selector->mode().length() - prev->selector->mode().length();
-    if (mode != 0)
-        return (mode < 0) ? false : true;
+    if (selector->modeID() != prev->selector->modeID()) {
+        return selector->modeID() != MUniqueStringCache::EmptyStringIndex;
+    }
 
     // Other one has class type and another doesn't have it
-    int classType = selector->classType().length() - prev->selector->classType().length();
-    if (classType != 0)
-        return (classType < 0) ? false : true;
-
+    if (selector->classTypeID() != prev->selector->classTypeID()) {
+        return selector->classTypeID() != MUniqueStringCache::EmptyStringIndex;
+    }
 
     // The closer one in the scene chain has more priority, 0xffff means no match
     unsigned int sceneOrder = EXTRACT_SCENEORDER(parentPriority);

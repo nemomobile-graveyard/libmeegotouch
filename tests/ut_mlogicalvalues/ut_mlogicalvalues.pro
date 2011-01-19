@@ -10,6 +10,7 @@ SOURCES += \
     $$MSRCDIR/corelib/theme/mlogicalvalues.cpp \
     $$MSRCDIR/corelib/style/mstylesheetattribute.cpp \
     $$MSRCDIR/corelib/core/msystemdirectories.cpp \
+    $$MSRCDIR/corelib/style/muniquestringcache.cpp \
 
 HEADERS += \
 	ut_mlogicalvalues.h \
@@ -17,6 +18,7 @@ HEADERS += \
         $$MSRCDIR/corelib/theme/mlogicalvalues_p.h \
         $$MSRCDIR/corelib/style/mstylesheetattribute.h \
         $$MSRCDIR/corelib/core/msystemdirectories.h \
+        $$MSRCDIR/corelib/style/muniquestringcache.h \
 
 support_files.files += *.ini
 

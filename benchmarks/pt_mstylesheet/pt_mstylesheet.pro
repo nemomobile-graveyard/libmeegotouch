@@ -9,8 +9,10 @@ SOURCES += pt_mstylesheet.cpp \
            mlogicalvalues.cpp \
            mstylesheetattribute.cpp \
            $$MSRCDIR/corelib/core/msystemdirectories.cpp \
+           muniquestringcache.cpp
 
 HEADERS += pt_mstylesheet.h \
            mlogicalvalues.h \
            mstylesheetattribute.h \
            $$MSRCDIR/corelib/core/msystemdirectories.h \
+           muniquestringcache.h

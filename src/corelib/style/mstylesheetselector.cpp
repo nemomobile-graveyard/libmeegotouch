@@ -20,23 +20,23 @@
 #include "mstylesheetselector.h"
 #include "mstylesheetselector_p.h"
 #include "mstylesheetattribute.h"
+#include "mstylesheetparser.h"
 
 void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &other)
 {
-    objName = other.objName;
-    clName = other.clName;
-    clType = other.clType;
+    objectName = other.objectName;
+    className = other.className;
+    classType = other.classType;
     screenOrientation = other.screenOrientation;
     objectMode = other.objectMode;
-    filename = other.filename;
     parentName = other.parentName;
     parentObjectName = other.parentObjectName;
     flags = other.flags;
 
     // copy attributes
-    MAttributeList::const_iterator otherDataEnd = other.data.constEnd();
+    MAttributeList::const_iterator otherAttributesEnd = other.attributes.constEnd();
 
-    for (MAttributeList::const_iterator iterator = other.data.begin(); iterator != otherDataEnd; ++iterator) {
+    for (MAttributeList::const_iterator iterator = other.attributes.begin(); iterator != otherAttributesEnd; ++iterator) {
         // attribute to copy
         MStyleSheetAttribute *source = *iterator;
 
@@ -44,51 +44,47 @@ void MStyleSheetSelectorPrivate::operator=(const MStyleSheetSelectorPrivate &oth
         MStyleSheetAttribute *copy = new MStyleSheetAttribute(*source);
 
         // add copy of attribute to data list
-        data.insert(iterator.key(), copy);
+        attributes.insert(iterator.key(), copy);
     }
 }
 
 
-MStyleSheetSelector::MStyleSheetSelector(const QByteArray &objectName,
-        const QByteArray &className,
-        const QByteArray &classType,
+MStyleSheetSelector::MStyleSheetSelector(const MUniqueStringCache::Index objectName,
+        const MUniqueStringCache::Index className,
+        const MUniqueStringCache::Index classType,
         const Orientation orientation,
-        const QByteArray &mode,
-        const QByteArray &filename,
-        const QByteArray &parentName,
+        const MUniqueStringCache::Index mode,
+        const MUniqueStringCache::Index parentName,
         Flags flags) :
     d_ptr(new MStyleSheetSelectorPrivate)
 {
     Q_D(MStyleSheetSelector);
-    d->objName = objectName;
-    d->clName = className;
-    d->clType = classType;
+    d->objectName = objectName;
+    d->className = className;
+    d->classType = classType;
     d->screenOrientation = orientation;
     d->objectMode = mode;
-    d->filename = filename;
     d->parentName = parentName;
-    d->parentObjectName = QByteArray();
+    d->parentObjectName = MUniqueStringCache::UndefinedIndex;
     d->flags = flags;
 }
 
-MStyleSheetSelector::MStyleSheetSelector(const QByteArray &objectName,
-        const QByteArray &className,
-        const QByteArray &classType,
+MStyleSheetSelector::MStyleSheetSelector(const MUniqueStringCache::Index objectName,
+        const MUniqueStringCache::Index className,
+        const MUniqueStringCache::Index classType,
         const Orientation orientation,
-        const QByteArray &mode,
-        const QByteArray &filename,
-        const QByteArray &parentName,
-        const QByteArray &parentObjectName,
+        const MUniqueStringCache::Index mode,
+        const MUniqueStringCache::Index parentName,
+        const MUniqueStringCache::Index parentObjectName,
         Flags flags) :
     d_ptr(new MStyleSheetSelectorPrivate)
 {
     Q_D(MStyleSheetSelector);
-    d->objName = objectName;
-    d->clName = className;
-    d->clType = classType;
+    d->objectName = objectName;
+    d->className = className;
+    d->classType = classType;
     d->screenOrientation = orientation;
     d->objectMode = mode;
-    d->filename = filename;
     d->parentName = parentName;
     d->parentObjectName = parentObjectName;
     d->flags = flags;
@@ -104,8 +100,8 @@ MStyleSheetSelector::~MStyleSheetSelector()
 {
     Q_D(MStyleSheetSelector);
 
-    qDeleteAll(d->data);
-    d->data.clear();
+    qDeleteAll(d->attributes);
+    d->attributes.clear();
     delete d_ptr;
 }
 
@@ -113,37 +109,37 @@ MStyleSheetSelector::~MStyleSheetSelector()
 MAttributeList *MStyleSheetSelector::attributes()
 {
     Q_D(MStyleSheetSelector);
-    return &d->data;
+    return &d->attributes;
 }
 
 QByteArray MStyleSheetSelector::parentName() const
 {
     Q_D(const MStyleSheetSelector);
-    return d->parentName;
+    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(d->parentName);
 }
 
 QByteArray MStyleSheetSelector::parentObjectName() const
 {
     Q_D(const MStyleSheetSelector);
-    return d->parentObjectName;
+    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(d->parentObjectName);
 }
 
 QByteArray MStyleSheetSelector::objectName() const
 {
     Q_D(const MStyleSheetSelector);
-    return d->objName;
+    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(d->objectName);
 }
 
 QByteArray MStyleSheetSelector::className() const
 {
     Q_D(const MStyleSheetSelector);
-    return d->clName;
+    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(d->className);
 }
 
 QByteArray MStyleSheetSelector::classType() const
 {
     Q_D(const MStyleSheetSelector);
-    return d->clType;
+    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(d->classType);
 }
 
 MStyleSheetSelector::Orientation MStyleSheetSelector::orientation() const
@@ -155,13 +151,49 @@ MStyleSheetSelector::Orientation MStyleSheetSelector::orientation() const
 QByteArray MStyleSheetSelector::mode() const
 {
     Q_D(const MStyleSheetSelector);
-    return d->objectMode;
+    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(d->objectMode);
 }
 
 MStyleSheetSelector::Flags MStyleSheetSelector::flags() const
 {
     Q_D(const MStyleSheetSelector);
     return d->flags;
+}
+
+MUniqueStringCache::Index MStyleSheetSelector::objectNameID() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->objectName;
+}
+
+MUniqueStringCache::Index MStyleSheetSelector::classNameID() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->className;
+}
+
+MUniqueStringCache::Index MStyleSheetSelector::classTypeID() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->classType;
+}
+
+MUniqueStringCache::Index MStyleSheetSelector::modeID() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->objectMode;
+}
+
+MUniqueStringCache::Index MStyleSheetSelector::parentNameID() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->parentName;
+}
+
+MUniqueStringCache::Index MStyleSheetSelector::parentObjectNameID() const
+{
+    Q_D(const MStyleSheetSelector);
+    return d->parentObjectName;
 }
 
 
