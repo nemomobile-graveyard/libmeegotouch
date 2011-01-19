@@ -610,9 +610,6 @@ void MWindowPrivate::ensureOrientationAngleIsUpToDateBeforeShowing()
         MOrientationTracker::instance()->d_ptr->updateOrientationAngle();
 #endif
 
-        MOnDisplayChangeEvent ev(true, QRectF(QPointF(0, 0), q->visibleSceneSize()));
-        MApplication::instance()->sendEvent(q, &ev);
-
         q->setUpdatesEnabled(true);
         q->update();
     }
