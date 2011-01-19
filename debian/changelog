@@ -1,3 +1,12 @@
+libmeegotouch (0.20.75-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#215740 - Toolbar icons misplaced during app startup.
+  * Fixes: NB#206291
+  * New: animation for MBanner (SystemBanner)
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 19 Jan 2011 16:17:03 +0200
+
 libmeegotouch (0.20.74-1) unstable; urgency=low
 
   * New version
