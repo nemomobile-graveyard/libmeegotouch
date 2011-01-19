@@ -31,6 +31,7 @@
 
 MApplication *app;
 MApplicationWindow *window;
+QGLWidget *glW;
 
 void Pt_MScalableImage::initTestCase()
 {
@@ -38,7 +39,9 @@ void Pt_MScalableImage::initTestCase()
     char *app_name = (char *) "./pt_mscalableimage";
     app = new MApplication(argc, &app_name);
 
+    glW = new QGLWidget;
     window = new MApplicationWindow();
+    window->setViewport(glW);
     window->show();
 }
 
