@@ -973,6 +973,16 @@ bool MWindowPrivate::getX11NotificationPreviewsDisabledProperty() const
 
     return previewsDisabled;
 }
+
+void MWindowPrivate::setDelayedX11Properties()
+{
+    if(settingXPropertiesDelayed) {
+        setX11OrientationAngleProperty(angle);
+        sceneManager->d_func()->updateStatusBarGeometryProperty();
+        settingXPropertiesDelayed = false;
+    }
+}
+
 #endif
 
 void MWindow::setGlobalAlpha(qreal level)

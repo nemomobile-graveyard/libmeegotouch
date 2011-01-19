@@ -66,6 +66,7 @@ public:
     void resolveOrientationRules();
     void setX11NotificationPreviewsDisabledProperty(bool set);
     bool getX11NotificationPreviewsDisabledProperty() const;
+    void setDelayedX11Properties();
 
     bool removeWindowFromSwitcherInProgress;
     bool skipTaskbar;

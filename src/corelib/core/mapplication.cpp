@@ -596,10 +596,8 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
 void MApplicationPrivate::handleXMapNotify(XMapEvent *xevent)
 {
     MWindow* win = windowForId(xevent->window);
-    if(win && win->d_func()->settingXPropertiesDelayed) {
-        win->d_func()->setX11OrientationAngleProperty(win->orientationAngle());
-        win->d_func()->settingXPropertiesDelayed = false;
-    }
+    if(win)
+        win->d_func()->setDelayedX11Properties();
 }
 
 #endif
