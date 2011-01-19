@@ -59,8 +59,10 @@ protected:
     bool isPrestarted();
     bool activeWindowSet();
 
+    void ensureDBusConnection();
+
 private:
-    QDBusConnection dBusConnection;
+    QDBusConnection *pDBusConnection;
     MApplication *mApp;
 
 };

@@ -31,13 +31,44 @@ MApplicationServicePrivate::MApplicationServicePrivate(const QString &newService
     registered(false),
     instanceCounter(0),
     q_ptr(NULL),
-    dBusConnection(QDBusConnection::sessionBus()),
+    pDBusConnection(NULL),
     mApp(MApplication::instance())
 {
 }
 
 MApplicationServicePrivate::~MApplicationServicePrivate()
 {
+}
+
+static QString getexepath()
+{
+    char result[ 255 ];
+    memset( result, 0, 255 );
+    readlink( "/proc/self/exe", result, 254 );
+    return QString( result );
+}
+
+void MApplicationServicePrivate::ensureDBusConnection()
+{
+    // here we create the dbusconnection only when needed
+    // the behaviour of a QDBusConnection::sessionBus()
+    // or QDBusConnection::systemBus() is undefined, when it
+    // is instantiated before the QApplication constructor
+    // is finished.
+    if ( ! pDBusConnection )
+    {
+        if ( ! QCoreApplication::instance() )
+        {
+            qCritical() << "error: MApplicationServicePrivate::ensureDBusConnection"
+                " without QCoreApplication::instance. pid: "
+                        << getpid() << "appname:" << getexepath();
+        }
+
+        static QDBusConnection myDBusConnection = QDBusConnection::sessionBus();
+
+        // now initialize the connection
+        pDBusConnection = &myDBusConnection;
+    }
 }
 
 void MApplicationServicePrivate::launchNewProcess(const QString &binaryName, const QStringList &arguments)
@@ -53,17 +84,20 @@ void MApplicationServicePrivate::launchNewProcess(const QString &binaryName, con
 
 bool MApplicationServicePrivate::registerService(const QString &serviceName)
 {
-    return dBusConnection.registerService(serviceName);
+    ensureDBusConnection();
+    return pDBusConnection->registerService(serviceName);
 }
 
 void MApplicationServicePrivate::registerObject(const QString &path, QObject *object)
 {
-    dBusConnection.registerObject(path, object);
+    ensureDBusConnection();
+    pDBusConnection->registerObject(path, object);
 }
 
 void MApplicationServicePrivate::unregisterObject(const QString &path)
 {
-    dBusConnection.unregisterObject(path);
+    ensureDBusConnection();
+    pDBusConnection->unregisterObject(path);
 }
 
 QString MApplicationServicePrivate::appName()
