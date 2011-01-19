@@ -6,6 +6,20 @@
 #include <QApplication>
 #include <QGraphicsView>
 
+#ifdef HAVE_XCOMPOSITE
+#include <QX11Info>
+#include <X11/extensions/Xcomposite.h>
+
+namespace {
+    bool compositeCallFailed = true;
+    int snapshot_error_handler(Display *, XErrorEvent *) {
+        compositeCallFailed = true;
+        return 0;
+    }
+}
+
+#endif
+
 MSnapshotItem::MSnapshotItem(const QRectF &sceneTargetRect, QGraphicsItem *parent)
     : QGraphicsObject(parent), m_boundingRect(sceneTargetRect)
 {
@@ -22,11 +36,44 @@ QRectF MSnapshotItem::boundingRect() const
 
 void MSnapshotItem::updateSnapshot()
 {
-    if (scene() && scene()->views().count() > 0)
+    pixmap = QPixmap();
+
+    if (scene() && scene()->views().count() == 0)
+        return;
+
 #if defined(Q_WS_MAC) || defined(Q_WS_WIN)
-        pixmap = QPixmap::grabWidget(scene()->views().at(0));
+    pixmap = QPixmap::grabWidget(scene()->views().at(0));
+#elif HAVE_XCOMPOSITE
+    WId windowId = scene()->views().at(0)->effectiveWinId();
+
+    // Flush any pending error
+    XSync(QX11Info::display(), false);
+
+    XErrorHandler oldHandler = XSetErrorHandler(snapshot_error_handler);
+
+    compositeCallFailed = false;
+    Qt::HANDLE x11Pixmap = XCompositeNameWindowPixmap(QX11Info::display(), windowId);
+    XSync(QX11Info::display(), false);
+
+    XSetErrorHandler(oldHandler);
+
+    if (!compositeCallFailed ) {
+        // We are being composited. If we use Qt's QPixmap::grabWindow() our snapshot
+        // will contain not only our window but also any other window that happens
+        // to be on top of it (e.g., a translucent window showing a small dialog box with
+        // a translucent dimming background).
+        //
+        // We use a copy because we don't want the live pixmap where our window is
+        // rendering to.
+        pixmap = QPixmap::fromX11Pixmap(x11Pixmap).copy();
+        XFreePixmap(QX11Info::display(), x11Pixmap);
+    } else {
+        // We are most likely not being composited. Thus Qt's QPixmap::grabWindow() will
+        // work just fine.
+        pixmap = QPixmap::grabWindow(windowId);
+    }
 #else
-        pixmap = QPixmap::grabWindow(scene()->views().at(0)->effectiveWinId());
+    pixmap = QPixmap::grabWindow(scene()->views().at(0)->effectiveWinId());
 #endif
 }
 
@@ -36,5 +83,6 @@ void MSnapshotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    painter->drawPixmap(0,0, pixmap);
+    if (!pixmap.isNull())
+        painter->drawPixmap(0,0, pixmap);
 }
