@@ -29,6 +29,8 @@ class MOrientationTracker;
 class MWindow;
 #ifdef HAVE_CONTEXTSUBSCRIBER
 class ContextProperty;
+class ContextPropertyInfo;
+class MServiceListener;
 
 // A simple wrapper to ContextProperty that provides the missing
 // isSusbscribed() getter.
@@ -75,11 +77,14 @@ public:
     void subscribeToSensorProperies();
     void unsubscribeToSensorProperties();
     void waitForSensorPropertiesToSubscribe();
+    void rotateWindows(M::OrientationAngle angle);
     //Properties based on sensors states
     ContextProperty *videoRouteProperty;
     ContextProperty *topEdgeProperty;
+    ContextProperty *remoteTopEdgeProperty;
     ContextProperty *isCoveredProperty;
     ContextProperty *isFlatProperty;
+    MServiceListener *remoteTopEdgeListener;
     //Property set by window manager
     MContextProperty *currentWindowAngleProperty;
     bool isSubscribedToSensorProperties;

@@ -28,6 +28,8 @@
 #include <QTimer>
 #ifdef HAVE_CONTEXTSUBSCRIBER
 #include "contextproperty.h"
+#include "contextpropertyinfo.h"
+#include "mservicelistener.h"
 #endif
 
 #include <MDebug>
@@ -84,14 +86,20 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #ifdef HAVE_CONTEXTSUBSCRIBER
     , videoRouteProperty(new ContextProperty("com.nokia.policy.video_route"))
     , topEdgeProperty(new ContextProperty("Screen.TopEdge"))
+    , remoteTopEdgeProperty(new ContextProperty("RemoteScreen.TopEdge"))
     , isCoveredProperty(new ContextProperty("Screen.IsCovered"))
     , isFlatProperty(new ContextProperty("Position.IsFlat"))
+    , remoteTopEdgeListener(0)
     , currentWindowAngleProperty(new MContextProperty("/Screen/CurrentWindow/OrientationAngle"))
     , isSubscribedToSensorProperties(false)
     , hasJustSubscribedToSensorProperties(false)
 #endif
     , q_ptr(controller)
 {
+    remoteTopEdgeListener = new MServiceListener(
+        remoteTopEdgeProperty->info()->providerDBusType(),
+        remoteTopEdgeProperty->info()->providerDBusName());
+
     if (MComponentData::isOrientationForced()) {
         currentAngle = MComponentData::forcedOrientationAngle();
         M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(currentAngle);
@@ -107,6 +115,8 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #ifdef HAVE_CONTEXTSUBSCRIBER
     connect(topEdgeProperty, SIGNAL(valueChanged()),
             this, SLOT(updateOrientationAngle()));
+    connect(remoteTopEdgeProperty, SIGNAL(valueChanged()),
+            this, SLOT(updateOrientationAngle()));
     connect(isCoveredProperty, SIGNAL(valueChanged()),
             this, SLOT(isCoveredChanged()));
     connect(videoRouteProperty, SIGNAL(valueChanged()),
@@ -114,6 +124,10 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     connect(isFlatProperty, SIGNAL(valueChanged()),
             this, SLOT(updateOrientationAngle()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
+            this, SLOT(updateOrientationAngle()));
+    connect(remoteTopEdgeListener, SIGNAL(nameAppeared()),
+            this, SLOT(updateOrientationAngle()));
+    connect(remoteTopEdgeListener, SIGNAL(nameDisappeared()),
             this, SLOT(updateOrientationAngle()));
     connect(currentWindowAngleProperty, SIGNAL(valueChanged()),
             this, SLOT(handleCurrentAppWindowOrientationAngleChange()));
@@ -130,6 +144,8 @@ MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     delete videoRouteProperty;
     delete topEdgeProperty;
+    delete remoteTopEdgeListener;
+    delete remoteTopEdgeProperty;
     delete isCoveredProperty;
     delete isFlatProperty;
     delete currentWindowAngleProperty;
@@ -201,16 +217,18 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
         return;
     }
 
-    M::OrientationAngle angle = currentAngle;
-    QString edge = topEdgeProperty->value().toString();
+    QString topEdge = topEdgeProperty->value().toString();
+    QString remoteTopEdge = remoteTopEdgeProperty->value().toString();
 
-    angle = angleForTopEdge(edge);
-
-    bool isDeviceFlat = isFlatProperty->value().toBool();
-
-    bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
-
-    doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, currentIsTvConnected);
+    if ((remoteTopEdgeListener->isServicePresent() != MServiceListener::Present) || remoteTopEdge.isEmpty()) {
+        M::OrientationAngle angle = angleForTopEdge(topEdge);
+        bool isDeviceFlat = isFlatProperty->value().toBool();
+        bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
+        doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, currentIsTvConnected);
+    } else {
+        M::OrientationAngle angle = angleForTopEdge(remoteTopEdge);
+        rotateWindows(angle);
+    }
 #endif
 }
 
@@ -255,7 +273,18 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
                 qFatal("MOrientationTrackerPrivate::updateOrientationAngle() - current keyboard state does not seem to be covered in target configuration file");
         }
     }
+    rotateWindows(angle);
+#else
+    Q_UNUSED(angle);
+    Q_UNUSED(isKeyboardOpen);
+    Q_UNUSED(isDeviceFlat);
+    Q_UNUSED(tvIsConnected);
+#endif //HAVE_CONTEXTSUBSCRIBER
+}
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::rotateWindows(M::OrientationAngle angle)
+{
     if (angle != currentAngle || hasJustSubscribedToSensorProperties) {
         hasJustSubscribedToSensorProperties = false;
         currentAngle = angle;
@@ -268,13 +297,8 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
                 rotateToAngleIfAllowed(angle, window);
         }
     }
-#else
-    Q_UNUSED(angle);
-    Q_UNUSED(isKeyboardOpen);
-    Q_UNUSED(isDeviceFlat);
-    Q_UNUSED(tvIsConnected);
-#endif //HAVE_CONTEXTSUBSCRIBER
 }
+#endif //HAVE_CONTEXTSUBSCRIBER
 
 void MOrientationTrackerPrivate::rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window)
 {
@@ -344,6 +368,7 @@ void MOrientationTrackerPrivate::subscribeToSensorProperies()
     if (!isSubscribedToSensorProperties) {
         //waiting for properties to synchronize
         topEdgeProperty->subscribe();
+        remoteTopEdgeProperty->subscribe();
         isCoveredProperty->subscribe();
         videoRouteProperty->subscribe();
         isFlatProperty->subscribe();
@@ -358,6 +383,7 @@ void MOrientationTrackerPrivate::unsubscribeToSensorProperties()
     if (isSubscribedToSensorProperties) {
         isSubscribedToSensorProperties = false;
         topEdgeProperty->unsubscribe();
+        remoteTopEdgeProperty->unsubscribe();
         isCoveredProperty->unsubscribe();
         videoRouteProperty->unsubscribe();
         isFlatProperty->unsubscribe();
@@ -371,6 +397,7 @@ void MOrientationTrackerPrivate::waitForSensorPropertiesToSubscribe()
     isCoveredProperty->waitForSubscription(true);
     videoRouteProperty->waitForSubscription(true);
     isFlatProperty->waitForSubscription(true);
+    remoteTopEdgeListener->startListening(true);
     isSubscribedToSensorProperties = true;
     hasJustSubscribedToSensorProperties = true;
 }
