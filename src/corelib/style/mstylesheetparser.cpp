@@ -44,6 +44,24 @@ namespace {
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
+
+MStyleSheetParser::StylesheetFileInfo::~StylesheetFileInfo() {
+    QList<MStyleSheetSelector *>::iterator selectorsEnd = selectors.end();
+
+    for (QList<MStyleSheetSelector *>::iterator iterator = selectors.begin();
+            iterator != selectorsEnd;
+            ++iterator) {
+        delete *iterator;
+    }
+
+    selectorsEnd = parentSelectors.end();
+    for (QList<MStyleSheetSelector *>::iterator iterator = parentSelectors.begin();
+            iterator != selectorsEnd;
+            ++iterator) {
+        delete *iterator;
+    }
+}
+
 class MStyleSheetParserPrivate
 {
 public:
@@ -73,8 +91,8 @@ public:
      */
     QString createBinaryFilename(const QString &filename) const;
 
-    QList<MStyleSheetParser::StylesheetFileInfo *>     fileInfoList;
-    MStyleSheetParser::StylesheetFileInfo            *privateFileInfo;
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> > fileInfoList;
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> privateFileInfo;
 
     /**
      \brief Load a previously-cached binary version of the style.
@@ -88,8 +106,8 @@ public:
      */
     bool dump(const QString &binaryFilename);
 
-    void writeStylesheetFileInfo(MStyleSheetParser::StylesheetFileInfo *selector, QDataStream &stream);
-    MStyleSheetParser::StylesheetFileInfo * readStylesheetFileInfo(QDataStream &stream);
+    void writeStylesheetFileInfo(QSharedPointer<MStyleSheetParser::StylesheetFileInfo> selector, QDataStream &stream);
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> readStylesheetFileInfo(QDataStream &stream);
 
     MStyleSheetSelector *readSelector(const QByteArray &file, QDataStream &stream);
     void writeSelector(MStyleSheetSelector *selector, QDataStream &stream);
@@ -254,9 +272,9 @@ void outputSelector(MStyleSheetSelector *selector)
 
 void MStyleSheetParserPrivate::debugOutput()
 {
-    QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fileInfoListEnd = fileInfoList.constEnd();
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fileInfoListEnd = fileInfoList.constEnd();
 
-    for (QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fi = fileInfoList.constBegin();
+    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fi = fileInfoList.constBegin();
             fi != fileInfoListEnd;
             ++fi) {
         mDebug("MStyleSheetParserPrivate") << "file:" << (*fi)->filename;
@@ -396,7 +414,7 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
 
         //mDebug("MStyleSheetParserPrivate") << "Loading ASCII css file" << filename;
 
-        privateFileInfo = new MStyleSheetParser::StylesheetFileInfo;
+        privateFileInfo = QSharedPointer<MStyleSheetParser::StylesheetFileInfo>(new MStyleSheetParser::StylesheetFileInfo);
         privateFileInfo->filename = qPrintable(filename);
 
         bool result = parse(file, filename);
@@ -413,11 +431,10 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
                 }
             }
 
-            privateFileInfo = NULL;
+            privateFileInfo.clear();
             return true;
         } else {
-            delete privateFileInfo;
-            privateFileInfo = NULL;
+            privateFileInfo.clear();
             return false;
         }
     }
@@ -630,7 +647,7 @@ bool MStyleSheetParserPrivate::importFile(const QByteArray &filename, bool valid
         syntaxMode == MStyleSheetParser::RelaxedSyntax) {
         // add all the new file infos into the list of parsed files
         while (parser.fileInfoList.count() > 0) {
-            MStyleSheetParser::StylesheetFileInfo *fileInfo = parser.fileInfoList.front();
+            QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fileInfo = parser.fileInfoList.front();
             fileInfoList.push_back(fileInfo);
             parser.fileInfoList.removeFirst();
         }
@@ -954,7 +971,6 @@ MStyleSheetParser::MStyleSheetParser(const MLogicalValues *logicalValues) :
     d_ptr(new MStyleSheetParserPrivate(logicalValues))
 {
     Q_D(MStyleSheetParser);
-    d->privateFileInfo = 0;
     d->binaryDirectory = MSystemDirectories::cacheDirectory() + QLatin1String("css") + QDir::separator();
     d->binaryFileMode = true;
 
@@ -965,33 +981,8 @@ MStyleSheetParser::~MStyleSheetParser()
 {
     Q_D(MStyleSheetParser);
 
-    QList<StylesheetFileInfo *>::iterator fileInfoListEnd = d->fileInfoList.end();
-
-    for (QList<StylesheetFileInfo *>::iterator fi = d->fileInfoList.begin();
-            fi != fileInfoListEnd;
-            ++fi) {
-        QList<MStyleSheetSelector *>::iterator selectorsEnd = (*fi)->selectors.end();
-
-        for (QList<MStyleSheetSelector *>::iterator iterator = (*fi)->selectors.begin();
-                iterator != selectorsEnd;
-                ++iterator) {
-
-            delete *iterator;
-        }
-
-        selectorsEnd = (*fi)->parentSelectors.end();
-        for (QList<MStyleSheetSelector *>::iterator iterator = (*fi)->parentSelectors.begin();
-                iterator != selectorsEnd;
-                ++iterator) {
-
-            delete *iterator;
-        }
-        delete *fi;
-    }
-
     d->fileInfoList.clear();
 
-    delete d->privateFileInfo;
     delete d_ptr;
 }
 
@@ -1006,7 +997,7 @@ bool MStyleSheetParser::load(const QString &filename)
     return result;
 }
 
-QList<MStyleSheetParser::StylesheetFileInfo *>& MStyleSheetParser::fileInfoList() const
+QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >& MStyleSheetParser::fileInfoList() const
 {
     return d_ptr->fileInfoList;
 }
@@ -1077,7 +1068,7 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
             int nrOfFiles;
             stream >> nrOfFiles;
             for (int i = 0; i < nrOfFiles; ++i) {
-                MStyleSheetParser::StylesheetFileInfo *fi = readStylesheetFileInfo(stream);
+                QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi = readStylesheetFileInfo(stream);
                 fileInfoList.append(fi);
             }
             return true;
@@ -1105,8 +1096,8 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
 
     // collect timestamps
     QList<QPair<QByteArray, qint64> > timestamps;
-    QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fileInfoListEnd = fileInfoList.constEnd();
-    for (QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fi = fileInfoList.constBegin();
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fileInfoListEnd = fileInfoList.constEnd();
+    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fi = fileInfoList.constBegin();
             fi != fileInfoListEnd;
             ++fi) {
         timestamps.append(QPair<QByteArray, qint64>((*fi)->filename, (*fi)->time_t));
@@ -1123,7 +1114,7 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
 
     stream << fileInfoList.count();
 
-    for (QList<MStyleSheetParser::StylesheetFileInfo *>::const_iterator fi = fileInfoList.constBegin();
+    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fi = fileInfoList.constBegin();
             fi != fileInfoListEnd;
             ++fi) {
         writeStylesheetFileInfo(*fi, stream);
@@ -1132,7 +1123,7 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
     return true;
 }
 
-void MStyleSheetParserPrivate::writeStylesheetFileInfo(MStyleSheetParser::StylesheetFileInfo *fi, QDataStream &stream)
+void MStyleSheetParserPrivate::writeStylesheetFileInfo(QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi, QDataStream &stream)
 {
     stream << fi->filename;
     stream << fi->time_t;
@@ -1156,10 +1147,9 @@ void MStyleSheetParserPrivate::writeStylesheetFileInfo(MStyleSheetParser::Styles
     }
 }
 
-
-MStyleSheetParser::StylesheetFileInfo * MStyleSheetParserPrivate::readStylesheetFileInfo(QDataStream &stream)
+QSharedPointer<MStyleSheetParser::StylesheetFileInfo> MStyleSheetParserPrivate::readStylesheetFileInfo(QDataStream &stream)
 {
-    MStyleSheetParser::StylesheetFileInfo *fi = new MStyleSheetParser::StylesheetFileInfo;
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi(new MStyleSheetParser::StylesheetFileInfo);
 
     stream >> fi->filename;
     stream >> fi->time_t;
@@ -1293,39 +1283,7 @@ void MStyleSheetParser::operator += (const MStyleSheetParser &stylesheet)
 {
     Q_D(MStyleSheetParser);
 
-    QList<StylesheetFileInfo *>::const_iterator fileInfoListEnd = stylesheet.fileInfoList().constEnd();
-
-    for (QList<StylesheetFileInfo *>::const_iterator fi = stylesheet.fileInfoList().constBegin();
-            fi != fileInfoListEnd;
-            ++fi) {
-        StylesheetFileInfo *fileInfo = new StylesheetFileInfo;
-
-        fileInfo->filename = (*fi)->filename;
-        fileInfo->includes = (*fi)->includes;
-
-        // copy all selectors from other stylesheet to this fileInfo
-        QList<MStyleSheetSelector *>::const_iterator selectorsEnd = (*fi)->selectors.constEnd();
-        for (QList<MStyleSheetSelector *>::const_iterator iterator = (*fi)->selectors.constBegin();
-                iterator != selectorsEnd;
-                ++iterator) {
-            // selector to copy
-            MStyleSheetSelector *selector = (*iterator);
-            // append copy of selector
-            fileInfo->selectors.push_back(new MStyleSheetSelector(*selector));
-        }
-
-        // copy all selectors with parent
-        selectorsEnd = (*fi)->parentSelectors.constEnd();
-        for (QList<MStyleSheetSelector *>::const_iterator iterator = (*fi)->parentSelectors.constBegin();
-                iterator != selectorsEnd;
-                ++iterator) {
-            // selector to copy
-            MStyleSheetSelector *selector = (*iterator);
-            // append copy of selector
-            fileInfo->parentSelectors.push_back(new MStyleSheetSelector(*selector));
-        }
-        d->fileInfoList.push_back(fileInfo);
-    }
+    d->fileInfoList.append(stylesheet.fileInfoList());
 }
 
 int MStyleSheetParser::getLineNum(QFile &stream, const qint64 &streamPos)

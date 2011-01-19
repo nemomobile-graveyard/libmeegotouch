@@ -26,6 +26,7 @@
 #include <QList>
 #include <QVector>
 #include <QHash>
+#include <QSharedPointer>
 
 class MStyleSheetParserPrivate;
 class MStyleSheetSelector;
@@ -48,6 +49,7 @@ class M_CORE_EXPORT MStyleSheetParser
 public:
     //! \internal
     struct StylesheetFileInfo {
+        ~StylesheetFileInfo();
         QByteArray filename;
         QVector<QPair<QByteArray, uint> > includes;
         QList<MStyleSheetSelector *> selectors;
@@ -112,7 +114,7 @@ public:
      * Returns all the information within the style sheet
      * \return A list of file information structures in this style sheet.
      */
-    QList<MStyleSheetParser::StylesheetFileInfo *>& fileInfoList() const;
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >& fileInfoList() const;
 
     /*!
      * Gets the current parse mode.

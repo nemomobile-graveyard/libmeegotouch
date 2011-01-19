@@ -95,7 +95,7 @@ void Ft_MStyleSheetParser::test_load()
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
     QCOMPARE(m_subject->fileInfoList().count(), 1);
 
-    MStyleSheetParser::StylesheetFileInfo *fi = m_subject->fileInfoList().value(0);
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi = m_subject->fileInfoList().value(0);
 
 
 
@@ -398,7 +398,7 @@ void Ft_MStyleSheetParser::test_import()
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_import.css"), true);
     QCOMPARE(m_subject->fileInfoList().count(), 5);
     int numberOfSelectors = 0;
-    for (QList<MStyleSheetParser::StylesheetFileInfo *>::iterator fi = m_subject->fileInfoList().begin();
+    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator fi = m_subject->fileInfoList().begin();
             fi != m_subject->fileInfoList().end();
             fi++) {
         QFileInfo fileinfo((*fi)->filename);
@@ -419,7 +419,7 @@ void Ft_MStyleSheetParser::test_constants()
     //check that file count is correct
     QCOMPARE(m_subject->fileInfoList().count(), 3);
 
-    MStyleSheetParser::StylesheetFileInfo *info = m_subject->fileInfoList()[0];
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> info = m_subject->fileInfoList()[0];
     QCOMPARE(info->constants.count(), 5);
     QCOMPARE(info->constants["cWidth"], QByteArray("10px"));
     QCOMPARE(info->constants["cHeight"], QByteArray("15px"));
@@ -503,7 +503,7 @@ void Ft_MStyleSheetParser::test_constants_binary()
     //check that file count is correct
     QCOMPARE(m_subject->fileInfoList().count(), 3);
 
-    MStyleSheetParser::StylesheetFileInfo *info = m_subject->fileInfoList()[0];
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> info = m_subject->fileInfoList()[0];
     // the binary files do not contain any constants
     QCOMPARE(info->constants.count(), 0);
 
@@ -574,8 +574,8 @@ void Ft_MStyleSheetParser::test_binary_equality()
     // check that there is equal count of file infos
     QCOMPARE(parser.fileInfoList().count(), binary.fileInfoList().count());
 
-    QList<MStyleSheetParser::StylesheetFileInfo *>::iterator parserFi = parser.fileInfoList().begin();
-    QList<MStyleSheetParser::StylesheetFileInfo *>::iterator binaryFi = binary.fileInfoList().begin();
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator parserFi = parser.fileInfoList().begin();
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator binaryFi = binary.fileInfoList().begin();
 
     for (int i = 0; i < parser.fileInfoList().count(); i++) {
         // NOTE: (*parserFi)->constants.count() will differ from (*binaryFi)->constants.count()

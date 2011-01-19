@@ -304,7 +304,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
     CacheEntry *entry = new CacheEntry;
 
     foreach(const MStyleSheet * sheet, sheets) {
-        foreach(MStyleSheetParser::StylesheetFileInfo * fi, sheet->fileInfoList()) {
+        foreach(QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
             foreach(MStyleSheetSelector * selector, fi->selectors) {
                 // mDebug("MStyleSheet") << "Searching style data for: " << cname << '#' << objectName;
                 // mDebug("MStyleSheet") << "Comparing against" << selector->className() << '#' << selector->objectName();
@@ -645,7 +645,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
         const QList<const MStyleSheet *> &thisParentSheets = pd.sheets;
 
         foreach (const MStyleSheet *sheet, thisParentSheets) {
-            foreach(const MStyleSheetParser::StylesheetFileInfo* fi, sheet->fileInfoList()) {
+            foreach(QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
                 unsigned int parentPriority, classPriority;
                 foreach (MStyleSheetSelector *selector, fi->parentSelectors) {
                     if (matchParent(selector, thisParentHierarchy, parentStyleName, sceneOrder, parentPriority) &&
@@ -666,7 +666,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
     }
 
     foreach (const MStyleSheet *sheet, sheets) {
-        foreach (const MStyleSheetParser::StylesheetFileInfo * fi, sheet->fileInfoList()) {
+        foreach (QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
 
             // loop trough all the selectors and find matching ones
             unsigned int parentPriority, classPriority;
