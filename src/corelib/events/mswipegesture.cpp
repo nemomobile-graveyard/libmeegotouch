@@ -24,7 +24,8 @@ MSwipeGesture::MSwipeGesture(QObject* parent) :
     recognizedAngle(0),
     prevDistance(0),
     startPosition(QPointF()),
-    timer(QElapsedTimer())
+    timer(QElapsedTimer()),
+    pressed(false)
 {
 }
 

@@ -69,6 +69,12 @@ private:
      */
     QElapsedTimer timer;
 
+    /*!
+     Filter for stray mouse events, we will only continue recognizing gesture if there
+     was a mouse press before mouse move event.
+     */
+    bool pressed;
+
     friend class MSwipeRecognizer;
     friend class MSwipeRecognizerPrivate;
 

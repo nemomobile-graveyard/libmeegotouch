@@ -72,6 +72,7 @@ QGestureRecognizer::Result MSwipeRecognizerPrivate::startRecognition(MSwipeGestu
     swipeGesture->timer.start();
     swipeGesture->startPosition = mouseEvent->globalPos();
     swipeGesture->setHotSpot(mouseEvent->globalPos());
+    swipeGesture->pressed = true;
 
     return QGestureRecognizer::MayBeGesture;
 }
@@ -79,6 +80,12 @@ QGestureRecognizer::Result MSwipeRecognizerPrivate::startRecognition(MSwipeGestu
 QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGesture *swipeGesture, const QMouseEvent *mouseEvent)
 {
     QGestureRecognizer::Result result = QGestureRecognizer::CancelGesture;
+
+    if (swipeGesture->pressed == false) {
+        //Stray mouse move received;
+        return QGestureRecognizer::Ignore;
+    }
+
     qreal currentDistance = vectorLength(mouseEvent->globalPos() - swipeGesture->startPosition);
 
     //Swipe angle is equal to the angle of a line between starting position and current position.
@@ -116,6 +123,7 @@ QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGest
 
 QGestureRecognizer::Result MSwipeRecognizerPrivate::finishRecognition(MSwipeGesture *swipeGesture)
 {
+    swipeGesture->pressed = false;
     return swipeGesture->state() != Qt::NoGesture ? QGestureRecognizer::FinishGesture : QGestureRecognizer::CancelGesture;
 }
 
@@ -190,6 +198,7 @@ void MSwipeRecognizer::reset(QGesture* state)
     swipeGesture->prevDistance = 0;
     swipeGesture->startPosition = QPointF();
     swipeGesture->timer.invalidate();
+    swipeGesture->pressed = false;
 
     QGestureRecognizer::reset(swipeGesture);
 }
