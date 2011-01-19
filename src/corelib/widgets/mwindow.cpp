@@ -1333,9 +1333,12 @@ bool MWindow::event(QEvent *event)
 {
     Q_D(MWindow);
 
-    if ((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate) {
-        MComponentData::setActiveWindow(this);
-    } else if (event->type() == QEvent::WindowStateChange) {
+    if (((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate)
+        && (MComponentData::activeWindow() == 0 || !property("followsCurrentApplicationWindowOrientation").toBool()))
+    {
+            MComponentData::setActiveWindow(this);
+    }
+    else if (event->type() == QEvent::WindowStateChange) {
         d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
     } else if (event->type() == QEvent::Close) {
         d->handleCloseEvent(static_cast<QCloseEvent *>(event));

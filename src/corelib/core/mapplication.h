@@ -159,11 +159,16 @@ public:
      */
     static MApplicationWindow *activeApplicationWindow();
     /*! Returns the currently active window.
+     *  The returned window is a topmost normal type window (i.e. not a dialog)
+     *  of the application. Even if system or system modal dialog is shown on top
+     *  of a window, its own MWindow is not recognized as an active window.
+     *  The active window in this case is the first window below the dialog.
+     *
      * \note In comparison to QApplication::activeWindow(), this method will return
      *       a pointer to the MWindow even if it doesn't have focus. For single-window
      *       applications this method will return a pointer to the window once it's
      *       created (even before it's shown). For multiple-window applications this method
-     *       will return a pointer to the current topmost window.
+     *       will return a pointer to the current topmost window (excluding system dialogs).
      */
     static MWindow *activeWindow();
     //! Returns a list of all windows in the application

@@ -177,7 +177,13 @@ public:
      * \sa activeWindow()
      */
     static MApplicationWindow *activeApplicationWindow();
-    //! Returns the currently active window
+    /*! Returns the currently active window.
+     *
+     * \note The returned window is a topmost normal type window (i.e. not a dialog)
+     *       of the application. Even if system or system modal dialog is shown on top
+     *       of a window, its own MWindow is not recognized as an active window.
+     *       The active window in this case is the first window below the dialog.
+     */
     static MWindow *activeWindow();
     //! Returns a list of all windows in the application
     static QList<MWindow *> windows();

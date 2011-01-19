@@ -200,6 +200,9 @@ const MStyle *MStyleContainer::currentStyle() const
 {
     M::Orientation orientation = M::Landscape;
 
+    // FIXME: replace activeWindow() with more reliable way of getting
+    // current orientation for the styled component.
+    // e.g. for MWidget descendants, a call to sceneManager()->orientation() would do
     const MWindow *activeWindow = MComponentData::activeWindow();
     if (activeWindow)
         orientation = activeWindow->orientation();
