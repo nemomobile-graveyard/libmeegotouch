@@ -205,7 +205,7 @@ MApplicationServicePrivate::MApplicationServicePrivate(const QString &newService
     registered(false),
     instanceCounter(0),
     q_ptr(0),
-    dBusConnection(QDBusConnection::sessionBus()),
+    pDBusConnection(0),
     mApp(MApplication::instance())
 {
 }
