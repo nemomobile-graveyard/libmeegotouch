@@ -315,6 +315,7 @@ MComboBox *MListPage::createComboBoxLabelButton(const QString &title, const QStr
 {
     MComboBox *comboBox = new MComboBox(parent);
     comboBox->setViewType("labelButton");
+    comboBox->setStyleName("CommonComboBoxInverted");
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);
     comboBox->addItems(itemsList);
