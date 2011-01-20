@@ -34,6 +34,9 @@ void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
     if (newSize != pixmap.size())
         pixmap = QPixmap(newSize);
 
+    if (pixmap.isNull())
+        return;
+
     pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
