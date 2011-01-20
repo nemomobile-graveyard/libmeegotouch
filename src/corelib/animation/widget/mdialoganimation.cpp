@@ -371,15 +371,13 @@ void MDialogAnimationPrivate::setupEasingCurves()
 {
     Q_Q(MDialogAnimation);
 
-    MOvershotBezierEasingCurve overshootBezierEasingCurve;
-
-    titleBarOpacityAnimation->setEasingCurve(overshootBezierEasingCurve);
-    titleBarPositionAnimation->setEasingCurve(overshootBezierEasingCurve);
+    titleBarOpacityAnimation->setEasingCurve(q->style()->titleBarAnimationEasingCurve());
+    titleBarPositionAnimation->setEasingCurve(q->style()->titleBarAnimationEasingCurve());
     contentsViewportOpacityAnimation->setEasingCurve(q->style()->contentsViewportOpacityAnimationEasingCurve());
     contentsViewportScaleAnimation->setEasingCurve(q->style()->contentsViewportScaleAnimationEasingCurve());
     contentsViewportPositionAnimation->setEasingCurve(q->style()->contentsViewportScaleAnimationEasingCurve());
-    buttonBoxOpacityAnimation->setEasingCurve(overshootBezierEasingCurve);
-    buttonBoxPositionAnimation->setEasingCurve(overshootBezierEasingCurve);
+    buttonBoxOpacityAnimation->setEasingCurve(q->style()->buttonBoxAnimationEasingCurve());
+    buttonBoxPositionAnimation->setEasingCurve(q->style()->buttonBoxAnimationEasingCurve());
 }
 
 #include "moc_mdialoganimation.cpp"

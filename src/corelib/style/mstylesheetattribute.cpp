@@ -38,7 +38,7 @@
 #include "mshareddata.h"
 #include "mbackgroundtiles.h"
 #include "mscalableimage.h"
-
+#include "movershotbeziereasingcurve.h"
 #include "mmetatypes.h"
 
 // internal enum that defines the attribute type
@@ -143,6 +143,11 @@ static const QByteArray values[NUM_VALUES] = {
     QByteArray("font("),
 };
 
+enum CustomEasingCurveTypes {
+    FirstCustomType = QEasingCurve::NCurveTypes + 1,
+    OvershotBezier = FirstCustomType
+};
+
 //! \internal
 class QtDatatypeConverter
 {
@@ -154,7 +159,8 @@ public:
     QHash<QByteArray, Qt::Axis> AXES;
     QHash<QByteArray, QFont::Weight> WEIGHTS;
     QHash<QByteArray, QFont::Capitalization> CAPITALIZATION;
-    QHash<QByteArray, QEasingCurve::Type> EASINGCURVETYPES;
+    QHash<QByteArray, int> EASINGCURVETYPES;
+
 
     QtDatatypeConverter() {
         ALIGNMENTS["left"] = Qt::AlignLeft;
@@ -242,6 +248,7 @@ public:
         EASINGCURVETYPES["outbounce"] = QEasingCurve::OutBounce;
         EASINGCURVETYPES["inoutbounce"] = QEasingCurve::InOutBounce;
         EASINGCURVETYPES["outinbounce"] = QEasingCurve::OutInBounce;
+        EASINGCURVETYPES["overshotbezier"] = OvershotBezier;
 
         qRegisterMetaType<const QPixmap *>();
         qRegisterMetaType<QTextCharFormat::UnderlineStyle>();
@@ -799,7 +806,11 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         QList<QByteArray> list = valueString.split(',');
         if (list.size() > 0) {
             if (DataTypeConverter.EASINGCURVETYPES.contains(list.at(0))) {
-                curve.setType(DataTypeConverter.EASINGCURVETYPES[list.at(0)]);
+                int type = DataTypeConverter.EASINGCURVETYPES[list.at(0)];
+                if (type < FirstCustomType)
+                    curve.setType(static_cast<QEasingCurve::Type>(type));
+                else if (type == OvershotBezier)
+                    curve = MOvershotBezierEasingCurve();
                 // curve amplitude
                 if (list.size() > 1) {
                     curve.setAmplitude((qreal) list.at(1).toDouble());

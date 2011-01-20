@@ -39,6 +39,7 @@ class MDialogAnimationStyle: public MAnimationStyle
 
     M_STYLE_ATTRIBUTE(int, titleBarAnimationDuration, TitleBarAnimationDuration)
     M_STYLE_ATTRIBUTE(qreal, titleBarAnimationDistance, TitleBarAnimationDistance)
+    M_STYLE_ATTRIBUTE(QEasingCurve, titleBarAnimationEasingCurve, TitleBarAnimationEasingCurve)
 
     M_STYLE_ATTRIBUTE(int, contentsViewportOpacityAnimationDuration, ContentsViewportOpacityAnimationDuration)
     M_STYLE_ATTRIBUTE(QEasingCurve, contentsViewportOpacityAnimationEasingCurve, ContentsViewportOpacityAnimationEasingCurve)
@@ -48,6 +49,7 @@ class MDialogAnimationStyle: public MAnimationStyle
 
     M_STYLE_ATTRIBUTE(int, buttonBoxAnimationDuration, ButtonBoxAnimationDuration)
     M_STYLE_ATTRIBUTE(qreal, buttonBoxAnimationDistance, ButtonBoxAnimationDistance)
+    M_STYLE_ATTRIBUTE(QEasingCurve, buttonBoxAnimationEasingCurve, ButtonBoxAnimationEasingCurve)
 
     M_STYLE_ATTRIBUTE(qreal, scale, Scale)
     M_STYLE_ATTRIBUTE(qreal, opacity, Opacity)
