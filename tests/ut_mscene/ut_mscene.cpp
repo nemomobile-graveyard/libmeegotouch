@@ -28,6 +28,7 @@
 
 #include "ut_mscene.h"
 #include "mscene_p.h"
+#include "mdeviceprofile.h"
 
 #define MAX_PARAMS 10
 
@@ -539,4 +540,67 @@ void Ut_MScene::touchPointCopyMousePosToPointStartPos()
     QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().rx(), xy3 ));
     QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().ry(), xy3 ));      
 }
+
+void Ut_MScene::touchPointMirrorMousePosToPointPos()
+{
+    qreal  xy1 = 300;
+    QPoint  screenPos(xy1,xy1);
+
+    QTouchEvent::TouchPoint  touchPoint;
+
+    QGraphicsSceneMouseEvent mousePress(QEvent::GraphicsSceneMousePress);
+    mousePress.setScreenPos(screenPos);
+
+    MWindow * mwindow= new MWindow;
+    mwindow->setScene(m_subject);
+
+    QSize resolution = MDeviceProfile::instance()->resolution();
+    qreal mirror_x = resolution.width(),mirror_y = resolution.height();
+    mirror_x -= xy1;
+    mirror_y -= xy1;
+
+    MScenePrivate * mscenePrivate= m_subject->d_func();
+    mscenePrivate->touchPointMirrorMousePosToPointPos(touchPoint,&mousePress);
+
+    QVERIFY(qFuzzyCompare ( touchPoint.pos().rx(), mirror_x ));
+    QVERIFY(qFuzzyCompare ( touchPoint.pos().ry(), mirror_y ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.scenePos().rx(), mirror_x ));
+    QVERIFY(qFuzzyCompare ( touchPoint.scenePos().ry(), mirror_y ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.screenPos().rx(), mirror_x ));
+    QVERIFY(qFuzzyCompare ( touchPoint.screenPos().ry(), mirror_y ));
+}
+
+void Ut_MScene::touchPointMirrorMousePosToPointStartPos()
+{
+    qreal  xy1 = 300;
+    QPoint  screenPos(xy1,xy1);
+
+    QTouchEvent::TouchPoint  touchPoint;
+
+    QGraphicsSceneMouseEvent mousePress(QEvent::GraphicsSceneMousePress);
+    mousePress.setScreenPos(screenPos);
+
+    MWindow * mwindow= new MWindow;
+    mwindow->setScene(m_subject);
+
+    QSize resolution = MDeviceProfile::instance()->resolution();
+    qreal mirror_x = resolution.width(),mirror_y = resolution.height();
+    mirror_x -= xy1;
+    mirror_y -= xy1;
+
+    MScenePrivate * mscenePrivate= m_subject->d_func();
+    mscenePrivate->touchPointMirrorMousePosToPointStartPos(touchPoint,&mousePress);
+
+    QVERIFY(qFuzzyCompare ( touchPoint.startPos().rx(), mirror_x ));
+    QVERIFY(qFuzzyCompare ( touchPoint.startPos().ry(), mirror_y ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.startScenePos().rx(), mirror_x ));
+    QVERIFY(qFuzzyCompare ( touchPoint.startScenePos().ry(), mirror_y ));
+
+    QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().rx(), mirror_x ));
+    QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().ry(), mirror_y ));
+}
+
 QTEST_APPLESS_MAIN(Ut_MScene)

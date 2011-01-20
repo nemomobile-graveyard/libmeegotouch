@@ -49,6 +49,8 @@ private slots:
     void touchPointCopyPosToLastPos();
     void touchPointCopyMousePosToPointPos();
     void touchPointCopyMousePosToPointStartPos();
+    void touchPointMirrorMousePosToPointPos();
+    void touchPointMirrorMousePosToPointStartPos();
 private:
 
     MApplication *app;
