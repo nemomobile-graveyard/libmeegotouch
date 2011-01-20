@@ -59,7 +59,7 @@ namespace
     // Default icon name for informational banner about failed paste
     const char *const DefaultPasteBannerIcon = "icon-m-framework-close";
 
-    // How long notification will stay visible
+    // Upper limit for how long notification will stay visible, may be closed earlier automatically
     const int NotificationDuration = 3000;
     const int BinaryTextVariantSeparator = 0x9c;
 }
@@ -109,6 +109,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     maskTimer->setInterval(MaskedTimeInterval);
 
     hideInfoBannerTimer->setSingleShot(true);
+    QObject::connect(hideInfoBannerTimer, SIGNAL(timeout()), q, SLOT(hideInfoBanner()));
 
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
@@ -1184,8 +1185,6 @@ void MTextEditView::informPasteFailed()
 {
     Q_D(MTextEditView);
 
-    d->hideInfoBannerTimer->start();
-
     if (d->infoBanner) {
         return;
     }
@@ -1212,7 +1211,7 @@ void MTextEditView::informPasteFailed()
 
     d->controller->sceneManager()->appearSceneWindow(d->infoBanner, MSceneWindow::DestroyWhenDone);
     d->hideInfoBannerTimer->setInterval(duration);
-    connect(d->hideInfoBannerTimer, SIGNAL(timeout()), this, SLOT(hideInfoBanner()));
+    d->hideInfoBannerTimer->start();
 }
 
 void MTextEditView::handleLongPress()

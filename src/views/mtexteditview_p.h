@@ -125,7 +125,7 @@ protected:
 
     bool inAutoSelectionClick;
 
-    MInfoBanner *infoBanner;
+    QPointer<MInfoBanner> infoBanner;
 
     bool editActive; // true if editing started and having focus
 
