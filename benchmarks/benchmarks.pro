@@ -36,5 +36,6 @@ SUBDIRS     = \
 
 contains(DEFINES, HAVE_ICU) {
 SUBDIRS += \
- pt_mcalendar
+ pt_mcalendar \
+ pt_mcharsetdetector
 }
