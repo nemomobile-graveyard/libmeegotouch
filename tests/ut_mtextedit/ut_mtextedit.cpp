@@ -626,6 +626,18 @@ void Ut_MTextEdit::testInputMethodEvent()
     QInputMethodEvent selectionEvent("", attributes);
     m_subject->inputMethodEvent(&selectionEvent);
     QCOMPARE(m_subject->selectedText(), testString.mid(0, 1));
+    
+    // test that if preedit is signaling textChanged on full text entry, also commit does that 
+    // when removing the character.
+    m_subject->clear();
+    m_subject->setMaxLength(0);
+    spy.clear();
+    m_subject->inputMethodEvent(&preeditEvent);
+    int countAfterPreedit = spy.count();
+    spy.clear();
+    m_subject->inputMethodEvent(&commitEvent);
+    int countAfterCommit = spy.count();
+    QCOMPARE(countAfterPreedit, countAfterCommit);
 }
 
 

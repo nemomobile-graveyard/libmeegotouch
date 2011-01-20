@@ -577,6 +577,10 @@ bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
     // Total characterCount mustn't exceed maxLength.
     if (characterCount + filteredText.length() > q->maxLength()) {
         filteredText.truncate(q->maxLength() - characterCount);
+
+        if (filteredText.length() == 0) {
+            return false;
+        }
         changed = true;
     }
 
@@ -2417,7 +2421,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
         // no signal if committing existing preedit as is
         if (!(wasPreediting && commitString == selectedFragment.toPlainText()
-              && preedit.isEmpty())) {
+              && insertionSuccess && preedit.isEmpty())) {
             emit textChanged();
         }
 
