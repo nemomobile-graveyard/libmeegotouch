@@ -24,6 +24,8 @@
 #include "mscenelayereffect.h"
 #include "mscenelayereffectmodel.h"
 
+#include "mscenemanager.h"
+
 //! \internal
 class MSceneLayerEffectDimViewPrivate : public MSceneWindowViewPrivate
 {
@@ -37,6 +39,7 @@ MSceneLayerEffectDimView::MSceneLayerEffectDimView(MSceneLayerEffect *controller
 {
     Q_D(MSceneLayerEffectDimView);
     d->controller = controller;
+
     d->controller->setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
 }
 
@@ -46,14 +49,26 @@ MSceneLayerEffectDimView::~MSceneLayerEffectDimView()
 
 void MSceneLayerEffectDimView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_D(MSceneLayerEffectDimView);
     Q_UNUSED(widget);
     Q_UNUSED(option);
 
     qreal oldOpacity = painter->opacity();
     qreal opacity = d_ptr->controller->effectiveOpacity() * style()->opacity();
+
+    QTransform oldTransform = painter->transform();
+    QTransform transform;
+    if (d->controller->sceneManager() && d->controller->sceneManager()->orientation() == M::Portrait) {
+        transform.translate(0, boundingRect().width());
+        transform.rotate(-90);
+    }
+
+    painter->setTransform(transform);
     painter->setOpacity(opacity);
     painter->fillRect(boundingRect(), QColor(0, 0, 0));
     painter->setOpacity(oldOpacity);
+
+    painter->setTransform(oldTransform);
 }
 
 QRectF MSceneLayerEffectDimView::boundingRect() const
