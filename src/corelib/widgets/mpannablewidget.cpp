@@ -241,7 +241,7 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
     //Ignoring pan gestures with directions not aligned with enabled pannign directions
     if (itemSpaceOffset.x() != 0) {
         if ( horizontalPanningPolicy() == PanningAlwaysOff ||
-            (horizontalPanningPolicy() == PanningAsNeeded && range().height() == 0) ) {
+            (horizontalPanningPolicy() == PanningAsNeeded && range().width() == 0) ) {
 
             event->ignore(panGesture);
             return;
