@@ -1528,6 +1528,7 @@ void MLocale::setDefault(const MLocale &locale)
         (s_systemDefault->d_ptr)->removeTrFromQCoreApp();
         *s_systemDefault = locale;
     }
+    defaultLocaleMutex.unlock();
     // load special translations to make QApplication detect the
     // correct direction (see qapplication.cpp in the Qt source
     // code). If this is not done, the QEvent::LanguageChange events
@@ -1539,7 +1540,6 @@ void MLocale::setDefault(const MLocale &locale)
     // triggered by
     // qApp->setLayoutDirection(s_systemDefault->textDirection());
     (s_systemDefault->d_ptr)->insertDirectionTrToQCoreApp();
-    defaultLocaleMutex.unlock();
 
     // sends QEvent::LanguageChange to qApp:
     (s_systemDefault->d_ptr)->insertTrToQCoreApp();
@@ -2992,6 +2992,21 @@ void MLocale::removeTrCatalog(const QString &name)
         else
             ++it;
     }
+}
+
+bool MLocale::isInstalledTrCatalog(const QString &name) const
+{
+    Q_D(const MLocale);
+    if(name.isEmpty())
+        return false;
+    MLocalePrivate::CatalogList::const_iterator it = d->_trTranslations.constBegin();
+    while (it != d->_trTranslations.constEnd()) {
+        if ((*it)->_name == name)
+            return true;
+        else
+            ++it;
+    }
+    return false;
 }
 
 /////////////////////////////

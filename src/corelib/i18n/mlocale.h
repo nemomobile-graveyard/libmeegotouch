@@ -1491,6 +1491,8 @@ public:
      * QString translatedString = qtTrId("hello_msg");
      * \endcode
      *
+     * \sa isInstalledTrCatalog(const QString &name)
+     * \sa removeTrCatalog(const QString &name)
      * \sa setDefault(const MLocale &locale)
      * \sa translationPaths()
      * \sa setTranslationPaths(const QStringList &paths)
@@ -1505,8 +1507,23 @@ public:
      *
      * Removes the catalog from the list of translation catalogs used by this
      * MLocale.
+     *
+     * \sa isInstalledTrCatalog(const QString &name)
+     * \sa installTrCatalog(const QString &name)
      */
     void removeTrCatalog(const QString &name);
+
+    /*!
+     * \brief checks whether a translation catalog is installed nor not
+     * \param name of the translation catalog to check
+     *
+     * returns true if such a translation catalog has been installed
+     * already, false if not.
+     *
+     * \sa installTrCatalog(const QString &name)
+     * \sa removeTrCatalog(const QString &name)
+     */
+    bool isInstalledTrCatalog(const QString &name) const;
 
     /*!
      * \brief tr() compatibility translation method.
