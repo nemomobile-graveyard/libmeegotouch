@@ -1942,7 +1942,17 @@ bool MTextEdit::setText(const QString &text)
 
 QString MTextEdit::text() const
 {
-    return document()->toPlainText();
+    Q_D(const MTextEdit);
+    QString content = document()->toPlainText();
+
+    // preedit cannot be limited that easily, but we'll respect the limitation
+    // in return value by chopping preedit
+    if (d->isPreediting() && (content.length() > maxLength())) {
+        int surplusCharacters = content.length() - maxLength();        
+        content.remove(d->cursor()->position() - surplusCharacters, surplusCharacters);
+    }
+
+    return content;
 }
 
 

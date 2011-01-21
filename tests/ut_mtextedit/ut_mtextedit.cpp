@@ -640,6 +640,18 @@ void Ut_MTextEdit::testInputMethodEvent()
     QCOMPARE(countAfterPreedit, countAfterCommit);
 }
 
+void Ut_MTextEdit::testText()
+{
+    // test that even though input method event might make content more than max length,
+    // text() still honors that by limiting preedit in resulting string
+    m_subject->setMaxLength(3);
+    m_subject->setText("bb");
+    m_subject->setCursorPosition(0);
+    
+    QInputMethodEvent event(testString, QList<QInputMethodEvent::Attribute>());
+    m_subject->inputMethodEvent(&event);
+    QCOMPARE(m_subject->text(), QString(testString.at(0)) + "bb");
+}
 
 /*!
  * Test setting cursor position.
