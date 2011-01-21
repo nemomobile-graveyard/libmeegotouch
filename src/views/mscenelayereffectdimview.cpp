@@ -23,6 +23,8 @@
 #include "mviewcreator.h"
 #include "mscenelayereffect.h"
 #include "mscenelayereffectmodel.h"
+#include <mdeviceprofile.h>
+#include "mscenemanager.h"
 
 //! \internal
 class MSceneLayerEffectDimViewPrivate : public MSceneWindowViewPrivate
@@ -37,6 +39,7 @@ MSceneLayerEffectDimView::MSceneLayerEffectDimView(MSceneLayerEffect *controller
 {
     Q_D(MSceneLayerEffectDimView);
     d->controller = controller;
+
     d->controller->setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
 }
 
@@ -46,14 +49,35 @@ MSceneLayerEffectDimView::~MSceneLayerEffectDimView()
 
 void MSceneLayerEffectDimView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_D(MSceneLayerEffectDimView);
     Q_UNUSED(widget);
     Q_UNUSED(option);
 
     qreal oldOpacity = painter->opacity();
     qreal opacity = d_ptr->controller->effectiveOpacity() * style()->opacity();
+
+    QTransform oldTransform = painter->transform();
+    QTransform transform;
+    M::Orientation layerEffectOrientation = M::Landscape;
+
+    QRectF geometry = d->controller->geometry();
+    if (geometry.height() > geometry.width()) {
+        layerEffectOrientation = M::Portrait;
+    }
+
+    if (layerEffectOrientation != MDeviceProfile::instance()->orientationFromAngle(M::Angle0)) {
+        // layer effect's orientation is different than display's native orientation.
+        // Therefore we have to place our layer effect sideways.
+        transform.translate(0, geometry.width());
+        transform.rotate(-90);
+    }
+
+    painter->setTransform(transform);
     painter->setOpacity(opacity);
     painter->fillRect(boundingRect(), QColor(0, 0, 0));
     painter->setOpacity(oldOpacity);
+
+    painter->setTransform(oldTransform);
 }
 
 QRectF MSceneLayerEffectDimView::boundingRect() const
