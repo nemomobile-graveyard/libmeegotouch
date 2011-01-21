@@ -547,6 +547,8 @@ void MWindowPrivate::doExitDisplayEvent()
         delete delayedMOnDisplayChangeEvent;
         delayedMOnDisplayChangeEvent = 0;
     }
+
+    QPixmapCache::clear();
 }
 
 void MWindowPrivate::_q_exitDisplayStabilized()
@@ -663,6 +665,7 @@ void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event
     // Check if window has entered / left the switcher
     if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
         doSwitcherEntered();
+        QPixmapCache::clear();
     }
     else if (event->oldState().testFlag(Qt::WindowMinimized) &&
              !q->windowState().testFlag(Qt::WindowMinimized)) {
