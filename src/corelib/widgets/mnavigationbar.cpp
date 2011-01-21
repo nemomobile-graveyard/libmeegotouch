@@ -59,6 +59,13 @@ MNavigationBar::MNavigationBar()
     d->init();
 }
 
+MNavigationBar::MNavigationBar(QGraphicsItem *parent)
+    : MSceneWindow(new MNavigationBarPrivate, new MNavigationBarModel, MSceneWindow::NavigationBar, QString(), parent)
+{
+    Q_D(MNavigationBar);
+    d->init();
+}
+
 MNavigationBar::~MNavigationBar()
 {
 }

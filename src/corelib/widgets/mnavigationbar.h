@@ -60,6 +60,8 @@ public:
      */
     MNavigationBar();
 
+    MNavigationBar(QGraphicsItem *parent);
+
     /*!
       \brief Destroys the navigation bar.
      */

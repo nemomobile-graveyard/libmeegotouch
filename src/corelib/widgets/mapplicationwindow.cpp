@@ -38,6 +38,7 @@
 #include "mapplication.h"
 #include "mcomponentdata.h"
 #include "mscenemanager.h"
+#include "mscenemanager_p.h"
 #include "mscene.h"
 #include "mstatusbar.h"
 #include "mdeviceprofile.h"
@@ -79,11 +80,12 @@ namespace {
 MApplicationWindowPrivate::MApplicationWindowPrivate()
     : MWindowPrivate()
     , page(NULL)
-    , navigationBar(new MNavigationBar)
+    , navigationBar(NULL)
     , toolBar(new MToolBar)
     , dockWidget(new MDockWidget)
-    , homeButtonPanel(new MHomeButtonPanel)
+    , homeButtonPanel(NULL)
     , menu(new MApplicationMenu)
+    , statusBar(NULL)
     , pageAreaMaximized(false)
 #ifdef Q_WS_X11
     , isChained(false)
@@ -100,12 +102,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , navigationBarPressed(false)
     , styleContainer(0)
 {
-    if(MDeviceProfile::instance()->showStatusbar())    {
-        statusBar = new MStatusBar;
-    }
-    else{
-        statusBar = NULL;
-    }
+
 }
 
 MApplicationWindowPrivate::~MApplicationWindowPrivate()
@@ -148,6 +145,16 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
 void MApplicationWindowPrivate::init()
 {
     Q_Q(MApplicationWindow);
+
+    navigationBar = new MNavigationBar(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::NavigationBar));
+    homeButtonPanel = new MHomeButtonPanel(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::HomeButtonPanel));
+
+    if(MDeviceProfile::instance()->showStatusbar())    {
+        statusBar = new MStatusBar(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::StatusBar));
+    }
+    else{
+        statusBar = NULL;
+    }
 
     q->connect(q, SIGNAL(orientationChanged(M::Orientation)), q, SLOT(_q_updateStyle()));
     q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()), q, SLOT(_q_updateStyle()));

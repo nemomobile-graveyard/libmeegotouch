@@ -23,7 +23,14 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MStatusBar)
 
-MStatusBar::MStatusBar() : MSceneWindow(new MStatusBarPrivate, new MSceneWindowModel, MSceneWindow::StatusBar)
+MStatusBar::MStatusBar()
+    : MSceneWindow(new MStatusBarPrivate, new MSceneWindowModel, MSceneWindow::StatusBar)
+{
+    setObjectName("statusBar");
+}
+
+MStatusBar::MStatusBar(QGraphicsItem *parent)
+    : MSceneWindow(new MStatusBarPrivate, new MSceneWindowModel, MSceneWindow::StatusBar, QString(), parent)
 {
     setObjectName("statusBar");
 }

@@ -45,6 +45,8 @@ public:
      */
     MStatusBar();
 
+    MStatusBar(QGraphicsItem *parent);
+
     /*!
       \brief Destroys the status bar.
      */
