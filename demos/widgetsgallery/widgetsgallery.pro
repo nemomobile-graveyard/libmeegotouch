@@ -67,6 +67,7 @@ SOURCES += main.cpp \
     maincategorypage.cpp \
     contentitemspage.cpp \
     bannerspage.cpp \
+    notificationspage.cpp \
     querydialogspage.cpp \
     singleselectiondialogspage.cpp \
     phonebookcell.cpp \
@@ -117,6 +118,7 @@ HEADERS += templatepage.h \
     maincategorypage.h \
     contentitemspage.h \
     bannerspage.h \
+    notificationspage.h \
     querydialogspage.h \
     singleselectiondialogspage.h \
     phonebookcell.h \
@@ -147,6 +149,9 @@ contains( DEFINES, M_OS_MAEMO5 ) {
 }
 desktop_entry.files = widgetsgallery.desktop
 
+event_type.files = data/widgetsgalleryeventtype.conf
+event_type.path = $$M_INSTALL_DATA/meegotouch/notifications/eventtypes 
+
 myname = com.nokia.widgetsgallery
 services.CONFIG += no_check_exist
 services.target = $${myname}.service
@@ -174,6 +179,7 @@ data_files.CONFIG += no_check_exist
 INSTALLS += target \
     data_files \
     desktop_entry \
+    event_type \
     testsxml \
     desktop_icon
 !win32:!macx:INSTALLS += services

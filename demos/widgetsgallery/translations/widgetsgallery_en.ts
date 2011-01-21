@@ -426,6 +426,21 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>System Information Banner</source>
         <translation>System Information Banner</translation>
     </message>
+    <message id="xx_wg_dialogs_and_banners_notifications">
+        <location filename="../mainpage.cpp" line="175"/>
+        <source>Notifications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_notifications_page_send_notification">
+        <location filename="../notificationspage.cpp" line="142"/>
+        <source>Send a notification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_notifications_page_toggle_preview_banner_show">
+        <location filename="../notificationspage.cpp" line="144"/>
+        <source>Toggle whether previews are shown</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_dialogs_and_notifications_progress_indicator">
         <location filename="../singleselectiondialogspage.cpp" line="219"/>
         <source>Progress Indicator</source>

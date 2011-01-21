@@ -45,6 +45,7 @@
 #include "singleselectiondialogspage.h"
 #include "querydialogspage.h"
 #include "bannerspage.h"
+#include "notificationspage.h"
 #include "bubblepage.h"
 #include "drilldownlistitem.h"
 #include "customnavigationbarpage.h"
@@ -103,6 +104,7 @@ public:
         SingleSelectionDialogsPageType,
         QueryDialogsPageType,
         BannersPageType,
+        NotificationsPageType,
         MListPageType,
         MGridPageType,
         ObjectMenuPageType,
@@ -166,6 +168,8 @@ public:
         addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_query_dialog"), WidgetsGalleryDataModel::QueryDialogsPageType);
         //% "Banner"
         addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_banner"), WidgetsGalleryDataModel::BannersPageType);
+        //% "Notifications"
+        addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_notifications"), WidgetsGalleryDataModel::NotificationsPageType);
 
         //% "Lists, Grids and Popups"
         addCategory(qtTrId("xx_wg_categories_lists_grids_and_popups"));
@@ -314,6 +318,9 @@ private:
                     break;
                 case BannersPageType:
                     page = new BannersPage();
+                    break;
+                case NotificationsPageType:
+                    page = new NotificationsPage();
                     break;
                 //category 4
                 case MListPageType:

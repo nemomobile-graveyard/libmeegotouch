@@ -6,3 +6,4 @@ usr/share/applications/hildon/*widgetsgallery.desktop
 usr/share/dbus-1/services/com.nokia.widgetsgallery.service
 usr/share/widgetsgallery/*
 usr/share/icons/*
+usr/share/meegotouch/notifications/eventtypes/*
