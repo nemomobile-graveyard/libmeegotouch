@@ -26,7 +26,7 @@ class DrillDownListItem : public MBasicListItem
 {
     Q_OBJECT
 public:
-    DrillDownListItem();
+    DrillDownListItem(QGraphicsItem *parent = 0);
     virtual ~DrillDownListItem();
 
 protected:

@@ -395,7 +395,10 @@ private:
 class WidgetGalleryCategoryCellCreator : public MAbstractCellCreator<DrillDownListItem>
 {
 public:
-    WidgetGalleryCategoryCellCreator() : MAbstractCellCreator<DrillDownListItem>() {
+    WidgetGalleryCategoryCellCreator(MList *list)
+        : MAbstractCellCreator<DrillDownListItem>(),
+        list(list)
+    {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
@@ -403,7 +406,7 @@ public:
 
         DrillDownListItem *cell = dynamic_cast<DrillDownListItem *>(recycler.take(DrillDownListItem::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new DrillDownListItem;
+            cell = new DrillDownListItem(list);
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -418,6 +421,9 @@ public:
 
         item->setTitle(index.data().toString());
     }
+
+private:
+    MList *list;
 };
 
 MainPage::MainPage(const QString &title)
@@ -533,7 +539,7 @@ void MainPage::setMainLoopHelper(EmptyMainLoopHelper *helper)
 void MainPage::populateLayout()
 {
     list = new MList(centralWidget());
-    list->setCellCreator(new WidgetGalleryCategoryCellCreator());
+    list->setCellCreator(new WidgetGalleryCategoryCellCreator(list));
     list->setItemModel(new WidgetsGalleryDataModel());
     policy->addItem(list, Qt::AlignCenter);
 

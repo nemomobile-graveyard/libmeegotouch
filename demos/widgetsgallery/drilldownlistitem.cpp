@@ -24,8 +24,8 @@
 #include <MImageWidget>
 #include <MLabel>
 
-DrillDownListItem::DrillDownListItem()
-    : MBasicListItem(MBasicListItem::SingleTitle)
+DrillDownListItem::DrillDownListItem(QGraphicsItem *parent)
+    : MBasicListItem(MBasicListItem::SingleTitle, parent)
 {
 
 }
