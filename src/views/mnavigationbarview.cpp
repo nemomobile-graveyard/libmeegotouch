@@ -81,10 +81,16 @@ void MNavigationBarViewPrivate::init()
 {
     Q_Q(MNavigationBarView);
 
-    applicationMenuButton = new MApplicationMenuButton(controller);
+    QGraphicsLinearLayout* contentLayout = new QGraphicsLinearLayout(controller);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
+    content = new QGraphicsWidget;
+    content->setObjectName("ContentToAnimate");
+    contentLayout->addItem(content);
+
+    applicationMenuButton = new MApplicationMenuButton(content);
     applicationMenuButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    escapeButtonSlot = new MEscapeButtonSlot(controller);
+    escapeButtonSlot = new MEscapeButtonSlot(content);
     escapeButtonSlot->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     closeButton = new MButton(escapeButtonSlot);
@@ -93,17 +99,11 @@ void MNavigationBarViewPrivate::init()
     backButton = new MButton(escapeButtonSlot);
     backButton->setViewType("icon");
 
-    QGraphicsLinearLayout* contentLayout = new QGraphicsLinearLayout(controller);
-    contentLayout->setContentsMargins(0, 0, 0, 0);
-    content = new QGraphicsWidget;
-    content->setObjectName("ContentToAnimate");
-    contentLayout->addItem(content);
-
     layout = new MLayout;
     layout->setContentsMargins(0, 0, 0, 0);
     content->setLayout(layout);
 
-    toolBarSlot = new QGraphicsWidget(controller);
+    toolBarSlot = new QGraphicsWidget(content);
     toolBarSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     toolBarLayout = new QGraphicsLinearLayout;
     toolBarLayout->setContentsMargins(0, 0, 0, 0);
