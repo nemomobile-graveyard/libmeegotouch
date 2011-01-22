@@ -1122,7 +1122,7 @@ MSceneManager *MWindow::sceneManager()
     // A scene manager is needed. Let's create one on the fly
     // if we don't have one already.
     if (!d->sceneManager) {
-        setSceneManager(new MSceneManager);
+        setSceneManager(new MSceneManager(scene()));
     }
 
     return d->sceneManager;
