@@ -105,6 +105,7 @@ PUBLIC_HEADERS += \
 
 PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
+    $$WIDGETS_SRC_DIR/msortfilterproxymodel_p.h \
     $$WIDGETS_SRC_DIR/madvancedlistitem_p.h \
     $$WIDGETS_SRC_DIR/mbasiclistitem_p.h \
     $$WIDGETS_SRC_DIR/mbuttongroup_p.h \

@@ -81,6 +81,14 @@ class M_VIEWS_EXPORT MListStyle : public MWidgetStyle
         Sets object name for a group separator widget.
     */
     M_STYLE_ATTRIBUTE(QString, groupSeparatorObjectName, GroupSeparatorObjectName)
+
+    /*!
+        \property MListStyle::listDeleteItemAnimation
+        \brief Sets object name for delete item animation
+
+        Sets object name for delete item animation.
+    */
+    M_STYLE_ATTRIBUTE(QString, deleteItemAnimation, DeleteItemAnimation)
 };
 
 class M_VIEWS_EXPORT MListStyleContainer : public MWidgetStyleContainer

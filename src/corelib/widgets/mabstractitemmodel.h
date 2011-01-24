@@ -129,12 +129,22 @@ Q_SIGNALS:
       \param animated Flag that shows if the remove operation was with animations or not.
     */
     void rowsRemoved(const QModelIndex &parent, int first, int last, bool animated);
+
+    /*!
+      \param The signal is emitted if the layout change shall be animated.
+    */
+    void layoutAboutToBeAnimated();
     
 private:
     Q_DISABLE_COPY(MAbstractItemModel)
     Q_DECLARE_PRIVATE(MAbstractItemModel)
+
     //! \internal
     MAbstractItemModelPrivate *const d_ptr;
+
+    Q_PRIVATE_SLOT(d_func(), void _q_rowsInsertAnimated(QModelIndex,int,int))
+    Q_PRIVATE_SLOT(d_func(), void _q_rowsRemoveAnimated(QModelIndex,int,int))
+    Q_PRIVATE_SLOT(d_func(), void _q_layoutChanged())
     //! \internal_end
 
 #ifdef UNIT_TEST

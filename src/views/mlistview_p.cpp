@@ -24,6 +24,7 @@
 #include <MAbstractItemModel>
 
 #include <QItemSelectionModel>
+#include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 
 #include "mcontentitem.h"
@@ -33,6 +34,7 @@
 #include "mapplicationpageview_p.h"
 
 #include "mlistview.h"
+#include "animations/mbasiclistitemdeletionanimation.h"
 
 using namespace MListViewPrivateNamespace;
 
@@ -59,6 +61,8 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     scrollToAnimation = new QPropertyAnimation(this);
     isDeleted = false;
 
+    itemDeletionAnimation = NULL;
+
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
 }
@@ -74,6 +78,7 @@ MListViewPrivate::~MListViewPrivate()
 
     delete hseparator;
     delete recycler;
+    delete itemDeletionAnimation;
 }
 
 void MListViewPrivate::setSeparator(MWidget *separator)
@@ -119,6 +124,9 @@ void MListViewPrivate::setHeadersCreator(MCellCreator *creator)
 
 void MListViewPrivate::movingDetectionTimerTimeout()
 {
+    if (isAnimating())
+        return;
+
     moving = false;
     controllerModel->setListIsMoving(false);
     movingDetectorTimer.stop();
@@ -166,14 +174,72 @@ void MListViewPrivate::cellLongTapped(const QModelIndex &index, const QPointF &p
 
 void MListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    foreach(MWidget * widget, visibleItems) {
-        // TODO convert into hashmap
-        QModelIndex widgetIndex(locateVisibleIndexAt(widget->y()));
-        if (selected.contains(widgetIndex))
-            widget->setSelected(true);
-        if (deselected.contains(widgetIndex))
-            widget->setSelected(false);
+    for (QHash<QModelIndex, MWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end(); ++iter) {
+        if (selected.contains(iter.key()))
+            iter.value()->setSelected(true);
+        if (deselected.contains(iter.key()))
+            iter.value()->setSelected(false);
     }
+}
+
+bool MListViewPrivate::isAnimating()
+{
+    return (itemDeletionAnimation && itemDeletionAnimation->state() == QParallelAnimationGroup::Running);
+}
+
+void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end, bool animated)
+{
+    int first = indexToFlatRow(controllerModel->firstVisibleItem());
+    int last = indexToFlatRow(controllerModel->lastVisibleItem());
+
+    if (parent.isValid()) {
+        int parentFlatRow = indexToFlatRow(parent);
+        start += parentFlatRow + 1;
+        end += parentFlatRow + 1;
+    }
+
+    if (!animated || isAnimating() || !itemDeletionAnimation || start > last || !controller->isVisible())
+        return;
+
+    start = first > start ? first : start;
+    end = end > last ? last : end;
+    // Set targets for deletion animation
+    appendTargetsToDeleteAnimation(start, end, first, last);
+
+    // Start item deletion animation
+    itemDeletionAnimation->start();
+}
+
+void MListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
+{
+    QPointF offset(0,0);
+    for (int flatRow = first; flatRow <= last; flatRow ++) {
+        MWidget *cell = findCellAtRow(flatRow);
+        if (cell) {
+            if (flatRow < start)
+                itemDeletionAnimation->appendBeforeTarget(cell);
+            else if (flatRow > end) {
+                itemDeletionAnimation->appendAfterTarget(cell, cell->pos() - offset);
+            }
+            else {
+                itemDeletionAnimation->appendDeleteTarget(cell);
+                offset += QPointF(0, cellSize(flatRow).height() + hseparatorHeight);
+            }
+        }
+    }
+    animatingItems = visibleItems.values().toVector();
+    visibleItems.clear();
+}
+
+void MListViewPrivate::resetAnimatedWidgets()
+{
+    while (!animatingItems.isEmpty()) {
+        delete animatingItems.front();
+        animatingItems.pop_front();
+    }
+
+    q_ptr->layoutChanged();
+    _q_relayoutItemsIfNeeded();
 }
 
 void MListViewPrivate::deleteItem(MWidget *widget)
@@ -351,6 +417,18 @@ QPointF MListViewPrivate::calculatePannableViewportOffset(const QPointF &listPos
     return listOffset;
 }
 
+void MListViewPrivate::updateAnimations()
+{
+    delete itemDeletionAnimation;
+    itemDeletionAnimation = 0;
+    if (q_ptr->style()->deleteItemAnimation().isEmpty())
+        return;
+
+    itemDeletionAnimation = qobject_cast<MBasicListItemDeletionAnimation*>(MTheme::animation(q_ptr->style()->deleteItemAnimation()));
+    if (itemDeletionAnimation)
+        connect(itemDeletionAnimation, SIGNAL(finished()), this, SLOT(resetAnimatedWidgets()));
+}
+
 void MListViewPrivate::updateItemHeight()
 {
     if (controllerModel->cellCreator())
@@ -360,7 +438,7 @@ void MListViewPrivate::updateItemHeight()
 void MListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
         const QPoint &lastVisibleItemCoord)
 {
-    for (QVector<MWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
+    for (ModelIndexWidgetHash::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
         MWidget *cell = *iter;
         qreal cellPosY = cell->pos().y();
 
@@ -375,7 +453,7 @@ void MListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
 
 MWidget *MListViewPrivate::findCellAtRow(int row)
 {
-    foreach(MWidget * widget, visibleItems) {
+    foreach (MWidget * widget, visibleItems) {
         QPointF pos(widget->pos());
         int widgetRow = locateVisibleRowAt(pos.y(), pos.x());
         if (widgetRow == row)
@@ -389,11 +467,17 @@ void MListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRo
 {
     for (int currentRow = firstVisibleRow; currentRow <= lastVisibleRow; currentRow++) {
         MWidget *existingCell = findCellAtRow(currentRow);
-        if (existingCell != NULL)
+        if (existingCell != NULL) {
+            visibleItems[flatRowToIndex(currentRow)] = existingCell;
             continue;
+        }
 
-        MWidget *cell = createItem(currentRow);
-        visibleItems.append(cell);
+        QModelIndex index = flatRowToIndex(currentRow);
+        MWidget *cell = visibleItems.value(index, NULL);
+        if (!cell) {
+            cell = createItem(currentRow);
+            visibleItems[index] = cell;
+        }
         cell->setPos(QPointF(0, locatePosOfItem(currentRow)));
     }
 }
@@ -408,13 +492,15 @@ void MListViewPrivate::connectSignalsFromModelToListView()
 {
     if (model) {
         connect(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)), q_ptr, SLOT(dataChanged(QModelIndex, QModelIndex)));
-        if (model->inherits("MAbstractItemModel")) {
+
+        if (model->inherits("MAbstractItemModel") || model->inherits("MSortFilterProxyModel")) {
             connect(model, SIGNAL(rowsInserted(QModelIndex, int, int, bool)), q_ptr, SLOT(rowsInserted(QModelIndex, int, int, bool)));
             connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int, bool)), q_ptr, SLOT(rowsRemoved(QModelIndex, int, int, bool)));
         } else {
             connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), q_ptr, SLOT(rowsInserted(QModelIndex, int, int)));
             connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int)), q_ptr, SLOT(rowsRemoved(QModelIndex, int, int)));
         }
+
         connect(model, SIGNAL(layoutChanged()), q_ptr, SLOT(layoutChanged()));
         connect(model, SIGNAL(modelReset()), q_ptr, SLOT(modelReset()));
         connect(model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
@@ -514,9 +600,7 @@ QModelIndex MListViewPrivate::locateLastVisibleIndexInRowAt(int pos)
 void MListViewPrivate::replaceItem(MWidget* item, MWidget* newItem)
 {
     newItem->setPos(item->pos());
-    int itemIndex = visibleItems.indexOf(item);
-    if (itemIndex >= 0)
-        visibleItems.replace(itemIndex, newItem);
+    visibleItems[visibleItems.key(item)] = newItem;
     deleteItem(item);
 }
 
@@ -537,7 +621,7 @@ void MListViewPrivate::layoutChanged()
 
 void MListViewPrivate::drawSeparators(QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
-    if(!controllerModel->firstVisibleItem().isValid() || !controllerModel->lastVisibleItem().isValid())
+    if (!controllerModel->firstVisibleItem().isValid() || !controllerModel->lastVisibleItem().isValid() || isAnimating())
         return;
 
     int firstRow = indexToFlatRow(controllerModel->firstVisibleItem());
@@ -941,7 +1025,7 @@ void MPlainMultiColumnListViewPrivate::clearVisibleItemsArray()
 void MPlainMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
         const QPoint &lastVisibleItemCoord)
 {
-    for (QVector<MWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
+    for (ModelIndexWidgetHash::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
         MWidget *cell = *iter;
         qreal cellPosY = cell->pos().y();
 
@@ -970,8 +1054,12 @@ void MPlainMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &fir
 
             // Create widgets to all columns in this row
             for (int column = 0; column < controllerModel->columns(); ++column) {
-                cell = createItem(currentRow + column);
-                visibleItems.append(cell);
+                QModelIndex index = flatRowToIndex(currentRow + column);
+                cell = visibleItems.value(index, NULL);
+                if (!cell) {
+                    cell = createItem(currentRow + column);
+                    visibleItems[index] = cell;
+                }
                 widgetFlatRows[cell] = currentRow + column + 1;
                 cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(currentRow + column)));
                 if (currentRow + column + 1 == itemsCount() || flatRowToColumn(currentRow + column + 1) == 0)
@@ -1006,6 +1094,26 @@ void MPlainMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column
     painter->translate(pos.x(), pos.y());
     vseparator->paint(painter, option);
     painter->translate(-pos.x(), -pos.y());
+}
+
+void MPlainMultiColumnListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
+{
+    QPointF destination = findCellAtRow(start)->pos();
+    for (int flatRow = first; flatRow <= last; flatRow ++) {
+        MWidget *cell = findCellAtRow(flatRow);
+        if (cell) {
+            if (flatRow < start)
+                itemDeletionAnimation->appendBeforeTarget(cell);
+            else if (flatRow > end) {
+                itemDeletionAnimation->appendAfterTarget(cell, destination);
+                destination = cell->pos();
+            }
+            else
+                itemDeletionAnimation->appendDeleteTarget(cell);
+        }
+    }
+    animatingItems = visibleItems.values().toVector();
+    visibleItems.clear();
 }
 
 ////////////
@@ -1391,6 +1499,11 @@ void MGroupHeaderListViewPrivate::updateListIndexOffset()
         listIndexWidget->setOffset(pannableViewport->pos());
 }
 
+void MGroupHeaderListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
+{
+    MListViewPrivate::appendTargetsToDeleteAnimation(start, end, first, last);
+}
+
 ////////////
 // Group Header MultiColumn
 ////////////
@@ -1534,7 +1647,7 @@ void MMultiColumnListViewPrivate::clearVisibleItemsArray()
 void MMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
         const QPoint &lastVisibleItemCoord)
 {
-    for (QVector<MWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
+    for (ModelIndexWidgetHash::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
         MWidget *cell = *iter;
         qreal cellPosY = cell->pos().y();
 
@@ -1564,8 +1677,12 @@ void MMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVis
 
             // Create widgets to all columns in this row
             for (int column = 0; column < controllerModel->columns(); ++column) {
-                cell = createItem(currentRow + column);
-                visibleItems.append(cell);
+                QModelIndex index = flatRowToIndex(currentRow + column);
+                cell = visibleItems.value(index, NULL);
+                if (!cell) {
+                    cell = createItem(currentRow + column);
+                    visibleItems[index] = cell;
+                }
                 widgetFlatRows[cell] = currentRow + column + 1;
                 cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(currentRow + column)));
                 if (currentRow + column + 1 == itemsCount() + rowCount || flatRowToColumn(currentRow + column + 1) == 0)
@@ -1711,4 +1828,39 @@ void MMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column, QPa
     painter->translate(pos.x(), pos.y());
     vseparator->paint(painter, option);
     painter->translate(-pos.x(), -pos.y());
+}
+
+void MMultiColumnListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
+{
+    QPointF offset(0,0);
+    QPointF destination = findCellAtRow(start)->pos();
+    bool shifting = false;
+    for (int flatRow = first; flatRow <= last; flatRow ++) {
+        MWidget *cell = findCellAtRow(flatRow);
+        if (cell) {
+            QModelIndex index = flatRowToIndex(flatRow);
+            if (flatRow < start)
+                itemDeletionAnimation->appendBeforeTarget(cell);
+            else if (flatRow > end) {
+                if (isGroupHeader(index) && !shifting) {
+                    int itemsInGroup = itemsCount(index.row() - 1);
+                    int oldGroupRows = itemsToRows(itemsInGroup + (end - start + 1));
+                    int newGroupRows = itemsToRows(itemsInGroup);
+                    offset = QPointF(0, (oldGroupRows - newGroupRows) * (itemHeight + hseparatorHeight));
+                    shifting = true;
+                }
+                if (!shifting) {
+                    itemDeletionAnimation->appendAfterTarget(cell, destination);
+                    destination = cell->pos();
+                }
+                else
+                    itemDeletionAnimation->appendAfterTarget(cell, cell->pos() - offset);
+            }
+            else {
+                itemDeletionAnimation->appendDeleteTarget(cell);
+            }
+        }
+    }
+    animatingItems = visibleItems.values().toVector();
+    visibleItems.clear();
 }

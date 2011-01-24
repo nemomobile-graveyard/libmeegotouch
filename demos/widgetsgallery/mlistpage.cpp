@@ -279,7 +279,6 @@ void MListPage::setPlainListModel()
     proxyModel->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
     proxyModel->setSourceModel(model);
 
-
     list->setItemModel(proxyModel);
 
     imageLoader = new PhoneBookImageLoader;

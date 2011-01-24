@@ -23,6 +23,8 @@
 #include <MExport>
 #include <QSortFilterProxyModel>
 
+class MSortFilterProxyModelPrivate;
+
 /*!
     \class MSortFilterProxyModel
     \brief MSortFilterProxyModel reimplementation of a custom sort/filter proxy data model.
@@ -47,10 +49,43 @@ public:
 
     //! \reimp
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    virtual void setSourceModel(QAbstractItemModel *sourceModel);
     //! \reimp_end
+
+Q_SIGNALS:
+    /*!
+      \param parent Parent index in which the rows were inserted.
+      \param first First inserted row index.
+      \param last Last inserted row index.
+      \param animated Flag that shows if the insert operation was with animations or not.
+    */
+    void rowsInserted(const QModelIndex &parent, int first, int last, bool animated);
+
+    /*!
+      \param parent Parent index in which the rows were removed.
+      \param first First removed row index.
+      \param last Last removed row index.
+      \param animated Flag that shows if the remove operation was with animations or not.
+    */
+    void rowsRemoved(const QModelIndex &parent, int first, int last, bool animated);
+
+    /*!
+      \param The signal is emitted if the layout change shall be animated.
+    */
+    void layoutAboutToBeAnimated();
 
 private:
     bool filterAcceptsGroup(const QModelIndex &source_index) const;
+
+    Q_PRIVATE_SLOT(d_func(), void _q_layoutAboutToBeAnimated())
+    Q_PRIVATE_SLOT(d_func(), void _q_rowsInserted(QModelIndex,int,int))
+    Q_PRIVATE_SLOT(d_func(), void _q_rowsRemoved(QModelIndex,int,int))
+
+    Q_PRIVATE_SLOT(d_func(), void _q_layoutChanged())
+
+private:
+    MSortFilterProxyModelPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(MSortFilterProxyModel)
 };
 
 #endif // MSORTFILTERPROXYMODEL_H

@@ -190,7 +190,7 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
     if (isGrouped() && group >= 0)
         flatRow = itemGroupCache[group][row];
 
-    beginRemoveRows(parent, row, row + count - 1, true);
+    beginRemoveRows(parent, row, row + count - 1, count == 1);
     
     qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
     phoneBookEntries.remove(flatRow, count);

@@ -43,6 +43,8 @@ class QAbstractItemModel;
 class QItemSelectionModel;
 class QItemSelection;
 class QPropertyAnimation;
+class QParallelAnimationGroup;
+class MBasicListItemDeletionAnimation;
 
 namespace MListViewPrivateNamespace
 {
@@ -83,6 +85,7 @@ public:
     MListViewPrivate();
     virtual ~MListViewPrivate();
 
+    void updateAnimations();
     void updateItemHeight();
 
     MWidget *createCell(int row);
@@ -132,6 +135,10 @@ public:
     virtual void resetModel(MListModel *controllerModel);
     virtual int locateVisibleRowAt(int y, int x = 0) = 0;
 
+    virtual void removeRows(const QModelIndex &parent, int start, int end, bool animated);
+    virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
+    virtual bool isAnimating();
+
     virtual int locatePosOfItem(int row) = 0;
     virtual int locatePosOfItem(const QModelIndex &index) = 0;
     virtual int itemsCount() const = 0;
@@ -163,6 +170,7 @@ public:
     virtual void updateItemLongTapConnection(MWidget *cell);
 
 public Q_SLOTS:
+    void resetAnimatedWidgets();
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);
     void viewportSizeChanged(const QSizeF &size);
@@ -184,7 +192,10 @@ public:
     int hseparatorHeight;
     MCellCreator *headersCreator;
 
-    QVector<MWidget *> visibleItems;
+    typedef QHash<QModelIndex, MWidget *> ModelIndexWidgetHash;
+    ModelIndexWidgetHash visibleItems;
+    QVector<MWidget *> animatingItems;
+
     QPointF viewportTopLeft;
     int viewportVisibleHeight;
 
@@ -209,7 +220,9 @@ public:
     // Scroll animation
     QPropertyAnimation *scrollToAnimation;
 
-    //
+    // Item remove animations
+    MBasicListItemDeletionAnimation* itemDeletionAnimation;
+
     bool isDeleted;
 };
 
@@ -271,6 +284,8 @@ public:
 
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option);
+
+    virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
 public:
     QHash<MWidget *, int> widgetFlatRows;
     MWidget *vseparator;
@@ -330,6 +345,8 @@ public:
     virtual void updateListIndexVisibility();
     virtual void updateListIndexOffset();
 
+    virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
+
 public:
     QVector<int> headersPositions;
     QVector<int> headersRows;
@@ -378,6 +395,8 @@ public:
     virtual void replaceItem(MWidget* item, MWidget* newItem);
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option);
+
+    virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
 public:
     QHash<MWidget *, int> widgetFlatRows;
     MWidget *vseparator;

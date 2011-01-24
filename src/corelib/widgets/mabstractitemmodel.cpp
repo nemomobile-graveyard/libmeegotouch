@@ -21,7 +21,9 @@
 #include "mabstractitemmodel_p.h"
 
 MAbstractItemModelPrivate::MAbstractItemModelPrivate()
-    : q_ptr(0), groupMode(false)
+    : q_ptr(0),
+    groupMode(false),
+    isAnimatedChange(false)
 {
 }
 
@@ -33,8 +35,10 @@ void MAbstractItemModelPrivate::connectModel()
 {
     Q_Q(MAbstractItemModel);
 
-    connect(q, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(_q_rowsInsertAnimated(QModelIndex,int,int)));
-    connect(q, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(_q_rowsRemoveAnimated(QModelIndex,int,int)));
+    q->connect(q, SIGNAL(rowsInserted(QModelIndex,int,int)), q, SLOT(_q_rowsInsertAnimated(QModelIndex,int,int)));
+    q->connect(q, SIGNAL(rowsRemoved(QModelIndex,int,int)), q, SLOT(_q_rowsRemoveAnimated(QModelIndex,int,int)));
+
+    q->connect(q, SIGNAL(layoutChanged()), q, SLOT(_q_layoutChanged()));
 }
 
 void MAbstractItemModelPrivate::setGrouped(bool mode)
@@ -47,28 +51,23 @@ bool MAbstractItemModelPrivate::isGrouped() const
     return groupMode;
 }
 
-void MAbstractItemModelPrivate::setChangeAnimated(bool animated)
-{
-    animatedChange.push(animated);
-}
-
-bool MAbstractItemModelPrivate::changeAnimated()
-{
-    return animatedChange.pop();
-}
-
 void MAbstractItemModelPrivate::_q_rowsInsertAnimated(const QModelIndex &parent, int first, int last)
 {
     Q_Q(MAbstractItemModel);
 
-    emit q->rowsInserted(parent, first, last, changeAnimated());
+    emit q->rowsInserted(parent, first, last, isAnimatedChange);
 }
 
 void MAbstractItemModelPrivate::_q_rowsRemoveAnimated(const QModelIndex &parent, int first, int last)
 {
     Q_Q(MAbstractItemModel);
 
-    emit q->rowsRemoved(parent, first, last, changeAnimated());
+    emit q->rowsRemoved(parent, first, last, isAnimatedChange);
+}
+
+void MAbstractItemModelPrivate::_q_layoutChanged()
+{
+    isAnimatedChange = false;
 }
 
 MAbstractItemModel::MAbstractItemModel(QObject *parent)
@@ -89,6 +88,8 @@ MAbstractItemModel::~MAbstractItemModel()
 void MAbstractItemModel::setGrouped(bool mode)
 {
     Q_D(MAbstractItemModel);
+
+    emit layoutAboutToBeChanged();
 
     if (d->isGrouped() == mode)
         return;
@@ -159,14 +160,22 @@ void MAbstractItemModel::beginInsertRows(const QModelIndex &parent, int first, i
 {
     Q_D(MAbstractItemModel);
 
+    d->isAnimatedChange = animated;
+    if (animated)
+        emit layoutAboutToBeAnimated();
+
     QAbstractItemModel::beginInsertRows(parent, first, last);
-    d->setChangeAnimated(animated);
 }
 
 void MAbstractItemModel::beginRemoveRows(const QModelIndex &parent, int first, int last, bool animated)
 {
     Q_D(MAbstractItemModel);
 
+    d->isAnimatedChange = animated;
+    if (animated)
+        emit layoutAboutToBeAnimated();
+
     QAbstractItemModel::beginRemoveRows(parent, first, last);
-    d->setChangeAnimated(animated);
 }
+
+#include "moc_mabstractitemmodel.cpp"

@@ -17,36 +17,36 @@
 **
 ****************************************************************************/
 
-#ifndef MABSTRACTITEMMODEL_P_H
-#define MABSTRACTITEMMODEL_P_H
+#ifndef MSORTFILTERPROXYMODEL_P_H
+#define MSORTFILTERPROXYMODEL_P_H
 
 #include <QObject>
 #include <QModelIndex>
 
-class MAbstractItemModel;
+class QAbstractItemModel;
+class MSortFilterProxyModel;
 
-class MAbstractItemModelPrivate
-{    
+class MSortFilterProxyModelPrivate
+{
 public:
-    MAbstractItemModelPrivate();
-    virtual ~MAbstractItemModelPrivate();
-    
-    void connectModel();
-    
-    void setGrouped(bool mode);
-    bool isGrouped() const;
-    
-    void _q_rowsInsertAnimated(const QModelIndex &parent, int first, int last);
-    void _q_rowsRemoveAnimated(const QModelIndex &parent, int first, int last);
-    
+    MSortFilterProxyModelPrivate();
+    virtual ~MSortFilterProxyModelPrivate();
+
+    void init();
+    void connectToSourceModel(QAbstractItemModel *sourceModel);
+
+    void _q_rowsInserted(const QModelIndex &parent, int first, int last);
+    void _q_rowsRemoved(const QModelIndex &parent, int first, int last);
+    void _q_layoutAboutToBeAnimated();
+    void _q_layoutAboutToBeChanged();
     void _q_layoutChanged();
 
 private:
-    MAbstractItemModel *q_ptr;
-    Q_DECLARE_PUBLIC(MAbstractItemModel)
+    MSortFilterProxyModel *q_ptr;
+    Q_DECLARE_PUBLIC(MSortFilterProxyModel)
 
-    bool groupMode;    
+    bool isSupportedModel;
     bool isAnimatedChange;
 };
 
-#endif // MABSTRACTITEMMODEL_P_H
+#endif // MSORTFILTERPROXYMODEL_P_H

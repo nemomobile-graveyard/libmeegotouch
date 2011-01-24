@@ -87,6 +87,7 @@ void MListView::init()
     d_ptr->createSeparators();
     d_ptr->updateSeparators();
     d_ptr->updateSeparatorSize();
+    d_ptr->updateAnimations();
 
     connectSelectionModel();
     d_ptr->connectPannableViewport();
@@ -157,6 +158,7 @@ void MListView::applyStyle()
 
     if (d_ptr) {        
         d_ptr->clearVisibleItemsArray();
+        d_ptr->updateAnimations();
         d_ptr->updateItemHeight();
         d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
@@ -297,20 +299,20 @@ void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool
  */
 void MListView::rowsRemoved(const QModelIndex &parent, int start, int end, bool animated)
 {
-    Q_UNUSED(parent);
-    Q_UNUSED(start);
-    Q_UNUSED(end);
-    Q_UNUSED(animated);
+    d_ptr->removeRows(parent, start, end, animated);
 
-    layoutChanged();
+    if (!animated)
+        layoutChanged();
 }
 
 void MListView::layoutChanged()
 {
-    d_ptr->layoutChanged();
+    if (!d_ptr->isAnimating()) {
+        d_ptr->layoutChanged();
 
-    updateGeometry();
-    d_ptr->clearVisibleOnRelayout = true;
+        updateGeometry();
+        d_ptr->clearVisibleOnRelayout = true;
+    }
 }
 
 void MListView::modelReset()
