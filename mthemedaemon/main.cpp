@@ -33,7 +33,7 @@ namespace
 
 static int setup_unix_signal_handlers()
 {
-    struct sigaction sighup, sigterm, sigint;
+    struct sigaction sighup, sigterm, sigint, sigusr1;
 
     sighup.sa_handler = MThemeDaemonServer::hupSignalHandler;
     sigemptyset(&sighup.sa_mask);
@@ -55,6 +55,13 @@ static int setup_unix_signal_handlers()
 
     if (sigaction(SIGINT, &sigint, 0) > 0)
         return 3;
+
+    sigusr1.sa_handler = MThemeDaemonServer::usr1SignalHandler;
+    sigemptyset(&sigusr1.sa_mask);
+    sigusr1.sa_flags = SA_RESTART;
+
+    if (sigaction(SIGUSR1, &sigusr1, 0) > 0)
+        return 4;
 
      return 0;
  }

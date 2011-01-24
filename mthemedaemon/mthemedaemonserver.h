@@ -50,6 +50,7 @@ public:
     static void hupSignalHandler(int unused);
     static void termSignalHandler(int unused);
     static void intSignalHandler(int unused);
+    static void usr1SignalHandler(int unused);
 
 public slots:
     void themeChanged(bool forceReload = false);
@@ -59,6 +60,7 @@ public slots:
     void handleSigHup();
     void handleSigTerm();
     void handleSigInt();
+    void handleSigUsr1();
 
 private slots:
     void clientConnected();
@@ -116,6 +118,30 @@ private:
             { return (client != other.client || pixmapId != other.pixmapId); }
     };
 
+    /**
+     * Prints the memory-usage required for all shared pixmaps to the default
+     * temporary directory (e.g. /var/tmp) as "mthemedaemonserver-stat.txt".
+     */
+    class MemoryUsagePrinter
+    {
+    public:
+        MemoryUsagePrinter(const QList<MThemeDaemonClient*> &clients);
+        void print();
+    private:
+        QString keyForHandle(const MPixmapHandle &handle) const;
+        void addPixmapCacheEntries(const QString &client,
+                                   const QString &imageId,
+                                   const QHash<QSize, const PixmapCacheEntry*> &pixmapCacheEntries,
+                                   QHash<QString, QString>& sharedPixmaps);
+        QList<QString> layoutedLines(const QList<QString> &lines) const;
+        int countColumns(const QList<QString> &lines) const;
+
+        const QChar columnSeparator;
+        QList<QString> lines;
+        QHash<QString, int> clientMemoryUsage;
+        int sharedMemoryUsage;
+    };
+
     QLocalServer server;
     QHash<QLocalSocket *, MThemeDaemonClient *> registeredClients;
     MThemeDaemon daemon;
@@ -143,9 +169,11 @@ private:
     static int sighupFd[2];
     static int sigtermFd[2];
     static int sigintFd[2];
+    static int sigusr1Fd[2];
     QSocketNotifier *snHup;
     QSocketNotifier *snTerm;
     QSocketNotifier *snInt;
+    QSocketNotifier *snUsr1;
 };
 //! \internal_end
 #endif

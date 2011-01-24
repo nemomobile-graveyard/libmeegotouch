@@ -85,12 +85,11 @@ public:
 
     // returns a handle to pixmap, without increasing the refCount
     MPixmapHandle pixmapHandle(const QSize &size);
-
-    bool save(QIODevice* device, const QSize& size) const;
-    bool load(QIODevice* device, const QSize& size);
     
     QString absoluteFilePath()
     { return filePath; }
+
+    QHash<QSize, const PixmapCacheEntry*> pixmapCacheEntries() const;
 
 protected:
     virtual QImage createPixmap(const QSize &size) = 0;

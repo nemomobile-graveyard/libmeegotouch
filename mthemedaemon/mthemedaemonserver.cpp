@@ -27,6 +27,7 @@
 
 #include <QLocalSocket>
 #include <QDir>
+#include <QTime>
 #include <QTimer>
 #include <QSettings>
 #include <QApplication>
@@ -38,6 +39,7 @@ const int THEME_CHANGE_TIMEOUT = 3000;
 int MThemeDaemonServer::sighupFd[2];
 int MThemeDaemonServer::sigtermFd[2];
 int MThemeDaemonServer::sigintFd[2];
+int MThemeDaemonServer::sigusr1Fd[2];
 
 MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     daemon(MThemeDaemon::RemoteDaemon),
@@ -55,6 +57,8 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
         qFatal("Couldn't create TERM socketpair");
     if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigintFd))
         qFatal("Couldn't create INT socketpair");
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigusr1Fd))
+        qFatal("Couldn't create USR1 socketpair");
 
     snHup = new QSocketNotifier(sighupFd[1], QSocketNotifier::Read, this);
     connect(snHup, SIGNAL(activated(int)), this, SLOT(handleSigHup()));
@@ -62,6 +66,8 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     connect(snTerm, SIGNAL(activated(int)), this, SLOT(handleSigTerm()));
     snInt = new QSocketNotifier(sigintFd[1], QSocketNotifier::Read, this);
     connect(snInt, SIGNAL(activated(int)), this, SLOT(handleSigInt()));
+    snUsr1 = new QSocketNotifier(sigusr1Fd[1], QSocketNotifier::Read, this);
+    connect(snUsr1, SIGNAL(activated(int)), this, SLOT(handleSigUsr1()));
 
     QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/themedaemonpriorities.conf";
     loadPriorities(filename);
@@ -708,6 +714,13 @@ void MThemeDaemonServer::intSignalHandler(int)
     Q_UNUSED(writtenBytes);
 }
 
+void MThemeDaemonServer::usr1SignalHandler(int)
+{
+    char a = 1;
+    ssize_t writtenBytes = ::write(sigusr1Fd[0], &a, sizeof(a));
+    Q_UNUSED(writtenBytes);
+}
+
 void MThemeDaemonServer::handleSigTerm()
 {
     snTerm->setEnabled(false);
@@ -744,4 +757,220 @@ void MThemeDaemonServer::handleSigInt()
     qApp->quit();
 
     snInt->setEnabled(true);
+}
+
+void MThemeDaemonServer::handleSigUsr1()
+{
+    snUsr1->setEnabled(false);
+    char tmp;
+    ssize_t readBytes = ::read(sigusr1Fd[1], &tmp, sizeof(tmp));
+    Q_UNUSED(readBytes);
+
+    MemoryUsagePrinter memoryUsagePrinter(registeredClients.values());
+    memoryUsagePrinter.print();
+
+    snUsr1->setEnabled(true);
+}
+
+MThemeDaemonServer::MemoryUsagePrinter::MemoryUsagePrinter(const QList<MThemeDaemonClient*> &clients) :
+    columnSeparator(QLatin1Char('|')),
+    lines(),
+    clientMemoryUsage(),
+    sharedMemoryUsage(0)
+{
+    QHash<QString, QString> sharedPixmaps;
+
+    // Iterate all themedaemon clients and create one line per shared pixmap
+    // for the output table (there all clients that use this pixmaps are listed).
+    foreach(const MThemeDaemonClient *client, clients) {
+        clientMemoryUsage[client->name()] = 0;
+
+        QHashIterator<M::MThemeDaemonProtocol::PixmapIdentifier, ImageResource*> it(client->pixmaps);
+        while (it.hasNext()) {
+            it.next();
+            if (it.value()) {
+                addPixmapCacheEntries(client->name(),
+                                      it.key().imageId,
+                                      it.value()->pixmapCacheEntries(),
+                                      sharedPixmaps);
+            }
+        }
+    }
+
+    // Layout the lines of the table to have an optimized column-width
+    lines = layoutedLines(sharedPixmaps.values());
+}
+
+void MThemeDaemonServer::MemoryUsagePrinter::print()
+{
+    QFile file(QDir::tempPath() + QDir::separator() + "mthemedaemonserver-status.txt");
+    if (file.open(QIODevice::Append | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << "\n" << "Timestamp: " + QTime::currentTime().toString() << "\n";
+
+        foreach (const QString &line, lines) {
+           out << line << "\n";
+        }
+
+        int overallMemoryUsage = sharedMemoryUsage;
+        out << "\nClient exclusive memory usage:\n";
+        QHashIterator<QString, int> it(clientMemoryUsage);
+        while (it.hasNext()) {
+            it.next();
+            out << "    " << it.key() << ": " << it.value() << " Bytes\n";
+            overallMemoryUsage += it.value();
+        }
+        out << "Shared memory usage: " << sharedMemoryUsage << " Bytes\n";
+        out << "Overall memory usage: " << overallMemoryUsage << " Bytes\n";
+    }
+}
+
+QString MThemeDaemonServer::MemoryUsagePrinter::keyForHandle(const MPixmapHandle &handle) const
+{
+    QString key;
+    if (handle.isValid()) {
+        if (handle.xHandle) {
+            key = QString::number(static_cast<qulonglong>(handle.xHandle));
+        } else {
+            key = QString::number(static_cast<qulonglong>(handle.eglHandle));
+        }
+    }
+    return key;
+}
+
+void MThemeDaemonServer::MemoryUsagePrinter::addPixmapCacheEntries(const QString &client,
+                                                                   const QString &imageId,
+                                                                   const QHash<QSize, const PixmapCacheEntry*> &pixmapCacheEntries,
+                                                                   QHash<QString, QString>& sharedPixmaps)
+{
+    QHashIterator<QSize, const PixmapCacheEntry*> it(pixmapCacheEntries);
+    while (it.hasNext()) {
+        it.next();
+
+        const PixmapCacheEntry *entry = it.value();
+        if (!entry) {
+            continue;
+        }
+
+        const QString key = keyForHandle(entry->handle);
+        if (key.isEmpty()) {
+            continue;
+        }
+
+        const int pixmapMemoryUsage = entry->pixmap->width() * entry->pixmap->height() * (QPixmap::defaultDepth() >> 3);
+
+        if (sharedPixmaps.contains(key)) {
+            // The entry is already available, just append the client-name to the end if the
+            // client-name has not already been added before.
+            const QChar clientSeparator(',');
+            const QString line = sharedPixmaps.value(key);
+            const int lastColumnIndex = line.lastIndexOf(columnSeparator);
+            const QString clientsLine = line.right(line.length() - lastColumnIndex - 1);
+            const QStringList clients = clientsLine.split(clientSeparator);
+            if (!clients.contains(client)) {
+                sharedPixmaps.insert(key, line + clientSeparator + client);
+
+                // If this is the second client that uses the same pixmap, the memory-usage
+                // of the first client must be adjusted by moving it to the shared memory-usage.
+                if (clients.count() == 1) {
+                    sharedMemoryUsage += pixmapMemoryUsage;
+                    clientMemoryUsage[clientsLine] -= pixmapMemoryUsage;
+                }
+            }
+        } else {
+            // The entry has not been added yet. Provide the size in bytes, image-ID, size in
+            // pixels and the current client-name as value content.
+            const QString width = QString::number(entry->pixmap->width());
+            const QString height = QString::number(entry->pixmap->height());
+            const QString size = QString::number(pixmapMemoryUsage);
+            QString value = size.rightJustified(8) + columnSeparator;
+            value += imageId + columnSeparator + "(";
+            value += width.rightJustified(3) + ",";
+            value += height.rightJustified(3) + ")" + columnSeparator;
+            value += client;
+
+            clientMemoryUsage[client] += pixmapMemoryUsage;
+            sharedPixmaps.insert(key, value);
+        }
+    }
+}
+
+QList<QString> MThemeDaemonServer::MemoryUsagePrinter::layoutedLines(const QList<QString> &lines) const
+{
+    int columnCount = countColumns(lines);
+
+    // maxColumnChars stores the maximum number of characters that fit
+    // into each column. Initialized with 0 per default.
+    QList<int> maxColumnChars;
+    for (int i = 0; i < columnCount; ++i) {
+        maxColumnChars.append(0);
+    }
+
+    // The layout of each line is done in two steps:
+    // 1. Calculate the maximum width for each column and remember the result
+    //    in maxColumnChars
+    // 2. Align the columns for each line so that that the column-content is
+    //    on the left and the rest filled with spaces.
+    QStringList layoutedLines;
+    bool calculatedMaxColumnChars = false;
+    bool layouted = false;
+    do {
+        foreach (const QString &line, lines) {
+            QString layoutedLine;
+
+            int separatorIndex = 0;
+            int oldSeparatorIndex = -1;
+            int columnIndex = 0;
+            do {
+                separatorIndex = line.indexOf(columnSeparator, oldSeparatorIndex + 1);
+                if (separatorIndex < 0) {
+                    separatorIndex = line.length();
+                }
+
+                const int columnWidth = separatorIndex - oldSeparatorIndex - 1;
+                if (calculatedMaxColumnChars) {
+                    // The maximum width of the column is known. Align the content of
+                    // the column to the left and fill the rest with spaces.
+                    Q_ASSERT(!layouted);
+                    const int length = separatorIndex - oldSeparatorIndex - 1;
+                    QString columnContent = line.mid(oldSeparatorIndex + 1, length);
+                    const int columnGap = 1;
+                    columnContent = columnContent.leftJustified(maxColumnChars[columnIndex] + columnGap);
+                    layoutedLine += columnContent;
+                } else if (columnWidth > maxColumnChars[columnIndex]) {
+                    maxColumnChars[columnIndex] = columnWidth;
+                }
+
+                ++columnIndex;
+                oldSeparatorIndex = separatorIndex;
+            } while (separatorIndex < line.length());
+
+            if (calculatedMaxColumnChars) {
+                layoutedLines.append(layoutedLine);
+            }
+        }
+
+        if (calculatedMaxColumnChars) {
+            layouted = true;
+        } else {
+            calculatedMaxColumnChars = true;
+        }
+    } while (!layouted);
+
+    layoutedLines.sort();
+    return layoutedLines;
+}
+
+int MThemeDaemonServer::MemoryUsagePrinter::countColumns(const QList<QString> &lines) const
+{
+    int columnCount = 0;
+
+    foreach (const QString &line, lines) {
+        const int valueColumnCount = line.count(columnSeparator) + 1;
+        if (valueColumnCount > columnCount) {
+            columnCount = valueColumnCount;
+        }
+    }
+
+    return columnCount;
 }

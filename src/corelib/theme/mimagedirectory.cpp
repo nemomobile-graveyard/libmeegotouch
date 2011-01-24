@@ -164,6 +164,19 @@ MPixmapHandle ImageResource::pixmapHandle(const QSize &size)
     }
 }
 
+QHash<QSize, const PixmapCacheEntry*> ImageResource::pixmapCacheEntries() const
+{
+    QHash<QSize, const PixmapCacheEntry*> entries;
+
+    QHashIterator<QSize, PixmapCacheEntry*> it(cachedPixmaps);
+    while (it.hasNext()) {
+        it.next();
+        entries.insert(it.key(), it.value());
+    }
+
+    return entries;
+}
+
 QImage ImageResource::loadFromFsCache(const QSize& size)
 {
     const QString cacheFileName = createCacheFilename(size);
