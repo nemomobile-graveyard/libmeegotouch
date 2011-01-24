@@ -36,6 +36,7 @@ public:
     static MKeyboardStateTracker *tracker;
 #ifdef HAVE_CONTEXTSUBSCRIBER
     ContextProperty keyboardOpenProperty;
+    bool isSubscribed;
 #elif defined(M_OS_MAEMO5)
     MGConfItem keyboardOpenConf;
 #endif

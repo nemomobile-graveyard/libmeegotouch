@@ -335,7 +335,6 @@ void MOrientationTrackerPrivate::unsubscribeToSensorProperties()
         videoRouteProperty->unsubscribe();
         isFlatProperty->unsubscribe();
         MKeyboardStateTracker::instance()->d_ptr->unsubscribe();
-        MKeyboardStateTracker::instance()->d_ptr->present = false;
     }
 }
 

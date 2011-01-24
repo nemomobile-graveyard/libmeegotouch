@@ -29,6 +29,7 @@ MKeyboardStateTracker *MKeyboardStateTrackerPrivate::tracker = 0;
 MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker *controller) :
 #ifdef HAVE_CONTEXTSUBSCRIBER
     keyboardOpenProperty("/maemo/InternalKeyboard/Open"),
+    isSubscribed(false),
 #elif defined(M_OS_MAEMO5)
     keyboardOpenConf("/system/osso/af/slide-open"),
 #endif
@@ -53,6 +54,7 @@ void MKeyboardStateTrackerPrivate::initContextSubscriber()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     //waiting for properties to synchronize
     keyboardOpenProperty.waitForSubscription(true);
+    isSubscribed = true;
     // TODO: use actual ContextProperty for present, which is still unready.
     present = true;
 #elif defined(M_OS_MAEMO5)
@@ -71,6 +73,7 @@ void MKeyboardStateTrackerPrivate::unsubscribe()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     keyboardOpenProperty.unsubscribe();
+    isSubscribed = false;
 #endif
 }
 
@@ -106,7 +109,7 @@ bool MKeyboardStateTracker::isOpen() const
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_D(const MKeyboardStateTracker);
     MKeyboardStateTrackerPrivate* trackerPriv = const_cast<MKeyboardStateTrackerPrivate*>(d);
-    if (!isPresent()) {
+    if (!d->isSubscribed) {
         trackerPriv->subscribe();
         trackerPriv->initContextSubscriber();
     }
