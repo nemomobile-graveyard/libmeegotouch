@@ -38,7 +38,8 @@ MListIndexFloatingViewPrivate::MListIndexFloatingViewPrivate()
     controller(NULL),
     container(NULL),
     tooltipWidget(NULL),
-    tooltipVerticalOffset(0.0)
+    tooltipVerticalOffset(0),
+    contentHeight(0)
 {
 }
 
@@ -65,7 +66,14 @@ void MListIndexFloatingViewPrivate::updateLayout()
     if(container) {
         controller->resize(controller->preferredWidth(), containerRect.height() - q->model()->offset().y());
         controller->setPos(containerRect.x() + containerRect.width() - controller->preferredWidth(), containerRect.y() + q->model()->offset().y());
+        updateContentHeight();
     }
+}
+
+void MListIndexFloatingViewPrivate::updateContentHeight()
+{
+    Q_Q(MListIndexFloatingView);
+    contentHeight = (controller->size().height() - (q->style()->marginTop() + q->style()->marginBottom()));
 }
 
 void MListIndexFloatingViewPrivate::attachToContainer()
@@ -143,7 +151,7 @@ void MListIndexFloatingViewPrivate::scrollToGroupHeader(int y)
 {
     Q_Q(MListIndexFloatingView);
 
-    qreal offset = (qreal)y / controller->size().height();
+    qreal offset = (qreal)y / contentHeight;
     int shortcutCount = q->model()->shortcutIndexes().count();
     int shortcutIndex = shortcutCount * offset;
 
@@ -227,6 +235,7 @@ void MListIndexFloatingView::applyStyle()
 
     MWidgetView::applyStyle();
     d->tooltip()->setStyleName(style()->floatingStyleName());
+    d->updateContentHeight();
 }
 
 void MListIndexFloatingView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const

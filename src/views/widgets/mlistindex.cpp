@@ -104,10 +104,14 @@ void MListIndex::setList(MList *list)
 
 void MListIndex::setDisplayMode(MList::DisplayMode displayMode)
 {
-    if (displayMode == MList::Floating)
+    if (displayMode == MList::Floating) {
+        setViewType("floating");
         setView(new MListIndexFloatingView(this));
-    else if (QString::compare(view()->metaObject()->className(), "MListIndexView") != 0)
+    }
+    else if (QString::compare(view()->metaObject()->className(), "MListIndexView") != 0) {
+        setViewType(QString());
         setView(new MListIndexView(this));
+    }
 
     model()->setDisplayMode(displayMode);
 }

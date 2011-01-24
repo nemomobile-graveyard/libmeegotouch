@@ -43,6 +43,7 @@ public:
     void configureController();
 
     void updateLayout();
+    void updateContentHeight();
 
     void attachToContainer();
 
@@ -68,6 +69,7 @@ private:
     QModelIndex currentScrollToIndex;
 
     qreal tooltipVerticalOffset;
+    qreal contentHeight;
 };
 
 #endif // MLISTINDEXFLOATINGVIEW_P_H
