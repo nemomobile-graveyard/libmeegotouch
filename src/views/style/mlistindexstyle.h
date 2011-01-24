@@ -36,6 +36,7 @@ class MListIndexStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int, floatingIndexOffset, FloatingIndexOffset)
     M_STYLE_ATTRIBUTE(int, floatingIndexCount, FloatingIndexCount)
     M_STYLE_ATTRIBUTE(qreal, floatingSnapDistance, FloatingSnapDistance)
+    M_STYLE_ATTRIBUTE(QString, floatingStyleName, FloatingStyleName)
 };
 
 class MListIndexStyleContainer : public MWidgetStyleContainer

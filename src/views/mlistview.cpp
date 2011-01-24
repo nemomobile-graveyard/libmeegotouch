@@ -164,6 +164,7 @@ void MListView::applyStyle()
         d_ptr->updateSeparatorSize();
         d_ptr->updateHeaders();
         d_ptr->updateHeaderHeight();
+        d_ptr->updateListIndexStyle();
 
         relayoutItemsInViewportRect();
     }

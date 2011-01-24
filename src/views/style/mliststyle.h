@@ -89,6 +89,14 @@ class M_VIEWS_EXPORT MListStyle : public MWidgetStyle
         Sets object name for delete item animation.
     */
     M_STYLE_ATTRIBUTE(QString, deleteItemAnimation, DeleteItemAnimation)
+
+    /*
+        \property MListStyle::listIndexStyleName
+        \brief Sets style name for a list index a.k.a. fast scroll widget
+
+        Sets style name for a list index a.k.a. fast scroll widget
+    */
+    M_STYLE_ATTRIBUTE(QString, listIndexStyleName, ListIndexStyleName)
 };
 
 class M_VIEWS_EXPORT MListStyleContainer : public MWidgetStyleContainer

@@ -162,6 +162,7 @@ public:
 
     virtual void updateListIndexVisibility();
     virtual void updateListIndexOffset();
+    virtual void updateListIndexStyle();
 
     virtual void disconnectSignalsFromModelToListView();
     virtual void connectSignalsFromModelToListView();
@@ -344,6 +345,7 @@ public:
 
     virtual void updateListIndexVisibility();
     virtual void updateListIndexOffset();
+    virtual void updateListIndexStyle();
 
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
 

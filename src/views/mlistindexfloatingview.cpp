@@ -221,6 +221,14 @@ void MListIndexFloatingView::updateData(const QList<const char *> &modifications
     }
 }
 
+void MListIndexFloatingView::applyStyle()
+{
+    Q_D(MListIndexFloatingView);
+
+    MWidgetView::applyStyle();
+    d->tooltip()->setStyleName(style()->floatingStyleName());
+}
+
 void MListIndexFloatingView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(painter);

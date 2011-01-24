@@ -99,6 +99,12 @@ void MListIndexTooltipPrivate::clearIndexes()
 {
     qDeleteAll(indexLabels);
     indexLabels.clear();
+
+    for (int i = panelLayout->count(); i > 0; i--) {
+        QGraphicsLayoutItem *item = panelLayout->itemAt(i - 1);
+        panelLayout->removeItem(item);
+        delete item;
+    }
 }
 
 void MListIndexTooltipPrivate::createIndexes(int count)
@@ -110,7 +116,6 @@ void MListIndexTooltipPrivate::createIndexes(int count)
     for (int i = 0; i < count; i++) {
         MLabel *label = new MLabel(panel);
         label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        label->setAlignment(Qt::AlignCenter);
         label->setStyleName("IndexLabel");
 
         panelLayout->addItem(label);
@@ -236,6 +241,13 @@ void MListIndexTooltip::applyStyle()
 {
     Q_D(MListIndexTooltip);
     MStylableWidget::applyStyle();
+
+    if (d->panel) {
+        d->panel->setMinimumSize(style()->minimumSize());
+        d->panel->setPreferredSize(style()->preferredSize());
+        d->panel->setMaximumSize(style()->maximumSize());
+        updateGeometry();
+    }
 
     d->_q_updateSizeToCentralWidget();
 }

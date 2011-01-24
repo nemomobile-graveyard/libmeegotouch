@@ -734,6 +734,10 @@ void MListViewPrivate::updateListIndexOffset()
 {
 }
 
+void MListViewPrivate::updateListIndexStyle()
+{
+}
+
 ////////////
 // Plain list
 ////////////
@@ -1172,6 +1176,7 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
     if (!listIndexWidget) {
         listIndexWidget = new MListIndex(controller);
         updateListIndexVisibility();
+        updateListIndexStyle();
     }
 
     if (!controllerModel->headerCreator()) {
@@ -1502,6 +1507,12 @@ void MGroupHeaderListViewPrivate::updateListIndexOffset()
 void MGroupHeaderListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
 {
     MListViewPrivate::appendTargetsToDeleteAnimation(start, end, first, last);
+}
+
+void MGroupHeaderListViewPrivate::updateListIndexStyle()
+{
+    if (listIndexWidget)
+        listIndexWidget->setStyleName(q_ptr->style()->listIndexStyleName());
 }
 
 ////////////

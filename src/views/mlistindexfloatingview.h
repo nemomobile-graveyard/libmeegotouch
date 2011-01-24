@@ -40,6 +40,7 @@ protected:
     /*! \reimp */
     void setupModel();
     void updateData(const QList<const char *> &modifications);
+    void applyStyle();
 
     void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
 
