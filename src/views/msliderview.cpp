@@ -1492,15 +1492,16 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     //event position (for example when user clicks to slider groove
     //once it is called at mouse press and once at mouse release)
     if (newValue != q->model()->value()) {
-        controller->setValue(newValue);
         if (needAnimation) {
             if (!positionAnimation) {
                 positionAnimation = createPositionAnimation();
             }
             positionAnimation->setEndValue(newValue);
             positionAnimation->start();
-        } else
+        } else {
             position = newValue;
+        }
+        controller->setValue(newValue);
     }
 
     return newValue;
@@ -1583,15 +1584,14 @@ void MSliderView::updateData(const QList<const char *>& modifications)
         else if (member == MSliderModel::Maximum)
             d->updateSliderGroove();
         else if (member == MSliderModel::Value) {
-            if (!(d->controller->isVisible() && d->controller->isOnDisplay())) {
+            // The position should not be set here if the position animation
+            // is running or else it would not let the animation play correctly
+            if (!(d->controller->isVisible() && d->controller->isOnDisplay()) ||
+                !d->positionAnimation ||
+                (d->positionAnimation->state() != QAbstractAnimation::Running)) {
                 setPosition(model()->value());
                 continue;
             }
-            if (!d->positionAnimation) {
-                d->positionAnimation = d->createPositionAnimation();
-            }
-            d->positionAnimation->setEndValue(model()->value());
-            d->positionAnimation->start();
         }
         else if (member == MSliderModel::Steps)
             d->updateSliderGroove();
