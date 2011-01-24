@@ -80,7 +80,7 @@ void MSceneLayerEffect::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MSceneLayerEffect::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MSceneLayerEffect);
-    QList<QGraphicsItem *> itemList = childItems();
+    QList<QGraphicsItem *> itemList = parentItem()->childItems(); // get our siblings
     QGraphicsItem *item;
 
     event->accept();
@@ -93,7 +93,7 @@ void MSceneLayerEffect::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             // proper click event.
             // Let's dismiss our associated scene window.
             foreach(item, itemList) {
-                if (item->isWidget()) {
+                if (item != this && item->isWidget()) {
                     QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
                     MSceneWindow *sceneWindow = qobject_cast<MSceneWindow *>(widget);
                     if (sceneWindow) {

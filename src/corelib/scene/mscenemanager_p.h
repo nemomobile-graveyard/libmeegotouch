@@ -103,8 +103,8 @@ public:
 
     void initOrientationAngles();
     int zForWindowType(MSceneWindow::WindowType windowType);
-    MSceneLayerEffect *createLayerEffectForWindow(MSceneWindow *window);
-    void destroyLayerEffectForWindow(MSceneWindow *sceneWindow);
+    void setupLayerEffectForSceneWindow(MSceneWindow *sceneWindow);
+    void destroyLayerEffectForSceneWindow(MSceneWindow *sceneWindow);
     bool windowIntersectsRect(const QRectF &rect, MSceneWindow *window);
 
     M::Orientation orientation(M::OrientationAngle angle) const;

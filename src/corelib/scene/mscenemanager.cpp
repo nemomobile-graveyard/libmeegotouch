@@ -678,7 +678,7 @@ void MSceneManagerPrivate::removeSceneWindow(MSceneWindow *sceneWindow)
     scene->removeItem(sceneWindow);
 }
 
-MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow *window)
+void MSceneManagerPrivate::setupLayerEffectForSceneWindow(MSceneWindow *window)
 {
     MSceneLayerEffect *effect = 0;
 
@@ -694,34 +694,46 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
         effect = new MSceneLayerEffect("objectmenu");
         break;
     default:
-        return NULL;
+        return;
     }
 
     //resize the effect layer
     setSceneWindowGeometry(effect);
 
+    QGraphicsItem *sceneWindowAndLayerEffectBinder = new QGraphicsWidget;
+    sceneWindowAndLayerEffectBinder->setFlag(QGraphicsItem::ItemHasNoContents);
+
     // Add effect to scene via rootElement
-    QGraphicsItem *effectParent = window->parentItem() ?
+    QGraphicsItem *binderParent = window->parentItem() ?
                                   window->parentItem() : rootElementForSceneWindowType(window->windowType());
 
-    setParentItemWithoutIncorrectRefocusing(effect, effectParent);
-    effect->setZValue(zForWindowType(window->windowType()));
+    setParentItemWithoutIncorrectRefocusing(sceneWindowAndLayerEffectBinder, binderParent);
+    sceneWindowAndLayerEffectBinder->setZValue(zForWindowType(window->windowType()));
 
-    // Add window as child of the effect
-    setParentItemWithoutIncorrectRefocusing(window, effect);
+    // Add window as child of the binder
+    setParentItemWithoutIncorrectRefocusing(window, sceneWindowAndLayerEffectBinder);
     window->d_func()->effect = effect;
 
-    return effect;
+    effect->setParentItem(sceneWindowAndLayerEffectBinder);
+
+    // Make sure the effect layer is below its corresponding scene window
+    effect->setZValue(0);
+    window->setZValue(1);
 }
 
-void MSceneManagerPrivate::destroyLayerEffectForWindow(MSceneWindow *sceneWindow)
+void MSceneManagerPrivate::destroyLayerEffectForSceneWindow(MSceneWindow *sceneWindow)
 {
     MSceneLayerEffect *&effect = sceneWindow->d_func()->effect;
     if (effect) {
+        QGraphicsItem *sceneWindowAndLayerEffectBinder = sceneWindow->parentItem();
+        Q_ASSERT(effect->parentItem() == sceneWindowAndLayerEffectBinder);
 
-        setParentItemWithoutIncorrectRefocusing(sceneWindow, effect->parentItem());
+        setParentItemWithoutIncorrectRefocusing(sceneWindow,
+                                                sceneWindowAndLayerEffectBinder->parentItem());
 
-        delete effect;
+
+        scene->removeItem(sceneWindowAndLayerEffectBinder);
+        delete sceneWindowAndLayerEffectBinder; // will bring effect along with it.
         effect = 0;
     }
 }
@@ -1153,7 +1165,7 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
     window->d_func()->dismissed = false;
 
     setSceneWindowGeometry(window);
-    createLayerEffectForWindow(window);
+    setupLayerEffectForSceneWindow(window);
 
     if (window->windowType() == MSceneWindow::StatusBar) {
         // There can be only one status bar in the scene.
@@ -1632,7 +1644,7 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
                 MTheme::animation(style()->navigationBarAnimation()));
         break;
     case MSceneWindow::NotificationEvent:
-        animation = (sceneWindow->styleName() == "SystemBanner") ? qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation())) : 
+        animation = (sceneWindow->styleName() == "SystemBanner") ? qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation())) :
                                                                    qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->notificationEventAnimation()));
         break;
     case MSceneWindow::ApplicationMenu:
@@ -2004,7 +2016,7 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
     _q_undoSceneWindowDislocation(sceneWindow);
 
     // If there is a layer effect it is deleted
-    destroyLayerEffectForWindow(sceneWindow);
+    destroyLayerEffectForSceneWindow(sceneWindow);
 
     sceneWindow->hide();
 
