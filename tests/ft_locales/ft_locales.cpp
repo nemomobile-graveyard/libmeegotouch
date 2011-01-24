@@ -29,6 +29,15 @@ void Ft_Locales::initTestCase()
     static char *dummyArgv[1] = { (char *) "ft_locales" };
     qap = new MApplication(dummyArgc, dummyArgv, "test");
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QProcess process;
+    process.start("sh -c \"dpkg -s libqtcore4 | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
+    if (!process.waitForFinished()) {
+        qDebug() << "cannot run process to check libqtcore4 package version , exiting ...";
+        exit(1);
+    }
+    libqtcore4PackageVersion = process.readAllStandardOutput();
+    libqtcore4PackageVersion.replace("\n", "");
+    qDebug() << "libqtcore4 package version is:" << libqtcore4PackageVersion;
 }
 
 void Ft_Locales::cleanupTestCase()
@@ -726,19 +735,39 @@ void Ft_Locales::testMLocaleToLower_data()
         << QString("größe")
         ;
 
-    QTest::newRow("de_DE")
-        << QString("de_DE")
-        << QString("GRÖẞE")
-        << QString("größe")
-        << QString("gröẞe") // Qt bug?
-        ;
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+        QTest::newRow("de_DE")
+            << QString("de_DE")
+            << QString("GRÖẞE")
+            << QString("größe")
+            << QString("größe") // works because Qt’s toLower uses libicu now
+            ;
+    }
+    else {
+        QTest::newRow("de_DE")
+            << QString("de_DE")
+            << QString("GRÖẞE")
+            << QString("größe")
+            << QString("gröẞe") // Qt bug?
+            ;
+    }
 
-    QTest::newRow("de_CH") // no difference in behaviour to de_CH here
-        << QString("de_CH")
-        << QString("GRÖẞE")
-        << QString("größe")
-        << QString("gröẞe") // Qt bug?
-        ;
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+        QTest::newRow("de_CH") // no difference in behaviour to de_CH here
+            << QString("de_CH")
+            << QString("GRÖẞE")
+            << QString("größe")
+            << QString("größe") // works because Qt’s toLower uses libicu now
+            ;
+    }
+    else {
+        QTest::newRow("de_CH") // no difference in behaviour to de_CH here
+            << QString("de_CH")
+            << QString("GRÖẞE")
+            << QString("größe")
+            << QString("gröẞe") // Qt bug?
+            ;
+    }
 
     QTest::newRow("en_GB")
         << QString("en_GB")
@@ -749,15 +778,27 @@ void Ft_Locales::testMLocaleToLower_data()
         << QString("item naïve i̇")
         ;
 
-    QTest::newRow("tr_TR")
-        << QString("tr_TR")
-        << QString("ITEM NAÏVE İ")
-        // I lowercases to ı in Turkish locale and İ to i
-        << QString("ıtem naïve i")
-        // Qt’s toLower is *not* locale aware
-        // last two chars are U+0069 (LATIN SMALL LETTER I) U+307 (COMBINING DOT ABOVE)
-        << QString("item naïve i̇")
-        ;
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+        QTest::newRow("tr_TR")
+            << QString("tr_TR")
+            << QString("ITEM NAÏVE İ")
+            // I lowercases to ı in Turkish locale and İ to i
+            << QString("ıtem naïve i")
+            // Qt’s toLower uses libicu now and thus works
+            << QString("ıtem naïve i")
+            ;
+    }
+    else {
+        QTest::newRow("tr_TR")
+            << QString("tr_TR")
+            << QString("ITEM NAÏVE İ")
+            // I lowercases to ı in Turkish locale and İ to i
+            << QString("ıtem naïve i")
+            // Qt’s toLower is *not* locale aware
+            // last two chars are U+0069 (LATIN SMALL LETTER I) U+307 (COMBINING DOT ABOVE)
+            << QString("item naïve i̇")
+            ;
+    }
 
     QTest::newRow("en_GB")
         << QString("de_GB")
@@ -773,23 +814,47 @@ void Ft_Locales::testMLocaleToLower_data()
         << QString("σι")
         ;
 
-    QTest::newRow("en_GB")
-        << QString("en_GB")
-        << QString("ΙΣ")
-        << QString("ις")
-        // Qt’s toLower is *not* locale aware and lowercases the final Σ
-        // the same way as a non-final one:
-        << QString("ισ")
-        ;
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+        QTest::newRow("en_GB")
+            << QString("en_GB")
+            << QString("ΙΣ")
+            << QString("ις")
+            // Qt’s toLower is *not* context aware and lowercases the final Σ
+            // the same way as a non-final one:
+            << QString("ις")
+            ;
+    }
+    else {
+        QTest::newRow("en_GB")
+            << QString("en_GB")
+            << QString("ΙΣ")
+            << QString("ις")
+            // Qt’s toLower is *not* context aware and lowercases the final Σ
+            // the same way as a non-final one:
+            << QString("ισ")
+            ;
+    }
 
-    QTest::newRow("el_GR")
-        << QString("el_GR")
-        << QString("ΙΣ")
-        << QString("ις")
-        // Qt’s toLower is *not* locale aware and lowercases the final Σ
-        // the same way as a non-final one:
-        << QString("ισ")
-        ;
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+        QTest::newRow("el_GR")
+            << QString("el_GR")
+            << QString("ΙΣ")
+            << QString("ις")
+            // Qt’s toLower is *not* context aware and lowercases the final Σ
+            // the same way as a non-final one:
+            << QString("ις")
+            ;
+    }
+    else {
+        QTest::newRow("el_GR")
+            << QString("el_GR")
+            << QString("ΙΣ")
+            << QString("ις")
+            // Qt’s toLower is *not* context aware and lowercases the final Σ
+            // the same way as a non-final one:
+            << QString("ισ")
+            ;
+    }
 
     QTest::newRow("en_GB")
         << QString("en_GB")
@@ -843,6 +908,8 @@ void Ft_Locales::testMLocaleToLower()
 
     MLocale locale(localeName);
     QString resultMLocale = locale.toLower(testString);
+    // MLocale::setDefault() calls QLocale::setDefault() (using McLcNumeric!)
+    MLocale::setDefault(locale);
     QString resultQt = testString.toLower();
 
     QVector<uint> testStringUcs4 = testString.toUcs4();
@@ -921,12 +988,22 @@ void Ft_Locales::testMLocaleToUpper_data()
         << QString("ITEM NAÏVE I")
         ;
 
-    QTest::newRow("tr_TR")
-        << QString("tr_TR")
-        << QString("item naïve ı")
-        << QString("İTEM NAÏVE I")
-        << QString("ITEM NAÏVE I")
-        ;
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+        QTest::newRow("tr_TR")
+            << QString("tr_TR")
+            << QString("item naïve ı")
+            << QString("İTEM NAÏVE I")
+            << QString("İTEM NAÏVE I") // works because Qt’s toUpper uses libicu now
+            ;
+    }
+    else {
+        QTest::newRow("tr_TR")
+            << QString("tr_TR")
+            << QString("item naïve ı")
+            << QString("İTEM NAÏVE I")
+            << QString("ITEM NAÏVE I")
+            ;
+    }
 
     QTest::newRow("en_GB")
         << QString("en_GB")
@@ -935,12 +1012,23 @@ void Ft_Locales::testMLocaleToUpper_data()
         << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
         ;
 
-    QTest::newRow("tr_TR")
-        << QString("tr_TR")
-        << QString("i̇") // U+0069 (LATIN SMALL LETTER I) U+0307  (COMBINING DOT ABOVE)
-        << QString("İ̇") // U+0130 (LATIN CAPITAL LETTER I WITH DOT ABOVE) U+0307  (COMBINING DOT ABOVE)
-        << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
-        ;
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+        QTest::newRow("tr_TR")
+            << QString("tr_TR")
+            << QString("i̇") // U+0069 (LATIN SMALL LETTER I) U+0307  (COMBINING DOT ABOVE)
+            << QString("İ̇") // U+0130 (LATIN CAPITAL LETTER I WITH DOT ABOVE) U+0307  (COMBINING DOT ABOVE)
+            // works because Qt’s toUpper uses libicu now
+            << QString("İ̇") // U+0130 (LATIN CAPITAL LETTER I WITH DOT ABOVE) U+0307  (COMBINING DOT ABOVE)
+            ;
+    }
+    else {
+        QTest::newRow("tr_TR")
+            << QString("tr_TR")
+            << QString("i̇") // U+0069 (LATIN SMALL LETTER I) U+0307  (COMBINING DOT ABOVE)
+            << QString("İ̇") // U+0130 (LATIN CAPITAL LETTER I WITH DOT ABOVE) U+0307  (COMBINING DOT ABOVE)
+            << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
+            ;
+    }
 
     QTest::newRow("en_GB")
         << QString("en_GB")
@@ -973,6 +1061,8 @@ void Ft_Locales::testMLocaleToUpper()
 
     MLocale locale(localeName);
     QString resultMLocale = locale.toUpper(testString);
+    // MLocale::setDefault() calls QLocale::setDefault() (using McLcNumeric!)
+    MLocale::setDefault(locale);
     QString resultQt = testString.toUpper();
 
     QVector<uint> testStringUcs4 = testString.toUcs4();

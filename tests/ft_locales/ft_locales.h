@@ -53,6 +53,7 @@ class Ft_Locales : public QObject
 
 private:
     MApplication *qap;
+    QString libqtcore4PackageVersion;
 
 private slots:
     void initTestCase();
