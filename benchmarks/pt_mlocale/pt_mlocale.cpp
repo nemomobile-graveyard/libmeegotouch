@@ -33,7 +33,7 @@ void Pt_MLocale::initTestCase()
         exit(1);
     }
     icuPackageVersion = process.readAllStandardOutput();
-    icuPackageVersion.replace("\n", "");
+    icuPackageVersion.replace('\n', "");
     qDebug() << "libicu44 package version is:" << icuPackageVersion;
 #endif
 }

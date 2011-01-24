@@ -1739,7 +1739,7 @@ void Ft_Locales::checkAvailableLocales()
     // for (int i = 0; i < numberOfAvailableLocales; ++i) {
     //     qDebug() << "available:" << availableLocaleNames[i] << availableDisplayNames[i];
     // }
-    foreach(QString requiredLocaleName, requiredLocaleNames) {
+    foreach(const QString &requiredLocaleName, requiredLocaleNames) {
         // if (availableLocaleNames.contains(requiredLocaleName))
         //     qDebug() << "required and available: "
         //              << requiredLocaleName
@@ -1925,7 +1925,7 @@ void Ft_Locales::checkAvailableLocales()
                             + "\tName of month " + QString("%1").arg(monthNumber, int(2), int(10), QLatin1Char('0'))
                             + " (" + calendarTypeString + "), "
                             + dateSymbolContextString + ", "
-                            + dateSymbolLengthString + "\t"
+                            + dateSymbolLengthString + QLatin1Char('\t')
                             + locale.monthName(calendar, monthNumber, dateSymbolContext, dateSymbolLength);
                     }
                 }
@@ -1983,7 +1983,7 @@ void Ft_Locales::checkAvailableLocales()
                             + "\tName of weekday " + QString("%1").arg(weekDayNumber, int(2), int(10), QLatin1Char('0'))
                             + " (" + calendarTypeString + "), "
                             + dateSymbolContextString + ", "
-                            + dateSymbolLengthString + "\t"
+                            + dateSymbolLengthString + QLatin1Char('\t')
                             + locale.weekdayName(calendar, weekDayNumber, dateSymbolContext, dateSymbolLength);
                     }
                 }
@@ -2119,10 +2119,10 @@ void Ft_Locales::checkAvailableLocales()
                         }
                         ft_localesTestOutput +=
                             newLinePlusSupportedLocaleName
-                            + "\t"
+                            + QLatin1Char('\t')
                             + dateTypeString + ", " + timeTypeString + ", "
                             + calendarTypeString + ", " + timeFormat24hString
-                            + "\t"
+                            + QLatin1Char('\t')
                             + icuFormatStringForced
                             + " -> "
                             + formattedDateTimeForced;
