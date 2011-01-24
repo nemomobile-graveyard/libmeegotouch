@@ -1,0 +1,77 @@
+/*! \page singleinstance Launching applications as single instances without the aid of D-Bus
+
+Usually the user wants his application to be run as a single instance. This means
+that if the application is launched and there is an instance already running, the existing application window is to be activated and no new application processes are started. This works only for applications with a single window.
+
+This can be achieved by adding --single-instance to the invoker command:
+
+\code
+Exec=/usr/bin/invoker --single-instance --type=m /usr/bin/<application_name>
+\endcode
+
+It is faster to use --single-instance instead of the single-instance functionality
+provided by D-Bus, because this check takes place before the application is even executed.
+
+If you register a D-Bus service only for single-instance purposes, it might
+be a good idea to use invoker with --single-instance and force MApplication not to register the D-Bus service at all.
+
+This can be done by creating a custom D-Bus service with an empty registering
+function. Note that we cannot just pass a NULL-service to MApplication, because
+then the default service would be registered.
+
+\section single-instance-sample Sample MeeGo Touch single instance application without D-Bus registering
+
+\code
+
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MApplicationService>
+#include <MComponentCache>
+#include <MExport>
+
+class MyApplicationService: public MApplicationService
+{
+public:
+    MyApplicationService(QObject *parent = 0) :
+        MApplicationService("", parent) {
+    }
+
+    QString registeredName()
+    {
+         return QString();
+    }
+
+    bool isRegistered()
+    {
+        return false;
+    }
+
+    bool registerService()
+    {
+        return true;
+    }
+};
+
+M_EXPORT int main(int argc, char ** argv)
+{
+    MApplication * app = MComponentCache::mApplication(argc, argv, "helloworld", new MyApplicationService());
+
+    MApplicationWindow * window = MComponentCache::mApplicationWindow();
+    MApplicationPage mainPage;
+
+    window->show();
+
+    mainPage.setTitle("Hello World! (Now supports single-instance)");
+    mainPage.appear(window);
+
+    int ret = app->exec();
+    delete app;
+
+    return ret;
+}
+
+\endcode
+
+*/
+

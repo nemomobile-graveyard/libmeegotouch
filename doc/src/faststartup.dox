@@ -39,6 +39,8 @@ some \subpage responsivewindow "initial GUI" fast when starting the application.
 
     \li \ref launcher "Writing launchable applications"
 
+    \li \ref singleinstance "Launching applications as single instances without the aid of D-Bus"
+
     \li \ref prestart "Writing prestartable and lazy shutdown applications"
 
     \li \ref responsivewindow "Showing a responsive window quickly in a MeeGo Touch application"

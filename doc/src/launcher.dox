@@ -148,13 +148,6 @@ add_definitions(${MEEGOTOUCH_BOOSTABLE_CFLAGS})
 link_libraries(${MEEGOTOUCH_BOOSTABLE_LDFLAGS})
 \endcode  
 
-3. To install the application binary with a \c .launch filename extension, use the following
-line:
-
-\code
-install(PROGRAMS myapplication DESTINATION /usr/bin RENAME myapplication.launch)
-\endcode
-
 If you do not want to use \c pkg-config for some reason, you can manually add the
 compiler and linker flags as follows:
 
@@ -250,39 +243,19 @@ Remember to remove the CONFIG += meegotouch-boostable, if used.
 
 \section packaging Packaging and distributing
 
-It is recommended to rename application binary to
-<application_name>.launch and replace original binary by a script that
-executes invoker with correct application type and the name of
-application binary as a parameter. Launch script example for typical
-application is:
-
-\code
-#!/bin/sh
-exec /usr/bin/invoker --type=m $0.launch "$@"
-\endcode
-
-Note: Even if the binary is renamed to <application_name>.launch,
-application identifier does not change (optional parameter of
-MComponentCache::mApplication).
-
 \c .desktop and D-Bus \c .service files can be modified so that 
 normal execution is replaced with the following:
 
 \code
-Exec=/usr/bin/invoker --delay <seconds> --type=m /usr/bin/<application_name>.launch
+Exec=/usr/bin/invoker --type=m /usr/bin/<application_name>
 \endcode
 
-Note 1: When launching through D-Bus, it is important to add enough delay to invoker so that it does not exit
-before the launched application gets its D-Bus service registered. Otherwise, D-Bus daemon may think that
-the application just died. Another option is to use --wait-term which forces invoker to wait until
-the launched application exits.
+By default, invoker waits for the application to terminate and exits with
+the same exit code. Most Unix signals received by invoker are forwarded to the application.
 
-Note 2: There is a slight difference in the application start-up time if you use a
-script instead of the actual binary in Exec-field of .desktop and .service files. 
-Therefore, it is recommended that you always use the actual invoker call with the binary name
-as presented above. 
+Note 1: Do not use --no-wait in D-Bus service files, otherwise D-Bus daemon may think that the application just died before registering its service. 
 
-Note 3: When .desktop file contains the X-Maemo-Service field, the application 
+Note 2: When .desktop file contains the X-Maemo-Service field, the application 
 is started by default through D-Bus. This might cause some delay for
 application start-up time. Therefore it is recommended not to have the 
 X-Maemo-Service field inside .desktop files with launched applications,
@@ -306,7 +279,7 @@ automatically generated application ID:
 \code
 <aegis>
   <request>
-    <for path="/usr/bin/application_name.launch" />
+    <for path="/usr/bin/application_name" />
     <for path="applauncherd-launcher::/usr/bin/applauncherd.bin" id="" />
   </request>
 </aegis>
@@ -317,7 +290,7 @@ If an application has a user-defined ID:
 \code
 <aegis>
   <request>
-    <for path="/usr/bin/application_name.launch" id="myownid" />
+    <for path="/usr/bin/application_name" id="myownid" />
     <for path="applauncherd-launcher::/usr/bin/applauncherd.bin" id="myownid" />
   </request>
 </aegis>
@@ -331,7 +304,7 @@ Finally, if an application has some security tokens:
     <credential name="GlobalToken" />
     <credential name="OwnToken" />
     <credential name="package::OtherToken" />
-    <for path="/usr/bin/application_name.launch" />
+    <for path="/usr/bin/application_name" />
     <for path="applauncherd-launcher::/usr/bin/applauncherd.bin" id="" />
   </request>
 </aegis>
@@ -387,21 +360,6 @@ M_EXPORT int main(int argc, char **argv) {
     ...
 \endcode
 
-\subsection issue-watchdog Issues with scripts, D-Bus, and process monitoring
-
-By default, invoker processes terminate before or right after booster
-processes have called main(). This may confuse shell scripts and
-process monitoring in D-Bus daemon and Upstart, for instance. To solve these issues, the invoker 
-accepts the following parameters:
-
-\li \c --delay \c 10 invoker waits for 10 seconds before terminating
-\li \c --wait-term invoker does not terminate until the launched
-application terminates. Invoker returns the same return value as
-the application did, or it is terminated by the same signal as
-the launched application. Signals received by the invoker process are forwarded to the launched 
-application.
-
-
 \section sample Sample MeeGo Touch launchable application
 
 \code
@@ -434,13 +392,9 @@ M_EXPORT int main(int argc, char ** argv)
 Warning: Behaviour of these boosters is subject to change.
 
 Qt booster is a no-operation booster. It can be used by calling \c
-invoker \c --type=qt. Qt booster requires only the M_EXPORT source
-modification. Any MeeGo Touch boostable application can be launched
-with this booster type as well, but it results in a slower start-up because of empty cache.
-
-Wrt booster, used with \c invoker \c --type=wrt, populates
-MComponentCache with MApplication and MApplicationWindow, just like
-the MeeGo Touch booster. However, in this case MApplication uses a
-graphics system which is more suitable for rendering web content.
-
+invoker \c --type=qt. Qt booster requires only that main() is exported
+with M_EXPORT (or Q_DECL_EXPORT).
+Any MeeGo Touch boostable application can be launched with this booster type as well, but it results in a slower start-up
+because of empty cache.
 */
+
