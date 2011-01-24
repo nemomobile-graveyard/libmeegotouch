@@ -1,8 +1,10 @@
-libmeegotouch (0.20.76~1) unstable; urgency=low
+libmeegotouch (0.20.76-1) unstable; urgency=low
 
-  * unreleased
+  * Fixes: NB#211859 - White and red rectangles in Events view after device reboot
+  * Fixes: NB#219932 - Swipe gesture has stopped working reliably
+  * Fixes: NB#209179 - QDBusConnection created before MApplication instantiation leads to threading issues
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 20 Jan 2011 11:21:14 +0200
+ -- Tobias Koch <tobias.koch@nokia.com>  Mon, 24 Jan 2011 16:28:47 +0200
 
 libmeegotouch (0.20.75-1) unstable; urgency=low
 
