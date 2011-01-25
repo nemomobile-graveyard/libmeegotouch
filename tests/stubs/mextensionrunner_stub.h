@@ -23,7 +23,6 @@
 #include "mextensionrunner.h"
 #include <stubbase.h>
 
-
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
 class MExtensionRunnerStub : public StubBase {
@@ -111,6 +110,10 @@ MExtensionRunner::MExtensionRunner()
     widget( NULL ),
     scene( NULL ),
     view( NULL ),
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    screenBlankProperty(0),
+#endif
+    displayBlanked(false),
 #ifdef QT_OPENGL_LIB
     context( NULL ),
 #endif

@@ -82,9 +82,10 @@ int main(int argc, char **argv)
 {
     // Set the out of memory adjustment value
     QFile file("/proc/self/oom_adj");
-    file.open(QIODevice::WriteOnly);
-    file.write("-1");
-    file.close();
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write("-1");
+        file.close();
+    }
 
     // Check for correct number of arguments
     if (argc != 3) {

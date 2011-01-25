@@ -32,6 +32,7 @@ const QString MDialogAnimationPrivate::DialogBoxObjectName = "MDialogBox";
 
 MDialogAnimationPrivate::MDialogAnimationPrivate() :
     MAbstractWidgetAnimationPrivate(),
+    direction(MDialogAnimation::In),
     delayedTitleBarAnimation(0),
     delayedContentsViewportAnimation(0),
     delayedButtonBoxAnimation(0),

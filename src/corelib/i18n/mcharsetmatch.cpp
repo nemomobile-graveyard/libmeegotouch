@@ -21,7 +21,8 @@
 #include "mcharsetmatch_p.h"
 
 MCharsetMatchPrivate::MCharsetMatchPrivate()
-    : _confidence(0)
+    : _confidence(0),
+      q_ptr(0)
 {
 }
 

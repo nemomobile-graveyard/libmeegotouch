@@ -181,15 +181,17 @@ void MApplicationPrivate::updateWindowIsAlwaysMapped(Window window)
 
     if(status == Success && nItems == 1 && type == XA_CARDINAL) {
         MWindow * win = MApplicationPrivate::windowForId(window);
-        switch(data.asULong[0]) {
-        case 1:
-        case 2:
-            win->d_func()->isAlwaysMapped = true;
-            break;
-        default:
-            win->d_func()->isAlwaysMapped = false;
+        if (win) {
+            switch(data.asULong[0]) {
+            case 1:
+            case 2:
+                win->d_func()->isAlwaysMapped = true;
+                break;
+            default:
+                win->d_func()->isAlwaysMapped = false;
+            }
+            win->d_func()->resolveOrientationRules();
         }
-        win->d_func()->resolveOrientationRules();
     }
 
     if (status == Success)
