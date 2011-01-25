@@ -69,6 +69,14 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     snUsr1 = new QSocketNotifier(sigusr1Fd[1], QSocketNotifier::Read, this);
     connect(snUsr1, SIGNAL(activated(int)), this, SLOT(handleSigUsr1()));
 
+    const QString address = serverAddress.isEmpty() ? M::MThemeDaemonProtocol::ServerAddress : serverAddress;
+
+    QLocalServer::removeServer(address);
+    connect(&server, SIGNAL(newConnection()), SLOT(clientConnected()));
+    if (!server.listen(address)) {
+        mWarning("MThemeDaemonServer") << "Failed to start socket server.";
+    }
+
     QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/themedaemonpriorities.conf";
     loadPriorities(filename);
 
@@ -97,16 +105,6 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     // 5) make sure we have a cache directory for the current theme
     if (!createCacheDir(MThemeDaemon::systemThemeCacheDirectory() + QDir::separator() + daemon.currentTheme())) {
         qCritical("Will continue without cache for the theme '%s'", qPrintable(daemon.currentTheme()));
-    }
-
-    // start socket server for client registeration
-    // first remove the old one, if there's such
-    const QString address = serverAddress.isEmpty() ? M::MThemeDaemonProtocol::ServerAddress : serverAddress;
-
-    QLocalServer::removeServer(address);
-    connect(&server, SIGNAL(newConnection()), SLOT(clientConnected()));
-    if (!server.listen(address)) {
-        mWarning("MThemeDaemonServer") << "Failed to start socket server.";
     }
 
     processQueueTimer.setInterval(0);
