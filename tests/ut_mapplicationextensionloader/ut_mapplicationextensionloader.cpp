@@ -83,6 +83,11 @@ void QPluginLoader::setLoadHints(QLibrary::LoadHints loadHints)
     gPluginLoaderHints = loadHints;
 }
 
+QString QPluginLoader::errorString() const
+{
+    return QString();
+}
+
 void Ut_MApplicationExtensionLoader::init()
 {
     gQPluginLoaderFileName.clear();
