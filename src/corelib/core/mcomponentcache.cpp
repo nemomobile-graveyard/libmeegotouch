@@ -27,6 +27,7 @@
 #include "mcomponentdata.h"
 #include "mgraphicssystemhelper.h"
 #include "mthemedaemon.h"
+#include "QFileInfo"
 #ifndef UNIT_TEST
 #include "mtheme_p.h"
 #include "mlibrary.h"
@@ -34,6 +35,7 @@
 
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #endif
 
 MComponentCachePrivate * const MComponentCache::d_ptr = new MComponentCachePrivate;
@@ -124,6 +126,22 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
                 Display *display = QX11Info::display();
                 if (display) {
                     XSetCommand(display, mApplicationWindowInstance->effectiveWinId(), argv, argc);
+
+                    // set correct WM_CLASS properties
+                    QString appName = QFileInfo(argv[0]).fileName();    
+                    QString appClass = appName.left(1).toUpper();
+                    if (appName.length() > 1)
+                        appClass += appName.right(appName.length() - 1);
+           
+                    // reserve memory for C strings
+                    QByteArray arrName(appName.toLatin1());
+                    QByteArray arrClass(appClass.toLatin1());
+
+                    XClassHint class_hint;
+                    class_hint.res_name  = arrName.data();
+                    class_hint.res_class = arrClass.data();
+
+                    XSetClassHint(display, mApplicationWindowInstance->effectiveWinId(), &class_hint);
                 }
             }
 #endif
