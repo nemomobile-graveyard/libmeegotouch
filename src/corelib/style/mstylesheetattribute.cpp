@@ -479,27 +479,27 @@ QFont MStyleSheetAttribute::fontFromString(const QByteArray string, bool *conver
 
     //family + font size
     if (list.size() == 2) {
-        qreal pixelSize = attributeToFloat(list[1], conversionOk);
+        qreal pixelSize = attributeToFloat(list.at(1), conversionOk);
         if (*conversionOk) {
-            QFont font(list[0]);
+            QFont font(list.at(0));
             font.setPixelSize(pixelSize);
             return font;
         }
     }
     //family + weight/italic/capitalization + font size
     else if (list.size() == 3) {
-        qreal pixelSize = attributeToFloat(list[2], conversionOk);
+        qreal pixelSize = attributeToFloat(list.at(2), conversionOk);
         if (*conversionOk) {
-            QFont font(list[0]);
+            QFont font(list.at(0));
             font.setPixelSize(pixelSize);
-            if (DataTypeConverter.WEIGHTS.contains(list[1])) {
-                font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
+            if (DataTypeConverter.WEIGHTS.contains(list.at(1))) {
+                font.setWeight(DataTypeConverter.WEIGHTS[list.at(1)]);
                 return font;
-            } else if (list[1] == "italic") {
+            } else if (list.at(1) == "italic") {
                 font.setItalic(true);
                 return font;
-            } else if (DataTypeConverter.CAPITALIZATION.contains(list[1])) {
-                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[1]]);
+            } else if (DataTypeConverter.CAPITALIZATION.contains(list.at(1))) {
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list.at(1)]);
                 return font;
             } else {
                 *conversionOk = false;
@@ -508,21 +508,21 @@ QFont MStyleSheetAttribute::fontFromString(const QByteArray string, bool *conver
     }
     //family + weight/italic + italic/capitalization + font size
     else if (list.size() == 4) {
-        qreal pixelSize = attributeToFloat(list[3], conversionOk);
+        qreal pixelSize = attributeToFloat(list.at(3), conversionOk);
         if (*conversionOk) {
-            QFont font(list[0]);
+            QFont font(list.at(0));
             font.setPixelSize(pixelSize);
-            if (DataTypeConverter.WEIGHTS.contains(list[1]) && list[2] == "italic") {
-                font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
+            if (DataTypeConverter.WEIGHTS.contains(list.at(1)) && list.at(2) == "italic") {
+                font.setWeight(DataTypeConverter.WEIGHTS[list.at(1)]);
                 font.setItalic(true);
                 return font;
-            } else if (DataTypeConverter.WEIGHTS.contains(list[1]) && DataTypeConverter.CAPITALIZATION.contains(list[2])) {
-                font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
-                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[2]]);
+            } else if (DataTypeConverter.WEIGHTS.contains(list.at(1)) && DataTypeConverter.CAPITALIZATION.contains(list.at(2))) {
+                font.setWeight(DataTypeConverter.WEIGHTS[list.at(1)]);
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list.at(2)]);
                 return font;
-            } else if (list[1] == "italic" && DataTypeConverter.CAPITALIZATION.contains(list[2])) {
+            } else if (list.at(1) == "italic" && DataTypeConverter.CAPITALIZATION.contains(list.at(2))) {
                 font.setItalic(true);
-                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[2]]);
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list.at(2)]);
                 return font;
             } else {
                 *conversionOk = false;
@@ -531,14 +531,14 @@ QFont MStyleSheetAttribute::fontFromString(const QByteArray string, bool *conver
     }
     //family + weight + italic + capitalization + font size
     else if (list.size() == 5) {
-        qreal pixelSize = attributeToFloat(list[4], conversionOk);
+        qreal pixelSize = attributeToFloat(list.at(4), conversionOk);
         if (*conversionOk) {
-            QFont font(list[0]);
+            QFont font(list.at(0));
             font.setPixelSize(pixelSize);
-            if (DataTypeConverter.WEIGHTS.contains(list[1]) && list[2] == "italic" && DataTypeConverter.CAPITALIZATION.contains(list[3])) {
-                font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
+            if (DataTypeConverter.WEIGHTS.contains(list.at(1)) && list.at(2) == "italic" && DataTypeConverter.CAPITALIZATION.contains(list.at(3))) {
+                font.setWeight(DataTypeConverter.WEIGHTS[list.at(1)]);
                 font.setItalic(true);
-                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[3]]);
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list.at(3)]);
                 return font;
             } else {
                 *conversionOk = false;
@@ -639,14 +639,14 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
 
         //only image_id
         if (list.size() == 1) {
-            const QPixmap *pixmap = MTheme::pixmap(list[0]);
+            const QPixmap *pixmap = MTheme::pixmap(list.at(0));
             return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap), false);
         }
         //image_id + width + height
         else if (list.size() == 3) {
-            int width = attributeToInt(list[1], &conversionOK, WidthAttribute, orientation);
-            int height = attributeToInt(list[2], &conversionOK, HeightAttribute, orientation);
-            const QPixmap *pixmap = MTheme::pixmap(list[0], QSize(width, height));
+            int width = attributeToInt(list.at(1), &conversionOK, WidthAttribute, orientation);
+            int height = attributeToInt(list.at(2), &conversionOK, HeightAttribute, orientation);
+            const QPixmap *pixmap = MTheme::pixmap(list.at(0), QSize(width, height));
             cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap), false);
         }
@@ -693,28 +693,28 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //only image_id
         else if (list.size() == 1) {
             if(attributeType == qMetaTypeId<const MScalableImage*>()) {
-                const MScalableImage *image = MTheme::scalableImage(list[0], 0, 0, 0, 0);
+                const MScalableImage *image = MTheme::scalableImage(list.at(0), 0, 0, 0, 0);
                 return fillProperty(property, style, cacheOrientation, qVariantFromValue(image), false);
             } else {
-                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list[0], 0,0,0,0)), false);
+                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list.at(0), 0,0,0,0)), false);
             }
         }
         //image_id + border width paramaters
         else if (list.size() == 5) {
             //image_id and the border parameters
             if(attributeType == qMetaTypeId<const MScalableImage*>()) {
-                const MScalableImage *image = MTheme::scalableImage(list[0],
-                                                attributeToInt(list[1], &conversionOK),
-                                                attributeToInt(list[2], &conversionOK),
-                                                attributeToInt(list[3], &conversionOK),
-                                                attributeToInt(list[4], &conversionOK));
+                const MScalableImage *image = MTheme::scalableImage(list.at(0),
+                                                attributeToInt(list.at(1), &conversionOK),
+                                                attributeToInt(list.at(2), &conversionOK),
+                                                attributeToInt(list.at(3), &conversionOK),
+                                                attributeToInt(list.at(4), &conversionOK));
                 return fillProperty(property, style, cacheOrientation, qVariantFromValue(image), false);
             } else {
-                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list[0],
-                                                                attributeToInt(list[1], &conversionOK),
-                                                                attributeToInt(list[2], &conversionOK),
-                                                                attributeToInt(list[3], &conversionOK),
-                                                                attributeToInt(list[4], &conversionOK))), false);
+                return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list.at(0),
+                                                                attributeToInt(list.at(1), &conversionOK),
+                                                                attributeToInt(list.at(2), &conversionOK),
+                                                                attributeToInt(list.at(3), &conversionOK),
+                                                                attributeToInt(list.at(4), &conversionOK))), false);
             }
         }
     } else if (attributeType == QMetaType::QSize || attributeType == QMetaType::QSizeF) {
@@ -726,12 +726,12 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         if (list.size() == 2) {
             cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             if (attributeType == QMetaType::QSize) {
-                int width = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
-                int height = attributeToInt(list[1], &conversionOK, HeightAttribute, orientation);
+                int width = attributeToInt(list.at(0), &conversionOK, WidthAttribute, orientation);
+                int height = attributeToInt(list.at(1), &conversionOK, HeightAttribute, orientation);
                 return fillProperty(property, style, cacheOrientation, QSize(width, height));
             } else {
-                qreal width = attributeToFloat(list[0], &conversionOK, WidthAttribute, orientation);
-                qreal height = attributeToFloat(list[1], &conversionOK, HeightAttribute, orientation);
+                qreal width = attributeToFloat(list.at(0), &conversionOK, WidthAttribute, orientation);
+                qreal height = attributeToFloat(list.at(1), &conversionOK, HeightAttribute, orientation);
                 return fillProperty(property, style, cacheOrientation, QSizeF(width, height));
             }
         }
@@ -744,12 +744,12 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         if (list.size() == 2) {
             cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             if (attributeType == QMetaType::QPoint) {
-                int x = attributeToInt(list[0], &conversionOK, WidthAttribute, orientation);
-                int y = attributeToInt(list[1], &conversionOK, HeightAttribute, orientation);
+                int x = attributeToInt(list.at(0), &conversionOK, WidthAttribute, orientation);
+                int y = attributeToInt(list.at(1), &conversionOK, HeightAttribute, orientation);
                 return fillProperty(property, style, cacheOrientation, QPoint(x, y));
             } else {
-                qreal x = attributeToFloat(list[0], &conversionOK, WidthAttribute, orientation);
-                qreal y = attributeToFloat(list[1], &conversionOK, HeightAttribute, orientation);
+                qreal x = attributeToFloat(list.at(0), &conversionOK, WidthAttribute, orientation);
+                qreal y = attributeToFloat(list.at(1), &conversionOK, HeightAttribute, orientation);
                 return fillProperty(property, style, cacheOrientation, QPointF(x, y));
             }
         }
@@ -768,8 +768,8 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         }
     } else if (attributeType == QMetaType::QChar) {
         if (valueString.length() == 3) {
-            if ((valueString[0] == '\'') && (valueString[2] == '\'')) {
-                return fillProperty(property, style, cacheOrientation, static_cast<QChar>(valueString[1]));
+            if ((valueString.at(0) == '\'') && (valueString.at(2) == '\'')) {
+                return fillProperty(property, style, cacheOrientation, static_cast<QChar>(valueString.at(1)));
             }
         }
     } else if (attributeType == qMetaTypeId<Qt::Alignment>()) {
@@ -800,17 +800,17 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         // curve type
         QList<QByteArray> list = valueString.split(',');
         if (list.size() > 0) {
-            if (DataTypeConverter.EASINGCURVETYPES.contains(list[0])) {
-                curve.setType(DataTypeConverter.EASINGCURVETYPES[list[0]]);
+            if (DataTypeConverter.EASINGCURVETYPES.contains(list.at(0))) {
+                curve.setType(DataTypeConverter.EASINGCURVETYPES[list.at(0)]);
                 // curve amplitude
                 if (list.size() > 1) {
-                    curve.setAmplitude((qreal) list[1].toDouble());
+                    curve.setAmplitude((qreal) list.at(1).toDouble());
                     // curve overshoot
                     if (list.size() > 2) {
-                        curve.setOvershoot((qreal) list[2].toDouble());
+                        curve.setOvershoot((qreal) list.at(2).toDouble());
                         // curve period
                         if (list.size() > 3) {
-                            curve.setPeriod((qreal) list[3].toDouble());
+                            curve.setPeriod((qreal) list.at(3).toDouble());
                         }
                     }
                 }
