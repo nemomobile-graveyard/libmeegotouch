@@ -38,6 +38,7 @@
 #include <QInputContext>
 #include <QInputContextFactory>
 #include <MPreeditInjectionEvent>
+#include <stdlib.h>
 
 #include <mtextedit.h>
 #include <mtexteditview.h>
@@ -271,6 +272,7 @@ void Ut_MTextEdit::initTestCase()
 
     // prevent loading of minputcontext because we don't need it
     MApplication::setLoadMInputContext(false);
+    unsetenv("QT_IM_MODULE");
 
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
