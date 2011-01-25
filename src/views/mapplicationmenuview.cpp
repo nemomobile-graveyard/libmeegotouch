@@ -106,6 +106,13 @@ MApplicationMenuViewPrivate::~MApplicationMenuViewPrivate()
     clearWidgets(buttons);
     removeEventFilter(controller);
     delete styleButtonGroup;
+
+    controllerLayout->removeItem(actionCommandViewport);
+    controllerLayout->removeItem(styleCommandLayout);
+    controllerLayout->removeItem(topArea);
+    delete actionCommandViewport;
+    delete styleCommandLayout;
+    delete topArea;
 }
 
 void MApplicationMenuViewPrivate::init()
