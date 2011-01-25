@@ -25,7 +25,6 @@
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QTextDocument>
-#include <QTextBlockFormat>
 #include <QTextCursor>
 #include <QTextBlock>
 #include <QTextLayout>
@@ -33,13 +32,8 @@
 #include <QTimer>
 #include <QStyleOptionGraphicsItem>
 
-#include "mfeedback.h"
 #include "mtextedit.h"
-#include "mtheme.h"
-#include "mviewcreator.h"
 #include "minfobanner.h"
-#include "mlocale.h"
-#include "mscenemanager.h"
 #include "mtimestamp.h"
 
 namespace

@@ -30,10 +30,8 @@
 class MTextEdit;
 class MTextMagnifier;
 class QGraphicsSceneMouseEvent;
-class QColor;
 class QTextDocument;
 class QTimer;
-class QTimeLine;
 class MInfoBanner;
 
 //! \internal
