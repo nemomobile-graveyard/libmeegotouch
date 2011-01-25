@@ -27,6 +27,8 @@
 
 #include "mtheme.h"
 
+#define ANIMATION_SLOWDOWN_RATIO 4
+
 MSpinnerViewPrivate::MSpinnerViewPrivate()
     :  q_ptr(NULL),
        controller(NULL),
@@ -55,7 +57,13 @@ void MSpinnerViewPrivate::refreshStyle()
 {
     Q_Q(MSpinnerView);
 
-    positionAnimation->setDuration(q->style()->period());
+    const MWindow *mWindow = getMWindow();
+
+    if (mWindow && mWindow->isInSwitcher()) {
+        positionAnimation->setDuration(q->style()->period() * ANIMATION_SLOWDOWN_RATIO);
+    } else {
+        positionAnimation->setDuration(q->style()->period());
+    }
     positionAnimation->setStartValue(0);
     positionAnimation->setEndValue(q->style()->numberOfFrames());
     reloadFrames();
@@ -74,6 +82,16 @@ void MSpinnerViewPrivate::refreshModel()
         if (positionAnimation->state() == QPropertyAnimation::Running)
             positionAnimation->pause();
     }
+}
+
+const MWindow* MSpinnerViewPrivate::getMWindow()
+{
+    QGraphicsScene *scene = controller->scene();
+
+    if (!scene || scene->views().isEmpty())
+        return 0;
+
+    return qobject_cast<MWindow*>(scene->views().at(0));
 }
 
 void MSpinnerViewPrivate::reloadFrames()
@@ -117,10 +135,35 @@ void MSpinnerViewPrivate::_q_pauseAnimation()
 
 void MSpinnerViewPrivate::_q_pauseOrResumeAnimation()
 {
-    if (controller->isVisible() && controller->isOnDisplay())
+    Q_Q(MSpinnerView);
+
+    if (controller->isVisible() && controller->isOnDisplay()) {
+        const MWindow *mWindow = getMWindow();
+        if (mWindow) {
+            q->connect(mWindow, SIGNAL(switcherEntered()), SLOT(_q_switcherEntered()), Qt::UniqueConnection);
+            q->connect(mWindow, SIGNAL(switcherExited()), SLOT(_q_switcherExited()), Qt::UniqueConnection);
+            if (mWindow->isInSwitcher()) {
+                _q_switcherEntered();
+            }
+        }
         _q_resumeAnimation();
-    else
+    } else {
         _q_pauseAnimation();
+    }
+}
+
+void MSpinnerViewPrivate::_q_switcherEntered()
+{
+    Q_Q(MSpinnerView);
+
+    positionAnimation->setDuration(q->style()->period() * ANIMATION_SLOWDOWN_RATIO);
+}
+
+void MSpinnerViewPrivate::_q_switcherExited()
+{
+    Q_Q(MSpinnerView);
+
+    positionAnimation->setDuration(q->style()->period());
 }
 
 MSpinnerView::MSpinnerView(MProgressIndicator *controller) :

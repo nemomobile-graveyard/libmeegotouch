@@ -33,10 +33,13 @@
 #include "mtheme.h"
 #include "mdebug.h"
 
+#define ANIMATION_SLOWDOWN_RATIO 4
+
 MProgressIndicatorBarViewPrivate::MProgressIndicatorBarViewPrivate()
     :   controller(0),
         q_ptr(0),
         animationTimer(0),
+        inSwitcher(false),
         animationCacheIndex(0)
 {
     animationTimer = new QTimer(this);
@@ -176,7 +179,10 @@ void MProgressIndicatorBarViewPrivate::setupAnimation()
     if (fps <= 0)
        fps = 20;
     int interval = (1 / fps) * 1000;
-    animationTimer->setInterval(interval);
+    if (inSwitcher)
+        animationTimer->setInterval(interval * ANIMATION_SLOWDOWN_RATIO);
+    else
+        animationTimer->setInterval(interval);
 
     connect(animationTimer, SIGNAL(timeout()), this, SLOT(setAnimationCacheIndex()));
     animationTimer->start();
@@ -188,6 +194,16 @@ void MProgressIndicatorBarViewPrivate::setupBarImages()
 
     createBarImages();
     q->update(q->rect());
+}
+
+const MWindow* MProgressIndicatorBarViewPrivate::getMWindow()
+{
+    QGraphicsScene *scene = controller->scene();
+
+    if (!scene || scene->views().isEmpty())
+        return 0;
+
+    return qobject_cast<MWindow*>(scene->views().at(0));
 }
 
 void MProgressIndicatorBarViewPrivate::setAnimationCacheIndex()
@@ -211,6 +227,18 @@ void MProgressIndicatorBarViewPrivate::setAnimationCacheIndex()
         animationCacheIndex = 0;
 
     q->update(q->rect());
+}
+
+void MProgressIndicatorBarViewPrivate::switcherEntered()
+{
+    inSwitcher = true;
+    setupAnimation();
+}
+
+void MProgressIndicatorBarViewPrivate::switcherExited()
+{
+    inSwitcher = false;
+    setupAnimation();
 }
 
 void MProgressIndicatorBarViewPrivate::createBarImages()
@@ -580,6 +608,15 @@ void MProgressIndicatorBarView::resumeAnimation()
 {
     Q_D(MProgressIndicatorBarView);
 
+    const MWindow *mWindow = d->getMWindow();
+    if (mWindow) {
+        d->connect(mWindow, SIGNAL(switcherEntered()), SLOT(switcherEntered()), Qt::UniqueConnection);
+        d->connect(mWindow, SIGNAL(switcherExited()), SLOT(switcherExited()), Qt::UniqueConnection);
+        if (mWindow->isInSwitcher()) {
+            d->switcherEntered();
+        }
+    }
+
     d->animate(true);
 }
 
@@ -587,6 +624,7 @@ void MProgressIndicatorBarView::pauseAnimation()
 {
     Q_D(MProgressIndicatorBarView);
 
+    d->inSwitcher = false;
     d->animate(false);
 }
 

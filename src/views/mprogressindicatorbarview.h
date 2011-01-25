@@ -143,6 +143,10 @@ private:
     Q_DISABLE_COPY(MProgressIndicatorBarView)
     Q_DECLARE_PRIVATE(MProgressIndicatorBarView)
 
+#ifdef UNIT_TEST
+    friend class Ut_MProgressIndicatorBarView;
+#endif
+
 #ifdef M_TEST_CLASS
     M_TEST_CLASS
 #endif

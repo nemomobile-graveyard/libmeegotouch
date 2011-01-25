@@ -52,10 +52,14 @@ public:
     void setupAnimation();
     void setupBarImages();
 
+    const MWindow* getMWindow();
+
     MProgressIndicator *controller;
 
 public Q_SLOTS:
     void setAnimationCacheIndex();
+    void switcherEntered();
+    void switcherExited();
 
 protected:
     MProgressIndicatorBarView *q_ptr;
@@ -72,8 +76,14 @@ private:
     QImage rightEndImage;
     QImage barBodyImage;
 
+    bool inSwitcher;
+
     QList<QImage*> animationCache;
     int animationCacheIndex;
+
+#ifdef UNIT_TEST
+    friend class Ut_MProgressIndicatorBarView;
+#endif
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

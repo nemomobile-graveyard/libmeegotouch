@@ -41,6 +41,8 @@ public:
     void refreshStyle();
     void refreshModel();
 
+    const MWindow* getMWindow();
+
     QPropertyAnimation *createAnimation();
     void resumeAnimation();
     void pauseAnimation();
@@ -51,6 +53,9 @@ public:
     void _q_pauseAnimation();
     void _q_resumeAnimation();
     void _q_pauseOrResumeAnimation();
+
+    void _q_switcherEntered();
+    void _q_switcherExited();
 
     MProgressIndicator *controller;
 

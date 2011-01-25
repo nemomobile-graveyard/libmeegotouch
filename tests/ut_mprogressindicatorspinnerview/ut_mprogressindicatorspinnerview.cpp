@@ -24,31 +24,39 @@
 #include <QSignalSpy>
 
 #include <views/mspinnerview.h>
+#include <views/mspinnerview_p.h>
 
 #include <mprogressindicator.h>
 #include "ut_mprogressindicatorspinnerview.h"
 #include "mapplication.h"
+#include "mapplicationwindow.h"
+#include "mapplicationpage.h"
 
 MApplication *app;
+MApplicationWindow *win;
+MApplicationPage *page;
 
 void Ut_MProgressIndicatorSpinnerView::initTestCase()
 {
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mbuttonview" };
     app = new MApplication(argc, app_name);
+    win = new MApplicationWindow();
+    page = new MApplicationPage();
 
     m_progressIndicator = new MProgressIndicator();
     m_subject = new MSpinnerView(m_progressIndicator);
     m_progressIndicator->setView(m_subject);
 
     m_progressIndicator->resize(20, 20);
+
+    page->setCentralWidget(m_progressIndicator);
+    page->appear(win);
 }
 
 void Ut_MProgressIndicatorSpinnerView::cleanupTestCase()
 {
-    delete m_progressIndicator;
-    m_progressIndicator = 0;
-
+    delete win;
     delete app;
 }
 
@@ -66,6 +74,24 @@ QImage Ut_MProgressIndicatorSpinnerView::captureImage(MProgressIndicator *progre
     progressIndicator->paint(&painter, NULL, NULL);
 
     return pixmap.toImage();
+}
+
+void Ut_MProgressIndicatorSpinnerView::testThrottleAnimationWhenRenderedInSwitcher()
+{
+    win->show();
+    app->processEvents();
+
+    // get animation duration
+    int normalDuration = m_subject->d_func()->positionAnimation->duration();
+
+    // set minimized state to the window
+    win->setWindowState(Qt::WindowMinimized);
+    app->processEvents();
+
+    // get animation duration
+    int slowDuration = m_subject->d_func()->positionAnimation->duration();
+
+    QVERIFY(normalDuration < slowDuration);
 }
 
 QTEST_APPLESS_MAIN(Ut_MProgressIndicatorSpinnerView)

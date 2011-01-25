@@ -24,31 +24,38 @@
 #include <QSignalSpy>
 
 #include <views/mprogressindicatorbarview.h>
+#include <views/mprogressindicatorbarview_p.h>
 
 #include <mprogressindicator.h>
 #include "ut_mprogressindicatorbarview.h"
 #include "mapplication.h"
+#include "mapplicationwindow.h"
+#include "mapplicationpage.h"
 
 MApplication *app;
+MApplicationWindow *win;
+MApplicationPage *page;
 
 void Ut_MProgressIndicatorBarView::initTestCase()
 {
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mbuttonview" };
     app = new MApplication(argc, app_name);
+    win = new MApplicationWindow();
+    page = new MApplicationPage();
 
     m_progressIndicator = new MProgressIndicator();
     m_subject = new MProgressIndicatorBarView(m_progressIndicator);
     m_progressIndicator->setView(m_subject);
 
     m_progressIndicator->resize(20, 20);
+    page->setCentralWidget(m_progressIndicator);
+    page->appear(win);
 }
 
 void Ut_MProgressIndicatorBarView::cleanupTestCase()
 {
-    delete m_progressIndicator;
-    m_progressIndicator = 0;
-
+    delete win;
     delete app;
 }
 
@@ -66,6 +73,25 @@ QImage Ut_MProgressIndicatorBarView::captureImage(MProgressIndicator *progressIn
     progressIndicator->paint(&painter, NULL, NULL);
 
     return pixmap.toImage();
+}
+
+void Ut_MProgressIndicatorBarView::testThrottleAnimationWhenRenderedInSwitcher()
+{
+    m_progressIndicator->setUnknownDuration(true);
+    win->show();
+    app->processEvents();
+
+    // get animation duration
+    int normalInterval = m_subject->d_func()->animationTimer->interval();
+
+    // set minimized state to the window
+    win->setWindowState(Qt::WindowMinimized);
+    app->processEvents();
+
+    // get animation duration
+    int slowInterval = m_subject->d_func()->animationTimer->interval();
+
+    QVERIFY(normalInterval < slowInterval);
 }
 
 QTEST_APPLESS_MAIN(Ut_MProgressIndicatorBarView)
