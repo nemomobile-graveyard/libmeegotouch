@@ -14,7 +14,6 @@ contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
 
 TEST_HEADERS = \
              $$MSRCDIR/corelib/core/mcomponentcache.h \
-             $$MSRCDIR/corelib/core/mcomponentdata.h \
              $$MSRCDIR/corelib/core/mgraphicssystemhelper.h \
 
 TEST_SOURCES = \
