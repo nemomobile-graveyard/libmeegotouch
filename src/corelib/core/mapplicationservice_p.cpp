@@ -44,7 +44,8 @@ static QString getexepath()
 {
     char result[ 255 ];
     memset( result, 0, 255 );
-    readlink( "/proc/self/exe", result, 254 );
+    ssize_t readBytes = readlink( "/proc/self/exe", result, 254 );
+    Q_UNUSED(readBytes);
     return QString( result );
 }
 
