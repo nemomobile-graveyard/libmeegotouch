@@ -1889,7 +1889,7 @@ bool MTextEdit::setText(const QString &text)
 
     int cursorPosBefore = d->cursor()->position();
     bool wasSelecting = hasSelectedText();
-    bool wasEmpty = (document()->characterCount() == 0);
+    bool wasEmpty = document()->isEmpty();
 
     // clear the state
     d->removePreedit();
@@ -1919,7 +1919,7 @@ bool MTextEdit::setText(const QString &text)
     }
 
     // only avoid signaling if empty before and after
-    if (!((document()->characterCount() == 0) && wasEmpty)) {
+    if (!(document()->isEmpty() && wasEmpty)) {
         d->updateMicroFocus();
         emit textChanged();
     }
