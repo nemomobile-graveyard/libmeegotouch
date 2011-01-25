@@ -572,8 +572,7 @@ bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
     QString filteredText = text;
 
     // Bug in QTextDocument::characterCount?
-    int characterCount = q->document()->characterCount() - 1;
-    Q_ASSERT(characterCount >= 0);
+    int characterCount = realCharacterCount();
 
     // Total characterCount mustn't exceed maxLength.
     if (characterCount + filteredText.length() > q->maxLength()) {
@@ -781,7 +780,7 @@ void MTextEditPrivate::commitPreedit()
 
     QTextCursor *textCursor = cursor();
 
-    int characterCount = q->document()->characterCount() - 1;
+    int characterCount = realCharacterCount();
     if (characterCount > q->maxLength()) {
         // Set markers for current selection as follows:
         // <start> Preserved preedit text <startErase> Erased preedit text <end>
@@ -1363,6 +1362,16 @@ void MTextEditPrivate::safeReset()
             omitInputMethodEvents = false;
         }
     }
+}
+
+int MTextEditPrivate::realCharacterCount() const
+{
+    Q_Q(const MTextEdit);
+
+    // QTextDocument::characterCount() will return one extra character
+    // as there is invisible paragraph separator (0x2029) at the end.
+    // see: http://bugreports.qt.nokia.com/browse/QTBUG-4841
+    return q->document()->characterCount() - 1;
 }
 
 ///////////////////////////////////////////////
@@ -2817,17 +2826,16 @@ int MTextEdit::maxLength() const
 
 void MTextEdit::setMaxLength(int numChars)
 {
+    Q_D(MTextEdit);
+
     if (numChars < 0) {
         numChars = 0;
     }
     model()->setMaxLength(numChars);
 
-    // Bug in QTextDocument::characterCount?
-    int characterCount = document()->characterCount() - 1;
-    Q_ASSERT(characterCount >= 0);
+    int characterCount = d->realCharacterCount();
 
     if (characterCount > maxLength()) {
-        Q_D(MTextEdit);
 
         // If we have preedit commit it first
         d->commitPreedit();
@@ -2836,7 +2844,7 @@ void MTextEdit::setMaxLength(int numChars)
         d->setMode(MTextEditModel::EditModeBasic);
 
         // Check again
-        characterCount = document()->characterCount() - 1;
+        characterCount = d->realCharacterCount();
         if (characterCount > maxLength()) {
             // Select everything after position maxLength and remove the selection.
             d->setCursorPosition(maxLength());

@@ -139,6 +139,9 @@ public:
     //! Works around NB#186087 - QGraphicsItem never gets focusOutEvent on hide.
     FocusEventStateType focusEventState;
 
+    // get the characters really in qtextdocument
+    int realCharacterCount() const;
+
 private:
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns
