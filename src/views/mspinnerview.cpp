@@ -155,6 +155,9 @@ void MSpinnerView::setCurrentFrame(int currentFrame)
 {
     Q_D(MSpinnerView);
 
+    if (d->currentFrame == currentFrame)
+        return;
+
     if (currentFrame >= d->animationPixmaps.length())
         currentFrame = 0;
 
