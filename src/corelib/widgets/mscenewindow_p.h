@@ -53,7 +53,6 @@ public:
 
     bool managedManually;
     bool dismissed;
-    bool waitingForContextMenuEvent;
 
     MSceneLayerEffect *effect;
     QGraphicsItem *displacementItem;

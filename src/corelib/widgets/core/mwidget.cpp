@@ -333,6 +333,11 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     }
 
     if (hasObjectMenuActions) {
+
+        MScene *mScene = qobject_cast<MScene *>(scene());
+        if (mScene)
+            mScene->d_func()->notifyChildRequestedMouseCancel();
+
         MObjectMenu *menu = new MObjectMenu(this);
         menu->setCursorPosition(event->scenePos());
         sceneManager()->appearSceneWindow(menu, MSceneWindow::DestroyWhenDone);

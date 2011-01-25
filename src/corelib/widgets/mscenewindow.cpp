@@ -49,7 +49,6 @@ MSceneWindowPrivate::MSceneWindowPrivate()
         sceneWindowState(MSceneWindow::Disappeared),
         managedManually(false),
         dismissed(false),
-        waitingForContextMenuEvent(false),
         effect(0),
         displacementItem(0),
         appearanceAnimation(0),
@@ -299,8 +298,6 @@ void MSceneWindow::closeEvent(QCloseEvent *event)
 
 void MSceneWindow::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
 {
-    Q_D(MSceneWindow);
-
     if (gesture->state() == Qt::GestureFinished) {
 
         QGraphicsSceneContextMenuEvent contextEvent(QEvent::GraphicsSceneContextMenu);
@@ -308,17 +305,7 @@ void MSceneWindow::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGestu
         contextEvent.setScenePos(gesture->position());
         contextEvent.setScreenPos(gesture->position().toPoint());
 
-        d->waitingForContextMenuEvent = true;
         QApplication::sendEvent(scene(), &contextEvent);
-
-        if (contextEvent.isAccepted() && d->waitingForContextMenuEvent) {
-            //Event has been accepted by some widget on top of this scenewindow.
-            MScene *mScene = qobject_cast<MScene *>(scene());
-            if (mScene)
-                mScene->d_func()->notifyChildRequestedMouseCancel();
-        }
-        d->waitingForContextMenuEvent = false;
-
     }
 
     event->accept(gesture);
@@ -331,14 +318,8 @@ bool MSceneWindow::event(QEvent *event)
         dismissEvent(static_cast<MDismissEvent *>(event));
     } else if (event->type() == QEvent::GraphicsSceneContextMenu) {
         //Event was not accepted by any of our child widgets.
-        //We need to accept it so that it doesn't propagate further and
-        //clear the flag, so that the tap&hold gesture event handler
-        //will know that the event wasn't delivered.
-        if (d->waitingForContextMenuEvent) {
-            event->accept();
-            d->waitingForContextMenuEvent = false;
-            return true;
-        }
+        //We need to accept it so that it doesn't propagate.
+        event->accept();
     } else if (event->type() == QEvent::ChildAdded) {
         QChildEvent *childEvent = static_cast<QChildEvent *>(event);
         if (childEvent->child()->objectName() == "_m_testBridge") {
