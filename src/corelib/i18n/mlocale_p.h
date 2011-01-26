@@ -157,6 +157,8 @@ public:
 
     bool isValidCountryCode( const QString& code ) const;
 
+    void dropCaches();
+
     bool _valid;
 
     // the default locale is used for messages and other categories if not
@@ -187,6 +189,7 @@ public:
     icu::NumberFormat *_numberFormatLcTime;
     mutable QCache<QString, icu::DateFormat> _dateFormatCache;
     mutable QCache<QString, icu::SimpleDateFormat> _simpleDateFormatCache;
+    mutable QCache<QString, QString> _icuFormatStringCache;
 #endif
 
     // translations for two supported translation categories
@@ -209,6 +212,9 @@ public:
     MGConfItem currentLcMonetaryItem;
     MGConfItem currentLcTelephoneItem;
 #endif
+
+    // calendar instance used formatDateTimeICU()
+    MCalendar *_pDateTimeCalendar;
 
     MLocale *q_ptr;
 };

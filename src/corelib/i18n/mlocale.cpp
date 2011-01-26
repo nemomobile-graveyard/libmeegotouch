@@ -628,6 +628,7 @@ MLocalePrivate::MLocalePrivate()
       currentLcMonetaryItem(SettingsLcMonetary),
       currentLcTelephoneItem(SettingsLcTelephone),
 #endif
+      _pDateTimeCalendar(0),
       q_ptr(0)
 {
     if (translationPaths.isEmpty())
@@ -683,6 +684,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       currentLcMonetaryItem(SettingsLcMonetary),
       currentLcTelephoneItem(SettingsLcTelephone),
 #endif
+      _pDateTimeCalendar(0),
       q_ptr(0)
 {
 #ifdef HAVE_ICU
@@ -703,6 +705,9 @@ MLocalePrivate::~MLocalePrivate()
 #endif
     // note: if tr translations are inserted into QCoreApplication
     // deleting the QTranslator removes them from the QCoreApplication
+
+    delete _pDateTimeCalendar;
+    _pDateTimeCalendar = 0;
 }
 
 MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
@@ -743,6 +748,22 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
 #endif
 
     return *this;
+}
+
+void MLocalePrivate::dropCaches()
+{
+    // call this function when the MLocale has changed so that
+    // cached data cannot be used any more
+
+    // delete MCalendar instance for this MLocale
+    if ( _pDateTimeCalendar )
+    {
+        delete _pDateTimeCalendar;
+        _pDateTimeCalendar = 0;
+    }
+
+    // drop cached formatString conversions
+    _icuFormatStringCache.clear();
 }
 
 bool MLocalePrivate::isValidCountryCode( const QString& code ) const
@@ -1585,12 +1606,16 @@ void MLocale::setCategoryLocale(Category category, const QString &localeName)
 {
     Q_D(MLocale);
     d->setCategoryLocale(this, category, localeName);
+
+    d->dropCaches();
 }
 
 void MLocale::setCollation(Collation collation)
 {
     Q_D(MLocale);
     d->_collation = collation;
+
+    d->dropCaches();
 }
 
 MLocale::Collation MLocale::collation() const
@@ -1603,6 +1628,8 @@ void MLocale::setCalendarType(CalendarType calendarType)
 {
     Q_D(MLocale);
     d->_calendarType = calendarType;
+
+    d->dropCaches();
 }
 
 MLocale::CalendarType MLocale::calendarType() const
@@ -1615,6 +1642,8 @@ void MLocale::setTimeFormat24h(TimeFormat24h timeFormat24h)
 {
     Q_D(MLocale);
     d->_timeFormat24h = timeFormat24h;
+
+    d->dropCaches();
 }
 
 MLocale::TimeFormat24h MLocale::timeFormat24h() const
@@ -2198,10 +2227,17 @@ QString MLocale::formatDateTime(const QDateTime &dateTime, CalendarType calendar
 QString MLocale::formatDateTime(const QDateTime &dateTime,
                                   const QString &formatString) const
 {
+    Q_D(const MLocale);
+
     // convert QDateTime to MCalendar and format
-    MCalendar calendar(*this);
-    calendar.setDateTime(dateTime);
-    return formatDateTime(calendar, formatString);
+
+    if ( ! d->_pDateTimeCalendar )
+    {
+        const_cast<MLocalePrivate *>(d)->_pDateTimeCalendar = new MCalendar( *this );
+    }
+
+    const_cast<MLocalePrivate *>(d)->_pDateTimeCalendar->setDateTime(dateTime);
+    return formatDateTime(*d->_pDateTimeCalendar, formatString);
 }
 #endif
 
@@ -2213,10 +2249,17 @@ QString MLocale::formatDateTime(const QDateTime &dateTime,
 QString MLocale::formatDateTimeICU(const QDateTime &dateTime,
                                      const QString &formatString) const
 {
+    Q_D(const MLocale);
+
     // convert QDateTime to MCalendar and format
-    MCalendar calendar(*this);
-    calendar.setDateTime(dateTime);
-    return formatDateTimeICU(calendar, formatString);
+
+    if ( ! d->_pDateTimeCalendar )
+    {
+        const_cast<MLocalePrivate *>(d)->_pDateTimeCalendar = new MCalendar( *this );
+    }
+
+    const_cast<MLocalePrivate *>(d)->_pDateTimeCalendar->setDateTime(dateTime);
+    return formatDateTimeICU(*d->_pDateTimeCalendar, formatString);
 }
 #endif
 
@@ -2307,316 +2350,328 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
 
     QString icuFormat;
 
-    bool isInNormalText = false; // a-zA-Z should be between <'>-quotations
+    if ( ! d->_icuFormatStringCache.contains( formatString ) )
+    {
+        bool isInNormalText = false; // a-zA-Z should be between <'>-quotations
 
-    const int length = formatString.length();
-    for (int i = 0; i < length; ++i) {
+        const int length = formatString.length();
+        for (int i = 0; i < length; ++i) {
 
-        QChar current = formatString.at(i);
+            QChar current = formatString.at(i);
 
-        if (current == '%') {
-            i++;
-            QChar next = formatString.at(i);
+            if (current == '%') {
+                i++;
+                QChar next = formatString.at(i);
 
-            // end plain text icu quotation
-            if (isInNormalText == true) {
-                icuFormat.append('\'');
-                isInNormalText = false;
-            }
-
-            switch (next.unicode()) {
-
-            case 'a':
-                // abbreviated weekday name
-                icuFormat.append("ccc");
-                break;
-
-            case 'A':
-                // stand-alone full weekday name
-                icuFormat.append("cccc");
-                break;
-
-            case 'b':
-            case 'h':
-                // abbreviated month name
-                icuFormat.append("LLL");
-                break;
-
-            case 'B':
-                // full month name
-                icuFormat.append("LLLL");
-                break;
-
-            case 'c': {
-                // FDCC-set's appropriate date and time representation
-
-                // This is ugly but possibly the only way to get the appropriate presentation
-                icu::Locale msgLocale = d->getCategoryLocale(MLcMessages);
-                DateFormat *df
-                = icu::DateFormat::createDateTimeInstance(icu::DateFormat::kDefault,
-                        icu::DateFormat::kDefault,
-                        msgLocale);
-                icu::UnicodeString dateTime;
-                icu::FieldPosition fieldPos;
-                dateTime = df->format(*mCalendar.d_ptr->_calendar, dateTime, fieldPos);
-                icuFormat.append('\'');
-                QString pattern = MIcuConversions::unicodeStringToQString(dateTime);
-                icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
-                icuFormat.append('\'');
-                delete df;
-                break;
-            }
-
-            case 'C': {
-                // century, no corresponding icu pattern
-                UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.year() / 100), str); //krazy:exclude=typedefs
-                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
-                break;
-            }
-
-            case 'd':
-                // Day of the month as a decimal number (01-31)
-                icuFormat.append("dd");
-                break;
-
-            case 'D':
-                // %D Date in the format mm/dd/yy.
-                icuFormat.append("MM/dd/yy"); // yy really shortened?
-                break;
-
-            case 'e':
-                // correct? there should be explicit space fill or something?
-                icuFormat.append("d");
-                break;
-
-            case 'F':
-                //The date in the format YYYY-MM-DD (An ISO 8601 format).
-                icuFormat.append("yyyy-MM-dd");
-                break;
-
-            case 'g':
-                icuFormat.append("YY");
-                break;
-
-            case 'G':
-                icuFormat.append("YYYY");
-                break;
-
-            case 'H':
-                // Hour (24-hour clock), as a decimal number (00-23).
-                icuFormat.append("HH");
-                break;
-
-            case 'I':
-                // Hour (12-hour clock), as a decimal number (01-12).
-                icuFormat.append("hh");
-                break;
-
-            case 'j':
-                // day of year
-                icuFormat.append("DDD");
-                break;
-
-            case 'm':
-                // month
-                icuFormat.append("MM");
-                break;
-
-            case 'M':
-                // minute
-                icuFormat.append("mm");
-                break;
-
-            case 'n':
-                // newline
-                icuFormat.append('\n');
-                break;
-
-            case 'p':
-                // AM/PM
-                icuFormat.append("aaa");
-                break;
-
-            case 'r': {
-                // 12 hour clock with am/pm
-                QString timeShortFormat
-                    = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
-                                         MLocale::GregorianCalendar,
-                                         MLocale::TwelveHourTimeFormat24h);
-                icuFormat.append(timeShortFormat);
-                break;
-            }
-
-            case 'R': {
-                // 24-hour clock time, in the format "%H:%M"
-                QString timeShortFormat
-                    = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
-                                         MLocale::GregorianCalendar,
-                                         MLocale::TwentyFourHourTimeFormat24h);
-                icuFormat.append(timeShortFormat);
-                break;
-            }
-
-            case 'S':
-                // seconds
-                icuFormat.append("ss");
-                break;
-
-            case 't':
-                // tab
-                icuFormat.append('\t');
-                break;
-
-            case 'T': // FIXME!
-                // 24 hour clock HH:MM:SS
-                icuFormat.append("kk:mm:ss");
-                break;
-
-            case 'u': {
-                // Weekday, as a decimal number (1(Monday)-7)
-                // no corresponding icu pattern for monday based weekday
-                UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.dayOfWeek()), str); //krazy:exclude=typedefs
-                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
-                break;
-            }
-
-            case 'U': {
-                // Week number of the year (Sunday as the first day of the week) as a
-                // decimal number (00-53). First week starts from first Sunday.
-                UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str); //krazy:exclude=typedefs
-                d->_numberFormatLcTime->format(static_cast<int32_t>(weekNumberStartingFromDay(mCalendar, MLocale::Sunday)), str); //krazy:exclude=typedefs
-                QString weeknumber = MIcuConversions::unicodeStringToQString(str);
-                if (weeknumber.length() > 2)
-                    weeknumber = weeknumber.right(2);
-                icuFormat.append(weeknumber);
-                break;
-            }
-
-            case 'v': // same as %V, for compatibility
-            case 'V': {
-                // Week of the year (Monday as the first day of the week), as a decimal
-                // number (01-53). according to ISO-8601
-
-                MCalendar calendarCopy = mCalendar;
-                calendarCopy.setFirstDayOfWeek(MLocale::Monday);
-                calendarCopy.setMinimalDaysInFirstWeek(4);
-                UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str); //krazy:exclude=typedefs
-                d->_numberFormatLcTime->format(static_cast<int32_t>(calendarCopy.weekNumber()), str); //krazy:exclude=typedefs
-                QString weeknumber = MIcuConversions::unicodeStringToQString(str);
-                if (weeknumber.length() > 2)
-                    weeknumber = weeknumber.right(2); // cut leading 0
-                icuFormat.append(weeknumber);
-                break;
-            }
-
-            case 'w': {
-                // Weekday, as a decimal number (0(Sunday)-6)
-                int weekday = mCalendar.dayOfWeek();
-                if (weekday == Sunday) {
-                    weekday = 0;
-                }
-                UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(weekday), str); //krazy:exclude=typedefs
-                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
-                break;
-            }
-
-            case 'W': {
-                // Week number of the year (Monday as the first day of the week), as a
-                // decimal number (00-53). Week starts from the first monday
-                int weeknumber = weekNumberStartingFromDay(mCalendar, MLocale::Monday);
-                UnicodeString str;
-                d->_numberFormatLcTime->format(static_cast<int32_t>(weeknumber), str); //krazy:exclude=typedefs
-                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
-                break;
-            }
-
-            case 'x': {
-                // appropriate date representation
-                icu::Locale msgLocale = d->getCategoryLocale(MLcMessages);
-                DateFormat *df
-                = icu::DateFormat::createDateInstance(icu::DateFormat::kDefault,
-                                                      msgLocale);
-                icu::UnicodeString dateTime;
-                icu::FieldPosition fieldPos;
-                dateTime = df->format(*mCalendar.d_ptr->_calendar, dateTime, fieldPos);
-                icuFormat.append('\'');
-                QString pattern = MIcuConversions::unicodeStringToQString(dateTime);
-                icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
-                icuFormat.append('\'');
-                delete df;
-                break;
-            }
-
-            case 'X': {
-                // appropriate time representation
-                icu::Locale msgLocale = d->getCategoryLocale(MLcMessages);
-                DateFormat *df
-                = icu::DateFormat::createTimeInstance(icu::DateFormat::kDefault,
-                                                      msgLocale);
-                icu::UnicodeString dateTime;
-                icu::FieldPosition fieldPos;
-                dateTime = df->format(*mCalendar.d_ptr->_calendar, dateTime, fieldPos);
-                icuFormat.append('\'');
-                QString pattern = MIcuConversions::unicodeStringToQString(dateTime);
-                icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
-                icuFormat.append('\'');
-                delete df;
-                break;
-            }
-
-            case 'y':
-                // year within century
-                icuFormat.append("yy");
-                break;
-
-            case 'Y':
-                // year with century
-                icuFormat.append("yyyy");
-                break;
-
-            case 'z':
-                // The offset from UTC in the ISO 8601 format "-0430" (meaning 4 hours
-                // 30 minutes behind UTC, west of Greenwich), or by no characters if no
-                // time zone is determinable
-                icuFormat.append("Z"); // correct?
-                break;
-
-            case 'Z':
-                // ISO-14652 (draft):
-                //   Time-zone name, or no characters if no time zone is determinable
-                // Linux date command, strftime (glibc):
-                //   alphabetic time zone abbreviation (e.g., EDT)
-                // note that the ISO-14652 draft does not mention abbreviation,
-                // i.e. it is a bit unclear how exactly this should look like.
-                icuFormat.append("vvvv"); // generic time zone info
-                break;
-
-            case '%':
-                icuFormat.append("%");
-                break;
-            }
-
-        } else {
-            if (current == '\'') {
-                icuFormat.append("''"); // icu escape
-
-            } else if ((current >= 'a' && current <= 'z') || (current >= 'A' && current <= 'Z')) {
-                if (isInNormalText == false) {
+                // end plain text icu quotation
+                if (isInNormalText == true) {
                     icuFormat.append('\'');
-                    isInNormalText = true;
+                    isInNormalText = false;
                 }
 
-                icuFormat.append(current);
+                switch (next.unicode()) {
+
+                    case 'a':
+                        // abbreviated weekday name
+                        icuFormat.append("ccc");
+                        break;
+
+                    case 'A':
+                        // stand-alone full weekday name
+                        icuFormat.append("cccc");
+                        break;
+
+                    case 'b':
+                    case 'h':
+                        // abbreviated month name
+                        icuFormat.append("LLL");
+                    break;
+
+                    case 'B':
+                        // full month name
+                        icuFormat.append("LLLL");
+                        break;
+
+                    case 'c': {
+                        // FDCC-set's appropriate date and time representation
+
+                        // This is ugly but possibly the only way to get the appropriate presentation
+                        icu::Locale msgLocale = d->getCategoryLocale(MLcMessages);
+                        DateFormat *df
+                            = icu::DateFormat::createDateTimeInstance(icu::DateFormat::kDefault,
+                                                                      icu::DateFormat::kDefault,
+                                                                      msgLocale);
+                        icu::UnicodeString dateTime;
+                        icu::FieldPosition fieldPos;
+                        dateTime = df->format(*mCalendar.d_ptr->_calendar, dateTime, fieldPos);
+                        icuFormat.append('\'');
+                        QString pattern = MIcuConversions::unicodeStringToQString(dateTime);
+                        icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
+                        icuFormat.append('\'');
+                        delete df;
+                        break;
+                    }
+
+                    case 'C': {
+                        // century, no corresponding icu pattern
+                        UnicodeString str;
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.year() / 100), str); //krazy:exclude=typedefs
+                        icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+                        break;
+                    }
+
+                    case 'd':
+                        // Day of the month as a decimal number (01-31)
+                        icuFormat.append("dd");
+                        break;
+
+                    case 'D':
+                        // %D Date in the format mm/dd/yy.
+                        icuFormat.append("MM/dd/yy"); // yy really shortened?
+                        break;
+
+                    case 'e':
+                        // correct? there should be explicit space fill or something?
+                        icuFormat.append("d");
+                        break;
+
+                    case 'F':
+                        //The date in the format YYYY-MM-DD (An ISO 8601 format).
+                        icuFormat.append("yyyy-MM-dd");
+                        break;
+
+                    case 'g':
+                        icuFormat.append("YY");
+                        break;
+
+                    case 'G':
+                        icuFormat.append("YYYY");
+                        break;
+
+                    case 'H':
+                        // Hour (24-hour clock), as a decimal number (00-23).
+                        icuFormat.append("HH");
+                        break;
+
+                    case 'I':
+                        // Hour (12-hour clock), as a decimal number (01-12).
+                        icuFormat.append("hh");
+                        break;
+
+                    case 'j':
+                        // day of year
+                        icuFormat.append("DDD");
+                        break;
+
+                    case 'm':
+                        // month
+                        icuFormat.append("MM");
+                        break;
+
+                    case 'M':
+                        // minute
+                        icuFormat.append("mm");
+                        break;
+
+                    case 'n':
+                        // newline
+                        icuFormat.append('\n');
+                        break;
+
+                    case 'p':
+                        // AM/PM
+                        icuFormat.append("aaa");
+                        break;
+
+                    case 'r': {
+                        // 12 hour clock with am/pm
+                        QString timeShortFormat
+                            = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                                 MLocale::GregorianCalendar,
+                                                 MLocale::TwelveHourTimeFormat24h);
+                        icuFormat.append(timeShortFormat);
+                        break;
+                    }
+
+                    case 'R': {
+                        // 24-hour clock time, in the format "%H:%M"
+                        QString timeShortFormat
+                            = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                                 MLocale::GregorianCalendar,
+                                                 MLocale::TwentyFourHourTimeFormat24h);
+                        icuFormat.append(timeShortFormat);
+                        break;
+                    }
+
+                    case 'S':
+                        // seconds
+                        icuFormat.append("ss");
+                        break;
+
+                    case 't':
+                        // tab
+                        icuFormat.append('\t');
+                        break;
+
+                    case 'T': // FIXME!
+                        // 24 hour clock HH:MM:SS
+                        icuFormat.append("kk:mm:ss");
+                        break;
+
+                    case 'u': {
+                        // Weekday, as a decimal number (1(Monday)-7)
+                        // no corresponding icu pattern for monday based weekday
+                        UnicodeString str;
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.dayOfWeek()), str); //krazy:exclude=typedefs
+                        icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+                        break;
+                    }
+
+                    case 'U': {
+                        // Week number of the year (Sunday as the first day of the week) as a
+                        // decimal number (00-53). First week starts from first Sunday.
+                        UnicodeString str;
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(0), str); //krazy:exclude=typedefs
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(weekNumberStartingFromDay(mCalendar, MLocale::Sunday)), str); //krazy:exclude=typedefs
+                        QString weeknumber = MIcuConversions::unicodeStringToQString(str);
+                        if (weeknumber.length() > 2)
+                            weeknumber = weeknumber.right(2);
+                        icuFormat.append(weeknumber);
+                        break;
+                    }
+
+                    case 'v': // same as %V, for compatibility
+                    case 'V': {
+                        // Week of the year (Monday as the first day of the week), as a decimal
+                        // number (01-53). according to ISO-8601
+
+                        MCalendar calendarCopy = mCalendar;
+                        calendarCopy.setFirstDayOfWeek(MLocale::Monday);
+                        calendarCopy.setMinimalDaysInFirstWeek(4);
+                        UnicodeString str;
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(0), str); //krazy:exclude=typedefs
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(calendarCopy.weekNumber()), str); //krazy:exclude=typedefs
+                        QString weeknumber = MIcuConversions::unicodeStringToQString(str);
+                        if (weeknumber.length() > 2)
+                            weeknumber = weeknumber.right(2); // cut leading 0
+                        icuFormat.append(weeknumber);
+                        break;
+                    }
+
+                    case 'w': {
+                        // Weekday, as a decimal number (0(Sunday)-6)
+                        int weekday = mCalendar.dayOfWeek();
+                        if (weekday == Sunday) {
+                            weekday = 0;
+                        }
+                        UnicodeString str;
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(weekday), str); //krazy:exclude=typedefs
+                        icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+                        break;
+                    }
+
+                    case 'W': {
+                        // Week number of the year (Monday as the first day of the week), as a
+                        // decimal number (00-53). Week starts from the first monday
+                        int weeknumber = weekNumberStartingFromDay(mCalendar, MLocale::Monday);
+                        UnicodeString str;
+                        d->_numberFormatLcTime->format(static_cast<int32_t>(weeknumber), str); //krazy:exclude=typedefs
+                        icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+                        break;
+                    }
+
+                    case 'x': {
+                        // appropriate date representation
+                        icu::Locale msgLocale = d->getCategoryLocale(MLcMessages);
+                        DateFormat *df
+                            = icu::DateFormat::createDateInstance(icu::DateFormat::kDefault,
+                                                                  msgLocale);
+                        icu::UnicodeString dateTime;
+                        icu::FieldPosition fieldPos;
+                        dateTime = df->format(*mCalendar.d_ptr->_calendar, dateTime, fieldPos);
+                        icuFormat.append('\'');
+                        QString pattern = MIcuConversions::unicodeStringToQString(dateTime);
+                        icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
+                        icuFormat.append('\'');
+                        delete df;
+                        break;
+                    }
+
+                    case 'X': {
+                        // appropriate time representation
+                        icu::Locale msgLocale = d->getCategoryLocale(MLcMessages);
+                        DateFormat *df
+                            = icu::DateFormat::createTimeInstance(icu::DateFormat::kDefault,
+                                                                  msgLocale);
+                        icu::UnicodeString dateTime;
+                        icu::FieldPosition fieldPos;
+                        dateTime = df->format(*mCalendar.d_ptr->_calendar, dateTime, fieldPos);
+                        icuFormat.append('\'');
+                        QString pattern = MIcuConversions::unicodeStringToQString(dateTime);
+                        icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
+                        icuFormat.append('\'');
+                        delete df;
+                        break;
+                    }
+
+                    case 'y':
+                        // year within century
+                        icuFormat.append("yy");
+                        break;
+
+                    case 'Y':
+                        // year with century
+                        icuFormat.append("yyyy");
+                        break;
+
+                    case 'z':
+                        // The offset from UTC in the ISO 8601 format "-0430" (meaning 4 hours
+                        // 30 minutes behind UTC, west of Greenwich), or by no characters if no
+                        // time zone is determinable
+                        icuFormat.append("Z"); // correct?
+                        break;
+
+                    case 'Z':
+                        // ISO-14652 (draft):
+                        //   Time-zone name, or no characters if no time zone is determinable
+                        // Linux date command, strftime (glibc):
+                        //   alphabetic time zone abbreviation (e.g., EDT)
+                        // note that the ISO-14652 draft does not mention abbreviation,
+                        // i.e. it is a bit unclear how exactly this should look like.
+                        icuFormat.append("vvvv"); // generic time zone info
+                        break;
+
+                    case '%':
+                        icuFormat.append("%");
+                        break;
+                }
 
             } else {
-                icuFormat.append(current);
+                if (current == '\'') {
+                    icuFormat.append("''"); // icu escape
+
+                } else if ((current >= 'a' && current <= 'z') || (current >= 'A' && current <= 'Z')) {
+                    if (isInNormalText == false) {
+                        icuFormat.append('\'');
+                        isInNormalText = true;
+                    }
+
+                    icuFormat.append(current);
+
+                } else {
+                    icuFormat.append(current);
+                }
             }
-        }
+        } // for loop
+
+        QString* value = new QString( icuFormat );
+        // save formatString -> icuFormat pair for future use
+        d->_icuFormatStringCache.insert( formatString, value );
+    }
+    else
+    {
+        // formatString does exist in hash
+        icuFormat = *d->_icuFormatStringCache[ formatString ];
     }
 
     return formatDateTimeICU(mCalendar, icuFormat);
@@ -3284,6 +3339,8 @@ void MLocale::refreshSettings()
         }
         emit settingsChanged();
     }
+
+    d->dropCaches();
 #endif
 }
 
