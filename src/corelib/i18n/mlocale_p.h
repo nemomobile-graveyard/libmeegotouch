@@ -186,6 +186,7 @@ public:
     icu::NumberFormat *_numberFormat;
     icu::NumberFormat *_numberFormatLcTime;
     mutable QCache<QString, icu::DateFormat> _dateFormatCache;
+    mutable QCache<QString, icu::SimpleDateFormat> _simpleDateFormatCache;
 #endif
 
     // translations for two supported translation categories

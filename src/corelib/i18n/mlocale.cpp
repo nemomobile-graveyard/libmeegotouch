@@ -2227,21 +2227,38 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
                                      const QString &formatString) const
 {
     Q_D(const MLocale);
-    UErrorCode status = U_ZERO_ERROR;
-    icu::SimpleDateFormat formatter(MIcuConversions::qStringToUnicodeString(formatString),
-                                    d->getCategoryLocale(MLcTime), status);
-
-    if (U_FAILURE(status)) {
+    QString key = QString("%1_%2_%3")
+        .arg(formatString)
+        .arg(mCalendar.type())
+        .arg(categoryName(MLocale::MLcTime));
+    icu::SimpleDateFormat *formatter;
+    if(d->_simpleDateFormatCache.contains(key)) {
+        formatter = d->_simpleDateFormatCache.object(key);
+    }
+    else {
+        UErrorCode status = U_ZERO_ERROR;
+        formatter = new icu::SimpleDateFormat(
+            MIcuConversions::qStringToUnicodeString(formatString),
+            d->getCategoryLocale(MLcTime), status);
+        if(U_FAILURE(status)) {
+            qWarning() << "icu::SimpleDateFormat() failed with error"
+                       << u_errorName(status);
+            formatter = NULL;
+        }
+        if(formatter)
+            d->_simpleDateFormatCache.insert(key, formatter);
+    }
+    if(!formatter) {
         return QString();
     }
-
-    icu::FieldPosition pos;
-    icu::UnicodeString resString;
-
-    formatter.format(*mCalendar.d_ptr->_calendar, resString, pos);
-    QString result = MIcuConversions::unicodeStringToQString(resString);
-    d->replaceDigitsFromLcTimeToLcNumeric(&result);
-    return result;
+    else {
+        icu::FieldPosition pos;
+        icu::UnicodeString resString;
+        formatter->format(*mCalendar.d_ptr->_calendar, resString, pos);
+        QString result = MIcuConversions::unicodeStringToQString(resString);
+        d->replaceDigitsFromLcTimeToLcNumeric(&result);
+        return result;
+    }
 }
 #endif
 
