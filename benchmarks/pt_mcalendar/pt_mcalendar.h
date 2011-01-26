@@ -48,6 +48,7 @@ private slots:
     void benchmarkFormatDateTimePosixFormatString_t_MCalendar();
     void benchmarkIcuFormatString();
     void benchmarkFormatDateTime();
+    void benchmarkFormatDateTimeICU();
 };
 
 #endif

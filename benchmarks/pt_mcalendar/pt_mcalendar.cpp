@@ -309,5 +309,30 @@ void Pt_MCalendar::benchmarkFormatDateTime()
     }
 }
 
+void Pt_MCalendar::benchmarkFormatDateTimeICU()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("fi_FI");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    QString formatString("cccc d. MMMM y H:mm:ss zzzz");
+    QString formattedResult("tiistai 13. heinäkuuta 2010 14:51:07 Itä-Euroopan kesäaika");
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    MCalendar::setSystemTimeZone("Europe/Helsinki");
+    MCalendar calendar;
+    calendar.setDateTime(QDateTime(QDate(2010, 7, 13),
+                                   QTime(14, 51, 07, 0),
+                                   Qt::LocalTime));
+
+    QCOMPARE(locale.formatDateTimeICU(calendar, formatString), formattedResult);
+
+    QBENCHMARK {
+        locale.formatDateTimeICU(calendar, formatString);
+    }
+}
+
 QTEST_APPLESS_MAIN(Pt_MCalendar);
 
