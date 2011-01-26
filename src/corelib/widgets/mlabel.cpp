@@ -74,8 +74,7 @@ void MLabel::changeEvent(QEvent *event)
 
 void MLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    Q_UNUSED(event);
-    event->ignore();
+    MWidgetController::contextMenuEvent(event);
 }
 
 void MLabel::setText(const QString &text)

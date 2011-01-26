@@ -18,6 +18,42 @@
 ****************************************************************************/
 
 #include "mlabelhighlighter.h"
+#include "mlabelhighlighter_p.h"
+#include <QHash>
+
+namespace {
+    //FIXME: Fake private functionality to avoid ABI break. Implement this with proper one
+    //when ABI breaks are allowed
+
+    typedef QHash<const MLabelHighlighter*, MLabelHighlighterPrivate*> MLabelHighlighterHash;
+    Q_GLOBAL_STATIC(MLabelHighlighterHash, d_func)
+
+    static MLabelHighlighterPrivate* d(const MLabelHighlighter* q)
+    {
+        MLabelHighlighterPrivate* ret = d_func()->value(q, 0);
+        if (!ret) {
+            ret = new MLabelHighlighterPrivate;
+            d_func()->insert(q, ret);
+        }
+        return ret;
+    }
+
+    static void delete_d(const MLabelHighlighter* q)
+    {
+        MLabelHighlighterPrivate* ret = d_func()->value(q, 0);
+        delete ret;
+        d_func()->remove(q);
+    }
+}
+
+MLabelHighlighterPrivate::MLabelHighlighterPrivate() :
+    ignoreEvents(false)
+{
+}
+
+MLabelHighlighterPrivate::~MLabelHighlighterPrivate()
+{
+}
 
 class MCommonLabelHighlighterPrivate
 {
@@ -27,6 +63,17 @@ public:
 
 MLabelHighlighter::~MLabelHighlighter()
 {
+    delete_d(this);
+}
+
+void MLabelHighlighter::setIgnoreClickAndLongPressEvents(bool ignore)
+{
+    d(this)->ignoreEvents = ignore;
+}
+
+bool MLabelHighlighter::ignoreClickAndLongPressEvents() const
+{
+    return d(this)->ignoreEvents;
 }
 
 bool MLabelHighlighter::validate(QString &item) const
@@ -34,6 +81,7 @@ bool MLabelHighlighter::validate(QString &item) const
     Q_UNUSED(item);
     return true;
 }
+
 MCommonLabelHighlighter::MCommonLabelHighlighter(const QRegExp &regExp)
     : d_ptr(new MCommonLabelHighlighterPrivate)
 {
@@ -61,4 +109,3 @@ void MCommonLabelHighlighter::longPress(const QString &item)
 {
     emit longPressed(item);
 }
-

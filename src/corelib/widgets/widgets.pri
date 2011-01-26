@@ -141,6 +141,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mtextedit_p.h \
     $$WIDGETS_SRC_DIR/mbasicsheetheader_p.h \
     $$WIDGETS_SRC_DIR/mcolorcombobox.h \
+    $$WIDGETS_SRC_DIR/mlabelhighlighter_p.h \
     $$PRIVATE_WIDGET_MODEL_HEADERS
 
 

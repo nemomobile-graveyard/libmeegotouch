@@ -401,19 +401,24 @@ void Ut_MLabel::testHighlighting()
 
     QVERIFY(nonhighlighted != highlighted);
 
+    //click and long press
     QSignalSpy spyClick(h, SIGNAL(clicked(QString)));
     label->simulateClick(QPoint(15, 5));
     QCOMPARE(spyClick.count(), 1);
-
     QSignalSpy spyLongPress(h, SIGNAL(longPressed(QString)));
-
     QList<QGesture *> list;
     QTapAndHoldGesture gesture;
     gesture.setPosition(QPointF(15, 5));
     list.append( &gesture );
     QGestureEvent gestureEvent(list);
     label->tapAndHoldGestureEvent (&gestureEvent, &gesture );
+    QCOMPARE(spyLongPress.count(), 1);
 
+    //click and long press when events are ignored
+    h->setIgnoreClickAndLongPressEvents(true);
+    label->simulateClick(QPoint(15, 5));
+    QCOMPARE(spyClick.count(), 1);
+    label->tapAndHoldGestureEvent (&gestureEvent, &gesture );
     QCOMPARE(spyLongPress.count(), 1);
 
     label->removeHighlighter(NULL);
