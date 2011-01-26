@@ -285,6 +285,9 @@ int MSceneManagerPrivate::zForWindowType(MSceneWindow::WindowType windowType)
     case MSceneWindow::StatusBar:
         z = MSceneManagerPrivate::StatusBar;
         break;
+    case MSceneWindow::Sheet:
+        z = MSceneManagerPrivate::Sheet;
+        break;
     default:
         z = 0;
         // Should not get here. Only scene layer effect does not have it's
@@ -933,16 +936,36 @@ void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
     }
 }
 
-QRectF MSceneManagerPrivate::calculateSceneWindowGeometry(MSceneWindow *window) const
+QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWindow) const
 {
     Q_Q(const MSceneManager);
     QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
     QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
+    if (sceneWindow->windowType() == MSceneWindow::Sheet
+        && statusBar
+        && (statusBar->sceneWindowState() == MSceneWindow::Appearing
+            || statusBar->sceneWindowState() == MSceneWindow::Appeared)) {
+        // Sheets cannot slip behind the status bar
+
+        qreal statusBarRealHeight = statusBar->property("sharedPixmapHeight").value<qreal>();
+        availableSceneRect.setTop(statusBarRealHeight);
+    }
+
+    return availableSceneRect;
+}
+
+QRectF MSceneManagerPrivate::calculateSceneWindowGeometry(MSceneWindow *window) const
+{
+    QRectF availableSceneRect = calculateAvailableSceneRect(window);
     Qt::Alignment alignment = window->alignment();
+
     //If the preferred size returned from sizeHint is larger than the maximum size, it will get reduced.
     //But this means that we need to get the new height for the new width..
     QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize, QSizeF(window->preferredWidth(), -1));
+
+    // scene window shouldn't be bigger than the available scene rect.
+    windowSize = windowSize.boundedTo(availableSceneRect.size());
 
     QPointF pos;
 
@@ -1437,6 +1460,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
                 case MSceneWindow::MessageBox:
                 case MSceneWindow::Dialog:
                 case MSceneWindow::ObjectMenu:
+                case MSceneWindow::Sheet:
                     freezeUIForAnimationDuration(window->d_func()->appearanceAnimation);
                     // Fallthrough is intentional and freezeUIForAnimationDuration must be called
                     // before following connect since order of slot execution is crutial here.
@@ -1598,6 +1622,7 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
             case MSceneWindow::MessageBox:
             case MSceneWindow::Dialog:
             case MSceneWindow::ObjectMenu:
+            case MSceneWindow::Sheet:
                 freezeUIForAnimationDuration(window->d_func()->disappearanceAnimation);
             default:
                 q->connect(window->d_func()->disappearanceAnimation, SIGNAL(finished()),
@@ -1626,12 +1651,11 @@ void MSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *anim
     }
 }
 
-void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow *sceneWindow)
+MAbstractWidgetAnimation *MSceneManagerPrivate::createAnimationFromSceneWindowType(
+        MSceneWindow* sceneWindow)
 {
-    Q_ASSERT(sceneWindow->d_func()->appearanceAnimation == 0);
     MAbstractWidgetAnimation *animation = 0;
 
-    // TODO: Get this from theme/CSS
     switch(sceneWindow->windowType()) {
     case MSceneWindow::NotificationInformation:
         animation = new MWidgetSlideAnimation(sceneWindow);
@@ -1666,6 +1690,39 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
         break;
     case MSceneWindow::StatusBar: {
         animation = new MWidgetSlideAnimation(sceneWindow);
+        break;
+    }
+    case MSceneWindow::Sheet: {
+        animation = qobject_cast<MAbstractWidgetAnimation*>(
+                    MTheme::animation(style()->sheetAnimation()));
+        break;
+    default:
+        break;
+    }
+    }
+
+    return animation;
+}
+
+void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow *sceneWindow)
+{
+    Q_ASSERT(sceneWindow->d_func()->appearanceAnimation == 0);
+    MAbstractWidgetAnimation *animation = 0;
+
+    // 1. First get the animation from the scene window style itself.
+    QString appearanceAnimationName = sceneWindow->property("_m_appearanceAnimation").toString();
+    if (!appearanceAnimationName.isEmpty()) {
+        animation = qobject_cast<MAbstractWidgetAnimation*>(
+                MTheme::animation(appearanceAnimationName));
+    }
+
+    // 2. If not defined, try to get it from our own style.
+    if (!animation)
+        animation = createAnimationFromSceneWindowType(sceneWindow);
+
+    // FIXME: Find a better place for this logic. Or find a better solution for this problem.
+    if (sceneWindow->windowType() == MSceneWindow::StatusBar &&
+        qobject_cast<MWidgetSlideAnimation*>(animation)) {
 
         QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
         foreach(QGraphicsWidget *widget, list) {
@@ -1674,12 +1731,10 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             moveAnimation->setFinalPos(QPointF(0, sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
             animation->addAnimation(moveAnimation);
         }
-        break;
     }
-    default:
-        break;
-    }
+    // end of FIXME
 
+    // 3. As a last resort, use hard coded animation assignment.
     if (!animation)
         animation = new MWidgetFadeAnimation(sceneWindow);
 
@@ -1700,41 +1755,21 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     Q_ASSERT(sceneWindow->d_func()->disappearanceAnimation == 0);
     MAbstractWidgetAnimation *animation = 0;
 
-    // TODO: Get this from theme/CSS
-    switch(sceneWindow->windowType()) {
-    case MSceneWindow::NotificationInformation:
-        animation = new MWidgetSlideAnimation(sceneWindow);
-        break;
-    case MSceneWindow::NavigationBar:
+    // 1. First get the animation from the scene window style itself.
+    QString disappearanceAnimationName =
+            sceneWindow->property("_m_disappearanceAnimation").toString();
+    if (!disappearanceAnimationName.isEmpty()) {
         animation = qobject_cast<MAbstractWidgetAnimation*>(
-                MTheme::animation(style()->navigationBarAnimation()));
-        break;
-    case MSceneWindow::NotificationEvent:
-         animation = (sceneWindow->styleName() == "SystemBanner") ? qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation())) :
-                                                                    qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->notificationEventAnimation()));
-        break;
-    case MSceneWindow::ApplicationMenu:
-        animation = qobject_cast<MAbstractWidgetAnimation*>(
-                MTheme::animation(style()->applicationMenuAnimation()));
-        break;
-    case MSceneWindow::PopupList:
-        animation = qobject_cast<MAbstractWidgetAnimation*>(
-                MTheme::animation(style()->popupListAnimation()));
-        break;
-    case MSceneWindow::MessageBox:
-        animation = qobject_cast<MAbstractWidgetAnimation*>(
-                MTheme::animation(style()->messageBoxAnimation()));
-        break;
-    case MSceneWindow::Dialog:
-        animation = qobject_cast<MAbstractWidgetAnimation*>(
-                MTheme::animation(style()->dialogAnimation()));
-        break;
-    case MSceneWindow::ObjectMenu:
-        animation = qobject_cast<MAbstractWidgetAnimation*>(
-                MTheme::animation(style()->objectMenuAnimation()));
-        break;
-    case MSceneWindow::StatusBar: {
-        animation = new MWidgetSlideAnimation(sceneWindow);
+                MTheme::animation(disappearanceAnimationName));
+    }
+
+    // 2. If not defined, try to get it from our own style.
+    if (!animation)
+        animation = createAnimationFromSceneWindowType(sceneWindow);
+
+    // FIXME: Find a better place for this logic. Or find a better solution for this problem.
+    if (sceneWindow->windowType() == MSceneWindow::StatusBar &&
+        qobject_cast<MWidgetSlideAnimation*>(animation)) {
 
         QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
         foreach(QGraphicsWidget *widget, list) {
@@ -1743,12 +1778,10 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             moveAnimation->setFinalPos(QPointF(0, 0));
             animation->addAnimation(moveAnimation);
         }
-        break;
     }
-    default:
-        break;
-    }
+    // end of FIXME
 
+    // 3. As a last resort, use hard coded animation assignment.
     if (!animation)
         animation = new MWidgetFadeAnimation(sceneWindow);
 
@@ -2180,6 +2213,9 @@ void MSceneManager::disappearSceneWindow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
 
+    if (!window->d_func()->canDisappear())
+        return;
+
     window->d_func()->dismissed = false;
     d->disappearSceneWindow(window, d->canHaveAnimatedTransitions());
 }
@@ -2187,6 +2223,10 @@ void MSceneManager::disappearSceneWindow(MSceneWindow *window)
 void MSceneManager::disappearSceneWindowNow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
+
+    if (!window->d_func()->canDisappear())
+        return;
+
     window->d_func()->dismissed = false;
     d->disappearSceneWindow(window, false);
 }
@@ -2195,6 +2235,9 @@ void MSceneManager::dismissSceneWindow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
 
+    if (!window->d_func()->canDismiss())
+        return;
+
     window->d_func()->dismissed = true;
     d->disappearSceneWindow(window, d->canHaveAnimatedTransitions());
 }
@@ -2202,6 +2245,10 @@ void MSceneManager::dismissSceneWindow(MSceneWindow *window)
 void MSceneManager::dismissSceneWindowNow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
+
+    if (!window->d_func()->canDismiss())
+        return;
+
     window->d_func()->dismissed = true;
     d->disappearSceneWindow(window, false);
 }

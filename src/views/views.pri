@@ -26,6 +26,7 @@ PUBLIC_HEADERS += \
     mpannablewidgetview.h \
     mpopuplistview.h \
     mprogressindicatorbarview.h \
+    msheetview.h \
     msliderview.h \
     mspinnerview.h \
     mtexteditview.h \
@@ -62,6 +63,7 @@ PRIVATE_HEADERS += \
     mobjectmenuview_p.h \
     mprogressindicatorbarview_p.h \
     mcompleterview_p.h \
+    msheetview_p.h \
     msliderview_p.h \
     mspinnerview_p.h \
     mlistview_p.h \
@@ -109,6 +111,7 @@ SOURCES += \
     mpannablewidgetview.cpp \
     mpopuplistview.cpp \
     mprogressindicatorbarview.cpp \
+    msheetview.cpp \
     msliderview.cpp \
     mspinnerview.cpp \
     mstatusbarview.cpp \

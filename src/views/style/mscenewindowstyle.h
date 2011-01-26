@@ -38,6 +38,28 @@ class M_VIEWS_EXPORT MSceneWindowStyle : public MWidgetStyle
         \brief Feedback given when scene window reaches the Appearing state.
       */
     M_STYLE_ATTRIBUTE(MFeedback, appearFeedback, AppearFeedback)
+
+    /*!
+       \property MSceneWindowStyle::appearanceAnimation
+       \brief Appearance animation to be used.
+        Format: class name
+        E.g. "MWidgetSlideAnimation"
+
+        If not set (left empty), the animation will be taken from the appropriate
+        property in MSceneManagerStyle, according to the scene window type.
+     */
+    M_STYLE_ATTRIBUTE(QString, appearanceAnimation, AppearanceAnimation)
+
+    /*!
+       \property MSceneWindowStyle::disappearanceAnimation
+       \brief Disappearance animation to be used.
+        Format: class name
+        E.g. "MWidgetSlideAnimation"
+
+        If not set (left empty), the animation will be taken from the appropriate
+        property in MSceneManagerStyle, according to the scene window type.
+     */
+    M_STYLE_ATTRIBUTE(QString, disappearanceAnimation, DisappearanceAnimation)
 };
 
 class M_VIEWS_EXPORT MSceneWindowStyleContainer : public MWidgetStyleContainer

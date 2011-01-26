@@ -141,7 +141,8 @@ public:
         Completer,                       // MCompleter
         HomeButtonPanel,                 // MHomeButtonPanel
         PlainSceneWindow,                // MSceneWindow
-        StatusBar                        // MStatusBar
+        StatusBar,                       // MStatusBar
+        Sheet                            // MSheet
     };
 
     /*!

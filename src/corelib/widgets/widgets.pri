@@ -41,6 +41,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mrichtextedit.h \
     $$WIDGETS_SRC_DIR/mscenewindow.h \
     $$WIDGETS_SRC_DIR/mseekbar.h \
+    $$WIDGETS_SRC_DIR/msheet.h \
     $$WIDGETS_SRC_DIR/mslider.h \
     $$WIDGETS_SRC_DIR/mstatusbar.h \
     $$WIDGETS_SRC_DIR/mtextedit.h \
@@ -88,6 +89,7 @@ WIDGET_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mpositionindicatormodel.h \
     $$WIDGETS_SRC_DIR/mprogressindicatormodel.h \
     $$WIDGETS_SRC_DIR/mseparatormodel.h \
+    $$WIDGETS_SRC_DIR/msheetmodel.h \
     $$WIDGETS_SRC_DIR/mslidermodel.h \
     $$WIDGETS_SRC_DIR/mseekbarmodel.h \
     $$WIDGETS_SRC_DIR/mtexteditmodel.h \
@@ -119,6 +121,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mpannableviewportlayout.h \
     $$WIDGETS_SRC_DIR/mpopuplist_p.h \
     $$WIDGETS_SRC_DIR/mscenewindow_p.h \
+    $$WIDGETS_SRC_DIR/msheet_p.h \
     $$WIDGETS_SRC_DIR/mstatusbar_p.h \
     $$WIDGETS_SRC_DIR/mwindow_p.h \
     $$WIDGETS_SRC_DIR/mrichtexteditdialogsmanager_p.h \
@@ -168,6 +171,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mrichtexteditdialogsmanager.cpp \
     $$WIDGETS_SRC_DIR/mscenewindow.cpp \
     $$WIDGETS_SRC_DIR/mseekbar.cpp \
+    $$WIDGETS_SRC_DIR/msheet.cpp \
     $$WIDGETS_SRC_DIR/mslider.cpp \
     $$WIDGETS_SRC_DIR/mslidermodel.cpp \
     $$WIDGETS_SRC_DIR/mstatusbar.cpp \

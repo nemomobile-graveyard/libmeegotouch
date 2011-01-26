@@ -38,6 +38,7 @@ class MSceneManagerStyle : public MStyle
     M_STYLE_ATTRIBUTE(QString, objectMenuAnimation, ObjectMenuAnimation)
     M_STYLE_ATTRIBUTE(QString, navigationBarAnimation, NavigationBarAnimation)
     M_STYLE_ATTRIBUTE(QString, systemBannerAnimation, SystemBannerAnimation)
+    M_STYLE_ATTRIBUTE(QString, sheetAnimation, SheetAnimation)
 };
 
 class MSceneManagerStyleContainer : public MStyleContainer

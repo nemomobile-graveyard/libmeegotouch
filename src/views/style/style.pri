@@ -37,6 +37,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mrichtexteditstyle.h \
     $$STYLE_SRC_DIR/mscenewindowstyle.h \
     $$STYLE_SRC_DIR/mseparatorstyle.h \
+    $$STYLE_SRC_DIR/msheetstyle.h \
     $$STYLE_SRC_DIR/msliderstyle.h \
     $$STYLE_SRC_DIR/mspinnerstyle.h \
     $$STYLE_SRC_DIR/mtexteditstyle.h \

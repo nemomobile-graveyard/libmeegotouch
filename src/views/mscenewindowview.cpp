@@ -68,11 +68,17 @@ MSceneWindowView::~MSceneWindowView()
 
 void MSceneWindowView::applyStyle()
 {
+    Q_D(MSceneWindowView);
+
     /*!
      *  Setuping disapearTimeout, by default= 0
      */
     model()->setDisappearTimeout(style()->disappearTimeout());
     MWidgetView::applyStyle();
+
+    // smuggle those style properties to our controller so that MSceneManager can use them.
+    d->controller->setProperty("_m_appearanceAnimation", style()->appearanceAnimation());
+    d->controller->setProperty("_m_disappearanceAnimation", style()->disappearanceAnimation());
 
     emit geometryAttributesChanged();
 }

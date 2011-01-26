@@ -37,6 +37,9 @@ class MSceneWindowPrivate : public MWidgetControllerPrivate
 public:
     MSceneWindowPrivate();
 
+    virtual bool canDisappear() {return true;}
+    virtual bool canDismiss() {return true;}
+
     // Called by MSceneManagerPrivate
     void setSceneWindowState(MSceneWindow::SceneWindowState newState);
 

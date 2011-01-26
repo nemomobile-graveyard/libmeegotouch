@@ -88,10 +88,11 @@ public:
         NavigationBar = 1000,                        // MNavigationBar
         DockWidget = NavigationBar,                  // MDockWidget
         EscapeButtonPanel = 2000,                    // MEscapeButtonPanel
-        Dialog = 3000,                               // MDialog
+        Sheet = 3000,                                // MSheet
+        Dialog = 4000,                               // MDialog
         MessageBox = Dialog,                         // MMessageBox
         ModalSceneWindow = Dialog,                   // MModalSceneWindow
-        PopupList = 4000,                            // MPopupList
+        PopupList = 5000,                            // MPopupList
         Overlay = 6000,                              // MOverlay
         Completer = Overlay,                         // MCompleter
         HomeButtonPanel = 7000,                      // MHomeButtonPanel
@@ -109,6 +110,7 @@ public:
 
     M::Orientation orientation(M::OrientationAngle angle) const;
 
+    QRectF calculateAvailableSceneRect(MSceneWindow *sceneWindow) const;
     QRectF calculateSceneWindowGeometry(MSceneWindow *window) const;
     void setSceneWindowGeometry(MSceneWindow *window);
     void setSceneWindowGeometries();
@@ -152,6 +154,7 @@ public:
     void createOrientationAnimation();
     void initRelocator();
 
+    MAbstractWidgetAnimation *createAnimationFromSceneWindowType(MSceneWindow* sceneWindow);
     void createAppearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
     void createDisappearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
 
