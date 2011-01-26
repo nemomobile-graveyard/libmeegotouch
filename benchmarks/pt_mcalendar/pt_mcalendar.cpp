@@ -59,7 +59,7 @@ void Pt_MCalendar::benchmarkFormatDateTimePosixFormatString_U_QDateTime()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("ar_SA");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("ar_SA");  // does matter, overrides localized numbers in dates
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -93,7 +93,7 @@ void Pt_MCalendar::benchmarkFormatDateTimePosixFormatString_U_MCalendar()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("ar_SA");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("ar_SA");  // does matter, overrides localized numbers in dates
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -127,7 +127,7 @@ void Pt_MCalendar::benchmarkFormatDateTimePosixFormatString_V_MCalendar()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("ar_SA");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("ar_SA");  // does matter, overrides localized numbers in dates
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -161,7 +161,7 @@ void Pt_MCalendar::benchmarkFormatDateTimePosixFormatString_r_MCalendar()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("ar_SA");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("ar_SA");  // does matter, overrides localized numbers in dates
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -195,7 +195,7 @@ void Pt_MCalendar::benchmarkFormatDateTimePosixFormatString_R_MCalendar()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("ar_SA");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("ar_SA");  // does matter, overrides localized numbers in dates
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -229,7 +229,7 @@ void Pt_MCalendar::benchmarkFormatDateTimePosixFormatString_t_MCalendar()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("ar_SA");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("ar_SA");  // does matter, overrides localized numbers in dates
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -263,7 +263,7 @@ void Pt_MCalendar::benchmarkIcuFormatString()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("fi_FI");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("en_US");  // should not matter, no localized numbers involved
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -288,7 +288,7 @@ void Pt_MCalendar::benchmarkFormatDateTime()
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
     QString lcTime("fi_FI");     // this overrides language
-    QString lcNumeric("en_US");  // should not matter
+    QString lcNumeric("en_US");  // should not matter, no localized numbers involved
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
