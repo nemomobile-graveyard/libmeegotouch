@@ -139,6 +139,10 @@ MApplicationWindowPrivate::~MApplicationWindowPrivate()
         delete statusBar;
         statusBar = 0;
     }
+    if (styleContainer){
+        delete styleContainer;
+        styleContainer = 0;
+    }
 }
 
 void MApplicationWindowPrivate::init()

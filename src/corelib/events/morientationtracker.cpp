@@ -125,6 +125,7 @@ void MOrientationTrackerPrivate::videoRouteChanged()
 }
 
 void MOrientationTrackerPrivate::isCoveredChanged()
+
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_Q(MOrientationTracker);
@@ -287,6 +288,7 @@ MOrientationTracker::~MOrientationTracker()
 {
     if (this == MOrientationTrackerPrivate::tracker)
         MOrientationTrackerPrivate::tracker = 0;
+    delete d_ptr;
 }
 
 M::OrientationAngle MOrientationTracker::orientationAngle() const
