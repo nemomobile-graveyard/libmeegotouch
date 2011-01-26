@@ -23,6 +23,7 @@ class MCommonLabelHighlighterPrivate
 {
 public:
     QRegExp m_regExp;
+    bool m_ignoreEvents;
 };
 
 MLabelHighlighter::~MLabelHighlighter()
@@ -34,11 +35,18 @@ bool MLabelHighlighter::validate(QString &item) const
     Q_UNUSED(item);
     return true;
 }
+
+bool MLabelHighlighter::ignoreClickAndLongPressEvents() const
+{
+    return false;
+}
+
 MCommonLabelHighlighter::MCommonLabelHighlighter(const QRegExp &regExp)
     : d_ptr(new MCommonLabelHighlighterPrivate)
 {
     Q_D(MCommonLabelHighlighter);
     d->m_regExp = regExp;
+    d->m_ignoreEvents = false;
 }
 
 MCommonLabelHighlighter::~MCommonLabelHighlighter()
@@ -62,3 +70,14 @@ void MCommonLabelHighlighter::longPress(const QString &item)
     emit longPressed(item);
 }
 
+void MCommonLabelHighlighter::setIgnoreClickAndLongPressEvents(bool ignore)
+{
+    Q_D(MCommonLabelHighlighter);
+    d->m_ignoreEvents = ignore;
+}
+
+bool MCommonLabelHighlighter::ignoreClickAndLongPressEvents() const
+{
+    Q_D(const MCommonLabelHighlighter);
+    return d->m_ignoreEvents;
+}

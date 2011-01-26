@@ -30,6 +30,8 @@ class MLabelView;
 class QGraphicsSceneResizeEvent;
 class QGestureEvent;
 class QTapAndHoldGesture;
+class MLabelHighlighter;
+class QTextCharFormat;
 
 class MLabelViewSimple
 {
@@ -151,6 +153,10 @@ public:
     void updateRichTextEliding();
     void updateHighlighting();
     QString wrapTextWithSpanTag(const QString &text) const;
+    MLabelHighlighter* extractHighlighter(const QTextCharFormat& format);
+    QTextCharFormat charFormat(const QPointF& pos);
+    QTextCharFormat charFormat(int cursorPos);
+    int cursorPosition(const QPointF& pos);
 
     /**
      * Assures that the tiles are initialized for the given size.
