@@ -1,3 +1,18 @@
+libmeegotouch (0.20.77-1) unstable; urgency=low
+
+  * Fixes: NB#206584 - MAbstractItemModel was returning an invalid parent index
+  * Fixes: NB#219747
+  * Fixes: NB#211829 - Not able to see a contact list when using completer
+  * Fixes: NB#216969 - MLabelView rendering speed is too slow
+  * Fixes: NB#219271 - Tab alignment is broken in certain scenario
+  * Fixes: Subject field taking more than 40 characters in Portrait mode
+  * Fixes: Rotating device while application menu is activated re-enables toolbar actions
+  * Fixes: Widgets gallery is crashing when tapped on the paste button in a scenario
+  * Fixes: ut_mlabel fails
+  * Fixes: Unable to view the font due to its color in widgets gallery
+
+ -- Tobias Koch <tobias.koch@nokia.com>  Wed, 26 Jan 2011 15:57:09 +0200
+
 libmeegotouch (0.20.76-1) unstable; urgency=low
 
   * Fixes: NB#211859 - White and red rectangles in Events view after device reboot
