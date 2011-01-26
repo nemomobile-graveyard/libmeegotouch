@@ -578,7 +578,7 @@ void MListPage::removeListItem()
 {
     if(longTappedIndex.isValid()) {
         mDebug("MListPage::removeListItem") << "Row about to be removed: " << longTappedIndex.row();
-        proxyModel->removeRow(longTappedIndex.row(), longTappedIndex.parent());
+        list->itemModel()->removeRow(longTappedIndex.row(), longTappedIndex.parent());
         longTappedIndex = QModelIndex();
     }
 }
