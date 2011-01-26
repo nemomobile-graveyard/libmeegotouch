@@ -112,9 +112,15 @@ int main(int argc, char **argv)
     // For the moment we use the native graphicssystem to share X pixmaps if
     // nothing else is specified explicitly.
     // Later we use the shiny new meego graphicssystem features by default.
-    if (qApp->arguments().indexOf("-graphicssystem") == -1) {
-        QApplication::setGraphicsSystem("native");
+    bool useNativeGraphicsSystem = true;
+    for (int i = 0; i < argc; i++) {
+        if (strcmp(argv[i], "-graphicssystem") == 0) {
+            useNativeGraphicsSystem = false;
+            break;
+        }
     }
+    if (useNativeGraphicsSystem)
+        QApplication::setGraphicsSystem("native");
 #endif // HAVE_MEEGOGRAPHICSSYSTEM
 
     QApplication app(argc, argv);
