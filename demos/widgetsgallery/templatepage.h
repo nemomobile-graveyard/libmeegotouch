@@ -41,7 +41,7 @@ public:
         ApplicationView = 0,
         SimpleWidgets,
         Buttons,
-        DialogsAndBanners,
+        DialogsSheetsAndBanners,
         ListsGridsAndPopups,
         UserInput
     };

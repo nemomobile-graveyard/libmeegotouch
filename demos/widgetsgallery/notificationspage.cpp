@@ -66,7 +66,7 @@ public:
 };
 
 NotificationsPage::NotificationsPage()
-    : TemplatePage(TemplatePage::DialogsAndBanners),
+    : TemplatePage(TemplatePage::DialogsSheetsAndBanners),
       policy(0),
       list(0),
       notificationPreviewsEnabled(false),

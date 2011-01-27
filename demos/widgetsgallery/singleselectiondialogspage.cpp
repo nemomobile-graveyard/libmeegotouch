@@ -64,7 +64,7 @@ public:
 };
 
 SingleSelectionDialogsPage::SingleSelectionDialogsPage()
-    : TemplatePage(TemplatePage::DialogsAndBanners),
+    : TemplatePage(TemplatePage::DialogsSheetsAndBanners),
       policy(0),
       list(0),
       dialog(),

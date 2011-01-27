@@ -44,6 +44,7 @@
 #include "contentitemspage.h"
 #include "singleselectiondialogspage.h"
 #include "querydialogspage.h"
+#include "sheetspage.h"
 #include "bannerspage.h"
 #include "notificationspage.h"
 #include "bubblepage.h"
@@ -103,6 +104,7 @@ public:
         ButtonGroupPageType,
         SingleSelectionDialogsPageType,
         QueryDialogsPageType,
+        SheetsPageType,
         BannersPageType,
         NotificationsPageType,
         MListPageType,
@@ -160,12 +162,14 @@ public:
         //% "Button Group"
         addGalleryPage(2, qtTrId("xx_wg_buttons_buttongroup"), WidgetsGalleryDataModel::ButtonGroupPageType);
 
-        //% "Dialogs and Banners"
+        //% "Dialogs, Sheets and Banners"
         addCategory(qtTrId("xx_wg_categories_dialogs_and_banners"));
         //% "Single Selection Dialog"
         addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_single_selection_dialog"), WidgetsGalleryDataModel::SingleSelectionDialogsPageType);
         //% "Query Dialog"
         addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_query_dialog"), WidgetsGalleryDataModel::QueryDialogsPageType);
+        //% "Sheet"
+        addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_sheet"), WidgetsGalleryDataModel::SheetsPageType);
         //% "Banner"
         addGalleryPage(3, qtTrId("xx_wg_dialogs_and_banners_banner"), WidgetsGalleryDataModel::BannersPageType);
         //% "Notifications"
@@ -315,6 +319,9 @@ private:
                     break;
                 case QueryDialogsPageType:
                     page = new QueryDialogsPage();
+                    break;
+                case SheetsPageType:
+                    page = new SheetsPage();
                     break;
                 case BannersPageType:
                     page = new BannersPage();

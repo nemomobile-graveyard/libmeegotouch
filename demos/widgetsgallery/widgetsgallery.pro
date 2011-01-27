@@ -23,7 +23,7 @@ target.path = $$M_INSTALL_BIN
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
 CONFIG += qt
-QT += svg opengl
+QT += svg opengl webkit
 contains(DEFINES, HAVE_DBUS) {
     CONFIG += qdbus
     QT += dbus
@@ -69,6 +69,7 @@ SOURCES += main.cpp \
     bannerspage.cpp \
     notificationspage.cpp \
     querydialogspage.cpp \
+    sheetspage.cpp \
     singleselectiondialogspage.cpp \
     phonebookcell.cpp \
     bubblepage.cpp \
@@ -79,6 +80,7 @@ SOURCES += main.cpp \
     customnavigationbarpage.cpp \
     mynavbarcontent.cpp \
     rotationbenchmark.cpp \
+    loginsheet.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -120,6 +122,7 @@ HEADERS += templatepage.h \
     bannerspage.h \
     notificationspage.h \
     querydialogspage.h \
+    sheetspage.h \
     singleselectiondialogspage.h \
     phonebookcell.h \
     bubblepage.h \
@@ -130,6 +133,7 @@ HEADERS += templatepage.h \
     customnavigationbarpage.h \
     mynavbarcontent.h \
     rotationbenchmark.h \
+    loginsheet.h \
 
 # theme
 include(theme/theme.pri)
@@ -150,7 +154,7 @@ contains( DEFINES, M_OS_MAEMO5 ) {
 desktop_entry.files = widgetsgallery.desktop
 
 event_type.files = data/widgetsgalleryeventtype.conf
-event_type.path = $$M_INSTALL_DATA/meegotouch/notifications/eventtypes 
+event_type.path = $$M_INSTALL_DATA/meegotouch/notifications/eventtypes
 
 myname = com.nokia.widgetsgallery
 services.CONFIG += no_check_exist

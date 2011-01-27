@@ -123,7 +123,7 @@ MButtonStyle#ExpandingBackgroundButton {
 
     // margins have to be at least 25% of size
     // because of the expanding-background trasition
-    // (during the transition the button will expand to 125% of it's original size)
+    // (during the transition the button will expand to 125% of its original size)
     margin-left: 2.5mm;
     margin-top: 2.5mm;
     margin-right: 2.5mm;
@@ -144,4 +144,12 @@ MApplicationWindowStyle#IconAndLabelTabsBottom.Portrait {
 MApplicationWindowStyle#IconOrLabelTabsTop {
     floatable-tab-bar: true;
     tab-bar-style-name: "TabsTopWithIconOrLabel";
+}
+
+MSheetStyle#PhotoViewer {
+    header-slot-style-name: "CommonSheetHeaderPanelInverted";
+    central-slot-style-name: "MSheetCentralSlotIverted";
+    background-color: black;
+    appearance-animation: "MWidgetFadeAnimation";
+    disappearance-animation: "MWidgetFadeAnimation";
 }

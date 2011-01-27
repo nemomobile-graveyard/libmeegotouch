@@ -85,8 +85,8 @@
     </message>
     <message id="xx_wg_categories_dialogs_and_banners">
         <location filename="../mainpage.cpp" line="129"/>
-        <source>Dialogs and Banners</source>
-        <translation>Dialogs and Banners</translation>
+        <source>Dialogs, Sheets and Banners</source>
+        <translation>Dialogs, Sheets and Banners</translation>
     </message>
     <message id="xx_wg_dialogs_and_banners_single_selection_dialog">
         <location filename="../mainpage.cpp" line="131"/>
