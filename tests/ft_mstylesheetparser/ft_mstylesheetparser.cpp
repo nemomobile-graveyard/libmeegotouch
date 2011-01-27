@@ -117,7 +117,7 @@ void Ft_MStyleSheetParser::test_load()
     //check that the attributes contain right values
 
     int counter = 0;
-    MStyleSheetAttribute *attributeList = fi->selectors[0]->attributeList();
+    const MStyleSheetAttribute *attributeList = fi->selectors[0]->attributeList();
     QMap<MUniqueStringCache::Index, QByteArray>::const_iterator i;
     for (i = attributes.constBegin(); i != attributes.constEnd(); ++i) {
         QCOMPARE(i.key(), attributeList[counter].getNameID());
@@ -616,8 +616,8 @@ void Ft_MStyleSheetParser::test_binary_equality()
             // loop through all attributes, check that they are equal
 
 
-            MStyleSheetAttribute* attributes0 = selector0->attributeList();
-            MStyleSheetAttribute* attributes1 = selector1->attributeList();
+            const MStyleSheetAttribute* attributes0 = selector0->attributeList();
+            const MStyleSheetAttribute* attributes1 = selector1->attributeList();
             int count = selector0->attributeCount();
             for (int i = 0; i < count; ++i) {
                 QCOMPARE(attributes0[i].getName(), attributes1[i].getName());

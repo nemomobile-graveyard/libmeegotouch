@@ -270,13 +270,6 @@ MStyleSheetAttribute::MStyleSheetAttribute(MUniqueStringCache::Index name, MUniq
 {
 }
 
-MStyleSheetAttribute::MStyleSheetAttribute(const MStyleSheetAttribute &other)
-{
-    this->name = other.name;
-    this->value = other.value;
-    this->position = other.position;
-}
-
 QByteArray MStyleSheetAttribute::getName() const
 {
     return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(name);

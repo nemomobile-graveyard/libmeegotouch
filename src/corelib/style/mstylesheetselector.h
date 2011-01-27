@@ -27,8 +27,6 @@
 #include <QByteArray>
 #include <QVariant>
 
-class MStyleSheetSelectorPrivate;
-
 //! \internal
 /*!
  * Style sheet selector class.
@@ -68,16 +66,17 @@ public:
      */
 
     explicit MStyleSheetSelector(
-            MStyleSheetAttribute *attributeList,
-            int attributeCount,
-            MUniqueStringCache::Index objectName,
-            MUniqueStringCache::Index className,
-            MUniqueStringCache::Index classType,
+            const MStyleSheetAttribute *attributeList,
+            const int attributeCount,
+            const MUniqueStringCache::Index objectName,
+            const MUniqueStringCache::Index className,
+            const MUniqueStringCache::Index classType,
             const Orientation orientation,
-            MUniqueStringCache::Index mode,
-            MUniqueStringCache::Index parentName,
-            MUniqueStringCache::Index parentObjectName,
-            Flags flags = (Flags) 0);
+            const MUniqueStringCache::Index mode,
+            const MUniqueStringCache::Index parentName,
+            const MUniqueStringCache::Index parentObjectName,
+            const Flags flags
+    );
 
     MUniqueStringCache::Index objectNameID() const;
     MUniqueStringCache::Index classNameID() const;
@@ -86,24 +85,18 @@ public:
     MUniqueStringCache::Index parentNameID() const;
     MUniqueStringCache::Index parentObjectNameID() const;
 
-    /*!
-     * Copy constructor
-     * \param selector style sheet selector to clone
-     */
-    MStyleSheetSelector(const MStyleSheetSelector &selector);
-
     //! Destructor for MStyleSheetSelector class
-    virtual ~MStyleSheetSelector();
+    ~MStyleSheetSelector();
 
     /*!
      * \brief Provides access for the attributes of this selector.
      */
-    MStyleSheetAttribute* attributeList() const;
+    const MStyleSheetAttribute* attributeList() const;
 
     /*!
      * \brief Return attribute with a given name.
      */
-    MStyleSheetAttribute* attributeByName(MUniqueStringCache::Index name) const;
+    const MStyleSheetAttribute* attributeByName(MUniqueStringCache::Index name) const;
 
     /*!
      * \brief Provides access for the attributes of this selector.
@@ -150,10 +143,33 @@ public:
      */
     Flags flags() const;
 
+    bool fromMappedMemory;
+
 private:
-    Q_DECLARE_PRIVATE(MStyleSheetSelector)
-    MStyleSheetSelectorPrivate *const d_ptr;
+    Q_DISABLE_COPY(MStyleSheetSelector)
+
+    //! Array containing a sorted list of MStyleSheetAttributes
+    const MStyleSheetAttribute *_attributeList;
+    //! The number of attributes in _attributeList
+    const int _attributeCount;
+    //! Object name, represented by this selector.
+    const MUniqueStringCache::Index _objectName;
+    //! Class name, represented by this selector.
+    const MUniqueStringCache::Index _className;
+    //! Type, represented by this selector.
+    const MUniqueStringCache::Index _classType;
+    //! Screen orientation type, represented by this selector.
+    const MStyleSheetSelector::Orientation _orientation;
+    //! Object mode, represented by this selector.
+    const MUniqueStringCache::Index _mode;
+    //! Parent class name, represented by this selector.
+    const MUniqueStringCache::Index _parentName;
+    //! Parent class object name, represented by this selector.
+    const MUniqueStringCache::Index _parentObjectName;
+    //! Flags indicating whether this is a special kind of selector.
+    const MStyleSheetSelector::Flags _flags;
 };
+
 //! \internal_end
 
 #endif

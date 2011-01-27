@@ -44,7 +44,7 @@
 #include <sys/file.h>
 
 namespace {
-    const unsigned int FILE_VERSION = 20;
+    const unsigned int FILE_VERSION = 21;
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -182,7 +182,7 @@ time_t modificationTime(const char* filename)
 
 void fixAlignement(char** buffer, int size)
 {
-    int remainder = (size_t)*buffer%size;
+    size_t remainder = (size_t)*buffer % size;
     if (remainder != 0) {
         *buffer += size - remainder;
     }
@@ -1304,7 +1304,7 @@ qint64 MStyleSheetParserPrivate::approximateSize()
         for (QList<const MStyleSheetSelector *>::const_iterator iterator = (*fi)->selectors.constBegin();
         iterator != infoSelectorsEnd;
         ++iterator) {
-            size += 9 * sizeof(qint32);
+            size += sizeof(MStyleSheetSelector);
             // alignement
             size += 4;
             size += (*iterator)->attributeCount() * sizeof(MStyleSheetAttribute);
@@ -1316,7 +1316,7 @@ qint64 MStyleSheetParserPrivate::approximateSize()
         for (QList<const MStyleSheetSelector *>::const_iterator iterator = (*fi)->parentSelectors.constBegin();
         iterator != infoSelectorsEnd;
         ++iterator) {
-            size += 9 * sizeof(qint32);
+            size += sizeof(MStyleSheetSelector);
             // alignement
             size += 4;
             size += (*iterator)->attributeCount() * sizeof(MStyleSheetAttribute);
@@ -1377,6 +1377,10 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
     }
 
     qint64 bytesToWrite = bufferIterator - buffer.data();
+    if (approximatedSize < bytesToWrite) {
+        // if this did not crash anyway we need to abort here. normally this should never happen
+        qFatal("Tried to write %lld bytes but only allocated memory for %lld bytes. approximateSize() must be fixed.", bytesToWrite, approximatedSize);
+    }
     file.resize(bytesToWrite);
     qint64 writtenBytes = file.write(buffer.data(), bytesToWrite);
     if (bytesToWrite != writtenBytes) {
@@ -1384,10 +1388,6 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
         qWarning() << file.errorString();
         file.remove();
     } else {
-        if (approximatedSize < writtenBytes) {
-            // if this did not crash anyway we need to abort here. normally this should never happen
-            qFatal("Tried to write %lld bytes but only allocated memory for %lld bytes. approximateSize() must be fixed.", writtenBytes, approximatedSize);
-        }
         file.close();
     }
 
@@ -1446,54 +1446,26 @@ QSharedPointer<MStyleSheetParser::StylesheetFileInfo> MStyleSheetParserPrivate::
 
 const MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(char** buffer)
 {
-    MUniqueStringCache::Index parentName, parentObjectName, objectName, className, classType, mode;
-    int flags, orientation;
+    fixAlignement(buffer, 4);
+    MStyleSheetSelector *selector = reinterpret_cast<MStyleSheetSelector*>(*buffer);
+    incrementBuffer(buffer, sizeof(MStyleSheetSelector));
 
-    parentName = readInteger<qint32>(buffer);
-    parentObjectName = readInteger<qint32>(buffer);
-    flags = readInteger<qint32>(buffer);
-    objectName = readInteger<qint32>(buffer);
-    className = readInteger<qint32>(buffer);
-    classType = readInteger<qint32>(buffer);
-    orientation = readInteger<qint32>(buffer);
-    mode = readInteger<qint32>(buffer);
-
-    int attributeCount = readInteger<int>(buffer);
-
-    // we need to be aligned to 8byte this way the two integers and the qint64 are correctly aligned.
+    // we need to be aligned to 8 byte. this way the two integers and the qint64 are correctly aligned.
     // ATTENTION: this may need to be changed if MStyleSheetAttribute changes
     fixAlignement(buffer, 8);
-    MStyleSheetAttribute *attributes = reinterpret_cast<MStyleSheetAttribute*>(*buffer);
-
-    MStyleSheetSelector *selector = new MStyleSheetSelector(
-            attributes,
-            attributeCount,
-            objectName,
-            className,
-            classType,
-            (MStyleSheetSelector::Orientation) orientation,
-            mode,
-            parentName,
-            parentObjectName,
-            (MStyleSheetSelector::Flags) flags);
-
-    incrementBuffer(buffer, attributeCount * sizeof(MStyleSheetAttribute));
+    incrementBuffer(buffer, selector->attributeCount() * sizeof(MStyleSheetAttribute));
 
     return selector;
 }
 
 void MStyleSheetParserPrivate::writeSelector(const MStyleSheetSelector *selector, char** buffer) const
 {
-    writeInteger<int>(selector->parentNameID(), buffer);
-    writeInteger<int>(selector->parentObjectNameID(), buffer);
-    writeInteger<int>(selector->flags(), buffer);
-    writeInteger<int>(selector->objectNameID(), buffer);
-    writeInteger<int>(selector->classNameID(), buffer);
-    writeInteger<int>(selector->classTypeID(), buffer);
-    writeInteger<int>(selector->orientation(), buffer);
-    writeInteger<int>(selector->modeID(), buffer);
-
-    writeInteger<int>(selector->attributeCount(), buffer);
+    fixAlignement(buffer, 4);
+    size_t sizeOfSelector = sizeof(MStyleSheetSelector);
+    const_cast<MStyleSheetSelector*>(selector)->fromMappedMemory = true;
+    memcpy(*buffer, selector, sizeOfSelector);
+    const_cast<MStyleSheetSelector*>(selector)->fromMappedMemory = false;
+    incrementBuffer(buffer, sizeOfSelector);
 
     if (selector->attributeCount() == 0) {
         mWarning("MStyleSheetParserPrivate") << "Warning:"
@@ -1504,7 +1476,7 @@ void MStyleSheetParserPrivate::writeSelector(const MStyleSheetSelector *selector
                 << __PRETTY_FUNCTION__;
     }
 
-    // we need to be aligned to 8byte this way the two integers and the qint64 are correctly aligned.
+    // we need to be aligned to 8 byte. this way the two integers and the qint64 are correctly aligned.
     // ATTENTION: this may need to be changed if MStyleSheetAttribute changes
     fixAlignement(buffer, 8);
     size_t sizeOfAttributes = selector->attributeCount() * sizeof(MStyleSheetAttribute);

@@ -15,7 +15,6 @@ PRIVATE_HEADERS += \
     $$STYLE_SRC_DIR/mstylesheetselector.h \
     $$STYLE_SRC_DIR/mstylesheetattribute.h \
     $$STYLE_SRC_DIR/mstylesheet.h \
-    $$STYLE_SRC_DIR/mstylesheetselector_p.h \
     $$STYLE_SRC_DIR/muniquestringcache.h \
 
 STYLE_HEADERS += \
