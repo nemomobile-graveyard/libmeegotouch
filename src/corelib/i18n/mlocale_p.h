@@ -214,7 +214,9 @@ public:
 #endif
 
     // calendar instance used formatDateTimeICU()
+#ifdef HAVE_ICU
     MCalendar *_pDateTimeCalendar;
+#endif
 
     MLocale *q_ptr;
 };

@@ -628,7 +628,9 @@ MLocalePrivate::MLocalePrivate()
       currentLcMonetaryItem(SettingsLcMonetary),
       currentLcTelephoneItem(SettingsLcTelephone),
 #endif
+#ifdef HAVE_ICU
       _pDateTimeCalendar(0),
+#endif
       q_ptr(0)
 {
     if (translationPaths.isEmpty())
@@ -684,7 +686,9 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       currentLcMonetaryItem(SettingsLcMonetary),
       currentLcTelephoneItem(SettingsLcTelephone),
 #endif
+#ifdef HAVE_ICU
       _pDateTimeCalendar(0),
+#endif
       q_ptr(0)
 {
 #ifdef HAVE_ICU
@@ -702,12 +706,12 @@ MLocalePrivate::~MLocalePrivate()
 #ifdef HAVE_ICU
     delete _numberFormat;
     delete _numberFormatLcTime;
-#endif
     // note: if tr translations are inserted into QCoreApplication
     // deleting the QTranslator removes them from the QCoreApplication
 
     delete _pDateTimeCalendar;
     _pDateTimeCalendar = 0;
+#endif
 }
 
 MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
@@ -752,6 +756,7 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
 
 void MLocalePrivate::dropCaches()
 {
+#ifdef HAVE_ICU
     // call this function when the MLocale has changed so that
     // cached data cannot be used any more
 
@@ -764,6 +769,7 @@ void MLocalePrivate::dropCaches()
 
     // drop cached formatString conversions
     _icuFormatStringCache.clear();
+#endif
 }
 
 bool MLocalePrivate::isValidCountryCode( const QString& code ) const
