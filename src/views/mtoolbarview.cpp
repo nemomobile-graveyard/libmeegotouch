@@ -52,6 +52,7 @@ MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
 {
     this->controller = controller;
     controller->installEventFilter(this);
+    removedActionsButtons.setMaxCost(10);
 }
 
 
@@ -70,6 +71,7 @@ MToolBarViewPrivate::~MToolBarViewPrivate()
             delete iterator.value(); //Is this the right thing to do ?
     }
     qDeleteAll(buttons);
+    removedActionsButtons.clear();
     delete layout;
     layout = NULL;
 }
@@ -173,8 +175,15 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
         layout->removeItem(widget);
 
         if (button) {
+            button->setChecked(false);
+            button->hide();
+
             buttons.remove(action);
-            delete button;
+            MButton *removedButton = removedActionsButtons.take(action);
+            if (removedButton && removedButton != button) {
+                delete removedButton;
+            }
+            removedActionsButtons.insert(action, button);
         } else {
             releaseWidget(action, leased);
             leasedWidgets.remove(action);
@@ -344,9 +353,13 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
                 widget->show();
             }
         } else {
-            MButton *button = new MButton;
-            button->setMinimumSize(0,0);
-
+            MButton *button = removedActionsButtons.take(action);
+            if (button) {
+                button->show();
+            } else {
+                button = new MButton;
+                button->setMinimumSize(0,0);
+            }
             button->setObjectName("toolbaractioncommand");
             if (action && !action->objectName().isEmpty())
                 button->setObjectName(button->objectName() + "_" + action->objectName());
