@@ -1200,6 +1200,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<(QStringList()
            <<"c"<<"Cc"<<"CC"
            <<"č"<<"č"<<"Č"
+           << "Ěrčk" << "Etsk" << "Ézfd"
            <<"h"<<"H"
            <<"ch"<<"cH"<<"Ch"<<"CH"
            <<"i"<<"I"
@@ -1210,6 +1211,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<(QStringList()
            <<"C"<<"C"<<"C"
            <<"Č"<<"Č"<<"Č"
+           <<"E"<<"E"<<"E"
            <<"H"<<"H"
            <<"CH"<<"CH"<<"CH"<<"CH"
            <<"I"<<"I"
@@ -1937,11 +1939,21 @@ void Ft_Locales::checkAvailableLocales()
         // Hebrew:
         << "א" << "ב" << "ג" << "ש" << "ת"
         // Latin:
-        << "A" << "a" << "Ä" << "ä" << "Å" << "å" << "Á" << "á"
-        << "b" << "ch" << "Ch" << "CH" << "h" << "H" << "i" << "I"
-        << "öfgh" << "oegh"
+        << "Ă" << "ă" << "A" << "a" << "Ä" << "ä" << "Å" << "å" << "Á" << "á"
+        << "b" << "ch" << "Ch" << "cH" << "CH" << "h" << "H" << "i" << "I"
+        << "c" << "ca" << "cz" << "č" << "ča" << "čc" << "čz"
+        << "cote" << "côte" << "coté" << "côté"
+        << "CÔTE" << "CÔTÉ" << "COTÉ" << "COTE"
+        << "O" << "o" << "Ö" << "ö" << "öfgh" << "oegh"
+        << "d" << "da" << "dz" << "ď" << "ďa" << "ďz"
+        << "e" << "ea" << "ez" << "ě" << "ěa" << "ěz"
+        << "n" << "na" << "nz" << "ň" << "ňa" << "ňz"
+        << "r" << "ra" << "rz" << "ř" << "řa" << "řz"
+        << "s" << "sa" << "sz" << "š" << "ša" << "šz"
+        << "t" << "ta" << "tz" << "ť" << "ťa" << "ťz"
         << "U" << "ú" << "Ů" << "ů" << "N" << "Ň" << "ň"
-        << "z";
+        << "z" << "za" << "zz" << "ž" << "ža"<< "žz"
+        ;
     QString ft_localesTestOutput = "";
     foreach(QString supportedLocaleName, supportedLocaleNames) {
         MLocale locale(supportedLocaleName);
