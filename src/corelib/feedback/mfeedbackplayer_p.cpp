@@ -43,6 +43,7 @@ MFeedbackPlayerPrivate::MFeedbackPlayerPrivate(QObject *parent)
 
     reconnectionAttempts = 0;
     fastReconnectionCount = 0;
+    previousSuccessfullConnection.invalidate();
 
     // TODO: Load from a config file?
     reconnectionIntervalsList << 10;
@@ -109,7 +110,8 @@ void MFeedbackPlayerPrivate::onSocketError(QLocalSocket::LocalSocketError socket
     Q_UNUSED(socketError);
 
     if (reconnectionAttempts == 0) {
-        if (previousSuccessfullConnection.elapsed() < fastReconnectionTime) {
+        if (previousSuccessfullConnection.isValid() &&
+            previousSuccessfullConnection.elapsed() < fastReconnectionTime) {
             // Increment fast reconnection count if time since previous succesfull
             // reconnection is less than fastReconnectionTime.
             fastReconnectionCount++;
