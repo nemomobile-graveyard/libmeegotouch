@@ -642,8 +642,8 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
                     qreal left, top, right, bottom;
                     layoutItem->getContentsMargins(&left, &top, &right, &bottom);
 
-                    QRectF outerRect = (*item)->mapRectToScene(br.x(),br.y(), br.width(), br.height());
-                    QRectF innerRect = outerRect.adjusted(left, top, -right, -bottom);
+                    QRectF outerRect = (*item)->mapRectToScene(br);
+                    QRectF innerRect = (*item)->mapRectToScene(br.adjusted(left, top, -right, -bottom));
 
                     QRectF leftRect(outerRect.x(), outerRect.y(), innerRect.x() - outerRect.x(), outerRect.height());
                     QRectF topRect(innerRect.x(), outerRect.y(), innerRect.width(), innerRect.y() - outerRect.y());
