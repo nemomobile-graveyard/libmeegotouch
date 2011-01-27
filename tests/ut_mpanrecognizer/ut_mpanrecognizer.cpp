@@ -152,6 +152,18 @@ void Ut_MPanRecognizer::testTheMovementInDirectionOtherThanRecognizedIsZeroed()
     QCOMPARE( panGesture->offset().x(), 0.0);
 }
 
+void Ut_MPanRecognizer::testReset()
+{
+    MPanGesture * panGesture = new MPanGesture(0);
+    panGesture->startPos = QPointF(1,1);
+    panGesture->panDirection = Qt::Vertical;
+    panGesture->pressed = true;
 
+    recognizer->reset(panGesture);
+    QCOMPARE((int)panGesture->panDirection,0);
+    QCOMPARE(panGesture->pressed, false);
+    QVERIFY(qFuzzyCompare(panGesture->startPos.x(), 0));
+    QVERIFY(qFuzzyCompare(panGesture->startPos.ry(),0));
+}
 QTEST_APPLESS_MAIN(Ut_MPanRecognizer)
 

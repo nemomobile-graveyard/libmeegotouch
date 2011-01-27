@@ -42,6 +42,7 @@ private slots:
     void testRecognize();
     void testTapIsNotRecognizedAsPan();
     void testTheMovementInDirectionOtherThanRecognizedIsZeroed();
+    void testReset();
 };
 
 #endif // UT_MPANRECOGNIZER_H
