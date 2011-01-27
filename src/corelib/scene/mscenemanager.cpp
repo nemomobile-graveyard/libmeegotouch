@@ -884,7 +884,7 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
     if (!statusBar && !statusBarGeometryPropertyWasSet)
         return;
 
-    long data[4] = {0};
+    unsigned long data[4] = {0};
 
     if (statusBar) {
         QRectF statusBarGeometry = statusBar->geometry();
