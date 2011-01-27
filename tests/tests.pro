@@ -103,7 +103,6 @@ SUBDIRS     =  \
     ut_mappletserver \
     ut_mappletclient \
     ut_mapplethandle \
-    ut_mapplethandleview \
     ut_mappletsharedmutex \
     ut_mappletinstancemanager \
     ut_mappletinstancedata \
