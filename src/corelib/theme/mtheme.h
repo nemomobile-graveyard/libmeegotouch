@@ -338,7 +338,7 @@ public:
     static bool loadCSS(const QString &filename, InsertMode mode = Append);
 
     /*!
-     Returns the name of the current theme in use.
+     Returns the name of the current theme in use or an empty string no theme is selected.
      */
     static QString currentTheme();
 

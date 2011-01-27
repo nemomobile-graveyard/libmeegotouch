@@ -271,8 +271,15 @@ void MRemoteThemeDaemon::releasePixmap(const QString &imageId, const QSize &size
 QString MRemoteThemeDaemon::currentTheme()
 {
     Q_D(MRemoteThemeDaemon);
-    QDir dir(d->themeInheritanceChain.at(0));
-    return dir.dirName();
+
+    QString theme;
+    if (!d->themeInheritanceChain.isEmpty()) {
+        QDir dir(d->themeInheritanceChain.at(0));
+        theme = dir.dirName();
+    } else {
+        qCritical() << "MRemoteThemeDaemon::currentTheme() - Asking for current theme and no theme is selected. Returning an empty string";
+    }
+    return theme;
 }
 
 QStringList MRemoteThemeDaemon::themeInheritanceChain()
