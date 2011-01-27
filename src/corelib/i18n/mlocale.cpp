@@ -2768,6 +2768,8 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
 
     delete dfs;
 
+    if(!result.isEmpty() && context == MLocale::DateSymbolStandalone)
+        result[0] = toUpper(result.at(0))[0];
     return result;
 }
 #endif
@@ -2809,6 +2811,8 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
 
     delete dfs;
 
+    if(!result.isEmpty() && context == MLocale::DateSymbolStandalone)
+        result[0] = toUpper(result.at(0))[0];
     return result;
 }
 #endif
