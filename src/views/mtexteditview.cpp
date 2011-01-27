@@ -22,6 +22,8 @@
 #include "mtextmagnifier.h"
 #include "mcompleter.h"
 
+#include <MSceneManager>
+
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QTextDocument>
@@ -466,6 +468,19 @@ QTextDocument *MTextEditViewPrivate::activeDocument() const
 
 void MTextEditViewPrivate::showMagnifier()
 {
+    Q_Q(MTextEditView);
+
+    // Prevent relocations when moving magnifier.
+    if (controller->sceneManager()) {
+        QObject::disconnect(static_cast<const QObject *>(controller), SIGNAL(cursorPositionChanged()),
+                            static_cast<const QObject *>(controller->sceneManager()), SLOT(ensureCursorVisible()));
+    }
+
+    // Make fake mouse event to update cursor position.
+    QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseMove);
+    mouseEvent.setPos(mouseTarget);
+    q->updateCursorPosition(&mouseEvent, false);
+
     if (!magnifier) {
         magnifier.reset(new MTextMagnifier(*controller,
                                            cursorRect().size()));
@@ -477,6 +492,12 @@ void MTextEditViewPrivate::showMagnifier()
 
 void MTextEditViewPrivate::hideMagnifier()
 {
+    if (controller->sceneManager()) {
+        QObject::connect(controller, SIGNAL(cursorPositionChanged()),
+                         controller->sceneManager(), SLOT(ensureCursorVisible()),
+                         Qt::UniqueConnection);
+    }
+
     if (magnifier) {
         magnifier->disappear();
         magnifier.reset();
@@ -918,6 +939,12 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     d->hideMagnifier();
 
+    // Make sure cursor is visible. This is done here on release so
+    // we don't do unnecessary scrolling if panning is started.
+    if (d->controller->sceneManager()) {
+        d->controller->sceneManager()->ensureCursorVisible();
+    }
+
     if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
         // Honor MWidgetView's style and play release feedback
         style()->releaseFeedback().play();
@@ -1243,11 +1270,6 @@ void MTextEditView::handleLongPress()
         return;
     }
 
-    // Make fake mouse event to update cursor position.
-    QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseMove);
-    mouseEvent.setPos(d->mouseTarget);
-    updateCursorPosition(&mouseEvent, false);
-
     // Bring up magnifier on long press.
     d->showMagnifier();
 }
@@ -1304,6 +1326,17 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
         d->inAutoSelectionClick = true;
     }
 
+    if (d->controller->sceneManager()) {
+        connect(d->controller, SIGNAL(cursorPositionChanged()),
+                d->controller->sceneManager(), SLOT(ensureCursorVisible()),
+                Qt::UniqueConnection);
+
+        if (reason != Qt::MouseFocusReason) {
+            // For mouse reason, this is done on mouse release.
+            d->controller->sceneManager()->ensureCursorVisible();
+        }
+    }
+
     d->focused = true;
     doUpdate();
 }
@@ -1313,6 +1346,11 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
 {
     Q_D(MTextEditView);
     Q_UNUSED(reason);
+
+    if (d->controller->sceneManager()) {
+        disconnect(d->controller, SIGNAL(cursorPositionChanged()),
+                   d->controller->sceneManager(), SLOT(ensureCursorVisible()));
+    }
 
     style().setModeDefault();
     d->focused = false;

@@ -1754,12 +1754,6 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
 void MTextEdit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     MWidgetController::mouseReleaseEvent(event);
-
-    // Make sure cursor is visible. This is done here so we don't do
-    // unnecessary scrolling if panning is started.
-    if (sceneManager()) {
-        sceneManager()->ensureCursorVisible();
-    }
 }
 
 
@@ -1775,15 +1769,6 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     d->editActive = false;
 
     if (sceneManager()) {
-        connect(this, SIGNAL(cursorPositionChanged()),
-                sceneManager(), SLOT(ensureCursorVisible()),
-                Qt::UniqueConnection);
-
-        if (event->reason() != Qt::MouseFocusReason) {
-            // For mouse reason, this is done on mouse release.
-            sceneManager()->ensureCursorVisible();
-        }
-
         d->requestAutoSip();
     }
 
@@ -1844,10 +1829,6 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     }
 
     emit lostFocus(event->reason());
-    if (sceneManager()) {
-        disconnect(this, SIGNAL(cursorPositionChanged()),
-                   sceneManager(), SLOT(ensureCursorVisible()));
-    }
 
     MInputMethodState::closeSoftwareInputPanel();
 }
