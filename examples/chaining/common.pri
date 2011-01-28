@@ -1,8 +1,4 @@
-include( ../common.pri )
-
-INCLUDEPATH += ../../../src/include
-QMAKE_LIBDIR += ../../../lib/
-LIBS += $$mAddLibrary(meegotouchcore)
+CONFIG += meegotouch-boostable
 
 DEPENDPATH += .
 INCLUDEPATH += .

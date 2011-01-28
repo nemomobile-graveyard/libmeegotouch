@@ -9,6 +9,7 @@
 #include <MApplicationPage>
 #include <MSceneWindow>
 #include <MApplicationIfProxy>
+#include <MComponentCache>
 
 ImageViewer::ImageViewer()
 {
@@ -22,7 +23,7 @@ bool ImageViewer::showImage(const QString &uri, const QStringList &uriList)
 {
     Q_UNUSED( uri );
 
-    MApplicationWindow *mWin = new MApplicationWindow();
+    MApplicationWindow* mWin = MComponentCache::mApplicationWindow();
     mWin->setObjectName( "MApplicationWindow#2" );
     mWin->setAttribute( Qt::WA_DeleteOnClose, true );
 

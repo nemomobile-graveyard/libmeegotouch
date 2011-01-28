@@ -1,4 +1,4 @@
 [D-BUS Service]
-Name=com.nokia.ChainingExampleApp2
+Name=com.nokia.chainingexampleapp2
 Interface=com.nokia.ChainingExampleInterface
-Exec=/usr/bin/chainingexampleapp2
+Exec=/usr/bin/invoker --type=m /usr/bin/chainingexampleapp2

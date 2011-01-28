@@ -1,4 +1,5 @@
-include( ../common.pri )
+INCLUDEPATH += ../../../../src/include
+QMAKE_LIBDIR += ../../../../lib/
 
 TEMPLATE = lib
 TARGET   = chainingexampleinterface

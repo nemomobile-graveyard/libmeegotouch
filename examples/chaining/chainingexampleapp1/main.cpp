@@ -2,13 +2,15 @@
 #include <MApplicationPage>
 #include <MApplicationWindow>
 #include <MButton>
+#include <MComponentCache>
+#include <MExport>
 
 #include "imageviewer.h"
 
-int main(int argc, char** argv)
+M_EXPORT int main(int argc, char** argv)
 {
-    MApplication app(argc, argv);
-    MApplicationWindow w;
+    MApplication& app = *MComponentCache::mApplication(argc, argv);
+    MApplicationWindow& w = *MComponentCache::mApplicationWindow();
     w.setObjectName( "Main Window" );
     w.show();
 
