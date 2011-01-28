@@ -97,6 +97,7 @@ void MContainerViewPrivate::createHeader()
         headerLayout = new QGraphicsLinearLayout(Qt::Horizontal);
         headerLayout->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
         header->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+        header->setStyleName(q->style()->headerStyleName());
 
         headerLayout->setContentsMargins(0, 0, 0, 0);
         header->setLayout(headerLayout);
@@ -124,7 +125,7 @@ void MContainerViewPrivate::createHeader()
         }
 
         QGraphicsLinearLayout* mainLayout = dynamic_cast<QGraphicsLinearLayout*>(controller->layout());
-        
+
         if (mainLayout)
             mainLayout->insertItem(0, header);
     }
@@ -174,9 +175,12 @@ void MContainerViewPrivate::setupIcon(const QSize &size)
 
 void MContainerViewPrivate::createProgressIndicator()
 {
+    Q_Q(MContainerView);
+
     if (!progressIndicator)
         progressIndicator = new MProgressIndicator;
     progressIndicator->setUnknownDuration(true);
+    progressIndicator->setStyleName(q->style()->progressIndicatorStyleName());
 }
 
 
@@ -242,6 +246,14 @@ void MContainerView::applyStyle()
 
     if (d->title) {
         d->title->setStyleName(style()->titleStyleName());
+    }
+
+    if (d->progressIndicator) {
+        d->progressIndicator->setStyleName(style()->progressIndicatorStyleName());
+    }
+
+    if (d->header) {
+        d->header->setStyleName(style()->headerStyleName());
     }
 
     //  get background from style
