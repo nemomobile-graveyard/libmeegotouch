@@ -132,6 +132,7 @@ protected:
     QTimer *hideInfoBannerTimer;
 
     QScopedPointer<MTextMagnifier> magnifier;
+    bool oldItemSendsScenePositionChanges;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

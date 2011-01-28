@@ -65,6 +65,8 @@ protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     virtual void changeEvent(QEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
+    virtual void notifyItemChange(QGraphicsItem::GraphicsItemChange change,
+                                  const QVariant &value);
     //! \reimp_end
 
     //! \brief Notifies this and possibly derived views about the need for redraw.

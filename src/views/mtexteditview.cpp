@@ -89,7 +89,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       inAutoSelectionClick(false),
       infoBanner(0),
       editActive(false),
-      hideInfoBannerTimer(new QTimer(this))
+      hideInfoBannerTimer(new QTimer(this)),
+      oldItemSendsScenePositionChanges(false)
 {
     // copy text options from actual document to prompt
     QTextOption option = document()->defaultTextOption();
@@ -486,6 +487,10 @@ void MTextEditViewPrivate::showMagnifier()
                                            cursorRect().size()));
     }
 
+    oldItemSendsScenePositionChanges =
+        controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges;
+    controller->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+
     updateMagnifierPosition();
     magnifier->appear();
 }
@@ -501,6 +506,9 @@ void MTextEditViewPrivate::hideMagnifier()
     if (magnifier) {
         magnifier->disappear();
         magnifier.reset();
+        if (!oldItemSendsScenePositionChanges) {
+            controller->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, false);
+        }
     }
 }
 
@@ -1146,6 +1154,16 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
 
     QObject::disconnect(d->controller, SIGNAL(selectionChanged()),
                         d, SLOT(playTextFieldSelectionFeedback()));
+}
+
+void MTextEditView::notifyItemChange(QGraphicsItem::GraphicsItemChange change,
+                                     const QVariant &value)
+{
+    Q_UNUSED(value);
+    Q_D(MTextEditView);
+    if (change == QGraphicsItem::ItemScenePositionHasChanged) {
+        d->updateMagnifierPosition();
+    }
 }
 
 QVariant MTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const

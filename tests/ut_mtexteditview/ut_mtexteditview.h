@@ -52,6 +52,7 @@ private slots:
     void testMaskedCharacters();
     void testUpdateScrollWhenTextChanged();
     void testSizeHint();
+    void testSendsScenePositionChangesOnMagnifier();
 
 private:
     MTextEdit *m_controller;

@@ -1,10 +1,17 @@
 include(../common_top.pri)
 TARGET = ut_mtexteditview
 
-INCLUDEPATH += $$MSRCDIR
+SOURCES += \
+    ut_mtexteditview.cpp \
+    $$MSRCDIR/views/mtexteditview.cpp
 
-SOURCES += ut_mtexteditview.cpp
+HEADERS += \
+    ut_mtexteditview.h \
+    mtextmagnifier.h \
+    $$MSRCDIR/views/mtexteditview.h \
+    $$MSRCDIR/views/mtexteditview_p.h
 
-HEADERS += ut_mtexteditview.h
+# Use stubbed mtextmagnifier.h in mtexteditview.cpp.
+QMAKE_CXXFLAGS += -include mtextmagnifier.h
 
 include(../common_bot.pri)

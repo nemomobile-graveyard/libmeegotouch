@@ -337,5 +337,24 @@ void Ut_MTextEditView::testSizeHint()
     QCOMPARE(maximumSize, m_controller->maximumSize());
 }
 
+void Ut_MTextEditView::testSendsScenePositionChangesOnMagnifier()
+{
+    // Normal magnifier show & hide, when no initial flag is set.
+    QVERIFY(!(m_controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges));
+    m_subject->d_func()->showMagnifier();
+    QVERIFY(m_controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges);
+    m_subject->d_func()->hideMagnifier();
+    // Flag should be cleared.
+    QVERIFY(!(m_controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges));
+
+    // Magnifier show & hide, when flag is initially set.
+    m_controller->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+    m_subject->d_func()->showMagnifier();
+    QVERIFY(m_controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges);
+    m_subject->d_func()->hideMagnifier();
+    // Flag should still be set.
+    QVERIFY(m_controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges);
+}
+
 QTEST_APPLESS_MAIN(Ut_MTextEditView)
 
