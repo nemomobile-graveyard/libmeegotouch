@@ -49,6 +49,9 @@ private slots:
     void testSwitchView();
     void testCheckboxView();
 
+    //regression test for NB#220043
+    void testSizeHint();
+
 private:
 
     QImage captureImage(MButton *button);

@@ -322,6 +322,17 @@ void Ut_MButtonView::testCheckboxView()
     QVERIFY(img2 != img3);*/
 }
 
+void Ut_MButtonView::testSizeHint()
+{
+    m_button->setText("H");
+    QSizeF s1 = m_subject->sizeHint(Qt::PreferredSize);
+    m_button->setText("<u></u>H");
+    QSizeF s2 = m_subject->sizeHint(Qt::PreferredSize);
+
+    QCOMPARE(s1.width(), s2.width());
+    QCOMPARE(s1.height(), s2.height());
+}
+
 QImage Ut_MButtonView::captureImage(MButton *button)
 {
     QPixmap pixmap(button->size().toSize());
