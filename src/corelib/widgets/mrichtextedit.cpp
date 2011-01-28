@@ -517,8 +517,9 @@ void MRichTextEdit::keyPressEvent(QKeyEvent *event)
             // set current italic style option
             setFontItalic(italicStyle);
         } else if (event->matches(QKeySequence::Underline)) {
-            QFont curFont = currentFont();
-            bool underlineStyle = !curFont.underline();
+            // As a workaround to NB#223092 we don't use currentFont() and QFont::underline().
+            const QTextCharFormat format(d->isPreediting() ? d->currentPreeditCharFormat() : textCursor().charFormat());
+            const bool underlineStyle = format.underlineStyle() == QTextCharFormat::NoUnderline;
             // set current underline style option
             setFontUnderline(underlineStyle);
         } else if ((event->key() == Qt::Key_F) && (event->modifiers() & Qt::ControlModifier)) {
