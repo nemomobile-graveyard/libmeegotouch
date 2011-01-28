@@ -81,7 +81,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     : MWindowPrivate()
     , page(NULL)
     , navigationBar(NULL)
-    , toolBar(new MToolBar)
+    , toolBar(NULL)
     , dockWidget(new MDockWidget)
     , homeButtonPanel(NULL)
     , menu(new MApplicationMenu)
@@ -147,6 +147,7 @@ void MApplicationWindowPrivate::init()
     Q_Q(MApplicationWindow);
 
     navigationBar = new MNavigationBar(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::NavigationBar));
+    toolBar = new MToolBar(navigationBar);
     homeButtonPanel = new MHomeButtonPanel(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::HomeButtonPanel));
 
     if(MDeviceProfile::instance()->showStatusbar())    {
