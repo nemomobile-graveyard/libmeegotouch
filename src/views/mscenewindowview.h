@@ -75,6 +75,7 @@ protected:
     //! \reimp
     virtual void applyStyle();
     virtual void setupModel();
+    virtual void notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
     //! \reimp_end
 
 signals:
