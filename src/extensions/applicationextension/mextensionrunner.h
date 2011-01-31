@@ -147,11 +147,6 @@ protected:
     //! True if the display is currently blanked
     bool displayBlanked;
 
-#ifdef QT_OPENGL_LIB
-    //! OpenGL context
-    QGLContext *context;
-#endif
-
     //! Timer for checking that the host process is alive
     QTimer *aliveTimer;
 

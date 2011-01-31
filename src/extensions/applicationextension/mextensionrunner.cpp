@@ -108,9 +108,6 @@ MExtensionRunner::MExtensionRunner() :
     screenBlankProperty(new ContextProperty("Session.State", this)),
 #endif
     displayBlanked(false),
-#ifdef QT_OPENGL_LIB
-    context(NULL),
-#endif
     aliveTimer(new QTimer),
     pixmapMutex(NULL),
     changedRect(QRectF()),
@@ -130,9 +127,6 @@ MExtensionRunner::~MExtensionRunner()
     teardown();
     delete aliveTimer;
     delete communicator;
-#ifdef QT_OPENGL_LIB
-    delete context;
-#endif
 }
 
 bool MExtensionRunner::init(const QString &serverName)
@@ -413,7 +407,7 @@ void MExtensionRunner::createAppletPixmap(Qt::HANDLE handle)
 
 #ifdef QT_OPENGL_LIB
     // The QGLWidget takes the ownership of the context
-    context = new QGLContext(QGLFormat::defaultFormat(), &pixmap);
+    QGLContext *context = new QGLContext(QGLFormat::defaultFormat(), &pixmap);
     context->create();
     if (context->isValid()) {
         qDebug() << "Direct HW accelerated rendering to pixmap is supported.";
