@@ -1826,6 +1826,7 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
         d->completer->hideCompleter();
         //disconnect related slots when the widget losing focus
         disconnect(completer(), 0, this, 0);
+        disconnect(this, 0, completer(), 0);
     }
 
     emit lostFocus(event->reason());
@@ -2927,6 +2928,7 @@ void MTextEdit::setCompleter(MCompleter *completer)
         return;
     if (d->completer) {
         disconnect(d->completer, 0, this, 0);
+        disconnect(this, 0, d->completer, 0);
         d->completer->setWidget(0);
     }
 
