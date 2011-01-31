@@ -1,3 +1,9 @@
+libmeegotouch (0.20.78-2) unstable; urgency=low
+
+  * Fixing build, reverting 85164ee7974470c702d4bfd28f2bb6599456977b
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 31 Jan 2011 16:33:21 +0200
+
 libmeegotouch (0.20.78-1) unstable; urgency=low
 
   * New version
