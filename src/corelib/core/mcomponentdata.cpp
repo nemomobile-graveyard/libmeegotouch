@@ -74,7 +74,7 @@ namespace
 #else
     QtMsgType g_debug_level(QtWarningMsg);
 #endif
-    bool g_loadMInputContext(true);
+    bool g_loadMInputContext(false);
     FILE *debugingOutput;
     MSyslogClientSocket * g_syslogSocket = 0;
 }
@@ -672,8 +672,6 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                           argv[0]);
                 exit(EXIT_FAILURE);
             }
-        } else if (s == "-disable-m-input-context") {
-            g_loadMInputContext = false;
         } else if (s == "-target") {
             if (i < (argc - 1)) {
                 i++;
