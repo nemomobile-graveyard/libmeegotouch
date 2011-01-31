@@ -48,8 +48,8 @@
 class MOriginContainer
 {
 public:
-    MOriginContainer(MStyleSheetAttribute *val,
-                       MStyleSheetSelector *selector,
+    MOriginContainer(const MStyleSheetAttribute *val,
+                       const MStyleSheetSelector *selector,
                        unsigned int classPriority,
                        unsigned int parentPriority,
                        const QByteArray &file,
@@ -61,8 +61,8 @@ public:
         filename(file),
         stylesheet(stylesheet) {}
 
-    MStyleSheetAttribute *value;
-    MStyleSheetSelector *selector;
+    const MStyleSheetAttribute *value;
+    const MStyleSheetSelector *selector;
     unsigned int classPriority;
     unsigned int parentPriority;
     QByteArray filename;
@@ -303,7 +303,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
 
     foreach(const MStyleSheet * sheet, sheets) {
         foreach(QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
-            foreach(MStyleSheetSelector * selector, fi->selectors) {
+            foreach(const MStyleSheetSelector * selector, fi->selectors) {
                 // mDebug("MStyleSheet") << "Searching style data for: " << cname << '#' << objectName;
                 // mDebug("MStyleSheet") << "Comparing against" << selector->className() << '#' << selector->objectName();
 
@@ -314,7 +314,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                 }
 
                 // None of the early out tests failed, so we're happy with these settings, loop 'em through and copy them to list
-                MStyleSheetAttribute *attributes = selector->attributeList();
+                const MStyleSheetAttribute *attributes = selector->attributeList();
                 int attributeCount = selector->attributeCount();
                 for (int i = 0; i < attributeCount; ++i) {
                     MUniqueStringCache::Index propertyName = attributes[i].getNameID();
@@ -369,7 +369,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
 
         // check all the attributes of this selector against the cached entry
 
-        MStyleSheetAttribute *attributes = info.selector->attributeList();
+        const MStyleSheetAttribute *attributes = info.selector->attributeList();
         int attributeCount = info.selector->attributeCount();
         for (int i = 0; i < attributeCount; ++i) {
             MOriginContainer *old = data.value(attributes[i].getNameID(), NULL);
@@ -401,7 +401,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
 
             // get the attribute value
             MOriginContainer *container = *iterator;
-            MStyleSheetAttribute *attribute = container->value;
+            const MStyleSheetAttribute *attribute = container->value;
 
             // erase this iterator from the data block, it is not needed anymore
             data.erase(iterator);
@@ -455,8 +455,8 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
     return result;
 }
 
-bool MStyleSheetPrivate::isHigherPriority(MOriginContainer *prev,
-        MStyleSheetSelector *selector,
+bool MStyleSheetPrivate::isHigherPriority(const MOriginContainer *prev,
+        const MStyleSheetSelector *selector,
         unsigned int classPriority,
         unsigned int parentPriority)
 {
@@ -648,7 +648,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
         foreach (const MStyleSheet *sheet, thisParentSheets) {
             foreach(QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
                 unsigned int parentPriority, classPriority;
-                foreach (MStyleSheetSelector *selector, fi->parentSelectors) {
+                foreach (const MStyleSheetSelector *selector, fi->parentSelectors) {
                     if (matchParent(selector, thisParentHierarchy, parentStyleName, sceneOrder, parentPriority) &&
                         spec.match(selector, classPriority)) {
                         // match found, store it to results list
@@ -671,7 +671,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
 
             // loop trough all the selectors and find matching ones
             unsigned int parentPriority, classPriority;
-            foreach (MStyleSheetSelector * selector, fi->parentSelectors) {
+            foreach (const MStyleSheetSelector * selector, fi->parentSelectors) {
                 if (matchParents(selector, parentsData, parentStyleName, parentPriority) &&
                     spec.match(selector, classPriority)) {
 

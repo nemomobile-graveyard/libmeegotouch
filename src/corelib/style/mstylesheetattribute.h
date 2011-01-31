@@ -68,7 +68,7 @@ public:
     bool writeAttribute(const QString &filename,
                         MStyle *style,
                         const QMetaProperty &property,
-                        M::Orientation orientation);
+                        M::Orientation orientation) const;
 
 private:
     // needed by MStyleSheetParserPrivate
@@ -82,7 +82,7 @@ private:
         LandscapeFlag = 2
     };
     bool fillProperty(const QMetaProperty &property, MStyle *style, CacheOrientationFlags cacheOrientation,
-        const QVariant &variant, bool cache = true);
+        const QVariant &variant, bool cache = true) const;
 
     MUniqueStringCache::Index name;
     MUniqueStringCache::Index value;

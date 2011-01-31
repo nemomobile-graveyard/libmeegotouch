@@ -54,8 +54,8 @@ public:
         ~StylesheetFileInfo();
         QByteArray filename;
         QVector<QPair<QByteArray, uint> > includes;
-        QList<MStyleSheetSelector *> selectors;
-        QList<MStyleSheetSelector *> parentSelectors;
+        QList<const MStyleSheetSelector *> selectors;
+        QList<const MStyleSheetSelector *> parentSelectors;
         QHash<QByteArray, QByteArray> constants;
         uint time_t;
         bool fromMapedMemory;

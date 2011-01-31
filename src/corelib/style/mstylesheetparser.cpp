@@ -137,8 +137,8 @@ public:
     void writeStylesheetFileInfo(QSharedPointer<MStyleSheetParser::StylesheetFileInfo> selector, char** buffer);
     QSharedPointer<MStyleSheetParser::StylesheetFileInfo> readStylesheetFileInfo(char** buffer);
 
-    MStyleSheetSelector *readSelector(char** buffer);
-    void writeSelector(MStyleSheetSelector *selector, char** buffer);
+    const MStyleSheetSelector *readSelector(char** buffer);
+    void writeSelector(const MStyleSheetSelector *selector, char** buffer) const;
 
     static QString getOrientationName(MStyleSheetSelector::Orientation orientation);
     static MStyleSheetSelector::Orientation getOrientationFromName(const QString &name);
@@ -341,7 +341,7 @@ bool MStyleSheetParserPrivate::validValue(const QByteArray &value)
     return true;
 }
 
-void outputSelector(MStyleSheetSelector *selector)
+void outputSelector(const MStyleSheetSelector *selector)
 {
     mDebug("MStyleSheetParserPrivate") << "  selector:"
                                            << selector->className()
@@ -351,7 +351,7 @@ void outputSelector(MStyleSheetSelector *selector)
                                            << selector->mode()
                                            << selector->parentName()
                                            << selector->parentObjectName();
-    MStyleSheetAttribute *attributes = selector->attributeList();
+    const MStyleSheetAttribute *attributes = selector->attributeList();
     for (int i = 0; i < selector->attributeCount(); ++i) {
         mDebug("MStyleShetParserPrivate") << "     attribute:" <<  attributes[i].getName() << "=" << attributes[i].getValue();
     }
@@ -368,16 +368,16 @@ void MStyleSheetParserPrivate::debugOutput()
         mDebug("MStyleSheetParserPrivate") << "includes:" << (*fi)->includes;
         mDebug("MStyleSheetParserPrivate") << "constants:" << (*fi)->constants;
 
-        QList<MStyleSheetSelector *>::const_iterator selectorsEnd = (*fi)->selectors.constEnd();
+        QList<const MStyleSheetSelector *>::const_iterator selectorsEnd = (*fi)->selectors.constEnd();
 
-        for (QList<MStyleSheetSelector *>::const_iterator iterator = (*fi)->selectors.constBegin();
+        for (QList<const MStyleSheetSelector *>::const_iterator iterator = (*fi)->selectors.constBegin();
                 iterator != selectorsEnd;
                 ++iterator) {
             outputSelector(*iterator);
         }
 
         selectorsEnd = (*fi)->parentSelectors.constEnd();
-        for (QList<MStyleSheetSelector *>::const_iterator iterator = (*fi)->parentSelectors.constBegin();
+        for (QList<const MStyleSheetSelector *>::const_iterator iterator = (*fi)->parentSelectors.constBegin();
                 iterator != selectorsEnd;
                 ++iterator) {
             outputSelector(*iterator);
@@ -1300,8 +1300,8 @@ qint64 MStyleSheetParserPrivate::approximateSize()
         // selector count
         size += sizeof(int);
 
-        QList<MStyleSheetSelector *>::const_iterator infoSelectorsEnd = (*fi)->selectors.constEnd();
-        for (QList<MStyleSheetSelector *>::const_iterator iterator = (*fi)->selectors.constBegin();
+        QList<const MStyleSheetSelector *>::const_iterator infoSelectorsEnd = (*fi)->selectors.constEnd();
+        for (QList<const MStyleSheetSelector *>::const_iterator iterator = (*fi)->selectors.constBegin();
         iterator != infoSelectorsEnd;
         ++iterator) {
             size += 9 * sizeof(qint32);
@@ -1313,7 +1313,7 @@ qint64 MStyleSheetParserPrivate::approximateSize()
         // parent selector count
         size += sizeof(int);
         infoSelectorsEnd = (*fi)->parentSelectors.constEnd();
-        for (QList<MStyleSheetSelector *>::const_iterator iterator = (*fi)->parentSelectors.constBegin();
+        for (QList<const MStyleSheetSelector *>::const_iterator iterator = (*fi)->parentSelectors.constBegin();
         iterator != infoSelectorsEnd;
         ++iterator) {
             size += 9 * sizeof(qint32);
@@ -1401,8 +1401,8 @@ void MStyleSheetParserPrivate::writeStylesheetFileInfo(QSharedPointer<MStyleShee
 
     writeInteger<int>(fi->selectors.count(), buffer);
     // write all selectors without parent
-    QList<MStyleSheetSelector *>::const_iterator infoSelectorsEnd = fi->selectors.constEnd();
-    for (QList<MStyleSheetSelector *>::const_iterator iterator = fi->selectors.constBegin();
+    QList<const MStyleSheetSelector *>::const_iterator infoSelectorsEnd = fi->selectors.constEnd();
+    for (QList<const MStyleSheetSelector *>::const_iterator iterator = fi->selectors.constBegin();
             iterator != infoSelectorsEnd;
             ++iterator) {
         writeSelector(*iterator, buffer);
@@ -1411,7 +1411,7 @@ void MStyleSheetParserPrivate::writeStylesheetFileInfo(QSharedPointer<MStyleShee
     // write all selectors with parent
     writeInteger<int>(fi->parentSelectors.count(), buffer);
     infoSelectorsEnd = fi->parentSelectors.constEnd();
-    for (QList<MStyleSheetSelector *>::const_iterator iterator = fi->parentSelectors.constBegin();
+    for (QList<const MStyleSheetSelector *>::const_iterator iterator = fi->parentSelectors.constBegin();
             iterator != infoSelectorsEnd;
             ++iterator) {
         writeSelector(*iterator, buffer);
@@ -1430,21 +1430,21 @@ QSharedPointer<MStyleSheetParser::StylesheetFileInfo> MStyleSheetParserPrivate::
     selectorCount = readInteger<int>(buffer);
     // read all selectors without parent
     for (int i = 0; i < selectorCount; ++i) {
-        MStyleSheetSelector *selector = readSelector(buffer);
+        const MStyleSheetSelector *selector = readSelector(buffer);
         fi->selectors.push_back(selector);
     }
 
     // read all selectors with parent
     selectorCount = readInteger<int>(buffer);
     for (int i = 0; i < selectorCount; ++i) {
-        MStyleSheetSelector *selector = readSelector(buffer);
+        const MStyleSheetSelector *selector = readSelector(buffer);
         fi->parentSelectors.push_back(selector);
     }
 
     return fi;
 }
 
-MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(char** buffer)
+const MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(char** buffer)
 {
     MUniqueStringCache::Index parentName, parentObjectName, objectName, className, classType, mode;
     int flags, orientation;
@@ -1482,7 +1482,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(char** buffer)
     return selector;
 }
 
-void MStyleSheetParserPrivate::writeSelector(MStyleSheetSelector *selector, char** buffer)
+void MStyleSheetParserPrivate::writeSelector(const MStyleSheetSelector *selector, char** buffer) const
 {
     writeInteger<int>(selector->parentNameID(), buffer);
     writeInteger<int>(selector->parentObjectNameID(), buffer);

@@ -574,7 +574,7 @@ QByteArray MStyleSheetAttribute::attributeNameToPropertyName(const QByteArray &a
 bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         MStyle *style,
         const QMetaProperty &property,
-        M::Orientation orientation)
+        M::Orientation orientation) const
 {
     QVariant cachedVariant = variantCache[orientation][value][property.userType()];
     if (cachedVariant.isValid()) {
@@ -828,7 +828,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
     return false;
 }
 
-bool MStyleSheetAttribute::fillProperty(const QMetaProperty &property, MStyle *style, CacheOrientationFlags cacheOrientation, const QVariant &variant, bool cache)
+bool MStyleSheetAttribute::fillProperty(const QMetaProperty &property, MStyle *style, CacheOrientationFlags cacheOrientation, const QVariant &variant, bool cache) const
 {
     if (cache && variant.isValid()) {
         // most variants will be cahced in landscape and portrait.

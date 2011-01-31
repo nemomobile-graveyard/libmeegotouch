@@ -43,7 +43,7 @@ class MStyleSheetPrivate
 public:
     struct SelectorInfo {
         QByteArray filename;
-        MStyleSheetSelector *selector;
+        const MStyleSheetSelector *selector;
         int classPriority;
         int parentPriority;
         const MStyleSheet *stylesheet;
@@ -128,7 +128,7 @@ public:
 
     static bool combine(MStyle *style, const CacheEntry &entry, const StyleSpec &spec);
 
-    static bool isHigherPriority(MOriginContainer *prev, MStyleSheetSelector *n, unsigned int classPriority, unsigned int parentPriority);
+    static bool isHigherPriority(const MOriginContainer *prev, const MStyleSheetSelector *n, unsigned int classPriority, unsigned int parentPriority);
 
     static int orderNumber(const QByteArray &n, const QByteArray &sn, const QByteArray &parentStyleName, const QList<QByteArray> &parentHierarchy);
 

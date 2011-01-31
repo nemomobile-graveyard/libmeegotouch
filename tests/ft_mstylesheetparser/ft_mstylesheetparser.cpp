@@ -593,14 +593,14 @@ void Ft_MStyleSheetParser::test_binary_equality()
         // check that there is equal count of selectors
         QCOMPARE((*parserFi)->selectors.count(), (*binaryFi)->selectors.count());
 
-        QList<MStyleSheetSelector *>::iterator parserSelectors = (*parserFi)->selectors.begin();
-        QList<MStyleSheetSelector *>::iterator binarySelectors = (*binaryFi)->selectors.begin();
+        QList<const MStyleSheetSelector *>::iterator parserSelectors = (*parserFi)->selectors.begin();
+        QList<const MStyleSheetSelector *>::iterator binarySelectors = (*binaryFi)->selectors.begin();
 
         // loop through all the selectors, check that they are equal
         for (int i = 0; i < (*parserFi)->selectors.count(); i++) {
             // Get selectors
-            MStyleSheetSelector *selector0 = *parserSelectors;
-            MStyleSheetSelector *selector1 = *binarySelectors;
+            const MStyleSheetSelector *selector0 = *parserSelectors;
+            const MStyleSheetSelector *selector1 = *binarySelectors;
 
             // check that selector properties are equal
             QCOMPARE(selector0->parentName(), selector1->parentName());
