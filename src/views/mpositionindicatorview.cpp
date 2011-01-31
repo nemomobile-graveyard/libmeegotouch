@@ -69,6 +69,13 @@ bool MPositionIndicatorViewPrivate::isInSwitcher() const
     return isInSwitcher;
 }
 
+bool MPositionIndicatorViewPrivate::contentFullyVisible() const
+{
+    Q_Q(const MPositionIndicatorView);
+    const QSizeF rangeSize = q->model()->range().size();
+    return rangeSize.isNull();
+}
+
 void MPositionIndicatorViewPrivate::_q_displayEntered()
 {
     Q_Q(MPositionIndicatorView);
@@ -245,8 +252,13 @@ void MPositionIndicatorView::hide()
     d->visible = false;
     d->fadeAnimation->stop();
     d->fadeAnimation->setEndValue(0.0f);
-    d->fadeAnimation->start();
-    update();
+
+    // Only start the animation if the content is partly visible, otherwise
+    // the position indicator won't be drawn at all (see drawContents())
+    if (!d->contentFullyVisible()) {
+        d->fadeAnimation->start();
+        update();
+    }
 }
 
 void MPositionIndicatorView::resetHideTimer()
@@ -255,7 +267,12 @@ void MPositionIndicatorView::resetHideTimer()
     if (!d->visible) {
         d->fadeAnimation->stop();
         d->fadeAnimation->setEndValue(1.0f);
-        d->fadeAnimation->start();
+
+        // Only start the animation if the content is partly visible, otherwise
+        // the position indicator won't be drawn at all (see drawContents())
+        if (!d->contentFullyVisible()) {
+            d->fadeAnimation->start();
+        }
         d->visible = true;
     }
     d->hideTimer->stop();

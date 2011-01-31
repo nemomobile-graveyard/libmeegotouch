@@ -42,6 +42,12 @@ public:
      */
     bool isInSwitcher() const;
 
+    /**
+     * Returns true if the content the position-indicator refers to is
+     * fully visible.
+     */
+    bool contentFullyVisible() const;
+
     MPositionIndicator *controller;
     QTimer *hideTimer;
     bool visible;
