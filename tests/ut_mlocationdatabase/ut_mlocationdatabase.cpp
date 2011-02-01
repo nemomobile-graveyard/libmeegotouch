@@ -219,29 +219,10 @@ void Ut_MLocationDatabase::testCitiesInTimeZone_data()
         << "Europe/Belgrade"
         << (QStringList()
             << "qtn_clk_city_serb_belgrade"
-            << "qtn_clk_city_bosnia_sarajevo"
-            << "qtn_clk_city_slove_ljubljana"
-            << "qtn_clk_city_croatia_zagreb"
-            << "qtn_clk_city_montenegro_podgorica"
-            << "qtn_clk_city_makedo_skopje"
-            );
-    QTest::newRow("Europe/Zagreb")
-        << "Europe/Zagreb" // canonical is "Europe/Belgrade"
-        << (QStringList()
-            << "qtn_clk_city_serb_belgrade"
-            << "qtn_clk_city_bosnia_sarajevo"
-            << "qtn_clk_city_slove_ljubljana"
-            << "qtn_clk_city_croatia_zagreb"
-            << "qtn_clk_city_montenegro_podgorica"
-            << "qtn_clk_city_makedo_skopje"
             );
     QTest::newRow("Europe/Vatican")
-        << "Europe/Vatican" // canonical is "Europe/Rome"
-        << (QStringList()
-            << "qtn_clk_city_italy_rome"
-            << "qtn_clk_city_vatican_vatican_city"
-            << "qtn_clk_city_san_marino"
-            );
+        << "Europe/Vatican" // canonical
+        << QStringList(); // no city here. Problem?
     QTest::newRow("Europe/Monaco")
         << "Europe/Monaco" // canonical
         << (QStringList()
@@ -264,7 +245,6 @@ void Ut_MLocationDatabase::testCitiesInTimeZone_data()
         << "America/Belem"
         << (QStringList()
             << "qtn_clk_city_bra_belem"
-            << "qtn_clk_city_bra_sao_luis"
             );
     QTest::newRow("America/Argentina/Buenos_Aires")
         << "America/Argentina/Buenos_Aires"
@@ -581,6 +561,9 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
         return;
     }
 
+    QTextStream debugStream(stderr);
+    debugStream.setCodec("UTF-8");
+
     QDateTime summerDateTime(QDate(2010, 6, 21), QTime(0, 0, 0, 0), Qt::LocalTime);
     QDateTime winterDateTime(QDate(2009, 12, 24), QTime(0, 0, 0, 0), Qt::LocalTime);
     QString ut_mlocationdatabaseTestOutput = "";
@@ -590,17 +573,18 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
         icu::UnicodeString canonicalId;
         icu::UnicodeString id = static_cast<const UChar *>(city.timeZone().utf16());
         TimeZone::getCanonicalID (id, canonicalId, status);
-        QString cityCanonicalTimeZone =
+        QString cityCanonicalTimeZoneICU =
             QString(reinterpret_cast<const QChar *>(canonicalId.getBuffer()), canonicalId.length());
-        if (cityCanonicalTimeZone.isEmpty())
-            cityCanonicalTimeZone = "***error: invalid";
+        if (cityCanonicalTimeZoneICU.isEmpty())
+            cityCanonicalTimeZoneICU = "***error: invalid";
 
-        if (city.timeZone() != cityCanonicalTimeZone)
-            qWarning() << city.key()
-                       << "time zone not canonical:"
-                       << city.timeZone()
-                       << "canonical:"
-                       << cityCanonicalTimeZone;
+        if (city.timeZone() != cityCanonicalTimeZoneICU)
+            debugStream << city.key()
+                        << " mlocationdatabase canonical: "
+                        << city.timeZone()
+                        << " icu has different canonical timezone: "
+                        << cityCanonicalTimeZoneICU
+                        << "\n";
         qint32 timeZoneRawOffsetHours = city.timeZoneRawOffset() / 1000 / 3600;
         qint32 timeZoneDstOffsetHoursWinter = city.timeZoneDstOffset(winterDateTime) / 1000 / 3600;
         qint32 timeZoneDstOffsetHoursSummer = city.timeZoneDstOffset(summerDateTime) / 1000 / 3600;
@@ -616,8 +600,8 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
             + QString::number(city.longitude())
             + '\n' + city.key() + "\tTime zone id\t"
             + city.timeZone()
-            + '\n' + city.key() + "\tCanonical time zone id\t"
-            + cityCanonicalTimeZone
+            + '\n' + city.key() + "\tCanonical time zone id according to libicu\t"
+            + cityCanonicalTimeZoneICU
             + '\n' + city.key() + "\tTime zone raw offset in hours\t"
             + QString::number(timeZoneRawOffsetHours)
             + '\n' + city.key() + "\tTime zone dst offset summer in hours\t"
@@ -688,10 +672,6 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
     QString ut_mlocationdatabaseTestInput2 = QString::fromUtf8(ut_mlocationdatabaseTestInput2File.readAll().constData());
     ut_mlocationdatabaseTestInput2File.close();
 
-    // QTextStream debugStream(stderr);
-    // debugStream.setCodec("UTF-8");
-    // debugStream << ut_mlocationdatabaseTestOutput2;
-
     if (ut_mlocationdatabaseTestOutput2 != ut_mlocationdatabaseTestInput2) {
         // don’t fail if there is a difference, there can easily
         // be differences due to changes in the database.
@@ -708,7 +688,7 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
         QProcess::execute("diff -u " + ut_mlocationdatabaseTestInputFileName + ' ' + ut_mlocationdatabaseTestOutputFileName);
     }
 #if QT_VERSION >= 0x040700
-    qDebug() << __PRETTY_FUNCTION__ << "took" << timer.restart() << "milliseconds";
+    debugStream << __PRETTY_FUNCTION__ << " took " << timer.restart() << " milliseconds ";
 #endif
 #endif
 }

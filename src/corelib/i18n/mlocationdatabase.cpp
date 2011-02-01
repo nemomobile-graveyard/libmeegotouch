@@ -20,15 +20,19 @@
 #include "mlocationdatabase.h"
 
 #include <QFile>
+#include <QTextStream>
 #include <QDomDocument>
 #include <QStringMatcher>
+#include <QStringList>
 #include <QDebug>
 
 #ifdef HAVE_ICU
 #include <unicode/timezone.h>
 #endif
 
-const QString path = "/usr/share/meegotouch/locationdatabase/";
+static const QString path = "/usr/share/meegotouch/locationdatabase/";
+static const QString zoneAliasFile = "/usr/share/tzdata-timed/zone.alias";
+static const QString zoneAliasFileFallback = ":/zone.alias.fallback";
 
 class MLocationDatabasePrivate
 {
@@ -36,10 +40,12 @@ public:
     MLocationDatabasePrivate();
     bool loadCountries();
     bool loadCities();
+    bool loadTimeZoneData();
     QString canonicalizeTimeZoneId(QString timeZoneId);
 
     QHash<QString, MCity> cities;
     QHash<QString, MCountry> countries;
+    QHash<QString, QString> canonicalTimeZoneIds;
 };
 
 MLocationDatabasePrivate::MLocationDatabasePrivate()
@@ -163,7 +169,17 @@ bool MLocationDatabasePrivate::loadCities()
         city.setLocalName( tmpEl.text() );
 
         tmpEl = e.elementsByTagName( "timezone" ).at( 0 ).toElement();
-        city.setTimeZone (canonicalizeTimeZoneId(tmpEl.text()));
+        QString timeZoneId = canonicalizeTimeZoneId(tmpEl.text());
+        if(timeZoneId.isEmpty()) {
+            qWarning() << __PRETTY_FUNCTION__ << "Time zone id"
+                       << tmpEl.text() << "cannot be canonicalized. Using it as it is.";
+            timeZoneId = tmpEl.text();
+        }
+        else if(timeZoneId != tmpEl.text()) {
+            qWarning() << __PRETTY_FUNCTION__ << "Time zone id"
+                       << tmpEl.text() << "canonicalized to" << timeZoneId;
+        }
+        city.setTimeZone (timeZoneId);
 
         tmpEl = e.elementsByTagName( "countrykey" ).at( 0 ).toElement();
         QString countryKey = tmpEl.text();
@@ -189,33 +205,49 @@ bool MLocationDatabasePrivate::loadCities()
     return true;
 }
 
+bool MLocationDatabasePrivate::loadTimeZoneData()
+{
+    QFile file;
+    file.setFileName(zoneAliasFile);
+    if(!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "file" << zoneAliasFile  << "is missing."
+                   << "Using fallback, aliases might have problems.";
+        file.setFileName(zoneAliasFileFallback);
+        if(!file.open(QIODevice::ReadOnly)) {
+            qWarning() << "fallback cannot be opened either.";
+            return false;
+        }
+    }
+    QTextStream stream(&file);
+    QString line;
+    do {
+        line = stream.readLine();
+        QStringList timeZoneIds(line.split(QLatin1Char(' '),
+                                           QString::SkipEmptyParts));
+        if(!timeZoneIds.isEmpty()) {
+            QString canonicalTimeZoneId = timeZoneIds.first();
+            foreach(const QString &alias, timeZoneIds) {
+                canonicalTimeZoneIds[alias] = canonicalTimeZoneId;
+            }
+        }
+    } while (!line.isNull());
+    file.close();
+    return true;
+}
+
 QString MLocationDatabasePrivate::canonicalizeTimeZoneId(QString timeZoneId)
 {
-#ifdef HAVE_ICU
-    UErrorCode status = U_ZERO_ERROR;
-    icu::UnicodeString canonicalId;
-    icu::UnicodeString id = static_cast<const UChar *>(timeZoneId.utf16());
-    TimeZone::getCanonicalID (id, canonicalId, status);
-    if (U_FAILURE(status)) {
-        qWarning() << "TimeZone::getCanonicalID failed with error"
-                   << u_errorName(status);
-        return QString();
-    }
-    QString canonicalTimeZoneId =
-        QString(reinterpret_cast<const QChar *>(canonicalId.getBuffer()), canonicalId.length());
-    if (canonicalTimeZoneId.isEmpty()) {
-        qWarning() << "TimeZone::getCanonicalID failed. Id is empty.";
-        return QString();
-    }
-    return canonicalTimeZoneId;
-#else
-    return timeZoneId;
-#endif
+    // returns an empty string if the hash does not contain the key:
+    return canonicalTimeZoneIds[timeZoneId];
 }
 
 MLocationDatabase::MLocationDatabase()
     : d_ptr( new MLocationDatabasePrivate )
 {
+    if ( ! d_ptr->loadTimeZoneData() )
+    {
+        qWarning( "loading of time zone data failed." );
+    }
     if ( ! d_ptr->loadCountries() )
     {
         qWarning( "loading of country list failed." );
@@ -289,10 +321,11 @@ QList<MCity> MLocationDatabase::citiesInTimeZone(const QString& timeZoneId)
     // Cut out last section of timezone id, for example cut out
     // “Tell_City” out of “America/Indiana/Tell_City” In case of
     // canonical time zone ids, the part after the last / seems to be
-    // a city in almost all cases. Although there seems to be the
-    // weird exception “America/North_Dakota/Center”. There are many
-    // non-canonical time zone ids which do not have a city name in
-    // the last part, for example “US/Pacific”.
+    // a city in most cases, although there are exceptions (For
+    // example “Indian/Mahe” is a canonical id but “Mahe” is an
+    // island, not a city. There are many non-canonical time zone ids
+    // which do not have a city name in the last part, for example
+    // “US/Pacific”.
     QString canonicalCity = canonicalTimeZoneId.section('/', -1);
     canonicalCity.replace('_', ' ');
 

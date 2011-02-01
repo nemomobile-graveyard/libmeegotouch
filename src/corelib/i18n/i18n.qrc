@@ -2,5 +2,6 @@
  <qresource>
      <file>libmeegotouch_rtl.qm</file>
      <file>libmeegotouch_ltr.qm</file>
+     <file>zone.alias.fallback</file>
  </qresource>
 </RCC>
