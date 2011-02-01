@@ -93,6 +93,7 @@ MExtensionHandlePrivate::MExtensionHandlePrivate() :
 
 MExtensionHandlePrivate::~MExtensionHandlePrivate()
 {
+    delete screenBlankProperty;
 }
 
 void MExtensionHandlePrivate::visibilityChanged()

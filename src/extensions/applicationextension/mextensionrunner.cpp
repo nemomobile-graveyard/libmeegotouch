@@ -127,6 +127,7 @@ MExtensionRunner::~MExtensionRunner()
     teardown();
     delete aliveTimer;
     delete communicator;
+    delete screenBlankProperty;
 }
 
 bool MExtensionRunner::init(const QString &serverName)
