@@ -131,9 +131,6 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
         } else if (distX > d->style->distanceThreshold() ||
                    distY > d->style->distanceThreshold()) {
             panGesture->panDirection = (distX > distY ? Qt::Horizontal : Qt::Vertical);
-            panGesture->startPos = ev->pos();
-            panGesture->setLastOffset(QPointF());
-            panGesture->setOffset(QPointF());
             result = QGestureRecognizer::TriggerGesture;
         } else {
             result = QGestureRecognizer::MayBeGesture;
