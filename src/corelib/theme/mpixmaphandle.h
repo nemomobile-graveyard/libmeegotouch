@@ -37,6 +37,8 @@ struct MPixmapHandle
     QSize size;
     QImage::Format format;
     int numBytes;
+
+    bool directMap;
 };
 
 #endif //MPIXMAPHANDLE_H

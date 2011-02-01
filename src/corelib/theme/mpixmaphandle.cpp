@@ -5,7 +5,8 @@ MPixmapHandle::MPixmapHandle() :
     eglHandle(0),
     shmHandle(QString()),
     format(QImage::Format_Invalid),
-    numBytes(0)
+    numBytes(0),
+    directMap(false)
 {}
 
 bool MPixmapHandle::isValid() const

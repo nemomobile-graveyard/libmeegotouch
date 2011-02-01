@@ -378,6 +378,7 @@ QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::Pixm
     stream << handle.pixmapHandle.size;
     stream << (quint64)handle.pixmapHandle.format;
     stream << handle.pixmapHandle.numBytes;
+    stream << (bool)handle.pixmapHandle.directMap;
     return stream;
 }
 
@@ -399,6 +400,8 @@ QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::PixmapHand
     handle.pixmapHandle.format = QImage::Format(h);
     waitForAvailableBytes(stream, sizeof(int));
     stream >> handle.pixmapHandle.numBytes;
+    waitForAvailableBytes(stream, sizeof(bool));
+    stream >> handle.pixmapHandle.directMap;
     return stream;
 }
 

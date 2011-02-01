@@ -101,9 +101,11 @@ protected:
 
 private:
     void pixmapFromImage(PixmapCacheEntry *cacheEntry ,const QImage image);
-    QImage loadFromFsCache(const QSize& size);
+    QImage loadFromFsCache(const QSize& size, PixmapCacheEntry *cacheEntry);
     void saveToFsCache(const QImage pixmap, const QSize& size);
     QString createCacheFilename(const QSize& size);
+
+    void fillCacheEntry(PixmapCacheEntry *cacheEntry, QImage &image, const QSize &size);
 
 #ifdef  Q_WS_X11
     bool convertToX11;
@@ -158,7 +160,6 @@ private:
     QString imageId;
 };
 
-
 class MThemeImagesDirectory
 {
 public:
@@ -199,7 +200,6 @@ private:
     QString m_path;
     QString m_locale;
 };
-
 
 class MImageDirectory
 {

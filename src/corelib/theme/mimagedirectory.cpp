@@ -28,14 +28,19 @@
 #include <QPainter>
 #include <QPixmap>
 
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+#include <QtMeeGoGraphicsSystemHelper>
+#endif
+
 #ifdef  Q_WS_X11
 #include <X11/Xlib.h>
 #include <QX11Info>
 #endif
 
+
 namespace {
     const unsigned int ID_CACHE_VERSION = 1;
-    const unsigned int IMAGE_CACHE_VERSION = 3;
+    const unsigned int IMAGE_CACHE_VERSION = 4;
 }
 
 uint qHash(const QSize &size)
@@ -71,37 +76,21 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
         // try to load it from filesystem cache
         QImage image;
         if (shouldBeCached()) {
-            image = loadFromFsCache(size);
+            image = loadFromFsCache(size, cacheEntry);
         }
 
         if (image.isNull()) {
             // we didn't have the correctly sized pixmap in cache, so we need to create one.
             image = createPixmap(size);
+
+            applyDebugColors(&image);
+
             if (shouldBeCached()) {
                 saveToFsCache(image, size);
             }
+
+            fillCacheEntry(cacheEntry, image, size);
         }
-
-        applyDebugColors(&image);
-
-#ifdef  Q_WS_X11
-        if (convertToX11) {
-            Pixmap x11Pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
-                                             image.width(), image.height(), 16);
-            cacheEntry->pixmap = new QPixmap(QPixmap::fromX11Pixmap(x11Pixmap));
-
-            QPainter painter(cacheEntry->pixmap);
-            painter.drawImage(0, 0, image);
-            painter.end();
-
-            XSync(QX11Info::display(), false);
-            cacheEntry->handle.xHandle = cacheEntry->pixmap->handle();
-        } else {
-            MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
-        }
-#else
-        MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
-#endif
     } else  {
         cacheEntry = *it;
     }
@@ -220,7 +209,7 @@ QHash<QSize, const PixmapCacheEntry*> ImageResource::pixmapCacheEntries() const
     return entries;
 }
 
-QImage ImageResource::loadFromFsCache(const QSize& size)
+QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cacheEntry)
 {
     const QString cacheFileName = createCacheFilename(size);
     const QString cacheMetaFileName = cacheFileName + ".meta";
@@ -267,6 +256,18 @@ QImage ImageResource::loadFromFsCache(const QSize& size)
             buffer = cacheFile->map(0, cacheFile->size());
             QImage image((const uchar*)buffer, imageSize.width(), imageSize.height(), (QImage::Format)imageFormat);
 
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+            if(QMeeGoGraphicsSystemHelper::isRunningMeeGo() && !convertToX11) {
+                cacheEntry->handle.format = (QImage::Format)imageFormat;
+                cacheEntry->handle.eglHandle = QMeeGoGraphicsSystemHelper::imageToEGLSharedImage(image);
+                cacheEntry->handle.numBytes = image.numBytes();
+                cacheEntry->handle.shmHandle = cacheFileName;
+                cacheEntry->handle.size = imageSize;
+                cacheEntry->handle.directMap = true;
+            } else
+#endif
+                fillCacheEntry(cacheEntry, image, size);
+
             cacheFile->close();
             return image;
         } else {
@@ -305,7 +306,8 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
         }
     }
 
-    if (pixmap.format() != QImage::Format_ARGB32 && pixmap.format() != QImage::Format_ARGB32_Premultiplied) {
+    // FIXME: Uncomment once the proper support for non-alpha images is ready.
+    if (/*pixmap.format() != QImage::Format_RGB32 &&*/ pixmap.format() != QImage::Format_ARGB32_Premultiplied) {
         pixmap = pixmap.convertToFormat(QImage::Format_ARGB32_Premultiplied);
     }
 
@@ -335,6 +337,29 @@ QString ImageResource::createCacheFilename(const QSize& size)
     cacheKey += '(' + QString::number(size.width()) + QLatin1Char(',') + QString::number(size.height()) + QLatin1Char(')');
 
     return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("images") + QDir::separator() + cacheKey;
+}
+
+
+void ImageResource::fillCacheEntry(PixmapCacheEntry *cacheEntry, QImage &image, const QSize &size)
+{
+#ifdef  Q_WS_X11
+    if (convertToX11) {
+        Pixmap x11Pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
+                                                 image.width(), image.height(), 16);
+        cacheEntry->pixmap = new QPixmap(QPixmap::fromX11Pixmap(x11Pixmap));
+
+        QPainter painter(cacheEntry->pixmap);
+        painter.drawImage(0, 0, image);
+        painter.end();
+
+        XSync(QX11Info::display(), false);
+        cacheEntry->handle.xHandle = cacheEntry->pixmap->handle();
+    } else {
+        MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
+    }
+#else
+    MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
+#endif
 }
 
 bool ImageResource::shouldBeCached()
@@ -637,7 +662,13 @@ void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool loc
                                      << "instead of" << fileInfo.absoluteFilePath();
         } else {
             //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
-            imageResources.insert(fileInfo.baseName(), fileInfo.suffix() == QLatin1String("svg") ? (ImageResource*) new IconImageResource(fileInfo.absoluteFilePath()) : (ImageResource*) new PixmapImageResource(fileInfo.absoluteFilePath()));
+            ImageResource *res = 0;
+            if(fileInfo.suffix() == QLatin1String("svg"))
+                res = new IconImageResource(fileInfo.absoluteFilePath());
+            else
+                res = new PixmapImageResource(fileInfo.absoluteFilePath());
+
+            imageResources.insert(fileInfo.baseName(), res);
         }
     }
     else {

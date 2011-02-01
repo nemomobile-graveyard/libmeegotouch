@@ -205,7 +205,12 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
     Q_UNUSED(numBytes);
 #else
     if (MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem() && pixmapHandle.eglHandle) {
-        int fd = shm_open(qPrintable(pixmapHandle.shmHandle), O_RDONLY, 0444);
+        int fd = -1;
+        if (pixmapHandle.directMap)
+            fd = open(qPrintable(pixmapHandle.shmHandle), O_RDONLY);
+        else
+            fd = shm_open(qPrintable(pixmapHandle.shmHandle), O_RDONLY, 0444);
+
         if (fd == -1) {
             qFatal("Failed to open shared memory: %s, %s", strerror(errno), qPrintable(pixmapHandle.shmHandle));
         }
@@ -220,7 +225,6 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
         QImage image((const uchar *)*addr, pixmapHandle.size.width(), pixmapHandle.size.height(), pixmapHandle.format);
 
         return QMeeGoGraphicsSystemHelper::pixmapFromEGLSharedImage(pixmapHandle.eglHandle, image);
-
     } else
 #endif // HAVE_MEEGOGRAPHICSSYSTEM
     {
@@ -243,11 +247,10 @@ bool MGraphicsSystemHelper::isRunningNativeGraphicsSystem() {
 
 bool MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem() {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
-    if (QMeeGoGraphicsSystemHelper::isRunningRuntime()) {
-        if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("meego") ||
-            QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("raster")) {
-            return true;
-        }
+    if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("meego") ||
+        (QMeeGoGraphicsSystemHelper::isRunningRuntime() &&
+         QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("raster"))) {
+        return true;
     }
     return false;
 #else
