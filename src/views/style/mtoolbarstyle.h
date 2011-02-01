@@ -61,6 +61,45 @@ class M_VIEWS_EXPORT MToolbarStyle : public MWidgetStyle
      * \brief Tool bar actions that have only text applied are handled with default button view instead of custom tool or tab bar views.
      */
     M_STYLE_ATTRIBUTE(bool, labelOnlyAsCommonButton, LabelOnlyAsCommonButton)
+
+    /*!
+     * \brief Enable tool bar widget centering to scene window parent of the tool bar
+     */
+    M_STYLE_ATTRIBUTE(bool, centerToParent, CenterToParent)
+
+    /*!
+     * \brief Enable just common (default view based) button centering to scene window parent of the tool bar
+     */
+    M_STYLE_ATTRIBUTE(bool, centerCommonButtonsToParent, CenterCommonButtonsToParent)
+
+    /*!
+     * \brief Margin that is applied according to widget alignment:
+       Left side of the tool bar when widgets/buttons are aligned to the left.
+       Right side of the tool bar when widgets/buttons are aligned to the right.
+       Both sides when alignment is justify.
+       Neither side on HCenter alignment.
+     */
+    M_STYLE_ATTRIBUTE(int, alignmentMargins, AlignmentMargins)
+
+    /*!
+     * \brief Style name for label only button that are based on common style
+     */
+    M_STYLE_ATTRIBUTE(QString, labelOnlyCommonButtonStyleName, LabelOnlyCommonButtonStyleName)
+
+    /*!
+     * \brief Style name for tool bar specific label only button
+     */
+    M_STYLE_ATTRIBUTE(QString, labelOnlyButtonStyleName, LabelOnlyButtonStyleName)
+
+    /*!
+     * \brief Style name for button containing just icon
+     */
+    M_STYLE_ATTRIBUTE(QString, iconButtonStyleName, IconButtonStyleName)
+
+    /*!
+     * \brief Style name for button containing both icon and label
+     */
+    M_STYLE_ATTRIBUTE(QString, iconLabelButtonStyleName, IconLabelButtonStyleName)
 };
 
 /*!

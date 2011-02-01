@@ -3,6 +3,11 @@ MToolbarStyle {
     has-icons: true;
     has-labels: false;
     label-only-as-common-button: true;
+
+    label-only-common-button-style-name: "ToolBarLabelOnlyCommonButton";
+    label-only-button-style-name: "ToolBarLabelOnlyButton";
+    icon-button-style-name: "ToolBarIconButton";
+    icon-label-button-style-name: "ToolBarIconButton";
 }
 
 MToolbarStyle.Landscape {

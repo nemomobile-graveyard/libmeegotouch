@@ -42,7 +42,6 @@ class MToolBarLayoutPolicy;
 class MButtonGroup;
 class MAction;
 
-
 class MToolBarViewPrivate : public QObject
 {
     Q_DECLARE_PUBLIC(MToolBarView)
@@ -61,7 +60,8 @@ public:
     void setIconsEnabled(bool enabled);
     void setLabelsEnabled(bool enabled);
     void setSpacesEnabled(bool enabled);
-    void setLabelOnlyAsCommonButton(bool enable);
+    void setLabelOnlyAsCommonButton(bool enable, bool centerToParent);
+    void setCentering(bool allToParent);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
@@ -82,9 +82,12 @@ protected:
     void addActionsFromLeftOvers();
     void updateViewAndStyling(MButton *button) const;
     virtual void updateWidgetAlignment();
-    void updateCenterOffset(const QSizeF &size);
+    void updateCenterOffset();
     void updateEmptinessProperty();
+    void updateAlignmentMargins(int alignmentMargins);
+    void updateStyleNames();
     bool isLabelOnly(MButton *button) const;
+    MToolBarLayoutPolicy *currentPolicy() const;
 
 protected:
     MToolBarView *q_ptr;
@@ -100,6 +103,11 @@ protected:
     bool labelOnlyAsCommonButton;
     Qt::AlignmentFlag widgetAlignment;
     bool itemsEnabled;
+    int alignmentMargins;
+    QString labelOnlyCommonButtonStyleName;
+    QString labelOnlyButtonStyleName;
+    QString iconButtonStyleName;
+    QString iconLabelButtonStyleName;
 };
 
 #endif

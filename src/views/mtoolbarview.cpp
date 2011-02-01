@@ -36,6 +36,7 @@
 #include "mscalableimage.h"
 #include "mscenemanager.h"
 
+#include <MNavigationBar>
 
 MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
     : QObject(),
@@ -48,7 +49,8 @@ MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
       labelsEnabled(false),
       labelOnlyAsCommonButton(true),
       widgetAlignment(Qt::AlignHCenter),
-      itemsEnabled(true)
+      itemsEnabled(true),
+      alignmentMargins(0)
 {
     this->controller = controller;
     controller->installEventFilter(this);
@@ -315,8 +317,10 @@ bool MToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
                 if (propertyEvent->propertyName() == _M_IsEnabledPreservingSelection) {
                     bool enabledPreservingSelection = obj->property(_M_IsEnabledPreservingSelection).toBool();
                     setEnabledPreservingSelection(enabledPreservingSelection);
-                } else if (propertyEvent->propertyName() == "widgetAlignment")
+                } else if (propertyEvent->propertyName() == "widgetAlignment") {
                     updateWidgetAlignment();
+                    updateCenterOffset();
+                }
             }
             break;
 
@@ -525,8 +529,7 @@ void MToolBarViewPrivate::setLabelsEnabled(bool enabled)
 
 void MToolBarViewPrivate::setSpacesEnabled(bool enabled)
 {
-    landscapePolicy->setSpacesBetween(enabled);
-    portraitPolicy->setSpacesBetween(enabled);
+    currentPolicy()->setSpacesBetween(enabled);
 }
 
 void MToolBarViewPrivate::updateViewAndStyling(MButton *button) const
@@ -539,17 +542,45 @@ void MToolBarViewPrivate::updateViewAndStyling(MButton *button) const
         if (labelOnlyAsCommonButton) {
             if (button->viewType() != MButton::defaultType)
                 button->setViewType(MButton::defaultType);
-            button->setStyleName("ToolBarLabelOnlyCommonButton");
+            button->setStyleName(labelOnlyCommonButtonStyleName);
         } else {
             if (button->viewType() != toolBarButtonDefaultViewType)
                 button->setViewType(toolBarButtonDefaultViewType);
-            button->setStyleName("ToolBarLabelOnlyButton");
+            button->setStyleName(labelOnlyButtonStyleName);
         }
     } else {
         if (button->viewType() != toolBarButtonDefaultViewType)
             button->setViewType(toolBarButtonDefaultViewType);
-        button->setStyleName("ToolBarIconButton");
+        if (iconsEnabled && !labelsEnabled)
+            button->setStyleName(iconButtonStyleName);
+        else
+            button->setStyleName(iconLabelButtonStyleName);
         button->setTextVisible(labelsEnabled);
+    }
+}
+
+void MToolBarViewPrivate::updateStyleNames()
+{
+    Q_Q(MToolBarView);
+
+    labelOnlyCommonButtonStyleName = q->style()->labelOnlyCommonButtonStyleName();
+    labelOnlyButtonStyleName = q->style()->labelOnlyButtonStyleName();
+    iconButtonStyleName = q->style()->iconButtonStyleName();
+    iconLabelButtonStyleName = q->style()->iconLabelButtonStyleName();
+
+    for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
+        MButton *button = bit.value();
+        if (button) {
+            if (isLabelOnly(button)) {
+                if (labelOnlyAsCommonButton)
+                    button->setStyleName(labelOnlyCommonButtonStyleName);
+                else
+                    button->setStyleName(labelOnlyButtonStyleName);
+            } else if (iconsEnabled && !labelsEnabled)
+                button->setStyleName(iconButtonStyleName);
+            else
+                button->setStyleName(iconLabelButtonStyleName);
+        }
     }
 }
 
@@ -569,40 +600,61 @@ void MToolBarViewPrivate::updateWidgetAlignment()
 
     if (widgetAlignment != Qt::AlignHCenter || !v.isValid())
         addActionsFromLeftOvers();
+
+    updateAlignmentMargins(alignmentMargins);
 }
 
-void MToolBarViewPrivate::updateCenterOffset(const QSizeF &size)
+void MToolBarViewPrivate::updateCenterOffset()
 {
-    qreal offset = 0.0;
+    qreal offset = 0.0f;
 
-    if ((widgetAlignment == Qt::AlignLeft || widgetAlignment == Qt::AlignRight) &&
-        controller->sceneManager() && controller->sceneManager()->orientation() == M::Landscape) {
-        qreal widthDiff = controller->sceneManager()->visibleSceneSize(M::Landscape).width() - size.width();
-        offset = (widgetAlignment == Qt::AlignRight) ? widthDiff/2 : -widthDiff/2;
+    //Find the difference between center of the tool bar and center of parent scene window of the tool bar (usually MNavigationBar)
+    QGraphicsWidget *parent = controller->parentWidget();
+    while (parent) {
+        MSceneWindow *parentSceneWindow = qobject_cast<MSceneWindow *>(parent);
+        if (parentSceneWindow) {
+            qreal centerX = controller->mapToItem(parentSceneWindow, controller->boundingRect().center()).x();
+            offset = qMax(centerX, (qreal)0.0f) - parentSceneWindow->boundingRect().width()/2;
+            break;
+        }
+        parent = parent->parentWidget();
     }
 
-    landscapePolicy->setCenterOffset(offset);
-    portraitPolicy->setCenterOffset(0.0); // Offset has no effect in portrait
+    currentPolicy()->setCenterOffset(offset);
+}
+
+void MToolBarViewPrivate::setCentering(bool allToParent)
+{
+    currentPolicy()->setCentering(buttonGroup ? true : false, allToParent);
+}
+
+void MToolBarViewPrivate::updateAlignmentMargins(int alignmentMargins)
+{
+    this->alignmentMargins = alignmentMargins;
+
+    switch (widgetAlignment) {
+    case Qt::AlignLeft:
+        layout->setContentsMargins(alignmentMargins, 0, 0, 0);
+        break;
+    case Qt::AlignRight:
+        layout->setContentsMargins(0, 0, alignmentMargins, 0);
+        break;
+    case Qt::AlignJustify:
+        layout->setContentsMargins(alignmentMargins, 0, alignmentMargins, 0);
+        break;
+    default:
+        layout->setContentsMargins(0, 0, 0, 0);
+        break;
+    }
 }
 
 void MToolBarViewPrivate::updateEmptinessProperty()
 {
-    MToolBarLayoutPolicy* currentPolicy;
-
-    // MLayout may not have orientationChanged processed yet, so try to take orientation from MSceneManager
-    if (controller->sceneManager())
-        currentPolicy = controller->sceneManager()->orientation() == M::Landscape ? landscapePolicy : portraitPolicy;
-    else
-        currentPolicy = static_cast<MToolBarLayoutPolicy*>(layout->policy());
-
-    controller->setProperty("isEmpty", currentPolicy->widgetCount() == 0);
+    controller->setProperty("isEmpty", currentPolicy()->widgetCount() == 0);
 }
 
-void MToolBarViewPrivate::setLabelOnlyAsCommonButton(bool enable)
+void MToolBarViewPrivate::setLabelOnlyAsCommonButton(bool enable, bool centerToParent)
 {
-    if (labelOnlyAsCommonButton == enable)
-        return;
-
     labelOnlyAsCommonButton = enable;
 
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
@@ -611,13 +663,24 @@ void MToolBarViewPrivate::setLabelOnlyAsCommonButton(bool enable)
             updateViewAndStyling(button);
     }
 
-    landscapePolicy->setLabelOnlyButtonCentering(labelOnlyAsCommonButton);
-    portraitPolicy->setLabelOnlyButtonCentering(labelOnlyAsCommonButton);
+    currentPolicy()->setLabelOnlyButtonCentering(labelOnlyAsCommonButton, centerToParent);
 }
 
 bool MToolBarViewPrivate::isLabelOnly(MButton *button) const
 {
     return (button && !button->text().isEmpty() && button->iconID().isEmpty());
+}
+
+MToolBarLayoutPolicy *MToolBarViewPrivate::currentPolicy() const
+{
+    MToolBarLayoutPolicy* currentPolicy;
+
+    // MLayout may not have orientationChanged processed yet, so try to take orientation from MSceneManager
+    if (controller->sceneManager())
+        currentPolicy = controller->sceneManager()->orientation() == M::Landscape ? landscapePolicy : portraitPolicy;
+    else
+        currentPolicy = static_cast<MToolBarLayoutPolicy*>(layout->policy());
+    return currentPolicy;
 }
 
 
@@ -680,8 +743,12 @@ void MToolBarView::applyStyle()
     d->setSpacesEnabled(style()->hasSpaces());
     d->setIconsEnabled(style()->hasIcons());
     d->setLabelsEnabled(style()->hasLabels());
-    d->setLabelOnlyAsCommonButton(style()->labelOnlyAsCommonButton());
+    d->setLabelOnlyAsCommonButton(style()->labelOnlyAsCommonButton(), style()->centerCommonButtonsToParent());
     d->setCapacity(style()->capacity());
+    d->updateStyleNames();
+    d->updateAlignmentMargins(style()->alignmentMargins());
+    d->setCentering(style()->centerToParent());
+    d->updateCenterOffset();
     d->updateEmptinessProperty();
 }
 
@@ -691,7 +758,7 @@ void MToolBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     MWidgetView::resizeEvent(event);
 
-    d->updateCenterOffset(event->newSize());
+    d->updateCenterOffset();
 }
 
 

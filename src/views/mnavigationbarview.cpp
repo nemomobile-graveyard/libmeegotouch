@@ -232,9 +232,8 @@ void MNavigationBarViewPrivate::updateLayout()
     } else {
         bool escapeVisible = isEscapeButtonVisible();
         bool menuVisible = q->model()->arrowIconVisible();
-        bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
 
-        if ((menuVisible && escapeVisible) || toolBarIsTabBar) {
+        if (menuVisible && escapeVisible) {
             layout->setPolicy(escapeToolbarMenuPolicy);
         } else if (menuVisible && !escapeVisible) {
             layout->setPolicy(toolbarMenuPolicy);
@@ -281,9 +280,8 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
     if (!q->style()->hasTitle()) {
         bool escapeVisible = isEscapeButtonVisible();
         bool menuVisible = q->model()->arrowIconVisible();
-        bool toolBarIsTabBar = toolBar && toolBar->viewType() == MToolBar::tabType;
 
-        if ((menuVisible && escapeVisible) || toolBarIsTabBar) {
+        if (menuVisible && escapeVisible) {
             alignment = Qt::AlignHCenter;
         } else if (menuVisible && !escapeVisible) {
             alignment = Qt::AlignLeft;

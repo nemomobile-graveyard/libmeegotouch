@@ -119,10 +119,18 @@ public:
     /*!
      * \brief Sets whether the buttons that have only label applied should be centered or not.
      */
-    void setLabelOnlyButtonCentering(bool center);
+    void setLabelOnlyButtonCentering(bool center, bool enableOffset = false);
 
     /*!
-     * \brief Sets offset of the center (i.e how much layout content needs to be adjusted to make it center).
+     * \brief Sets whether all widgets should be centered/grouped together and whether the centered group
+     *  should be in the middle of the tool bar or is the offset enabled.
+     * \sa setCenterOffset(qreal offset)
+     */
+    void setCentering(bool allWidgets, bool enableOffset = false);
+
+    /*!
+     * \brief Sets offset of the centered/grouped widgets.
+     * \sa setCentering(bool allWidgets, bool enableOffset = false)
      */
     void setCenterOffset(qreal offset);
 
@@ -149,7 +157,10 @@ private:
     QGraphicsWidget *rightSpacer;
     Qt::Alignment widgetAlignment;
     bool widgetAlignmentAffectsCapacity;
+    bool centerAllWidgets;
+    bool centerOffsetEnabledForAll;
     bool centerLabelOnlyButtons;
+    bool centerOffsetEnabledForLabelOnly;
     qreal centerOffset;
 
     /*!
@@ -241,6 +252,11 @@ private:
      * \brief Number of label only buttons in the policy
      */
     int labelOnlyButtonCount() const;
+
+    /*!
+     * \brief Returns effective centering offset value
+     */
+    qreal effectiveCenterOffset() const;
 };
 //! \internal_end
 

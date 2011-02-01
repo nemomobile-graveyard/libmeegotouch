@@ -25,7 +25,6 @@
 #include "mbutton.h"
 #include "mtoolbarlayoutpolicy.h"
 
-
 MToolBarLayoutPolicy::MToolBarLayoutPolicy(MLayout *layout)
     : MLinearLayoutPolicy(layout, Qt::Horizontal),
       textEditIndex(-1),
@@ -36,7 +35,10 @@ MToolBarLayoutPolicy::MToolBarLayoutPolicy(MLayout *layout)
       rightSpacer(0),
       widgetAlignment(Qt::AlignHCenter),
       widgetAlignmentAffectsCapacity(false),
+      centerAllWidgets(false),
+      centerOffsetEnabledForAll(false),
       centerLabelOnlyButtons(true),
+      centerOffsetEnabledForLabelOnly(false),
       centerOffset(0.0)
 {
     setSpacing(0);
@@ -231,9 +233,24 @@ void MToolBarLayoutPolicy::setWidgetAlignment(Qt::Alignment alignment, bool affe
     updateSpacers();
 }
 
-void MToolBarLayoutPolicy::setLabelOnlyButtonCentering(bool center)
+void MToolBarLayoutPolicy::setLabelOnlyButtonCentering(bool center, bool enableOffset)
 {
+    if (centerLabelOnlyButtons == center && centerOffsetEnabledForLabelOnly == enableOffset)
+        return;
+
     centerLabelOnlyButtons = center;
+    centerOffsetEnabledForLabelOnly = enableOffset;
+
+    updateSpacers();
+}
+
+void MToolBarLayoutPolicy::setCentering(bool allWidgets, bool enableOffset)
+{
+    if (centerAllWidgets == allWidgets && centerOffsetEnabledForAll == enableOffset)
+        return;
+
+    centerAllWidgets = allWidgets;
+    centerOffsetEnabledForAll = enableOffset;
 
     updateSpacers();
 }
@@ -331,8 +348,7 @@ void MToolBarLayoutPolicy::updateSpacers()
 {
     updateContentsMargins();
 
-    if (centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount()) {
-        //All widgets are labelonlybuttons and they should be centered
+    if (centerAllWidgets || (centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount())) {
         activateLeftSpacer(true);
         activateRightSpacer(true);
         activateMiddleSpacers(false);
@@ -400,13 +416,23 @@ void MToolBarLayoutPolicy::activateMiddleSpacers(bool activate)
     }
 }
 
+qreal MToolBarLayoutPolicy::effectiveCenterOffset() const
+{
+    if (centerAllWidgets && centerOffsetEnabledForAll)
+        return centerOffset; //center offset is active for all widgets
+    else if (centerLabelOnlyButtons && centerOffsetEnabledForLabelOnly && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount())
+        return centerOffset; //center offset is active for label only buttons and all buttons are such;
+    return 0.0f;
+}
+
 void MToolBarLayoutPolicy::updateContentsMargins()
 {
-    if (centerOffset != 0.0 && centerLabelOnlyButtons && widgetCount() > 0 && labelOnlyButtonCount() == widgetCount()) {
-        //All widgets are labelonlybuttons and they should be centered if needed
-        qreal margin = qAbs(centerOffset*2);
-        setContentsMargins(centerOffset < 0.0 ? margin : -1, -1,
-                           centerOffset > 0.0 ? margin : -1, -1);
+    qreal offset = effectiveCenterOffset();
+
+    if (offset != 0.0f) {
+        qreal margin = qAbs(offset*2);
+        setContentsMargins(offset < 0.0f ? margin : -1, -1,
+                           offset > 0.0f ? margin : -1, -1);
     } else {
         qreal left(-1), right(-1);
         getContentsMargins(&left, 0, &right, 0);
@@ -493,9 +519,13 @@ int MToolBarLayoutPolicy::labelOnlyButtonCount() const
 
     for (int i = 0; i < widgetCount(); i++) {
         MButton *button = dynamic_cast<MButton *>(widgetAt(i));
-        if (button && !button->text().isEmpty() && button->iconID().isEmpty())
+        if (button &&
+            !button->text().isEmpty() && button->iconID().isEmpty() &&
+            button->viewType() == MButton::defaultType) {
             cnt++;
+        }
     }
 
     return cnt;
 }
+

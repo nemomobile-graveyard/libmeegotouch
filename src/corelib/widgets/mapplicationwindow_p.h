@@ -183,6 +183,7 @@ private:
 #ifdef Q_WS_X11
     void setWindowChainedProperty( const WId &parentWinId, const WId &childWinId );
 #endif
+    void updateStyleNames();
 public:
     void _q_pageTitleChanged(MApplicationPage *, const QString &);
     void _q_actionUpdated(QActionEvent *e);

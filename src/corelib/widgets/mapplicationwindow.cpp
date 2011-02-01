@@ -220,8 +220,8 @@ void MApplicationWindowPrivate::init()
     q->connect(navigationBarIsEmptyPropertyWatcher, SIGNAL(propertyChanged()),
                SLOT(_q_scheduleNavigationBarVisibilityUpdate()));
 
-    navigationBar->setStyleName(style()->navigationBarStyleName());
- 
+    updateStyleNames();
+
     // Create the view to get the "isEmpty" property updates.
     navigationBar->view();
     navigationBar->setVisible(false);
@@ -1051,6 +1051,7 @@ bool MApplicationWindowPrivate::needsDockWidget()
 void MApplicationWindowPrivate::setToolBarViewType(const MTheme::ViewType& viewType)
 {
     toolBar->setViewType(viewType);
+    updateStyleNames();
     _q_placeToolBar();
 }
 
@@ -1077,10 +1078,21 @@ MApplicationWindowStyleContainer* MApplicationWindowPrivate::createStyleContaine
 
 void MApplicationWindowPrivate::_q_updateStyle()
 {
-    navigationBar->setStyleName(style()->navigationBarStyleName());
+    updateStyleNames();
     _q_placeToolBar();
     initAutoHideComponentsTimer();
 }
+
+void MApplicationWindowPrivate::updateStyleNames()
+{
+    navigationBar->setStyleName(style()->navigationBarStyleName());
+    if (toolBar->viewType() == MToolBar::tabType)
+        toolBar->setStyleName(style()->tabBarStyleName());
+    else
+        toolBar->setStyleName(style()->toolBarStyleName());
+    dockWidget->setStyleName(toolBar->styleName()); //dock widget will have the same style name as tool bar
+}
+
 
 MApplicationWindow::MApplicationWindow(MApplicationWindowPrivate &dd, QWidget *parent)
     : MWindow(dd, new MSceneManager, parent)
