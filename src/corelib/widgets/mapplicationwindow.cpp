@@ -263,7 +263,6 @@ void MApplicationWindowPrivate::init()
 
 void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
 {
-    closeMenu();
 }
 
 #ifdef Q_WS_X11
