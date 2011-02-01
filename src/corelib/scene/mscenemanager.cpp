@@ -782,11 +782,8 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
     if (window->isManagedManually())
         return;
 
-    QPointF p = calculateSceneWindowPosition(window);
-    //If the preferred size returned from sizeHint is larger than the maximum size, it will get reduced.
-    //But this means that we need to get the new height for the new width..
-    QSizeF size = window->effectiveSizeHint(Qt::PreferredSize, QSizeF(window->preferredWidth(), -1));
-    window->setGeometry( QRectF(p, size) );
+    QRectF geom = calculateSceneWindowGeometry(window);
+    window->setGeometry(geom);
 
     // restart running navigationbar appearance animation to update animation endValues
     MAbstractWidgetAnimation* animation = window->d_func()->appearanceAnimation;
@@ -940,14 +937,16 @@ void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
     }
 }
 
-QPointF MSceneManagerPrivate::calculateSceneWindowPosition(MSceneWindow *window)
+QRectF MSceneManagerPrivate::calculateSceneWindowGeometry(MSceneWindow *window) const
 {
-    Q_Q(MSceneManager);
+    Q_Q(const MSceneManager);
     QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
     QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
     Qt::Alignment alignment = window->alignment();
-    QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize);
+    //If the preferred size returned from sizeHint is larger than the maximum size, it will get reduced.
+    //But this means that we need to get the new height for the new width..
+    QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize, QSizeF(window->preferredWidth(), -1));
 
     QPointF pos;
 
@@ -971,7 +970,7 @@ QPointF MSceneManagerPrivate::calculateSceneWindowPosition(MSceneWindow *window)
 
     pos += window->offset();
 
-    return pos;
+    return QRectF(pos, windowSize);
 }
 
 void MSceneManagerPrivate::rotateToAngle(M::OrientationAngle newAngle)

@@ -109,7 +109,7 @@ public:
 
     M::Orientation orientation(M::OrientationAngle angle) const;
 
-    QPointF calculateSceneWindowPosition(MSceneWindow *window);
+    QRectF calculateSceneWindowGeometry(MSceneWindow *window) const;
     void setSceneWindowGeometry(MSceneWindow *window);
     void setSceneWindowGeometries();
     QGraphicsItem *rootElementForSceneWindowType(MSceneWindow::WindowType type) const;
