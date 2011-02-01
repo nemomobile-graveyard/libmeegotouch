@@ -31,6 +31,7 @@
 #include <QTimer>
 #include <MDeviceProfile>
 #include <limits>
+#include <QSwipeGesture>
 
 #include "mdebug.h"
 
@@ -55,10 +56,16 @@ MSliderHandle::MSliderHandle(QGraphicsItem *parent) :
     handleVerticalPressedPixmap(0),
     sliderState(MSliderModel::Released)
 {
+    grabGesture(Qt::SwipeGesture);
 }
 
 MSliderHandle::~MSliderHandle()
 {
+}
+
+void MSliderHandle::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
+{
+    event->accept(gesture);
 }
 
 void MSliderHandle::setOrientation(Qt::Orientation orientation)
