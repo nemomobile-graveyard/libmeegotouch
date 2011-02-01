@@ -589,6 +589,7 @@ MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
     backgroundVerticalElapsedImage(0),
     backgroundVerticalReceivedImage(0),
     grooveThickness(0),
+    grooveMargin(0),
     minimum(0),
     maximum(0),
     value(0),
@@ -684,6 +685,13 @@ void MSliderGroove::setGrooveLength(qreal prefLength, qreal minLength, qreal max
     preferredLength = prefLength;
     minimumLength = minLength;
     maximumLength = maxLength;
+
+    updateGeometry();
+}
+
+void MSliderGroove::setGrooveMargin(qreal margin)
+{
+    grooveMargin = margin;
 
     updateGeometry();
 }
@@ -787,45 +795,33 @@ void MSliderGroove::setIndicatorImage(const QString &id)
 //converts one of coordinates of point to slider value
 int MSliderGroove::screenPointToValue(const QPointF &point) const
 {
-    bool reverse = qApp->isRightToLeft();
     QPointF handlePoint = point - pos();
-
-    qreal coordinate = 0;
-
-    if (orientation == Qt::Horizontal)
-        coordinate = handlePoint.x();
-    if (orientation == Qt::Vertical)
-        coordinate = handlePoint.y();
-
-    int range = maximum - minimum;
+    qreal coordinate = 0.0f;
     int offset = 0;
+    QRectF valueRangeRect = rect();
+    int range = maximum - minimum;
 
-    if (minimum != maximum) {
-        QRectF valueRangeRect = rect();
+    if (minimum == maximum)
+        return minimum;
 
-        if (orientation == Qt::Horizontal) {
-            qreal hAdjustment = sliderHandle->rect().width() / 2;
-
-            valueRangeRect.adjust(hAdjustment, 0, -hAdjustment, 0);
-            coordinate = qBound(valueRangeRect.left(), coordinate, valueRangeRect.right());
-
-            if (!reverse)
-                offset = qRound(((coordinate - valueRangeRect.left()) * range) / valueRangeRect.width());
-            else
-                offset = qRound(((valueRangeRect.right() - coordinate) * range) / valueRangeRect.width());
-        }
-
-        if (orientation == Qt::Vertical) {
-            qreal vAdjustment = sliderHandle->rect().height() / 2;
-
-            valueRangeRect.adjust(0, vAdjustment, 0, -vAdjustment);
-            coordinate = qBound(valueRangeRect.top(), coordinate, valueRangeRect.bottom());
-
-            offset = qRound(((valueRangeRect.bottom() - coordinate) * range) / valueRangeRect.height());
-        }
+    if (orientation == Qt::Horizontal) {
+        valueRangeRect.adjust(grooveMargin, 0, -grooveMargin, 0);
+        coordinate = handlePoint.x();
+    } else if (orientation == Qt::Vertical) {
+        valueRangeRect.adjust(0, grooveMargin, 0, -grooveMargin);
+        coordinate = handlePoint.y();
     }
 
-    return minimum + offset;
+    if (orientation == Qt::Horizontal) {
+        if (!qApp->isRightToLeft())
+            offset = qRound(((coordinate - valueRangeRect.left()) * range) / valueRangeRect.width());
+        else
+            offset = qRound(((valueRangeRect.right() - coordinate) * range) / valueRangeRect.width());
+    } else if (orientation == Qt::Vertical) {
+        offset = qRound(((valueRangeRect.bottom() - coordinate) * range) / valueRangeRect.height());
+    }
+
+    return qBound(minimum, minimum + offset, maximum);
 }
 
 //determines clickable area which is basically the
@@ -912,8 +908,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         }
 
         qreal vAdjustment = (grooveRect.height() - grooveThickness) / 2;
-
-        grooveRect.adjust(0, vAdjustment, 0, -vAdjustment);
+        grooveRect.adjust(grooveMargin, vAdjustment, -grooveMargin, -vAdjustment);
 
         if (backgroundBaseImage) {
             if (grooveRect.width() >= qreal(horizontalMargins))
@@ -973,8 +968,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         }
 
         qreal hAdjustment = (grooveRect.width() - grooveThickness) / 2;
-
-        grooveRect.adjust(hAdjustment, 0, -hAdjustment, 0);
+        grooveRect.adjust(hAdjustment, grooveMargin, -hAdjustment, -grooveMargin);
 
         if (backgroundVerticalBaseImage) {
             if (grooveRect.width() >= qreal(verticalMargins))
@@ -1091,34 +1085,19 @@ void MSliderGroove::setGeometry(const QRectF &rect)
 //by handle remains inside rect occupied by groove
 void MSliderGroove::updateHandlePos(const QPointF &position)
 {
-    if (orientation == Qt::Horizontal) {
-        qreal x = position.x();
+    qreal w = sliderHandle->rect().width();
+    qreal h = sliderHandle->rect().height();
+    QPointF newPos((rect().width() - w) / 2.0f, (rect().height() - h) / 2.0f);
 
-        QPointF newPos(x - (sliderHandle->rect().width() / 2), (rect().height() - sliderHandle->rect().height()) / 2);
+    if (orientation == Qt::Horizontal)
+        newPos.setX(position.x() - w/2.0f);
+    else
+        newPos.setY(position.y() - h/2.0f);
 
-        //changes slider handle positions only if
-        //it is really necessary
-        if (newPos == sliderHandle->pos())
-            return;
+    if (newPos != sliderHandle->pos()) {
         sliderHandle->setPos(newPos);
+        updateHandleIndicatorPos();
     }
-
-    if (orientation == Qt::Vertical) {
-        qreal y = position.y();
-
-        y = qBound(sliderHandle->rect().height() / 2, y, rect().height() - (sliderHandle->rect().height() / 2));
-
-        QPointF newPos((rect().width() - sliderHandle->rect().width()) / 2, y - (sliderHandle->rect().height() / 2));
-
-        //changes slider handle positions only if
-        //it is really necessary
-        if (newPos == sliderHandle->pos())
-            return;
-
-        sliderHandle->setPos(newPos);
-    }
-
-    updateHandleIndicatorPos();
 }
 
 //updates slider handle indicator accordingly to
@@ -1218,15 +1197,15 @@ qreal MSliderGroove::valueToScreenCoordinate(int value) const
 
     if (minimum != maximum) {
         if (orientation == Qt::Horizontal) {
+            valueRangeRect.adjust(grooveMargin, 0, -grooveMargin, 0);
             beginning = valueRangeRect.left();
 
             if (!reverse)
                 offset = (value - minimum) * valueRangeRect.width() / range;
             else
                 offset = (maximum - value) * valueRangeRect.width() / range;
-        }
-
-        if (orientation == Qt::Vertical) {
+        } else if (orientation == Qt::Vertical) {
+            valueRangeRect.adjust(0, grooveMargin, 0, -grooveMargin);
             beginning = valueRangeRect.top();
 
             offset = (maximum - value) * valueRangeRect.height() / range;
@@ -1734,8 +1713,7 @@ void MSliderView::applyStyle()
     d->sliderGroove->setIndicatorOffset(style()->indicatorOffset());
     d->sliderGroove->setIndicatorStyleName(style()->indicatorStyleName());
 
-    d->horizontalPolicy->setSpacing(style()->grooveMargin());
-    d->verticalPolicy->setSpacing(style()->grooveMargin());
+    d->sliderGroove->setGrooveMargin(style()->grooveMargin());
 
     d->minIndicator->setLabelFixedWidth(style()->minLabelFixedWidth());
     d->maxIndicator->setLabelFixedWidth(style()->maxLabelFixedWidth());

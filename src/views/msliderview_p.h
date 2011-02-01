@@ -184,6 +184,7 @@ public:
                    const MScalableImage *backgroundVertical,
                    const MScalableImage *backgroundVerticalElapsed,
                    const MScalableImage *backgroundVerticalReceived);
+    void setGrooveMargin(qreal thickness);
     void setGrooveThickness(qreal thickness);
     void setGrooveLength(qreal prefLength, qreal minLength, qreal maxLength);
     void setIndicatorMargin(qreal margin);
@@ -240,6 +241,7 @@ private:
     const MScalableImage *backgroundVerticalReceivedImage;
 
     qreal grooveThickness;
+    qreal grooveMargin;
 
     int minimum;
     int maximum;
