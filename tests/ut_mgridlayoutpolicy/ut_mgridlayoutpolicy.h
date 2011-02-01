@@ -50,6 +50,8 @@ private slots:
     void testSpacing();
     void testAlignment();
     void testAlignmentSubLayouts();
+    void testDeleteItem_data();
+    void testDeleteItem();
     void testRowCount();
     void testRtl();
     void testLayoutInLayoutRefresh();

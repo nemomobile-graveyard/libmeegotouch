@@ -588,4 +588,66 @@ void Ut_MGridLayoutPolicy::testHeightForWidthInSubLayout()
     QCOMPARE(form->effectiveSizeHint(Qt::PreferredSize, QSizeF(100,-1)), QSizeF(100,100));
 }
 
+void Ut_MGridLayoutPolicy::testDeleteItem_data()
+{
+    QTest::addColumn<bool>("addToVisiblePolicy");
+    QTest::addColumn<bool>("addToInvisiblePolicy");
+
+    QTest::newRow("Add item to visible policy only") << true << false;
+    QTest::newRow("Add item to invisible policy only") << false << true;
+    QTest::newRow("Add item to both policies") << true << true;
+}
+void Ut_MGridLayoutPolicy::testDeleteItem()
+{
+    QFETCH(bool, addToVisiblePolicy);
+    QFETCH(bool, addToInvisiblePolicy);
+
+    QGraphicsWidget *w1 = new QGraphicsWidget;
+    QGraphicsWidget *w2 = new QGraphicsWidget;
+    QGraphicsWidget *w3 = new QGraphicsWidget;
+
+    MGridLayoutPolicy *policy2 = new MGridLayoutPolicy(m_mockLayout);
+
+    if (addToVisiblePolicy) {
+        m_policy->addItem(w1, 0,0);
+        m_policy->addItem(w2, 1,0);
+        m_policy->addItem(w3, 0,1);
+        QCOMPARE( m_policy->count(), 3);
+    }
+    if (addToInvisiblePolicy) {
+        policy2->addItem(w1, 0,0);
+        policy2->addItem(w2, 1,0);
+        policy2->addItem(w3, 0,1);
+        QCOMPARE( policy2->count(), 3);
+    }
+
+    delete w1;
+
+    QCOMPARE( m_policy->count(), addToVisiblePolicy?2:0);
+    QCOMPARE( policy2->count(), addToInvisiblePolicy?2:0);
+    QCOMPARE( m_mockLayout->count(), 2);
+
+    m_mockLayout->activate();
+
+    delete w2;
+
+    QCOMPARE( m_policy->count(), addToVisiblePolicy?1:0);
+    QCOMPARE( policy2->count(), addToInvisiblePolicy?1:0);
+    QCOMPARE( m_mockLayout->count(), 1);
+
+    qApp->processEvents(); //let relayout happen
+
+    delete w3;
+
+    QCOMPARE( m_policy->count(), 0);
+    QCOMPARE( policy2->count(), 0);
+    QCOMPARE( m_mockLayout->count(), 0);
+
+    //Just make sure there are no more events that could cause us to crash
+    qApp->processEvents();
+    qApp->processEvents();
+    qApp->processEvents();
+}
+
+
 QTEST_APPLESS_MAIN(Ut_MGridLayoutPolicy)
