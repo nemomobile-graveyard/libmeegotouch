@@ -38,6 +38,7 @@
 
 #ifndef Q_OS_WIN
 #include <utime.h>
+#include <dirent.h>
 #endif
 
 #include <sys/stat.h>
@@ -97,6 +98,12 @@ public:
      line separators and such.
      */
     QString createBinaryFilename(const QString &filename) const;
+
+    /**
+      * \brief Returns all cache files from the cache directory starting
+      * with the given filter.
+      */
+    QStringList cacheFileCandidates(const QString& filter) const;
 
     /**
       * \brief Return the newest binary CSS cache file for a given
@@ -1097,9 +1104,7 @@ QString MStyleSheetParserPrivate::createBinaryFilename(const QString &filename) 
 
 QString MStyleSheetParserPrivate::currentBinaryCacheFile(const QString &filename) const
 {
-    const QString filter = createBinaryFilename(filename).append(QLatin1Char('*'));
-    const QDir cacheDir(binaryDirectory, filter, QDir::Name, QDir::Files);
-    const QStringList files = cacheDir.entryList();
+    const QStringList files = cacheFileCandidates(createBinaryFilename(filename));
     if (files.isEmpty()) {
         return QString();
     } else {
@@ -1116,9 +1121,33 @@ QString MStyleSheetParserPrivate::currentBinaryCacheFile(const QString &filename
                 currentFile = file;
             }
         }
-
         return binaryDirectory + currentFile;
     }
+}
+
+QStringList MStyleSheetParserPrivate::cacheFileCandidates(const QString& filter) const
+{
+#ifndef Q_OS_WIN
+    // this code is much faster than the version using QDir::entryList() from below
+    QStringList candidates;
+    DIR *dirHandle = opendir(qPrintable(binaryDirectory));
+    if (dirHandle) {
+        dirent *dirEntry;
+        while ((dirEntry = readdir(dirHandle))) {
+            if (dirEntry->d_type == DT_REG) {
+                QString filename(dirEntry->d_name);
+                if (filename.startsWith(filter)) {
+                    candidates.push_back(dirEntry->d_name);
+                }
+            }
+        }
+        closedir(dirHandle);
+    }
+    return candidates;
+#else
+    const QDir cacheDir(binaryDirectory, filter.append(QLatin1Char('*')), QDir::Name, QDir::Files);
+    return cacheDir.entryList();
+#endif
 }
 
 QString MStyleSheetParserPrivate::nextBinaryCacheFile(const QString &filename) const
@@ -1260,7 +1289,6 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
             }
             return true;
         }
-
         return false;
     }
 
