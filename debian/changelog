@@ -1,8 +1,10 @@
-libmeegotouch (0.20.79~1) unstable; urgency=low
+libmeegotouch (0.20.79-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#214271 - MContainer header spinner is black in dark gray background.
+  * Fixes: NB#223804 - Unable to swipe the launcher screen to get Recent Apps and Notification Screens.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 31 Jan 2011 16:10:13 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 01 Feb 2011 12:46:46 +0200
 
 libmeegotouch (0.20.78-1) unstable; urgency=low
 
