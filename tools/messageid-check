@@ -114,6 +114,7 @@ my @sourcePackagesIgnore = (
     "meegotouchhome-nokia", # fails to download, 403 error, 2010-10-18
     "meegotouchhome-nokia-ui-tests", # fails to download, 403 error, 2010-10-11
     "nokia-maps", # fails to download, 403 error
+    "maps", # fails to download, 403 error 2011-01-31
     "adobe-flashplayer", # fails to downloadm, 403 error
     "syncshare-test-app", # fails to downloadm, 403 error
     "wrt",        # does this need to be scanned? I guess not.
