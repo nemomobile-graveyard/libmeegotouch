@@ -3170,13 +3170,13 @@ void Ut_MCalendar::testWeekdaySymbols_data()
 
     QStringList fi_FI_Symbols;
     fi_FI_Symbols
-            << QString("maanantai")
-            << QString("tiistai")
-            << QString("keskiviikko")
-            << QString("torstai")
-            << QString("perjantai")
-            << QString("lauantai")
-            << QString("sunnuntai");
+            << QString("Maanantai")
+            << QString("Tiistai")
+            << QString("Keskiviikko")
+            << QString("Torstai")
+            << QString("Perjantai")
+            << QString("Lauantai")
+            << QString("Sunnuntai");
 
     QTest::newRow("weekday_symbols_fi_FI_Gregorian")
             << QString("fi_FI")
@@ -3200,13 +3200,13 @@ void Ut_MCalendar::testWeekdaySymbols_data()
 
     QStringList nn_NO_Symbols;
     nn_NO_Symbols
-            << QString("måndag")
-            << QString("tysdag")
-            << QString("onsdag")
-            << QString("torsdag")
-            << QString("fredag")
-            << QString("laurdag")
-            << QString("søndag");
+            << QString("Måndag")
+            << QString("Tysdag")
+            << QString("Onsdag")
+            << QString("Torsdag")
+            << QString("Fredag")
+            << QString("Laurdag")
+            << QString("Søndag");
 
     QTest::newRow("weekday_symbols_nn_NO_Gregorian")
             << QString("nn_NO")
@@ -3215,13 +3215,13 @@ void Ut_MCalendar::testWeekdaySymbols_data()
 
     QStringList nb_NO_Symbols;
     nb_NO_Symbols
-            << QString("mandag")
-            << QString("tirsdag")
-            << QString("onsdag")
-            << QString("torsdag")
-            << QString("fredag")
-            << QString("lørdag")
-            << QString("søndag");
+            << QString("Mandag")
+            << QString("Tirsdag")
+            << QString("Onsdag")
+            << QString("Torsdag")
+            << QString("Fredag")
+            << QString("Lørdag")
+            << QString("Søndag");
 
     QTest::newRow("weekday_symbols_nb_NO_Gregorian")
             << QString("nb_NO")
@@ -3259,18 +3259,18 @@ void Ut_MCalendar::testMonthSymbols_data()
 
     QStringList fi_FI_Symbols;
     fi_FI_Symbols
-            << QString("tammikuu")
-            << QString("helmikuu")
-            << QString("maaliskuu")
-            << QString("huhtikuu")
-            << QString("toukokuu")
-            << QString("kesäkuu")
-            << QString("heinäkuu")
-            << QString("elokuu")
-            << QString("syyskuu")
-            << QString("lokakuu")
-            << QString("marraskuu")
-            << QString("joulukuu");
+            << QString("Tammikuu")
+            << QString("Helmikuu")
+            << QString("Maaliskuu")
+            << QString("Huhtikuu")
+            << QString("Toukokuu")
+            << QString("Kesäkuu")
+            << QString("Heinäkuu")
+            << QString("Elokuu")
+            << QString("Syyskuu")
+            << QString("Lokakuu")
+            << QString("Marraskuu")
+            << QString("Joulukuu");
 
     QTest::newRow("month_symbols_fi_FI_Gregorian")
             << QString("fi_FI")
@@ -3299,18 +3299,18 @@ void Ut_MCalendar::testMonthSymbols_data()
 
     QStringList nn_NO_Symbols;
     nn_NO_Symbols
-            << QString("januar")
-            << QString("februar")
-            << QString("mars")
-            << QString("april")
-            << QString("mai")
-            << QString("juni")
-            << QString("juli")
-            << QString("august")
-            << QString("september")
-            << QString("oktober")
-            << QString("november")
-            << QString("desember");
+            << QString("Januar")
+            << QString("Februar")
+            << QString("Mars")
+            << QString("April")
+            << QString("Mai")
+            << QString("Juni")
+            << QString("Juli")
+            << QString("August")
+            << QString("September")
+            << QString("Oktober")
+            << QString("November")
+            << QString("Desember");
 
     QTest::newRow("month_symbols_nn_NO_Gregorian")
             << QString("nn_NO")
@@ -3319,18 +3319,18 @@ void Ut_MCalendar::testMonthSymbols_data()
 
     QStringList nb_NO_Symbols;
     nb_NO_Symbols
-            << QString("januar")
-            << QString("februar")
-            << QString("mars")
-            << QString("april")
-            << QString("mai")
-            << QString("juni")
-            << QString("juli")
-            << QString("august")
-            << QString("september")
-            << QString("oktober")
-            << QString("november")
-            << QString("desember");
+            << QString("Januar")
+            << QString("Februar")
+            << QString("Mars")
+            << QString("April")
+            << QString("Mai")
+            << QString("Juni")
+            << QString("Juli")
+            << QString("August")
+            << QString("September")
+            << QString("Oktober")
+            << QString("November")
+            << QString("Desember");
 
     QTest::newRow("month_symbols_nb_NO_Gregorian")
             << QString("nb_NO")
