@@ -41,6 +41,7 @@ public:
     UniqueStringCacheMappedMemory(const QString& filename)
         : cacheFile(filename),
         accessSemaphore(filename + "_UNIQUE_STRING_SEMAPHORE", 1),
+        rawMappedMemory(0),
         attached(false),
         locked(false)
     {
@@ -342,11 +343,11 @@ bool MUniqueStringCache::isLocked()
 
 ////////////////////////
 
-MUniqueStringCacheLocker::MUniqueStringCacheLocker(MUniqueStringCache *cache)
-    : cache(cache->lock() ? cache : (MUniqueStringCache *)0)
+MUniqueStringCacheLocker::MUniqueStringCacheLocker(MUniqueStringCache *usCache)
+    : cache(usCache->lock() ? usCache : (MUniqueStringCache *)0)
 {
     if (!cache) {
-        mWarning("MUniqueStringCacheLocker") << "Unable to lock unique string cache" << cache->d_ptr->uniqueStringCacheMappedMemory->accessSemaphore.errorString();
+        mWarning("MUniqueStringCacheLocker") << "Unable to lock unique string cache" << usCache->d_ptr->uniqueStringCacheMappedMemory->accessSemaphore.errorString();
     }
 }
 

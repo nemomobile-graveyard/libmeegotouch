@@ -178,9 +178,8 @@ void Pt_MLayout::heightForWidthPerformance()
             m_form->setLayout(layout);
     }
 
-    MySquareWidget *widget = new MySquareWidget;
     for(int i = 0; i < 1; i++) {
-        widget = new MySquareWidget;
+        MySquareWidget *widget = new MySquareWidget;
         QSizePolicy sizepolicy = widget->sizePolicy();
         sizepolicy.setHeightForWidth(hfw);
         widget->setSizePolicy(sizepolicy);
