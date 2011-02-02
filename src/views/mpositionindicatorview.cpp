@@ -30,6 +30,7 @@
 #include "mviewcreator.h"
 #include "mpositionindicator.h"
 #include "mscalableimage.h"
+#include "mdebug.h"
 
 MPositionIndicatorViewPrivate::MPositionIndicatorViewPrivate()
     : controller(0),
@@ -132,7 +133,16 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
     QPointF pPos   = model()->position();
 
     const MScalableImage *indicator = style()->indicatorImage();
+    if (!indicator) {
+        mWarning("MPositionIndicatorView") << "could not get \"indicator-image\"";
+        return;
+    }
+
     const MScalableImage *rail = style()->backgroundImage();
+    if (!rail) {
+        mWarning("MPositionIndicatorView") << "could not get \"background-image\"";
+        return;
+    }
 
 
     if ((int)pRange.height() > (int)vpSize.height()) {
