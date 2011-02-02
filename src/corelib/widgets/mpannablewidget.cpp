@@ -244,6 +244,7 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
             (horizontalPanningPolicy() == PanningAsNeeded && range().width() == 0) ) {
 
             event->ignore(panGesture);
+            d->_q_resetPhysics();
             return;
         }
     }
@@ -253,6 +254,7 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
             (verticalPanningPolicy() == PanningAsNeeded && range().height() == 0) ) {
 
             event->ignore(panGesture);
+            d->_q_resetPhysics();
             return;
         }
     }

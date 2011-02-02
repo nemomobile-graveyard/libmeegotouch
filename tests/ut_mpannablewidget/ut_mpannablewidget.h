@@ -47,7 +47,7 @@ private slots:
     void settingPhysicsToNULLShouldNotBreakTheWidget();
 
     void panGestureMovesPhysicsPointer();
-    void panGestureAgainstPanningDirectionIsIgnored();
+    void panGestureAgainstPanningDirectionStopsPanning();
 
 private:
     MPannableWidget *widget;

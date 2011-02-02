@@ -149,7 +149,7 @@ void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
 
 }
 
-void Ut_MPannableWidget::panGestureAgainstPanningDirectionIsIgnored()
+void Ut_MPannableWidget::panGestureAgainstPanningDirectionStopsPanning()
 {
     QPanGesture panGesture;
 
@@ -163,7 +163,7 @@ void Ut_MPannableWidget::panGestureAgainstPanningDirectionIsIgnored()
     widget->panGestureEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, false);
     QCOMPARE(physicsState->pointerMoved, false);
-    QCOMPARE(physicsState->pointerReleased, false);
+    QCOMPARE(physicsState->pointerReleased, true);
     QCOMPARE(event.isAccepted(&panGesture), false);
 }
 
