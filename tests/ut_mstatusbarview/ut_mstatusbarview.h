@@ -76,6 +76,8 @@ private slots:
     void testTapFunctionality();
     // Test that the status bar is dimmed when pressed
     void testPressDimming();
+    // Test that the status indicator menu does not appear if it has been disabled from the style
+    void testStatusIndicatorMenuDisabling();
 
 private:
     void mouseDownWorker(QPointF downAt);

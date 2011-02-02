@@ -308,8 +308,10 @@ void MStatusBarView::handleSwitcherExited()
 void MStatusBarView::showStatusIndicatorMenu()
 {
 #ifdef HAVE_DBUS
-    MDBusInteface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
-    interface.call(QDBus::NoBlock, "open");
+    if (style()->enableStatusIndicatorMenu()) {
+        MDBusInteface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
+        interface.call(QDBus::NoBlock, "open");
+    }
 #endif // HAVE_DBUS
 }
 

@@ -3,6 +3,7 @@ libmeegotouch (0.20.80~1) unstable; urgency=low
   * unreleased
   * Fixes: NB#220305 - binary CSS files should be mmaped
   * Fixes: NB#199539 - Theme CSS loading takes 0.6MB memory even for minimal MTF application
+  * Implemented: SWP#DUI-4677 Possibility to disable opening of status menu from a given window
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 01 Feb 2011 12:51:38 +0200
 

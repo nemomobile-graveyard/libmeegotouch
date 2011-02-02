@@ -168,6 +168,7 @@ void Ut_MStatusBarView::init()
     m_statusbar->setView(m_subject);
     m_subject->modifiableStyle()->setUseSwipeGesture(true);
     m_subject->modifiableStyle()->setSwipeThreshold(SWIPE_THRESHOLD);
+    m_subject->modifiableStyle()->setEnableStatusIndicatorMenu(true);
 }
 
 void Ut_MStatusBarView::cleanup()
@@ -205,6 +206,7 @@ void Ut_MStatusBarView::cleanup()
 //    m_subject->handlePixmapProviderOffline();
 //    QVERIFY(m_subject->pixmapDamage == 0);
 //}
+#endif
 
 void Ut_MStatusBarView::testWhenMouseMovesAboveThresholdStatusIndicatorMenuAppears()
 {
@@ -309,6 +311,14 @@ void Ut_MStatusBarView::testPressDimming()
     m_subject = NULL;
 }
 
+void Ut_MStatusBarView::testStatusIndicatorMenuDisabling()
+{
+    m_subject->modifiableStyle()->setEnableStatusIndicatorMenu(false);
+    mouseDownWorker(START_POINT);
+    mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD + 1));
+    QCOMPARE(dbusCallMade, false);
+}
+
 
 
 // Helpers
@@ -335,7 +345,5 @@ void Ut_MStatusBarView::mouseUpWorker(QPointF upAt)
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
     m_subject->mouseReleaseEvent(&mouseReleaseEvent);
 }
-
-#endif
 
 QTEST_APPLESS_MAIN(Ut_MStatusBarView)
