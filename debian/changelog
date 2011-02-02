@@ -1,3 +1,10 @@
+libmeegotouch (0.20.79-2) unstable; urgency=low
+
+  * New version: special release for integration.
+  * Revert "Fixes: NB#222807 - [TASK] mthemedaemon should use the meego graphicssystem"
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 02 Feb 2011 11:59:55 +0200
+
 libmeegotouch (0.20.79-1) unstable; urgency=low
 
   * New version
