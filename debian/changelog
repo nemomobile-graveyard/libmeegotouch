@@ -1,11 +1,23 @@
-libmeegotouch (0.20.80~1) unstable; urgency=low
+libmeegotouch (0.20.80-1) unstable; urgency=low
 
-  * unreleased
-  * Fixes: NB#220305 - binary CSS files should be mmaped
-  * Fixes: NB#199539 - Theme CSS loading takes 0.6MB memory even for minimal MTF application
+  * New version
+  * Fixes: Unit test Ut_MNavigationBarView::testToolBarViewTypeChange()
+  * Fixes: NB#223879 - MSeekBar routes events to lower widgets
+  * Revert "Fixes: NB#222807 - [TASK] mthemedaemon should use the meego graphicssystem"
+  * Fixes: NB#217991 - [TASK] Framework does not support full width tab buttons on toolbar
+  * Fixes: NB#221370 - Minimal MApplication produces -performance-debug warnings, causing style reloading.
+  * Fixes: MToolbar is created without a parent.
+  * Fixes: Re-parenting issues in MNavigationBar view.
+  * Fixes: Re-parenting issues on MApplicationWindow creation.
+  * Fixes: Reparenting of DrillDownListItem on widgetsgallery startup.
+  * Fixes: NB#221613 - Minimal Mapplication is repainted 21-24 times on startup
+  * Fixes: #220305 - binary CSS files should be mmaped
+  * Fixes: #199539 - Theme CSS loading takes 0.6MB memory even for minimal MTF application
+  * Fixes: NB#223007 - COREWEB: /usr/lib/meegotouch/applicationextensions/mapplicationextensionrunner 'MApplicationExtensionRunner::~MApplicationExtensionRunner main'
+  * Fixes: NB#221092 - Coverity testrun around 19.01.2010 - libmeegotouch
   * Implemented: SWP#DUI-4677 Possibility to disable opening of status menu from a given window
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 01 Feb 2011 12:51:38 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 02 Feb 2011 13:48:07 +0200
 
 libmeegotouch (0.20.79-1) unstable; urgency=low
 
