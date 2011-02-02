@@ -34,6 +34,7 @@ public:
     void sendDataChanged();
 
     QString iconID;
+    QString toggledIconID;
 
     MAction::Locations location;
 

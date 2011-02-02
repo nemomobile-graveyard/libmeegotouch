@@ -106,6 +106,22 @@ void MAction::setIconID(const QString &iconID)
     d->sendDataChanged();
 }
 
+QString MAction::toggledIconID() const
+{
+    Q_D(const MAction);
+    return d->toggledIconID;
+}
+
+void MAction::setToggledIconID(const QString &id)
+{
+    Q_D(MAction);
+    if (d->toggledIconID == id)
+        return;
+
+    d->toggledIconID = id;
+    d->sendDataChanged();
+}
+
 MAction::Locations MAction::location() const
 {
     Q_D(const MAction);

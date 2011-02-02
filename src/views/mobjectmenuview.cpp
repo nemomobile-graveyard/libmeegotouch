@@ -248,6 +248,7 @@ void MObjectMenuView::actionModified(MAction *action)
             // update button data accordingly
             button->setText(action->text());
             button->setIconID(action->iconID());
+            button->setToggledIconID(action->toggledIconID());
             button->setEnabled(action->isEnabled());
         }
     } else {

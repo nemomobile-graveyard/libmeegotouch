@@ -99,6 +99,16 @@ public:
      */
     void setIconID(const QString &id);
 
+    /*!
+      Returns the \ref logicalid "logical ID" associated with this action's toggled icon.
+     */
+    QString toggledIconID() const;
+
+    /*!
+      Sets the \ref logicalid "logical ID" associated with this action's toggled icon to \a id.
+     */
+    void setToggledIconID(const QString &id);
+
     /**
        \brief Return the possible locations this action may reside in
      */
