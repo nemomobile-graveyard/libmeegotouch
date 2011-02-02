@@ -1228,6 +1228,9 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
             if (d->document()->isEmpty() == true) {
                 viewChanged = true;
             }
+        } else if ((member == MTextEditModel::PreeditCursor)
+                   || (member == MTextEditModel::AdditionalFormats)) {
+            doUpdate(); // no need for checking sizes just for these
         } else if (member == MTextEditModel::Document) {
             // this shouldn't really be happening
             qWarning("MTextEditView doesn't support changing the model's document member");
