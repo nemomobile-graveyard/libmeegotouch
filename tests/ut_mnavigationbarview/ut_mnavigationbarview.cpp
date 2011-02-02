@@ -249,8 +249,8 @@ void Ut_MNavigationBarView::testToolBarViewTypeChange()
 
     toolBar->setViewType(MToolBar::tabType);
 
-    QCOMPARE(toolBar->property("widgetAlignment").toInt(), (int)Qt::AlignHCenter);
-    QCOMPARE(subject->d_func()->layout->policy(), subject->d_func()->escapeToolbarMenuPolicy);
+    QCOMPARE(toolBar->property("widgetAlignment").toInt(), (int)Qt::AlignJustify);
+    QCOMPARE(subject->d_func()->layout->policy(), subject->d_func()->toolbarPolicy);
 
     model->setToolBar(0);
     QCOMPARE(toolBar->property("widgetAlignment").isValid(), false);
