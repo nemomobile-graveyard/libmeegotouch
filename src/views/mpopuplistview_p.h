@@ -37,6 +37,7 @@ class MPopupListItem : public MListItem {
 public:
     explicit MPopupListItem(QGraphicsItem *parent = NULL);
     void setTitle(const QString &title);
+    void setWordWrap(bool wordWrap);
     void setIconID(const QString& id);
     void setPixmap(const QPixmap& pixmap);
 
@@ -63,8 +64,11 @@ class MPopupListCellCreator : public MAbstractCellCreator<MPopupListItem>
 public:
     MPopupListCellCreator(MList* list);
     virtual void updateCell(const QModelIndex& index, MWidget * cell) const;
+    void setWordWrap(bool wordWrap);
+
 private:
     MList* list;
+    bool wordWrap;
 };
 
 class MPopupListViewPrivate : public MDialogViewPrivate

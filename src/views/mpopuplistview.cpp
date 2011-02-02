@@ -69,6 +69,19 @@ void MPopupListItem::setTitle(const QString &text)
     updateLayout();
 }
 
+void MPopupListItem::setWordWrap(bool wordWrap) {
+    if (!title)
+        return;
+    if (wordWrap) {
+        title->setTextElide(false);
+        title->setWordWrap(true);
+    }
+    else {
+        title->setTextElide(true);
+        title->setWordWrap(false);
+    }
+}
+
 MImageWidget* MPopupListItem::iconWidget()
 {
     if (!icon) {
@@ -129,7 +142,7 @@ void MPopupListViewPrivate::init()
 }
 
 MPopupListCellCreator::MPopupListCellCreator(MList *list)
-    : list(list)
+    : list(list), wordWrap(false)
 {}
 
 void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell) const
@@ -138,6 +151,7 @@ void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell)
 
     QVariant variant = list->itemModel()->data(index, Qt::DisplayRole);
     item->setTitle(variant.toString());
+    item->setWordWrap(wordWrap);
 
     variant = list->itemModel()->data(index, Qt::DecorationRole);
     if (variant.canConvert<QString>()) {
@@ -159,6 +173,11 @@ void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell)
         item->setLayoutPosition(M::VerticalBottomPosition);
     else
         item->setLayoutPosition(M::VerticalCenterPosition);
+}
+
+void MPopupListCellCreator::setWordWrap(bool wordWrap)
+{
+    this->wordWrap = wordWrap;
 }
 
 void MPopupListViewPrivate::_q_scrollOnFirstAppearance()
@@ -222,6 +241,7 @@ void MPopupListView::applyStyle()
     MDialogView::applyStyle();
 
     d->cellCreator->setCellObjectName(style()->itemStyleName());
+    d->cellCreator->setWordWrap(style()->itemWordWrap());
     contentsViewport()->setStyleName(style()->contentsViewportStyleName());
 }
 

@@ -39,6 +39,7 @@ class M_VIEWS_EXPORT MPopupListStyle : public MDialogStyle
 
     M_STYLE_ATTRIBUTE(QString, itemStyleName, ItemStyleName)
     M_STYLE_ATTRIBUTE(QString, contentsViewportStyleName, ContentsViewportStyleName)
+    M_STYLE_ATTRIBUTE(bool, itemWordWrap, ItemWordWrap)
 };
 
 /*!
