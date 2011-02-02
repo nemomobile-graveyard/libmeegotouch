@@ -28,17 +28,16 @@
 #include "mnamespace.h"
 
 
-class ToolbarInfo {
+class AttributeExtensionInfo {
 public:
-    ToolbarInfo(const QString &toolbarFile)
-        : fileName(toolbarFile)
+    AttributeExtensionInfo(const QString &attributeExtensionFile)
+        : fileName(attributeExtensionFile)
     {
     }
 
     QString fileName;
-    MInputMethodState::ItemAttributeMap items;
+    MInputMethodState::ExtendedAttributeMap extendedAttributes;
 };
-
 
 
 class MInputMethodStatePrivate
@@ -59,7 +58,7 @@ public:
     //! Indicate during rotation changing.
     bool rotationInProgress;
 
-    QMap<int, ToolbarInfo*> toolbars;
+    QMap<int, AttributeExtensionInfo*> attributeExtensions;
 
 private:
     Q_DISABLE_COPY(MInputMethodStatePrivate)

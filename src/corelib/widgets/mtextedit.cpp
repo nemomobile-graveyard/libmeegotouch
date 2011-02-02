@@ -2644,10 +2644,10 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case M::ImCorrectionEnabledQuery:
         return QVariant(inputMethodCorrectionEnabled());
 
-    case M::InputMethodToolbarIdQuery:
+    case M::InputMethodAttributeExtensionIdQuery:
         return QVariant(attachedToolbarId());
 
-    case M::InputMethodToolbarQuery:
+    case M::InputMethodAttributeExtensionQuery:
         return QVariant(attachedToolbar());
 
     case Qt::ImMicroFocus:

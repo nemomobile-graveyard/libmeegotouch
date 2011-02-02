@@ -135,8 +135,10 @@ namespace M
         PreeditRectangleQuery,      //!< Retrieve bounding rectangle for current preedit text.
         ImCorrectionEnabledQuery,   //!< explicit correction enabling for text entries
         ImModeQuery,                //!< Retrieve mode: normal, direct or proxy
-        InputMethodToolbarIdQuery,  //!< custom toolbar identifier for text entry
-        InputMethodToolbarQuery     //!< custom toolbar file name for text entry
+        InputMethodToolbarIdQuery,  //!< custom toolbar identifier for text entry. \deprecated use InputMethodAttributeExtensionIdQuery instead.
+        InputMethodAttributeExtensionIdQuery = InputMethodToolbarIdQuery, //!< attribute extension identifier for text entry
+        InputMethodToolbarQuery,     //!< custom toolbar file name for text entry. \deprecated use InputMethodAttributeExtensionQuery instead.
+        InputMethodAttributeExtensionQuery = InputMethodToolbarQuery //!< attribute extension file name for text entry
     };
 
     //! \deprecated do not use

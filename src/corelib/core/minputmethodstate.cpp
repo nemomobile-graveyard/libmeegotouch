@@ -23,9 +23,14 @@
 #include "qapplication.h"
 #include "qinputcontext.h"
 
+#include <MDebug>
+
 #include <QTimer>
 #include <QKeyEvent>
 
+namespace {
+    const char * const ToolbarExtension("/toolbar");
+}
 
 MInputMethodStatePrivate::MInputMethodStatePrivate()
     : orientationAngle(M::Angle0),
@@ -49,6 +54,10 @@ MInputMethodState::MInputMethodState()
 
     d->q_ptr = this;
     d->init();
+    connect(this, SIGNAL(attributeExtensionRegistered(int, QString)),
+            this, SIGNAL(toolbarRegistered(int,QString)));
+    connect(this, SIGNAL(attributeExtensionUnregistered(int)),
+            this, SIGNAL(toolbarUnregistered(int)));
 }
 
 MInputMethodState::~MInputMethodState()
@@ -149,64 +158,116 @@ void MInputMethodState::emitKeyRelease(const QKeyEvent &event)
 
 QList<int> MInputMethodState::toolbarIds() const
 {
-    Q_D(const MInputMethodState);
-    return d->toolbars.keys();
+    mWarning("MInputMethodState") << Q_FUNC_INFO << "is deprecated. Use attributeExtensionIds() instead";
+    return attributeExtensionIds();
 }
 
 MInputMethodState::ItemAttributeMap MInputMethodState::toolbarState(int id) const
 {
+    mWarning("MInputMethodState") << Q_FUNC_INFO << "is deprecated. Use extendedAttributes() instead";
     Q_D(const MInputMethodState);
-    ToolbarInfo *toolbar = d->toolbars.value(id);
+    AttributeExtensionInfo *attributeExtension = d->attributeExtensions.value(id);
 
-    return (toolbar ? toolbar->items : ItemAttributeMap());
+    return (attributeExtension ? attributeExtension->extendedAttributes.value(ToolbarExtension) : ItemAttributeMap());
 }
 
 int MInputMethodState::registerToolbar(const QString &fileName)
 {
-    Q_D(MInputMethodState);
-    static int idCounter = 0;
-    // generate an application local unique identifier for the toolbar.
-    int newId = idCounter;
-    idCounter++;
-    d->toolbars.insert(newId, new ToolbarInfo(fileName));
-    emit toolbarRegistered(newId, fileName);
-    return newId;
+    mWarning("MInputMethodState") << Q_FUNC_INFO << "is deprecated. Use registerAttributeExtension() instead";
+    return registerAttributeExtension(fileName);
 }
 
 void MInputMethodState::unregisterToolbar(int id)
 {
-    Q_D(MInputMethodState);
-    delete d->toolbars[id];
-    d->toolbars.remove(id);
-    emit toolbarUnregistered(id);
+    mWarning("MInputMethodState") << Q_FUNC_INFO << "is deprecated. Use unregisterAttributeExtension() instead";
+    return unregisterAttributeExtension(id);
 }
 
 void MInputMethodState::setToolbarItemAttribute(int id, const QString &item,
                                                 const QString &attribute, const QVariant &value)
 {
+    mWarning("MInputMethodState") << Q_FUNC_INFO << "is deprecated. Use setExtendedAttribute() instead";
     Q_D(MInputMethodState);
 
-    if (!d->toolbars.contains(id)) {
+    if (!d->attributeExtensions.contains(id)) {
         return;
     }
 
-    ToolbarInfo *toolbar = d->toolbars[id];
-    bool changed = (value != toolbar->items[item][attribute]);
+    AttributeExtensionInfo *attributeExtension = d->attributeExtensions[id];
+    bool changed = (value != attributeExtension->extendedAttributes[ToolbarExtension][item][attribute]);
 
     if (changed) {
-        toolbar->items[item][attribute] = value;
+        attributeExtension->extendedAttributes[ToolbarExtension][item][attribute] = value;
         emit toolbarItemAttributeChanged(id, item, attribute, value);
     }
 }
 
 QString MInputMethodState::toolbar(int id) const
 {
+    mWarning("MInputMethodState") << Q_FUNC_INFO << "is deprecated. Use attributeExtensionFile() instead";
+    return attributeExtensionFile(id);
+}
+
+QList<int> MInputMethodState::attributeExtensionIds() const
+{
+    Q_D(const MInputMethodState);
+    return d->attributeExtensions.keys();
+}
+
+MInputMethodState::ExtendedAttributeMap MInputMethodState::extendedAttributes(int id) const
+{
+    Q_D(const MInputMethodState);
+    AttributeExtensionInfo *attributeExtension = d->attributeExtensions.value(id);
+
+    return (attributeExtension ? attributeExtension->extendedAttributes : ExtendedAttributeMap());
+}
+
+int MInputMethodState::registerAttributeExtension(const QString &fileName)
+{
+    Q_D(MInputMethodState);
+    static int idCounter = 0;
+    // generate an application local unique identifier for the toolbar.
+    int newId = idCounter;
+    idCounter++;
+    d->attributeExtensions.insert(newId, new AttributeExtensionInfo(fileName));
+    emit attributeExtensionRegistered(newId, fileName);
+    return newId;
+}
+
+void MInputMethodState::unregisterAttributeExtension(int id)
+{
+    Q_D(MInputMethodState);
+    delete d->attributeExtensions[id];
+    d->attributeExtensions.remove(id);
+    emit attributeExtensionUnregistered(id);
+}
+
+void MInputMethodState::setExtendedAttribute(int id, const QString &target, const QString &targetItem,
+                                             const QString &attribute, const QVariant &value)
+{
+    Q_D(MInputMethodState);
+
+    if (!d->attributeExtensions.contains(id)) {
+        return;
+    }
+
+    AttributeExtensionInfo *attributeExtension = d->attributeExtensions[id];
+    bool changed = (value != attributeExtension->extendedAttributes[target][targetItem][attribute]);
+
+    if (changed) {
+        attributeExtension->extendedAttributes[target][targetItem][attribute] = value;
+        emit extendedAttributeChanged(id, target, targetItem, attribute, value);
+    }
+}
+
+QString MInputMethodState::attributeExtensionFile(int id) const
+{
     Q_D(const MInputMethodState);
 
-    ToolbarInfo *toolbar = d->toolbars.value(id);
+    AttributeExtensionInfo *attributeExtension = d->attributeExtensions.value(id);
 
-    if (toolbar) {
-        return toolbar->fileName;
+    if (attributeExtension) {
+        return attributeExtension->fileName;
     } else {
         return QString();
     }
