@@ -68,6 +68,14 @@ namespace {
 #endif
     const char* AnimatedOrientationChangePropertyName =
             "animatedOrientationChange";
+
+    M::Orientation orientationFromOrientationAngle(M::OrientationAngle angle) {
+        if (angle == M::Angle0 || angle == M::Angle180) {
+            return M::Landscape;
+        } else {
+            return M::Portrait;
+        }
+    }
 }
 
 /// Actual class
@@ -336,6 +344,22 @@ void MWindowPrivate::playScreenshotEffect()
     q->scene()->addItem(flash);
 
     QObject::connect(animation, SIGNAL(finished()), flash, SLOT(deleteLater()));
+}
+
+void MWindowPrivate::rotateWindowsFromKeyEvent(QKeyEvent *event) {
+    foreach (MWindow *window, MApplication::windows()) {
+
+        int newAngle = (window->orientationAngle()
+                        + ((event->modifiers() & Qt::AltModifier) ? 270 : 90)) % 360;
+        M::OrientationAngle newOrientationAngle = static_cast<M::OrientationAngle>(newAngle);
+        M::Orientation newOrientation = orientationFromOrientationAngle(newOrientationAngle);
+
+        if (!window->isOrientationAngleLocked()) {
+            if (!window->isOrientationLocked() || (window->orientation() == newOrientation)) {
+                window->setOrientationAngle(newOrientationAngle);
+            }
+        }
+    }
 }
 
 WId MWindowPrivate::robustEffectiveWinId() const
@@ -982,7 +1006,6 @@ void MWindowPrivate::setDelayedX11Properties()
         settingXPropertiesDelayed = false;
     }
 }
-
 #endif
 
 void MWindow::setGlobalAlpha(qreal level)
@@ -1350,16 +1373,7 @@ bool MWindow::event(QEvent *event)
         //SIMULATION OF ROTATION FOR DEVELOPMENT PURPOSES
         QKeyEvent *k = static_cast<QKeyEvent *>(event);
         if (Qt::Key_R == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
-            foreach (MWindow *window, MApplication::windows()) {
-                int newAngle = (window->orientationAngle()
-                                + ((k->modifiers() & Qt::AltModifier) ? 270 : 90)) % 360;
-                if (!window->isOrientationAngleLocked()) {
-                    if ((!window->isOrientationLocked())
-                        || window->orientation() == static_cast<M::Orientation>(newAngle)) {
-                        window->setOrientationAngle(static_cast<M::OrientationAngle>(newAngle));
-                    }
-                }
-            }
+            d->rotateWindowsFromKeyEvent(k);
         } else if (Qt::Key_T == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowPosition(!MApplication::showPosition());
             updateNeeded = true;

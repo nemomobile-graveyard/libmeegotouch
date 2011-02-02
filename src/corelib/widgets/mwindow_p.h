@@ -111,6 +111,7 @@ public:
 
     void takeScreenshot();
     void playScreenshotEffect();
+    void rotateWindowsFromKeyEvent(QKeyEvent *event);
 
     /**
       * Calling winId() on a QWidget makes this widget a native window.
