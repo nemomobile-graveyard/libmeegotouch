@@ -28,12 +28,14 @@
 #include "mlayout.h"
 #include "mlinearlayoutpolicy.h"
 #include "mgridlayoutpolicy.h"
+#include "mviewconstants.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsGridLayout>
 #include <QColor>
 #include <QPalette>
 #include <QDebug>
+
 
 MBannerViewPrivate::MBannerViewPrivate() :
     layout(0),
@@ -556,14 +558,51 @@ void MBannerView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
 
     d->down = false;
-    d->refreshStyleMode();
 
     QPointF touch = event->scenePos();
-    QRectF rect  = d->controller->sceneBoundingRect();
+    QRectF rect = d->controller->sceneBoundingRect();
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
 
     if (rect.contains(touch)) {
         d->controller->click();
     }
+
+    d->refreshStyleMode();
+}
+
+void MBannerView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_D(MBannerView);
+
+    QPointF touch = event->scenePos();
+    QRectF rect = d->controller->sceneBoundingRect();
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
+
+    if (rect.contains(touch)) {
+        if (!d->down) {
+            d->down = true;
+        }
+    } else {
+        if (d->down) {
+            d->down = false;
+        }
+    }
+
+    d->refreshStyleMode();
+}
+
+void MBannerView::cancelEvent(MCancelEvent *event)
+{
+    Q_UNUSED(event);
+    Q_D(MBannerView);
+
+    if (!d->down)
+        return;
+
+    d->down = false;
+    d->refreshStyleMode();
 }
 
 void MBannerView::setupModel()

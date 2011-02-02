@@ -56,6 +56,8 @@ protected:
     //! \reimp
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void cancelEvent(MCancelEvent *event);
     virtual void setupModel();
     virtual void applyStyle();
     virtual void drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
