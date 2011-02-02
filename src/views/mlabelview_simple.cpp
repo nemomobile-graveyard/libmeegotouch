@@ -119,7 +119,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             maxSize.rheight() = preferredSize.height();
         }
 
-        return sizeForWidth(maxSize.width()).boundedTo(maxSize);
+        return sizeForWidth(maxSize.width());
     }
     case Qt::MaximumSize: {
         return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
