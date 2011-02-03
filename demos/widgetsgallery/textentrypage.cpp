@@ -33,13 +33,6 @@
 #include <QKeyEvent>
 #include <QTextDocument>
 
-namespace
-{
-    //! the maximum and minimum width for labels
-    const int MaxminLabelWidth = 225;
-    const int MiniminTextEntryWidth = 225;
-}
-
 class CompleterTestModel : public QAbstractTableModel
 {
 public :
@@ -294,8 +287,7 @@ void TextEntryPage::createContent()
 
     label0 = new MLabel(centralWidget());
     label0->setWordWrap(true);
-    label0->setMinimumWidth(MaxminLabelWidth);
-    label0->setMaximumWidth(MaxminLabelWidth);
+    label0->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     layoutPolicy->addItem(label0, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
@@ -306,8 +298,7 @@ void TextEntryPage::createContent()
 
     label1 = new MLabel(centralWidget());
     label1->setWordWrap(true);
-    label1->setMinimumWidth(MaxminLabelWidth);
-    label1->setMaximumWidth(MaxminLabelWidth);
+    label1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setEchoMode(MTextEditModel::Password);
     layoutPolicy->addItem(label1, row, 0);
@@ -319,8 +310,7 @@ void TextEntryPage::createContent()
 
     labelNoEcho = new MLabel(centralWidget());
     labelNoEcho->setWordWrap(true);
-    labelNoEcho->setMinimumWidth(MaxminLabelWidth);
-    labelNoEcho->setMaximumWidth(MaxminLabelWidth);
+    labelNoEcho->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setEchoMode(MTextEditModel::NoEcho);
     layoutPolicy->addItem(labelNoEcho, row, 0);
@@ -332,8 +322,7 @@ void TextEntryPage::createContent()
 
     labelEchoOnEdit = new MLabel(centralWidget());
     labelEchoOnEdit->setWordWrap(true);
-    labelEchoOnEdit->setMinimumWidth(MaxminLabelWidth);
-    labelEchoOnEdit->setMaximumWidth(MaxminLabelWidth);
+    labelEchoOnEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setEchoMode(MTextEditModel::PasswordEchoOnEdit);
     layoutPolicy->addItem(labelEchoOnEdit, row, 0);
@@ -345,8 +334,7 @@ void TextEntryPage::createContent()
 
     label2 = new MLabel(centralWidget());
     label2->setWordWrap(true);
-    label2->setMinimumWidth(MaxminLabelWidth);
-    label2->setMaximumWidth(MaxminLabelWidth);
+    label2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::NumberContentType);
     layoutPolicy->addItem(label2, row, 0);
@@ -358,8 +346,7 @@ void TextEntryPage::createContent()
 
     label3 = new MLabel(centralWidget());
     label3->setWordWrap(true);
-    label3->setMinimumWidth(MaxminLabelWidth);
-    label3->setMaximumWidth(MaxminLabelWidth);
+    label3->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::PhoneNumberContentType);
     layoutPolicy->addItem(label3, row, 0);
@@ -371,8 +358,7 @@ void TextEntryPage::createContent()
 
     label4 = new MLabel(centralWidget());
     label4->setWordWrap(true);
-    label4->setMinimumWidth(MaxminLabelWidth);
-    label4->setMaximumWidth(MaxminLabelWidth);
+    label4->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::EmailContentType);
     layoutPolicy->addItem(label4, row, 0);
@@ -384,8 +370,7 @@ void TextEntryPage::createContent()
 
     label5 = new MLabel(centralWidget());
     label5->setWordWrap(true);
-    label5->setMinimumWidth(MaxminLabelWidth);
-    label5->setMaximumWidth(MaxminLabelWidth);
+    label5->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::UrlContentType);
     layoutPolicy->addItem(label5, row, 0);
@@ -397,8 +382,7 @@ void TextEntryPage::createContent()
 
     label6 = new MLabel(centralWidget());
     label6->setWordWrap(true);
-    label6->setMinimumWidth(MaxminLabelWidth);
-    label6->setMaximumWidth(MaxminLabelWidth);
+    label6->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     label6->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(label6, row, 0);
@@ -411,8 +395,7 @@ void TextEntryPage::createContent()
 
     label7 = new MLabel(centralWidget());
     label7->setWordWrap(true);
-    label7->setMinimumWidth(MaxminLabelWidth);
-    label7->setMaximumWidth(MaxminLabelWidth);
+    label7->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label7->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(label7, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
@@ -491,8 +474,7 @@ void TextEntryPage::createContent()
 
     label8 = new MLabel(centralWidget());
     label8->setWordWrap(true);
-    label8->setMinimumWidth(MaxminLabelWidth);
-    label8->setMaximumWidth(MaxminLabelWidth);
+    label8->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label8->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(label8, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
@@ -503,8 +485,7 @@ void TextEntryPage::createContent()
 
     label9 = new MLabel(centralWidget());
     label9->setWordWrap(true);
-    label9->setMinimumWidth(MaxminLabelWidth);
-    label9->setMaximumWidth(MaxminLabelWidth);
+    label9->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label9->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(label9, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
@@ -515,8 +496,7 @@ void TextEntryPage::createContent()
 
     label10 = new MLabel(centralWidget());
     label10->setWordWrap(true);
-    label10->setMinimumWidth(MaxminLabelWidth);
-    label10->setMaximumWidth(MaxminLabelWidth);
+    label10->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label10->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(label10, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
@@ -526,8 +506,7 @@ void TextEntryPage::createContent()
     directIMWidget = new CustomDirectIMWidget(centralWidget());
     labelDirectIM = new MLabel(centralWidget());
     labelDirectIM->setWordWrap(true);
-    labelDirectIM->setMinimumWidth(MaxminLabelWidth);
-    labelDirectIM->setMaximumWidth(MaxminLabelWidth);
+    labelDirectIM->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     labelDirectIM->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(labelDirectIM, row, 0);
     layoutPolicy->addItem(directIMWidget, row, 1);
@@ -539,8 +518,7 @@ void TextEntryPage::createContent()
     customTextEdit1->setPrompt(qtTrId("xx_tooltip_customtoolbar1"));
     labelCustomToolbar1 = new MLabel(centralWidget());
     labelCustomToolbar1->setWordWrap(true);
-    labelCustomToolbar1->setMinimumWidth(MaxminLabelWidth);
-    labelCustomToolbar1->setMaximumWidth(MaxminLabelWidth);
+    labelCustomToolbar1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     labelCustomToolbar1->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(labelCustomToolbar1, row, 0);
     layoutPolicy->addItem(customTextEdit1, row, 1);
@@ -553,8 +531,7 @@ void TextEntryPage::createContent()
     customTextEdit2->setPrompt(qtTrId("xx_tooltip_customtoolbar2"));
     labelCustomToolbar2 = new MLabel(centralWidget());
     labelCustomToolbar2->setWordWrap(true);
-    labelCustomToolbar2->setMinimumWidth(MaxminLabelWidth);
-    labelCustomToolbar2->setMaximumWidth(MaxminLabelWidth);
+    labelCustomToolbar2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     labelCustomToolbar2->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(labelCustomToolbar2, row, 0);
     layoutPolicy->addItem(customTextEdit2, row, 1);
@@ -581,8 +558,6 @@ void TextEntryPage::createContent()
 
     connect(button1, SIGNAL(toggled(bool)), this, SLOT(changeAutoCapitalisation(bool)));
     connect(button2, SIGNAL(toggled(bool)), this, SLOT(changeErrorCorrection(bool)));
-
-    layoutPolicy->setColumnMinimumWidth(1, MiniminTextEntryWidth);
 
     // switch on Auto Capitalistaion and error correction
     changeAutoCapitalisation(true);
