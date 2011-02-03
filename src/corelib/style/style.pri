@@ -47,6 +47,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mrelocatorstyle.h \
     $$STYLE_SRC_DIR/mwindowstyle.h \
     $$STYLE_SRC_DIR/mcontentfadeandslideanimationstyle.h \
+    $$STYLE_SRC_DIR/mtapstatemachinestyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS

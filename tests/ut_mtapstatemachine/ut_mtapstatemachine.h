@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libmeegotouch.
+** This file is part of libdui.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,35 +17,29 @@
 **
 ****************************************************************************/
 
-#ifndef MLISTITEMVIEW_P_H
-#define MLISTITEMVIEW_P_H
+#ifndef UT_MTAPSTATEMACHINE_H
+#define UT_MTAPSTATEMACHINE_H
 
-#include <private/mwidgetview_p.h>
+#include <QObject>
 
-class MListItem;
 class MTapStateMachine;
 
-class MListItemViewPrivate : public MWidgetViewPrivate
+class Ut_MTapStateMachine : public QObject
 {
-public:
-    MListItemViewPrivate(MWidgetController *controller);
-    virtual ~MListItemViewPrivate();
-    
+    Q_OBJECT
+
+private:
+    MTapStateMachine*  machine;
+    QObject* fakeObject;
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
     void init();
-    void click();
-    void longTap(const QPointF &pos);
+    void cleanup();
 
-    void _q_applyPressedStyle();
-    void _q_applyReleasedStyle();
+    void testLongPressAndRelease();
+    void testShortTapAndRelease();
 
-private:
-    bool down;
-    bool tapAndHoldStarted;
-    MListItem *controller;
-
-    MTapStateMachine* tapStateMachine;
-private:
-    Q_DECLARE_PUBLIC(MListItemView)
 };
 
-#endif // MLISTITEMVIEW_P_H
+#endif // UT_MTAPSTATEMACHINE_H

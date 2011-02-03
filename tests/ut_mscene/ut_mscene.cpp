@@ -162,66 +162,6 @@ void Ut_MScene::drawForeground()
     QVERIFY(img1 == img1);
 }
 
-void Ut_MScene::mousePressIsDelayed()
-{
-    QGraphicsSceneMouseEvent mousePress(QEvent::GraphicsSceneMousePress);
-    mousePress.setButton(Qt::LeftButton);
-    mousePress.setPos(QPointF(100,100));
-    mousePress.setScreenPos(QPoint(100,100));
-    mousePress.setScenePos(QPointF(100,100));
-
-    QGraphicsSceneMouseEvent mouseRelease(QEvent::GraphicsSceneMouseRelease);
-    mouseRelease.setButton(Qt::LeftButton);
-    mouseRelease.setPos(QPointF(100,100));
-    mouseRelease.setScreenPos(QPoint(100,100));
-    mouseRelease.setScenePos(QPointF(100,100));
-
-    QApplication::sendEvent(m_subject,&mousePress);
-
-    QCOMPARE(eventTester->mousePressReceived, false);
-    QCOMPARE(eventTester->mouseMoveReceived, false);
-    QCOMPARE(eventTester->mouseReleaseReceived, false);
-
-    // Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
-
-    QCOMPARE(eventTester->mousePressReceived, true);
-    QCOMPARE(eventTester->mouseMoveReceived, false);
-    QCOMPARE(eventTester->mouseReleaseReceived, false);
-    eventTester->mousePressReceived = false;
-}
-
-void Ut_MScene::touchBeginIsDelayed()
-{
-    QList<QTouchEvent::TouchPoint> touchList;
-    QTouchEvent::TouchPoint touchPoint;
-    touchPoint.setState(Qt::TouchPointPressed);
-    touchPoint.setPos(QPointF(100,100));
-    touchPoint.setScenePos(QPointF(100,100));
-    touchPoint.setScreenPos(QPoint(100,100));
-
-    touchList.append(touchPoint);
-
-    QTouchEvent touchEvent(QEvent::TouchBegin, QTouchEvent::TouchPad, Qt::NoModifier, Qt::TouchPointPressed, touchList);
-
-    QApplication::sendEvent(m_subject,&touchEvent);
-
-    QCOMPARE(eventTester->touchBeginReceived, false);
-    QCOMPARE(eventTester->touchUpdateReceived, false);
-    QCOMPARE(eventTester->touchEndReceived, false);
-
-    // Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
-
-    QCOMPARE(eventTester->touchBeginReceived, true);
-    QCOMPARE(eventTester->touchUpdateReceived, false);
-    QCOMPARE(eventTester->touchEndReceived, false);
-}
-
 void Ut_MScene::mousePressAndReleaseAreDeliveredToGrabber()
 {
     QGraphicsSceneMouseEvent mousePress(QEvent::GraphicsSceneMousePress);
@@ -237,11 +177,6 @@ void Ut_MScene::mousePressAndReleaseAreDeliveredToGrabber()
     mouseRelease.setScenePos(QPointF(100,100));
 
     QApplication::sendEvent(m_subject,&mousePress);
-
-    // Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
 
     QCOMPARE(eventTester->mousePressReceived, true);
     QCOMPARE(eventTester->mouseMoveReceived, false);
@@ -278,11 +213,6 @@ void Ut_MScene::touchBeginAndEndAreDeliveredToGrabber()
 
     QApplication::sendEvent(m_subject,&touchBeginEvent);
 
-    // Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
-
     QCOMPARE(eventTester->touchBeginReceived, true);
     QCOMPARE(eventTester->touchUpdateReceived, false);
     QCOMPARE(eventTester->touchEndReceived, false);
@@ -311,11 +241,6 @@ void Ut_MScene::mouseMoveIsDelieveredToGrabberIfNoGestureIsRecognized()
 
     QApplication::sendEvent(m_subject,&mousePress);
 
-    //Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
-
     QCOMPARE(eventTester->mousePressReceived, true);
     QCOMPARE(eventTester->mouseMoveReceived, false);
     QCOMPARE(eventTester->mouseReleaseReceived, false);
@@ -343,11 +268,6 @@ void Ut_MScene::mouseReleaseResetsStateOfEventEater()
     mouseRelease.setScenePos(QPointF(100,100));
 
     QApplication::sendEvent(m_subject,&mousePress);
-
-    //Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
 
     QCOMPARE(eventTester->mousePressReceived, true);
     QCOMPARE(eventTester->mouseMoveReceived, false);
@@ -388,11 +308,6 @@ void Ut_MScene::panGestureCancelsMouseEvents()
     mouseRelease.setScenePos(QPointF(100,100));
 
     QApplication::sendEvent(m_subject,&mousePress);
-
-    //Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
 
     QCOMPARE(eventTester->mousePressReceived, true);
     QCOMPARE(eventTester->mouseMoveReceived, false);
@@ -436,11 +351,6 @@ void Ut_MScene::ignoredGestureShouldNotCancelMouseEvents()
     mouseRelease.setScenePos(QPointF(100,100));
 
     QApplication::sendEvent(m_subject,&mousePress);
-
-    //Initial press timer has been started.
-    QVERIFY(m_subject->d_func()->initialPressTimer->isActive());
-    m_subject->d_func()->initialPressTimer->stop();
-    m_subject->d_func()->_q_initialPressDeliveryTimeout();
 
     QCOMPARE(eventTester->mousePressReceived, true);
     QCOMPARE(eventTester->mouseMoveReceived, false);

@@ -48,7 +48,10 @@ protected:
 private:
     Q_DISABLE_COPY(MListItemView)
     Q_DECLARE_PRIVATE(MListItemView)
-    Q_PRIVATE_SLOT(d_func(), void _q_applyQueuedStyleModeChange())
+
+    Q_PRIVATE_SLOT(d_func(), void _q_applyPressedStyle())
+    Q_PRIVATE_SLOT(d_func(), void _q_applyReleasedStyle())
+
 };
 
 #endif // MLISTITEMVIEW_H

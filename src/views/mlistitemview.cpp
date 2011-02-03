@@ -21,19 +21,18 @@
 #include "mlistitemview_p.h"
 
 #include "mviewconstants.h"
+#include "mtapstatemachine.h"
 
 #include <MListItem>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QTapAndHoldGesture>
-#include <QTimer>
 
 MListItemViewPrivate::MListItemViewPrivate(MWidgetController *controller) 
     : MWidgetViewPrivate(),
     down(false),
     tapAndHoldStarted(false),
-    queuedStyleModeChange(false),
-    styleModeChangeTimer(0)
+    tapStateMachine(0)
 {
     this->controller = dynamic_cast<MListItem *>(controller);
 }
@@ -42,38 +41,37 @@ MListItemViewPrivate::~MListItemViewPrivate()
 {
 }
 
-void MListItemViewPrivate::_q_applyQueuedStyleModeChange()
-{
-    if (queuedStyleModeChange) {
-        queuedStyleModeChange = false;
-        updateStyleMode();
-    }
-}
-
-void MListItemViewPrivate::updateStyleMode()
+void MListItemViewPrivate::init()
 {
     Q_Q(MListItemView);
 
-    if (down) {
-        if (styleModeChangeTimer->isActive()) {
-            styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
-            return;
-        }
-        styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
-        q->style().setModePressed();
-        if (tapAndHoldStarted && !q->style()->downStateEffect().isEmpty())
-            controller->setGraphicsEffect(MTheme::effect(q->style()->downStateEffect()));
-    } else {
-        if (controller->isSelected()) {
-            q->style().setModeSelected();
-        } else {
-            if (styleModeChangeTimer->isActive()) {
-                queuedStyleModeChange = true;
-                return;
-            }
-            q->style().setModeDefault();
-        }
-    }
+    tapStateMachine = new MTapStateMachine(controller);
+    q->connect(tapStateMachine, SIGNAL(delayedPress()), q, SLOT(_q_applyPressedStyle()));
+    q->connect(tapStateMachine, SIGNAL(release()), q, SLOT(_q_applyReleasedStyle()));
+
+}
+
+void MListItemViewPrivate::_q_applyPressedStyle()
+{
+    Q_Q(MListItemView);
+
+    q->style().setModePressed();
+
+    if (tapAndHoldStarted && !q->style()->downStateEffect().isEmpty())
+        controller->setGraphicsEffect(MTheme::effect(q->style()->downStateEffect()));
+
+    q->applyStyle();
+    q->update();
+}
+
+void MListItemViewPrivate::_q_applyReleasedStyle()
+{
+    Q_Q(MListItemView);
+
+    if (controller->isSelected())
+        q->style().setModeSelected();
+    else
+        q->style().setModeDefault();
 
     if (!tapAndHoldStarted && controller->graphicsEffect())
         controller->setGraphicsEffect(NULL);
@@ -92,14 +90,13 @@ void MListItemViewPrivate::longTap(const QPointF &pos)
     controller->longTap(pos);
 }
 
+
 MListItemView::MListItemView(MWidgetController *controller) 
     : MWidgetView(new MListItemViewPrivate(controller))
 {
     Q_D(MListItemView);
 
-    d->styleModeChangeTimer = new QTimer(this);
-    d->styleModeChangeTimer->setSingleShot(true);
-    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
+    d->init();
 }
 
 void MListItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -112,7 +109,6 @@ void MListItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     
     style()->pressFeedback().play();
     d->down = true;
-    d->updateStyleMode();
 }
 
 void MListItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -125,7 +121,6 @@ void MListItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     
     d->down = false;
     d->tapAndHoldStarted = false;
-    d->updateStyleMode();    
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
@@ -157,7 +152,6 @@ void MListItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             style()->cancelFeedback().play();
         }
         d->down = pressed;
-        d->updateStyleMode();
     }
 }
 
@@ -173,8 +167,6 @@ void MListItemView::cancelEvent(MCancelEvent *event)
 
     d->down = false;
     d->tapAndHoldStarted = false;
-
-    d->updateStyleMode();
 }
 
 void MListItemView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)

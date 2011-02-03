@@ -35,9 +35,6 @@ private slots:
     void cleanupTestCase();
     void drawForeground();
 
-    void mousePressIsDelayed();
-    void touchBeginIsDelayed();
-
     void mousePressAndReleaseAreDeliveredToGrabber();
     void touchBeginAndEndAreDeliveredToGrabber();
     void mouseMoveIsDelieveredToGrabberIfNoGestureIsRecognized();

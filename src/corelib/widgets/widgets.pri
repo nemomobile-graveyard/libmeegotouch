@@ -61,6 +61,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mbasiclistitem.h \
     $$WIDGETS_SRC_DIR/mdetailedlistitem.h \
     $$WIDGETS_SRC_DIR/madvancedlistitem.h \
+    $$WIDGETS_SRC_DIR/mtapstatemachine.h \
 
 WIDGET_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
@@ -121,6 +122,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mstatusbar_p.h \
     $$WIDGETS_SRC_DIR/mwindow_p.h \
     $$WIDGETS_SRC_DIR/mrichtexteditdialogsmanager_p.h \
+    $$WIDGETS_SRC_DIR/mtapstatemachine_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
@@ -189,3 +191,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mbasiclistitem.cpp \
     $$WIDGETS_SRC_DIR/mdetailedlistitem.cpp \
     $$WIDGETS_SRC_DIR/madvancedlistitem.cpp \
+    $$WIDGETS_SRC_DIR/mtapstatemachine.cpp \

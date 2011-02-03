@@ -29,6 +29,12 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QVariantAnimation>
 
+namespace {
+    //Minimum distance that the thumb must be dragged before the
+    //button switches into drag mode.
+    const int minimumDragMovement = 4; //pixels
+}
+
 //! \internal
 class ThumbAnimation : public QVariantAnimation
 {
@@ -304,6 +310,12 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     //drag only if the thumb was pressed down
     if (d->m_thumbDown) {
+
+        qreal currentMouseOffset =  event->pos().x() - d->controller->pos().x() - d->m_thumbPos.x();
+        //Check if the thumb was moved far enough to start the dragging mode;
+        if (!d->m_thumbDragged && abs(currentMouseOffset - d->mouseOffset) < minimumDragMovement)
+            return;
+
         //calculate new x for the thumb
         QPointF pos = event->pos() - d->controller->pos();
         int x = qRound(pos.x()) - d->mouseOffset;

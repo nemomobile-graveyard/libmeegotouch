@@ -74,15 +74,9 @@ public:
     void fillMarginRectWithPattern(QPainter *painter, const QRectF& rect, int thickness);
 
     void resetMouseGrabber();
-    void delayMousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void delayTouchEvent(QTouchEvent* touchEvent);
-    void forceSendingInitialEvents();
     void sendCancelEvent();
 
     void notifyChildRequestedMouseCancel();
-
-public Q_SLOTS:
-    void _q_initialPressDeliveryTimeout();
 
 protected:
     MScene *q_ptr;
@@ -90,11 +84,6 @@ protected:
 
     QGraphicsWidget* eventEater;
     bool cancelSent;
-    QTimer *initialPressTimer;
-    QGraphicsSceneMouseEvent mousePressEvent;
-    QTouchEvent touchBeginEvent;
-    bool pressPending;
-    bool touchPending;
 
     //Two finger gestures emulation variables
     QTouchEvent::TouchPoint emuPoint1, emuPoint2;

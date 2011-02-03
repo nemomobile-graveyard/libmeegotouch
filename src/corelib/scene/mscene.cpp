@@ -89,11 +89,6 @@ MScenePrivate::MScenePrivate() :
         manager(0),
         eventEater(new QGraphicsWidget),
         cancelSent(false),
-        initialPressTimer(0),
-        mousePressEvent(QEvent::GraphicsSceneMousePress),
-        touchBeginEvent(QEvent::TouchBegin),
-        pressPending(false),
-        touchPending(false),
         emuPoint1(1),
         emuPoint2(2),
         pinchEmulationEnabled(false)
@@ -457,15 +452,6 @@ void MScenePrivate::sendCancelEvent()
 {
     Q_Q(MScene);
 
-    if (initialPressTimer->isActive()) {
-        //We still didn't send the initial press and touch.
-        //We can stop the timer and forget about them.
-        initialPressTimer->stop();
-        pressPending = false;
-        touchPending = false;
-        return;
-    }
-
     if (q->mouseGrabberItem()) {
         MCancelEvent cancelEvent;
         q->sendEvent(q->mouseGrabberItem(),&cancelEvent);
@@ -475,48 +461,6 @@ void MScenePrivate::sendCancelEvent()
         eventEater->grabMouse();
 
     cancelSent = true;
-}
-
-void MScenePrivate::delayMousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
-{
-    copyGraphicsSceneMouseEvent(mousePressEvent, *mouseEvent);
-
-    if (!initialPressTimer->isActive())
-        initialPressTimer->start();
-
-    pressPending = true;
-}
-
-void MScenePrivate::delayTouchEvent(QTouchEvent* touchEvent)
-{
-    touchBeginEvent = *touchEvent;
-
-    if (!initialPressTimer->isActive())
-        initialPressTimer->start();
-
-    touchPending = true;
-}
-
-void MScenePrivate::forceSendingInitialEvents()
-{
-    if (initialPressTimer->isActive()) {
-        //Didn't send the press yet...
-        initialPressTimer->stop();
-        _q_initialPressDeliveryTimeout();
-    }
-}
-
-void MScenePrivate::_q_initialPressDeliveryTimeout()
-{
-    Q_Q(MScene);
-    if (touchPending) {
-        q->QGraphicsScene::event(&touchBeginEvent);
-        touchPending = false;
-    }
-    if (pressPending) {
-        q->QGraphicsScene::event(&mousePressEvent);
-        pressPending = false;
-    }
 }
 
 MScene::MScene(QObject *parent)
@@ -541,10 +485,6 @@ MScene::MScene(QObject *parent)
 
     d->eventEater->setParent(this);
     addItem(d->eventEater);
-    d->initialPressTimer = new QTimer(this);
-    d->initialPressTimer->setSingleShot(true);
-    d->initialPressTimer->setInterval(InitialPressTimeout);
-    connect(d->initialPressTimer, SIGNAL(timeout()), this, SLOT(_q_initialPressDeliveryTimeout()));
 }
 
 MScene::~MScene()
@@ -567,40 +507,10 @@ bool MScene::event(QEvent *event)
         return true;
 
     bool retValue = false;
+    retValue = QGraphicsScene::event(event);
 
-    switch (event->type())
-    {
-
-    case QEvent::TouchBegin:
-        d->delayTouchEvent(static_cast<QTouchEvent*>(event));
-        retValue = true;
-        break;
-    case QEvent::TouchUpdate:
-        if ((static_cast<QTouchEvent*>(event))->touchPoints().size() > 1)
-            d->forceSendingInitialEvents();
-        retValue = (d->touchPending ? true : QGraphicsScene::event(event));
-        break;
-    case QEvent::TouchEnd:
-        d->forceSendingInitialEvents();
-        retValue = QGraphicsScene::event(event);
-        break;
-
-    case QEvent::GraphicsSceneMousePress:
-        d->delayMousePressEvent(static_cast<QGraphicsSceneMouseEvent*>(event));
-        retValue = true;
-        break;
-    case QEvent::GraphicsSceneMouseMove:
-        retValue = (d->pressPending ? true : QGraphicsScene::event(event));
-        break;
-    case QEvent::GraphicsSceneMouseRelease:
-        d->forceSendingInitialEvents();
-        retValue = QGraphicsScene::event(event);
+    if (event->type() == QEvent::GraphicsSceneMouseRelease)
         d->resetMouseGrabber();
-        break;
-
-    default:
-        retValue = QGraphicsScene::event(event);
-    }
 
     return retValue;
 }
