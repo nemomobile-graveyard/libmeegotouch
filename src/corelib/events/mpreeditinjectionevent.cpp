@@ -29,7 +29,9 @@ static QMutex sPreeditInjectionMutex;
 
 MPreeditInjectionEventPrivate::MPreeditInjectionEventPrivate(const QString &preedit, int eventCursorPos)
     : preedit(preedit),
-      eventCursorPosition(eventCursorPos)
+      eventCursorPosition(eventCursorPos),
+      replacementStart(0),
+      replacementLength(0)
 {
     // nothing
 }
@@ -75,6 +77,25 @@ int MPreeditInjectionEvent::eventCursorPosition() const
 {
     Q_D(const MPreeditInjectionEvent);
     return d->eventCursorPosition;
+}
+
+void MPreeditInjectionEvent::setReplacement(int replacementStart, int replacementLength)
+{
+    Q_D(MPreeditInjectionEvent);
+    d->replacementStart = replacementStart;
+    d->replacementLength = replacementLength;
+}
+
+int MPreeditInjectionEvent::replacementStart() const
+{
+    Q_D(const MPreeditInjectionEvent);
+    return d->replacementStart;
+}
+
+int MPreeditInjectionEvent::replacementLength() const
+{
+    Q_D(const MPreeditInjectionEvent);
+    return d->replacementLength;
 }
 
 

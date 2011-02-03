@@ -68,6 +68,21 @@ public:
      */
     int eventCursorPosition() const;
 
+    /*!
+     * \brief sets replacement information that should be used for QInputMethodEvent.
+     */
+    void setReplacement(int replacementStart, int replacementLength);
+
+    /*!
+     * \brief replacement start info as in QInputMethodEvent
+     */
+    int replacementStart() const;
+
+    /*!
+      \brief replacement length info as in QInputMethodEvent
+    */
+    int replacementLength() const;
+
     static QEvent::Type eventNumber();
 
 protected:

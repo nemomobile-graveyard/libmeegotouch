@@ -28,6 +28,8 @@ public:
 
     QString preedit;
     int eventCursorPosition;
+    int replacementStart;
+    int replacementLength;
 };
 
 #endif
