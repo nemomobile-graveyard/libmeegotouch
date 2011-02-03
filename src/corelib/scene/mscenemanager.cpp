@@ -544,14 +544,11 @@ void MSceneManagerPrivate::_q_dislocateSceneWindow(MSceneWindow *sceneWindow,
         displacementItem = new QGraphicsWidget;
         displacementItem->setFlag(QGraphicsItem::ItemHasNoContents, true);
 
-        QGraphicsItem *childOfDisplacementItem = sceneWindow->d_func()->effect ?
-                                                 sceneWindow->d_func()->effect : sceneWindow;
-
-        setParentItemWithoutIncorrectRefocusing(displacementItem, childOfDisplacementItem->parentItem());
-        setParentItemWithoutIncorrectRefocusing(childOfDisplacementItem, displacementItem);
+        setParentItemWithoutIncorrectRefocusing(displacementItem, sceneWindow->parentItem());
+        setParentItemWithoutIncorrectRefocusing(sceneWindow, displacementItem);
 
         // Don't change the z value.
-        displacementItem->setZValue(childOfDisplacementItem->zValue());
+        displacementItem->setZValue(sceneWindow->zValue());
     }
 
     displacementItem->setPos(displacementItem->pos() + displacement);
@@ -569,10 +566,7 @@ void MSceneManagerPrivate::_q_undoSceneWindowDislocation(MSceneWindow *sceneWind
     if (displacementItem) {
         displacementItem->setPos(0.0, 0.0);
 
-        QGraphicsItem *childOfDisplacementItem = sceneWindow->d_func()->effect ?
-                                                 sceneWindow->d_func()->effect : sceneWindow;
-
-        setParentItemWithoutIncorrectRefocusing(childOfDisplacementItem, displacementItem->parentItem());
+        setParentItemWithoutIncorrectRefocusing(sceneWindow, displacementItem->parentItem());
 
         delete displacementItem;
         displacementItem = 0;
