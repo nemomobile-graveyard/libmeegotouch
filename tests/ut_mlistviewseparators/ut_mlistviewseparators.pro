@@ -8,6 +8,7 @@ INCLUDEPATH += ../mlistviewcommon \
         $$MSRCDIR/views \
         ../../src/corelib/.gen \
         ../../src/views/.moc \
+        $$MSRCDIR/views/animations \
 
 HEADERS += ut_mlistviewseparators.h \
         ../mlistviewcommon/myindexedmodel.h \
@@ -15,6 +16,7 @@ HEADERS += ut_mlistviewseparators.h \
         $$MSRCDIR/views/style/mlistindexstyle.h \
         $$MSRCDIR/views/style/mlistindextooltipstyle.h \
         $$MSRCDIR/views/style/mlistheaderstyle.h \
+        $$MSRCDIR/views/style/mbasiclistitemdeletionanimationstyle.h \
 
 SOURCES += ut_mlistviewseparators.cpp  \
         ../mlistviewcommon/myindexedmodel.cpp \
@@ -33,5 +35,7 @@ SOURCES += ut_mlistviewseparators.cpp  \
         $$MSRCDIR/views/widgets/mlistheader.cpp \
         ../../src/views/.moc/moc_mlistheader.cpp \
         ../../src/views/.gen/gen_mlistheaderstyledata.cpp \
+        $$MSRCDIR/views/animations/mbasiclistitemdeletionanimation.cpp \
+        ../../src/views/.gen/gen_mbasiclistitemdeletionanimationstyledata.cpp \
 
 include(../common_bot.pri)
