@@ -59,6 +59,7 @@ public:
     void _q_toolBarModelChanged(const QList<const char*>& members);
     void updateToolBarAlignment();
     void setCustomContent(QGraphicsWidget *customContent);
+    bool isToolbarLandscapeTabbar();
 
     QGraphicsWidget* content;
 

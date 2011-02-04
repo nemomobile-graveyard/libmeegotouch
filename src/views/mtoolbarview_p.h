@@ -82,7 +82,7 @@ protected:
     void addActionsFromLeftOvers();
     void updateViewAndStyling(MButton *button) const;
     virtual void updateWidgetAlignment();
-    void updateCenterOffset();
+    void updateCenterOffset(const QSizeF &size);
     void updateEmptinessProperty();
     void updateAlignmentMargins(int alignmentMargins);
     void updateStyleNames();

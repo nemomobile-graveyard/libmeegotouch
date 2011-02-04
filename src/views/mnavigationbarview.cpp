@@ -235,6 +235,8 @@ void MNavigationBarViewPrivate::updateLayout()
 
         if (menuVisible && escapeVisible) {
             layout->setPolicy(escapeToolbarMenuPolicy);
+        } else if (isToolbarLandscapeTabbar() && (menuVisible || escapeVisible)) {
+            layout->setPolicy(escapeToolbarMenuPolicy);
         } else if (menuVisible && !escapeVisible) {
             layout->setPolicy(toolbarMenuPolicy);
         } else if (!menuVisible && escapeVisible) {
@@ -283,6 +285,8 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
 
         if (menuVisible && escapeVisible) {
             alignment = Qt::AlignHCenter;
+        } else if (isToolbarLandscapeTabbar() && (menuVisible || escapeVisible)) {
+            alignment = Qt::AlignHCenter;
         } else if (menuVisible && !escapeVisible) {
             alignment = Qt::AlignLeft;
         } else if (!menuVisible && escapeVisible) {
@@ -322,6 +326,13 @@ void MNavigationBarViewPrivate::setCustomContent(QGraphicsWidget *customContent)
         currentCustomContent = customContent;
     }
 }
+
+bool MNavigationBarViewPrivate::isToolbarLandscapeTabbar()
+{
+    return (toolBar && toolBar->viewType() == MToolBar::tabType &&
+            controller->sceneManager() && controller->sceneManager()->orientation() == M::Landscape);
+}
+
 
 // --------------------------------------------------------------------------
 // MNavigationBarView
