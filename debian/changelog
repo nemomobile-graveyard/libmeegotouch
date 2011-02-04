@@ -1,8 +1,22 @@
-libmeegotouch (0.20.81~1) unstable; urgency=low
+libmeegotouch (0.20.81-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#224395 - Toolbar tabs wrong aligned after reentering page with tabs
+  * Fixes: NB#224575 - Navigation bar content disappears in edit alarm view (given scenario)
+  * Fixes: NB#213541 - Application menu updates its contents during disappearance animation.
+  * Fixes: NB#224111 - Entry Dialog widget gets covered with VKB in given scenario (Widgets Gallery)
+  * Fixes: NB#222761 - MBanner pressed down state is not cancelled properly
+  * Fixes: NB#218896
+  * Fixes: NB#212607 - Temporary fix for MLabelView for height for width
+  * Fixes: NB#221679 - Long items in popuplist cannot be wrapped.
+  * Fixes: NB#211465 - Datetime applet uses some other than MLocationDatabase as timezone list source
+  * Fixes: NB#224050 - Coverity testrun around 01.02.2011 - libmeegotouch
+  * Fixes: NB#221744 - crash in MPositionIndicatorView
+  * Fixes: MTextEdit: pre-edit styling (partly)
+  * Fixes: NB#223561 - MTextEdit does not disconnect from MCompleter
+  * Fixes: NB#212632, Keep magnifier within screen area
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 02 Feb 2011 13:57:08 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 04 Feb 2011 13:23:13 +0200
 
 libmeegotouch (0.20.80-1) unstable; urgency=low
 
