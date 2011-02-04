@@ -211,6 +211,8 @@ public:
     QString tileCacheKey;
     M::Orientation tileOrientation;
     QList<Tile> tiles;
+
+    bool highlightersChanged;
 };
 
 class MLabelViewPrivate : public MWidgetViewPrivate

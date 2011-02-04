@@ -48,7 +48,7 @@ static const int M_HIGHLIGHTER_ID_PROPERTY  = QTextFormat::UserProperty + 1;
 
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
-    tileHeight(-1), tileCacheKey(), tiles()
+    tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false)
 {
     const M::OrientationAngle orientationAngle = MOrientationTracker::instance()->orientationAngle();
     tileOrientation = (orientationAngle == M::Angle0 || orientationAngle == M::Angle180)
@@ -289,7 +289,7 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
             needUpdate = true;
             textDocumentDirty = true;
         } else if (member == MLabelModel::Highlighters) {
-            textDocumentDirty = true;
+            highlightersChanged = true;
         }
     }
 
@@ -503,6 +503,7 @@ void MLabelViewRich::updateHighlighting()
             }
         }
     }
+    highlightersChanged = false;
 }
 
 
@@ -520,7 +521,7 @@ void MLabelViewRich::applyStyle()
 
 void MLabelViewRich::initTiles(const QSize &size)
 {
-    if (dirty || textDocumentDirty) {
+    if (dirty || textDocumentDirty || highlightersChanged) {
         cleanupTiles();       
         dirty = false;
     }
@@ -537,7 +538,12 @@ void MLabelViewRich::initTiles(const QSize &size)
 
     Q_ASSERT(tiles.isEmpty());
 
-    ensureDocumentIsReady();
+    if (textDocumentDirty) {
+        ensureDocumentIsReady();
+    } else if (highlightersChanged) {
+        QString t = viewPrivate->model()->text();
+        textDocument.setHtml(wrapTextWithSpanTag(t));
+    }
     updateRichTextEliding();
     updateHighlighting();
 
