@@ -28,8 +28,11 @@
 #include <QAbstractTextDocumentLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneResizeEvent>
+#include <QTimer>
 
-MLabelViewPrivate::MLabelViewPrivate()
+MLabelViewPrivate::MLabelViewPrivate() :
+    MWidgetViewPrivate(),
+    notificationTimer(0)
 {
     impl = new MLabelViewSimple(this);
 }
@@ -37,6 +40,7 @@ MLabelViewPrivate::MLabelViewPrivate()
 MLabelViewPrivate::~MLabelViewPrivate()
 {
     delete impl;
+    delete notificationTimer;
 }
 
 const MLabelModel *MLabelViewPrivate::model() const
@@ -55,6 +59,22 @@ const QRectF MLabelViewPrivate::boundingRect() const
 {
     Q_Q(const MLabelView);
     return q->boundingRect();
+}
+
+void MLabelViewPrivate::requestNotification(int interval)
+{
+    Q_Q(MLabelView);
+    if (!notificationTimer) {
+        notificationTimer = new QTimer();
+        notificationTimer->setSingleShot(true);
+        QObject::connect(notificationTimer, SIGNAL(timeout()), q, SLOT(_q_notificationTimerExceeded()));
+    }
+    notificationTimer->start(interval);
+}
+
+void MLabelViewPrivate::_q_notificationTimerExceeded()
+{
+    impl->handleNotification();
 }
 
 bool MLabelViewPrivate::displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const
@@ -233,3 +253,5 @@ void MLabelView::orientationChangeEvent(MOrientationChangeEvent *event)
 }
 
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
+
+#include "moc_mlabelview.cpp"

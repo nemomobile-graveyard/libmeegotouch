@@ -84,6 +84,7 @@ PRIVATE_HEADERS += \
     mbuttontransition.h \
     mbuttondefaulttransition.h \
     mbuttonexpandingbackgroundtransition.h \
+    mlabelview_p.h \
     ../corelib/core/mdynamicpropertywatcher.h \ # an internal helper class that is also needed by the view lib
 
 SOURCES += \

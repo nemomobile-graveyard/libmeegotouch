@@ -36,7 +36,6 @@
 #include "mlabel.h"
 #include "mlabel_p.h"
 #include "mlabelhighlighter.h"
-#include "mdebug.h"
 #include "mdeviceprofile.h"
 #include "morientationchangeevent.h"
 #include "morientationtracker.h"
@@ -91,9 +90,8 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
 
     if (tiles.isEmpty()) {
         // The QPixmapCache is full. Draw the text directly as fallback.
-        QRectF bounds = textBoundaries();
-        bounds.translate(pixmapOffset);
-        textDocument.drawContents(painter, bounds);
+        painter->translate(pixmapOffset);
+        textDocument.drawContents(painter, textBoundaries());
     } else {
         drawTiles(painter, pixmapOffset, size);
     }
@@ -314,7 +312,7 @@ void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
             event->accept();
             mouseDownCursorPos = cursorPos;
-            cleanupTiles();
+            triggerHighlightingUpdate();
             viewPrivate->controller->update();
             viewPrivate->style()->pressFeedback().play();
         }
@@ -329,9 +327,9 @@ void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     mouseDownCursorPos = -1;
-    cleanupTiles();
+    triggerHighlightingUpdate();
     viewPrivate->controller->update();
-    
+
     int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
@@ -359,7 +357,7 @@ void MLabelViewRich::cancelEvent(MCancelEvent *event)
     Q_UNUSED(event);
     if (mouseDownCursorPos > 0) {
         mouseDownCursorPos = -1;
-        cleanupTiles();
+        triggerHighlightingUpdate();
         viewPrivate->controller->update();
         viewPrivate->style()->cancelFeedback().play();
     }
@@ -387,7 +385,7 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
         }
     }
     mouseDownCursorPos = -1;
-    cleanupTiles();
+    triggerHighlightingUpdate();
     viewPrivate->controller->update();
 }
 
@@ -463,10 +461,11 @@ void MLabelViewRich::updateRichTextEliding()
     }
 }
 
-void MLabelViewRich::updateHighlighting()
+bool MLabelViewRich::updateHighlighting()
 {
-    //TODO: Should the highlight format come from the highlighter object?
+    bool highlightingChanged = false;
 
+    //TODO: Should the highlight format come from the highlighter object?
     QList<MLabelHighlighter *> list = viewPrivate->model()->highlighters();
     const int listSize = list.size();
     for (int i = 0; i < listSize; ++i) {
@@ -474,7 +473,7 @@ void MLabelViewRich::updateHighlighting()
         QTextCursor cursor(&textDocument);
         while (!cursor.isNull() && !cursor.atEnd()) {
             cursor = textDocument.find(highlighter->highlightExpression(), cursor);
-           
+
             //Regexp matching an empty string doesn’t advance cursor
             if (cursor.selectedText().isNull()) {
                 break;
@@ -483,7 +482,8 @@ void MLabelViewRich::updateHighlighting()
             if (!cursor.isNull()) {
                 QString item = cursor.selectedText();
                 if (highlighter->validate(item)) {
-                    QTextCharFormat format = cursor.charFormat();
+                    const QTextCharFormat oldFormat = cursor.charFormat();
+                    QTextCharFormat format = oldFormat;
                     format.setFontUnderline(true);
                     format.setAnchor(true);
                     format.setAnchorHref(item);
@@ -495,14 +495,19 @@ void MLabelViewRich::updateHighlighting()
                     } else
                         format.setForeground(QBrush(viewPrivate->style()->highlightColor()));
                     //cursor.mergeCharFormat(format);
-                    cursor.setCharFormat(format);
+                    if (oldFormat != format) {
+                        highlightingChanged = true;
+                        cursor.setCharFormat(format);
+                    }
                 }
             }
         }
     }
-    highlightersChanged = false;
-}
 
+    highlightersChanged = false;
+
+    return highlightingChanged;
+}
 
 QString MLabelViewRich::wrapTextWithSpanTag(const QString &text) const
 {
@@ -519,10 +524,18 @@ void MLabelViewRich::applyStyle()
     }
 }
 
+void MLabelViewRich::handleNotification()
+{
+    if (updateHighlighting()) {
+        cleanupTiles();
+        viewPrivate->controller->update();
+    }
+}
+
 void MLabelViewRich::initTiles(const QSize &size)
 {
     if (dirty || textDocumentDirty || highlightersChanged) {
-        cleanupTiles();       
+        cleanupTiles();
         dirty = false;
     }
 
@@ -532,7 +545,7 @@ void MLabelViewRich::initTiles(const QSize &size)
         // to update the cache again.
         if (isTilesCacheValid()) {
             return;
-        }       
+        }
         cleanupTiles();
     }
 
@@ -712,3 +725,9 @@ QString MLabelViewRich::defaultStyleSheet() const
     return QString::fromLatin1("* { color: %1; } a {color: %2;}").arg(textColor.name()).arg(anchorColor.name());
 }
 
+void MLabelViewRich::triggerHighlightingUpdate()
+{
+    // Try to update the highlighting after at least one frame
+    const int maxFps = 60;
+    viewPrivate->requestNotification(1000 / maxFps);
+}

@@ -30,6 +30,7 @@ class MLabelView;
 class QGraphicsSceneResizeEvent;
 class QGestureEvent;
 class QTapAndHoldGesture;
+class QTimer;
 
 class MLabelViewSimple
 {
@@ -49,6 +50,13 @@ public:
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
+
+    /**
+     * Is invoked after the specified interval given by
+     * MLabelViewPrivate::requestNotification(interval).
+     */
+    virtual void handleNotification();
+
     void initializeTextProperties();
 
     /**
@@ -107,7 +115,7 @@ public:
     bool dirty;
     QStaticText staticText;
     QString unconstraintText;
-    
+
     bool clip;
     QPen pen;
     QFont font;
@@ -145,11 +153,19 @@ public:
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
     virtual void applyStyle();
+    virtual void handleNotification();
 
     void ensureDocumentIsReady();
     int cursorPositionOfLastVisibleCharacter();
     void updateRichTextEliding();
-    void updateHighlighting();
+
+    /**
+     * Updates the textformat to show parts of the text highlighted dependent on
+     * the attached MLabelHighlighters.
+     * \return True if the textformat has been changed.
+     */
+    bool updateHighlighting();
+
     QString wrapTextWithSpanTag(const QString &text) const;
 
     /**
@@ -207,6 +223,14 @@ public:
      */
     QString defaultStyleSheet() const;
 
+    /**
+     * Triggers an asynchronous update of the text-highlighting. It is important
+     * to do the update asynchronously because MLabelViewRich::updateHighlighting() is a
+     * quite expensive operation. Multiple calls of MLabelViewRich::triggerHighlightingUpdate()
+     * within one callstack will only result in one call of MLabelViewRich::updateHighlighting().
+     */
+    void triggerHighlightingUpdate();
+
     mutable QTextDocument textDocument;
     bool textDocumentDirty;
     QPoint pixmapOffset;
@@ -232,9 +256,18 @@ public:
     const MLabelStyle *style() const;
     const QRectF boundingRect() const;
 
+    /**
+     * Triggers a call of MLabelViewSimple::handleNotification() after the specified
+     * interval. If the method is invoked before the interval has been exceeded, the
+     * remaining interval will get reset to the specified interval.
+     */
+    void requestNotification(int interval);
+
+    void _q_notificationTimerExceeded();
+
     //Should label be rendered as rich text
     bool displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const;
-    
+
     // need define this for there are overload functions in controller
     MLabel *controller;
 
@@ -243,6 +276,7 @@ public:
 
     QSizeF paddedSize;
     QSizeF previousStaticTextSize;
+    QTimer *notificationTimer;
 };
 
 #endif
