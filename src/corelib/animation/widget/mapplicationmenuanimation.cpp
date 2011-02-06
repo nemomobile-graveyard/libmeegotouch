@@ -30,11 +30,10 @@ MApplicationMenuAnimationPrivate::MApplicationMenuAnimationPrivate()
 
 QPointF MApplicationMenuAnimationPrivate::setupPositionAnimation(const QPointF &widgetPos)
 {
+    Q_UNUSED(widgetPos);
     Q_Q(MApplicationMenuAnimation);
 
-    QPointF pos = widgetPos;
-    pos.ry() += q->style()->contentsViewportPositionAnimationDistance();
-    return pos;
+    return QPointF(0, q->style()->contentsViewportPositionAnimationDistance());
 }
 
 void MApplicationMenuAnimationPrivate::setupDurations()

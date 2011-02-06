@@ -63,7 +63,7 @@ void MDialogAnimationPrivate::init()
     titleBarOpacityAnimation = new QPropertyAnimation;
     titleBarPositionAnimation = new QPropertyAnimation;
     titleBarOpacityAnimation->setPropertyName("opacity");
-    titleBarPositionAnimation->setPropertyName("pos");
+    titleBarPositionAnimation->setPropertyName("paintOffset");
 
     contentsViewportAnimationDelay = new QPauseAnimation;
     contentsViewportOpacityAnimation = new QPropertyAnimation;
@@ -71,13 +71,13 @@ void MDialogAnimationPrivate::init()
     contentsViewportPositionAnimation = new QPropertyAnimation;
     contentsViewportOpacityAnimation->setPropertyName("opacity");
     contentsViewportScaleAnimation->setPropertyName("scale");
-    contentsViewportPositionAnimation->setPropertyName("pos");
+    contentsViewportPositionAnimation->setPropertyName("paintOffset");
 
     buttonBoxAnimationDelay = new QPauseAnimation;
     buttonBoxOpacityAnimation = new QPropertyAnimation;
     buttonBoxPositionAnimation = new QPropertyAnimation;
     buttonBoxOpacityAnimation->setPropertyName("opacity");
-    buttonBoxPositionAnimation->setPropertyName("pos");
+    buttonBoxPositionAnimation->setPropertyName("paintOffset");
 
     QParallelAnimationGroup *titleBarAnimation = new QParallelAnimationGroup;
     titleBarAnimation->addAnimation(titleBarOpacityAnimation);
@@ -148,7 +148,7 @@ QPointF MDialogAnimationPrivate::setupPositionAnimation(const QPointF &widgetPos
     Q_Q(MDialogAnimation);
 
     QPointF distance = origin - widgetPos;
-    return widgetPos + distance * (1 - q->style()->scale());
+    return distance * (1 - q->style()->scale());
 }
 
 MDialogAnimation::MDialogAnimation(QObject *parent) :
@@ -254,23 +254,19 @@ void MDialogAnimationPrivate::setupTitleBarAnimation()
 
     Q_Q(MDialogAnimation);
 
-    QPointF titleBarPos = titleBar->pos();
-
     if (direction == MDialogAnimation::In) {
         titleBar->setOpacity(0);
         titleBarOpacityAnimation->setStartValue(0);
         titleBarOpacityAnimation->setEndValue(q->style()->opacity());
-
-        titleBarPositionAnimation->setEndValue(titleBarPos);
-        titleBarPos.ry() += q->style()->titleBarAnimationDistance();
-        titleBarPositionAnimation->setStartValue(titleBarPos);
+        titleBarPositionAnimation->setEndValue(QPointF(0,0));
+        titleBarPositionAnimation->setStartValue(QPointF(0,q->style()->titleBarAnimationDistance()));
     } else {
         titleBarOpacityAnimation->setStartValue(q->style()->opacity());
         titleBarOpacityAnimation->setEndValue(0);
 
-        titleBarPositionAnimation->setStartValue(titleBarPos);
-        titleBarPos.ry() += q->style()->titleBarAnimationDistance();
-        titleBarPositionAnimation->setEndValue(titleBarPos);
+
+        titleBarPositionAnimation->setStartValue(QPointF(0,0));
+        titleBarPositionAnimation->setEndValue(QPointF(0,q->style()->titleBarAnimationDistance()));
     }
 
     origin.ry() += titleBar->sizeHint(Qt::PreferredSize).height();
@@ -298,7 +294,7 @@ void MDialogAnimationPrivate::setupContentsViewportAnimation()
         contentsViewportScaleAnimation->setEndValue(1);
 
         contentsViewportPositionAnimation->setStartValue(setupPositionAnimation(contentsViewportPos));
-        contentsViewportPositionAnimation->setEndValue(contentsViewportPos);
+        contentsViewportPositionAnimation->setEndValue(QPointF(0,0));
     } else {
         contentsViewportOpacityAnimation->setStartValue(q->style()->opacity());
         contentsViewportOpacityAnimation->setEndValue(0);
@@ -306,7 +302,7 @@ void MDialogAnimationPrivate::setupContentsViewportAnimation()
         contentsViewportScaleAnimation->setStartValue(1);
         contentsViewportScaleAnimation->setEndValue(q->style()->scale());
 
-        contentsViewportPositionAnimation->setStartValue(contentsViewportPos);
+        contentsViewportPositionAnimation->setStartValue(QPointF(0,0));
         contentsViewportPositionAnimation->setEndValue(setupPositionAnimation(contentsViewportPos));
     }
 
@@ -323,28 +319,19 @@ void MDialogAnimationPrivate::setupButtonBoxAnimation()
 
     Q_Q(MDialogAnimation);
 
-    qreal buttonBoxPosY = qMin(contentsViewport->sizeHint(Qt::PreferredSize).height(),
-                               contentsViewport->sizeHint(Qt::MaximumSize).height());
-
-    QPointF buttonBoxPos(0, buttonBoxPosY);
-    if (titleBar && titleBar->isVisible())
-        buttonBoxPos.ry() += titleBar->sizeHint(Qt::PreferredSize).height();
-
     if (direction == MDialogAnimation::In) {
         buttonBox->setOpacity(0);
         buttonBoxOpacityAnimation->setStartValue(0);
         buttonBoxOpacityAnimation->setEndValue(q->style()->opacity());
 
-        buttonBoxPositionAnimation->setEndValue(buttonBoxPos);
-        buttonBoxPos.ry() -= q->style()->buttonBoxAnimationDistance();
-        buttonBoxPositionAnimation->setStartValue(buttonBoxPos);
+        buttonBoxPositionAnimation->setStartValue(QPointF(0,-q->style()->buttonBoxAnimationDistance()));
+        buttonBoxPositionAnimation->setEndValue(QPointF(0,0));
     } else {
         buttonBoxOpacityAnimation->setStartValue(q->style()->opacity());
         buttonBoxOpacityAnimation->setEndValue(0);
 
-        buttonBoxPositionAnimation->setStartValue(buttonBoxPos);
-        buttonBoxPos.ry() -= q->style()->buttonBoxAnimationDistance();
-        buttonBoxPositionAnimation->setEndValue(buttonBoxPos);
+        buttonBoxPositionAnimation->setStartValue(QPointF(0,0));
+        buttonBoxPositionAnimation->setEndValue(QPointF(0,-q->style()->buttonBoxAnimationDistance()));
     }
 
     q->addAnimation(delayedButtonBoxAnimation);
