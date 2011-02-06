@@ -74,6 +74,9 @@ class MCharsetDetectorPrivate;
  * qDebug() << bestMatch.name();       // this will print "UTF-8"
  * qDebug() << bestMatch.language();   // this will print ""
  * qDebug() << bestMatch.confidence(); // this will print "100"
+ * // decode input string into a QString, using the encoding
+ * // detected as best best match:
+ * QString result = charsetDetector.text(bestMatch);
  *
  * // try another detection using the same MCharsetDetector object
  * // (it saves some time not creating a new one all the time):
@@ -90,6 +93,11 @@ class MCharsetDetectorPrivate;
  *              << mCharsetMatchList[i].language() // for i==0, “ja” is printed
  *              << mCharsetMatchList[i].confidence();
  * }
+ * // decode input string into a QString using the encoding detected
+ * // in the first (i.e. best )match (if there was a match at all):
+ * if(!mCharsetMatchList.isEmpty())
+ *     result = charsetDetector.text(mCharsetMatchList.first());
+ *
  * \endcode
  */
 

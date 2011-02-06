@@ -819,8 +819,8 @@ void Ft_Locales::testMLocaleToLower_data()
             << QString("en_GB")
             << QString("ΙΣ")
             << QString("ις")
-            // Qt’s toLower is *not* context aware and lowercases the final Σ
-            // the same way as a non-final one:
+            // Qt’s toLower is now context aware and lowercases the final Σ
+            // correctly using ICU
             << QString("ις")
             ;
     }
@@ -840,8 +840,8 @@ void Ft_Locales::testMLocaleToLower_data()
             << QString("el_GR")
             << QString("ΙΣ")
             << QString("ις")
-            // Qt’s toLower is *not* context aware and lowercases the final Σ
-            // the same way as a non-final one:
+            // Qt’s toLower is now context aware and lowercases the final Σ
+            // correctly using ICU
             << QString("ις")
             ;
     }
