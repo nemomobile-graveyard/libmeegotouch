@@ -27,17 +27,12 @@
 
 #include "mscalableimage.h"
 
-#include <qdrawutil.h>
-#include <QVarLengthArray>
-#include <QPainter>
+class QPainter;
 
 class MScalableImagePrivate
 {
     Q_DECLARE_PUBLIC(MScalableImage)
 public:
-
-    typedef QVarLengthArray<QPainter::PixmapFragment, 16> QPixmapFragmentsArray;
-
     enum MScalableImageType {
         MScalable9,
         MScalable1
@@ -55,29 +50,6 @@ public:
     //void drawScalable3H(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
     //void drawScalable3V(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
 
-    /*!
-        \note The method is reimplementation of Qt's method qDrawBorderPixmap with floating point target rect support.
-        see Qt src/gui/painting/qdrawutil.[cpp,h].
-    */
-    void drawBorderPixmap(QPainter *painter,
-                          const QRectF &targetRect,
-                          const QMargins &targetMargins,
-                          const QPixmap &pixmap,
-                          const QRect &sourceRect,
-                          const QMargins &sourceMargins,
-                          const QTileRules &rules = QTileRules(),
-                          QDrawBorderPixmap::DrawingHints hints = 0
-                          );
-
-    inline void drawBorderPixmap(QPainter *painter,
-                                 const QRectF &target,
-                                 const QMargins &margins,
-                                 const QPixmap &pixmap) const
-    {
-        const_cast<MScalableImagePrivate*>(this)->drawBorderPixmap(painter, target, margins, pixmap, pixmap.rect(), margins);
-    }
-
-
     MScalableImageType m_imageType;
 
     const QPixmap *m_image;
@@ -85,11 +57,10 @@ public:
     QMargins m_preferredMargins;
 
     QString pixmapId;
-
     QString cachedImageKey;
 
 protected:
     MScalableImage *q_ptr;
 };
 
-#endif // MWIDGET_P_H
+#endif // MSCALABLEIMAGE_P_H
