@@ -262,7 +262,7 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
         }
     }
 
-    if (pixmap.format() != QImage::Format_ARGB32 || pixmap.format() != QImage::Format_ARGB32_Premultiplied) {
+    if (pixmap.format() != QImage::Format_ARGB32 && pixmap.format() != QImage::Format_ARGB32_Premultiplied) {
         pixmap = pixmap.convertToFormat(QImage::Format_ARGB32_Premultiplied);
     }
 
@@ -320,7 +320,7 @@ QString PixmapImageResource::uniqueKey()
 
 bool PixmapImageResource::shouldBeCached()
 {
-    return false;
+    return true;
 }
 
 QImage IconImageResource::createPixmap(const QSize &size)
