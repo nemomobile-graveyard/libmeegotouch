@@ -68,7 +68,6 @@ public:
 
 protected:
     virtual bool eventFilter(QObject *obj, QEvent *event);
-    void processActionEvent(QActionEvent* actionEvent);
     virtual void addActions();
     MWidget *createWidget(QAction *action);
     MWidget *createButton(QAction *action);
@@ -102,7 +101,6 @@ protected:
     void removeStyleWidget(MWidget *widget);
     void addStyleSpacer();
     void makeLandscapePolicyColumnsEqual();
-    void _q_processDelayedActionEvents();
 
 protected:
     QGraphicsLinearLayout *controllerLayout;
@@ -115,8 +113,6 @@ protected:
 
     QHash<QAction *, MWidget *> leasedWidgets;
     QHash<QAction *, MWidget *> buttons;
-
-    QList<QActionEvent*> delayedActionEvents;
 
     MApplicationMenu *controller;
 
