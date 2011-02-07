@@ -249,6 +249,7 @@ void MBannerViewPrivate::layoutShortEventBanner()
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("ShortEventBannerTitle");
         title()->setVisible(true);
+        title()->setAlignment(Qt::AlignTop);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
@@ -256,6 +257,7 @@ void MBannerViewPrivate::layoutShortEventBanner()
     if (!q->model()->subtitle().isEmpty()) {
         subtitle()->setStyleName("ShortEventBannerSubtitle");
         subtitle()->setVisible(true);
+        subtitle()->setAlignment(Qt::AlignTop);
         landscapePolicy->addItem(subtitle(), Qt::AlignTop);
         portraitPolicy->addItem(subtitle(), Qt::AlignTop);
     }
