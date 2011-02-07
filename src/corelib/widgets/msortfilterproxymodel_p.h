@@ -38,8 +38,7 @@ public:
     void _q_rowsInserted(const QModelIndex &parent, int first, int last);
     void _q_rowsRemoved(const QModelIndex &parent, int first, int last);
     void _q_layoutAboutToBeAnimated();
-    void _q_layoutAboutToBeChanged();
-    void _q_layoutChanged();
+    void _q_resetAnimatedChange();
 
 private:
     MSortFilterProxyModel *q_ptr;

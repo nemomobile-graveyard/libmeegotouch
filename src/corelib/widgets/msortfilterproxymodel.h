@@ -81,7 +81,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_rowsInserted(QModelIndex,int,int))
     Q_PRIVATE_SLOT(d_func(), void _q_rowsRemoved(QModelIndex,int,int))
 
-    Q_PRIVATE_SLOT(d_func(), void _q_layoutChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_resetAnimatedChange())
 
 private:
     MSortFilterProxyModelPrivate *d_ptr;

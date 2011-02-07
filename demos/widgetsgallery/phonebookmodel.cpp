@@ -160,8 +160,6 @@ QVariant PhoneBookModel::itemData(int row, int group, int role) const
 
 bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    emit layoutAboutToBeChanged();
-    
     beginInsertRows(parent, row, row + count - 1, false);
 
     for (int i = phoneBookEntries.size(); i < count; i++) {
@@ -172,15 +170,11 @@ bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
     regenerateModel();
 
     endInsertRows();
-    
-    emit layoutChanged();
     return true;
 }
 
 bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    emit layoutAboutToBeChanged();
-    
     if (count <= 0)
         return true; //Successfully removed 0 rows.
     
@@ -191,15 +185,12 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
         flatRow = itemGroupCache[group][row];
 
     beginRemoveRows(parent, row, row + count - 1, count == 1);
-    
     qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
     phoneBookEntries.remove(flatRow, count);
 
     regenerateModel();
-    
-    endRemoveRows();
 
-    emit layoutChanged();
+    endRemoveRows();
     return true;
 }
 

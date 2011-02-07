@@ -37,7 +37,7 @@ void MSortFilterProxyModelPrivate::init()
 {
     Q_Q(MSortFilterProxyModel);
 
-    q->connect(q, SIGNAL(layoutChanged()), q, SLOT(_q_layoutChanged()));
+    q->connect(q, SIGNAL(layoutChanged()), q, SLOT(_q_resetAnimatedChange()));
 
     q->connect(q, SIGNAL(rowsInserted(QModelIndex,int,int)), q, SLOT(_q_rowsInserted(QModelIndex,int,int)));
     q->connect(q, SIGNAL(rowsRemoved(QModelIndex,int,int)), q, SLOT(_q_rowsRemoved(QModelIndex,int,int)));
@@ -61,12 +61,14 @@ void MSortFilterProxyModelPrivate::_q_rowsInserted(const QModelIndex &parent, in
 {
     Q_Q(MSortFilterProxyModel);
     emit q->rowsInserted(parent, first, last, isAnimatedChange);
+    _q_resetAnimatedChange();
 }
 
 void MSortFilterProxyModelPrivate::_q_rowsRemoved(const QModelIndex &parent, int first, int last)
 {
     Q_Q(MSortFilterProxyModel);
     emit q->rowsRemoved(parent, first, last, isAnimatedChange);
+    _q_resetAnimatedChange();
 }
 
 void MSortFilterProxyModelPrivate::_q_layoutAboutToBeAnimated()
@@ -76,7 +78,7 @@ void MSortFilterProxyModelPrivate::_q_layoutAboutToBeAnimated()
     isAnimatedChange = true;
 }
 
-void MSortFilterProxyModelPrivate::_q_layoutChanged()
+void MSortFilterProxyModelPrivate::_q_resetAnimatedChange()
 {
     isAnimatedChange = false;
 }
