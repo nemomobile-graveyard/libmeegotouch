@@ -84,7 +84,10 @@ protected:
     MLabel *bannerTimeStampLabel;
     MLabel *prefixTimeStampLabel;
     QDateTime *bannerTimeStampData;
+    //To check when the banner is pressed
     bool down;
+    //To activate the opacity in the press down state
+    bool isDownOpacityEnabled;
     MImageWidget *pixmapBanner;
 
     MBanner *controller;

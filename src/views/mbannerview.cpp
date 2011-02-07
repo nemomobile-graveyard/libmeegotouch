@@ -47,6 +47,7 @@ MBannerViewPrivate::MBannerViewPrivate() :
     prefixTimeStampLabel(NULL),
     bannerTimeStampData(NULL),
     down(false),
+    isDownOpacityEnabled(false),
     pixmapBanner(NULL),
     controller(0)
 {
@@ -266,6 +267,7 @@ void MBannerViewPrivate::layoutShortEventBanner()
     bannerTimeStamp()->setVisible(false);
     landscapePolicy->addStretch();
     portraitPolicy->addStretch();
+    isDownOpacityEnabled = true;
 }
 
 void MBannerViewPrivate::layoutInformationBanner()
@@ -433,6 +435,7 @@ void MBannerViewPrivate::layoutFullEventBanner()
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setVisible(false);
     }
+    isDownOpacityEnabled = true ;
 }
 
 void MBannerViewPrivate::layoutPrivateEventBanner()
@@ -643,6 +646,20 @@ void MBannerView::drawForeground(QPainter *painter, const QStyleOptionGraphicsIt
 
     if (d->bannerTimeStampLabel)
         d->updateDateFormat();
+}
+
+void MBannerView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    Q_UNUSED(option);
+
+    Q_D(const MBannerView);
+
+    if (d->down && d->isDownOpacityEnabled) {
+        painter->save();
+        painter->setOpacity(style()->pressDownBannerOpacity());
+        painter->fillRect(QRectF(QPointF(), size()), Qt::black);
+        painter->restore();
+    }
 }
 
 void MBannerView::updateData(const QList<const char *>& modifications)

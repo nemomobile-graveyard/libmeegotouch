@@ -61,6 +61,7 @@ protected:
     virtual void setupModel();
     virtual void applyStyle();
     virtual void drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     //! \reimp_end
 
     MBannerViewPrivate *const d_ptr;

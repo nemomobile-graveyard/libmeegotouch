@@ -28,7 +28,7 @@ class M_VIEWS_EXPORT MBannerStyle : public MSceneWindowStyle
     M_STYLE(MBannerStyle)
 
     M_STYLE_ATTRIBUTE(QSize,iconSize,IconSize)
-    M_STYLE_ATTRIBUTE(qreal, pressDimFactor, PressDimFactor)
+    M_STYLE_ATTRIBUTE(qreal,pressDownBannerOpacity,PressDownBannerOpacity)
 };
 
 class M_VIEWS_EXPORT MBannerStyleContainer : public MSceneWindowStyleContainer
