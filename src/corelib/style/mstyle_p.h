@@ -22,9 +22,11 @@
 
 #include <QObject>
 #include <QHash>
+#include <QWeakPointer>
 
 class MStyle;
 class MWidgetController;
+class MSceneManager;
 
 class MStyleContainerPrivate
 {
@@ -44,6 +46,7 @@ private:
 
     MStyleContainer *q_ptr;
     const MWidgetController *parent;
+    QWeakPointer<MSceneManager> sceneManager;
 };
 
 #endif

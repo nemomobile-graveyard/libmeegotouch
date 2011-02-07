@@ -23,7 +23,8 @@
 #include "mtheme.h"
 #include "mtheme_p.h"
 #include "mcomponentdata.h"
-#include "mapplicationwindow.h"
+#include <mwindow.h>
+#include <mscenemanager.h>
 
 // TODO: get rid of this include, make MStyle not to use mgen
 #include "gen_mstyledata.h"
@@ -195,17 +196,28 @@ const MWidgetController *MStyleContainer::parent() const
     return d_ptr->parent;
 }
 
+void MStyleContainer::setSceneManager(MSceneManager *sceneManager)
+{
+    d_ptr->sceneManager = sceneManager;
+}
+
+const MSceneManager *MStyleContainer::sceneManager() const
+{
+    return d_ptr->sceneManager.data();
+}
+
 // getter for derived classes
 const MStyle *MStyleContainer::currentStyle() const
 {
     M::Orientation orientation = M::Landscape;
 
-    // FIXME: replace activeWindow() with more reliable way of getting
-    // current orientation for the styled component.
-    // e.g. for MWidget descendants, a call to sceneManager()->orientation() would do
-    const MWindow *activeWindow = MComponentData::activeWindow();
-    if (activeWindow)
-        orientation = activeWindow->orientation();
+    if (!d_ptr->sceneManager.isNull()) {
+        orientation = d_ptr->sceneManager.data()->orientation();
+    } else {
+        const MWindow *activeWindow = MComponentData::activeWindow();
+        if (activeWindow)
+            orientation = activeWindow->orientation();
+    }
 
     if (d_ptr->cachedCurrentStyle[orientation] != 0) {
         return d_ptr->cachedCurrentStyle[orientation];

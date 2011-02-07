@@ -100,6 +100,7 @@
 
 class MWidgetController;
 class MWidgetViewPrivate;
+class MSceneManager;
 
 class M_CORE_EXPORT MStyle : public QObject
 {
@@ -129,6 +130,9 @@ public:
     QString type() const;
     void setParent(const MWidgetController *parent);
     const MWidgetController *parent() const;
+
+    void setSceneManager(MSceneManager *sceneManager);
+    const MSceneManager *sceneManager() const;
 protected:
     void reloadStyles();
     const MStyle *currentStyle() const;

@@ -32,6 +32,7 @@
 #include "mapplication.h"
 #include "mapplicationwindow.h"
 #include "mclassfactory.h"
+#include <mscene.h>
 
 #include "mdebug.h"
 
@@ -202,6 +203,7 @@ void MWidgetView::setModel(MWidgetModel *model)
     else
         styleName = d->model->styleName();
     d->styleContainer->initialize(styleName, styleType, parent);
+    d->styleContainer->setSceneManager(d->controller->sceneManager());
 
     if (d->controller->isActive()) {
         setActive(true);
@@ -438,6 +440,16 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
             d->reloadChildItemsStyles(d->controller);
             applyStyle();
         }
+    } else if (change == QGraphicsItem::ItemSceneChange) {
+        QGraphicsScene *scene = value.value<QGraphicsScene*>();
+        MScene *mscene = 0;
+        if (scene)
+            mscene = qobject_cast<MScene*>(scene);
+
+        if (mscene)
+            d->styleContainer->setSceneManager(mscene->sceneManager());
+        else
+            d->styleContainer->setSceneManager(0);
     }
 }
 void MWidgetView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
