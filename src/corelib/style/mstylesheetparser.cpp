@@ -221,41 +221,61 @@ class MFileLocker {
 public:
     static bool readLock(const QFile& file)
     {
+#ifndef Q_OS_WIN
         bool result = (flock(file.handle(), LOCK_SH) == 0);
         if (!result) {
             mWarning("MFileLocker") << "Could not read lock" << file.fileName();
         }
         return result;
+#else
+        return true;
+#endif
     }
 
     static bool writeLock(const QFile& file)
     {
+#ifndef Q_OS_WIN
         bool result = (flock(file.handle(), LOCK_EX) == 0);
         if (!result) {
             mWarning("MFileLocker") << "Could not write lock" << file.fileName();
         }
         return result;
+#else
+        return true;
+#endif
     }
 
     static bool readLockNB(const QFile& file)
     {
+#ifndef Q_OS_WIN
         bool result = (flock(file.handle(), LOCK_SH | LOCK_NB) == 0);
         return result;
+#else
+        return true;
+#endif
     }
 
     static bool writeLockNB(const QFile& file)
     {
+#ifndef Q_OS_WIN
         bool result = (flock(file.handle(), LOCK_EX | LOCK_NB) == 0);
         return result;
+#else
+        return true;
+#endif
     }
 
     static bool unlock(const QFile& file)
     {
+#ifndef Q_OS_WIN
         bool result = flock(file.handle(), LOCK_UN);
         if (!result) {
             mWarning("MFileLocker") << "Could not unlock" << file.fileName();
         }
         return result;
+#else
+        return true;
+#endif
     }
 };
 }
@@ -1145,7 +1165,9 @@ QStringList MStyleSheetParserPrivate::cacheFileCandidates(const QString& filter)
     }
     return candidates;
 #else
-    const QDir cacheDir(binaryDirectory, filter.append(QLatin1Char('*')), QDir::Name, QDir::Files);
+    QString tmpFilter( filter );
+    tmpFilter.append(QLatin1Char('*'));
+    const QDir cacheDir(binaryDirectory, tmpFilter, QDir::Name, QDir::Files);
     return cacheDir.entryList();
 #endif
 }
