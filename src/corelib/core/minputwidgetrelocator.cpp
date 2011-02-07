@@ -63,8 +63,11 @@ MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
     Q_ASSERT(rootElement);
 
     // Always update when input method area changes.
+    // Important: layouting is started immediately at signal emission. We use QueuedConnection
+    // to allow them to start before triggering relocation.
     connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
-            this, SLOT(update()));
+            this, SLOT(update()),
+            Qt::QueuedConnection);
 
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(handleKeyboardStateChange()));

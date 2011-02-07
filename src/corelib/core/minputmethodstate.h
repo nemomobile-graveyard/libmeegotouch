@@ -186,8 +186,15 @@ public Q_SLOTS:
     QString attributeExtensionFile(int id) const;
 
 Q_SIGNALS:
-    //! Emitted when input method area is changed
-    //! \param region new input method area
+    /*! \brief Emitted when input method area is changed
+     *
+     *  If applications want to react to this signal by changing their layout (e.g. to
+     *  one that works better when a input method panel is around) they have to do their
+     *  layout changes immediately upon invocation of this signal. Therefore queued
+     *  connections (like Qt::QueuedConnection) should not be used for that purpose.
+     *
+     *  \param region new input method area
+     */
     void inputMethodAreaChanged(const QRect &region);
 
     /*!

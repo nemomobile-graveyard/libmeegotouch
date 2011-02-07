@@ -171,6 +171,8 @@ void Ut_MInputWidgetRelocator::testPostponeAndUpdate()
                                               "inputMethodAreaChanged",
                                               Qt::DirectConnection,
                                               Q_ARG(QRect, sipRect)));
+            // Signal is connected via queued connection. Visit event loop.
+            qApp->processEvents();
             break;
         case HwKbChange:
             // Emit protected signal
