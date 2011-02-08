@@ -58,6 +58,8 @@ namespace
     // Upper limit for how long notification will stay visible, may be closed earlier automatically
     const int NotificationDuration = 3000;
     const int BinaryTextVariantSeparator = 0x9c;
+
+    const char * const CursorWidthProperty = "cursorWidth";
 }
 
 
@@ -442,6 +444,8 @@ void MTextEditViewPrivate::initMaskedDocument()
     maskedTextDocument->setDocumentMargin(document()->documentMargin());
     maskedTextDocument->setDefaultFont(document()->defaultFont());
     maskedTextDocument->setTextWidth(document()->textWidth());
+    QVariant cursorWidth = document()->documentLayout()->property(CursorWidthProperty);
+    maskedTextDocument->documentLayout()->setProperty(CursorWidthProperty, cursorWidth);
 
     // no word wrapping in masked mode
     QTextOption option = document()->defaultTextOption();
@@ -779,7 +783,7 @@ QRect MTextEditViewPrivate::cursorRect() const
     int cursorWidth, cursorHeight;
     bool ok = false;
 
-    cursorWidth = document()->documentLayout()->property("cursorWidth").toInt(&ok);
+    cursorWidth = document()->documentLayout()->property(CursorWidthProperty).toInt(&ok);
     if (!ok)
         cursorWidth = 1;
     //cursor occupies one space
@@ -1409,12 +1413,13 @@ void MTextEditView::applyStyle()
     d->promptTextDocument->setDocumentMargin(InternalMargin);
 
     // Note: using non-documented property
-    d->document()->documentLayout()->setProperty("cursorWidth", style()->cursorWidth());
+    d->document()->documentLayout()->setProperty(CursorWidthProperty, style()->cursorWidth());
 
     if (d->maskedTextDocument != 0) {
         d->maskedTextDocument->setDefaultFont(style()->font());
         d->maskedTextDocument->setDocumentMargin(InternalMargin);
-        d->maskedTextDocument->documentLayout()->setProperty("cursorWidth", style()->cursorWidth());
+        d->maskedTextDocument->documentLayout()->setProperty(CursorWidthProperty,
+                                                             style()->cursorWidth());
     }
 
     // font etc might affect size
