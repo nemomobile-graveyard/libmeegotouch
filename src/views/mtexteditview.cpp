@@ -1159,11 +1159,11 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
 void MTextEditView::notifyItemChange(QGraphicsItem::GraphicsItemChange change,
                                      const QVariant &value)
 {
-    Q_UNUSED(value);
     Q_D(MTextEditView);
     if (change == QGraphicsItem::ItemScenePositionHasChanged) {
         d->updateMagnifierPosition();
     }
+    MWidgetView::notifyItemChange(change, value);
 }
 
 QVariant MTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const
