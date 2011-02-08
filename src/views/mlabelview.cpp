@@ -124,7 +124,9 @@ void MLabelView::resizeEvent(QGraphicsSceneResizeEvent *event)
     event->setOldSize(event->oldSize() - padding);
     event->setNewSize(d->paddedSize);
 
-    d->impl->resizeEvent(event);
+    if (d->impl->resizeEvent(event))  {
+        updateGeometry();
+    }
 }
 
 QFont MLabelView::font() const

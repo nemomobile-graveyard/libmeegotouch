@@ -134,9 +134,38 @@ void MLabelViewRich::ensureDocumentIsReady()
     }
 }
 
-void MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
+bool MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    textDocument.setTextWidth(event->newSize().width());
+    // We support two different modes of operation.  If heightForWidth is set, then the layout
+    // that we are in will set our size correctly, and nothing more is needed.
+    //
+    // However users can optionally disable heightForWidth to get a slightly different
+    // behavior, getting a tight bounding box.
+
+    if (viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
+        //We just need to resize the document, and nothing more needed
+        textDocument.setTextWidth(event->newSize().width());
+        return false; //No invalidate ever needed
+    } else {
+        // Without height for width, we have to invalidate when we change size.
+
+        // 1st phase, when Qt calls sizeHint, view will return approximate values for
+        // minimum and preffered size. When resizeEvent comes, layout already knows
+        // sizes of components, and here comes
+        // 2nd phase, when we identify widget's height, based on width. Our height will
+        // change and we don't want to occupy more space then need, so we have to call
+        // updateGeometry, to tell layout to update sizeHint cache. This function
+        // return true if such update is needed.
+        // forward resize event to text document
+        // if height is changed
+        QSizeF oldSize(textDocument.size());
+        textDocument.setTextWidth(event->newSize().width());
+        QSizeF newSize(textDocument.size());
+        if (newSize.height() != oldSize.height())
+            return true;
+        else
+            return false;
+    }
 }
 
 QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -161,10 +190,19 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         // then return its size.  This works correctly
         // even for a constraint width of -1 (unconstrained)
         QSizeF size;
-        qreal oldWidth = textDocument.textWidth();
-        textDocument.setTextWidth(constraint.width());
-        size = textDocument.size();
-        textDocument.setTextWidth(oldWidth);
+        if (viewPrivate->controller->sizePolicy().hasHeightForWidth() || constraint.width() >= 0) {
+            //By default, the label policy has height for width, meaning that the layout
+            //will pass us the constraint correctly, so we don't need to do anything special.
+            qreal oldWidth = textDocument.textWidth();
+            textDocument.setTextWidth(constraint.width());
+            size = textDocument.size();
+            textDocument.setTextWidth(oldWidth);
+        } else {
+            //If the user has manually disabled the sizepolicy heightForWidth and there is
+            //no constraint, then we need to fall back to previous behavior of using the current
+            //idealWidth as the constraint width
+            size = QSizeF(textDocument.idealWidth(), textDocument.size().height());
+        }
 
         return size;
     }

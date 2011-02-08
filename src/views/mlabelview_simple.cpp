@@ -37,7 +37,7 @@
 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
-    viewPrivate(viewPrivate), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
+    viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
 {
     staticText.setTextFormat(Qt::PlainText);
 }
@@ -70,9 +70,49 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     }
 }
 
-void MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
+bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    Q_UNUSED(event);
+    // We support two different modes of operation.  If heightForWidth is set, then the layout
+    // that we are in will set our size correctly, and nothing more is needed.
+    //
+    // However users can optionally disable heightForWidth to get a slightly different
+    // behavior, getting a tight bounding box.
+
+    if (viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
+        return false; //No invalidate ever needed
+    } else {
+        // Without height for width, we have to invalidate when we change size.
+
+        // 1st phase, when Qt calls sizeHint, view will return approximate values for
+        // minimum and preffered size. When resizeEvent comes, layout already knows
+        // sizes of components, and here comes
+        // 2nd phase, when we identify widget's height, based on width. Our height will
+        // change and we don't want to occupy more space then need, so we have to call
+        // updateGeometry, to tell layout to update sizeHint cache. This function
+        // return true if such update is needed.
+        // forward resize event to text document
+        // if height is changed
+        QFontMetricsF fm(viewPrivate->controller->font());
+
+        QString text = viewPrivate->model()->text();
+
+        // If the text represents a multilength-string, only respect the first
+        // (= longest) text for the bounding rectangle.
+        const QChar multiLengthSeparator(0x9c, 0);
+        const int index = text.indexOf(multiLengthSeparator);
+        if (index >= 0) {
+            text = text.left(index);
+        }
+
+        QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
+                viewPrivate->textOptions.alignment() | textFlagForWrapMode(),
+                text);
+        if (bR.height() > fm.height()) {
+            preferredSize = QSizeF(bR.width(), bR.height());
+            return true;
+        } else
+            return false;
+    }
 }
 
 QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -83,7 +123,12 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         return QSizeF(fm.width(QLatin1Char('x')), fm.height());
     }
     case Qt::PreferredSize: {
-        return sizeForWidth(constraint.width());
+        qreal width = constraint.width();
+        if (!viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
+            if (preferredSize.width() >= 0 && (preferredSize.width() < width || width < 0))
+                width = preferredSize.width();
+        }
+        return sizeForWidth(width);
     }
     case Qt::MaximumSize: {
         return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -116,6 +161,10 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
 
     foreach(member, modifications) {
         if (member == MLabelModel::Text) {
+            if (!viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
+                preferredSize = QSizeF(-1, -1);
+                viewPrivate->previousStaticTextSize = staticText.size();
+            }
             needUpdate = true;
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
