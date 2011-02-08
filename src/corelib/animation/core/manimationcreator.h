@@ -56,7 +56,7 @@ public:
 };
 
 template<class ANIMATION>
-class M_CORE_EXPORT MAnimationCreator : public MAnimationCreatorBase
+class MAnimationCreator : public MAnimationCreatorBase
 {
 public:
     MAnimationCreator(const char *animationClassName) :
