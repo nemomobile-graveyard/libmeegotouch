@@ -83,15 +83,6 @@ void MSceneWindowView::setupModel()
     emit geometryAttributesChanged();
 }
 
-void MSceneWindowView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    // Do not notify the MWidgetView of the parent has changed, thus the styles of the scene window
-    // and all of it's childs are not reloaded.
-    if (change == QGraphicsItem::ItemParentHasChanged)
-        return;
-    MWidgetView::notifyItemChange(change, value);
-}
-
 Qt::Alignment MSceneWindowView::alignment() const
 {
     Qt::Alignment verticalAlign = style()->verticalAlign() & Qt::AlignVertical_Mask;
