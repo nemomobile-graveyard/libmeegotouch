@@ -151,7 +151,8 @@ void MSceneManagerPrivate::init(MScene *scene)
             SLOT(_q_onPageSwitchAnimationFinished()));
 
     navigationBarAnimation = new MContentFadeAndSlideAnimation(q);
-    pageSwitchAnimation->addAnimation(navigationBarAnimation);
+    if (pageSwitchAnimation)
+        pageSwitchAnimation->addAnimation(navigationBarAnimation);
 
     setOrientationAngleWithoutAnimation(newAngle);
 
