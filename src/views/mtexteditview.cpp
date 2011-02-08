@@ -48,7 +48,7 @@ namespace
     //! how long before character becomes masked
     const int MaskedTimeInterval = 1000;
 
-    const int InternalMargin = 4;
+    const int InternalMargin = 0; // disable the margin altogether, QTextDocument default is 4
 
     const QChar DefaultMaskCharacter('*');
 
