@@ -1,3 +1,24 @@
+libmeegotouch (0.20.82-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#225602 - Short event banner pressed down state visuals look wrong
+  * Fixes: NB#207899 - MTextEdit allows preedit to entries that have already reached maximum size
+  * Fixes: NB#225573 - Strangely looking text entry in Search app
+  * Fixes: NB#221617 - Each MAction adds approximately 5ms to every MApplicationPage appearance (Using gallery css)
+  * Fixes: NB#220043 - MButtonView::sizeHint(Qt::PreferredSize) provides incorrect size for rich-text
+  * Fixes: NB#212951 - Short event banner visuals do not match the layout guide
+  * Fixes: LayoutAboutToBeChanged/LayoutChanged signals is used wrong in the PhoneBookModel in widgetsgallery.
+  * Fixes: NB#218220 - COREWEB: /usr/bin/call-ui 'QDir::QDir MRemoteThemeDaemon::currentTheme MTheme::currentTheme Dialer::DialerWidget::DialerWidget'
+  * Fixes: NB#221365 - Can not set list index style to inverted
+  * Fixes: NB#209318 - MLabelView calls updateGeometry() when the text changes.
+  * Fixes: NB#217876 - MApplicationMenuView::~MApplicationMenuView() does not remove its widgets from the controller.
+  * Fixes: NB#223699 - [TASK] MAction->setSelectedIcon needed
+  * Fixes: NB#222528 - Status menu displayed in left part of the screen in landscape mode
+  * Fixes: NB#225456 - crash when removing action from application menu
+  * Fixes: NB#209082 - transfer-ui thrashes CPU forever when BT transfer fails
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 08 Feb 2011 15:07:50 +0200
+
 libmeegotouch (0.20.81-1) unstable; urgency=low
 
   * New version
