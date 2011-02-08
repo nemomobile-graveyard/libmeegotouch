@@ -58,8 +58,9 @@ MObjectMenu::MObjectMenu(MWidget *target)
         if(v.isValid())
             model()->setIconId(v.toString());
 
-        // install event filter to the target widget, so we get notified
-        // when actions are added,removed or changed.
+        // install event filter to the target widget and object menu itself,
+        // so we get notified when actions are added,removed or changed.
+        installEventFilter(this);
         target->installEventFilter(this);
     }
     else {
@@ -72,8 +73,9 @@ MObjectMenu::MObjectMenu(MWidget *target)
 MObjectMenu::MObjectMenu(const QList<MAction *> &actionList)
     : MSceneWindow(new MSceneWindowPrivate, new MObjectMenuModel, MSceneWindow::ObjectMenu)
 {
-    model()->setActions(actionList);
     installEventFilter(this);
+    for (int i = 0; i < actionList.count(); ++i)
+        addAction(actionList[i]);
 }
 
 MObjectMenu::~MObjectMenu()

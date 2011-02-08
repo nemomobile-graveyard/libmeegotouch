@@ -183,6 +183,17 @@ void Ut_MObjectMenu::testActionsUsingObjectMenu()
     QCOMPARE(model->actions().count(), 0);
     
     delete menu;
+
+    action1 = new MAction("Test1", NULL);
+    action2 = new MAction("Test2", NULL);
+    QList<MAction*> ql;
+    ql.append(action1);
+    ql.append(action2);
+    menu = new MObjectMenu(ql);
+    QCOMPARE(menu->actions().count(), 2);
+    delete menu;
+    delete action1;
+    delete action2;
 }
 
 void Ut_MObjectMenu::testCursorPosition()
