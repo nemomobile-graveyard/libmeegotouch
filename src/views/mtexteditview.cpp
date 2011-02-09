@@ -121,8 +121,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
     QObject::connect(maskTimer, SIGNAL(timeout()), this, SLOT(hideUnmaskedText()));
     QObject::connect(control, SIGNAL(cursorPositionChanged()),
-                     this, SLOT(updateMagnifierPosition()));
-    QObject::connect(control, SIGNAL(cursorPositionChanged()),
                      this, SLOT(updateEditorToolbarPosition()));
     QObject::connect(control, SIGNAL(selectionChanged()),
                      this, SLOT(updateEditorToolbarPosition()));
@@ -895,9 +893,35 @@ QRect MTextEditViewPrivate::cursorRect() const
 
 void MTextEditViewPrivate::updateMagnifierPosition()
 {
+    Q_Q(MTextEditView);
+
     if (magnifier) {
-        const QPointF magpos = cursorRect().center();
-        magnifier->setMagnifiedPosition(magpos);
+        // Magnified position will be the current mouse position but with
+        // extra contraints applied:
+        // - magnified position is inside document layout
+        // - top and bottom margins are used so magnifier never shows content
+        //   that is not interesting to user. The margin is half of current font's height.
+        //   Font can change inside text edit but in most cases this is sufficient.
+        // Magnifier itself makes sure it doesn't go out of screen.
+
+        QPointF documentLayoutPos(0, q->style()->paddingTop());
+        if (isLayoutLeftToRight()) {
+            documentLayoutPos.setX(q->style()->paddingLeft());
+        } else {
+            documentLayoutPos.setX(q->style()->paddingRight());
+        }
+
+        QFontMetrics fm(q->style()->font());
+        QRectF documentGeometry(documentLayoutPos,
+                                document()->documentLayout()->documentSize());
+        QPointF magnifierPos(qBound<qreal>(documentGeometry.left(),
+                                           mouseTarget.x(),
+                                           documentGeometry.right()),
+                             qBound<qreal>(documentGeometry.top() + fm.height() / 2.0f,
+                                           mouseTarget.y(),
+                                           documentGeometry.bottom() - fm.height() / 2.0f));
+
+        magnifier->setMagnifiedPosition(magnifierPos);
     }
 }
 
@@ -1235,6 +1259,8 @@ void MTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     // Only update selection if magnifier is not in use.
     const bool updateSelection = !(d->magnifier && d->magnifier->isAppeared());
     updateCursorPosition(event, updateSelection);
+
+    d->updateMagnifierPosition();
 }
 
 void MTextEditView::updateCursorPosition(QGraphicsSceneMouseEvent *event, const bool updateSelection)
