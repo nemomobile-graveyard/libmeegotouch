@@ -191,6 +191,10 @@ void MPannableViewportPrivate::_q_positionIndicatorEnabledChanged()
     Q_Q(MPannableViewport);
 
     if (positionIndicator->isEnabled()) {
+        positionIndicator->setRange(q->range());
+        positionIndicator->setPosition(q->position());
+        positionIndicator->setViewportSize(q->size());
+
         q->connect(q,
                    SIGNAL(viewportSizeChanged(QSizeF)),
                    positionIndicator,
