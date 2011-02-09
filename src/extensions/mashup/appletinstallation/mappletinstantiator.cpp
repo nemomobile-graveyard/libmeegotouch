@@ -60,7 +60,7 @@ void MAppletInstantiator::instantiateAppletsInPackage(const QString &packageName
         Q_D(MAppletInstantiator);
 
         // Query the meta data of the package
-        MDBusInteface interface(MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_PATH,
+        MDBusInterface interface(MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_PATH,
                                 MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
         QDBusPendingCallWatcher *watcher;
         if (packageName.contains('/')) {
@@ -92,7 +92,7 @@ void MAppletInstantiatorPrivate::receivePackageData(QDBusPendingCallWatcher *wat
             informCanvasAboutPackageInstallation(packageName, reply.argumentAt<0>(), canvasDBusAddress);
 
             // Start the installation of the package
-            MDBusInteface interface(PACKAGE_MANAGER_DBUS_SERVICE, PACKAGE_MANAGER_DBUS_PATH, PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
+            MDBusInterface interface(PACKAGE_MANAGER_DBUS_SERVICE, PACKAGE_MANAGER_DBUS_PATH, PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
             if (packageName.contains('/')) {
                 // Install from a local file
                 interface.asyncCall("InstallFile", packageName);
@@ -115,7 +115,7 @@ void MAppletInstantiatorPrivate::informCanvasAboutPackageInstallation(const QStr
     QString path = canvasDBusAddress.mid(pathSeparatorIndex);
 
     // Call the instantiateApplet method of the target mashup canvas
-    MDBusInteface interface(service, path, APPLET_INSTANCE_MANAGER_DBUS_INTERFACE);
+    MDBusInterface interface(service, path, APPLET_INSTANCE_MANAGER_DBUS_INTERFACE);
     interface.asyncCall("instantiateAppletFromPackage", packageName, metaData);
 }
 

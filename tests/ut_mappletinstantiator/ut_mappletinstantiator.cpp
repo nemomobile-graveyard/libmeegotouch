@@ -24,7 +24,7 @@
 #include "mappletinstantiator.h"
 
 // QDBusInterface stubs (used by MRemoteAction)
-MDBusInteface::MDBusInteface(const QString &service, const QString &path, const char *interface, const QDBusConnection &connection, QObject *parent) :
+MDBusInterface::MDBusInterface(const QString &service, const QString &path, const char *interface, const QDBusConnection &connection, QObject *parent) :
         QDBusAbstractInterface(service, path, interface, connection, parent)
 {
     Ut_MAppletInstantiator::callServiceNames.append(service);
@@ -32,7 +32,7 @@ MDBusInteface::MDBusInteface(const QString &service, const QString &path, const 
     Ut_MAppletInstantiator::callInterfaces.append(interface);
 }
 
-MDBusInteface::~MDBusInteface()
+MDBusInterface::~MDBusInterface()
 {
 }
 

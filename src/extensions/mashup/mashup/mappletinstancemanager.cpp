@@ -349,7 +349,7 @@ void MAppletInstanceManager::instantiateAppletPlaceHolder(MAppletInstanceData *d
 
 void MAppletInstanceManager::queryInstallationStatus(MAppletInstanceData *data)
 {
-    MDBusInteface interface(MAppletInstanceManager::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_PATH, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
+    MDBusInterface interface(MAppletInstanceManager::PACKAGE_MANAGER_DBUS_SERVICE, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_PATH, MAppletInstanceManager::PACKAGE_MANAGER_DBUS_INTERFACE, QDBusConnection::systemBus());
     QDBusPendingCall call = interface.asyncCall("Operation", data->packageName);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
     watcher->setProperty("appletId", data->appletId.toString());

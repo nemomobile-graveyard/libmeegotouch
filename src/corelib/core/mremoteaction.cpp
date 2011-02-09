@@ -128,6 +128,6 @@ void MRemoteAction::call()
 {
     Q_D(MRemoteAction);
 
-    MDBusInteface interface(d->serviceName, d->objectPath, d->interface.toAscii());
+    MDBusInterface interface(d->serviceName, d->objectPath, d->interface.toAscii());
     interface.asyncCallWithArgumentList(d->methodName, d->arguments);
 }

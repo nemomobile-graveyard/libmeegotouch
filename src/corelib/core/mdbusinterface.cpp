@@ -19,12 +19,12 @@
 
 #include "mdbusinterface.h"
 
-MDBusInteface::MDBusInteface(const QString &service, const QString &path, const char *interface,
+MDBusInterface::MDBusInterface(const QString &service, const QString &path, const char *interface,
                              const QDBusConnection &connection, QObject *parent) :
     QDBusAbstractInterface(service, path, interface, connection, parent)
 {
 }
 
-MDBusInteface::~MDBusInteface()
+MDBusInterface::~MDBusInterface()
 {
 }

@@ -31,12 +31,12 @@
     DBus without any type of blocking introspection.
 */
 
-class M_CORE_EXPORT MDBusInteface : public QDBusAbstractInterface
+class M_CORE_EXPORT MDBusInterface : public QDBusAbstractInterface
 {
 public:
-    MDBusInteface(const QString &service, const QString &path, const char *interface,
+    MDBusInterface(const QString &service, const QString &path, const char *interface,
                   const QDBusConnection &connection = QDBusConnection::sessionBus() , QObject *parent = 0);
-    virtual ~MDBusInteface();
+    virtual ~MDBusInterface();
 };
 
 /*! \internal_end */

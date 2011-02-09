@@ -32,7 +32,7 @@
 
 #ifdef HAVE_DBUS
 #include <mdbusinterface.h>
-#include <QDBusServiceWatcher> 
+#include <QDBusServiceWatcher>
 #include <QDBusConnectionInterface>
 #endif // HAVE_DBUS
 
@@ -254,7 +254,7 @@ void MStatusBarView::querySharedPixmapFromProvider()
 {
     if ((!updatesEnabled)||(!isPixmapProviderOnline) || isInSwitcher)
         return;
-    MDBusInteface interface(PIXMAP_PROVIDER_DBUS_SERVICE, PIXMAP_PROVIDER_DBUS_PATH, PIXMAP_PROVIDER_DBUS_INTERFACE,
+    MDBusInterface interface(PIXMAP_PROVIDER_DBUS_SERVICE, PIXMAP_PROVIDER_DBUS_PATH, PIXMAP_PROVIDER_DBUS_INTERFACE,
                              QDBusConnection::sessionBus());
     QDBusPendingCall asyncCall =  interface.asyncCall(PIXMAP_PROVIDER_DBUS_SHAREDPIXMAP_CALL);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(asyncCall, this);
@@ -309,7 +309,7 @@ void MStatusBarView::showStatusIndicatorMenu()
 {
 #ifdef HAVE_DBUS
     if (style()->enableStatusIndicatorMenu()) {
-        MDBusInteface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
+        MDBusInterface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
         interface.call(QDBus::NoBlock, "open");
     }
 #endif // HAVE_DBUS
