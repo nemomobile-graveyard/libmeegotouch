@@ -1,9 +1,13 @@
-libmeegotouch (0.20.83~1) unstable; urgency=low
+libmeegotouch (0.20.83-1) unstable; urgency=low
 
-  * Unreleased
+  * New version
+  * Fixes: NB#221148 - Notification group's timestamp information doesn't always get updated
+  * Fixes: NB#216504 - CSS property "content-opacity" for MButton does not affect icon
+  * Fixes: properly initialize cursor width on masked text entries
   * Fixes: NB#224577
+  * Fixes: NB#223769 crash in MSceneManagerPrivate::init
 
- -- Stanislav Ionascu <stanislav.ionascu@nokia.com>  Wed, 09 Feb 2011 08:14:17 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 09 Feb 2011 15:22:03 +0200
 
 libmeegotouch (0.20.82-1) unstable; urgency=low
 
