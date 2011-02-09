@@ -1238,6 +1238,17 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
         } else if (member == MTextEditModel::Document) {
             // this shouldn't really be happening
             qWarning("MTextEditView doesn't support changing the model's document member");
+        } else if (member == MTextEditModel::ErrorHighlight) {
+            viewChanged = true;
+
+            if (model()->errorHighlight()) {
+                style().setModeError();
+            } else if (d->focused) {
+                style().setModeSelected();
+            } else {
+                style().setModeDefault();
+            }
+
         }
     }
 
@@ -1342,7 +1353,9 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
     Q_D(MTextEditView);
     MTextEdit *textEdit = qobject_cast<MTextEdit *>(sender());
 
-    style().setModeSelected();
+    if (!model()->errorHighlight()) {
+        style().setModeSelected();
+    }
     if (reason == Qt::MouseFocusReason &&
             textEdit != 0 && textEdit->isAutoSelectionEnabled() == true) {
         // assuming the selection got made since the autoselection is enabled and focus was
@@ -1377,7 +1390,9 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
                    d->controller->sceneManager(), SLOT(ensureCursorVisible()));
     }
 
-    style().setModeDefault();
+    if (!model()->errorHighlight()) {
+        style().setModeDefault();
+    }
     d->focused = false;
     d->editActive = false;
     doUpdate();

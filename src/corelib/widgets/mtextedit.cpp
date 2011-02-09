@@ -3039,4 +3039,14 @@ void MTextEdit::detachToolbar()
     d->icUpdate();
 }
 
+bool MTextEdit::errorHighlight() const
+{
+    return model()->errorHighlight();
+}
+
+void MTextEdit::setErrorHighlight(bool showErrorHighlight)
+{
+    model()->setErrorHighlight(showErrorHighlight);
+}
+
 #include "moc_mtextedit.cpp"

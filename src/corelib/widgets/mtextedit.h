@@ -76,6 +76,7 @@ class M_CORE_EXPORT MTextEdit : public MWidgetController
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength)
     Q_PROPERTY(MTextEditModel::EchoMode echoMode READ echoMode WRITE setEchoMode)
     Q_PROPERTY(bool autoSipEnabled READ isAutoSipEnabled WRITE setAutoSipEnabled)
+    Q_PROPERTY(bool errorHighlight READ errorHighlight WRITE setErrorHighlight)
 
 public:
     typedef M::TextContentType TextContentType; // workaround for moc bug
@@ -438,6 +439,16 @@ public:
      * \sa attachToolbar(const QString &).
      */
     void detachToolbar();
+
+    /*!
+     * \brief Returns true if the textedit has error highlighting enabled.
+     */
+    bool errorHighlight() const;
+
+    /*!
+     * \brief Show error highlighting.
+     */
+    void setErrorHighlight(bool showErrorHighlight);
 
 public Q_SLOTS:
     /**

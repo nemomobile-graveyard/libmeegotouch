@@ -92,6 +92,7 @@ private:
     M_MODEL_PROPERTY(M::TextContentType, type, Type, true, M::FreeTextContentType)
     M_MODEL_PROPERTY(Qt::TextInteractionFlags, textInteractionFlags, TextInteractionFlags, true, Qt::TextEditorInteraction)
 
+    M_MODEL_PROPERTY(bool, errorHighlight, ErrorHighlight, true, false)
     M_MODEL_PROPERTY(bool, inputMethodCorrectionEnabled, InputMethodCorrectionEnabled, true, true)
     M_MODEL_PROPERTY(bool, isReadOnly, ReadOnly, true, false)
     M_MODEL_PROPERTY(bool, inputMethodAutoCapitalizationEnabled, InputMethodAutoCapitalizationEnabled, true, true)

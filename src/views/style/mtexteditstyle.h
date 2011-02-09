@@ -78,6 +78,8 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
 class M_VIEWS_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MTextEditStyle)
+
+    M_STYLE_MODE(Error)
 };
 
 #endif
