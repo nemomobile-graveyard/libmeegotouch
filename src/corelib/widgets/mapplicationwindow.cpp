@@ -98,7 +98,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingStatusBar(false)
     , showingNavigationBar(false)
     , showingDockWidget(false)
-    , animateNavigationBarTransitions(false)
+    , animateComponentsTransitions(false)
     , navigationBarPressed(false)
     , styleContainer(0)
 {
@@ -425,8 +425,12 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
                                         page->model()->homeButtonDisplayMode());
 
             } else if (member == MApplicationPageModel::NavigationBarDisplayMode) {
-                setComponentDisplayMode(navigationBar,
-                                        page->model()->navigationBarDisplayMode());
+                if (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide)
+                    addComponentToAutoHide(navigationBar);
+                else
+                    removeComponentFromAutoHide(navigationBar);
+
+                _q_scheduleNavigationBarVisibilityUpdate();
 
                 // Dock widget follows navigation bar display mode.
                 setComponentDisplayMode(dockWidget,
@@ -436,11 +440,7 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
                 // affect appearance state. Need to update exposed rectangle explicitly.
                 _q_updatePageExposedContentRect();
             } else if (member == MApplicationPageModel::EscapeButtonDisplayMode) {
-                bool escapeButtonVisible = page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
-                if (escapeButtonVisible != navigationBar->escapeButtonVisible()) {
-                    navigationBar->setEscapeButtonVisible(escapeButtonVisible);
-                    _q_updateNavigationBarVisibility();
-                }
+                _q_scheduleNavigationBarVisibilityUpdate();
             }
         }
 
@@ -676,53 +676,51 @@ void MApplicationWindowPrivate::refreshArrowIconVisibility()
 void MApplicationWindowPrivate::setComponentDisplayMode(
     MSceneWindow *component, MApplicationPageModel::ComponentDisplayMode displayMode)
 {
-    Q_Q(MApplicationWindow);
-
     switch (displayMode) {
     case MApplicationPageModel::Show:
         removeComponentFromAutoHide(component);
 
         if (component == dockWidget) {
-            // Dock widget is a special guy.
             updateDockWidgetVisibility();
         } else if (component == navigationBar) {
             _q_updateNavigationBarVisibility();
         } else {
-            component->appear(q);
+            setSceneWindowVisibility(component, true);
         }
         break;
 
     case MApplicationPageModel::AutoHide:
-        if (!componentsOnAutoHide.contains(component)) {
-            component->connect(&autoHideComponentsTimer, SIGNAL(timeout()),
-                               SLOT(disappear()));
+        addComponentToAutoHide(component);
 
-            // Visibility in sync with other components in auto-hide mode.
-            if (autoHideComponentsTimer.isActive()) {
-                if (component == dockWidget) {
-                    // Dock widget is a special guy.
-                    updateDockWidgetVisibility();
-                } else if (component == navigationBar) {
-                    _q_updateNavigationBarVisibility();
-                } else {
-                    sceneManager->appearSceneWindowNow(component);
-                }
-            } else {
-                component->disappear();
-            }
-
-            componentsOnAutoHide << component;
+        // Visibility in sync with other components in auto-hide mode.
+        if (component == dockWidget && autoHideComponentsTimer.isActive()) {
+            updateDockWidgetVisibility();
+        } else if (component == navigationBar) {
+            _q_updateNavigationBarVisibility();
+        } else {
+            setSceneWindowVisibility(component, autoHideComponentsTimer.isActive());
         }
         break;
 
     case MApplicationPageModel::Hide:
         removeComponentFromAutoHide(component);
-        component->disappear();
+
+        setSceneWindowVisibility(component, false);
         break;
     };
 
     if (componentsOnAutoHide.count() == 0) {
         autoHideComponentsTimer.stop();
+    }
+}
+
+void MApplicationWindowPrivate::addComponentToAutoHide(MSceneWindow *component)
+{
+    if (!componentsOnAutoHide.contains(component)) {
+        component->connect(&autoHideComponentsTimer, SIGNAL(timeout()),
+                           SLOT(disappear()));
+
+        componentsOnAutoHide << component;
     }
 }
 
@@ -758,12 +756,7 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
         }
     }
 
-    if (toolbarHasVisibleActions) {
-        //TODO: no animation until appear/disappear starts working properly
-        sceneManager->appearSceneWindowNow(dockWidget);
-    } else {
-        sceneManager->disappearSceneWindowNow(dockWidget);
-    }
+    setSceneWindowVisibility(dockWidget, toolbarHasVisibleActions);
 }
 
 void MApplicationWindowPrivate::_q_updateNavigationBarVisibility()
@@ -773,22 +766,23 @@ void MApplicationWindowPrivate::_q_updateNavigationBarVisibility()
         navigationBarVisibilityUpdateTimer.stop();
     }
 
-    if (page && (page->model()->navigationBarDisplayMode() == MApplicationPageModel::Hide
-        || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide
-            && !autoHideComponentsTimer.isActive())))
-    {
-        return;
-    }
-
     bool navigationBarIsEmpty = navigationBar->property("isEmpty").toBool();
 
-    if (navigationBarIsEmpty)
-        sceneManager->disappearSceneWindow(navigationBar);
-    else {
-        if (animateNavigationBarTransitions)
-            sceneManager->appearSceneWindow(navigationBar);
-        else
-            sceneManager->appearSceneWindowNow(navigationBar);
+    bool navigationBarHasJustEscapeButton = navigationBar->property("justEscapeButton").toBool();
+
+    bool navigationBarVisible = !page || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::Show
+                                          || (page->model()->navigationBarDisplayMode() == MApplicationPageModel::AutoHide
+                                              && autoHideComponentsTimer.isActive()));
+
+    bool escapeButtonVisible = !page || page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
+
+    if (navigationBarHasJustEscapeButton)
+        setSceneWindowVisibility(navigationBar, navigationBarVisible && escapeButtonVisible);
+    else
+        setSceneWindowVisibility(navigationBar, navigationBarVisible && !navigationBarIsEmpty);
+
+    if (escapeButtonVisible || navigationBar->sceneWindowState() != MSceneWindow::Disappearing) {
+        navigationBar->setEscapeButtonVisible(escapeButtonVisible);
     }
 }
 
@@ -877,7 +871,6 @@ void MApplicationWindowPrivate::sceneWindowDismissEvent(MSceneWindowEvent *event
 void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *event)
 {
     MApplicationPage *pageFromEvent = static_cast<MApplicationPage *>(event->sceneWindow());
-    animateNavigationBarTransitions = event->animatedTransition();
 
     // It cannot be the current page
     Q_ASSERT(pageFromEvent != page);
@@ -888,7 +881,9 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
         disconnectPage(page);
     }
 
+    animateComponentsTransitions = event->animatedTransition();
     connectPage(pageFromEvent);
+    animateComponentsTransitions = true;
     _q_updatePageExposedContentRect();
 
 #ifdef Q_WS_X11
@@ -1256,25 +1251,23 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
     navigationBar->setViewMenuDescription(page->title());
     q->setWindowTitle(longestLengthVariant(page->title()));
 
-    setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
-    setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
-
-    bool escapeButtonVisible = page->model()->escapeButtonDisplayMode() != MApplicationPageModel::Hide;
-    navigationBar->setEscapeButtonVisible(escapeButtonVisible);
-
     setupPageEscape();
 
     page->connect(navigationBar, SIGNAL(backButtonClicked()), SIGNAL(backButtonClicked()));
     page->connect(navigationBar, SIGNAL(closeButtonClicked()), SIGNAL(closeButtonClicked()));
-
-    // Dock widget follows navigation bar display mode.
-    setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
 
     navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
 
     _q_setupNavigationBarCustomContent();
     q->connect(page, SIGNAL(customNavigationBarContentChanged()),
                SLOT(_q_setupNavigationBarCustomContent()));
+
+    setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
+    setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
+    // escapeButtonDisplayMode is handled along with navigationBarDisplayMode
+
+    // Dock widget follows navigation bar display mode.
+    setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
 
     emit q->pageChanged(page);
 }
@@ -1364,6 +1357,18 @@ void MApplicationWindowPrivate::_q_setupNavigationBarCustomContent()
     }
 
     navigationBar->setCustomContent(page->customNavigationBarContent());
+}
+
+void MApplicationWindowPrivate::setSceneWindowVisibility(MSceneWindow* sceneWindow, bool visible)
+{
+    if (visible && animateComponentsTransitions)
+        sceneManager->appearSceneWindow(sceneWindow);
+    else if (visible && !animateComponentsTransitions)
+        sceneManager->appearSceneWindowNow(sceneWindow);
+    else if (!visible && animateComponentsTransitions)
+        sceneManager->disappearSceneWindow(sceneWindow);
+    else if (!visible && !animateComponentsTransitions)
+        sceneManager->disappearSceneWindowNow(sceneWindow);
 }
 
 QString MApplicationWindow::windowIconID() const

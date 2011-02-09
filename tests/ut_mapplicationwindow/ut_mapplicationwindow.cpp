@@ -314,12 +314,11 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
     MSceneWindow *navigationBar = m_subject->d_func()->navigationBar;
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
-    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
     sceneManager->fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
-    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Disappeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
@@ -340,7 +339,7 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
 
     page->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Show);
     sceneManager->fastForwardSceneWindowTransitionAnimation(homeButtonPanel);
-    sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
+    processEventsAndFastForwardDisappearAppearAnimations(navigationBar);
 
     QCOMPARE(homeButtonPanel->sceneWindowState(), MSceneWindow::Appeared);
     QCOMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
@@ -473,9 +472,6 @@ void Ut_MApplicationWindow::processEventsAndFastForwardDisappearAppearAnimations
     // property are deferred to a separate event.
     QCoreApplication::processEvents();
 
-    // we can have at most 1 ongoing and 1 queued disappearing/appearing animation
-    // ensure both animations are fast forwarded
-    m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(sceneWindow);
     m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(sceneWindow);
 }
 
@@ -885,6 +881,30 @@ void Ut_MApplicationWindow::testNavigationBarInOutAnimations()
 
     sceneManager->fastForwardSceneWindowTransitionAnimation(navigationBar);
     QCOMPARE(navigationBar->sceneWindowState(), finalNavBarState);
+}
+
+void Ut_MApplicationWindow::testNavigationBarShowAfterNonAnimatedPageAppearance()
+{
+    MApplicationPage *page = new MApplicationPage;
+    MNavigationBar* navigationBar = m_subject->d_func()->navigationBar;
+
+    page->setEscapeMode(MApplicationPageModel::EscapeManualBack);
+
+    page->setComponentsDisplayMode(MApplicationPage::NavigationBar, MApplicationPageModel::Hide);
+
+    page->appear(m_subject);
+    m_subject->show();
+
+    QCOMPARE(page->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE((int)navigationBar->sceneWindowState(), (int)MSceneWindow::Disappeared);
+
+    page->setComponentsDisplayMode(MApplicationPage::NavigationBar, MApplicationPageModel::Show);
+
+    QCoreApplication::processEvents();
+
+    QCOMPARE((int)navigationBar->sceneWindowState(), (int)MSceneWindow::Appearing);
+
+    delete page;
 }
 
 QTEST_MAIN(Ut_MApplicationWindow)

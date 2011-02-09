@@ -55,7 +55,7 @@ public:
     void updateMenuButton();
     bool isEscapeButtonVisible();
     void updateLayout();
-    void _q_updateIsEmptyProperty();
+    void _q_updateIsEmptyAndJustEscapeButtonProperties();
     void _q_toolBarModelChanged(const QList<const char*>& members);
     void updateToolBarAlignment();
     void setCustomContent(QGraphicsWidget *customContent);

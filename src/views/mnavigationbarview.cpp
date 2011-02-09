@@ -149,7 +149,7 @@ void MNavigationBarViewPrivate::init()
     toolBarIsEmptyWatcher = new MDynamicPropertyWatcher;
     toolBarIsEmptyWatcher->setPropertyName("isEmpty");
     q->connect(toolBarIsEmptyWatcher, SIGNAL(propertyChanged()),
-               SLOT(_q_updateIsEmptyProperty()));
+               SLOT(_q_updateIsEmptyAndJustEscapeButtonProperties()));
 }
 
 void MNavigationBarViewPrivate::notificationFlagChanged()
@@ -247,19 +247,24 @@ void MNavigationBarViewPrivate::updateLayout()
     }
 }
 
-void MNavigationBarViewPrivate::_q_updateIsEmptyProperty()
+void MNavigationBarViewPrivate::_q_updateIsEmptyAndJustEscapeButtonProperties()
 {
     Q_Q(MNavigationBarView);
     bool hasContent;
+    bool justEscapeButton;
     bool menuButtonVisible = q->model()->arrowIconVisible();
 
     hasContent = q->model()->customContent() != 0
                  || q->style()->hasTitle()
-                 || isEscapeButtonVisible()
                  || menuButtonVisible
                  || (toolBar && !toolBar->property("isEmpty").toBool());
 
-    controller->setProperty("isEmpty", !hasContent);
+    justEscapeButton = !hasContent
+            && (q->style()->hasCloseButton()
+                || q->model()->escapeButtonMode() == MNavigationBarModel::EscapeButtonBack);
+
+    controller->setProperty("isEmpty", !hasContent && !isEscapeButtonVisible());
+    controller->setProperty("justEscapeButton", justEscapeButton);
 }
 
 void MNavigationBarViewPrivate::_q_toolBarModelChanged(const QList<const char*>& modifications)
@@ -414,7 +419,7 @@ void MNavigationBarView::updateData(const QList<const char *>& modifications)
 
     if (layoutNeedsUpdate) {
         d->updateLayout();
-        d->_q_updateIsEmptyProperty();
+        d->_q_updateIsEmptyAndJustEscapeButtonProperties();
     }
     if (toolBarAlignmentNeedsUpdate)
         d->updateToolBarAlignment();
@@ -448,7 +453,7 @@ void MNavigationBarView::applyStyle()
     d->updateMenuButton();
     d->updateDockedToolBar();
     d->updateLayout();
-    d->_q_updateIsEmptyProperty();
+    d->_q_updateIsEmptyAndJustEscapeButtonProperties();
     d->updateToolBarAlignment();
 }
 

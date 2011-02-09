@@ -82,7 +82,7 @@ public:
     bool showingNavigationBar;
     bool showingDockWidget;
 
-    bool animateNavigationBarTransitions;
+    bool animateComponentsTransitions;
     QTimer navigationBarVisibilityUpdateTimer;
 
     bool navigationBarPressed;
@@ -93,6 +93,9 @@ public:
 
     void setComponentDisplayMode(MSceneWindow *component,
                                  MApplicationPageModel::ComponentDisplayMode displayMode);
+
+    void addComponentToAutoHide(MSceneWindow *component);
+
     void removeComponentFromAutoHide(MSceneWindow *component);
 
     /*!
@@ -201,6 +204,7 @@ public:
     void _q_handleInSwitcherVisibilityChange();
     void _q_updateStyle();
     void _q_setupNavigationBarCustomContent();
+    void setSceneWindowVisibility(MSceneWindow *sceneWindow, bool visible);
 };
 
 #endif

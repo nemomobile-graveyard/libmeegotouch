@@ -98,6 +98,8 @@ private slots:
     void testNavigationBarInOutAnimations_data();
     void testNavigationBarInOutAnimations();
 
+    void testNavigationBarShowAfterNonAnimatedPageAppearance();
+
 private:
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;
