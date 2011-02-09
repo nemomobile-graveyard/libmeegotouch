@@ -1595,9 +1595,9 @@ qtn_clk_city_canada_ottawa	Time zone total offset summer in hours	-4
 qtn_clk_city_canada_ottawa	Time zone total offset winter in hours	-5
 qtn_clk_city_vatican_vatican_city	English Name	Vatican City
 qtn_clk_city_vatican_vatican_city	Country English Name	Vatican
-qtn_clk_city_vatican_vatican_city	Latitude	41.9
-qtn_clk_city_vatican_vatican_city	Longitude	12.45
-qtn_clk_city_vatican_vatican_city	Time zone id	Europe/Rome
+qtn_clk_city_vatican_vatican_city	Latitude	41.9024
+qtn_clk_city_vatican_vatican_city	Longitude	12.4532
+qtn_clk_city_vatican_vatican_city	Time zone id	Europe/Vatican
 qtn_clk_city_vatican_vatican_city	Canonical time zone id according to libicu	Europe/Rome
 qtn_clk_city_vatican_vatican_city	Time zone raw offset in hours	1
 qtn_clk_city_vatican_vatican_city	Time zone dst offset summer in hours	1

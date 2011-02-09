@@ -222,7 +222,9 @@ void Ut_MLocationDatabase::testCitiesInTimeZone_data()
             );
     QTest::newRow("Europe/Vatican")
         << "Europe/Vatican" // canonical
-        << QStringList(); // no city here. Problem?
+        << (QStringList()
+            << "qtn_clk_city_vatican_vatican_city"
+            );
     QTest::newRow("Europe/Monaco")
         << "Europe/Monaco" // canonical
         << (QStringList()
