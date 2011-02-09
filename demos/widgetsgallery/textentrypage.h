@@ -67,6 +67,10 @@ public slots:
     //! switch error correction on/off in every MTextEdit
     void changeErrorCorrection(bool val);
 
+    //! Check if the email text in errorHighlightingTextEdit is valid.
+    //! If not, set error highlight
+    void checkEmailValidity();
+
 protected:
     virtual void retranslateUi();
 
@@ -87,10 +91,12 @@ private:
     QPointer<MLabel> labelDirectIM;
     QPointer<MLabel> labelCustomToolbar1;
     QPointer<MLabel> labelCustomToolbar2;
+    QPointer<MLabel> labelErrorHighlighting;
 
     QPointer<MLabel> labelHeader1;
     QPointer<MButton> button1;
     QPointer<MButton> button2;
+    QPointer<MTextEdit> errorHighlightingTextEdit;
 
     QList<MLabel *> labels;
     QList<MTextEdit *> Entries;

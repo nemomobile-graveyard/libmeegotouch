@@ -538,6 +538,25 @@ void TextEntryPage::createContent()
     Entries << customTextEdit2;
     row++;
 
+    // Email field showing error highlighting
+    // Trivial demo showing how error highlighting can be used in
+    // applications
+    errorHighlightingTextEdit = new MTextEdit(MTextEditModel::SingleLine,
+                                                     "", centralWidget());
+    errorHighlightingTextEdit->setContentType(M::EmailContentType);
+    //% "Valid input: 'user@domain.toplevel'"
+    errorHighlightingTextEdit->setPrompt(qtTrId("xx_error_highlighting"));
+    connect(errorHighlightingTextEdit, SIGNAL(lostFocus(Qt::FocusReason)),
+            this, SLOT(checkEmailValidity()));
+
+    labelErrorHighlighting = new MLabel(centralWidget());
+    labelErrorHighlighting->setWordWrap(true);
+    labelErrorHighlighting->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    layoutPolicy->addItem(labelErrorHighlighting, row, 0);
+    layoutPolicy->addItem(errorHighlightingTextEdit, row, 1);
+    Entries << errorHighlightingTextEdit;
+    row++;
+
     // Auto capitalisation button (Toggle)
     button1 = new MButton(panel);
     button1->setObjectName("switchAutoCaps");
@@ -621,6 +640,9 @@ void TextEntryPage::retranslateUi()
     //% "Custom toolbar 2:"
     labelCustomToolbar2->setText(qtTrId("xx_textentry_custom_toolbar2"));
 
+    //% "Error highlighting:"
+    labelErrorHighlighting->setText(qtTrId("xx_error_highlighting_label"));
+
     //% "Auto capitalisation"
     button1->setText(qtTrId("xx_auto_capitalisation"));
     //% "Error correction"
@@ -668,4 +690,15 @@ void TextEntryPage::changeErrorCorrection(bool val)
         if (!entry->completer())
             entry->setInputMethodCorrectionEnabled(val);
     }
+}
+
+void TextEntryPage::checkEmailValidity()
+{
+    // For the purpose of this demo,
+    // a valid email address has the form "username@domain.toplevel"
+    QString text = errorHighlightingTextEdit->text();
+    QRegExp regExp("[^@]+@[^@]+\\.[^@]+");
+    bool validEmail = regExp.exactMatch(text);
+
+    errorHighlightingTextEdit->setErrorHighlight(!validEmail);
 }
