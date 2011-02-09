@@ -696,6 +696,7 @@ void MBannerView::updateData(const QList<const char *>& modifications)
       */
     if (updateLayout == true) {
         d->initDynamicLayout();
+        update();
     }
 }
 
