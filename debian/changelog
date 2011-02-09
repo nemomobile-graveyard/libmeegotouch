@@ -1,6 +1,7 @@
 libmeegotouch (0.20.83~1) unstable; urgency=low
 
   * Unreleased
+  * Fixes: NB#224577
 
  -- Stanislav Ionascu <stanislav.ionascu@nokia.com>  Wed, 09 Feb 2011 08:14:17 +0200
 
