@@ -327,7 +327,7 @@ void MTheme::releasePixmap(const QPixmap *pixmap)
         return;
 
     // invalidPixmap, no need to release it
-    if (pixmap == instance()->d_ptr->invalidPixmap()) {
+    if (instance()->d_ptr->invalidPixmapPtr && pixmap == instance()->d_ptr->invalidPixmapPtr) {
         return;
     }
 
