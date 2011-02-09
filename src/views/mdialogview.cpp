@@ -31,6 +31,7 @@
 #include <MProgressIndicator>
 #include <MLayout>
 #include <MGridLayoutPolicy>
+#include <MPositionIndicator>
 #include "mbuttongrouplayoutpolicy_p.h"
 
 #include <QFont>
@@ -135,6 +136,7 @@ void MDialogViewPrivate::createDialogBox()
 
     contentsViewport = new MPannableViewport;
     contentsViewport->setStyleName("MDialogContentsViewport");
+    contentsViewport->positionIndicator()->setStyleName("CommonPositionIndicatorInverted");
     contentsViewport->setObjectName(contentsViewport->styleName());
     dialogBoxLayout->addItem(contentsViewport);
 
