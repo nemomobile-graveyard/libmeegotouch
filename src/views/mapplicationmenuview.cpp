@@ -40,6 +40,7 @@
 #include "mbasiclistitem.h"
 #include "mcombobox.h"
 #include "mstylablewidget.h"
+#include "mpositionindicator.h"
 
 const int maxCommandActionsWithStyle = 6;
 const int maxColumns = 1;
@@ -72,6 +73,7 @@ MApplicationMenuViewPrivate::MApplicationMenuViewPrivate(MApplicationMenu *menu)
     actionWidget->setLayout(actionCommandLayout);
     actionCommandViewport = new MPannableViewport(controller);
     actionCommandViewport->setStyleName("MApplicationMenuActionViewport");
+    actionCommandViewport->positionIndicator()->setStyleName("CommonPositionIndicatorInverted");
     actionCommandViewport->setObjectName(actionCommandViewport->styleName());
     actionCommandViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
     actionCommandViewport->setWidget(actionWidget);
