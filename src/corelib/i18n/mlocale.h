@@ -1147,7 +1147,7 @@ public:
      * formattedDateTime = locale.formatDateTime(calendar, MLocale::DateMedium, MLocale::TimeMedium);
      * // Make the first letter uppercase:
      * if (!formattedDateTime.isEmpty())
-     *    formattedDateTime[0] = formattedDateTime.at(0).toUpper();
+     *    formattedDateTime[0] = locale.toUpper(formattedDateTime.at(0))[0];
      * \endcode
      *
      * If many dates and times need to be formatted, this method
