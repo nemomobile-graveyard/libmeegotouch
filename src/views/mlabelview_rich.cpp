@@ -122,10 +122,7 @@ void MLabelViewRich::ensureDocumentIsReady()
         // default text color can be specified only via stylesheet. However
         // text should be enclosed with tags: <span>text</span> to let CSS
         // engine apply color
-        QColor textColor(viewPrivate->model()->color().isValid() ? viewPrivate->model()->color() : viewPrivate->style()->color());
-        QColor anchorColor(viewPrivate->style()->highlightColor());
-        QString styleSheet = QString::fromLatin1("* { color: %1; } a {color: %2;}").arg(textColor.name()).arg(anchorColor.name());
-        textDocument.setDefaultStyleSheet(styleSheet);
+        textDocument.setDefaultStyleSheet(defaultStyleSheet());
 
         // To force it relayout text, it should be set again
         QString t = viewPrivate->model()->text();
@@ -515,8 +512,11 @@ QString MLabelViewRich::wrapTextWithSpanTag(const QString &text) const
 
 void MLabelViewRich::applyStyle()
 {
-    textDocumentDirty = true;
-    ensureDocumentIsReady();
+    const QString styleSheet = defaultStyleSheet();
+    if (textDocument.defaultStyleSheet() != styleSheet) {
+        textDocumentDirty = true;
+        textDocument.setDefaultStyleSheet(styleSheet);
+    }
 }
 
 void MLabelViewRich::initTiles(const QSize &size)
@@ -704,3 +704,11 @@ QRectF MLabelViewRich::textBoundaries() const
 
     return bounds;
 }
+
+QString MLabelViewRich::defaultStyleSheet() const
+{
+    const QColor textColor(viewPrivate->model()->color().isValid() ? viewPrivate->model()->color() : viewPrivate->style()->color());
+    const QColor anchorColor(viewPrivate->style()->highlightColor());
+    return QString::fromLatin1("* { color: %1; } a {color: %2;}").arg(textColor.name()).arg(anchorColor.name());
+}
+

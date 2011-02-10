@@ -202,6 +202,11 @@ public:
 
     QRectF textBoundaries() const;
 
+    /**
+     *\return Default stylesheet string that defines the text-color and anchor-color.
+     */
+    QString defaultStyleSheet() const;
+
     mutable QTextDocument textDocument;
     bool textDocumentDirty;
     QPoint pixmapOffset;
