@@ -2305,7 +2305,17 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
             }
         }
     } else {
-        if (mode == AnimatedTransition && d->canHaveAnimatedTransitions()) {
+        // In order to enable a synchronized rotation of app and keyboard,
+        // meego-im-uiserver captures an app screenshot, blends it
+        // with the keyboard and displays that animation on top
+        // of anything else that's on the screen. The application needs
+        // to rotate quickly, without animation. This patch
+        // suppresses the rotation animation on the application side
+        // when VKB is shown - see also NB#231633.
+        // i.e., the virtual keyboard does the composition of application
+        // window + virtual keyboard by itself.
+        if (mode == AnimatedTransition && d->canHaveAnimatedTransitions()
+            && MInputMethodState::instance()->inputMethodArea().isNull()) {
             d->rotateToAngle(angle);
         } else {
             d->setOrientationAngleWithoutAnimation(angle);
