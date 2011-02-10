@@ -55,8 +55,9 @@ void MKeyboardStateTrackerPrivate::initContextSubscriber()
     //waiting for properties to synchronize
     keyboardOpenProperty.waitForSubscription(true);
     isSubscribed = true;
-    // TODO: use actual ContextProperty for present, which is still unready.
-    present = true;
+    if (!keyboardOpenProperty.value().isNull()) {
+        present = true;
+    }
 #elif defined(M_OS_MAEMO5)
     present = true;
 #endif
@@ -106,17 +107,18 @@ bool MKeyboardStateTracker::isPresent() const
 bool MKeyboardStateTracker::isOpen() const
 {
     bool val = false;
+    Q_D(const MKeyboardStateTracker);
+    if (d->present) {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    Q_D(const MKeyboardStateTracker);
-    MKeyboardStateTrackerPrivate* trackerPriv = const_cast<MKeyboardStateTrackerPrivate*>(d);
-    if (!d->isSubscribed) {
-        trackerPriv->subscribe();
-        trackerPriv->initContextSubscriber();
-    }
-    val = d->keyboardOpenProperty.value().toBool();
+        MKeyboardStateTrackerPrivate* trackerPriv = const_cast<MKeyboardStateTrackerPrivate*>(d);
+        if (!d->isSubscribed) {
+            trackerPriv->subscribe();
+            trackerPriv->initContextSubscriber();
+        }
+        val = d->keyboardOpenProperty.value().toBool();
 #elif defined(M_OS_MAEMO5)
-    Q_D(const MKeyboardStateTracker);
-    val = d->keyboardOpenConf.value().toBool();
+        val = d->keyboardOpenConf.value().toBool();
 #endif
+    }
     return val;
 }
