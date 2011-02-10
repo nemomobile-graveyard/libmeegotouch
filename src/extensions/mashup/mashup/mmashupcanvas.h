@@ -34,7 +34,7 @@ class MMashupCanvasPrivate;
  *
  * \section overview Overview
  *
- * Applets are small programs that are embedded into mashup canvases. The mashup canvas composites applet images as part of it's own visual presentation.
+ * Applets are small programs that are embedded into mashup canvases. The mashup canvas composites applet images as part of its own visual presentation.
  * Applets are primarily run in separate processes in order to safeguard against possible bugs in applets such as blocking the GUI or crashing.
  * The mashup canvas contains an applet inventory (\c MAppletInventory), which is a special type of menu which populates its content from .desktop files that applets have installed during their package installation.
  * It automatically registers applets (through \c MAppletInstanceManager) and implements state handling, memory management etc.

@@ -266,12 +266,12 @@ MWidget *MListViewPrivate::createCell(int row)
     cell->resize(cellSize(row));
 
     // TODO this is not optimal, I'm pretty sure, need to find better way to keep
-    // selection. Refactor into it's own function.
+    // selection. Refactor into its own function.
     QItemSelectionModel *selectionModel = controllerModel->selectionModel();
     cell->setSelected(selectionModel->isSelected(index));
 
     // TODO this code can be executed only when panning is stopped. Refactor into
-    // it's own function
+    // its own function
     if (cell->metaObject()->indexOfSignal("clicked()") != -1) {
         QObject::connect(cell, SIGNAL(clicked()), q_ptr, SLOT(itemClick()), Qt::UniqueConnection);
     }

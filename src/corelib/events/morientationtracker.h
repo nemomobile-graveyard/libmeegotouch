@@ -31,7 +31,7 @@ class MOrientationTrackerPrivate;
 
 /*!
  * Class responsible for tracking the accelerometer properties and signaling events
- * when the device should change it's orientation.
+ * when the device should change its orientation.
  * At the moment this is not a part of M api - use MDeviceProfile for the information.
  * Initially designed as singleton as MDeviceProfile might need to access some more information about
  * the concrete phone position, that is not available from fired events.

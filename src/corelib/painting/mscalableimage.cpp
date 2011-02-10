@@ -97,7 +97,7 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
         return;
     }
 
-    //the image is used in it's native size
+    //the image is used in its native size
     //no need to scale just draw it
     QSize requiredSize(w, h);
     if (m_image->size() == requiredSize) {
@@ -168,7 +168,7 @@ void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QP
     // decreases the performance
     painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
 #else
-    //the image is used in it's native size
+    //the image is used in its native size
     //no need to scale just draw it
     if( m_image->size() == QSizeF(w, h) ) {
         painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());

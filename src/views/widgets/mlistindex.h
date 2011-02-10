@@ -36,7 +36,7 @@ class DuiList;
  * list content.
  *
  * MListIndex creates a stylable container on the right side of the window in which the list
- * is rendered. It's main duty is to provide a way for fast navigation through list contents.
+ * is rendered. Its main duty is to provide a way for fast navigation through list contents.
  * The content of the list index is dynamic and is controlled by the list itself.
  * The list index widget creates a scene window container and places itself into it.
  * Thus the positioning and sizing of the list index are controlled by the scene window.
@@ -62,7 +62,7 @@ public:
 
     /*!
      * \brief Sets the navigation indexes of the list to be displayed.
-     * \param shortcuts The mapping between a string label and it's index position in list.
+     * \param shortcuts The mapping between a string label and its index position in list.
      */
     void setShortcuts(const QMap<QModelIndex, QString> &shortcuts);
 

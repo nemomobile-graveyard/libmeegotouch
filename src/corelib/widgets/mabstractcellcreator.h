@@ -108,7 +108,7 @@ public:
 
     \section MAbstractCellCreator Overview
         MAbstractCellCreator implements cellSize() function from MCellCreator interface by creating
-        one instance of a widget and asking it's preffered size. Also it automatically creates widgets
+        one instance of a widget and asking its preferred size. Also it automatically creates widgets
         of specified type specified by the template parameter. It asks recycler first and allocates memory
         only if there is no object in a recycler. With a template parameter you control which objects
         should be created, with setCellViewType(const QString&viewType) you may specify what view type should

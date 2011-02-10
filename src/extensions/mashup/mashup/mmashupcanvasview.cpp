@@ -48,7 +48,7 @@ MMashupCanvasViewPrivate::MMashupCanvasViewPrivate() :
 
 MMashupCanvasViewPrivate::~MMashupCanvasViewPrivate()
 {
-    // Destroying the window destroys it's children (the viewport, layouts, button...)
+    // Destroying the window destroys its children (the viewport, layouts, button...)
     delete appletInventoryWindow;
 }
 

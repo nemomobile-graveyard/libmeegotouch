@@ -56,7 +56,7 @@ protected:
 
 protected Q_SLOTS:
     /*!
-     * addWidget performs setup of an extension widget and it's datastore when the widget is being added to
+     * addWidget performs setup of an extension widget and its datastore when the widget is being added to
      * the extension area. The ownership of the widget remains on the caller of this slot.
      * This slot can be overridden in specialized extension areas to provide additional setup.
      * \param widget Widget to be added onto the MExtensionArea.

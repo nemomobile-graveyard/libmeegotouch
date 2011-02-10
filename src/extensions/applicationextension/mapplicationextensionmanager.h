@@ -124,7 +124,7 @@ Q_SIGNALS:
     void widgetRemoved(QGraphicsWidget* widget);
 
     /*!
-     * Signal for instantiating an extension widget and it's datastore
+     * Signal for instantiating an extension widget and its datastore
      * \param widget Widget to be added onto the MExtensionArea.
      * \param store This MDataStore object can be used to store permanent extension area data related
      * to this particular application extension instance.

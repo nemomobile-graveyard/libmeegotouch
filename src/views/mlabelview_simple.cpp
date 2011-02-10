@@ -84,7 +84,7 @@ bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
         // Without height for width, we have to invalidate when we change size.
 
         // 1st phase, when Qt calls sizeHint, view will return approximate values for
-        // minimum and preffered size. When resizeEvent comes, layout already knows
+        // minimum and preferred size. When resizeEvent comes, layout already knows
         // sizes of components, and here comes
         // 2nd phase, when we identify widget's height, based on width. Our height will
         // change and we don't want to occupy more space then need, so we have to call

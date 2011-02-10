@@ -33,7 +33,7 @@ class MContainer;
  * \brief MContainerView implements a view for the MContainer
  *
  * \section MContainerViewOverview Overview
- * A Container has a minimum width of 18mm, it's maximum width is the width of
+ * A Container has a minimum width of 18mm, its maximum width is the width of
  * the screen. By default, the user can set it to a value between these
  * boundaries. The minimum height is the minimum height of the header which is
  * 5.06mm. There is no maximum height of the container.

@@ -196,7 +196,7 @@ public Q_SLOTS:
       Sets the avatar image to display the \a pixmap.
       
       If there is an existing avatar() widget, this will set the pixmap for that avatar.
-      Otherwise a new MImageWidget will be created and it's QGraphicsItem::parent() set
+      Otherwise a new MImageWidget will be created and its QGraphicsItem::parent() set
       to this bubble widget.
 
       \sa avatar()

@@ -605,7 +605,7 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
             if (selector->className() != classHierarchy.at(0))
                 return false;
         } else {
-            // Early out: Make sure that we are a class of requested type or it's subclass
+            // Early out: Make sure that we are a class of requested type or its subclass
             order = MStyleSheetPrivate::orderNumber(selector->className(), QByteArray(), QByteArray(), classHierarchy);
             if (order == -1)
                 return false;

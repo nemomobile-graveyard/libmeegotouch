@@ -124,7 +124,7 @@ class M_VIEWS_EXPORT MDialogStyle : public MSceneWindowStyle
 
     /*!
         \property MDialogStyle::dialogPreferredSize
-        \brief Dialog preffered size.
+        \brief Dialog preferred size.
     */
     M_STYLE_ATTRIBUTE(QSize, dialogPreferredSize, DialogPreferredSize)
 

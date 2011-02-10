@@ -94,7 +94,7 @@ class MListFilter;
 
   Model doesn't tell MList how to create actual widgets, we need MCellCreator for that.
   MAbstractCellCreator is the best candidate for simple case (keep in mind that you can change style of MContentItem only
-  in it's constructor, so if other style is needed, MAbstractCellCreator will not work, MCellCreator should be used instead):
+  in its constructor, so if other style is needed, MAbstractCellCreator will not work, MCellCreator should be used instead):
 
   \code
   class MContentItemCreator : public MAbstractCellCreator<MContentItem>

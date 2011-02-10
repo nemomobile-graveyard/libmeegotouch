@@ -93,7 +93,7 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
         accY = 0.0f;
     }
 
-    // Checking if the viewport is currently dragged beyond it's borders and the integration should
+    // Checking if the viewport is currently dragged beyond its borders and the integration should
     // continue even though the speed is low.
     bool inRangeX = (panDirection.testFlag(Qt::Horizontal) == false) ||
                     (posX >= range.left() && posX <= range.right());
@@ -237,7 +237,7 @@ void MPhysics2DPanning::stop()
 {
     Q_D(MPhysics2DPanning);
 
-    // Checking if the viewport is currently dragged beyond it's borders and the integration should
+    // Checking if the viewport is currently dragged beyond its borders and the integration should
     // continue.
     bool inRangeX = (d->panDirection.testFlag(Qt::Horizontal) == false) ||
                     (d->posX >= d->range.left() && d->posX <= d->range.right());

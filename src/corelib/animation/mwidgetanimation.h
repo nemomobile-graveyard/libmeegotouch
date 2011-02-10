@@ -49,7 +49,7 @@ class QPointF;
 
   \section examples Examples
 
-  Animate single widget from it's current position to another.
+  Animate single widget from its current position to another.
   \code
    MWidgetAnimation* a = new MWidgetAnimation(NULL);
    a->setTargetPosition(widget, QPointF(50,50));
