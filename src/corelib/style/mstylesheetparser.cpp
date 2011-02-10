@@ -985,6 +985,11 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
             if (stream.peek(&peek, 1) == 0) {
                 mWarning("MStyleSheetParserPrivate") << "EOF in selector: " <<
                         className + '[' + classType + "]#" + objectName;
+
+		// release allocated attributes
+		foreach(MStyleSheetAttribute* a, attributeList.values()) {
+		    delete a;
+		}
                 return NULL;
             }
 
@@ -1006,6 +1011,10 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
                 if (syntaxMode == MStyleSheetParser::RelaxedSyntax) {
                     return createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
                 } else {
+		    // release allocated attributes
+		    foreach(MStyleSheetAttribute* a, attributeList.values()) {
+			delete a;
+		    }
                     return NULL;
                 }
             }
@@ -1026,6 +1035,11 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
 
         //the end bracket of the selector was not found
         outputParseError(parsedFileName, "Invalid selector, '}' is missing from the end.", getLineNum(stream, startSelector));
+
+	// release allocated attributes
+	foreach(MStyleSheetAttribute* a, attributeList.values()) {
+	    delete a;
+	}
         return NULL;
     } else if (className.length() == 0) {
         // We got comment or something similar,
