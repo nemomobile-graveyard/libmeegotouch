@@ -122,6 +122,14 @@ protected:
     virtual void cancelEvent(MCancelEvent *event);
 
     /*!
+        \brief Swipe gesture event handler.
+
+        Accepts swipe events, so they are not sent to the parent widgets while
+        the user is dragging the slider..
+     */
+    virtual void swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture);
+
+    /*!
         \brief Updates MSliderView class instance when current model is changed.
 
         Called when MSliderModel (MSeekBarModel) class instance is changed

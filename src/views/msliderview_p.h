@@ -54,8 +54,6 @@ public:
 
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
-    virtual void swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture);
-
 private:
     Qt::Orientation orientation;
 

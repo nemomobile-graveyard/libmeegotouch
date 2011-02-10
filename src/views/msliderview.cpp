@@ -56,16 +56,10 @@ MSliderHandle::MSliderHandle(QGraphicsItem *parent) :
     handleVerticalPressedPixmap(0),
     sliderState(MSliderModel::Released)
 {
-    grabGesture(Qt::SwipeGesture);
 }
 
 MSliderHandle::~MSliderHandle()
 {
-}
-
-void MSliderHandle::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
-{
-    event->accept(gesture);
 }
 
 void MSliderHandle::setOrientation(Qt::Orientation orientation)
@@ -1595,6 +1589,8 @@ MSliderView::MSliderView(MSlider *controller):
     d->q_ptr = this;
     d->init(controller);
 
+    controller->grabGesture(Qt::SwipeGesture);
+
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(changeSliderHandleIndicatorVisibility()));
     connect(controller, SIGNAL(displayExited()), this, SLOT(lowerSliderHandleIndicator()));
 }
@@ -1843,6 +1839,11 @@ void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             d->sliderGroove->lowerHandleIndicator();
         }
     }
+}
+
+void MSliderView::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
+{
+    event->accept(gesture);
 }
 
 void MSliderView::timerEvent(QTimerEvent *event)
