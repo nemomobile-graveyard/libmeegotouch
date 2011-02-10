@@ -46,6 +46,25 @@ protected:
     bool event(QEvent *event);
 };
 
+class HeaderedTextEdit : public MTextEdit
+{
+    Q_OBJECT
+
+public:
+    explicit HeaderedTextEdit(QGraphicsItem *parent = 0);
+    virtual ~HeaderedTextEdit();
+
+    void setHeaderText(const QString &text);
+    QString staticHeaderText() const;
+
+protected Q_SLOTS:
+    void _q_updateTextLeftMargin();
+    void _q_resetNewBlockMargin();
+
+private:
+    MLabel *headerLabel;
+};
+
 /** /brief Page that shows the features of the virtual keyboard and the MtextEdit
 */
 class TextEntryPage : public TemplatePage
@@ -92,6 +111,7 @@ private:
     QPointer<MLabel> labelCustomToolbar1;
     QPointer<MLabel> labelCustomToolbar2;
     QPointer<MLabel> labelErrorHighlighting;
+    QPointer<MLabel> uneditableTextEditLabel;
 
     QPointer<MLabel> labelHeader1;
     QPointer<MButton> button1;

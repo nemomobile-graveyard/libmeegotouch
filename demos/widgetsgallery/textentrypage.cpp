@@ -31,7 +31,13 @@
 #include <QDebug>
 #include <layout/mgridlayoutpolicy.h>
 #include <QKeyEvent>
+#include <QGraphicsSceneMouseEvent>
 #include <QTextDocument>
+#include <QTextCursor>
+#include <QAbstractTextDocumentLayout>
+#include <QTextDocumentFragment>
+#include <QTextLayout>
+#include <QTextBlock>
 
 class CompleterTestModel : public QAbstractTableModel
 {
@@ -249,12 +255,65 @@ bool CustomTextEdit::event(QEvent *event)
     return MTextEdit::event(event);
 }
 
+HeaderedTextEdit::HeaderedTextEdit(QGraphicsItem *parent)
+    : MTextEdit(MTextEditModel::MultiLine, QString(), parent),
+    headerLabel(0)
+{
+    connect(document(), SIGNAL(blockCountChanged(int)), this, SLOT(_q_resetNewBlockMargin()));
+}
+
+HeaderedTextEdit::~HeaderedTextEdit()
+{
+}
+
+void HeaderedTextEdit::setHeaderText(const QString &text)
+{
+    if (!headerLabel) {
+        headerLabel = new MLabel(this);
+        headerLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+        headerLabel->setPos(0, 0);
+        headerLabel->setPreferredHeight(size().height());
+        connect(headerLabel, SIGNAL(geometryChanged()), this, SLOT(_q_updateTextLeftMargin()));
+    }
+    headerLabel->setText(text);
+    headerLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    _q_updateTextLeftMargin();
+}
+
+QString HeaderedTextEdit::staticHeaderText() const
+{
+    if (headerLabel)
+        return headerLabel->text();
+    else
+        return QString();
+}
+
+void HeaderedTextEdit::_q_updateTextLeftMargin()
+{
+    QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
+    QTextCursor cursor(document());
+    cursor.setPosition(0);
+    QTextBlockFormat tbf = cursor.blockFormat();
+    tbf.setTextIndent(labelSize.width());
+    cursor.setBlockFormat(tbf);
+}
+
+void HeaderedTextEdit::_q_resetNewBlockMargin()
+{
+    QTextBlockFormat tbf = textCursor().blockFormat();
+    if (textCursor().blockNumber() == 0)
+        tbf.setTextIndent(headerLabel->size().width());
+    else
+        tbf.setTextIndent(0);
+    textCursor().setBlockFormat(tbf);
+}
+
 TextEntryPage::TextEntryPage()
     : TemplatePage(TemplatePage::UserInput),
       label0(), label1(), label2(), label3(), label4(), label5(),
       label6(), label7(), label8(), label9(), label10(),
       labelNoEcho(), labelEchoOnEdit(), labelDirectIM(),
-      labelCustomToolbar1(), labelCustomToolbar2(),
+      labelCustomToolbar1(), labelCustomToolbar2(), uneditableTextEditLabel(),
       labelHeader1(),
        button1(), button2(),
        labels(),
@@ -280,6 +339,7 @@ void TextEntryPage::createContent()
     MApplicationPage::createContent();
     QGraphicsWidget *panel = centralWidget();
     MGridLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupGridPolicy(panel);
+
     int row = 0;
 
     // free text line
@@ -557,6 +617,18 @@ void TextEntryPage::createContent()
     Entries << errorHighlightingTextEdit;
     row++;
 
+    HeaderedTextEdit *uneditableTextEdit = new HeaderedTextEdit(centralWidget());
+    uneditableTextEdit->setHeaderText("Recipient:");
+    uneditableTextEdit->setContentType(M::EmailContentType);
+    uneditableTextEdit->setCompleter(m_completer.data());
+    uneditableTextEditLabel = new MLabel(centralWidget());
+    uneditableTextEditLabel->setTextElide(true);
+    layoutPolicy->addItem(uneditableTextEditLabel, row, 0, 1, 2);
+    row++;
+    layoutPolicy->addItem(uneditableTextEdit, row, 0, 1, 2);
+    Entries << uneditableTextEdit;
+    row++;
+
     // Auto capitalisation button (Toggle)
     button1 = new MButton(panel);
     button1->setObjectName("switchAutoCaps");
@@ -642,6 +714,8 @@ void TextEntryPage::retranslateUi()
 
     //% "Error highlighting:"
     labelErrorHighlighting->setText(qtTrId("xx_error_highlighting_label"));
+    //% "Uneditable Text Edit:"
+    uneditableTextEditLabel->setText(qtTrId("xx_textentry_uneditable_textedit"));
 
     //% "Auto capitalisation"
     button1->setText(qtTrId("xx_auto_capitalisation"));
@@ -657,7 +731,7 @@ MGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(QGraphicsWidget *pane
     MLayout *layout = new MLayout(panel);
     panel->setLayout(layout);
     MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
-    policy->setContentsMargins(20, 0, 20, 0);
+    policy->setContentsMargins(0, 0, 0, 0);
     return policy;
 }
 
