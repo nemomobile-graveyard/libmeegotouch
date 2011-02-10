@@ -474,13 +474,13 @@ void MLocalePrivate::dateFormatTo12h(icu::DateFormat *df) const
 #endif
 
 #ifdef HAVE_ICU
-void MLocalePrivate::replaceDigitsFromLcTimeToLcNumeric(QString *dateTimeString) const
+void MLocalePrivate::replaceDigitsToOtherCategory(MLocale::Category fromCategory, MLocale::Category toCategory, QString *dateTimeString) const
 {
     Q_Q(const MLocale);
-    QString lcTimeLanguage = q->categoryLanguage(MLocale::MLcTime);
-    QString lcNumericLanguage = q->categoryLanguage(MLocale::MLcNumeric);
-    if (lcTimeLanguage == "ar") {
-        if (lcNumericLanguage == "ar")
+    QString fromCategoryLanguage = q->categoryLanguage(fromCategory);
+    QString toCategoryLanguage = q->categoryLanguage(toCategory);
+    if (fromCategoryLanguage == "ar") {
+        if (toCategoryLanguage == "ar")
             return;
         else {
             dateTimeString->replace(QChar(0x0660), '0'); // ٠
@@ -493,11 +493,14 @@ void MLocalePrivate::replaceDigitsFromLcTimeToLcNumeric(QString *dateTimeString)
             dateTimeString->replace(QChar(0x0667), '7'); // ٧
             dateTimeString->replace(QChar(0x0668), '8'); // ٨
             dateTimeString->replace(QChar(0x0669), '9'); // ٩
+            dateTimeString->replace(QChar(0x066A), '%'); // ٪
+            dateTimeString->replace(QChar(0x066B), '.'); // ٫
+            dateTimeString->replace(QChar(0x066C), ','); // ٬
             return;
         }
     }
-    else if (lcTimeLanguage == "fa") {
-        if(lcNumericLanguage == "fa")
+    else if (fromCategoryLanguage == "fa") {
+        if(toCategoryLanguage == "fa")
             return;
         else {
             dateTimeString->replace(QChar(0x06F0), '0'); // ٠
@@ -510,11 +513,14 @@ void MLocalePrivate::replaceDigitsFromLcTimeToLcNumeric(QString *dateTimeString)
             dateTimeString->replace(QChar(0x06F7), '7'); // ۷
             dateTimeString->replace(QChar(0x06F8), '8'); // ۸
             dateTimeString->replace(QChar(0x06F9), '9'); // ۹
+            dateTimeString->replace(QChar(0x066A), '%'); // ٪
+            dateTimeString->replace(QChar(0x066B), '.'); // ٫
+            dateTimeString->replace(QChar(0x066C), ','); // ٬
             return;
         }
     }
-    else if (lcTimeLanguage == "hi") {
-        if(lcNumericLanguage == "hi")
+    else if (fromCategoryLanguage == "hi") {
+        if(toCategoryLanguage == "hi")
             return;
         else {
             dateTimeString->replace(QChar(0x0966), '0'); // ०
@@ -2158,7 +2164,8 @@ QString MLocale::formatCurrency(double amount, const QString &currency) const
     icu::NumberFormat *nf = icu::NumberFormat::createCurrencyInstance(monetaryLocale, status);
 
     if (!U_SUCCESS(status)) {
-        qWarning() << "NumberFormat creating failed";
+        qWarning() << "icu::NumberFormat::createCurrencyInstance failed with error"
+                   << u_errorName(status);
         return QString();
     }
 
@@ -2166,7 +2173,8 @@ QString MLocale::formatCurrency(double amount, const QString &currency) const
     nf->setCurrency(currencyString.getTerminatedBuffer(), status);
 
     if (!U_SUCCESS(status)) {
-        qWarning() << "currency setting failed";
+        qWarning() << "icu::NumberFormat::setCurrency failed with error"
+                   << u_errorName(status);
         delete nf;
         return QString();
     }
@@ -2174,8 +2182,9 @@ QString MLocale::formatCurrency(double amount, const QString &currency) const
     icu::UnicodeString str;
     nf->format(amount, str);
     delete nf;
-
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->replaceDigitsToOtherCategory(MLocale::MLcMonetary, MLocale::MLcNumeric, &result);
+    return result;
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcMonetary).toString(amount) + ' ' + currency;
@@ -2217,7 +2226,7 @@ QString MLocale::formatDateTime(const MCalendar &mcalendar,
     if(df)
         df->format(*cal, resString, pos);
     QString result = MIcuConversions::unicodeStringToQString(resString);
-    d->replaceDigitsFromLcTimeToLcNumeric(&result);
+    d->replaceDigitsToOtherCategory(MLocale::MLcTime, MLocale::MLcNumeric, &result);
     return result;
 }
 #endif
@@ -2305,7 +2314,7 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
         icu::UnicodeString resString;
         formatter->format(*mCalendar.d_ptr->_calendar, resString, pos);
         QString result = MIcuConversions::unicodeStringToQString(resString);
-        d->replaceDigitsFromLcTimeToLcNumeric(&result);
+        d->replaceDigitsToOtherCategory(MLocale::MLcTime, MLocale::MLcNumeric, &result);
         return result;
     }
 }

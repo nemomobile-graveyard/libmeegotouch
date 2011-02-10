@@ -19,6 +19,8 @@
 
 #include "ft_numbers.h"
 
+#define VERBOSE_OUTPUT
+
 void Ft_Numbers::initTestCase()
 {
     static int argc = 0;
@@ -2179,82 +2181,162 @@ void Ft_Numbers::testPercents()
 
 void Ft_Numbers::testCurrencies_data()
 {
-    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("language");
+    QTest::addColumn<QString>("lcMonetary");
+    QTest::addColumn<QString>("lcNumeric");
     QTest::addColumn<double>("val");
     QTest::addColumn<QString>("currency");
     QTest::addColumn<QString>("formatted");
 
     QTest::newRow("0_fi")
-            << QString("fi_FI")
-            << 1234.56
-            << "EUR"
-            << QString("1 234,56 €");
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << 1234.56
+        << "EUR"
+        << QString("1 234,56 €");
     QTest::newRow("1_fi")
-            << QString("fi_FI")
-            << 1234.56
-            << "USD"
-            << QString("1 234,56 $");
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << 1234.56
+        << "USD"
+        << QString("1 234,56 $");
     QTest::newRow("2_fi")
-            << QString("fi_FI")
-            << 1234.56
-            << "GBP"
-            << QString("1 234,56 £");
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << 1234.56
+        << "GBP"
+        << QString("1 234,56 £");
     QTest::newRow("3_fi")
-            << QString("fi_FI")
-            << 1234.56
-            << "XYZ"
-            << QString("1 234,56 XYZ");
-
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << 1234.56
+        << "XYZ"
+        << QString("1 234,56 XYZ");
     QTest::newRow("0_en")
-            << QString("en_GB")
-            << 1234.56
-            << "EUR"
-            << QString("€1,234.56");
+        << QString("en_GB")
+        << QString("en_GB")
+        << QString("en_GB")
+        << 1234.56
+        << "EUR"
+        << QString("€1,234.56");
     QTest::newRow("1_en")
-            << QString("en_GB")
-            << 1234.56
-            << "USD"
-            << QString("$1,234.56");
+        << QString("en_GB")
+        << QString("en_GB")
+        << QString("en_GB")
+        << 1234.56
+        << "USD"
+        << QString("$1,234.56");
     QTest::newRow("2_en")
-            << QString("en_GB")
-            << 1234.56
-            << "GBP"
-            << QString("£1,234.56");
+        << QString("en_GB")
+        << QString("en_GB")
+        << QString("en_GB")
+        << 1234.56
+        << "GBP"
+        << QString("£1,234.56");
     QTest::newRow("3_en")
-            << QString("en_GB")
-            << 1234.56
-            << "XYZ"
-            << QString("XYZ1,234.56");
-
+        << QString("en_GB")
+        << QString("en_GB")
+        << QString("en_GB")
+        << 1234.56
+        << "XYZ"
+        << QString("XYZ1,234.56");
     QTest::newRow("0_de")
-            << QString("de_DE")
-            << 1234.56
-            << "EUR"
-            << QString("1.234,56 €");
+        << QString("de_DE")
+        << QString("de_DE")
+        << QString("de_DE")
+        << 1234.56
+        << "EUR"
+        << QString("1.234,56 €");
     QTest::newRow("1_de")
-            << QString("de_DE")
-            << 1234.56
-            << "USD"
-            << QString("1.234,56 $");
+        << QString("de_DE")
+        << QString("de_DE")
+        << QString("de_DE")
+        << 1234.56
+        << "USD"
+        << QString("1.234,56 $");
     QTest::newRow("2_de")
-            << QString("de_DE")
-            << 1234.56
-            << "GBP"
-            << QString("1.234,56 £");
+        << QString("de_DE")
+        << QString("de_DE")
+        << QString("de_DE")
+        << 1234.56
+        << "GBP"
+        << QString("1.234,56 £");
     QTest::newRow("3_de")
-            << QString("de_DE")
-            << 1234.56
-            << "XYZ"
-            << QString("1.234,56 XYZ");
+        << QString("de_DE")
+        << QString("de_DE")
+        << QString("de_DE")
+        << 1234.56
+        << "XYZ"
+        << QString("1.234,56 XYZ");
+    QTest::newRow("ar_EG")
+        << QString("de_DE")
+        << QString("ar_EG")
+        << QString("ar_EG")
+        << 1234.56
+        << "USD"
+        << QString("US$ ١٬٢٣٤٫٥٦");
+    QTest::newRow("ar_EG")
+        << QString("de_DE")
+        << QString("ar_EG")
+        << QString("en_US")
+        << 1234.56
+        << "USD"
+        << QString("US$ 1,234.56");
+    QTest::newRow("ar_SA")
+        << QString("de_DE")
+        << QString("ar_SA")
+        << QString("ar_SA")
+        << 1234.56
+        << "USD"
+        << QString("US$١٢٣٤٫٥٦");
+    QTest::newRow("ar_SA")
+        << QString("de_DE")
+        << QString("ar_SA")
+        << QString("en_US")
+        << 1234.56
+        << "USD"
+        << QString("US$1234.56");
+    QTest::newRow("hi_IN")
+        << QString("de_DE")
+        << QString("hi_IN")
+        << QString("hi_IN")
+        << 1234.56
+        << "USD"
+        << QString("US$ १,२३४.५६");
+    QTest::newRow("hi_IN")
+        << QString("de_DE")
+        << QString("hi_IN")
+        << QString("en_US")
+        << 1234.56
+        << "USD"
+        << QString("US$ 1,234.56");
 }
 
 void Ft_Numbers::testCurrencies()
 {
-    QFETCH(QString, localeName);
+    QFETCH(QString, language);
+    QFETCH(QString, lcMonetary);
+    QFETCH(QString, lcNumeric);
     QFETCH(double, val);
     QFETCH(QString, currency);
-    MLocale loc(localeName);
-    QTEST(loc.formatCurrency(val, currency), "formatted");
+    QFETCH(QString, formatted);
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMonetary, lcMonetary);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "result: " << locale.formatCurrency(val, currency)
+        << " expected: " << formatted
+        << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(locale.formatCurrency(val, currency), formatted);
 }
 
 QTEST_APPLESS_MAIN(Ft_Numbers);
