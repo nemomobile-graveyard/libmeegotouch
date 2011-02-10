@@ -408,7 +408,7 @@ void MLayout::widgetEvent ( QEvent * event )
     } else if(event->type() == MOrientationChangeEvent::eventNumber()) {
         MOrientationChangeEvent *oce = static_cast<MOrientationChangeEvent *>(event);
         d->setOrientation(oce->orientation());
-        activate();
+        QGraphicsLayout::invalidate();
     }
 
     QGraphicsLayout::widgetEvent(event);
