@@ -40,7 +40,6 @@ class MComboBox;
 class MListContentItemCreator;
 class MAbstractItemModel;
 class MObjectMenu;
-class MNavigationBar;
 
 class MListPage: public TemplatePage
 {
@@ -95,9 +94,10 @@ public slots:
     void liveFilteringTextChangeTimeout();
     void filteringVKB();
     void hideEmptyTextEdit();
-    void setFocusToList();
 
     void showAdvancedConfigurationDialog();
+    void listGrabKeyboard();
+    void listUngrabKeyboard();
 
 protected:
     void retranslateUi();
@@ -106,7 +106,6 @@ private:
     MComboBox *createComboBoxAction(const QString &title, const QStringList &itemsList);
     MComboBox *createComboBoxLabelButton(const QString &title, const QStringList &itemsList, QGraphicsWidget *parent);
     void showTextEdit(bool show);
-    MNavigationBar *navigationBar();
 
 private:
 
