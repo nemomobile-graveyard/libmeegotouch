@@ -51,6 +51,7 @@ MSceneLayerEffect::MSceneLayerEffect(const QString &effectType)
                      effectType)
 {
     Q_D(MSceneLayerEffect);
+    setFlag(QGraphicsItem::ItemStopsClickFocusPropagation, true);
 
     d->appearanceAnimation->setTargetWidget(this);
     d->appearanceAnimation->setParent(this);
