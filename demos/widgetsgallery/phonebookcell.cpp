@@ -38,6 +38,7 @@ PhoneBookCell::PhoneBookCell()
     subtitleLabel(NULL),
     icon(NULL)
 {
+    setStyleName("CommonPanel");
 }
 
 PhoneBookCell::~PhoneBookCell()
@@ -48,7 +49,6 @@ PhoneBookCell::~PhoneBookCell()
 
 MLayout *PhoneBookCell::createLayout()
 {
-    setObjectName("BasicListItemIconWithTitleAndSubtitle");
     layout = new MLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -145,7 +145,8 @@ QString PhoneBookCell::subtitle()
 
 void PhoneBookCell::setSubtitle(const QString &subtitle)
 {
-    subtitleLabelWidget()->setText(subtitle);
+    if (layout && layout->policy() == landscapePolicy)
+        subtitleLabelWidget()->setText(subtitle);
 }
 
 QImage PhoneBookCell::image()
