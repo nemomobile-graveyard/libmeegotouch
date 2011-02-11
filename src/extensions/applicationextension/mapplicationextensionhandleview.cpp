@@ -35,25 +35,8 @@ MApplicationExtensionHandleViewPrivate::~MApplicationExtensionHandleViewPrivate(
 
 void MApplicationExtensionHandleViewPrivate::showBrokenDialog()
 {
-    // the following use of translatable strings is not good.
-    // Splitting sentences like this makes it hard to translate them
-    // into language where the structure of the sentence is very
-    // different from English.
-    QString s;
-    QTextStream(&s) <<
-                    "<font color=\"white\">" <<
-                    //~ uispec-document ??? FIXME
-                    //% "The extension"
-                    qtTrId("mapplicationextensionhandle_brokendialog_messagestart") <<
-                    //~ uispec-document ??? FIXME
-                    //% "is not functioning properly.<br />"
-                    //% "Please restart the extension."
-                    qtTrId("mapplicationextensionhandle_brokendialog_messageend") << "</font>";
-
-    MMessageBox mb(s, M::NoStandardButton);
-    //~ uispec-document ??? FIXME
-    //% "Restart"
-    MButtonModel *restartButton = mb.addButton(qtTrId("mapplicationextensionhandle_brokendialog_restart"));
+    MMessageBox mb("This application extension is not functioning properly. Please restart the extension.", M::NoStandardButton);
+    MButtonModel *restartButton = mb.addButton("Restart");
 
     controller->sceneManager()->execDialog(&mb);
 
@@ -64,30 +47,11 @@ void MApplicationExtensionHandleViewPrivate::showBrokenDialog()
 
 void MApplicationExtensionHandleViewPrivate::showInstallationFailedDialog(const QString &error)
 {
-    // the following use of translatable strings is not good.
-    // Splitting sentences like this makes it hard to translate them
-    // into language where the structure of the sentence is very
-    // different from English.
-    QString s;
-    QTextStream(&s) <<
-                    "<font color=\"white\">" <<
-                    //~ uispec-document ??? FIXME
-                    //% "The extension"
-                    qtTrId("mapplicationextensionhandle_installationfaileddialog_messagestart") <<
-                    //~ uispec-document ??? FIXME
-                    //% "failed to install properly with the following error message: <br />"
-                    qtTrId("mapplicationextensionhandle_installationfaileddialog_messagemiddle") <<
-                    error <<
-                    "<br />" <<
-                    //% "Please remove the extension."
-                    qtTrId("mapplicationextensionhandle_installationfaileddialog_messageend") << "</font>";
-
-    MMessageBox mb(s, M::NoStandardButton);
-    //~ uispec-document ??? FIXME
-    //% "Remove"
-    MButtonModel *removeButton = mb.addButton(qtTrId("mapplicationextensionhandle_brokendialog_remove"));
+    MMessageBox mb("This application extension failed to install properly with the following error message: " + error + "Please remove the extension.", M::NoStandardButton);
+    MButtonModel *removeButton = mb.addButton("Remove");
 
     controller->sceneManager()->execDialog(&mb);
+
     if (mb.clickedButton() == removeButton) {
         // TODO this doesn't really do anything yet
     }
