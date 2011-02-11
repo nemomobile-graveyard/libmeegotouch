@@ -24,13 +24,15 @@
 #include <mscenewindowmodel.h>
 #include <mstatusbarstyle.h>
 
+#ifdef HAVE_DBUS
+#include <mdbusinterface.h>
+
+class QDBusServiceWatcher;
+class QDBusPendingCallWatcher;
+#endif // HAVE_DBUS
 
 class MStatusBar;
 class QPixmap;
-#ifdef HAVE_DBUS
-class QDBusServiceWatcher;
-class QDBusPendingCallWatcher;
-#endif
 
 //! \internal
 
@@ -60,15 +62,6 @@ private:
 
     // Perform the haptic feedback
     void playHapticsFeedback();
-
-    //! The name of the status indicator menu D-Bus service
-    static const QString STATUS_INDICATOR_MENU_DBUS_SERVICE;
-
-    //! The name of the status indicator menu D-Bus path
-    static const QString STATUS_INDICATOR_MENU_DBUS_PATH;
-
-    //! The name of the status indicator menu D-Bus interface
-    static const char *  STATUS_INDICATOR_MENU_DBUS_INTERFACE;
 
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
     QPointF firstPos, lastPos;
@@ -107,10 +100,24 @@ private Q_SLOTS:
 
 #endif // Q_WS_X11
 
+private:
+#ifdef HAVE_DBUS
+    //! The name of the status indicator menu D-Bus service
+    static const QString STATUS_INDICATOR_MENU_DBUS_SERVICE;
+
+    //! The name of the status indicator menu D-Bus path
+    static const QString STATUS_INDICATOR_MENU_DBUS_PATH;
+
+    //! The name of the status indicator menu D-Bus interface
+    static const char *STATUS_INDICATOR_MENU_DBUS_INTERFACE;
+
+    //! DBus interface for the status indicator menu
+    MDBusInterface statusIndicatorMenuInterface;
+#endif // HAVE_DBUS
+
 #ifdef UNIT_TEST
     friend class Ut_MStatusBarView;
 #endif // UNIT_TEST
-
 };
 
 //! \internal_end

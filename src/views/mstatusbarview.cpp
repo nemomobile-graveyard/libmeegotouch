@@ -50,9 +50,11 @@ namespace{
     const qreal SharedPixmapHeight = 30;
 }
 
+#ifdef HAVE_DBUS
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE = "com.meego.core.MStatusIndicatorMenu";
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH = "/statusindicatormenu";
 const char *  MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE = "com.meego.core.MStatusIndicatorMenu";
+#endif // HAVE_DBUS
 
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
@@ -62,6 +64,9 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
     , updatesEnabled(true)
     , isInSwitcher(false)
 #endif
+#ifdef HAVE_DBUS
+    , statusIndicatorMenuInterface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus())
+#endif // HAVE_DBUS
 {
 #ifdef Q_WS_X11
     pixmapDamage = 0;
@@ -309,8 +314,7 @@ void MStatusBarView::showStatusIndicatorMenu()
 {
 #ifdef HAVE_DBUS
     if (style()->enableStatusIndicatorMenu()) {
-        MDBusInterface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
-        interface.call(QDBus::NoBlock, "open");
+        statusIndicatorMenuInterface.call(QDBus::NoBlock, "open");
     }
 #endif // HAVE_DBUS
 }
@@ -319,6 +323,5 @@ void MStatusBarView::playHapticsFeedback()
 {
     style()->pressFeedback().play();
 }
-
 
 M_REGISTER_VIEW_NEW(MStatusBarView, MStatusBar)
