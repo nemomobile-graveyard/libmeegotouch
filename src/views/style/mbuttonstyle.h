@@ -186,6 +186,14 @@ class M_VIEWS_EXPORT MButtonStyleContainer : public MWidgetStyleContainer
         button is released.
      */
     M_STYLE_MODE(Pressed)
+
+
+    /*!
+        \brief Style mode for a selected and disabled button.
+
+        Mode is activated when a button is activated and disabled.
+     */
+    M_STYLE_MODE(DisabledSelected)
 };
 
 #endif

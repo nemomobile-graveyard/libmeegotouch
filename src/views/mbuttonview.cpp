@@ -632,5 +632,19 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
     return QSizeF(width + s->paddingLeft() + s->paddingRight(), height + s->paddingTop() + s->paddingBottom());
 }
 
+
+void MButtonView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    MWidgetView::notifyItemChange(change, value);
+
+    if (change == QGraphicsItem::ItemEnabledHasChanged) {
+        Q_D(MButtonView);
+        if (!d->controller->isEnabled() && model()->checked()) {
+            style().setModeDisabledSelected();
+            applyStyle();
+        }
+    }
+}
+
 M_REGISTER_VIEW_NEW(MButtonView, MButton)
 

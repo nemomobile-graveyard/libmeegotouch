@@ -42,18 +42,23 @@ void Ut_MButtonView::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mbuttonview" };
     app = new MApplication(argc, app_name);
+}
 
+void Ut_MButtonView::cleanupTestCase()
+{
+    delete app;
+}
+
+void Ut_MButtonView::init()
+{
     m_button = new MButton();
     m_subject = new MButtonIconView(m_button);
     m_button->setView(m_subject);
 }
 
-void Ut_MButtonView::cleanupTestCase()
+void Ut_MButtonView::cleanup()
 {
     delete m_button;
-    m_button = 0;
-
-    delete app;
 }
 
 void Ut_MButtonView::testDrawText_data()
@@ -265,26 +270,17 @@ void Ut_MButtonView::testSwitchView()
 
     //draw checked
     m_button->setChecked(true);
-    QImage img1 = captureImage(m_button);
+    QImage img1= captureImage(m_button);
 
-    //draw checked down
-    m_button->setDown(true);
-    QImage img2 = captureImage(m_button);
-
-    //draw down
+    //disabled
     m_button->setChecked(false);
-    QImage img3 = captureImage(m_button);
+    m_button->setEnabled(false);
+    QImage img2= captureImage(m_button);
 
-    m_button->setDown(false);
-
-    /*QVERIFY(img0 != img1);
+    QVERIFY(img0 != img1);
     QVERIFY(img0 != img2);
-    QVERIFY(img0 == img3);
-
-    QVERIFY(img1 == img2);
-    QVERIFY(img1 != img3);
-
-    QVERIFY(img2 != img3);*/
+    
+    QVERIFY(img1 != img2);
 }
 
 void Ut_MButtonView::testCheckboxView()
@@ -302,24 +298,15 @@ void Ut_MButtonView::testCheckboxView()
     m_button->setChecked(true);
     QImage img1 = captureImage(m_button);
 
-    //draw checked down
-    m_button->setDown(true);
+    //disabled
+    m_button->setChecked(false);
+    m_button->setEnabled(false);
     QImage img2 = captureImage(m_button);
 
-    //draw down
-    m_button->setChecked(false);
-    QImage img3 = captureImage(m_button);
-
-    m_button->setDown(false);
-
-    /*QVERIFY(img0 != img1);
+    QVERIFY(img0 != img1);
     QVERIFY(img0 != img2);
-    QVERIFY(img0 != img3);
 
     QVERIFY(img1 != img2);
-    QVERIFY(img1 != img3);
-
-    QVERIFY(img2 != img3);*/
 }
 
 void Ut_MButtonView::testSizeHint()
@@ -331,6 +318,28 @@ void Ut_MButtonView::testSizeHint()
 
     QCOMPARE(s1.width(), s2.width());
     QCOMPARE(s1.height(), s2.height());
+}
+
+void Ut_MButtonView::testDisabledSelected()
+{
+    m_button->setCheckable(true);
+    m_button->setChecked(false);
+    m_button->setViewType(MButton::checkboxType);
+    QRectF rect = QRectF(0, 0, 200, 100);
+    m_button->setGeometry(rect);
+
+    //draw disabled selected
+    m_button->setChecked(true);
+    m_button->setEnabled(false);
+    QImage img0 = captureImage(m_button);
+
+    //draw disabled
+    m_button->setEnabled(true);
+    m_button->setChecked(false);
+    m_button->setEnabled(false);
+    QImage img1 = captureImage(m_button);
+
+    QVERIFY(img0 != img1);
 }
 
 QImage Ut_MButtonView::captureImage(MButton *button)

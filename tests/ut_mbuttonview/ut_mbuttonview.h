@@ -34,6 +34,8 @@ public:
 private slots:
     void initTestCase();
     void cleanupTestCase();
+    void init();
+    void cleanup();
 
     void testDrawText_data();
     void testDrawText();
@@ -51,6 +53,8 @@ private slots:
 
     //regression test for NB#220043
     void testSizeHint();
+
+    void testDisabledSelected();
 
 private:
 

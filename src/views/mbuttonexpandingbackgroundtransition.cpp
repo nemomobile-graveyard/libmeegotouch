@@ -81,8 +81,6 @@ void MButtonExpandingBackgroundTransition::refreshStyle()
         } else {
             style.setModeDefault();
         }
-    } else {
-        style.setModeDisabled();
     }
     priv->updateItemsAfterModeChange();
 }

@@ -86,15 +86,13 @@ void MButtonDefaultTransition::onCancel()
 void MButtonDefaultTransition::refreshStyle()
 {
     if(controller->isEnabled()) {
-	if(model->down()) {
-	    style.setModePressed();
-	} else if(model->checked()) {
-	    style.setModeSelected();
-	} else {
-	    style.setModeDefault();
-	}
-    } else {
-	style.setModeDisabled();
+        if(model->down()) {
+            style.setModePressed();
+        } else if(model->checked()) {
+            style.setModeSelected();
+        } else {
+            style.setModeDefault();
+        }
     }
     priv->updateItemsAfterModeChange();
 }
