@@ -22,7 +22,6 @@
 
 #include <QObject>
 #include <QHash>
-#include <QCache>
 #include <QList>
 
 #include "maction.h"
@@ -63,8 +62,6 @@ public:
     void setSpacesEnabled(bool enabled);
     void setLabelOnlyAsCommonButton(bool enable, bool centerToParent);
     void setCentering(bool allToParent);
-
-    QCache<QAction *, MButton> removedActionsButtons;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
