@@ -121,6 +121,7 @@ public:
     virtual void updateSeparators();
     virtual void updateHeaders();
     virtual void updateHeaderHeight();
+    virtual void updateRecyclerMaxItemsCount();
 
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
@@ -264,6 +265,7 @@ public:
 public:
     virtual void createSeparators();
     virtual void updateSeparators();
+    virtual void updateRecyclerMaxItemsCount();
 
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
@@ -373,6 +375,7 @@ public:
 public:
     virtual void createSeparators();
     virtual void updateSeparators();
+    virtual void updateRecyclerMaxItemsCount();
 
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();

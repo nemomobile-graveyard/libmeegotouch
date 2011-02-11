@@ -47,6 +47,12 @@ MListIndexFloatingViewPrivate::~MListIndexFloatingViewPrivate()
 {
 }
 
+void MListIndexFloatingViewPrivate::init()
+{
+    Q_Q(MListIndexFloatingView);
+    q->connect(&scrollToDelayQueue, SIGNAL(timeout()), q, SLOT(_q_scrollListToCurrentIndex()));
+}
+
 void MListIndexFloatingViewPrivate::initLayout()
 {
     attachToContainer();
@@ -164,13 +170,26 @@ void MListIndexFloatingViewPrivate::scrollToGroupHeader(int y)
                     snapDirection = 1;
 
                 currentScrollToIndex = scrollToIndex;
-                q->model()->list()->scrollTo(scrollToIndex, MList::PositionAtTopHint);
+                queueListScrollTo();
                 updateTooltipData();
 
                 tooltip()->snap(q->style()->floatingSnapDistance() * snapDirection);
             }
         }
     }
+}
+
+void MListIndexFloatingViewPrivate::queueListScrollTo()
+{
+    if (!scrollToDelayQueue.isActive())
+        scrollToDelayQueue.start(50);
+}
+
+void MListIndexFloatingViewPrivate::_q_scrollListToCurrentIndex()
+{
+    Q_Q(MListIndexFloatingView);
+    q->model()->list()->scrollTo(currentScrollToIndex, MList::PositionAtTopHint);
+    scrollToDelayQueue.stop();
 }
 
 void MListIndexFloatingViewPrivate::_q_recalculateListIndexRegion()
@@ -194,6 +213,7 @@ MListIndexFloatingView::MListIndexFloatingView(MListIndex *controller)
 {
     Q_D(MListIndexFloatingView);
     d->controller = controller;
+    d->init();
 }
 
 MListIndexFloatingView::~MListIndexFloatingView()

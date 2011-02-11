@@ -23,6 +23,8 @@
 #include "private/mwidgetview_p.h"
 #include "mlistindexfloatingview.h"
 
+#include <QTimer>
+
 class MApplicationPage;
 class MLabel;
 class MListIndex;
@@ -39,6 +41,7 @@ public:
     MListIndexFloatingViewPrivate();
     virtual ~MListIndexFloatingViewPrivate();
 
+    void init();
     void initLayout();
     void configureController();
 
@@ -53,10 +56,12 @@ public:
     void updateTooltipData();
 
     void scrollToGroupHeader(int y);
+    void queueListScrollTo();
 
     void _q_recalculateListIndexRegion();
     void _q_listParentChanged();
     void _q_recalculateTooltipOffsets();
+    void _q_scrollListToCurrentIndex();
 
 private:
     Q_DECLARE_PUBLIC(MListIndexFloatingView)
@@ -67,6 +72,7 @@ private:
 
     MListIndexTooltip *tooltipWidget;
     QModelIndex currentScrollToIndex;
+    QTimer scrollToDelayQueue;
 
     qreal tooltipVerticalOffset;
     qreal contentHeight;

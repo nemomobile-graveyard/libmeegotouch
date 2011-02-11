@@ -57,6 +57,7 @@ protected:
 private:
     Q_PRIVATE_SLOT(d_func(), void _q_recalculateListIndexRegion())
     Q_PRIVATE_SLOT(d_func(), void _q_recalculateTooltipOffsets())
+    Q_PRIVATE_SLOT(d_func(), void _q_scrollListToCurrentIndex())
 
     Q_DISABLE_COPY(MListIndexFloatingView)
     Q_DECLARE_PRIVATE(MListIndexFloatingView)

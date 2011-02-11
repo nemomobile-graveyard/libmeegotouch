@@ -39,6 +39,7 @@
 using namespace MListViewPrivateNamespace;
 
 static const int MOVINGDETECTORTIMEOUT = 500;
+static const int SCROLLTOANIMATIONSNAPDISTANCE = 100;
 
 MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
 {
@@ -113,6 +114,12 @@ void MListViewPrivate::updateHeaders()
 
 void MListViewPrivate::updateHeaderHeight()
 {
+}
+
+void MListViewPrivate::updateRecyclerMaxItemsCount()
+{
+    if (itemHeight > 0)
+        recycler->setMaxItemsPerClass(viewportVisibleHeight / itemHeight + 2);
 }
 
 void MListViewPrivate::setHeadersCreator(MCellCreator *creator)
@@ -313,6 +320,7 @@ void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
 
     updateViewportRect(viewportTopLeft, QSizeF(viewWidth, size.height()));
     updateScrollToTargetPosition();
+    updateRecyclerMaxItemsCount();
 }
 
 void MListViewPrivate::viewportRangeChanged(const QRectF &range)
@@ -431,8 +439,10 @@ void MListViewPrivate::updateAnimations()
 
 void MListViewPrivate::updateItemHeight()
 {
-    if (controllerModel->cellCreator())
+    if (controllerModel->cellCreator()) {
         itemHeight = controllerModel->cellCreator()->cellSize().height();
+        updateRecyclerMaxItemsCount();
+    }
 }
 
 void MListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
@@ -702,18 +712,26 @@ void MListViewPrivate::updateScrollToTargetPosition()
 {
     if (scrollToAnimation->state() == QPropertyAnimation::Running) {
         QPointF targetPosition = locateScrollToPosition(controllerModel->scrollToIndex(), static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
-        if (targetPosition != scrollToAnimation->endValue().toPointF())
+        if (targetPosition != scrollToAnimation->endValue().toPointF()) {
+            if (targetPosition.y() > pannableViewport->position().y())
+                scrollToAnimation->setStartValue(targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
+            else
+                scrollToAnimation->setStartValue(targetPosition - QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
             scrollToAnimation->setEndValue(targetPosition);
+        }
     }
 }
 
 void MListViewPrivate::scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode)
 {
     if (mode == MList::Animated) {
-        scrollToAnimation->setStartValue(pannableViewport->position());
+        if (targetPosition.y() > pannableViewport->position().y())
+            scrollToAnimation->setStartValue(targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
+        else
+            scrollToAnimation->setStartValue(targetPosition - QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
         scrollToAnimation->setEndValue(targetPosition);
         scrollToAnimation->setEasingCurve(QEasingCurve::OutCubic);
-        scrollToAnimation->setDuration(300);
+        scrollToAnimation->setDuration(100);
         scrollToAnimation->start();
     }
     else
@@ -860,6 +878,12 @@ void MPlainMultiColumnListViewPrivate::updateSeparators()
     MListViewPrivate::updateSeparators();
     if (vseparator)
         vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
+}
+
+void MPlainMultiColumnListViewPrivate::updateRecyclerMaxItemsCount()
+{
+    if (itemHeight > 0)
+        recycler->setMaxItemsPerClass((viewportVisibleHeight / itemHeight + 2) * controllerModel->columns());
 }
 
 void MPlainMultiColumnListViewPrivate::setVerticalSeparator(MWidget *separator)
@@ -1549,6 +1573,12 @@ void MMultiColumnListViewPrivate::updateSeparators()
 
     if (vseparator)
         vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
+}
+
+void MMultiColumnListViewPrivate::updateRecyclerMaxItemsCount()
+{
+    if (itemHeight > 0)
+        recycler->setMaxItemsPerClass((viewportVisibleHeight / itemHeight + 2) * controllerModel->columns());
 }
 
 int MMultiColumnListViewPrivate::itemsToRows(int items) const
