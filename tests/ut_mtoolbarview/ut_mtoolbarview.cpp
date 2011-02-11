@@ -32,7 +32,6 @@
 #include <QPointer>
 
 #include "ut_mtoolbarview.h"
-#include "mtoolbarview_p.h"
 
 MApplication *app;
 MApplicationWindow *appWin;
@@ -478,9 +477,6 @@ void Ut_MToolBarView::testAddingRemoveActions()
         delete action3;
         delete action1;
         delete action2;
-        // After deleting the actions, one can no longer check for them in
-        // the QCache but the 2 buttons will be there
-        QVERIFY(m_toolbarview->d_ptr->removedActionsButtons.count() == 2);
     } else {
         m_toolbar->removeAction(action3);
         m_toolbar->removeAction(action1);
@@ -488,16 +484,10 @@ void Ut_MToolBarView::testAddingRemoveActions()
         QVERIFY(!action1.isNull());
         QVERIFY(!action2.isNull());
         QVERIFY(!action3.isNull());
-
-        QPointer<MButton> removedButton = 0;
-        removedButton = m_toolbarview->d_ptr->removedActionsButtons.take(action1);
-        QVERIFY(button1 == removedButton);
-        removedButton = m_toolbarview->d_ptr->removedActionsButtons.take(action2);
-        QVERIFY(button2 == removedButton);
-        removedButton = m_toolbarview->d_ptr->removedActionsButtons.take(action3);
-        QVERIFY(button3 == removedButton);
     }
-
+    QVERIFY(button1.isNull());
+    QVERIFY(button2.isNull());
+    QVERIFY(button3.isNull());
     if(!deleteAction) {
         //Delete now, after they've been removed, just to clean up
         delete action1;
@@ -675,10 +665,7 @@ void Ut_MToolBarView::testButtons()
     WAIT_VERIFY(button->isVisible());
 
     m_toolbar->removeAction(action);
-    // When an action is removed, the associated button is added to a cache of
-    // buttons to avoid having to recreate it if the action is added again
-    MButton *removedButton = m_toolbarview->d_ptr->removedActionsButtons.take(action);
-    QVERIFY(button == removedButton);
+    QVERIFY(button.isNull()); //The toolbar owns the button, so it should have been deleted
 }
 
 void Ut_MToolBarView::testMWidgetAction_data()
