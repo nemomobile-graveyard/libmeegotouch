@@ -155,5 +155,80 @@ void Ut_MInputMethodState::testToolbars()
     QCOMPARE(changeSpy.count(), 0);
 }
 
+// checks registering and modifying attributeExtension
+void Ut_MInputMethodState::testExtendedAttributes()
+{
+    MInputMethodState *state = MInputMethodState::instance();
+
+    QSignalSpy registerSpy(state, SIGNAL(attributeExtensionRegistered(int, QString)));
+
+    QSignalSpy changeSpy(state,
+                         SIGNAL(extendedAttributeChanged(int, QString, QString, QString, QVariant)));
+
+    QList<int> oldIdList = state->attributeExtensionIds();
+
+    // register attribute extension
+    int id = state->registerAttributeExtension("filename");
+    QCOMPARE(registerSpy.count(), 1);
+    registerSpy.clear();
+
+    // make a modification
+    state->setExtendedAttribute(id, "/toolbar", "itemName", "attributeName", 42);
+    QCOMPARE(changeSpy.count(), 1);
+
+    // check that setting value doesn't make signals if value does not change
+    state->setExtendedAttribute(id, "/toolbar", "itemName", "attributeName", 42);
+    QCOMPARE(changeSpy.count(), 1);
+
+    changeSpy.clear();
+
+    // another attribute extension with one item containing two attributes, and second containing one
+    int id2 = state->registerAttributeExtension("filename2");
+
+    // check that registered attribute extension ids are correct
+    QList<int> idList = state->attributeExtensionIds();
+    QList<int> expectedIds = oldIdList;
+    expectedIds << id << id2;
+    QCOMPARE(idList, expectedIds);
+
+    MInputMethodState::ExtendedAttributeMap valuesToSet;
+    QMap<QString, QMap<QString, QVariant> > targetValues;
+    QMap<QString, QVariant> item2Attributes;
+    item2Attributes.insert("attributeName2", 43);
+    item2Attributes.insert("attributeName3", 44);
+    targetValues.insert("itemName2", item2Attributes);
+
+    QMap<QString, QVariant> item3Attributes;
+    item3Attributes.insert("attributeName4", 45);
+    targetValues.insert("itemName3", item3Attributes);
+
+    valuesToSet.insert("/toolbar", targetValues);
+
+    foreach (QString itemName, targetValues.keys()) {
+        QMap<QString, QVariant> attributes = targetValues[itemName];
+
+        foreach (QString attributeName, attributes.keys()) {
+            QVariant attribute = attributes[attributeName];
+
+            state->setExtendedAttribute(id2, "/toolbar", itemName, attributeName, attribute);
+        }
+    }
+
+    QCOMPARE(changeSpy.count(), 3);
+    changeSpy.clear();
+
+    // check the toolbar item attribute values are really the ones set
+    MInputMethodState::ExtendedAttributeMap extendedAttributes = state->extendedAttributes(id2);
+    QList<QString> names;
+
+    qDebug() << "valuesToSet:" << valuesToSet;
+    qDebug() << "extendedAttributes:" << extendedAttributes;
+    QCOMPARE(valuesToSet, extendedAttributes);
+
+    // check unregister
+    QSignalSpy unregisterSpy(state, SIGNAL(attributeExtensionUnregistered(int)));
+    state->unregisterAttributeExtension(id);
+    QCOMPARE(unregisterSpy.count(), 1);
+}
 
 QTEST_APPLESS_MAIN(Ut_MInputMethodState)

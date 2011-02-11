@@ -44,6 +44,8 @@ private slots:
 
     void testToolbars();
 
+    void testExtendedAttributes();
+
 private:
     std::auto_ptr<MApplication> m_app;
 };
