@@ -52,6 +52,11 @@ private slots:
     void disabledViewportShouldNotAllowWigetToBeBiggerThanViewport();
     void rangeOfViewportShouldBeSizeOfPannedWidgetMinusViewportSize();
 
+    //See NB#226518 or NB#217727
+    void testPositionIndicatorPositionAfterReenabled();
+    void testPositionIndicatorRangeAfterReenabled();
+    void testPositionIndicatorViewportSizeAfterReenabled();
+
     void testSetClipping();
     void testRangeSetting();
     void testExtendedRange_data();

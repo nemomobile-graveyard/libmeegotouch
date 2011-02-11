@@ -393,7 +393,7 @@ void Ut_MPannableViewport::testSizeHint()
            if (which != Qt::PreferredSize || constraint.width() == -1)
               return QGraphicsWidget::sizeHint(which, constraint);
            else
-              return QSizeF( constraint.width(), constraint.width() ); 
+              return QSizeF( constraint.width(), constraint.width() );
         }
     };
 
@@ -442,6 +442,34 @@ void Ut_MPannableViewport::testSizeHint()
             QCOMPARE(subject->preferredSize(), QSizeF(200,50));
         subject->setPreferredWidth(-1);
     }
+}
+
+void Ut_MPannableViewport::testPositionIndicatorPositionAfterReenabled()
+{
+    subject->resize(50,1000);;
+    subject->setPosition(QPointF(0.0, 0.0));
+    subject->positionIndicator()->setEnabled(false);
+    subject->setPosition(QPointF(0.0, 1000.0));
+    subject->positionIndicator()->setEnabled(true);
+    QCOMPARE(subject->position(), subject->positionIndicator()->position());
+}
+
+void Ut_MPannableViewport::testPositionIndicatorRangeAfterReenabled()
+{
+    subject->setAutoRange(false);
+    subject->setRange(QRectF(0,0,100,100));
+    subject->positionIndicator()->setEnabled(false);
+    subject->setRange(QRectF(0,0,100,1000));
+    subject->positionIndicator()->setEnabled(true);
+    QCOMPARE(subject->range(), subject->positionIndicator()->range());
+}
+
+void Ut_MPannableViewport::testPositionIndicatorViewportSizeAfterReenabled()
+{
+    subject->positionIndicator()->setEnabled(false);
+    subject->resize(500,500);
+    subject->positionIndicator()->setEnabled(true);
+    QCOMPARE(subject->size(), subject->positionIndicator()->viewportSize());
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)
