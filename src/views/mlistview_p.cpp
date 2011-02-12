@@ -466,12 +466,6 @@ MWidget *MListViewPrivate::findCellAtRow(int row)
 void MListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
 {
     for (int currentRow = firstVisibleRow; currentRow <= lastVisibleRow; currentRow++) {
-        MWidget *existingCell = findCellAtRow(currentRow);
-        if (existingCell != NULL) {
-            visibleItems[flatRowToIndex(currentRow)] = existingCell;
-            continue;
-        }
-
         QModelIndex index = flatRowToIndex(currentRow);
         MWidget *cell = visibleItems.value(index, NULL);
         if (!cell) {
