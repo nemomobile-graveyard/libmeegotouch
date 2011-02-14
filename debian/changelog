@@ -1,6 +1,7 @@
 libmeegotouch (0.20.84~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#222047 - Height-For-Width is not working properly in libmeegotouch
   * Fixes: NB#197142 - invalid logical ids in extensions/applicationextension/mapplicationextensionhandleview.cpp
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 09 Feb 2011 15:24:26 +0200
