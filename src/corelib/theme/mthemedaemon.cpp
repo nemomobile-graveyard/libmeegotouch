@@ -302,13 +302,10 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
 
         delete themeIndexFile;
 
-        if (tmpTheme == "base")
+        if (parentTheme.isEmpty()) {
             break;
-        tmpTheme = parentTheme;
-        if (tmpTheme.isEmpty()) {
-            // TODO: print out warning, no base theme for this theme.
-            return false;
         }
+        tmpTheme = parentTheme;
 
         // check that there is no cyclic dependencies
         foreach(const QString & themeName, newThemeInheritanceChain) {
