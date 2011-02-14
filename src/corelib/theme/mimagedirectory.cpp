@@ -82,6 +82,8 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
             }
         }
 
+        applyDebugColors(&image);
+
 #ifdef  Q_WS_X11
         if (convertToX11) {
             Pixmap x11Pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
@@ -108,6 +110,47 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
 
 
     return cacheEntry->handle;
+}
+
+void ImageResource::applyDebugColors(QImage *image) {
+    if (image->depth() != 32) {
+        return;
+    }
+
+    static QByteArray visualizationEnv = qgetenv("MTHEMEDAEMON_TRANSPARENCY_VISUALIZATION");
+    static bool visualizeCompleteTransparency = (visualizationEnv == "complete") || (visualizationEnv == "both");
+    static bool visualizePartialTransparency =  (visualizationEnv == "partial") || (visualizationEnv == "both");
+
+    if (! (visualizeCompleteTransparency || visualizePartialTransparency )) {
+        return;
+    }
+
+    QImage backup = *image;
+
+    bool completelyTransparent = true;
+    for (int i = 0; i < image->height(); ++i) {
+        QRgb *scanline = reinterpret_cast<QRgb*>(image->scanLine(i));
+        for (int j = 0; j < image->width(); ++j) {
+            QRgb *pixel = &scanline[j];
+            if (*pixel == qRgba(0, 0, 0, 0)) {
+                if (visualizePartialTransparency) {
+                    *pixel = qRgb(0, 0, 255);
+                }
+            } else {
+                if (visualizePartialTransparency && qAlpha(*pixel) < 255) {
+                    *pixel = qRgb(0, 255, 0);
+                }
+                completelyTransparent = false;
+            }
+        }
+    }
+    if (completelyTransparent) {
+        if (visualizeCompleteTransparency) {
+            image->fill(qRgb(255, 0, 127));
+        } else if (visualizePartialTransparency){
+            *image = backup;
+        }
+    }
 }
 
 ImageResource::~ImageResource()

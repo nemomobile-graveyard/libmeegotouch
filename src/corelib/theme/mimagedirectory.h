@@ -91,6 +91,8 @@ public:
 
     QHash<QSize, const PixmapCacheEntry*> pixmapCacheEntries() const;
 
+    void applyDebugColors(QImage *image);
+
 protected:
     virtual QImage createPixmap(const QSize &size) = 0;
     // must not return an empty string
