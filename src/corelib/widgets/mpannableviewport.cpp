@@ -357,12 +357,7 @@ bool MPannableViewport::autoRange() const
 void MPannableViewport::setClipping(bool enabled)
 {
     model()->setClipWidget(enabled);
-
-    if (enabled) {
-        setFlags(QGraphicsItem::ItemClipsChildrenToShape);
-    } else {
-        setFlags(0);
-    }
+    setFlag(QGraphicsItem::ItemClipsChildrenToShape, enabled);
 }
 
 bool MPannableViewport::hasClipping() const
