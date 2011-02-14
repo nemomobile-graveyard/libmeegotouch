@@ -25,6 +25,7 @@
 //! \internal
 
 class MWidgetController;
+class QGraphicsWidget;
 
 class MDebug
 {
@@ -51,6 +52,9 @@ public:
 
     static void installMessageHandler(MMsgHandler handler);
     static MMsgHandler messageHandler();
+
+    /*! Print out, using qWarning(), details all the children recursively, along with their geometry and sizehints. */
+    static void printDebugChildInformation(QGraphicsWidget *widget, int initialIndentationDepth = 0);
 
 private:
     void flush();
