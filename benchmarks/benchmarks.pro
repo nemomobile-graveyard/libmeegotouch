@@ -33,6 +33,7 @@ SUBDIRS     = \
  pt_mtoolbar \
  pt_widgetsgallery \
  pt_mwidgetcontroller \
+ pt_mscalableimage \
 
 contains(DEFINES, HAVE_ICU) {
 SUBDIRS += \
