@@ -35,7 +35,6 @@
 #include <QGestureEvent>
 #include <QTapAndHoldGesture>
 
-
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
     viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
 {
@@ -243,8 +242,8 @@ void MLabelViewSimple::initializeTextProperties()
         : viewPrivate->boundingRect().adjusted(style->paddingRight(), style->paddingTop(), -style->paddingLeft(), -style->paddingBottom());
     textOffset = paintingRect.topLeft().toPoint();
 
-    unconstraintText = textToRender(QWIDGETSIZE_MAX);
-    const QString text = textToRender(paintingRect.width());
+    unconstraintText = textToRender(QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+    const QString text = textToRender(paintingRect.size());
 
     staticText.setTextWidth(paintingRect.width());
     staticText.setTextOption(viewPrivate->textOptions);
@@ -263,7 +262,7 @@ void MLabelViewSimple::initializeTextProperties()
     font = QFont(viewPrivate->controller->font());
 }
 
-QString MLabelViewSimple::textToRender(qreal width) const
+QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
 {
     QString text = viewPrivate->model()->text();
 
@@ -275,15 +274,10 @@ QString MLabelViewSimple::textToRender(qreal width) const
         const QFontMetricsF metrics(viewPrivate->controller->font());
         foreach (const QString &string, strings) {
             text = string;
-            if (metrics.width(text) <= width) {
+            if (metrics.width(text) <= renderSize.width()) {
                 break;
             }
         }
-    }
-
-    if (viewPrivate->model()->textElide() && text.size() > 4) {
-        QFontMetrics metrics(viewPrivate->controller->font());
-        text = metrics.elidedText(text, Qt::ElideRight, width);
     }
 
     // QStaticText uses QTextLayout internally to render text. Contrary to
@@ -298,6 +292,36 @@ QString MLabelViewSimple::textToRender(qreal width) const
             const QChar chr = text.at(i);
             if (chr == QLatin1Char('\n') || chr == QChar::LineSeparator) {
                 text[i] = QLatin1Char(' ');
+            }
+        }
+    }
+
+    if (viewPrivate->model()->textElide() && text.size() > 4) {
+        if (!wrap()) {
+            QFontMetrics metrics(viewPrivate->controller->font());
+            //No word wrap, so simple to elide
+            text = metrics.elidedText(text, Qt::ElideRight, renderSize.width());
+        } else {
+            //For word wrapping and eliding, bisect to find where to elide
+            QStaticText staticText;
+            staticText.setTextOption(staticText.textOption());
+            staticText.setTextWidth(renderSize.width());
+            staticText.setText(text);
+            staticText.prepare(QTransform(), viewPrivate->controller->font());
+
+            if (staticText.size().height() > renderSize.height()) {
+                int bad = text.length();
+                int good = 0;
+                int offset = bad + (good - bad)/2;
+                while (offset != good && offset != bad) {
+                    staticText.setText(text.left(offset) + "...");
+                    if (staticText.size().height() > renderSize.height())
+                        bad = offset;
+                    else
+                        good = offset;
+                    offset = bad + (good - bad)/2;
+                }
+                text = text.left(good) + "...";
             }
         }
     }

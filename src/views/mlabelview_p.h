@@ -59,7 +59,7 @@ public:
      *              width, the wrapping-policies, eliding-settings and multilength-status
      *              adjustments are done.
      */
-    QString textToRender(qreal width) const;
+    QString textToRender(const QSizeF &renderSize) const;
 
     /**
      * \param text  Text that should be rendered.
