@@ -55,7 +55,7 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
     QRectF posRange = viewport->range();
 
     // ...and limit our panning accordingly.
-    panningPos.ry() = qMax(posRange.top(), panningPos.y()); // We can extend bottom limit.
+    panningPos.ry() = qBound(posRange.top(), panningPos.y(), posRange.bottom());
 
     const QPoint translation(0, currentPosition.y() - panningPos.y());
     return translation;
@@ -74,9 +74,8 @@ void MPannableViewportScroller::applyScrolling(QGraphicsWidget *widget, const QP
     // covers at least the sip.
 }
 
-void MPannableViewportScroller::restoreScrolling(QGraphicsWidget *widget)
+void MPannableViewportScroller::restoreScrolling(QGraphicsWidget *)
 {
-    MPannableViewport *viewport = static_cast<MPannableViewport *>(widget);
-    viewport->d_func()->setAutoScrollingExtension(0);
+    // We rely on viewport's range/border springs to restore as much as needed.
+    // No need to actually pan back. Might even confuse user.
 }
-

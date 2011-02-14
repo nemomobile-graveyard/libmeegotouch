@@ -30,6 +30,12 @@ QPoint MSceneWindowScroller::queryScrollingAmount(const QGraphicsWidget *widget,
 {
     const MSceneWindow *sceneWindow = static_cast<const MSceneWindow *>(widget);
 
+    // Don't scroll window types that can have some kind of top bar, and,
+    // that do have some other way of scrolling their contents.
+    if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+        return QPoint();
+    }
+
     // Moving currently only in vertical direction.
     // Assuming panel is at the bottom of scene, and also assuming no parent's are being scrolled.
 

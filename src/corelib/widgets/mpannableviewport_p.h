@@ -42,7 +42,6 @@ public:
     MPositionIndicator *positionIndicator;
 
     qreal rangeHeightExtension; // Amount of range extended vertically
-    qreal autoScrollingExtension;
     qreal inputMethodAreaHeight; // Height of software input panel
 
     QPropertyAnimation scrollToAnimation;
@@ -53,7 +52,6 @@ public:
      */
     void setNewRange(const QRectF &newRange);
 
-    void setAutoScrollingExtension(qreal extension);
     void setInputMethodArea(const QRect &imArea);
     void updateExtendedVerticalRange();
     void applyAutoRange();

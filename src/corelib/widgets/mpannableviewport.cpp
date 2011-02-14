@@ -49,7 +49,6 @@ MPannableViewportPrivate::MPannableViewportPrivate()
       viewportLayout(0),
       positionIndicator(0),
       rangeHeightExtension(0),
-      autoScrollingExtension(0),
       inputMethodAreaHeight(0)
 {
 }
@@ -81,13 +80,6 @@ void MPannableViewportPrivate::setNewRange(const QRectF &newRange)
     }
 }
 
-void MPannableViewportPrivate::setAutoScrollingExtension(qreal extension)
-{
-    // Increase panning range to so that Intelligent Scrolling can scroll enough.
-    autoScrollingExtension = extension;
-    updateExtendedVerticalRange();
-}
-
 void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
 {
     Q_Q(MPannableViewport);
@@ -107,8 +99,13 @@ void MPannableViewportPrivate::updateExtendedVerticalRange()
     Q_Q(MPannableViewport);
     const QRectF restoredRange(q->range().adjusted(0, 0, 0, -rangeHeightExtension));
 
-    // Choose whichever is bigger.
-    rangeHeightExtension = qMax<qreal>(0.0, qMax<qreal>(inputMethodAreaHeight, autoScrollingExtension));
+    // Only touch range extension if auto range is enabled.
+    if (q->autoRange()) {
+        // Choose whichever is bigger.
+        rangeHeightExtension = qMax<qreal>(0.0, inputMethodAreaHeight);
+    } else {
+        rangeHeightExtension = 0.0f;
+    }
 
     setNewRange(restoredRange);
 }
@@ -128,12 +125,6 @@ void MPannableViewportPrivate::applyAutoRange()
 void MPannableViewportPrivate::scrollTo(const QPointF &endPosition)
 {
     Q_Q(MPannableViewport);
-
-    // This privileged scrolling extends the range if necessary.
-    const qreal bottomRangeExtension = endPosition.y()
-                                       + q->size().height()
-                                       - pannedWidget->size().height();
-    setAutoScrollingExtension(qMax<qreal>(0.0, bottomRangeExtension));
 
     scrollToAnimation.stop();
     scrollToAnimation.setStartValue(q->position());

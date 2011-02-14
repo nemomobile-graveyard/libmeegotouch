@@ -315,24 +315,20 @@ void Ut_MPannableViewport::testRangeSetting()
 
 void Ut_MPannableViewport::testExtendedRange_data()
 {
-    QTest::addColumn<qreal>("autoScrollHeightExtension");
     QTest::addColumn<qreal>("sipHeightExtension");
+    QTest::addColumn<bool>("autoRange");
     QTest::addColumn<qreal>("verticalRange");
     QTest::addColumn<qreal>("expectedVerticalRange");
 
-    QTest::newRow("Zero range") << (qreal)0.0 << (qreal)0.0 << (qreal)0.0 << (qreal)0.0;
-    QTest::newRow("autoscroll extension") << (qreal)1.0 << (qreal)0.0 << (qreal)0.0 << (qreal)1.0;
-    QTest::newRow("sip extension") << (qreal)0.0 << (qreal)1.0 << (qreal)0.0 << (qreal)1.0;
-    QTest::newRow("autoscroll & sip #1") << (qreal)1.0 << (qreal)1.0 << (qreal)0.0 << (qreal)1.0;
-    QTest::newRow("autoscroll & sip #2") << (qreal)5.0 << (qreal)1.0 << (qreal)0.0 << (qreal)5.0;
-    QTest::newRow("autoscroll & sip #3") << (qreal)1.0 << (qreal)5.0 << (qreal)0.0 << (qreal)5.0;
-    QTest::newRow("autoscroll & sip #4") << (qreal)1.0 << (qreal)5.0 << (qreal)2.0 << (qreal)7.0;
+    QTest::newRow("Zero range") << (qreal)0.0 << false << (qreal)0.0 << (qreal)0.0;
+    QTest::newRow("sip extension ") << (qreal)2.0 << true << (qreal)1.0 << (qreal)2.0;
+    QTest::newRow("sip extension ignored because of disabled autorange") << (qreal)2.0 << false << (qreal)1.0 << (qreal)1.0;
 }
 
 void Ut_MPannableViewport::testExtendedRange()
 {
-    QFETCH(qreal, autoScrollHeightExtension);
     QFETCH(qreal, sipHeightExtension);
+    QFETCH(bool, autoRange);
     QFETCH(qreal, verticalRange);
     QFETCH(qreal, expectedVerticalRange);
 
@@ -343,18 +339,15 @@ void Ut_MPannableViewport::testExtendedRange()
     subject->resize(viewportSize);
     subject->setMinimumSize(viewportSize);
     subject->setMaximumSize(viewportSize);
-    subject->setAutoRange(false);
+    subject->setAutoRange(autoRange);
 
     QGraphicsWidget *widget = new QGraphicsWidget();
-    widget->setMinimumSize(1000,1000);
+    widget->setPreferredSize(1000,1000);
     subject->setWidget(widget);
 
     subject->adjustSize();
 
     subject->setRange(QRectF(QPointF(), QSizeF(0, verticalRange)));
-
-    // Set autoscrolling extension
-    subject->d_func()->setAutoScrollingExtension(autoScrollHeightExtension);
 
     // Set area occupied by input method area.
     const QRect imArea(subject->geometry().adjusted(0, (viewportSize.height() - sipHeightExtension),

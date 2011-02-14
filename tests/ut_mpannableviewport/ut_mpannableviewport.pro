@@ -28,6 +28,7 @@ HEADERS += \
     $$MSRCDIR/corelib/widgets/mpannablewidget.h \
     $$MSRCDIR/corelib/widgets/mpannableviewportlayout.h \
     $$MSRCDIR/corelib/widgets/mpannableviewport.h \
+    $$MSRCDIR/corelib/widgets/mpannableviewport_p.h \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller_p.h \
     $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
     $$MSRCDIR/corelib/scene/mscene.h \
