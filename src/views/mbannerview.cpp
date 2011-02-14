@@ -74,7 +74,6 @@ MLabel *MBannerViewPrivate::subtitle()
         subtitleLabel = new MLabel(controller);
         //Banners can't have html
         subtitleLabel->setTextFormat(Qt::PlainText);
-        subtitleLabel->setVisible(true);
         subtitleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         subtitleLabel->setWordWrap(true);
         subtitleLabel->setTextElide(true);
