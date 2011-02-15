@@ -196,6 +196,9 @@ bool MListViewPrivate::isAnimating()
 
 void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end, bool animated)
 {
+    if (!animated || isAnimating() || !itemDeletionAnimation)
+        return;
+
     int first = indexToFlatRow(controllerModel->firstVisibleItem());
     int last = indexToFlatRow(controllerModel->lastVisibleItem());
 
@@ -205,7 +208,7 @@ void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end,
         end += parentFlatRow + 1;
     }
 
-    if (!animated || isAnimating() || !itemDeletionAnimation || start > last || !controller->isVisible())
+    if (start > last || !controller->isVisible())
         return;
 
     start = first > start ? first : start;
