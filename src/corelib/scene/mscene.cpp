@@ -442,6 +442,49 @@ void MScenePrivate::notifyChildRequestedMouseCancel()
         sendCancelEvent();
 }
 
+QList<QGraphicsItem *> MScenePrivate::itemsAtPosition(const QPointF &scenePos,
+                                                      QWidget *widget) const
+{
+    Q_Q(const MScene);
+
+    QGraphicsView *view = widget ? qobject_cast<QGraphicsView *>(widget->parentWidget()) : 0;
+    if (!view)
+        return q->items(scenePos, Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
+
+    const QRectF pointRect(scenePos, QSizeF(1, 1));
+    if (!view->isTransformed())
+        return q->items(pointRect, Qt::IntersectsItemShape, Qt::DescendingOrder);
+
+    const QTransform viewTransform = view->viewportTransform();
+    return q->items(pointRect, Qt::IntersectsItemShape,
+                             Qt::DescendingOrder, viewTransform);
+}
+
+void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
+{
+    Q_Q(MScene);
+
+    if (cancelSent) return;
+
+    bool focusSet = false;
+    bool manualFocusForced = false;
+    QList<QGraphicsItem*> itemsUnderMouse = itemsAtPosition(event->scenePos(), event->widget());
+    foreach (QGraphicsItem *item, itemsUnderMouse) {
+        if (item->flags() & QGraphicsItem::ItemStopsFocusHandling) manualFocusForced = true;
+        if (manualFocusForced && item->isEnabled() && (item->flags() & QGraphicsItem::ItemIsFocusable)) {
+
+            if (!item->isWidget() || ((QGraphicsWidget *)item)->focusPolicy() & Qt::ClickFocus) {
+                if (item != q->focusItem())
+                    q->setFocusItem(item, Qt::MouseFocusReason);
+                focusSet = true;
+                break;
+            }
+        }
+    }
+
+    if (manualFocusForced && !focusSet)
+        q->setFocusItem(0, Qt::MouseFocusReason);
+}
 
 void MScenePrivate::resetMouseGrabber()
 {
@@ -625,11 +668,12 @@ bool MScene::event(QEvent *event)
     if (d->eventEmulateTwoFingerGestures(event))
         return true;
 
-    bool retValue = false;
-    retValue = QGraphicsScene::event(event);
+    bool retValue = QGraphicsScene::event(event);
 
-    if (event->type() == QEvent::GraphicsSceneMouseRelease)
+    if (event->type() == QEvent::GraphicsSceneMouseRelease) {
+        d->handleFocusChange(static_cast<QGraphicsSceneMouseEvent*>(event));
         d->resetMouseGrabber();
+    }
 
     return retValue;
 }
