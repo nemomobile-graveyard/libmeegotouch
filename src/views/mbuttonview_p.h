@@ -26,6 +26,7 @@
 class MScalableImage;
 class MLabel;
 class QTimer;
+class MButtonTransition;
 
 class MButtonViewPrivate : public MWidgetViewPrivate
 {
@@ -70,28 +71,22 @@ public:
     Icon *toggledIcon;
 
     MLabel *label;
-    QTimer *styleModeChangeTimer;
-    QTimer *blinkTimer;
 
     IconOrigin iconOrigin;
     IconOrigin toggledIconOrigin;
-    bool queuedStyleModeChange;
 
     QRectF iconRect;
 
     void calcIconTextRects();
     bool toggleState() const;
-    void refreshStyleMode();
 
     void loadIcon(const QIcon &qIcon, const QSize &newIconSize);
     void loadIcon(const QString &newIconId, const QSize &newIconSize, QIcon::Mode mode = QIcon::Normal);
 
-    void _q_applyQueuedStyleModeChange();
-    void _q_finishBlinkEffect();
-
     virtual void updateItemsAfterModeChange();
 
     int pressTimeout() const;
+    MButtonTransition* transition;
 };
 
 #endif

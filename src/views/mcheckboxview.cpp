@@ -25,6 +25,7 @@
 
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
+#include "mbuttontransition.h"
 
 #include "mdebug.h"
 
@@ -61,6 +62,7 @@ void MCheckboxView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 void MCheckboxView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
+    Q_D(MCheckboxView);
 
     if (model()->down()) {
         return;
@@ -76,6 +78,7 @@ void MCheckboxView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 
     model()->setDown(true);
+    d->transition->onPress();
 }
 
 void MCheckboxView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -90,6 +93,7 @@ void MCheckboxView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (rect.contains(touch)) {
         if (!model()->down()) {
             model()->setDown(true);
+	    d->transition->onPress();
 
             // Honor MWidgetView's style and play press feedback.
             style()->pressFeedback().play();
@@ -104,6 +108,7 @@ void MCheckboxView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         if (model()->down()) {
             model()->setDown(false);
             style()->cancelFeedback().play();
+	    d->transition->onCancel();
         }
     }
 
@@ -117,6 +122,7 @@ void MCheckboxView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
     model()->setDown(false);
+    d->transition->onRelease();
 
     if (model()->checked()) {
         style()->releaseOffFeedback().play();

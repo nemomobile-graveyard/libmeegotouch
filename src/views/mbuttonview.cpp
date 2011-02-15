@@ -37,11 +37,14 @@
 #include "mdebug.h"
 #include "mtimestamp.h"
 #include "mviewconstants.h"
+#include "mbuttontransition.h"
+#include "mbuttondefaulttransition.h"
+
 
 MButtonViewPrivate::MButtonViewPrivate()
-    : icon(0), toggledIcon(0), label(NULL), styleModeChangeTimer(NULL),
+    : icon(0), toggledIcon(0), label(NULL),
     iconOrigin(IconOriginUndefined), toggledIconOrigin(IconOriginUndefined),
-    queuedStyleModeChange(false)
+    transition(NULL)
 {
 }
 
@@ -97,6 +100,7 @@ void MButtonViewPrivate::freeIcons()
 MButtonViewPrivate::~MButtonViewPrivate()
 {
     freeIcons();
+    delete transition;
 }
 
 // As the condition of text color and background change for button
@@ -109,68 +113,6 @@ bool MButtonViewPrivate::toggleState() const
         return state;
     } else
         return q->model()->down();
-}
-
-void MButtonViewPrivate::_q_applyQueuedStyleModeChange()
-{
-    Q_Q(MButtonView);
-
-    if (queuedStyleModeChange) {
-        queuedStyleModeChange = false;
-        q->applyStyle();
-    }
-}
-
-void MButtonViewPrivate::_q_finishBlinkEffect()
-{
-    Q_Q(MButtonView);
-
-    q->style().setModePressed();
-    updateItemsAfterModeChange();
-    q->update();
-
-    styleModeChangeTimer->start(pressTimeout());
-}
-
-void MButtonViewPrivate::refreshStyleMode()
-{
-    Q_Q(MButtonView);
-
-    if (controller->isEnabled()) {
-        if (q->model()->down()) {
-            if (blinkTimer->isActive()) {
-                // very unlikely to happen, but check it anyway
-                return;
-            }
-            if (styleModeChangeTimer->isActive()) {
-                styleModeChangeTimer->stop();
-                q->style().setModeDefault();
-                updateItemsAfterModeChange();
-                q->update();
-
-                blinkTimer->start(M_PRESS_BLINK_TIMEOUT);
-                return;
-            }
-            styleModeChangeTimer->start(pressTimeout());
-            q->style().setModePressed();
-        } else if (q->model()->checked()) {
-            q->style().setModeSelected();
-        } else {
-            if (styleModeChangeTimer->isActive()) {
-                queuedStyleModeChange = true;
-                return;
-            }
-            q->style().setModeDefault();
-        }
-    } else {
-        if (styleModeChangeTimer->isActive()) {
-            queuedStyleModeChange = true;
-            return;
-        }
-        q->style().setModeDisabled();
-    }
-
-    updateItemsAfterModeChange();
 }
 
 void MButtonViewPrivate::updateItemsAfterModeChange()
@@ -389,14 +331,6 @@ MButtonView::MButtonView(MButton *controller) :
     d->label->setTextElide(true);
     d->label->setObjectName("ButtonLabel");
     d->label->setMinimumSize(0,0);
-
-    d->styleModeChangeTimer = new QTimer(this);
-    d->styleModeChangeTimer->setSingleShot(true);
-    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
-
-    d->blinkTimer = new QTimer(this);
-    d->blinkTimer->setSingleShot(true);
-    connect(d->blinkTimer, SIGNAL(timeout()), SLOT(_q_finishBlinkEffect()));
 }
 
 MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
@@ -408,14 +342,6 @@ MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
     d->label->setTextElide(true);
     d->label->setObjectName("ButtonLabel");
     d->label->setMinimumSize(0,0);
-
-    d->styleModeChangeTimer = new QTimer(this);
-    d->styleModeChangeTimer->setSingleShot(true);
-    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
-
-    d->blinkTimer = new QTimer(this);
-    d->blinkTimer->setSingleShot(true);
-    connect(d->blinkTimer, SIGNAL(timeout()), SLOT(_q_finishBlinkEffect()));
 }
 
 MButtonView::~MButtonView()
@@ -476,7 +402,7 @@ void MButtonView::applyStyle()
 
     MWidgetView::applyStyle();
 
-    d->refreshStyleMode();
+    d->updateItemsAfterModeChange();
 
     update();
 }
@@ -484,12 +410,13 @@ void MButtonView::applyStyle()
 void MButtonView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
+    Q_D(MButtonView);
 
     if (model()->down()) {
         return;
     }
     model()->setDown(true);
-
+    d->transition->onPress();
     style()->pressFeedback().play();
 }
 
@@ -505,11 +432,13 @@ void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (rect.contains(touch)) {
         if (!model()->down()) {
             model()->setDown(true);
+            d->transition->onPress();
             style()->pressFeedback().play();
         }
     } else {
         if (model()->down()) {
             model()->setDown(false);
+            d->transition->onCancel();
             style()->cancelFeedback().play();
         }
     }
@@ -524,7 +453,7 @@ void MButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
     model()->setDown(false);
-
+    d->transition->onRelease();
     style()->releaseFeedback().play();
 
     QPointF touch = event->scenePos();
@@ -538,14 +467,15 @@ void MButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void MButtonView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
+    Q_D(MButtonView);
 
     if (!model()->down()) {
         return;
     }
 
-    style()->cancelFeedback().play();
-
     model()->setDown(false);
+    d->transition->onCancel();
+    style()->cancelFeedback().play();
 }
 
 void MButtonView::setGeometry(const QRectF &rect)
@@ -583,9 +513,9 @@ void MButtonView::updateData(const QList<const char *>& modifications)
             mustUpdateGeometry = true;
         } else if (member == MButtonModel::IconVisible) {
             mustUpdateGeometry = true;
-        } else if (member == MButtonModel::Down || member == MButtonModel::Checked ||
+        } else if (member == MButtonModel::Checked ||
                    member == MButtonModel::Checkable) {
-            d->refreshStyleMode();
+            d->transition->refreshStyle();
         }
     }
 
@@ -616,6 +546,9 @@ void MButtonView::setupModel()
         members << MButtonModel::Icon;
     if (!model()->toggledIconID().isEmpty())
         members << MButtonModel::ToggledIconID;
+
+
+    d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
 
     updateData(members);
 
@@ -658,4 +591,3 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 
 M_REGISTER_VIEW_NEW(MButtonView, MButton)
 
-#include "moc_mbuttonview.cpp"

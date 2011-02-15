@@ -156,8 +156,6 @@ protected Q_SLOTS:
 private:
     Q_DISABLE_COPY(MButtonView)
     Q_DECLARE_PRIVATE(MButtonView)
-    Q_PRIVATE_SLOT(d_func(), void _q_applyQueuedStyleModeChange())
-    Q_PRIVATE_SLOT(d_func(), void _q_finishBlinkEffect())
 
 #ifdef UNIT_TEST
     friend class Ut_MButtonView;
