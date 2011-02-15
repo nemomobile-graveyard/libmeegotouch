@@ -1,10 +1,35 @@
-libmeegotouch (0.20.84~1) unstable; urgency=low
+libmeegotouch (0.20.84-1) unstable; urgency=low
 
-  * unreleased
-  * Fixes: NB#222047 - Height-For-Width is not working properly in libmeegotouch
+  * New version
+  * Fixes: NB#226585
+  * Fixes: NB#212995 - [TASK] Make it possible to disable handling of events by MLabel when tapping a highlighted part
+  * Fixes: NB#221368
+  * Fixes: NB#225734 - Problem with giving a list of actions to the objectmenu
+  * Fixes: NB#225035 - MTextEdit hard codes internal margin
+  * Fixes: NB#223980 - MLabel::removeHighlighter looks a bit slow
+  * Fixes: NB#224827 - Wrong style of scroll indicator used in dialogs.
+  * Fixes: NB#224817 - Wrong style for scroll indicator used in view menu.
+  * Fixes: NB#217727 Pannable viewport position indicator range does not reflect the viewport content's size if the size changes while the position indicator is disabled
+  * Fixes: NB#226518 MPannableViewport's position indicator does not show the correct position if the position has changed while the position indicator has been disabled
+  * Fixes: NB#223879 - MSeekBar routes events to lower widgets
+  * Fixes: NB#218656 - Blocked scene windows should lose their focus
+  * Fixes: NB#222563 - Floating fast scroll isn't smooth
+  * Fixes: NB#226750 - Double widget free in widget recycler.
+  * Fixes: MPannableViewport resets all QGI flags when disabling clipping
+  * Fixes: NB#222047 - Height-For-Width is not working properly in LMT
+  * Fixes: NB#186688 MLabel - UNREVERT fix sizeHint to reuse the staticText for the sizehint
   * Fixes: NB#197142 - invalid logical ids in extensions/applicationextension/mapplicationextensionhandleview.cpp
+  * Fixes: NB#211593 - Floating Fast scrolling to top or bottom of list is too hard
+  * Fixes: NB#206906 - MList filter stops responding to KB, now uses grabKeyboard
+  * Fixes: NB#219346
+  * Fixes: NB#216912 When the device is in portrait mode horizontal strip appears at the bottom of the page even when panning is done vertically
+  * Fixes: NB#212375 - Next icon in player view seems temporarily disabled during certain scenario
+  * Fixes: NB#221478 - Segfault when deleting QApplication explicitly
+  * Fixes: NB#204190 - call-ui dialogs receive 'displayExited' and then 'displayEntered' signals
+  * Fixes: NB#217284 - back button disappearing when navigation bar is hidden
+  * Fixes: NB#223242 - View Menu closes when application goes into background
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 09 Feb 2011 15:24:26 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 15 Feb 2011 15:17:11 +0200
 
 libmeegotouch (0.20.83-1) unstable; urgency=low
 
