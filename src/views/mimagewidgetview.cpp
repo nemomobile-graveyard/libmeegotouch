@@ -287,6 +287,15 @@ void MImageWidgetView::setGeometry(const QRectF &rect)
     d->updateImageGeometry();
 }
 
+void MImageWidgetView::updateGeometry()
+{
+    Q_D(MImageWidgetView);
+
+    MWidgetView::updateGeometry();
+
+    d->updateImageGeometry();
+}
+
 void MImageWidgetView::applyStyle()
 {
     Q_D(MImageWidgetView);

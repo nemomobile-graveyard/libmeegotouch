@@ -75,6 +75,7 @@ protected:
     virtual void setGeometry(const QRectF &rect);
     virtual void applyStyle();
     virtual void updateData(const QList<const char *> &modifications);
+    void updateGeometry();
     //! \reimp_end
 
     //! \internal
