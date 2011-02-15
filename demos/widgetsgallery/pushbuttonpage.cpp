@@ -40,7 +40,8 @@ PushButtonPage::PushButtonPage():
         button10(0),button11(0),button12(0),
         button13(0),button14(0),button15(0),
         button16(0),button17(0),button18(0),
-        button19(0),text1(0),text2(0),text3(0),
+        button19(0),button20(0),button21(0),
+        button22(0),text1(0),text2(0),text3(0),
         text4(0),text5(0),text6(0),text7(0),
         text8(0),text9(0),text10(0),text11(0),
         text12(0)
@@ -84,6 +85,7 @@ void PushButtonPage::createContent()
     callRejectButtonLayout();
     callRejectRowLayout();
     splitButtonsLayout();
+    buttonTransitionsLayout();
 
     retranslateUi();
 }
@@ -426,6 +428,53 @@ void PushButtonPage::threeButtons()
     layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
 }
 
+void PushButtonPage::buttonTransitionsLayout()
+{
+    button20 = new MButton();
+    button20->setStyleName("ExpandingBackgroundButton");
+
+    button21 = new MButton();
+    button21->setStyleName("ExpandingBackgroundButton");
+
+    button22 = new MButton();
+    button22->setStyleName("ExpandingBackgroundButton");
+
+    text13 = new MLabel();
+    text13->setStyleName("CommonTitle");
+    text13->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(text13);
+
+    text14 = new MLabel();
+    text14->setStyleName("TempWidgetsgalleryBodyText");
+    text14->setWordWrap(true);
+    text14->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(text14);
+
+    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+
+    layoutPolicy->setAlignment(text14,Qt::AlignLeft);
+
+    // sublayout
+    MLayout* layoutB20B21B22 = new MLayout;
+    MLinearLayoutPolicy* layoutB20B21B22LandscapePolicy = new MLinearLayoutPolicy(layoutB20B21B22,Qt::Horizontal);
+    layoutB20B21B22->setLandscapePolicy(layoutB20B21B22LandscapePolicy);
+    layoutB20B21B22LandscapePolicy->setSpacing(0); // distance between both buttons is exactly 2 margins (right,left), see css
+    layoutB20B21B22LandscapePolicy->addItem(button20);
+    layoutB20B21B22LandscapePolicy->addItem(button21);
+    layoutB20B21B22LandscapePolicy->addItem(button22);
+
+    MLinearLayoutPolicy* layoutB20B21B22PortraitPolicy = new MLinearLayoutPolicy(layoutB20B21B22,Qt::Horizontal);
+    layoutB20B21B22->setPortraitPolicy(layoutB20B21B22PortraitPolicy);
+    layoutB20B21B22PortraitPolicy->addItem(button20);
+    layoutB20B21B22PortraitPolicy->addItem(button21);
+    layoutB20B21B22PortraitPolicy->addItem(button22);
+
+    layoutPolicy->addItem(layoutB20B21B22);
+    layoutPolicy->setAlignment(layoutB20B21B22,Qt::AlignCenter);
+
+    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+}
+
 void PushButtonPage::retranslateUi()
 {
     //% "Push Button"
@@ -479,6 +528,12 @@ void PushButtonPage::retranslateUi()
 
     /*% "In cases where standard buttons have been used and need to be changed to split buttons just change the Object Names for example from <i>#CommonTopButton to #CommonTopSplitButton</i>. But first check whether you could use the <b>MButtonGroup</b> for your purpose. "*/
     text12->setText(qtTrId("xx_push_button_text12"));
+
+    /*% "6. Button transitions" */
+    text13->setText(qtTrId("xx_push_button_text13"));
+
+    /*% "Currently available transitions are \"default\" and \"expanding-background\"." */
+    text14->setText(qtTrId("xx_push_button_text14"));
 
     /*% "only button" */
     button1->setText(qtTrId("xx_push_button_button1"));

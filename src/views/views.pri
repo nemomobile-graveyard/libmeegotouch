@@ -83,6 +83,7 @@ PRIVATE_HEADERS += \
     mnavigationbarview_p.h \
     mbuttontransition.h \
     mbuttondefaulttransition.h \
+    mbuttonexpandingbackgroundtransition.h \
     ../corelib/core/mdynamicpropertywatcher.h \ # an internal helper class that is also needed by the view lib
 
 SOURCES += \
@@ -142,4 +143,5 @@ SOURCES += \
     mlistitemview.cpp \
     mbubbleitemview.cpp \
     mbuttondefaulttransition.cpp \
+    mbuttonexpandingbackgroundtransition.cpp \
     ../corelib/core/mdynamicpropertywatcher.cpp \ # an internal helper class that is also needed by the view lib

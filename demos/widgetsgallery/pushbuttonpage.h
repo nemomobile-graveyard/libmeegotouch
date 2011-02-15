@@ -51,6 +51,7 @@ private:
     void callRejectButtonLayout();
     void callRejectRowLayout();
     void splitButtonsLayout();
+    void buttonTransitionsLayout();
 
     MLinearLayoutPolicy *layoutPolicy;
 
@@ -73,6 +74,9 @@ private:
     MButton *button17;
     MButton *button18;
     MButton *button19;
+    MButton *button20;
+    MButton *button21;
+    MButton *button22;
 
     MLabel *text1;
     MLabel *text2;
@@ -86,6 +90,8 @@ private:
     MLabel *text10;
     MLabel *text11;
     MLabel *text12;
+    MLabel *text13;
+    MLabel *text14;
 };
 
 #endif

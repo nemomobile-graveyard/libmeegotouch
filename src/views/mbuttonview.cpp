@@ -39,6 +39,7 @@
 #include "mviewconstants.h"
 #include "mbuttontransition.h"
 #include "mbuttondefaulttransition.h"
+#include "mbuttonexpandingbackgroundtransition.h"
 
 
 MButtonViewPrivate::MButtonViewPrivate()
@@ -369,6 +370,15 @@ void MButtonView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem
     drawIcon(painter, d->iconRect);
 }
 
+void MButtonView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    Q_D(const MButtonView);
+    painter->save();
+    d->transition->modifyBackgroundPainter(painter);
+    MWidgetView::drawBackground(painter,option);
+    painter->restore();
+}
+
 void MButtonView::drawIcon(QPainter *painter, const QRectF &iconRect) const
 {
     if (model()->iconVisible()) {
@@ -548,7 +558,13 @@ void MButtonView::setupModel()
         members << MButtonModel::ToggledIconID;
 
 
-    d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
+    if(style()->transition() == "default") {
+	d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
+    } else if(style()->transition() == "expanding-background") {
+	d->transition = new MButtonExpandingBackgroundTransition(style(), model(), d->controller,d);
+    } else {
+	d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
+    }
 
     updateData(members);
 

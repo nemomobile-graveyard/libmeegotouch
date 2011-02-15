@@ -115,3 +115,18 @@ MLabelStyle#video-title-label {
 #iconButton {
     text-color: black;
 }
+
+MButtonStyle#ExpandingBackgroundButton {
+    minimum-size: 10mm 10mm;
+    preferred-size: 10mm 10mm;
+    maximum-size: 10mm 10mm;
+
+    // margins have to be at least 25% of size
+    // because of the expanding-background trasition
+    // (during the transition the button will expand to 125% of it's original size)
+    margin-left: 2.5mm;
+    margin-top: 2.5mm;
+    margin-right: 2.5mm;
+    margin-bottom: 2.5mm;
+    transition: "expanding-background";
+}

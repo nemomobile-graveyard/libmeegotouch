@@ -160,6 +160,12 @@ class M_VIEWS_EXPORT MButtonStyle : public MWidgetStyle
         \brief Content opacity.
     */
     M_STYLE_ATTRIBUTE(qreal, contentOpacity, contentOpacity)    
+
+    /*!
+        \property MButtonStyle::transition
+        \brief name of the animation used for the transition
+     */
+    M_STYLE_ATTRIBUTE(QString,                transition,               Transition)
 };
 
 /*!

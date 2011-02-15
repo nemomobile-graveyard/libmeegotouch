@@ -16,6 +16,8 @@ public:
     virtual void onCancel() = 0;
 
     virtual void refreshStyle() = 0;
+
+    virtual void modifyBackgroundPainter(QPainter *) const {}
 };
 
 /*! \internal_end */
