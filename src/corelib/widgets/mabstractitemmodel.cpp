@@ -122,7 +122,7 @@ int MAbstractItemModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex MAbstractItemModel::index(int row, int column, const QModelIndex &parent) const
 {
-    return (row >= 0 && row < rowCountInGroup(parent.row())) ? createIndex(row, column, parent.row()) : QModelIndex();
+    return (row >= 0 && row < rowCount(parent)) ? createIndex(row, column, parent.row()) : QModelIndex();
 }
 
 QModelIndex MAbstractItemModel::parent(const QModelIndex &child) const
