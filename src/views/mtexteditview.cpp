@@ -24,6 +24,7 @@
 
 #include <MSceneManager>
 
+#include <QApplication>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QTextDocument>
@@ -161,7 +162,7 @@ int MTextEditViewPrivate::cursorPosition(const QPointF &point, Qt::HitTestAccura
     QPointF hitPoint = point;
     hitPoint.rx() += hscroll;
     hitPoint.ry() += vscroll;
-    hitPoint.rx() -= q->style()->paddingLeft();
+    hitPoint.rx() -= qApp->isRightToLeft() ? q->style()->paddingRight() : q->style()->paddingLeft();
     hitPoint.ry() -= q->style()->paddingTop();
 
     // limit the area inside the text document.
@@ -241,14 +242,23 @@ void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event
     Q_Q(MTextEditView);
 
     QRectF rect = q->geometry();
+    int paddingLeft, paddingRight;
+
+    if (!qApp->isRightToLeft()) {
+        paddingLeft = q->style()->paddingLeft();
+        paddingRight = q->style()->paddingRight();
+    } else {
+        paddingLeft = q->style()->paddingRight();
+        paddingRight = q->style()->paddingLeft();
+    }
 
     // event inside scrolling margin creates constant speed scrolling.
     // this could be changed to determine some scrolling speed depending on the position.
     if (q->model()->textInteractionFlags() == Qt::NoTextInteraction) {
         scrollSpeedVertical = 0;
-    } else if (event->pos().x() < (ScrollMargin + q->style()->paddingLeft()) && hscroll > 0) {
+    } else if (event->pos().x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
         scrollSpeedVertical = -ScrollStep;
-    } else if (event->pos().x() > (rect.width() - (ScrollMargin + q->style()->paddingRight()))
+    } else if (event->pos().x() > (rect.width() - (ScrollMargin + paddingRight))
                && hscroll < (activeDocument()->size().width() - rect.width())) {
         scrollSpeedVertical = ScrollStep;
     } else {
@@ -803,7 +813,8 @@ QRect MTextEditViewPrivate::cursorRect() const
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
 
-    rect = QRect((q->style()->paddingLeft() + layoutPos.x() + x - hscroll),
+    rect = QRect(((qApp->isRightToLeft() ? q->style()->paddingRight() : q->style()->paddingLeft())
+                  + layoutPos.x() + x - hscroll),
                  (q->style()->paddingTop() + layoutPos.y() + currentLine.y() - vscroll),
                  cursorWidth, cursorHeight);
 
@@ -858,19 +869,28 @@ MTextEditView::~MTextEditView()
 void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_D(const MTextEditView);
+    int paddingLeft, paddingRight;
+
+    if (!qApp->isRightToLeft()) {
+        paddingLeft = style()->paddingLeft();
+        paddingRight = style()->paddingRight();
+    } else {
+        paddingLeft = style()->paddingRight();
+        paddingRight = style()->paddingLeft();
+    }
 
     // mTimestamp("MTextEditView", QString("start text=%1").arg(d->document()->toPlainText()));
     painter->save();
 
     // set clipping rectangle to draw text inside the border
-    QRectF clipping(boundingRect().adjusted(style()->paddingLeft(),
+    QRectF clipping(boundingRect().adjusted(paddingLeft,
                                             style()->paddingTop(),
-                                            -style()->paddingRight(),
+                                            -paddingRight,
                                             -style()->paddingBottom()));
     clipping = clipping.intersected(option->exposedRect);
     painter->setClipRect(clipping, Qt::IntersectClip);
     // If text does not fit inside widget, it may have to be scrolled
-    const qreal dx = -d->hscroll + style()->paddingLeft();
+    const qreal dx = -d->hscroll + paddingLeft;
     const qreal dy = -d->vscroll + style()->paddingTop();
     painter->translate(dx, dy);
     // draw actual text to the screen
