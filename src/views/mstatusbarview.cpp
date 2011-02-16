@@ -292,6 +292,7 @@ void MStatusBarView::handlePixmapProviderOffline()
 {
     isPixmapProviderOnline = false;
     destroyXDamageForSharedPixmap();
+    sharedPixmap = QPixmap();
 }
 #endif // HAVE_DBUS
 
