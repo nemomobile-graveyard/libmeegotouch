@@ -32,4 +32,7 @@ HEADERS += \
     $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
     $$MSRCDIR/corelib/scene/mscene.h \
 
+support_files.files += \
+    *.css \
+
 include(../common_bot.pri)
