@@ -148,17 +148,19 @@ void MOrientationTrackerPrivate::resolveIfOrientationUpdatesRequired()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     bool updatesRequired = false;
-    foreach(MWindow* win, MApplication::windows()) {
+    if (!MApplication::isPrestarted()) {
+        foreach(MWindow* win, MApplication::windows()) {
 #ifdef Q_WS_X11
-        if (win && (win->isOnDisplay()) &&
-            !windowsFollowingCurrentAppWindow.contains(win) &&
-            !windowsFollowingWithConstraintsCurrentAppWindow.contains(win))
+            if (win && (win->isOnDisplay()) &&
+                !windowsFollowingCurrentAppWindow.contains(win) &&
+                !windowsFollowingWithConstraintsCurrentAppWindow.contains(win))
 #else
-        if (win && win->isOnDisplay())
+            if (win && win->isOnDisplay())
 #endif
-        {
-            updatesRequired = true;
-            break;
+            {
+                updatesRequired = true;
+                break;
+            }
         }
     }
     if (updatesRequired && !isSubscribed)

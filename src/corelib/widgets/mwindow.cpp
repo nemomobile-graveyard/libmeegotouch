@@ -192,6 +192,7 @@ void MWindowPrivate::init()
     // we have to set X11 property _MEEGOTOUCH_PRESTARTED
     if(MApplication::isPrestarted()) {
         setX11PrestartProperty(true);
+        resolveOrientationRules();
     }
     setX11OrientationAngleProperty(angle);
 #endif
