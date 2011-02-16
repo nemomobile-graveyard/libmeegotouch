@@ -336,7 +336,7 @@ void MPannableWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 
 void MPannableWidget::orientationChangeEvent(MOrientationChangeEvent *event)
 {
-    Q_UNUSED(event);
+    MWidgetController::orientationChangeEvent(event);
 }
 
 void MPannableWidget::setPanDirection(const Qt::Orientations &panDirection)
