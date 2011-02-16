@@ -1121,6 +1121,10 @@ void MWindow::setSceneManager(MSceneManager *sceneManager)
         return;
     }
 
+    if (sceneManager && sceneManager->orientationAngle() != orientationAngle()) {
+        sceneManager->setOrientationAngle(orientationAngle(), MSceneManager::ImmediateTransition);
+    }
+
     if (d->sceneManager) {
         delete d->sceneManager;
     }
