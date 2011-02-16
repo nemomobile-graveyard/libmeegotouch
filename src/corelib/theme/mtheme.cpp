@@ -1031,7 +1031,11 @@ void MTheme::rebuildViewsForWidgets()
             if (className != view->metaObject()->className()) {
                 controller->d_func()->deprecateView();
             } else {
-                const_cast<MWidgetView *>(view)->applyStyle();
+                // instead of calling applyStyle(), create a styleChange event
+                // and send it to the widgets. This will cause applyStyle() to be called
+                // without blocking the main loop.
+                QEvent *event = new QEvent(QEvent::StyleChange);
+                qApp->postEvent(controller, event, Qt::LowEventPriority);
             }
         }
     }

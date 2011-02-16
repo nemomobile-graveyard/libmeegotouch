@@ -592,8 +592,10 @@ void MWidgetView::changeEvent(QEvent *event)
 {
     // styles can depend on right-to-left e.g. left and right margins
     // get switched.
-    if (event->type() == QEvent::LayoutDirectionChange)
+    if (event->type() == QEvent::LayoutDirectionChange
+        || event->type() == QEvent::StyleChange) {
         applyStyle();
+    }
 }
 
 void MWidgetView::show()
