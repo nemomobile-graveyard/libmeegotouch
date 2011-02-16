@@ -4,6 +4,8 @@ libs-pkg: libmeegotouchcore0
 dev-pkg: libmeegotouch-dev
 state: stable
 scope: Platform
+doc-type: doxygen
+doxygen-conf: doc/mdoxy.cfg
 
 interface: libmeegotouchextensions
 type: library
@@ -11,6 +13,8 @@ libs-pkg: libmeegotouchextensions0
 dev-pkg: libmeegotouch-dev
 state: stable
 scope: Platform
+doc-type: doxygen
+doxygen-conf: doc/mdoxy.cfg
 
 interface: libmeegotouchsettings
 type: library
@@ -18,6 +22,8 @@ libs-pkg: libmeegotouchsettings0
 dev-pkg: libmeegotouch-dev
 state: stable
 scope: Platform
+doc-type: doxygen
+doxygen-conf: doc/mdoxy.cfg
 
 interface: libmeegotouchviews
 type: library
@@ -25,3 +31,5 @@ libs-pkg: libmeegotouchviews0
 dev-pkg: libmeegotouch-dev
 state: unstable
 scope: Platform
+doc-type: doxygen
+doxygen-conf: doc/mdoxy.cfg
