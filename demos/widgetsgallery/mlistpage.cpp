@@ -521,28 +521,12 @@ void MListPage::changeLiveFilteringMode(int index)
         list->filtering()->editor()->setVisible(false);
         connect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB()));
         connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged()));
-        list->grabKeyboard();
-        connect(list->filtering()->editor(), SIGNAL(gainedFocus(Qt::FocusReason)), this, SLOT(listUngrabKeyboard()));
-        connect(list->filtering()->editor(), SIGNAL(lostFocus(Qt::FocusReason)), this, SLOT(listGrabKeyboard()));
     } else {
-        disconnect(list->filtering()->editor(), SIGNAL(gainedFocus(Qt::FocusReason)), this, SLOT(listUngrabKeyboard()));
-        disconnect(list->filtering()->editor(), SIGNAL(lostFocus(Qt::FocusReason)), this, SLOT(listGrabKeyboard()));
-        list->ungrabKeyboard();
         disconnect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB()));
         disconnect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged()));
         list->filtering()->setEnabled(false);
         showTextEdit(false);
     }
-}
-
-void MListPage::listGrabKeyboard()
-{
-    list->grabKeyboard();
-}
-
-void MListPage::listUngrabKeyboard()
-{
-    list->ungrabKeyboard();
 }
 
 void MListPage::changeGroupHeadersMode(int index)

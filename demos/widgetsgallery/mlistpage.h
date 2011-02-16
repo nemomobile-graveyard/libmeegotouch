@@ -96,8 +96,6 @@ public slots:
     void hideEmptyTextEdit();
 
     void showAdvancedConfigurationDialog();
-    void listGrabKeyboard();
-    void listUngrabKeyboard();
 
 protected:
     void retranslateUi();
