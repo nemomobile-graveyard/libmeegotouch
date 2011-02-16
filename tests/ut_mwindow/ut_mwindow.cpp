@@ -345,13 +345,7 @@ void Ut_MWindow::testDisplayExitedSignal()
     MOnDisplayChangeEvent ev2(false, QRectF(QPointF(0, 0), win->visibleSceneSize()));
     win->event(&ev2);
 
-    // sending displayExited should be delayed, so false at the moment
-    QVERIFY(Ut_MWindow::m_onDisplaySignalSent == false);
-
-    sleep(1.2);
-    MApplication::processEvents();
-
-    // now displayExited should have been emitted
+    // sending displayExited should not be delayed
     QVERIFY(Ut_MWindow::m_onDisplaySignalSent == true);
 
     disconnect(win, SIGNAL(displayExited()), this, SLOT(onDisplayTestSlot()));

@@ -67,6 +67,7 @@ public:
     void setX11NotificationPreviewsDisabledProperty(bool set);
     bool getX11NotificationPreviewsDisabledProperty() const;
     void setDelayedX11Properties();
+    void sendDelayedExitDisplayEvent();
 
     bool removeWindowFromSwitcherInProgress;
     bool skipTaskbar;

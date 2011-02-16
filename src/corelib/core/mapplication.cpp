@@ -71,8 +71,17 @@ MApplicationPrivate::~MApplicationPrivate()
 #ifdef Q_WS_X11
 void MApplicationPrivate::setWindowVisibility(MWindow * window, bool visible)
 {
-    MOnDisplayChangeEvent ev(visible, QRectF(QPointF(0, 0), window->visibleSceneSize()));
-    MApplication::instance()->sendEvent(window, &ev);
+    // displayExited signal is delayed for one second if it's caused by
+    // XVisibilityEvent or _MEEGOTOUCH_VISIBLE_IN_SWITCHER window property
+    // (managed by MeegoTouch Home). Emitting will be canceled if VisibilityUnobscured
+    // is received during the delay. Rationale for this is to prevent oscillation
+    // of displayEntered / displayExited signals.
+    if (visible) {
+        MOnDisplayChangeEvent ev(visible, QRectF(QPointF(0, 0), window->visibleSceneSize()));
+        MApplication::instance()->sendEvent(window, &ev);
+    } else {
+        window->d_ptr->sendDelayedExitDisplayEvent();
+    }
 }
 
 int MApplicationPrivate::handleXError(Display *, XErrorEvent *)

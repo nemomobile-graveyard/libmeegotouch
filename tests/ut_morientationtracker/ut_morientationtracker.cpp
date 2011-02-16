@@ -287,8 +287,11 @@ void Ut_MOrientationTracker::testOffDisplaySpecialWindows()
     window1->setOrientationAngle(firstAngle);
     window2->setOrientationAngle(firstAngle);
     window1->setWindowAlwaysMapped(true);
-    QMetaObject::invokeMethod(window1, "_q_exitDisplayStabilized");
-    QMetaObject::invokeMethod(window2, "_q_exitDisplayStabilized");
+
+    // Tell the window it's not visible
+    MOnDisplayChangeEvent ev(false, QRectF(QPointF(0, 0), window1->visibleSceneSize()));
+    window1->event(&ev);
+    window2->event(&ev);
 
     MApplicationWindow appWindow;
     setCurrentWindowXPropertyOnRootWindow(appWindow.effectiveWinId());

@@ -567,30 +567,16 @@ void MWindowPrivate::doExitDisplayEvent()
     resolveOrientationRules();
 #endif
 
-    if (q->scene() && delayedMOnDisplayChangeEvent != 0) {
-        propagateMOnDisplayChangeEventToScene(delayedMOnDisplayChangeEvent);
-        delete delayedMOnDisplayChangeEvent;
-        delayedMOnDisplayChangeEvent = 0;
-    }
-
     QPixmapCache::clear();
 }
 
 void MWindowPrivate::_q_exitDisplayStabilized()
 {
-    doExitDisplayEvent();
-}
-
-void MWindowPrivate::sendExitDisplayEvent(bool delayedSending)
-{
     Q_Q(MWindow);
-
-    delete delayedMOnDisplayChangeEvent;
-    delayedMOnDisplayChangeEvent = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOffDisplay, q->sceneRect());
-    if (delayedSending) {
-        displayExitedTimer.start();
-    } else {
-        _q_exitDisplayStabilized();
+    if (delayedMOnDisplayChangeEvent) {
+        q->onDisplayChangeEvent(delayedMOnDisplayChangeEvent);
+        delete delayedMOnDisplayChangeEvent;
+        delayedMOnDisplayChangeEvent = 0;
     }
 }
 
@@ -732,7 +718,9 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
 
     isLogicallyClosed = true;
 
-    sendExitDisplayEvent(false);
+    MOnDisplayChangeEvent ev(false, QRectF(QPointF(0, 0), q->visibleSceneSize()));
+    q->onDisplayChangeEvent(&ev);
+
     doSwitcherExited();
 
     if (MApplication::prestartMode() == M::LazyShutdownMultiWindow ||
@@ -1269,14 +1257,24 @@ void MWindow::enterDisplayEvent()
 void MWindow::exitDisplayEvent()
 {}
 
+#ifdef Q_WS_X11
+void MWindowPrivate::sendDelayedExitDisplayEvent()
+{
+    Q_Q(MWindow);
+    delete delayedMOnDisplayChangeEvent;
+    delayedMOnDisplayChangeEvent = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOffDisplay, q->sceneRect());
+    displayExitedTimer.start();
+}
+#endif
+
 void MWindow::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 {
     Q_D(MWindow);
+    d->displayExitedTimer.stop();
 
     switch (event->state()) {
 
     case MOnDisplayChangeEvent::FullyOnDisplay:
-        d->displayExitedTimer.stop();
         if (!d->onDisplay || !d->onDisplaySet) {
             d->doEnterDisplayEvent();
             if (scene()) {
@@ -1287,13 +1285,10 @@ void MWindow::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 
     case MOnDisplayChangeEvent::FullyOffDisplay:
         if (d->onDisplay || !d->onDisplaySet) {
-            // displayEntered signal is emitted immediately above, but
-            // emitting displayExited is delayed by default. Emitting
-            // will be canceled if FullyOnDisplay event is received
-            // during the delay. displayExitedTimer timeout will call
-            // d->doExitDisplayEvent() which will take care of
-            // propagating delayedMOnDisplayChangeEvent to the scene.
-            d->sendExitDisplayEvent(true);
+            d->doExitDisplayEvent();
+            if (scene()) {
+                d->propagateMOnDisplayChangeEventToScene(event);
+            }
         }
         break;
 
