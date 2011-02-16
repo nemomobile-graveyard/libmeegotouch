@@ -264,8 +264,8 @@ void MPannableViewportPrivate::_q_ensureFocusedPannedWidgetIsVisible()
 {
     Q_Q(MPannableViewport);
 
-    if (q->sceneManager()
-        && pannedWidget->focusItem()) {
+    if (q->sceneManager() &&
+        pannedWidget && pannedWidget->focusItem()) {
         q->sceneManager()->ensureCursorVisible();
     }
 }
