@@ -28,21 +28,23 @@
 #define EXTRACT_INHERITANCEORDER(priority)              (priority & 0xffff)
 
 #include "muniquestringcache.h"
+#include "mnamespace.h"
 
 #include <QObject>
 #include <QString>
 #include <QList>
+#include <QHash>
 
 class MOriginContainer;
 class MStyleSheetSelector;
 class MStyle;
 class MWidgetController;
+class MStyleSheet;
 
 class MStyleSheetPrivate
 {
 public:
     struct SelectorInfo {
-        QByteArray filename;
         const MStyleSheetSelector *selector;
         int classPriority;
         int parentPriority;

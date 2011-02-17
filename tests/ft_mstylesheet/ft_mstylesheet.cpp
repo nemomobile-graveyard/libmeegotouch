@@ -75,8 +75,6 @@ void Ft_MStyleSheet::cleanupTestCase()
 
 void Ft_MStyleSheet::test_supported_attribute_types()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
 
@@ -140,8 +138,6 @@ void Ft_MStyleSheet::test_supported_attribute_types()
 
 void Ft_MStyleSheet::test_inheritance()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
 
@@ -193,8 +189,6 @@ void Ft_MStyleSheet::test_inheritance()
 
 void Ft_MStyleSheet::test_objectnames()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
 
@@ -219,8 +213,6 @@ void Ft_MStyleSheet::test_objectnames()
 
 void Ft_MStyleSheet::test_orientations()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
 
@@ -246,8 +238,6 @@ void Ft_MStyleSheet::test_orientations()
 
 void Ft_MStyleSheet::test_modes()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
 
@@ -290,8 +280,6 @@ void Ft_MStyleSheet::test_modes()
 
 void Ft_MStyleSheet::test_types()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
     QList<const MStyleSheet *> sheets;
@@ -328,8 +316,6 @@ void Ft_MStyleSheet::test_types()
 
 void Ft_MStyleSheet::test_parent()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
     QList<const MStyleSheet *> sheets;
@@ -357,8 +343,6 @@ void Ft_MStyleSheet::test_parent()
 
 void Ft_MStyleSheet::test_parent_stylenames()
 {
-    m_subject->setBinaryFileGenerationEnabled(false);
-
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
     QList<const MStyleSheet *> sheets;
@@ -425,13 +409,13 @@ void Ft_MStyleSheet::test_wrong_attribute_value_with_parent()
 void Ft_MStyleSheet::test_wrong_syntax()
 {
     m_subject->setBinaryFileGenerationEnabled(false);
-
     /* Testing with default syntax mode: strict */
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_syntax.css"), false);
 
     m_subject->setSyntaxMode(MStyleSheet::RelaxedSyntax);
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject_wrong_syntax.css"), true);
     m_subject->setSyntaxMode(MStyleSheet::StrictSyntax);
+    m_subject->setBinaryFileGenerationEnabled(true);
 }
 
 /*

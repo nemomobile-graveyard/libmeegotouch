@@ -43,7 +43,6 @@ private slots:
     void test_load();
     void test_import();
     void test_constants();
-    void test_constants_binary();
     void test_binary_equality();
     void test_parser_speed();
     void test_binary_speed();

@@ -75,7 +75,8 @@ public:
             const MUniqueStringCache::Index mode,
             const MUniqueStringCache::Index parentName,
             const MUniqueStringCache::Index parentObjectName,
-            const Flags flags
+            const Flags flags,
+            const MUniqueStringCache::Index filename
     );
 
     MUniqueStringCache::Index objectNameID() const;
@@ -143,6 +144,8 @@ public:
      */
     Flags flags() const;
 
+    QByteArray filename() const;
+
     bool fromMappedMemory;
 
 private:
@@ -168,6 +171,8 @@ private:
     const MUniqueStringCache::Index _parentObjectName;
     //! Flags indicating whether this is a special kind of selector.
     const MStyleSheetSelector::Flags _flags;
+    //! Filename where this selector comes from.
+    const MUniqueStringCache::Index _filename;
 };
 
 //! \internal_end

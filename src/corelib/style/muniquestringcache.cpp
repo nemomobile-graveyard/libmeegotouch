@@ -228,7 +228,6 @@ void MUniqueStringCachePrivate::initiallyFillCache() {
             }
         }
         fillUniqueStringCache();
-
         cacheFilled = true;
     }
 }

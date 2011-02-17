@@ -22,6 +22,7 @@
 #include <time.h>
 #include <QtTest>
 #include <mstylesheetselector.h>
+#include "../../src/corelib/style/mstylesheetparser_p.h"
 #include "../../src/corelib/style/mstylesheetattribute.h"
 #include "../../src/corelib/theme/mlogicalvalues.h"
 
@@ -97,9 +98,9 @@ void Ft_MStyleSheetParser::test_load()
 
     // Open test file
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
-    QCOMPARE(m_subject->fileInfoList().count(), 1);
+    QCOMPARE(m_subject->d_ptr->fileInfoList.count(), 1);
 
-    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi = m_subject->fileInfoList().value(0);
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi = m_subject->d_ptr->fileInfoList.value(0);
 
 
     // Check that there's correct amount of selectors
@@ -404,10 +405,10 @@ void Ft_MStyleSheetParser::test_import()
     importedFiles.append("ft_mstylesheetparser_test.css");
 
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_import.css"), true);
-    QCOMPARE(m_subject->fileInfoList().count(), 5);
+    QCOMPARE(m_subject->d_ptr->fileInfoList.count(), 5);
     int numberOfSelectors = 0;
-    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator fi = m_subject->fileInfoList().begin();
-            fi != m_subject->fileInfoList().end();
+    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator fi = m_subject->d_ptr->fileInfoList.begin();
+            fi != m_subject->d_ptr->fileInfoList.end();
             fi++) {
         QFileInfo fileinfo((*fi)->filename);
         QVERIFY(importedFiles.indexOf(fileinfo.fileName()) != -1);
@@ -425,18 +426,18 @@ void Ft_MStyleSheetParser::test_constants()
     QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_constants.css"), true);
 
     //check that file count is correct
-    QCOMPARE(m_subject->fileInfoList().count(), 3);
+    QCOMPARE(m_subject->d_ptr->fileInfoList.count(), 3);
 
-    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> info = m_subject->fileInfoList()[0];
+    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> info = m_subject->d_ptr->fileInfoList[0];
     QCOMPARE(info->constants.count(), 5);
     QCOMPARE(info->constants["cWidth"], QByteArray("10px"));
     QCOMPARE(info->constants["cHeight"], QByteArray("15px"));
     QCOMPARE(info->constants["cFontFamily"], QByteArray("sans"));
     QCOMPARE(info->constants["cFontSize"], QByteArray("12px"));
     QCOMPARE(info->constants["cColor"], QByteArray("#0abba0"));
-    info = m_subject->fileInfoList()[1];
+    info = m_subject->d_ptr->fileInfoList[1];
     QCOMPARE(info->constants.count(), 0);
-    info = m_subject->fileInfoList()[2];
+    info = m_subject->d_ptr->fileInfoList[2];
     QCOMPARE(info->constants.count(), 7);
     QCOMPARE(info->constants["cInt"], QByteArray("10"));
     QCOMPARE(info->constants["cReal"], QByteArray("1.0"));
@@ -447,16 +448,16 @@ void Ft_MStyleSheetParser::test_constants()
     QCOMPARE(info->constants["cFont"], QByteArray("arial 10px"));
 
     //check that there are right number of attributes
-    info = m_subject->fileInfoList()[0];
+    info = m_subject->d_ptr->fileInfoList[0];
     QCOMPARE(info->selectors.count(), 0);
-    info = m_subject->fileInfoList()[1];
+    info = m_subject->d_ptr->fileInfoList[1];
     QCOMPARE(info->selectors.count(), 1);
     QCOMPARE(info->selectors[0]->attributeCount(), 1);
 
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width")));
     QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-width")));
     QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getValue(), QByteArray("10px"));
-    info = m_subject->fileInfoList()[2];
+    info = m_subject->d_ptr->fileInfoList[2];
     QCOMPARE(info->selectors.count(), 1);
     QCOMPARE(info->selectors[0]->attributeCount(), 13);
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int")));
@@ -465,74 +466,6 @@ void Ft_MStyleSheetParser::test_constants()
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1")));
     QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-string1")));
 
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getValue(), QByteArray("\"name\""));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2"))->getValue(), QByteArray("\"this is a string with constant \"name\"\" 10 1.0"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool"))->getValue(), QByteArray("true"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-pos1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1"))->getValue(), QByteArray("10px 15px"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-pos2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2"))->getValue(), QByteArray("17px 11px"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-font1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1"))->getValue(), QByteArray("sans 12px"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-font2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2"))->getValue(), QByteArray("arial 10px"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-color")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color"))->getValue(), QByteArray("#0abba0"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-invalid")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid"))->getValue(), QByteArray(""));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-void")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void"))->getValue(), QByteArray(""));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-black"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-logical-black")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-black"))->getValue(), QByteArray("#000000"));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-green"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-logical-green")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-green"))->getValue(), QByteArray("#00ff00"));
-}
-
-void Ft_MStyleSheetParser::test_constants_binary()
-{
-    //read css from binary
-    m_subject->setBinaryFileGenerationEnabled(true);
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_constants.css"), true);
-    delete m_subject;
-
-    m_subject = new MStyleSheetParser(m_logicalValues);
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_constants.css"), true);
-
-    //check that file count is correct
-    QCOMPARE(m_subject->fileInfoList().count(), 3);
-
-    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> info = m_subject->fileInfoList()[0];
-    // the binary files do not contain any constants
-    QCOMPARE(info->constants.count(), 0);
-
-    //check that there are right number of attributes
-    info = m_subject->fileInfoList()[0];
-    QCOMPARE(info->selectors.count(), 0);
-    info = m_subject->fileInfoList()[1];
-    QCOMPARE(info->selectors.count(), 1);
-    QCOMPARE(info->selectors[0]->attributeCount(), 1);
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-width")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getValue(), QByteArray("10px"));
-    info = m_subject->fileInfoList()[2];
-    QCOMPARE(info->selectors.count(), 1);
-    QCOMPARE(info->selectors[0]->attributeCount(), 13);
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-int")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int"))->getValue(), QByteArray("10"));
-    QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-string1")));
     QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getValue(), QByteArray("\"name\""));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2")));
     QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2")));
@@ -581,12 +514,12 @@ void Ft_MStyleSheetParser::test_binary_equality()
     QCOMPARE(binary.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
 
     // check that there is equal count of file infos
-    QCOMPARE(parser.fileInfoList().count(), binary.fileInfoList().count());
+    QCOMPARE(parser.d_ptr->fileInfoList.count(), binary.d_ptr->fileInfoList.count());
 
-    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator parserFi = parser.fileInfoList().begin();
-    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator binaryFi = binary.fileInfoList().begin();
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator parserFi = parser.d_ptr->fileInfoList.begin();
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::iterator binaryFi = binary.d_ptr->fileInfoList.begin();
 
-    for (int i = 0; i < parser.fileInfoList().count(); i++) {
+    for (int i = 0; i < parser.d_ptr->fileInfoList.count(); i++) {
         // NOTE: (*parserFi)->constants.count() will differ from (*binaryFi)->constants.count()
         // as the binary files do not contain any constants
 

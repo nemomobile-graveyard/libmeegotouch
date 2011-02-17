@@ -16,6 +16,8 @@ PRIVATE_HEADERS += \
     $$STYLE_SRC_DIR/mstylesheetattribute.h \
     $$STYLE_SRC_DIR/mstylesheet.h \
     $$STYLE_SRC_DIR/muniquestringcache.h \
+    $$STYLE_SRC_DIR/mstylesheetparser_p.h \
+    $$STYLE_SRC_DIR/mstylesheetselectortree.h \
 
 STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mstyle.h \
@@ -60,4 +62,5 @@ SOURCES += \
     $$STYLE_SRC_DIR/mstylesheetselector.cpp \
     $$STYLE_SRC_DIR/mstylesheetattribute.cpp \
     $$STYLE_SRC_DIR/muniquestringcache.cpp \
+    $$STYLE_SRC_DIR/mstylesheetselectortree.cpp \
 

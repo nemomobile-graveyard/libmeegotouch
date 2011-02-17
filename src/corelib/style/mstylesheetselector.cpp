@@ -43,7 +43,8 @@ MStyleSheetSelector::MStyleSheetSelector(
         const MUniqueStringCache::Index mode,
         const MUniqueStringCache::Index parentName,
         const MUniqueStringCache::Index parentObjectName,
-        const Flags flags) :
+        const Flags flags,
+        const MUniqueStringCache::Index filename) :
         fromMappedMemory(false),
         _attributeList(attributeList),
         _attributeCount(attributeCount),
@@ -54,7 +55,8 @@ MStyleSheetSelector::MStyleSheetSelector(
         _mode(mode),
         _parentName(parentName),
         _parentObjectName(parentObjectName),
-        _flags(flags)
+        _flags(flags),
+        _filename(filename)
 {
 }
 
@@ -107,12 +109,12 @@ QByteArray MStyleSheetSelector::parentObjectName() const
 
 QByteArray MStyleSheetSelector::objectName() const
 {
-    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(_objectName);
+    return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(_objectName);
 }
 
 QByteArray MStyleSheetSelector::className() const
 {
-    return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(_className);
+    return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(_className);
 }
 
 QByteArray MStyleSheetSelector::classType() const
@@ -134,6 +136,12 @@ MStyleSheetSelector::Flags MStyleSheetSelector::flags() const
 {
     return _flags;
 }
+
+QByteArray MStyleSheetSelector::filename() const
+{
+    return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(_filename);
+}
+
 
 MUniqueStringCache::Index MStyleSheetSelector::objectNameID() const
 {

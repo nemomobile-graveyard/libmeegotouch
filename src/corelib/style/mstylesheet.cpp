@@ -52,20 +52,17 @@ public:
                        const MStyleSheetSelector *selector,
                        unsigned int classPriority,
                        unsigned int parentPriority,
-                       const QByteArray &file,
                        const MStyleSheet *stylesheet) :
         value(val),
         selector(selector),
         classPriority(classPriority),
         parentPriority(parentPriority),
-        filename(file),
         stylesheet(stylesheet) {}
 
     const MStyleSheetAttribute *value;
     const MStyleSheetSelector *selector;
     unsigned int classPriority;
     unsigned int parentPriority;
-    QByteArray filename;
     const MStyleSheet *stylesheet;
 };
 //! \endcond
@@ -302,48 +299,45 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
     CacheEntry *entry = new CacheEntry;
 
     foreach(const MStyleSheet * sheet, sheets) {
-        foreach(QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
-            foreach(const MStyleSheetSelector * selector, fi->selectors) {
-                // mDebug("MStyleSheet") << "Searching style data for: " << cname << '#' << objectName;
-                // mDebug("MStyleSheet") << "Comparing against" << selector->className() << '#' << selector->objectName();
+        QList<const MStyleSheetSelector*> selectors = sheet->selectorList(spec);
 
-                unsigned int parentPriority, classPriority;
-                if (!MStyleSheetPrivate::matchParents(selector, parentsData, parentStyleName, parentPriority) ||
+        foreach(const MStyleSheetSelector * selector, selectors) {
+            unsigned int parentPriority = 0xffffffff;
+            unsigned int classPriority = 0xffffffff;
+            if (!MStyleSheetPrivate::matchParents(selector, parentsData, parentStyleName, parentPriority) ||
                     !spec.match(selector, classPriority)) {
-                    continue;
-                }
+                continue;
+            }
 
-                // None of the early out tests failed, so we're happy with these settings, loop 'em through and copy them to list
-                const MStyleSheetAttribute *attributes = selector->attributeList();
-                int attributeCount = selector->attributeCount();
-                for (int i = 0; i < attributeCount; ++i) {
-                    MUniqueStringCache::Index propertyName = attributes[i].getNameID();
+            // None of the early out tests failed, so we're happy with these settings, loop 'em through and copy them to list
+            const MStyleSheetAttribute *attributes = selector->attributeList();
+            int attributeCount = selector->attributeCount();
+            for (int i = 0; i < attributeCount; ++i) {
+                MUniqueStringCache::Index propertyName = attributes[i].getNameID();
 
-                    CacheEntry::iterator iter = (*entry).find(propertyName);
-                    // Check if these settings are already in the list
-                    if (iter != entry->end()) {
-                        // Ok so they are, we need to determine whether we have higher priority settings to replace
-                        MOriginContainer *existing = *iter;
+                CacheEntry::iterator iter = (*entry).find(propertyName);
+                // Check if these settings are already in the list
+                if (iter != entry->end()) {
+                    // Ok so they are, we need to determine whether we have higher priority settings to replace
+                    MOriginContainer *existing = *iter;
 
-                        // If the previous one didn't have object name or we're higher priority, we can override
-                        if (MStyleSheetPrivate::isHigherPriority(existing, selector, classPriority, parentPriority)) {
-                            // override
-                            existing->selector = selector;
-                            existing->classPriority = classPriority;
-                            existing->parentPriority = parentPriority;
-                            existing->filename = fi->filename;
-                            existing->value = &attributes[i];
-                            existing->stylesheet = sheet;
-                        }
-                    } else {
-                        // New settings, just add them to the hash
-                        (*entry)[propertyName] = new MOriginContainer(&attributes[i],
-                                selector,
-                                classPriority,
-                                parentPriority,
-                                fi->filename,
-                                sheet);
+                    // If the previous one didn't have object name or we're higher priority, we can override
+                    if (MStyleSheetPrivate::isHigherPriority(existing, selector, classPriority, parentPriority)) {
+                        // override
+                        existing->selector = selector;
+                        existing->classPriority = classPriority;
+                        existing->parentPriority = parentPriority;
+                        //existing->filename = fi->filename;
+                        existing->value = &attributes[i];
+                        existing->stylesheet = sheet;
                     }
+                } else {
+                    // New settings, just add them to the hash
+                    (*entry)[propertyName] = new MOriginContainer(&attributes[i],
+                                                                  selector,
+                                                                  classPriority,
+                                                                  parentPriority,
+                                                                  sheet);
                 }
             }
         }
@@ -381,7 +375,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
             MOriginContainer *tempMOriginCont =   new MOriginContainer(&attributes[i], info.selector,
                                                                        info.classPriority,
                                                                        info.parentPriority,
-                                                                       info.filename, info.stylesheet);
+                                                                       info.stylesheet);
             data[attributes[i].getNameID()] = tempMOriginCont;
             tempMOriginContainers.append(tempMOriginCont);
         }
@@ -406,13 +400,13 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
             // erase this iterator from the data block, it is not needed anymore
             data.erase(iterator);
 
-            if (!attribute->writeAttribute(container->filename, style, style->metaObject()->property(i), spec.orientation)) {
+            if (!attribute->writeAttribute(container->selector->filename(), style, style->metaObject()->property(i), spec.orientation)) {
                 qCritical("Failed to write attribute: %s to property %s. The stylesheet syntax might be invalid (%s:%s) in %s.",
                           attribute->getName().data(),
                           style->metaObject()->property(i).name(),
                           attribute->getName().data(),
                           attribute->getValue().data(),
-                          container->filename.constData());
+                          container->selector->filename().data());
 
                 result = container->stylesheet->syntaxMode() == MStyleSheet::RelaxedSyntax;
             } else {
@@ -439,12 +433,13 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
             identifier += '#' + container->selector->objectName();
         if (container->selector->orientation() != MStyleSheetSelector::UndefinedOrientation)
             identifier += '.' + container->selector->orientation() == MStyleSheetSelector::PortraitOrientation
-		          ? "Portrait" : "Landscape";
+                  ? "Portrait" : "Landscape";
         if (!container->selector->mode().isEmpty())
             identifier += ':' + container->selector->mode();
         identifier += ')';
 
-        mWarning("mstylesheet.cpp") << "unused attribute in" << container->filename << container->value->getName() << identifier;
+        mWarning("mstylesheet.cpp") << "unused attribute in" << container->selector->filename()
+                                    << container->value->getName() << identifier;
     }
 
     // cleaning up temporary data so "data" variable  is useless after that!
@@ -588,27 +583,17 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
     // Initialize
     classPriority = MAKE_PRIORITY(0xffff, 0xffff);
 
-    // Check whether we need to take care of the object names
-    if (!selector->objectName().isEmpty()) {
-        // Early out: check that object name matches, if it doesn't match we can forget these settings
-        if (objectName != selector->objectName())
-            return false;
-    }
-
     // Check whether the class name matches
-    if (!selector->className().isEmpty()) {
+    if (selector->classNameID() != MUniqueStringCache::EmptyStringIndex) {
         int order = 0;
         // Check if the class name contains '.' as a first letter, if it does it means that these are not for subclasses
         if (selector->flags() & MStyleSheetSelector::ExactClassMatch) {
-
-            // Early out: check that the class name is valid
-            if (selector->className() != classHierarchy.at(0))
+            if (selector->className() != classHierarchy.at(0)) {
                 return false;
+            }
         } else {
-            // Early out: Make sure that we are a class of requested type or its subclass
+            // TODO: MStyleSheetSelectorTree::partiallyMatchingSelectors() already knows the order, no need to determine it again
             order = MStyleSheetPrivate::orderNumber(selector->className(), QByteArray(), QByteArray(), classHierarchy);
-            if (order == -1)
-                return false;
         }
         // store inheritance order for later use
         classPriority = MAKE_PRIORITY(0xffff, order);
@@ -616,8 +601,8 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
 
     // Check whether the orientation matches
     if (selector->orientation() != MStyleSheetSelector::UndefinedOrientation &&
-	orientation != static_cast<M::Orientation>(selector->orientation())) {
-	return false;
+        orientation != static_cast<M::Orientation>(selector->orientation())) {
+        return false;
     }
 
     // Check whether the type matches
@@ -646,20 +631,17 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
         const QList<const MStyleSheet *> &thisParentSheets = pd.sheets;
 
         foreach (const MStyleSheet *sheet, thisParentSheets) {
-            foreach(QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
-                unsigned int parentPriority, classPriority;
-                foreach (const MStyleSheetSelector *selector, fi->parentSelectors) {
-                    if (matchParent(selector, thisParentHierarchy, parentStyleName, sceneOrder, parentPriority) &&
+            unsigned int parentPriority, classPriority;
+            foreach (const MStyleSheetSelector *selector, sheet->parentSelectorList(spec)) {
+                if (matchParent(selector, thisParentHierarchy, parentStyleName, sceneOrder, parentPriority) &&
                         spec.match(selector, classPriority)) {
-                        // match found, store it to results list
-                        SelectorInfo info;
-                        info.filename = fi->filename;
-                        info.selector = selector;
-                        info.classPriority = classPriority;
-                        info.parentPriority = parentPriority;
-                        info.stylesheet = sheet;
-                        results.append(info);
-                    }
+                    // match found, store it to results list
+                    SelectorInfo info;
+                    info.selector = selector;
+                    info.classPriority = classPriority;
+                    info.parentPriority = parentPriority;
+                    info.stylesheet = sheet;
+                    results.append(info);
                 }
             }
         }
@@ -667,23 +649,18 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
     }
 
     foreach (const MStyleSheet *sheet, sheets) {
-        foreach (QSharedPointer<const MStyleSheetParser::StylesheetFileInfo> fi, sheet->fileInfoList()) {
-
-            // loop trough all the selectors and find matching ones
-            unsigned int parentPriority, classPriority;
-            foreach (const MStyleSheetSelector * selector, fi->parentSelectors) {
-                if (matchParents(selector, parentsData, parentStyleName, parentPriority) &&
+        // loop trough all the selectors and find matching ones
+        unsigned int parentPriority, classPriority;
+        foreach (const MStyleSheetSelector *selector, sheet->parentSelectorList(spec)) {
+            if (matchParents(selector, parentsData, parentStyleName, parentPriority) &&
                     spec.match(selector, classPriority)) {
-
-                    // match found, store it to results list
-                    SelectorInfo info;
-                    info.filename = fi->filename;
-                    info.selector = selector;
-                    info.classPriority = classPriority;
-                    info.parentPriority = parentPriority;
-                    info.stylesheet = sheet;
-                    results.append(info);
-                }
+                // match found, store it to results list
+                SelectorInfo info;
+                info.selector = selector;
+                info.classPriority = classPriority;
+                info.parentPriority = parentPriority;
+                info.stylesheet = sheet;
+                results.append(info);
             }
         }
     }

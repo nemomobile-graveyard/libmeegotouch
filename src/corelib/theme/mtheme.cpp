@@ -33,6 +33,7 @@ M_LIBRARY
 #include <QSettings>
 #include <QDir>
 #include <QSharedMemory>
+#include <QHash>
 
 #include "private/mwidgetcontroller_p.h"
 
@@ -401,6 +402,16 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
                                              QList<const MStyleSheet *> &sheets,
                                              QList<QByteArray> &styleMetaObjectHierarchy)
 {
+    typedef QPair<QList<const MStyleSheet *>, QList<QByteArray> > SheetsAndHierarchy;
+
+    static QHash<const char*, SheetsAndHierarchy> cache;
+    QHash<const char*, SheetsAndHierarchy>::const_iterator it = cache.constFind(styleClassName);
+    if (it != cache.constEnd()) {
+        sheets.append(it->first);
+        styleMetaObjectHierarchy.append(it->second);
+        return true;
+    }
+
     // Go through the inheritance chain and add stylesheets from each assembly
     const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
     if (!mobj)
@@ -412,6 +423,8 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
     if (mobj->className() == MWidgetStyle::staticMetaObject.className()) {
         styleMetaObjectHierarchy.append(mobj->className());
         appendAllLibraryStyleSheets(sheets);
+
+        cache.insert(styleClassName, SheetsAndHierarchy(sheets, styleMetaObjectHierarchy));
         return true;
     }
 
@@ -432,6 +445,7 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
 
+    cache.insert(styleClassName, SheetsAndHierarchy(sheets, styleMetaObjectHierarchy));
     return true;
 }
 

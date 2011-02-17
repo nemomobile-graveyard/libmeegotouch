@@ -18,11 +18,13 @@
 ****************************************************************************/
 
 #include "mstylesheetparser.h"
+#include "mstylesheetparser_p.h"
 #include "mstylesheetselector.h"
 #include "mclassfactory.h"
 #include "mstylesheetattribute.h"
 #include "mlogicalvalues.h"
 #include "msystemdirectories.h"
+#include "mstylesheetselectortree.h"
 
 #include <QFile>
 #include <QTextStream>
@@ -45,134 +47,23 @@
 #include <sys/file.h>
 
 namespace {
-    const unsigned int FILE_VERSION = 21;
+    const unsigned int FILE_VERSION = 22;
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 MStyleSheetParser::StylesheetFileInfo::StylesheetFileInfo() :
-    time_t(0),
-    fromMapedMemory(false)
+    time_t(0)
 {
 }
 
 MStyleSheetParser::StylesheetFileInfo::~StylesheetFileInfo()
 {
-    if (!fromMapedMemory) {
-        qDeleteAll(selectors);
-        qDeleteAll(parentSelectors);
-    }
+    qDeleteAll(selectors);
+    qDeleteAll(parentSelectors);
     selectors.clear();
     parentSelectors.clear();
 }
-
-class MStyleSheetParserPrivate
-{
-public:
-    MStyleSheetParserPrivate(const MLogicalValues *logicalValues);
-
-    QChar read(QFile &stream, const QByteArray &delimeters, QByteArray &out);
-    QChar peek(QFile &stream, const QByteArray &delimeters, QByteArray &out);
-
-    bool load(const QString &filename, QHash<QByteArray, QByteArray>* constants, bool toplevel);
-
-    /**
-     \brief Parse a stylesheet \a file.
-     \param fileInfo a QFileInfo for the filename. This parameter is provided so it can be shared by other methods, to avoid unnecessary file IO.
-     */
-    bool parse(QFile &file, const QFileInfo &fileInfo, bool validateOnly = false);
-
-    MStyleSheetSelector *parseSelector(QFile &stream, bool *error, bool validateOnly);
-    MStyleSheetAttribute* parseAttribute(QFile &stream, QChar &endCharacter, bool validateOnly);
-    bool parseAtToken(QFile &stream, bool validateOnly = false);
-    bool importFile(const QByteArray &importedFileName, bool validateOnly = false);
-    int getMatchIndex(const QByteArray &str, const QByteArray &charList, int from = 0) const;
-    bool replaceConsts(QByteArray &value) const;
-    MStyleSheetSelector* createSelector(
-             const QByteArray& objectName, const QByteArray& className, const QByteArray& classType, const QByteArray& orientation,
-             const QByteArray& mode, const QByteArray& parentName, const QByteArray& parentObjectName, int flags,
-             const QMap<MUniqueStringCache::Index, MStyleSheetAttribute*>& attributeList);
-
-    /**
-     \brief Convert an absolute path into a filename by replacing
-     line separators and such.
-     */
-    QString createBinaryFilename(const QString &filename) const;
-
-    /**
-      * \brief Returns all cache files from the cache directory starting
-      * with the given filter.
-      */
-    QStringList cacheFileCandidates(const QString& filter) const;
-
-    /**
-      * \brief Return the newest binary CSS cache file for a given
-      * CSS file.
-      */
-    QString currentBinaryCacheFile(const QString &filename) const;
-
-    /**
-      * \brief When we have to update an existing binary cache file we
-      * may not overwride existing files as they may be mapped by another
-      * application. Instead we increase the number at the end of the cache
-      * filename. This function calculates the proper name for a new cache file.
-      */
-    QString nextBinaryCacheFile(const QString &filename) const;
-
-    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> > fileInfoList;
-    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> privateFileInfo;
-
-    /**
-     \brief Load a previously-cached binary version of the style.
-     \param binaryFilename The binary stylesheet file.
-     */
-    bool loadBinary(const QString &binaryFilename);
-
-    /**
-      * Returns the approximated size of the current stylesheet. The returned number is
-      * equal to or larger than the actual size. It can be used to allocate a buffer to
-      * store the serialized stylesheet in.
-      */
-    qint64 approximateSize();
-
-    /**
-     \brief Write all binary stylesheet data to a file on disk.
-     \param binaryFilename The file to create.
-     */
-    bool dump(const QString &binaryFilename);
-
-    void writeStylesheetFileInfo(QSharedPointer<MStyleSheetParser::StylesheetFileInfo> selector, char** buffer);
-    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> readStylesheetFileInfo(char** buffer);
-
-    const MStyleSheetSelector *readSelector(char** buffer);
-    void writeSelector(const MStyleSheetSelector *selector, char** buffer) const;
-
-    static QString getOrientationName(MStyleSheetSelector::Orientation orientation);
-    static MStyleSheetSelector::Orientation getOrientationFromName(const QString &name);
-
-    bool binaryFileMode;
-    QString binaryDirectory;
-    MStyleSheetParser::SyntaxMode syntaxMode;
-
-    void debugOutput();
-
-    static int getLineNum(QFile &stream, const qint64 &streamPos = -1);
-    static void outputParseError(const QString &file, const QString &desc, int line);
-    static void outputParseWarning(const QString &file, const QString &desc, int line);
-
-    void skipWhiteSpace(QFile &file);
-
-    qint64 startReadPos;
-    QFileInfo parsedFileInfo;
-    QByteArray parsedFileName;
-    const MLogicalValues *logicalValues;
-    QSystemSemaphore cssSemaphore;
-    QList<QSharedPointer<QFile> > mappedFiles;
-    QHash<QByteArray, QByteArray>* globalConstants;
-
-    bool validName(const QByteArray &name);
-    bool validValue(const QByteArray &value);
-};
 
 namespace {
 // faster than QFileInfo::lastModified().toTime_t()
@@ -547,6 +438,7 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
         privateFileInfo->filename = qPrintable(filename);
 
         bool result = parse(file, filename);
+
         file.close();
 
         if (result || syntaxMode == MStyleSheetParser::RelaxedSyntax) {
@@ -567,6 +459,7 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
                     // to make use of mmaping
                     fileInfoList.clear();
                     privateFileInfo.clear();
+
                     return loadBinary(currentBinaryCacheFile(filename));
                 }
             }
@@ -783,6 +676,7 @@ bool MStyleSheetParserPrivate::importFile(const QByteArray &filename, bool valid
     MStyleSheetParserPrivate parser(logicalValues);
     parser.binaryDirectory = binaryDirectory;
     parser.binaryFileMode = binaryFileMode;
+
     if (parser.load(parsedFileInfo.absolutePath() + QDir::separator() + filename, globalConstants, false) ||
         syntaxMode == MStyleSheetParser::RelaxedSyntax) {
         // add all the new file infos into the list of parsed files
@@ -1075,14 +969,15 @@ MStyleSheetSelector* MStyleSheetParserPrivate::createSelector(
      MStyleSheetSelector *selector = new MStyleSheetSelector(
              attributeArray,
              attributeList.size(),
-             MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex(objectName),
-             MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex(className),
+             MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(objectName),
+             MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(className),
              MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex(classType),
              getOrientationFromName(orientation),
              MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex(mode),
              MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex(parentName),
              MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex(parentObjectName),
-             (MStyleSheetSelector::Flags) flags
+             (MStyleSheetSelector::Flags) flags,
+             MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(parsedFileName)
              );
 
      return selector;
@@ -1231,9 +1126,26 @@ bool MStyleSheetParser::load(const QString &filename)
     return result;
 }
 
-QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >& MStyleSheetParser::fileInfoList() const
+QList<const MStyleSheetSelector*> MStyleSheetParser::selectorList(const MStyleSheetPrivate::StyleSpec &spec) const
 {
-    return d_ptr->fileInfoList;
+    QList<const MStyleSheetSelector*> selectors;
+
+    foreach (const MStyleSheetSelectorTree *list, d_ptr->selectorTrees) {
+        list->partiallyMatchingSelectors(spec, &selectors);
+    }
+
+    return selectors;
+}
+
+QList<const MStyleSheetSelector*> MStyleSheetParser::parentSelectorList(const MStyleSheetPrivate::StyleSpec &spec) const
+{
+    QList<const MStyleSheetSelector*> selectors;
+
+    foreach (const MStyleSheetSelectorTree *list, d_ptr->parentSelectorTrees) {
+        list->partiallyMatchingSelectors(spec, &selectors);
+    }
+
+    return selectors;
 }
 
 void MStyleSheetParser::setBinaryFileDirectory(const QString &directory)
@@ -1318,11 +1230,8 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
                 return false;
             }
 
-            int nrOfFiles = readInteger<int>(&bufferIterator);
-            for (int i = 0; i < nrOfFiles; ++i) {
-                QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi = readStylesheetFileInfo(&bufferIterator);
-                fileInfoList.append(fi);
-            }
+            readAllSelectors(&bufferIterator);
+
             return true;
         }
         return false;
@@ -1351,10 +1260,14 @@ qint64 MStyleSheetParserPrivate::approximateSize()
     // file info count
     size += sizeof(int);
 
+    int selectorCount = 0;
     QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fileInfoListEnd = fileInfoList.constEnd();
     for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fi = fileInfoList.constBegin();
     fi != fileInfoListEnd;
     ++fi) {
+        selectorCount += (*fi)->selectors.count();
+        selectorCount += (*fi)->parentSelectors.count();
+
         // filename
         size += sizeof(uint);
 
@@ -1386,6 +1299,10 @@ qint64 MStyleSheetParserPrivate::approximateSize()
             size += (*iterator)->attributeCount() * sizeof(MStyleSheetAttribute);
         }
     }
+
+    // now a worst case approximation of the maximum size occupied by nodes
+    size += (selectorCount + 1) * (sizeof(Node) + 2 * sizeof(Node::ChildHeader) + sizeof(StyleSheetSelectorList));
+
     return size;
 }
 
@@ -1433,12 +1350,8 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
         writeInteger<uint>(logicalValues->timestamps().at(i), &bufferIterator);
     }
 
-    writeInteger<int>(fileInfoList.count(), &bufferIterator);
-    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fi = fileInfoList.constBegin();
-            fi != fileInfoListEnd;
-            ++fi) {
-        writeStylesheetFileInfo(*fi, &bufferIterator);
-    }
+
+     writeAllSelectors(&bufferIterator);
 
     qint64 bytesToWrite = bufferIterator - buffer.data();
     if (approximatedSize < bytesToWrite) {
@@ -1458,54 +1371,95 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
     return true;
 }
 
-void MStyleSheetParserPrivate::writeStylesheetFileInfo(QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi, char** buffer)
+void MStyleSheetParserPrivate::writeAllSelectors(char** buffer)
 {
-    writeInteger<MUniqueStringCache::Index>(MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex(fi->filename), buffer);
-    writeInteger<uint>(fi->time_t, buffer);
-
-    writeInteger<int>(fi->selectors.count(), buffer);
-    // write all selectors without parent
-    QList<const MStyleSheetSelector *>::const_iterator infoSelectorsEnd = fi->selectors.constEnd();
-    for (QList<const MStyleSheetSelector *>::const_iterator iterator = fi->selectors.constBegin();
-            iterator != infoSelectorsEnd;
-            ++iterator) {
-        writeSelector(*iterator, buffer);
+    QMultiMap<MUniqueStringCache::Index, const MStyleSheetSelector*>  selectorMap;
+    QMultiMap<MUniqueStringCache::Index, const MStyleSheetSelector*>  parentSelectorMap;
+    foreach(const QSharedPointer<MStyleSheetParser::StylesheetFileInfo> &fi, fileInfoList) {
+        foreach (const MStyleSheetSelector *selector, fi->selectors) {
+            selectorMap.insert(selector->classNameID(), selector);
+        }
+        foreach (const MStyleSheetSelector *selector, fi->parentSelectors) {
+            parentSelectorMap.insert(selector->classNameID(), selector);
+        }
     }
 
-    // write all selectors with parent
-    writeInteger<int>(fi->parentSelectors.count(), buffer);
-    infoSelectorsEnd = fi->parentSelectors.constEnd();
-    for (QList<const MStyleSheetSelector *>::const_iterator iterator = fi->parentSelectors.constBegin();
-            iterator != infoSelectorsEnd;
-            ++iterator) {
-        writeSelector(*iterator, buffer);
+    // write selectors without parent
+    writeSelectorMap(selectorMap, buffer);
+
+    // write selectors with parent
+    writeSelectorMap(parentSelectorMap, buffer);
+}
+
+void MStyleSheetParserPrivate::writeSelectorMap(const QMultiMap<MUniqueStringCache::Index, const MStyleSheetSelector*> &selectorMap, char** buffer)
+{
+    QList<MUniqueStringCache::Index> uniqueKeys = selectorMap.uniqueKeys();
+    Node *node = reinterpret_cast<Node*>(*buffer);
+    node->childCount = uniqueKeys.count();
+    incrementBuffer(buffer, sizeof(Node));
+
+    Node::ChildHeader *headers = reinterpret_cast<Node::ChildHeader*>(*buffer);
+    incrementBuffer(buffer, node->childCount * sizeof(Node::ChildHeader));
+    int i = 0;
+    foreach(MUniqueStringCache::Index type, uniqueKeys) {
+        headers[i].index = type;
+        headers[i].offset = *buffer - (char*)headers;
+
+        writeSelectorsGroupedByObjectName(selectorMap.values(type), buffer);
+        ++i;
+    }
+
+    node->totalSize = *buffer - (char*)node;
+}
+
+void MStyleSheetParserPrivate::writeSelectorsGroupedByObjectName(const QList<const MStyleSheetSelector*> &selectors, char **buffer)
+{
+    QMultiMap<MUniqueStringCache::Index, const MStyleSheetSelector*>  selectorMap;
+    foreach (const MStyleSheetSelector *selector, selectors) {
+        selectorMap.insert(selector->objectNameID(), selector);
+    }
+
+    QList<MUniqueStringCache::Index> uniqueKeys = selectorMap.uniqueKeys();
+
+    Node *node = reinterpret_cast<Node*>(*buffer);
+    node->childCount = uniqueKeys.count();
+    incrementBuffer(buffer, sizeof(Node));
+
+    Node::ChildHeader *headers = reinterpret_cast<Node::ChildHeader*>(*buffer);
+    incrementBuffer(buffer, node->childCount * sizeof(Node::ChildHeader));
+    int i = 0;
+    foreach(MUniqueStringCache::Index objectName, uniqueKeys) {
+        headers[i].index = objectName;
+        headers[i].offset = *buffer - (char*)headers;
+
+        writeSelectorList(selectorMap.values(objectName), buffer);
+        ++i;
+    }
+    node->totalSize = (char*)node - *buffer;
+}
+
+void MStyleSheetParserPrivate::writeSelectorList(const QList<const MStyleSheetSelector*> &selectors, char **buffer)
+{
+    StyleSheetSelectorList *sl = reinterpret_cast<StyleSheetSelectorList*>(*buffer);
+    sl->selectorCount = selectors.count();
+    incrementBuffer(buffer, sizeof(StyleSheetSelectorList));
+
+    foreach(const MStyleSheetSelector *selector, selectors) {
+        writeSelector(selector, buffer);
     }
 }
 
-QSharedPointer<MStyleSheetParser::StylesheetFileInfo> MStyleSheetParserPrivate::readStylesheetFileInfo(char** buffer)
+
+void MStyleSheetParserPrivate::readAllSelectors(char** buffer)
 {
-    QSharedPointer<MStyleSheetParser::StylesheetFileInfo> fi(new MStyleSheetParser::StylesheetFileInfo);
+    MStyleSheetSelectorTree *st = reinterpret_cast<MStyleSheetSelectorTree*>(*buffer);
+    selectorTrees.append(st);
+    incrementBuffer(buffer,st->totalSize);
 
-    fi->fromMapedMemory = true;
-    fi->filename = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(readInteger<MUniqueStringCache::Index>(buffer));
-    fi->time_t = readInteger<quint32>(buffer);
+    st = reinterpret_cast<MStyleSheetSelectorTree*>(*buffer);
+    parentSelectorTrees.append(st);
 
-    int selectorCount;
-    selectorCount = readInteger<int>(buffer);
-    // read all selectors without parent
-    for (int i = 0; i < selectorCount; ++i) {
-        const MStyleSheetSelector *selector = readSelector(buffer);
-        fi->selectors.push_back(selector);
-    }
-
-    // read all selectors with parent
-    selectorCount = readInteger<int>(buffer);
-    for (int i = 0; i < selectorCount; ++i) {
-        const MStyleSheetSelector *selector = readSelector(buffer);
-        fi->parentSelectors.push_back(selector);
-    }
-
-    return fi;
+    incrementBuffer(buffer,st->totalSize);
 }
 
 const MStyleSheetSelector *MStyleSheetParserPrivate::readSelector(char** buffer)
@@ -1570,7 +1524,8 @@ void MStyleSheetParser::operator += (const MStyleSheetParser &stylesheet)
 {
     Q_D(MStyleSheetParser);
 
-    d->fileInfoList.append(stylesheet.fileInfoList());
+    d->selectorTrees.append(stylesheet.d_ptr->selectorTrees);
+    d->parentSelectorTrees.append(stylesheet.d_ptr->parentSelectorTrees);
     d->mappedFiles.append(stylesheet.d_ptr->mappedFiles);
 }
 

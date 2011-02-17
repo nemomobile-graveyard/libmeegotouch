@@ -21,12 +21,15 @@
 #define MSTYLESHEETPARSER_H
 
 #include "mexport.h"
+#include "muniquestringcache.h"
+#include "mstylesheet_p.h"
 
 #include <QString>
 #include <QList>
 #include <QVector>
 #include <QHash>
 #include <QSharedPointer>
+#include <QMultiMap>
 
 class MStyleSheetParserPrivate;
 class MStyleSheetSelector;
@@ -113,11 +116,9 @@ public:
      */
     void setBinaryFileGenerationEnabled(bool enabled);
 
-    /*!
-     * Returns all the information within the style sheet
-     * \return A list of file information structures in this style sheet.
-     */
-    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >& fileInfoList() const;
+    QList<const MStyleSheetSelector*> selectorList(const MStyleSheetPrivate::StyleSpec &spec) const;
+    QList<const MStyleSheetSelector*> parentSelectorList(const MStyleSheetPrivate::StyleSpec &spec) const;
+
 
     /*!
      * Gets the current parse mode.
@@ -159,6 +160,10 @@ private:
     Q_DECLARE_PRIVATE(MStyleSheetParser)
 protected:
     MStyleSheetParserPrivate *const d_ptr;
+
+#ifdef UNIT_TEST
+    friend class Ft_MStyleSheetParser;
+#endif
 
     friend class MStyleSheetAttribute;
 };
