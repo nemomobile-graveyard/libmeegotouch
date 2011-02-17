@@ -307,12 +307,14 @@ bool MLabelViewRich::isRich()
 void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->ignore();
-    int cursorPos = cursorPosition(event->pos());
-    QTextCharFormat format = charFormat(cursorPos);
-    if (format.isValid()) {
-        //check if highlighted anchor is pressed and it wants to handle it
-        MLabelHighlighter* h = extractHighlighter(format);
-        if (h && !h->ignoreClickAndLongPressEvents()) {
+    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
+    if (cursorPos >= 0) {
+        QTextCursor cursor(&textDocument);
+        cursor.setPosition(cursorPos);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+        QTextCharFormat format = cursor.charFormat();
+        //highlighted anchor is pressed
+        if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
             event->accept();
             mouseDownCursorPos = cursorPos;
             cleanupTiles();
@@ -320,7 +322,7 @@ void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
             viewPrivate->style()->pressFeedback().play();
         }
         //application defined anchor is pressed
-        else if ( !h && format.isAnchor()) {
+        else if (format.isAnchor()) {
             event->accept();
             viewPrivate->style()->pressFeedback().play();
         }
@@ -333,16 +335,22 @@ void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     cleanupTiles();
     viewPrivate->controller->update();
     
-    QTextCharFormat format = charFormat(event->pos());
-    if (format.isValid()) {
+    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
+    if (cursorPos >= 0) {
+        QTextCursor cursor(&textDocument);
+        cursor.setPosition(cursorPos);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+        QTextCharFormat format = cursor.charFormat();
         //highlighted anchor is released
-        MLabelHighlighter* h = extractHighlighter(format);
-        if (h && !h->ignoreClickAndLongPressEvents()) {
-            h->click(format.anchorHref());
+        if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
+            int idx = cursor.charFormat().intProperty(M_HIGHLIGHTER_ID_PROPERTY);
+            if (idx < viewPrivate->model()->highlighters().size())
+                viewPrivate->model()->highlighters()[idx]->click(format.anchorHref());
+
             viewPrivate->style()->releaseFeedback().play();
         }
         //application defined anchor is released
-        else if (!h && format.isAnchor()) {
+        else if (format.isAnchor()) {
             viewPrivate->style()->releaseFeedback().play();
             viewPrivate->model()->emitLinkActivated(format.anchorHref());
         }
@@ -366,13 +374,18 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
     // the gesture was insid highlightable text.
     event->ignore(gesture);
 
-    QTextCharFormat format = charFormat(viewPrivate->controller->mapFromScene(gesture->position()));
-    if (format.isValid()) {
-        MLabelHighlighter* h = extractHighlighter(format);
-        if (h && !h->ignoreClickAndLongPressEvents()) {
+    int cursorPos = textDocument.documentLayout()->hitTest(viewPrivate->controller->mapFromScene(gesture->position()) - pixmapOffset, Qt::ExactHit);
+    if (cursorPos >= 0) {
+        QTextCursor cursor(&textDocument);
+        cursor.setPosition(cursorPos);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+        QTextCharFormat format = cursor.charFormat();
+        if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
             event->accept(gesture);
-            if(gesture->state() == Qt::GestureFinished )
-                h->longPress(format.anchorHref());
+            int idx = cursor.charFormat().intProperty(M_HIGHLIGHTER_ID_PROPERTY);
+            if (idx < viewPrivate->model()->highlighters().size() && gesture->state() == Qt::GestureFinished)
+                viewPrivate->model()->highlighters()[idx]->longPress(format.anchorHref());
+
             viewPrivate->style()->pressFeedback().play();
         }
     }
@@ -504,38 +517,6 @@ void MLabelViewRich::applyStyle()
 {
     textDocumentDirty = true;
     ensureDocumentIsReady();
-}
-
-MLabelHighlighter* MLabelViewRich::extractHighlighter(const QTextCharFormat& format)
-{
-    if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
-        int idx = format.intProperty(M_HIGHLIGHTER_ID_PROPERTY);
-        if (idx < viewPrivate->model()->highlighters().size() )
-            return viewPrivate->model()->highlighters()[idx];
-    }
-    return NULL;
-}
-
-QTextCharFormat MLabelViewRich::charFormat(const QPointF& pos)
-{
-    return charFormat(cursorPosition(pos));
-}
-
-QTextCharFormat MLabelViewRich::charFormat(int cursorPos)
-{
-    if (cursorPos >= 0) {
-        QTextCursor cursor(&textDocument);
-        cursor.setPosition(cursorPos);
-        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-        return cursor.charFormat();
-    }
-    return QTextCharFormat();
-
-}
-
-int MLabelViewRich::cursorPosition(const QPointF& pos)
-{
-    return textDocument.documentLayout()->hitTest(pos - pixmapOffset, Qt::ExactHit);
 }
 
 void MLabelViewRich::initTiles(const QSize &size)
