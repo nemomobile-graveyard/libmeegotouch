@@ -279,6 +279,7 @@ void MBannerViewPrivate::layoutInformationBanner()
         title()->setStyleName("InformationBannerTitle");
         title()->setVisible(true);
         title()->setWordWrap(true);
+        title()->setTextElide(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
@@ -319,6 +320,7 @@ void MBannerViewPrivate::layoutSystemBanner()
         title()->setVisible(true);
         title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         title()->setWordWrap(true);
+        title()->setTextElide(true);
         landscapePolicy->addItem(title(), Qt::AlignTop);
         portraitPolicy->addItem(title(), Qt::AlignTop);
     }
@@ -403,12 +405,16 @@ void MBannerViewPrivate::layoutFullEventBanner()
     if (!q->model()->title().isEmpty()) {
         title()->setStyleName("FullEventBannerTitle");
         title()->setVisible(true);
+        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        title()->setWordWrap(true);
+        title()->setTextElide(true);
         gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
     }
 
     if (!q->model()->subtitle().isEmpty()) {
         subtitle()->setStyleName("FullEventBannerSubtitle");
         subtitle()->setVisible(true);
+        subtitle()->setWordWrap(false);
         gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
     }
 
