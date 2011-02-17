@@ -1,8 +1,24 @@
-libmeegotouch (0.20.85~1) unstable; urgency=low
+libmeegotouch (0.20.85-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#219687 - Full Event banner should allow 2 lines of text for the Information label
+  * Fixes: NB#225602 - [TASK] Short event banner pressed down state visuals look wrong
+  * Fixes: NB#227588 - mservicemapper spams the console with inane debug info
+  * Fixes: NB#217481
+  * Fixes: NB#214268 - Gallery, keep in (no items - USB mode) after Unplug the USB and gets crashes in Arabic language
+  * Fixes: NB222039
+  * Fixes: NB#200329 - All windows are rotating when device rotates
+  * Fixes: NB#225952 - Locked orientation not respected for second MWindow
+  * Fixes: a possible crash in MPannableViewportPrivate::_q_ensureFocusedPannedWidgetIsVisible()
+  * Fixes: NB#214801 - MButton does not update its geometry after a call to setText()
+  * Fixes: NB#218196 - Not enough mouse move events and too big distance between the mouse press and first mouse move.
+  * Fixes: NB#216904 - MScene delays touch events for every widget
+  * Fixes: NB#185681 - Too much time is spent between click on booster-enabled application icon and start of application's main function.
+  * Fixes: NB#226456 - Calendar closes after saving new event
+  * Fixes: NB#225559 - Timezone applet leads to settings crash
+  * Fixes: failing ut_mpannableviewport unittest
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 15 Feb 2011 15:32:21 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 17 Feb 2011 17:30:31 +0200
 
 libmeegotouch (0.20.84-1) unstable; urgency=low
 
