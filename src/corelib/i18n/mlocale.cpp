@@ -1108,13 +1108,13 @@ void MLocalePrivate::removeTrFromQCoreApp()
 void MLocalePrivate::insertDirectionTrToQCoreApp()
 {
     if (MLocale::s_rtlTranslator == 0) {
-        MLocale::s_rtlTranslator = new QTranslator;
+        MLocale::s_rtlTranslator = new QTranslator( qApp );
         bool ok = MLocale::s_rtlTranslator->load(":/libmeegotouch_rtl.qm");
 	Q_UNUSED(ok);
         Q_ASSERT(ok);
     }
     if (MLocale::s_ltrTranslator == 0) {
-        MLocale::s_ltrTranslator = new QTranslator;
+        MLocale::s_ltrTranslator = new QTranslator( qApp );
         bool ok = MLocale::s_ltrTranslator->load(":/libmeegotouch_ltr.qm");
 	Q_UNUSED(ok);
         Q_ASSERT(ok);
@@ -1537,8 +1537,6 @@ QTranslator *MLocale::s_rtlTranslator = 0;
 struct MStaticLocaleDestroyer {
     ~MStaticLocaleDestroyer() {
         delete MLocale::s_systemDefault; MLocale::s_systemDefault = 0;
-        delete MLocale::s_ltrTranslator; MLocale::s_ltrTranslator = 0;
-        delete MLocale::s_rtlTranslator; MLocale::s_rtlTranslator = 0;
     }
 };
 static MStaticLocaleDestroyer staticLocaleDestroyer;
