@@ -19,6 +19,8 @@
 
 #include "ft_locales.h"
 
+#define VERBOSE_OUTPUT
+
 class TestLocale : public MLocale
 {
 };
@@ -605,14 +607,62 @@ void Ft_Locales::testMLocaleLanguageEndonym_data()
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
 
+    QTest::newRow("ar")
+            << QString("ar")
+            << QString("العربية");
+    QTest::newRow("zh")
+            << QString("zh")
+            << QString("中文 (中国大陆)");
+    QTest::newRow("zh_CN")
+            << QString("zh_CN")
+            << QString("中文 (中国大陆)");
+    QTest::newRow("zh_HK")
+            << QString("zh_HK")
+            << QString("繁體中文 (香港)");
+    QTest::newRow("zh_TW")
+            << QString("zh_TW")
+            << QString("中文 (台灣)");
+    QTest::newRow("cs")
+            << QString("cs")
+            << QString("čeština");
+    QTest::newRow("da")
+            << QString("da")
+            << QString("dansk");
+    QTest::newRow("nl")
+            << QString("nl")
+            << QString("Nederlands");
+    QTest::newRow("en")
+            << QString("en")
+            << QString("English (United Kingdom)");
+    QTest::newRow("en_GB")
+            << QString("en_GB")
+            << QString("English (United Kingdom)");
+    QTest::newRow("en_US")
+            << QString("en_US")
+            << QString("English (United States)");
+    QTest::newRow("en_AU")
+            << QString("en_AU")
+            << QString("English (Australia)");
     QTest::newRow("fi")
             << QString("fi")
             << QString("suomi");
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("suomi");
+    QTest::newRow("fr")
+            << QString("fr")
+            << QString("français (France)");
+    QTest::newRow("fr_FR")
+            << QString("fr_FR")
+            << QString("français (France)");
+    QTest::newRow("fr_CA")
+            << QString("fr_CA")
+            << QString("français (Canada)");
     QTest::newRow("de")
             << QString("de")
+            << QString("Deutsch");
+    QTest::newRow("de_DE")
+            << QString("de_DE")
             << QString("Deutsch");
     // de_CH needs a special fix because of
     // see http://site.icu-project.org/design/resbund/issues
@@ -626,12 +676,114 @@ void Ft_Locales::testMLocaleLanguageEndonym_data()
     QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("Deutsch");
+    QTest::newRow("hu")
+            << QString("hu")
+            << QString("magyar");
+    QTest::newRow("hu_HU")
+            << QString("hu_HU")
+            << QString("magyar");
+    QTest::newRow("id")
+            << QString("id")
+            << QString("Indonesia");
+    QTest::newRow("id_ID")
+            << QString("id_ID")
+            << QString("Indonesia");
+    QTest::newRow("it")
+            << QString("it")
+            << QString("italiano");
+    QTest::newRow("it_IT")
+            << QString("it_IT")
+            << QString("italiano");
+    QTest::newRow("ms")
+            << QString("ms")
+            << QString("Melayu");
+    QTest::newRow("ms_BN")
+            << QString("ms_BN")
+            << QString("Melayu");
+    QTest::newRow("ms_MY")
+            << QString("ms_MY")
+            << QString("Melayu");
+    QTest::newRow("no")
+            << QString("no")
+            << QString("norsk");
+    QTest::newRow("no_NO")
+            << QString("no_NO")
+            << QString("norsk");
+    QTest::newRow("nb")
+            << QString("nb")
+            << QString("norsk bokmål");
+    QTest::newRow("nb_NO")
+            << QString("nb_NO")
+            << QString("norsk bokmål");
+    QTest::newRow("pl")
+            << QString("pl")
+            << QString("polski");
+    QTest::newRow("pl_PL")
+            << QString("pl_PL")
+            << QString("polski");
+    QTest::newRow("pt")
+            << QString("pt")
+            << QString("português (Portugal)");
+    QTest::newRow("pt_PT")
+            << QString("pt_PT")
+            << QString("português (Portugal)");
+    QTest::newRow("pt_BR")
+            << QString("pt_BR")
+            << QString("português (Brasil)");
+    QTest::newRow("ro")
+            << QString("ro")
+            << QString("română");
+    QTest::newRow("ro_MD")
+            << QString("ro_MD")
+            << QString("română");
+    QTest::newRow("ro_RO")
+            << QString("ro_RO")
+            << QString("română");
+    QTest::newRow("ru")
+            << QString("ru")
+            << QString("русский");
+    QTest::newRow("ru_RU")
+            << QString("ru_RU")
+            << QString("русский");
+    QTest::newRow("ru_UA")
+            << QString("ru_UA")
+            << QString("русский");
+    QTest::newRow("sk")
+            << QString("sk")
+            << QString("slovenčina");
+    QTest::newRow("sk_SK")
+            << QString("sk_SK")
+            << QString("slovenčina");
+    QTest::newRow("es")
+            << QString("es")
+            << QString("español (España)");
+    QTest::newRow("es_419")
+            << QString("es_419")
+            << QString("español (América Latina)");
+    QTest::newRow("sv")
+            << QString("sv")
+            << QString("svenska");
+    QTest::newRow("sv_FI")
+            << QString("sv_FI")
+            << QString("svenska");
+    QTest::newRow("sv_SE")
+            << QString("sv_SE")
+            << QString("svenska");
+    QTest::newRow("tr")
+            << QString("tr")
+            << QString("Türkçe");
+    QTest::newRow("tr_TR")
+            << QString("tr_TR")
+            << QString("Türkçe");
+    QTest::newRow("uk")
+            << QString("uk")
+            << QString("українська");
+    QTest::newRow("uk_UA")
+            << QString("uk_UA")
+            << QString("українська");
     QTest::newRow("ja_JP")
             << QString("ja_JP")
             << QString("日本語");
-    QTest::newRow("zh_CN")
-            << QString("zh_CN")
-            << QString("中文 (中国大陆)");
 }
 
 void Ft_Locales::testMLocaleLanguageEndonym()
@@ -639,6 +791,16 @@ void Ft_Locales::testMLocaleLanguageEndonym()
     QFETCH(QString, locale_name);
     QFETCH(QString, endonym_result);
     MLocale locale(locale_name);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "locale name: " << locale_name
+        << " result: " << locale.languageEndonym()
+        << " expected: " << endonym_result
+        << "\n";
+    debugStream.flush();
+#endif
     QCOMPARE(locale.languageEndonym(), endonym_result);
 }
 

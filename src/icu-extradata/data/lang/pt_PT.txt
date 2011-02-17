@@ -50,8 +50,9 @@ pt_PT{
         pl{"polaco"}
         pra{"idioma prácito"}
         pro{"provençal, arcaico (até 1500)"}
-        pt{"português"}
-        pt_PT{"português"}
+        pt{"português (Portugal)"}
+        pt_BR{"português (Brasil)"}
+        pt_PT{"português (Portugal)"}
         rom{"romanês"}
         sai{"idioma indígeno sul-americano"}
         sal{"salishan languages"}

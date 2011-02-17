@@ -151,9 +151,14 @@ fr{
         fj{"fidjien"}
         fo{"féroïen"}
         fon{"fon"}
-        fr{"français"}
+        fr{"français (France)"}
+        fr_BE{"français (Belgique)"}
         fr_CA{"français (Canada)"}
-        fr_CH{"français suisse"}
+        fr_CH{"français (Suisse)"}
+        fr_FR{"français (France)"}
+        fr_LU{"français (Luxembourg)"}
+        fr_MC{"français (Monaco)"}
+        fr_SN{"français (Sénégal)"}
         frm{"moyen français"}
         fro{"ancien français"}
         frr{"frison du Nord"}

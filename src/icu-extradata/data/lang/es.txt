@@ -135,9 +135,28 @@ es{
         en_US{"inglés estadounidense"}
         enm{"inglés medieval"}
         eo{"esperanto"}
-        es{"español"}
+        es{"español (España)"}
         es_419{"español (América Latina)"}
-        es_ES{"español"}
+        es_AR{"español (Argentina)"}
+        es_BO{"español (Bolivia)"}
+        es_CL{"español (Chile)"}
+        es_CO{"español (Colombia)"}
+        es_CR{"español (Costa Rica)"}
+        es_DO{"español (República Dominicana)"}
+        es_EC{"español (Ecuador)"}
+        es_ES{"español (España)"}
+        es_GT{"español (Guatemala)"}
+        es_HN{"español (Honduras)"}
+        es_MX{"español (México)"}
+        es_NI{"español (Nicaragua)"}
+        es_PA{"español (Panamá)"}
+        es_PE{"español (Perú)"}
+        es_PR{"español (Puerto Rico)"}
+        es_PY{"español (Paraguay)"}
+        es_SV{"español (El Salvador)"}
+        es_US{"español (Estados Unidos)"}
+        es_UY{"español (Uruguay)"}
+        es_VE{"español (Venezuela)"}
         et{"estonio"}
         eu{"vasco"}
         ewo{"ewondo"}

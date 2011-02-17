@@ -3117,6 +3117,21 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << "Europe/Helsinki"
             << "EEEE، d MMMM، y zzzz H:mm:ss"
             << "الثلاثاء، 22 يوليو، 2008 جرينتش+03:00 14:31:03";
+    QTest::newRow("id_ID “EEEE”")
+            << MLocale::GregorianCalendar
+            << 2011
+            << 2
+            << 17
+            << 14
+            << 31
+            << 3
+            << "de_DE" // language
+            << "de_DE" // lc_messages
+            << "id_ID" // lc_time
+            << "de_DE" // lc_numeric
+            << "Europe/Helsinki"
+            << "EEEE"
+            << "Kamis";
 }
 
 void Ut_MCalendar::testFormatDateTimeICU()

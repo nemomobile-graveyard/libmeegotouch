@@ -130,11 +130,29 @@ en{
         eka{"Ekajuk"}
         el{"Greek"}
         elx{"Elamite"}
-        en{"English"}
-        en_AU{"Australian English"}
-        en_CA{"Canadian English"}
-        en_GB{"English (UK)"}
-        en_US{"English (US)"}
+        en{"English (United Kingdom)"}
+        en_AU{"English (Australia)"}
+        en_CA{"English (Canada)"}
+        en_GB{"English (United Kingdom)"}
+        en_US{"English (United States)"}
+        en_BE{"English (Belgium)"}
+        en_BW{"English (Botswana)"}
+        en_BZ{"English (Belize)"}
+        en_HK{"English (Hong Kong)"}
+        en_IE{"English (Ireland)"}
+        en_IN{"English (India)"}
+        en_JM{"English (Jamaica)"}
+        en_MH{"English (Marshall Islands)"}
+        en_MT{"English (Malta)"}
+        en_NA{"English (Namibia)"}
+        en_NZ{"English (New Zealand)"}
+        en_PH{"English (Philippines)"}
+        en_PK{"English (Pakistan)"}
+        en_SG{"English (Singapore)"}
+        en_TT{"English (Trinidad and Tobago)"}
+        en_VI{"English (U.S. Virgin Islands)"}
+        en_ZA{"English (South Africa)"}
+        en_ZW{"English (Zimbabwe)"}
         enm{"Middle English"}
         eo{"Esperanto"}
         es{"Spanish"}

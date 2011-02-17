@@ -371,9 +371,9 @@ pt{
         pra{"idioma prácrito"}
         pro{"provençal arcaico"}
         ps{"pashto"}
-        pt{"português"}
+        pt{"português (Portugal)"}
         pt_BR{"português (Brasil)"}
-        pt_PT{"português"}
+        pt_PT{"português (Portugal)"}
         qu{"quíchua"}
         raj{"rajastani"}
         rap{"rapanui"}
