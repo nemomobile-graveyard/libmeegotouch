@@ -96,11 +96,8 @@ void ApplicationMenuPage::createContent()
     QGraphicsWidget *panel = centralWidget();
 
     infoLabel = new MLabel(panel);
-    infoLabel->setMinimumWidth(0);
-    infoLabel->setPreferredWidth(0);
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
-    infoLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     actionItalic = new MAction(panel);
     actionItalic->setLocation(MAction::ApplicationMenuLocation);

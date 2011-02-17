@@ -28,6 +28,8 @@
 #include <MLabel>
 #include <MLocale>
 
+#define CONTAINER_MIN_WIDTH 400
+
 TemplatePage::TemplatePage(TemplatePage::Category category) :
     TimedemoPage(),
     layout(0), landscapePolicy(0), portraitPolicy(0),
@@ -74,19 +76,16 @@ void TemplatePage::createLayout()
     layout->setPortraitPolicy(portraitPolicy);
 
     container = new MWidget();
-    container->setMinimumWidth(0);
-    container->setPreferredWidth(0);
+    container->setMinimumWidth(CONTAINER_MIN_WIDTH);
+    container->setPreferredWidth(CONTAINER_MIN_WIDTH);
     container->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     separator = new MSeparator();
     separator->setOrientation(Qt::Vertical);
 
     infoLabel = new MLabel();
-    infoLabel->setMinimumWidth(0);
-    infoLabel->setPreferredWidth(0);
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
-    infoLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     landscapePolicy->addItem(container);
     landscapePolicy->addItem(separator);
