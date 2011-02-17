@@ -59,6 +59,7 @@ public:
     void setPrefixTimeStamp(const QString& string);
     void updateDateFormat() const;
     void refreshStyleMode();
+    void manageOpacities() const;
     void setPixmap(const QPixmap& pixmapTemp);
 
 protected:

@@ -518,6 +518,35 @@ void MBannerViewPrivate::initDynamicLayout()
     QObject::connect(controller, SIGNAL(clicked()), controller, SLOT(dismiss()));
 }
 
+void MBannerViewPrivate::manageOpacities() const
+{
+    Q_Q(const MBannerView);
+
+    if (down && isDownOpacityEnabled) {
+        if (iconId)
+            iconId->setOpacity(q->style()->pressDownBannerOpacity());
+        if (titleLabel)
+            titleLabel->setOpacity(q->style()->pressDownBannerOpacity());
+        if (subtitleLabel)
+            subtitleLabel->setOpacity(q->style()->pressDownBannerOpacity());
+        if (prefixTimeStampLabel)
+            prefixTimeStampLabel->setOpacity(q->style()->pressDownBannerOpacity());
+        if (bannerTimeStampLabel)
+            bannerTimeStampLabel->setOpacity(q->style()->pressDownBannerOpacity());
+    } else if (!down && isDownOpacityEnabled) {
+        if (iconId)
+            iconId->setOpacity(controller->opacity());
+        if (titleLabel)
+            titleLabel->setOpacity(controller->opacity());
+        if (subtitleLabel)
+            subtitleLabel->setOpacity(controller->opacity());
+        if (prefixTimeStampLabel)
+            prefixTimeStampLabel->setOpacity(controller->opacity());
+        if (bannerTimeStampLabel)
+            bannerTimeStampLabel->setOpacity(controller->opacity());
+    }
+}
+
 MBannerView::MBannerView(MBanner *controller) :
     MSceneWindowView(controller),
     d_ptr(new MBannerViewPrivate)
@@ -650,15 +679,11 @@ void MBannerView::drawForeground(QPainter *painter, const QStyleOptionGraphicsIt
 void MBannerView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
+    Q_UNUSED(painter);
 
     Q_D(const MBannerView);
 
-    if (d->down && d->isDownOpacityEnabled) {
-        painter->save();
-        painter->setOpacity(style()->pressDownBannerOpacity());
-        painter->fillRect(QRectF(QPointF(), size()), Qt::black);
-        painter->restore();
-    }
+    d->manageOpacities();
 }
 
 void MBannerView::updateData(const QList<const char *>& modifications)
