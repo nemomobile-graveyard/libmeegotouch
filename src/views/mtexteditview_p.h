@@ -73,6 +73,8 @@ protected slots:
     void handleDocumentSizeChange(const QSizeF &newSize);
     void playTextFieldSelectionFeedback();
     void updateMagnifierPosition();
+    void makeMagnifierDisappear();
+    void makeMagnifierAppear();
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);

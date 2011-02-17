@@ -479,6 +479,10 @@ void MTextEditViewPrivate::showMagnifier()
     if (controller->sceneManager()) {
         QObject::disconnect(static_cast<const QObject *>(controller), SIGNAL(cursorPositionChanged()),
                             static_cast<const QObject *>(controller->sceneManager()), SLOT(ensureCursorVisible()));
+        QObject::connect(controller->sceneManager(), SIGNAL(orientationChanged(const M::Orientation  &)),
+                         this, SLOT(makeMagnifierDisappear()), Qt::UniqueConnection);
+        QObject::connect(controller->sceneManager(), SIGNAL(orientationChangeFinished(const M::Orientation  &)),
+                         this, SLOT(makeMagnifierAppear()), Qt::UniqueConnection);
     }
 
     // Make fake mouse event to update cursor position.
@@ -511,6 +515,10 @@ void MTextEditViewPrivate::hideMagnifier()
         QObject::connect(controller, SIGNAL(cursorPositionChanged()),
                          controller->sceneManager(), SLOT(ensureCursorVisible()),
                          Qt::UniqueConnection);
+        QObject::disconnect(controller->sceneManager(), SIGNAL(orientationChanged(const M::Orientation  &)),
+                            this, 0);
+        QObject::disconnect(controller->sceneManager(), SIGNAL(orientationChangeFinished(const M::Orientation  &)),
+                            this, 0);
     }
 
     if (magnifier) {
@@ -807,6 +815,20 @@ void MTextEditViewPrivate::updateMagnifierPosition()
     if (magnifier) {
         const QPointF magpos = cursorRect().center();
         magnifier->setMagnifiedPosition(magpos);
+    }
+}
+
+void MTextEditViewPrivate::makeMagnifierDisappear()
+{
+    if (magnifier) {
+        magnifier->disappear();
+    }
+}
+
+void MTextEditViewPrivate::makeMagnifierAppear()
+{
+    if (magnifier) {
+        magnifier->appear();
     }
 }
 
