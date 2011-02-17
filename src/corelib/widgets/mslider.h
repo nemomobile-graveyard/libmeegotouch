@@ -385,7 +385,9 @@ public Q_SLOTS:
     /*!
         \brief Set number of value steps for slider.
         \param value steps to be set (for 0 there will not be steps)\n
-               If there are steps slider values are limited to integer multiples of step values.
+               If there are steps slider will work in discrete mode being steps the number of allowed positions (besides min value).
+               For example, setting 4 steps to a slider with a minimum value of 0 and a maximum value of 100 will make it to
+               move only among the (0, 25, 50, 75, 100) set of values.
      */
     void setSteps(int steps);
 

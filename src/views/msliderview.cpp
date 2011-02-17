@@ -1471,7 +1471,10 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     eventPos.setX(eventPos.x() + q->marginLeft());
     eventPos.setY(eventPos.y() + q->marginTop());
 
-    newValue = sliderGroove->screenPointToValue(eventPos);
+    newValue = adjustValue(q->model()->minimum(),
+                           sliderGroove->screenPointToValue(eventPos),
+                           q->model()->maximum(),
+                           q->model()->steps());
     //sometimes this method can be called twice with the same
     //event position (for example when user clicks to slider groove
     //once it is called at mouse press and once at mouse release)
@@ -1489,6 +1492,27 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     }
 
     return newValue;
+}
+
+// adjusts the slider value according to the defined steps
+int MSliderViewPrivate::adjustValue(int minimum, int value, int maximum, int steps)
+{
+    if (steps < 0)
+        steps = -steps;
+
+    if ((steps < 1) || (steps > maximum - minimum - 1))
+        return value;
+
+    //minimum or maximum are always valid values regardless
+    //to the number of steps, values outside of slider range will
+    //not be adjusted because model forces them to minimum
+    //of maximum values
+    if ((value <= minimum) || (value >= maximum))
+        return value;
+
+    int numberOfStep = qRound(((qreal(value) - qreal(minimum)) * qreal(steps)) / (qreal(maximum) - qreal(minimum)));
+    qreal discreteValue = minimum + (qreal(numberOfStep) * (qreal(maximum) - qreal(minimum)) / qreal(steps));
+    return qRound(discreteValue);
 }
 
 //refreshes slider groove (min, max and value, slider state)

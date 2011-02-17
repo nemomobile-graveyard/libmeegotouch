@@ -315,6 +315,7 @@ public:
     void updateOrientation();
     bool isCollision(QGraphicsSceneMouseEvent *event) const;
     int updateValue(QGraphicsSceneMouseEvent *event);
+    int adjustValue(int minimum, int value, int maximum, int steps);
     void updateSliderGroove();
     void updateSeekBar();
     void playSliderMoveFeedback(int newValue, const QPointF& newPosition);
