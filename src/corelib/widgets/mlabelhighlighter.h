@@ -28,9 +28,9 @@
     \class MLabelHighlighter
     \brief Abstract base class for label highlighter objects.
 
-    Class is used to highlight text fragments from MLabel with the color specified in the
-    label style. Information about the click and long press events happening to the highlighted
-    parts of the label can be received through the callback methods if wanted.
+    Class is used to highlight text fragments from MLabel with the color specified in MLabel style.
+    Class will also receive user interaction events when clicking and long pressing a highlighted
+    piece of text.
 
     \ingroup widgets
 
@@ -70,16 +70,6 @@ public:
         \brief Callback method when user long presses a highlighted item.
     */
     virtual void longPress(const QString &item) = 0;
-
-    /*!
-        \brief Method for defining whether the highlighter will handle or ignore the
-        click and long press events of the highlighted items.
-
-        Return false if the mouse click and long press events should be handled by the
-        highlighter, return true if the events should be ignored. Default implementation
-        returns false.
-     */
-    virtual bool ignoreClickAndLongPressEvents() const;
 };
 
 /*!
@@ -113,26 +103,14 @@ public:
     virtual QRegExp highlightExpression() const;
 
     /*!
-        \brief Emits clicked() signal if event handling is enabled.
+        \brief Emits clicked() signal;
     */
     virtual void click(const QString &item);
 
     /*!
-        \brief Emits longPressed() signal if event handling is enabled.
+        \brief Emits longPressed() signal;
     */
     virtual void longPress(const QString &item);
-
-    /*!
-      \brief Enable/disable processing of click and long press events.
-    */
-    void setIgnoreClickAndLongPressEvents(bool ignore);
-
-    /*!
-      \brief Returns the value that was previously set with setIgnoreClickAndLongPress().
-
-      False is returned by default.
-    */
-    virtual bool ignoreClickAndLongPressEvents() const;
 
 Q_SIGNALS:
 
