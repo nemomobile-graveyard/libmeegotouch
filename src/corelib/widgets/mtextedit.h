@@ -524,7 +524,10 @@ Q_SIGNALS:
     //! \brief This signal is emitted whenever the selection changes
     void selectionChanged();
 
-    //! \brief A signal to be emitted when the cursor position changes
+    //! \brief A signal to be emitted when the cursor position changes.
+    //!
+    //! Preedit cursor (as defined by the MTextEditModel) changes also
+    //! cause this signal to be emitted.
     void cursorPositionChanged();
 
     //! \brief This signal is emitted when text is selected or de-selected in the text edit.

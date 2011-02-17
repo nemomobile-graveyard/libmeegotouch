@@ -350,7 +350,8 @@ MTextEditPrivate::MTextEditPrivate()
       doubleClick(false),
       previousReleaseWordStart(0),
       previousReleaseWordEnd(0),
-      signalEmitter(*this)
+      signalEmitter(*this),
+      preeditInjectionInProgress(false)
 {
 }
 
@@ -871,8 +872,6 @@ void MTextEditPrivate::commitPreedit()
     updateMicroFocus();
 
     safeReset();
-
-    emit q->textChanged();
 }
 
 
@@ -2115,8 +2114,10 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                 QInputContext *ic = qApp->inputContext();
                 if (ic) { 
                     QString preedit = text.mid(start, end - start);
+                    d->preeditInjectionInProgress = true;
                     MPreeditInjectionEvent event(preedit, eventCursorPosition - start);
                     injectionAccepted = ic->filterEvent(&event);
+                    d->preeditInjectionInProgress = false;
                 }
 
                 // if injection wasn't supported, put the text back and fall back to cursor changing
@@ -2290,6 +2291,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 {
     Q_D(MTextEdit);
 
+    bool emitTextChanged = false;
+    const int cursorPositionBefore(cursorPosition());
+    const int preeditCursorPositionBefore(d->isPreediting() ? model()->preeditCursor() : -1);
     QString preedit = event->preeditString();
 
     // The first click of a double click sequence causes pre-edit injection, which implies
@@ -2339,6 +2343,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     if (wasSelecting == true) {
         selectionStart = d->cursor()->selectionStart();
         d->cursor()->removeSelectedText();
+        emitTextChanged = true;
     }
 
     const bool wasPreediting = d->isPreediting();
@@ -2385,6 +2390,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     bool insertionSuccess = false;
 
     if (event->replacementLength()) {
+        emitTextChanged = true;
         d->removePreedit();
         // store styles of replaced text to preedit styles.
         const int start = d->cursor()->position() + event->replacementStart();
@@ -2414,6 +2420,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     if (commitString.isEmpty() == false) {
         d->removePreedit();
         insertionSuccess = d->doTextInsert(commitString, true);
+        emitTextChanged = emitTextChanged || wasPreediting || insertionSuccess;
 
         if (insertionSuccess == false && wasSelecting == true) {
             // validation failed, put the old selection back
@@ -2429,15 +2436,13 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         d->preeditStyling.clear();
     }
 
-    bool changed = false;
-
     if (insertionSuccess || (preedit.isEmpty() && wasPreediting)) {
         // return to basic mode on insertion or removed preedit
         if (!insertionSuccess) {
+            emitTextChanged = true;
             d->removePreedit();
         }
         d->setMode(MTextEditModel::EditModeBasic);
-        changed = true;
     }
 
     QList<QInputMethodEvent::Attribute> attributes = event->attributes();
@@ -2451,9 +2456,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     if (!preedit.isEmpty()) {
         if (!atMaxLength) {
+            emitTextChanged = emitTextChanged || !wasPreediting || (d->cursor()->selectedText() != preedit);
             d->setPreeditText(preedit, attributes);
             d->setMode(MTextEditModel::EditModeActive);
-            changed = true;
         } else {
             d->safeReset();
         }
@@ -2468,15 +2473,24 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         }
     }
 
-    if (changed) {
+    const bool emitCursorPositionChanged(
+        (cursorPositionBefore != cursorPosition())
+        || (preeditCursorPositionBefore != (d->isPreediting() ? model()->preeditCursor() : -1)));
+
+    if (emitCursorPositionChanged || emitTextChanged) {
         d->updateMicroFocus();
+    }
 
-        // no signal if committing existing preedit as is
-        if (!(wasPreediting && commitString == selectedFragment.toPlainText()
-              && insertionSuccess && preedit.isEmpty())) {
-            emit textChanged();
-        }
+    if (emitTextChanged
+        // no signal if committing existing preedit as is...
+        && !((wasPreediting && commitString == selectedFragment.toPlainText()
+              && insertionSuccess && preedit.isEmpty())
+             // ...or this is pre-edit injection
+             || d->preeditInjectionInProgress)) {
+        emit textChanged();
+    }
 
+    if (emitCursorPositionChanged) {
         emit cursorPositionChanged();
     }
 

@@ -199,6 +199,7 @@ private:
     // the last time when double click selection was done
     QTime doubleClickSelectionTime;
     MTextEditSignalEmitter signalEmitter;
+    bool preeditInjectionInProgress;
 
     friend class MTextEditSignalEmitter;
     friend class MCompleterViewPrivate;
