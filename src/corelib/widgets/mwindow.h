@@ -388,7 +388,7 @@ public:
     /*!
       Controls whether notification preview banners are shown on top of the window.
 
-      \note Banners for system notifications (e.g. battery low) are not disabled.
+      \note System notifications (e.g. battery low) are still shown regardless of the property.
      */
     void setNotificationPreviewsVisible(bool visible);
 
