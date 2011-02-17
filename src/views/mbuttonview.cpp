@@ -429,7 +429,10 @@ MButtonView::~MButtonView()
 
 void MButtonView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
+    Q_D(MButtonView);
+
     MWidgetView::resizeEvent(event);
+    d->calcIconTextRects();
 }
 
 void MButtonView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -547,10 +550,7 @@ void MButtonView::cancelEvent(MCancelEvent *event)
 
 void MButtonView::setGeometry(const QRectF &rect)
 {
-    Q_D(MButtonView);
     MWidgetView::setGeometry(rect);
-
-    d->calcIconTextRects();
 }
 
 void MButtonView::updateData(const QList<const char *>& modifications)
