@@ -1,25 +1,30 @@
-isEmpty(M_MGEN_OUTDIR) {
-    M_MGEN_OUTDIR = .
+isEmpty(_MEEGOTOUCH_MGEN_PRF_) {
+
+    _MEEGOTOUCH_MGEN_PRF_ = 1
+
+    isEmpty(M_MGEN_OUTDIR) {
+        M_MGEN_OUTDIR = .
+    }
+
+    isEmpty(M_MGEN_EXECUTABLE) {
+        M_MGEN_EXECUTABLE = mgen
+    }
+
+    mgenerator_model.name = mgenerator model
+    mgenerator_model.input = MODEL_HEADERS
+    mgenerator_model.output = $$M_MGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp
+    mgenerator_model.commands += $$M_MGEN_EXECUTABLE --model ${QMAKE_FILE_NAME} $$M_MGEN_OUTDIR
+    mgenerator_model.clean += $$M_MGEN_OUTDIR/gen_*
+    mgenerator_model.CONFIG = target_predeps no_link
+    mgenerator_model.variable_out = GENERATED_SOURCES
+    QMAKE_EXTRA_COMPILERS += mgenerator_model
+
+    mgenerator_style.name = mgenerator style
+    mgenerator_style.input = STYLE_HEADERS
+    mgenerator_style.output = $$M_MGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp
+    mgenerator_style.commands += $$M_MGEN_EXECUTABLE --style ${QMAKE_FILE_NAME} $$M_MGEN_OUTDIR
+    mgenerator_style.clean += $$M_MGEN_OUTDIR/gen_*
+    mgenerator_style.CONFIG = target_predeps no_link
+    mgenerator_style.variable_out = GENERATED_SOURCES
+    QMAKE_EXTRA_COMPILERS += mgenerator_style
 }
-
-isEmpty(M_MGEN_EXECUTABLE) {
-    M_MGEN_EXECUTABLE = mgen
-}
-
-mgenerator_model.name = mgenerator model
-mgenerator_model.input = MODEL_HEADERS
-mgenerator_model.output = $$M_MGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp
-mgenerator_model.commands += $$M_MGEN_EXECUTABLE --model ${QMAKE_FILE_NAME} $$M_MGEN_OUTDIR
-mgenerator_model.clean += $$M_MGEN_OUTDIR/gen_*
-mgenerator_model.CONFIG = target_predeps no_link
-mgenerator_model.variable_out = GENERATED_SOURCES
-QMAKE_EXTRA_COMPILERS += mgenerator_model
-
-mgenerator_style.name = mgenerator style
-mgenerator_style.input = STYLE_HEADERS
-mgenerator_style.output = $$M_MGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp
-mgenerator_style.commands += $$M_MGEN_EXECUTABLE --style ${QMAKE_FILE_NAME} $$M_MGEN_OUTDIR
-mgenerator_style.clean += $$M_MGEN_OUTDIR/gen_*
-mgenerator_style.CONFIG = target_predeps no_link
-mgenerator_style.variable_out = GENERATED_SOURCES
-QMAKE_EXTRA_COMPILERS += mgenerator_style
