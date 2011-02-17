@@ -103,6 +103,8 @@ public:
 
     void applyDebugColors(QImage *image);
 
+    static void saveToFsCache(const QImage pixmap, const QSize& size, const QString &origFileName);
+
 protected:
     virtual QImage createPixmap(const QSize &size) = 0;
     // must not return an empty string
@@ -112,8 +114,7 @@ protected:
 private:
     void pixmapFromImage(PixmapCacheEntry *cacheEntry ,const QImage image);
     QImage loadFromFsCache(const QSize& size, PixmapCacheEntry *cacheEntry);
-    void saveToFsCache(const QImage pixmap, const QSize& size);
-    QString createCacheFilename(const QSize& size);
+    static QString createCacheFilename(const QSize& size, const QString &cacheKey);
 
     void fillCacheEntry(PixmapCacheEntry *cacheEntry, QImage &image, const QSize &size);
 

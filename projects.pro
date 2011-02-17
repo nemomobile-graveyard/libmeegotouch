@@ -44,7 +44,8 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
                   mapplicationextensionrunner \
                   mservicemapper \
                   mthemedaemon \
-                  tools
+                  tools \
+                  imgcachegen
        }
     } else:isEqual(PROJECT, tests) {
        SUBDIRS += tests

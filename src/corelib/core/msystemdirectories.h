@@ -30,6 +30,13 @@ public:
       * specific cache files.
       */
     static QString cacheDirectory();
+
+    /**
+      * Sets the prefix for cache directory. This is useful for example
+      * when building a dpkg-package and it should be avoided to generate
+      * the caches in system root directory.
+      */
+    static void setPrefix(const QString &prefix);
 };
 
 #endif

@@ -416,3 +416,15 @@ Section: devel
 Architecture: any
 Depends: meegotouch-examples (= ${Source-Version})
 Description: Debug symbols of the example applications
+
+Package: meegotouch-cache-utils
+Section: devel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: util for caching pixmap files in themes
+
+Package: meegotouch-cache-utils-dbg
+Section: devel
+Architecture: any
+Depends: meegotouch-cache-utils (= ${Source-Version})
+Description: Debug symbols of the meegotouch-cache-utils

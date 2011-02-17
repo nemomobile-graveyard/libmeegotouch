@@ -28,18 +28,26 @@
 #include <cstdlib>
 
 
+namespace {
+    QString cacheDirPrefix = QString();
+    bool prefixChanged = false;
+}
+
+
 QString MSystemDirectories::cacheDirectory()
 {
     static QString cacheDir;
-    if (cacheDir.isEmpty()) {
+    if (cacheDir.isEmpty() || prefixChanged) {
+        cacheDir = cacheDirPrefix;
+
         // first check if we can write to CACHEDIR
-        cacheDir = CACHEDIR "/";
+        cacheDir += CACHEDIR "/";
         QDir().mkpath(cacheDir);
         QFileInfo cacheDirInfo(cacheDir);
         if (!(cacheDirInfo.isWritable() && cacheDirInfo.isDir()))
         {
             // now we try a standard cache location
-            cacheDir = QDesktopServices::storageLocation(QDesktopServices::CacheLocation) + QDir::separator() + QLatin1String("meegotouch") + QDir::separator();
+            cacheDir = cacheDirPrefix + QDesktopServices::storageLocation(QDesktopServices::CacheLocation) + QDir::separator() + QLatin1String("meegotouch") + QDir::separator();
             QDir().mkpath(cacheDir);
             cacheDirInfo.setFile(cacheDir);
             if (!cacheDirInfo.isWritable() && cacheDirInfo.isDir()) {
@@ -47,7 +55,17 @@ QString MSystemDirectories::cacheDirectory()
                 exit(EXIT_FAILURE);
             }
         }
+
+        prefixChanged = false;
     }
 
     return cacheDir;
 }
+
+
+void MSystemDirectories::setPrefix(const QString &prefix)
+{
+    cacheDirPrefix = prefix;
+    prefixChanged = true;
+}
+

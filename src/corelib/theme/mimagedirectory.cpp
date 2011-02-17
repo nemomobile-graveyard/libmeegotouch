@@ -87,7 +87,7 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
                 applyDebugColors(&image);
 
                 if (shouldBeCached()) {
-                    saveToFsCache(image, size);
+                    saveToFsCache(image, size, uniqueKey());
                 }
 
                 fillCacheEntry(cacheEntry, image, size);
@@ -103,7 +103,8 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
     return cacheEntry->handle;
 }
 
-void ImageResource::applyDebugColors(QImage *image) {
+void ImageResource::applyDebugColors(QImage *image)
+{
     if (image->depth() != 32) {
         return;
     }
@@ -213,7 +214,7 @@ QHash<QSize, const PixmapCacheEntry*> ImageResource::pixmapCacheEntries() const
 
 QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cacheEntry)
 {
-    const QString cacheFileName = createCacheFilename(size);
+    const QString cacheFileName = createCacheFilename(size, uniqueKey());
     const QString cacheMetaFileName = cacheFileName + ".meta";
 
     if (cacheFileName.isEmpty()) {
@@ -280,14 +281,14 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
     return QImage();
 }
 
-void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
+void ImageResource::saveToFsCache(QImage pixmap, const QSize& size, const QString &origFileName)
 {
     static bool failedCacheSaveAttempt = false;
 
     if (failedCacheSaveAttempt)
         return;
 
-    const QString cacheFileName = createCacheFilename(size);
+    const QString cacheFileName = createCacheFilename(size, origFileName);
     if (cacheFileName.isEmpty()) {
         return;
     }
@@ -328,7 +329,7 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
 
     QDataStream stream(&meta);
     stream << IMAGE_CACHE_VERSION;
-    QFileInfo fileInfo(absoluteFilePath());
+    QFileInfo fileInfo(origFileName);
     stream << fileInfo.lastModified().toTime_t();
     stream << pixmap.size();
     stream << pixmap.format();
@@ -336,19 +337,17 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
     meta.close();
 }
 
-QString ImageResource::createCacheFilename(const QSize& size)
+QString ImageResource::createCacheFilename(const QSize& size, const QString &cacheKey)
 {
-    QString cacheKey = uniqueKey();
-    if (cacheKey.isEmpty()) {
-        mWarning("ImageResource::loadFromFsCache") << "Cache filename for" << absoluteFilePath()
-                << "could not be created. uniqueKey must not be empty.";
+    QString tmp = cacheKey;
+    if (tmp.isEmpty()) {
         return QString();
     }
-    cacheKey.replace(QLatin1Char('_'), QLatin1String("__"));
-    cacheKey.replace(QLatin1Char('/'), QLatin1String("_."));
-    cacheKey += '(' + QString::number(size.width()) + QLatin1Char(',') + QString::number(size.height()) + QLatin1Char(')');
+    tmp.replace(QLatin1Char('_'), QLatin1String("__"));
+    tmp.replace(QLatin1Char('/'), QLatin1String("_."));
+    tmp += '(' + QString::number(size.width()) + QLatin1Char(',') + QString::number(size.height()) + QLatin1Char(')');
 
-    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("images") + QDir::separator() + cacheKey;
+    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("images") + QDir::separator() + tmp;
 }
 
 

@@ -36,3 +36,4 @@ SOURCES += $$THEME_SRC_DIR/mtheme.cpp \
     $$THEME_SRC_DIR/mthemedaemonprotocol.cpp \
     $$THEME_SRC_DIR/mpixmaphandle.cpp \
 
+

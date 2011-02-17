@@ -187,6 +187,7 @@ binary-arch: build install
 	dh_strip -p meegotouch-dev-tools --dbg-package=meegotouch-dev-tools
 	dh_strip -p libmeegotouch-tests --dbg-package=libmeegotouch-tests
 	dh_strip -p libmeegotouch-benchmarks --dbg-package=libmeegotouch-benchmarks
+	dh_strip -p meegotouch-cache-utils --dbg-package=meegotouch-cache-utils
 ifneq (0,$(MAKEDEMOS))
 	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery
 	dh_strip -p meegotouch-demos-appletinstallationsource --dbg-package=meegotouch-demos-appletinstallationsource
