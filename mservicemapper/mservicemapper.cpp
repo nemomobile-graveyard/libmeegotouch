@@ -104,8 +104,6 @@ void MServiceMapper::handleServiceChanged(const QString &path)
         if ( fileRemoved ) {
             QString thisServiceName = d_ptr->m_serviceFileInfo.take(thisFile).service;
 
-            qDebug() << "removing" << thisServiceName;
-
 #ifdef HAVE_QTM_SERVICEMAPPER
             QServiceManager serviceManager;
             serviceManager.removeService( thisServiceName );
@@ -129,7 +127,6 @@ void MServiceMapper::handleServiceChanged(const QString &path)
             QString thisInterface = thisServiceInterfacePair.interface;
 
             QString xmlFileName( "/usr/lib/maemo-meegotouch-services/"+thisService+".xml" );
-            qDebug() << "adding" << xmlFileName;
 
 #ifdef HAVE_QTM_SERVICEMAPPER
             QServiceManager serviceManager;
