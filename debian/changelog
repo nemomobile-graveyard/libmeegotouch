@@ -1,3 +1,10 @@
+libmeegotouch (0.20.84-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#226456 - Calendar closes after saving new event
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 18 Feb 2011 10:22:51 +0200
+
 libmeegotouch (0.20.84-1) unstable; urgency=low
 
   * New version
