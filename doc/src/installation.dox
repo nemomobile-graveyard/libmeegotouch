@@ -87,6 +87,23 @@ export LD_LIBRARY_PATH=[your libmeegotouch build directory]/lib:$LD_LIBRARY_PATH
 [your libmeegotouch build directory]/demos/widgetsgallery/widgetsgallery
 </pre>
 
+\section maemo Building MeeGo Touch on Fremantle scratchbox target
+
+Execute 1-4 steps from "Building MeeGo Touch on Linux" section. But instead of using sudo command, use fakeroot command
+
+To run application inside Maemo simulator you need to run it with run-standalone.sh script.
+For example, to run widgetsgallery application in maemo simulator you need to:
+<pre>
+cd [your libmeegotouch build directory]/demos/widgetsgallery/widgetsgallery
+run-standalone.sh ./widgetsgallery
+</pre>
+
+If you are facing errors while the application is started try to run again application with -software parameter:
+<pre>
+run-standalone.sh ./widgetsgallery -software
+</pre>
+
+
 \section mac Building MeeGo Touch on Mac OS X
 
 Coming soon.
