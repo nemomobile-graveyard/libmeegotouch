@@ -54,10 +54,15 @@ public:
     MUniqueStringCache::Index getValueID() const;
     qint64 getPosition() const;
 
+    enum CacheOrientationFlags {
+        PortraitFlag = 1,
+        LandscapeFlag = 2
+    };
+
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk);
-    static int attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
+    static int attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation, CacheOrientationFlags *cacheOrientation);
     static qreal attributeToFloat(const QByteArray &attribute, bool *conversionOk);
-    static qreal attributeToFloat(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
+    static qreal attributeToFloat(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation, CacheOrientationFlags *cacheOrientation);
 
     static bool booleanFromString(const QByteArray &string, bool *conversionOk);
     static QColor colorFromString(const QByteArray &string, bool *conversionOk);
@@ -76,10 +81,6 @@ private:
     // Fills a property with a variant and caches the variant if possible.
     // Pointer types cannot be cached as the ownership is transfered to the property.
     // Caching must be disabled for them.
-    enum CacheOrientationFlags {
-        PortraitFlag = 1,
-        LandscapeFlag = 2
-    };
     bool fillProperty(const QMetaProperty &property, MStyle *style, CacheOrientationFlags cacheOrientation,
         const QVariant &variant, bool cache = true) const;
 

@@ -70,19 +70,6 @@ public:
 QHash<QByteArray, MStyleSheetPrivate::CacheEntry *> MStyleSheetPrivate::EntryCache;
 QHash<QByteArray, MStyle *> MStyleSheetPrivate::StyleCache;
 
-#ifdef M_THEMESYSTEM_PROFILING_SUPPORT
-int sizeOfString(const QByteArray &string)
-{
-    int size = 0;
-
-    const QChar *data = string.constData();
-    while (*data++ != 0)
-        size++;
-
-    return size;
-}
-#endif
-
 MStyleSheet::MStyleSheet(const MLogicalValues *logicalValues) : MStyleSheetParser(logicalValues)
 {
 }
@@ -113,10 +100,12 @@ MStyle *MStyleSheetPrivate::buildStyle(const StyleSpec &spec,
         MStyleSheetPrivate::EntryCache.insert(identifier, entry);
     }
 
+    style->setOrientationDependent(spec.parentInfo->orientationDependent || entry->orientationDependent);
+
     // Fill the MStyle object by combining the information from the EntryCache with the
     // scene-dependent selectors in spec.parentInfo. After that the 'style' object will be
     // ready to be used.
-    if (!MStyleSheetPrivate::combine(style, *entry, spec)) {
+    if (!MStyleSheetPrivate::combine(style, entry->data, spec)) {
         qCritical("Failed to populate style for: %s#%s.%s:%s",
                   style->metaObject()->className(),
                   spec.objectName.constData(),
@@ -225,7 +214,7 @@ MStyle *MStyleSheetPrivate::style(const QList<const MStyleSheet *> &sheets,
     StyleSpec spec(styleClassName, styleMetaObjectHierarchy, objectName, mode, type, orientation);
 
     // Get the styling data that exists due to the parents in the scene.
-    QList<MStyleSheetPrivate::SelectorInfo> sceneInfo;
+    SelectorInfoList sceneInfo;
     sceneInfo = MStyleSheetPrivate::getMatchingSelectorsWithParent(sheets, parentsData, parentStyleName, spec);
     spec.setParentInfo(&sceneInfo);
 
@@ -283,7 +272,7 @@ void MStyleSheet::cleanup(bool)
             ++iterator) {
 
         MStyleSheetPrivate::CacheEntry *entry = *iterator;
-        qDeleteAll(*entry);
+        qDeleteAll(entry->data);
         delete entry;
     }
     MStyleSheetPrivate::EntryCache.clear();
@@ -298,8 +287,18 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
 {
     CacheEntry *entry = new CacheEntry;
 
+    entry->orientationDependent = false;
     foreach(const MStyleSheet * sheet, sheets) {
         QList<const MStyleSheetSelector*> selectors = sheet->selectorList(spec);
+
+        if (!entry->orientationDependent) {
+            foreach (const MStyleSheetSelector * selector, selectors) {
+                if (selector->orientation() != MStyleSheetSelector::UndefinedOrientation) {
+                    entry->orientationDependent = true;
+                    break;
+                }
+            }
+        }
 
         foreach(const MStyleSheetSelector * selector, selectors) {
             unsigned int parentPriority = 0xffffffff;
@@ -315,9 +314,9 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
             for (int i = 0; i < attributeCount; ++i) {
                 MUniqueStringCache::Index propertyName = attributes[i].getNameID();
 
-                CacheEntry::iterator iter = (*entry).find(propertyName);
+                CacheEntryData::iterator iter = entry->data.find(propertyName);
                 // Check if these settings are already in the list
-                if (iter != entry->end()) {
+                if (iter != entry->data.end()) {
                     // Ok so they are, we need to determine whether we have higher priority settings to replace
                     MOriginContainer *existing = *iter;
 
@@ -333,7 +332,7 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
                     }
                 } else {
                     // New settings, just add them to the hash
-                    (*entry)[propertyName] = new MOriginContainer(&attributes[i],
+                    entry->data[propertyName] = new MOriginContainer(&attributes[i],
                                                                   selector,
                                                                   classPriority,
                                                                   parentPriority,
@@ -346,17 +345,17 @@ MStyleSheetPrivate::CacheEntry *MStyleSheetPrivate::buildCacheEntry(const QList<
     return entry;
 }
 
-bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const StyleSpec &spec)
+bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntryData &entry, const StyleSpec &spec)
 {
     // we need to match data with parent information for the cache entry, this will
     // result to a combined list of attributes, which can be populated for the style
 
     // create copy of cache entry, we can't modify the original one for ovbious reasons
-    CacheEntry data = entry;
+    CacheEntryData data = entry;
     QList<MOriginContainer *> tempMOriginContainers;
 
     // match parent selectors to cached data
-    foreach(const SelectorInfo & info, *spec.parentInfo) {
+    foreach(const SelectorInfo & info, spec.parentInfo->selectorInfos) {
 
         if (info.selector->attributeCount() == 0)
             continue;
@@ -390,7 +389,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const CacheEntry &entry, const S
         bool propertyInitialized = false;
 
         // find matching attribute from hash
-        CacheEntry::iterator iterator = data.find(MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(style->metaObject()->property(i).name()));
+        CacheEntryData::iterator iterator = data.find(MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(style->metaObject()->property(i).name()));
         if (iterator != data.end()) {
 
             // get the attribute value
@@ -616,13 +615,14 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
     return true;
 }
 
-QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectorsWithParent(const QList<const MStyleSheet *> &sheets,
+MStyleSheetPrivate::SelectorInfoList MStyleSheetPrivate::getMatchingSelectorsWithParent(const QList<const MStyleSheet *> &sheets,
                                                                        const QVector<ParentData> &parentsData,
                                                                        const QByteArray &parentStyleName,
                                                                        const StyleSpec &spec)
 {
-    QList<SelectorInfo> results;
+    SelectorInfoList results;
     unsigned int sceneOrder = 0;
+    QList<const MStyleSheetSelector*> selectorCandidates;
 
     // Traverse from the most generic to the most specific parent sheets
     for (int i = parentsData.size() - 1; i >= 0; i--) {
@@ -632,7 +632,9 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
 
         foreach (const MStyleSheet *sheet, thisParentSheets) {
             unsigned int parentPriority, classPriority;
-            foreach (const MStyleSheetSelector *selector, sheet->parentSelectorList(spec)) {
+            const QList<const MStyleSheetSelector*> selectors = sheet->parentSelectorList(spec);
+            selectorCandidates.append(selectors);
+            foreach (const MStyleSheetSelector *selector, selectors) {
                 if (matchParent(selector, thisParentHierarchy, parentStyleName, sceneOrder, parentPriority) &&
                         spec.match(selector, classPriority)) {
                     // match found, store it to results list
@@ -641,7 +643,7 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
                     info.classPriority = classPriority;
                     info.parentPriority = parentPriority;
                     info.stylesheet = sheet;
-                    results.append(info);
+                    results.selectorInfos.append(info);
                 }
             }
         }
@@ -651,7 +653,9 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
     foreach (const MStyleSheet *sheet, sheets) {
         // loop trough all the selectors and find matching ones
         unsigned int parentPriority, classPriority;
-        foreach (const MStyleSheetSelector *selector, sheet->parentSelectorList(spec)) {
+        const QList<const MStyleSheetSelector*> selectors = sheet->parentSelectorList(spec);
+        selectorCandidates.append(selectors);
+        foreach (const MStyleSheetSelector *selector, selectors) {
             if (matchParents(selector, parentsData, parentStyleName, parentPriority) &&
                     spec.match(selector, classPriority)) {
                 // match found, store it to results list
@@ -660,8 +664,16 @@ QList<MStyleSheetPrivate::SelectorInfo> MStyleSheetPrivate::getMatchingSelectors
                 info.classPriority = classPriority;
                 info.parentPriority = parentPriority;
                 info.stylesheet = sheet;
-                results.append(info);
+                results.selectorInfos.append(info);
             }
+        }
+    }
+
+    results.orientationDependent = false;
+    foreach (const MStyleSheetSelector * selector, selectorCandidates) {
+        if (selector->orientation() != MStyleSheetSelector::UndefinedOrientation) {
+            results.orientationDependent = true;
+            break;
         }
     }
 

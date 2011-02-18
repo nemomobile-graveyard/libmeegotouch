@@ -44,6 +44,8 @@ private:
     QString type;
     QString currentMode;
 
+    const MStyle *cachedOrientationIndependentStyle;
+
     MStyleContainer *q_ptr;
     const MWidgetController *parent;
     QWeakPointer<MSceneManager> sceneManager;

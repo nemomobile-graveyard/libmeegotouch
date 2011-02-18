@@ -81,6 +81,19 @@ int MStyle::removeReference()
     return data->references;
 }
 
+bool MStyle::isOrientationDependent() const
+{
+    return property("orientation_dependent").toBool();
+}
+
+void MStyle::setOrientationDependent(bool orientationDependent)
+{
+    // using a dymanic property is not the pretties thing on earth but
+    // as we need to mainatin ABI compatibility we have no choice as
+    // MStyle has not d-pointer
+    setProperty("orientation_dependent", orientationDependent);
+}
+
 MStyleContainerPrivate::MStyleContainerPrivate() :
     currentMode("")
 {
@@ -88,6 +101,7 @@ MStyleContainerPrivate::MStyleContainerPrivate() :
     cachedCurrentStyle[1] = 0;
     parent = NULL;
     q_ptr = NULL;
+    cachedOrientationIndependentStyle = 0;
 }
 
 MStyleContainerPrivate::~MStyleContainerPrivate()
@@ -106,6 +120,7 @@ void MStyleContainerPrivate::releaseStyles()
         cachedStyles[i].clear();
         cachedCurrentStyle[i] = 0;
     }
+    cachedOrientationIndependentStyle = 0;
 }
 
 //////////////////
@@ -209,6 +224,10 @@ const MSceneManager *MStyleContainer::sceneManager() const
 // getter for derived classes
 const MStyle *MStyleContainer::currentStyle() const
 {
+    if (d_ptr->cachedOrientationIndependentStyle) {
+        return d_ptr->cachedOrientationIndependentStyle;
+    }
+
     M::Orientation orientation = M::Landscape;
 
     if (!d_ptr->sceneManager.isNull()) {
@@ -223,15 +242,39 @@ const MStyle *MStyleContainer::currentStyle() const
         return d_ptr->cachedCurrentStyle[orientation];
     }
 
-    const MStyle* style;
+    const MStyle* style = 0;
     QHash<QString, const MStyle*>::iterator iter = d_ptr->cachedStyles[orientation].find(currentMode());
     if (iter != d_ptr->cachedStyles[orientation].end()) {
         style = *iter;
     } else {
-        style = MTheme::style(styleType(), objectName(), currentMode(), type(), orientation, parent());
-        d_ptr->cachedStyles[orientation].insert(currentMode(), style);
+        if (orientation == M::Portrait) {
+            // check if we have an orientation independent style
+            iter = d_ptr->cachedStyles[M::Landscape].find(currentMode());
+            if (iter != d_ptr->cachedStyles[M::Landscape].end()) {
+                if (!(*iter)->isOrientationDependent()) {
+                    style = *iter;
+                }
+            }
+        }
+        if (!style) {
+            style = MTheme::style(styleType(), objectName(), currentMode(), type(), orientation, parent());
+            if (style->isOrientationDependent()) {
+                d_ptr->cachedStyles[orientation].insert(currentMode(), style);
+            } else {
+                d_ptr->cachedStyles[M::Landscape].insert(currentMode(), style);
+            }
+        }
     }
-    d_ptr->cachedCurrentStyle[orientation] = style;
+
+    if (style->isOrientationDependent()) {
+        d_ptr->cachedCurrentStyle[orientation] = style;
+    } else {
+        d_ptr->cachedOrientationIndependentStyle = style;
+        // orientation independent styles are just saved in landscape mode but
+        // resused if we request the same style in portrait
+        d_ptr->cachedCurrentStyle[M::Landscape] = style;
+    }
+
     return style;
 }
 
@@ -241,6 +284,7 @@ void MStyleContainer::setCurrentMode(const QString &mode)
         d_ptr->cachedCurrentStyle[0] = 0;
         d_ptr->cachedCurrentStyle[1] = 0;
         d_ptr->currentMode = mode;
+        d_ptr->cachedOrientationIndependentStyle = 0;
     }
 }
 

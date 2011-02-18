@@ -266,7 +266,7 @@ public:
 // global array with hashes for already parsed variants in landscape and portrait
 // the first has contains values as keys, the second one the variant types
 namespace {
-    static QHash<MUniqueStringCache::Index, QHash<int, QVariant> > variantCache[2];
+    static QHash<MUniqueStringCache::Index, QHash<int, QVariant> > variantCache[3];
 }
 //! \internal_end
 
@@ -329,7 +329,7 @@ int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conv
     return value.toInt(conversionOk);
 }
 
-int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation)
+int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation, CacheOrientationFlags *cacheOrientation)
 {
     QByteArray value = attribute.trimmed();
 
@@ -337,11 +337,13 @@ int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conv
         int maximumValue = 0;
 
         if (orientation == M::Landscape) {
+            *cacheOrientation = LandscapeFlag;
             if (type == WidthAttribute)
                 maximumValue = MDeviceProfile::instance()->resolution().width();
             else
                 maximumValue = MDeviceProfile::instance()->resolution().height();
         } else {
+            *cacheOrientation = PortraitFlag;
             if (type == WidthAttribute)
                 maximumValue = MDeviceProfile::instance()->resolution().height();
             else
@@ -385,7 +387,7 @@ qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *
     return value.toFloat(conversionOk);
 }
 
-qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation)
+qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation, CacheOrientationFlags *cacheOrientation)
 {
     QByteArray value = attribute.trimmed();
 
@@ -393,11 +395,13 @@ qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *
         int maximumValue = 0;
 
         if (orientation == M::Landscape) {
+            *cacheOrientation = LandscapeFlag;
             if (type == WidthAttribute)
                 maximumValue = MDeviceProfile::instance()->resolution().width();
             else
                 maximumValue = MDeviceProfile::instance()->resolution().height();
         } else {
+            *cacheOrientation = PortraitFlag;
             if (type == WidthAttribute)
                 maximumValue = MDeviceProfile::instance()->resolution().height();
             else
@@ -576,9 +580,17 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         const QMetaProperty &property,
         M::Orientation orientation) const
 {
-    QVariant cachedVariant = variantCache[orientation][value][property.userType()];
+    // first check if the attribute is cached orientation independent, if not found
+    // check for the given orientation
+    QVariant cachedVariant = variantCache[M::Landscape + 1][value][property.userType()];
     if (cachedVariant.isValid()) {
         return property.write(style, cachedVariant);
+    } else {
+        cachedVariant = variantCache[orientation][value][property.userType()];
+        if (cachedVariant.isValid()) {
+            style->setOrientationDependent(true);
+            return property.write(style, cachedVariant);
+        }
     }
 
     bool conversionOK = false;
@@ -649,10 +661,9 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         }
         //image_id + width + height
         else if (list.size() == 3) {
-            int width = attributeToInt(list.at(1), &conversionOK, WidthAttribute, orientation);
-            int height = attributeToInt(list.at(2), &conversionOK, HeightAttribute, orientation);
+            int width = attributeToInt(list.at(1), &conversionOK, WidthAttribute, orientation, &cacheOrientation);
+            int height = attributeToInt(list.at(2), &conversionOK, HeightAttribute, orientation, &cacheOrientation);
             const QPixmap *pixmap = MTheme::pixmap(list.at(0), QSize(width, height));
-            cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             return fillProperty(property, style, cacheOrientation, qVariantFromValue(pixmap), false);
         }
         //no parameters
@@ -729,14 +740,13 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         QList<QByteArray> list = valueString.split(' ');
         list.removeAll("");
         if (list.size() == 2) {
-            cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             if (attributeType == QMetaType::QSize) {
-                int width = attributeToInt(list.at(0), &conversionOK, WidthAttribute, orientation);
-                int height = attributeToInt(list.at(1), &conversionOK, HeightAttribute, orientation);
+                int width = attributeToInt(list.at(0), &conversionOK, WidthAttribute, orientation, &cacheOrientation);
+                int height = attributeToInt(list.at(1), &conversionOK, HeightAttribute, orientation, &cacheOrientation);
                 return fillProperty(property, style, cacheOrientation, QSize(width, height));
             } else {
-                qreal width = attributeToFloat(list.at(0), &conversionOK, WidthAttribute, orientation);
-                qreal height = attributeToFloat(list.at(1), &conversionOK, HeightAttribute, orientation);
+                qreal width = attributeToFloat(list.at(0), &conversionOK, WidthAttribute, orientation, &cacheOrientation);
+                qreal height = attributeToFloat(list.at(1), &conversionOK, HeightAttribute, orientation, &cacheOrientation);
                 return fillProperty(property, style, cacheOrientation, QSizeF(width, height));
             }
         }
@@ -747,14 +757,13 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         QList<QByteArray> list = valueString.split(' ');
         list.removeAll("");
         if (list.size() == 2) {
-            cacheOrientation = (orientation == M::Portrait) ? PortraitFlag : LandscapeFlag;
             if (attributeType == QMetaType::QPoint) {
-                int x = attributeToInt(list.at(0), &conversionOK, WidthAttribute, orientation);
-                int y = attributeToInt(list.at(1), &conversionOK, HeightAttribute, orientation);
+                int x = attributeToInt(list.at(0), &conversionOK, WidthAttribute, orientation, &cacheOrientation);
+                int y = attributeToInt(list.at(1), &conversionOK, HeightAttribute, orientation, &cacheOrientation);
                 return fillProperty(property, style, cacheOrientation, QPoint(x, y));
             } else {
-                qreal x = attributeToFloat(list.at(0), &conversionOK, WidthAttribute, orientation);
-                qreal y = attributeToFloat(list.at(1), &conversionOK, HeightAttribute, orientation);
+                qreal x = attributeToFloat(list.at(0), &conversionOK, WidthAttribute, orientation, &cacheOrientation);
+                qreal y = attributeToFloat(list.at(1), &conversionOK, HeightAttribute, orientation, &cacheOrientation);
                 return fillProperty(property, style, cacheOrientation, QPointF(x, y));
             }
         }
@@ -835,13 +844,15 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
 bool MStyleSheetAttribute::fillProperty(const QMetaProperty &property, MStyle *style, CacheOrientationFlags cacheOrientation, const QVariant &variant, bool cache) const
 {
     if (cache && variant.isValid()) {
-        // most variants will be cahced in landscape and portrait.
-        // this should not really increase memory usage as QVariants are implicitly shared
-        if (cacheOrientation & PortraitFlag) {
-            variantCache[M::Portrait][value][property.userType()] = variant;
-        }
-        if (cacheOrientation & LandscapeFlag) {
-            variantCache[M::Landscape][value][property.userType()] = variant;
+        if (cacheOrientation == (PortraitFlag | LandscapeFlag)) {
+            variantCache[M::Landscape + 1][value][property.userType()] = variant;
+        } else {
+            style->setOrientationDependent(true);
+            if (cacheOrientation & PortraitFlag) {
+                variantCache[M::Portrait][value][property.userType()] = variant;
+            } else if (cacheOrientation & LandscapeFlag) {
+                variantCache[M::Landscape][value][property.userType()] = variant;
+            }
         }
     }
 

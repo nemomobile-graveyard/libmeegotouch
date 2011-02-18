@@ -111,10 +111,14 @@ protected:
     int references() const;
     int addReference();
     int removeReference();
+    bool isOrientationDependent() const;
+    void setOrientationDependent(bool orientationDependent);
 
     friend class MStyleSheet;
     friend class MStyleSheetPrivate;
     friend class MThemePrivate;
+    friend class MStyleContainer;
+    friend class MStyleSheetAttribute;
 };
 
 class M_CORE_EXPORT MStyleContainer
