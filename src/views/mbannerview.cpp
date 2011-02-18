@@ -440,7 +440,6 @@ void MBannerViewPrivate::layoutFullEventBanner()
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setVisible(false);
     }
-    isDownOpacityEnabled = true ;
 }
 
 void MBannerViewPrivate::layoutPrivateEventBanner()
