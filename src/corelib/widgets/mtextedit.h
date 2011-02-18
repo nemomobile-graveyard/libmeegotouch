@@ -560,7 +560,7 @@ private:
     Q_DECLARE_PRIVATE(MTextEdit)
     Q_DISABLE_COPY(MTextEdit)
 
-    friend class MCompleter;
+    friend class MCompleterViewPrivate;
     friend class MTextEditViewPrivate;
 #ifdef UNIT_TEST
     friend class Ut_MTextEdit;

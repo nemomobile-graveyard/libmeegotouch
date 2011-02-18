@@ -201,7 +201,7 @@ private:
     MTextEditSignalEmitter signalEmitter;
 
     friend class MTextEditSignalEmitter;
-    friend class MCompleter;
+    friend class MCompleterViewPrivate;
     friend class MTextEditViewPrivate;
 };
 

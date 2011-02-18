@@ -22,6 +22,7 @@
 #include "mcompleterview_p.h"
 
 #include "mtextedit.h"
+#include "mtextedit_p.h"
 #include "moverlay.h"
 #include "mlabel.h"
 #include "mbutton.h"
@@ -97,6 +98,10 @@ void MCompleterViewPrivate::init()
         connect(controller->widget()->sceneManager(),
                 SIGNAL(orientationChangeFinished(const M::Orientation &)),
                 this, SLOT(organizeContents()));
+        connect(controller, SIGNAL(shown()),
+                this,       SLOT(handleCompleterShown()));
+        connect(controller, SIGNAL(hidden()),
+                this,       SLOT(handleCompleterHidden()));
     }
 }
 
@@ -338,6 +343,37 @@ void MCompleterViewPrivate::refocusPopup()
         controller->scene()->setFocusItem(popup);
         controller->setActive(true);
     }
+}
+
+void MCompleterViewPrivate::handleCompleterShown()
+{
+    // connect to MTextEdit private signal scenePositionChanged() to enable
+    // the completer to follow the text widget.
+    MTextEdit *textWidget = qobject_cast<MTextEdit *>(controller->widget());
+    if (!textWidget)
+        return;
+
+    MTextEditPrivate *textWidgetPrivate = static_cast<MTextEditPrivate *>(textWidget->d_func());
+    connect(&textWidgetPrivate->signalEmitter,
+            SIGNAL(scenePositionChanged()),
+            this,
+            SLOT(organizeContents()),
+            Qt::UniqueConnection);
+}
+
+void MCompleterViewPrivate::handleCompleterHidden()
+{
+    // connect to MTextEdit private signal scenePositionChanged() to enable
+    // the completer to follow the text widget.
+    MTextEdit *textWidget = qobject_cast<MTextEdit *>(controller->widget());
+    if (!textWidget)
+        return;
+
+    MTextEditPrivate *textWidgetPrivate = static_cast<MTextEditPrivate *>(textWidget->d_func());
+    disconnect(&textWidgetPrivate->signalEmitter,
+               SIGNAL(scenePositionChanged()),
+               this,
+               0);
 }
 
 MCompleterView::MCompleterView(MCompleter *controller)

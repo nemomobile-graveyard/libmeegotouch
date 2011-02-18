@@ -58,6 +58,10 @@ protected slots:
 
     void handlePopupDisappeared();
 
+    void handleCompleterShown();
+
+    void handleCompleterHidden();
+
 protected:
     void init();
 
