@@ -65,7 +65,8 @@ MTapStateMachinePrivate::MTapStateMachinePrivate() :
         pressedCancelEventTransition(0),
 
         initialWaitTimer(0),
-        minimumHighlightTimer(0)
+        minimumHighlightTimer(0),
+        q_ptr(0)
 {
 
 }
