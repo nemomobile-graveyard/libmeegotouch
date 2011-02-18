@@ -44,6 +44,7 @@ Q_DECLARE_METATYPE(MWidgetController*)
 MApplication *app;
 
 Ut_AllWidgets::Ut_AllWidgets()
+    : m_scene( 0 )
 {
     static int argc = 1;
     static char *argv[1] = { (char *) "./ut_allwidgets" };
