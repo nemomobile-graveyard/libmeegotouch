@@ -895,9 +895,13 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     painter->translate(dx, dy);
     // draw actual text to the screen
 
-    if (d->focused == false && d->activeDocument()->isEmpty() == true) {
-        // with no focus and content we show the prompt text
+    if (d->activeDocument()->isEmpty() == true
+        && d->promptDocument()->isEmpty() == false) {
+        // with no content we show the prompt text if there is prompt text
         QAbstractTextDocumentLayout::PaintContext paintContext;
+        if (d->focused == true) {
+            paintContext.cursorPosition = 0;
+        }
         QColor promptColor = style()->promptColor();
         paintContext.palette.setColor(QPalette::Text, promptColor);
 
@@ -1469,7 +1473,10 @@ void MTextEditView::applyStyle()
     d->promptTextDocument->setDocumentMargin(InternalMargin);
 
     // Note: using non-documented property
-    d->document()->documentLayout()->setProperty(CursorWidthProperty, style()->cursorWidth());
+    d->document()->documentLayout()->setProperty(CursorWidthProperty,
+                                                 style()->cursorWidth());
+    d->promptTextDocument->documentLayout()->setProperty(CursorWidthProperty,
+                                                         style()->cursorWidth());
 
     if (d->maskedTextDocument != 0) {
         d->maskedTextDocument->setDefaultFont(style()->font());
