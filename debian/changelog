@@ -1,3 +1,10 @@
+libmeegotouch (0.20.84-3) unstable; urgency=low
+
+  * New version
+  * ABI break fixed
+
+ -- Adrian Yanes <adrian@ayanes.com>  Fri, 18 Feb 2011 17:23:22 +0200
+
 libmeegotouch (0.20.84-2) unstable; urgency=low
 
   * New version
