@@ -296,6 +296,42 @@ namespace
 }
 
 
+MTextEditSignalEmitter::MTextEditSignalEmitter(MTextEditPrivate &p)
+    : editPtr(p),
+      scenePositionChangedConnections(0),
+      oldItemSendsScenePositionChanges(false)
+{
+}
+
+MTextEditSignalEmitter::~MTextEditSignalEmitter()
+{
+}
+
+void MTextEditSignalEmitter::connectNotify(const char *signal)
+{
+    if (QLatin1String(signal) == SIGNAL(scenePositionChanged())) {
+        // initialize the oldItemSendsScenePositionChanges flag
+        if (scenePositionChangedConnections == 0) {
+            oldItemSendsScenePositionChanges = editPtr.q_func()->flags()
+                                               & QGraphicsItem::ItemSendsScenePositionChanges;
+        }
+        scenePositionChangedConnections++;
+        editPtr.q_func()->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+    }
+    QObject::connectNotify(signal);
+}
+
+void MTextEditSignalEmitter::disconnectNotify(const char *signal)
+{
+    if (QLatin1String(signal) == SIGNAL(scenePositionChanged())) {
+        scenePositionChangedConnections--;
+        if (scenePositionChangedConnections <= 0 && !oldItemSendsScenePositionChanges) {
+            editPtr.q_func()->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, false);
+        }
+    }
+    QObject::disconnectNotify(signal);
+}
+
 
 /*!
  * \brief Constructor
@@ -313,7 +349,8 @@ MTextEditPrivate::MTextEditPrivate()
       pendingMicroFocusUpdate(false),
       doubleClick(false),
       previousReleaseWordStart(0),
-      previousReleaseWordEnd(0)
+      previousReleaseWordEnd(0),
+      signalEmitter(*this)
 {
 }
 
@@ -2692,6 +2729,11 @@ QVariant MTextEdit::itemChange(GraphicsItemChange change, const QVariant &value)
             // Need to notify the view, too:
             emit lostFocus(Qt::OtherFocusReason);
         }
+        break;
+
+    case QGraphicsItem::ItemScenePositionHasChanged:
+        // notify widgets (completer or magnifier) that the scene position has changed.
+        emit d->signalEmitter.scenePositionChanged();
         break;
 
     default:

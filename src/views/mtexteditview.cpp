@@ -35,6 +35,7 @@
 #include <QStyleOptionGraphicsItem>
 
 #include "mtextedit.h"
+#include "mtextedit_p.h"
 #include "minfobanner.h"
 #include "mtimestamp.h"
 
@@ -91,8 +92,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       inAutoSelectionClick(false),
       infoBanner(0),
       editActive(false),
-      hideInfoBannerTimer(new QTimer(this)),
-      oldItemSendsScenePositionChanges(false)
+      hideInfoBannerTimer(new QTimer(this))
 {
     // copy text options from actual document to prompt
     QTextOption option = document()->defaultTextOption();
@@ -491,16 +491,22 @@ void MTextEditViewPrivate::showMagnifier()
                                            cursorRect().size()));
     }
 
-    oldItemSendsScenePositionChanges =
-        controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges;
-    controller->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
-
     updateMagnifierPosition();
     magnifier->appear();
+    MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
+    if (textWidgetPtr) {
+        connect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()),
+                this, SLOT(updateMagnifierPosition()), Qt::UniqueConnection);
+    }
 }
 
 void MTextEditViewPrivate::hideMagnifier()
 {
+    MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
+    if (textWidgetPtr) {
+        disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()), this, 0);
+    }
+
     if (controller->sceneManager()) {
         QObject::connect(controller, SIGNAL(cursorPositionChanged()),
                          controller->sceneManager(), SLOT(ensureCursorVisible()),
@@ -510,9 +516,6 @@ void MTextEditViewPrivate::hideMagnifier()
     if (magnifier) {
         magnifier->disappear();
         magnifier.reset();
-        if (!oldItemSendsScenePositionChanges) {
-            controller->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, false);
-        }
     }
 }
 
@@ -1163,10 +1166,6 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
 void MTextEditView::notifyItemChange(QGraphicsItem::GraphicsItemChange change,
                                      const QVariant &value)
 {
-    Q_D(MTextEditView);
-    if (change == QGraphicsItem::ItemScenePositionHasChanged) {
-        d->updateMagnifierPosition();
-    }
     MWidgetView::notifyItemChange(change, value);
 }
 
@@ -1442,6 +1441,5 @@ void MTextEditView::applyStyle()
 
     MWidgetView::applyStyle();
 }
-
 
 M_REGISTER_VIEW_NEW(MTextEditView, MTextEdit)

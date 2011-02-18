@@ -11,6 +11,9 @@ HEADERS += \
     $$MSRCDIR/views/mtexteditview.h \
     $$MSRCDIR/views/mtexteditview_p.h
 
+INCLUDEPATH += \
+    $$MSRCDIR/corelib/widgets/ \
+
 # Use stubbed mtextmagnifier.h in mtexteditview.cpp.
 QMAKE_CXXFLAGS += -include mtextmagnifier.h
 

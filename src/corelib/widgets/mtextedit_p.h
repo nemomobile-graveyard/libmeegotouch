@@ -35,6 +35,40 @@ class MCompleter;
 
 class MNavigationBar;
 
+class MTextEditSignalEmitter : public QObject
+{
+    Q_OBJECT
+public:
+    MTextEditSignalEmitter(MTextEditPrivate &p);
+    virtual ~MTextEditSignalEmitter();
+
+Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted when the scene position of MTextEdit changes.
+     *
+     * \Note This signal is only emitted when there's at least one object connected to it.
+     * If no one is connected to this signal it won'tt be emitted. Connecting to this signal
+     * will result in the flag QGraphicsItem::ItemSendsScenePositionChanges being set for
+     * MTextEdit and as a consequence some performance penalty.
+     * This signal is useful for widgets like completer and magnifier, who want to listen to
+     * the movement of text edit and follow it.
+     */
+    void scenePositionChanged();
+
+protected:
+    /*! \reimp */
+    virtual void connectNotify(const char *signal);
+    virtual void disconnectNotify(const char *signal);
+    /*! \reimp_end */
+
+private:
+    MTextEditPrivate &editPtr;
+    int scenePositionChangedConnections;
+    bool oldItemSendsScenePositionChanges;
+    friend class MTextEditPrivate;
+    friend class MTextEdit;
+};
+
 class MTextEditPrivate : public MWidgetControllerPrivate
 {
     Q_DECLARE_PUBLIC(MTextEdit)
@@ -164,6 +198,11 @@ private:
     int previousReleaseWordEnd;
     // the last time when double click selection was done
     QTime doubleClickSelectionTime;
+    MTextEditSignalEmitter signalEmitter;
+
+    friend class MTextEditSignalEmitter;
+    friend class MCompleter;
+    friend class MTextEditViewPrivate;
 };
 
 #endif

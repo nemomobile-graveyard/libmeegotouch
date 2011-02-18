@@ -123,6 +123,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mwindow_p.h \
     $$WIDGETS_SRC_DIR/mrichtexteditdialogsmanager_p.h \
     $$WIDGETS_SRC_DIR/mtapstatemachine_p.h \
+    $$WIDGETS_SRC_DIR/mtextedit_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
