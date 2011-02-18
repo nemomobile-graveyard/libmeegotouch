@@ -26,6 +26,7 @@
 class MAction;
 class MApplicationMenu;
 class MApplicationMenuViewPrivate;
+class MMenuListItem;
 
 class Ut_MApplicationMenu : public QObject
 {
@@ -61,6 +62,7 @@ private:
     bool        testValue;
 
     const MApplicationMenuViewPrivate* menuViewPrivate();
+    MMenuListItem* getMenuItem(const MApplicationMenuViewPrivate *viewPrivate, int actionNumber);
 };
 
 #endif

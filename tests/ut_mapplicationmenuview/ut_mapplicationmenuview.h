@@ -43,7 +43,7 @@ private slots:
 
     // class testing
     void testSetView();
-    void testCalculateLayoutPosition();
+    void testActionsModel();
 
 private:
     MApplicationMenuView *m_subject;

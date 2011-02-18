@@ -13,6 +13,7 @@ SOURCES += \
     $$MSRCDIR/views/mapplicationmenuview.cpp
 
 HEADERS += \
-    ut_mapplicationmenu.h
+    ut_mapplicationmenu.h \
+    $$MSRCDIR/views/mapplicationmenuview_p.h
 
 include(../common_bot.pri)

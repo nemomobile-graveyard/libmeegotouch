@@ -31,6 +31,7 @@
 #include <MComboBox>
 #include "mapplicationmenu_p.h"
 #include "mapplicationmenuview_p.h"
+#include "mlist.h"
 
 MApplication *app;
 MApplicationWindow *appWin;
@@ -158,8 +159,9 @@ void Ut_MApplicationMenu::testSetWidgetAfterWidgetActionIsAdded()
 
     const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
     QVERIFY(viewPrivate);
-    MWidget *widgetInMenu = viewPrivate->getWidget(action);
-    QVERIFY(widgetInMenu == widgetInAction);
+    MMenuListItem* menuItem = getMenuItem(viewPrivate, 0);
+    QVERIFY(menuItem);
+    QVERIFY(menuItem->customWidget() == widgetInAction);
 }
 
 void Ut_MApplicationMenu::testChangeWidgetInWidgetAction()
@@ -177,8 +179,9 @@ void Ut_MApplicationMenu::testChangeWidgetInWidgetAction()
 
     const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
     QVERIFY(viewPrivate);
-    MWidget *widgetInMenu = viewPrivate->getWidget(action);
-    QVERIFY(widgetInMenu == newWidgetInAction);
+    MMenuListItem* menuItem = getMenuItem(viewPrivate, 0);
+    QVERIFY(menuItem);
+    QVERIFY(menuItem->customWidget() == newWidgetInAction);
 }
 
 void Ut_MApplicationMenu::testRemoveWidgetFromWidgetAction()
@@ -195,9 +198,9 @@ void Ut_MApplicationMenu::testRemoveWidgetFromWidgetAction()
 
     const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
     QVERIFY(viewPrivate);
-    MWidget *widgetInMenu = viewPrivate->getWidget(action);
-    QVERIFY(widgetInMenu);
-    QVERIFY(widgetInMenu != widgetInAction);
+    MMenuListItem* menuItem = getMenuItem(viewPrivate, 0);
+    QVERIFY(menuItem);
+    QVERIFY(!menuItem->customWidget());
 }
 
 void Ut_MApplicationMenu::testActionVisiblity()
@@ -282,16 +285,18 @@ void Ut_MApplicationMenu::testOpeningAndClosingAppMenuWithDisabledAction()
 
     const MApplicationMenuViewPrivate *viewPrivate = menuViewPrivate();
     QVERIFY(viewPrivate);
-    MWidget *widget = viewPrivate->getWidget(action);
-    QVERIFY(widget);
-    QVERIFY(widget->isEnabled());
+    MMenuListItem *menuItem = getMenuItem(viewPrivate, 0);
+    QVERIFY(menuItem);
+    QVERIFY(menuItem->isEnabled());
 
     // Test opening and closing the app menu with the action disabled, it should remain disabled
     action->setEnabled(false);
-    QVERIFY(!widget->isEnabled());
+    menuItem = getMenuItem(viewPrivate, 0);
+    QVERIFY(menuItem);
+    QVERIFY(!menuItem->isEnabled());
     appWin->sceneManager()->appearSceneWindowNow(m_subject);
     appWin->sceneManager()->dismissSceneWindowNow(m_subject);
-    QVERIFY(!widget->isEnabled());
+    QVERIFY(!menuItem->isEnabled());
 
 }
 
@@ -302,6 +307,13 @@ const MApplicationMenuViewPrivate* Ut_MApplicationMenu::menuViewPrivate()
         return 0;
     const MApplicationMenuViewPrivate *viewPrivate = view->d_func();
     return viewPrivate;
+}
+
+MMenuListItem* Ut_MApplicationMenu::getMenuItem(const MApplicationMenuViewPrivate *viewPrivate, int actionNumber)
+{
+    QModelIndex index = viewPrivate->list->itemModel()->index(actionNumber, 0);
+    MWidget* cell = viewPrivate->list->cellCreator()->createCell(index, *MWidgetRecycler::instance());
+    return dynamic_cast<MMenuListItem*>(cell);
 }
 
 void Ut_MApplicationMenu::actionSlot(bool checked)

@@ -110,11 +110,10 @@ private:
     Q_DISABLE_COPY(MApplicationMenuView)
     Q_DECLARE_PRIVATE(MApplicationMenuView)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_displayEntered())
-
 #ifdef UNIT_TEST
     friend class Pt_MApplicationMenu;
     friend class Ut_MApplicationMenu;
+    friend class Ut_MApplicationMenuView;
 #endif
 
 };

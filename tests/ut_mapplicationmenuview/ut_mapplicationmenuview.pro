@@ -14,5 +14,6 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_mapplicationmenuview.h \
+    $$MSRCDIR/views/mapplicationmenuview_p.h \
 
 include(../common_bot.pri)

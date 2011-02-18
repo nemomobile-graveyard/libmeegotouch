@@ -21,10 +21,16 @@
 #include <mapplicationmenu.h>
 
 #include "mapplicationmenuview_p.h"
+#include <MAction>
+#include <MWidgetAction>
+#include <MList>
+#include <MButton>
 
 #include "ut_mapplicationmenuview.h"
 
 MApplication *app;
+
+Q_DECLARE_METATYPE(QAction*)
 
 void Ut_MApplicationMenuView::initTestCase()
 {
@@ -59,41 +65,46 @@ void Ut_MApplicationMenuView::testSetView()
     m_menu->setView(m_subject);
 }
 
-void Ut_MApplicationMenuView::testCalculateLayoutPosition()
+void Ut_MApplicationMenuView::testActionsModel()
 {
-    // Empty menu
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(0, 0, 0), M::DefaultPosition);
+    m_menu->setView(m_subject);
 
-    // Single item in menu
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(1, 1, 0), M::DefaultPosition);
+    MAction* menuAction = new MAction("menuAction",m_menu);
+    menuAction->setLocation(MAction::ApplicationMenuLocation);
 
-    // Single column
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(1, 3, 0), M::VerticalTopPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(1, 3, 1), M::VerticalCenterPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(1, 3, 2), M::VerticalBottomPosition);
+    MAction* toolbarAction = new MAction("toolbarAction",m_menu);
+    toolbarAction->setLocation(MAction::ToolBarLocation);
 
-    // Single row
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 3, 0), M::HorizontalLeftPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 3, 1), M::HorizontalCenterPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 3, 2), M::HorizontalRightPosition);
+    MAction* everyLocationAction = new MAction("everyLocationAction",m_menu);
+    everyLocationAction->setLocation(MAction::EveryLocation);
+    everyLocationAction->setIconID("ICON");
 
-    // 2D 3x3 layout
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 0), M::TopLeftPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 1), M::TopCenterPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 2), M::TopRightPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 3), M::CenterLeftPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 4), M::CenterPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 5), M::CenterRightPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 6), M::BottomLeftPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 7), M::BottomCenterPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 9, 8), M::BottomRightPosition);
+    QAction* qaction = new QAction("qaction",m_menu);
 
-    // Incomplete last row
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(2, 3, 1), M::TopRightPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(2, 5, 3), M::CenterRightPosition);
+    MWidgetAction* widgetAction = new MWidgetAction(m_menu);
+    MButton* button = new MButton("widgetAction",m_menu);
+    widgetAction->setWidget(button);
 
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 4, 3), M::BottomLeftPosition);
-    QCOMPARE(MApplicationMenuViewPrivate::calculateLayoutPosition(3, 5, 4), M::BottomCenterPosition);
+    m_menu->addAction(menuAction);
+    m_menu->addAction(toolbarAction); // this action should be ignored by menu
+    m_menu->addAction(everyLocationAction);
+    m_menu->addAction(qaction);
+    m_menu->addAction(widgetAction);
+
+    QAbstractItemModel* itemModel = m_subject->d_func()->list->itemModel();
+    QCOMPARE(itemModel->rowCount(), 4);
+
+    QCOMPARE(itemModel->index(0,0).data(), QVariant("menuAction"));
+
+    QCOMPARE(itemModel->index(1,0).data(), QVariant("everyLocationAction"));
+    QCOMPARE(itemModel->index(1,0).data(Qt::DecorationRole), QVariant("ICON"));
+
+    QCOMPARE(itemModel->index(2,0).data(), QVariant("qaction"));
+
+    MWidgetAction* widgetActionInModel = dynamic_cast<MWidgetAction*>(itemModel->index(3,0).data(MActionsItemModel::ActionRole).value<QAction*>());
+    QCOMPARE(widgetActionInModel, widgetAction);
+    QCOMPARE(widgetActionInModel->widget(), button);
 }
 
 QTEST_APPLESS_MAIN(Ut_MApplicationMenuView)
+
