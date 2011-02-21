@@ -35,18 +35,19 @@ class MWidgetController;
 class QGraphicsLinearLayout;
 class QPropertyAnimation;
 
-class MListIndexViewPrivate : public QObject
+class MListIndexViewPrivate
 {
-    Q_OBJECT
-    Q_DECLARE_PUBLIC(MListIndexView)
 public:
     MListIndexViewPrivate();
     virtual ~MListIndexViewPrivate();
 
+    void init();
+
     virtual void applyStyleToShortcuts();
 
-    virtual void initLayout();
-    virtual void updateLayout();
+    void initLayout();
+    void updateLayout();
+    void connectToList();
 
     virtual QModelIndex locateShortcutIndex(int y, int x = 0);
 
@@ -63,26 +64,28 @@ public:
 protected:
     void scrollToGroupHeader(int y);
 
-protected Q_SLOTS:
-    virtual void listParentChanged();
-    virtual void listPanningStarted();
-    virtual void listPanningStopped();
-    virtual void visibilityTimerTimeout();
+    virtual void _q_listParentChanged();
+    virtual void _q_listPanningStarted();
+    virtual void _q_listPanningStopped();
+    virtual void _q_visibilityTimerTimeout();
 
-    virtual void hideAnimated();
-    virtual void showAnimated();
+    virtual void _q_hideAnimated();
+    virtual void _q_showAnimated();
 
-    virtual void startVisibilityTimer();
-    virtual void stopVisibilityTimer();
+    virtual void _q_startVisibilityTimer();
+    virtual void _q_stopVisibilityTimer();
 
-    virtual void exposedContentRectChanged();
+    virtual void _q_exposedContentRectChanged();
 
 private:
+    Q_DECLARE_PUBLIC(MListIndexView)
+    MListIndexView *q_ptr;
+
     MListIndex *controller;
-    const MListIndexModel *controllerModel;
     QGraphicsLinearLayout *layout;
 
     MApplicationPage *container;
+    MList *list;
 
     int shortcutHeight;
     int shortcutsCount;
@@ -91,8 +94,6 @@ private:
     QPropertyAnimation *autoVisibilityAnimation;
     QTimer autoVisibilityTimer;
     bool down;
-
-    MListIndexView *q_ptr;
 };
 
 #endif

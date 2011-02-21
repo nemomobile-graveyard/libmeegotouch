@@ -64,6 +64,13 @@ private:
     Q_DISABLE_COPY(MListIndexView)
     Q_DECLARE_PRIVATE(MListIndexView)
 
+    Q_PRIVATE_SLOT(d_func(), void _q_listParentChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_exposedContentRectChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_listPanningStarted())
+    Q_PRIVATE_SLOT(d_func(), void _q_listPanningStopped())
+    Q_PRIVATE_SLOT(d_func(), void _q_visibilityTimerTimeout())
+
+
 #ifdef UNIT_TEST
     friend class Ut_MListIndex;
 #endif
