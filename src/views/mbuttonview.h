@@ -122,6 +122,7 @@ public:
 
     //! \reimp
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void setGeometry(const QRectF &rect);
     //! \reimp_end
 
 protected:
@@ -136,7 +137,6 @@ protected:
     virtual void setupModel();
     virtual void cancelEvent(MCancelEvent *event);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
-    virtual void setGeometry(const QRectF &rect);
     //! \reimp_end
 
     /*!

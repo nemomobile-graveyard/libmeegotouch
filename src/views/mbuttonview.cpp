@@ -526,26 +526,33 @@ void MButtonView::updateData(const QList<const char *>& modifications)
     bool mustUpdateGeometry = false;
     bool mustUpdateIcon = false;
     bool mustUpdateToggledIcon = false;
+    bool mustRelocateIconText = false;
 
     foreach(member, modifications) {
         if (member == MButtonModel::Text) {
             d->label->setText(model()->text());
             mustUpdateGeometry = true;
+            mustRelocateIconText = true;
         } else if (member == MButtonModel::TextVisible) {
             d->label->setVisible(model()->textVisible());
             mustUpdateGeometry = true;
+            mustRelocateIconText = true;
         } else if (member == MButtonModel::IconID) {
             mustUpdateIcon = true;
             mustUpdateGeometry = true;
+            mustRelocateIconText = true;
         } else if (member == MButtonModel::ToggledIconID) {
             mustUpdateToggledIcon = true;
             mustUpdateGeometry = true;
+            mustRelocateIconText = true;
         } else if (member == MButtonModel::Icon) {
             mustUpdateIcon = true;
             mustUpdateToggledIcon = true;
             mustUpdateGeometry = true;
+            mustRelocateIconText = true;
         } else if (member == MButtonModel::IconVisible) {
             mustUpdateGeometry = true;
+            mustRelocateIconText = true;
         } else if (member == MButtonModel::Checked ||
                    member == MButtonModel::Checkable) {
             d->transition->refreshStyle();
@@ -558,6 +565,10 @@ void MButtonView::updateData(const QList<const char *>& modifications)
 
     if (mustUpdateToggledIcon) {
         d->updateToggledIcon();
+    }
+
+    if (mustRelocateIconText) {
+        d->calcIconTextRects();
     }
 
     if (mustUpdateGeometry) {
