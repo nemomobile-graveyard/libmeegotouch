@@ -37,6 +37,7 @@ MListIndexFloatingViewPrivate::MListIndexFloatingViewPrivate()
     : MWidgetViewPrivate(),
     controller(NULL),
     container(NULL),
+    list(NULL),
     tooltipWidget(NULL),
     tooltipVerticalOffset(0),
     contentHeight(0)
@@ -63,6 +64,19 @@ void MListIndexFloatingViewPrivate::configureController()
 {
     controller->show();
     controller->setOpacity(1.0);
+}
+
+void MListIndexFloatingViewPrivate::connectToList()
+{
+    Q_Q(MListIndexFloatingView);
+
+    if (list)
+        q->disconnect(list, SIGNAL(parentChanged()), q, SLOT(_q_listParentChanged()));
+
+    if (q->model()->list())
+        q->connect(q->model()->list(), SIGNAL(parentChanged()), q, SLOT(_q_listParentChanged()));
+
+    list = q->model()->list();
 }
 
 void MListIndexFloatingViewPrivate::updateLayout()
@@ -198,14 +212,14 @@ void MListIndexFloatingViewPrivate::_q_recalculateListIndexRegion()
     updateLayout();
 }
 
-void MListIndexFloatingViewPrivate::_q_listParentChanged()
-{
-    initLayout();
-}
-
 void MListIndexFloatingViewPrivate::_q_recalculateTooltipOffsets()
 {
     tooltipVerticalOffset = controller->size().height() - tooltip()->size().height() / 2;
+}
+
+void MListIndexFloatingViewPrivate::_q_listParentChanged()
+{
+    initLayout();
 }
 
 MListIndexFloatingView::MListIndexFloatingView(MListIndex *controller)
@@ -241,8 +255,10 @@ void MListIndexFloatingView::updateData(const QList<const char *> &modifications
     for (int i = 0; i < modifications.count(); i++) {
         member = modifications[i];
         if (member == MListIndexModel::List) {
-            if (model()->list())
+            if (model()->list()) {
                 d->initLayout();
+                d->connectToList();
+            }
         } else if (member == MListIndexModel::ShortcutIndexes) {
             d->tooltip()->setIndexCount(qMin(style()->floatingIndexCount(), model()->shortcutIndexes().count()));
         }

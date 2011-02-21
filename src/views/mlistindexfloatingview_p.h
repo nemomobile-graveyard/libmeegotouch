@@ -44,6 +44,7 @@ public:
     void init();
     void initLayout();
     void configureController();
+    void connectToList();
 
     void updateLayout();
     void updateContentHeight();
@@ -59,15 +60,16 @@ public:
     void queueListScrollTo();
 
     void _q_recalculateListIndexRegion();
-    void _q_listParentChanged();
     void _q_recalculateTooltipOffsets();
     void _q_scrollListToCurrentIndex();
+    void _q_listParentChanged();
 
 private:
     Q_DECLARE_PUBLIC(MListIndexFloatingView)
     MListIndex *controller;
 
     MApplicationPage *container;
+    MList *list;
     QRectF containerRect;
 
     MListIndexTooltip *tooltipWidget;

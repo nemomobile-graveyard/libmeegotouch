@@ -22,7 +22,6 @@
 #include "mlistindextooltip_p.h"
 
 #include <MLabel>
-#include <MPannableViewport>
 #include <MSeparator>
 
 #include <QGraphicsLinearLayout>
@@ -62,6 +61,7 @@ void MListIndexTooltipPrivate::initLayout()
     panelLayout->setContentsMargins(0, 0, 0, 0);
     panelLayout->setSpacing(0);
 
+    layout->addItem(panel);
     q->disconnect(q, SLOT(_q_updateSizeToCentralWidget()));
     q->connect(panel, SIGNAL(geometryChanged()), q, SLOT(_q_updateSizeToCentralWidget()));
     _q_updateSizeToCentralWidget();
@@ -72,7 +72,7 @@ void MListIndexTooltipPrivate::initAnimations()
     Q_Q(MListIndexTooltip);
 
     snapAnimation->setTargetObject(panel);
-    snapAnimation->setPropertyName("pos");
+    snapAnimation->setPropertyName("paintOffset");
 
     arrowOffsetAnimation->setTargetObject(q);
     arrowOffsetAnimation->setPropertyName("arrowOffset");
@@ -82,9 +82,6 @@ void MListIndexTooltipPrivate::initAnimations()
 void MListIndexTooltipPrivate::_q_updateSizeToCentralWidget()
 {
     Q_Q(MListIndexTooltip);
-    qreal top, left, bottom, right;
-    q->getContentsMargins(&left, &top, &right, &bottom);
-
     QSizeF parentSize = panel->size();
     parentSize += QSizeF(q->style()->paddingLeft()+q->style()->paddingRight(), q->style()->paddingTop()+q->style()->paddingBottom());
 
@@ -117,6 +114,7 @@ void MListIndexTooltipPrivate::createIndexes(int count)
         MLabel *label = new MLabel(panel);
         label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         label->setStyleName("IndexLabel");
+        label->setTextElide(true);
 
         panelLayout->addItem(label);
 
@@ -229,7 +227,7 @@ void MListIndexTooltip::snap(qreal snapDistance)
 
     d->snapAnimation->stop();
     d->snapAnimation->setTargetObject(d->panel);
-    d->snapAnimation->setPropertyName("pos");
+    d->snapAnimation->setPropertyName("paintOffset");
 
     d->snapAnimation->setStartValue(QPointF(style()->paddingLeft(), style()->paddingTop() + snapDistance));
     d->snapAnimation->setEndValue(QPointF(style()->paddingLeft(), style()->paddingTop()));
@@ -243,9 +241,9 @@ void MListIndexTooltip::applyStyle()
     MStylableWidget::applyStyle();
 
     if (d->panel) {
-        d->panel->setMinimumSize(style()->minimumSize());
-        d->panel->setPreferredSize(style()->preferredSize());
-        d->panel->setMaximumSize(style()->maximumSize());
+        setMinimumSize(style()->minimumSize());
+        setPreferredSize(style()->preferredSize());
+        setMaximumSize(style()->maximumSize());
         updateGeometry();
     }
 
