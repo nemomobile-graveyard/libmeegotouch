@@ -363,7 +363,7 @@ void MListViewPrivate::connectPannableViewport()
 
 void MListViewPrivate::controllerParentChanged()
 {
-    disconnect(this, SLOT(controllerParentChanged()));
+    disconnect(controller, SIGNAL(parentChanged()), this, SLOT(controllerParentChanged()));
     connectPannableViewport();
 }
 
