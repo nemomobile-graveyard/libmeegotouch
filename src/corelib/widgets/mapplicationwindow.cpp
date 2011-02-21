@@ -152,6 +152,7 @@ void MApplicationWindowPrivate::init()
 
     if(MDeviceProfile::instance()->showStatusbar())    {
         statusBar = new MStatusBar(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::StatusBar));
+        statusBar->setStyleName(style()->statusBarStyleName());
     }
     else{
         statusBar = NULL;

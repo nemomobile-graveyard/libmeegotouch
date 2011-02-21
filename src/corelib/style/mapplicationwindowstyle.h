@@ -47,19 +47,24 @@ class MApplicationWindowStyle : public MStyle
     M_STYLE_ATTRIBUTE(bool, floatableTabBar, FloatableTabBar)
 
     /*!
-      \brief This allows to customize the style of navigation bar for an specific app
+      \brief This allows to customize the style of navigation bar for a specific app
     */
     M_STYLE_ATTRIBUTE(QString, navigationBarStyleName, NavigationBarStyleName)
 
     /*!
-      \brief This allows to customize the style of the toolbar for an specific app
+      \brief This allows to customize the style of the toolbar for a specific app
     */
     M_STYLE_ATTRIBUTE(QString, toolBarStyleName, ToolBarStyleName)
 
     /*!
-      \brief This allows to customize the style of the toolbar tabs for an specific app
+      \brief This allows to customize the style of the toolbar tabs for a specific app
     */
     M_STYLE_ATTRIBUTE(QString, tabBarStyleName, TabBarStyleName)
+
+    /*!
+      \brief This allows to customize the style of the status bar for a specific app
+    */
+    M_STYLE_ATTRIBUTE(QString, statusBarStyleName, StatusBarStyleName)
 };
 
 class MApplicationWindowStyleContainer : public MStyleContainer
