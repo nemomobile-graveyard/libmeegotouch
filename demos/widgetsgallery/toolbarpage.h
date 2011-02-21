@@ -26,6 +26,7 @@
 class MToolBar;
 class MGridLayoutPolicy;
 class MList;
+class MSlider;
 
 class TestModel : public QAbstractListModel
 {
@@ -55,11 +56,24 @@ private:
 };
 
 class MContentItemCreator;
+
 class ToolBarPage : public TemplatePage
 {
     Q_OBJECT
 
 public:
+    enum configuration {
+        tools = 0,
+        textButtons,
+        textField,
+        iconAndLabelTabsBottom,
+        iconTabsBottom,
+        textTabsBottom,
+        iconAndLabelTabsTop,
+        iconTabsTop,
+        textTabsTop
+    };
+
     ToolBarPage();
     virtual ~ToolBarPage();
     virtual QString timedemoTitle();
@@ -71,32 +85,74 @@ protected:
     virtual void retranslateUi();
 
 private slots:
-    void fourButtons();
-    void textEntryWithTwoButtons();
-    void selectToolbarDefaultView();
-    void selectToolbarTabView();
     void populateCallMissed();
     void populateCallReceived();
     void populateCallInitiated();
     void showCallDataAsList();
     void showCallDataAsGrid();
 
+    void onAppear();
+    void onDisappear();
+    void reset();
+
+    void toolsConfiguration();
+    void textButtonsConfiguration();
+    void textFieldConfiguration();
+    void iconAndLabelTabsBottomConfiguration();
+    void iconTabsBottomConfiguration();
+    void textTabsBottomConfiguration();
+    void iconAndLabelTabsTopConfiguration();
+    void iconTabsTopConfiguration();
+    void textTabsTopConfiguration();
+
+    void setBackButtonVisible(bool visible);
+    void setMenuActionsVisible(bool visible);
+
+    void updateTools(int count);
+    void updateTabs(int count);
+
 private:
-    void addTextEntry();
     void clearToolbarActions();
-    void addButtonsToTabView();
+    void setupCheckBoxes();
+    void setupSliders();
+    int buttonCount();
+    void removeLast(int count = 1);
+    void toolsConfiguration(int count);
+    void initDefaultViewToolBar();
+    void initTabViewToolBar(bool onTop, bool icons, bool labels);
+    void addTab(int tabNumber);
+    bool isTabBarOnTop();
 
     MList* callList;
     TestModel* callModel;
     MContentItemCreator * cellCreator;
 
-    MAction * exampleAction1;
-    MAction * exampleAction2;
-    MAction * defaultViewAction;
-    MAction * tabViewAction;
+    QString defaultStyleName;
+    QString currentStyleName;
+    configuration currentConfiguration;
+    bool wasFullScreen;
 
-    bool isDefaultView;
+    MAction *toolsAction;
+    MAction *textButtonsAction;
+    MAction *textFieldAction;
+    MAction *iconAndLabelTabsAction;
+    MAction *iconTabsAction;
+    MAction *textTabsAction;
+    MAction *iconAndLabelTabsTopAction;
+    MAction *iconTabsTopAction;
+    MAction *textTabsTopAction;
 
+    MButton *visibleBackButton;
+    MLabel  *visibleBackButtonLabel;
+    MButton *visibleMenuButton;
+    MLabel  *visibleMenuButtonLabel;
+
+    MLabel  *maxToolsLabel;
+    MSlider *maxToolsSlider;
+    MLabel  *maxTabsLabel;
+    MSlider *maxTabsSlider;
+
+    MButton *resetButton;
 };
 
 #endif

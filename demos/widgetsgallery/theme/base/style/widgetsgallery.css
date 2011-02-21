@@ -130,3 +130,18 @@ MButtonStyle#ExpandingBackgroundButton {
     margin-bottom: 2.5mm;
     transition: "expanding-background";
 }
+
+MApplicationWindowStyle#IconAndLabelTabsTop.Portrait {
+    floatable-tab-bar: true;
+    tab-bar-style-name: "TabsTopWithIconAndLabel";
+}
+
+MApplicationWindowStyle#IconAndLabelTabsBottom.Portrait {
+    floatable-tab-bar: true;
+    tab-bar-style-name: "TabsBottomWithIconAndLabel";
+}
+
+MApplicationWindowStyle#IconOrLabelTabsTop {
+    floatable-tab-bar: true;
+    tab-bar-style-name: "TabsTopWithIconOrLabel";
+}
