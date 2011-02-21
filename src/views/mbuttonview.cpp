@@ -412,19 +412,19 @@ void MButtonView::applyStyle()
     MWidgetView::applyStyle();
 
     if (style()->transition() == "default") {
-        if (!dynamic_cast<MButtonDefaultTransition*>(d->transition)) {
+        if (!qobject_cast<MButtonDefaultTransition*>(d->transition)) {
             delete d->transition;
             d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
             d->transition->setParent(this);
         }
     } else if (style()->transition() == "expanding-background") {
-        if (!dynamic_cast<MButtonExpandingBackgroundTransition*>(d->transition)) {
+        if (!qobject_cast<MButtonExpandingBackgroundTransition*>(d->transition)) {
             delete d->transition;
             d->transition = new MButtonExpandingBackgroundTransition(style(), model(), d->controller,d);
             d->transition->setParent(this);
         }
     } else {
-        if (!dynamic_cast<MButtonDefaultTransition*>(d->transition)) {
+        if (!qobject_cast<MButtonDefaultTransition*>(d->transition)) {
             delete d->transition;
             d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
             d->transition->setParent(this);
