@@ -101,7 +101,6 @@ void MButtonViewPrivate::freeIcons()
 MButtonViewPrivate::~MButtonViewPrivate()
 {
     freeIcons();
-    delete transition;
 }
 
 // As the condition of text color and background change for button
@@ -412,7 +411,27 @@ void MButtonView::applyStyle()
 
     MWidgetView::applyStyle();
 
-    d->updateItemsAfterModeChange();
+    if (style()->transition() == "default") {
+        if (!dynamic_cast<MButtonDefaultTransition*>(d->transition)) {
+            delete d->transition;
+            d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
+            d->transition->setParent(this);
+        }
+    } else if (style()->transition() == "expanding-background") {
+        if (!dynamic_cast<MButtonExpandingBackgroundTransition*>(d->transition)) {
+            delete d->transition;
+            d->transition = new MButtonExpandingBackgroundTransition(style(), model(), d->controller,d);
+            d->transition->setParent(this);
+        }
+    } else {
+        if (!dynamic_cast<MButtonDefaultTransition*>(d->transition)) {
+            delete d->transition;
+            d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
+            d->transition->setParent(this);
+        }
+    }
+
+    d->transition->refreshStyle();
 
     update();
 }
@@ -556,15 +575,6 @@ void MButtonView::setupModel()
         members << MButtonModel::Icon;
     if (!model()->toggledIconID().isEmpty())
         members << MButtonModel::ToggledIconID;
-
-
-    if(style()->transition() == "default") {
-	d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
-    } else if(style()->transition() == "expanding-background") {
-	d->transition = new MButtonExpandingBackgroundTransition(style(), model(), d->controller,d);
-    } else {
-	d->transition = new MButtonDefaultTransition(style(), model(), d->controller,d);
-    }
 
     updateData(members);
 
