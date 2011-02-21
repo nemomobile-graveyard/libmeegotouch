@@ -56,7 +56,9 @@ MLabel *MMessageBoxViewPrivate::titleLabelWidget()
     if (!titleLabel) {
         titleLabel = new MLabel(contents);
         titleLabel->setStyleName("CommonQueryTitle");
-        titleLabel->setTextElide(true);
+        titleLabel->setTextElide(false);
+        titleLabel->setWordWrap(true);
+        titleLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         titleLabel->setAlignment(Qt::AlignCenter);
     }
     return titleLabel;
