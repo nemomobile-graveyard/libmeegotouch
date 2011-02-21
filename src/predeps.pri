@@ -4,7 +4,7 @@ build_moc.target = ../mmoc/mmoc
 build_gen.target = ../mgen/mgen
 win32 {
     build_mmoc.commands = \
-        cd $$M_BUILD_TREE/mmmoc && mingw32-make
+        cd $$M_BUILD_TREE/mmoc && mingw32-make
 
     build_mgen.commands = \
         cd $$M_BUILD_TREE/mgen && mingw32-make
