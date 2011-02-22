@@ -155,14 +155,14 @@ MApplicationMenuButtonView::~MApplicationMenuButtonView()
 // must override MButtonView::resizeEvent
 void MApplicationMenuButtonView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    MWidgetView::resizeEvent(event);
+    MButtonView::resizeEvent(event);
 }
 
 void MApplicationMenuButtonView::applyStyle()
 {
     Q_D(MApplicationMenuButtonView);
 
-    MWidgetView::applyStyle();
+    MButtonView::applyStyle();
 
     d->arrowIconImage->setImage(style()->arrowIcon(), style()->arrowIconSize());
     d->refreshStyleMode();
@@ -177,7 +177,7 @@ void MApplicationMenuButtonView::updateData(const QList<const char *>& modificat
 {
     Q_D(MApplicationMenuButtonView);
 
-    MWidgetView::updateData(modifications);
+    MButtonView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
         if (member == MButtonModel::Text) {
@@ -214,7 +214,7 @@ void MApplicationMenuButtonView::setupModel()
 
     d->refreshIconImage();
 
-    MWidgetView::setupModel();
+    MButtonView::setupModel();
 }
 
 M_REGISTER_VIEW_NEW(MApplicationMenuButtonView, MApplicationMenuButton)
