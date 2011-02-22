@@ -6,6 +6,7 @@ Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.7.2~git20110119-0maemo2+0m6), 
 Standards-Version: 3.7.2
 
 Package: libmeegotouchcore0
+Section: libs
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouch-bin (= ${Source-Version}), libmeegotouch-l10n-engineering-english (= ${Source-Version}), dbus-x11, meegotouchtheme (>= 0.20.67), libqtm-serviceframework
 Suggests: libmeegotouch-l10n-ar, libmeegotouch-l10n-de, libmeegotouch-l10n-en, libmeegotouch-l10n-fi, libmeegotouch-l10n-hu, libmeegotouch-l10n-ur, libmeegotouch-l10n-zh-cn
@@ -13,52 +14,56 @@ Description: MeeGo Touch core library
  MeeGo Touch core framework library
 
 Package: libmeegotouchcore0-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: libmeegotouchcore0 (= ${Source-Version})
 Description: libmeegotouch debug package
  libmeegotouch debug symbols.
 
 Package: libmeegotouchextensions0
+Section: libs
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch extensions library
  MeeGo Touch extensions framework library
 
 Package: libmeegotouchextensions0-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: libmeegotouchextensions0 (= ${Source-Version})
 Description: libmeegotouch debug package
  libmeegotouch debug symbols.
 
 Package: libmeegotouchsettings0
+Section: libs
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch settings library
  MeeGo Touch settings framework library
 
 Package: libmeegotouchsettings0-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: libmeegotouchsettings0 (= ${Source-Version})
 Description: libmeegotouch debug package
  libmeegotouch debug symbols.
 
 Package: libmeegotouchviews0
+Section: libs
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch views library
  MeeGo Touch views framework library
 
 Package: libmeegotouchviews0-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: libmeegotouchviews0 (= ${Source-Version})
 Description: libmeegotouch debug package
  libmeegotouch debug symbols.
 
 Package: libmeegotouch-bin
+Section: utils
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch binary files
@@ -72,8 +77,8 @@ Description: MeeGo Touch binary files
  mapplicationextensionrunner - launcher process for MeeGo Touch application extensions.
 
 Package: libmeegotouch-bin-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: libmeegotouch-bin (= ${Source-Version})
 Description: libmeegotouch debug package
  libmeegotouch debug symbols.
@@ -95,8 +100,8 @@ Description: MeeGo Touch specific development and testing tools
  stuff like applettester and code/mock generation.
 
 Package: meegotouch-dev-tools-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: meegotouch-dev-tools (= ${Source-Version})
 Description: meegotouch-dev-tools debug package
  meegotouch-dev-tools debug symbols.
@@ -109,9 +114,9 @@ Description: Demo applications for MeeGo Touch
  Collection of demo applications for MeeGo Touch
 
 Package: meegotouch-demos-widgetsgallery
-Section: user/development
-Priority: extra
+Section: devel
 Architecture: any
+Priority: extra
 Depends: ${shlibs:Depends}, meegotouch-demos-widgetsgallery-l10n-engineering-english (= ${Source-Version})
 Suggests: meegotouch-demos-widgetsgallery-l10n-ar, meegotouch-demos-widgetsgallery-l10n-de, meegotouch-demos-widgetsgallery-l10n-en, meegotouch-demos-widgetsgallery-l10n-fi, meegotouch-demos-widgetsgallery-l10n-ur, meegotouch-demos-widgetsgallery-l10n-zh-cn
 Conflicts: dui-demos-widgetsgallery
@@ -207,29 +212,29 @@ Depends: meegotouch-demos-applicationextension (= ${Source-Version})
 Description: Debug symbols of the demo application for application extensions
 
 Package: libmeegotouch-tests
-Section: extra
+Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}, locales, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good
 Description: libmeegotouch unit tests
  Unit testing binaries and shellscripts for testing libmeegotouch library
 
 Package: libmeegotouch-tests-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: libmeegotouch-tests (= ${Source-Version})
 Description: libmeegotouch-tests debug package
  libmeegotouch-tests debug symbols.
 
 Package: libmeegotouch-benchmarks
-Section: extra
+Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}, meegotouch-demos-widgetsgallery
 Description: libmeegotouch benchmarks
  Benchmarking binaries for testing libmeegotouch library
 
 Package: libmeegotouch-benchmarks-dbg
-Architecture: any
 Section: devel
+Architecture: any
 Depends: libmeegotouch-benchmarks (= ${Source-Version})
 Description: libmeegotouch-benchmarks debug package
  libmeegotouch-benchmarks debug symbols.
