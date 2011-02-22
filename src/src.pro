@@ -15,17 +15,6 @@ contains(DEFINES, HAVE_ICU) {
     SUBDIRS += icu-extradata
 }
 
-contains(DEFINES, HAVE_GCONF) {
-    # install gconf schema
-    unix {
-        schemas.CONFIG += no_check_exist
-        schemas.files = $${IN_PWD}/data/meegotouch.schemas
-        schemas.path = $${M_SYSCONFDIR}/gconf/schemas
-        schemas.commands = GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $${IN_PWD}/data/meegotouch.schemas
-        INSTALLS += schemas
-    }
-}
-
 #install device configuration file
 devices.CONFIG += no_check_exist
 devices.files = $${IN_PWD}/data/targets/*.conf

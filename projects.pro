@@ -102,5 +102,4 @@ setup.target = setup
 setup.CONFIG += no_check_exist
 setup.commands = mkdir -p $$M_TARGETS_CONF_DIR
 setup.commands += && cp src/data/targets/*.conf $$M_TARGETS_CONF_DIR
-setup.commands += && GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule src/data/meegotouch.schemas
 QMAKE_EXTRA_TARGETS += setup
