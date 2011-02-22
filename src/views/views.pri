@@ -54,6 +54,7 @@ PUBLIC_HEADERS += \
 PRIVATE_HEADERS += \
     mstylablewidgetview_p.h \
     mstatusbarview.h \
+    mstatusbarviewdbuswrapper.h \
     mextendingbackgroundview_p.h \
     mtexteditview_p.h \
     mapplicationmenuview_p.h \
@@ -111,6 +112,7 @@ SOURCES += \
     msliderview.cpp \
     mspinnerview.cpp \
     mstatusbarview.cpp \
+    mstatusbarviewdbuswrapper.cpp \
     mtexteditview.cpp \
     mtextmagnifier.cpp \
     mtoolbarlayoutpolicy.cpp \

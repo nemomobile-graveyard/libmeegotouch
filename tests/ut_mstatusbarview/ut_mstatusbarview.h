@@ -58,10 +58,7 @@ private slots:
     void cleanupTestCase();
     void init();
     void cleanup();
-#ifdef Q_WS_X11
-//    void testXDamageWhileTogglingVisibility();
-//    void testXDamageWhileTogglingProviderAvailability();
-#endif
+
     // Test when mouse is moved over a certain threshold then status indicator menu appears.
     void testWhenMouseMovesAboveThresholdStatusIndicatorMenuAppears();
     // Test when swipe less than a particular amount, status indicator will not be triggered.
@@ -79,13 +76,33 @@ private slots:
     // Test that the status indicator menu does not appear if it has been disabled from the style
     void testStatusIndicatorMenuDisabling();
 
+#ifdef Q_WS_X11
+    void testFetchingSharedPixmapHandle();
+    void testFetchSharedPixmapWhenProviderRegisters();
+    void testDiscardSharedPixmapWhenProviderUnregisters();
+#endif
+
+#ifdef HAVE_XDAMAGE
+    void testTrackXDamageEventsForSharedPixmapWhenEnterDisplay();
+    void testDestroyXDamageTrackingForSharedPixmapWhenExitDisplay();
+    void testDestroyXDamageTrackingForSharedPixmapWhenEnterSwitcher();
+#endif //HAVE_XDAMAGE
+
+
 private:
     void mouseDownWorker(QPointF downAt);
     void mouseMoveWorker(QPointF moveTo);
     void mouseUpWorker(QPointF upAt);
+    void initHelper();
+
+#ifdef Q_WS_X11
+    void createX11SharedPixmap();
+    void freeX11SharedPixmap();
+#endif
 
     TestMStatusBarView *m_subject;
     MStatusBar *m_statusbar;
+    Qt::HANDLE m_pixmapHandle;
     MApplication* app;
 };
 

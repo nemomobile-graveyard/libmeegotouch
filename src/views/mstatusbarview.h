@@ -24,15 +24,9 @@
 #include <mscenewindowmodel.h>
 #include <mstatusbarstyle.h>
 
-#ifdef HAVE_DBUS
-#include <mdbusinterface.h>
-
-class QDBusServiceWatcher;
-class QDBusPendingCallWatcher;
-#endif // HAVE_DBUS
-
 class MStatusBar;
 class QPixmap;
+class MStatusBarViewDBusWrapper;
 
 //! \internal
 
@@ -69,15 +63,14 @@ private:
     //! Used to track whether a mouse button is currently being pressed
     bool pressDown;
 
+    MStatusBarViewDBusWrapper *dbusWrapper;
+
 #ifdef Q_WS_X11
-    bool updatesEnabled;
+    bool isOnDisplay;
     bool isInSwitcher;
-    void updateSharedPixmap();
-#ifdef HAVE_DBUS
+    bool shouldStayUpToDate();
+    void updateXDamageForSharedPixmap();
     bool isPixmapProviderOnline;
-    QDBusServiceWatcher *dbusWatcher;
-    void querySharedPixmapFromProvider();
-#endif // HAVE_DBUS
     void setupXDamageForSharedPixmap();
     void destroyXDamageForSharedPixmap();
 
@@ -88,32 +81,15 @@ private Q_SLOTS:
     void handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short &y,
                                  unsigned short &width, unsigned short &height);
 
-    void enablePixmapUpdates();
-    void disablePixmapUpdates();
+    void handleDisplayEntered();
+    void handleDisplayExited();
     void handleSwitcherEntered();
     void handleSwitcherExited();
-#ifdef HAVE_DBUS
-    void sharedPixmapHandleReceived(QDBusPendingCallWatcher * call);
+    void handleSharedPixmapHandleReceived(quint32 handle, bool ok);
     void handlePixmapProviderOnline();
     void handlePixmapProviderOffline();
-#endif // HAVE_DBUS
 
 #endif // Q_WS_X11
-
-private:
-#ifdef HAVE_DBUS
-    //! The name of the status indicator menu D-Bus service
-    static const QString STATUS_INDICATOR_MENU_DBUS_SERVICE;
-
-    //! The name of the status indicator menu D-Bus path
-    static const QString STATUS_INDICATOR_MENU_DBUS_PATH;
-
-    //! The name of the status indicator menu D-Bus interface
-    static const char *STATUS_INDICATOR_MENU_DBUS_INTERFACE;
-
-    //! DBus interface for the status indicator menu
-    MDBusInterface statusIndicatorMenuInterface;
-#endif // HAVE_DBUS
 
 #ifdef UNIT_TEST
     friend class Ut_MStatusBarView;
