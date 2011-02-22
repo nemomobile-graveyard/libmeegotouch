@@ -48,6 +48,7 @@ public: // public to inherited classes
 private:// public only to MWidgetView
     MWidgetModel *model;
     MWidgetStyleContainer *styleContainer;
+    const MStyle *appliedStyle;
 };
 
 #endif // MWIDGETVIEW_P_H

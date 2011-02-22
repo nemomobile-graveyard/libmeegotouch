@@ -47,7 +47,8 @@ MWidgetViewPrivate::MWidgetViewPrivate() :
     q_ptr(NULL),
     controller(NULL),
     model(NULL),
-    styleContainer(NULL)
+    styleContainer(NULL),
+    appliedStyle(NULL)
 {
 }
 
@@ -281,6 +282,8 @@ void MWidgetView::applyStyle()
 
     updateGeometry();
     update();
+
+    d->appliedStyle = style().currentStyle();
 }
 
 MWidgetModel *MWidgetView::model()
@@ -469,7 +472,11 @@ void MWidgetView::cancelEvent(MCancelEvent *event)
 void MWidgetView::orientationChangeEvent(MOrientationChangeEvent *event)
 {
     Q_UNUSED(event);
-    applyStyle();
+    Q_D(MWidgetView);
+    if (style().currentStyle() != d->appliedStyle) {
+        applyStyle();
+        d->appliedStyle = style().currentStyle();
+    }
 }
 
 void MWidgetView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)

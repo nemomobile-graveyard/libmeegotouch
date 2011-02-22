@@ -146,6 +146,7 @@ protected:
 
     friend class MTheme;
     friend class MWidgetViewPrivate; // it needs to call reloadStyles()
+    friend class MWidgetView; // needs to call currentStyle()
 };
 
 #endif
