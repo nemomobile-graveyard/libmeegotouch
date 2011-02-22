@@ -103,7 +103,7 @@ const QImage& MImageWidgetPrivate::getImage()
 void MImageWidgetPrivate::init() {
     Q_Q(MImageWidget);
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    policy.setHeightForWidth(true);
+    policy.setHeightForWidth(false);
     q->setSizePolicy(policy);
 }
 
