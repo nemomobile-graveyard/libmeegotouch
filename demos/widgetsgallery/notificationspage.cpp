@@ -31,7 +31,10 @@
 #include <QTimer>
 #include <MDialog>
 #include <QGraphicsLinearLayout>
+
+#ifdef HAVE_DBUS
 #include <MNotification>
+#endif //HAVE_DBUS
 
 class NotificationsPageCellCreator : public MAbstractCellCreator<MBasicListItem>
 {
@@ -117,9 +120,11 @@ QString NotificationsPage::timedemoTitle()
 
 void NotificationsPage::sendNotification()
 {
+#ifdef HAVE_DBUS
     MNotification *notification = new MNotification("widgetsgalleryeventtype.conf", "This is a notification", "This is a notification");
     notification->publish();
     delete notification;
+#endif //HAVE_DBUS
 }
 
 void NotificationsPage::toggleNotificationPreviewEnabled()
