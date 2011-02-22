@@ -10,6 +10,7 @@ isEmpty(DOXYGEN_BIN) {
 
     doc.commands = ( sed -e \"s:@M_SRC_DIR@:$${IN_PWD}:g\" \
                          -e \"s:@M_BUILD_DIR@:$${M_BUILD_TREE}:g\" \
+                         -e \"s/@M_DOC_VERSION_STRING@/$${M_DOC_VERSION_STRING}/g\" \
                          $${IN_PWD}/mdoxy.cfg.in > doc/mdoxy.cfg );
 
     doc.commands+= ( $${IN_PWD}/generate-toc.pl < $${M_SOURCE_TREE}/doc/src/i18n.dox > $${M_BUILD_TREE}/doc/i18n-toc.html );

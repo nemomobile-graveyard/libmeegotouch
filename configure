@@ -44,6 +44,9 @@ if [ -z "$M_MAJOR_VERSION" ]; then
    exit 1
 fi
 
+# create version string for doxygen doc
+M_DOC_VERSION_STRING=`sh doc/versionString.sh .`
+
 #-------------------------------------------------------------------------------
 # initalize variables
 #-------------------------------------------------------------------------------
@@ -675,6 +678,8 @@ M_VERSION = $M_VERSION
 M_MAJOR_VERSION = $M_MAJOR_VERSION
 M_MINOR_VERSION = $M_MINOR_VERSION
 M_PATCH_VERSION = $M_PATCH_VERSION
+
+M_DOC_VERSION_STRING = $M_DOC_VERSION_STRING
 
 #paths
 M_INSTALL_PREFIX = $M_INSTALL_PREFIX
