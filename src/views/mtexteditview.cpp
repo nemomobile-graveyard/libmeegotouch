@@ -530,11 +530,6 @@ void MTextEditViewPrivate::showMagnifier()
 
 void MTextEditViewPrivate::hideMagnifier()
 {
-    MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
-    if (textWidgetPtr) {
-        disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()), this, 0);
-    }
-
     if (controller->sceneManager()) {
         QObject::connect(controller, SIGNAL(cursorPositionChanged()),
                          controller->sceneManager(), SLOT(ensureCursorVisible()),
@@ -546,6 +541,11 @@ void MTextEditViewPrivate::hideMagnifier()
     }
 
     if (magnifier) {
+        MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
+        if (textWidgetPtr) {
+            disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(updateMagnifierPosition()));
+        }
+
         magnifier->disappear();
         magnifier.reset();
     }
