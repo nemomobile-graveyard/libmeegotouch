@@ -68,9 +68,11 @@ MBackgroundTiles::MBackgroundTiles(const QString& imageId, int left, int right, 
     d_ptr(new MBackgroundTilesPrivate)
 {
     Q_D(MBackgroundTiles);
-    for(int i=0; i!=16; ++i) {
-        d->tiles[i] = MTheme::scalableImage(imageId+TILE_POSTFIX[i], left, right, top, bottom);
-    }
+    d->imageId = imageId;
+    d->left = left;
+    d->right = right;
+    d->top = top;
+    d->bottom = bottom;
 }
 
 MBackgroundTiles::~MBackgroundTiles()
@@ -86,6 +88,10 @@ MBackgroundTiles::~MBackgroundTiles()
 const MScalableImage* MBackgroundTiles::operator [] (M::Position tile) const
 {
     Q_D(const MBackgroundTiles);
+    if(!d->tiles[tile]) {
+        const_cast<MBackgroundTilesPrivate*&>(d)->tiles[tile] =
+            MTheme::scalableImage(d->imageId+TILE_POSTFIX[tile], d->left, d->right, d->top, d->bottom);
+    }
     return d->tiles[tile];
 }
 

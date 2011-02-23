@@ -32,6 +32,8 @@ private:
 
     const MScalableImage* tiles[16];
     int refCount;
+    QString imageId;
+    int left,right,top,bottom;
 };
 
 #endif

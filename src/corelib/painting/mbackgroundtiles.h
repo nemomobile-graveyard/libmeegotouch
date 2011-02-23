@@ -30,8 +30,36 @@ class MBackgroundTilesPrivate;
   \class MBackgroundTiles
   \brief This class holds 16 pieces of scalable images which represent every possible position in a layout
 
-  M::Position documents all the variations.
+  All 16 pieces are fetched from MTheme with different suffixes. For example if you use imageId 'bg'
+  this class will fetch the following images corresponding to M::Position:
+  \li M::DefaultPosition => 'bg'
+
+  \li M::TopLeftPosition => 'bg-top-left'
+  \li M::TopCenterPosition => 'bg-top-center'
+  \li M::TopRightPosition => 'bg-top-right'
+  \li M::CenterLeftPosition => 'bg-center-left'
+  \li M::CenterPosition => 'bg-center'
+  \li M::CenterRightPosition => 'bg-center-right'
+  \li M::BottomLeftPosition => 'bg-bottom-left'
+  \li M::BottomCenterPosition => 'bg-bottom-center'
+  \li M::BottomRightPosition => 'bg-bottom-right'
+
+  \li M::HorizontalLeftPosition => 'bg-horizontal-left'
+  \li M::HorizontalCenterPosition => 'bg-horizontal-center'
+  \li M::HorizontalRightPosition => 'bg-horizontal-right'
+
+  \li M::VerticalTopPosition => 'bg-vertical-top'
+  \li M::VerticalCenterPosition => 'bg-vertical-center'
+  \li M::VerticalBottomPosition => 'bg-vertical-bottom'
+
+  This class is mainly meant to be used with the style system, so that the imageId can be given from css,
+  and the M::Position from application code. A working example is the background of any widget.
+  MWidgetStyle::backgroundTiles defines the id and the margins while MWidgetController::setLayoutPosition can be
+  used for defining which tile is the one to be rendered. Some layout policies have this functionality to automatically
+  set the correct position for each widget, e.g. MLinearLayoutPolicy::setNotifyWidgetsOfLayoutPositionEnabled.
+
   \sa M::Position
+
 */
 class M_CORE_EXPORT MBackgroundTiles
 {
