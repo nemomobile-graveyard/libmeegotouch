@@ -22,13 +22,21 @@
 #include <QVariant>
 #include <QCoreApplication>
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#include "contextproperty.h"
+#endif
+
 #include <MDebug>
+
+namespace {
+    const QString keyboardPresent("/maemo/InternalKeyboard/Present");
+}
 
 MKeyboardStateTracker *MKeyboardStateTrackerPrivate::tracker = 0;
 
 MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker *controller) :
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    keyboardOpenProperty("/maemo/InternalKeyboard/Open"),
+    keyboardOpenProperty(0),
     isSubscribed(false),
 #elif defined(M_OS_MAEMO5)
     keyboardOpenConf("/system/osso/af/slide-open"),
@@ -36,12 +44,15 @@ MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker
     q_ptr(controller),
     present(false)
 {
+    Q_Q(MKeyboardStateTracker);
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    Q_Q(MKeyboardStateTracker);
-    QObject::connect(&keyboardOpenProperty, SIGNAL(valueChanged()),
+    checkKeyboardPresent();
+    if (present) {
+        keyboardOpenProperty = new ContextProperty(QString("/maemo/InternalKeyboard/Open"));
+        QObject::connect(keyboardOpenProperty, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
+    }
 #elif defined(M_OS_MAEMO5)
-    Q_Q(MKeyboardStateTracker);
     QObject::connect(&keyboardOpenConf, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
 #endif
@@ -52,29 +63,40 @@ MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker
 void MKeyboardStateTrackerPrivate::initContextSubscriber()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    if (!present)
+        return;
     //waiting for properties to synchronize
-    keyboardOpenProperty.waitForSubscription(true);
+    keyboardOpenProperty->waitForSubscription(true);
     isSubscribed = true;
-    if (!keyboardOpenProperty.value().isNull()) {
-        present = true;
-    }
 #elif defined(M_OS_MAEMO5)
     present = true;
 #endif
 }
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MKeyboardStateTrackerPrivate::checkKeyboardPresent()
+{
+    ContextProperty keyboardPresentProperty(keyboardPresent);
+    keyboardPresentProperty.waitForSubscription(true);
+    present = keyboardPresentProperty.value().toBool();
+}
+#endif
+
 void MKeyboardStateTrackerPrivate::subscribe()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    keyboardOpenProperty.subscribe();
+    if (present)
+        keyboardOpenProperty->subscribe();
 #endif
 }
 
 void MKeyboardStateTrackerPrivate::unsubscribe()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    keyboardOpenProperty.unsubscribe();
-    isSubscribed = false;
+    if (present) {
+        keyboardOpenProperty->unsubscribe();
+        isSubscribed = false;
+    }
 #endif
 }
 
@@ -116,7 +138,7 @@ bool MKeyboardStateTracker::isOpen() const
             trackerPriv->subscribe();
             trackerPriv->initContextSubscriber();
         }
-        val = d->keyboardOpenProperty.value().toBool();
+        val = d->keyboardOpenProperty->value().toBool();
 #elif defined(M_OS_MAEMO5)
         val = d->keyboardOpenConf.value().toBool();
 #endif

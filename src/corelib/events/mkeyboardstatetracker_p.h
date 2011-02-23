@@ -20,10 +20,12 @@
 #ifndef MKEYBOARDSTATETRACKER_P_H
 #define MKEYBOARDSTATETRACKER_P_H
 
-#ifdef HAVE_CONTEXTSUBSCRIBER
-#include "contextproperty.h"
-#elif defined(M_OS_MAEMO5)
+#if defined(M_OS_MAEMO5)
 #include "mgconfitem.h"
+#endif
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    class ContextProperty;
 #endif
 
 class MKeyboardStateTracker;
@@ -35,8 +37,9 @@ public:
 
     static MKeyboardStateTracker *tracker;
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    ContextProperty keyboardOpenProperty;
+    ContextProperty *keyboardOpenProperty;
     bool isSubscribed;
+    void checkKeyboardPresent();
 #elif defined(M_OS_MAEMO5)
     MGConfItem keyboardOpenConf;
 #endif
