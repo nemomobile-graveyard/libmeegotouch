@@ -27,6 +27,7 @@
 
 #include "mtexteditview.h"
 
+class MEditorToolbar;
 class MTextEdit;
 class MTextMagnifier;
 class QGraphicsSceneMouseEvent;
@@ -66,6 +67,10 @@ public:
 
     void showMagnifier();
     void hideMagnifier();
+
+    void showEditorToolbar();
+    void hideEditorToolbar();
+
 protected slots:
     void scrolling();
     void hideUnmaskedText();
@@ -76,6 +81,7 @@ protected slots:
     void updateMagnifierPosition();
     void makeMagnifierDisappear();
     void makeMagnifierAppear();
+    void updateEditorToolbarPosition();
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
@@ -89,6 +95,12 @@ private:
 
     //! Returns a rectangle of the cursor
     QRect cursorRect() const;
+
+    //! \return area covered by text starting from \a startPosition and ending
+    //! to \a endPosition.  Both positions must be on the same line.
+    QRect textRectangle(int startPosition, int endPosition);
+    //! \return area covered by selection on its \a first or last line
+    QRect selectionLineRectangle(bool first);
 
 protected:
     MTextEditView *q_ptr;
@@ -135,7 +147,10 @@ protected:
     QTimer *hideInfoBannerTimer;
 
     QScopedPointer<MTextMagnifier> magnifier;
+    QScopedPointer<MEditorToolbar> editorToolbar;
     bool oldItemSendsScenePositionChanges;
+
+    bool focusReleaseExpected;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

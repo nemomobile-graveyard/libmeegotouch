@@ -25,6 +25,7 @@
 #include <QList>
 #include <QInputMethodEvent>
 #include <QTime>
+#include <QAction>
 
 class QGraphicsSceneMouseEvent;
 class QValidator;
@@ -141,6 +142,7 @@ public:
     virtual bool copy();
     QString replaceLineBreaks(QString text, QString replacement);
     void _q_confirmCompletion(const QString &);
+    void _q_updatePasteActionState();
 
     //! \brief Disable MTextEdit::updateMicroFocus().
     //!
@@ -200,6 +202,9 @@ private:
     QTime doubleClickSelectionTime;
     MTextEditSignalEmitter signalEmitter;
     bool preeditInjectionInProgress;
+    QAction cutAction;
+    QAction copyAction;
+    QAction pasteAction;
 
     friend class MTextEditSignalEmitter;
     friend class MCompleterViewPrivate;

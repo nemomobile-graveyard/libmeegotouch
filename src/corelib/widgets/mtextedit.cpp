@@ -351,7 +351,10 @@ MTextEditPrivate::MTextEditPrivate()
       previousReleaseWordStart(0),
       previousReleaseWordEnd(0),
       signalEmitter(*this),
-      preeditInjectionInProgress(false)
+      preeditInjectionInProgress(false),
+      cutAction("Cut", 0),
+      copyAction("Copy", 0),
+      pasteAction("Paste", 0)
 {
 }
 
@@ -396,6 +399,36 @@ void MTextEditPrivate::init()
     q->model()->cursor()->movePosition(QTextCursor::End);
     q->setFocusPolicy(Qt::ClickFocus);
     q->setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
+
+    // Set up default editor toolbar actions.  It's possible for MTextEdit
+    // children to replace them and it's recommended that they do that right
+    // after MTextEdit construction and don't change them later.  The actions of
+    // MTextEdit are used as MEditorToolbar actions by MTextEditView when the
+    // toolbar is shown.  A dynamic property "noCloseToolbarOnTrigger" of
+    // boolean type may be set for an action and if true, it disables the
+    // default behaviour where triggering an action closes the toolbar.
+    // For now we don't advertise actions as a public MTextEdit API.
+    QObject::connect(q, SIGNAL(copyAvailable(bool)), &cutAction, SLOT(setVisible(bool)));
+    QObject::connect(q, SIGNAL(copyAvailable(bool)), &copyAction, SLOT(setVisible(bool)));
+    // paste visibility is controlled by _q_updatePasteActionState,
+    // (dis)connected in focusInEvent and focusOutEvent
+    cutAction.setVisible(false);
+    copyAction.setVisible(false);
+    pasteAction.setVisible(!QApplication::clipboard()->text().isEmpty());
+
+    QObject::connect(&cutAction, SIGNAL(triggered(bool)), q, SLOT(cut()));
+    QObject::connect(&copyAction, SIGNAL(triggered(bool)), q, SLOT(copy()));
+    QObject::connect(&pasteAction, SIGNAL(triggered(bool)), q, SLOT(paste()));
+
+    q->addAction(&cutAction);
+    q->addAction(&copyAction);
+    q->addAction(&pasteAction);
+}
+
+void MTextEditPrivate::_q_updatePasteActionState()
+{
+    const bool hasText = !QApplication::clipboard()->text().isEmpty();
+    pasteAction.setVisible(hasText);
 }
 
 QTextCursor *MTextEditPrivate::cursor() const
@@ -1830,6 +1863,11 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
                 completer(), SLOT(complete()));
     }
 
+    // Listen to clipboard changes and update visibility of paste action accordingly.
+    d->_q_updatePasteActionState();
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
+            this, SLOT(_q_updatePasteActionState()));
+
     emit gainedFocus(event->reason());
 }
 
@@ -1845,6 +1883,9 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MTextEdit);
+
+    disconnect(QApplication::clipboard(), SIGNAL(dataChanged()),
+               this, SLOT(_q_updatePasteActionState()));
 
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;

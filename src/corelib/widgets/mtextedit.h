@@ -570,6 +570,7 @@ private:
     friend class Ut_MTextEditView;
 #endif
     Q_PRIVATE_SLOT(d_func(), void _q_confirmCompletion(const QString &))
+    Q_PRIVATE_SLOT(d_func(), void _q_updatePasteActionState())
 };
 
 #endif

@@ -20,6 +20,7 @@
 #include "mtexteditview.h"
 #include "mtexteditview_p.h"
 #include "mtextmagnifier.h"
+#include "meditortoolbar.h"
 #include "mcompleter.h"
 
 #include <MSceneManager>
@@ -39,6 +40,7 @@
 #include "mtextedit_p.h"
 #include "minfobanner.h"
 #include "mtimestamp.h"
+#include "minputmethodstate.h"
 
 namespace
 {
@@ -62,6 +64,9 @@ namespace
     const int BinaryTextVariantSeparator = 0x9c;
 
     const char * const CursorWidthProperty = "cursorWidth";
+
+    // Editor toolbar action property that affects toolbar closing
+    const char * const NoCloseToolbarOnTriggerProperty("noCloseToolbarOnTrigger");
 }
 
 
@@ -93,7 +98,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       inAutoSelectionClick(false),
       infoBanner(0),
       editActive(false),
-      hideInfoBannerTimer(new QTimer(this))
+      hideInfoBannerTimer(new QTimer(this)),
+      focusReleaseExpected(false)
 {
     // copy text options from actual document to prompt
     QTextOption option = document()->defaultTextOption();
@@ -116,6 +122,10 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     QObject::connect(maskTimer, SIGNAL(timeout()), this, SLOT(hideUnmaskedText()));
     QObject::connect(control, SIGNAL(cursorPositionChanged()),
                      this, SLOT(updateMagnifierPosition()));
+    QObject::connect(control, SIGNAL(cursorPositionChanged()),
+                     this, SLOT(updateEditorToolbarPosition()));
+    QObject::connect(control, SIGNAL(selectionChanged()),
+                     this, SLOT(updateEditorToolbarPosition()));
 }
 
 
@@ -495,6 +505,41 @@ QTextDocument *MTextEditViewPrivate::activeDocument() const
 }
 
 
+void MTextEditViewPrivate::showEditorToolbar()
+{
+    if (!editorToolbar) {
+        editorToolbar.reset(new MEditorToolbar(*controller));
+        foreach (QAction *action, controller->actions()) {
+            if (!action->property(NoCloseToolbarOnTriggerProperty).toBool()) {
+                connect(action, SIGNAL(triggered()), editorToolbar.data(), SLOT(disappear()));
+            }
+            editorToolbar->addAction(action);
+        }
+    }
+    editorToolbar->appear();
+    QObject::connect(controller, SIGNAL(textChanged()),
+                     editorToolbar.data(), SLOT(disappear()));
+    QObject::connect(editorToolbar.data(), SIGNAL(sizeChanged()),
+                     this, SLOT(updateEditorToolbarPosition()));
+    MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
+    connect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
+            this, SLOT(updateEditorToolbarPosition()), Qt::UniqueConnection);
+    updateEditorToolbarPosition();
+}
+
+
+void MTextEditViewPrivate::hideEditorToolbar()
+{
+    if (!editorToolbar) {
+        return;
+    }
+
+    editorToolbar->disappear();
+    MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
+    disconnect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(updateEditorToolbarPosition()));
+    editorToolbar.reset();
+}
+
 void MTextEditViewPrivate::showMagnifier()
 {
     Q_Q(MTextEditView);
@@ -858,6 +903,103 @@ void MTextEditViewPrivate::makeMagnifierAppear()
     }
 }
 
+QRect MTextEditViewPrivate::textRectangle(const int startPosition, const int endPosition)
+{
+    Q_Q(const MTextEditView);
+
+    const QTextBlock startBlock(document()->findBlock(startPosition));
+    const int blockRelativeStartPosition(startPosition - startBlock.position());
+    const QTextLine firstLine(startBlock.layout()->lineForTextPosition(
+                                  blockRelativeStartPosition));
+    Q_ASSERT(firstLine.isValid());
+
+    const QPointF commonOffset(document()->documentLayout()->blockBoundingRect(startBlock).topLeft()
+                               + QPointF(q->style()->paddingLeft(), q->style()->paddingTop()));
+    const QPointF topLeft(QPointF(firstLine.cursorToX(blockRelativeStartPosition),
+                                  firstLine.naturalTextRect().top())
+                          + commonOffset);
+    const QPointF bottomRight(QPointF(firstLine.cursorToX(endPosition
+                                                          - startBlock.position()),
+                                      firstLine.naturalTextRect().bottom())
+                              + commonOffset);
+    return QRectF(topLeft, bottomRight).toRect();
+}
+
+QRect MTextEditViewPrivate::selectionLineRectangle(bool first)
+{
+    const int selectionStart(controller->textCursor().selectionStart());
+    const int selectionEnd(controller->textCursor().selectionEnd());
+    QTextCursor cursor(controller->textCursor());
+    if (first) {
+        cursor.setPosition(selectionStart);
+        cursor.movePosition(QTextCursor::EndOfLine);
+        const bool multiLine(selectionEnd > cursor.position());
+        if (!multiLine) {
+            cursor.setPosition(selectionEnd);
+        }
+        return textRectangle(selectionStart, cursor.position());
+    } else {
+        cursor.setPosition(selectionEnd);
+        cursor.movePosition(QTextCursor::StartOfLine);
+        const bool multiLine(selectionStart < cursor.position());
+        if (!multiLine) {
+            cursor.setPosition(selectionStart);
+        }
+        return textRectangle(cursor.position(), selectionEnd);
+    }
+}
+
+void MTextEditViewPrivate::updateEditorToolbarPosition()
+{
+    if (!editorToolbar || !editorToolbar->isAppeared()) {
+        return;
+    }
+
+    QRect firstRect;
+    QRect secondRect;
+
+    if (controller->hasSelectedText()) {
+        firstRect = selectionLineRectangle(true);
+        secondRect = selectionLineRectangle(false);
+    } else {
+        firstRect = cursorRect();
+        secondRect = firstRect;
+    }
+
+    QRect targetRect(firstRect);
+    int targetY(firstRect.top());
+    MEditorToolbarArrow::ArrowDirection arrowDirection(MEditorToolbarArrow::ArrowDown);
+
+    const QRect visibleSceneRect(
+        controller->mapRectFromScene(
+            0, 0, controller->sceneManager()->visibleSceneSize(M::Landscape).width(),
+            controller->sceneManager()->visibleSceneSize(M::Landscape).height()).toRect());
+
+    if (targetY - editorToolbar->size().height() < visibleSceneRect.top()) {
+        targetY = secondRect.bottom();
+
+        int bottomLimit;
+        if (MInputMethodState::instance()->inputMethodArea().isEmpty()) {
+            bottomLimit = visibleSceneRect.bottom();
+        } else {
+            bottomLimit = qMin<int>(
+                controller->mapRectFromScene(
+                    MInputMethodState::instance()->inputMethodArea()).toRect().top(),
+                visibleSceneRect.bottom());
+        }
+
+        if (targetY + editorToolbar->size().height() <= bottomLimit) {
+            targetRect = secondRect;
+        } else {
+            targetY = firstRect.bottom();
+        }
+        arrowDirection = MEditorToolbarArrow::ArrowUp;
+    }
+
+    editorToolbar->setPosition(QPointF(targetRect.center().x(), targetY),
+                               arrowDirection);
+}
+
 //////////////////////
 //// Actual class ////
 //////////////////////
@@ -1015,6 +1157,7 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     MTextEdit::TextFieldLocationType location;
 
+    const bool magnifierHidden(d->magnifier && d->magnifier->isAppeared());
     d->hideMagnifier();
 
     // Make sure cursor is visible. This is done here on release so
@@ -1028,12 +1171,17 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         style()->releaseFeedback().play();
     }
 
+    const int eventCursorPos = d->cursorPosition(event);
+    const QTextCursor cursor(d->controller->textCursor());
+    const bool insideCurrentPreedit((model()->edit() == MTextEditModel::EditModeActive)
+                                    && (eventCursorPos > cursor.selectionStart())
+                                    && (eventCursorPos < cursor.selectionEnd()));
+
     // controller shouldn't do anything for selection ending mouse release
     if (d->selecting == false) {
         // don't send either focus gaining mouse click with autoselect
         if (d->inAutoSelectionClick == false) {
-            int cursor = d->cursorPosition(event);
-            d->controller->handleMouseRelease(cursor, event, &location);
+            d->controller->handleMouseRelease(eventCursorPos, event, &location);
 
             if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
                 if (location == MTextEdit::Word) {
@@ -1044,6 +1192,12 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             }
         }
     }
+
+    if (magnifierHidden || (!d->focusReleaseExpected && !insideCurrentPreedit)
+        || d->controller->hasSelectedText()) {
+        d->showEditorToolbar();
+    }
+    d->focusReleaseExpected = false;
 
     d->selecting = false;
     d->inAutoSelectionClick = false;
@@ -1440,6 +1594,15 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
         }
     }
 
+    d->focusReleaseExpected = false;
+
+    if (reason == Qt::MouseFocusReason) {
+        if (d->activeDocument()->isEmpty()) {
+            d->showEditorToolbar();
+        }
+        d->focusReleaseExpected = true;
+    }
+
     d->focused = true;
     doUpdate();
 }
@@ -1449,6 +1612,8 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
 {
     Q_D(MTextEditView);
     Q_UNUSED(reason);
+
+    d->hideEditorToolbar();
 
     if (d->controller->sceneManager()) {
         disconnect(d->controller, SIGNAL(cursorPositionChanged()),
