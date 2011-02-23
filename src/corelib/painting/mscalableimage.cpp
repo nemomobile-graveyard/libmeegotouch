@@ -142,16 +142,7 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             const_cast<MScalableImagePrivate*>(this)->cachedImageKey = key;
         } else {
             // caching isn't permitted for this case; scale and render direct to screen.
-            #if defined(M_OS_MAEMO5)
-                // don't use smooth pixmap transformation on the N900, as this
-                // decreases the performance
-                qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
-            #else
-                bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
-                painter->setRenderHint(QPainter::SmoothPixmapTransform);
-                qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
-                painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
-            #endif //defined(M_OS_MAEMO5)
+            qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
 
             if (!cachedImageKey.isEmpty()) {
                 QPixmapCache::remove(cachedImageKey);
