@@ -30,6 +30,7 @@
 #include "toolbarpage.h"
 #include "textentrypage.h"
 #include "textentrynavigationpage.h"
+#include "textentryattributeextensionpage.h"
 #include "mlistpage.h"
 #include "mgridpage.h"
 #include "sliderpage.h"
@@ -115,6 +116,7 @@ public:
         BubblePageType,
         TextEntryPageType,
         TextEntryNavigationPageType,
+        TextEntryAttributeExtensionPageType,
         SliderPageType,
         FeedbackPageType
     };
@@ -196,6 +198,8 @@ public:
         addGalleryPage(5, qtTrId("xx_wg_user_input_text_entries"), WidgetsGalleryDataModel::TextEntryPageType);
         //% "Text Entries Navigation"
         addGalleryPage(5, qtTrId("xx_wg_user_input_text_entries_navigation"), WidgetsGalleryDataModel::TextEntryNavigationPageType);
+        //% "Text Entries Attribute Extension"
+        addGalleryPage(5, qtTrId("xx_wg_user_input_text_entries_attribute_extension"), WidgetsGalleryDataModel::TextEntryAttributeExtensionPageType);
         //% "Slider"
         addGalleryPage(5, qtTrId("xx_wg_user_input_slider"), WidgetsGalleryDataModel::SliderPageType);
         //% "Input Feedback"
@@ -354,6 +358,9 @@ private:
                     break;
                 case TextEntryNavigationPageType:
                     page = new TextEntryNavigationPage();
+                    break;
+                case TextEntryAttributeExtensionPageType:
+                    page = new TextEntryAttributeExtensionPage();
                     break;
                 case SliderPageType:
                     page = new SliderPage();

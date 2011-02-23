@@ -42,6 +42,7 @@ SOURCES += main.cpp \
     toolbarpage.cpp \
     textentrypage.cpp \
     textentrynavigationpage.cpp \
+    textentryattributeextensionpage.cpp \
     mlistpage.cpp \
     mgridpage.cpp \
     gridmodel.cpp \
@@ -95,6 +96,7 @@ HEADERS += templatepage.h \
     toolbarpage.h \
     textentrypage.h \
     textentrynavigationpage.h \
+    textentryattributeextensionpage.h \
     mlistpage.h \
     mgridpage.h \
     gridmodel.h \
