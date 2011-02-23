@@ -268,6 +268,10 @@ public:
     //Should label be rendered as rich text
     bool displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const;
 
+    // Set the text direction and alignment in textOptions according to the text direction in
+    // the model or (if auto) based on the model text's content
+    void autoSetTextDirection();
+
     // need define this for there are overload functions in controller
     MLabel *controller;
 

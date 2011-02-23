@@ -820,6 +820,8 @@ public:
 
     /*!
      * \brief Returns the text direction of the locale
+     *
+     * \sa directionForText()
      */
     Qt::LayoutDirection textDirection() const;
 
@@ -1688,6 +1690,29 @@ public:
      * when obtaining a list of endonyms for a lot of languages.
      */
     static QString languageEndonym(const QString &locale);
+
+    /*!
+     * \brief Static method to obtain the text direction for a given text.
+     *
+     * This returns the text direction for a (paragraph) of text
+     * according to the rules to determine the <a
+     * href="http://unicode.org/reports/tr9/#The_Paragraph_Level">
+     * Paragraph Level in the Unicode Bidirectional Algorithm</a>.
+     * I.e. it looks for the first character of L, AL, or R in the
+     * paragraph, if such a character is found and it is of type AL or
+     * R, the text direction is Qt::RightToLeft else Qt::LeftToRight.
+     *
+     * If the text is empty or if it only contains digits, whitespace,
+     * punctuation characters or other characters with no strong text
+     * direction, this function returns Qt::LayoutDirectionAuto.
+     *
+     * Notice that this will only work well for plain text; rich text
+     * might contain markup tags (e.g., \<b\>) that might also be
+     * detected as having a meaningful text direction.
+     *
+     * \sa textDirection() const
+     */
+    static Qt::LayoutDirection directionForText(const QString & text);
 
 Q_SIGNALS:
     void settingsChanged();

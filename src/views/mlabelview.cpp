@@ -22,6 +22,7 @@
 #include "mlabelmodel.h"
 #include "mlabel.h"
 #include "mviewcreator.h"
+#include "mlocale.h"
 
 #include <QTextDocument>
 #include <QPixmapCache>
@@ -90,6 +91,35 @@ bool MLabelViewPrivate::displayAsRichText(QString text, Qt::TextFormat textForma
     
     return Qt::mightBeRichText(text) || (numberOfHighlighters > 0);
 }
+
+void MLabelViewPrivate::autoSetTextDirection()
+{
+    // Set text direction
+
+    Qt::LayoutDirection textDirection = model()->textDirection();
+
+    if (textDirection == Qt::LayoutDirectionAuto) {
+        textDirection = MLocale::directionForText(model()->text()); // look at the text content
+    }
+    textOptions.setTextDirection(textDirection);
+
+    // Set alignment
+
+    Qt::Alignment alignment = model()->alignment();
+
+    if (textDirection == Qt::RightToLeft && !(alignment & Qt::AlignAbsolute)) {
+        // Mirror horizontal alignment
+        Qt::Alignment horAlignment = (alignment & Qt::AlignHorizontal_Mask);
+        if (horAlignment & Qt::AlignRight) {
+            horAlignment = Qt::AlignLeft;
+        } else if (!(horAlignment & Qt::AlignHCenter)) {
+            horAlignment = Qt::AlignRight;
+        }
+        alignment = (alignment & ~Qt::AlignHorizontal_Mask) | horAlignment;
+    }
+    textOptions.setAlignment(alignment);
+}
+
 
 MLabelView::MLabelView(MLabel *controller) :
     MWidgetView(new MLabelViewPrivate)

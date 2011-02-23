@@ -142,8 +142,8 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 
 void MLabelViewSimple::setupModel()
 {
-    viewPrivate->textOptions.setTextDirection(viewPrivate->model()->textDirection());
     viewPrivate->textOptions.setAlignment(viewPrivate->model()->alignment());
+    viewPrivate->autoSetTextDirection();
     if (viewPrivate->model()->wordWrap()) {
         viewPrivate->textOptions.setWrapMode(viewPrivate->model()->wrapMode());
     } else {
@@ -165,6 +165,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
                 preferredSize = QSizeF(-1, -1);
                 viewPrivate->previousStaticTextSize = staticText.size();
             }
+            viewPrivate->autoSetTextDirection();
             needUpdate = true;
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
@@ -181,8 +182,8 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             }
             needUpdate = true;
         } else if (member == MLabelModel::TextDirection) {
+            viewPrivate->autoSetTextDirection();
             needUpdate = true;
-            viewPrivate->textOptions.setTextDirection(viewPrivate->model()->textDirection());
         } else if (member == MLabelModel::Alignment) {
             viewPrivate->textOptions.setAlignment(viewPrivate->model()->alignment());
         } else if (member == MLabelModel::UseModelFont || member == MLabelModel::Font) {
@@ -241,6 +242,9 @@ void MLabelViewSimple::initializeTextProperties()
     dirty = false;
 
     const MLabelStyle *style = viewPrivate->style();
+
+    if (viewPrivate->textOptions.textDirection() == Qt::LayoutDirectionAuto)
+        viewPrivate->autoSetTextDirection();
 
     paintingRect = (viewPrivate->textOptions.textDirection() == Qt::LeftToRight)
         ? viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom())
@@ -371,16 +375,9 @@ Qt::TextFlag MLabelViewSimple::textFlagForWrapMode() const
 
 void MLabelViewSimple::adjustTextOffset()
 {
-    const MLabelModel *model = viewPrivate->model();
+    // textOptions.alignment() was mirrored by autoSetTextDirection() if RtoL (Arabic, Hebrew).
+    // model->alignment() contains the raw (unmirrored) alignment.
     Qt::Alignment alignment = viewPrivate->textOptions.alignment();
-    if (model->textDirection() == Qt::RightToLeft && !(alignment & Qt::AlignHCenter)) {
-        // Mirror the horizontal alignment
-        if (alignment & Qt::AlignRight) {
-            alignment = (alignment | Qt::AlignLeft) & ~Qt::AlignRight;
-        } else {
-            alignment = (alignment | Qt::AlignRight) & ~Qt::AlignLeft;
-        }
-    }
 
     // Adjust x-position dependent on the horizontal alignment
     if (alignment & Qt::AlignHCenter) {

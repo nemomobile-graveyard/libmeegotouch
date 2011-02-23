@@ -3311,6 +3311,26 @@ Qt::LayoutDirection MLocale::textDirection() const
     return dir;
 }
 
+Qt::LayoutDirection MLocale::directionForText(const QString & text)
+{
+    QString::const_iterator textEnd = text.constEnd();
+
+    for ( QString::const_iterator it = text.constBegin(); it != textEnd; ++it ) {
+        // Taken from qtextobject.cpp
+        switch(QChar::direction(it->unicode()))
+        {
+            case QChar::DirL:
+                return Qt::LeftToRight;
+            case QChar::DirR:
+            case QChar::DirAL:
+                return Qt::RightToLeft;
+            default:
+                break;
+        }
+    }
+    return Qt::LeftToRight;
+}
+
 void MLocale::refreshSettings()
 {
 #ifdef HAVE_GCONF
