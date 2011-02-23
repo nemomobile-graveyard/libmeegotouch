@@ -26,13 +26,6 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsScene>
 
-namespace {
-    //! Magnifier overlay should be on top of every widget, even status bar.
-    //! Therefore we set the z value of this top level widget to 1.0 which
-    //! is more than default Z of root element in MScene.
-    const qreal MagnifierOverlayZValue = 1.0f;
-}
-
 MTextMagnifier::MTextMagnifier(const MWidget &sourceWidget,
                                const QSizeF &keepVisibleSize)
     : MStylableWidget(0),
@@ -207,50 +200,4 @@ void MTextMagnifier::prepareOffscreenSurface(const QSize &size)
         return;
     }
     offscreenSurface.reset(new QPixmap(size));
-}
-
-
-// Magnifier overlay widget
-
-MagnifierOverlay::MagnifierOverlay(const MSceneManager *sceneManager)
-    : sceneManager(sceneManager)
-{
-    setFlag(QGraphicsItem::ItemHasNoContents, true);
-    setZValue(MagnifierOverlayZValue);
-
-    rotateAndResizeToFullscreen(sceneManager->orientationAngle());
-    QObject::connect(sceneManager, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
-                     this, SLOT(rotateAndResizeToFullscreen(M::OrientationAngle)));
-}
-
-bool MagnifierOverlay::isAppeared() const
-{
-    return isVisible();
-}
-
-void MagnifierOverlay::panGestureEvent(QGestureEvent *event, QPanGesture *panGesture)
-{
-    // Accept gesture if magnifier is appeared. This is done to prevent panning of
-    // application page but will of course prevent other uses of pan gestures as well.
-    if (panGesture->state() == Qt::GestureStarted
-        && isAppeared()) {
-        event->accept(panGesture);
-    } else {
-        event->ignore(panGesture);
-    }
-}
-
-void MagnifierOverlay::rotateAndResizeToFullscreen(M::OrientationAngle orientationAngle)
-{
-    // Set geometry to new fullscreen and center it for rotation.
-    // Need to occupy whole screen to be able to catch panning gestures.
-    const QRectF landscapeRect(QPointF(), sceneManager->visibleSceneSize(M::Landscape));
-    QRectF newRect(QPointF(), sceneManager->visibleSceneSize());
-    newRect.moveTopLeft(landscapeRect.center() - newRect.center());
-    setGeometry(newRect);
-
-    // Rotate with pivot at center.
-    const qreal angle = static_cast<qreal>(orientationAngle);
-    setTransformOriginPoint(rect().center()); // Origin point is given in local coordinates.
-    setRotation(angle);
 }

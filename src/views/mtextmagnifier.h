@@ -21,36 +21,9 @@
 
 #include "mstylablewidget.h"
 #include "mtextmagnifierstyle.h"
-
-#include <MOverlay>
-
-#include <MSceneManager>
-#include <QDebug>
-#include <QPanGesture>
+#include "mtopleveloverlay.h"
 
 //! \internal
-
-//! Overlay widget to allow magnifier to stay on top of other widgets.
-class MagnifierOverlay : public QGraphicsWidget
-{
-    Q_OBJECT
-public:
-    explicit MagnifierOverlay(const MSceneManager *sceneManager);
-    bool isAppeared() const;
-
-protected:
-    //! \reimp
-    virtual void panGestureEvent(QGestureEvent *event, QPanGesture *panGesture);
-    //! \reimp_end
-
-private slots:
-    void rotateAndResizeToFullscreen(M::OrientationAngle angle);
-
-private:
-    const MSceneManager * const sceneManager;
-
-    friend class Ut_MTextMagnifier;
-};
 
 /*! \brief Magnifier widget to magnify text.
  *
@@ -111,7 +84,7 @@ private:
     QPointF offsetFromCenter;
     QScopedPointer<QPixmap> offscreenSurface;
 
-    MagnifierOverlay overlay;
+    MTopLevelOverlay overlay;
 
     M_STYLABLE_WIDGET(MTextMagnifierStyle)
 

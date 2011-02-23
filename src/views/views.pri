@@ -30,7 +30,6 @@ PUBLIC_HEADERS += \
     msliderview.h \
     mspinnerview.h \
     mtexteditview.h \
-    mtextmagnifier.h \
     mtoolbartabview.h \
     mtoolbarview.h \
     mseparatorview.h \
@@ -60,6 +59,8 @@ PRIVATE_HEADERS += \
     mstatusbarviewdbuswrapper.h \
     mextendingbackgroundview_p.h \
     mtexteditview_p.h \
+    mtextmagnifier.h \
+    mtopleveloverlay.h \
     mapplicationmenuview_p.h \
     mapplicationmenubuttonview.h \
     mobjectmenuview_p.h \
@@ -124,6 +125,7 @@ SOURCES += \
     mstatusbarviewdbuswrapper.cpp \
     mtexteditview.cpp \
     mtextmagnifier.cpp \
+    mtopleveloverlay.cpp \
     mtoolbarlayoutpolicy.cpp \
     mtoolbartabview.cpp \
     mtoolbarview.cpp \

@@ -19,6 +19,7 @@
 
 #include "ut_mtextmagnifier.h"
 #include "views/mtextmagnifier.h"
+#include "views/mtopleveloverlay.h"
 
 #include <QEvent>
 #include <QMetaType>
@@ -31,6 +32,7 @@
 #include <MCancelEvent>
 #include <MNamespace>
 #include <MScene>
+#include <MSceneManager>
 #include <MWidget>
 
 namespace {
