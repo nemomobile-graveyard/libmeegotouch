@@ -235,6 +235,8 @@ Q_SIGNALS:
      */
     void localeSettingsChanged();
 
+    void chainTaskDataChanged();
+
 protected:
     MComponentData(MComponentDataPrivate &dd, int &argc, char **argv, const QString &appIdentifier = QString());
     MComponentDataPrivate *const d_ptr;

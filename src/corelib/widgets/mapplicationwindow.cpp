@@ -164,25 +164,18 @@ void MApplicationWindowPrivate::init()
     q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
 #ifdef Q_WS_X11
-    if (!MComponentData::chainDataStackIsEmpty()) {
-        MComponentData::ChainData thisData = MComponentData::popChainData();
-
-        WId     thisDataWId       = thisData.first;
-        QString thisDataTaskTitle = thisData.second;
-
-        chainParentWinId = thisDataWId;
-        bool taskTitleSet = !thisDataTaskTitle.isEmpty();
-        if (taskTitleSet) {
-            chainTaskTitle = thisDataTaskTitle;
-        } else {
-            chainTaskTitle = MComponentData::appName();
-        }
-
-        isChained = true;
-
-        // for compositor page animation
-        setWindowChainedProperty( chainParentWinId, q->effectiveWinId() );
+    if ( ! MComponentData::chainDataStackIsEmpty() )
+    {
+        // init for chainTask here
+        _q_updateChainTaskData();
     }
+    else
+    {
+        // connect to notification about chainTask data changed signal
+        q->connect(MComponentData::instance(), SIGNAL(chainTaskDataChanged()),
+                   q, SLOT(_q_updateChainTaskData()));
+    }
+
     addMStatusBarOverlayProperty();
     appendMApplicationWindowTypeProperty();
 #endif
@@ -1076,6 +1069,36 @@ void MApplicationWindowPrivate::_q_updateStyle()
     updateStyleNames();
     _q_placeToolBar();
     initAutoHideComponentsTimer();
+}
+
+void MApplicationWindowPrivate::_q_updateChainTaskData()
+{
+    // here we try to inject the chainTaskData into this MApplicationWindow
+    Q_Q(MApplicationWindow);
+    if (!MComponentData::chainDataStackIsEmpty()) {
+        MComponentData::ChainData thisData = MComponentData::popChainData();
+
+        WId     thisDataWId       = thisData.first;
+        QString thisDataTaskTitle = thisData.second;
+
+        chainParentWinId = thisDataWId;
+        bool taskTitleSet = !thisDataTaskTitle.isEmpty();
+        if (taskTitleSet) {
+            chainTaskTitle = thisDataTaskTitle;
+        } else {
+            chainTaskTitle = MComponentData::appName();
+        }
+
+        isChained = true;
+
+        // for compositor page animation
+        setWindowChainedProperty( chainParentWinId, q->effectiveWinId() );
+    }
+
+    // make sure we disconnect from the SIGNAL, so that we do not
+    // steal a chaindata object in case a new one comes in.
+    q->disconnect(MComponentData::instance(), SIGNAL(chainTaskDataChanged()),
+                  q, SLOT(_q_updateChainTaskData()));
 }
 
 void MApplicationWindowPrivate::updateStyleNames()

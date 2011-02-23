@@ -1327,6 +1327,11 @@ QStack<MComponentData::ChainData> MComponentDataPrivate::chainData;
 void MComponentData::pushChainData(const ChainData &newChainData)
 {
     MComponentDataPrivate::chainData.push( newChainData );
+
+    if ( MComponentData::instance() )
+    {
+        emit MComponentData::instance()->chainTaskDataChanged();
+    }
 }
 
 MComponentData::ChainData MComponentData::popChainData()
