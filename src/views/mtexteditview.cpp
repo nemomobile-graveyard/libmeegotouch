@@ -1478,7 +1478,7 @@ void MTextEditView::applyStyle()
 
     // Set document font
     d->document()->setDefaultFont(s->font());
-    d->promptTextDocument->setDefaultFont(s->font());
+    d->promptTextDocument->setDefaultFont(s->promptFont());
 
     // Note: currently using fixed internal margin
     d->document()->setDocumentMargin(InternalMargin);

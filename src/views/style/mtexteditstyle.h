@@ -39,6 +39,7 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(bool,         disableMagnifier,         DisableMagnifier)
     M_STYLE_ATTRIBUTE(QString,      maskString,               MaskString)
     M_STYLE_ATTRIBUTE(QColor,       promptColor,              PromptColor)
+    M_STYLE_ATTRIBUTE(QFont,        promptFont,               PromptFont)
     M_STYLE_ATTRIBUTE(QString,      pasteFailedIcon,          PasteFailedIcon)
     M_STYLE_ATTRIBUTE(int,          pasteFailedDuration,      PasteFailedDuration)
     M_STYLE_ATTRIBUTE(int,          maskingDelay,             MaskingDelay)
