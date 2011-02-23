@@ -1,3 +1,10 @@
+libmeegotouch (0.20.85-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#229146 - Class derived from MImageWidgetModel does not receive updates
+
+ -- Adrian Yanes <adrian@ayanes.com>  Wed, 23 Feb 2011 14:40:15 +0200
+
 libmeegotouch (0.20.85-1) unstable; urgency=low
 
   * New version
