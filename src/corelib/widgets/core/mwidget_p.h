@@ -38,6 +38,8 @@ public:
                             MOnDisplayChangeEvent *event = NULL);
     QGraphicsView *fetchGraphicsView();
 
+    void setVisible(bool visible);
+
     bool explicitlyHidden;  //< true if the user called hide(), as opposed to MLayout hiding it
     bool layoutHidden;  //< true if MLayout is currently hiding the widget
 

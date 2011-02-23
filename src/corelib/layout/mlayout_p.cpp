@@ -91,8 +91,13 @@ void MLayoutPrivate::setItemGeometry(int index, const QRectF &geometry)
         // If no animator or the item is not a widget then do not animate
         Q_ASSERT(!item.toBeDeleted); //It should have been deleted immediately in there's no animator or it is a layout
         //Show item
-        if(item.item->graphicsItem())
-            showItemNow(item.item->graphicsItem());
+        if(item.item->graphicsItem()) {
+            MWidget *widget = dynamic_cast<MWidget *>(item.item->graphicsItem());
+            if (widget)
+                widget->d_ptr->layoutHidden = false;
+            if (!widget || !widget->d_ptr->explicitlyHidden)
+                item.item->graphicsItem()->show();
+        }
         item.item->setGeometry(geometry);
     }
 }
@@ -198,8 +203,9 @@ void MLayoutPrivate::showItemNow(QGraphicsItem *graphicsItem) const
     MWidget *widget = dynamic_cast<MWidget *>(graphicsItem);
     if (widget) {
         widget->d_ptr->layoutHidden = false;
-        if (!widget->d_ptr->explicitlyHidden)
-            graphicsItem->show(); //Show only if item was not set to invisible by the user
+        if (!widget->d_ptr->explicitlyHidden) {
+            widget->d_ptr->setVisible(true); //Show only if item was not set to invisible by the user
+        }
     } else
         graphicsItem->show(); //Show always for non-mwidgets
 }
@@ -211,9 +217,12 @@ void MLayoutPrivate::removeHiddenFlag(QGraphicsItem *graphicsItem) const
 }
 void MLayoutPrivate::hideItemNow(QGraphicsItem *graphicsItem) const
 {
-    graphicsItem->hide();
     MWidget *widget = dynamic_cast<MWidget *>(graphicsItem);
-    if (widget)
+    if (widget) {
+        widget->d_ptr->setVisible(false);
         widget->d_ptr->layoutHidden = true;
+    } else {
+        graphicsItem->hide();
+    }
 }
 

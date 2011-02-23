@@ -191,6 +191,41 @@ QGraphicsView *MWidgetPrivate::fetchGraphicsView()
     return graphicsView;
 }
 
+void MWidgetPrivate::setVisible(bool visible)
+{
+    Q_Q(MWidget);
+
+    // FIXME: Workaround for bug NB#186278.
+    QGraphicsItem *focused = q->focusItem();
+    if (visible && focused && !focused->hasFocus()) {
+        focused->setFlag(QGraphicsItem::ItemIsFocusable, false);
+        q->QGraphicsWidget::setVisible(true);
+        focused->setFlag(QGraphicsItem::ItemIsFocusable, true);
+    } else {
+        q->QGraphicsWidget::setVisible(visible);
+    }
+
+    // Propagate visibility events
+    QGraphicsView *graphicsView = fetchGraphicsView();
+    if (graphicsView) {
+        QRectF visibleSceneRect = graphicsView->sceneRect();
+
+        // show() called: resolve visibility
+        if (visible) {
+            if (q->isOnDisplay()) {
+                MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOnDisplay,
+                                            visibleSceneRect);
+                resolveIsOnDisplay(q, &visibleSceneRect, &event);
+            }
+            // hide() called: explicitly send FullyOffDisplay
+            } else {
+                MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOffDisplay,
+                                            visibleSceneRect);
+                resolveIsOnDisplay(q, &visibleSceneRect, &event);
+        }
+    }
+ }
+
 void MWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 {
     Q_D(MWidget);
@@ -531,38 +566,8 @@ void MWidget::setVisible(bool visible)
     d->explicitlyHidden = !visible;
 
     // Only show if the layout is not hiding this
-    if (!d->layoutHidden) {
-
-        // FIXME: Workaround for bug NB#186278.
-        QGraphicsItem *focused = focusItem();
-        if (visible && focused && !focused->hasFocus()) {
-            focused->setFlag(QGraphicsItem::ItemIsFocusable, false);
-            QGraphicsWidget::setVisible(true);
-            focused->setFlag(QGraphicsItem::ItemIsFocusable, true);
-        } else {
-            QGraphicsWidget::setVisible(visible);
-        }
-
-        // Propagate visibility events
-        QGraphicsView *graphicsView = d->fetchGraphicsView();
-        if (graphicsView) {
-            QRectF visibleSceneRect = graphicsView->sceneRect();
-
-            // show() called: resolve visibility
-            if (visible) {
-                if (isOnDisplay()) {
-                    MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOnDisplay,
-                                            visibleSceneRect);
-                    d->resolveIsOnDisplay(this, &visibleSceneRect, &event);
-                }
-            // hide() called: explicitly send FullyOffDisplay
-            } else {
-                MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOffDisplay,
-                                            visibleSceneRect);
-                d->resolveIsOnDisplay(this, &visibleSceneRect, &event);
-            }
-        }
-    }
+    if (!d->layoutHidden)
+        d->setVisible(visible);
 }
 
 QPointF MWidget::paintOffset() const
