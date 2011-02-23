@@ -51,6 +51,7 @@ public:
     QTextDocument *promptDocument() const;
     void checkScroll();
     void setMouseTarget(const QPointF &point);
+    bool isLayoutLeftToRight() const;
 
     // returns a paint context for drawing. Includes selection formatting
     QAbstractTextDocumentLayout::PaintContext paintContext() const;

@@ -164,7 +164,7 @@ int MTextEditViewPrivate::cursorPosition(const QPointF &point, Qt::HitTestAccura
     QPointF hitPoint = point;
     hitPoint.rx() += hscroll;
     hitPoint.ry() += vscroll;
-    hitPoint.rx() -= qApp->isRightToLeft() ? s->paddingRight() : s->paddingLeft();
+    hitPoint.rx() -= isLayoutLeftToRight() ? s->paddingLeft() : s->paddingRight();
     hitPoint.ry() -= s->paddingTop();
 
     // limit the area inside the text document.
@@ -248,7 +248,7 @@ void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event
 
     const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
 
-    if (!qApp->isRightToLeft()) {
+    if (isLayoutLeftToRight()) {
         paddingLeft = s->paddingLeft();
         paddingRight = s->paddingRight();
     } else {
@@ -346,6 +346,16 @@ void MTextEditViewPrivate::setMouseTarget(const QPointF &point)
 
     mouseTarget.setX(qBound<qreal>(0.0, point.x(), q->geometry().width()));
     mouseTarget.setY(qBound<qreal>(0.0, point.y(), q->geometry().height()));
+}
+
+
+bool MTextEditViewPrivate::isLayoutLeftToRight() const
+{
+    if (controller->layoutDirection() == Qt::LayoutDirectionAuto) {
+        return qApp->isLeftToRight();
+    }
+
+    return controller->layoutDirection() == Qt::LeftToRight;
 }
 
 
@@ -818,7 +828,7 @@ QRect MTextEditViewPrivate::cursorRect() const
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
 
-    rect = QRect(((qApp->isRightToLeft() ? s->paddingRight() : s->paddingLeft())
+    rect = QRect(((isLayoutLeftToRight() ? s->paddingLeft() : s->paddingRight())
                   + layoutPos.x() + x - hscroll),
                  (s->paddingTop() + layoutPos.y() + currentLine.y() - vscroll),
                  cursorWidth, cursorHeight);
@@ -878,7 +888,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 
     const MTextEditStyle *s = static_cast<const MTextEditStyle *>(style().operator ->());
 
-    if (!qApp->isRightToLeft()) {
+    if (d->isLayoutLeftToRight()) {
         paddingLeft = s->paddingLeft();
         paddingRight = s->paddingRight();
     } else {
