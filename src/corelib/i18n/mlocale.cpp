@@ -2365,6 +2365,10 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
 
     if ( ! d->_icuFormatStringCache.contains( formatString ) )
     {
+        // determine if we can cache this format string, or if
+        // we have to add something to it that is a part of a date or time.
+        bool canCacheIcuFormat = true;
+
         bool isInNormalText = false; // a-zA-Z should be between <'>-quotations
 
         const int length = formatString.length();
@@ -2422,6 +2426,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
                         icuFormat.append('\'');
                         delete df;
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2430,6 +2436,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         UnicodeString str;
                         d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.year() / 100), str); //krazy:exclude=typedefs
                         icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2537,6 +2545,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         UnicodeString str;
                         d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.dayOfWeek()), str); //krazy:exclude=typedefs
                         icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2550,6 +2560,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         if (weeknumber.length() > 2)
                             weeknumber = weeknumber.right(2);
                         icuFormat.append(weeknumber);
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2557,7 +2569,6 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                     case 'V': {
                         // Week of the year (Monday as the first day of the week), as a decimal
                         // number (01-53). according to ISO-8601
-
                         MCalendar calendarCopy = mCalendar;
                         calendarCopy.setFirstDayOfWeek(MLocale::Monday);
                         calendarCopy.setMinimalDaysInFirstWeek(4);
@@ -2568,6 +2579,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         if (weeknumber.length() > 2)
                             weeknumber = weeknumber.right(2); // cut leading 0
                         icuFormat.append(weeknumber);
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2580,6 +2593,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         UnicodeString str;
                         d->_numberFormatLcTime->format(static_cast<int32_t>(weekday), str); //krazy:exclude=typedefs
                         icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2590,6 +2605,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         UnicodeString str;
                         d->_numberFormatLcTime->format(static_cast<int32_t>(weeknumber), str); //krazy:exclude=typedefs
                         icuFormat.append(MIcuConversions::unicodeStringToQString(str));
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2607,6 +2624,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
                         icuFormat.append('\'');
                         delete df;
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2624,6 +2643,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                         icuFormat.append(MIcuConversions::icuDatePatternEscaped(pattern));
                         icuFormat.append('\'');
                         delete df;
+
+                        canCacheIcuFormat = false;
                         break;
                     }
 
@@ -2677,9 +2698,14 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
             }
         } // for loop
 
-        QString* value = new QString( icuFormat );
-        // save formatString -> icuFormat pair for future use
-        d->_icuFormatStringCache.insert( formatString, value );
+        // save formatString -> icuFormat pair for future use,
+        // if it does not contain content from the input date or time
+        if ( canCacheIcuFormat )
+        {
+            QString* value = new QString( icuFormat );
+
+            d->_icuFormatStringCache.insert( formatString, value );
+        }
     }
     else
     {
