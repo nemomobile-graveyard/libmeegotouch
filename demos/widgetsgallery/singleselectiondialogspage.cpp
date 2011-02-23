@@ -201,12 +201,13 @@ void SingleSelectionDialogsPage::openSystemDialog()
         //% "System Dialog"
         qtTrId("xx_dialogs_and_notifications_system_dialog_title"),
         M::OkButton);
-    dialog->setCentralWidget(
-        //% "I'm a system dialog.<br>"
-        //% "You can skip me with the home button.<br>"
-        //% "I'll be minimised to the task switcher<br>"
-        //% "but I'll remain alive until you make a selection."
-        new MLabel(qtTrId("xx_dialogs_and_notifications_system_dialog_label")));
+    //% "I'm a system dialog.<br>"
+    //% "You can skip me with the home button.<br>"
+    //% "I'll be minimised to the task switcher<br>"
+    //% "but I'll remain alive until you make a selection."
+    MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_system_dialog_label"));
+    label->setWordWrap(true);
+    dialog->setCentralWidget(label);
 
     dialog->setSystem(true);
     dialog->setModal(false);
