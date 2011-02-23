@@ -61,6 +61,8 @@ PRIVATE_HEADERS += \
     mtexteditview_p.h \
     mtextmagnifier.h \
     mtopleveloverlay.h \
+    meditortoolbar.h \
+    meditortoolbararrow.h \
     mapplicationmenuview_p.h \
     mapplicationmenubuttonview.h \
     mobjectmenuview_p.h \
@@ -126,6 +128,8 @@ SOURCES += \
     mtexteditview.cpp \
     mtextmagnifier.cpp \
     mtopleveloverlay.cpp \
+    meditortoolbar.cpp \
+    meditortoolbararrow.cpp \
     mtoolbarlayoutpolicy.cpp \
     mtoolbartabview.cpp \
     mtoolbarview.cpp \

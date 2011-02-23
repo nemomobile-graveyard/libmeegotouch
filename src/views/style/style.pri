@@ -47,6 +47,8 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mcompleterstyle.h \
     $$STYLE_SRC_DIR/mtoolbartabstyle.h \
     $$STYLE_SRC_DIR/mtoolbarstyle.h \
+    $$STYLE_SRC_DIR/meditortoolbarstyle.h \
+    $$STYLE_SRC_DIR/meditortoolbararrowstyle.h \
     $$STYLE_SRC_DIR/mdevicestyle.h \
     $$STYLE_SRC_DIR/mcontainerheaderstyle.h \
     $$STYLE_SRC_DIR/mcontentitemstyle.h \
