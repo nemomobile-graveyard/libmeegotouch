@@ -145,7 +145,7 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             #if defined(M_OS_MAEMO5)
                 // don't use smooth pixmap transformation on the N900, as this
                 // decreases the performance
-                drawBorderPixmap(painter, QRectF(x, y, w, h), margins, *m_image);
+                qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
             #else
                 bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
                 painter->setRenderHint(QPainter::SmoothPixmapTransform);
