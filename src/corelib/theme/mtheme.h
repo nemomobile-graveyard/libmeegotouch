@@ -181,6 +181,12 @@ public:
      \a directoryName, which can be either an relative or absolute path. If \a mode
      is defined as Recursive, subdirectories of the specified directory are searched as well.
      The default is not to search subdirectories.
+
+     Note: A custom pixmap directory path must be added prior requesting a pixmap from it,
+        otherwise an invalid pixmap will be displayed.
+
+     \sa pixmap
+
      */
     static bool addPixmapDirectory(const QString &directoryName, M::RecursionMode mode = M::NonRecursive);
 
@@ -201,6 +207,8 @@ public:
      you do not need to immediately know the final size of the requested graphics, consider using the
      asyncPixmap() method instead to keep the UI responsive.
 
+     Prior requesting a pixmap from a custom path, the path must be added through addPixmapDirectory() method.
+
      The \a id is a logical identifier for a single graphical theme asset.
      The source format of the graphics is abstracted and determined by the theme service. The default
      graphics loading policy is as follows:
@@ -218,6 +226,7 @@ public:
 
      \sa releasePixmap
      \sa asyncPixmap
+     \sa addPixmapDirectory
      */
     static const QPixmap *pixmap(const QString &id, const QSize &size = QSize(0, 0));
 
@@ -225,6 +234,8 @@ public:
      Returns a QPixmap that contains the graphical asset specified by the \ref logicalid "logical ID".
 
      Loads the pixmap specified by \a id of size \a size.
+
+     Note: Prior requesting a pixmap from a custom path, the path must be added through addPixmapDirectory() method.
 
      The requested pixmap is loaded asynchronously. The returned pixmap can be one of the following:
      - The real pixmap if the pixmap was already loaded by the system.
@@ -239,6 +250,7 @@ public:
 
      \sa pixmap
      \sa releasePixmap
+     \sa addPixmapDirectory
      */
     static const QPixmap *asyncPixmap(const QString &id, const QSize &size = QSize(0, 0));
 
@@ -248,10 +260,13 @@ public:
      Loads the pixmap specified by \a id of size \a size synchronously and returns a copy to the caller.
      This method can be very slow, use the pixmap() or asyncPixmap() methods instead if possible.
 
+     Note: Prior requesting a pixmap from a custom path, the path must be added through addPixmapDirectory() method.
+
      The ownership of the returned pixmap is transferred to caller, and the pixmap may be modified.
 
      \sa pixmap
      \sa asyncPixmap
+     \sa addPixmapDirectory
      */
     static QPixmap *pixmapCopy(const QString &id, const QSize &size = QSize(0, 0));
 
