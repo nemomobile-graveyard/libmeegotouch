@@ -140,13 +140,8 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         }
 
         const MScalableImage *rail = style()->backgroundImage();
-        if (!rail) {
-            mWarning("MPositionIndicatorView") << "could not get \"background-image\"";
-            return;
-        }
 
         int indicatorPixmapSizeX = indicator->pixmap()->width();
-        int railPixmapSizeX = rail->pixmap()->width();
 
         int indicatorHeight = qMax(style()->minIndicatorSize(), int((vpSize.height()/pRange.height())*size().height()));
         int indicatorPositionY = (pPos.y()/pRange.height())*size().height();
@@ -160,16 +155,18 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
             indicatorPositionY = 0;
         }
 
-        int railPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - railPixmapSizeX);
+        if (rail) {
+            int railPixmapSizeX = rail->pixmap()->width();
+            int railPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - railPixmapSizeX);
+
+            rail->draw((qreal)railPositionX,
+                        0.0,
+                        (qreal)railPixmapSizeX,
+                        size().height(),
+                        painter);
+        }
+
         int indicatorPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - indicatorPixmapSizeX);
-
-        rail->draw((qreal)railPositionX,
-                    0.0,
-                    (qreal)railPixmapSizeX,
-                    size().height(),
-                    painter);
-
-
 
         indicator->draw(indicatorPositionX,
                         indicatorPositionY,
@@ -186,13 +183,8 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         }
 
         const MScalableImage *rail = style()->backgroundImageHorizontal();
-        if (!rail) {
-            mWarning("MPositionIndicatorView") << "could not get \"background-image-horizontal\"";
-            return;
-        }
 
         int indicatorPixmapSizeY = indicator->pixmap()->height();
-        int railPixmapSizeY = rail->pixmap()->height();
         int indicatorWidth = qMax(style()->minIndicatorSize(), int((vpSize.width()/pRange.width())*size().width()));
         int indicatorPositionX = (pPos.x()/pRange.width())*size().width();
 
@@ -205,11 +197,15 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
             indicatorPositionX = 0;
         }
 
-        rail->draw( 0.0,
-                    size().height() - railPixmapSizeY,
-                    size().width(),
-                    (qreal)railPixmapSizeY,
-                    painter);
+        if (rail) {
+            int railPixmapSizeY = rail->pixmap()->height();
+
+            rail->draw( 0.0,
+                        size().height() - railPixmapSizeY,
+                        size().width(),
+                        (qreal)railPixmapSizeY,
+                        painter);
+        }
 
         indicator->draw((qreal)indicatorPositionX,
                         size().height() - indicatorPixmapSizeY,
