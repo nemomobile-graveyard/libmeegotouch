@@ -444,10 +444,12 @@ void MNavigationBarView::applyStyle()
 
     Q_D(MNavigationBarView);
 
-    d->applicationMenuButton->setStyleName(style()->menuButtonStyleName());
-    d->escapeButtonSlot->setStyleName(style()->escapeButtonSlotStyleName());
-    d->closeButton->setStyleName(style()->closeButtonStyleName());
-    d->backButton->setStyleName(style()->backButtonStyleName());
+    const MNavigationBarStyle *s = const_cast<const MNavigationBarStyle*>(style().operator ->());
+
+    d->applicationMenuButton->setStyleName(s->menuButtonStyleName());
+    d->escapeButtonSlot->setStyleName(s->escapeButtonSlotStyleName());
+    d->closeButton->setStyleName(s->closeButtonStyleName());
+    d->backButton->setStyleName(s->backButtonStyleName());
 
     d->updateEscapeButton();
     d->updateMenuButton();
@@ -481,9 +483,11 @@ void MNavigationBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
+    const MNavigationBarStyle *s = const_cast<const MNavigationBarStyle*>(style().operator ->());
+
     //draw shadow under the actual navigationbar
-    if( style()->dropShadowImage() ) {
-        style()->dropShadowImage()->draw(0.0, size().height(), boundingRect().width(),  (qreal)style()->dropShadowImage()->pixmap()->size().height(), painter);
+    if (s->dropShadowImage() ) {
+        s->dropShadowImage()->draw(0.0, size().height(), boundingRect().width(),  (qreal)s->dropShadowImage()->pixmap()->size().height(), painter);
     }
 
     MWidgetView::drawBackground(painter, option);

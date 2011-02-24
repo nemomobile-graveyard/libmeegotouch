@@ -561,10 +561,12 @@ void MToolBarViewPrivate::updateStyleNames()
 {
     Q_Q(MToolBarView);
 
-    labelOnlyCommonButtonStyleName = q->style()->labelOnlyCommonButtonStyleName();
-    labelOnlyButtonStyleName = q->style()->labelOnlyButtonStyleName();
-    iconButtonStyleName = q->style()->iconButtonStyleName();
-    iconLabelButtonStyleName = q->style()->iconLabelButtonStyleName();
+    const MToolbarStyle *s = static_cast<const MToolbarStyle *>(q->style().operator ->());
+
+    labelOnlyCommonButtonStyleName = s->labelOnlyCommonButtonStyleName();
+    labelOnlyButtonStyleName = s->labelOnlyButtonStyleName();
+    iconButtonStyleName = s->iconButtonStyleName();
+    iconLabelButtonStyleName = s->iconLabelButtonStyleName();
 
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
         MButton *button = bit.value();
@@ -714,11 +716,12 @@ void MToolBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsI
 
     //draw shadow on top of the actual toolbar on portrait mode
     if (d->controller->sceneManager() && d->controller->sceneManager()->orientation() == M::Portrait) {
-        if (style()->dropShadowImage()) {
-            style()->dropShadowImage()->draw(0.0,
-                    (qreal)-style()->dropShadowImage()->pixmap()->size().height(),
+        const MToolbarStyle *s = static_cast<const MToolbarStyle *>(style().operator ->());
+        if (s->dropShadowImage()) {
+            s->dropShadowImage()->draw(0.0,
+                    (qreal)-s->dropShadowImage()->pixmap()->size().height(),
                     boundingRect().width(),
-                    (qreal)style()->dropShadowImage()->pixmap()->size().height(),
+                    (qreal)s->dropShadowImage()->pixmap()->size().height(),
                     painter);
         }
     }
@@ -731,14 +734,16 @@ void MToolBarView::applyStyle()
 
     MWidgetView::applyStyle();
 
-    d->setSpacesEnabled(style()->hasSpaces());
-    d->setIconsEnabled(style()->hasIcons());
-    d->setLabelsEnabled(style()->hasLabels());
-    d->setLabelOnlyAsCommonButton(style()->labelOnlyAsCommonButton(), style()->centerCommonButtonsToParent());
-    d->setCapacity(style()->capacity());
+    const MToolbarStyle *s = static_cast<const MToolbarStyle *>(style().operator ->());
+
+    d->setSpacesEnabled(s->hasSpaces());
+    d->setIconsEnabled(s->hasIcons());
+    d->setLabelsEnabled(s->hasLabels());
+    d->setLabelOnlyAsCommonButton(s->labelOnlyAsCommonButton(), s->centerCommonButtonsToParent());
+    d->setCapacity(s->capacity());
     d->updateStyleNames();
-    d->updateAlignmentMargins(style()->alignmentMargins());
-    d->setCentering(style()->centerToParent());
+    d->updateAlignmentMargins(s->alignmentMargins());
+    d->setCentering(s->centerToParent());
     d->updateEmptinessProperty();
 }
 

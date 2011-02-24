@@ -344,14 +344,16 @@ void MApplicationMenuView::drawBackground(QPainter *painter, const QStyleOptionG
 
     Q_D(const MApplicationMenuView);
 
-    if (style()->canvasOpacity() > 0.0) {
+    const MApplicationMenuStyle *s = static_cast<const MApplicationMenuStyle *>(style().operator ->());
+
+    if (s->canvasOpacity() > 0.0) {
         // draw canvas as a background of the pannable area
-        painter->setOpacity(d->controller->effectiveOpacity() * style()->canvasOpacity());
+        painter->setOpacity(d->controller->effectiveOpacity() * s->canvasOpacity());
         QRectF layoutGeometry = d->actionCommandViewport->geometry();
-        if (style()->canvasImage()) {
-            style()->canvasImage()->draw(layoutGeometry.toRect(), painter);
+        if (s->canvasImage()) {
+            s->canvasImage()->draw(layoutGeometry.toRect(), painter);
         } else {
-            QColor color = style()->canvasColor();
+            QColor color = s->canvasColor();
             painter->fillRect(layoutGeometry, QBrush(color));
         }
     }

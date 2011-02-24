@@ -93,19 +93,22 @@ MStylableWidget::~MStylableWidget()
 void MStylableWidget::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
-    if (!style()->backgroundTiles().isValid() && !style()->backgroundImage() && !style()->backgroundColor().isValid())
+
+    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator ->());
+
+    if (!s->backgroundTiles().isValid() && !s->backgroundImage() && !s->backgroundColor().isValid())
         return;
 
     qreal oldOpacity = painter->opacity();
-    painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
+    painter->setOpacity(s->backgroundOpacity() * effectiveOpacity());
 
-    QSizeF s = size() - QSizeF(style()->marginLeft() + style()->marginRight(), style()->marginTop() + style()->marginBottom());
-    if (style()->backgroundTiles().isValid()) {
-        style()->backgroundTiles()[model()->layoutPosition()]->draw(0.0,0.0, s.width(), s.height(), painter);
-    }else if (style()->backgroundImage()) {
-        style()->backgroundImage()->draw(0.0, 0.0, s.width(), s.height(), painter);
+    QSizeF currentSize = size() - QSizeF(s->marginLeft() + s->marginRight(), s->marginTop() + s->marginBottom());
+    if (s->backgroundTiles().isValid()) {
+        s->backgroundTiles()[model()->layoutPosition()]->draw(0.0, 0.0, currentSize.width(), currentSize.height(), painter);
+    }else if (s->backgroundImage()) {
+        s->backgroundImage()->draw(0.0, 0.0, currentSize.width(), currentSize.height(), painter);
     } else { //style background color must be valid
-        painter->fillRect(QRectF(QPointF(0, 0), s), QBrush(style()->backgroundColor()));
+        painter->fillRect(QRectF(QPointF(0, 0), currentSize), QBrush(s->backgroundColor()));
     }
     painter->setOpacity(oldOpacity);
 }
@@ -124,18 +127,19 @@ void MStylableWidget::drawForeground(QPainter *painter, const QStyleOptionGraphi
 
 void MStylableWidget::applyStyle()
 {
+    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator ->());
     if (layoutDirection() == Qt::RightToLeft)
         setContentsMargins(
-            style()->paddingRight() + style()->marginRight(),
-            style()->paddingTop() + style()->marginTop(),
-            style()->paddingLeft() + style()->marginLeft(),
-            style()->paddingBottom() + style()->marginBottom());
+            s->paddingRight() + s->marginRight(),
+            s->paddingTop() + s->marginTop(),
+            s->paddingLeft() + s->marginLeft(),
+            s->paddingBottom() + s->marginBottom());
     else
         setContentsMargins(
-            style()->paddingLeft() + style()->marginLeft(),
-            style()->paddingTop() + style()->marginTop(),
-            style()->paddingRight() + style()->marginRight(),
-            style()->paddingBottom() + style()->marginBottom());
+            s->paddingLeft() + s->marginLeft(),
+            s->paddingTop() + s->marginTop(),
+            s->paddingRight() + s->marginRight(),
+            s->paddingBottom() + s->marginBottom());
 
     updateGeometry();
     update();

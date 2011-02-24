@@ -158,7 +158,8 @@ QSizeF MLabelView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MLabelView);
 
-    QSizeF padding(style()->paddingLeft() + style()->paddingRight(), style()->paddingTop() + style()->paddingBottom());
+    const MLabelStyle *s = static_cast<const MLabelStyle *>(style().operator ->());
+    QSizeF padding(s->paddingLeft() + s->paddingRight(), s->paddingTop() + s->paddingBottom());
     return d->impl->sizeHint(which, constraint - padding) + padding;
 }
 

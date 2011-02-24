@@ -119,10 +119,12 @@ void MButtonViewPrivate::updateItemsAfterModeChange()
 {
     Q_Q(MButtonView);
 
-    label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
-    label->setFont(q->style()->font());
-    label->setColor(q->style()->textColor());
-    label->setOpacity(q->style()->contentOpacity());
+    const MButtonStyle *s = static_cast<const MButtonStyle *>(q->style().operator ->());
+
+    label->setAlignment(s->horizontalTextAlign() | s->verticalTextAlign());
+    label->setFont(s->font());
+    label->setColor(s->textColor());
+    label->setOpacity(s->contentOpacity());
 
     updateIcon();
     updateToggledIcon();
@@ -134,22 +136,24 @@ void MButtonViewPrivate::calcIconTextRects()
 {
     Q_Q(const MButtonView);
 
+    const MButtonStyle *s = static_cast<const MButtonStyle *>(q->style().operator ->());
+
     //total horizontal and vertical text margins
-    int hTextMargin = q->style()->textMarginLeft() + q->style()->textMarginRight();
-    int vTextMargin = q->style()->textMarginTop() + q->style()->textMarginBottom();
+    int hTextMargin = s->textMarginLeft() + s->textMarginRight();
+    int vTextMargin = s->textMarginTop() + s->textMarginBottom();
 
     //total horizontal and vertical padding
-    int hPadding = q->style()->paddingLeft() + q->style()->paddingRight();
-    int vPadding = q->style()->paddingTop() + q->style()->paddingBottom();
+    int hPadding = s->paddingLeft() + s->paddingRight();
+    int vPadding = s->paddingTop() + s->paddingBottom();
 
     //area for the content (icon and text)
-    QRectF contentRect(q->style()->paddingLeft(), q->style()->paddingTop(),
+    QRectF contentRect(s->paddingLeft(), s->paddingTop(),
                       q->size().width() - hPadding,
                       q->size().height() - vPadding);
 
     //text rect when there is no icon
-    QRectF textRect(contentRect.left() + q->style()->textMarginLeft(),
-                    contentRect.top() + q->style()->textMarginTop(),
+    QRectF textRect(contentRect.left() + s->textMarginLeft(),
+                    contentRect.top() + s->textMarginTop(),
                     contentRect.width() - hTextMargin,
                     contentRect.height() - vTextMargin);
 
@@ -157,8 +161,8 @@ void MButtonViewPrivate::calcIconTextRects()
 
     //icon visible and valid?
     if (q->model()->iconVisible() && (icon || toggledIcon)) {
-        int iconWidth = q->style()->iconSize().width();
-        int iconHeight = q->style()->iconSize().height();
+        int iconWidth = s->iconSize().width();
+        int iconHeight = s->iconSize().height();
 
         QSizeF iconSize(iconWidth, iconHeight);
         QPointF iconPosition(0, 0);
@@ -169,26 +173,26 @@ void MButtonViewPrivate::calcIconTextRects()
             switch (q->style()->iconAlign()) {
                 //icon on left and text on right
             case Qt::AlignLeft: {
-                if (q->style()->horizontalTextAlign() == Qt::AlignHCenter)
+                if (s->horizontalTextAlign() == Qt::AlignHCenter)
                     iconPosition.setX(contentRect.center().x() - iconWidth - (textSize.width() / 2));
-                else if (q->style()->horizontalTextAlign() == Qt::AlignRight)
+                else if (s->horizontalTextAlign() == Qt::AlignRight)
                     iconPosition.setX(contentRect.right() - textSize.width() - iconWidth - hTextMargin);
-                else if (q->style()->horizontalTextAlign() == Qt::AlignLeft)
+                else if (s->horizontalTextAlign() == Qt::AlignLeft)
                     iconPosition.setX(contentRect.left());
 
                 iconPosition.setY(contentRect.center().y() - (iconHeight / 2));
-                textRect.setX(contentRect.left() + q->style()->textMarginLeft() + iconWidth);
+                textRect.setX(contentRect.left() + s->textMarginLeft() + iconWidth);
                 textRect.setWidth(contentRect.width() - iconWidth - hTextMargin);
                 break;
             }
 
             //icon on right and text on left
             case Qt::AlignRight: {
-                if (q->style()->horizontalTextAlign() == Qt::AlignHCenter)
+                if (s->horizontalTextAlign() == Qt::AlignHCenter)
                     iconPosition.setX(contentRect.center().x() + (textSize.width() / 2));
-                else if (q->style()->horizontalTextAlign() == Qt::AlignRight)
+                else if (s->horizontalTextAlign() == Qt::AlignRight)
                     iconPosition.setX(contentRect.right() - iconWidth);
-                else if (q->style()->horizontalTextAlign() == Qt::AlignLeft)
+                else if (s->horizontalTextAlign() == Qt::AlignLeft)
                     iconPosition.setX(contentRect.left() + textSize.width() + hTextMargin);
 
                 iconPosition.setY(contentRect.center().y() - (iconHeight / 2));
@@ -593,6 +597,8 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
     if (which == Qt::MinimumSize || which == Qt::MaximumSize)
         return MWidgetView::sizeHint(which, constraint);
 
+    const MButtonStyle *s = static_cast<const MButtonStyle *>(style().operator ->());
+
     QSizeF iconSize(0, 0);
     if (model()->iconVisible() && d->icon)
         iconSize = d->icon->pixmap->size();
@@ -600,11 +606,11 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
     QSizeF textSize(0, 0);
     if (model()->textVisible() && !model()->text().isEmpty()) {
         textSize = d->label->sizeHint(which, constraint);
-        textSize += QSizeF(style()->textMarginLeft() + style()->textMarginRight(), style()->textMarginTop() + style()->textMarginBottom());
+        textSize += QSizeF(s->textMarginLeft() + s->textMarginRight(), s->textMarginTop() + s->textMarginBottom());
     }
 
     qreal width = 0, height = 0;
-    if (style()->iconAlign() == Qt::AlignTop || style()->iconAlign() == Qt::AlignBottom) {
+    if (s->iconAlign() == Qt::AlignTop || style()->iconAlign() == Qt::AlignBottom) {
         width  = qMax(iconSize.width(), textSize.width());
         height = iconSize.height() + textSize.height();
     } else {
@@ -612,7 +618,7 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
         height = qMax(iconSize.height(), textSize.height());
     }
 
-    return QSizeF(width + style()->paddingLeft() + style()->paddingRight(), height + style()->paddingTop() + style()->paddingBottom());
+    return QSizeF(width + s->paddingLeft() + s->paddingRight(), height + s->paddingTop() + s->paddingBottom());
 }
 
 M_REGISTER_VIEW_NEW(MButtonView, MButton)

@@ -350,10 +350,13 @@ void MObjectMenuView::setupModel()
         actionAdded(action);
     }
 #endif
-    d->titleArea->setStyleName(style()->titleStyleName());
-    d->titleIcon->setStyleName(style()->titleIconStyleName());
-    d->titleLabel->setStyleName(style()->titleLabelStyleName());
-    d->titleSeparator->setStyleName(style()->titleSeparatorStyleName());
+
+    const MObjectMenuStyle *s = const_cast<const MObjectMenuStyle *>(style().operator ->());
+
+    d->titleArea->setStyleName(s->titleStyleName());
+    d->titleIcon->setStyleName(s->titleIconStyleName());
+    d->titleLabel->setStyleName(s->titleLabelStyleName());
+    d->titleSeparator->setStyleName(s->titleSeparatorStyleName());
 
     d->titleLabel->setText(model()->title());
     d->updateIcon();

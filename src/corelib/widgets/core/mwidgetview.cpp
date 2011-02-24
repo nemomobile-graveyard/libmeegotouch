@@ -264,18 +264,20 @@ void MWidgetView::applyStyle()
 {
     Q_D(MWidgetView);
 
+    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator->());
+
     if (d->controller->layoutDirection() == Qt::RightToLeft)
         d->controller->setContentsMargins(
-            style()->paddingRight() + style()->marginRight(),
-            style()->paddingTop() + style()->marginTop(),
-            style()->paddingLeft() + style()->marginLeft(),
-            style()->paddingBottom() + style()->marginBottom());
+            s->paddingRight() + s->marginRight(),
+            s->paddingTop() + s->marginTop(),
+            s->paddingLeft() + s->marginLeft(),
+            s->paddingBottom() + s->marginBottom());
     else
         d->controller->setContentsMargins(
-            style()->paddingLeft() + style()->marginLeft(),
-            style()->paddingTop() + style()->marginTop(),
-            style()->paddingRight() + style()->marginRight(),
-            style()->paddingBottom() + style()->marginBottom());
+            s->paddingLeft() + s->marginLeft(),
+            s->paddingTop() + s->marginTop(),
+            s->paddingRight() + s->marginRight(),
+            s->paddingBottom() + s->marginBottom());
 
     updateGeometry();
     update();
@@ -592,7 +594,6 @@ qreal MWidgetView::scale() const
     return d->controller->scale();
 }
 
-
 QFont MWidgetView::font() const
 {
     return QFont();
@@ -650,16 +651,18 @@ void MWidgetView::drawBackground(QPainter *painter, const QStyleOptionGraphicsIt
     if (currentSize.width() == 0 || currentSize.height() == 0)
         return;
 
-    qreal oldOpacity = painter->opacity();
-    painter->setOpacity(oldOpacity * style()->backgroundOpacity() * effectiveOpacity());
+    const MWidgetStyle *s = style().operator ->();
 
-    if (style()->backgroundTiles().isValid()) {
-        style()->backgroundTiles()[model()->layoutPosition()]->draw(0.0,0.0, currentSize.width(), currentSize.height(), painter);
+    qreal oldOpacity = painter->opacity();
+    painter->setOpacity(oldOpacity * s->backgroundOpacity() * effectiveOpacity());
+
+    if (s->backgroundTiles().isValid()) {
+        s->backgroundTiles()[model()->layoutPosition()]->draw(0.0,0.0, currentSize.width(), currentSize.height(), painter);
     }
-    else if (style()->backgroundImage()) {
-        style()->backgroundImage()->draw(0.0, 0.0, currentSize.width(), currentSize.height(), painter);
-    } else if (style()->backgroundColor().isValid()) {
-        painter->fillRect(boundingRect(), QBrush(style()->backgroundColor()));
+    else if (s->backgroundImage()) {
+        s->backgroundImage()->draw(0.0, 0.0, currentSize.width(), currentSize.height(), painter);
+    } else if (s->backgroundColor().isValid()) {
+        painter->fillRect(boundingRect(), QBrush(s->backgroundColor()));
     }
     painter->setOpacity(oldOpacity);
 }

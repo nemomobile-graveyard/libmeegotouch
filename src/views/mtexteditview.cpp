@@ -158,12 +158,14 @@ int MTextEditViewPrivate::cursorPosition(const QPointF &point, Qt::HitTestAccura
 {
     Q_Q(MTextEditView);
 
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
+
     // adjust widget position to textdocument position
     QPointF hitPoint = point;
     hitPoint.rx() += hscroll;
     hitPoint.ry() += vscroll;
-    hitPoint.rx() -= qApp->isRightToLeft() ? q->style()->paddingRight() : q->style()->paddingLeft();
-    hitPoint.ry() -= q->style()->paddingTop();
+    hitPoint.rx() -= qApp->isRightToLeft() ? s->paddingRight() : s->paddingLeft();
+    hitPoint.ry() -= s->paddingTop();
 
     // limit the area inside the text document.
     // otherwise up from it equals start index, and below end index.
@@ -244,12 +246,14 @@ void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event
     QRectF rect = q->geometry();
     int paddingLeft, paddingRight;
 
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
+
     if (!qApp->isRightToLeft()) {
-        paddingLeft = q->style()->paddingLeft();
-        paddingRight = q->style()->paddingRight();
+        paddingLeft = s->paddingLeft();
+        paddingRight = s->paddingRight();
     } else {
-        paddingLeft = q->style()->paddingRight();
-        paddingRight = q->style()->paddingLeft();
+        paddingLeft = s->paddingRight();
+        paddingRight = s->paddingLeft();
     }
 
     // event inside scrolling margin creates constant speed scrolling.
@@ -803,6 +807,7 @@ QRect MTextEditViewPrivate::cursorRect() const
 
     int cursorWidth, cursorHeight;
     bool ok = false;
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
 
     cursorWidth = document()->documentLayout()->property(CursorWidthProperty).toInt(&ok);
     if (!ok)
@@ -813,9 +818,9 @@ QRect MTextEditViewPrivate::cursorRect() const
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
 
-    rect = QRect(((qApp->isRightToLeft() ? q->style()->paddingRight() : q->style()->paddingLeft())
+    rect = QRect(((qApp->isRightToLeft() ? s->paddingRight() : s->paddingLeft())
                   + layoutPos.x() + x - hscroll),
-                 (q->style()->paddingTop() + layoutPos.y() + currentLine.y() - vscroll),
+                 (s->paddingTop() + layoutPos.y() + currentLine.y() - vscroll),
                  cursorWidth, cursorHeight);
 
     return rect;
@@ -871,12 +876,14 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     Q_D(const MTextEditView);
     int paddingLeft, paddingRight;
 
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(style().operator ->());
+
     if (!qApp->isRightToLeft()) {
-        paddingLeft = style()->paddingLeft();
-        paddingRight = style()->paddingRight();
+        paddingLeft = s->paddingLeft();
+        paddingRight = s->paddingRight();
     } else {
-        paddingLeft = style()->paddingRight();
-        paddingRight = style()->paddingLeft();
+        paddingLeft = s->paddingRight();
+        paddingRight = s->paddingLeft();
     }
 
     // mTimestamp("MTextEditView", QString("start text=%1").arg(d->document()->toPlainText()));
@@ -884,14 +891,14 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 
     // set clipping rectangle to draw text inside the border
     QRectF clipping(boundingRect().adjusted(paddingLeft,
-                                            style()->paddingTop(),
+                                            s->paddingTop(),
                                             -paddingRight,
-                                            -style()->paddingBottom()));
+                                            -s->paddingBottom()));
     clipping = clipping.intersected(option->exposedRect);
     painter->setClipRect(clipping, Qt::IntersectClip);
     // If text does not fit inside widget, it may have to be scrolled
     const qreal dx = -d->hscroll + paddingLeft;
-    const qreal dy = -d->vscroll + style()->paddingTop();
+    const qreal dy = -d->vscroll + s->paddingTop();
     painter->translate(dx, dy);
     // draw actual text to the screen
 
@@ -902,7 +909,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         if (d->focused == true) {
             paintContext.cursorPosition = 0;
         }
-        QColor promptColor = style()->promptColor();
+        QColor promptColor = s->promptColor();
         paintContext.palette.setColor(QPalette::Text, promptColor);
 
         d->promptDocument()->documentLayout()->draw(painter, paintContext);
@@ -1089,18 +1096,20 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
     //  Qt::MaximumSize:
     //      Return QWIDGETSIZE_MAX
 
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(style().operator ->());
+
     QSizeF hint = constraint;
     const QTextBlock block = d->document()->firstBlock();
     const QTextLayout *layout = block.layout();
     QTextLine line = layout->lineAt(0);
-    qreal minLineHeight = line.height() + style()->paddingTop() + style()->paddingBottom()
+    qreal minLineHeight = line.height() + s->paddingTop() + s->paddingBottom()
                           + 2 * d->document()->documentMargin();
 
     switch (which) {
     case Qt::MinimumSize:
         if (hint.width() < 0) {
             QFontMetrics fm(style()->font());
-            qreal minWidth = fm.width('x') + style()->paddingLeft() + style()->paddingRight()
+            qreal minWidth = fm.width('x') + s->paddingLeft() + s->paddingRight()
                              + 2 * d->document()->documentMargin();
             hint.setWidth(minWidth);
         }
@@ -1113,7 +1122,7 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
             if (model()->line() == MTextEditModel::SingleLine) {
                 if (hint.width() < 0) {
                     hint.setWidth(d->document()->size().width() +
-                        style()->paddingLeft() + style()->paddingRight());
+                        s->paddingLeft() + s->paddingRight());
                 }
                 if (hint.height() < 0) {
                     hint.setHeight(minLineHeight);
@@ -1125,10 +1134,10 @@ QSizeF MTextEditView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
                 } else {
                     //Use the current document width if we are given no constraints
                     hint.setWidth(d->document()->size().width() +
-                        style()->paddingLeft() + style()->paddingRight());
+                        s->paddingLeft() + s->paddingRight());
                     if (hint.height() < 0)
                         hint.setHeight(d->document()->size().height() +
-                            style()->paddingTop() + style()->paddingBottom());
+                            s->paddingTop() + s->paddingBottom());
                 }
             }
         }
@@ -1161,9 +1170,10 @@ qreal MTextEditViewPrivate::heightForWidth(qreal width) const
      * to the given constraint width.  But we don't want this to trigger
      * a documentsSizeChanged so we disconnect that signal and reconnect afterwards
      */
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(q->style().operator ->());
     const qreal oldDocumentWidth = document()->textWidth();
-    const qreal horizontalPadding = q->style()->paddingLeft() + q->style()->paddingRight();
-    const qreal verticalPadding = q->style()->paddingTop() + q->style()->paddingBottom();
+    const qreal horizontalPadding = s->paddingLeft() + s->paddingRight();
+    const qreal verticalPadding = s->paddingTop() + s->paddingBottom();
 
     // Disconnect size change signal
     disconnect(document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),
@@ -1448,25 +1458,27 @@ void MTextEditView::applyStyle()
 {
     Q_D(MTextEditView);
 
-    d->maskTimer->setInterval(style()->maskingDelay());
+    const MTextEditStyle *s = static_cast<const MTextEditStyle *>(style().operator ->());
 
-    d->selectionFormat.setForeground(style()->selectionTextColor());
-    d->selectionFormat.setBackground(style()->selectionBackgroundColor());
+    d->maskTimer->setInterval(s->maskingDelay());
+
+    d->selectionFormat.setForeground(s->selectionTextColor());
+    d->selectionFormat.setBackground(s->selectionBackgroundColor());
 
     // movement threshold for selection start
-    qreal threshold = style()->selectionThreshold();
+    qreal threshold = s->selectionThreshold();
     if (threshold > 0) {
         d->selectionThreshold = threshold;
     }
 
-    QString maskString = style()->maskString();
+    QString maskString = s->maskString();
     if (maskString.isEmpty() == false) {
         d->maskCharacter = maskString.at(0); // use only the first character
     }
 
     // Set document font
-    d->document()->setDefaultFont(style()->font());
-    d->promptTextDocument->setDefaultFont(style()->font());
+    d->document()->setDefaultFont(s->font());
+    d->promptTextDocument->setDefaultFont(s->font());
 
     // Note: currently using fixed internal margin
     d->document()->setDocumentMargin(InternalMargin);
@@ -1474,15 +1486,15 @@ void MTextEditView::applyStyle()
 
     // Note: using non-documented property
     d->document()->documentLayout()->setProperty(CursorWidthProperty,
-                                                 style()->cursorWidth());
+                                                 s->cursorWidth());
     d->promptTextDocument->documentLayout()->setProperty(CursorWidthProperty,
-                                                         style()->cursorWidth());
+                                                         s->cursorWidth());
 
     if (d->maskedTextDocument != 0) {
-        d->maskedTextDocument->setDefaultFont(style()->font());
+        d->maskedTextDocument->setDefaultFont(s->font());
         d->maskedTextDocument->setDocumentMargin(InternalMargin);
         d->maskedTextDocument->documentLayout()->setProperty(CursorWidthProperty,
-                                                             style()->cursorWidth());
+                                                             s->cursorWidth());
     }
 
     // font etc might affect size

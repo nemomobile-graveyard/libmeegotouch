@@ -82,14 +82,16 @@ void MListIndexTooltipPrivate::initAnimations()
 void MListIndexTooltipPrivate::_q_updateSizeToCentralWidget()
 {
     Q_Q(MListIndexTooltip);
+
+    const MListIndexTooltipStyle *s = static_cast<const MListIndexTooltipStyle *>(q->style().operator ->());
     QSizeF parentSize = panel->size();
-    parentSize += QSizeF(q->style()->paddingLeft()+q->style()->paddingRight(), q->style()->paddingTop()+q->style()->paddingBottom());
+    parentSize += QSizeF(s->paddingLeft()+s->paddingRight(), s->paddingTop()+s->paddingBottom());
 
     q->resize(parentSize);
     if (snapAnimation->state() == QPropertyAnimation::Running)
-        snapAnimation->setEndValue(QPointF(q->style()->paddingLeft(), q->style()->paddingTop()));
+        snapAnimation->setEndValue(QPointF(s->paddingLeft(), s->paddingTop()));
     else
-        panel->setPos(q->style()->paddingLeft(), q->style()->paddingTop());
+        panel->setPos(s->paddingLeft(), s->paddingTop());
 }
 
 void MListIndexTooltipPrivate::clearIndexes()
@@ -217,20 +219,23 @@ void MListIndexTooltip::drawForeground(QPainter *painter, const QStyleOptionGrap
 
     MStylableWidget::drawForeground(painter, option);
 
-    if (style()->arrowPixmap() != NULL && !style()->arrowPixmap()->isNull())
-        painter->drawPixmap(size().width(), d->arrowOffset + style()->paddingTop() - style()->arrowPixmap()->size().height() / 2, *style()->arrowPixmap());
+    const MListIndexTooltipStyle *s = static_cast<const MListIndexTooltipStyle *>(style().operator ->());
+    if (s->arrowPixmap() != NULL && !s->arrowPixmap()->isNull())
+        painter->drawPixmap(size().width(), d->arrowOffset + s->paddingTop() - s->arrowPixmap()->size().height() / 2, *s->arrowPixmap());
 }
 
 void MListIndexTooltip::snap(qreal snapDistance)
 {
     Q_D(MListIndexTooltip);
 
+    const MListIndexTooltipStyle *s = static_cast<const MListIndexTooltipStyle *>(style().operator ->());
+
     d->snapAnimation->stop();
     d->snapAnimation->setTargetObject(d->panel);
     d->snapAnimation->setPropertyName("paintOffset");
 
-    d->snapAnimation->setStartValue(QPointF(style()->paddingLeft(), style()->paddingTop() + snapDistance));
-    d->snapAnimation->setEndValue(QPointF(style()->paddingLeft(), style()->paddingTop()));
+    d->snapAnimation->setStartValue(QPointF(s->paddingLeft(), s->paddingTop() + snapDistance));
+    d->snapAnimation->setEndValue(QPointF(s->paddingLeft(), s->paddingTop()));
     d->snapAnimation->setDuration(100);
     d->snapAnimation->start();
 }
@@ -240,10 +245,12 @@ void MListIndexTooltip::applyStyle()
     Q_D(MListIndexTooltip);
     MStylableWidget::applyStyle();
 
+    const MListIndexTooltipStyle *s = static_cast<const MListIndexTooltipStyle *>(style().operator ->());
+
     if (d->panel) {
-        setMinimumSize(style()->minimumSize());
-        setPreferredSize(style()->preferredSize());
-        setMaximumSize(style()->maximumSize());
+        setMinimumSize(s->minimumSize());
+        setPreferredSize(s->preferredSize());
+        setMaximumSize(s->maximumSize());
         updateGeometry();
     }
 

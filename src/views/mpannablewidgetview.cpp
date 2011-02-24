@@ -41,16 +41,18 @@ void MPannableWidgetViewPrivate::_q_applyStyleToPhysics()
 {
     Q_Q(MPannableWidgetView);
 
-    controller->model()->setPanThreshold(q->style()->panThreshold());
-    controller->model()->setPanClickThreshold(q->style()->panClickThreshold());
+    const MPannableWidgetStyle *s = static_cast<const MPannableWidgetStyle *>(q->style().operator ->());
 
-    controller->physics()->setPointerSpringK(q->style()->pointerSpringK());
-    controller->physics()->setFriction(q->style()->frictionC());
-    controller->physics()->setSlidingFriction(q->style()->slidingFrictionC());
-    controller->physics()->setBorderSpringK(q->style()->borderSpringK());
-    controller->physics()->setBorderFriction(q->style()->borderFrictionC());
+    controller->model()->setPanThreshold(s->panThreshold());
+    controller->model()->setPanClickThreshold(s->panClickThreshold());
+
+    controller->physics()->setPointerSpringK(s->pointerSpringK());
+    controller->physics()->setFriction(s->frictionC());
+    controller->physics()->setSlidingFriction(s->slidingFrictionC());
+    controller->physics()->setBorderSpringK(s->borderSpringK());
+    controller->physics()->setBorderFriction(s->borderFrictionC());
     controller->physics()->setPanDirection(controller->panDirection());
-    controller->physics()->setMaximumVelocity(q->style()->maximumVelocity());
+    controller->physics()->setMaximumVelocity(s->maximumVelocity());
 }
 
 MPannableWidgetView::MPannableWidgetView(MPannableWidget *controller) :
