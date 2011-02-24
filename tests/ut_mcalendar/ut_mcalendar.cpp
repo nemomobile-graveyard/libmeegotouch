@@ -25,6 +25,8 @@
 
 #include "ut_mcalendar.h"
 
+#define VERBOSE_OUTPUT
+
 void Ut_MCalendar::initTestCase()
 {
     static int argc = 0;
@@ -294,10 +296,10 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::IslamicCalendar
-        << "d.M.yyyy"
-        << "d.M.yyyy"
-        << "d. MMMM y"
-        << "cccc d. MMMM y"
+        << "d.M.y G"
+        << "d.M.y G"
+        << "d. MMMM y G"
+        << "cccc d. MMMM y G"
         << "H:mm"
         << "H:mm:ss"
         << "H:mm:ss z"
@@ -308,10 +310,10 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::IslamicCalendar
-        << "d.M.yyyy"
-        << "d.M.yyyy"
-        << "d. MMMM y"
-        << "cccc d. MMMM y"
+        << "d.M.y G"
+        << "d.M.y G"
+        << "d. MMMM y G"
+        << "cccc d. MMMM y G"
         << "H:mm"
         << "H:mm:ss"
         << "H:mm:ss z"
@@ -322,10 +324,10 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::IslamicCalendar
-        << "d.M.yyyy"
-        << "d.M.yyyy"
-        << "d. MMMM y"
-        << "cccc d. MMMM y"
+        << "d.M.y G"
+        << "d.M.y G"
+        << "d. MMMM y G"
+        << "cccc d. MMMM y G"
         << "h:mm a"
         << "h:mm:ss a"
         << "h:mm:ss a z"
@@ -1918,11 +1920,20 @@ void Ut_MCalendar::testIslamicCalendar()
     QString format = loc.formatDateTime(cal, MLocale::DateShort, MLocale::TimeNone);
     bool gotCorrect = false;
 
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "result format: " << format
+        << "\n";
+    debugStream.flush();
+#endif
+
     // we allow off-by-one conversion because the dates can be a bit ambiguous
     // e.g. islamic day starts from sunset
-    if (format == "22.12.1428"
-            || format == "23.12.1428"
-            || format == "21.12.1428") {
+    if (format.contains("22.12.1428")
+        || format.contains("23.12.1428")
+        || format.contains("21.12.1428")) {
         gotCorrect = true;
     }
 

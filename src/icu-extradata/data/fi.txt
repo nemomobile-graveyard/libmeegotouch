@@ -1,7 +1,28 @@
 fi{
     calendar{
-        gregorian{
+        buddhist{
             DateTimePatterns{
+                "H:mm:ss zzzz",
+                "H:mm:ss z",
+                "H:mm:ss",
+                "H:mm",
+                "cccc d. MMMM y G",
+                "d. MMMM y G",
+                "d.M.y G",
+                "d.M.y G",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+        }
+        gregorian{
+             AmPmMarkers{
+                 "ap.",
+                 "ip.",
+             }
+             DateTimePatterns{
                 "H:mm:ss zzzz",
                 "H:mm:ss z",
                 "H:mm:ss",
@@ -10,6 +31,57 @@ fi{
                 "d. MMMM y",
                 "d.M.yyyy",
                 "d.M.yyyy",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+        }
+        islamic{
+            DateTimePatterns{
+                "H:mm:ss zzzz",
+                "H:mm:ss z",
+                "H:mm:ss",
+                "H:mm",
+                "cccc d. MMMM y G",
+                "d. MMMM y G",
+                "d.M.y G",
+                "d.M.y G",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+        }
+        japanese{
+            DateTimePatterns{
+                "H:mm:ss zzzz",
+                "H:mm:ss z",
+                "H:mm:ss",
+                "H:mm",
+                "cccc d. MMMM y G",
+                "d. MMMM y G",
+                "d.M.y G",
+                "d.M.y G",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+        }
+        roc{
+            DateTimePatterns{
+                "H:mm:ss zzzz",
+                "H:mm:ss z",
+                "H:mm:ss",
+                "H:mm",
+                "cccc d. MMMM y G",
+                "d. MMMM y G",
+                "d.M.y G",
+                "d.M.y G",
                 "{1} {0}",
                 "{1} {0}",
                 "{1} {0}",
