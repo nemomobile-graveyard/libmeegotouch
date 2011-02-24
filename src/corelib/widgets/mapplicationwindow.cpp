@@ -1071,6 +1071,7 @@ void MApplicationWindowPrivate::_q_updateStyle()
     initAutoHideComponentsTimer();
 }
 
+#ifdef Q_WS_X11
 void MApplicationWindowPrivate::_q_updateChainTaskData()
 {
     // here we try to inject the chainTaskData into this MApplicationWindow
@@ -1100,6 +1101,7 @@ void MApplicationWindowPrivate::_q_updateChainTaskData()
     q->disconnect(MComponentData::instance(), SIGNAL(chainTaskDataChanged()),
                   q, SLOT(_q_updateChainTaskData()));
 }
+#endif
 
 void MApplicationWindowPrivate::updateStyleNames()
 {
