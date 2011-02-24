@@ -493,6 +493,7 @@ void MListViewPrivate::disconnectSignalsFromModelToListView()
 {
     if (model)
         model->disconnect(q_ptr);
+    disconnect(controller, SIGNAL(visibleChanged()), q_ptr, SLOT(_q_relayoutItemsIfNeeded()));
 }
 
 void MListViewPrivate::connectSignalsFromModelToListView()
