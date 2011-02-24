@@ -444,7 +444,7 @@ void MNavigationBarView::applyStyle()
 
     Q_D(MNavigationBarView);
 
-    const MNavigationBarStyle *s = const_cast<const MNavigationBarStyle*>(style().operator ->());
+    const MNavigationBarStyle *s = static_cast<const MNavigationBarStyle*>(style().operator ->());
 
     d->applicationMenuButton->setStyleName(s->menuButtonStyleName());
     d->escapeButtonSlot->setStyleName(s->escapeButtonSlotStyleName());
@@ -483,7 +483,7 @@ void MNavigationBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    const MNavigationBarStyle *s = const_cast<const MNavigationBarStyle*>(style().operator ->());
+    const MNavigationBarStyle *s = static_cast<const MNavigationBarStyle*>(style().operator ->());
 
     //draw shadow under the actual navigationbar
     if (s->dropShadowImage() ) {

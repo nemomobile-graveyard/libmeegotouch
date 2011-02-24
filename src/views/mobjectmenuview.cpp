@@ -351,7 +351,7 @@ void MObjectMenuView::setupModel()
     }
 #endif
 
-    const MObjectMenuStyle *s = const_cast<const MObjectMenuStyle *>(style().operator ->());
+    const MObjectMenuStyle *s = static_cast<const MObjectMenuStyle *>(style().operator ->());
 
     d->titleArea->setStyleName(s->titleStyleName());
     d->titleIcon->setStyleName(s->titleIconStyleName());
