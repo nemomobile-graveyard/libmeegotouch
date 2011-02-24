@@ -107,14 +107,6 @@ Qt::GestureState QGesture::state() const
 
 void Ut_MScene::initTestCase()
 {
-}
-void Ut_MScene::cleanupTestCase()
-{
-}
-
-
-void Ut_MScene::init()
-{
     QChar sep(' ');
     static char *argv[MAX_PARAMS];
     static int x = 0;
@@ -127,7 +119,16 @@ void Ut_MScene::init()
     }
     x = 6;
     app = new MApplication(x, argv);
+}
 
+void Ut_MScene::cleanupTestCase()
+{
+    delete app;
+    app = 0;
+}
+
+void Ut_MScene::init()
+{
     eventTester = new EventTester;
     m_subject = new MScene();
 
@@ -139,9 +140,6 @@ void Ut_MScene::cleanup()
 {
     delete m_subject;
     m_subject = 0;
-
-    delete app;
-    app = 0;
 }
 
 void Ut_MScene::drawForeground()
