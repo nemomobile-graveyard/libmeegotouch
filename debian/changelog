@@ -1,8 +1,18 @@
-libmeegotouch (0.20.87~1) unstable; urgency=low
+libmeegotouch (0.20.87-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#229699 - TextEdit tooltip needs font style attribute
+  * Fixes: NB#227075 - mdecorator is constantly doing window updates on the background
+  * Fixes: NB#212215 - MTheme::pixmap() returns the invalid pixmap even if the original is available
+  * Fixes: NB#225394 - MLocale::formatDateTime() returns wrong values for some format codes
+  * Fixes: NB#220018 - chainTask servicefw property does not work with apps running through applauncherd
+  * Fixes: NB#193497, Clock; Unusual time display separator (.) in Finnish.
+  * Fixes: NB#220652 - It is impossible to pan long multimedia message with lots of links in MMS Viewer
+  * Fixes: NB#228259 WidgetsGallery - enable word wrap for the system dialog box
+  * Fixes: Fix build break in maemo 5 build.
+  * Fixes: NB#224
 
- -- Adrian Yanes <adrian@ayanes.com>  Tue, 22 Feb 2011 15:49:49 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 24 Feb 2011 15:58:04 +0200
 
 libmeegotouch (0.20.86-1) unstable; urgency=low
 
