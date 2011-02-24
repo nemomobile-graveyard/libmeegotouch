@@ -62,6 +62,10 @@ LanguagePage::LanguagePage()
       labelExampleTranslation1(0),
       labelExampleTranslation2(0),
       labelExampleTranslation3(0),
+      labelLtrTest(0),
+      labelRtlTest(0),
+      labelLtrTestRich(0),
+      labelRtlTestRich(0),
       labelFontTest(0)
 {
 }
@@ -97,6 +101,10 @@ void LanguagePage::createContent()
     labelExampleTranslation1 = new MLabel;
     labelExampleTranslation2 = new MLabel;
     labelExampleTranslation3 = new MLabel;
+    labelLtrTest = new MLabel;
+    labelRtlTest = new MLabel;
+    labelLtrTestRich = new MLabel;
+    labelRtlTestRich = new MLabel;
     labelFontTest = new MLabel;
     labelFontTest->setWordWrap(true);
 
@@ -114,7 +122,11 @@ void LanguagePage::createContent()
     policy->addItem(labelExampleTranslation1, 13, 1);
     policy->addItem(labelExampleTranslation2, 14, 1);
     policy->addItem(labelExampleTranslation3, 15, 1);
-    policy->addItem(labelFontTest, 16, 1);
+    policy->addItem(labelLtrTest, 16, 1);
+    policy->addItem(labelRtlTest, 17, 1);
+    policy->addItem(labelLtrTestRich, 18, 1);
+    policy->addItem(labelRtlTestRich, 19, 1);
+    policy->addItem(labelFontTest, 20, 1);
 
     retranslateUi();
 }
@@ -417,6 +429,29 @@ void LanguagePage::retranslateUi()
         qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 1).arg(2431.78));
     labelExampleTranslation3->setText(
         qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 2).arg(7891.32));
+
+    // Some simple test labels to check wether alignment and bidi
+    // reordering of RTL and LTR text in labels works correctly.
+    // To test Arabic, the labels are set to English first, then
+    // a processEvents() is executed, then to Arabic, and vice versa.
+    // This processEvents() is inserted between a change of the
+    // contents from RTL to LTR because this did cause breakage
+    // and I want to make sure that this is fixed and remains so.
+    labelLtrTest->setText(QString::fromUtf8("العربية"));
+    qApp->processEvents();
+    labelLtrTest->setText("LTR text (next line is RTL text)");
+
+    labelRtlTest->setText("English");
+    qApp->processEvents();
+    labelRtlTest->setText(QString::fromUtf8("العربية (مصر)"));
+
+    labelLtrTestRich->setText(QString::fromUtf8("<b>العربية</b>"));
+    qApp->processEvents();
+    labelLtrTestRich->setText("<b>LTR rich text (next line is RTL rich text)</b>");
+
+    labelRtlTestRich->setText("<b>English</b>");
+    qApp->processEvents();
+    labelRtlTestRich->setText(QString::fromUtf8("<b>العربية (مصر)</b>"));
 
     //% "Font test:"
     labelFontTest->setText(

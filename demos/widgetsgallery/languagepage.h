@@ -71,6 +71,10 @@ private:
     MLabel *labelExampleTranslation1;
     MLabel *labelExampleTranslation2;
     MLabel *labelExampleTranslation3;
+    MLabel *labelLtrTest;
+    MLabel *labelRtlTest;
+    MLabel *labelLtrTestRich;
+    MLabel *labelRtlTestRich;
     MLabel *labelFontTest;
 };
 
