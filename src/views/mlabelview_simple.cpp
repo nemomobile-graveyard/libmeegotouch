@@ -38,6 +38,7 @@
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
     viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
 {
+    staticText.setPerformanceHint(QStaticText::AggressiveCaching);
     staticText.setTextFormat(Qt::PlainText);
 }
 
