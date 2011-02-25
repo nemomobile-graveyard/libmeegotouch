@@ -93,7 +93,9 @@ MExtensionHandlePrivate::MExtensionHandlePrivate() :
 
 MExtensionHandlePrivate::~MExtensionHandlePrivate()
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     delete screenBlankProperty;
+#endif
 }
 
 void MExtensionHandlePrivate::visibilityChanged()
