@@ -37,6 +37,7 @@ private slots:
     void cleanupTestCase();
 
     void sliderResize();
+    void sliderGrooveMargin();
 
 private:
     MSeekBar *m_seekbar;

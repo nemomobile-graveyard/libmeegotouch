@@ -24,11 +24,13 @@
 #include <QSignalSpy>
 
 #include <msliderview.h>
+#include "views/msliderview_p.h"
 
 #include <mseekbar.h>
 #include <msliderstyle.h>
 #include "ut_msliderview.h"
 #include "mapplication.h"
+#include <mdebug.h>
 
 MApplication *app;
 
@@ -47,6 +49,7 @@ void Ut_MSliderView::initTestCase()
     m_seekbar = new MSeekBar();
     m_subject = new MSliderView(m_seekbar);
     m_seekbar->setView(m_subject);
+    m_seekbar->setRange(0, 100);
 }
 
 void Ut_MSliderView::cleanupTestCase()
@@ -88,6 +91,45 @@ void Ut_MSliderView::sliderResize()
     seekbarGeometry = m_seekbar->geometry();
 
     QCOMPARE(rect.height(), seekbarGeometry.height());
+}
+
+void Ut_MSliderView::sliderGrooveMargin()
+{
+    MSliderGroove *groove = m_subject->d_func()->sliderGroove;
+    MSliderHandle *handle = m_subject->d_func()->sliderGroove->sliderHandle;
+
+    // initial dimensions
+    m_seekbar->setOrientation(Qt::Horizontal);
+    groove->indicatorMargin = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        // set groove-margin
+        groove->grooveMargin = i * 10;
+        groove->updateGeometry();
+
+        // set inital position
+        m_seekbar->setValue(0);
+        m_subject->setPosition(0);
+
+        // check that the handle's center is groove->grooveMargin away from the left edge
+        QCOMPARE(groove->geometry().x() + groove->grooveMargin,
+                 handle->geometry().x() + handle->geometry().width() / 2);
+
+        // center position is always the same, regardless of groove margin
+        m_seekbar->setValue(50);
+        m_subject->setPosition(50);
+        QCOMPARE(groove->geometry().x() + groove->geometry().width() / 2,
+                 handle->geometry().x() + handle->geometry().width() / 2);
+
+        // set final position
+        m_seekbar->setValue(100);
+        m_subject->setPosition(100);
+
+        // check that the handle's center is groove->grooveMargin away from the right edge
+        QCOMPARE(groove->geometry().x() + groove->geometry().width() - groove->grooveMargin,
+                 handle->geometry().x() + handle->geometry().width() / 2);
+    }
 }
 
 QTEST_APPLESS_MAIN(Ut_MSliderView)
