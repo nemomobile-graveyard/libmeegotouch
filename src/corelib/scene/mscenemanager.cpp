@@ -151,9 +151,10 @@ void MSceneManagerPrivate::init(MScene *scene)
     q->connect(pageSwitchAnimation, SIGNAL(finished()),
             SLOT(_q_onPageSwitchAnimationFinished()));
 
-    navigationBarAnimation = new MContentFadeAndSlideAnimation(q);
-    if (pageSwitchAnimation)
+    if (pageSwitchAnimation) {
+        navigationBarAnimation = new MContentFadeAndSlideAnimation(q);
         pageSwitchAnimation->addAnimation(navigationBarAnimation);
+    }
 
     setOrientationAngleWithoutAnimation(newAngle);
 
@@ -612,7 +613,7 @@ void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
 
     sceneWindow->hide();
 
-    if (sceneWindow->windowType() == MSceneWindow::NavigationBar)
+    if (sceneWindow->windowType() == MSceneWindow::NavigationBar && navigationBarAnimation)
         navigationBarAnimation->setTargetWidget(sceneWindow);
 }
 
@@ -1204,7 +1205,8 @@ void MSceneManagerPrivate::startPageSwitchAnimation(MSceneWindow *newPage,
 {
     Q_ASSERT(pageSwitchAnimation);
 
-    navigationBarAnimation->setTransitionDirection(direction == MPageSwitchAnimation::ToChildPage ?
+    if (navigationBarAnimation)
+        navigationBarAnimation->setTransitionDirection(direction == MPageSwitchAnimation::ToChildPage ?
                                                        MAbstractWidgetAnimation::In : MAbstractWidgetAnimation::Out);
 
     pageSwitchAnimation->setNewPage(newPage);
@@ -1224,7 +1226,7 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
     // due to eiter a change in the escape button state or presence (triggered from a
     // change in the page history, if the escape mode is in "auto") or finally due
     // to a change in the current page, which will cause the nav bar to be repopulated.
-    if (navigationBarAnimation)
+    if (currentPage && animatedTransition && navigationBarAnimation)
         navigationBarAnimation->takeContentSnapshot();
 
     if (currentPage && currentPage != page) {
@@ -1260,7 +1262,7 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
     // due to eiter a change in the escape button state or presence (triggered from a
     // change in the page history, if the escape mode is in "auto") or finally due
     // to a change in the current page, which will cause the nav bar to be repopulated.
-    if (navigationBarAnimation)
+    if (animatedTransition && navigationBarAnimation)
         navigationBarAnimation->takeContentSnapshot();
 
     // Pages in the history might have been deleted overtime.
