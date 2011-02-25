@@ -25,18 +25,35 @@
 #include <QPointer>
 #include <QString>
 
-/* Must be last, as it conflicts with some of the Qt defined types */
-#ifdef Q_WS_X11
-#include <QX11Info>
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-#endif //Q_WS_X11
-
 class MOrientationTracker;
 class MWindow;
 #ifdef HAVE_CONTEXTSUBSCRIBER
 class ContextProperty;
+
+// A simple wrapper to ContextProperty that provides the missing
+// isSusbscribed() getter.
+class MContextProperty : public QObject {
+    Q_OBJECT
+public:
+    MContextProperty(const QString &key, QObject *parent = 0);
+    virtual ~MContextProperty();
+
+    void subscribeAndWaitForSubscription();
+    void unsubscribe();
+    bool isSubscribed() const;
+
+    QVariant value() const;
+
+Q_SIGNALS:
+    void valueChanged();
+
+private:
+    ContextProperty *m_contextProperty;
+    bool m_isSubscribed;
+};
+
 #endif
+
 
 class MOrientationTrackerPrivate : public QObject
 {
@@ -58,46 +75,38 @@ public:
     void subscribeToSensorProperies();
     void unsubscribeToSensorProperties();
     void waitForSensorPropertiesToSubscribe();
+    //Properties based on sensors states
     ContextProperty *videoRouteProperty;
     ContextProperty *topEdgeProperty;
     ContextProperty *isCoveredProperty;
     ContextProperty *isFlatProperty;
-    bool isSubscribed;
-    bool hasJustSubscribed;
+    //Property set by window manager
+    MContextProperty *currentWindowAngleProperty;
+    bool isSubscribedToSensorProperties;
+    bool hasJustSubscribedToSensorProperties;
 #endif
-#ifdef Q_WS_X11
-    bool handleX11PropertyEvent(XPropertyEvent* event);
-    void handleCurrentAppWindowOrientationAngleChange();
-    void handleCurrentAppWindowChange();
-    WId fetchWIdCurrentAppWindow();
-    M::OrientationAngle fetchCurrentAppWindowOrientationAngle(int* error = NULL);
-    WId widCurrentAppWindow;
-    bool currentAppWindowHadXPropertyChangeMask;
-    //windows from this list follow _MEEGOTOUCH_CURRENT_APP_WINDOW (set by meego window manager).
+
+    //windows from this list follow "/Screen/CurrentWindow/OrientationAngle" (set by meego window manager).
     //by default it includes modal dialogs.
     QList<QPointer<MWindow> > windowsFollowingCurrentAppWindow;
-    //windows from this list will follow _MEEGOTOUCH_CURRENT_APP_WINDOW but with
+    //windows from this list will follow "/Screen/CurrentWindow/OrientationAngle" but with
     //regard to restrictions as orientation lock or device profile data.
     //This list includes windows off display which do not get iconic state (WM_STATE),
     //and windows which have _MEEGOTOUCH_ALWAYS_MAPPED property set to 1 or 2.
     QList<QPointer<MWindow> > windowsFollowingWithConstraintsCurrentAppWindow;
     void startFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
     void stopFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
-#endif
 
 public slots:
     void isCoveredChanged();
     void videoRouteChanged();
     void updateOrientationAngle();
+    void handleCurrentAppWindowOrientationAngleChange();
 
 protected:
     MOrientationTracker *q_ptr;
 
 private:
-#ifdef Q_WS_X11
-    Atom orientationAngleAtom;
-    Atom currentAppWindowAtom;
-#endif
     Q_DECLARE_PUBLIC(MOrientationTracker)
 };
 

@@ -54,29 +54,12 @@ private slots:
     void testWindowOrientationLock_data();
     void testWindowOrientationLock();
 
-#ifdef Q_WS_X11
-    void testOffDisplaySpecialWindows_data();
-    void testOffDisplaySpecialWindows();
-    void testFollowCurrentWindow_data();
-    void testFollowCurrentWindow();
-    void testFollowNonLMTCurrentWindow_data();
-    void testFollowNonLMTCurrentWindow();
-
-    void testXEventMaskPreservationWhenChangingCurrentAppWindow();
-#endif
-
 private:
     /*  Helper members   */
 
     //enables all angles for device profile
     void setAllAngles(QList<M::OrientationAngle>* list);
-#ifdef Q_WS_X11
-    void setCurrentWindowXPropertyOnRootWindow(WId winId);
-    void cleanCurrentWindowXPropertyOnRootWindow();
-    void checkIfMCompositorIsRunning();
-    //tells if we need to clean root window properties after test
-    bool isMCompositor;
-#endif
+
     MOrientationTracker *mTracker;
     MComponentData* m_componentData;
 

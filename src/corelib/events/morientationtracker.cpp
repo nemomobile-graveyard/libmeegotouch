@@ -38,6 +38,44 @@
 
 MOrientationTracker *MOrientationTrackerPrivate::tracker = 0;
 
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+MContextProperty::MContextProperty(const QString &key, QObject *parent)
+    : QObject(parent), m_contextProperty(0), m_isSubscribed(false)
+{
+    m_contextProperty = new ContextProperty(key, this);
+    connect(m_contextProperty, SIGNAL(valueChanged()), SIGNAL(valueChanged()));
+}
+
+MContextProperty::~MContextProperty()
+{
+}
+
+void MContextProperty::subscribeAndWaitForSubscription()
+{
+    m_contextProperty->subscribe();
+    m_contextProperty->waitForSubscription(true);
+    m_isSubscribed = true;
+}
+
+void MContextProperty::unsubscribe() {
+    if (m_isSubscribed) {
+        m_contextProperty->unsubscribe();
+        m_isSubscribed = false;
+    }
+}
+
+bool MContextProperty::isSubscribed() const
+{
+    return m_isSubscribed;
+}
+
+QVariant MContextProperty::value() const
+{
+    return m_contextProperty->value();
+}
+#endif
+
 MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *controller) :
     currentAngle(M::Angle0),
     currentIsCovered(false),
@@ -48,18 +86,11 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , topEdgeProperty(new ContextProperty("Screen.TopEdge"))
     , isCoveredProperty(new ContextProperty("Screen.IsCovered"))
     , isFlatProperty(new ContextProperty("Position.IsFlat"))
-    , isSubscribed(false)
-    , hasJustSubscribed(false)
+    , currentWindowAngleProperty(new MContextProperty("/Screen/CurrentWindow/OrientationAngle"))
+    , isSubscribedToSensorProperties(false)
+    , hasJustSubscribedToSensorProperties(false)
 #endif
-#ifdef Q_WS_X11
-    , widCurrentAppWindow(0)
-    , currentAppWindowHadXPropertyChangeMask(false)
-#endif //Q_WS_X11
     , q_ptr(controller)
-#ifdef Q_WS_X11
-    , orientationAngleAtom(0)
-    , currentAppWindowAtom(0)
-#endif //Q_WS_X11
 {
     if (MComponentData::isOrientationForced()) {
         currentAngle = MComponentData::forcedOrientationAngle();
@@ -84,19 +115,14 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
             this, SLOT(updateOrientationAngle()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(updateOrientationAngle()));
+    connect(currentWindowAngleProperty, SIGNAL(valueChanged()),
+            this, SLOT(handleCurrentAppWindowOrientationAngleChange()));
 
     waitForSensorPropertiesToSubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
 
     isCoveredChanged();
     videoRouteChanged();
-
-#ifdef Q_WS_X11
-    orientationAngleAtom = XInternAtom(QX11Info::display(),
-                                       "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
-    currentAppWindowAtom = XInternAtom(QX11Info::display(),
-                                       "_MEEGOTOUCH_CURRENT_APP_WINDOW", False);
-#endif //Q_WS_X11
 }
 
 MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
@@ -106,6 +132,7 @@ MOrientationTrackerPrivate::~MOrientationTrackerPrivate()
     delete topEdgeProperty;
     delete isCoveredProperty;
     delete isFlatProperty;
+    delete currentWindowAngleProperty;
 #endif
 }
 
@@ -160,9 +187,9 @@ void MOrientationTrackerPrivate::resolveIfOrientationUpdatesRequired()
             }
         }
     }
-    if (updatesRequired && !isSubscribed)
+    if (updatesRequired && !isSubscribedToSensorProperties)
         subscribeToSensorProperies();
-    else if (!updatesRequired && isSubscribed)
+    else if (!updatesRequired && isSubscribedToSensorProperties)
         unsubscribeToSensorProperties();
 #endif
 }
@@ -170,7 +197,7 @@ void MOrientationTrackerPrivate::resolveIfOrientationUpdatesRequired()
 void MOrientationTrackerPrivate::updateOrientationAngle()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    if (!isSubscribed) {
+    if (!isSubscribedToSensorProperties) {
         return;
     }
 
@@ -229,8 +256,8 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
         }
     }
 
-    if (angle != currentAngle || hasJustSubscribed) {
-        hasJustSubscribed = false;
+    if (angle != currentAngle || hasJustSubscribedToSensorProperties) {
+        hasJustSubscribedToSensorProperties = false;
         currentAngle = angle;
         // instead of emitting a signal we have to explicitely call setOrientationAngle
         // on windows, because this is very often excuted before the application's
@@ -312,10 +339,9 @@ void MOrientationTracker::doUpdateOrientationAngle(
     d->doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, tvIsConnected);
 }
 #ifdef HAVE_CONTEXTSUBSCRIBER
-
 void MOrientationTrackerPrivate::subscribeToSensorProperies()
 {
-    if(!isSubscribed) {
+    if (!isSubscribedToSensorProperties) {
         //waiting for properties to synchronize
         topEdgeProperty->subscribe();
         isCoveredProperty->subscribe();
@@ -329,8 +355,8 @@ void MOrientationTrackerPrivate::subscribeToSensorProperies()
 
 void MOrientationTrackerPrivate::unsubscribeToSensorProperties()
 {
-    if(isSubscribed) {
-        isSubscribed = false;
+    if (isSubscribedToSensorProperties) {
+        isSubscribedToSensorProperties = false;
         topEdgeProperty->unsubscribe();
         isCoveredProperty->unsubscribe();
         videoRouteProperty->unsubscribe();
@@ -345,17 +371,8 @@ void MOrientationTrackerPrivate::waitForSensorPropertiesToSubscribe()
     isCoveredProperty->waitForSubscription(true);
     videoRouteProperty->waitForSubscription(true);
     isFlatProperty->waitForSubscription(true);
-    isSubscribed = true;
-    hasJustSubscribed = true;
-}
-#endif //HAVE_CONTEXTSUBSCRIBER
-
-#ifdef Q_WS_X11
-
-void MOrientationTracker::handleCurrentAppWindowChange()
-{
-    Q_D(MOrientationTracker);
-    d->handleCurrentAppWindowChange();
+    isSubscribedToSensorProperties = true;
+    hasJustSubscribedToSensorProperties = true;
 }
 
 void MOrientationTracker::handleCurrentAppWindowOrientationAngleChange()
@@ -363,26 +380,11 @@ void MOrientationTracker::handleCurrentAppWindowOrientationAngleChange()
     Q_D(MOrientationTracker);
     d->handleCurrentAppWindowOrientationAngleChange();
 }
-
-bool MOrientationTrackerPrivate::handleX11PropertyEvent(XPropertyEvent *event)
-{
-    //handle only if there are any windows registered  to follow Current Window
-    if (windowsFollowingCurrentAppWindow.count() > 0) {
-        if (event->atom == orientationAngleAtom) {
-            handleCurrentAppWindowOrientationAngleChange();
-            return true;
-        } else if (event->atom == currentAppWindowAtom) {
-            handleCurrentAppWindowChange();
-            handleCurrentAppWindowOrientationAngleChange();
-            return true;
-        }
-    }
-    return false;
-}
+#endif //HAVE_CONTEXTSUBSCRIBER
 
 void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
 {
-    M::OrientationAngle angle = fetchCurrentAppWindowOrientationAngle();
+    M::OrientationAngle angle = (M::OrientationAngle)currentWindowAngleProperty->value().toInt();
     //windows like system dialog will follow current window to any orientation
     foreach(MWindow * win, windowsFollowingCurrentAppWindow) {
         win->setOrientationAngle(angle);
@@ -393,107 +395,18 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
     }
 }
 
-void MOrientationTrackerPrivate::handleCurrentAppWindowChange()
-{
-    Display* display = QX11Info::display();
-    if(!display)
-        return;
-
-    XWindowAttributes attributes;
-    if (widCurrentAppWindow) {
-        XGetWindowAttributes(display, widCurrentAppWindow, &attributes);
-        //We unset PropertyChangeMask if it was not set before
-        if (!currentAppWindowHadXPropertyChangeMask)
-            attributes.your_event_mask &= ~PropertyChangeMask;
-        XSelectInput(display, widCurrentAppWindow, attributes.your_event_mask);
-    }
-
-    //fetch ID of new current window
-    widCurrentAppWindow = fetchWIdCurrentAppWindow();
-
-    //current window is invalid or not set then return
-    if (widCurrentAppWindow == 0)
-        return;
-
-    XGetWindowAttributes(display, widCurrentAppWindow, &attributes);
-    //remember if PropertyChangeMask is already set
-    currentAppWindowHadXPropertyChangeMask = (bool)(attributes.your_event_mask & PropertyChangeMask);
-    //set PropertyChangeMask for current app window if it is not set
-    XSelectInput(display, widCurrentAppWindow, attributes.your_event_mask | PropertyChangeMask);
-}
-
-WId MOrientationTrackerPrivate::fetchWIdCurrentAppWindow()
-{
-    WId currentWindowId = 0;
-    Atom actualType = 0;
-    int actualFormat = 0;
-    unsigned long nitems = 0;
-    unsigned long bytes = 0;
-
-    union {
-        unsigned char* asUChar;
-        unsigned long* asULong;
-    } data = {0};
-
-    int status = XGetWindowProperty(QX11Info::display(), RootWindow(QX11Info::display(), 0),
-                                    currentAppWindowAtom, 0, 1, False, AnyPropertyType,
-                                    &actualType, &actualFormat, &nitems,
-                                    &bytes, &data.asUChar);
-    if (status == Success && actualType == XA_WINDOW && actualFormat == 32)
-        currentWindowId = data.asULong[0];
-
-    if (status == Success)
-        XFree(data.asUChar);
-
-    return currentWindowId;
-}
-
-M::OrientationAngle MOrientationTrackerPrivate::fetchCurrentAppWindowOrientationAngle(int* error)
-{
-    M::OrientationAngle angle = M::Angle0;
-    Atom actualType = 0;
-    int actualFormat = 0;
-    unsigned long nitems = 0;
-    unsigned long bytes = 0;
-
-    union {
-        unsigned char* asUChar;
-        unsigned int* asInt;
-    } data = {0};
-    //we are using fetchWIdCurrentAppWindow() instead of stored value (widCurrentAppWindow)
-    //to eliminate a risk of race condition
-    int status = XGetWindowProperty(QX11Info::display(), fetchWIdCurrentAppWindow(),
-                                    orientationAngleAtom, 0, 1, False, AnyPropertyType,
-                                    &actualType, &actualFormat, &nitems,
-                                    &bytes, &data.asUChar);
-
-    if (status == Success && actualType == XA_CARDINAL && actualFormat == 32 && nitems == 1) {
-        if (data.asInt[0] == M::Angle0 || data.asInt[0] == M::Angle90 || data.asInt[0] == M::Angle180
-            || data.asInt[0] == M::Angle270 ){
-            angle = (M::OrientationAngle)( data.asInt[0] );
-        }
-    }
-
-    if (status == Success)
-        XFree(data.asUChar);
-
-    if (error)
-        *error = status;
-
-    return angle;
-}
-
 void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win, bool limitedByConstraints)
 {
-    M::OrientationAngle angle = fetchCurrentAppWindowOrientationAngle();
     if (limitedByConstraints && !windowsFollowingWithConstraintsCurrentAppWindow.contains(win)) {
-        windowsFollowingWithConstraintsCurrentAppWindow.append(win);
-        rotateToAngleIfAllowed(angle, win);
+        windowsFollowingWithConstraintsCurrentAppWindow.append(win);;
     } else {
         windowsFollowingCurrentAppWindow.append(win);
-        win->setOrientationAngle(angle);
     }
-    handleCurrentAppWindowChange();
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if (!currentWindowAngleProperty->isSubscribed())
+        currentWindowAngleProperty->subscribeAndWaitForSubscription();
+    handleCurrentAppWindowOrientationAngleChange();
+#endif //HAVE_CONTEXTSUBSCRIBER
 }
 
 void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win, bool limitedByConstraints)
@@ -502,20 +415,9 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win, boo
         windowsFollowingWithConstraintsCurrentAppWindow.removeAll(win);
     else
         windowsFollowingCurrentAppWindow.removeAll(win);
-
-    if (windowsFollowingCurrentAppWindow.count() == 0 &&
-        windowsFollowingWithConstraintsCurrentAppWindow.count() == 0) {
-        if (widCurrentAppWindow) {
-            XWindowAttributes attributes;
-            XGetWindowAttributes(QX11Info::display(), widCurrentAppWindow, &attributes);
-            //We unset PropertyChangeMask if it was not set before
-            if (!currentAppWindowHadXPropertyChangeMask)
-                attributes.your_event_mask &= ~PropertyChangeMask;
-            XSelectInput(QX11Info::display(), widCurrentAppWindow, attributes.your_event_mask);
-            widCurrentAppWindow = 0;
-        }
-        currentAppWindowHadXPropertyChangeMask = false;
-    }
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if (windowsFollowingWithConstraintsCurrentAppWindow.isEmpty() &&
+        windowsFollowingCurrentAppWindow.isEmpty())
+        currentWindowAngleProperty->unsubscribe();
+#endif //HAVE_CONTEXTSUBSCRIBER
 }
-
-#endif //Q_WS_X11

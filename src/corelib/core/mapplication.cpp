@@ -28,8 +28,6 @@
 #include "mwindow_p.h"
 #include <MDebug>
 #include "mapplication_p.h"
-#include "morientationtracker.h"
-#include "morientationtracker_p.h"
 
 /* Must be last, as it conflicts with some of the Qt defined types */
 #ifdef Q_WS_X11
@@ -559,9 +557,6 @@ void MApplicationPrivate::handleXVisibilityEvent(XVisibilityEvent *xevent)
 
 void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
 {
-    if (MOrientationTracker::instance()->d_func()->handleX11PropertyEvent(xevent))
-        return;
-
     // _MEEGOTOUCH_VISIBLE_IN_SWITCHER is set by Home Screen for
     // windows that are in the switcher and visible. Set/unset the
     // flag for corresponding window because we need to combine this

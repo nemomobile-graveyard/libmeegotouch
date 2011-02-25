@@ -1460,16 +1460,11 @@ bool MWindow::event(QEvent *event)
     } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
         return true;
-    }
-#ifdef Q_WS_X11
-    else if (event->type() == QEvent::DynamicPropertyChange) {
+    } else if (event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
-            int error = 0;
-            MOrientationTracker::instance()->d_func()->fetchCurrentAppWindowOrientationAngle(&error);
-
             //property was set, does not matter what value
-            if (property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid() && error == Success) {
+            if (property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid()) {
                 mDebug("MWindow") << "window follows current app window orientation";
                 MOrientationTracker::instance()->d_func()->startFollowingCurrentAppWindow(this);
             }
@@ -1480,7 +1475,6 @@ bool MWindow::event(QEvent *event)
     } else if (event->type() == QEvent::WinIdChange) {
         d->setMeegoX11Properties();
     }
-#endif
     return QGraphicsView::event(event);
 }
 
