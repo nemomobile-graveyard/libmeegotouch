@@ -39,6 +39,7 @@ private:
 
     QHash<QString, const MStyle*> cachedStyles[2];
     const MStyle *cachedCurrentStyle[2];
+    const MStyle *activeStyle;
 
     QString objectName;
     QString type;

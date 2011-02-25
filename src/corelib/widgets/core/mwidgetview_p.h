@@ -43,12 +43,16 @@ public: // public to inherited classes
 
     static void reloadChildItemsStyles(QGraphicsItem* item);
 
+    const MWidgetStyle *currentStyle() const;
+
 //private: // public only to MWidgetView
     MWidgetController     *controller;
 private:// public only to MWidgetView
     MWidgetModel *model;
     MWidgetStyleContainer *styleContainer;
     const MStyle *appliedStyle;
+    QMargins margins;
+    QMargins reactiveMargins;
 };
 
 #endif // MWIDGETVIEW_P_H

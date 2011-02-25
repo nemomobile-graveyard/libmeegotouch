@@ -48,7 +48,9 @@ MWidgetViewPrivate::MWidgetViewPrivate() :
     controller(NULL),
     model(NULL),
     styleContainer(NULL),
-    appliedStyle(NULL)
+    appliedStyle(NULL),
+    margins(),
+    reactiveMargins()
 {
 }
 
@@ -103,6 +105,11 @@ void MWidgetViewPrivate::setSelected(bool selected)
                 viewPrivate->setSelected(false);
         }
     }
+}
+
+const MWidgetStyle *MWidgetViewPrivate::currentStyle() const
+{
+    return static_cast<const MWidgetStyle *>(styleContainer->currentStyle());
 }
 
 MWidgetView::MWidgetView() :
@@ -265,25 +272,29 @@ void MWidgetView::applyStyle()
 {
     Q_D(MWidgetView);
 
-    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator->());
+    style().updateCurrentStyle();
+    const MWidgetStyle *s = d->currentStyle();
+
+    d->margins = QMargins(s->marginLeft(), s->marginTop(), s->marginRight(), s->marginBottom());
+    d->reactiveMargins = QMargins(s->reactiveMarginLeft(), s->reactiveMarginTop(), s->reactiveMarginRight(), s->reactiveMarginBottom());
 
     if (d->controller->layoutDirection() == Qt::RightToLeft)
         d->controller->setContentsMargins(
-            s->paddingRight() + s->marginRight(),
-            s->paddingTop() + s->marginTop(),
-            s->paddingLeft() + s->marginLeft(),
-            s->paddingBottom() + s->marginBottom());
+            s->paddingRight() + d->margins.right(),
+            s->paddingTop() + d->margins.top(),
+            s->paddingLeft() + d->margins.left(),
+            s->paddingBottom() + d->margins.bottom());
     else
         d->controller->setContentsMargins(
-            s->paddingLeft() + s->marginLeft(),
-            s->paddingTop() + s->marginTop(),
-            s->paddingRight() + s->marginRight(),
-            s->paddingBottom() + s->marginBottom());
+            s->paddingLeft() + d->margins.left(),
+            s->paddingTop() + d->margins.top(),
+            s->paddingRight() + d->margins.right(),
+            s->paddingBottom() + d->margins.bottom());
 
     updateGeometry();
     update();
 
-    d->appliedStyle = style().currentStyle();
+    d->appliedStyle = s;
 }
 
 MWidgetModel *MWidgetView::model()
@@ -312,60 +323,68 @@ const MWidgetStyleContainer &MWidgetView::style() const
 
 QRect MWidgetView::margins() const
 {
-    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator->());
-    return QRect(s->marginLeft(),
-                 s->marginTop(),
-                 s->marginRight(),
-                 s->marginBottom());
+    Q_D(const MWidgetView);
+    return QRect(d->margins.left(),
+                 d->margins.top(),
+                 d->margins.right(),
+                 d->margins.bottom());
 }
 
 int MWidgetView::marginLeft() const
 {
-    return style()->marginLeft();
+    Q_D(const MWidgetView);
+    return d->margins.left();
 }
 
 int MWidgetView::marginTop() const
 {
-    return style()->marginTop();
+    Q_D(const MWidgetView);
+    return d->margins.top();
 }
 
 int MWidgetView::marginRight() const
 {
-    return style()->marginRight();
+    Q_D(const MWidgetView);
+    return d->margins.right();
 }
 
 int MWidgetView::marginBottom() const
 {
-    return style()->marginBottom();
+    Q_D(const MWidgetView);
+    return d->margins.bottom();
 }
 
 QRect MWidgetView::reactiveMargins() const
 {
-    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator->());
-    return QRect(s->reactiveMarginLeft(),
-                 s->reactiveMarginTop(),
-                 s->reactiveMarginRight(),
-                 s->reactiveMarginBottom());
+    Q_D(const MWidgetView);
+    return QRect(d->reactiveMargins.left(),
+                 d->reactiveMargins.top(),
+                 d->reactiveMargins.right(),
+                 d->reactiveMargins.bottom());
 }
 
 int MWidgetView::reactiveMarginLeft() const
 {
-    return style()->reactiveMarginLeft();
+    Q_D(const MWidgetView);
+    return d->reactiveMargins.left();
 }
 
 int MWidgetView::reactiveMarginTop() const
 {
-    return style()->reactiveMarginTop();
+    Q_D(const MWidgetView);
+    return d->reactiveMargins.top();
 }
 
 int MWidgetView::reactiveMarginRight() const
 {
-    return style()->reactiveMarginRight();
+    Q_D(const MWidgetView);
+    return d->reactiveMargins.right();
 }
 
 int MWidgetView::reactiveMarginBottom() const
 {
-    return style()->reactiveMarginBottom();
+    Q_D(const MWidgetView);
+    return d->reactiveMargins.bottom();
 }
 
 QRectF MWidgetView::boundingRect() const
@@ -375,12 +394,13 @@ QRectF MWidgetView::boundingRect() const
 
 QPainterPath MWidgetView::shape() const
 {
+    Q_D(const MWidgetView);
     QPainterPath path;
     QRectF br = boundingRect();
-    br.setRect(br.x() - reactiveMarginLeft(),
-               br.y() - reactiveMarginTop(),
-               br.width()  + marginLeft() + marginRight() + reactiveMarginLeft() +  reactiveMarginRight(),
-               br.height() + marginTop() + marginBottom() + reactiveMarginTop() + reactiveMarginBottom());
+    br.setRect(br.x() - d->reactiveMargins.left(),
+               br.y() - d->reactiveMargins.top(),
+               br.width()  + d->margins.left() + d->margins.right() + d->reactiveMargins.left() +  d->reactiveMargins.right(),
+               br.height() + d->margins.top() + d->margins.bottom() + d->reactiveMargins.top() + d->reactiveMargins.bottom());
     path.addRect(br);
     return path;
 }
@@ -473,9 +493,11 @@ void MWidgetView::orientationChangeEvent(MOrientationChangeEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MWidgetView);
-    if (style().currentStyle() != d->appliedStyle) {
+
+    style().updateCurrentStyle();
+    if (d->currentStyle() != d->appliedStyle) {
         applyStyle();
-        d->appliedStyle = style().currentStyle();
+        d->appliedStyle = d->currentStyle();
     }
 }
 
@@ -531,20 +553,20 @@ QRectF MWidgetView::geometry() const
 {
     Q_D(const MWidgetView);
     QRectF controllerGeom = d->controller->geometry();
-    return QRectF(controllerGeom.topLeft() + QPointF(marginLeft(), marginTop()),
-                  controllerGeom.bottomRight() - QPointF(marginRight(), marginBottom()));
+    return QRectF(controllerGeom.topLeft() + QPointF(d->margins.left(), d->margins.top()),
+                  controllerGeom.bottomRight() - QPointF(d->margins.right(), d->margins.bottom()));
 }
 
 QSizeF MWidgetView::size() const
 {
     Q_D(const MWidgetView);
-    return d->controller->size() - QSizeF(marginLeft() + marginRight(), marginTop() + marginBottom());
+    return d->controller->size() - QSizeF(d->margins.left() + d->margins.right(), d->margins.top() + d->margins.bottom());
 }
 
 QPointF MWidgetView::pos() const
 {
     Q_D(const MWidgetView);
-    return d->controller->pos() + QPointF(marginLeft(), marginTop());
+    return d->controller->pos() + QPointF(d->margins.left(), d->margins.top());
 }
 
 QRectF MWidgetView::rect() const
@@ -639,14 +661,14 @@ void MWidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     int horizontalMargin = 0;
     if (d->controller->layoutDirection() == Qt::LeftToRight)
-        horizontalMargin = marginLeft();
+        horizontalMargin = d->margins.left();
     else
-        horizontalMargin = marginRight();
+        horizontalMargin = d->margins.right();
 
-    painter->translate(horizontalMargin, marginTop());
+    painter->translate(horizontalMargin, d->margins.top());
     drawBackground(painter, option);
     drawContents(painter, option);
-    painter->translate(-horizontalMargin, -marginTop());
+    painter->translate(-horizontalMargin, -d->margins.top());
     drawForeground(painter, option);
 }
 

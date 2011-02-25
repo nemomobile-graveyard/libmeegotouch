@@ -99,6 +99,7 @@ MStyleContainerPrivate::MStyleContainerPrivate() :
 {
     cachedCurrentStyle[0] = 0;
     cachedCurrentStyle[1] = 0;
+    activeStyle = 0;
     parent = NULL;
     q_ptr = NULL;
     cachedOrientationIndependentStyle = 0;
@@ -224,10 +225,15 @@ const MSceneManager *MStyleContainer::sceneManager() const
 // getter for derived classes
 const MStyle *MStyleContainer::currentStyle() const
 {
-    if (d_ptr->cachedOrientationIndependentStyle) {
-        return d_ptr->cachedOrientationIndependentStyle;
-    }
+    return d_ptr->activeStyle;
+}
 
+void MStyleContainer::updateCurrentStyle() const
+{
+    if (d_ptr->cachedOrientationIndependentStyle) {
+	d_ptr->activeStyle = d_ptr->cachedOrientationIndependentStyle;
+        return;
+    }
     M::Orientation orientation = M::Landscape;
 
     if (!d_ptr->sceneManager.isNull()) {
@@ -239,7 +245,8 @@ const MStyle *MStyleContainer::currentStyle() const
     }
 
     if (d_ptr->cachedCurrentStyle[orientation] != 0) {
-        return d_ptr->cachedCurrentStyle[orientation];
+        d_ptr->activeStyle = d_ptr->cachedCurrentStyle[orientation];
+        return;
     }
 
     const MStyle* style = 0;
@@ -274,8 +281,7 @@ const MStyle *MStyleContainer::currentStyle() const
         // resused if we request the same style in portrait
         d_ptr->cachedCurrentStyle[M::Landscape] = style;
     }
-
-    return style;
+    d_ptr->activeStyle = style;
 }
 
 void MStyleContainer::setCurrentMode(const QString &mode)
@@ -286,6 +292,7 @@ void MStyleContainer::setCurrentMode(const QString &mode)
         d_ptr->currentMode = mode;
         d_ptr->cachedOrientationIndependentStyle = 0;
     }
+    updateCurrentStyle();
 }
 
 QString MStyleContainer::currentMode() const
@@ -304,6 +311,7 @@ const char *MStyleContainer::styleType() const
 void MStyleContainer::reloadStyles()
 {
     d_ptr->releaseStyles();
+    updateCurrentStyle();
 }
 
 // sets the current style to default

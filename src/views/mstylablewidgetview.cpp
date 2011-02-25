@@ -64,6 +64,7 @@ void MStylableWidgetView::applyStyle()
 {
     //Rerouting the call to the controller to allow implementation of this
     //method in a simple widget class.
+    MWidgetView::applyStyle();
     controller->applyStyle();
 }
 M_REGISTER_VIEW_NEW(MStylableWidgetView, MStylableWidget)
