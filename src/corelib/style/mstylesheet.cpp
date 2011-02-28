@@ -140,8 +140,9 @@ QVector<MStyleSheetPrivate::ParentData> MStyleSheetPrivate::extractParentsData(c
             const QGraphicsWidget *widget = static_cast<const QGraphicsWidget *>(p);
             const QMetaObject *mobj = widget->metaObject();
 
-            while (mobj->className() != QObject::staticMetaObject.className()) { // ###
-                pd.hierarchy.append(mobj->className()); // ###
+            while (mobj->className() != QObject::staticMetaObject.className() &&
+                   mobj->className() != QGraphicsWidget::staticMetaObject.className()) {
+                pd.hierarchy.append(mobj->className());
                 mobj = mobj->superClass();
             }
 
