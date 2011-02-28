@@ -46,26 +46,6 @@ public:
      */
     QString createBinaryFilename(const QString &filename) const;
 
-    /**
-      * \brief Returns all cache files from the cache directory starting
-      * with the given filter.
-      */
-    QStringList cacheFileCandidates(const QString& filter) const;
-
-    /**
-      * \brief Return the newest binary CSS cache file for a given
-      * CSS file.
-      */
-    QString currentBinaryCacheFile(const QString &filename) const;
-
-    /**
-      * \brief When we have to update an existing binary cache file we
-      * may not overwride existing files as they may be mapped by another
-      * application. Instead we increase the number at the end of the cache
-      * filename. This function calculates the proper name for a new cache file.
-      */
-    QString nextBinaryCacheFile(const QString &filename) const;
-
     QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> > fileInfoList;
     QSharedPointer<MStyleSheetParser::StylesheetFileInfo> privateFileInfo;
 

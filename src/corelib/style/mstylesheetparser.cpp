@@ -405,7 +405,7 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
 {
     globalConstants = constants;
 
-    const QString binaryFilename = currentBinaryCacheFile(filename);
+    const QString binaryFilename = binaryDirectory + createBinaryFilename(filename);
     if (toplevel && binaryFileMode) {
         // If binary file mode is enabled, we'll check if there's binary
         // file available instead of the ASCII css to speed-up the loading process
@@ -453,14 +453,17 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
                         mWarning("MStyleSheetParser::load") << "Failed to acquire css guard semaphore.";
                         return false;
                     }
-                    dump(nextBinaryCacheFile(filename));
-                    cssSemaphore.release();
+                    QString tmpBinaryFilename = binaryFilename + ".tmp";
+                    dump(tmpBinaryFilename);
                     // now clear the stylesheets we just created and load the from the cache file
                     // to make use of mmaping
                     fileInfoList.clear();
                     privateFileInfo.clear();
 
-                    return loadBinary(currentBinaryCacheFile(filename));
+                    rename(tmpBinaryFilename.toLatin1(), binaryFilename.toLatin1());
+
+                    cssSemaphore.release();
+                    return loadBinary(binaryFilename);
                 }
             }
 
@@ -1027,73 +1030,7 @@ QString MStyleSheetParserPrivate::createBinaryFilename(const QString &filename) 
     // also replace windows directory separators and the drive letter separator
     absoluteFilePathEncoded.replace(QLatin1Char('\\'), QLatin1String("_."));
     absoluteFilePathEncoded.replace(QLatin1Char(':'), QLatin1String("_."));
-    absoluteFilePathEncoded.append(QLatin1Char('#'));
     return absoluteFilePathEncoded;
-}
-
-QString MStyleSheetParserPrivate::currentBinaryCacheFile(const QString &filename) const
-{
-    const QStringList files = cacheFileCandidates(createBinaryFilename(filename));
-    if (files.isEmpty()) {
-        return QString();
-    } else {
-        // we extract the index from all cache files and return the cache file with the
-        // highest index to make sure we are sorting by number and not alphanumeric.
-        // we want #1, #2, #10, #20 and not #1, #10, #2, #20
-        int highestIndex  = -1;
-        QString currentFile;
-        foreach (const QString &file, files) {
-            int indexOfHash = file.lastIndexOf(QLatin1Char('#'));
-            int index = file.right(file.size() - indexOfHash - 1).toInt();
-            if (index > highestIndex) {
-                highestIndex = index;
-                currentFile = file;
-            }
-        }
-        return binaryDirectory + currentFile;
-    }
-}
-
-QStringList MStyleSheetParserPrivate::cacheFileCandidates(const QString& filter) const
-{
-#ifndef Q_OS_WIN
-    // this code is much faster than the version using QDir::entryList() from below
-    QStringList candidates;
-    DIR *dirHandle = opendir(qPrintable(binaryDirectory));
-    if (dirHandle) {
-        dirent *dirEntry;
-        while ((dirEntry = readdir(dirHandle))) {
-            if (dirEntry->d_type == DT_REG) {
-                QString filename(dirEntry->d_name);
-                if (filename.startsWith(filter)) {
-                    candidates.push_back(dirEntry->d_name);
-                }
-            }
-        }
-        closedir(dirHandle);
-    }
-    return candidates;
-#else
-    QString tmpFilter( filter );
-    tmpFilter.append(QLatin1Char('*'));
-    const QDir cacheDir(binaryDirectory, tmpFilter, QDir::Name, QDir::Files);
-    return cacheDir.entryList();
-#endif
-}
-
-QString MStyleSheetParserPrivate::nextBinaryCacheFile(const QString &filename) const
-{
-    const QString binaryFilename = createBinaryFilename(filename);
-    const QString currentFile = currentBinaryCacheFile(filename);
-    if (currentFile.isEmpty()) {
-        return binaryDirectory + binaryFilename + QLatin1String("000");
-    } else {
-        int indexOfHash = currentFile.lastIndexOf(QLatin1Char('#'));
-        int currentIndex = currentFile.right(currentFile.size() - indexOfHash - 1).toInt();
-        QString newIndex;
-        newIndex.setNum(currentIndex + 1);
-        return binaryDirectory + binaryFilename + newIndex.rightJustified(3, QLatin1Char('0'));
-    }
 }
 
 MStyleSheetParser::MStyleSheetParser(const MLogicalValues *logicalValues) :
