@@ -74,6 +74,7 @@ CFG_ICU=auto
 CFG_GCONF=auto
 CFG_MEEGOGRAPHICSSYSTEM=no
 
+HAVE_LINUX=no
 HAVE_ICU=no
 HAVE_CONTEXTSUBSCRIBER=no
 HAVE_GCONF=no
@@ -373,6 +374,11 @@ if [ "$OPT_SHADOW" = "maybe" ]; then
     fi
 fi
 
+# is this a Linux build ?
+if [ ! -z "`uname -s | grep Linux`" ]; then
+    HAVE_LINUX=yes
+fi
+
 # Test for ICU
 if [ "$CFG_ICU" != "no" ]; then
     which icu-config > /dev/null
@@ -430,19 +436,22 @@ if [ $? -eq 0 ]; then
 	HAVE_CONTENTACTION=no
     fi
 
-    pkg-config --exists xdamage
-    if [ $? -eq 0 ]; then
-        HAVE_XDAMAGE=yes
-    fi
+    # use xdamage, xfixes and xcomposite only on Linux platform
+    if [ "$HAVE_LINUX" != "no" ]; then
+        pkg-config --exists xdamage
+        if [ $? -eq 0 ]; then
+            HAVE_XDAMAGE=yes
+        fi
 
-    pkg-config --exists xfixes
-    if [ $? -eq 0 ]; then
-        HAVE_XFIXES=yes
-    fi
+        pkg-config --exists xfixes
+        if [ $? -eq 0 ]; then
+            HAVE_XFIXES=yes
+        fi
 
-    pkg-config --exists xcomposite
-    if [ $? -eq 0 ]; then
-        HAVE_XCOMPOSITE=yes
+        pkg-config --exists xcomposite
+        if [ $? -eq 0 ]; then
+            HAVE_XCOMPOSITE=yes
+        fi
     fi
 
     # For Scratchbox and  For OBS/MeeGo
