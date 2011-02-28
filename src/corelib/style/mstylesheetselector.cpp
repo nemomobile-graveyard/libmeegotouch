@@ -85,7 +85,7 @@ const MStyleSheetAttribute* MStyleSheetSelector::attributeByName(MUniqueStringCa
     const MStyleSheetAttribute *attributes = attributeList();
     MStyleSheetAttributeComparator comp;
     const MStyleSheetAttribute *attribute = std::lower_bound(attributes, attributes + attributeCount(), name, comp);
-    if (attribute == &attributes[attributeCount()]) {
+    if (attribute == &attributes[attributeCount()] || attribute->getNameID() != name) {
         return 0;
     } else {
         return attribute;

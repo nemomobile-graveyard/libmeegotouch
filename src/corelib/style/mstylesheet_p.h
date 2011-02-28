@@ -35,7 +35,6 @@
 #include <QList>
 #include <QHash>
 
-class MOriginContainer;
 class MStyleSheetSelector;
 class MStyle;
 class MWidgetController;
@@ -45,6 +44,15 @@ class MStyleSheetPrivate
 {
 public:
     struct SelectorInfo {
+        SelectorInfo(const MStyleSheetSelector *selector,
+                     int classPriority,
+                     int parentPriority,
+                     const MStyleSheet *stylesheet) :
+            selector(selector),
+            classPriority(classPriority),
+            parentPriority(parentPriority),
+            stylesheet(stylesheet)
+        {};
         const MStyleSheetSelector *selector;
         int classPriority;
         int parentPriority;
@@ -53,7 +61,7 @@ public:
 
     struct SelectorInfoList {
         bool orientationDependent;
-        QList<SelectorInfo> selectorInfos;
+        QList<QSharedPointer<SelectorInfo> > selectorInfos;
     };
 
     // Aggregates the (non-parent) data that specifies which style we want to obtain
@@ -79,11 +87,11 @@ public:
 
             if (parentInfo && !parentInfo->selectorInfos.isEmpty()) {
                 result +=  + "{";
-                for (QList<SelectorInfo>::const_iterator iterator = parentInfo->selectorInfos.begin(); iterator != parentInfo->selectorInfos.constEnd(); ++iterator) {
+                for (QList<QSharedPointer<SelectorInfo> >::const_iterator iterator = parentInfo->selectorInfos.begin(); iterator != parentInfo->selectorInfos.constEnd(); ++iterator) {
                     if (iterator != parentInfo->selectorInfos.constBegin()) {
                         result += ',';
                     }
-                    result += QByteArray::number((quintptr) iterator->selector, 16);
+                    result += QByteArray::number((quintptr) (*iterator)->selector, 16);
                 }
                 result += '}';
             }
@@ -124,22 +132,17 @@ public:
                          const QByteArray &type,
                          M::Orientation orientation);
 
-    typedef QHash<MUniqueStringCache::Index, MOriginContainer *> CacheEntryData;
-    struct CacheEntry {
-        QHash<MUniqueStringCache::Index, MOriginContainer *> data;
-        bool orientationDependent;
-    };
-    static QHash<QByteArray, CacheEntry *> EntryCache;
+    static QHash<QByteArray, SelectorInfoList*> EntryCache;
     static QHash<QByteArray, MStyle *> StyleCache;
 
-    static CacheEntry *buildCacheEntry(const QList<const MStyleSheet *> &sheets,
+    static SelectorInfoList *buildSelectorInfoList(const QList<const MStyleSheet *> &sheets,
                                        const StyleSpec &spec,
                                        const QVector<ParentData> &parentsData,
                                        const QByteArray &parentStyleName);
 
-    static bool combine(MStyle *style, const CacheEntryData &entry, const StyleSpec &spec);
+    static bool combine(MStyle *style, const SelectorInfoList &entry, const StyleSpec &spec);
 
-    static bool isHigherPriority(const MOriginContainer *prev, const MStyleSheetSelector *n, unsigned int classPriority, unsigned int parentPriority);
+    static bool isHigherPriority(const QSharedPointer<SelectorInfo> &prev, const QSharedPointer<SelectorInfo> &next);
 
     static int orderNumber(const QByteArray &n, const QByteArray &sn, const QByteArray &parentStyleName, const QList<QByteArray> &parentHierarchy);
 
