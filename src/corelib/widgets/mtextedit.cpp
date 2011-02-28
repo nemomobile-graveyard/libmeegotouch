@@ -2335,12 +2335,12 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         commitString.replace("\r", "\n");
     }
 
-    // get and remove the current selection
+    // get and remove the current selection if there are preedit string or commit string
     const bool wasSelecting = hasSelectedText();
     QTextDocumentFragment selectedFragment = d->cursor()->selection();
     int selectionStart = -1;
 
-    if (wasSelecting == true) {
+    if (wasSelecting == true && (!preedit.isEmpty() || !commitString.isEmpty())) {
         selectionStart = d->cursor()->selectionStart();
         d->cursor()->removeSelectedText();
         emitTextChanged = true;
