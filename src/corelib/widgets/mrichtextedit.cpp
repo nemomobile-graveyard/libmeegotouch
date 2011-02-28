@@ -65,12 +65,22 @@ bool MRichTextEditPrivate::insertFromMimeData(const QMimeData *source)
     bool updated = false;
 
     if (source->hasHtml()) {
-        fragment = QTextDocumentFragment::fromHtml(source->html());
+        // on single line newline are changed into spaces
+        if (q->lineMode() == MTextEditModel::SingleLine) {
+            fragment = replaceLineBreaks(QTextDocumentFragment::fromHtml(source->html()), QChar(' '));
+        } else {
+            fragment = QTextDocumentFragment::fromHtml(source->html());
+        }
         updated = true;
     } else {
         QString text = source->text();
         if (!text.isNull()) {
-            fragment = QTextDocumentFragment::fromPlainText(text);
+            // on single line newline are changed into spaces
+            if (q->lineMode() == MTextEditModel::SingleLine) {
+                fragment = QTextDocumentFragment::fromPlainText(MTextEditPrivate::replaceLineBreaks(text, QChar(' ')));
+            } else {
+                fragment = QTextDocumentFragment::fromPlainText(text);
+            }
             updated = true;
         }
     }
@@ -232,6 +242,30 @@ void MRichTextEditPrivate::textStyleValues(QString *fontfamily, int *fontPointSi
             break;
         }
     }
+}
+
+
+QTextDocumentFragment MRichTextEditPrivate::replaceLineBreaks(const QTextDocumentFragment &fragment,
+                                                              const QString &replacement)
+{
+    // Create temprorary document
+    QTextDocument document;
+    QTextCursor cursor(&document);
+    cursor.insertFragment(fragment);
+
+    // Remove all line breaks
+    cursor.movePosition(QTextCursor::Start);
+    while (cursor.movePosition(QTextCursor::NextBlock)) {
+        cursor.deletePreviousChar();
+        cursor.insertText(replacement);
+    }
+
+    // Set selection
+    cursor.movePosition(QTextCursor::Start);
+    cursor.movePosition(QTextCursor::End,QTextCursor::KeepAnchor);
+
+    // Construct new fragment
+    return QTextDocumentFragment(cursor);
 }
 
 

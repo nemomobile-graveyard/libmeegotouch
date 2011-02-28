@@ -21,6 +21,7 @@
 #define MRICHTEXTEDIT_P_H
 
 #include <QMimeData>
+#include <QTextDocumentFragment>
 #include "mtextedit_p.h"
 #include "mrichtextedit.h"
 
@@ -72,6 +73,11 @@ public:
      * \brief gets the current text style values to be shown in the text styling ui
      */
     void  textStyleValues(QString *fontfamily, int *fontPointSize, QColor *fontColor);
+
+    /*!
+     * \brief removes line breakes in rich text document
+     */
+    QTextDocumentFragment replaceLineBreaks(const QTextDocumentFragment &fragment,const QString &replacement);
 
     void _q_setFontFamily(const QString &fontFamily);
 
