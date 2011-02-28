@@ -225,6 +225,9 @@ void MExtensionAreaView::setupModel()
 void MExtensionAreaView::applyStyle()
 {
     Q_D(MExtensionAreaView);
+
+    MWidgetView::applyStyle();
+
     d->setupContainers(style()->containerMode());
 }
 
