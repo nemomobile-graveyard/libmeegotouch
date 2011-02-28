@@ -48,7 +48,8 @@ MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
       labelOnlyAsCommonButton(true),
       widgetAlignment(Qt::AlignHCenter),
       itemsEnabled(true),
-      alignmentMargins(0)
+      alignmentMargins(0),
+      centerOffset(0)
 {
     this->controller = controller;
     controller->installEventFilter(this);
@@ -334,6 +335,7 @@ bool MToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
                     setEnabledPreservingSelection(enabledPreservingSelection);
                 } else if (propertyEvent->propertyName() == "widgetAlignment") {
                     updateWidgetAlignment();
+                    updateCenterOffset();
                 }
             }
             break;
@@ -628,9 +630,17 @@ void MToolBarViewPrivate::updateCenterOffset(const QSizeF &size)
 {
     qreal offset = 0.0f;
 
-    if ((widgetAlignment == Qt::AlignLeft || widgetAlignment == Qt::AlignRight)) {
-        qreal widthDiff = controller->sceneManager()->visibleSceneSize(M::Landscape).width() - size.width();
-        offset = (widgetAlignment == Qt::AlignRight) ? widthDiff/2 : -widthDiff/2;
+    if (widgetAlignment == Qt::AlignLeft || widgetAlignment == Qt::AlignRight) {
+        if (size.isValid()) {
+            if (controller->sceneManager()) {
+                qreal widthDiff = controller->sceneManager()->visibleSceneSize(controller->sceneManager()->orientation()).width() - size.width();
+                offset = qAbs(widthDiff/2);
+            }
+        } else
+            offset = qAbs(centerOffset);
+        if (widgetAlignment == Qt::AlignLeft)
+            offset = -offset;
+        centerOffset = offset;
     }
 
     currentPolicy()->setCenterOffset(offset);
@@ -645,12 +655,14 @@ void MToolBarViewPrivate::updateAlignmentMargins(int alignmentMargins)
 {
     this->alignmentMargins = alignmentMargins;
 
+    bool isLandscapeButtonGroup = (buttonGroup && controller->sceneManager() && controller->sceneManager()->orientation() == M::Landscape);
+
     switch (widgetAlignment) {
     case Qt::AlignLeft:
-        layout->setContentsMargins(alignmentMargins, 0, 0, 0);
+        layout->setContentsMargins(isLandscapeButtonGroup ? 0 : alignmentMargins, 0, 0, 0);
         break;
     case Qt::AlignRight:
-        layout->setContentsMargins(0, 0, alignmentMargins, 0);
+        layout->setContentsMargins(0, 0, isLandscapeButtonGroup ? 0 : alignmentMargins, 0);
         break;
     case Qt::AlignJustify:
         layout->setContentsMargins(alignmentMargins, 0, alignmentMargins, 0);

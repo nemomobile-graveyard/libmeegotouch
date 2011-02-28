@@ -290,8 +290,6 @@ void MNavigationBarViewPrivate::updateToolBarAlignment()
 
         if (menuVisible && escapeVisible) {
             alignment = Qt::AlignHCenter;
-        } else if (isToolbarLandscapeTabbar() && (menuVisible || escapeVisible)) {
-            alignment = Qt::AlignHCenter;
         } else if (menuVisible && !escapeVisible) {
             alignment = Qt::AlignLeft;
         } else if (!menuVisible && escapeVisible) {

@@ -17,22 +17,8 @@
 **
 ****************************************************************************/
 
-#include <QGraphicsLinearLayout>
-#include <QActionGroup>
-
 #include "mtoolbar.h"
-#include "mtheme.h"
-#include "mbutton.h"
-#include "mviewcreator.h"
-#include "mwidgetaction.h"
-#include "private/mwidgetview_p.h"
-#include "mapplication.h"
-#include "mapplicationwindow.h"
 #include "mbuttongroup.h"
-
-#include "mlayout.h"
-#include "mlinearlayoutpolicy.h"
-#include "mtextedit.h"
 #include "mtoolbartabview.h"
 #include "mtoolbartabview_p.h"
 
