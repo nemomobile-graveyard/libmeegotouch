@@ -226,6 +226,9 @@ private:
     // to not ignore classes which free their styles after the destrutction of
     // MTheme
     static LeakedStyles leakedStyles;
+
+    typedef QPair<QList<const MStyleSheet *>, QList<QByteArray> > SheetsAndHierarchy;
+    static QHash<const char*, SheetsAndHierarchy> hierarchyCache;
 };
 
 #endif

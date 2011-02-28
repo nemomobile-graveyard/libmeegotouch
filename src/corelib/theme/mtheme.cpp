@@ -99,6 +99,7 @@ namespace
 } // anonymous namespace
 
 MThemePrivate::LeakedStyles MThemePrivate::leakedStyles;
+QHash<const char*, MThemePrivate::SheetsAndHierarchy> MThemePrivate::hierarchyCache;
 
 void mMessageHandler(QtMsgType type, const char *msg);
 
@@ -402,7 +403,12 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
                                              QList<const MStyleSheet *> &sheets,
                                              QList<QByteArray> &styleMetaObjectHierarchy)
 {
-    typedef QPair<QList<const MStyleSheet *>, QList<QByteArray> > SheetsAndHierarchy;
+    QHash<const char*, SheetsAndHierarchy>::const_iterator it = hierarchyCache.constFind(styleClassName);
+    if (it != hierarchyCache.constEnd()) {
+        sheets = it->first;
+        styleMetaObjectHierarchy = it->second;
+        return true;
+    }
 
     // Go through the inheritance chain and add stylesheets from each assembly
     const QMetaObject *mobj = MClassFactory::instance()->styleMetaObject(styleClassName);
@@ -415,6 +421,7 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
     if (mobj->className() == MWidgetStyle::staticMetaObject.className()) {
         styleMetaObjectHierarchy.append(mobj->className());
         appendAllLibraryStyleSheets(sheets);
+        hierarchyCache.insert(styleClassName, SheetsAndHierarchy(sheets, styleMetaObjectHierarchy));
 
         return true;
     }
@@ -435,6 +442,8 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
         }
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
+
+    hierarchyCache.insert(styleClassName, SheetsAndHierarchy(sheets, styleMetaObjectHierarchy));
 
     return true;
 }
@@ -842,6 +851,7 @@ const QPixmap *MThemePrivate::fetchPixmapFromCache(const QString &identifier)
 
 void MThemePrivate::themeChangedSlot(const QStringList &themeInheritance, const QStringList& libraryNames)
 {
+    hierarchyCache.clear();
     refreshLocalThemeConfiguration(themeInheritance);
     q_ptr->rebuildViewsForWidgets();
     reloadThemeLibraries(libraryNames);
