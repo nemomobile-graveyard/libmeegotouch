@@ -1,6 +1,7 @@
 libmeegotouch (0.20.89~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#231743 - Calling MContainer::setHeaderVisible(false) for a container on first boot leaves the container header on the scene
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 28 Feb 2011 15:45:03 +0200
 

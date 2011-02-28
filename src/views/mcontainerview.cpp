@@ -139,9 +139,15 @@ void MContainerViewPrivate::createHeader()
 void MContainerViewPrivate::removeHeader()
 {
     if (header) {
+        // Remove the item from the layout. deleteLater() will NOT remove it properly but leaves the layout size incorrect and the item on the scene. See bug #231743.
+        QGraphicsLinearLayout* mainLayout = dynamic_cast<QGraphicsLinearLayout*>(controller->layout());
+        if (mainLayout)
+            mainLayout->removeItem(header);
+
         /*
-           delete header and its children, the header must be delted with
-           deleteLater() as this gets called from a slot.
+           Delete header and its children. The header must be deleted with
+           deleteLater() as this gets called from a slot. However, the item
+           MUST be removed from the layout before this.
         */
         header->deleteLater();
         header = 0;
