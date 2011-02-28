@@ -30,6 +30,7 @@
 
 #include <QGraphicsLinearLayout>
 #include <QIcon>
+#include <QTimer>
 
 MPopupListItem::MPopupListItem(QGraphicsItem* parent)
     : MListItem(parent),
@@ -138,7 +139,6 @@ void MPopupListViewPrivate::init()
     q->contentsLayout()->insertItem(0, list);
 
     QObject::connect(list, SIGNAL(itemClicked(QModelIndex)), controller, SLOT(click(QModelIndex)));
-    QObject::connect(list, SIGNAL(displayEntered()), q, SLOT(_q_scrollOnFirstAppearance()));
 }
 
 MPopupListCellCreator::MPopupListCellCreator(MList *list)
@@ -184,7 +184,6 @@ void MPopupListViewPrivate::_q_scrollOnFirstAppearance()
 {
     Q_Q(MPopupListView);
     list->scrollTo(q->model()->scrollToIndex());
-    QObject::disconnect(list, SIGNAL(displayEntered()), q, SLOT(_q_scrollOnFirstAppearance()));
 }
 
 MPopupListView::MPopupListView(MPopupList *controller)
@@ -232,6 +231,7 @@ void MPopupListView::setupModel()
 
     d->list->setItemModel(model()->itemModel());
     d->list->setSelectionModel(model()->selectionModel());
+    QTimer::singleShot(0, this, SLOT(_q_scrollOnFirstAppearance()));
 }
 
 void MPopupListView::applyStyle()
