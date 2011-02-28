@@ -437,9 +437,7 @@ void MDialogViewPrivate::updateButtonBoxLayoutOrientation()
     if (q->style()->maximumHorizontalButtons() < buttonBoxLayoutPolicy->count())
             buttonBoxLayoutPolicy->setOrientation(Qt::Vertical);
 
-    if (q->model()->buttons().count()==0) {
-        buttonBox->setPreferredHeight(q->style()->verticalSpacing());
-    } else if (buttonBoxLayoutPolicy->orientation()==Qt::Horizontal) {
+    if (q->model()->buttons().count() == 0 || buttonBoxLayoutPolicy->orientation() == Qt::Horizontal) {
         buttonBox->setPreferredHeight(buttonBox->minimumHeight() + q->style()->verticalSpacing());
     } else {
         buttonBox->setPreferredHeight((q->model()->buttons().count() * buttonBox->minimumHeight()) + q->style()->verticalSpacing());
