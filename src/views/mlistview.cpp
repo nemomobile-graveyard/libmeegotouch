@@ -44,7 +44,9 @@ MListView::MListView(MWidgetController *widgetController)
 MListView::~MListView()
 {
     if (d_ptr) {
-        delete d_ptr->headersCreator;
+        if (!model()->headerCreator())
+            delete d_ptr->headersCreator;
+
         delete d_ptr;
     }
 }
@@ -75,12 +77,12 @@ void MListView::init()
             d_ptr = new MPlainListViewPrivate;
     }
 
-    if (model()->showGroups()) {
-        if (model()->headerCreator())
-            d_ptr->setHeadersCreator(model()->headerCreator());
-        else
-            d_ptr->setHeadersCreator(headersCreator);
-    }
+    if (model()->headerCreator()) {
+        d_ptr->setHeadersCreator(model()->headerCreator());
+        if (model()->headerCreator() != headersCreator)
+            delete headersCreator;
+    } else
+        d_ptr->setHeadersCreator(headersCreator);
 
     d_ptr->q_ptr = this;
     d_ptr->controller = dynamic_cast<MList *>(controller);

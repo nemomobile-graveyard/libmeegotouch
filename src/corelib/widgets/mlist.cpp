@@ -82,6 +82,7 @@ MList::MList(QGraphicsItem *parent)
 MList::~MList()
 {
     delete model()->cellCreator();
+    delete model()->headerCreator();
 }
 
 void MList::updateData(const QList<const char *>& modifications)

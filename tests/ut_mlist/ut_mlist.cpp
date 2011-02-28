@@ -34,6 +34,16 @@ MApplication *app;
 class MContentItemCreator : public MAbstractCellCreator<MContentItem>
 {
 public:
+    MContentItemCreator()
+    {
+       destroyed = false;
+    }
+
+    ~MContentItemCreator()
+    {
+        destroyed = true;
+    }
+
     void updateCell(const QModelIndex& index, MWidget * cell) const
     {
        MContentItem * contentItem = qobject_cast<MContentItem *>(cell);
@@ -54,8 +64,10 @@ public:
             contentItem->setPixmap( QPixmap("icon-home"));
         }
     }
+    static bool destroyed;
 };
 
+bool MContentItemCreator::destroyed = false;
 
 //ut_mlist class
 void Ut_mlist::init()
@@ -118,6 +130,11 @@ void Ut_mlist::testHeaderCreator()
 
     QCOMPARE( m_subject->itemModel(), listTesterModel );
     QCOMPARE (m_subject->headerCreator(), cellCreator);
+
+    delete m_subject;
+    m_subject = 0;
+
+    QVERIFY(MContentItemCreator::destroyed);
 }
 
 void Ut_mlist::testScrollTo()
@@ -455,6 +472,5 @@ QVariant ListTesterModel::headerData(int section, Qt::Orientation orientation, i
     }
     return QVariant();
 }
-
 
 QTEST_APPLESS_MAIN(Ut_mlist)
