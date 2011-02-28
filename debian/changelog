@@ -1,8 +1,19 @@
-libmeegotouch (0.20.88~1) unstable; urgency=low
+libmeegotouch (0.20.88-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#230586
+  * Fixes: NB#227711 - [TASK] MSlider::setSteps is confusing
+  * Fixes: NB#227536 - Inconsistency of number of tabs on MToolbar
+  * Fixes: NB#222807 - [TASK] mthemedaemon should use the meego graphicssystem
+  * Fixes: NB#226637 - MWindow::isOnDisplay() returns true for quite some time after the window has exited the display
+  * Fixes: NB#223291 Memory leak: MListViewPrivate will connects the same signal
+  * Fixes: NB#221617 - Each MAction adds approximately 5ms to every MApplicationPage appearance (Using gallery css)
+  * Fixes: NB#224151 - Libmeegotouch is highly depend of the word "base" due to old-theming requirements.
+  * Fixes: NB#228912 - Button no longer draws correctly
+  * Fixes: NB#210573 - Crash in /usr/lib/meegotouch/applicationextensions/mapplicationextensionrunner
+  * Fixes: Build break on mac.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 28 Feb 2011 13:04:23 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 28 Feb 2011 15:37:38 +0200
 
 libmeegotouch (0.20.87-1) unstable; urgency=low
 
