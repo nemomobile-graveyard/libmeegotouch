@@ -50,6 +50,7 @@ PUBLIC_HEADERS += \
     mnavigationbarview.h \
     mlistitemview.h \
     mbubbleitemview.h \
+    mbasicsheetheaderview.h \
 
 
 PRIVATE_HEADERS += \
@@ -64,6 +65,7 @@ PRIVATE_HEADERS += \
     mprogressindicatorbarview_p.h \
     mcompleterview_p.h \
     msheetview_p.h \
+    mbasicsheetheaderview_p.h \
     msliderview_p.h \
     mspinnerview_p.h \
     mlistview_p.h \
@@ -112,6 +114,7 @@ SOURCES += \
     mpopuplistview.cpp \
     mprogressindicatorbarview.cpp \
     msheetview.cpp \
+    mbasicsheetheaderview.cpp \
     msliderview.cpp \
     mspinnerview.cpp \
     mstatusbarview.cpp \

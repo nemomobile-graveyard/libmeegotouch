@@ -124,6 +124,8 @@ SUBDIRS     =  \
     ut_mappletid \
     ut_mappletsettings \
     ut_mappletsettingsdialog \
+    ut_mbasicsheetheader \
+    ut_mbasicsheetheaderview \
     ut_mfiledatastore \
     ut_maggregatedataaccess \
     ut_mmashupcanvas \
