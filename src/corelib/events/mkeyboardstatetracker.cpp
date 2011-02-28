@@ -95,6 +95,7 @@ MKeyboardStateTracker::~MKeyboardStateTracker()
 {
     if (this == MKeyboardStateTrackerPrivate::tracker)
         MKeyboardStateTrackerPrivate::tracker = 0;
+    delete d_ptr;
 }
 
 bool MKeyboardStateTracker::isPresent() const
