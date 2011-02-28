@@ -23,7 +23,7 @@ target.path = $$M_INSTALL_BIN
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
 CONFIG += qt
-QT += svg opengl webkit
+QT += svg opengl
 contains(DEFINES, HAVE_DBUS) {
     CONFIG += qdbus
     QT += dbus
