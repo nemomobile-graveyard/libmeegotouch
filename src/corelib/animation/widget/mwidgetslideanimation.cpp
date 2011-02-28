@@ -133,6 +133,7 @@ void MWidgetSlideAnimation::updateState(QAbstractAnimation::State newState, QAbs
         }
 
         d->delay->setDuration(style()->delay());
+        d->positionAnimation->setEasingCurve(style()->easingCurve());
         d->positionAnimation->setDuration(style()->duration());
         d->played = true;
     }
