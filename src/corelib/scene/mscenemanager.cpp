@@ -791,6 +791,7 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
         animation && animation->state() == QAbstractAnimation::Running)
     {
         animation->stop();
+        animation->restoreTargetWidgetState();
         animation->start();
     }
 }
