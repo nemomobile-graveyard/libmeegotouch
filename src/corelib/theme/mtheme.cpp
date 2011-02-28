@@ -902,7 +902,7 @@ void MThemePrivate::reloadThemeLibraries(const QStringList& libraryNames)
         if (library->isLoaded()) {
             openedThemeLibraries.insert(library);
         } else {
-            mWarning("MTheme") << "Failed to open theme library:" << libname;
+            mWarning("MTheme") << "Failed to open theme library:" << libname << library->errorString();
             delete library;
         }
     }
