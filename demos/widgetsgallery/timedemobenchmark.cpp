@@ -1,4 +1,5 @@
 #include "timedemobenchmark.h"
+#include "timedemo.h"
 
 #include <QTimer>
 #include <MApplicationPage>
@@ -27,7 +28,8 @@ void TimedemoBenchmark::terminateIfNotAppeared() {
     if (applicationPage->isOnDisplay()) {
         return;
     } else {
-        qCritical("Could not activate application page. Is a window manager running?");
+        timedemo->displayBenchmarkResults();
+        qCritical("Could not activate application page. Either the application page is not the toplevel window or the window manager is not running.\nAborting.");
         exit(EXIT_FAILURE);
     }
 }

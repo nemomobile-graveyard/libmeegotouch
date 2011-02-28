@@ -82,8 +82,8 @@ public:
       */
     void stopTiming(const TimedemoBenchmark *activeBenchmark);
 
-private:
     void displayBenchmarkResults();
+private:
     void saveFramelog();
 
     MainPage *m_pFrontPage;
