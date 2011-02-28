@@ -237,7 +237,7 @@ void MApplicationWindowPrivate::init()
 
     _q_placeToolBar();
 
-    q->setBackgroundBrush(Qt::black);
+    applyWindowBackground();
 
     initAutoHideComponentsTimer();
 
@@ -1069,6 +1069,7 @@ void MApplicationWindowPrivate::_q_updateStyle()
     updateStyleNames();
     _q_placeToolBar();
     initAutoHideComponentsTimer();
+    applyWindowBackground();
 }
 
 #ifdef Q_WS_X11
@@ -1102,6 +1103,16 @@ void MApplicationWindowPrivate::_q_updateChainTaskData()
                   q, SLOT(_q_updateChainTaskData()));
 }
 #endif
+
+void MApplicationWindowPrivate::applyWindowBackground()
+{
+    Q_Q(MApplicationWindow);
+
+    if (style()->backgroundColor().isValid())
+        q->setBackgroundBrush(style()->backgroundColor());
+    else
+        q->setBackgroundBrush(Qt::black);
+}
 
 void MApplicationWindowPrivate::updateStyleNames()
 {

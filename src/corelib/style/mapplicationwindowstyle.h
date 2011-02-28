@@ -22,6 +22,8 @@
 
 #include <mstyle.h>
 
+#include <QColor>
+
 /** \brief Defines a style for a MApplicationWindowStyle class.
  *  This class defines default style values for application window.
  */
@@ -65,6 +67,11 @@ class MApplicationWindowStyle : public MStyle
       \brief This allows to customize the style of the status bar for a specific app
     */
     M_STYLE_ATTRIBUTE(QString, statusBarStyleName, StatusBarStyleName)
+
+    /*!
+      \brief This allows to customize application window background color.
+    */
+    M_STYLE_ATTRIBUTE(QColor, backgroundColor, BackgroundColor)
 };
 
 class MApplicationWindowStyleContainer : public MStyleContainer

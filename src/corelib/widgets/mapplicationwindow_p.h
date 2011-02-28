@@ -207,6 +207,7 @@ public:
 #ifdef Q_WS_X11
     void _q_updateChainTaskData();
 #endif
+    void applyWindowBackground();
     void setSceneWindowVisibility(MSceneWindow *sceneWindow, bool visible);
 };
 
