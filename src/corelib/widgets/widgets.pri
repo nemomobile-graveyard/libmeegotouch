@@ -65,7 +65,10 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mtapstatemachine.h \
     $$WIDGETS_SRC_DIR/mbasicsheetheader.h \
 
-WIDGET_MODEL_HEADERS += \
+PRIVATE_WIDGET_MODEL_HEADERS += \
+    $$WIDGETS_SRC_DIR/mcolorcomboboxmodel.h \
+
+PUBLIC_WIDGET_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
     $$WIDGETS_SRC_DIR/mbuttonmodel.h \
     $$WIDGETS_SRC_DIR/mcomboboxmodel.h \
@@ -103,10 +106,12 @@ WIDGET_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mbubbleitemmodel.h \
     $$WIDGETS_SRC_DIR/mbasicsheetheadermodel.h \
 
-MODEL_HEADERS += $$WIDGET_MODEL_HEADERS
+MODEL_HEADERS += \
+    $$PRIVATE_WIDGET_MODEL_HEADERS \
+    $$PUBLIC_WIDGET_MODEL_HEADERS \
 
 PUBLIC_HEADERS += \
-    $$WIDGET_MODEL_HEADERS \
+    $$PUBLIC_WIDGET_MODEL_HEADERS \
 
 PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
@@ -133,6 +138,9 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mtapstatemachine_p.h \
     $$WIDGETS_SRC_DIR/mtextedit_p.h \
     $$WIDGETS_SRC_DIR/mbasicsheetheader_p.h \
+    $$WIDGETS_SRC_DIR/mcolorcombobox.h \
+    $$PRIVATE_WIDGET_MODEL_HEADERS
+
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
@@ -208,3 +216,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mtapstatemachine.cpp \
     $$WIDGETS_SRC_DIR/mbasicsheetheader.cpp \
     $$WIDGETS_SRC_DIR/mmessageboxmodel.cpp \
+    $$WIDGETS_SRC_DIR/mcolorcombobox.cpp \

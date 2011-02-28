@@ -1,7 +1,12 @@
 STYLE_SRC_DIR=./style
 INCLUDEPATH+=./style
 
-STYLE_HEADERS += \
+PRIVATE_STYLE_HEADERS += \
+    $$STYLE_SRC_DIR/mcolorwidgetstyle.h \
+    $$STYLE_SRC_DIR/mcolorliststyle.h \
+    $$STYLE_SRC_DIR/mcolorcomboboxstyle.h
+
+PUBLIC_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mapplicationpagestyle.h \
     $$STYLE_SRC_DIR/mborderdecorationroundedcornersstyle.h \
     $$STYLE_SRC_DIR/mbuttonstyle.h \
@@ -65,7 +70,14 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mlistheaderstyle.h \
     $$STYLE_SRC_DIR/mbasiclistitemdeletionanimationstyle.h \
 
+STYLE_HEADERS += \
+    $$PRIVATE_STYLE_HEADERS \
+    $$PUBLIC_STYLE_HEADERS \
+
 PUBLIC_HEADERS += \
-    $$STYLE_HEADERS \
+    $$PUBLIC_STYLE_HEADERS \
+
+PRIVATE_HEADERS += \
+    $$PRIVATE_STYLE_HEADERS \
 
 HEADERS += \
