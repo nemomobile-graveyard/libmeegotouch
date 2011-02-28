@@ -396,6 +396,11 @@ bool MStyleSheetPrivate::isHigherPriority(const QSharedPointer<SelectorInfo> &pr
         }
     }
 
+    // check if parent name is set
+    if (next->selector->parentObjectName() != prev->selector->parentObjectName()) {
+        return next->selector->parentObjectNameID() != MUniqueStringCache::EmptyStringIndex;
+    }
+
     // Only other has orientation
     if (next->selector->orientation() != prev->selector->orientation())
     return next->selector->orientation() != MStyleSheetSelector::UndefinedOrientation;
