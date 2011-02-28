@@ -63,8 +63,16 @@ MBasicSheetHeader::MBasicSheetHeader(QGraphicsItem *parent)
 
 MBasicSheetHeader::~MBasicSheetHeader()
 {
-    delete model()->positiveAction();
-    delete model()->negativeAction();
+    if (model()->positiveAction()) {
+        QObject::disconnect(model()->positiveAction(), SIGNAL(destroyed()),
+                            this, SLOT(_q_removePositiveActionFromModel()));
+    }
+
+    if (model()->negativeAction()) {
+        QObject::disconnect(model()->negativeAction(), SIGNAL(destroyed()),
+                            this, SLOT(_q_removeNegativeActionFromModel()));
+    }
+
     delete d_ptr;
 }
 
