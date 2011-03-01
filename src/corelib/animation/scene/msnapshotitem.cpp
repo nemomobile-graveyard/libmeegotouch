@@ -6,18 +6,11 @@
 #include <QApplication>
 #include <QGraphicsView>
 
-#ifdef HAVE_XCOMPOSITE
+#if defined(HAVE_X11_XCB) && defined(HAVE_XCB_COMPOSITE)
 #include <QX11Info>
-#include <X11/extensions/Xcomposite.h>
-
-namespace {
-    bool compositeCallFailed = true;
-    int snapshot_error_handler(Display *, XErrorEvent *) {
-        compositeCallFailed = true;
-        return 0;
-    }
-}
-
+#include <X11/Xlib-xcb.h>
+#include <xcb/xcb.h>
+#include <xcb/composite.h>
 #endif
 
 MSnapshotItem::MSnapshotItem(const QRectF &sceneTargetRect, QGraphicsItem *parent)
@@ -43,21 +36,13 @@ void MSnapshotItem::updateSnapshot()
 
 #if defined(Q_WS_MAC) || defined(Q_WS_WIN)
     pixmap = QPixmap::grabWidget(scene()->views().at(0));
-#elif HAVE_XCOMPOSITE
-    WId windowId = scene()->views().at(0)->effectiveWinId();
+#elif defined(HAVE_X11_XCB) && defined(HAVE_XCB_COMPOSITE)
+    xcb_connection_t *c = XGetXCBConnection(QX11Info::display());
+    xcb_window_t windowId = scene()->views().at(0)->effectiveWinId();
+    xcb_pixmap_t x11Pixmap = xcb_generate_id(c);
+    xcb_void_cookie_t cookie = xcb_composite_name_window_pixmap_checked(c, windowId, x11Pixmap);
 
-    // Flush any pending error
-    XSync(QX11Info::display(), false);
-
-    XErrorHandler oldHandler = XSetErrorHandler(snapshot_error_handler);
-
-    compositeCallFailed = false;
-    Qt::HANDLE x11Pixmap = XCompositeNameWindowPixmap(QX11Info::display(), windowId);
-    XSync(QX11Info::display(), false);
-
-    XSetErrorHandler(oldHandler);
-
-    if (!compositeCallFailed ) {
+    if (xcb_request_check(c, cookie) == NULL) {
         // We are being composited. If we use Qt's QPixmap::grabWindow() our snapshot
         // will contain not only our window but also any other window that happens
         // to be on top of it (e.g., a translucent window showing a small dialog box with
