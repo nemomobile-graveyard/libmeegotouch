@@ -45,6 +45,14 @@ TestObject2Style
     attribute-string2: "string2"
 }
 
+# If two selectors are the same the one appearing later in the CSS file win.
+# The following one should therefor be ignored.
+TestObject3Style
+{
+    attribute-integer: 30;
+    // Last attribute doesn't need ';' and the bracket can be in the same row
+    attribute-string2: "string3_" }
+
 TestObject3Style
 {
     attribute-integer: 3;

@@ -1,0 +1,184 @@
+/* 
+ * This file contains style definitions for TestObject
+ * class which is inherited from QObject 
+ */
+
+// General purpose style definitions for Test object
+TestObjectStyle
+{
+    attribute-integer: 9;
+    attribute-real: 2;
+    attribute-string: "str";
+    attribute-char: 'a';
+    attribute-bool: false;
+    attribute-point: 5px 10px;
+    attribute-point-f: 14.5 21.5;
+    attribute-font: sans 1px;
+    attribute-size: 1px 15px;
+    attribute-size-f: 2.5 27.75;
+    attribute-color: #00ffff;
+    //attribute-easing-curve: linear, 0.5, 1.5, 1.0;
+
+    attribute-alignment: right;
+    attribute-orientation: vertical;
+    attribute-underline-style: singleunderline;
+    attribute-pen-style: dashline;
+    attribute-axis: y;
+    
+    attribute-pixmap: "duibutton-background" 30 40;
+    attribute-pixmap2: duibutton-background 30 40;
+    attribute-pixmap3: "duibutton-background";
+    attribute-pixmap4: duibutton-background;
+    attribute-scalable: "C1-container-background" 20 20 20 20;
+    attribute-scalable2: C1-container-background 20 20 20 20;
+    attribute-scalable3: "C1-container-background";
+    attribute-scalable4: C1-container-background;
+}
+
+TestObject2Style
+{
+    attribute-integer: 1;
+    attribute-string: "str123";
+
+    attribute-integer2: 90;
+    // Last attribute doesn't need ';'
+    attribute-string2: "string2_"
+}
+
+TestObject3Style
+{
+    attribute-integer: 30;
+    // Last attribute doesn't need ';' and the bracket can be in the same row
+    attribute-string2: "string3_" }
+
+TestObject3Style:some-mode
+{
+    attribute-integer: 164;
+}
+
+TestObjectStyle#Specialized
+{
+    attribute-integer: 101;
+    attribute-real: 101.0;
+    attribute-string: "specialized string_";
+    attribute-pixmap: none;
+    attribute-color: none;
+}
+
+TestObject2Style#Specialized
+{
+    attribute-integer2: 8;
+    attribute-real: 13.0;
+    attribute-string2: "specialized string2_";
+}
+
+TestObjectStyle:Disabled
+{
+    attribute-color: #aaaaff;
+}
+
+TestObjectStyle:Active
+{
+    attribute-color: #ff00ff;
+}
+
+TestObjectStyle#Specialized:Active
+{
+    attribute-color: #00ffff;
+}
+
+TestObjectStyle.Portrait
+{
+    attribute-orientation: horizontal;
+}
+
+TestObjectStyle.Landscape
+{
+    attribute-orientation: vertical;
+}
+
+TestObject2Style.Portrait
+{
+    attribute-orientation: horizontal;
+}
+
+TestObject2Style.Landscape
+{
+    attribute-orientation: vertical;
+}
+
+TestObjectStyle#Specialized.Portrait:Active
+{
+    attribute-string: "specialiazed portrait active_";
+    attribute-orientation: horizontal;
+    attribute-color: #ff0fff;
+}
+
+TestObject2Style#Specialized.Portrait:Active
+{
+    attribute-string: "specialiazed portrait active 2_";
+    attribute-orientation: horizontal;
+    attribute-color: #f000ff;
+}
+
+
+TestObjectStyle[icon]
+{
+    attribute-color: #aaaafa;
+}
+
+TestObjectStyle[fancy]
+{
+    attribute-color: #ff00f0;
+}
+
+TestObject2Style[fancy]
+{
+    attribute-color: #000fff;
+}
+
+TestObjectStyle[icon]#Specialized
+{
+    attribute-color: #00ff0f;
+}
+
+TestObjectStyle[fancy]#Specialized
+{
+    attribute-color: #0abbaf;
+}
+
+TestObjectStyle[fancy]#Specialized:Active
+{
+    attribute-color: #0f0fff;
+}
+
+TestObjectStyle[fancy]#Specialized:Disabled
+{
+    attribute-color: #f0f0ff;
+}
+
+TestWidget > TestObjectStyle
+{
+    attribute-color: #0000f1;
+}
+
+TestWidget TestObjectStyle
+{
+    attribute-color: #00f010;
+}
+
+TestWidget2 TestObjectStyle
+{
+    attribute-color: #00f020;
+}
+
+TestWidget#Specialized TestObjectStyle 
+{
+    attribute-color: #00f100;
+}
+
+TestWidget3#Specialized TestObjectStyle#Specialized
+{
+    attribute-color: #00f110;
+}
+

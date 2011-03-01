@@ -73,10 +73,30 @@ void Ft_MStyleSheet::cleanupTestCase()
 {
 }
 
+void Ft_MStyleSheet::loadTestObjectSheets(bool testThemeInheritance)
+{
+    if (testThemeInheritance) {
+        m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject_base.css");
+        MStyleSheet sheet;
+        sheet.load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css");
+        *m_subject += sheet;
+    } else {
+        m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css");
+    }
+}
+
+void Ft_MStyleSheet::test_supported_attribute_types_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_supported_attribute_types()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
 
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
@@ -136,10 +156,18 @@ void Ft_MStyleSheet::test_supported_attribute_types()
     MStyleSheet::releaseStyle(style);
 }
 
+void Ft_MStyleSheet::test_inheritance_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_inheritance()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
 
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
@@ -187,10 +215,18 @@ void Ft_MStyleSheet::test_inheritance()
     MStyleSheet::releaseStyle(style3);
 }
 
+void Ft_MStyleSheet::test_objectnames_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_objectnames()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
 
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
@@ -211,10 +247,18 @@ void Ft_MStyleSheet::test_objectnames()
     MStyleSheet::releaseStyle(style2);
 }
 
+void Ft_MStyleSheet::test_orientations_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_orientations()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
 
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
@@ -236,10 +280,18 @@ void Ft_MStyleSheet::test_orientations()
     MStyleSheet::releaseStyle(style2);
 }
 
+void Ft_MStyleSheet::test_modes_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_modes()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
 
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
@@ -278,10 +330,18 @@ void Ft_MStyleSheet::test_modes()
     QCOMPARE(styleContainer->attributeInteger(), 163);
 }
 
+void Ft_MStyleSheet::test_types_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_types()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
 
@@ -314,10 +374,18 @@ void Ft_MStyleSheet::test_types()
     MStyleSheet::releaseStyle(style2);
 }
 
+void Ft_MStyleSheet::test_parent_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_parent()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
 
@@ -341,10 +409,18 @@ void Ft_MStyleSheet::test_parent()
     MStyleSheet::releaseStyle(style);
 }
 
+void Ft_MStyleSheet::test_parent_stylenames_data()
+{
+    QTest::addColumn<bool>("testThemeInheritance");
+
+    QTest::newRow("no theme inheritance") << false;
+    QTest::newRow("theme inheritance") << true;
+}
+
 void Ft_MStyleSheet::test_parent_stylenames()
 {
-    // Open test file
-    QCOMPARE(m_subject->load(qApp->applicationDirPath() + "/ft_mstylesheet_testobject.css"), true);
+    QFETCH(bool, testThemeInheritance);
+    loadTestObjectSheets(testThemeInheritance);
     QList<const MStyleSheet *> sheets;
     sheets.append(m_subject);
 
@@ -417,51 +493,6 @@ void Ft_MStyleSheet::test_wrong_syntax()
     m_subject->setSyntaxMode(MStyleSheet::StrictSyntax);
     m_subject->setBinaryFileGenerationEnabled(true);
 }
-
-/*
-void Ft_CSS::test_cache_size()
-{
-    m_subject->setBinaryFileGenerationEnabled(false);
-
-    // get current size of the cache, should be zero
-    QCOMPARE(0, MThemePrivate::getProfilingInfo().cacheSize);
-    qDebug() << "Cache size is:" << MThemePrivate::getProfilingInfo().cacheSize;
-
-//    MTheme::instance()->prepareThemeChange("green");
-
-    // load css file
-    MTheme::loadCSS(qApp->applicationDirPath() + "/ft_mstylesheet_test.css");
-
-//    MTheme::instance()->changeTheme();
-
-    // should still be zero
-    QCOMPARE(0, MThemePrivate::getProfilingInfo().cacheSize);
-
-    TestObject testObject;
-
-    // just get something from the style system
-    MStyle* style = MTheme::style(&testObject, m_styleDescription);
-
-    // ensure that it was cached
-    int cacheSizeInMemory = MThemePrivate::getProfilingInfo().cacheSize;
-    qDebug() << "Cache size is:" << MThemePrivate::getProfilingInfo().cacheSize;
-    QVERIFY(cacheSizeInMemory > 0);
-
-    // get something different
-    testObject.setObjectName("Specialized");
-    style = MTheme::style(&testObject, m_styleDescription);
-
-    // check that the cache is bigger now, it should be
-    int cacheSizeInMemory2 = MThemePrivate::getProfilingInfo().cacheSize;
-    qDebug() << "Cache size is:" << MThemePrivate::getProfilingInfo().cacheSize;
-    QVERIFY(cacheSizeInMemory2 > cacheSizeInMemory);
-
-    // get same data once again, the cache size should remain same
-    style = MTheme::style(&testObject, m_styleDescription);
-    qDebug() << "Cache size is:" << MThemePrivate::getProfilingInfo().cacheSize;
-    QVERIFY(cacheSizeInMemory2 == MThemePrivate::getProfilingInfo().cacheSize);
-}
-*/
 
 int main_stylesheet_helper_app(const QStringList &arguments)
 {

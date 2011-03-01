@@ -58,13 +58,21 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void test_supported_attribute_types_data();
     void test_supported_attribute_types();
+    void test_inheritance_data();
     void test_inheritance();
+    void test_objectnames_data();
     void test_objectnames();
+    void test_orientations_data();
     void test_orientations();
+    void test_modes_data();
     void test_modes();
+    void test_types_data();
     void test_types();
+    void test_parent_data();
     void test_parent();
+    void test_parent_stylenames_data();
     void test_parent_stylenames();
     void test_wrong_attribute_value_strict();
     void test_wrong_attribute_value_relaxed();
@@ -74,6 +82,7 @@ private slots:
     //void test_cache_size();
 
 private:
+    void loadTestObjectSheets(bool testThemeInheritance);
 
     MStyleSheet      *m_subject;
     //MStyleDescription m_styleDescription;
