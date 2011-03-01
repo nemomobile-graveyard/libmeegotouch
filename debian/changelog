@@ -1,9 +1,17 @@
-libmeegotouch (0.20.89~1) unstable; urgency=low
+libmeegotouch (0.20.89-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: MB#10259 - Build fails on OS X when XDamage is installed
+  * Fixes: NB#220178 - Maybe page change leaks memory
+  * Fixes: NB#219131 - Bottom line of dialog is not visible.
+  * Fixes: NB#218765 - widgetsgallery crashed easy during testing
+  * Fixes: NB#225576 - [TASK] Unable to disable checkbox style buttons
+  * Fixes: NB#230739 - Nav bar will disappear in given scenario
   * Fixes: NB#231743 - Calling MContainer::setHeaderVisible(false) for a container on first boot leaves the container header on the scene
+  * Fixes: A missing base class call to MWidgetView::applyStyle() in MExtensionAreaView::applyStyle()
+  * Fixes: NB#230821
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 28 Feb 2011 15:45:03 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 01 Mar 2011 16:05:37 +0200
 
 libmeegotouch (0.20.88-1) unstable; urgency=low
 
