@@ -575,7 +575,7 @@ void Ft_MStyleSheetParser::test_set_binary_file_directory()
     parser.setBinaryFileDirectory(binaryPath);
     parser.load(cssPath);
 
-    QString binaryFilename = cssPath + QLatin1String("#000");
+    QString binaryFilename = cssPath;
     binaryFilename.replace(QLatin1Char('_'), "__");
     binaryFilename.replace(QLatin1Char('/'), "_.");
 
