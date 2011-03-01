@@ -524,14 +524,6 @@ void MLabelViewRich::applyStyle()
     }
 }
 
-void MLabelViewRich::handleNotification()
-{
-    if (updateHighlighting()) {
-        cleanupTiles();
-        viewPrivate->controller->update();
-    }
-}
-
 void MLabelViewRich::initTiles(const QSize &size)
 {
     if (dirty || textDocumentDirty || highlightersChanged) {
@@ -729,5 +721,5 @@ void MLabelViewRich::triggerHighlightingUpdate()
 {
     // Try to update the highlighting after at least one frame
     const int maxFps = 60;
-    viewPrivate->requestNotification(1000 / maxFps);
+    viewPrivate->requestHighlighterUpdate(1000 / maxFps);
 }

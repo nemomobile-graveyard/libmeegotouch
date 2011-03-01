@@ -138,7 +138,7 @@ private:
     Q_DISABLE_COPY(MLabelView)
     Q_DECLARE_PRIVATE(MLabelView)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_notificationTimerExceeded())
+    Q_PRIVATE_SLOT(d_func(), void _q_highlighterUpdateTimerExceeded())
 
 #ifdef UNIT_TEST
     friend class Pt_MLabel;

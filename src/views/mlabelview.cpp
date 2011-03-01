@@ -33,7 +33,7 @@
 
 MLabelViewPrivate::MLabelViewPrivate() :
     MWidgetViewPrivate(),
-    notificationTimer(0)
+    highlighterUpdateTimer(0)
 {
     impl = new MLabelViewSimple(this);
 }
@@ -41,7 +41,7 @@ MLabelViewPrivate::MLabelViewPrivate() :
 MLabelViewPrivate::~MLabelViewPrivate()
 {
     delete impl;
-    delete notificationTimer;
+    delete highlighterUpdateTimer;
 }
 
 const MLabelModel *MLabelViewPrivate::model() const
@@ -62,20 +62,24 @@ const QRectF MLabelViewPrivate::boundingRect() const
     return q->boundingRect();
 }
 
-void MLabelViewPrivate::requestNotification(int interval)
+void MLabelViewPrivate::requestHighlighterUpdate(int interval)
 {
     Q_Q(MLabelView);
-    if (!notificationTimer) {
-        notificationTimer = new QTimer();
-        notificationTimer->setSingleShot(true);
-        QObject::connect(notificationTimer, SIGNAL(timeout()), q, SLOT(_q_notificationTimerExceeded()));
+    if (!highlighterUpdateTimer) {
+        highlighterUpdateTimer = new QTimer();
+        highlighterUpdateTimer->setSingleShot(true);
+        QObject::connect(highlighterUpdateTimer, SIGNAL(timeout()), q, SLOT(_q_highlighterUpdateTimerExceeded()));
     }
-    notificationTimer->start(interval);
+    highlighterUpdateTimer->start(interval);
 }
 
-void MLabelViewPrivate::_q_notificationTimerExceeded()
+void MLabelViewPrivate::_q_highlighterUpdateTimerExceeded()
 {
-    impl->handleNotification();
+    MLabelViewRich *labelViewRich = static_cast<MLabelViewRich*>(impl);
+    if (labelViewRich->updateHighlighting()) {
+        labelViewRich->cleanupTiles();
+        controller->update();
+    }
 }
 
 bool MLabelViewPrivate::displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const

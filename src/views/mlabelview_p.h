@@ -51,12 +51,6 @@ public:
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
 
-    /**
-     * Is invoked after the specified interval given by
-     * MLabelViewPrivate::requestNotification(interval).
-     */
-    virtual void handleNotification();
-
     void initializeTextProperties();
 
     /**
@@ -153,7 +147,6 @@ public:
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
     virtual void applyStyle();
-    virtual void handleNotification();
 
     void ensureDocumentIsReady();
     int cursorPositionOfLastVisibleCharacter();
@@ -261,9 +254,9 @@ public:
      * interval. If the method is invoked before the interval has been exceeded, the
      * remaining interval will get reset to the specified interval.
      */
-    void requestNotification(int interval);
+    void requestHighlighterUpdate(int interval);
 
-    void _q_notificationTimerExceeded();
+    void _q_highlighterUpdateTimerExceeded();
 
     //Should label be rendered as rich text
     bool displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const;
@@ -280,7 +273,7 @@ public:
 
     QSizeF paddedSize;
     QSizeF previousStaticTextSize;
-    QTimer *notificationTimer;
+    QTimer *highlighterUpdateTimer;
 };
 
 #endif
