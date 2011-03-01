@@ -30,6 +30,7 @@
 M_REGISTER_WIDGET(MBasicSheetHeader)
 
 MBasicSheetHeaderPrivate::MBasicSheetHeaderPrivate()
+    : q_ptr(0)
 {
 }
 

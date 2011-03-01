@@ -61,7 +61,6 @@ public:
         QList<const MStyleSheetSelector *> parentSelectors;
         QHash<QByteArray, QByteArray> constants;
         uint time_t;
-        bool fromMapedMemory;
     };
     //! \internal_end
 

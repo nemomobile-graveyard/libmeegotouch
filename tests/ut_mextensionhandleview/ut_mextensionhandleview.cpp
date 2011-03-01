@@ -70,7 +70,8 @@ MWidgetViewPrivate::MWidgetViewPrivate() :
         q_ptr(NULL),
         controller(NULL),
         model(NULL),
-        styleContainer(NULL)
+        styleContainer(NULL),
+        appliedStyle(NULL)
 {
 }
 
