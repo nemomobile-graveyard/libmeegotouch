@@ -45,7 +45,6 @@ public:
     void openSystemModalDialog();
     void openDialogWithProgressIndicator();
     void openDialogWithIcon();
-    void openEntryDialog();
     void openLongDialog();
 
 protected:

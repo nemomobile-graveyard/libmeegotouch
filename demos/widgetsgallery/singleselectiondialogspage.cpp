@@ -110,24 +110,21 @@ void SingleSelectionDialogsPage::itemClicked(const QModelIndex &index)
 {
     switch (index.row()) {
     case 0:
-        openEntryDialog();
-        break;
-    case 1:
         openLongDialog();
         break;
-    case 2:
+    case 1:
         openSystemDialog();
         break;
-    case 3:
+    case 2:
         openSystemModalDialog();
         break;
-    case 4:
+    case 3:
         openDialogWithProgressIndicator();
         break;
-    case 5:
+    case 4:
         openStackedDialogs();
         break;
-    case 6:
+    case 5:
         openDialogWithIcon();
         break;
     default:
@@ -299,39 +296,6 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
-void SingleSelectionDialogsPage::openEntryDialog()
-{
-    if (dialog)
-        return;
-
-    MWidget *centralWidget = new MWidget;
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setContentsMargins(0,0,0,0);
-    layout->setSpacing(0);
-    //% "Name"
-    MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_entry_dialog_label"), centralWidget);
-    label->setStyleName("CommonTitleInverted");
-    MTextEdit *textEdit = new MTextEdit(MTextEditModel::SingleLine,
-                                            QString(),
-                                            centralWidget);
-    textEdit->setStyleName("CommonSingleInputField");
-    MLabel *spacer = new MLabel();
-    spacer->setObjectName("CommonSpacer");
-
-    centralWidget->setLayout(layout);
-
-    layout->addItem(label);
-    layout->addItem(textEdit);
-    layout->addItem(spacer);
-
-    //% "Please enter your name"
-    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),
-                           M::OkButton | M::ResetButton);
-    dialog->setCentralWidget(centralWidget);
-
-    dialog->appear(MSceneWindow::DestroyWhenDone);
-}
-
 void SingleSelectionDialogsPage::openLongDialog()
 {
     if (dialog)
@@ -388,8 +352,6 @@ void SingleSelectionDialogsPage::retranslateUi()
         return;
 
     QStringList singleSelectionDialogTypes;
-    //% "Entry Dialog"
-    singleSelectionDialogTypes << qtTrId("xx_wg_query_dialogs_page_entry_dialog");
     //% "Long Dialog"
     singleSelectionDialogTypes << qtTrId("xx_wg_query_dialogs_page_long_dialog");
     //% "System Dialog"
