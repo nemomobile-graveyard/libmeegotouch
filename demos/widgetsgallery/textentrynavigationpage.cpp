@@ -7,7 +7,7 @@
 #include <MGridLayoutPolicy>
 
 namespace {
-    MTextEdit *createTextEdit(QObject *owner,
+    MTextEdit *createTextEdit(QGraphicsItem *parent,
                               const QString &objName,
                               M::TextContentType contentType,
                               bool multi = false,
@@ -18,13 +18,13 @@ namespace {
 
         MTextEdit *e = 0;
 
-        e = (rich ? new MRichTextEdit(lm)
-                  : new MTextEdit(lm));
+        e = (rich ? new MRichTextEdit(lm, "", parent)
+                  : new MTextEdit(lm, "", parent));
 
-        e->setParent(owner);
         e->setContentType(contentType);
 
         e->setObjectName(objName);
+        e->setPreferredWidth(50);
 
         return e;
     }
@@ -51,34 +51,32 @@ void TextEntryNavigationPage::createContent()
 
     MGridLayoutPolicy *layoutPolicy = new MGridLayoutPolicy(layout);
     layoutPolicy->setContentsMargins(20, 0, 20, 0);
+    layoutPolicy->setColumnStretchFactor(0,0);
 
     QList<MTextEdit *> edits;
     // 1st row:
     edits << createTextEdit(panel, "Numbers", M::NumberContentType)
-          << 0
           << createTextEdit(panel, "Multi-line rich text", M::FreeTextContentType, true, true)
-          << 0
     // 2nd row:
           << createTextEdit(panel, "Default", M::FreeTextContentType)
           << createTextEdit(panel, "Multi-line text", M::FreeTextContentType, true)
-          << 0
-          << createTextEdit(panel, "Default", M::FreeTextContentType)
     // 3rd row:
-          << createTextEdit(panel, "Default", M::FreeTextContentType)
-          << createTextEdit(panel, "Phone numbers", M::PhoneNumberContentType)
-          << 0
+          << createTextEdit(panel, "Phone number", M::PhoneNumberContentType)
           << createTextEdit(panel, "Multi-line rich text", M::FreeTextContentType, true, true);
 
     int i = 0;
     int j = 0;
     foreach (MTextEdit *edit, edits) {
         if (edit) {
-            layoutPolicy->addItem(new MLabel(edit->objectName(), edit), i, j % 4);
-            layoutPolicy->addItem(edit, i + 1, j % 4);
+            MLabel *label =  new MLabel(edit->objectName(), panel);
+            label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            layoutPolicy->addItem(label, i, j);
+            layoutPolicy->addItem(edit, i + 1, j);
         }
 
-        if (++j % 4 == 0) {
+        if (++j == 2) {
             i += 2;
+            j = 0;
         }
     }
 }
