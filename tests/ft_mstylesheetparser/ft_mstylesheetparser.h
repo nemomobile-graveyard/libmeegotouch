@@ -44,8 +44,6 @@ private slots:
     void test_import();
     void test_constants();
     void test_binary_equality();
-    void test_parser_speed();
-    void test_binary_speed();
     void test_set_binary_file_directory();
 
     /*void test_inheritance();

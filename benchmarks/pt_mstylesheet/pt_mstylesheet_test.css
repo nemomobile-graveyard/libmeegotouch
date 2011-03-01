@@ -1,0 +1,184 @@
+/* 
+ * This file contains style definitions for TestObject
+ * class which is inherited from QObject 
+ */
+
+// test constants inside the constants
+@const color: #ff00ff;
+@const constColor: $color;
+@const constConstColor: $constColor;
+
+// General purpose style definitions for Test object
+TestObject
+{
+    //attribute integer
+    attribute-integer:10;
+    /*attribute-real*/
+    attribute-real:     10.0;
+    attribute/*interesting*/-string: 
+    "string;"; //string comment
+    attribute-bool: true;attribute-point: 10px 10px;
+    attribute-font: /*this is a font*/sans 10px;
+    attribute-color: #fff/*hmm...*/fff;
+}
+
+/* some valid comments */
+/***/
+/**/ /* * */
+/* abc **/
+
+
+// General purpose style definitions for Test object with parent
+ParentName TestObject
+{
+    //attribute integer
+    attribute-integer:10;
+    /*attribute-real*/
+    attribute-real:     10.0;
+    attribute/*interesting*/-string: 
+    "string"; //string comment
+    attribute-bool: true;attribute-point: 10px 10px;
+    attribute-font: /*this is a font*/sans 10px;
+    attribute-color: #fff/*hmm...*/fff;
+}
+
+
+// Specialised style definitions
+TestObject#Specialized{
+    attribute-integer: 100;
+    attribute-real: 100.0;
+    attribute-string: "specialized string";
+}
+
+// Specialised style definitions
+ParentName TestObject#Specialized{
+    attribute-integer: 100;
+    attribute-real: 100.0;
+    attribute-string: "specialized string";
+}
+
+
+TestObject:Disabled
+{attribute-color: #aaaaaa;}
+
+ParentName TestObject:Disabled
+{attribute-color: #aaaaaa;}
+
+
+TestObject:Active
+{
+    attribute-color: #ff0000;
+}
+
+ParentName TestObject:Active
+{
+    attribute-color: #ff0000;
+}
+
+
+TestObject#Specialized:Active
+{
+    attribute-color: #00ff00;
+}
+
+ParentName TestObject#Specialized:Active
+{
+    attribute-color: #00ff00;
+}
+
+
+TestObject.Portrait{attribute-orientation: 90;}
+
+ParentName TestObject.Portrait{attribute-orientation: 90;}
+
+
+TestObject./*blaah*/Landscape
+{
+    attribute-orientation: 0;
+}
+
+ParentName TestObject./*blaah*/Landscape
+{
+    attribute-orientation: 0;
+}
+
+
+TestObject#Specialized.Portrait:Active
+{
+    attribute-orientation: 270;
+    attribute-color: constConstColor;
+}
+
+ParentName TestObject#Specialized.Portrait:Active
+{
+    attribute-orientation: 270;
+    attribute-color: constColor;
+}
+
+
+TestObject[ icon ]
+{
+    attribute-color: #aaaaaa;
+}
+
+ParentName TestObject[ icon ]
+{
+    attribute-color: #aaaaaa;
+}
+
+
+TestObject[fancy]
+{
+    attribute-color: #ff0000;
+}
+
+ParentName TestObject[fancy]
+{
+    attribute-color: #ff0000;
+}
+
+
+TestObject[icon]#Specialized
+{
+    attribute-color: #00ff00;
+}
+
+ParentName TestObject[icon]#Specialized
+{
+    attribute-color: #00ff00;
+}
+
+ParentName > TestObject[icon]#Specialized
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject 
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized #Specialized
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]#Specialized
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]#Specialized.Portrait
+{
+    attribute-color: #00ff00;
+}
+
+ParentName#Specialized TestObject[icon]#Specialized.Portrait:Active
+{
+    attribute-color: #00ff00;
+}

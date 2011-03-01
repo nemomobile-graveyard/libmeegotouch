@@ -16,3 +16,6 @@ HEADERS += pt_mstylesheet.h \
            mstylesheetattribute.h \
            $$MSRCDIR/corelib/core/msystemdirectories.h \
            muniquestringcache.h
+
+
+support_files.files += pt_mstylesheet_test.css

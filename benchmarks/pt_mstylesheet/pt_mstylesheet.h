@@ -49,6 +49,9 @@ private slots:
     void loadCoreStyles();
     void loadCoreStyles_data();
 
+    void testParserSpeed();
+    void testBinarySpeed();
+
 private:
     void initLogicalValues(MLogicalValues &values);
 };

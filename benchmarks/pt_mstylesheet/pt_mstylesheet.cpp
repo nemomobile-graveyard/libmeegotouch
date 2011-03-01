@@ -105,4 +105,31 @@ void Pt_MStyleSheet::initLogicalValues(MLogicalValues &values)
     values.load(themeInheritance, QString());
 }
 
+void Pt_MStyleSheet::testParserSpeed()
+{
+    QBENCHMARK {
+        MStyleSheetParser p;
+        p.setBinaryFileGenerationEnabled(false);
+
+        // Open test file
+        QVERIFY(p.load(qApp->applicationDirPath() + "/pt_mstylesheet_test.css"));
+    }
+}
+
+void Pt_MStyleSheet::testBinarySpeed()
+{
+    // create binary file, if it doesn't exist
+    MStyleSheetParser tmp;
+    tmp.setBinaryFileGenerationEnabled(true);
+    QVERIFY(tmp.load(qApp->applicationDirPath() + "/pt_mstylesheet_test.css"));
+
+    QBENCHMARK {
+        MStyleSheetParser p;
+        p.setBinaryFileGenerationEnabled(true);
+
+        // Open test file
+        QVERIFY(p.load(qApp->applicationDirPath() + "/pt_mstylesheet_test.css"));
+    }
+}
+
 QTEST_MAIN(Pt_MStyleSheet)

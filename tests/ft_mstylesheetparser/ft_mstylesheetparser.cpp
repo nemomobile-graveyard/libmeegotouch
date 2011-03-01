@@ -30,7 +30,6 @@
 //#include "../../src/corelib/theme/mtheme_p.h"
 
 namespace {
-const int NUMBER_OF_LOOPS = 1000;
 const int SELECTOR_COUNT = 29;
 MUniqueStringCache::Index attributeNameToIndex(const QByteArray& name)
 {
@@ -564,89 +563,6 @@ void Ft_MStyleSheetParser::test_binary_equality()
         parserFi++;
         binaryFi++;
     }
-}
-
-void Ft_MStyleSheetParser::test_parser_speed()
-{
-    unsigned long int TIMERS[NUMBER_OF_LOOPS];
-    unsigned long int TOTAL_TIME = 0;
-
-    clock_t test_start, time_start;
-    clock_t time_end;
-
-    qDebug() << "Testing speed of CSS parser, reading ft_mstylesheetparser_test.css" << NUMBER_OF_LOOPS << "times";
-
-    test_start = clock();
-
-    for (int i = 0; i < NUMBER_OF_LOOPS; i++) {
-        MStyleSheetParser p;
-        p.setBinaryFileGenerationEnabled(false);
-
-        // Start clocking
-        time_start = clock();
-        // Open test file
-        QCOMPARE(p.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
-        // End clocking
-        time_end = clock();
-
-        // Store result & cleanup
-        TIMERS[i] = time_end - time_start;
-    }
-
-    TOTAL_TIME = time_end - test_start;
-
-    long average = 0;
-    for (int i = 0; i < NUMBER_OF_LOOPS; i++) {
-        average += TIMERS[i];
-    }
-    average /= NUMBER_OF_LOOPS;
-
-    qDebug() << "Average reading time:" << average << "microseconds (" << average / 1000000.0 << "seconds)";
-    qDebug() << "Total reading time:" << TOTAL_TIME << "microseconds (" << TOTAL_TIME / 1000000.0 << "seconds)";
-}
-
-void Ft_MStyleSheetParser::test_binary_speed()
-{
-    unsigned long int TIMERS[NUMBER_OF_LOOPS];
-    unsigned long int TOTAL_TIME = 0;
-
-    clock_t test_start, time_start;
-    clock_t time_end;
-
-    // create binary file, if it doesn't exist
-    MStyleSheetParser tmp;
-    tmp.setBinaryFileGenerationEnabled(true);
-    QCOMPARE(tmp.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
-
-    qDebug() << "Testing speed of binary css files, reading ft_mstylesheetparser_test.css" << NUMBER_OF_LOOPS << "times";
-
-    test_start = clock();
-
-    for (int i = 0; i < NUMBER_OF_LOOPS; i++) {
-        MStyleSheetParser p;
-        p.setBinaryFileGenerationEnabled(true);
-
-        // Start clocking
-        time_start = clock();
-        // Open test file
-        QCOMPARE(p.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
-        // End clocking
-        time_end = clock();
-
-        // Store result & cleanup
-        TIMERS[i] = time_end - time_start;
-    }
-
-    TOTAL_TIME = time_end - test_start;
-
-    long average = 0;
-    for (int i = 0; i < NUMBER_OF_LOOPS; i++) {
-        average += TIMERS[i];
-    }
-    average /= NUMBER_OF_LOOPS;
-
-    qDebug() << "Average reading time:" << average << "microseconds (" << average / 1000000.0 << "seconds)";
-    qDebug() << "Total reading time:" << TOTAL_TIME << "microseconds (" << TOTAL_TIME / 1000000.0 << "seconds)";
 }
 
 void Ft_MStyleSheetParser::test_set_binary_file_directory()
