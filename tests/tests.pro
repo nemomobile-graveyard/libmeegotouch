@@ -56,6 +56,7 @@ SUBDIRS     =  \
      ut_mapplicationmenu \
      ut_mapplicationmenuview \
      ut_mobjectmenu \
+     ut_mobjectmenuview \
      ut_morientationtracker \
      ut_moverlay \
      ut_mpannableviewport \

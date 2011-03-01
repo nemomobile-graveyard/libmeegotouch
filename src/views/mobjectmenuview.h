@@ -72,6 +72,10 @@ protected slots:
     void actionRemoved(MAction *action);
 private:
     Q_PRIVATE_SLOT(d_func(), void contentActionTriggered())
+
+#ifdef UNIT_TEST
+    friend class Ut_MObjectMenuView;
+#endif
 };
 
 #endif
