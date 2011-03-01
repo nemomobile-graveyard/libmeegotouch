@@ -1215,7 +1215,7 @@ void Ft_Numbers::testToDouble_data()
         << double(1.0E+9)
         << QString("1,000,000,000");
 
-    if (icuPackageVersion < "4.4.2-0maemo3") {
+    if (!icuPackageVersion.isEmpty() && icuPackageVersion < "4.4.2-0maemo3") {
         qDebug() << "NB#206085 not yet fixed, some exponents parsed wrong.";
         QTest::newRow("en_GB 1E+10")
             << QString("en_GB")
@@ -1784,7 +1784,7 @@ void Ft_Numbers::testToFloat_data()
         << float(1.0E+9)
         << QString("1,000,000,000");
 
-    if (icuPackageVersion < "4.4.2-0maemo3") {
+    if (!icuPackageVersion.isEmpty() && icuPackageVersion < "4.4.2-0maemo3") {
         qDebug() << "NB#206085 not yet fixed, some exponents parsed wrong.";
         QTest::newRow("en_GB 1E+10")
             << QString("en_GB")

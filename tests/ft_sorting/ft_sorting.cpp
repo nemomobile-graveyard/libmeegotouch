@@ -94,7 +94,7 @@ void Ft_Sorting::testMLocaleSorting_data()
             << QString("ø")
             << QString("å");
 
-    if (icuPackageVersion < "4.2.1-0maemo3") {
+    if (!icuPackageVersion.isEmpty() &&  icuPackageVersion < "4.2.1-0maemo3") {
         qDebug() << "NB#154449 not yet fixed, sort order must be wrong.";
         QTest::newRow("Sorting_nb_NO")
                 << QString("nb_NO")
@@ -126,7 +126,7 @@ void Ft_Sorting::testMLocaleSorting_data()
                 << QString("å");
     }
 
-    if (icuPackageVersion < "4.2.1-0maemo3") {
+    if (!icuPackageVersion.isEmpty() &&  icuPackageVersion < "4.2.1-0maemo3") {
         qDebug() << "NB#154449 not yet fixed, sort order must be wrong.";
         QTest::newRow("Sorting_no_NO")
                 << QString("no_NO")
