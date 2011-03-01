@@ -79,8 +79,12 @@ MDialogViewPrivate::~MDialogViewPrivate()
 
 void MDialogViewPrivate::createWidgetHierarchy()
 {
+    // We don't require any painting on the controller.
+    controller->setFlag(QGraphicsItem::ItemHasNoContents, true);
+
     rootGrid = new MLayout();
     rootGrid->setContentsMargins(0, 0, 0, 0);
+
     rootPolicy = new MGridLayoutPolicy(rootGrid);
     rootGrid->setPolicy(rootPolicy);
     // Cast here is needed to invoke method from QGraphicsWidget, since
