@@ -54,7 +54,7 @@ public:
     /**
       * Converts a given index into a string. This lookup is very fast.
       */
-    QByteArray indexToString(Index id);
+    QLatin1String indexToString(Index id);
 
     /**
       * Returns the id for a given string. If the string is not in the cache yet

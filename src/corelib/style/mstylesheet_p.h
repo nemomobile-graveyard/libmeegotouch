@@ -144,7 +144,7 @@ public:
 
     static bool isHigherPriority(const QSharedPointer<SelectorInfo> &prev, const QSharedPointer<SelectorInfo> &next);
 
-    static int orderNumber(const QByteArray &n, const QByteArray &sn, const QByteArray &parentStyleName, const QList<QByteArray> &parentHierarchy);
+    static int orderNumber(const QLatin1String &n, const QLatin1String &sn, const QByteArray &parentStyleName, const QList<QByteArray> &parentHierarchy);
 
     static MStyle *buildStyle(const StyleSpec &spec,
                               const QList<const MStyleSheet *> &sheets,

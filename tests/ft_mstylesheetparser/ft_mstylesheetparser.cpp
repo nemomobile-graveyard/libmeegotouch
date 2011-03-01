@@ -72,23 +72,23 @@ void Ft_MStyleSheetParser::cleanupTestCase()
 
 void Ft_MStyleSheetParser::test_load()
 {
-    QMap<MUniqueStringCache::Index, QByteArray> attributes;
-    attributes.insert(attributeNameToIndex("attribute-integer"), "10");
-    attributes.insert(attributeNameToIndex("attribute-real"), "10.0");
-    attributes.insert(attributeNameToIndex("attribute-string"), "\"string;\"");
-    attributes.insert(attributeNameToIndex("attribute-bool"), "true");
-    attributes.insert(attributeNameToIndex("attribute-point"), "10px 10px");
-    attributes.insert(attributeNameToIndex("attribute-font"), "sans 10px");
-    attributes.insert(attributeNameToIndex("attribute-color"), "#ffffff");
+    QMap<MUniqueStringCache::Index, QLatin1String> attributes;
+    attributes.insert(attributeNameToIndex("attribute-integer"), QLatin1String("10"));
+    attributes.insert(attributeNameToIndex("attribute-real"), QLatin1String("10.0"));
+    attributes.insert(attributeNameToIndex("attribute-string"), QLatin1String("\"string;\""));
+    attributes.insert(attributeNameToIndex("attribute-bool"), QLatin1String("true"));
+    attributes.insert(attributeNameToIndex("attribute-point"), QLatin1String("10px 10px"));
+    attributes.insert(attributeNameToIndex("attribute-font"), QLatin1String("sans 10px"));
+    attributes.insert(attributeNameToIndex("attribute-color"), QLatin1String("#ffffff"));
 
-    QMap<MUniqueStringCache::Index, QByteArray> parentAttributes;
-    parentAttributes.insert(attributeNameToIndex("attribute-integer"), "10");
-    parentAttributes.insert(attributeNameToIndex("attribute-real"), "10.0");
-    parentAttributes.insert(attributeNameToIndex("attribute-string"), "\"string\"");
-    parentAttributes.insert(attributeNameToIndex("attribute-bool"), "true");
-    parentAttributes.insert(attributeNameToIndex("attribute-point"), "10px 10px");
-    parentAttributes.insert(attributeNameToIndex("attribute-font"), "sans 10px");
-    parentAttributes.insert(attributeNameToIndex("attribute-color"), "#ffffff");
+    QMap<MUniqueStringCache::Index, QLatin1String> parentAttributes;
+    parentAttributes.insert(attributeNameToIndex("attribute-integer"), QLatin1String("10"));
+    parentAttributes.insert(attributeNameToIndex("attribute-real"), QLatin1String("10.0"));
+    parentAttributes.insert(attributeNameToIndex("attribute-string"), QLatin1String("\"string\""));
+    parentAttributes.insert(attributeNameToIndex("attribute-bool"), QLatin1String("true"));
+    parentAttributes.insert(attributeNameToIndex("attribute-point"), QLatin1String("10px 10px"));
+    parentAttributes.insert(attributeNameToIndex("attribute-font"), QLatin1String("sans 10px"));
+    parentAttributes.insert(attributeNameToIndex("attribute-color"), QLatin1String("#ffffff"));
 
     m_subject->setBinaryFileGenerationEnabled(false);
 
@@ -107,30 +107,30 @@ void Ft_MStyleSheetParser::test_load()
     int selectorId = 0;
     int parentSelectorId = 0;
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 7);
     //check that the attributes contain right values
 
     int counter = 0;
     const MStyleSheetAttribute *attributeList = fi->selectors[0]->attributeList();
-    QMap<MUniqueStringCache::Index, QByteArray>::const_iterator i;
+    QMap<MUniqueStringCache::Index, QLatin1String>::const_iterator i;
     for (i = attributes.constBegin(); i != attributes.constEnd(); ++i) {
         QCOMPARE(i.key(), attributeList[counter].getNameID());
         QCOMPARE(i.value(), attributeList[counter].getValue());
         ++counter;
     }
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 7);
 
     //check that the attributes contain right values
@@ -142,252 +142,252 @@ void Ft_MStyleSheetParser::test_load()
         ++counter;
     }
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->selectors[selectorId]->flags() & MStyleSheetSelector::Child)  == 0);
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 3);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child)  == 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 3);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray("Disabled"));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String("Disabled"));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray("Disabled"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String("Disabled"));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray("Active"));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String("Active"));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray("Active"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String("Active"));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray("Active"));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String("Active"));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray("Active"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String("Active"));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::PortraitOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::PortraitOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::LandscapeOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::LandscapeOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::PortraitOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray("Active"));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String("Active"));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 2);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::PortraitOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray("Active"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String("Active"));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 2);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray("fancy"));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String("fancy"));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("fancy"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("fancy"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
 
 
-    QCOMPARE(fi->selectors[selectorId]->parentName(), QByteArray(""));
-    QCOMPARE(fi->selectors[selectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->selectors[selectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->selectors[selectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->selectors[selectorId]->parentName(), QLatin1String(""));
+    QCOMPARE(fi->selectors[selectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->selectors[selectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->selectors[selectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->selectors[selectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->selectors[selectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->selectors[selectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->selectors[selectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String(""));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray(""));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::UndefinedOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::PortraitOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray(""));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String(""));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QByteArray("ParentName"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QByteArray("TestObject"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QByteArray("Specialized"));
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QByteArray("icon"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentName(), QLatin1String("ParentName"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->parentObjectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->className(), QLatin1String("TestObject"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->objectName(), QLatin1String("Specialized"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->classType(), QLatin1String("icon"));
     QCOMPARE(fi->parentSelectors[parentSelectorId]->orientation(), MStyleSheetSelector::PortraitOrientation);
-    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QByteArray("Active"));
+    QCOMPARE(fi->parentSelectors[parentSelectorId]->mode(), QLatin1String("Active"));
     QVERIFY((fi->parentSelectors[parentSelectorId]->flags() & MStyleSheetSelector::Child) != 0);
     QCOMPARE(fi->parentSelectors[parentSelectorId++]->attributeCount(), 1);
 }
@@ -454,49 +454,49 @@ void Ft_MStyleSheetParser::test_constants()
     QCOMPARE(info->selectors[0]->attributeCount(), 1);
 
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-width")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getValue(), QByteArray("10px"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-width")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-width"))->getValue(), QLatin1String("10px"));
     info = m_subject->d_ptr->fileInfoList[2];
     QCOMPARE(info->selectors.count(), 1);
     QCOMPARE(info->selectors[0]->attributeCount(), 13);
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-int")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int"))->getValue(), QByteArray("10"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-int")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-int"))->getValue(), QLatin1String("10"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-string1")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-string1")));
 
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getValue(), QByteArray("\"name\""));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string1"))->getValue(), QLatin1String("\"name\""));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2"))->getValue(), QByteArray("\"this is a string with constant \"name\"\" 10 1.0"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-string2"))->getValue(), QLatin1String("\"this is a string with constant \"name\"\" 10 1.0"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool"))->getValue(), QByteArray("true"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-bool"))->getValue(), QLatin1String("true"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-pos1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1"))->getValue(), QByteArray("10px 15px"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-pos1")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos1"))->getValue(), QLatin1String("10px 15px"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-pos2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2"))->getValue(), QByteArray("17px 11px"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-pos2")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-pos2"))->getValue(), QLatin1String("17px 11px"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-font1")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1"))->getValue(), QByteArray("sans 12px"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-font1")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font1"))->getValue(), QLatin1String("sans 12px"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-font2")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2"))->getValue(), QByteArray("arial 10px"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-font2")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-font2"))->getValue(), QLatin1String("arial 10px"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-color")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color"))->getValue(), QByteArray("#0abba0"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-color")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-color"))->getValue(), QLatin1String("#0abba0"));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-invalid")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid"))->getValue(), QByteArray(""));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-invalid")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-invalid"))->getValue(), QLatin1String(""));
     QVERIFY(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-void")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void"))->getValue(), QByteArray(""));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-black"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-logical-black")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-black"))->getValue(), QByteArray("#000000"));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-green"))->getName(), QByteArray(MStyleSheetAttribute::attributeNameToPropertyName("attr-logical-green")));
-    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-green"))->getValue(), QByteArray("#00ff00"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-void")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-void"))->getValue(), QLatin1String(""));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-black"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-logical-black")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-black"))->getValue(), QLatin1String("#000000"));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-green"))->getName(), QLatin1String(MStyleSheetAttribute::attributeNameToPropertyName("attr-logical-green")));
+    QCOMPARE(info->selectors[0]->attributeByName(attributeNameToIndex("attr-logical-green"))->getValue(), QLatin1String("#00ff00"));
 }
 
 void Ft_MStyleSheetParser::test_binary_equality()

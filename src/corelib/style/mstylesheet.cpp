@@ -329,11 +329,11 @@ bool MStyleSheetPrivate::combine(MStyle *style, const SelectorInfoList &entry, c
 
                 if (!attribute->writeAttribute(info->selector->filename(), style, property, spec.orientation)) {
                     qCritical("Failed to write attribute: %s to property %s. The stylesheet syntax might be invalid (%s:%s) in %s.",
-                              attribute->getName().data(),
+                              attribute->getName().latin1(),
                               property.name(),
-                              attribute->getName().data(),
-                              attribute->getValue().data(),
-                              info->selector->filename().data());
+                              attribute->getName().latin1(),
+                              attribute->getValue().latin1(),
+                              info->selector->filename().latin1());
 
                     result = info->stylesheet->syntaxMode() == MStyleSheet::RelaxedSyntax;
                 } else {
@@ -422,20 +422,20 @@ bool MStyleSheetPrivate::isHigherPriority(const QSharedPointer<SelectorInfo> &pr
 }
 
 // calculates "order" number (how far is in superclass inheritance tree)
-int MStyleSheetPrivate::orderNumber(const QByteArray &n, const QByteArray &sn, const QByteArray &parentStyleName, const QList<QByteArray> &parentHierarchy)
+int MStyleSheetPrivate::orderNumber(const QLatin1String &n, const QLatin1String &sn, const QByteArray &parentStyleName, const QList<QByteArray> &parentHierarchy)
 {
     // Exit imediately if the style name does not match
     // parent style (object) name.
-    if (!sn.isEmpty() && sn != parentStyleName)
+    if (sn != QLatin1String("") && sn != parentStyleName.constData())
         return -1;
 
     // Selectors class name may have "." in front of it, remove it
-    if (n.startsWith('.')) {
-        QByteArray realClassName = QByteArray::fromRawData(n.constData() + 1, n.length() - 1);
+    if (n != QLatin1String("") && *(n.latin1()) == '.') {
+        QByteArray realClassName = QByteArray::fromRawData(n.latin1() + 1, strlen(n.latin1()) - 1);
         return parentHierarchy.indexOf(realClassName);
     }
 
-    return parentHierarchy.indexOf(n);
+    return parentHierarchy.indexOf(n.latin1());
 }
 
 bool MStyleSheetPrivate::matchParent(const MStyleSheetSelector *selector,
@@ -462,7 +462,7 @@ bool MStyleSheetPrivate::matchParents(const MStyleSheetSelector *selector,
 {
     parentPriority = MAKE_PRIORITY(0xffff, 0xffff);
 
-    if (selector->parentName().isEmpty()) {
+    if (selector->parentNameID() == MUniqueStringCache::EmptyStringIndex) {
         return true;
     }
 
@@ -493,12 +493,12 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
         int order = 0;
         // Check if the class name contains '.' as a first letter, if it does it means that these are not for subclasses
         if (selector->flags() & MStyleSheetSelector::ExactClassMatch) {
-            if (selector->className() != classHierarchy.at(0)) {
+            if (selector->className() != classHierarchy.at(0).constData()) {
                 return false;
             }
         } else {
             // TODO: MStyleSheetSelectorTree::partiallyMatchingSelectors() already knows the order, no need to determine it again
-            order = MStyleSheetPrivate::orderNumber(selector->className(), QByteArray(), QByteArray(), classHierarchy);
+            order = MStyleSheetPrivate::orderNumber(selector->className(), QLatin1String(""), QByteArray(), classHierarchy);
         }
         // store inheritance order for later use
         classPriority = MAKE_PRIORITY(0xffff, order);
@@ -511,12 +511,14 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
     }
 
     // Check whether the type matches
-    if (!selector->classType().isEmpty() && type != selector->classType())
+    if (selector->classTypeID() != MUniqueStringCache::EmptyStringIndex && type.constData() != selector->classType()) {
         return false;
+    }
 
     // Check whether the mode matches
-    if (!selector->mode().isEmpty() && mode != selector->mode())
+    if (selector->modeID() != MUniqueStringCache::EmptyStringIndex&& mode.constData() != selector->mode()) {
         return false;
+    }
 
     return true;
 }

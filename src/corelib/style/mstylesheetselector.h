@@ -107,27 +107,27 @@ public:
     /*!
      * \brief Returns the parent class name for this selector.
      */
-    QByteArray parentName() const;
+    QLatin1String parentName() const;
 
     /*!
      * \brief Returns the parent class object name for this selector.
      */
-    QByteArray parentObjectName() const;
+    QLatin1String parentObjectName() const;
 
     /*!
      * \brief Returns the object name for this selector.
      */
-    QByteArray objectName() const;
+    QLatin1String objectName() const;
 
     /*!
      * \brief Returns the class name for this selector.
      */
-    QByteArray className() const;
+    QLatin1String className() const;
 
     /*!
      * \brief Returns the type for this selector.
      */
-    QByteArray classType() const;
+    QLatin1String classType() const;
 
     /*!
      * \brief Returns the screen orientation for this selector.
@@ -137,14 +137,14 @@ public:
     /*!
      * \brief Returns the object mode for this selector.
      */
-    QByteArray mode() const;
+    QLatin1String mode() const;
 
     /*!
      * \brief Returns flags of this selector.
      */
     Flags flags() const;
 
-    QByteArray filename() const;
+    QLatin1String filename() const;
 
     bool fromMappedMemory;
 

@@ -155,20 +155,19 @@ MUniqueStringCachePrivate::~MUniqueStringCachePrivate()
 void MUniqueStringCachePrivate::fillUniqueStringCache() {
     uchar *rawCache = uniqueStringCacheMappedMemory->data();
     int elementsInCache = *reinterpret_cast<int*>(rawCache);
-    int oldSize = idToOffsetCache.count();
-    idToStringCache.resize(elementsInCache);
-    idToOffsetCache.resize(elementsInCache);
+    int oldSize = idToPointerCache.count();
+    idToPointerCache.resize(elementsInCache);
 
     for (int i = oldSize; i < elementsInCache; ++i) {
         uchar *stringAdress = rawCache + offset;
         int stringLength = *reinterpret_cast<int*>(stringAdress);
 
-        idToOffsetCache[i] = stringAdress;
+        idToPointerCache[i] = stringAdress;
 
         offset += sizeof(int) + stringLength + 1;
 
         if (stringToIdCacheFilled) {
-            stringToIdCache.insert(q_ptr->indexToString(i), i);
+            stringToIdCache.insert(QLatin1String(q_ptr->indexToString(i)), i);
         }
     }
     if (elementsInCache == 0) {
@@ -185,14 +184,14 @@ void MUniqueStringCachePrivate::fillUniqueStringCache() {
 int MUniqueStringCachePrivate::insertStringToCache(const QByteArray &string) {
     uchar *rawCache = uniqueStringCacheMappedMemory->data();
     int elementsInCache = *reinterpret_cast<int*>(rawCache);
-    if (elementsInCache != idToOffsetCache.count()) {
+    if (elementsInCache != idToPointerCache.count()) {
         // cache has changed, check if the string has been added
         // in the meanwhile
         fillUniqueStringCache();
         if (!stringToIdCacheFilled) {
             fillStringToIdCache();
         }
-        StringToIdCache::const_iterator it = stringToIdCache.constFind(string);
+        StringToIdCache::const_iterator it = stringToIdCache.constFind(QLatin1String(string.constData()));
         if (it != stringToIdCache.constEnd()) {
             return *it;
         }
@@ -209,11 +208,10 @@ int MUniqueStringCachePrivate::insertStringToCache(const QByteArray &string) {
         qFatal("unique string cache is full");
     }
 
-    idToStringCache.append(string);
-    idToOffsetCache.append(0);
-    stringToIdCache.insert(string, idToStringCache.count() - 1);
+    idToPointerCache.append((uchar*)stringAdress);
+    stringToIdCache.insert(QLatin1String(reinterpret_cast<const char*>(stringAdress + sizeof(int))), idToPointerCache.count() - 1);
 
-    return idToStringCache.count() - 1;
+    return idToPointerCache.count() - 1;
 }
 
 // triggers initialization of our data structures from the cache if this
@@ -232,18 +230,11 @@ void MUniqueStringCachePrivate::initiallyFillCache() {
     }
 }
 
-QByteArray MUniqueStringCachePrivate::stringFromOffset(uchar *stringAdress)
-{
-    int stringLength = *reinterpret_cast<int*>(stringAdress);
-
-    return QByteArray::fromRawData(reinterpret_cast<const char*>(stringAdress + sizeof(int)), stringLength);
-}
-
 void MUniqueStringCachePrivate::fillStringToIdCache()
 {
     mDebug("MUniqueStringCachePrivate::fillStringToIdCache") << "filling stringToIdCache for" << filename;
-    for (int i = 0; i < idToOffsetCache.count(); ++i) {
-        stringToIdCache.insert(q_ptr->indexToString(i), i);
+    for (int i = 0; i < idToPointerCache.count(); ++i) {
+        stringToIdCache.insert(QLatin1String(q_ptr->indexToString(i)), i);
     }
     stringToIdCacheFilled = true;
 }
@@ -277,7 +268,7 @@ MUniqueStringCache::Index MUniqueStringCache::stringToIndex(const QByteArray& st
         d_ptr->fillStringToIdCache();
     }
 
-    MUniqueStringCachePrivate::StringToIdCache::const_iterator it = d_ptr->stringToIdCache.constFind(string);
+    MUniqueStringCachePrivate::StringToIdCache::const_iterator it = d_ptr->stringToIdCache.constFind(QLatin1String(string.constData()));
     if (it != d_ptr->stringToIdCache.constEnd()) {
         return *it;
     }
@@ -293,36 +284,29 @@ MUniqueStringCache::Index MUniqueStringCache::stringToIndex(const QByteArray& st
     return d_ptr->insertStringToCache(string);
 }
 
-QByteArray MUniqueStringCache::indexToString(Index id)
+QLatin1String MUniqueStringCache::indexToString(Index id)
 {
     d_ptr->initiallyFillCache();
     if (id < 0) {
-        return QByteArray();
-    } else if (id >= d_ptr->idToStringCache.count())  {
+        return indexToString(EmptyStringIndex);
+    } else if (id >= d_ptr->idToPointerCache.count())  {
         // it may be a new string in the cache. try to update the cache and then check again
         QScopedPointer<MUniqueStringCacheLocker> locker;
         if (!isLocked()) {
             locker.reset(new MUniqueStringCacheLocker(this));
             if (!locker->isLocked()) {
-                return QByteArray();
+                return indexToString(EmptyStringIndex);
             }
         }
         d_ptr->fillUniqueStringCache();
-        if (id >= d_ptr->idToStringCache.count()) {
-            mWarning("MUniqueStringCache::indexToString") << "Id" << id << "is unknown. Has the string cache been deleted?" << d_ptr->idToStringCache.count();
-            return QByteArray();
+        if (id >= d_ptr->idToPointerCache.count()) {
+            mWarning("MUniqueStringCache::indexToString") << "Id" << id << "is unknown. Has the string cache been deleted?" << d_ptr->idToPointerCache.count();
+            return indexToString(EmptyStringIndex);
         }
     }
 
-    uchar *offset = d_ptr->idToOffsetCache.at(id);
-    if (offset != 0) {
-        QByteArray string = d_ptr->stringFromOffset(offset);
-        d_ptr->idToStringCache[id] = string;
-        d_ptr->idToOffsetCache[id] = 0;
-        return string;
-    } else {
-        return d_ptr->idToStringCache.at(id);
-    }
+    uchar *stringAdress = d_ptr->idToPointerCache.at(id);
+    return QLatin1String(reinterpret_cast<const char*>(stringAdress + sizeof(int)));
 }
 
 bool MUniqueStringCache::lock()

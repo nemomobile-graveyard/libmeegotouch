@@ -524,10 +524,10 @@ bool MStyleSheetParserPrivate::parse(QFile &file, const QFileInfo &fileInfo, boo
                         break;
                 }
                 if (selector) {
-                    if (selector->parentName().isEmpty()) {
-                        privateFileInfo->selectors.push_back(selector);
-                    } else {
+                    if (selector->parentName() != QLatin1String("")) {
                         privateFileInfo->parentSelectors.push_back(selector);
+                    } else {
+                        privateFileInfo->selectors.push_back(selector);
                     }
                 }
             }
@@ -1069,6 +1069,7 @@ QList<const MStyleSheetSelector*> MStyleSheetParser::selectorList(const MStyleSh
 
     foreach (const MStyleSheetSelectorTree *list, d_ptr->selectorTrees) {
         list->partiallyMatchingSelectors(spec, &selectors);
+
     }
 
     return selectors;
@@ -1144,11 +1145,11 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
             quint32 timestampCount = readInteger<quint32>(&bufferIterator);
             for (quint32 i = 0; i < timestampCount; ++i) {
                 MUniqueStringCache::Index fileNameIndex = readInteger<MUniqueStringCache::Index>(&bufferIterator);
-                QByteArray fileName = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(fileNameIndex);
+                QLatin1String fileName = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(fileNameIndex);
 
                 qint64 timestamp = readInteger<qint64>(&bufferIterator);
 
-                time_t current = modificationTime(fileName);
+                time_t current = modificationTime(fileName.latin1());
                 if (current != timestamp) {
                     mDebug("MStyleSheetParserPrivate::loadBinary") << fileName << "changed. Recreating cache file";
                     return false;

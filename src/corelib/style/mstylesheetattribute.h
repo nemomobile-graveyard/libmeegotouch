@@ -48,9 +48,9 @@ class MStyleSheetAttribute
 public:
     MStyleSheetAttribute(MUniqueStringCache::Index name, MUniqueStringCache::Index value, qint64 position);
 
-    QByteArray getName() const;
+    QLatin1String getName() const;
     MUniqueStringCache::Index getNameID() const;
-    QByteArray getValue() const;
+    QLatin1String getValue() const;
     MUniqueStringCache::Index getValueID() const;
     qint64 getPosition() const;
 

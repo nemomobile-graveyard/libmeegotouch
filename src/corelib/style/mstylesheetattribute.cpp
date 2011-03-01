@@ -277,7 +277,7 @@ MStyleSheetAttribute::MStyleSheetAttribute(MUniqueStringCache::Index name, MUniq
 {
 }
 
-QByteArray MStyleSheetAttribute::getName() const
+QLatin1String MStyleSheetAttribute::getName() const
 {
     return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(name);
 }
@@ -287,7 +287,7 @@ MUniqueStringCache::Index MStyleSheetAttribute::getNameID() const
     return name;
 }
 
-QByteArray MStyleSheetAttribute::getValue() const
+QLatin1String MStyleSheetAttribute::getValue() const
 {
     return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(value);
 }
@@ -597,7 +597,8 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
     // most types are the same in landscape and portrait
     CacheOrientationFlags cacheOrientation = CacheOrientationFlags(PortraitFlag | LandscapeFlag);
 
-    QByteArray valueString = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(value);
+    QLatin1String vs = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(value);
+    QByteArray valueString = QByteArray::fromRawData(vs.latin1(), strlen(vs.latin1()));
 
     const int attributeType = property.userType();
     if (attributeType == QMetaType::Bool) {

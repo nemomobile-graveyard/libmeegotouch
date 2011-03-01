@@ -97,27 +97,27 @@ int MStyleSheetSelector::attributeCount() const
     return _attributeCount;
 }
 
-QByteArray MStyleSheetSelector::parentName() const
+QLatin1String MStyleSheetSelector::parentName() const
 {
     return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(_parentName);
 }
 
-QByteArray MStyleSheetSelector::parentObjectName() const
+QLatin1String MStyleSheetSelector::parentObjectName() const
 {
     return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(_parentObjectName);
 }
 
-QByteArray MStyleSheetSelector::objectName() const
+QLatin1String MStyleSheetSelector::objectName() const
 {
     return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(_objectName);
 }
 
-QByteArray MStyleSheetSelector::className() const
+QLatin1String MStyleSheetSelector::className() const
 {
     return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(_className);
 }
 
-QByteArray MStyleSheetSelector::classType() const
+QLatin1String MStyleSheetSelector::classType() const
 {
     return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(_classType);
 }
@@ -127,7 +127,7 @@ MStyleSheetSelector::Orientation MStyleSheetSelector::orientation() const
     return _orientation;
 }
 
-QByteArray MStyleSheetSelector::mode() const
+QLatin1String MStyleSheetSelector::mode() const
 {
     return MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(_mode);
 }
@@ -137,7 +137,7 @@ MStyleSheetSelector::Flags MStyleSheetSelector::flags() const
     return _flags;
 }
 
-QByteArray MStyleSheetSelector::filename() const
+QLatin1String MStyleSheetSelector::filename() const
 {
     return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(_filename);
 }

@@ -45,13 +45,10 @@ public:
 
     UniqueStringCacheMappedMemory *uniqueStringCacheMappedMemory;
 
-    // mapping id => string
-    typedef QVector<QByteArray> IdToStringCache;
-    IdToStringCache idToStringCache;
     // mapping id => offset
-    QVector<uchar*> idToOffsetCache;
+    QVector<uchar*> idToPointerCache;
     // mapping string => id
-    typedef QHash<QByteArray, int> StringToIdCache;
+    typedef QHash<QLatin1String, int> StringToIdCache;
     StringToIdCache stringToIdCache;
     int offset;
 
