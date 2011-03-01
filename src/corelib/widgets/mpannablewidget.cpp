@@ -80,6 +80,7 @@ void MPannableWidgetPrivate::init()
 
     glass = new MPannableWidgetGlass(q);
     glass->setZValue(ZValueGlass);
+    glass->setFlag(QGraphicsItem::ItemHasNoContents, true);
 
     glass->setObjectName("glass");
     glass->grabGesture(Qt::TapAndHoldGesture);
