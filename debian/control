@@ -19,7 +19,10 @@ Build-Depends: debhelper (>= 5),
  libxdamage-dev,
  xsltproc,
  libqtm-serviceframework-dev,
- libxcomposite-dev
+ libxcomposite-dev,
+ libx11-xcb-dev,
+ libxcb1-dev,
+ libxcb-composite0-dev
 Standards-Version: 3.7.2
 
 Package: libmeegotouchcore0
