@@ -55,6 +55,8 @@ MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker
 #elif defined(M_OS_MAEMO5)
     QObject::connect(&keyboardOpenConf, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
+#else
+    Q_UNUSED(q);
 #endif
 
     initContextSubscriber();
