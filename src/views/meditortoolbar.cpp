@@ -226,6 +226,12 @@ void MEditorToolbar::updateAvailableButtons()
 
     for (int i = 0; i < buttons.count(); ++i) {
         MButton *button = buttons.at(i);
+
+        if (actionList.at(i)->isCheckable()) {
+            button->setCheckable(true);
+            button->setChecked(actionList.at(i)->isChecked());
+        }
+
         if (actionList.at(i)->isVisible()) {
             buttonLayoutPolicy->addItem(button);
             button->show();

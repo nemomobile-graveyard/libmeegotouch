@@ -33,9 +33,6 @@ M_REGISTER_WIDGET(MRichTextEdit)
 
 namespace
 {
-    //! Toolbar file
-    const QString ToolbarFile = QString("RichTextEditorToolbar1.xml");
-
     MTextEditModel *createRichTextModel(MTextEditModel::LineMode type, const QString &text)
     {
         MTextEditModel *model = new MTextEditModel;
@@ -45,9 +42,97 @@ namespace
     }
 }
 
+MActionGroup::MActionGroup(QObject *parent): group(parent),
+                                             _visibleItemCount(0),
+                                             internalUpdate(false)
+{
+}
+
+MActionGroup::~MActionGroup()
+{
+}
+
+QAction *MActionGroup::addAction(QAction *a)
+{
+    if (!actions().contains(a)) {
+        connect(a, SIGNAL(changed()),SLOT(onItemChanged()));
+        group.addAction(a);
+        setVisibleItemCount(readVisibleItemCount());
+    }
+    return a;
+}
+
+void MActionGroup::removeAction(QAction *a)
+{
+    if (actions().contains(a)) {
+        group.removeAction(a);
+        disconnect(a, SIGNAL(changed()));
+        setVisibleItemCount(readVisibleItemCount());
+    }
+}
+
+QList<QAction*> MActionGroup::actions() const
+{
+    return group.actions();
+}
+
+void MActionGroup::setVisible(bool visible)
+{
+    internalUpdate = true;
+    group.setVisible(visible);
+    internalUpdate = false;
+}
+
+bool MActionGroup::isVisible() const
+{
+    return group.isVisible();
+}
+
+int MActionGroup::visibleItemCount()
+{
+    return _visibleItemCount;
+}
+
+void MActionGroup::setVisibleItemCount(int value)
+{
+    if (_visibleItemCount < value) {
+        _visibleItemCount = value;
+        if (!internalUpdate) {
+            emit itemShown();
+        }
+    } else if (_visibleItemCount > value) {
+        _visibleItemCount = value;
+        if (!internalUpdate) {
+            emit itemHidden();
+        }
+    }
+}
+
+int MActionGroup::readVisibleItemCount()
+{
+    int count = 0;
+    foreach (QAction* value, actions()) {
+        if (value->isVisible()) {
+            count++;
+        }
+    }
+    return count;
+}
+
+void MActionGroup::onItemChanged()
+{
+    setVisibleItemCount(readVisibleItemCount());
+}
 
 MRichTextEditPrivate::MRichTextEditPrivate()
-    : MTextEditPrivate()
+    : MTextEditPrivate(),
+      textEditButtons(0),
+      richTextEditButtons(0),
+      boldAction(0),
+      italicAction(0),
+      underlineAction(0),
+      formatAction(0),
+      modeAction(0)
 {
 }
 
@@ -56,6 +141,111 @@ MRichTextEditPrivate::~MRichTextEditPrivate()
 {
 }
 
+void MRichTextEditPrivate::init()
+{
+    Q_Q(MRichTextEdit);
+
+    // Remember all parent buttons
+    foreach (QAction* action, q->actions()) {
+        textEditButtons.addAction(action);
+    }
+    textEditButtons.setVisible(false);
+    q->connect(&textEditButtons, SIGNAL(itemShown()), SLOT(_q_updateToolbarButtons()));
+    q->connect(&textEditButtons, SIGNAL(itemHidden()), SLOT(_q_updateToolbarButtons()));
+
+    // Add rich text edit buttons B,I,U,F
+    boldAction.setObjectName("Bold");
+    italicAction.setObjectName("Italic");
+    underlineAction.setObjectName("Underline");
+    formatAction.setObjectName("Format");
+
+    boldAction.setCheckable(true);
+    italicAction.setCheckable(true);
+    underlineAction.setCheckable(true);
+
+    q->connect(&boldAction, SIGNAL(triggered(bool)), SLOT(_q_toggleFontBold()));
+    q->connect(&italicAction, SIGNAL(triggered(bool)), SLOT(_q_toggleFontItalic()));
+    q->connect(&underlineAction, SIGNAL(triggered(bool)), SLOT(_q_toggleFontUnderline()));
+    q->connect(&formatAction, SIGNAL(triggered(bool)), SLOT(_q_showTextStylingOptions()));
+
+    q->addAction(&underlineAction);
+    q->addAction(&boldAction);
+    q->addAction(&italicAction);
+    q->addAction(&formatAction);
+
+    richTextEditButtons.addAction(&boldAction);
+    richTextEditButtons.addAction(&italicAction);
+    richTextEditButtons.addAction(&underlineAction);
+    richTextEditButtons.addAction(&formatAction);
+    richTextEditButtons.setExclusive(false);
+    richTextEditButtons.setVisible(textEditButtons.visibleItemCount() == 0);
+
+    // Add mode toggle button T
+    modeAction.setObjectName("Mode");
+    modeAction.setVisible(textEditButtons.visibleItemCount() != 0);
+    modeAction.setCheckable(true);
+    modeAction.setChecked(false);
+    modeAction.setProperty("noCloseToolbarOnTrigger", true);// TODO: Use defined constant instead of string
+    q->connect(&modeAction, SIGNAL(triggered(bool)), SLOT(_q_showRichTextToolbar(bool)));
+    q->addAction(&modeAction);
+}
+
+void MRichTextEditPrivate::_q_updateToolbarButtons()
+{
+    // Make group visible to check buttons state in it
+    // otherwise all buttons in this group will be invisible
+    textEditButtons.setVisible(true);
+    if (!textEditButtons.visibleItemCount()) {
+        modeAction.setVisible(false);
+        _q_showRichTextToolbar(true);
+    } else {
+        modeAction.setVisible(true);
+        modeAction.setChecked(false);
+        _q_showRichTextToolbar(false);
+    }
+}
+
+void MRichTextEditPrivate::_q_showRichTextToolbar(bool show)
+{
+    if (show) {
+        textEditButtons.setVisible(false);
+        richTextEditButtons.setVisible(true);
+    } else {
+        textEditButtons.setVisible(true);
+        richTextEditButtons.setVisible(false);
+    }
+}
+
+void MRichTextEditPrivate::_q_toggleFontBold()
+{
+    Q_Q(MRichTextEdit);
+
+    QFont curFont = q->currentFont();
+    bool boldStyle = !curFont.bold();
+    // set current bold style option
+    q->setFontBold(boldStyle);
+}
+
+void MRichTextEditPrivate::_q_toggleFontItalic()
+{
+    Q_Q(MRichTextEdit);
+
+    QFont curFont = q->currentFont();
+    bool italicStyle = !curFont.italic();
+    // set current italic style option
+    q->setFontItalic(italicStyle);
+}
+
+void MRichTextEditPrivate::_q_toggleFontUnderline()
+{
+    Q_Q(MRichTextEdit);
+
+    // As a workaround to NB#223092 we don't use currentFont() and QFont::underline().
+    const QTextCharFormat format(isPreediting() ? currentPreeditCharFormat() : q->textCursor().charFormat());
+    const bool underlineStyle = format.underlineStyle() == QTextCharFormat::NoUnderline;
+    // set current underline style option
+    q->setFontUnderline(underlineStyle);
+}
 
 bool MRichTextEditPrivate::insertFromMimeData(const QMimeData *source)
 {
@@ -93,7 +283,6 @@ bool MRichTextEditPrivate::insertFromMimeData(const QMimeData *source)
 
     return updated;
 }
-
 
 QMimeData *MRichTextEditPrivate::createMimeDataFromSelection()
 {
@@ -138,22 +327,13 @@ void MRichTextEditPrivate::_q_updateStyle()
         format = cursor.charFormat();
     }
 
-    MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
-                                                           "Bold",
-                                                           "pressed",
-                                                           QVariant((format.fontWeight() > QFont::Normal) ? "true" : "false"));
-    MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
-                                                           "Underline",
-                                                           "pressed",
-                                                           QVariant((format.fontUnderline()) ? "true" : "false"));
-    MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
-                                                           "Italic",
-                                                           "pressed",
-                                                           QVariant((format.fontItalic()) ? "true" : "false"));
+    boldAction.setChecked(format.fontWeight() > QFont::Normal);
+    underlineAction.setChecked(format.fontUnderline());
+    italicAction.setChecked(format.fontItalic());
 }
 
 
-void MRichTextEditPrivate::showTextStylingOptions()
+void MRichTextEditPrivate::_q_showTextStylingOptions()
 {
     Q_Q(MRichTextEdit);
 
@@ -355,22 +535,46 @@ void MRichTextEditPrivate::_q_setFontColor(const QColor &fontColor)
 MRichTextEdit::MRichTextEdit(MTextEditModel::LineMode type, const QString &text, QGraphicsItem *parent)
     : MTextEdit(new MRichTextEditPrivate, createRichTextModel(type, text), parent)
 {
+    Q_D(MRichTextEdit);
+
     connect(this,
             SIGNAL(cursorPositionChanged()),
             SLOT(_q_updateStyle()));
+    connect(this,
+            SIGNAL(selectionChanged()),
+            SLOT(_q_updateStyle()));
 
-    attachToolbar(QString(M_IM_TOOLBARS_DIR) + "/" + ToolbarFile);
+    connect(this,
+            SIGNAL(cursorPositionChanged()),
+            SLOT(_q_updateToolbarButtons()));
+    connect(this,
+            SIGNAL(selectionChanged()),
+            SLOT(_q_updateToolbarButtons()));
+
+    d->init();
 }
 
 
 MRichTextEdit::MRichTextEdit(MTextEditModel *model, QGraphicsItem *parent)
     : MTextEdit(new MRichTextEditPrivate, model, parent)
 {
+    Q_D(MRichTextEdit);
+
     connect(this,
             SIGNAL(cursorPositionChanged()),
             SLOT(_q_updateStyle()));
+    connect(this,
+            SIGNAL(selectionChanged()),
+            SLOT(_q_updateStyle()));
 
-    attachToolbar(QString(M_IM_TOOLBARS_DIR) + "/" + ToolbarFile);
+    connect(this,
+            SIGNAL(cursorPositionChanged()),
+            SLOT(_q_updateToolbarButtons()));
+    connect(this,
+            SIGNAL(selectionChanged()),
+            SLOT(_q_updateToolbarButtons()));
+
+    d->init();
 }
 
 
@@ -541,24 +745,14 @@ void MRichTextEdit::keyPressEvent(QKeyEvent *event)
 
     if (QEvent::KeyPress == event->type()) {
         if (event->matches(QKeySequence::Bold)) {
-            QFont curFont = currentFont();
-            bool boldStyle = !curFont.bold();
-            // set current bold style option
-            setFontBold(boldStyle);
+            d->_q_toggleFontBold();
         } else if (event->matches(QKeySequence::Italic)) {
-            QFont curFont = currentFont();
-            bool italicStyle = !curFont.italic();
-            // set current italic style option
-            setFontItalic(italicStyle);
+            d->_q_toggleFontItalic();
         } else if (event->matches(QKeySequence::Underline)) {
-            // As a workaround to NB#223092 we don't use currentFont() and QFont::underline().
-            const QTextCharFormat format(d->isPreediting() ? d->currentPreeditCharFormat() : textCursor().charFormat());
-            const bool underlineStyle = format.underlineStyle() == QTextCharFormat::NoUnderline;
-            // set current underline style option
-            setFontUnderline(underlineStyle);
+            d->_q_toggleFontUnderline();
         } else if ((event->key() == Qt::Key_F) && (event->modifiers() & Qt::ControlModifier)) {
             // show text styling options
-            d->showTextStylingOptions();
+            d->_q_showTextStylingOptions();
         } else {
             // Pass the remaining events to MTextEdit will handle
             MTextEdit::keyPressEvent(event);

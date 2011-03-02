@@ -107,6 +107,12 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_setFontFamily(const QString &))
     Q_PRIVATE_SLOT(d_func(), void _q_setFontSize(int))
     Q_PRIVATE_SLOT(d_func(), void _q_setFontColor(const QColor &))
+    Q_PRIVATE_SLOT(d_func(), void _q_showRichTextToolbar(bool))
+    Q_PRIVATE_SLOT(d_func(), void _q_updateToolbarButtons())
+    Q_PRIVATE_SLOT(d_func(), void _q_toggleFontBold())
+    Q_PRIVATE_SLOT(d_func(), void _q_toggleFontItalic())
+    Q_PRIVATE_SLOT(d_func(), void _q_toggleFontUnderline())
+    Q_PRIVATE_SLOT(d_func(), void _q_showTextStylingOptions())
 
     Q_DISABLE_COPY(MRichTextEdit)
 
