@@ -1078,6 +1078,34 @@ public:
      * \brief Returns the string representation of a number as percentage
      * \param i number to format
      * \param decimals number of digits shown after decimal separator
+     *
+     * Example:
+     *
+     * \code
+     * MLocale locale; // gets the current system default locale
+     * QString percentString = locale.formatPercent(0.0123, 2);
+     * \endcode
+     *
+     * <table border="1">
+     * <caption>
+     *  <big><b>Examples of formatPercent results</b></big>
+     * </caption>
+     * <tr>
+     *  <th>locale</th><th>double value</th><th>decimals</th><th>result</th>
+     * </tr>
+     * <tr>
+     *   <td>en_US</td><td>0.0123</td><td>2</td><td>1.23%</td>
+     * </tr>
+     * <tr>
+     *   <td>en_US</td><td>12.3456789</td><td>4</td><td>1,234.5679%</td>
+     * </tr>
+     * <tr>
+     *   <td>de_CH</td><td>12.3456789</td><td>4</td><td>1'234.5679%</td>
+     * </tr>
+     * <tr>
+     *   <td>tr_TR</td><td>12.3456789</td><td>4</td><td>% 1.234,5679</td>
+     * </tr>
+     * </table>
      */
     QString formatPercent(double i, int decimals = 0) const;
 
