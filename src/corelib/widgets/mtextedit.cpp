@@ -889,7 +889,6 @@ void MTextEditPrivate::commitPreedit()
     }
 
     // clear styling
-    QTextBlock block = textCursor->block();
     q->model()->setAdditionalFormats(QList<MTextEditFormatRange>());
 
     if (validateCurrentBlock() == true) {
