@@ -166,7 +166,7 @@ In libmeegotouch/demos/servicefw/ there is example code showing three service pr
 <ul>
 <li>cd libmeegotouch</li>
 <li>qmake && make && make install (or at least do a make install in the mservicemapper directory)</li>
-<li>cd demos/servicefw</li>
+<li>cd examples/servicefw</li>
 <li>pushd misc; sudo ./INSTALL; popd (this installs the relevant dbus service files into /usr/share/dbus-1/services)</li>
 <li>LD_LIBRARY_PATH=lib bin/user</li>
 <li>This opens a small window that allows you to enter text which is sent through the interface to a service which returns the reversed text.</li>
