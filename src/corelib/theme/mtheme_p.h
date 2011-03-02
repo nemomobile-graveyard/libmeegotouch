@@ -129,7 +129,7 @@ public:
     bool showAsyncRequests;
 
     typedef QHash<QString, QString> MStringHash;
-    QHash<QString, MStringHash> controllerViewCache;
+    QHash<const char*, MStringHash> controllerViewCache;
 
 public:
     /*!

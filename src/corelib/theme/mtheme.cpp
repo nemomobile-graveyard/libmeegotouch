@@ -96,6 +96,10 @@ namespace
                 + QChar::fromLatin1('_') + QString::number(right)
                 + QChar::fromLatin1('_') + QString::number(bottom);
     }
+
+    static QByteArray wrapConstCharInQByteArray(const char* rawPointer) {
+        return QByteArray::fromRawData(rawPointer, qstrlen(rawPointer));
+    }
 } // anonymous namespace
 
 MThemePrivate::LeakedStyles MThemePrivate::leakedStyles;
@@ -419,7 +423,7 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
     // otherwise the views styles (including common styles) are not installable
     // on MWidgetController and MStylableWidget.
     if (mobj->className() == MWidgetStyle::staticMetaObject.className()) {
-        styleMetaObjectHierarchy.append(mobj->className());
+        styleMetaObjectHierarchy.append(wrapConstCharInQByteArray(mobj->className()));
         appendAllLibraryStyleSheets(sheets);
         hierarchyCache.insert(styleClassName, SheetsAndHierarchy(sheets, styleMetaObjectHierarchy));
 
@@ -427,14 +431,14 @@ bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
     }
 
     do {
-        styleMetaObjectHierarchy.append(mobj->className());
+        styleMetaObjectHierarchy.append(wrapConstCharInQByteArray(mobj->className()));
 
-        M::AssemblyType assemblyType = MClassFactory::instance()->styleAssemblyType(mobj->className());
+        M::AssemblyType assemblyType = MClassFactory::instance()->styleAssemblyType(wrapConstCharInQByteArray(mobj->className()));
         if (assemblyType == M::Application) {
             mobj = mobj->superClass();
             continue;
         }
-        QString assemblyName = MClassFactory::instance()->styleAssemblyName(mobj->className());
+        QString assemblyName = MClassFactory::instance()->styleAssemblyName(wrapConstCharInQByteArray(mobj->className()));
 
         // find proper library
         if (!MThemePrivate::appendLibraryStyleSheet(sheets, assemblyName)) {
@@ -790,7 +794,7 @@ QString MThemePrivate::determineViewClassForController(const MWidgetController *
 {
     bool exactMatch = false;
 
-    QString controllerClassName = controller->metaObject()->className();
+    const char* controllerClassName = controller->metaObject()->className();
     QString cachedViewClass = controllerViewCache[controllerClassName].value(controller->viewType(), QString::null);
     if (!cachedViewClass.isNull())
         return cachedViewClass;
@@ -803,12 +807,12 @@ QString MThemePrivate::determineViewClassForController(const MWidgetController *
     for (const QMetaObject *metaObject = controller->metaObject(); metaObject != &MWidget::staticMetaObject; metaObject = metaObject->superClass()) {
 
         // check if this widget is declared inside some library
-        M::AssemblyType type = MClassFactory::instance()->widgetAssemblyType(metaObject->className());
+        M::AssemblyType type = MClassFactory::instance()->widgetAssemblyType(wrapConstCharInQByteArray(metaObject->className()));
         if (type == M::Application)
             continue;
 
         // get name of the library where this widget was declared
-        QString assemblyName = MClassFactory::instance()->widgetAssemblyName(metaObject->className());
+        QString assemblyName = MClassFactory::instance()->widgetAssemblyName(wrapConstCharInQByteArray(metaObject->className()));
         if (assemblyName.isEmpty())
             continue;
 
