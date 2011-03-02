@@ -96,6 +96,10 @@ private:
     MListIndexPrivate *d_ptr;
 
     Q_DISABLE_COPY(MListIndex)
+
+#ifdef UNIT_TEST
+    friend class Ut_MListIndexFloatingView;
+#endif
 };
 
 #endif

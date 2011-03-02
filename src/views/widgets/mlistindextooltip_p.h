@@ -64,6 +64,10 @@ private:
     QGraphicsLinearLayout *panelLayout;
 
     QVector<MLabel *> indexLabels;
+
+#ifdef UNIT_TEST
+    friend class Ut_MListIndexFloatingView;
+#endif
 };
 
 #endif // MLISTINDEXTOOLTIP_P_H

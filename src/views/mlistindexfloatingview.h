@@ -62,6 +62,11 @@ private:
 
     Q_DISABLE_COPY(MListIndexFloatingView)
     Q_DECLARE_PRIVATE(MListIndexFloatingView)
+
+#ifdef UNIT_TEST
+    friend class Ut_MListIndexFloatingView;
+#endif
+
 };
 
 #endif // MLISTINDEXFLOATINGVIEW_H

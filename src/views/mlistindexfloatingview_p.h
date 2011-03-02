@@ -78,6 +78,10 @@ private:
 
     qreal tooltipVerticalOffset;
     qreal contentHeight;
+
+#ifdef UNIT_TEST
+    friend class Ut_MListIndexFloatingView;
+#endif
 };
 
 #endif // MLISTINDEXFLOATINGVIEW_P_H

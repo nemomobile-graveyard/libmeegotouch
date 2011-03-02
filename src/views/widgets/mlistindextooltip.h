@@ -54,6 +54,10 @@ private:
     Q_DECLARE_PRIVATE(MListIndexTooltip)
     MListIndexTooltipPrivate *d_ptr;
     M_STYLABLE_WIDGET(MListIndexTooltipStyle)
+
+#ifdef UNIT_TEST
+    friend class Ut_MListIndexFloatingView;
+#endif
 };
 
 #endif // MLISTINDEXTOOLTIP_H
