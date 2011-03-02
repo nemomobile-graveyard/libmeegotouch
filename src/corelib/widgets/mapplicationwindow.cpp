@@ -1066,6 +1066,7 @@ MApplicationWindowStyleContainer* MApplicationWindowPrivate::createStyleContaine
 
 void MApplicationWindowPrivate::_q_updateStyle()
 {
+    style().updateCurrentStyle();
     updateStyleNames();
     _q_placeToolBar();
     initAutoHideComponentsTimer();
