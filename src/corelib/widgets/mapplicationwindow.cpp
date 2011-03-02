@@ -152,7 +152,6 @@ void MApplicationWindowPrivate::init()
 
     if(MDeviceProfile::instance()->showStatusbar())    {
         statusBar = new MStatusBar(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::StatusBar));
-        statusBar->setStyleName(style()->statusBarStyleName());
     }
     else{
         statusBar = NULL;
@@ -1123,6 +1122,8 @@ void MApplicationWindowPrivate::updateStyleNames()
     else
         toolBar->setStyleName(style()->toolBarStyleName());
     dockWidget->setStyleName(toolBar->styleName()); //dock widget will have the same style name as tool bar
+    if (statusBar)
+        statusBar->setStyleName(style()->statusBarStyleName());
 }
 
 
