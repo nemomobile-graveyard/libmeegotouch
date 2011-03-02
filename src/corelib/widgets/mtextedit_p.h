@@ -102,7 +102,7 @@ public:
 
     void setPreeditText(const QString &text,
                         const QList<QInputMethodEvent::Attribute> &attributes);
-    void commitPreedit();
+    void commitPreedit(bool keepPreeditCursorPosition = false);
     void removePreedit();
     bool isPositionOnPreedit(int cursorPosition) const;
     bool isPreediting() const;

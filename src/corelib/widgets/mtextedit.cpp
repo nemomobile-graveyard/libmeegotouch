@@ -851,7 +851,7 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 /*!
   * \brief Commit current pre-edit so it becomes normal text
   */
-void MTextEditPrivate::commitPreedit()
+void MTextEditPrivate::commitPreedit(bool keepPreeditCursorPosition)
 {
     Q_Q(MTextEdit);
 
@@ -891,6 +891,11 @@ void MTextEditPrivate::commitPreedit()
     // clear styling
     q->model()->setAdditionalFormats(QList<MTextEditFormatRange>());
 
+    int newCursorPosition = 0;
+    if (keepPreeditCursorPosition) {
+        newCursorPosition = textCursor->selectionStart() + q->model()->preeditCursor();
+    }
+
     if (validateCurrentBlock() == true) {
         // make preedit selection part of the normal text
         textCursor->clearSelection();
@@ -901,6 +906,11 @@ void MTextEditPrivate::commitPreedit()
     }
 
     setMode(MTextEditModel::EditModeBasic);
+
+    if (keepPreeditCursorPosition) {
+        setCursorPosition(newCursorPosition);
+    }
+
     updateMicroFocus();
 
     safeReset();
@@ -2252,7 +2262,7 @@ void MTextEdit::paste()
         d->cursor()->removeSelectedText();
         emit selectionChanged();
     } else if (mode() == MTextEditModel::EditModeActive) {
-        d->commitPreedit();
+        d->commitPreedit(true);
     }
 
     d->setMode(MTextEditModel::EditModeBasic);
