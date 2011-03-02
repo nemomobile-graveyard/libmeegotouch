@@ -100,6 +100,14 @@ public:
      */
     explicit MNotificationGroup(const MNotificationGroup &group);
 
+    /*!
+     * Returns amount of notifications in a given group
+     *
+     * \param groupId the group ID
+     * \return amount of notifications in given group
+     */
+    uint notificationCount();
+
     friend QDBusArgument &operator<<(QDBusArgument &, const MNotificationGroup &);
     friend const QDBusArgument &operator>>(const QDBusArgument &, MNotificationGroup &);
 

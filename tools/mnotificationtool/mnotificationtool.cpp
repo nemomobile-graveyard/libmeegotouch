@@ -225,6 +225,7 @@ int main(int argc, char *argv[])
             QList<MNotificationGroup*> tmpList = MNotificationGroup::notificationGroups();
             foreach (MNotificationGroup* group, tmpList) {
                 list.append(group);
+                group->setCount(group->notificationCount());
             }
 
             itemName = "notification groups";

@@ -137,3 +137,8 @@ QList<MNotificationGroup> MNotificationManager::notificationGroupListWithIdentif
 {
     return proxy.notificationGroupListWithIdentifiers(userId);
 }
+
+uint MNotificationManager::notificationCountInGroup(uint groupId)
+{
+    return proxy.notificationCountInGroup(userId, groupId);
+}

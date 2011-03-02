@@ -189,6 +189,14 @@ public:
      * \return list of notification groups
      */
     QList<MNotificationGroup> notificationGroupListWithIdentifiers();
+
+    /*!
+     * Returns amount of notifications in a given group
+     *
+     * \param groupId the group ID
+     * \return amount of notifications in given group
+     */
+    uint notificationCountInGroup(uint groupId);
 };
 
 //! \internal_end

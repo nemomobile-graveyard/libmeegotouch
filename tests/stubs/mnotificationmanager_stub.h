@@ -44,6 +44,7 @@ public:
     virtual QList<uint> notificationIdList();
     virtual QList<MNotification> notificationListWithIdentifiers();
     virtual QList<MNotificationGroup> notificationGroupListWithIdentifiers();
+    virtual uint notificationCountInGroup(uint groupId);
 };
 
 // 2. IMPLEMENT STUB
@@ -184,7 +185,13 @@ QList<MNotificationGroup> MNotificationManagerStub::notificationGroupListWithIde
     return stubReturnValue<QList<MNotificationGroup> >("notificationGroupListWithIdentifiers");
 }
 
-
+uint MNotificationManagerStub::notificationCountInGroup(uint groupId)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<uint >(groupId));
+    stubMethodEntered("notificationCountInGroup", params);
+    return stubReturnValue<uint>("notificationCountInGroup");
+}
 
 // 3. CREATE A STUB INSTANCE
 MNotificationManagerStub gDefaultMNotificationManagerStub;
@@ -281,6 +288,11 @@ MNotificationManagerProxy::MNotificationManagerProxy(const QString &service, con
 
 MNotificationManagerProxy::~MNotificationManagerProxy()
 {
+}
+
+uint MNotificationManager::notificationCountInGroup(uint groupId)
+{
+    return gMNotificationManagerStub->notificationCountInGroup(groupId);
 }
 
 #endif

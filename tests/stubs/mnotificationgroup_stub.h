@@ -14,6 +14,7 @@ class MNotificationGroupStub : public StubBase {
   virtual bool publish();
   virtual bool remove();
   virtual void MNotificationGroupConstructor(uint id);
+  uint notificationCount();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -41,6 +42,10 @@ void MNotificationGroupStub::MNotificationGroupConstructor(uint id) {
 
 }
 
+uint MNotificationGroupStub::notificationCount() {
+  stubMethodEntered("notificationCount");
+  return stubReturnValue<uint>("notificationCount");
+}
 
 // 3. CREATE A STUB INSTANCE
 MNotificationGroupStub gDefaultMNotificationGroupStub;
@@ -68,5 +73,8 @@ MNotificationGroup::MNotificationGroup(uint id) : MNotification(id) {
   gMNotificationGroupStub->MNotificationGroupConstructor(id);
 }
 
+uint MNotificationGroup::notificationCount() {
+  return gMNotificationGroupStub->notificationCount();
+}
 
 #endif

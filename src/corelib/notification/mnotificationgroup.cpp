@@ -82,6 +82,16 @@ bool MNotificationGroup::publish()
     return success;
 }
 
+uint MNotificationGroup::notificationCount()
+{
+    if (!isPublished()) {
+        return 0;
+    } else {
+        Q_D(MNotificationGroup);
+        return MNotificationManager::instance()->notificationCountInGroup(d->id);
+    }
+}
+
 bool MNotificationGroup::remove()
 {
     if (!isPublished()) {
