@@ -49,6 +49,7 @@ MBannerViewPrivate::MBannerViewPrivate() :
     down(false),
     isDownOpacityEnabled(false),
     pixmapBanner(NULL),
+    timeShortNoDate(false),
     controller(0)
 {
 }
@@ -94,10 +95,14 @@ MImageWidget *MBannerViewPrivate::icon()
 
 MLabel *MBannerViewPrivate::bannerTimeStamp()
 {
+    Q_Q(MBannerView);
+
     if (!bannerTimeStampLabel) {
         bannerTimeStampLabel = new MLabel(controller);
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
-    }
+        bannerTimeStampLabel->setText(MLocale().formatDateTime(q->model()->bannerTimeStamp(), MLocale::DateNone, MLocale::TimeShort));
+        timeShortNoDate = true;
+   }
 
     return bannerTimeStampLabel;
 }
@@ -179,15 +184,19 @@ void MBannerViewPrivate::updateDateFormat() const
     Q_Q(const MBannerView);
 
     if (bannerTimeStampData) {
-        //If the datetime is less than 24 hours TimeShort format if not DateShort
-        if (q->model()->bannerTimeStamp().daysTo(QDateTime::currentDateTime()) < 1) {
-            bannerTimeStampLabel->setText(MLocale().formatDateTime(
-                    q->model()->bannerTimeStamp().toLocalTime(),
-                    MLocale::DateNone, MLocale::TimeShort));
-        } else {
+        //If the datetime is more than 24 hours, change the format to DateShort
+        int daysCalc = q->model()->bannerTimeStamp().daysTo(QDateTime::currentDateTime());
+
+        if (daysCalc > 1 && timeShortNoDate) {
             bannerTimeStampLabel->setText(MLocale().formatDateTime(
                     q->model()->bannerTimeStamp().toLocalTime(),
                     MLocale::DateShort, MLocale::TimeNone));
+            timeShortNoDate = false;
+        } else if (daysCalc == 0 && !timeShortNoDate) {
+            bannerTimeStampLabel->setText(MLocale().formatDateTime(
+                    q->model()->bannerTimeStamp(), MLocale::DateNone,
+                    MLocale::TimeShort));
+            timeShortNoDate = true;
         }
     }
 }

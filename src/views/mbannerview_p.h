@@ -90,6 +90,8 @@ protected:
     //To activate the opacity in the press down state
     bool isDownOpacityEnabled;
     MImageWidget *pixmapBanner;
+    //To perform updateDateFormat only when is needed
+    mutable bool timeShortNoDate;
 
     MBanner *controller;
 };
