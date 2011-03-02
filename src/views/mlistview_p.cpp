@@ -181,6 +181,9 @@ void MListViewPrivate::cellLongTapped(const QModelIndex &index, const QPointF &p
 
 void MListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
+    if (clearVisibleOnRelayout)
+        return;
+
     for (QHash<QModelIndex, MWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end(); ++iter) {
         if (selected.contains(iter.key()))
             iter.value()->setSelected(true);
