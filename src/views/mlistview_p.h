@@ -112,6 +112,7 @@ public:
     void updateScrollToTargetPosition();
 
     void scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode);
+    void scrollToLastIndex();
 
     void deleteVisibleItemsArray();
     void destroy();

@@ -81,8 +81,6 @@ public:
 
     virtual void init();
 
-    virtual void _q_scrollOnFirstAppearance();
-
     MPopupList*   controller;
 
     MList*    list;

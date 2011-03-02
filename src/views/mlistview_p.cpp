@@ -301,7 +301,10 @@ void MListViewPrivate::viewportRectChanged(const QRectF &viewportRect)
 
         if (!moving) {
             moving = true;
+            controllerModel->beginTransaction();
             controllerModel->setListIsMoving(true);
+            controllerModel->setScrollToIndex(QModelIndex());
+            controllerModel->commitTransaction();
         }
 
         oldViewportRectPosition = viewportRect.topLeft();
@@ -714,8 +717,10 @@ void MListViewPrivate::_q_relayoutItemsIfNeeded()
 
 void MListViewPrivate::updateScrollToTargetPosition()
 {
-    if (scrollToAnimation->state() == QPropertyAnimation::Running) {
-        QPointF targetPosition = locateScrollToPosition(controllerModel->scrollToIndex(), static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
+    if (scrollToAnimation->state() == QPropertyAnimation::Running &&
+        controllerModel->scrollToIndex().isValid()) {
+        QPointF targetPosition = locateScrollToPosition(controllerModel->scrollToIndex(),
+                                                        static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
         if (targetPosition != scrollToAnimation->endValue().toPointF()) {
             if (targetPosition.y() > pannableViewport->position().y())
                 scrollToAnimation->setStartValue(targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
@@ -740,6 +745,16 @@ void MListViewPrivate::scrollToPos(const QPointF &targetPosition, MList::Animati
     }
     else
         pannableViewport->setPosition(targetPosition);
+}
+
+void MListViewPrivate::scrollToLastIndex()
+{
+    if (isDeleted)
+        return;
+
+    q_ptr->scrollTo(controllerModel->scrollToIndex(),
+                    static_cast<MList::ScrollHint>(controllerModel->scrollHint()),
+                    static_cast<MList::AnimationMode>(controllerModel->animationMode()));
 }
 
 void MListViewPrivate::updateListIndexVisibility()

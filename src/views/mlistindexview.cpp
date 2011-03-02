@@ -46,7 +46,8 @@ MListIndexViewPrivate::MListIndexViewPrivate()
     shortcutHeight(0),
     shortcutsCount(0),
     autoVisibilityAnimation(0),
-    down(false)
+    down(false),
+    currentIndex()
 {
     autoVisibilityTimer.setSingleShot(true);
     autoVisibilityTimer.stop();
@@ -260,8 +261,9 @@ void MListIndexViewPrivate::scrollToGroupHeader(int y)
 {
     Q_Q(MListIndexView);
     QModelIndex scrollTo = locateShortcutIndex(y, 0);
-    if (scrollTo.isValid()) {
+    if (scrollTo.isValid() && scrollTo != currentIndex) {
         q->model()->list()->scrollTo(scrollTo, MList::PositionAtTopHint);
+        currentIndex = scrollTo;
     }
 }
 
