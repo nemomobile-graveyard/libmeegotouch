@@ -807,12 +807,13 @@ QString MThemePrivate::determineViewClassForController(const MWidgetController *
     for (const QMetaObject *metaObject = controller->metaObject(); metaObject != &MWidget::staticMetaObject; metaObject = metaObject->superClass()) {
 
         // check if this widget is declared inside some library
-        M::AssemblyType type = MClassFactory::instance()->widgetAssemblyType(wrapConstCharInQByteArray(metaObject->className()));
+        QByteArray className = wrapConstCharInQByteArray(metaObject->className());
+        M::AssemblyType type = MClassFactory::instance()->widgetAssemblyType(className);
         if (type == M::Application)
             continue;
 
         // get name of the library where this widget was declared
-        QString assemblyName = MClassFactory::instance()->widgetAssemblyName(wrapConstCharInQByteArray(metaObject->className()));
+        QString assemblyName = MClassFactory::instance()->widgetAssemblyName(className);
         if (assemblyName.isEmpty())
             continue;
 
