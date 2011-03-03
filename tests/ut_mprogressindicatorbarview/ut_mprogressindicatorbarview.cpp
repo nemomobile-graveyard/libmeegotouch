@@ -78,15 +78,12 @@ QImage Ut_MProgressIndicatorBarView::captureImage(MProgressIndicator *progressIn
 void Ut_MProgressIndicatorBarView::testThrottleAnimationWhenRenderedInSwitcher()
 {
     m_progressIndicator->setUnknownDuration(true);
-    win->show();
-    app->processEvents();
 
     // get animation duration
     int normalInterval = m_subject->d_func()->animationTimer->interval();
 
-    // set minimized state to the window
-    win->setWindowState(Qt::WindowMinimized);
-    app->processEvents();
+    // emulate the window entering the switcher
+    m_subject->d_func()->switcherEntered();
 
     // get animation duration
     int slowInterval = m_subject->d_func()->animationTimer->interval();

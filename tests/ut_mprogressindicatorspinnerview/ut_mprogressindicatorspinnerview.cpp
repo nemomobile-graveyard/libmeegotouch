@@ -78,15 +78,11 @@ QImage Ut_MProgressIndicatorSpinnerView::captureImage(MProgressIndicator *progre
 
 void Ut_MProgressIndicatorSpinnerView::testThrottleAnimationWhenRenderedInSwitcher()
 {
-    win->show();
-    app->processEvents();
-
     // get animation duration
     int normalDuration = m_subject->d_func()->positionAnimation->duration();
 
-    // set minimized state to the window
-    win->setWindowState(Qt::WindowMinimized);
-    app->processEvents();
+    // emulate entering the switcher
+    m_subject->d_func()->_q_switcherEntered();
 
     // get animation duration
     int slowDuration = m_subject->d_func()->positionAnimation->duration();
