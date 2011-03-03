@@ -727,13 +727,14 @@ void Ut_MToolBarView::testMWidgetAction()
     WAIT_VERIFY(widget->isVisible());
 
     if(button) {
+        //MWidgetAction changes should not reflect to properties of the attached widget
         QCOMPARE(button->text(), QString("Hello"));
         action->setText(QString("Goodbye"));
-        QCOMPARE(button->text(), QString("Hello")); //Shouldn't change button text
+        QCOMPARE(button->text(), QString("Hello"));
         QCOMPARE(button->isChecked(), false);
         action->setCheckable(true);
         action->setChecked(true);
-        QCOMPARE(button->isChecked(), true);
+        QCOMPARE(button->isChecked(), false);
     }
 }
 

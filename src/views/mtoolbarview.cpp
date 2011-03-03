@@ -170,7 +170,7 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
     if(hideOnly) {
         landscapePolicy->removeWidget(widget);
         portraitPolicy->removeWidget(widget);
-        if (button)
+        if (button && buttonGroup)
             button->setChecked(false);
     } else {
         //Need to fully remove the action
@@ -292,25 +292,22 @@ void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *actio
     widget->setEnabled(action->isEnabled() && itemsEnabled);
 
     MButton *button = qobject_cast<MButton *>(widget);
-    if (button) {
-        // Update button data accordingly
+    if (button && buttons.contains(action)) {
+        // Update button data accordingly only if we created it
         button->setCheckable(action->isCheckable());
         button->setChecked(action->isChecked());
 
-        // Only update the text and icon if we created the button
-        if (buttons.contains(action)) {
-            button->setText(action->text());
-            button->setTextVisible(labelsEnabled);
+        button->setText(action->text());
+        button->setTextVisible(labelsEnabled);
 
-            MAction *mAction = qobject_cast<MAction *>(action);
-            if (mAction) {
-                button->setIconID(mAction->iconID());
-                button->setIconVisible(iconsEnabled);
-                button->setToggledIconID(mAction->toggledIconID());
-            }
-
-            updateViewAndStyling(button);
+        MAction *mAction = qobject_cast<MAction *>(action);
+        if (mAction) {
+            button->setIconID(mAction->iconID());
+            button->setIconVisible(iconsEnabled);
+            button->setToggledIconID(mAction->toggledIconID());
         }
+
+        updateViewAndStyling(button);
     }
 }
 
@@ -373,15 +370,14 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
             if (action && !action->objectName().isEmpty())
                 button->setObjectName(button->objectName() + "_" + action->objectName());
 
-            if(buttonGroup) {
-                button->setCheckable(action->isCheckable());
-                //We can't set button->checked until we've added it to the scene
+            if (buttonGroup) {
                 buttonGroup->addButton(button);
                 connect(button, SIGNAL(toggled(bool)), q, SLOT(_q_groupButtonClicked(bool)));
                 connect(action, SIGNAL(toggled(bool)), q, SLOT(_q_groupActionToggled(bool)));
-            }
+            } else
+                connect(button, SIGNAL(toggled(bool)), action, SLOT(setChecked(bool)));
 
-            connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
+            connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered(bool)));
 
             buttons.insert(action, button);
             widget = button;
@@ -451,7 +447,7 @@ void MToolBarViewPrivate::setEnabledPreservingSelection(bool enabled)
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
         QAction *action = bit.key();
         MButton *button = bit.value();
-        if (!button->isChecked()) {
+        if (!buttonGroup || !button->isChecked()) {
             button->setEnabled(enabled && action->isEnabled());
         }
     }
@@ -459,10 +455,7 @@ void MToolBarViewPrivate::setEnabledPreservingSelection(bool enabled)
     for (QHash<QAction *, MWidget *>::const_iterator wit = leasedWidgets.constBegin(); wit != leasedWidgets.constEnd(); ++wit) {
         QAction *action = wit.key();
         MWidget *widget = wit.value();
-        MButton *button = qobject_cast<MButton *>(widget);
-        if (!button || !button->isChecked()) {
-            widget->setEnabled(enabled && action->isEnabled());
-        }
+        widget->setEnabled(enabled && action->isEnabled());
     }
 }
 
