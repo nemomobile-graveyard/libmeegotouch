@@ -297,7 +297,7 @@ should be used.  Other parties using logical IDs instead of
 engineering English IDs for the UI messages may also find \c qtTrId() 
 useful.
 
-Engineering English is commonly used as the message IDs in the open source community. However, the
+Engineering English is commonly used for the message IDs in the open source community. However, the
 logical ID approach uses message IDs which are guaranteed to be globally unique.
 
 With \c qtTrId(), the logical ID is an argument of the function and the
@@ -953,8 +953,7 @@ libmeegotouch source code.
 `/usr/share/l10n/meegotouch` is also the default directory used by
 translation packages to store the .qm files. Applications can set
 additional search paths by using \c MLocale::setTranslationPaths() 
-and \c MLocale::addTranslationPath() . This supports the variability
-needed for over-the-air translation installation and user-defined translations.
+and \c MLocale::addTranslationPath() .
 
 \subsection  translationdatapackaging  Translation data packaging
 
@@ -1114,11 +1113,164 @@ For the freedesktop specification of the .desktop files, see
 
 In MeeGo Touch UI, such .desktop files are parsed using MDesktopEntry.
 
-\subsection  otatranslationinstallation  Over-the-air translation installation
-FIXME: No settings available now
+\subsection lengthvariantstrings Translations with length variants
 
-Translation data can be downloaded to the device and the translation
-system can immediately use the new downloaded data.
+Translations can have length variants, i.e. the original text can have
+several different translations which should express the same meaning
+but have different lengths.
+
+The purpose of this feature is to use a longer, more verbose
+translation if the widget which shows the translation has enough
+space, for example in landscape mode.  If the widget does not have
+enough space to show a long translation, for example in portrait mode,
+a shorter translation variant should be used automatically.
+
+This feature can be sometimes useful but it also causes a lot of
+confusion and problems if not used correctly.
+
+In this section I try to explain how it works, and what to do to avoid
+running in to problems.
+
+Let’s start with an example how such a translation with length
+variants looks like in a .ts translation-file:
+
+\verbatim
+    <message id="xx_enter_text">
+        <source>Enter text here</source>
+        <translation variants="yes">
+          <lengthvariant>Enter text here:</lengthvariant>
+          <lengthvariant>Enter text:</lengthvariant>
+          <lengthvariant>Text:</lengthvariant>
+        </translation>
+    </message>
+\endverbatim
+
+Here we have 3 different length translations of the original text.
+The translations <b>must</b> be ordered according to their length, the
+longest translation first, the shortest translation last.
+
+Now if such a .ts-file is converted into a binary .qm-file with
+lrelease, this file is installed and then qtTrId() is used in the
+program to fetch the translation like this:
+
+\verbatim
+    QString translation = qtTrId("xx_enter_text");
+    // translation: “Enter text here:Enter text:Text:”
+\endverbatim
+
+then the string returned by qtTrId() will contain all the
+length variants concatenated with the character
+
+     U+009C STRING TERMINATOR
+
+as a separator between the variants. If such a string containing
+string terminator characters is painted into a label, QPainter checks
+whether the part up to the first terminator fits into the label, if
+yes it is used, if not the next part is tried. If the last part still
+does not fit, it is cut of or elided.
+
+This works only in some widgets though, not in all. It does <b>not</b>
+work in widgets using QTextDocument, for example. That means it does
+<b>not</b> work in rich text labels and it does <b>not</b> work in
+labels which contain multiline text. If a string with length variants
+is painted into a widget which does not support it, the complete
+string including the string terminators is shown, the string terminators
+appear as boxes in most fonts.
+
+If a translation which has lenghtvariants ends up to be used in a
+widget which does not support the length variants, for example a richt
+text label, one should check whether the translation should really use
+length variants at all. If the only use case is a widget where it does
+not work anyway, it is better not to create a translation withl
+engthvariants at all, i.e. it maybe a good approach to ask the
+translators not to use length variants there.
+
+If the length variants cannot be removed from the translations then
+one can workaround the problem by using only the first or only
+the last length variant, for example:
+
+\verbatim
+    QString shortTrans = qtTrId("xx_enter_text").split(QChar(0x9c)).last();
+    // shortTrans: “Text:”
+    QString longTrans = qtTrId("xx_enter_text").split(QChar(0x9c)).first();
+    // longTrans: “Enter text here:”
+\endverbatim
+
+Another common mistake when using translations with length variants is
+to insert them into placeholders. The following example illustrates this:
+
+\verbatim
+    QString trans1 = qtTrId("xx_usb_info_connected");
+    // trans1: “SB connected. %1 active.”
+    QString trans2 = qtTrId("xx_usb_mass_storage");
+    // trans2: “Mass storage modeMass st.”
+    QString trans3 = trans1.arg(trans2);
+    // trans3: “SB connected. Mass storage modeMass st. active”
+\endverbatim
+
+By inserting the string trans2 which has length variants into the
+placeholder \%1 in the string trans1, the resulting string trans3
+became a string with length variants but with the two nonsensical
+parts:
+
+    “SB connected. Mass storage mode”
+    
+    “Mass st. active”
+
+This is another case where one should consider whether the length
+variants can be removed from the translation. If this cannot be done
+because the same translation is used in other places where the length
+variants are useful, the application can use the workaround to
+cut out only one length variant again before inserting, like this:
+
+\verbatim
+    QString trans1 = qtTrId("xx_usb_info_connected");
+    // trans1: “SB connected. %1 active.”
+    QString trans2 = qtTrId("xx_usb_mass_storage");
+    // trans2: “Mass storage modeMass st.”
+    QString trans3 = trans1.arg(trans2.split(QChar(0x9c)).first());
+    // trans3: “SB connected. Mass storage mode active”
+\endverbatim
+
+Yet another common mistake is concatenation of strings with length variants,
+like in this example:
+
+\verbatim
+    QString trans1 = qtTrId("xx_string_a");
+    // trans1: “aaaaaa”
+    QString trans2 = qtTrId("xx_string_b");
+    // trans2: “bbbbbb”
+    QString trans3 = trans1 + ' ' + trans2;
+    // trans3: “aaaaaa bbbbbb”
+\endverbatim
+
+Note that the result trans3 in the above example is not a string with
+5 length variants but doesn’t make any sense anymore. As a workaround,
+if length variants cannot be removed from the translations, something
+like the following example can be used:
+
+\verbatim
+    QString trans1 = qtTrId("xx_string_a");
+    // trans1: “aaaaaa”
+    QString trans2 = qtTrId("xx_string_b");
+    // trans2: “bbbbbb”
+    QString trans3 =
+        trans1.split(QChar(0x9c)).first()
+        + ' '
+        + trans2.split(QChar(0x9c)).first()
+        + QChar(0x9c)
+        trans1.split(QChar(0x9c)).last()
+        + ' '
+        + trans2.split(QChar(0x9c)).last()
+    // trans3: “aaa bbba b”
+\endverbatim
+
+i.e. concatenate the longest variants of trans1 and trans2 to get the
+longest variant of trans3 and the shortest variants of trans1 and
+trans2 to get the shortest variant of trans3 and concatenate the final
+longest and shortest variants into one string by adding a new string
+terminator character. When doing it this way, the result is a string
+with length variants which does make sense.
 
 \section  uiprogramming  UI programming
 
