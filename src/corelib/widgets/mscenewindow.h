@@ -142,7 +142,8 @@ public:
         HomeButtonPanel,                 // MHomeButtonPanel
         PlainSceneWindow,                // MSceneWindow
         StatusBar,                       // MStatusBar
-        Sheet                            // MSheet
+        Sheet,                           // MSheet
+        BorderDecoration                 // MBorderDecoration
     };
 
     /*!

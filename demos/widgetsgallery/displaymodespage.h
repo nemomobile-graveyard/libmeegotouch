@@ -27,6 +27,18 @@ class MComboBox;
 class MLabel;
 class QGraphicsLinearLayout;
 
+class LabeledCheckbox : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    LabeledCheckbox(QGraphicsItem * parent = 0, Qt::WindowFlags wFlags = 0);
+    virtual ~LabeledCheckbox();
+
+    MButton *button;
+    MLabel *label;
+    QGraphicsLinearLayout *roundedCornersCheckboxLayout;
+};
+
 class DisplayModesPage : public TemplatePage
 {
     Q_OBJECT
@@ -54,6 +66,7 @@ public slots:
     void changeEscapeButtonDisplayMode(int index);
     void changeHomeButtonDisplayMode(int index);
     void changeFullScreenMode(bool fullScreen);
+    void changeRoundedCorners(bool enable);
     void changeNavigationBarTransparency(bool transparent);
 
 protected:
@@ -69,12 +82,9 @@ private:
     MComboBox *comboHomeButtonDisplayMode;
     MLabel *lblDisplayMode;
     MLabel *lblWindowState;
-    MButton *checkboxFullScreen;
-    MLabel *lblFullScreen;
-    QGraphicsLinearLayout *fullScreenCheckboxLayout;
-    MButton *checkboxNavigationBarTransparency;
-    MLabel *lblNavigationBarTransparency;
-    QGraphicsLinearLayout* navigationBarTransparencyLayout;
+    LabeledCheckbox *fullScreenCheckbox;
+    LabeledCheckbox *navigationBarTransparencyCheckbox;
+    LabeledCheckbox *roundedCornersCheckbox;
 };
 
 #endif // NAVIGATIONBARPAGE_H

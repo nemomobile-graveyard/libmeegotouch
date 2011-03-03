@@ -63,6 +63,9 @@ class MOnDisplayChangeEvent;
    so that orientation changes and in-scene windows such as MDialog and MApplicationPage windows are
    automatically managed.
 
+   Also MApplicationWindows, unlike plain MWindows, have rounded corners enabled by default.
+   Check MWindow::roundedCornersEnabled property for more information.
+
    \section MApplicationWindowFullScreenMode Full screen mode
 
    When an application window is in full screen mode (see QWidget::showFullScreen())

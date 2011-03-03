@@ -54,6 +54,7 @@ PUBLIC_HEADERS += \
 
 
 PRIVATE_HEADERS += \
+    mborderdecorationroundedcornersview.h \
     mstylablewidgetview_p.h \
     mstatusbarview.h \
     mstatusbarviewdbuswrapper.h \
@@ -95,6 +96,7 @@ PRIVATE_HEADERS += \
 
 SOURCES += \
     mapplicationpageview.cpp \
+    mborderdecorationroundedcornersview.cpp \
     mcomboboxview.cpp \
     mdialogview.cpp \
     mmodalscenewindowview.cpp \

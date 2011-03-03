@@ -88,6 +88,9 @@ namespace
 
     void setParentItemWithoutIncorrectRefocusing(QGraphicsItem *item, QGraphicsItem *parent)
     {
+        if (item->parentItem() == parent)
+            return;
+
         // FIXME: Workaround for bug NB#186278.
         QGraphicsItem *focused = item->focusItem();
         if (focused && !focused->hasFocus()) {
@@ -105,8 +108,9 @@ MSceneManagerPrivate::MSceneManagerPrivate()
     :scene(0)
     ,rootElement(0)
     ,homeButtonRootElement(0)
-    ,navigationBarRootElement(0)
-    ,dockWidgetRootElement(0)
+    ,topNavigationBarRootElement(0)
+    ,topDockWidgetRootElement(0)
+    ,topBorderDecorationRootElement(0)
     ,orientationAnimation(0)
     ,pageSwitchAnimation(0)
     ,navigationBarAnimation(0)
@@ -131,12 +135,27 @@ void MSceneManagerPrivate::init(MScene *scene)
     initOrientationAngles();
 
     rootElement = new QGraphicsWidget();
+
     homeButtonRootElement = new QGraphicsWidget(rootElement);
     homeButtonRootElement->setZValue(zForWindowType(MSceneWindow::HomeButtonPanel));
-    navigationBarRootElement = new QGraphicsWidget(rootElement);
-    navigationBarRootElement->setZValue(zForWindowType(MSceneWindow::NavigationBar));
-    dockWidgetRootElement = new QGraphicsWidget(rootElement);
-    dockWidgetRootElement->setZValue(zForWindowType(MSceneWindow::DockWidget));
+    homeButtonRootElement->setFlag(QGraphicsItem::ItemHasNoContents);
+    rootElementsDisplacedByStatusBar << homeButtonRootElement;
+
+    topNavigationBarRootElement = new QGraphicsWidget(rootElement);
+    topNavigationBarRootElement->setZValue(zForWindowType(MSceneWindow::NavigationBar));
+    topNavigationBarRootElement->setFlag(QGraphicsItem::ItemHasNoContents);
+    rootElementsDisplacedByStatusBar << topNavigationBarRootElement;
+
+    topDockWidgetRootElement = new QGraphicsWidget(rootElement);
+    topDockWidgetRootElement->setZValue(zForWindowType(MSceneWindow::DockWidget));
+    topDockWidgetRootElement->setFlag(QGraphicsItem::ItemHasNoContents);
+    rootElementsDisplacedByStatusBar << topDockWidgetRootElement;
+
+    topBorderDecorationRootElement = new QGraphicsWidget(rootElement);
+    topBorderDecorationRootElement->setZValue(zForWindowType(MSceneWindow::BorderDecoration));
+    topBorderDecorationRootElement->setFlag(QGraphicsItem::ItemHasNoContents);
+    rootElementsDisplacedByStatusBar << topBorderDecorationRootElement;
+
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.f, q->visibleSceneSize().height() / 2.f));
     scene->addItem(rootElement);
 
@@ -288,6 +307,9 @@ int MSceneManagerPrivate::zForWindowType(MSceneWindow::WindowType windowType)
         break;
     case MSceneWindow::Sheet:
         z = MSceneManagerPrivate::Sheet;
+        break;
+    case MSceneWindow::BorderDecoration:
+        z = MSceneManagerPrivate::BorderDecoration;
         break;
     default:
         z = 0;
@@ -607,7 +629,7 @@ void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
     // Now its sceneManager() method will return the correct result.
     // It will also transfer the ownership of the scene window to the scene.
 
-    setParentItemWithoutIncorrectRefocusing(sceneWindow, rootElementForSceneWindowType(sceneWindow->windowType()));
+    setParentItemWithoutIncorrectRefocusing(sceneWindow, rootElementForSceneWindow(sceneWindow));
 
     sceneWindow->setZValue(zForWindowType(sceneWindow->windowType()));
 
@@ -706,7 +728,7 @@ void MSceneManagerPrivate::setupLayerEffectForSceneWindow(MSceneWindow *window)
 
     // Add effect to scene via rootElement
     QGraphicsItem *binderParent = window->parentItem() ?
-                                  window->parentItem() : rootElementForSceneWindowType(window->windowType());
+                                  window->parentItem() : rootElementForSceneWindow(window);
 
     setParentItemWithoutIncorrectRefocusing(sceneWindowAndLayerEffectBinder, binderParent);
     sceneWindowAndLayerEffectBinder->setZValue(zForWindowType(window->windowType()));
@@ -739,14 +761,18 @@ void MSceneManagerPrivate::destroyLayerEffectForSceneWindow(MSceneWindow *sceneW
     }
 }
 
-QGraphicsItem *MSceneManagerPrivate::rootElementForSceneWindowType(MSceneWindow::WindowType type) const
+QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *sceneWindow) const
 {
-    QGraphicsItem *root = 0;
-    switch (type) {
+    QGraphicsWidget *root = 0;
+    switch (sceneWindow->windowType()) {
         case MSceneWindow::EscapeButtonPanel:
         case MSceneWindow::NavigationBar:
         case MSceneWindow::ApplicationMenu:
-            root = navigationBarRootElement;
+            if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
+                root = topNavigationBarRootElement;
+            } else {
+                root = rootElement;
+            }
             break;
         case MSceneWindow::HomeButtonPanel:
         case MSceneWindow::NotificationInformation:
@@ -754,13 +780,46 @@ QGraphicsItem *MSceneManagerPrivate::rootElementForSceneWindowType(MSceneWindow:
             root = homeButtonRootElement;
             break;
         case MSceneWindow::DockWidget:
-            root = dockWidgetRootElement;
+            if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
+                root = topDockWidgetRootElement;
+            } else {
+                root = rootElement;
+            }
+            break;
+        case MSceneWindow::BorderDecoration:
+            if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
+                root = topBorderDecorationRootElement;
+            } else {
+                root = rootElement;
+            }
             break;
         default:
             root = rootElement;
             break;
     }
     return root;
+}
+
+void MSceneManagerPrivate::updateSceneWindowRootElement(MSceneWindow *sceneWindow)
+{
+    QGraphicsWidget *newRootElement = rootElementForSceneWindow(sceneWindow);
+    QGraphicsWidget *currentRootElement;
+
+    if (sceneWindow->d_func()->displacementItem) {
+        // skip the displacement item
+        currentRootElement = sceneWindow->d_func()->displacementItem->parentWidget();
+    } else {
+        currentRootElement = sceneWindow->parentWidget();
+    }
+
+    if (sceneWindow->d_func()->effect) {
+        // it's not yet the root element. we gotta skip the effect binder as well.
+        currentRootElement = currentRootElement->parentWidget();
+    }
+
+    if (currentRootElement != newRootElement) {
+        setParentItemWithoutIncorrectRefocusing(sceneWindow, newRootElement);
+    }
 }
 
 void MSceneManagerPrivate::setSceneWindowGeometries()
@@ -781,6 +840,10 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
 {
     if (window->isManagedManually())
         return;
+
+    // A change in alignment may cause a change in the rootElement where the
+    // scene window should be placed
+    updateSceneWindowRootElement(window);
 
     QRectF geom = calculateSceneWindowGeometry(window);
     window->setGeometry(geom);
@@ -942,8 +1005,7 @@ QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWind
     QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
     QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
-    if (sceneWindow->windowType() == MSceneWindow::Sheet
-        && statusBar
+    if (sceneWindow->windowType() == MSceneWindow::Sheet && statusBar
         && (statusBar->sceneWindowState() == MSceneWindow::Appearing
             || statusBar->sceneWindowState() == MSceneWindow::Appeared)) {
         // Sheets cannot slip behind the status bar
@@ -1473,7 +1535,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
             setSceneWindowState(window, MSceneWindow::Appeared);
             if (window->windowType() == MSceneWindow::StatusBar) {
                 qreal y = window->size().height();
-                foreach(QGraphicsWidget *widget, findRootElementsForMoveAnimation(window))
+                foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar)
                     widget->setPos(0, y);
             }
         }
@@ -1631,7 +1693,7 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
     } else {
         setSceneWindowState(window, MSceneWindow::Disappeared);
         if (window->windowType() == MSceneWindow::StatusBar) {
-            foreach(QGraphicsWidget *widget, findRootElementsForMoveAnimation(window))
+            foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar)
                 widget->setPos(0, 0);
         }
     }
@@ -1724,8 +1786,7 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     if (sceneWindow->windowType() == MSceneWindow::StatusBar &&
         qobject_cast<MWidgetSlideAnimation*>(animation)) {
 
-        QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
-        foreach(QGraphicsWidget *widget, list) {
+        foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar) {
             MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
             moveAnimation->setWidget(widget);
             moveAnimation->setFinalPos(QPointF(0, statusBar->size().height()));
@@ -1771,8 +1832,7 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     if (sceneWindow->windowType() == MSceneWindow::StatusBar &&
         qobject_cast<MWidgetSlideAnimation*>(animation)) {
 
-        QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
-        foreach(QGraphicsWidget *widget, list) {
+        foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar) {
             // OBS: for this to look correct both status bar slide animation
             // and our root elements move animations must have the same
             // parameters (easing curve, duration...)
@@ -1800,50 +1860,18 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     sceneWindow->d_func()->disappearanceAnimation = animation;
 }
 
-QList<QGraphicsWidget*> MSceneManagerPrivate::findRootElementsForMoveAnimation(MSceneWindow *sceneWindow)
-{
-    QList<QGraphicsWidget*> rootElements;
-    QList<QGraphicsWidget*> list;
-    rootElements << navigationBarRootElement << dockWidgetRootElement << homeButtonRootElement;
-
-    QList<MSceneWindow::WindowType> animatedSceneWindowTypes;
-    animatedSceneWindowTypes << MSceneWindow::NavigationBar
-            << MSceneWindow::DockWidget
-            << MSceneWindow::HomeButtonPanel
-            << MSceneWindow::EscapeButtonPanel;
-
-    foreach(QGraphicsWidget *rootElement, rootElements) {
-        foreach(QGraphicsItem *item, rootElement->childItems()) {
-            // Item may not be MSceneWindow when scene window dislocation is in progress.
-            QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
-            MSceneWindow *win = qobject_cast<MSceneWindow *>(widget);
-            if (win && animatedSceneWindowTypes.contains(win->windowType())) {
-                if ((win->alignment() & Qt::AlignVertical_Mask) ==
-                    (sceneWindow->alignment() & Qt::AlignVertical_Mask))
-                {
-                    list << rootElement;
-                    break;
-                }
-            }
-        }
-    }
-
-    return list;
-}
-
 void MSceneManagerPrivate::_q_updateRootElementsPositions()
 {
-    QList<QGraphicsWidget*> rootElements;
-    rootElements << navigationBarRootElement << dockWidgetRootElement << homeButtonRootElement;
-
-    foreach(QGraphicsWidget *rootElement, rootElements)
-        rootElement->setPos(0, 0);
+    qreal y;
 
     if (statusBar) {
-        qreal y = statusBar->size().height();
-        foreach(QGraphicsWidget *rootElement, findRootElementsForMoveAnimation(statusBar))
-            rootElement->setPos(0, y);
+        y = statusBar->size().height();
+    } else {
+        y = 0;
     }
+
+    foreach(QGraphicsWidget *rootElement, rootElementsDisplacedByStatusBar)
+        rootElement->setPos(0, y);
 }
 
 void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,

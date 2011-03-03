@@ -34,6 +34,33 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 
+LabeledCheckbox::LabeledCheckbox(QGraphicsItem * parent, Qt::WindowFlags wFlags)
+    : QGraphicsWidget(parent, wFlags)
+{
+    setFlag(QGraphicsItem::ItemHasNoContents);
+
+    button = new MButton;
+    button->setViewType(MButton::checkboxType);
+    button->setCheckable(true);
+
+    label = new MLabel;
+    label->setWordWrap(true);
+    label->setTextElide(true);
+
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal, this);
+    layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addItem(button);
+    layout->addItem(label);
+    layout->setAlignment(button, Qt::AlignCenter);
+    layout->setAlignment(label, Qt::AlignCenter);
+}
+
+LabeledCheckbox::~LabeledCheckbox()
+{
+}
+
+
 DisplayModesPage::DisplayModesPage()
     : TemplatePage(TemplatePage::ApplicationView),
       comboNavigationBarDisplayMode(0),
@@ -41,12 +68,9 @@ DisplayModesPage::DisplayModesPage()
       comboHomeButtonDisplayMode(0),
       lblDisplayMode(0),
       lblWindowState(0),
-      checkboxFullScreen(0),
-      lblFullScreen(0),
-      fullScreenCheckboxLayout(0),
-      checkboxNavigationBarTransparency(0),
-      lblNavigationBarTransparency(0),
-      navigationBarTransparencyLayout(0)
+      fullScreenCheckbox(0),
+      navigationBarTransparencyCheckbox(0),
+      roundedCornersCheckbox(0)
 {
 }
 
@@ -93,7 +117,7 @@ void DisplayModesPage::createContent()
     createWindowStateWidgets();
 
     lytButtons->addItem(comboNavigationBarDisplayMode);
-    lytButtons->addItem(navigationBarTransparencyLayout);
+    lytButtons->addItem(navigationBarTransparencyCheckbox);
     lytButtons->addItem(comboHomeButtonDisplayMode);
     lytButtons->addItem(comboEscapeButtonDisplayMode);
 
@@ -101,7 +125,8 @@ void DisplayModesPage::createContent()
     lytMain->addItem(lytButtons);
     lytMain->addItem(new MSeparator);
     lytMain->addItem(lblWindowState);
-    lytMain->addItem(fullScreenCheckboxLayout);
+    lytMain->addItem(fullScreenCheckbox);
+    lytMain->addItem(roundedCornersCheckbox);
 
     centralWidget()->setLayout(lytMain);
 
@@ -113,38 +138,22 @@ void DisplayModesPage::createWindowStateWidgets()
 {
     lblWindowState = new MLabel;
 
-    checkboxFullScreen = new MButton;
-    checkboxFullScreen->setViewType(MButton::checkboxType);
-    checkboxFullScreen->setCheckable(true);
-    connect(checkboxFullScreen, SIGNAL(toggled(bool)), SLOT(changeFullScreenMode(bool)));
-
+    fullScreenCheckbox = new LabeledCheckbox;
+    connect(fullScreenCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeFullScreenMode(bool)));
     // Init "full screen" checkbox state
     if (MApplication::activeWindow()) {
-        checkboxFullScreen->setChecked(MApplication::activeWindow()->isFullScreen());
+        fullScreenCheckbox->button->setChecked(MApplication::activeWindow()->isFullScreen());
     }
 
-    lblFullScreen = new MLabel;
-    lblFullScreen->setWordWrap(true);
-    lblFullScreen->setTextElide(true);
+    roundedCornersCheckbox = new LabeledCheckbox;
+    connect(roundedCornersCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeRoundedCorners(bool)));
+    // Init "rounded corners" checkbox state
+    if (MApplication::activeWindow()) {
+        roundedCornersCheckbox->button->setChecked(MApplication::activeWindow()->isRoundedCornersEnabled());
+    }
 
-    fullScreenCheckboxLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    fullScreenCheckboxLayout->addItem(checkboxFullScreen);
-    fullScreenCheckboxLayout->addItem(lblFullScreen);
-    fullScreenCheckboxLayout->setAlignment(checkboxFullScreen, Qt::AlignCenter);
-    fullScreenCheckboxLayout->setAlignment(lblFullScreen, Qt::AlignCenter);
-
-    checkboxNavigationBarTransparency = new MButton;
-    checkboxNavigationBarTransparency->setViewType(MButton::checkboxType);
-    checkboxNavigationBarTransparency->setCheckable(true);
-    connect(checkboxNavigationBarTransparency, SIGNAL(toggled(bool)), SLOT(changeNavigationBarTransparency(bool)));
-
-    lblNavigationBarTransparency = new MLabel;
-
-    navigationBarTransparencyLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    navigationBarTransparencyLayout->addItem(checkboxNavigationBarTransparency);
-    navigationBarTransparencyLayout->addItem(lblNavigationBarTransparency);
-    navigationBarTransparencyLayout->setAlignment(checkboxNavigationBarTransparency, Qt::AlignCenter);
-    navigationBarTransparencyLayout->setAlignment(lblNavigationBarTransparency, Qt::AlignCenter);
+    navigationBarTransparencyCheckbox = new LabeledCheckbox;
+    connect(navigationBarTransparencyCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeNavigationBarTransparency(bool)));
 }
 
 void DisplayModesPage::addExampleActions()
@@ -177,10 +186,13 @@ void DisplayModesPage::retranslateUi()
     lblWindowState->setText(qtTrId("xx_displaymodes_window_state"));
 
     //% "Full Screen"
-    lblFullScreen->setText(qtTrId("xx_displaymodes_full_screen"));
+    fullScreenCheckbox->label->setText(qtTrId("xx_displaymodes_full_screen"));
+
+    //% "Rounded Corners"
+    roundedCornersCheckbox->label->setText(qtTrId("xx_displaymodes_rounded_corners"));
 
     //% "Navigation Bar Transparency"
-    lblNavigationBarTransparency->setText(qtTrId("xx_displaymodes_navigation_bar_transparency"));
+    navigationBarTransparencyCheckbox->label->setText(qtTrId("xx_displaymodes_navigation_bar_transparency"));
 
     retranslateDisplayModeComboBox(comboNavigationBarDisplayMode);
     retranslateDisplayModeComboBox(comboHomeButtonDisplayMode);
@@ -258,6 +270,16 @@ void DisplayModesPage::changeFullScreenMode(bool fullScreen)
     } else {
         window->showNormal();
     }
+}
+
+void DisplayModesPage::changeRoundedCorners(bool enable)
+{
+    MWindow *window = MApplication::activeWindow();
+
+    if (!window)
+        return;
+
+    window->setRoundedCornersEnabled(enable);
 }
 
 void DisplayModesPage::changeNavigationBarTransparency(bool transparent)

@@ -99,7 +99,8 @@ public:
         ObjectMenu = 7500,                           // MObjectMenu
         NotificationInformation = 8000,              // MNotification - Information
         NotificationEvent = NotificationInformation, // MNotification - Event
-        StatusBar = 9000                             // MStatusBar
+        StatusBar = 9000,                            // MStatusBar
+        BorderDecoration = StatusBar                 // MBorderDecoration
     };
 
     void initOrientationAngles();
@@ -114,7 +115,8 @@ public:
     QRectF calculateSceneWindowGeometry(MSceneWindow *window) const;
     void setSceneWindowGeometry(MSceneWindow *window);
     void setSceneWindowGeometries();
-    QGraphicsItem *rootElementForSceneWindowType(MSceneWindow::WindowType type) const;
+    QGraphicsWidget *rootElementForSceneWindow(MSceneWindow *sceneWindow) const;
+    void updateSceneWindowRootElement(MSceneWindow *sceneWindow);
     void notifyWidgetsAboutOrientationChange();
     void rotateToAngle(M::OrientationAngle newAngle);
     void setOrientationAngleWithoutAnimation(M::OrientationAngle newAngle);
@@ -183,7 +185,6 @@ public:
     void sendCancelEvent(MSceneWindow *window);
 
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
-    QList<QGraphicsWidget*> findRootElementsForMoveAnimation(MSceneWindow *sceneWindow);
 
     MSceneManagerStyleContainer &style();
     const MSceneManagerStyleContainer &style() const;
@@ -231,8 +232,10 @@ public:
 
     QGraphicsWidget *rootElement;
     QGraphicsWidget *homeButtonRootElement;
-    QGraphicsWidget *navigationBarRootElement;
-    QGraphicsWidget *dockWidgetRootElement;
+    QGraphicsWidget *topNavigationBarRootElement;
+    QGraphicsWidget *topDockWidgetRootElement;
+    QGraphicsWidget *topBorderDecorationRootElement;
+    QList<QGraphicsWidget*> rootElementsDisplacedByStatusBar;
 
     MOrientationAnimation *orientationAnimation;
     MPageSwitchAnimation *pageSwitchAnimation;

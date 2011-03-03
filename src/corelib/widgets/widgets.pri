@@ -110,6 +110,7 @@ PUBLIC_HEADERS += \
 
 PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
+    $$WIDGETS_SRC_DIR/mborderdecoration.h \
     $$WIDGETS_SRC_DIR/msortfilterproxymodel_p.h \
     $$WIDGETS_SRC_DIR/madvancedlistitem_p.h \
     $$WIDGETS_SRC_DIR/mbasiclistitem_p.h \
@@ -126,6 +127,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/msheet_p.h \
     $$WIDGETS_SRC_DIR/mstatusbar_p.h \
     $$WIDGETS_SRC_DIR/mwindow_p.h \
+    $$WIDGETS_SRC_DIR/mwindowborderdecorator.h \
     $$WIDGETS_SRC_DIR/mrichtexteditdialogsmanager_p.h \
     $$WIDGETS_SRC_DIR/mtapstatemachine_p.h \
     $$WIDGETS_SRC_DIR/mtextedit_p.h \
@@ -135,6 +137,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
     $$WIDGETS_SRC_DIR/mapplicationpage.cpp \
     $$WIDGETS_SRC_DIR/mapplicationwindow.cpp \
+    $$WIDGETS_SRC_DIR/mborderdecoration.cpp \
     $$WIDGETS_SRC_DIR/mbutton.cpp \
     $$WIDGETS_SRC_DIR/mbuttonmodel.cpp \
     $$WIDGETS_SRC_DIR/mbuttongroup.cpp \
@@ -183,6 +186,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mtoolbar.cpp \
     $$WIDGETS_SRC_DIR/mviewcreator.cpp \
     $$WIDGETS_SRC_DIR/mwindow.cpp \
+    $$WIDGETS_SRC_DIR/mwindowborderdecorator.cpp \
     $$WIDGETS_SRC_DIR/mseparator.cpp \
     $$WIDGETS_SRC_DIR/mstylablewidget.cpp \
     $$WIDGETS_SRC_DIR/mwidgetrecycler.cpp \

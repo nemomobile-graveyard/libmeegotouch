@@ -3,6 +3,7 @@ INCLUDEPATH+=./style
 
 STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mapplicationpagestyle.h \
+    $$STYLE_SRC_DIR/mborderdecorationroundedcornersstyle.h \
     $$STYLE_SRC_DIR/mbuttonstyle.h \
     $$STYLE_SRC_DIR/mbuttoniconstyle.h \
     $$STYLE_SRC_DIR/mbuttonswitchstyle.h \

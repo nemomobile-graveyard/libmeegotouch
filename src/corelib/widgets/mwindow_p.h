@@ -37,6 +37,7 @@ class MOnDisplayChangeEvent;
 class MStatusBar;
 class QGLWidget;
 class QGLContext;
+class MWindowBorderDecorator;
 
 class MWindowPrivate
 {
@@ -148,6 +149,7 @@ public:
     bool beforeFirstPaintEvent;
     int invisiblePaintCounter;
     const int allowedPaintEventsWhenInvisible;
+    MWindowBorderDecorator *borderDecorator;
 
 protected:
     MWindow *q_ptr;

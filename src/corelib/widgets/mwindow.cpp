@@ -41,6 +41,7 @@
 #include "mlocale.h"
 #include "mgraphicssystemhelper.h"
 #include "mwindowstyle.h"
+#include <mwindowborderdecorator.h>
 
 #include <QPropertyAnimation>
 #include <QSettings>
@@ -105,6 +106,7 @@ MWindowPrivate::MWindowPrivate() :
     beforeFirstPaintEvent(true),
     invisiblePaintCounter(0),
     allowedPaintEventsWhenInvisible(5),
+    borderDecorator(0),
     q_ptr(NULL)
 {
 #ifdef Q_WS_X11
@@ -128,6 +130,7 @@ MWindowPrivate::MWindowPrivate() :
 MWindowPrivate::~MWindowPrivate()
 {
     delete delayedMOnDisplayChangeEvent;
+    delete borderDecorator;
 }
 
 void MWindowPrivate::init()
@@ -1594,6 +1597,32 @@ void MWindow::disableNotificationPreviews()
 {
     setNotificationPreviewsVisible(false);
 }
+
+bool MWindow::isRoundedCornersEnabled() const
+{
+    Q_D(const MWindow);
+
+    return d->borderDecorator && d->borderDecorator->isDecorating();
+}
+
+void MWindow::setRoundedCornersEnabled(bool enabled)
+{
+    Q_D(MWindow);
+
+    if (enabled == isRoundedCornersEnabled())
+        return;
+
+    if (enabled) {
+        if (!d->borderDecorator)
+            d->borderDecorator = new MWindowBorderDecorator;
+
+        d->borderDecorator->decorate(sceneManager());
+    } else {
+        if (d->borderDecorator)
+            d->borderDecorator->removeDecorations();
+    }
+}
+
 
 #ifdef Q_WS_X11
 void MWindow::setWindowIconicState(bool isIconic)

@@ -146,12 +146,12 @@ void MApplicationWindowPrivate::init()
 {
     Q_Q(MApplicationWindow);
 
-    navigationBar = new MNavigationBar(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::NavigationBar));
+    navigationBar = new MNavigationBar;
     toolBar = new MToolBar(navigationBar);
-    homeButtonPanel = new MHomeButtonPanel(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::HomeButtonPanel));
+    homeButtonPanel = new MHomeButtonPanel;
 
     if(MDeviceProfile::instance()->showStatusbar())    {
-        statusBar = new MStatusBar(sceneManager->d_func()->rootElementForSceneWindowType(MSceneWindow::StatusBar));
+        statusBar = new MStatusBar;
     }
     else{
         statusBar = NULL;
@@ -235,6 +235,10 @@ void MApplicationWindowPrivate::init()
     }
 
     _q_placeToolBar();
+
+    // Unlike plain MWindows, the full-fledged application window have rounded corners
+    // enabled by default.
+    q->setRoundedCornersEnabled(true);
 
     applyWindowBackground();
 

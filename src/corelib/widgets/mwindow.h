@@ -108,6 +108,20 @@ class M_CORE_EXPORT MWindow : public QGraphicsView
     */
     Q_PROPERTY(bool notificationPreviewsVisible READ notificationPreviewsVisible WRITE setNotificationPreviewsVisible)
 
+    /*!
+     \property MWindow::roundedCornersEnabled
+     \brief This property defines whether the window should have rounded corners.
+
+     By default this property is false.
+
+     Get its current value with isRoundedCornersEnabled() and set it with
+     setRoundedCornersEnabled();
+
+     \note Setting it to true will incur the creation of a scene manager
+           and scene if the window doesn't have them yet.
+    */
+    Q_PROPERTY(bool roundedCornersEnabled READ isRoundedCornersEnabled WRITE setRoundedCornersEnabled)
+
 public:
     /*!
      \brief Creates a MWindow without a scene manager.
@@ -399,6 +413,19 @@ public:
      * The value is true by default.
      */
     bool notificationPreviewsVisible() const;
+
+    /*!
+      \brief Returns whether the window has/draws rounded corners.
+      \sa setRoundedCornersEnabled()
+     */
+    bool isRoundedCornersEnabled() const;
+
+    /*!
+      \brief Sets whether the window should have/draw rounded corners.
+      \sa isRoundedCornersEnabled()
+     */
+    void setRoundedCornersEnabled(bool enabled);
+
 
 public Q_SLOTS:
     /*!
