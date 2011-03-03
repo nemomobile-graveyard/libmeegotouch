@@ -423,27 +423,11 @@ bool MApplication::x11EventFilter(XEvent *event)
     else if (event->type == d->xDamageEventBase + XDamageNotify) {
 
         XDamageNotifyEvent *xevent = (XDamageNotifyEvent *) event;
-        XserverRegion parts;
-        XRectangle *rects;
-        int n_rect;
 
-        // It is possible that the Damage has already been destroyed so register an error handler to suppress X errors
-        XErrorHandler errh = XSetErrorHandler(MApplicationPrivate::handleXError);
-
-        // Get the damaged rectangles from the damage event
-        parts = XFixesCreateRegion(QX11Info::display(), 0, 0);
-        // TODO does subtracting 0 regions really make any sense?
-        XDamageSubtract(QX11Info::display(), xevent->damage, None, parts);
-        rects = XFixesFetchRegion(QX11Info::display(), parts, &n_rect);
-        XFixesDestroyRegion(QX11Info::display(), parts);
-
-        // Create separate damage event signals from the damaged rectangles
-        for (int i = 0; i < n_rect; ++i)
-            emit damageEvent(xevent->damage, rects[i].x, rects[i].y, rects[i].width, rects[i].height);
-
-        // Free the rectangles and reset the original error handler
-        XFree(rects);
-        XSetErrorHandler(errh);
+        // xevent->more would inform us if there is more events for the
+        // rendering operation. but there isn't interface to pass the
+        // information to damageEvent.
+        emit damageEvent(xevent->damage, xevent->area.x, xevent->area.y, xevent->area.width, xevent->area.height);
 
         return true;
     }

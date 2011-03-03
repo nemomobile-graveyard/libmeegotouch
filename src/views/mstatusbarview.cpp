@@ -226,7 +226,7 @@ void MStatusBarView::setupXDamageForSharedPixmap()
 {
     Q_ASSERT(!sharedPixmap.isNull());
 #ifdef HAVE_XDAMAGE
-    pixmapDamage = XDamageCreate(QX11Info::display(), sharedPixmap.handle(), XDamageReportNonEmpty);
+    pixmapDamage = XDamageCreate(QX11Info::display(), sharedPixmap.handle(), XDamageReportRawRectangles);
 #endif //HAVE_XDAMAGE
 }
 
