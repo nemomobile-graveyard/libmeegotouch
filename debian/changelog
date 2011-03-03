@@ -1,8 +1,22 @@
-libmeegotouch (0.20.90~1) unstable; urgency=low
+libmeegotouch (0.20.90-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#231712 - short event banner - long sms - source label is partially covered by message content
+  * Fixes: NB#231232 - Unique object names are missing for menu options.
+  * Fixes: NB#230358 - Dialog with MList crashes when the model (selection) is updated second time
+  * Fixes: NB#230821
+  * Fixes: NB#230927 - MCompleter access button is wrong presented while more than 10 matches are available
+  * Fixes: NB#223990
+  * Fixes: Build break without context subscriber.
+  * Fixes: NB#231297 - MApplicationWindowStyle statusBarStyleName support is implemented incorrectly
+  * Fixes: NB#219895
+  * Fixes: NB#232062 - Coverity run around 1. March 2011
+  * Fixes: MApplicationWindow does not update the current style.
+  * Fixes: NB#230538 - Wrong alignment in simple MLabels in RtoL (Arabic, Hebrew) locales
+  * Fixes: NB#231891 - wrong case for setSelection in MTextEdit::InputMethodEvent
+  * Fixes: NB#178324 Copying text from multi-line rich text edit to single line rich text edit expands single line text edit.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 01 Mar 2011 16:07:42 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 03 Mar 2011 13:58:32 +0200
 
 libmeegotouch (0.20.89-1) unstable; urgency=low
 
