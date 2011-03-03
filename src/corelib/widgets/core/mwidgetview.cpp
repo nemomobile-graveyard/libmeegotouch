@@ -65,6 +65,8 @@ void MWidgetViewPrivate::setActive(bool active)
     } else {
         styleContainer->setModeDefault();
     }
+
+    const_cast<MWidgetView*>(controller->view())->applyStyle();
 }
 
 void MWidgetViewPrivate::setEnabled(bool enabled)
@@ -85,6 +87,8 @@ void MWidgetViewPrivate::setEnabled(bool enabled)
                 viewPrivate->setEnabled(false);
         }
     }
+
+    const_cast<MWidgetView*>(controller->view())->applyStyle();
 }
 
 void MWidgetViewPrivate::setSelected(bool selected)
@@ -105,6 +109,8 @@ void MWidgetViewPrivate::setSelected(bool selected)
                 viewPrivate->setSelected(false);
         }
     }
+
+    const_cast<MWidgetView*>(controller->view())->applyStyle();
 }
 
 const MWidgetStyle *MWidgetViewPrivate::currentStyle() const
@@ -219,10 +225,9 @@ void MWidgetView::setModel(MWidgetModel *model)
         notifyItemChange(QGraphicsItem::ItemEnabledHasChanged, false);
     } else if (d->controller->isSelected()) {
         notifyItemChange(QGraphicsItem::ItemSelectedHasChanged, true);
+    } else {
+        applyStyle();
     }
-
-    // TODO: to be removed when scalable image is ready
-    applyStyle();
 
     // notify derived classes
     setupModel();
@@ -446,11 +451,9 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
     Q_D(MWidgetView);
     if (change == QGraphicsItem::ItemEnabledHasChanged) {
         d->setEnabled(d->controller->isEnabled());
-        applyStyle();
     } else if (change == QGraphicsItem::ItemSelectedHasChanged) {
         if (d->controller->isEnabled()) {
             d->setSelected(d->controller->isSelected());
-            applyStyle();
         }
     } else if (change == QGraphicsItem::ItemParentHasChanged) {
         MWidgetController *parent = NULL;
