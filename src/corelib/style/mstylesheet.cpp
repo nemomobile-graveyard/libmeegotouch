@@ -317,7 +317,8 @@ bool MStyleSheetPrivate::combine(MStyle *style, const SelectorInfoList &entry, c
     const int propertyCount = style->metaObject()->propertyCount();
     for (int i = MStyle::staticMetaObject.propertyOffset(); i != propertyCount; ++i) {
         QMetaProperty property = style->metaObject()->property(i);
-        MUniqueStringCache::Index propertyIndex = MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(property.name());
+        QByteArray propertyName = QByteArray::fromRawData(property.name(), qstrlen(property.name()));
+        MUniqueStringCache::Index propertyIndex = MStyleSheetParser::stringCacheWithReverseLookup()->stringToIndex(propertyName);
         bool propertyInitialized = false;
 
         // search for attribute in selectors based on their priority
