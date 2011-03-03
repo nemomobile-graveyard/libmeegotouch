@@ -94,6 +94,7 @@ private:
     QPropertyAnimation *autoVisibilityAnimation;
     QTimer autoVisibilityTimer;
     bool down;
+    QModelIndex currentIndex;
 };
 
 #endif

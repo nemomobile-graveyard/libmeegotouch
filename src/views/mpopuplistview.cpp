@@ -180,12 +180,6 @@ void MPopupListCellCreator::setWordWrap(bool wordWrap)
     this->wordWrap = wordWrap;
 }
 
-void MPopupListViewPrivate::_q_scrollOnFirstAppearance()
-{
-    Q_Q(MPopupListView);
-    list->scrollTo(q->model()->scrollToIndex());
-}
-
 MPopupListView::MPopupListView(MPopupList *controller)
     : MDialogView(* new MPopupListViewPrivate, controller)
 {
@@ -231,7 +225,7 @@ void MPopupListView::setupModel()
 
     d->list->setItemModel(model()->itemModel());
     d->list->setSelectionModel(model()->selectionModel());
-    QTimer::singleShot(0, this, SLOT(_q_scrollOnFirstAppearance()));
+    d->list->scrollTo(model()->scrollToIndex());
 }
 
 void MPopupListView::applyStyle()

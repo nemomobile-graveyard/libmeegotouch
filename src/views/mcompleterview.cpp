@@ -251,7 +251,7 @@ void MCompleterViewPrivate::createContents()
             if (total <= DefaultMaximumHits)
                 completionsButton->setText(QString("<b></b>%1").arg(total));
             else
-                completionsButton->setText(QString("<b></b>&gt;%1").arg(DefaultMaximumHits));
+                completionsButton->setText(QString("<b></b>%1+").arg(DefaultMaximumHits));
             completionsButton->setFocusProxy(controller->widget());
             completionsButton->setVisible(true);
             layout->addItem(completionsButton);
@@ -300,8 +300,8 @@ void MCompleterViewPrivate::showPopup()
     if (popup->currentIndex().row() < 0)
         popup->setCurrentIndex(popup->itemModel()->index(0, 0));
 
-    //if the label of the button is ">10", should query all before showing popup
-    if (completionsButton->text() == QString(">%1").arg(DefaultMaximumHits))
+    //if the label of the button is "10+", should query all before showing popup
+    if (completionsButton->text() == QString("%1+").arg(DefaultMaximumHits))
         controller->queryAll();
     controller->sceneManager()->appearSceneWindow(popup);
 }
