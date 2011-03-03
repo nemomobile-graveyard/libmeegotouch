@@ -41,7 +41,8 @@ PushButtonPage::PushButtonPage():
         button13(0),button14(0),button15(0),
         button16(0),button17(0),button18(0),
         button19(0),button20(0),button21(0),
-        button22(0),text1(0),text2(0),text3(0),
+        button22(0),button23(0),button24(0),
+        button25(0),text1(0),text2(0),text3(0),
         text4(0),text5(0),text6(0),text7(0),
         text8(0),text9(0),text10(0),text11(0),
         text12(0)
@@ -473,6 +474,34 @@ void PushButtonPage::buttonTransitionsLayout()
     layoutPolicy->setAlignment(layoutB20B21B22,Qt::AlignCenter);
 
     layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+
+    button23 = new MButton("A");
+    button23->setStyleName("ImplodingBackgroundButton");
+
+    button24 = new MButton("B");
+    button24->setStyleName("ImplodingBackgroundButton");
+
+    button25 = new MButton("C");
+    button25->setStyleName("ImplodingBackgroundButton");
+
+    MLayout* layoutB23B24B25 = new MLayout;
+    MLinearLayoutPolicy* layoutB23B24B25LandscapePolicy = new MLinearLayoutPolicy(layoutB23B24B25,Qt::Horizontal);
+    layoutB23B24B25->setLandscapePolicy(layoutB23B24B25LandscapePolicy);
+    layoutB23B24B25LandscapePolicy->setSpacing(0); // distance between both buttons is exactly 2 margins (right,left), see css
+    layoutB23B24B25LandscapePolicy->addItem(button23);
+    layoutB23B24B25LandscapePolicy->addItem(button24);
+    layoutB23B24B25LandscapePolicy->addItem(button25);
+
+    MLinearLayoutPolicy* layoutB23B24B25PortraitPolicy = new MLinearLayoutPolicy(layoutB23B24B25,Qt::Horizontal);
+    layoutB23B24B25->setPortraitPolicy(layoutB23B24B25PortraitPolicy);
+    layoutB23B24B25PortraitPolicy->addItem(button23);
+    layoutB23B24B25PortraitPolicy->addItem(button24);
+    layoutB23B24B25PortraitPolicy->addItem(button25);
+
+    layoutPolicy->addItem(layoutB23B24B25);
+    layoutPolicy->setAlignment(layoutB23B24B25, Qt::AlignCenter);
+
+    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
 }
 
 void PushButtonPage::retranslateUi()
@@ -532,7 +561,7 @@ void PushButtonPage::retranslateUi()
     /*% "6. Button transitions" */
     text13->setText(qtTrId("xx_push_button_text13"));
 
-    /*% "Currently available transitions are \"default\" and \"expanding-background\"." */
+    /*% "Currently available transitions are \"default\", \"expanding-background\" and \"imploding-background\"." */
     text14->setText(qtTrId("xx_push_button_text14"));
 
     /*% "only button" */

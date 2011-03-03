@@ -40,6 +40,7 @@
 #include "mbuttontransition.h"
 #include "mbuttondefaulttransition.h"
 #include "mbuttonexpandingbackgroundtransition.h"
+#include "mbuttonimplodingbackgroundtransition.h"
 
 
 MButtonViewPrivate::MButtonViewPrivate()
@@ -425,6 +426,12 @@ void MButtonView::applyStyle()
         if (!qobject_cast<MButtonExpandingBackgroundTransition*>(d->transition)) {
             delete d->transition;
             d->transition = new MButtonExpandingBackgroundTransition(style(), model(), d->controller,d);
+            d->transition->setParent(this);
+        }
+    } else if (style()->transition() == "imploding-background") {
+        if (!qobject_cast<MButtonImplodingBackgroundTransition*>(d->transition)) {
+            delete d->transition;
+            d->transition = new MButtonImplodingBackgroundTransition(style(), model(), d->controller,d);
             d->transition->setParent(this);
         }
     } else {

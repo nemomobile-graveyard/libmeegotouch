@@ -77,6 +77,9 @@ private:
     MButton *button20;
     MButton *button21;
     MButton *button22;
+    MButton *button23;
+    MButton *button24;
+    MButton *button25;
 
     MLabel *text1;
     MLabel *text2;

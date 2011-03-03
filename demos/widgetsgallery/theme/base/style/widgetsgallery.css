@@ -131,6 +131,25 @@ MButtonStyle#ExpandingBackgroundButton {
     transition: "expanding-background";
 }
 
+MButtonStyle#ImplodingBackgroundButton {
+    background-image:;
+    background-color: transparent;
+
+    text-color: white;
+
+    minimum-size: 12.5mm 12.5mm;
+    preferred-size: 12.5mm 12.5mm;
+    maximum-size: 12.5mm 12.5mm;
+
+    transition: "imploding-background";
+}
+
+MButtonStyle#ImplodingBackgroundButton:pressed {
+    background-image: "meegotouch-button-background" $CORNER_MARGINS;
+
+    text-color: white;
+}
+
 MApplicationWindowStyle#IconAndLabelTabsTop.Portrait {
     floatable-tab-bar: true;
     tab-bar-style-name: "TabsTopWithIconAndLabel";
