@@ -76,10 +76,8 @@ void MLabelViewPrivate::requestHighlighterUpdate(int interval)
 void MLabelViewPrivate::_q_highlighterUpdateTimerExceeded()
 {
     MLabelViewRich *labelViewRich = static_cast<MLabelViewRich*>(impl);
-    if (labelViewRich->updateHighlighting()) {
-        labelViewRich->cleanupTiles();
-        controller->update();
-    }
+    labelViewRich->cleanupTiles();
+    controller->update();
 }
 
 bool MLabelViewPrivate::displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const

@@ -152,12 +152,13 @@ public:
     int cursorPositionOfLastVisibleCharacter();
     void updateRichTextEliding();
 
+    void updateHighlighters();
+
     /**
      * Updates the textformat to show parts of the text highlighted dependent on
      * the attached MLabelHighlighters.
-     * \return True if the textformat has been changed.
      */
-    bool updateHighlighting();
+    void updateHighlighting();
 
     QString wrapTextWithSpanTag(const QString &text) const;
 
@@ -244,6 +245,7 @@ public:
     QList<Tile> tiles;
 
     bool highlightersChanged;
+    bool isElided;
 };
 
 class MLabelViewPrivate : public MWidgetViewPrivate
