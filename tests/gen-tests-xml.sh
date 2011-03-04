@@ -2,7 +2,7 @@
 
 TESTDIR=`dirname $0`
 DOMAIN="Application Framework"
-FEATURE="Direct UI Framework"
+FEATURE="MeeGo Touch UI Framework"
 TYPE="Functional"
 LEVEL="Component"
 
@@ -66,6 +66,5 @@ TESTSUITE_TEMPLATE="<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>
 </testdefinition>"
 
 echo "$TESTSUITE_TEMPLATE"
-#echo "Skipped tests: $SKIPPED_TESTCASES"
-#echo "UT:$UT_COUNT FT:$FT_COUNT SKIPPED=$SKIPPED_COUNT"
+echo "<!-- UT:$UT_COUNT FT:$FT_COUNT SKIPPED=$SKIPPED_COUNT Skipped tests: $SKIPPED_TESTCASES -->"
 

@@ -1,6 +1,6 @@
 TEMPLATE    = subdirs
 
-  include(../mkspecs/common.pri)
+include(../mkspecs/common.pri)
 
 SUBDIRS     = \
  mt_mbutton \
@@ -40,3 +40,6 @@ SUBDIRS += \
  pt_mcalendar \
  pt_mcharsetdetector
 }
+
+include(shell.pri)
+
