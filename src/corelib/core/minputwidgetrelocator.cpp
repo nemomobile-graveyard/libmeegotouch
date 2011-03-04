@@ -211,6 +211,9 @@ void MInputWidgetRelocator::handleRotationBegin()
 
 void MInputWidgetRelocator::handleRotationFinished(M::Orientation orientation)
 {
+    // Update to portrait or landscape style.
+    style().updateCurrentStyle();
+
     this->orientation = orientation;
     updatePending = true; // Update always after rotation.
     clearPostponeRelocationFlag(WaitForRotationFinished);
