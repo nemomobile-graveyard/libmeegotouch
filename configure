@@ -72,7 +72,7 @@ CFG_NOBUILD_PARTS=""
 CFG_DBUS=auto
 CFG_ICU=auto
 CFG_GCONF=auto
-CFG_MEEGOGRAPHICSSYSTEM=no
+CFG_MEEGOGRAPHICSSYSTEM=auto
 
 HAVE_LINUX=no
 HAVE_ICU=no
@@ -462,9 +462,13 @@ if [ $? -eq 0 ]; then
     if [ "$CFG_MEEGOGRAPHICSSYSTEM" != "no" ]; then
         if  [ "$IS_ARMEL" = "yes" ]; then
             HAVE_MEEGOGRAPHICSSYSTEM=yes
+            CFG_MEEGOGRAPHICSSYSTEM=yes
         else
-            echo "MeeGo graphicssystem is only available for ARM."
-            exit 1
+            if [ "$CFG_MEEGOGRAPHICSSYSTEM" = "yes" ]; then
+                #we need this for intel devices but not for scratchbox
+                echo "WARNING: MeeGo graphicssystem is enabled for x86"
+                HAVE_MEEGOGRAPHICSSYSTEM=yes
+            fi
         fi
     fi
 fi
