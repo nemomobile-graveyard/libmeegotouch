@@ -40,6 +40,7 @@
 #include <QApplication>
 #include <QMutex>
 #include <QDateTime>
+#include <QPointer>
 #include <MApplication>
 
 #ifdef HAVE_ICU
@@ -48,6 +49,9 @@
 #include "mcalendar_p.h"
 #include "micuconversions.h"
 #endif
+
+static QPointer<QTranslator> s_ltrTranslator = 0;
+static QPointer<QTranslator> s_rtlTranslator = 0;
 
 namespace
 {
@@ -1107,15 +1111,15 @@ void MLocalePrivate::removeTrFromQCoreApp()
 
 void MLocalePrivate::insertDirectionTrToQCoreApp()
 {
-    if (MLocale::s_rtlTranslator == 0) {
-        MLocale::s_rtlTranslator = new QTranslator( qApp );
-        bool ok = MLocale::s_rtlTranslator->load(":/libmeegotouch_rtl.qm");
+    if (s_rtlTranslator == 0) {
+        s_rtlTranslator = new QTranslator( qApp );
+        bool ok = s_rtlTranslator->load(":/libmeegotouch_rtl.qm");
 	Q_UNUSED(ok);
         Q_ASSERT(ok);
     }
-    if (MLocale::s_ltrTranslator == 0) {
-        MLocale::s_ltrTranslator = new QTranslator( qApp );
-        bool ok = MLocale::s_ltrTranslator->load(":/libmeegotouch_ltr.qm");
+    if (s_ltrTranslator == 0) {
+        s_ltrTranslator = new QTranslator( qApp );
+        bool ok = s_ltrTranslator->load(":/libmeegotouch_ltr.qm");
 	Q_UNUSED(ok);
         Q_ASSERT(ok);
     }
@@ -1123,20 +1127,20 @@ void MLocalePrivate::insertDirectionTrToQCoreApp()
     if (MLocale::s_systemDefault->textDirection() == Qt::RightToLeft) {
         // make sure previous installations of the direction translators
         // are removed:
-        QCoreApplication::removeTranslator(MLocale::s_ltrTranslator);
-        QCoreApplication::removeTranslator(MLocale::s_rtlTranslator);
+        QCoreApplication::removeTranslator(s_ltrTranslator);
+        QCoreApplication::removeTranslator(s_rtlTranslator);
         // install the correct direction translator for the current
         // system default locale:
-        QCoreApplication::installTranslator(MLocale::s_rtlTranslator);
+        QCoreApplication::installTranslator(s_rtlTranslator);
     }
     else {
         // make sure previous installations of the direction translators
         // are removed:
-        QCoreApplication::removeTranslator(MLocale::s_rtlTranslator);
-        QCoreApplication::removeTranslator(MLocale::s_ltrTranslator);
+        QCoreApplication::removeTranslator(s_rtlTranslator);
+        QCoreApplication::removeTranslator(s_ltrTranslator);
         // install the correct direction translator for the current
         // system default locale:
-        QCoreApplication::installTranslator(MLocale::s_ltrTranslator);
+        QCoreApplication::installTranslator(s_ltrTranslator);
     }
 }
 
@@ -1531,8 +1535,6 @@ static QMutex defaultLocaleMutex;
 
 // The static default locale
 MLocale *MLocale::s_systemDefault = 0;
-QTranslator *MLocale::s_ltrTranslator = 0;
-QTranslator *MLocale::s_rtlTranslator = 0;
 
 struct MStaticLocaleDestroyer {
     ~MStaticLocaleDestroyer() {
