@@ -2637,7 +2637,7 @@ void MTextEdit::setContentType(M::TextContentType type)
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
         newHint = Qt::ImhEmailCharactersOnly;
-        if (attachedToolbar().isEmpty()) {
+        if (attachedToolbarId() == -1) {
             attachToolbar(QString(M_IM_TOOLBARS_DIR) + "/" + EmailContentToolbarFile);
         }
         break;
@@ -2646,7 +2646,7 @@ void MTextEdit::setContentType(M::TextContentType type)
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
         newHint = Qt::ImhUrlCharactersOnly;
-        if (attachedToolbar().isEmpty()) {
+        if (attachedToolbarId() == -1) {
             attachToolbar(QString(M_IM_TOOLBARS_DIR) + "/" + UrlContentToolbarFile);
         }
         break;
@@ -3061,15 +3061,13 @@ void MTextEdit::attachToolbar(int id)
         return;
     detachToolbar();
     const QString toolbar = MInputMethodState::instance()->toolbar(id);
-    if (!toolbar.isEmpty()) {
-        // record attached toolbar identifier and file name.
-        // The toolbar identifier is an unique id in the space of the application.
-        // Two text entries may attach to the same toolbar file, but have two different
-        // toolbar instances (two ids).
-        model()->setToolbar(toolbar);
-        model()->setToolbarId(id);
-        d->icUpdate();
-    }
+    // record attached toolbar identifier and file name.
+    // The toolbar identifier is an unique id in the space of the application.
+    // Two text entries may attach to the same toolbar file, but have two different
+    // toolbar instances (two ids).
+    model()->setToolbar(toolbar);
+    model()->setToolbarId(id);
+    d->icUpdate();
 }
 
 QString MTextEdit::attachedToolbar() const
