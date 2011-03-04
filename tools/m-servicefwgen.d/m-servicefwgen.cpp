@@ -41,6 +41,7 @@ public:
     void setQtSfwDirectory( const QString& directory );
     void setAllSignals( const QString& val );
     void setAllConnectSignalCommands( const QString& val );
+    void setXmlFileName( const QString& val );
 
     void setCreateQtSfw( bool val );
     void setCreateAdaptor( bool val );
@@ -58,6 +59,9 @@ public:
     void setServiceName( const QString &serviceName );
 
     void setServiceDescription( const QString &serviceDescription );
+
+    bool oldUsage() { return m_oldUsage; };
+    void setOldUsage( bool oldUsage ) { m_oldUsage = oldUsage; };
 
     QString applicationName();
     QString generatedByComment();
@@ -183,6 +187,8 @@ private:
     QHash<int, QString> m_methodDocs;
 
     bool m_needsMApplication;
+
+    bool m_oldUsage;
 };
 
 Worker::Worker()
@@ -196,6 +202,8 @@ Worker::Worker()
     m_createProxy = false;
 
     m_needsMApplication = false;
+
+    m_oldUsage = true;
 }
 
 bool Worker::hasNameSpace()
@@ -444,6 +452,11 @@ QString Worker::upperInterfaceName()
 {
     QString retVal = m_lowerInterfaceName.toUpper();
     return retVal;
+}
+
+void Worker::setXmlFileName( const QString& xmlFileName )
+{
+    m_xmlFileName = xmlFileName;
 }
 
 QString Worker::xmlFileName()
@@ -2018,7 +2031,11 @@ void runQDBusXml2Cpp(const QStringList &params)
 
 void usage()
 {
-    qDebug() << "usage: $0 [-p interfaceName |-a interfaceName | -q interfaceName] -s serviceName -d serviceDescription -v serviceVersion";
+    qDebug() << "";
+    qDebug() << "old usage: m-servicefwgen [-p interfaceName |-a interfaceName | -q interfaceName] -s serviceName -d serviceDescription -v serviceVersion";
+    qDebug() << "";
+    qDebug() << "new usage: m-servicefwgen [-p interfaceName |-a interfaceName | -q interfaceName] -s serviceName -d serviceDescription -v serviceVersion xmlFile";
+    qDebug() << "";
     qDebug() << "       -a            generate adaptor files";
     qDebug() << "       -p            generate proxy files";
     qDebug() << "       -q            generate Qt SFW proxy files";
@@ -2027,6 +2044,23 @@ void usage()
     qDebug() << "       -d            service description for the Qt SFW service xml file";
     qDebug() << "       -D            directory for Qt SFW code (default:qtsfw)";
     qDebug() << "       -h            this help";
+    qDebug() << "       xmlFile       path to the xml file for the interface";
+    qDebug() << "";
+    qDebug() << "Note: the old usage is deprecated. The reason for that is that we are guessing";
+    qDebug() << "where we can find the xml file from the given interface names.";
+    qDebug() << "Then with the old usage the program changed the directory to";
+    qDebug() << "the path that was guessed. And then it created the adaptor,";
+    qDebug() << "proxy or interface files in that directory.";
+    qDebug() << "";
+    qDebug() << "With the new usage, the program does not cd to somewhere any more";
+    qDebug() << "at all. This way you can generate the needed files in the directory";
+    qDebug() << "where you want to have them. Also the usage is quite similar to";
+    qDebug() << "how the qdbusxml2cpp program from Qt is used.";
+    qDebug() << "";
+    qDebug() << "Example:";
+    qDebug() << "    m-servicefwgen -a com.nokia.maemo.meegotouch.CameraInterface \\";
+    qDebug() << "        /usr/share/dbus-1/interfaces/com.nokia.maemo.meegotouch.CameraInterface.xml";
+    qDebug() << "";
     exit(1);
 }
 
@@ -2037,6 +2071,8 @@ int main(int argc, char *argv[])
     w.setArguments( argc, argv );
 
     QString interfaceName("");
+
+    QString xmlFilePath;
 
     if (argc == 1) {
         usage();
@@ -2165,6 +2201,24 @@ int main(int argc, char *argv[])
 
             w.setQtSfwDirectory( arg );
         }
+        else
+        {
+            // if we get a parameter here, we got the path of the xml file
+            // to use as interface description, similar to how
+            // qdbusxml2cpp handles it
+
+            // check if file exists
+            QFileInfo fi( arg );
+
+            if ( ! fi.exists() )
+            {
+                qDebug() << "error: xml file " << arg << " does not exist.";
+                usage();
+            }
+
+            xmlFilePath = arg;
+            w.setOldUsage( false );
+        }
 
     }
 
@@ -2178,6 +2232,15 @@ int main(int argc, char *argv[])
     }
 
     w.setInterfaceName( interfaceName );
+
+    if ( ! w.oldUsage() )
+    {
+        // update xml file path after all other values were
+        // calculated from setInterfaceName()
+
+        w.setXmlFileName( xmlFilePath );
+    }
+
     w.preprocessXML();
 
     if ( w.createProxy() ) {
