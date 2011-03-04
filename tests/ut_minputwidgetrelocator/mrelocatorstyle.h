@@ -42,6 +42,7 @@ public:
     void initialize(const QString &, const QString &, const MWidgetController *){}
     void setModePhysicalKeyboard() const {}
     void setModeDefault() const {}
+    void updateCurrentStyle() const {}
     const MRelocatorStyle* operator->() const
     {
         return &gRelocatorStyle;
