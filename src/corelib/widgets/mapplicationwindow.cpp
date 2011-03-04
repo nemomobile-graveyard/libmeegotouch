@@ -489,9 +489,7 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
     QRectF pageExposedContentRect;
 
     if (showingStatusBar) {
-        // use this instead of the real height since bottom part of status bar is transparent
-        // and therefore it doesn't cover the application page contents
-        topCoverage += statusBar->property("sharedPixmapHeight").value<qreal>();
+        topCoverage += statusBar->size().height();
     }
 
     // Interpretation of whether the navigation bar is covering the page

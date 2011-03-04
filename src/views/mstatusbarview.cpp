@@ -170,7 +170,8 @@ void MStatusBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QPointF touch = event->scenePos();
-    QRectF rect = controller->sceneBoundingRect();
+    // shape includes the reactive margins
+    QRectF rect = controller->mapToScene(controller->shape()).boundingRect();
     rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
                 M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     if(rect.contains(touch)) {

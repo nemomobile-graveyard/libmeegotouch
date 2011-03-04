@@ -899,8 +899,6 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
 
     if (statusBar) {
         QRectF statusBarGeometry = statusBar->geometry();
-        statusBarGeometry.setHeight(statusBar->property("sharedPixmapHeight").value<qreal>());
-
         QRectF mappedStatusBarGeometry = statusBar->mapRectToScene(statusBarGeometry);
         data[0] = mappedStatusBarGeometry.x();
         data[1] = mappedStatusBarGeometry.y();
@@ -950,8 +948,7 @@ QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWind
             || statusBar->sceneWindowState() == MSceneWindow::Appeared)) {
         // Sheets cannot slip behind the status bar
 
-        qreal statusBarRealHeight = statusBar->property("sharedPixmapHeight").value<qreal>();
-        availableSceneRect.setTop(statusBarRealHeight);
+        availableSceneRect.setTop(statusBar->size().height());
     }
 
     return availableSceneRect;
@@ -1475,7 +1472,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
         } else {
             setSceneWindowState(window, MSceneWindow::Appeared);
             if (window->windowType() == MSceneWindow::StatusBar) {
-                qreal y = window->effectiveSizeHint(Qt::PreferredSize).height();
+                qreal y = window->size().height();
                 foreach(QGraphicsWidget *widget, findRootElementsForMoveAnimation(window))
                     widget->setPos(0, y);
             }
@@ -1731,7 +1728,7 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
         foreach(QGraphicsWidget *widget, list) {
             MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
             moveAnimation->setWidget(widget);
-            moveAnimation->setFinalPos(QPointF(0, sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
+            moveAnimation->setFinalPos(QPointF(0, statusBar->size().height()));
             animation->addAnimation(moveAnimation);
         }
     }
@@ -1776,6 +1773,9 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
 
         QList<QGraphicsWidget*> list = findRootElementsForMoveAnimation(sceneWindow);
         foreach(QGraphicsWidget *widget, list) {
+            // OBS: for this to look correct both status bar slide animation
+            // and our root elements move animations must have the same
+            // parameters (easing curve, duration...)
             MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
             moveAnimation->setWidget(widget);
             moveAnimation->setFinalPos(QPointF(0, 0));
@@ -1840,7 +1840,7 @@ void MSceneManagerPrivate::_q_updateRootElementsPositions()
         rootElement->setPos(0, 0);
 
     if (statusBar) {
-        qreal y = statusBar->effectiveSizeHint(Qt::PreferredSize).height();
+        qreal y = statusBar->size().height();
         foreach(QGraphicsWidget *rootElement, findRootElementsForMoveAnimation(statusBar))
             rootElement->setPos(0, y);
     }
