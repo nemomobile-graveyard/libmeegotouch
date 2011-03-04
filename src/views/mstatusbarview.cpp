@@ -122,7 +122,7 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
 
     painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
 
-    if (pressDown) {
+    if (pressDown && style()->enableStatusIndicatorMenu()) {
         painter->save();
         painter->setOpacity(style()->pressDimFactor());
         painter->fillRect(QRectF(QPointF(0.0, 0.0), sourceRect.size()), Qt::black);
@@ -298,7 +298,9 @@ void MStatusBarView::showStatusIndicatorMenu()
 
 void MStatusBarView::playHapticsFeedback()
 {
-    style()->pressFeedback().play();
+    if (style()->enableStatusIndicatorMenu()) {
+        style()->pressFeedback().play();
+    }
 }
 
 M_REGISTER_VIEW_NEW(MStatusBarView, MStatusBar)
