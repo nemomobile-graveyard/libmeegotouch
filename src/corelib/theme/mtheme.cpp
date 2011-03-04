@@ -787,6 +787,8 @@ MThemePrivate::~MThemePrivate()
     delete invalidPixmapPtr;
     delete customStylesheet;
 
+    hierarchyCache.clear();
+
     // TODO: check if we need to release QPixmaps from pixmapHandles
 }
 

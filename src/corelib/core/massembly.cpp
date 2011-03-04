@@ -117,6 +117,7 @@ MAssembly::MAssembly(const QString &name) :
 MAssembly::~MAssembly()
 {
     delete d_ptr->stylesheet;
+    d_ptr->stylesheet = 0;
     delete d_ptr;
 }
 
