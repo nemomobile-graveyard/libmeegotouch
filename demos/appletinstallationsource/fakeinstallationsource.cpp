@@ -23,7 +23,7 @@
 #include <QDBusConnection>
 #include <QDBusPendingReply>
 #include <MButton>
-#include <MAppletInstantiator>
+#include <mappletinstantiator.h>
 #include <QGraphicsGridLayout>
 #include "fakeinstallationsource.h"
 #include <stdlib.h>
