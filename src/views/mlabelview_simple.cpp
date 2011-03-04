@@ -373,13 +373,24 @@ void MLabelViewSimple::adjustTextOffset()
 {
     // textOptions.alignment() was mirrored by autoSetTextDirection() if RtoL (Arabic, Hebrew).
     // model->alignment() contains the raw (unmirrored) alignment.
-    Qt::Alignment alignment = viewPrivate->textOptions.alignment();
+    const Qt::Alignment alignment = viewPrivate->textOptions.alignment();
 
-    // Adjust x-position dependent on the horizontal alignment
-    if (alignment & Qt::AlignHCenter) {
-        textOffset.rx() += (paintingRect.width() - staticText.size().width()) / 2.f;
-    } else if (alignment & Qt::AlignRight) {
-        textOffset.setX(paintingRect.right() - staticText.size().width());
+    if (paintingRect.width() < staticText.size().width()) {
+        // There is not enough width available to show the text without clipping.
+        // Assure that in this case the text will always be clipped on the right
+        // in the L2R case. In the R2l case the text will always be clipped on the left.
+        const qreal diff = staticText.size().width() - paintingRect.width();
+        if (viewPrivate->controller->layoutDirection() == Qt::RightToLeft) {
+            if (alignment & Qt::AlignLeft) {
+                textOffset.rx() -= diff;
+            } else if (alignment & Qt::AlignHCenter) {
+                textOffset.rx() -= diff / 2.0;
+            }
+        } else if (alignment & Qt::AlignHCenter) {
+            textOffset.rx() += diff / 2.0;
+        } else if (alignment & Qt::AlignRight) {
+            textOffset.rx() += diff;
+        }
     }
 
     // Adjust y-position dependent on the vertical alignment

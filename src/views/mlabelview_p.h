@@ -209,7 +209,16 @@ public:
     Tile* topTile();
     Tile* bottomTile();
 
-    QRectF textBoundaries() const;
+    /**
+     * \param x Output parameter that specifies the x-value for the QPainter
+     *          translation that is required for a correct padding in the
+     *          right-to-left mode.
+     * \return  Boundaries of the text including the left padding of the style.
+     *          If a right-to-left alignment is used the boundaries are adjusted
+     *          to clip the left part of the text in case if there is not enough
+     *          width available.
+     */
+    QRectF textBoundaries(qreal *x) const;
 
     /**
      *\return Default stylesheet string that defines the text-color and anchor-color.

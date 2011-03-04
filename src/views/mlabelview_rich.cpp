@@ -90,8 +90,11 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
 
     if (tiles.isEmpty()) {
         // The QPixmapCache is full. Draw the text directly as fallback.
+        qreal x;
+        const QRectF textBounds = textBoundaries(&x);
+        pixmapOffset.rx() -= x;
         painter->translate(pixmapOffset);
-        textDocument.drawContents(painter, textBoundaries());
+        textDocument.drawContents(painter, textBounds);
     } else {
         drawTiles(painter, pixmapOffset, size);
     }
@@ -660,14 +663,15 @@ void MLabelViewRich::updateTilesPosition()
 
 bool MLabelViewRich::updateTilePixmap(const Tile &tile)
 {
-    QRectF textBounds = textBoundaries();
-    textBounds = textBounds.intersected(QRectF(0, tile.y, tile.size.width(), tile.size.height()));
+    qreal x;
+    QRectF textBounds = textBoundaries(&x);
+    textBounds = textBounds.intersected(QRectF(x, tile.y, tile.size.width(), tile.size.height()));
     if (!textBounds.isEmpty()) {
         QPixmap pixmap(tile.size);
         pixmap.fill(Qt::transparent);
 
         QPainter painter(&pixmap);
-        painter.translate(viewPrivate->style()->paddingLeft(), -tile.y);
+        painter.translate(viewPrivate->style()->paddingLeft() - x, -tile.y);
         textDocument.drawContents(&painter, textBounds);
 
         return QPixmapCache::insert(tile.pixmapCacheKey, pixmap);
@@ -698,7 +702,7 @@ MLabelViewRich::Tile* MLabelViewRich::bottomTile()
     return (tiles[0].y <= tiles[1].y) ? &tiles[1] : &tiles[0];
 }
 
-QRectF MLabelViewRich::textBoundaries() const
+QRectF MLabelViewRich::textBoundaries(qreal *x) const
 {
     QRectF bounds = QRectF(QPointF(0, 0), textDocument.size()).intersected(viewPrivate->boundingRect());
 
@@ -706,6 +710,17 @@ QRectF MLabelViewRich::textBoundaries() const
     // the text wrap correctly, the vertical padding is added
     // when drawing the pixmap into the screen
     bounds.adjust(0, 0, viewPrivate->style()->paddingLeft(), 0);
+
+    Q_ASSERT(x);
+    *x = 0.0;
+
+    if (viewPrivate->controller->layoutDirection() == Qt::RightToLeft) {
+        const qreal diff = textDocument.size().width() - viewPrivate->boundingRect().width();
+        if (diff > 0.0) {
+            *x = diff;
+            bounds.moveLeft(diff);
+        }
+    }
 
     return bounds;
 }
