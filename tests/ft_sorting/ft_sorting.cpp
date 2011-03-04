@@ -24,6 +24,8 @@
 #include <QDebug>
 #include <QProcess>
 
+#define VERBOSE_OUTPUT
+
 class TestCollator : public MCollator
 {
 public:
@@ -278,10 +280,13 @@ void Ft_Sorting::testMLocaleSorting()
     QStringList stringListOrig;
     stringListOrig << source1 << source2 << source3 << source4 << source5;
     QStringList sl = stringListOrig;
-    // printf("%s %s %s %s %s\n", sl[0].toUtf8().data(), sl[1].toUtf8().data(), sl[2].toUtf8().data(), sl[3].toUtf8().data(), sl[4].toUtf8().data());
+#if defined(VERBOSE_OUTPUT)
+    printf("%s %s %s %s %s\n", sl[0].toUtf8().data(), sl[1].toUtf8().data(), sl[2].toUtf8().data(), sl[3].toUtf8().data(), sl[4].toUtf8().data());
+#endif
     qSort(sl.begin(), sl.end(), mCollator);
-    // printf("%s %s %s %s %s\n", sl[0].toUtf8().data(), sl[1].toUtf8().data(), sl[2].toUtf8().data(), sl[3].toUtf8().data(), sl[4].toUtf8().data());
-
+#if defined(VERBOSE_OUTPUT)
+    printf("%s %s %s %s %s\n", sl[0].toUtf8().data(), sl[1].toUtf8().data(), sl[2].toUtf8().data(), sl[3].toUtf8().data(), sl[4].toUtf8().data());
+#endif
     QCOMPARE(sl[0], target1);
     QCOMPARE(sl[1], target2);
     QCOMPARE(sl[2], target3);

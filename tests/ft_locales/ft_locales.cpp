@@ -1343,9 +1343,9 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"T"<<"T"
            <<"Z"<<"Z"<<"Z"<<"Z"<<"Z"
            <<"沙");
-    QTest::newRow("fr_FR")
+    QTest::newRow("fr_CA")
         <<"ja_JP"
-        <<"fr_FR"
+        <<"fr_CA"
         <<(QStringList()
            <<"cote"<<"côte"<<"coté"<<"côté"
            <<"ö"<<"Ö"<<"öe"<<"Öe"<<"ÖE"
@@ -1442,8 +1442,8 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<"de_DE"
         <<"ja_JP@collation=standard" // collation=standard is default for ja_JP
         <<(QStringList()
-           <<"゙"<<"゛"<<"・"<<"﹅"<<"㈠"<<"㈱"<<"※"<<"∮"<<"♨"<<"〒"<<"ー"<<"ヾ"
-           <<"Ａ"<<"ｊｏｈｎ"<<"john"<<"Ｊｏｈｎ"<<"John"<<"ｓａｋｉ"<<"saki"<<"Saki"<<"Ｓａｋｉ"
+           <<"・"<<"﹅"<<"㈠"<<"㈱"<<"※"<<"∮"<<"♨"<<"〒"<<"ー"<<"ヾ"
+           <<"Ａ"<<"john"<<"John"<<"saki"<<"Saki"
            <<"あ"<<"㋐"<<"い"<<"イ"<<"ゔ"<<"ヴ"<<"ゕ"<<"ヵ"
            <<"か"<<"㋕"<<"ㇰ"<<"く"<<"ク"<<"ゖ"<<"ヶ"<<"㋘"<<"こ"<<"ご"<<"ご"<<"ヿ"
            <<"さ"<<"㋚"<<"さき"<<"サキ"<<"じょん"<<"ジョン"<<"せ"<<"セ"<<"せ1"<<"セ1"<<"せ2"<<"セ2"<<"セあセ"<<"せいせ"
@@ -1459,8 +1459,8 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"ㄎ"
            <<"一"<<"沙紀"<<"丁"<<"頻"<<"隆"<<"廳"<<"⼀"<<"㊀"<<"㆒"<<"龢"<<"㺃"<<"䵷")
         <<(QStringList()
-           <<"゙"<<"゛"<<"・"<<"﹅"<<"㈠"<<"㈱"<<"※"<<"∮"<<"♨"<<"〒"<<"ー"<<"ヾ"
-           <<"Ａ"<<"Ｊ"<<"J"<<"Ｊ"<<"J"<<"Ｓ"<<"S"<<"S"<<"Ｓ"
+           <<"・"<<"﹅"<<"㈠"<<"㈱"<<"※"<<"∮"<<"♨"<<"〒"<<"ー"<<"ヾ"
+           <<"Ａ"<<"J"<<"J"<<"S"<<"S"
            <<"あ"<<"あ"<<"あ"<<"あ"<<"あ"<<"あ"<<"あ"<<"あ"
            <<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"<<"か"
            <<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"<<"さ"
@@ -1476,126 +1476,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"ㄅ"
            <<"ㄎ"
            <<"一"<<"沙"<<"丁"<<"頻"<<"隆"<<"廳"<<"⼀"<<"㊀"<<"㆒"<<"龢"<<"㺃"<<"䵷");
-    QTest::newRow("zh_TW@collation=stroke") 
-        <<"ja_JP"
-        <<"zh_TW@collation=stroke" // collation=stroke is default for zh_TW
-        <<(QStringList()
-           <<"∮"<<"♨"
-           <<"A"<<"Ａ"<<"john"<<"ｊｏｈｎ"<<"John"<<"Ｊｏｈｎ"<<"saki"<<"ｓａｋｉ"<<"Saki"<<"Ｓａｋｉ"
-           <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
-           <<"一"<<"乙" // 1 stroke
-           <<"丁"<<"二" // 2
-           <<"三"<<"川" // 3
-           <<"丑"<<"木" // 4
-           <<"丙"<<"宁驰" // 5
-           <<"丞"<<"羊" // 6
-           <<"串"<<"君蘅 柳"<<"李"<<"沙紀" // 7
-           <<"並"<<"炒" //  8
-           <<"亟"<<"威"<<"柳" //  9
-           <<"乘"<<"髟" // 10
-           <<"乾"<<"雪" // 11
-           <<"傢"<<"隆" // 12
-           <<"亂"<<"罪" // 13
-           <<"僧"<<"蜻" // 14
-           <<"億"<<"蝙" // 15
-           <<"儒"<<"頻" // 16
-           <<"優"<<"曙" // 17
-           <<"叢"<<"鮹" // 18
-           <<"嚥"<<"譏" // 19
-           <<"勸"<<"霰"<<"襦" // 20
-           <<"儷"<<"驃" // 21
-           <<"儼"<<"龢" // 22
-           <<"囌"<<"鷲" // 23
-           <<"囑"<<"鷺" // 24
-           <<"廳" // 25 last official bucket
-           <<"躡" // 25
-           <<"鑽" // 27
-           <<"鬱" // 29
-           <<"驫" // 30
-           <<"⼀"<<"㊀"<<"㆒"<<"张威"<<"邉"<<"釡"<<"閇"<<"驰"<<"㺃"<<"䵷"
-            )
-        <<(QStringList()
-           <<"∮"<<"♨"
-           <<"A"<<"Ａ"<<"J"<<"Ｊ"<<"J"<<"Ｊ"<<"S"<<"Ｓ"<<"S"<<"Ｓ"
-           <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
-           <<"一"<<"一" //  1 stroke
-           <<"丁"<<"丁" //  2
-           <<"三"<<"三" //  3
-           <<"丑"<<"丑" //  4
-           <<"丙"<<"丙" //  5
-           <<"丞"<<"丞" //  6
-           <<"串"<<"串"<<"串"<<"串" //  7
-           <<"並"<<"並" //  8
-           <<"亟"<<"亟"<<"亟" //  9
-           <<"乘"<<"乘" // 10
-           <<"乾"<<"乾" // 11
-           <<"傢"<<"傢" // 12
-           <<"亂"<<"亂" // 13
-           <<"僧"<<"僧" // 14
-           <<"億"<<"億" // 15
-           <<"儒"<<"儒" // 16
-           <<"優"<<"優" // 17
-           <<"叢"<<"叢" // 18
-           <<"嚥"<<"嚥" // 19
-           <<"勸"<<"勸"<<"勸" // 20
-           <<"儷"<<"儷" // 21
-           <<"儼"<<"儼" // 22
-           <<"囌"<<"囌" // 23
-           <<"囑"<<"囑" // 24
-           <<"廳" // 25 last official bucket 
-           <<"躡" // 25
-           <<"鑽" // 27
-           <<"鬱" // 29
-           <<"驫" // 30
-           <<"⼀"<<"㊀"<<"㆒"<<"张"<<"邉"<<"釡"<<"閇"<<"驰"<<"㺃"<<"䵷"
-            );
-    QTest::newRow("zh_CN@collation=pinyin")
-        <<"ja_JP"
-        <<"zh_CN@collation=pinyin" // collation=pinyin is default for zh_CN
-        <<(QStringList()
-           <<"∮"<<"♨"
-           <<"A"<<"Ａ"<<"john"<<"ｊｏｈｎ"<<"John"<<"Ｊｏｈｎ"<<"saki"<<"ｓａｋｉ"<<"Saki"<<"Ｓａｋｉ"
-           <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
-           <<"阿" // a1
-           <<"驰" // chi2
-           <<"馳" // chi2, traditional version
-           <<"峠" // quia3 Japanese kokuji, mountain pass, variant of 卡
-           <<"蘅" // heng2
-           <<"君" // jun1
-           <<"卡" // ka3
-           <<"李" // li5
-           <<"柳" // liu3
-           <<"宁" // ning2
-           <<"威" // wei1
-           <<"张" // zhang1
-           <<"張" // zhang1, traditional version
-            )
-        <<(QStringList()
-           <<"∮"<<"♨"
-           <<"A"<<"A"<<"J"<<"J"<<"J"<<"J"<<"S"<<"S"<<"S"<<"S"
-           <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
-           <<"阿" // a1
-           <<"驰" // chi2
-           <<"馳" // chi2, traditional version
-           <<"峠" // qia3 Japanese kokuji, mountain pass, variant of 卡
-           <<"蘅" // heng2
-           <<"君" // jun1
-           <<"卡" // ka3
-           <<"李" // li5
-           <<"柳" // liu3
-           <<"宁" // ning2
-           <<"威" // wei1
-           <<"张" // zhang1
-           <<"張" // zhang1, traditional version
-            );
     QTest::newRow("ko_KR@collation=standard")
         <<"ja_JP"
         <<"ko_KR@collation=standard"
@@ -1767,6 +1647,144 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"蘅"
            <<"驰"
             );
+    QTest::newRow("zh_TW@collation=stroke")
+        <<"ja_JP"
+        <<"zh_TW@collation=stroke" // collation=stroke is default for zh_TW
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"john"<<"John"<<"saki"<<"Saki"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"一"<<"乙" // 1 stroke
+           <<"丁"<<"二" // 2
+           <<"三"<<"川" // 3
+           <<"丑"<<"木" // 4
+           <<"丙"<<"宁驰" // 5
+           <<"丞"<<"羊" // 6
+           <<"串"<<"君蘅 柳"<<"李"<<"沙紀" // 7
+           <<"並" //  8
+           <<"亟"<<"威"<<"柳" //  9
+           <<"乘"<<"髟" // 10
+           <<"乾"<<"雪" // 11
+           <<"傢"      // 12
+           <<"亂"<<"罪" // 13
+           <<"僧"<<"蜻" // 14
+           <<"億"<<"蝙" // 15
+           <<"儒"<<"頻" // 16
+           <<"優"<<"曙" // 17
+           <<"叢"<<"鮹" // 18
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+           <<"勸" // 19
+           <<"嚥" // 19
+           <<"嚷" // 20
+#else
+           <<"嚥" // 19
+           <<"勸" // 19
+           <<"嚷" // 20
+#endif
+           <<"儷" // 21
+           <<"儼" // 22
+           <<"囌" // 23
+           <<"囑" // 24
+           <<"廳" // 25 last official bucket
+           <<"躡" // 25
+           <<"鑽" // 27
+           <<"鬱" // 29
+           <<"驫" // 30
+           <<"㺃"<<"䵷"
+            )
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"J"<<"J"<<"S"<<"S"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"一"<<"一" //  1 stroke
+           <<"丁"<<"丁" //  2
+           <<"三"<<"三" //  3
+           <<"丑"<<"丑" //  4
+           <<"丙"<<"丙" //  5
+           <<"丞"<<"丞" //  6
+           <<"串"<<"串"<<"串"<<"串" //  7
+           <<"並" //  8
+           <<"亟"<<"亟"<<"亟" //  9
+           <<"乘"<<"乘" // 10
+           <<"乾"<<"乾" // 11
+           <<"傢"      // 12
+           <<"亂"<<"亂" // 13
+           <<"僧"<<"僧" // 14
+           <<"億"<<"億" // 15
+           <<"儒"<<"儒" // 16
+           <<"優"<<"優" // 17
+           <<"叢"<<"叢" // 18
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+           <<"叢" // 19
+           <<"嚥" // 19
+           <<"嚷" // 20
+#else
+           <<"嚥" // 19
+           <<"嚥" // 19
+           <<"嚷" // 20
+#endif
+           <<"儷" // 21
+           <<"儼" // 22
+           <<"囌" // 23
+           <<"囑" // 24
+           <<"廳" // 25 last official bucket
+           <<"躡" // 25
+           <<"鑽" // 27
+           <<"鬱" // 29
+           <<"驫" // 30
+           <<"㺃"<<"䵷"
+            );
+    QTest::newRow("zh_CN@collation=pinyin")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyin" // collation=pinyin is default for zh_CN
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"Ａ"<<"john"<<"ｊｏｈｎ"<<"John"<<"Ｊｏｈｎ"<<"saki"<<"ｓａｋｉ"<<"Saki"<<"Ｓａｋｉ"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"阿 kHanyuPinlu a1      U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5"
+           <<"驰 kHanyuPinlu chi2    U+9A70 kBigFive    - kGB0 1959 kRSUnicode 187'.3"
+           <<"馳 kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3"
+           <<"峠 kHanyuPinlu quia3   U+5CE0 kBigFive    - kGB0    - kRSUnicode 46.6"
+           <<"蘅 kHanyuPinlu heng2   U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16"
+           <<"叫 kHanyuPinlu jiao4   U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2"
+           <<"君 kHanyuPinlu jun1    U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4"
+           <<"卡 kHanyuPinlu ka3     U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3"
+           <<"李 kHanyuPinlu li5     U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3"
+           <<"柳 kHanyuPinlu liu3    U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
+           <<"宁 kHanyuPinlu ning2   U+5B81 kBigFive C972 kGB0 3694 kRSUnicode 40.2"
+           <<"威 kHanyuPinlu wei1    U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
+           <<"张 kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
+           <<"張 kHanyuPinlu zhang1  U+5F35 kBigFive B169 kGB0    - kRSUnicode 57.8"
+           <<"𠮩 kHanyuPinlu -      U+20BA9 kBigFive    - kGB0    - kRSUnicode 30.2"
+            )
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"<<"A"<<"J"<<"J"<<"J"<<"J"<<"S"<<"S"<<"S"<<"S"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
+           <<"阿"
+           <<"驰"
+           <<"馳"
+           <<"峠"
+           <<"蘅"
+           <<"叫"
+           <<"君"
+           <<"卡"
+           <<"李"
+           <<"柳"
+           <<"宁"
+           <<"威"
+           <<"张"
+           <<"張"
+           <<"𠮩"
+            );
 }
 
 void Ft_Locales::testMLocaleIndexBucket()
@@ -1785,7 +1803,7 @@ void Ft_Locales::testMLocaleIndexBucket()
            localeEn.collator());
     qSort (stringsSortedCopy.begin(), stringsSortedCopy.end(),
            locale.collator());
-#if 1
+#if defined(VERBOSE_OUTPUT)
     QTextStream debugStream(stdout);
     debugStream.setCodec("UTF-8");
     debugStream << "\tlcCollate: " << lcCollate
@@ -1793,16 +1811,29 @@ void Ft_Locales::testMLocaleIndexBucket()
                 << "\n\texpect \tfound  \torig   \tsorted\n";
     for (int i = 0; i < stringsSorted.size(); ++i)
         debugStream
+            << i
             << "\t" << expectedBuckets[i]
             << "\t" << locale.indexBucket(stringsSorted[i])
             << "\t" << stringsSorted[i]
             << "\t" << stringsSortedCopy[i]
             << "\n";
+    debugStream.flush();
 #endif
     QCOMPARE(stringsSortedCopy, stringsSorted);
-    for (int i = 0; i < stringsSorted.size(); ++i)
+    for (int i = 0; i < stringsSorted.size(); ++i) {
+#if defined(VERBOSE_OUTPUT)
+        if (locale.indexBucket(stringsSorted[i]) != expectedBuckets[i]) {
+            debugStream << "i=" << i
+                        << " locale.indexBucket(stringsSorted[i])="
+                        << locale.indexBucket(stringsSorted[i])
+                        << " expectedBuckets[i]="
+                        << expectedBuckets[i] << "\n";
+            debugStream.flush();
+        }
+#endif
         QCOMPARE(locale.indexBucket(stringsSorted[i]),
                  expectedBuckets[i]);
+    }
 }
 
 /*
@@ -2018,6 +2049,8 @@ void Ft_Locales::checkAvailableLocales()
     supportedLocaleNames << "zh_MO";
     supportedLocaleNames << "zh_TW";
     supportedLocaleNames << "zh_Hans_TW";
+    supportedLocaleNames << "zh_TW@collation=pinyin";
+    supportedLocaleNames << "zh_TW@collation=stroke";
     supportedLocaleNames << "zh_CN@collation=pinyin";
     supportedLocaleNames << "zh_CN@collation=stroke";
     supportedLocaleNames << "ko_KR";
