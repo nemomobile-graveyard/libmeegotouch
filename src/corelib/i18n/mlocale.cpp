@@ -2978,18 +2978,23 @@ QString MLocale::indexBucket(const QString &str) const
         MIcuConversions::unicodeStringToQString(
             MIcuConversions::qStringToUnicodeString(str).toUpper(
                 d->getCategoryLocale(MLcCollate)));
+    QString firstCharacter;
+    if (strUpperCase.at(0).isHighSurrogate())
+        firstCharacter = strUpperCase.at(0) + strUpperCase.at(1);
+    else
+        firstCharacter = strUpperCase.at(0);
     MCollator coll = this->collator();
     for (int i = 0; i < buckets.size(); ++i) {
         if (coll(strUpperCase, buckets[i])) {
             if (i == 0) {
-                return QString(strUpperCase[0]);
+                return firstCharacter;
             }
             else {
                 return buckets[i-1];
             }
         }
     }
-    return QString(strUpperCase[0]);
+    return firstCharacter;
 }
 #endif
 
