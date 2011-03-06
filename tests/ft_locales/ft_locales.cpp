@@ -2280,6 +2280,7 @@ void Ft_Locales::checkAvailableLocales()
                 calendar = islamicCalendar;
                 break;
             }
+            locale.setCalendarType(calendarType);
             for (unsigned dateType = MLocale::DateNone;
                  dateType <= MLocale::DateFull;
                  ++dateType) {
