@@ -59,6 +59,14 @@ class M_CORE_EXPORT MLocationDatabase
      * citiesInTimeZone("America/Los_Angeles") will return the same
      * list.
      *
+     * I.e. this lists all cities which have the same canonical
+     * timezone id as the id given as parameter.
+     *
+     * It tries to put the “most important” city for this timezone id
+     * first in the list of cities returned. Currently it does this
+     * by putting a city first if it happens to have the same name
+     * as the part of the canonical timezone id after the last “/”.
+     *
      * For invalid time zone ids like "Oz/Emerald_City", an empty list
      * is returned.
      */
