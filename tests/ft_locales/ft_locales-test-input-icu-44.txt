@@ -5318,46 +5318,46 @@ fi_FI	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12          	h:mm:s
 fi_FI	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss z -> 14:31:00 UTC+0.00
 fi_FI	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a zzzz -> 2:31:00 ip. UTC+0.00
 fi_FI	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm:ss zzzz -> 14:31:00 UTC+0.00
-fi_FI	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
-fi_FI	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
-fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 ip.
-fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
-fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 ip.
-fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
-fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 ip. UTC+0.00
-fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 UTC+0.00
-fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 ip. UTC+0.00
-fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 UTC+0.00
-fi_FI	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy -> 18.7.1429
-fi_FI	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy -> 18.7.1429
-fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm a -> 18.7.1429 2:31 ip.
-fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm -> 18.7.1429 14:31
-fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a -> 18.7.1429 2:31:00 ip.
-fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss -> 18.7.1429 14:31:00
-fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a z -> 18.7.1429 2:31:00 ip. UTC+0.00
-fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss z -> 18.7.1429 14:31:00 UTC+0.00
-fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.yyyy h:mm:ss a zzzz -> 18.7.1429 2:31:00 ip. UTC+0.00
-fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.yyyy H:mm:ss zzzz -> 18.7.1429 14:31:00 UTC+0.00
-fi_FI	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y -> 18. radžab 1429
-fi_FI	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y -> 18. radžab 1429
-fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm a -> 18. radžab 1429 2:31 ip.
-fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm -> 18. radžab 1429 14:31
-fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a -> 18. radžab 1429 2:31:00 ip.
-fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss -> 18. radžab 1429 14:31:00
-fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a z -> 18. radžab 1429 2:31:00 ip. UTC+0.00
-fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss z -> 18. radžab 1429 14:31:00 UTC+0.00
-fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y h:mm:ss a zzzz -> 18. radžab 1429 2:31:00 ip. UTC+0.00
-fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y H:mm:ss zzzz -> 18. radžab 1429 14:31:00 UTC+0.00
-fi_FI	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y -> maanantai 18. radžab 1429
-fi_FI	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y -> maanantai 18. radžab 1429
-fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm a -> maanantai 18. radžab 1429 2:31 ip.
-fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm -> maanantai 18. radžab 1429 14:31
-fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a -> maanantai 18. radžab 1429 2:31:00 ip.
-fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss -> maanantai 18. radžab 1429 14:31:00
-fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a z -> maanantai 18. radžab 1429 2:31:00 ip. UTC+0.00
-fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss z -> maanantai 18. radžab 1429 14:31:00 UTC+0.00
-fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y h:mm:ss a zzzz -> maanantai 18. radžab 1429 2:31:00 ip. UTC+0.00
-fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y H:mm:ss zzzz -> maanantai 18. radžab 1429 14:31:00 UTC+0.00
+fi_FI	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.y G -> 18.7.1429 AH
+fi_FI	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G -> 18.7.1429 AH
+fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm a -> 18.7.1429 AH 2:31 ip.
+fi_FI	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm -> 18.7.1429 AH 14:31
+fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm:ss a -> 18.7.1429 AH 2:31:00 ip.
+fi_FI	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm:ss -> 18.7.1429 AH 14:31:00
+fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm:ss a z -> 18.7.1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm:ss z -> 18.7.1429 AH 14:31:00 UTC+0.00
+fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm:ss a zzzz -> 18.7.1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm:ss zzzz -> 18.7.1429 AH 14:31:00 UTC+0.00
+fi_FI	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d.M.y G -> 18.7.1429 AH
+fi_FI	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G -> 18.7.1429 AH
+fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm a -> 18.7.1429 AH 2:31 ip.
+fi_FI	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm -> 18.7.1429 AH 14:31
+fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm:ss a -> 18.7.1429 AH 2:31:00 ip.
+fi_FI	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm:ss -> 18.7.1429 AH 14:31:00
+fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm:ss a z -> 18.7.1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm:ss z -> 18.7.1429 AH 14:31:00 UTC+0.00
+fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d.M.y G h:mm:ss a zzzz -> 18.7.1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d.M.y G H:mm:ss zzzz -> 18.7.1429 AH 14:31:00 UTC+0.00
+fi_FI	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y G -> 18. radžab 1429 AH
+fi_FI	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y G -> 18. radžab 1429 AH
+fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y G h:mm a -> 18. radžab 1429 AH 2:31 ip.
+fi_FI	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y G H:mm -> 18. radžab 1429 AH 14:31
+fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y G h:mm:ss a -> 18. radžab 1429 AH 2:31:00 ip.
+fi_FI	dateLong, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y G H:mm:ss -> 18. radžab 1429 AH 14:31:00
+fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y G h:mm:ss a z -> 18. radžab 1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y G H:mm:ss z -> 18. radžab 1429 AH 14:31:00 UTC+0.00
+fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d. MMMM y G h:mm:ss a zzzz -> 18. radžab 1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d. MMMM y G H:mm:ss zzzz -> 18. radžab 1429 AH 14:31:00 UTC+0.00
+fi_FI	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y G -> maanantai 18. radžab 1429 AH
+fi_FI	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y G -> maanantai 18. radžab 1429 AH
+fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y G h:mm a -> maanantai 18. radžab 1429 AH 2:31 ip.
+fi_FI	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y G H:mm -> maanantai 18. radžab 1429 AH 14:31
+fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y G h:mm:ss a -> maanantai 18. radžab 1429 AH 2:31:00 ip.
+fi_FI	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y G H:mm:ss -> maanantai 18. radžab 1429 AH 14:31:00
+fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y G h:mm:ss a z -> maanantai 18. radžab 1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y G H:mm:ss z -> maanantai 18. radžab 1429 AH 14:31:00 UTC+0.00
+fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. MMMM y G h:mm:ss a zzzz -> maanantai 18. radžab 1429 AH 2:31:00 ip. UTC+0.00
+fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. MMMM y G H:mm:ss zzzz -> maanantai 18. radžab 1429 AH 14:31:00 UTC+0.00
 fr_FR	Language endonym	français (France)
 fr_FR	Country endonym	France
 fr_FR	Floating Point Number	-123 456 789,012
@@ -12963,7 +12963,7 @@ zh_CN@collation=stroke	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_CN@collation=stroke	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_CN@collation=stroke	Name of weekday 07 (Islamic calendar), format, narrow	日
 zh_CN@collation=stroke	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 正 此 竹山 竹山 沙紀 松下 俄 若山 得 鳩山 播 攀 内山 楽谷 爱
-zh_CN@collation=stroke	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
+zh_CN@collation=stroke	Exemplar characters index	[一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 嚷 儷 儼 囌 囑 廳]
 zh_CN@collation=stroke	Scripts used	Hani
 zh_CN@collation=stroke	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_CN@collation=stroke	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -13633,7 +13633,7 @@ zh_Hant_TW	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_Hant_TW	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_Hant_TW	Name of weekday 07 (Islamic calendar), format, narrow	日
 zh_Hant_TW	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 正 此 竹山 竹山 沙紀 松下 俄 若山 得 鳩山 播 攀 内山 楽谷 爱
-zh_Hant_TW	Exemplar characters index	[一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 勸 儷 儼 囌 囑 廳]
+zh_Hant_TW	Exemplar characters index	[一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 嚷 儷 儼 囌 囑 廳]
 zh_Hant_TW	Scripts used	Hani Bopo
 zh_Hant_TW	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_Hant_TW	%R (locale specific 24 hour “TimeShort”)	14:31
