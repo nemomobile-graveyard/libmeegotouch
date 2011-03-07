@@ -29,6 +29,11 @@ MAbstractScroller::~MAbstractScroller()
 {
 }
 
+void MAbstractScroller::stopScrolling(QGraphicsWidget *)
+{
+    // Empty default implementation. Scrollers can use this if they lack animation.
+}
+
 void MAbstractScroller::restoreScrolling(QGraphicsWidget *)
 {
     // Empty default implementation.

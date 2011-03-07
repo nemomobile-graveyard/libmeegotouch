@@ -74,6 +74,14 @@ void MPannableViewportScroller::applyScrolling(QGraphicsWidget *widget, const QP
     // covers at least the sip.
 }
 
+void MPannableViewportScroller::stopScrolling(QGraphicsWidget *widget)
+{
+    MPannableViewport *viewport = static_cast<MPannableViewport *>(widget);
+
+    // Scroll to current position. This is effectively same as stopping the animation.
+    viewport->d_func()->scrollTo(viewport->position());
+}
+
 void MPannableViewportScroller::restoreScrolling(QGraphicsWidget *)
 {
     // We rely on viewport's range/border springs to restore as much as needed.

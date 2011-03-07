@@ -88,6 +88,8 @@ public:
      */
     void applyScrolling();
 
+    void stopScrolling();
+
     /*! \brief Restores the state of scroller widgets.
      *
      *  This is does not necessarily undo the scrolling but can be used to
@@ -123,6 +125,7 @@ private:
         ScrollChainItem(QSharedPointer<MAbstractScroller> scroller, QGraphicsWidget *scrollerWidget);
         void calculateScrolling(const QRect &targetRect, const QPoint &originPoint);
         void applyScrolling();
+        void stopScrolling();
         void restoreScrolling();
 
         // Scroller for our widget

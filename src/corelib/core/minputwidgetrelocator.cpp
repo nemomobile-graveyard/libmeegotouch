@@ -152,22 +152,28 @@ void MInputWidgetRelocator::update()
 
             // If widget was not docked then use the regular rules with nogo zones
             // and an anchor point.
-            if (!widgetWasDocked && needsRelocation(inputWidget, microRect)) {
+            if (!widgetWasDocked) {
+                if (needsRelocation(inputWidget, microRect)) {
 
-                // Calculate anchor point in root coordinates
-                const QPoint anchorPoint(rootElement->mapFromItem(inputWidget, microRect.topLeft()).x(),
-                                         exposedContentRect().top() + style()->verticalAnchorPosition());
+                    // Calculate anchor point in root coordinates
+                    const QPoint anchorPoint(rootElement->mapFromItem(inputWidget, microRect.topLeft()).x(),
+                                             exposedContentRect().top() + style()->verticalAnchorPosition());
 
-                // First, center context widget to anchorPoint but ensure always top edge
-                // is within exposed content rect. The term "context widget" refers to the first
-                // scrollable parent widget of the input widget widget, and therefore it can be
-                // used to show user "context" or visibility around the focused input widget.
-                centerContextWidgetToAnchorPoint(newChain, anchorPoint, inputWidget);
+                    // First, center context widget to anchorPoint but ensure always top edge
+                    // is within exposed content rect. The term "context widget" refers to the first
+                    // scrollable parent widget of the input widget, and therefore it can be
+                    // used to show user "context" or visibility around the focused input widget.
+                    centerContextWidgetToAnchorPoint(newChain, anchorPoint, inputWidget);
 
-                const QRect targetRect(anchorPoint, microRect.size());
-                newChain->addBottomUpScroll(targetRect, microRect.topLeft());
+                    const QRect targetRect(anchorPoint, microRect.size());
+                    newChain->addBottomUpScroll(targetRect, microRect.topLeft());
 
-                newChain->applyScrolling();
+                    newChain->applyScrolling();
+                } else {
+                    // No scrolling was needed to be done. However, some earlier scrolling animations might
+                    // still be ongoing, moving the input widget to an improper place.
+                    newChain->stopScrolling();
+                }
             }
         }
         oldChain = newChain;

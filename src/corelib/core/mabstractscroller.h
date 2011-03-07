@@ -64,6 +64,9 @@ public:
     //! \brief Scrolls the contents of given \a widget by the amount of \a contentsOffset.
     virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset) = 0;
 
+    //! \brief Stops any ongoing scrolling animation in the given \a widget.
+    virtual void stopScrolling(QGraphicsWidget *widget);
+
     //! \brief Restores the widget to its original state (Optional)
     virtual void restoreScrolling(QGraphicsWidget *widget);
 

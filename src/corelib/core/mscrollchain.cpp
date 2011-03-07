@@ -86,6 +86,13 @@ void MScrollChain::applyScrolling()
     }
 }
 
+void MScrollChain::stopScrolling()
+{
+    for (ChainItemList::iterator item = chainItems.begin(); item != chainItems.end(); ++item) {
+        item->stopScrolling();
+    }
+}
+
 void MScrollChain::restore(const MScrollChain *excludeChain)
 {
     if (chainItems.isEmpty()) {
@@ -263,6 +270,12 @@ void MScrollChain::ScrollChainItem::applyScrolling()
     scroller->applyScrolling(widget, contentsTranslation);
 
     // We no longer know what the translation is.
+    contentsTranslation = QPoint();
+}
+
+void MScrollChain::ScrollChainItem::stopScrolling()
+{
+    scroller->stopScrolling(widget);
     contentsTranslation = QPoint();
 }
 

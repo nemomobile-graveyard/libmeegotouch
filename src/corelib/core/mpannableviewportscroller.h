@@ -32,6 +32,7 @@ public:
                                         const QPoint &originPoint,
                                         const QPoint &currentOffset);
     virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset);
+    virtual void stopScrolling(QGraphicsWidget *widget);
     virtual void restoreScrolling(QGraphicsWidget *widget);
 };
 
