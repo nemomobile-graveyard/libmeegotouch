@@ -1,5 +1,10 @@
 /*! \page news What's new in MeeGo Touch
 
+\section v02091 0.20.91
+
+\subsection New
+- MWindow::roundedCornersEnabled property
+
 \section v02088 0.20.88
 
 \subsection New
