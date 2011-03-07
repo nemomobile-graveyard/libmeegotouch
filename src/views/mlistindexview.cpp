@@ -213,7 +213,8 @@ void MListIndexViewPrivate::updateVisible()
 void MListIndexViewPrivate::createContainer()
 {
     Q_Q(MListIndexView);
-    q->disconnect(q, SLOT(_q_exposedContentRectChanged()));
+    if (container)
+        q->disconnect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_exposedContentRectChanged()));
 
     if (q->model()->list()) {
         container = MListViewPrivateNamespace::findParentWidgetOfType<MApplicationPage>(q->model()->list());
