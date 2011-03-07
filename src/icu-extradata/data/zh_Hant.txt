@@ -1,0 +1,13 @@
+// original list of index characters from libicu is:
+// [一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 勸 儷 儼 囌 囑 廳]
+// The character for the 20 stroke box, 勸 U+52F8, seems to be wrong, it has 19
+// strokes. 嚷 U+56B7 seems to serve better here as it is the first
+// 20 stroke character in the stroke count order of libicu 4.4.
+// (譢 U+8B62 would work for libicu 4.6, it is the first
+// 20 stroke character in the stroke count order of libicu 4.6, but
+// it wouldn’t work for libicu 4.4). 嚷 U+56B7 is probably good enough
+// as a compromise.
+//
+zh_Hant{
+    ExemplarCharactersIndex { "[一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 嚷 儷 儼 囌 囑 廳]" }
+}

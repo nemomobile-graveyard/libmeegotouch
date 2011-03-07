@@ -2922,6 +2922,20 @@ QStringList MLocale::exemplarCharactersIndex() const
     QString collationLocaleName = d->categoryName(MLcCollate);
     QStringList exemplarCharactersIndex;
 
+    // special treatment for Chinese locales because these have the
+    // collation options "stroke" and "pinyin" which require different
+    // index buckets.  But libicu currently supports only one index
+    // bucket list per locale.  As a workaround, force use of the
+    // index bucket list from the zh_TW locale if collation=stroke is
+    // set and force the use of the index bucket list from the zh_CN
+    // locale if collation=pinyin is set:
+    if(collationLocaleName.startsWith("zh")) {
+        if(collationLocaleName.contains("collation=stroke"))
+            collationLocaleName = QLatin1String("zh_TW");
+        if(collationLocaleName.contains("collation=pinyin"))
+            collationLocaleName = QLatin1String("zh_CN");
+    }
+
     UErrorCode status = U_ZERO_ERROR;
     UResourceBundle *res =
         ures_open(NULL, collationLocaleName.toUtf8().constData(), &status);
