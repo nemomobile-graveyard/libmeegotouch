@@ -20,11 +20,10 @@
 #include "minputmethodstate.h"
 #include "minputmethodstate_p.h"
 
-#include "qapplication.h"
-#include "qinputcontext.h"
-
 #include <MDebug>
 
+#include <QApplication>
+#include <QInputContext>
 #include <QTimer>
 #include <QKeyEvent>
 
