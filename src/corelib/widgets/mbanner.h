@@ -180,6 +180,12 @@ public:
     */
     Q_PROPERTY(QString prefixTimeStamp READ prefixTimeStamp WRITE setPrefixTimeStamp)
 
+    /*!
+        \property MBanner::down
+        \brief See MBannerModel::down
+    */
+    Q_PROPERTY(bool down READ isDown WRITE setDown DESIGNABLE false)
+
 public:
 
     /*!
@@ -228,6 +234,11 @@ public:
     */
     QPixmap pixmap() const;
 
+    /*!
+      \brief Returns true if the banner is pressed down.
+    */
+    bool isDown() const;
+
 Q_SIGNALS:
 
     /*!
@@ -272,6 +283,12 @@ public Q_SLOTS:
         \param pixmap
     */
     void setPixmap(const QPixmap &pixmap);
+
+    /*!
+      \brief Set the banner down state.
+    */
+
+    void setDown(bool);
 
 private:
     Q_DISABLE_COPY(MBanner)

@@ -76,6 +76,11 @@ QPixmap MBanner::pixmap() const
     return model()->pixmap();
 }
 
+bool MBanner::isDown() const
+{
+    return model()->down();
+}
+
 void MBanner::setIconID(const QString &iconId)
 {
     model()->setIconID(iconId);
@@ -104,4 +109,9 @@ void MBanner::setPrefixTimeStamp(const QString &text)
 void MBanner::setPixmap(const QPixmap &pixmap)
 {
     model()->setPixmap(pixmap);
+}
+
+void MBanner::setDown(bool down)
+{
+    model()->setDown(down);
 }

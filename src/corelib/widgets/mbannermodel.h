@@ -62,7 +62,12 @@ class M_CORE_EXPORT MBannerModel : public MSceneWindowModel
     */
 
     M_MODEL_PROPERTY(QPixmap, pixmap, Pixmap, false, QPixmap())
+
+    /*!
+        \property MBannerModel::down
+        \brief Boolean value that defines whether button is currently pressed down or not.
+    */
+    M_MODEL_PROPERTY(bool, down, Down, true, false)
 };
 
 #endif
-

@@ -46,7 +46,6 @@ MBannerViewPrivate::MBannerViewPrivate() :
     bannerTimeStampLabel(NULL),
     prefixTimeStampLabel(NULL),
     bannerTimeStampData(NULL),
-    down(false),
     isDownOpacityEnabled(false),
     pixmapBanner(NULL),
     timeShortNoDate(false),
@@ -95,12 +94,10 @@ MImageWidget *MBannerViewPrivate::icon()
 
 MLabel *MBannerViewPrivate::bannerTimeStamp()
 {
-    Q_Q(MBannerView);
 
     if (!bannerTimeStampLabel) {
         bannerTimeStampLabel = new MLabel(controller);
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
-        bannerTimeStampLabel->setText(MLocale().formatDateTime(q->model()->bannerTimeStamp(), MLocale::DateNone, MLocale::TimeShort));
         timeShortNoDate = true;
    }
 
@@ -152,6 +149,9 @@ void MBannerViewPrivate::setBannerTimeStamp(const QDateTime &date)
 
     if (date.isValid()) {
         bannerTimeStampData->setMSecsSinceEpoch(date.toMSecsSinceEpoch());
+        //By default Date Time format is TimeShort (show hours & minutes + prefix)
+        bannerTimeStamp()->setText(MLocale().formatDateTime(date, MLocale::DateNone, MLocale::TimeShort));
+        updateDateFormat();
     }
 }
 
@@ -169,7 +169,7 @@ void MBannerViewPrivate::refreshStyleMode()
 {
     Q_Q(MBannerView);
 
-    if (down) {
+    if (q->model()->down()) {
         q->style().setModePressed();
     } else {
         q->style().setModeDefault();
@@ -186,7 +186,6 @@ void MBannerViewPrivate::updateDateFormat() const
     if (bannerTimeStampData) {
         //If the datetime is more than 24 hours, change the format to DateShort
         int daysCalc = q->model()->bannerTimeStamp().daysTo(QDateTime::currentDateTime());
-
         if (daysCalc > 1 && timeShortNoDate) {
             bannerTimeStampLabel->setText(MLocale().formatDateTime(
                     q->model()->bannerTimeStamp().toLocalTime(),
@@ -357,8 +356,10 @@ void MBannerViewPrivate::layoutGenericBanner(){
     }
 
     if (!q->model()->pixmap().isNull()) {
-        if (!q->model()->iconID().isEmpty())
+        if (!q->model()->iconID().isEmpty()) {
             icon()->setVisible(false);
+            layout->removeItem(icon());
+        }
         pixmap()->setStyleName("GenericBannerIcon");
         pixmap()->setVisible(true);
         landscapePolicy->addItem(pixmap(), Qt::AlignTop);
@@ -538,7 +539,7 @@ void MBannerViewPrivate::manageOpacities() const
 {
     Q_Q(const MBannerView);
 
-    if (down && isDownOpacityEnabled) {
+    if (q->model()->down() && isDownOpacityEnabled) {
         if (iconId)
             iconId->setOpacity(q->style()->pressDownBannerOpacity());
         if (titleLabel)
@@ -549,7 +550,7 @@ void MBannerViewPrivate::manageOpacities() const
             prefixTimeStampLabel->setOpacity(q->style()->pressDownBannerOpacity());
         if (bannerTimeStampLabel)
             bannerTimeStampLabel->setOpacity(q->style()->pressDownBannerOpacity());
-    } else if (!down && isDownOpacityEnabled) {
+    } else if (!q->model()->down() && isDownOpacityEnabled) {
         if (iconId)
             iconId->setOpacity(controller->opacity());
         if (titleLabel)
@@ -592,10 +593,10 @@ void MBannerView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     Q_D(MBannerView);
 
-    if (d->down)
+    if (model()->down())
         return;
 
-    d->down = true;
+    model()->setDown(true);
     d->refreshStyleMode();
 }
 
@@ -603,10 +604,10 @@ void MBannerView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MBannerView);
 
-    if (!d->down)
+    if (!model()->down())
         return;
 
-    d->down = false;
+    model()->setDown(false);
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
@@ -630,12 +631,12 @@ void MBannerView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
 
     if (rect.contains(touch)) {
-        if (!d->down) {
-            d->down = true;
+        if (!model()->down()) {
+            model()->setDown(true);
         }
     } else {
-        if (d->down) {
-            d->down = false;
+        if (model()->down()) {
+            model()->setDown(false);
         }
     }
 
@@ -647,10 +648,10 @@ void MBannerView::cancelEvent(MCancelEvent *event)
     Q_UNUSED(event);
     Q_D(MBannerView);
 
-    if (!d->down)
+    if (!model()->down())
         return;
 
-    d->down = false;
+    model()->setDown(false);
     d->refreshStyleMode();
 }
 

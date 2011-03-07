@@ -94,6 +94,7 @@ SUBDIRS     =  \
     ut_mcontentitem \
     ut_minfobanner \
     ut_mbanner \
+    ut_mbannerview \
     ut_mwidgetcontroller \
     ut_mservicemapper \
     ut_mservicefwbaseif \

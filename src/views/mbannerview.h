@@ -75,6 +75,13 @@ private:
     Q_DECLARE_PRIVATE(MBannerView)
     Q_DISABLE_COPY(MBannerView)
 
+#ifdef UNIT_TEST
+    friend class Ut_MBannerView;
+#endif
+
+#ifdef M_TEST_CLASS
+    M_TEST_CLASS
+#endif
 };
 
 #endif
