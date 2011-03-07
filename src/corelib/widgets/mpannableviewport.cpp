@@ -133,11 +133,14 @@ void MPannableViewportPrivate::scrollTo(const QPointF &endPosition)
         scrollToAnimation.stop();
     }
 
-    scrollToAnimation.setStartValue(q->position());
-    scrollToAnimation.setEndValue(endPosition);
-    scrollToAnimation.setEasingCurve(QEasingCurve::InOutCubic);
-    scrollToAnimation.setDuration(300);
-    scrollToAnimation.start();
+    if (q->position() != endPosition) {
+        // TODO: Add animation parameters to some style.
+        scrollToAnimation.setStartValue(q->position());
+        scrollToAnimation.setEndValue(endPosition);
+        scrollToAnimation.setEasingCurve(QEasingCurve::InOutCubic);
+        scrollToAnimation.setDuration(300);
+        scrollToAnimation.start();
+    }
 }
 
 void MPannableViewportPrivate::sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
