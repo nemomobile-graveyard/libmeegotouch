@@ -173,17 +173,84 @@ qSort(sl.begin, sl.end, c); // start to sort!
 ...
 \endcode
 
-To use a different collation system:
+Some locales support different collation systems, for example the
+German locale supports sorting the way it is done in German
+dictionaries (locale name “de_DE\@collation=standard” or just locale
+name “de_DE” as this is the default sort order for the German
+locale) and it also supports sorting the way it is done in German
+phonebooks (locale name “de_DE\@collation=phonebook”).  For example,
+if you want to sort something according to the German phonebook sort
+method, it can be done like this:
+
 \code
 QStringList sl; // This contains the strings which need to be sorted
 ...
-MLocale myLocale; // get the current locale
-myLocale.setCollation (MLocale::PhonebookCollation); // sort using German's phonebook sorting order
+// create a locale with German phonebook sort order:
+MLocale myLocale("de_DE@collation=phonebook");
+
 MCollator c = myLocale.collator(); // getting the comparator
 ...
 qSort(sl.begin, sl.end, c); // start to sort!
 ...
 \endcode
+
+\subsubsection chinesesortoptions Chinese sort options
+
+MeeGo Touch UI supports the sortoptions libicu supports for a certain
+locale. For the Chinese locales, the supported sort options are:
+
+<ul>
+<li>
+<b>pinyin</b>:<br>
+Alphabetically according to the pinyin pronunciation
+in Latin transcription. This is the default for the simplified Chinese
+locales like “zh_CN” and “zh_SG”, i.e. “zh_CN” behaves the same as
+“zh_CN\@collation=pinyin”. To use stroke count sort order in a simplified
+Chinese locale one needs to specify the stroke count sort option
+explicitely like “zh_CN\@collation=stroke”.
+</li>
+<li>
+<b>stroke</b>:<br>
+Stroke count sort order. This is the default for the tradtional Chinese
+locales like “zh_TW”, “zh_HK”, and “zh_MO”, i.e. “zh_TW” behaves
+the same as “zh_TW\@collation=stroke”. To use pinyin sort order for
+the traditional Chinese locales one needs to specify the pinyin sort
+option explicitely like “zh_TW\@collation=pinyin”.
+</li>
+<li>
+<b>big5han</b>:<br>
+Big5 code point order. For some information
+about Big5 see <a href="http://en.wikipedia.org/wiki/Big5">http://en.wikipedia.org/wiki/Big5</a> which says about the Big5 order:
+<blockquote>
+     “The original Big5 character set is sorted first by
+      usage frequency, second by stroke count, lastly by
+      Kangxi radical.”
+</blockquote>
+</li>
+<li>
+<b>gb2312han</b>:<br>
+gb3212 code point order.
+</li>
+<li>
+<b>standard</b>: apparently Unicode code point order
+</li>
+<li>
+<b>unihan</b>:<br>
+The unihan sort order is a consistent way of ordering all the Unihan
+characters, first by radial, then by the residual stroke count,
+then by the Unicode block (where the Unicode blocks are reordered
+to make the compatibility blocks come last) and finally by code point.
+I.e. it is primarily a radical and stroke count sort method where
+the code point is used as a sort of tie-breaker.
+For example, it sorts the characters 叫 U+53EB and 𠮩 U+20BA9 next
+to each other, which are far apart in their Unicode code points
+but share the same Kangxi Radical ⼝ U+2F1D (KANGXI RADICAL MOUTH)
+and the same residual stroke count (3).
+The “unihan” sort order is described
+in detail in <a href="http://www.unicode.org/reports/tr38/">“Unicode Standard Annex #38 Unicode Han Database (Unihan)”</a>.
+</p>
+</li>
+</ul>
 
 \subsection formatters Formatters
 
