@@ -142,6 +142,10 @@ QLatin1String MStyleSheetSelector::filename() const
     return MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(_filename);
 }
 
+MUniqueStringCache::Index MStyleSheetSelector::filenameID() const
+{
+    return _filename;
+}
 
 MUniqueStringCache::Index MStyleSheetSelector::objectNameID() const
 {

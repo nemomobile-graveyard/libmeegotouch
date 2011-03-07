@@ -145,6 +145,7 @@ public:
     Flags flags() const;
 
     QLatin1String filename() const;
+    MUniqueStringCache::Index filenameID() const;
 
     bool fromMappedMemory;
 

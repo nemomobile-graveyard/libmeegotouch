@@ -69,7 +69,7 @@ public:
     static QFont fontFromString(const QByteArray string, bool *conversionOk);
     static QByteArray attributeNameToPropertyName(const QByteArray &attributeName);
 
-    bool writeAttribute(const QString &filename,
+    bool writeAttribute(MUniqueStringCache::Index filename,
                         MStyle *style,
                         const QMetaProperty &property,
                         M::Orientation orientation) const;

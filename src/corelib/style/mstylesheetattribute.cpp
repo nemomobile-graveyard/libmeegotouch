@@ -575,7 +575,7 @@ QByteArray MStyleSheetAttribute::attributeNameToPropertyName(const QByteArray &a
     return result;
 }
 
-bool MStyleSheetAttribute::writeAttribute(const QString &filename,
+bool MStyleSheetAttribute::writeAttribute(MUniqueStringCache::Index filename,
         MStyle *style,
         const QMetaProperty &property,
         M::Orientation orientation) const
@@ -838,7 +838,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         }
     }
 
-    MStyleSheetParser::outputParseError(filename, "Not a valid attribute(" + QLatin1String(property.typeName()) + "): " + MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(name) + " : " + valueString, MStyleSheetParser::getLineNum(filename, position));
+    MStyleSheetParser::outputParseError(MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(filename), "Not a valid attribute(" + QLatin1String(property.typeName()) + "): " + MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(name) + " : " + valueString, MStyleSheetParser::getLineNum(MStyleSheetParser::stringCacheWithReverseLookup()->indexToString(filename), position));
     return false;
 }
 

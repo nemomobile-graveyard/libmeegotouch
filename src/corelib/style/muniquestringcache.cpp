@@ -32,8 +32,29 @@
 #include <QApplication>
 #include <QScopedPointer>
 
+namespace {
 const int MAX_CACHE_SIZE = 1024*1024;
 #define CACHE_NAME "MTF_UNIQUE_STRING_CACHE"
+
+// slightly adapted from the version found in Qt's corelib/tools/qhash.cpp
+static uint hash(const uchar *p)
+{
+    uint h = 0;
+
+    while (*p) {
+        h = (h << 4) + *p++;
+        h ^= (h & 0xf0000000) >> 23;
+        h &= 0x0fffffff;
+    }
+    return h;
+}
+
+}
+
+uint qHash(const QLatin1String &key)
+{
+    return hash(reinterpret_cast<const uchar *>(key.latin1()));
+}
 
 class UniqueStringCacheMappedMemory
 {

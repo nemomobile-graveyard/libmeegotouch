@@ -328,7 +328,7 @@ bool MStyleSheetPrivate::combine(MStyle *style, const SelectorInfoList &entry, c
             QSharedPointer<SelectorInfo> info = it.previous();
             if (const MStyleSheetAttribute *attribute = info->selector->attributeByName(propertyIndex)) {
 
-                if (!attribute->writeAttribute(info->selector->filename(), style, property, spec.orientation)) {
+                if (!attribute->writeAttribute(info->selector->filenameID(), style, property, spec.orientation)) {
                     qCritical("Failed to write attribute: %s to property %s. The stylesheet syntax might be invalid (%s:%s) in %s.",
                               attribute->getName().latin1(),
                               property.name(),
