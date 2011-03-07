@@ -77,7 +77,7 @@ public:
     virtual QString timedemoTitle();
 
     virtual void createContent();
-    MGridLayoutPolicy *createAndSetupGridPolicy(QGraphicsWidget *panel);
+    MLinearLayoutPolicy *createAndSetupLinearPolicy(QGraphicsWidget *panel);
 
 public slots:
     //! switch Autocapitalisation on/off in every MTextEdit
@@ -94,6 +94,7 @@ protected:
     virtual void retranslateUi();
 
 private:
+    QPointer<MLabel> pageTitleLabel;
     QPointer<MLabel> label0;
     QPointer<MLabel> label1;
     QPointer<MLabel> label2;

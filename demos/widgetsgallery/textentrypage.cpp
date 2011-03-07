@@ -26,10 +26,12 @@
 #include <MCompleter>
 #include <MSceneManager>
 #include <MRichTextEdit>
+#include <MLinearLayoutPolicy>
+#include <MWidgetStyle>
+
 #include <QList>
 #include <QStringListModel>
 #include <QDebug>
-#include <layout/mgridlayoutpolicy.h>
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QTextDocument>
@@ -38,6 +40,7 @@
 #include <QTextDocumentFragment>
 #include <QTextLayout>
 #include <QTextBlock>
+#include <QGraphicsLinearLayout>
 
 class CompleterTestModel : public QAbstractTableModel
 {
@@ -270,6 +273,7 @@ void HeaderedTextEdit::setHeaderText(const QString &text)
 {
     if (!headerLabel) {
         headerLabel = new MLabel(this);
+        headerLabel->setStyleName("CommonEditorInputFieldLabel");
         headerLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         headerLabel->setPos(0, 0);
         headerLabel->setPreferredHeight(size().height());
@@ -295,7 +299,7 @@ void HeaderedTextEdit::_q_updateTextLeftMargin()
     cursor.setPosition(0);
     QTextBlockFormat tbf = cursor.blockFormat();
     tbf.setTextIndent(labelSize.width());
-    cursor.setBlockFormat(tbf);
+    cursor.setBlockFormat(tbf);    
 }
 
 void HeaderedTextEdit::_q_resetNewBlockMargin()
@@ -309,7 +313,7 @@ void HeaderedTextEdit::_q_resetNewBlockMargin()
 }
 
 TextEntryPage::TextEntryPage()
-    : TemplatePage(TemplatePage::UserInput),
+    : TemplatePage(TemplatePage::UserInput), pageTitleLabel(),
       label0(), label1(), label2(), label3(), label4(), label5(),
       label6(), label7(), label8(), label9(), label10(),
       labelNoEcho(), labelEchoOnEdit(), labelDirectIM(),
@@ -338,131 +342,155 @@ void TextEntryPage::createContent()
 {
     MApplicationPage::createContent();
     QGraphicsWidget *panel = centralWidget();
-    MGridLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupGridPolicy(panel);
+    MLinearLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupLinearPolicy(panel);
+
+    pageTitleLabel = new MLabel(centralWidget());
+    pageTitleLabel->setStyleName("CommonApplicationHeader");
+    layoutPolicy->addItem(pageTitleLabel);
 
     int row = 0;
 
     // free text line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
-
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
     label0 = new MLabel(centralWidget());
+    label0->setStyleName("CommonFieldLabel");
     label0->setWordWrap(true);
     label0->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    layoutPolicy->addItem(label0, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label0);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // password line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label1 = new MLabel(centralWidget());
+    label1->setStyleName("CommonFieldLabel");
     label1->setWordWrap(true);
     label1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setEchoMode(MTextEditModel::Password);
-    layoutPolicy->addItem(label1, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label1);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // no echo line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     labelNoEcho = new MLabel(centralWidget());
+    labelNoEcho->setStyleName("CommonFieldLabel");
     labelNoEcho->setWordWrap(true);
     labelNoEcho->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setEchoMode(MTextEditModel::NoEcho);
-    layoutPolicy->addItem(labelNoEcho, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(labelNoEcho);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // passwordEchoOnEdit
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     labelEchoOnEdit = new MLabel(centralWidget());
+    labelEchoOnEdit->setStyleName("CommonFieldLabel");
     labelEchoOnEdit->setWordWrap(true);
     labelEchoOnEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setEchoMode(MTextEditModel::PasswordEchoOnEdit);
-    layoutPolicy->addItem(labelEchoOnEdit, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(labelEchoOnEdit);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // number content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label2 = new MLabel(centralWidget());
+    label2->setStyleName("CommonFieldLabel");
     label2->setWordWrap(true);
     label2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::NumberContentType);
-    layoutPolicy->addItem(label2, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label2);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // phone number content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label3 = new MLabel(centralWidget());
+    label3->setStyleName("CommonFieldLabel");
     label3->setWordWrap(true);
     label3->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::PhoneNumberContentType);
-    layoutPolicy->addItem(label3, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label3);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // email content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label4 = new MLabel(centralWidget());
+    label4->setStyleName("CommonFieldLabel");
     label4->setWordWrap(true);
     label4->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::EmailContentType);
-    layoutPolicy->addItem(label4, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label4);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // url content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label5 = new MLabel(centralWidget());
+    label5->setStyleName("CommonFieldLabel");
     label5->setWordWrap(true);
     label5->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     Entries.at(row)->setContentType(M::UrlContentType);
-    layoutPolicy->addItem(label5, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label5);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // multiline
     Entries << new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label6 = new MLabel(centralWidget());
+    label6->setStyleName("CommonFieldLabel");
     label6->setWordWrap(true);
     label6->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     label6->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(label6, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label6);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // autoselection line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
     Entries.at(row)->setAutoSelectionEnabled(true);
 
     label7 = new MLabel(centralWidget());
+    label7->setStyleName("CommonFieldLabel");
     label7->setWordWrap(true);
     label7->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label7->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(label7, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label7);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // completion
     Entries << new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
     QStringList list;
     list << "Betty Brey <Betty.C.Brey@example.com>"
          << "Anne Rodriguez <Anne.E.Rodriguez@example.com>"
@@ -533,68 +561,67 @@ void TextEntryPage::createContent()
     Entries.at(row)->setCompleter(m_completer.data());
 
     label8 = new MLabel(centralWidget());
+    label8->setStyleName("CommonFieldLabel");
     label8->setWordWrap(true);
     label8->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label8->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(label8, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label8);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // rich text entry
     Entries << new MRichTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label9 = new MLabel(centralWidget());
+    label9->setStyleName("CommonFieldLabel");
     label9->setWordWrap(true);
     label9->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label9->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(label9, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
+    layoutPolicy->addItem(label9);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     // multiline rich text entry
     Entries << new MRichTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+    Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label10 = new MLabel(centralWidget());
+    label10->setStyleName("CommonFieldLabel");
     label10->setWordWrap(true);
     label10->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     label10->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(label10, row, 0);
-    layoutPolicy->addItem(Entries.at(row), row, 1);
-    row++;
-
-    //direct input custom widget.
-    directIMWidget = new CustomDirectIMWidget(centralWidget());
-    labelDirectIM = new MLabel(centralWidget());
-    labelDirectIM->setWordWrap(true);
-    labelDirectIM->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    labelDirectIM->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(labelDirectIM, row, 0);
-    layoutPolicy->addItem(directIMWidget, row, 1);
+    layoutPolicy->addItem(label10);
+    layoutPolicy->addItem(Entries.at(row));
     row++;
 
     CustomTextEdit *customTextEdit1 = new CustomTextEdit("", centralWidget());
+    customTextEdit1->setStyleName("CommonSingleInputFieldLabeled");
     customTextEdit1->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar1.xml");
     //% "Example custom toolbar 1"
     customTextEdit1->setPrompt(qtTrId("xx_tooltip_customtoolbar1"));
     labelCustomToolbar1 = new MLabel(centralWidget());
+    labelCustomToolbar1->setStyleName("CommonFieldLabel");
     labelCustomToolbar1->setWordWrap(true);
     labelCustomToolbar1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     labelCustomToolbar1->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(labelCustomToolbar1, row, 0);
-    layoutPolicy->addItem(customTextEdit1, row, 1);
+    layoutPolicy->addItem(labelCustomToolbar1);
+    layoutPolicy->addItem(customTextEdit1);
     Entries << customTextEdit1;
     row++;
 
     CustomTextEdit *customTextEdit2 = new CustomTextEdit("", centralWidget());
+    customTextEdit2->setStyleName("CommonSingleInputFieldLabeled");
     customTextEdit2->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar2.xml");
     //% "Example custom toolbar 2"
     customTextEdit2->setPrompt(qtTrId("xx_tooltip_customtoolbar2"));
     labelCustomToolbar2 = new MLabel(centralWidget());
+    labelCustomToolbar2->setStyleName("CommonFieldLabel");
     labelCustomToolbar2->setWordWrap(true);
     labelCustomToolbar2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     labelCustomToolbar2->setAlignment(Qt::AlignTop);
-    layoutPolicy->addItem(labelCustomToolbar2, row, 0);
-    layoutPolicy->addItem(customTextEdit2, row, 1);
+    layoutPolicy->addItem(labelCustomToolbar2);
+    layoutPolicy->addItem(customTextEdit2);
     Entries << customTextEdit2;
     row++;
 
@@ -603,6 +630,7 @@ void TextEntryPage::createContent()
     // applications
     errorHighlightingTextEdit = new MTextEdit(MTextEditModel::SingleLine,
                                                      "", centralWidget());
+    errorHighlightingTextEdit->setStyleName("CommonSingleInputFieldLabeled");
     errorHighlightingTextEdit->setContentType(M::EmailContentType);
     //% "Valid input: 'user@domain.toplevel'"
     errorHighlightingTextEdit->setPrompt(qtTrId("xx_error_highlighting"));
@@ -610,41 +638,63 @@ void TextEntryPage::createContent()
             this, SLOT(checkEmailValidity()));
 
     labelErrorHighlighting = new MLabel(centralWidget());
+    labelErrorHighlighting->setStyleName("CommonFieldLabel");
     labelErrorHighlighting->setWordWrap(true);
     labelErrorHighlighting->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    layoutPolicy->addItem(labelErrorHighlighting, row, 0);
-    layoutPolicy->addItem(errorHighlightingTextEdit, row, 1);
+    layoutPolicy->addItem(labelErrorHighlighting);
+    layoutPolicy->addItem(errorHighlightingTextEdit);
     Entries << errorHighlightingTextEdit;
     row++;
 
+    //direct input custom widget.
+    QGraphicsWidget *directIMPanel = new QGraphicsWidget(centralWidget());
+    QGraphicsLinearLayout *directIMLayout = new QGraphicsLinearLayout(Qt::Horizontal, directIMPanel);
+    directIMLayout->setContentsMargins(0, 0, 0, 0);
+    directIMLayout->setSpacing(0);
+    directIMWidget = new CustomDirectIMWidget(directIMPanel);
+    directIMWidget->setStyleName("CommonEditorInputFieldValue");
+    labelDirectIM = new MLabel(directIMPanel);
+    labelDirectIM->setStyleName("CommonEditorInputFieldLabel");
+    labelDirectIM->setTextElide(true);
+    labelDirectIM->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    labelDirectIM->setAlignment(Qt::AlignTop);
+    directIMLayout->addItem(labelDirectIM);
+    directIMLayout->addItem(directIMWidget);
+
+    layoutPolicy->addItem(directIMPanel);
+    row++;
+
     HeaderedTextEdit *uneditableTextEdit = new HeaderedTextEdit(centralWidget());
+    uneditableTextEdit->setStyleName("CommonEditorInputFieldMultiline");
     uneditableTextEdit->setHeaderText("Recipient:");
     uneditableTextEdit->setContentType(M::EmailContentType);
     uneditableTextEdit->setCompleter(m_completer.data());
     uneditableTextEditLabel = new MLabel(centralWidget());
+    uneditableTextEditLabel->setStyleName("CommonFieldLabel");
     uneditableTextEditLabel->setTextElide(true);
-    layoutPolicy->addItem(uneditableTextEditLabel, row, 0, 1, 2);
-    row++;
-    layoutPolicy->addItem(uneditableTextEdit, row, 0, 1, 2);
+    layoutPolicy->addItem(uneditableTextEditLabel);
+    layoutPolicy->addItem(uneditableTextEdit);
     Entries << uneditableTextEdit;
     row++;
 
     // Auto capitalisation button (Toggle)
     button1 = new MButton(panel);
+    button1->setStyleName("CommonSingleButton");
     button1->setObjectName("switchAutoCaps");
 
     button1->setCheckable(true);
     button1->setChecked(true);
-    layoutPolicy->addItem(button1, row, 0, 1, 2);
+    layoutPolicy->addItem(button1, Qt::AlignCenter);
     row++;
 
     // error correction button (Toggle)
     button2 = new MButton(panel);
+    button2->setStyleName("CommonSingleButton");
     button2->setObjectName("switchErrorCorrection");
 
     button2->setCheckable(true);
     button2->setChecked(true);
-    layoutPolicy->addItem(button2, row, 0, 1, 2);
+    layoutPolicy->addItem(button2, Qt::AlignCenter);
     row++;
 
     connect(button1, SIGNAL(toggled(bool)), this, SLOT(changeAutoCapitalisation(bool)));
@@ -663,6 +713,9 @@ void TextEntryPage::retranslateUi()
     setTitle(qtTrId("xx_textentry_title"));
     if (!isContentCreated())
         return;
+
+    //% "Text Entries"
+    pageTitleLabel->setText(qtTrId("xx_textentry_title"));
     //% "Enter text here"
     Entries.at(0)->setPrompt(qtTrId("xx_tooltip_entry0"));
 
@@ -726,12 +779,14 @@ void TextEntryPage::retranslateUi()
     changeErrorCorrection(m_errorCorrection);
 }
 
-MGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
+MLinearLayoutPolicy *TextEntryPage::createAndSetupLinearPolicy(QGraphicsWidget *panel)
 {
     MLayout *layout = new MLayout(panel);
+    layout->setContentsMargins(0, 0, 0, 0);
     panel->setLayout(layout);
-    MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
     return policy;
 }
 
