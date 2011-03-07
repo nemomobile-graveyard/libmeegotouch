@@ -118,15 +118,7 @@ bool MButtonViewPrivate::toggleState() const
 
 void MButtonViewPrivate::updateItemsAfterModeChange()
 {
-    Q_Q(MButtonView);
-
-    const MButtonStyle *s = static_cast<const MButtonStyle *>(q->style().operator ->());
-
-    label->setAlignment(s->horizontalTextAlign() | s->verticalTextAlign());
-    label->setFont(s->font());
-    label->setColor(s->textColor());
-    label->setOpacity(s->contentOpacity());
-
+    updateLabelStyle();
     updateIcon();
     updateToggledIcon();
 
@@ -158,7 +150,9 @@ void MButtonViewPrivate::calcIconTextRects()
                     contentRect.width() - hTextMargin,
                     contentRect.height() - vTextMargin);
 
-    QSizeF textSize = label->sizeHint(Qt::PreferredSize);
+    QSizeF textSize(0,0);
+    if (label)
+        textSize = label->sizeHint(Qt::PreferredSize);
 
     //icon visible and valid?
     if (q->model()->iconVisible() && (icon || toggledIcon)) {
@@ -227,10 +221,12 @@ void MButtonViewPrivate::calcIconTextRects()
     }
 
     //adjust label with button margins
-    if (controller->layoutDirection() == Qt::LeftToRight)
-        label->setGeometry(textRect.translated(q->marginLeft(), q->marginTop()));
-    else
-        label->setGeometry(textRect.translated(q->marginRight(), q->marginTop()));
+    if (label) {
+        if (controller->layoutDirection() == Qt::LeftToRight)
+            label->setGeometry(textRect.translated(q->marginLeft(), q->marginTop()));
+        else
+            label->setGeometry(textRect.translated(q->marginRight(), q->marginTop()));
+    }
 }
 
 bool MButtonViewPrivate::isCurrentIconObsolete(const QString &newIconId) const
@@ -327,26 +323,48 @@ void MButtonViewPrivate::updateToggledIcon()
     updateIcon(&toggledIcon, QIcon::Selected, q->model()->toggledIconID(), q->style()->toggledIconId());
 }
 
+void MButtonViewPrivate::setText(const QString &text)
+{
+    Q_Q(MButtonView);
+
+    if (q->model()->textVisible() && !text.isEmpty()) {
+        if (!label) {
+            label = new MLabel(controller);
+            label->setTextElide(true);
+            label->setObjectName("ButtonLabel");
+            label->setMinimumSize(0,0);
+            updateLabelStyle();
+        }
+        if (!label->isVisible())
+            label->setVisible(true);
+        label->setText(text);
+    } else {
+        if (label)
+            label->setVisible(false);
+    }
+}
+
+void MButtonViewPrivate::updateLabelStyle()
+{
+    Q_Q(MButtonView);
+
+    if (label) {
+        const MButtonStyle *s = static_cast<const MButtonStyle *>(q->style().operator ->());
+        label->setAlignment(s->horizontalTextAlign() | s->verticalTextAlign());
+        label->setFont(s->font());
+        label->setColor(s->textColor());
+        label->setOpacity(s->contentOpacity());
+    }
+}
+
 MButtonView::MButtonView(MButton *controller) :
     MWidgetView(* new MButtonViewPrivate, controller)
 {
-    Q_D(MButtonView);
-    d->label = new MLabel(controller);
-    d->label->setParentItem(controller);
-    d->label->setTextElide(true);
-    d->label->setObjectName("ButtonLabel");
-    d->label->setMinimumSize(0,0);
 }
 
 MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
     MWidgetView(dd, controller)
 {
-    Q_D(MButtonView);
-    d->label = new MLabel(controller);
-    d->label->setParentItem(controller);
-    d->label->setTextElide(true);
-    d->label->setObjectName("ButtonLabel");
-    d->label->setMinimumSize(0,0);
 }
 
 MButtonView::~MButtonView()
@@ -403,12 +421,6 @@ void MButtonView::drawIcon(QPainter *painter, const QRectF &iconRect) const
         }
     }
 }
-
-/*MLabel* MButtonView::label()
-{
-    Q_D(const MButtonView);
-    return d->label;
-}*/
 
 void MButtonView::applyStyle()
 {
@@ -534,14 +546,11 @@ void MButtonView::updateData(const QList<const char *>& modifications)
     bool mustUpdateIcon = false;
     bool mustUpdateToggledIcon = false;
     bool mustRelocateIconText = false;
+    bool mustUpdateButtonText = false;
 
     foreach(member, modifications) {
-        if (member == MButtonModel::Text) {
-            d->label->setText(model()->text());
-            mustUpdateGeometry = true;
-            mustRelocateIconText = true;
-        } else if (member == MButtonModel::TextVisible) {
-            d->label->setVisible(model()->textVisible());
+        if (member == MButtonModel::Text || member == MButtonModel::TextVisible) {
+            mustUpdateButtonText = true;
             mustUpdateGeometry = true;
             mustRelocateIconText = true;
         } else if (member == MButtonModel::IconID) {
@@ -566,6 +575,10 @@ void MButtonView::updateData(const QList<const char *>& modifications)
         }
     }
 
+    if (mustUpdateButtonText) {
+        d->setText(model()->text());
+    }
+
     if (mustUpdateIcon) {
         d->updateIcon();
     }
@@ -587,8 +600,6 @@ void MButtonView::updateData(const QList<const char *>& modifications)
 
 void MButtonView::setupModel()
 {
-    Q_D(MButtonView);
-
     MWidgetView::setupModel();
     QList<const char *> members;
     if (model()->icon().isNull())
@@ -597,15 +608,10 @@ void MButtonView::setupModel()
         members << MButtonModel::Icon;
     if (!model()->toggledIconID().isEmpty())
         members << MButtonModel::ToggledIconID;
+    members << MButtonModel::TextVisible;
+    members << MButtonModel::Text;
 
     updateData(members);
-
-    d->label->setText(model()->text());
-    d->label->setVisible(model()->textVisible());
-
-    d->calcIconTextRects();
-
-    update();
 }
 
 QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -622,7 +628,7 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
         iconSize = d->icon->pixmap->size();
 
     QSizeF textSize(0, 0);
-    if (model()->textVisible() && !model()->text().isEmpty()) {
+    if (model()->textVisible() && !model()->text().isEmpty() && d->label) {
         textSize = d->label->sizeHint(which, constraint);
         textSize += QSizeF(s->textMarginLeft() + s->textMarginRight(), s->textMarginTop() + s->textMarginBottom());
     }
