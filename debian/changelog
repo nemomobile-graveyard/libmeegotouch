@@ -1,8 +1,18 @@
-libmeegotouch (0.20.91~1) unstable; urgency=low
+libmeegotouch (0.20.91-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: MTextEditView: magnifier scene position listening
+  * Fixes: NB#233304 - Multiple parallel connections created in MListIndexViewPrivate::createContainer
+  * Fixes: NB#230256 - [TASK] Rounded view corners
+  * Fixes: NB#233143 - Creating an MApplication after destroying one causes a segfault
+  * Fixes: NB#232832 - [TASK] libmeegotouch-dev installs extra header
+  * Fixes: Landscape style was used for portrait in MInputWidgetRelocator.
+  * Fixes: NB#230496 - Disabling/enabling impacts action checked state
+  * Fixes: NB#223556 - Impossible to detect cleared notification groups
+  * Fixes: NB#230015 MList causes memory leak
+  * Fixes: NB#232510 - [TASK] "Imploding" transition for button clicking
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 03 Mar 2011 14:00:53 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 07 Mar 2011 16:30:23 +0200
 
 libmeegotouch (0.20.90-1) unstable; urgency=low
 
