@@ -178,6 +178,11 @@ public:
     // get the characters really in qtextdocument
     int realCharacterCount() const;
 
+    //! connect to completer.
+    void  connectCompleter();
+    //! disconnect from completer.
+    void disconnectCompleter();
+
 private:
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns

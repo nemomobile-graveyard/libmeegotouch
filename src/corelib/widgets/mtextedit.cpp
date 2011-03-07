@@ -1464,6 +1464,32 @@ int MTextEditPrivate::realCharacterCount() const
     return q->document()->characterCount() - 1;
 }
 
+void  MTextEditPrivate::connectCompleter()
+{
+    Q_Q(MTextEdit);
+    if (completer) {
+        // The completer can be shared by several widgets, so call its setWidget,
+        // and connect related slots again when getting focus.
+        completer->setWidget(q);
+        QObject::connect(completer, SIGNAL(confirmed(QString, QModelIndex)),
+                         q, SLOT(_q_confirmCompletion(QString)));
+        QObject::connect(q, SIGNAL(textChanged()),
+                         completer, SLOT(complete()));
+    }
+}
+
+void  MTextEditPrivate::disconnectCompleter()
+{
+    Q_Q(MTextEdit);
+    if (completer) {
+        // hide completer when disconnecting (focus out)
+        completer->hideCompleter();
+        // disconnect related slots when the widget (losing focus)
+        QObject::disconnect(completer, 0, q, 0);
+        QObject::disconnect(q, 0, completer, 0);
+    }
+}
+
 ///////////////////////////////////////////////
 // Actual class implementation
 
@@ -1501,6 +1527,7 @@ MTextEdit::~MTextEdit()
 
     if (d->focusEventState == MTextEditPrivate::FocusInEventReceived) {
         d->closeAutoSip();
+        d->disconnectCompleter();
     }
 
     detachToolbar();
@@ -1862,15 +1889,7 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
         selectAll();
     }
 
-    if (completer()) {
-        //The completer can be shared by several widgets, so call its setWidget,
-        //and connect related slots again when getting focus.
-        completer()->setWidget(this);
-        connect(completer(), SIGNAL(confirmed(QString, QModelIndex)),
-                this, SLOT(_q_confirmCompletion(QString)));
-        connect(this, SIGNAL(textChanged()),
-                completer(), SLOT(complete()));
-    }
+    d->connectCompleter();
 
     // Listen to clipboard changes and update visibility of paste action accordingly.
     d->_q_updatePasteActionState();
@@ -1915,13 +1934,7 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     QGraphicsItem::d_ptr->clearSubFocus();
 #endif
 
-    if (d->completer) {
-        //hide completer when focus out
-        d->completer->hideCompleter();
-        //disconnect related slots when the widget losing focus
-        disconnect(completer(), 0, this, 0);
-        disconnect(this, 0, completer(), 0);
-    }
+    d->disconnectCompleter();
 
     emit lostFocus(event->reason());
 
@@ -2789,6 +2802,7 @@ QVariant MTextEdit::itemChange(GraphicsItemChange change, const QVariant &value)
             // Hidden (but focused) MTextEdit (please don't ask what it means
             // to hide a controller) does not need a VKB:
             d->closeAutoSip();
+            d->disconnectCompleter();
 
             // Need to notify the view, too:
             emit lostFocus(Qt::OtherFocusReason);
