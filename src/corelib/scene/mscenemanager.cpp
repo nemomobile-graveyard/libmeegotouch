@@ -1134,14 +1134,15 @@ bool MSceneManagerPrivate::canHaveAnimatedTransitions()
 {
     Q_Q(MSceneManager);
 
-    QList<QGraphicsView *> viewsList = q->scene()->views();
-    MWindow *window = 0;
-    bool result = false;
-    int i = 0;
+#ifdef __arm__
+    if (MApplication::softwareRendering()) {
+        return false;
+    }
+#endif
 
-    while (result == false && i < viewsList.count()) {
-
-        window = qobject_cast<MWindow *>(viewsList[i]);
+    const QList<QGraphicsView *> viewsList = q->scene()->views();
+    foreach (const QGraphicsView *view, viewsList) {
+        const MWindow *window = qobject_cast<const MWindow *>(view);
 
         // We can have animated transitions if the MWindow is on display or
         // is still being initialized (didn't receive a visibility message
@@ -1151,17 +1152,15 @@ bool MSceneManagerPrivate::canHaveAnimatedTransitions()
         // If it's visible in the switcher we don't animate as we shouldn't
         // be using many resources in this situation and the FPS is likely
         // to be limited to a fairly low number anyway.
-
-        if (window
-                && (window->isOnDisplay() || !window->d_ptr->onDisplaySet)
-                && !window->isInSwitcher()) {
-            result = true;
+        const bool animate = window
+                             && (window->isOnDisplay() || !window->d_ptr->onDisplaySet)
+                             && !window->isInSwitcher();
+        if (animate) {
+            return true;
         }
-
-        i++;
     }
 
-    return result;
+    return false;
 }
 
 void MSceneManagerPrivate::produceMustBeResolvedDisplayEvent(MSceneWindow *sceneWindow)
