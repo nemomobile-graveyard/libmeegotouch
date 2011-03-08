@@ -62,11 +62,8 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif //Q_WS_X11
 {
     if (MComponentData::isOrientationForced()) {
-        M::Orientation orientation = M::Landscape;
-
         currentAngle = MComponentData::forcedOrientationAngle();
-        if (currentAngle == M::Angle90 || currentAngle == M::Angle270)
-            orientation = M::Portrait;
+        M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(currentAngle);
 
         foreach(MWindow * window, MApplication::windows()) {
             if (window->orientation() == orientation)
@@ -205,9 +202,13 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
     }
     currentIsKeyboardOpen = isKeyboardOpen;
 
-    if (tvIsConnected) // TV forces landscape for now, no transformations
-        angle = M::Angle0;
-    else if (!MDeviceProfile::instance()->orientationAngleIsSupported(angle, isKeyboardOpen)) {
+    if (tvIsConnected) { // TV forces landscape for now, no transformations
+        if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
+            angle = M::Angle0;
+        } else {
+            angle = M::Angle270;
+        }
+    } else if (!MDeviceProfile::instance()->orientationAngleIsSupported(angle, isKeyboardOpen)) {
         //it seems that orientation does not match allowed for current kybrd state.
         //check if the previous one was ok:
         if (MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen)) {
@@ -250,9 +251,7 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
 
 void MOrientationTrackerPrivate::rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window)
 {
-    M::Orientation orientation = M::Landscape;
-    if (angle == M::Angle90 || angle == M::Angle270)
-        orientation = M::Portrait;
+    M::Orientation orientation = MDeviceProfile::instance()->orientationFromAngle(angle);
     if (!window->isOrientationAngleLocked() &&
         (!window->isOrientationLocked() || window->orientation() == orientation)) {
         window->setOrientationAngle(angle);
