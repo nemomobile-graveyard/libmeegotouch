@@ -1,8 +1,15 @@
-libmeegotouch (0.20.92~1) unstable; urgency=low
+libmeegotouch (0.20.92-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#227051, Unable to position cursor in the middle of a short word with the magnifier
+  * Fixes: NB#230571 - Rendering MSnapshotItem is very expensive in software mode
+  * Fixes: BMC#12929 -  libmeegotouch on ARM in MeeGo doesn't use meegographicssystem
+  * Fixes: NB#227482 - enter/exitDisplayEvents not delivered when widget is hidden/shown by MLayout.
+  * Fixes: NB#225447 - LMT blocks applications' mainloop long enough that app jammed dialog pops up
+  * Fixes: NB#231340 - Style #CommonStatusBarNoMenu has additional effect - status area becomes black.
+  * Fixes: NB#230054 - MCompleter is still visible after MTextEdit disappeared form the screen
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 07 Mar 2011 16:41:16 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 08 Mar 2011 16:11:32 +0200
 
 libmeegotouch (0.20.91-1) unstable; urgency=low
 
