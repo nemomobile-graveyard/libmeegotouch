@@ -46,7 +46,6 @@ void Pt_MStyleSheet::loadThemeStyles()
     files.append("/usr/share/themes/base/meegotouch/libmeegotouchextensions/style/libmeegotouchextensions.css");
     files.append("/usr/share/themes/base/meegotouch/libmeegotouchcore/style/libmeegotouchcore.css");
     files.append("/usr/share/themes/base/meegotouch/libmeegotouchviews/style/libmeegotouchviews.css");
-    files.append("/usr/share/themes/base/meegotouch/libmeegotouchtheme-nokia-views/style/libmeegotouchtheme-nokia-views.css");
 
     MBENCHMARK_ONCE (
         for (int i = 0; i < repeatCount; ++i) {
@@ -88,8 +87,8 @@ void Pt_MStyleSheet::loadCoreStyles_data()
     QTest::addColumn<QString>("style");
     QTest::addColumn<int>("repeatCount");
 
-    QTest::newRow("commonlayouts (read once)")  << "commonlayouts.css" << 1;
-    QTest::newRow("commonlayouts (read twice)") << "commonlayouts.css" << 2;
+    QTest::newRow("commonlayouts (read once)")  << "../../libmeegotouchviews/style/commonlayouts/commonlayouts.css" << 1;
+    QTest::newRow("commonlayouts (read twice)") << "../../libmeegotouchviews/style/commonlayouts/commonlayouts.css" << 2;
     QTest::newRow("mwidgetstyle (read once)")   << "mwidgetstyle.css"  << 1;
     QTest::newRow("mwidgetstyles (read twice)") << "mwidgetstyle.css"  << 2;
     QTest::newRow("deprecated (read once)")     << "deprecated.css"    << 1;
@@ -99,21 +98,9 @@ void Pt_MStyleSheet::loadCoreStyles_data()
 void Pt_MStyleSheet::initLogicalValues(MLogicalValues &values)
 {
     QStringList themeInheritance;
-    themeInheritance.append("/usr/share/themes/blanco/");
     themeInheritance.append("/usr/share/themes/base/");
 
     values.load(themeInheritance, QString());
-}
-
-void Pt_MStyleSheet::testParserSpeed()
-{
-    QBENCHMARK {
-        MStyleSheetParser p;
-        p.setBinaryFileGenerationEnabled(false);
-
-        // Open test file
-        QVERIFY(p.load(qApp->applicationDirPath() + "/pt_mstylesheet_test.css"));
-    }
 }
 
 void Pt_MStyleSheet::testBinarySpeed()
