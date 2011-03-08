@@ -161,7 +161,8 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     eventEater = new MSceneEventEater();
     scene->addItem(eventEater);
-    eventEater->setGeometry(QRectF(QPointF(0.0, 0.0), q->visibleSceneSize(M::Landscape)));
+    QSize eventEaterSize = q->visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(M::Angle0));
+    eventEater->setGeometry(QRectF(QPointF(0.0, 0.0), eventEaterSize));
     createOrientationAnimation();
 
     initRelocator();
@@ -202,7 +203,8 @@ void MSceneManagerPrivate::createOrientationAnimation()
 {
     Q_Q(MSceneManager);
 
-    QRectF visibleSceneRect = QRectF(QPointF(0.0, 0.0), q->visibleSceneSize(M::Landscape));
+    QRectF visibleSceneRect = QRectF(QPointF(0.0, 0.0),
+        q->visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(M::Angle0)));
 
     //TODO: get this from theme
     orientationAnimation = new MCrossFadedOrientationAnimation(visibleSceneRect);
@@ -224,7 +226,8 @@ void MSceneManagerPrivate::initRelocator()
     Q_Q(MSceneManager);
 
     inputWidgetRelocator = QPointer<MInputWidgetRelocator>(
-        new MInputWidgetRelocator(*q, rootElement, orientation(newAngle)));
+        new MInputWidgetRelocator(*q, rootElement,
+                                  MDeviceProfile::instance()->orientationFromAngle(newAngle)));
 
     // Register scene window scroller.
     QSharedPointer<MSceneWindowScroller> sceneWindowScroller(new MSceneWindowScroller);
@@ -334,13 +337,13 @@ void MSceneManagerPrivate::_q_changeGlobalOrientationAngle()
     Q_Q(MSceneManager);
 
     M::OrientationAngle oldAngle = angle;
-    M::Orientation oldOrientation = orientation(angle);
+    M::Orientation oldOrientation = MDeviceProfile::instance()->orientationFromAngle(angle);
     angle = newAngle;
 
     // Needs to be called on every angle change and before scene window geometries are changed.
     inputWidgetRelocator->handleRotationBegin();
 
-    if (oldOrientation != orientation(angle)) {
+    if (oldOrientation != MDeviceProfile::instance()->orientationFromAngle(angle)) {
         emit q->orientationAboutToChange(q->orientation());
 
         notifyWidgetsAboutOrientationChange();
@@ -610,11 +613,6 @@ void MSceneManager::ensureCursorVisible()
     d->inputWidgetRelocator->update();
 }
 
-M::Orientation MSceneManagerPrivate::orientation(M::OrientationAngle angle) const
-{
-    return (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
-}
-
 void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
 {
     Q_Q(MSceneManager);
@@ -650,7 +648,7 @@ void MSceneManagerPrivate::addSceneWindow(MSceneWindow *sceneWindow)
         // Just add it
         addUnmanagedSceneWindow(sceneWindow);
         // This window was not receiving any events. Might not know about orientation change yet.
-        MOrientationChangeEvent event(orientation(angle));
+        MOrientationChangeEvent event(MDeviceProfile::instance()->orientationFromAngle(angle));
         scene->sendEvent(sceneWindow, &event);
     } else {
         if (sceneWindow->d_func()->sceneManager != q) {
@@ -990,7 +988,7 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
 
 void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
 {
-    MOrientationChangeEvent event(orientation(angle));
+    MOrientationChangeEvent event(MDeviceProfile::instance()->orientationFromAngle(angle));
 
     QList<QGraphicsItem *> sceneItems = scene->items();
     for(int i = sceneItems.count() - 1; i >= 0; i--) {
@@ -1005,7 +1003,7 @@ void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
 QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWindow) const
 {
     Q_Q(const MSceneManager);
-    QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
+    QSizeF sceneSize = q->visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(angle));
     QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
     if (sceneWindow->windowType() == MSceneWindow::Sheet && statusBar
@@ -1069,23 +1067,22 @@ void MSceneManagerPrivate::rotateToAngle(M::OrientationAngle newAngle)
 
 void MSceneManagerPrivate::setOrientationAngleWithoutAnimation(M::OrientationAngle newAngle)
 {
-    Q_Q(MSceneManager);
-
     this->newAngle = newAngle;
     _q_changeGlobalOrientationAngle();
 
-    QSize landscapeScreenSize = q->visibleSceneSize(M::Landscape);
+    QSize nativeScreenSize = MDeviceProfile::instance()->resolution();
+    M::Orientation nativeOrientation = MDeviceProfile::instance()->orientationFromAngle(M::Angle0);
 
     rootElement->setRotation(newAngle);
-    if (orientation(angle) == M::Landscape) {
+    if (MDeviceProfile::instance()->orientationFromAngle(newAngle) == nativeOrientation) {
         rootElement->setPos(0, 0);
-        rootElement->setTransformOriginPoint(landscapeScreenSize.width() / 2,
-                                             landscapeScreenSize.height() / 2);
+        rootElement->setTransformOriginPoint(nativeScreenSize.width() / 2,
+                                             nativeScreenSize.height() / 2);
     } else {
-        rootElement->setPos((landscapeScreenSize.width() - landscapeScreenSize.height()) / 2,
-                            (landscapeScreenSize.height() - landscapeScreenSize.width()) / 2);
-        rootElement->setTransformOriginPoint(landscapeScreenSize.height() / 2,
-                                             landscapeScreenSize.width() / 2);
+        rootElement->setPos((nativeScreenSize.width() - nativeScreenSize.height()) / 2,
+                            (nativeScreenSize.height() - nativeScreenSize.width()) / 2);
+        rootElement->setTransformOriginPoint(nativeScreenSize.height() / 2,
+                                             nativeScreenSize.width() / 2);
     }
 
     _q_emitOrientationChangeFinished();
@@ -2373,7 +2370,7 @@ M::Orientation MSceneManager::orientation() const
 {
     Q_D(const MSceneManager);
 
-    return d->orientation(d->angle);
+    return MDeviceProfile::instance()->orientationFromAngle(d->angle);
 }
 
 M::OrientationAngle MSceneManager::orientationAngle() const
@@ -2387,11 +2384,22 @@ QSize MSceneManager::visibleSceneSize(M::Orientation orientation) const
 {
     QSize s;
 
-    if (orientation == M::Landscape) {
-        s = MDeviceProfile::instance()->resolution();
+    if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
+        // native display orientation is landscape
+        if (orientation == M::Landscape)
+            s = QSize(MDeviceProfile::instance()->resolution().width(),
+                      MDeviceProfile::instance()->resolution().height());
+        else
+            s = QSize(MDeviceProfile::instance()->resolution().height(),
+                      MDeviceProfile::instance()->resolution().width());
     } else {
-        s = QSize(MDeviceProfile::instance()->resolution().height(),
-                  MDeviceProfile::instance()->resolution().width());
+        // native display orientation is portrait
+        if (orientation == M::Landscape)
+            s = QSize(MDeviceProfile::instance()->resolution().height(),
+                      MDeviceProfile::instance()->resolution().width());
+        else
+            s = QSize(MDeviceProfile::instance()->resolution().width(),
+                      MDeviceProfile::instance()->resolution().height());
     }
 
     return s;

@@ -109,8 +109,6 @@ public:
     void destroyLayerEffectForSceneWindow(MSceneWindow *sceneWindow);
     bool windowIntersectsRect(const QRectF &rect, MSceneWindow *window);
 
-    M::Orientation orientation(M::OrientationAngle angle) const;
-
     QRectF calculateAvailableSceneRect(MSceneWindow *sceneWindow) const;
     QRectF calculateSceneWindowGeometry(MSceneWindow *window) const;
     void setSceneWindowGeometry(MSceneWindow *window);
