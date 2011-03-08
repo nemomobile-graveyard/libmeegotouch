@@ -18,6 +18,8 @@
 ****************************************************************************/
 
 #include "mbuttoniconview.h"
+#include "mbuttonview_p.h"
+#include <mlabel.h>
 
 MButtonIconView::MButtonIconView(MButton *controller) :
     MButtonView(controller)
@@ -40,7 +42,17 @@ void MButtonIconView::drawBackground(QPainter *painter, const QStyleOptionGraphi
 
 void MButtonIconView::applyStyle()
 {
+    Q_D(MButtonView);
+
     MButtonView::applyStyle();
+
+    d->label->setTextElide(style()->textEliding());
+
+    d->label->setWrapMode(style()->textWrapMode());
+    if (style()->textWrapMode() != QTextOption::NoWrap)
+        d->label->setWordWrap(true);
+    else
+        d->label->setWordWrap(false);
 }
 
 void MButtonIconView::updateData(const QList<const char *>& modifications)

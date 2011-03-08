@@ -25,6 +25,7 @@
 #include <mbuttoniconstyle.h>
 
 class MButton;
+class MButtonViewPrivate;
 
 /*!
     \class MButtonIconView
@@ -70,6 +71,7 @@ protected:
     //! \reimp_end
 private:
     Q_DISABLE_COPY(MButtonIconView)
+    Q_DECLARE_PRIVATE(MButtonView)
 
 #ifdef UNIT_TEST
     friend class Ut_MButtonIconView;

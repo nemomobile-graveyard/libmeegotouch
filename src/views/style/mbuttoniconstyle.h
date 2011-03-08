@@ -21,6 +21,7 @@
 #define MBUTTONICONSTYLE_H
 
 #include <mbuttonstyle.h>
+#include <mnamespace.h>
 
 /*!
     \class MButtonIconStyle
@@ -59,6 +60,18 @@ class M_VIEWS_EXPORT MButtonIconStyle : public MButtonStyle
       \deprecated Not in use.
     */
     M_STYLE_ATTRIBUTE(qreal,  shrinkFactor,       ShrinkFactor)
+
+    /*!
+        \property MButtonIconStyle::labelWrapMode
+        \brief Wrap mode for the button label.
+    */
+    M_STYLE_ATTRIBUTE(QTextOption::WrapMode, textWrapMode, textWrapMode)
+
+    /*!
+        \property MButtonIconStyle::LabelEliding
+        \brief Boolean flag for defining whether label should elide or not.
+    */
+    M_STYLE_ATTRIBUTE(bool, textEliding, TextEliding)
 };
 
 /*!

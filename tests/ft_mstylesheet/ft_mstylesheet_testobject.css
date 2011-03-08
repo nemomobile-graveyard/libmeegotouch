@@ -33,6 +33,8 @@ TestObjectStyle
     attribute-scalable2: C1-container-background 20 20 20 20;
     attribute-scalable3: "C1-container-background";
     attribute-scalable4: C1-container-background;
+    
+    attribute-wrap-mode: nowrap;
 }
 
 TestObject2Style
