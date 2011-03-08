@@ -1177,18 +1177,22 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                                     && (eventCursorPos > cursor.selectionStart())
                                     && (eventCursorPos < cursor.selectionEnd()));
 
-    // controller shouldn't do anything for selection ending mouse release
-    if (d->selecting == false) {
+    // We don't want pre-edit activation when magnifier is hidden, because it serves no
+    // useful purpose and also because we want the cursor to be left where it was
+    // positioned with magnifier and activation might change that if the input method so
+    // decides.
+    if (!magnifierHidden
+        // controller shouldn't do anything for selection ending mouse release
+        && !d->selecting
         // don't send either focus gaining mouse click with autoselect
-        if (d->inAutoSelectionClick == false) {
-            d->controller->handleMouseRelease(eventCursorPos, event, &location);
+        && !d->inAutoSelectionClick) {
+        d->controller->handleMouseRelease(eventCursorPos, event, &location);
 
-            if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
-                if (location == MTextEdit::Word) {
-                    style()->releaseWordFeedback().play();
-                } else {
-                    style()->releaseBoundaryFeedback().play();
-                }
+        if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
+            if (location == MTextEdit::Word) {
+                style()->releaseWordFeedback().play();
+            } else {
+                style()->releaseBoundaryFeedback().play();
             }
         }
     }

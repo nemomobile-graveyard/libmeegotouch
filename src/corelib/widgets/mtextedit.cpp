@@ -2106,6 +2106,8 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
 }
 
 
+// Beware: handleMouseRelease is not called for every mouse release event; see
+// MTextEditView::mouseReleaseEvent().
 void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseEvent *event,
                                    TextFieldLocationType *location)
 {
