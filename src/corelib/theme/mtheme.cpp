@@ -59,6 +59,7 @@ M_LIBRARY
 #include "mapplicationwindow.h"
 #include "mcomponentdata.h"
 #include "mcomponentdata_p.h"
+#include "mdeviceprofile.h"
 
 #include "mgraphicssystemhelper.h"
 
@@ -498,7 +499,9 @@ bool MThemePrivate::appendLibraryStyleSheet(QList<const MStyleSheet *> &sheets, 
 const MStyle *MTheme::style(const char *styleClassName,
                                 const QString &objectName)
 {
-    return MTheme::style(styleClassName, objectName, 0, 0, M::Landscape, NULL);
+    M::Orientation nativeOrientation = MDeviceProfile::instance()->orientationFromAngle(M::Angle0);
+
+    return MTheme::style(styleClassName, objectName, 0, 0, nativeOrientation, NULL);
 }
 
 const MStyle *MTheme::style(const char *styleClassName,
