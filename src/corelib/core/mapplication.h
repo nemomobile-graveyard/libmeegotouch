@@ -40,21 +40,21 @@ class MSceneWindow;
  * \class MApplication
  * \brief MApplication manages the GUI application's control flow and main settings.
  *
- * MApplication instance automatically extracts application name from the arguments
- * given in the constructor. It also loads css - stylesheet, svg file and adds application
+ * The MApplication instance automatically extracts the application name from the arguments
+ * given in the constructor. It also loads the CSS stylesheet and the SVG file and adds application
  * specific image paths to the pixmap search paths used by the current MTheme instance.
  *
  * CSS and SVG files are searched for in order from the following places:
  * <ol>
- *   <li>Directory in which application was launched.</li>
+ *   <li>The directory in which the application was launched.</li>
  *   <li>Application specific theme path (global theme path appended with the application name)</li>
  *   <li>Global theme path (Qt data path appended by themes/m)</li>
  * </ol>
- * When first instance of CSS or SVG file is found it is loaded to the current MTheme.
- * Also image - subdirectory of each of the aforementioned paths is appended to the pixmap search
+ * When the first instance of the CSS or SVG file is found, it is loaded to the current MTheme.
+ * Also the image subdirectory of each of the aforementioned paths is appended to the pixmap search
  * paths used by MTheme.
  *
- * MApplication will also create a QDBus service with name made by prepending 'com.nokia.' to
+ * MApplication will also create a QDBus service with a name made by prepending 'com.nokia.' to
  * the application name provided in the constructor (or the binary name if no name is provided
  * in the constructor). It will provide an interface called MApplicationIf which calls service
  * methods in an instance of MApplicationService. By default, MApplication will construct an
@@ -65,9 +65,9 @@ class MSceneWindow;
  *
  * The default behaviour is to only allow a single instance of any
  * application. When an application is launched, it attempts to register
- * itself as a dbus service (as above). Only the first instance of the
+ * itself as a DBUS service (as above). Only the first instance of the
  * application will be successful, and subsequent attempts will fail. When
- * dbus registration fails, the default behaviour is to call the first
+ * DBUS registration fails, the default behaviour is to call the first
  * instance's MApplicationService launch() method, and then quit. This
  * causes the first instance to become visible (raises the window).
  *
