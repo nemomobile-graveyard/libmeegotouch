@@ -74,6 +74,9 @@ class MSceneWindow;
  * If other behaviour is required, for example if you want multiple
  * instances of an application, then it is necessary to derive a class from
  * MApplicationService and override its methods.
+ *
+ * Notice that it is not supported to create, delete and again create an MApplication instance
+ * in the same program.
  */
 
 class M_CORE_EXPORT MApplication : public QApplication
