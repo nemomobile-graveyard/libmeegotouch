@@ -25,7 +25,10 @@
 MSortFilterProxyModelPrivate::MSortFilterProxyModelPrivate()
     : q_ptr(0),
     isSupportedModel(false),
-    isAnimatedChange(false)
+    isAnimatedChange(false),
+    localeAwareSortingEnabled(true),
+    locale(),
+    collator(locale)
 {
 }
 
@@ -121,6 +124,32 @@ bool MSortFilterProxyModel::filterAcceptsGroup(const QModelIndex &source_index) 
             return true;
 
     return false;
+}
+
+void MSortFilterProxyModel::enableLocaleAwareSorting(bool enable)
+{
+    Q_D(MSortFilterProxyModel);
+    d->localeAwareSortingEnabled = enable;
+}
+
+bool MSortFilterProxyModel::isLocaleAwareSortingEnabled() const
+{
+    Q_D(const MSortFilterProxyModel);
+    return d->localeAwareSortingEnabled;
+}
+
+bool MSortFilterProxyModel::lessThan(const QModelIndex &leftIndex, const QModelIndex &rightIndex) const
+{
+    Q_D(const MSortFilterProxyModel);
+    if (d->localeAwareSortingEnabled && leftIndex.isValid() && rightIndex.isValid()) {
+        QVariant leftVal  = leftIndex.model()->data(leftIndex, sortRole());
+        if (leftVal.userType() == QVariant::String) {
+            QVariant rightVal = rightIndex.model()->data(rightIndex, sortRole());
+            return d->collator(leftVal.toString(), rightVal.toString());
+        }
+    }
+    // Fallback: Use base class implementation
+    return QSortFilterProxyModel::lessThan(leftIndex, rightIndex);
 }
 
 #include "moc_msortfilterproxymodel.cpp"

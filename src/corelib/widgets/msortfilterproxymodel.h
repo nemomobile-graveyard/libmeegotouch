@@ -47,9 +47,28 @@ public:
     */
     virtual ~MSortFilterProxyModel();
 
+    /*!
+      \brief Enable or disable locale-aware sorting.
+
+      Sorting string data that are visible to the user should be done locale-aware since there are
+      different sorting rules in different languages. For example, in Czech, words starting with
+      "ch" are sorted after words starting with "h". By default, MSortFilterProxyModel does
+      this. This function can turn this off (or on again).
+
+      Disabling locale-aware sorting could be useful if there are only non-string data to be sorted,
+      for example numbers, dates or times. This can improve performance slightly.
+    */
+    void enableLocaleAwareSorting(bool enable=true);
+
+    /*!
+      \brief Check if locale-aware sorting is enabled.
+     */
+    bool isLocaleAwareSortingEnabled() const;
+
     //! \reimp
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
     virtual void setSourceModel(QAbstractItemModel *sourceModel);
+    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
     //! \reimp_end
 
 Q_SIGNALS:
