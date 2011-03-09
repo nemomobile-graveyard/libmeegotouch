@@ -208,9 +208,13 @@ protected:
     //! \reimp_end
 
 private:
+
+    void reinit();
+
     friend class MSceneManagerPrivate;
     friend class MInputWidgetRelocator;
     friend class Ut_MApplicationWindow;
+    friend class MComponentCachePrivate;
 
     Q_DISABLE_COPY(MApplicationWindow)
     Q_DECLARE_PRIVATE(MApplicationWindow)
@@ -233,9 +237,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_setupNavigationBarCustomContent())
     Q_PRIVATE_SLOT(d_func(), void _q_updateNavigationBarVisibility())
     Q_PRIVATE_SLOT(d_func(), void _q_scheduleNavigationBarVisibilityUpdate())
-#ifdef Q_WS_X11
-    Q_PRIVATE_SLOT(d_func(), void _q_updateChainTaskData())
-#endif
 };
 
 #endif

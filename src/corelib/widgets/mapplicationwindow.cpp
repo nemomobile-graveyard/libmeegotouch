@@ -28,6 +28,7 @@
 #include "mapplicationpage_p.h"
 #include "mnavigationbar.h"
 #include "mapplicationmenu.h"
+#include "mcomponentcache.h"
 #include <mdynamicpropertywatcher.h>
 #include "mtoolbar.h"
 #include "mtoolbar_p.h"
@@ -163,16 +164,11 @@ void MApplicationWindowPrivate::init()
     q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
 #ifdef Q_WS_X11
-    if ( ! MComponentData::chainDataStackIsEmpty() )
+    if ( !MComponentCache::populating() &&
+         !MComponentData::chainDataStackIsEmpty() )
     {
         // init for chainTask here
-        _q_updateChainTaskData();
-    }
-    else
-    {
-        // connect to notification about chainTask data changed signal
-        q->connect(MComponentData::instance(), SIGNAL(chainTaskDataChanged()),
-                   q, SLOT(_q_updateChainTaskData()));
+        updateChainTaskData();
     }
 
     addMStatusBarOverlayProperty();
@@ -1074,11 +1070,18 @@ void MApplicationWindowPrivate::_q_updateStyle()
     applyWindowBackground();
 }
 
-#ifdef Q_WS_X11
-void MApplicationWindowPrivate::_q_updateChainTaskData()
+void MApplicationWindow::reinit()
+{
+    Q_D(MApplicationWindow);
+    d->updateChainTaskData();
+}
+
+void MApplicationWindowPrivate::updateChainTaskData()
 {
     // here we try to inject the chainTaskData into this MApplicationWindow
     Q_Q(MApplicationWindow);
+
+#ifdef Q_WS_X11
     if (!MComponentData::chainDataStackIsEmpty()) {
         MComponentData::ChainData thisData = MComponentData::popChainData();
 
@@ -1098,13 +1101,8 @@ void MApplicationWindowPrivate::_q_updateChainTaskData()
         // for compositor page animation
         setWindowChainedProperty( chainParentWinId, q->effectiveWinId() );
     }
-
-    // make sure we disconnect from the SIGNAL, so that we do not
-    // steal a chaindata object in case a new one comes in.
-    q->disconnect(MComponentData::instance(), SIGNAL(chainTaskDataChanged()),
-                  q, SLOT(_q_updateChainTaskData()));
-}
 #endif
+}
 
 void MApplicationWindowPrivate::applyWindowBackground()
 {

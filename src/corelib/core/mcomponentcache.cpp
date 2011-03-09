@@ -236,6 +236,7 @@ MApplicationWindow* MComponentCachePrivate::mApplicationWindow()
 {
     MApplicationWindow *returnValue;
     if (mApplicationWindowInstance != 0) {
+        mApplicationWindowInstance->reinit();
         returnValue = mApplicationWindowInstance;
         mApplicationWindowInstance = 0;
         MComponentData::registerWindow(returnValue);

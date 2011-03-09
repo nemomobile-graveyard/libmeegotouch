@@ -204,9 +204,8 @@ public:
     void _q_handleInSwitcherVisibilityChange();
     void _q_updateStyle();
     void _q_setupNavigationBarCustomContent();
-#ifdef Q_WS_X11
-    void _q_updateChainTaskData();
-#endif
+
+    void updateChainTaskData();
     void applyWindowBackground();
     void setSceneWindowVisibility(MSceneWindow *sceneWindow, bool visible);
 };
