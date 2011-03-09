@@ -167,7 +167,7 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
     Q_D(MCharsetDetector);
     clearError();
     // get list of matches from ICU:
-    int32_t matchesFound;
+    qint32 matchesFound;
     const UCharsetMatch **uCharsetMatch
         = ucsdet_detectAll(d->_uCharsetDetector, &matchesFound, &(d->_status));
     if(hasError()) {
@@ -177,12 +177,12 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
     // sometimes the number of matches found by ucsdet_detectAll()
     // maybe 0 (matchesFound == 0) but d->_status has no error. Do not
     // return here with an error if this happens because the fine
-    // tuning below may add more matches.  Better check wether no
+    // tuning below may add more matches.  Better check whether no
     // matches were found at all *after* the fine tuning.
 
     // fill list of matches into a QList<MCharsetMatch>:
     QList<MCharsetMatch> mCharsetMatchList;
-    for (int32_t i = 0; i < matchesFound; ++i) {
+    for (qint32 i = 0; i < matchesFound; ++i) {
         MCharsetMatch mCharsetMatch;
         mCharsetMatch.setName(
             QString::fromAscii(ucsdet_getName(uCharsetMatch[i], &(d->_status))));
@@ -225,8 +225,8 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
     // of matches will detect that and remove it again.
     if(!d->_declaredEncoding.isEmpty()
         && (d->_declaredEncoding.startsWith(QLatin1String("ISO-8859-"))
-            || d->_declaredEncoding.startsWith("windows-12")
-            || d->_declaredEncoding.startsWith("KOI8")))
+            || d->_declaredEncoding.startsWith(QLatin1String("windows-12"))
+            || d->_declaredEncoding.startsWith(QLatin1String("KOI8"))))
             mCharsetMatchList << MCharsetMatch(d->_declaredEncoding, "", 10);
     // Similar as for declaredEncoding, when declaredLocale is used
     // and it is a locale where the legacy encoding is a single byte
@@ -470,7 +470,7 @@ QStringList MCharsetDetector::getAllDetectableCharsets()
     // ksc5601.1987-0 cp949 Big5-HKSCS big5-0 big5hkscs-0
 
     QStringList availableCodecsQt;
-    foreach(QByteArray ba, QTextCodec::availableCodecs())
+    foreach(const QByteArray &ba, QTextCodec::availableCodecs())
         availableCodecsQt << QString(ba);
 
     // Charsets detectable by libicu 4.4.2:
@@ -521,7 +521,7 @@ QStringList MCharsetDetector::getAllDetectableCharsets()
     //     the charset detection service has been safely initialized
     //     and that the required detection data is available.”
     //
-    // but that does not seem to be completly true, in fact it
+    // but that does not seem to be completely true, in fact it
     // *does* depend on the state of the charset detector. For example
     // sometimes "windows-1250" *is* among the returned charsets.
     // This happens if some non-ASCII text
@@ -564,7 +564,7 @@ QStringList MCharsetDetector::getAllDetectableCharsets()
     uenum_close(en);
 
     // remove all charsets not supported by QTextCodec and all duplicates:
-    foreach(QString cs, allDetectableCharsetsICU) {
+    foreach(const QString &cs, allDetectableCharsetsICU) {
         if(availableCodecsQt.contains(cs) && !d->_allDetectableCharsets.contains(cs))
             d->_allDetectableCharsets << cs;
     }

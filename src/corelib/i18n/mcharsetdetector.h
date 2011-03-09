@@ -153,7 +153,7 @@ public:
     virtual ~MCharsetDetector();
 
     /*!
-     * \brief checks whether an error occured during the last action
+     * \brief checks whether an error occurred during the last action
      *
      * \sa clearError()
      * \sa errorString()
@@ -161,7 +161,7 @@ public:
     bool hasError() const;
 
     /*!
-     * \brief clears any error which might have occured during previous action
+     * \brief clears any error which might have occurred during previous action
      *
      * Useful if one wants to ignore an error and continue.
      *
@@ -171,7 +171,7 @@ public:
     void clearError();
 
     /*!
-     * \brief text describing the error occured during the last action
+     * \brief text describing the error occurred during the last action
      *
      * Example:
      *

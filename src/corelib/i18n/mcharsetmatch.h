@@ -50,7 +50,7 @@ public:
      * Constructs an MCharsetMatch object setting a name of the
      * charset a language, and a confidence.
      */
-    MCharsetMatch(const QString name, const QString language = QString(), const qint32 confidence = 0);
+    explicit MCharsetMatch(const QString name, const QString language = QString(), const qint32 confidence = 0);
 
     /*!
      * \brief copy constructor for MCharsetMatch

@@ -2929,10 +2929,10 @@ QStringList MLocale::exemplarCharactersIndex() const
     // index bucket list from the zh_TW locale if collation=stroke is
     // set and force the use of the index bucket list from the zh_CN
     // locale if collation=pinyin is set:
-    if(collationLocaleName.startsWith("zh")) {
-        if(collationLocaleName.contains("collation=stroke"))
+    if(collationLocaleName.startsWith(QLatin1String("zh"))) {
+        if(collationLocaleName.contains(QLatin1String("collation=stroke")))
             collationLocaleName = QLatin1String("zh_TW");
-        if(collationLocaleName.contains("collation=pinyin"))
+        if(collationLocaleName.contains(QLatin1String("collation=pinyin")))
             collationLocaleName = QLatin1String("zh_CN");
     }
 
