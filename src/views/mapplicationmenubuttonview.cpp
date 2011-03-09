@@ -50,7 +50,6 @@ void MApplicationMenuButtonViewPrivate::init()
     iconImage->setObjectName("NavigationBarMenuButtonIconImage");
     arrowIconImage->setObjectName("NavigationBarMenuButtonArrowImage");
     arrowIconImage->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-    label->setObjectName("NavigationBarMenuButtonLabel");
 
     layout = new MLayout();
     policy = new MGridLayoutPolicy(layout);
@@ -70,7 +69,8 @@ void MApplicationMenuButtonViewPrivate::refreshStyleMode()
     else
         q->style().setModeDefault();
 
-    label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
+    if (label)
+        label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
 
     refreshIconImage();
 }
@@ -92,8 +92,11 @@ void MApplicationMenuButtonViewPrivate::refreshLayout()
     } else {
         iconImage->hide();
     }
-    policy->addItem(label, 0, colIndex++);
-    policy->setAlignment(label, Qt::AlignCenter);
+
+    if (label) {
+        policy->addItem(label, 0, colIndex++);
+        policy->setAlignment(label, Qt::AlignCenter);
+    }
 
     arrowIconImage->hide();
     if (q->model()->progressIndicatorVisible() && spinner) {
@@ -165,12 +168,15 @@ void MApplicationMenuButtonView::applyStyle()
     MButtonView::applyStyle();
 
     d->arrowIconImage->setImage(style()->arrowIcon(), style()->arrowIconSize());
-    d->refreshStyleMode();
-    d->refreshLayout();
     d->iconImage->setZoomFactor(1.0);
     d->arrowIconImage->setZoomFactor(1.0);
 
-    update();
+    if (d->label) {
+        d->label->setObjectName("NavigationBarMenuButtonLabel");
+    }
+
+    d->refreshStyleMode();
+    d->refreshLayout();
 }
 
 void MApplicationMenuButtonView::updateData(const QList<const char *>& modifications)
@@ -178,43 +184,50 @@ void MApplicationMenuButtonView::updateData(const QList<const char *>& modificat
     Q_D(MApplicationMenuButtonView);
 
     MButtonView::updateData(modifications);
+    bool mustRefreshLayout = false;
+    bool mustRefreshStyleMode = false;
     const char *member;
     foreach(member, modifications) {
-        if (member == MButtonModel::Text) {
-            d->label->setText(model()->text());
-        } else if (member == MButtonModel::TextVisible) {
-            d->label->setVisible(model()->textVisible());
+        if (member == MButtonModel::Text || member == MButtonModel::TextVisible) {
+            mustRefreshLayout = true;
         } else if (member == MButtonModel::IconID || member == MButtonModel::ToggledIconID) {
             d->refreshIconImage();
         } else if (member == MButtonModel::IconVisible) {
             d->iconImage->setVisible(model()->iconVisible());
-            d->refreshLayout();
+            mustRefreshLayout = true;
         } else if (member == MApplicationMenuButtonModel::ProgressIndicatorVisible) {
             // to reduce the application startup time,  only create spinner when it is needed.
             if (d->spinner == 0) {
                 d->spinner = new MProgressIndicator(d->controller, MProgressIndicator::spinnerType);
             }
-            d->refreshLayout();
+            mustRefreshLayout = true;
         } else if (member == MApplicationMenuButtonModel::ArrowIconVisible) {
-            d->refreshLayout();
+            mustRefreshLayout = true;
         } else if (member == MButtonModel::Down || member == MButtonModel::Checked ||
                    member == MButtonModel::Checkable) {
-            d->refreshStyleMode();
+            mustRefreshStyleMode = true;
         }
     }
-    update();
+
+    if (mustRefreshLayout)
+        d->refreshLayout();
+
+    if (mustRefreshStyleMode)
+        d->refreshStyleMode();
 }
 
 void MApplicationMenuButtonView::setupModel()
 {
-    Q_D(MApplicationMenuButtonView);
-
-    d->label->setText(model()->text());
-    d->label->setVisible(model()->textVisible());
-
-    d->refreshIconImage();
-
     MButtonView::setupModel();
+
+    QList<const char*> modifications;
+    modifications << MButtonModel::IconID;
+    modifications << MButtonModel::IconVisible;
+    modifications << MApplicationMenuButtonModel::ProgressIndicatorVisible;
+    modifications << MApplicationMenuButtonModel::ArrowIconVisible;
+
+    updateData(modifications);
+    update();
 }
 
 M_REGISTER_VIEW_NEW(MApplicationMenuButtonView, MApplicationMenuButton)
