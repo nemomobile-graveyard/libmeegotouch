@@ -615,6 +615,12 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_updateMinimizedSoftwareSwitch())
 #endif
 
+    /**
+     * Is invoked by MComponentCache in case if an application is
+     * prestarted.
+     */
+    void prestartedInit();
+
     /*
         For testing purposes.
         Returns a MSceneManager::TransitionMode
@@ -633,6 +639,7 @@ private:
     friend class MApplicationPrivate;
     friend class MSceneManagerPrivate;
     friend class MOrientationTrackerPrivate;
+    friend class MComponentCachePrivate; // Calls MWindow::prestartedInit()
 #ifdef UNIT_TEST
     // to call orientationAngleChanged()
     friend class Ut_MWindow;

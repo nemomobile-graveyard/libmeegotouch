@@ -1562,6 +1562,16 @@ bool MWindow::closeOnLazyShutdown() const
     return d->closeOnLazyShutdown;
 }
 
+void MWindow::prestartedInit()
+{
+#ifdef Q_WS_X11
+    Q_D(MWindow);
+    if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+        d->applyStartupWindowBackground();
+    }
+#endif //Q_WS_X11
+}
+
 int MWindow::orientationChangeTransitionMode()
 {
     Q_D(MWindow);
