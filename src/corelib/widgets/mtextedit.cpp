@@ -1919,6 +1919,7 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
         return;
 
     d->focusEventState = MTextEditPrivate::FocusOutEventReceived;
+    d->lastMousePressTime = QTime(); // assume click somewhere else that removed focus
 
     // Need to tell the MArrowKeyNavigator that the next key event it sees
     // would come from a different focus item. Otherwise, it could think
