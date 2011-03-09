@@ -61,14 +61,14 @@ public:
     void resolveOrientationRules();
     void setX11NotificationPreviewsDisabledProperty(bool set);
     bool getX11NotificationPreviewsDisabledProperty() const;
-    void setDelayedX11Properties();
+    void setMeegoX11Properties();
     void sendDelayedExitDisplayEvent();
 
     bool removeWindowFromSwitcherInProgress;
     bool skipTaskbar;
     bool isIconicState;
     bool isAlwaysMapped;
-    bool settingXPropertiesDelayed;
+    bool notificationPreviewDisabled;
 #endif
 
     void _q_onPixmapRequestsFinished();

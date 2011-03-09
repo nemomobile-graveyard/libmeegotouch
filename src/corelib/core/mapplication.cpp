@@ -522,10 +522,6 @@ bool MApplication::x11EventFilter(XEvent *event)
         return true;
     }
 #endif //HAVE_XDAMAGE
-    else if (event->type == MapNotify) {
-        XMapEvent * xevent = (XMapEvent*) event;
-        d->handleXMapNotify(xevent);
-    }
     return false;
 }
 
@@ -616,14 +612,6 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
         }
     }
 }
-
-void MApplicationPrivate::handleXMapNotify(XMapEvent *xevent)
-{
-    MWindow* win = windowForId(xevent->window);
-    if(win)
-        win->d_func()->setDelayedX11Properties();
-}
-
 #endif
 
 QString MApplication::appName()

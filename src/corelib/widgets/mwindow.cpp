@@ -102,7 +102,7 @@ MWindowPrivate::MWindowPrivate() :
     skipTaskbar = false;
     isIconicState = false;
     isAlwaysMapped = false;
-    settingXPropertiesDelayed = false;
+    notificationPreviewDisabled = false;
 #endif
 
     MWindow *window = MApplication::activeWindow();
@@ -877,22 +877,19 @@ void MWindowPrivate::setX11PrestartProperty(bool set)
 
 void MWindowPrivate::setX11OrientationAngleProperty(M::OrientationAngle angle)
 {
-    Q_Q(MWindow);
     Display *display = QX11Info::display();
 
     if (!display)
         return;
 
     //sometimes this class is used without valid x11 window
-    if (q->effectiveWinId() == 0) {
-        settingXPropertiesDelayed = true;
+    if (robustEffectiveWinId() == 0) {
         return;
     }
-    settingXPropertiesDelayed = false;
 
     Atom orientationAngleAtom = XInternAtom(display, "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
 
-    XChangeProperty(display, q->effectiveWinId(), orientationAngleAtom, XA_CARDINAL, 32,
+    XChangeProperty(display, robustEffectiveWinId(), orientationAngleAtom, XA_CARDINAL, 32,
                     PropModeReplace, (unsigned char*)&angle, 1);
 }
 
@@ -945,13 +942,14 @@ bool MWindowPrivate::getX11NotificationPreviewsDisabledProperty() const
     return previewsDisabled;
 }
 
-void MWindowPrivate::setDelayedX11Properties()
+void MWindowPrivate::setMeegoX11Properties()
 {
-    if(settingXPropertiesDelayed) {
-        setX11OrientationAngleProperty(angle);
+    setX11OrientationAngleProperty(angle);
+    if (sceneManager) {
         sceneManager->d_func()->updateStatusBarGeometryProperty();
-        settingXPropertiesDelayed = false;
     }
+    setX11PrestartProperty(MApplication::isPrestarted());
+    setX11NotificationPreviewsDisabledProperty(notificationPreviewDisabled);
 }
 #endif
 
@@ -1479,6 +1477,8 @@ bool MWindow::event(QEvent *event)
             else
                 MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
         }
+    } else if (event->type() == QEvent::WinIdChange) {
+        d->setMeegoX11Properties();
     }
 #endif
     return QGraphicsView::event(event);
@@ -1570,6 +1570,7 @@ void MWindow::setNotificationPreviewsVisible(bool visible)
 {
 #ifdef Q_WS_X11
     Q_D(MWindow);
+    d->notificationPreviewDisabled = !visible;
     d->setX11NotificationPreviewsDisabledProperty(!visible);
 #else
     Q_UNUSED(visible);
@@ -1580,7 +1581,7 @@ bool MWindow::notificationPreviewsVisible() const
 {
 #ifdef Q_WS_X11
     Q_D(const MWindow);
-    return !d->getX11NotificationPreviewsDisabledProperty();
+    return !d->notificationPreviewDisabled;
 #else
     return false;
 #endif
