@@ -447,9 +447,7 @@ void MToolBarViewPrivate::setEnabledPreservingSelection(bool enabled)
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
         QAction *action = bit.key();
         MButton *button = bit.value();
-        if (!buttonGroup || !button->isChecked()) {
-            button->setEnabled(enabled && action->isEnabled());
-        }
+        button->setEnabled(enabled && action->isEnabled());
     }
 
     for (QHash<QAction *, MWidget *>::const_iterator wit = leasedWidgets.constBegin(); wit != leasedWidgets.constEnd(); ++wit) {
