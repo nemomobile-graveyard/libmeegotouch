@@ -1,8 +1,10 @@
-libmeegotouch (0.20.93~1) unstable; urgency=low
+libmeegotouch (0.20.93-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: Locale-aware sorting in MSortFilterProxyModel
+  * Fixes: NB#232076 - Tool bar back button is missing in Login view and Account settings view
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 08 Mar 2011 16:15:14 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 10 Mar 2011 16:35:05 +0200
 
 libmeegotouch (0.20.92-1) unstable; urgency=low
 
