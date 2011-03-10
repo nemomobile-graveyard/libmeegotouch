@@ -857,7 +857,8 @@ void MThemeDaemonServer::MemoryUsagePrinter::addPixmapCacheEntries(const QString
             continue;
         }
 
-        const int pixmapMemoryUsage = entry->pixmap->width() * entry->pixmap->height() * (QPixmap::defaultDepth() >> 3);
+        const QSize pixmapSize = entry->pixmap ? entry->pixmap->size() : entry->handle.size;
+        const int pixmapMemoryUsage = pixmapSize.width() * pixmapSize.height() * (QPixmap::defaultDepth() >> 3);
 
         if (sharedPixmaps.contains(key)) {
             // The entry is already available, just append the client-name to the end if the
@@ -880,8 +881,8 @@ void MThemeDaemonServer::MemoryUsagePrinter::addPixmapCacheEntries(const QString
         } else {
             // The entry has not been added yet. Provide the size in bytes, image-ID, size in
             // pixels and the current client-name as value content.
-            const QString width = QString::number(entry->pixmap->width());
-            const QString height = QString::number(entry->pixmap->height());
+            const QString width = QString::number(pixmapSize.width());
+            const QString height = QString::number(pixmapSize.height());
             const QString size = QString::number(pixmapMemoryUsage);
             QString value = size.rightJustified(8) + columnSeparator;
             value += imageId + columnSeparator + "(";
