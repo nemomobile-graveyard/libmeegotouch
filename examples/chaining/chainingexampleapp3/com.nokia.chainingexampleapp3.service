@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.nokia.chainingexampleapp3
+Exec=/usr/bin/invoker --type=m /usr/bin/chainingexampleapp3

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=3-Chaining Example App
+Icon=icon-l-video
+X-Maemo-Service=com.nokia.chainingexampleapp3
+Exec=/usr/bin/invoker --type=m /usr/bin/chainingexampleapp3
+OnlyShowIn=X-MeeGo;

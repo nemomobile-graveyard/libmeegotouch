@@ -18,12 +18,12 @@ ImageViewer::~ImageViewer()
 
 void ImageViewer::showImage()
 {
-    QString imageFilename( "chained view from app 1" );
+    QString imageFilename( "chained view from app 3" );
     QStringList list;
     list << imageFilename;
 
     if ( chainingExampleInterface->isValid() ) {
-        chainingExampleInterface->showImage( imageFilename, list, "title from app1" );
+        chainingExampleInterface->showImage( imageFilename, list, "app3 title" );
     } else {
         qDebug() << "chainingExampleInterface not valid : " << chainingExampleInterface;
     }

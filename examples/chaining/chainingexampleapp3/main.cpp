@@ -11,14 +11,14 @@ M_EXPORT int main(int argc, char** argv)
 {
     MApplication& app = *MComponentCache::mApplication(argc, argv);
     MApplicationWindow& w = *MComponentCache::mApplicationWindow();
-    w.setObjectName( "Main Window" );
+    w.setObjectName( "Main Window 3" );
     w.show();
 
     MApplicationPage p;
     p.appear(&w);
 
     MButton b(p.centralWidget());
-    b.setText("IMAGE 1");
+    b.setText("IMAGE 3");
 
     ImageViewer myImageViewer( b );
 

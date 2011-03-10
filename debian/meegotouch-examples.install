@@ -1,5 +1,6 @@
 usr/bin/chainingexampleapp1
 usr/bin/chainingexampleapp2
+usr/bin/chainingexampleapp3
 usr/bin/com.nokia.textprocessor
 usr/bin/lifecycle
 usr/bin/org.maemo.textprocessor
@@ -12,11 +13,13 @@ usr/lib/libtextprocessor.so.1.0
 usr/lib/libtextprocessor.so.1.0.0
 usr/share/applications/chainingexampleapp1.desktop
 usr/share/applications/chainingexampleapp2.desktop
+usr/share/applications/chainingexampleapp3.desktop
 usr/share/applications/lifecycle.desktop
 usr/share/dbus-1/interfaces/com.nokia.ChainingExampleInterface.xml
 usr/share/dbus-1/interfaces/com.nokia.TextProcessorInterface.xml
 usr/share/dbus-1/services/com.nokia.chainingexampleapp1.service
 usr/share/dbus-1/services/com.nokia.chainingexampleapp2.service
+usr/share/dbus-1/services/com.nokia.chainingexampleapp3.service
 usr/share/dbus-1/services/com.nokia.lifecycle.service
 usr/share/dbus-1/services/com.nokia.textprocessor.service
 usr/share/dbus-1/services/org.maemo.textprocessor.service
