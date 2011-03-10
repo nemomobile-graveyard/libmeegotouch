@@ -112,9 +112,11 @@ namespace {
 void MGraphicsSystemHelper::switchToSoftwareRendering(MWindow *window)
 {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
-    if (QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
-        mDebug("MGraphicsSystemHelper") << "switching to raster";
-        QMeeGoGraphicsSystemHelper::switchToRaster();
+    if (MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+        if (QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
+            mDebug("MGraphicsSystemHelper") << "switching to raster";
+            QMeeGoGraphicsSystemHelper::switchToRaster();
+        }
     } else
 #endif
     {
