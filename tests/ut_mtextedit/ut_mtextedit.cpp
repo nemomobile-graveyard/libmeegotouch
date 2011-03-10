@@ -1227,6 +1227,45 @@ void Ut_MTextEdit::testSelection()
     QVERIFY(copyAvailableSpy.count() == 0);
 }
 
+void Ut_MTextEdit::testSelectionVsFocus()
+{
+    AutoActivatedScene sc;
+    MTextEdit *subject(new MTextEdit(MTextEditModel::SingleLine, "a bcd e"));
+    subject->setParentItem(sc.window()->box());
+    sc.adjustTextEdit(subject, QPoint(0, 0));
+    MTextEdit *subject2(new MTextEdit(MTextEditModel::SingleLine, "f"));
+    subject2->setParentItem(sc.window()->box());
+    sc.adjustTextEdit(subject2, QPoint(0, 100));
+    subject->setFocus();
+
+    subject->setSelection(2, 3, true);
+    sc.window()->show();
+    QTest::qWaitForWindowShown(sc.window());
+    QCOMPARE(subject->mode(), MTextEditModel::EditModeSelect);
+    QCOMPARE(subject->textCursor().selectionStart(), 2);
+    QCOMPARE(subject->textCursor().selectionEnd(), 5);
+
+    sc.window()->setWindowState(Qt::WindowMinimized);
+    QCoreApplication::processEvents();
+    QVERIFY(sc.window()->windowState() & Qt::WindowMinimized);
+    QTest::qWait(500); // without this wait the following activation does not indeed cause activation
+
+    // selection must remain after window is iconified and restored back
+    sc.window()->activateWindow();
+    QCoreApplication::processEvents();
+    QTest::qWait(500);
+    QVERIFY(!(sc.window()->windowState() & Qt::WindowMinimized));
+    QCOMPARE(subject->mode(), MTextEditModel::EditModeSelect);
+    QCOMPARE(subject->textCursor().selectionStart(), 2);
+    QCOMPARE(subject->textCursor().selectionEnd(), 5);
+
+    // ...but usual loss of focus must reset selection
+    subject2->setFocus();
+    QCoreApplication::processEvents();
+    QTest::qWait(1000);
+    QVERIFY(subject->mode() != MTextEditModel::EditModeSelect);
+    QCOMPARE(subject->selectionStart(), -1);
+}
 
 void Ut_MTextEdit::testDoubleClick_data()
 {

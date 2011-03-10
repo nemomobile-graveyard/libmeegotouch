@@ -96,6 +96,7 @@ private slots:
     //void testFeedback();
     void testBadData();
     void testSelection();
+    void testSelectionVsFocus();
     void testDoubleClick_data();
     void testDoubleClick();
     void testAutoSelection();

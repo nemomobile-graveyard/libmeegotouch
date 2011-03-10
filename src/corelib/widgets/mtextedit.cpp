@@ -1929,7 +1929,10 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     gArrowKeyNav.skipNextRequest();
 
     d->commitPreedit();
-    deselect();
+
+    Qt::FocusReason reason = event->reason();
+    if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason)
+        deselect();
 
 #if QT_VERSION >= 0x040702 // 4.7.1 was missing stopItem parameter
     // kludge warning!
