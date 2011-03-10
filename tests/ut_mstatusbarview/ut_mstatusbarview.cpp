@@ -25,23 +25,57 @@
 #include <MSceneManager>
 #include <MScene>
 
-// our own version of the wrapper
-#include "mstatusbarviewdbuswrapper.h"
-
 #include <mstatusbar.h>
 #include "mstatusbar_p.h"
 #include "ut_mstatusbarview.h"
+#include "mstatusbar_p.h"
+
+#ifdef HAVE_DBUS
+#include <mdbusinterface.h>
+#endif
 
 #ifdef Q_WS_X11
 #include <QX11Info>
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #endif
+
+#ifdef HAVE_XDAMAGE
+#include <X11/extensions/Xdamage.h>
+#endif //HAVE_XDAMAGE
 
 #define SWIPE_THRESHOLD 30
 #define SCENE_WIDTH 100
 
 // an arbitrary point
 #define START_POINT QPointF(15.20, 2.10)
+
+bool gPreviousFilterCalled;
+static bool previousFilter(void *)
+{
+    gPreviousFilterCalled = true;
+    return false;
+}
+
+#ifdef HAVE_DBUS
+// MDBusInterface stubs
+MDBusInterface::MDBusInterface(const QString &service, const QString &path, const char *interface,
+                             const QDBusConnection &connection, QObject *parent) :
+    QDBusAbstractInterface(service, path, interface, connection, parent)
+{
+}
+
+QDBus::CallMode gDBusInterfaceCallModeValue;
+QString gDBusInterfaceCallMethodValue;
+QDBusMessage QDBusAbstractInterface::call(QDBus::CallMode mode, const QString &method, const QVariant &, const QVariant &,
+                                  const QVariant &, const QVariant &, const QVariant & , const QVariant &,
+                                  const QVariant &, const QVariant &)
+{
+    gDBusInterfaceCallModeValue = mode;
+    gDBusInterfaceCallMethodValue = method;
+    return QDBusMessage();
+}
+#endif
 
 // QGraphicsItem::sceneBoundingRect mock
 QRectF QGraphicsItem::sceneBoundingRect() const
@@ -122,24 +156,150 @@ void QPainter::restore()
 {
 }
 
-
 Ut_MStatusBarView::Ut_MStatusBarView():
         m_subject(0),
         m_statusbar(0),
-        m_pixmapHandle(0),
         app(0)
 {
 }
 
+Qt::HANDLE g_pixmapHandle;
+Atom gStatusBarPixmapAtom;
+Atom gStatusBarPixmapPropertyType;
+int gStatusBarPixmapPropertyFormat;
+QByteArray gStatusBarPixmapPropertyData;
+Status gStatusBarPixmapPropertyReturnStatus;
+
+void* gReturnedPixmapPropertyData;
+bool gReturnedPixmapPropertyDataFreed;
+
+void initStatusBarPixmapProperty(Atom actualType, int actualFormat, quint32 data, int status)
+{
+    gStatusBarPixmapPropertyType = actualType;
+    gStatusBarPixmapPropertyFormat = actualFormat;
+    gStatusBarPixmapPropertyData = QByteArray((const char*)&data, 4);
+    gStatusBarPixmapPropertyReturnStatus = status;
+}
+
+Atom gStatusBarPropertyWindowAtom;
+Atom gStatusBarPropertyWindowPropertyType;
+int gStatusBarPropertyWindowPropertyFormat;
+Window gStatusBarPropertyWindowPropertyData;
+Status gStatusBarPropertyWindowPropertyReturnStatus;
+
+void* gReturnedPropertyWindowPropertyData;
+bool gReturnedPropertyWindowPropertyDataFreed;
+
+void initStatusBarPropertyWindowProperty(Atom actualType, int actualFormat, Window data, int status)
+{
+    gStatusBarPropertyWindowPropertyType = actualType;
+    gStatusBarPropertyWindowPropertyFormat = actualFormat;
+    gStatusBarPropertyWindowPropertyData = data;
+    gStatusBarPropertyWindowPropertyReturnStatus = status;
+}
+
+void resetXPropertyStubData()
+{
+    gStatusBarPixmapPropertyType = 0;
+    gStatusBarPixmapPropertyFormat = 0;
+    gStatusBarPixmapPropertyData.clear();
+    gStatusBarPixmapPropertyReturnStatus = 0;
+
+    gStatusBarPropertyWindowPropertyType = 0;
+    gStatusBarPropertyWindowPropertyFormat = 0;
+    gStatusBarPropertyWindowPropertyData = 0;
+    gStatusBarPropertyWindowPropertyReturnStatus = 0;
+}
+
+int (*RealXGetWindowProperty)(Display *, Window, Atom, long, long, Bool, Atom, Atom*, int*, unsigned long *, unsigned long *, unsigned char **);
+
+int XGetWindowProperty(
+    Display* d,
+    Window w,
+    Atom propertyAtom,
+    long offset,
+    long length,
+    Bool delete_property,
+    Atom req_type,
+    Atom *actualType,
+    int *actualFormat,
+    unsigned long *nitems,
+    unsigned long *bytes_after,
+    unsigned char **data)
+{
+    if (propertyAtom == gStatusBarPropertyWindowAtom) {
+        *actualType = gStatusBarPropertyWindowPropertyType;
+        *actualFormat = gStatusBarPropertyWindowPropertyFormat;
+        *data = (unsigned char*)&gStatusBarPropertyWindowPropertyData;
+        *nitems = 1;
+        *bytes_after = 0;
+
+        gReturnedPropertyWindowPropertyData = *data;
+        gReturnedPropertyWindowPropertyDataFreed = false;
+
+        return gStatusBarPixmapPropertyReturnStatus;
+    } else if (propertyAtom == gStatusBarPixmapAtom) {
+        *actualType = gStatusBarPixmapPropertyType;
+        *actualFormat = gStatusBarPixmapPropertyFormat;
+        *data = (unsigned char*)gStatusBarPixmapPropertyData.data();
+        *nitems = 1;
+        *bytes_after = 0;
+
+        gReturnedPixmapPropertyData = *data;
+        gReturnedPixmapPropertyDataFreed = false;
+
+        return gStatusBarPixmapPropertyReturnStatus;
+    } else {
+        return (*RealXGetWindowProperty)(d, w, propertyAtom,
+                                               offset, length, delete_property, req_type,
+                                               actualType, actualFormat, nitems,
+                                               bytes_after, data);
+    }
+}
+
+int (*RealXFree)(void *);
+
+int XFree(void *data)
+{
+    if (data == gReturnedPropertyWindowPropertyData) {
+        gReturnedPropertyWindowPropertyDataFreed = true;
+        return Success;
+    } else if (data == gReturnedPixmapPropertyData) {
+        gReturnedPixmapPropertyDataFreed = true;
+        return Success;
+    } else {
+        return (*RealXFree)(data);
+    }
+}
+
+
 void Ut_MStatusBarView::initTestCase()
 {
+#ifdef Q_WS_X11
+    QLibrary libX11("/usr/lib/libX11.so.6");
+
+    RealXGetWindowProperty =
+        reinterpret_cast<int (*)(Display *, Window, Atom,
+                 long, long, Bool,
+                 Atom, Atom*,
+                 int*, unsigned long *,
+                 unsigned long *, unsigned char **)>(libX11.resolve("XGetWindowProperty"));
+
+    RealXFree = reinterpret_cast<int (*)(void*)>(libX11.resolve("XFree"));
+#endif
+
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mstatusbarview" };
     app = new MApplication(argc, app_name);
 
 #ifdef Q_WS_X11
     createX11SharedPixmap();
+
+    gStatusBarPixmapAtom = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", False);
+    gStatusBarPropertyWindowAtom = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW", False);
 #endif
+
+    QAbstractEventDispatcher::instance()->setEventFilter(previousFilter);
 }
 
 void Ut_MStatusBarView::cleanupTestCase()
@@ -152,6 +312,14 @@ void Ut_MStatusBarView::cleanupTestCase()
 
 void Ut_MStatusBarView::init()
 {
+    resetXPropertyStubData();
+
+    gPreviousFilterCalled = false;
+#ifdef HAVE_DBUS
+    // Just initialize to an invalid value
+    gDBusInterfaceCallModeValue = QDBus::AutoDetect;
+    gDBusInterfaceCallMethodValue = QString();
+#endif
 }
 
 void Ut_MStatusBarView::cleanup()
@@ -162,13 +330,14 @@ void Ut_MStatusBarView::cleanup()
     m_statusbar = 0;
 }
 
+#ifdef HAVE_DBUS
 void Ut_MStatusBarView::testWhenMouseMovesAboveThresholdStatusIndicatorMenuAppears()
 {
     initHelper();
     mouseDownWorker(START_POINT);
     mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD + 1));
-
-    QVERIFY(MStatusBarViewDBusWrapper::self->m_openStatusIndicatorMenuCalled);
+    QCOMPARE(gDBusInterfaceCallModeValue, QDBus::NoBlock);
+    QCOMPARE(gDBusInterfaceCallMethodValue, QString("open"));
 }
 
 void Ut_MStatusBarView::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear()
@@ -176,7 +345,7 @@ void Ut_MStatusBarView::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNot
     initHelper();
     mouseDownWorker(START_POINT);
     mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD - 1));
-    QCOMPARE(MStatusBarViewDBusWrapper::self->m_openStatusIndicatorMenuCalled, false);
+    QVERIFY(gDBusInterfaceCallModeValue != QDBus::NoBlock);
 }
 
 void Ut_MStatusBarView::testWhenMousePressHapticsDone()
@@ -191,7 +360,7 @@ void Ut_MStatusBarView::testWhenUsingSwipeTapDoesNothing()
     initHelper();
     mouseDownWorker(START_POINT);
     mouseUpWorker(START_POINT);
-    QCOMPARE(MStatusBarViewDBusWrapper::self->m_openStatusIndicatorMenuCalled, false);
+    QVERIFY(gDBusInterfaceCallModeValue != QDBus::NoBlock);
 }
 
 void Ut_MStatusBarView::testWhenUsingTapSwipeDoesNothing()
@@ -200,7 +369,7 @@ void Ut_MStatusBarView::testWhenUsingTapSwipeDoesNothing()
     m_subject->modifiableStyle()->setUseSwipeGesture(false);
     mouseDownWorker(START_POINT);
     mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD - 1));
-    QCOMPARE(MStatusBarViewDBusWrapper::self->m_openStatusIndicatorMenuCalled, false);
+    QVERIFY(gDBusInterfaceCallModeValue != QDBus::NoBlock);
 }
 
 void Ut_MStatusBarView::testTapFunctionality()
@@ -211,17 +380,30 @@ void Ut_MStatusBarView::testTapFunctionality()
     // Test that a tap where a release is out of bounds is not recognised
     mouseDownWorker(START_POINT);
     mouseUpWorker(START_POINT + QPointF(SCENE_WIDTH, SCENE_WIDTH) * 2);
-    QCOMPARE(MStatusBarViewDBusWrapper::self->m_openStatusIndicatorMenuCalled, false);
+    QVERIFY(gDBusInterfaceCallModeValue != QDBus::NoBlock);
 
     // Test that a tap where a release is within bounds is recognised
     mouseDownWorker(START_POINT);
     mouseUpWorker(START_POINT + QPointF(5,5));
-    QCOMPARE(MStatusBarViewDBusWrapper::self->m_openStatusIndicatorMenuCalled, true);
+    QCOMPARE(gDBusInterfaceCallModeValue, QDBus::NoBlock);
+    QCOMPARE(gDBusInterfaceCallMethodValue, QString("open"));
 }
 
+void Ut_MStatusBarView::testStatusIndicatorMenuDisabling()
+{
+    initHelper();
+    m_subject->modifiableStyle()->setEnableStatusIndicatorMenu(false);
+    mouseDownWorker(START_POINT);
+    mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD + 1));
+    QVERIFY(gDBusInterfaceCallModeValue != QDBus::NoBlock);
+}
+#endif
 
 void Ut_MStatusBarView::testPressDimming()
 {
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1, Success);
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
+
     initHelper();
     qreal styleDimCSS = m_subject->modifiableStyle()->pressDimFactor();
     QCOMPARE(styleDimCSS, m_subject->modifiableStyle()->pressDimFactor());
@@ -263,101 +445,184 @@ void Ut_MStatusBarView::testPressDimming()
     m_subject = NULL;
 }
 
-void Ut_MStatusBarView::testStatusIndicatorMenuDisabling()
-{
-    initHelper();
-    m_subject->modifiableStyle()->setEnableStatusIndicatorMenu(false);
-    mouseDownWorker(START_POINT);
-    mouseMoveWorker(START_POINT + QPointF(0, SWIPE_THRESHOLD + 1));
-    QCOMPARE(MStatusBarViewDBusWrapper::self->m_openStatusIndicatorMenuCalled, false);
-}
-
 #ifdef Q_WS_X11
-void Ut_MStatusBarView::testFetchingSharedPixmapHandle()
-{
-    MStatusBarViewDBusWrapper::m_isPixmapProviderServiceRegistered = true;
 
-    // It should ask for the handle straight away, regardless of whether we are on display
-    // and regardless of whether we are on switcher.
+void Ut_MStatusBarView::testGettingPropertyWindowId()
+{
+    Window expectedWindow(69);
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, expectedWindow, Success);
 
     m_statusbar = new MStatusBar();
     m_subject = new TestMStatusBarView(m_statusbar);
     m_statusbar->setView(m_subject);
 
-    MStatusBarViewDBusWrapper *dbusWrapper = MStatusBarViewDBusWrapper::self;
-
-    QCOMPARE(dbusWrapper->havePendingSharedPixmapHandleReply(), true);
-
-    dbusWrapper->emitSharedPixmapHandleFromProviderReceived(m_pixmapHandle, true);
-
-    QCOMPARE(m_subject->sharedPixmap.handle(), m_pixmapHandle);
+    QCOMPARE(m_subject->statusBarPropertyWindowId, expectedWindow);
+    QVERIFY(gReturnedPropertyWindowPropertyDataFreed);
 }
 
-void Ut_MStatusBarView::testFetchSharedPixmapWhenProviderRegisters()
+void Ut_MStatusBarView::testGettingSharedPixmapHandle_data()
 {
-    MStatusBarViewDBusWrapper::m_isPixmapProviderServiceRegistered = false;
+    QTest::addColumn<quint32>("pixmapHandle");
+    QTest::addColumn<Atom>("propertyType");
+    QTest::addColumn<int>("propertyFormat");
+    QTest::addColumn<int>("returnStatus");
+    QTest::addColumn<bool>("shouldGetPixmapHandle");
+
+    QTest::newRow("Pixmap handle received successfully") << (quint32)g_pixmapHandle << XA_PIXMAP << 32 << Success << true;
+    QTest::newRow("Getting pixmap handle failed") << (quint32)0 << (ulong)None << 0 << Success << false;
+    QTest::newRow("Pixmap handle received successfully but handle is 0") << (quint32)0 << XA_PIXMAP << 32 << Success << false;
+}
+
+void Ut_MStatusBarView::testGettingSharedPixmapHandle()
+{
+    QFETCH(quint32, pixmapHandle);
+    QFETCH(Atom, propertyType);
+    QFETCH(int, propertyFormat);
+    QFETCH(int, returnStatus);
+    QFETCH(bool, shouldGetPixmapHandle);
+
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1, Success);
+    initStatusBarPixmapProperty(propertyType, propertyFormat, pixmapHandle, returnStatus);
 
     m_statusbar = new MStatusBar();
     m_subject = new TestMStatusBarView(m_statusbar);
     m_statusbar->setView(m_subject);
 
-    MStatusBarViewDBusWrapper *dbusWrapper = MStatusBarViewDBusWrapper::self;
+    if (shouldGetPixmapHandle) {
+        QCOMPARE(m_subject->sharedPixmap.handle(), g_pixmapHandle);
+        QCOMPARE(m_subject->isPixmapValid, true);
+    } else {
+        QCOMPARE(m_subject->isPixmapValid, false);
+        QCOMPARE(m_subject->sharedPixmap.isNull(), true);
+    }
+    QCOMPARE(gReturnedPixmapPropertyDataFreed, returnStatus == Success);
+}
 
-    // Initially we don't have a shared pixmap
+void Ut_MStatusBarView::testThatPropertyNewValueOfXPropertyNotifyEventFetchesPixmapHandleAndPropertyDeleteRemovesPixmapHandle()
+{
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1, Success);
+    // Pixmap property is not received during initialization
+    initStatusBarPixmapProperty(None, 0, 0, Success);
+
+    m_statusbar = new MStatusBar();
+    m_subject = new TestMStatusBarView(m_statusbar);
+    m_statusbar->setView(m_subject);
+
+    XEvent xevent;
+    xevent.type = PropertyNotify;
+    xevent.xproperty.atom = gStatusBarPixmapAtom;
+    xevent.xproperty.state = PropertyNewValue;
+
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
+
+    void *message = static_cast<void*>(&xevent);
+    MStatusBarEventListener::xWindowPropertyEventFilter(message);
+
+    QCOMPARE(m_subject->sharedPixmap.handle(), g_pixmapHandle);
+    QCOMPARE(m_subject->isPixmapValid, true);
+    // Verify that previous filter was also called
+    QVERIFY(gPreviousFilterCalled);
+
+    //PropertyDelete state
+    xevent.xproperty.state = PropertyDelete;
+    message = static_cast<void*>(&xevent);
+    MStatusBarEventListener::xWindowPropertyEventFilter(message);
+
     QCOMPARE(m_subject->sharedPixmap.isNull(), true);
-
-    // querySharedPixmapHandleFromProvider() shouldn't have been called yet.
-    QCOMPARE(dbusWrapper->havePendingSharedPixmapHandleReply(), false);
-
-    dbusWrapper->m_isPixmapProviderServiceRegistered = true;
-    dbusWrapper->emitPixmapProviderServiceRegistered();
-
-    // querySharedPixmapHandleFromProvider() should have been called.
-    QCOMPARE(dbusWrapper->havePendingSharedPixmapHandleReply(), true);
-
-    dbusWrapper->emitSharedPixmapHandleFromProviderReceived(m_pixmapHandle, true);
-
-    QCOMPARE(m_subject->sharedPixmap.handle(), m_pixmapHandle);
+    QCOMPARE(m_subject->isPixmapValid, false);
 }
 
-void Ut_MStatusBarView::testDiscardSharedPixmapWhenProviderUnregisters()
+void Ut_MStatusBarView::testSharedPixmapHandleProviderOffline()
 {
-    MStatusBarViewDBusWrapper::m_isPixmapProviderServiceRegistered = true;
-
+    // Create status bar with valid pixmap handle
+    Window propertyWindow(69);
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, propertyWindow, Success);
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
     m_statusbar = new MStatusBar();
     m_subject = new TestMStatusBarView(m_statusbar);
     m_statusbar->setView(m_subject);
 
-    MStatusBarViewDBusWrapper *dbusWrapper = MStatusBarViewDBusWrapper::self;
+    // Destroy property window
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, BadWindow);
+    XEvent xevent;
+    xevent.type = DestroyNotify;
+    xevent.xdestroywindow.window = propertyWindow;
+    void *message = static_cast<void*>(&xevent);
+    MStatusBarEventListener::xWindowPropertyEventFilter(message);
+    // Verify property poll timer
+    QVERIFY(disconnect(&m_subject->propertyWindowPollTimer, SIGNAL(timeout()), m_subject, SLOT(propertyWindowPollTimerTimeout())));
+    QVERIFY(m_subject->propertyWindowPollTimer.isActive());
+    // Verify offline state
+    QVERIFY(!m_subject->isPixmapValid);
+    QVERIFY(m_subject->sharedPixmap.isNull());
 
-    dbusWrapper->emitSharedPixmapHandleFromProviderReceived(m_pixmapHandle, true);
+    // First timeout while provider still offline
+    m_subject->propertyWindowPollTimerTimeout();
+    QVERIFY(m_subject->propertyWindowPollTimer.isActive());
+    QVERIFY(!m_subject->isPixmapValid);
 
-    QCOMPARE(m_subject->sharedPixmap.handle(), m_pixmapHandle);
-
-    dbusWrapper->m_isPixmapProviderServiceRegistered = false;
-    dbusWrapper->emitPixmapProviderServiceUnregistered();
-
-    QCOMPARE(m_subject->sharedPixmap.isNull(), true);
+    // Second timeout after provider back online
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
+    m_subject->propertyWindowPollTimerTimeout();
+    QVERIFY(!m_subject->propertyWindowPollTimer.isActive());
+    QVERIFY(m_subject->isPixmapValid);
 }
+
+void Ut_MStatusBarView::testEventFilterIsSetCorrectly()
+{
+    QAbstractEventDispatcher::EventFilter currentEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(NULL);
+    QVERIFY(currentEventFilter == MStatusBarEventListener::xWindowPropertyEventFilter);
+
+    // Restore the filter for rest of the tests
+    QAbstractEventDispatcher::instance()->setEventFilter(MStatusBarEventListener::xWindowPropertyEventFilter);
+}
+
+void Ut_MStatusBarView::testEventFilterWhenNoStatusBarInstance()
+{
+    cleanup();
+
+    XEvent xevent;
+    xevent.type = PropertyNotify;
+    xevent.xproperty.atom = gStatusBarPixmapAtom;
+    xevent.xproperty.state = PropertyNewValue;
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
+    void *message = static_cast<void*>(&xevent);
+    // Verify that we can call the filter even without statusbar instance
+    MStatusBarEventListener::xWindowPropertyEventFilter(message);
+    // Verify that previous filter was called
+    QVERIFY(gPreviousFilterCalled);
+
+    // Verify that the filter is still correct
+    QAbstractEventDispatcher::EventFilter currentEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(NULL);
+    QVERIFY(currentEventFilter == MStatusBarEventListener::xWindowPropertyEventFilter);
+}
+
 #endif // Q_WS_X11
 
 #ifdef HAVE_XDAMAGE
 void Ut_MStatusBarView::testTrackXDamageEventsForSharedPixmapWhenEnterDisplay()
 {
-    MStatusBarViewDBusWrapper::m_isPixmapProviderServiceRegistered = true;
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1, Success);
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
 
     m_statusbar = new MStatusBar();
     m_subject = new TestMStatusBarView(m_statusbar);
     m_statusbar->setView(m_subject);
-
-    MStatusBarViewDBusWrapper *dbusWrapper = MStatusBarViewDBusWrapper::self;
 
     // we don't even have a window
     QCOMPARE(m_subject->isOnDisplay, false);
     QCOMPARE(m_subject->isInSwitcher, false);
 
     // give it a shared pixmap
-    dbusWrapper->emitSharedPixmapHandleFromProviderReceived(m_pixmapHandle, true);
+    XEvent xevent;
+    xevent.type = PropertyNotify;
+    xevent.xproperty.atom = gStatusBarPixmapAtom;
+    xevent.xproperty.state = PropertyNewValue;
+
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
+
+    void *message = static_cast<void*>(&xevent);
+    MStatusBarEventListener::xWindowPropertyEventFilter(message);
 
     // should not setup XDamage if we're not on display
     QCOMPARE(m_subject->pixmapDamage, static_cast<Qt::HANDLE>(0));
@@ -372,16 +637,23 @@ void Ut_MStatusBarView::testTrackXDamageEventsForSharedPixmapWhenEnterDisplay()
 
 void Ut_MStatusBarView::testDestroyXDamageTrackingForSharedPixmapWhenExitDisplay()
 {
-    MStatusBarViewDBusWrapper::m_isPixmapProviderServiceRegistered = true;
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1, Success);
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
 
     m_statusbar = new MStatusBar();
     m_subject = new TestMStatusBarView(m_statusbar);
     m_statusbar->setView(m_subject);
 
-    MStatusBarViewDBusWrapper *dbusWrapper = MStatusBarViewDBusWrapper::self;
-
     // give it a shared pixmap
-    dbusWrapper->emitSharedPixmapHandleFromProviderReceived(m_pixmapHandle, true);
+    XEvent xevent;
+    xevent.type = PropertyNotify;
+    xevent.xproperty.atom = gStatusBarPixmapAtom;
+    xevent.xproperty.state = PropertyNewValue;
+
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
+
+    void *message = static_cast<void*>(&xevent);
+    MStatusBarEventListener::xWindowPropertyEventFilter(message);
 
     // simulating emission of displayEntered()
     m_subject->handleDisplayEntered();
@@ -399,16 +671,23 @@ void Ut_MStatusBarView::testDestroyXDamageTrackingForSharedPixmapWhenExitDisplay
 
 void Ut_MStatusBarView::testDestroyXDamageTrackingForSharedPixmapWhenEnterSwitcher()
 {
-    MStatusBarViewDBusWrapper::m_isPixmapProviderServiceRegistered = true;
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1, Success);
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
 
     m_statusbar = new MStatusBar();
     m_subject = new TestMStatusBarView(m_statusbar);
     m_statusbar->setView(m_subject);
 
-    MStatusBarViewDBusWrapper *dbusWrapper = MStatusBarViewDBusWrapper::self;
-
     // give it a shared pixmap
-    dbusWrapper->emitSharedPixmapHandleFromProviderReceived(m_pixmapHandle, true);
+    XEvent xevent;
+    xevent.type = PropertyNotify;
+    xevent.xproperty.atom = gStatusBarPixmapAtom;
+    xevent.xproperty.state = PropertyNewValue;
+
+    initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
+
+    void *message = static_cast<void*>(&xevent);
+    MStatusBarEventListener::xWindowPropertyEventFilter(message);
 
     // simulating emission of displayEntered()
     m_subject->handleDisplayEntered();
@@ -469,16 +748,16 @@ void Ut_MStatusBarView::initHelper()
 void Ut_MStatusBarView::createX11SharedPixmap()
 {
     // some pseudo-random dimensions. not really important for these tests
-    m_pixmapHandle = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
+    g_pixmapHandle = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
                              854, 70, QX11Info::appDepth());
     QApplication::syncX();
 }
 
 void Ut_MStatusBarView::freeX11SharedPixmap()
 {
-    if (m_pixmapHandle) {
-        XFreePixmap(QX11Info::display(), m_pixmapHandle);
-        m_pixmapHandle = 0;
+    if (g_pixmapHandle) {
+        XFreePixmap(QX11Info::display(), g_pixmapHandle);
+        g_pixmapHandle = 0;
     }
 }
 #endif

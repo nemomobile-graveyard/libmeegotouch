@@ -9,7 +9,6 @@ TEST_SOURCES = \
 # unit test and unit
 SOURCES += \
     ut_mstatusbarview.cpp \
-    mstatusbarviewdbuswrapper.cpp \
     $$TEST_SOURCES \ 
 
 # service classes
@@ -19,7 +18,7 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_mstatusbarview.h \
-    mstatusbarviewdbuswrapper.h \
-    $$MSRCDIR/views/mstatusbarview.h \
+    $$MSRCDIR/views/mstatusbarview.h
+
 
 include(../common_bot.pri)

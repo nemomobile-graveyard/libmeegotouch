@@ -20,15 +20,29 @@
 #ifndef MSTATUSBARVIEW_H
 #define MSTATUSBARVIEW_H
 
+#include <QTimer>
+#include <mdebug.h>
 #include <mscenewindowview.h>
 #include <mscenewindowmodel.h>
 #include <mstatusbarstyle.h>
 
+#ifdef Q_WS_X11
+#include <X11/Xlib.h>
+#endif //Q_WS_X11
+
 class MStatusBar;
 class QPixmap;
-class MStatusBarViewDBusWrapper;
 
 //! \internal
+
+class MStatusBarEventListener
+{
+public:
+    MStatusBarEventListener();
+    ~MStatusBarEventListener();
+
+    static bool xWindowPropertyEventFilter(void *message);
+};
 
 class MStatusBarView : public MSceneWindowView
 {
@@ -38,6 +52,14 @@ class MStatusBarView : public MSceneWindowView
 public:
     MStatusBarView(MStatusBar *controller);
     virtual ~MStatusBarView();
+
+    //! Handles x property events.
+    void handleXWindowPropertyNotifyEvent(int status);
+    //! Handles x window destroy events.
+    void handleXWindowDestroyNotifyEvent(const Window &window);
+
+    static Atom propertyWindowAtom;
+    static Atom pixmapHandleAtom;
 
 protected:
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
@@ -54,7 +76,7 @@ private:
      */
     void showStatusIndicatorMenu();
 
-    // Perform the haptic feedback
+    //! Perform the haptic feedback for status bar press
     void playHapticsFeedback();
 
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
@@ -63,21 +85,43 @@ private:
     //! Used to track whether a mouse button is currently being pressed
     bool pressDown;
 
-    MStatusBarViewDBusWrapper *dbusWrapper;
+    //! Timer to poll the status bar property window from root window property
+    QTimer propertyWindowPollTimer;
+
+    //! Window id of the status bar property window
+    Window statusBarPropertyWindowId;
 
 #ifdef Q_WS_X11
     bool isOnDisplay;
     bool isInSwitcher;
     bool shouldStayUpToDate();
     void updateXDamageForSharedPixmap();
-    bool isPixmapProviderOnline;
+    static bool isPixmapValid;
     void setupXDamageForSharedPixmap();
     void destroyXDamageForSharedPixmap();
 
     QPixmap sharedPixmap;
     Qt::HANDLE pixmapDamage;
 
+    /*! Updates the status bar shared pix handle from x property of given window
+     * \return Whether update succeeded
+     */
+    bool updateSharedPixmapHandleFromPropertyWindow(const Window &window);
+
+    /*! Gets the status bar property window id from root window property
+     * \return The window id from root property, or -1 if unsuccessful
+     */
+    Window statusBarPropertyWindow();
+
 private Q_SLOTS:
+    /*! Handles property window poll timer timeout.
+     * Tries to update the shared pixmap handle.
+     * And ccording to current interval, either increases the timer interval or stops the timer.
+     */
+    void propertyWindowPollTimerTimeout();
+
+    //! Updates the shared pixmap handle if available
+    void updateStatusBarSharedPixmapHandle();
     void handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short &y,
                                  unsigned short &width, unsigned short &height);
 
@@ -85,7 +129,7 @@ private Q_SLOTS:
     void handleDisplayExited();
     void handleSwitcherEntered();
     void handleSwitcherExited();
-    void handleSharedPixmapHandleReceived(quint32 handle, bool ok);
+    void handleSharedPixmapHandleReceived(quint32 handle);
     void handlePixmapProviderOnline();
     void handlePixmapProviderOffline();
 

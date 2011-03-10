@@ -77,9 +77,13 @@ private slots:
     void testStatusIndicatorMenuDisabling();
 
 #ifdef Q_WS_X11
-    void testFetchingSharedPixmapHandle();
-    void testFetchSharedPixmapWhenProviderRegisters();
-    void testDiscardSharedPixmapWhenProviderUnregisters();
+    void testGettingPropertyWindowId();
+    void testGettingSharedPixmapHandle_data();
+    void testGettingSharedPixmapHandle();
+    void testThatPropertyNewValueOfXPropertyNotifyEventFetchesPixmapHandleAndPropertyDeleteRemovesPixmapHandle();
+    void testSharedPixmapHandleProviderOffline();
+    void testEventFilterIsSetCorrectly();
+    void testEventFilterWhenNoStatusBarInstance();
 #endif
 
 #ifdef HAVE_XDAMAGE
@@ -102,7 +106,6 @@ private:
 
     TestMStatusBarView *m_subject;
     MStatusBar *m_statusbar;
-    Qt::HANDLE m_pixmapHandle;
     MApplication* app;
 };
 

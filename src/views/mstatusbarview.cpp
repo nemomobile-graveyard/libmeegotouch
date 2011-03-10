@@ -16,25 +16,166 @@
 ** of this file.
 **
 ****************************************************************************/
-
+#include <QGraphicsSceneMouseEvent>
+#include <QAbstractEventDispatcher>
+#include <QTimer>
 #include "mviewconstants.h"
 #include "mstatusbarview.h"
 #include <mstatusbar.h>
 #include <mapplication.h>
 #include <mscenemanager.h>
 #include <mscene.h>
-#include <mdebug.h>
 
-#include <QFile>
-#include <QDataStream>
-#include <QDir>
-#include <QGraphicsSceneMouseEvent>
-
-#include <mstatusbarviewdbuswrapper.h>
+#ifdef HAVE_DBUS
+#include <mdbusinterface.h>
+#endif
 
 #ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
 #endif //HAVE_XDAMAGE
+
+#ifdef Q_WS_X11
+#include <X11/Xatom.h>
+#endif //Q_WS_X11
+
+#define PROPERTY_WINDOW_INITIAL_POLL_TIMEOUT 3000
+
+Atom MStatusBarView::propertyWindowAtom = NULL;
+Atom MStatusBarView::pixmapHandleAtom = NULL;
+QAbstractEventDispatcher::EventFilter previousEventFilter = NULL;
+static QSharedPointer<MStatusBarEventListener> eventListenerInstance;
+static MStatusBarView *statusBarViewInstance = NULL;
+bool MStatusBarView::isPixmapValid;
+
+MStatusBarEventListener::MStatusBarEventListener()
+{
+    // Setup event filter to follow root window property notify events
+    if (previousEventFilter == NULL) {
+        previousEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(xWindowPropertyEventFilter);
+    }
+}
+
+MStatusBarEventListener::~MStatusBarEventListener()
+{
+    if (previousEventFilter) {
+        QAbstractEventDispatcher *dispatcher = QAbstractEventDispatcher::instance();
+        if (dispatcher) {
+            dispatcher->setEventFilter(previousEventFilter);
+        }
+        previousEventFilter = NULL;
+    }
+}
+
+bool MStatusBarEventListener::xWindowPropertyEventFilter(void *message)
+{
+    XEvent *xevent = static_cast<XEvent*>(message);
+
+    if (statusBarViewInstance != NULL) {
+        if ((xevent->type == PropertyNotify && xevent->xproperty.atom == MStatusBarView::pixmapHandleAtom)) {
+            statusBarViewInstance->handleXWindowPropertyNotifyEvent(xevent->xproperty.state);
+        } else if (xevent->type == DestroyNotify) {
+            statusBarViewInstance->handleXWindowDestroyNotifyEvent(xevent->xdestroywindow.window);
+        }
+    }
+
+    bool handled = false;
+    if (previousEventFilter && previousEventFilter != xWindowPropertyEventFilter) {
+        handled = previousEventFilter(message);
+    }
+
+    return handled;
+}
+
+void MStatusBarView::handleXWindowDestroyNotifyEvent(const Window &window)
+{
+    if (statusBarPropertyWindowId == window) {
+        handlePixmapProviderOffline();
+    }
+}
+
+void MStatusBarView::handleXWindowPropertyNotifyEvent(int state)
+{
+    switch (state) {
+    case  PropertyNewValue:
+        updateStatusBarSharedPixmapHandle();
+    break;
+    case PropertyDelete:
+        handlePixmapProviderOffline();
+    break;
+    default:
+    break;
+    }
+}
+
+Window MStatusBarView::statusBarPropertyWindow()
+{
+    Atom actualType = 0;
+    int actualFormat = 0;
+    unsigned long nitems = 0;
+    unsigned long bytesAfter = 0;
+    unsigned char *data = NULL;
+
+    int status = XGetWindowProperty(QX11Info::display(),
+                                    QX11Info::appRootWindow(),
+                                    propertyWindowAtom,
+                                    0,
+                                    1,
+                                    False,
+                                    XA_WINDOW,
+                                    &actualType,
+                                    &actualFormat,
+                                    &nitems,
+                                    &bytesAfter,
+                                    &data);
+
+    Window window(0);
+    if (status == Success && data != None) {
+        window = *(Window *)data;
+
+        XSelectInput(QX11Info::display(), window, PropertyChangeMask | StructureNotifyMask);
+
+        XFree(data);
+    }
+
+    return window;
+}
+
+bool MStatusBarView::updateSharedPixmapHandleFromPropertyWindow(const Window &window)
+{
+    Atom actualType = 0;
+    int actualFormat = 0;
+    unsigned long nitems = 0;
+    unsigned long bytesAfter = 0;
+
+     union {
+        unsigned char* asUChar;
+        unsigned long* asULong;
+    } data = {0};
+
+    int status = XGetWindowProperty(QX11Info::display(),
+                                    window,
+                                    pixmapHandleAtom,
+                                    0,
+                                    1,
+                                    False,
+                                    XA_PIXMAP,
+                                    &actualType,
+                                    &actualFormat,
+                                    &nitems,
+                                    &bytesAfter,
+                                    &data.asUChar);
+
+    bool success = false;
+    if (status == Success) {
+        if (actualType == XA_PIXMAP && actualFormat == 32 && data.asULong[0] != 0) {
+            handleSharedPixmapHandleReceived(data.asULong[0]);
+            success = true;
+        }
+        XFree(data.asUChar);
+    }
+
+    return success;
+}
 
 namespace{
     const qreal SharedPixmapHeight = 30;
@@ -71,26 +212,22 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
         }
     }
 
-    dbusWrapper = new MStatusBarViewDBusWrapper(this);
+    statusBarViewInstance = this;
+    isPixmapValid = false;
+    propertyWindowAtom = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW", False);
+    pixmapHandleAtom = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", False);
 
-    connect(dbusWrapper,
-            SIGNAL(sharedPixmapHandleFromProviderReceived(quint32, bool)),
-            SLOT(handleSharedPixmapHandleReceived(quint32, bool)));
+    // Create event listener on first statusbar creation. To assure correct QAbstractEventDispatcher filter
+    // handling the listener has to be destroyed (restoring previous filter) only when application is destroyed
+    // (hence the use of global static shared pointer).
+    if (eventListenerInstance.isNull()) {
+        eventListenerInstance = QSharedPointer<MStatusBarEventListener>(new MStatusBarEventListener);
+    }
 
-    if (dbusWrapper->isPixmapProviderServiceRegistered())
-        isPixmapProviderOnline = true;
-    else
-        isPixmapProviderOnline = false;
+    connect(&propertyWindowPollTimer, SIGNAL(timeout()), this, SLOT(propertyWindowPollTimerTimeout()));
+    propertyWindowPollTimer.setInterval(PROPERTY_WINDOW_INITIAL_POLL_TIMEOUT);
 
-
-    connect(dbusWrapper, SIGNAL(pixmapProviderServiceRegistered()),
-            this, SLOT(handlePixmapProviderOnline()));
-    connect(dbusWrapper, SIGNAL(pixmapProviderServiceUnregistered()),
-            this, SLOT(handlePixmapProviderOffline()));
-
-    if (isPixmapProviderOnline)
-        dbusWrapper->querySharedPixmapHandleFromProvider();
-
+    updateStatusBarSharedPixmapHandle();
 #endif // Q_WS_X11
 }
 
@@ -99,6 +236,36 @@ MStatusBarView::~MStatusBarView()
 #ifdef Q_WS_X11
     destroyXDamageForSharedPixmap();
 #endif // Q_WS_X11
+
+    if (this == statusBarViewInstance) {
+        statusBarViewInstance = NULL;
+    }
+}
+
+void MStatusBarView::propertyWindowPollTimerTimeout()
+{
+    int currentInterval = propertyWindowPollTimer.interval();
+    // Increase the interval as long as it's under maximum of five minutes
+    if (currentInterval < 300000) {
+        propertyWindowPollTimer.setInterval(currentInterval*2);
+    } else {
+        // Stop timer when maximum interval reached
+        propertyWindowPollTimer.stop();
+    }
+
+    updateStatusBarSharedPixmapHandle();
+}
+
+void MStatusBarView::updateStatusBarSharedPixmapHandle()
+{
+    // Get the status bar property window id from the root window property
+    statusBarPropertyWindowId = statusBarPropertyWindow();
+    // Update the shared pixmap handle from the status bar property window property
+    if (statusBarPropertyWindowId > 0 && updateSharedPixmapHandleFromPropertyWindow(statusBarPropertyWindowId)) {
+        handlePixmapProviderOnline();
+    } else {
+        handlePixmapProviderOffline();
+    }
 }
 
 void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -106,12 +273,9 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     Q_UNUSED(option);
 
 #ifdef Q_WS_X11
-    if (sharedPixmap.isNull() && !dbusWrapper->havePendingSharedPixmapHandleReply() && isPixmapProviderOnline) {
-        dbusWrapper->querySharedPixmapHandleFromProvider();
-    }
-
-    if (sharedPixmap.isNull() || (controller->sceneManager() == 0))
+    if (!isPixmapValid || sharedPixmap.isNull() || (controller->sceneManager() == 0)) {
         return;
+    }
 
     QRectF sourceRect;
 
@@ -121,11 +285,13 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     sourceRect.setHeight(SharedPixmapHeight);
 
     // provider can die under mysterious circumstances so sharedPixmap can be invalid
-    try {
+    // Catch the bad_alloc in case the shared pixmap have been deleted without PropertyDelete notify
+    QT_TRY {
         painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
-    } catch(...) {
-        qWarning() << "MStatusBarView::drawContents: Cannot draw sharedPixmap.";
+    } QT_CATCH (...) {
+        mWarning("MStatusBarView") << "drawContents: Cannot draw sharedPixmap.";
         const_cast<MStatusBarView*>(this)->sharedPixmap = QPixmap();
+        isPixmapValid = false;
     }
 
     if (pressDown) {
@@ -203,7 +369,7 @@ void MStatusBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 #ifdef Q_WS_X11
 bool MStatusBarView::shouldStayUpToDate()
 {
-    return isOnDisplay && isPixmapProviderOnline && !isInSwitcher;
+    return isOnDisplay && !isInSwitcher && isPixmapValid;
 }
 
 void MStatusBarView::updateXDamageForSharedPixmap()
@@ -261,14 +427,8 @@ void MStatusBarView::handleDisplayExited()
     updateXDamageForSharedPixmap();
 }
 
-void MStatusBarView::handleSharedPixmapHandleReceived(quint32 handle, bool ok)
+void MStatusBarView::handleSharedPixmapHandleReceived(quint32 handle)
 {
-    Q_ASSERT(isPixmapProviderOnline);
-
-    if (!ok) {
-        return;
-    }
-
     sharedPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
 
     destroyXDamageForSharedPixmap();
@@ -281,20 +441,19 @@ void MStatusBarView::handleSharedPixmapHandleReceived(quint32 handle, bool ok)
 
 void MStatusBarView::handlePixmapProviderOnline()
 {
-    isPixmapProviderOnline = true;
-
-    Q_ASSERT(sharedPixmap.isNull());
-    Q_ASSERT(!pixmapDamage);
-
-    dbusWrapper->querySharedPixmapHandleFromProvider();
+    propertyWindowPollTimer.stop();
+    isPixmapValid = true;
 }
+
 
 void MStatusBarView::handlePixmapProviderOffline()
 {
-    isPixmapProviderOnline = false;
+    isPixmapValid = false;
 
     destroyXDamageForSharedPixmap();
     sharedPixmap = QPixmap();
+
+    propertyWindowPollTimer.start();
 }
 
 void MStatusBarView::handleSwitcherEntered()
@@ -312,9 +471,15 @@ void MStatusBarView::handleSwitcherExited()
 
 void MStatusBarView::showStatusIndicatorMenu()
 {
+#ifdef HAVE_DBUS
     if (style()->enableStatusIndicatorMenu()) {
-        dbusWrapper->openStatusIndicatorMenu();
+        MDBusInterface interface("com.meego.core.MStatusIndicatorMenu",
+                                            "/statusindicatormenu",
+                                            "com.meego.core.MStatusIndicatorMenu",
+                                            QDBusConnection::sessionBus());
+        interface.call(QDBus::NoBlock, "open");
     }
+#endif
 }
 
 void MStatusBarView::playHapticsFeedback()

@@ -56,7 +56,6 @@ PRIVATE_HEADERS += \
     mborderdecorationroundedcornersview.h \
     mstylablewidgetview_p.h \
     mstatusbarview.h \
-    mstatusbarviewdbuswrapper.h \
     mextendingbackgroundview_p.h \
     mtexteditview_p.h \
     mtextmagnifier.h \
@@ -124,7 +123,6 @@ SOURCES += \
     msliderview.cpp \
     mspinnerview.cpp \
     mstatusbarview.cpp \
-    mstatusbarviewdbuswrapper.cpp \
     mtexteditview.cpp \
     mtextmagnifier.cpp \
     mtopleveloverlay.cpp \

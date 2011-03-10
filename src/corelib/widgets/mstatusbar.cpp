@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "mstatusbar.h"
 #include "mstatusbar_p.h"
 
