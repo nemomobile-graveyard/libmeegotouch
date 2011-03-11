@@ -746,6 +746,8 @@ void TextEntryPage::retranslateUi()
     label7->setText(qtTrId("xx_textentry_singleselectall"));
     //% "Email suggestion text:"
     label8->setText(qtTrId("xx_textentry_completion_text"));
+    //% Email suggestions
+    m_completer->setCompletionTitle("xx_completion_title");
     //% "Rich text:"
     label9->setText(qtTrId("xx_textentry_richtext_text"));
     //% "Rich text (multiline):"
