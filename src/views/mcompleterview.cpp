@@ -293,6 +293,7 @@ void MCompleterViewPrivate::showPopup()
     if (!popup) {
         popup = new MPopupList();
         popup->setItemModel(q->model()->matchedModel());
+        popup->setTitle(q->model()->completionTitle());
         connect(popup, SIGNAL(appearing()), this, SLOT(handlePopupAppearing()));
         connect(popup, SIGNAL(disappeared()), this, SLOT(handlePopupDisappeared()));
     }
@@ -437,7 +438,10 @@ void MCompleterView::updateData(const QList<const char *>& modifications)
             // to avoid focus out)
             d->clear();
         }
+    } else if (modifications.contains(MCompleterModel::CompletionTitle) && d->popup) {
+        d->popup->setTitle(model()->completionTitle());
     }
+
     MSceneWindowView::updateData(modifications);
 }
 

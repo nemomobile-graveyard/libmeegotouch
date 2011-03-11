@@ -116,6 +116,8 @@ class M_CORE_EXPORT MCompleter : public MSceneWindow
 
     Q_PROPERTY(bool acceptMultipleEntries READ acceptMultipleEntries WRITE setAcceptMultipleEntries)
     Q_PROPERTY(QString charactersToTrimForCompletionPrefix READ charactersToTrimForCompletionPrefix WRITE setCharactersToTrimForCompletionPrefix)
+    Q_PROPERTY(QString completionTitle READ completionTitle WRITE setCompletionTitle)
+
 public:
 
     /*!
@@ -246,6 +248,16 @@ public:
      * \sa charactersToTrimForCompletionPrefix().
      */
     void setCharactersToTrimForCompletionPrefix(const QString &str);
+
+    /*!
+     * \brief Set title for completions
+     */
+    void setCompletionTitle(const QString &title);
+
+    /*!
+     * \brief Returns title for completions
+     */
+    QString completionTitle() const;
 
 Q_SIGNALS:
     /*!

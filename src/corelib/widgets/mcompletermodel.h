@@ -41,7 +41,7 @@ private:
     M_MODEL_PROPERTY(bool, acceptMultipleEntries, AcceptMultipleEntries, true, true)
     M_MODEL_PROPERTY(QString, charactersToTrim, CharactersToTrim, true, QString(" "))
     M_MODEL_PROPERTY(QString, charactersToTrimForCompletionPrefix, CharactersToTrimForCompletionPrefix, true, QString())
-
+    M_MODEL_PROPERTY(QString, completionTitle, CompletionTitle, true, QString())
 };
 
 #endif

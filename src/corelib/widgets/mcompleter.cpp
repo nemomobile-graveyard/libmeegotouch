@@ -646,6 +646,18 @@ void MCompleter::setCharactersToTrimForCompletionPrefix(const QString &str)
     return model()->setCharactersToTrimForCompletionPrefix(str);
 }
 
+void MCompleter::setCompletionTitle(const QString &title)
+{
+    model()->setCompletionTitle(title);
+}
+
+QString MCompleter::completionTitle() const
+{
+    return model()->completionTitle();
+}
+
+
+
 MCompletionModel::MCompletionModel(QObject *parent)
     : QAbstractProxyModel(parent)
 {
