@@ -294,7 +294,7 @@ sub getEngineeringEnglishPackageList {
     @engineeringEnglishPackages = @engineeringEnglishPackagesKnownToApt;
 }
 
-sub download {
+sub downloadSources {
     if (mySystem("fakeroot apt-get update")) {
         printf (STDERR "“fakeroot apt-get update” didn’t work.\n");
         exit (1);
@@ -347,7 +347,9 @@ sub download {
     }
 
     chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
+}
 
+sub downloadHandoffFiles {
     if (-d "$OPT_HANDOFF_DIR") {
         rmtree ("$OPT_HANDOFF_DIR", {verbose => 1});
     }
@@ -375,20 +377,14 @@ sub download {
         myExit(1);
     }
 
-    # Convert handoff files mac2unix:
+    # Convert handoff files to utf-8 and unix line endings for
+    # convenient manual checking, save them with extra extension .unix.
+    # Using xmllint for this is easy and also detects whether
+    # the files are broken or not.
+    # Keep the originals, parse the originals later.
     for my $file (@handoffFiles) {
         printf(STDOUT "mac2unix %s\n", $file);
-        my $fileContents = "";
-        open (TS, "<:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
-        while(<TS>) {
-            $ARG =~ s/\x{FEFF}//; # remove BOM
-            $ARG =~ s/\r/\n/gi;   # replace returns with newlines
-            $fileContents .= $ARG;
-        }
-        close (TS);
-        open (TS, ">:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
-        printf(TS "%s", $fileContents);
-        close (TS);
+        mySystem("xmllint --encode utf8 $file > $file.unix");
     }
 }
 
@@ -1102,16 +1098,17 @@ if (! -d $OPT_OUTPUTDIR) {
 getEngineeringEnglishPackageList();
 
 if (!$OPT_SKIP_DOWNLOAD) {
+    downloadHandoffFiles();
+    readHandoffXmlTrees();
     checkListOfSourcePackagesDependingOnLibmeegotouch();
-    download();
+    downloadSources();
 }
 else {
     @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
+    readHandoffXmlTrees();
 }
 
 checkListOfSourcePackagesDependingOnLibmeegotouch();
-
-readHandoffXmlTrees();
 
 getIdsFromHandoffFiles();
 
