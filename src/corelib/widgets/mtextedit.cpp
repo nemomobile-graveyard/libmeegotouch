@@ -354,7 +354,8 @@ MTextEditPrivate::MTextEditPrivate()
       preeditInjectionInProgress(false),
       cutAction("Cut", 0),
       copyAction("Copy", 0),
-      pasteAction("Paste", 0)
+      pasteAction("Paste", 0),
+      programmaticalDocumentChange(false)
 {
 }
 
@@ -1985,6 +1986,8 @@ bool MTextEdit::setText(const QString &text)
     bool wasSelecting = hasSelectedText();
     bool wasEmpty = document()->isEmpty();
 
+    d->programmaticalDocumentChange = true; // hack to allow MTextEditView avoid delayed masking
+
     // clear the state
     d->removePreedit();
     d->preeditStyling.clear();
@@ -2025,6 +2028,8 @@ bool MTextEdit::setText(const QString &text)
     if (wasSelecting) {
         d->sendCopyAvailable(false);
     }
+
+    d->programmaticalDocumentChange = false;
 
     return accepted;
 }

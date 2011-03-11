@@ -210,6 +210,7 @@ private:
     QAction cutAction;
     QAction copyAction;
     QAction pasteAction;
+    bool programmaticalDocumentChange; // true while text changed using public interface
 
     friend class MTextEditSignalEmitter;
     friend class MCompleterViewPrivate;

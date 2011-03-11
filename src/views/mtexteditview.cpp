@@ -689,13 +689,22 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
         newTextCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, charsAdded);
         QString newText = newTextCursor.selectedText();
 
-        if (q->model()->echo() == MTextEditModel::Password) {
+        // PasswordEchoOnEdit does immediate masking
+        bool delayedMask = (q->model()->echo() == MTextEditModel::Password);
+
+        // ugly hack to avoid masking when app developer uses setText()
+        MTextEditPrivate *textWidgetPtr = static_cast<MTextEditPrivate *>(controller->d_func());
+        if (textWidgetPtr && textWidgetPtr->programmaticalDocumentChange) {
+            delayedMask = false;
+        }
+
+        if (delayedMask) {
             maskCursor.insertText(newText);
             unmaskPosition = position;
             unmaskLength = newText.length();
             maskTimer->start();
 
-        } else { // PasswordEchoOnEdit, do immediate masking
+        } else {
             QString maskedText(newText.length(), maskCharacter);
             maskCursor.insertText(maskedText);
         }
