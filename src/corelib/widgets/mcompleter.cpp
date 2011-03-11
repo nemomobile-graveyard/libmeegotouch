@@ -633,7 +633,7 @@ QString MCompleter::charactersToTrim() const
 
 void MCompleter::setCharactersToTrim(const QString &set)
 {
-    return model()->setCharactersToTrim(set);
+    model()->setCharactersToTrim(set);
 }
 
 QString MCompleter::charactersToTrimForCompletionPrefix() const
@@ -643,7 +643,7 @@ QString MCompleter::charactersToTrimForCompletionPrefix() const
 
 void MCompleter::setCharactersToTrimForCompletionPrefix(const QString &str)
 {
-    return model()->setCharactersToTrimForCompletionPrefix(str);
+    model()->setCharactersToTrimForCompletionPrefix(str);
 }
 
 void MCompleter::setCompletionTitle(const QString &title)
