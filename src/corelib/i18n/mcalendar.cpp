@@ -123,8 +123,8 @@ MCalendar::MCalendar(MLocale::CalendarType calendarType,
     MLocale defaultLocale;
 
     QString timeCategory = defaultLocale.d_ptr->categoryName(MLocale::MLcTime);
-
-    icu::Locale calLocale = MIcuConversions::createLocale(timeCategory, calendarType);
+    timeCategory = MIcuConversions::setCalendarOption(timeCategory, calendarType);
+    icu::Locale calLocale = icu::Locale(qPrintable(timeCategory));
 
     UErrorCode status = U_ZERO_ERROR;
 

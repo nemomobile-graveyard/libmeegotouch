@@ -145,6 +145,7 @@ public:
                                       MLocale::TimeFormat24h timeFormat24h) const;
 #endif
 
+    static bool parseIcuLocaleString(const QString &localeString, QString *language, QString *script, QString *country, QString *variant);
     // these return the requested part of a locale string,
     // e.g. parseLanguage("fi_FI") -> "fi"
     static QString parseLanguage(const QString &localeString);
@@ -175,11 +176,7 @@ public:
     // the list of valid country codes for the formatPhoneNumber function
     QSet<QString> _validCountryCodes;
 
-    // the used calendar and collation may be overridden
-    MLocale::CalendarType _calendarType;
-    MLocale::Collation _collation;
     MLocale::TimeFormat24h _timeFormat24h;
-    // add currency?
 
     MLocale::PhoneNumberGrouping _phoneNumberGrouping;
 

@@ -27,6 +27,7 @@
 #include <MLocale>
 
 Q_DECLARE_METATYPE(MLocale);
+Q_DECLARE_METATYPE(MLocale::Collation);
 Q_DECLARE_METATYPE(MLocale::Comparison);
 
 #define MAX_PARAMS 10
@@ -41,6 +42,9 @@ private:
 private slots:
     void initTestCase();
     void cleanup();
+
+    void testMLocaleSetAndGetCollation_data();
+    void testMLocaleSetAndGetCollation();
 
     void testMLocaleSorting_data();
     void testMLocaleSorting();

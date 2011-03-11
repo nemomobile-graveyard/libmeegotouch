@@ -54,6 +54,119 @@ void Ft_Sorting::cleanup()
 {
 }
 
+void Ft_Sorting::testMLocaleSetAndGetCollation_data()
+{
+    QTest::addColumn<QString>("localeNameOrig");
+    QTest::addColumn<QString>("lcCollateOrig");
+    QTest::addColumn<MLocale::Collation>("collationOrig");
+    QTest::addColumn<MLocale::Collation>("collationNew");
+    QTest::addColumn<QString>("localeNameNew");
+    QTest::addColumn<QString>("lcCollateNew");
+
+    QTest::newRow("default->default")
+        << "fi"
+        << "fi"
+        << MLocale::DefaultCollation
+        << MLocale::DefaultCollation
+        << "fi"
+        << "fi";
+    QTest::newRow("default->default")
+        << "fi@collation=phonebook"
+        << "fi"
+        << MLocale::DefaultCollation
+        << MLocale::DefaultCollation
+        << "fi@collation=phonebook"
+        << "fi";
+    QTest::newRow("phonebook->default")
+        << "fi@collation=standard"
+        << "fi@collation=phonebook"
+        << MLocale::PhonebookCollation
+        << MLocale::DefaultCollation
+        << "fi@collation=standard"
+        << "fi";
+    QTest::newRow("phonebook->phonebook")
+        << "ja_JP"
+        << "zh_CN@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::PhonebookCollation
+        << MLocale::PhonebookCollation
+        << "ja_JP"
+        << "zh_CN@collation=phonebook;calendar=islamic-civil;foo=bar";
+    QTest::newRow("stroke->default")
+        << "ja_JP"
+        << "zh_CN@collation=stroke;calendar=islamic-civil;foo=bar"
+        << MLocale::StrokeCollation
+        << MLocale::DefaultCollation
+        << "ja_JP"
+        << "zh_CN@calendar=islamic-civil;foo=bar";
+    QTest::newRow("default->stroke")
+        << "ja_JP"
+        << "zh_CN@calendar=islamic-civil;foo=bar"
+        << MLocale::DefaultCollation
+        << MLocale::StrokeCollation
+        << "ja_JP"
+        << "zh_CN@calendar=islamic-civil;foo=bar;collation=stroke";
+    QTest::newRow("stroke->pinyin")
+        << "ja_JP"
+        << "zh_CN@collation=stroke;calendar=islamic-civil;foo=bar"
+        << MLocale::StrokeCollation
+        << MLocale::PinyinCollation
+        << "ja_JP"
+        << "zh_CN@collation=pinyin;calendar=islamic-civil;foo=bar";
+    QTest::newRow("stroke->traditional")
+        << "ja_JP"
+        << "zh_CN@collation=stroke;calendar=islamic-civil;foo=bar"
+        << MLocale::StrokeCollation
+        << MLocale::TraditionalCollation
+        << "ja_JP"
+        << "zh_CN@collation=traditional;calendar=islamic-civil;foo=bar";
+    QTest::newRow("stroke->direct")
+        << "ja_JP"
+        << "zh_CN@collation=stroke;calendar=islamic-civil;foo=bar"
+        << MLocale::StrokeCollation
+        << MLocale::DirectCollation
+        << "ja_JP"
+        << "zh_CN@collation=direct;calendar=islamic-civil;foo=bar";
+    QTest::newRow("stroke->posix")
+        << "ja_JP"
+        << "zh_CN@collation=stroke;calendar=islamic-civil;foo=bar"
+        << MLocale::StrokeCollation
+        << MLocale::PosixCollation
+        << "ja_JP"
+        << "zh_CN@collation=posix;calendar=islamic-civil;foo=bar";
+    QTest::newRow("stroke->big5han")
+        << "ja_JP"
+        << "zh_CN@collation=stroke;calendar=islamic-civil;foo=bar"
+        << MLocale::StrokeCollation
+        << MLocale::Big5hanCollation
+        << "ja_JP"
+        << "zh_CN@collation=big5han;calendar=islamic-civil;foo=bar";
+    QTest::newRow("stroke->gb2312han")
+        << "ja_JP"
+        << "zh_CN@collation=stroke;calendar=islamic-civil;foo=bar"
+        << MLocale::StrokeCollation
+        << MLocale::Gb2312hanCollation
+        << "ja_JP"
+        << "zh_CN@collation=gb2312han;calendar=islamic-civil;foo=bar";
+}
+
+void Ft_Sorting::testMLocaleSetAndGetCollation()
+{
+    QFETCH(QString, localeNameOrig);
+    QFETCH(QString, lcCollateOrig);
+    QFETCH(MLocale::Collation, collationOrig);
+    QFETCH(MLocale::Collation, collationNew);
+    QFETCH(QString, localeNameNew);
+    QFETCH(QString, lcCollateNew);
+    MLocale locale(localeNameOrig);
+    QVERIFY2(locale.isValid(), "constructor did not create a valid locale");
+    locale.setCategoryLocale(MLocale::MLcCollate, lcCollateOrig);
+    QCOMPARE(locale.collation(), collationOrig);
+    locale.setCollation(collationNew);
+    QCOMPARE(locale.name(), localeNameNew);
+    QCOMPARE(locale.categoryName(MLocale::MLcCollate), lcCollateNew);
+    QCOMPARE(locale.collation(), collationNew);
+}
+
 void Ft_Sorting::testMLocaleSorting_data()
 {
     QTest::addColumn<QString>("locale_name");

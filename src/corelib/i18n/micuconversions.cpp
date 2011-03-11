@@ -19,26 +19,12 @@
 
 #include "micuconversions.h"
 
+#include <QDebug>
 #include <QString>
 #include <unicode/unistr.h>
 #include <unicode/datefmt.h>
 
 #include "mlocale_p.h"
-
-namespace
-{
-// string presentations for MLocale::Collate and MLocale::CalendarType
-// Keep in sync!
-
-    const char *const CollationNames[] = {"", "phonebook", "pinyin", "traditional", "stroke", "direct",
-                                          "posix", "big5han", "gb2312han"
-                                         };
-
-
-    const char *const CalendarNames[] = {"", "gregorian", "islamic", "chinese", "islamic-civil", "hebrew",
-                                         "japanese", "buddhist", "persian", "coptic", "ethiopic"
-                                        };
-}
 
 icu::UnicodeString MIcuConversions::qStringToUnicodeString(const QString &sourceStr)
 {
@@ -95,20 +81,128 @@ icu::DateFormat::EStyle MIcuConversions::toEStyle(MLocale::TimeType timeType)
 
 QString MIcuConversions::collationToString(MLocale::Collation coll)
 {
-    if (static_cast<unsigned int>(coll) >= (sizeof(CollationNames) / sizeof(char *))) {
-        return "";
+    QString collationName;
+    switch(coll) {
+    case MLocale::PhonebookCollation:
+        collationName = "phonebook";
+        break;
+    case MLocale::PinyinCollation:
+        collationName = "pinyin";
+        break;
+    case MLocale::TraditionalCollation:
+        collationName = "traditional";
+        break;
+    case MLocale::StrokeCollation:
+        collationName = "stroke";
+        break;
+    case MLocale::DirectCollation:
+        collationName = "direct";
+        break;
+    case MLocale::PosixCollation:
+        collationName = "posix";
+        break;
+    case MLocale::Big5hanCollation:
+        collationName = "big5han";
+        break;
+    case MLocale::Gb2312hanCollation:
+        collationName = "gb2312han";
+        break;
+    case MLocale::DefaultCollation:
+    default:
+        collationName = "";
+        break;
     }
-
-    return CollationNames[coll];
+    return collationName;
 }
 
-QString MIcuConversions::calendarToString(MLocale::CalendarType cal)
+MLocale::Collation MIcuConversions::stringToCollation(QString collationName)
 {
-    if (static_cast<unsigned int>(cal) >= (sizeof(CalendarNames) / sizeof(char *))) {
-        return "";
-    }
+    if(collationName == "phonebook")
+        return MLocale::PhonebookCollation;
+    else if (collationName == "pinyin")
+        return MLocale::PinyinCollation;
+    else if (collationName == "traditional")
+        return MLocale::TraditionalCollation;
+    else if (collationName == "stroke")
+        return MLocale::StrokeCollation;
+    else if (collationName == "direct")
+        return MLocale::DirectCollation;
+    else if (collationName == "posix")
+        return MLocale::PosixCollation;
+    else if (collationName == "big5han")
+        return MLocale::Big5hanCollation;
+    else if (collationName == "gb2312han")
+        return MLocale::Gb2312hanCollation;
+    else
+        return MLocale::DefaultCollation;
+}
 
-    return CalendarNames[cal];
+QString MIcuConversions::calendarToString(MLocale::CalendarType calendarType)
+{
+    QString calendarTypeName;
+    switch(calendarType) {
+    case MLocale::GregorianCalendar:
+        calendarTypeName = "gregorian";
+        break;
+    case MLocale::IslamicCalendar:
+        calendarTypeName = "islamic";
+        break;
+    case MLocale::ChineseCalendar:
+        calendarTypeName = "chinese";
+        break;
+    case MLocale::IslamicCivilCalendar:
+        calendarTypeName = "islamic-civil";
+        break;
+    case MLocale::HebrewCalendar:
+        calendarTypeName = "hebrew";
+        break;
+    case MLocale::JapaneseCalendar:
+        calendarTypeName = "japanese";
+        break;
+    case MLocale::BuddhistCalendar:
+        calendarTypeName = "buddhist";
+        break;
+    case MLocale::PersianCalendar:
+        calendarTypeName = "persian";
+        break;
+    case MLocale::CopticCalendar:
+        calendarTypeName = "coptic";
+        break;
+    case MLocale::EthiopicCalendar:
+        calendarTypeName = "ethiopic";
+        break;
+    case MLocale::DefaultCalendar:
+    default:
+        calendarTypeName = "";
+        break;
+    }
+    return calendarTypeName;
+}
+
+MLocale::CalendarType MIcuConversions::stringToCalendar(QString calendarTypeName)
+{
+    if(calendarTypeName == "gregorian")
+        return MLocale::GregorianCalendar;
+    else if (calendarTypeName == "islamic")
+        return MLocale::IslamicCalendar;
+    else if (calendarTypeName == "chinese")
+        return MLocale::ChineseCalendar;
+    else if (calendarTypeName == "islamic-civil")
+        return MLocale::IslamicCivilCalendar;
+    else if (calendarTypeName == "hebrew")
+        return MLocale::HebrewCalendar;
+    else if (calendarTypeName == "japanese")
+        return MLocale::JapaneseCalendar;
+    else if (calendarTypeName == "buddhist")
+        return MLocale::BuddhistCalendar;
+    else if (calendarTypeName == "persian")
+        return MLocale::PersianCalendar;
+    else if (calendarTypeName == "coptic")
+        return MLocale::CopticCalendar;
+    else if (calendarTypeName == "ethiopic")
+        return MLocale::EthiopicCalendar;
+    else
+        return MLocale::DefaultCalendar;
 }
 
 icu::DateFormatSymbols::DtContextType
@@ -178,35 +272,73 @@ QString MIcuConversions::icuDatePatternEscaped(const QString &str)
     return result.replace('\'', "''");
 }
 
-icu::Locale MIcuConversions::createLocale(const QString &baseString,
-        MLocale::CalendarType calendarType,
-        MLocale::Collation collation)
+QString MIcuConversions::parseOption(const QString &localeName, const QString &option)
 {
-    // calendarType and collation are appended as @keyword=value;keyword2=value2;
-    // first create the attribute part keyword=value;...
-    QString attributeAccu;
-
-    if (collation != MLocale::DefaultCollation) {
-        attributeAccu.append("collation=");
-
-        QString collName = MIcuConversions::collationToString(collation);
-        attributeAccu.append(collName);
-        attributeAccu.append(";");
+    QString value;
+    QRegExp regexp("^[^@]+@.*"+QRegExp::escape(option)+"=([^@=;]+)($|;.*$)");
+    if(regexp.indexIn(localeName) >= 0 && regexp.capturedTexts().size() == 3) {
+        value = regexp.capturedTexts().at(1);
     }
-
-    if (calendarType != MLocale::DefaultCalendar) {
-        attributeAccu.append("calendar=");
-        QString calendarName = MIcuConversions::calendarToString(calendarType);
-        attributeAccu.append(calendarName);
-    }
-
-    QString baseStringModified = baseString;
-    // ICU doesn't accept trailing "@" with no actual attributes
-    if (!attributeAccu.isEmpty()) {
-        baseStringModified.append("@");
-        baseStringModified.append(attributeAccu);
-    }
-
-    return icu::Locale(qPrintable(baseStringModified));
+    return value;
 }
 
+QString MIcuConversions::setOption(const QString &localeName, const QString &option, const QString &value)
+{
+    QString newLocaleName = localeName;
+    if(!newLocaleName.isEmpty() && !option.isEmpty()) {
+        if(value.isEmpty()) { // remove option completely
+            if(newLocaleName.contains('@') && newLocaleName.contains(option)) {
+                QRegExp regexp("^([^@]+@.*)"+QRegExp::escape(option)+"=[^@=;]+($|;.*$)");
+                newLocaleName.replace(regexp, "\\1\\2");
+                newLocaleName.replace(QLatin1String(";;"), QLatin1String(";"));
+                newLocaleName.replace(QLatin1String("@;"), QLatin1String("@"));
+                while(newLocaleName.endsWith(';'))
+                    newLocaleName.chop(1);
+                if(newLocaleName.endsWith('@'))
+                    newLocaleName.chop(1);
+            }
+        }
+        else { // replace option value
+            if(!newLocaleName.contains('@')) {
+                newLocaleName += '@' + option + '=' + value;
+            }
+            else if(!newLocaleName.contains(option)) {
+                if(newLocaleName.endsWith(';'))
+                    newLocaleName += option + '=' + value;
+                else
+                    newLocaleName += ';' + option + '=' + value;
+            }
+            else {
+                QRegExp regexp("^([^@]+@.*"+QRegExp::escape(option)+"=)[^@=;]+($|;.*$)");
+                newLocaleName.replace(regexp, "\\1"+value+"\\2");
+            }
+        }
+    }
+    return newLocaleName;
+}
+
+MLocale::CalendarType MIcuConversions::parseCalendarOption(const QString &localeName)
+{
+    return MIcuConversions::stringToCalendar(
+        MIcuConversions::parseOption(localeName, "calendar"));
+}
+
+QString MIcuConversions::setCalendarOption(const QString &localeName, MLocale::CalendarType calendarType)
+{
+    return MIcuConversions::setOption(
+        localeName, "calendar",
+        MIcuConversions::calendarToString(calendarType));
+}
+
+MLocale::Collation MIcuConversions::parseCollationOption(const QString &localeName)
+{
+    return MIcuConversions::stringToCollation(
+        MIcuConversions::parseOption(localeName, "collation"));
+}
+
+QString MIcuConversions::setCollationOption(const QString &localeName, MLocale::Collation collation)
+{
+    return MIcuConversions::setOption(
+        localeName, "collation",
+        MIcuConversions::collationToString(collation));
+}

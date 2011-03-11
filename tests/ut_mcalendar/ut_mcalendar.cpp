@@ -857,38 +857,152 @@ void Ut_MCalendar::testIcuFormatString()
     }
 }
 
-void Ut_MCalendar::testMLocaleCalendar_data()
+void Ut_MCalendar::testMLocaleSetAndGetCalendar_data()
 {
-    QTest::addColumn<MLocale::CalendarType>("cal");
-    QTest::newRow("default") << MLocale::DefaultCalendar;
-    QTest::newRow("gregorian") << MLocale::GregorianCalendar;
-    QTest::newRow("islamic") << MLocale::IslamicCalendar;
-    QTest::newRow("chinese") << MLocale::ChineseCalendar;
-    QTest::newRow("islamiccivil") << MLocale::IslamicCivilCalendar;
-    QTest::newRow("hebrew") << MLocale::HebrewCalendar;
-    QTest::newRow("japanese") << MLocale::JapaneseCalendar;
-    QTest::newRow("buddhist") << MLocale::BuddhistCalendar;
-    QTest::newRow("persian") << MLocale::PersianCalendar;
-    QTest::newRow("coptic") << MLocale::CopticCalendar;
-    QTest::newRow("ethiopian") << MLocale::EthiopicCalendar;
+    QTest::addColumn<QString>("localeNameOrig");
+    QTest::addColumn<QString>("lcTimeOrig");
+    QTest::addColumn<MLocale::CalendarType>("calendarTypeOrig");
+    QTest::addColumn<MLocale::CalendarType>("calendarTypeNew");
+    QTest::addColumn<QString>("localeNameNew");
+    QTest::addColumn<QString>("lcTimeNew");
+
+    QTest::newRow("default->default")
+        << "fi"
+        << "fi"
+        << MLocale::DefaultCalendar
+        << MLocale::DefaultCalendar
+        << "fi"
+        << "fi";
+    QTest::newRow("default->default")
+        << "fi@calendar=gregorian"
+        << "fi"
+        << MLocale::DefaultCalendar
+        << MLocale::DefaultCalendar
+        << "fi@calendar=gregorian"
+        << "fi";
+    QTest::newRow("gregorian->default")
+        << "fi@calendar=islamic"
+        << "fi@calendar=gregorian"
+        << MLocale::GregorianCalendar
+        << MLocale::DefaultCalendar
+        << "fi@calendar=islamic"
+        << "fi";
+    QTest::newRow("gregorian->default")
+        << "fi@collation=phonebook;calendar=islamic;foo=bar"
+        << "fi@collation=phonebook;calendar=gregorian;foo=bar"
+        << MLocale::GregorianCalendar
+        << MLocale::DefaultCalendar
+        << "fi@collation=phonebook;calendar=islamic;foo=bar"
+        << "fi@collation=phonebook;foo=bar";
+    QTest::newRow("gregorian->default")
+        << "fi@collation=phonebook;calendar=gregorian;foo=bar"
+        << ""
+        << MLocale::GregorianCalendar
+        << MLocale::DefaultCalendar
+        << "fi@collation=phonebook;foo=bar"
+        << "fi@collation=phonebook;foo=bar";
+    QTest::newRow("gregorian->islamic")
+        << "fi@collation=phonebook;calendar=gregorian;foo=bar"
+        << ""
+        << MLocale::GregorianCalendar
+        << MLocale::IslamicCalendar
+        << "fi@collation=phonebook;calendar=islamic;foo=bar"
+        << "fi@collation=phonebook;calendar=islamic;foo=bar";
+    QTest::newRow("gregorian->islamic")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=gregorian;foo=bar"
+        << MLocale::GregorianCalendar
+        << MLocale::IslamicCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic;foo=bar";
+    QTest::newRow("islamic->islamic-civil")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic;foo=bar"
+        << MLocale::IslamicCalendar
+        << MLocale::IslamicCivilCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar";
+    QTest::newRow("islamic-civil->islamic")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::IslamicCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic;foo=bar";
+    QTest::newRow("default->islamic-civil")
+        << "zh_CN"
+        << "fi@collation=phonebook;foo=bar"
+        << MLocale::DefaultCalendar
+        << MLocale::IslamicCivilCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;foo=bar;calendar=islamic-civil";
+    QTest::newRow("islamic-civil->chinese")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::ChineseCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=chinese;foo=bar";
+    QTest::newRow("islamic-civil->hebrew")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::HebrewCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=hebrew;foo=bar";
+    QTest::newRow("islamic-civil->japanese")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::JapaneseCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=japanese;foo=bar";
+    QTest::newRow("islamic-civil->buddhist")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::BuddhistCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=buddhist;foo=bar";
+    QTest::newRow("islamic-civil->persian")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::PersianCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=persian;foo=bar";
+    QTest::newRow("islamic-civil->coptic")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::CopticCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=coptic;foo=bar";
+    QTest::newRow("islamic-civil->ethiopic")
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=islamic-civil;foo=bar"
+        << MLocale::IslamicCivilCalendar
+        << MLocale::EthiopicCalendar
+        << "zh_CN"
+        << "fi@collation=phonebook;calendar=ethiopic;foo=bar";
 }
 
-void Ut_MCalendar::testMLocaleCalendar()
+void Ut_MCalendar::testMLocaleSetAndGetCalendar()
 {
-    MLocale *z = 0;
-    // We can't test with default locale because the s_systemDefault
-    // is persistent and whatever we set to default locale will be
-    // kept there.
-    z = new MLocale("fi");
-    QVERIFY2(z->isValid(), "new MLocale() did not create a valid locale");
-
-    QFETCH(MLocale::CalendarType, cal);
-
-    QVERIFY2(z->calendarType() == MLocale::DefaultCalendar,
-             "Constructor didn't set the default calendar");
-    z->setCalendarType(cal);
-    QVERIFY2(z->calendarType() == cal, "Calendar was not set properly");
-    delete z;
+    QFETCH(QString, localeNameOrig);
+    QFETCH(QString, lcTimeOrig);
+    QFETCH(MLocale::CalendarType, calendarTypeOrig);
+    QFETCH(MLocale::CalendarType, calendarTypeNew);
+    QFETCH(QString, localeNameNew);
+    QFETCH(QString, lcTimeNew);
+    MLocale locale(localeNameOrig);
+    QVERIFY2(locale.isValid(), "constructor did not create a valid locale");
+    locale.setCategoryLocale(MLocale::MLcTime, lcTimeOrig);
+    QCOMPARE(locale.calendarType(), calendarTypeOrig);
+    locale.setCalendarType(calendarTypeNew);
+    QCOMPARE(locale.name(), localeNameNew);
+    QCOMPARE(locale.categoryName(MLocale::MLcTime), lcTimeNew);
+    QCOMPARE(locale.calendarType(), calendarTypeNew);
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
@@ -1037,6 +1151,40 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
         << QString("fi_FI")
+        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=latn;foo=bar") // lc_time
+        << QString("ar_EG") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15‏/6‏/2004"
+        << "15‏/06‏/2004"
+        << "15 يونيو، 2004"
+        << "الثلاثاء، 15 يونيو، 2004"
+        << "2:31 م"
+        << "2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=arab;foo=bar") // lc_time
+        << QString("ar_EG") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "١٥‏/٦‏/٢٠٠٤"
+        << "١٥‏/٠٦‏/٢٠٠٤"
+        << "١٥ يونيو، ٢٠٠٤"
+        << "الثلاثاء، ١٥ يونيو، ٢٠٠٤"
+        << "٢:٣١ م"
+        << "٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
         << QString("ar_EG") // lc_time: Arabic date/time formatting
         << QString("fi_FI") // lc_numeric: force unlocalized digits
         << "Europe/Helsinki"
@@ -1103,7 +1251,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime()
                 expectedResult = dateResults[dateType];
             else
                 expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
-#if 0
+#if defined(VERBOSE_OUTPUT)
             QTextStream debugStream(stdout);
             debugStream.setCodec("UTF-8");
             debugStream
@@ -1123,6 +1271,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime()
                     static_cast<MLocale::TimeType>(timeType),
                     calType)
                 << "| expected result |" << expectedResult << "|\n";
+            debugStream.flush();
 #endif
             QCOMPARE(
                 locale.formatDateTime(datetime,
@@ -1647,19 +1796,19 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                 expectedResult = timeResults[timeType];
             else if (timeType == MLocale::TimeNone)
                 expectedResult = dateResults[dateType];
-            else if (locale.categoryName(MLocale::MLcTime) == "ja_JP"
+            else if (locale.categoryName(MLocale::MLcTime).startsWith("ja_JP")
                      && calType == MLocale::GregorianCalendar
                      && (dateType == MLocale::DateLong
                          || dateType == MLocale::DateFull))
                 expectedResult = dateResults[dateType] + timeResults[timeType];
-            else if (locale.categoryName(MLocale::MLcTime) == "zh_CN"
+            else if (locale.categoryName(MLocale::MLcTime).startsWith("zh_CN")
                      && calType == MLocale::GregorianCalendar
                      && (dateType == MLocale::DateLong
                          || dateType == MLocale::DateFull))
                 expectedResult = dateResults[dateType] + timeResults[timeType];
-            else if(locale.categoryName(MLocale::MLcTime) == "th_TH")
+            else if(locale.categoryName(MLocale::MLcTime).startsWith("th_TH"))
                 expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
-            else if(locale.categoryName(MLocale::MLcTime) == "fa_IR") {
+            else if(locale.categoryName(MLocale::MLcTime).startsWith("fa_IR")) {
                 if (dateType == MLocale::DateShort || dateType == MLocale::DateMedium)
                     expectedResult = dateResults[dateType] + "،‏ " + timeResults[timeType];
                 else
@@ -1667,7 +1816,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
             }
             else
                 expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
-#if 0
+#if defined(VERBOSE_OUTPUT)
             QTextStream debugStream(stdout);
             debugStream.setCodec("UTF-8");
             debugStream
@@ -1686,6 +1835,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                     static_cast<MLocale::DateType>(dateType),
                     static_cast<MLocale::TimeType>(timeType))
                 << "| expected result |" << expectedResult << "|\n";
+            debugStream.flush();
 #endif
 #if 1
             QCOMPARE(
@@ -3054,6 +3204,36 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << "G" // era designator
             << "公元";
     QTest::newRow("ja_JP “G”")
+            << MLocale::DefaultCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "ja_JP" // language
+            << "ja_JP" // lc_messages
+            << "ja_JP@calendar=japanese;collation=standard" // lc_time
+            << "ja_JP" // lc_numeric
+            << "Europe/Helsinki"
+            << "G" // era designator
+            << "AD";
+    QTest::newRow("ja_JP “G”")
+            << MLocale::DefaultCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "ja_JP@calendar=japanese;collation=standard" // language
+            << "ja_JP" // lc_messages
+            << "" // lc_time
+            << "ja_JP" // lc_numeric
+            << "Europe/Helsinki"
+            << "G" // era designator
+            << "AD";
+    QTest::newRow("ja_JP “G”")
             << MLocale::GregorianCalendar
             << 2008
             << 2
@@ -3063,7 +3243,7 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << 3
             << "ja_JP" // language
             << "ja_JP" // lc_messages
-            << "ja_JP" // lc_time
+            << "ja_JP@calendar=japanese" // lc_time
             << "ja_JP" // lc_numeric
             << "Europe/Helsinki"
             << "G" // era designator
@@ -3078,7 +3258,7 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << 3
             << "ja_JP" // language
             << "ja_JP" // lc_messages
-            << "ja_JP" // lc_time
+            << "ja_JP@calendar=gregorian" // lc_time
             << "ja_JP" // lc_numeric
             << "Europe/Helsinki"
             << "G" // era designator
@@ -3176,13 +3356,28 @@ void Ut_MCalendar::testFormatDateTimeICU()
     QTime time(hour, minute, second);
     QDateTime datetime(date, time, Qt::LocalTime);
     QLocale qlocale(localeName);
-#if 1
+#if defined(VERBOSE_OUTPUT)
     QTextStream debugStream(stdout);
     debugStream.setCodec("UTF-8");
-    debugStream << "format: " << format
-                << " actual result mcal: " << locale.formatDateTimeICU(mcal, format)
-                << " actual result datetime: " << locale.formatDateTimeICU(datetime, format)
-                << " expected result: " << result << "\n";
+    debugStream
+        << "--------------------\n"
+        << " localeName: " << localeName
+        << " lcMessages: " << lcMessages
+        << " lcTime: " << lcTime
+        << " lcNumeric: " << lcNumeric
+        << "\n"
+        << " after locale.setCalendarType(" << calendarType << ")"
+        << "\n"
+        << " localeName: " << locale.name()
+        << " lcMessages: " << locale.categoryName(MLocale::MLcMessages)
+        << " lcTime: " << locale.categoryName(MLocale::MLcTime)
+        << " lcNumeric: " << locale.categoryName(MLocale::MLcNumeric)
+        << "\n"
+        << " format: " << format
+        << " actual result mcal: " << locale.formatDateTimeICU(mcal, format)
+        << " actual result datetime: " << locale.formatDateTimeICU(datetime, format)
+        << " expected result: " << result << "\n";
+    debugStream.flush();
 #endif
     QCOMPARE(locale.formatDateTimeICU(mcal, format), result);
     QCOMPARE(locale.formatDateTimeICU(datetime, format), result);

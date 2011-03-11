@@ -71,8 +71,8 @@ private slots:
     void testIcuFormatString_data();
     void testIcuFormatString();
 
-    void testMLocaleCalendar_data();
-    void testMLocaleCalendar();
+    void testMLocaleSetAndGetCalendar_data();
+    void testMLocaleSetAndGetCalendar();
 
     void testMLocaleCalendarConversionsFromLocaltimeQDateTime_data();
     void testMLocaleCalendarConversionsFromLocaltimeQDateTime();

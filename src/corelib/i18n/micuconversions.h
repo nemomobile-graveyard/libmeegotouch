@@ -69,22 +69,36 @@ namespace MIcuConversions
     icu::DateFormat::EStyle toEStyle(MLocale::TimeType timeType);
 
     /*!
-     * \brief transforms MLocale::Collation enum to icu string presentations
+     * \brief transforms MLocale::Collation enum to icu string representations
      *
      * @param coll MLocale::Collation enum
      *
-     * \sa MIcuConversions::calendarToString(MLocale::CalendarType cal)
      */
     QString collationToString(MLocale::Collation coll);
 
     /*!
-     * \brief transforms MLocale::CalendarType enum to icu string presentations
+     * \brief transforms string representation to  MLocale::Collation enum
      *
-     * @param cal MLocale::CalendarType enum
+     * @param collationName string representation of collation option
      *
-     * \sa MIcuConversions::collationToString(MLocale::Collation coll);
      */
-    QString calendarToString(MLocale::CalendarType cal);
+    MLocale::Collation stringToCollation(QString collationName);
+
+    /*!
+     * \brief transforms MLocale::CalendarType enum to icu string representations
+     *
+     * @param calendarType MLocale::CalendarType enum
+     *
+     */
+    QString calendarToString(MLocale::CalendarType calendarType);
+
+    /*!
+     * \brief transforms string representation to MLocale::CalendarType enum
+     *
+     * @param calendarTypeName string representation of calendar option
+     *
+     */
+    MLocale::CalendarType stringToCalendar(QString calendarTypeName);
 
     /*!
      * \brief transforms MLocale::DateSymbolContext to icu::DateFormatSymbols::DtContextType
@@ -134,12 +148,13 @@ namespace MIcuConversions
      */
     QString icuDatePatternEscaped(const QString &str);
 
-    /*!
-     * \brief creates an icu::Locale based on a locale string and additional parameters
-     */
-    icu::Locale createLocale(const QString &baseString,
-                             MLocale::CalendarType calendarType = MLocale::DefaultCalendar,
-                             MLocale::Collation collation = MLocale::DefaultCollation);
+    QString parseOption(const QString &localeName, const QString &option);
+    QString setOption(const QString &localeName, const QString &option, const QString &value);
+
+    MLocale::CalendarType parseCalendarOption(const QString &localeName);
+    QString setCalendarOption(const QString &localeName, MLocale::CalendarType calendarType);
+    MLocale::Collation parseCollationOption(const QString &localeName);
+    QString setCollationOption(const QString &localeName, MLocale::Collation collation);
 }
 
 //! \internal_end

@@ -569,28 +569,30 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
                                                   MLocale::CalendarType calendarType,
                                                   MLocale::TimeFormat24h timeFormat24h) const
 {
+    QString categoryNameTime = categoryName(MLocale::MLcTime);
+    QString categoryNameMessages = categoryName(MLocale::MLcMessages);
+    categoryNameTime =
+        MIcuConversions::setCalendarOption(categoryNameTime, calendarType);
+    categoryNameMessages =
+        MIcuConversions::setCalendarOption(categoryNameMessages, calendarType);
     QString key = QString("%1_%2_%3_%4_%5")
         .arg(dateType)
         .arg(timeType)
-        .arg(calendarType)
         .arg(timeFormat24h)
-        .arg(categoryName(MLocale::MLcTime));
+        .arg(categoryNameTime)
+        .arg(categoryNameMessages);
     if (_dateFormatCache.contains(key))
         return _dateFormatCache.object(key);
     // Create calLocale which has the time pattern we want to use
-    icu::Locale calLocale = MIcuConversions::createLocale(
-        categoryName(MLocale::MLcTime),
-        calendarType);
+    icu::Locale calLocale = icu::Locale(qPrintable(categoryNameTime));
 
     icu::DateFormat::EStyle dateStyle = MIcuConversions::toEStyle(dateType);
     icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
     icu::DateFormat *df
     = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
 #if 0
-    // Symbols come from the time locale
-    icu::Locale symbolLocale
-    = MIcuConversions::createLocale(categoryName(MLocale::MLcTime),
-                                      calendarType);
+    // Symbols come from the message locale
+    icu::Locale symbolLocale = icu::Locale(categoryNameMessages);
 
     DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
 
@@ -621,8 +623,6 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
 
 MLocalePrivate::MLocalePrivate()
     : _valid(true),
-      _calendarType(MLocale::DefaultCalendar),
-      _collation(MLocale::DefaultCollation),
       _timeFormat24h(MLocale::LocaleDefaultTimeFormat24h),
       _phoneNumberGrouping( MLocale::DefaultPhoneNumberGrouping ),
 #ifdef HAVE_ICU
@@ -676,8 +676,6 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       _nameLocale(other._nameLocale),
       _telephoneLocale(other._telephoneLocale),
       _validCountryCodes( other._validCountryCodes ),
-      _calendarType(other._calendarType),
-      _collation(other._collation),
       _timeFormat24h(other._timeFormat24h),
       _phoneNumberGrouping( other._phoneNumberGrouping ),
 #ifdef HAVE_ICU
@@ -734,8 +732,6 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
     _calendarLocale = other._calendarLocale;
     _monetaryLocale = other._monetaryLocale;
     _nameLocale = other._nameLocale;
-    _calendarType = other._calendarType;
-    _collation = other._collation;
     _timeFormat24h = other._timeFormat24h;
     _messageTranslations = other._messageTranslations;
     _timeTranslations = other._timeTranslations;
@@ -1029,8 +1025,7 @@ bool MLocalePrivate::isValidCountryCode( const QString& code ) const
 // creates icu::Locale presenting a category
 Locale MLocalePrivate::getCategoryLocale(MLocale::Category category) const
 {
-    QString baseString = categoryName(category);
-    return MIcuConversions::createLocale(baseString, _calendarType, _collation);
+    return icu::Locale(qPrintable(categoryName(category)));
 }
 #endif
 
@@ -1173,7 +1168,7 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
         _numberFormatLcTime = icu::NumberFormat::createInstance(timeLocale, status);
 
         if (!U_SUCCESS(status)) {
-            mDebug("MLocalePrivate") << "Unable to create number format for LcTime";
+            mDebug("MLocalePrivate") << "Unable to create number format for LcTime" << u_errorName(status);
             _valid = false;
         }
 #endif
@@ -1188,7 +1183,7 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
         _numberFormat = icu::NumberFormat::createInstance(numericLocale, status);
 
         if (!U_SUCCESS(status)) {
-            mDebug("MLocalePrivate") << "Unable to create number format for LcNumeric";
+            mDebug("MLocalePrivate") << "Unable to create number format for LcNumeric" << u_errorName(status);
             _valid = false;
         }
 #endif
@@ -1212,7 +1207,7 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
     }
 }
 
-static bool parseIcuLocaleString(const QString &localeString, QString *language, QString *script, QString *country, QString *variant)
+bool MLocalePrivate::parseIcuLocaleString(const QString &localeString, QString *language, QString *script, QString *country, QString *variant)
 {
     // A ICU locale string looks like this:
     //     aa_Bbbb_CC_DDDDDD@foo=fooval;bar=barval;
@@ -1625,29 +1620,51 @@ void MLocale::setCategoryLocale(Category category, const QString &localeName)
 void MLocale::setCollation(Collation collation)
 {
     Q_D(MLocale);
-    d->_collation = collation;
-
     d->dropCaches();
+#ifdef HAVE_ICU
+    if(!d->_collationLocale.isEmpty())
+        d->_collationLocale =
+            MIcuConversions::setCollationOption(d->_collationLocale, collation);
+    else
+        d->_defaultLocale =
+            MIcuConversions::setCollationOption(d->_defaultLocale, collation);
+#else
+    Q_UNUSED(collation);
+#endif
 }
 
 MLocale::Collation MLocale::collation() const
 {
-    Q_D(const MLocale);
-    return d->_collation;
+#ifdef HAVE_ICU
+    return MIcuConversions::parseCollationOption(categoryName(MLcCollate));
+#else
+    return MLocale::DefaultCollation;
+#endif
 }
 
 void MLocale::setCalendarType(CalendarType calendarType)
 {
     Q_D(MLocale);
-    d->_calendarType = calendarType;
-
     d->dropCaches();
+#ifdef HAVE_ICU
+    if(!d->_calendarLocale.isEmpty())
+        d->_calendarLocale =
+            MIcuConversions::setCalendarOption(d->_calendarLocale, calendarType);
+    else
+        d->_defaultLocale =
+            MIcuConversions::setCalendarOption(d->_defaultLocale, calendarType);
+#else
+    Q_UNUSED(calendarType);
+#endif
 }
 
 MLocale::CalendarType MLocale::calendarType() const
 {
-    Q_D(const MLocale);
-    return d->_calendarType;
+#ifdef HAVE_ICU
+    return MIcuConversions::parseCalendarOption(categoryName(MLcTime));
+#else
+    return MLocale::DefaultCalendar;
+#endif
 }
 
 void MLocale::setTimeFormat24h(TimeFormat24h timeFormat24h)
@@ -1670,7 +1687,7 @@ MLocale::TimeFormat24h MLocale::defaultTimeFormat24h() const
     Q_D(const MLocale);
     QString defaultTimeShortFormat
         = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
-                             d->_calendarType,
+                             calendarType(),
                              MLocale::LocaleDefaultTimeFormat24h);
     if (d->isTwelveHours(defaultTimeShortFormat))
         return MLocale::TwelveHourTimeFormat24h;
@@ -2784,9 +2801,9 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
 
     monthNumber--; // months in array starting from index zero
 
-    icu::Locale symbolLocale
-    = MIcuConversions::createLocale(d->categoryName(MLcMessages),
-                                      mCalendar.type());
+    QString categoryName = d->categoryName(MLcMessages);
+    categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
+    icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 
     icu::DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
 
@@ -2828,9 +2845,9 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
                                DateSymbolLength symbolLength) const
 {
     Q_D(const MLocale);
-    icu::Locale symbolLocale
-    = MIcuConversions::createLocale(d->categoryName(MLcMessages),
-                                      mCalendar.type());
+    QString categoryName = d->categoryName(MLcMessages);
+    categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
+    icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 
     icu::DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
 
