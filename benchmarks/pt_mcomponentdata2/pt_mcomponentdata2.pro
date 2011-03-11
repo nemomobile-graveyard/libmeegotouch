@@ -4,6 +4,9 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
 DEFINES+=M_VERSION
 
 QT += network
+contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
+    QT += meegographicssystemhelper
+}
 
 INCLUDEPATH += $$MSRCDIR/include \
     $$MSRCDIR/corelib/core \

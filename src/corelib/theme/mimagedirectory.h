@@ -35,6 +35,7 @@
 
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <sys/mman.h>
+#include <QtMeeGoGraphicsSystemHelper>
 #endif
 
 class QPixmap;
@@ -55,11 +56,20 @@ struct PixmapCacheEntry {
         if (refCount != 0) {
             qCritical("Freeing PixmapCacheEntry with a non-zero reference count. This very likely leads to a crash.");
         }
+
         if (!handle.shmHandle.isEmpty()) {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
-            shm_unlink(qPrintable(handle.shmHandle));
+            if (!handle.directMap)
+                shm_unlink(qPrintable(handle.shmHandle));
 #endif
         }
+
+        if (handle.eglHandle) {
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+            QMeeGoGraphicsSystemHelper::destroyEGLSharedImage(handle.eglHandle);
+#endif
+        }
+
         if (pixmap) {
             delete pixmap;
         }
