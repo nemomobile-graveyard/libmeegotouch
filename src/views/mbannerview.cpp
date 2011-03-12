@@ -268,6 +268,8 @@ void MBannerViewPrivate::layoutShortEventBanner()
         subtitle()->setStyleName("ShortEventBannerSubtitle");
         subtitle()->setVisible(true);
         subtitle()->setAlignment(Qt::AlignTop);
+        subtitle()->setWrapMode(QTextOption::WordWrap);
+        subtitle()->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         landscapePolicy->addItem(subtitle(), Qt::AlignTop);
         portraitPolicy->addItem(subtitle(), Qt::AlignTop);
     }
