@@ -21,7 +21,7 @@ win32 {
 win32 {
     M_MMOC_EXECUTABLE = perl.exe $$M_SOURCE_TREE/mmoc/mmoc.pl
 } else {
-    contains(DEFINES, IS_ARMEL) {
+    equals(QT_ARCH, arm) | equals(QT_ARCH, armv6) {
         M_MMOC_EXECUTABLE = perl $$M_SOURCE_TREE/mmoc/mmoc.pl
     } else {
         M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc

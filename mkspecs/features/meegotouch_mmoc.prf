@@ -6,7 +6,7 @@ isEmpty(_MEEGOTOUCH_MMOC_PRF_) {
 
     contains(DEFINES, BUILD_M) {
         win32 {
-            contains(DEFINES, IS_ARMEL) {
+            equals(QT_ARCH, arm) | equals(QT_ARCH, armv6) {
                 M_MMOC_EXECUTABLE = perl.exe $$M_SOURCE_TREE/mmoc/mmoc.pl
             } else {
                 debug {
@@ -16,7 +16,7 @@ isEmpty(_MEEGOTOUCH_MMOC_PRF_) {
 	        }
             }
         } else {
-            contains(DEFINES, IS_ARMEL) {
+            equals(QT_ARCH, arm) | equals(QT_ARCH, armv6) {
                 M_MMOC_EXECUTABLE = perl $$M_SOURCE_TREE/mmoc/mmoc.pl
             } else {
                 M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
@@ -26,11 +26,7 @@ isEmpty(_MEEGOTOUCH_MMOC_PRF_) {
         win32 {
             M_MMOC_EXECUTABLE = perl.exe $$M_SOURCE_TREE/mmoc/mmoc.pl
         } else {
-            isEmpty( MEEGO_ARCH ) {
-                MEEGO_ARCH = $$system( uname -m )
-            }
-
-            contains(MEEGO_ARCH, arm) {
+            equals(QT_ARCH, arm) | equals(QT_ARCH, armv6) {
                 M_MMOC_EXECUTABLE = mmoc.pl
             } else {
                 M_MMOC_EXECUTABLE = mmoc
