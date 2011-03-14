@@ -235,6 +235,8 @@ void Ut_MInputWidgetRelocator::testTargetPosition()
     updateStubbedStyleValues(orientation);
 
     MInputMethodState::instance()->setInputMethodArea(sipRect);
+    qApp->processEvents(); //  Process above area change.
+
     QRect exposedContentRect(rootElement->mapRectFromScene(scene->sceneRect()).toRect());
     if (!sipRect.isNull()) {
         sipRect = rootElement->mapRectFromScene(sipRect).toRect();
@@ -306,6 +308,8 @@ void Ut_MInputWidgetRelocator::testDockBottom()
     updateStubbedStyleValues(orientation);
 
     MInputMethodState::instance()->setInputMethodArea(sipRect);
+    qApp->processEvents(); //  Process above area change.
+
     QRect exposedContentRect(rootElement->mapRectFromScene(scene->sceneRect()).toRect());
     if (!sipRect.isNull()) {
         sipRect = rootElement->mapRectFromScene(sipRect).toRect();
