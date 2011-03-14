@@ -204,8 +204,8 @@ void Ut_MInputWidgetRelocator::testTargetPosition_data()
     // Sip rectangle is given in scene coordinates.
     const QSize screenSize(MDeviceProfile::instance()->resolution());
     const QRect sipRect(0, screenSize.height() / 2,
-                        screenSize.height() - (screenSize.height() / 2),
-                        screenSize.width());
+                        screenSize.width(),
+                        screenSize.height() - (screenSize.height() / 2));
 
     QTest::newRow("no sip, widget at upper nogo zone")   << M::Landscape << QRect() << UpperNoGoZone;
     QTest::newRow("no sip, widget already visible")    << M::Landscape << QRect() << AllowedZone;
