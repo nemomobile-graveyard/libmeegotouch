@@ -313,7 +313,6 @@ MComboBox *MListPage::createComboBoxAction(const QString &title, const QStringLi
 MComboBox *MListPage::createComboBoxLabelButton(const QString &title, const QStringList &itemsList, QGraphicsWidget *parent)
 {
     MComboBox *comboBox = new MComboBox(parent);
-    comboBox->setViewType("labelButton");
     comboBox->setStyleName("CommonComboBoxInverted");
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);

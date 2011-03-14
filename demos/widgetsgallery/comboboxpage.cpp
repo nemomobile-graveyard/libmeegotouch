@@ -66,14 +66,21 @@ void ComboBoxPage::createContent()
         list << QString::number(1970 + i);
     }
 
+    /*
+      CommonComboBox / CommonComboBoxInverted
+    */
     comboBox1 = new MComboBox;
     comboBox1->setIconID("icon-m-camera-scene-portrait");
     comboBox1->addItems(list);
     comboBox1->setCurrentIndex(40);
-    comboBox1->setViewType("button");
 
+    /*
+      simpleButton view type displays the combo box as a button, the title is hidden but still appears in the popup.
+
+      CommonComboBoxButtonNoTitle / CommonComboBoxButtonNoTitleInverted
+    */
     comboBox2 = new MComboBox;
-    comboBox2->setViewType("labelButton");
+    comboBox2->setViewType("simpleButton");
 
     model1 = new QStringListModel(this);
     model1->setStringList(list);
