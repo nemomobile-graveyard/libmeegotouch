@@ -125,6 +125,10 @@ contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
     QT += meegographicssystemhelper
 }
 
+contains(QT_CONFIG, opengles2) {
+    DEFINES += M_USE_OPENGL
+}
+
 !simulator: QT += opengl
 
 QMAKE_EXTRA_TARGETS += check

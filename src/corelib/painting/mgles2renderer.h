@@ -23,6 +23,7 @@
 #include <QList>
 #include <QSize>
 #include <QString>
+#include <QtOpenGL>
 #include "mexport.h"
 
 class QGLContext;
@@ -33,16 +34,6 @@ class QGLShaderProgram;
 class QPainter;
 class QPixmap;
 class QRect;
-
-//some definitions to enable building without gles2 libraries
-#ifdef QT_OPENGL_LIB
-# include <QtOpenGL>
-# ifdef QT_OPENGL_ES_2
-// TODO: It does not seem kosher to define a macro with global effect
-// in this place.
-#  define M_USE_OPENGL
-# endif
-#endif
 
 /*!
     \class MGLES2Renderer
