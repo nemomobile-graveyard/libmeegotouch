@@ -78,7 +78,7 @@ public slots:
      *  Together with \a handleRotationFinished blocks relocation requests
      *  while rotation is in progress.
      */
-    void handleRotationBegin();
+    void handleRotationBegin(M::Orientation orientation);
 
     /*!
      * \brief Must be called in the end of device orientation angle change.
@@ -86,7 +86,7 @@ public slots:
      * If needed and possible for the moment being, calling this method triggers relocation.
      * \sa handleRotationBegin
      */
-    void handleRotationFinished(M::Orientation orientation);
+    void handleRotationFinished();
 
     /*!
      * \brief This tells relocator whether the new state of scene window.
@@ -103,6 +103,7 @@ public slots:
 
 private slots:
     void handleKeyboardStateChange();
+    void handleInputMethodAreaChange(const QRect &rect);
 
 private:
     const MRelocatorStyleContainer &style() const;

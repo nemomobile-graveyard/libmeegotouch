@@ -152,7 +152,6 @@ void Ut_MInputWidgetRelocator::testPostponeAndUpdate()
     QFETCH(bool, updated);
 
     const QRect sipRect(QPoint(0, 300), scene->sceneRect().size().toSize());
-    MInputMethodState::instance()->setInputMethodArea(sipRect);
 
     const QPointF invalidPos(-1000, -1000);
     inputWidget->setPos(invalidPos); // Position somewhere beyond nogo zones so relocation takes place.
@@ -161,10 +160,10 @@ void Ut_MInputWidgetRelocator::testPostponeAndUpdate()
     foreach (Operation op, operations) {
         switch (op) {
         case RotationBegin:
-            subject->handleRotationBegin();
+            subject->handleRotationBegin(M::Landscape);
             break;
         case RotationEnd:
-            subject->handleRotationFinished(M::Landscape);
+            subject->handleRotationFinished();
             break;
         case SceneWindowAppearing:
             subject->sceneWindowStateHasChanged(0, MSceneWindow::Appearing, MSceneWindow::Disappeared);
@@ -230,8 +229,8 @@ void Ut_MInputWidgetRelocator::testTargetPosition()
     QFETCH(Zone, initialZone);
 
     // Apply orientation
-    subject->handleRotationBegin();
-    subject->handleRotationFinished(orientation);
+    subject->handleRotationBegin(orientation);
+    subject->handleRotationFinished();
 
     updateStubbedStyleValues(orientation);
 
@@ -301,8 +300,8 @@ void Ut_MInputWidgetRelocator::testDockBottom()
     QFETCH(Zone, initialZone);
 
     // Apply orientation
-    subject->handleRotationBegin();
-    subject->handleRotationFinished(orientation);
+    subject->handleRotationBegin(orientation);
+    subject->handleRotationFinished();
 
     updateStubbedStyleValues(orientation);
 

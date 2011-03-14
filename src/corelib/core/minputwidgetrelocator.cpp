@@ -68,7 +68,7 @@ MInputWidgetRelocator::MInputWidgetRelocator(MSceneManager &sceneManager,
     // Important: layouting is started immediately at signal emission. We use QueuedConnection
     // to allow them to start before triggering relocation.
     connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
-            this, SLOT(update()),
+            this, SLOT(handleInputMethodAreaChange(QRect)),
             Qt::QueuedConnection);
 
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
@@ -107,6 +107,14 @@ void MInputWidgetRelocator::handleKeyboardStateChange()
     update();
 }
 
+void MInputWidgetRelocator::handleInputMethodAreaChange(const QRect &rect)
+{
+    if (inputPanelRect != rect) {
+        inputPanelRect = rect;
+        update();
+    }
+}
+
 void MInputWidgetRelocator::update()
 {
     // The 'relocating' check is only for stopping recursion, and every re-entry that may occur must
@@ -122,9 +130,6 @@ void MInputWidgetRelocator::update()
     relocating = true;
 
     const QGraphicsWidget *inputWidget = focusedWidget();
-
-    // Update input method area
-    inputPanelRect = MInputMethodState::instance()->inputMethodArea();
 
     // Always update screen space
     updateScreenArea();
@@ -220,17 +225,32 @@ const QRect &MInputWidgetRelocator::exposedContentRect()
     return cachedExposedRect;
 }
 
-void MInputWidgetRelocator::handleRotationBegin()
+void MInputWidgetRelocator::handleRotationBegin(M::Orientation orientation)
 {
     postponeFlags |= WaitForRotationFinished;
+
+    if (this->orientation != orientation) {
+        this->orientation = orientation;
+
+        // Application orientation and software input panel (SIP) area are out of sync at the
+        // time of orientation change. It takes time for the new SIP area to arrive (via d-bus).
+        // Therefore the current MInputMethodState::inputMethodArea() is for wrong orientation.
+        // Better to use empty.
+        //
+        // TODO: This makes the assumption that SIP rectangle is different in each orientation.
+        //       Otherwise, we are left with the null rect set here because we don't receive any
+        //       further inputMethodAreaChanged() notifications after orientation is applied.
+        //       Proper fix would be to communicate the aligment and/or angle of the SIP along
+        //       with the rect itself.
+        inputPanelRect = QRect();
+    }
 }
 
-void MInputWidgetRelocator::handleRotationFinished(M::Orientation orientation)
+void MInputWidgetRelocator::handleRotationFinished()
 {
     // Update to portrait or landscape style.
     style().updateCurrentStyle();
 
-    this->orientation = orientation;
     updatePending = true; // Update always after rotation.
     clearPostponeRelocationFlag(WaitForRotationFinished);
 }

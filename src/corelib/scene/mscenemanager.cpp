@@ -339,12 +339,13 @@ void MSceneManagerPrivate::_q_changeGlobalOrientationAngle()
 
     M::OrientationAngle oldAngle = angle;
     M::Orientation oldOrientation = MDeviceProfile::instance()->orientationFromAngle(angle);
+    M::Orientation newOrientation = MDeviceProfile::instance()->orientationFromAngle(newAngle);
     angle = newAngle;
 
     // Needs to be called on every angle change and before scene window geometries are changed.
-    inputWidgetRelocator->handleRotationBegin();
+    inputWidgetRelocator->handleRotationBegin(newOrientation);
 
-    if (oldOrientation != MDeviceProfile::instance()->orientationFromAngle(angle)) {
+    if (oldOrientation != newOrientation) {
         emit q->orientationAboutToChange(q->orientation());
 
         notifyWidgetsAboutOrientationChange();
@@ -352,7 +353,7 @@ void MSceneManagerPrivate::_q_changeGlobalOrientationAngle()
 
         // emit signal after sending the orientation event to widgets (in case someone
         // would like to connect to the signal and get correct size hints for widgets)
-        emit q->orientationChanged(q->orientation());
+        emit q->orientationChanged(newOrientation);
     }
     if (oldAngle != angle)
         emit q->orientationAngleChanged(angle);
@@ -370,7 +371,7 @@ void MSceneManagerPrivate::_q_emitOrientationChangeFinished()
 
     // Needs to be called on every angle change and after animation and scene window
     // geometries have been changed.
-    inputWidgetRelocator->handleRotationFinished(q->orientation());
+    inputWidgetRelocator->handleRotationFinished();
 }
 
 void MSceneManagerPrivate::_q_unfreezeUI(QAbstractAnimation::State newState,
