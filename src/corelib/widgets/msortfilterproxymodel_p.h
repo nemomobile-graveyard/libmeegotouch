@@ -23,10 +23,10 @@
 #include <QObject>
 #include <QModelIndex>
 #include "mlocale.h"
-#include "mcollator.h"
 
 class QAbstractItemModel;
 class MSortFilterProxyModel;
+class MCollator;
 
 class MSortFilterProxyModelPrivate
 {
@@ -50,7 +50,7 @@ private:
     bool isAnimatedChange;
     bool localeAwareSortingEnabled;
     MLocale locale;
-    MCollator collator;
+    MCollator *pCollator;
 };
 
 #endif // MSORTFILTERPROXYMODEL_P_H

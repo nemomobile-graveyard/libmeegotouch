@@ -22,14 +22,22 @@
 
 #include "mabstractitemmodel.h"
 
+#ifdef HAVE_ICU
+#  include "mcollator.h"
+#endif
+
+
 MSortFilterProxyModelPrivate::MSortFilterProxyModelPrivate()
     : q_ptr(0),
     isSupportedModel(false),
     isAnimatedChange(false),
     localeAwareSortingEnabled(true),
     locale(),
-    collator(locale)
+    pCollator(0)
 {
+#ifdef HAVE_ICU
+    pCollator = new MCollator( locale );
+#endif
 }
 
 MSortFilterProxyModelPrivate::~MSortFilterProxyModelPrivate()
@@ -140,14 +148,16 @@ bool MSortFilterProxyModel::isLocaleAwareSortingEnabled() const
 
 bool MSortFilterProxyModel::lessThan(const QModelIndex &leftIndex, const QModelIndex &rightIndex) const
 {
+#ifdef HAVE_ICU
     Q_D(const MSortFilterProxyModel);
     if (d->localeAwareSortingEnabled && leftIndex.isValid() && rightIndex.isValid()) {
         QVariant leftVal  = leftIndex.model()->data(leftIndex, sortRole());
         if (leftVal.userType() == QVariant::String) {
             QVariant rightVal = rightIndex.model()->data(rightIndex, sortRole());
-            return d->collator(leftVal.toString(), rightVal.toString());
+            return d->pCollator->operator()(leftVal.toString(), rightVal.toString());
         }
     }
+#endif
     // Fallback: Use base class implementation
     return QSortFilterProxyModel::lessThan(leftIndex, rightIndex);
 }
