@@ -1,5 +1,9 @@
 include(../common_top.pri)
 
+contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
+    QT += meegographicssystemhelper
+}
+
 TARGET = ut_mremotethemedaemon
 
 INCLUDEPATH += $$MSRCDIR/corelib/theme
