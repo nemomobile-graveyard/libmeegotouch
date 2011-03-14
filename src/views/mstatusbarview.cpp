@@ -120,7 +120,13 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     sourceRect.setWidth(size().width());
     sourceRect.setHeight(SharedPixmapHeight);
 
-    painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
+    // provider can die under mysterious circumstances so sharedPixmap can be invalid
+    try {
+        painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
+    } catch(...) {
+        qWarning() << "MStatusBarView::drawContents: Cannot draw sharedPixmap.";
+        const_cast<MStatusBarView*>(this)->sharedPixmap = QPixmap();
+    }
 
     if (pressDown && style()->enableStatusIndicatorMenu()) {
         painter->save();
