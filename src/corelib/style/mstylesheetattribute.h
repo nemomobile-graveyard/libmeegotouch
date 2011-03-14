@@ -59,6 +59,7 @@ public:
         LandscapeFlag = 2
     };
 
+    static int maxValueForDevice(SizeAttributeType type, M::Orientation orientation);
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk);
     static int attributeToInt(const QByteArray &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation, CacheOrientationFlags *cacheOrientation);
     static qreal attributeToFloat(const QByteArray &attribute, bool *conversionOk);

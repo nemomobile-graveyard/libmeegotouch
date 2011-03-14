@@ -302,6 +302,46 @@ qint64 MStyleSheetAttribute::getPosition() const
     return position;
 }
 
+int MStyleSheetAttribute::maxValueForDevice(SizeAttributeType type, M::Orientation orientation)
+{
+    // Percentages must be based on the devices native orientation, so
+    // here we are returning the correct sizes based on the device AND the
+    // requested orientation.
+    //
+    // Another way of putting is, for portrait native devices:
+    //   M::landscape == MDeviceProfile::instance()->resolution().height()
+    // While, for landscape native devices:
+    //   M::landscape == MDeviceProfile::instance()->resolution().width()
+
+    if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
+        // native display orientation is landscape
+        if (orientation == M::Landscape) {
+            if (type == WidthAttribute)
+                return MDeviceProfile::instance()->resolution().width();
+            else
+                return MDeviceProfile::instance()->resolution().height();
+        } else {
+            if (type == WidthAttribute)
+                return MDeviceProfile::instance()->resolution().height();
+            else
+                return MDeviceProfile::instance()->resolution().width();
+        }
+    } else {
+        // native display orientation is portrait
+        if (orientation == M::Landscape) {
+            if (type == WidthAttribute)
+                return MDeviceProfile::instance()->resolution().height();
+            else
+                return MDeviceProfile::instance()->resolution().width();
+        } else {
+            if (type == WidthAttribute)
+                return MDeviceProfile::instance()->resolution().width();
+            else
+                return MDeviceProfile::instance()->resolution().height();
+        }
+    }
+}
+
 int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conversionOk)
 {
     QByteArray value = attribute.trimmed();
@@ -334,21 +374,9 @@ int MStyleSheetAttribute::attributeToInt(const QByteArray &attribute, bool *conv
     QByteArray value = attribute.trimmed();
 
     if (attribute.endsWith(units[PERCENT_UNIT])) {
-        int maximumValue = 0;
+        int maximumValue = maxValueForDevice(type, orientation);
 
-        if (orientation == M::Landscape) {
-            *cacheOrientation = LandscapeFlag;
-            if (type == WidthAttribute)
-                maximumValue = MDeviceProfile::instance()->resolution().width();
-            else
-                maximumValue = MDeviceProfile::instance()->resolution().height();
-        } else {
-            *cacheOrientation = PortraitFlag;
-            if (type == WidthAttribute)
-                maximumValue = MDeviceProfile::instance()->resolution().height();
-            else
-                maximumValue = MDeviceProfile::instance()->resolution().width();
-        }
+        *cacheOrientation = (orientation==M::Landscape) ? LandscapeFlag : PortraitFlag;
 
         value.truncate(value.length() - 1);
 
@@ -392,21 +420,9 @@ qreal MStyleSheetAttribute::attributeToFloat(const QByteArray &attribute, bool *
     QByteArray value = attribute.trimmed();
 
     if (attribute.endsWith(units[PERCENT_UNIT])) {
-        int maximumValue = 0;
+        int maximumValue = maxValueForDevice(type, orientation);
 
-        if (orientation == M::Landscape) {
-            *cacheOrientation = LandscapeFlag;
-            if (type == WidthAttribute)
-                maximumValue = MDeviceProfile::instance()->resolution().width();
-            else
-                maximumValue = MDeviceProfile::instance()->resolution().height();
-        } else {
-            *cacheOrientation = PortraitFlag;
-            if (type == WidthAttribute)
-                maximumValue = MDeviceProfile::instance()->resolution().height();
-            else
-                maximumValue = MDeviceProfile::instance()->resolution().width();
-        }
+        *cacheOrientation = (orientation==M::Landscape) ? LandscapeFlag : PortraitFlag;
 
         value.truncate(value.length() - 1);
 
