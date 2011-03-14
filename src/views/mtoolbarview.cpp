@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QApplication>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneResizeEvent>
 #include "mtoolbar.h"
@@ -705,6 +706,20 @@ MToolBarLayoutPolicy *MToolBarViewPrivate::currentPolicy() const
     return currentPolicy;
 }
 
+void MToolBarViewPrivate::refreshDisabledWidgets() const
+{
+    if (!itemsEnabled) {
+        QEvent event(QEvent::StyleChange);
+
+        int count = currentPolicy()->widgetCount();
+        for (int i=0; i<count; i++) {
+            MWidgetController *wc = dynamic_cast<MWidgetController *>(currentPolicy()->widgetAt(i));
+            if (wc && !wc->isEnabled())
+                QApplication::sendEvent(wc, &event);
+        }
+    }
+}
+
 
 MToolBarView::MToolBarView(MToolBar *controller) :
     MWidgetView(controller),
@@ -785,6 +800,14 @@ void MToolBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
     d->updateCenterOffset(event->newSize());
 }
 
+void MToolBarView::orientationChangeEvent(MOrientationChangeEvent *event)
+{
+    Q_D(MToolBarView);
+
+    MWidgetView::orientationChangeEvent(event);
+
+    d->refreshDisabledWidgets();
+}
 
 // bind view and controller together
 M_REGISTER_VIEW_NEW(MToolBarView, MToolBar)

@@ -77,6 +77,7 @@ public:
     //! \reimp
     virtual QRectF boundingRect() const;
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     //! \reimp_end
 
 protected:

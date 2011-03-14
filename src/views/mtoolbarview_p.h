@@ -64,6 +64,7 @@ public:
     void setSpacesEnabled(bool enabled);
     void setLabelOnlyAsCommonButton(bool enable, bool centerToParent);
     void setCentering(bool allToParent);
+    void refreshDisabledWidgets() const;
 
     QCache<QAction *, MButton> removedActionsButtons;
 
