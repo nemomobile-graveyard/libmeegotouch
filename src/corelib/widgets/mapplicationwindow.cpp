@@ -1078,10 +1078,10 @@ void MApplicationWindow::reinit()
 
 void MApplicationWindowPrivate::updateChainTaskData()
 {
+#ifdef Q_WS_X11
     // here we try to inject the chainTaskData into this MApplicationWindow
     Q_Q(MApplicationWindow);
 
-#ifdef Q_WS_X11
     if (!MComponentData::chainDataStackIsEmpty()) {
         MComponentData::ChainData thisData = MComponentData::popChainData();
 
