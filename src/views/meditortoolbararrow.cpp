@@ -1,7 +1,8 @@
 #include "meditortoolbararrow.h"
 
 MEditorToolbarArrow::MEditorToolbarArrow(QGraphicsItem *parentItem)
-    : MStylableWidget(parentItem)
+    : MStylableWidget(parentItem),
+      arrowDirection(ArrowDown)
 {
 }
 

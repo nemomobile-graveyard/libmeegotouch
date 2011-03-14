@@ -39,22 +39,25 @@ void Ut_MCommonPixmaps::initTestCase()
         QCoreApplication::processEvents();
     }
 
+    m_commonPixmaps = 0;
+
     MGConfItem currentLocale("/meegotouch/i18n/language");
     MGConfItem currentTheme("/meegotouch/theme/name");
     m_themeDaemon = new MThemeDaemon(MThemeDaemon::LocalDaemon);
-    m_themeDaemon->activateTheme(currentTheme.value().toString(),
-                                 currentLocale.value().toString(),
-                                 QList<MThemeDaemonClient*>(),
-                                 pixmapsToDelete);
-    m_commonPixmaps = 0;
+    bool themeActivated = m_themeDaemon->activateTheme(currentTheme.value().toString(),
+                                                       currentLocale.value().toString(),
+                                                       QList<MThemeDaemonClient*>(),
+                                                       pixmapsToDelete);
+    QVERIFY(themeActivated);
 }
 
 void Ut_MCommonPixmaps::cleanupTestCase()
 {
-    m_commonPixmaps->clear();
-
-    delete m_commonPixmaps;
-    m_commonPixmaps = 0;
+    if (m_commonPixmaps) {
+        m_commonPixmaps->clear();
+        delete m_commonPixmaps;
+        m_commonPixmaps = 0;
+    }
 
     delete m_themeDaemon;
     m_themeDaemon = 0;
