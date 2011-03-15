@@ -882,9 +882,11 @@ QRect MTextEditViewPrivate::cursorRect() const
     cursorHeight = currentLine.height();
     qreal x = currentLine.cursorToX(relativePos);
 
-    rect = QRect(((isLayoutLeftToRight() ? s->paddingLeft() : s->paddingRight())
-                  + layoutPos.x() + x - hscroll),
-                 (s->paddingTop() + layoutPos.y() + currentLine.y() - vscroll),
+    const qreal horizontalPaddingAndMargin(
+        isLayoutLeftToRight() ? (s->paddingLeft() + s->marginLeft())
+        : (s->paddingRight() + s->marginRight()));
+    rect = QRect(horizontalPaddingAndMargin + layoutPos.x() + x - hscroll,
+                 s->paddingTop() + layoutPos.y() + currentLine.y() - vscroll,
                  cursorWidth, cursorHeight);
 
     return rect;
@@ -922,8 +924,12 @@ QRect MTextEditViewPrivate::textRectangle(const int startPosition, const int end
                                   blockRelativeStartPosition));
     Q_ASSERT(firstLine.isValid());
 
+    const qreal horizontalPaddingAndMargin(
+        isLayoutLeftToRight() ? (q->style()->paddingLeft() + q->style()->marginLeft())
+        : (q->style()->paddingRight() + q->style()->marginRight()));
     const QPointF commonOffset(document()->documentLayout()->blockBoundingRect(startBlock).topLeft()
-                               + QPointF(q->style()->paddingLeft(), q->style()->paddingTop()));
+                               + QPointF(horizontalPaddingAndMargin,
+                                         q->style()->paddingTop()));
     const QPointF topLeft(QPointF(firstLine.cursorToX(blockRelativeStartPosition),
                                   firstLine.naturalTextRect().top())
                           + commonOffset);
