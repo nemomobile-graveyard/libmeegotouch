@@ -1,8 +1,17 @@
-libmeegotouch (0.20.94~1) unstable; urgency=low
+libmeegotouch (0.20.94-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#235920, [TASK] Don't show "Paste" on first focus to empty text field
+  * Fixes: NB#211968 - Selection over the selected text is going off after minimizing and returning to the application
+  * Fixes: NB#236235 - Fix keyboardOpenProperty leak
+  * Fixes: NB#236041 - Use "unregisterAttributeExtension()" instead of "MInputMethodState: void MInputMethodState::unregisterToolbar(int)"
+  * Fixes: NB#234408, MTextEditView masking with delay on setText()
+  * Fixes: NB#234739 - State of the tab is incorrect after scenario: app menu opened, orientation changed, app menu closed
+  * Fixes: NB#222809 - libmeegotouch stopped working on OSX
+  * Fixes: NB#234350 - Constant huge X resource usage increase in mthemedaemon
+  * Fixes: NB#231712 - short event banner - long sms - source label is partially covered by message content
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 10 Mar 2011 16:39:05 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 15 Mar 2011 16:21:51 +0200
 
 libmeegotouch (0.20.93-1) unstable; urgency=low
 
