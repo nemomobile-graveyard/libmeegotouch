@@ -3120,7 +3120,7 @@ void MTextEdit::attachToolbar(const QString &name)
         return;
     detachToolbar();
     // record registered toolbar identifier which will be unregistered when detachToolbar().
-    d->registeredToolbarId = MInputMethodState::instance()->registerToolbar(name);
+    d->registeredToolbarId = MInputMethodState::instance()->registerAttributeExtension(name);
     model()->setToolbar(name);
     model()->setToolbarId(d->registeredToolbarId);
     d->icUpdate();
@@ -3132,7 +3132,7 @@ void MTextEdit::attachToolbar(int id)
     if (attachedToolbarId() == id)
         return;
     detachToolbar();
-    const QString toolbar = MInputMethodState::instance()->toolbar(id);
+    const QString toolbar = MInputMethodState::instance()->attributeExtensionFile(id);
     // record attached toolbar identifier and file name.
     // The toolbar identifier is an unique id in the space of the application.
     // Two text entries may attach to the same toolbar file, but have two different
@@ -3157,7 +3157,7 @@ void MTextEdit::detachToolbar()
     Q_D(MTextEdit);
     // only unregister toolbar it has registered.
     if (d->registeredToolbarId >= 0) {
-        MInputMethodState::instance()->unregisterToolbar(d->registeredToolbarId);
+        MInputMethodState::instance()->unregisterAttributeExtension(d->registeredToolbarId);
         d->registeredToolbarId = -1;
     }
     model()->setToolbar(QString());
