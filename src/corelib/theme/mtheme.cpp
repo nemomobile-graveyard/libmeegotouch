@@ -717,7 +717,8 @@ bool MTheme::hasPendingRequests()
 
 void MTheme::cleanupGarbage()
 {
-    instance()->d_ptr->cleanupGarbage();
+    // FIXME: Uncomment once it's safe to release resource at any time.
+    // instance()->d_ptr->cleanupGarbage();
 }
 
 void MThemePrivate::reinit(const QString &newApplicationName)
