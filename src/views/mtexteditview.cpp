@@ -1607,14 +1607,7 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
         }
     }
 
-    d->focusReleaseExpected = false;
-
-    if (reason == Qt::MouseFocusReason) {
-        if (d->activeDocument()->isEmpty()) {
-            d->showEditorToolbar();
-        }
-        d->focusReleaseExpected = true;
-    }
+    d->focusReleaseExpected = reason == Qt::MouseFocusReason;
 
     d->focused = true;
     doUpdate();
