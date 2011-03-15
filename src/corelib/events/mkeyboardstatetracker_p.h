@@ -34,6 +34,7 @@ class MKeyboardStateTrackerPrivate
 {
 public:
     MKeyboardStateTrackerPrivate(MKeyboardStateTracker *controller);
+    ~MKeyboardStateTrackerPrivate();
 
     static MKeyboardStateTracker *tracker;
 #ifdef HAVE_CONTEXTSUBSCRIBER

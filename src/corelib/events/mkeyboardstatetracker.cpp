@@ -62,6 +62,13 @@ MKeyboardStateTrackerPrivate::MKeyboardStateTrackerPrivate(MKeyboardStateTracker
     initContextSubscriber();
 }
 
+MKeyboardStateTrackerPrivate::~MKeyboardStateTrackerPrivate()
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    delete keyboardOpenProperty;
+#endif
+}
+
 void MKeyboardStateTrackerPrivate::initContextSubscriber()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
