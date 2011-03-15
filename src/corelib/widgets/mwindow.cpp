@@ -845,8 +845,10 @@ void MWindow::setTranslucentBackground(bool enable)
     }
 
     // when the gl widget is not initialized yet we will also not initialize it
-    if (MApplication::softwareRendering() || MApplication::isPrestarted() ||
-        (MGraphicsSystemHelper::isRunningNativeGraphicsSystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
+    if (MApplication::softwareRendering() 
+        || MApplication::isPrestarted() 
+        || MComponentCache::populating()
+        || (MGraphicsSystemHelper::isRunningNativeGraphicsSystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
         d->initSoftwareViewport();
     } else {
         d->initGLViewport();
