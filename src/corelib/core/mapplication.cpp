@@ -311,6 +311,16 @@ MApplication::~MApplication()
     delete d_ptr;
 }
 
+bool MApplication::notify(QObject *receiver, QEvent *event)
+{
+    try {
+        return QApplication::notify(receiver, event);
+    } catch(std::exception& e) {
+        mDebug("MApplication") << "Caught exception in notify:" << e.what();
+    }
+    return false;
+}
+
 QString MApplication::deviceName()
 {
     return MComponentData::deviceName();

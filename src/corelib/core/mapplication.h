@@ -103,6 +103,12 @@ public:
     //! Cleans up any window system resources that were allocated by this application.
     virtual ~MApplication();
 
+    //! \reimp
+    // Reimplement QApplication::notify so we catch eventual
+    // exceptions thrown from within event handlers
+    virtual bool notify(QObject *receiver, QEvent *event);
+    //! \reimp_end
+
     /*! \brief Returns a pointer to the application's MApplication instance.
      * If no instance has been allocated, null is returned.
      * \sa QCoreApplication::instance()
