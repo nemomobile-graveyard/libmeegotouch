@@ -79,14 +79,14 @@ void MToolBarLayoutPolicy::insertWidgetAndRemoveOverflow(int widgetIndex, QGraph
     if (widgetCount() > 0) {
         bool lastItem = (widgetIndex == widgetCount());
         if (lastItem) {
-            MLinearLayoutPolicy::insertItem(policyIndex-1, item);
+            MLinearLayoutPolicy::insertItem(policyIndex-1, item, Qt::AlignVCenter);
             insertSpacer(policyIndex-1);
         } else {
-            MLinearLayoutPolicy::insertItem(policyIndex, item);
+            MLinearLayoutPolicy::insertItem(policyIndex, item, Qt::AlignVCenter);
             insertSpacer(policyIndex+1);
         }
     } else
-        MLinearLayoutPolicy::insertItem(policyIndex, item);
+        MLinearLayoutPolicy::insertItem(policyIndex, item, Qt::AlignVCenter);
 
     updateLayoutPositionDueToInsert(widgetIndex);
     removeOverflownWidgets();
