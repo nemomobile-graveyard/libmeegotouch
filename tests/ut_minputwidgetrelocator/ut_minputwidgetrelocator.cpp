@@ -21,6 +21,8 @@
 #include "mdeviceprofile.h"
 #include "mrelocatorstyle.h"
 #include "mscrollchain.h"
+#include "mscenemanager.h"
+#include "mscene.h"
 #include "minputmethodstate.h"
 #include "minputwidgetrelocator.h"
 #include "mkeyboardstatetracker.h"
@@ -51,7 +53,9 @@ void Ut_MInputWidgetRelocator::initTestCase()
 
     app = new MApplication(argc, app_name);
 
-    scene = new QGraphicsScene(QRectF(QPointF(), MDeviceProfile::instance()->resolution()));
+    sceneManager = new MSceneManager(new MScene(QRectF(QPointF(),
+                                                       MDeviceProfile::instance()->resolution())));
+    scene = sceneManager->scene();
     view = new QGraphicsView(scene);
 
     QApplication::setActiveWindow(view);
@@ -71,8 +75,8 @@ void Ut_MInputWidgetRelocator::initTestCase()
 
 void Ut_MInputWidgetRelocator::cleanupTestCase()
 {
-    delete scene;
-    scene = 0;
+    delete sceneManager;
+    sceneManager = 0;
     delete view;
     view = 0;
     delete app;
@@ -81,7 +85,10 @@ void Ut_MInputWidgetRelocator::cleanupTestCase()
 
 void Ut_MInputWidgetRelocator::init()
 {
-    subject = new MInputWidgetRelocator(scene, rootElement, M::Landscape);
+    // Let's have something funny here so we get "changed" signals.
+    MInputMethodState::instance()->setInputMethodArea(QRect(1, 2, 3, 4));
+
+    subject = new MInputWidgetRelocator(*sceneManager, rootElement, M::Landscape);
 
     parentScrollableWidget = QPointer<ScrollableWidget>(new ScrollableWidget(rootElement));
     parentScrollableWidget->resize(1000, 1000);

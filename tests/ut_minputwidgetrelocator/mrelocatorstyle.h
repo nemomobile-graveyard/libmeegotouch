@@ -21,6 +21,7 @@
 #define MRELOCATORSTYLE_H
 
 class QString;
+class MSceneManager;
 class MWidgetController;
 
 class MRelocatorStyle
@@ -47,6 +48,7 @@ public:
     {
         return &gRelocatorStyle;
     }
+    void setSceneManager(MSceneManager *) {}
 };
 
 #endif

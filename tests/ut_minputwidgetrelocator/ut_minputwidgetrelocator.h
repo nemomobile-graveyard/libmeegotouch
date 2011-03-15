@@ -26,6 +26,7 @@
 #include "mapplication.h"
 
 class MInputWidgetRelocator;
+class MSceneManager;
 
 class QGraphicsScene;
 class QGraphicsView;
@@ -82,6 +83,7 @@ private:
 private:
     MApplication *app;
     MInputWidgetRelocator *subject;
+    MSceneManager *sceneManager;
     QGraphicsScene *scene;
     QGraphicsView *view;
     QGraphicsWidget *rootElement;

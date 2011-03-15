@@ -51,7 +51,7 @@ class MInputWidgetRelocator : public QObject
 {
     Q_OBJECT
 public:
-    explicit MInputWidgetRelocator(const QGraphicsScene *scene,
+    explicit MInputWidgetRelocator(MSceneManager &sceneManager,
                                    const QGraphicsItem *rootElement,
                                    M::Orientation initialOrientation);
     virtual ~MInputWidgetRelocator();

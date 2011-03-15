@@ -18,10 +18,15 @@ HEADERS += \
     ut_minputwidgetrelocator.h \
     mapplicationwindow_p.h \
     mrelocatorstyle.h \
+    mscenemanager.h \
+    mscene.h \
     $$MSRCDIR/corelib/core/minputwidgetrelocator.h \
     $$MSRCDIR/corelib/core/mscrollchain.h \
     $$MSRCDIR/corelib/core/mabstractscroller.h \
    ../ut_mscrollchain/scroller.h \
    ../ut_mscrollchain/scrollablewidget.h
+
+CXXFLAGS += -include mscenemanager.h \
+            -include mscene.h
 
 include(../common_bot.pri)

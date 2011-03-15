@@ -224,7 +224,7 @@ void MSceneManagerPrivate::initRelocator()
     Q_Q(MSceneManager);
 
     inputWidgetRelocator = QPointer<MInputWidgetRelocator>(
-        new MInputWidgetRelocator(scene, rootElement, orientation(newAngle)));
+        new MInputWidgetRelocator(*q, rootElement, orientation(newAngle)));
 
     // Register scene window scroller.
     QSharedPointer<MSceneWindowScroller> sceneWindowScroller(new MSceneWindowScroller);

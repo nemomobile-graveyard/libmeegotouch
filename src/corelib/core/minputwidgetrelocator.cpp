@@ -26,6 +26,8 @@
 #include "minputmethodstate.h"
 #include "mkeyboardstatetracker.h"
 #include "mrelocatorstyle.h"
+#include "mscenemanager.h"
+#include "mscene.h"
 #include "mscrollchain.h"
 
 #include <QGraphicsScene>
@@ -45,10 +47,10 @@ namespace {
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(PostponeRelocationFlags)
 
-MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
+MInputWidgetRelocator::MInputWidgetRelocator(MSceneManager &sceneManager,
                                              const QGraphicsItem *rootElement,
                                              M::Orientation initialOrientation)
-    : scene(scene),
+    : scene(sceneManager.scene()),
       rootElement(rootElement),
       orientation(initialOrientation),
       cachedExposedRect(0, 0, -1, -1),
@@ -72,6 +74,10 @@ MInputWidgetRelocator::MInputWidgetRelocator(const QGraphicsScene *scene,
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
             this, SLOT(handleKeyboardStateChange()));
 
+    // At this point, if there is no MComponenteData::activeWindow the style container will not use
+    // correct orientation. Therefore we set scene manager for it which is used instead.
+    // Do before initialize() so orientation gets updated right from the beginning.
+    styleContainer->setSceneManager(&sceneManager);
     styleContainer->initialize(objectName(), "", 0);
 
     // Set initial style mode if needed.
