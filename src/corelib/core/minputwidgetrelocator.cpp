@@ -190,6 +190,16 @@ const QRect &MInputWidgetRelocator::exposedContentRect()
     if (!currentPage.isNull() && currentPage->focusItem()) {
         MApplicationPage *page = static_cast<MApplicationPage *>(currentPage.data());
         cachedExposedRect &= rootElement->mapRectFromItem(page, page->exposedContentRect()).toRect();
+    } else {
+        // check if focused widget is in MSheet
+        QGraphicsWidget *inputWidget = focusedWidget();
+        QGraphicsWidget *sheetPannableViewport = inputWidget ? inputWidget->parentWidget() : 0;
+        while (sheetPannableViewport && sheetPannableViewport->objectName() != "MSheetCentralSlotPannableViewport")
+            sheetPannableViewport = sheetPannableViewport->parentWidget();
+
+        if (sheetPannableViewport)
+            cachedExposedRect &= rootElement->mapRectFromItem(sheetPannableViewport,
+                                                              sheetPannableViewport->rect()).toRect();
     }
 
     // Map input panel rectangle to rootElement's orientation.

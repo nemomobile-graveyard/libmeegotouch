@@ -32,7 +32,9 @@ QPoint MSceneWindowScroller::queryScrollingAmount(const QGraphicsWidget *widget,
 
     // Don't scroll window types that can have some kind of top bar, and,
     // that do have some other way of scrolling their contents.
-    if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+    if (sceneWindow->windowType() == MSceneWindow::ApplicationPage ||
+        sceneWindow->windowType() == MSceneWindow::Sheet)
+    {
         return QPoint();
     }
 
