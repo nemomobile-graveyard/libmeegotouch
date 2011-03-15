@@ -1,6 +1,6 @@
 ###############################################################################
 # Internationalization module
-############################################################################### 
+###############################################################################
 I18N_SRC_DIR=./i18n
 INCLUDEPATH+=./i18n
 
@@ -9,6 +9,7 @@ RESOURCES += ./i18n/i18n.qrc
 PUBLIC_HEADERS += \
     $$I18N_SRC_DIR/mbreakiterator.h \
     $$I18N_SRC_DIR/mlocale.h \
+    $$I18N_SRC_DIR/mlocalebuckets.h \
     $$I18N_SRC_DIR/mcountry.h \
     $$I18N_SRC_DIR/mcity.h \
     $$I18N_SRC_DIR/mlocationdatabase.h \
@@ -16,6 +17,7 @@ PUBLIC_HEADERS += \
 SOURCES += \
     $$I18N_SRC_DIR/mbreakiterator.cpp \
     $$I18N_SRC_DIR/mlocale.cpp \
+    $$I18N_SRC_DIR/mlocalebuckets.cpp \
     $$I18N_SRC_DIR/mcountry.cpp \
     $$I18N_SRC_DIR/mcity.cpp \
     $$I18N_SRC_DIR/mlocationdatabase.cpp \

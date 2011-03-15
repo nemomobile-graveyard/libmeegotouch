@@ -25,6 +25,7 @@
 #include <float.h>
 #include <QtGlobal>
 #include <QObject>
+#include <QMap>
 
 class QString;
 class QStringList;
@@ -722,9 +723,28 @@ public:
      * This function tries to create useful extra buckets for these
      * foreign strings.
      *
+     * For applications using an MAbstractItemModel, it is probably more
+     * convenient to use the MLocaleBuckets class that uses this function
+     * internally.
+     *
+     * \sa MLocaleBuckets
      * \sa exemplarCharactersIndex()
      */
     QString indexBucket(const QString &str) const;
+    
+    /*!
+     * \brief Internal version of MLocale::indexBucket().
+     *
+     * \param str String to find a bucket for
+     * \param buckets bucket list (result of MLocale::exemplarCharactersIndex())
+     * \param collator collator to use for sorting.
+     *
+     * This overloaded function is more efficient if a large number of index
+     * buckets is to be retrieved since it can re-use the buckets list and the
+     * collator from one call to the next. Before the first call, initialize
+     * the 'buckets' list with MLocale::exemplarCharactersIndex().
+     */
+    QString indexBucket(const QString &str, const QStringList &buckets, const MCollator &collator) const;
 
     /*!
      * \brief Returns the language code of the locale in ISO-639 format

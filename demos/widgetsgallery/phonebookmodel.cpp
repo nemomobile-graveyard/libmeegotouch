@@ -34,9 +34,7 @@ PhoneBookModel::PhoneBookModel()
       namesList(),
       imageIdList(),
       defaultThumbnail(),
-      groups(),
-      groupsSize(),
-      itemGroupCache()
+      buckets()
 {
     namesList = loadFakeNames();
     imageIdList = loadFakeImageIds();
@@ -57,7 +55,7 @@ QStringList PhoneBookModel::loadFakeNames()
         QTextStream in(&fileNames);
         in.setCodec("UTF-8");
         while (!in.atEnd()) {
-            QString line = in.readLine();
+            QString line = in.readLine().simplified();
             if (!line.isEmpty()) {
                 listNames << line.split(' ');
             }
@@ -66,7 +64,7 @@ QStringList PhoneBookModel::loadFakeNames()
 
     // fallback
     if (listNames.isEmpty())
-        listNames << "Pasi" << "Arto" << "Kiki" << "Keitty" << "Kitti" << "Adam" << "Tomas" << "Jakub" << "Sergiy" << "Rocks";
+        listNames << "Pasi" << "Arto" << "Kiki" << "Chaim" << "Cholotov" << "Keitty" << "Kitti" << "Adam" << "Tomas" << "Jakub" << "Sergiy" << "Rocks";
 
     return listNames;
 }
@@ -115,46 +113,42 @@ PhoneBookEntry *PhoneBookModel::generateEntry()
 
 int PhoneBookModel::groupCount() const
 {
-    return groups.count();
+    return buckets.bucketCount();
 }
 
 int PhoneBookModel::rowCountInGroup(int group) const
 {
-    if (group < groupsSize.count() && group >= 0)
-        return groupsSize[group];
-    else if (group == -1)
+    if (group == -1) {
         return phoneBookEntries.count();
-    
-    return 0;
+    } else {
+        return buckets.bucketSize(group);
+    }
 }
 
 QString PhoneBookModel::groupTitle(int group) const
 {
-    if (group < groups.count())
-        return groups[group];
-    
-    return QString();
+    return buckets.bucketName(group);
 }
 
 QVariant PhoneBookModel::itemData(int row, int group, int role) const
 {
     int flatRow = row;
-    
-    if (group >= 0 && row >= 0)
-        flatRow = itemGroupCache[group][row];
 
-    // This function will be called many times during fast panning, lets
-    // check boundaries and validnes only in debug mode
+    if (group >= 0 && row >= 0)
+        flatRow = buckets.origItemIndex(group, row);
+
+    // This function will be called many times during fast panning, let's
+    // check boundaries and validity only in debug mode
     Q_ASSERT(flatRow >= 0);
     Q_ASSERT(flatRow < phoneBookEntries.size());
-    
+
     if (role == Qt::DisplayRole)
         return QVariant::fromValue(static_cast<void *>(phoneBookEntries[flatRow]));
     else if (role == PhoneBookSortRole)
         return QVariant::fromValue(phoneBookEntries[flatRow]->lastName);
     else if (role == PhoneBookFilterRole)
         return QVariant::fromValue(phoneBookEntries[flatRow]->fullName);
-    
+
     return QVariant();
 }
 
@@ -166,7 +160,7 @@ bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
         PhoneBookEntry *entry = generateEntry();
         phoneBookEntries.append(entry);
     }
-    
+
     regenerateModel();
 
     endInsertRows();
@@ -177,12 +171,12 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     if (count <= 0)
         return true; //Successfully removed 0 rows.
-    
+
     int flatRow = row;
     int group = parent.row();
-            
+
     if (isGrouped() && group >= 0)
-        flatRow = itemGroupCache[group][row];
+        flatRow = buckets.origItemIndex(group, row);
 
     beginRemoveRows(parent, row, row + count - 1, count == 1);
     qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
@@ -194,25 +188,28 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
+void PhoneBookModel::clear()
+{
+    if (!phoneBookEntries.isEmpty()) {
+        beginRemoveRows(QModelIndex(), 0, phoneBookEntries.count()-1, false);
+        qDeleteAll(phoneBookEntries);
+        phoneBookEntries.clear();
+        buckets.clear();
+        endRemoveRows();
+    }
+}
+
 void PhoneBookModel::regenerateModel()
 {
-    groups.clear();
-    groupsSize.clear();
-    itemGroupCache.clear();
-    for (int i = 0; i < phoneBookEntries.count(); i++) {
-        PhoneBookEntry *entry = phoneBookEntries[i];
-        if (!entry)
-            continue;
-        
-        QChar group = entry->fullName[0];
-        if (!groups.contains(group)) {
-            groups.append(group);
-            groupsSize.append(1);
-        } else {
-            groupsSize[groups.indexOf(group)] ++ ;
+    QStringList itemList;
+
+    foreach (PhoneBookEntry *entry, phoneBookEntries) {
+        if (entry) {
+            itemList << entry->fullName;
         }
-        itemGroupCache[groups.indexOf(group)].append(i);
     }
+
+    buckets.setItems(itemList);
 }
 
 void PhoneBookModel::thumbnailWasLoaded(const QModelIndex &index)
@@ -281,7 +278,7 @@ void PhoneBookImageLoader::addJob(const QModelIndex &index)
     // May happen if size of list model was changed
     if (entry == NULL)
         return;
-    
+
     foreach (const Job& job, thumbnailLoadingJobs) {
         if (job.entry == entry)
             return;
@@ -328,7 +325,7 @@ void PhoneBookImageLoader::processJobQueue()
 }
 
 // There is no need to cast if you attach model to the image loader
-// but this is one way to achieve same result.
+// but this is one way to achieve the same result.
 void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
 {
     QModelIndex realIndex = index;
@@ -339,9 +336,8 @@ void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
         Q_ASSERT(sortModel);
         PhoneBookModel *phoneBookModel = dynamic_cast<PhoneBookModel *>(sortModel->sourceModel());
         if (phoneBookModel == NULL) {
-            // Looks like live filtering is enabled
-            // one more cast step needed to get the
-            // the correct source index.
+            // Looks like live filtering is enabled.
+            // One more cast step needed to get the correct source index.
             MSortFilterProxyModel *filterModel = dynamic_cast<MSortFilterProxyModel *>(sortModel->sourceModel());
             if (filterModel) {
                 phoneBookModel = dynamic_cast<PhoneBookModel *>(filterModel->sourceModel());

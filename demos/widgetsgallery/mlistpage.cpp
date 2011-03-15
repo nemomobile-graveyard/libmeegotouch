@@ -343,7 +343,7 @@ void MListPage::createActions()
     QStringList amountOfItemsList;
     amountOfItemsList << "50 items" << "100 items" << "200 items" << "1000 items";
     combo = createComboBoxAction("Items in model", amountOfItemsList);
-    combo->setCurrentIndex(3); // by default create 1000 items
+    combo->setCurrentIndex(2); // by default create 100 items
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAmountOfItemInList(int)));
 
     QStringList sortingOrderList;
@@ -422,11 +422,11 @@ void MListPage::changeAmountOfItemInList(int index)
         list->setShowGroups(false);
     }
 
-
     if (model->rowCount() > 0)
         model->removeRows(0, model->rowCount());
 
-    int amountOfItems[4] = {50, 100, 200, 1000};
+    int amountOfItems[] = {50, 100, 200, 1000};
+    model->clear();
     model->insertRows(0, amountOfItems[index]);
     changeSortingOrder(currentSortingIndex);
     changeListMode(currentListModeIndex);
@@ -739,6 +739,8 @@ void MListPage::createContent()
     list = new MList(panel);
 
     setPlainListModel();
+    changeListMode(Grouped);
+    comboListMode->setCurrentIndex(Grouped);
 
     layout->addItem(list);
 

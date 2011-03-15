@@ -2967,37 +2967,39 @@ QStringList MLocale::exemplarCharactersIndex() const
     charStr.remove('}');
     exemplarCharactersIndex = charStr.split(QLatin1String(" "),
                                             QString::SkipEmptyParts);
+
+    // Special hack for the last Japanese bucket:
+    if (exemplarCharactersIndex.last() == QString::fromUtf8("わ")) {
+        exemplarCharactersIndex << QString::fromUtf8("ん"); // to get ワ, ゐ,ヰ,ヸ, ヹ, を, ヲ, ヺ, into the わ bucket
+    }
+    // Special hack for the last Korean bucket:
+    if (exemplarCharactersIndex.last() == QString::fromUtf8("ᄒ")) {
+        exemplarCharactersIndex << QString::fromUtf8("あ"); // to get 학,  學, ... ᄒ bucket
+    }
+
     return exemplarCharactersIndex;
 }
 #endif
 
 #ifdef HAVE_ICU
-QString MLocale::indexBucket(const QString &str) const
+QString MLocale::indexBucket(const QString &str, const QStringList &buckets, const MCollator &coll) const
 {
     Q_D(const MLocale);
     if (str.isEmpty())
         return str;
-    QStringList buckets = exemplarCharactersIndex();
-    // Special hack for the last Japanese bucket:
-    if (buckets.last() == QString::fromUtf8("わ")) {
-        buckets << QString::fromUtf8("ん"); // to get ワ, ゐ,ヰ,ヸ, ヹ, を, ヲ, ヺ, into the わ bucket
+    if (str.startsWith(QString::fromUtf8("ン")) && buckets.last() == QString::fromUtf8("ん")) {
         // ン sorts after ん but should go into the ん bucket:
-        if (str.startsWith(QString::fromUtf8("ン")))
-            return QString::fromUtf8("ん");
+        return QString::fromUtf8("ん");
     }
-    // Special hack for the last Korean bucket:
-    if (buckets.last() == QString::fromUtf8("ᄒ"))
-        buckets << QString::fromUtf8("あ"); // to get 학,  學, ... ᄒ bucket
     QString strUpperCase =
         MIcuConversions::unicodeStringToQString(
             MIcuConversions::qStringToUnicodeString(str).toUpper(
-                d->getCategoryLocale(MLcCollate)));
+                d->getCategoryLocale(MLocale::MLcCollate)));
     QString firstCharacter;
     if (strUpperCase.at(0).isHighSurrogate())
         firstCharacter = strUpperCase.at(0) + strUpperCase.at(1);
     else
         firstCharacter = strUpperCase.at(0);
-    MCollator coll = this->collator();
     for (int i = 0; i < buckets.size(); ++i) {
         if (coll(strUpperCase, buckets[i])) {
             if (i == 0) {
@@ -3009,6 +3011,14 @@ QString MLocale::indexBucket(const QString &str) const
         }
     }
     return firstCharacter;
+}
+#endif
+
+#ifdef HAVE_ICU
+QString MLocale::indexBucket(const QString &str) const
+{
+    QStringList bucketList = exemplarCharactersIndex();
+    return indexBucket(str, bucketList, this->collator());
 }
 #endif
 

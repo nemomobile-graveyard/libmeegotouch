@@ -27,12 +27,13 @@
 #include <QImage>
 
 #include <MAbstractItemModel>
+#include <MLocaleBuckets>
 
 // Structure which contain data for each row
 struct PhoneBookEntry {
     QString firstName; // store first and last names for searching
     QString lastName;
-    QString fullName; // store fullname so that we don't need to concantenate first and last name
+    QString fullName; // store fullname so that we don't need to concatenate first and last name
     QString phoneNumber;
     QImage thumbnail; // will be filled with empty image, after real image will be loaded it will replace old one
     QString thumbnailId; // thumbnail will represent an id of image to load, if it's empty, no loading will be triggered
@@ -85,6 +86,7 @@ public:
 
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    void clear();
 
     void thumbnailWasLoaded(const QModelIndex &index);
     void updateData(const QModelIndex &first, const QModelIndex &last);
@@ -101,12 +103,7 @@ private:
     QStringList namesList;
     QStringList imageIdList;
     QImage defaultThumbnail;
-
-    QList<QChar> groups;
-    QList<int> groupsSize;
-    
-    typedef QList<int> ListOfInt;
-    QMap<int, ListOfInt> itemGroupCache;
+    MLocaleBuckets buckets;
 };
 
 #endif

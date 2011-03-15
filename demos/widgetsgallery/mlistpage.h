@@ -109,7 +109,7 @@ private:
 
 private:
 
-    MAbstractItemModel *model;
+    PhoneBookModel *model;
     MSortFilterProxyModel *proxyModel;
     PhoneBookImageLoader *imageLoader;
 
