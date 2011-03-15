@@ -6,13 +6,13 @@
 /*!
     \brief This defines style for the small arrow in MEditorToolbar.
 */
-class M_EXPORT MEditorToolbarArrowStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MEditorToolbarArrowStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MEditorToolbarArrowStyle)
 };
 
-class M_EXPORT MEditorToolbarArrowStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MEditorToolbarArrowStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MEditorToolbarArrowStyle)
 

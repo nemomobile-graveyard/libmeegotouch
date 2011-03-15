@@ -7,13 +7,13 @@
     \brief This defines style for editor toolbar which can be either cut/copy/paste
            or rich text editor toolbar.
 */
-class M_EXPORT MEditorToolbarStyle : public MWidgetStyle
+class M_VIEWS_EXPORT MEditorToolbarStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MEditorToolbarStyle)
 };
 
-class M_EXPORT MEditorToolbarStyleContainer : public MWidgetStyleContainer
+class M_VIEWS_EXPORT MEditorToolbarStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MEditorToolbarStyle)
 
