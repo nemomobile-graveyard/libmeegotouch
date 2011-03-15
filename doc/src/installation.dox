@@ -106,10 +106,10 @@ run-standalone.sh ./widgetsgallery -software
 
 \section mac Building MeeGo Touch on Mac OS X
 
-Coming soon.
+Described <a href="build-macosx.html">here</a>.
 
 \section windows Building MeeGo Touch on Windows
 
-Coming soon. Preliminary instructions available in the README.win32 file of the sources.
+Described <a href="build-windows.html">here</a>.
 
 */

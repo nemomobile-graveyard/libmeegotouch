@@ -1,0 +1,112 @@
+/*! \page build-macosx Build libmeegotouch on Mac OS X
+
+This page describes how to build, install and test
+libmeegotouch on Mac OS X.
+
+
+\section buildrequirements Build requirements
+
+ - Mac OS X 10.6 or later
+ - XCode 3.2 or later
+ - Qt 4.7.2 or later
+ - Git
+
+
+To build and install libmeegotouch on Mac OS X, you need
+a computer with Mac OS X installed. You need at least version
+10.6 because libmeegotouch needs XCode version 3.2 or later,
+and that one requires at least version 10.6 of Mac OS X.
+
+You need XCode 3.2 to have a compiler, linker, etc. You can
+install it from either the DVD that you got with your Mac computer,
+or you can download it from the Apple Developer Website.
+
+You need Qt, as libmeegotouch depends on it.
+At least version 4.7.2 is needed.
+You can find it at: <a href="http://qt.nokia.com/downloads">http://qt.nokia.com/downloads</a>. Either download the Qt SDK or download the Qt library alone.
+At the point of this writing the Qt SDK does only contain Qt 4.7.0,
+which is too old for libmeegotouch, so you then have to also install
+Qt 4.7.2 or newer after you installed the SDK.
+
+You need Git to download the libmeegotouch and meegotouch-theme
+sources code. You can find Git for Mac OS X here:
+<a href="http://code.google.com/p/git-osx-installer/">http://code.google.com/p/git-osx-installer/</a>
+
+
+\section getsources Get the sources
+
+Create a common directory under which you will download the
+sources for libmeegotouch (the source code) and meegotouch-theme
+(the css files and images):
+
+\verbatim
+mkdir lmt-dev
+cd lmt-dev
+\endverbatim
+
+Fetch the libmeegotouch and meegotouch-theme source code:
+
+\verbatim
+git clone git://gitorious.org/meegotouch/libmeegotouch.git
+git clone git://gitorious.org/meegotouch/meegotouch-theme.git
+\endverbatim
+
+
+\section build_lmt Build libmeegotouch
+
+Change into the directory that contains the libmeegotouch
+sources, create a build directory in it, change into it and
+call the configure program.
+When you want to change some configure settings, call
+<code>../configure -help</code> to check which options you can
+change. Then call make to build the sources. The "-j10"
+parameter tells make to run 10 processes in parallel, if
+possible, which should speed up the build.
+
+\verbatim
+cd libmeegotouch
+mkdir build-osx
+cd build-osx
+../configure
+make -j10
+\endverbatim
+
+
+\section install_lmt Install libmeegotouch
+
+This command will install libmeegotouch to <code>/usr/local/</code> .
+
+\verbatim
+sudo make install
+\endverbatim
+
+
+\section install_mtt Install meegotouch-theme
+
+You have to give the "-spec macx-g++" switch
+to qmake so that it creates Makefiles instead
+of XCode project files. By default it installs the theme files
+to <code>/usr/local/</code> .
+
+\verbatim
+cd meegotouch-theme
+qmake -spec macx-g++
+sudo make install
+\endverbatim
+
+
+\section test Test that it worked
+
+Now you can start the widgetsgallery. It is a demo program
+in libmeegotouch. It contains exaamples of the different
+widgets that can be created using libmeegotouch.
+You can start it like this:
+
+\verbatim
+/usr/local/bin/widgetsgallery.app/Contents/MacOS/widgetsgallery -software
+\endverbatim
+
+Now you should see a window that contains some menu items.
+Just click around and explore what libmeegotouch has to offer.
+
+*/

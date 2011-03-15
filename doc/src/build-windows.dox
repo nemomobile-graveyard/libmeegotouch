@@ -1,0 +1,221 @@
+/*! \page build-windows Build libmeegotouch on Microsoft Windows
+
+This page describes how to download, build and install
+libmeegotouch on Microsoft Windows. You will need at least
+Windows XP, Windows Vista and Windows 7 should also work
+fine. It is possible to build libmeegotouch with either
+the <a href="http://www.mingw.org">MinGW C++ compiler</a> or with the
+<a href="http://www.microsoft.com/express/Downloads/#2010-Visual-CPP"
+>Microsoft Visual Studio 2010 Express C++ compiler</a>. Also the
+full version of Visual Studio is supported.
+
+
+\section requirements Requirements
+
+libmeegotouch needs
+some requirements so that it can be compiled. Some of them
+are depending on the compiler you want to use, and some are not.
+
+
+\subsection general_requirements General requirements
+
+- Git, e.g. from http://code.google.com/p/msysgit/
+
+- Perl, e.g. from http://strawberryperl.com/
+
+- optional, but recommended: DebugView, e.g. from
+  http://technet.microsoft.com/en-us/sysinternals/bb896647.aspx .
+  This program shows the debug messages that libmeegotouch will print when 
+  something goes wrong, these do not show up in the command window
+  under MS Windows usually.
+
+
+\subsection mingw_requirements Requirements for MinGW
+
+- Qt from http://qt.nokia.com/downloads. For MinGW it is recommended
+  to download and install the
+  <a href="http://qt.nokia.com/downloads/sdk-windows-cpp">Qt SDK for Windows</a>
+  as it does already contain the MinGW compiler. Make sure you do install
+  the MinGW compiler, and you do not deselect it at installation.
+
+
+\subsection msvc_requirements Requirements for Microsoft Visual Studio 2010 (MSVC)
+
+- A version of Microsoft Visual Studio 2010,
+  Visual Studio 2010 Express worked fine for me.
+
+- Qt from http://qt.nokia.com/downloads. You have to compile Qt
+  on your own, because there is no binary version for the 2010 version
+  of Visual C++ right now.
+
+
+
+\section getsources Get the sources
+
+Create a common directory under which you will download the
+sources for libmeegotouch (the source code) and meegotouch-theme
+(the css files and images). Make sure that the path
+to that directory does not contain any space (" ") charakters.
+In that directory create build and install directories.
+In this description c:\\lmt-dev is used.
+
+\verbatim
+mkdir \lmt-dev
+cd \lmt-dev
+\endverbatim
+
+Open a git shell by clicking
+<code>Start -> Programs -> Git -> Git Bash</code>,
+navigate it to the directory you just
+created, and fetch the libmeegotouch and meegotouch-theme sources:
+
+\verbatim
+cd ../../lmt-dev/
+git clone git://gitorious.org/meegotouch/libmeegotouch.git
+git clone git://gitorious.org/meegotouch/meegotouch-theme.git
+\endverbatim
+
+
+\section mingw Build and install with MinGW
+
+\subsection build_mingw Build libmeegotouch
+
+Open a Qt command prompt by clicking
+<code>Start -> Programs -> Qt SDK ... -> Qt Command Prompt</code>.
+
+Set the PATH needed to find Perl:
+
+\verbatim
+set PATH=%PATH%;c:\strawberry\perl\bin
+\endverbatim
+
+Change the directory to the libmeegotouch source dir,
+create a build directory and cd into it:
+
+\verbatim
+cd \lmt-dev\libmeegotouch
+mkdir build-win
+cd build-win
+\endverbatim
+
+Execute "configure", "qmake" and "mingw32-make":
+
+\verbatim
+..\configure-win32.pl
+qmake ..\projects.pro
+mingw32-make
+\endverbatim
+
+You can ignore any warnings about missing programs here.
+
+
+\subsection install_lmt_mingw Install libmeegotouch
+
+Create a directory to install the libraries and binaries to,
+set the INSTALL_ROOT to that directory and execute "mingw32-make install":
+
+\verbatim
+mkdir c:\lmt-dev\inst-win
+set INSTALL_ROOT=c:\lmt-dev\inst-win
+mingw32-make install
+\endverbatim
+
+
+\subsection install_mtt_mingw Install meegotouch-theme
+
+Change to the meegotouch-theme directory, and execute
+"qmake" and "mingw32-make install".
+
+\verbatim
+cd \lmt-dev\meegotouch-theme
+qmake PREFIX=/
+set INSTALL_ROOT=c:\lmt-dev\inst-win
+mingw32-make install
+\endverbatim
+
+Here the PREFIX parameter for qmake is important. If it is not given,
+"mingw32-make install" fails. If it points to somewhere else,
+the libmeegotouch programs will not find their css and image
+files.
+
+
+\section msvc Build and install libmeegotouch with MSVC
+
+\subsection build_msvc Build libmeegotouch
+
+When you want to build libmeegotouch with Microsoft Visual Studio,
+the steps are similar to MinGW, but slightly different. Open a
+windows command prompt by clicking <code>Start -> Run ... </code> and typing
+<code>cmd</code>. In this cmd window we then have to setup the needed
+environment variables. The paths to your installation directories may
+be a bit different.
+
+\verbatim
+"c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
+set QTDIR=c:\Qt\4.7.2
+set PATH=%PATH%;%QTDIR%\bin
+set QMAKESPEC=win32-msvc2010
+set PATH=%PATH%;c:\strawberry\perl\bin
+\endverbatim
+
+Go to the libmeegotouch directory, create a build dir and
+change into it:
+
+\verbatim
+cd \lmt-dev\libmeegotouch
+mkdir build-win
+cd build-win
+\endverbatim
+
+Execute "configure", "qmake" and "nmake":
+
+\verbatim
+..\configure-win32.pl
+qmake ..\projects.pro
+nmake
+\endverbatim
+
+You can ignore any warnings about missing programs here.
+
+
+\subsection install_lmt_msvc Install libmeegotouch
+
+Create a directory to install the libraries and binaries to,
+set the INSTALL_ROOT to that directory and execute "nmake install":
+
+\verbatim
+mkdir \lmt-dev\inst-win
+set INSTALL_ROOT=c:\lmt-dev\inst-win
+nmake install
+\endverbatim
+
+
+\subsection install_mtt_msvc Install meegotouch-theme
+
+Change to the meegotouch-theme directory, and execute
+"qmake" and "nmake install".
+
+\verbatim
+cd \lmt-dev\meegotouch-theme
+qmake PREFIX=/
+nmake
+set INSTALL_ROOT=c:\lmt-dev\inst-win
+nmake install
+\endverbatim
+
+
+\section test Test libmeegotouch installation:
+
+Now you can start the widgetsgallery. It is a demo program
+in libmeegotouch. It contains exaamples of the different
+widgets that can be created using libmeegotouch.
+You can start it like this:
+
+\verbatim
+\lmt-dev\inst-win\bin\widgetsgallery.exe -software
+\endverbatim
+
+You should see a window that contains some menu items.
+Just click around and explore what libmeegotouch has to offer.
+
+*/
