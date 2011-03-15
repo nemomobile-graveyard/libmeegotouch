@@ -1,6 +1,6 @@
 /***************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
@@ -87,8 +87,8 @@ public:
     bool smartMoveCursor(QTextCursor::MoveOperation moveOp,
                          QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor, int n = 1);
 
-    bool doBackspace();
-    bool doDelete();
+    bool doBackspace(bool deleteStartOfWord);
+    bool doDelete(bool deleteEndOfWord);
     bool doTab();
     bool doTextInsert(const QString &text, bool usePreeditStyling = false);
     bool onReturnPressed(QKeyEvent *event);

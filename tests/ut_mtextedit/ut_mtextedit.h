@@ -1,6 +1,6 @@
 /***************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
@@ -81,6 +81,10 @@ private slots:
     void testInsert();
     void testKeyPressEvent();
     void testSingleLineKeyPressEvent();
+    void testDeleteStartOfWordKeyPressEvent();
+    void testDeleteEndOfWordKeyPressEvent();
+    void testDeleteStartOfWordWithSelection();
+    void testDeleteEndOfWordWithSelection();
     void testFocusInEvent();
     void testFocusOutEvent();
     void testSubFocusHandling();

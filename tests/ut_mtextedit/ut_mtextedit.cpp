@@ -1,6 +1,6 @@
 /***************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
@@ -516,6 +516,124 @@ void Ut_MTextEdit::testSingleLineKeyPressEvent()
     QCOMPARE(mode, MTextEditModel::SingleLine);
 
     confirmKeyEventIgnored(&singleLine, Qt::Key_Return, 1);
+}
+
+/*!
+ * Test that Ctrl + Backspace deletes start of word.
+ */
+void Ut_MTextEdit::testDeleteStartOfWordKeyPressEvent()
+{
+    // test Ctrl + Backspace
+    m_subject->setText("abcd efgh");        
+    QKeyEvent event(QKeyEvent::KeyPress, Qt::Key_Backspace, Qt::ControlModifier);
+    m_subject->keyPressEvent(&event);
+    QCOMPARE(m_subject->text(), QString("abcd "));
+
+    // test that characters are not deleted when cursor is in the beginning of text
+    m_subject->setCursorPosition(0);
+    m_subject->keyPressEvent(&event);
+    QCOMPARE(m_subject->text(), QString("abcd "));
+
+    // test that deletion works when cursor is in middle of a word
+    // set cursor position in middle of a word and change character format
+    m_subject->setCursorPosition(2);
+    QTextCursor *cursor = m_subject->model()->cursor();
+    QVERIFY( cursor != 0);
+    QTextCharFormat format(cursor->charFormat());
+    bool fontKernering = format.fontKerning();
+    fontKernering = !fontKernering;
+    format.setFontKerning(fontKernering);
+    cursor->setCharFormat(format);
+
+    m_subject->keyPressEvent(&event);
+
+    // verify that beginning of word was deleted and character format was not changed
+    QCOMPARE(m_subject->text(), QString("cd "));
+    format = cursor->charFormat();
+    QVERIFY(format.fontKerning() == fontKernering);
+}
+
+/*!
+ * Test that Ctrl + Delete deletes start of word.
+ */
+void Ut_MTextEdit::testDeleteEndOfWordKeyPressEvent()
+{
+    // test Ctrl + Delete
+    m_subject->setText("abcd efgh");
+    m_subject->setCursorPosition(0);
+    QKeyEvent event(QKeyEvent::KeyPress, Qt::Key_Delete, Qt::ControlModifier);
+    m_subject->keyPressEvent(&event);
+    QCOMPARE(m_subject->text(), QString("efgh"));
+
+    // test that characters are not deleted when cursor is in the end of text
+    m_subject->setCursorPosition(4);
+    m_subject->keyPressEvent(&event);
+    QCOMPARE(m_subject->text(), QString("efgh"));
+
+    // test that deletion works when cursor is in middle of a word
+    m_subject->setCursorPosition(2);
+    m_subject->keyPressEvent(&event);
+    QCOMPARE(m_subject->text(), QString("ef"));
+}
+
+/*!
+ * Test Ctrl + Backspace when text has been selected.
+ */
+void Ut_MTextEdit::testDeleteStartOfWordWithSelection()
+{
+    m_subject->setText("abcd efgh");
+
+    QKeyEvent right(QEvent::KeyPress, Qt::Key_Right, Qt::ShiftModifier, QChar());
+    QKeyEvent left (QEvent::KeyPress, Qt::Key_Left , Qt::ShiftModifier, QChar());
+
+    // Select text from beginning.
+    m_subject->setCursorPosition(0);
+    m_subject->keyPressEvent(&right);
+    m_subject->keyPressEvent(&right);
+
+    // test Ctrl + Backspace
+    QKeyEvent deleteStartOfWord(QKeyEvent::KeyPress, Qt::Key_Backspace, Qt::ControlModifier);
+    m_subject->keyPressEvent(&deleteStartOfWord);
+    QCOMPARE(m_subject->text(), QString("cd efgh"));
+
+    // Select text from end.
+    m_subject->setCursorPosition(7);
+    m_subject->keyPressEvent(&left);
+    m_subject->keyPressEvent(&left);
+
+    // test Ctrl + Backspace
+    m_subject->keyPressEvent(&deleteStartOfWord);
+    QCOMPARE(m_subject->text(), QString("cd ef"));
+}
+
+/*!
+ * Test Ctrl + Delete when text has been selected.
+ */
+void Ut_MTextEdit::testDeleteEndOfWordWithSelection()
+{
+    m_subject->setText("abcd efgh");
+
+    QKeyEvent right(QEvent::KeyPress, Qt::Key_Right, Qt::ShiftModifier, QChar());
+    QKeyEvent left (QEvent::KeyPress, Qt::Key_Left , Qt::ShiftModifier, QChar());
+
+    // Select text from beginning.
+    m_subject->setCursorPosition(0);
+    m_subject->keyPressEvent(&right);
+    m_subject->keyPressEvent(&right);
+
+    // test Ctrl + Delete
+    QKeyEvent deleteEndOfWord(QKeyEvent::KeyPress, Qt::Key_Delete, Qt::ControlModifier);
+    m_subject->keyPressEvent(&deleteEndOfWord);
+    QCOMPARE(m_subject->text(), QString("cd efgh"));
+
+    // Select text from end.
+    m_subject->setCursorPosition(7);
+    m_subject->keyPressEvent(&left);
+    m_subject->keyPressEvent(&left);
+
+    // test Ctrl + Delete
+    m_subject->keyPressEvent(&deleteEndOfWord);
+    QCOMPARE(m_subject->text(), QString("cd ef"));
 }
 
 #include <MEscapeButtonPanel>

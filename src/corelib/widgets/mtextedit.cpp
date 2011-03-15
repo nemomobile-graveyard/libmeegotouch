@@ -1,6 +1,6 @@
 /***************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
@@ -493,8 +493,11 @@ bool MTextEditPrivate::smartMoveCursor(QTextCursor::MoveOperation moveOp,
 
 /*!
   * \brief Backspace functionality, doesn't change mode
+  * \param True if start of word is deleted. False if only single character is
+  * deleted.
+  * \return success
   */
-bool MTextEditPrivate::doBackspace()
+bool MTextEditPrivate::doBackspace(bool deleteStartOfWord)
 {
     Q_Q(MTextEdit);
 
@@ -502,29 +505,28 @@ bool MTextEditPrivate::doBackspace()
         return false;
     }
 
-    QTextCursor currentPositionCursor = q->textCursor();
-    int position = currentPositionCursor.position();
-
+    int position = q->textCursor().position();
     if (position == 0) {
         return false;
     }
 
-    currentPositionCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
-    QTextDocumentFragment currentFragment = currentPositionCursor.selection();
+    // Get the style that would be applied when a text is inserted at the cursor position
+    QTextCharFormat format = cursor()->charFormat();
 
-    QTextCharFormat format;
-    // setPosition() is required to get the style that would be applied when a text is inserted at the cursor position
-    currentPositionCursor.setPosition(position);
-    format = currentPositionCursor.charFormat();
-
-    cursor()->deletePreviousChar();
+    if (deleteStartOfWord) {
+        cursor()->movePosition(QTextCursor::PreviousWord, QTextCursor::KeepAnchor);
+    } else {
+        cursor()->movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+    }
+    QTextDocumentFragment currentFragment = cursor()->selection();
+    cursor()->removeSelectedText();
 
     if (validateCurrentBlock() == true) {
         cursor()->setCharFormat(format);
         return true;
 
     } else {
-        // document doesn't validate after delete -> put the character back
+        // document doesn't validate after delete -> put the fragment back
         cursor()->insertFragment(currentFragment);
         return false;
     }
@@ -533,8 +535,11 @@ bool MTextEditPrivate::doBackspace()
 
 /*!
   * \brief Deletes a character at cursor position
+  * \param True if end of word is deleted. False if only single character is
+  * deleted.
+  * \return success
   */
-bool MTextEditPrivate::doDelete()
+bool MTextEditPrivate::doDelete(bool deleteEndOfWord)
 {
     Q_Q(MTextEdit);
 
@@ -542,13 +547,19 @@ bool MTextEditPrivate::doDelete()
         return false;
     }
 
-    QTextCursor currentPositionCursor(q->textCursor());
-    currentPositionCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-    QTextDocumentFragment currentFragment = currentPositionCursor.selection();
-    cursor()->deleteChar();
+    // Set text cursor to model, if not yet set.
+    q->textCursor();
+
+    if (deleteEndOfWord) {
+        cursor()->movePosition(QTextCursor::NextWord, QTextCursor::KeepAnchor);
+    } else {
+        cursor()->movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+    }
+    QTextDocumentFragment currentFragment = cursor()->selection();
+    cursor()->removeSelectedText();
 
     if (!validateCurrentBlock()) {
-        // document doesn't validate after delete -> put the character back
+        // document doesn't validate after delete -> put the fragment back
         cursor()->insertFragment(currentFragment);
         return false;
     }
@@ -1771,6 +1782,8 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         if (key != Qt::Key_Backspace && key != Qt::Key_Delete &&
             key != Qt::Key_Tab && key != Qt::Key_Space &&
             key != Qt::Key_Return && key != Qt::Key_plusminus &&
+            !event->matches(QKeySequence::DeleteStartOfWord) &&
+            !event->matches(QKeySequence::DeleteEndOfWord) &&
             (tmpText.isEmpty() || !tmpText.at(0).isPrint())) {
             needRemoveFirst = false;
         }
@@ -1796,48 +1809,64 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     // Whether text was modified, excluding the removal of 'needRemoveFirst' text above.
     bool modified = false;
 
-    switch (key) {
-    case Qt::Key_Backspace:
-        // backspace and delete in selection mode are special cases, only selection is removed
-        // These also need explicit validation here.
+    if ( event->matches(QKeySequence::DeleteStartOfWord) ) {
         if (wasSelecting == false) {
-            modified = d->doBackspace();
+            modified = d->doBackspace(true);
         } else if (d->validateCurrentBlock()) {
             d->cursor()->setCharFormat(format);
             modified = true;
         }
-        break;
-
-    case Qt::Key_Delete:
+    } else if ( event->matches(QKeySequence::DeleteEndOfWord) ) {
         if (wasSelecting == false) {
-            modified = d->doDelete();
+            modified = d->doDelete(true);
         } else if (d->validateCurrentBlock()) {
             modified = true;
         }
-        break;
+    } else {
 
-    case Qt::Key_Tab:
-        modified = d->doTab();
-        break;
+        switch (key) {
+        case Qt::Key_Backspace:
+            // backspace and delete in selection mode are special cases, only selection is removed
+            // These also need explicit validation here.
+            if (wasSelecting == false) {
+                modified = d->doBackspace(false);
+            } else if (d->validateCurrentBlock()) {
+                d->cursor()->setCharFormat(format);
+                modified = true;
+            }
+            break;
 
-    case Qt::Key_Space:
-        modified = d->doTextInsert(" ");
-        break;
+        case Qt::Key_Delete:
+            if (wasSelecting == false) {
+                modified = d->doDelete(false);
+            } else if (d->validateCurrentBlock()) {
+                modified = true;
+            }
+            break;
 
-    case Qt::Key_Return:
-        modified = d->onReturnPressed(event);
-        break;
+        case Qt::Key_Tab:
+            modified = d->doTab();
+            break;
 
-    case Qt::Key_plusminus:
-        modified = d->doSignCycle();
-        break;
+        case Qt::Key_Space:
+            modified = d->doTextInsert(" ");
+            break;
 
-    default: {
-        QString text = event->text();
-        if (!text.isEmpty() && text.at(0).isPrint()) {
-            modified = d->doTextInsert(event->text());
-        }
-    }
+        case Qt::Key_Return:
+            modified = d->onReturnPressed(event);
+            break;
+
+        case Qt::Key_plusminus:
+            modified = d->doSignCycle();
+            break;
+
+        default: {
+            QString text = event->text();
+            if (!text.isEmpty() && text.at(0).isPrint()) {
+                modified = d->doTextInsert(event->text());
+            }
+        } // default
+        } // switch
     }
 
     if (modified == true) {
