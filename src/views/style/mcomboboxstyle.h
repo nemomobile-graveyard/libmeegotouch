@@ -51,12 +51,6 @@ class M_VIEWS_EXPORT MComboBoxStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, indicatorImage, IndicatorImage)
 
     /*!
-      \property MComboBoxStyle::buttonStyleName
-      \brief Style name of the pressable widget.
-    */
-    M_STYLE_ATTRIBUTE(QString, buttonStyleName, ButtonStyleName)
-
-    /*!
       \property MComboBoxStyle::titleObjectName
       \brief Object name of title label.
     */
@@ -85,12 +79,6 @@ class M_VIEWS_EXPORT MComboBoxStyle : public MWidgetStyle
       \brief Object name of combobox's indicator arrows.
     */
     M_STYLE_ATTRIBUTE(QString, indicatorObjectName, indicatorObjectName)
-
-    /*!
-      \property MComboBoxStyle::hasTitle
-      \brief Controls whether a title label is displayed.
-    */
-    M_STYLE_ATTRIBUTE(bool, hasTitle, HasTitle)
 
     /*!
       \property MComboBoxStyle::separateTitle
