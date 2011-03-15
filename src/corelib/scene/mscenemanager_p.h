@@ -226,6 +226,8 @@ public:
     void updateStatusBarGeometryProperty();
 #endif
 
+    void updateSheetsGeometry();
+
 public:
 
     MScene *scene;

@@ -504,6 +504,9 @@ void MSceneManagerPrivate::_q_onSceneWindowAppearanceAnimationFinished()
 
     setSceneWindowState(sceneWindow, MSceneWindow::Appeared);
 
+    if (sceneWindow->windowType() == MSceneWindow::StatusBar)
+        updateSheetsGeometry();
+
     if (sceneWindow->d_func()->queuedTransition) {
         MSceneWindowTransition *transition = sceneWindow->d_func()->queuedTransition;
         sceneWindow->d_func()->queuedTransition = 0;
@@ -1236,6 +1239,17 @@ void MSceneManagerPrivate::produceSceneWindowEvent(QEvent::Type type,
     }
 }
 
+void MSceneManagerPrivate::updateSheetsGeometry()
+{
+    foreach(MSceneWindow* window, windows) {
+        if (window->windowType() == MSceneWindow::Sheet &&
+            window->sceneWindowState() != MSceneWindow::Disappeared)
+        {
+            setSceneWindowGeometry(window);
+        }
+    }
+}
+
 void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 {
     Q_Q(MSceneManager);
@@ -1536,6 +1550,8 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
                 qreal y = window->size().height();
                 foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar)
                     widget->setPos(0, y);
+
+                updateSheetsGeometry();
             }
         }
     }
@@ -1696,6 +1712,9 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
                 widget->setPos(0, 0);
         }
     }
+
+    if (window->windowType() == MSceneWindow::StatusBar)
+        updateSheetsGeometry();
 }
 
 void MSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *animation)
