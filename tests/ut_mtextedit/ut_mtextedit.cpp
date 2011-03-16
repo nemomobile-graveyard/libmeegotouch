@@ -1247,14 +1247,18 @@ void Ut_MTextEdit::testSelectionVsFocus()
 
     sc.window()->setWindowState(Qt::WindowMinimized);
     QCoreApplication::processEvents();
-    QVERIFY(sc.window()->windowState() & Qt::WindowMinimized);
+    if (!(sc.window()->windowState() & Qt::WindowMinimized)) {
+        QSKIP("Control check \"window is minimized\" failed", SkipSingle);
+    }
     QTest::qWait(500); // without this wait the following activation does not indeed cause activation
 
     // selection must remain after window is iconified and restored back
     sc.window()->activateWindow();
     QCoreApplication::processEvents();
     QTest::qWait(500);
-    QVERIFY(!(sc.window()->windowState() & Qt::WindowMinimized));
+    if (sc.window()->windowState() & Qt::WindowMinimized) {
+        QSKIP("Control check \"window is unminimized\" failed", SkipSingle);
+    }
     QCOMPARE(subject->mode(), MTextEditModel::EditModeSelect);
     QCOMPARE(subject->textCursor().selectionStart(), 2);
     QCOMPARE(subject->textCursor().selectionEnd(), 5);
@@ -1263,6 +1267,9 @@ void Ut_MTextEdit::testSelectionVsFocus()
     subject2->setFocus();
     QCoreApplication::processEvents();
     QTest::qWait(1000);
+    if (subject->hasFocus()) {
+        QSKIP("Control check \"textedit is deselected\" failed", SkipSingle);
+    }
     QVERIFY(subject->mode() != MTextEditModel::EditModeSelect);
     QCOMPARE(subject->selectionStart(), -1);
 }
