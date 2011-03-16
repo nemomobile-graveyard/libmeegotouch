@@ -1,7 +1,7 @@
 libmeegotouch (0.20.95-1) unstable; urgency=low
 
   * unreleased
-  * Fixes: NB#Bug 234488 - UI for activation debug info display and screenshot
+  * Fixes: NB#234488 - UI for activation debug info display and screenshot
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 15 Mar 2011 16:28:00 +0200
 
