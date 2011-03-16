@@ -928,8 +928,8 @@ QRect MTextEditViewPrivate::textRectangle(const int startPosition, const int end
         isLayoutLeftToRight() ? (q->style()->paddingLeft() + q->style()->marginLeft())
         : (q->style()->paddingRight() + q->style()->marginRight()));
     const QPointF commonOffset(document()->documentLayout()->blockBoundingRect(startBlock).topLeft()
-                               + QPointF(horizontalPaddingAndMargin,
-                                         q->style()->paddingTop()));
+                               + QPointF(horizontalPaddingAndMargin - hscroll,
+                                         q->style()->paddingTop() - vscroll));
     const QPointF topLeft(QPointF(firstLine.cursorToX(blockRelativeStartPosition),
                                   firstLine.naturalTextRect().top())
                           + commonOffset);
