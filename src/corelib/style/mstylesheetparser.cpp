@@ -41,10 +41,9 @@
 #ifndef Q_OS_WIN
 #include <utime.h>
 #include <dirent.h>
-#endif
-
 #include <sys/stat.h>
 #include <sys/file.h>
+#endif
 
 namespace {
     const unsigned int FILE_VERSION = 22;
@@ -69,6 +68,7 @@ namespace {
 // faster than QFileInfo::lastModified().toTime_t()
 time_t modificationTime(const char* filename)
 {
+#ifndef Q_OS_WIN
     struct stat fileInfo;
     int result = stat(filename, &fileInfo);
     if (result != 0) {
@@ -76,6 +76,9 @@ time_t modificationTime(const char* filename)
     } else {
         return fileInfo.st_mtime;
     }
+#else
+    return QFileInfo( filename ).lastModified().toTime_t();
+#endif
 }
 
 void fixAlignement(char** buffer, int size)
@@ -119,6 +122,7 @@ public:
         }
         return result;
 #else
+        Q_UNUSED( file )
         return true;
 #endif
     }
@@ -132,6 +136,7 @@ public:
         }
         return result;
 #else
+        Q_UNUSED( file )
         return true;
 #endif
     }
@@ -142,6 +147,7 @@ public:
         bool result = (flock(file.handle(), LOCK_SH | LOCK_NB) == 0);
         return result;
 #else
+        Q_UNUSED( file )
         return true;
 #endif
     }
@@ -152,6 +158,7 @@ public:
         bool result = (flock(file.handle(), LOCK_EX | LOCK_NB) == 0);
         return result;
 #else
+        Q_UNUSED( file )
         return true;
 #endif
     }
@@ -165,6 +172,7 @@ public:
         }
         return result;
 #else
+        Q_UNUSED( file )
         return true;
 #endif
     }

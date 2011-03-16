@@ -56,7 +56,7 @@ private:
     void selectorsWithObjectName(const QByteArray& objectName, const Node* node, QList<const StyleSheetSelectorList*>* listOfSelectorLists) const;
 };
 
-struct StyleSheetSelectorList {
+class StyleSheetSelectorList {
 public:
     void extractSelectors(QList<const MStyleSheetSelector*> *selectors) const;
 
