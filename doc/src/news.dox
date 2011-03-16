@@ -1,5 +1,10 @@
 /*! \page news What's new in MeeGo Touch
 
+\section v02094 0.20.96
+
+\subsection New
+- MTextEdit to handle QKeySequence::DeleteStartOfWord and QKeySequence::DeleteEndOfWord key press events.
+
 \section v02091 0.20.91
 
 \subsection New
