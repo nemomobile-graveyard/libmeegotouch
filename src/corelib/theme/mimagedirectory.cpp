@@ -83,13 +83,15 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
             // we didn't have the correctly sized pixmap in cache, so we need to create one.
             image = createPixmap(size);
 
-            applyDebugColors(&image);
+            if (!image.isNull()) {
+                applyDebugColors(&image);
 
-            if (shouldBeCached()) {
-                saveToFsCache(image, size);
+                if (shouldBeCached()) {
+                    saveToFsCache(image, size);
+                }
+
+                fillCacheEntry(cacheEntry, image, size);
             }
-
-            fillCacheEntry(cacheEntry, image, size);
         }
     } else  {
         cacheEntry = *it;
@@ -286,17 +288,15 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
         return;
 
     const QString cacheFileName = createCacheFilename(size);
-    const QString cacheMetaFileName = cacheFileName + ".meta";
     if (cacheFileName.isEmpty()) {
         return;
     }
 
-    QFile meta(cacheMetaFileName);
     QFile cache(cacheFileName);
-    if (!meta.open(QFile::WriteOnly) || !cache.open(QFile::WriteOnly)) {
+    if (!cache.open(QFile::WriteOnly)) {
         //Maybe it failed because the directory doesn't exist
-        QDir().mkpath(QFileInfo(cacheMetaFileName).absolutePath());
-        if (!meta.open(QFile::WriteOnly) || !cache.open(QFile::WriteOnly)) {
+        QDir().mkpath(QFileInfo(cacheFileName).absolutePath());
+        if (!cache.open(QFile::WriteOnly)) {
             mWarning("ImageResource") <<
                      "Wrong permissions for cache directory" <<
                      MThemeDaemon::systemThemeCacheDirectory() <<
@@ -311,17 +311,29 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size)
         pixmap = pixmap.convertToFormat(QImage::Format_ARGB32_Premultiplied);
     }
 
+    cache.write((const char*)pixmap.constBits(), pixmap.byteCount());
+    cache.flush();
+    cache.close();
+
+    const QString cacheMetaFileName = cacheFileName + QLatin1String(".meta");
+    QFile meta(cacheMetaFileName);
+    if (!meta.open(QFile::WriteOnly)) {
+        mWarning("ImageResource") <<
+                 "Wrong permissions for cache directory" <<
+                 MThemeDaemon::systemThemeCacheDirectory() <<
+                 ". Cache is disabled.";
+        failedCacheSaveAttempt = true;
+        return;
+    }
+
     QDataStream stream(&meta);
     stream << IMAGE_CACHE_VERSION;
     QFileInfo fileInfo(absoluteFilePath());
     stream << fileInfo.lastModified().toTime_t();
     stream << pixmap.size();
     stream << pixmap.format();
-
-    cache.write((const char*)pixmap.constBits(), pixmap.byteCount());
-
+    meta.flush();
     meta.close();
-    cache.close();
 }
 
 QString ImageResource::createCacheFilename(const QSize& size)
