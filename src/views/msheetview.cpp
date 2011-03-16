@@ -24,6 +24,7 @@
 #include "msheetview_p.h"
 #include "mabstractwidgetanimation.h"
 #include <MDebug>
+#include <mpannableviewport.h>
 
 #include <QGraphicsAnchorLayout>
 #include <QGraphicsLinearLayout>
@@ -87,6 +88,7 @@ MSheetViewPrivate::MSheetViewPrivate()
       rootLayout(0),
       headerSlot(0),
       centralSlot(0),
+      centralSlotPannableViewport(0),
       headerAnimation(0)
 {
 }
@@ -98,8 +100,8 @@ MSheetViewPrivate::~MSheetViewPrivate()
     headerSlot = 0;
 
     //rootLayout->removeItem(centralSlot);
-    delete centralSlot;
-    centralSlot = 0;
+    delete centralSlotPannableViewport;
+    centralSlotPannableViewport = 0;
 
     if (qobject_cast<MSheet *>(controller)) {
         // controller is still valid.
@@ -119,10 +121,17 @@ void MSheetViewPrivate::init()
     headerSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     rootLayout->addCornerAnchors(headerSlot, Qt::TopRightCorner, rootLayout, Qt::TopRightCorner);
 
-    centralSlot = new MSheetSlot(controller);
-    centralSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    rootLayout->addCornerAnchors(centralSlot, Qt::TopLeftCorner, headerSlot, Qt::BottomLeftCorner);
-    rootLayout->addCornerAnchors(centralSlot, Qt::BottomRightCorner, rootLayout, Qt::BottomRightCorner);
+    // The sole purpose of this internal pannable is to guarantee proper input widget relocation
+    // if the central widget doesn't have a pannable viewport.
+    centralSlotPannableViewport = new MPannableViewport(controller);
+    centralSlotPannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    centralSlotPannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+    centralSlotPannableViewport->setObjectName("MSheetCentralSlotPannableViewport");
+    rootLayout->addCornerAnchors(centralSlotPannableViewport, Qt::TopLeftCorner, headerSlot, Qt::BottomLeftCorner);
+    rootLayout->addCornerAnchors(centralSlotPannableViewport, Qt::BottomRightCorner, rootLayout, Qt::BottomRightCorner);
+
+    centralSlot = new MSheetSlot(centralSlotPannableViewport);
+    centralSlotPannableViewport->setWidget(centralSlot);
 }
 
 void MSheetViewPrivate::updateStyle()

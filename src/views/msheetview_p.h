@@ -30,6 +30,7 @@ class QGraphicsAnchorLayout;
 class MSheetView;
 class MSheetSlot;
 class MAbstractWidgetAnimation;
+class MPannableViewport;
 
 class MSheetViewPrivate : public MSceneWindowViewPrivate
 {
@@ -50,6 +51,7 @@ private:
 
     MSheetSlot *headerSlot;
     MSheetSlot *centralSlot;
+    MPannableViewport *centralSlotPannableViewport;
     MAbstractWidgetAnimation *headerAnimation;
 };
 
