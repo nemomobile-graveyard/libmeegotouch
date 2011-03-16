@@ -62,6 +62,8 @@ public:
 
     void showFpsCounter(QPainter *painter, float fps);
     void logFpsCounter(const QTime *timestamp, float fps);
+    void drawObjectNames(QPainter *painter, QList<QGraphicsItem *>::iterator item);
+    void drawStyleNames(QPainter *painter, QList<QGraphicsItem *>::iterator item);
 
     void touchPointCopyPosToLastPos(QTouchEvent::TouchPoint &point);
     void touchPointCopyMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
@@ -88,6 +90,7 @@ protected:
     //Two finger gestures emulation variables
     QTouchEvent::TouchPoint emuPoint1, emuPoint2;
     bool pinchEmulationEnabled;
+    QFontMetrics metrics;
 
     Fps fps;
     FpsLog fpsLog;

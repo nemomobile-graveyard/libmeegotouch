@@ -42,6 +42,8 @@
 static const QFont     TextFont                = QFont("Sans", 10);
 static const QSize     FpsBoxSize              = QSize(100, 40);
 static const QColor    FpsTextColor            = QColor(0xFFFF00);
+static const QColor    stylesTextColor         = QColor(0xFF0000); //red
+static const QColor    objectsTextColor        = QColor(0x0017FF); //blue
 static const QFont     FpsFont                 = QFont("Sans", 15);
 static const int       FpsRefreshInterval      = 1000;
 static const QString   FpsBackgroundColor      = "#000000";
@@ -91,7 +93,8 @@ MScenePrivate::MScenePrivate() :
         cancelSent(false),
         emuPoint1(1),
         emuPoint2(2),
-        pinchEmulationEnabled(false)
+        pinchEmulationEnabled(false),
+        metrics(TextFont)
 {
 }
 
@@ -463,6 +466,122 @@ void MScenePrivate::sendCancelEvent()
     cancelSent = true;
 }
 
+void MScenePrivate::drawObjectNames(QPainter *painter, QList<QGraphicsItem *>::iterator item)
+{
+    Q_Q(MScene);
+
+    QRectF br = (*item)->boundingRect();
+    QPolygonF bp = (*item)->mapToScene(br);
+
+    MWidgetController *widget = 0;
+    if ((*item)->isWidget()) {
+        widget = qobject_cast<MWidgetController *>(static_cast<QGraphicsWidget*>(*item));
+    }
+
+    if (widget) {
+        fpsBackgroundBrush.setColor(Qt::transparent);
+        painter->setOpacity(1.0);
+        QString name = widget->styleName();
+        QRectF boundingRect = bp.boundingRect();
+        QRect textBoundingRect = metrics.boundingRect(name);
+        QPointF center;
+        painter->setPen(objectsTextColor);
+        if (q->sceneManager()->orientationAngle()== M::Angle0) {
+            center = boundingRect.topLeft();
+            center += QPointF(0.0 , boundingRect.height() / 1.5);
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->drawText(center, name);
+        } else if (q->sceneManager()->orientationAngle() == M::Angle90) {
+            center = boundingRect.topLeft();
+            center += QPointF(boundingRect.width() / 1, 0.0);
+            painter->save();
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->translate(center);
+            painter->rotate(90);
+            painter->drawText(0, 0, name);
+            painter->restore();
+        } else if (q->sceneManager()->orientationAngle() == M::Angle180) {
+            center = boundingRect.topLeft();
+            center += QPointF(0.0 , boundingRect.height() / 1.5);
+            painter->save();
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->translate(center);
+            painter->rotate(180);
+            painter->drawText(0, 0, name);
+            painter->restore();
+        } else if (q->sceneManager()->orientationAngle() == M::Angle270) {
+            center = boundingRect.bottomLeft();
+            center += QPointF(boundingRect.width() / 1, 0.0);
+            painter->save();
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->translate(center);
+            painter->rotate(270);
+            painter->drawText(0, 0, name);
+            painter->restore();
+        }
+        fpsBackgroundBrush.setColor(FpsBackgroundColor);
+    }
+}
+
+void MScenePrivate::drawStyleNames(QPainter *painter, QList<QGraphicsItem *>::iterator item)
+{
+    Q_Q(MScene);
+
+    QRectF br = (*item)->boundingRect();
+    QPolygonF bp = (*item)->mapToScene(br);
+
+    MWidgetController *widget = 0;
+    if ((*item)->isWidget()) {
+        widget = qobject_cast<MWidgetController *>(static_cast<QGraphicsWidget*>(*item));
+    }
+
+    if (widget) {
+        fpsBackgroundBrush.setColor(Qt::transparent);
+        painter->setOpacity(1.0);
+        QString name = widget->styleName();
+        QRectF boundingRect = bp.boundingRect();
+        QRect textBoundingRect = metrics.boundingRect(name);
+        QPointF center;
+        painter->setPen(stylesTextColor);
+        if (q->sceneManager()->orientationAngle()== M::Angle0) {
+            center = boundingRect.topLeft();
+            center += QPointF(0.0 , boundingRect.height() / 4);
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->drawText(center, name);
+        } else if (q->sceneManager()->orientationAngle() == M::Angle90) {
+            center = boundingRect.topLeft();
+            center += QPointF(boundingRect.width() / 3, 0.0);
+            painter->save();
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->translate(center);
+            painter->rotate(90);
+            painter->drawText(0, 0, name);
+            painter->restore();
+        } else if (q->sceneManager()->orientationAngle() == M::Angle180) {
+            center = boundingRect.topLeft();
+            center += QPointF(0.0 , boundingRect.height() / 4);
+            painter->save();
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->translate(center);
+            painter->rotate(180);
+            painter->drawText(0, 0, name);
+            painter->restore();
+        } else if (q->sceneManager()->orientationAngle() == M::Angle270) {
+            center = boundingRect.bottomLeft();
+            center += QPointF(boundingRect.width() / 3, 0.0);
+            painter->save();
+            painter->fillRect(textBoundingRect.translated(center.toPoint()), fpsBackgroundBrush);
+            painter->translate(center);
+            painter->rotate(270);
+            painter->drawText(0, 0, name);
+            painter->restore();
+        }
+    }
+    fpsBackgroundBrush.setColor(FpsBackgroundColor);
+}
+
+
+
 MScene::MScene(QObject *parent)
     : QGraphicsScene(parent),
       d_ptr(new MScenePrivate)
@@ -525,9 +644,7 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
         QList<QGraphicsItem *>::iterator item;
 
         painter->setFont(TextFont);
-        QFontMetrics metrics(TextFont);
-        int fontHeight = metrics.height();
-
+        int fontHeight = d->metrics.height();
         QTransform rotationMatrix;
         painter->setTransform(rotationMatrix);
 
@@ -586,37 +703,17 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
                 QPointF pos = (*item)->mapToScene(br.topLeft());
                 QString sizeStr = QString("%1x%2 (%3,%4)").arg(br.width()).arg(br.height()).arg(pos.x()).arg(pos.y());
                 painter->setPen(Qt::black);
-                painter->drawText(bottomRight -= QPointF(metrics.width(sizeStr), 2), sizeStr);
+                painter->drawText(bottomRight -= QPointF(d->metrics.width(sizeStr), 2), sizeStr);
                 painter->setPen(Qt::white);
                 painter->drawText(bottomRight -= QPointF(1, 1), sizeStr);
             }
 
             if (MApplication::showObjectNames()) {
-                QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget *>(*item);
-                if (widget) {
-                    QRectF boundingRect = bp.boundingRect();
-                    QString name = widget->objectName();
-                    QRect textBoundingRect = metrics.boundingRect(name);
-                    QPointF center = boundingRect.topLeft();
-                    center += QPointF((boundingRect.width() - textBoundingRect.width()) / 2, (boundingRect.height() - fontHeight) / 2);
-                    painter->fillRect(textBoundingRect.translated(center.toPoint()), d->fpsBackgroundBrush);
-                    painter->setPen(FpsTextColor);
-                    painter->drawText(center, name);
-                }
+                d->drawObjectNames(painter, item);
             }
 
             if (MApplication::showStyleNames()) {
-                MWidgetController *widget = dynamic_cast<MWidgetController *>(*item);
-                if (widget) {
-                    QRectF boundingRect = bp.boundingRect();
-                    QString name = widget->styleName();
-                    QRect textBoundingRect = metrics.boundingRect(name);
-                    QPointF center = boundingRect.topLeft();
-                    center += QPointF((boundingRect.width() - textBoundingRect.width()) / 2, (boundingRect.height() - fontHeight) / 2);
-                    painter->fillRect(textBoundingRect.translated(center.toPoint()), d->fpsBackgroundBrush);
-                    painter->setPen(FpsTextColor);
-                    painter->drawText(center, name);
-                }
+                d->drawStyleNames(painter, item);
             }
         }
     }
