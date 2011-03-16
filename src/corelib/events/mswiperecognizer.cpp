@@ -30,6 +30,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QTouchEvent>
 #include <QLineF>
+#include <qmath.h>
 
 MSwipeRecognizerPrivate::MSwipeRecognizerPrivate()
   : style( 0 ),
@@ -41,7 +42,7 @@ MSwipeRecognizerPrivate::~MSwipeRecognizerPrivate()
 
 qreal MSwipeRecognizerPrivate::vectorLength(const QPointF &vector)
 {
-    return 0.7f *(vector.x()*vector.x() + vector.y()*vector.y());
+    return qSqrt(vector.x()*vector.x() + vector.y()*vector.y());
 }
 
 bool MSwipeRecognizerPrivate::isAngleDeltaBelowThreshold(qreal angleDelta, qreal threshold)
