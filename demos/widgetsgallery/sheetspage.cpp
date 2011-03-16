@@ -45,6 +45,7 @@
 
 #include "utils.h"
 #include "loginsheet.h"
+#include "longsheet.h"
 
 ClickableImageWidget::ClickableImageWidget(QGraphicsItem *parent)
     : MImageWidget(parent),
@@ -162,6 +163,9 @@ void SheetsPage::itemClicked(const QModelIndex &index)
     case 2:
         openPhotoSheet();
         break;
+    case 3:
+        openLongSheet();
+        break;
     default:
         break;
     }
@@ -181,6 +185,8 @@ void SheetsPage::retranslateUi()
     sheetExamples << qtTrId("xx_wg_sheets_systemwide_sheet");
     //% "Sheet from photo"
     sheetExamples << qtTrId("xx_wg_sheets_from_photo_sheet");
+    //% "Long sheet"
+    sheetExamples << qtTrId("xx_wg_sheets_long_sheet");
 
     static_cast<QStringListModel *>(list->itemModel())->setStringList(sheetExamples);
 }
@@ -195,6 +201,12 @@ void SheetsPage::openSystemwideSheet()
 {
     MSheet *loginSheet = new LoginSheet;
     loginSheet->appearSystemwide(MSceneWindow::DestroyWhenDone);
+}
+
+void SheetsPage::openLongSheet()
+{
+    MSheet *longSheet = new LongSheet;
+    longSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SheetsPage::openPhotoSheet()

@@ -74,6 +74,7 @@ private Q_SLOTS:
 private:
     void openLoginSheet();
     void openSystemwideSheet();
+    void openLongSheet();
 
     void openPhotoSheet();
     void populatePhotoSheetCentralWidget(QGraphicsWidget *centralWidget);

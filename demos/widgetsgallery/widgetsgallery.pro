@@ -82,6 +82,7 @@ SOURCES += main.cpp \
     mynavbarcontent.cpp \
     rotationbenchmark.cpp \
     loginsheet.cpp \
+    longsheet.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -136,6 +137,7 @@ HEADERS += templatepage.h \
     mynavbarcontent.h \
     rotationbenchmark.h \
     loginsheet.h \
+    longsheet.h \
 
 # theme
 include(theme/theme.pri)
