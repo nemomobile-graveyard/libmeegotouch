@@ -27,11 +27,6 @@
 
 #include <mscenemanager.h>
 
-#ifdef HAVE_GCONF
-#include <mgconfitem.h>
-#endif
-
-
 class MScene;
 class MOnDisplayChangeEvent;
 class MStatusBar;
@@ -136,12 +131,6 @@ public:
 
     bool visibleInSwitcher;
     bool fullyObscured;
-
-#ifdef HAVE_GCONF
-    void _q_updateMinimizedSoftwareSwitch();
-    MGConfItem minimizedSoftwareSwitchItem;
-#endif
-    bool minimizedSoftwareSwitch;
 
     QElapsedTimer timeSinceLastPaintInSwitcher;
     bool updateIsPending;

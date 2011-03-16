@@ -611,9 +611,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onPixmapRequestsFinished())
     Q_PRIVATE_SLOT(d_func(), void _q_enablePaintUpdates())
     Q_PRIVATE_SLOT(d_func(), void _q_exitDisplayStabilized())
-#ifdef HAVE_GCONF
-    Q_PRIVATE_SLOT(d_func(), void _q_updateMinimizedSoftwareSwitch())
-#endif
 
     /**
      * Is invoked by MComponentCache in case if an application is

@@ -97,10 +97,6 @@ MWindowPrivate::MWindowPrivate() :
     displayExitedTimer(),
     visibleInSwitcher(false),
     fullyObscured(false),
-#ifdef HAVE_GCONF
-    minimizedSoftwareSwitchItem("/meegotouch/debug/minimized_software_switch"),
-#endif
-    minimizedSoftwareSwitch(false),
     updateIsPending(false),
     discardedPaintEvent(false),
     beforeFirstPaintEvent(true),
@@ -141,11 +137,6 @@ void MWindowPrivate::init()
                                q, SLOT(_q_exitDisplayStabilized()));
     displayExitedTimer.setInterval(DisplayExitedDelay);
     displayExitedTimer.setSingleShot(true);
-
-#ifdef HAVE_GCONF
-    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value(true).toBool();
-    QObject::connect(&minimizedSoftwareSwitchItem, SIGNAL(valueChanged()), q_ptr, SLOT(_q_updateMinimizedSoftwareSwitch()));
-#endif
 
 #ifdef Q_WS_X11
     // We do window decorations ourselves. Set env variable accordingly for
@@ -688,7 +679,7 @@ void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event
     }
 
 #ifdef QT_OPENGL_LIB
-    if (!minimizedSoftwareSwitch || MApplication::softwareRendering())
+    if (MApplication::softwareRendering())
         return;
 
     if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
@@ -757,12 +748,6 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
 #endif
 
 }
-
-#ifdef HAVE_GCONF
-void MWindowPrivate::_q_updateMinimizedSoftwareSwitch() {
-    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value().toBool();
-}
-#endif
 
 MWindow::MWindow(MWindowPrivate &dd, QWidget *parent)
     : QGraphicsView(parent),
