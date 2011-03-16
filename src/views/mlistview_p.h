@@ -421,7 +421,7 @@ public:
     }
 
     virtual MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
-        MListHeader *header = qobject_cast<MListHeader *>(recycler.take(MLabel::staticMetaObject.className()));
+        MListHeader *header = qobject_cast<MListHeader *>(recycler.take(MListHeader::staticMetaObject.className()));
         if (header == NULL) {
             header = new MListHeader;
             header->setStyleName(headerStyleName);
