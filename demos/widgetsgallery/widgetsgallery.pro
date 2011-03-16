@@ -33,6 +33,8 @@ SOURCES += main.cpp \
     templatepage.cpp \
     mainpage.cpp \
     labelpage.cpp \
+    debugpage.cpp \
+    screenshotpage.cpp \
     pushbuttonpage.cpp \
     buttongrouppage.cpp \
     feedbackpage.cpp \
@@ -87,6 +89,8 @@ SOURCES += main.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
+    debugpage.h \
+    screenshotpage.h \
     labelpage.h \
     pushbuttonpage.h \
     buttongrouppage.h \

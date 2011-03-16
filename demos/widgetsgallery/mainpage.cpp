@@ -51,6 +51,8 @@
 #include "bubblepage.h"
 #include "drilldownlistitem.h"
 #include "customnavigationbarpage.h"
+#include "debugpage.h"
+#include "screenshotpage.h"
 
 #include "../../benchmarks/performancebenchmark/emptymainloophelper.h"
 
@@ -118,7 +120,9 @@ public:
         TextEntryNavigationPageType,
         TextEntryAttributeExtensionPageType,
         SliderPageType,
-        FeedbackPageType
+        FeedbackPageType,
+        DebugPageType,
+        ScreenshotPageType,
     };
 
 public:
@@ -205,6 +209,14 @@ public:
         //% "Input Feedback"
         addGalleryPage(5, qtTrId("xx_wg_user_input_input_feedback"), WidgetsGalleryDataModel::FeedbackPageType);
 
+        //TODO  it will be removed , only for development
+        addCategory("Debug tools");
+
+        //% "Information display"
+        addGalleryPage(6, qtTrId("xx_wg_information_display"), WidgetsGalleryDataModel::DebugPageType);
+
+        //% "Take a screenshot"
+        addGalleryPage(6, qtTrId("xx_wg_take_screenshot"), WidgetsGalleryDataModel::ScreenshotPageType);
     }
 
     QModelIndex parent(const QModelIndex &child) const {
@@ -368,13 +380,22 @@ private:
                 case FeedbackPageType:
                     page = new FeedbackPage();
                     break;
+                //category 6
+                case DebugPageType:
+                    page = new DebugPage();
+                    break;
+                case ScreenshotPageType:
+                    page = new ScreenShotPage();
+                    break;
                 default:
                     break;
                 }
 
                 galleryPages[index.parent().row()].replace(index.row(), (TemplatePage*)page);
             }
+
             return galleryPages[index.parent().row()].at(index.row());
+
         } else {
             if (!categoryPages[index.row()])
                 categoryPages[index.row()] = new MainCategoryPage(this, index);
