@@ -21,6 +21,7 @@
 #include "mlabelview_p.h"
 #include "mlabelmodel.h"
 #include "mfeedback.h"
+#include "mscenemanager.h"
 
 #include <QPainter>
 #include <QTextDocument>
@@ -39,6 +40,7 @@
 #include "mdeviceprofile.h"
 #include "morientationchangeevent.h"
 #include "morientationtracker.h"
+#include "mcomponentdata.h"
 
 static const QString unicodeEllipsisString = QString("...");//QChar(0x2026);
 
@@ -47,11 +49,8 @@ static const int M_HIGHLIGHTER_ID_PROPERTY  = QTextFormat::UserProperty + 1;
 
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
-    tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false)
+    tileHeight(-1), tileCacheKey(), tileOrientation(M::Portrait), tiles(), highlightersChanged(false)
 {
-    const M::OrientationAngle orientationAngle = MOrientationTracker::instance()->orientationAngle();
-    tileOrientation = (orientationAngle == M::Angle0 || orientationAngle == M::Angle180)
-                      ? M::Landscape : M::Portrait;
     textDocument.setDocumentMargin(0);
     tileCacheKey.sprintf("%p", static_cast<void*>(this));
 }
@@ -218,6 +217,12 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
 void MLabelViewRich::setupModel()
 {
     const MLabelModel *model = viewPrivate->model();
+
+    if (const MSceneManager *sceneManager = viewPrivate->controller->sceneManager()) {
+        tileOrientation = sceneManager->orientation();
+    } else if (const MWindow *activeWindow = MComponentData::activeWindow()) {
+        tileOrientation = activeWindow->orientation();
+    }
 
     if (model->wordWrap()) {
         viewPrivate->textOptions.setWrapMode(model->wrapMode());
