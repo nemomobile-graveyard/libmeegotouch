@@ -1363,30 +1363,40 @@ void Ut_MTextEdit::testSelectionVsFocus()
     QCOMPARE(subject->textCursor().selectionStart(), 2);
     QCOMPARE(subject->textCursor().selectionEnd(), 5);
 
-    sc.window()->setWindowState(Qt::WindowMinimized);
+    // selection must remain after whole window looses focus and gets it back
+    // stealing focus ..
+    MWindow window2;
+    window2.show();
+    window2.activateWindow();
+    QApplication::syncX();
     QCoreApplication::processEvents();
-    if (!(sc.window()->windowState() & Qt::WindowMinimized)) {
-        QSKIP("Control check \"window is minimized\" failed", SkipSingle);
+    QTest::qWaitForWindowShown(&window2);
+    QTest::qWait(1000);
+    if (sc.window()->isActiveWindow()) {
+        QSKIP("Control check \"window is moved to background\" failed", SkipSingle);
     }
-    QTest::qWait(500); // without this wait the following activation does not indeed cause activation
-
-    // selection must remain after window is iconified and restored back
+    // .. back
     sc.window()->activateWindow();
+    QApplication::syncX();
     QCoreApplication::processEvents();
-    QTest::qWait(500);
-    if (sc.window()->windowState() & Qt::WindowMinimized) {
-        QSKIP("Control check \"window is unminimized\" failed", SkipSingle);
+    QTest::qWaitForWindowShown(sc.window());
+    if (!sc.window()->isActiveWindow()) {
+        QSKIP("Control check \"window is activated\" failed", SkipSingle);
     }
     QCOMPARE(subject->mode(), MTextEditModel::EditModeSelect);
     QCOMPARE(subject->textCursor().selectionStart(), 2);
     QCOMPARE(subject->textCursor().selectionEnd(), 5);
 
-    // ...but usual loss of focus must reset selection
+    // usual loss of focus by control must reset selection
     subject2->setFocus();
+    QApplication::syncX();
     QCoreApplication::processEvents();
-    QTest::qWait(1000);
-    if (subject->hasFocus()) {
-        QSKIP("Control check \"textedit is deselected\" failed", SkipSingle);
+    // .. back
+    subject->setFocus();
+    QApplication::syncX();
+    QCoreApplication::processEvents();
+    if (!(subject->mode() != MTextEditModel::EditModeSelect)) {
+        QSKIP("Control check \"textedit content is deselected\" failed", SkipSingle);
     }
     QVERIFY(subject->mode() != MTextEditModel::EditModeSelect);
     QCOMPARE(subject->selectionStart(), -1);
