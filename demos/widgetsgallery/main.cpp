@@ -33,6 +33,7 @@
 #include <MLocale>
 #include <MGConfItem>
 #include <MSceneManager>
+#include <MComponentCache>
 
 #include "mainpage.h"
 #include "timedemo.h"
@@ -58,21 +59,21 @@ public:
     }
 };
 
-int main(int argc, char **argv)
+M_EXPORT int main(int argc, char **argv)
 {
 #ifdef M_OS_MAEMO5
     QApplication::setGraphicsSystem(QLatin1String("native"));
 #endif //M_OS_MAEMO5
     //MApplication application(argc, argv, "widgetsgallery", new MyApplicationService() );
-    MApplication application(argc, argv, "widgetsgallery");
+    MApplication *application = MComponentCache::mApplication(argc, argv);
 
     WidgetsgalleryRetranslator widgetsgalleryRetranslator;
-    QObject::connect(&application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
+    QObject::connect(application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
 
-    MApplicationWindow window;
-    window.show();
+    MApplicationWindow* window = MComponentCache::mApplicationWindow();
+    window->show();
 
-    MainPage mainPage;
+    MainPage *mainPage = new MainPage;
     Timedemo *timedemo = 0;
     if (qApp->arguments().indexOf("-timedemo") >= 0) {
         QStringList demoPages;
@@ -81,7 +82,7 @@ int main(int argc, char **argv)
             demoPages = qApp->arguments()[idx + 1].split(',');
         }
 
-        timedemo = new Timedemo(&mainPage, demoPages);
+        timedemo = new Timedemo(mainPage, demoPages);
 
         idx = qApp->arguments().indexOf("-outputcsv");
         if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
@@ -96,7 +97,7 @@ int main(int argc, char **argv)
     int index = qApp->arguments().indexOf("-initialpage");
     if (index >= 0) {
       if (index + 1 < qApp->arguments().count()) {
-          mainPage.setInitialPageToShow(qApp->arguments()[index + 1]);
+          mainPage->setInitialPageToShow(qApp->arguments()[index + 1]);
       }
     }
 
@@ -105,13 +106,16 @@ int main(int argc, char **argv)
     // -exitimmediately will skip creating the content of the main page
     if (qApp->arguments().indexOf("-quitimmediately") >= 0 || qApp->arguments().indexOf("-exitimmediately") >= 0) {
         // terminate widgetsgallery as soon as the content is shown and main loop is idle
-        mainPage.setMainLoopHelper(&mainLoopHelper);
+        mainPage->setMainLoopHelper(&mainLoopHelper);
         mainLoopHelper.triggerTermination(EmptyMainLoopHelper::QuitOnEmpty);
     }
 
-    window.sceneManager()->appearSceneWindowNow(&mainPage);
+    window->sceneManager()->appearSceneWindowNow(mainPage);
 
-    int exitCode = application.exec();
+    int exitCode = application->exec();
     delete timedemo;
+    delete mainPage;
+    delete window;
+    delete application;
     return exitCode;
 }

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Boosted WG
+Icon=icon-l-widgetsgallery
+Exec=invoker --type=m --single-instance /usr/bin/widgetsgallery
+OnlyShowIn=X-MeeGo;GNOME;X-MEEGO-HS;

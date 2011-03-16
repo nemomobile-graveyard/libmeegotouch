@@ -22,7 +22,8 @@ target.path = $$M_INSTALL_BIN
 !win32:OBJECTS_DIR = ./.obj
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
-CONFIG += qt
+CONFIG += qt meegotouch-boostable
+
 QT += svg opengl
 contains(DEFINES, HAVE_DBUS) {
     CONFIG += qdbus
@@ -155,7 +156,7 @@ contains( DEFINES, M_OS_MAEMO5 ) {
 
     desktop_entry.path = $$M_INSTALL_DATA/applications
 }
-desktop_entry.files = widgetsgallery.desktop
+desktop_entry.files = widgetsgallery.desktop widgetsgallery-boosted.desktop
 
 event_type.files = data/widgetsgalleryeventtype.conf
 event_type.path = $$M_INSTALL_DATA/meegotouch/notifications/eventtypes
