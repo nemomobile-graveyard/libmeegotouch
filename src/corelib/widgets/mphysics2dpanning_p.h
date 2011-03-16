@@ -63,6 +63,7 @@ public:
     qreal borderFrictionC;
     Qt::Orientations panDirection;
 
+    void ensureViewportInRangeOnStopping();
     void _q_integrator(const QVariant &value);
 
 protected:

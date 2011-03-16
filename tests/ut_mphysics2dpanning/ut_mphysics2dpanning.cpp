@@ -383,7 +383,7 @@ void Ut_MPhysics2DPanning::integrating_data()
     actionList.push_back(integratingAction(tick,    7));
 
     // End position is rounded to nearest 0.001
-    QTest::newRow("actionList 2") << actionList << QPointF(83.578,20.241);
+    QTest::newRow("actionList 2") << actionList << QPointF(83.088,20.037);
 }
 
 

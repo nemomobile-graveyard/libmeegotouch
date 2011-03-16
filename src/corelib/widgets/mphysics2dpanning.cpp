@@ -23,6 +23,12 @@
 #include "mphysics2dpanning.h"
 #include "mphysics2dpanning_p.h"
 
+#include "MDebug"
+
+namespace {
+    const int BorderJumpWarningThreshold = 2; //px. Used when physics parameters are wrong.
+}
+
 MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObject) :
     enabled(true),
     range(QRectF(0.0, 0.0, 0.0, 0.0)),
@@ -50,6 +56,35 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
 MPhysics2DPanningPrivate::~MPhysics2DPanningPrivate()
 {
     delete panningAnimation;
+}
+
+void MPhysics2DPanningPrivate::ensureViewportInRangeOnStopping()
+{
+    qreal offset = 0;
+    if (panDirection.testFlag(Qt::Horizontal)) {
+        velX = 0;
+        if (posX < range.left())  { offset = posX - range.left();  posX = range.left();  }
+        if (posX > range.right()) { offset = posX - range.right(); posX = range.right(); }
+    }
+
+    if (qAbs(offset) > BorderJumpWarningThreshold) {
+        qWarning() << "The physics engine had to artificially move the viewport inside range on X axis\n"
+                      "after the viewport was dragged outside range. Check the physics parameters.";
+        offset = 0;
+    }
+
+    if (panDirection.testFlag(Qt::Vertical)) {
+        velY = 0;
+        if (posY < range.top())    { offset = posY - range.top();    posY = range.top();    }
+        if (posY > range.bottom()) { offset = posY - range.bottom(); posY = range.bottom(); }
+    }
+
+    if (qAbs(offset) > BorderJumpWarningThreshold) {
+        qWarning() << "The physics engine had to artificially move the viewport inside range on Y axis\n"
+                      "after the viewport was dragged outside range. Check the physics parameters.";
+        offset = 0;
+    }
+
 }
 
 void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
@@ -93,21 +128,14 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
         accY = 0.0f;
     }
 
-    // Checking if the viewport is currently dragged beyond its borders and the integration should
-    // continue even though the speed is low.
-    bool inRangeX = (panDirection.testFlag(Qt::Horizontal) == false) ||
-                    (posX >= range.left() && posX <= range.right());
-
-    bool inRangeY = (panDirection.testFlag(Qt::Vertical) == false) ||
-                    (posY >= range.top()  && posY <= range.bottom());
-
-        // Integration stop condition.
-    if (inRangeX && inRangeY &&
-        qAbs(accX) < 1 &&
+    // Integration stop condition.
+    if (qAbs(accX) < 1 &&
         qAbs(accY) < 1 &&
-        qAbs(velX) < 1 &&
-        qAbs(velY) < 1 &&
+        qAbs(velX) < 0.1 &&
+        qAbs(velY) < 0.1 &&
         !pointerPressed) {
+
+        ensureViewportInRangeOnStopping();
         panningAnimation->stop();
 
         emit q->panningStopped();
