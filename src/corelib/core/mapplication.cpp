@@ -680,7 +680,6 @@ void MApplication::releasePrestart()
         if (MApplication::activeWindow()) {
             MApplication::activeWindow()->show();
             MApplication::activeWindow()->activateWindow();
-            MApplication::activeWindow()->raise();
         }
     }
 }

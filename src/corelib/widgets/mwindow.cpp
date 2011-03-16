@@ -735,7 +735,6 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
 
         if (!q->closeOnLazyShutdown()) {
             q->hide();
-            q->lower();
             event->ignore();
             return;
         }
