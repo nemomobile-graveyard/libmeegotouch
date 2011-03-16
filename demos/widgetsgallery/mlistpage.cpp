@@ -580,7 +580,7 @@ void MListPage::itemLongTapped(const QModelIndex &index, const QPointF &position
         mDebug("MListPage::itemLongTapped") << "Row: " << index.row() << " Group: " << index.parent().row();
         sceneManager()->appearSceneWindow(objectMenu);
     }
-    else if (model->hasChildren(index) > 0)
+    else if (model->hasChildren(index))
         mDebug("MListPage::itemLongTapped") << "Group: " << index.row();
     else {
         mDebug("MListPage::itemLongTapped") << "Row: " << index.row();
