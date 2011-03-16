@@ -478,68 +478,40 @@ void MLocalePrivate::dateFormatTo12h(icu::DateFormat *df) const
 #endif
 
 #ifdef HAVE_ICU
-void MLocalePrivate::replaceDigitsToOtherCategory(MLocale::Category fromCategory, MLocale::Category toCategory, QString *dateTimeString) const
+QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) const
 {
     Q_Q(const MLocale);
-    QString fromCategoryLanguage = q->categoryLanguage(fromCategory);
-    QString toCategoryLanguage = q->categoryLanguage(toCategory);
-    if (fromCategoryLanguage == "ar") {
-        if (toCategoryLanguage == "ar")
-            return;
-        else {
-            dateTimeString->replace(QChar(0x0660), '0'); // ٠
-            dateTimeString->replace(QChar(0x0661), '1'); // ١
-            dateTimeString->replace(QChar(0x0662), '2'); // ٢
-            dateTimeString->replace(QChar(0x0663), '3'); // ٣
-            dateTimeString->replace(QChar(0x0664), '4'); // ٤
-            dateTimeString->replace(QChar(0x0665), '5'); // ٥
-            dateTimeString->replace(QChar(0x0666), '6'); // ٦
-            dateTimeString->replace(QChar(0x0667), '7'); // ٧
-            dateTimeString->replace(QChar(0x0668), '8'); // ٨
-            dateTimeString->replace(QChar(0x0669), '9'); // ٩
-            dateTimeString->replace(QChar(0x066A), '%'); // ٪
-            dateTimeString->replace(QChar(0x066B), '.'); // ٫
-            dateTimeString->replace(QChar(0x066C), ','); // ٬
-            return;
-        }
+    QString categoryLanguage = parseLanguage(categoryName);
+    // do nothing for languages other than ar, fa, hi:
+    if(categoryLanguage != "ar"
+       && categoryLanguage != "fa"
+       && categoryLanguage != "hi")
+        return categoryName;
+    // if @numbers=<something> is already there, don’t touch it
+    // and return immediately:
+    if(!MIcuConversions::parseOption(categoryName, "numbers").isEmpty())
+        return categoryName;
+    QString numericCategoryLanguage = q->categoryLanguage(MLocale::MLcNumeric);
+    if(categoryLanguage == "ar") {
+        if(numericCategoryLanguage == "ar")
+            return MIcuConversions::setOption(categoryName, "numbers", "arab");
+        else
+            return MIcuConversions::setOption(categoryName, "numbers", "latn");
     }
-    else if (fromCategoryLanguage == "fa") {
-        if(toCategoryLanguage == "fa")
-            return;
-        else {
-            dateTimeString->replace(QChar(0x06F0), '0'); // ٠
-            dateTimeString->replace(QChar(0x06F1), '1'); // ۱
-            dateTimeString->replace(QChar(0x06F2), '2'); // ۲
-            dateTimeString->replace(QChar(0x06F3), '3'); // ۳
-            dateTimeString->replace(QChar(0x06F4), '4'); // ۴
-            dateTimeString->replace(QChar(0x06F5), '5'); // ۵
-            dateTimeString->replace(QChar(0x06F6), '6'); // ۶
-            dateTimeString->replace(QChar(0x06F7), '7'); // ۷
-            dateTimeString->replace(QChar(0x06F8), '8'); // ۸
-            dateTimeString->replace(QChar(0x06F9), '9'); // ۹
-            dateTimeString->replace(QChar(0x066A), '%'); // ٪
-            dateTimeString->replace(QChar(0x066B), '.'); // ٫
-            dateTimeString->replace(QChar(0x066C), ','); // ٬
-            return;
-        }
+    if(categoryLanguage == "fa") {
+        if(numericCategoryLanguage == "fa")
+            return MIcuConversions::setOption(categoryName, "numbers", "arabext");
+        else
+            return MIcuConversions::setOption(categoryName, "numbers", "latn");
     }
-    else if (fromCategoryLanguage == "hi") {
-        if(toCategoryLanguage == "hi")
-            return;
-        else {
-            dateTimeString->replace(QChar(0x0966), '0'); // ०
-            dateTimeString->replace(QChar(0x0967), '1'); // १
-            dateTimeString->replace(QChar(0x0968), '2'); // २
-            dateTimeString->replace(QChar(0x0969), '3'); // ३
-            dateTimeString->replace(QChar(0x096A), '4'); // ४
-            dateTimeString->replace(QChar(0x096B), '5'); // ५
-            dateTimeString->replace(QChar(0x096C), '6'); // ६
-            dateTimeString->replace(QChar(0x096D), '7'); // ७
-            dateTimeString->replace(QChar(0x096E), '8'); // ८
-            dateTimeString->replace(QChar(0x096F), '9'); // ९
-            return;
-        }
+    if(categoryLanguage == "hi") {
+        if(numericCategoryLanguage == "hi")
+            return MIcuConversions::setOption(categoryName, "numbers", "deva");
+        else
+            return MIcuConversions::setOption(categoryName, "numbers", "latn");
     }
+    // never reached:
+    return categoryName;
 }
 #endif
 
@@ -570,19 +542,22 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
                                                   MLocale::TimeFormat24h timeFormat24h) const
 {
     QString categoryNameTime = categoryName(MLocale::MLcTime);
+    QString categoryNameNumeric = categoryName(MLocale::MLcNumeric);
     QString categoryNameMessages = categoryName(MLocale::MLcMessages);
-    categoryNameTime =
-        MIcuConversions::setCalendarOption(categoryNameTime, calendarType);
-    categoryNameMessages =
-        MIcuConversions::setCalendarOption(categoryNameMessages, calendarType);
-    QString key = QString("%1_%2_%3_%4_%5")
+    QString key = QString("%1_%2_%3_%4_%5_%6_%7")
         .arg(dateType)
         .arg(timeType)
+        .arg(calendarType)
         .arg(timeFormat24h)
         .arg(categoryNameTime)
+        .arg(categoryNameNumeric)
         .arg(categoryNameMessages);
     if (_dateFormatCache.contains(key))
         return _dateFormatCache.object(key);
+    categoryNameTime = fixCategoryNameForNumbers(
+        MIcuConversions::setCalendarOption(categoryNameTime, calendarType));
+    categoryNameMessages = fixCategoryNameForNumbers(
+        MIcuConversions::setCalendarOption(categoryNameMessages, calendarType));
     // Create calLocale which has the time pattern we want to use
     icu::Locale calLocale = icu::Locale(qPrintable(categoryNameTime));
 
@@ -1162,11 +1137,11 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
 #ifdef HAVE_ICU
         // recreate the number formatter
         delete _numberFormatLcTime;
-
+        QString categoryNameTime =
+            fixCategoryNameForNumbers(categoryName(MLocale::MLcTime));
+        icu::Locale timeLocale = icu::Locale(qPrintable(categoryNameTime));
         UErrorCode status = U_ZERO_ERROR;
-        icu::Locale timeLocale = getCategoryLocale(MLocale::MLcTime);
         _numberFormatLcTime = icu::NumberFormat::createInstance(timeLocale, status);
-
         if (!U_SUCCESS(status)) {
             mDebug("MLocalePrivate") << "Unable to create number format for LcTime" << u_errorName(status);
             _valid = false;
@@ -1175,15 +1150,25 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
     } else if (category == MLocale::MLcNumeric) {
         _numericLocale = localeName;
 #ifdef HAVE_ICU
-        // recreate the number formatter
+        // recreate the number formatters
         delete _numberFormat;
-
+        QString categoryNameNumeric =
+            fixCategoryNameForNumbers(categoryName(MLocale::MLcNumeric));
+        icu::Locale numericLocale = icu::Locale(qPrintable(categoryNameNumeric));
         UErrorCode status = U_ZERO_ERROR;
-        icu::Locale numericLocale = getCategoryLocale(MLocale::MLcNumeric);
         _numberFormat = icu::NumberFormat::createInstance(numericLocale, status);
-
         if (!U_SUCCESS(status)) {
             mDebug("MLocalePrivate") << "Unable to create number format for LcNumeric" << u_errorName(status);
+            _valid = false;
+        }
+        delete _numberFormatLcTime;
+        QString categoryNameTime =
+            fixCategoryNameForNumbers(categoryName(MLocale::MLcTime));
+        icu::Locale timeLocale = icu::Locale(qPrintable(categoryNameTime));
+        status = U_ZERO_ERROR;
+        _numberFormatLcTime = icu::NumberFormat::createInstance(timeLocale, status);
+        if (!U_SUCCESS(status)) {
+            mDebug("MLocalePrivate") << "Unable to create number format for LcTime" << u_errorName(status);
             _valid = false;
         }
 #endif
@@ -1462,18 +1447,22 @@ MLocale::MLocale(const QString &localeName, QObject *parent)
 
 #ifdef HAVE_ICU
     // we cache the number formatter for better performance
+    QString categoryNameNumeric =
+        d->fixCategoryNameForNumbers(categoryName(MLocale::MLcNumeric));
     UErrorCode status = U_ZERO_ERROR;
-    d->_numberFormat = icu::NumberFormat::createInstance(d->getCategoryLocale(MLcNumeric),
-                       status);
-
+    d->_numberFormat =
+        icu::NumberFormat::createInstance(icu::Locale(qPrintable(categoryNameNumeric)),
+                                          status);
     if (!U_SUCCESS(status)) {
         qWarning() << "NumberFormat creating for LcNumeric failed:" << u_errorName(status);
         d->_valid = false;
     }
+    QString categoryNameTime =
+        d->fixCategoryNameForNumbers(categoryName(MLocale::MLcTime));
     status = U_ZERO_ERROR;
-    d->_numberFormatLcTime = icu::NumberFormat::createInstance(d->getCategoryLocale(MLcTime),
-                       status);
-
+    d->_numberFormatLcTime =
+        icu::NumberFormat::createInstance(icu::Locale(qPrintable(categoryNameTime)),
+                                          status);
     if (!U_SUCCESS(status)) {
         qWarning() << "NumberFormat creating for LcTime failed:" << u_errorName(status);
         d->_valid = false;
@@ -1996,14 +1985,14 @@ QString MLocale::formatNumber(double i, int prec) const
         d->_numberFormat->format(i, str, pos);
     } else {
         // the cached number formatter isn't sufficient
+        QString categoryNameNumeric =
+            d->fixCategoryNameForNumbers(categoryName(MLocale::MLcNumeric));
         UErrorCode status = U_ZERO_ERROR;
         icu::NumberFormat *nf;
-
-        nf = icu::NumberFormat::createInstance(d->getCategoryLocale(MLcNumeric),
+        nf = icu::NumberFormat::createInstance(icu::Locale(qPrintable(categoryNameNumeric)),
                                                status);
-
         if (!U_SUCCESS(status)) {
-            qWarning() << "NumberFormat creating failed";
+            qWarning() << "NumberFormat creating failed" << u_errorName(status);
             return QString(); // "null" string
         }
 
@@ -2154,9 +2143,10 @@ float MLocale::toFloat(const QString &s, bool *ok) const
 QString MLocale::formatPercent(double i, int decimals) const
 {
     Q_D(const MLocale);
-    icu::UnicodeString str;
+    QString categoryNameNumeric
+        = d->fixCategoryNameForNumbers(categoryName(MLocale::MLcNumeric));
+    icu::Locale numericLocale = icu::Locale(qPrintable(categoryNameNumeric));
     UErrorCode status = U_ZERO_ERROR;
-    icu::Locale numericLocale = d->getCategoryLocale(MLcNumeric);
     icu::NumberFormat *nf = NumberFormat::createPercentInstance(numericLocale, status);
 
     if (!U_SUCCESS(status)) {
@@ -2165,6 +2155,7 @@ QString MLocale::formatPercent(double i, int decimals) const
     }
 
     nf->setMinimumFractionDigits(decimals);
+    icu::UnicodeString str;
     nf->format(i, str);
     delete nf;
 
@@ -2176,8 +2167,9 @@ QString MLocale::formatCurrency(double amount, const QString &currency) const
 {
 #ifdef HAVE_ICU
     Q_D(const MLocale);
+    QString monetaryCategoryName = d->fixCategoryNameForNumbers(categoryName(MLcMonetary));
     UErrorCode status = U_ZERO_ERROR;
-    icu::Locale monetaryLocale = d->getCategoryLocale(MLcMonetary);
+    icu::Locale monetaryLocale = icu::Locale(qPrintable(monetaryCategoryName));
     icu::NumberFormat *nf = icu::NumberFormat::createCurrencyInstance(monetaryLocale, status);
 
     if (!U_SUCCESS(status)) {
@@ -2199,9 +2191,7 @@ QString MLocale::formatCurrency(double amount, const QString &currency) const
     icu::UnicodeString str;
     nf->format(amount, str);
     delete nf;
-    QString result = MIcuConversions::unicodeStringToQString(str);
-    d->replaceDigitsToOtherCategory(MLocale::MLcMonetary, MLocale::MLcNumeric, &result);
-    return result;
+    return MIcuConversions::unicodeStringToQString(str);
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcMonetary).toString(amount) + ' ' + currency;
@@ -2243,7 +2233,6 @@ QString MLocale::formatDateTime(const MCalendar &mcalendar,
     if(df)
         df->format(*cal, resString, pos);
     QString result = MIcuConversions::unicodeStringToQString(resString);
-    d->replaceDigitsToOtherCategory(MLocale::MLcTime, MLocale::MLcNumeric, &result);
     return result;
 }
 #endif
@@ -2302,10 +2291,14 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
                                      const QString &formatString) const
 {
     Q_D(const MLocale);
-    QString key = QString("%1_%2_%3")
+    QString categoryNameTime = categoryName(MLocale::MLcTime);
+    QString categoryNameNumeric = categoryName(MLocale::MLcTime);
+    QString key = QString("%1_%2_%3_%4")
         .arg(formatString)
         .arg(mCalendar.type())
-        .arg(categoryName(MLocale::MLcTime));
+        .arg(categoryNameTime)
+        .arg(categoryNameNumeric);
+    categoryNameTime = d->fixCategoryNameForNumbers(categoryNameTime);
     icu::SimpleDateFormat *formatter;
     if(d->_simpleDateFormatCache.contains(key)) {
         formatter = d->_simpleDateFormatCache.object(key);
@@ -2314,7 +2307,7 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
         UErrorCode status = U_ZERO_ERROR;
         formatter = new icu::SimpleDateFormat(
             MIcuConversions::qStringToUnicodeString(formatString),
-            d->getCategoryLocale(MLcTime), status);
+            icu::Locale(qPrintable(categoryNameTime)), status);
         if(U_FAILURE(status)) {
             qWarning() << "icu::SimpleDateFormat() failed with error"
                        << u_errorName(status);
@@ -2330,9 +2323,7 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
         icu::FieldPosition pos;
         icu::UnicodeString resString;
         formatter->format(*mCalendar.d_ptr->_calendar, resString, pos);
-        QString result = MIcuConversions::unicodeStringToQString(resString);
-        d->replaceDigitsToOtherCategory(MLocale::MLcTime, MLocale::MLcNumeric, &result);
-        return result;
+        return MIcuConversions::unicodeStringToQString(resString);
     }
 }
 #endif

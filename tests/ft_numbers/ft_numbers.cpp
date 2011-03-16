@@ -2285,7 +2285,7 @@ void Ft_Numbers::testCurrencies_data()
         << QString("en_US")
         << 1234.56
         << "USD"
-        << QString("US$ 1,234.56");
+        << QString("US$ 1٬234٫56");
     QTest::newRow("ar_SA")
         << QString("de_DE")
         << QString("ar_SA")
@@ -2299,7 +2299,7 @@ void Ft_Numbers::testCurrencies_data()
         << QString("en_US")
         << 1234.56
         << "USD"
-        << QString("US$1234.56");
+        << QString("US$1234٫56");
     QTest::newRow("hi_IN")
         << QString("de_DE")
         << QString("hi_IN")

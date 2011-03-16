@@ -123,8 +123,7 @@ public:
     // converts an ICU date format to 12 hour clock
     void dateFormatTo12h(icu::DateFormat *df) const;
 
-    void replaceDigitsToOtherCategory(MLocale::Category fromCategory, MLocale::Category toCategory, QString *dateTimeString) const;
-
+    QString fixCategoryNameForNumbers(const QString &categoryName) const;
     /*!
      * \brief returns ICU date and time format string of the current locale
      * \param dateType style of date formatting

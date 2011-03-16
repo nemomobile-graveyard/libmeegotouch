@@ -1590,6 +1590,44 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
+        << QString("ar_EG@numbers=latn") // lc_time: Arabic date/time formatting
+        << QString("ar_EG") // lc_numeric: force unlocalized digits
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "15‏/6‏/2004"
+        << "15‏/06‏/2004"
+        << "15 يونيو، 2004"
+        << "الثلاثاء، 15 يونيو، 2004"
+        << "2:31 م"
+        << "2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@numbers=arab") // lc_time: Arabic date/time formatting
+        << QString("fi_FI") // lc_numeric: keep localized digits
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "١٥‏/٦‏/٢٠٠٤"
+        << "١٥‏/٠٦‏/٢٠٠٤"
+        << "١٥ يونيو، ٢٠٠٤"
+        << "الثلاثاء، ١٥ يونيو، ٢٠٠٤"
+        << "٢:٣١ م"
+        << "٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
         << QString("ar_EG") // lc_time: Arabic date/time formatting
         << QString("fi_FI") // lc_numeric: force unlocalized digits
         << "Europe/Helsinki"
@@ -1630,6 +1668,44 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << QString("fi_FI")
         << QString("fa_IR") // lc_time: Farsi date/time formatting
         << QString("fi_FI") // lc_numeric: force unlocalized digits
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "6/15/04"
+        << "جون 15, 2004"
+        << "جون 15, 2004"
+        << "سه‌شنبه, جون 15, 2004"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 (GMT+03:00)"
+        << "14:31:00 (وقت تابستانی شرق اروپا)";
+    QTest::newRow("15.6.2004_fa_IR_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fa_IR@numbers=arabext") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "۶/۱۵/۰۴"
+        << "جون ۱۵, ۲۰۰۴"
+        << "جون ۱۵, ۲۰۰۴"
+        << "سه‌شنبه, جون ۱۵, ۲۰۰۴"
+        << "۱۴:۳۱"
+        << "۱۴:۳۱:۰۰"
+        << "۱۴:۳۱:۰۰ (GMT+۰۳:۰۰)"
+        << "۱۴:۳۱:۰۰ (وقت تابستانی شرق اروپا)";
+    QTest::newRow("15.6.2004_fa_IR_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fa_IR@numbers=latn") // lc_time
+        << QString("fa_IR") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1706,6 +1782,44 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << QString("fi_FI")
         << QString("hi_HI") // lc_time: Hindi date/time formatting
         << QString("fi_FI") // lc_numeric: force unlocalized digits
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "15-6-04"
+        << "15-06-2004"
+        << "15 जून 2004"
+        << "मंगलवार, 15 जून 2004"
+        << "2:31 अपराह्न"
+        << "2:31:00 अपराह्न"
+        << "2:31:00 अपराह्न GMT+03:00"
+        << "2:31:00 अपराह्न GMT+03:00";
+    QTest::newRow("15.6.2004_hi_HI_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("hi_HI@numbers=deva") // lc_time: Hindi date/time formatting
+        << QString("fi_FI") // lc_numeric: keep localized digits
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "१५-६-०४"
+        << "१५-०६-२००४"
+        << "१५ जून २००४"
+        << "मंगलवार, १५ जून २००४"
+        << "२:३१ अपराह्न"
+        << "२:३१:०० अपराह्न"
+        << "२:३१:०० अपराह्न GMT+०३:००"
+        << "२:३१:०० अपराह्न GMT+०३:००";
+    QTest::newRow("15.6.2004_hi_HI_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("hi_HI@numbers=latn") // lc_time: Hindi date/time formatting
+        << QString("hi_HI") // lc_numeric: force unlocalized digits
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
