@@ -59,7 +59,10 @@ public:
     }
 };
 
-M_EXPORT int main(int argc, char **argv)
+#ifndef Q_OS_WIN
+M_EXPORT
+#endif
+int main(int argc, char **argv)
 {
 #ifdef M_OS_MAEMO5
     QApplication::setGraphicsSystem(QLatin1String("native"));
