@@ -99,7 +99,7 @@ public:
             return result;
         }
 
-        bool match(const MStyleSheetSelector *selector, unsigned int &classPriority) const;
+        bool matchOrientationIndependent(const MStyleSheetSelector *selector, unsigned int &classPriority) const;
 
         const QByteArray className;
         const QList<QByteArray> classHierarchy;
@@ -166,6 +166,9 @@ public:
                                                               const QVector<ParentData> &parentsData,
                                                               const QByteArray &parentStyleName,
                                                               const StyleSpec &spec);
+
+    static void matchOrientationDependent(QList<QSharedPointer<SelectorInfo> > *selectorInfos,
+                                          bool *orientationDependent, M::Orientation targetOriention);
 };
 
 #endif

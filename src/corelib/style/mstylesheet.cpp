@@ -265,14 +265,10 @@ MStyleSheetPrivate::SelectorInfoList *MStyleSheetPrivate::buildSelectorInfoList(
         QList<const MStyleSheetSelector*> selectors = sheet->selectorList(spec);
 
         foreach(const MStyleSheetSelector * selector, selectors) {
-            if (!entry->orientationDependent && selector->orientation() != MStyleSheetSelector::UndefinedOrientation) {
-                entry->orientationDependent = true;
-            }
-
             unsigned int parentPriority = 0xffffffff;
             unsigned int classPriority = 0xffffffff;
             if (!MStyleSheetPrivate::matchParents(selector, parentsData, parentStyleName, parentPriority) ||
-                    !spec.match(selector, classPriority)) {
+                    !spec.matchOrientationIndependent(selector, classPriority)) {
                 continue;
             }
 
@@ -280,6 +276,8 @@ MStyleSheetPrivate::SelectorInfoList *MStyleSheetPrivate::buildSelectorInfoList(
             entry->selectorInfos.push_back(info);
         }
     }
+
+    matchOrientationDependent(&entry->selectorInfos, &entry->orientationDependent, spec.orientation);
 
     qStableSort(entry->selectorInfos.begin(), entry->selectorInfos.end(), MStyleSheetPrivate::isHigherPriority);
 
@@ -483,7 +481,7 @@ bool MStyleSheetPrivate::matchParents(const MStyleSheetSelector *selector,
     return false;
 }
 
-bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
+bool MStyleSheetPrivate::StyleSpec::matchOrientationIndependent(const MStyleSheetSelector *selector,
                                           unsigned int &classPriority) const
 {
     // Initialize
@@ -503,12 +501,6 @@ bool MStyleSheetPrivate::StyleSpec::match(const MStyleSheetSelector *selector,
         }
         // store inheritance order for later use
         classPriority = MAKE_PRIORITY(0xffff, order);
-    }
-
-    // Check whether the orientation matches
-    if (selector->orientation() != MStyleSheetSelector::UndefinedOrientation &&
-        orientation != static_cast<M::Orientation>(selector->orientation())) {
-        return false;
     }
 
     // Check whether the type matches
@@ -543,7 +535,7 @@ MStyleSheetPrivate::SelectorInfoList MStyleSheetPrivate::getMatchingSelectorsWit
             const QList<const MStyleSheetSelector*> selectors = sheet->parentSelectorList(spec);
             foreach (const MStyleSheetSelector *selector, selectors) {
                 if (matchParent(selector, thisParentHierarchy, parentStyleName, sceneOrder, parentPriority) &&
-                        spec.match(selector, classPriority)) {
+                        spec.matchOrientationIndependent(selector, classPriority)) {
                     // match found, store it to results list
                     QSharedPointer<SelectorInfo> info(new SelectorInfo(selector, classPriority, parentPriority, sheet));
                     results.selectorInfos.append(info);
@@ -559,7 +551,7 @@ MStyleSheetPrivate::SelectorInfoList MStyleSheetPrivate::getMatchingSelectorsWit
         const QList<const MStyleSheetSelector*> selectors = sheet->parentSelectorList(spec);
         foreach (const MStyleSheetSelector *selector, selectors) {
             if (matchParents(selector, parentsData, parentStyleName, parentPriority) &&
-                    spec.match(selector, classPriority)) {
+                    spec.matchOrientationIndependent(selector, classPriority)) {
                 // match found, store it to results list
                 QSharedPointer<SelectorInfo> info(new SelectorInfo(selector, classPriority, parentPriority, sheet));
                 results.selectorInfos.append(info);
@@ -568,13 +560,24 @@ MStyleSheetPrivate::SelectorInfoList MStyleSheetPrivate::getMatchingSelectorsWit
     }
 
     results.orientationDependent = false;
-    foreach (const QSharedPointer<SelectorInfo> &selectorInfo, results.selectorInfos) {
-        if (selectorInfo->selector->orientation() != MStyleSheetSelector::UndefinedOrientation) {
-            results.orientationDependent = true;
-            break;
-        }
-    }
+    matchOrientationDependent(&results.selectorInfos, &results.orientationDependent, spec.orientation);
 
     return results;
 }
 
+void MStyleSheetPrivate::matchOrientationDependent(QList<QSharedPointer<SelectorInfo> > *selectorInfos,
+                                                   bool *orientationDependent, M::Orientation targetOriention) {
+    // check whether the style will be orientation dependent and remove all selectors
+    // with the wrong orientation
+    QMutableListIterator<QSharedPointer<SelectorInfo> > it(*selectorInfos);
+    while (it.hasNext())
+    {
+        QSharedPointer<SelectorInfo> selectorInfo = it.next();
+        if (selectorInfo->selector->orientation() != MStyleSheetSelector::UndefinedOrientation) {
+            if (static_cast<M::Orientation>(selectorInfo->selector->orientation()) != targetOriention) {
+                it.remove();
+            }
+            *orientationDependent = true;
+        }
+    }
+}
