@@ -1,9 +1,14 @@
 libmeegotouch (0.20.95-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#198866 - booster-m keeps OpenGl context
+  * Fixes: NB#217481
+  * Fixes: NB#232025 - MSheet should have proper relocation upon virtual keyboard presence
+  * Fixes: NB#233328 - Randomly wrong resources are rendered.
+  * Fixes: List default header creator does not reuse widgets.
   * Fixes: NB#234488 - UI for activation debug info display and screenshot
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 15 Mar 2011 16:28:00 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 16 Mar 2011 17:18:20 +0200
 
 libmeegotouch (0.20.94-1) unstable; urgency=low
 
