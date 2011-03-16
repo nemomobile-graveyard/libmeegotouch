@@ -251,6 +251,9 @@ private:
 
     Q_DECLARE_PRIVATE(MComponentData)
     Q_DISABLE_COPY(MComponentData)
+    #ifdef HAVE_GCONF
+    Q_PRIVATE_SLOT(d_func(), void _q_updateDebugOptionsFromGConfValues())
+    #endif
     Q_PRIVATE_SLOT(d_func(), void _q_notifyInputMethodActiveWindowOrientationChangeStarted())
     Q_PRIVATE_SLOT(d_func(), void _q_notifyInputMethodActiveWindowOrientationChangeFinished())
 

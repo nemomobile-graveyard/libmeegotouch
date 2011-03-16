@@ -30,6 +30,10 @@
 
 #include "mtheme.h"
 
+#ifdef HAVE_GCONF
+#include "mgconfitem.h"
+#endif
+
 class MComponentData;
 class MFeedbackPlayer;
 class MApplicationService;
@@ -46,12 +50,14 @@ public:
     MComponentDataPrivate();
     virtual ~MComponentDataPrivate();
 
-    void parseArguments(int &argc, char **argv, 
+    void parseArguments(int &argc, char **argv,
                         MTheme::ThemeService &themeService);
 
     void _q_notifyInputMethodActiveWindowOrientationChangeStarted();
     void _q_notifyInputMethodActiveWindowOrientationChangeFinished();
-
+#ifdef HAVE_GCONF
+    void _q_updateDebugOptionsFromGConfValues();
+#endif
     bool softwareRendering;
     bool fullScreen;
     bool showBoundingRect;
@@ -84,6 +90,21 @@ public:
 
 #ifdef Q_WS_X11
     static QStack<MComponentData::ChainData> chainData;
+#endif
+
+#ifdef HAVE_GCONF
+    MGConfItem debugOptions;
+    /*
+     ONLY FOR DEVELOPMENT -remove in the future-
+     gconf value (string) containing an emulation of bitarray
+      _ _ _ _ _ _ _
+     |_|_|_|_|_|_|_|
+      |
+      |
+      |
+     This can be 0 or 1, if it is other value (a string) the position will be consider as false.
+     If one value is not provided the position is initialized to false too.
+    */
 #endif
 
 protected:

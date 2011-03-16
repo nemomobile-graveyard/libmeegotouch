@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QApplication>
+#include <QBitArray>
 #include <QFile>
 #include <QDir>
 #include <QFileInfo>
@@ -212,9 +213,11 @@ MComponentDataPrivate::MComponentDataPrivate()
     syslogServer(),
     service(0),
     testabilityInterface(0),
+#ifdef HAVE_GCONF
+    debugOptions ("/meegotouch/debug/info_display"),
+#endif
     q_ptr(NULL)
 {
-
 }
 
 MComponentDataPrivate::~MComponentDataPrivate()
@@ -349,7 +352,7 @@ MComponentData::MComponentData(int &argc, char **argv, const QString &appIdentif
 
     if(self)
         qWarning() << "MComponentData instantiated although there is already an instance!\n Maybe you called the MComponentData Contructor directly, what is deprecated. Use MComponentData::createInstance() instead.";
-    
+
     self = this;
 
     d->init(argc, argv, appIdentifier, service);
@@ -364,7 +367,7 @@ MComponentData::MComponentData(MApplicationService *service) :
 
     if(self)
         qWarning() << "MComponentData instantiated although there is already an instance!\n Maybe you called the MComponentData Contructor directly, what is deprecated. Use MComponentData::createInstance() instead.";
-    
+
     self = this;
 
     int argc = 0;
@@ -395,6 +398,11 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     // constructor "eats" the "-reverse" command line parameter.
     // Therefore, we can not parse it here.)
     reverseLayout = qApp->layoutDirection() == Qt::RightToLeft;
+
+#ifdef HAVE_GCONF
+    QObject::connect(&debugOptions, SIGNAL(valueChanged()),
+                     q_ptr, SLOT(_q_updateDebugOptionsFromGConfValues()));
+#endif
 
 #ifdef __arm__
     MTheme::ThemeService themeService = MTheme::RemoteTheme;
@@ -812,6 +820,46 @@ void MComponentDataPrivate::_q_notifyInputMethodActiveWindowOrientationChangeFin
         MInputMethodState::instance()->setActiveWindowOrientationAngle(activeWindow->orientationAngle());
     }
 }
+
+#ifdef HAVE_GCONF
+void MComponentDataPrivate::_q_updateDebugOptionsFromGConfValues()
+{
+    Q_Q(MComponentData);
+
+    QString gconfKey = debugOptions.value().toString();
+    QBitArray debugOptionsBitArray;
+
+    debugOptionsBitArray.resize(7);
+    debugOptionsBitArray.fill(false);
+
+    for (int i = 0; i < debugOptionsBitArray.size(); i++) {
+        if (i >= gconfKey.size()) {
+            debugOptionsBitArray.setBit(i, false);
+        } else {
+            if (gconfKey.at(i) == '1') {
+                debugOptionsBitArray.setBit(i, true);
+            } else {
+                debugOptionsBitArray.setBit(i, false);
+            }
+        }
+    }
+
+    q->setShowStyleNames(debugOptionsBitArray.at(0));
+    q->setShowObjectNames(debugOptionsBitArray.at(1));
+    q->setShowSize(debugOptionsBitArray.at(2));
+    q->setShowBoundingRect(debugOptionsBitArray.at(3));
+    q->setShowPosition(debugOptionsBitArray.at(4));
+    q->setShowMargins(debugOptionsBitArray.at(5));
+    q->setShowFps(debugOptionsBitArray.at(6));
+
+    // Necessary to immediately see the activated options
+    Q_FOREACH(MWindow *window, q->windows()) {
+        if (window->isOnDisplay() && !window->isInSwitcher()) {
+            window->viewport()->update();
+        }
+    }
+}
+#endif
 
 void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
