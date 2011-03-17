@@ -216,8 +216,8 @@ void MWidgetView::setModel(MWidgetModel *model)
         styleName = d->model->objectName(); // fallback to old behavior
     else
         styleName = d->model->styleName();
-    d->styleContainer->initialize(styleName, styleType, parent);
     d->styleContainer->setSceneManager(d->controller->sceneManager());
+    d->styleContainer->initialize(styleName, styleType, parent);
 
     if (d->controller->isActive()) {
         setActive(true);
