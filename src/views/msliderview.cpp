@@ -742,14 +742,7 @@ void MSliderGroove::setSliderValues(int min, int max, int val)
     value = val;
     value = qBound(minimum, value, maximum);
 
-    QPointF handlePos;
-
-    if (orientation == Qt::Horizontal)
-        handlePos.setX(valueToScreenCoordinate(value));
-    else
-        handlePos.setY(valueToScreenCoordinate(value));
-
-    updateHandlePos(handlePos);
+    updateHandlePos();
 
     if (controller)
         controller->update();
@@ -800,12 +793,13 @@ int MSliderGroove::screenPointToValue(const QPointF &point) const
     int offset = 0;
     QRectF valueRangeRect = rect();
     int range = maximum - minimum;
+    qreal w = sliderHandle->rect().width();
 
     if (minimum == maximum)
         return minimum;
 
     if (orientation == Qt::Horizontal) {
-        valueRangeRect.adjust(grooveMargin, 0, -grooveMargin, 0);
+        valueRangeRect.adjust(w/2.0, 0, -w/2.0, 0);
         coordinate = handlePoint.x();
     } else if (orientation == Qt::Vertical) {
         valueRangeRect.adjust(0, grooveMargin, 0, -grooveMargin);
@@ -902,6 +896,8 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     int verticalMargins = 0;
 
     if (orientation == Qt::Horizontal) {
+        qreal handle_center = sliderHandle->pos().x() + sliderHandle->rect().width() / 2.0;
+
         if (backgroundBaseImage) {
             backgroundBaseImage->borders(&left, &right, &top, &bottom);
             horizontalMargins = left + right;
@@ -947,12 +943,12 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
             if (!reverse) {
                 if (value < maximum)
-                    elapsedRect.setRight(qMin(valueToScreenCoordinate(value) + elapsedOffset,
+                    elapsedRect.setRight(qMin(handle_center + elapsedOffset,
                                               grooveRect.right()));
             }
             else {
                 if (value < maximum)
-                    elapsedRect.setLeft(qMax(valueToScreenCoordinate(value) - elapsedOffset,
+                    elapsedRect.setLeft(qMax(handle_center - elapsedOffset,
                                              grooveRect.left()));
             }
 
@@ -962,6 +958,8 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     }
 
     if (orientation == Qt::Vertical) {
+        qreal handle_center = sliderHandle->pos().y() + sliderHandle->rect().height() / 2.0;
+
         if (backgroundVerticalBaseImage) {
             backgroundVerticalBaseImage->borders(&left, &right, &top, &bottom);
             verticalMargins = top + bottom;
@@ -996,7 +994,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             QRectF elapsedRect = grooveRect;
 
             if (value < maximum) {
-                elapsedRect.setTop(qMin(valueToScreenCoordinate(value) + elapsedOffset,
+                elapsedRect.setTop(qMin(handle_center + elapsedOffset,
                                         grooveRect.top()));
             }
 
@@ -1011,14 +1009,7 @@ void MSliderGroove::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_UNUSED(event);
 
-    QPointF handlePos;
-
-    if (orientation == Qt::Horizontal)
-        handlePos.setX(valueToScreenCoordinate(value));
-    if (orientation == Qt::Vertical)
-        handlePos.setY(valueToScreenCoordinate(value));
-
-    updateHandlePos(handlePos);
+    updateHandlePos();
 }
 
 QSizeF MSliderGroove::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -1083,16 +1074,29 @@ void MSliderGroove::setGeometry(const QRectF &rect)
 
 //sets middle point so that the whole rect occupied
 //by handle remains inside rect occupied by groove
-void MSliderGroove::updateHandlePos(const QPointF &position)
+void MSliderGroove::updateHandlePos()
 {
     qreal w = sliderHandle->rect().width();
     qreal h = sliderHandle->rect().height();
     QPointF newPos((rect().width() - w) / 2.0f, (rect().height() - h) / 2.0f);
 
-    if (orientation == Qt::Horizontal)
-        newPos.setX(position.x() - w/2.0f);
-    else
-        newPos.setY(position.y() - h/2.0f);
+    int range = maximum - minimum;
+    QRectF valueRangeRect = rect();
+
+    if (minimum != maximum) {
+        if (orientation == Qt::Horizontal) {
+            valueRangeRect.adjust(0, 0, - w, 0);
+
+            if (!qApp->isRightToLeft())
+                newPos.setX(valueRangeRect.left() + (value - minimum) * valueRangeRect.width() / range);
+            else
+                newPos.setX(valueRangeRect.left() + (maximum - value) * valueRangeRect.width() / range);
+        } else if (orientation == Qt::Vertical) {
+            valueRangeRect.adjust(0, h/2.0, 0, - w / 2.0);
+
+            newPos.setX(valueRangeRect.top() + (maximum - value) * valueRangeRect.height() / range);
+        }
+    }
 
     if (newPos != sliderHandle->pos()) {
         sliderHandle->setPos(newPos);

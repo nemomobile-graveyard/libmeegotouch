@@ -224,7 +224,7 @@ protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:
-    void updateHandlePos(const QPointF &position);
+    void updateHandlePos();
     void updateHandleIndicatorPos();
 
     MSlider *controller;
