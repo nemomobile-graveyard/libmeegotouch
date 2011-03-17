@@ -544,10 +544,11 @@ void MTextEditViewPrivate::showMagnifier()
 {
     Q_Q(MTextEditView);
 
-    // Prevent relocations when moving magnifier.
     if (controller->sceneManager()) {
+        // Prevent relocations when moving magnifier.
         QObject::disconnect(static_cast<const QObject *>(controller), SIGNAL(cursorPositionChanged()),
                             static_cast<const QObject *>(controller->sceneManager()), SLOT(ensureCursorVisible()));
+
         QObject::connect(controller->sceneManager(), SIGNAL(orientationChanged(const M::Orientation  &)),
                          this, SLOT(makeMagnifierDisappear()), Qt::UniqueConnection);
         QObject::connect(controller->sceneManager(), SIGNAL(orientationChangeFinished(const M::Orientation  &)),
