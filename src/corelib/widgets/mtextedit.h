@@ -155,11 +155,15 @@ public:
     /*!
      * \brief Returns the current document
      * \return pointer to the document
+     * \note Caution advised if changes are done using this interface. Change signals 
+     * are not necessarily emitted and care is needed not to break MTextEdit state.
      */
     QTextDocument *document() const;
 
     /*!
      * \brief Returns a copy of the currently visible cursor.
+     * \note Caution advised if changes are done using this interface. Change signals 
+     * are not necessarily emitted and care is needed not to break MTextEdit state.
      */
     QTextCursor textCursor() const;
 
