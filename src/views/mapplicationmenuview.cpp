@@ -115,8 +115,8 @@ bool MActionsItemModel::eventFilter(QObject *, QEvent *event)
 MMenuListItem::MMenuListItem(QGraphicsItem* parent)
     : MListItem(parent), icon(0), title(0)
 {
-    setStyleName("menuactioncommand");
-    setObjectName(styleName());
+    setStyleName("CommonSmallPanelInverted");
+    setObjectName("menuactioncommand");
     new QGraphicsLinearLayout(this);
     layout()->setContentsMargins(0, 0, 0, 0);
 }
@@ -153,7 +153,7 @@ void MMenuListItem::setTitle(const QString &text)
     if (!title) {
         title = new MLabel(this);
         title->setTextElide(true);
-        title->setStyleName("CommonSingleTitle");
+        title->setStyleName("CommonSingleTitleInverted");
     }
     title->setText(text);
 }
@@ -249,7 +249,7 @@ MWidget* MApplicationMenuCellCreator::extractWidget(QAction* action) const
 
     MWidgetController *widget = qobject_cast<MWidgetController*>(widgetAction->widget());
     if (widget && widget->styleName().isEmpty())
-        widget->setStyleName(isComboBox(widget) ? "menucomboboxcommand" : "menuwidgetcommand");
+        widget->setStyleName(isComboBox(widget) ? "CommonComboBoxInverted" : "menuwidgetcommand");
     return widgetAction->widget();
 }
 
