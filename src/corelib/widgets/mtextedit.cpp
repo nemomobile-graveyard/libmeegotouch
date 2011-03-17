@@ -352,9 +352,9 @@ MTextEditPrivate::MTextEditPrivate()
       previousReleaseWordEnd(0),
       signalEmitter(*this),
       preeditInjectionInProgress(false),
-      cutAction("Cut", 0),
-      copyAction("Copy", 0),
-      pasteAction("Paste", 0),
+      cutAction(0),
+      copyAction(0),
+      pasteAction(0),
       programmaticalDocumentChange(false)
 {
 }
@@ -424,6 +424,8 @@ void MTextEditPrivate::init()
     q->addAction(&cutAction);
     q->addAction(&copyAction);
     q->addAction(&pasteAction);
+
+    q->retranslateUi();
 }
 
 void MTextEditPrivate::_q_updatePasteActionState()
@@ -2612,6 +2614,17 @@ void MTextEdit::changeEvent(QEvent *event)
     MWidgetController::changeEvent(event);
 }
 
+void MTextEdit::retranslateUi()
+{
+    Q_D(MTextEdit);
+
+    //% "Cut"
+    d->cutAction.setText(qtTrId("qtn_comm_cut"));
+    //% "Copy"
+    d->copyAction.setText(qtTrId("qtn_comm_copy"));
+    //% "Paste"
+    d->pasteAction.setText(qtTrId("qtn_comm_paste"));
+}
 
 QTextDocument *MTextEdit::document() const
 {

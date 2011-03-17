@@ -559,6 +559,7 @@ protected:
     virtual void focusOutEvent(QFocusEvent *event);
     virtual void inputMethodEvent(QInputMethodEvent *);
     virtual void changeEvent(QEvent *event);
+    virtual void retranslateUi();
     virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     /*! \reimp_end */

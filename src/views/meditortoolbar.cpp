@@ -26,7 +26,6 @@
 #include <QAction>
 
 #include <QApplication>
-#include <QDebug>
 #include <QGraphicsLinearLayout>
 
 MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
@@ -181,9 +180,21 @@ bool MEditorToolbar::event(QEvent *event)
         break;
     }
     case QEvent::ActionChanged:
-        // We support only visibility changes
+    {
+        QActionEvent *actionEvent(static_cast<QActionEvent *>(event));
+
+        // Name of action might have been changed.
+        const int actionIndex = actions().indexOf(actionEvent->action());
+        Q_ASSERT(actionIndex >= 0 && actionIndex < buttons.count());
+        MButton *button(buttons.at(actionIndex));
+        if (button->text() != actionEvent->action()->text()) {
+            button->setText(actionEvent->action()->text());
+        }
+
+        // Update visibility of buttons to match visibility of actions.
         visibilityUpdated();
         break;
+    }
     default:
         return MStylableWidget::event(event);
         break;

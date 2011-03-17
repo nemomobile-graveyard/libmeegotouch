@@ -25,6 +25,7 @@
 
 class MApplication;
 class MApplicationWindow;
+class MButton;
 class MEditorToolbar;
 class MWidget;
 
@@ -43,6 +44,10 @@ private slots:
     void testPositionMapping_data();
     void testPositionMapping();
     void testVerticalPositioning();
+    void testActionTextChange();
+
+private:
+    QList<MButton *> subjectButtons() const;
 
 private:
     MApplication *m_app;

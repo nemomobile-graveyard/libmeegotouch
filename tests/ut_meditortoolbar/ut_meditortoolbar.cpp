@@ -21,9 +21,11 @@
 #include "views/meditortoolbar.h"
 
 #include <QAction>
+#include <QGraphicsLayout>
 
 #include <MApplication>
 #include <MApplicationWindow>
+#include <MButton>
 #include <MScene>
 
 void Ut_MEditorToolbar::initTestCase()
@@ -161,6 +163,33 @@ void Ut_MEditorToolbar::testVerticalPositioning()
 
     // Arrow points down, so widget should be above parent's origin.
     QVERIFY(subjectCenter.y() < 0.0f);
+}
+
+void Ut_MEditorToolbar::testActionTextChange()
+{
+    const QString oldText("granpa");
+    const QString newText("junior");
+
+    QAction action(oldText, 0);
+    action.setVisible(true);
+    subject->addAction(&action);
+    qApp->processEvents(); // Allow subject to react.
+
+    QCOMPARE(subjectButtons().first()->text(), oldText);
+    action.setText(newText);
+    QCOMPARE(subjectButtons().first()->text(), newText);
+}
+
+QList<MButton *> Ut_MEditorToolbar::subjectButtons() const
+{
+    QList<MButton *> buttons;
+    for (int i = 0; i < subject->layout()->count(); ++i) {
+        QGraphicsLayoutItem *layoutItem = subject->layout()->itemAt(i);
+        MButton *button = dynamic_cast<MButton *>(layoutItem);
+        Q_ASSERT(button);
+        buttons << button;
+    }
+    return buttons;
 }
 
 QTEST_APPLESS_MAIN(Ut_MEditorToolbar)
