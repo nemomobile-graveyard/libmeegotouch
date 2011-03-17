@@ -99,6 +99,13 @@ public:
      */
     static void releaseStyle(const MStyle *style);
 
+    enum CleanupPolicy {
+        ReleaseResouces,
+        DoNotReleaseResources
+    };
+
+    static void deleteStylesWithoutReference(CleanupPolicy cleanupPolicy = ReleaseResouces);
+
     /*!
      * \brief Cleans up the cache
      * \param outputAndDelete    If true, outputs warnings from remaining cached styles and deletes them

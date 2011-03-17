@@ -40,10 +40,6 @@ void MThemePrivate::registerStyleContainer(MStyleContainer *)
 {
 }
 
-void MThemePrivate::removeLeakedStyle(MStyle *)
-{
-}
-
 #include "mtheme.h"
 //Filling the values of the style object.
 static const int defaultPanThreshold = 10;

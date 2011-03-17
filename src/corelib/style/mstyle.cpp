@@ -30,27 +30,6 @@
 #include "gen_mstyledata.h"
 #include <QMetaProperty>
 
-/* TODO: Will be removed once all the pointers are removed from the styles
-         and pixmaps & scalable images doesn't need release calls */
-Q_DECLARE_METATYPE(const QPixmap *)
-Q_DECLARE_METATYPE(const MScalableImage *)
-void releaseAllocatedResourcesFromStyle(const MStyle *style)
-{
-    // TODO: Fix this in mtheme so, that the pixmaps are not pointers
-    // and therefore we don't need to call release at all.
-    const int propertyCount = style->metaObject()->propertyCount();
-    for (int i = 0; i < propertyCount; ++i) {
-        const QMetaProperty &property = style->metaObject()->property(i);
-        if (property.isReadable()) {
-            const char *type = property.typeName();
-            if (strcmp(type, "const QPixmap*") == 0) {
-                MTheme::releasePixmap(qvariant_cast<const QPixmap *>(property.read(style)));
-            } else if (strcmp(type, "const MScalableImage*") == 0) {
-                MTheme::releaseScalableImage(qvariant_cast<const MScalableImage *>(property.read(style)));
-            }
-        }
-    }
-}
 
 ///////////////////
 // PRIVATE CLASS //
@@ -68,16 +47,8 @@ int MStyle::addReference()
 
 int MStyle::removeReference()
 {
-    data->references--;
-    if (data->references <= 0) {
-        releaseAllocatedResourcesFromStyle(this);
-        /* TODO: deleteLater breaks theme change (when theme libraries are unloaded and deleteLater refs them)
-        deleteLater(); // Use deleteLater() for QObjects instead of "delete this"
-        */
-        MThemePrivate::removeLeakedStyle(this);
-        delete this;
-        return 0;
-    }
+    --data->references;
+
     return data->references;
 }
 

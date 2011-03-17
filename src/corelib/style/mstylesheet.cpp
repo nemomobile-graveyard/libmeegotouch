@@ -41,8 +41,52 @@
 #include "mclassfactory.h"
 #include "mwidgetcontroller.h"
 
+Q_DECLARE_METATYPE(const QPixmap *)
+namespace {
+void releaseAllocatedResourcesFromStyle(const MStyle *style)
+{
+    // TODO: Fix this in mtheme so, that the pixmaps are not pointers
+    // and therefore we don't need to call release at all.
+    const int propertyCount = style->metaObject()->propertyCount();
+    for (int i = 0; i < propertyCount; ++i) {
+        const QMetaProperty &property = style->metaObject()->property(i);
+        if (property.isReadable()) {
+            if (property.userType() == qMetaTypeId<const QPixmap *>()) {
+                MTheme::releasePixmap(qvariant_cast<const QPixmap *>(property.read(style)));
+            } else if (property.userType() == qMetaTypeId<const MScalableImage *>()) {
+                MTheme::releaseScalableImage(qvariant_cast<const MScalableImage *>(property.read(style)));
+            }
+        }
+    }
+}
+}
+
+void mMessageHandler(QtMsgType type, const char *msg);
+
+MStyleSheetPrivate::StyleCache::~StyleCache()
+{
+    // free all styles which have been released after the d'tor of MTheme
+    // MStyleSheet::DoNotReleaseResources is passed as most parts of Qt are
+    // already destroyed and freeing resources would lead to a crash
+    MStyleSheet::deleteStylesWithoutReference(MStyleSheet::DoNotReleaseResources);
+
+    // as LeakedStyles is a static class the method handler could not be valid
+    // anymore at this point. work around this problem by creating a new one
+    qInstallMsgHandler(mMessageHandler);
+
+    QHash<QByteArray, MStyle *>::iterator end = styles.end();
+    for (QHash<QByteArray, MStyle *>::iterator iterator = styles.begin();
+            iterator != end;
+            ++iterator) {
+        QByteArray id = iterator.key();
+        MStyle *leak = iterator.value();
+        mWarning("mtheme.cpp") << "Style:" << id << "not released!" << "refcount:" << leak->references();
+    }
+}
+
+MStyleSheetPrivate::StyleCache MStyleSheetPrivate::styleCache;
 QHash<QByteArray, MStyleSheetPrivate::SelectorInfoList *> MStyleSheetPrivate::EntryCache;
-QHash<QByteArray, MStyle *> MStyleSheetPrivate::StyleCache;
+//QHash<QByteArray, MStyle *> MStyleSheetPrivate::StyleCache;
 
 MStyleSheet::MStyleSheet(const MLogicalValues *logicalValues) : MStyleSheetParser(logicalValues)
 {
@@ -194,7 +238,7 @@ MStyle *MStyleSheetPrivate::style(const QList<const MStyleSheet *> &sheets,
 
     // Look in the cache first.
     QByteArray identifier = spec.styleCacheKey();
-    MStyle *style = MStyleSheetPrivate::StyleCache.value(identifier, NULL);
+    MStyle *style = MStyleSheetPrivate::styleCache.styles.value(identifier, NULL);
     if (style) {
         style->addReference();
         return style;
@@ -203,8 +247,7 @@ MStyle *MStyleSheetPrivate::style(const QList<const MStyleSheet *> &sheets,
     // If not yet cached, try to build a new style and add it to the cache.
     style = MStyleSheetPrivate::buildStyle(spec, sheets, parentsData, parentStyleName);
     if (style) {
-        MStyleSheetPrivate::StyleCache.insert(identifier, style);
-        MThemePrivate::addLeakedStyle(style, identifier);
+        MStyleSheetPrivate::styleCache.styles.insert(identifier, style);
     }
 
     return style;
@@ -213,8 +256,8 @@ MStyle *MStyleSheetPrivate::style(const QList<const MStyleSheet *> &sheets,
 void MStyleSheet::releaseStyle(const MStyle *style)
 {
     // TODO: Optimize this later
-    QHash<QByteArray, MStyle *>::iterator end = MStyleSheetPrivate::StyleCache.end();
-    for (QHash<QByteArray, MStyle *>::iterator iterator = MStyleSheetPrivate::StyleCache.begin();
+    QHash<QByteArray, MStyle *>::iterator end = MStyleSheetPrivate::styleCache.styles.end();
+    for (QHash<QByteArray, MStyle *>::iterator iterator = MStyleSheetPrivate::styleCache.styles.begin();
             iterator != end;
             ++iterator) {
 
@@ -223,11 +266,8 @@ void MStyleSheet::releaseStyle(const MStyle *style)
         // check if this was the style which needs to be released
         if (style == cached) {
             int count = cached->removeReference();
-
-            // check if the refcount drops down to zero, if it does, delete the style
-            if (count == 0) {
-                // remove cache entry
-                MStyleSheetPrivate::StyleCache.erase(iterator);
+            if (count < 0) {
+                mWarning("MStyleSheet::releaseStyle") << "Reference count for" << iterator.key() << "is below 0. Something is going wrong.";
             }
             return;
         }
@@ -235,6 +275,21 @@ void MStyleSheet::releaseStyle(const MStyle *style)
 
     // unknown style object, or cache is disabled
     const_cast<MStyle *>(style)->removeReference();
+}
+
+void MStyleSheet::deleteStylesWithoutReference(CleanupPolicy cleanupPolicy)
+{
+    QMutableHashIterator<QByteArray, MStyle *> it(MStyleSheetPrivate::styleCache.styles);
+    while (it.hasNext()) {
+        MStyle *style = it.next().value();
+        if (style->references() <= 0) {
+            if (cleanupPolicy == ReleaseResouces) {
+                releaseAllocatedResourcesFromStyle(style);
+            }
+            delete style;
+            it.remove();
+        }
+    }
 }
 
 void MStyleSheet::cleanup(bool)
@@ -250,7 +305,7 @@ void MStyleSheet::cleanup(bool)
     }
     MStyleSheetPrivate::EntryCache.clear();
 
-    MStyleSheetPrivate::StyleCache.clear();
+    deleteStylesWithoutReference();
 }
 
 MStyleSheetPrivate::SelectorInfoList *MStyleSheetPrivate::buildSelectorInfoList(const QList<const MStyleSheet *>& sheets,

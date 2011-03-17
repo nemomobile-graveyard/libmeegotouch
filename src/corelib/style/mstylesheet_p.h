@@ -133,7 +133,6 @@ public:
                          M::Orientation orientation);
 
     static QHash<QByteArray, SelectorInfoList*> EntryCache;
-    static QHash<QByteArray, MStyle *> StyleCache;
 
     static SelectorInfoList *buildSelectorInfoList(const QList<const MStyleSheet *> &sheets,
                                        const StyleSpec &spec,
@@ -169,6 +168,15 @@ public:
 
     static void matchOrientationDependent(QList<QSharedPointer<SelectorInfo> > *selectorInfos,
                                           bool *orientationDependent, M::Orientation targetOriention);
+
+    struct StyleCache {
+        ~StyleCache();
+        QHash<QByteArray, MStyle *> styles;
+    };
+    // this class must be static as it needs to be destroyed as late as possible
+    // to not ignore classes which free their styles after the destrutction of
+    // MTheme
+    static StyleCache styleCache;
 };
 
 #endif

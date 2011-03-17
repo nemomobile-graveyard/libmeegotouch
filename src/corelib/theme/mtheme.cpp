@@ -103,37 +103,7 @@ namespace
     }
 } // anonymous namespace
 
-MThemePrivate::LeakedStyles MThemePrivate::leakedStyles;
 QHash<const char*, MThemePrivate::SheetsAndHierarchy> MThemePrivate::hierarchyCache;
-
-void mMessageHandler(QtMsgType type, const char *msg);
-
-MThemePrivate::LeakedStyles::~LeakedStyles()
-{
-    // as LeakedStyles is a static class the method handler could not be valid
-    // anymore at this point. work around this problem by creating a new one
-    qInstallMsgHandler(mMessageHandler);
-
-    QHash<MStyle*, QString>::iterator end = styles.end();
-    for (QHash<MStyle*, QString>::iterator iterator = styles.begin();
-            iterator != end;
-            ++iterator) {
-        MStyle *leak = iterator.key();
-        QString id = iterator.value();
-
-        mWarning("mtheme.cpp") << "Style:" << id << "not released!" << "refcount:" << leak->references();
-    }
-}
-
-void MThemePrivate::addLeakedStyle(MStyle *style, const QString &id)
-{
-    leakedStyles.insert(style, id);
-}
-
-void MThemePrivate::removeLeakedStyle(MStyle *style)
-{
-    leakedStyles.remove(style);
-}
 
 MTheme::MTheme(const QString &applicationName, const QString &, ThemeService themeService) :
     d_ptr(new MThemePrivate(applicationName, themeService))
@@ -720,6 +690,7 @@ bool MTheme::hasPendingRequests()
 
 void MTheme::cleanupGarbage()
 {
+    MStyleSheet::deleteStylesWithoutReference();
     // FIXME: Uncomment once it's safe to release resource at any time.
     // instance()->d_ptr->cleanupGarbage();
 }
