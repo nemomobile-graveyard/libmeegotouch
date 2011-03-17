@@ -1545,19 +1545,6 @@ MTextEdit::~MTextEdit()
     }
 
     detachToolbar();
-
-    // TODO: This cannot be right - MTextEdit does not own the model, so we cannot just delete stuff from the model (another text edit could be using them).
-    // Revise after MR#434 has been merged!
-
-    // kludge so view doesn't receive memberModified() signals for the deleted pointers
-    model()->beginTransaction();
-
-    //should delete QTextDocument and QTextCursor
-    delete model()->document();
-    delete model()->cursor();
-
-    model()->setDocument(NULL);
-    model()->setCursor(NULL);
 }
 
 

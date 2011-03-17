@@ -1,6 +1,6 @@
 /***************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
@@ -43,6 +43,7 @@ class M_CORE_EXPORT MTextEditModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MTextEditModel)
+    M_MODEL_CUSTOM_DESTRUCTOR
 
 public:
 

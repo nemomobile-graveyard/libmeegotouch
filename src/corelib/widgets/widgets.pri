@@ -182,6 +182,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mslidermodel.cpp \
     $$WIDGETS_SRC_DIR/mstatusbar.cpp \
     $$WIDGETS_SRC_DIR/mtextedit.cpp \
+    $$WIDGETS_SRC_DIR/mtexteditmodel.cpp \
     $$WIDGETS_SRC_DIR/mcompleter.cpp \
     $$WIDGETS_SRC_DIR/mtoolbar.cpp \
     $$WIDGETS_SRC_DIR/mviewcreator.cpp \
