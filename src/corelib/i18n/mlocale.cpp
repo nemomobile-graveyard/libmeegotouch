@@ -2792,7 +2792,7 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
 
     monthNumber--; // months in array starting from index zero
 
-    QString categoryName = d->categoryName(MLcMessages);
+    QString categoryName = d->categoryName(MLcTime);
     categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
     icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 
@@ -2836,7 +2836,7 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
                                DateSymbolLength symbolLength) const
 {
     Q_D(const MLocale);
-    QString categoryName = d->categoryName(MLcMessages);
+    QString categoryName = d->categoryName(MLcTime);
     categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
     icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 
