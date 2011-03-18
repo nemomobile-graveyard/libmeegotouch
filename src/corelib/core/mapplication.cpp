@@ -56,9 +56,6 @@ MApplicationPrivate::MApplicationPrivate():
                               "_MEEGOTOUCH_VISIBLE_IN_SWITCHER", False);
     minimizeAnimationAtom = XInternAtom(QX11Info::display(),
                                         "_MEEGOTOUCH_MINIMIZE_ANIMATION", False);
-    mtAlwaysMappedAtom = XInternAtom(QX11Info::display(),
-                                     "_MEEGOTOUCH_ALWAYS_MAPPED", True);
-    wmStateAtom = XInternAtom(QX11Info::display(), "WM_STATE", True);
 #endif
 }
 
@@ -135,75 +132,6 @@ bool MApplicationPrivate::hasXStateAtom(Window window, Atom atom)
 
         return false;
     }
-}
-
-void MApplicationPrivate::updateWindowIconicState(Window window)
-{
-    Atom type;
-    int format;
-    unsigned long nItems;
-    unsigned long bytesAfter;
-
-    union {
-        unsigned char* asUChar;
-        unsigned long* asULong;
-    } data = {0};
-
-    int status = XGetWindowProperty(QX11Info::display(), window, wmStateAtom, 0, 1, False,
-                                    AnyPropertyType, &type, &format, &nItems, &bytesAfter,
-                                    &data.asUChar);
-
-    if(status == Success && nItems == 1) {
-        MWindow * win = MApplicationPrivate::windowForId(window);
-        if (win) {
-            switch (data.asULong[0]) {
-            case IconicState:
-                win->d_func()->isIconicState = true;
-                break;
-            case NormalState:
-            default:
-                win->d_func()->isIconicState = false;
-            }
-        }
-    }
-
-    if (status == Success)
-        XFree(data.asUChar);
-}
-
-void MApplicationPrivate::updateWindowIsAlwaysMapped(Window window)
-{
-    Atom type;
-    int format;
-    unsigned long nItems;
-    unsigned long bytesAfter;
-
-    union {
-        unsigned char* asUChar;
-        unsigned long* asULong;
-    } data = {0};
-
-    int status = XGetWindowProperty(QX11Info::display(), window, mtAlwaysMappedAtom, 0, 1, False,
-                                    XA_CARDINAL, &type, &format, &nItems, &bytesAfter,
-                                    &data.asUChar);
-
-    if(status == Success && nItems == 1 && type == XA_CARDINAL) {
-        MWindow * win = MApplicationPrivate::windowForId(window);
-        if (win) {
-            switch(data.asULong[0]) {
-            case 1:
-            case 2:
-                win->d_func()->isAlwaysMapped = true;
-                break;
-            default:
-                win->d_func()->isAlwaysMapped = false;
-            }
-            win->d_func()->resolveOrientationRules();
-        }
-    }
-
-    if (status == Success)
-        XFree(data.asUChar);
 }
 #endif
 
@@ -600,10 +528,6 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
                                                                                             "_NET_WM_STATE_SKIP_TASKBAR",
                                                                                             True));
             }
-        } else if (xevent->atom == wmStateAtom) {
-            updateWindowIconicState(xevent->window);
-        } else if (xevent->atom == mtAlwaysMappedAtom) {
-            updateWindowIsAlwaysMapped(xevent->window);
         }
     }
 }

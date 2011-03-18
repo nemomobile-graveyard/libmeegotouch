@@ -71,14 +71,10 @@ private:
     static void setX11PrestartPropertyForWindows(bool set);
     static MWindow * windowForId(Window window);
     static bool hasXStateAtom(Window window, Atom atom);
-    void updateWindowIconicState(Window window);
-    void updateWindowIsAlwaysMapped(Window window);
     void handleXVisibilityEvent(XVisibilityEvent *xevent);
     void handleXPropertyEvent(XPropertyEvent *xevent);
     Atom visibleAtom;
     Atom minimizeAnimationAtom;
-    Atom wmStateAtom;
-    Atom mtAlwaysMappedAtom;
 #endif
     friend class MApplicationServicePrivate;
     friend class MWindow;

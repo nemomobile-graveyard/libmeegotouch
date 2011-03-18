@@ -66,8 +66,6 @@ public:
 
     bool removeWindowFromSwitcherInProgress;
     bool skipTaskbar;
-    bool isIconicState;
-    bool isAlwaysMapped;
     bool notificationPreviewDisabled;
 #endif
 

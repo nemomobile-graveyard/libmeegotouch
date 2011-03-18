@@ -633,15 +633,6 @@ private:
         Returns a MSceneManager::TransitionMode
     */
     int orientationChangeTransitionMode();
-#ifdef Q_WS_X11
-    /*
-        For testing purposes.
-        Sets variables set by MApplication while processing x
-        property events.
-     */
-    void setWindowIconicState(bool isIconic);
-    void setWindowAlwaysMapped(bool alwaysMapped);
-#endif
 
     friend class MApplicationPrivate;
     friend class MSceneManagerPrivate;

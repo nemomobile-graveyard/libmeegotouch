@@ -100,8 +100,6 @@ MWindowPrivate::MWindowPrivate() :
 #ifdef Q_WS_X11
     removeWindowFromSwitcherInProgress = false;
     skipTaskbar = false;
-    isIconicState = false;
-    isAlwaysMapped = false;
     notificationPreviewDisabled = false;
 #endif
 
@@ -404,7 +402,9 @@ void MWindowPrivate::resolveOrientationRules() {
     Q_Q(MWindow);
 
 #ifdef Q_WS_X11
-    if ((!isIconicState || isAlwaysMapped) && !q->isOnDisplay()) {
+    //follow current app window if window is visible in switcher
+    if ((isInSwitcher && q->isOnDisplay()) ||
+        (q->isVisible() && !q->isMinimized() && !q->isOnDisplay())) {
         MOrientationTracker::instance()->d_ptr->startFollowingCurrentAppWindow(q, true);
     } else {
         MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
@@ -511,8 +511,7 @@ void MWindowPrivate::doEnterDisplayEvent()
     emit q->displayEntered();
 
 #ifdef Q_WS_X11
-    MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
-    MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
+    resolveOrientationRules();
 #endif //Q_WS_X11
 
     if (discardedPaintEvent) {
@@ -625,6 +624,7 @@ void MWindowPrivate::doSwitcherExited()
 
     if (isInSwitcher) {
         isInSwitcher = false;
+        resolveOrientationRules();
         emit q->switcherExited();
     }
 }
@@ -635,6 +635,7 @@ void MWindowPrivate::doSwitcherEntered()
 
     if (!isInSwitcher) {
         isInSwitcher = true;
+        resolveOrientationRules();
         emit q->switcherEntered();
     }
 }
@@ -1339,6 +1340,8 @@ bool MWindow::event(QEvent *event)
 
     if ((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);
+    } else if (event->type() == QEvent::Show || event->type() == QEvent::Hide) {
+        d->resolveOrientationRules();
     } else if (event->type() == QEvent::WindowStateChange) {
         d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
     } else if (event->type() == QEvent::Close) {
@@ -1460,9 +1463,7 @@ bool MWindow::event(QEvent *event)
     } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
         return true;
-    }
-#ifdef Q_WS_X11
-    else if (event->type() == QEvent::DynamicPropertyChange) {
+    } else if (event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
             //property was set, does not matter what value
@@ -1471,10 +1472,14 @@ bool MWindow::event(QEvent *event)
                 MOrientationTracker::instance()->d_func()->startFollowingCurrentAppWindow(this);
             }
             //propery was unset
-            else
+            else {
                 MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this);
+                d->resolveOrientationRules();
+            }
         }
-    } else if (event->type() == QEvent::WinIdChange) {
+    }
+#ifdef Q_WS_X11
+    else if (event->type() == QEvent::WinIdChange) {
         d->setMeegoX11Properties();
     }
 #endif
@@ -1618,21 +1623,6 @@ void MWindow::setRoundedCornersEnabled(bool enabled)
             d->borderDecorator->removeDecorations();
     }
 }
-
-
-#ifdef Q_WS_X11
-void MWindow::setWindowIconicState(bool isIconic)
-{
-    Q_D(MWindow);
-    d->isIconicState = isIconic;
-}
-
-void MWindow::setWindowAlwaysMapped(bool alwaysMapped)
-{
-    Q_D(MWindow);
-    d->isAlwaysMapped = alwaysMapped;
-}
-#endif
 
 #ifndef UNIT_TEST
 #include "moc_mwindow.cpp"
