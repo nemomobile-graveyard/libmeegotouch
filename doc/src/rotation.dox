@@ -1,6 +1,6 @@
 /*! \page rotation Screen rotation
 
-MeeGo Touch applications can be used in both landscape and portrait orientations. You can rotate applications to four different orientation angles: 0 (landscape), 90 (portrait), 180 (landscape) and 270 degrees clockwise (portrait). For more information on coordinate systems and related angles, see \subpage sceneandscenewindows.
+MeeGo Touch applications can be used in both landscape and portrait orientations. You can rotate applications to four different orientation angles: 0, 90, 180 and 270 degrees clockwise. For more information on coordinate systems and related angles, see \subpage sceneandscenewindows.
 
 By default, MeeGo Touch applications automatically rotate to the appropriate orientation angle when needed. It just works.
 

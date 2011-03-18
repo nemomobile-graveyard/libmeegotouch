@@ -52,25 +52,25 @@ namespace M
     M_CORE_EXPORT extern const char* NoMStatusBar;
 
     /*!
-     * This enum contains values of the orientation angle of windows in the application.
-     *
+     * \brief An enumeration of different rotation angles.
      * \sa Orientation
      */
     enum OrientationAngle {
-        Angle0   =   0,
-        Angle90  =  90,
-        Angle180 = 180,
-        Angle270 = 270
+        Angle0   =   0, //!< No rotation.
+        Angle90  =  90, //!< 90 degrees of rotation, clockwise.
+        Angle180 = 180, //!< 180 degrees of rotation, clockwise.
+        Angle270 = 270  //!< 270 degrees of rotation, clockwise.
     };
 
     /*!
-     * This enum contains possible values for orientation of windows in the application.
+     * \brief This enum contains values that defines a basic relationship between the width and
+     *        height of windows, displays, rectangles, etc.
      *
      * \sa OrientationAngle
      */
     enum Orientation {
-        Portrait, //!< equal to either M::Angle90 or M::Angle270 orientation angles
-        Landscape //!< equal to either M::Angle0 or M::Angle180 orientation angles
+        Portrait, //!< Window's or display's height is larger than its width
+        Landscape //!< Window's or display's width is larger than (or equal to) its height
     };
 
     /*!
