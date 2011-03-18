@@ -62,25 +62,31 @@ void LongSheet::createCentralWidget()
 
     //% "Username:"
     label = new MLabel(qtTrId("xx_wg_sheets_username"));
+    label->setStyleName("CommonFieldLabel");
 
     mainLayout->addItem(label);
 
     MTextEdit *textEdit = new MTextEdit;
+    textEdit->setStyleName("CommonSingleInputFieldLabeled");
     mainLayout->addItem(textEdit);
 
     mainLayout->addItem(createSpacer());
 
     //% "Password:"
     label = new MLabel(qtTrId("xx_wg_sheets_password"));
+    label->setStyleName("CommonFieldLabel");
     mainLayout->addItem(label);
 
     textEdit = new MTextEdit;
+    textEdit->setStyleName("CommonSingleInputFieldLabeled");
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
 
     //% "This sheet is so long that it needs a pannable viewport to make all its "
     //% "content available."
     label = new MLabel(qtTrId("xx_wg_sheets_long_notice"));
+    label->setStyleName("CommonBodyText");
+    label->setWordWrap(true);
     mainLayout->addItem(label);
 
     mainLayout->addItem(createSpacer());
@@ -93,12 +99,14 @@ void LongSheet::createCentralWidget()
         "velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
         "cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id "
         "est laborum.");
+    label->setStyleName("CommonBodyText");
     label->setWordWrap(true);
     mainLayout->addItem(label);
 
     mainLayout->addItem(createSpacer());
 
     MSlider *slider = new MSlider;
+    slider->setStyleName("CommonSlider");
     slider->setRange(0, 100);
     slider->setMinLabelVisible(true);
     slider->setMaxLabelVisible(true);
@@ -109,8 +117,10 @@ void LongSheet::createCentralWidget()
 
     // OBS: No point in translating dummy text.
     label = new MLabel("Foobar:");
+    label->setStyleName("CommonFieldLabel");
     mainLayout->addItem(label);
     textEdit = new MTextEdit;
+    textEdit->setStyleName("CommonSingleInputFieldLabeled");
     mainLayout->addItem(textEdit);
 }
 
@@ -171,7 +181,7 @@ QGraphicsWidget *LongSheet::createSpacer() const
 {
     QGraphicsWidget *spacer = new QGraphicsWidget;
     spacer->setFlag(QGraphicsItem::ItemHasNoContents);
-    spacer->setPreferredHeight(50.0);
+    spacer->setPreferredHeight(24.0);
     spacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     return spacer;
 }

@@ -73,12 +73,14 @@
 #include <MButton>
 #include <MLabel>
 #include <MAction>
+#include <MWidgetAction>
 #include <MDialog>
 #include <MButtonGroup>
 #include <MTheme>
 #include <MGridLayoutPolicy>
 #include <MLinearLayoutPolicy>
 #include <MApplicationWindow>
+#include <MComboBox>
 
 #ifdef HAVE_GCONF
 #include <MGConfItem>
@@ -472,9 +474,9 @@ MainPage::MainPage(const QString &title)
     : TimedemoPage(),
       list(0),
       actionThemes(0),
-      actionOrientation(0),
       actionToggleFPS(0),
       actionLanguage(0),
+      comboOrientation(0),
       shownPage(0),
       policy(0),
       languageSettingsPage(0),
@@ -522,10 +524,17 @@ void MainPage::createContent()
     this->addAction(actionThemes);
     connect(actionThemes, SIGNAL(triggered()), SLOT(showThemeSelectionDialog()));
 
-    actionOrientation = new MAction(this);
-    actionOrientation->setLocation(MAction::ApplicationMenuLocation);
-    this->addAction(actionOrientation);
-    connect(actionOrientation, SIGNAL(triggered()), SLOT(showOrientationSelectionDialog()));
+    QStringList items;
+    items << //% "Automatic"
+        qtTrId("xx_apporientation_auto") << //% "Portrait"
+        qtTrId("xx_apporientation_portrait") << //% "Landscape"
+        qtTrId("xx_apporientation_landscape") << //% "0 degrees"
+        qtTrId("xx_apporientation_angle0") << //% "90 degrees clockwise"
+        qtTrId("xx_apporientation_angle90") << //% "180 degrees clockwise"
+        qtTrId("xx_apporientation_angle180") << //% "270 degrees clockwise"
+        qtTrId("xx_apporientation_angle270");
+    comboOrientation = createComboBoxAction(NULL, items);
+    connect(comboOrientation, SIGNAL(currentIndexChanged(int)), SLOT(changeOrientation(int)));
 
     actionToggleFPS = new MAction(this);
     actionToggleFPS->setLocation(MAction::ApplicationMenuLocation);
@@ -554,7 +563,7 @@ void MainPage::retranslateUi()
     //% "Themes"
     actionThemes->setText(qtTrId("xx_mainpage_themes"));
     //% "Orientation"
-    actionOrientation->setText(qtTrId("xx_mainpage_orientation"));
+    comboOrientation->setTitle(qtTrId("xx_mainpage_orientation"));
     //% "Toggle FPS"
     actionToggleFPS->setText(qtTrId("xx_mainpage_toggle_fps"));
     //% "Language Settings"
@@ -758,104 +767,59 @@ void MainPage::showThemeSelectionDialog()
     delete dialog;
 }
 
-void MainPage::showOrientationSelectionDialog()
+MComboBox* MainPage::createComboBoxAction(const QString &title, const QStringList &itemsList)
 {
-    QPointer<MDialog> dialog = new MDialog("Select orientation (angle)", M::OkButton | M::CancelButton);
+    MWidgetAction *widgetAction = new MWidgetAction(centralWidget());
+    widgetAction->setLocation(MAction::ApplicationMenuLocation);
+    MComboBox *comboBox = new MComboBox;
+    comboBox->setTitle(title);
+    comboBox->setIconVisible(false);
+    comboBox->addItems(itemsList);
+    comboBox->setCurrentIndex(0);
+    widgetAction->setWidget(comboBox);
+    addAction(widgetAction);
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    dialog->centralWidget()->setLayout(layout);
+    return comboBox;
+}
 
-    MButtonGroup *group = new MButtonGroup(dialog->centralWidget());
-
-    MButton *automatic = new MButton(//% "Automatic"
-        qtTrId("xx_apporientation_auto"));
-    automatic->setCheckable(true);
-    automatic->setChecked(!applicationWindow()->isOrientationAngleLocked() &&
-                          !applicationWindow()->isOrientationLocked());
-    layout->addItem(automatic);
-    group->addButton(automatic);
-
-    MButton *portrait = new MButton(//% "Portrait"
-        qtTrId("xx_apporientation_portrait"));
-    portrait->setCheckable(true);
-    portrait->setChecked(applicationWindow()->isOrientationLocked()
-                         && applicationWindow()->orientation() == M::Portrait);
-    layout->addItem(portrait);
-    group->addButton(portrait);
-
-    MButton *landscape = new MButton(//% "Landscape"
-        qtTrId("xx_apporientation_landscape"));
-    landscape->setCheckable(true);
-    landscape->setChecked(applicationWindow()->isOrientationLocked()
-                          && applicationWindow()->orientation() == M::Landscape);
-    layout->addItem(landscape);
-    group->addButton(landscape);
-
-    MButton *angle0 = new MButton(//% "0 degrees"
-        qtTrId("xx_apporientation_angle0"));
-    angle0->setCheckable(true);
-    angle0->setChecked(applicationWindow()->isOrientationAngleLocked()
-                       && applicationWindow()->orientationAngle() == M::Angle0);
-    layout->addItem(angle0);
-    group->addButton(angle0);
-
-    MButton *angle90 = new MButton(//% "90 degrees clockwise"
-        qtTrId("xx_apporientation_angle90"));
-    angle90->setCheckable(true);
-    angle0->setChecked(applicationWindow()->isOrientationAngleLocked()
-                       && applicationWindow()->orientationAngle() == M::Angle90);
-    layout->addItem(angle90);
-    group->addButton(angle90);
-
-    MButton *angle180 = new MButton(//% "180 degrees clockwise"
-        qtTrId("xx_apporientation_angle180"));
-    angle180->setCheckable(true);
-    angle0->setChecked(applicationWindow()->isOrientationAngleLocked()
-                       && applicationWindow()->orientationAngle() == M::Angle180);
-    layout->addItem(angle180);
-    group->addButton(angle180);
-
-    MButton *angle270 = new MButton(//% "270 degrees clockwise"
-        qtTrId("xx_apporientation_angle270"));
-    angle270->setCheckable(true);
-    angle0->setChecked(applicationWindow()->isOrientationAngleLocked()
-                       && applicationWindow()->orientationAngle() == M::Angle270);
-    layout->addItem(angle270);
-    group->addButton(angle270);
-
-    if (dialog->exec() == MDialog::Accepted) {
-        MButton *mode = group->checkedButton();
-        if (mode == automatic) {
-            applicationWindow()->setOrientationAngleLocked(false);
-            applicationWindow()->setOrientationLocked(false);
-        } else if (mode == portrait) {
-            applicationWindow()->setOrientationAngleLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle270);
-            applicationWindow()->setOrientationLocked(true);
-        } else if (mode == landscape) {
-            applicationWindow()->setOrientationAngleLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle0);
-            applicationWindow()->setOrientationLocked(true);
-        } else if (mode == angle0) {
-            applicationWindow()->setOrientationLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle0);
-            applicationWindow()->setOrientationAngleLocked(true);
-        } else if (mode == angle90) {
-            applicationWindow()->setOrientationLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle90);
-            applicationWindow()->setOrientationAngleLocked(true);
-        } else if (mode == angle180) {
-            applicationWindow()->setOrientationLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle180);
-            applicationWindow()->setOrientationAngleLocked(true);
-        } else if (mode == angle270) {
-            applicationWindow()->setOrientationLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle270);
-            applicationWindow()->setOrientationAngleLocked(true);
-        }
+void MainPage::changeOrientation(int index)
+{
+    switch(index) {
+    case Automatic:
+        applicationWindow()->setOrientationAngleLocked(false);
+        applicationWindow()->setOrientationLocked(false);
+        break;
+    case Portrait:
+        applicationWindow()->setOrientationAngleLocked(false);
+        applicationWindow()->setOrientationAngle(M::Angle270);
+        applicationWindow()->setOrientationLocked(true);
+        break;
+    case Landscape:
+        applicationWindow()->setOrientationAngleLocked(false);
+        applicationWindow()->setOrientationAngle(M::Angle0);
+        applicationWindow()->setOrientationLocked(true);
+        break;
+    case Angle0:
+        applicationWindow()->setOrientationAngleLocked(false);
+        applicationWindow()->setOrientationAngle(M::Angle0);
+        applicationWindow()->setOrientationLocked(true);
+        break;
+    case Angle90:
+        applicationWindow()->setOrientationAngleLocked(false);
+        applicationWindow()->setOrientationAngle(M::Angle90);
+        applicationWindow()->setOrientationLocked(true);
+        break;
+    case Angle180:
+        applicationWindow()->setOrientationAngleLocked(false);
+        applicationWindow()->setOrientationAngle(M::Angle180);
+        applicationWindow()->setOrientationLocked(true);
+        break;
+    case Angle270:
+        applicationWindow()->setOrientationAngleLocked(false);
+        applicationWindow()->setOrientationAngle(M::Angle270);
+        applicationWindow()->setOrientationLocked(true);
+        break;
     }
-
-    delete dialog;
 }
 
 void MainPage::toggleFps()

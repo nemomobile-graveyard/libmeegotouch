@@ -38,6 +38,8 @@
 #include <MDialog>
 #include <MPannableViewport>
 #include <MGridLayoutPolicy>
+#include <MSheet>
+#include <MBasicSheetHeader>
 
 #include "utils.h"
 #include "gridmodel.h"
@@ -109,9 +111,7 @@ MGridPage::MGridPage()
       m_columnsPortrait(4),
       m_columnsLandscape(6),
       m_columnsLandscapeSlider(0),
-      m_columnsPortraitSlider(0),
-      m_columnsLandscapeLabel(0),
-      m_columnsPortraitLabel(0)
+      m_columnsPortraitSlider(0)
 {
     setStyleName("gridPage");
 }
@@ -168,7 +168,7 @@ void MGridPage::createContent()
     //% "Configuration"
     actionConfiguration = new MAction(this);
     actionConfiguration->setLocation(MAction::ApplicationMenuLocation);
-    connect(actionConfiguration, SIGNAL(triggered()), this, SLOT(showGridConfigurationDialog()));
+    connect(actionConfiguration, SIGNAL(triggered()), this, SLOT(showGridConfigurationSheet()));
     addAction(actionConfiguration);
 
     connect(this, SIGNAL(disappearing()), this, SLOT(pauseLoaders()));
@@ -238,79 +238,94 @@ void MGridPage::configureGrid(M::Orientation orientation)
     update();
 }
 
-void MGridPage::showGridConfigurationDialog()
+void MGridPage::configurationUpdated()
 {
-    //% "Set columns"
-    QPointer<MDialog> dialog = new MDialog(qtTrId("xx_gridpage_set_columns"), M::OkButton | M::CancelButton);
+    m_columnsLandscape = m_columnsLandscapeSlider->value();
+    m_columnsPortrait = m_columnsPortraitSlider->value();
+    configureGrid();
+    configurationSheet->dismiss();
+}
 
-    MLayout *layout = new MLayout(dialog->centralWidget());
-    MGridLayoutPolicy *landscapePolicy = new MGridLayoutPolicy(layout);
-    layout->setLandscapePolicy(landscapePolicy);
-
-    MLinearLayoutPolicy *potraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    layout->setPortraitPolicy(potraitPolicy);
-
-    dialog->centralWidget()->setLayout(layout);
-
-    m_columnsLandscapeSlider = new MSlider;
-    m_columnsLandscapeSlider->setRange(2,8);
-    m_columnsLandscapeSlider->setValue(m_columnsLandscape);
-    m_columnsLandscapeSlider->setHandleLabelVisible(true);
-    m_columnsLandscapeSlider->setMinLabelVisible(true);
-    m_columnsLandscapeSlider->setMaxLabelVisible(true);
-
-    m_columnsPortraitSlider = new MSlider;
-    m_columnsPortraitSlider->setRange(2,5);
-    m_columnsPortraitSlider->setValue(m_columnsPortrait);
-    m_columnsPortraitSlider->setHandleLabelVisible(true);
-    m_columnsPortraitSlider->setMinLabelVisible(true);
-    m_columnsPortraitSlider->setMaxLabelVisible(true);
-
-    m_columnsLandscapeLabel = new MLabel(QString::number( m_columnsLandscapeSlider->value() ));
-    m_columnsPortraitLabel = new MLabel(QString::number(m_columnsPortraitSlider->value()));
-
-    connect( m_columnsLandscapeSlider,SIGNAL(valueChanged(int)), this,SLOT(modifyColumnsSliderHandle(int)) );
-    connect( m_columnsPortraitSlider,SIGNAL(valueChanged(int)), this,SLOT(modifyRowsSliderHandle(int)) );
-
-    //% "Landscape"
-    landscapePolicy->addItem(new MLabel(qtTrId("xx_gridpage_landscape")), 0,0);
-    landscapePolicy->addItem(m_columnsLandscapeLabel,  1,0);
-    landscapePolicy->addItem(m_columnsLandscapeSlider, 2,0);
-
-    //% "Portrait"
-    landscapePolicy->addItem(new MLabel(qtTrId("xx_gridpage_portrait")), 0,1);
-    landscapePolicy->addItem(m_columnsPortraitLabel,  1,1);
-    landscapePolicy->addItem(m_columnsPortraitSlider, 2,1);
-
-    //% "Landscape"
-    potraitPolicy->addItem(new MLabel(qtTrId("xx_gridpage_landscape")));
-    potraitPolicy->addItem(m_columnsLandscapeLabel);
-    potraitPolicy->addItem(m_columnsLandscapeSlider);
-
-    //% "Portrait"
-    potraitPolicy->addItem(new MLabel(qtTrId("xx_gridpage_portrait")));
-    potraitPolicy->addItem(m_columnsPortraitLabel);
-    potraitPolicy->addItem(m_columnsPortraitSlider);
-
-    if (dialog->exec() == MDialog::Accepted) {
-        m_columnsLandscape = m_columnsLandscapeSlider->value();
-        m_columnsPortrait = m_columnsPortraitSlider->value();
-        configureGrid();
-    }
-
-    delete dialog;
+void MGridPage::configurationCanceled()
+{
+    configurationSheet->dismiss();
 }
 
 void MGridPage::modifyColumnsSliderHandle(int newValue)
 {
     m_columnsLandscapeSlider->setHandleLabel(QString::number(newValue));
-    m_columnsLandscapeLabel->setText(QString::number(newValue));
 }
 
 void MGridPage::modifyRowsSliderHandle(int newValue)
 {
     m_columnsPortraitSlider->setHandleLabel(QString::number(newValue));
-    m_columnsPortraitLabel->setText(QString::number(newValue));
+}
+
+void MGridPage::showGridConfigurationSheet()
+{
+    configurationSheet = new MSheet;
+    MBasicSheetHeader *header = new MBasicSheetHeader;
+
+    header->setPositiveAction(new QAction("Done", header));
+    connect(header->positiveAction(), SIGNAL(triggered()), SLOT(configurationUpdated()));
+
+    header->setNegativeAction(new QAction("Cancel", header));
+    connect(header->negativeAction(), SIGNAL(triggered()), SLOT(configurationCanceled()));
+
+    configurationSheet->setHeaderWidget(header);
+
+
+    MLayout *layout = new MLayout(configurationSheet->centralWidget());
+    layout->setContentsMargins(0, 0, 0, 0);
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    layout->setPolicy(policy);
+
+    configurationSheet->centralWidget()->setLayout(layout);
+
+    MLabel *titleLabel = new MLabel(qtTrId("xx_gridpage_set_columns"));
+    titleLabel->setStyleName("CommonTitle");
+    policy->addItem(titleLabel);
+
+    m_columnsLandscapeSlider = new MSlider;
+    m_columnsLandscapeSlider->setStyleName("CommonSlider");
+    m_columnsLandscapeSlider->setRange(2,8);
+    m_columnsLandscapeSlider->setValue(m_columnsLandscape);
+    m_columnsLandscapeSlider->setHandleLabelVisible(true);
+    m_columnsLandscapeSlider->setMinLabelVisible(true);
+    m_columnsLandscapeSlider->setMaxLabelVisible(true);
+    m_columnsLandscapeSlider->setMinLabel("2");
+    m_columnsLandscapeSlider->setMaxLabel("8");
+
+    m_columnsPortraitSlider = new MSlider;
+    m_columnsPortraitSlider->setStyleName("CommonSlider");
+    m_columnsPortraitSlider->setRange(2,5);
+    m_columnsPortraitSlider->setValue(m_columnsPortrait);
+    m_columnsPortraitSlider->setHandleLabelVisible(true);
+    m_columnsPortraitSlider->setMinLabelVisible(true);
+    m_columnsPortraitSlider->setMaxLabelVisible(true);
+    m_columnsPortraitSlider->setMinLabel("2");
+    m_columnsPortraitSlider->setMaxLabel("5");
+
+    connect( m_columnsLandscapeSlider,SIGNAL(valueChanged(int)), this,SLOT(modifyColumnsSliderHandle(int)) );
+    connect( m_columnsPortraitSlider,SIGNAL(valueChanged(int)), this,SLOT(modifyRowsSliderHandle(int)) );
+
+    //% "Landscape"
+    MLabel *landscapeLabel = new MLabel(qtTrId("xx_gridpage_landscape"));
+    landscapeLabel->setStyleName("CommonFieldLabel");
+
+    //% "Portrait"
+    MLabel *portraitLabel = new MLabel(qtTrId("xx_gridpage_portrait"));
+    portraitLabel->setStyleName("CommonFieldLabel");
+
+    policy->addItem(landscapeLabel);
+    policy->addItem(m_columnsLandscapeSlider);
+
+    policy->addItem(portraitLabel);
+    policy->addItem(m_columnsPortraitSlider);
+
+    policy->addStretch();
+
+    configurationSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void MGridPage::pauseLoaders()

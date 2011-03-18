@@ -54,19 +54,23 @@ void LoginSheet::createCentralWidget()
 
     //% "Username:"
     label = new MLabel(qtTrId("xx_wg_sheets_username"));
+    label->setStyleName("CommonFieldLabel");
 
     mainLayout->addItem(label);
 
     MTextEdit *textEdit = new MTextEdit;
+    textEdit->setStyleName("CommonSingleInputFieldLabeled");
     mainLayout->addItem(textEdit);
 
     mainLayout->addItem(createSpacer());
 
     //% "Password:"
     label = new MLabel(qtTrId("xx_wg_sheets_password"));
+    label->setStyleName("CommonFieldLabel");
     mainLayout->addItem(label);
 
     textEdit = new MTextEdit;
+    textEdit->setStyleName("CommonSingleInputFieldLabeled");
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
 
@@ -130,7 +134,7 @@ QGraphicsWidget *LoginSheet::createSpacer() const
 {
     QGraphicsWidget *spacer = new QGraphicsWidget;
     spacer->setFlag(QGraphicsItem::ItemHasNoContents);
-    spacer->setPreferredHeight(50.0);
+    spacer->setPreferredHeight(24.0);
     spacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     return spacer;
 }

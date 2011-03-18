@@ -32,6 +32,7 @@ class MLabel;
 class MList;
 class MButton;
 class QSettings;
+class MComboBox;
 
 class LanguagePage;
 class EmptyMainLoopHelper;
@@ -50,6 +51,16 @@ public:
         PageType
     };
 
+    enum Orientation {
+        Automatic,
+        Portrait,
+        Landscape,
+        Angle0,
+        Angle90,
+        Angle180,
+        Angle270
+    };
+
 public:
     MainPage(const QString &title = "");
     virtual ~MainPage();
@@ -66,10 +77,10 @@ public:
 
 public slots:
     void showThemeSelectionDialog();
-    void showOrientationSelectionDialog();
     void toggleFps();
     void showInitialPage();
     void showLanguageSettingsPage();
+    void changeOrientation(int index);
 
     void categoryItemClicked(const QModelIndex &index);
 
@@ -84,9 +95,9 @@ private:
 private:
     MList *list;
     MAction *actionThemes;
-    MAction *actionOrientation;
     MAction *actionToggleFPS;
     MAction *actionLanguage;
+    MComboBox *comboOrientation;
 
     MApplicationPage *shownPage;
     MLinearLayoutPolicy *policy;
@@ -97,6 +108,8 @@ private:
     QString initialPageToShow;
     bool createEmpty;
     EmptyMainLoopHelper *mainLoopHelper;
+
+    MComboBox *createComboBoxAction(const QString &title, const QStringList &itemList);
 };
 
 #endif

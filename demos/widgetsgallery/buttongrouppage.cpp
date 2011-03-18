@@ -63,6 +63,8 @@ void ButtonGroupPage::createContent()
   // Init horizontal button group, default style
     MLayout* hLayout1 = new MLayout;
     MLinearLayoutPolicy* hPolicy1 = new MLinearLayoutPolicy(hLayout1, Qt::Horizontal);
+    hPolicy1->setContentsMargins(0, 0, 0, 0);
+    hPolicy1->setSpacing(0);
     // The policy notifies the widgets of their relative position inside the layout,
     // this causes the buttons to be rendered with different backgrounds for each position
     hPolicy1->setNotifyWidgetsOfLayoutPositionEnabled(true);
@@ -88,6 +90,8 @@ void ButtonGroupPage::createContent()
     // Init horizontal button group, exclusive
     MLayout* hLayout2 = new MLayout;
     MLinearLayoutPolicy* hPolicy2 = new MLinearLayoutPolicy(hLayout2, Qt::Horizontal);
+    hPolicy2->setContentsMargins(0, 0, 0, 0);
+    hPolicy2->setSpacing(0);
     hPolicy2->setNotifyWidgetsOfLayoutPositionEnabled(true);
     pushButton4 = new MButton();
     pushButton4->setCheckable(true);

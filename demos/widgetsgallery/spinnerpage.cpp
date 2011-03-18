@@ -20,7 +20,7 @@
 #include "spinnerpage.h"
 #include "utils.h"
 #include <QTimer>
-#include <MButton>
+#include <MBasicListItem>
 #include <MLabel>
 #include <MTheme>
 #include <MLocale>
@@ -214,13 +214,20 @@ void SpinnerPage::launchDialog()
 {
     MWidget *container = new MWidget();
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
     container->setLayout(layout);
 
-    MButton *wifi = new MButton("Free Wifi", container);
+    MBasicListItem *wifi = new MBasicListItem();
+    wifi->setStyleName("CommonSmallPanelInverted");
+    wifi->setTitle("Free Wifi");
     layout->addItem(wifi);
-    MButton *wlan = new MButton("Public WLAN", container);
+    MBasicListItem *wlan = new MBasicListItem();
+    wlan->setStyleName("CommonSmallPanelInverted");
+    wlan->setTitle("Public WLAN");
     layout->addItem(wlan);
-    MButton *starbucks = new MButton("Starbucks", container);
+    MBasicListItem *starbucks = new MBasicListItem();
+    starbucks->setStyleName("CommonSmallPanelInverted");
+    starbucks->setTitle("Starbucks");
     layout->addItem(starbucks);
 
     //% "Select Internet connection"

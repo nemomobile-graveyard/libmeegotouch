@@ -27,6 +27,7 @@
 
 class MSlider;
 class MLabel;
+class MSheet;
 
 class MGridPage: public TemplatePage
 {
@@ -47,10 +48,11 @@ public:
 public Q_SLOTS:
     void itemClicked(const QModelIndex &index);
 
-    void showGridConfigurationDialog();
-
+    void showGridConfigurationSheet();
     void modifyColumnsSliderHandle(int newValue);
     void modifyRowsSliderHandle(int newValue);
+    void configurationUpdated();
+    void configurationCanceled();
 
 signals:
 protected:
@@ -75,8 +77,8 @@ private:
 
     MSlider* m_columnsLandscapeSlider;
     MSlider* m_columnsPortraitSlider;
-    MLabel* m_columnsLandscapeLabel;
-    MLabel* m_columnsPortraitLabel;
+
+    MSheet* configurationSheet;
 };
 
 #endif

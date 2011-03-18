@@ -83,6 +83,7 @@ void SliderPage::createContent()
 
     ageSlider = new MSlider;
     ageSlider->setObjectName("ageSlider");
+    ageSlider->setStyleName("CommonSlider");
     horizontalAgeLayoutPolicy->addItem(ageSlider);
     horizontalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
     verticalAgeLayoutPolicy->addItem(ageSlider);
@@ -107,6 +108,7 @@ void SliderPage::createContent()
 
     playerSeekBar = new MSeekBar;
     playerSeekBar->setObjectName("playerSeekBar");
+    playerSeekBar->setStyleName("CommonSeeker");
     playerLayoutPolicy->addItem(playerSeekBar);
     playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
 

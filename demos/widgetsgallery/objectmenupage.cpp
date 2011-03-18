@@ -28,7 +28,7 @@
 #include <MAction>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
-#include <MContentItem>
+#include <MBasicListItem>
 
 #include "utils.h"
 
@@ -56,12 +56,14 @@ void ObjectMenuPage::createContent()
 
     containerFriends = new MContainer(centralWidget());
     QGraphicsLinearLayout *friendsLayout = new QGraphicsLinearLayout(containerFriends->centralWidget());
+    friendsLayout->setContentsMargins(0, 0, 0, 0);
     friendsLayout->setOrientation(Qt::Vertical);
     containerFriends->centralWidget()->setLayout(friendsLayout);
     containerPolicy->addItem(containerFriends);
 
     containerAlbums = new MContainer(centralWidget());
     QGraphicsLinearLayout *albumLayout = new QGraphicsLinearLayout(Qt::Horizontal, containerAlbums->centralWidget());
+    albumLayout->setContentsMargins(0, 0, 0, 0);
     containerAlbums->centralWidget()->setLayout(albumLayout);
     containerPolicy->addItem(containerAlbums);
 
@@ -78,8 +80,7 @@ void ObjectMenuPage::createContent()
 
     // Fill the friends
     for (int i = 0; i < 3; ++i) {
-        MContentItem *item = new MContentItem(MContentItem::IconAndTwoTextLabels, containerFriends->centralWidget());
-        item->setItemMode(MContentItem::Single);
+        MBasicListItem *item = new MBasicListItem(MBasicListItem::IconWithTitleAndSubtitle, containerFriends->centralWidget());
 
         // set content uri to dummy contact.
         item->setProperty("contentURI", QString("a.contact"));
@@ -91,7 +92,8 @@ void ObjectMenuPage::createContent()
             item->setProperty("objectMenuIconId", QString("icon-m-messaging-smiley-sarcastic"));
 
         if (imageContacts.size() > 0) {
-            item->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]));
+            MImageWidget *icon = new MImageWidget(new QPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]));
+            item->setImageWidget(icon);
         }
         item->setTitle(names[i]);
         item->setSubtitle(numbers[i]);

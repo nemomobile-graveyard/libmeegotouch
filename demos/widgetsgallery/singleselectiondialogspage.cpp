@@ -145,8 +145,9 @@ void SingleSelectionDialogsPage::openStackedDialogs()
 
     //% "Click to spawn a nested dialog"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_button"));
+    button->setStyleName("CommonSingleButtonInverted");
     //% "Stacked dialogs"
-    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), M::CancelButton);
+    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), M::NoStandardButton);
     alignLayout->addItem(button);
     alignLayout->addItem(rightSpacer);
     dialog->setCentralWidget(alignContainer);
@@ -169,8 +170,9 @@ void SingleSelectionDialogsPage::openNestedDialog()
 
     //% "Click to open a nested message box"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox"));
+    button->setStyleName("CommonSingleButtonInverted");
     //% "This is a nested dialog"
-    nestedDialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), M::CancelButton);
+    nestedDialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), M::NoStandardButton);
     alignLayout->addItem(button);
     alignLayout->addItem(rightSpacer);
     nestedDialog->setCentralWidget(alignContainer);
@@ -196,13 +198,13 @@ void SingleSelectionDialogsPage::openSystemDialog()
 
     dialog = new MDialog(
         //% "System Dialog"
-        qtTrId("xx_dialogs_and_notifications_system_dialog_title"),
-        M::OkButton);
+        qtTrId("xx_dialogs_and_notifications_system_dialog_title"), M::NoStandardButton);
     //% "I'm a system dialog.<br>"
     //% "You can skip me with the home button.<br>"
     //% "I'll be minimised to the task switcher<br>"
     //% "but I'll remain alive until you make a selection."
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_system_dialog_label"));
+    label->setStyleName("CommonBodyTextInverted");
     label->setWordWrap(true);
     dialog->setCentralWidget(label);
 
@@ -219,8 +221,7 @@ void SingleSelectionDialogsPage::openSystemModalDialog()
 
     dialog = new MDialog(
         //% "System Modal Dialog"
-        qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"),
-        M::OkButton);
+        qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"), M::OkButton);
     //% "I'm a system modal dialog.<br>"
     //% "You can't skip me as I'm designed for<br>"
     //% "use cases that require immediate user attention."
@@ -249,6 +250,7 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
 
     MButton *button = new MButton();
     button->setViewType(MButton::switchType);
+    button->setStyleName("CommonSwitchInverted");
     button->setCheckable(true);
     button->setChecked(true);
     connect(button, SIGNAL(toggled(bool)), this, SLOT(setDialogProgressIndicatorVisible(bool)));
@@ -276,6 +278,7 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
 
     MButton *button = new MButton();
     button->setViewType(MButton::switchType);
+    button->setStyleName("CommonSwitchInverted");
     button->setCheckable(true);
     button->setChecked(true);
     connect(button, SIGNAL(toggled(bool)), this, SLOT(setDialogIconVisible(bool)));
@@ -303,9 +306,11 @@ void SingleSelectionDialogsPage::openLongDialog()
 
     MWidget *centralWidget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     //% "Select printer"
-    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), M::CancelButton);
+    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), M::NoStandardButton);
     dialog->setCentralWidget(centralWidget);
 
     centralWidget->setLayout(layout);
@@ -317,7 +322,8 @@ void SingleSelectionDialogsPage::openLongDialog()
 
 
     for(int i = 0; printers[i] != NULL; i++) {
-        MBasicListItem *printerItem = new MBasicListItem;
+        MBasicListItem *printerItem = new MBasicListItem(MBasicListItem::SingleTitle);
+        printerItem->setStyleName("CommonSmallPanelInverted");
         printerItem->setTitle(printers[i]);
         dialog->connect(printerItem, SIGNAL(clicked()), SLOT(accept()));
         layout->addItem(printerItem);

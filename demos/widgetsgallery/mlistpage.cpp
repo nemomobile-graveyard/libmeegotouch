@@ -313,7 +313,6 @@ MComboBox *MListPage::createComboBoxAction(const QString &title, const QStringLi
 MComboBox *MListPage::createComboBoxLabelButton(const QString &title, const QStringList &itemsList, QGraphicsWidget *parent)
 {
     MComboBox *comboBox = new MComboBox(parent);
-    comboBox->setViewType("labelButton");
     comboBox->setStyleName("CommonComboBoxInverted");
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);
@@ -646,12 +645,14 @@ void MListPage::hideEmptyTextEdit()
 void MListPage::showAdvancedConfigurationDialog()
 {
     if (!dialogAdvancedConfiguration) {
-        dialogAdvancedConfiguration = new MDialog("Advanced configuration", M::OkButton);
+        dialogAdvancedConfiguration = new MDialog("Advanced configuration", M::NoStandardButton);
 
         QGraphicsWidget *panel = dialogAdvancedConfiguration->centralWidget();
 
         MLayout *layout = new MLayout(panel);
         MLinearLayoutPolicy *landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+        landscapePolicy->setContentsMargins(0, 0, 0, 0);
+        landscapePolicy->setSpacing(0);
         // Use the same landscape policy for portrait mode.
         MLinearLayoutPolicy *portraitPolicy = landscapePolicy;
 
