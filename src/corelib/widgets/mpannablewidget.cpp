@@ -33,7 +33,10 @@
 #include "mscene.h"
 M_REGISTER_WIDGET(MPannableWidget)
 
-static const int ZValueGlass = 2;
+namespace {
+    const int ZValueGlass = 2;
+    const int MousePressStopingMovementTimeout = 300; //ms.
+}
 
 MPannableWidgetGlass::MPannableWidgetGlass(MPannableWidget *pannableWidget) :
     MWidget(pannableWidget),
@@ -57,7 +60,9 @@ void MPannableWidgetGlass::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndH
 }
 
 MPannableWidgetPrivate::MPannableWidgetPrivate() :
-    physics(0)
+    mousePressPhysicsStopTimer(0),
+    physics(0),
+    glass(0)
 {
 }
 
@@ -71,6 +76,13 @@ void MPannableWidgetPrivate::init()
     Q_Q(MPannableWidget);
 
     physics = new MPhysics2DPanning(q);
+
+    mousePressPhysicsStopTimer = new QTimer(q);
+    mousePressPhysicsStopTimer->setInterval(MousePressStopingMovementTimeout);
+    mousePressPhysicsStopTimer->setSingleShot(true);
+
+    q->connect(mousePressPhysicsStopTimer, SIGNAL(timeout()),
+               q,                          SLOT(_q_resetPhysics()));
 
     q->connect(physics, SIGNAL(positionChanged(QPointF)),
                q,       SLOT(updatePosition(QPointF)));
@@ -98,7 +110,7 @@ void MPannableWidgetPrivate::glassMousePressEvent(QGraphicsSceneMouseEvent *mous
     if (q->isEnabled() && physics->inMotion()) {
         // The viewport is still moving,
         // let's swallow this event
-        _q_resetPhysics();
+        mousePressPhysicsStopTimer->start();
         mouseEvent->accept();
     } else {
         mouseEvent->ignore();
@@ -235,6 +247,8 @@ void MPannableWidget::updatePosition(const QPointF &/*position*/)
 void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGesture)
 {
     Q_D(MPannableWidget);
+
+    d->mousePressPhysicsStopTimer->stop();
 
     QTransform itemTransform(sceneTransform().inverted());
     QPointF itemSpaceOffset = panGesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());

@@ -63,8 +63,11 @@ public:
     qreal borderFrictionC;
     Qt::Orientations panDirection;
 
+    QList<QPointF>  positions;
+
     void ensureViewportInRangeOnStopping();
     void _q_integrator(const QVariant &value);
+    QPointF getVelocity();
 
 protected:
     MPhysics2DPanning *q_ptr;

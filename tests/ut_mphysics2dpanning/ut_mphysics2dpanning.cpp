@@ -100,13 +100,11 @@ void Ut_MPhysics2DPanning::init()
     physics = new MPhysics2DPanning(pannable);
 
     // no style object available, just set some default values
-    physics->d_ptr->pointerSpringK = 0.09;
-    physics->d_ptr->frictionC = 0.6;
-    physics->d_ptr->slideFrictionC = 0.02;
-    physics->d_ptr->borderSpringK = 0.09;
-    physics->d_ptr->borderFrictionC = 0.6;
+    physics->d_ptr->slideFrictionC = 0.95;
+    physics->d_ptr->borderSpringK = 0.06;
+    physics->d_ptr->borderFrictionC = 0.66;
     physics->d_ptr->panDirection = Qt::Vertical | Qt::Horizontal;
-    physics->d_ptr->maxVel = 70.0;
+    physics->d_ptr->maxVel = 100.0;
 
     Ut_MPhysics2DPanning::animationActions.clear();
     Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Stopped;
@@ -126,11 +124,9 @@ void Ut_MPhysics2DPanning::initValues()
     QCOMPARE(physics->d_ptr->posY, 0.0);
     QCOMPARE(physics->d_ptr->velX, 0.0);
     QCOMPARE(physics->d_ptr->velY, 0.0);
-    QCOMPARE(physics->d_ptr->pointerSpringK, 0.09);
-    QCOMPARE(physics->d_ptr->frictionC, 0.6);
-    QCOMPARE(physics->d_ptr->slideFrictionC, 0.6 / 30.0);
-    QCOMPARE(physics->d_ptr->borderSpringK, 0.09);
-    QCOMPARE(physics->d_ptr->borderFrictionC, 0.6);
+    QCOMPARE(physics->d_ptr->slideFrictionC, 0.95);
+    QCOMPARE(physics->d_ptr->borderSpringK, 0.06);
+    QCOMPARE(physics->d_ptr->borderFrictionC, 0.66);
     QCOMPARE(physics->d_ptr->pointerPressed, false);
     QCOMPARE(physics->d_ptr->pointerSpringX, 0.0);
     QCOMPARE(physics->d_ptr->pointerSpringY, 0.0);
@@ -278,6 +274,10 @@ void Ut_MPhysics2DPanning::pointerMove()
     QFLOATCOMPARE(physics->d_ptr->pointerSpringX, currSpring.x());
     QFLOATCOMPARE(physics->d_ptr->pointerSpringY, currSpring.y());
 
+    //First one is going to be ignored.
+    physics->pointerPress(sceneLastPos);
+    physics->pointerMove(sceneLastPos);
+
     pos = QPointF(100.0, -50.0);
     physics->pointerMove(pos);
     currSpring += (pos - sceneLastPos);
@@ -369,7 +369,7 @@ void Ut_MPhysics2DPanning::integrating_data()
     actionList.push_back(integratingAction(tick,    7));
 
     // End position is rounded to nearest 0.001
-    QTest::newRow("actionList 1") << actionList << QPointF(-22.39,-2.794);
+    QTest::newRow("actionList 1") << actionList << QPointF(-135.16, -16.944);
 
     actionList.clear();
     actionList.push_back(integratingAction(setRange, QSizeF(100, 100)));
@@ -383,7 +383,7 @@ void Ut_MPhysics2DPanning::integrating_data()
     actionList.push_back(integratingAction(tick,    7));
 
     // End position is rounded to nearest 0.001
-    QTest::newRow("actionList 2") << actionList << QPointF(83.088,20.037);
+    QTest::newRow("actionList 2") << actionList << QPointF(225.894,67.316);
 }
 
 
@@ -444,25 +444,19 @@ void Ut_MPhysics2DPanning::kinetic_disabled_integrating_data()
     QTest::addColumn< QPointF >("endPosition");
 
     actionList.clear();
+    actionList.push_back(integratingAction(setRange, QSizeF(0, 0)));
     actionList.push_back(integratingAction(press,   QPointF(0.0, 0.0)));
-    actionList.push_back(integratingAction(tick,    7));
     actionList.push_back(integratingAction(move,    QPointF(50.0, 10.0)));
-    actionList.push_back(integratingAction(tick,    7));
     actionList.push_back(integratingAction(move,    QPointF(80.0, 10.0)));
-    actionList.push_back(integratingAction(tick,    7));
     actionList.push_back(integratingAction(release));
-    actionList.push_back(integratingAction(tick,    7));
 
     QTest::newRow("actionList 1") << actionList << QPointF(0.0, 0.0);
 
     actionList.clear();
     actionList.push_back(integratingAction(setRange, QSizeF(100, 100)));
     actionList.push_back(integratingAction(press,   QPointF(0.0, 0.0)));
-    actionList.push_back(integratingAction(tick,    7));
     actionList.push_back(integratingAction(move,    QPointF(-83.0, -20.0)));
-    actionList.push_back(integratingAction(tick,    7));
     actionList.push_back(integratingAction(release));
-    actionList.push_back(integratingAction(tick,    7));
 
     // End position is rounded to nearest 0.001
     QTest::newRow("actionList 2") << actionList << QPointF(83, 20);
@@ -471,10 +465,10 @@ void Ut_MPhysics2DPanning::kinetic_disabled_integrating_data()
 
 void Ut_MPhysics2DPanning::kinetic_disabled_integrating()
 {
-    int i, j;
+    int i;
     qreal x, y;
-    int frame = 0;
 
+    physics->setPosition(QPointF(0,0));
     physics->setEnabled(false);
 
     QFETCH(QList<integratingAction>, actionList);
@@ -482,11 +476,6 @@ void Ut_MPhysics2DPanning::kinetic_disabled_integrating()
 
     for (i = 0; i < actionList.size(); i++) {
         switch (actionList[i].type) {
-        case tick:
-            for (j = 0; j < actionList[i].value_int; j++) {
-                physics->d_ptr->_q_integrator(frame++);
-            }
-            break;
         case press:
             physics->pointerPress(actionList[i].value_QPointF);
             break;
@@ -605,7 +594,7 @@ void Ut_MPhysics2DPanning::maximumSlidingSpeedShouldNotExceedAllowedMaximumVeloc
 
     QPointF pos;
 
-    pos = QPointF(100.0, 100.0);
+    pos = QPointF(100.0, 600.0);
     physics->pointerPress(pos);
 
     pos = QPointF(100.0, 0.0);
@@ -613,9 +602,7 @@ void Ut_MPhysics2DPanning::maximumSlidingSpeedShouldNotExceedAllowedMaximumVeloc
 
     physics->pointerRelease();
 
-    physics->d_ptr->_q_integrator(1);
-
-    QCOMPARE(physics->velocity().y(), qreal(70.0));
+    QCOMPARE(physics->velocity().y(), qreal(100.0));
 }
 
 void Ut_MPhysics2DPanning::testSetGetEnabled()

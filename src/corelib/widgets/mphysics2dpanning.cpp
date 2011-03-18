@@ -27,6 +27,7 @@
 
 namespace {
     const int BorderJumpWarningThreshold = 2; //px. Used when physics parameters are wrong.
+    const int SampleCount = 5; // Used for speed calculation;
 }
 
 MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObject) :
@@ -145,6 +146,18 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
         emit(q->positionChanged(QPointF(posX, posY)));
     }
 }
+
+
+QPointF MPhysics2DPanningPrivate::getVelocity()
+{
+    QPointF sum;
+    int validSampleCount = qMin(SampleCount, positions.count() - 1);
+    for(int i=0; i<validSampleCount; i++) {
+            sum += positions[i] - positions[i + 1];
+    }
+    return - sum / validSampleCount;
+}
+
 
 MPhysics2DPanning::MPhysics2DPanning(QObject *parent)
     : QObject(parent),
@@ -372,6 +385,9 @@ void MPhysics2DPanning::pointerPress(const QPointF &pos)
 
     d->pointerSpringX = 0.0f;
     d->pointerSpringY = 0.0f;
+
+    d->positions.clear();
+    d->positions.push_front(pos);
 }
 
 
@@ -383,10 +399,16 @@ void MPhysics2DPanning::pointerMove(const QPointF &pos)
     QPointF delta = pos - d->sceneLastPos;
 
     d->sceneLastPos = pos;
+    d->positions.push_front(pos);
 
     if (d->enabled) {
-        d->pointerSpringX += delta.x();
-        d->pointerSpringY += delta.y();
+        // We are going to follow the finger starting from the
+        // second move request to avoid jumping of the viewport.
+        // In that way, the viewport will start moving more smoothly.
+        if (d->positions.count() > 2) {
+            d->pointerSpringX += delta.x();
+            d->pointerSpringY += delta.y();
+        }
         start();
     } else {
 
@@ -431,6 +453,17 @@ void MPhysics2DPanning::pointerRelease()
         //The physics engine is not working, emitting panning stopped now.
         emit panningStopped();
     }
+
+    // Resolve new velocity only if we have enough samples
+    if(d->positions.count() > 1) {
+        // Get the current velocity
+        QPointF v = d->getVelocity();
+        // Limit the velocity
+        d->velX = qBound(-d->maxVel, v.x(), d->maxVel);
+        d->velY = qBound(-d->maxVel, v.y(), d->maxVel);
+        d->positions.clear();
+    }
+
 }
 
 
@@ -444,73 +477,49 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
 {
     Q_D(MPhysics2DPanning);
 
-    qreal force;
     qreal rangeStart = (orientation == Qt::Vertical ? d->range.top() : d->range.left());
     qreal rangeEnd =   (orientation == Qt::Vertical ? d->range.bottom() : d->range.right());
 
-    // Damping
-    if (position >= rangeStart && position <= rangeEnd) {
-
-        // Inside range
-        if (d->pointerPressed) {
-            force = -d->frictionC * velocity;
-        } else {
-            force = -d->slideFrictionC * velocity;
-        }
-    } else {
-        // Outside range (in border)
-        force = -d->borderFrictionC * velocity;
-    }
-
-    // Border springs
-    if (position < rangeStart) {
-        force += d->borderSpringK * (rangeStart - position);
-        //Special case - when the border is crossed,
-        //we don't want the view to "bounce" from the border.
-        //We snap in this place to rangeStart value;
-        if ((pointerPressed == false) && (position + velocity + force >= rangeStart)) {
-            velocity = force = 0;
-            position = rangeStart;
-        }
-    }
-
-    if (position > rangeEnd) {
-        force += -d->borderSpringK * (position - rangeEnd);
-        //Special case - when the border is crossed
-        //we don't want the view to "bounce" from the border.
-        //We snap in this place to rangeEnd value;
-        if ((pointerPressed == false) && (position + velocity + force <= rangeEnd)) {
-            velocity = force = 0;
-            position = rangeEnd;
-        }
-    }
-
-    // Integration. Currently does not use time_delta or mass (assumed as 1.0)
+    acceleration = 0;
 
     if (pointerPressed) {
 
-        // Damping of acceleration with pointer spring values.
-        force += d->pointerSpringK * pointerDifference;
-        // Increasing the speed by the last movement of the pointer
-        acceleration = force - pointerDifference;
+        if (position < rangeStart || position > rangeEnd)
+            pointerDifference /= 2;
 
-        velocity += acceleration;
-        velocity = qBound(-d->maxVel, velocity, d->maxVel);
-
-        position           -= pointerDifference;
-        pointerDifference = 0;
+        position          -= pointerDifference;
+        pointerDifference = velocity = 0;
 
     } else {
 
-        acceleration = force - pointerDifference;
+        // Acceleration applies only when overshooting
+        qreal a = 0;
+        qreal f = d->slideFrictionC;
+        if(position < rangeStart) {
+            // Overshoot at the top
+            a = (rangeStart - position) * d->borderSpringK;
+            if (velocity > 0) f = d->borderFrictionC;
 
-        velocity                 += acceleration;
-        velocity                 = qBound(-d->maxVel, velocity, d->maxVel);
+            if (position + (velocity + a)*f >= rangeStart) {
+                velocity = a = f = 0;
+                position = rangeStart;
+            }
+        } else if(position > rangeEnd) {
+            // Overshoot at the bottom
+            a = (rangeEnd - position) * d->borderSpringK;
+            if(velocity < 0) f = d->borderFrictionC;
 
-        position                 += velocity;
-        pointerDifference        = 0;
+            if (position + (velocity + a)*f <= rangeEnd) {
+                velocity = a = f = 0;
+                position = rangeEnd;
+            }
+        }
+        velocity += a;
+        velocity = velocity * f;
+        // Move content
+        position += velocity;
+        pointerDifference = 0;
     }
-
 
 }
 

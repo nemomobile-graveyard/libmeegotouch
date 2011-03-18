@@ -33,6 +33,7 @@ class QGraphicsItem;
 class QGraphicsSceneMouseEvent;
 class MPhysics2DPanning;
 class MPannableWidgetGlass;
+class QTimer;
 
 class MPannableWidgetGlass : public MWidget
 {
@@ -62,6 +63,8 @@ public:
     void glassMousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:
+
+    QTimer *mousePressPhysicsStopTimer;
 
     MPhysics2DPanning *physics;
     MPannableWidgetGlass *glass;
