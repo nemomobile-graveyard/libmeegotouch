@@ -224,7 +224,6 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
         s << deemphasize();
     }
 
-    QString information;
     MWidgetController *mwidget = dynamic_cast<MWidgetController*>(widget);
     if (mwidget && !widget->objectName().isEmpty() && !mwidget->styleName().isEmpty() ) {
         if (widget->objectName() == QString(mwidget->styleName()))
@@ -239,7 +238,7 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
     s << sizeToString(widget->minimumSize().toSize() );
     s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize() );
     if (preferredSize.height() != hfwPreferredSize.height())
-        s << "(hfw:" << sizeToString( preferredSize.toSize() ) << ')';
+        s << "(hfw:" << sizeToString( hfwPreferredSize.toSize() ) << ')';
     if (widget->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
         s << QString::fromUtf8("≤ ") << sizeToString(widget->maximumSize().toSize());
 
@@ -308,7 +307,7 @@ void MDebug::printDebugChildInformation(QGraphicsWidget *widget, int initialInde
         s << sizeToString(layout->minimumSize().toSize() );
         s << QString::fromUtf8("≤ ") << sizeToString( preferredSize.toSize() );
         if (preferredSize.height() != hfwPreferredSize.height())
-            s << "(hfw:" << sizeToString( preferredSize.toSize() ) << ')';
+            s << "(hfw:" << sizeToString( hfwPreferredSize.toSize() ) << ')';
         if (layout->effectiveSizeHint( Qt::MaximumSize) != QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
             s << QString::fromUtf8("≤ ") << sizeToString(layout->maximumSize().toSize());
 
