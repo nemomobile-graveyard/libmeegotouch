@@ -54,6 +54,24 @@ public:
     //! Return whether the status bar should be shown on target device
     bool showStatusbar() const;
 
+    /*!
+      \brief Returns the resulting orientation of a device for a given rotation angle.
+
+      The rotation is relative to the position where the device's display has its
+      top edge on top.
+
+      For devices whose display native resolution is landscape:
+        \li Angle0 and Angle180 are landscape angles.
+        \li Angle90 and Angle270 are portrait angles.
+
+      For devices whose display native resolution is portrait:
+        \li Angle0 and Angle180 are portrait angles.
+        \li Angle90 and Angle270 are landscape angles.
+
+        orientationFromAngle(M::Angle0) returns the display's native orientation.
+     */
+    M::Orientation orientationFromAngle(M::OrientationAngle angle) const;
+
     //! Returns true if orientation angle is supported for given keyboard state.
     bool orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const;
 

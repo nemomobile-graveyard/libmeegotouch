@@ -225,6 +225,30 @@ bool MDeviceProfile::showStatusbar() const
     return d->showStatusBar;
 }
 
+M::Orientation MDeviceProfile::orientationFromAngle(M::OrientationAngle angle) const
+{
+    Q_D(const MDeviceProfile);
+    M::Orientation orientation;
+
+    if (d->resolution.width() >= d->resolution.height()) {
+        // native display orientation is landscape
+        if (angle == M::Angle0 || angle == M::Angle180) {
+            orientation = M::Landscape;
+        } else {
+            orientation = M::Portrait;
+        }
+    } else {
+        // native display orientation is portrait
+        if (angle == M::Angle0 || angle == M::Angle180) {
+            orientation = M::Portrait;
+        } else {
+            orientation = M::Landscape;
+        }
+    }
+
+    return orientation;
+}
+
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
     Q_D(const MDeviceProfile);
