@@ -69,14 +69,6 @@ namespace {
 #endif
     const char* AnimatedOrientationChangePropertyName =
             "animatedOrientationChange";
-
-    M::Orientation orientationFromOrientationAngle(M::OrientationAngle angle) {
-        if (angle == M::Angle0 || angle == M::Angle180) {
-            return M::Landscape;
-        } else {
-            return M::Portrait;
-        }
-    }
 }
 
 /// Actual class
@@ -163,9 +155,9 @@ void MWindowPrivate::init()
 
 #endif // Q_WS_X11
 
-    // resize always to the size in landscape mode,
+    // resize always to the display's native orientation
     // since it's not the window but the scene content that is rotated
-    q->resize(q->visibleSceneSize(M::Landscape));
+    q->resize(q->visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(M::Angle0)));
     q->setFrameStyle(0);
     q->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     q->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -347,7 +339,7 @@ void MWindowPrivate::rotateWindowsFromKeyEvent(QKeyEvent *event) {
         int newAngle = (window->orientationAngle()
                         + ((event->modifiers() & Qt::AltModifier) ? 270 : 90)) % 360;
         M::OrientationAngle newOrientationAngle = static_cast<M::OrientationAngle>(newAngle);
-        M::Orientation newOrientation = orientationFromOrientationAngle(newOrientationAngle);
+        M::Orientation newOrientation = MDeviceProfile::instance()->orientationFromAngle(newOrientationAngle);
 
         if (!window->isOrientationAngleLocked()) {
             if (!window->isOrientationLocked() || (window->orientation() == newOrientation)) {
@@ -491,11 +483,6 @@ bool MWindow::isInSwitcher() const
     Q_D(const MWindow);
 
     return d->isInSwitcher;
-}
-
-M::Orientation MWindowPrivate::orientation(M::OrientationAngle angle) const
-{
-    return (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
 }
 
 // return true if modifiers match what is required for debug keyboard shortcuts
@@ -1118,7 +1105,8 @@ void MWindow::setSceneManager(MSceneManager *sceneManager)
                 SIGNAL(orientationChangeFinished(M::Orientation)));
         sceneManager->setParent(this);
         setScene(sceneManager->scene());
-        setSceneRect(QRectF(QPointF(), visibleSceneSize(M::Landscape)));
+        // make scene rect match the display's native orientation
+        setSceneRect(QRectF(QPointF(), visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(M::Angle0))));
         centerOn(sceneRect().center());
     }
 }
@@ -1150,7 +1138,7 @@ M::Orientation MWindow::orientation() const
     if (d->sceneManager) {
         return d->sceneManager->orientation();
     } else {
-        return d->orientation(d->angle);
+        return MDeviceProfile::instance()->orientationFromAngle(d->angle);
     }
 }
 
@@ -1204,25 +1192,54 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
 
 void MWindow::setLandscapeOrientation()
 {
-    if (orientation() != M::Landscape)
+    if (orientation() == M::Landscape) {
+        return;
+    }
+
+    if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
+        // native display orientation is landscape
         setOrientationAngle(M::Angle0);
+    } else {
+        // native display orientation is portrait
+        setOrientationAngle(M::Angle270);
+    }
 }
 
 void MWindow::setPortraitOrientation()
 {
-    if (orientation() != M::Portrait)
+    if (orientation() == M::Portrait) {
+        return;
+    }
+
+    if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Portrait) {
+        // native display orientation is portrait
+        setOrientationAngle(M::Angle0);
+    } else {
+        // native display orientation is landscape
         setOrientationAngle(M::Angle270);
+    }
 }
 
 QSize MWindow::visibleSceneSize(M::Orientation orientation) const
 {
     QSize s;
 
-    if (orientation == M::Landscape) {
-        s = MDeviceProfile::instance()->resolution();
+    if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
+        // native display orientation is landscape
+        if (orientation == M::Landscape)
+            s = QSize(MDeviceProfile::instance()->resolution().width(),
+                      MDeviceProfile::instance()->resolution().height());
+        else
+            s = QSize(MDeviceProfile::instance()->resolution().height(),
+                      MDeviceProfile::instance()->resolution().width());
     } else {
-        s = QSize(MDeviceProfile::instance()->resolution().height(),
-                  MDeviceProfile::instance()->resolution().width());
+        // native display orientation is portrait
+        if (orientation == M::Landscape)
+            s = QSize(MDeviceProfile::instance()->resolution().height(),
+                      MDeviceProfile::instance()->resolution().width());
+        else
+            s = QSize(MDeviceProfile::instance()->resolution().width(),
+                      MDeviceProfile::instance()->resolution().height());
     }
 
     return s;
