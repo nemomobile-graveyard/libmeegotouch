@@ -120,6 +120,10 @@ void runModelMoc(const QString& header, const QStringList& arguments)
     if(!p.waitForFinished()) {
         qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
     }
+
+    if ( p.exitCode() != 0 ) {
+        qFatal("mmoc: qt moc ended with error: %i", p.exitCode() );
+    }
 }
 
 void runStyleMoc(const QString& header, const QStringList& arguments)
@@ -158,6 +162,10 @@ void runStyleMoc(const QString& header, const QStringList& arguments)
     if(!p.waitForFinished()) {
         qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
     }
+
+    if ( p.exitCode() != 0 ) {
+        qFatal("mmoc: qt moc ended with error: %i", p.exitCode() );
+    }
 }
 
 void runQtMoc(const QStringList& arguments)
@@ -172,6 +180,10 @@ void runQtMoc(const QStringList& arguments)
 
     if(!p.waitForFinished()) {
         qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
+    }
+
+    if ( p.exitCode() != 0 ) {
+        qFatal("mmoc: qt moc ended with error: %i", p.exitCode() );
     }
 }
 
