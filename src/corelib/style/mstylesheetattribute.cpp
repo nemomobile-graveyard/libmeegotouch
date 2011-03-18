@@ -565,7 +565,7 @@ QByteArray MStyleSheetAttribute::attributeNameToPropertyName(const QByteArray &a
         if (attributeName.at(i) == '-') {
             if (length > i + 1) {
                 i++;
-                result += QChar(attributeName.at(i)).toUpper();
+                result += toupper(attributeName.at(i));
             }
         } else {
             result += attributeName.at(i);
