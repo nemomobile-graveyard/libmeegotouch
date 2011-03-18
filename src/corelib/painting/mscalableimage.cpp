@@ -19,10 +19,10 @@
 
 #include "mscalableimage.h"
 #include "mscalableimage_p.h"
-#include "mgles2renderer.h"
 
 #include <mtheme.h>
 
+#include <QPaintEngine>
 #include <QPainter>
 #include <QPixmapCache>
 #include <MDebug>

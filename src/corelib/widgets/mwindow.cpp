@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #ifdef QT_OPENGL_LIB
-#include "mgles2renderer.h"
+#include <QtOpenGL>
 #endif
 
 #include "mwindow.h"
@@ -208,12 +208,6 @@ void MWindowPrivate::initSoftwareViewport()
 
     mDebug("MWindow") << "Switching to software rendering";
 
-#ifdef M_USE_OPENGL
-    MGLES2Renderer::activate((QGLContext*)NULL);
-    MGLES2Renderer::destroy(glContext);
-    glContext = NULL;
-#endif
-
     MGraphicsSystemHelper::switchToSoftwareRendering(q);
 
     q->setViewportUpdateMode(MWindow::MinimalViewportUpdate);
@@ -241,11 +235,6 @@ void MWindowPrivate::initGLViewport()
         q->viewport()->setAutoFillBackground(true);
         q->viewport()->setPalette(palette);
     }
-
-#ifdef M_USE_OPENGL
-    MGLES2Renderer::instance(glContext);
-    MGLES2Renderer::activate(glContext);
-#endif
 #endif // QT_OPENGL_LIB
 
     q->setViewportUpdateMode(MWindow::FullViewportUpdate);
@@ -740,13 +729,6 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
             return;
         }
     }
-
-#ifdef M_USE_OPENGL
-    if (!MApplication::softwareRendering()) {
-        MGLES2Renderer::destroy(glContext);
-    }
-#endif
-
 }
 
 MWindow::MWindow(MWindowPrivate &dd, QWidget *parent)
@@ -1291,11 +1273,6 @@ void MWindow::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 void MWindow::paintEvent(QPaintEvent *event)
 {
     Q_D(MWindow);
-#ifdef M_USE_OPENGL
-    if (!MApplication::softwareRendering()) {
-        MGLES2Renderer::activate(d->glContext);
-    }
-#endif // M_USE_OPENGL
     if (d->beforeFirstPaintEvent) {
         d->beforeFirstPaintEvent = false;
         d->disableAutomaticBackgroundRepainting();
