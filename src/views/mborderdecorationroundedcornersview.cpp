@@ -48,6 +48,9 @@ MBorderDecorationRoundedCornersView::MBorderDecorationRoundedCornersView(MBorder
     rightCornerWidget = new MRoundedCorner(controller);
     rightCornerWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     layout->addCornerAnchors(rightCornerWidget, Qt::TopRightCorner, layout, Qt::TopRightCorner);
+
+    // Needed locked state because orientation state will change the order that is not wanted.
+    controller->setLayoutDirection(Qt::LeftToRight);
 }
 
 MBorderDecorationRoundedCornersView::~MBorderDecorationRoundedCornersView()
