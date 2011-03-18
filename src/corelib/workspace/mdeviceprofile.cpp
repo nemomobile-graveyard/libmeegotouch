@@ -132,7 +132,7 @@ bool MDeviceProfilePrivate::load(const QString& filename)
     pixelsPerMmF = pixelsPerInch.width() / mmPerInch;
     pixelsPerPt = pixelsPerInch.height() / pointsPerInch;
     pixelsPerPtF = pixelsPerInch.height() / pointsPerInch;
-    
+
     if (settings.value("/other/showStatusBar").toString() == "autodetect")
         showStatusBar = hasStatusbarProvider();
     else
@@ -301,7 +301,7 @@ int MDeviceProfile::ptToPixels(qreal pt)
     return pt * d->pixelsPerPt;
 }
 
-qreal MDeviceProfile::ptToPixelsF(qreal pt) 
+qreal MDeviceProfile::ptToPixelsF(qreal pt)
 {
     Q_D(const MDeviceProfile);
     return pt * d->pixelsPerPtF;

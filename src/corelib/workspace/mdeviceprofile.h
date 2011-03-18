@@ -89,7 +89,7 @@ public:
 
     //! Returns the result of pixels to points conversion
     int pixelsToPt(int pixels);
-    
+
     //! Returns the result of pixels to points conversion
     qreal pixelsToPtF(qreal pixels);
 
