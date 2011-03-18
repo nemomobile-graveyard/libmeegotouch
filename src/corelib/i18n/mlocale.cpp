@@ -558,23 +558,20 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
         MIcuConversions::setCalendarOption(categoryNameTime, calendarType));
     categoryNameMessages = fixCategoryNameForNumbers(
         MIcuConversions::setCalendarOption(categoryNameMessages, calendarType));
-    // Create calLocale which has the time pattern we want to use
     icu::Locale calLocale = icu::Locale(qPrintable(categoryNameTime));
-
     icu::DateFormat::EStyle dateStyle = MIcuConversions::toEStyle(dateType);
     icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
     icu::DateFormat *df
-    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-#if 0
-    // Symbols come from the message locale
-    icu::Locale symbolLocale = icu::Locale(categoryNameMessages);
-
-    DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
-
-    // This is not nice but seems to be the only way to set the
-    // symbols with the public API
-    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
-#endif
+        = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
+    if(!categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))) {
+        // mixing in symbols like month name and weekday name from the message locale
+        DateFormatSymbols *dfs =
+            MLocalePrivate::createDateFormatSymbols(
+                icu::Locale(qPrintable(categoryNameMessages)));
+        // This is not nice but seems to be the only way to set the
+        // symbols with the public API
+        static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+    }
     if (timeType != MLocale::TimeNone) {
         switch (timeFormat24h) {
         case(MLocale::TwelveHourTimeFormat24h):
@@ -2292,13 +2289,18 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
 {
     Q_D(const MLocale);
     QString categoryNameTime = categoryName(MLocale::MLcTime);
-    QString categoryNameNumeric = categoryName(MLocale::MLcTime);
-    QString key = QString("%1_%2_%3_%4")
+    QString categoryNameNumeric = categoryName(MLocale::MLcNumeric);
+    QString categoryNameMessages = categoryName(MLocale::MLcMessages);
+    QString key = QString("%1_%2_%3_%4_%5")
         .arg(formatString)
         .arg(mCalendar.type())
         .arg(categoryNameTime)
-        .arg(categoryNameNumeric);
-    categoryNameTime = d->fixCategoryNameForNumbers(categoryNameTime);
+        .arg(categoryNameNumeric)
+        .arg(categoryNameMessages);
+    categoryNameTime = d->fixCategoryNameForNumbers(
+        MIcuConversions::setCalendarOption(categoryNameTime, mCalendar.type()));
+    categoryNameMessages = d->fixCategoryNameForNumbers(
+        MIcuConversions::setCalendarOption(categoryNameMessages, mCalendar.type()));
     icu::SimpleDateFormat *formatter;
     if(d->_simpleDateFormatCache.contains(key)) {
         formatter = d->_simpleDateFormatCache.object(key);
@@ -2313,6 +2315,13 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
                        << u_errorName(status);
             formatter = NULL;
         }
+        if (formatter && !categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))) {
+            // mixing in symbols like month name and weekday name from the message locale
+            DateFormatSymbols *dfs =
+                MLocalePrivate::createDateFormatSymbols(
+                    icu::Locale(qPrintable(categoryNameMessages)));
+            formatter->adoptDateFormatSymbols(dfs);
+         }
         if(formatter)
             d->_simpleDateFormatCache.insert(key, formatter);
     }
@@ -2793,6 +2802,8 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
     monthNumber--; // months in array starting from index zero
 
     QString categoryName = d->categoryName(MLcTime);
+    if(!categoryName.contains(QRegExp("@.*mix-time-and-language=no")))
+        categoryName = d->categoryName(MLcMessages);
     categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
     icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 
@@ -2837,6 +2848,8 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
 {
     Q_D(const MLocale);
     QString categoryName = d->categoryName(MLcTime);
+    if(!categoryName.contains(QRegExp("@.*mix-time-and-language=no")))
+        categoryName = d->categoryName(MLcMessages);
     categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
     icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 

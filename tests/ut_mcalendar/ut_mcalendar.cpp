@@ -1134,41 +1134,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ar_EG") // lc_time: Arabic date/time formatting
-        << QString("ar_EG") // lc_numeric: keep localized digits
-        << "Europe/Helsinki"
-        << MLocale::LocaleDefaultTimeFormat24h
-        << MLocale::GregorianCalendar
-        << "١٥‏/٦‏/٢٠٠٤"
-        << "١٥‏/٠٦‏/٢٠٠٤"
-        << "١٥ يونيو، ٢٠٠٤"
-        << "الثلاثاء، ١٥ يونيو، ٢٠٠٤"
-        << "٢:٣١ م"
-        << "٢:٣١:٠٠ م"
-        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م"
-        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م";
-    QTest::newRow("15.6.2004_ar_EG_Gregorian")
-        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
-        << QString("fi_FI")
-        << QString("fi_FI")
-        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=latn;foo=bar") // lc_time
-        << QString("ar_EG") // lc_numeric
-        << "Europe/Helsinki"
-        << MLocale::LocaleDefaultTimeFormat24h
-        << MLocale::GregorianCalendar
-        << "15‏/6‏/2004"
-        << "15‏/06‏/2004"
-        << "15 يونيو، 2004"
-        << "الثلاثاء، 15 يونيو، 2004"
-        << "2:31 م"
-        << "2:31:00 م"
-        << "جرينتش+03:00 2:31:00 م"
-        << "جرينتش+03:00 2:31:00 م";
-    QTest::newRow("15.6.2004_ar_EG_Gregorian")
-        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
-        << QString("fi_FI")
-        << QString("fi_FI")
-        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=arab;foo=bar") // lc_time
+        << QString("ar_EG@mix-time-and-language=no") // lc_time
         << QString("ar_EG") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1185,8 +1151,25 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ar_EG") // lc_time: Arabic date/time formatting
-        << QString("fi_FI") // lc_numeric: force unlocalized digits
+        << QString("ar_EG@mix-time-and-language=yes") // lc_time
+        << QString("ar_EG") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "١٥‏/٦‏/٢٠٠٤"
+        << "١٥‏/٠٦‏/٢٠٠٤"
+        << "١٥ kesäkuuta، ٢٠٠٤"
+        << "tiistaina، ١٥ kesäkuuta، ٢٠٠٤"
+        << "٢:٣١ ip."
+        << "٢:٣١:٠٠ ip."
+        << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
+        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ ip.";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=latn;foo=bar;mix-time-and-language=no") // lc_time
+        << QString("ar_EG") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1198,6 +1181,227 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "2:31:00 م"
         << "جرينتش+03:00 2:31:00 م"
         << "جرينتش+03:00 2:31:00 م";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=latn;foo=bar;mix-time-and-language=yes") // lc_time
+        << QString("ar_EG") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15‏/6‏/2004"
+        << "15‏/06‏/2004"
+        << "15 kesäkuuta، 2004"
+        << "tiistaina، 15 kesäkuuta، 2004"
+        << "2:31 ip."
+        << "2:31:00 ip."
+        << "UTC+3.00 2:31:00 ip."
+        << "Itä-Euroopan kesäaika 2:31:00 ip.";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=arab;foo=bar;mix-time-and-language=no") // lc_time
+        << QString("ar_EG") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "١٥‏/٦‏/٢٠٠٤"
+        << "١٥‏/٠٦‏/٢٠٠٤"
+        << "١٥ يونيو، ٢٠٠٤"
+        << "الثلاثاء، ١٥ يونيو، ٢٠٠٤"
+        << "٢:٣١ م"
+        << "٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@collation=phonebook;calendar=islamic-civil;numbers=arab;foo=bar;mix-time-and-language=yes") // lc_time
+        << QString("ar_EG") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "١٥‏/٦‏/٢٠٠٤"
+        << "١٥‏/٠٦‏/٢٠٠٤"
+        << "١٥ kesäkuuta، ٢٠٠٤"
+        << "tiistaina، ١٥ kesäkuuta، ٢٠٠٤"
+        << "٢:٣١ ip."
+        << "٢:٣١:٠٠ ip."
+        << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
+        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ ip.";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15‏/6‏/2004"
+        << "15‏/06‏/2004"
+        << "15 يونيو، 2004"
+        << "الثلاثاء، 15 يونيو، 2004"
+        << "2:31 م"
+        << "2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15‏/6‏/2004"
+        << "15‏/06‏/2004"
+        << "15 kesäkuuta، 2004"
+        << "tiistaina، 15 kesäkuuta، 2004"
+        << "2:31 ip."
+        << "2:31:00 ip."
+        << "UTC+3.00 2:31:00 ip."
+        << "Itä-Euroopan kesäaika 2:31:00 ip.";
+    QTest::newRow("15.6.2004_ru_RU_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ru_RU@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15.06.04"
+        << "15.06.2004"
+        << "15 июня 2004 г."
+        << "вторник, 15 июня 2004 г."
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 Восточноевропейское летнее время"
+        << "14:31:00 Восточноевропейское летнее время";
+    QTest::newRow("15.6.2004_ru_RU_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ru_RU@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15.06.04"
+        << "15.06.2004"
+        << "15 kesäkuuta 2004 г."
+        << "tiistaina, 15 kesäkuuta 2004 г."
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 UTC+3.00"
+        << "14:31:00 Itä-Euroopan kesäaika";
+    QTest::newRow("15.6.2004_en_US_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_US@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "6/15/04"
+        << "Jun 15, 2004"
+        << "June 15, 2004"
+        << "Tuesday, June 15, 2004"
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM GMT+03:00"
+        << "2:31:00 PM Eastern European Summer Time";
+    QTest::newRow("15.6.2004_en_US_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_US@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "6/15/04"
+        << "kesäkuuta 15, 2004"
+        << "kesäkuuta 15, 2004"
+        << "tiistaina, kesäkuuta 15, 2004"
+        << "2:31 ip."
+        << "2:31:00 ip."
+        << "2:31:00 ip. UTC+3.00"
+        << "2:31:00 ip. Itä-Euroopan kesäaika";
+    QTest::newRow("15.6.2004_he_IL_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("he_IL@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15/06/04"
+        << "15 ביונ 2004"
+        << "15 ביוני 2004"
+        << "יום שלישי, 15 ביוני 2004"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "14:31:00 GMT+03:00";
+    QTest::newRow("15.6.2004_he_IL_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("he_IL@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "15/06/04"
+        << "15 בkesäkuuta 2004"
+        << "15 בkesäkuuta 2004"
+        << "tiistaina, 15 בkesäkuuta 2004"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 UTC+3.00"
+        << "14:31:00 Itä-Euroopan kesäaika";
+    QTest::newRow("15.6.2004_hu_HU_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("hu_HU@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "2004.06.15."
+        << "2004.06.15."
+        << "2004. június 15."
+        << "2004. június 15., kedd"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 EEST"
+        << "14:31:00 kelet-európai nyári idő";
+    QTest::newRow("15.6.2004_hu_HU_Gregorian")
+        << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("hu_HU@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "2004.06.15."
+        << "2004.06.15."
+        << "2004. kesäkuuta 15."
+        << "2004. kesäkuuta 15., tiistaina"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 UTC+3.00"
+        << "14:31:00 Itä-Euroopan kesäaika";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime()
@@ -1397,10 +1601,48 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::addColumn<QString>("timeLongResult");
     QTest::addColumn<QString>("timeFullResult");
 
+    QTest::newRow("21.7.2008_en_US_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_US@mix-time-and-language=no") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "7/21/08"
+        << "Jul 21, 2008"
+        << "July 21, 2008"
+        << "Monday, July 21, 2008"
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM GMT+03:00"
+        << "2:31:00 PM Eastern European Summer Time";
+    QTest::newRow("21.7.2008_en_US_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_US@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "7/21/08"
+        << "heinäkuuta 21, 2008"
+        << "heinäkuuta 21, 2008"
+        << "maanantaina, heinäkuuta 21, 2008"
+        << "2:31 ip."
+        << "2:31:00 ip."
+        << "2:31:00 ip. UTC+3.00"
+        << "2:31:00 ip. Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_de_DE_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("de_DE") // only this matters
+        << QString("de_DE@mix-time-and-language=no") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1416,10 +1658,29 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14:31:00 GMT+03:00"
         << "14:31:00 Osteuropäische Sommerzeit";
+    QTest::newRow("21.7.2008_de_DE_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("de_DE@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21.07.2008"
+        << "21. heinäkuuta 2008"
+        << "maanantaina, 21. heinäkuuta 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 UTC+3.00"
+        << "14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_fi_FI_Gregorian")
         << QString("de_DE")
         << QString("de_DE")
-        << QString("fi_FI") // only this matters
+        << QString("fi_FI@mix-time-and-language=no") // lc_time
         << QString("de_DE")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1435,10 +1696,29 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14:31:00 UTC+3.00"
         << "14:31:00 Itä-Euroopan kesäaika";
+    QTest::newRow("21.7.2008_fi_FI_Gregorian")
+        << QString("de_DE")
+        << QString("de_DE")
+        << QString("fi_FI@mix-time-and-language=yes") // lc_time
+        << QString("de_DE")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.7.2008"
+        << "21.7.2008"
+        << "21. Juli 2008"
+        << "Montag 21. Juli 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "14:31:00 Osteuropäische Sommerzeit";
     QTest::newRow("21.7.2008_en_GB_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("en_GB") // only this matters
+        << QString("en_GB@mix-time-and-language=no") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1454,10 +1734,29 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14:31:00 EEST"
         << "14:31:00 Eastern European Summer Time";
+    QTest::newRow("21.7.2008_en_GB_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_GB@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21/07/2008"
+        << "21 heinäkuuta 2008"
+        << "21 heinäkuuta 2008"
+        << "maanantaina, 21 heinäkuuta 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 UTC+3.00"
+        << "14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_nn_NO_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("nn_NO") // only this matters
+        << QString("nn_NO@mix-time-and-language=no") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1473,10 +1772,67 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14:31:00 GMT+03:00"
         << "kl. 14:31:00 austeuropeisk sommartid";
+    QTest::newRow("21.7.2008_nn_NO_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("nn_NO@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21. heinäkuuta. 2008" // bad, look at the dot!
+        << "21. heinäkuuta 2008"
+        << "maanantaina 21. heinäkuuta 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 UTC+3.00"
+        << "kl. 14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("nb_NO") // only this matters
+        << QString("nb_NO@mix-time-and-language=no") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21. juli 2008"
+        << "21. juli 2008"
+        << "mandag 21. juli 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "kl. 14:31:00 østeuropeisk sommertid";
+    QTest::newRow("21.7.2008_nb_NO_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("nb_NO@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21. heinäkuuta 2008"
+        << "21. heinäkuuta 2008"
+        << "maanantaina 21. heinäkuuta 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 UTC+3.00"
+        << "kl. 14:31:00 Itä-Euroopan kesäaika";
+    QTest::newRow("21.7.2008_no_NO_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("no_NO@mix-time-and-language=no") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1495,7 +1851,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("21.7.2008_no_NO_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("no_NO") // only this matters
+        << QString("no_NO@mix-time-and-language=yes") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1504,17 +1860,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21.07.08"
-        << "21. juli 2008"
-        << "21. juli 2008"
-        << "mandag 21. juli 2008"
+        << "21. heinäkuuta 2008"
+        << "21. heinäkuuta 2008"
+        << "maanantaina 21. heinäkuuta 2008"
         << "14:31"
         << "14:31:00"
-        << "14:31:00 GMT+03:00"
-        << "kl. 14:31:00 østeuropeisk sommertid";
+        << "14:31:00 UTC+3.00"
+        << "kl. 14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_ja_JP_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ja_JP") // only this matters
+        << QString("ja_JP@mix-time-and-language=no") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1533,7 +1889,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("21.7.2008_ja_JP_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ja_JP") // only this matters
+        << QString("ja_JP@mix-time-and-language=yes") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1544,15 +1900,15 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "08/07/21"
         << "2008/07/21"
         << "2008年7月21日"
-        << "2008年7月21日月曜日"
+        << "2008年7月21日maanantaina"
         << "14:31"
         << "14:31:00"
-        << "14:31:00 GMT+03:00"
-        << "14時31分00秒 東欧夏時間";
+        << "14:31:00 UTC+3.00"
+        << "14時31分00秒 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_zh_CN_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("zh_CN") // only this matters
+        << QString("zh_CN@mix-time-and-language=no") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1568,11 +1924,30 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "下午2:31:00"
         << "格林尼治标准时间+0300下午2时31分00秒"
         << "东欧夏令时间下午2时31分00秒";
+    QTest::newRow("21.7.2008_zh_CN_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("zh_CN@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "08-7-21"
+        << "2008-7-21"
+        << "2008年7月21日"
+        << "2008年7月21日maanantaina"
+        << "ip.2:31"
+        << "ip.2:31:00"
+        << "UTC+3.00ip.2时31分00秒"
+        << "Itä-Euroopan kesäaikaip.2时31分00秒";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ar_EG") // lc_time: Arabic date/time formatting
-        << QString("ar_EG") // lc_numeric: keep localized digits
+        << QString("ar_EG@mix-time-and-language=no") // lc_time
+        << QString("ar_EG") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1590,8 +1965,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ar_EG@numbers=latn") // lc_time: Arabic date/time formatting
-        << QString("ar_EG") // lc_numeric: force unlocalized digits
+        << QString("ar_EG@numbers=latn;mix-time-and-language=no") // lc_time
+        << QString("ar_EG") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1609,8 +1984,27 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ar_EG@numbers=arab") // lc_time: Arabic date/time formatting
-        << QString("fi_FI") // lc_numeric: keep localized digits
+        << QString("ar_EG@numbers=latn;mix-time-and-language=yes") // lc_time
+        << QString("ar_EG") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "15‏/6‏/2004"
+        << "15‏/06‏/2004"
+        << "15 kesäkuuta، 2004"
+        << "tiistaina، 15 kesäkuuta، 2004"
+        << "2:31 ip."
+        << "2:31:00 ip."
+        << "UTC+3.00 2:31:00 ip."
+        << "Itä-Euroopan kesäaika 2:31:00 ip.";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@numbers=arab;mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1628,8 +2022,27 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ar_EG") // lc_time: Arabic date/time formatting
-        << QString("fi_FI") // lc_numeric: force unlocalized digits
+        << QString("ar_EG@numbers=arab;mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "١٥‏/٦‏/٢٠٠٤"
+        << "١٥‏/٠٦‏/٢٠٠٤"
+        << "١٥ kesäkuuta، ٢٠٠٤"
+        << "tiistaina، ١٥ kesäkuuta، ٢٠٠٤"
+        << "٢:٣١ ip."
+        << "٢:٣١:٠٠ ip."
+        << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
+        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ ip.";
+    QTest::newRow("15.6.2004_ar_EG_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1647,8 +2060,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("fa_IR") // lc_time: Farsi date/time formatting
-        << QString("fa_IR") // lc_numeric: keep localized digits
+        << QString("fa_IR@mix-time-and-language=no") // lc_time
+        << QString("fa_IR") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1666,8 +2079,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("fa_IR") // lc_time: Farsi date/time formatting
-        << QString("fi_FI") // lc_numeric: force unlocalized digits
+        << QString("fa_IR@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1685,7 +2098,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("fa_IR@numbers=arabext") // lc_time
+        << QString("fa_IR@numbers=arabext;mix-time-and-language=no") // lc_time
         << QString("fi_FI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1704,7 +2117,26 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("fa_IR@numbers=latn") // lc_time
+        << QString("fa_IR@numbers=arabext;mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "۶/۱۵/۰۴"
+        << "kesäkuuta ۱۵, ۲۰۰۴"
+        << "kesäkuuta ۱۵, ۲۰۰۴"
+        << "tiistaina, kesäkuuta ۱۵, ۲۰۰۴"
+        << "۱۴:۳۱"
+        << "۱۴:۳۱:۰۰"
+        << "۱۴:۳۱:۰۰ (UTC+۳.۰۰)"
+        << "۱۴:۳۱:۰۰ (Itä-Euroopan kesäaika)";
+    QTest::newRow("15.6.2004_fa_IR_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fa_IR@numbers=latn;mix-time-and-language=no") // lc_time
         << QString("fa_IR") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1720,11 +2152,30 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14:31:00 (GMT+03:00)"
         << "14:31:00 (وقت تابستانی شرق اروپا)";
+    QTest::newRow("15.6.2004_fa_IR_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("fa_IR@numbers=latn;mix-time-and-language=yes") // lc_time
+        << QString("fa_IR") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "6/15/04"
+        << "kesäkuuta 15, 2004"
+        << "kesäkuuta 15, 2004"
+        << "tiistaina, kesäkuuta 15, 2004"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 (UTC+3.00)"
+        << "14:31:00 (Itä-Euroopan kesäaika)";
     QTest::newRow("15.6.2004_ur_PK_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ur_PK") // lc_time: Urdu date/time formatting
-        << QString("ur_PK") // lc_numeric: keep localized digits
+        << QString("ur_PK@mix-time-and-language=no") // lc_time
+        << QString("ur_PK") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1742,8 +2193,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_ur_PK_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("ur_PK") // lc_time: Urdu date/time formatting
-        << QString("fi_FI") // lc_numeric: force unlocalized digits
+        << QString("ur_PK@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1758,11 +2209,30 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "2:31:00 PM"
         << "2:31:00 PM GMT+03:00"
         << "2:31:00 PM GMT+03:00";
+    QTest::newRow("15.6.2004_ur_PK_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ur_PK@mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "15/6/04"
+        << "15, kesäkuuta 2004"
+        << "15, kesäkuuta 2004"
+        << "tiistaina, 15, kesäkuuta 2004"
+        << "2:31 ip."
+        << "2:31:00 ip."
+        << "2:31:00 ip. UTC+3.00"
+        << "2:31:00 ip. Itä-Euroopan kesäaika";
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("hi_HI") // lc_time: Hindi date/time formatting
-        << QString("hi_HI") // lc_numeric: keep localized digits
+        << QString("hi_HI@mix-time-and-language=no") // lc_time
+        << QString("hi_HI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1780,8 +2250,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("hi_HI") // lc_time: Hindi date/time formatting
-        << QString("fi_FI") // lc_numeric: force unlocalized digits
+        << QString("hi_HI@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1799,8 +2269,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("hi_HI@numbers=deva") // lc_time: Hindi date/time formatting
-        << QString("fi_FI") // lc_numeric: keep localized digits
+        << QString("hi_HI@numbers=deva;mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1818,8 +2288,27 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
-        << QString("hi_HI@numbers=latn") // lc_time: Hindi date/time formatting
-        << QString("hi_HI") // lc_numeric: force unlocalized digits
+        << QString("hi_HI@numbers=deva;mix-time-and-language=yes") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "१५-६-०४"
+        << "१५-०६-२००४"
+        << "१५ kesäkuuta २००४"
+        << "tiistaina, १५ kesäkuuta २००४"
+        << "२:३१ ip."
+        << "२:३१:०० ip."
+        << "२:३१:०० ip. UTC+३.००"
+        << "२:३१:०० ip. Itä-Euroopan kesäaika";
+    QTest::newRow("15.6.2004_hi_HI_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI") // lc_messages
+        << QString("hi_HI@numbers=latn;mix-time-and-language=no") // lc_time
+        << QString("hi_HI") // lc_numeric
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
@@ -1834,10 +2323,29 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "2:31:00 अपराह्न"
         << "2:31:00 अपराह्न GMT+03:00"
         << "2:31:00 अपराह्न GMT+03:00";
+    QTest::newRow("15.6.2004_hi_HI_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI") // lc_messages
+        << QString("hi_HI@numbers=latn;mix-time-and-language=yes") // lc_time
+        << QString("hi_HI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2004
+        << 6
+        << 15
+        << "15-6-04"
+        << "15-06-2004"
+        << "15 kesäkuuta 2004"
+        << "tiistaina, 15 kesäkuuta 2004"
+        << "2:31 ip."
+        << "2:31:00 ip."
+        << "2:31:00 ip. UTC+3.00"
+        << "2:31:00 ip. Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_th_TH_Gregorian")
         << QString("fi_FI")
-        << QString("fi_FI")
-        << QString("th_TH") // only this matters
+        << QString("fi_FI") // lc_messages
+        << QString("th_TH@calendar=gregorian;mix-time-and-language=no") // lc_time
         << QString("fi_FI")
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
@@ -1853,6 +2361,25 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00"
         << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00";
+    QTest::newRow("21.7.2008_th_TH_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI") // lc_messages
+        << QString("th_TH@calendar=gregorian;mix-time-and-language=yes") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21/7/2008"
+        << "21 heinäkuuta 2008"
+        << "21 heinäkuuta 2008"
+        << "maanantainaที่ 21 heinäkuuta jKr. 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14 นาฬิกา 31 นาที 00 วินาที UTC+3.00"
+        << "14 นาฬิกา 31 นาที 00 วินาที Itä-Euroopan kesäaika";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
@@ -3370,13 +3897,118 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << 12
             << 25
             << 3
-            << "ja_JP" // language
-            << "ja_JP" // lc_messages
-            << "ja_JP@calendar=gregorian" // lc_time
-            << "ja_JP" // lc_numeric
+            << "de_DE" // language
+            << "de_DE" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=no" // lc_time
+            << "de_DE" // lc_numeric
             << "Europe/Helsinki"
             << "G" // era designator
             << "平成";
+    QTest::newRow("ja_JP “G”")
+            << MLocale::JapaneseCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "de_DE" // language
+            << "de_DE" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=yes" // lc_time
+            << "de_DE" // lc_numeric
+            << "Europe/Helsinki"
+            << "G" // era designator
+            << "Heisei";
+    QTest::newRow("ja_JP “G”")
+            << MLocale::JapaneseCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "de_DE" // language
+            << "he_IL" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=yes" // lc_time
+            << "de_DE" // lc_numeric
+            << "Europe/Helsinki"
+            << "G" // era designator
+            << "Heisei";
+    QTest::newRow("ja_JP “Gy年M月d日EEEE時mm分ss秒 zzzz”")
+            << MLocale::JapaneseCalendar
+            << 2008
+            << 7
+            << 22
+            << 14
+            << 31
+            << 3
+            << "ja_JP" // language
+            << "he_IL" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=no" // lc_time
+            << "ja_JP" // lc_numeric
+            << "Europe/Helsinki"
+            << "Gy年M月d日EEEE時mm分ss秒 zzzz"
+            << "平成20年7月22日火曜日時31分03秒 東欧夏時間";
+    QTest::newRow("ja_JP “Gy年M月d日EEEE時mm分ss秒 zzzz”")
+            << MLocale::JapaneseCalendar
+            << 2008
+            << 7
+            << 22
+            << 14
+            << 31
+            << 3
+            << "ja_JP" // language
+            << "he_IL" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=yes" // lc_time
+            << "ja_JP" // lc_numeric
+            << "Europe/Helsinki"
+            << "Gy年M月d日EEEE時mm分ss秒 zzzz"
+            << "Heisei20年7月22日יום שלישי時31分03秒 GMT+03:00";
+    QTest::newRow("ja_JP “Gy年M月d日EEEE時mm分ss秒 zzzz”")
+            << MLocale::JapaneseCalendar
+            << 2008
+            << 7
+            << 22
+            << 14
+            << 31
+            << 3
+            << "ja_JP" // language
+            << "ar_SA" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=yes" // lc_time
+            << "ja_JP" // lc_numeric
+            << "Europe/Helsinki"
+            << "Gy年M月d日EEEE時mm分ss秒 zzzz"
+            << "هيسي20年7月22日الثلاثاء時31分03秒 جرينتش+03:00";
+    QTest::newRow("ja_JP “Gy年M月d日EEEE時mm分ss秒 zzzz”")
+            << MLocale::JapaneseCalendar
+            << 646 // http://en.wikipedia.org/wiki/Taika_%28era%29
+            << 7
+            << 22
+            << 14
+            << 31
+            << 3
+            << "ja_JP" // language
+            << "he_IL" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=no" // lc_time
+            << "ja_JP" // lc_numeric
+            << "Europe/Helsinki"
+            << "Gy年M月d日EEEE時mm分ss秒 zzzz"
+            << "大化2年7月22日土曜日時31分03秒 GMT+01:39:52"; // strange tz offset!
+    QTest::newRow("ja_JP “Gy年M月d日EEEE時mm分ss秒 zzzz”")
+            << MLocale::JapaneseCalendar
+            << 646 // http://en.wikipedia.org/wiki/Taika_%28era%29
+            << 7
+            << 22
+            << 14
+            << 31
+            << 3
+            << "ja_JP" // language
+            << "he_IL" // lc_messages
+            << "ja_JP@calendar=gregorian;mix-time-and-language=yes" // lc_time
+            << "ja_JP" // lc_numeric
+            << "Europe/Helsinki"
+            << "Gy年M月d日EEEE時mm分ss秒 zzzz"
+            << "טאיקה2年7月22日יום שבת時31分03秒 GMT+01:39:52"; // strange tz offset!
     QTest::newRow("ja_JP “y年M月d日EEEEH時mm分ss秒 zzzz”")
             << MLocale::GregorianCalendar
             << 2008
@@ -3432,11 +4064,26 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << 3
             << "de_DE" // language
             << "de_DE" // lc_messages
-            << "id_ID" // lc_time
+            << "id_ID@mix-time-and-language=no" // lc_time
             << "de_DE" // lc_numeric
             << "Europe/Helsinki"
             << "EEEE"
             << "Kamis";
+    QTest::newRow("id_ID “EEEE”")
+            << MLocale::GregorianCalendar
+            << 2011
+            << 2
+            << 17
+            << 14
+            << 31
+            << 3
+            << "de_DE" // language
+            << "de_DE" // lc_messages
+            << "id_ID@mix-time-and-language=yes" // lc_time
+            << "de_DE" // lc_numeric
+            << "Europe/Helsinki"
+            << "EEEE"
+            << "Donnerstag";
 }
 
 void Ut_MCalendar::testFormatDateTimeICU()
@@ -3463,13 +4110,11 @@ void Ut_MCalendar::testFormatDateTimeICU()
     locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
     MCalendar::setSystemTimeZone(timeZone);
     locale.setCalendarType(calendarType);
-    MCalendar mcal(locale);
-    mcal.setDate(year, month, day);
-    mcal.setTime(hour, minute, second);
     QDate date(year, month, day);
     QTime time(hour, minute, second);
     QDateTime datetime(date, time, Qt::LocalTime);
-    QLocale qlocale(localeName);
+    MCalendar mcal(locale);
+    mcal.setDateTime(datetime);
 #if defined(VERBOSE_OUTPUT)
     QTextStream debugStream(stdout);
     debugStream.setCodec("UTF-8");
