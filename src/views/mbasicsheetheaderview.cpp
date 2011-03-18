@@ -52,6 +52,8 @@ MBasicSheetHeaderViewPrivate::~MBasicSheetHeaderViewPrivate()
 void MBasicSheetHeaderViewPrivate::createLayout()
 {
     layout = new QGraphicsAnchorLayout(controller);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 }
 
 void MBasicSheetHeaderViewPrivate::setPositiveAction(QAction *action)
