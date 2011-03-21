@@ -1,3 +1,10 @@
+libmeegotouch (0.20.95-2) unstable; urgency=low
+
+  * New version
+  * Changes: Remove mgles2renderer activation/deactivation from mwindow.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 21 Mar 2011 13:26:19 +0200
+
 libmeegotouch (0.20.95-1) unstable; urgency=low
 
   * New version
