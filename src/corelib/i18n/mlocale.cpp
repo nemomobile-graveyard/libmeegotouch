@@ -1783,7 +1783,9 @@ QString MLocale::formatNumber(qlonglong i) const
     // This might generate a warning by the Krazy code analyzer,
     // but it allows the code to compile with ICU 4.0
     d->_numberFormat->format(static_cast<int64_t>(i), str); //krazy:exclude=typedefs
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->fixFormattedNumberForRTL(&result);
+    return result;
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcNumeric).toString(i);
@@ -1799,7 +1801,9 @@ qlonglong MLocale::toLongLong(const QString &s, bool *ok) const
     }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    QString parseInput = s;
+    d->removeDirectionalFormattingCodes(&parseInput);
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
     qint64 result;
@@ -1843,7 +1847,9 @@ QString MLocale::formatNumber(short i) const
     Q_D(const MLocale);
     UnicodeString str;
     d->_numberFormat->format(i, str);
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->fixFormattedNumberForRTL(&result);
+    return result;
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcNumeric).toString(i);
@@ -1859,7 +1865,9 @@ short MLocale::toShort(const QString &s, bool *ok) const
     }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    QString parseInput = s;
+    d->removeDirectionalFormattingCodes(&parseInput);
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
     qint64 result;
@@ -1910,7 +1918,9 @@ QString MLocale::formatNumber(int i) const
     Q_D(const MLocale);
     UnicodeString str;
     d->_numberFormat->format(i, str);
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->fixFormattedNumberForRTL(&result);
+    return result;
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcNumeric).toString(i);
@@ -1926,7 +1936,9 @@ int MLocale::toInt(const QString &s, bool *ok) const
     }
 #ifdef HAVE_ICU
     Q_D(const MLocale);
-    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(s);
+    QString parseInput = s;
+    d->removeDirectionalFormattingCodes(&parseInput);
+    icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
     icu::Formattable formattable;
     icu::ParsePosition parsePosition;
     qint64 result;
@@ -1998,7 +2010,9 @@ QString MLocale::formatNumber(double i, int prec) const
         delete nf;
     }
 
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->fixFormattedNumberForRTL(&result);
+    return result;
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcNumeric).toString(i, 'g', prec);
@@ -2022,6 +2036,7 @@ double MLocale::toDouble(const QString &s, bool *ok) const
         = MIcuConversions::unicodeStringToQString(
             decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
     QString parseInput = s;
+    d->removeDirectionalFormattingCodes(&parseInput);
     // parse the exponential symbol in the input case insensitive:
     parseInput.replace(exponentialSymbol, exponentialSymbol, Qt::CaseInsensitive);
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
@@ -2067,7 +2082,9 @@ QString MLocale::formatNumber(float i) const
     icu::UnicodeString str;
     icu::FieldPosition pos;
     d->_numberFormat->format(i, str, pos);
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->fixFormattedNumberForRTL(&result);
+    return result;
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcNumeric).toString(i, 'g');
@@ -2091,6 +2108,7 @@ float MLocale::toFloat(const QString &s, bool *ok) const
         = MIcuConversions::unicodeStringToQString(
             decimalFormatSymbols->getSymbol(DecimalFormatSymbols::kExponentialSymbol));
     QString parseInput = s;
+    d->removeDirectionalFormattingCodes(&parseInput);
     // parse the exponential symbol in the input case insensitive:
     parseInput.replace(exponentialSymbol, exponentialSymbol, Qt::CaseInsensitive);
     icu::UnicodeString str = MIcuConversions::qStringToUnicodeString(parseInput);
@@ -2137,6 +2155,62 @@ float MLocale::toFloat(const QString &s, bool *ok) const
 }
 
 #ifdef HAVE_ICU
+void MLocalePrivate::removeDirectionalFormattingCodes(QString *str) const
+{
+    str->remove(QChar(0x200F)); // RIGHT-TO-LEFT MARK
+    str->remove(QChar(0x200E)); // LEFT-TO-RIGHT MARK
+    str->remove(QChar(0x202D)); // LEFT-TO-RIGHT OVERRIDE
+    str->remove(QChar(0x202E)); // RIGHT-TO-LEFT OVERRIDE
+    str->remove(QChar(0x202A)); // LEFT-TO-RIGHT EMBEDDING
+    str->remove(QChar(0x202B)); // RIGHT-TO-LEFT EMBEDDING
+    str->remove(QChar(0x202C)); // POP DIRECTIONAL FORMATTING
+}
+#endif
+
+#ifdef HAVE_ICU
+void MLocalePrivate::fixFormattedNumberForRTL(QString *formattedNumber) const
+{
+    // see https://projects.maemo.org/bugzilla/show_bug.cgi?id=232757
+    // and http://comments.gmane.org/gmane.comp.internationalization.bidi/2
+    //
+    // If the user interface (lc_messages) is Arabic or Persian,
+    // make formatted numbers with percents, minus-signs,... at the end
+    // or the beginning reorder correctly, even if a string starts with
+    // such a number and even if the number is alone in a label.
+    QString categoryNameMessages = categoryName(MLocale::MLcMessages);
+    if(!categoryNameMessages.startsWith(QLatin1String("ar"))
+       && !categoryNameMessages.startsWith(QLatin1String("fa")))
+        return;
+    // Some number formats, for example Persian, already contain some
+    // markup for bidi reordering, although it doesn’t seem to be right.
+    // Remove all already existing markers first to avoid conflicts
+    // with the markers I insert:
+    removeDirectionalFormattingCodes(formattedNumber);
+    // Now insert a RIGHT-TO-LEFT MARK before the first EN or AN
+    // and another one after the last EN or AN:
+    int first = -1;
+    int last = -1;
+    for(int i = 0; i < formattedNumber->size(); ++i) {
+        switch(formattedNumber->at(i).direction()) {
+        case QChar::DirEN:
+        case QChar::DirAN:
+            last = i;
+            if(first == -1)
+                first = i;
+            break;
+        default:
+            break;
+        }
+    }
+    if(last != -1)
+        formattedNumber->insert(last+1, QChar(0x200F)); // RIGHT-TO-LEFT MARK
+    if(first != -1)
+        formattedNumber->insert(first, QChar(0x200F)); // RIGHT-TO-LEFT MARK
+    return;
+}
+#endif
+
+#ifdef HAVE_ICU
 QString MLocale::formatPercent(double i, int decimals) const
 {
     Q_D(const MLocale);
@@ -2155,8 +2229,9 @@ QString MLocale::formatPercent(double i, int decimals) const
     icu::UnicodeString str;
     nf->format(i, str);
     delete nf;
-
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->fixFormattedNumberForRTL(&result);
+    return result;
 }
 #endif
 
@@ -2188,7 +2263,9 @@ QString MLocale::formatCurrency(double amount, const QString &currency) const
     icu::UnicodeString str;
     nf->format(amount, str);
     delete nf;
-    return MIcuConversions::unicodeStringToQString(str);
+    QString result = MIcuConversions::unicodeStringToQString(str);
+    d->fixFormattedNumberForRTL(&result);
+    return result;
 #else
     Q_D(const MLocale);
     return d->createQLocale(MLcMonetary).toString(amount) + ' ' + currency;

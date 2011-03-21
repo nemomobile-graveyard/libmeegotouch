@@ -1,9 +1,9 @@
 ar_SA	Language endonym	العربية
 ar_SA	Country endonym	المملكة العربية السعودية
-ar_SA	Floating Point Number	١٢٣٤٥٦٧٨٩٫٠١٢-
-ar_SA	Percent value	-١٬٢٣٤٫٥٦٧٩٪
-ar_SA	Currency value	€١٢٣٤٫٥٦
-ar_SA	Negative Currency value	-€١٢٣٤٫٥٦
+ar_SA	Floating Point Number	‏١٢٣٤٥٦٧٨٩٫٠١٢‏-
+ar_SA	Percent value	-‏١٬٢٣٤٫٥٦٧٩‏٪
+ar_SA	Currency value	€‏١٢٣٤٫٥٦‏
+ar_SA	Negative Currency value	-€‏١٢٣٤٫٥٦‏
 ar_SA	Name of month 01 (Gregorian calendar), stand-alone, wide	يناير
 ar_SA	Name of month 02 (Gregorian calendar), stand-alone, wide	فبراير
 ar_SA	Name of month 03 (Gregorian calendar), stand-alone, wide	مارس
@@ -4690,10 +4690,10 @@ eu_ES	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, 
 eu_ES	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, y'eko' MMMM'ren' dd'a' HH:mm:ss zzzz -> astelehena, 1429eko Rajabren 18a 14:31:00 GMT+00:00
 fa_IR	Language endonym	فارسی
 fa_IR	Country endonym	ایران
-fa_IR	Floating Point Number	‪−۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‬
-fa_IR	Percent value	−‪٪۱٬۲۳۴٫۵۶۷۹‬
-fa_IR	Currency value	۱٬۲۳۴٫۵۶ €
-fa_IR	Negative Currency value	‪−۱٬۲۳۴٫۵۶‬ €
+fa_IR	Floating Point Number	−‏۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‏
+fa_IR	Percent value	−٪‏۱٬۲۳۴٫۵۶۷۹‏
+fa_IR	Currency value	‏۱٬۲۳۴٫۵۶‏ €
+fa_IR	Negative Currency value	−‏۱٬۲۳۴٫۵۶‏ €
 fa_IR	Name of month 01 (Gregorian calendar), stand-alone, wide	ژانویه
 fa_IR	Name of month 02 (Gregorian calendar), stand-alone, wide	فوریه
 fa_IR	Name of month 03 (Gregorian calendar), stand-alone, wide	مارس

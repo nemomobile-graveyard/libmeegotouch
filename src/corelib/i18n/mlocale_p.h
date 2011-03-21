@@ -180,6 +180,8 @@ public:
     MLocale::PhoneNumberGrouping _phoneNumberGrouping;
 
 #ifdef HAVE_ICU
+    void removeDirectionalFormattingCodes(QString *str) const;
+    void fixFormattedNumberForRTL(QString *formattedNumber) const;
     // number format caching for better performance.
     icu::NumberFormat *_numberFormat;
     icu::NumberFormat *_numberFormatLcTime;
