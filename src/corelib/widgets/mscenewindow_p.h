@@ -71,6 +71,9 @@ public:
 
     // Scene manager that owns this scene window.
     QPointer<MSceneManager> sceneManager;
+
+    // Focused item before window blocked.
+    QPointer<QGraphicsWidget> focusItemBeforeWindowBlocked;
 };
 
 class MSceneWindowTestInterface : public QObject

@@ -54,7 +54,8 @@ MSceneWindowPrivate::MSceneWindowPrivate()
         appearanceAnimation(0),
         disappearanceAnimation(0),
         queuedTransition(0),
-        sceneManager(0)
+        sceneManager(0),
+        focusItemBeforeWindowBlocked(0)
 {
 }
 
@@ -328,8 +329,16 @@ bool MSceneWindow::event(QEvent *event)
     } else if (event->type() == QEvent::WindowBlocked) {
         // blocked scene windows must lose focus
         if (focusItem()) {
+            if (focusItem()->isWidget())
+                d->focusItemBeforeWindowBlocked = static_cast<QGraphicsWidget*>(focusItem());
             focusItem()->clearFocus();
         }
+    } else if (event->type() == QEvent::WindowUnblocked) {
+        // Unblocked scene window must restore the lost focus.
+        if (d->focusItemBeforeWindowBlocked && !focusItem()) {
+            d->focusItemBeforeWindowBlocked->setFocus(Qt::ActiveWindowFocusReason);
+        }
+        d->focusItemBeforeWindowBlocked = 0;
     }
 
     return MWidgetController::event(event);
