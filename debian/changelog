@@ -1,8 +1,20 @@
 libmeegotouch (0.20.96-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#237124 - MLabel component does not draw all of the text in portrait mode when using rich text with paragraphs
+  * Fixes: NB#236089 - Layout is broken after changing language - Turkish only
+  * Fixes: NB#175013 - Dates are shown according to region, not according to language
+  * Fixes: NB#215918 - calendar UI language can be different from device UI language
+  * Fixes: NB#236663 - prestarted apps lower/raise themselves
+  * Fixes: NB#228851 - [TASK] Improve localized number support
+  * Fixes: NB#234426 - Non-default values of border spring cause MPhysics2DPanning never to stop the integration
+  * Fixes: Problem with distance threshold calculation in swipe gesture.
+  * Fixes: NB#236866 - Orientation styling parameters are not working correctly
+  * Fixes: Correctly apply initial orientation for MInputWidgetRelocator style container
+  * Fixes: NB#237059, Copy,cut,paste menu is truncated when a long text is entered in the single line text
+  * Fixes: cut/copy/paste widget's arrow doesn't point at the cursor
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 16 Mar 2011 17:23:42 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 21 Mar 2011 12:12:19 +0200
 
 libmeegotouch (0.20.95-1) unstable; urgency=low
 
