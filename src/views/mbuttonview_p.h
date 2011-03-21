@@ -90,6 +90,8 @@ public:
 
     int pressTimeout() const;
     MButtonTransition* transition;
+
+    bool eventCancelled;
 };
 
 #endif

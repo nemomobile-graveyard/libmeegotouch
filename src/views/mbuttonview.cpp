@@ -46,7 +46,7 @@
 MButtonViewPrivate::MButtonViewPrivate()
     : icon(0), toggledIcon(0), label(NULL),
     iconOrigin(IconOriginUndefined), toggledIconOrigin(IconOriginUndefined),
-    transition(NULL)
+      transition(NULL), eventCancelled(false)
 {
 }
 
@@ -462,14 +462,11 @@ void MButtonView::applyStyle()
 void MButtonView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
-    Q_D(MButtonView);
 
     if (model()->down()) {
         return;
     }
     model()->setDown(true);
-    d->transition->onPress();
-    style()->pressFeedback().play();
 }
 
 void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -484,14 +481,11 @@ void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (rect.contains(touch)) {
         if (!model()->down()) {
             model()->setDown(true);
-            d->transition->onPress();
-            style()->pressFeedback().play();
         }
     } else {
         if (model()->down()) {
+            d->eventCancelled = true;
             model()->setDown(false);
-            d->transition->onCancel();
-            style()->cancelFeedback().play();
         }
     }
 
@@ -505,8 +499,6 @@ void MButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
     model()->setDown(false);
-    d->transition->onRelease();
-    style()->releaseFeedback().play();
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
@@ -525,9 +517,8 @@ void MButtonView::cancelEvent(MCancelEvent *event)
         return;
     }
 
+    d->eventCancelled = true;
     model()->setDown(false);
-    d->transition->onCancel();
-    style()->cancelFeedback().play();
 }
 
 void MButtonView::setGeometry(const QRectF &rect)
@@ -572,6 +563,20 @@ void MButtonView::updateData(const QList<const char *>& modifications)
         } else if (member == MButtonModel::Checked ||
                    member == MButtonModel::Checkable) {
             d->transition->refreshStyle();
+        } else if (member == MButtonModel::Down) {
+            if (model()->down()) {
+                d->transition->onPress();
+                style()->pressFeedback().play();
+            } else {
+                if (!d->eventCancelled) {
+                    d->transition->onRelease();
+                    style()->releaseFeedback().play();
+                } else {
+                    d->transition->onCancel();
+                    style()->cancelFeedback().play();
+                    d->eventCancelled = false;
+                }
+            }
         }
     }
 
