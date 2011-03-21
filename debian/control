@@ -1,7 +1,7 @@
 Source: libmeegotouch
 Section: libs
 Priority: extra
-Maintainer: Tomas Junnonen <tomas.junnonen@nokia.com>
+Maintainer: Adrian Yanes <ext-adrian.yanes@nokia.com>
 Build-Depends: debhelper (>= 5),
  libqt4-dev (>= 4.7.2~git20110119-0maemo2+0m6),
  libicu-dev,
