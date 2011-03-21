@@ -148,7 +148,9 @@ public:
       headerLayout->addItem(new MButton("Save"));
       \endcode
 
-      \sa setHeaderWidget()
+      For most common cases (such as the example above) you should consider using MBasicSheetHeader.
+
+      \sa setHeaderWidget(), MBasicSheetHeader
      */
     QGraphicsWidget *headerWidget();
 
