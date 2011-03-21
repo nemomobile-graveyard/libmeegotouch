@@ -236,7 +236,7 @@ void MyPage::showPreviousImage(bool stopCurrentAnimation)
     }
 
     MImageWidget *oldImage = images[currentImageNumber];
-    currentImageNumber = --currentImageNumber % ImageCount;
+    currentImageNumber = (currentImageNumber - 1) % ImageCount;
     if (currentImageNumber < 0)
         currentImageNumber = ImageCount - 1;
     MImageWidget *newImage = images[currentImageNumber];
@@ -272,7 +272,7 @@ void MyPage::showNextImage(bool stopCurrentAnimation)
     }
 
     MImageWidget *oldImage = images[currentImageNumber];
-    currentImageNumber = ++currentImageNumber % ImageCount;
+    currentImageNumber = (currentImageNumber + 1) % ImageCount;
     MImageWidget *newImage = images[currentImageNumber];
 
     oldImagePosAnimation->setTargetObject(oldImage);
