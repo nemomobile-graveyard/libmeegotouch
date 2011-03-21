@@ -160,7 +160,7 @@ void Pt_MCalendar::benchmarkFormatDateTimePosixFormatString_r_MCalendar()
 {
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
-    QString lcTime("ar_SA");     // this overrides language
+    QString lcTime("ar_SA@mix-time-and-language=no");     // this overrides language
     QString lcNumeric("ar_SA");  // does matter, overrides localized numbers in dates
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
@@ -287,7 +287,7 @@ void Pt_MCalendar::benchmarkFormatDateTime()
 {
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
-    QString lcTime("fi_FI");     // this overrides language
+    QString lcTime("fi_FI@mix-time-and-language=no");     // this overrides language
     QString lcNumeric("en_US");  // should not matter, no localized numbers involved
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
@@ -313,7 +313,7 @@ void Pt_MCalendar::benchmarkFormatDateTimeICU()
 {
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
-    QString lcTime("fi_FI");     // this overrides language
+    QString lcTime("fi_FI@mix-time-and-language=no"); // this overrides language
     QString lcNumeric("en_US");  // should not matter
     QString formatString("cccc d. MMMM y H:mm:ss zzzz");
     QString formattedResult("tiistai 13. heinäkuuta 2010 14:51:07 Itä-Euroopan kesäaika");
