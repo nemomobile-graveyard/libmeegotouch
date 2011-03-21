@@ -74,7 +74,6 @@ int main(int argc, char **argv)
     QObject::connect(application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
 
     MApplicationWindow* window = MComponentCache::mApplicationWindow();
-    window->show();
 
     MainPage *mainPage = new MainPage;
     Timedemo *timedemo = 0;
@@ -114,6 +113,7 @@ int main(int argc, char **argv)
     }
 
     window->sceneManager()->appearSceneWindowNow(mainPage);
+    window->show();
 
     int exitCode = application->exec();
     delete timedemo;
