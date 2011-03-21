@@ -235,8 +235,6 @@ void MNavigationBarViewPrivate::updateLayout()
 
         if (menuVisible && escapeVisible) {
             layout->setPolicy(escapeToolbarMenuPolicy);
-        } else if (isToolbarLandscapeTabbar() && (menuVisible || escapeVisible)) {
-            layout->setPolicy(escapeToolbarMenuPolicy);
         } else if (menuVisible && !escapeVisible) {
             layout->setPolicy(toolbarMenuPolicy);
         } else if (!menuVisible && escapeVisible) {

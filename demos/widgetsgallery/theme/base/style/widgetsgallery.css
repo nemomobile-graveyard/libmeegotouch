@@ -150,19 +150,22 @@ MButtonStyle#ImplodingBackgroundButton:pressed {
     text-color: white;
 }
 
-MApplicationWindowStyle#IconAndLabelTabsTop.Portrait {
-    floatable-tab-bar: true;
-    tab-bar-style-name: "TabsTopWithIconAndLabel";
+MApplicationWindowStyle#IconTabsBottom {
+    tab-bar-style-name: "TabsBottomWithIcon";
 }
 
-MApplicationWindowStyle#IconAndLabelTabsBottom.Portrait {
-    floatable-tab-bar: true;
-    tab-bar-style-name: "TabsBottomWithIconAndLabel";
+MApplicationWindowStyle#LabelTabsBottom {
+    tab-bar-style-name: "TabsBottomWithLabel";
 }
 
-MApplicationWindowStyle#IconOrLabelTabsTop {
+MApplicationWindowStyle#IconTabsTop {
     floatable-tab-bar: true;
-    tab-bar-style-name: "TabsTopWithIconOrLabel";
+    tab-bar-style-name: "TabsTopWithIcon";
+}
+
+MApplicationWindowStyle#LabelTabsTop {
+    floatable-tab-bar: true;
+    tab-bar-style-name: "TabsTopWithLabel";
 }
 
 MSheetStyle#PhotoViewer {

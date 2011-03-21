@@ -303,7 +303,7 @@ void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *actio
         MAction *mAction = qobject_cast<MAction *>(action);
         if (mAction) {
             button->setIconID(mAction->iconID());
-            button->setIconVisible(iconsEnabled);
+            button->setIconVisible(iconsEnabled || isIconOnly(button));
             button->setToggledIconID(mAction->toggledIconID());
         }
 
@@ -521,7 +521,7 @@ void MToolBarViewPrivate::setIconsEnabled(bool enabled)
     for (QHash<QAction *, MButton *>::const_iterator bit = buttons.constBegin(); bit != buttons.constEnd(); ++bit) {
         MButton *button = bit.value();
         if (button)
-            button->setIconVisible(iconsEnabled);
+            button->setIconVisible(iconsEnabled || isIconOnly(button));
     }
 }
 
@@ -608,8 +608,9 @@ void MToolBarViewPrivate::updateWidgetAlignment()
        AlignJustify = no prereserved slots on left and right
        AlignHCenter = prereserved slots on left and right */
 
-    landscapePolicy->setWidgetAlignment(widgetAlignment, v.isValid() ? true : false);
-    portraitPolicy->setWidgetAlignment(widgetAlignment, v.isValid() ? true : false);
+    bool alignmentAffectsCapacity = (v.isValid() && !buttonGroup);
+    landscapePolicy->setWidgetAlignment(widgetAlignment, alignmentAffectsCapacity);
+    portraitPolicy->setWidgetAlignment(widgetAlignment, alignmentAffectsCapacity);
 
     if (widgetAlignment != Qt::AlignHCenter || !v.isValid())
         addActionsFromLeftOvers();
@@ -685,6 +686,11 @@ void MToolBarViewPrivate::setLabelOnlyAsCommonButton(bool enable, bool centerToP
 bool MToolBarViewPrivate::isLabelOnly(MButton *button) const
 {
     return (button && !button->text().isEmpty() && button->iconID().isEmpty());
+}
+
+bool MToolBarViewPrivate::isIconOnly(MButton *button) const
+{
+    return (button && button->text().isEmpty() && !button->iconID().isEmpty());
 }
 
 MToolBarLayoutPolicy *MToolBarViewPrivate::currentPolicy() const

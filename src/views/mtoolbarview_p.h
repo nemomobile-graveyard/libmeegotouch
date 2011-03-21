@@ -91,6 +91,7 @@ protected:
     void updateAlignmentMargins(int alignmentMargins);
     void updateStyleNames();
     bool isLabelOnly(MButton *button) const;
+    bool isIconOnly(MButton *button) const;
     MToolBarLayoutPolicy *currentPolicy() const;
 
 protected:

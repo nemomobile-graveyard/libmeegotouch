@@ -279,7 +279,7 @@ void ToolBarPage::retranslateUi()
     textButtonsAction->setText(qtTrId("xx_toolbar_page_text_buttons"));
     //% "Text field"
     textFieldAction->setText(qtTrId("xx_toolbar_page_text_field"));
-    //% "Icon + label tabs in portrait"
+    //% "Icon + label tabs in portrait (default)"
     iconAndLabelTabsAction->setText(qtTrId("xx_toolbar_page_icon_and_label_tabs"));
     //% "Icon tabs"
     iconTabsAction->setText(qtTrId("xx_toolbar_page_icon_tabs"));
@@ -371,7 +371,7 @@ void ToolBarPage::setupSliders()
     maxTabsLabel->setTextElide(true);
     layoutSliders->addItem(maxTabsLabel, 1, 0);
     maxTabsSlider = new MSlider;
-    maxTabsSlider->setRange(0, 5);
+    maxTabsSlider->setRange(0, 4);
     maxTabsSlider->setValue(3);
     maxTabsSlider->setMinLabelVisible(true);
     maxTabsSlider->setMaxLabelVisible(true);
@@ -654,12 +654,12 @@ void ToolBarPage::initTabViewToolBar(bool onTop, bool icons, bool labels)
     if (onTop) {
         if (!MApplication::activeWindow()->isFullScreen())
             MApplication::activeWindow()->showFullScreen();
-        currentStyleName = (icons && labels) ? "IconAndLabelTabsTop" : "IconOrLabelTabsTop";
+        currentStyleName = (icons && labels) ? "CommonApplicationWindowTabBarOnTop" : (icons ? "IconTabsTop" : "LabelTabsTop");
         applicationWindow()->setStyleName(currentStyleName);
     } else {
         if (MApplication::activeWindow()->isFullScreen() && !wasFullScreen)
             MApplication::activeWindow()->showNormal();
-        currentStyleName = (icons && labels) ? "IconAndLabelTabsBottom" : defaultStyleName;
+        currentStyleName = (icons && labels) ? defaultStyleName : (icons ? "IconTabsBottom" : "LabelTabsBottom");
         applicationWindow()->setStyleName(currentStyleName);
     }
 
@@ -678,13 +678,10 @@ void ToolBarPage::addTab(int tabNumber)
     switch (currentConfiguration) {
     case iconAndLabelTabsBottom:
     case iconAndLabelTabsTop:
-        icons = true;
-        labels = true;
-        break;
     case iconTabsBottom:
     case iconTabsTop:
         icons = true;
-        labels = false;
+        labels = true;
         break;
     case textTabsBottom:
     case textTabsTop:
