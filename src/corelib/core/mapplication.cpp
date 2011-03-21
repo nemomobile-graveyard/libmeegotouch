@@ -316,7 +316,9 @@ bool MApplication::notify(QObject *receiver, QEvent *event)
     try {
         return QApplication::notify(receiver, event);
     } catch(std::exception& e) {
-        mDebug("MApplication") << "Caught exception in notify:" << e.what();
+        mWarning("MApplication") << "Caught exception in notify:" << e.what();
+	// make sure we die here...
+	abort();
     }
     return false;
 }
