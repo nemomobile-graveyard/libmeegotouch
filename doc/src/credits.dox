@@ -4,82 +4,165 @@ The following people have contributed code to MeeGo Touch or otherwise helped ou
 
 <pre>
 
- Abdiel Janulgue 
- Aleksandar Stojiljkovic
- Alexander Shalamov 
- Alexey Shilov
- Alexey Smirnov
- Anna Gadomska
- Antti Kervinen
- Armin Berres
- Arsi Antila
- Ashish Gupta
- Bernd Lamecker
- Berthold Krevert
- Bjoern Schnabel
- Bradley T. Hughes 
- Chi Ning
- Daniel d'Andrada 
- Daniel Lehtovirta
- Denis Dzyubenko 
- Dominik Kapusta
- Dubovik Sergiy
- Esko Oramaa 
- Girish Sarode
- Holger Schroeder
- Huiyuan Zhu
- Jakub Pavelek
- James Cook
- Jani Lehmuskoski 
- Jani Mikkonen 
- Janne Heikkilä
- Jarosław Jaryszew
- Jarno Santeri Luoma-Nirva
- Johan Paul
- John Tapsell
- Juha Lintula
- Juha-Pekka Jokela 
- Juho Valonen 
- Jussi Lind
- Jussi Petteri Lehtinen
- Jussi Rautio 
- Kuisma Salonen 
- Leo Hynninen
- Maciej Jabłoński
- Marcin Miklas
- Marius Vollmer
- Marko A. Mattila 
- Martin Scherbaum 
- Max Waterman 
- Michał Guminiak
- Mike Fabian
- Mohammad Anwari
- Mu Yang
- Nimika Keshri
- Pankaj Saharan 
- Patrick Spendrin 
- Pavan Patale 
- Paweł Łukaszewicz
- Pekka Vuorela
- Pertti Kellomäki
- Sergiusz Szachowałow
- Stanislav Ionascu
- Stefan Hundhammer
- Steffen Imhof
- Tapani Pälli 
- Tero Tiittanen 
- Thiago Bedin Frustaci 
- Thomas Mönicke
- Timo Palonen 
- Tobias Hunger
- Tobias Koch 
- Tomas Junnonen 
- Torsten Rahn 
- Tuomas Järvensivu 
- Vesa Halttunen 
- Viacheslav Sobolev 
- Wei Zhang 
- Wenpeng Zhou
+Abdiel Janulgue
+Adam Endrodi
+Adrian Yanes
+Adrien Bustany
+Aki Koskinen
+Alexander Kornilov
+Alexander Shalamov
+Alexandr Ivanov
+Alexey Shilov
+Alexey Smirnov
+Anna Gadomska
+Antti Kervinen
+Antti Pulakka
+Armin Berres
+Arsi Antila
+Artem Egorkine
+Artur Swiderski
+Ashish Gupta
+Axel Jaeger
+Bernd Lamecker
+Berthold Krevert
+Björn Schnabel
+Bradley T. Hughes
+Caio Marcelo de Oliveira Filho
+Chris Skluzacek
+Chi Ning
+Csaba Kertész
+Daniel Borgmann
+Daniel d'Andrada
+Daniel Elstner
+Daniel Lehtovirta
+David King
+Denes Dezso
+Denis Dzyubenko
+Deqing Huang
+Dezsö Denes
+Didier Raboud
+Dirk-Jan Binnema 
+Dmitry Abramov
+Dominik Kapusta
+Dominik Röttsches
+Eduardo Lima Mitev
+Eduardo M. Fleury
+Eetu Lehmusvuo
+Esko Oramaa
+Fathi Boudra
+Felipe Erias Morandeira
+Girish Sarode
+Hannu Koivisto
+Harald Fernengel
+Holger Schröder
+Huiyuan Zhu
+Imran Zaman
+Ivan Arias-Rodriguez
+Jakub Pavelek
+James Cook
+Jani Lehmuskoski
+Jani Mikkonen
+Janne Heikkilä
+Janne Kylliö
+Janne Sakko
+Jarkko Markkanen
+Jarno Malmari
+Jarno Santeri Luoma-Nirva
+Jarosław Jaryszew
+Joaquim Rocha
+Johan Paul
+John Hammink
+John Tapsell
+Jon Nordby
+Jörgen Scheibengruber
+Juan A. Suarez Romero
+Juergen Bocklage-Ryannel
+Juha Lintula
+Juha-Pekka Jokela
+Juho Valonen
+Jukka Halonen
+Jussi Lehtinen
+Jussi Lind
+Jussi Petteri Lehtinen
+Jussi Rautio
+Kuisma Salonen
+Laszlo Papp
+Lehmusvuo Eetu
+Leo Hynninen
+Maciej Gudan
+Maciej Jabłoński
+Maksim Kirillov
+Marcin Miklas
+Marius Vollmer
+Marja Hassinen
+Markkanen Jarkko
+Marko A. Mattila
+Martin Scherbaum
+Matias Wilkman
+Matti Vuorela
+Max Waterman
+Michael Dominic K
+Michael Hasselmann
+Michal Guminiak
+Michał Palczewski
+Miguel Gómez
+Mihaly Milian
+Mika Wilen
+Mike Fabian
+Mikko Herranen
+Mikko Levonmaa
+Miroslav Safr
+Mohammad Anwari
+Mu Yang
+Murray Cumming
+Murugappan Nataraj
+Natalia Dobrovolskaya
+Niina Pietilainen
+Nimika Keshri
+Oliver McFadden
+Olli Leppanen
+Oskari Timperi
+Otso Koski
+Pankaj Saharan
+Patrick Spendrin
+Pauli Lehtinen
+Pavan Patale
+Paweł Łukaszewicz
+Pekka Vuorela
+Pertti Kellomäki
+Peter Penz
+Peter Vajda
+Piotr Podsiadły
+Ran Nyman
+Robin Burchell
+Roy Tanping
+Sachin Kundu
+Sauli Kauppi
+Sergiy Dubovik
+Shane Bryan
+Stanislav Ionascu
+Stefan Hundhammer
+Steffen Imhof
+Tapani Pälli
+Tatu Lahtela
+Tero Tiittanen
+Thiago Bedin Frustaci
+Thierry Bastian
+Thomas Mönicke
+Timo Palonen
+Tobias Hunger
+Tobias Koch
+Tomas Junnonen
+Tor Arne Vestbø
+Torsten Rahn
+Tuomas Järvensivu
+Tuomas Kuosmanen
+Vesa Halttunen
+Viacheslav Sobolev
+Ville Voutilainen
+Yang Mu
+Wei Zhang 
+Wenpeng Zhou
 
 </pre>
 
