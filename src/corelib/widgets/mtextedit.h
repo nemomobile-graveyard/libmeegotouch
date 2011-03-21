@@ -351,7 +351,7 @@ public:
     /*!
      * \brief sets prompt value
      * \param prompt prompt text
-     * Prompt is shown inside text entry when the entry doesn't have focus or contents
+     * Prompt is placeholder text for describing a text enty.
      */
     void setPrompt(const QString &prompt);
 
