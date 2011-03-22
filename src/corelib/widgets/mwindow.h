@@ -380,8 +380,14 @@ public:
     /*! Returns true if user can see the window.
      *  This is different from QWidget::isVisible(), which is always
      *  explicitly set in the application. QWidget::isVisible() doesn't
-     *  know if the window is e.g. covered by another window and cannot be
+     *  know if the window is e.g. covered by an opaque window and cannot be
      *  seen.
+     *
+     *  \note Translucent windows (windows that have an alpha channel) are not
+     *  considered to obscure the windows behind them, even if all their pixels
+     *  happen to have alpha 1.0.
+     *
+     * \sa displayEntered(), displayExited()
      */
     bool isOnDisplay() const;
 
@@ -544,20 +550,24 @@ Q_SIGNALS:
     /*!
      This signal is emitted when:
      - the window becomes visible
-     - is not obscured anymore by another window
+     - is not obscured anymore by an opaque window
 
      Calling show() will emit displayEntered() when the window becomes
      visible.
+
+     \sa displayExited(), isOnDisplay()
      */
     void displayEntered();
 
     /*!
      A signal that is emitted when:
-     - the window has been obscured by another window approximately for one second
+     - the window has been obscured by an opaque window approximately for one second
      - the window gets hidden
      - the window gets closed
 
      Calling close() will immediately emit displayExited().
+
+     \sa displayEntered(), isOnDisplay()
      */
     void displayExited();
 
