@@ -18,9 +18,40 @@
 ****************************************************************************/
 
 #include "mbuttoniconview.h"
+#include "mbuttonview_p.h"
+#include <mlabel.h>
+
+class MButtonIconViewPrivate : public MButtonViewPrivate
+{
+    Q_DECLARE_PUBLIC(MButtonIconView)
+
+public:
+    virtual void updateLabelStyle();
+};
+
+void MButtonIconViewPrivate::updateLabelStyle()
+{
+    MButtonViewPrivate::updateLabelStyle();
+
+    if (label) {
+        Q_Q(MButtonIconView);
+        const MButtonIconStyle *s = static_cast<const MButtonIconStyle *>(q->style().operator ->());
+        label->setTextElide(s->textEliding());
+        label->setWrapMode(s->textWrapMode());
+        if (s->textWrapMode() != QTextOption::NoWrap)
+            label->setWordWrap(true);
+        else
+            label->setWordWrap(false);
+    }
+}
 
 MButtonIconView::MButtonIconView(MButton *controller) :
-    MButtonView(controller)
+    MButtonView(* new MButtonIconViewPrivate, controller)
+{
+}
+
+MButtonIconView::MButtonIconView(MButtonIconViewPrivate &dd, MButton *controller) :
+    MButtonView(dd, controller)
 {
 }
 

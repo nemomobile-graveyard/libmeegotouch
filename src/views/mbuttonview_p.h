@@ -67,7 +67,7 @@ public:
     void updateToggledIcon();
 
     void setText(const QString &text);
-    void updateLabelStyle();
+    virtual void updateLabelStyle();
 
     // The icons come either from the style or from the model.
     Icon *icon;

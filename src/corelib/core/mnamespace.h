@@ -22,7 +22,7 @@
 
 #include <QMetaType>
 #include <QMessageBox>
-
+#include <QTextOption>
 #include "mexport.h"
 
 namespace M
@@ -304,4 +304,5 @@ Q_DECLARE_METATYPE(M::InputMethodMode)
 Q_DECLARE_METATYPE(M::PrestartMode)
 Q_DECLARE_METATYPE(M::StandardButton)
 
+Q_DECLARE_METATYPE(QTextOption::WrapMode)
 #endif

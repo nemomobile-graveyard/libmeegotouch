@@ -25,6 +25,7 @@
 #include <mbuttoniconstyle.h>
 
 class MButton;
+class MButtonIconViewPrivate;
 
 /*!
     \class MButtonIconView
@@ -68,8 +69,13 @@ protected:
     virtual void applyStyle();
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
+
+    //! \internal
+    MButtonIconView(MButtonIconViewPrivate &dd, MButton *controller);
+    //! \internal_end
 private:
     Q_DISABLE_COPY(MButtonIconView)
+    Q_DECLARE_PRIVATE(MButtonIconView)
 
 #ifdef UNIT_TEST
     friend class Ut_MButtonIconView;

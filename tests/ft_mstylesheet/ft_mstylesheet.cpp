@@ -131,6 +131,8 @@ void Ft_MStyleSheet::test_supported_attribute_types()
     QCOMPARE(style->attributePenStyle(), Qt::NoPen);
     QCOMPARE(style->attributeAxis(), Qt::XAxis);
 
+    QCOMPARE(style->attributeWrapMode(), QTextOption::NoWrap);
+
     QVERIFY(style->attributePixmap());
     QVERIFY(style->attributePixmap2());
     QVERIFY(style->attributePixmap3());
@@ -195,6 +197,8 @@ void Ft_MStyleSheet::test_inheritance()
     QCOMPARE(style2->attributeUnderlineStyle(), QTextCharFormat::NoUnderline);
     QCOMPARE(style2->attributePenStyle(), Qt::NoPen);
     QCOMPARE(style2->attributeAxis(), Qt::XAxis);
+
+    QCOMPARE(style2->attributeWrapMode(), QTextOption::NoWrap);
 
     QVERIFY(style2->attributePixmap());
 
