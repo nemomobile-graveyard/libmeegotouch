@@ -437,6 +437,12 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
             if (!locker2->isLocked()) {
                 return false;
             }
+
+            // After the locking has been granted it is possible that the binary cache has already been
+            // written by another process in the meantime.
+            if (binaryFileMode && !binaryFilename.isEmpty() && loadBinary(binaryFilename)) {
+                return true;
+            }
         }
 
 

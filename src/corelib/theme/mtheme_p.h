@@ -33,6 +33,7 @@ class MLibrary;
 #include <QHash>
 #include <QLibrary>
 #include <QAtomicInt>
+#include <QSystemSemaphore>
 
 #include "massembly.h"
 #include "mlogicalvalues.h"
@@ -128,6 +129,9 @@ public:
     typedef QHash<QString, QString> MStringHash;
     QHash<const char*, MStringHash> controllerViewCache;
 
+    QTimer *changeThemeTimer;
+    QSystemSemaphore changeThemeSemaphore;
+
 public:
     /*!
      * Check if the theme has defined a view for this controller, if not, go towards base class
@@ -169,6 +173,11 @@ public:
      * GConf item change signals that locale is changed. Logical values & icons are reloaded.
      */
     void localeChangedSlot();
+
+    /*!
+     * Invokes themeChangedSlot() with the current theme inheritence chain and library names.
+     */
+    void changeTheme();
 
     bool loadCSS(const QString &filename, MTheme::InsertMode mode = MTheme::Append);
 

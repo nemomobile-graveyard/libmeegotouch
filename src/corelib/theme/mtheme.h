@@ -421,6 +421,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void pixmapCreatedOrChangedSlot(QString,QSize,MPixmapHandle))
     Q_PRIVATE_SLOT(d_func(), void localeChangedSlot())
 #endif
+    Q_PRIVATE_SLOT(d_func(), void changeTheme())
 
     friend class MApplicationPrivate;
     friend class MAssemblyPrivate;

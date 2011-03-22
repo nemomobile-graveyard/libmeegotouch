@@ -32,6 +32,7 @@ M_LIBRARY
 #include <QFileInfo>
 #include <QSettings>
 #include <QDir>
+#include <QTimer>
 #include <QSharedMemory>
 #include <QHash>
 
@@ -719,6 +720,9 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
 #ifdef HAVE_GCONF
     , locale("/meegotouch/i18n/language")
 #endif
+    , showAsyncRequests(false),
+    changeThemeTimer(0),
+    changeThemeSemaphore("MTHEME_CHANGE_THEME_GUARD", 1)
 {
     switch (themeService) {
     case MTheme::LocalTheme:
@@ -1021,7 +1025,30 @@ void MThemePrivate::unregisterStyleContainer(MStyleContainer *container)
 
 void MThemePrivate::localeChangedSlot()
 {
+    Q_Q(MTheme);
+
+    const MWindow *window = MApplication::activeWindow();
+    if (window && window->isOnDisplay() && window->hasFocus()) {
+        changeTheme();
+    } else {
+        // Delay the expensive changing of the theme for applications that
+        // are in background to improve the performance for the application
+        // that is in foreground.
+        if (!changeThemeTimer) {
+            changeThemeTimer = new QTimer(q);
+            changeThemeTimer->setSingleShot(true);
+            changeThemeTimer->setInterval(500);
+            connect(changeThemeTimer, SIGNAL(timeout()), q, SLOT(changeTheme()));
+        }
+        changeThemeTimer->start();
+    }
+}
+
+void MThemePrivate::changeTheme()
+{
+    changeThemeSemaphore.acquire();
     themeChangedSlot(themeDaemon->themeInheritanceChain(), themeDaemon->themeLibraryNames());
+    changeThemeSemaphore.release();
 }
 
 #include "moc_mtheme.cpp"
