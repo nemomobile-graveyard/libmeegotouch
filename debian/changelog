@@ -1,8 +1,21 @@
-libmeegotouch (0.20.97~1) unstable; urgency=low
+libmeegotouch (0.20.97-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: Qt model tester is failing on meegotouch abstract item model.
+  * Fixes: NB#213057 - [TASK] Camera; §qtn_cam_whitebalance_fluorescent§ med. translation is truncated.
+  * Fixes: MB#6593 - widgetsgallery linking fails due to clock_gettime being in -lrt
+  * Fixes: NB#232757 - Arabic Gallery, Incorrect location of the percentage symbol"%" in the string §qtn_gall_resize_button_value_2§.
+  * Fixes: NB#235720 - Coverity run on 11. March 2011
+  * Fixes: NB#234273 - [TASK] libmeegotouch fails to build with gcc-4.5
+  * Fixes: NB#230352 - _MEEGOTOUCH_ORIENTATION_ANGLE is missing after MWindow::setTranslucentBackground(true)
+  * Fixes: Always inject MOnDisplayChangeEvent in MWindow::setVisible
+  * Fixes: NB#222235 - sync ui : SIGABRT after performing few sync operations
+  * Fixes: NB#236961, Copy-Paste popup labels are hard-coded
+  * Fixes: NB#237347 - MButton setDown api doesnt set the button state visuals
+  * Fixes: GL build dependencies for i386
+  * Fixes: NB#175013 - Dates are shown according to region, not according to language
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 21 Mar 2011 12:13:21 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 22 Mar 2011 19:15:36 +0200
 
 libmeegotouch (0.20.96-1) unstable; urgency=low
 
