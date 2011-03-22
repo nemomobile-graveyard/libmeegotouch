@@ -46,6 +46,7 @@ private slots:
     void mouseReleaseEvent();
     void mouseMoveEvent();
     void testThatActiveStyleIsUsedInActiveState();
+    void testExposedRectTranslation();
 
 private:
     void setBottomMarginParameter(MWidgetStyleContainer &container, int param);

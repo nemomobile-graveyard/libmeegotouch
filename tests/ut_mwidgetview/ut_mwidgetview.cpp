@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
+#include <QStyleOptionGraphicsItem>
 
 #include <mwidgetview.h>
 
@@ -33,6 +34,32 @@ public:
     virtual void setGeometry(const QRectF &rect);
     virtual QRectF boundingRect() const;
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+
+    virtual void drawBackground(QPainter *painter,
+                                const QStyleOptionGraphicsItem *option) const
+    {
+        Q_UNUSED(painter);
+        const_cast<MyMWidgetView *>(this)->lastBgExposedRect
+            = option ? option->exposedRect : QRectF();
+    }
+    virtual void drawContents(QPainter *painter,
+                              const QStyleOptionGraphicsItem *option) const
+    {
+        Q_UNUSED(painter);
+        const_cast<MyMWidgetView *>(this)->lastContentsExposedRect
+            = option ? option->exposedRect : QRectF();
+    }
+    virtual void drawForeground(QPainter *painter,
+                                const QStyleOptionGraphicsItem *option) const
+    {
+        Q_UNUSED(painter);
+        const_cast<MyMWidgetView *>(this)->lastFgExposedRect
+            = option ? option->exposedRect : QRectF();
+    }
+
+    QRectF lastBgExposedRect;
+    QRectF lastContentsExposedRect;
+    QRectF lastFgExposedRect;
 };
 
 MyMWidgetView::MyMWidgetView(MWidgetController *controller)
@@ -169,6 +196,35 @@ void Ut_MWidgetView::testThatActiveStyleIsUsedInActiveState()
 
     // Verify that default style is used
     QCOMPARE(m_subject->style()->marginBottom(), 3);
+}
+
+void Ut_MWidgetView::testExposedRectTranslation()
+{
+    MyMWidgetView *subject = static_cast<MyMWidgetView *>(m_subject);
+
+    // Get pointer to writable style.
+    MWidgetStyle *style = const_cast<MWidgetStyle *>(m_subject->style().operator ->());
+
+    const int margin = 5;
+    style->setMarginLeft(margin);
+    style->setMarginTop(margin);
+    subject->applyStyle();
+
+    // Set exposedRect to 10x10 rect sitting at item origin.
+    QStyleOptionGraphicsItem option;
+    option.exposedRect = QRectF(0, 0, 10, 10);
+
+    QPainter painter;
+    subject->MWidgetView::paint(&painter, &option);
+
+    // exposedRect should be translated in drawBackground,
+    // drawContents, but not in drawForeground.
+    QCOMPARE(subject->lastBgExposedRect,
+             QRectF(-5, -5, 10, 10));
+    QCOMPARE(subject->lastContentsExposedRect,
+             QRectF(-5, -5, 10, 10));
+    QCOMPARE(subject->lastFgExposedRect,
+             QRectF(0, 0, 10, 10));
 }
 
 QTEST_APPLESS_MAIN(Ut_MWidgetView)

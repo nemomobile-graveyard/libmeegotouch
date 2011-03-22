@@ -42,6 +42,7 @@
 #include <QPinchGesture>
 #include <QTapGesture>
 #include <QSwipeGesture>
+#include <QStyleOptionGraphicsItem>
 
 MWidgetViewPrivate::MWidgetViewPrivate() :
     q_ptr(NULL),
@@ -671,8 +672,18 @@ void MWidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         horizontalMargin = d->margins.right();
 
     painter->translate(horizontalMargin, d->margins.top());
-    drawBackground(painter, option);
-    drawContents(painter, option);
+
+    if (option) {
+        QStyleOptionGraphicsItem translatedOption(*option);
+        translatedOption.exposedRect.translate(-horizontalMargin,
+                                               -d->margins.top());
+        drawBackground(painter, &translatedOption);
+        drawContents(painter, &translatedOption);
+    } else {
+        drawBackground(painter, 0);
+        drawContents(painter, 0);
+    }
+
     painter->translate(-horizontalMargin, -d->margins.top());
     drawForeground(painter, option);
 }
