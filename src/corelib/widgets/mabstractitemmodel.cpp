@@ -107,9 +107,16 @@ bool MAbstractItemModel::isGrouped() const
 
 int MAbstractItemModel::rowCount(const QModelIndex &parent) const
 {
+    if (parent.column() > 0)
+        return 0;
+
     if (isGrouped()) {
-        if (parent.isValid())
-            return rowCountInGroup(parent.row());
+        if (parent.isValid()) {
+            if (parent.row() < groupCount() && !parent.parent().isValid())
+                return rowCountInGroup(parent.row());
+            else
+                return 0;
+        }
         else
             return groupCount();
     } else {
@@ -122,12 +129,12 @@ int MAbstractItemModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex MAbstractItemModel::index(int row, int column, const QModelIndex &parent) const
 {
-    return (row >= 0 && row < rowCount(parent)) ? createIndex(row, column, parent.row()) : QModelIndex();
+    return ((row >= 0 && column >= 0) && row < rowCount(parent)) ? createIndex(row, column, parent.row()) : QModelIndex();
 }
 
 QModelIndex MAbstractItemModel::parent(const QModelIndex &child) const
 {
-    if (isGrouped()) {
+    if (isGrouped() && child.isValid()) {
         return index(child.internalId(), 0);
     }
 
@@ -143,8 +150,8 @@ int MAbstractItemModel::columnCount(const QModelIndex &parent) const
 
 QVariant MAbstractItemModel::data(const QModelIndex &index, int role) const
 {
-    if (isGrouped()) {
-        if (!index.parent().isValid())
+    if (isGrouped() && index.isValid()) {
+        if (!index.parent().isValid() && role == Qt::DisplayRole)
             return groupTitle(index.row());
         else
             return itemData(index.row(), index.parent().row(), role);
