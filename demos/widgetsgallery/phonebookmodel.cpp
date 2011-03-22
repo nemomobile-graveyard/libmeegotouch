@@ -154,16 +154,52 @@ QVariant PhoneBookModel::itemData(int row, int group, int role) const
 
 bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    beginInsertRows(parent, row, row + count - 1, false);
+    if (count <= 0)
+        return true; //Successfully added 0 rows.
 
-    for (int i = phoneBookEntries.size(); i < count; i++) {
+    QVector<PhoneBookEntry *> entries = phoneBookEntries;
+    for (int i = entries.size(); i < count; i++) {
         PhoneBookEntry *entry = generateEntry();
-        phoneBookEntries.append(entry);
+        entries.append(entry);
     }
 
-    regenerateModel();
+    QStringList entriesList;
+    foreach (PhoneBookEntry *entry, entries) {
+        Q_ASSERT(entry);
+        entriesList << entry->fullName;
+    }
 
-    endInsertRows();
+    MLocaleBuckets entryBuckets(entriesList);
+
+    if (entryBuckets.isEmpty()) {
+        qDeleteAll(entries.begin() + phoneBookEntries.size(), entries.end());
+        return false; // Something went wrong.
+    }
+
+    bool layoutHasChanged = false;
+    if (entryBuckets.bucketCount() == buckets.bucketCount())
+        layoutHasChanged = true;
+
+    if (layoutHasChanged) {
+        layoutAboutToBeChanged();
+    }
+    else {
+        if (isGrouped() && !parent.isValid())
+           beginInsertRows(QModelIndex(), row, row + (entryBuckets.bucketCount() - buckets.bucketCount()) - 1, false);
+        else
+           beginInsertRows(parent, row, row + count - 1, false);
+    }
+
+
+    phoneBookEntries = entries;
+    buckets = entryBuckets;
+
+    if (layoutHasChanged)
+        layoutChanged();
+    else
+        endInsertRows();
+
+
     return true;
 }
 
@@ -181,21 +217,24 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
     beginRemoveRows(parent, row, row + count - 1, count == 1);
     qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
     phoneBookEntries.remove(flatRow, count);
-
-    regenerateModel();
+    if (isGrouped() && group >= 0)
+        buckets.removeBucketItems(group, row, count);
+    else
+        regenerateModel();
 
     endRemoveRows();
+
     return true;
 }
 
 void PhoneBookModel::clear()
 {
     if (!phoneBookEntries.isEmpty()) {
-        beginRemoveRows(QModelIndex(), 0, phoneBookEntries.count()-1, false);
+        beginResetModel();
         qDeleteAll(phoneBookEntries);
         phoneBookEntries.clear();
         buckets.clear();
-        endRemoveRows();
+        endResetModel();
     }
 }
 
@@ -204,9 +243,8 @@ void PhoneBookModel::regenerateModel()
     QStringList itemList;
 
     foreach (PhoneBookEntry *entry, phoneBookEntries) {
-        if (entry) {
-            itemList << entry->fullName;
-        }
+        Q_ASSERT(entry);
+        itemList << entry->fullName;
     }
 
     buckets.setItems(itemList);

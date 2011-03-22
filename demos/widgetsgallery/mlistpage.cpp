@@ -292,7 +292,7 @@ void MListPage::setPlainListModel()
     QTimer::singleShot(1500, this, SLOT(loadPicturesInVisibleItems()));
 
 
-    changeAmountOfItemInList(3);
+    changeAmountOfItemInList(1);
 }
 
 MComboBox *MListPage::createComboBoxAction(const QString &title, const QStringList &itemsList)
@@ -342,7 +342,7 @@ void MListPage::createActions()
     QStringList amountOfItemsList;
     amountOfItemsList << "50 items" << "100 items" << "200 items" << "1000 items";
     combo = createComboBoxAction("Items in model", amountOfItemsList);
-    combo->setCurrentIndex(2); // by default create 100 items
+    combo->setCurrentIndex(1); // by default create 100 items
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAmountOfItemInList(int)));
 
     QStringList sortingOrderList;
