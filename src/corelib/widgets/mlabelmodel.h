@@ -24,9 +24,9 @@
 #include <QList>
 #include <QTextOption>
 #include <mwidgetmodel.h>
-#include <mnamespace.h>
 
 class MLabelHighlighter;
+Q_DECLARE_METATYPE(QTextOption::WrapMode)
 
 /*!
     \class MLabelModel

@@ -22,6 +22,7 @@
 
 #include <mwidgetcontroller.h>
 #include <mlabelmodel.h>
+
 class MLabelPrivate;
 class MLabelHighlighter;
 class QString;

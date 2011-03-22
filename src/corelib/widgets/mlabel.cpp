@@ -21,7 +21,10 @@
 #include "mlabel_p.h"
 #include "mwidgetview.h"
 #include "mlabelhighlighter.h"
+
 #include <QGraphicsSceneContextMenuEvent>
+
+//#include "mlabelview.h"
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MLabel)
@@ -186,5 +189,3 @@ void MLabel::removeAllHighlighters()
     model()->setHighlighters(QList<MLabelHighlighter *>());
 }
 
-
-#include "moc_mlabel.cpp"

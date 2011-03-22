@@ -26,7 +26,6 @@
 #include <QDebug>
 #include <QTextCharFormat>
 #include <QEasingCurve>
-#include <QTextOption>
 
 #include "mstylesheet.h"
 #include "mstyle.h"
@@ -41,7 +40,6 @@
 #include "mscalableimage.h"
 #include "movershotbeziereasingcurve.h"
 #include "mmetatypes.h"
-#include "mnamespace.h"
 
 // internal enum that defines the attribute type
 typedef enum {
@@ -67,8 +65,6 @@ typedef enum {
     FEEDBACK_TYPE,
 
     EASINGCURVE_TYPE,
-
-    WRAPMODE_TYPE,
 
     CONST_PIXMAP_TYPE_0,
     CONST_PIXMAP_TYPE_1,
@@ -133,8 +129,7 @@ static const QByteArray types[NUM_TYPES] = {
     QByteArray("Qt::PenStyle"),
     QByteArray("Qt::Axis"),
     QByteArray("MFeedback"),
-    QByteArray("QEasingCurve"),
-    QByteArray("QTextOption::WrapMode")
+    QByteArray("QEasingCurve")
 };
 
 // These should be always in lower case
@@ -165,7 +160,6 @@ public:
     QHash<QByteArray, QFont::Weight> WEIGHTS;
     QHash<QByteArray, QFont::Capitalization> CAPITALIZATION;
     QHash<QByteArray, int> EASINGCURVETYPES;
-    QHash<QByteArray, QTextOption::WrapMode> WRAPMODES;
 
 
     QtDatatypeConverter() {
@@ -256,12 +250,6 @@ public:
         EASINGCURVETYPES["outinbounce"] = QEasingCurve::OutInBounce;
         EASINGCURVETYPES["overshotbezier"] = OvershotBezier;
 
-        WRAPMODES[""] = QTextOption::NoWrap;
-        WRAPMODES["nowrap"] = QTextOption::NoWrap;
-        WRAPMODES["wordwrap"] = QTextOption::WordWrap;
-        WRAPMODES["wrapanywhere"] = QTextOption::WrapAnywhere;
-        WRAPMODES["wrapatwordboundaryoranywhere"] =QTextOption::WrapAtWordBoundaryOrAnywhere;
-
         qRegisterMetaType<const QPixmap *>();
         qRegisterMetaType<QTextCharFormat::UnderlineStyle>();
         qRegisterMetaType<Qt::Alignment>();
@@ -272,8 +260,6 @@ public:
         qRegisterMetaType<MFeedback>();
         qRegisterMetaType<const MScalableImage *>();
         qRegisterMetaType<MBackgroundTiles>();
-
-        qRegisterMetaType<QTextOption::WrapMode>();
     }
 };
 
@@ -865,10 +851,6 @@ bool MStyleSheetAttribute::writeAttribute(MUniqueStringCache::Index filename,
                 }
                 return fillProperty(property, style, cacheOrientation, qVariantFromValue(curve));
             }
-        }
-    } else if (attributeType == qMetaTypeId<QTextOption::WrapMode>()) {
-        if (DataTypeConverter.WRAPMODES.contains(valueString)) {
-            return fillProperty(property, style, cacheOrientation, qVariantFromValue(DataTypeConverter.WRAPMODES[valueString]));
         }
     }
 

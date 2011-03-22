@@ -22,7 +22,6 @@
 
 #include <mstyle.h>
 
-#include <mnamespace.h>
 #include <QFont>
 #include <QPoint>
 #include <QTextCharFormat>
@@ -56,7 +55,6 @@ class TestObjectStyle : public MStyle
     M_STYLE_ATTRIBUTE(QTextCharFormat::UnderlineStyle, attributeUnderlineStyle,   AttributeUnderlineStyle)
     M_STYLE_ATTRIBUTE(Qt::PenStyle,                    attributePenStyle,         AttributePenStyle)
     M_STYLE_ATTRIBUTE(Qt::Axis,                        attributeAxis,             AttributeAxis)
-    M_STYLE_ATTRIBUTE(QTextOption::WrapMode,         attributeWrapMode,         AttributeWrapMode)
 
     M_STYLE_PTR_ATTRIBUTE(QPixmap *, attributePixmap, AttributePixmap)
     M_STYLE_PTR_ATTRIBUTE(QPixmap *, attributePixmap2, AttributePixmap2)
