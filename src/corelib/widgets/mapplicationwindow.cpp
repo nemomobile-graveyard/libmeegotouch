@@ -474,10 +474,6 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
 
     QRectF pageExposedContentRect;
 
-    if (showingStatusBar) {
-        topCoverage += statusBar->size().height();
-    }
-
     // Interpretation of whether the navigation bar is covering the page
     // changes from "auto-hide" to "show". On "auto-hide" the navigation
     // bar doesn't count as covering the page since it does so only momentarily.

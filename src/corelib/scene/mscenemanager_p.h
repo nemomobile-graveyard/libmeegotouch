@@ -224,7 +224,8 @@ public:
     void updateStatusBarGeometryProperty();
 #endif
 
-    void updateSheetsGeometry();
+    void updatePagesAndSheetsGeometry();
+    void addPagesAndSheetsGeometryUpdateAnimation(QParallelAnimationGroup* mainAnimation);
 
 public:
 
