@@ -7,6 +7,7 @@
 #include <QEvent>
 #include <QDebug>
 #include <QTimer>
+#include <QElapsedTimer>
 
 #include <MApplication>
 #include <MWindow>
@@ -26,6 +27,8 @@ public:
 
     void frameFinished();
 
+    qint64 time();
+
 #ifdef EGL
     EGLBoolean eglSwapBuffers(EGLDisplay dpy, EGLSurface surface);
     typedef EGLAPI EGLBoolean EGLAPIENTRY (*eglSwapBuffers_ptr)(EGLDisplay dpy, EGLSurface surface);
@@ -36,16 +39,13 @@ public:
 
     void *lib;
     bool lurk;
-    timestamp lurkBegin;
+    qint64 lurkBegin;
     bool firstTimestamp;
-    QLinkedList<timestamp> stamps;
+    QLinkedList<qint64> stamps;
+
+    QElapsedTimer elapsedTimer;
 };
 
-class Clock
-{
-public:
-    static timestamp time();
-};
 
 #ifdef EGL
 extern "C" EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
@@ -54,18 +54,9 @@ extern "C" EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffers(EGLDisplay dpy, EGLSurfa
 }
 #endif
 
-timestamp Clock::time()
+qint64 SwapHookPrivate::time()
 {
-    // TODO: port this to QElapsedTimer once we have Qt 4.7
-#ifdef Q_OS_LINUX
-    struct timespec now;
-    if(clock_gettime(CLOCK_MONOTONIC, &now))
-        qFatal("clock_gettime errored");
-    return ((timestamp)(now.tv_sec))*1000 + now.tv_nsec / 1000000;
-#else
-    qFatal("swap monitoring on this operating system is not supported right now");
-    return 0;
-#endif
+    return elapsedTimer.elapsed();
 }
 
 SwapHookPrivate::SwapHookPrivate() :
@@ -101,6 +92,8 @@ SwapHookPrivate::SwapHookPrivate() :
     }
     qFatal("%s:%d: failed to redirect eglSwapBuffers()", __FILE__, __LINE__);
 #endif
+
+    elapsedTimer.start();
 }
 
 SwapHookPrivate::~SwapHookPrivate()
@@ -135,7 +128,7 @@ EGLBoolean SwapHookPrivate::eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
 
 void SwapHookPrivate::frameFinished() {
     if (lurk) {
-        timestamp ts = Clock::time();
+        qint64 ts = time();
         if (firstTimestamp) {
             lurkBegin = ts;
             firstTimestamp = false;
@@ -195,7 +188,7 @@ void SwapHook::stopLurking()
     d->lurk = false;
 }
 
-QLinkedList<timestamp> SwapHook::timestamps() {
+QLinkedList<qint64> SwapHook::timestamps() {
     return d->stamps;
 }
 

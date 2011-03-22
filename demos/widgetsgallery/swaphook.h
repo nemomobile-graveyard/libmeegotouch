@@ -1,9 +1,6 @@
 #ifndef SWAPHOOK_H
 #define SWAPHOOK_H
 
-// Used to store time in milliseconds.
-typedef unsigned long long timestamp;
-
 #ifdef __arm__
 #define EGL
 #include <EGL/egl.h>
@@ -39,7 +36,7 @@ public:
   /**
     * Return the saved timestamps.
     */
-  QLinkedList<timestamp> timestamps();
+  QLinkedList<qint64> timestamps();
 
   /**
     * Returns the global SwapHook instance.

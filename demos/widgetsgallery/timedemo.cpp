@@ -307,7 +307,7 @@ void Timedemo::saveFramelog() {
             if (resultIter == results.end() || resultIter->runtime() == 0 ||  resultIter->fps() == 0) {
                 continue;
             }
-            timestamp firstTs = resultIter->timestamps.first();
+            qint64 firstTs = resultIter->timestamps.first();
             framelog.writeStartElement("benchmark");
             framelog.writeAttribute("id", name);
             framelog.writeAttribute("start", QString::number(static_cast<qulonglong>(firstTs)));
@@ -315,7 +315,7 @@ void Timedemo::saveFramelog() {
             framelog.writeTextElement("type", resultIter->type);
             framelog.writeTextElement("runtime", QString::number(resultIter->runtime()));
             QString timestamps;
-            foreach(const timestamp& ts, resultIter->timestamps) {
+            foreach(const qint64& ts, resultIter->timestamps) {
                 timestamps.append(QString::number(ts - firstTs) + ',');
             }
             timestamps.truncate(timestamps.size() - 1);

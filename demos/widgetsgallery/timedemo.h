@@ -37,12 +37,12 @@ class TimedemoBenchmark;
 class BenchmarkResult {
 public:
     BenchmarkResult() {}
-    BenchmarkResult(const QLinkedList<timestamp>& timestamps, const QString& type)
+    BenchmarkResult(const QLinkedList<qint64>& timestamps, const QString& type)
         : timestamps(timestamps),
         type(type)
     {}
 
-    QLinkedList<timestamp> timestamps;
+    QLinkedList<qint64> timestamps;
     QString type;
 
     int fps() const {
