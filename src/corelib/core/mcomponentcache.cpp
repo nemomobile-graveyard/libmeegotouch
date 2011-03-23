@@ -38,6 +38,9 @@
 #include <X11/Xutil.h>
 #endif
 
+#include <unistd.h>
+
+
 MComponentCachePrivate * const MComponentCache::d_ptr = new MComponentCachePrivate;
 const int MComponentCachePrivate::ARGV_LIMIT = 32;
 
@@ -60,6 +63,18 @@ bool MComponentCachePrivate::populating()
 {
     return cacheBeingPopulated;
 }
+
+#ifdef Q_WS_X11
+static int boostedapp_xio_errhandler(Display *)
+{
+    // The safest way to exit a boosted application is without calling
+    // exit handlers of loaded libraries. A significant part of the
+    // libraries have been loaded and are still used by the parent
+    // process.
+    _exit(EXIT_FAILURE);
+}
+#endif //Q_WS_X11
+
 
 void MComponentCachePrivate::populateForMApplication()
 {
@@ -89,6 +104,10 @@ void MComponentCachePrivate::populateForMApplication()
     }
 
     mApplicationWindowInstance = new MApplicationWindow();
+
+ #ifdef Q_WS_X11
+    XSetIOErrorHandler(boostedapp_xio_errhandler);
+ #endif //Q_WS_X11
 
     cacheBeingPopulated = false;
 }
