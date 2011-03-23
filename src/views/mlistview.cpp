@@ -199,8 +199,14 @@ void MListView::setGeometry(const QRectF &rect)
         d_ptr->updateSeparatorSize();
         relayoutItemsInViewportRect();
 
-        if (model()->scrollToIndex().isValid())
-            d_ptr->scrollToLastIndex();
+        QModelIndex index = model()->scrollToIndex();
+        if (index.isValid()) {
+            if (model()->itemModel() &&
+                    model()->itemModel()->hasIndex(index.row(), index.column(), index.parent()))
+                d_ptr->scrollToLastIndex();
+            else
+                model()->setScrollToIndex(QModelIndex());
+        }
     }
 
     MWidgetView::setGeometry(rect);
