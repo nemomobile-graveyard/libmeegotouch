@@ -19,11 +19,13 @@
 #ifndef MEDITORTOOLBAR_H
 #define MEDITORTOOLBAR_H
 
+#include <QPointer>
+
 #include <MStylableWidget>
 #include "meditortoolbararrow.h"
 #include "meditortoolbarstyle.h"
-#include "mtopleveloverlay.h"
 
+class MTopLevelOverlay;
 class MButton;
 class MLinearLayoutPolicy;
 class MWidget;
@@ -122,7 +124,7 @@ private slots:
 private:
     QList<MButton *> buttons;
 
-    MTopLevelOverlay overlay;
+    QPointer<MTopLevelOverlay> overlay;
     const MWidget &followWidget;
 
     MLinearLayoutPolicy *buttonLayoutPolicy;

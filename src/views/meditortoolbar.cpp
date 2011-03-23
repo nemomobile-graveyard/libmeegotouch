@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 #include "meditortoolbar.h"
+#include "mtopleveloverlay.h"
 
 #include <MButton>
 #include <MLayout>
@@ -29,7 +30,7 @@
 #include <QGraphicsLinearLayout>
 
 MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
-    : overlay(followWidget.sceneManager()),
+    : overlay(new MTopLevelOverlay(followWidget.sceneManager())),
       followWidget(followWidget),
       buttonLayoutPolicy(new MLinearLayoutPolicy(new MLayout(this),
                                                  Qt::Horizontal)),
@@ -37,10 +38,10 @@ MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
       buttonUpdateQueued(false)
 {
     setFlag(QGraphicsItem::ItemHasNoContents, true);
-    overlay.hide();
+    overlay->hide();
     hide();
-    followWidget.scene()->addItem(&overlay);
-    setParentItem(&overlay);
+    followWidget.scene()->addItem(overlay);
+    setParentItem(overlay);
 
     // Set z value for arrow higher than default since
     // it needs to float on top of buttons.
@@ -65,30 +66,33 @@ MEditorToolbar::~MEditorToolbar()
     hideEditorItem();
     // Before destroying parent, detach so it doesn't try to destroy us.
     setParentItem(0);
+    if (overlay) {
+        overlay->deleteLater();
+    }
 }
 
 void MEditorToolbar::setPosition(const QPointF &pos,
                                  MEditorToolbarArrow::ArrowDirection direction)
 {
-    setPos(followWidget.mapToItem(&overlay, pos));
+    setPos(followWidget.mapToItem(overlay, pos));
     updateArrow(direction);
 }
 
 void MEditorToolbar::appear()
 {
-    overlay.show();
+    overlay->show();
     updateEditorItemVisibility();
 }
 
 void MEditorToolbar::disappear()
 {
     hideEditorItem();
-    overlay.hide();
+    overlay->hide();
 }
 
 bool MEditorToolbar::isAppeared() const
 {
-    return overlay.isVisible();
+    return overlay->isVisible();
 }
 
 void MEditorToolbar::updateArrow(MEditorToolbarArrow::ArrowDirection direction)
