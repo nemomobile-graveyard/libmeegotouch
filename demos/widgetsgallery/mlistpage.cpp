@@ -733,8 +733,9 @@ void MListPage::createContent()
 
     MTheme::addPixmapDirectory(QDir(CONTACTS_DIR).canonicalPath());
     QGraphicsWidget *panel = centralWidget();
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    panel->setLayout(layout);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical, panel);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     list = new MList(panel);
 
