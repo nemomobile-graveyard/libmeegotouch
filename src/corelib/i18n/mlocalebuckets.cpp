@@ -22,10 +22,11 @@
 
 
 MLocaleBucketsPrivate::MLocaleBucketsPrivate() :
-    locale()
+    locale(),
 #ifdef HAVE_ICU
-    , collator(locale)
+    collator(locale),
 #endif
+    q_ptr(0)
 {
 #ifdef HAVE_ICU
     allBuckets = locale.exemplarCharactersIndex();
