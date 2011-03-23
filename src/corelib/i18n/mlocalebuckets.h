@@ -198,6 +198,8 @@ public:
     /*!
      * \brief Return the bucket size for the specified bucket index, i.e. the
      * number of items in that bucket.
+     *
+     * This returns -1 if there is no bucket with that index.
      */
     int bucketSize(int bucketIndex) const;
 

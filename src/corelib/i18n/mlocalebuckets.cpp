@@ -179,7 +179,7 @@ int MLocaleBuckets::bucketSize(int bucketIndex) const
     Q_D(const MLocaleBuckets);
 
     if (bucketIndex < 0 || bucketIndex >= d->buckets.size())
-        return 0;
+        return -1;
     else
         return d->bucketItems.at(bucketIndex).size();
 }

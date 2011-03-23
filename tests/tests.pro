@@ -205,6 +205,7 @@ SUBDIRS += \
     ft_breakiterator \
     ft_locales \
     ft_localedata \
+    ft_mlocalebuckets \
     ft_numbers \
     ft_sorting \
     ft_mcharsetdetector \
