@@ -681,30 +681,6 @@ void Ut_MTextEdit::testFocusOutEvent()
     QCOMPARE(spyLostFocus.count(), 1);
 }
 
-void Ut_MTextEdit::testSubFocusHandling()
-{
-    MWindow w;
-
-    MTextEdit *subject = new MTextEdit;
-    subject->setFocus();
-
-    MDialog *dlg = new MDialog;
-    QSignalSpy spy(dlg, SIGNAL(appeared()));
-
-    dlg->setCentralWidget(subject);
-    QVERIFY(!subject->hasFocus());
-
-    w.show();
-    QTest::qWaitForWindowShown(&w);
-    dlg->appear(&w);
-
-    Ut_Utils::waitForSignal(spy);
-    QApplication::setActiveWindow(&w);
-
-    QCOMPARE(w.scene()->focusItem(), subject);
-    QVERIFY(subject->hasFocus());
-}
-
 /*!
  * Test moving to pre-editing mode.
  */
