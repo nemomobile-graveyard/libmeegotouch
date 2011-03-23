@@ -269,3 +269,14 @@ bool MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem() {
 #endif
     return false;
 }
+
+bool MGraphicsSystemHelper::canSwitchBetweenSoftwareAndHardwareRendering()
+{
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    return QMeeGoGraphicsSystemHelper::isRunningRuntime() &&
+        (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("raster") ||
+         QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("meego"));
+#else
+    return true;
+#endif
+}

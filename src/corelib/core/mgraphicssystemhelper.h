@@ -37,6 +37,8 @@ public:
     static bool isRunningNativeGraphicsSystem();
     static bool isRunningMeeGoCompatibleGraphicsSystem();
     static bool isRunningMeeGoGraphicsSystem();
+
+    static bool canSwitchBetweenSoftwareAndHardwareRendering();
 };
 
 

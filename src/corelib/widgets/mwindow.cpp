@@ -664,7 +664,8 @@ void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event
     }
 
 #ifdef QT_OPENGL_LIB
-    if (MApplication::softwareRendering())
+    if (MApplication::softwareRendering()
+        || !MGraphicsSystemHelper::canSwitchBetweenSoftwareAndHardwareRendering())
         return;
 
     if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
