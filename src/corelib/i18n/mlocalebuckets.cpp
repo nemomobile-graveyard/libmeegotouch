@@ -47,7 +47,7 @@ void MLocaleBucketsPrivate::setItems(const QStringList &unsortedItems, Qt::SortO
     QStringList lastBucketItems;
     QList<int>  lastBucketOrigIndices;
 
-    foreach (MLocaleBucketItem item, items) {
+    foreach (const MLocaleBucketItem &item, items) {
 
 #ifdef HAVE_ICU
         QString bucket = locale.indexBucket(item.text, allBuckets, collator);
