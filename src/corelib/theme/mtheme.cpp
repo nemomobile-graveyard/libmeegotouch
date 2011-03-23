@@ -235,11 +235,7 @@ const QPixmap *MThemePrivate::pixmap(const QString &id, bool async, const QSize 
     pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
 
     if (async) {
-        if (showAsyncRequests) {
-            result->fill(QColor(0, 255, 0, 255));
-        } else {
-            result->fill(QColor(0, 0, 0, 0));
-        }
+        result->fill(QColor(0, 0, 0, 0));
         themeDaemon->pixmapHandle(id, realSize);
     } else {
         themeDaemon->pixmapHandleSync(id, realSize);
@@ -722,9 +718,7 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     fonts(logicalValues)
 #ifdef HAVE_GCONF
     , locale("/meegotouch/i18n/language")
-    , showAsyncRequestsItem("/meegotouch/debug/show_async_requests")
 #endif
-    , showAsyncRequests(false)
 {
     switch (themeService) {
     case MTheme::LocalTheme:
@@ -749,11 +743,6 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     // this loads the current theme
     reloadThemeLibraries(themeDaemon->themeLibraryNames());
     refreshLocalThemeConfiguration(themeDaemon->themeInheritanceChain());
-
-#ifdef HAVE_GCONF
-    showAsyncRequests = showAsyncRequestsItem.value(false).toBool();
-    connect(&showAsyncRequestsItem, SIGNAL(valueChanged()), this, SLOT(updateShowAsyncRequests()));
-#endif
 }
 
 MThemePrivate::~MThemePrivate()
@@ -1034,12 +1023,5 @@ void MThemePrivate::localeChangedSlot()
 {
     themeChangedSlot(themeDaemon->themeInheritanceChain(), themeDaemon->themeLibraryNames());
 }
-
-#ifdef HAVE_GCONF
-void MThemePrivate::updateShowAsyncRequests()
-{
-    showAsyncRequests = showAsyncRequestsItem.value().toBool();
-}
-#endif
 
 #include "moc_mtheme.cpp"

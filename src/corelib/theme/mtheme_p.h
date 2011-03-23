@@ -81,9 +81,8 @@ struct CachedScalableImage {
 };
 //! \endcond
 
-class MThemePrivate : public QObject
+class MThemePrivate
 {
-    Q_OBJECT
     Q_DECLARE_PUBLIC(MTheme)
 public:
     MThemePrivate(const QString &applicationName, MTheme::ThemeService themeService);
@@ -124,9 +123,7 @@ public:
 
 #ifdef HAVE_GCONF
     MGConfItem locale;
-    MGConfItem showAsyncRequestsItem;
 #endif
-    bool showAsyncRequests;
 
     typedef QHash<QString, QString> MStringHash;
     QHash<const char*, MStringHash> controllerViewCache;
@@ -204,11 +201,6 @@ public:
 
     static void registerLibrary(MLibrary *library);
     static void unregisterLibrary(MLibrary *library);
-
-#ifdef HAVE_GCONF
-public slots:
-    void updateShowAsyncRequests();
-#endif
 
 private:
     typedef QPair<QList<const MStyleSheet *>, QList<QByteArray> > SheetsAndHierarchy;
