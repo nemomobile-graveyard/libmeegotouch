@@ -39,7 +39,9 @@ void MLocaleBucketsPrivate::copy(const MLocaleBuckets &other)
     bucketItems = other.d_func()->bucketItems;
     buckets = other.d_func()->buckets;
     locale = other.d_func()->locale;
+#ifdef HAVE_ICU
     collator = other.d_func()->collator;
+#endif // HAVE_ICU
     origIndices = other.d_func()->origIndices;
 }
 

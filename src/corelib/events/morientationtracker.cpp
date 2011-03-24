@@ -380,7 +380,6 @@ void MOrientationTracker::handleCurrentAppWindowOrientationAngleChange()
     Q_D(MOrientationTracker);
     d->handleCurrentAppWindowOrientationAngleChange();
 }
-#endif //HAVE_CONTEXTSUBSCRIBER
 
 void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
 {
@@ -394,6 +393,7 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
         rotateToAngleIfAllowed(angle, window);
     }
 }
+#endif //HAVE_CONTEXTSUBSCRIBER
 
 void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win, bool limitedByConstraints)
 {

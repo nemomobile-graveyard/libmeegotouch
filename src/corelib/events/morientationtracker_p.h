@@ -101,7 +101,9 @@ public slots:
     void isCoveredChanged();
     void videoRouteChanged();
     void updateOrientationAngle();
+#ifdef HAVE_CONTEXTSUBSCRIBER
     void handleCurrentAppWindowOrientationAngleChange();
+#endif // HAVE_CONTEXTSUBSCRIBER
 
 protected:
     MOrientationTracker *q_ptr;

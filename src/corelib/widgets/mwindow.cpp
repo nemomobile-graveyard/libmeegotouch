@@ -1460,7 +1460,9 @@ bool MWindow::event(QEvent *event)
     } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
         return true;
-    } else if (event->type() == QEvent::DynamicPropertyChange) {
+    }
+#ifdef Q_WS_X11
+    else if (event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
             //property was set, does not matter what value
@@ -1475,6 +1477,7 @@ bool MWindow::event(QEvent *event)
     } else if (event->type() == QEvent::WinIdChange) {
         d->setMeegoX11Properties();
     }
+#endif
     return QGraphicsView::event(event);
 }
 
