@@ -408,12 +408,7 @@ void MLayout::widgetEvent ( QEvent * event )
     } else if(event->type() == MOrientationChangeEvent::eventNumber()) {
         MOrientationChangeEvent *oce = static_cast<MOrientationChangeEvent *>(event);
         d->setOrientation(oce->orientation());
-        for (int i = count() - 1; i >= 0; --i) {
-            const MLayoutPrivate::LayoutItem &item = d->items.at(i);
-            if (item.item && item.item->isLayout()) {
-                static_cast<QGraphicsLayout *>(item.item)->widgetEvent(event);
-            }
-        }
+        QGraphicsLayout::invalidate();
     }
 
     QGraphicsLayout::widgetEvent(event);
