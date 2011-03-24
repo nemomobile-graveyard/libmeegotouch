@@ -68,8 +68,7 @@ void Ut_MExtensionArea::initTestCase()
 
 void Ut_MExtensionArea::cleanupTestCase()
 {
-    // this is commented out for now, to prevent crash at exit:
-    // delete app;
+     delete app;
 }
 
 void Ut_MExtensionArea::testAddition()
