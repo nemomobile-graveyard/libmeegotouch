@@ -485,11 +485,7 @@ void MWindowPrivate::notifyWidgetsAboutOrientationChange()
 
     if (sceneManager == 0 && oldOrientation != newOrientation) {
         QGraphicsScene *graphicsScene = q->QGraphicsView::scene();
-        if (graphicsScene) {
-            MOrientationChangeEvent event(newOrientation);
-            foreach(QGraphicsItem * item, graphicsScene->items())
-                graphicsScene->sendEvent(item, &event);
-        }
+        MScenePrivate::notifySceneAboutOrientationChange(graphicsScene, newOrientation);
 
         emit q->orientationChanged(newOrientation);
         emit q->orientationChangeFinished(newOrientation);

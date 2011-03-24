@@ -80,6 +80,11 @@ public:
 
     void notifyChildRequestedMouseCancel();
 
+    // These two methods are static so that they can be called from scenemanager-less MWindows
+    // for which mscene presence is not guaranteed.
+    static void sendEventToAllSubLayouts(QGraphicsLayout *layout, QEvent *event);
+    static void notifySceneAboutOrientationChange(QGraphicsScene *scene, M::Orientation orientation);
+
 protected:
     MScene *q_ptr;
     MSceneManager *manager;

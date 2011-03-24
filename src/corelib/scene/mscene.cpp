@@ -26,6 +26,7 @@
 #include <QFileInfo>
 #include <QGesture>
 #include <QGestureEvent>
+#include <QGraphicsLayout>
 
 #include "mdebug.h"
 #include <mondisplaychangeevent.h>
@@ -38,6 +39,7 @@
 #include "mscene_p.h"
 #include "mdeviceprofile.h"
 #include "mcancelevent.h"
+#include "morientationchangeevent.h"
 
 static const QFont     TextFont                = QFont("Sans", 10);
 static const QSize     FpsBoxSize              = QSize(100, 40);
@@ -440,6 +442,52 @@ void MScenePrivate::notifyChildRequestedMouseCancel()
 {
     if (!cancelSent)
         sendCancelEvent();
+}
+
+void MScenePrivate::sendEventToAllSubLayouts(QGraphicsLayout *layout, QEvent *event)
+{
+    for (int i = layout->count()-1; i >= 0; --i) {
+        // QGraphicsLayout::itemAt allows the subclasses to assume that item index is valid (within the count boundaries).
+        // The items might be removed from layout when it'll process the orientation change event.
+        if (i >= layout->count())
+            i = layout->count() - 1;
+        // The layout may end up empty, thus we should early out if it happens
+        if (i < 0)
+            return;
+        QGraphicsLayoutItem * layoutItem = layout->itemAt(i);
+        if (layoutItem->isLayout()) {
+            QGraphicsLayout *layout = static_cast<QGraphicsLayout *>(layoutItem);
+            layout->widgetEvent(event);
+            MScenePrivate::sendEventToAllSubLayouts(layout, event);
+        }
+    }
+}
+
+void MScenePrivate::notifySceneAboutOrientationChange(QGraphicsScene *scene, M::Orientation orientation)
+{
+    if (!scene)
+        return;
+
+    MOrientationChangeEvent event(orientation);
+
+    QList<QGraphicsItem *> sceneItems = scene->items();
+    for (int i = sceneItems.count() - 1; i >= 0; i--) {
+        QGraphicsItem *item = sceneItems.at(i);
+        // event handlers might remove items from the scene
+        // so we must check if item it's still there
+        if (scene->items().contains(item)) {
+            scene->sendEvent(item, &event);
+            // Sending an event to a widget means only its direct layout gets the orientation
+            // change event.
+            // To ensure that the event it sent to all layouts, we have to manually send it to
+            // the sub-layouts (layout inside a layout)
+            if (item->isWidget()) {
+                QGraphicsLayout *layout = static_cast<QGraphicsWidget *>(item)->layout();
+                if (layout)
+                    MScenePrivate::sendEventToAllSubLayouts(layout, &event);
+            }
+        }
+    }
 }
 
 

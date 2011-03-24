@@ -60,6 +60,7 @@ private slots:
     void testMLabelOnLayout();
     void testHidingShowingWidgets_data();
     void testHidingShowingWidgets();
+    void testLayoutInsideLayoutOrientation_data();
     void testLayoutInsideLayoutOrientation();
     void testLayoutInsideLayout_data();
     void testLayoutInsideLayout();

@@ -936,11 +936,27 @@ void Ut_MLayout::testHidingShowingWidgets()
     QCOMPARE(item1->isVisible(), false);
 }
 
+void Ut_MLayout::testLayoutInsideLayoutOrientation_data()
+{
+    QTest::addColumn<bool>("outerLayoutIsQ"); //Whether outer layout is QGraphicsLinearLayout or MLayout
+
+    QTest::newRow("MLayout inside QGraphicsLayout") << true;
+    QTest::newRow("MLayout inside MLayout") << false;
+}
 void Ut_MLayout::testLayoutInsideLayoutOrientation()
 {
     /* A simple test to check that a layout inside of a layout respects the current window orientation */
-    MLayout *layout = new MLayout(m_form);
-    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    QFETCH(bool, outerLayoutIsQ); //Whether outer layout is QGraphicsLinearLayout or MLayout
+
+    MLayout *mlayout;
+    QGraphicsLinearLayout *qlayout;
+    MLinearLayoutPolicy *policy;
+    if (outerLayoutIsQ) {
+       qlayout = new QGraphicsLinearLayout(m_form);
+    } else {
+       mlayout = new MLayout(m_form);
+       policy = new MLinearLayoutPolicy(mlayout, Qt::Horizontal);
+    }
     MLayout *innerLayout = new MLayout;
     MLinearLayoutPolicy *landscapePolicy = new MLinearLayoutPolicy(innerLayout, Qt::Horizontal);
     MLinearLayoutPolicy *portraitPolicy = new MLinearLayoutPolicy(innerLayout, Qt::Horizontal);
@@ -950,16 +966,31 @@ void Ut_MLayout::testLayoutInsideLayoutOrientation()
     QCOMPARE(innerLayout->landscapePolicy(), landscapePolicy);
     QCOMPARE(innerLayout->portraitPolicy(), portraitPolicy);
 
-    policy->addItem(innerLayout);
+    if (outerLayoutIsQ) {
+        qlayout->addItem(innerLayout);
+        QCOMPARE(innerLayout->parentLayoutItem(), qlayout);
+        QCOMPARE(qlayout->parentLayoutItem(), m_form);
+        QVERIFY(qlayout->isLayout());
+    } else {
+        policy->addItem(innerLayout);
+        QCOMPARE(innerLayout->parentLayoutItem(), mlayout);
+        QCOMPARE(mlayout->parentLayoutItem(), m_form);
+        QVERIFY(mlayout->isLayout());
+    }
 
-    QCOMPARE(innerLayout->parentLayoutItem(), layout);
     QVERIFY(innerLayout->isLayout());
-    QVERIFY(layout->isLayout());
-    QCOMPARE(layout->parentLayoutItem(), m_form);
     QVERIFY(!m_form->isLayout());
     QVERIFY(m_form->graphicsItem());
 
     QCOMPARE(appWin->orientation(), M::Landscape); //Default
+    QVERIFY(innerLayout->policy() == landscapePolicy);
+
+    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    QCOMPARE(appWin->orientation(), M::Portrait);
+
+    QVERIFY(innerLayout->policy() == portraitPolicy);
+
+    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
     QVERIFY(innerLayout->policy() == landscapePolicy);
 }
 /* We are testing a layout inside of a layout.  We test four combinations

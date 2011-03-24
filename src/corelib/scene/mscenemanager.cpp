@@ -990,16 +990,7 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
 
 void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
 {
-    MOrientationChangeEvent event(MDeviceProfile::instance()->orientationFromAngle(angle));
-
-    QList<QGraphicsItem *> sceneItems = scene->items();
-    for(int i = sceneItems.count() - 1; i >= 0; i--) {
-        QGraphicsItem *item = sceneItems.at(i);
-        // event handlers might remove items from the scene
-        // so we must check if item it's still there
-        if (scene->items().contains(item))
-            scene->sendEvent(item, &event);
-    }
+    MScenePrivate::notifySceneAboutOrientationChange(scene, MDeviceProfile::instance()->orientationFromAngle(angle));
 }
 
 QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWindow) const
