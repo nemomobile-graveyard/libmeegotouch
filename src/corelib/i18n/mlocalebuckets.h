@@ -115,6 +115,11 @@ public:
     MLocaleBuckets();
 
     /*!
+     * \brief Constructor: Copies locale buckets from the other reference.
+     */
+    MLocaleBuckets(const MLocaleBuckets &other);
+
+    /*!
      * \brief Constructor: Create an MLocaleBuckets object from the specified
      * list of items with the current locale.
      *
@@ -217,8 +222,17 @@ public:
      */
     void clear();
 
+    /*!
+     * \brief Removes range of items from bucket.
+     */
+    void removeBucketItems(int bucketIndex, int itemIndex, int count = 1);
+
+    /*!
+     * \brief Copies buckets and bucket items from the other reference.
+     */
+    MLocaleBuckets& operator =(const MLocaleBuckets &other);
+
 private:
-    Q_DISABLE_COPY(MLocaleBuckets)
     Q_DECLARE_PRIVATE(MLocaleBuckets)
 
     MLocaleBucketsPrivate *const d_ptr;

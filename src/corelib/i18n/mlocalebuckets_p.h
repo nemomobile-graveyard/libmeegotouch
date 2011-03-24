@@ -35,8 +35,12 @@ class MLocaleBucketsPrivate
     Q_DECLARE_PUBLIC(MLocaleBuckets)
 
     MLocaleBucketsPrivate();
+    void copy(const MLocaleBuckets &other);
+
     void setItems(const QStringList &items, Qt::SortOrder sortOrder);
     void clear();
+
+    void removeItems(int bucket, int item, int count);
 
     MLocale locale;
 #ifdef HAVE_ICU

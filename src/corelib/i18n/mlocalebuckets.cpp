@@ -33,6 +33,16 @@ MLocaleBucketsPrivate::MLocaleBucketsPrivate() :
 #endif
 }
 
+void MLocaleBucketsPrivate::copy(const MLocaleBuckets &other)
+{
+    allBuckets = other.d_func()->allBuckets;
+    bucketItems = other.d_func()->bucketItems;
+    buckets = other.d_func()->buckets;
+    locale = other.d_func()->locale;
+    collator = other.d_func()->collator;
+    origIndices = other.d_func()->origIndices;
+}
+
 void MLocaleBucketsPrivate::setItems(const QStringList &unsortedItems, Qt::SortOrder sortOrder)
 {
     // Remember to call clear() first if this is called from somewhere else than a constructor!
@@ -84,7 +94,31 @@ void MLocaleBucketsPrivate::clear()
     origIndices.clear();
 }
 
+void MLocaleBucketsPrivate::removeItems(int bucket, int item, int count)
+{
+    if (bucket < 0 && item < 0)
+        return;
 
+    if (bucket < bucketItems.count() && item < bucketItems[bucket].count()) {
+        QStringList &items = bucketItems[bucket];
+        if (count > items.count())
+            count = items.count();
+
+        for (int i = 0; i < count; i ++) {
+            items.removeAt(item);
+        }
+        int origItem = origIndices[bucket][item];
+        for (int b = 0; b < origIndices.count(); b ++) {
+            for (QList<int>::iterator i = origIndices[b].begin(); i != origIndices[b].end(); ++i)  {
+                if ((*i) > origItem)
+                    (*i) -= count;
+            }
+        }
+        for (int i = 0; i < count; i ++) {
+            origIndices[bucket].removeAt(item);
+        }
+    }
+}
 
 MLocaleBuckets::MLocaleBuckets():
     d_ptr(new MLocaleBucketsPrivate())
@@ -92,6 +126,15 @@ MLocaleBuckets::MLocaleBuckets():
     Q_D(MLocaleBuckets);
 
     d->q_ptr = this;
+}
+
+MLocaleBuckets::MLocaleBuckets(const MLocaleBuckets &other)
+    : d_ptr(new MLocaleBucketsPrivate)
+{
+    Q_D(MLocaleBuckets);
+
+    d->q_ptr = this;
+    d->copy(other);
 }
 
 MLocaleBuckets::MLocaleBuckets(const QStringList &unsortedItems, Qt::SortOrder sortOrder) :
@@ -197,4 +240,18 @@ void MLocaleBuckets::clear()
     Q_D(MLocaleBuckets);
 
     d->clear();
+}
+
+void MLocaleBuckets::removeBucketItems(int bucketIndex, int itemIndex, int count)
+{
+    Q_D(MLocaleBuckets);
+    d->removeItems(bucketIndex, itemIndex, count);
+}
+
+MLocaleBuckets &MLocaleBuckets::operator =(const MLocaleBuckets &other)
+{
+    Q_D(MLocaleBuckets);
+
+    d->copy(other);
+    return *this;
 }
