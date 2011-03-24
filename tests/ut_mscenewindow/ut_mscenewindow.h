@@ -54,8 +54,6 @@ private slots:
     void testSceneWindowStateChanges();
     void testSettingSameSceneWindowState();
 
-    void testFocusHandlingOnWindowBlocking();
-
 private:
     void processPendingEvents();
     bool verifySceneWindowStateChange(QSignalSpy &spy,
