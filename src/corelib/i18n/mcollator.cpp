@@ -171,3 +171,12 @@ MLocale::Comparison MCollator::compare(MLocale &locale, const QString &first,
         return MLocale::GreaterThan;
     }
 }
+
+MCollator &MCollator::operator =(const MCollator &other)
+{
+    Q_D(MCollator);
+
+    delete d->_coll;
+    d->_coll = other.d_ptr->_coll->safeClone();
+    return *this;
+}

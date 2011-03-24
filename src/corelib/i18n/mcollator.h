@@ -41,11 +41,12 @@ public:
     static MLocale::Comparison compare(MLocale &locale, const QString &first,
                                          const QString &second);
 
+    MCollator &operator=(const MCollator &other);
+
 private:
     // not implemented
     bool operator==(const MCollator &other) const;
     bool operator!=(const MCollator &other) const;
-    MCollator &operator=(const MCollator &other);
 
     Q_DECLARE_PRIVATE(MCollator)
     MCollatorPrivate *const d_ptr;
