@@ -53,7 +53,7 @@ public:
     void updateTitleAreaVisibility();
 
     QHash<MAction *, MButton *> buttons;
-
+    QList<QPair<int, MAction *> > delayedActionEvents;
 #ifdef HAVE_CONTENTACTION
     QHash<MAction*, ContentAction::Action> contentActions;
 #endif
@@ -74,6 +74,7 @@ public:
 
 private:
     void contentActionTriggered();
+    void appearing();
 };
 
 class MObjectMenuTitleArea : public MStylableWidget

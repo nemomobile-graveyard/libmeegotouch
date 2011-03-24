@@ -101,6 +101,9 @@ void MObjectMenuViewPrivate::init()
     actionViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
     actionViewport->setObjectName("ObjectMenuActionViewport");
     mainLayout->addItem(actionViewport);
+
+    Q_Q(MObjectMenuView);
+    QObject::connect(controller, SIGNAL(appearing()), q, SLOT(appearing()));
 }
 
 void MObjectMenuViewPrivate::updateIcon()
@@ -193,67 +196,86 @@ void MObjectMenuView::actionAdded(MAction *action)
 {
     Q_D(MObjectMenuView);
 
-    // show only if it is visible
-    if (action->isVisible()) {
+    //show action immediately if the menu is not disappering,
+    //otherwise it will be shown when the menu is shown next time
+    if( d->controller->sceneWindowState() != MSceneWindow::Disappearing ) {
+        // show only if it is visible
+        if (action->isVisible()) {
 
-        // create button for this action
-        MButton *button = new MButton(action->iconID(), action->text(), d->actionWidget);
+            // create button for this action
+            MButton *button = new MButton(action->iconID(), action->text(), d->actionWidget);
 
-        d->controller->connect(button, SIGNAL(clicked(bool)), SLOT(dismiss()));
-        QObject::connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
+            d->controller->connect(button, SIGNAL(clicked(bool)), SLOT(dismiss()));
+            QObject::connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
 
-        button->setEnabled(action->isEnabled());
-        d->actionLayout->addItem(button);
-        int buttonCount = d->actionLayout->count();
-        if(buttonCount == 1) {
-            // make the only button to use "single button" background
-            button->setLayoutPosition(M::DefaultPosition);
-        } else if( buttonCount > 1 ) {
-            MButton* prev = (MButton*)d->actionLayout->itemAt(buttonCount - 2);
-            // we have more than one in layout
-            if(buttonCount == 2) {
-                prev->setLayoutPosition(M::VerticalTopPosition);
-            } else {
-                prev->setLayoutPosition(M::VerticalCenterPosition);
+            button->setEnabled(action->isEnabled());
+            d->actionLayout->addItem(button);
+            int buttonCount = d->actionLayout->count();
+            if(buttonCount == 1) {
+                // make the only button to use "single button" background
+                button->setLayoutPosition(M::DefaultPosition);
+            } else if( buttonCount > 1 ) {
+                MButton* prev = (MButton*)d->actionLayout->itemAt(buttonCount - 2);
+                // we have more than one in layout
+                if(buttonCount == 2) {
+                    prev->setLayoutPosition(M::VerticalTopPosition);
+                } else {
+                    prev->setLayoutPosition(M::VerticalCenterPosition);
+                }
+                button->setLayoutPosition(M::VerticalBottomPosition);
             }
-            button->setLayoutPosition(M::VerticalBottomPosition);
+
+            d->buttons.insert(action, button);
+
+            //viewport doesnt update its size without this
+            d->actionViewport->setWidget(d->actionWidget);
         }
-
-        d->buttons.insert(action, button);
-
-        //viewport doesnt update its size without this
-        d->actionViewport->setWidget(d->actionWidget);
+    } else {
+        d->delayedActionEvents.append(qMakePair((int)QEvent::ActionAdded, action));
     }
 }
-
 void MObjectMenuView::actionRemoved(MAction *action)
 {
     Q_D(MObjectMenuView);
 
-    MButton *button = d->buttons.value(action, NULL);
-    if (button) {
-        d->buttons.remove(action);
-        delete button;
+    //remove the  action immediately if the menu is not disappering,
+    //otherwise it will be removed when the menu is shown next time
+    if( d->controller->sceneWindowState() != MSceneWindow::Disappearing ) {
+        MButton *button = d->buttons.value(action, NULL);
+        if (button) {
+            d->buttons.remove(action);
+            delete button;
+        }
+    }
+    else {
+        d->delayedActionEvents.append(qMakePair((int)QEvent::ActionRemoved, action));
     }
 }
 
 void MObjectMenuView::actionModified(MAction *action)
 {
     Q_D(MObjectMenuView);
-    MButton *button = d->buttons.value(action, NULL);
-    if (button) {
-        if (!action->isVisible()) {
-            actionRemoved(action);
+    //modify the  action immediately if the menu is not disappering,
+    //otherwise it will be modified when the menu is shown next time
+    if( d->controller->sceneWindowState() != MSceneWindow::Disappearing ) {
+        MButton *button = d->buttons.value(action, NULL);
+        if (button) {
+            if (!action->isVisible()) {
+                actionRemoved(action);
+            } else {
+                // update button data accordingly
+                button->setText(action->text());
+                button->setIconID(action->iconID());
+                button->setToggledIconID(action->toggledIconID());
+                button->setEnabled(action->isEnabled());
+            }
         } else {
-            // update button data accordingly
-            button->setText(action->text());
-            button->setIconID(action->iconID());
-            button->setToggledIconID(action->toggledIconID());
-            button->setEnabled(action->isEnabled());
+            // there is no button yet, action must've been invisible
+            actionAdded(action);
         }
-    } else {
-        // there is no button yet, action must've been invisible
-        actionAdded(action);
+    }
+    else {
+        d->delayedActionEvents.append(qMakePair((int)QEvent::ActionChanged, action));
     }
 }
 
@@ -391,6 +413,23 @@ void MObjectMenuViewPrivate::contentActionTriggered()
 
     i.value().trigger();
 #endif
+}
+
+void MObjectMenuViewPrivate::appearing()
+{
+    Q_Q(MObjectMenuView);
+
+    //add the delayed actions to the object menu
+    QPair<int, MAction*> pair;
+    foreach(pair, delayedActionEvents) {
+        if (pair.first == QEvent::ActionAdded)
+            q->actionAdded(pair.second);
+        else if (pair.first == QEvent::ActionRemoved)
+            q->actionRemoved(pair.second);
+        else if (pair.first == QEvent::ActionChanged)
+            q->actionModified(pair.second);
+    }
+    delayedActionEvents.clear();
 }
 
 M_REGISTER_VIEW_NEW(MObjectMenuView, MObjectMenu)
