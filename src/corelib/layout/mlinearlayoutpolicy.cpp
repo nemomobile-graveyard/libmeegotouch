@@ -29,7 +29,13 @@
 #include <QtGui/QGraphicsLinearLayout>
 MLinearLayoutPolicy::MLinearLayoutPolicy(MLayout *l, Qt::Orientation o) :
     MAbstractLayoutPolicy(*(new MLinearLayoutPolicyPrivate(l, o)))
-{ }
+{
+    Q_D(MLinearLayoutPolicy);
+    if (d->engine->orientation() == Qt::Horizontal)
+        d->engine->setSpacing(horizontalSpacing());
+    else
+        d->engine->setSpacing(verticalSpacing());
+}
 
 MLinearLayoutPolicy::~MLinearLayoutPolicy()
 { }

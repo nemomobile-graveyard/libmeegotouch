@@ -29,7 +29,12 @@
 #include <QtGui/QGraphicsGridLayout>
 MGridLayoutPolicy::MGridLayoutPolicy(MLayout *layout) :
     MAbstractLayoutPolicy(*(new MGridLayoutPolicyPrivate(layout)))
-{ }
+{
+    Q_D(MGridLayoutPolicy);
+    d->engine->setHorizontalSpacing(horizontalSpacing());
+    d->engine->setVerticalSpacing(verticalSpacing());
+}
+
 
 MGridLayoutPolicy::~MGridLayoutPolicy()
 { }
