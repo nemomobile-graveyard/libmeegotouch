@@ -202,7 +202,8 @@ void MListView::setGeometry(const QRectF &rect)
         QModelIndex index = model()->scrollToIndex();
         if (index.isValid()) {
             if (model()->itemModel() &&
-                    model()->itemModel()->hasIndex(index.row(), index.column(), index.parent()))
+                    model()->itemModel()->hasIndex(index.row(), index.column(), index.parent()) &&
+                    index.model() == model()->itemModel())
                 d_ptr->scrollToLastIndex();
             else
                 model()->setScrollToIndex(QModelIndex());
