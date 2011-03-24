@@ -298,6 +298,30 @@ void Ut_MSceneWindow::testSettingSameSceneWindowState()
 
 }
 
+void Ut_MSceneWindow::testFocusHandlingOnWindowBlocking()
+{
+    window->show();
+    QTest::qWaitForWindowShown(window);
+
+    m_subject->appear(window->scene());
+    QGraphicsWidget *widget = new QGraphicsWidget(m_subject);
+    widget->setFlag(QGraphicsItem::ItemIsFocusable);
+    widget->setFocus();
+
+    QVERIFY(widget->hasFocus());
+
+    qApp->sendEvent(m_subject, new QEvent(QEvent::WindowBlocked));
+
+    QVERIFY(!widget->hasFocus());
+
+    qApp->sendEvent(m_subject, new QEvent(QEvent::WindowUnblocked));
+
+    QVERIFY(widget->hasFocus());
+
+    window->hide();
+    qApp->processEvents();
+}
+
 void Ut_MSceneWindow::processPendingEvents()
 {
     // Send the posted QEvent::DeferredDelete from deleteLater().
