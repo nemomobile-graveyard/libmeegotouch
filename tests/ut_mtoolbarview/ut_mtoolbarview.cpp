@@ -45,9 +45,10 @@ void Ut_MToolBarView::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./Ut_MToolBarView" };
     app = new MApplication(argc, app_name);
-    appWin = new MApplicationWindow;
 
     MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mtoolbarview.css");
+
+    appWin = new MApplicationWindow;
 }
 
 void Ut_MToolBarView::cleanupTestCase()
