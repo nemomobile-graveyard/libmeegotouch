@@ -1224,28 +1224,6 @@ void MApplicationWindow::closeEvent(QCloseEvent *event)
         }
     }
 
-#ifdef Q_WS_X11
-
-    if (testAttribute(Qt::WA_QuitOnClose) && windowState().testFlag(Qt::WindowNoState) && !event->spontaneous()) {
-        XEvent ev;
-        Display *dpy = QX11Info::display();
-        memset(&ev, 0, sizeof(ev));
-
-        ev.xclient.type         = ClientMessage;
-        ev.xclient.display      = dpy;
-        ev.xclient.window       = effectiveWinId();
-        ev.xclient.message_type = XInternAtom(dpy, "_NET_CLOSE_WINDOW", False);
-        ev.xclient.format       = 32;
-        ev.xclient.data.l[0]    = CurrentTime;
-        ev.xclient.data.l[1]    = QX11Info::appRootWindow();
-
-        XSendEvent(dpy, QX11Info::appRootWindow(), False, SubstructureRedirectMask | SubstructureNotifyMask,
-                   &ev);
-
-        XSync(dpy, False);
-    }
-#endif
-
     event->accept();
 }
 

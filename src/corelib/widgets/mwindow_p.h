@@ -62,6 +62,7 @@ public:
     void setX11NotificationPreviewsDisabledProperty(bool set);
     bool getX11NotificationPreviewsDisabledProperty() const;
     void setMeegoX11Properties();
+    void sendNetCloseWindow();
     void sendDelayedExitDisplayEvent();
 
     bool notificationPreviewDisabled;

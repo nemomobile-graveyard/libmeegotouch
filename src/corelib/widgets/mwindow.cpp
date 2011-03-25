@@ -714,6 +714,15 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
             return;
         }
     }
+
+#ifdef Q_WS_X11
+    if (q->testAttribute(Qt::WA_QuitOnClose) &&
+        q->windowState().testFlag(Qt::WindowNoState) &&
+        !event->spontaneous())
+    {
+        sendNetCloseWindow();
+    }
+#endif
 }
 
 MWindow::MWindow(MWindowPrivate &dd, QWidget *parent)
@@ -949,6 +958,28 @@ void MWindowPrivate::setMeegoX11Properties()
     }
     setX11PrestartProperty(MApplication::isPrestarted());
     setX11NotificationPreviewsDisabledProperty(notificationPreviewDisabled);
+}
+
+void MWindowPrivate::sendNetCloseWindow()
+{
+    Q_Q(const MWindow);
+
+    XEvent ev;
+    Display *dpy = QX11Info::display();
+    memset(&ev, 0, sizeof(ev));
+
+    ev.xclient.type         = ClientMessage;
+    ev.xclient.display      = dpy;
+    ev.xclient.window       = q->effectiveWinId();
+    ev.xclient.message_type = XInternAtom(dpy, "_NET_CLOSE_WINDOW", False);
+    ev.xclient.format       = 32;
+    ev.xclient.data.l[0]    = CurrentTime;
+    ev.xclient.data.l[1]    = QX11Info::appRootWindow();
+
+    XSendEvent(dpy, QX11Info::appRootWindow(), False, SubstructureRedirectMask | SubstructureNotifyMask,
+               &ev);
+
+    XSync(dpy, False);
 }
 #endif
 
