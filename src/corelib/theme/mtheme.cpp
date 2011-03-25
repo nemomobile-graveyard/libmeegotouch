@@ -716,11 +716,10 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     invalidPixmapPtr(0),
     application(new MAssembly(applicationName)),
     palette(logicalValues),
-    fonts(logicalValues)
+    fonts(logicalValues),
 #ifdef HAVE_GCONF
-    , locale("/meegotouch/i18n/language")
+    locale("/meegotouch/i18n/language"),
 #endif
-    , showAsyncRequests(false),
     changeThemeTimer(0),
     changeThemeSemaphore("MTHEME_CHANGE_THEME_GUARD", 1)
 {
@@ -1038,7 +1037,7 @@ void MThemePrivate::localeChangedSlot()
             changeThemeTimer = new QTimer(q);
             changeThemeTimer->setSingleShot(true);
             changeThemeTimer->setInterval(500);
-            connect(changeThemeTimer, SIGNAL(timeout()), q, SLOT(changeTheme()));
+            QObject::connect(changeThemeTimer, SIGNAL(timeout()), q, SLOT(changeTheme()));
         }
         changeThemeTimer->start();
     }
