@@ -139,15 +139,25 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
             return;
         }
 
+        qreal distanceK = pPos.y() / pRange.height();
+        qreal sizeK = vpSize.height() / pRange.height();
+        qreal railHeight = size().height();
+
         const MScalableImage *rail = style()->backgroundImage();
 
         int indicatorPixmapSizeX = indicator->pixmap()->width();
 
-        int indicatorHeight = qMax(style()->minIndicatorSize(), int((vpSize.height()/pRange.height())*size().height()));
-        int indicatorPositionY = (pPos.y()/pRange.height())*size().height();
+        int indicatorHeight = sizeK * railHeight;
+        if (style()->minIndicatorSize() > indicatorHeight) {
+            railHeight -= (style()->minIndicatorSize() - indicatorHeight);
+            indicatorHeight = style()->minIndicatorSize();
+        }
 
-        if (indicatorPositionY + indicatorHeight > size().height()) {
+        int indicatorPositionY = distanceK * railHeight;
+
+        if (indicatorPositionY + indicatorHeight >= int(size().height())) {
             indicatorHeight = size().height() - indicatorPositionY;
+            indicatorPositionY -= 1;
         }
 
         if (indicatorPositionY < 0) {
