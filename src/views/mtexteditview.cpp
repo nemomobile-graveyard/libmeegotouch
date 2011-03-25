@@ -542,6 +542,11 @@ void MTextEditViewPrivate::showMagnifier()
 {
     Q_Q(MTextEditView);
 
+    // Never show editor at the same time with magnifier.
+    // There is separate logic for showing the toolbar again
+    // once magnifier is gone on mouse release.
+    hideEditorToolbar();
+
     if (controller->sceneManager()) {
         // Prevent relocations when moving magnifier.
         QObject::disconnect(static_cast<const QObject *>(controller), SIGNAL(cursorPositionChanged()),
