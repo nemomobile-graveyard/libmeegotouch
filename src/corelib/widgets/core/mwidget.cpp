@@ -563,11 +563,25 @@ bool MWidget::isSelected() const
 void MWidget::setVisible(bool visible)
 {
     Q_D(MWidget);
+    // FIXME: The proper way of handling this would be the listening to QGraphicsItem::ItemVisibleChange
+    // instead of overriding the non-virtual QGraphicsItem::setVisible(), but doing that would cause an ABI
+    // break for those who inherit directly from MWidget.
+
+    // If we are already explicitly hidden, early out.
+    if (!visible && d->explicitlyHidden)
+        return;
+
     d->explicitlyHidden = !visible;
 
     // Only show if the layout is not hiding this
-    if (!d->layoutHidden)
-        d->setVisible(visible);
+    if (!d->layoutHidden) {
+        // If current visibility has changed or we're explicitly hidden
+        // we must change the visibility.
+        // d->explicitlyHidden is hit when QGraphicsItem::setVisible(false) has been
+        // called since the code in MWidget::setVisible() won’t be executed.
+        if (visible != isVisible() || d->explicitlyHidden)
+            d->setVisible(visible);
+    }
 }
 
 QPointF MWidget::paintOffset() const
