@@ -156,7 +156,7 @@ contains( DEFINES, M_OS_MAEMO5 ) {
     desktop_entry.path = $$M_INSTALL_DATA/applications/hildon
 } else {
     desktop_icon.path = $$M_THEME_DIR/base/meegotouch/icons
-    desktop_icon.files = icon-l-widgetsgallery.svg
+    desktop_icon.files = icon-l-widgetsgallery.png
 
     desktop_entry.path = $$M_INSTALL_DATA/applications
 }
