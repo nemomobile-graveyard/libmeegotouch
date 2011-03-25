@@ -41,6 +41,7 @@ HEADERS += \
     $$MSRCDIR/corelib/widgets/core/mwidget.h \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller.h \
     $$MSRCDIR/corelib/core/mdesktopentry.h \
+    $$MSRCDIR/corelib/theme/mtheme.h \
     $$MSRCDIR/corelib/core/mfiledatastore.h \
     $$MSRCDIR/corelib/core/mdatastore.h \
     $$MSRCDIR/corelib/core/mdataaccess.h \
