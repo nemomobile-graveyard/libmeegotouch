@@ -847,7 +847,6 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
     updateSceneWindowRootElement(window);
 
     QRectF geom = calculateSceneWindowGeometry(window);
-    window->setGeometry(geom);
 
     // restart running navigationbar appearance animation to update animation endValues
     MAbstractWidgetAnimation* animation = window->d_func()->appearanceAnimation;
@@ -856,7 +855,10 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
     {
         animation->stop();
         animation->restoreTargetWidgetState();
+        window->setGeometry(geom);
         animation->start();
+    } else {
+        window->setGeometry(geom);
     }
 }
 
