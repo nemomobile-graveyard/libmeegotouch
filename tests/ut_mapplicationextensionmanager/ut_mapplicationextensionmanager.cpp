@@ -24,7 +24,6 @@
 #include <mapplicationextensionmetadata_stub.h>
 #include <mwidget_stub.h>
 #include <mwidgetcontroller_stub.h>
-#include <mtheme_stub.h>
 #include "mfiledatastore_stub.h"
 #include "mdataaccess_stub.h"
 
