@@ -1,3 +1,34 @@
+libmeegotouch (0.20.98-1) unstable; urgency=low
+
+  * New version
+  * Fixes: MTheme private slots should be ifdef-ed for unit tests.
+  * Fixes: NB#240288, MTextEdit magnifier doesn't hide copy/paste popup
+  * Fixes: NB#236761, Interacting with readonly textedit causes crash
+  * Fixes: NB#239953 - MSheetViewPrivate - memory leak and crash on language change (even if MSheet destroyed)
+  * Fixes: Failing ut_mtoolbarview unit tests
+  * Fixes: NB#240092 - Red square box is displaying as Icon for Widgets gallery in launcher.
+  * Fixes: NB#234716 - Size/layout of the tab is changed after app menu is invoked and orientation is changed
+  * Fixes: NB#229937 - Slider knob still slightly truncated at the min/max positions
+  * Fixes: NB#234640 - combobox and view menu icon look misaligned
+  * Fixes: NB#228113 - [TASK] URI handling - object menu for URI link is not invoked
+  * Fixes: NB#225447 - Language-change spinner blocks when changing language from command line
+  * Fixes: NB#234233 - 'Show this calendar and reminders'/Hide this calendar and reminders displayed for a short span of time in manage calendars.
+  * Fixes: NB#213408 - MPositionIndicator fails for some values
+  * Fixes: NB#226229 - [TASK] Rich text should show highlights when the underlined text is clicked
+  * Fixes: Build break on mac.
+  * Fixes: NB#235195 Make sure we properly load the horizontal and vertical row spacing from css for the linear/grid layout policy
+  * Fixes: NB#238612 - Widgetsgallery crashes when items are removed from the list page.
+  * Fixes: NB#237696 - [TASK] Long dialog cancel button not fully visible in landscape.
+  * Fixes: NB#235174 - ut_mextensionarea aborts (SIGBUS)
+  * Fixes: NB#226585
+  * Fixes: NB#239249 - MList incorrectly caches 'scroll to' index and references it later
+  * Fixes: Krazy warning
+  * Fixes: NB#239544 - (bogus) coverity problem
+  * Fixes: NB#218742 - Boosted applications do not exit cleanly when X connection is lost
+  * Fixes: NB#210576 - MScalableImage doesn't warn about downscaling.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com> Fri, 25 Mar 2011 16:06:39 +0200
+
 libmeegotouch (0.20.97-1) unstable; urgency=low
 
   * New version
