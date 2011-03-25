@@ -154,12 +154,27 @@ void MStatusBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (!style()->useSwipeGesture()) {
-        return;
-    }
-
-    if(firstPos.y()+ style()->swipeThreshold() < event->pos().y()) {
-        showStatusIndicatorMenu();
+    if (style()->useSwipeGesture()) {
+        if(firstPos.y()+ style()->swipeThreshold() < event->pos().y()) {
+            showStatusIndicatorMenu();
+        }
+    } else {
+        QPointF touch = event->scenePos();
+        // shape includes the reactive margins
+        QRectF rect = controller->mapToScene(controller->shape()).boundingRect();
+        rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                    M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
+        if (rect.contains(touch)) {
+            if (!pressDown) {
+                pressDown = true;
+                update();
+            }
+        } else {
+            if (pressDown) {
+                pressDown = false;
+                update();
+            }
+        }
     }
 }
 
