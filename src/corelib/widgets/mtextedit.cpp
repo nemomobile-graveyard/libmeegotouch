@@ -2556,6 +2556,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         }
     }
 
+    d->disableUpdateMicroFocus();
     foreach (const QInputMethodEvent::Attribute &attribute, attributes) {
         if (attribute.type == QInputMethodEvent::Selection) {
             // attribute.start is related to block start, while setSelection() is
@@ -2572,6 +2573,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     if (emitCursorPositionChanged || emitTextChanged) {
         d->updateMicroFocus();
     }
+    d->enableUpdateMicroFocus(true);
 
     if (emitTextChanged
         // no signal if committing existing preedit as is...
