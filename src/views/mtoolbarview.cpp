@@ -708,6 +708,12 @@ MToolBarLayoutPolicy *MToolBarViewPrivate::currentPolicy() const
 
 void MToolBarViewPrivate::refreshDisabledWidgets() const
 {
+    // Qt does not send events to disabled widgets,
+    // so in this case the QEvent::StyleChange does not
+    // reach its receivers.
+    // To work around this problem we send the event
+    // by hand here.
+
     if (!itemsEnabled) {
         QEvent event(QEvent::StyleChange);
 
