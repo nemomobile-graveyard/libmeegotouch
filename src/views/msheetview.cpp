@@ -95,6 +95,9 @@ MSheetViewPrivate::MSheetViewPrivate()
 
 MSheetViewPrivate::~MSheetViewPrivate()
 {
+    delete headerAnimation;
+    headerAnimation = 0;
+
     //rootLayout->removeItem(headerSlot);
     delete headerSlot;
     headerSlot = 0;
@@ -142,6 +145,7 @@ void MSheetViewPrivate::updateStyle()
     centralSlot->setStyleName(q->style()->centralSlotStyleName());
 
     delete headerAnimation;
+    headerAnimation = 0;
     if (!q->style()->headerAnimation().isEmpty()) {
         headerAnimation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(q->style()->headerAnimation()));
         headerAnimation->setTargetWidget(headerSlot);
