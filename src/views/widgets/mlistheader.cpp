@@ -21,13 +21,15 @@
 #include "mlistheader_p.h"
 
 #include <MLabel>
+#include <MSeparator>
 
 #include <QGraphicsLinearLayout>
 
 MListHeaderPrivate::MListHeaderPrivate()
     : q_ptr(0),
     layout(0),
-    titleLabel(0)
+    titleLabel(0),
+    separator(0)
 {
 }
 
@@ -42,6 +44,7 @@ void MListHeaderPrivate::init()
         layout = new QGraphicsLinearLayout(Qt::Horizontal, q);
         layout->setContentsMargins(0, 0, 0, 0);
         layout->setSpacing(0);
+        layout->addItem(separatorWidget());
         layout->addItem(titleLabelWidget());
     }
 }
@@ -55,6 +58,17 @@ MLabel *MListHeaderPrivate::titleLabelWidget()
         titleLabel->setStyleName("CommonGroupHeader");
     }
     return titleLabel;
+}
+
+MSeparator *MListHeaderPrivate::separatorWidget()
+{
+    Q_Q(MListHeader);
+    if (!separator) {
+        separator = new MSeparator(q);
+        separator->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        separator->setStyleName("CommonGroupHeaderDivider");
+    }
+    return separator;
 }
 
 MListHeader::MListHeader(QGraphicsItem *parent)
@@ -87,4 +101,5 @@ void MListHeader::applyStyle()
 {
     Q_D(MListHeader);
     d->titleLabelWidget()->setStyleName(style()->titleStyleName());
+    d->separatorWidget()->setStyleName(style()->separatorStyleName());
 }

@@ -31,6 +31,7 @@ class MListHeaderStyle : public MWidgetStyle
     M_STYLE(MListHeaderStyle)
 
     M_STYLE_ATTRIBUTE(QString, titleStyleName, TitleStyleName)
+    M_STYLE_ATTRIBUTE(QString, separatorStyleName, SeparatorStyleName)
 };
 
 class MListHeaderStyleContainer : public MWidgetStyleContainer

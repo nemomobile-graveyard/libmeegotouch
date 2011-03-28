@@ -25,6 +25,7 @@
 class MLabel;
 class MListHeader;
 class QGraphicsLinearLayout;
+class MSeparator;
 
 class MListHeaderPrivate
 {
@@ -36,6 +37,7 @@ public:
 
 protected:
     MLabel *titleLabelWidget();
+    MSeparator *separatorWidget();
 
 private:
     Q_DECLARE_PUBLIC(MListHeader)
@@ -43,6 +45,7 @@ private:
 
     QGraphicsLinearLayout *layout;
     MLabel *titleLabel;
+    MSeparator *separator;
 };
 
 #endif // MLISTHEADER_P_H
