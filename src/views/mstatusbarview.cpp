@@ -128,7 +128,7 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
         const_cast<MStatusBarView*>(this)->sharedPixmap = QPixmap();
     }
 
-    if (pressDown && style()->enableStatusIndicatorMenu()) {
+    if (pressDown) {
         painter->save();
         painter->setOpacity(style()->pressDimFactor());
         painter->fillRect(QRectF(QPointF(0.0, 0.0), sourceRect.size()), Qt::black);
