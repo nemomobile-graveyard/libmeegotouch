@@ -68,7 +68,6 @@ void MCommonPixmaps::clear()
 
 void MCommonPixmaps::load()
 {
-    // clear the old ones.
     clear();
 
     if (!QFile::exists(cacheFilename())) {
@@ -180,6 +179,11 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
     }
     ++requestCount.value();
 
+    if (toLoadList.contains(id)) {
+        toLoadList.remove(id);
+        resource->fetchPixmap(id.size);
+    }
+
     // does this pixmap has higher request count value than the current minimum for cache?
     if (requestCount.value() > minRequestsForCache && !mostUsedPixmaps.contains(id)) {
 
@@ -259,14 +263,12 @@ void MCommonPixmaps::reload(const PixmapIdentifier &id, ImageResource *oldResour
 
 QList<M::MThemeDaemonProtocol::PixmapHandle> MCommonPixmaps::mostUsedPixmapHandles()
 {
-    if (!toLoadList.isEmpty()) {
-        // not all pixmaps loaded/valid - return empty list
-        return QList<M::MThemeDaemonProtocol::PixmapHandle>();
-    }
+    QSet<M::MThemeDaemonProtocol::PixmapIdentifier> validMostUsedPixmaps(mostUsedPixmaps);
+    validMostUsedPixmaps.subtract(toLoadList);
 
     // we could also save the handles earlier but it is cheap to do the query
     QList<PixmapHandle> pixmapHandles;
-    foreach(const M::MThemeDaemonProtocol::PixmapIdentifier& id, mostUsedPixmaps) {
+    foreach(const M::MThemeDaemonProtocol::PixmapIdentifier& id, validMostUsedPixmaps) {
         MPixmapHandle handle = daemon->findImageResource(id.imageId)->pixmapHandle(id.size);
         pixmapHandles.append(M::MThemeDaemonProtocol::PixmapHandle(id, handle));
     }
