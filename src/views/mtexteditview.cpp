@@ -305,6 +305,7 @@ void MTextEditViewPrivate::checkScroll()
     // TODO: vscroll possibly at some point
 
     qreal currentX = cursorX();
+    int cWidth = cursorWidth();
     bool scrolled = false;
 
     // check that cursor isn't before the widget
@@ -318,21 +319,23 @@ void MTextEditViewPrivate::checkScroll()
         qreal rightBorder = activeDocument()->textWidth() - 2 * activeDocument()->documentMargin()
                             + hscroll;
 
-        if (currentX > rightBorder) {
+        if (currentX > (rightBorder - cWidth)) {
             // check cursor being after the widget (if the widget size is set)
             // FIXME: margins seem to be a bit funny. this avoids having cursor outside
             // visible area.
             hscroll = currentX - activeDocument()->textWidth()
-                      + 2 * activeDocument()->documentMargin();
+                      + 2 * activeDocument()->documentMargin()
+                      + cWidth;
             scrolled = true;
         } else if (hscroll > 0) {
             // scroll text to the right if
             // 1) there is text before widget and
             // 2) there is free space between end of text and right widget's border
-            qreal endX = activeDocument()->idealWidth();
+            qreal endX = activeDocument()->idealWidth() + cWidth;
 
             if (endX < rightBorder) {
                 hscroll -= rightBorder - endX;
+
                 if (hscroll < 0) {
                     hscroll = 0;
                 }
@@ -717,6 +720,20 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
     q->doUpdate();
 }
 
+void MTextEditViewPrivate::handleDocumentUpdated()
+{
+    qreal currentWidth = activeDocument()->idealWidth();
+    qreal textWidth = activeDocument()->textWidth();
+
+    // Check the need to scroll when current text width is so wide that cursor
+    // would be partially visible or hidden but not wide enough to trigger
+    // QAbstractTextDocumentLayout size change signal. This is a special
+    // case since QAbstractTextDocumentLayout size change signal doesn't
+    // take in to account the width of the cursor.
+    if (currentWidth > (textWidth - cursorWidth()) && currentWidth <= textWidth) {
+        checkScroll();
+    }
+}
 
 // handles size change signals from QAbstractTextDocumentLayout
 void MTextEditViewPrivate::handleDocumentSizeChange(const QSizeF &newSize)
@@ -846,6 +863,19 @@ QRect MTextEditViewPrivate::preeditRectangle() const
     }
 
     return rect;
+}
+
+
+int MTextEditViewPrivate::cursorWidth() const
+{
+    int cursorWidth = 0;
+    bool ok;
+
+    cursorWidth = activeDocument()->documentLayout()->property(CursorWidthProperty).toInt(&ok);
+    if (!ok)
+        cursorWidth = 1;
+
+    return cursorWidth;
 }
 
 
@@ -1606,6 +1636,9 @@ void MTextEditView::setupModel()
     // note: qtextdocument signal is emitted before it does it layout updates
     connect(model()->document(), SIGNAL(contentsChange(int, int, int)),
             d, SLOT(handleDocumentUpdate(int, int, int)));
+
+    connect(model()->document(), SIGNAL(contentsChanged()),
+            d, SLOT(handleDocumentUpdated()));
 
     // handle size changes separately
     connect(model()->document()->documentLayout(), SIGNAL(documentSizeChanged(QSizeF)),

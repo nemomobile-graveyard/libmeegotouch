@@ -76,6 +76,7 @@ protected slots:
     void hideUnmaskedText();
     void checkSize();
     void handleDocumentUpdate(int position, int charsRemoved, int charsAdded);
+    void handleDocumentUpdated();
     void handleDocumentSizeChange(const QSizeF &newSize);
     void playTextFieldSelectionFeedback();
     void updateMagnifierPosition();
@@ -92,6 +93,9 @@ private:
 
     //! Returns a rectangle covering preedit text in item space
     QRect preeditRectangle() const;
+
+    //! Returns width of the cursor
+    int cursorWidth() const;
 
     //! Returns a rectangle of the cursor
     QRect cursorRect() const;
