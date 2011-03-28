@@ -42,6 +42,9 @@ MSortFilterProxyModelPrivate::MSortFilterProxyModelPrivate()
 
 MSortFilterProxyModelPrivate::~MSortFilterProxyModelPrivate()
 {
+#ifdef HAVE_ICU
+    delete pCollator;
+#endif
 }
 
 void MSortFilterProxyModelPrivate::init()

@@ -673,7 +673,6 @@ void ToolBarPage::initTabViewToolBar(bool onTop, bool icons, bool labels)
 void ToolBarPage::addTab(int tabNumber)
 {
     bool icons = false;
-    bool labels = false;
 
     switch (currentConfiguration) {
     case iconAndLabelTabsBottom:
@@ -681,12 +680,10 @@ void ToolBarPage::addTab(int tabNumber)
     case iconTabsBottom:
     case iconTabsTop:
         icons = true;
-        labels = true;
         break;
     case textTabsBottom:
     case textTabsTop:
         icons = false;
-        labels = true;
         break;
     default:
         return;
@@ -696,7 +693,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 1:
         {
             //% "Initiated"
-            MAction *action = new MAction(icons ? "icon-m-telephony-call-initiated" : "", labels ? qtTrId("xx_toolbar_page_tools_initiated") : "" , this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-call-initiated" : "", qtTrId("xx_toolbar_page_tools_initiated"), this);
             action->setLocation(MAction::ToolBarLocation);
             action->setCheckable(true);
             action->setChecked(true);
@@ -708,7 +705,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 2:
         {
             //% "Received"
-            MAction *action = new MAction(icons ? "icon-m-telephony-call-received" : "", labels ? qtTrId("xx_toolbar_page_tools_received") : "", this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-call-received" : "", qtTrId("xx_toolbar_page_tools_received"), this);
             action->setLocation(MAction::ToolBarLocation);
             action->setCheckable(true);
             connect(action, SIGNAL(triggered()), this, SLOT(populateCallReceived()));
@@ -718,7 +715,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 3:
         {
             //% "Missed"
-            MAction *action = new MAction(icons ? "icon-m-telephony-call-missed" : "", labels ? qtTrId("xx_toolbar_page_tools_missed") : "", this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-call-missed" : "", qtTrId("xx_toolbar_page_tools_missed"), this);
             action->setCheckable(true);
             connect(action, SIGNAL(triggered()), this, SLOT(populateCallMissed()));
             action->setLocation(MAction::ToolBarLocation);
@@ -728,7 +725,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 4:
         {
             //% "Diverted"
-            MAction *action = new MAction(icons ? "icon-m-telephony-call-diverted" : "", labels ? qtTrId("xx_toolbar_page_tools_diverted") : "", this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-call-diverted" : "", qtTrId("xx_toolbar_page_tools_diverted"), this);
             action->setCheckable(true);
             action->setLocation(MAction::ToolBarLocation);
             addAction(action);
@@ -737,7 +734,7 @@ void ToolBarPage::addTab(int tabNumber)
     case 5:
         {
             //% "Call"
-            MAction *action = new MAction(icons ? "icon-m-telephony-cellular" : "", labels ? qtTrId("xx_toolbar_page_tools_call") : "", this);
+            MAction *action = new MAction(icons ? "icon-m-telephony-cellular" : "", qtTrId("xx_toolbar_page_tools_call"), this);
             action->setCheckable(true);
             action->setLocation(MAction::ToolBarLocation);
             addAction(action);
