@@ -33,7 +33,7 @@ libmeegotouch (0.20.98-1) unstable; urgency=low
   * Fixes: NB#218742 - Boosted applications do not exit cleanly when X connection is lost
   * Fixes: NB#210576 - MScalableImage doesn't warn about downscaling.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com> Fri, 25 Mar 2011 16:06:39 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 25 Mar 2011 16:06:39 +0200
 
 libmeegotouch (0.20.97-1) unstable; urgency=low
 
