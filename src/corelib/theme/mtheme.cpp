@@ -104,7 +104,7 @@ namespace
     }
 } // anonymous namespace
 
-QHash<const char*, MThemePrivate::SheetsAndHierarchy> MThemePrivate::hierarchyCache;
+QHash<QByteArray, MThemePrivate::SheetsAndHierarchy> MThemePrivate::hierarchyCache;
 
 MTheme::MTheme(const QString &applicationName, const QString &, ThemeService themeService) :
     d_ptr(new MThemePrivate(applicationName, themeService))
@@ -372,11 +372,11 @@ void MThemePrivate::cleanupGarbage()
     }
 }
 
-bool MThemePrivate::extractDataForStyleClass(const char *styleClassName,
+bool MThemePrivate::extractDataForStyleClass(const QByteArray &styleClassName,
                                              QList<const MStyleSheet *> &sheets,
                                              QList<QByteArray> &styleMetaObjectHierarchy)
 {
-    QHash<const char*, SheetsAndHierarchy>::const_iterator it = hierarchyCache.constFind(styleClassName);
+    QHash<QByteArray, SheetsAndHierarchy>::const_iterator it = hierarchyCache.constFind(styleClassName);
     if (it != hierarchyCache.constEnd()) {
         sheets = it->first;
         styleMetaObjectHierarchy = it->second;
@@ -489,7 +489,8 @@ const MStyle *MTheme::style(const char *styleClassName,
     QList<const MStyleSheet *> sheets;
 
     QList<QByteArray> styleMetaObjectHierarchy;
-    if (!d->extractDataForStyleClass(styleClassName, sheets, styleMetaObjectHierarchy))
+    QByteArray scn(styleClassName);
+    if (!d->extractDataForStyleClass(scn, sheets, styleMetaObjectHierarchy))
          return 0;
 
     // Get parent data by traversing the MWidgetController pointer we have
@@ -516,7 +517,7 @@ const MStyle *MTheme::style(const char *styleClassName,
     }
 
     return MStyleSheetPrivate::style(sheets, parentsData, parentStyleName.toAscii(),
-                                     styleMetaObjectHierarchy, styleClassName, objectName.toAscii(),
+                                     styleMetaObjectHierarchy, scn, objectName.toAscii(),
                                      mode.toAscii(), type.toAscii(), orientation);
 }
 

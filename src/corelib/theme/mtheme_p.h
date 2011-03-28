@@ -196,7 +196,7 @@ public:
      */
     void reinit(const QString &applicationName);
 
-    static bool extractDataForStyleClass(const char *styleClassName,
+    static bool extractDataForStyleClass(const QByteArray &styleClassName,
                                          QList<const MStyleSheet *> &sheets,
                                          QList<QByteArray> &styleMetaObjectHierarchy);
     static QList<const MStyleSheet *> extractSheetsForClassHierarchy(const QList<const MStyleSheet *> &sheets,
@@ -213,7 +213,7 @@ public:
 
 private:
     typedef QPair<QList<const MStyleSheet *>, QList<QByteArray> > SheetsAndHierarchy;
-    static QHash<const char*, SheetsAndHierarchy> hierarchyCache;
+    static QHash<QByteArray, SheetsAndHierarchy> hierarchyCache;
 };
 
 #endif
