@@ -40,7 +40,8 @@ MListIndexFloatingViewPrivate::MListIndexFloatingViewPrivate()
     list(NULL),
     tooltipWidget(NULL),
     tooltipVerticalOffset(0),
-    contentHeight(0)
+    contentHeight(0),
+    fastScrollPosition()
 {
 }
 
@@ -132,7 +133,7 @@ MListIndexTooltip *MListIndexFloatingViewPrivate::tooltip()
     return tooltipWidget;
 }
 
-void MListIndexFloatingViewPrivate::updateTooltipPosition(const QPointF &pos)
+void MListIndexFloatingViewPrivate::updateTooltipPosition(int y)
 {
     Q_Q(MListIndexFloatingView);
 
@@ -140,9 +141,9 @@ void MListIndexFloatingViewPrivate::updateTooltipPosition(const QPointF &pos)
         qreal top = 0;
         qreal tooltipHeight = tooltip()->size().height();
 
-        if (pos.y() > tooltipHeight / 2 && pos.y() < tooltipVerticalOffset)
-            top = pos.y() - tooltipHeight / 2;
-        else if (pos.y() >= tooltipVerticalOffset)
+        if (y > tooltipHeight / 2 && y < tooltipVerticalOffset)
+            top = y - tooltipHeight / 2;
+        else if (y >= tooltipVerticalOffset)
             top = controller->size().height() - tooltipHeight;
 
         tooltip()->setPos(-tooltip()->size().width() - q->style()->floatingIndexOffset(), top);
@@ -222,6 +223,33 @@ void MListIndexFloatingViewPrivate::_q_listParentChanged()
     initLayout();
 }
 
+void MListIndexFloatingViewPrivate::beginFastScrolling(const QPointF &pos)
+{
+    Q_Q(MListIndexFloatingView);
+
+    if (q->model()->shortcutIndexes().isEmpty())
+        return;
+
+    updateFastScrolling(pos);
+    fastScrollPosition = pos;
+
+    tooltip()->show();
+}
+
+void MListIndexFloatingViewPrivate::updateFastScrolling(const QPointF &offset)
+{
+    fastScrollPosition += offset;
+    int y = controller->mapFromScene(fastScrollPosition).y();
+    scrollToGroupHeader(y);
+    updateTooltipPosition(y);
+}
+
+void MListIndexFloatingViewPrivate::endFastScrolling()
+{
+    tooltip()->hide();
+    fastScrollPosition = QPointF(0,0);
+}
+
 MListIndexFloatingView::MListIndexFloatingView(MListIndex *controller)
     : MWidgetView(*(new MListIndexFloatingViewPrivate),  controller)
 {
@@ -280,71 +308,28 @@ void MListIndexFloatingView::drawBackground(QPainter *painter, const QStyleOptio
     Q_UNUSED(option);
 }
 
-void MListIndexFloatingView::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_D(MListIndexFloatingView);
-
-    if (model()->shortcutIndexes().isEmpty()) {
-        event->ignore();
-        return;
-    }
-
-    MWidgetView::mousePressEvent(event);
-
-    d->scrollToGroupHeader(event->pos().y());
-    d->updateTooltipPosition(event->pos());
-
-    event->accept();
-
-    d->tooltip()->show();
-}
-
-void MListIndexFloatingView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_D(MListIndexFloatingView);
-
-    if (model()->shortcutIndexes().isEmpty()) {
-        event->ignore();
-        return;
-    }
-
-    MWidgetView::mousePressEvent(event);
-
-    d->scrollToGroupHeader(event->pos().y());
-    d->updateTooltipPosition(event->pos());
-
-    event->accept();
-
-    d->tooltip()->show();
-}
-
-void MListIndexFloatingView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_D(MListIndexFloatingView);
-
-    MWidgetView::mouseReleaseEvent(event);
-    event->accept();
-
-    d->tooltip()->hide();
-}
-
-void MListIndexFloatingView::cancelEvent(MCancelEvent *event)
-{
-    Q_D(MListIndexFloatingView);
-
-    MWidgetView::cancelEvent(event);
-    event->accept();
-
-    d->tooltip()->hide();
-}
-
 void MListIndexFloatingView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
 {
-    event->accept(gesture);
+    Q_D(MListIndexFloatingView);
+
+    if (d->tooltip()->isVisible()) {
+        event->accept(gesture);
+        return;
+    }
+
+    MWidgetView::tapAndHoldGestureEvent(event, gesture);
 }
 
 void MListIndexFloatingView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
 {
+    Q_D(MListIndexFloatingView);
+    if (gesture->state() == Qt::GestureStarted)
+        d->beginFastScrolling(event->mapToGraphicsScene(gesture->hotSpot()));
+    else if (gesture->state() == Qt::GestureFinished || gesture->state() == Qt::GestureCanceled)
+        d->endFastScrolling();
+    else if (gesture->state() == Qt::GestureUpdated)
+        d->updateFastScrolling(gesture->delta());
+
     event->accept(gesture);
 }
 

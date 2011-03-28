@@ -180,7 +180,7 @@ void MListItemView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGest
         gesture->state() == Qt::GestureFinished)
         d->tapAndHoldStarted = false;
 
-    if (gesture->state() == Qt::GestureFinished)
+    if (gesture->state() == Qt::GestureFinished && d->down)
         d->longTap(gesture->position());
 
     event->accept(gesture);

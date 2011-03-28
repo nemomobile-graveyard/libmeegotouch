@@ -44,8 +44,8 @@ void MListIndexPrivate::init()
     q->setView(new MListIndexView(q));
     q->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    q->grabGesture(Qt::TapAndHoldGesture);
-    q->grabGesture(Qt::PanGesture);
+    q->grabGestureWithCancelPolicy(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureStarted);
+    q->grabGestureWithCancelPolicy(Qt::PanGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureStarted);
 }
 
 void MListIndexPrivate::updateListConnections(MList *list)

@@ -44,12 +44,6 @@ protected:
 
     void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-    void cancelEvent(MCancelEvent *event);
-
     void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);
     /*! \reimp_end */

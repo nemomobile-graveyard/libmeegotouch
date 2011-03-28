@@ -53,7 +53,7 @@ public:
 
     MListIndexTooltip *tooltip();
 
-    void updateTooltipPosition(const QPointF &pos);
+    void updateTooltipPosition(int y);
     void updateTooltipData();
 
     void scrollToGroupHeader(int y);
@@ -63,6 +63,10 @@ public:
     void _q_recalculateTooltipOffsets();
     void _q_scrollListToCurrentIndex();
     void _q_listParentChanged();
+
+    void beginFastScrolling(const QPointF &pos);
+    void updateFastScrolling(const QPointF &offset);
+    void endFastScrolling();
 
 private:
     Q_DECLARE_PUBLIC(MListIndexFloatingView)
@@ -78,6 +82,8 @@ private:
 
     qreal tooltipVerticalOffset;
     qreal contentHeight;
+
+    QPointF fastScrollPosition;
 
 #ifdef UNIT_TEST
     friend class Ut_MListIndexFloatingView;
