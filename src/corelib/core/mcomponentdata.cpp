@@ -393,6 +393,55 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
     gMComponentDataPrivate = this;
 
+    QFileInfo fileInfo(argv[0]);
+    QString themeIdentifier = fileInfo.fileName();
+    if (!appIdentifier.isEmpty()) {
+        QRegExp regExp("[0-9a-zA-Z_-]*");
+        if (regExp.exactMatch(appIdentifier)) {
+            themeIdentifier = appIdentifier;
+        }
+    }
+
+    // register dbus service
+    appName = themeIdentifier;
+    binaryName = argv[0];
+
+    //appName cannot begin with number
+    if (appName[0].isDigit()) {
+        qCritical("MComponentData - application identifier must not begin with a digit.");
+        exit(EXIT_FAILURE);
+    }
+
+#ifdef HAVE_DBUS
+    // here we check for a working dbus session bus and give a big
+    // fat error message when it does not exist.
+
+    QDBusConnection connection = QDBusConnection::sessionBus();
+
+    if (!connection.isConnected()) {
+        qCritical("ERROR: No DBUS session bus found. Exiting now. Please make sure that a dbus session bus\n"
+               "is running. In Scratchbox you should execute meego-sb-session start. On the target device\n"
+               "it should already be running. You should also make sure that the DBUS_SESSION_BUS_ADDRESS\n"
+               "environment variable is set correctly. For that you can execute the following command:\n"
+               "source /tmp/session_bus_address.user\n");
+
+        exit(EXIT_FAILURE);
+    }
+
+    /* If cache is being populated, real name of the application to be
+       executed is not known yet. Service registration will be skipped
+       now and done in reinit(). */
+    if (!MComponentCache::populating()) {
+        if (newService == 0) {
+            registerDefaultService(appName);
+        } else {
+            registerNewService(newService);
+        }
+    }
+#else
+    Q_UNUSED(newService);
+#endif
+
     // Remember if we were given the -reverse parameter
     // (we have to do it this way, because the QApplication
     // constructor "eats" the "-reverse" command line parameter.
@@ -427,14 +476,6 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
         testabilityInit();
 #endif //TESTABLE
 
-    QFileInfo fileInfo(argv[0]);
-    QString themeIdentifier = fileInfo.fileName();
-    if (!appIdentifier.isEmpty()) {
-        QRegExp regExp("[0-9a-zA-Z_-]*");
-        if (regExp.exactMatch(appIdentifier)) {
-            themeIdentifier = appIdentifier;
-        }
-    }
     theme = new MTheme(themeIdentifier, QString(), themeService);
     deviceProfile = new MDeviceProfile();
 
@@ -496,46 +537,6 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
         delete feedbackPlayer;
         feedbackPlayer = 0;
     }
-#endif
-
-    // register dbus service
-    appName = themeIdentifier;
-    binaryName = argv[0];
-
-    //appName cannot begin with number
-    if (appName[0].isDigit()) {
-        qCritical("MComponentData - application identifier must not begin with a digit.");
-        exit(EXIT_FAILURE);
-    }
-
-#ifdef HAVE_DBUS
-    // here we check for a working dbus session bus and give a big
-    // fat error message when it does not exist.
-
-    QDBusConnection connection = QDBusConnection::sessionBus();
-
-    if (connection.isConnected() == false) {
-        qCritical("ERROR: No DBUS session bus found. Exiting now. Please make sure that a dbus session bus\n"
-               "is running. In Scratchbox you should execute meego-sb-session start. On the target device\n"
-               "it should already be running. You should also make sure that the DBUS_SESSION_BUS_ADDRESS\n"
-               "environment variable is set correctly. For that you can execute the following command:\n"
-               "source /tmp/session_bus_address.user\n");
-
-        exit(EXIT_FAILURE);
-    }
-
-    /* If cache is being populated, real name of the application to be
-       executed is not known yet. Service registration will be skipped
-       now and done in reinit(). */
-    if (!MComponentCache::populating()) {
-        if (newService == 0) {
-            registerDefaultService(appName);
-        } else {
-            registerNewService(newService);
-        }
-    }
-#else
-    Q_UNUSED(newService);
 #endif
 
     QGestureRecognizer::unregisterRecognizer(Qt::TapAndHoldGesture);
