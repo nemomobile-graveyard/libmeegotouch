@@ -18,7 +18,6 @@ SUBDIRS     =  \
     ft_mbutton \
     ft_mslider \
     ft_mscalableimage \
-    ft_mwindow \
     ut_allwidgets \
 #     ut_mapplication \ // Depends on private class
      ut_madvancedlistitem \
