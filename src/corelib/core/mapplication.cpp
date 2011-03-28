@@ -497,8 +497,6 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
         unsigned long  nItems;
         unsigned long  bytesAfter;
         unsigned char *data = NULL;
-        static Atom netWmStateAtom = XInternAtom(QX11Info::display(),
-                                            "_NET_WM_STATE", True);
 
         if (xevent->atom == visibleAtom) {
             // Read value of the property. Should be 1 or 0.
@@ -516,17 +514,6 @@ void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
                 }
 
                 XFree(data);
-            }
-        } else if (xevent->atom == netWmStateAtom) {
-            /* Check if it comes from MTF itself */
-            if (window->d_ptr->removeWindowFromSwitcherInProgress) {
-                window->d_ptr->removeWindowFromSwitcherInProgress = false;
-            } else {
-                /* Check if SKIP_TASKBAR was set or removed */
-                window->d_ptr->skipTaskbar = MApplicationPrivate::hasXStateAtom(xevent->window,
-                                                                                XInternAtom(QX11Info::display(),
-                                                                                            "_NET_WM_STATE_SKIP_TASKBAR",
-                                                                                            True));
             }
         }
     }

@@ -98,8 +98,6 @@ MWindowPrivate::MWindowPrivate() :
     q_ptr(NULL)
 {
 #ifdef Q_WS_X11
-    removeWindowFromSwitcherInProgress = false;
-    skipTaskbar = false;
     notificationPreviewDisabled = false;
 #endif
 

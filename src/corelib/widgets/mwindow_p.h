@@ -64,8 +64,6 @@ public:
     void setMeegoX11Properties();
     void sendDelayedExitDisplayEvent();
 
-    bool removeWindowFromSwitcherInProgress;
-    bool skipTaskbar;
     bool notificationPreviewDisabled;
 #endif
 
