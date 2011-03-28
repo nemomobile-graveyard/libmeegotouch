@@ -49,7 +49,9 @@ MBorderDecorationRoundedCornersView::MBorderDecorationRoundedCornersView(MBorder
     rightCornerWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     layout->addCornerAnchors(rightCornerWidget, Qt::TopRightCorner, layout, Qt::TopRightCorner);
 
-    // Needed locked state because orientation state will change the order that is not wanted.
+    // we need to lock the layout direction to LeftToRight here,
+    // because otherwise we will have the wrong rounded corners
+    // on the left and right sides of the window.
     controller->setLayoutDirection(Qt::LeftToRight);
 }
 
