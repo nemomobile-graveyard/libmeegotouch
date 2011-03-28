@@ -10,6 +10,10 @@ INCLUDEPATH += . \
 
 QMAKE_LIBDIR += $$MLIB
 
+#needed in case megotouch-boostable is not available
+QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+QMAKE_LFLAGS += -pie -rdynamic
+
 LIBS += $$mAddLibrary(meegotouchcore) \
         $$mAddLibrary(meegotouchviews)
 
@@ -22,7 +26,7 @@ target.path = $$M_INSTALL_BIN
 !win32:OBJECTS_DIR = ./.obj
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
-CONFIG += qt meegotouch-boostable
+CONFIG += qt
 
 QT += svg opengl
 contains(DEFINES, HAVE_DBUS) {
