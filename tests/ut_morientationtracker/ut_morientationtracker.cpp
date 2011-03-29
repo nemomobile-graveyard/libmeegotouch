@@ -18,7 +18,8 @@
 ****************************************************************************/
 
 #include "ut_morientationtracker.h"
-
+#include "mservicelistener_stub.h"
+#include "contextproperty_stub.h"
 #include <mdeviceprofile.h>
 
 #include <MComponentData>
@@ -61,8 +62,12 @@ void Ut_MOrientationTracker::initTestCase()
     static int argc = 1;
     static char *argv[ 1 ];
     argv[ 0 ] = (char*)"./ut_mwindow";
-    m_componentData = new MComponentData(argc, argv);
 
+    gContextPropertyStubMap->createStub("/maemo/InternalKeyboard/Present")->stubSetReturnValue("value", QVariant("true"));
+    gContextPropertyStubMap->createStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(""));
+    gContextPropertyStubMap->createStub("Screen.IsCovered")->stubSetReturnValue("value", QVariant("false"));
+
+    m_componentData = new MComponentData(argc, argv);
     mTracker = MOrientationTracker::instance();
 }
 
@@ -249,6 +254,79 @@ void Ut_MOrientationTracker::testWindowOrientationLock()
 
     QCOMPARE(window1->orientation(), orientation1);
     QCOMPARE(window2->orientation(), orientation2);
+}
+
+void Ut_MOrientationTracker::testWindowRemoteOrientationLock_data()
+{
+    QTest::addColumn<MServiceListener::ServicePresence>("remoteTopEdgePropertyPresence");
+    QTest::addColumn<QString>("sensorTopEdge");
+    QTest::addColumn<QString>("remoteTopEdge");
+    QTest::addColumn<QString>("keyboardOpen");
+    QTest::addColumn<QString>("tvOutState");
+    QTest::addColumn<M::OrientationAngle>("expectedAngle");
+
+    QTest::newRow("NotPresent, right, bottom, false, <empty> -> Angle90")
+            << MServiceListener::NotPresent << "right" << "bottom" << "false" << "" << M::Angle90;
+    QTest::newRow("NotPresent, right, bottom, true, <empty> -> Angle0")
+            << MServiceListener::NotPresent << "right" << "bottom" << "true" << "" << M::Angle0;
+    QTest::newRow("NotPresent, right, bottom, false, tvout -> Angle0")
+            << MServiceListener::NotPresent << "right" << "bottom" << "false" << "tvout" << M::Angle0;
+    QTest::newRow("NotPresent, right, bottom, true, tvout -> Angle0")
+            << MServiceListener::NotPresent << "right" << "bottom" << "true" << "tvout" << M::Angle0;
+    QTest::newRow("Present, right, <empty>, false, <empty> -> Angle90")
+            << MServiceListener::Present << "right" << "" << "false" << "" << M::Angle90;
+    QTest::newRow("Present, right, <empty>, true, <empty> -> Angle0")
+            << MServiceListener::Present << "right" << "" << "true" << "" << M::Angle0;
+    QTest::newRow("Present, right, <empty>, false, tvout -> Angle0")
+            << MServiceListener::Present << "right" << "" << "false" << "tvout" << M::Angle0;
+    QTest::newRow("Present, right, <empty>, true, tvout -> Angle0")
+            << MServiceListener::Present << "right" << "" << "true" << "tvout" << M::Angle0;
+    QTest::newRow("Present, right, bottom, false, <empty> -> Angle180")
+            << MServiceListener::Present << "right" << "bottom" << "false" << "" << M::Angle180;
+    QTest::newRow("Present, right, bottom, true, <empty> -> Angle180")
+            << MServiceListener::Present << "right" << "bottom" << "true" << "" << M::Angle180;
+    QTest::newRow("Present, right, bottom, false, tvout -> Angle180")
+            << MServiceListener::Present << "right" << "bottom" << "false" << "tvout" << M::Angle180;
+    QTest::newRow("Present, right, bottom, true, tvout -> Angle180")
+            << MServiceListener::Present << "right" << "bottom" << "true" << "tvout" << M::Angle180;
+}
+
+void Ut_MOrientationTracker::testWindowRemoteOrientationLock()
+{
+    QFETCH(MServiceListener::ServicePresence, remoteTopEdgePropertyPresence);
+    QFETCH(QString, sensorTopEdge);
+    QFETCH(QString, remoteTopEdge);
+    QFETCH(QString, keyboardOpen);
+    QFETCH(QString, tvOutState);
+    QFETCH(M::OrientationAngle, expectedAngle);
+
+    supportedAnglesStubLists[KeyboardOpen].clear();
+    supportedAnglesStubLists[KeyboardOpen] <<  M::Angle0;
+
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0 << M::Angle90 << M::Angle180 << M::Angle270;
+
+    QString dbusName = gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->getProxy()->info()->providerDBusName();
+
+    gMServiceListenerStubMap->findStub(dbusName)->stubReset();
+    gContextPropertyStubMap->findStub("Screen.TopEdge")->stubReset();
+    gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->stubReset();
+    gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubReset();
+    gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->stubReset();
+
+    gMServiceListenerStubMap->findStub(dbusName)->stubSetReturnValue("isServicePresent", remoteTopEdgePropertyPresence);
+    gContextPropertyStubMap->findStub("Screen.TopEdge")->stubSetReturnValue("value", QVariant(sensorTopEdge));
+    gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->stubSetReturnValue("value", QVariant(remoteTopEdge));
+    gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubSetReturnValue("value", QVariant(keyboardOpen));
+    gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(tvOutState));
+
+    // Use this signal so that also the video_route gets updated when eventually entering the updateOrientationAndle()
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->getProxy(), "valueChanged");
+
+    QCoreApplication::processEvents();
+
+    QCOMPARE(window1->orientationAngle(), expectedAngle);
+    QCOMPARE(window2->orientationAngle(), expectedAngle);
 }
 
 ///////////////////////////////////////////////////////

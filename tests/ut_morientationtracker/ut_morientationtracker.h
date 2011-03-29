@@ -53,6 +53,8 @@ private slots:
     void testWindowOrientationAngleLock();
     void testWindowOrientationLock_data();
     void testWindowOrientationLock();
+    void testWindowRemoteOrientationLock_data();
+    void testWindowRemoteOrientationLock();
 
 private:
     /*  Helper members   */
@@ -62,7 +64,6 @@ private:
 
     MOrientationTracker *mTracker;
     MComponentData* m_componentData;
-
     MWindow *window1;
     MWindow *window2;
 };
