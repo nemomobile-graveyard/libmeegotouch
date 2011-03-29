@@ -52,6 +52,7 @@ Q_SIGNALS:
 
 private slots:
     void loadOne();
+    void updateClientsAboutMostUsed();
     void considerSaving();
 private:
     QString cacheFilename() const;

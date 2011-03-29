@@ -160,15 +160,28 @@ void MCommonPixmaps::loadOne()
             cpuMonitor.start(100);
         } else {
             if (toLoadList.isEmpty()) {
-                // notify clients when all common pixmaps have been loaded
-                MostUsedPixmaps mostUsed;
-                mostUsed.addedHandles = mostUsedPixmapHandles();
-                emit mostUsedPixmapsChanged(mostUsed);
+                disconnect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), this, SLOT(loadOne()));
+                connect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), SLOT(updateClientsAboutMostUsed()));
+                cpuMonitor.start(5000);
             }
         }
     } else {
         // the cpu usage was too high, so start start the timer with longer delay
         cpuMonitor.start(1000);
+    }
+}
+
+void MCommonPixmaps::updateClientsAboutMostUsed()
+{
+    cpuMonitor.stop();
+    // only wakeup all clients if the device is idle
+    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < 10)) {
+        MostUsedPixmaps mostUsed;
+        mostUsed.addedHandles = mostUsedPixmapHandles();
+        emit mostUsedPixmapsChanged(mostUsed);
+        disconnect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), this, SLOT(updateClientsAboutMostUsed()));
+    } else {
+        cpuMonitor.start(5000);
     }
 }
 
