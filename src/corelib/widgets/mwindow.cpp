@@ -399,7 +399,6 @@ void MWindowPrivate::applyStartupWindowBackground()
 void MWindowPrivate::resolveOrientationRules() {
     Q_Q(MWindow);
 
-#ifdef Q_WS_X11
     //follow current app window if window is visible in switcher
     if ((isInSwitcher && q->isOnDisplay()) ||
         (q->isVisible() && !q->isMinimized() && !q->isOnDisplay())) {
@@ -407,7 +406,6 @@ void MWindowPrivate::resolveOrientationRules() {
     } else {
         MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
     }
-#endif //Q_WS_X11
 
     MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
 
@@ -622,7 +620,9 @@ void MWindowPrivate::doSwitcherExited()
 
     if (isInSwitcher) {
         isInSwitcher = false;
+#ifdef Q_WS_X11
         resolveOrientationRules();
+#endif
         emit q->switcherExited();
     }
 }
@@ -633,7 +633,9 @@ void MWindowPrivate::doSwitcherEntered()
 
     if (!isInSwitcher) {
         isInSwitcher = true;
+#ifdef Q_WS_X11
         resolveOrientationRules();
+#endif
         emit q->switcherEntered();
     }
 }
@@ -1370,7 +1372,9 @@ bool MWindow::event(QEvent *event)
     if ((event->type() == QEvent::Show && !isMinimized()) || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);
     } else if (event->type() == QEvent::Show || event->type() == QEvent::Hide) {
+#ifdef Q_WS_X11
         d->resolveOrientationRules();
+#endif
     } else if (event->type() == QEvent::WindowStateChange) {
         d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
     } else if (event->type() == QEvent::Close) {
@@ -1492,8 +1496,10 @@ bool MWindow::event(QEvent *event)
     } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
         return true;
-    } else if (event->type() == QEvent::DynamicPropertyChange) {
-        QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
+    }
+#ifdef Q_WS_X11
+    else if (event->type() == QEvent::DynamicPropertyChange) {
+        QDynamicPropertyChangeEvent* dynamicEvent = static_cast<QDynamicPropertyChangeEvent*>(event);        
         if (dynamicEvent->propertyName() == FollowsCurrentApplicationWindowOrientationPropertyName) {
             //property was set, does not matter what value
             if (property(FollowsCurrentApplicationWindowOrientationPropertyName).isValid()) {
@@ -1507,7 +1513,6 @@ bool MWindow::event(QEvent *event)
             }
         }
     }
-#ifdef Q_WS_X11
     else if (event->type() == QEvent::WinIdChange) {
         d->setMeegoX11Properties();
     }
