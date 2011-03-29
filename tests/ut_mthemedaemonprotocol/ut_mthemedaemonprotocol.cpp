@@ -64,52 +64,6 @@ void Ut_MThemedaemonProtocol::cleanupTestCase()
 {
 }
 
-void Ut_MThemedaemonProtocol::streamQString_data()
-{
-    QTest::addColumn<QString>("string");
-
-    QTest::newRow("empty") << QString();
-    QTest::newRow("non-empty") << QString("abc");
-}
-
-void Ut_MThemedaemonProtocol::streamQString()
-{
-    QFETCH(QString, string);
-
-    stream << string;
-    buffer.seek(0);
-    QVERIFY(buffer.bytesAvailable() > 0);
-
-    QString string2 = readQString(stream);
-    verifyStreamIsEmpty();
-
-    QCOMPARE(string2, string);
-}
-
-void Ut_MThemedaemonProtocol::streamQStringList_data()
-{
-    QTest::addColumn<QStringList>("stringList");
-
-    QTest::newRow("empty") << QStringList();
-    QStringList list;
-    list << QString("abc") << QString("def") << QString();
-    QTest::newRow("non-empty") << list;
-}
-
-void Ut_MThemedaemonProtocol::streamQStringList()
-{
-    QFETCH(QStringList, stringList);
-
-    stream << stringList;
-    buffer.seek(0);
-    QVERIFY(buffer.bytesAvailable() > 0);
-
-    QStringList stringList2 = readQStringList(stream);
-    verifyStreamIsEmpty();
-
-    QCOMPARE(stringList2, stringList);
-}
-
 void Ut_MThemedaemonProtocol::streamPixmapId_data()
 {
     QTest::addColumn<QString>("imageId");
