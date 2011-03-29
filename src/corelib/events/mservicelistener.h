@@ -23,6 +23,9 @@
 #include <QDBusConnection>
 #include <QDBusServiceWatcher>
 
+#include "mnamespace.h"
+#include "mexport.h"
+
 class QDBusPendingCallWatcher;
 
 //! \internal
@@ -58,7 +61,7 @@ class QDBusPendingCallWatcher;
   <tt>isServicePresent()</tt> can return false, even though the service
   is present.
 */
-class MServiceListener : public QDBusServiceWatcher
+class M_CORE_EXPORT MServiceListener : public QDBusServiceWatcher
 {
     Q_OBJECT
 public:
