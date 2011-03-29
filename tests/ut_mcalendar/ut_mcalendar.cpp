@@ -1402,6 +1402,40 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "14:31:00"
         << "14:31:00 UTC+3.00"
         << "14:31:00 Itä-Euroopan kesäaika";
+    QTest::newRow("2010-02-28_en_GB_Gregorian Helsinki Summertime switch")
+        << QDateTime(QDate(2011, 3, 27), QTime(3, 01, 00))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_GB@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "27/03/2011"
+        << "27 Mar 2011"
+        << "27 March 2011"
+        << "Sunday, 27 March 2011"
+        << "4:01"
+        << "4:01:00"
+        << "4:01:00 EEST"
+        << "4:01:00 Eastern European Summer Time";
+    QTest::newRow("2010-02-28_en_GB_Gregorian Berlin Summertime switch")
+        << QDateTime(QDate(2011, 3, 27), QTime(2, 01, 00))
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_GB@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Berlin"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "27/03/2011"
+        << "27 Mar 2011"
+        << "27 March 2011"
+        << "Sunday, 27 March 2011"
+        << "3:01"
+        << "3:01:00"
+        << "3:01:00 CEST"
+        << "3:01:00 Central European Summer Time";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime()
