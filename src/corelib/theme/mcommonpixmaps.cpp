@@ -27,6 +27,32 @@
 
 using namespace M::MThemeDaemonProtocol;
 
+namespace {
+    // before loading one item from the queue the cpu usage must
+    // be below the given percentage
+    const int maximumCpuUsageBeforeLoadingOneItem = 30;
+
+    // when the cpu has been busy wait that many milliseconds before
+    // doing the next check
+    const int delayBeforeLoadingNextItemWhenBusy = 1000;
+
+    // when the cpu was idle (we loaded an item) wait that many milliseconds
+    // before doing the next check
+    const int delayBeforeLoadingNextItemWhenIdle = 100;
+
+    // this one is a tradeof between the time needed to load all pixmaps and
+    // increased cpu usage
+    const int numberOfPixmapsToLoadAtOnce = 5;
+
+    // before sending the most used pixmaps the device should be pretty
+    // idle as this wakes up all processes connected to the themedaemon
+    const int maximumCpuUsageBeforeSendingMostUsed = 10;
+
+    // check the cpu usage for that many seconds before deciding if
+    // a most used package can be sent
+    const int delayBeforeSendingMostUsed = 5000;
+}
+
 
 #define VERSION(major, minor) ((major << 16) | minor)
 const unsigned int PRELOAD_FILE_VERSION = VERSION(0, 1);
@@ -102,7 +128,7 @@ void MCommonPixmaps::load()
     }
 
     if (!toLoadList.isEmpty()) {
-        cpuMonitor.start(2000);
+        cpuMonitor.start(delayBeforeLoadingNextItemWhenBusy);
     }
 
     file.close();
@@ -136,9 +162,8 @@ void MCommonPixmaps::loadOne()
     // stop the timer, so we can adjust the frequency depending on the usage
     cpuMonitor.stop();
 
-    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < 30)) {
-        const int batchSize = 5;
-        for (int i = 0; i < batchSize; ++i) {
+    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < maximumCpuUsageBeforeLoadingOneItem)) {
+        for (int i = 0; i < numberOfPixmapsToLoadAtOnce; ++i) {
             if (!toLoadList.isEmpty()) {
                 PixmapIdentifier id = *toLoadList.begin();
                 toLoadList.erase(toLoadList.begin());
@@ -157,17 +182,17 @@ void MCommonPixmaps::loadOne()
         }
         if (!toLoadList.isEmpty()) {
             // there's still items in the list, so start the timer with small delay
-            cpuMonitor.start(100);
+            cpuMonitor.start(delayBeforeLoadingNextItemWhenIdle);
         } else {
             if (toLoadList.isEmpty()) {
                 disconnect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), this, SLOT(loadOne()));
                 connect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), SLOT(updateClientsAboutMostUsed()));
-                cpuMonitor.start(5000);
+                cpuMonitor.start(delayBeforeSendingMostUsed);
             }
         }
     } else {
         // the cpu usage was too high, so start start the timer with longer delay
-        cpuMonitor.start(1000);
+        cpuMonitor.start(delayBeforeLoadingNextItemWhenBusy);
     }
 }
 
@@ -175,13 +200,13 @@ void MCommonPixmaps::updateClientsAboutMostUsed()
 {
     cpuMonitor.stop();
     // only wakeup all clients if the device is idle
-    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < 10)) {
+    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < maximumCpuUsageBeforeSendingMostUsed)) {
         MostUsedPixmaps mostUsed;
         mostUsed.addedHandles = mostUsedPixmapHandles();
         emit mostUsedPixmapsChanged(mostUsed);
         disconnect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), this, SLOT(updateClientsAboutMostUsed()));
     } else {
-        cpuMonitor.start(5000);
+        cpuMonitor.start(delayBeforeSendingMostUsed);
     }
 }
 
