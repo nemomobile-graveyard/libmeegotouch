@@ -2429,10 +2429,10 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     // get and remove the current selection if there are preedit string or commit string
     const bool wasSelecting = hasSelectedText();
-    QTextDocumentFragment selectedFragment = d->cursor()->selection();
+    const QTextDocumentFragment selectedFragment = d->cursor()->selection();
     int selectionStart = -1;
 
-    if (wasSelecting == true && (!preedit.isEmpty() || !commitString.isEmpty())) {
+    if (wasSelecting && (!preedit.isEmpty() || !commitString.isEmpty())) {
         selectionStart = d->cursor()->selectionStart();
         d->cursor()->removeSelectedText();
         emitTextChanged = true;
@@ -2470,16 +2470,14 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         }
     }
 
-    if (d->editActive == false &&
-            echoMode() == MTextEditModel::PasswordEchoOnEdit &&
-            (commitString.isEmpty() == false || preedit.isEmpty() == false)) {
+    if (!d->editActive
+        && echoMode() == MTextEditModel::PasswordEchoOnEdit
+        && (!commitString.isEmpty() || !preedit.isEmpty())) {
         // in this mode, clear the contents before starting editing and doing new input
         document()->clear();
     }
 
     d->editActive = true;
-
-    bool insertionSuccess = false;
 
     if (event->replacementLength()) {
         emitTextChanged = true;
@@ -2512,13 +2510,15 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         d->cursor()->setPosition(d->cursor()->position() + event->replacementStart());
     }
 
+    bool insertionSuccess = false;
+
     // append possible commit string
-    if (commitString.isEmpty() == false) {
+    if (!commitString.isEmpty()) {
         d->removePreedit();
         insertionSuccess = d->doTextInsert(commitString, true);
         emitTextChanged = emitTextChanged || wasPreediting || insertionSuccess;
 
-        if (insertionSuccess == false && wasSelecting == true) {
+        if (!insertionSuccess && wasSelecting) {
             // validation failed, put the old selection back
             d->cursor()->setPosition(selectionStart, QTextCursor::KeepAnchor);
             d->cursor()->removeSelectedText();
@@ -2565,10 +2565,8 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     // rationale: max length commonly used without word correction so keyboards
     // do input character at a time. commonly cannot know how much space preedit would
     // use when committed, but full entry can be known not to accept anything.
-    const bool atMaxLength = ((maxLength() >= 0)
-                              && (d->realCharacterCount() == maxLength()));
-
     if (!preedit.isEmpty()) {
+        const bool atMaxLength((maxLength() >= 0) && (d->realCharacterCount() == maxLength()));
         if (!atMaxLength) {
             emitTextChanged = emitTextChanged || !wasPreediting || (d->cursor()->selectedText() != preedit);
             d->setPreeditText(preedit, attributes);
