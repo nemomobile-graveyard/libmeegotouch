@@ -65,6 +65,7 @@ MBubbleItemViewPrivate::MBubbleItemViewPrivate()
     messageComposition->setWordWrap(true);
     messageComposition->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     messageComposition->setAlignment(Qt::AlignLeft);
+    messageComposition->setTextFormat(Qt::RichText);
 }
 
 MBubbleItemViewPrivate::~MBubbleItemViewPrivate()
@@ -225,21 +226,25 @@ void MBubbleItemViewPrivate::updateMessageComposition()
 {
     Q_Q(MBubbleItemView);
 
-    QString senderName = q->model()->senderName();
-    QFont boldFontForSendername( messageComposition->font() );
-    boldFontForSendername.setBold(true);
-    QFontMetrics fontMetrics(boldFontForSendername);
+    if (controller->messageType() == MBubbleItem::Incoming) {
+        QString senderName = q->model()->senderName();
+        if (senderName.isEmpty()) {
+            messageComposition->setText(q->model()->message());
+        } else {
+            QFont boldFontForSendername( messageComposition->font() );
+            boldFontForSendername.setBold(true);
+            QFontMetrics fontMetrics(boldFontForSendername);
 
-    if (fontMetrics.width(senderName) > messageComposition->size().width())
-        senderName = fontMetrics.elidedText(senderName, Qt::ElideRight,
-                                            messageComposition->size().width()
-                                            - fontMetrics.size( Qt::TextSingleLine, "...:" ).width()
-                                            );
+            if (fontMetrics.width(senderName) > messageComposition->size().width())
+                senderName = fontMetrics.elidedText(senderName, Qt::ElideRight,
+                                                    messageComposition->size().width()
+                                                    - fontMetrics.size( Qt::TextSingleLine, "...:" ).width()
+                                                    );
 
-    if (controller->messageType() == MBubbleItem::Incoming)
-        messageComposition->setText( "<b>" + senderName + "</b>: " + q->model()->message());
-    else if (controller->messageType() == MBubbleItem::Outgoing)
-        messageComposition->setText(q->model()->message() + "<b></b>");
+            messageComposition->setText( "<b>" + senderName + "</b>: " + q->model()->message());
+        }
+    } else if (controller->messageType() == MBubbleItem::Outgoing)
+        messageComposition->setText(q->model()->message());
 
 }
 MBubbleItemView::MBubbleItemView(MBubbleItem *controller)
