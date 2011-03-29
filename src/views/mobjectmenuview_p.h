@@ -52,6 +52,8 @@ public:
     void updateIcon();
     void updateTitleAreaVisibility();
 
+    void updateActionViewportSize();
+
     QHash<MAction *, MButton *> buttons;
     QList<QPair<int, MAction *> > delayedActionEvents;
 #ifdef HAVE_CONTENTACTION

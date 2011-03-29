@@ -149,6 +149,18 @@ void MObjectMenuViewPrivate::updateTitleAreaVisibility()
     }
 }
 
+void MObjectMenuViewPrivate::updateActionViewportSize()
+{
+    Q_Q(MObjectMenuView);
+
+    //viewport doesnt update its size without this
+    actionViewport->setWidget(actionWidget);
+    actionViewport->updateGeometry();
+
+    //force scene window to update it's size
+    emit q->geometryAttributesChanged();
+}
+
 
 MObjectMenuView::MObjectMenuView(MObjectMenu *controller) :
     MSceneWindowView(controller),
@@ -227,8 +239,7 @@ void MObjectMenuView::actionAdded(MAction *action)
 
             d->buttons.insert(action, button);
 
-            //viewport doesnt update its size without this
-            d->actionViewport->setWidget(d->actionWidget);
+            d->updateActionViewportSize();
         }
     } else {
         d->delayedActionEvents.append(qMakePair((int)QEvent::ActionAdded, action));
@@ -246,6 +257,7 @@ void MObjectMenuView::actionRemoved(MAction *action)
             d->buttons.remove(action);
             delete button;
         }
+        d->updateActionViewportSize();
     }
     else {
         d->delayedActionEvents.append(qMakePair((int)QEvent::ActionRemoved, action));
