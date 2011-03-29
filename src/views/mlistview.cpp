@@ -121,7 +121,8 @@ void MListView::updateData(const QList<const char *>& modifications)
         } else if (member == MListModel::SelectionModel) {
             connectSelectionModel();
         } else if (member == MListModel::ScrollToIndex) {
-            scrollTo(model()->scrollToIndex(), static_cast<MList::ScrollHint>(model()->scrollHint()),
+            scrollTo(model()->scrollToIndex(),
+                     static_cast<MList::ScrollHint>(model()->scrollHint()),
                      static_cast<MList::AnimationMode>(model()->animationMode()));
         } else if (member == MListModel::LongTap) {
             longTap(model()->longTap());
@@ -199,15 +200,7 @@ void MListView::setGeometry(const QRectF &rect)
         d_ptr->updateSeparatorSize();
         relayoutItemsInViewportRect();
 
-        QModelIndex index = model()->scrollToIndex();
-        if (index.isValid()) {
-            if (model()->itemModel() &&
-                    model()->itemModel()->hasIndex(index.row(), index.column(), index.parent()) &&
-                    index.model() == model()->itemModel())
-                d_ptr->scrollToLastIndex();
-            else
-                model()->setScrollToIndex(QModelIndex());
-        }
+        d_ptr->scrollToLastIndex();
     }
 
     MWidgetView::setGeometry(rect);
@@ -325,6 +318,7 @@ void MListView::layoutChanged()
 
         updateGeometry();
         d_ptr->clearVisibleOnRelayout = true;
+        d_ptr->lastScrolledToFlatRow = -1;
     }
 }
 
@@ -361,8 +355,17 @@ void MListView::itemClick()
 void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint, MList::AnimationMode mode)
 {
     if (index.isValid()) {
+        int row = d_ptr->indexToFlatRow(index);
+        scrollTo(row, hint, mode);
+    }
+}
+
+void MListView::scrollTo(int row, MList::ScrollHint hint, MList::AnimationMode mode)
+{
+    if (row >= 0) {
+        d_ptr->lastScrolledToFlatRow = row;
         if (d_ptr->pannableViewport) {
-            QPointF targetPosition = d_ptr->locateScrollToPosition(index, hint);
+            QPointF targetPosition = d_ptr->locateScrollToPosition(row, hint);
 
             if (targetPosition != d_ptr->pannableViewport->position())
                 d_ptr->scrollToPos(targetPosition, mode);

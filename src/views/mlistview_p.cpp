@@ -60,6 +60,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     clearVisibleOnRelayout = false;
 
     scrollToAnimation = new QPropertyAnimation(this);
+    lastScrolledToFlatRow = -1;
     isDeleted = false;
 
     itemDeletionAnimation = NULL;
@@ -304,10 +305,8 @@ void MListViewPrivate::viewportRectChanged(const QRectF &viewportRect)
 
         if (!moving) {
             moving = true;
-            controllerModel->beginTransaction();
             controllerModel->setListIsMoving(true);
-            controllerModel->setScrollToIndex(QModelIndex());
-            controllerModel->commitTransaction();
+            lastScrolledToFlatRow = -1;
         }
 
         oldViewportRectPosition = viewportRect.topLeft();
@@ -663,12 +662,12 @@ void MListViewPrivate::drawHorizontalSeparator(int row, QPainter *painter, const
     painter->translate(-pos.x(), -pos.y());
 }
 
-QPointF MListViewPrivate::locateScrollToPosition(const QModelIndex &index, MList::ScrollHint hint)
+QPointF MListViewPrivate::locateScrollToPosition(int row, MList::ScrollHint hint)
 {
     if (!pannableViewport)
         return QPointF(0,0);
 
-    int cellPosition = locatePosOfItem(index);
+    int cellPosition = locatePosOfItem(row);
     QPointF targetPosition = pannableViewport->position();
 
     qreal pannableViewportHeight = pannableViewport->boundingRect().height() - listOffset.y();
@@ -721,8 +720,8 @@ void MListViewPrivate::_q_relayoutItemsIfNeeded()
 void MListViewPrivate::updateScrollToTargetPosition()
 {
     if (scrollToAnimation->state() == QPropertyAnimation::Running &&
-        controllerModel->scrollToIndex().isValid()) {
-        QPointF targetPosition = locateScrollToPosition(controllerModel->scrollToIndex(),
+            lastScrolledToFlatRow >= 0) {
+        QPointF targetPosition = locateScrollToPosition(lastScrolledToFlatRow,
                                                         static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
         if (targetPosition != scrollToAnimation->endValue().toPointF()) {
             if (targetPosition.y() > pannableViewport->position().y())
@@ -755,7 +754,7 @@ void MListViewPrivate::scrollToLastIndex()
     if (isDeleted)
         return;
 
-    q_ptr->scrollTo(controllerModel->scrollToIndex(),
+    q_ptr->scrollTo(lastScrolledToFlatRow,
                     static_cast<MList::ScrollHint>(controllerModel->scrollHint()),
                     static_cast<MList::AnimationMode>(controllerModel->animationMode()));
 }

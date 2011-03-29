@@ -108,7 +108,7 @@ public:
 
     void drawHorizontalSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
-    QPointF locateScrollToPosition(const QModelIndex &index, MList::ScrollHint hint);
+    QPointF locateScrollToPosition(int row, MList::ScrollHint hint);
     void updateScrollToTargetPosition();
 
     void scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode);
@@ -222,6 +222,7 @@ public:
 
     // Scroll animation
     QPropertyAnimation *scrollToAnimation;
+    int lastScrolledToFlatRow;
 
     // Item remove animations
     MBasicListItemDeletionAnimation* itemDeletionAnimation;
