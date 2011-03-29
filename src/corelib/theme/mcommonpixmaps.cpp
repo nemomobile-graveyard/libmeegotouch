@@ -187,7 +187,6 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
 
     // pixmap has higher request count value than the current minimum for cache?
     if (requestCount.value() > minRequestsForCache && !mostUsedPixmaps.contains(id)) {
-
         // this pixmap might end up in mostUsedPixmaps list
 
         // check if there's still room for this pixmap
@@ -198,9 +197,7 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
 
             MostUsedPixmaps packet;
             packet.addedHandles.append(PixmapHandle(id, handle));
-            if (toLoadList.isEmpty()) {
-                emit mostUsedPixmapsChanged(packet);
-            }
+
             return;
         }
 
