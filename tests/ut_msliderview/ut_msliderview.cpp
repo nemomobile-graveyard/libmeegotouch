@@ -96,6 +96,7 @@ void Ut_MSliderView::sliderResize()
 void Ut_MSliderView::sliderGrooveMargin()
 {
     MSliderGroove *groove = m_subject->d_func()->sliderGroove;
+    qreal w = groove->sliderHandle->rect().width();
 
     // initial dimensions
     m_seekbar->setOrientation(Qt::Horizontal);
@@ -109,17 +110,23 @@ void Ut_MSliderView::sliderGrooveMargin()
 
         qreal coord(0.0);
 
-        coord = groove->valueToScreenCoordinate(0);
-        // check that the coordinate is groove->grooveMargin away from the left edge
-        QCOMPARE(coord, groove->grooveMargin);
+        m_seekbar->setValue(0);
+        groove->updateHandlePos();
+        coord = groove->sliderHandle->pos().x();
+        // the left edge of the handle matches the left edge of the slider
+        QCOMPARE(coord, 0.0);
 
-        // center position is always the same, regardless of groove margin
-        coord = groove->valueToScreenCoordinate(50);
-        QCOMPARE(coord, groove->geometry().width() / 2);
+        // the centre of the handle matches the centre of the slider
+        m_seekbar->setValue(50);
+        groove->updateHandlePos();
+        coord = groove->sliderHandle->pos().x();
+        QCOMPARE(coord + w/2.0, groove->geometry().width() / 2.0);
 
-        // check that the coordinate is groove->grooveMargin away from the right edge
-        coord = groove->valueToScreenCoordinate(100);
-        QCOMPARE(coord, groove->geometry().width() - groove->grooveMargin);
+        // the right edge of the handle matches the right edge of the slider
+        m_seekbar->setValue(100);
+        groove->updateHandlePos();
+        coord = groove->sliderHandle->pos().x();
+        QCOMPARE(coord + w, groove->geometry().width());
     }
 }
 
