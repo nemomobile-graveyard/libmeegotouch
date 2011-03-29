@@ -309,7 +309,6 @@ void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *actio
         if (mAction) {
             button->setIconID(mAction->iconID());
             button->setIconVisible(iconsEnabled || isIconOnly(button));
-            button->setToggledIconID(mAction->toggledIconID());
         }
 
         updateViewAndStyling(button);
