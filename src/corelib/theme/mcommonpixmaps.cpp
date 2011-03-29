@@ -137,29 +137,30 @@ void MCommonPixmaps::loadOne()
     cpuMonitor.stop();
 
     if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < 30)) {
-        //check if there really is something to load
-        if (!toLoadList.isEmpty()) {
-            PixmapIdentifier id = *toLoadList.begin();
-            toLoadList.erase(toLoadList.begin());
-
-            ImageResource *resource = daemon->findImageResource(id.imageId);
-            if (resource) {
-                resource->fetchPixmap(id.size);
-            } else {
-                mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
-                requestCounts.remove(id);
-                mostUsedPixmaps.remove(id);
-            }
-
+        const int batchSize = 5;
+        for (int i = 0; i < batchSize; ++i) {
             if (!toLoadList.isEmpty()) {
-                // there's still items in the list, so start the timer with small delay
-                cpuMonitor.start(100);
-            }
+                PixmapIdentifier id = *toLoadList.begin();
+                toLoadList.erase(toLoadList.begin());
 
-            if (toLoadList.isEmpty() || toLoadList.count() % 100 == 0) {
+                ImageResource *resource = daemon->findImageResource(id.imageId);
+                if (resource) {
+                    resource->fetchPixmap(id.size);
+                } else {
+                    mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
+                    requestCounts.remove(id);
+                    mostUsedPixmaps.remove(id);
+                }
+            } else {
+                break;
+            }
+        }
+        if (!toLoadList.isEmpty()) {
+            // there's still items in the list, so start the timer with small delay
+            cpuMonitor.start(100);
+        } else {
+            if (toLoadList.isEmpty()) {
                 // notify clients when all common pixmaps have been loaded
-                // additional notify roughly every 100 loaded pixmaps. if the list is very large
-                // or the system not idle we might otherwise not keep apps up to date
                 MostUsedPixmaps mostUsed;
                 mostUsed.addedHandles = mostUsedPixmapHandles();
                 emit mostUsedPixmapsChanged(mostUsed);
@@ -184,10 +185,10 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
         resource->fetchPixmap(id.size);
     }
 
-    // does this pixmap has higher request count value than the current minimum for cache?
+    // pixmap has higher request count value than the current minimum for cache?
     if (requestCount.value() > minRequestsForCache && !mostUsedPixmaps.contains(id)) {
 
-        // this pixmap might end up to mostUsedPixmaps list
+        // this pixmap might end up in mostUsedPixmaps list
 
         // check if there's still room for this pixmap
         if (mostUsedPixmaps.count() < MCommonPixmaps::CacheSize) {
