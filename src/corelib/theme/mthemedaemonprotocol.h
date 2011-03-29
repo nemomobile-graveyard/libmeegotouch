@@ -278,11 +278,10 @@ namespace M
     }
 }
 
-QString readQString(QDataStream &stream);
-QStringList readQStringList(QDataStream &stream);
-
 QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::Packet &packet);
+void writePacketData(QDataStream &stream, const M::MThemeDaemonProtocol::Packet &packet);
 QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::Packet &packet);
+void readPacketData(QDataStream &stream, M::MThemeDaemonProtocol::Packet &packet);
 
 QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::PixmapHandle &handle);
 QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::PixmapHandle &handle);
