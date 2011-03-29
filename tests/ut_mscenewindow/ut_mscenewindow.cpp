@@ -308,6 +308,9 @@ void Ut_MSceneWindow::testFocusHandlingOnWindowBlocking()
     widget->setFlag(QGraphicsItem::ItemIsFocusable);
     widget->setFocus();
 
+    if (!window->scene()->isActive())
+        QSKIP("The scene is not active, focus will not be set...", SkipAll);
+
     QVERIFY(widget->hasFocus());
 
     qApp->sendEvent(m_subject, new QEvent(QEvent::WindowBlocked));
