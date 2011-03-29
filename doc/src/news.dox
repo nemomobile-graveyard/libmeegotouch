@@ -1,5 +1,10 @@
 /*! \page news What's new in MeeGo Touch
 
+\section v02099 0.20.99
+
+\subsection New
+- MMessageBox::iconPixmap property
+
 \section v02094 0.20.96
 
 \subsection New

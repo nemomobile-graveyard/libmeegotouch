@@ -41,6 +41,7 @@ private slots:
     void testConstructor();
     void testSetText();
     void testIconId();
+    void testIconPixmap();
     void testDismissEvent();
     void testSizeHint();
 

@@ -91,6 +91,15 @@ void Ut_MMessageBox::testIconId()
     QCOMPARE( m_subject->iconId(), iconId );
 }
 
+void Ut_MMessageBox::testIconPixmap()
+{
+    QPixmap pixmap(60, 60);
+    pixmap.fill();
+    QVERIFY(!pixmap.isNull());
+    m_subject->setIconPixmap(pixmap);
+    QCOMPARE(m_subject->iconPixmap(), pixmap);
+}
+
 void Ut_MMessageBox::testDismissEvent()
 {
     QSignalSpy spyChanged1(m_subject, SIGNAL(rejected()));

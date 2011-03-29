@@ -83,18 +83,41 @@ public:
 
     /*!
      * \brief Returns the dialog's icon id.
+     *
      * \return Icon being displayed in the message box.
-     * \sa setIconId()
+     * \sa setIconId(), iconPixmap(), setIconPixmap()
      */
     QString iconId() const;
 
     /*!
      * \brief Sets the dialog's icon.
      *
-     * \param iconId Logical icon id to be displayed as message box icon.
-     * \sa iconId()
+     * iconId() has a lower priority than iconPixmap(). If iconPixmap() contains
+     * a valid (non-null) Pixmap, the message box icon will be taken from it
+     * instead of from iconId().
+     *
+     * \param iconId Logical id of the icon to be displayed in the message box.
+     * \sa iconId(), iconPixmap(), setIconPixmap()
      */
     void setIconId(const QString &iconId);
+
+    /*!
+     * \brief Returns the dialog's icon pixmap.
+     *
+     * By default it returns a null pixmap.
+     *
+     * \return Pixmap of the icon to be displayed in the message box.
+     * \sa setIconPixmap(), iconId(), setIconId()
+     */
+    QPixmap iconPixmap() const;
+
+    /*!
+     * \brief Sets the dialog's icon pixmap.
+     *
+     * \param iconPixmap Pixmap of the icon to be used in the message box.
+     * \sa iconPixmap(), iconId(), setIconId()
+     */
+    void setIconPixmap(QPixmap &iconPixmap);
 
     /*!
      * \brief Destructor

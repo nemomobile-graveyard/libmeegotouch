@@ -206,3 +206,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/madvancedlistitem.cpp \
     $$WIDGETS_SRC_DIR/mtapstatemachine.cpp \
     $$WIDGETS_SRC_DIR/mbasicsheetheader.cpp \
+    $$WIDGETS_SRC_DIR/mmessageboxmodel.cpp \

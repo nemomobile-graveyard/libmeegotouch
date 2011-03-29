@@ -1,6 +1,6 @@
 /***************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
@@ -17,25 +17,15 @@
 **
 ****************************************************************************/
 
-#ifndef MMESSAGEBOXMODEL_H
-#define MMESSAGEBOXMODEL_H
+#include "mmessageboxmodel.h"
 
-#include <mdialogmodel.h>
-
-#include <QMessageBox>
-
-class M_CORE_EXPORT MMessageBoxModel : public MDialogModel
+const QPixmap& MMessageBoxModel::iconPixmap() const
 {
-    Q_OBJECT
-    M_MODEL_INTERNAL(MMessageBoxModel)
-public:
+    return _iconPixmap();
+}
 
-private:
-
-    M_MODEL_PROPERTY(QString, text, Text, true, QString())
-    M_MODEL_PROPERTY(QString, iconId, IconId, true, QString())
-    M_MODEL_PROPERTY(QPixmap, iconPixmap, IconPixmap, false, QPixmap())
-};
-
-#endif
-
+void MMessageBoxModel::setIconPixmap(const QPixmap &iconPixmap)
+{
+    _iconPixmap() = iconPixmap;
+    memberModified(IconPixmap);
+}

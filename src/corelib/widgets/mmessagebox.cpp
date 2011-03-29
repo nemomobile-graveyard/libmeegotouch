@@ -73,3 +73,13 @@ void MMessageBox::dismissEvent(MDismissEvent *event)
 {
     event->ignore();
 }
+
+QPixmap MMessageBox::iconPixmap() const
+{
+    return model()->iconPixmap();
+}
+
+void MMessageBox::setIconPixmap(QPixmap &iconPixmap)
+{
+    model()->setIconPixmap(iconPixmap);
+}

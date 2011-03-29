@@ -123,12 +123,15 @@ void MMessageBoxViewPrivate::updateIconWidget()
 {
     Q_Q(MMessageBoxView);
 
-    if (q->model()->iconId().isEmpty()) {
+    if (q->model()->iconId().isEmpty() && q->model()->iconPixmap().isNull()) {
         if (iconImage)
             delete iconImage;
         iconImage = NULL;
     } else {
-        iconImageWidget()->setImage(q->model()->iconId());
+        if (!q->model()->iconPixmap().isNull())
+            iconImageWidget()->setPixmap(q->model()->iconPixmap());
+        else
+            iconImageWidget()->setImage(q->model()->iconId());
     }
 }
 
@@ -180,7 +183,7 @@ void MMessageBoxView::updateData(const QList<const char *>& modifications)
     bool updateLayout = false;
     foreach(member, modifications) {
         if (member == MMessageBoxModel::Text || member == MMessageBoxModel::Title ||
-            member == MMessageBoxModel::IconId) {
+            member == MMessageBoxModel::IconId || member == MMessageBoxModel::IconPixmap) {
             updateLayout = true;
             break;
         }
