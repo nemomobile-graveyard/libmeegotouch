@@ -2506,6 +2506,10 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         d->cursor()->setPosition(start);
         d->cursor()->setPosition(end, QTextCursor::KeepAnchor);
         d->cursor()->removeSelectedText();
+    } else if (event->replacementStart()) {
+        emitTextChanged = true;
+        d->removePreedit();
+        d->cursor()->setPosition(d->cursor()->position() + event->replacementStart());
     }
 
     // append possible commit string
