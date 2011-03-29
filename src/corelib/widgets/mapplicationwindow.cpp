@@ -171,7 +171,6 @@ void MApplicationWindowPrivate::init()
         updateChainTaskData();
     }
 
-    addMStatusBarOverlayProperty();
     appendMApplicationWindowTypeProperty();
 #endif
 
@@ -272,19 +271,6 @@ void MApplicationWindowPrivate::setWindowChainedProperty( const Window &parentWi
 
     // for task switcher view stacking
     XSetTransientForHint(display, childWinId, parentWinId);
-}
-
-void MApplicationWindowPrivate::addMStatusBarOverlayProperty()
-{
-    Q_Q(MWindow);
-
-    Atom atomMStatusBarOverlay = XInternAtom(QX11Info::display(), "_DUI_STATUSBAR_OVERLAY", False);
-    long propertyData = 1;
-
-    XChangeProperty(QX11Info::display(), q->effectiveWinId(),
-            atomMStatusBarOverlay, XA_CARDINAL /* type */,
-            32 /* format, in bits */, PropModeReplace,
-            (unsigned char *) &propertyData, 1 /* number of elements */);
 }
 
 void MApplicationWindowPrivate::appendMApplicationWindowTypeProperty()

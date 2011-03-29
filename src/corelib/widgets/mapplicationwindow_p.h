@@ -137,7 +137,6 @@ public:
     void closeMenu();
     bool isMenuOpen() const;
 #ifdef Q_WS_X11
-    void addMStatusBarOverlayProperty();
     void appendMApplicationWindowTypeProperty();
 #endif
 
