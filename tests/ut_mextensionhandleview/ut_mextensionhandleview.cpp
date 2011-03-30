@@ -174,7 +174,17 @@ void MProgressIndicator::setUnknownDuration(bool run)
 bool progressIndicatorVisible = false;
 
 // QGraphicsItem stubs
+
 void QGraphicsItem::setVisible(bool visible)
+{
+    if (dynamic_cast<MProgressIndicator *>(this)) {
+        progressIndicatorVisible = visible;
+    }
+}
+
+// MWidget stubs
+
+void MWidget::setVisible(bool visible)
 {
     if (dynamic_cast<MProgressIndicator *>(this)) {
         progressIndicatorVisible = visible;
