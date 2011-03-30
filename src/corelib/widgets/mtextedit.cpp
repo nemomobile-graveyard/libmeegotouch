@@ -2537,7 +2537,25 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         d->setMode(MTextEditModel::EditModeBasic);
     }
 
-    QList<QInputMethodEvent::Attribute> attributes = event->attributes();
+    const QList<QInputMethodEvent::Attribute> attributes(event->attributes());
+
+    d->disableUpdateMicroFocus();
+    foreach (const QInputMethodEvent::Attribute &attribute, attributes) {
+        if (attribute.type == QInputMethodEvent::Selection) {
+            // attribute.start is related to block start, while setSelection() is
+            // using start which is related to plain text, need to do map.
+            const int absoluteStart(attribute.start + d->cursor()->block().position());
+            if (preedit.isEmpty()) {
+                setSelection(absoluteStart, attribute.length);
+            } else {
+                // We don't support pre-edit and selection at the same time; pre-edit
+                // wins, just set the cursor position in that case.  We remove the
+                // pre-edit because attribute.start is likely != 0.
+                d->removePreedit();
+                d->cursor()->setPosition(absoluteStart);
+            }
+        }
+    }
 
     // special case for omitting preedit if already at max length.
     // rationale: max length commonly used without word correction so keyboards
@@ -2553,16 +2571,6 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
             d->setMode(MTextEditModel::EditModeActive);
         } else {
             d->safeReset();
-        }
-    }
-
-    d->disableUpdateMicroFocus();
-    foreach (const QInputMethodEvent::Attribute &attribute, attributes) {
-        if (attribute.type == QInputMethodEvent::Selection) {
-            // attribute.start is related to block start, while setSelection() is
-            // using start which is related to plain text, need to do map.
-            int start = attribute.start + d->cursor()->block().position();
-            setSelection(start, attribute.length);
         }
     }
 
