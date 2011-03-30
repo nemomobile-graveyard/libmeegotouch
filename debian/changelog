@@ -1,8 +1,30 @@
 libmeegotouch (0.20.99-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#240932 - Setting disabled action to MBasicSheetHeader results in non-disabled button
+  * Fixes: Build break on mac.
+  * Fixes: NB#240412 - [TASK] Optimize MWidget::setVisible()
+  * Fixes: NB#235677 - List should not access the index model on geometry update.
+  * Fixes: NB#230649 - MSheet does not sets the focus to the first text field automatically.
+  * Fixes: NB#221636 - Floating fast scroll should allow tapping a list item
+  * Fixes: NB#239709 - Digital Clock in Clock Main view is clipped displaying characters or a portion of the Digits when the Region format is set to Singapore (English)
+  * Fixes: NB#225435 - [TASK] Mthemedaemon is waking up processes during incoming MMS and call
+  * Fixes: NB#238567 - System sheet doesn't use _NET_CLOSE_WINDOW to dismiss the window
+  * Fixes: NB#236369 - [TASK] Not possible to set QImage as icon for MMessageBox
+  * Fixes: Ut_MSceneWindow::testFocusHandlingOnWindowBlocking is not reliable.
+  * Fixes: NB#238558 - Boosted Widgets Gallery doesn't run
+  * Fixes: NB#240335 - Separator should be on the side of the list header widget.
+  * Fixes: NB#239544 - Coverity run on 23 March 2011
+  * Fixes: NB#236905 - Rounded Corners are sorted wrong on arabic LTR state
+  * Fixes: Failing Ut_MSliderView unit test
+  * Fixes: NB#238618 - Navigation bar displayed in the middle of the screen after given scenario
+  * Fixes: NB#222556 - Status area's pressed down state is not cancelled properly
+  * Fixes: NB#230681 - Boosted apps start in Portrait mode even though device is in landscape
+  * Fixes: NB#226005
+  * Fixes: NB#235411 - Portrait-locked application rotates in switcher
+  * Fixes: NB#231763 - Label Text is shown truncated in Text Entries Navigation in Portrait
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 25 Mar 2011 16:08:50 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 30 Mar 2011 13:50:10 +0300
 
 libmeegotouch (0.20.98-1) unstable; urgency=low
 
