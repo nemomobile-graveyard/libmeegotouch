@@ -68,6 +68,7 @@ void MBasicSheetHeaderViewPrivate::setPositiveAction(QAction *action)
             layout->addAnchor(positiveButton, Qt::AnchorVerticalCenter, layout, Qt::AnchorVerticalCenter);
         }
         positiveButton->setText(action->text());
+        positiveButton->setEnabled(action->isEnabled());
         positiveButton->connect(positiveButton, SIGNAL(clicked()), action, SLOT(trigger()));
         q->connect(action, SIGNAL(changed()), q, SLOT(_q_refreshPositiveAction()));
     } else {
@@ -89,6 +90,7 @@ void MBasicSheetHeaderViewPrivate::setNegativeAction(QAction *action)
             layout->addAnchor(negativeButton, Qt::AnchorVerticalCenter, layout, Qt::AnchorVerticalCenter);
         }
         negativeButton->setText(action->text());
+        negativeButton->setEnabled(action->isEnabled());
         negativeButton->connect(negativeButton, SIGNAL(clicked()), action, SLOT(trigger()));
         q->connect(action, SIGNAL(changed()), q, SLOT(_q_refreshNegativeAction()));
     } else {
