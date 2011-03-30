@@ -53,7 +53,6 @@ void ObjectMenuPage::createContent()
 {
     TemplatePage::createContent();
 
-
     containerFriends = new MContainer(centralWidget());
     QGraphicsLinearLayout *friendsLayout = new QGraphicsLinearLayout(containerFriends->centralWidget());
     friendsLayout->setContentsMargins(0, 0, 0, 0);

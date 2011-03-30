@@ -54,6 +54,7 @@ MContainerViewPrivate::MContainerViewPrivate()
     : controller(0)
     , headerLayout(0)
     , header(0)
+    , separator(0)
     , icon(0) // created only if needed
     , title(0)
     , text(0)
@@ -100,26 +101,29 @@ void MContainerViewPrivate::createHeader()
         header->setStyleName(q->style()->headerStyleName());
 
         headerLayout->setContentsMargins(0, 0, 0, 0);
+        headerLayout->setSpacing(0);
         header->setLayout(headerLayout);
 
-        title = new MLabel();
-        text = new MLabel();
+        separator = new MSeparator(header, Qt::Horizontal);
+        separator->setStyleName(q->style()->separatorStyleName());
+        separator->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred));
 
+        title = new MLabel(header);
         title->setObjectName("MContainerTitle");
         title->setStyleName(q->style()->titleStyleName());
-        text->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+
+        headerLayout->addItem(separator);
+        headerLayout->setAlignment(separator, Qt::AlignVCenter | Qt::AlignLeft);
+        separator->show();
 
         headerLayout->addItem(title);
-        headerLayout->setAlignment(title,  Qt::AlignVCenter | Qt::AlignLeft);
+        headerLayout->setAlignment(title,  Qt::AlignVCenter | Qt::AlignRight);
         title->show();
 
-        headerLayout->addItem(text);
-        headerLayout->setAlignment(text,  Qt::AlignVCenter | Qt::AlignRight);
-        text->show();
 
         // insert icon if available
         if (icon) {
-            headerLayout->insertItem(0, icon);
+            headerLayout->insertItem(1, icon);
             headerLayout->setAlignment(icon,  Qt::AlignVCenter | Qt::AlignLeft);
             icon->show();
         }
@@ -154,8 +158,23 @@ void MContainerViewPrivate::removeHeader()
         title = 0;
         text = 0;
         icon = 0;
+        separator = 0;
         progressIndicator = 0;
         headerLayout = 0;
+    }
+}
+
+void MContainerViewPrivate::setupTextLabel()
+{
+    if (!text)
+        text = new MLabel();
+
+    text->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+
+    if (header) {
+        headerLayout->addItem(text);
+        headerLayout->setAlignment(text,  Qt::AlignVCenter | Qt::AlignRight);
+        text->show();
     }
 }
 
@@ -173,7 +192,7 @@ void MContainerViewPrivate::setupIcon(const QSize &size)
 
     // insert it if header is available
     if (header) {
-        headerLayout->insertItem(0, icon);
+        headerLayout->insertItem(1, icon);
         headerLayout->setAlignment(icon,  Qt::AlignVCenter | Qt::AlignLeft);
         icon->show();
     }
@@ -193,7 +212,7 @@ void MContainerViewPrivate::createProgressIndicator()
 void MContainerViewPrivate::layoutProgressIndicator()
 {
     if (header) {
-        headerLayout->addItem(progressIndicator);
+        headerLayout->insertItem(1, progressIndicator);
         headerLayout->setAlignment(progressIndicator,  Qt::AlignVCenter | Qt::AlignRight);
         progressIndicator->show();
     }
@@ -250,6 +269,10 @@ void MContainerView::applyStyle()
 
     MWidgetView::applyStyle();
 
+    if (d->separator) {
+        d->separator->setStyleName(style()->separatorStyleName());
+    }
+
     if (d->title) {
         d->title->setStyleName(style()->titleStyleName());
     }
@@ -285,7 +308,12 @@ void MContainerView::updateData(const QList<const char *>& modifications)
 
         // update labels
         d->title->setText(model->title());
-        d->text->setText(model->text());
+
+        // create the text label if necessary
+        if (!model->text().isEmpty()) {
+            d->setupTextLabel();
+            d->text->setText(model->text());
+        }
 
         // make sure the icon is present if headerVisible() changed at runtime
         if (!model->icon().isEmpty())
@@ -348,7 +376,8 @@ void MContainerView::setupModel()
         QObject::connect(d->header, SIGNAL(released()), this, SLOT(headerReleased()));
 
         d->title->setText(model()->title());
-        d->text->setText(model()->text());
+        if (!model()->text().isEmpty())
+            d->text->setText(model()->text());
 
         // create icon if it is set to be shown by the model
         if (!model()->icon().isEmpty())

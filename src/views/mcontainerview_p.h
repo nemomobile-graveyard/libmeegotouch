@@ -51,11 +51,14 @@ public:
     void createProgressIndicator();
     void layoutProgressIndicator();
 
+    void setupTextLabel();
+
     // layout for the header component of the container
     QGraphicsLinearLayout *headerLayout;
 
     // widgets for the header
     MContainerHeader *header;
+    MSeparator *separator;
     MImageWidget *icon;
     MLabel  *title;
     MLabel  *text;
