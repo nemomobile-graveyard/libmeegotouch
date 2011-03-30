@@ -50,6 +50,10 @@ private slots:
     void benchmarkAllLanguageEndonym();
     void benchmarkSingleCountryEndonym();
     void benchmarkAllCountryEndonym();
+    void benchmarkFormatNumberQLongLongArabic();
+    void benchmarkFormatNumberQLongLongWestern();
+    void benchmarkFormatNumberDoubleArabic();
+    void benchmarkFormatNumberDoubleWestern();
 #endif
 };
 

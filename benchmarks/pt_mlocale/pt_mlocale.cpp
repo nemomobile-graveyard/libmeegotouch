@@ -19,6 +19,8 @@
 
 #include "pt_mlocale.h"
 
+#define VERBOSE_OUTPUT
+
 void Pt_MLocale::initTestCase()
 {
     static int argc = 0;
@@ -133,6 +135,110 @@ void Pt_MLocale::benchmarkAllCountryEndonym()
 #endif
             locale.countryEndonym();
         }
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkFormatNumberQLongLongArabic()
+{
+    QString localeName("ar");
+    QString localeNameLcNumeric("ar_EG@numbers=arab");
+    qlonglong number = qlonglong(-1542678073);
+    QString formatted("‏١٬٥٤٢٬٦٧٨٬٠٧٣‏-");
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
+#if 0
+    QTextStream stream(stdout);
+    stream.setCodec("UTF-8");
+    stream << " localeName=" << localeName
+           << "\n localeNameLcNumeric=" << localeNameLcNumeric
+           << "\n number=" << number
+           << "\n locale.formatNumber(number)=" <<  locale.formatNumber(number)
+           << "\n formatted=" << formatted;
+    stream.flush();
+#endif
+    QCOMPARE(locale.formatNumber(number), formatted);
+    QBENCHMARK {
+        locale.formatNumber(number);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkFormatNumberQLongLongWestern()
+{
+    QString localeName("de_CH");
+    QString localeNameLcNumeric("de_CH");
+    qlonglong number = qlonglong(-1542678073);
+    QString formatted("-1'542'678'073");
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
+#if 0
+    QTextStream stream(stdout);
+    stream.setCodec("UTF-8");
+    stream << " localeName=" << localeName
+           << "\n localeNameLcNumeric=" << localeNameLcNumeric
+           << "\n number=" << number
+           << "\n locale.formatNumber(number)=" <<  locale.formatNumber(number)
+           << "\n formatted=" << formatted;
+    stream.flush();
+#endif
+    QCOMPARE(locale.formatNumber(number), formatted);
+    QBENCHMARK {
+        locale.formatNumber(number);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkFormatNumberDoubleArabic()
+{
+    QString localeName("ar");
+    QString localeNameLcNumeric("ar_EG@numbers=arab");
+    double number = double(-1234567.1234567);
+    QString formatted("‏١٬٢٣٤٬٥٦٧٫١٢٣‏-");
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
+#if 0
+    QTextStream stream(stdout);
+    stream.setCodec("UTF-8");
+    stream << " localeName=" << localeName
+           << "\n localeNameLcNumeric=" << localeNameLcNumeric
+           << "\n number=" << number
+           << "\n locale.formatNumber(number)=" <<  locale.formatNumber(number)
+           << "\n formatted=" << formatted;
+    stream.flush();
+#endif
+    QCOMPARE(locale.formatNumber(number), formatted);
+    QBENCHMARK {
+        locale.formatNumber(number);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void Pt_MLocale::benchmarkFormatNumberDoubleWestern()
+{
+    QString localeName("de_CH");
+    QString localeNameLcNumeric("de_CH");
+    double number = double(-1234567.1234567);
+    QString formatted("-1'234'567.123");
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
+#if 0
+    QTextStream stream(stdout);
+    stream.setCodec("UTF-8");
+    stream << " localeName=" << localeName
+           << "\n localeNameLcNumeric=" << localeNameLcNumeric
+           << "\n number=" << number
+           << "\n locale.formatNumber(number)=" <<  locale.formatNumber(number)
+           << "\n formatted=" << formatted;
+    stream.flush();
+#endif
+    QCOMPARE(locale.formatNumber(number), formatted);
+    QBENCHMARK {
+        locale.formatNumber(number);
     }
 }
 #endif
