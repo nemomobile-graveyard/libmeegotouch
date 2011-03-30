@@ -219,30 +219,36 @@ void MThemeDaemonServer::clientDataAvailable()
 
         // loop as long as the socket has some data left
         while (socket->bytesAvailable()) {
-
-            // read one packet from the socket
             Packet packet;
             stream >> packet;
-            // and check if it's a registration request
-            if (packet.type() != Packet::RequestRegistrationPacket) {
-                // reply error
+
+            if (packet.type() != Packet::ProtocolVersionPacket) {
                 stream << Packet(Packet::ErrorPacket, packet.sequenceNumber(),
-                                 new String("You must send registration packet before requesting anything else!"));
+                                 new String("You must send a protocol version packet before requesting anything else!"));
             } else {
-                // we got the registration packet so register the client, and continue normally
-                const QString clientName = static_cast<const String *>(packet.data())->string;
-                if (clientName.isEmpty()) {
+                stream << Packet(Packet::ProtocolVersionPacket, packet.sequenceNumber(),
+                                 new Number(M::MThemeDaemonProtocol::protocolVersion));
+
+                stream >> packet;
+                if (packet.type() != Packet::RequestRegistrationPacket) {
                     stream << Packet(Packet::ErrorPacket, packet.sequenceNumber(),
-                                     new String("The registration packet must provide a name for the client"));
+                                     new String("Protocol version package must be followed by registration packet!"));
                 } else {
-                    client = new MThemeDaemonClient(socket, clientName, daemon.themeInheritanceChain());
-                    registeredClients.insert(socket, client);
-                    daemon.addClient(client);
-                    client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
-                                               new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
-                    client->stream() << Packet(Packet::MostUsedPixmapsPacket, ++sequenceCounter,
-                                               new MostUsedPixmaps(daemon.mostUsedPixmaps.mostUsedPixmapHandles(), QList<PixmapIdentifier>()));
-                    break;
+                    // we got the registration packet so register the client, and continue normally
+                    const QString clientName = static_cast<const String *>(packet.data())->string;
+                    if (clientName.isEmpty()) {
+                        stream << Packet(Packet::ErrorPacket, packet.sequenceNumber(),
+                                         new String("The registration packet must provide a name for the client"));
+                    } else {
+                        client = new MThemeDaemonClient(socket, clientName, daemon.themeInheritanceChain());
+                        registeredClients.insert(socket, client);
+                        daemon.addClient(client);
+                        client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
+                                                   new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+                        client->stream() << Packet(Packet::MostUsedPixmapsPacket, ++sequenceCounter,
+                                                   new MostUsedPixmaps(daemon.mostUsedPixmaps.mostUsedPixmapHandles(), QList<PixmapIdentifier>()));
+                        break;
+                    }
                 }
             }
         }

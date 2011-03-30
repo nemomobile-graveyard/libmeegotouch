@@ -52,6 +52,7 @@ MRemoteThemeDaemon::MRemoteThemeDaemon(const QString &applicationName, int timeo
     const QString address = serverAddress.isEmpty() ? M::MThemeDaemonProtocol::ServerAddress : serverAddress;
     if (d->waitForServer(address, timeout)) {
         d->stream.setDevice(&d->socket);
+        d->negotiateProtocolVersion();
         registerApplicationName(applicationName);
     } else {
         mWarning("MRemoteThemeDaemon") << "Failed to connect to theme daemon (IPC)";
@@ -73,8 +74,8 @@ void MRemoteThemeDaemon::registerApplicationName(const QString &applicationName)
         d->themeInheritanceChain = info->themeInheritance;
         d->themeLibraryNames = info->themeLibraryNames;
     } else {
-        // TODO: print out warning, etc.
-    }    
+        d->handleUnexpectedPacket(reply);
+    }
 }
 
 MRemoteThemeDaemon::~MRemoteThemeDaemon()
@@ -131,6 +132,35 @@ bool MRemoteThemeDaemonPrivate::waitForServer(const QString &serverAddress, int 
 #else
         Sleep(1000);
 #endif
+    }
+}
+
+void MRemoteThemeDaemonPrivate::negotiateProtocolVersion() {
+    const quint64 seq = ++sequenceCounter;
+    stream << Packet(Packet::ProtocolVersionPacket, seq, new Number(M::MThemeDaemonProtocol::protocolVersion));
+    Packet reply = waitForPacket(seq);
+    if (reply.type() == Packet::ProtocolVersionPacket) {
+        const Number* protocolVersion = static_cast<const Number*>(reply.data());
+        if (protocolVersion->value != M::MThemeDaemonProtocol::protocolVersion) {
+            qCritical("Running themedaemon and this client do not support the same protocol version.\n"
+                      "Maybe you need to restart the themedaemon server or to upgrade your installation.\n"
+                      "Exiting.");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        handleUnexpectedPacket(reply);
+    }
+}
+
+void MRemoteThemeDaemonPrivate::handleUnexpectedPacket(const Packet& packet) {
+    if (packet.type() == Packet::ErrorPacket) {
+        const String *errorString = static_cast<const String*>(packet.data());
+        qCritical() << "Themedaemon replied with error packet:\n" <<
+                       errorString->string << "\nExiting.";
+        exit(EXIT_FAILURE);
+    } else {
+        qCritical() << "Received unexpected packet" << packet.type() << "from themedaemon. Exiting.";
+        exit(EXIT_FAILURE);
     }
 }
 

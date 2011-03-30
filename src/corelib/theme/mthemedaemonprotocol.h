@@ -33,6 +33,8 @@ namespace M
     namespace MThemeDaemonProtocol
     {
 
+        const qint32 protocolVersion = 1;
+
         extern const QString ServerAddress;
 
         struct PacketData {
@@ -48,10 +50,20 @@ namespace M
                 Unknown                             = 0,
 
                 // Packet which must be sent to daemon
-                // before asking anything else.
+                // after sending the protocol version and before
+                // doing any other communication
                 // The type of the data is String and should contain
                 // the name of the client.
                 RequestRegistrationPacket           = 1,
+
+                // Package sent to the themedaemon before doing any other
+                // communication. It contains a simple integer representing
+                // the ideally used protocol version.
+                // Themedaemon answers with the protocol version it will
+                // use if any further communication happens. It may be a different
+                // protocol version. If the client wants to continue it must use
+                // the protocol version sent by the themedaemon from now on.
+                ProtocolVersionPacket               = 2,
 
                 // Client tells the daemon that it will use a specific
                 // package. It does not expect an answer as it already
