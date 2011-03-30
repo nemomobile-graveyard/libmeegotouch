@@ -32,6 +32,7 @@ MPannableViewportLayout::MPannableViewportLayout(QGraphicsLayoutItem *parent)
 void MPannableViewportLayout::setPanningDirections(const Qt::Orientations &newDirections)
 {
     directions = newDirections;
+    invalidate();
 }
 
 Qt::Orientations MPannableViewportLayout::panningDirections() const
@@ -56,7 +57,7 @@ void MPannableViewportLayout::setPanningPosition(const QPointF &newPos)
 {
     if (newPos != panningPos) {
         panningPos = newPos;
-        invalidate();
+        pannedWidget->setPos(panningPos);
     }
 }
 
