@@ -226,6 +226,15 @@ public:
      * Returns if the chained ChainData stack is empty
      */
     static bool chainDataStackIsEmpty();
+
+    /**
+     * Returns the WindowId of the last chain parent.
+     * Make sure you check that there is chain task data
+     * available with " ! chainDataStackIsEmpty() " before
+     * calling this function. Returns 0 when there is no
+     * chain data available.
+     */
+    static WId lastChainParentWinId();
 #endif // Q_WS_X11
     //! \internal_end
 

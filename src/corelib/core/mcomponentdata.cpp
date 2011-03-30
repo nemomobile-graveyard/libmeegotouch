@@ -1396,6 +1396,16 @@ bool MComponentData::chainDataStackIsEmpty()
 
     return retVal;
 }
+
+WId MComponentData::lastChainParentWinId()
+{
+    if ( MComponentDataPrivate::chainData.isEmpty() )
+    {
+        return 0;
+    }
+
+    return MComponentDataPrivate::chainData.top().first;
+}
 #endif // Q_WS_X11
 
 
