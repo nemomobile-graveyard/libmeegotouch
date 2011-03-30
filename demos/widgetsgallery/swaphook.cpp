@@ -48,7 +48,7 @@ public:
 
 
 #ifdef EGL
-extern "C" EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
+extern "C" M_EXPORT EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
 {
     return SwapHook::instance()->d->eglSwapBuffers(dpy, surface);
 }
