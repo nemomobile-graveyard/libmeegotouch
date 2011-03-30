@@ -65,13 +65,17 @@ MToolBarViewPrivate::~MToolBarViewPrivate()
         delete buttonGroup;
         buttonGroup = NULL;
     }
+
+    landscapePolicy->removeAllWidgets();
+    portraitPolicy->removeAllWidgets();
+
     QHashIterator<QAction *, MWidget *> iterator(leasedWidgets);
     while (iterator.hasNext()) {
         iterator.next();
-
-        if (!releaseWidget(iterator.key(), iterator.value()))
-            delete iterator.value(); //Is this the right thing to do ?
+        releaseWidget(iterator.key(), iterator.value());
     }
+    leasedWidgets.clear();
+
     qDeleteAll(buttons);
     removedActionsButtons.clear();
     delete layout;

@@ -57,6 +57,11 @@ public:
     void removeWidget(const QGraphicsLayoutItem *item);
 
     /*!
+     * \brief Remove all widgets.
+     */
+    void removeAllWidgets();
+
+    /*!
      * \brief Check if there is room for new widget in indicated index.
      */
     bool roomForWidget(int widgetIndex, bool textEdit) const;

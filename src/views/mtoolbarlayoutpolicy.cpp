@@ -124,8 +124,13 @@ void MToolBarLayoutPolicy::removeWidgetAtPreservingSpacers(int widgetIndex)
     bool onlyItem = (widgetCount() == 1);
 
     MLinearLayoutPolicy::removeAt(policyIndex);
-    if (!onlyItem)
-        MLinearLayoutPolicy::removeAt(lastItem ? policyIndex-1 : policyIndex);
+    if (!onlyItem) {
+        //remove and delete spacer
+        int spacerIndex = lastItem ? policyIndex-1 : policyIndex;
+        QGraphicsLayoutItem *item = MLinearLayoutPolicy::itemAt(spacerIndex);
+        MLinearLayoutPolicy::removeAt(spacerIndex);
+        delete item;
+    }
 }
 
 bool MToolBarLayoutPolicy::roomForWidget(int widgetIndex, bool textEdit) const
@@ -172,6 +177,13 @@ int MToolBarLayoutPolicy::widgetIndexOf(const QGraphicsLayoutItem *item) const
 void MToolBarLayoutPolicy::removeWidget(const QGraphicsLayoutItem *item)
 {
     removeWidgetAt(widgetIndexOf(item));
+}
+
+void MToolBarLayoutPolicy::removeAllWidgets()
+{
+    for (int i = widgetCount()-1; i >= 0; i--) {
+        removeWidgetAtPreservingSpacers(i);
+    }
 }
 
 QGraphicsLayoutItem *MToolBarLayoutPolicy::widgetAt(int widgetIndex) const
