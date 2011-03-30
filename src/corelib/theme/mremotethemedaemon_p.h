@@ -34,6 +34,8 @@ public:
     QHash<M::MThemeDaemonProtocol::PixmapIdentifier, quint64> pixmapRequests;
     QHash<M::MThemeDaemonProtocol::PixmapIdentifier, MPixmapHandle> mostUsedPixmaps;
 
+    void negotiateProtocolVersion();
+    void handleUnexpectedPacket(const M::MThemeDaemonProtocol::Packet& packet);
     M::MThemeDaemonProtocol::Packet readOnePacket();
     void processOnePacket(const M::MThemeDaemonProtocol::Packet &packet);
     void connectionDataAvailable();
