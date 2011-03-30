@@ -1058,6 +1058,11 @@ void MApplicationWindowPrivate::_q_updateStyle()
 
 void MApplicationWindow::reinit()
 {
+    updateChainTaskData();
+}
+
+void MApplicationWindow::updateChainTaskData()
+{
     Q_D(MApplicationWindow);
     d->updateChainTaskData();
 }

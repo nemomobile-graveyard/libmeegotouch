@@ -134,6 +134,18 @@ public:
 #endif
 
     /*!
+     * This function updates the chain task data.
+     *
+     * Do not use this function unless you really know
+     * what you are doing !
+     *
+     * It is used to get the displaying of window animations
+     * and the displaying of chained tasks in the switcher
+     * view right.
+     */
+    void updateChainTaskData();
+
+    /*!
       Returns the style name of the application window.
      */
     QString styleName() const;
