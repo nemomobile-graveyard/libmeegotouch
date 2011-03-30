@@ -190,6 +190,7 @@ void Ut_MWidget::testShowHideSimple()
 
     widget->setGeometry(10, 10, 50, 50);
 
+    widget->hide();
     m_dummySlotCalled = false;
     connect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
     widget->show();
@@ -228,6 +229,7 @@ void Ut_MWidget::testShowHidePropagation()
     scene.addItem(topLevel);
     topLevel->setGeometry(10, 10, 50, 50);
 
+    topLevel->hide();
     m_dummySlotCalled = false;
     connect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
     topLevel->show();
