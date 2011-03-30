@@ -199,7 +199,6 @@ void MSheetPrivate::appearSystemwide(MSceneWindow::DeletionPolicy policy)
 
     if (standAloneWindow == 0) {
         standAloneWindow = new MWindow(new MSceneManager);
-        standAloneWindow->setProperty("followsCurrentApplicationWindowOrientation", 1);
         standAloneWindow->setRoundedCornersEnabled(true);
 
 #ifdef Q_WS_X11
