@@ -74,18 +74,18 @@ void Ft_Locales::testBug169305()
     // https://projects.maemo.org/bugzilla/show_bug.cgi?id=169305
     // and also:
     // https://projects.maemo.org/bugzilla/show_bug.cgi?id=184502
-    MLocale locale0("en_US");
+    MLocale locale0("en_US@layout-direction=auto");
     locale0.installTrCatalog("foo");
     MLocale::setDefault(locale0);
     QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("LTR"));
     QCOMPARE(qApp->layoutDirection(), Qt::LeftToRight);
-    MLocale locale1("ar_SA");
+    MLocale locale1("ar_SA@layout-direction=auto");
     locale1.installTrCatalog("foo");
     MLocale::setDefault(locale1);
     QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("RTL"));
     QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
     MLocale locale2;
-    QCOMPARE(locale2.name(), QString("ar_SA"));
+    QCOMPARE(locale2.name(), QString("ar_SA@layout-direction=auto"));
     locale2.installTrCatalog("foo");
     MLocale::setDefault(locale2);
     QCOMPARE(QApplication::tr("QT_LAYOUT_DIRECTION"), QString("RTL"));
@@ -487,29 +487,151 @@ void Ft_Locales::testMLocaleVariant()
 
 void Ft_Locales::testMLocaleTextDirection_data()
 {
-    QTest::addColumn<QString>("locale");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<int>("direction");
 
-    QTest::newRow("fi") << QString("fi") << (int) Qt::LeftToRight;
-    QTest::newRow("am") << QString("am") << (int) Qt::LeftToRight;
-    QTest::newRow("ar") << QString("ar") << (int) Qt::RightToLeft;
-    QTest::newRow("he") << QString("he") << (int) Qt::RightToLeft;
-    QTest::newRow("ur") << QString("ur") << (int) Qt::RightToLeft;
-    QTest::newRow("fa") << QString("fa") << (int) Qt::RightToLeft;
-    QTest::newRow("ps") << QString("ps") << (int) Qt::RightToLeft;
-    QTest::newRow("snd") << QString("snd_Arab_AF") << (int) Qt::RightToLeft;
-    QTest::newRow("snd") << QString("snd_Arab_AF_XXX") << (int) Qt::RightToLeft;
-    QTest::newRow("snd") << QString("snd_Deva_AF_XXX") << (int) Qt::LeftToRight;
+    QTest::newRow("fi")
+        << QString("fi")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("fi@layout-direction=auto")
+        << QString("fi@layout-direction=auto")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("fi@layout-direction=ltr")
+        << QString("fi@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("fi@layout-direction=rtl")
+        << QString("fi@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("am")
+        << QString("am")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("am@layout-direction=auto")
+        << QString("am@layout-direction=auto")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("am@layout-direction=ltr")
+        << QString("am@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("am@layout-direction=rtl")
+        << QString("am@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("ar")
+        << QString("ar")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("ar@layout-direction=auto")
+        << QString("ar@layout-direction=auto")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("ar@layout-direction=ltr")
+        << QString("ar@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("ar@layout-direction=rtl")
+        << QString("ar@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("he")
+        << QString("he")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("he@layout-direction=auto")
+        << QString("he@layout-direction=auto")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("he@layout-direction=ltr")
+        << QString("he@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("he@layout-direction=rtl")
+        << QString("he@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("ur")
+        << QString("ur")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("ur@layout-direction=auto")
+        << QString("ur@layout-direction=auto")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("ur@layout-direction=ltr")
+        << QString("ur@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("ur@layout-direction=rtl")
+        << QString("ur@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("fa")
+        << QString("fa")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("fa@layout-direction=auto")
+        << QString("fa@layout-direction=auto")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("fa@layout-direction=ltr")
+        << QString("fa@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("fa@layout-direction=rtl")
+        << QString("fa@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("ps")
+        << QString("ps")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("ps@layout-direction=auto")
+        << QString("ps@layout-direction=auto")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("ps@layout-direction=ltr")
+        << QString("ps@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("ps@layout-direction=rtl")
+        << QString("ps@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("snd_Arab_AF")
+        << QString("snd_Arab_AF")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("snd_Arab_AF@layout-direction=auto")
+        << QString("snd_Arab_AF@layout-direction=auto")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("snd_Arab_AF@layout-direction=ltr")
+        << QString("snd_Arab_AF@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("snd_Arab_AF@layout-direction=rtl")
+        << QString("snd_Arab_AF@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("snd_Arab_AF_XXX")
+        << QString("snd_Arab_AF_XXX")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("snd_Arab_AF_XXX@layout-direction=auto")
+        << QString("snd_Arab_AF_XXX@layout-direction=auto")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("snd_Arab_AF_XXX@layout-direction=ltr")
+        << QString("snd_Arab_AF_XXX@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("snd_Arab_AF_XXX@layout-direction=rtl")
+        << QString("snd_Arab_AF_XXX@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
+    QTest::newRow("snd")
+        << QString("snd_Deva_AF_XXX")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("snd_Deva_AF_XXX@layout-direction=auto")
+        << QString("snd_Deva_AF_XXX@layout-direction=auto")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("snd_Deva_AF_XXX@layout-direction=ltr")
+        << QString("snd_Deva_AF_XXX@layout-direction=ltr")
+        << (int) Qt::LeftToRight;
+    QTest::newRow("snd_Deva_AF_XXX@layout-direction=rtl")
+        << QString("snd_Deva_AF_XXX@layout-direction=rtl")
+        << (int) Qt::RightToLeft;
 }
 
 void Ft_Locales::testMLocaleTextDirection()
 {
-    QFETCH(QString, locale);
+    QFETCH(QString, localeName);
     QFETCH(int, direction);
 
-    MLocale *z = new MLocale(locale);
-    QCOMPARE((int)z->textDirection(), direction);
-    delete z;
+    MLocale defaultLocale("ar");
+    MLocale::setDefault(defaultLocale);
+    QCOMPARE(MLocale::defaultLayoutDirection(), Qt::LeftToRight);
+
+    MLocale locale(localeName);
+    QCOMPARE((int)locale.textDirection(), direction);
+    MLocale::setDefault(locale);
+    if(localeName.contains(QRegExp("@.*layout-direction=auto")))
+        QCOMPARE(MLocale::defaultLayoutDirection(), Qt::LayoutDirectionAuto);
+    else if(localeName.contains(QRegExp("@.*layout-direction=ltr")))
+        QCOMPARE(MLocale::defaultLayoutDirection(), Qt::LeftToRight);
+    else if(localeName.contains(QRegExp("@.*layout-direction=rtl")))
+        QCOMPARE(MLocale::defaultLayoutDirection(), Qt::RightToLeft);
+    else
+        QCOMPARE(MLocale::defaultLayoutDirection(), Qt::LeftToRight);
 }
 
 void Ft_Locales::testMLocaleConstructorWithParams_data()

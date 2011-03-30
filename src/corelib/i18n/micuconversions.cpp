@@ -79,6 +79,40 @@ icu::DateFormat::EStyle MIcuConversions::toEStyle(MLocale::TimeType timeType)
     return icu::DateFormat::kFull;
 }
 
+QString MIcuConversions::layoutDirectionToString(Qt::LayoutDirection layoutDirection)
+{
+    QString layoutDirectionName;
+    switch(layoutDirection) {
+    case Qt::LeftToRight:
+        layoutDirectionName = "ltr";
+        break;
+    case Qt::RightToLeft:
+        layoutDirectionName = "rtl";
+        break;
+    case Qt::LayoutDirectionAuto:
+    default:
+        layoutDirectionName = "auto";
+        break;
+    }
+    return layoutDirectionName;
+}
+
+Qt::LayoutDirection MIcuConversions::stringToLayoutDirection(QString layoutDirectionName)
+{
+    if(layoutDirectionName == "rtl")
+        // force layout direction to RTL
+        return Qt::RightToLeft;
+    else if(layoutDirectionName == "ltr")
+        // force layout direction to LTR
+        return Qt::LeftToRight;
+    else if(layoutDirectionName == "auto")
+        // determine layout direction from the locale
+        return Qt::LayoutDirectionAuto;
+    else
+        // no option means force layout direction to LTR:
+        return Qt::LeftToRight;
+}
+
 QString MIcuConversions::collationToString(MLocale::Collation coll)
 {
     QString collationName;
@@ -315,6 +349,19 @@ QString MIcuConversions::setOption(const QString &localeName, const QString &opt
         }
     }
     return newLocaleName;
+}
+
+Qt::LayoutDirection MIcuConversions::parseLayoutDirectionOption(const QString &localeName)
+{
+    return MIcuConversions::stringToLayoutDirection(
+        MIcuConversions::parseOption(localeName, "layout-direction"));
+}
+
+QString MIcuConversions::setLayoutDirectionOption(const QString &localeName, Qt::LayoutDirection layoutDirection)
+{
+    return MIcuConversions::setOption(
+        localeName, "layout-direction",
+        MIcuConversions::layoutDirectionToString(layoutDirection));
 }
 
 MLocale::CalendarType MIcuConversions::parseCalendarOption(const QString &localeName)

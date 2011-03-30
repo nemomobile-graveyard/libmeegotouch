@@ -512,7 +512,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     }
     MLocale::setDefault(systemLocale);
 
-    // MLocale::setDefault(locale) also sets the
+    // MLocale::setDefault(locale) may also set the
     // layoutDirection(). This overrides the effects of the -reverse
     // command line switch. Therefore, if the -reverse command line switch
     // was used, we have to set the RTL direction again here:

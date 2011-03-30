@@ -314,7 +314,6 @@ public:
      *   <td>collation=stroke;calendar=chinese</td>
      *   <td>Simplified Chinese with sorting via stroke-count and Chinese calendar</td>
      * </tr>
-     * </tr>
      * </table>
      *
      * \sa MLocale(QObject *parent)
@@ -841,7 +840,97 @@ public:
     /*!
      * \brief Returns the text direction of the locale
      *
+     * This function unfortunately has a confusing name, it is not the
+     * direction of a certain amount of text, which is detected by
+     * directionForText(const QString &text). For a purely Arabic text
+     * for example, directionForText() will always return
+     * Qt::RightToLeft no matter what the current locale is (it is a
+     * static function, thus independent of the current locale, the
+     * result only depends on th text given as an argument).
+     *
+     * This function here actually returns the <b>layout direction</b>
+     * for the current locale.
+     *
+     * The layout direction of the QApplication is set to what
+     * textDirection() returns for the system default locale
+     * (which can be set with setDefault(const MLocale &locale)).
+     *
+     * The layout direction returned here used to be Qt::RightToLeft
+     * for locales which use RTL scripts (e.g. Arabic, Hebrew, ...)
+     * and Qt::LeftToRight for locales which use LTR scripts (e.g.
+     * English, Chinese, Russian, ...)
+     *
+     * Now this has changed because it has been requested to disable
+     * layout reversal by default, therefore this function will
+     * <b>always</b> return Qt::LeftToRight by default now, even for
+     * locales with RTL scripts like Arabic or Hebrew.
+     *
+     * This new behaviour can be overridden by setting the option
+     * “layout-direction” in the full locale name.
+     * “layout-direction=rtl” forces right-to-left layout direction
+     * “layout-direction=ltr” forces left-to-right layout direction
+     * and “layout-direction=auto” sets the layout direction to the
+     * direction of the script used by the locale, i.e.
+     * “layout-direction=auto” reproduces the previous behaviour.
+     *
+     * Examples:
+     *
+     * <table border="1">
+     * <caption>
+     *   <big><b>
+     *      Examples for locale names and layout reversal behaviour
+     *   </b></big>
+     * </caption>
+     * <tr>
+     *   <th>Locale ID</th>
+     *   <th>textDirection()</th>
+     *   <th>defaultLayoutDirection()</th>
+     * </tr>
+     * <tr>
+     *   <td>ar_EG</td>
+     *   <td>Qt::LeftToRight</td>
+     *   <td>Qt::LeftToRight</td>
+     * </tr>
+     * <tr>
+     *   <td>ar_EG\@layout-direction=ltr</td>
+     *   <td>Qt::LeftToRight</td>
+     *   <td>Qt::LeftToRight</td>
+     * </tr>
+     * <tr>
+     *   <td>ar_EG\@layout-direction=rtl</td>
+     *   <td>Qt::RightToLeft</td>
+     *   <td>Qt::RightToLeft</td>
+     * </tr>
+     * <tr>
+     *   <td>ar_EG\@layout-direction=auto</td>
+     *   <td>Qt::RightToLeft</td>
+     *   <td>Qt::LayoutDirectionAuto</td>
+     * </tr>
+     * <tr>
+     *   <td>en_US</td>
+     *   <td>Qt::LeftToRight</td>
+     *   <td>Qt::LeftToRight</td>
+     * </tr>
+     * <tr>
+     *   <td>en_US\@layout-direction=ltr</td>
+     *   <td>Qt::LeftToRight</td>
+     *   <td>Qt::LeftToRight</td>
+     * </tr>
+     * <tr>
+     *   <td>en_US\@layout-direction=rtl</td>
+     *   <td>Qt::RightToLeft</td>
+     *   <td>Qt::RightToLeft</td>
+     * </tr>
+     * <tr>
+     *   <td>en_US\@layout-direction=auto</td>
+     *   <td>Qt::LeftToRight</td>
+     *   <td>Qt::LayoutDirectionAuto</td>
+     * </tr>
+     * </table>
+     *
+     * \sa defaultLayoutDirection()
      * \sa directionForText()
+     * \sa setDefault(const MLocale &locale)
      */
     Qt::LayoutDirection textDirection() const;
 
@@ -1759,8 +1848,24 @@ public:
      * detected as having a meaningful text direction.
      *
      * \sa textDirection() const
+     * \sa defaultLayoutDirection()
      */
     static Qt::LayoutDirection directionForText(const QString & text);
+
+    /*!
+     * \brief Static method to obtain the layout direction of the default locale
+     *
+     * This returns the layout direction of the system default locale,
+     * i.e. of the locale which has been set with setDefault().
+     *
+     * See the longer explanation at textDirection() for what layout
+     * direction is returned depending on the locale id.
+     *
+     * \sa textDirection() const
+     * \sa directionForText(const QString & text)
+     * \sa setDefault(const MLocale &locale)
+     */
+    static Qt::LayoutDirection defaultLayoutDirection();
 
 Q_SIGNALS:
     void settingsChanged();

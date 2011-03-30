@@ -101,7 +101,18 @@ void MLabelViewPrivate::autoSetTextDirection()
     Qt::LayoutDirection textDirection = model()->textDirection();
 
     if (textDirection == Qt::LayoutDirectionAuto) {
-        textDirection = MLocale::directionForText(model()->text()); // look at the text content
+        switch (MLocale::defaultLayoutDirection()) {
+        case Qt::LeftToRight:
+            textDirection = Qt::LeftToRight;
+            break;
+        case Qt::RightToLeft:
+            textDirection = Qt::RightToLeft;
+            break;
+        case Qt::LayoutDirectionAuto:
+        default:
+            textDirection = MLocale::directionForText(model()->text()); // look at the text content
+            break;
+        }
     }
     textOptions.setTextDirection(textDirection);
 

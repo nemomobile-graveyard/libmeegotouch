@@ -1517,6 +1517,8 @@ static QMutex defaultLocaleMutex;
 // The static default locale
 MLocale *MLocale::s_systemDefault = 0;
 
+static Qt::LayoutDirection _defaultLayoutDirection = Qt::LeftToRight;
+
 struct MStaticLocaleDestroyer {
     ~MStaticLocaleDestroyer() {
         delete MLocale::s_systemDefault; MLocale::s_systemDefault = 0;
@@ -1562,6 +1564,7 @@ void MLocale::setDefault(const MLocale &locale)
     QLocale::setDefault((s_systemDefault->d_ptr)->createQLocale(MLcNumeric));
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
+    _defaultLayoutDirection = MIcuConversions::parseLayoutDirectionOption(s_systemDefault->name());
 
     if (qobject_cast<MApplication *> (qApp))
         QObject::connect(s_systemDefault, SIGNAL(settingsChanged()),
@@ -3423,21 +3426,32 @@ QStringList MLocale::translationPaths()
     return MLocalePrivate::translationPaths;
 }
 
+Qt::LayoutDirection MLocale::defaultLayoutDirection()
+{
+    return _defaultLayoutDirection;
+}
+
 Qt::LayoutDirection MLocale::textDirection() const
 {
-    Qt::LayoutDirection dir = Qt::LeftToRight;
-
-    // Checking for the script "arab" is needed for
-    // locales where the language can be written in several scripts.
-    // Eg the Uyghur language can be written in Chinese, Cyrillic,
-    // or Arabic script.
-    if (script().contains("arab", Qt::CaseInsensitive))
-        dir = Qt::RightToLeft;
-    else if (!language().isEmpty()
-             && RtlLanguages.contains(language() + ':'))
-        dir = Qt::RightToLeft;
-
-    return dir;
+    Qt::LayoutDirection layoutDirectionOption =
+        MIcuConversions::parseLayoutDirectionOption(this->name());
+    if (layoutDirectionOption == Qt::LayoutDirectionAuto) {
+        // choose the layout direction automatically depending on the
+        // script used by the locale (old behaviour of this function):
+        //
+        // Checking for the script "arab" is needed for
+        // locales where the language can be written in several scripts.
+        // Eg the Uyghur language can be written in Chinese, Cyrillic,
+        // or Arabic script.
+        if (script().contains("arab", Qt::CaseInsensitive))
+            layoutDirectionOption = Qt::RightToLeft;
+        else if (!language().isEmpty()
+                 && RtlLanguages.contains(language() + ':'))
+            layoutDirectionOption = Qt::RightToLeft;
+        else
+            layoutDirectionOption = Qt::LeftToRight;
+    }
+    return layoutDirectionOption;
 }
 
 Qt::LayoutDirection MLocale::directionForText(const QString & text)
@@ -3525,6 +3539,7 @@ void MLocale::refreshSettings()
             // support in translations via %Ln, %L1, %L2, ...:
             QLocale::setDefault(d->createQLocale(MLcNumeric));
             qApp->setLayoutDirection(this->textDirection());
+            _defaultLayoutDirection = MIcuConversions::parseLayoutDirectionOption(s_systemDefault->name());
         }
         else {
             d->loadTrCatalogs();

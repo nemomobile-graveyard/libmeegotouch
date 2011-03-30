@@ -69,6 +69,22 @@ namespace MIcuConversions
     icu::DateFormat::EStyle toEStyle(MLocale::TimeType timeType);
 
     /*!
+     * \brief transforms Qt::LayoutDirection enum to string representation
+     *
+     * @param layoutDirection Qt::LayoutDirection enum
+     *
+     */
+    QString layoutDirectionToString(Qt::LayoutDirection layoutDirection);
+
+    /*!
+     * \brief transforms string representation of layout direction to Qt::LayoutDirection enum
+     *
+     * @param layoutDirectionName string representation of  Qt::LayoutDirection
+     *
+     */
+    Qt::LayoutDirection stringToLayoutDirection(QString layoutDirectionName);
+
+    /*!
      * \brief transforms MLocale::Collation enum to icu string representations
      *
      * @param coll MLocale::Collation enum
@@ -150,6 +166,9 @@ namespace MIcuConversions
 
     QString parseOption(const QString &localeName, const QString &option);
     QString setOption(const QString &localeName, const QString &option, const QString &value);
+
+    Qt::LayoutDirection parseLayoutDirectionOption(const QString &localeName);
+    QString setLayoutDirectionOption(const QString &localeName, Qt::LayoutDirection layoutDirection);
 
     MLocale::CalendarType parseCalendarOption(const QString &localeName);
     QString setCalendarOption(const QString &localeName, MLocale::CalendarType calendarType);
