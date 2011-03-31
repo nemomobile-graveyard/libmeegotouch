@@ -37,6 +37,21 @@ class MBasicSheetHeaderPrivate;
   Its default view provides a button for a negative or neutral action in its
   left corner, a button for a positive action in its right corner and an
   optional progress indicator (of unknown duration, a.k.a a spinner) in its middle.
+
+   Common usage:
+   \code
+   MySheet::MySheet() : MSheet() {
+       MBasicSheetHeader *sheetHeader = new MBasicSheetHeader;
+
+       sheetHeader->setPositiveAction(new QAction("Done", sheetHeader));
+       connect(sheetHeader->positiveAction(), SIGNAL(triggered()), SLOT(done()));
+
+       sheetHeader->setNegativeAction(new QAction("Cancel", sheetHeader));
+       connect(sheetHeader->negativeAction(), SIGNAL(triggered()), SLOT(cancel()));
+
+       setHeaderWidget(sheetHeader);
+   }
+   \endcode
  */
 class M_CORE_EXPORT MBasicSheetHeader : public MWidgetController
 {
@@ -56,21 +71,6 @@ class M_CORE_EXPORT MBasicSheetHeader : public MWidgetController
 
        Set it with setProgressIndicatorVisible() and get its current value with
        isProgressIndicatorVisible().
-
-       Common usage:
-       \code
-       MySheet::MySheet() : MSheet() {
-           MBasicSheetHeader *sheetHeader = new MBasicSheetHeader;
-
-           sheetHeader->setPositiveAction(new QAction("Done", sheetHeader));
-           connect(sheetHeader->positiveAction(), SIGNAL(triggered()), SLOT(done()));
-
-           sheetHeader->setNegativeAction(new QAction("Cancel", sheetHeader));
-           connect(sheetHeader->negativeAction(), SIGNAL(triggered()), SLOT(cancel()));
-
-           setHeaderWidget(sheetHeader);
-       }
-       \endcode
      */
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
 
