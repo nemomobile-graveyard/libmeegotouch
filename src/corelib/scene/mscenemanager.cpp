@@ -1990,7 +1990,8 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
         type == MSceneWindow::ApplicationMenu ||
         type == MSceneWindow::ObjectMenu ||
         type == MSceneWindow::ModalSceneWindow ||
-        type == MSceneWindow::PopupList) {
+        type == MSceneWindow::PopupList ||
+        type == MSceneWindow::Sheet) {
 
         // Notify page on first blocker appearing
         if (currentPage && blockingWindows.count() == 0) {
@@ -2076,7 +2077,8 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
         type == MSceneWindow::ApplicationMenu ||
         type == MSceneWindow::ObjectMenu ||
         type == MSceneWindow::ModalSceneWindow ||
-        type == MSceneWindow::PopupList) {
+        type == MSceneWindow::PopupList ||
+        type == MSceneWindow::Sheet) {
 
         blockingWindows.removeOne(sceneWindow);
 
