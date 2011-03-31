@@ -51,7 +51,7 @@
     </td>
     <td>
       <ul>
-       <li>\subpage rotation</li>
+       <li><a href="rotation.html">Screen rotation</a></li>
        <li><a href="faststart.html">Reducing application start-up time</a></li>
        <li><a href="notifications.html">Notification system</a></li>
        <li>\subpage sceneandscenewindows "Scene and scene windows"</li>
