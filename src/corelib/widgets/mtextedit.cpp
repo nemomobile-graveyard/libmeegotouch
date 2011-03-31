@@ -2486,8 +2486,8 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         emitTextChanged = true;
         d->removePreedit();
         // store styles of replaced text to preedit styles.
-        const int start = d->cursor()->position() + event->replacementStart();
-        const int end = start + event->replacementLength();
+        const int start = qMax(0, d->cursor()->position() + event->replacementStart());
+        const int end = qMin(d->realCharacterCount(), start + event->replacementLength());
         const int storedStyleEnd = (preeditCursorPos <= event->replacementLength()) ?
                                     start + preeditCursorPos : end;
         if (wasPreediting) {
@@ -2512,7 +2512,8 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     } else if (event->replacementStart()) {
         emitTextChanged = true;
         d->removePreedit();
-        d->cursor()->setPosition(d->cursor()->position() + event->replacementStart());
+        d->cursor()->setPosition(qBound(0, d->cursor()->position() + event->replacementStart(),
+                                        d->realCharacterCount()));
         if (!wasPreediting) {
             newPreeditPosition = cursorPosition();
         }
@@ -2572,7 +2573,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
                 // wins, just set the cursor position in that case.  We remove the
                 // pre-edit because attribute.start is likely != 0.
                 d->removePreedit();
-                newPreeditPosition = absoluteStart;
+                newPreeditPosition = qBound(0, absoluteStart, d->realCharacterCount());
             }
         }
     }
