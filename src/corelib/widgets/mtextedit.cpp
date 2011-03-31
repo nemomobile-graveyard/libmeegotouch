@@ -2478,6 +2478,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     }
 
     d->editActive = true;
+    // Pre-edit position will be adjusted based on replacement and commit text
+    // and possibly overridden at the end by Selection attribute.
+    int newPreeditPosition(wasPreediting ? d->cursor()->selectionStart() : cursorPosition());
 
     if (event->replacementLength()) {
         emitTextChanged = true;
@@ -2489,6 +2492,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
                                     start + preeditCursorPos : end;
         if (wasPreediting) {
             if (event->replacementStart() < 0) {
+                newPreeditPosition -= qMin(end, newPreeditPosition) - start;
                 QList<MTextEditPrivate::styleData> storedPreeditStyle = d->preeditStyling;
                 d->preeditStyling.clear();
                 d->storePreeditTextStyling(start, storedStyleEnd);
@@ -2497,6 +2501,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
                 d->storePreeditTextStyling(start, storedStyleEnd);
             }
         } else {
+            newPreeditPosition = start;
             d->preeditStyling.clear();
             d->storePreeditTextStyling(start, storedStyleEnd);
         }
@@ -2508,6 +2513,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         emitTextChanged = true;
         d->removePreedit();
         d->cursor()->setPosition(d->cursor()->position() + event->replacementStart());
+        if (!wasPreediting) {
+            newPreeditPosition = cursorPosition();
+        }
     }
 
     bool insertionSuccess = false;
@@ -2515,6 +2523,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     // append possible commit string
     if (!commitString.isEmpty()) {
         d->removePreedit();
+        const int commitPosition(cursorPosition());
         insertionSuccess = d->doTextInsert(commitString, true);
         emitTextChanged = emitTextChanged || wasPreediting || insertionSuccess;
 
@@ -2528,6 +2537,13 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
             // if validation passed, then set the cursor charformat with the
             // last preedit styling used by the cursor.
             d->cursor()->setCharFormat(d->preeditStyling.last().charFormat);
+        }
+        if (insertionSuccess) {
+            if (!wasPreediting) {
+                newPreeditPosition = cursorPosition();
+            } else if (commitPosition <= newPreeditPosition) {
+                newPreeditPosition += cursorPosition() - commitPosition;
+            }
         }
         d->preeditStyling.clear();
     }
@@ -2556,7 +2572,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
                 // wins, just set the cursor position in that case.  We remove the
                 // pre-edit because attribute.start is likely != 0.
                 d->removePreedit();
-                d->cursor()->setPosition(absoluteStart);
+                newPreeditPosition = absoluteStart;
             }
         }
     }
@@ -2569,6 +2585,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         const bool atMaxLength((maxLength() >= 0) && (d->realCharacterCount() == maxLength()));
         if (!atMaxLength) {
             emitTextChanged = emitTextChanged || !wasPreediting || (d->cursor()->selectedText() != preedit);
+            if (!(wasPreediting && d->cursor()->hasSelection() && (newPreeditPosition == d->cursor()->selectionStart()))) {
+                d->cursor()->setPosition(newPreeditPosition);
+            }
             d->setPreeditText(preedit, attributes);
             d->setMode(MTextEditModel::EditModeActive);
         } else {
