@@ -426,7 +426,7 @@ void MOrientationTrackerPrivate::startFollowingCurrentAppWindow(MWindow *win, bo
 {
     if (limitedByConstraints && !windowsFollowingWithConstraintsCurrentAppWindow.contains(win)) {
         windowsFollowingWithConstraintsCurrentAppWindow.append(win);;
-    } else {
+    } else if (!limitedByConstraints && !windowsFollowingCurrentAppWindow.contains(win)) {
         windowsFollowingCurrentAppWindow.append(win);
     }
 #ifdef HAVE_CONTEXTSUBSCRIBER
