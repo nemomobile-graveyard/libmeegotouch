@@ -39,8 +39,12 @@ class MLocaleBucketsPrivate
 
     void setItems(const QStringList &items, Qt::SortOrder sortOrder);
     void clear();
+    bool removeBucketItems(int bucketIndex, int itemIndex, int count);
+    void removeEmptyBucket(int bucketIndex);
 
-    void removeItems(int bucket, int item, int count);
+    //
+    // Data members
+    //
 
     MLocale locale;
 #ifdef HAVE_ICU

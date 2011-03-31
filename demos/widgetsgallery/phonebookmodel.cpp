@@ -155,7 +155,7 @@ QVariant PhoneBookModel::itemData(int row, int group, int role) const
 bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     if (count <= 0)
-        return true; //Successfully added 0 rows.
+        return true; // Successfully added 0 rows.
 
     QVector<PhoneBookEntry *> entries = phoneBookEntries;
     for (int i = entries.size(); i < count; i++) {
@@ -214,11 +214,18 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
     if (isGrouped() && group >= 0)
         flatRow = buckets.origItemIndex(group, row);
 
+    Q_ASSERT(flatRow >= 0);
+    Q_ASSERT(flatRow < phoneBookEntries.size());
+
     beginRemoveRows(parent, row, row + count - 1, count == 1);
     qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
     phoneBookEntries.remove(flatRow, count);
-    if (isGrouped() && group >= 0)
-        buckets.removeBucketItems(group, row, count);
+    if (isGrouped() && group >= 0) {
+        bool bucketEmpty = buckets.removeBucketItems(group, row, count);
+
+        if (bucketEmpty)
+            regenerateModel();
+    }
     else
         regenerateModel();
 

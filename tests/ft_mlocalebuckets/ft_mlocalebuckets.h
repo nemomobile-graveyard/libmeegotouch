@@ -33,6 +33,8 @@ private slots:
     void initTestCase();
     void testEnglishGrouping();
     void testCzechGrouping();
+    void testRemove();
+    void testCopy();
 
 private:
     void dumpBuckets(const MLocaleBuckets &buckets, const char *header=0) const;

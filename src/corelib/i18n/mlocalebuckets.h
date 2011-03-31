@@ -195,6 +195,12 @@ public:
      *
      * If there is no item at that position, -1 is returned.
      *
+     * If during the life time of this MLocaleBuckets object any items are
+     * removed with removeBucketItems(), the original index of each item that
+     * came after the removed item is decremented accordingly, just as if the
+     * item was removed from the original items list set with setItems() or in
+     * the constructor.
+     *
      * \param bucketIndex index of the bucket.
      * \param indexInBucket index within the bucket. Each bucket starts with 0.
      */
@@ -223,9 +229,32 @@ public:
     void clear();
 
     /*!
-     * \brief Removes range of items from bucket.
+     * \brief Remove a range of items from bucket.
+     *
+     * This removes 'count' items from the bucket 'bucketIndex', starting with
+     * index 'indexInBucket' inside that bucket.
+     *
+     * This returns 'true' if the bucket is empty afterwards (i.e., it should
+     * be removed), 'false' otherwise.
+     *
+     * The original indices of items (origItemIndex()) will be decremented
+     * accordingly, just as if the items were removed from the QStringList
+     * passed in the constructor or in setItems().
      */
-    void removeBucketItems(int bucketIndex, int itemIndex, int count = 1);
+    bool removeBucketItems(int bucketIndex, int indexInBucket, int count=1);
+
+    /*!
+     * \brief Remove a bucket if it is empty.
+     *
+     * This should be done after removeBucketItems() returned true. The
+     * rationale why removeBucketItems() doesn't do this automatically is
+     * because SortFilterProxyModels that are attached to a model that uses
+     * MLocaleBuckets will get very confused if toplevel items disappear
+     * because the items below them were removed.
+     *
+     * If the bucket is not empty, this function does nothing.
+     */
+    void removeEmptyBucket(int bucketIndex);
 
     /*!
      * \brief Copies buckets and bucket items from the other reference.
