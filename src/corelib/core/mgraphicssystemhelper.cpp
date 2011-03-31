@@ -46,11 +46,11 @@ namespace {
         QString keyWithSize = uniqueKey + '(' + QString::number(requestedSize.width()) +
                               QLatin1Char(',') + QString::number(requestedSize.height()) + QLatin1Char(')');
         crypto.addData(qPrintable(keyWithSize));
-        handle->shmHandle = QString(crypto.result().toHex());
-        handle->shmHandle.prepend(QLatin1Char('/') + appName);
+        handle->shmHandle = crypto.result().toHex();
+        handle->shmHandle.prepend(QByteArray("/") + qPrintable(appName));
 
         // Create a new memory object
-        int fd = shm_open(qPrintable(handle->shmHandle), O_RDWR | O_CREAT, 0666);
+        int fd = shm_open(handle->shmHandle.constData(), O_RDWR | O_CREAT, 0666);
         if (fd == -1) {
             qFatal("Failed to open shared memory: %s", strerror(errno));
         }
@@ -210,12 +210,12 @@ QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandl
     if (MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem() && pixmapHandle.eglHandle) {
         int fd = -1;
         if (pixmapHandle.directMap)
-            fd = open(qPrintable(pixmapHandle.shmHandle), O_RDONLY);
+            fd = open(pixmapHandle.shmHandle.constData(), O_RDONLY);
         else
-            fd = shm_open(qPrintable(pixmapHandle.shmHandle), O_RDONLY, 0444);
+            fd = shm_open(pixmapHandle.shmHandle.constData(), O_RDONLY, 0444);
 
         if (fd == -1) {
-            qFatal("Failed to open shared memory: %s, %s", strerror(errno), qPrintable(pixmapHandle.shmHandle));
+            qFatal("Failed to open shared memory: %s, %s", strerror(errno), pixmapHandle.shmHandle.constData());
         }
 
         *addr = mmap(0, pixmapHandle.numBytes, PROT_READ, MAP_SHARED, fd, 0);
