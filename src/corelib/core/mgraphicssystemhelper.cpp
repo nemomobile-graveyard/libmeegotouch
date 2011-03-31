@@ -188,7 +188,9 @@ void MGraphicsSystemHelper::pixmapFromImage(PixmapCacheEntry *cacheEntry, const 
         }
 
         fillHandleFromImage(&cacheEntry->handle, imageCopy);
-        allocateSharedMemory(&cacheEntry->handle, imageCopy, uniqueKey, requestedSize);
+        if (!cacheEntry->handle.directMap) {
+            allocateSharedMemory(&cacheEntry->handle, imageCopy, uniqueKey, requestedSize);
+        }
     } else if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("native"))
 #endif // HAVE_MEEGO_GRAPHICSSYSTEM
     {

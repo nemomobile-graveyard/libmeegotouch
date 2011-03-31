@@ -88,9 +88,16 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
 
                 if (shouldBeCached()) {
                     saveToFsCache(image, size, uniqueKey());
+                    QImage imageFromCache = loadFromFsCache(size, cacheEntry);
+                    if (imageFromCache.isNull()) {
+                        qCritical() << "Themedaemon: Failed to reload image" << uniqueKey() << "from cache. Something bad is happening.";
+                        fillCacheEntry(cacheEntry, image, size);
+                    } else {
+                        image = imageFromCache;
+                    }
+                } else {
+                    fillCacheEntry(cacheEntry, image, size);
                 }
-
-                fillCacheEntry(cacheEntry, image, size);
             }
         }
     } else  {
@@ -269,7 +276,9 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
                 cacheEntry->handle.directMap = true;
             } else
 #endif
+            {
                 fillCacheEntry(cacheEntry, image, size);
+            }
 
             cacheFile->close();
             return image;
