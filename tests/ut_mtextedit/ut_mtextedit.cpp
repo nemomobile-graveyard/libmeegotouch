@@ -681,6 +681,119 @@ void Ut_MTextEdit::testFocusOutEvent()
     QCOMPARE(spyLostFocus.count(), 1);
 }
 
+// Test the basic three steps of input method event processing as described at
+// <http://doc.trolltech.com/4.7/qinputmethodevent.html>:
+// 1. remove selected text, if any
+// 2. handle replacement (which may just reposition the cursor), insert commit string
+// 3. keep or replace pre-edit
+//
+// Boundary cases and pre-edit cursor are ignored here.
+void Ut_MTextEdit::testInputMethodEventSteps()
+{
+    // Let's have a selection
+    const int selPos(1);
+    const int selLength(2);
+    QList<QInputMethodEvent::Attribute> select1_2;
+    select1_2 << QInputMethodEvent::Attribute(QInputMethodEvent::Selection, selPos, selLength, QVariant());
+    QInputMethodEvent testSelect1_2("", select1_2);
+    testSelect1_2.setCommitString("123456789");
+    m_subject->inputMethodEvent(&testSelect1_2);
+    QCOMPARE(m_subject->selectedText(), QString("23"));
+    QCOMPARE(m_subject->text(), testSelect1_2.commitString());
+    QCOMPARE(static_cast<int>(m_subject->mode()), static_cast<int>(MTextEditModel::EditModeSelect));
+    QCOMPARE(m_subject->cursorPosition(), selPos + selLength);
+
+    // Let's remove the selection, replace last two characters with others and add a
+    // pre-edit to the beginning, all with one event!  Per Qt documentation we could even
+    // set a new selection on top of that but MTextEdit does not support that as pre-edit
+    // is implemented using a selection.
+    QList<QInputMethodEvent::Attribute> moveTo0;
+    // Selection start seems to be relative to the surrounding text start
+    // instead of the cursor position (Qt documentation is a bit vague about this).
+    moveTo0 << QInputMethodEvent::Attribute(QInputMethodEvent::Selection, 0, 0, QVariant());
+    QInputMethodEvent allInOne("ab", moveTo0);
+    allInOne.setCommitString("cd", testSelect1_2.commitString().length() - selLength - 2 - /* cursor */ 1, 2);
+    m_subject->inputMethodEvent(&allInOne);
+    QCOMPARE(m_subject->selectedText(), QString());
+    QCOMPARE(m_subject->text(), QString("ab14567cd"));
+    QCOMPARE(static_cast<int>(m_subject->mode()), static_cast<int>(MTextEditModel::EditModeActive));
+    QCOMPARE(m_subject->cursorPosition(), 2);
+
+    // Let's replace the pre-edit with a new one but have a commit string as well.
+    const QList<QInputMethodEvent::Attribute> noAttributes;
+    QInputMethodEvent replace("ef", noAttributes);
+    replace.setCommitString("kala", 1, 0);
+    m_subject->inputMethodEvent(&replace);
+    QCOMPARE(m_subject->selectedText(), QString());
+    QCOMPARE(m_subject->text(), QString("ef1kala4567cd"));
+    QCOMPARE(static_cast<int>(m_subject->mode()), static_cast<int>(MTextEditModel::EditModeActive));
+    QCOMPARE(m_subject->cursorPosition(), 2);
+
+    m_subject->clear();
+
+    // Nothing but pre-edit string; replace it with another (in the same place)
+    QCOMPARE(m_subject->text(), QString());
+    QInputMethodEvent justPreedit("ab", noAttributes);
+    m_subject->inputMethodEvent(&justPreedit);
+    QInputMethodEvent justAnotherPreedit("cd", noAttributes);
+    m_subject->inputMethodEvent(&justAnotherPreedit);
+    QCOMPARE(m_subject->text(), QString("cd"));
+    QCOMPARE(static_cast<int>(m_subject->mode()), static_cast<int>(MTextEditModel::EditModeActive));
+    QCOMPARE(m_subject->cursorPosition(), 2);
+
+    m_subject->clear();
+
+    // Another pre-edit replacement case, #1
+    QList<QInputMethodEvent::Attribute> moveTo4;
+    moveTo4 << QInputMethodEvent::Attribute(QInputMethodEvent::Selection, 4, 0, QVariant());
+    QInputMethodEvent commitAndPreedit("kala", moveTo4);
+    commitAndPreedit.setCommitString("123456789");
+    m_subject->inputMethodEvent(&commitAndPreedit);
+
+    {
+        QInputMethodEvent replace2("lahna", noAttributes);
+        replace2.setCommitString("ho");
+        m_subject->inputMethodEvent(&replace2);
+        QCOMPARE(m_subject->text(), QString("1234holahna56789"));
+    }
+    {
+        QInputMethodEvent replace2("lohi", noAttributes);
+        replace2.setCommitString("ah", -1);
+        m_subject->inputMethodEvent(&replace2);
+        QCOMPARE(m_subject->text(), QString("1234haholohi56789"));
+    }
+    {
+        QInputMethodEvent replace2("kuha", noAttributes);
+        replace2.setCommitString("gg", -1, 1);
+        m_subject->inputMethodEvent(&replace2);
+        QCOMPARE(m_subject->text(), QString("1234hahggkuha56789"));
+    }
+    {
+        QInputMethodEvent replace2("made", noAttributes);
+        replace2.setCommitString("rr", -2, 3);
+        m_subject->inputMethodEvent(&replace2);
+        QCOMPARE(m_subject->text(), QString("1234hahrrmade6789"));
+    }
+    {
+        QInputMethodEvent replace2("turska", noAttributes);
+        replace2.setCommitString("", 1, 1);
+        m_subject->inputMethodEvent(&replace2);
+        QCOMPARE(m_subject->text(), QString("1234hahrrturska689"));
+    }
+    {
+        QInputMethodEvent replace2("silakka", noAttributes);
+        replace2.setCommitString("", -5, 4);
+        m_subject->inputMethodEvent(&replace2);
+        QCOMPARE(m_subject->text(), QString("1234rsilakka689"));
+    }
+    {
+        QInputMethodEvent replace2("ahven", noAttributes);
+        replace2.setCommitString("", -10, 4);
+        m_subject->inputMethodEvent(&replace2);
+        QCOMPARE(m_subject->text(), QString("rahven689"));
+    }
+}
+
 /*!
  * Test moving to pre-editing mode.
  */

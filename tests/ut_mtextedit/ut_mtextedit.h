@@ -87,6 +87,7 @@ private slots:
     void testDeleteEndOfWordWithSelection();
     void testFocusInEvent();
     void testFocusOutEvent();
+    void testInputMethodEventSteps();
     void testInputMethodEvent();
     void testText();
     void testSetCursorPosition();
