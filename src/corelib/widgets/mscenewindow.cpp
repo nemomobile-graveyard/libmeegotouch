@@ -305,6 +305,7 @@ void MSceneWindow::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGestu
         contextEvent.setPos(gesture->position());
         contextEvent.setScenePos(gesture->position());
         contextEvent.setScreenPos(gesture->position().toPoint());
+        contextEvent.setReason(QGraphicsSceneContextMenuEvent::Mouse);
 
         QApplication::sendEvent(scene(), &contextEvent);
     }

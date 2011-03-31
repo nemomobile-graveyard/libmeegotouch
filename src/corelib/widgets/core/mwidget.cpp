@@ -369,7 +369,7 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     if (hasObjectMenuActions) {
 
         MScene *mScene = qobject_cast<MScene *>(scene());
-        if (mScene)
+        if (mScene && event->reason() == QGraphicsSceneContextMenuEvent::Mouse)
             mScene->d_func()->notifyChildRequestedMouseCancel();
 
         MObjectMenu *menu = new MObjectMenu(this);
