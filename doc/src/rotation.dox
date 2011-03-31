@@ -139,9 +139,7 @@ example, users might wonder why the application does not rotate like the others.
 flexibility of your GUI. However, locking the orientation of the GUI can be useful and valid if it 
 is intended to be used in only one specific orientation or angle.
 
-\section rotation_stepbystep Creating rotation animation
-
-To create a rotation animation, do the following:
+\section rotation_stepbystep A rotation animation, step-by-step
 
 -# MSceneManager::setOrientationAngle() is called (for example, due to a change in the device's orientation angle)
 -# MSceneManager starts a rotation animation
