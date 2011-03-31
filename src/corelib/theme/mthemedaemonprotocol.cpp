@@ -188,8 +188,6 @@ static bool waitForAvailableBytes(QDataStream &stream, quint32 count)
 
 QDataStream &operator>>(QDataStream &stream, Packet &packet)
 {
-    Q_ASSERT(!packet.data());
-
     if (!waitForAvailableBytes(stream, sizeof(quint32))) {
         return stream;
     }
