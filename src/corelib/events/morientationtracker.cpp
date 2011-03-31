@@ -96,9 +96,11 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif
     , q_ptr(controller)
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     remoteTopEdgeListener = new MServiceListener(
         remoteTopEdgeProperty->info()->providerDBusType(),
         remoteTopEdgeProperty->info()->providerDBusName());
+#endif
 
     if (MComponentData::isOrientationForced()) {
         currentAngle = MComponentData::forcedOrientationAngle();
