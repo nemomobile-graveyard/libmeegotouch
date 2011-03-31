@@ -2518,7 +2518,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         insertionSuccess = d->doTextInsert(commitString, true);
         emitTextChanged = emitTextChanged || wasPreediting || insertionSuccess;
 
-        if (!insertionSuccess && wasSelecting) {
+        if (!insertionSuccess && wasSelecting && preedit.isEmpty()) {
             // validation failed, put the old selection back
             d->cursor()->setPosition(selectionStart, QTextCursor::KeepAnchor);
             d->cursor()->removeSelectedText();
