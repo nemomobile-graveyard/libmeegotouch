@@ -44,6 +44,7 @@ private slots:
     void testParseSettingsNode();
     void testParseSelectionInSettings();
     void EtestParseSelectionWithoutKey();
+    void EtestParseSelectionWithoutTitle();
     void testParseSelectionOneValue();
     void EtestParseSelectionWithInvalidValue();
     void testParseSelectionManyValues();

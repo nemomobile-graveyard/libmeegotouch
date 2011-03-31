@@ -21,30 +21,27 @@
 #include "msettingslanguagebinary.h"
 #include "msettingslanguagewidget.h"
 #include "msettingslanguagesettings.h"
-
 #include "msettingslanguagesettingsfactory.h"
 
-#include <MLayout>
-#include <MLinearLayoutPolicy>
+#include <QGraphicsLinearLayout>
 
 MSettingsLanguageWidget *MSettingsLanguageWidgetFactory::createWidget(const MSettingsLanguageBinary &settingsBinary, MDataStore *dataStore)
 {
     MSettingsLanguageWidget *widget = new MSettingsLanguageWidget;
-    widget->setObjectName("MSettingsLanguage");
+    widget->setStyleName("MSettingsLanguage");
 
     // Create a central layout
-    MLayout *layout = new MLayout();
-    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    policy->setContentsMargins(0, 0, 0, 0);
-    policy->setSpacing(0);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
     widget->setLayout(layout);
 
-    foreach(MSettingsLanguageNode * settingsNode, settingsBinary.children()) {
+    foreach(MSettingsLanguageNode *settingsNode, settingsBinary.children()) {
         MSettingsLanguageSettings *settingsItem = dynamic_cast<MSettingsLanguageSettings *>(settingsNode);
         if (settingsItem != NULL) {
             MWidget *itemWidget = MSettingsLanguageSettingsFactory::createWidget(*settingsItem, *widget, dataStore);
             itemWidget->setParentItem(widget);
-            policy->addItem(itemWidget);
+            layout->addItem(itemWidget);
         }
     }
 

@@ -123,10 +123,10 @@ bool MSettingsLanguageParserPrivate::parseSettings(const QDomElement &item, MSet
 bool MSettingsLanguageParserPrivate::parseGroup(const QDomElement &item, MSettingsLanguageNode &settingsNode)
 {
     // Possible children elements of a 'settings' element
-    const static QStringList itemChildElements = (QStringList() << "text" << "boolean"
-            << "integer" << "selection");
+    const static QStringList itemChildElements = (QStringList() << "text" << "boolean" << "integer" << "selection");
+    const static QStringList requiredAttributes = (QStringList() << "title");
 
-    MSettingsLanguageNode *group = new MSettingsLanguageGroup();
+    MSettingsLanguageNode *group = new MSettingsLanguageGroup(item.attribute("title"));
     settingsNode.addChild(group);
 
     // Parse child elements
@@ -137,10 +137,10 @@ bool MSettingsLanguageParserPrivate::parseSelection(const QDomElement &item, MSe
 {
     // Possible children elements of a 'selection' element
     const static QStringList selectionChildElements = (QStringList() << "option");
-    const static QStringList requiredAttributes = (QStringList() << "key");
+    const static QStringList requiredAttributes = (QStringList() << "key" << "title");
 
     if (checkAttributes(item, requiredAttributes)) {
-        MSettingsLanguageSelection *se = new MSettingsLanguageSelection(item.attribute("key"));
+        MSettingsLanguageSelection *se = new MSettingsLanguageSelection(item.attribute("key"), item.attribute("title"));
         settingsNode.addChild(se);
 
         // Parse child elements

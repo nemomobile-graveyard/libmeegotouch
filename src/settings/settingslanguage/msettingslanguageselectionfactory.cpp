@@ -23,11 +23,13 @@
 #include "msettingslanguageoption.h"
 #include "msettingslanguagewidget.h"
 
-#include <MWidgetView>
+#include <MStylableWidget>
+#include <QGraphicsLinearLayout>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MButtonGroup>
 #include <MButton>
+#include <MLabel>
 #include <MDataStore>
 
 MWidgetController *MSettingsLanguageSelectionFactory::createWidget(const MSettingsLanguageSelection &settingsSelection,
@@ -35,18 +37,32 @@ MWidgetController *MSettingsLanguageSelectionFactory::createWidget(const MSettin
 {
     Q_UNUSED(rootWidget)
 
-    MWidgetController *parentWidget = new MWidgetController;
-    parentWidget->setView(new MWidgetView(parentWidget));
+    MStylableWidget *parentWidget = new MStylableWidget;
+    parentWidget->setStyleName("MSettingsLanguageItem");
 
     // Make an interaction controller and make it a child of the widget object (so that it gets destroyed when appropriate)
     MSettingsLanguageSelectionController *selectionController = new MSettingsLanguageSelectionController(parentWidget);
 
+    // Create a vertical layout
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    parentWidget->setLayout(layout);
+
+    // Create a label widget and put it into the layout
+    MLabel *label = new MLabel(settingsSelection.title());
+    label->setStyleName("CommonSingleTitleInverted");
+    layout->addItem(label);
+
     // Create a horizontal layout
-    MLayout *layout = new MLayout();
-    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    MLayout *buttonLayout = new MLayout;
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(buttonLayout, Qt::Horizontal);
     policy->setContentsMargins(0, 0, 0, 0);
     policy->setSpacing(0);
-    parentWidget->setLayout(layout);
+    policy->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    layout->addItem(buttonLayout);
+
+    QSizePolicy sizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
 
     // Create a button group
     MButtonGroup *buttonGroup = new MButtonGroup(parentWidget);
@@ -57,14 +73,15 @@ MWidgetController *MSettingsLanguageSelectionFactory::createWidget(const MSettin
     foreach(const MSettingsLanguageOption * value, settingsSelection.options()) {
         // Create a radio button for the enum value
         MButton *button = new MButton(parentWidget);
+        button->setViewType(MButton::groupType);
+        button->setSizePolicy(sizePolicy);
         button->setText(value->title());
         button->setCheckable(true);
-        button->setObjectName("SettingsLanguageOptionButton");
         button->setChecked(value->value() == selectedValue);
         button->setProperty("dataStore", qVariantFromValue(static_cast<void *>(dataStore)));
         button->setProperty("key", settingsSelection.key());
         button->setProperty("value", value->value());
-        policy->addItem(button, Qt::AlignCenter);
+        policy->addItem(button);
 
         // Add the button to a button group
         buttonGroup->addButton(button);

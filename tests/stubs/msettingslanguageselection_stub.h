@@ -29,9 +29,10 @@
 class MSettingsLanguageSelectionStub : public StubBase
 {
 public:
-    virtual void MSettingsLanguageSelectionConstructor(const QString &key);
+    virtual void MSettingsLanguageSelectionConstructor(const QString &key, const QString &title);
     virtual void MSettingsLanguageSelectionDestructor();
     virtual QString key() const;
+    virtual QString title() const;
     virtual MSettingsLanguageOption *addOption(const QString &title, int value);
     virtual MSettingsLanguageOption *addOption(MSettingsLanguageOption *option);
     virtual uint numOptions() const;
@@ -39,10 +40,11 @@ public:
 };
 
 // 2. IMPLEMENT STUB
-void MSettingsLanguageSelectionStub::MSettingsLanguageSelectionConstructor(const QString &key)
+void MSettingsLanguageSelectionStub::MSettingsLanguageSelectionConstructor(const QString &key, const QString &title)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<QString>(key));
+    params.append(new Parameter<QString>(title));
     stubMethodEntered("constructor", params);
 }
 void MSettingsLanguageSelectionStub::MSettingsLanguageSelectionDestructor()
@@ -53,6 +55,12 @@ QString MSettingsLanguageSelectionStub::key() const
 {
     stubMethodEntered("key");
     return stubReturnValue<QString>("key");
+}
+
+QString MSettingsLanguageSelectionStub::title() const
+{
+    stubMethodEntered("title");
+    return stubReturnValue<QString>("title");
 }
 
 MSettingsLanguageOption *MSettingsLanguageSelectionStub::addOption(const QString &title, int value)
@@ -92,9 +100,9 @@ MSettingsLanguageSelectionStub *gMSettingsLanguageSelectionStub = &gDefaultMSett
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-MSettingsLanguageSelection::MSettingsLanguageSelection(const QString &key)
+MSettingsLanguageSelection::MSettingsLanguageSelection(const QString &key, const QString &title)
 {
-    gMSettingsLanguageSelectionStub->MSettingsLanguageSelectionConstructor(key);
+    gMSettingsLanguageSelectionStub->MSettingsLanguageSelectionConstructor(key, title);
 }
 
 MSettingsLanguageSelection::~MSettingsLanguageSelection()
@@ -105,6 +113,11 @@ MSettingsLanguageSelection::~MSettingsLanguageSelection()
 QString MSettingsLanguageSelection::key() const
 {
     return gMSettingsLanguageSelectionStub->key();
+}
+
+QString MSettingsLanguageSelection::title() const
+{
+    return gMSettingsLanguageSelectionStub->title();
 }
 
 MSettingsLanguageOption *MSettingsLanguageSelection::addOption(const QString &title, int value)

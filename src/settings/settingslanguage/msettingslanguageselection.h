@@ -41,8 +41,9 @@ public:
     /*!
      * Constructs a new selection with a given key.
      * \param key the key (name) of the selection.
+     * \param title the title of the selection.
      */
-    MSettingsLanguageSelection(const QString &key);
+    MSettingsLanguageSelection(const QString &key, const QString &title);
 
     /*!
      * Destructor.
@@ -53,6 +54,11 @@ public:
      * Returns the key of this selection.
      */
     QString key() const;
+
+    /*!
+     * Returns the localized title of this text node.
+     */
+    QString title() const;
 
     /*!
      * Adds a new option to this selection.
@@ -87,7 +93,8 @@ public:
 private:
     //! The key (name) of this object.
     QString _key;
-
+    //! The title of this object.
+    QString _title;
 };
 //! \internal_end
 

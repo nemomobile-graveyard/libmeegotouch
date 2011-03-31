@@ -20,8 +20,9 @@
 #include "msettingslanguageselection.h"
 #include "msettingslanguageoption.h"
 
-MSettingsLanguageSelection::MSettingsLanguageSelection(const QString &key) :
-    _key(key)
+MSettingsLanguageSelection::MSettingsLanguageSelection(const QString &key, const QString &title) :
+    _key(key),
+    _title(title)
 {
 }
 
@@ -32,6 +33,11 @@ MSettingsLanguageSelection::~MSettingsLanguageSelection()
 QString MSettingsLanguageSelection::key() const
 {
     return _key;
+}
+
+QString MSettingsLanguageSelection::title() const
+{
+    return qtTrId(_title.toUtf8());;
 }
 
 MSettingsLanguageOption *MSettingsLanguageSelection::addOption(const QString &title, int value)

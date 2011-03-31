@@ -26,7 +26,7 @@
 
 void Ut_MSettingsLanguageSelection::init()
 {
-    m_subject = new MSettingsLanguageSelection("key");
+    m_subject = new MSettingsLanguageSelection("key", "title");
 }
 
 void Ut_MSettingsLanguageSelection::cleanup()

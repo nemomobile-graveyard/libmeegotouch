@@ -59,7 +59,7 @@ void Ut_MSettingsLanguageBinary::testKeys()
     gMSettingsLanguageBooleanStub->stubSetReturnValue("key", QString("boolKey"));
     gMSettingsLanguageIntegerStub->stubSetReturnValue("key", QString("intKey"));
     MSettingsLanguageSettings *child = new MSettingsLanguageSettings();
-    MSettingsLanguageSelection *aEnum = new MSettingsLanguageSelection("enumKey");
+    MSettingsLanguageSelection *aEnum = new MSettingsLanguageSelection("enumKey", "foobar");
     MSettingsLanguageText *aText = new MSettingsLanguageText("textKey", "bar");
     MSettingsLanguageBoolean *aBool = new MSettingsLanguageBoolean("boolKey", "boolBar");
     MSettingsLanguageInteger *aInteger = new MSettingsLanguageInteger("intKey", "foo");

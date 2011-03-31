@@ -27,9 +27,10 @@
 #include "msettingslanguagebooleanfactory_stub.h"
 #include "msettingslanguageinteger_stub.h"
 #include "msettingslanguageintegerfactory_stub.h"
+#include "msettingslanguagegroup_stub.h"
+#include "msettingslanguagegroupfactory_stub.h"
 #include "msettingslanguagenode.h"
 #include "msettingslanguagetext_stub.h"
-#include "msettingslanguagegroup_stub.h"
 #include "msettingslanguagewidget_stub.h"
 
 #include <QtTest/QtTest>
@@ -122,29 +123,30 @@ void Ut_MSettingsLanguageSettingsFactory::cleanup()
 void Ut_MSettingsLanguageSettingsFactory::testChildrenCreation()
 {
     // Create a settings item with a selection of two values, text and group with boolean and integer
-    MSettingsLanguageSelection *aSelection = new MSettingsLanguageSelection("EnumTestKey");
+    MSettingsLanguageSelection *aSelection = new MSettingsLanguageSelection("EnumTestKey", "selectionTitle");
     aSelection->addOption("TestValue0", 0);
     aSelection->addOption("TestValue1", 1);
     MSettingsLanguageText *text = new MSettingsLanguageText("TextTestKey", "title");
 
     // Group that boolean and integer are added. If then there are those items, there must be a group..
-    MSettingsLanguageGroup *group = new MSettingsLanguageGroup();
+    MSettingsLanguageGroup *group = new MSettingsLanguageGroup("groupTitle");
     MSettingsLanguageBoolean *booleanNode = new MSettingsLanguageBoolean("BoolTestKey", "titleBool");
     MSettingsLanguageInteger *intNode = new MSettingsLanguageInteger("IntTestKey", "titleInt");
-
-    group->addChild(intNode);
-    group->addChild(booleanNode);
 
     MSettingsLanguageSettings item;
     item.addChild(group);
     item.addChild(aSelection);
     item.addChild(text);
+    item.addChild(booleanNode);
+    item.addChild(intNode);
 
     // Set up the stub to return the same values
     QList<MSettingsLanguageNode *> children;
     children.append(group);
     children.append(aSelection);
     children.append(text);
+    children.append(booleanNode);
+    children.append(intNode);
     gMSettingsLanguageSettingsStub->stubSetReturnValue("children", children);
 
     MSettingsLanguageWidget dds;
@@ -158,6 +160,8 @@ void Ut_MSettingsLanguageSettingsFactory::testChildrenCreation()
     QCOMPARE(gMSettingsLanguageBooleanFactoryStub->stubLastCallTo("createWidget").parameter<const MSettingsLanguageBoolean *>(0), booleanNode);
     QCOMPARE(gMSettingsLanguageIntegerFactoryStub->stubCallCount("createWidget"), 1);
     QCOMPARE(gMSettingsLanguageIntegerFactoryStub->stubLastCallTo("createWidget").parameter<const MSettingsLanguageInteger *>(0), intNode);
+    QCOMPARE(gMSettingsLanguageGroupFactoryStub->stubCallCount("createWidget"), 1);
+    QCOMPARE(gMSettingsLanguageGroupFactoryStub->stubLastCallTo("createWidget").parameter<const MSettingsLanguageGroup *>(0), group);
 }
 
 QTEST_APPLESS_MAIN(Ut_MSettingsLanguageSettingsFactory)

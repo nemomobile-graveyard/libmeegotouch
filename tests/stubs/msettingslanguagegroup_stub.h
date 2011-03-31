@@ -29,9 +29,28 @@
 class MSettingsLanguageGroupStub : public StubBase
 {
 public:
+    virtual void MSettingsLanguageGroupConstructor(const QString &title);
+    virtual void MSettingsLanguageGroupDestructor();
+    virtual QString title() const;
 };
 
 // 2. IMPLEMENT STUB
+void MSettingsLanguageGroupStub::MSettingsLanguageGroupConstructor(const QString &title)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<QString>(title));
+    stubMethodEntered("constructor", params);
+}
+void MSettingsLanguageGroupStub::MSettingsLanguageGroupDestructor()
+{
+
+}
+QString MSettingsLanguageGroupStub::title() const
+{
+    stubMethodEntered("title");
+    return stubReturnValue<QString>("title");
+}
+
 
 
 // 3. CREATE A STUB INSTANCE
@@ -40,5 +59,20 @@ MSettingsLanguageGroupStub *gMSettingsLanguageGroupStub = &gDefaultMSettingsLang
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
+MSettingsLanguageGroup::MSettingsLanguageGroup(const QString &title)
+{
+    gMSettingsLanguageGroupStub->MSettingsLanguageGroupConstructor(title);
+}
+
+MSettingsLanguageGroup::~MSettingsLanguageGroup()
+{
+    gMSettingsLanguageGroupStub->MSettingsLanguageGroupDestructor();
+}
+
+QString MSettingsLanguageGroup::title() const
+{
+    return gMSettingsLanguageGroupStub->title();
+}
+
 
 #endif

@@ -28,43 +28,36 @@
 #include "msettingslanguageselection.h"
 #include "msettingslanguageinteger.h"
 #include "mtheme.h"
-#include "msettingslanguagesettingsfactorystyle.h"
 #include "msettingslanguagebooleanfactory.h"
 #include "msettingslanguageboolean.h"
+#include "msettingslanguagegroupfactory.h"
 #include "msettingslanguagegroup.h"
 
-#include <MLayout>
-#include <MLinearLayoutPolicy>
+#include <QGraphicsLinearLayout>
 #include <MButton>
 #include <MImageWidget>
 #include <MContainer>
 #include <MAction>
-#include <MWidgetView>
+#include <MStylableWidget>
 
 MWidgetController *MSettingsLanguageSettingsFactory::createWidget(const MSettingsLanguageSettings &settingsItem, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
 {
-    const MSettingsLanguageSettingsFactoryStyle *style =
-        static_cast<const MSettingsLanguageSettingsFactoryStyle *>
-        (MTheme::style("MSettingsLanguageSettingsFactoryStyle", "", "", "", M::Landscape, NULL));
-
     // Create content layout to layout content items in
-    MLayout *contentLayout = new MLayout();
-    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(contentLayout, Qt::Vertical);
-    policy->setContentsMargins(0, 0, 0, 0);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
-    MWidgetController *widget = new MWidgetController;
-    widget->setView(new MWidgetView(widget));
-    widget->setObjectName("MSettingsLanguage");
-    widget->setLayout(contentLayout);
+    MStylableWidget *widget = new MStylableWidget;
+    widget->setStyleName("MSettingsLanguage");
+    widget->setLayout(layout);
 
-    createChildren(*policy, settingsItem, rootWidget, dataStore);
-
-    MTheme::releaseStyle(style);
+    createChildren(layout, settingsItem, rootWidget, dataStore);
+    layout->addStretch();
 
     return widget;
 }
 
-void MSettingsLanguageSettingsFactory::createChildren(MLinearLayoutPolicy &layoutPolicy, const MSettingsLanguageNode &node,
+void MSettingsLanguageSettingsFactory::createChildren(QGraphicsLinearLayout *layout, const MSettingsLanguageNode &node,
         MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
 {
     // Go through all children of the item
@@ -75,6 +68,7 @@ void MSettingsLanguageSettingsFactory::createChildren(MLinearLayoutPolicy &layou
         const MSettingsLanguageInteger *intNode;
         const MSettingsLanguageText *textNode;
         const MSettingsLanguageBoolean *booleanNode;
+        const MSettingsLanguageGroup *groupNode;
 
         if ((selectionNode = dynamic_cast<const MSettingsLanguageSelection *>(child))) {
             childWidget = MSettingsLanguageSelectionFactory::createWidget(*selectionNode, rootWidget, dataStore);
@@ -84,20 +78,12 @@ void MSettingsLanguageSettingsFactory::createChildren(MLinearLayoutPolicy &layou
             childWidget = MSettingsLanguageTextFactory::createWidget(*textNode, rootWidget, dataStore);
         } else if ((booleanNode = dynamic_cast<const MSettingsLanguageBoolean *>(child))) {
             childWidget = MSettingsLanguageBooleanFactory::createWidget(*booleanNode, rootWidget, dataStore);
-        } else if ((dynamic_cast<const MSettingsLanguageGroup *>(child))) {
-            MContainer *container = new MContainer;
-            container->setObjectName("SettingsLanguageGroupContainer");
-            MLayout *groupContentLayout = new MLayout();
-            MLinearLayoutPolicy *contentGroupPolicy = new MLinearLayoutPolicy(groupContentLayout, Qt::Vertical);
-            contentGroupPolicy->setContentsMargins(0, 0, 0, 0);
-            container->setLayout(groupContentLayout);
-
-            createChildren(*contentGroupPolicy, *child, rootWidget, dataStore);
-            childWidget = container;
+        } else if ((groupNode = dynamic_cast<const MSettingsLanguageGroup *>(child))) {
+            childWidget = MSettingsLanguageGroupFactory::createWidget(*groupNode, rootWidget, dataStore);
         }
 
         if (childWidget != NULL) {
-            layoutPolicy.addItem(childWidget);
+            layout->addItem(childWidget);
         }
     }
 }

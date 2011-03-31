@@ -28,7 +28,7 @@
 #include <msettingslanguageboolean_stub.h>
 #include <msettingslanguageinteger_stub.h>
 #include <msettingslanguagetext_stub.h>
-#include <msettingslanguagegroup.h>
+#include <msettingslanguagegroup_stub.h>
 
 // A QIODevice that we can control nicely for testing purposes
 class InaccessibleDevice : public QIODevice
@@ -139,7 +139,7 @@ void Ut_MSettingsLanguageParser::EtestParseInvalidRootElement()
     executeParsingTest("<foobar></foobar>");
     QCOMPARE(m_testSettingsBinary, (MSettingsLanguageBinary *)NULL);
 
-    executeParsingTest("<selection key=\"key\"></selection>");
+    executeParsingTest("<selection key=\"key\" title=\"title\"></selection>");
     QCOMPARE(m_testSettingsBinary, (MSettingsLanguageBinary *)NULL);
 }
 
@@ -152,7 +152,7 @@ void Ut_MSettingsLanguageParser::testParseSettingsNode()
 void Ut_MSettingsLanguageParser::testParseSelectionInSettings()
 {
     executeParsingTest("<settings>\n"
-                       "  <selection key=\"key\"></selection>\n"
+                       "  <selection key=\"key\" title=\"title\"></selection>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
     QVERIFY(si != NULL);
@@ -164,7 +164,15 @@ void Ut_MSettingsLanguageParser::testParseSelectionInSettings()
 void Ut_MSettingsLanguageParser::EtestParseSelectionWithoutKey()
 {
     executeParsingTest("<settings>\n"
-                       "  <selection></selection>\n"
+                       "  <selection title=\"title\"></selection>\n"
+                       "</settings>");
+    QCOMPARE(m_testSettingsBinary, (MSettingsLanguageBinary *)NULL);
+}
+
+void Ut_MSettingsLanguageParser::EtestParseSelectionWithoutTitle()
+{
+    executeParsingTest("<settings>\n"
+                       "  <selection key=\"key\"></selection>\n"
                        "</settings>");
     QCOMPARE(m_testSettingsBinary, (MSettingsLanguageBinary *)NULL);
 }
@@ -172,7 +180,7 @@ void Ut_MSettingsLanguageParser::EtestParseSelectionWithoutKey()
 void Ut_MSettingsLanguageParser::testParseSelectionOneValue()
 {
     executeParsingTest("<settings>\n"
-                       "  <selection key=\"key\">\n"
+                       "  <selection key=\"key\" title=\"title\">\n"
                        "    <option title=\"Title\">5</option>\n"
                        "  </selection>\n"
                        "</settings>");
@@ -185,7 +193,7 @@ void Ut_MSettingsLanguageParser::EtestParseSelectionWithInvalidValue()
 {
     // value element doesn't have a required title attribute
     executeParsingTest("<settings>\n"
-                       "  <selection key=\"key\">\n"
+                       "  <selection key=\"key\" title=\"title\">\n"
                        "    <option>5</option>\n"
                        "  </selection>\n"
                        "</settings>");
@@ -193,7 +201,7 @@ void Ut_MSettingsLanguageParser::EtestParseSelectionWithInvalidValue()
 
     // value element has invalid content (should be an integer)
     executeParsingTest("<settings>\n"
-                       "  <selection key=\"key\">\n"
+                       "  <selection key=\"key\" title=\"title\">\n"
                        "    <option title=\"Title\">foo</option>\n"
                        "  </selection>\n"
                        "</settings>");
@@ -203,7 +211,7 @@ void Ut_MSettingsLanguageParser::EtestParseSelectionWithInvalidValue()
 void Ut_MSettingsLanguageParser::testParseSelectionManyValues()
 {
     executeParsingTest("<settings>\n"
-                       "  <selection key=\"key\">\n"
+                       "  <selection key=\"key\" title=\"title\">\n"
                        "    <option title=\"Title1\">5</option>\n"
                        "    <option title=\"Title2\">6</option>\n"
                        "  </selection>\n"
@@ -358,7 +366,7 @@ void Ut_MSettingsLanguageParser::EtestParseIntegerWithInsaneMinMax()
 void Ut_MSettingsLanguageParser::testParseGroupInSettings()
 {
     executeParsingTest("<settings>\n"
-                       "  <group>\n"
+                       "  <group title=\"title\">\n"
                        "    <boolean key=\"aKey\" title=\"titleBoolean\"/>\n"
                        "  </group>\n"
                        "</settings>");
@@ -373,10 +381,10 @@ void Ut_MSettingsLanguageParser::testParseMultipleGroupsInSettings()
 {
     executeParsingTest("<settings>\n"
                        "  <boolean key=\"aKey\" title=\"titleBoolean\"/>\n"
-                       "  <group>\n"
+                       "  <group title=\"title\">\n"
                        "    <integer key=\"aKey\" title=\"aTitle\"/>\n"
                        "  </group>\n"
-                       "  <group>\n"
+                       "  <group title=\"title\">\n"
                        "    <text key=\"aKey\" title=\"aTitle\"/>\n"
                        "  </group>\n"
                        "</settings>");

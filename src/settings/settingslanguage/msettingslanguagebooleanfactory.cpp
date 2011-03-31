@@ -22,9 +22,9 @@
 #include "msettingslanguageboolean.h"
 #include "msettingslanguagewidget.h"
 
-#include <MWidgetView>
-#include <MLayout>
-#include <MLinearLayoutPolicy>
+#include <QGraphicsLinearLayout>
+#include <MStylableWidget>
+#include <MLabel>
 #include <MButton>
 #include <MDataStore>
 
@@ -32,23 +32,28 @@ MWidgetController *MSettingsLanguageBooleanFactory::createWidget(const MSettings
 {
     Q_UNUSED(rootWidget)
 
-    MWidgetController *parentWidget = new MWidgetController;
-    parentWidget->setView(new MWidgetView(parentWidget));
+    MStylableWidget *parentWidget = new MStylableWidget;
+    parentWidget->setStyleName("MSettingsLanguageItem");
 
     // Make an interaction controller and make it a child of the widget object (so that it gets destroyed when appropriate)
     MSettingsLanguageBooleanController *boolController = new MSettingsLanguageBooleanController(parentWidget);
 
     // Create a horizontal layout
-    MLayout *layout = new MLayout();
-    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-    policy->setContentsMargins(0, 0, 0, 0);
-    policy->setSpacing(0);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
     parentWidget->setLayout(layout);
+
+    // Create a label widget and put it into the layout
+    MLabel *label = new MLabel(settingsBool.title());
+    label->setStyleName("CommonSingleTitleInverted");
+    layout->addItem(label);
 
     // Create a button
     MButton *button = new MButton(parentWidget);
+    button->setViewType(MButton::switchType);
+    button->setStyleName("CommonSingleButtonInverted");
     button->setCheckable(true);
-    button->setViewType(MButton::toggleType);
     button->connect(button, SIGNAL(toggled(bool)), boolController, SLOT(buttonToggled(bool)));
 
     // Get the previously selected value if it exists
@@ -57,12 +62,9 @@ MWidgetController *MSettingsLanguageBooleanFactory::createWidget(const MSettings
         selectedValue = dataStore->value(settingsBool.key()).toBool();
     }
     button->setChecked(selectedValue);
-
-    button->setText(settingsBool.title());
-    button->setObjectName("SettingsLanguageBooleanValueButton");
     button->setProperty("dataStore", qVariantFromValue(static_cast<void *>(dataStore)));
     button->setProperty("key", settingsBool.key());
-    policy->addItem(button, Qt::AlignCenter);
+    layout->addItem(button);
 
     return parentWidget;
 }

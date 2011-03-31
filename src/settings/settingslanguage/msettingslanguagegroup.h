@@ -21,6 +21,7 @@
 #define MSETTINGSLANGUAGEGROUP_H
 
 #include "msettingslanguagenode.h"
+#include <QString>
 
 //! \internal
 /*!
@@ -33,10 +34,23 @@ class MSettingsLanguageGroup : public MSettingsLanguageNode
 public:
     /*!
      * Constructor.
+     * \param title the title of the group.
      */
-    MSettingsLanguageGroup() {}
+    MSettingsLanguageGroup(const QString &title);
 
-    virtual ~MSettingsLanguageGroup() {}
+    /*!
+     * Destructor
+     */
+    virtual ~MSettingsLanguageGroup();
+
+    /*!
+     * Returns the localized title of this group.
+     */
+    QString title() const;
+
+private:
+    //! The title of this object.
+    QString title_;
 };
 //! \internal_end
 

@@ -17,39 +17,38 @@
 **
 ****************************************************************************/
 
-#ifndef MSETTINGSLANGUAGEITEMFACTORY_H_
-#define MSETTINGSLANGUAGEITEMFACTORY_H_
+#ifndef MSETTINGSLANGUAGEGROUPFACTORY_H_
+#define MSETTINGSLANGUAGEGROUPFACTORY_H_
 
-#include <QString>
+#include <QObject>
 
 class MWidgetController;
-class MDataStore;
-class MSettingsLanguageSetting;
+class MSettingsLanguageGroup;
 class MSettingsLanguageWidget;
+class MDataStore;
 
 //! \internal
 /*!
  * A factory for translating settings binaries to widgets.
  */
-class MSettingsLanguageSettingFactory
+class MSettingsLanguageGroupFactory
 {
     /*!
      * Private constructor to prevent construction.
      */
-    MSettingsLanguageSettingFactory() {}
-    Q_DISABLE_COPY(MSettingsLanguageSettingFactory)
+    MSettingsLanguageGroupFactory() {}
+    Q_DISABLE_COPY(MSettingsLanguageGroupFactory)
 
 public:
     /*!
-     * \brief Creates a widget from a MSettingsLanguageSetting representation.
+     * \brief Creates a widget from a MSettingsLanguageGroup representation.
      *
-     * \param settingsItem the settings binary representation.
+     * \param settingsGroup the settings binary representation.
      * \param rootWidget the root of the widget hierarchy where the new widget will be attached.
      * \param dataStore the data store for the settings.
      * \return a widget.
      */
-    static MWidgetController *createWidget(const MSettingsLanguageSetting &settingsItem, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore = NULL);
-
+    static MWidgetController *createWidget(const MSettingsLanguageGroup &settingsGroup, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore = NULL);
 };
 //! \internal_end
 

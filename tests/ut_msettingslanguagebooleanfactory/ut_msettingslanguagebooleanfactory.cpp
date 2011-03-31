@@ -27,10 +27,10 @@
 #include <MDataStore>
 #include <MApplication>
 #include <QGraphicsLinearLayout>
+#include <MLabel>
 #include <MButton>
 #include <QtTest/QtTest>
 #include <QLayoutItem>
-#include <QDebug>
 
 // Tests
 void Ut_MSettingsLanguageBooleanFactory::initTestCase()
@@ -75,21 +75,30 @@ void Ut_MSettingsLanguageBooleanFactory::testBuildWidgetButtonCheck(bool aIsChec
     MWidgetController *widget = MSettingsLanguageBooleanFactory::createWidget(se, dds, &ddatas);
     QVERIFY(widget != NULL);
 
-    // Just find the toggle button
+    // Find the title and the toggle button
+    MLabel *label = NULL;
     MButton *button = NULL;
-    foreach(QGraphicsItem * child, widget->childItems()) {
-        button = static_cast<MButton *>(child);
-        if (button != NULL && button->objectName() == "SettingsLanguageBooleanValueButton") {
+    foreach(QGraphicsItem *child, widget->childItems()) {
+        label = static_cast<MLabel *>(child);
+        if (label != NULL && label->styleName() == "CommonSingleTitleInverted") {
             break;
         }
     }
+    foreach(QGraphicsItem *child, widget->childItems()) {
+        button = static_cast<MButton *>(child);
+        if (button != NULL && button->styleName() == "CommonSingleButtonInverted") {
+            break;
+        }
+    }
+    QVERIFY(label != NULL);
     QVERIFY(button != NULL);
 
+    QCOMPARE(label->styleName(), QString("CommonSingleTitleInverted"));
+    QCOMPARE(label->text(), QString("ToggleButton1"));
     QVERIFY(button->isCheckable());
     QVERIFY(button->isChecked() == aIsChecked);
-    QCOMPARE(button->objectName(), QString("SettingsLanguageBooleanValueButton"));
+    QCOMPARE(button->styleName(), QString("CommonSingleButtonInverted"));
     QCOMPARE(button->property("key").toString(), QString("testKey"));
-    QCOMPARE(button->text(), QString("ToggleButton1"));
 
     MDataStore *dataStore = static_cast<MDataStore *>(button->property("dataStore").value<void *>());
     QCOMPARE(dataStore->value("testKey").toBool(), aIsChecked);

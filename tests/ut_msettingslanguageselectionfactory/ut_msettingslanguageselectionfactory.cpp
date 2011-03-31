@@ -73,7 +73,7 @@ void Ut_MSettingsLanguageSelectionFactory::cleanup()
 void Ut_MSettingsLanguageSelectionFactory::testBuildWidget()
 {
     // Create a settings enum of two values
-    MSettingsLanguageSelection se("TestKey");
+    MSettingsLanguageSelection se("TestKey", "TestTitle");
     se.addOption("TestValue0", 0);
     se.addOption("TestValue1", 1);
     MSettingsLanguageOption *option0 = new MSettingsLanguageOption("StubTitle", 5);

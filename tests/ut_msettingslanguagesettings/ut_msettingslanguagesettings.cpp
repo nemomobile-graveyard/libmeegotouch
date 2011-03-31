@@ -48,7 +48,7 @@ void Ut_MSettingsLanguageSettings::cleanupTestCase()
 void Ut_MSettingsLanguageSettings::testAddChildToItem()
 {
     QCOMPARE(m_subject->numChildren(), uint(0));
-    MSettingsLanguageSelection *aEnum = new MSettingsLanguageSelection("foo");
+    MSettingsLanguageSelection *aEnum = new MSettingsLanguageSelection("foo", "bar");
     m_subject->addChild(aEnum);
     QCOMPARE(m_subject->numChildren(), uint(1));
 }

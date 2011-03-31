@@ -1,10 +1,6 @@
 INCLUDEPATH += .
 
-STYLE_HEADERS += \
-    settingslanguage/msettingslanguagesettingsfactorystyle.h
-
 PUBLIC_HEADERS += \
-    $$STYLE_HEADERS \
     settingslanguage/msettingslanguageparser.h \
     settingslanguage/msettingslanguagebinary.h \
     settingslanguage/msettingslanguagewidget.h \
@@ -13,6 +9,7 @@ PUBLIC_HEADERS += \
     settingslanguage/msettingslanguageselectionfactory.h \
     settingslanguage/msettingslanguagetextfactory.h \
     settingslanguage/msettingslanguageintegerfactory.h \
+    settingslanguage/msettingslanguagegroupfactory.h \
     settingslanguage/msettingslanguageselectioncontroller.h \
     settingslanguage/msettingslanguagetextcontroller.h \
     settingslanguage/msettingslanguageintegercontroller.h \
@@ -36,6 +33,7 @@ SOURCES += \
     settingslanguage/msettingslanguageselectionfactory.cpp \
     settingslanguage/msettingslanguagetextfactory.cpp \
     settingslanguage/msettingslanguageintegerfactory.cpp \
+    settingslanguage/msettingslanguagegroupfactory.cpp \
     settingslanguage/msettingslanguageselectioncontroller.cpp \
     settingslanguage/msettingslanguagetextcontroller.cpp \
     settingslanguage/msettingslanguageintegercontroller.cpp \
@@ -47,4 +45,5 @@ SOURCES += \
     settingslanguage/msettingslanguagebooleancontroller.cpp \
     settingslanguage/msettingslanguagebooleanfactory.cpp \
     settingslanguage/msettingslanguageboolean.cpp \
-    settingslanguage/msettingslanguageinteger.cpp
+    settingslanguage/msettingslanguageinteger.cpp \
+    settingslanguage/msettingslanguagegroup.cpp
