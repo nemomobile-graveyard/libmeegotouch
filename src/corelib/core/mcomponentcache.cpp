@@ -138,6 +138,10 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
             initialArgc = qMin(argc, ARGV_LIMIT);
 
             MComponentData::instance()->reinit(argc, argv, appIdentifier, service);
+            
+            // Set object name for MApplication
+            QString appName = QFileInfo(argv[0]).fileName();    
+            qApp->setObjectName(appName);
 
 #ifdef Q_WS_X11
             // reinit WM_COMMAND X11 property
@@ -147,7 +151,6 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
                     XSetCommand(display, mApplicationWindowInstance->effectiveWinId(), argv, argc);
 
                     // set correct WM_CLASS properties
-                    QString appName = QFileInfo(argv[0]).fileName();    
                     QString appClass = appName.left(1).toUpper();
                     if (appName.length() > 1)
                         appClass += appName.right(appName.length() - 1);
