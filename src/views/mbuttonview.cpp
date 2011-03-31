@@ -46,7 +46,7 @@
 MButtonViewPrivate::MButtonViewPrivate()
     : icon(0), toggledIcon(0), label(NULL),
     iconOrigin(IconOriginUndefined), toggledIconOrigin(IconOriginUndefined),
-      transition(NULL), eventCancelled(false)
+      transition(NULL), eventCancelled(false), expectMouseReleaseEvent(false)
 {
 }
 
@@ -462,6 +462,9 @@ void MButtonView::applyStyle()
 void MButtonView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
+    Q_D(MButtonView);
+
+    d->expectMouseReleaseEvent = true;
 
     if (model()->down()) {
         return;
@@ -472,6 +475,11 @@ void MButtonView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MButtonView);
+    if (!d->expectMouseReleaseEvent) {
+        // The usual mouse-press -> mouse-move -> mouse-release cycle
+        // has been interrupted by a cancel event.
+        return;
+    }
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
@@ -494,6 +502,7 @@ void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void MButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MButtonView);
+    d->expectMouseReleaseEvent = false;
 
     if (!model()->down()) {
         return;
@@ -512,6 +521,8 @@ void MButtonView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MButtonView);
+
+    d->expectMouseReleaseEvent = false;
 
     if (!model()->down()) {
         return;

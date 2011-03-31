@@ -203,16 +203,26 @@ void Ut_MButton::toggle()
 
 void Ut_MButton::testPressedCanceled()
 {
-    QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMousePress);
-    m_subject->mousePressEvent(&mouseEvent);
+    QGraphicsSceneMouseEvent mousePressEvent(QEvent::GraphicsSceneMousePress);
+    m_subject->mousePressEvent(&mousePressEvent);
     QVERIFY(m_subject->isDown() == true);
 
-    QSignalSpy spy(m_subject, SIGNAL(clicked()));
+    QSignalSpy releasedSpy(m_subject, SIGNAL(released()));
+    QSignalSpy clickedSpy(m_subject, SIGNAL(clicked()));
     MCancelEvent event;
     m_subject->cancelEvent(&event);
 
-    QCOMPARE(spy.count(), 0);
-    QVERIFY(m_subject->isDown() == false);
+    QCOMPARE(clickedSpy.count(), 0);
+    QVERIFY(!m_subject->isDown());
+
+    QGraphicsSceneMouseEvent mouseMoveEvent(QEvent::GraphicsSceneMouseMove);
+    mouseMoveEvent.setScenePos(m_subject->sceneBoundingRect().topLeft());
+    m_subject->mouseMoveEvent(&mouseMoveEvent);
+
+    QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
+    m_subject->mouseReleaseEvent(&mouseReleaseEvent);
+
+    QCOMPARE(releasedSpy.count(), 1);
 }
 
 void Ut_MButton::testGroup()

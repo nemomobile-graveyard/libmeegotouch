@@ -92,6 +92,7 @@ public:
     MButtonTransition* transition;
 
     bool eventCancelled;
+    bool expectMouseReleaseEvent;
 };
 
 #endif
