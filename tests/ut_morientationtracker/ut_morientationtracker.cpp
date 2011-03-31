@@ -325,8 +325,8 @@ void Ut_MOrientationTracker::testWindowRemoteOrientationLock()
 
     QCoreApplication::processEvents();
 
-    QCOMPARE(window1->orientationAngle(), expectedAngle);
-    QCOMPARE(window2->orientationAngle(), expectedAngle);
+    QCOMPARE(static_cast<int>(window1->orientationAngle()), static_cast<int>(expectedAngle));
+    QCOMPARE(static_cast<int>(window2->orientationAngle()), static_cast<int>(expectedAngle));
 }
 
 ///////////////////////////////////////////////////////
