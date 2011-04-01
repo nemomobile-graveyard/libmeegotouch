@@ -35,7 +35,8 @@ MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
       buttonLayoutPolicy(new MLinearLayoutPolicy(new MLayout(this),
                                                  Qt::Horizontal)),
       arrow(new MEditorToolbarArrow(this)),
-      buttonUpdateQueued(false)
+      buttonUpdateQueued(false),
+      temporarilyDisappeared(false)
 {
     setFlag(QGraphicsItem::ItemHasNoContents, true);
     overlay->hide();
@@ -82,12 +83,29 @@ void MEditorToolbar::appear()
 {
     overlay->show();
     updateEditorItemVisibility();
+    temporarilyDisappeared = false;
 }
 
 void MEditorToolbar::disappear()
 {
     hideEditorItem();
     overlay->hide();
+    temporarilyDisappeared = false;
+}
+
+void MEditorToolbar::disappearTemporarily()
+{
+    if (isAppeared()) {
+        disappear();
+        temporarilyDisappeared = true;
+    }
+}
+
+void MEditorToolbar::removeTemporaryDisappearance()
+{
+    if (temporarilyDisappeared) {
+        appear();
+    }
 }
 
 bool MEditorToolbar::isAppeared() const

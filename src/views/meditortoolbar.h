@@ -94,6 +94,12 @@ public slots:
     //! \brief Hide the toolbar.
     void disappear();
 
+    //! \brief Make toolbar hide temporarily if visible
+    void disappearTemporarily();
+
+    //! \brief Show the toolbar again if it was only temporarily hidden
+    void removeTemporaryDisappearance();
+
 protected:
     //! \reimp
     virtual QSizeF sizeHint(Qt::SizeHint which,
@@ -131,6 +137,7 @@ private:
     MEditorToolbarArrow *arrow;
 
     bool buttonUpdateQueued;
+    bool temporarilyDisappeared;
 
     M_STYLABLE_WIDGET(MEditorToolbarStyle)
 };

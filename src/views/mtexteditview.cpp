@@ -516,15 +516,24 @@ void MTextEditViewPrivate::showEditorToolbar()
             }
             editorToolbar->addAction(action);
         }
+
+        QObject::connect(controller, SIGNAL(textChanged()),
+                         editorToolbar.data(), SLOT(disappear()));
+        QObject::connect(editorToolbar.data(), SIGNAL(sizeChanged()),
+                         this, SLOT(updateEditorToolbarPosition()));
+        QObject::connect(controller->sceneManager(),
+                         SIGNAL(orientationChanged(const M::Orientation &)),
+                         editorToolbar.data(), SLOT(disappearTemporarily()));
+        QObject::connect(controller->sceneManager(),
+                         SIGNAL(orientationChangeFinished(const M::Orientation &)),
+                         this, SLOT(restoreEditorToolbar()));
+
+        MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
+        connect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
+                this, SLOT(updateEditorToolbarPosition()), Qt::UniqueConnection);
     }
+
     editorToolbar->appear();
-    QObject::connect(controller, SIGNAL(textChanged()),
-                     editorToolbar.data(), SLOT(disappear()));
-    QObject::connect(editorToolbar.data(), SIGNAL(sizeChanged()),
-                     this, SLOT(updateEditorToolbarPosition()));
-    MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
-    connect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
-            this, SLOT(updateEditorToolbarPosition()), Qt::UniqueConnection);
     updateEditorToolbarPosition();
 }
 
@@ -534,10 +543,13 @@ void MTextEditViewPrivate::hideEditorToolbar()
     if (!editorToolbar) {
         return;
     }
-
     editorToolbar->disappear();
     MTextEditPrivate &controllerD(*static_cast<MTextEditPrivate *>(controller->d_func()));
-    disconnect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(updateEditorToolbarPosition()));
+    disconnect(&controllerD.signalEmitter, SIGNAL(scenePositionChanged()),
+               this, SLOT(updateEditorToolbarPosition()));
+    disconnect(controller->sceneManager(),
+               SIGNAL(orientationChangeFinished(const M::Orientation &)),
+               this, SLOT(restoreEditorToolbar()));
     editorToolbar.reset();
 }
 
@@ -586,10 +598,12 @@ void MTextEditViewPrivate::hideMagnifier()
         QObject::connect(controller, SIGNAL(cursorPositionChanged()),
                          controller->sceneManager(), SLOT(ensureCursorVisible()),
                          Qt::UniqueConnection);
-        QObject::disconnect(controller->sceneManager(), SIGNAL(orientationChanged(const M::Orientation  &)),
-                            this, 0);
-        QObject::disconnect(controller->sceneManager(), SIGNAL(orientationChangeFinished(const M::Orientation  &)),
-                            this, 0);
+        QObject::disconnect(controller->sceneManager(),
+                            SIGNAL(orientationChanged(const M::Orientation  &)),
+                            this, SIGNAL(makeMagnifierDisappear()));
+        QObject::disconnect(controller->sceneManager(),
+                            SIGNAL(orientationChangeFinished(const M::Orientation  &)),
+                            this, SIGNAL(makeMagnifierAppear()));
     }
 
     if (magnifier) {
@@ -971,6 +985,15 @@ void MTextEditViewPrivate::makeMagnifierAppear()
 {
     if (magnifier) {
         magnifier->appear();
+    }
+}
+
+void MTextEditViewPrivate::restoreEditorToolbar()
+{
+    // restore editor toolbar if it was temporarily hidden
+    if (editorToolbar) {
+        editorToolbar->removeTemporaryDisappearance();
+        updateEditorToolbarPosition();
     }
 }
 

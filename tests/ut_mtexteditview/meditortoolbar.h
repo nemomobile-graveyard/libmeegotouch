@@ -29,6 +29,7 @@ public:
     {
         return false;
     }
+    void removeTemporaryDisappearance() {}
 
 signals:
     void sizeChanged();
