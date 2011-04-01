@@ -62,7 +62,7 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 
     if (clip) {
         painter->save();
-        painter->setClipRect(paintingRect, Qt::IntersectClip);
+        painter->setClipRect(viewPrivate->controller->boundingRect(), Qt::IntersectClip);
         painter->drawStaticText(textOffset, staticText);
         painter->restore();
     } else {
@@ -261,11 +261,11 @@ void MLabelViewSimple::initializeTextProperties()
     staticText.prepare(QTransform(), viewPrivate->controller->font());
 
     adjustTextOffset();
-    
-    clip =  textOffset.x() < paintingRect.x()
-           || textOffset.y() < paintingRect.y()
-           || textOffset.x() + staticText.size().width()  > paintingRect.right()
-           || textOffset.y() + staticText.size().height() > paintingRect.bottom();
+
+    clip =  textOffset.x() < viewPrivate->controller->boundingRect().x()
+           || textOffset.y() < viewPrivate->controller->boundingRect().y()
+           || textOffset.x() + staticText.size().width()  > viewPrivate->controller->boundingRect().right()
+           || textOffset.y() + staticText.size().height() > viewPrivate->controller->boundingRect().bottom();
 
     const QColor& color = viewPrivate->model()->color();
     pen = QPen(color.isValid() ? color : style->color());
