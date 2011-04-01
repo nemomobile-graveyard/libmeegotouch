@@ -290,14 +290,14 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
     return QImage();
 }
 
-void ImageResource::saveToFsCache(QImage pixmap, const QSize& size, const QString &origFileName)
+void ImageResource::saveToFsCache(QImage pixmap, const QSize& size, const QString &uniqueKey)
 {
     static bool failedCacheSaveAttempt = false;
 
     if (failedCacheSaveAttempt)
         return;
 
-    const QString cacheFileName = createCacheFilename(size, origFileName);
+    const QString cacheFileName = createCacheFilename(size, uniqueKey);
     if (cacheFileName.isEmpty()) {
         return;
     }
@@ -338,7 +338,7 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size, const QStrin
 
     QDataStream stream(&meta);
     stream << IMAGE_CACHE_VERSION;
-    QFileInfo fileInfo(origFileName);
+    QFileInfo fileInfo(absoluteFilePath());
     stream << fileInfo.lastModified().toTime_t();
     stream << pixmap.size();
     stream << pixmap.format();

@@ -103,7 +103,7 @@ public:
 
     void applyDebugColors(QImage *image);
 
-    static void saveToFsCache(const QImage pixmap, const QSize& size, const QString &origFileName);
+    void saveToFsCache(const QImage pixmap, const QSize& size, const QString &uniqueKey);
 
 protected:
     virtual QImage createPixmap(const QSize &size) = 0;
