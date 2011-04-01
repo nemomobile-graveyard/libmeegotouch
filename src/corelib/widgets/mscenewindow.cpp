@@ -319,9 +319,14 @@ bool MSceneWindow::event(QEvent *event)
     if (event->type() == MDismissEvent::eventType()) {
         dismissEvent(static_cast<MDismissEvent *>(event));
     } else if (event->type() == QEvent::GraphicsSceneContextMenu) {
-        //Event was not accepted by any of our child widgets.
-        //We need to accept it so that it doesn't propagate.
+
+        //Event was not accepted by any of our child widgets. We want to
+        //react to it, if we have actions added to us, but in the end
+        //we always need to accept it so that it doesn't propagate.
+        MWidgetController::event(event);
         event->accept();
+        return true;
+
     } else if (event->type() == QEvent::ChildAdded) {
         QChildEvent *childEvent = static_cast<QChildEvent *>(event);
         if (childEvent->child()->objectName() == "_m_testBridge") {
