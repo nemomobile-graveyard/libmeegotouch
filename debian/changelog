@@ -1,8 +1,28 @@
-libmeegotouch (0.21.1~1) unstable; urgency=low
+libmeegotouch (0.21.1-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#241800 - [TASK] Coverity run on 30 March 2011 (AF05)
+  * Fixes: NB#240034 - Dialer object menu opens in the "Merge to contact" sheet
+  * Fixes: NB#240696 - [TASK] Theme should be able to retrieve application icon from default application icon folder
+  * Fixes: Consistency of model back-references in MLocaleBuckets::removeItems() and test coverage
+  * Fixes: NB#239405
+  * Fixes: NB#227302 - When using QContextMenuEvent tap/click twice is required to choose action from menu
+  * Fixes: NB#241923 - MeeGo Touch boosted applications have incorrect MApplication::objectName
+  * Fixes: NB#233653 - widgets created with declarative settings language renders incorrectly
+  * Fixes: MeeGoTouch version must match the package version.
+  * Fixes: NB#238939 - A colon is prefixed for the event messages in Skype group chat conversation view
+  * Fixes: NB#242117 - LMT compilation broken when context subscriber is not available
+  * Fixes: NB#234593 - Paste option is missing for the first time after clipboard is populated
+  * Fixes: NB#241780
+  * Fixes: NB#241306 - New theme makes headers not visible.
+  * Fixes: NB#241193 - <MemLeak> page switch is increasing memory consumption if we have actions on the MToolBar
+  * Fixes: NB#238789 - [TASK] no way to access the requester winId of a chainTask situation
+  * Fixes: Ut_MWidget unit test.
+  * Fixes: Fix Ut_MExtensionHandleView unit test.
+  * Fixes: NB#229428, Cursor is not visible once the text crosses the visible area of the text field.
+  * Fixes: PannableViewportLayout invalidates layout on each position update.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 30 Mar 2011 13:52:23 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 01 Apr 2011 13:06:13 +0300
 
 libmeegotouch (0.20.99-1) unstable; urgency=low
 
