@@ -203,7 +203,7 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     QDataStream serializedPackageDataStream(serializedPackageData);
     readPacketData(serializedPackageDataStream, packet);
 
-    delete raw;
+    delete[] raw;
 
     return stream;
 }
