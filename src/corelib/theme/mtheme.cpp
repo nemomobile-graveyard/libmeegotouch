@@ -715,6 +715,7 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     applicationName(applicationName),
     customStylesheet(NULL),
     invalidPixmapPtr(0),
+    q_ptr(0),
     application(new MAssembly(applicationName)),
     palette(logicalValues),
     fonts(logicalValues),
