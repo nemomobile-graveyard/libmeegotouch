@@ -41,6 +41,10 @@ using namespace M::MThemeDaemonProtocol;
 
 MThemeDaemon::MThemeDaemon(Type type) :
     mostUsedPixmaps(this, type),
+#ifndef Q_OS_WIN
+    pngIcons("/usr/share/icons/hicolor/64x64/apps/", M::Recursive),
+    scalableIcons("/usr/share/icons/hicolor/scalable/apps/", M::Recursive),
+#endif
     type(type)
 {
     // check that the base theme ("fallback") directory exists.
@@ -176,6 +180,17 @@ ImageResource *MThemeDaemon::findImageResource(const QString &imageId)
         if (resource)
             break;
     }
+
+#ifndef Q_OS_WIN
+    if (!resource) {
+        // couldn't find the icon from theme-directories,
+        // search from the system default icon-directories
+        resource = pngIcons.findImage(imageId);
+        if (!resource) {
+            resource = scalableIcons.findImage(imageId);
+        }
+    }
+#endif
 
     return resource;
 }

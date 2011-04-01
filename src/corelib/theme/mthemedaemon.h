@@ -70,6 +70,7 @@ private:
     QStringList themeInheritance;
     QStringList themeLibraries;
     QList<MThemeImagesDirectory *> themeImageDirs;
+    MImageDirectory pngIcons, scalableIcons;
     Type type;
 };
 //! \internal_end
