@@ -44,17 +44,17 @@ MPageSwitchSlideAnimation::MPageSwitchSlideAnimation(QObject *parent) :
     Q_D(MPageSwitchSlideAnimation);
 
     d->positionNewPageAnimation = new QPropertyAnimation;
-    d->positionNewPageAnimation->setPropertyName("x");
+    d->positionNewPageAnimation->setPropertyName("pos");
     d->positionNewPageAnimation->setEasingCurve(style()->easingCurve());
     d->positionNewPageAnimation->setDuration(style()->duration());
-    d->positionNewPageAnimation->setEndValue((qreal)0);
+    d->positionNewPageAnimation->setEndValue(QPointF(0, 0));
     addAnimation(d->positionNewPageAnimation);
 
     d->positionOldPageAnimation = new QPropertyAnimation;
-    d->positionOldPageAnimation->setPropertyName("x");
+    d->positionOldPageAnimation->setPropertyName("pos");
     d->positionOldPageAnimation->setEasingCurve(style()->easingCurve());
     d->positionOldPageAnimation->setDuration(style()->duration());
-    d->positionOldPageAnimation->setStartValue((qreal)0);
+    d->positionOldPageAnimation->setStartValue(QPointF(0, 0));
     addAnimation(d->positionOldPageAnimation);
 }
 
@@ -77,16 +77,16 @@ void MPageSwitchSlideAnimation::updateState(QAbstractAnimation::State newState,
 
     if (newPage()) {
         if (transitionDirection() == ToParentPage)
-            d->positionNewPageAnimation->setStartValue(newPage()->boundingRect().width());
+            d->positionNewPageAnimation->setStartValue(QPointF(newPage()->boundingRect().width(), 0));
         else
-            d->positionNewPageAnimation->setStartValue(-newPage()->boundingRect().width());
+            d->positionNewPageAnimation->setStartValue(QPointF(-newPage()->boundingRect().width(), 0));
     }
 
     if (oldPage()) {
         if (transitionDirection() == ToParentPage)
-            d->positionOldPageAnimation->setEndValue(-oldPage()->boundingRect().width());
+            d->positionOldPageAnimation->setEndValue(QPointF(-oldPage()->boundingRect().width(), 0));
         else
-            d->positionOldPageAnimation->setEndValue(oldPage()->boundingRect().width());
+            d->positionOldPageAnimation->setEndValue(QPointF(oldPage()->boundingRect().width(), 0));
     }
 }
 

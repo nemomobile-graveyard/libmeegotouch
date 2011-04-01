@@ -224,8 +224,7 @@ public:
     void updateStatusBarGeometryProperty();
 #endif
 
-    void updatePagesAndSheetsGeometry();
-    void addPagesAndSheetsGeometryUpdateAnimation(QParallelAnimationGroup* mainAnimation);
+    void updateSheetsGeometry();
 
     void setVisibilityOfSceneWindowsBehind(MSceneWindow *referenceSceneWindow, bool newVisibility);
 
