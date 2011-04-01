@@ -20,6 +20,7 @@
 #include "mlocalebuckets.h"
 #include "mlocalebuckets_p.h"
 
+
 MLocaleBucketsPrivate::MLocaleBucketsPrivate() :
     locale(),
 #ifdef HAVE_ICU
@@ -89,8 +90,9 @@ bool MLocaleBucketsPrivate::removeBucketItems(int bucketIndex, int itemIndex, in
         return false;
 
     QStringList &itemList = bucketItems[bucketIndex];
-    if (count > itemList.count())
-        count = itemList.count();
+
+    if (itemIndex + count > itemList.count())
+        return false;
 
     for (int i=0; i < count; ++i) {
         QList<int> &origIndexList = origIndices[bucketIndex];

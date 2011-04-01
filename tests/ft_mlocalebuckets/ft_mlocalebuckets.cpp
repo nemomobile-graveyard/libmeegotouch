@@ -88,7 +88,9 @@ void Ft_MLocaleBuckets::dumpBuckets(const MLocaleBuckets &buckets, const char *h
 
         for (int i=0; i < items.count(); ++i)
         {
-            cout << "  #" << i << ": " << items.at(i).toUtf8().constData() << endl;
+            cout << "  #" << i << ": " << items.at(i).toUtf8().constData()
+                 << "      \torig index: " << buckets.origItemIndex(b, i)
+                 << endl;
         }
     }
 
@@ -340,7 +342,7 @@ void Ft_MLocaleBuckets::testRemove()
     QVERIFY(buckets.bucketCount() == oldBucketCount-1);
     QVERIFY(buckets.bucketIndex("H") == H_Bucket-1); // Moved up one position after bucket "C" is gone
     // dumpBuckets(buckets, __FUNCTION__);
-    
+
     QVERIFY(buckets.origItemIndex(Y_Bucket-1, 0) == origItems.indexOf("Yannick"));
     QVERIFY(buckets.origItemIndex(H_Bucket-1, 0) == origItems.indexOf("Halvar"));
     QVERIFY(buckets.origItemIndex(H_Bucket-1, 1) == origItems.indexOf("Hendrik"));
@@ -386,7 +388,7 @@ void Ft_MLocaleBuckets::testCopy()
 {
     MLocale locale("en_US");
     MLocale::setDefault(locale);
-    
+
     // Expecting:
     //
     // Bucket #0 [A] size 2
@@ -437,9 +439,9 @@ void Ft_MLocaleBuckets::testCopy()
 
     delete buckets1;
     buckets1 = 0;
-    
+
     QVERIFY(!buckets2->isEmpty());
-    
+
     QVERIFY(checkBucketContent(*buckets2, A_Bucket, QStringList() << "Agnetha" << "Anna"));
     QVERIFY(checkBucketContent(*buckets2, B_Bucket, QStringList() << "Bernardo"));
     QVERIFY(checkBucketContent(*buckets2, C_Bucket, QStringList() << "Chaim" << "Christopher" << "Claudia" ));
@@ -454,14 +456,14 @@ void Ft_MLocaleBuckets::testCopy()
     QVERIFY(checkBucketContent(buckets3, H_Bucket, QStringList() << "Halvar" << "Hendrik"));
 
     delete buckets2;
-    
+
     QVERIFY(!buckets3.isEmpty());
     QVERIFY(checkBucketContent(buckets3, H_Bucket, QStringList() << "Halvar" << "Hendrik"));
-    
+
     QVERIFY(buckets3.origItemIndex(A_Bucket, 1) == inputItems.indexOf("Anna"));
     QVERIFY(buckets3.origItemIndex(H_Bucket, 0) == inputItems.indexOf("Halvar"));
     QVERIFY(buckets3.origItemIndex(H_Bucket, 1) == inputItems.indexOf("Hendrik"));
     QVERIFY(buckets3.origItemIndex(Y_Bucket, 0) == inputItems.indexOf("Yannick"));
 }
-    
+
 QTEST_APPLESS_MAIN(Ft_MLocaleBuckets)
