@@ -90,6 +90,8 @@ private slots:
 #ifdef Q_WS_X11
     void testStatusBarGeometryProperty();
 #endif
+    void testSceneWindowsBehindSheetGetHiddenUponSheetAppearance();
+    void testSceneWindowsBehindSheetAreShownWhenSheetAboutToDisappear();
 private:
     MComponentData* m_componentData;
 };

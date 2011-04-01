@@ -2002,6 +2002,14 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
         blockingWindows.append(sceneWindow);
     }
 
+    if (type == MSceneWindow::Sheet) {
+        // A sheet by definition takes the entire screen and is fully opaque.
+        // Therefore all scene windows behind it won't be visible at all.
+        // But they will still be painted.
+        // As an optimization we hide them all.
+        setVisibilityOfSceneWindowsBehind(sceneWindow, false);
+    }
+
     if (isOnDisplay()) {
         produceMustBeResolvedDisplayEvent(sceneWindow);
     }
@@ -2015,6 +2023,15 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
 
 void MSceneManagerPrivate::onSceneWindowEnteringDisappearingState(MSceneWindow *sceneWindow)
 {
+    if (sceneWindow->windowType() == MSceneWindow::Sheet) {
+        // A sheet by definition takes the entire screen and is fully opaque.
+        // Therefore all scene windows behind it won't be visible at all.
+        // But they will still be painted.
+        // As an optimization we have hidden them all.
+        // Now we should restore their visibilities.
+        setVisibilityOfSceneWindowsBehind(sceneWindow, true);
+    }
+
     if (sceneWindow->d_func()->dismissed) {
         produceSceneWindowEvent(MSceneWindowEvent::eventTypeDismiss(),
                 sceneWindow, true);
@@ -2061,6 +2078,16 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
             break;
 
         case MSceneWindow::Appeared:
+
+            if (sceneWindow->windowType() == MSceneWindow::Sheet) {
+                // A sheet by definition takes the entire screen and is fully opaque.
+                // Therefore all scene windows behind it won't be visible at all.
+                // But they will still be painted.
+                // As an optimization we have hidden them all.
+                // Now we should restore their visibilities.
+                setVisibilityOfSceneWindowsBehind(sceneWindow, true);
+            }
+
             produceSceneWindowEvent(MSceneWindowEvent::eventTypeDisappear(),
                     sceneWindow, false);
             prepareWindowHide(sceneWindow);
@@ -2183,6 +2210,21 @@ const MSceneManagerStyleContainer &MSceneManagerPrivate::style() const
 MSceneManagerStyleContainer *MSceneManagerPrivate::createStyleContainer() const
 {
     return new MSceneManagerStyleContainer();
+}
+
+void MSceneManagerPrivate::setVisibilityOfSceneWindowsBehind(
+        MSceneWindow *referenceSceneWindow, bool newVisibility)
+{
+    MSceneWindow *sceneWindow;
+    Q_FOREACH(sceneWindow, windows) {
+        // Disappeared scene windows are not on the scene window
+        // stack
+        if (sceneWindow->sceneWindowState() != sceneWindow->Disappeared
+            && sceneWindow->zValue() < referenceSceneWindow->zValue()) {
+
+            sceneWindow->setVisible(newVisibility);
+        }
+    }
 }
 
 MSceneManager::MSceneManager(MScene *scene, QObject *parent) :

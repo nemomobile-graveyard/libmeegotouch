@@ -36,6 +36,7 @@
 #include "mdockwidget.h"
 #include <MScene>
 #include "mscenemanager_p.h"
+#include <MSheet>
 
 #include <MComponentData>
 #include <mapplicationwindow.h>
@@ -1214,5 +1215,57 @@ void Ut_MSceneManager::testStatusBarGeometryProperty()
 }
 
 #endif
+
+void Ut_MSceneManager::testSceneWindowsBehindSheetGetHiddenUponSheetAppearance()
+{
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *sheet = new MSheet;
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->appearSceneWindowNow(page);
+
+    QCOMPARE(page->isVisible(), true);
+
+    sm->appearSceneWindow(sheet);
+
+    // Nothing changes. sheet is still animating its appearance
+    QCOMPARE(page->isVisible(), true);
+
+    sm->fastForwardSceneWindowTransitionAnimation(sheet);
+
+    // Sheet has finished its appearance animation. It now covers the entire screen
+    // but for the status bar part. Since we consider both status bar and sheet to be
+    // fully opaque nothing behind them is visible to a QGraphicsView.
+    QCOMPARE(page->isVisible(), false);
+}
+
+void Ut_MSceneManager::testSceneWindowsBehindSheetAreShownWhenSheetAboutToDisappear()
+{
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *sheet = new MSheet;
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->appearSceneWindowNow(page);
+    sm->appearSceneWindowNow(sheet);
+
+    // Sheet covers the entire screen but for the status bar part. Since we consider
+    // both status bar and sheet to be fully opaque nothing behind them is visible
+    // to a QGraphicsView.
+    QCOMPARE(page->isVisible(), false);
+
+    sm->disappearSceneWindow(sheet);
+
+    // Sheet is starting to disappear. Scene windows behind it must be visible again
+    QCOMPARE(page->isVisible(), true);
+
+    sm->fastForwardSceneWindowTransitionAnimation(sheet);
+
+    // And keep being visible
+    QCOMPARE(page->isVisible(), true);
+}
 
 QTEST_MAIN(Ut_MSceneManager);

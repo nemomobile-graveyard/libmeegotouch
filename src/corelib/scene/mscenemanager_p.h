@@ -227,6 +227,8 @@ public:
     void updatePagesAndSheetsGeometry();
     void addPagesAndSheetsGeometryUpdateAnimation(QParallelAnimationGroup* mainAnimation);
 
+    void setVisibilityOfSceneWindowsBehind(MSceneWindow *referenceSceneWindow, bool newVisibility);
+
 public:
 
     MScene *scene;
