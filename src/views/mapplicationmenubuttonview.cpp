@@ -29,9 +29,10 @@
 #include "mgridlayoutpolicy.h"
 
 #include <QFontMetricsF>
+#include <QGraphicsLinearLayout>
 
 MApplicationMenuButtonViewPrivate::MApplicationMenuButtonViewPrivate()
-    : iconImage(0),  arrowIconImage(0), spinner(0), layout(0)
+    : iconImage(0), arrowIconImage(0), spinner(0), layout(0), labelSlot(0), labelLayout(0)
 {
 }
 
@@ -40,6 +41,7 @@ MApplicationMenuButtonViewPrivate::~MApplicationMenuButtonViewPrivate()
     delete iconImage;
     delete arrowIconImage;
     delete spinner;
+    delete labelSlot;
 }
 
 void MApplicationMenuButtonViewPrivate::init()
@@ -56,23 +58,13 @@ void MApplicationMenuButtonViewPrivate::init()
 
     policy->setContentsMargins(0, 0, 0, 0);
     controller->setLayout(layout);
-}
 
-void MApplicationMenuButtonViewPrivate::refreshStyleMode()
-{
-    Q_Q(MApplicationMenuButtonView);
-
-    if (q->model()->down())
-        q->style().setModePressed();
-    else if (q->model()->checked())
-        q->style().setModeSelected();
-    else
-        q->style().setModeDefault();
-
-    if (label)
-        label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
-
-    refreshIconImage();
+    labelSlot = new QGraphicsWidget;
+    labelSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    labelLayout = new QGraphicsLinearLayout;
+    labelLayout->setContentsMargins(0, 0, 0, 0);
+    labelLayout->setSpacing(0);
+    labelSlot->setLayout(labelLayout);
 }
 
 void MApplicationMenuButtonViewPrivate::refreshLayout()
@@ -93,9 +85,11 @@ void MApplicationMenuButtonViewPrivate::refreshLayout()
         iconImage->hide();
     }
 
-    if (label) {
-        policy->addItem(label, 0, colIndex++);
-        policy->setAlignment(label, Qt::AlignCenter);
+    if (label && labelLayout) {
+        if (labelLayout->count() == 0)
+            labelLayout->addItem(label);
+        policy->addItem(labelSlot, 0, colIndex++);
+        policy->setAlignment(labelSlot, Qt::AlignCenter);
     }
 
     arrowIconImage->hide();
@@ -137,6 +131,26 @@ void MApplicationMenuButtonViewPrivate::refreshIconImage()
     }
 }
 
+void MApplicationMenuButtonViewPrivate::updateLabelStyle()
+{
+    Q_Q(MApplicationMenuButtonView);
+
+    MButtonViewPrivate::updateLabelStyle();
+
+    if (labelLayout) {
+        const MApplicationMenuButtonStyle *s = static_cast<const MApplicationMenuButtonStyle *>(q->style().operator ->());
+        labelLayout->setContentsMargins(s->textMarginLeft(), s->textMarginTop(),
+                                        s->textMarginRight(), s->textMarginBottom());
+    }
+}
+
+void MApplicationMenuButtonViewPrivate::updateItemsAfterModeChange()
+{
+    updateLabelStyle();
+    refreshIconImage();
+}
+
+
 MApplicationMenuButtonView::MApplicationMenuButtonView(MApplicationMenuButton *controller) :
     MButtonView(* new MApplicationMenuButtonViewPrivate, controller)
 {
@@ -155,10 +169,9 @@ MApplicationMenuButtonView::~MApplicationMenuButtonView()
 {
 }
 
-// must override MButtonView::resizeEvent
 void MApplicationMenuButtonView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    MButtonView::resizeEvent(event);
+    MWidgetView::resizeEvent(event); //skip MButtonView::resizeEvent as we don't like calcIconTextRects() call there
 }
 
 void MApplicationMenuButtonView::applyStyle()
@@ -175,7 +188,8 @@ void MApplicationMenuButtonView::applyStyle()
         d->label->setObjectName("NavigationBarMenuButtonLabel");
     }
 
-    d->refreshStyleMode();
+    d->updateLabelStyle();
+    d->refreshIconImage();
     d->refreshLayout();
 }
 
@@ -185,13 +199,13 @@ void MApplicationMenuButtonView::updateData(const QList<const char *>& modificat
 
     MButtonView::updateData(modifications);
     bool mustRefreshLayout = false;
-    bool mustRefreshStyleMode = false;
+    bool mustRefreshIconImage = false;
     const char *member;
     foreach(member, modifications) {
         if (member == MButtonModel::Text || member == MButtonModel::TextVisible) {
             mustRefreshLayout = true;
         } else if (member == MButtonModel::IconID || member == MButtonModel::ToggledIconID) {
-            d->refreshIconImage();
+            mustRefreshIconImage = true;
         } else if (member == MButtonModel::IconVisible) {
             d->iconImage->setVisible(model()->iconVisible());
             mustRefreshLayout = true;
@@ -203,17 +217,14 @@ void MApplicationMenuButtonView::updateData(const QList<const char *>& modificat
             mustRefreshLayout = true;
         } else if (member == MApplicationMenuButtonModel::ArrowIconVisible) {
             mustRefreshLayout = true;
-        } else if (member == MButtonModel::Down || member == MButtonModel::Checked ||
-                   member == MButtonModel::Checkable) {
-            mustRefreshStyleMode = true;
         }
     }
 
+    if (mustRefreshIconImage)
+        d->refreshIconImage();
+
     if (mustRefreshLayout)
         d->refreshLayout();
-
-    if (mustRefreshStyleMode)
-        d->refreshStyleMode();
 }
 
 void MApplicationMenuButtonView::setupModel()
@@ -228,6 +239,12 @@ void MApplicationMenuButtonView::setupModel()
 
     updateData(modifications);
     update();
+}
+
+void MApplicationMenuButtonView::drawIcon(QPainter *painter, const QRectF &iconRect) const
+{
+    Q_UNUSED(painter);
+    Q_UNUSED(iconRect);
 }
 
 M_REGISTER_VIEW_NEW(MApplicationMenuButtonView, MApplicationMenuButton)

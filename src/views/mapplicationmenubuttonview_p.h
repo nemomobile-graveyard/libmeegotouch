@@ -27,6 +27,7 @@ class MImageWidget;
 class MProgressIndicator;
 class MLayout;
 class MGridLayoutPolicy;
+class  QGraphicsLinearLayout;
 
 class MApplicationMenuButtonViewPrivate : public MButtonViewPrivate
 {
@@ -37,16 +38,18 @@ public:
     virtual ~MApplicationMenuButtonViewPrivate();
 
     void init();
-    void refreshStyleMode();
     void refreshLayout();
     void refreshIconImage();
+    virtual void updateLabelStyle();
+    virtual void updateItemsAfterModeChange();
 
     MImageWidget *iconImage;
     MImageWidget *arrowIconImage;
     MProgressIndicator *spinner;
     MLayout *layout;
     MGridLayoutPolicy *policy;
-
+    QGraphicsWidget *labelSlot;
+    QGraphicsLinearLayout *labelLayout;
 };
 
 #endif

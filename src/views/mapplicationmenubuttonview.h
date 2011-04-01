@@ -66,6 +66,7 @@ protected:
     //! \reimp
     virtual void applyStyle();
     virtual void setupModel();
+    virtual void drawIcon(QPainter *painter, const QRectF &iconRect) const;
     //! \reimp_end
 
     //! \internal
