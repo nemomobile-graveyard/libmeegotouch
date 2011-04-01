@@ -35,6 +35,7 @@ class QPixmap;
 
 //! \internal
 
+#ifdef Q_WS_X11
 class MStatusBarEventListener
 {
 public:
@@ -43,6 +44,7 @@ public:
 
     static bool xWindowPropertyEventFilter(void *message);
 };
+#endif //Q_WS_X11
 
 class MStatusBarView : public MSceneWindowView
 {
@@ -53,13 +55,15 @@ public:
     MStatusBarView(MStatusBar *controller);
     virtual ~MStatusBarView();
 
-    //! Handles x property events.
-    void handleXWindowPropertyNotifyEvent(int status);
-    //! Handles x window destroy events.
-    void handleXWindowDestroyNotifyEvent(const Window &window);
+#ifdef Q_WS_X11
+    //! Handles X11 PropertyNotify events.
+    void handleXPropertyNotify(const XPropertyEvent &propertyEvent);
+    //! Handles X11 DestroyNotify events.
+    void handleXDestroyNotify(const XDestroyWindowEvent &destroyWindowEvent);
 
     static Atom propertyWindowAtom;
     static Atom pixmapHandleAtom;
+#endif //Q_WS_X11
 
 protected:
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
@@ -85,18 +89,18 @@ private:
     //! Used to track whether a mouse button is currently being pressed
     bool pressDown;
 
+#ifdef Q_WS_X11
+
     //! Timer to poll the status bar property window from root window property
     QTimer propertyWindowPollTimer;
 
     //! Window id of the status bar property window
     Window statusBarPropertyWindowId;
 
-#ifdef Q_WS_X11
     bool isOnDisplay;
     bool isInSwitcher;
     bool shouldStayUpToDate();
     void updateXDamageForSharedPixmap();
-    static bool isPixmapValid;
     void setupXDamageForSharedPixmap();
     void destroyXDamageForSharedPixmap();
 
@@ -111,14 +115,14 @@ private:
     /*! Gets the status bar property window id from root window property
      * \return The window id from root property, or -1 if unsuccessful
      */
-    Window statusBarPropertyWindow();
+    Window fetchStatusBarPropertyWindowId();
 
 private Q_SLOTS:
     /*! Handles property window poll timer timeout.
      * Tries to update the shared pixmap handle.
      * And ccording to current interval, either increases the timer interval or stops the timer.
      */
-    void propertyWindowPollTimerTimeout();
+    void onPropertyWindowPollTimerTimeout();
 
     //! Updates the shared pixmap handle if available
     void updateStatusBarSharedPixmapHandle();
@@ -130,7 +134,6 @@ private Q_SLOTS:
     void handleSwitcherEntered();
     void handleSwitcherExited();
     void handleSharedPixmapHandleReceived(quint32 handle);
-    void handlePixmapProviderOnline();
     void handlePixmapProviderOffline();
 
 #endif // Q_WS_X11

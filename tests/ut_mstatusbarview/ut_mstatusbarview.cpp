@@ -489,10 +489,9 @@ void Ut_MStatusBarView::testGettingSharedPixmapHandle()
     m_statusbar->setView(m_subject);
 
     if (shouldGetPixmapHandle) {
+        QCOMPARE(m_subject->sharedPixmap.isNull(), false);
         QCOMPARE(m_subject->sharedPixmap.handle(), g_pixmapHandle);
-        QCOMPARE(m_subject->isPixmapValid, true);
     } else {
-        QCOMPARE(m_subject->isPixmapValid, false);
         QCOMPARE(m_subject->sharedPixmap.isNull(), true);
     }
     QCOMPARE(gReturnedPixmapPropertyDataFreed, returnStatus == Success);
@@ -500,7 +499,7 @@ void Ut_MStatusBarView::testGettingSharedPixmapHandle()
 
 void Ut_MStatusBarView::testThatPropertyNewValueOfXPropertyNotifyEventFetchesPixmapHandleAndPropertyDeleteRemovesPixmapHandle()
 {
-    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1, Success);
+    initStatusBarPropertyWindowProperty(XA_WINDOW, 32, 1234, Success);
     // Pixmap property is not received during initialization
     initStatusBarPixmapProperty(None, 0, 0, Success);
 
@@ -512,14 +511,15 @@ void Ut_MStatusBarView::testThatPropertyNewValueOfXPropertyNotifyEventFetchesPix
     xevent.type = PropertyNotify;
     xevent.xproperty.atom = gStatusBarPixmapAtom;
     xevent.xproperty.state = PropertyNewValue;
-
+    xevent.xproperty.window = 1234;
     initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
 
     void *message = static_cast<void*>(&xevent);
     MStatusBarEventListener::xWindowPropertyEventFilter(message);
 
+    QCOMPARE(m_subject->sharedPixmap.isNull(), false);
     QCOMPARE(m_subject->sharedPixmap.handle(), g_pixmapHandle);
-    QCOMPARE(m_subject->isPixmapValid, true);
+
     // Verify that previous filter was also called
     QVERIFY(gPreviousFilterCalled);
 
@@ -529,7 +529,6 @@ void Ut_MStatusBarView::testThatPropertyNewValueOfXPropertyNotifyEventFetchesPix
     MStatusBarEventListener::xWindowPropertyEventFilter(message);
 
     QCOMPARE(m_subject->sharedPixmap.isNull(), true);
-    QCOMPARE(m_subject->isPixmapValid, false);
 }
 
 void Ut_MStatusBarView::testSharedPixmapHandleProviderOffline()
@@ -550,22 +549,21 @@ void Ut_MStatusBarView::testSharedPixmapHandleProviderOffline()
     void *message = static_cast<void*>(&xevent);
     MStatusBarEventListener::xWindowPropertyEventFilter(message);
     // Verify property poll timer
-    QVERIFY(disconnect(&m_subject->propertyWindowPollTimer, SIGNAL(timeout()), m_subject, SLOT(propertyWindowPollTimerTimeout())));
+    QVERIFY(disconnect(&m_subject->propertyWindowPollTimer, SIGNAL(timeout()), m_subject, SLOT(onPropertyWindowPollTimerTimeout())));
     QVERIFY(m_subject->propertyWindowPollTimer.isActive());
     // Verify offline state
-    QVERIFY(!m_subject->isPixmapValid);
     QVERIFY(m_subject->sharedPixmap.isNull());
 
     // First timeout while provider still offline
-    m_subject->propertyWindowPollTimerTimeout();
+    m_subject->onPropertyWindowPollTimerTimeout();
     QVERIFY(m_subject->propertyWindowPollTimer.isActive());
-    QVERIFY(!m_subject->isPixmapValid);
+    QCOMPARE(m_subject->sharedPixmap.isNull(), true);
 
     // Second timeout after provider back online
     initStatusBarPixmapProperty(XA_PIXMAP, 32, g_pixmapHandle, Success);
-    m_subject->propertyWindowPollTimerTimeout();
+    m_subject->onPropertyWindowPollTimerTimeout();
     QVERIFY(!m_subject->propertyWindowPollTimer.isActive());
-    QVERIFY(m_subject->isPixmapValid);
+    QCOMPARE(m_subject->sharedPixmap.isNull(), false);
 }
 
 void Ut_MStatusBarView::testEventFilterIsSetCorrectly()
