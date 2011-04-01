@@ -34,6 +34,7 @@ class MStyleContainerPrivate
 public:
     MStyleContainerPrivate();
     virtual ~MStyleContainerPrivate();
+
 private:
     void releaseStyles();
 

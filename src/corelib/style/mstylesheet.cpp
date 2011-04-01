@@ -283,7 +283,7 @@ void MStyleSheet::deleteStylesWithoutReference(CleanupPolicy cleanupPolicy)
     while (it.hasNext()) {
         MStyle *style = it.next().value();
         if (style->references() <= 0) {
-            if (cleanupPolicy == ReleaseResouces) {
+            if (cleanupPolicy == ReleaseResources) {
                 releaseAllocatedResourcesFromStyle(style);
             }
             delete style;

@@ -100,11 +100,11 @@ public:
     static void releaseStyle(const MStyle *style);
 
     enum CleanupPolicy {
-        ReleaseResouces,
+        ReleaseResources,
         DoNotReleaseResources
     };
 
-    static void deleteStylesWithoutReference(CleanupPolicy cleanupPolicy = ReleaseResouces);
+    static void deleteStylesWithoutReference(CleanupPolicy cleanupPolicy = ReleaseResources);
 
     /*!
      * \brief Cleans up the cache

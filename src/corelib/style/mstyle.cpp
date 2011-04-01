@@ -93,6 +93,7 @@ void MStyleContainerPrivate::releaseStyles()
         cachedCurrentStyle[i] = 0;
     }
     cachedOrientationIndependentStyle = 0;
+    activeStyle = 0;
 }
 
 //////////////////
@@ -196,13 +197,16 @@ const MSceneManager *MStyleContainer::sceneManager() const
 // getter for derived classes
 const MStyle *MStyleContainer::currentStyle() const
 {
+    if (!d_ptr->activeStyle) {
+        updateCurrentStyle();
+    }
     return d_ptr->activeStyle;
 }
 
 void MStyleContainer::updateCurrentStyle() const
 {
     if (d_ptr->cachedOrientationIndependentStyle) {
-	d_ptr->activeStyle = d_ptr->cachedOrientationIndependentStyle;
+        d_ptr->activeStyle = d_ptr->cachedOrientationIndependentStyle;
         return;
     }
     M::Orientation orientation = M::Landscape;
@@ -262,8 +266,8 @@ void MStyleContainer::setCurrentMode(const QString &mode)
         d_ptr->cachedCurrentStyle[1] = 0;
         d_ptr->currentMode = mode;
         d_ptr->cachedOrientationIndependentStyle = 0;
+        d_ptr->activeStyle = 0;
     }
-    updateCurrentStyle();
 }
 
 QString MStyleContainer::currentMode() const
@@ -282,7 +286,6 @@ const char *MStyleContainer::styleType() const
 void MStyleContainer::reloadStyles()
 {
     d_ptr->releaseStyles();
-    updateCurrentStyle();
 }
 
 // sets the current style to default

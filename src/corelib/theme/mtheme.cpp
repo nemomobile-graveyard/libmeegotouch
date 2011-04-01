@@ -982,6 +982,8 @@ void MTheme::rebuildViewsForWidgets()
         iterator.value()->reloadStyles();
     }
 
+    MStyleSheet::deleteStylesWithoutReference();
+
     // Clear controller -> view cache
     d_ptr->controllerViewCache.clear();
 
