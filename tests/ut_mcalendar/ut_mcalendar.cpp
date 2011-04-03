@@ -4118,6 +4118,66 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << "Europe/Helsinki"
             << "EEEE"
             << "Donnerstag";
+    QTest::newRow("fi_FI “ccc”")
+            << MLocale::GregorianCalendar
+            << 2011
+            << 2
+            << 17
+            << 14
+            << 31
+            << 3
+            << "de_DE" // language
+            << "de_DE" // lc_messages
+            << "fi_FI@mix-time-and-language=no" // lc_time
+            << "de_DE" // lc_numeric
+            << "Europe/Helsinki"
+            << "ccc"
+            << "to";
+    QTest::newRow("de_DE “EEE”")
+            << MLocale::GregorianCalendar
+            << 2011
+            << 2
+            << 17
+            << 14
+            << 31
+            << 3
+            << "de_DE" // language
+            << "de_DE" // lc_messages
+            << "de_DE@mix-time-and-language=no" // lc_time
+            << "de_DE" // lc_numeric
+            << "Europe/Helsinki"
+            << "EEE"
+            << "Do.";
+    QTest::newRow("fi_FI “MMM”")
+            << MLocale::GregorianCalendar
+            << 2011
+            << 2
+            << 17
+            << 14
+            << 31
+            << 3
+            << "de_DE" // language
+            << "de_DE" // lc_messages
+            << "fi_FI@mix-time-and-language=no" // lc_time
+            << "de_DE" // lc_numeric
+            << "Europe/Helsinki"
+            << "MMM"
+            << "helmikuuta";
+    QTest::newRow("de_DE “MMM”")
+            << MLocale::GregorianCalendar
+            << 2011
+            << 2
+            << 17
+            << 14
+            << 31
+            << 3
+            << "fi_FI" // language
+            << "fi_FI" // lc_messages
+            << "de_DE@mix-time-and-language=no" // lc_time
+            << "fi_FI" // lc_numeric
+            << "Europe/Helsinki"
+            << "MMM"
+            << "Feb";
 }
 
 void Ut_MCalendar::testFormatDateTimeICU()
