@@ -1690,7 +1690,8 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
     Q_D(MTextEditView);
     Q_UNUSED(reason);
 
-    d->hideEditorToolbar();
+    if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason)
+        d->hideEditorToolbar();
 
     if (d->controller->sceneManager()) {
         disconnect(d->controller, SIGNAL(cursorPositionChanged()),
