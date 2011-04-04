@@ -534,10 +534,9 @@ void Ut_MToolBarView::testSizeHint()
 
     if(rotate) {
         appWin->setOrientationAngle(M::Angle90);
-        qApp->processEvents();
     }
     for(int i = 0; i < 5; i++) {
-
+        qApp->processEvents(); //Let layouting complete.
         minimumSizes << m_toolbar->sizeHint(Qt::MinimumSize);
         maximumSizes << m_toolbar->sizeHint(Qt::MaximumSize);
         preferredSizes << m_toolbar->sizeHint(Qt::PreferredSize);
@@ -589,6 +588,7 @@ void Ut_MToolBarView::testSizeHint()
 
     for(int i = 4; i >= 0; i--) {
         m_toolbar->removeAction(actions[4-i]);
+        qApp->processEvents(); //Let layouting complete.
         QVERIFY(!actions[4-i].isNull());
         QCOMPARE(minimumSizes[i], m_toolbar->sizeHint(Qt::MinimumSize));
         QCOMPARE(maximumSizes[i], m_toolbar->sizeHint(Qt::MaximumSize));

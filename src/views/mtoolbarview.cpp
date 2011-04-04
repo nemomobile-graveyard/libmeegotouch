@@ -367,7 +367,7 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
             if (button) {
                 button->show();
             } else {
-                button = new MButton;
+                button = new MButton(controller);
                 button->setMinimumSize(0,0);
             }
             button->setObjectName("toolbaractioncommand");
