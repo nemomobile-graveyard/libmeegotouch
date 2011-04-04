@@ -96,7 +96,6 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     , callStatusProperty("Phone.Call")
 #endif
-    , showingStatusBar(false)
     , showingNavigationBar(false)
     , showingDockWidget(false)
     , animateComponentsTransitions(false)
@@ -246,6 +245,11 @@ void MApplicationWindowPrivate::init()
             SLOT(_q_updatePageExposedContentRect()));
     q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()),
                SLOT(_q_updatePageExposedContentRect()));
+
+    if (statusBar) {
+        q->connect(statusBar, SIGNAL(appeared()), SLOT(_q_updatePageExposedContentRect()));
+        q->connect(statusBar, SIGNAL(disappeared()), SLOT(_q_updatePageExposedContentRect()));
+    }
 
     navigationBarVisibilityUpdateTimer.setSingleShot(true);
     navigationBarVisibilityUpdateTimer.setInterval(0);
@@ -464,7 +468,6 @@ void MApplicationWindowPrivate::_q_placeToolBar()
 
 void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
 {
-    Q_Q(MApplicationWindow);
     if (!page) {
         return;
     }
@@ -473,10 +476,6 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
     qreal bottomCoverage = 0.0f;
 
     QRectF pageExposedContentRect;
-
-    if (showingStatusBar) {
-        topCoverage += statusBar->size().height();
-    }
 
     // Interpretation of whether the navigation bar is covering the page
     // changes from "auto-hide" to "show". On "auto-hide" the navigation
@@ -500,8 +499,8 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
     }
 
     pageExposedContentRect.setY(topCoverage);
-    pageExposedContentRect.setWidth(q->visibleSceneSize().width());
-    pageExposedContentRect.setHeight(q->visibleSceneSize().height()
+    pageExposedContentRect.setWidth(page->geometry().width());
+    pageExposedContentRect.setHeight(page->geometry().height()
                               - pageExposedContentRect.y() - bottomCoverage);
 
     page->d_func()->setExposedContentRect(pageExposedContentRect);
@@ -785,13 +784,6 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
             }
             break;
 
-        case MSceneWindow::StatusBar:
-            if (!statusBar)
-                return;
-            showingStatusBar = true;
-            _q_updatePageExposedContentRect();
-            break;
-
         case MSceneWindow::NavigationBar:
             showingNavigationBar = true;
             _q_updatePageExposedContentRect();
@@ -815,13 +807,6 @@ void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *eve
     switch (sceneWindow->windowType()) {
         case MSceneWindow::ApplicationPage:
             applicationPageDisappearEvent(event);
-            break;
-
-        case MSceneWindow::StatusBar:
-            if(!statusBar)
-                return;
-            showingStatusBar = false;
-            _q_updatePageExposedContentRect();
             break;
 
         case MSceneWindow::NavigationBar:

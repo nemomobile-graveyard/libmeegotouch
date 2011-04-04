@@ -74,6 +74,7 @@
 #include <mdialoganimation.h>
 #include <mwidgetscalefadeanimation.h>
 #include <mtheme.h>
+#include <QPropertyAnimation>
 
 #ifdef Q_WS_X11
 # include <QX11Info>
@@ -506,9 +507,6 @@ void MSceneManagerPrivate::_q_onSceneWindowAppearanceAnimationFinished()
     Q_ASSERT(sceneWindow);
 
     setSceneWindowState(sceneWindow, MSceneWindow::Appeared);
-
-    if (sceneWindow->windowType() == MSceneWindow::StatusBar)
-        updateSheetsGeometry();
 
     if (sceneWindow->d_func()->queuedTransition) {
         MSceneWindowTransition *transition = sceneWindow->d_func()->queuedTransition;
@@ -999,11 +997,10 @@ QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWind
     QSizeF sceneSize = q->visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(angle));
     QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
-    if (sceneWindow->windowType() == MSceneWindow::Sheet && statusBar
-        && (statusBar->sceneWindowState() == MSceneWindow::Appearing
-            || statusBar->sceneWindowState() == MSceneWindow::Appeared)) {
-        // Sheets cannot slip behind the status bar
-
+    if ((sceneWindow->windowType() == MSceneWindow::Sheet || sceneWindow->windowType() == MSceneWindow::ApplicationPage)
+        && statusBar && (statusBar->sceneWindowState() == MSceneWindow::Appearing ||
+                         statusBar->sceneWindowState() == MSceneWindow::Appeared))
+    {
         availableSceneRect.setTop(statusBar->size().height());
     }
 
@@ -1229,16 +1226,35 @@ void MSceneManagerPrivate::produceSceneWindowEvent(QEvent::Type type,
     }
 }
 
-void MSceneManagerPrivate::updateSheetsGeometry()
+void MSceneManagerPrivate::updatePagesAndSheetsGeometry()
 {
     foreach(MSceneWindow* window, windows) {
-        if (window->windowType() == MSceneWindow::Sheet &&
+        if ((window->windowType() == MSceneWindow::Sheet || window->windowType() == MSceneWindow::ApplicationPage) &&
             window->sceneWindowState() != MSceneWindow::Disappeared)
         {
             setSceneWindowGeometry(window);
         }
     }
 }
+
+void MSceneManagerPrivate::addPagesAndSheetsGeometryUpdateAnimation(QParallelAnimationGroup* mainAnimation)
+{
+    foreach(MSceneWindow* window, windows) {
+        if ((window->windowType() == MSceneWindow::Sheet || window->windowType() == MSceneWindow::ApplicationPage) &&
+            window->sceneWindowState() != MSceneWindow::Disappeared)
+        {
+            QPropertyAnimation *geometryAnimation = new QPropertyAnimation;
+            geometryAnimation->setTargetObject(window);
+            geometryAnimation->setPropertyName("geometry");
+            geometryAnimation->setStartValue(window->geometry());
+            geometryAnimation->setEndValue(calculateSceneWindowGeometry(window));
+            geometryAnimation->setEasingCurve(QEasingCurve::Linear);
+            geometryAnimation->setDuration(300);
+            mainAnimation->addAnimation(geometryAnimation);
+        }
+    }
+}
+
 
 void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 {
@@ -1541,7 +1557,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
                 foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar)
                     widget->setPos(0, y);
 
-                updateSheetsGeometry();
+                updatePagesAndSheetsGeometry();
             }
         }
     }
@@ -1700,11 +1716,10 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
         if (window->windowType() == MSceneWindow::StatusBar) {
             foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar)
                 widget->setPos(0, 0);
+
+            updatePagesAndSheetsGeometry();
         }
     }
-
-    if (window->windowType() == MSceneWindow::StatusBar)
-        updateSheetsGeometry();
 }
 
 void MSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *animation)
@@ -1800,6 +1815,8 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             moveAnimation->setFinalPos(QPointF(0, statusBar->size().height()));
             animation->addAnimation(moveAnimation);
         }
+
+        addPagesAndSheetsGeometryUpdateAnimation(animation);
     }
     // end of FIXME
 
@@ -1849,6 +1866,8 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             moveAnimation->setFinalPos(QPointF(0, 0));
             animation->addAnimation(moveAnimation);
         }
+
+        addPagesAndSheetsGeometryUpdateAnimation(animation);
     }
     // end of FIXME
 

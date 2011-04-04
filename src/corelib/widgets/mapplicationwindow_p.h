@@ -78,7 +78,6 @@ public:
     // TODO: Use some API like "bool MSceneWindow::isAppearing()" or something,
     //       once it becomes available, instead of manually tracking the scene windows
     //       appear/disappear statuses.
-    bool showingStatusBar;
     bool showingNavigationBar;
     bool showingDockWidget;
 
