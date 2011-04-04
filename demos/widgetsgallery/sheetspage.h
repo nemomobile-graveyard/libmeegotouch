@@ -75,6 +75,7 @@ private:
     void openLoginSheet();
     void openSystemwideSheet();
     void openLongSheet();
+    void openListSheet();
 
     void openPhotoSheet();
     void populatePhotoSheetCentralWidget(QGraphicsWidget *centralWidget);
