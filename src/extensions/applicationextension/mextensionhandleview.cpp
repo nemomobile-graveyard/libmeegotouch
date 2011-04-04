@@ -205,6 +205,7 @@ MExtensionHandleView::MExtensionHandleView(MExtensionHandleViewPrivate &dd, MExt
 
 MExtensionHandleView::~MExtensionHandleView()
 {
+    delete d_ptr;
 }
 
 void MExtensionHandleView::setupModel()
