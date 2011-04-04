@@ -43,9 +43,6 @@ protected:
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-
-    virtual void cancelEvent(MCancelEvent *event);
 
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     virtual void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);

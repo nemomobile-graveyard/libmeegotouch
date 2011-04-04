@@ -47,7 +47,8 @@ MListIndexViewPrivate::MListIndexViewPrivate()
     shortcutsCount(0),
     autoVisibilityAnimation(0),
     down(false),
-    currentIndex()
+    currentIndex(),
+    fastScrollPosition()
 {
     autoVisibilityTimer.setSingleShot(true);
     autoVisibilityTimer.stop();
@@ -330,6 +331,36 @@ void MListIndexViewPrivate::_q_exposedContentRectChanged()
     updateLayout();
 }
 
+void MListIndexViewPrivate::beginFastScrolling(const QPointF &pos)
+{
+    Q_Q(MListIndexView);
+
+    if (q->model()->shortcutIndexes().isEmpty())
+        return;
+
+    fastScrollPosition = QPointF();
+    updateFastScrolling(pos);
+    fastScrollPosition = pos;
+
+    down = true;
+    _q_stopVisibilityTimer();
+}
+
+void MListIndexViewPrivate::updateFastScrolling(const QPointF &offset)
+{
+    fastScrollPosition += offset;
+    int y = controller->mapFromScene(fastScrollPosition).y();
+    scrollToGroupHeader(y);
+    _q_stopVisibilityTimer();
+}
+
+void MListIndexViewPrivate::endFastScrolling()
+{
+    down = false;
+    fastScrollPosition = QPointF(0,0);
+    _q_startVisibilityTimer();
+}
+
 MListIndexView::MListIndexView(MListIndex *controller) : MWidgetView(controller), d_ptr(new MListIndexViewPrivate)
 {
     Q_D(MListIndexView);
@@ -408,51 +439,33 @@ void MListIndexView::updateData(const QList<const char *> &modifications)
 void MListIndexView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MListIndexView);
-    MWidgetView::mousePressEvent(event);
-
-    d->scrollToGroupHeader(event->pos().y());
-    d->down = true;
-    d->_q_listPanningStarted();
-    d->_q_stopVisibilityTimer();
-
+    d->beginFastScrolling(d->controller->mapToScene(event->pos()));
     event->accept();
 }
 
 void MListIndexView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MListIndexView);
-    MWidgetView::mouseReleaseEvent(event);
 
-    d->down = false;
-    d->_q_startVisibilityTimer();
-}
-
-void MListIndexView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_D(MListIndexView);
-    MWidgetView::mouseMoveEvent(event);
-
-    d->scrollToGroupHeader(event->pos().y());
-
-    event->accept();   
-}
-
-void MListIndexView::cancelEvent(MCancelEvent *event)
-{
-    Q_D(MListIndexView);
-    MWidgetView::cancelEvent(event);
-
-    d->down = false;
-    d->_q_startVisibilityTimer();
+    d->endFastScrolling();
+    event->accept();
 }
 
 void MListIndexView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
 {
-    event->accept(gesture);
+    event->ignore(gesture);
 }
 
 void MListIndexView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
 {
+    Q_D(MListIndexView);
+    if (gesture->state() == Qt::GestureStarted)
+        d->beginFastScrolling(event->mapToGraphicsScene(gesture->hotSpot()));
+    else if (gesture->state() == Qt::GestureFinished || gesture->state() == Qt::GestureCanceled)
+        d->endFastScrolling();
+    else if (gesture->state() == Qt::GestureUpdated)
+        d->updateFastScrolling(gesture->delta());
+
     event->accept(gesture);
 }
 

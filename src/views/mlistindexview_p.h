@@ -61,6 +61,10 @@ public:
     qreal timelineDuration();
     void updateDisplayMode();
 
+    void beginFastScrolling(const QPointF &pos);
+    void updateFastScrolling(const QPointF &offset);
+    void endFastScrolling();
+
 protected:
     void scrollToGroupHeader(int y);
 
@@ -95,6 +99,7 @@ private:
     QTimer autoVisibilityTimer;
     bool down;
     QModelIndex currentIndex;
+    QPointF fastScrollPosition;
 };
 
 #endif
