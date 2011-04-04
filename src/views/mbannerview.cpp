@@ -523,7 +523,7 @@ void MBannerViewPrivate::initDynamicLayout()
         layoutShortEventBanner();
     } else if (q->model()->styleName()=="FullEventBanner") {
         layoutFullEventBanner();
-    } else if (q->model()->styleName()=="PrivateBanner") {
+    } else if (q->model()->styleName()=="PrivateEventBanner") {
         layoutPrivateEventBanner();
     } else if (q->model()->styleName()=="SystemBanner") {
         layoutSystemBanner();
