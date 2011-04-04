@@ -109,6 +109,7 @@ public:
     void drawHorizontalSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
     QPointF locateScrollToPosition(int row, MList::ScrollHint hint);
+    QPointF locateStartScrollToPosition(const QPointF &targetPosition);
     void updateScrollToTargetPosition();
 
     void scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode);

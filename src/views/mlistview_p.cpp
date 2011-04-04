@@ -697,11 +697,22 @@ QPointF MListViewPrivate::locateScrollToPosition(int row, MList::ScrollHint hint
     int pannableWidgetBoundingHeight = pannableViewport->widget()->boundingRect().height();
     targetPosition.setY(qMax(targetPosition.y(), (qreal)0));
     if (pannableWidgetBoundingHeight > pannableViewportHeight)
-        targetPosition.setY(qMin(targetPosition.y(), pannableWidgetBoundingHeight - pannableViewportHeight));
+        targetPosition.setY(qMin(targetPosition.y(), pannableViewport->range().height()));
     else
         targetPosition = pannableViewport->position();
 
     return targetPosition;
+}
+
+QPointF MListViewPrivate::locateStartScrollToPosition(const QPointF &targetPosition)
+{
+    QPointF startPosition;
+    if (targetPosition.y() > pannableViewport->position().y())
+        startPosition = targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE);
+    else
+        startPosition = targetPosition - QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE);
+    startPosition.setY(qMin(startPosition.y(), pannableViewport->range().height() - SCROLLTOANIMATIONSNAPDISTANCE));
+    return startPosition;
 }
 
 void MListViewPrivate::_q_itemLongTapped(const QPointF &pos)
@@ -725,10 +736,7 @@ void MListViewPrivate::updateScrollToTargetPosition()
         QPointF targetPosition = locateScrollToPosition(lastScrolledToFlatRow,
                                                         static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
         if (targetPosition != scrollToAnimation->endValue().toPointF()) {
-            if (targetPosition.y() > pannableViewport->position().y())
-                scrollToAnimation->setStartValue(targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
-            else
-                scrollToAnimation->setStartValue(targetPosition - QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
+            scrollToAnimation->setStartValue(locateStartScrollToPosition(targetPosition));
             scrollToAnimation->setEndValue(targetPosition);
         }
     }
@@ -741,10 +749,7 @@ void MListViewPrivate::scrollToPos(const QPointF &targetPosition, MList::Animati
         return;
     }
     if (mode == MList::Animated) {
-        if (targetPosition.y() > pannableViewport->position().y())
-            scrollToAnimation->setStartValue(targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
-        else
-            scrollToAnimation->setStartValue(targetPosition - QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));
+        scrollToAnimation->setStartValue(locateStartScrollToPosition(targetPosition));
         scrollToAnimation->setEndValue(targetPosition);
         scrollToAnimation->setEasingCurve(QEasingCurve::OutCubic);
         scrollToAnimation->setDuration(100);
