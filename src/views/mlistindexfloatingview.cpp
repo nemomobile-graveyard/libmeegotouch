@@ -289,6 +289,8 @@ void MListIndexFloatingView::updateData(const QList<const char *> &modifications
             }
         } else if (member == MListIndexModel::ShortcutIndexes) {
             d->tooltip()->setIndexCount(qMin(style()->floatingIndexCount(), model()->shortcutIndexes().count()));
+        } else if (member == MListIndexModel::ShortcutLabels) {
+            d->updateTooltipData();
         }
     }
 }
