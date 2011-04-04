@@ -209,8 +209,6 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
             this, SLOT(handleDisplayExited()));
     connect(controller, SIGNAL(displayEntered()),
             this, SLOT(handleDisplayEntered()));
-    controller->setProperty("sharedPixmapHeight", SharedPixmapHeight);
-
 
     if (controller->scene() && !controller->scene()->views().isEmpty()) {
         MWindow* win = qobject_cast<MWindow*>(controller->scene()->views().at(0));
