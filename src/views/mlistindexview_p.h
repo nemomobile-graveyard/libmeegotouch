@@ -25,7 +25,7 @@
 #include <QVector>
 #include <QTimer>
 
-class MApplicationPage;
+class MSceneWindow;
 class MListIndex;
 class MListIndexModel;
 class MListIndexView;
@@ -88,7 +88,7 @@ private:
     MListIndex *controller;
     QGraphicsLinearLayout *layout;
 
-    MApplicationPage *container;
+    MSceneWindow *container;
     MList *list;
 
     int shortcutHeight;

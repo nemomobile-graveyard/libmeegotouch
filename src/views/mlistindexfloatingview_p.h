@@ -25,7 +25,7 @@
 
 #include <QTimer>
 
-class MApplicationPage;
+class MSceneWindow;
 class MLabel;
 class MListIndex;
 class MListIndexFloatingView;
@@ -72,7 +72,7 @@ private:
     Q_DECLARE_PUBLIC(MListIndexFloatingView)
     MListIndex *controller;
 
-    MApplicationPage *container;
+    MSceneWindow *container;
     MList *list;
     QRectF containerRect;
 

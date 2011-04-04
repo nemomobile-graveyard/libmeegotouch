@@ -24,6 +24,7 @@
 #include <mlistindex.h>
 
 #include <MApplicationPage>
+#include <MSheet>
 #include <MCancelEvent>
 #include <MPannableViewport>
 #include <MSeparator>
@@ -101,16 +102,28 @@ void MListIndexFloatingViewPrivate::attachToContainer()
 {
     Q_Q(MListIndexFloatingView);
 
-    if (container)
-        container->disconnect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_exposedContentRectChanged()));
+    if (container) {
+        if (container->windowType() == MSceneWindow::ApplicationPage)
+            container->disconnect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_recalculateListIndexRegion()));
+        else {
+            container->disconnect(container, SIGNAL(widthChanged()), q, SLOT(_q_recalculateListIndexRegion()));
+            container->disconnect(container, SIGNAL(heightChanged()), q, SLOT(_q_recalculateListIndexRegion()));
+        }
+    }
 
     if (q->model()->list()) {
-        container = MListViewPrivateNamespace::findParentWidgetOfType<MApplicationPage>(q->model()->list());
+        container = MListViewPrivateNamespace::findParentWidgetOfType<MSceneWindow>(q->model()->list());
 
         if (container) {
             controller->setParentItem(container);
+            controller->setZValue(container->zValue() + 1);
 
-            container->connect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_recalculateListIndexRegion()));
+            if (container->windowType() == MSceneWindow::ApplicationPage)
+                q->connect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_recalculateListIndexRegion()));
+            else {
+                q->connect(container, SIGNAL(widthChanged()), q, SLOT(_q_recalculateListIndexRegion()));
+                q->connect(container, SIGNAL(heightChanged()), q, SLOT(_q_recalculateListIndexRegion()));
+            }
             _q_recalculateListIndexRegion();
         }
     }
@@ -209,7 +222,19 @@ void MListIndexFloatingViewPrivate::_q_scrollListToCurrentIndex()
 
 void MListIndexFloatingViewPrivate::_q_recalculateListIndexRegion()
 {
-    containerRect = container->exposedContentRect();
+    if (container->windowType() == MSceneWindow::ApplicationPage)
+        containerRect = static_cast<MApplicationPage*>(container)->exposedContentRect();
+    else if (container->windowType() == MSceneWindow::Sheet) {
+        QGraphicsWidget *headerWidget = static_cast<MSheet*>(container)->headerWidget();
+        QSizeF containerSize = container->size();
+        if (headerWidget)
+            containerRect = QRectF(QPointF(0, headerWidget->size().height()),
+                                   QSize(containerSize.width(), containerSize.height() - headerWidget->size().height()));
+        else
+            containerRect = QRectF(QPointF(), containerSize);
+    } else
+        containerRect = QRectF(QPointF(), container->size());
+
     updateLayout();
 }
 
