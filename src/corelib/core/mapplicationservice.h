@@ -83,6 +83,17 @@ public Q_SLOTS: // METHODS
      *
      * If you want to process the parameters, derive a class from
      * MApplicationService and override launch(const QStringList&).
+     *
+     * This function is called when there is already an instance
+     * of this program running and registered to the DBus, and
+     * a second instance of this application gets executed. It will
+     * then try to register the same DBus interface, and fail at it.
+     * In this case when the second application was invoked with
+     * command line arguments, it will call this launch function
+     * with arguments on the first application instance via DBus.
+     * In this case no command line parameters are removed by
+     * libmeegotouch. The parameter list does not contain the
+     * executable name (argv[0]), but only the command line parameters.
      **/
     virtual void launch(const QStringList& parameters);
 

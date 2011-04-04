@@ -125,7 +125,18 @@ void MApplicationService::handleServiceRegistrationFailure()
 
     if (mApplicationIfProxy.connection().isConnected()) {
         mDebug("MApplicationService") << "Calling launch() in other application with service :" << registeredName();
-        mApplicationIfProxy.launch();
+
+        // when we are given command line arguments, call
+        // launch( QStringList& ), otherwise call launch()
+        QStringList args = QApplication::arguments();
+        if ( args.count() <= 1 ) {
+            mApplicationIfProxy.launch();
+        } else {
+            // remove basename
+            args.removeFirst();
+
+            mApplicationIfProxy.launch( args );
+        }
         d->stdExit(0);
     } else {
         mDebug("MApplicationService") << "DBus not connected; not launching";
