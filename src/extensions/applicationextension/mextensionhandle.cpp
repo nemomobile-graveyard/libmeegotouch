@@ -166,6 +166,8 @@ void MExtensionHandle::initialize()
 MExtensionHandle::~MExtensionHandle()
 {
     kill();
+
+    delete d_ptr;
 }
 
 void MExtensionHandle::updateDisplayState()
