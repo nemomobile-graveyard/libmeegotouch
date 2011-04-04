@@ -1166,16 +1166,7 @@ static QVector<unsigned long> windowGeometry(MSceneWindow* window)
     QRectF rect = window->mapRectToScene(QRectF(QPointF(), window->geometry().size()));
     QVector<unsigned long> vector;
     vector << rect.x() << rect.y();
-
-    if (window->windowType() == MSceneWindow::StatusBar) {
-        if (window->sceneManager()->orientation() == M::Landscape)
-            vector << rect.width() << window->property("sharedPixmapHeight").value<qreal>();
-        else
-            vector << window->property("sharedPixmapHeight").value<qreal>() << rect.height();
-    } else {
-        vector << rect.width() << rect.height();
-    }
-
+    vector << rect.width() << rect.height();
     return vector;
 }
 
