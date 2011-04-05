@@ -23,6 +23,10 @@
 #include "mpanrecognizer.h"
 #include "mpanrecognizerstyle.h"
 
+#include "mpangesture_p.h"
+
+#include <QMouseEvent>
+
 /*!
   Private class used by MPanRecognizer objects to
   store variables during gesture recognition.
@@ -37,6 +41,12 @@ public:
 
 private:
     const MPanRecognizerStyle* style;
+
+    void clearNotAlignedMovement(MPanGesture *panGesture);
+
+    QGestureRecognizer::Result recognitionStart(MPanGesture *panGesture, const QMouseEvent *ev);
+    QGestureRecognizer::Result recognitionUpdate(MPanGesture *panGesture, const QMouseEvent *ev);
+    QGestureRecognizer::Result recognitionFinish(MPanGesture *panGesture);
 
     MPanRecognizer* q_ptr;
 };

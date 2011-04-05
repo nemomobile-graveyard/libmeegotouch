@@ -54,6 +54,7 @@ private:
     bool                pressed;
 
     friend class MPanRecognizer;
+    friend class MPanRecognizerPrivate;
 
 #ifdef UNIT_TEST
     friend class  Ut_MPanRecognizer;
