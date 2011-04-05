@@ -1369,13 +1369,8 @@ void MTextEditPrivate::_q_confirmCompletion(const QString &completion)
     QTextBlock block = cursor()->block();
     int cursorPos = cursor()->position() - block.position();
     QString text = block.text();
-    int index = -1;
-    do {
-        index++;
-        index = text.indexOf(prefix, index);
-    } while ((index >= 0) && (index < cursorPos - prefix.length()));
-
-    //select prefix, then insert confirmed completion, this way is faster than backspacing
+    int index = text.lastIndexOf(prefix, cursorPos - text.length() - 1);
+    index = qMax(index, 0);
     commitPreedit();
     cursor()->setPosition(index + block.position());
     cursor()->setPosition(index + block.position() + prefix.length(), QTextCursor::KeepAnchor);
