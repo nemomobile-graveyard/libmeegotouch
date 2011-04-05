@@ -34,30 +34,28 @@
 #include "msystemdirectories.h"
 
 
-class PixmapSaver
+void saveToFsCache(const QFileInfo &fileInfo)
 {
-public:
-    PixmapSaver(QString absoluteFilePath) : path(absoluteFilePath)
-    {
-        pixmap = QImage(absoluteFilePath);
+    ImageResource *resource = NULL;
+    QImage image(fileInfo.absoluteFilePath());
+
+    if (fileInfo.suffix() == QLatin1String("png") || fileInfo.suffix() == QLatin1String("jpg")) {
+        resource = new PixmapImageResource(fileInfo.absoluteFilePath());
+    }
+    else if (fileInfo.suffix() == QLatin1String("svg")) {
+        resource = new IconImageResource(fileInfo.absoluteFilePath());
     }
 
-    void saveToFsCache()
-    {
-        const QString &constRef = path;
+    if (resource)
+        resource->saveToFsCache(image, QSize(0,0));
+    delete resource;
+}
 
-        ImageResource::saveToFsCache(pixmap, pixmap.size(), constRef);
-    }
 
-private:
-    QImage pixmap;
-    QString path;
-};
-
-void copyToFSCache(QFileInfo fileInfo)
+void copyToFSCache(const QFileInfo &fileInfo)
 {
-    PixmapSaver saver(fileInfo.absoluteFilePath());
-    saver.saveToFsCache();
+    saveToFsCache(fileInfo.absoluteFilePath());
+    mDebug("ImageCacheGen")<< "File processed" << fileInfo.absoluteFilePath();
 }
 
 void visitDirectory(QDir dir)
@@ -89,9 +87,9 @@ int main(int argc, char** argv)
     QList<QDir> directories;
     int errors = 0;
 
-    for(int i = 1; i < argc; i++) {
-        if(argv[i][0] == '-') {
-            if(!strcmp(argv[i], "--prefix") && i+1 < argc) {
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
+            if (!strcmp(argv[i], "--prefix") && i+1 < argc) {
                 MSystemDirectories::setPrefix( argv[i+1] );
                 i++;
             } else {
@@ -102,21 +100,21 @@ int main(int argc, char** argv)
             directories << QDir( argv[i] );
     }
 
-    if(directories.size() < 1)
+    if (directories.size() < 1)
         directories << QDir( THEMEDIR );
 
 
-    mDebug("mtheme") << "converting images ...";
+    mDebug("ImageCacheGen") << "Converting images ...";
 
-    for(QList<QDir>::iterator i = directories.begin();
+    for (QList<QDir>::iterator i = directories.begin();
         i != directories.end(); i++) {
-        if(i->exists())
+        if (i->exists())
             visitDirectory(*i);
 	else
             errors++;
     }
 
-    mDebug("mtheme") << (errors ? "fail!" : "success!");
+    mDebug("ImageCacheGen") << (errors ? "FAIL!" : "Done!");
 
     return errors;
 }
