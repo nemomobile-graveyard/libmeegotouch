@@ -272,6 +272,7 @@ private:
     friend class MTheme;
     friend class MDeviceProfile;
     friend class MComponentCachePrivate;
+    friend class MStyleSheet;
 };
 
 #endif

@@ -40,6 +40,8 @@
 #include "mstylesheetattribute.h"
 #include "mclassfactory.h"
 #include "mwidgetcontroller.h"
+#include "mcomponentdata.h"
+#include "mcomponentdata_p.h"
 
 Q_DECLARE_METATYPE(const QPixmap *)
 namespace {
@@ -70,7 +72,7 @@ MStyleSheetPrivate::StyleCache::~StyleCache()
     // free all styles which have been released after the d'tor of MTheme
     // MStyleSheet::DoNotReleaseResources is passed as most parts of Qt are
     // already destroyed and freeing resources would lead to a crash
-    MStyleSheet::deleteStylesWithoutReference(MStyleSheet::DoNotReleaseResources);
+    MStyleSheet::deleteStylesWithoutReference();
 
     // as LeakedStyles is a static class the method handler could not be valid
     // anymore at this point. work around this problem by creating a new one
@@ -282,7 +284,7 @@ void MStyleSheet::releaseStyle(const MStyle *style)
     const_cast<MStyle *>(style)->removeReference();
 }
 
-void MStyleSheet::deleteStylesWithoutReference(CleanupPolicy cleanupPolicy)
+void MStyleSheet::deleteStylesWithoutReference()
 {
     typedef MStyleSheetPrivate::StyleCache::StyleHash StyleHash;
     QHash<QByteArray, StyleHash>::iterator end = styleCache()->styles.end();
@@ -293,7 +295,7 @@ void MStyleSheet::deleteStylesWithoutReference(CleanupPolicy cleanupPolicy)
         while (it.hasNext()) {
             MStyle *style = it.next().value();
             if (style->references() <= 0) {
-                if (cleanupPolicy == ReleaseResources) {
+                if (MComponentData::instance() && MComponentData::instance()->d_ptr->theme) {
                     releaseAllocatedResourcesFromStyle(style);
                 }
                 delete style;
@@ -319,9 +321,11 @@ void MStyleSheet::deleteStylesFromStyleCreator(const QByteArray & styleClassName
             MStyle *style = it.next().value();
             if (style->references() > 0) {
                 mWarning("MStyleSheet::deleteStylesFromStyleCreator") << "Removing style creator for" << styleClassName
-                    << "but style" << it.key() << "has still" << style->references() << "references. This can lead to a crash!";
+                    << "but style" << it.key() << "has still" << style->references() << "references. This can lead to a crash if style is used somewhere!";
             }
-            releaseAllocatedResourcesFromStyle(style);
+            if (MComponentData::instance() && MComponentData::instance()->d_ptr->theme) {
+                releaseAllocatedResourcesFromStyle(style);
+            }
             delete style;
             it.remove();
         }

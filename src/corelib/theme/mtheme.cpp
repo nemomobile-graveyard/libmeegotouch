@@ -134,6 +134,8 @@ MTheme::MTheme(const QString &applicationName, const QString &, ThemeService the
 MTheme::~MTheme()
 {
     MStyleSheet::cleanup(false);
+    // unload all theme libraries
+    d_ptr->reloadThemeLibraries(QStringList());
 
     QHash<QString, CachedScalableImage>::iterator i2 = d_ptr->scalableImageIdentifiers.begin();
     QHash<QString, CachedScalableImage>::iterator end2 = d_ptr->scalableImageIdentifiers.end();
@@ -151,9 +153,6 @@ MTheme::~MTheme()
     for (; i != end; ++i) {
         qWarning() << "MTheme - pixmap" << i.key() << "not released!" << "refcount:" << i.value().refcount;
     }
-
-    // unload all theme libraries
-    d_ptr->reloadThemeLibraries(QStringList());
 
     gTheme = NULL;
     delete d_ptr;

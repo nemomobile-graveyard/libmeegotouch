@@ -99,12 +99,7 @@ public:
      */
     static void releaseStyle(const MStyle *style);
 
-    enum CleanupPolicy {
-        ReleaseResources,
-        DoNotReleaseResources
-    };
-
-    static void deleteStylesWithoutReference(CleanupPolicy cleanupPolicy = ReleaseResources);
+    static void deleteStylesWithoutReference();
     static void deleteStylesFromStyleCreator(const QByteArray & styleClassName);
 
     /*!
