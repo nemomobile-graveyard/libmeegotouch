@@ -126,17 +126,10 @@ void MCompleterViewPrivate::organizeContents()
     if (q->style()->height() > 0)
         height = q->style()->height();
 
-    int textWidth = 0;
-    //using the font information from the label to caculate the width (of the plain label text)
-    //TODO: use the MLabel::preferredSize() instead of calculate by ourselves.
-    textWidth = QFontMetrics(completionLabel->font()).width(
-                    QTextDocumentFragment::fromHtml(completionLabel->text()).toPlainText());
-
-    const int labelMargin = q->style()->labelMargin();
     const int buttonWidth = q->style()->buttonWidth();
     const int displayBorder = q->style()->displayBorder();
 
-    width = textWidth + 2 * labelMargin;
+    width = completionLabel->preferredWidth();
     bool buttonVisible = (!completionsButton->text().isEmpty()) && completionsButton->isVisible();
     if (buttonVisible) {
         const int buttonMargin = q->style()->buttonMargin();
