@@ -208,7 +208,7 @@ void MComboBoxView::applyStyle()
     if (d->popuplist && d->popuplist->viewType() != style()->popupListType())
         d->popuplist->setViewType(style()->popupListType());
 
-    d->buttonWidget()->setStyleName(style()->contentItemObjectName());
+    d->buttonWidget()->setStyleName(style()->buttonStyleName());
     d->buttonWidget()->setTitleObjectName(style()->titleObjectName());
     d->buttonWidget()->setSubTitleObjectName(style()->subTitleObjectName());
     d->buttonWidget()->setIconObjectName(style()->iconObjectName());
@@ -216,10 +216,11 @@ void MComboBoxView::applyStyle()
     d->buttonWidget()->setIndicatorImage(style()->indicatorImage());
     d->buttonWidget()->setProgressIndicatorObjectName(style()->progressIndicatorObjectName());
 
-    d->layout->setPolicy(style()->separateTitle() ? d->separateTitlePolicy() : d->integratedTitlePolicy());
-    d->buttonWidget()->setTitleVisible(!style()->separateTitle());
-    if (d->title)
+    d->layout->setPolicy(style()->separateTitle() && style()->hasTitle() ? d->separateTitlePolicy() : d->integratedTitlePolicy());
+    d->buttonWidget()->setTitleVisible(!style()->separateTitle() && style()->hasTitle());
+    if (d->title) {
         d->title->setObjectName(style()->titleObjectName());
+    }
 }
 
 void MComboBoxView::updateData(const QList<const char *>& modifications)
