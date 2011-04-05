@@ -23,6 +23,8 @@
 #include <MSheet>
 #include <QTimer>
 
+class MTextEdit;
+
 class LoginSheet : public MSheet
 {
     Q_OBJECT
@@ -34,6 +36,7 @@ private Q_SLOTS:
     void login();
     void cancel();
     void showLoginSuccessfulAndDismiss();
+    void setfocusOnUsernameTextEdit();
 
 private:
     void createCentralWidget();
@@ -41,6 +44,7 @@ private:
     QGraphicsWidget *createSpacer() const;
 
     QTimer fakeAuthenticationTimer;
+    MTextEdit *userNameTextEdit;
 };
 
 #endif //LOGINSHEET_H

@@ -33,8 +33,12 @@ LoginSheet::LoginSheet()
     fakeAuthenticationTimer.setInterval(2000);
     connect(&fakeAuthenticationTimer, SIGNAL(timeout()), SLOT(showLoginSuccessfulAndDismiss()));
 
+    userNameTextEdit = 0;
+
     createCentralWidget();
     createHeaderWidget();
+
+    connect(this, SIGNAL(appeared()), SLOT(setfocusOnUsernameTextEdit()));
 }
 
 void LoginSheet::createCentralWidget()
@@ -58,9 +62,9 @@ void LoginSheet::createCentralWidget()
 
     mainLayout->addItem(label);
 
-    MTextEdit *textEdit = new MTextEdit;
-    textEdit->setStyleName("CommonSingleInputFieldLabeled");
-    mainLayout->addItem(textEdit);
+    userNameTextEdit = new MTextEdit;
+    userNameTextEdit->setStyleName("CommonSingleInputFieldLabeled");
+    mainLayout->addItem(userNameTextEdit);
 
     mainLayout->addItem(createSpacer());
 
@@ -69,7 +73,7 @@ void LoginSheet::createCentralWidget()
     label->setStyleName("CommonFieldLabel");
     mainLayout->addItem(label);
 
-    textEdit = new MTextEdit;
+    MTextEdit *textEdit = new MTextEdit;
     textEdit->setStyleName("CommonSingleInputFieldLabeled");
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
@@ -128,6 +132,11 @@ void LoginSheet::showLoginSuccessfulAndDismiss()
 
     connect(messageBox, SIGNAL(disappeared()), SLOT(dismiss()));
     messageBox->appear(MSceneWindow::DestroyWhenDone);
+}
+
+void LoginSheet::setfocusOnUsernameTextEdit()
+{
+    userNameTextEdit->setFocus();
 }
 
 QGraphicsWidget *LoginSheet::createSpacer() const
