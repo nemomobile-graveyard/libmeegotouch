@@ -23,6 +23,7 @@
 #include "mwidgetcreator.h"
 #include "manimationcreator.h"
 #include "meffectcreator.h"
+#include "mstylesheet.h"
 
 #include <QHash>
 #include <QString>
@@ -189,6 +190,7 @@ void MClassFactory::unregisterStyleCreator(MStyleCreatorBase *creator)
         qWarning("MClassFactory cannot unregister MStyleCreator which is not registered");
     } else {
         d_ptr->styleCreators.remove(styleClassName);
+        MStyleSheet::deleteStylesFromStyleCreator(qPrintable(styleClassName));
     }
 }
 

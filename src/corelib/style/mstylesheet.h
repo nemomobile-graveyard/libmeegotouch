@@ -105,6 +105,7 @@ public:
     };
 
     static void deleteStylesWithoutReference(CleanupPolicy cleanupPolicy = ReleaseResources);
+    static void deleteStylesFromStyleCreator(const QByteArray & styleClassName);
 
     /*!
      * \brief Cleans up the cache
