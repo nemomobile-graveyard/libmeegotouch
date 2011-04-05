@@ -23,7 +23,7 @@
 
 using namespace M::MThemeDaemonProtocol;
 
-const QString M::MThemeDaemonProtocol::ServerAddress = "m.mthemedaemon";
+const QString M::MThemeDaemonProtocol::ServerAddress = "/var/run/m.mthemedaemon";
 static const int SOCKET_DELAY_MS = 15000;
 
 PacketData::~PacketData()
