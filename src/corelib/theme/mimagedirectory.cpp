@@ -87,7 +87,7 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
                 applyDebugColors(&image);
 
                 if (shouldBeCached()) {
-                    saveToFsCache(image, size, uniqueKey());
+                    saveToFsCache(image, size);
                     QImage imageFromCache = loadFromFsCache(size, cacheEntry);
                     if (imageFromCache.isNull()) {
                         qCritical() << "Themedaemon: Failed to reload image" << uniqueKey() << "from cache. Something bad is happening.";
@@ -290,7 +290,12 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
     return QImage();
 }
 
-void ImageResource::saveToFsCache(QImage pixmap, const QSize& size, const QString &uniqueKey)
+void ImageResource::saveToFsCache(QImage &image, const QSize &size)
+{
+    saveToFsCache(image, size, uniqueKey());
+}
+
+void ImageResource::saveToFsCache(QImage &image, const QSize& size, const QString &uniqueKey)
 {
     static bool failedCacheSaveAttempt = false;
 
@@ -317,11 +322,11 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size, const QStrin
     }
 
     // FIXME: Uncomment once the proper support for non-alpha images is ready.
-    if (/*pixmap.format() != QImage::Format_RGB32 &&*/ pixmap.format() != QImage::Format_ARGB32_Premultiplied) {
-        pixmap = pixmap.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    if (/*pixmap.format() != QImage::Format_RGB32 &&*/ image.format() != QImage::Format_ARGB32_Premultiplied) {
+        image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
     }
 
-    cache.write((const char*)pixmap.constBits(), pixmap.byteCount());
+    cache.write((const char*)image.constBits(), image.byteCount());
     cache.flush();
     cache.close();
 
@@ -340,8 +345,8 @@ void ImageResource::saveToFsCache(QImage pixmap, const QSize& size, const QStrin
     stream << IMAGE_CACHE_VERSION;
     QFileInfo fileInfo(absoluteFilePath());
     stream << fileInfo.lastModified().toTime_t();
-    stream << pixmap.size();
-    stream << pixmap.format();
+    stream << image.size();
+    stream << image.format();
     meta.flush();
     meta.close();
 }
