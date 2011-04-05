@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "textentrypage.h"
+#include "headeredtextedit.h"
 #include <MLayout>
 #include <MLocale>
 #include <MLabel>
@@ -256,60 +257,6 @@ bool CustomTextEdit::event(QEvent *event)
         }
     }
     return MTextEdit::event(event);
-}
-
-HeaderedTextEdit::HeaderedTextEdit(QGraphicsItem *parent)
-    : MTextEdit(MTextEditModel::MultiLine, QString(), parent),
-    headerLabel(0)
-{
-    connect(document(), SIGNAL(blockCountChanged(int)), this, SLOT(_q_resetNewBlockMargin()));
-}
-
-HeaderedTextEdit::~HeaderedTextEdit()
-{
-}
-
-void HeaderedTextEdit::setHeaderText(const QString &text)
-{
-    if (!headerLabel) {
-        headerLabel = new MLabel(this);
-        headerLabel->setStyleName("CommonEditorInputFieldLabel");
-        headerLabel->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        headerLabel->setPos(0, 0);
-        headerLabel->setPreferredHeight(size().height());
-        connect(headerLabel, SIGNAL(geometryChanged()), this, SLOT(_q_updateTextLeftMargin()));
-    }
-    headerLabel->setText(text);
-    headerLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    _q_updateTextLeftMargin();
-}
-
-QString HeaderedTextEdit::staticHeaderText() const
-{
-    if (headerLabel)
-        return headerLabel->text();
-    else
-        return QString();
-}
-
-void HeaderedTextEdit::_q_updateTextLeftMargin()
-{
-    QSizeF labelSize = headerLabel->sizeHint(Qt::PreferredSize, QSizeF(-1, -1));
-    QTextCursor cursor(document());
-    cursor.setPosition(0);
-    QTextBlockFormat tbf = cursor.blockFormat();
-    tbf.setTextIndent(labelSize.width());
-    cursor.setBlockFormat(tbf);    
-}
-
-void HeaderedTextEdit::_q_resetNewBlockMargin()
-{
-    QTextBlockFormat tbf = textCursor().blockFormat();
-    if (textCursor().blockNumber() == 0)
-        tbf.setTextIndent(headerLabel->size().width());
-    else
-        tbf.setTextIndent(0);
-    textCursor().setBlockFormat(tbf);
 }
 
 TextEntryPage::TextEntryPage()
@@ -667,7 +614,7 @@ void TextEntryPage::createContent()
     HeaderedTextEdit *uneditableTextEdit = new HeaderedTextEdit(centralWidget());
     uneditableTextEdit->setStyleName("CommonEditorInputFieldMultiline");
     uneditableTextEdit->setHeaderText("Recipient:");
-    uneditableTextEdit->setContentType(M::EmailContentType);
+    uneditableTextEdit->setContentType(M::FreeTextContentType);
     uneditableTextEdit->setCompleter(m_completer.data());
     uneditableTextEditLabel = new MLabel(centralWidget());
     uneditableTextEditLabel->setStyleName("CommonFieldLabel");
