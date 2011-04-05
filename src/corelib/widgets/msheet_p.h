@@ -38,9 +38,6 @@ public:
 
     void _q_makeSystemSheetDisappear();
     void _q_dismissSystemSheet();
-    void _q_focusFirstEditItem();
-
-    void findFirstEditItem(QGraphicsItem* item, QGraphicsItem*& firstEditItem);
 
 #ifdef Q_WS_X11
     void appendMSheetTypePropertyToStandAloneWindow();

@@ -116,43 +116,6 @@ void MSheetPrivate::_q_dismissSystemSheet()
     q->sceneManager()->dismissSceneWindowNow(q);
 }
 
-void MSheetPrivate::_q_focusFirstEditItem()
-{
-    Q_Q(MSheet);
-
-    QGraphicsWidget *centralWidget = q->model()->centralWidget();
-    if (!centralWidget)
-        return;
-
-    QGraphicsItem* firstEditItem = 0;
-    findFirstEditItem(centralWidget, firstEditItem);
-    if (firstEditItem)
-        firstEditItem->setFocus();
-}
-
-void MSheetPrivate::findFirstEditItem(QGraphicsItem* item, QGraphicsItem*& firstEditItem)
-{
-    Q_Q(MSheet);
-
-    QGraphicsWidget *centralWidget = q->model()->centralWidget();
-    QPointF firstEditItemPos;
-    if (firstEditItem)
-        firstEditItemPos = centralWidget->mapFromItem(firstEditItem, firstEditItem->pos());
-
-    foreach(QGraphicsItem* child, item->childItems()) {
-        if (child->flags().testFlag(QGraphicsItem::ItemAcceptsInputMethod)) {
-            QPointF  pos = centralWidget->mapFromItem(child, child->pos());
-            if (!firstEditItem || pos.y() < firstEditItemPos.y()
-                || (pos.y() == firstEditItemPos.y() && pos.x() < firstEditItemPos.x()))
-            {
-                firstEditItem = child;
-                firstEditItemPos = pos;
-            }
-        }
-        findFirstEditItem(child, firstEditItem);
-    }
-}
-
 #ifdef Q_WS_X11
 void MSheetPrivate::appendMSheetTypePropertyToStandAloneWindow()
 {
@@ -215,7 +178,6 @@ void MSheetPrivate::appearSystemwide(MSceneWindow::DeletionPolicy policy)
 
     standAloneWindow->sceneManager()->appearSceneWindowNow(q);
     standAloneWindow->show();
-    standAloneWindow->setFocus();
 }
 
 //////////////////
@@ -226,7 +188,6 @@ MSheet::MSheet() :
                  new MSheetModel,
                  MSceneWindow::Sheet, QString(""), 0)
 {
-    connect(this, SIGNAL(appeared()), SLOT(_q_focusFirstEditItem()));
 }
 
 MSheet::~MSheet()
