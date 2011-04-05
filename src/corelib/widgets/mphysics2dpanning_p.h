@@ -65,7 +65,6 @@ public:
 
     QList<QPointF>  positions;
 
-    void ensureViewportInRangeOnStopping();
     void _q_integrator(const QVariant &value);
     QPointF getVelocity();
 

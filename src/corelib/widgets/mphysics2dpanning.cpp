@@ -23,10 +23,8 @@
 #include "mphysics2dpanning.h"
 #include "mphysics2dpanning_p.h"
 
-#include "MDebug"
-
 namespace {
-    const int BorderJumpWarningThreshold = 2; //px. Used when physics parameters are wrong.
+    const qreal MinimumBorderSpeed = 0.1; //px. Used when physics parameters do not allow to drag the viewport to correct range.
     const int SampleCount = 5; // Used for speed calculation;
 }
 
@@ -57,35 +55,6 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
 MPhysics2DPanningPrivate::~MPhysics2DPanningPrivate()
 {
     delete panningAnimation;
-}
-
-void MPhysics2DPanningPrivate::ensureViewportInRangeOnStopping()
-{
-    qreal offset = 0;
-    if (panDirection.testFlag(Qt::Horizontal)) {
-        velX = 0;
-        if (posX < range.left())  { offset = posX - range.left();  posX = range.left();  }
-        if (posX > range.right()) { offset = posX - range.right(); posX = range.right(); }
-    }
-
-    if (qAbs(offset) > BorderJumpWarningThreshold) {
-        qWarning() << "The physics engine had to artificially move the viewport inside range on X axis\n"
-                      "after the viewport was dragged outside range. Check the physics parameters.";
-        offset = 0;
-    }
-
-    if (panDirection.testFlag(Qt::Vertical)) {
-        velY = 0;
-        if (posY < range.top())    { offset = posY - range.top();    posY = range.top();    }
-        if (posY > range.bottom()) { offset = posY - range.bottom(); posY = range.bottom(); }
-    }
-
-    if (qAbs(offset) > BorderJumpWarningThreshold) {
-        qWarning() << "The physics engine had to artificially move the viewport inside range on Y axis\n"
-                      "after the viewport was dragged outside range. Check the physics parameters.";
-        offset = 0;
-    }
-
 }
 
 void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
@@ -132,14 +101,25 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
     // Integration stop condition.
     if (qAbs(accX) < 1 &&
         qAbs(accY) < 1 &&
-        qAbs(velX) < 0.1 &&
-        qAbs(velY) < 0.1 &&
+        qAbs(velX) < MinimumBorderSpeed &&
+        qAbs(velY) < MinimumBorderSpeed &&
         !pointerPressed) {
 
-        ensureViewportInRangeOnStopping();
-        panningAnimation->stop();
+        bool inRangeX = (panDirection.testFlag(Qt::Horizontal) == false) ||
+                        (posX >= range.left() && posX <= range.right());
 
-        emit q->panningStopped();
+        bool inRangeY = (panDirection.testFlag(Qt::Vertical) == false) ||
+                        (posY >= range.top()  && posY <= range.bottom());
+
+        if (!inRangeX)
+            velX = ( posX < range.left() ? 1 : -1) * MinimumBorderSpeed;
+        if (!inRangeY)
+            velY = ( posY < range.top() ? 1 : -1) * MinimumBorderSpeed;
+
+        if (inRangeX && inRangeY) {
+            panningAnimation->stop();
+            emit q->panningStopped();
+        }
     }
 
     if (tempPosX != posX || tempPosY != posY) {
