@@ -1,8 +1,18 @@
-libmeegotouch (0.21.2~1) unstable; urgency=low
+libmeegotouch (0.21.2-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: Rasterized svgs are not properly cached.
+  * Fixes: Theme changing does not work due to styles being lazily released.
+  * Fixes: Minor fixes in Ut_MInputWidgetRelocator.
+  * Fixes: Use correct sip rect in ut_minputwidgetrelocator
+  * Fixes: NB#232754 - Floating fast scroll shows previous value when changing sort method
+  * Fixes: Robustness against invalid indices upon MLocalBuckets::removeItems()
+  * Fixes: NB#242110 - <memleak> Memory leak reported in mextensionhandleview.cpp while running valgrind on libmeegotouch-tests
+  * Fixes: NB#238698 - MButton sends two released() signals when on a disappearing page
+  * Fixes: NB#217075 - List/view panning always starts with a jump
+  * Fixes: NB#242234 - continuous panning is not possible anymore
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 01 Apr 2011 13:07:34 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 05 Apr 2011 11:45:45 +0200
 
 libmeegotouch (0.21.1-1) unstable; urgency=low
 
