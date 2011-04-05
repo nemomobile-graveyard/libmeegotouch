@@ -67,8 +67,6 @@ class MSheetPrivate;
   \li In most other cases the header buttons provide a negative- and positive action. For the
       negative action usually 'Cancel' is used as the label. For the positive action the
       actual verb is used, e.g. Save / Send / Add.
-  \li Sets the focus to the first text field (if applicable) automatically. A user should
-      never have to tap to gain focus.
 
   The sheet contains...
   \li the controls necessary to perform the task
