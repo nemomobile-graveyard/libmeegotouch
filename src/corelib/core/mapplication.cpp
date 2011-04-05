@@ -533,11 +533,19 @@ void MApplicationPrivate::stdExit(int status)
       the c exit() function.
      */
 
-    // exit when an event loop is running
-    qApp->exit( status );
-
+    if ( qApp )
+    {
+        // exit when an event loop is running
+        qApp->exit( status );
+    }
+    
     // exit when no event loop is running
     _exit( status );
+}
+
+void MApplication::stdExit(int status)
+{
+    MApplicationPrivate::stdExit( status );
 }
 
 void MApplication::setPrestartMode(M::PrestartMode mode)

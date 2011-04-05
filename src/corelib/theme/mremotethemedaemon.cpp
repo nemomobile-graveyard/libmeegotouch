@@ -145,7 +145,7 @@ void MRemoteThemeDaemonPrivate::negotiateProtocolVersion() {
             qCritical("Running themedaemon and this client do not support the same protocol version.\n"
                       "Maybe you need to restart the themedaemon server or to upgrade your installation.\n"
                       "Exiting.");
-            exit(EXIT_FAILURE);
+            MApplication::stdExit(EXIT_FAILURE);
         }
     } else {
         handleUnexpectedPacket(reply);

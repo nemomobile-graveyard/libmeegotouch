@@ -20,6 +20,7 @@
 #include <QDir>
 #include <QSettings>
 
+#include "mapplication.h"
 #include "mgconfitem.h"
 #include "massembly.h"
 #include "massembly_p.h"
@@ -78,7 +79,7 @@ void MAssemblyPrivate::loadStylesheet(const QString &filename, const MLogicalVal
     } else {
         mWarning("MAssembly") << "Failed to load stylesheet:" << filename;
         delete newStylesheet;
-        exit(2);
+        MApplication::stdExit(2);
     }
 }
 

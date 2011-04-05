@@ -109,7 +109,7 @@ void MApplicationService::exit()
     if (d->prestartModeIsLazyShutdown()) {
         d->restorePrestart();
     } else {
-        d->stdExit(0);
+        MApplication::stdExit(0);
     }
 
     mDebug("MApplicationService") << "exit()";
@@ -117,8 +117,6 @@ void MApplicationService::exit()
 
 void MApplicationService::handleServiceRegistrationFailure()
 {
-    Q_D(MApplicationService);
-
     MApplication *mApp = MApplication::instance();
 
     MApplicationIfProxy mApplicationIfProxy(registeredName(), mApp);
@@ -137,7 +135,7 @@ void MApplicationService::handleServiceRegistrationFailure()
 
             mApplicationIfProxy.launch( args );
         }
-        d->stdExit(0);
+        MApplication::stdExit(0);
     } else {
         mDebug("MApplicationService") << "DBus not connected; not launching";
     }
@@ -153,7 +151,7 @@ void MApplicationService::incrementAndRegister()
 
     if (++d->instanceCounter == MaxNoInstances) {
         mDebug("MApplicationService") << "Reached maximum number instances of this application.";
-        d->stdExit(0);
+        MApplication::stdExit(0);
     }
 
     QString baseServiceName = "com.nokia." + appName;
@@ -168,7 +166,7 @@ void MApplicationService::incrementAndRegister()
 
         if (++d->instanceCounter == MaxNoInstances) {
             mDebug("MApplicationService") << "Reached maximum number instances of this application.";
-            d->stdExit(0);
+            MApplication::stdExit(0);
         }
 
         serviceName = baseServiceName + QString::number(d->instanceCounter);

@@ -191,10 +191,6 @@ void MApplicationServicePrivate::unregisterObject(const QString &path)
 {
     Q_UNUSED(path);
 }
-void MApplicationServicePrivate::stdExit(int exitValue)
-{
-    MApplicationPrivate::stdExit(exitValue);
-}
 void MApplicationServicePrivate::closeAllWindows()
 {
     mApp->closeAllWindows();

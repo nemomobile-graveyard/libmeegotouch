@@ -48,7 +48,6 @@ protected:
     bool registerService(const QString &serviceName);
     void registerObject(const QString &path, QObject *object);
     void unregisterObject(const QString &path);
-    void stdExit(int exitValue);
     void activateActiveWindow();
     void raiseActiveWindow();
     bool thisAppRunWithDBus();

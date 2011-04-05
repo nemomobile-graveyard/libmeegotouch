@@ -240,6 +240,16 @@ public:
      */
     static void setPrestarted(bool enable);
 
+    /*
+     * Meegotouch exit call.
+     * For Meegotouch applications it is recommended to use this
+     * function to exit an application. Do not use exit() or
+     * _exit(), but use this function to exit your program.
+     *
+     * Using the qApp->exit() and qApp->quit() functions is fine.
+     */
+    static void stdExit(int status);
+
 Q_SIGNALS:
 
     /*!

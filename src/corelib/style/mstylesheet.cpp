@@ -136,7 +136,7 @@ MStyle *MStyleSheetPrivate::buildStyle(const StyleSpec &spec,
                   spec.mode.constData());
 
         delete style;
-        exit(2);
+        MApplication::stdExit(2);
     }
 
     return style;

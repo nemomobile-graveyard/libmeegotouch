@@ -59,6 +59,7 @@
 #include <QLibraryInfo>
 #include "testabilityinterface.h"
 #include "mgraphicssystemhelper.h"
+#include "mapplication.h"
 
 #ifdef Q_WS_X11
 #include <QX11Info>
@@ -288,7 +289,7 @@ void MComponentDataPrivate::debugInit(bool levelSet)
         if (!list.isEmpty()) {
             if (g_has_debug_whitelist) {
                 qCritical("Error: Please export either M_OUTPUT_PREFIX or M_NO_OUTPUT_PREFIX, not both");
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
             g_has_debug_blacklist = true;
         }
@@ -413,7 +414,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     //appName cannot begin with number
     if (appName[0].isDigit()) {
         qCritical("MComponentData - application identifier must not begin with a digit.");
-        exit(EXIT_FAILURE);
+        MApplication::stdExit(EXIT_FAILURE);
     }
 
 #ifdef HAVE_DBUS
@@ -429,7 +430,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
                "environment variable is set correctly. For that you can execute the following command:\n"
                "source /tmp/session_bus_address.user\n");
 
-        exit(EXIT_FAILURE);
+        MApplication::stdExit(EXIT_FAILURE);
     }
 
     /* If cache is being populated, real name of the application to be
@@ -609,7 +610,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
         } else if (s == "-local-theme") {
             if (softwareRendering && MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
                 qCritical("-local-theme in combination with -software is not supported with the MeeGo graphicssystem. Please either drop one of the parameters or use a different graphicssystem.");
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
             themeService = MTheme::LocalTheme;
         } else if (s == "-output-level") {
@@ -627,12 +628,12 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                 } else {
                     qCritical("%s: Error: Provide one of debug, warning or error to -output-level",
                               argv[0]);
-                    exit(EXIT_FAILURE);
+                    MApplication::stdExit(EXIT_FAILURE);
                 }
             } else {
                 qCritical("%s: Error: Provide one of debug, warning or error to -output-level",
                           argv[0]);
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
         } else if (s == "-output-prefix" || s == "-no-output-prefix") {
             if (s == "-output-prefix")
@@ -643,7 +644,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
             if (g_has_debug_blacklist && g_has_debug_whitelist) {
                 qCritical("%s: Error: Provide either -output-prefix or -no-output-prefix, not both",
                           argv[0]);
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
             if (i < (argc - 1)) {
                 i++;
@@ -651,7 +652,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
             } else {
                 qCritical("%s: Error: Provide a prefix to filter for to %s",
                           argv[0], argv[i]);
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
         } else if (s == "-output-file") {
             if (i < (argc - 1)) {
@@ -662,13 +663,13 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                 if (! ok) {
                     qCritical("%s: Error: Opening of log file failed: %s",
                               argv[0], argv[i]);
-                    exit(EXIT_FAILURE);
+                    MApplication::stdExit(EXIT_FAILURE);
                 }
 
             } else {
                 qCritical("%s: Error: Please provide a log file name",
                           argv[0]);
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
         } else if (s == "-performance-debug") {
             g_show_performance_messages = true;
@@ -685,13 +686,13 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                 if (!syslogServer.isValid()) {
                     qCritical("%s: Error: Given syslog server URL is invalid",
                         argv[0]);
-                    exit(EXIT_FAILURE);
+                    MApplication::stdExit(EXIT_FAILURE);
                 }
 
             } else {
                 qCritical("%s: Error: Please specify the syslog server",
                           argv[0]);
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
         } else if (s == "-target") {
             if (i < (argc - 1)) {
@@ -701,7 +702,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
             } else {
                 qCritical("%s: Error: Provide a device name to -target",
                           argv[0]);
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
         } else if (s == "-fixed-orientation") {
             if (i < (argc - 1)) {
@@ -723,19 +724,19 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                 } else {
                     qCritical("%s: Error: Provide one of 0, 90, 180, 270 to -fixed-orientation",
                               argv[0]);
-                    exit(EXIT_FAILURE);
+                    MApplication::stdExit(EXIT_FAILURE);
                 }
             } else {
                 qCritical("%s: Error: Provide one of 0, 90, 180, 270 to -fixed-orientation",
                           argv[0]);
-                exit(EXIT_FAILURE);
+                MApplication::stdExit(EXIT_FAILURE);
             }
         } else if (s == "-v" || s.startsWith("-version") || s.startsWith("--version")) {
             mDebug("MComponentData") << "Version info: " <<  "\n"
                                          << "M_VERSION :" << M_VERSION << "\n"
                                          << "Compile time:" <<  __DATE__  << __TIME__ << "\n"
                                          << "QT verison  :" << QT_VERSION_STR << "\n";
-            exit(EXIT_SUCCESS);
+            MApplication::stdExit(EXIT_SUCCESS);
         } else if (s == "-h" || s.startsWith("-help") || s.startsWith("--help")) {
             mDebug("MComponentData") << "Usage: " << argv[0] << "\n"
                                          << "  [-software] Enable software rendering\n"
@@ -766,7 +767,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-fixed-orientation 0|90|180|270] Start application in fixed orientation. \n "
                                          << "      This overrides keyboard state, as well as a device profile"
                                          << "\n";
-            exit(0);
+            MApplication::stdExit(0);
 
         } else if (s == "-prestart") {
             prestarted = true;

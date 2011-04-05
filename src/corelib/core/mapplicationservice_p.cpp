@@ -107,11 +107,6 @@ QString MApplicationServicePrivate::appName()
     return appName;
 }
 
-void MApplicationServicePrivate::stdExit(int exitValue)
-{
-    MApplicationPrivate::stdExit(exitValue);
-}
-
 bool MApplicationServicePrivate::isPrestarted()
 {
     return mApp->isPrestarted();
