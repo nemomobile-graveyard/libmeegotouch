@@ -40,6 +40,7 @@ public: // public to inherited classes
     void setActive(bool active);
     void setEnabled(bool enabled);
     void setSelected(bool selected);
+    void setPressed(bool pressed);
 
     static void reloadChildItemsStyles(QGraphicsItem* item);
 

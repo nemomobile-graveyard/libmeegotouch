@@ -55,7 +55,7 @@ void MListItemViewPrivate::_q_applyPressedStyle()
 {
     Q_Q(MListItemView);
 
-    q->style().setModePressed();
+    setPressed(true);
 
     if (tapAndHoldStarted && !q->style()->downStateEffect().isEmpty())
         controller->setGraphicsEffect(MTheme::effect(q->style()->downStateEffect()));
@@ -68,10 +68,7 @@ void MListItemViewPrivate::_q_applyReleasedStyle()
 {
     Q_Q(MListItemView);
 
-    if (controller->isSelected())
-        q->style().setModeSelected();
-    else
-        q->style().setModeDefault();
+    setSelected(controller->isSelected());
 
     if (!tapAndHoldStarted && controller->graphicsEffect())
         controller->setGraphicsEffect(NULL);
