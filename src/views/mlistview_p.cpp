@@ -61,6 +61,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
 
     scrollToAnimation = new QPropertyAnimation(this);
     lastScrolledToFlatRow = -1;
+    lastGeometrySize = QSizeF();
     isDeleted = false;
 
     itemDeletionAnimation = NULL;
@@ -735,6 +736,10 @@ void MListViewPrivate::updateScrollToTargetPosition()
 
 void MListViewPrivate::scrollToPos(const QPointF &targetPosition, MList::AnimationMode mode)
 {
+    if (scrollToAnimation->state() == QPropertyAnimation::Running) {
+        updateScrollToTargetPosition();
+        return;
+    }
     if (mode == MList::Animated) {
         if (targetPosition.y() > pannableViewport->position().y())
             scrollToAnimation->setStartValue(targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE));

@@ -223,6 +223,7 @@ public:
     // Scroll animation
     QPropertyAnimation *scrollToAnimation;
     int lastScrolledToFlatRow;
+    QSizeF lastGeometrySize;
 
     // Item remove animations
     MBasicListItemDeletionAnimation* itemDeletionAnimation;

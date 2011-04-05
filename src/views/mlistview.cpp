@@ -192,15 +192,19 @@ QSizeF MListView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 void MListView::setGeometry(const QRectF &rect)
 {
     if (d_ptr) {
-        d_ptr->viewWidth = rect.width();
         if (!d_ptr->pannableViewport)
             d_ptr->viewportVisibleHeight = d_ptr->totalHeight();
-        d_ptr->updatePannableViewportPosition();
-        d_ptr->updateItemSize();
-        d_ptr->updateSeparatorSize();
-        relayoutItemsInViewportRect();
 
-        d_ptr->scrollToLastIndex();
+        if (d_ptr->lastGeometrySize != size()) {
+            d_ptr->viewWidth = rect.width();
+            d_ptr->updatePannableViewportPosition();
+            d_ptr->updateItemSize();
+            d_ptr->updateSeparatorSize();
+            relayoutItemsInViewportRect();
+
+            d_ptr->scrollToLastIndex();
+            d_ptr->lastGeometrySize = size();
+        }
     }
 
     MWidgetView::setGeometry(rect);
