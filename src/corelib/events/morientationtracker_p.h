@@ -90,6 +90,7 @@ public:
     bool isSubscribedToSensorProperties;
     bool hasJustSubscribedToSensorProperties;
 #endif
+    bool rotationsDisabled;
 
     //windows from this list follow "/Screen/CurrentWindow/OrientationAngle" (set by meego window manager).
     //by default it includes modal dialogs.
@@ -106,6 +107,8 @@ public slots:
     void isCoveredChanged();
     void videoRouteChanged();
     void updateOrientationAngle();
+    void disableRotations();
+    void enableRotations();
 #ifdef HAVE_CONTEXTSUBSCRIBER
     void handleCurrentAppWindowOrientationAngleChange();
 #endif // HAVE_CONTEXTSUBSCRIBER

@@ -94,6 +94,7 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , isSubscribedToSensorProperties(false)
     , hasJustSubscribedToSensorProperties(false)
 #endif
+    , rotationsDisabled(false)
     , q_ptr(controller)
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
@@ -136,6 +137,15 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 
     waitForSensorPropertiesToSubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
+
+#ifdef Q_WS_X11
+    connect(MApplication::instance(), SIGNAL(minimizing()),
+            this, SLOT(disableRotations()));
+    connect(MApplication::instance(), SIGNAL(minimized()),
+            this, SLOT(enableRotations()));
+    connect(MApplication::instance(), SIGNAL(minimizingCanceled()),
+            this, SLOT(enableRotations()));
+#endif
 
     isCoveredChanged();
     videoRouteChanged();
@@ -214,6 +224,9 @@ void MOrientationTrackerPrivate::resolveIfOrientationUpdatesRequired()
 
 void MOrientationTrackerPrivate::updateOrientationAngle()
 {
+    if (rotationsDisabled)
+        return;
+
 #ifdef HAVE_CONTEXTSUBSCRIBER
     if (!isSubscribedToSensorProperties) {
         return;
@@ -412,6 +425,9 @@ void MOrientationTracker::handleCurrentAppWindowOrientationAngleChange()
 
 void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
 {
+    if (rotationsDisabled)
+        return;
+
     M::OrientationAngle angle = (M::OrientationAngle)currentWindowAngleProperty->value().toInt();
     //windows like system dialog will follow current window to any orientation
     foreach(MWindow * win, windowsFollowingCurrentAppWindow) {
@@ -449,4 +465,18 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win, boo
         windowsFollowingCurrentAppWindow.isEmpty())
         currentWindowAngleProperty->unsubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
+}
+
+void MOrientationTrackerPrivate::disableRotations()
+{
+    rotationsDisabled = true;
+}
+
+void MOrientationTrackerPrivate::enableRotations()
+{
+    if (rotationsDisabled) {
+        rotationsDisabled = false;
+        updateOrientationAngle();
+        handleCurrentAppWindowOrientationAngleChange();
+    }
 }
