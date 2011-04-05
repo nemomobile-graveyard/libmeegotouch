@@ -170,6 +170,12 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
     standAloneWindow = 0;
 }
 
+void MDialogPrivate::_q_onCentralWidgetDestroyed()
+{
+    Q_Q(MDialog);
+    q->model()->setCentralWidget(0);
+}
+
 bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy policy)
 {
     Q_Q(MDialog);
@@ -323,6 +329,9 @@ void MDialog::setCentralWidget(QGraphicsWidget *centralWidget)
         delete model()->centralWidget();
 
     model()->setCentralWidget(centralWidget);
+
+    if (centralWidget)
+        connect(centralWidget, SIGNAL(destroyed()), SLOT(_q_onCentralWidgetDestroyed()));
 }
 
 void MDialog::addButton(MButtonModel *buttonModel)

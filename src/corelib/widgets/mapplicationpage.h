@@ -546,6 +546,7 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState newState,
                                                                MSceneWindow::SceneWindowState oldState))
+    Q_PRIVATE_SLOT(d_func(), void _q_onCentralWidgetDestroyed())
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MApplicationPage::Components)

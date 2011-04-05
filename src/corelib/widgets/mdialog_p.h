@@ -42,6 +42,7 @@ public:
     void updateStandAloneHomeButtonVisibility();
     void _q_onStandAloneDialogDisappeared();
     void _q_buttonClicked(QObject *obj);
+    void _q_onCentralWidgetDestroyed();
     bool prepareStandAloneAppearance(MSceneWindow::DeletionPolicy policy);
     void updateButtonClickedMappings();
     int  resultFromStandardButtonId(int buttonId);
@@ -61,6 +62,7 @@ public:
     MWindow *standAloneWindow;
     MHomeButtonPanel *homeButtonPanel;
     bool suicideAfterDestroyingStandAloneWindow;
+
 };
 
 #endif

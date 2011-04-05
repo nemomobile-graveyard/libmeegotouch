@@ -60,6 +60,12 @@ void MApplicationPagePrivate::init()
                                                  MSceneWindow::SceneWindowState)));
 }
 
+void MApplicationPagePrivate::_q_onCentralWidgetDestroyed()
+{
+    Q_Q(MApplicationPage);
+    q->model()->setCentralWidget(0);
+}
+
 void MApplicationPagePrivate::_q_onSceneWindowStateChanged(
         MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState)
 {
@@ -106,6 +112,9 @@ void MApplicationPage::setCentralWidget(QGraphicsWidget *centralWidget)
         delete model()->centralWidget();
 
     model()->setCentralWidget(centralWidget);
+
+    if (centralWidget)
+        connect(centralWidget, SIGNAL(destroyed()), SLOT(_q_onCentralWidgetDestroyed()));
 }
 
 QGraphicsWidget *MApplicationPage::centralWidget()

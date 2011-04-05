@@ -34,6 +34,12 @@ MContainerPrivate::~MContainerPrivate()
 {
 }
 
+void MContainerPrivate::_q_onCentralWidgetDestroyed()
+{
+    Q_Q(MContainer);
+    q->model()->setCentralWidget(0);
+}
+
 void MContainerPrivate::init(const QString &newTitle)
 {
     Q_Q(MContainer);
@@ -80,13 +86,20 @@ void MContainer::setCentralWidget(QGraphicsWidget *centralWidget, bool destroy)
     // Destroy the old central widget if requested
     if (destroy) {
         delete oldCentralWidget;
+
+        if (centralWidget)
+            connect(centralWidget, SIGNAL(destroyed()), SLOT(_q_onCentralWidgetDestroyed()));
     } else {
         // pass the ownership back to the caller.
         oldCentralWidget->setParentItem(0);
         oldCentralWidget->setParent(0);
         if (scene())
             scene()->removeItem(oldCentralWidget);
+
+        if (oldCentralWidget)
+            disconnect(oldCentralWidget, SIGNAL(destroyed()), this, SLOT(_q_onCentralWidgetDestroyed()));
     }
+
 }
 
 QString MContainer::title() const
@@ -148,3 +161,5 @@ void MContainer::toggleProgressIndicatorVisible()
 {
     setProgressIndicatorVisible(!isProgressIndicatorVisible());
 }
+
+#include "moc_mcontainer.cpp"

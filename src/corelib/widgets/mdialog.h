@@ -729,6 +729,7 @@ private:
     Q_DISABLE_COPY(MDialog)
     Q_PRIVATE_SLOT(d_func(), void _q_buttonClicked(QObject *))
     Q_PRIVATE_SLOT(d_func(), void _q_onStandAloneDialogDisappeared())
+    Q_PRIVATE_SLOT(d_func(), void _q_onCentralWidgetDestroyed())
 
     friend class MDialogView;
     friend class MDialogViewPrivate;

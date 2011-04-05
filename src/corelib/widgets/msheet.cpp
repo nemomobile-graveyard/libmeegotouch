@@ -116,6 +116,18 @@ void MSheetPrivate::_q_dismissSystemSheet()
     q->sceneManager()->dismissSceneWindowNow(q);
 }
 
+void MSheetPrivate::_q_onCentralWidgetDestroyed()
+{
+    Q_Q(MSheet);
+    q->model()->setCentralWidget(0);
+}
+
+void MSheetPrivate::_q_onHeaderWidgetDestroyed()
+{
+    Q_Q(MSheet);
+    q->model()->setHeaderWidget(0);
+}
+
 #ifdef Q_WS_X11
 void MSheetPrivate::appendMSheetTypePropertyToStandAloneWindow()
 {
@@ -208,6 +220,9 @@ void MSheet::setCentralWidget(QGraphicsWidget *newWidget)
     model()->setCentralWidget(newWidget);
 
     delete oldWidget;
+
+    if (newWidget)
+        connect(newWidget, SIGNAL(destroyed()), SLOT(_q_onCentralWidgetDestroyed()));
 }
 
 QGraphicsWidget *MSheet::headerWidget()
@@ -222,6 +237,9 @@ void MSheet::setHeaderWidget(QGraphicsWidget *newWidget)
     model()->setHeaderWidget(newWidget);
 
     delete oldWidget;
+
+    if (newWidget)
+        connect(newWidget, SIGNAL(destroyed()), SLOT(_q_onHeaderWidgetDestroyed()));
 }
 
 void MSheet::appearSystemwide(MSceneWindow::DeletionPolicy policy)

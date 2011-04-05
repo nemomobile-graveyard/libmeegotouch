@@ -191,6 +191,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onStandAloneSheetDisappeared())
     Q_PRIVATE_SLOT(d_func(), void _q_makeSystemSheetDisappear())
     Q_PRIVATE_SLOT(d_func(), void _q_dismissSystemSheet())
+    Q_PRIVATE_SLOT(d_func(), void _q_onCentralWidgetDestroyed())
+    Q_PRIVATE_SLOT(d_func(), void _q_onHeaderWidgetDestroyed())
 };
 
 #endif // MSHEET_H

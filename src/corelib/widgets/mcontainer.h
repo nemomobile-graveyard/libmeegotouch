@@ -219,6 +219,7 @@ Q_SIGNALS:
 private:
     Q_DECLARE_PRIVATE(MContainer)
     Q_DISABLE_COPY(MContainer)
+    Q_PRIVATE_SLOT(d_func(), void _q_onCentralWidgetDestroyed())
 
 #ifdef UNIT_TEST
     friend class Ut_MContainer;

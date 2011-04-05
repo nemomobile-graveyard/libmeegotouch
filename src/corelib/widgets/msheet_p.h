@@ -38,6 +38,8 @@ public:
 
     void _q_makeSystemSheetDisappear();
     void _q_dismissSystemSheet();
+    void _q_onCentralWidgetDestroyed();
+    void _q_onHeaderWidgetDestroyed();
 
 #ifdef Q_WS_X11
     void appendMSheetTypePropertyToStandAloneWindow();

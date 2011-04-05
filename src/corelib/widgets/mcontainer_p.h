@@ -34,6 +34,7 @@ public:
     virtual ~MContainerPrivate();
 
     void init(const QString &newTitle = QString::null);
+    void _q_onCentralWidgetDestroyed();
 };
 
 #endif

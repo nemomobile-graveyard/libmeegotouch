@@ -49,6 +49,7 @@ public:
 
     void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState newState,
                                       MSceneWindow::SceneWindowState oldState);
+    void _q_onCentralWidgetDestroyed();
 };
 
 #endif
