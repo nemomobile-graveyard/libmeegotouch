@@ -618,7 +618,7 @@ void generateStyleDataHeader(const StyleClass *c, const QList<QString>& modes, c
         h << "private:\n";
         QList<QString>::const_iterator iterator = modes.constBegin();
         for (; iterator != modes.constEnd(); ++iterator) {
-            h << "    const MStyle* " << iterator->toLower() << "Style[2];\n";
+            h << "    const MStyle* _" << iterator->toLower() << "Style[2];\n";
         }
 
         h << "};\n\n";
@@ -884,8 +884,8 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
         cpp << "{\n";
         QList<QString>::const_iterator iterator = modes.constBegin();
         for (; iterator != modes.constEnd(); ++iterator) {
-            cpp << "    " << iterator->toLower() << "Style[M::Landscape] = NULL;\n";
-            cpp << "    " << iterator->toLower() << "Style[M::Portrait] = NULL;\n";
+            cpp << "    _" << iterator->toLower() << "Style[M::Landscape] = NULL;\n";
+            cpp << "    _" << iterator->toLower() << "Style[M::Portrait] = NULL;\n";
         }
         cpp << "}\n\n";
 
@@ -894,8 +894,8 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
         cpp << "{\n";
         iterator = modes.begin();
         for (; iterator != modes.end(); ++iterator) {
-            cpp << "    MTheme::releaseStyle(" << iterator->toLower() << "Style[M::Landscape]);\n";
-            cpp << "    MTheme::releaseStyle(" << iterator->toLower() << "Style[M::Portrait]);\n";
+            cpp << "    MTheme::releaseStyle(_" << iterator->toLower() << "Style[M::Landscape]);\n";
+            cpp << "    MTheme::releaseStyle(_" << iterator->toLower() << "Style[M::Portrait]);\n";
         }
         cpp << "}\n\n\n";
 
