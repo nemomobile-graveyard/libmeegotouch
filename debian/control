@@ -34,7 +34,7 @@ Depends: ${misc:Depends},
  libmeegotouch-bin (= ${Source-Version}),
  libmeegotouch-l10n-engineering-english (= ${Source-Version}),
  dbus-x11,
- meegotouchtheme (>= 0.20.85~1),
+ meegotouchtheme (>= 0.20.88~1),
  libqtm-serviceframework
 Suggests: libmeegotouch-l10n-ar,
  libmeegotouch-l10n-de,
