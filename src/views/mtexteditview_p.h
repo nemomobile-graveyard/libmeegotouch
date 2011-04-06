@@ -106,6 +106,9 @@ private:
     QRect textRectangle(int startPosition, int endPosition);
     //! \return area covered by selection on its \a first or last line
     QRect selectionLineRectangle(bool first);
+    //! \return rectangle in local coordinates, which is not obscured/clipped
+    //!         by pannable viewports or navigation controls
+    QRect visibleArea() const;
 
 protected:
     MTextEditView *q_ptr;

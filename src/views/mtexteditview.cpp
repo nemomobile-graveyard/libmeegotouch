@@ -24,6 +24,8 @@
 #include "mcompleter.h"
 
 #include <MSceneManager>
+#include <MApplicationPage>
+#include <MPannableViewport>
 
 #include <QApplication>
 #include <QPainter>
@@ -1068,34 +1070,68 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
     int targetY(firstRect.top());
     MEditorToolbarArrow::ArrowDirection arrowDirection(MEditorToolbarArrow::ArrowDown);
 
-    const QRect visibleSceneRect(
-        controller->mapRectFromScene(
-            0, 0, controller->sceneManager()->visibleSceneSize(M::Landscape).width(),
-            controller->sceneManager()->visibleSceneSize(M::Landscape).height()).toRect());
+    const QRect visibleRect = visibleArea();
 
-    if (targetY - editorToolbar->size().height() < visibleSceneRect.top()) {
-        targetY = secondRect.bottom();
+    const QRect visibleSceneRect = controller->mapRectFromScene(
+        QRectF(QPointF(), controller->sceneManager()->visibleSceneSize(M::Landscape))).toRect();
 
-        int bottomLimit;
-        if (MInputMethodState::instance()->inputMethodArea().isEmpty()) {
-            bottomLimit = visibleSceneRect.bottom();
-        } else {
-            bottomLimit = qMin<int>(
-                controller->mapRectFromScene(
-                    MInputMethodState::instance()->inputMethodArea()).toRect().top(),
-                visibleSceneRect.bottom());
-        }
+    const int topLimit = qMax<int>(visibleRect.top() - editorToolbar->size().height(), visibleSceneRect.top());
 
-        if (targetY + editorToolbar->size().height() <= bottomLimit) {
+    if (targetY - editorToolbar->size().height() < topLimit) {
+        if (secondRect.bottom() + editorToolbar->size().height() <= visibleRect.bottom()) {
+            targetY = secondRect.bottom();
             targetRect = secondRect;
+            arrowDirection = MEditorToolbarArrow::ArrowUp;
         } else {
-            targetY = firstRect.bottom();
+            targetY = topLimit + editorToolbar->size().height();
         }
-        arrowDirection = MEditorToolbarArrow::ArrowUp;
     }
 
-    editorToolbar->setPosition(QPointF(targetRect.center().x(), targetY),
-                               arrowDirection);
+    targetRect.moveTop(visibleRect.top());
+    const int targetX(visibleRect.intersected(targetRect).center().x());
+
+    editorToolbar->setPosition(QPointF(targetX, targetY), arrowDirection);
+}
+
+QRect MTextEditViewPrivate::visibleArea() const
+{
+    QRect visibleRect = controller->mapRectFromScene(
+        QRectF(QPointF(), controller->sceneManager()->visibleSceneSize(M::Landscape))).toRect();
+
+    // Map input panel rectangle to local coordinates and remove it
+    // from visible scene rectangle. It is assumed that input panel
+    // is always at the bottom of the sreen.
+    const QRect sipRect = MInputMethodState::instance()->inputMethodArea();
+    if (!sipRect.isNull()) {
+        const QRect mappedPanelRect(controller->mapRectFromScene(sipRect).toRect());
+
+        visibleRect.setBottom(qMin<int>(mappedPanelRect.top(),
+                                        visibleRect.bottom()));
+    }
+
+    // Map further restricting rectangles to local coordinates and clip
+    // them with visible scene rectangle.
+    QGraphicsWidget *widget = controller->parentWidget();
+    while (widget) {
+        QRect widgetClipRect;
+        if (MSceneWindow *sceneWindow = qobject_cast<MSceneWindow *>(widget)) {
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+                widgetClipRect = static_cast<MApplicationPage *>(sceneWindow)->exposedContentRect().toRect();
+            }
+        } else if (MPannableViewport *viewport = qobject_cast<MPannableViewport *>(widget)) {
+            if (viewport->hasClipping()) {
+                widgetClipRect = viewport->rect().toRect();
+            }
+        }
+
+        if (!widgetClipRect.isNull()) {
+            visibleRect &= controller->mapRectFromItem(widget, widgetClipRect).toRect();
+        }
+
+        widget = widget->parentWidget();
+    }
+
+    return visibleRect;
 }
 
 //////////////////////
