@@ -185,7 +185,7 @@ bool MStatusBarView::updateSharedPixmapHandleFromPropertyWindow(const Window &wi
 #endif //Q_WS_X11
 
 namespace{
-    const qreal SharedPixmapHeight = 30;
+    const qreal SharedPixmapHeight = 36;
 }
 
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
@@ -310,7 +310,10 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     // provider can die under mysterious circumstances so sharedPixmap can be invalid
     // Catch the bad_alloc in case the shared pixmap have been deleted without PropertyDelete notify
     QT_TRY {
+        painter->save();
+        painter->setClipRect(0, 0, size().width(), sharedPixmap.height()/2);
         painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
+        painter->restore();
     } QT_CATCH (...) {
         mWarning("MStatusBarView") << "drawContents: Cannot draw sharedPixmap.";
         const_cast<MStatusBarView*>(this)->destroyXDamageForSharedPixmap();
