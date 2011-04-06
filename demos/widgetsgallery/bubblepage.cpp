@@ -69,7 +69,7 @@ void BubblePage::createContent()
     QGraphicsLinearLayout * layout = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(layout);
 
-    BubbleListModel * model = new BubbleListModel;
+    BubbleListModel * model = new BubbleListModel(this);
 
     for (int i = 0; i < model->rowCount(); ++i)
     {
@@ -98,12 +98,14 @@ void BubblePage::createContent()
     expandedItem->addInformationWidget(pendingLabel);
     expandedItem->setCommentsString("+3");
 
-    QImage* p0 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_001.jpg");
-    MImageWidget* i0 = new MImageWidget(p0);
-    QImage* p1 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_002.jpg");
-    MImageWidget* i1 = new MImageWidget(p1);
-    QImage* p2 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_003.jpg");
-    MImageWidget* i2 = new MImageWidget(p2);
+    MImageWidget* i0 = new MImageWidget;
+    i0->setPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_001.jpg");
+
+    MImageWidget* i1 = new MImageWidget;
+    i1->setPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_002.jpg");
+
+    MImageWidget* i2 = new MImageWidget;
+    i2->setPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_003.jpg");
 
     MWidget* widget = new MWidget;
     QGraphicsGridLayout* gl = new QGraphicsGridLayout(widget);
@@ -123,14 +125,16 @@ void BubblePage::createContent()
     secondExpandedItem->setSenderName("");
     secondExpandedItem->setTimeStamp("5 min ago");
 
-    QImage* p4 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_004.jpg");
-    MImageWidget* i4 = new MImageWidget(p4);
-    QImage* p5 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_005.jpg");
-    MImageWidget* i5 = new MImageWidget(p5);
-    QImage* p6 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_006.jpg");
-    MImageWidget* i6 = new MImageWidget(p6);
-    MWidget* widget2 = new MWidget;
+    MImageWidget* i4 = new MImageWidget;
+    i4->setPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_004.jpg");
 
+    MImageWidget* i5 = new MImageWidget;
+    i5->setPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_005.jpg");
+
+    MImageWidget* i6 = new MImageWidget;
+    i6->setPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_006.jpg");
+
+    MWidget* widget2 = new MWidget;
     QGraphicsGridLayout* gl2 = new QGraphicsGridLayout(widget2);
     gl2->setSpacing(30);
     gl2->addItem(i4, 0,0);

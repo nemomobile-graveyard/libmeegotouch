@@ -41,6 +41,12 @@ BubbleListModel::BubbleListModel( QObject* parent )
     ;
 }
 
+BubbleListModel::~BubbleListModel()
+{
+    qDeleteAll(chatMessages);
+    chatMessages.clear();
+}
+
 int BubbleListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);

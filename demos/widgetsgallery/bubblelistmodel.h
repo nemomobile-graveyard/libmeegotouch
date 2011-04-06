@@ -40,6 +40,7 @@ class BubbleListModel : public QAbstractListModel
 
 public:
     BubbleListModel(QObject *parent = 0);
+    virtual ~BubbleListModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
