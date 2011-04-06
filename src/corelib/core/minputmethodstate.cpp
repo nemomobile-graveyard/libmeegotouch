@@ -41,6 +41,12 @@ MInputMethodStatePrivate::MInputMethodStatePrivate()
 
 MInputMethodStatePrivate::~MInputMethodStatePrivate()
 {
+    Q_Q(MInputMethodState);
+
+    foreach (int id, attributeExtensions.keys()) {
+        emit q->attributeExtensionUnregistered(id);
+        delete attributeExtensions[id];
+    }
 }
 
 void MInputMethodStatePrivate::init()
