@@ -62,6 +62,7 @@ private slots:
     void testRotation();
     void testSystemDialog();
     void testSystemModalDialog();
+    void testCentralWidgetSurviveDoubleDelete();
 };
 
 #endif

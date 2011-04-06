@@ -463,4 +463,14 @@ void Ut_MDialog::testSystemModalDialog()
     QCOMPARE(spyChanged3.count(), 1);
 }
 
+void Ut_MDialog::testCentralWidgetSurviveDoubleDelete()
+{
+    QGraphicsWidget *newCentralWidget = new QGraphicsWidget(dialog);
+    QGraphicsWidget *anotherCentralWidget = new QGraphicsWidget(dialog);
+    dialog->setCentralWidget(newCentralWidget);
+    delete newCentralWidget;
+    dialog->setCentralWidget(anotherCentralWidget);
+    QVERIFY(true);
+}
+
 QTEST_APPLESS_MAIN(Ut_MDialog);

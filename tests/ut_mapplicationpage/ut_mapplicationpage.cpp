@@ -425,4 +425,14 @@ void Ut_MApplicationPage::testCustomNavigationBarContentChangedSignal()
     QCOMPARE(customNavigationBarContentChangedSignalSpy.count(), 2);
 }
 
+void Ut_MApplicationPage::testSurviveCentralWidgetDoubleDelete()
+{
+    QGraphicsWidget *newCentralWidget = new QGraphicsWidget(m_subject);
+    QGraphicsWidget *anotherCentralWidget = new QGraphicsWidget(m_subject);
+    m_subject->setCentralWidget(newCentralWidget);
+    delete newCentralWidget;
+    m_subject->setCentralWidget(anotherCentralWidget);
+    QVERIFY(true);
+}
+
 QTEST_APPLESS_MAIN(Ut_MApplicationPage)

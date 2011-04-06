@@ -50,6 +50,8 @@ private slots:
     void testCreatingViewImmediatelyInLayout();
     void testCreatingViewImmediately();
     void testCancelEvent();
+    void testSurviveCentralWidgetDoubleDelete();
+    void testSurviveCentralWidgetReplace();
     void toggleProgressIndicatorVisible();
 
     void setTitleWithHeaderVisible();

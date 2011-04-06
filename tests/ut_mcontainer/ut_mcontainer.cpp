@@ -200,6 +200,26 @@ void Ut_MContainer::testCancelEvent()
     QVERIFY(spy.count() == 0);
 }
 
+void Ut_MContainer::testSurviveCentralWidgetDoubleDelete()
+{
+    QGraphicsWidget *newCentralWidget = new QGraphicsWidget(m_subject);
+    QGraphicsWidget *anotherCentralWidget = new QGraphicsWidget(m_subject);
+    m_subject->setCentralWidget(newCentralWidget);
+    delete newCentralWidget;
+    m_subject->setCentralWidget(anotherCentralWidget);
+    QVERIFY(true);
+}
+
+void Ut_MContainer::testSurviveCentralWidgetReplace()
+{
+    QGraphicsWidget *newCentralWidget = new QGraphicsWidget(m_subject);
+    QGraphicsWidget *anotherCentralWidget = new QGraphicsWidget(m_subject);
+    m_subject->setCentralWidget(newCentralWidget);
+    m_subject->setCentralWidget(anotherCentralWidget, false);
+    delete newCentralWidget;
+    QVERIFY(m_subject->centralWidget() == anotherCentralWidget);
+}
+
 // test all of the set/get with both visible and invisble header, because it should work for instance
 // that one sets the e.g. iconID now and makes the header visible later
 

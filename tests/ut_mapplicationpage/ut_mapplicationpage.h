@@ -81,6 +81,7 @@ private slots:
     void testCustomNavigationBarContentSetterAndGetter();
     void testCustomNavigationBarContentOwnershipOnPageDeletion();
     void testCustomNavigationBarContentChangedSignal();
+    void testSurviveCentralWidgetDoubleDelete();
 
 private:
     MApplicationPage *m_subject;
