@@ -396,15 +396,19 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     QFileInfo fileInfo(argv[0]);
     QString themeIdentifier = fileInfo.fileName();
     if (!appIdentifier.isEmpty()) {
-        QRegExp regExp("[0-9a-zA-Z_-]*");
-        if (regExp.exactMatch(appIdentifier)) {
-            themeIdentifier = appIdentifier;
-        }
+        themeIdentifier = appIdentifier;
     }
 
     // register dbus service
     appName = themeIdentifier;
     binaryName = argv[0];
+
+    //allowed characters for app name
+    QRegExp regExp("[0-9a-zA-Z_-]*");
+    if (!regExp.exactMatch(appName)) {
+        qCritical("MComponentData - application identifier contains characters not allowed by dbus.");
+        exit(EXIT_FAILURE);
+    }
 
     //appName cannot begin with number
     if (appName[0].isDigit()) {

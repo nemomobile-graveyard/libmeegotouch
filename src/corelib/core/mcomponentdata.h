@@ -57,7 +57,8 @@ class MFeedbackPlayer;
  *
  * MComponentData will also create a QDBus service with name made by prepending 'com.nokia.' to
  * the application name provided in the constructor (or the binary name if no name is provided
- * in the constructor). It will provide an interface called MComponentDataIf which calls service
+ * in the constructor). Due to this, the application name can't contain characters not allowed by dbus.
+ * It will provide an interface called MComponentDataIf which calls service
  * methods in an instance of MApplicationService. By default, MComponentData will construct an
  * instance of MApplicationService, but the application programmer can derive a class from
  * MApplicationService and provide a pointer to that in the constructor for MComponentData to
