@@ -47,6 +47,19 @@ class QGraphicsWidget;
 class QTimeLine;
 class QPointF;
 
+/*
+    List of all scene windows whose state != Disappeared.
+    Ordered by Z-value, from lowest to highest.
+ */
+class MSceneWindowStack {
+public:
+    void add(MSceneWindow *sceneWindow);
+    void remove(MSceneWindow *sceneWindow);
+    const QList<MSceneWindow *> &list() {return m_list;}
+private:
+    QList<MSceneWindow *> m_list;
+};
+
 class MSceneWindowTransition {
     public:
         QPointer<MSceneWindow> sceneWindow;
@@ -227,7 +240,8 @@ public:
     void updatePagesAndSheetsGeometry();
     void addPagesAndSheetsGeometryUpdateAnimation(QParallelAnimationGroup* mainAnimation);
 
-    void setVisibilityOfSceneWindowsBehind(MSceneWindow *referenceSceneWindow, bool newVisibility);
+    void updateVisibilityOfSceneWindowsBehind(MSceneWindow *referenceSceneWindow, bool newVisibility);
+    MSceneWindow *findTopMostSheet();
 
 public:
 
@@ -287,5 +301,7 @@ public:
 #ifdef Q_WS_X11
     bool statusBarGeometryPropertyWasSet;
 #endif
+
+    MSceneWindowStack sceneWindowStack;
 };
 #endif

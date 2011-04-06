@@ -92,6 +92,8 @@ private slots:
 #endif
     void testSceneWindowsBehindSheetGetHiddenUponSheetAppearance();
     void testSceneWindowsBehindSheetAreShownWhenSheetAboutToDisappear();
+    void testSceneWindowsBehindFirstSheetAreKeptHiddenWhenSecondSheetDisappears();
+    void testDisappearingFirstSheetDoesNotAffectOthersVisibility();
 private:
     MComponentData* m_componentData;
 };

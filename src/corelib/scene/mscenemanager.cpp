@@ -105,6 +105,38 @@ namespace
     }
 }
 
+void MSceneWindowStack::add(MSceneWindow *newSceneWindow)
+{
+    Q_ASSERT(!m_list.contains(newSceneWindow));
+
+    if (m_list.isEmpty()) {
+        m_list.append(newSceneWindow);
+        return;
+    }
+
+    MSceneWindow *sceneWindow;
+    int i = m_list.count() - 1;
+    bool inserted = false;
+    do {
+        sceneWindow = m_list.at(i);
+        if (sceneWindow->zValue() <= newSceneWindow->zValue()) {
+            // put newSceneWindow in front of sceneWindow
+            m_list.insert(i + 1, newSceneWindow);
+            inserted = true;
+        } else if (i == 0) {
+            m_list.prepend(newSceneWindow);
+            inserted = true;
+        } else {
+            --i;
+        }
+    } while(!inserted);
+}
+
+void MSceneWindowStack::remove(MSceneWindow *sceneWindow)
+{
+    m_list.removeAll(sceneWindow);
+}
+
 MSceneManagerPrivate::MSceneManagerPrivate()
     :scene(0)
     ,rootElement(0)
@@ -1264,6 +1296,8 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
     window->show();
     window->d_func()->dismissed = false;
 
+    sceneWindowStack.add(window);
+
     setSceneWindowGeometry(window);
     setupLayerEffectForSceneWindow(window);
 
@@ -2008,7 +2042,7 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
         // Therefore all scene windows behind it won't be visible at all.
         // But they will still be painted.
         // As an optimization we hide them all.
-        setVisibilityOfSceneWindowsBehind(sceneWindow, false);
+        updateVisibilityOfSceneWindowsBehind(sceneWindow, false);
     }
 
     if (isOnDisplay()) {
@@ -2024,13 +2058,14 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
 
 void MSceneManagerPrivate::onSceneWindowEnteringDisappearingState(MSceneWindow *sceneWindow)
 {
-    if (sceneWindow->windowType() == MSceneWindow::Sheet) {
+    if (sceneWindow->windowType() == MSceneWindow::Sheet
+        && sceneWindow == findTopMostSheet()) {
         // A sheet by definition takes the entire screen and is fully opaque.
         // Therefore all scene windows behind it won't be visible at all.
         // But they will still be painted.
         // As an optimization we have hidden them all.
         // Now we should restore their visibilities.
-        setVisibilityOfSceneWindowsBehind(sceneWindow, true);
+        updateVisibilityOfSceneWindowsBehind(sceneWindow, true);
     }
 
     if (sceneWindow->d_func()->dismissed) {
@@ -2080,13 +2115,14 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
         case MSceneWindow::Appeared:
 
-            if (sceneWindow->windowType() == MSceneWindow::Sheet) {
+            if (sceneWindow->windowType() == MSceneWindow::Sheet
+                && sceneWindow == findTopMostSheet()) {
                 // A sheet by definition takes the entire screen and is fully opaque.
                 // Therefore all scene windows behind it won't be visible at all.
                 // But they will still be painted.
                 // As an optimization we have hidden them all.
                 // Now we should restore their visibilities.
-                setVisibilityOfSceneWindowsBehind(sceneWindow, true);
+                updateVisibilityOfSceneWindowsBehind(sceneWindow, true);
             }
 
             produceSceneWindowEvent(MSceneWindowEvent::eventTypeDisappear(),
@@ -2135,6 +2171,8 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
     // If there is a layer effect it is deleted
     destroyLayerEffectForSceneWindow(sceneWindow);
+
+    sceneWindowStack.remove(sceneWindow);
 
     sceneWindow->hide();
 
@@ -2213,17 +2251,40 @@ MSceneManagerStyleContainer *MSceneManagerPrivate::createStyleContainer() const
     return new MSceneManagerStyleContainer();
 }
 
-void MSceneManagerPrivate::setVisibilityOfSceneWindowsBehind(
+MSceneWindow *MSceneManagerPrivate::findTopMostSheet()
+{
+    const QList<MSceneWindow *> &stackList = sceneWindowStack.list();
+    MSceneWindow *sheet = 0;
+    MSceneWindow *sceneWindow;
+    int i = stackList.count() - 1;
+
+    while (!sheet && i >= 0) {
+        sceneWindow = stackList.at(i);
+        if (sceneWindow->windowType() == MSceneWindow::Sheet) {
+            sheet = sceneWindow;
+        } else {
+            --i;
+        }
+    }
+
+    return sheet;
+}
+
+void MSceneManagerPrivate::updateVisibilityOfSceneWindowsBehind(
         MSceneWindow *referenceSceneWindow, bool newVisibility)
 {
     MSceneWindow *sceneWindow;
-    Q_FOREACH(sceneWindow, windows) {
-        // Disappeared scene windows are not on the scene window
-        // stack
-        if (sceneWindow->sceneWindowState() != sceneWindow->Disappeared
-            && sceneWindow->zValue() < referenceSceneWindow->zValue()) {
+    const QList<MSceneWindow *> &stackList = sceneWindowStack.list();
 
-            sceneWindow->setVisible(newVisibility);
+    for (int i = stackList.indexOf(referenceSceneWindow) - 1; i >= 0; --i) {
+        sceneWindow = stackList.at(i);
+        sceneWindow->setVisible(newVisibility);
+
+        if (sceneWindow->windowType() == MSceneWindow::Sheet
+            && sceneWindow->isVisible()) {
+            // don't propagate the visibility further as the sheet
+            // obscures all scene windows behind it.
+            break;
         }
     }
 }

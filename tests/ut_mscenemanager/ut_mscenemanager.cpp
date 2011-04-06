@@ -1259,4 +1259,67 @@ void Ut_MSceneManager::testSceneWindowsBehindSheetAreShownWhenSheetAboutToDisapp
     QCOMPARE(page->isVisible(), true);
 }
 
+void Ut_MSceneManager::testSceneWindowsBehindFirstSheetAreKeptHiddenWhenSecondSheetDisappears()
+{
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *firstSheet = new MSheet;
+    MSceneWindow *secondSheet = new MSheet;
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->appearSceneWindowNow(page);
+    sm->appearSceneWindowNow(firstSheet);
+    sm->appearSceneWindowNow(secondSheet);
+
+    // Sheet covers the entire screen but for the status bar part. Since we consider
+    // both status bar and sheet to be fully opaque nothing behind them is visible
+    // to a QGraphicsView.
+    QCOMPARE(page->isVisible(), false);
+    QCOMPARE(firstSheet->isVisible(), false);
+
+    sm->disappearSceneWindow(secondSheet);
+
+    // second sheet is starting to disappear. First sheet can now be seen.
+    QCOMPARE(firstSheet->isVisible(), true);
+
+    // Scene windows behind first it are still occluded though.
+    QCOMPARE(page->isVisible(), false);
+
+    sm->fastForwardSceneWindowTransitionAnimation(secondSheet);
+
+    QCOMPARE(firstSheet->isVisible(), true);
+    // And keep hidden after second sheet has gone away
+    QCOMPARE(page->isVisible(), false);
+}
+
+void Ut_MSceneManager::testDisappearingFirstSheetDoesNotAffectOthersVisibility()
+{
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *firstSheet = new MSheet;
+    MSceneWindow *secondSheet = new MSheet;
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->appearSceneWindowNow(page);
+    sm->appearSceneWindowNow(firstSheet);
+    sm->appearSceneWindowNow(secondSheet);
+
+    QCOMPARE(page->isVisible(), false);
+    QCOMPARE(secondSheet->isVisible(), true);
+
+    sm->disappearSceneWindow(firstSheet);
+
+    // Nothing changes
+    QCOMPARE(page->isVisible(), false);
+    QCOMPARE(secondSheet->isVisible(), true);
+
+    sm->fastForwardSceneWindowTransitionAnimation(secondSheet);
+
+    // Nothing changes
+    QCOMPARE(page->isVisible(), false);
+    QCOMPARE(secondSheet->isVisible(), true);
+}
+
 QTEST_MAIN(Ut_MSceneManager);
