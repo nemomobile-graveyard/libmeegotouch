@@ -28,7 +28,9 @@
 #include "mapplicationpage_p.h"
 #include "mnavigationbar.h"
 #include "mapplicationmenu.h"
+#ifndef Q_OS_WIN
 #include "mcomponentcache.h"
+#endif
 #include <mdynamicpropertywatcher.h>
 #include "mtoolbar.h"
 #include "mtoolbar_p.h"

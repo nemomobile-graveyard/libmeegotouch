@@ -1,7 +1,6 @@
 #include "mgraphicssystemhelper.h"
 
 #include "mwindow.h"
-#include "mcomponentcache.h"
 #include "../theme/mimagedirectory.h"
 #include "../theme/mpixmaphandle.h"
 #include "mdebug.h"

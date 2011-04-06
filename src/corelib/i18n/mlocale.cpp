@@ -1564,7 +1564,11 @@ void MLocale::setDefault(const MLocale &locale)
     QLocale::setDefault((s_systemDefault->d_ptr)->createQLocale(MLcNumeric));
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
+#ifdef HAVE_ICU
     _defaultLayoutDirection = MIcuConversions::parseLayoutDirectionOption(s_systemDefault->name());
+#else
+    _defaultLayoutDirection = Qt::LeftToRight;
+#endif
 
     if (qobject_cast<MApplication *> (qApp))
         QObject::connect(s_systemDefault, SIGNAL(settingsChanged()),
@@ -3433,8 +3437,13 @@ Qt::LayoutDirection MLocale::defaultLayoutDirection()
 
 Qt::LayoutDirection MLocale::textDirection() const
 {
+#ifdef HAVE_ICU
     Qt::LayoutDirection layoutDirectionOption =
         MIcuConversions::parseLayoutDirectionOption(this->name());
+#else
+    Qt::LayoutDirection layoutDirectionOption = Qt::LeftToRight;
+#endif
+
     if (layoutDirectionOption == Qt::LayoutDirectionAuto) {
         // choose the layout direction automatically depending on the
         // script used by the locale (old behaviour of this function):

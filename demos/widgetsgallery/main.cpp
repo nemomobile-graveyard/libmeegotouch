@@ -68,12 +68,20 @@ int main(int argc, char **argv)
     QApplication::setGraphicsSystem(QLatin1String("native"));
 #endif //M_OS_MAEMO5
     //MApplication application(argc, argv, "widgetsgallery", new MyApplicationService() );
+#ifndef Q_OS_WIN
     MApplication *application = MComponentCache::mApplication(argc, argv);
+#else
+    MApplication *application = new MApplication(argc, argv);
+#endif
 
     WidgetsgalleryRetranslator widgetsgalleryRetranslator;
     QObject::connect(application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
 
+#ifndef Q_OS_WIN
     MApplicationWindow* window = MComponentCache::mApplicationWindow();
+#else
+    MApplicationWindow* window = new MApplicationWindow();
+#endif
 
     MainPage *mainPage = new MainPage;
     Timedemo *timedemo = 0;

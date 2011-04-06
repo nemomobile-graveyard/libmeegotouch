@@ -41,7 +41,11 @@
 #include "mapplicationifadaptor.h"
 #include "mapplicationservice.h"
 #endif //HAVE_DBUS
+
+#ifndef Q_OS_WIN
 #include "mcomponentcache.h"
+#endif
+
 #include "mcomponentdata_p.h"
 #include "mwindow.h"
 #include "mapplicationwindow.h"
@@ -435,7 +439,10 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     /* If cache is being populated, real name of the application to be
        executed is not known yet. Service registration will be skipped
        now and done in reinit(). */
-    if (!MComponentCache::populating()) {
+#ifndef Q_OS_WIN
+    if (!MComponentCache::populating())
+#endif
+    {
         if (newService == 0) {
             registerDefaultService(appName);
         } else {
@@ -476,7 +483,9 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     parseArguments(argc, argv, themeService);
 
 #ifdef TESTABLE
+#ifndef Q_OS_WIN
     if (!MComponentCache::populating())
+#endif
         testabilityInit();
 #endif //TESTABLE
 
@@ -511,7 +520,10 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     // installs the translation catalog of the application if we
     // already know the application/catalog name (not just populate
     // cache)
-    if (!MComponentCache::populating()) {
+#ifndef Q_OS_WIN
+    if (!MComponentCache::populating())
+#endif
+    {
         systemLocale.installTrCatalog(catalog);
     }
     MLocale::setDefault(systemLocale);

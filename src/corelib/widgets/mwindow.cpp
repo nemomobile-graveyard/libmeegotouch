@@ -28,7 +28,9 @@
 #include "mscene_p.h"
 #include "mapplication.h"
 #include "mapplication_p.h"
+#ifndef Q_OS_WIN
 #include "mcomponentcache.h"
+#endif
 #include "morientationtracker.h"
 #include "mdeviceprofile.h"
 #include "mdeviceprofile.h"
@@ -806,7 +808,9 @@ void MWindow::setTranslucentBackground(bool enable)
     // when the gl widget is not initialized yet we will also not initialize it
     if (MApplication::softwareRendering() 
         || MApplication::isPrestarted() 
+#ifndef Q_OS_WIN
         || MComponentCache::populating()
+#endif
         || (MGraphicsSystemHelper::isRunningNativeGraphicsSystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
         d->initSoftwareViewport();
     } else {

@@ -5,11 +5,11 @@
 ###############################################################################
 CORE_SRC_DIR=./core
 INCLUDEPATH+=./core
+
 PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mapplication.h \
     $$CORE_SRC_DIR/maction.h \
     $$CORE_SRC_DIR/massembly.h \
-    $$CORE_SRC_DIR/mcomponentcache.h \
     $$CORE_SRC_DIR/mcomponentdata.h \
     $$CORE_SRC_DIR/mlibrary.h \
     $$CORE_SRC_DIR/mwidgetaction.h \
@@ -27,6 +27,9 @@ PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mdataaccess.h \
     $$CORE_SRC_DIR/mdatastore.h \
     $$CORE_SRC_DIR/mfiledatastore.h \
+
+!win32:PUBLIC_HEADERS += \
+    $$CORE_SRC_DIR/mcomponentcache.h
 
 PRIVATE_HEADERS += \
     $$CORE_SRC_DIR/mclassfactory.h \
@@ -61,7 +64,6 @@ SOURCES += \
     $$CORE_SRC_DIR/mapplication.cpp \
     $$CORE_SRC_DIR/maction.cpp \
     $$CORE_SRC_DIR/massembly.cpp \
-    $$CORE_SRC_DIR/mcomponentcache.cpp \
     $$CORE_SRC_DIR/mcomponentdata.cpp \
     $$CORE_SRC_DIR/mlibrary.cpp \
     $$CORE_SRC_DIR/mwidgetaction.cpp \
@@ -84,6 +86,9 @@ SOURCES += \
     $$CORE_SRC_DIR/mdebug.cpp \
     $$CORE_SRC_DIR/msystemdirectories.cpp \
 
+!win32:SOURCES += \
+    $$CORE_SRC_DIR/mcomponentcache.cpp
+
 contains(DEFINES, HAVE_DBUS) {
   SOURCES += \
     $$CORE_SRC_DIR/mapplicationservice.cpp \
@@ -100,3 +105,4 @@ contains(DEFINES, HAVE_GCONF) {
 } else {
     SOURCES += $$CORE_SRC_DIR/mgconfitem_stub.cpp
 }
+

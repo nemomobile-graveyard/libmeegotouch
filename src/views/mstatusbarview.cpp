@@ -36,9 +36,7 @@
 
 #ifdef Q_WS_X11
 #include <X11/Xatom.h>
-#endif //Q_WS_X11
 
-#ifdef Q_WS_X11
 #define PROPERTY_WINDOW_INITIAL_POLL_TIMEOUT 3000
 #define PROPERTY_WINDOW_MAX_POLL_TIMEOUT 300000 // five minutes
 
@@ -241,13 +239,14 @@ MStatusBarView::~MStatusBarView()
 {
 #ifdef Q_WS_X11
     destroyXDamageForSharedPixmap();
-#endif // Q_WS_X11
 
     if (this == statusBarViewInstance) {
         statusBarViewInstance = NULL;
     }
+#endif // Q_WS_X11
 }
 
+#ifdef Q_WS_X11
 void MStatusBarView::onPropertyWindowPollTimerTimeout()
 {
     int currentInterval = propertyWindowPollTimer.interval();
@@ -290,6 +289,7 @@ void MStatusBarView::updateStatusBarSharedPixmapHandle()
         }
     }
 }
+#endif // Q_WS_X11
 
 void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
