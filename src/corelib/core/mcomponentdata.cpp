@@ -396,19 +396,25 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 {
     Q_Q(MComponentData);
 
+    QRegExp regExp("[0-9a-zA-Z_-]*");
+
     gMComponentDataPrivate = this;
 
     QFileInfo fileInfo(argv[0]);
     QString themeIdentifier = fileInfo.fileName();
     if (!appIdentifier.isEmpty()) {
-        QRegExp regExp("[0-9a-zA-Z_-]*");
         if (regExp.exactMatch(appIdentifier)) {
             themeIdentifier = appIdentifier;
+        } else {
+            mWarning("MComponentData::init()") << "Especified application name contains invalid characters. Using binary name instead";
         }
     }
 
     // register dbus service
     appName = themeIdentifier;
+    if (!regExp.exactMatch(appName)) {
+        mWarning("MComponentData::init()") << "Application name contains invalid characters. This may cause errors registering the application dbus service.";
+    }
     binaryName = argv[0];
 
     //appName cannot begin with number

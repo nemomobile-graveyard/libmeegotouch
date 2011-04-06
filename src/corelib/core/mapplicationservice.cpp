@@ -206,7 +206,13 @@ bool MApplicationService::registerService()
 
         bool anotherAppRunning = !d->registerService(d->serviceName);
         if (anotherAppRunning) {
-            mDebug("MApplicationService") << "registerService() registering failed";
+            // check if registration failed because invalid service name
+            QRegExp regExp("[0-9a-zA-Z_-.]*");
+            if (!regExp.exactMatch(d->serviceName)) {
+                mWarning("MApplicationService") << "registerService() registering failed due to an invalid service name"; 
+            } else {
+                mDebug("MApplicationService") << "registerService() registering failed";
+            }
             handleServiceRegistrationFailure();
             success = false;
         } else {
