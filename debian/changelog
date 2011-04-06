@@ -1,6 +1,7 @@
 libmeegotouch (0.21.3~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#214137 - Small swipes are producing unreliable panning
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 05 Apr 2011 11:48:29 +0200
 
