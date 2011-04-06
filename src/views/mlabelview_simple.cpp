@@ -149,7 +149,6 @@ void MLabelViewSimple::setupModel()
     } else {
         viewPrivate->textOptions.setWrapMode(QTextOption::NoWrap);
     }
-    viewPrivate->previousStaticTextSize = QSizeF(-1, -1);
 }
 
 bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
@@ -163,7 +162,6 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
         if (member == MLabelModel::Text) {
             if (!viewPrivate->controller->sizePolicy().hasHeightForWidth()) {
                 preferredSize = QSizeF(-1, -1);
-                viewPrivate->previousStaticTextSize = staticText.size();
             }
             viewPrivate->autoSetTextDirection();
             needUpdate = true;

@@ -283,7 +283,6 @@ public:
     QTextOption textOptions;
 
     QSizeF paddedSize;
-    QSizeF previousStaticTextSize;
     QTimer *highlighterUpdateTimer;
 };
 
