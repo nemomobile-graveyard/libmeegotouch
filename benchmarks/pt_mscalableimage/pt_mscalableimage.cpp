@@ -27,28 +27,16 @@
 #include <QPainter>
 
 #include "pt_mscalableimage.h"
-#include <QGLWidget>
 
 MApplication *app;
 MApplicationWindow *window;
-QGLWidget *glW;
 
 void Pt_MScalableImage::initTestCase()
 {
-    int argc = 1;
-    char *app_name = (char *) "./pt_mscalableimage";
-    app = new MApplication(argc, &app_name);
-
-    glW = new QGLWidget;
-    window = new MApplicationWindow();
-    window->setViewport(glW);
-    window->show();
 }
 
 void Pt_MScalableImage::cleanupTestCase()
 {
-    delete window;
-    delete app;
 }
 
 void Pt_MScalableImage::init()
@@ -62,7 +50,8 @@ void Pt_MScalableImage::init()
 
 void Pt_MScalableImage::cleanup()
 {
-    QCoreApplication::processEvents();
+    if (app->hasPendingEvents())
+        app->processEvents();
 }
 
 void Pt_MScalableImage::paintScalablePerformance_data()
@@ -155,7 +144,8 @@ void Pt_MScalableImage::paintPOTScalablePerformance()
         painter.end();
     }
     delete pixmap;
-    MTheme::releaseScalableImage(image);
+    MTheme::releasePixmap(imagePixmap);
+    delete image;
 }
 
 void Pt_MScalableImage::paintHugeScalablePerformance_data()
@@ -201,7 +191,8 @@ void Pt_MScalableImage::paintHugeScalablePerformance()
         painter.end();
     }
     delete pixmap;
-    MTheme::releaseScalableImage(image);
+    MTheme::releasePixmap(imagePixmap);
+    delete image;
 }
 
 void Pt_MScalableImage::paintPixmapPerformance_data()
@@ -452,4 +443,19 @@ void Pt_MScalableImage::paintBorderPixmapPerformance()
     MTheme::releasePixmap(image);
 }
 
-QTEST_APPLESS_MAIN(Pt_MScalableImage)
+int main(int argc, char *argv[])
+{
+    app = new MApplication(argc, argv);
+
+    window = new MApplicationWindow();
+    window->activateWindow();
+    window->show();
+
+    Pt_MScalableImage tc;
+    int result = QTest::qExec(&tc, argc, argv);
+
+    delete window;
+    delete app;
+
+    return result;
+}
