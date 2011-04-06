@@ -58,36 +58,6 @@ static const QColor    MarginColor             = QColor(Qt::red);
 static const int       MarginBorderWidth       = 2;
 static const int       InitialPressTimeout     = 140; //msec
 
-void copyGraphicsSceneMouseEvent(QGraphicsSceneMouseEvent &target, const QGraphicsSceneMouseEvent &source)
-{
-
-    target.setPos(source.pos());
-    target.setScenePos(source.scenePos());
-    target.setScreenPos(source.screenPos());
-
-    target.setButtons(source.buttons());
-    Qt::MouseButtons buttons = source.buttons();
-    Qt::MouseButton buttonbit = (Qt::MouseButton)0x1;
-    while (buttons != 0x0) {
-        if (buttons & buttonbit) {
-            // Button pressed
-            target.setButtonDownPos(buttonbit, source.buttonDownPos(buttonbit));
-            target.setButtonDownScenePos(buttonbit, source.buttonDownScenePos(buttonbit));
-            target.setButtonDownScreenPos(buttonbit, source.buttonDownScreenPos(buttonbit));
-
-            // Unset button
-            buttons = buttons & ~buttonbit;
-        }
-        buttonbit = (Qt::MouseButton)(buttonbit << 1);
-    }
-
-    target.setLastPos(source.lastPos());
-    target.setLastScenePos(source.lastScenePos());
-    target.setLastScreenPos(source.lastScreenPos());
-    target.setButton(source.button());
-    target.setModifiers(source.modifiers());
-}
-
 MScenePrivate::MScenePrivate() :
         q_ptr(0),
         manager(0),
