@@ -109,6 +109,54 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("en_US")
             << qlonglong(1542678073)
             << QString("‏1,542,678,073‏");
+    QTest::newRow("ar_EG")
+            << QString("ar_EG@numbers=arab")
+            << QString("ar_EG@numbers=latn")
+            << qlonglong(-1542678073)
+        // with RLM markers because language is ar!:
+            << QString("‏1.542.678.073‏-");
+    QTest::newRow("ar_EG")
+            << QString("fa")
+            << QString("ar_EG@numbers=latn")
+            << qlonglong(-1542678073)
+        // with RLM markers because language is fa!:
+            << QString("‏1.542.678.073‏-");
+    QTest::newRow("ar_EG")
+            << QString("en_US")
+            << QString("ar_EG@numbers=latn")
+            << qlonglong(-1542678073)
+        // without RLM markers because language is en_US!:
+            << QString("1.542.678.073-");
+    QTest::newRow("ar_TN")
+            << QString("ar_TN@numbers=arab")
+            << QString("ar_TN@numbers=latn")
+            << qlonglong(-1542678073)
+        // with RLM markers because language is ar!:
+            << QString("‏1542678073‏-");
+    QTest::newRow("ar_TN")
+            << QString("ar_TN@numbers=arab")
+            << QString("ar_TN@numbers=arab")
+            << qlonglong(-1542678073)
+        // with RLM markers because language is ar!:
+            << QString("‏١٥٤٢٦٧٨٠٧٣‏-");
+    QTest::newRow("ar_TN")
+            << QString("en_US")
+            << QString("ar_TN@numbers=arab")
+            << qlonglong(-1542678073)
+        // without RLM markers because language is en_US!:
+            << QString("١٥٤٢٦٧٨٠٧٣-");
+    QTest::newRow("ar_TN")
+            << QString("en_US")
+            << QString("ar_TN")
+            << qlonglong(-1542678073)
+        // without RLM markers because language is en_US!:
+            << QString("١٥٤٢٦٧٨٠٧٣-");
+    QTest::newRow("ar_TN")
+            << QString("ar_TN")
+            << QString("ar_TN")
+            << qlonglong(-1542678073)
+        // with RLM markers because language is en_US!:
+            << QString("‏١٥٤٢٦٧٨٠٧٣‏-");
     QTest::newRow("ur_PK")
             << QString("ur_PK")
             << QString("ur_PK")
@@ -144,8 +192,17 @@ void Ft_Numbers::testQLongLongs()
     QFETCH(QString, formatted);
     MLocale loc(localeName);
     loc.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
-    qDebug() << "localeName:" << localeName << "localeNameLcNumeric" << localeNameLcNumeric;
-    printf("printf %s\n", loc.formatNumber(val).toUtf8().constData());
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "localeName: " << localeName
+        << " localeNameLcNumeric: " << localeNameLcNumeric
+        << " number: " << val
+        << " formatNumber result: " << loc.formatNumber(val)
+        << "\n";
+    debugStream.flush();
+#endif
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
@@ -2404,6 +2461,150 @@ void Ft_Numbers::testCurrencies()
     debugStream.flush();
 #endif
     QCOMPARE(locale.formatCurrency(val, currency), formatted);
+}
+
+void Ft_Numbers::testPercentPlaceholdersInQt_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("localeNameLcNumeric");
+    QTest::addColumn<QString>("formatString");
+    QTest::addColumn<double>("number");
+    QTest::addColumn<QString>("formatted");
+
+    QTest::newRow("zh_CN")
+        << QString("zh_CN")
+        << QString("zh_CN")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1.2345");
+    QTest::newRow("ar_EG")
+        << QString("ar_EG")
+        << QString("en_US")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1.2345");
+    QTest::newRow("ar_EG")
+        << QString("ar_EG")
+        << QString("de_DE")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1,2345");
+    QTest::newRow("ar_EG")
+        << QString("en_US")
+        << QString("ar_EG")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("ar_TN")
+        << QString("en_US")
+        << QString("ar_TN")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("ar_MA")
+        << QString("en_US")
+        << QString("ar_MA")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("ar_DZ")
+        << QString("en_US")
+        << QString("ar_DZ")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("ar_EG")
+        << QString("en_US")
+        << QString("ar_EG@numbers=latn")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1.2345");
+    QTest::newRow("ar_EG")
+        << QString("en_US")
+        << QString("ar_EG@numbers=arab")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("ar_MA")
+        << QString("en_US")
+        << QString("ar_MA@numbers=latn")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1.2345");
+    QTest::newRow("ar_MA")
+        << QString("en_US")
+        << QString("ar_MA@numbers=arab")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("ar_DZ")
+        << QString("en_US")
+        << QString("ar_DZ@numbers=latn")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1.2345");
+    QTest::newRow("ar_DZ")
+        << QString("en_US")
+        << QString("ar_DZ@numbers=arab")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("ar_TN")
+        << QString("en_US")
+        << QString("ar_TN@numbers=latn")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1.2345");
+    QTest::newRow("ar_TN")
+        << QString("en_US")
+        << QString("ar_TN@numbers=arab")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-١٫٢٣٤٥");
+    QTest::newRow("fa_IR")
+        << QString("en_US")
+        << QString("fa_IR@numbers=latn")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("-1.2345");
+    QTest::newRow("fa_IR")
+        << QString("en_US")
+        << QString("fa_IR@numbers=arab")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("−۱٫۲۳۴۵");
+    QTest::newRow("fa_IR")
+        << QString("en_US")
+        << QString("fa_IR")
+        << QString("%L1")
+        << double(-1.2345)
+        << QString("−۱٫۲۳۴۵");
+}
+
+void Ft_Numbers::testPercentPlaceholdersInQt()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, localeNameLcNumeric);
+    QFETCH(QString, formatString);
+    QFETCH(double, number);
+    QFETCH(QString, formatted);
+
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
+    MLocale::setDefault(locale);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << " localeName: " << localeName
+        << " localeNameLcNumeric: " << localeNameLcNumeric
+        << " number: " << number
+        << " result: " << formatString.arg(number)
+        << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(formatString.arg(number), formatted);
+
 }
 
 QTEST_APPLESS_MAIN(Ft_Numbers);

@@ -80,6 +80,9 @@ private slots:
 
     void testCurrencies_data();
     void testCurrencies();
+
+    void testPercentPlaceholdersInQt_data();
+    void testPercentPlaceholdersInQt();
 };
 
 

@@ -1113,10 +1113,48 @@ void MLocalePrivate::insertDirectionTrToQCoreApp()
 
 QLocale MLocalePrivate::createQLocale(MLocale::Category category) const
 {
+    // This function is mainly used to create a QLocale which is then passed to
+    // QLocale::setDefault(...) to get support for localized numbers
+    // in translations via %Ln, %L1, %L2, ... .
     Q_Q(const MLocale);
-    QLocale qlocale(q->categoryLanguage(category)
-                    + '_' +
-                    q->categoryCountry(category));
+    QString language = q->categoryLanguage(category);
+    QString country = q->categoryCountry(category);
+    QString categoryName = q->categoryName(category);
+    QString numberOption = MIcuConversions::parseOption(categoryName, "numbers");
+
+    switch(category) {
+    case(MLocale::MLcNumeric):
+    case(MLocale::MLcTime):
+    case(MLocale::MLcMonetary):
+        if(language == "ar" || language == "fa") {
+            if(numberOption == "latn") {
+                // We have no way to disable use of Eastern Arabic digits
+                // in QLocale. Therefore, we change the locale to US English
+                // if Latin numbers are requested, this produces reasonably
+                // good results:
+                language = QLatin1String("en");
+                country = QLatin1String("US");
+            }
+            else if(country == "TN" || country == "MA" || country == "DZ") {
+                // for TN (Tunisia), MA (Morocco), and DZ (Algeria),
+                // Qt always formats with Western digits (because that
+                // is the default in CLDR for these countries, for the
+                // same reason libicu formats with Western digits by
+                // default for these countries). But we want Arabic digits
+                // by default, unless they are explicitely disabled
+                // by an option like “ar_TN@numbers=latn” (this case is handled
+                // above). So we switch the country to EG (Egypt) because
+                // the numeric formats for Egypt are similar to those for
+                // the above 3 countries except that Qt uses Eastern Arabic
+                // digits for Egypt:
+                country = "EG";
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    QLocale qlocale(language + '_' + country);
     return qlocale;
 }
 
