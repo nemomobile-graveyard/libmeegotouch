@@ -21,115 +21,85 @@
 #include "mlistindexview_p.h"
 #include "mlistview_p.h"
 
+#include <MAbstractWidgetAnimation>
 #include <MApplicationPage>
 #include <MSheet>
 #include <MLabel>
 #include <MPannableViewport>
+#include <MPositionIndicator>
 #include <MScalableImage>
 #include <MSceneManager>
 
+#include <QGraphicsAnchorLayout>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
-#include <qmath.h>
 #include <QPropertyAnimation>
 #include <QTapAndHoldGesture>
 
 #include "mlistindex.h"
+#include "mlistindextooltip.h"
 #include "mlist.h"
 
 MListIndexViewPrivate::MListIndexViewPrivate()
-  : q_ptr(NULL),
-    controller(NULL),
-    layout(NULL),
-    container(NULL),
-    list(NULL),
-    shortcutHeight(0),
-    shortcutsCount(0),
-    autoVisibilityAnimation(0),
-    down(false),
-    currentIndex(),
-    fastScrollPosition()
+  : q_ptr(0),
+    controller(0),
+    panel(0),
+    layout(0),
+    panelLayout(0),
+    container(0),
+    appearanceAnimation(0),
+    tooltipWidget(0),
+    list(0),
+    viewport(0),
+    groupTitleHeight(0),
+    isFastScrolling(false),
+    lastFastScrollRow(-1),
+    contentOpacity(1.0),
+    viewportSize(),
+    viewportAdjustedRange(),
+    positionIndicatorPosition(),
+    ScrollToDelay(64)
 {
-    autoVisibilityTimer.setSingleShot(true);
-    autoVisibilityTimer.stop();
 }
 
 MListIndexViewPrivate::~MListIndexViewPrivate()
 {
-    clearVisible();
+    qDeleteAll(groupTitleLabelWidgets);
+    groupTitleLabelWidgets.clear();
 }
 
 void MListIndexViewPrivate::init()
 {
     Q_Q(MListIndexView);
-    q->connect(&autoVisibilityTimer, SIGNAL(timeout()), q, SLOT(_q_visibilityTimerTimeout()));
-}
+    q->connect(controller, SIGNAL(groupTitlesChanged()), q, SLOT(_q_updateTitles()));
 
-void MListIndexViewPrivate::applyStyleToShortcuts()
-{
-    Q_Q(MListIndexView);
+    appearanceAnimation = new QPropertyAnimation(q, "contentOpacity", q);
 
-    if (layout) {
-        for (int i = 0; i < layout->count(); i++) {
-            MLabel *shortcut = dynamic_cast<MLabel*>(layout->itemAt(i));
-            if (shortcut)
-                shortcut->setObjectName(q->style()->shortcutObjectName());
-        }
-        updateVisible();
-    }
+    scrollToQueueTimer.setInterval(ScrollToDelay);
+    scrollToQueueTimer.setSingleShot(true);
+    scrollToQueueTimer.connect(&scrollToQueueTimer, SIGNAL(timeout()), q, SLOT(_q_scrollToLastRow()));
 }
 
 void MListIndexViewPrivate::initLayout()
 {
-    Q_Q(MListIndexView);
+    qDeleteAll(groupTitleLabelWidgets);
+    groupTitleLabelWidgets.clear();
 
-    clearVisible();
-
-    if (!autoVisibilityAnimation) {
-        autoVisibilityAnimation = new QPropertyAnimation(controller, "opacity", controller);
-        autoVisibilityAnimation->setLoopCount(1);
-        autoVisibilityAnimation->setStartValue(0.0);
-        autoVisibilityAnimation->setEndValue(1.0);
-        autoVisibilityAnimation->setDuration(timelineDuration());
-        autoVisibilityAnimation->setKeyValueAt(delayTimelineDuration(), 0.0);
-        autoVisibilityAnimation->setKeyValueAt(1.0 - delayTimelineDuration(), 1.0);
+    if (!panel) {
+        panel = new QGraphicsWidget(controller);
+        panel->hide();
     }
 
-    if (!layout) {
-        layout = new QGraphicsLinearLayout(Qt::Vertical, controller);
-        layout->setSpacing(0);
-        layout->setContentsMargins(0, 0, 0, 0);
-        controller->setLayout(layout);
-    }
-    
-    if (q->model()) {
-        shortcutsCount = 0;
+    layout = new QGraphicsAnchorLayout(controller);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
-        createContainer();
+    layout->addCornerAnchors(panel, Qt::TopLeftCorner, layout, Qt::TopLeftCorner);
+    layout->addCornerAnchors(panel, Qt::BottomRightCorner, layout, Qt::BottomRightCorner);
 
-        if (q->model()->shortcutLabels().count() > 0) {
-            //create the first shortcut label and get the font metrics from it
-            MLabel *firstShortcut = createLabel(0);
-            layout->addItem(firstShortcut);
-
-            shortcutHeight = firstShortcut->minimumHeight();
-
-            shortcutsCount = q->model()->shortcutLabels().count();
-            updateVisible();
-        }
-    }
-}
-
-void MListIndexViewPrivate::updateLayout()
-{
-    Q_Q(MListIndexView);
-
-    if(container) {
-        clearVisible();
-        controller->resize(controller->preferredWidth(), containerRect.height() - q->model()->offset().y());
-        controller->setPos(containerRect.x() + containerRect.width() - controller->preferredWidth(), containerRect.y() + q->model()->offset().y());
-    }
-    updateVisible();
+    panelLayout = new QGraphicsLinearLayout(Qt::Vertical, panel);
+    panelLayout->setContentsMargins(0, 0, 0, 0);
+    panelLayout->setSpacing(0);
 }
 
 void MListIndexViewPrivate::connectToList()
@@ -138,89 +108,76 @@ void MListIndexViewPrivate::connectToList()
 
     if (list != q->model()->list()) {
         if (list) {
-            q->disconnect(list, SIGNAL(parentChanged()), q, SLOT(_q_listParentChanged()));
-            q->disconnect(list, SIGNAL(panningStarted()), q, SLOT(_q_listPanningStarted()));
-            q->disconnect(list, SIGNAL(panningStopped()), q, SLOT(_q_listPanningStopped()));
-        }
-        if (q->model()->list()) {
-            q->connect(q->model()->list(), SIGNAL(parentChanged()), q, SLOT(_q_listParentChanged()));
-            q->connect(q->model()->list(), SIGNAL(panningStarted()), q, SLOT(_q_listPanningStarted()));
-            q->connect(q->model()->list(), SIGNAL(panningStopped()), q, SLOT(_q_listPanningStopped()));
+            q->disconnect(list, SIGNAL(parentChanged()), q, SLOT(_q_attachToListContainer()));
+            q->disconnect(list, SIGNAL(panningStarted()), q, SLOT(_q_showIfNeeded()));
+            q->disconnect(list, SIGNAL(panningStopped()), q, SLOT(_q_hideIfNeeded()));
         }
         list = q->model()->list();
-    }
-}
-
-QModelIndex MListIndexViewPrivate::locateShortcutIndex(int y, int x)
-{
-    Q_UNUSED(x);
-
-    for (int i = 0; i < layout->count(); i++) {
-        MLabel *shortcut = dynamic_cast<MLabel*>(layout->itemAt(i));
-        if (shortcut && shortcut->geometry().contains(x, y)) {
-            int flatIndex = controller->model()->shortcutLabels().indexOf(shortcut->text());
-            return controller->model()->shortcutIndexes()[flatIndex];
+        if (list) {
+            q->connect(list, SIGNAL(parentChanged()), q, SLOT(_q_attachToListContainer()));
+            q->connect(list, SIGNAL(panningStarted()), q, SLOT(_q_showIfNeeded()));
+            q->connect(list, SIGNAL(panningStopped()), q, SLOT(_q_hideIfNeeded()));
         }
     }
-    return QModelIndex();
+    _q_attachToListContainer();
 }
 
-MLabel *MListIndexViewPrivate::createLabel(int index)
+void MListIndexViewPrivate::setGroupTitle(int item, int index)
 {
-    Q_Q(MListIndexView);
-    Q_ASSERT(index < q->model()->shortcutLabels().count());
-
-    MLabel *shortcut = new MLabel();
-    shortcut->setAlignment(Qt::AlignCenter);
-    shortcut->setObjectName(q->style()->shortcutObjectName());
-    shortcut->setText(q->model()->shortcutLabels()[index]);
-
-    return shortcut;
+    if (item < groupTitleLabelWidgets.count())
+        groupTitleLabelWidgets[item]->setText(list->itemModel()->index(index, 0).data(Qt::DisplayRole).toString());
 }
 
-void MListIndexViewPrivate::clearVisible()
-{
-    if (layout) {
-        for (int i = layout->count(); i > 0; i--) {
-            QGraphicsLayoutItem *item = layout->itemAt(0);
-            delete item;
-        }
-    }
-}
-
-void MListIndexViewPrivate::updateVisible()
+MLabel *MListIndexViewPrivate::createGroupTitleLabel()
 {
     Q_Q(MListIndexView);
 
-    if (shortcutHeight == 0)
-        return;
-
-    int fitCount = (controller->contentsRect().height() - q->model()->offset().y()) / shortcutHeight;
-
-    if (fitCount > 0 && fitCount != layout->count()) {
-        int skipCount = qCeil((qreal)shortcutsCount / (qreal)fitCount);
-        if (skipCount > 0 && layout->count() != shortcutsCount / skipCount) {
-            clearVisible();
-            for (int i = 0; i < shortcutsCount; i += skipCount) {
-                if (shortcutsCount - i <= skipCount)
-                    layout->addItem(createLabel(shortcutsCount - 1));
-                else
-                    layout->addItem(createLabel(i));
-            }
-        }
-    }
+    MLabel *label = new MLabel(panel);
+    label->setWordWrap(false);
+    label->setTextElide(false);
+    label->setAlignment(Qt::AlignCenter);
+    label->setStyleName(q->style()->shortcutStyleName());
+    return label;
 }
 
-void MListIndexViewPrivate::createContainer()
+MListIndexTooltip *MListIndexViewPrivate::tooltip()
+{
+    if (!tooltipWidget) {
+        tooltipWidget = new MListIndexTooltip(controller);
+        tooltipWidget->hide();
+    }
+    return tooltipWidget;
+}
+
+void MListIndexViewPrivate::setDisplayMode(int mode)
+{
+    MList::DisplayMode displayMode = static_cast<MList::DisplayMode>(mode);
+
+    switch(displayMode) {
+    case MList::Floating:
+    case MList::Auto:
+    case MList::Show:
+        controller->show();
+        hideViewportPositionIndicator();
+        _q_appearOnSceneWindow();
+        break;
+    case MList::Hide:
+    default:
+        showViewportPositionIndicator();
+        controller->hide();
+        break;
+    };
+}
+
+void MListIndexViewPrivate::_q_attachToListContainer()
 {
     Q_Q(MListIndexView);
     if (container) {
         if (container->windowType() == MSceneWindow::ApplicationPage)
-            q->disconnect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_exposedContentRectChanged()));
-        else {
-            q->disconnect(container, SIGNAL(widthChanged()), q, SLOT(_q_exposedContentRectChanged()));
-            q->disconnect(container, SIGNAL(heightChanged()), q, SLOT(_q_exposedContentRectChanged()));
-        }
+            q->disconnect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_updateGeometry()));
+        q->disconnect(container, SIGNAL(widthChanged()), q, SLOT(_q_updateGeometry()));
+        q->disconnect(container, SIGNAL(heightChanged()), q, SLOT(_q_updateGeometry()));
+        q->disconnect(container, SIGNAL(appearing()), q, SLOT(_q_appearOnSceneWindow()));
     }
 
     if (q->model()->list()) {
@@ -231,114 +188,108 @@ void MListIndexViewPrivate::createContainer()
             controller->setZValue(container->zValue() + 1);
 
             if (container->windowType() == MSceneWindow::ApplicationPage)
-                q->connect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_exposedContentRectChanged()));
-            else {
-                q->connect(container, SIGNAL(widthChanged()), q, SLOT(_q_exposedContentRectChanged()));
-                q->connect(container, SIGNAL(heightChanged()), q, SLOT(_q_exposedContentRectChanged()));
-            }
-            _q_exposedContentRectChanged();
+                q->connect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_updateGeometry()));
+            q->connect(container, SIGNAL(widthChanged()), q, SLOT(_q_updateGeometry()));
+            q->connect(container, SIGNAL(heightChanged()), q, SLOT(_q_updateGeometry()));
+            q->connect(container, SIGNAL(appearing()), q, SLOT(_q_appearOnSceneWindow()));
+            _q_updateGeometry();
         }
     }
+    _q_attachToViewport();
 }
 
-qreal MListIndexViewPrivate::delayTimelineDuration()
+void MListIndexViewPrivate::_q_attachToViewport()
 {
     Q_Q(MListIndexView);
-    return q->style()->appearDelay() / timelineDuration();
-}
+    if (viewport) {
+        q->disconnect(viewport, SIGNAL(viewportSizeChanged(QSizeF)), q, SLOT(_q_updatePositionIndicatorPosition(QSizeF)));
+        q->disconnect(viewport, SIGNAL(positionChanged(QPointF)), q, SLOT(_q_updatePositionIndicatorPosition(QPointF)));
+        q->disconnect(viewport, SIGNAL(rangeChanged(QRectF)), q, SLOT(_q_updatePositionIndicatorPosition(QRectF)));
+    }
 
-qreal MListIndexViewPrivate::timelineDuration()
-{
-    Q_Q(MListIndexView);
-    return q->style()->appearDelay() * 2.f + q->style()->appearDuration();
-}
+    if (q->model()->list()) {
+        viewport = MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(q->model()->list());
 
-void MListIndexViewPrivate::updateDisplayMode()
-{
-    switch(controller->displayMode()) {
-    case MList::Auto:
-        controller->show();
-        _q_startVisibilityTimer();
-        break;
-    case MList::Show:
-        controller->show();
-        _q_stopVisibilityTimer();
-        _q_showAnimated();
-        break;
-    default:
-        controller->hide();
-        break;
-    };
+        if (viewport) {
+            q->connect(viewport, SIGNAL(viewportSizeChanged(QSizeF)), q, SLOT(_q_updatePositionIndicatorPosition(QSizeF)));
+            q->connect(viewport, SIGNAL(positionChanged(QPointF)), q, SLOT(_q_updatePositionIndicatorPosition(QPointF)));
+            q->connect(viewport, SIGNAL(rangeChanged(QRectF)), q, SLOT(_q_updatePositionIndicatorPosition(QRectF)));
+            _q_updatePositionIndicatorPosition(viewport->size());
+        }
+    }
 }
 
 void MListIndexViewPrivate::scrollToGroupHeader(int y)
 {
     Q_Q(MListIndexView);
-    QModelIndex scrollTo = locateShortcutIndex(y, 0);
-    if (scrollTo.isValid() && scrollTo != currentIndex) {
-        q->model()->list()->scrollTo(scrollTo, MList::PositionAtTopHint);
-        currentIndex = scrollTo;
+    int groupCount = list->itemModel()->rowCount();
+    int fastScrollRow = groupCount * ((qreal)y / q->size().height());
+    if (fastScrollRow != lastFastScrollRow && fastScrollRow >= 0 && fastScrollRow < groupCount)  {
+        // Force updating the title of the bubble.
+        if (lastFastScrollRow == -1)
+            tooltip()->setTitle(list->itemModel()->index(fastScrollRow, 0).data().toString());
+
+        lastFastScrollRow = fastScrollRow;
+        if (!scrollToQueueTimer.isActive()) {
+            scrollToQueueTimer.start();
+        }
     }
+
+    int tooltipY = y;
+    qreal tooltipHeight = tooltip()->size().height();
+    tooltipY -= tooltipHeight / 2;
+    if (tooltipY < 0)
+        tooltipY = 0;
+    else if (tooltipY + tooltipHeight > q->size().height())
+        tooltipY = q->size().height() - tooltipHeight;
+    tooltip()->setPos(tooltip()->pos().x(), tooltipY);
 }
 
-void MListIndexViewPrivate::_q_listParentChanged()
-{
-    initLayout();
-}
-
-void MListIndexViewPrivate::_q_listPanningStarted()
-{
-    _q_stopVisibilityTimer();
-    if (!autoVisibilityAnimation || controller->displayMode() != MList::Auto)
-        return;
-
-    if (controller->opacity() < 1.0)
-        _q_showAnimated();
-}
-
-void MListIndexViewPrivate::_q_listPanningStopped()
-{
-    if (!autoVisibilityAnimation || controller->displayMode() != MList::Auto || down)
-        return;
-
-    if (!autoVisibilityTimer.isActive())
-        _q_startVisibilityTimer();
-}
-
-void MListIndexViewPrivate::_q_visibilityTimerTimeout()
-{
-    _q_hideAnimated();
-}
-
-void MListIndexViewPrivate::_q_hideAnimated()
-{
-    if (autoVisibilityAnimation->state() != QPropertyAnimation::Running) {
-        autoVisibilityAnimation->setDirection(QPropertyAnimation::Backward);
-        autoVisibilityAnimation->start();
-    }
-}
-
-void MListIndexViewPrivate::_q_showAnimated()
-{
-    autoVisibilityAnimation->setDirection(QPropertyAnimation::Forward);
-    if (autoVisibilityAnimation->state() != QPropertyAnimation::Running)
-        autoVisibilityAnimation->start();
-}
-
-void MListIndexViewPrivate::_q_startVisibilityTimer()
+void MListIndexViewPrivate::_q_showIfNeeded()
 {
     Q_Q(MListIndexView);
-    if (q->model()->displayMode() == MList::Auto && !down)
-        autoVisibilityTimer.start();
+
+    if (list && list->itemModel() && list->itemModel()->rowCount() > 1) {
+        if (q->model()->displayMode() != MList::Hide) {
+            panel->hide();
+            appearanceAnimation->stop();
+            appearanceAnimation->setStartValue(q->contentOpacity());
+            appearanceAnimation->setEndValue(1.0);
+            appearanceAnimation->start();
+        }
+    }
 }
 
-void MListIndexViewPrivate::_q_stopVisibilityTimer()
+void MListIndexViewPrivate::_q_appearOnSceneWindow()
 {
-    autoVisibilityTimer.stop();
+    Q_Q(MListIndexView);
+
+    // Show only if there's more than just 1 group.
+    if (list && list->itemModel() && list->itemModel()->rowCount() > 1) {
+        _q_showIfNeeded();
+        QTimer::singleShot(q->style()->appearDelay(), q, SLOT(_q_hideIfNeeded()));
+    } else {
+        q->setContentOpacity(0);
+    }
 }
 
-void MListIndexViewPrivate::_q_exposedContentRectChanged()
+void MListIndexViewPrivate::_q_hideIfNeeded()
 {
+    Q_Q(MListIndexView);
+
+    if (q->model()->displayMode() != MList::Show &&
+            !isFastScrolling &&
+            !list->model()->listIsMoving()) {
+        appearanceAnimation->stop();
+        appearanceAnimation->setStartValue(q->contentOpacity());
+        appearanceAnimation->setEndValue(0);
+        appearanceAnimation->start();
+    }
+}
+
+void MListIndexViewPrivate::_q_updateGeometry()
+{
+    Q_Q(MListIndexView);
     if (container->windowType() == MSceneWindow::ApplicationPage)
         containerRect = static_cast<MApplicationPage*>(container)->exposedContentRect();
     else if (container->windowType() == MSceneWindow::Sheet) {
@@ -352,37 +303,155 @@ void MListIndexViewPrivate::_q_exposedContentRectChanged()
     } else
         containerRect = QRectF(QPointF(), container->size());
 
-    updateLayout();
+    layout->invalidate();
+
+    q->updateGeometry();
+    controller->setPos(containerRect.width() - q->size().width(), containerRect.top() + q->model()->offset().y());
+
+    tooltip()->setPos(controller->mapFromParent(containerRect.left(), tooltip()->pos().y()));
+    tooltip()->resize(containerRect.width(), tooltip()->size().height());
+
+    positionIndicatorPosition.setX((q->size().width() - q->style()->positionIndicator()->width()) / 2);
 }
 
-void MListIndexViewPrivate::beginFastScrolling(const QPointF &pos)
+void MListIndexViewPrivate::_q_updateTitles()
 {
     Q_Q(MListIndexView);
 
-    if (q->model()->shortcutIndexes().isEmpty())
+    qDeleteAll(groupTitleLabelWidgets);
+    groupTitleLabelWidgets.clear();
+
+    if (q->model()->displayMode() == MList::Floating)
         return;
 
-    fastScrollPosition = QPointF();
-    updateFastScrolling(pos);
-    fastScrollPosition = pos;
+    if (!groupTitleHeight)
+        return;
 
-    down = true;
-    _q_stopVisibilityTimer();
+    int groupCount = list->itemModel()->rowCount();
+    int visibleTitlesCount = qMin(int(q->size().height() / groupTitleHeight), groupCount);
+
+    if (!visibleTitlesCount)
+        return;
+
+    for (int i = groupTitleLabelWidgets.count(); i < visibleTitlesCount; ++i) {
+        MLabel *label = createGroupTitleLabel();
+        groupTitleLabelWidgets.append(label);
+        panelLayout->addItem(label);
+        panelLayout->setAlignment(label, Qt::AlignCenter);
+    }
+
+    qreal skip = qreal(visibleTitlesCount) / qreal(groupCount);
+    int index = 0;
+    for (int i = 0; i < groupCount; ++i) {
+        if (i * skip >= index) {
+            setGroupTitle(index, i);
+            ++index;
+        }
+    }
 }
 
-void MListIndexViewPrivate::updateFastScrolling(const QPointF &offset)
+void MListIndexViewPrivate::_q_scrollToLastRow()
 {
-    fastScrollPosition += offset;
-    int y = controller->mapFromScene(fastScrollPosition).y();
+    if (lastFastScrollRow >= 0) {
+        QModelIndex index = list->itemModel()->index(lastFastScrollRow, 0);
+        list->scrollTo(index, MList::PositionAtTopHint);
+        tooltip()->setTitle(index.data().toString());
+    }
+}
+
+void MListIndexViewPrivate::_q_updatePositionIndicatorPosition(const QSizeF &viewportSize)
+{
+    this->viewportSize = viewportSize;
+    _q_updatePositionIndicatorPosition(viewport->range());
+    _q_updatePositionIndicatorPosition(viewport->position());
+}
+
+void MListIndexViewPrivate::_q_updatePositionIndicatorPosition(const QPointF &viewportPosition)
+{
+    Q_Q(MListIndexView);
+
+    qreal distanceK = viewportPosition.y() / viewportAdjustedRange.height();
+    qreal railHeight = q->size().height();
+
+    int indicatorHeight = q->style()->positionIndicator()->height();
+    railHeight -= indicatorHeight;
+    int indicatorPositionY = distanceK * railHeight;
+
+    if (indicatorPositionY + indicatorHeight >= int(q->size().height())) {
+        indicatorPositionY = q->size().height() - indicatorHeight;
+    }
+
+    if (indicatorPositionY < 0) {
+        indicatorPositionY = 0;
+    }
+
+    this->positionIndicatorPosition.setY(indicatorPositionY);
+}
+
+void MListIndexViewPrivate::_q_updatePositionIndicatorPosition(const QRectF &viewportRange)
+{
+    viewportAdjustedRange = viewportRange;
+    _q_updatePositionIndicatorPosition(viewport->position());
+}
+
+void MListIndexViewPrivate::beginFastScrolling(const QPointF &pos)
+{   
+    _q_showIfNeeded();
+    isFastScrolling = true;
+    updateFastScrolling(pos);
+    tooltip()->show();
+}
+
+void MListIndexViewPrivate::updateFastScrolling(const QPointF &pos)
+{
+    showTitlesPanel();
+    int y = controller->mapFromScene(pos).y();
     scrollToGroupHeader(y);
-    _q_stopVisibilityTimer();
 }
 
 void MListIndexViewPrivate::endFastScrolling()
 {
-    down = false;
-    fastScrollPosition = QPointF(0,0);
-    _q_startVisibilityTimer();
+    Q_Q(MListIndexView);
+
+    isFastScrolling = false;
+    if (scrollToQueueTimer.isActive()) {
+        scrollToQueueTimer.stop();
+        _q_scrollToLastRow();
+    }
+
+    lastFastScrollRow = -1;
+    if (!list->model()->listIsMoving() && q->model()->displayMode() != MList::Show)
+        q->setContentOpacity(0);
+    tooltip()->hide();
+    panel->hide();
+}
+
+void MListIndexViewPrivate::updateGroupTitleHeight()
+{
+    MLabel *label = createGroupTitleLabel();
+    groupTitleHeight = label->sizeHint(Qt::MinimumSize).height();
+    delete label;
+}
+
+void MListIndexViewPrivate::showTitlesPanel()
+{
+    Q_Q(MListIndexView);
+    if (q->model()->displayMode() == MList::Floating)
+        panel->hide();
+    else
+        panel->show();
+}
+
+void MListIndexViewPrivate::hideViewportPositionIndicator()
+{
+    if (viewport)
+        viewport->positionIndicator()->setEnabled(false);
+}
+
+void MListIndexViewPrivate::showViewportPositionIndicator()
+{
+    if (viewport)
+        viewport->positionIndicator()->setEnabled(true);
 }
 
 MListIndexView::MListIndexView(MListIndex *controller) : MWidgetView(controller), d_ptr(new MListIndexViewPrivate)
@@ -399,14 +468,22 @@ MListIndexView::~MListIndexView()
     delete d_ptr;
 }
 
-void MListIndexView::setupModel()
+void MListIndexView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_D(MListIndexView);
+    MWidgetView::resizeEvent(event);
 
+    d->_q_updateTitles();
+}
+
+void MListIndexView::setupModel()
+{
     MWidgetView::setupModel();
-    d->initLayout();
-    d->connectToList();
-    d->updateDisplayMode();
+
+    QList<const char *> modifications;
+    modifications << MListIndexModel::List;
+    modifications << MListIndexModel::DisplayMode;
+    updateData(modifications);
 }
 
 void MListIndexView::applyStyle()
@@ -415,82 +492,103 @@ void MListIndexView::applyStyle()
 
     MWidgetView::applyStyle();
 
-    if (style()->preferredSize().isValid())
-        d->controller->setPreferredWidth(style()->preferredSize().width());
-    else
-        d->controller->setPreferredWidth(0.0);
+    d->updateGroupTitleHeight();
+    d->tooltip()->setStyleName(style()->tooltipStyleName());
+    d->appearanceAnimation->setDuration(style()->fadeDuration());
+}
 
-    if (d->autoVisibilityAnimation) {
-        d->autoVisibilityAnimation->setDuration(style()->appearDuration());
+qreal MListIndexView::contentOpacity() const
+{
+    Q_D(const MListIndexView);
+    return d->contentOpacity;
+}
 
-        d->autoVisibilityAnimation->setStartValue(0.0);
-        d->autoVisibilityAnimation->setEndValue(1.0);
+void MListIndexView::setContentOpacity(qreal opacity)
+{
+    Q_D(MListIndexView);
+    d->contentOpacity = qMin(qMax(opacity, qreal(0.0)), qreal(1.0));
+    update();
+}
 
-        d->autoVisibilityAnimation->setKeyValueAt(d->delayTimelineDuration(), 0.0);
-        d->autoVisibilityAnimation->setKeyValueAt(1.0 - d->delayTimelineDuration(), 1.0);
-    }
+void MListIndexView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    if (contentOpacity() == 0)
+        return;
 
-    d->autoVisibilityTimer.setInterval(style()->fadeOutDelay());
+    qreal oldOpacity = painter->opacity();
+    painter->setOpacity(contentOpacity() * oldOpacity);
+    MWidgetView::drawBackground(painter, option);
+    painter->setOpacity(oldOpacity);
+}
 
-    d->applyStyleToShortcuts();
+void MListIndexView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    Q_D(const MListIndexView);
+
+    if (contentOpacity() == 0)
+        return;
+
+    qreal oldOpacity = painter->opacity();
+    painter->setOpacity(contentOpacity() * oldOpacity);
+
+    MWidgetView::drawContents(painter, option);
+
+    if (style()->positionIndicator() && d->viewport && !d->isFastScrolling)
+        painter->drawPixmap(d->positionIndicatorPosition, *style()->positionIndicator());
+
+    painter->setOpacity(oldOpacity);
 }
 
 void MListIndexView::updateData(const QList<const char *> &modifications)
 {
     Q_D(MListIndexView);
+    MWidgetView::updateData(modifications);
 
     const char *member;
     for (int i = 0; i < modifications.count(); i++) {
         member = modifications[i];
 
-        if (member == MListIndexModel::ShortcutLabels || member == MListIndexModel::List) {
+        if (member == MListIndexModel::List) {
             if (model()->list()) {
                 d->initLayout();
                 d->connectToList();
             }
         }
         else if (member == MListIndexModel::DisplayMode) {
-            d->updateDisplayMode();
+            d->setDisplayMode(model()->displayMode());
         }
         else if (member == MListIndexModel::Offset) {
-            d->updateLayout();
+            d->_q_updateGeometry();
         }
     }
-
-    MWidgetView::updateData(modifications);
-}
-
-void MListIndexView::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_D(MListIndexView);
-    d->beginFastScrolling(d->controller->mapToScene(event->pos()));
-    event->accept();
-}
-
-void MListIndexView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_D(MListIndexView);
-
-    d->endFastScrolling();
-    event->accept();
-}
-
-void MListIndexView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
-{
-    event->ignore(gesture);
 }
 
 void MListIndexView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
 {
     Q_D(MListIndexView);
-    if (gesture->state() == Qt::GestureStarted)
-        d->beginFastScrolling(event->mapToGraphicsScene(gesture->hotSpot()));
-    else if (gesture->state() == Qt::GestureFinished || gesture->state() == Qt::GestureCanceled)
-        d->endFastScrolling();
-    else if (gesture->state() == Qt::GestureUpdated)
-        d->updateFastScrolling(gesture->delta());
+    if (d->isFastScrolling || (d->list && d->list->itemModel()->rowCount() > 1)) {
+        if (gesture->state() == Qt::GestureStarted)
+            d->beginFastScrolling(event->mapToGraphicsScene(gesture->hotSpot()));
+        else if (gesture->state() == Qt::GestureFinished || gesture->state() == Qt::GestureCanceled)
+            d->endFastScrolling();
+        else if (gesture->state() == Qt::GestureUpdated)
+            d->updateFastScrolling(event->mapToGraphicsScene(gesture->hotSpot()) + gesture->offset());
 
-    event->accept(gesture);
+        event->accept(gesture);
+    } else
+        event->ignore(gesture);
+}
+
+QSizeF MListIndexView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+{
+    Q_D(const MListIndexView);
+    Q_UNUSED(which);
+    Q_UNUSED(constraint);
+
+    if (model())
+        return QSizeF(style()->preferredSize().width(), d->containerRect.height() - model()->offset().y());
+
+    return QSizeF();
 }
 
 #include "moc_mlistindexview.cpp"

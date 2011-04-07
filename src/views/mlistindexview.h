@@ -32,41 +32,52 @@ class MListIndexView : public MWidgetView
     Q_OBJECT
     M_VIEW(MListIndexModel, MListIndexStyle)
 
+    Q_PROPERTY(qreal contentOpacity READ contentOpacity WRITE setContentOpacity)
+
 public:
     MListIndexView(MListIndex *controller);
     virtual ~MListIndexView();
 
 protected:
     //! \reimp
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual void setupModel();
     virtual void applyStyle();
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
 
-    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     virtual void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);
     //! \reimp_end
-
-    //! \internal
-    MListIndexViewPrivate *d_ptr;
-    //! \internal_end
 
 protected Q_SLOTS:
     //! \reimp
     virtual void updateData(const QList<const char *> &modifications);
+    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     //! \reimp_end
+
+    qreal contentOpacity() const;
+    void setContentOpacity(qreal opacity);
 
 private:
     Q_DISABLE_COPY(MListIndexView)
     Q_DECLARE_PRIVATE(MListIndexView)
+    MListIndexViewPrivate *d_ptr;
 
-    Q_PRIVATE_SLOT(d_func(), void _q_listParentChanged())
-    Q_PRIVATE_SLOT(d_func(), void _q_exposedContentRectChanged())
-    Q_PRIVATE_SLOT(d_func(), void _q_listPanningStarted())
-    Q_PRIVATE_SLOT(d_func(), void _q_listPanningStopped())
-    Q_PRIVATE_SLOT(d_func(), void _q_visibilityTimerTimeout())
+    Q_PRIVATE_SLOT(d_func(), void _q_attachToListContainer())
 
+    Q_PRIVATE_SLOT(d_func(), void _q_showIfNeeded())
+    Q_PRIVATE_SLOT(d_func(), void _q_appearOnSceneWindow())
+    Q_PRIVATE_SLOT(d_func(), void _q_hideIfNeeded())
+    Q_PRIVATE_SLOT(d_func(), void _q_updateGeometry())
+
+    Q_PRIVATE_SLOT(d_func(), void _q_updateTitles())
+
+    Q_PRIVATE_SLOT(d_func(), void _q_scrollToLastRow())
+
+    Q_PRIVATE_SLOT(d_func(), void _q_updatePositionIndicatorPosition(QSizeF))
+    Q_PRIVATE_SLOT(d_func(), void _q_updatePositionIndicatorPosition(QPointF))
+    Q_PRIVATE_SLOT(d_func(), void _q_updatePositionIndicatorPosition(QRectF))
 
 #ifdef UNIT_TEST
     friend class Ut_MListIndex;

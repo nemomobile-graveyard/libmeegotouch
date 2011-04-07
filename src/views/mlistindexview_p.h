@@ -25,14 +25,18 @@
 #include <QVector>
 #include <QTimer>
 
-class MSceneWindow;
+class MLabel;
 class MListIndex;
 class MListIndexModel;
 class MListIndexView;
-class MLabel;
+class MListIndexTooltip;
+class MPannableViewport;
+class MSceneWindow;
 class MWidgetController;
 
+class QGraphicsAnchorLayout;
 class QGraphicsLinearLayout;
+class QGraphicsWidget;
 class QPropertyAnimation;
 
 class MListIndexViewPrivate
@@ -42,64 +46,82 @@ public:
     virtual ~MListIndexViewPrivate();
 
     void init();
-
-    virtual void applyStyleToShortcuts();
-
     void initLayout();
-    void updateLayout();
     void connectToList();
 
-    virtual QModelIndex locateShortcutIndex(int y, int x = 0);
+    void setGroupTitle(int item, int index);
+    MLabel *createGroupTitleLabel();
 
-    virtual MLabel *createLabel(int index);
-    virtual void clearVisible();
-    virtual void updateVisible();
+    MListIndexTooltip *tooltip();
 
-    virtual void createContainer();
-
-    qreal delayTimelineDuration();
-    qreal timelineDuration();
-    void updateDisplayMode();
+    void setDisplayMode(int mode);
 
     void beginFastScrolling(const QPointF &pos);
-    void updateFastScrolling(const QPointF &offset);
+    void updateFastScrolling(const QPointF &pos);
     void endFastScrolling();
+
+    void updateGroupTitleHeight();
+
+    void showTitlesPanel();
+
+    void hideViewportPositionIndicator();
+    void showViewportPositionIndicator();
 
 protected:
     void scrollToGroupHeader(int y);
 
-    virtual void _q_listParentChanged();
-    virtual void _q_listPanningStarted();
-    virtual void _q_listPanningStopped();
-    virtual void _q_visibilityTimerTimeout();
+    void _q_attachToListContainer();
+    void _q_attachToViewport();
 
-    virtual void _q_hideAnimated();
-    virtual void _q_showAnimated();
+    void _q_showIfNeeded();
+    void _q_appearOnSceneWindow();
+    void _q_hideIfNeeded();
 
-    virtual void _q_startVisibilityTimer();
-    virtual void _q_stopVisibilityTimer();
+    void _q_updateGeometry();
 
-    virtual void _q_exposedContentRectChanged();
+    void _q_updateTitles();
+
+    void _q_scrollToLastRow();
+
+    void _q_updatePositionIndicatorPosition(const QSizeF &viewportSize);
+    void _q_updatePositionIndicatorPosition(const QPointF &viewportPosition);
+    void _q_updatePositionIndicatorPosition(const QRectF &viewportRange);
 
 private:
     Q_DECLARE_PUBLIC(MListIndexView)
     MListIndexView *q_ptr;
 
     MListIndex *controller;
-    QGraphicsLinearLayout *layout;
+    QGraphicsWidget *panel;
+
+    QGraphicsAnchorLayout *layout;
+    QGraphicsLinearLayout *panelLayout;
 
     MSceneWindow *container;
-    MList *list;
-
-    int shortcutHeight;
-    int shortcutsCount;
     QRectF containerRect;
 
-    QPropertyAnimation *autoVisibilityAnimation;
-    QTimer autoVisibilityTimer;
-    bool down;
-    QModelIndex currentIndex;
-    QPointF fastScrollPosition;
+    QPropertyAnimation *appearanceAnimation;
+
+    MListIndexTooltip *tooltipWidget;
+
+    MList *list;
+    MPannableViewport *viewport;
+
+    QTimer scrollToQueueTimer;
+
+    QVector<MLabel *> groupTitleLabelWidgets;
+    int groupTitleHeight;
+
+    bool isFastScrolling;
+    int lastFastScrollRow;
+
+    qreal contentOpacity;
+
+    QSizeF viewportSize;
+    QRectF viewportAdjustedRange;
+    QPoint positionIndicatorPosition;
+
+    const int ScrollToDelay;
 };
 
 #endif

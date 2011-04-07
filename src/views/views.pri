@@ -78,7 +78,6 @@ PRIVATE_HEADERS += \
     mtoolbarlayoutpolicy.h \
     mpannablewidgetview_p.h \
     mlistindexview_p.h \
-    mlistindexfloatingview_p.h \
     mlistitemview_p.h \
     mescapebuttonpanelview_p.h \
     mhomebuttonpanelview_p.h \
@@ -87,7 +86,6 @@ PRIVATE_HEADERS += \
     mdockwidgetview.h \
     mscenelayereffectdimview.h \
     mlistindexview.h \
-    mlistindexfloatingview.h \
     mnavigationbarview_p.h \
     mbuttontransition.h \
     mbuttondefaulttransition.h \
@@ -160,7 +158,6 @@ SOURCES += \
     mnavigationbarview.cpp \
     mscenelayereffectdimview.cpp \
     mlistindexview.cpp \
-    mlistindexfloatingview.cpp \
     mlistitemview.cpp \
     mbubbleitemview.cpp \
     mbuttondefaulttransition.cpp \

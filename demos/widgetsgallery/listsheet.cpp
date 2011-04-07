@@ -66,7 +66,6 @@ ListSheet::ListSheet()
 
 ListSheet::~ListSheet()
 {
-
 }
 
 void ListSheet::createHeaderWidget()
@@ -95,7 +94,7 @@ void ListSheet::createCentralWidget()
     list->setShowGroups(true);
     list->setItemModel(model);
     list->setCellCreator(new MListSheetContentItemCreator);
-    list->setIndexDisplayMode(MList::Floating);
+    list->setIndexDisplayMode(MList::Auto);
 
     model->setParent(list);
     pannableViewport->setWidget(list);

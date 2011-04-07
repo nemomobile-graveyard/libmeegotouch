@@ -312,7 +312,6 @@ public:
     int itemsCount(int index) const;
     void updateHeadersPositions();
     void updateHeadersRows();
-    void updateHeadersIndexes();
 
     void setGroupSeparator(MWidget *separator);
 
@@ -353,6 +352,7 @@ public:
     virtual void updateListIndexVisibility();
     virtual void updateListIndexOffset();
     virtual void updateListIndexStyle();
+    virtual void updateListIndexTitles();
 
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
 

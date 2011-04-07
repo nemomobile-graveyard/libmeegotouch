@@ -51,20 +51,14 @@ class MListIndex : public MWidgetController
 public:
     /*!
      * \brief Default constructor. Constructs the list index widget.
-     * \param parent The list controller of the list index content.
+     * \param parent The default parent of the list index content.
      */
-    MListIndex(MList *parent = NULL);
+    MListIndex(QGraphicsItem *parent = NULL);
 
     /*!
      * \brief Default destructor. Cleanups and destroys the list index widget.
      */
     virtual ~MListIndex();
-
-    /*!
-     * \brief Sets the navigation indexes of the list to be displayed.
-     * \param shortcuts The mapping between a string label and its index position in list.
-     */
-    void setShortcuts(const QMap<QModelIndex, QString> &shortcuts);
 
     /*!
      * \brief Sets the content controller of the list index.
@@ -83,6 +77,12 @@ public:
 
     void setOffset(const QPointF &offset);
     QPointF offset() const;
+
+public Q_SLOTS:
+    void updateGroupTitles();
+
+Q_SIGNALS:
+    void groupTitlesChanged();
 
 protected:
    /*! \reimp */

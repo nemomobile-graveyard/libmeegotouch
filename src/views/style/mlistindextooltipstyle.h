@@ -26,8 +26,6 @@ class MListIndexTooltipStyle : public MStylableWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MListIndexTooltipStyle)
-
-    M_STYLE_PTR_ATTRIBUTE(QPixmap *, arrowPixmap, ArrowPixmap)
 };
 
 class MListIndexTooltipStyleContainer : public MStylableWidgetStyleContainer

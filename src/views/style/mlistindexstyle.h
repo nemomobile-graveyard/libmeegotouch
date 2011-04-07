@@ -27,16 +27,13 @@ class MListIndexStyle : public MWidgetStyle
     Q_OBJECT
     M_STYLE(MListIndexStyle)
 
-    M_STYLE_ATTRIBUTE(QString, shortcutObjectName, ShortcutObjectName)
+    M_STYLE_ATTRIBUTE(QString, shortcutStyleName, ShortcutStyleName)
+    M_STYLE_ATTRIBUTE(QString, tooltipStyleName, TooltipStyleName)
 
-    M_STYLE_ATTRIBUTE(qreal, appearDelay, AppearDelay)
-    M_STYLE_ATTRIBUTE(qreal, appearDuration, AppearDuration)
-    M_STYLE_ATTRIBUTE(qreal, fadeOutDelay, FadeOutDelay)
+    M_STYLE_ATTRIBUTE(int, appearDelay, AppearDelay)
+    M_STYLE_ATTRIBUTE(int, fadeDuration, FadeDuration)
 
-    M_STYLE_ATTRIBUTE(int, floatingIndexOffset, FloatingIndexOffset)
-    M_STYLE_ATTRIBUTE(int, floatingIndexCount, FloatingIndexCount)
-    M_STYLE_ATTRIBUTE(qreal, floatingSnapDistance, FloatingSnapDistance)
-    M_STYLE_ATTRIBUTE(QString, floatingStyleName, FloatingStyleName)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap*, positionIndicator, PositionIndicator)
 };
 
 class MListIndexStyleContainer : public MWidgetStyleContainer

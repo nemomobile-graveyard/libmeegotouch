@@ -27,7 +27,7 @@ class MListIndexTooltip;
 class MWidget;
 
 class QGraphicsWidget;
-class QGraphicsLinearLayout;
+class QGraphicsAnchorLayout;
 class QPropertyAnimation;
 
 class MListIndexTooltipPrivate
@@ -36,34 +36,19 @@ public:
     MListIndexTooltipPrivate();
     virtual ~MListIndexTooltipPrivate();
 
-    void initLayout();
-    void initAnimations();
+    void init();
+
+    void setTitle(const QString &title);
+    MLabel *titleLabel();
 
     void _q_updateSizeToCentralWidget();
-
-    void clearIndexes();
-    void createIndexes(int count);
-
-    void setIndexText(int index, const QString &text);
-    void setIndexSelected(int index);
-
-    void setArrowOffsetAnimated(qreal offset);
-    qreal calculateArrowOffset(int index);
 
 private:
     Q_DECLARE_PUBLIC(MListIndexTooltip)
     MListIndexTooltip *q_ptr;
 
-    QGraphicsLinearLayout *layout;
-    qreal arrowOffset;
-
-    QPropertyAnimation *arrowOffsetAnimation;
-    QPropertyAnimation *snapAnimation;
-
-    MWidget *panel;
-    QGraphicsLinearLayout *panelLayout;
-
-    QVector<MLabel *> indexLabels;
+    QGraphicsAnchorLayout *layout;
+    MLabel *titleLabelWidget;
 
 #ifdef UNIT_TEST
     friend class Ut_MListIndexFloatingView;

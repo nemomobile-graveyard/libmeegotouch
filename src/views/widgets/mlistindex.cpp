@@ -20,7 +20,6 @@
 #include "mlistindex.h"
 #include "mlistindex_p.h"
 #include "mlistindexview.h"
-#include "mlistindexfloatingview.h"
 #include "mlist.h"
 
 #include <QGraphicsSceneContextMenuEvent>
@@ -41,10 +40,10 @@ void MListIndexPrivate::init()
 {
     Q_Q(MListIndex);
 
+    // Force creating the view.
     q->setView(new MListIndexView(q));
-    q->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    q->grabGestureWithCancelPolicy(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureStarted);
+    q->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     q->grabGestureWithCancelPolicy(Qt::PanGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureStarted);
 }
 
@@ -70,28 +69,18 @@ void MListIndexPrivate::_q_updateVisibility()
     }
 }
 
-MListIndex::MListIndex(MList *parent)
+MListIndex::MListIndex(QGraphicsItem *parent)
     : MWidgetController(new MListIndexModel, parent),
     d_ptr(new MListIndexPrivate)
 {
     Q_D(MListIndex);
     d->q_ptr = this;
     d->init();
-
-    setList(parent);
 }
 
 MListIndex::~MListIndex()
 {
     delete d_ptr;
-}
-
-void MListIndex::setShortcuts(const QMap<QModelIndex, QString> &shortcuts)
-{
-    model()->beginTransaction();
-    model()->setShortcutIndexes(shortcuts.keys());
-    model()->setShortcutLabels(shortcuts.values());
-    model()->commitTransaction();
 }
 
 void MListIndex::setList(MList *list)
@@ -104,15 +93,6 @@ void MListIndex::setList(MList *list)
 
 void MListIndex::setDisplayMode(MList::DisplayMode displayMode)
 {
-    if (displayMode == MList::Floating) {
-        setViewType("floating");
-        setView(new MListIndexFloatingView(this));
-    }
-    else if (QString::compare(view()->metaObject()->className(), "MListIndexView") != 0) {
-        setViewType(QString());
-        setView(new MListIndexView(this));
-    }
-
     model()->setDisplayMode(displayMode);
 }
 
@@ -134,6 +114,11 @@ QPointF MListIndex::offset() const
 void MListIndex::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     event->accept();
+}
+
+void MListIndex::updateGroupTitles()
+{
+    emit groupTitlesChanged();
 }
 
 #include "moc_mlistindex.cpp"

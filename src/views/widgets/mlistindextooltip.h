@@ -29,27 +29,13 @@ class MListIndexTooltip : public MStylableWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(qreal arrowOffset READ arrowOffset WRITE setArrowOffset)
 public:
     MListIndexTooltip(QGraphicsItem *parent=NULL);
     virtual ~MListIndexTooltip();
 
-    void setIndexCount(int count);
-    void setIndexText(int index, const QString &text);
-    void setIndexSelected(int index);
-
-    void setArrowOffset(qreal offset);
-    qreal arrowOffset() const;
-
-    void snap(qreal snapDistance);
+    void setTitle(const QString &title);
 
 protected:
-    void drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    void applyStyle();
-
-private:
-    Q_PRIVATE_SLOT(d_func(), void _q_updateSizeToCentralWidget())
-
 private:
     Q_DECLARE_PRIVATE(MListIndexTooltip)
     MListIndexTooltipPrivate *d_ptr;

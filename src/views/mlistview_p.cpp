@@ -1225,6 +1225,8 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
 
     if (!listIndexWidget) {
         listIndexWidget = new MListIndex(controller);
+        listIndexWidget->setList(controller);
+
         updateListIndexVisibility();
         updateListIndexStyle();
     }
@@ -1355,18 +1357,6 @@ void MGroupHeaderListViewPrivate::updateHeadersRows()
     }
 }
 
-void MGroupHeaderListViewPrivate::updateHeadersIndexes()
-{
-    if(listIndexWidget) {
-        QMap<QModelIndex, QString> shortcuts;
-        for (int i = 0; i < headersCount(); i++) {
-            QModelIndex headerRowIndex = flatRowToIndex(headersRows[i]);
-            shortcuts[headerRowIndex] = model->data(headerRowIndex).toString();
-        }
-        listIndexWidget->setShortcuts(shortcuts);
-    }
-}
-
 void MGroupHeaderListViewPrivate::setGroupSeparator(MWidget *separator)
 {
     if(gseparator)
@@ -1408,7 +1398,7 @@ void MGroupHeaderListViewPrivate::updateHeaderHeight()
 {
     updateHeadersPositions();
     updateHeadersRows();
-    updateHeadersIndexes();
+    updateListIndexTitles();
 }
 
 void MGroupHeaderListViewPrivate::updateItemSize()
@@ -1569,6 +1559,12 @@ void MGroupHeaderListViewPrivate::updateListIndexStyle()
 {
     if (listIndexWidget)
         listIndexWidget->setStyleName(q_ptr->style()->listIndexStyleName());
+}
+
+void MGroupHeaderListViewPrivate::updateListIndexTitles()
+{
+    if (listIndexWidget)
+        listIndexWidget->updateGroupTitles();
 }
 
 ////////////
