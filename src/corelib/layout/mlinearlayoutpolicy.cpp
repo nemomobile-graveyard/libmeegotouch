@@ -180,7 +180,11 @@ QSizeF MLinearLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constrain
 
     d->engine->setMinimumSize(QSizeF(-1, -1));
     d->engine->setMaximumSize(QSizeF(-1, -1));
-    const_cast<MLinearLayoutPolicyPrivate *>(d)->refreshEngine();
+    if (d->invalidated) {
+        const_cast<MLinearLayoutPolicyPrivate *>(d)->refreshEngine();
+        d->engine->invalidate();
+        d->invalidated = false;
+    }
     return d->engine->sizeHint(which, constraint);
 }
 
@@ -207,6 +211,12 @@ void MLinearLayoutPolicy::relayout()
     if (!isActive())
         return;
 
+    if (d->invalidated) {
+        const_cast<MLinearLayoutPolicyPrivate *>(d)->refreshEngine();
+        d->engine->invalidate();
+        d->invalidated = false;
+    }
+
     d->engine->setMinimumSize(layout()->minimumSize());
     d->engine->setMaximumSize(layout()->maximumSize());
     d->refreshWidget();
@@ -220,8 +230,8 @@ void MLinearLayoutPolicy::relayout()
 void MLinearLayoutPolicy::invalidate()
 {
     Q_D(MLinearLayoutPolicy);
-    d->engine->invalidate();
 
+    d->invalidated = true;
     MAbstractLayoutPolicy::invalidate();
 }
 

@@ -59,6 +59,8 @@ public:
      *  basically q->count() + the number of stretches added/inserted. */
     int rowCount;
 
+    mutable bool invalidated;
+
     bool notifyWidgetsOfLayoutPositionEnabled;
 };
 

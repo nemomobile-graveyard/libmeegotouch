@@ -46,6 +46,7 @@ public:
 
     QGraphicsWidget *const engineWidget;
     QGraphicsGridLayout *const engine;
+    mutable bool invalidated;
 };
 
 #endif // Header Guard

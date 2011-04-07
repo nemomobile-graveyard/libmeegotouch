@@ -32,6 +32,7 @@ MLinearLayoutPolicyPrivate::MLinearLayoutPolicyPrivate(MLayout *layout, Qt::Orie
     engineWidget(new QGraphicsWidget),
     engine(new QGraphicsLinearLayout(orientation, engineWidget)),
     rowCount(0),
+    invalidated(true),
     notifyWidgetsOfLayoutPositionEnabled(false)
 {
 }

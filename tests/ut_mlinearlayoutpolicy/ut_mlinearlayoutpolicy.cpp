@@ -656,30 +656,59 @@ void Ut_MLinearLayoutPolicy::testRtl()
     QCOMPARE(m_mockItem100->geometry(), QRectF(QPointF(200.0, 0.0), QSize(100.0, 100.0)));
     QCOMPARE(m_mockItem200->geometry(), QRectF(QPointF(0.0, 0.0), QSizeF(200.0, 200.0)));
 }
+void Ut_MLinearLayoutPolicy::testLayoutInLayoutRefresh_data()
+{
+    //Run the test one with QGraphicsLinearLayout to check that the test itself is
+    //correct, then again with libmeegotouch to check MLinearLayoutPolicy is correct
+    QTest::addColumn<bool>("useQt");
+    QTest::newRow("QGraphicsLinearLayout") << true;
+    QTest::newRow("MLinearLayoutPolicy") << false;
+}
 
 void Ut_MLinearLayoutPolicy::testLayoutInLayoutRefresh()
 {
-    m_policy->setSpacing(0);
-    m_policy->setOrientation(Qt::Vertical);
-    m_mockLayout->activate();
+    QFETCH(bool, useQt);
 
-    MWidget *widget = new MWidget;
-    MLayout *layout = new MLayout(widget);
-    layout->setContentsMargins(0,0,0,0);
-    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-    m_policy->addItem(widget);
+    QGraphicsWidget *form = new QGraphicsWidget;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal, form);
+    layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
+    layout->activate();
+
+    QGraphicsWidget *widget = new QGraphicsWidget;
+    layout->addItem(widget);
     QGraphicsWidget *leftSpacerWithWidget = new QGraphicsWidget;
-    policy->addItem(leftSpacerWithWidget);
-    policy->addItem(m_mockItem100);
-    policy->addItem(new QGraphicsWidget);
-    policy->addItem(m_mockItem200);
 
-    m_form->resize(400,200);
+    QGraphicsLayout *innerLayout;
+    if (useQt) {
+        QGraphicsLinearLayout *qlayout = new QGraphicsLinearLayout(Qt::Horizontal, widget);
+        innerLayout = qlayout;
+        qlayout->setContentsMargins(0,0,0,0);
+        qlayout->setSpacing(0);
+
+        qlayout->addItem(leftSpacerWithWidget);
+        qlayout->addItem(m_mockItem100);
+        qlayout->addItem(new QGraphicsWidget);
+        qlayout->addItem(m_mockItem200);
+    } else {
+        MLayout *layout = new MLayout(widget);
+        innerLayout = layout;
+        layout->setContentsMargins(0,0,0,0);
+        MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+
+        policy->addItem(leftSpacerWithWidget);
+        policy->addItem(m_mockItem100);
+        policy->addItem(new QGraphicsWidget);
+        policy->addItem(m_mockItem200);
+    }
+
+    form->resize(400,200);
     
     qApp->processEvents();
-    qApp->processEvents();
     
+    QCOMPARE(innerLayout->geometry(), QRectF(0,0,400,200));
+    QCOMPARE(leftSpacerWithWidget->geometry(), QRectF(0,0,50,200));
     QCOMPARE(m_mockItem100->geometry(), QRectF(50,0,100,100));
     QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
 
@@ -687,6 +716,8 @@ void Ut_MLinearLayoutPolicy::testLayoutInLayoutRefresh()
 
     qApp->processEvents();
 
+    QCOMPARE(innerLayout->geometry(), QRectF(0,0,400,200));
+    QCOMPARE(leftSpacerWithWidget->geometry(), QRectF(0,0,0,200));
     QCOMPARE(m_mockItem100->geometry(), QRectF(0,0,100,100));
     QCOMPARE(m_mockItem200->geometry(), QRectF(200,0,200,200));
 }

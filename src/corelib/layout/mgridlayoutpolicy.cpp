@@ -276,7 +276,13 @@ QSizeF MGridLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
 
     d->engine->setMinimumSize(QSizeF(-1, -1));
     d->engine->setMaximumSize(QSizeF(-1, -1));
-    const_cast<MGridLayoutPolicyPrivate *>(d)->refreshEngine();
+
+    if (d->invalidated) {
+        const_cast<MGridLayoutPolicyPrivate *>(d)->refreshEngine();
+        d->engine->invalidate();
+        d->invalidated = false;
+    }
+
     return d->engine->sizeHint(which, constraint);
 }
 
@@ -285,6 +291,12 @@ void MGridLayoutPolicy::relayout()
     Q_D(MGridLayoutPolicy);
     if (!isActive())
         return;
+
+    if (d->invalidated) {
+        const_cast<MGridLayoutPolicyPrivate *>(d)->refreshEngine();
+        d->engine->invalidate();
+        d->invalidated = false;
+    }
 
     d->engine->setMinimumSize(layout()->minimumSize());
     d->engine->setMaximumSize(layout()->maximumSize());
@@ -299,7 +311,7 @@ void MGridLayoutPolicy::relayout()
 void MGridLayoutPolicy::invalidate()
 {
     Q_D(MGridLayoutPolicy);
-    d->engine->invalidate();
+    d->invalidated = true;
 
     MAbstractLayoutPolicy::invalidate();
 }
