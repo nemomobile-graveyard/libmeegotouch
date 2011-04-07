@@ -29,8 +29,10 @@
 
 class MColorComboBoxPrivate;
 
+//! \internal
 /**
  * \brief A combobox for picking colors from a list of predefined colors.
+ * \note INTERNAL, only for rich text formatting dialog
  */
 class M_CORE_EXPORT MColorComboBox : public MWidgetController
 {
@@ -66,5 +68,6 @@ protected slots:
     //! \reimp_end
 
 };
+//! \internal_end
 
 #endif
