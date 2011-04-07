@@ -1,9 +1,24 @@
-libmeegotouch (0.21.3~1) unstable; urgency=low
+libmeegotouch (0.21.3-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#241068 - Status area height is 30 px instead of specified 36 px
+  * Fixes: NB#243298 - widgetgallery windows compilation broken
+  * Fixes: NB#229059 - Focused textedit is not in view in a scenario
   * Fixes: NB#214137 - Small swipes are producing unreliable panning
+  * Fixes: NB#237948 - MApplicationPage doesn't listen to its centralWidget's destroyed() signal
+  * Fixes: NB#221813 - completer does not work correct when doing completion
+  * Fixes: NB#231642 - Completer's "scale with content" functionality doesn't work
+  * Fixes: NB#226128 - Close button in font size and color is not properly visible in both landscape and portrait orientation.
+  * Fixes: NB#236368 - Pressed state is not propagated to child widgets
+  * Fixes: NB#243131 - Programs with + in filename fail to start
+  * Fixes: NB#237909 - [TASK] MApplicationService::launch(const QStringList&) behavior not intuitive
+  * Fixes: NB#238598 - MListIndexFloating is only working when the MList is in a MApplicationPage
+  * Fixes: NB#203668 - M_STYLE_MODE macro only accepts valid C++ identifier
+  * Fixes: NB#240912 - Cut-Copy widget is not present after screen lock occurs
+  * Fixes: NB#221658 - Rich text editing options not available.
+  * Fixes: NB#239110 - ft_theme::testViews segfaults
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 05 Apr 2011 11:48:29 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 07 Apr 2011 11:09:18 +0200
 
 libmeegotouch (0.21.2-1) unstable; urgency=low
 
