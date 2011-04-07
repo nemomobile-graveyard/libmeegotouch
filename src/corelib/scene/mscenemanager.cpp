@@ -808,8 +808,13 @@ QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *s
             break;
         case MSceneWindow::HomeButtonPanel:
         case MSceneWindow::NotificationInformation:
-        case MSceneWindow::NotificationEvent:
             root = homeButtonRootElement;
+            break;
+        case MSceneWindow::NotificationEvent:
+            if (sceneWindow->styleName() == "ShortEventBanner")
+                root = rootElement;
+            else
+                root = homeButtonRootElement;
             break;
         case MSceneWindow::DockWidget:
             if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
@@ -1785,8 +1790,12 @@ MAbstractWidgetAnimation *MSceneManagerPrivate::createAnimationFromSceneWindowTy
                 MTheme::animation(style()->navigationBarAnimation()));
         break;
     case MSceneWindow::NotificationEvent:
-        animation = (sceneWindow->styleName() == "SystemBanner") ? qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation())) :
-                                                                   qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->notificationEventAnimation()));
+        if (sceneWindow->styleName() == "SystemBanner")
+            animation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation()));
+        else if (sceneWindow->styleName() == "ShortEventBanner")
+            animation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->shortEventBannerAnimation()));
+        else
+            animation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->notificationEventAnimation()));
         break;
     case MSceneWindow::ApplicationMenu:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
