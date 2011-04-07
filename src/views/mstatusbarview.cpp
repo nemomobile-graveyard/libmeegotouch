@@ -40,8 +40,8 @@
 #define PROPERTY_WINDOW_INITIAL_POLL_TIMEOUT 3000
 #define PROPERTY_WINDOW_MAX_POLL_TIMEOUT 300000 // five minutes
 
-Atom MStatusBarView::propertyWindowAtom = NULL;
-Atom MStatusBarView::pixmapHandleAtom = NULL;
+Atom MStatusBarView::propertyWindowAtom = 0;
+Atom MStatusBarView::pixmapHandleAtom = 0;
 QAbstractEventDispatcher::EventFilter previousEventFilter = NULL;
 static QSharedPointer<MStatusBarEventListener> eventListenerInstance;
 static MStatusBarView *statusBarViewInstance = NULL;
