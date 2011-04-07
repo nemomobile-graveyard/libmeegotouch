@@ -26,6 +26,10 @@
 #include <QProcess>
 #include <MLocale>
 
+#ifdef HAVE_ICU
+#include <unicode/numfmt.h>
+#endif
+
 Q_DECLARE_METATYPE(MLocale);
 Q_DECLARE_METATYPE(qlonglong);
 
@@ -40,6 +44,8 @@ private:
 
 private slots:
     void initTestCase();
+    void cleanupTestCase();
+    void init();
     void cleanup();
 
     void testQLongLongs_data();

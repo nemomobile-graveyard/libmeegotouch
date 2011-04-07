@@ -38,6 +38,15 @@ void Ft_Numbers::initTestCase()
     qDebug() << "libicu44 package version is:" << icuPackageVersion;
 }
 
+void Ft_Numbers::cleanupTestCase()
+{
+    delete qap;
+}
+
+void Ft_Numbers::init()
+{
+}
+
 void Ft_Numbers::cleanup()
 {
 }
@@ -114,19 +123,31 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("ar_EG@numbers=latn")
             << qlonglong(-1542678073)
         // with RLM markers because language is ar!:
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
             << QString("‏1.542.678.073‏-");
+#else
+            << QString("‏1٬542٬678٬073‏-");
+#endif
     QTest::newRow("ar_EG")
             << QString("fa")
             << QString("ar_EG@numbers=latn")
             << qlonglong(-1542678073)
         // with RLM markers because language is fa!:
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
             << QString("‏1.542.678.073‏-");
+#else
+            << QString("‏1٬542٬678٬073‏-");
+#endif
     QTest::newRow("ar_EG")
             << QString("en_US")
             << QString("ar_EG@numbers=latn")
             << qlonglong(-1542678073)
         // without RLM markers because language is en_US!:
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
             << QString("1.542.678.073-");
+#else
+            << QString("1٬542٬678٬073-");
+#endif
     QTest::newRow("ar_TN")
             << QString("ar_TN@numbers=arab")
             << QString("ar_TN@numbers=latn")
@@ -199,6 +220,7 @@ void Ft_Numbers::testQLongLongs()
         << "localeName: " << localeName
         << " localeNameLcNumeric: " << localeNameLcNumeric
         << " number: " << val
+        << " expected: " << formatted
         << " formatNumber result: " << loc.formatNumber(val)
         << "\n";
     debugStream.flush();
@@ -2404,12 +2426,16 @@ void Ft_Numbers::testCurrencies_data()
         << "USD"
         << QString("US$ ١٬٢٣٤٫٥٦");
     QTest::newRow("ar_EG")
-        << QString("de_DE")
-        << QString("ar_EG")
-        << QString("en_US")
+        << QString("de_DE") // language
+        << QString("ar_EG") // lc_monetary
+        << QString("en_US") // lc_numeric
         << 1234.56
         << "USD"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+        << QString("US$ 1.234,56");
+#else
         << QString("US$ 1٬234٫56");
+#endif
     QTest::newRow("ar_SA")
         << QString("de_DE")
         << QString("ar_SA")
@@ -2423,7 +2449,11 @@ void Ft_Numbers::testCurrencies_data()
         << QString("en_US")
         << 1234.56
         << "USD"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+        << QString("US$1234,56");
+#else
         << QString("US$1234٫56");
+#endif
     QTest::newRow("hi_IN")
         << QString("de_DE")
         << QString("hi_IN")
@@ -2455,7 +2485,10 @@ void Ft_Numbers::testCurrencies()
     QTextStream debugStream(stdout);
     debugStream.setCodec("UTF-8");
     debugStream
-        << "result: " << locale.formatCurrency(val, currency)
+        << " language: " << language
+        << " lcMonetary: " << lcMonetary
+        << " lcNumeric: " << lcNumeric
+        << " result: " << locale.formatCurrency(val, currency)
         << " expected: " << formatted
         << "\n";
     debugStream.flush();
