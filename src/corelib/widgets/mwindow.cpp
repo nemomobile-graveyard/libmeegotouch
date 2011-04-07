@@ -65,6 +65,8 @@
 namespace {
     const QString ImagesPath(QDir::homePath() + "/MyDocs/.images");
     const int DisplayExitedDelay = 1000; //ms.
+    const int ThrottlingInSwitcherDelay = 3000; //ms
+    const int AllowedPaintEventsWhenInvisible = 5;
 #ifdef Q_WS_X11
     const char* FollowsCurrentApplicationWindowOrientationPropertyName =
             "followsCurrentApplicationWindowOrientation";
@@ -91,11 +93,11 @@ MWindowPrivate::MWindowPrivate() :
     displayExitedTimer(),
     visibleInSwitcher(false),
     fullyObscured(false),
+    throttleInSwitcher(false),
     updateIsPending(false),
     discardedPaintEvent(false),
     beforeFirstPaintEvent(true),
     invisiblePaintCounter(0),
-    allowedPaintEventsWhenInvisible(5),
     borderDecorator(0),
     q_ptr(NULL)
 {
@@ -543,6 +545,11 @@ void MWindowPrivate::_q_exitDisplayStabilized()
     }
 }
 
+void MWindowPrivate::_q_enableThrottlingInSwitcher()
+{
+    throttleInSwitcher = true;
+}
+
 void MWindowPrivate::propagateMOnDisplayChangeEventToScene(MOnDisplayChangeEvent *event)
 {
     Q_Q(MWindow);
@@ -622,6 +629,7 @@ void MWindowPrivate::doSwitcherExited()
         resolveOrientationRules();
 #endif
         emit q->switcherExited();
+        throttleInSwitcher = false;
     }
 }
 
@@ -635,6 +643,8 @@ void MWindowPrivate::doSwitcherEntered()
         resolveOrientationRules();
 #endif
         emit q->switcherEntered();
+        throttleInSwitcher = false;
+        QTimer::singleShot(ThrottlingInSwitcherDelay, q, SLOT(_q_enableThrottlingInSwitcher()));
     }
 }
 
@@ -1325,10 +1335,10 @@ void MWindow::paintEvent(QPaintEvent *event)
     }
 
     // FIXME: disabled for the meego graphicssystem right now until we have a solution for NB#205680
-    if (!isOnDisplay() && !MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem()) {
+    if (!isOnDisplay() && d->throttleInSwitcher && !MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem()) {
         // we allow some paint events when we are not visible as we might have a race between
         // the visibility information and the paint events
-        if (d->invisiblePaintCounter < d->allowedPaintEventsWhenInvisible) {
+        if (d->invisiblePaintCounter < AllowedPaintEventsWhenInvisible) {
             mDebug("MWindow::paintEvent") << "Application is not visible. Paint event allowed nevertheless.";
             ++d->invisiblePaintCounter;
         } else {
@@ -1339,7 +1349,7 @@ void MWindow::paintEvent(QPaintEvent *event)
         }
     }
 
-    if (isInSwitcher()) {
+    if (isInSwitcher() && d->throttleInSwitcher) {
         if (!d->timeSinceLastPaintInSwitcher.isValid()) {
             d->timeSinceLastPaintInSwitcher.start();
             d->updateIsPending = false;

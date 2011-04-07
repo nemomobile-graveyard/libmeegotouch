@@ -621,6 +621,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onPixmapRequestsFinished())
     Q_PRIVATE_SLOT(d_func(), void _q_enablePaintUpdates())
     Q_PRIVATE_SLOT(d_func(), void _q_exitDisplayStabilized())
+    Q_PRIVATE_SLOT(d_func(), void _q_enableThrottlingInSwitcher())
 
     /**
      * Is invoked by MComponentCache in case if an application is

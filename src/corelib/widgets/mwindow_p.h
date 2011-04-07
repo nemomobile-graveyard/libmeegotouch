@@ -121,6 +121,8 @@ public:
 
     void _q_exitDisplayStabilized();
 
+    void _q_enableThrottlingInSwitcher();
+
     bool onDisplay;
     bool onDisplaySet;
     QTimer displayExitedTimer;
@@ -129,11 +131,11 @@ public:
     bool fullyObscured;
 
     QElapsedTimer timeSinceLastPaintInSwitcher;
+    bool throttleInSwitcher;
     bool updateIsPending;
     bool discardedPaintEvent;
     bool beforeFirstPaintEvent;
     int invisiblePaintCounter;
-    const int allowedPaintEventsWhenInvisible;
     MWindowBorderDecorator *borderDecorator;
 
 protected:
