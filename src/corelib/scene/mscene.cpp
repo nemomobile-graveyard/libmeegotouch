@@ -41,6 +41,29 @@
 #include "mcancelevent.h"
 #include "morientationchangeevent.h"
 
+/*
+ The MScene is one of the classes responsible for handling MCancelEvent
+ in case a gesture is recognized.
+
+ Typical mouse press/move/release sequence is handled without change in
+ the MScene::event() method. However, when a user executes a gesture with
+ specified cancel policy, the MScene object is notified by the MWidget
+ that received the gesture that the mouse event sequence needs to be
+ canceled. The notification comes via a private method:
+ MScenePrivate::notifyChildRequestedMouseCancel().
+
+ MScene object at that time sends the MCancelEvent to the widget that
+ currently is the mouse grabber and breaks mouse event sequence using
+ an eventEater object. This code is located in
+ MScenePrivate::sendCancelEvent() method.
+
+ After mouse release event the state of mouse grabber is reset and
+ the MScene object waits for another gesture notification.
+
+ See also MWidget and MSceneWindow documentation for additional
+ information on gesture handling.
+ */
+
 static const QFont     TextFont                = QFont("Sans", 10);
 static const QSize     FpsBoxSize              = QSize(100, 40);
 static const QColor    FpsTextColor            = QColor(0xFFFF00);

@@ -48,6 +48,27 @@
 
 #include "mobjectmenu.h"
 
+/*
+ The MWidget is one of the classes responsible for handling gesture and cancel
+ event.
+
+ All gesture events are caught in the event() method and redirected to the specific
+ handler via the gestureEvent() method. Currently, only the generic Qt gestures have
+ specified gesture handlers named *gesturename*GestureEvent().
+
+ After each gesture handler is called, the gestureEvent() method is checking if
+ this specific gesture was registered for cancel event processing. If the widget is
+ grabbing the gesture with MouseEventCancelOnGestureStarted policy, then the
+ gestureEvent() will call the MScenePrivate::notifyChildRequestedMouseCancel() method
+ on gesture started state. The same will happen on gesture finished state, when a
+ gesture is grabbing the gesture with MouseEventCancelOnGestureFinished state.
+
+ MWidget can start grabbing gesture with cancel policies using
+ MWidget::grabGestureWithCancelPolicy() method.
+
+ See also MScene and MSceneWindow documentation for additional information on
+ gesture handling.
+ */
 
 MWidgetPrivate::MWidgetPrivate() :
     explicitlyHidden(false),

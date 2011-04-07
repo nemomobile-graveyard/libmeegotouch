@@ -42,6 +42,25 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
 
+/*
+ The MSceneWindow is one of the classes taking part in gestures handling.
+
+ The widget is responsible for catching all gesture events that weren't
+ accepted by its children widgets (see MSceneWindow::gestureEvent()).
+ In that way, the gesture events aren't propagated to the widgets below
+ the current scene window and don't interact with them.
+
+ The MSceneWindow is also responsible for generating GraphicsSceneContextMenu
+ event if no child widget accepted tap&hold gesture. (see
+ MSceneWindow::tapAndHoldGestureEvent()). The context menu event will traverse
+ through the widget stack and will trigger an object menu if any widget has
+ specified actions. If no child widget accepted the context menu event, it will
+ again be swallowed by the MSceneWindow object.
+
+ See also MWidget and MScene documentation for additional information on
+ gesture handling.
+ */
+
 
 MSceneWindowPrivate::MSceneWindowPrivate()
         : windowType(MSceneWindow::PlainSceneWindow),
