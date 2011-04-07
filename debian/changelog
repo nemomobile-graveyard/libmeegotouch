@@ -1,6 +1,7 @@
 libmeegotouch (0.21.4~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#238350 - CMCC (China Mobile) SIM application name is not shown correctly
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 07 Apr 2011 11:13:32 +0200
 

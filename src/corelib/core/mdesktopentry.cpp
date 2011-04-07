@@ -91,7 +91,7 @@ bool MDesktopEntryPrivate::readDesktopFile(QIODevice &device, QMap<QString, QStr
     QString currentGroup;
     QStringList groupNames;
     while (device.bytesAvailable()) {
-        QString line = QString(device.readLine()).trimmed();
+        QString line = QString::fromUtf8(device.readLine()).trimmed();
         if (!line.isEmpty() && !line.startsWith('#')) {
             if (keyValueRE.exactMatch(line) && !currentGroup.isEmpty()) {
                 // A key-value line was found. Prepend the key with the current group name.
