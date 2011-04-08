@@ -209,7 +209,8 @@ public:
         //% "Slider"
         addGalleryPage(5, qtTrId("xx_wg_user_input_slider"), WidgetsGalleryDataModel::SliderPageType);
         //% "Input Feedback"
-        addGalleryPage(5, qtTrId("xx_wg_user_input_input_feedback"), WidgetsGalleryDataModel::FeedbackPageType);
+        // The Input Feedback page is temporary disabled since the common widget components do not have haptics right now.
+//        addGalleryPage(5, qtTrId("xx_wg_user_input_input_feedback"), WidgetsGalleryDataModel::FeedbackPageType);
 
         //TODO  it will be removed , only for development
         addCategory("Debug tools");
