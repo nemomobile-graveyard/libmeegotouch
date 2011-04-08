@@ -191,6 +191,8 @@ void MWindowPrivate::init()
     if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
         applyStartupWindowBackground();
     }
+
+    MGraphicsSystemHelper::enableSwitchEvents();
 #endif //Q_WS_X11
 }
 

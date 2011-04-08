@@ -280,3 +280,12 @@ bool MGraphicsSystemHelper::canSwitchBetweenSoftwareAndHardwareRendering()
     return true;
 #endif
 }
+
+void MGraphicsSystemHelper::enableSwitchEvents()
+{
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    if (MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
+        QMeeGoGraphicsSystemHelper::enableSwitchEvents();
+    }
+#endif
+}

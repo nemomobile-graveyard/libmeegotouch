@@ -39,6 +39,8 @@ public:
     static bool isRunningMeeGoGraphicsSystem();
 
     static bool canSwitchBetweenSoftwareAndHardwareRendering();
+
+    static void enableSwitchEvents();
 };
 
 
