@@ -55,7 +55,7 @@ public:
     };
 
 
-    explicit GridModel(const QSize &size, const QStringList &dirs);
+    explicit GridModel(QObject *parent, const QSize &size, const QStringList &dirs);
     ~GridModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -88,6 +88,7 @@ class Loader : public QThread
 public:
     explicit Loader (const QSize &s)
         : QThread(), mutex(), backlog(), size(s), stopWork(false), loadOffset(0) { }
+    virtual ~Loader();
     void pushImage(const QString &path, int index);
 
     void resume(int offset);

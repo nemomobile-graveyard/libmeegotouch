@@ -110,7 +110,7 @@ void ButtonGroupPage::createContent()
     hPolicy2->addItem(pushButton5);
     hPolicy2->addItem(pushButton6);
     // The group enforces the logical exclusivity
-    MButtonGroup* group = new MButtonGroup();
+    MButtonGroup* group = new MButtonGroup(this);
     group->addButton(pushButton4);
     group->addButton(pushButton5);
     group->addButton(pushButton6);

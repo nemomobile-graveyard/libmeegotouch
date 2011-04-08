@@ -45,7 +45,10 @@ TextEntryAttributeExtensionPage::TextEntryAttributeExtensionPage()
 {}
 
 TextEntryAttributeExtensionPage::~TextEntryAttributeExtensionPage()
-{}
+{
+    MInputMethodState::instance()->unregisterAttributeExtension(registeredAttributeExtensionId1);
+    MInputMethodState::instance()->unregisterAttributeExtension(registeredAttributeExtensionId2);
+}
 
 QString TextEntryAttributeExtensionPage::timedemoTitle()
 {

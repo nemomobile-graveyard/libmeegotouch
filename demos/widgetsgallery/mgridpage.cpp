@@ -160,7 +160,7 @@ void MGridPage::createContent()
     mediaDirs << Utils::picturesDir();
     mediaDirs << Utils::mediaArtDir();
 
-    model = new GridModel(m_itemSize.toSize(), mediaDirs);
+    model = new GridModel(this, m_itemSize.toSize(), mediaDirs);
     list->setItemModel(model);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));

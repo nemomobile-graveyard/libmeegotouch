@@ -10,8 +10,8 @@
 
 class WidgetsGalleryCategoryDataModel : public QAbstractListModel {
 public:
-    WidgetsGalleryCategoryDataModel(QAbstractItemModel *parentModel, const QModelIndex &parentIndex)
-        : QAbstractListModel(),
+    WidgetsGalleryCategoryDataModel(QObject *parent, QAbstractItemModel *parentModel, const QModelIndex &parentIndex)
+        : QAbstractListModel(parent),
           widgetsGalleryModel(parentModel),
           categoryIndex(parentIndex) {
 
@@ -69,7 +69,7 @@ public:
 
 MainCategoryPage::MainCategoryPage(QAbstractItemModel *demosDataModel, const QModelIndex &parentIndex) :
         TimedemoPage(),
-        dataModel(new WidgetsGalleryCategoryDataModel(demosDataModel, parentIndex)),
+        dataModel(new WidgetsGalleryCategoryDataModel(this, demosDataModel, parentIndex)),
         list(0),
         policy(0)
 {

@@ -43,3 +43,8 @@ MyNavBarContent::MyNavBarContent(QGraphicsItem *parent)
     connect(okButton, SIGNAL(clicked()), SIGNAL(okClicked()));
     layout->addItem(okButton);
 }
+
+MyNavBarContent::~MyNavBarContent()
+{
+    delete d;
+}

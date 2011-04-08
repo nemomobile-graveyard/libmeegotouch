@@ -11,6 +11,7 @@ class MyNavBarContent : public QGraphicsWidget
 
 public:
     MyNavBarContent(QGraphicsItem *parent = 0);
+    virtual ~MyNavBarContent();
 
 signals:
     void okClicked();

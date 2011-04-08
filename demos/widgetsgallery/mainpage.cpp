@@ -128,8 +128,8 @@ public:
     };
 
 public:
-    WidgetsGalleryDataModel()
-        : QAbstractItemModel(),
+    WidgetsGalleryDataModel(QObject *parent)
+        : QAbstractItemModel(parent),
           categoryPageNames(),
           categoryPages(),
           galleryPages(),
@@ -592,7 +592,7 @@ void MainPage::populateLayout()
 {
     list = new MList(centralWidget());
     list->setCellCreator(new WidgetGalleryCategoryCellCreator(list));
-    list->setItemModel(new WidgetsGalleryDataModel());
+    list->setItemModel(new WidgetsGalleryDataModel(this));
     policy->addItem(list, Qt::AlignCenter);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(categoryItemClicked(QModelIndex)));

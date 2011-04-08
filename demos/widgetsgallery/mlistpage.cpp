@@ -374,7 +374,7 @@ void MListPage::createActions()
 
 void MListPage::createObjectMenuActions()
 {
-    objectMenu = new MObjectMenu(NULL);
+    objectMenu = new MObjectMenu(this);
 
     //% "Remove"
     MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), this);

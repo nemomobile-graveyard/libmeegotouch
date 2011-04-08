@@ -25,8 +25,8 @@
 
 #define THREAD_COUNT 5
 
-GridModel::GridModel(const QSize &size, const QStringList &dirs)
-    : QAbstractTableModel(),
+GridModel::GridModel(QObject *parent, const QSize &size, const QStringList &dirs)
+    : QAbstractTableModel(parent),
       m_dirs(dirs)
 {
     qRegisterMetaType<MediaType>("MediaType");
@@ -146,6 +146,12 @@ void GridModel::insertImage(QImage image, int index)
 
         emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     }
+}
+
+Loader::~Loader()
+{
+    qDeleteAll(backlog);
+    backlog.clear();
 }
 
 void Loader::run()

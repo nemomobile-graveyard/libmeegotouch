@@ -226,8 +226,8 @@ private:
 
 class ContentItemsPageModel : public QAbstractItemModel {
 public:
-    ContentItemsPageModel(const QString &title)
-        : QAbstractItemModel(),
+    ContentItemsPageModel(QObject *parent, const QString &title)
+        : QAbstractItemModel(parent),
         headerTitle(title)
     {
     }
@@ -342,7 +342,7 @@ void ContentItemsPage::populateLayout()
 
 MList *ContentItemsPage::createList(const QString &title, MCellCreator *creator)
 {
-    QAbstractItemModel *model = new ContentItemsPageModel(title);
+    QAbstractItemModel *model = new ContentItemsPageModel(this, title);
 
     MList *list = new MList(centralWidget());
     list->setCellCreator(creator);

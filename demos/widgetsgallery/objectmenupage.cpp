@@ -91,7 +91,8 @@ void ObjectMenuPage::createContent()
             item->setProperty("objectMenuIconId", QString("icon-m-messaging-smiley-sarcastic"));
 
         if (imageContacts.size() > 0) {
-            MImageWidget *icon = new MImageWidget(new QPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]));
+            MImageWidget *icon = new MImageWidget;
+            icon->setPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]);
             item->setImageWidget(icon);
         }
         item->setTitle(names[i]);
