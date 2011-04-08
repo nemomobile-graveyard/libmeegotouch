@@ -124,7 +124,6 @@ void MWidgetSlideAnimation::updateState(QAbstractAnimation::State newState, QAbs
         }
 
         if (d->direction == In) {
-            targetWidget()->hide();
             d->positionAnimation->setStartValue(offscreenPos);
             d->positionAnimation->setEndValue(d->originalPos);
         } else {
