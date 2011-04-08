@@ -155,12 +155,9 @@ void MRemoteThemeDaemonPrivate::negotiateProtocolVersion() {
 void MRemoteThemeDaemonPrivate::handleUnexpectedPacket(const Packet& packet) {
     if (packet.type() == Packet::ErrorPacket) {
         const String *errorString = static_cast<const String*>(packet.data());
-        qCritical() << "Themedaemon replied with error packet:\n" <<
-                       errorString->string << "\nExiting.";
-        exit(EXIT_FAILURE);
+        qFatal("Themedaemon replied with error packet:\n%s\nExiting.", qPrintable(errorString->string));
     } else {
-        qCritical() << "Received unexpected packet" << packet.type() << "from themedaemon. Exiting.";
-        exit(EXIT_FAILURE);
+        qFatal("Received unexpected packet %d from themedaemon. Exiting.", packet.type());
     }
 }
 
@@ -174,24 +171,26 @@ Packet MRemoteThemeDaemonPrivate::waitForPacket(quint64 sequenceNumber)
     QObject::disconnect(&socket, SIGNAL(readyRead()), q, SLOT(connectionDataAvailable()));
 
     // wait until we get a packet with type
-    while (socket.waitForReadyRead(3000)) {
-        while (socket.bytesAvailable()) {
-            // read one packet
-            const Packet packet = readOnePacket();
-            // check if it was the one we are waiting for
-            if (packet.sequenceNumber() == sequenceNumber) {
-                // read rest
-                QObject::connect(&socket, SIGNAL(readyRead()), q, SLOT(connectionDataAvailable()));
-                connectionDataAvailable();
-                return packet;
+    while (true) {
+        const int Timeout = 15000;
+        while (socket.waitForReadyRead(Timeout)) {
+            while (socket.bytesAvailable()) {
+                // read one packet
+                const Packet packet = readOnePacket();
+                // check if it was the one we are waiting for
+                if (packet.sequenceNumber() == sequenceNumber) {
+                    // read rest
+                    QObject::connect(&socket, SIGNAL(readyRead()), q, SLOT(connectionDataAvailable()));
+                    connectionDataAvailable();
+                    return packet;
+                }
+                // if it was not the packet we're waiting for, lets process it
+                processOnePacket(packet);
             }
-            // if it was not the packet we're waiting for, lets process it
-            processOnePacket(packet);
         }
+        qCritical() << qApp->applicationFilePath() << "Connection timeout when waiting for packet" << sequenceNumber << "Retrying.";
     }
 
-    mWarning("MRemoteThemeDaemon") << "waitForPacket: connection timeout when waiting for packet " << sequenceNumber;
-    QObject::connect(&socket, SIGNAL(readyRead()), q, SLOT(connectionDataAvailable()));
     return Packet();
 }
 
