@@ -253,18 +253,22 @@ void Timedemo::displayBenchmarkResults()
         foreach(const QString& name, allBenchmarks) {
             statsCsv << ", ";
             BenchmarkResultHash::const_iterator resultIter = results.find(name);
-            if (resultIter != results.constEnd() && resultIter->fps() != 0 && resultIter->runtime() != 0) {
-                log << right
-                    << qSetFieldWidth(fpsWidth) << resultIter->fps()
-                    << qSetFieldWidth(fpsUnitWidth) << "fps |"
-                    << qSetFieldWidth(runtimeWidth) << resultIter->runtime()
-                    << qSetFieldWidth(runtimeUnitWidth) << "ms"
-                    << qSetFieldWidth(actualWidth[name] - benchmarkWidth) << ""
-                    << left;
+            if (resultIter != results.constEnd()) {
+                if (resultIter->fps() != 0 && resultIter->runtime() != 0) {
+                    log << right
+                        << qSetFieldWidth(fpsWidth) << resultIter->fps()
+                        << qSetFieldWidth(fpsUnitWidth) << "fps |"
+                        << qSetFieldWidth(runtimeWidth) << resultIter->runtime()
+                        << qSetFieldWidth(runtimeUnitWidth) << "ms"
+                        << qSetFieldWidth(actualWidth[name] - benchmarkWidth) << ""
+                        << left;
+                } else
+                    log << qSetFieldWidth(actualWidth[name]) << center << "n/a" << left;
+                statsCsv << resultIter->fps() << ", " << resultIter->runtime();
             } else {
                 log << qSetFieldWidth(actualWidth[name]) << center << "n/a" << left;
+                statsCsv << ",";
             }
-            statsCsv << resultIter->fps() << ", " << resultIter->runtime();
         }
         log << qSetFieldWidth(0) << '\n';
         statsCsv << '\n';
