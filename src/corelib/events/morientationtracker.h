@@ -74,6 +74,9 @@ private:
     // For testing purposes
     void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
                                   bool isDeviceFlat, bool tvIsConnected);
+    void disableRotations();
+    void enableRotations();
+
 #ifdef Q_WS_X11
     void handleCurrentAppWindowChange();
     void handleCurrentAppWindowOrientationAngleChange();

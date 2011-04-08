@@ -56,6 +56,8 @@ private slots:
     void testWindowRemoteOrientationLock_data();
     void testWindowRemoteOrientationLock();
 
+    void testUpdatesPostponedUntilRotationsAreEnabled();
+
 private:
     /*  Helper members   */
 

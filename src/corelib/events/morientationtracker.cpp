@@ -95,6 +95,8 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , hasJustSubscribedToSensorProperties(false)
 #endif
     , rotationsDisabled(false)
+    , pendingOrientationAngleUpdate(false)
+    , pendingCurrentAppWindowOrientationAngleChangeHandling(false)
     , q_ptr(controller)
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
@@ -224,8 +226,10 @@ void MOrientationTrackerPrivate::resolveIfOrientationUpdatesRequired()
 
 void MOrientationTrackerPrivate::updateOrientationAngle()
 {
-    if (rotationsDisabled)
+    if (rotationsDisabled) {
+        pendingOrientationAngleUpdate = true;
         return;
+    }
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
     if (!isSubscribedToSensorProperties) {
@@ -370,6 +374,18 @@ void MOrientationTracker::childEvent(QChildEvent *event)
     Q_UNUSED(event);
 }
 
+void MOrientationTracker::disableRotations()
+{
+    Q_D(MOrientationTracker);
+    d->disableRotations();
+}
+
+void MOrientationTracker::enableRotations()
+{
+    Q_D(MOrientationTracker);
+    d->enableRotations();
+}
+
 void MOrientationTracker::doUpdateOrientationAngle(
         M::OrientationAngle angle, bool isKeyboardOpen,
         bool isDeviceFlat, bool tvIsConnected)
@@ -425,8 +441,10 @@ void MOrientationTracker::handleCurrentAppWindowOrientationAngleChange()
 
 void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
 {
-    if (rotationsDisabled)
+    if (rotationsDisabled) {
+        pendingCurrentAppWindowOrientationAngleChangeHandling = true;
         return;
+    }
 
     M::OrientationAngle angle = (M::OrientationAngle)currentWindowAngleProperty->value().toInt();
     //windows like system dialog will follow current window to any orientation
@@ -469,14 +487,26 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win, boo
 
 void MOrientationTrackerPrivate::disableRotations()
 {
-    rotationsDisabled = true;
+    if (!rotationsDisabled) {
+        rotationsDisabled = true;
+        pendingOrientationAngleUpdate = false;
+        pendingCurrentAppWindowOrientationAngleChangeHandling = false;
+    }
 }
 
 void MOrientationTrackerPrivate::enableRotations()
 {
     if (rotationsDisabled) {
         rotationsDisabled = false;
-        updateOrientationAngle();
-        handleCurrentAppWindowOrientationAngleChange();
+
+        if (pendingOrientationAngleUpdate) {
+            updateOrientationAngle();
+            pendingOrientationAngleUpdate = false;
+        }
+
+        if (pendingCurrentAppWindowOrientationAngleChangeHandling) {
+            handleCurrentAppWindowOrientationAngleChange();
+            pendingCurrentAppWindowOrientationAngleChangeHandling = false;
+        }
     }
 }

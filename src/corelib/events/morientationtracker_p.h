@@ -91,6 +91,8 @@ public:
     bool hasJustSubscribedToSensorProperties;
 #endif
     bool rotationsDisabled;
+    bool pendingOrientationAngleUpdate;
+    bool pendingCurrentAppWindowOrientationAngleChangeHandling;
 
     //windows from this list follow "/Screen/CurrentWindow/OrientationAngle" (set by meego window manager).
     //by default it includes modal dialogs.

@@ -329,6 +329,55 @@ void Ut_MOrientationTracker::testWindowRemoteOrientationLock()
     QCOMPARE(static_cast<int>(window2->orientationAngle()), static_cast<int>(expectedAngle));
 }
 
+void Ut_MOrientationTracker::testUpdatesPostponedUntilRotationsAreEnabled()
+{
+    supportedAnglesStubLists[KeyboardOpen].clear();
+    supportedAnglesStubLists[KeyboardOpen] <<  M::Angle0;
+
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0 << M::Angle90 << M::Angle180 << M::Angle270;
+
+    QString dbusName = gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->getProxy()->info()->providerDBusName();
+
+    gMServiceListenerStubMap->findStub(dbusName)->stubReset();
+    gContextPropertyStubMap->findStub("Screen.TopEdge")->stubReset();
+    gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->stubReset();
+    gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubReset();
+    gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->stubReset();
+
+    gMServiceListenerStubMap->findStub(dbusName)->stubSetReturnValue("isServicePresent", MServiceListener::NotPresent);
+    gContextPropertyStubMap->findStub("Screen.TopEdge")->stubSetReturnValue("value", QVariant(QString("top")));
+    gContextPropertyStubMap->findStub("RemoteScreen.TopEdge")->stubSetReturnValue("value", QVariant(""));
+    gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubSetReturnValue("value", QVariant(false));
+    gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(""));
+
+    // Use this signal so that also the video_route gets updated when eventually entering the updateOrientationAndle()
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->getProxy(), "valueChanged");
+
+    // Cause MOrientationTrackerPrivate::updateOrienationAngle() slot to get called.
+    // Will update the orientation of our window1
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Screen.TopEdge")->getProxy(), "valueChanged");
+
+    // Should follow Screen.TopEdge accordingly
+    QCOMPARE(static_cast<int>(window1->orientationAngle()), static_cast<int>(M::Angle0));
+
+    mTracker->disableRotations();
+
+    gContextPropertyStubMap->findStub("Screen.TopEdge")->stubSetReturnValue("value", QVariant(QString("left")));
+
+    // Cause MOrientationTrackerPrivate::updateOrienationAngle() slot to get called
+    // Will update the orientation of our window1
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("Screen.TopEdge")->getProxy(), "valueChanged");
+
+    // Don't follow Screen.TopEdge since rotations are disabled
+    QCOMPARE(static_cast<int>(window1->orientationAngle()), static_cast<int>(M::Angle0));
+
+    mTracker->enableRotations();
+
+    // Now window1 orientation should have been updated properly to match current state of Screen.TopEdge
+    QCOMPARE(static_cast<int>(window1->orientationAngle()), static_cast<int>(M::Angle270));
+}
+
 ///////////////////////////////////////////////////////
 //////////////////HELPER FUNCTIONS/////////////////////
 ///////////////////////////////////////////////////////
