@@ -505,7 +505,9 @@ void MOrientationTrackerPrivate::enableRotations()
         }
 
         if (pendingCurrentAppWindowOrientationAngleChangeHandling) {
+#ifdef HAVE_CONTEXTSUBSCRIBER
             handleCurrentAppWindowOrientationAngleChange();
+#endif //HAVE_CONTEXTSUBSCRIBER
             pendingCurrentAppWindowOrientationAngleChangeHandling = false;
         }
     }
