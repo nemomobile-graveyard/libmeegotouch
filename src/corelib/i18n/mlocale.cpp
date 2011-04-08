@@ -1120,7 +1120,11 @@ QLocale MLocalePrivate::createQLocale(MLocale::Category category) const
     QString language = q->categoryLanguage(category);
     QString country = q->categoryCountry(category);
     QString categoryName = q->categoryName(category);
+#ifdef HAVE_ICU
     QString numberOption = MIcuConversions::parseOption(categoryName, "numbers");
+#else
+    QString numberOption;
+#endif
 
     switch(category) {
     case(MLocale::MLcNumeric):
@@ -3586,7 +3590,11 @@ void MLocale::refreshSettings()
             // support in translations via %Ln, %L1, %L2, ...:
             QLocale::setDefault(d->createQLocale(MLcNumeric));
             qApp->setLayoutDirection(this->textDirection());
+#ifdef HAVE_ICU
             _defaultLayoutDirection = MIcuConversions::parseLayoutDirectionOption(s_systemDefault->name());
+#else
+            _defaultLayoutDirection = Qt::LeftToRight;
+#endif
         }
         else {
             d->loadTrCatalogs();
