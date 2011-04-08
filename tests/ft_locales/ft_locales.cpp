@@ -1769,7 +1769,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"蘅"
            <<"驰"
             );
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
     QTest::newRow("zh_TW@collation=stroke")
         <<"ja_JP"
         <<"zh_TW@collation=stroke" // collation=stroke is default for zh_TW
@@ -1810,14 +1809,13 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"张" // 7 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
            <<"李" // 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
            <<"沙紀" // 7 strokes, 1st stroke down to right, 1st character U+6C99
-           <<"阿" // a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5 (ERROR: bucket wrong in libicu46!)
            <<"並" // 8 strokes, 1st stroke down to right U+4E26
            <<"亟" // 8 strokes! (libicu 44 counts 9 strokes, which looks like an ERROR), 1st stroke horizontal U+4E9F
            <<"侗" // dong4, 8 strokes, 1st stroke down to left U+4F97
            <<"咚" // dong1, 8 strokes, 1st stroke vertical U+549A
            <<"岽" // dong1, 8 strokes, 1st stroke vertical, simplified of 崠 U+5CBD
            <<"東" // dong1, 8 strokes, 1st stroke horizontal, traditional of 东 U+6771
-           <<"苳" // dong1, 8 strokes, 1st stroke horizontal, (libicu44: 9 strokes (old, 2 part kusakanmuri gives 9 strokes)) U+82F3
+           <<"阿" // a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
            <<"威" // 9 strokes, 1st stroke horizontal U+5A01
            <<"峠" // quia3??? ９ strokes, 1st stroke vertical, (Japanese only! variant of 卡) U+5CE0 kBigFive - kGB0 - kRSUnicode 46.6
            <<"恫" // dong4, 9 strokes, 1st stroke vertical U+606B
@@ -1831,6 +1829,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"栋" // dong4, 9 strokes, 1st stroke horizontal, simplified of 棟 U+680B
            <<"氡" // dong1, 9 strokes, 1st stroke down to left U+6C21
            <<"洞" // dong4, 9 strokes, 1st stroke down to right U+6D1E
+           <<"苳" // dong1, 8 strokes, 1st stroke horizontal, (CLDR trunk 20110909: 9 strokes (old, 2 part kusakanmuri gives 9 strokes)) U+82F3
            <<"乘" // 10 strokes, 1st stroke down to left U+4E58
            <<"凍" // dong4, 10 strokes, 1st stroke down to right, traditional of 冻 U+51CD
            <<"胴" // dong4, 10 strokes, 1st stroke down to left U+80F4
@@ -1845,10 +1844,11 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"雪" // 11 strokes, 1st stroke horizontal U+96EA
            <<"傢" // 12 strokes, 1st stroke down to left U+50A2
            <<"棟" // dong4, 12 strokes, 1st stroke horizontal, traditional of 栋 U+68DF
-           <<"董" // dong3, 12 strokes (libicu44 13 strokes, seems to count kusakanmuri as 4) U+8463
+           <<"㺃" // U+3E83
            <<"亂" // 13 strokes, 1st stroke down to left U+4E82
            <<"働" // dong4, 13 strokes (Japanese only!) U+50CD
            <<"罪" // 13 strokes, 1st stroke vertical, 2nd stroke bending U+7F6A
+           <<"董" // dong3, 12 strokes (CLDR trunk 20110909: 13 strokes, seems to count kusakanmuri as 4) U+8463
            <<"馳" // chi2, 13 strokes, 1st stroke vertical, 2nd stroke horizontal, kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3
            <<"僧" // 14 strokes, 1st stroke down to left U+50E7
            <<"蜻" // 14 strokes, 1st stroke vertical U+873B
@@ -1859,229 +1859,21 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"劉Lucy" // liu2; traditional
            <<"劉利" // liu2 li4; traditional
            <<"劉利軍" // liu2 li4 jun1; traditional
-           <<"懂" // dong3, 15 strokes (ERROR in libuicu44, counts 17. If kusakanmuri counts as 4, then 16, but why 17?) U+61C2
            <<"蝙" // 15 strokes, 1st stroke vertical U+8759
            <<"儒" // 16 U+5112
            <<"頻" // 16 U+FA6A
            <<"優" // 17 U+512A
+           <<"懂" // dong3, 15 strokes (CLDR trunk 20110909: 17 strokes. If kusakanmuri counts as 4, then 16, but why 17?) U+61C2
            <<"曙" // 17 U+66D9
            <<"叢" // 18 strokes, 1st stroke U+53E2
            <<"鮹" // 18 strokes, 1st stroke down to left U+9BB9
            <<"鼕" // dong1, 18 strokes, 1st stroke horizontal U+9F15
            <<"勸" // 19 strokes, 1st stroke horizontal U+52F8
            <<"嚥" // 19 strokes, 1st stroke vertical U+56A5
-           <<"蘅" // 19 strokes (when kusakanmuri counts as 4, else 18), 1st stroke horizontal, kHanyuPinlu heng2 U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
            <<"鶇" // dong1, 19 strokes, 1st stroke horizontal, traditional of 鸫 U+9D87
-           <<"嚷" // 20 strokes, 1st stroke vertical
-           <<"儷" // 21
-           <<"儼" // 22
-           <<"囌" // 23
-           <<"囑" // 24
-           <<"廳" // 25 last official bucket
-           <<"躡" // 25
-           <<"鑽" // 27
-           <<"鬱" // 29
-           <<"驫" // 30
-           <<"㺃" // U+3E83
            <<"䵷" // U+4D77
-            )
-        <<(QStringList()
-           <<"∮"<<"♨"
-           <<"A"<<"J"<<"J"<<"S"<<"S"
-           <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
-           <<"一"<<"一" //  1 stroke
-           <<"丁"<<"丁" //  2
-           <<"三"<<"三" //  3
-           <<"丑" // 4
-           <<"丑" // 4
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"並" // 8
-           <<"亟" // 8
-           <<"亟" // 8
-           <<"亟" // 8
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"乘" // 10
-           <<"乘" // 10
-           <<"乘" // 10
-           <<"乘" // 10
-           <<"乘" // 10
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"傢" // 12
-           <<"傢" // 12
-           <<"傢" // 12
-           <<"亂" // 13
-           <<"亂" // 13
-           <<"亂" // 13
-           <<"亂" // 13
-           <<"僧" // 14
-           <<"僧" // 14
-           <<"僧" // 14
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"儒" // 16
-           <<"儒" // 16
-           <<"優" // 17
-           <<"優" // 17
-           <<"叢" // 18
-           <<"叢" // 18
-           <<"叢" // 18
-           <<"叢" // 18
-           <<"嚥" // 19
-           <<"嚥" // 19
-           <<"嚥" // 19
-           <<"嚷" // 20
-           <<"儷" // 21
-           <<"儼" // 22
-           <<"囌" // 23
-           <<"囑" // 24
-           <<"廳" // 25 last official bucket
-           <<"躡" // 25
-           <<"鑽" // 27
-           <<"鬱" // 29
-           <<"驫" // 30
-           <<"㺃"
-           <<"䵷"
-            );
-#else // libicu < 46, i.e. libicu 44
-    QTest::newRow("zh_TW@collation=stroke")
-        <<"ja_JP"
-        <<"zh_TW@collation=stroke" // collation=stroke is default for zh_TW
-        <<(QStringList()
-           <<"∮"<<"♨"
-           <<"A"<<"john"<<"John"<<"saki"<<"Saki"
-           <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
-           <<"一" // 1 stroke
-           <<"乙" // 1 stroke
-           <<"丁" // 2 strokes
-           <<"二" // 2 strokes
-           <<"三" // 3 strokes
-           <<"川" // 3 strokes
-           <<"丑" // 4 strokes
-           <<"木" // 4 strokes
-           <<"丙" // 5 strokes, 1st stroke horizontal
-           <<"冬" // dong1, 5 strokes, 1st stroke down to left
-           <<"卡" // 5 strokes, 1st stroke vertical, kHanyuPinlu ka3 U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3
-           <<"叫" // 5 strokes, 1st stroke vertical, kHanyuPinlu jiao4   U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2
-           <<"宁驰" // 5 strokes, 1st stroke vertical
-           <<"丞" // 6 strokes
-           <<"羊" // 6 strokes
-           <<"串" // 7 strokes
-           <<"君" // 7 strokes, 1st stroke bending, kHanyuPinlu jun1 U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4
-           <<"君蘅 柳" // 7 strokes, 1st stroke bending
-           <<"李" // 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
-           <<"沙紀" // 7 strokes, 1st stroke down to right
-           <<"並" // 8 strokes, 1st stroke down to right
-           <<"咚" // dong1, 8 strokes, 1st stroke vertical
-           <<"東" // dong1, 8 strokes, 1st stroke horizontal, traditional of 东
-           <<"阿" // a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
-           <<"侗" // dong4, 8 strokes, 1st stroke down to left
-           <<"亟" // 9 strokes, 1st stroke horizontal
-           <<"威" // 9 strokes, 1st stroke horizontal
-           <<"恫" // dong4, 9 strokes, 1st stroke vertical
-           <<"柳" // 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
-           <<"柳冬" // liu3 dong1; 2nd character 5 strokes, initial stroke down to left
-           <<"柳利軍" // liu3 li4 jun1; 3rd character traditional, 9 strokes, initial stroke vertical
-           <<"柳利军" // liu3 li4 jun1; 3rd character 5 strokes, initial stroke vertical
-           <<"柳咚" // liu3 dong1; 2nd character 8 strokes, initial stroke vertical
-           <<"柳東" // liu3 dong1; 2nd character traditional, 8 strokes, initial stroke horizontal
-           <<"柳东" // liu3 dong1; 2nd character 5 strokes, initial stroke horizontal
-           <<"洞" // dong4, 9 strokes, 1st stroke down to right
-           <<"氡" // dong1, 9 strokes, 1st stroke down to left
-           <<"苳" // dong1, 8 strokes, 1st stroke horizontal, ERROR? (old, 2 part kusakanmuri gives 9 strokes)
-           <<"乘" // 10 strokes, 1st stroke down to left
-           <<"凍" // dong4, 10 strokes, 1st stroke down to right, traditional of 冻
-           <<"胴" // dong4, 10 strokes, 1st stroke down to left
-           <<"髟" // 10 strokes, 1st stroke vertical
-           <<"乾" // 11 strokes, 1st stroke horizontal
-           <<"動" // dong4, 11 strokes, 1st stroke down to left, traditional of 动
-           <<"張" // 11 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F35 kBigFive B169 kGB0    - kRSUnicode 57.8"
-           <<"雪" // 11 strokes, 1st stroke horizontal
-           <<"崠" // dong1, dong4, 11 strokes, 1st stroke vertical, traditional of 岽
-           <<"涷" // dong1, 11 strokes, 1st stroke down to right
-           <<"硐" // dong4, 11 strokes, 1st stroke horizontal
-           <<"傢" // 12 strokes, 1st stroke down to left
-           <<"棟" // dong4, 12 strokes, 1st stroke horizontal, traditional of 栋
-           <<"亂" // 13 strokes, 1st stroke down to left
-           <<"罪" // 13 strokes, 1st stroke vertical, 2nd stroke bending
-           <<"董" // dong3, 12 strokes (ERROR? kusakanmuri seems to count as 4)
-           <<"馳" // chi2, 13 strokes, 1st stroke vertical, 2nd stroke horizontal, kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3
-           <<"僧" // 14 strokes, 1st stroke down to left
-           <<"蜻" // 14 strokes, 1st stroke vertical
-           <<"蝀" // dong1, 14 strokes, 1st stroke vertical
-           <<"億" // 15 strokes, 1st stroke down to left
-           <<"劉" // liu2; 15 strokes, 1st stroke bending, traditional of 刘
-           <<"劉 Lucy" // liu2; traditional
-           <<"劉Lucy" // liu2; traditional
-           <<"劉利" // liu2 li4; traditional
-           <<"劉利軍" // liu2 li4 jun1; traditional
-           <<"蝙" // 15 strokes, 1st stroke vertical
-           <<"儒" // 16
-           <<"頻" // 16
-           <<"優" // 17
-           <<"懂" // dong3, 15 strokes (ERROR? if kusakanmuri counts as 4, then 16, but why 17?)
-           <<"曙" // 17
-           <<"叢" // 18 strokes, 1st stroke
-           <<"鼕" // dong1, 18 strokes, 1st stroke horizontal
-           <<"鮹" // 18 strokes, 1st stroke down to left
-           <<"嚥" // 19
-           <<"鶇" // dong1, 19 strokes, 1st stroke horizontal, traditional of 鸫
-           <<"勸" // 19
            <<"嚷" // 20 strokes, 1st stroke vertical
-           <<"蘅" // 20 strokes, 1st stroke horizontal, kHanyuPinlu heng2   U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
+           <<"蘅" // 19 strokes (when kusakanmuri counts as 4, else 18), 1st stroke horizontal, kHanyuPinlu heng2 U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
            <<"儷" // 21
            <<"儼" // 22
            <<"囌" // 23
@@ -2091,24 +1883,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"鑽" // 27
            <<"鬱" // 29
            <<"驫" // 30
-           <<"东" // dong1, 5 strokes, 1st stroke horizontal, simplified of 東
-           <<"働" // dong4, 13 strokes (Japanese only!)
-           <<"冻" // dong4, 7 strokes, 1st stroke down to right, simplified of 凍
-           <<"刘" // 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
-           <<"刘 Lucy" // liu2
-           <<"刘Lucy" // liu2
-           <<"刘利" // liu2 li4
-           <<"刘利军" // liu2 li4 jun1
-           <<"动" // dong4, 6 strokes, 1st stroke horizontal, simplified of 動
-           <<"岽" // dong1, 8 strokes, 1st stroke vertical, simplified of 崠
-           <<"峠" // quia3??? ９ strokes, 1st stroke vertical, (Japanese only! variant of 卡) U+5CE0 kBigFive - kGB0 - kRSUnicode 46.6
-           <<"张" // 7 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
-           <<"栋" // dong4, 9 strokes, 1st stroke horizontal, simplified of 棟
-           <<"驰" // chi2, 6 strokes, 1st stroke bending, simplified of 馳, kHanyuPinlu chi2 U+9A70 kBigFive - kGB0 1959 kRSUnicode 187'.3
-           <<"鸫" // dong1, 10 strokes, 1st stroke horizontal, simplified of 鶇
-           <<"㺃"
-           <<"䵷"
-           <<"𠮩" // 5 strokes, 1st stroke vertical, kHanyuPinlu - U+20BA9 kBigFive - kGB0- kRSUnicode 30.2"
             )
         <<(QStringList()
            <<"∮"<<"♨"
@@ -2116,152 +1890,155 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"あ"
            <<"ㄅ"
            <<"ㄎ"
-           <<"一"<<"一" //  1 stroke
-           <<"丁"<<"丁" //  2
-           <<"三"<<"三" //  3
-           <<"丑" // 4
-           <<"丑" // 4
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丙" // 5
-           <<"丞" // 6
-           <<"丞" // 6
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"串" // 7
-           <<"並" // 8
-           <<"並" // 8
-           <<"並" // 8
-           <<"並" // 8
-           <<"並" // 8
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"亟" // 9
-           <<"乘" // 10
-           <<"乘" // 10
-           <<"乘" // 10
-           <<"乘" // 10
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"乾" // 11
-           <<"傢" // 12
-           <<"傢" // 12
-           <<"亂" // 13
-           <<"亂" // 13
-           <<"亂" // 13
-           <<"亂" // 13
-           <<"僧" // 14
-           <<"僧" // 14
-           <<"僧" // 14
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"億" // 15
-           <<"儒" // 16
-           <<"儒" // 16
-           <<"優" // 17
-           <<"優" // 17
-           <<"優" // 17
-           <<"叢" // 18
-           <<"叢" // 18
-           <<"叢" // 18
-           <<"嚥" // 19
-           <<"嚥" // 19
-           <<"嚥" // 19
-           <<"嚷" // 20
-           <<"嚷" // 20
-           <<"儷" // 21
-           <<"儼" // 22
-           <<"囌" // 23
-           <<"囑" // 24
-           <<"廳" // 25 last official bucket
-           <<"躡" // 25
-           <<"鑽" // 27
-           <<"鬱" // 29
-           <<"驫" // 30
-           <<"东"
-           <<"働"
-           <<"冻"
-           <<"刘"
-           <<"刘"
-           <<"刘"
-           <<"刘"
-           <<"刘"
-           <<"动"
-           <<"岽"
-           <<"峠"
-           <<"张"
-           <<"栋"
-           <<"驰"
-           <<"鸫"
-           <<"㺃"
-           <<"䵷"
-           <<"𠮩"
+           <<"1"
+           <<"1"
+           <<"2"
+           <<"2"
+           <<"3"
+           <<"3"
+           <<"4"
+           <<"4"
+           <<"5"
+           <<"5"
+           <<"5"
+           <<"5"
+           <<"5"
+           <<"5"
+           <<"5"
+           <<"6"
+           <<"6"
+           <<"6"
+           <<"6"
+           <<"6"
+           <<"6"
+           <<"6"
+           <<"6"
+           <<"6"
+           <<"7"
+           <<"7"
+           <<"7"
+           <<"7"
+           <<"7"
+           <<"7"
+           <<"7"
+           <<"8"
+           <<"8"
+           <<"8"
+           <<"8"
+           <<"8"
+           <<"8"
+           <<"8"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"9"
+           <<"10"
+           <<"10"
+           <<"10"
+           <<"10"
+           <<"10"
+           <<"11"
+           <<"11"
+           <<"11"
+           <<"11"
+           <<"11"
+           <<"11"
+           <<"11"
+           <<"12"
+           <<"12"
+           <<"12"
+           <<"13"
+           <<"13"
+           <<"13"
+           <<"13"
+           <<"13"
+           <<"14"
+           <<"14"
+           <<"14"
+           <<"15"
+           <<"15"
+           <<"15"
+           <<"15"
+           <<"15"
+           <<"15"
+           <<"15"
+           <<"16"
+           <<"16"
+           <<"17"
+           <<"17"
+           <<"17"
+           <<"18"
+           <<"18"
+           <<"18"
+           <<"19"
+           <<"19"
+           <<"19"
+           <<"19"
+           <<"20"
+           <<"20"
+           <<"21"
+           <<"22"
+           <<"23"
+           <<"24"
+           <<"25"
+           <<"25"
+           <<"27"
+           <<"29"
+           <<"30"
             );
-#endif
-#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
     QTest::newRow("zh_CN@collation=pinyin")
         <<"ja_JP"
         <<"zh_CN@collation=pinyin" // collation=pinyin is default for zh_CN
         <<(QStringList()
            <<"∮"<<"♨"
-           <<"A"<<"Ａ"<<"john"<<"ｊｏｈｎ"<<"John"<<"Ｊｏｈｎ"<<"saki"<<"ｓａｋｉ"<<"Saki"<<"Ｓａｋｉ"
-           <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
+           <<"A"
+           <<"Ａ"
            <<"阿" // a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
            <<"驰" // chi2, 6 strokes, 1st stroke bending, kHanyuPinlu chi2 U+9A70 kBigFive - kGB0 1959 kRSUnicode 187'.3
            <<"馳" // chi2, 13 strokes, 1st stroke vertical, kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3
            <<"东" // dong1, 5 strokes, 1st stroke horizontal, simplified of 東 U+4E1C
            <<"冬" // dong1, 5 strokes, 1st stroke down to left U+51AC
            <<"咚" // dong1, 8 strokes, 1st stroke vertical U+549A
-           <<"岽" // dong1, 8 strokes, 1st stroke vertical, simplified of 崠 U+5CBD
-           <<"東" // dong1, 8 strokes, 1st stroke horizontal, traditional of 东 U+6771
-           <<"苳" // dong1, 8 strokes, 1st stroke horizontal U+82F3
-           <<"氡" // dong1, 9 strokes, 1st stroke down to left
-           <<"鸫" // dong1, 10 strokes, 1st stroke horizontal, simplified of 鶇 U+9E2B
-           <<"崠" // dong1, dong4 (libicu44 sorts as dong4, libicu46 as dong1), 11 strokes, 1st stroke vertical, traditional of 岽 U+5D20
-           <<"涷" // dong1, 11 strokes U+6DB7
-           <<"蝀" // dong1, 14 strokes
-           <<"鼕" // dong1, 18 strokes
-           <<"鶇" // dong1, 19 strokes, 1st stroke horizontal, traditional of 鸫
-           <<"董" // dong3, 12 strokes
-           <<"懂" // dong3, 15 strokes
-           <<"动" // dong4, 6 strokes, 1st stroke horizontal, simplified of 動
-           <<"冻" // dong4, 7 strokes, 1st stroke down to right, simplified of 凍
-           <<"侗" // dong4, 8 strokes
-           <<"恫" // dong4, 9 strokes, 1st stroke vertical U+606B
-           <<"栋" // dong4, 9 strokes, 1st stroke horizontal, simplified of 棟 U+680B
-           <<"洞" // dong4, 9 strokes, 1st stroke down to right U+6D1E
-           <<"凍" // dong4, 10 strokes, 1st stroke down to right, traditional of 冻 U+51CD
-           <<"胴" // dong4, 10 strokes, 1st stroke down to left U+80F4
-           <<"動" // dong4, 11 strokes, 1st stroke down to left, traditional of 动 U+52D5
-           <<"硐" // dong4, 11 strokes, 1st stroke horizontal U+7850
-           <<"棟" // dong4, 12 strokes, 1st stroke horizontal, traditional of 栋
-           <<"働" // dong4, 13 strokes (Japanese only!)
+           <<"岽" // dong1, 8 strokes, 1st stroke vertical, simplified of 崠 U+5CBD kRSUnicode 46.5
+           <<"東" // dong1, 8 strokes, 1st stroke horizontal, traditional of 东 U+6771 kRSUnicode 75.4
+           <<"苳" // dong1, 8 strokes, 1st stroke horizontal U+82F3 kRSUnicode 140.5
+           <<"氡" // dong1, 9 strokes, 1st stroke down to left kRSUnicode 84.5
+           <<"鸫" // dong1, 10 strokes, 1st stroke horizontal, simplified of 鶇 U+9E2B kRSUnicode 196'.5
+           <<"崠" // dong1, dong4 (libicu44 sorts as dong4, libicu46 as dong1), 11 strokes, 1st stroke vertical, traditional of 岽 U+5D20 kRSUnicode 46.8
+           <<"涷" // dong1, 11 strokes U+6DB7 kRSUnicode 85.8
+           <<"蝀" // dong1, 14 strokes kRSUnicode 142.8
+           <<"鼕" // dong1, 18 strokes kRSUnicode 207.5
+           <<"鶇" // dong1, 19 strokes, 1st stroke horizontal, traditional of 鸫 kRSUnicode 196.8
+           <<"董" // dong3, 12 strokes kRSUnicode 140.9
+           <<"懂" // dong3, 15 strokes kRSUnicode 61.13
+           <<"动" // dong4, 6 strokes, 1st stroke horizontal, simplified of 動 kRSUnicode 19.4
+           <<"冻" // dong4, 7 strokes, 1st stroke down to right, simplified of 凍 kRSUnicode 15.5
+           <<"侗" // dong4, 8 strokes kRSUnicode 9.6
+           <<"恫" // dong4, 9 strokes, 1st stroke vertical U+606B kRSUnicode 61.6
+           <<"栋" // dong4, 9 strokes, 1st stroke horizontal, simplified of 棟 U+680B kRSUnicode 75.5
+           <<"洞" // dong4, 9 strokes, 1st stroke down to right U+6D1E kRSUnicode 85.6
+           <<"凍" // dong4, 10 strokes, 1st stroke down to right, traditional of 冻 U+51CD kRSUnicode 15.8
+           <<"胴" // dong4, 10 strokes, 1st stroke down to left U+80F4 kRSUnicode 130.6
+           <<"動" // dong4, 11 strokes, 1st stroke down to left, traditional of 动 U+52D5 kRSUnicode 19.9
+           <<"硐" // dong4, 11 strokes, 1st stroke horizontal U+7850 kRSUnicode 112.6
+           <<"棟" // dong4, 12 strokes, 1st stroke horizontal, traditional of 栋 kRSUnicode 75.8
+           <<"働" // dong4, 13 strokes (Japanese only!) kRSUnicode 9.11
            <<"峠" // quia3??? ９ strokes, 1st stroke vertical, (Japanese only! variant of 卡) U+5CE0 kBigFive - kGB0 - kRSUnicode 46.6
            <<"蘅" // 20 strokes, 1st stroke horizontal, kHanyuPinlu heng2 U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
+           <<"john"
+           <<"ｊｏｈｎ"
+           <<"John"
+           <<"Ｊｏｈｎ"
            <<"叫" // 5 strokes, 1st stroke vertical, kHanyuPinlu jiao4 U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2
            <<"君" // 7 strokes, 1st stroke bending, kHanyuPinlu jun1 U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4
            <<"卡" // 5 strokes, 1st stroke vertical, kHanyuPinlu ka3 U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3
@@ -2271,7 +2048,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"刘Lucy" // liu2
            <<"刘利" // liu2 li4
            <<"刘利军" // liu2 li4 jun1
-           <<"劉" // liu2; 15 strokes, 1st stroke bending, traditional of 刘
+           <<"劉" // liu2; 15 strokes, 1st stroke bending, traditional of 刘 kRSUnicode 18.13
            <<"劉 Lucy" // liu2; traditional
            <<"劉Lucy" // liu2; traditional
            <<"劉利" // liu2 li4; traditional
@@ -2284,183 +2061,876 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"柳利军" // liu3 li4 jun1; 3rd character 5 strokes, initial stroke vertical, 3rd character U+519B
            <<"柳利軍" // liu3 li4 jun1; 3rd character traditional, 9 strokes, initial stroke vertical, 3rd character U+8ECD
            <<"宁" // kHanyuPinlu ning2   U+5B81 kBigFive C972 kGB0 3694 kRSUnicode 40.2"
+           <<"saki"
+           <<"ｓａｋｉ"
+           <<"Saki"
+           <<"Ｓａｋｉ"
            <<"威" // 9 strokes, 1st stroke horizontal, kHanyuPinlu wei1 U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
            <<"张" // 7 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
            <<"張" // 11 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F35 kBigFive B169 kGB0    - kRSUnicode 57.8"
+           <<"あ"
+           <<"ㄅ"
+           <<"ㄎ"
            <<"𠮩" // 5 strokes, 1st stroke vertical, kHanyuPinlu - U+20BA9 kBigFive - kGB0- kRSUnicode 30.2"
             )
         <<(QStringList()
            <<"∮"<<"♨"
-           <<"A"<<"A"<<"J"<<"J"<<"J"<<"J"<<"S"<<"S"<<"S"<<"S"
+           <<"A"
+           <<"A"
+           <<"A"
+           <<"C"
+           <<"C"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"D"
+           <<"G"
+           <<"H"
+           <<"J"
+           <<"J"
+           <<"J"
+           <<"J"
+           <<"J"
+           <<"J"
+           <<"K"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"L"
+           <<"N"
+           <<"S"
+           <<"S"
+           <<"S"
+           <<"S"
+           <<"W"
+           <<"Z"
+           <<"Z"
            <<"あ"
            <<"ㄅ"
            <<"ㄎ"
-           <<"阿"
-           <<"驰"
-           <<"馳"
-           <<"东"
-           <<"冬"
-           <<"咚"
-           <<"岽"
-           <<"東"
-           <<"苳"
-           <<"氡"
-           <<"鸫"
-           <<"崠"
-           <<"涷"
-           <<"蝀"
-           <<"鼕"
-           <<"鶇"
-           <<"董"
-           <<"懂"
-           <<"动"
-           <<"冻"
-           <<"侗"
-           <<"恫"
-           <<"栋"
-           <<"洞"
-           <<"凍"
-           <<"胴"
-           <<"動"
-           <<"硐"
-           <<"棟"
-           <<"働"
-           <<"峠"
-           <<"蘅"
-           <<"叫"
-           <<"君"
-           <<"卡"
-           <<"李"
-           <<"刘"<<"刘"<<"刘"<<"刘"<<"刘"
-           <<"劉"<<"劉"<<"劉"<<"劉"<<"劉"
-           <<"柳"<<"柳"<<"柳"<<"柳"<<"柳"<<"柳"<<"柳"
-           <<"宁"
-           <<"威"
-           <<"张"
-           <<"張"
            <<"𠮩"
             );
-#else // libicu < 46, i.e. libicu 44
-    QTest::newRow("zh_CN@collation=pinyin")
+    QTest::newRow("zh_TW@collation=zhuyin")
         <<"ja_JP"
-        <<"zh_CN@collation=pinyin" // collation=pinyin is default for zh_CN
+        <<"zh_TW@collation=zhuyin" // collation=pinyin is default for zh_CN
         <<(QStringList()
            <<"∮"<<"♨"
-           <<"A"<<"Ａ"<<"john"<<"ｊｏｈｎ"<<"John"<<"Ｊｏｈｎ"<<"saki"<<"ｓａｋｉ"<<"Saki"<<"Ｓａｋｉ"
+           <<"A"
+           <<"Ａ"
+           <<"john"
+           <<"ｊｏｈｎ"
+           <<"John"
+           <<"Ｊｏｈｎ"
+           <<"saki"
+           <<"ｓａｋｉ"
+           <<"Saki"
+           <<"Ｓａｋｉ"
            <<"あ"
-           <<"ㄅ"
-           <<"ㄎ"
-           <<"阿" // a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
-           <<"驰" // chi2, 6 strokes, 1st stroke bending, kHanyuPinlu chi2 U+9A70 kBigFive - kGB0 1959 kRSUnicode 187'.3
-           <<"馳" // chi2, 13 strokes, 1st stroke vertical, kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3
-           <<"东" // dong1, 5 strokes, 1st stroke horizontal, simplified of 東
-           <<"冬" // dong1, 5 strokes, 1st stroke down to left
-           <<"咚" // dong1, 8 strokes, 1st stroke vertical
-           <<"岽" // dong1, 8 strokes, 1st stroke vertical, simplified of 崠
-           <<"東" // dong1, 8 strokes, 1st stroke horizontal, traditional of 东
-           <<"苳" // dong1, 8 strokes, 1st stroke horizontal
-           <<"氡" // dong1, 9 strokes, 1st stroke down to left
-           <<"鸫" // dong1, 10 strokes, 1st stroke horizontal, simplified of 鶇
-           <<"涷" // dong1, 11 strokes
-           <<"蝀" // dong1, 14 strokes
-           <<"鼕" // dong1, 18 strokes
-           <<"鶇" // dong1, 19 strokes, 1st stroke horizontal, traditional of 鸫
-           <<"董" // dong3, 12 strokes
-           <<"懂" // dong3, 15 strokes
-           <<"动" // dong4, 6 strokes, 1st stroke horizontal, simplified of 動
-           <<"冻" // dong4, 7 strokes, 1st stroke down to right, simplified of 凍
-           <<"侗" // dong4, 8 strokes
-           <<"恫" // dong4, 9 strokes, 1st stroke vertical
-           <<"栋" // dong4, 9 strokes, 1st stroke horizontal, simplified of 棟
-           <<"洞" // dong4, 9 strokes, 1st stroke down to right
-           <<"凍" // dong4, 10 strokes, 1st stroke down to right, traditional of 冻
-           <<"胴" // dong4, 10 strokes, 1st stroke down to left
-           <<"動" // dong4, 11 strokes, 1st stroke down to left, traditional of 动
-           <<"崠" // dong1, dong4 (libicu44 sorts as dong4, libicu46 as dong1), 11 strokes, 1st stroke vertical, traditional of 岽
-           <<"硐" // dong4, 11 strokes, 1st stroke horizontal
-           <<"棟" // dong4, 12 strokes, 1st stroke horizontal, traditional of 栋
-           <<"働" // dong4, 13 strokes (Japanese only!)
-           <<"峠" // quia3??? ９ strokes, 1st stroke vertical, (Japanese only! variant of 卡) U+5CE0 kBigFive - kGB0 - kRSUnicode 46.6
-           <<"蘅" // 20 strokes, 1st stroke horizontal, kHanyuPinlu heng2 U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
-           <<"叫" // 5 strokes, 1st stroke vertical, kHanyuPinlu jiao4 U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2
-           <<"君" // 7 strokes, 1st stroke bending, kHanyuPinlu jun1 U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4
-           <<"卡" // 5 strokes, 1st stroke vertical, kHanyuPinlu ka3 U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3
-           <<"李" // 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
-           <<"刘" // 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
-           <<"刘 Lucy" // liu2
-           <<"刘Lucy" // liu2
-           <<"刘利" // liu2 li4
-           <<"刘利军" // liu2 li4 jun1
-           <<"劉" // liu2; 15 strokes, 1st stroke bending, traditional of 刘
-           <<"劉 Lucy" // liu2; traditional
-           <<"劉Lucy" // liu2; traditional
-           <<"劉利" // liu2 li4; traditional
-           <<"劉利軍" // liu2 li4 jun1; traditional
-           <<"柳" // 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
-           <<"柳东" // liu3 dong1; 2nd character 5 strokes, initial stroke horizontal
-           <<"柳冬" // liu3 dong1; 2nd character 5 strokes, initial stroke down to left
-           <<"柳咚" // liu3 dong1; 2nd character 8 strokes, initial stroke vertical
-           <<"柳東" // liu3 dong1; 2nd character traditional, 8 strokes, initial stroke horizontal
-           <<"柳利军" // liu3 li4 jun1; 3rd character 5 strokes, initial stroke vertical
-           <<"柳利軍" // liu3 li4 jun1; 3rd character traditional, 9 strokes, initial stroke vertical
-           <<"宁" // kHanyuPinlu ning2   U+5B81 kBigFive C972 kGB0 3694 kRSUnicode 40.2"
-           <<"威" // 9 strokes, 1st stroke horizontal, kHanyuPinlu wei1 U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
-           <<"张" // 7 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
-           <<"張" // 11 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F35 kBigFive B169 kGB0    - kRSUnicode 57.8"
+           <<"ㄅ" // U+3105 BOPOMOFO LETTER B
+           <<"ㄆ" // U+3106 BOPOMOFO LETTER P
+           <<"ㄇ" // U+3107 BOPOMOFO LETTER M
+           <<"ㄈ" // U+3108 BOPOMOFO LETTER F
+           <<"ㄉ" // U+3109 BOPOMOFO LETTER D
+           <<"东" // ㄉㄨㄥ dong1, 5 strokes, 1st stroke horizontal, simplified of 東 U+4E1C
+           <<"冬" // ㄉㄨㄥ dong1, 5 strokes, 1st stroke down to left U+51AC
+           <<"咚" // ㄉㄨㄥ dong1, 8 strokes, 1st stroke vertical U+549A
+           <<"岽" // ㄉㄨㄥ dong1, 8 strokes, 1st stroke vertical, simplified of 崠 U+5CBD
+           <<"東" // ㄉㄨㄥ dong1, 8 strokes, 1st stroke horizontal, traditional of 东 U+6771
+           <<"苳" // ㄉㄨㄥ dong1, 8 strokes, 1st stroke horizontal U+82F3
+           <<"氡" // ㄉㄨㄥ dong1, 9 strokes, 1st stroke down to left
+           <<"鸫" // ㄉㄨㄥ dong1, 10 strokes, 1st stroke horizontal, simplified of 鶇 U+9E2B
+           <<"崠" // ㄉㄨㄥ dong1, dong4 (libicu44 sorts as dong4, libicu46 as dong1), 11 strokes, 1st stroke vertical, traditional of 岽 U+5D20
+           <<"涷" // ㄉㄨㄥ dong1, 11 strokes U+6DB7
+           <<"蝀" // ㄉㄨㄥ dong1, 14 strokes
+           <<"鼕" // ㄉㄨㄥ dong1, 18 strokes
+           <<"鶇" // ㄉㄨㄥ dong1, 19 strokes, 1st stroke horizontal, traditional of 鸫
+           <<"董" // ㄉㄨㄥˇ dong3, 12 strokes
+           <<"懂" // ㄉㄨㄥˇ dong3, 15 strokes
+           <<"动" // ㄉㄨㄥˋ dong4, 6 strokes, 1st stroke horizontal, simplified of 動
+           <<"冻" // ㄉㄨㄥˋ dong4, 7 strokes, 1st stroke down to right, simplified of 凍
+           <<"侗" // ㄉㄨㄥˋ dong4, 8 strokes
+           <<"恫" // ㄉㄨㄥˋ dong4, 9 strokes, 1st stroke vertical U+606B
+           <<"栋" // ㄉㄨㄥˋ dong4, 9 strokes, 1st stroke horizontal, simplified of 棟 U+680B
+           <<"洞" // ㄉㄨㄥˋ dong4, 9 strokes, 1st stroke down to right U+6D1E
+           <<"凍" // ㄉㄨㄥˋ dong4, 10 strokes, 1st stroke down to right, traditional of 冻 U+51CD
+           <<"胴" // ㄉㄨㄥˋ dong4, 10 strokes, 1st stroke down to left U+80F4
+           <<"動" // ㄉㄨㄥˋ dong4, 11 strokes, 1st stroke down to left, traditional of 动 U+52D5
+           <<"硐" // ㄉㄨㄥˋ dong4, 11 strokes, 1st stroke horizontal U+7850
+           <<"棟" // ㄉㄨㄥˋ dong4, 12 strokes, 1st stroke horizontal, traditional of 栋
+           <<"働" // ㄉㄨㄥˋ dong4, 13 strokes (Japanese only!)
+           <<"ㄊ" // U+310A BOPOMOFO LETTER T
+           <<"ㄋ" // U+310B BOPOMOFO LETTER N
+           <<"宁" // ㄋㄧㄥˊ kHanyuPinlu ning2   U+5B81 kBigFive C972 kGB0 3694 kRSUnicode 40.2"
+           <<"ㄌ" // U+310C BOPOMOFO LETTER L
+           <<"李" // ㄌㄧ 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
+           <<"刘" // ㄌㄧㄡˊ 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
+           <<"刘 Lucy" // ㄌㄧㄡˊ Lucy liu2
+           <<"刘Lucy" // ㄌㄧㄡˊLucy liu2
+           <<"刘利" // ㄌㄧㄡˊㄌㄧˋ liu2 li4
+           <<"刘利军" // ㄌㄧㄡˊㄌㄧˋㄐㄩㄣ liu2 li4 jun1
+           <<"劉" // ㄌㄧㄡˊ liu2; 15 strokes, 1st stroke bending, traditional of 刘
+           <<"劉 Lucy" // ㄌㄧㄡˊ Lucy liu2; traditional
+           <<"劉Lucy" // ㄌㄧㄡˊLucy liu2; traditional
+           <<"劉利" // ㄌㄧㄡˊㄌㄧˋ liu2 li4; traditional
+           <<"劉利軍" // ㄌㄧㄡˊㄌㄧˋㄐㄩㄣ liu2 li4 jun1; traditional
+           <<"柳" // ㄌㄧㄡˇ 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
+           <<"柳东" //  ㄌㄧㄡˇㄉㄨㄥ liu3 dong1; 2nd character 5 strokes, initial stroke horizontal, 2nd character U+4E1C
+           <<"柳冬" //  ㄌㄧㄡˇㄉㄨㄥ liu3 dong1; 2nd character 5 strokes, initial stroke down to left, 2nd character U+51AC
+           <<"柳咚" //  ㄌㄧㄡˇㄉㄨㄥ liu3 dong1; 2nd character 8 strokes, initial stroke vertical, 2nd character U+549A
+           <<"柳東" //  ㄌㄧㄡˇㄉㄨㄥ liu3 dong1; 2nd character traditional, 8 strokes, initial stroke horizontal, U+6771
+           <<"柳利军" // ㄌㄧㄡˇㄌㄧˋㄐㄩㄣ liu3 li4 jun1; 3rd character 5 strokes, initial stroke vertical, 3rd character U+519B
+           <<"柳利軍" // ㄌㄧㄡˇㄌㄧˋㄐㄩㄣ liu3 li4 jun1; 3rd character traditional, 9 strokes, initial stroke vertical, 3rd character U+8ECD
+           <<"ㄍ" // U+310D BOPOMOFO LETTER G
+           <<"峠" // ㄑㄧㄚˇ quia3??? ９ strokes, 1st stroke vertical, (Japanese only! variant of 卡) U+5CE0 kBigFive - kGB0 - kRSUnicode 46.6
+           <<"ㄎ" // U+310E BOPOMOFO LETTER K
+           <<"卡" // ㄎㄚˇ 5 strokes, 1st stroke vertical, kHanyuPinlu ka3 U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3
+           <<"ㄏ" // U+310F BOPOMOFO LETTER H
+           <<"蘅" // ㄏㄥˊ 20 strokes, 1st stroke horizontal, kHanyuPinlu heng2 U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
+           <<"ㄐ" // U+3110 BOPOMOFO LETTER J
+           <<"叫" // ㄐㄧㄠˋ 5 strokes, 1st stroke vertical, kHanyuPinlu jiao4 U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2
+           <<"君" // ㄐㄩㄣ 7 strokes, 1st stroke bending, kHanyuPinlu jun1 U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4
+           <<"ㄑ" // U+3111 BOPOMOFO LETTER Q
+           <<"ㄒ" // U+3112 BOPOMOFO LETTER X
+           <<"ㄓ" // U+3113 BOPOMOFO LETTER ZH
+           <<"张" // ㄓㄤ 7 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
+           <<"張" // ㄓㄤ 11 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F35 kBigFive B169 kGB0    - kRSUnicode 57.8"
+           <<"ㄔ" // U+3114 BOPOMOFO LETTER CH
+           <<"驰" // ㄔˊ chi2, 6 strokes, 1st stroke bending, kHanyuPinlu chi2 U+9A70 kBigFive - kGB0 1959 kRSUnicode 187'.3
+           <<"馳" // ㄔˊ chi2, 13 strokes, 1st stroke vertical, kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3
+           <<"ㄕ" // U+3115 BOPOMOFO LETTER SH
+           <<"ㄖ" // U+3116 BOPOMOFO LETTER R
+           <<"ㄗ" // U+3117 BOPOMOFO LETTER Z
+           <<"ㄘ" // U+3118 BOPOMOFO LETTER C
+           <<"ㄙ" // U+3119 BOPOMOFO LETTER S
+           <<"ㄚ" // U+311A BOPOMOFO LETTER A
+           <<"阿" // ㄚ a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
+           <<"ㄛ" // U+311B BOPOMOFO LETTER O
+           <<"ㄜ" // U+311C BOPOMOFO LETTER E
+           <<"ㄝ" // U+311D BOPOMOFO LETTER EH
+           <<"ㄞ" // U+311E BOPOMOFO LETTER AI
+           <<"ㄟ" // U+311F BOPOMOFO LETTER EI
+           <<"ㄠ" // U+3120 BOPOMOFO LETTER AU
+           <<"ㄡ" // U+3121 BOPOMOFO LETTER OU
+           <<"ㄢ" // U+3122 BOPOMOFO LETTER AN
+           <<"ㄣ" // U+3123 BOPOMOFO LETTER EN
+           <<"ㄤ" // U+3124 BOPOMOFO LETTER ANG
+           <<"ㄥ" // U+3125 BOPOMOFO LETTER ENG
+           <<"ㄦ" // U+3126 BOPOMOFO LETTER ER
+           <<"ㄧ" // U+3127 BOPOMOFO LETTER I
+           <<"ㄨ" // U+3128 BOPOMOFO LETTER U
+           <<"威" // ㄨㄟ 9 strokes, 1st stroke horizontal, kHanyuPinlu wei1 U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
+           <<"ㄩ" // U+3129 BOPOMOFO LETTER IU
+           <<"ㄪ" // U+312A BOPOMOFO LETTER V
+           <<"ㄫ" // U+312B BOPOMOFO LETTER NG
+           <<"ㄬ" // U+312C BOPOMOFO LETTER GN
+           <<"ㄭ" // U+312D BOPOMOFO LETTER IH
            <<"𠮩" // 5 strokes, 1st stroke vertical, kHanyuPinlu - U+20BA9 kBigFive - kGB0- kRSUnicode 30.2"
             )
         <<(QStringList()
            <<"∮"<<"♨"
-           <<"A"<<"A"<<"J"<<"J"<<"J"<<"J"<<"S"<<"S"<<"S"<<"S"
+           <<"A"
+           <<"Ａ"
+           <<"J"
+           <<"Ｊ"
+           <<"J"
+           <<"Ｊ"
+           <<"S"
+           <<"Ｓ"
+           <<"S"
+           <<"Ｓ"
            <<"あ"
            <<"ㄅ"
+           <<"ㄆ"
+           <<"ㄇ"
+           <<"ㄈ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄉ"
+           <<"ㄊ"
+           <<"ㄋ"
+           <<"ㄋ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄌ"
+           <<"ㄍ"
+           <<"ㄍ"
            <<"ㄎ"
-           <<"阿"
-           <<"驰"
-           <<"馳"
-           <<"东"
-           <<"冬"
-           <<"咚"
-           <<"岽"
-           <<"東"
-           <<"苳"
-           <<"氡"
-           <<"鸫"
-           <<"涷"
-           <<"蝀"
-           <<"鼕"
-           <<"鶇"
-           <<"董"
-           <<"懂"
-           <<"动"
-           <<"冻"
-           <<"侗"
-           <<"恫"
-           <<"栋"
-           <<"洞"
-           <<"凍"
-           <<"胴"
-           <<"動"
-           <<"崠"
-           <<"硐"
-           <<"棟"
-           <<"働"
-           <<"峠"
-           <<"蘅"
-           <<"叫"
-           <<"君"
-           <<"卡"
-           <<"李"
-           <<"刘"<<"刘"<<"刘"<<"刘"<<"刘"
-           <<"劉"<<"劉"<<"劉"<<"劉"<<"劉"
-           <<"柳"<<"柳"<<"柳"<<"柳"<<"柳"<<"柳"<<"柳"
-           <<"宁"
-           <<"威"
-           <<"张"
-           <<"張"
+           <<"ㄎ"
+           <<"ㄏ"
+           <<"ㄏ"
+           <<"ㄐ"
+           <<"ㄐ"
+           <<"ㄐ"
+           <<"ㄑ"
+           <<"ㄒ"
+           <<"ㄓ"
+           <<"ㄓ"
+           <<"ㄓ"
+           <<"ㄔ"
+           <<"ㄔ"
+           <<"ㄔ"
+           <<"ㄕ"
+           <<"ㄖ"
+           <<"ㄗ"
+           <<"ㄘ"
+           <<"ㄙ"
+           <<"ㄚ"
+           <<"ㄚ"
+           <<"ㄛ"
+           <<"ㄜ"
+           <<"ㄝ"
+           <<"ㄞ"
+           <<"ㄟ"
+           <<"ㄠ"
+           <<"ㄡ"
+           <<"ㄢ"
+           <<"ㄣ"
+           <<"ㄤ"
+           <<"ㄥ"
+           <<"ㄦ"
+           <<"ㄧ"
+           <<"ㄨ"
+           <<"ㄨ"
+           <<"ㄩ"
+           <<"ㄪ"
+           <<"ㄫ"
+           <<"ㄬ"
+           <<"ㄭ"
            <<"𠮩"
             );
-#endif
+    QTest::newRow("zh_TW@collation=unihan")
+        <<"ja_JP"
+        <<"zh_TW@collation=unihan" // collation=pinyin is default for zh_CN
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"
+           <<"Ａ"
+           <<"john"
+           <<"ｊｏｈｎ"
+           <<"John"
+           <<"Ｊｏｈｎ"
+           <<"saki"
+           <<"ｓａｋｉ"
+           <<"Saki"
+           <<"Ｓａｋｉ"
+           <<"あ"
+           <<"⼀" // 1
+           <<"东" // kRSUnicode 1.4
+           <<"⼁" // 2
+           <<"⼂" // 3
+           <<"⼃" // 4
+           <<"⼄" // 5
+           <<"⼅" // 6
+           <<"⼆" // 7
+           <<"⼇" // 8
+           <<"⼈" // 9
+           <<"侗" // kRSUnicode 9.6
+           <<"働" // kRSUnicode 9.11
+           <<"⼉" // 10
+           <<"⼊" // 11
+           <<"⼋" // 12
+           <<"⼌" // 13
+           <<"⼍" // 14
+           <<"军" // kRSUnicode　14.4
+           <<"⼎" // 15
+           <<"冬" // kRSUnicode 15.3
+           <<"冻" // kRSUnicode 15.5
+           <<"凍" // kRSUnicode 15.8
+           <<"⼏" // 16
+           <<"⼐" // 17
+           <<"⼑" // 18
+           <<"刘" // kRSUnicode 18.4
+           <<"利" // kRSUnicode 18.5
+           <<"劉" // kRSUnicode 18.13
+           <<"⼒" // 19
+           <<"动" // kRSUnicode 19.4
+           <<"動" // kRSUnicode 19.9
+           <<"⼓" // 20
+           <<"⼔" // 21
+           <<"⼕" // 22
+           <<"⼖" // 23
+           <<"⼗" // 24
+           <<"⼘" // 25
+           <<"卡" // kRSUnicode 25.3
+           <<"⼙" // 26
+           <<"⼚" // 27
+           <<"⼛" // 28
+           <<"⼜" // 29
+           <<"⼝" // 30
+           <<"叫" // kRSUnicode 30.2
+           <<"𠮩" // kRSUnicode 30.2
+           <<"君" // kRSUnicode 30.4
+           <<"咚" // kRSUnicode 30.5
+           <<"⼞" // 31
+           <<"⼟" // 32
+           <<"⼠" // 33
+           <<"⼡" // 34
+           <<"⼢" // 35
+           <<"⼣" // 36
+           <<"⼤" // 37
+           <<"⼥" // 38
+           <<"威" // kRSUnicode 38.6
+           <<"⼦" // 39
+           <<"⼧" // 40
+           <<"宁" // kRSUnicode 40.2"
+           <<"⼨" // 41
+           <<"⼩" // 42
+           <<"⼪" // 43
+           <<"⼫" // 44
+           <<"⼬" // 45
+           <<"⼭" // 46
+           <<"岽" // kRSUnicode 46.5
+           <<"峠" // kRSUnicode 46.6
+           <<"崠" // kRSUnicode 46.8
+           <<"⼮" // 47
+           <<"⼯" // 48
+           <<"⼰" // 49
+           <<"⼱" // 50
+           <<"⼲" // 51
+           <<"⼳" // 52
+           <<"⼴" // 53
+           <<"⼵" // 54
+           <<"⼶" // 55
+           <<"⼷" // 56
+           <<"⼸" // 57
+           <<"张" // kRSUnicode 57.4
+           <<"張" // kRSUnicode 57.8"
+           <<"⼹" // 58
+           <<"⼺" // 59
+           <<"⼻" // 60
+           <<"⼼" // 61
+           <<"恫" // kRSUnicode 61.6
+           <<"懂" // kRSUnicode 61.13
+           <<"⼽" // 62
+           <<"⼾" // 63
+           <<"⼿" // 64
+           <<"⽀" // 65
+           <<"⽁" // 66
+           <<"⽂" // 67
+           <<"⽃" // 68
+           <<"⽄" // 69
+           <<"⽅" // 70
+           <<"⽆" // 71
+           <<"⽇" // 72
+           <<"⽈" // 73
+           <<"⽉" // 74
+           <<"⽊" // 75
+           <<"李" // kRSUnicode 75.3
+           <<"東" // kRSUnicode 75.4
+           <<"柳" // kRSUnicode 75.5"
+           <<"栋" // kRSUnicode 75.5
+           <<"⽋" // 76
+           <<"⽌" // 77
+           <<"⽍" // 78
+           <<"⽎" // 79
+           <<"⽏" // 80
+           <<"⽐" // 81
+           <<"⽑" // 82
+           <<"⽒" // 83
+           <<"⽓" // 84
+           <<"氡" // kRSUnicode 84.5
+           <<"⽔" // 85
+           <<"洞" // kRSUnicode 85.6
+           <<"涷" // kRSUnicode 85.8
+           <<"⽕" // 86
+           <<"⽖" // 87
+           <<"⽗" // 88
+           <<"⽘" // 89
+           <<"⽙" // 90
+           <<"⽚" // 91
+           <<"⽛" // 92
+           <<"⽜" // 93
+           <<"⽝" // 94
+           <<"⽞" // 95
+           <<"⽟" // 96
+           <<"⽠" // 97
+           <<"⽡" // 98
+           <<"⽢" // 99
+           <<"⽣" // 100
+           <<"⽤" // 101
+           <<"⽥" // 102
+           <<"⽦" // 103
+           <<"⽧" // 104
+           <<"⽨" // 105
+           <<"⽩" // 106
+           <<"⽪" // 107
+           <<"⽫" // 108
+           <<"⽬" // 109
+           <<"⽭" // 110
+           <<"⽮" // 111
+           <<"⽯" // 112
+           <<"硐" // 112.6
+           <<"⽰" // 113
+           <<"⽱" // 114
+           <<"⽲" // 115
+           <<"⽳" // 116
+           <<"⽴" // 117
+           <<"⽵" // 118
+           <<"⽶" // 119
+           <<"⽷" // 120
+           <<"⽸" // 121
+           <<"⽹" // 122
+           <<"⽺" // 123
+           <<"⽻" // 124
+           <<"⽼" // 125
+           <<"⽽" // 126
+           <<"⽾" // 127
+           <<"⽿" // 128
+           <<"⾀" // 129
+           <<"⾁" // 130
+           <<"胴" // kRSUnicode 130.6
+           <<"⾂" // 131
+           <<"⾃" // 132
+           <<"⾄" // 133
+           <<"⾅" // 134
+           <<"⾆" // 135
+           <<"⾇" // 136
+           <<"⾈" // 137
+           <<"⾉" // 138
+           <<"⾊" // 139
+           <<"⾋" // 140
+           <<"苳" // kRSUnicode 140.5
+           <<"董" // kRSUnicode 140.9
+           <<"蘅" // kRSUnicode 140.16
+           <<"⾌" // 141
+           <<"⾍" // 142
+           <<"蝀" // kRSUnicode 142.8
+           <<"⾎" // 143
+           <<"⾏" // 144
+           <<"⾐" // 145
+           <<"⾑" // 146
+           <<"⾒" // 147
+           <<"⾓" // 148
+           <<"⾔" // 149
+           <<"⾕" // 150
+           <<"⾖" // 151
+           <<"⾗" // 152
+           <<"⾘" // 153
+           <<"⾙" // 154
+           <<"⾚" // 155
+           <<"⾛" // 156
+           <<"⾜" // 157
+           <<"⾝" // 158
+           <<"⾞" // 159
+           <<"軍" // kRSUnicode 159.2
+           <<"⾟" // 160
+           <<"⾠" // 161
+           <<"⾡" // 162
+           <<"⾢" // 163
+           <<"⾣" // 164
+           <<"⾤" // 165
+           <<"⾥" // 166
+           <<"⾦" // 167
+           <<"⾧" // 168
+           <<"⾨" // 169
+           <<"⾩" // 170
+           <<"阿" // kRSUnicode 170.5
+           <<"⾪" // 171
+           <<"⾫" // 172
+           <<"⾬" // 173
+           <<"⾭" // 174
+           <<"⾮" // 175
+           <<"⾯" // 176
+           <<"⾰" // 177
+           <<"⾱" // 178
+           <<"⾲" // 179
+           <<"⾳" // 180
+           <<"⾴" // 181
+           <<"⾵" // 182
+           <<"⾶" // 183
+           <<"⾷" // 184
+           <<"⾸" // 185
+           <<"⾹" // 186
+           <<"⾺" // 187
+           <<"馳" // kRSUnicode 187.3
+           <<"驰" // kRSUnicode 187'.3
+           <<"⾻" // 188
+           <<"⾼" // 189
+           <<"⾽" // 190
+           <<"⾾" // 191
+           <<"⾿" // 192
+           <<"⿀" // 193
+           <<"⿁" // 194
+           <<"⿂" // 195
+           <<"⿃" // 196
+           <<"鶇" // kRSUnicode 196.8
+           <<"鸫" // kRSUnicode 196'.5
+           <<"⿄" // 197
+           <<"⿅" // 198
+           <<"⿆" // 199
+           <<"⿇" // 200
+           <<"⿈" // 201
+           <<"⿉" // 202
+           <<"⿊" // 203
+           <<"⿋" // 204
+           <<"⿌" // 205
+           <<"⿍" // 206
+           <<"⿎" // 207
+           <<"鼕" // kRSUnicode 207.5
+           <<"⿏" // 208
+           <<"⿐" // 209
+           <<"⿑" // 210
+           <<"⿒" // 211
+           <<"⿓" // 212
+           <<"⿔" // 213
+           <<"⿕" // 214
+           <<"龢" // kRSUnicode 214.5
+           <<"𪛖" // kRSUnicode 214.20
+            )
+        <<(QStringList()
+           <<"∮"<<"♨"
+           <<"A"
+           <<"Ａ"
+           <<"J"
+           <<"Ｊ"
+           <<"J"
+           <<"Ｊ"
+           <<"S"
+           <<"Ｓ"
+           <<"S"
+           <<"Ｓ"
+           <<"あ"
+           <<"⼀" // 1
+           <<"⼀" // 1
+           <<"⼁" // 2
+           <<"⼂" // 3
+           <<"⼃" // 4
+           <<"⼄" // 5
+           <<"⼅" // 6
+           <<"⼆" // 7
+           <<"⼇" // 8
+           <<"⼈" // 9
+           <<"⼈" // 9
+           <<"⼈" // 9
+           <<"⼉" // 10
+           <<"⼊" // 11
+           <<"⼋" // 12
+           <<"⼌" // 13
+           <<"⼍" // 14
+           <<"⼍" // 14
+           <<"⼎" // 15
+           <<"⼎" // 15
+           <<"⼎" // 15
+           <<"⼎" // 15
+           <<"⼏" // 16
+           <<"⼐" // 17
+           <<"⼑" // 18
+           <<"⼑" // 18
+           <<"⼑" // 18
+           <<"⼑" // 18
+           <<"⼒" // 19
+           <<"⼒" // 19
+           <<"⼒" // 19
+           <<"⼓" // 20
+           <<"⼔" // 21
+           <<"⼕" // 22
+           <<"⼖" // 23
+           <<"⼗" // 24
+           <<"⼘" // 25
+           <<"⼘" // 25
+           <<"⼙" // 26
+           <<"⼚" // 27
+           <<"⼛" // 28
+           <<"⼜" // 29
+           <<"⼝" // 30
+           <<"⼝" // 30
+           <<"⼝" // 30
+           <<"⼝" // 30
+           <<"⼝" // 30
+           <<"⼞" // 31
+           <<"⼟" // 32
+           <<"⼠" // 33
+           <<"⼡" // 34
+           <<"⼢" // 35
+           <<"⼣" // 36
+           <<"⼤" // 37
+           <<"⼥" // 38
+           <<"⼥" // 38
+           <<"⼦" // 39
+           <<"⼧" // 40
+           <<"⼧" // 40
+           <<"⼨" // 41
+           <<"⼩" // 42
+           <<"⼪" // 43
+           <<"⼫" // 44
+           <<"⼬" // 45
+           <<"⼭" // 46
+           <<"⼭" // 46
+           <<"⼭" // 46
+           <<"⼭" // 46
+           <<"⼮" // 47
+           <<"⼯" // 48
+           <<"⼰" // 49
+           <<"⼱" // 50
+           <<"⼲" // 51
+           <<"⼳" // 52
+           <<"⼴" // 53
+           <<"⼵" // 54
+           <<"⼶" // 55
+           <<"⼷" // 56
+           <<"⼸" // 57
+           <<"⼸" // 57
+           <<"⼸" // 57
+           <<"⼹" // 58
+           <<"⼺" // 59
+           <<"⼻" // 60
+           <<"⼼" // 61
+           <<"⼼" // 61
+           <<"⼼" // 61
+           <<"⼽" // 62
+           <<"⼾" // 63
+           <<"⼿" // 64
+           <<"⽀" // 65
+           <<"⽁" // 66
+           <<"⽂" // 67
+           <<"⽃" // 68
+           <<"⽄" // 69
+           <<"⽅" // 70
+           <<"⽆" // 71
+           <<"⽇" // 72
+           <<"⽈" // 73
+           <<"⽉" // 74
+           <<"⽊" // 75
+           <<"⽊" // 75
+           <<"⽊" // 75
+           <<"⽊" // 75
+           <<"⽊" // 75
+           <<"⽋" // 76
+           <<"⽌" // 77
+           <<"⽍" // 78
+           <<"⽎" // 79
+           <<"⽏" // 80
+           <<"⽐" // 81
+           <<"⽑" // 82
+           <<"⽒" // 83
+           <<"⽓" // 84
+           <<"⽓" // 84
+           <<"⽔" // 85
+           <<"⽔" // 85
+           <<"⽔" // 85
+           <<"⽕" // 86
+           <<"⽖" // 87
+           <<"⽗" // 88
+           <<"⽘" // 89
+           <<"⽙" // 90
+           <<"⽚" // 91
+           <<"⽛" // 92
+           <<"⽜" // 93
+           <<"⽝" // 94
+           <<"⽞" // 95
+           <<"⽟" // 96
+           <<"⽠" // 97
+           <<"⽡" // 98
+           <<"⽢" // 99
+           <<"⽣" // 100
+           <<"⽤" // 101
+           <<"⽥" // 102
+           <<"⽦" // 103
+           <<"⽧" // 104
+           <<"⽨" // 105
+           <<"⽩" // 106
+           <<"⽪" // 107
+           <<"⽫" // 108
+           <<"⽬" // 109
+           <<"⽭" // 110
+           <<"⽮" // 111
+           <<"⽯" // 112
+           <<"⽯" // 112
+           <<"⽰" // 113
+           <<"⽱" // 114
+           <<"⽲" // 115
+           <<"⽳" // 116
+           <<"⽴" // 117
+           <<"⽵" // 118
+           <<"⽶" // 119
+           <<"⽷" // 120
+           <<"⽸" // 121
+           <<"⽹" // 122
+           <<"⽺" // 123
+           <<"⽻" // 124
+           <<"⽼" // 125
+           <<"⽽" // 126
+           <<"⽾" // 127
+           <<"⽿" // 128
+           <<"⾀" // 129
+           <<"⾁" // 130
+           <<"⾁" // 130
+           <<"⾂" // 131
+           <<"⾃" // 132
+           <<"⾄" // 133
+           <<"⾅" // 134
+           <<"⾆" // 135
+           <<"⾇" // 136
+           <<"⾈" // 137
+           <<"⾉" // 138
+           <<"⾊" // 139
+           <<"⾋" // 140
+           <<"⾋" // 140
+           <<"⾋" // 140
+           <<"⾋" // 140
+           <<"⾌" // 141
+           <<"⾍" // 142
+           <<"⾍" // 142
+           <<"⾎" // 143
+           <<"⾏" // 144
+           <<"⾐" // 145
+           <<"⾑" // 146
+           <<"⾒" // 147
+           <<"⾓" // 148
+           <<"⾔" // 149
+           <<"⾕" // 150
+           <<"⾖" // 151
+           <<"⾗" // 152
+           <<"⾘" // 153
+           <<"⾙" // 154
+           <<"⾚" // 155
+           <<"⾛" // 156
+           <<"⾜" // 157
+           <<"⾝" // 158
+           <<"⾞" // 159
+           <<"⾞" // 159
+           <<"⾟" // 160
+           <<"⾠" // 161
+           <<"⾡" // 162
+           <<"⾢" // 163
+           <<"⾣" // 164
+           <<"⾤" // 165
+           <<"⾥" // 166
+           <<"⾦" // 167
+           <<"⾧" // 168
+           <<"⾨" // 169
+           <<"⾩" // 170
+           <<"⾩" // 170
+           <<"⾪" // 171
+           <<"⾫" // 172
+           <<"⾬" // 173
+           <<"⾭" // 174
+           <<"⾮" // 175
+           <<"⾯" // 176
+           <<"⾰" // 177
+           <<"⾱" // 178
+           <<"⾲" // 179
+           <<"⾳" // 180
+           <<"⾴" // 181
+           <<"⾵" // 182
+           <<"⾶" // 183
+           <<"⾷" // 184
+           <<"⾸" // 185
+           <<"⾹" // 186
+           <<"⾺" // 187
+           <<"⾺" // 187
+           <<"⾺" // 187
+           <<"⾻" // 188
+           <<"⾼" // 189
+           <<"⾽" // 190
+           <<"⾾" // 191
+           <<"⾿" // 192
+           <<"⿀" // 193
+           <<"⿁" // 194
+           <<"⿂" // 195
+           <<"⿃" // 196
+           <<"⿃" // 196
+           <<"⿃" // 196
+           <<"⿄" // 197
+           <<"⿅" // 198
+           <<"⿆" // 199
+           <<"⿇" // 200
+           <<"⿈" // 201
+           <<"⿉" // 202
+           <<"⿊" // 203
+           <<"⿋" // 204
+           <<"⿌" // 205
+           <<"⿍" // 206
+           <<"⿎" // 207
+           <<"⿎" // 207
+           <<"⿏" // 208
+           <<"⿐" // 209
+           <<"⿑" // 210
+           <<"⿒" // 211
+           <<"⿓" // 212
+           <<"⿔" // 213
+           <<"⿕" // 214
+           <<"⿕" // 214
+           <<"⿕" // 214
+            );
 }
 
 void Ft_Locales::testMLocaleIndexBucket()

@@ -3068,7 +3068,13 @@ QStringList MLocale::exemplarCharactersIndex() const
     Q_D(const MLocale);
     QString collationLocaleName = d->categoryName(MLcCollate);
     QStringList exemplarCharactersIndex;
-
+    QString charStr;
+    if (collationLocaleName.contains(QLatin1String("collation=unihan"))) {
+        charStr = QString::fromUtf8("⼀ ⼁ ⼂ ⼃ ⼄ ⼅ ⼆ ⼇ ⼈ ⼉ ⼊ ⼋ ⼌ ⼍ ⼎ ⼏ ⼐ ⼑ ⼒ ⼓ ⼔ ⼕ ⼖ ⼗ ⼘ ⼙ ⼚ ⼛ ⼜ ⼝ ⼞ ⼟ ⼠ ⼡ ⼢ ⼣ ⼤ ⼥ ⼦ ⼧ ⼨ ⼩ ⼪ ⼫ ⼬ ⼭ ⼮ ⼯ ⼰ ⼱ ⼲ ⼳ ⼴ ⼵ ⼶ ⼷ ⼸ ⼹ ⼺ ⼻ ⼼ ⼽ ⼾ ⼿ ⽀ ⽁ ⽂ ⽃ ⽄ ⽅ ⽆ ⽇ ⽈ ⽉ ⽊ ⽋ ⽌ ⽍ ⽎ ⽏ ⽐ ⽑ ⽒ ⽓ ⽔ ⽕ ⽖ ⽗ ⽘ ⽙ ⽚ ⽛ ⽜ ⽝ ⽞ ⽟ ⽠ ⽡ ⽢ ⽣ ⽤ ⽥ ⽦ ⽧ ⽨ ⽩ ⽪ ⽫ ⽬ ⽭ ⽮ ⽯ ⽰ ⽱ ⽲ ⽳ ⽴ ⽵ ⽶ ⽷ ⽸ ⽹ ⽺ ⽻ ⽼ ⽽ ⽾ ⽿ ⾀ ⾁ ⾂ ⾃ ⾄ ⾅ ⾆ ⾇ ⾈ ⾉ ⾊ ⾋ ⾌ ⾍ ⾎ ⾏ ⾐ ⾑ ⾒ ⾓ ⾔ ⾕ ⾖ ⾗ ⾘ ⾙ ⾚ ⾛ ⾜ ⾝ ⾞ ⾟ ⾠ ⾡ ⾢ ⾣ ⾤ ⾥ ⾦ ⾧ ⾨ ⾩ ⾪ ⾫ ⾬ ⾭ ⾮ ⾯ ⾰ ⾱ ⾲ ⾳ ⾴ ⾵ ⾶ ⾷ ⾸ ⾹ ⾺ ⾻ ⾼ ⾽ ⾾ ⾿ ⿀ ⿁ ⿂ ⿃ ⿄ ⿅ ⿆ ⿇ ⿈ ⿉ ⿊ ⿋ ⿌ ⿍ ⿎ ⿏ ⿐ ⿑ ⿒ ⿓ ⿔ ⿕");
+        // add a dummy bucket at the end 𪛖 is the last character in unihan order:
+        charStr += QString::fromUtf8(" 𪛖");
+        return charStr.split(QLatin1String(" "),QString::SkipEmptyParts);
+    }
     // special treatment for Chinese locales because these have the
     // collation options "stroke" and "pinyin" which require different
     // index buckets.  But libicu currently supports only one index
@@ -3077,6 +3083,10 @@ QStringList MLocale::exemplarCharactersIndex() const
     // set and force the use of the index bucket list from the zh_CN
     // locale if collation=pinyin is set:
     if(collationLocaleName.startsWith(QLatin1String("zh"))) {
+        if(collationLocaleName.contains(QLatin1String("collation=zhuyin"))) {
+            charStr = QString::fromUtf8("ㄅ ㄆ ㄇ ㄈ ㄉ ㄊ ㄋ ㄌ ㄍ ㄎ ㄏ ㄐ ㄑ ㄒ ㄓ ㄔ ㄕ ㄖ ㄗ ㄘ ㄙ ㄚ ㄛ ㄜ ㄝ ㄞ ㄟ ㄠ ㄡ ㄢ ㄣ ㄤ ㄥ ㄦ ㄧ ㄨ ㄩ ㄪ ㄫ ㄬ ㄭ");
+            return charStr.split(QLatin1String(" "),QString::SkipEmptyParts);
+        }
         if(collationLocaleName.contains(QLatin1String("collation=stroke")))
             collationLocaleName = QLatin1String("zh_TW");
         if(collationLocaleName.contains(QLatin1String("collation=pinyin")))
@@ -3106,7 +3116,7 @@ QStringList MLocale::exemplarCharactersIndex() const
         return exemplarCharactersIndex;
     }
 
-    QString charStr = QString::fromUtf16(val, len);
+    charStr = QString::fromUtf16(val, len);
     ures_close(res);
     charStr.remove('[');
     charStr.remove(']');
@@ -3123,7 +3133,16 @@ QStringList MLocale::exemplarCharactersIndex() const
     if (exemplarCharactersIndex.last() == QString::fromUtf8("ᄒ")) {
         exemplarCharactersIndex << QString::fromUtf8("あ"); // to get 학,  學, ... ᄒ bucket
     }
-
+    // Special hack for the last pinyin bucket:
+    if (exemplarCharactersIndex.last() == QString::fromUtf8("Z") &&
+        (collationLocaleName.contains(QLatin1String("collation=pinyin"))
+         || collationLocaleName.startsWith(QLatin1String("zh_CN"))
+         || collationLocaleName.startsWith(QLatin1String("zh_SG")))
+        ) {
+        // to get all characters with pinyin starting with z
+        // (last one is 蓙) into the Z bucket
+        exemplarCharactersIndex << QString::fromUtf8("あ");
+    }
     return exemplarCharactersIndex;
 }
 #endif
@@ -3134,6 +3153,10 @@ QString MLocale::indexBucket(const QString &str, const QStringList &buckets, con
     Q_D(const MLocale);
     if (str.isEmpty())
         return str;
+    if (str.startsWith(QString::fromUtf8("𪛖")) && buckets.last() == QString::fromUtf8("𪛖")) {
+        // 𪛖 is the last character in unihan order, should go into the ⿕ bucket
+        return QString::fromUtf8("⿕");
+    }
     if (str.startsWith(QString::fromUtf8("ン")) && buckets.last() == QString::fromUtf8("ん")) {
         // ン sorts after ん but should go into the ん bucket:
         return QString::fromUtf8("ん");
@@ -3153,7 +3176,10 @@ QString MLocale::indexBucket(const QString &str, const QStringList &buckets, con
                 return firstCharacter;
             }
             else {
-                return buckets[i-1];
+                if(buckets.first() == QString::fromUtf8("一")) // stroke count sorting
+                    return QString::number(i);
+                else
+                    return buckets[i-1];
             }
         }
     }
