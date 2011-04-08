@@ -1,9 +1,16 @@
-libmeegotouch (0.21.4~1) unstable; urgency=low
+libmeegotouch (0.21.4-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#244918 - Red square box icon is displaying for widgets gallery in the launcher view.
+  * Fixes: NB#243067
+  * Fixes: NB#244069 - <MemLeak> bubblepage.cpp of widgetsgallery
+  * Fixes: NB#228944 - Sharing, Image size dialog in Publish to service UI keeps displays Latin Number instead of Hindi number in Arabic language
+  * Fixes: NB#241928 - ugly behavior of MEditorToolbar during rotation without vkb
+  * Fixes: NB#228944 - Sharing, Image size dialog in Publish to service UI keeps displays Latin Number instead of Hindi number in Arabic language
   * Fixes: NB#238350 - CMCC (China Mobile) SIM application name is not shown correctly
+  * Fixes: NB#244746
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 07 Apr 2011 11:13:32 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 08 Apr 2011 11:47:15 +0200
 
 libmeegotouch (0.21.3-1) unstable; urgency=low
 
