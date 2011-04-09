@@ -123,7 +123,7 @@ bool MLocationDatabasePrivate::loadCities()
     QFile file( path + "cities.xml" );
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug( "loadCitiess file open failed" );
+        qDebug( "loadCities file open failed" );
         return false;
     }
 
