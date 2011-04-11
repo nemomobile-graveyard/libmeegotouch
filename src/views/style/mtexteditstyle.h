@@ -44,6 +44,9 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int,          pasteFailedDuration,      PasteFailedDuration)
     M_STYLE_ATTRIBUTE(int,          maskingDelay,             MaskingDelay)
     M_STYLE_ATTRIBUTE(int,          cursorWidth,              CursorWidth)
+    M_STYLE_ATTRIBUTE(qreal,        focusedPromptOpacity,     FocusedPromptOpacity)
+    M_STYLE_ATTRIBUTE(qreal,        unfocusedPromptOpacity,   UnfocusedPromptOpacity)
+    M_STYLE_ATTRIBUTE(int,          focusTransitionDuration,  FocusTransitionDuration)
 
     /*!
         \property MTextEditStyle::pressBoundaryFeedback

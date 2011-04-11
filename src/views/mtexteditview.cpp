@@ -101,7 +101,9 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       infoBanner(0),
       editActive(false),
       hideInfoBannerTimer(new QTimer(this)),
-      focusReleaseExpected(false)
+      focusReleaseExpected(false),
+      currentPromptOpacity(0.2),
+      promptFocusAnimation(this, "promptOpacity")
 {
     // copy text options from actual document to prompt
     QTextOption option = document()->defaultTextOption();
@@ -555,6 +557,19 @@ void MTextEditViewPrivate::hideEditorToolbar()
     editorToolbar.reset();
 }
 
+qreal MTextEditViewPrivate::promptOpacity() const
+{
+    return currentPromptOpacity;
+}
+
+void MTextEditViewPrivate::setPromptOpacity(qreal opacity)
+{
+    Q_Q(MTextEditView);
+
+    currentPromptOpacity = opacity;
+    q->doUpdate();
+}
+
 void MTextEditViewPrivate::showMagnifier()
 {
     Q_Q(MTextEditView);
@@ -731,6 +746,11 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
             QString maskedText(newText.length(), maskCharacter);
             maskCursor.insertText(maskedText);
         }
+    }
+
+    if (promptFocusAnimation.state() == QAbstractAnimation::Running) {
+        promptFocusAnimation.stop();
+        setPromptOpacity(focused ? q->style()->focusedPromptOpacity() : q->style()->unfocusedPromptOpacity());
     }
 
     q->doUpdate();
@@ -1049,6 +1069,26 @@ QRect MTextEditViewPrivate::selectionLineRectangle(bool first)
     }
 }
 
+void MTextEditViewPrivate::playFocusAnimation(QAbstractAnimation::Direction direction)
+{
+    if (promptTextDocument->isEmpty() || !document()->isEmpty()) {
+        promptFocusAnimation.stop();
+        return;
+    }
+
+    promptFocusAnimation.setDirection(direction);
+    switch (promptFocusAnimation.state()) {
+    case QAbstractAnimation::Stopped:
+        promptFocusAnimation.start();
+        break;
+    case QAbstractAnimation::Paused:
+        promptFocusAnimation.resume();
+        break;
+    case QAbstractAnimation::Running:
+        break;
+    }
+}
+
 void MTextEditViewPrivate::updateEditorToolbarPosition()
 {
     if (!editorToolbar || !editorToolbar->isAppeared()) {
@@ -1199,7 +1239,10 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         QColor promptColor = s->promptColor();
         paintContext.palette.setColor(QPalette::Text, promptColor);
 
+        qreal opacity = painter->opacity();
+        painter->setOpacity(d->currentPromptOpacity);
         d->promptDocument()->documentLayout()->draw(painter, paintContext);
+        painter->setOpacity(opacity);
 
     } else {
         // normal painting
@@ -1658,7 +1701,7 @@ void MTextEditView::informPasteFailed()
 void MTextEditView::handleLongPress()
 {
     Q_D(MTextEditView);
-    
+
     if ((model()->echo() != MTextEditModel::Normal
          && model()->echo() != MTextEditModel::PasswordEchoOnEdit)
         || style()->disableMagnifier()
@@ -1741,6 +1784,9 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
     d->focusReleaseExpected = reason == Qt::MouseFocusReason;
 
     d->focused = true;
+
+    d->playFocusAnimation(QAbstractAnimation::Forward);
+
     doUpdate();
 }
 
@@ -1763,6 +1809,9 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
     }
     d->focused = false;
     d->editActive = false;
+
+    d->playFocusAnimation(QAbstractAnimation::Backward);
+
     doUpdate();
 }
 
@@ -1812,6 +1861,11 @@ void MTextEditView::applyStyle()
 
     // font etc might affect size
     d->checkSize();
+
+    d->promptFocusAnimation.setDuration(s->focusTransitionDuration());
+    d->promptFocusAnimation.setStartValue(s->unfocusedPromptOpacity());
+    d->promptFocusAnimation.setEndValue(s->focusedPromptOpacity());
+    d->setPromptOpacity(d->focused ? s->focusedPromptOpacity() : s->unfocusedPromptOpacity());
 
     MWidgetView::applyStyle();
 }

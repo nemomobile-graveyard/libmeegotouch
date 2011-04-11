@@ -24,6 +24,7 @@
 #include <QTextCharFormat>
 #include <QAbstractTextDocumentLayout>
 #include <QPointer>
+#include <QPropertyAnimation>
 
 #include "mtexteditview.h"
 
@@ -40,6 +41,8 @@ class MTextEditViewPrivate : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PUBLIC(MTextEditView)
+
+    Q_PROPERTY(qreal promptOpacity READ promptOpacity WRITE setPromptOpacity)
 
 public:
     MTextEditViewPrivate(MTextEdit *controller, MTextEditView *q);
@@ -70,6 +73,9 @@ public:
 
     void showEditorToolbar();
     void hideEditorToolbar();
+
+    qreal promptOpacity() const;
+    void setPromptOpacity(qreal opacity);
 
 protected slots:
     void scrolling();
@@ -109,6 +115,8 @@ private:
     //! \return rectangle in local coordinates, which is not obscured/clipped
     //!         by pannable viewports or navigation controls
     QRect visibleArea() const;
+
+    void playFocusAnimation(QAbstractAnimation::Direction direction);
 
 protected:
     MTextEditView *q_ptr;
@@ -159,6 +167,9 @@ protected:
     bool oldItemSendsScenePositionChanges;
 
     bool focusReleaseExpected;
+
+    qreal currentPromptOpacity;
+    QPropertyAnimation promptFocusAnimation;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;
