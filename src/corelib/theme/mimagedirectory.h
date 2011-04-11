@@ -119,6 +119,8 @@ private:
 
     void fillCacheEntry(PixmapCacheEntry *cacheEntry, QImage &image, const QSize &size);
 
+    void deleteCacheFile();
+
 #ifdef  Q_WS_X11
     bool convertToX11;
 #endif

@@ -154,10 +154,7 @@ void ImageResource::applyDebugColors(QImage *image)
 
 ImageResource::~ImageResource()
 {
-    if (cacheFile) {
-        cacheFile->unmap(buffer);
-        delete cacheFile;
-    }
+    deleteCacheFile();
 }
 
 void ImageResource::releasePixmap(const QSize &size)
@@ -256,6 +253,8 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
             stream >> imageFormat;
             meta.close();
 
+            deleteCacheFile();
+
             cacheFile = new QFile(cacheFileName);
             if (!cacheFile->open(QFile::ReadOnly)) {
                 delete cacheFile;
@@ -263,6 +262,7 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
                 return QImage();
             }
 
+            Q_ASSERT(!buffer);
             buffer = cacheFile->map(0, cacheFile->size());
             QImage image((const uchar*)buffer, imageSize.width(), imageSize.height(), (QImage::Format)imageFormat);
 
@@ -385,6 +385,16 @@ void ImageResource::fillCacheEntry(PixmapCacheEntry *cacheEntry, QImage &image, 
 #else
     MGraphicsSystemHelper::pixmapFromImage(cacheEntry, image, uniqueKey(), size);
 #endif
+}
+
+void ImageResource::deleteCacheFile()
+{
+    if (cacheFile) {
+        cacheFile->unmap(buffer);
+        buffer = 0;
+        delete cacheFile;
+        cacheFile = 0;
+    }
 }
 
 bool ImageResource::shouldBeCached()
