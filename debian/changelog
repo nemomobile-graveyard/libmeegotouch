@@ -1,6 +1,7 @@
 libmeegotouch (0.21.5~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#236960 - Audio and vibration feedbacks are not coming for the buttons in Input Feedback page.
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 08 Apr 2011 11:49:03 +0200
 
