@@ -169,8 +169,6 @@ public:
 
       The sheet will appear on its own stand-alone MWindow and separate scene.
       It will be fullscreen, providing no status bar.
-
-      User won't be able to minimize or move it away.
      */
     void appearSystemwide(MSceneWindow::DeletionPolicy policy);
 
