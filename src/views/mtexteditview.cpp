@@ -1243,14 +1243,13 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         painter->setOpacity(d->currentPromptOpacity);
         d->promptDocument()->documentLayout()->draw(painter, paintContext);
         painter->setOpacity(opacity);
-
-    } else {
-        // normal painting
-        QAbstractTextDocumentLayout::PaintContext paintContext = d->paintContext();
-        paintContext.clip = option->exposedRect;
-        paintContext.clip.translate(-dx, -dy);
-        d->activeDocument()->documentLayout()->draw(painter, paintContext);
     }
+
+    // normal painting, also draw cursor when prompt is visible
+    QAbstractTextDocumentLayout::PaintContext paintContext = d->paintContext();
+    paintContext.clip = option->exposedRect;
+    paintContext.clip.translate(-dx, -dy);
+    d->activeDocument()->documentLayout()->draw(painter, paintContext);
 
     painter->restore();
     // mTimestamp("MTextEditView", QString("end text=%1").arg(d->document()->toPlainText()));
@@ -1850,7 +1849,7 @@ void MTextEditView::applyStyle()
     d->document()->documentLayout()->setProperty(CursorWidthProperty,
                                                  s->cursorWidth());
     d->promptTextDocument->documentLayout()->setProperty(CursorWidthProperty,
-                                                         s->cursorWidth());
+                                                         0);
 
     if (d->maskedTextDocument != 0) {
         d->maskedTextDocument->setDefaultFont(s->font());
