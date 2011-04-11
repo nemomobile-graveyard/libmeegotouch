@@ -184,10 +184,6 @@ bool MStatusBarView::updateSharedPixmapHandleFromPropertyWindow(const Window &wi
 }
 #endif //Q_WS_X11
 
-namespace{
-    const qreal SharedPixmapHeight = 36;
-}
-
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
     controller(controller),
@@ -300,16 +296,16 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
         return;
     }
 
-    QRectF sourceRect;
-
-    sourceRect.setX(0);
-    sourceRect.setY(controller->sceneManager()->orientation() == M::Landscape ? 0 : SharedPixmapHeight);
-    sourceRect.setWidth(size().width());
-    sourceRect.setHeight(SharedPixmapHeight);
-
     // provider can die under mysterious circumstances so sharedPixmap can be invalid
     // Catch the bad_alloc in case the shared pixmap have been deleted without PropertyDelete notify
     QT_TRY {
+        QRectF sourceRect;
+        sourceRect.setX(0);
+        sourceRect.setY(controller->sceneManager()->orientation() == M::Landscape ? 0 : sharedPixmap.height()/2);
+        sourceRect.setWidth(size().width());
+        sourceRect.setHeight(sharedPixmap.height()/2);
+
+        painter->fillRect(QRectF(QPointF(0.0, 0.0), size()), Qt::black);
         painter->save();
         painter->setClipRect(0, 0, size().width(), sharedPixmap.height()/2);
         painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
@@ -323,7 +319,7 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     if (pressDown) {
         painter->save();
         painter->setOpacity(style()->pressDimFactor());
-        painter->fillRect(QRectF(QPointF(0.0, 0.0), sourceRect.size()), Qt::black);
+        painter->fillRect(QRectF(QPointF(0.0, 0.0), size()), Qt::black);
         painter->restore();
     }
 
