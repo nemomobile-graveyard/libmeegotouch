@@ -432,6 +432,7 @@ protected:
     virtual bool event(QEvent *e);
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     virtual void gestureEvent(QGestureEvent *event);
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     //! \reimp_end
 
 private:
