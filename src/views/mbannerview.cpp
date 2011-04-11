@@ -448,7 +448,7 @@ void MBannerViewPrivate::layoutFullEventBanner()
         gridBanner->addItem(layoutStamp, 2, 1,Qt::AlignTop);
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
-        bannerTimeStamp()->setStyleName("FullEventBannerTimeStamp");
+        bannerTimeStamp()->setStyleName("FullEventBannerTimeStampIsolated");
         gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
     } else {
         prefixTimeStamp()->setVisible(false);
