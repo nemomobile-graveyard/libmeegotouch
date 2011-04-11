@@ -468,13 +468,13 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
     gridBanner = createGrid();
 
     if (!q->model()->iconID().isEmpty()) {
-        icon()->setStyleName("PrivateBannerIcon");
+        icon()->setStyleName("PrivateEventBannerIcon");
         icon()->setVisible(true);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     }
 
     if (!q->model()->pixmap().isNull()) {
-        pixmap()->setStyleName("PrivateBannerIcon");
+        pixmap()->setStyleName("PrivateEventBannerIcon");
         if (!q->model()->iconID().isEmpty())
             icon()->setVisible(false);
         pixmap()->setVisible(true);
@@ -482,7 +482,7 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
     }
 
     if (!q->model()->title().isEmpty()) {
-        title()->setStyleName("PrivateBannerTitle");
+        title()->setStyleName("PrivateEventBannerTitle");
         title()->setVisible(true);
         gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
     }
@@ -495,10 +495,10 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
         layoutStamp->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
-        prefixTimeStamp()->setStyleName("PrivateBannerPrefixTimeStamp");
+        prefixTimeStamp()->setStyleName("PrivateEventBannerPrefixTimeStamp");
         prefixTimeStamp()->setVisible(true);
         prefixTimeStamp()->setAlignment(Qt::AlignTop);
-        bannerTimeStamp()->setStyleName("PrivateBannerTimeStamp");
+        bannerTimeStamp()->setStyleName("PrivateEventBannerTimeStamp");
         bannerTimeStamp()->setVisible(true);
         bannerTimeStamp()->setAlignment(Qt::AlignTop);
         layoutStamp->addItem(prefixTimeStamp());
@@ -507,7 +507,7 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
         gridBanner->addItem(layoutStamp, 1, 1,Qt::AlignTop);
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
-        bannerTimeStamp()->setStyleName("PrivateBannerTimeStamp");
+        bannerTimeStamp()->setStyleName("PrivateEventBannerTimeStamp");
         gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
     } else {
         prefixTimeStamp()->setVisible(false);
