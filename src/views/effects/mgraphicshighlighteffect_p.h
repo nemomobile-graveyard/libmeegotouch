@@ -43,7 +43,7 @@ public:
 
     void applyStyle();
 
-    void drawComposedImage(QPoint offset, QPainter *painter, const QPixmap *pixmap);
+    void drawComposedImage(QPainter *painter);
 
 private:
     Q_DECLARE_PUBLIC(MGraphicsHighlightEffect)
@@ -52,12 +52,13 @@ private:
     QColor highlightColor;
     qreal strength;
 
-    QImage *composed;
+    QImage composed;
     QPainter *composer;
 
     QSequentialAnimationGroup *animationGroup;
-    QPauseAnimation *delayAnimation;
-    QPropertyAnimation *strengthAnimation;
+
+    QPixmap pixmapCached;
+    QPoint offsetCached;
 };
 
 #endif // MGRAPHICSWIDGETOVERLAYEFFECT_P_H

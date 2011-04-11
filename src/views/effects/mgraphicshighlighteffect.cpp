@@ -33,17 +33,13 @@ MGraphicsHighlightEffectPrivate::MGraphicsHighlightEffectPrivate()
     : q_ptr(NULL),
     highlightColor(Qt::black),
     strength(0.5),
-    composed(NULL),
     composer(NULL),
-    animationGroup(NULL),
-    delayAnimation(NULL),
-    strengthAnimation(NULL)
+    animationGroup(NULL)
 {
 }
 
 MGraphicsHighlightEffectPrivate::~MGraphicsHighlightEffectPrivate()
 {
-    delete composed;
     delete composer;
 }
 
@@ -54,55 +50,42 @@ void MGraphicsHighlightEffectPrivate::applyStyle()
     highlightColor = q->style()->color();
     strength = q->style()->startStrength();
 
-    if (!delayAnimation)
-        delayAnimation = new QPauseAnimation(q);
+    if (!animationGroup)
+        animationGroup = new QSequentialAnimationGroup(q);
 
+    animationGroup->clear();
+
+    QPauseAnimation *delayAnimation = new QPauseAnimation(animationGroup);
     delayAnimation->setDuration(q->style()->delay());
 
-    if (!strengthAnimation) {
-        strengthAnimation = new QPropertyAnimation(q);
-        strengthAnimation->setPropertyName("strength");
-        strengthAnimation->setTargetObject(q);
-    }
-
+    QPropertyAnimation *strengthAnimation = new QPropertyAnimation(q, "strength", animationGroup);
     strengthAnimation->setDuration(q->style()->duration());
     strengthAnimation->setStartValue(q->style()->startStrength());
     strengthAnimation->setEndValue(q->style()->endStrength());
 
-    if (!animationGroup) {
-        animationGroup = new QSequentialAnimationGroup(q);
-        animationGroup->addAnimation(delayAnimation);
-        animationGroup->addAnimation(strengthAnimation);
-        animationGroup->setLoopCount(1);
-    }
+
+    animationGroup->addAnimation(delayAnimation);
+    animationGroup->addAnimation(strengthAnimation);
+    animationGroup->setLoopCount(1);
 
     animationGroup->start();
 }
 
-void MGraphicsHighlightEffectPrivate::drawComposedImage(QPoint offset, QPainter *painter, const QPixmap *pixmap)
+void MGraphicsHighlightEffectPrivate::drawComposedImage(QPainter *painter)
 {
-    if (!composed || (pixmap->size().width() != composed->size().width() ||
-                      pixmap->size().height() != composed->size().height())) {
-        if (composed)
-            delete composed;
-        composed = new QImage(pixmap->size(), QImage::Format_ARGB32_Premultiplied);
-    }
+    composed = pixmapCached.toImage();
 
     if (!composer)
         composer = new QPainter();
 
-    composed->fill(0);
-    if (composer->begin(composed)) {
-        composer->setCompositionMode(QPainter::CompositionMode_Source);
-        composer->drawPixmap(QRect(QPoint(0, 0), pixmap->size()), *pixmap);
+    if (composer->begin(&composed)) {
         composer->setCompositionMode(QPainter::CompositionMode_SourceAtop);
         composer->setOpacity(strength);
-        composer->fillRect(QRect(QPoint(0, 0), pixmap->size()), highlightColor);
-        composer->setOpacity(1.0);
+        composer->fillRect(composed.rect(), highlightColor);
         composer->end();
     }
 
-    painter->drawImage(offset, *composed);
+    painter->drawImage(offsetCached, composed);
 }
 
 MGraphicsHighlightEffect::MGraphicsHighlightEffect(QObject *parent)
@@ -148,15 +131,15 @@ void MGraphicsHighlightEffect::draw(QPainter *painter)
 {
     Q_D(MGraphicsHighlightEffect);
 
-    QPoint offset;
-    QPixmap pixmap;
+    if (d->pixmapCached.isNull())
+        d->pixmapCached = sourcePixmap(Qt::LogicalCoordinates, &d->offsetCached, QGraphicsEffect::NoPad);
 
-    if (sourceIsPixmap()) {
-        pixmap = sourcePixmap(Qt::LogicalCoordinates, &offset, QGraphicsEffect::PadToEffectiveBoundingRect);
-    } else {
-        pixmap = sourcePixmap(Qt::DeviceCoordinates, &offset, QGraphicsEffect::PadToEffectiveBoundingRect);
-        painter->setWorldTransform(QTransform());
-    }
+    d->drawComposedImage(painter);
+}
 
-    d->drawComposedImage(offset, painter, &pixmap);
+void MGraphicsHighlightEffect::sourceChanged(ChangeFlags flags)
+{
+    Q_UNUSED(flags);
+    Q_D(MGraphicsHighlightEffect);
+    d->pixmapCached = QPixmap();
 }
