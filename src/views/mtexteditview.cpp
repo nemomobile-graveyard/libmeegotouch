@@ -614,8 +614,8 @@ void MTextEditViewPrivate::hideMagnifier()
             disconnect(&textWidgetPtr->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(updateMagnifierPosition()));
         }
 
-        magnifier->disappear();
-        magnifier.reset();
+        magnifier->disappear(MTextMagnifier::DestroyWhenDone);
+        (void)magnifier.take(); // Set pointer to null without destroying.
     }
 }
 
@@ -979,7 +979,7 @@ void MTextEditViewPrivate::updateMagnifierPosition()
 void MTextEditViewPrivate::makeMagnifierDisappear()
 {
     if (magnifier) {
-        magnifier->disappear();
+        magnifier->disappear(MTextMagnifier::KeepWhenDone);
     }
 }
 
@@ -1182,6 +1182,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
                                             -s->paddingBottom()));
     clipping = clipping.intersected(option->exposedRect);
     painter->setClipRect(clipping, Qt::IntersectClip);
+
     // If text does not fit inside widget, it may have to be scrolled
     const qreal dx = -d->hscroll + paddingLeft;
     const qreal dy = -d->vscroll + s->paddingTop();

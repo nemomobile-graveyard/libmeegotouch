@@ -23,6 +23,8 @@
 #include "mtextmagnifierstyle.h"
 #include "mtopleveloverlay.h"
 
+#include <QPropertyAnimation>
+
 //! \internal
 
 /*! \brief Magnifier widget to magnify text.
@@ -40,6 +42,11 @@ class MTextMagnifier : protected MStylableWidget
 {
     Q_OBJECT
 public:
+    enum DeletionPolicy {
+        KeepWhenDone,    //!< Magnifier is kept alive after being disappeared.
+        DestroyWhenDone  //!< Magnifier is destroyed after being disappeared.
+    };
+
     /*! \brief Constructs magnifier that magnifies \a sourceWidget.
      *  \param sourceWidget The contents of this widget is magnified.
      *  \param keepVisibleSize Size of centered rectangle in magnifier
@@ -54,7 +61,8 @@ public:
     void appear();
 
     //! Hide magnifier.
-    void disappear();
+    //! \param deletionPolicy Whether to destroy magnifier after animation or not.
+    void disappear(DeletionPolicy deletionPolicy);
 
     //! Set magnified position in source item coordinates.
     //! Magnifier is drawn at this position unless offset is defined in style.
@@ -78,11 +86,20 @@ private:
     void prepareOffscreenSurface(const QSize &size);
     QSizeF frameSize() const;
     void updateMagnifierOffset();
+    void setupAnimationParameters();
 
+private slots:
+    void handleScaleUpAnimationFinished();
+
+private:
     const MWidget &sourceWidget;
     const QSizeF keepVisibleSize;
     QPointF offsetFromCenter;
     QScopedPointer<QPixmap> offscreenSurface;
+
+    DeletionPolicy deletionPolicy;
+
+    QPropertyAnimation scaleUpAnimation;
 
     MTopLevelOverlay overlay;
 

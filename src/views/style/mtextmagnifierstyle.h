@@ -21,6 +21,7 @@
 #define MTEXTMAGNIFIERSTYLE_H
 
 #include "mwidgetstyle.h"
+#include <QEasingCurve>
 
 //! \internal
 class MTextMagnifierStyle : public MWidgetStyle
@@ -39,6 +40,12 @@ class MTextMagnifierStyle : public MWidgetStyle
 
     //! Defines offset from magnified point to actual drawn magnifier.
     M_STYLE_ATTRIBUTE(QPointF, visualOffset, VisualOffset)
+
+    //! Easing curve for appearance animation
+    M_STYLE_ATTRIBUTE(QEasingCurve, appearanceEasingCurve, AppearanceEasingCurve)
+
+    //! Duration for appearance animation
+    M_STYLE_ATTRIBUTE(int, appearanceDuration, AppearanceDuration)
 };
 
 class MTextMagnifierStyleContainer : public MWidgetStyleContainer

@@ -8,13 +8,17 @@ class QPointF;
 // Stub text magnifier
 class MTextMagnifier {
 public:
+    enum DeletionPolicy {
+        KeepWhenDone,
+        DestroyWhenDone
+    };
     MTextMagnifier(const MWidget &, const QSizeF &)
     {
     }
     void appear()
     {
     }
-    void disappear()
+    void disappear(DeletionPolicy)
     {
     }
     void setMagnifiedPosition(const QPointF &)

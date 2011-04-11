@@ -31,11 +31,17 @@ MTextMagnifier::MTextMagnifier(const MWidget &sourceWidget,
     : MStylableWidget(0),
       sourceWidget(sourceWidget),
       keepVisibleSize(keepVisibleSize),
+      deletionPolicy(KeepWhenDone),
+      scaleUpAnimation(this, "scale"),
       overlay(sourceWidget.sceneManager())
 {
     overlay.hide();
     sourceWidget.scene()->addItem(&overlay);
     setParentItem(&overlay);
+
+    setupAnimationParameters();
+    connect(&scaleUpAnimation, SIGNAL(finished()),
+            this, SLOT(handleScaleUpAnimationFinished()));
 }
 
 MTextMagnifier::~MTextMagnifier()
@@ -49,12 +55,32 @@ void MTextMagnifier::appear()
     // Appear in the scene of the source item.
     overlay.show();
     overlay.grabGesture(Qt::PanGesture);
+
+    scaleUpAnimation.setDirection(QAbstractAnimation::Forward);
+    if (scaleUpAnimation.state() != QAbstractAnimation::Running) {
+        scaleUpAnimation.start();
+    }
 }
 
-void MTextMagnifier::disappear()
+void MTextMagnifier::disappear(DeletionPolicy policy)
 {
-    overlay.ungrabGesture(Qt::PanGesture);
-    overlay.hide();
+    deletionPolicy = policy;
+
+    scaleUpAnimation.setDirection(QAbstractAnimation::Backward);
+    if (scaleUpAnimation.state() != QAbstractAnimation::Running) {
+        scaleUpAnimation.start();
+    }
+}
+
+void MTextMagnifier::handleScaleUpAnimationFinished()
+{
+    if (scaleUpAnimation.direction() == QAbstractAnimation::Backward) {
+        overlay.ungrabGesture(Qt::PanGesture);
+        overlay.hide();
+        if (deletionPolicy == DestroyWhenDone) {
+            deleteLater();
+        }
+    }
 }
 
 void MTextMagnifier::setMagnifiedPosition(const QPointF &sourceWidgetPos)
@@ -89,7 +115,9 @@ void MTextMagnifier::drawContents(QPainter *painter,
                             sourceSize);
 
     // Source rectangle in source item coordinates.
-    const QRectF sourceWidgetRect(mapRectToItem(&sourceWidget, sourceRect));
+    // Scale property of magnifier does not affect which part of source
+    // is drawn. Therefore we cannot use mapRectToItem etc. Assume we have simple translation.
+    const QRectF sourceWidgetRect = sourceRect.translated(mapToItem(&sourceWidget, QPointF()));
 
     // Paint sourceWidget onto offscreen surface.
     offscreenSurface->fill(Qt::transparent);
@@ -127,6 +155,14 @@ void MTextMagnifier::drawContents(QPainter *painter,
     painter->restore();
 }
 
+void MTextMagnifier::setupAnimationParameters()
+{
+    scaleUpAnimation.setStartValue(QVariant(0.0));
+    scaleUpAnimation.setEndValue(QVariant(1.0));
+    scaleUpAnimation.setEasingCurve(style()->appearanceEasingCurve());
+    scaleUpAnimation.setDuration(style()->appearanceDuration());
+}
+
 void MTextMagnifier::applyStyle()
 {
     if (!style()->magnifierFrame()) {
@@ -138,6 +174,8 @@ void MTextMagnifier::applyStyle()
     if (!magnifierSize.isEmpty()) {
         resize(magnifierSize);
     }
+
+    setupAnimationParameters();
 }
 
 void MTextMagnifier::resizeEvent(QGraphicsSceneResizeEvent *event)
