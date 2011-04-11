@@ -26,6 +26,7 @@
 #include <QFont>
 #include <QMetaProperty>
 #include <QTextCharFormat>
+#include <QApplication>
 
 #include "mapplication.h"
 #include "mfeedbackplayer.h"
@@ -295,7 +296,7 @@ void MStyleSheet::deleteStylesWithoutReference()
         while (it.hasNext()) {
             MStyle *style = it.next().value();
             if (style->references() <= 0) {
-                if (MComponentData::instance() && MComponentData::instance()->d_ptr->theme) {
+                if (qApp && MComponentData::instance() && MComponentData::instance()->d_ptr->theme) {
                     releaseAllocatedResourcesFromStyle(style);
                 }
                 delete style;
