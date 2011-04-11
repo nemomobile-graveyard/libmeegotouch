@@ -422,7 +422,12 @@ void Ut_MStatusBarView::testPressDimming()
 
     // Check that the dimming rectangle isn't being drawn by default
     m_subject->drawContents(&painter, NULL);
-    QVERIFY(gFilledRect.isNull());
+    QVERIFY(gFilledRect.isNull() || gTestOpacity != m_subject->modifiableStyle()->pressDimFactor());
+
+    gTestOpacity = -1;
+    gFillColor = -1;
+    gFilledRect = QRectF();
+
 
     mouseDownWorker(START_POINT);
     // Now the dimmer should be drawn
