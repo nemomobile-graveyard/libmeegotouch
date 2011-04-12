@@ -41,8 +41,9 @@ void MSnapshotItem::updateSnapshot()
     xcb_window_t windowId = scene()->views().at(0)->effectiveWinId();
     xcb_pixmap_t x11Pixmap = xcb_generate_id(c);
     xcb_void_cookie_t cookie = xcb_composite_name_window_pixmap_checked(c, windowId, x11Pixmap);
+    xcb_generic_error_t *error;
 
-    if (xcb_request_check(c, cookie) == NULL) {
+    if ((error = xcb_request_check(c, cookie)) == NULL) {
         // We are being composited. If we use Qt's QPixmap::grabWindow() our snapshot
         // will contain not only our window but also any other window that happens
         // to be on top of it (e.g., a translucent window showing a small dialog box with
@@ -56,6 +57,7 @@ void MSnapshotItem::updateSnapshot()
         // We are most likely not being composited. Thus Qt's QPixmap::grabWindow() will
         // work just fine.
         pixmap = QPixmap::grabWindow(windowId);
+        free (error);
     }
 #else
     pixmap = QPixmap::grabWindow(scene()->views().at(0)->effectiveWinId());
