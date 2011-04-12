@@ -26,6 +26,7 @@
 #include <QTextStream>
 #include <QObject>
 #include <MLocale>
+#include <MCollator>
 #ifdef HAVE_ICU
 #include <unicode/uversion.h>
 #include <unicode/uloc.h>
@@ -54,6 +55,7 @@ private slots:
     void benchmarkFormatNumberQLongLongWestern();
     void benchmarkFormatNumberDoubleArabic();
     void benchmarkFormatNumberDoubleWestern();
+    void benchmarkChineseSorting();
 #endif
 };
 
