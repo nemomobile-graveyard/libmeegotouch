@@ -116,7 +116,8 @@ private:
     //!         by pannable viewports or navigation controls
     QRect visibleArea() const;
 
-    void playFocusAnimation(QAbstractAnimation::Direction direction);
+    void playFocusAnimation(QAbstractAnimation::Direction direction,
+                            qreal endValue);
 
 protected:
     MTextEditView *q_ptr;
@@ -170,6 +171,8 @@ protected:
 
     qreal currentPromptOpacity;
     QPropertyAnimation promptFocusAnimation;
+    QPropertyAnimation promptShowHideAnimation;
+    bool isPromptVisible;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

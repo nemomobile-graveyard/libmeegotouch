@@ -103,7 +103,9 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       hideInfoBannerTimer(new QTimer(this)),
       focusReleaseExpected(false),
       currentPromptOpacity(0.2),
-      promptFocusAnimation(this, "promptOpacity")
+      promptFocusAnimation(this, "promptOpacity"),
+      promptShowHideAnimation(this, "promptOpacity"),
+      isPromptVisible(false)
 {
     // copy text options from actual document to prompt
     QTextOption option = document()->defaultTextOption();
@@ -705,6 +707,23 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
         editActive = true; // PasswordEchoOnEdit mode only becomes visible after doing editing
     }
 
+    const bool hasText = !document()->isEmpty();
+    const bool hasPrompt = !q->model()->prompt().isEmpty();
+
+    if (isPromptVisible && hasText && hasPrompt) {
+        isPromptVisible = false;
+        promptShowHideAnimation.setStartValue(currentPromptOpacity);
+        promptShowHideAnimation.setDirection(QAbstractAnimation::Forward);
+        promptShowHideAnimation.start();
+        promptFocusAnimation.stop();
+    } else if (!isPromptVisible && !hasText && hasPrompt) {
+        isPromptVisible = true;
+        promptShowHideAnimation.setStartValue(q->style()->focusedPromptOpacity());
+        promptShowHideAnimation.setDirection(QAbstractAnimation::Backward);
+        promptShowHideAnimation.start();
+        promptFocusAnimation.stop();
+    }
+
     if (q->model()->echo() == MTextEditModel::NoEcho) {
         // early bail out, nothing is really done on no echo mode
         return;
@@ -746,11 +765,6 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
             QString maskedText(newText.length(), maskCharacter);
             maskCursor.insertText(maskedText);
         }
-    }
-
-    if (promptFocusAnimation.state() == QAbstractAnimation::Running) {
-        promptFocusAnimation.stop();
-        setPromptOpacity(focused ? q->style()->focusedPromptOpacity() : q->style()->unfocusedPromptOpacity());
     }
 
     q->doUpdate();
@@ -1069,7 +1083,8 @@ QRect MTextEditViewPrivate::selectionLineRectangle(bool first)
     }
 }
 
-void MTextEditViewPrivate::playFocusAnimation(QAbstractAnimation::Direction direction)
+void MTextEditViewPrivate::playFocusAnimation(QAbstractAnimation::Direction direction,
+                                              qreal endValue)
 {
     if (promptTextDocument->isEmpty() || !document()->isEmpty()) {
         promptFocusAnimation.stop();
@@ -1077,6 +1092,7 @@ void MTextEditViewPrivate::playFocusAnimation(QAbstractAnimation::Direction dire
     }
 
     promptFocusAnimation.setDirection(direction);
+    promptFocusAnimation.setEndValue(endValue);
     switch (promptFocusAnimation.state()) {
     case QAbstractAnimation::Stopped:
         promptFocusAnimation.start();
@@ -1229,8 +1245,8 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     painter->translate(dx, dy);
     // draw actual text to the screen
 
-    if (d->activeDocument()->isEmpty() == true
-        && d->promptDocument()->isEmpty() == false) {
+    if (d->isPromptVisible
+        || d->promptShowHideAnimation.state() == QAbstractAnimation::Running) {
         // with no content we show the prompt text if there is prompt text
         QAbstractTextDocumentLayout::PaintContext paintContext;
         if (d->focused == true) {
@@ -1630,6 +1646,9 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
             QString promptText = model()->prompt();
             promptText = promptText.left(promptText.indexOf(QChar(BinaryTextVariantSeparator)));
             d->promptTextDocument->setPlainText(promptText);
+            d->setPromptOpacity(d->focused ? style()->focusedPromptOpacity() : style()->unfocusedPromptOpacity());
+            d->isPromptVisible = (d->activeDocument()->isEmpty() == true
+                                  && model()->prompt().isEmpty() == false);
 
             if (d->document()->isEmpty() == true) {
                 viewChanged = true;
@@ -1733,6 +1752,9 @@ void MTextEditView::setupModel()
     }
 
     d->promptDocument()->setPlainText(model()->prompt());
+    d->setPromptOpacity(d->focused ? style()->focusedPromptOpacity() : style()->unfocusedPromptOpacity());
+    d->isPromptVisible = (d->activeDocument()->isEmpty() == true
+                          && model()->prompt().isEmpty() == false);
 
     // directly connect text document contents changing to separate handler
     // note: qtextdocument signal is emitted before it does it layout updates
@@ -1784,7 +1806,7 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
 
     d->focused = true;
 
-    d->playFocusAnimation(QAbstractAnimation::Forward);
+    d->playFocusAnimation(QAbstractAnimation::Forward, style()->focusedPromptOpacity());
 
     doUpdate();
 }
@@ -1809,7 +1831,7 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
     d->focused = false;
     d->editActive = false;
 
-    d->playFocusAnimation(QAbstractAnimation::Backward);
+    d->playFocusAnimation(QAbstractAnimation::Backward, d->currentPromptOpacity);
 
     doUpdate();
 }
@@ -1865,6 +1887,10 @@ void MTextEditView::applyStyle()
     d->promptFocusAnimation.setStartValue(s->unfocusedPromptOpacity());
     d->promptFocusAnimation.setEndValue(s->focusedPromptOpacity());
     d->setPromptOpacity(d->focused ? s->focusedPromptOpacity() : s->unfocusedPromptOpacity());
+
+    d->promptShowHideAnimation.setDuration(s->hideShowPromptDuration());
+    d->promptShowHideAnimation.setStartValue(s->unfocusedPromptOpacity());
+    d->promptShowHideAnimation.setEndValue(0);
 
     MWidgetView::applyStyle();
 }
