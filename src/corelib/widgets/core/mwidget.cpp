@@ -88,7 +88,7 @@ MWidgetPrivate::~MWidgetPrivate()
  */
 MWidget::MWidget(MWidgetPrivate &dd, QGraphicsItem *parent)
     : QGraphicsWidget(parent)
-    , d_ptr(& dd) // this is a special case, since we start our shared d-pointer hierarchy within m right here
+    , d_ptr(& dd) // this is a special case, since we start our shared d-pointer hierarchy within libmeegotouch right here
 {
     Q_D(MWidget);
     if (d)
