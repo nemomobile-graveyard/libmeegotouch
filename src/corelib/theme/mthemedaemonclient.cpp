@@ -87,7 +87,6 @@ ImageResource *MThemeDaemonClient::findImageResource(const QString &imageId)
 void MThemeDaemonClient::reloadImagePaths(const QStringList &themes)
 {
     toBeDeletedThemeImageDirs.append(themeImageDirs);
-    qDeleteAll(themeImageDirs);
     themeImageDirs.clear();
 
     foreach(const QString & theme, themes) {
