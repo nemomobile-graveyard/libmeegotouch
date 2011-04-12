@@ -410,7 +410,7 @@ void Ut_MStatusBarView::testPressDimming()
 
     m_subject->modifiableStyle()->setPressDimFactor(0.6);
 
-    m_subject->sharedPixmap = QPixmap(50, 50);
+    m_subject->sharedPixmap = QPixmap(50, 72);
     MSceneManager sceneManager;
     m_statusbar->appear(sceneManager.scene());
 
@@ -428,7 +428,6 @@ void Ut_MStatusBarView::testPressDimming()
     gFillColor = -1;
     gFilledRect = QRectF();
 
-
     mouseDownWorker(START_POINT);
     // Now the dimmer should be drawn
     m_subject->drawContents(&painter, NULL);
@@ -441,9 +440,12 @@ void Ut_MStatusBarView::testPressDimming()
     // Release the mouse button and verify that the dimmer disappers
     mouseUpWorker(START_POINT);
 
+    gTestOpacity = -1;
+    gFillColor = -1;
     gFilledRect = QRectF();
+
     m_subject->drawContents(&painter, NULL);
-    QVERIFY(gFilledRect.isNull());
+    QVERIFY(gFilledRect.isNull() || gTestOpacity != m_subject->modifiableStyle()->pressDimFactor());
 
     // These are owned by the scene now
     m_statusbar = NULL;
