@@ -273,6 +273,7 @@ TextEntryPage::TextEntryPage()
       m_errorCorrection(true),
       m_completer(new MCompleter)
 {
+    m_completer->setObjectName("m_completer");
 }
 
 
@@ -292,6 +293,7 @@ void TextEntryPage::createContent()
     MLinearLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupLinearPolicy(panel);
 
     pageTitleLabel = new MLabel(centralWidget());
+    pageTitleLabel->setObjectName("pageTitleLabel");
     pageTitleLabel->setStyleName("CommonApplicationHeader");
     layoutPolicy->addItem(pageTitleLabel);
 
@@ -300,7 +302,9 @@ void TextEntryPage::createContent()
     // free text line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
+    Entries.at(row)->setObjectName("freeTextTextEdit");
     label0 = new MLabel(centralWidget());
+    label0->setObjectName("label0");
     label0->setStyleName("CommonFieldLabel");
     label0->setWordWrap(true);
     label0->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -311,9 +315,11 @@ void TextEntryPage::createContent()
 
     // password line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("passwordTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label1 = new MLabel(centralWidget());
+    label1->setObjectName("label1");
     label1->setStyleName("CommonFieldLabel");
     label1->setWordWrap(true);
     label1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -325,9 +331,11 @@ void TextEntryPage::createContent()
 
     // no echo line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("noEchoTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     labelNoEcho = new MLabel(centralWidget());
+    labelNoEcho->setObjectName("labelNoEcho");
     labelNoEcho->setStyleName("CommonFieldLabel");
     labelNoEcho->setWordWrap(true);
     labelNoEcho->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -339,9 +347,11 @@ void TextEntryPage::createContent()
 
     // passwordEchoOnEdit
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("passwordEchoOnEditTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     labelEchoOnEdit = new MLabel(centralWidget());
+    labelEchoOnEdit->setObjectName("labelEchoOnEdit");
     labelEchoOnEdit->setStyleName("CommonFieldLabel");
     labelEchoOnEdit->setWordWrap(true);
     labelEchoOnEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -353,9 +363,11 @@ void TextEntryPage::createContent()
 
     // number content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("numberTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label2 = new MLabel(centralWidget());
+    label2->setObjectName("label2");
     label2->setStyleName("CommonFieldLabel");
     label2->setWordWrap(true);
     label2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -367,9 +379,11 @@ void TextEntryPage::createContent()
 
     // phone number content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("phoneTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label3 = new MLabel(centralWidget());
+    label3->setObjectName("label3");
     label3->setStyleName("CommonFieldLabel");
     label3->setWordWrap(true);
     label3->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -381,9 +395,11 @@ void TextEntryPage::createContent()
 
     // email content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("emailTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label4 = new MLabel(centralWidget());
+    label4->setObjectName("label4");
     label4->setStyleName("CommonFieldLabel");
     label4->setWordWrap(true);
     label4->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -395,9 +411,11 @@ void TextEntryPage::createContent()
 
     // url content type
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("urlTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label5 = new MLabel(centralWidget());
+    label5->setObjectName("label5");
     label5->setStyleName("CommonFieldLabel");
     label5->setWordWrap(true);
     label5->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -409,9 +427,11 @@ void TextEntryPage::createContent()
 
     // multiline
     Entries << new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+    Entries.at(row)->setObjectName("multilineTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label6 = new MLabel(centralWidget());
+    label6->setObjectName("label6");
     label6->setStyleName("CommonFieldLabel");
     label6->setWordWrap(true);
     label6->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -423,10 +443,12 @@ void TextEntryPage::createContent()
 
     // autoselection line
     Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("autoselectionTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
     Entries.at(row)->setAutoSelectionEnabled(true);
 
     label7 = new MLabel(centralWidget());
+    label7->setObjectName("label7");
     label7->setStyleName("CommonFieldLabel");
     label7->setWordWrap(true);
     label7->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -437,6 +459,7 @@ void TextEntryPage::createContent()
 
     // completion
     Entries << new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+    Entries.at(row)->setObjectName("completionTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
     QStringList list;
     list << "Betty Brey <Betty.C.Brey@example.com>"
@@ -501,6 +524,7 @@ void TextEntryPage::createContent()
     }
 
     CompleterTestModel *model = new CompleterTestModel(c1, c2, this);
+    model->setObjectName("completerTestModel");
     m_completer->setCandidateSourceModel(model);
     m_completer->setCharactersToTrim(QString("<>"));
     m_completer->setCharactersToTrimForCompletionPrefix(QString(" "));
@@ -508,6 +532,7 @@ void TextEntryPage::createContent()
     Entries.at(row)->setCompleter(m_completer.data());
 
     label8 = new MLabel(centralWidget());
+    label8->setObjectName("label8");
     label8->setStyleName("CommonFieldLabel");
     label8->setWordWrap(true);
     label8->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -518,9 +543,11 @@ void TextEntryPage::createContent()
 
     // rich text entry
     Entries << new MRichTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.at(row)->setObjectName("richTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label9 = new MLabel(centralWidget());
+    label9->setObjectName("label9");
     label9->setStyleName("CommonFieldLabel");
     label9->setWordWrap(true);
     label9->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -531,9 +558,11 @@ void TextEntryPage::createContent()
 
     // multiline rich text entry
     Entries << new MRichTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+    Entries.at(row)->setObjectName("multilineRichTextEdit");
     Entries.at(row)->setStyleName("CommonSingleInputFieldLabeled");
 
     label10 = new MLabel(centralWidget());
+    label10->setObjectName("label10");
     label10->setStyleName("CommonFieldLabel");
     label10->setWordWrap(true);
     label10->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -543,11 +572,13 @@ void TextEntryPage::createContent()
     row++;
 
     CustomTextEdit *customTextEdit1 = new CustomTextEdit("", centralWidget());
+    customTextEdit1->setObjectName("customTextEdit1");
     customTextEdit1->setStyleName("CommonSingleInputFieldLabeled");
     customTextEdit1->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar1.xml");
     //% "Example custom toolbar 1"
     customTextEdit1->setPrompt(qtTrId("xx_tooltip_customtoolbar1"));
     labelCustomToolbar1 = new MLabel(centralWidget());
+    labelCustomToolbar1->setObjectName("labelCustomToolbar1");
     labelCustomToolbar1->setStyleName("CommonFieldLabel");
     labelCustomToolbar1->setWordWrap(true);
     labelCustomToolbar1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -558,11 +589,13 @@ void TextEntryPage::createContent()
     row++;
 
     CustomTextEdit *customTextEdit2 = new CustomTextEdit("", centralWidget());
+    customTextEdit2->setObjectName("customTextEdit2");
     customTextEdit2->setStyleName("CommonSingleInputFieldLabeled");
     customTextEdit2->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar2.xml");
     //% "Example custom toolbar 2"
     customTextEdit2->setPrompt(qtTrId("xx_tooltip_customtoolbar2"));
     labelCustomToolbar2 = new MLabel(centralWidget());
+    labelCustomToolbar2->setObjectName("labelCustomToolbar2");
     labelCustomToolbar2->setStyleName("CommonFieldLabel");
     labelCustomToolbar2->setWordWrap(true);
     labelCustomToolbar2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -577,6 +610,7 @@ void TextEntryPage::createContent()
     // applications
     errorHighlightingTextEdit = new MTextEdit(MTextEditModel::SingleLine,
                                                      "", centralWidget());
+    errorHighlightingTextEdit->setObjectName("errorHighlightingTextEdit");
     errorHighlightingTextEdit->setStyleName("CommonSingleInputFieldLabeled");
     errorHighlightingTextEdit->setContentType(M::EmailContentType);
     //% "Valid input: 'user@domain.toplevel'"
@@ -585,6 +619,7 @@ void TextEntryPage::createContent()
             this, SLOT(checkEmailValidity()));
 
     labelErrorHighlighting = new MLabel(centralWidget());
+    labelErrorHighlighting->setObjectName("labelErrorHighlighting");
     labelErrorHighlighting->setStyleName("CommonFieldLabel");
     labelErrorHighlighting->setWordWrap(true);
     labelErrorHighlighting->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -595,11 +630,14 @@ void TextEntryPage::createContent()
 
     //direct input custom widget.
     QGraphicsWidget *directIMPanel = new QGraphicsWidget(centralWidget());
+    directIMPanel->setObjectName("directIMPanel");
     QGraphicsLinearLayout *directIMLayout = new QGraphicsLinearLayout(Qt::Horizontal, directIMPanel);
     directIMLayout->setContentsMargins(0, 0, 0, 0);
     directIMLayout->setSpacing(0);
     directIMWidget = new CustomDirectIMWidget(directIMPanel);
+    directIMWidget->setObjectName("directIMWidget");
     directIMWidget->setStyleName("CommonEditorInputFieldValue");
+    directIMWidget->setObjectName("directIMWidget");
     labelDirectIM = new MLabel(directIMPanel);
     labelDirectIM->setStyleName("CommonEditorInputFieldLabel");
     labelDirectIM->setTextElide(true);
@@ -612,11 +650,13 @@ void TextEntryPage::createContent()
     row++;
 
     HeaderedTextEdit *uneditableTextEdit = new HeaderedTextEdit(centralWidget());
+    uneditableTextEdit->setObjectName("uneditableTextEdit");
     uneditableTextEdit->setStyleName("CommonEditorInputFieldMultiline");
     uneditableTextEdit->setHeaderText("Recipient:");
     uneditableTextEdit->setContentType(M::FreeTextContentType);
     uneditableTextEdit->setCompleter(m_completer.data());
     uneditableTextEditLabel = new MLabel(centralWidget());
+    uneditableTextEditLabel->setObjectName("uneditableTextEditLabel");
     uneditableTextEditLabel->setStyleName("CommonFieldLabel");
     uneditableTextEditLabel->setTextElide(true);
     layoutPolicy->addItem(uneditableTextEditLabel);
@@ -642,6 +682,7 @@ void TextEntryPage::createContent()
 
     // Auto capitalisation button (Toggle)
     button1 = new MButton(panel);
+    button1->setObjectName("button1");
     button1->setStyleName("CommonSingleButton");
     button1->setObjectName("switchAutoCaps");
 
@@ -652,6 +693,7 @@ void TextEntryPage::createContent()
 
     // error correction button (Toggle)
     button2 = new MButton(panel);
+    button2->setObjectName("button2");
     button2->setStyleName("CommonSingleButton");
     button2->setObjectName("switchErrorCorrection");
 

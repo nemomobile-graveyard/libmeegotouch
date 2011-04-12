@@ -69,6 +69,7 @@ void TextEntryNavigationPage::createContent()
     foreach (MTextEdit *edit, edits) {
         if (edit) {
             MLabel *label =  new MLabel(edit->objectName(), panel);
+            label->setObjectName("label");
             label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
             layoutPolicy->addItem(label, i, j);
             layoutPolicy->addItem(edit, i + 1, j);

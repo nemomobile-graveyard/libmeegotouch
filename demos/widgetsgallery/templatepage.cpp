@@ -76,14 +76,17 @@ void TemplatePage::createLayout()
     layout->setPortraitPolicy(portraitPolicy);
 
     container = new MWidget();
+    container->setObjectName("container");
     container->setMinimumWidth(CONTAINER_MIN_WIDTH);
     container->setPreferredWidth(CONTAINER_MIN_WIDTH);
     container->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     separator = new MSeparator();
+    separator->setObjectName("separator");
     separator->setOrientation(Qt::Vertical);
 
     infoLabel = new MLabel();
+    infoLabel->setObjectName("infoLabel");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

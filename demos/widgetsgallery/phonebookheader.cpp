@@ -45,6 +45,7 @@ MLabel *PhoneBookHeader::groupTitleLabelWidget()
 {
     if (!groupTitleLabel) {
         groupTitleLabel = new MLabel(this);
+        groupTitleLabel->setObjectName("groupTitleLabel");
         groupTitleLabel->setAlignment(Qt::AlignLeft);
     }
 
@@ -55,6 +56,7 @@ MLabel *PhoneBookHeader::groupCountLabelWidget()
 {
     if (!groupCountLabel) {
         groupCountLabel = new MLabel(this);
+        groupCountLabel->setObjectName("groupCountLabel");
         groupCountLabel->setAlignment(Qt::AlignRight);
     }
 

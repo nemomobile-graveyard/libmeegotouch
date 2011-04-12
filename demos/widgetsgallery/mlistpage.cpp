@@ -273,8 +273,10 @@ void MListPage::setPlainListModel()
     list->setCellCreator(cellCreator);
 
     model = new PhoneBookModel();
+    model->setObjectName("phoneBookModel");
 
     proxyModel = new MSortFilterProxyModel();
+    proxyModel->setObjectName("proxyModel");
     proxyModel->setSortRole(PhoneBookModel::PhoneBookSortRole);
     proxyModel->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
     proxyModel->setSourceModel(model);
@@ -282,6 +284,7 @@ void MListPage::setPlainListModel()
     list->setItemModel(proxyModel);
 
     imageLoader = new PhoneBookImageLoader;
+    imageLoader->setObjectName("phoneBookImageLoader");
 
     // when list is moving we shouldn't do any processing, which may happen
     connect(list, SIGNAL(panningStarted()), imageLoader, SLOT(stopLoadingPictures()));
@@ -299,8 +302,10 @@ void MListPage::setPlainListModel()
 MComboBox *MListPage::createComboBoxAction(const QString &title, const QStringList &itemsList)
 {
     MWidgetAction *widgetAction = new MWidgetAction(centralWidget());
+    widgetAction->setObjectName("widgetAction");
     widgetAction->setLocation(MAction::ApplicationMenuLocation);
     MComboBox *comboBox = new MComboBox;
+    comboBox->setObjectName("comboBox");
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);
     comboBox->addItems(itemsList);
@@ -314,6 +319,7 @@ MComboBox *MListPage::createComboBoxAction(const QString &title, const QStringLi
 MComboBox *MListPage::createComboBoxLabelButton(const QString &title, const QStringList &itemsList, QGraphicsWidget *parent)
 {
     MComboBox *comboBox = new MComboBox(parent);
+    comboBox->setObjectName("comboBox");
     comboBox->setStyleName("CommonComboBoxInverted");
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);
@@ -367,6 +373,7 @@ void MListPage::createActions()
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSelectionMode(int)));
 
     actionAdvancedConfiguration = new MAction(centralWidget());
+    actionAdvancedConfiguration->setObjectName("advancedConfigurationAction");
     actionAdvancedConfiguration->setLocation(MAction::ApplicationMenuLocation);
     actionAdvancedConfiguration->setText("Advanced Configuration");
     addAction(actionAdvancedConfiguration);
@@ -376,14 +383,17 @@ void MListPage::createActions()
 void MListPage::createObjectMenuActions()
 {
     objectMenu = new MObjectMenu(0);
+    objectMenu->setObjectName("objectMenu");
 
     //% "Remove"
     MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), this);
+    action->setObjectName("removeAction");
     objectMenu->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
 
     //% "Edit"
     action = new MAction(qtTrId("xx_listpage_list_edit"), this);
+    action->setObjectName("editAction");
     objectMenu->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(editListItem()));
 }
@@ -483,7 +493,7 @@ void MListPage::changeSeparatorsMode(int index)
     if (enableSeparators)
         list->setObjectName("listWithSeparators");
     else
-        list->setObjectName("");
+        list->setObjectName("list");
 }
 
 void MListPage::changeListIndexVisibility(int index)
@@ -647,6 +657,7 @@ void MListPage::showAdvancedConfigurationDialog()
 {
     if (!dialogAdvancedConfiguration) {
         dialogAdvancedConfiguration = new MDialog("Advanced configuration", M::NoStandardButton);
+        dialogAdvancedConfiguration->setObjectName("dialogAdvancedConfiguration");
 
         QGraphicsWidget *panel = dialogAdvancedConfiguration->centralWidget();
 
@@ -724,6 +735,7 @@ void MListPage::createContent()
     layout->setSpacing(0);
 
     list = new MList(panel);
+    list->setObjectName("list");
 
     setPlainListModel();
     changeListMode(Grouped);

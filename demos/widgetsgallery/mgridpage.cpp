@@ -138,6 +138,7 @@ void MGridPage::createContent()
     layout->setPortraitPolicy(portraitPolicy);
 
     list = new MList(panel);
+    list->setObjectName("list");
     landscapePolicy->addItem(list);
     portraitPolicy->addItem(list);
 
@@ -161,12 +162,14 @@ void MGridPage::createContent()
     mediaDirs << Utils::mediaArtDir();
 
     model = new GridModel(this, m_itemSize.toSize(), mediaDirs);
+    model->setObjectName("gridModel");
     list->setItemModel(model);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
 
     //% "Configuration"
     actionConfiguration = new MAction(this);
+    actionConfiguration->setObjectName("actionConfiguration");
     actionConfiguration->setLocation(MAction::ApplicationMenuLocation);
     connect(actionConfiguration, SIGNAL(triggered()), this, SLOT(showGridConfigurationSheet()));
     addAction(actionConfiguration);
@@ -205,6 +208,7 @@ void MGridPage::itemClicked(const QModelIndex &index)
         QString imageId = index.data(GridModel::ImageId).toString();
 
         ItemDetailPage* page = new ItemDetailPage();
+        page->setObjectName("itemDetailPage");
         page->setImageId(imageId);
         page->appear(scene(), DestroyWhenDismissed);
     }
@@ -264,7 +268,9 @@ void MGridPage::modifyRowsSliderHandle(int newValue)
 void MGridPage::showGridConfigurationSheet()
 {
     configurationSheet = new MSheet;
+    configurationSheet->setObjectName("configurationSheet");
     MBasicSheetHeader *header = new MBasicSheetHeader;
+    header->setObjectName("sheetHeader");
 
     header->setPositiveAction(new QAction("Done", header));
     connect(header->positiveAction(), SIGNAL(triggered()), SLOT(configurationUpdated()));
@@ -283,10 +289,12 @@ void MGridPage::showGridConfigurationSheet()
     configurationSheet->centralWidget()->setLayout(layout);
 
     MLabel *titleLabel = new MLabel(qtTrId("xx_gridpage_set_columns"));
+    titleLabel->setObjectName("titleLabel");
     titleLabel->setStyleName("CommonTitle");
     policy->addItem(titleLabel);
 
     m_columnsLandscapeSlider = new MSlider;
+    m_columnsLandscapeSlider->setObjectName("m_columnsLandscapeSlider");
     m_columnsLandscapeSlider->setStyleName("CommonSlider");
     m_columnsLandscapeSlider->setRange(2,8);
     m_columnsLandscapeSlider->setValue(m_columnsLandscape);
@@ -297,6 +305,7 @@ void MGridPage::showGridConfigurationSheet()
     m_columnsLandscapeSlider->setMaxLabel("8");
 
     m_columnsPortraitSlider = new MSlider;
+    m_columnsPortraitSlider->setObjectName("m_columnsPortraitSlider");
     m_columnsPortraitSlider->setStyleName("CommonSlider");
     m_columnsPortraitSlider->setRange(2,5);
     m_columnsPortraitSlider->setValue(m_columnsPortrait);
@@ -311,10 +320,12 @@ void MGridPage::showGridConfigurationSheet()
 
     //% "Landscape"
     MLabel *landscapeLabel = new MLabel(qtTrId("xx_gridpage_landscape"));
+    landscapeLabel->setObjectName("landscapeLabel");
     landscapeLabel->setStyleName("CommonFieldLabel");
 
     //% "Portrait"
     MLabel *portraitLabel = new MLabel(qtTrId("xx_gridpage_portrait"));
+    portraitLabel->setObjectName("portraitLabel");
     portraitLabel->setStyleName("CommonFieldLabel");
 
     policy->addItem(landscapeLabel);

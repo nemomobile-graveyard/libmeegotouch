@@ -70,6 +70,7 @@ void ComboBoxPage::createContent()
       CommonComboBox / CommonComboBoxInverted
     */
     comboBox1 = new MComboBox;
+    comboBox1->setObjectName("comboBox1");
     comboBox1->setIconID("icon-m-camera-scene-portrait");
     comboBox1->addItems(list);
     comboBox1->setCurrentIndex(40);
@@ -80,11 +81,14 @@ void ComboBoxPage::createContent()
       CommonComboBoxButtonNoTitle / CommonComboBoxButtonNoTitleInverted
     */
     comboBox2 = new MComboBox;
+    comboBox2->setObjectName("comboBox2");
     comboBox2->setViewType("simpleButton");
 
     model1 = new QStringListModel(this);
+    model1->setObjectName("model1");
     model1->setStringList(list);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setObjectName("proxyModel");
     proxyModel->setSourceModel(model1);
     proxyModel->setDynamicSortFilter(true);
     proxyModel->sort(0, Qt::DescendingOrder);
@@ -92,6 +96,7 @@ void ComboBoxPage::createContent()
     comboBox2->setItemModel(proxyModel);
 
     comboBox3 = new MComboBox;
+    comboBox3->setObjectName("comboBox3");
     comboBox3->setIconID("icon-m-common-clock");
     comboBox3->setTitle("Time-consuming setting");
     comboBox3->addItem("Wash your car");

@@ -299,102 +299,133 @@ private:
                 //category 0
                 case ApplicationMenuPageType:
                     page = new ApplicationMenuPage();
+                    page->setObjectName("ApplicationMenuPage");
                     break;
                 case DisplayModesPageType:
                     page = new DisplayModesPage();
+                    page->setObjectName("DisplayModesPage");
                     break;
                 case ToolBarPageType:
                     page = new ToolBarPage();
+                    page->setObjectName("ToolBarPage");
                     break;
                 case CustomNavigationBarPageType:
                     page = new CustomNavigationBarPage();
+                    page->setObjectName("CustomNavigationBarPage");
                     break;
                 //category 1
                 case LabelPageType:
                     page = new LabelPage();
+                    page->setObjectName("LabelPage");
                     break;
                 case ImagePageType:
                     page = new ImagePage();
+                    page->setObjectName("ImagePage");
                     break;
                 case ProgressBarPageType:
                     page = new ProgressBarPage();
+                    page->setObjectName("ProgressBarPage");
                     break;
                 case SpinnerPageType:
                     page = new SpinnerPage();
+                    page->setObjectName("SpinnerPage");
                     break;
                 //category 2
                 case PushButtonPageType:
                     page = new PushButtonPage();
+                    page->setObjectName("PushButtonPage");
                     break;
                 case IconButtonPageType:
                     page = new IconButtonPage();
+                    page->setObjectName("IconButtonPage");
                     break;
                 case SwitchPageType:
                     page = new SwitchPage();
+                    page->setObjectName("SwitchPage");
                     break;
                 case CheckboxPageType:
                     page = new CheckboxPage();
+                    page->setObjectName("CheckboxPage");
                     break;
                 case ButtonGroupPageType:
                     page = new ButtonGroupPage();
+                    page->setObjectName("ButtonGroupPage");
                     break;
                 //category 3
                 case SingleSelectionDialogsPageType:
                     page = new SingleSelectionDialogsPage();
+                    page->setObjectName("SingleSelectionDialogsPage");
                     break;
                 case QueryDialogsPageType:
                     page = new QueryDialogsPage();
+                    page->setObjectName("QueryDialogsPage");
                     break;
                 case SheetsPageType:
                     page = new SheetsPage();
+                    page->setObjectName("SheetsPage");
                     break;
                 case BannersPageType:
                     page = new BannersPage();
+                    page->setObjectName("BannersPage");
                     break;
                 case NotificationsPageType:
                     page = new NotificationsPage();
+                    page->setObjectName("NotificationsPage");
                     break;
                 //category 4
                 case MListPageType:
                     page = new MListPage();
+                    page->setObjectName("ListPage");
                     break;
                 case MGridPageType:
                     page = new MGridPage();
+                    page->setObjectName("GridPage");
                     break;
                 case ObjectMenuPageType:
                     page = new ObjectMenuPage();
+                    page->setObjectName("ObjectMenuPage");
                     break;
                 case ComboBoxPageType:
                     page = new ComboBoxPage();
+                    page->setObjectName("ComboBoxPage");
                     break;
                 case ContentItemsPageType:
                     page = new ContentItemsPage();
+                    page->setObjectName("ContentItemsPage");
                     break;
                 case BubblePageType:
                     page = new BubblePage();
+                    page->setObjectName("BubblePage");
                     break;
                 //category 5
                 case TextEntryPageType:
                     page = new TextEntryPage();
+                    page->setObjectName("TextEntryPage");
                     break;
                 case TextEntryNavigationPageType:
                     page = new TextEntryNavigationPage();
+                    page->setObjectName("TextEntryNavigationPage");
                     break;
                 case TextEntryAttributeExtensionPageType:
                     page = new TextEntryAttributeExtensionPage();
+                    page->setObjectName("TextEntryAttributeExtensionPage");
                     break;
                 case SliderPageType:
                     page = new SliderPage();
+                    page->setObjectName("SliderPage");
                     break;
                 case FeedbackPageType:
                     page = new FeedbackPage();
+                    page->setObjectName("FeedbackPage");
                     break;
                 //category 6
                 case DebugPageType:
                     page = new DebugPage();
+                    page->setObjectName("DebugPage");
                     break;
                 case ScreenshotPageType:
                     page = new ScreenShotPage();
+                    page->setObjectName("ScreenShotPage");
                     break;
                 default:
                     break;
@@ -406,8 +437,10 @@ private:
             return galleryPages[index.parent().row()].at(index.row());
 
         } else {
-            if (!categoryPages[index.row()])
+            if (!categoryPages[index.row()]) {
                 categoryPages[index.row()] = new MainCategoryPage(this, index);
+                categoryPages[index.row()]->setObjectName("MainCategoryPage");
+            }
             return categoryPages[index.row()];
         }
 
@@ -527,6 +560,7 @@ void MainPage::createContent()
     populateLayout();
 
     actionThemes = new MAction(this);
+    actionThemes->setObjectName("actionThemes");
     actionThemes->setLocation(MAction::ApplicationMenuLocation);
     this->addAction(actionThemes);
     connect(actionThemes, SIGNAL(triggered()), SLOT(showThemeSelectionDialog()));
@@ -544,11 +578,13 @@ void MainPage::createContent()
     connect(comboOrientation, SIGNAL(currentIndexChanged(int)), SLOT(changeOrientation(int)));
 
     actionToggleFPS = new MAction(this);
+    actionToggleFPS->setObjectName("actionToggleFPS");
     actionToggleFPS->setLocation(MAction::ApplicationMenuLocation);
     this->addAction(actionToggleFPS);
     connect(actionToggleFPS, SIGNAL(triggered()), SLOT(toggleFps()));
 
     actionLanguage = new MAction( this);
+    actionLanguage->setObjectName("actionLanguage");
     actionLanguage->setLocation(MAction::ApplicationMenuLocation);
     this->addAction(actionLanguage);
     connect(actionLanguage, SIGNAL(triggered()), SLOT(showLanguageSettingsPage()));
@@ -597,6 +633,7 @@ void MainPage::setMainLoopHelper(EmptyMainLoopHelper *helper)
 void MainPage::populateLayout()
 {
     list = new MList(centralWidget());
+    list->setObjectName("list");
     list->setCellCreator(new WidgetGalleryCategoryCellCreator(list));
     list->setItemModel(new WidgetsGalleryDataModel(this));
     policy->addItem(list, Qt::AlignCenter);
@@ -616,6 +653,7 @@ void MainPage::showLanguageSettingsPage()
 {
     if (!languageSettingsPage) {
         languageSettingsPage = new LanguagePage();
+        languageSettingsPage->setObjectName("languageSettingsPage");
         languageSettingsPage->setParent(this);
     }
     languageSettingsPage->appear(scene());
@@ -741,11 +779,13 @@ void MainPage::showThemeSelectionDialog()
     QList<ThemeInfo> themes = findAvailableThemes();
 
     QPointer<MDialog> dialog = new MDialog("Select theme", M::OkButton | M::CancelButton);
+    dialog->setObjectName("selectThemeDialog");
 
     QGraphicsGridLayout *layout = new QGraphicsGridLayout();
     dialog->centralWidget()->setLayout(layout);
 
     MButtonGroup *group = new MButtonGroup(dialog->centralWidget());
+    group->setObjectName("buttonGroup");
 
     const int themesCount = themes.count();
     for (int i = 0; i < themesCount; ++i) {
@@ -777,8 +817,10 @@ void MainPage::showThemeSelectionDialog()
 MComboBox* MainPage::createComboBoxAction(const QString &title, const QStringList &itemsList)
 {
     MWidgetAction *widgetAction = new MWidgetAction(centralWidget());
+    widgetAction->setObjectName("comboBoxWidgetAction");
     widgetAction->setLocation(MAction::ApplicationMenuLocation);
     MComboBox *comboBox = new MComboBox;
+    comboBox->setObjectName("comboBox");
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);
     comboBox->addItems(itemsList);

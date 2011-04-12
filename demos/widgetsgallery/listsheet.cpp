@@ -71,6 +71,7 @@ ListSheet::~ListSheet()
 void ListSheet::createHeaderWidget()
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(this);
+    basicHeader->setObjectName("basicSheetHeader");
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));
@@ -83,14 +84,17 @@ void ListSheet::createHeaderWidget()
 void ListSheet::createCentralWidget()
 {
     MPannableViewport *pannableViewport = new MPannableViewport(this);
+    pannableViewport->setObjectName("pannableViewport");
     setCentralWidget(pannableViewport);
 
     PhoneBookModel *model = new PhoneBookModel;
+    model->setObjectName("phoneBookModel");
     model->clear();
     model->insertRows(0, 1000);
     model->setGrouped(true);
 
     MList *list = new MList(pannableViewport);
+    list->setObjectName("list");
     list->setShowGroups(true);
     list->setItemModel(model);
     list->setCellCreator(new MListSheetContentItemCreator);

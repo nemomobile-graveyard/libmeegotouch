@@ -72,19 +72,23 @@ void ImagePage::createContent()
 
     // Image properties label
     propertiesLabel = new MLabel();
+    propertiesLabel->setObjectName("propertiesLabel");
 
     // Image properties comboBox
     propertiesComboBox = new MComboBox();
+    propertiesComboBox->setObjectName("propertiesComboBox");
     propertiesComboBox->setIconID("icon-m-gallery-image-edit");
 
     // Image property slider
     slider = new MSlider();
+    slider->setObjectName("slider");
     slider->setOrientation(Qt::Horizontal);
     slider->setRange(0, 100);
     slider->setValue(0);
 
     // Visual is a common parent for Image and Animation
     visual = new MWidget();
+    visual->setObjectName("visual");
 
     QGraphicsGridLayout *gridLayout = new QGraphicsGridLayout();
     gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -96,6 +100,7 @@ void ImagePage::createContent()
     QString fname = imagesDir + '/' + QString("grape.jpg");
     QImage img(fname);
     image = new MImageWidget(&img);
+    image->setObjectName("image");
     image->setVisible(true);
     gridLayout->addItem(image, 0, 0);
 

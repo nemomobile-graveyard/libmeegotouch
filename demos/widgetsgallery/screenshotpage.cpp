@@ -75,12 +75,14 @@ void ScreenShotPage::createContent()
     elementsPolicyP->setSpacing(0);
 
     label1 = new MLabel ("Take a screenshot");
+    label1->setObjectName("label1");
     label1->setStyleName("CommonApplicationHeader");
 
     elementsPolicyL->addItem(label1);
     elementsPolicyP->addItem(label1);
 
     labelDescription = new MLabel ();
+    labelDescription->setObjectName("descriptionLabel");
     labelDescription->setWordWrap(true);
     labelDescription->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     labelDescription->setStyleName("CommonBodyText");
@@ -91,12 +93,14 @@ void ScreenShotPage::createContent()
     QGraphicsGridLayout * gridSecs = new QGraphicsGridLayout();
 
     entrySeconds = new MTextEdit(MTextEditModel::SingleLine,"");
+    entrySeconds->setObjectName("secondsTextEntry");
     entrySeconds->setMaxLength(2);
     entrySeconds->setStyleName("CommonSingleInputField");
     entrySeconds->setContentType(M::NumberContentType);
     entrySeconds->setText("8");
     entrySeconds->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     MLabel * secsLabel = new MLabel();
+    secsLabel->setObjectName("secsLabel");
     secsLabel->setText("seconds");
     secsLabel->setStyleName("CommonSingleTitle");
 
@@ -107,6 +111,7 @@ void ScreenShotPage::createContent()
     elementsPolicyP->addItem(gridSecs);
 
     buttonScreenshot = new MButton("Take it!");
+    buttonScreenshot->setObjectName("screenshotButton");
     buttonScreenshot->setStyleName("CommonSingleButton");
 
     elementsPolicyL->addItem(buttonScreenshot);
@@ -153,6 +158,7 @@ void ScreenShotPage::playScreenshotEffect()
 {
 
     ScreenshotEffect *flash = new ScreenshotEffect();
+    flash->setObjectName("screenshotEffect");
     flash->setGeometry(0, 0, scene()->views().at(0)->width(), scene()->views().at(0)->height());
 
     QPropertyAnimation *animation = new QPropertyAnimation(flash, "opacity", scene()->views().at(0));
@@ -186,6 +192,7 @@ void ScreenShotPage::takeScreenshot()
     playScreenshotEffect();
 
     MBanner * bannerPath = new MBanner();
+    bannerPath->setObjectName("pathBanner");
     bannerPath->setStyleName("InformationBanner");
     bannerPath->setTitle("Screenshot has been saved in: " + fileFormat);
     bannerPath->appear(scene(), MSceneWindow::DestroyWhenDone);

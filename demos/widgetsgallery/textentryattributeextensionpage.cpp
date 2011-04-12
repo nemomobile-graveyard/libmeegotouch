@@ -68,14 +68,17 @@ void TextEntryAttributeExtensionPage::createContent()
     MLinearLayoutPolicy* hPolicy1 = new MLinearLayoutPolicy(layout1, Qt::Vertical);
 
     edits << new MTextEdit(MTextEditModel::SingleLine, "", panel);
+    edits.at(0)->setObjectName("editwithoutextendedattribute1TextEdit");
     //% "Example text edit without extended attributes"
     edits.at(0)->setPrompt(qtTrId("xx_tooltip_editwithoutextendedattribute1"));
     hPolicy1->addItem(edits.at(0));
 
     noteLabel = new MLabel(panel);
+    noteLabel->setObjectName("noteLabel");
     hPolicy1->addItem(noteLabel);
 
     edits << new MTextEdit(MTextEditModel::MultiLine, "", panel);
+    edits.at(1)->setObjectName("customextendedattribute1TextEdit");
     // create buttons
     MLayout *layout2 = new MLayout;
     MLinearLayoutPolicy* hPolicy2 = new MLinearLayoutPolicy(layout2, Qt::Horizontal);
@@ -85,24 +88,28 @@ void TextEntryAttributeExtensionPage::createContent()
 
     QSizePolicy sizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
     pushButton1 = new MButton();
+    pushButton1->setObjectName("pushButton1");
     pushButton1->setCheckable(true);
     pushButton1->setViewType(MButton::toggleType);
     pushButton1->setSizePolicy(sizePolicy);
     connect(pushButton1, SIGNAL(toggled(bool)), this, SLOT(setUseLabel(bool)));
 
     pushButton2 = new MButton();
+    pushButton2->setObjectName("pushButton2");
     pushButton2->setCheckable(true);
     pushButton2->setViewType(MButton::toggleType);
     pushButton2->setSizePolicy(sizePolicy);
     connect(pushButton2, SIGNAL(toggled(bool)), this, SLOT(setUseIcon(bool)));
 
     pushButton3 = new MButton();
+    pushButton3->setObjectName("pushButton3");
     pushButton3->setCheckable(true);
     pushButton3->setViewType(MButton::toggleType);
     pushButton3->setSizePolicy(sizePolicy);
     connect(pushButton3, SIGNAL(toggled(bool)), this, SLOT(setKeyHighlighted(bool)));
 
     pushButton4 = new MButton();
+    pushButton4->setObjectName("pushButton4");
     pushButton4->setCheckable(true);
     pushButton4->setViewType(MButton::toggleType);
     pushButton4->setSizePolicy(sizePolicy);
@@ -125,6 +132,7 @@ void TextEntryAttributeExtensionPage::createContent()
     layout3->setMinimumHeight(100);
 
     edits << new MTextEdit(MTextEditModel::MultiLine, "", panel);
+    edits.at(2)->setObjectName("customextendedattribute2TextEdit");
     // create buttons
     MLayout *layout4 = new MLayout;
     MLinearLayoutPolicy* hPolicy4 = new MLinearLayoutPolicy(layout4, Qt::Horizontal);
@@ -133,24 +141,28 @@ void TextEntryAttributeExtensionPage::createContent()
     hPolicy4->setNotifyWidgetsOfLayoutPositionEnabled(true);
 
     pushButton5 = new MButton();
+    pushButton5 ->setObjectName("pushButton5");
     pushButton5->setCheckable(true);
     pushButton5->setViewType(MButton::toggleType);
     pushButton5->setSizePolicy(sizePolicy);
     connect(pushButton5, SIGNAL(toggled(bool)), this, SLOT(setUseLabel(bool)));
 
     pushButton6 = new MButton();
+    pushButton6->setObjectName("pushButton6");
     pushButton6->setCheckable(true);
     pushButton6->setViewType(MButton::toggleType);
     pushButton6->setSizePolicy(sizePolicy);
     connect(pushButton6, SIGNAL(toggled(bool)), this, SLOT(setUseIcon(bool)));
 
     pushButton7 = new MButton();
+    pushButton7->setObjectName("pushButton7");
     pushButton7->setCheckable(true);
     pushButton7->setViewType(MButton::toggleType);
     pushButton7->setSizePolicy(sizePolicy);
     connect(pushButton7, SIGNAL(toggled(bool)), this, SLOT(setKeyHighlighted(bool)));
 
     pushButton8 = new MButton();
+    pushButton8->setObjectName("pushButton8");
     pushButton8->setCheckable(true);
     pushButton8->setViewType(MButton::toggleType);
     pushButton8->setSizePolicy(sizePolicy);

@@ -31,6 +31,7 @@ MyNavBarContent::MyNavBarContent(QGraphicsItem *parent)
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     MSlider *slider = new MSlider;
+    slider->setObjectName("slider");
     slider->setRange(0, 100);
     slider->setMinLabelVisible(true);
     slider->setMaxLabelVisible(true);
@@ -38,6 +39,7 @@ MyNavBarContent::MyNavBarContent(QGraphicsItem *parent)
     layout->addItem(slider);
 
     MButton *okButton = new MButton("OK");
+    okButton->setObjectName("okButton");
     okButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     okButton->setStyleName("ToolBarLabelOnlyCommonButton");
     connect(okButton, SIGNAL(clicked()), SIGNAL(okClicked()));

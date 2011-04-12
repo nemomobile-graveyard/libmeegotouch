@@ -60,12 +60,14 @@ void IconButtonPage::createContent()
 
     // Icon buttons
     iconButton1 = new MButton();
+    iconButton1->setObjectName("iconButton1");
     iconButton1->setViewType(MButton::iconType);
     iconButton1->setIconID("icon-m-toolbar-new-chat");
 
     containerPolicy->addItem(iconButton1, Qt::AlignCenter);
 
     iconButton2 = new MButton();
+    iconButton2->setObjectName("iconButton2");
     iconButton2->setViewType(MButton::iconType);
     iconButton2->setObjectName("iconButton");
     iconButton2->setIconID("icon-m-toolbar-send-email");

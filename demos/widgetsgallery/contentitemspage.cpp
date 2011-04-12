@@ -343,8 +343,10 @@ void ContentItemsPage::populateLayout()
 MList *ContentItemsPage::createList(const QString &title, MCellCreator *creator)
 {
     QAbstractItemModel *model = new ContentItemsPageModel(this, title);
+    model->setObjectName("contentItemsPageModel");
 
     MList *list = new MList(centralWidget());
+    list->setObjectName("list");
     list->setCellCreator(creator);
     list->setItemModel(model);
     list->setShowGroups(true);

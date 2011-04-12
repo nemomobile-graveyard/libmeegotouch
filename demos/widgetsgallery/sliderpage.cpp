@@ -74,6 +74,7 @@ void SliderPage::createContent()
     ageLayout->setPortraitPolicy(verticalAgeLayoutPolicy);
 
     ageLabel = new MLabel;
+    ageLabel->setObjectName("ageLabel");
     ageLabel->setTextElide(true);
 
     horizontalAgeLayoutPolicy->addItem(ageLabel);
@@ -90,6 +91,7 @@ void SliderPage::createContent()
     verticalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
 
     ageContainer = new MContainer;
+    ageContainer->setObjectName("ageContainer");
     ageContainer->centralWidget()->setLayout(ageLayout);
     containerPolicy->addItem(ageContainer);
 
@@ -101,6 +103,7 @@ void SliderPage::createContent()
     playerLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
     playerButton = new MButton;
+    playerButton->setObjectName("playerButton");
     playerButton->setViewType(MButton::iconType);
     playerButton->setIconID("icon-m-common-play");
     playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
@@ -113,6 +116,7 @@ void SliderPage::createContent()
     playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
 
     playerContainer = new MContainer;
+    playerContainer->setObjectName("playerContainer");
     playerContainer->centralWidget()->setLayout(playerLayout);
     containerPolicy->addItem(playerContainer);
 
@@ -133,6 +137,7 @@ void SliderPage::createContent()
     brightnessLayoutPolicy->addItem(brightnessSlider);
 
     brightnessContainer = new MContainer;
+    brightnessContainer->setObjectName("brightnessContainer");
     brightnessContainer->centralWidget()->setLayout(brightnessLayout);
     containerPolicy->addItem(brightnessContainer);
 
@@ -155,8 +160,10 @@ void SliderPage::createLayout()
     layout->setPortraitPolicy(portraitPolicy);
 
     container = new MWidget;
+    container->setObjectName("container");
 
     infoLabel = new MLabel;
+    infoLabel->setObjectName("infoLabel");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

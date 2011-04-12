@@ -94,6 +94,7 @@ void BannersPage::createContent()
 void BannersPage::populateLayout()
 {
     list = new MList(centralWidget());
+    list->setObjectName("list");
     list->setCellCreator(new BannersPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
@@ -114,6 +115,7 @@ void BannersPage::itemClicked(const QModelIndex &index)
 void BannersPage::showEventBanner()
 {
     MBanner *banner = new MBanner();
+    banner->setObjectName("eventBanner");
     banner->setStyleName(MBannerType::ShortEventBanner);
     banner->setIconID("icon-s-status-sms");
     banner->setTitle("John Milles");
@@ -124,6 +126,7 @@ void BannersPage::showEventBanner()
 void BannersPage::showInformationBanner()
 {
     MBanner *banner = new MBanner();
+    banner->setObjectName("informationBanner");
     banner->setStyleName(MBannerType::InformationBanner);
     banner->setTitle("You have 6 meetings in your Agenda");
     banner->appear(scene(), MSceneWindow::DestroyWhenDone);
@@ -132,6 +135,7 @@ void BannersPage::showInformationBanner()
 void BannersPage::showSystemInformationBanner()
 {
     MBanner *systemBanner = new MBanner();
+    systemBanner->setObjectName("systemBanner");
     systemBanner->setStyleName(MBannerType::InformationBanner);
     systemBanner->setIconID("icon-m-common-usb");
     systemBanner->setTitle("Unable to continue video editing. USB disconnected.");

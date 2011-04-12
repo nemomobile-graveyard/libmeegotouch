@@ -33,6 +33,7 @@ GridModel::GridModel(QObject *parent, const QSize &size, const QStringList &dirs
 
     for (int i = 0; i < THREAD_COUNT; i++) {
         Loader *loader = new Loader(size);
+        loader->setObjectName("loader");
         connect(loader, SIGNAL(imageReady(QImage, int)), this, SLOT(insertImage(QImage, int)));
         m_loaders.append(loader);
     }

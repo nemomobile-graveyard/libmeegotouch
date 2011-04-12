@@ -40,10 +40,12 @@ LabeledCheckbox::LabeledCheckbox(QGraphicsItem * parent, Qt::WindowFlags wFlags)
     setFlag(QGraphicsItem::ItemHasNoContents);
 
     button = new MButton;
+    button->setObjectName("button");
     button->setViewType(MButton::checkboxType);
     button->setCheckable(true);
 
     label = new MLabel;
+    label->setObjectName("label");
     label->setWordWrap(true);
     label->setTextElide(true);
 
@@ -87,11 +89,13 @@ void DisplayModesPage::createContent()
 {
     QGraphicsLinearLayout *lytMain = new QGraphicsLinearLayout(Qt::Vertical);
     lblDisplayMode = new MLabel(this);
+    lblDisplayMode->setObjectName("lblDisplayMode");
 
     QGraphicsLinearLayout *lytButtons = new QGraphicsLinearLayout(Qt::Vertical);
 
     // combo box nav bar display mode
     comboNavigationBarDisplayMode = new MComboBox(this);
+    comboNavigationBarDisplayMode->setObjectName("comboNavigationBarDisplayMode");
     //%  "Navigation Bar"
     comboNavigationBarDisplayMode->setTitle(qtTrId("xx_displaymodes_navbarcombo"));
     comboNavigationBarDisplayMode->setIconVisible(false);
@@ -100,6 +104,7 @@ void DisplayModesPage::createContent()
 
     // combo box escape button display mode
     comboEscapeButtonDisplayMode = new MComboBox(this);
+    comboEscapeButtonDisplayMode->setObjectName("comboEscapeButtonDisplayMode");
     //% "Escape Button"
     comboEscapeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_escapebtncombo"));
     comboEscapeButtonDisplayMode->setIconVisible(false);
@@ -108,6 +113,7 @@ void DisplayModesPage::createContent()
 
     // combo box home button display mode
     comboHomeButtonDisplayMode = new MComboBox(this);
+    comboHomeButtonDisplayMode->setObjectName("comboHomeButtonDisplayMode");
     //% "Home Button"
     comboHomeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_homebtncombo"));
     comboHomeButtonDisplayMode->setIconVisible(false);
@@ -137,8 +143,10 @@ void DisplayModesPage::createContent()
 void DisplayModesPage::createWindowStateWidgets()
 {
     lblWindowState = new MLabel;
+    lblWindowState->setObjectName("lblWindowState");
 
     fullScreenCheckbox = new LabeledCheckbox;
+    fullScreenCheckbox->setObjectName("fullScreenCheckbox");
     connect(fullScreenCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeFullScreenMode(bool)));
     // Init "full screen" checkbox state
     if (MApplication::activeWindow()) {
@@ -146,6 +154,7 @@ void DisplayModesPage::createWindowStateWidgets()
     }
 
     roundedCornersCheckbox = new LabeledCheckbox;
+    roundedCornersCheckbox->setObjectName("roundedCornersCheckbox");
     connect(roundedCornersCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeRoundedCorners(bool)));
     // Init "rounded corners" checkbox state
     if (MApplication::activeWindow()) {
@@ -153,6 +162,7 @@ void DisplayModesPage::createWindowStateWidgets()
     }
 
     navigationBarTransparencyCheckbox = new LabeledCheckbox;
+    navigationBarTransparencyCheckbox->setObjectName("navigationBarTransparencyCheckbox");
     connect(navigationBarTransparencyCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeNavigationBarTransparency(bool)));
 }
 
@@ -161,14 +171,17 @@ void DisplayModesPage::addExampleActions()
     MAction *action;
 
     action = new MAction("icon-m-toolbar-new-chat", "Chat", this);
+    action->setObjectName("chatAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
     action = new MAction("icon-m-toolbar-send-sms", "SMS", this);
+    action->setObjectName("smsAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
     action = new MAction("icon-m-toolbar-send-email", "Mail", this);
+    action->setObjectName("mailAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 }

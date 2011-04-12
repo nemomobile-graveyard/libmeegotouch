@@ -55,10 +55,12 @@ void SwitchPage::createContent()
     //landscapePolicy->insertStretch(1);
 
     switch1 = new MButton();
+    switch1->setObjectName("switch1");
     switch1->setViewType(MButton::switchType);
     switch1->setCheckable(true);
     switch1->setChecked(true);
     label1 = new MLabel();
+    label1->setObjectName("label1");
     label1->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label1);
@@ -69,9 +71,11 @@ void SwitchPage::createContent()
     connect(switch1, SIGNAL(toggled(bool)), this, SLOT(switchToggled(bool)));
 
     switch2 = new MButton();
+    switch2->setObjectName("switch2");
     switch2->setViewType(MButton::switchType);
     switch2->setCheckable(true);
     label2 = new MLabel();
+    label2->setObjectName("label2");
     label2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label2);
@@ -81,9 +85,11 @@ void SwitchPage::createContent()
     containerPolicy->addItem(l);
 
     switch3 = new MButton();
+    switch3->setObjectName("switch3");
     switch3->setViewType(MButton::switchType);
     switch3->setCheckable(true);
     label3 = new MLabel();
+    label3->setObjectName("label3");
     label3->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label3);
@@ -93,9 +99,11 @@ void SwitchPage::createContent()
     containerPolicy->addItem(l);
 
     switch4 = new MButton();
+    switch4->setObjectName("switch4");
     switch4->setViewType(MButton::switchType);
     switch4->setCheckable(true);
     label4 = new MLabel();
+    label4->setObjectName("label4");
     label4->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label4);
@@ -105,10 +113,12 @@ void SwitchPage::createContent()
     containerPolicy->addItem(l);
 
     switch5 = new MButton();
+    switch5->setObjectName("switch5");
     switch5->setViewType(MButton::switchType);
     switch5->setCheckable(true);
     switch5->setChecked(true);
     label5 = new MLabel();
+    label5->setObjectName("label5");
     label5->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label5);
@@ -150,6 +160,7 @@ void SwitchPage::retranslateUi()
 void SwitchPage::switchToggled(bool toggle)
 {
     MMessageBox *msgBox = new MMessageBox();
+    msgBox->setObjectName("msgBox");
 
     if (toggle)
         msgBox->setText("The feature was enabled");

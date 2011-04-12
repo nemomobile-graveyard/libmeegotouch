@@ -50,6 +50,7 @@ void LoginSheet::createCentralWidget()
 
     //% "Connect to Service"
     MLabel *label = new MLabel(qtTrId("xx_wg_sheets_connect_service"));
+    label->setObjectName("connectLabel");
     label->setStyleName("CommonTitle");
     label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     mainLayout->addItem(label);
@@ -58,11 +59,13 @@ void LoginSheet::createCentralWidget()
 
     //% "Username:"
     label = new MLabel(qtTrId("xx_wg_sheets_username"));
+    label->setObjectName("usernameLabel");
     label->setStyleName("CommonFieldLabel");
 
     mainLayout->addItem(label);
 
     userNameTextEdit = new MTextEdit;
+    userNameTextEdit->setObjectName("userNameTextEdit");
     userNameTextEdit->setStyleName("CommonSingleInputFieldLabeled");
     mainLayout->addItem(userNameTextEdit);
 
@@ -70,10 +73,12 @@ void LoginSheet::createCentralWidget()
 
     //% "Password:"
     label = new MLabel(qtTrId("xx_wg_sheets_password"));
+    label->setObjectName("PasswordLabel");
     label->setStyleName("CommonFieldLabel");
     mainLayout->addItem(label);
 
     MTextEdit *textEdit = new MTextEdit;
+    textEdit->setObjectName("passwordTextEdit");
     textEdit->setStyleName("CommonSingleInputFieldLabeled");
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
@@ -84,6 +89,7 @@ void LoginSheet::createCentralWidget()
 void LoginSheet::createHeaderWidget()
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(this);
+    basicHeader->setObjectName("basicSheetHeader");
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));
@@ -124,6 +130,7 @@ void LoginSheet::showLoginSuccessfulAndDismiss()
     header->setProgressIndicatorVisible(false);
 
     MMessageBox *messageBox = new MMessageBox;
+    messageBox->setObjectName("messageBox");
 
     //% "Access Granted!"
     messageBox->setTitle(qtTrId("xx_wg_sheets_connection_success"));
@@ -142,6 +149,7 @@ void LoginSheet::setfocusOnUsernameTextEdit()
 QGraphicsWidget *LoginSheet::createSpacer() const
 {
     QGraphicsWidget *spacer = new QGraphicsWidget;
+    spacer->setObjectName("spacer");
     spacer->setFlag(QGraphicsItem::ItemHasNoContents);
     spacer->setPreferredHeight(24.0);
     spacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

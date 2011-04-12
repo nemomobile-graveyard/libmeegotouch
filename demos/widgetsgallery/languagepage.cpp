@@ -83,29 +83,50 @@ void LanguagePage::createContent()
 {
     MApplicationPage::createContent();
     QGraphicsWidget *panel = centralWidget();
+    panel->setObjectName("panel");
     MLayout *layout = new MLayout(panel);
     MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
     comboBoxLanguage = new MComboBox;
+    comboBoxLanguage->setObjectName("comboBoxLanguage");
     policy->addItem(comboBoxLanguage, 1, 1);
     comboBoxLcTime = new MComboBox;
+    comboBoxLcTime->setObjectName("comboBoxLcTime");
     comboBoxLcTimeFormat24h = new MComboBox;
+    comboBoxLcTimeFormat24h->setObjectName("comboBoxLcTimeFormat24h");
     comboBoxLcCollate = new MComboBox;
+    comboBoxLcCollate->setObjectName("comboBoxLcCollate");
     comboBoxLcNumeric = new MComboBox;
+    comboBoxLcNumeric->setObjectName("comboBoxLcNumeric");
     comboBoxLcMonetary = new MComboBox;
+    comboBoxLcMonetary->setObjectName("comboBoxLcMonetary");
     labelHaveGconf = new MLabel;
+    labelHaveGconf->setObjectName("labelHaveGconf");
     labelHaveIcu = new MLabel;
+    labelHaveIcu->setObjectName("labelHaveIcu");
     labelExampleNumber = new MLabel;
+    labelExampleNumber->setObjectName("labelExampleNumber");
     labelExampleDateTime = new MLabel;
+    labelExampleDateTime->setObjectName("labelExampleDateTime");
     labelExampleWeekNumber = new MLabel;
+    labelExampleWeekNumber->setObjectName("labelExampleWeekNumber");
     labelExampleCurrency = new MLabel;
+    labelExampleCurrency->setObjectName("labelExampleCurrency");
     labelExampleTranslation1 = new MLabel;
+    labelExampleTranslation1->setObjectName("labelExampleTranslation1");
     labelExampleTranslation2 = new MLabel;
+    labelExampleTranslation2->setObjectName("labelExampleTranslation2");
     labelExampleTranslation3 = new MLabel;
+    labelExampleTranslation3->setObjectName("labelExampleTranslation3");
     labelLtrTest = new MLabel;
+    labelLtrTest->setObjectName("labelLtrTest");
     labelRtlTest = new MLabel;
+    labelRtlTest->setObjectName("labelRtlTest");
     labelLtrTestRich = new MLabel;
+    labelLtrTestRich->setObjectName("labelLtrTestRich");
     labelRtlTestRich = new MLabel;
+    labelRtlTestRich->setObjectName("labelRtlTestRich");
     labelFontTest = new MLabel;
+    labelFontTest->setObjectName("labelFontTest");
     labelFontTest->setWordWrap(true);
 
     policy->addItem(comboBoxLcTime, 2, 1);
@@ -241,6 +262,7 @@ void LanguagePage::retranslateUi()
 
     QStandardItemModel *newModelLanguage
         = new QStandardItemModel(rowsLocale.count(), 2, this);
+    newModelLanguage->setObjectName("newModelLanguage");
     Q_CHECK_PTR(newModelLanguage);
     for (int i = 0; i < rowsLocaleCount; ++i)
         for (int j = 0; j < 2; ++j)
@@ -259,6 +281,7 @@ void LanguagePage::retranslateUi()
 
     QStandardItemModel *newModelLcTime
         = new QStandardItemModel(rowsLocale.count(), 2, this);
+    newModelLcTime->setObjectName("newModelLcTime");
     Q_CHECK_PTR(newModelLcTime);
     for (int i = 0; i < rowsLocaleCount; ++i)
         for (int j = 0; j < 2; ++j)
@@ -276,6 +299,7 @@ void LanguagePage::retranslateUi()
 
     QStandardItemModel *newModelLcTimeFormat24h
         = new QStandardItemModel(rowsTimeFormat24h.count(), 2, this);
+    newModelLcTimeFormat24h->setObjectName("newModelLcTimeFormat24h");
     Q_CHECK_PTR(newModelLcTimeFormat24h);
     for (int i = 0; i < rowsTimeFormat24hCount; ++i)
         for (int j = 0; j < 2; ++j)
@@ -308,6 +332,7 @@ void LanguagePage::retranslateUi()
 
     QStandardItemModel *newModelLcCollate
         = new QStandardItemModel(rowsLocale.count(), 2, this);
+    newModelLcCollate->setObjectName("newModelLcCollate");
     Q_CHECK_PTR(newModelLcCollate);
     for (int i = 0; i < rowsLocaleCount; ++i)
         for (int j = 0; j < 2; ++j)
@@ -325,6 +350,7 @@ void LanguagePage::retranslateUi()
 
     QStandardItemModel *newModelLcNumeric
         = new QStandardItemModel(rowsLocale.count(), 2, this);
+    newModelLcNumeric->setObjectName("newModelLcNumeric");
     Q_CHECK_PTR(newModelLcNumeric);
     for (int i = 0; i < rowsLocaleCount; ++i)
         for (int j = 0; j < 2; ++j)
@@ -342,6 +368,7 @@ void LanguagePage::retranslateUi()
 
     QStandardItemModel *newModelLcMonetary
         = new QStandardItemModel(rowsLocale.count(), 2, this);
+    newModelLcMonetary->setObjectName("newModelLcMonetary");
     Q_CHECK_PTR(newModelLcMonetary);
     for (int i = 0; i < rowsLocaleCount; ++i)
         for (int j = 0; j < 2; ++j)

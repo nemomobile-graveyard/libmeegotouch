@@ -73,14 +73,17 @@ void ButtonGroupPage::createContent()
     QSizePolicy sizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
     
     pushButton1 = new MButton();
+    pushButton1->setObjectName("pushButton1");
     // The group type makes the button use the MButton[group] CSS block from the theme,
     // this allows for gapless groups by modifying the margins.
     pushButton1->setViewType(MButton::groupType);
     pushButton1->setSizePolicy(sizePolicy);
     pushButton2 = new MButton();
+    pushButton2->setObjectName("pushButton2");
     pushButton2->setViewType(MButton::groupType);
     pushButton2->setSizePolicy(sizePolicy);
     pushButton3 = new MButton();
+    pushButton3->setObjectName("pushButton3");
     pushButton3->setViewType(MButton::groupType);
     pushButton3->setSizePolicy(sizePolicy);
     hPolicy1->addItem(pushButton1);
@@ -94,15 +97,18 @@ void ButtonGroupPage::createContent()
     hPolicy2->setSpacing(0);
     hPolicy2->setNotifyWidgetsOfLayoutPositionEnabled(true);
     pushButton4 = new MButton();
+    pushButton4->setObjectName("pushButton4");
     pushButton4->setCheckable(true);
     pushButton4->setViewType(MButton::groupType);
     pushButton4->setSizePolicy(sizePolicy);
     pushButton5 = new MButton();
+    pushButton5->setObjectName("pushButton5");
     pushButton5->setCheckable(true);
     pushButton5->setChecked(true); // Let's make this our default
     pushButton5->setViewType(MButton::groupType);
     pushButton5->setSizePolicy(sizePolicy);
     pushButton6 = new MButton();
+    pushButton6->setObjectName("pushButton6");
     pushButton6->setCheckable(true);
     pushButton6->setViewType(MButton::groupType);
     pushButton6->setSizePolicy(sizePolicy);
@@ -111,6 +117,7 @@ void ButtonGroupPage::createContent()
     hPolicy2->addItem(pushButton6);
     // The group enforces the logical exclusivity
     MButtonGroup* group = new MButtonGroup(this);
+    group->setObjectName("buttonGroup");
     group->addButton(pushButton4);
     group->addButton(pushButton5);
     group->addButton(pushButton6);
@@ -121,12 +128,15 @@ void ButtonGroupPage::createContent()
     vPolicy->setNotifyWidgetsOfLayoutPositionEnabled(true);
     vPolicy->setSpacing(0);
     pushButton7 = new MButton();
+    pushButton7->setObjectName("pushButton7");
     pushButton7->setCheckable(true);
     pushButton7->setViewType(MButton::groupType);
     pushButton8 = new MButton();
+    pushButton8->setObjectName("pushButton8");
     pushButton8->setCheckable(true);
     pushButton8->setViewType(MButton::groupType);
     pushButton9 = new MButton();
+    pushButton9->setObjectName("pushButton9");
     pushButton9->setCheckable(true);
     pushButton9->setViewType(MButton::groupType);
     vPolicy->addItem(pushButton7);
@@ -135,11 +145,13 @@ void ButtonGroupPage::createContent()
 
     //add label and horizontal button group into page
     hLabel1 = new MLabel();
+    hLabel1->setObjectName("hLabel1");
     containerPolicy->addItem(hLabel1);
     containerPolicy->addItem(hLayout1);
 
     //add small spacer between button groups
     QGraphicsWidget* spacer1 = new QGraphicsWidget;
+    spacer1->setObjectName("spacer1");
     spacer1->setMinimumSize(0, 20);
     spacer1->setPreferredSize(0, 20);
     spacer1->setMaximumSize(0, 20);
@@ -147,11 +159,13 @@ void ButtonGroupPage::createContent()
 
     //add label and horizontal button group into page
     hLabel2 = new MLabel();
+    hLabel2->setObjectName("hLabel2");
     containerPolicy->addItem(hLabel2);
     containerPolicy->addItem(hLayout2);
 
     //add small spacer between button groups
     QGraphicsWidget* spacer2 = new QGraphicsWidget;
+    spacer2->setObjectName("spacer2");
     spacer2->setMinimumSize(0, 20);
     spacer2->setPreferredSize(0, 20);
     spacer2->setMaximumSize(0, 20);
@@ -159,6 +173,7 @@ void ButtonGroupPage::createContent()
 
     //add label and vertical button group into page
     vLabel = new MLabel();
+    vLabel->setObjectName("vLabel");
     containerPolicy->addItem(vLabel);
     containerPolicy->addItem(vLayout);
 

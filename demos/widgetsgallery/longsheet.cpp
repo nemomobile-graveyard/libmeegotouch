@@ -42,8 +42,10 @@ LongSheet::LongSheet()
 void LongSheet::createCentralWidget()
 {
     MPannableViewport *pannableViewport = new MPannableViewport;
+    pannableViewport->setObjectName("pannableViewport");
 
     QGraphicsWidget *contentWidget = new QGraphicsWidget;
+    contentWidget->setObjectName("contentWidget");
     pannableViewport->setWidget(contentWidget);
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical,
                                                                   contentWidget);
@@ -54,6 +56,7 @@ void LongSheet::createCentralWidget()
 
     //% "Connect to Service"
     MLabel *label = new MLabel(qtTrId("xx_wg_sheets_connect_service"));
+    label->setObjectName("connectLabel");
     label->setStyleName("CommonTitle");
     label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     mainLayout->addItem(label);
@@ -62,29 +65,34 @@ void LongSheet::createCentralWidget()
 
     //% "Username:"
     label = new MLabel(qtTrId("xx_wg_sheets_username"));
+    label->setObjectName("usernameLKabel");
     label->setStyleName("CommonFieldLabel");
 
     mainLayout->addItem(label);
 
     MTextEdit *textEdit = new MTextEdit;
     textEdit->setStyleName("CommonSingleInputFieldLabeled");
+    textEdit->setObjectName("usernameTextEdit");
     mainLayout->addItem(textEdit);
 
     mainLayout->addItem(createSpacer());
 
     //% "Password:"
     label = new MLabel(qtTrId("xx_wg_sheets_password"));
+    label->setObjectName("passwordLabel");
     label->setStyleName("CommonFieldLabel");
     mainLayout->addItem(label);
 
     textEdit = new MTextEdit;
     textEdit->setStyleName("CommonSingleInputFieldLabeled");
+    textEdit->setObjectName("passwordTextEdit");
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
 
     //% "This sheet is so long that it needs a pannable viewport to make all its "
     //% "content available."
     label = new MLabel(qtTrId("xx_wg_sheets_long_notice"));
+    label->setObjectName("longNoticeLabel");
     label->setStyleName("CommonBodyText");
     label->setWordWrap(true);
     mainLayout->addItem(label);
@@ -99,6 +107,7 @@ void LongSheet::createCentralWidget()
         "velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
         "cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id "
         "est laborum.");
+    label->setObjectName("loremIpsumLabel");
     label->setStyleName("CommonBodyText");
     label->setWordWrap(true);
     mainLayout->addItem(label);
@@ -106,6 +115,7 @@ void LongSheet::createCentralWidget()
     mainLayout->addItem(createSpacer());
 
     MSlider *slider = new MSlider;
+    slider->setObjectName("slider");
     slider->setStyleName("CommonSlider");
     slider->setRange(0, 100);
     slider->setMinLabelVisible(true);
@@ -117,9 +127,11 @@ void LongSheet::createCentralWidget()
 
     // OBS: No point in translating dummy text.
     label = new MLabel("Foobar:");
+    label->setObjectName("foobarLabel");
     label->setStyleName("CommonFieldLabel");
     mainLayout->addItem(label);
     textEdit = new MTextEdit;
+    textEdit->setObjectName("textEdit");
     textEdit->setStyleName("CommonSingleInputFieldLabeled");
     mainLayout->addItem(textEdit);
 }
@@ -127,6 +139,7 @@ void LongSheet::createCentralWidget()
 void LongSheet::createHeaderWidget()
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(this);
+    basicHeader->setObjectName("basicSheetHeader");
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));
@@ -180,6 +193,7 @@ void LongSheet::showLoginSuccessfulAndDismiss()
 QGraphicsWidget *LongSheet::createSpacer() const
 {
     QGraphicsWidget *spacer = new QGraphicsWidget;
+    spacer->setObjectName("spacer");
     spacer->setFlag(QGraphicsItem::ItemHasNoContents);
     spacer->setPreferredHeight(24.0);
     spacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

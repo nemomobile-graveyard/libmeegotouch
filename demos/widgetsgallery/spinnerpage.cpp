@@ -69,16 +69,19 @@ void SpinnerPage::createContent()
     TemplatePage::createContent();
 
     actionInMainArea = new MAction(this);
+    actionInMainArea->setObjectName("actionInMainArea");
     actionInMainArea->setLocation(MAction::ApplicationMenuLocation);
     connect(actionInMainArea, SIGNAL(triggered()), this, SLOT(inApplicationMainArea()));
     addAction(actionInMainArea);
 
     actionInContainerHeader = new MAction(this);
+    actionInContainerHeader->setObjectName("actionInContainerHeader");
     actionInContainerHeader->setLocation(MAction::ApplicationMenuLocation);
     connect(actionInContainerHeader, SIGNAL(triggered()), this, SLOT(inContainerHeader()));
     addAction(actionInContainerHeader);
 
     actionInDialog = new MAction(this);
+    actionInDialog->setObjectName("actionInDialog");
     actionInDialog->setLocation(MAction::ApplicationMenuLocation);
     connect(actionInDialog, SIGNAL(triggered()), this, SLOT(inDialog()));
     addAction(actionInDialog);
@@ -116,6 +119,7 @@ void SpinnerPage::inApplicationMainArea()
     view = ApplicationMainArea;
 
     description = new MLabel(centralWidget());
+    description->setObjectName("appAreaDescriptionLabel");
     //% "Spinner can be used while content is loading."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_application_area_description"));
     description->setWordWrap(true);
@@ -130,6 +134,7 @@ void SpinnerPage::inApplicationMainArea()
     containerPolicy->addItem(spinnerLayout1);
 
     spinner = new MProgressIndicator(centralWidget(), MProgressIndicator::spinnerType);
+    spinner->setObjectName("spinner");
     spinner->setUnknownDuration(true);
     containerPolicy->addItem(spinner, Qt::AlignCenter);
 
@@ -148,6 +153,7 @@ void SpinnerPage::inContainerHeader()
     view = ContainerHeader;
 
     container = new MContainer(centralWidget());
+    container->setObjectName("container");
     container->setProgressIndicatorVisible(true);
     //% "Online albums"
     container->setTitle(qtTrId("xx_spinner_page_container_title"));
@@ -157,6 +163,7 @@ void SpinnerPage::inContainerHeader()
     imageContainerPolicy = new MFlowLayoutPolicy(layout);
 
     description = new MLabel(centralWidget());
+    description->setObjectName("containerDescriptionLabel");
     //% "Spinner can be used in container header to indicate that the items inside the container "
     //% "are being updated, but visible items can be interacted with."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_container_header_description"));
@@ -184,6 +191,7 @@ void SpinnerPage::timeout()
         }
 
         MImageWidget *image = new MImageWidget(container->centralWidget());
+        image->setObjectName("image");
         image->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[imageContainerPolicy->count() % imageContacts.size()]));
         image->setMinimumSize(ImageSize, ImageSize);
         image->setMaximumSize(ImageSize, ImageSize);
@@ -202,6 +210,7 @@ void SpinnerPage::inDialog()
     view = Dialog;
 
     description = new MLabel(centralWidget());
+    description->setObjectName("dialogDescriptionLabel");
     //% "Spinner can be placed in dialog header to indicate changing content."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_dialog_header_description"));
     description->setWordWrap(true);
@@ -213,19 +222,23 @@ void SpinnerPage::inDialog()
 void SpinnerPage::launchDialog()
 {
     MWidget *container = new MWidget();
+    container->setObjectName("container");
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setContentsMargins(0, 0, 0, 0);
     container->setLayout(layout);
 
     MBasicListItem *wifi = new MBasicListItem();
+    wifi->setObjectName("wifiListItem");
     wifi->setStyleName("CommonSmallPanelInverted");
     wifi->setTitle("Free Wifi");
     layout->addItem(wifi);
     MBasicListItem *wlan = new MBasicListItem();
+    wlan->setObjectName("wlanListItem");
     wlan->setStyleName("CommonSmallPanelInverted");
     wlan->setTitle("Public WLAN");
     layout->addItem(wlan);
     MBasicListItem *starbucks = new MBasicListItem();
+    starbucks->setObjectName("starbucksListItem");
     starbucks->setStyleName("CommonSmallPanelInverted");
     starbucks->setTitle("Starbucks");
     layout->addItem(starbucks);

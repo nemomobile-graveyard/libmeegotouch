@@ -98,9 +98,11 @@ void PushButtonPage::twoButtonsRowLayout()
      */
 
     button7 = new MButton();
+    button7->setObjectName("button7");
     button7->setStyleName("CommonLeftButton");
 
     button8 = new MButton();
+    button8->setObjectName("button8");
     button8->setStyleName("CommonRightButton");
 
     // sublayout
@@ -128,12 +130,15 @@ void PushButtonPage::threeButtonsRowLayout()
      */
 
     button9 = new MButton();
+    button9->setObjectName("button9");
     button9->setStyleName("CommonLeftButton");
 
     button10 = new MButton();
+    button10->setObjectName("button10");
     button10->setStyleName("CommonHorizontalCenterButton");
 
     button11 = new MButton("abc"); // even if text is shorter, buttons have same width
+    button11->setObjectName("button11");
     button11->setStyleName("CommonRightButton");
 
     // sublayout
@@ -163,6 +168,7 @@ void PushButtonPage::callRejectButtonLayout()
      */
 
     text10 = new MLabel();
+    text10->setObjectName("text10");
     text10->setStyleName("CommonTitle");
     text10->setWordWrap(true);
     text10->setAlignment(Qt::AlignTop);
@@ -178,10 +184,12 @@ void PushButtonPage::callRejectRowLayout()
      */
 
     button12 = new MButton();
+    button12->setObjectName("button12");
     button12->setStyleName("CommonLeftCallButton");
     button12->setIconID("icon-m-telephony-call");
 
     button13 = new MButton();
+    button13->setObjectName("button13");
     button13->setStyleName("CommonRightRejectButton");
     button13->setIconID("icon-m-telephony-call-end");
 
@@ -210,12 +218,14 @@ void PushButtonPage::splitButtonsLayout()
      */
 
     text11 = new MLabel();
+    text11->setObjectName("text11");
     text11->setStyleName("CommonTitle");
     text11->setWordWrap(true);
     text11->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text11);
 
     text12 = new MLabel();
+    text12->setObjectName("text12");
     text12->setStyleName("TempWidgetsgalleryBodyText");
     text12->setWordWrap(true);
     text12->setAlignment(Qt::AlignTop);
@@ -224,12 +234,15 @@ void PushButtonPage::splitButtonsLayout()
     // horiz.
 
     button14 = new MButton();
+    button14->setObjectName("button14");
     button14->setStyleName("CommonLeftSplitButton");
 
     button15 = new MButton();
+    button15->setObjectName("button15");
     button15->setStyleName("CommonHorizontalCenterSplitButton");
 
     button16 = new MButton("abc"); // even if text is shorter, buttons have same width
+    button16->setObjectName("button16");
     button16->setStyleName("CommonRightSplitButton");
 
     // sublayout
@@ -254,11 +267,14 @@ void PushButtonPage::splitButtonsLayout()
     // vertical
     button17 = new MButton();
     button17->setStyleName("CommonTopSplitButton");
+    button17->setObjectName("button17");
 
     button18 = new MButton();
     button18->setStyleName("CommonVerticalCenterSplitButton");
+    button18->setObjectName("button18");
 
     button19 = new MButton("abc"); // even if text is shorter, buttons have same width
+    button19->setObjectName("button19");
     button19->setStyleName("CommonBottomSplitButton");
 
     // sublayout
@@ -288,17 +304,20 @@ void PushButtonPage::singleButton()
      */
 
     text1 = new MLabel();
+    text1->setObjectName("text1");
     text1->setStyleName("TempWidgetsgalleryBodyText");
     text1->setWordWrap(true);
     text1->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text1);
 
     text2 = new MLabel();
+    text2->setObjectName("text2");
     text2->setStyleName("CommonTitle");
     text2->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text2);
 
     text3 = new MLabel();
+    text3->setObjectName("text3");
     text3->setStyleName("TempWidgetsgalleryBodyText");
     text3->setWordWrap(true);
     text3->setAlignment(Qt::AlignTop);
@@ -306,6 +325,7 @@ void PushButtonPage::singleButton()
 
 
     button1 = new MButton();
+    button1->setObjectName("button1");
     button1->setStyleName("CommonSingleButton");
 
 
@@ -323,23 +343,27 @@ void PushButtonPage::twoButtons()
     // text
 
     text4 = new MLabel();
+    text4->setObjectName("text4");
     text4->setStyleName("CommonTitle");
     text4->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text4);
 
     text5 = new MLabel();
+    text5->setObjectName("text5");
     text5->setStyleName("TempWidgetsgalleryBodyText");
     text5->setWordWrap(true);
     text5->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text5);
 
     text6 = new MLabel();
+    text6->setObjectName("text6");
     text6->setStyleName("CommonTitle");
     text6->setWordWrap(true);
     text6->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text6);
 
     text7 = new MLabel();
+    text7->setObjectName("text7");
     text7->setStyleName("TempWidgetsgalleryBodyText");
     text7->setWordWrap(true);
     text7->setAlignment(Qt::AlignTop);
@@ -353,9 +377,11 @@ void PushButtonPage::twoButtons()
     */
 
     button2 = new MButton();
+    button2->setObjectName("button2");
     button2->setStyleName("CommonTopButton");
 
     button3 = new MButton();
+    button3->setObjectName("button3");
     button3->setStyleName("CommonBottomButton");
 
     // sublayout
@@ -383,12 +409,15 @@ void PushButtonPage::threeButtons()
     */
 
     button4 = new MButton();
+    button4->setObjectName("button4");
     button4->setStyleName("CommonTopButton");
 
     button5 = new MButton();
+    button5->setObjectName("button5");
     button5->setStyleName("CommonVerticalCenterButton");
 
     button6 = new MButton("abc"); // even if text is shorter, buttons have same width
+    button6->setObjectName("button6");
     button6->setStyleName("CommonBottomButton");
 
     // sublayout
@@ -415,12 +444,14 @@ void PushButtonPage::threeButtons()
     */
 
     text8 = new MLabel();
+    text8->setObjectName("text8");
     text8->setStyleName("CommonTitle");
     text8->setWordWrap(true);
     text8->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text8);
 
     text9 = new MLabel();
+    text9->setObjectName("text9");
     text9->setStyleName("TempWidgetsgalleryBodyText");
     text9->setWordWrap(true);
     text9->setAlignment(Qt::AlignTop);
@@ -432,20 +463,25 @@ void PushButtonPage::threeButtons()
 void PushButtonPage::buttonTransitionsLayout()
 {
     button20 = new MButton();
+    button20->setObjectName("button20");
     button20->setStyleName("ExpandingBackgroundButton");
 
     button21 = new MButton();
+    button21->setObjectName("button21");
     button21->setStyleName("ExpandingBackgroundButton");
 
     button22 = new MButton();
+    button22->setObjectName("button22");
     button22->setStyleName("ExpandingBackgroundButton");
 
     text13 = new MLabel();
+    text13->setObjectName("text13");
     text13->setStyleName("CommonTitle");
     text13->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text13);
 
     text14 = new MLabel();
+    text14->setObjectName("text14");
     text14->setStyleName("TempWidgetsgalleryBodyText");
     text14->setWordWrap(true);
     text14->setAlignment(Qt::AlignTop);
@@ -476,12 +512,15 @@ void PushButtonPage::buttonTransitionsLayout()
     layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
 
     button23 = new MButton("A");
+    button23->setObjectName("button23");
     button23->setStyleName("ImplodingBackgroundButton");
 
     button24 = new MButton("B");
+    button24->setObjectName("button24");
     button24->setStyleName("ImplodingBackgroundButton");
 
     button25 = new MButton("C");
+    button25->setObjectName("button25");
     button25->setStyleName("ImplodingBackgroundButton");
 
     MLayout* layoutB23B24B25 = new MLayout;

@@ -41,12 +41,14 @@ void CustomNavigationBarPage::createContent()
     MApplicationPage::createContent();
 
     infoLabel = new MLabel;
+    infoLabel->setObjectName("infoLabel");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 
     setCentralWidget(infoLabel);
 
     MyNavBarContent *myNavBarContent = new MyNavBarContent;
+    myNavBarContent->setObjectName("myNavBarContent");
     connect(myNavBarContent, SIGNAL(okClicked()), SLOT(dismiss()));
     setCustomNavigationBarContent(myNavBarContent);
 

@@ -80,6 +80,7 @@ MLabel *PhoneBookCell::landscapeTitleLabelWidget()
 {
     if (!landscapeTitleLabel) {
         landscapeTitleLabel = new MLabel(this);
+        landscapeTitleLabel->setObjectName("phoneBookListItemLandscapeTitleLabel");
         landscapeTitleLabel->setTextElide(true);
         landscapeTitleLabel->setObjectName("CommonTitle");
     }
@@ -91,6 +92,7 @@ MLabel *PhoneBookCell::portraitTitleLabelWidget()
     if (!portraitTitleLabel) {
         // In portrait we have only one title, also object name should be different
         portraitTitleLabel = new MLabel(this);
+        portraitTitleLabel->setObjectName("phoneBookListItemPortraitTitleLabel");
         portraitTitleLabel->setTextElide(true);
         portraitTitleLabel->setObjectName("CommonSingleTitle");
     }
@@ -101,6 +103,7 @@ MLabel *PhoneBookCell::subtitleLabelWidget()
 {
     if (!subtitleLabel) {
         subtitleLabel = new MLabel(this);
+        subtitleLabel->setObjectName("phoneBookListItemSubtitleLabel");
         subtitleLabel->setTextElide(true);
         subtitleLabel->setObjectName("CommonSubTitle");
     }
@@ -112,6 +115,7 @@ MImageWidget *PhoneBookCell::imageWidget()
     if (!icon) {
         // icon
         icon = new MImageWidget();
+        icon->setObjectName("phoneBookListItemIcon");
         icon->setObjectName("CommonMainIcon");
         icon->setImage("icon-m-content-avatar-placeholder");
     }

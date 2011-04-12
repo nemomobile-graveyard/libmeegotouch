@@ -69,63 +69,78 @@ void DebugPage::createContent()
     layout->setPortraitPolicy(layoutPolicy);
     layout->setLandscapePolicy(layoutPolicy);
     label1 = new MLabel ("Information Display");
+    label1->setObjectName("label1");
     label1->setStyleName("CommonApplicationHeader");
     layoutPolicy->addItem(label1);
 
     labelNames= new MLabel ("Show style names");
+    labelNames->setObjectName("labelNames");
     labelNames->setStyleName("CommonSingleTitle");
 
     checkBoxNames = new MButton();
+    checkBoxNames->setObjectName("checkBoxNames");
     checkBoxNames->setViewType(MButton::checkboxType);
     checkBoxNames->setStyleName("CommonRightCheckBox");
     checkBoxNames->setCheckable(true);
 
     labelObjects= new MLabel ("Show object names");
+    labelObjects->setObjectName("labelObjects");
     labelObjects->setStyleName("CommonSingleTitle");
 
     checkBoxobjNames = new MButton();
+    checkBoxobjNames->setObjectName("checkBoxobjNames");
     checkBoxobjNames->setViewType(MButton::checkboxType);
     checkBoxobjNames->setStyleName("CommonRightCheckBox");
     checkBoxobjNames->setCheckable(true);
 
     labelSize= new MLabel ("Show sizes");
+    labelSize->setObjectName("labelSize");
     labelSize->setStyleName("CommonSingleTitle");
 
     checkBoxSize = new MButton();
+    checkBoxSize->setObjectName("checkBoxSize");
     checkBoxSize->setViewType(MButton::checkboxType);
     checkBoxSize->setCheckable(true);
     checkBoxSize->setStyleName("CommonRightCheckBox");
 
     labelBoundingRect= new MLabel ("Show bounding rect");
+    labelBoundingRect->setObjectName("labelBoundingRect");
     labelBoundingRect->setStyleName("CommonSingleTitle");
 
     checkBoxBoundingRect = new MButton();
+    checkBoxBoundingRect->setObjectName("checkBoxBoundingRect");
     checkBoxBoundingRect->setViewType(MButton::checkboxType);
     checkBoxBoundingRect->setCheckable(true);
     checkBoxBoundingRect->setStyleName("CommonRightCheckBox");
 
     labelPosition= new MLabel ("Show positions");
+    labelPosition->setObjectName("labelPosition");
     labelPosition->setStyleName("CommonSingleTitle");
 
     checkBoxPosition = new MButton();
+    checkBoxPosition->setObjectName("checkBoxPosition");
     checkBoxPosition->setViewType(MButton::checkboxType);
     checkBoxPosition->setCheckable(true);
     checkBoxPosition->setStyleName("CommonRightCheckBox");
 
 
     labelMargins= new MLabel ("Show margins");
+    labelMargins->setObjectName("labelMargins");
     labelMargins->setStyleName("CommonSingleTitle");
 
     checkBoxMargins = new MButton();
+    checkBoxMargins->setObjectName("checkBoxMargins");
     checkBoxMargins->setViewType(MButton::checkboxType);
     checkBoxMargins->setCheckable(true);
     checkBoxMargins->setStyleName("CommonRightCheckBox");
 
 
     labelFps= new MLabel ("Show FPS");
+    labelFps->setObjectName("labelFps");
     labelFps->setStyleName("CommonSingleTitle");
 
     checkBoxFps = new MButton();
+    checkBoxFps->setObjectName("checkBoxFps");
     checkBoxFps->setViewType(MButton::checkboxType);
     checkBoxFps->setCheckable(true);
     checkBoxFps->setStyleName("CommonRightCheckBox");

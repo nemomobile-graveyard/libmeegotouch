@@ -98,6 +98,7 @@ void MainCategoryPage::createContent()
 void MainCategoryPage::populateLayout()
 {
     list = new MList(centralWidget());
+    list->setObjectName("list");
     list->setCellCreator(new WidgetGalleryCellCreator());
     list->setItemModel(dataModel);
 

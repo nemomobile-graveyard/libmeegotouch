@@ -96,6 +96,7 @@ void QueryDialogsPage::createContent()
 void QueryDialogsPage::populateLayout()
 {
     list = new MList(centralWidget());
+    list->setObjectName("list");
     list->setCellCreator(new QueryDialogsPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
@@ -129,6 +130,7 @@ void QueryDialogsPage::openMessageBox(MessageBoxOptions options)
         return;
 
     MMessageBox *messageBox = new MMessageBox("", M::YesButton|M::NoButton);
+    messageBox->setObjectName("messageBox");
 
     //% "ARE YOU SURE?"
     messageBox->setTitle(qtTrId("xx_dialogs_and_notifications_are_you_sure_upcase"));

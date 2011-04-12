@@ -96,15 +96,18 @@ void ApplicationMenuPage::createContent()
     QGraphicsWidget *panel = centralWidget();
 
     infoLabel = new MLabel(panel);
+    infoLabel->setObjectName("infoLabel");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 
     actionItalic = new MAction(panel);
+    actionItalic->setObjectName("actionItalic");
     actionItalic->setLocation(MAction::ApplicationMenuLocation);
     addAction(actionItalic);
     connect(actionItalic, SIGNAL(triggered()), this, SLOT(makeTextItalic()));
 
     actionNormal = new MAction(panel);
+    actionNormal->setObjectName("actionNormal");
     actionNormal->setLocation(MAction::ApplicationMenuLocation);
     addAction(actionNormal);
     connect(actionNormal, SIGNAL(triggered()), this, SLOT(makeTextNormal()));
@@ -117,6 +120,7 @@ void ApplicationMenuPage::createContent()
         list << QString::number(100 + i);
     }
     comboBox = new MComboBox;
+    comboBox->setObjectName("comboBox");
     comboBox->addItems(list);
 
     comboBox->setIconVisible(false);
@@ -125,6 +129,7 @@ void ApplicationMenuPage::createContent()
     widgetAction->setWidget(comboBox);
 
     actionIcon = new MAction(panel);
+    actionIcon->setObjectName("actionIcon");
     actionIcon->setLocation(MAction::ApplicationMenuLocation);
     addAction(actionIcon);
     connect(actionIcon, SIGNAL(triggered()), this, SLOT(toggleWindowIconVisibility()));

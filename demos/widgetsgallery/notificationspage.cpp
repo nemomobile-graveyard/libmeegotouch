@@ -70,6 +70,7 @@ void NotificationsPage::createContent()
 
     labelTitleNotification = new MLabel(centralWidget());
     labelTitleNotification->setStyleName("CommonTitle");
+    labelTitleNotification->setObjectName("labelTitleNotification");
     policy->addItem(labelTitleNotification);
 
     textEditTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of title", centralWidget());
@@ -172,6 +173,7 @@ void NotificationsPage::sendNotification()
 
         notification->setImage(iconids.at(qrand () % iconids.count()));
     }
+    notification->setObjectName("notification");
     notification->publish();
     delete notification;
 #endif //HAVE_DBUS

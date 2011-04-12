@@ -256,6 +256,7 @@ void ItemDetailPage::createContent()
             realImage = realImage.scaled(QSize(maxTextureSize, maxTextureSize), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 #endif
         image = new MyImageWidget(centralWidget());
+        image->setObjectName("image");
         image->setImage(realImage);
 
         image->setZoomFactor(qMin(size().width() / realImage.width(), size().height() / realImage.height()));

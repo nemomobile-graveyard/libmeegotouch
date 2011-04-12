@@ -190,13 +190,16 @@ void ToolBarPage::createContent()
     setupSliders();
 
     resetButton = new MButton();
+    resetButton->setObjectName("resetButton");
     connect(resetButton, SIGNAL(clicked()), this, SLOT(reset()));
     containerPolicy->addItem(resetButton, Qt::AlignCenter);
 
     callList = new MList;
+    callList->setObjectName("callList");
     cellCreator = new MContentItemCreator;
     callList->setCellCreator(cellCreator);
     callModel = new TestModel;
+    callModel->setObjectName("callModel");
     callList->setItemModel(callModel);
     containerPolicy->setSpacing(20);
     containerPolicy->addItem(callList);
@@ -205,46 +208,55 @@ void ToolBarPage::createContent()
     toolsConfiguration();
 
     toolsAction = new MAction(this);
+    toolsAction->setObjectName("toolsAction");
     toolsAction->setLocation(MAction::ApplicationMenuLocation);
     connect(toolsAction, SIGNAL(triggered()), this, SLOT(toolsConfiguration()));
     addAction(toolsAction);
 
     textButtonsAction = new MAction(this);
+    textButtonsAction->setObjectName("textButtonsAction");
     textButtonsAction->setLocation(MAction::ApplicationMenuLocation);
     connect(textButtonsAction, SIGNAL(triggered()), this, SLOT(textButtonsConfiguration()));
     addAction(textButtonsAction);
 
     textFieldAction = new MAction(this);
+    textFieldAction->setObjectName("textFieldAction");
     textFieldAction->setLocation(MAction::ApplicationMenuLocation);
     connect(textFieldAction, SIGNAL(triggered()), this, SLOT(textFieldConfiguration()));
     addAction(textFieldAction);
 
     iconTabsAction = new MAction(this);
+    iconTabsAction->setObjectName("iconTabsAction");
     iconTabsAction->setLocation(MAction::ApplicationMenuLocation);
     connect(iconTabsAction, SIGNAL(triggered()), this, SLOT(iconTabsBottomConfiguration()));
     addAction(iconTabsAction);
 
     textTabsAction = new MAction(this);
+    textTabsAction->setObjectName("textTabsAction");
     textTabsAction->setLocation(MAction::ApplicationMenuLocation);
     connect(textTabsAction, SIGNAL(triggered()), this, SLOT(textTabsBottomConfiguration()));
     addAction(textTabsAction);
 
     iconAndLabelTabsAction = new MAction(this);
+    iconAndLabelTabsAction->setObjectName("iconAndLabelTabsAction");
     iconAndLabelTabsAction->setLocation(MAction::ApplicationMenuLocation);
     connect(iconAndLabelTabsAction, SIGNAL(triggered()), this, SLOT(iconAndLabelTabsBottomConfiguration()));
     addAction(iconAndLabelTabsAction);
 
     iconTabsTopAction = new MAction(this);
+    iconTabsTopAction->setObjectName("iconTabsTopAction");
     iconTabsTopAction->setLocation(MAction::ApplicationMenuLocation);
     connect(iconTabsTopAction, SIGNAL(triggered()), this, SLOT(iconTabsTopConfiguration()));
     addAction(iconTabsTopAction);
 
     textTabsTopAction = new MAction(this);
+    textTabsTopAction->setObjectName("textTabsTopAction");
     textTabsTopAction->setLocation(MAction::ApplicationMenuLocation);
     connect(textTabsTopAction, SIGNAL(triggered()), this, SLOT(textTabsTopConfiguration()));
     addAction(textTabsTopAction);
 
     iconAndLabelTabsTopAction = new MAction(this);
+    iconAndLabelTabsTopAction->setObjectName("iconAndLabelTabsTopAction");
     iconAndLabelTabsTopAction->setLocation(MAction::ApplicationMenuLocation);
     connect(iconAndLabelTabsTopAction, SIGNAL(triggered()), this, SLOT(iconAndLabelTabsTopConfiguration()));
     addAction(iconAndLabelTabsTopAction);
@@ -311,21 +323,25 @@ void ToolBarPage::setupCheckBoxes()
     QGraphicsLinearLayout *layoutCheckboxes = new QGraphicsLinearLayout(Qt::Vertical);
 
     visibleBackButton = new MButton();
+    visibleBackButton->setObjectName("visibleBackButton");
     visibleBackButton->setViewType(MButton::checkboxType);
     visibleBackButton->setCheckable(true);
     visibleBackButton->setChecked(true);
     connect(visibleBackButton, SIGNAL(toggled(bool)), this, SLOT(setBackButtonVisible(bool)));
     visibleBackButtonLabel = new MLabel();
+    visibleBackButtonLabel->setObjectName("visibleBackButtonLabel");
     visibleBackButtonLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     visibleBackButtonLabel->setWordWrap(false);
     visibleBackButtonLabel->setTextElide(true);
 
     visibleMenuButton = new MButton();
+    visibleMenuButton->setObjectName("visibleMenuButton");
     visibleMenuButton->setViewType(MButton::checkboxType);
     visibleMenuButton->setCheckable(true);
     visibleMenuButton->setChecked(true);
     connect(visibleMenuButton, SIGNAL(toggled(bool)), this, SLOT(setMenuActionsVisible(bool)));
     visibleMenuButtonLabel = new MLabel();
+    visibleMenuButtonLabel->setObjectName("visibleMenuButtonLabel");
     visibleMenuButtonLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     visibleMenuButtonLabel->setWordWrap(false);
     visibleMenuButtonLabel->setTextElide(true);
@@ -354,9 +370,11 @@ void ToolBarPage::setupSliders()
     layoutSliders->setColumnFixedWidth(1, 250);
 
     maxToolsLabel = new MLabel;
+    maxToolsLabel ->setObjectName("maxToolsLabel");
     maxToolsLabel->setTextElide(true);
     layoutSliders->addItem(maxToolsLabel, 0, 0);
     maxToolsSlider = new MSlider;
+    maxToolsSlider->setObjectName("maxToolsSlider");
     maxToolsSlider->setRange(0, 5);
     maxToolsSlider->setValue(2);
     maxToolsSlider->setMinLabelVisible(true);
@@ -368,9 +386,11 @@ void ToolBarPage::setupSliders()
     layoutSliders->addItem(maxToolsSlider, 0, 1);
 
     maxTabsLabel = new MLabel;
+    maxTabsLabel->setObjectName("maxTabsLabel");
     maxTabsLabel->setTextElide(true);
     layoutSliders->addItem(maxTabsLabel, 1, 0);
     maxTabsSlider = new MSlider;
+    maxTabsSlider->setObjectName("maxTabsSlider");
     maxTabsSlider->setRange(0, 4);
     maxTabsSlider->setValue(3);
     maxTabsSlider->setMinLabelVisible(true);
@@ -523,6 +543,7 @@ void ToolBarPage::toolsConfiguration(int count)
 
         for (int i=currentCount; i<qMin(5, count); i++) {
             MAction *action = new MAction(icons[i], "", this);
+            action->setObjectName("configurationAction");
             action->setLocation(MAction::ToolBarLocation);
             addAction(action);
             switch (i) {
@@ -547,12 +568,14 @@ void ToolBarPage::textButtonsConfiguration()
 
     //% "Save"
     MAction* action = new MAction(qtTrId("xx_toolbar_page_tools_save"), this);
+    action->setObjectName("saveAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(disappear()));
 
     //% "Cancel"
     action = new MAction(qtTrId("xx_toolbar_page_tools_cancel"), this);
+    action->setObjectName("cancelAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(reset()));
@@ -565,8 +588,10 @@ void ToolBarPage::textFieldConfiguration()
     initDefaultViewToolBar();
 
     MTextEdit *entry = new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    entry->setObjectName("entry");
     entry->setViewType("toolbar");
     MWidgetAction *action = new MWidgetAction(this);
+    action->setObjectName("action");
     action->setLocation(MAction::ToolBarLocation);
     action->setWidget(entry);
     addAction(action);
@@ -694,6 +719,7 @@ void ToolBarPage::addTab(int tabNumber)
         {
             //% "Initiated"
             MAction *action = new MAction(icons ? "icon-m-telephony-call-initiated" : "", qtTrId("xx_toolbar_page_tools_initiated"), this);
+            action->setObjectName("callInitiatedAction");
             action->setLocation(MAction::ToolBarLocation);
             action->setCheckable(true);
             action->setChecked(true);
@@ -706,6 +732,7 @@ void ToolBarPage::addTab(int tabNumber)
         {
             //% "Received"
             MAction *action = new MAction(icons ? "icon-m-telephony-call-received" : "", qtTrId("xx_toolbar_page_tools_received"), this);
+            action->setObjectName("callReceivedAction");
             action->setLocation(MAction::ToolBarLocation);
             action->setCheckable(true);
             connect(action, SIGNAL(triggered()), this, SLOT(populateCallReceived()));
@@ -716,6 +743,7 @@ void ToolBarPage::addTab(int tabNumber)
         {
             //% "Missed"
             MAction *action = new MAction(icons ? "icon-m-telephony-call-missed" : "", qtTrId("xx_toolbar_page_tools_missed"), this);
+            action->setObjectName("callMissedAction");
             action->setCheckable(true);
             connect(action, SIGNAL(triggered()), this, SLOT(populateCallMissed()));
             action->setLocation(MAction::ToolBarLocation);
@@ -726,6 +754,7 @@ void ToolBarPage::addTab(int tabNumber)
         {
             //% "Diverted"
             MAction *action = new MAction(icons ? "icon-m-telephony-call-diverted" : "", qtTrId("xx_toolbar_page_tools_diverted"), this);
+            action->setObjectName("callDivertedAction");
             action->setCheckable(true);
             action->setLocation(MAction::ToolBarLocation);
             addAction(action);
@@ -735,6 +764,7 @@ void ToolBarPage::addTab(int tabNumber)
         {
             //% "Call"
             MAction *action = new MAction(icons ? "icon-m-telephony-cellular" : "", qtTrId("xx_toolbar_page_tools_call"), this);
+            action->setObjectName("telephonyCellularAction");
             action->setCheckable(true);
             action->setLocation(MAction::ToolBarLocation);
             addAction(action);

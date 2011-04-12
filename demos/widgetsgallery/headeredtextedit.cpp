@@ -35,6 +35,7 @@ HeaderedTextEdit::~HeaderedTextEdit()
 void HeaderedTextEdit::setHeaderText(const QString &text)
 {
     headerLabel = new MLabel(this);
+    headerLabel->setObjectName("headerLabel");
     headerLabel->setStyleName("CommonEditorInputFieldLabel");
     headerLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     headerLabel->setPos(0, 0);

@@ -54,6 +54,7 @@ void ObjectMenuPage::createContent()
     TemplatePage::createContent();
 
     containerFriends = new MContainer(centralWidget());
+    containerFriends->setObjectName("containerFriends");
     QGraphicsLinearLayout *friendsLayout = new QGraphicsLinearLayout(containerFriends->centralWidget());
     friendsLayout->setContentsMargins(0, 0, 0, 0);
     friendsLayout->setOrientation(Qt::Vertical);
@@ -61,6 +62,7 @@ void ObjectMenuPage::createContent()
     containerPolicy->addItem(containerFriends);
 
     containerAlbums = new MContainer(centralWidget());
+    containerAlbums->setObjectName("containerAlbums");
     QGraphicsLinearLayout *albumLayout = new QGraphicsLinearLayout(Qt::Horizontal, containerAlbums->centralWidget());
     albumLayout->setContentsMargins(0, 0, 0, 0);
     containerAlbums->centralWidget()->setLayout(albumLayout);
@@ -80,6 +82,7 @@ void ObjectMenuPage::createContent()
     // Fill the friends
     for (int i = 0; i < 3; ++i) {
         MBasicListItem *item = new MBasicListItem(MBasicListItem::IconWithTitleAndSubtitle, containerFriends->centralWidget());
+        item->setObjectName("listItem");
 
         // set content uri to dummy contact.
         item->setProperty("contentURI", QString("a.contact"));
@@ -92,6 +95,7 @@ void ObjectMenuPage::createContent()
 
         if (imageContacts.size() > 0) {
             MImageWidget *icon = new MImageWidget;
+            icon->setObjectName("icon");
             icon->setPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]);
             item->setImageWidget(icon);
         }
@@ -100,21 +104,25 @@ void ObjectMenuPage::createContent()
 
         //% "Call"
         MAction *action = new MAction(qtTrId("xx_objectmenu_call"), item);
+        action->setObjectName("callAction");
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
         //% "Send message"
         action = new MAction(qtTrId("xx_objectmenu_send_message"), item);
+        action->setObjectName("sendMessageAction");
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
         //% "Open contact card"
         action = new MAction(qtTrId("xx_objectmenu_open_contact_card"), item);
+        action->setObjectName("contactAction");
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
         //% "Remove"
         action = new MAction(qtTrId("xx_objectmenu_remove"), item);
+        action->setObjectName("removeAction");
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
@@ -125,6 +133,7 @@ void ObjectMenuPage::createContent()
     // Fill the albums
     for (int i = 0; i < 4; ++i) {
         MImageWidget *image = new MImageWidget(containerAlbums->centralWidget());
+        image->setObjectName("albumImage");
 
         // set content uri to dummy album
         image->setProperty("contentURI", QString("a.album"));
@@ -142,21 +151,25 @@ void ObjectMenuPage::createContent()
 
         //% "Play"
         MAction *action = new MAction(qtTrId("xx_objectmenu_Play"), image);
+        action->setObjectName("playAction");
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
         //% "Add to playlist"
         action = new MAction(qtTrId("xx_objectmenu_add_to_playlist"), image);
+        action->setObjectName("addAction");
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
         //% "Change album art"
         action = new MAction(qtTrId("xx_objectmenu_change_album_art"), image);
+        action->setObjectName("artAction");
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
         //% "Remove"
         action = new MAction(qtTrId("xx_objectmenu_remove"), image);
+        action->setObjectName("removeAction");
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 

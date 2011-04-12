@@ -74,6 +74,8 @@ int main(int argc, char **argv)
     MApplication *application = new MApplication(argc, argv);
 #endif
 
+    application->setObjectName("application");
+
     WidgetsgalleryRetranslator widgetsgalleryRetranslator;
     QObject::connect(application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
 
@@ -82,8 +84,10 @@ int main(int argc, char **argv)
 #else
     MApplicationWindow* window = new MApplicationWindow();
 #endif
+    window->setObjectName("applicationWindow");
 
     MainPage *mainPage = new MainPage;
+    mainPage->setObjectName("mainPage");
     Timedemo *timedemo = 0;
     if (qApp->arguments().indexOf("-timedemo") >= 0) {
         QStringList demoPages;

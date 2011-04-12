@@ -59,10 +59,12 @@ void LabelPage::createContent()
     TemplatePage::createContent();
 
     simpleLabel = new MLabel();
+    simpleLabel->setObjectName("simpleLabel");
     simpleLabel->setAlignment(Qt::AlignVCenter);
     containerPolicy->addItem(simpleLabel);
 
     richLabel = new MLabel();
+    richLabel->setObjectName("richLabel");
 
     richLabel->setAlignment(Qt::AlignTop);
     richLabel->setWordWrap(true);
@@ -79,8 +81,11 @@ void LabelPage::createContent()
 
 
     MCommonLabelHighlighter *phone = new MCommonLabelHighlighter(phoneregexp);
+    phone->setObjectName("phoneLabelHighlighter");
     MCommonLabelHighlighter *email = new MCommonLabelHighlighter(emailregexp);
+    email->setObjectName("emailLabelHighlighter");
     MCommonLabelHighlighter *url = new MCommonLabelHighlighter(urlregexp);
+    url->setObjectName("urlLabelHighlighter");
 
     connect(phone, SIGNAL(longPressed(QString)), this, SLOT(phoneNumberLongPressed(QString)));
     connect(phone, SIGNAL(clicked(QString)), this, SLOT(phoneNumberClicked(QString)));

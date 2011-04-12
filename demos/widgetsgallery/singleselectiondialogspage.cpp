@@ -99,6 +99,7 @@ void SingleSelectionDialogsPage::createContent()
 void SingleSelectionDialogsPage::populateLayout()
 {
     list = new MList(centralWidget());
+    list->setObjectName("list");
     list->setCellCreator(new SingleSelectionDialogsPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
@@ -138,6 +139,7 @@ void SingleSelectionDialogsPage::openStackedDialogs()
         return;
 
     QGraphicsWidget *alignContainer = new QGraphicsWidget();
+    alignContainer->setObjectName("alignContainer");
     QGraphicsWidget *leftSpacer = createSpacer();
     QGraphicsWidget *rightSpacer = createSpacer();
     QGraphicsLinearLayout  *alignLayout = new QGraphicsLinearLayout(Qt::Horizontal, alignContainer);
@@ -145,9 +147,11 @@ void SingleSelectionDialogsPage::openStackedDialogs()
 
     //% "Click to spawn a nested dialog"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_button"));
+    button->setObjectName("stackedDialogButton");
     button->setStyleName("CommonSingleButtonInverted");
     //% "Stacked dialogs"
     dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), M::NoStandardButton);
+    dialog->setObjectName("stackedDialog");
     alignLayout->addItem(button);
     alignLayout->addItem(rightSpacer);
     dialog->setCentralWidget(alignContainer);
@@ -163,6 +167,7 @@ void SingleSelectionDialogsPage::openNestedDialog()
         return;
 
     QGraphicsWidget *alignContainer = new QGraphicsWidget();
+    alignContainer->setObjectName("alignContainer");
     QGraphicsWidget *leftSpacer = createSpacer();
     QGraphicsWidget *rightSpacer = createSpacer();
     QGraphicsLinearLayout  *alignLayout = new QGraphicsLinearLayout(Qt::Horizontal, alignContainer);
@@ -170,9 +175,11 @@ void SingleSelectionDialogsPage::openNestedDialog()
 
     //% "Click to open a nested message box"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox"));
+    button->setObjectName("nestedDialogButton");
     button->setStyleName("CommonSingleButtonInverted");
     //% "This is a nested dialog"
     nestedDialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), M::NoStandardButton);
+    nestedDialog->setObjectName("nestedDialog");
     alignLayout->addItem(button);
     alignLayout->addItem(rightSpacer);
     nestedDialog->setCentralWidget(alignContainer);
@@ -188,6 +195,7 @@ void SingleSelectionDialogsPage::openNestedMessageBox()
 
     //% "I'm a nested message box"
     nestedMessageBox = new MMessageBox(qtTrId("xx_dialogs_and_notifications_stacked_dialog_messagebox_text"));
+    nestedMessageBox->setObjectName("nestedMessageBox");
     nestedMessageBox->appear(MSceneWindow::DestroyWhenDone);
 }
 
@@ -199,11 +207,13 @@ void SingleSelectionDialogsPage::openSystemDialog()
     dialog = new MDialog(
         //% "System Dialog"
         qtTrId("xx_dialogs_and_notifications_system_dialog_title"), M::NoStandardButton);
+    dialog->setObjectName("systemDialog");
     //% "I'm a system dialog.<br>"
     //% "You can skip me with the home button.<br>"
     //% "I'll be minimised to the task switcher<br>"
     //% "but I'll remain alive until you make a selection."
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_system_dialog_label"));
+    label->setObjectName("systemDialogLabel");
     label->setStyleName("CommonBodyTextInverted");
     label->setWordWrap(true);
     dialog->setCentralWidget(label);
@@ -222,11 +232,13 @@ void SingleSelectionDialogsPage::openSystemModalDialog()
     dialog = new MDialog(
         //% "System Modal Dialog"
         qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"), M::OkButton);
+    dialog->setObjectName("modalDialog");
     //% "I'm a system modal dialog.<br>"
     //% "You can't skip me as I'm designed for<br>"
     //% "use cases that require immediate user attention."
 
     MLabel *textSystemModal= new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label"));
+    textSystemModal->setObjectName("textSystemModalLabel");
     textSystemModal->setStyleName("CommonBodyTextInverted");
     textSystemModal->setAlignment(Qt::AlignCenter);
     textSystemModal->setWordWrap(true);
@@ -249,6 +261,7 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
         return;
 
     MButton *button = new MButton();
+    button->setObjectName("progressIndicatorButton");
     button->setViewType(MButton::switchType);
     button->setStyleName("CommonSwitchInverted");
     button->setCheckable(true);
@@ -257,6 +270,7 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
 
     //% "Progress Indicator"
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_progress_indicator"));
+    label->setObjectName("progressIndicatorLabel");
     label->setStyleName("CommonTitleInverted");
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -266,6 +280,7 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
     layout->addStretch();
 
     dialog = new MDialog("Lorem ipsum", M::NoStandardButton);
+    dialog->setObjectName("progressIndicatorDialog");
     dialog->centralWidget()->setLayout(layout);
     dialog->setProgressIndicatorVisible(true);
     dialog->appear(MSceneWindow::DestroyWhenDone);
@@ -277,6 +292,7 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
         return;
 
     MButton *button = new MButton();
+    button->setObjectName("iconDialogButton");
     button->setViewType(MButton::switchType);
     button->setStyleName("CommonSwitchInverted");
     button->setCheckable(true);
@@ -285,6 +301,7 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
 
     //% "Title Bar Icon"
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_icon"));
+    label->setObjectName("iconDialogLabel");
     label->setStyleName("CommonTitleInverted");
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -294,6 +311,7 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
     layout->addStretch();
 
     dialog = new MDialog("Lorem ipsum", M::NoStandardButton);
+    dialog->setObjectName("iconDialog");
     dialog->centralWidget()->setLayout(layout);
     dialog->setTitleBarIconId("icon-l-default-application");
     dialog->appear(MSceneWindow::DestroyWhenDone);
@@ -305,12 +323,14 @@ void SingleSelectionDialogsPage::openLongDialog()
         return;
 
     MWidget *centralWidget = new MWidget;
+    centralWidget->setObjectName("centralWidget");
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
     //% "Select printer"
     dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), M::NoStandardButton);
+    dialog->setObjectName("longDialog");
     dialog->setCentralWidget(centralWidget);
 
     centralWidget->setLayout(layout);
@@ -323,6 +343,7 @@ void SingleSelectionDialogsPage::openLongDialog()
 
     for(int i = 0; printers[i] != NULL; i++) {
         MBasicListItem *printerItem = new MBasicListItem(MBasicListItem::SingleTitle);
+        printerItem->setObjectName("printerItem");
         printerItem->setStyleName("CommonSmallPanelInverted");
         printerItem->setTitle(printers[i]);
         dialog->connect(printerItem, SIGNAL(clicked()), SLOT(accept()));

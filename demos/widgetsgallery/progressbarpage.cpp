@@ -55,9 +55,11 @@ void ProgressBarPage::createContent()
     TemplatePage::createContent();
 
     label1 = new MLabel();
+    label1->setObjectName("label1");
     containerPolicy->addItem(label1);
 
     bar1 = new MProgressIndicator(0, MProgressIndicator::barType);
+    bar1->setObjectName("progressIndicatorBar2bar1");
     // Since range's type is int, we want a fairly large number here, to get a smooth animation
     bar1->setRange(0, 1000);
     bar1->setValue(0);
@@ -67,14 +69,17 @@ void ProgressBarPage::createContent()
     bar1ValueAnimation->setEasingCurve(QEasingCurve::OutInQuad);
 
     button1 = new MButton();
+    button1->setObjectName("button1");
     button1->setIconID("icon-m-common-play");
     containerPolicy->addItem(button1, Qt::AlignHCenter);
     containerPolicy->setVerticalSpacing(10);
 
     label2 = new MLabel();
+    label2->setObjectName("label2");
     containerPolicy->addItem(label2);
 
     bar2 = new MProgressIndicator(0, MProgressIndicator::barType);
+    bar2->setObjectName("progressIndicatorBar2bar2");
     bar2->setRange(0, 9);
     bar2->setUnknownDuration(true);
     containerPolicy->addItem(bar2);

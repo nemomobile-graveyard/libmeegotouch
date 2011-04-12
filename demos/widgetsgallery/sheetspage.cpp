@@ -146,6 +146,7 @@ void SheetsPage::createContent()
 void SheetsPage::populateLayout()
 {
     list = new MList(centralWidget());
+    list->setObjectName("list");
     list->setCellCreator(new SheetsPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
@@ -201,30 +202,35 @@ void SheetsPage::retranslateUi()
 void SheetsPage::openLoginSheet()
 {
     MSheet *loginSheet = new LoginSheet;
+    loginSheet->setObjectName("loginSheet");
     loginSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SheetsPage::openSystemwideSheet()
 {
     MSheet *loginSheet = new LoginSheet;
+    loginSheet->setObjectName("loginSheet");
     loginSheet->appearSystemwide(MSceneWindow::DestroyWhenDone);
 }
 
 void SheetsPage::openLongSheet()
 {
     MSheet *longSheet = new LongSheet;
+    longSheet->setObjectName("longSheet");
     longSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SheetsPage::openListSheet()
 {
     MSheet *listSheet = new ListSheet;
+    listSheet->setObjectName("listSheet");
     listSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SheetsPage::openPhotoSheet()
 {
     photoSheet = new MSheet;
+    photoSheet->setObjectName("photoSheet");
 
     populatePhotoSheetCentralWidget(photoSheet->centralWidget());
     populatePhotoSheetHeader(photoSheet);
@@ -235,6 +241,7 @@ void SheetsPage::openPhotoSheet()
 void SheetsPage::populatePhotoSheetCentralWidget(QGraphicsWidget *centralWidget)
 {
     sheetPhoto = new ClickableImageWidget(centralWidget);
+    sheetPhoto->setObjectName("sheetPhoto");
     sheetPhoto->setPixmap(QPixmap(Utils::mediaArtDir() + QDir::separator() + "photo_450x450_021.jpg"));
     sheetPhoto->setGeometry(QRectF(100, 50, 300, 300));
 
@@ -244,6 +251,7 @@ void SheetsPage::populatePhotoSheetCentralWidget(QGraphicsWidget *centralWidget)
 void SheetsPage::populatePhotoSheetHeader(MSheet *sheet)
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(sheet);
+    basicHeader->setObjectName("basicHeader");
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));
@@ -255,6 +263,7 @@ void SheetsPage::populatePhotoSheetHeader(MSheet *sheet)
 void SheetsPage::openFullscreenPhotoSheet()
 {
     fullScreenPhotoSheet = new MSheet;
+    fullScreenPhotoSheet->setObjectName("fullScreenPhotoSheet");
     fullScreenPhotoSheet->setStyleName("PhotoViewer");
 
     populateFullscreenPhotoSheetCentralWidget(fullScreenPhotoSheet->centralWidget());
@@ -287,6 +296,7 @@ void SheetsPage::populateFullscreenPhotoSheetCentralWidget(QGraphicsWidget *cent
 void SheetsPage::populateFullscreenPhotoSheetHeader(MSheet *sheet)
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(sheet);
+    basicHeader->setObjectName("basicHeader");
     basicHeader->setStyleName("Inverted");
 
     //% "Done"
@@ -346,6 +356,7 @@ void SheetsPage::processFullscreenSaveSuccess()
         header->setProgressIndicatorVisible(false);
     }
     MMessageBox *msg = new MMessageBox;
+    msg->setObjectName("messageBox");
     //% "Save Completed!"
     msg->setTitle(qtTrId("xx_wg_sheets_save_completed"));
     //% "The photo was imported into your photo library, and is now accessible through the photo gallery viewer."
