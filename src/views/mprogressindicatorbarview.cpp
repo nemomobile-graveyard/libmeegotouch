@@ -582,7 +582,7 @@ void MProgressIndicatorBarView::applyStyle()
     Q_D(MProgressIndicatorBarView);
 
     d->clearBarImages();
-    d->animationCache.clear();
+    d->clearAnimationCache();
 
     if (model()->unknownDuration())
         d->setupAnimation();
