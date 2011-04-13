@@ -222,6 +222,12 @@ public:
         addGalleryPage(6, qtTrId("xx_wg_take_screenshot"), WidgetsGalleryDataModel::ScreenshotPageType);
     }
 
+    ~WidgetsGalleryDataModel() {
+        foreach (const TemplatePageList &pageList, galleryPages.values()) {
+            qDeleteAll(pageList);
+        }
+    }
+
     QModelIndex parent(const QModelIndex &child) const {
         Q_UNUSED(child);
 
