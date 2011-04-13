@@ -34,6 +34,8 @@ MThemeDaemonClient::MThemeDaemonClient(QIODevice *socket, const QString &clientN
 
 MThemeDaemonClient::~MThemeDaemonClient()
 {
+    qDeleteAll(toBeDeletedThemeImageDirs);
+    toBeDeletedThemeImageDirs.clear();
     qDeleteAll(themeImageDirs);
     themeImageDirs.clear();
     qDeleteAll(customImageDirs);
@@ -86,6 +88,10 @@ ImageResource *MThemeDaemonClient::findImageResource(const QString &imageId)
 
 void MThemeDaemonClient::reloadImagePaths(const QStringList &themes)
 {
+    // Postpone the deleting of the themeImageDirs until the themechange has
+    // been applied in MThemeDaemonClient::themeChangeApplied(). This assures
+    // that clients that changed their application name don't accidently access
+    // dangling pointers.
     toBeDeletedThemeImageDirs.append(themeImageDirs);
     themeImageDirs.clear();
 
