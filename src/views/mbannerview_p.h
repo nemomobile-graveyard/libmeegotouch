@@ -75,6 +75,7 @@ protected:
     void layoutShortEventBanner();
     void layoutPrivateEventBanner();
     void layoutFullEventBanner();
+    void layoutLockScreenEventBanner();
     void layoutInformationBanner();
     void layoutSystemBanner();
     void layoutGenericBanner();

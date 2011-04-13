@@ -456,6 +456,66 @@ void MBannerViewPrivate::layoutFullEventBanner()
     }
 }
 
+void MBannerViewPrivate::layoutLockScreenEventBanner()
+{
+    Q_Q(MBannerView);
+
+    gridBanner = createGrid();
+
+    if (!q->model()->iconID().isEmpty()) {
+        icon()->setStyleName("LockScreenEventBannerIcon");
+        icon()->setVisible(true);
+        gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
+    }
+
+    if (!q->model()->pixmap().isNull()) {
+        pixmap()->setStyleName("LockScreenEventBannerIcon");
+        if (!q->model()->iconID().isEmpty())
+            icon()->setVisible(false);
+        pixmap()->setVisible(true);
+        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
+    }
+
+    if (!q->model()->title().isEmpty()) {
+        title()->setStyleName("LockScreenEventBannerTitle");
+        title()->setVisible(true);
+        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        title()->setWordWrap(true);
+        title()->setTextElide(true);
+        gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
+    }
+
+    if (!q->model()->subtitle().isEmpty()) {
+        subtitle()->setStyleName("LockScreenEventBannerSubtitle");
+        subtitle()->setVisible(true);
+        subtitle()->setWordWrap(false);
+        gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+    }
+
+    //Prefix is not show if it doesn't come with a valid datetime
+    if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
+        QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
+        layoutStamp->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        layoutStamp->setContentsMargins(0,0,0,0);
+        layoutStamp->setSpacing(0);
+        prefixTimeStamp()->setStyleName("LockScreenEventBannerPrefixTimeStamp");
+        prefixTimeStamp()->setVisible(true);
+        bannerTimeStamp()->setStyleName("LockScreenEventBannerTimeStamp");
+        bannerTimeStamp()->setVisible(true);
+        layoutStamp->addItem(prefixTimeStamp());
+        layoutStamp->addItem(bannerTimeStamp());
+        layoutStamp->addStretch();
+        gridBanner->addItem(layoutStamp, 2, 1,Qt::AlignTop);
+    } else if (q->model()->bannerTimeStamp().isValid()) {
+        prefixTimeStamp()->setVisible(false);
+        bannerTimeStamp()->setStyleName("LockScreenEventBannerTimeStampIsolated");
+        gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+    } else {
+        prefixTimeStamp()->setVisible(false);
+        bannerTimeStamp()->setVisible(false);
+    }
+}
+
 void MBannerViewPrivate::layoutPrivateEventBanner()
 {
     /*!
@@ -523,6 +583,8 @@ void MBannerViewPrivate::initDynamicLayout()
         layoutShortEventBanner();
     } else if (q->model()->styleName()=="FullEventBanner") {
         layoutFullEventBanner();
+    } else if (q->model()->styleName()=="LockScreenEventBanner") {
+        layoutLockScreenEventBanner();
     } else if (q->model()->styleName()=="PrivateEventBanner") {
         layoutPrivateEventBanner();
     } else if (q->model()->styleName()=="SystemBanner") {
