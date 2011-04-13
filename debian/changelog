@@ -1,9 +1,23 @@
-libmeegotouch (0.21.5~1) unstable; urgency=low
+libmeegotouch (0.21.5-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#244334 - <MemLeak> mprogressindicatorbarview.cpp
+  * Fixes: wrong library name in mwidget.cpp comment
+  * Fixes: failing ut_mapplicationwindow
+  * Fixes: NB#242028, Copy,cut menu is not shown in the single line(select all) field when a long text is entered with the device in portrait mode.
+  * Fixes: ut_mstatusbarview
+  * Fixes: NB#244004 - [REG] Application visible area is not as it should be.
+  * Fixes: NB#237669 - Possible memory leak in mthemedaemon process when sending IM messages
+  * Fixes: NB#229401 - [TASK] Camera needs a way to paint while in switcher
+  * Fixes: NB#245540 - [REG] Notifications placed to close to left edge of screen
+  * Fixes: NB#241592 - Navigation tool bar is not displayed when tapped on camera settings icon after changing device orientation.
+  * Fixes: NB#244227 - Boot sequence is broken after erase-user-data flashing
+  * Fixes: Widgetsgallery crashes when benchmark result is missing.
+  * Fixes: NB#244241 - <MemLeak> mstylesheet.cpp, minputmethodstate.cpp
+  * Fixes: Build break on systems without context subscriber.
   * Fixes: NB#236960 - Audio and vibration feedbacks are not coming for the buttons in Input Feedback page.
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 08 Apr 2011 11:49:03 +0200
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 13 Apr 2011 11:08:24 +0300
 
 libmeegotouch (0.21.4-1) unstable; urgency=low
 
