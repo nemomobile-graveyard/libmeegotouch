@@ -60,9 +60,11 @@ class MBannerPrivate;
 
     \li FullEventBanner
     \li PrivateEventBanner
+    \li LockScreenEventBanner
 
     The difference between FullEventBanner and PrivateEventBanner is that the second doesn't show
-    the subtitle due to privacy reasons.
+    the subtitle due to privacy reasons. LockScreenEventBanner allows the user to customize the
+    MBanner when it is placed at the lock screen.
 
     MBanner can switch to different styles in anytime only switching the stylename.
     Note that some styles contain some specific layouts in which some properties are not show.
