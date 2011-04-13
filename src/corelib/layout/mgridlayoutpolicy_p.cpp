@@ -25,7 +25,7 @@
 #include "mlayout.h"
 #include "mlayouthelper_p.h"
 MGridLayoutPolicyPrivate::MGridLayoutPolicyPrivate(MLayout *l) :
-    MAbstractLayoutPolicyPrivate(l), engineWidget(new QGraphicsWidget), engine(new QGraphicsGridLayout(engineWidget)), invalidated(true)
+    MAbstractLayoutPolicyPrivate(l), engineWidget(new EngineWidget), engine(new QGraphicsGridLayout(engineWidget)), invalidated(true)
 {
 }
 

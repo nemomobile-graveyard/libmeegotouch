@@ -23,6 +23,9 @@
 #include "mabstractlayoutpolicy_p.h"
 #include "mgridlayoutpolicy.h"
 
+/* Include in EngineWidget to filter out layout request events since we will manually send activate() */
+#include "mlinearlayoutpolicy_p.h"
+
 class MLayout;
 class QGraphicsWidget;
 class QGraphicsGridLayout;
@@ -44,7 +47,7 @@ public:
     void refreshEngine();
     void refreshWidget();
 
-    QGraphicsWidget *const engineWidget;
+    EngineWidget *const engineWidget;
     QGraphicsGridLayout *const engine;
     mutable bool invalidated;
 };

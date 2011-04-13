@@ -23,11 +23,22 @@
 #include "mlinearlayoutpolicy.h"
 #include "mabstractlayoutpolicy_p.h"
 #include "mnamespace.h"
+#include <QGraphicsWidget>
 
 class QGraphicsLinearLayout;
 class QGraphicsWidget;
 class MLayout;
 class ProxyItem;
+
+class EngineWidget : public QGraphicsWidget
+{
+    protected:
+        virtual bool event(QEvent *event) {
+            if (event->type() == QEvent::LayoutRequest)
+                return true; //Filter out layout requests for the enginewidget because we'll explicitly layout ourselves
+            return QGraphicsWidget::event(event);
+        }
+};
 
 /**
     This is the private implementation class for the grid layout policy.
@@ -52,7 +63,7 @@ public:
     void notifyAffectedWidgetsOfLayoutPosition(int index, bool add);
     void notifyAllWidgetsOfLayoutPosition();
 
-    QGraphicsWidget *const engineWidget;
+    EngineWidget *const engineWidget;
     QGraphicsLinearLayout *const engine;
     /** We need to keep track of the number of rows/columns in the layout, since
      *  QGraphicsLinearLayout does not expose this information to us.  This is

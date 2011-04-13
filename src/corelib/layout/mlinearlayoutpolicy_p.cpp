@@ -29,7 +29,7 @@
 #include "mlayouthelper_p.h"
 MLinearLayoutPolicyPrivate::MLinearLayoutPolicyPrivate(MLayout *layout, Qt::Orientation orientation) :
     MAbstractLayoutPolicyPrivate(layout),
-    engineWidget(new QGraphicsWidget),
+    engineWidget(new EngineWidget),
     engine(new QGraphicsLinearLayout(orientation, engineWidget)),
     rowCount(0),
     invalidated(true),
