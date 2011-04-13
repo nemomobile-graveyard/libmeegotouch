@@ -66,7 +66,7 @@ void MLinearLayoutPolicy::insertItem(int index, QGraphicsLayoutItem *item)
     ProxyItem *proxyItem = new ProxyItem(item);
     d->engine->insertItem(index, proxyItem);
     MAbstractLayoutPolicy::insertItem(index, item);
-    
+
     if( isActive() && d->notifyWidgetsOfLayoutPositionEnabled )
         d->notifyAffectedWidgetsOfLayoutPosition(index, true);
 }
@@ -238,17 +238,29 @@ void MLinearLayoutPolicy::invalidate()
 void MLinearLayoutPolicy::setHorizontalSpacing(qreal spacing)
 {
     Q_D(MLinearLayoutPolicy);
-    MAbstractLayoutPolicy::setHorizontalSpacing(spacing);
-    if (orientation() == Qt::Horizontal)
+    if (orientation() == Qt::Horizontal) {
         d->engine->setSpacing(spacing);
+        MAbstractLayoutPolicy::setHorizontalSpacing(spacing);
+    } else {
+        d->disableInvalidateLayoutAndPolicy = true;
+        MAbstractLayoutPolicy::setHorizontalSpacing(spacing);
+        d->disableInvalidateLayoutAndPolicy = false;
+        d->layoutInvalidateCalledWhileDisabled = false;
+    }
 }
 
 void MLinearLayoutPolicy::setVerticalSpacing(qreal spacing)
 {
     Q_D(MLinearLayoutPolicy);
-    MAbstractLayoutPolicy::setVerticalSpacing(spacing);
-    if (orientation() == Qt::Vertical)
+    if (orientation() == Qt::Vertical) {
         d->engine->setSpacing(spacing);
+        MAbstractLayoutPolicy::setVerticalSpacing(spacing);
+    } else {
+        d->disableInvalidateLayoutAndPolicy = true;
+        MAbstractLayoutPolicy::setVerticalSpacing(spacing);
+        d->disableInvalidateLayoutAndPolicy = false;
+        d->layoutInvalidateCalledWhileDisabled = false;
+    }
 }
 void MLinearLayoutPolicy::setSpacing(qreal spacing)
 {

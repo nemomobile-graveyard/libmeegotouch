@@ -34,6 +34,8 @@ MAbstractLayoutPolicyPrivate::MAbstractLayoutPolicyPrivate(MLayout *l) :
     style(NULL),
     removingFromLayout(false),
     hasHeightForWidth(false),
+    disableInvalidateLayoutAndPolicy(false),
+    layoutInvalidateCalledWhileDisabled(false),
     q_ptr(NULL)
 {
     Q_ASSERT(0 != layout);

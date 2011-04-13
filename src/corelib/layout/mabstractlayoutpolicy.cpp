@@ -78,6 +78,11 @@ void MAbstractLayoutPolicy::invalidate()
 void MAbstractLayoutPolicy::invalidatePolicyAndLayout()
 {
     Q_D(MAbstractLayoutPolicy);
+    if (d->disableInvalidateLayoutAndPolicy) {
+        d->layoutInvalidateCalledWhileDisabled = true;
+        return;
+    }
+    d->layoutInvalidateCalledWhileDisabled = false;
     if (d->layout && d->layout->policy() == this)
         d->layout->QGraphicsLayout::invalidate();  //Invalidate the layout only, and not the policy again
     invalidate();
@@ -165,6 +170,9 @@ void MAbstractLayoutPolicy::applyStyle()
     Q_D(MAbstractLayoutPolicy);
     //Do not change the margins if the user manually set them or the margins
     //have not changed
+
+    d->disableInvalidateLayoutAndPolicy = true;
+
     if (!d->userSetContentsMargins &&
             (d->marginLeft != (int)d->style->marginLeft() ||
              d->marginTop != (int)d->style->marginTop() ||
@@ -185,6 +193,11 @@ void MAbstractLayoutPolicy::applyStyle()
     if (!d->userSetVerticalSpacing) {
         setVerticalSpacing(d->style->verticalSpacing()); //This is a virtual function so we have to call it so that subclasses receive this
         d->userSetVerticalSpacing = false;
+    }
+
+    d->disableInvalidateLayoutAndPolicy = false;
+    if (d->layoutInvalidateCalledWhileDisabled) {
+        invalidatePolicyAndLayout();
     }
 }
 
@@ -258,8 +271,15 @@ qreal MAbstractLayoutPolicy::verticalSpacing() const
 
 void MAbstractLayoutPolicy::setSpacing(qreal spacing)
 {
+    Q_D(MAbstractLayoutPolicy);
+    d->disableInvalidateLayoutAndPolicy = true;
+
     setHorizontalSpacing(spacing);
     setVerticalSpacing(spacing);
+
+    d->disableInvalidateLayoutAndPolicy = false;
+    if (d->layoutInvalidateCalledWhileDisabled)
+        invalidatePolicyAndLayout();
 }
 
 int MAbstractLayoutPolicy::count() const

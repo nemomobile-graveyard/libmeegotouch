@@ -84,6 +84,11 @@ public:
     /** True if the height depends on the width */
     bool hasHeightForWidth;
 
+    /** If true, do not call invalidate() on the layout and policy from invalidateLayoutAndPolicy() */
+    bool disableInvalidateLayoutAndPolicy;
+
+    /** Set to true by invalidateLayoutAndPolicy() if it is called while disableInvalidateLayoutAndPolicy is true */
+    bool layoutInvalidateCalledWhileDisabled;
 protected:
     // Shared d_ptr related code:
     MAbstractLayoutPolicy *q_ptr;
