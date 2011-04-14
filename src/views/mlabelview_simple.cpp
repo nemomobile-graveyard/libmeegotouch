@@ -119,8 +119,13 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 {
     switch (which) {
     case Qt::MinimumSize: {
-        QFontMetricsF fm(viewPrivate->controller->font());
-        return QSizeF(fm.width(QLatin1Char('x')), fm.height());
+        //If we have word wrap or eliding, the minimum size is the size of a single letter,
+        if (wrap() || viewPrivate->model()->textElide()) {
+            QFontMetricsF fm(viewPrivate->controller->font());
+            return QSizeF(fm.width(QLatin1Char('x')), fm.height());
+        }
+        //If word wrap and eliding are both disabled (the default) then fall through to preferred
+        //size case, so that the preferred size == minimum size.
     }
     case Qt::PreferredSize: {
         qreal width = constraint.width();
@@ -171,6 +176,8 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             if (model->wordWrap()) {
                 viewPrivate->textOptions.setWrapMode(model->wrapMode());
             }
+            needUpdate = true;
+        } else if (member == MLabelModel::TextElide) {
             needUpdate = true;
         } else if (member == MLabelModel::WordWrap) {
             if (model->wordWrap()) {

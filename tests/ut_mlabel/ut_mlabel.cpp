@@ -39,6 +39,13 @@
 #include <QTextDocument>
 #include <QTextLayout>
 
+#include <QLabel>
+
+#define SHOW_IMAGE(image) \
+    do { \
+        QLabel label; label.setPixmap(QPixmap::fromImage(elided)); label.show(); QTest::qWait(1000); \
+    } while(0)
+
 #define SAVE_IMAGE(fileName, image) \
     do{ \
         QFile f(fileName); f.open(QIODevice::WriteOnly); image.save(&f, "PNG"); f.close(); \
@@ -262,6 +269,7 @@ void Ut_MLabel::testTextWordWrap()
     QVERIFY(text == label->text());
 
     label->setWordWrap(true);
+    label->resize(400,400);
     QVERIFY(label->wordWrap() == true);
     QImage wrapped = captureImage(label);
 
@@ -293,19 +301,17 @@ void Ut_MLabel::testTextElide()
 
     label->setWordWrap(false);
     label->setTextElide(true);
+    label->resize(400,400);
     QVERIFY(label->textElide() == true);
     QImage elided = captureImage(label);
 
     label->setTextElide(false);
+    label->resize(400,400);
     QVERIFY(label->textElide() == false);
     QImage unelided = captureImage(label);
 
     label->setLayoutDirection(Qt::RightToLeft);
     QImage elidedRtl = captureImage(label);
-
-    //elided.save("elided", "PNG");
-    //unelided.save("unelided", "PNG");
-    //elidedRtl.save("elidedrtl", "PNG");
 
     QVERIFY(elided != unelided);
     QVERIFY(elided != elidedRtl);
@@ -326,18 +332,21 @@ void Ut_MLabel::testRichTextElide()
     QVERIFY(text == label->text());
 
     label->setTextElide(true);
+    label->resize(400,400);
     QVERIFY(label->textElide() == true);
     QImage elided = captureImage(label);
 
     label->setTextElide(false);
+    label->resize(400,400);
     QVERIFY(label->textElide() == false);
     QImage unelided = captureImage(label);
 
-    QImage leftUnelided = unelided.copy(0, 0, unelided.width() / 2, unelided.height());
-    QImage rightUnelided = unelided.copy(unelided.width() / 2, 0, unelided.width() / 2, unelided.height());
+    int cropWidth = 200;
+    QImage leftUnelided = unelided.copy(0, 0, cropWidth, unelided.height());
+    QImage rightUnelided = unelided.copy(cropWidth, 0, unelided.width() - cropWidth, unelided.height());
 
-    QImage leftElided = elided.copy(0, 0, elided.width() / 2, elided.height());
-    QImage rightElided = elided.copy(elided.width() / 2, 0, elided.width() / 2, elided.height());
+    QImage leftElided = elided.copy(0, 0, cropWidth, elided.height());
+    QImage rightElided = elided.copy(cropWidth, 0, elided.width() - cropWidth, elided.height());
 
     QCOMPARE(elided.isNull(), false);
     QCOMPARE(unelided.isNull(), false);
@@ -552,11 +561,15 @@ void Ut_MLabel::testSizeHint()
     QFontMetricsF fm(label->font());
     if (constraint.width() > 0.0) {
         QCOMPARE(minSizeHint.width(), constraint.width());
+    } else if (wrapMode == QTextOption::NoWrap || wrapMode == QTextOption::ManualWrap ) {
+        QCOMPARE(minSizeHint.width(), prefSizeHint.width());
     } else {
         QCOMPARE(minSizeHint.width(), fm.width(QLatin1Char('x')));
     }
     if (constraint.height() > 0.0) {
         QCOMPARE(minSizeHint.width(), constraint.height());
+    } else if (wrapMode == QTextOption::NoWrap || wrapMode == QTextOption::ManualWrap ) {
+        QCOMPARE(minSizeHint.height(), prefSizeHint.height());
     } else {
         QCOMPARE(minSizeHint.height(), fm.height());
     }
@@ -604,6 +617,8 @@ void Ut_MLabel::testSizeHint()
         QSizeF prefSizeHint = label->preferredSize();
         QSizeF maxSizeHint = label->maximumSize();
 
+        if (wrapMode == QTextOption::NoWrap || wrapMode == QTextOption::ManualWrap )
+            width = qMax(width, minSizeHint.width());
         QCOMPARE(prefSizeHint.width(), width);
 
         label->resize(prefSizeHint);
@@ -855,6 +870,7 @@ void Ut_MLabel::wrapModes()
 {
     QFETCH(QString, text);
     label->setText(text);
+    label->setMaximumSize(100,800);
     label->resize(100, 800);
 
     QImage defaultMode = captureImage(label);

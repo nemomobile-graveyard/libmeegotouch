@@ -173,14 +173,19 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
 {
     switch (which) {
     case Qt::MinimumSize: {
-        QFontMetrics fm(viewPrivate->controller->font());
-        //Resize text document to maximum width to find the height of one line
-        //This follows the QLabel implementation
-        qreal oldWidth = textDocument.textWidth();
-        textDocument.setTextWidth(QWIDGETSIZE_MAX);
-        qreal height = textDocument.size().height();
-        textDocument.setTextWidth(oldWidth);
-        return QSizeF(fm.width('x'), height);
+        //If we have word wrap or eliding, the minimum size is the size of a single letter,
+        if (wrap() || viewPrivate->model()->textElide()) {
+            QFontMetrics fm(viewPrivate->controller->font());
+            //Resize text document to maximum width to find the height of one line
+            //This follows the QLabel implementation
+            qreal oldWidth = textDocument.textWidth();
+            textDocument.setTextWidth(QWIDGETSIZE_MAX);
+            qreal height = textDocument.size().height();
+            textDocument.setTextWidth(oldWidth);
+            return QSizeF(fm.width('x'), height);
+        }
+        //If word wrap and eliding are both disabled (the default) then fall through to preferred
+        //size case, so that the preferred size == minimum size.
     }
 
     case Qt::PreferredSize: {
@@ -267,6 +272,8 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
             textDocumentDirty = true;
+        } else if (member == MLabelModel::TextElide) {
+            needUpdate = true;
         } else if(member == MLabelModel::WrapMode) {
             if (model->wordWrap()) {
                 if (model->wrapMode() == QTextOption::NoWrap) {
