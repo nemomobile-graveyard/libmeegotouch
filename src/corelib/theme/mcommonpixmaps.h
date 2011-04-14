@@ -47,6 +47,8 @@ public:
 
     QList<M::MThemeDaemonProtocol::PixmapHandle> mostUsedPixmapHandles();
 
+    void setCacheFilename(const QString &filename);
+
 Q_SIGNALS:
     void mostUsedPixmapsChanged(const M::MThemeDaemonProtocol::MostUsedPixmaps& mostUsed);
 
@@ -93,6 +95,11 @@ private:
     MCpuMonitor cpuMonitor;
 
     QElapsedTimer timerSinceLastSave;
+
+    /*!
+        \brief Filename of the cache if set from outside
+     */
+    QString requiredCacheFilename;
 };
 //! \internal_end
 

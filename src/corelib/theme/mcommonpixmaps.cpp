@@ -30,7 +30,11 @@ using namespace M::MThemeDaemonProtocol;
 namespace {
     // before loading one item from the queue the cpu usage must
     // be below the given percentage
+#ifdef UNIT_TEST
+    const int maximumCpuUsageBeforeLoadingOneItem = 100;
+#else
     const int maximumCpuUsageBeforeLoadingOneItem = 30;
+#endif
 
     // when the cpu has been busy wait that many milliseconds before
     // doing the next check
@@ -46,11 +50,19 @@ namespace {
 
     // before sending the most used pixmaps the device should be pretty
     // idle as this wakes up all processes connected to the themedaemon
+#ifdef UNIT_TEST
+    const int maximumCpuUsageBeforeSendingMostUsed = 100;
+#else
     const int maximumCpuUsageBeforeSendingMostUsed = 10;
+#endif
 
     // check the cpu usage for that many seconds before deciding if
     // a most used package can be sent
+#ifdef UNIT_TEST
+    const int delayBeforeSendingMostUsed = 100;
+#else
     const int delayBeforeSendingMostUsed = 5000;
+#endif
 }
 
 
@@ -314,7 +326,16 @@ QList<M::MThemeDaemonProtocol::PixmapHandle> MCommonPixmaps::mostUsedPixmapHandl
 
 QString MCommonPixmaps::cacheFilename() const
 {
-    return daemon->systemThemeCacheDirectory() + QDir::separator() + daemon->currentTheme() + QDir::separator() + QLatin1String("preload.list");
+    if (!requiredCacheFilename.isEmpty()) {
+        return requiredCacheFilename;
+    } else {
+        return daemon->systemThemeCacheDirectory() + QDir::separator() + daemon->currentTheme() + QDir::separator() + QLatin1String("preload.list");
+    }
+}
+
+void MCommonPixmaps::setCacheFilename(const QString &filename)
+{
+    requiredCacheFilename = filename;
 }
 
 void MCommonPixmaps::considerSaving()

@@ -35,8 +35,9 @@ class Ut_MCommonPixmaps : public QObject
 private slots:
     void initTestCase();
     void cleanupTestCase();
+    void init();
+    void cleanup();
 
-    void testConstructor();
     void testLoad();
     void testIncreaseRequestCount();
     void testReload();
@@ -47,5 +48,11 @@ private:
     MCommonPixmaps *m_commonPixmaps;
     MThemeDaemon *m_themeDaemon;
     QList<PixmapCacheEntry*> pixmapsToDelete;
+    QList<QString> cacheImages;
+
+    void createCache();
+    void loadCache(const QString &cacheFilename = "");
+    bool isInCache(const QString &imageId);
+    int cacheItemCount();
 };
 #endif
