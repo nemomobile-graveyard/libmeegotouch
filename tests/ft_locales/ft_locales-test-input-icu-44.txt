@@ -7603,7 +7603,7 @@ ja_JP	Name of weekday 05 (Islamic calendar), format, narrow	金
 ja_JP	Name of weekday 06 (Islamic calendar), format, narrow	土
 ja_JP	Name of weekday 07 (Islamic calendar), format, narrow	日
 ja_JP	Collation sample	a A á Á ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH cote COTE coté COTÉ côte CÔTE côté CÔTÉ cz čz d ď da ďa dz ďz e ě ea ěa ez ěz h H i I n N ň ň Ň na ňa nz ňz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz U ú ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 俄 楽谷 此 沙紀 三 山田 若山 小中 松下 正 竹山 竹山 中 中村 得 内山 二 播 鳩山 攀 爱
-ja_JP	Exemplar characters index	[あ か さ た な は ま や ら わ]
+ja_JP	Exemplar characters index	[あ か さ た な は ま や ら わ ん]
 ja_JP	Scripts used	Kana Hira Hani
 ja_JP	%r (locale specific 12 hour “TimeShort”)	午後2:31
 ja_JP	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -7938,7 +7938,7 @@ ko_KR	Name of weekday 05 (Islamic calendar), format, narrow	금
 ko_KR	Name of weekday 06 (Islamic calendar), format, narrow	토
 ko_KR	Name of weekday 07 (Islamic calendar), format, narrow	일
 ko_KR	Collation sample	a A á Á ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH cote COTE coté COTÉ côte CÔTE côté CÔTÉ cz čz d ď da ďa dz ďz e ě ea ěa ez ěz h H i I n N ň ň Ň na ňa nz ňz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz U ú ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي 鳩山 得 攀 沙紀 山田 三 小中 松下 俄 若山 二 一 正 竹山 竹山 中 中村 此 播 あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 内山 楽谷 爱
-ko_KR	Exemplar characters index	[ᄀ ᄂ ᄃ ᄅ ᄆ ᄇ ᄉ ᄋ ᄌ ᄎ ᄏ ᄐ ᄑ ᄒ]
+ko_KR	Exemplar characters index	[ᄀ ᄂ ᄃ ᄅ ᄆ ᄇ ᄉ ᄋ ᄌ ᄎ ᄏ ᄐ ᄑ ᄒ あ]
 ko_KR	Scripts used	Hang Hani
 ko_KR	%r (locale specific 12 hour “TimeShort”)	오후 2:31
 ko_KR	%R (locale specific 24 hour “TimeShort”)	 14:31
@@ -12627,8 +12627,8 @@ zh_CN@collation=pinyin	Name of weekday 04 (Islamic calendar), format, narrow	四
 zh_CN@collation=pinyin	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_CN@collation=pinyin	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_CN@collation=pinyin	Name of weekday 07 (Islamic calendar), format, narrow	日
-zh_CN@collation=pinyin	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 爱 播 此 得 俄 二 鳩山 楽谷 内山 攀 若山 三 沙紀 山田 松下 小中 一 正 中 中村 竹山 竹山
-zh_CN@collation=pinyin	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
+zh_CN@collation=pinyin	Collation sample	á Á a A ă Ă å Å ä Ä 爱 b 播 c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz 此 d ď da ďa dz ďz 得 ě e ěa ea ěz ez 俄 二 h H i I 鳩山 楽谷 ň ň Ň n N ňa na ňz nz 内山 o O ö Ö oegh öfgh 攀 r ř ra řa rz řz 若山 s š sa ša sz šz 三 沙紀 山田 松下 t ť ta ťa tz ťz ú U ů Ů 小中 一 z ž za ža zz žz 正 中 中村 竹山 竹山 α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン
+zh_CN@collation=pinyin	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z あ]
 zh_CN@collation=pinyin	Scripts used	Hani
 zh_CN@collation=pinyin	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_CN@collation=pinyin	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -12962,8 +12962,8 @@ zh_CN@collation=stroke	Name of weekday 04 (Islamic calendar), format, narrow	四
 zh_CN@collation=stroke	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_CN@collation=stroke	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_CN@collation=stroke	Name of weekday 07 (Islamic calendar), format, narrow	日
-zh_CN@collation=stroke	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 正 此 竹山 竹山 沙紀 松下 俄 若山 得 鳩山 播 攀 内山 楽谷 爱
-zh_CN@collation=stroke	Exemplar characters index	[一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 嚷 儷 儼 囌 囑 廳]
+zh_CN@collation=stroke	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 内山 正 此 竹山 竹山 沙紀 松下 俄 若山 爱 得 楽谷 鳩山 播 攀
+zh_CN@collation=stroke	Exemplar characters index	[一 丁 万 不 丗 㐁 丣 並 𠀵 𠀽 𠁁 𠁆 𠁌 𠁎 𠁓 𠁕 𠁖 𠁟 𠁺 𠁠 𠆞 𠁻 𠃈 𠆟 𠣊 㒪 𠨋 𠆠 𠆡 𠥬 𡆟 𠫑 𠨌 𠣋 𣍜 𡔙 𪺚 𨐄 𡔚 𩇓 𪓊 𦧄 𧆘 𧢱 𧢱 𩙣 𩙣 𦧅 𦧅 𦧅 𦧅 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 𠔻]
 zh_CN@collation=stroke	Scripts used	Hani
 zh_CN@collation=stroke	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_CN@collation=stroke	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -13297,7 +13297,7 @@ zh_Hans_CN	Name of weekday 04 (Islamic calendar), format, narrow	四
 zh_Hans_CN	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_Hans_CN	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_Hans_CN	Name of weekday 07 (Islamic calendar), format, narrow	日
-zh_Hans_CN	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 爱 播 此 得 俄 二 鳩山 楽谷 内山 攀 若山 三 沙紀 山田 松下 小中 一 正 中 中村 竹山 竹山
+zh_Hans_CN	Collation sample	á Á a A ă Ă å Å ä Ä 爱 b 播 c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz 此 d ď da ďa dz ďz 得 ě e ěa ea ěz ez 俄 二 h H i I 鳩山 楽谷 ň ň Ň n N ňa na ňz nz 内山 o O ö Ö oegh öfgh 攀 r ř ra řa rz řz 若山 s š sa ša sz šz 三 沙紀 山田 松下 t ť ta ťa tz ťz ú U ů Ů 小中 一 z ž za ža zz žz 正 中 中村 竹山 竹山 α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン
 zh_Hans_CN	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 zh_Hans_CN	Scripts used	Hani
 zh_Hans_CN	%r (locale specific 12 hour “TimeShort”)	下午2:31
@@ -13632,8 +13632,8 @@ zh_Hant_TW	Name of weekday 04 (Islamic calendar), format, narrow	四
 zh_Hant_TW	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_Hant_TW	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_Hant_TW	Name of weekday 07 (Islamic calendar), format, narrow	日
-zh_Hant_TW	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 正 此 竹山 竹山 沙紀 松下 俄 若山 得 鳩山 播 攀 内山 楽谷 爱
-zh_Hant_TW	Exemplar characters index	[一 丁 三 丑 丙 丞 串 並 亟 乘 乾 傢 亂 僧 億 儒 優 叢 嚥 嚷 儷 儼 囌 囑 廳]
+zh_Hant_TW	Collation sample	á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン 一 二 三 小中 山田 中 中村 内山 正 此 竹山 竹山 沙紀 松下 俄 若山 爱 得 楽谷 鳩山 播 攀
+zh_Hant_TW	Exemplar characters index	[一 丁 万 不 丗 㐁 丣 並 𠀵 𠀽 𠁁 𠁆 𠁌 𠁎 𠁓 𠁕 𠁖 𠁟 𠁺 𠁠 𠆞 𠁻 𠃈 𠆟 𠣊 㒪 𠨋 𠆠 𠆡 𠥬 𡆟 𠫑 𠨌 𠣋 𣍜 𡔙 𪺚 𨐄 𡔚 𩇓 𪓊 𦧄 𧆘 𧢱 𧢱 𩙣 𩙣 𦧅 𦧅 𦧅 𦧅 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 䨻 𠔻]
 zh_Hant_TW	Scripts used	Hani Bopo
 zh_Hant_TW	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_Hant_TW	%R (locale specific 24 hour “TimeShort”)	14:31
