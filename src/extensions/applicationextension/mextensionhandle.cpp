@@ -80,7 +80,7 @@ MExtensionHandlePrivate::MExtensionHandlePrivate() :
     applicationVisible(true),
     remoteActions(),
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    screenBlankProperty(new ContextProperty("Session.State", this)),
+    screenBlankProperty(new ContextProperty("Screen.Blanked", this)),
 #endif
     q_ptr(NULL)
 {
@@ -176,7 +176,7 @@ void MExtensionHandle::updateDisplayState()
     Q_D(MExtensionHandle);
 
     if(state() == MExtensionHandleModel::RUNNING) {
-        bool blanked = d->screenBlankProperty->value().toString() == "blanked";
+        bool blanked = d->screenBlankProperty->value().toBool();
 
         if(blanked && d->aliveTimer.isActive()) {
             d->aliveTimer.stop();
