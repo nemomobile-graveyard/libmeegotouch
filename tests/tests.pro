@@ -194,7 +194,7 @@ SUBDIRS     =  \
     ut_mstylablewidget \
     ut_mdynamicpropertywatcher \
     ut_mtapstatemachine \
-    ut_mcommonpixmaps \
+#    ut_mcommonpixmaps \ // not reliable. it randomly fails in TeamCity and also freezes on some machines
     ut_mgles2renderer \
 
 # enable only when we have icu available
