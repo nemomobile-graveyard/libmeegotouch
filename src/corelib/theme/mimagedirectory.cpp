@@ -271,7 +271,7 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
                 cacheEntry->handle.format = (QImage::Format)imageFormat;
                 cacheEntry->handle.eglHandle = QMeeGoGraphicsSystemHelper::imageToEGLSharedImage(image);
                 cacheEntry->handle.numBytes = image.numBytes();
-                cacheEntry->handle.shmHandle = qPrintable(cacheFileName);
+                cacheEntry->handle.shmHandle = cacheFileName;
                 cacheEntry->handle.size = imageSize;
                 cacheEntry->handle.directMap = true;
             } else

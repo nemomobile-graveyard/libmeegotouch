@@ -33,7 +33,7 @@ struct MPixmapHandle
 
     Qt::HANDLE xHandle;
     Qt::HANDLE eglHandle;
-    QByteArray shmHandle;
+    QString shmHandle;
     QSize size;
     QImage::Format format;
     int numBytes;

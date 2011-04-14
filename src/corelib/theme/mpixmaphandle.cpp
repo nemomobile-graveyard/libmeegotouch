@@ -3,7 +3,7 @@
 MPixmapHandle::MPixmapHandle() :
     xHandle(0),
     eglHandle(0),
-    shmHandle(QByteArray()),
+    shmHandle(QString()),
     format(QImage::Format_Invalid),
     numBytes(0),
     directMap(false)
