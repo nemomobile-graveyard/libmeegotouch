@@ -2436,7 +2436,10 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"⼜" // 29
            <<"⼝" // 30
            <<"叫" // kRSUnicode 30.2
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+#else
            <<"𠮩" // kRSUnicode 30.2
+#endif
            <<"君" // kRSUnicode 30.4
            <<"咚" // kRSUnicode 30.5
            <<"⼞" // 31
@@ -2653,7 +2656,12 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"⿔" // 213
            <<"⿕" // 214
            <<"龢" // kRSUnicode 214.5
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+           <<"𠮩" // kRSUnicode 30.2
            <<"𪛖" // kRSUnicode 214.20
+#else
+           <<"𪛖" // kRSUnicode 214.20
+#endif
             )
         <<(QStringList()
            <<"∮"<<"♨"
@@ -2714,7 +2722,10 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"⼝" // 30
            <<"⼝" // 30
            <<"⼝" // 30
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+#else
            <<"⼝" // 30
+#endif
            <<"⼞" // 31
            <<"⼟" // 32
            <<"⼠" // 33
@@ -2930,6 +2941,10 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"⿕" // 214
            <<"⿕" // 214
            <<"⿕" // 214
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+           <<"⿕" // 214
+#else
+#endif
             );
 }
 
