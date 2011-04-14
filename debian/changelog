@@ -1,8 +1,14 @@
-libmeegotouch (0.21.6~1) unstable; urgency=low
+libmeegotouch (0.21.6-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#243131 - Programs with + in filename fail to start
+  * Fixes: NB#245296 - Tap&hold visual effect on list items breaks displaying list item labels
+  * Fixes: NB#237907 - use _exit rather than exit in MAssembly
+  * Fixes: NB#237976
+  * Fixes: NB#237669 - Possible memory leak in mthemedaemon process when sending IM messages
+  * Fixes: ut_mstatusbarview
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 13 Apr 2011 12:26:01 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 14 Apr 2011 16:41:02 +0300
 
 libmeegotouch (0.21.5-1) unstable; urgency=low
 
