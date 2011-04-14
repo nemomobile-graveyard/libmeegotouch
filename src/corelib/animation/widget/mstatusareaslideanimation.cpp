@@ -46,7 +46,7 @@ void MStatusAreaSlideAnimationPrivate::init()
 
     statusBarAnimationDelay = new QPauseAnimation;
     statusBarPosAnimation = new QPropertyAnimation;
-    statusBarPosAnimation->setPropertyName("paintOffset");
+    statusBarPosAnimation->setPropertyName("clippedPaintOffset");
     statusBarPosAnimation->setEasingCurve(QEasingCurve::InExpo);
     statusBarAnimation = new QSequentialAnimationGroup();
     statusBarAnimation->addAnimation(statusBarPosAnimation);
@@ -83,7 +83,7 @@ void MStatusAreaSlideAnimationPrivate::restoreStatusBarOriginalState()
 {
     if (!statusBarPointer.isNull()) {
         statusBarPointer.data()->setZValue(MSceneManagerPrivate::StatusBar);
-        statusBarPointer.data()->setPaintOffset(QPointF(0,0));
+        statusBarPointer.data()->setProperty("clippedPaintOffset", QPointF(0.0f, 0.0f));
     }
 }
 

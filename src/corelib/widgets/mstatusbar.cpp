@@ -18,6 +18,7 @@
 ****************************************************************************/
 #include "mstatusbar.h"
 #include "mstatusbar_p.h"
+#include "mdynamicpropertywatcher.h"
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MStatusBar)
@@ -25,13 +26,17 @@ M_REGISTER_WIDGET(MStatusBar)
 MStatusBar::MStatusBar()
     : MSceneWindow(new MStatusBarPrivate, new MSceneWindowModel, MSceneWindow::StatusBar)
 {
+    Q_D(MStatusBar);
     setObjectName("statusBar");
+    d->setupClippedPaintOffsetProperty();
 }
 
 MStatusBar::MStatusBar(QGraphicsItem *parent)
     : MSceneWindow(new MStatusBarPrivate, new MSceneWindowModel, MSceneWindow::StatusBar, QString(), parent)
 {
+    Q_D(MStatusBar);
     setObjectName("statusBar");
+    d->setupClippedPaintOffsetProperty();
 }
 
 MStatusBar::~MStatusBar()
@@ -46,7 +51,30 @@ MStatusBarPrivate::~MStatusBarPrivate()
 {
 }
 
+void MStatusBarPrivate::setupClippedPaintOffsetProperty()
+{
+    Q_Q(MStatusBar);
+    bool ok;
+
+    q->setProperty("clippedPaintOffset", QPointF(0.0f, 0.0f));
+
+    MDynamicPropertyWatcher *pixmapPaintOffsetPropertyWatcher = new MDynamicPropertyWatcher(q);
+    pixmapPaintOffsetPropertyWatcher->watch(q);
+    pixmapPaintOffsetPropertyWatcher->setPropertyName("clippedPaintOffset");
+    ok = q->connect(pixmapPaintOffsetPropertyWatcher, SIGNAL(propertyChanged()),
+               SLOT(_q_scheduleUpdate()));
+    if (!ok) qFatal("signal connection failed");
+}
+
+void MStatusBarPrivate::_q_scheduleUpdate()
+{
+    Q_Q(MStatusBar);
+    q->update();
+}
+
 bool MStatusBar::sceneEvent(QEvent *event)
 {
     return MSceneWindow::sceneEvent(event);
 }
+
+#include "moc_mstatusbar.cpp"

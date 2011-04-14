@@ -42,6 +42,10 @@ public:
      */
     virtual ~MStatusBarPrivate();
 
+    void setupClippedPaintOffsetProperty();
+
+    void _q_scheduleUpdate();
+
 };
 
 //! \internal_end

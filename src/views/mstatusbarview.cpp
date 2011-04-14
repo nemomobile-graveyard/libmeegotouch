@@ -228,6 +228,7 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
     propertyWindowPollTimer.setInterval(PROPERTY_WINDOW_INITIAL_POLL_TIMEOUT);
 
     updateStatusBarSharedPixmapHandle();
+
 #endif // Q_WS_X11
 }
 
@@ -305,10 +306,25 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
         sourceRect.setWidth(size().width());
         sourceRect.setHeight(sharedPixmap.height()/2);
 
+        QPointF originPoint(0.0f, 0.0f);
+
+        QVariant clippedPaintOffsetVaritant = controller->property("clippedPaintOffset");
+        if (clippedPaintOffsetVaritant.isValid()) {
+            originPoint = clippedPaintOffsetVaritant.toPointF();
+            // subtract from the rectangle the area of the pixmap that would fall
+            // outside the item's bounding rect.
+            // i.e. do a preemptive clipping
+            sourceRect.adjust(0.0f, 0.0f, -originPoint.x(), -originPoint.y());
+        }
+
         painter->fillRect(QRectF(QPointF(0.0, 0.0), size()), Qt::black);
         painter->save();
         painter->setClipRect(0, 0, size().width(), sharedPixmap.height()/2);
-        painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
+
+        if (boundingRect().contains(originPoint) && sourceRect.height() > 0.0f) {
+            painter->drawPixmap(originPoint, sharedPixmap, sourceRect);
+        }
+
         painter->restore();
     } QT_CATCH (...) {
         mWarning("MStatusBarView") << "drawContents: Cannot draw sharedPixmap.";

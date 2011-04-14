@@ -59,6 +59,8 @@ public:
 private:
     Q_DECLARE_PRIVATE(MStatusBar)
     Q_DISABLE_COPY(MStatusBar)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_scheduleUpdate())
 };
 
 #endif
