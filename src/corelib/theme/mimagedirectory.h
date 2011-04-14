@@ -60,7 +60,7 @@ struct PixmapCacheEntry {
         if (!handle.shmHandle.isEmpty()) {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
             if (!handle.directMap)
-                shm_unlink(handle.shmHandle.constData());
+                shm_unlink(qPrintable(handle.shmHandle));
 #endif
         }
 
