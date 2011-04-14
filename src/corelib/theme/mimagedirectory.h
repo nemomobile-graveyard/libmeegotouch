@@ -20,6 +20,7 @@
 #ifndef MIMAGEDIRECTORY_H
 #define MIMAGEDIRECTORY_H
 
+
 #include "mpixmaphandle.h"
 
 #include <QString>
@@ -194,14 +195,33 @@ public:
     QString locale() const;
     
 private:
+#ifdef Q_OS_WIN  // stick with old Qt-based implementation
     bool loadIdsFromCache(const QFileInfo& svgFileInfo, bool localized = false);
     void saveIdsInCache(const QStringList& ids, const QFileInfo& svgFileInfo) const;
+#else
+    bool loadIdsFromCache(const char *path, bool localized = false);
+    void saveIdsInCache(const QStringList& ids, const char *path) const;
+#endif
+
     QString createIdCacheFilename(const QString &filePath) const;
 
     void readImageResources(const QString& path, bool localized = false);
     void readSvgResources(const QString& path, bool localized = false);
+
+#ifdef Q_OS_WIN
     void addImageResource(const QFileInfo& fileInfo, bool localized);
     void addSvgResource(const QFileInfo& fileInfo, bool localized);
+#else
+    void addImageResource(const char *path, const char *filename, bool localized);
+    void addSvgResource(const char *path, bool localized);
+
+      // params: self, path (filename with full path), filename (filename without path, in same buf as path), localized
+    typedef void (*FileCrawlerHandler)(MThemeImagesDirectory *, const char *, const char *, bool);
+    void crawlImageDirectory(FileCrawlerHandler handler, const QString& path, bool localized);
+
+    static void imageCrawlerHandler(MThemeImagesDirectory *self, const char *path, const char *filename, bool localized);
+    static void svgCrawlerHandler(MThemeImagesDirectory *self, const char *path, const char *filename, bool localized);
+#endif
 
     // image id => image resource
     QHash<QString, ImageResource *> imageResources;

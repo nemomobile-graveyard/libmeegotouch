@@ -17,6 +17,27 @@
 **
 ****************************************************************************/
 
+
+#ifndef Q_OS_WIN
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+#include <unistd.h>
+
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#include <dirent.h>
+
+
+#ifndef MAX_PATH_WITHOUT_ALLOC
+#define MAX_PATH_WITHOUT_ALLOC 256
+#endif
+#endif
+
+
 #include "mimagedirectory.h"
 #include "mthemedaemon.h"
 #include "mdebug.h"
@@ -27,6 +48,8 @@
 #include <QDir>
 #include <QPainter>
 #include <QPixmap>
+
+#include <QLinkedList>
 
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
 #include <QtMeeGoGraphicsSystemHelper>
@@ -41,6 +64,10 @@
 namespace {
     const unsigned int ID_CACHE_VERSION = 1;
     const unsigned int IMAGE_CACHE_VERSION = 4;
+
+      // reimplementing these in order to delete (instead of free()ing) the return values
+    char *strDup(const char *src);
+    char *appendToPath(const char *basepath, const char *subdir);
 }
 
 uint qHash(const QSize &size)
@@ -637,8 +664,10 @@ QString MThemeImagesDirectory::locale() const
     return m_locale;
 }
 
+
 void MThemeImagesDirectory::readImageResources(const QString& path, bool localized)
 {
+#ifdef Q_OS_WIN
     QList<QString> directories;
     directories.append(path);
     while (!directories.isEmpty()) {
@@ -660,10 +689,14 @@ void MThemeImagesDirectory::readImageResources(const QString& path, bool localiz
             }
         }
     }
+#else
+    crawlImageDirectory(imageCrawlerHandler, path, localized);
+#endif
 }
 
 void MThemeImagesDirectory::readSvgResources(const QString& path, bool localized)
 {
+#ifdef Q_OS_WIN
     QList<QString> directories;
     directories.append(path);
     while (!directories.isEmpty()) {
@@ -685,8 +718,13 @@ void MThemeImagesDirectory::readSvgResources(const QString& path, bool localized
             }
         }
     }
+#else
+    crawlImageDirectory(svgCrawlerHandler, path, localized);
+#endif
 }
 
+
+#ifdef Q_OS_WIN
 void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool localized)
 {
     if( !localized ) {
@@ -705,8 +743,7 @@ void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool loc
 
             imageResources.insert(fileInfo.baseName(), res);
         }
-    }
-    else {
+    } else {
         //add localized image resource only if same named resource was found from the original theme
         if (!imageResources.contains(fileInfo.baseName()) && !idsInSvgImages.contains(fileInfo.baseName())) {
             mWarning("MThemeDaemon") << "Ignoring localized image resource" << fileInfo.absoluteFilePath() << "because it was not found from the original theme!";
@@ -799,6 +836,222 @@ void MThemeImagesDirectory::saveIdsInCache(const QStringList& ids, const QFileIn
     stream << ids;
     file.close();
 }
+#else
+void MThemeImagesDirectory::addImageResource(const char *path, const char *filename, bool localized)
+{
+    const char *a = 0;
+    char *basename;
+
+    for(const char *t = filename; t; t = strstr(t+1, "."))
+        a = t;
+    if(filename < a) {
+        int len = a - filename;
+        basename = new char[len + 1];
+        memcpy(basename, filename, len);
+        basename[len] = 0;
+    } else {
+        return;  // no suffix, we can return now - though this should be never triggered (checks in calling function)
+    }
+
+    if( !localized ) {
+        //only one image resource from the theme with a same name is allowed
+        if (imageResources.contains(basename)) {
+            mWarning("MThemeDaemon") << "Multiple reference of " << basename
+                                     << "Using " << imageResources.value(basename)->absoluteFilePath()
+                                     << "instead of" << path;
+        } else {
+            //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
+            ImageResource *res = 0;
+            if (!strcasecmp(a+1, "svg"))
+                res = new IconImageResource(path);
+            else
+                res = new PixmapImageResource(path);
+
+            imageResources.insert(basename, res);
+        }
+    }
+    else {
+        //add localized image resource only if same named resource was found from the original theme
+        if (!imageResources.contains(basename) && !idsInSvgImages.contains(basename)) {
+            mWarning("MThemeDaemon") << "Ignoring localized image resource" << path << "because it was not found from the original theme!";
+        } else {
+            //if "svg" add IconImageResource, if "jpg" or "png" add PixmapImageResource
+            localizedImageResources.insert(basename, !strcasecmp(a+1, "svg") ? (ImageResource*) new IconImageResource(path) : (ImageResource*) new PixmapImageResource(path));
+        }
+    }
+
+    delete basename;
+}
+
+void MThemeImagesDirectory::addSvgResource(const char *path, bool localized)
+{
+    // matches and id specified in a svg file.
+    // the id may either appear in a g, image or path tag.
+    static QRegExp idRegexp("<(g|image|path)\\s[^>]*id=\"([^\"]*)\"[^>]*>");
+    if (!loadIdsFromCache(path, localized)) {
+        QFile svgFile(path);
+        if (svgFile.open(QIODevice::ReadOnly)) {
+            QByteArray content = svgFile.readAll();
+            int pos = 0;
+            QStringList ids;
+            QMultiHash<QString, QString>& svgIds = localized ? idsInLocalizedSvgImages : idsInSvgImages;
+            while ((pos = idRegexp.indexIn(content, pos)) != -1) {
+                QString id = idRegexp.cap(2);
+                svgIds.insert(id, path);
+
+                pos += idRegexp.matchedLength();
+                ids << id;
+            }
+            saveIdsInCache(ids, path);
+        } else {
+                mWarning("MThemeImagesDirectory") << "Failed to load ids from" << path;
+        }
+    }
+}
+
+
+void MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawlerHandler handler, const QString& path, bool localized)
+{
+    QLinkedList<char *> dirs;
+    dirs.append(::strDup(qPrintable(path)));
+    while (!dirs.isEmpty()) {
+        char *s = dirs.takeFirst();
+        DIR *d = opendir(s);
+        if (!d) {
+            delete s;
+            continue;
+        }
+
+          // allocate buffer for file names here in order to avoid allocating it
+          // once per file (unless the length of filename exceeds 256 - 2
+          // characters) - only per-file operation required is copying the file
+          // name at the end of buffer containing the path
+        char *fnbuf = new char[strlen(s) + MAX_PATH_WITHOUT_ALLOC];
+        memcpy(fnbuf, s, strlen(s));
+        char *fnptr = fnbuf + strlen(s);
+        *(fnptr++) = '/';
+
+        for (struct dirent *e = readdir(d); e; e = readdir(d)) { // FIXME: retarded . and .. detection
+            if (e->d_type == DT_DIR) {
+                bool ignoreMe = e->d_name[0] == '.' && (e->d_name[1] == 0 || (e->d_name[1] == '.' && e->d_name[2] == 0));
+                if (!ignoreMe)
+                    dirs.append(::appendToPath(s, e->d_name));
+            } else if (e->d_type == DT_REG) { // TODO: handle symlinks
+                unsigned l = strlen(e->d_name);
+                if(MAX_PATH_WITHOUT_ALLOC - 2 < l) { // avoid  hazardous buffer overflow by extra alloc/free round - slow path
+                    char *tmp = ::appendToPath(s, e->d_name);
+                    handler(this, tmp, tmp + strlen(s) + 1, localized);
+                    delete tmp;
+                } else {
+                    memcpy(fnptr, e->d_name, l);
+                    fnptr[l] = 0;
+                    handler(this, fnbuf, fnptr, localized);
+                }
+            }
+        }
+
+        delete s;
+        delete fnbuf;
+        closedir(d);
+    }
+}
+
+
+  // extra suffix checking round happens in these two - something that should be avoided...
+void MThemeImagesDirectory::imageCrawlerHandler(MThemeImagesDirectory *self, const char *path, const char *filename, bool localized)
+{
+    const char *suffix = 0;
+    for (const char *i = filename; i; i = strstr(suffix, "."))
+        suffix = i + 1;
+
+      // TODO: use some clever suffix dictionary rather than having logically
+      // OR'd strcasecmp list here
+    if (!(!strcasecmp(suffix, "png") || !strcasecmp(suffix, "jpg") ||
+          !strcasecmp(suffix, "svg") || !strcasecmp(suffix, "jpeg")))
+        return;
+
+    self->addImageResource(path, filename, localized);
+}
+
+void MThemeImagesDirectory::svgCrawlerHandler(MThemeImagesDirectory *self, const char *path, const char *filename, bool localized)
+{
+    const char *suffix = 0;
+    for (const char *i = filename; i; i = strstr(suffix, "."))
+        suffix = i + 1;
+
+    if (strcasecmp(suffix, "svg"))
+        return;
+
+    self->addSvgResource(path, localized);
+}
+
+
+bool MThemeImagesDirectory::loadIdsFromCache(const char *path, bool localized)
+{
+    const QString idCacheFile = createIdCacheFilename(path);
+    if (QFile::exists(idCacheFile)) {
+        struct stat sb;
+
+        if(stat(path, &sb))
+            return false;
+
+        QFile file(idCacheFile);
+        if (file.open(QFile::ReadOnly)) {
+            QDataStream stream(&file);
+            uint version;
+            stream >> version;
+            if (version != ID_CACHE_VERSION) {
+                file.close();
+                return false;
+            }
+            uint timestamp;
+            stream >> timestamp;
+            if (timestamp != (uint)sb.st_mtime) {
+                file.close();
+                return false;
+            }
+
+            QStringList ids;
+            stream >> ids;
+            QMultiHash<QString, QString>& svgIds = localized ? idsInLocalizedSvgImages : idsInSvgImages;
+            foreach(const QString& id, ids) {
+                svgIds.insert(id, path);
+            }
+            file.close();
+            return true;
+        } else {
+            mWarning("MThemeImagesDirectory") << "Failed to load id cache file" << idCacheFile;
+        }
+        return false;
+    }
+    return false;
+}
+
+void MThemeImagesDirectory::saveIdsInCache(const QStringList& ids, const char *path) const
+{
+    const QString idCacheFile = createIdCacheFilename(path);
+
+    struct stat sb;
+    if(stat(path, &sb))
+        return;
+
+    QFile file(idCacheFile);
+    if (!file.open(QFile::WriteOnly)) {
+        //Maybe it failed because the directory doesn't exist
+        QDir().mkpath(QFileInfo(idCacheFile).absolutePath());
+        if (!file.open(QFile::WriteOnly)) {
+            mDebug("MThemeImagesDirectory") << "Failed to save id cache file" << path << "to" << idCacheFile;
+            return;
+        }
+    }
+
+    QDataStream stream(&file);
+    stream << ID_CACHE_VERSION;
+    stream << (uint)sb.st_mtime;
+    stream << ids;
+    file.close();
+}
+#endif
 
 QString MThemeImagesDirectory::createIdCacheFilename(const QString &filePath) const
 {
@@ -885,3 +1138,44 @@ QStringList MImageDirectory::activeImageIds() const
 {
     return imageResources.keys();
 }
+
+  // the C string operations
+namespace
+{     // the only purpose of this function is using new (and avoiding using C free() )
+    char *strDup(const char *src)
+    {
+        unsigned l = 0;
+        for (const char *i = src; *i; i++)
+            l++;
+
+        char *ret = new char[l + 1];
+        memcpy(ret, src, l);
+        ret[l] = 0;
+
+        return ret;
+    }
+
+    char *appendToPath(const char *basepath, const char *subdir)
+    {
+        unsigned l = 0;
+        for (const char *i = basepath; *i; i++)
+            l++;
+        for (const char *i = subdir; *i; i++)
+            l++;
+
+        char *ret = new char[l + 2];
+        char *dest = ret;
+        for (const char *s = basepath; *s; s++)
+            *(dest++) = *s;
+
+        *(dest++) = '/';
+
+        for (const char *s = subdir; *s; s++)
+            *(dest++) = *s;
+
+        *dest = 0;
+
+        return ret;
+    }
+}
+
