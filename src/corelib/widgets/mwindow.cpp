@@ -405,12 +405,19 @@ void MWindowPrivate::applyStartupWindowBackground()
 void MWindowPrivate::resolveOrientationRules() {
     Q_Q(MWindow);
 
-    //follow current app window if window is visible in switcher
-    if ((isInSwitcher && q->isOnDisplay()) ||
-        (q->isVisible() && !q->isMinimized() && !q->isOnDisplay())) {
-        MOrientationTracker::instance()->d_ptr->startFollowingCurrentAppWindow(q, true);
+    MOrientationTrackerPrivate *privateTracker = MOrientationTracker::instance()->d_ptr;
+
+    //follow desktop if visible in switcher
+    if ((isInSwitcher && q->isOnDisplay())) {
+        privateTracker->startFollowingDesktop(q);
+    //follow current app window if window is not on top but over home window
+    } else if (q->isVisible() && !q->isMinimized() && !q->isOnDisplay()) {
+        privateTracker->startFollowingCurrentAppWindow(q, true);
+    //in other cases do not follow other windows.
+    //MOrientationTracker will resolve if following sensors is required
     } else {
-        MOrientationTracker::instance()->d_ptr->stopFollowingCurrentAppWindow(q, true);
+        privateTracker->stopFollowingDesktop(q);
+        privateTracker->stopFollowingCurrentAppWindow(q, true);
     }
 
     MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
@@ -791,10 +798,9 @@ MWindow::MWindow(QWidget *parent)
 
 MWindow::~MWindow()
 {
-#ifdef Q_WS_X11
     MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this, true);
     MOrientationTracker::instance()->d_func()->stopFollowingCurrentAppWindow(this, false);
-#endif
+    MOrientationTracker::instance()->d_func()->stopFollowingDesktop(this);
     MComponentData::unregisterWindow(this);
     delete d_ptr;
 }

@@ -27,6 +27,8 @@
 #include <MApplicationWindow>
 #include <MOnDisplayChangeEvent>
 
+#include <QWindowStateChangeEvent>
+
 namespace {
     enum { KeyboardOpen = 0, KeyboardClosed };
     QList<M::OrientationAngle> supportedAnglesStubLists[2];
@@ -52,7 +54,7 @@ void Ut_MOrientationTracker::cleanup()
     delete window1;
     delete window2;
     supportedAnglesStubLists[KeyboardOpen].clear();
-    supportedAnglesStubLists[KeyboardOpen].clear();
+    supportedAnglesStubLists[KeyboardClosed].clear();
 }
 
 void Ut_MOrientationTracker::initTestCase()
@@ -66,6 +68,7 @@ void Ut_MOrientationTracker::initTestCase()
     gContextPropertyStubMap->createStub("/maemo/InternalKeyboard/Present")->stubSetReturnValue("value", QVariant("true"));
     gContextPropertyStubMap->createStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(""));
     gContextPropertyStubMap->createStub("Screen.IsCovered")->stubSetReturnValue("value", QVariant("false"));
+    gContextPropertyStubMap->createStub("/Screen/Desktop/OrientationAngle")->stubSetReturnValue("value", QVariant(0));
 
     m_componentData = new MComponentData(argc, argv);
     mTracker = MOrientationTracker::instance();
@@ -376,6 +379,65 @@ void Ut_MOrientationTracker::testUpdatesPostponedUntilRotationsAreEnabled()
 
     // Now window1 orientation should have been updated properly to match current state of Screen.TopEdge
     QCOMPARE(static_cast<int>(window1->orientationAngle()), static_cast<int>(M::Angle270));
+}
+
+void Ut_MOrientationTracker::testFollowingDesktopOrientation_data()
+{
+    QTest::addColumn<M::OrientationAngle>("firstAngle");
+    QTest::addColumn<M::OrientationAngle>("secondAngle");
+
+    QTest::newRow("Angle0 -> 90") << M::Angle0 << M::Angle90;
+    QTest::newRow("Angle90 -> 180") << M::Angle90 << M::Angle180;
+    QTest::newRow("Angle180 -> 270") << M::Angle180 << M::Angle270;
+    QTest::newRow("Angle270 -> 0") << M::Angle270 << M::Angle0;
+}
+
+void Ut_MOrientationTracker::testFollowingDesktopOrientation()
+{
+    QFETCH(M::OrientationAngle, firstAngle);
+    QFETCH(M::OrientationAngle, secondAngle);
+
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    gContextPropertyStubMap->findStub("/Screen/Desktop/OrientationAngle")->stubReset();
+
+    gContextPropertyStubMap->findStub("/Screen/Desktop/OrientationAngle")->stubSetReturnValue("value", QVariant(firstAngle));
+
+    //convince the window that it is in switcher
+    window1->setWindowState(Qt::WindowMinimized);
+    MOnDisplayChangeEvent displayChangeEvent(true, QRectF(QPointF(0,0),window1->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayChangeEvent);
+
+    //test if window is rotated after entering switcher
+    QCOMPARE(window1->orientationAngle(), firstAngle);
+
+    //simulate desktop rotation
+    gContextPropertyStubMap->findStub("/Screen/Desktop/OrientationAngle")->stubSetReturnValue("value", QVariant(secondAngle));
+    QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("/Screen/Desktop/OrientationAngle")->getProxy(), "valueChanged");
+
+    //test if desktop rotation was handled properly
+    QCOMPARE(window1->orientationAngle(), secondAngle);
+}
+
+void Ut_MOrientationTracker::testFollowingDesktopOrientationWhenPropertyIsNotPresent()
+{
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    gContextPropertyStubMap->findStub("/Screen/Desktop/OrientationAngle")->stubReset();
+
+    gContextPropertyStubMap->findStub("/Screen/Desktop/OrientationAngle")->stubSetReturnValue("value", QVariant());
+
+    window1->setLandscapeOrientation();
+
+    //convince the window that it is in switcher
+    window1->setWindowState(Qt::WindowMinimized);
+    MOnDisplayChangeEvent displayChangeEvent(true, QRectF(QPointF(0,0),window1->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayChangeEvent);
+
+    //if property is not present (value().isNull()) defaults to portrait
+    QCOMPARE(window1->orientation(), M::Portrait);
 }
 
 ///////////////////////////////////////////////////////

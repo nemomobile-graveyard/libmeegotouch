@@ -45,6 +45,7 @@ public:
     bool isSubscribed() const;
 
     QVariant value() const;
+    QVariant value(const QVariant &def) const;
 
 Q_SIGNALS:
     void valueChanged();
@@ -85,8 +86,9 @@ public:
     ContextProperty *isCoveredProperty;
     ContextProperty *isFlatProperty;
     MServiceListener *remoteTopEdgeListener;
-    //Property set by window manager
+    //Properties set by window manager
     MContextProperty *currentWindowAngleProperty;
+    MContextProperty *desktopAngleProperty;
     bool isSubscribedToSensorProperties;
     bool hasJustSubscribedToSensorProperties;
 #endif
@@ -105,6 +107,10 @@ public:
     void startFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
     void stopFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
 
+    void startFollowingDesktop(MWindow *win);
+    void stopFollowingDesktop(MWindow *win);
+    QList<QPointer<MWindow> > windowsFollowingDesktop;
+
 public slots:
     void isCoveredChanged();
     void videoRouteChanged();
@@ -113,6 +119,7 @@ public slots:
     void enableRotations();
 #ifdef HAVE_CONTEXTSUBSCRIBER
     void handleCurrentAppWindowOrientationAngleChange();
+    void handleDesktopOrientationChange();
 #endif // HAVE_CONTEXTSUBSCRIBER
 
 protected:

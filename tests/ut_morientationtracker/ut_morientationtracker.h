@@ -58,6 +58,10 @@ private slots:
 
     void testUpdatesPostponedUntilRotationsAreEnabled();
 
+    void testFollowingDesktopOrientation_data();
+    void testFollowingDesktopOrientation();
+    void testFollowingDesktopOrientationWhenPropertyIsNotPresent();
+
 private:
     /*  Helper members   */
 

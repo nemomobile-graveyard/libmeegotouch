@@ -76,6 +76,11 @@ QVariant MContextProperty::value() const
 {
     return m_contextProperty->value();
 }
+
+QVariant MContextProperty::value(const QVariant &def) const
+{
+    return m_contextProperty->value(def);
+}
 #endif
 
 MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *controller) :
@@ -91,6 +96,7 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     , isFlatProperty(new ContextProperty("Position.IsFlat"))
     , remoteTopEdgeListener(0)
     , currentWindowAngleProperty(new MContextProperty("/Screen/CurrentWindow/OrientationAngle"))
+    , desktopAngleProperty(new MContextProperty("/Screen/Desktop/OrientationAngle"))
     , isSubscribedToSensorProperties(false)
     , hasJustSubscribedToSensorProperties(false)
 #endif
@@ -136,6 +142,8 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
             this, SLOT(updateOrientationAngle()));
     connect(currentWindowAngleProperty, SIGNAL(valueChanged()),
             this, SLOT(handleCurrentAppWindowOrientationAngleChange()));
+    connect(desktopAngleProperty, SIGNAL(valueChanged()),
+            this, SLOT(handleDesktopOrientationChange()));
 
     waitForSensorPropertiesToSubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
@@ -207,7 +215,8 @@ void MOrientationTrackerPrivate::resolveIfOrientationUpdatesRequired()
 #ifdef Q_WS_X11
             if (win && (win->isOnDisplay()) &&
                 !windowsFollowingCurrentAppWindow.contains(win) &&
-                !windowsFollowingWithConstraintsCurrentAppWindow.contains(win))
+                !windowsFollowingWithConstraintsCurrentAppWindow.contains(win) &&
+                !windowsFollowingDesktop.contains(win))
 #else
             if (win && win->isOnDisplay())
 #endif
@@ -312,7 +321,8 @@ void MOrientationTrackerPrivate::rotateWindows(M::OrientationAngle angle)
         // event loop is started and leads to crash in QMetaObject
         foreach(MWindow * window, MApplication::windows()) {
             if(!windowsFollowingCurrentAppWindow.contains(window) &&
-               !windowsFollowingWithConstraintsCurrentAppWindow.contains(window))
+               !windowsFollowingWithConstraintsCurrentAppWindow.contains(window) &&
+               !windowsFollowingDesktop.contains(window))
                 rotateToAngleIfAllowed(angle, window);
         }
     }
@@ -511,4 +521,38 @@ void MOrientationTrackerPrivate::enableRotations()
             pendingCurrentAppWindowOrientationAngleChangeHandling = false;
         }
     }
+}
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MOrientationTrackerPrivate::handleDesktopOrientationChange()
+{
+    //if property is not set we default to portrait orientation
+    int fallbackAngle =
+            (MDeviceProfile::instance()->orientationFromAngle(M::Angle270) == M::Portrait)?270:0;
+    M::OrientationAngle angle = (M::OrientationAngle)desktopAngleProperty->value(fallbackAngle).toInt();
+    foreach(MWindow *win, windowsFollowingDesktop)
+        if (win)
+            rotateToAngleIfAllowed(angle, win);
+}
+#endif //HAVE_CONTEXTSUBSCRIBER
+
+void MOrientationTrackerPrivate::startFollowingDesktop(MWindow *win)
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if (!windowsFollowingDesktop.contains(win))
+        windowsFollowingDesktop.append(win);
+
+    if (!desktopAngleProperty->isSubscribed())
+        desktopAngleProperty->subscribeAndWaitForSubscription();
+    handleDesktopOrientationChange();
+#endif //HAVE_CONTEXTSUBSCRIBER
+}
+
+void MOrientationTrackerPrivate::stopFollowingDesktop(MWindow *win)
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    windowsFollowingDesktop.removeAll(win);
+    if (windowsFollowingDesktop.isEmpty())
+        desktopAngleProperty->unsubscribe();
+#endif //HAVE_CONTEXTSUBSCRIBER
 }

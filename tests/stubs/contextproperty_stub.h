@@ -60,6 +60,15 @@ QVariant ContextProperty::value() const
     return gContextPropertyStubMap->findStub(this)->stubReturnValue<QVariant>("value");
 }
 
+QVariant ContextProperty::value(const QVariant &def) const
+{
+    QVariant val =  gContextPropertyStubMap->findStub(this)->stubReturnValue<QVariant>("value");
+    if (val.isNull())
+        return def;
+    else
+        return val;
+}
+
 void ContextProperty::subscribe() const
 {
     gContextPropertyStubMap->findStub(this)->stubMethodEntered("subscribe");
