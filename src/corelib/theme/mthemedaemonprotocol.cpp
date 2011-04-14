@@ -97,7 +97,6 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
         stream << info->themeInheritance << info->themeLibraryNames;
     } break;
 
-    case Packet::ProtocolVersionPacket:
     case Packet::ThemeChangeAppliedPacket: {
         stream << static_cast<const Number *>(packet.data())->value;
     } break;
@@ -257,7 +256,6 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
         packet.setData(new ThemeChangeInfo(themeInheritance, themeLibraryNames));
     } break;
 
-    case Packet::ProtocolVersionPacket:
     case Packet::ThemeChangeAppliedPacket: {
         qint32  priority;
         waitForAvailableBytes(stream, sizeof(qint32));
