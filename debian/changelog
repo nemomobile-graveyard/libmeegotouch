@@ -1,3 +1,10 @@
+libmeegotouch (0.21.4-2) unstable; urgency=low
+
+  * New version
+  * Changes: reverting mthedaemon protocol changes
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 14 Apr 2011 11:32:42 +0300
+
 libmeegotouch (0.21.4-1) unstable; urgency=low
 
   * New version
