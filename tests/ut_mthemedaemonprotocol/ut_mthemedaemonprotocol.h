@@ -33,6 +33,12 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void streamQString_data();
+    void streamQString();
+
+    void streamQStringList_data();
+    void streamQStringList();
+
     void streamPixmapId_data();
     void streamPixmapId();
 
