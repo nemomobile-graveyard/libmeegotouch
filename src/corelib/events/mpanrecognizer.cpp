@@ -142,18 +142,8 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
 
     MPanGesture *panGesture = static_cast<MPanGesture*>(gesture);
     const QMouseEvent *ev = static_cast<const QMouseEvent *>(event);
-    const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
 
     switch (event->type()) {
-    case QEvent::TouchBegin:
-    case QEvent::TouchUpdate:
-    case QEvent::TouchEnd:
-
-        if (panGesture->state() != Qt::NoGesture && touchEvent->touchPoints().count() > 1)
-            return QGestureRecognizer::CancelGesture;
-        else
-            return QGestureRecognizer::Ignore;
-
     case QEvent::MouseButtonPress:
         return d->recognitionStart(panGesture, ev);
 

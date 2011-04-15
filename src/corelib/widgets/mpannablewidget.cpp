@@ -35,7 +35,7 @@ M_REGISTER_WIDGET(MPannableWidget)
 
 namespace {
     const int ZValueGlass = 2;
-    const int MousePressStopingMovementTimeout = 300; //ms.
+    const int MousePressStopingMovementTimeout = 70; //ms.
 }
 
 MPannableWidgetGlass::MPannableWidgetGlass(MPannableWidget *pannableWidget) :
