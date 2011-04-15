@@ -419,7 +419,7 @@ void MTextEditPrivate::init()
 
     QObject::connect(&cutAction, SIGNAL(triggered(bool)), q, SLOT(cut()));
     QObject::connect(&copyAction, SIGNAL(triggered(bool)), q, SLOT(copy()));
-    QObject::connect(&pasteAction, SIGNAL(triggered(bool)), q, SLOT(paste()));
+    QObject::connect(&pasteAction, SIGNAL(triggered(bool)), q, SLOT(_q_pasteAndClear()));
 
     q->addAction(&cutAction);
     q->addAction(&copyAction);
@@ -1512,6 +1512,7 @@ MTextEdit::MTextEdit(MTextEditModel::LineMode type, const QString &text,
     model()->setDocument(new QTextDocument(text, this->model()));
     model()->setLine(type);
     d->init();
+
 }
 
 MTextEdit::MTextEdit(MTextEditModel *model, QGraphicsItem *parent)
@@ -2324,6 +2325,14 @@ void MTextEdit::paste()
         mDebug("MTextEdit") << __PRETTY_FUNCTION__ << "paste failed";
         emit pasteFailed();
     }
+
+}
+
+void MTextEditPrivate::_q_pasteAndClear()
+{
+    Q_Q(MTextEdit);
+    q->paste();
+    QApplication::clipboard()->clear(QClipboard::Clipboard);
 }
 
 void MTextEdit::cut()

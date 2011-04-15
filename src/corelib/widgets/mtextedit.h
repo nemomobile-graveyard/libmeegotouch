@@ -501,6 +501,7 @@ public Q_SLOTS:
      */
     virtual void paste();
 
+
     /*!
      * \brief Copies the selected text to the clipboard and deletes it, if there is any, and if echoMode() is Normal.
      *
@@ -576,6 +577,7 @@ private:
 #endif
     Q_PRIVATE_SLOT(d_func(), void _q_confirmCompletion(const QString &))
     Q_PRIVATE_SLOT(d_func(), void _q_updatePasteActionState())
+    Q_PRIVATE_SLOT(d_func(), void _q_pasteAndClear())
 };
 
 #endif

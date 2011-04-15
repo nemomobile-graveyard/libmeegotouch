@@ -143,6 +143,7 @@ public:
     QString replaceLineBreaks(QString text, QString replacement);
     void _q_confirmCompletion(const QString &);
     void _q_updatePasteActionState();
+    void _q_pasteAndClear();
 
     //! \brief Disable MTextEdit::updateMicroFocus().
     //!
