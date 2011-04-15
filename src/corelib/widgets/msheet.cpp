@@ -217,6 +217,12 @@ void MSheet::setCentralWidget(QGraphicsWidget *newWidget)
 {
     QGraphicsWidget *oldWidget  = model()->centralWidget();
 
+    if (newWidget == oldWidget)
+        return;
+
+    if (oldWidget)
+        disconnect(oldWidget, SIGNAL(destroyed()), this, SLOT(_q_onCentralWidgetDestroyed()));
+
     model()->setCentralWidget(newWidget);
 
     delete oldWidget;
@@ -233,6 +239,12 @@ QGraphicsWidget *MSheet::headerWidget()
 void MSheet::setHeaderWidget(QGraphicsWidget *newWidget)
 {
     QGraphicsWidget *oldWidget  = model()->headerWidget();
+
+    if (newWidget == oldWidget)
+        return;
+
+    if (oldWidget)
+        disconnect(oldWidget, SIGNAL(destroyed()), this, SLOT(_q_onHeaderWidgetDestroyed()));
 
     model()->setHeaderWidget(newWidget);
 
