@@ -47,7 +47,8 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(qreal,        focusedPromptOpacity,     FocusedPromptOpacity)
     M_STYLE_ATTRIBUTE(qreal,        unfocusedPromptOpacity,   UnfocusedPromptOpacity)
     M_STYLE_ATTRIBUTE(int,          focusTransitionDuration,  FocusTransitionDuration)
-    M_STYLE_ATTRIBUTE(int,          hideShowPromptDuration,   hideShowPromptDuration)
+    M_STYLE_ATTRIBUTE(int,          hideShowPromptDuration,   HideShowPromptDuration)
+    M_STYLE_ATTRIBUTE(int,          promptTransitionDelay,    PromptTransitionDelay)
 
     /*!
         \property MTextEditStyle::pressBoundaryFeedback

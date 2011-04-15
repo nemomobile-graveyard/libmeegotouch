@@ -105,7 +105,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       currentPromptOpacity(0.2),
       promptFocusAnimation(this, "promptOpacity"),
       promptShowHideAnimation(this, "promptOpacity"),
-      isPromptVisible(false)
+      isPromptVisible(false),
+      focusAnimationDelay(new QTimer(this))
 {
     // copy text options from actual document to prompt
     QTextOption option = document()->defaultTextOption();
@@ -120,6 +121,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     maskTimer->setSingleShot(true);
     maskTimer->setInterval(MaskedTimeInterval);
 
+    focusAnimationDelay->setSingleShot(true);
+
     hideInfoBannerTimer->setSingleShot(true);
     QObject::connect(hideInfoBannerTimer, SIGNAL(timeout()), q, SLOT(hideInfoBanner()));
 
@@ -130,6 +133,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
                      this, SLOT(updateEditorToolbarPosition()));
     QObject::connect(control, SIGNAL(selectionChanged()),
                      this, SLOT(updateEditorToolbarPosition()));
+    QObject::connect(focusAnimationDelay, SIGNAL(timeout()),
+                     this, SLOT(startFocusAnimation()));
 }
 
 
@@ -708,7 +713,7 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
     }
 
     const bool hasText = !document()->isEmpty();
-    const bool hasPrompt = !q->model()->prompt().isEmpty();
+    const bool hasPrompt = !promptTextDocument->isEmpty();
 
     if (isPromptVisible && hasText && hasPrompt) {
         isPromptVisible = false;
@@ -716,12 +721,14 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
         promptShowHideAnimation.setDirection(QAbstractAnimation::Forward);
         promptShowHideAnimation.start();
         promptFocusAnimation.stop();
+        focusAnimationDelay->stop();
     } else if (!isPromptVisible && !hasText && hasPrompt) {
         isPromptVisible = true;
         promptShowHideAnimation.setStartValue(q->style()->focusedPromptOpacity());
         promptShowHideAnimation.setDirection(QAbstractAnimation::Backward);
         promptShowHideAnimation.start();
         promptFocusAnimation.stop();
+        focusAnimationDelay->stop();
     }
 
     if (q->model()->echo() == MTextEditModel::NoEcho) {
@@ -1095,7 +1102,7 @@ void MTextEditViewPrivate::playFocusAnimation(QAbstractAnimation::Direction dire
     promptFocusAnimation.setEndValue(endValue);
     switch (promptFocusAnimation.state()) {
     case QAbstractAnimation::Stopped:
-        promptFocusAnimation.start();
+        focusAnimationDelay->start();
         break;
     case QAbstractAnimation::Paused:
         promptFocusAnimation.resume();
@@ -1147,6 +1154,22 @@ void MTextEditViewPrivate::updateEditorToolbarPosition()
     const int targetX(visibleRect.intersected(targetRect).center().x());
 
     editorToolbar->setPosition(QPointF(targetX, targetY), arrowDirection);
+}
+
+void MTextEditViewPrivate::startFocusAnimation()
+{
+    Q_Q(MTextEditView);
+    qreal targetOpacity;
+
+    if (promptFocusAnimation.direction() == QAbstractAnimation::Forward) {
+        targetOpacity = q->style()->focusedPromptOpacity();
+    } else {
+        targetOpacity = q->style()->unfocusedPromptOpacity();
+    }
+
+    if (currentPromptOpacity != targetOpacity) {
+        promptFocusAnimation.start();
+    }
 }
 
 QRect MTextEditViewPrivate::visibleArea() const
@@ -1891,6 +1914,8 @@ void MTextEditView::applyStyle()
     d->promptShowHideAnimation.setDuration(s->hideShowPromptDuration());
     d->promptShowHideAnimation.setStartValue(s->unfocusedPromptOpacity());
     d->promptShowHideAnimation.setEndValue(0);
+
+    d->focusAnimationDelay->setInterval(s->promptTransitionDelay());
 
     MWidgetView::applyStyle();
 }

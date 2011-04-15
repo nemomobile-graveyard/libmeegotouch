@@ -90,6 +90,7 @@ protected slots:
     void makeMagnifierAppear();
     void restoreEditorToolbar();
     void updateEditorToolbarPosition();
+    void startFocusAnimation();
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
@@ -173,6 +174,7 @@ protected:
     QPropertyAnimation promptFocusAnimation;
     QPropertyAnimation promptShowHideAnimation;
     bool isPromptVisible;
+    QTimer * const focusAnimationDelay;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;
