@@ -34,7 +34,7 @@ class MTextMagnifier;
 class QGraphicsSceneMouseEvent;
 class QTextDocument;
 class QTimer;
-class MInfoBanner;
+class MBanner;
 
 //! \internal
 class MTextEditViewPrivate : public QObject
@@ -158,11 +158,9 @@ protected:
 
     bool inAutoSelectionClick;
 
-    QPointer<MInfoBanner> infoBanner;
+    QPointer<MBanner> infoBanner;
 
     bool editActive; // true if editing started and having focus
-
-    QTimer *hideInfoBannerTimer;
 
     QScopedPointer<MTextMagnifier> magnifier;
     QScopedPointer<MEditorToolbar> editorToolbar;

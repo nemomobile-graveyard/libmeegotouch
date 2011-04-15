@@ -40,7 +40,7 @@
 
 #include "mtextedit.h"
 #include "mtextedit_p.h"
-#include "minfobanner.h"
+#include "mbanner.h"
 #include "mtimestamp.h"
 #include "minputmethodstate.h"
 
@@ -58,11 +58,6 @@ namespace
 
     const QChar DefaultMaskCharacter('*');
 
-    // Default icon name for informational banner about failed paste
-    const char *const DefaultPasteBannerIcon = "icon-m-framework-close";
-
-    // Upper limit for how long notification will stay visible, may be closed earlier automatically
-    const int NotificationDuration = 3000;
     const int BinaryTextVariantSeparator = 0x9c;
 
     const char * const CursorWidthProperty = "cursorWidth";
@@ -100,7 +95,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       inAutoSelectionClick(false),
       infoBanner(0),
       editActive(false),
-      hideInfoBannerTimer(new QTimer(this)),
       focusReleaseExpected(false),
       currentPromptOpacity(0.2),
       promptFocusAnimation(this, "promptOpacity"),
@@ -122,9 +116,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
     maskTimer->setInterval(MaskedTimeInterval);
 
     focusAnimationDelay->setSingleShot(true);
-
-    hideInfoBannerTimer->setSingleShot(true);
-    QObject::connect(hideInfoBannerTimer, SIGNAL(timeout()), q, SLOT(hideInfoBanner()));
 
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
@@ -1714,29 +1705,16 @@ void MTextEditView::informPasteFailed()
         return;
     }
 
-    QString iconName = style()->pasteFailedIcon();
-    int duration = style()->pasteFailedDuration();
-
-    if (iconName.isEmpty()) {
-        iconName = DefaultPasteBannerIcon;
-    }
-
-    if (duration <= 0) {
-        duration = NotificationDuration;
-    }
-
-    d->infoBanner = new MInfoBanner(MInfoBanner::Information);
-    d->infoBanner->setImageID(iconName);
-    d->infoBanner->setBodyText(
+    d->infoBanner = new MBanner();
+    d->infoBanner->setStyleName("InformationBanner");
+    d->infoBanner->setTitle(
         //: Information banner to indicate that no characters could be pasted from the
         //: clipboard to this text field. Is shown when user tries to paste
         //: non-numeric text to a numeric or phone number text field.
         //% "Cannot paste text here"
         qtTrId("qtn_comm_cantpaste"));
 
-    d->controller->sceneManager()->appearSceneWindow(d->infoBanner, MSceneWindow::DestroyWhenDone);
-    d->hideInfoBannerTimer->setInterval(duration);
-    d->hideInfoBannerTimer->start();
+    d->infoBanner->appear(d->controller->scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void MTextEditView::handleLongPress()
@@ -1756,11 +1734,7 @@ void MTextEditView::handleLongPress()
 
 void MTextEditView::hideInfoBanner()
 {
-    Q_D(MTextEditView);
-
-    if (d->infoBanner)
-        d->infoBanner->dismiss();
-    d->infoBanner = 0;
+    /* Deprecated */
 }
 
 void MTextEditView::setupModel()
