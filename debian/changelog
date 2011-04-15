@@ -1,3 +1,10 @@
+libmeegotouch (0.21.4-3) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#247480 - MSheet can appear empty if the central widget is changed.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 15 Apr 2011 16:59:30 +0300
+
 libmeegotouch (0.21.4-2) unstable; urgency=low
 
   * New version
