@@ -124,6 +124,10 @@ void MWidgetSlideAnimation::updateState(QAbstractAnimation::State newState, QAbs
         }
 
         if (d->direction == In) {
+            // because animation doesn't immediately set properties to start values
+            // we must explicitly set targetWidget position here to prevent widget
+            // poping out in finalPosition before animation starts
+            d->targetWidget->setPos(offscreenPos);
             d->positionAnimation->setStartValue(offscreenPos);
             d->positionAnimation->setEndValue(d->originalPos);
         } else {
