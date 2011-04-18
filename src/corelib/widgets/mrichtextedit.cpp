@@ -276,6 +276,7 @@ bool MRichTextEditPrivate::insertFromMimeData(const QMimeData *source)
     }
 
     if (updated) {
+        commitPreedit(true); // Reset preedit before paste
         QTextCursor textcursor = q->textCursor();
         textcursor.insertFragment(fragment);
         q->setTextCursor(textcursor);
