@@ -20,6 +20,8 @@ greaterThan(ICUVERSION, 4.4) {
                  data/it.txt \
                  data/ms.txt \
                  data/ms_BN.txt \
+                 data/pt.txt \
+                 data/pt_BR.txt \
                  data/pt_PT.txt \
                  data/uk.txt \
                  data/ur.txt \

@@ -10050,10 +10050,10 @@ pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, 
 pt_BR	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d 'de' MMMM 'de' y HH'h'mm'min'ss's' zzzz -> segunda-feira, 18 de Rajab de 1429 14h31min00s GMT+00:00
 pt_PT	Language endonym	português (Portugal)
 pt_PT	Country endonym	Portugal
-pt_PT	Floating Point Number	-123 456 789,012
-pt_PT	Percent value	-1 234,5679%
-pt_PT	Currency value	1 234,56 €
-pt_PT	Negative Currency value	-1 234,56 €
+pt_PT	Floating Point Number	-123.456.789,012
+pt_PT	Percent value	-1.234,5679%
+pt_PT	Currency value	1.234,56 €
+pt_PT	Negative Currency value	-1.234,56 €
 pt_PT	Name of month 01 (Gregorian calendar), stand-alone, wide	Janeiro
 pt_PT	Name of month 02 (Gregorian calendar), stand-alone, wide	Fevereiro
 pt_PT	Name of month 03 (Gregorian calendar), stand-alone, wide	Março
@@ -10226,13 +10226,13 @@ pt_PT	Name of weekday 04 (Gregorian calendar), format, wide	Quinta-feira
 pt_PT	Name of weekday 05 (Gregorian calendar), format, wide	Sexta-feira
 pt_PT	Name of weekday 06 (Gregorian calendar), format, wide	Sábado
 pt_PT	Name of weekday 07 (Gregorian calendar), format, wide	Domingo
-pt_PT	Name of weekday 01 (Gregorian calendar), format, abbreviated	seg
-pt_PT	Name of weekday 02 (Gregorian calendar), format, abbreviated	ter
-pt_PT	Name of weekday 03 (Gregorian calendar), format, abbreviated	qua
-pt_PT	Name of weekday 04 (Gregorian calendar), format, abbreviated	qui
-pt_PT	Name of weekday 05 (Gregorian calendar), format, abbreviated	sex
-pt_PT	Name of weekday 06 (Gregorian calendar), format, abbreviated	sáb
-pt_PT	Name of weekday 07 (Gregorian calendar), format, abbreviated	dom
+pt_PT	Name of weekday 01 (Gregorian calendar), format, abbreviated	Seg
+pt_PT	Name of weekday 02 (Gregorian calendar), format, abbreviated	Ter
+pt_PT	Name of weekday 03 (Gregorian calendar), format, abbreviated	Qua
+pt_PT	Name of weekday 04 (Gregorian calendar), format, abbreviated	Qui
+pt_PT	Name of weekday 05 (Gregorian calendar), format, abbreviated	Sex
+pt_PT	Name of weekday 06 (Gregorian calendar), format, abbreviated	Sáb
+pt_PT	Name of weekday 07 (Gregorian calendar), format, abbreviated	Dom
 pt_PT	Name of weekday 01 (Gregorian calendar), format, narrow	S
 pt_PT	Name of weekday 02 (Gregorian calendar), format, narrow	T
 pt_PT	Name of weekday 03 (Gregorian calendar), format, narrow	Q
@@ -10268,13 +10268,13 @@ pt_PT	Name of weekday 04 (Islamic calendar), format, wide	Quinta-feira
 pt_PT	Name of weekday 05 (Islamic calendar), format, wide	Sexta-feira
 pt_PT	Name of weekday 06 (Islamic calendar), format, wide	Sábado
 pt_PT	Name of weekday 07 (Islamic calendar), format, wide	Domingo
-pt_PT	Name of weekday 01 (Islamic calendar), format, abbreviated	seg
-pt_PT	Name of weekday 02 (Islamic calendar), format, abbreviated	ter
-pt_PT	Name of weekday 03 (Islamic calendar), format, abbreviated	qua
-pt_PT	Name of weekday 04 (Islamic calendar), format, abbreviated	qui
-pt_PT	Name of weekday 05 (Islamic calendar), format, abbreviated	sex
-pt_PT	Name of weekday 06 (Islamic calendar), format, abbreviated	sáb
-pt_PT	Name of weekday 07 (Islamic calendar), format, abbreviated	dom
+pt_PT	Name of weekday 01 (Islamic calendar), format, abbreviated	Seg
+pt_PT	Name of weekday 02 (Islamic calendar), format, abbreviated	Ter
+pt_PT	Name of weekday 03 (Islamic calendar), format, abbreviated	Qua
+pt_PT	Name of weekday 04 (Islamic calendar), format, abbreviated	Qui
+pt_PT	Name of weekday 05 (Islamic calendar), format, abbreviated	Sex
+pt_PT	Name of weekday 06 (Islamic calendar), format, abbreviated	Sáb
+pt_PT	Name of weekday 07 (Islamic calendar), format, abbreviated	Dom
 pt_PT	Name of weekday 01 (Islamic calendar), format, narrow	S
 pt_PT	Name of weekday 02 (Islamic calendar), format, narrow	T
 pt_PT	Name of weekday 03 (Islamic calendar), format, narrow	Q
@@ -10305,16 +10305,16 @@ pt_PT	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/
 pt_PT	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' z -> 21/07/08 14h31min00s GMT+00:00
 pt_PT	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a zzzz -> 21/07/08 02h31min00s PM GMT+00:00
 pt_PT	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' zzzz -> 21/07/08 14h31min00s GMT+00:00
-pt_PT	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy -> 21 de Jul de 2008
-pt_PT	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy -> 21 de Jul de 2008
-pt_PT	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm a -> 21 de Jul de 2008 02:31 PM
-pt_PT	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm -> 21 de Jul de 2008 14:31
-pt_PT	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm:ss a -> 21 de Jul de 2008 02:31:00 PM
-pt_PT	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm:ss -> 21 de Jul de 2008 14:31:00
-pt_PT	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a z -> 21 de Jul de 2008 02h31min00s PM GMT+00:00
-pt_PT	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' z -> 21 de Jul de 2008 14h31min00s GMT+00:00
-pt_PT	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a zzzz -> 21 de Jul de 2008 02h31min00s PM GMT+00:00
-pt_PT	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' zzzz -> 21 de Jul de 2008 14h31min00s GMT+00:00
+pt_PT	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy -> 21/07/2008
+pt_PT	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy -> 21/07/2008
+pt_PT	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm a -> 21/07/2008 02:31 PM
+pt_PT	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm -> 21/07/2008 14:31
+pt_PT	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a -> 21/07/2008 02:31:00 PM
+pt_PT	dateMedium, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss -> 21/07/2008 14:31:00
+pt_PT	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh'h'mm'min'ss's' a z -> 21/07/2008 02h31min00s PM GMT+00:00
+pt_PT	dateMedium, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH'h'mm'min'ss's' z -> 21/07/2008 14h31min00s GMT+00:00
+pt_PT	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh'h'mm'min'ss's' a zzzz -> 21/07/2008 02h31min00s PM GMT+00:00
+pt_PT	dateMedium, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH'h'mm'min'ss's' zzzz -> 21/07/2008 14h31min00s GMT+00:00
 pt_PT	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y -> 21 de Julho de 2008
 pt_PT	dateLong, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y -> 21 de Julho de 2008
 pt_PT	dateLong, timeShort, Gregorian calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm a -> 21 de Julho de 2008 02:31 PM
@@ -10353,16 +10353,16 @@ pt_PT	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM
 pt_PT	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' z -> 18/07/29 14h31min00s GMT+00:00
 pt_PT	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yy hh'h'mm'min'ss's' a zzzz -> 18/07/29 02h31min00s PM GMT+00:00
 pt_PT	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yy HH'h'mm'min'ss's' zzzz -> 18/07/29 14h31min00s GMT+00:00
-pt_PT	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy -> 18 de Raj. de 1429
-pt_PT	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy -> 18 de Raj. de 1429
-pt_PT	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm a -> 18 de Raj. de 1429 02:31 PM
-pt_PT	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm -> 18 de Raj. de 1429 14:31
-pt_PT	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh:mm:ss a -> 18 de Raj. de 1429 02:31:00 PM
-pt_PT	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH:mm:ss -> 18 de Raj. de 1429 14:31:00
-pt_PT	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a z -> 18 de Raj. de 1429 02h31min00s PM GMT+00:00
-pt_PT	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' z -> 18 de Raj. de 1429 14h31min00s GMT+00:00
-pt_PT	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMM 'de' yyyy hh'h'mm'min'ss's' a zzzz -> 18 de Raj. de 1429 02h31min00s PM GMT+00:00
-pt_PT	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMM 'de' yyyy HH'h'mm'min'ss's' zzzz -> 18 de Raj. de 1429 14h31min00s GMT+00:00
+pt_PT	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy -> 18/07/1429
+pt_PT	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy -> 18/07/1429
+pt_PT	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm a -> 18/07/1429 02:31 PM
+pt_PT	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm -> 18/07/1429 14:31
+pt_PT	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh:mm:ss a -> 18/07/1429 02:31:00 PM
+pt_PT	dateMedium, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH:mm:ss -> 18/07/1429 14:31:00
+pt_PT	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh'h'mm'min'ss's' a z -> 18/07/1429 02h31min00s PM GMT+00:00
+pt_PT	dateMedium, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH'h'mm'min'ss's' z -> 18/07/1429 14h31min00s GMT+00:00
+pt_PT	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd/MM/yyyy hh'h'mm'min'ss's' a zzzz -> 18/07/1429 02h31min00s PM GMT+00:00
+pt_PT	dateMedium, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd/MM/yyyy HH'h'mm'min'ss's' zzzz -> 18/07/1429 14h31min00s GMT+00:00
 pt_PT	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y -> 18 de Rajab de 1429
 pt_PT	dateLong, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	d 'de' MMMM 'de' y -> 18 de Rajab de 1429
 pt_PT	dateLong, timeShort, Islamic calendar, 24/12 hour mode: 12          	d 'de' MMMM 'de' y hh:mm a -> 18 de Rajab de 1429 02:31 PM
