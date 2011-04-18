@@ -228,7 +228,9 @@ void MApplicationMenuCellCreator::updateCell(const QModelIndex& index, MWidget *
        item->setTitle(text);
        item->updateLayout(MMenuListItem::SingleTitle);
    }
-   item->setEnabled(action->isEnabled());
+
+   if (action)
+       item->setEnabled(action->isEnabled());
 
    if (action && !action->objectName().isEmpty())
        item->setObjectName(QString("menuactioncommand_%1").arg(action->objectName()));

@@ -1522,6 +1522,7 @@ bool MStyleSheetParser::validate(const QString &filename)
         file.close();
         delete privateFileInfo;
     }
+    delete p;
     return result;
 }
 

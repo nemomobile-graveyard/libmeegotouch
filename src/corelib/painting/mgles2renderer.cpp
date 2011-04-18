@@ -109,6 +109,7 @@ MGLES2RendererPrivate::MGLES2RendererPrivate()
     : m_glContext(NULL),
     m_viewportSize(-1, -1),
     m_activePainter(NULL),
+    m_activeProgram(NULL),
     m_invertTexture(false),
     m_initialized(false)
 {}
