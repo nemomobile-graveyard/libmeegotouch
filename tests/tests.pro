@@ -45,7 +45,6 @@ SUBDIRS     =  \
      ut_mlistviewmulticolumn \
      ut_mlistviewseparators \
      ut_mlistfilter \
-     ut_mlistindexfloatingview \
      ut_mflowlayoutpolicy \
      ut_mfreestylelayoutpolicy \
      ut_mgridlayoutpolicy \

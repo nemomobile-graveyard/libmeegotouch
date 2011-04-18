@@ -26,7 +26,6 @@ SOURCES += ut_mlistviewgroupheader.cpp  \
         $$MSRCDIR/views/widgets/mlistindextooltip.cpp \
         ../../src/views/.gen/gen_mlistindexmodeldata.cpp \
         $$MSRCDIR/views/mlistindexview.cpp \
-        $$MSRCDIR/views/mlistindexfloatingview.cpp \
         ../../src/views/.gen/gen_mlistindexstyledata.cpp \
         ../../src/views/.gen/gen_mlistindextooltipstyledata.cpp \
         $$MSRCDIR/views/mapplicationpageview.cpp \
