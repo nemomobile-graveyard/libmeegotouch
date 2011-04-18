@@ -82,7 +82,7 @@ void MRichTextEditDialogsManager::initTextStylingDialog()
     QStringList fontFamilyValues = fontDatabase.families();
     fontFamilyCombo = new MComboBox(centralWidget);
     //% "Font"
-    fontFamilyCombo->setTitle(qtTrId("qtn_comm_font_combobox"));
+    fontFamilyCombo->setTitle(qtTrId("qtn_comm_font"));
     QStringListModel *fontModel = new QStringListModel(centralWidget);
     fontModel->setStringList(fontFamilyValues);
     fontFamilyCombo->setItemModel(fontModel);
@@ -94,7 +94,7 @@ void MRichTextEditDialogsManager::initTextStylingDialog()
     // Initialize Font Size combo box
     fontSizeCombo = new MComboBox(centralWidget);
     //% "Font size"
-    fontSizeCombo->setTitle(qtTrId("qtn_comm_font_size_combobox"));
+    fontSizeCombo->setTitle(qtTrId("qtn_comm_font_size"));
     QStringListModel *sizeModel = new QStringListModel(centralWidget);
     fontSizeCombo->setItemModel(sizeModel);
     policy->addItem(fontSizeCombo);
