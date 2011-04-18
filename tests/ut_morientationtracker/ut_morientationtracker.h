@@ -58,6 +58,11 @@ private slots:
 
     void testUpdatesPostponedUntilRotationsAreEnabled();
 
+    void testFollowsCurrentAppWindowWhenDynamicPropertySet_data();
+    void testFollowsCurrentAppWindowWhenDynamicPropertySet();
+    void testFollowsCurrentAppWindowWhenOnStackButNotTopmost_data();
+    void testFollowsCurrentAppWindowWhenOnStackButNotTopmost();
+
     void testFollowingDesktopOrientation_data();
     void testFollowingDesktopOrientation();
     void testFollowingDesktopOrientationWhenPropertyIsNotPresent();
