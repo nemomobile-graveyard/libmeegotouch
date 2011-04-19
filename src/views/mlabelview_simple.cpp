@@ -319,13 +319,13 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
             staticText2.setText(text);
             staticText2.prepare(QTransform(), viewPrivate->controller->font());
 
-            if (staticText2.size().height() > renderSize.height()) {
+            if (staticText2.size().height() > renderSize.height() || staticText2.size().width() > renderSize.width()) {
                 int bad = text.length();
                 int good = 0;
                 int offset = bad + (good - bad)/2;
                 while (offset != good && offset != bad) {
                     staticText2.setText(text.left(offset) + "...");
-                    if (staticText2.size().height() > renderSize.height())
+                    if (staticText2.size().height() > renderSize.height() || staticText2.size().width() > renderSize.width())
                         bad = offset;
                     else
                         good = offset;
