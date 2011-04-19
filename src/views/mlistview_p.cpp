@@ -1411,6 +1411,12 @@ void MGroupHeaderListViewPrivate::updateHeaderHeight()
     updateHeadersIndexes();
 }
 
+void MGroupHeaderListViewPrivate::updateItemSize()
+{
+    for (ModelIndexWidgetHash::iterator iter = visibleItems.begin(); iter != visibleItems.end(); ++iter)
+        iter.value()->resize(cellSize(iter.key()));
+}
+
 int MGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) const
 {
     if (!index.isValid())

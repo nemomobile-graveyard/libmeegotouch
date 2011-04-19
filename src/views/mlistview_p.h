@@ -322,6 +322,7 @@ public:
     virtual void updateSeparatorSize();
 
     virtual void updateHeaderHeight();
+    virtual void updateItemSize();
 
     virtual int indexToFlatRow(const QModelIndex &index) const;
     virtual int locatePosOfItem(int headerIndex, int itemIndex); // groups only
