@@ -101,26 +101,18 @@ void MLabelViewPrivate::autoSetTextDirection()
     Qt::LayoutDirection textDirection = model()->textDirection();
 
     if (textDirection == Qt::LayoutDirectionAuto) {
-        switch (MLocale::defaultLayoutDirection()) {
-        case Qt::LeftToRight:
-            textDirection = Qt::LeftToRight;
-            break;
-        case Qt::RightToLeft:
-            textDirection = Qt::RightToLeft;
-            break;
-        case Qt::LayoutDirectionAuto:
-        default:
-            textDirection = MLocale::directionForText(model()->text()); // look at the text content
-            break;
-        }
+        textDirection = MLocale::directionForText(model()->text()); // look at the text content
     }
     textOptions.setTextDirection(textDirection);
 
     // Set alignment
-
+    Qt::LayoutDirection layoutDirection = MLocale::defaultLayoutDirection();
+    if (layoutDirection == Qt::LayoutDirectionAuto) {
+        layoutDirection = textDirection; // layout according to the text content
+    }
     Qt::Alignment alignment = model()->alignment();
 
-    if (textDirection == Qt::RightToLeft && !(alignment & Qt::AlignAbsolute)) {
+    if (layoutDirection == Qt::RightToLeft && !(alignment & Qt::AlignAbsolute)) {
         // Mirror horizontal alignment
         Qt::Alignment horAlignment = (alignment & Qt::AlignHorizontal_Mask);
         if (horAlignment & Qt::AlignRight) {
