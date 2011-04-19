@@ -545,6 +545,8 @@ void MOrientationTrackerPrivate::startFollowingDesktop(MWindow *win)
     if (!desktopAngleProperty->isSubscribed())
         desktopAngleProperty->subscribeAndWaitForSubscription();
     handleDesktopOrientationChange();
+#else
+    Q_UNUSED(win);
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
 
@@ -554,5 +556,7 @@ void MOrientationTrackerPrivate::stopFollowingDesktop(MWindow *win)
     windowsFollowingDesktop.removeAll(win);
     if (windowsFollowingDesktop.isEmpty())
         desktopAngleProperty->unsubscribe();
+#else
+    Q_UNUSED(win);
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
