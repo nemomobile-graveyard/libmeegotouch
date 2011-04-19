@@ -42,7 +42,8 @@ private slots:
     void testRecognize();
     void testFastTap();
     void testTimedout();
-    void testZigzagged();
+    void testZigzaggedAngleChanged();
+    void testZigzaggedDirectionChanged();
     void testSnappingToRightAngles();
 };
 

@@ -46,6 +46,7 @@ static const int MSwipeTimeout = 300; /* miliseconds */
 static const int MSwipeMovementThreshold = 50; /* pixels */
 static const qreal MSwipeAngleThreshold = 15; /* degrees */
 static const qreal MSwipeAngleSnappingThreshold = 22.5; /* degrees */
+static const qreal MJitterThreshold = 30; /*pixels*/
 
 MSwipeRecognizerStyle recognizerStyle;
 const MStyle *MTheme::style(const char *,
@@ -54,6 +55,7 @@ const MStyle *MTheme::style(const char *,
     recognizerStyle.setDistanceThreshold(MSwipeMovementThreshold);
     recognizerStyle.setangleThreshold(MSwipeAngleThreshold);
     recognizerStyle.setangleSnappingThreshold(MSwipeAngleSnappingThreshold);
+    recognizerStyle.setjitterThreshold(MJitterThreshold);
     return &recognizerStyle;
 }
 
@@ -147,7 +149,7 @@ void Ut_MSwipeRecognizer::testTimedout()
 
 }
 
-void Ut_MSwipeRecognizer::testZigzagged()
+void Ut_MSwipeRecognizer::testZigzaggedAngleChanged()
 {
     QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(0,0), QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
     QMouseEvent moveEvent1(QEvent::MouseMove, QPoint(55,0), QPoint(55,0), Qt::LeftButton, Qt::LeftButton, 0);
@@ -157,7 +159,7 @@ void Ut_MSwipeRecognizer::testZigzagged()
     currentState = recognizer->recognize(swipeGesture, 0, &pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
 
-    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent2);
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent1);
     QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
 
     currentGestureState = Qt::GestureStarted;
@@ -165,6 +167,36 @@ void Ut_MSwipeRecognizer::testZigzagged()
     currentState = recognizer->recognize(swipeGesture, 0, &moveEvent2);
     QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
 
+    currentGestureState = Qt::NoGesture;
+}
+
+void Ut_MSwipeRecognizer::testZigzaggedDirectionChanged()
+{
+    QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(0,0), QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
+    QMouseEvent moveEvent1(QEvent::MouseMove, QPoint(55,0), QPoint(55,0), Qt::LeftButton, Qt::LeftButton, 0);
+    QMouseEvent moveEvent2(QEvent::MouseMove, QPoint(40,0), QPoint(40,0), Qt::LeftButton, Qt::LeftButton, 0);
+    QMouseEvent moveEvent3(QEvent::MouseMove, QPoint(30,0), QPoint(30,0), Qt::LeftButton, Qt::LeftButton, 0);
+    QMouseEvent moveEvent4(QEvent::MouseMove, QPoint(20,0), QPoint(10,0), Qt::LeftButton, Qt::LeftButton, 0);
+
+    QGestureRecognizer::Result currentState;
+    currentState = recognizer->recognize(swipeGesture, 0, &pressEvent);
+    QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent1);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+
+    currentGestureState = Qt::GestureStarted;
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent2);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent3);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent4);
+    QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
+
+    currentGestureState = Qt::NoGesture;
 }
 
 void Ut_MSwipeRecognizer::testSnappingToRightAngles()

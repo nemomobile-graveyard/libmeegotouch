@@ -101,7 +101,8 @@ QGestureRecognizer::Result MSwipeRecognizerPrivate::updateRecognition(MSwipeGest
              currentDistance + style->jitterThreshold() > swipeGesture->prevDistance )
             result = QGestureRecognizer::TriggerGesture;
 
-        swipeGesture->prevDistance = currentDistance;
+        if (currentDistance > swipeGesture->prevDistance)
+            swipeGesture->prevDistance = currentDistance;
 
     } else if (elapsedTime > style->timeout()) {
         // Timeout! This movement is too slow to be a swipe;
