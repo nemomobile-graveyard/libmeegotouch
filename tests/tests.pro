@@ -57,7 +57,6 @@ SUBDIRS     =  \
      ut_mapplicationmenuview \
      ut_mobjectmenu \
      ut_mobjectmenuview \
-     ut_morientationtracker \
      ut_moverlay \
      ut_mpannableviewport \
      ut_mpannablewidget \
@@ -211,6 +210,14 @@ SUBDIRS += \
     ut_mcalendar \
     ut_mappletinstantiator \
     ft_mmoc
+}
+
+# enable only when we have context subscriber
+
+contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
+SUBDIRS += \
+    ut_morientationtracker \
+
 }
 
 QMAKE_STRIP = echo
