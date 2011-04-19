@@ -44,12 +44,17 @@
 #include "mstatusbar.h"
 
 #include "mondisplaychangeevent.h"
+#include <MOrientationChangeEvent>
 
 #ifdef Q_WS_X11
 # include <QX11Info>
 # include <X11/Xatom.h>
 # include <X11/Xlib.h>
 #endif
+
+// OBS: if we don't do this cast QCOMPARE won't print the "Actual" and "Expected" values
+//      in case of a mismatch since it doesn't know about MSceneWindow::SceneWindowState enum.
+#define STATE_COMPARE(state1, state2) QCOMPARE(static_cast<int>(state1), static_cast<int>(state2))
 
 bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
 {
@@ -1320,6 +1325,34 @@ void Ut_MSceneManager::testDisappearingFirstSheetDoesNotAffectOthersVisibility()
     // Nothing changes
     QCOMPARE(page->isVisible(), false);
     QCOMPARE(secondSheet->isVisible(), true);
+}
+
+void Ut_MSceneManager::testDisappearedSceneWindowsDoNotGetOrientationChangeEvents()
+{
+    gMWindowIsOnDisplay = false;
+    MSceneWindow *firstPage = new MApplicationPage;
+    MSceneWindow *secondPage = new MApplicationPage;
+
+    sm->setOrientationAngle(M::Angle0);
+
+    sm->appearSceneWindowNow(firstPage);
+    sm->appearSceneWindowNow(secondPage);
+
+    STATE_COMPARE(firstPage->sceneWindowState(), MSceneWindow::Disappeared);
+    STATE_COMPARE(secondPage->sceneWindowState(), MSceneWindow::Appeared);
+
+    EventSpy firstPageEventSpy;
+    firstPage->installEventFilter(&firstPageEventSpy);
+
+    EventSpy secondPageEventSpy;
+    secondPage->installEventFilter(&secondPageEventSpy);
+
+    sm->setOrientationAngle(M::Angle270);
+
+    QVERIFY2(!firstPageEventSpy.eventTypesReceived.contains(MOrientationChangeEvent::eventNumber()),
+            "Disappeared scene window shouldn't have received an MOrientationChangeEvent");
+    QVERIFY2(secondPageEventSpy.eventTypesReceived.contains(MOrientationChangeEvent::eventNumber()),
+            "Appeared scene window must receive an MOrientationChangeEvent");
 }
 
 QTEST_MAIN(Ut_MSceneManager);
