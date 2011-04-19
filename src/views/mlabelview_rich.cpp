@@ -272,8 +272,6 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
             textDocumentDirty = true;
-        } else if (member == MLabelModel::TextElide) {
-            needUpdate = true;
         } else if(member == MLabelModel::WrapMode) {
             if (model->wordWrap()) {
                 if (model->wrapMode() == QTextOption::NoWrap) {
@@ -301,6 +299,7 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
             viewPrivate->textOptions.setAlignment(model->alignment());
             textDocumentDirty = true;
         } else if (member == MLabelModel::TextElide) {
+            needUpdate = true;
             textDocumentDirty = true;
         } else if (member == MLabelModel::UseModelFont || member == MLabelModel::Font) {
             textDocument.setTextWidth(viewPrivate->boundingRect().width());
