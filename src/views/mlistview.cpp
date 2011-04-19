@@ -195,7 +195,7 @@ void MListView::setGeometry(const QRectF &rect)
         if (!d_ptr->pannableViewport)
             d_ptr->viewportVisibleHeight = d_ptr->totalHeight();
 
-        if (d_ptr->lastGeometrySize != size()) {
+        if (d_ptr->lastGeometrySize != size() || d_ptr->clearVisibleOnRelayout) {
             d_ptr->viewWidth = rect.width();
             d_ptr->updatePannableViewportPosition();
             d_ptr->updateItemSize();
@@ -320,8 +320,9 @@ void MListView::layoutChanged()
     if (!d_ptr->isAnimating()) {
         d_ptr->layoutChanged();
 
-        updateGeometry();
         d_ptr->clearVisibleOnRelayout = true;
+        updateGeometry();
+
         d_ptr->lastScrolledToFlatRow = -1;
     }
 }

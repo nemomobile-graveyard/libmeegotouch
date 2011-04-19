@@ -339,6 +339,7 @@ void MListViewPrivate::viewportRangeChanged(const QRectF &range)
     if (isDeleted)
         return;
 
+    updatePannableViewportPosition();
     updateScrollToTargetPosition();
 }
 
