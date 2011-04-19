@@ -313,19 +313,19 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
             text = metrics.elidedText(text, Qt::ElideRight, renderSize.width());
         } else {
             //For word wrapping and eliding, bisect to find where to elide
-            QStaticText staticText;
-            staticText.setTextOption(staticText.textOption());
-            staticText.setTextWidth(renderSize.width());
-            staticText.setText(text);
-            staticText.prepare(QTransform(), viewPrivate->controller->font());
+            QStaticText staticText2;
+            staticText2.setTextOption(staticText.textOption());
+            staticText2.setTextWidth(renderSize.width());
+            staticText2.setText(text);
+            staticText2.prepare(QTransform(), viewPrivate->controller->font());
 
-            if (staticText.size().height() > renderSize.height()) {
+            if (staticText2.size().height() > renderSize.height()) {
                 int bad = text.length();
                 int good = 0;
                 int offset = bad + (good - bad)/2;
                 while (offset != good && offset != bad) {
-                    staticText.setText(text.left(offset) + "...");
-                    if (staticText.size().height() > renderSize.height())
+                    staticText2.setText(text.left(offset) + "...");
+                    if (staticText2.size().height() > renderSize.height())
                         bad = offset;
                     else
                         good = offset;
