@@ -141,6 +141,7 @@ private:
     struct MGConfItemPrivate *priv;
 
     void update_value(bool emit_signal);
+    void update_value_local( const QVariant& value );
 };
 
 #endif // MGCONFITEM_H

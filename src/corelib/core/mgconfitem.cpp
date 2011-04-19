@@ -23,6 +23,9 @@
 #include <QVariant>
 #include <MDebug>
 
+#include <QList>
+#include <QHash>
+
 #include "mgconfitem.h"
 
 #include <gconf/gconf-value.h>
@@ -40,7 +43,41 @@ struct MGConfItemPrivate {
     bool have_gconf;
 
     static void notify_trampoline(GConfClient *, guint, GConfEntry *, gpointer);
+
+    void registerLocalItem( MGConfItem* item );
+    void unregisterLocalItem( MGConfItem* item );
+
+    void notifyLocalItems( const QString& key, const QVariant& value );
 };
+
+static QHash< QString, QList< MGConfItem * > > g_localGConfItems;
+
+void MGConfItemPrivate::registerLocalItem( MGConfItem* item )
+{
+    if ( g_localGConfItems.contains( item->key() ) ) {
+        g_localGConfItems[ item->key() ].append( item );
+    } else {
+        QList< MGConfItem * > itemList;
+        itemList << item;
+        g_localGConfItems[ item->key() ] = itemList;
+    }
+}
+
+void MGConfItemPrivate::unregisterLocalItem( MGConfItem* item )
+{
+    if ( g_localGConfItems.contains( item->key() ) ) {
+        g_localGConfItems[ item->key() ].removeAll( item );
+    }
+}
+
+void MGConfItemPrivate::notifyLocalItems( const QString& key, const QVariant& value )
+{
+    if ( g_localGConfItems.contains( key ) ) {
+        for ( int i = 0; i < g_localGConfItems[ key ].count(); i++ ) {
+            g_localGConfItems[ key ][ i ]->update_value_local( value );
+        }
+    }
+}
 
 /* We get the default client and never release it, on purpose, to
    avoid disconnecting from the GConf daemon when a program happens to
@@ -261,6 +298,14 @@ void MGConfItem::update_value(bool emit_signal)
     }
 }
 
+void MGConfItem::update_value_local( const QVariant& value )
+{
+    if ( value != priv->value ) {
+        priv->value = value;
+        emit valueChanged();
+    }
+}
+
 QString MGConfItem::key() const
 {
     return priv->key;
@@ -281,6 +326,7 @@ QVariant MGConfItem::value(const QVariant &def) const
 
 void MGConfItem::set(const QVariant &val)
 {
+    priv->notifyLocalItems( priv->key, val );
     withClient(client) {
         QByteArray k = convertKey(priv->key);
         GConfValue *v;
@@ -365,6 +411,7 @@ MGConfItem::MGConfItem(const QString &key, QObject *parent)
 {
     priv = new MGConfItemPrivate;
     priv->key = key;
+    priv->registerLocalItem( this );
     withClient(client) {
         QByteArray k = convertKey(priv->key);
         GError *error = NULL;
@@ -398,6 +445,7 @@ MGConfItem::MGConfItem(const QString &key, QObject *parent)
 
 MGConfItem::~MGConfItem()
 {
+    priv->unregisterLocalItem( this );
     if(priv->have_gconf) {
         withClient(client) {
             QByteArray k = convertKey(priv->key);
