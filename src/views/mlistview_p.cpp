@@ -186,10 +186,11 @@ void MListViewPrivate::selectionChange(const QItemSelection &selected, const QIt
     if (clearVisibleOnRelayout)
         return;
 
-    for (QHash<QModelIndex, MWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end(); ++iter) {
-        if (selected.contains(iter.key()))
+    for (ModelIndexWidgetHash::iterator iter = visibleItems.begin(); iter != visibleItems.end(); ++iter) {
+        QModelIndex index = flatRowToIndex(iter.key());
+        if (selected.contains(index))
             iter.value()->setSelected(true);
-        if (deselected.contains(iter.key()))
+        if (deselected.contains(index))
             iter.value()->setSelected(false);
     }
 }
@@ -486,11 +487,10 @@ MWidget *MListViewPrivate::findCellAtRow(int row)
 void MListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
 {
     for (int currentRow = firstVisibleRow; currentRow <= lastVisibleRow; currentRow++) {
-        QModelIndex index = flatRowToIndex(currentRow);
-        MWidget *cell = visibleItems.value(index, NULL);
+        MWidget *cell = visibleItems.value(currentRow, NULL);
         if (!cell) {
             cell = createItem(currentRow);
-            visibleItems[index] = cell;
+            visibleItems[currentRow] = cell;
         }
         cell->setPos(QPointF(0, locatePosOfItem(currentRow)));
     }
@@ -561,7 +561,7 @@ void MListViewPrivate::resetModel(MListModel *mListModel)
 
 void MListViewPrivate::updateItemSize()
 {
-    foreach(MWidget * cell, visibleItems) {
+    foreach (MWidget *cell, visibleItems) {
         cell->resize(cellSize(0));
     }
 }
@@ -1108,15 +1108,15 @@ void MPlainMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &fir
 
             // Create widgets to all columns in this row
             for (int column = 0; column < controllerModel->columns(); ++column) {
-                QModelIndex index = flatRowToIndex(currentRow + column);
-                cell = visibleItems.value(index, NULL);
+                int flatRow = currentRow + column;
+                cell = visibleItems.value(flatRow, NULL);
                 if (!cell) {
-                    cell = createItem(currentRow + column);
-                    visibleItems[index] = cell;
+                    cell = createItem(flatRow);
+                    visibleItems[flatRow] = cell;
                 }
-                widgetFlatRows[cell] = currentRow + column + 1;
-                cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(currentRow + column)));
-                if (currentRow + column + 1 == itemsCount() || flatRowToColumn(currentRow + column + 1) == 0)
+                widgetFlatRows[cell] = flatRow + 1;
+                cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(flatRow)));
+                if (flatRow + 1 == itemsCount() || flatRowToColumn(flatRow + 1) == 0)
                     break;
             }
         }
@@ -1744,15 +1744,15 @@ void MMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVis
 
             // Create widgets to all columns in this row
             for (int column = 0; column < controllerModel->columns(); ++column) {
-                QModelIndex index = flatRowToIndex(currentRow + column);
-                cell = visibleItems.value(index, NULL);
+                int flatRow = currentRow + column;
+                cell = visibleItems.value(flatRow, NULL);
                 if (!cell) {
-                    cell = createItem(currentRow + column);
-                    visibleItems[index] = cell;
+                    cell = createItem(flatRow);
+                    visibleItems[flatRow] = cell;
                 }
-                widgetFlatRows[cell] = currentRow + column + 1;
-                cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(currentRow + column)));
-                if (currentRow + column + 1 == itemsCount() + rowCount || flatRowToColumn(currentRow + column + 1) == 0)
+                widgetFlatRows[cell] = flatRow + 1;
+                cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(flatRow)));
+                if (flatRow + 1 == itemsCount() + rowCount || flatRowToColumn(flatRow + 1) == 0)
                     break;
             }
         }

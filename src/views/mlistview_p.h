@@ -196,7 +196,7 @@ public:
     int hseparatorHeight;
     MCellCreator *headersCreator;
 
-    typedef QHash<QModelIndex, MWidget *> ModelIndexWidgetHash;
+    typedef QHash<int, MWidget *> ModelIndexWidgetHash;
     ModelIndexWidgetHash visibleItems;
     QVector<MWidget *> animatingItems;
 
