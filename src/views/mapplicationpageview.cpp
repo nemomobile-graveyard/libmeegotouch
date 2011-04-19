@@ -127,6 +127,8 @@ void MApplicationPageViewPrivate::setCentralWidget(QGraphicsWidget *newCentralWi
     }
 }
 
+// here we quietly assume that the height of page will never change
+// without accompanying update of exposedContentRect
 void MApplicationPageViewPrivate::updateAutoMarginsForComponents()
 {
     Q_Q(MApplicationPageView);
@@ -219,7 +221,6 @@ void MApplicationPageView::applyStyle()
     Q_D(MApplicationPageView);
 
     MSceneWindowView::applyStyle();
-    d->updateAutoMarginsForComponents();
     d->updateTitleLabel();
 }
 
