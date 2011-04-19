@@ -96,6 +96,7 @@ void MPannableWidgetPrivate::init()
 
     glass->setObjectName("glass");
     glass->grabGesture(Qt::TapAndHoldGesture);
+    glass->setFlags(QGraphicsItem::ItemStopsFocusHandling);
 
     q->grabGestureWithCancelPolicy(Qt::PanGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureStarted);
 

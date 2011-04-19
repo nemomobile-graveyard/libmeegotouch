@@ -29,6 +29,8 @@ class MSceneManager;
 class MOnDisplayChangeEvent;
 class QGraphicsSceneMouseEvent;
 class QTouchEvent;
+class QGraphicsItem;
+class QPointF;
 
 class MScenePrivate
 {
@@ -75,6 +77,9 @@ public:
     bool eventEmulatePinch(QEvent *event);
     void fillMarginRectWithPattern(QPainter *painter, const QRectF& rect, int thickness);
 
+    QList<QGraphicsItem *> itemsAtPosition(const QPointF &scenePos,
+                                           QWidget *widget) const;
+    void handleFocusChange(QGraphicsSceneMouseEvent* mouseEvent);
     void resetMouseGrabber();
     void sendCancelEvent();
 
