@@ -70,6 +70,7 @@ SUBDIRS     =  \
      ut_mscenemanager \
      ut_mseparator \
      ut_mseparatorview \
+     ut_msheet \
      ut_mslider \
      ut_mseekbar \
      ut_msliderview \
