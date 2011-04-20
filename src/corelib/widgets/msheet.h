@@ -187,8 +187,8 @@ private:
     Q_DECLARE_PRIVATE(MSheet)
     Q_DISABLE_COPY(MSheet)
     Q_PRIVATE_SLOT(d_func(), void _q_onStandAloneSheetDisappeared())
-    Q_PRIVATE_SLOT(d_func(), void _q_makeSystemSheetDisappear())
-    Q_PRIVATE_SLOT(d_func(), void _q_dismissSystemSheet())
+    Q_PRIVATE_SLOT(d_func(), void _q_makeSystemSheetDisappearImmediately())
+    Q_PRIVATE_SLOT(d_func(), void _q_dismissSystemSheetImmediately())
     Q_PRIVATE_SLOT(d_func(), void _q_onCentralWidgetDestroyed())
     Q_PRIVATE_SLOT(d_func(), void _q_onHeaderWidgetDestroyed())
 };

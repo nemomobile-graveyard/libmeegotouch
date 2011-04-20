@@ -20,10 +20,15 @@
 #include "msheet.h"
 #include "msheetmodel.h"
 #include "msheet_p.h"
+#include "mdismissevent.h"
 #include <mscene.h>
 #include <mscenemanager.h>
 #include <mscenemanager_p.h>
 #include <mwindow.h>
+
+#include <QApplication>
+#include <QCloseEvent>
+#include <QTimer>
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MSheet)
@@ -45,13 +50,8 @@ MSheetPrivate::MSheetPrivate()
 
 MSheetPrivate::~MSheetPrivate()
 {
-    if (standAloneWindow) {
-        Q_Q(MSheet);
-        standAloneWindow->close();
-        standAloneWindow->scene()->removeItem(q);
-        delete standAloneWindow;
-        standAloneWindow = 0;
-    }
+    delete standAloneWindow;
+    standAloneWindow = 0;
 
     delete appearSystemwideDeletionPolicy;
     appearSystemwideDeletionPolicy = 0;
@@ -62,23 +62,25 @@ bool MSheetPrivate::canDisappear(bool dismissing)
     Q_Q(MSheet);
 
     if (standAloneWindow && standAloneWindow->scene() == q->scene()
-        && standAloneWindow->isOnDisplay()) {
+            && standAloneWindow->isVisible()) {
 
-        // we are being shown systemwide. In this situations we let
-        // the window manager handle our closing animation.
+        // we are being shown systemwide and disappearance is being triggered
+        // from application code (e.g. from the click of a "Cancel" button in
+        // the header) instead of due to the stand alone window being hidden or
+        // closed.
+        //
+        // For system-wide sheets we let the window manager handle our disappearance
+        // animation (i.e. it will animate the stand alone window).
+        // The scene window animation is not used at all and is therefore
+        // denied here.
 
         if (dismissing) {
-            q->connect(standAloneWindow, SIGNAL(displayExited()), SLOT(_q_makeSystemSheetDisappear()));
+            standAloneWindow->close();
         } else {
-            q->connect(standAloneWindow, SIGNAL(displayExited()), SLOT(_q_dismissSystemSheet()));
+            standAloneWindow->hide();
         }
 
-        standAloneWindow->close();
-
-        // FIXME: FINISH THIS IMPLEMENTATION HERE
-        // let it disappear once standAloneWindow emits displayExited()
         return false;
-
     } else {
         return true;
     }
@@ -94,23 +96,17 @@ bool MSheetPrivate::canDismiss()
     return canDisappear(true);
 }
 
-void MSheetPrivate::_q_makeSystemSheetDisappear()
+void MSheetPrivate::_q_makeSystemSheetDisappearImmediately()
 {
     Q_Q(MSheet);
-
-    QObject::disconnect(standAloneWindow, SIGNAL(displayExited()),
-                        q, SLOT(_q_makeSystemSheetDisappear()));
 
     Q_ASSERT(standAloneWindow->scene() == q->scene());
     q->sceneManager()->disappearSceneWindowNow(q);
 }
 
-void MSheetPrivate::_q_dismissSystemSheet()
+void MSheetPrivate::_q_dismissSystemSheetImmediately()
 {
     Q_Q(MSheet);
-
-    QObject::disconnect(standAloneWindow, SIGNAL(displayExited()),
-                        q, SLOT(_q_dismissSystemSheet()));
 
     Q_ASSERT(standAloneWindow->scene() == q->scene());
     q->sceneManager()->dismissSceneWindowNow(q);
@@ -128,24 +124,13 @@ void MSheetPrivate::_q_onHeaderWidgetDestroyed()
     q->model()->setHeaderWidget(0);
 }
 
-#ifdef Q_WS_X11
-void MSheetPrivate::appendMSheetTypePropertyToStandAloneWindow()
-{
-    Q_ASSERT(standAloneWindow);
-
-    Atom atomWindowType = XInternAtom(QX11Info::display(),
-                                      "_MEEGOTOUCH_NET_WM_WINDOW_TYPE_SHEET", False);
-
-    XChangeProperty(QX11Info::display(), standAloneWindow->effectiveWinId(),
-                    XInternAtom(QX11Info::display(), "_NET_WM_WINDOW_TYPE", False),
-                    XA_ATOM, 32, PropModeAppend, (unsigned char*) &atomWindowType, 1);
-}
-#endif
-
 void MSheetPrivate::_q_onStandAloneSheetDisappeared()
 {
     Q_Q(MSheet);
     Q_ASSERT(standAloneWindow != 0);
+    Q_ASSERT(!standAloneWindow->isVisible());
+
+    standAloneWindow->setSheet(0);
 
     q->disconnect(SIGNAL(disappeared()), q, SLOT(_q_onStandAloneSheetDisappeared()));
 
@@ -173,13 +158,10 @@ void MSheetPrivate::appearSystemwide(MSceneWindow::DeletionPolicy policy)
     Q_Q(MSheet);
 
     if (standAloneWindow == 0) {
-        standAloneWindow = new MWindow(new MSceneManager);
-        standAloneWindow->setRoundedCornersEnabled(true);
-
-#ifdef Q_WS_X11
-        appendMSheetTypePropertyToStandAloneWindow();
-#endif
+        standAloneWindow = new MSheetStandAloneWindow;
     }
+
+    standAloneWindow->setSheet(q);
 
     q->connect(q, SIGNAL(disappeared()), SLOT(_q_onStandAloneSheetDisappeared()));
 
@@ -204,8 +186,19 @@ MSheet::MSheet() :
 
 MSheet::~MSheet()
 {
+    Q_D(MSheet);
+
     setHeaderWidget(0);
     setCentralWidget(0);
+
+    if (d->standAloneWindow) {
+        if (d->standAloneWindow->isVisible()) {
+            d->standAloneWindow->setSheet(0);
+            disconnect(SIGNAL(disappeared()), this, SLOT(_q_onStandAloneSheetDisappeared()));
+            d->standAloneWindow->scene()->removeItem(this);
+            d->standAloneWindow->close();
+        }
+    }
 }
 
 QGraphicsWidget *MSheet::centralWidget()
@@ -269,5 +262,67 @@ bool MSheet::isHeaderVisible() const
 {
     return model()->headerVisible();
 }
+
+//////////////////
+// MSheetStandAloneWindow
+
+MSheetStandAloneWindow::MSheetStandAloneWindow()
+    : MWindow(new MSceneManager, 0), beingClosed(false), sheet(0)
+{
+    setRoundedCornersEnabled(true);
+#ifdef Q_WS_X11
+    appendMSheetTypeProperty();
+#endif //Q_WS_X11
+}
+
+void MSheetStandAloneWindow::closeEvent(QCloseEvent *event)
+{
+    if (sheet) {
+        MDismissEvent dismissEvent;
+        QApplication::sendEvent(sheet, &dismissEvent);
+
+        event->setAccepted(dismissEvent.isAccepted());
+    } else {
+        event->accept();
+    }
+
+    beingClosed = event->isAccepted();
+}
+
+void MSheetStandAloneWindow::showEvent(QShowEvent *event)
+{
+    Q_UNUSED(event);
+    // reset variable
+    beingClosed = false;
+}
+
+void MSheetStandAloneWindow::hideEvent(QHideEvent *event)
+{
+    Q_UNUSED(event);
+
+    if (!sheet)
+        return;
+
+    // OBS: disappear only on the next event loop as we might be
+    // called from within MSceneWindowPrivate::canDisappear()
+
+    if (beingClosed) {
+        QTimer::singleShot(0, sheet, SIGNAL(_q_dismissSystemSheetImmediately()));
+    } else {
+        QTimer::singleShot(0, sheet, SIGNAL(_q_makeSystemSheetDisappearImmediately()));
+    }
+}
+
+#ifdef Q_WS_X11
+void MSheetStandAloneWindow::appendMSheetTypeProperty()
+{
+    Atom atomWindowType = XInternAtom(QX11Info::display(),
+                                      "_MEEGOTOUCH_NET_WM_WINDOW_TYPE_SHEET", False);
+
+    XChangeProperty(QX11Info::display(), effectiveWinId(),
+                    XInternAtom(QX11Info::display(), "_NET_WM_WINDOW_TYPE", False),
+                    XA_ATOM, 32, PropModeAppend, (unsigned char*) &atomWindowType, 1);
+}
+#endif //Q_WS_X11
 
 #include "moc_msheet.cpp"
