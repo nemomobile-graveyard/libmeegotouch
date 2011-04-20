@@ -1311,10 +1311,10 @@ like in this example:
     // trans3: “aaaaaa bbbbbb”
 \endverbatim
 
-Note that the result trans3 in the above example is not a string with
-5 length variants but doesn’t make any sense anymore. As a workaround,
-if length variants cannot be removed from the translations, something
-like the following example can be used:
+Note that the result trans3 in the above example is now a string with
+5 length variants but in a way that doesn’t make any sense
+anymore. As a workaround, if length variants cannot be removed from
+the translations, something like the following example can be used:
 
 \verbatim
     QString trans1 = qtTrId("xx_string_a");
