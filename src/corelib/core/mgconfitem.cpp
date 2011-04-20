@@ -50,31 +50,83 @@ struct MGConfItemPrivate {
     void notifyLocalItems( const QString& key, const QVariant& value );
 };
 
-static QHash< QString, QList< MGConfItem * > > g_localGConfItems;
+
+/*
+  The problem here is that the nofity_trampoline is not called
+  under certain circumstances when we call MGConfItem::set(),
+  see e.g. NB#241217. To make this work reliably, we do call
+  update_value_local() for our local MGConfItem's. This does not
+  cause more problems, because both update_value() and
+  update_value_local() do check if the new value and the old value
+  of the MGConfItem are different. And the valueChanged() signal
+  is then only emitted when the values are different. So as
+  end-result two things change:
+
+  * We get the local updates reliably.
+  * We do get the local updates earlier, i.e. before they
+    are sent to the gconf daemon and relayed back.
+ */
+static QHash< QString, QList< MGConfItem * > > * p_gLocalGConfItems = 0;
 
 void MGConfItemPrivate::registerLocalItem( MGConfItem* item )
 {
-    if ( g_localGConfItems.contains( item->key() ) ) {
-        g_localGConfItems[ item->key() ].append( item );
+    // create hash
+    if ( ! p_gLocalGConfItems )
+    {
+        p_gLocalGConfItems = new QHash< QString, QList< MGConfItem * > >();
+    }
+
+    // save item to hash
+    if ( p_gLocalGConfItems->contains( item->key() ) ) {
+        // append item to list
+        p_gLocalGConfItems->operator[] ( item->key() ).append( item );
     } else {
+        // create new list with item
         QList< MGConfItem * > itemList;
         itemList << item;
-        g_localGConfItems[ item->key() ] = itemList;
+        p_gLocalGConfItems->operator[]( item->key() ) = itemList;
     }
 }
 
 void MGConfItemPrivate::unregisterLocalItem( MGConfItem* item )
 {
-    if ( g_localGConfItems.contains( item->key() ) ) {
-        g_localGConfItems[ item->key() ].removeAll( item );
+    // exit early if pointer is NULL
+    if ( ! p_gLocalGConfItems )
+    {
+        return;
+    }
+
+    // remove item from item list for key
+    if ( p_gLocalGConfItems->contains( item->key() ) ) {
+        p_gLocalGConfItems->operator[]( item->key() ).removeAll( item );
+
+        // remove hash entry if value list is empty.
+        if ( p_gLocalGConfItems->operator[]( item->key() ).isEmpty() )
+        {
+            p_gLocalGConfItems->remove( item->key() );
+        }
+    }
+
+    // delete the hash, if it is empty.
+    if ( p_gLocalGConfItems->isEmpty() )
+    {
+        delete p_gLocalGConfItems;
+        p_gLocalGConfItems = 0;
     }
 }
 
 void MGConfItemPrivate::notifyLocalItems( const QString& key, const QVariant& value )
 {
-    if ( g_localGConfItems.contains( key ) ) {
-        for ( int i = 0; i < g_localGConfItems[ key ].count(); i++ ) {
-            g_localGConfItems[ key ][ i ]->update_value_local( value );
+    // exit early, if hash does not exist
+    if ( ! p_gLocalGConfItems )
+    {
+        return;
+    }
+
+    // send new value to all local MGConfItems
+    if ( p_gLocalGConfItems->contains( key ) ) {
+        for ( int i = 0; i < p_gLocalGConfItems->operator[]( key ).count(); i++ ) {
+            p_gLocalGConfItems->operator[]( key )[ i ]->update_value_local( value );
         }
     }
 }
