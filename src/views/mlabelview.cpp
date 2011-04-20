@@ -288,6 +288,12 @@ void MLabelView::orientationChangeEvent(MOrientationChangeEvent *event)
     d->impl->orientationChangeEvent(event);
 }
 
+QString MLabelView::renderedText() const
+{
+    Q_D(const MLabelView);
+    return d->impl->renderedText();
+}
+
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
 
 #include "moc_mlabelview.cpp"

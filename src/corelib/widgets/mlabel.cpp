@@ -19,7 +19,7 @@
 
 #include "mlabel.h"
 #include "mlabel_p.h"
-#include "mwidgetview.h"
+#include "mlabelview.h"
 #include "mlabelhighlighter.h"
 #include <QGraphicsSceneContextMenuEvent>
 
@@ -186,5 +186,10 @@ void MLabel::removeAllHighlighters()
     model()->setHighlighters(QList<MLabelHighlighter *>());
 }
 
+QString MLabel::renderedText() const
+{
+    const MLabelView* labelView = qobject_cast<const MLabelView*>(view());
+    return labelView ? labelView->renderedText() : QString();
+}
 
 #include "moc_mlabel.cpp"

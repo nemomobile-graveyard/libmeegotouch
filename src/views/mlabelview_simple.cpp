@@ -234,6 +234,11 @@ void MLabelViewSimple::applyStyle()
         const_cast<MLabelModel*>(viewPrivate->model())->setAlignment(viewPrivate->style()->horizontalAlignment() | viewPrivate->style()->verticalAlignment());
 }
 
+QString MLabelViewSimple::renderedText() const
+{
+    return staticText.text();
+}
+
 void MLabelViewSimple::initializeTextProperties()
 {
     if (!dirty) {
