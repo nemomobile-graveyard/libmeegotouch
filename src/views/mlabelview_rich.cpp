@@ -101,17 +101,6 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
     }
 }
 
-/**
-  * Returns true if label should be elided.
-  */
-bool MLabelViewRich::shouldElide() const
-{
-    static const int MAXIMUM_NON_ELIDING_TEXT_SIZE = 4;
-
-    return viewPrivate->model()->textElide() && (textDocument.size().width() > viewPrivate->boundingRect().size().width()) && (textDocument.characterCount() > MAXIMUM_NON_ELIDING_TEXT_SIZE);
-
-}
-
 void MLabelViewRich::ensureDocumentIsReady()
 {
     if (textDocumentDirty) {
@@ -189,11 +178,16 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
     }
 
     case Qt::PreferredSize: {
-        //remove existing eliding if there
-        if(isElided) {
+        // For the preferred size no eliding is wanted. Temporary reset the eliding for
+        // calculating the preferred size:
+        bool restoreEliding = false;
+        QString oldContent;
+        if (isElided) {
+            oldContent = textDocument.toHtml();
             textDocument.setHtml(wrapTextWithSpanTag(viewPrivate->model()->text()));
             const_cast<bool&>(isElided) = false;
             const_cast<MLabelViewRich*>(this)->updateHighlighters();
+            restoreEliding = true;
         }
 
         // resize text document to constraint width,
@@ -203,7 +197,7 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         if (viewPrivate->controller->sizePolicy().hasHeightForWidth() || constraint.width() >= 0) {
             //By default, the label policy has height for width, meaning that the layout
             //will pass us the constraint correctly, so we don't need to do anything special.
-            qreal oldWidth = textDocument.textWidth();
+            const qreal oldWidth = textDocument.textWidth();
             textDocument.setTextWidth(constraint.width());
             size = textDocument.size();
             textDocument.setTextWidth(oldWidth);
@@ -212,6 +206,11 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
             //no constraint, then we need to fall back to previous behavior of using the current
             //idealWidth as the constraint width
             size = QSizeF(textDocument.idealWidth(), textDocument.size().height());
+        }
+
+        if (restoreEliding) {
+            textDocument.setHtml(oldContent);
+            const_cast<bool&>(isElided) = true;
         }
 
         return size;
@@ -466,6 +465,15 @@ void MLabelViewRich::updateRichTextEliding()
         cursor.endEditBlock();
         isElided = true;
     }
+}
+
+bool MLabelViewRich::shouldElide() const
+{
+    const int MaximumNonElidingTextSize = 4;
+
+    return viewPrivate->model()->textElide()
+           && (textDocument.size().width() > viewPrivate->boundingRect().size().width())
+           && (textDocument.characterCount() > MaximumNonElidingTextSize);
 }
 
 void MLabelViewRich::updateHighlighters()

@@ -134,7 +134,6 @@ public:
     virtual ~MLabelViewRich();
 
     virtual void drawContents(QPainter *painter, const QSizeF &size);
-    virtual bool shouldElide() const;
     virtual bool resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     virtual void setupModel();
@@ -151,6 +150,12 @@ public:
     void ensureDocumentIsReady();
     int cursorPositionOfLastVisibleCharacter();
     void updateRichTextEliding();
+
+    /**
+     * Helper method for updateRichTextEliding(). Returns true if the text
+     * should get elided considering the current width of the label.
+     */
+    bool shouldElide() const;
 
     void updateHighlighters();
 

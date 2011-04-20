@@ -43,7 +43,7 @@
 
 #define SHOW_IMAGE(image) \
     do { \
-        QLabel label; label.setPixmap(QPixmap::fromImage(elided)); label.show(); QTest::qWait(1000); \
+        QLabel label; label.setPixmap(QPixmap::fromImage(image)); label.show(); QTest::qWait(1000); \
     } while(0)
 
 #define SAVE_IMAGE(fileName, image) \
@@ -334,12 +334,14 @@ void Ut_MLabel::testRichTextElide()
     label->setTextElide(true);
     label->resize(400,400);
     QVERIFY(label->textElide() == true);
-    QImage elided = captureImage(label);
+    const QImage elided = captureImage(label);
+    const QRect elidedRect = contentRect(elided);
 
     label->setTextElide(false);
     label->resize(400,400);
     QVERIFY(label->textElide() == false);
-    QImage unelided = captureImage(label);
+    const QImage unelided = captureImage(label);
+    const QRect unelidedRect = contentRect(unelided);
 
     int cropWidth = 200;
     QImage leftUnelided = unelided.copy(0, 0, cropWidth, unelided.height());
@@ -352,6 +354,7 @@ void Ut_MLabel::testRichTextElide()
     QCOMPARE(unelided.isNull(), false);
 
     QVERIFY(elided != unelided);
+    QVERIFY(elidedRect != unelidedRect);
 
     //'...' is added to the rightmost part of the label in LTR mode
     QVERIFY(leftUnelided == leftElided);
