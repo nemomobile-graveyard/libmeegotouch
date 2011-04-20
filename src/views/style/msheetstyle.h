@@ -29,6 +29,7 @@ class M_VIEWS_EXPORT MSheetStyle : public MSceneWindowStyle
 
     M_STYLE_ATTRIBUTE(QString, headerSlotStyleName, HeaderSlotStyleName)
     M_STYLE_ATTRIBUTE(QString, centralSlotStyleName, CentralSlotStyleName)
+    M_STYLE_ATTRIBUTE(QString, centralSlotPositionIndicatorStyleName, CentralSlotPositionIndicatorStyleName)
 
     M_STYLE_ATTRIBUTE(QString, headerAnimation, HeaderAnimation)
 };

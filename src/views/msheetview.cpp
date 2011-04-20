@@ -25,6 +25,7 @@
 #include "mabstractwidgetanimation.h"
 #include <MDebug>
 #include <mpannableviewport.h>
+#include <mpositionindicator.h>
 
 #include <QGraphicsAnchorLayout>
 #include <QGraphicsLinearLayout>
@@ -150,6 +151,9 @@ void MSheetViewPrivate::updateStyle()
         headerAnimation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(q->style()->headerAnimation()));
         headerAnimation->setTargetWidget(headerSlot);
     }
+
+    centralSlotPannableViewport->positionIndicator()->setStyleName(
+                q->style()->centralSlotPositionIndicatorStyleName());
 }
 
 void MSheetViewPrivate::updateHeaderVisibility()
