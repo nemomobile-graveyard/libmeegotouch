@@ -208,9 +208,16 @@ void MSheetView::updateData(const QList<const char *> &modifications)
         member = modifications[i];
         if (member == MSheetModel::HeaderVisible)
             d->updateHeaderVisibility();
-        else if (member == MSheetModel::CentralWidget)
+        else if (member == MSheetModel::CentralWidget) {
+            if (qobject_cast<MPannableViewport*>(model()->centralWidget()))
+                // our internal pannable is not needed at all in this case
+                // TODO: consider removing centralSlotPannableViewport from the widget hierarchy altogether
+                //       if there's any performance benefit in doing so
+                d->centralSlotPannableViewport->setVerticalPanningPolicy(MPannableViewport::PanningAlwaysOff);
+            else
+                d->centralSlotPannableViewport->setVerticalPanningPolicy(MPannableViewport::PanningAsNeeded);
             d->centralSlot->setWidget(model()->centralWidget());
-        else if (member == MSheetModel::HeaderWidget)
+        } else if (member == MSheetModel::HeaderWidget)
             d->headerSlot->setWidget(model()->headerWidget());
     }
 }
