@@ -285,8 +285,6 @@ void MWidgetControllerPrivate::createView()
         constructingView = true;
         view = MTheme::view(q);
         constructingView = false;
-    } else {
-        qCritical("Already creating a view for: %s. The view is not valid yet. Please make sure you are not accessing style during a construction of the view.", q->metaObject()->className());
     }
 
     if (view) {
@@ -629,16 +627,10 @@ bool MWidgetController::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 
 MWidgetStyleContainer &MWidgetController::style()
 {
-    if (!view())
-        qFatal("Cannot access style without view: %s", metaObject()->className());
-
     return const_cast<MWidgetStyleContainer &>(view()->style());
 }
 
 const MWidgetStyleContainer &MWidgetController::style() const
 {
-    if (!view())
-        qFatal("Cannot access style without view: %s", metaObject()->className());
-
     return view()->style();
 }
