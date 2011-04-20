@@ -2270,7 +2270,7 @@ QString MLocale::formatPercent(double i, int decimals) const
     icu::NumberFormat *nf = NumberFormat::createPercentInstance(numericLocale, status);
 
     if (!U_SUCCESS(status)) {
-        qWarning() << "NumberFormat creating failed";
+        qWarning() << "NumberFormat creating failed" << u_errorName(status);
         return QString();
     }
 
@@ -3032,13 +3032,15 @@ QString MLocale::countryEndonym() const
                                          qPrintable(resourceBundleLocaleName),
                                          &status);
         if (U_FAILURE(status)) {
-            mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+            mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_open"
+                              << u_errorName(status);
             ures_close(res);
             return countryCode;
         }
         res = ures_getByKey(res, Countries, res, &status);
         if (U_FAILURE(status)) {
-            mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
+            mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_getByKey"
+                              << u_errorName(status);
             ures_close(res);
             return countryCode;
         }
@@ -3098,7 +3100,7 @@ QStringList MLocale::exemplarCharactersIndex() const
         ures_open(NULL, collationLocaleName.toUtf8().constData(), &status);
 
     if (U_FAILURE(status)) {
-        mDebug("MLocale") << "Error ures_open"
+        mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_open"
                           << collationLocaleName << u_errorName(status);
         ures_close(res);
         return exemplarCharactersIndex;
@@ -3110,7 +3112,7 @@ QStringList MLocale::exemplarCharactersIndex() const
                                            "ExemplarCharactersIndex",
                                            &len, &status);
     if (U_FAILURE(status)) {
-        mDebug("MLocale") << "Error ures_getStringByKey"
+        mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_getStringByKey"
                           << collationLocaleName << u_errorName(status);
         ures_close(res);
         return exemplarCharactersIndex;
@@ -3204,12 +3206,14 @@ QStringList MLocale::localeScripts() const
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
 
     if (U_FAILURE(status)) {
-        mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+        mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_open"
+                          << u_errorName(status);
     }
 
     res = ures_getByKey(res, "LocaleScript", res, &status);
     if (U_FAILURE(status)) {
-        mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
+        mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_getByKey"\
+                          << u_errorName(status);
     }
 
     QStringList scripts;
@@ -3425,13 +3429,15 @@ QString MLocale::languageEndonym(const QString &locale)
                                          qPrintable(resourceBundleLocaleName),
                                          &status);
         if (U_FAILURE(status)) {
-            mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+            mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_open"
+                              << u_errorName(status);
             ures_close(res);
             return locale;
         }
         res = ures_getByKey(res, Languages, res, &status);
         if (U_FAILURE(status)) {
-            mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
+            mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_getByKey"
+                              << u_errorName(status);
             ures_close(res);
             return locale;
         }

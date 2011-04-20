@@ -18,6 +18,7 @@ greaterThan(ICUVERSION, 4.4) {
                  data/gl.txt \
                  data/id.txt \
                  data/it.txt \
+                 data/kk.txt \
                  data/ms.txt \
                  data/ms_BN.txt \
                  data/pt.txt \
