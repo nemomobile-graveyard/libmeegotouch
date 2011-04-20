@@ -51,14 +51,6 @@ public:
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
 
-    /**
-     * \return Text that gets rendered in drawContents(). The text might differ
-     *         from MLabel::text() because of the eliding or adjusted linebreaks.
-     *         The method is used by MLabel::renderedText() to allow Ut_MLabel
-     *         accessing the rendered text for unit testing.
-     */
-    virtual QString renderedText() const;
-
     void initializeTextProperties();
 
     /**
@@ -154,7 +146,6 @@ public:
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
     virtual void applyStyle();
-    virtual QString renderedText() const;
 
     void ensureDocumentIsReady();
     int cursorPositionOfLastVisibleCharacter();

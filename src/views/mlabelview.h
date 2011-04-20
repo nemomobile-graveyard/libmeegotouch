@@ -140,8 +140,6 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_highlighterUpdateTimerExceeded())
 
-    //! \see MLabelViewSimple::renderedText()
-    QString renderedText() const;
 #ifdef UNIT_TEST
     friend class Pt_MLabel;
 #endif

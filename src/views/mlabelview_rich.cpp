@@ -556,11 +556,6 @@ void MLabelViewRich::applyStyle()
     }
 }
 
-QString MLabelViewRich::renderedText() const
-{
-    return textDocument.toHtml();
-}
-
 void MLabelViewRich::initTiles(const QSize &size)
 {
     if (dirty || textDocumentDirty || highlightersChanged) {
