@@ -69,14 +69,6 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     snUsr1 = new QSocketNotifier(sigusr1Fd[1], QSocketNotifier::Read, this);
     connect(snUsr1, SIGNAL(activated(int)), this, SLOT(handleSigUsr1()));
 
-    const QString address = serverAddress.isEmpty() ? M::MThemeDaemonProtocol::ServerAddress : serverAddress;
-
-    QLocalServer::removeServer(address);
-    connect(&server, SIGNAL(newConnection()), SLOT(clientConnected()));
-    if (!server.listen(address)) {
-        mWarning("MThemeDaemonServer") << "Failed to start socket server.";
-    }
-
     QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/themedaemonpriorities.conf";
     loadPriorities(filename);
 
@@ -111,6 +103,13 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     processQueueTimer.setSingleShot(false);
     connect(&processQueueTimer, SIGNAL(timeout()), SLOT(processOneQueueItem()));
     connect(&daemon.mostUsedPixmaps, SIGNAL(mostUsedPixmapsChanged(M::MThemeDaemonProtocol::MostUsedPixmaps)), this, SLOT(handleUpdatedMostUsedPixmaps(M::MThemeDaemonProtocol::MostUsedPixmaps)));
+
+    const QString address = serverAddress.isEmpty() ? M::MThemeDaemonProtocol::ServerAddress : serverAddress;
+    QLocalServer::removeServer(address);
+    connect(&server, SIGNAL(newConnection()), SLOT(clientConnected()));
+    if (!server.listen(address)) {
+        mWarning("MThemeDaemonServer") << "Failed to start socket server.";
+    }
 }
 
 MThemeDaemonServer::~MThemeDaemonServer()
