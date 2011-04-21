@@ -44,6 +44,8 @@
 #include "mcomponentdata.h"
 #include "mcomponentdata_p.h"
 
+#include <iostream>
+
 Q_DECLARE_METATYPE(const QPixmap *)
 namespace {
 void releaseAllocatedResourcesFromStyle(const MStyle *style)
@@ -66,18 +68,12 @@ void releaseAllocatedResourcesFromStyle(const MStyle *style)
 Q_GLOBAL_STATIC(MStyleSheetPrivate::StyleCache, styleCache)
 }
 
-void mMessageHandler(QtMsgType type, const char *msg);
-
 MStyleSheetPrivate::StyleCache::~StyleCache()
 {
     // free all styles which have been released after the d'tor of MTheme
     // MStyleSheet::DoNotReleaseResources is passed as most parts of Qt are
     // already destroyed and freeing resources would lead to a crash
     MStyleSheet::deleteStylesWithoutReference();
-
-    // as LeakedStyles is a static class the method handler could not be valid
-    // anymore at this point. work around this problem by creating a new one
-    qInstallMsgHandler(mMessageHandler);
 
     foreach(const StyleHash &styleHash, styles) {
         QHash<QByteArray, MStyle *>::const_iterator end = styleHash.end();
@@ -86,7 +82,7 @@ MStyleSheetPrivate::StyleCache::~StyleCache()
              ++iterator) {
             QByteArray id = iterator.key();
             MStyle *leak = iterator.value();
-            mWarning("mtheme.cpp") << "Style:" << id << "not released!" << "refcount:" << leak->references();
+            std::cerr << "~StyleCache(): Style: " << id.constData() << " not released! refcount: " << leak->references() << std::endl;
         }
     }
 }
@@ -321,8 +317,8 @@ void MStyleSheet::deleteStylesFromStyleCreator(const QByteArray & styleClassName
         while (it.hasNext()) {
             MStyle *style = it.next().value();
             if (style->references() > 0) {
-                mWarning("MStyleSheet::deleteStylesFromStyleCreator") << "Removing style creator for" << styleClassName
-                    << "but style" << it.key() << "has still" << style->references() << "references. This can lead to a crash if style is used somewhere!";
+                std::cerr << "MStyleSheet::deleteStylesFromStyleCreator: Removing style creator for " << styleClassName.constData()
+                    << " but style " << it.key().constData() << " has still " << style->references() << " references. This can lead to a crash if style is used somewhere!";
             }
             if (MComponentData::instance() && MComponentData::instance()->d_ptr->theme) {
                 releaseAllocatedResourcesFromStyle(style);
