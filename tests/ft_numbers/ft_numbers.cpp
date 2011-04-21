@@ -203,6 +203,11 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("hi_IN")
             << qlonglong(1542678073)
             << QString("१,५४,२६,७८,०७३");
+    QTest::newRow("ar_EG")
+            << QString("ar_EG")
+            << QString("ar_EG")
+            << qlonglong(0)
+            << QString("‏٠‏");
 }
 
 void Ft_Numbers::testQLongLongs()
