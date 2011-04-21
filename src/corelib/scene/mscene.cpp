@@ -527,6 +527,10 @@ void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
             focusSet = true;
             break;
         }
+
+        if (item->flags() & QGraphicsItem::ItemStopsClickFocusPropagation) {
+            break;
+        }
     }
 
     if (manualFocusForced && !focusSet)
