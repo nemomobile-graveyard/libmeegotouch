@@ -135,8 +135,7 @@ public:
         ObjectMenu,                      // MObjectMenu
         ModalSceneWindow,                // MModalSceneWindow
         PopupList,                       // MPopupList
-        NotificationInformation,         // MNotification - Information
-        NotificationEvent,               // MNotification - Event
+        Banner,                          // MBanner
         Overlay,                         // MOverlay
         Completer,                       // MCompleter
         HomeButtonPanel,                 // MHomeButtonPanel

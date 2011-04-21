@@ -46,9 +46,9 @@ class MBannerPrivate;
 
 
      You should set the stylename through setStyleName() with one of the following names:
-    \li "ShortEventBanner": used for events as emails, sms, etc. Icon, title and subtitle.
-    \li "InformationBanner": used to show generic information for apps with icons.
-    \li "SystemBanner": reserved for system notifications, only text.
+    \li "MBannerType::ShortEventBanner": used for events as emails, sms, etc. Icon, title and subtitle.
+    \li "MBannerType::InformationBanner": reserved for system notifications, only text.
+    \li "MBannerType::SystemBanner": used to show generic information for apps with icons.
 
     If you create a MBanner without styleName it will have a default style, and it will have the
     capability to show any property: title, subtitle, etc.
@@ -58,9 +58,12 @@ class MBannerPrivate;
     Due to the MBanner has the capability to be shown at the events/lock screen, it comes with two
     styles for this use case:
 
-    \li FullEventBanner
-    \li PrivateEventBanner
-    \li LockScreenEventBanner
+    \li MBannerType::FullEventBanner this is equal to the string "FullEventBanner"
+    \li MBannerType::LockScreenEventBanner this is equal to the string "LockScreenEventBanner"
+
+    At the same time the MBanner includes a stylename that only shows the icon and title, hidding
+    the subtitle
+    \li MBannerType::PrivateEventBanner
 
     The difference between FullEventBanner and PrivateEventBanner is that the second doesn't show
     the subtitle due to privacy reasons. LockScreenEventBanner allows the user to customize the
@@ -72,7 +75,7 @@ class MBannerPrivate;
     For instance if you create a Short Event Banner:
        \code
            MBanner *eventBanner = new MBanner();
-           eventBanner->setStyleName("ShortEventBanner");
+           eventBanner->setStyleName(MBannerType::ShortEventBanner);
            eventBanner->setIconID("icon-l-settings");
            eventBanner->setTitle("New updates waiting to install");
            eventBanner->setSubtitle("130 files");
@@ -82,7 +85,7 @@ class MBannerPrivate;
     If you want show the look and feel of this MBanner in the event screen you only need switch
     the stylename:
        \code
-           eventBanner->setStyleName("FullEventBanner");
+           eventBanner->setStyleName(MBannerType::FullEventBanner);
        \endcode
 
     The MBanner layout will be styled with the FullEventBanner's layout automatically.
@@ -107,7 +110,7 @@ class MBannerPrivate;
         Here's how to launch an event banner from code:
         \code
            MBanner *eventBanner = new MBanner();
-           eventBanner->setStyleName("ShortEventBanner");
+           eventBanner->setStyleName(MBannerType::ShortEventBanner);
            eventBanner->setIconID("icon-l-settings");
            eventBanner->setTitle("New updates waiting to install");
            eventBanner->setSubtitle("130 files");
@@ -117,7 +120,7 @@ class MBannerPrivate;
         Here's how to launch an information banner from code:
         \code
            MBanner *infoBanner = new MBanner();
-           infoBanner->setStyleName("InformationBanner");
+           infoBanner->setStyleName(MBannerType::InformationBanner);
            infoBanner->setTitle("Info banner with so much information that the text wraps in portrait");
            infoBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
         \endcode
@@ -125,7 +128,7 @@ class MBannerPrivate;
         Here's how to launch a system banner from code:
         \code
           MBanner *systemBanner = new MBanner();
-          systemBanner->setStyleName("SystemBanner");
+          systemBanner->setStyleName(MBannerType::SystemBanner);
           systemBanner->setIconID("icon-m-common-usb");
           systemBanner->setTitle("System banner");
           systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
@@ -134,7 +137,7 @@ class MBannerPrivate;
         Here's how to launch a event full banner from code:
         \code
           MBanner *fullEventBanner = new MBanner();
-          fullEventBanner->setStyleName("FullEventBanner");
+          fullEventBanner->setStyleName(MBannerType::FullEventBanner);
           fullEventBanner->setIconID("icon-m-camera-scene-landscape-selected");
           fullEventBanner->setTitle("Call");
           fullEventBanner->setSubtitle("Brianna Edwards");
@@ -145,11 +148,23 @@ class MBannerPrivate;
     \sa MNotification
 */
 
+/*!
+ * \brief An namespace for the MBanner's stylenames
+ */
+namespace MBannerType {
+const QString FullEventBanner = "FullEventBanner";
+const QString ShortEventBanner = "ShortEventBanner";
+const QString PrivateEventBanner = "PrivateEventBanner";
+const QString InformationBanner = "InformationBanner";
+const QString LockScreenEventBanner = "LockScreenEventBanner";
+const QString SystemBanner = "SystemBanner";
+const QString GenericBanner = "GenericBanner";
+}
+
 class M_CORE_EXPORT MBanner : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MBanner)
-public:
 
     /*!
         \property MBanner::iconID
@@ -188,11 +203,11 @@ public:
     */
     Q_PROPERTY(bool down READ isDown WRITE setDown DESIGNABLE false)
 
-public:
+    public:
 
-    /*!
+     /*!
         \brief Constructs a new banner
-    */
+     */
 
     MBanner();
 

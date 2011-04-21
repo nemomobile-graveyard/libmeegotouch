@@ -28,7 +28,7 @@
 M_REGISTER_WIDGET(MBanner)
 
 MBanner::MBanner() :
-        MSceneWindow(new MSceneWindowPrivate, new MBannerModel, MSceneWindow::NotificationEvent)
+    MSceneWindow(new MSceneWindowPrivate, new MBannerModel, MSceneWindow::Banner)
 {
     ungrabGesture(Qt::PanGesture);
     ungrabGesture(Qt::TapGesture);

@@ -110,8 +110,7 @@ public:
         Completer = Overlay,                         // MCompleter
         HomeButtonPanel = 7000,                      // MHomeButtonPanel
         ObjectMenu = 7500,                           // MObjectMenu
-        NotificationInformation = 8000,              // MNotification - Information
-        NotificationEvent = NotificationInformation, // MNotification - Event
+        Banner = 8000,                               // MBanner
         StatusBar = 9000,                            // MStatusBar
         BorderDecoration = StatusBar                 // MBorderDecoration
     };

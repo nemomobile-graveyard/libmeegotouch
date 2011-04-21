@@ -52,6 +52,7 @@
 #include "mpannableviewport.h"
 #include "mpannableviewportscroller.h"
 #include "mtextedit.h"
+#include "mbanner.h"
 
 #include "mscrollchain.h"
 #include "minputwidgetrelocator.h"
@@ -320,11 +321,8 @@ int MSceneManagerPrivate::zForWindowType(MSceneWindow::WindowType windowType)
     case MSceneWindow::PopupList:
         z = MSceneManagerPrivate::PopupList;
         break;
-    case MSceneWindow::NotificationInformation:
-        z = MSceneManagerPrivate::NotificationInformation;
-        break;
-    case MSceneWindow::NotificationEvent:
-        z = MSceneManagerPrivate::NotificationEvent;
+    case MSceneWindow::Banner:
+        z = MSceneManagerPrivate::Banner;
         break;
     case MSceneWindow::Overlay:
         z = MSceneManagerPrivate::Overlay;
@@ -807,13 +805,12 @@ QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *s
             }
             break;
         case MSceneWindow::HomeButtonPanel:
-        case MSceneWindow::NotificationInformation:
             root = homeButtonRootElement;
             break;
-        case MSceneWindow::NotificationEvent:
-            if (sceneWindow->styleName() == "ShortEventBanner")
+        case MSceneWindow::Banner:
+            if (sceneWindow->styleName() == MBannerType::ShortEventBanner)
                 root = rootElement;
-            else
+            else if (sceneWindow->styleName() == MBannerType::InformationBanner || sceneWindow->styleName() == MBannerType::SystemBanner)
                 root = homeButtonRootElement;
             break;
         case MSceneWindow::DockWidget:
@@ -1782,20 +1779,22 @@ MAbstractWidgetAnimation *MSceneManagerPrivate::createAnimationFromSceneWindowTy
     MAbstractWidgetAnimation *animation = 0;
 
     switch(sceneWindow->windowType()) {
-    case MSceneWindow::NotificationInformation:
-        animation = new MWidgetSlideAnimation(sceneWindow);
-        break;
+
     case MSceneWindow::NavigationBar:
         animation = qobject_cast<MAbstractWidgetAnimation*>(
                 MTheme::animation(style()->navigationBarAnimation()));
         break;
-    case MSceneWindow::NotificationEvent:
-        if (sceneWindow->styleName() == "SystemBanner")
+    case MSceneWindow::Banner:
+        //MBanner animations are based on the stylenames assigned to the MBanner
+        if (sceneWindow->styleName() == MBannerType::InformationBanner || sceneWindow->styleName() == MBannerType::SystemBanner) {
+            //Information & System banner have the same animations.
             animation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->systemBannerAnimation()));
-        else if (sceneWindow->styleName() == "ShortEventBanner")
+        } else if (sceneWindow->styleName() == MBannerType::ShortEventBanner) {
             animation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->shortEventBannerAnimation()));
-        else
+        } else {
+            //Generic animation for generic banners
             animation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(style()->notificationEventAnimation()));
+        }
         break;
     case MSceneWindow::ApplicationMenu:
         animation = qobject_cast<MAbstractWidgetAnimation*>(

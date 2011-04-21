@@ -28,8 +28,7 @@ const MTheme::ViewType MInfoBanner::informationType  = "information";
 const MTheme::ViewType MInfoBanner::eventType        = "event";
 
 MInfoBanner::MInfoBanner(BannerType type) :
-    MSceneWindow(new MInfoBannerPrivate, new MInfoBannerModel,
-                   (type == Information) ? MSceneWindow::NotificationInformation : MSceneWindow::NotificationEvent,
+        MSceneWindow(new MInfoBannerPrivate, new MInfoBannerModel, MSceneWindow::Banner,
                    (type == Information) ? informationType : eventType)
 {
     Q_D(MInfoBanner);

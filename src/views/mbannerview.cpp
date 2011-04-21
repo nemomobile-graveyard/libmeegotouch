@@ -20,11 +20,9 @@
 #include "mbanner.h"
 #include "mbannerview.h"
 #include "mbannerview_p.h"
-
 #include "mviewcreator.h"
 #include "mimagewidget.h"
 #include "mlabel.h"
-
 #include "mlayout.h"
 #include "mlinearlayoutpolicy.h"
 #include "mgridlayoutpolicy.h"
@@ -99,7 +97,7 @@ MLabel *MBannerViewPrivate::bannerTimeStamp()
         bannerTimeStampLabel = new MLabel(controller);
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
         timeShortNoDate = true;
-   }
+    }
 
     return bannerTimeStampLabel;
 }
@@ -188,13 +186,13 @@ void MBannerViewPrivate::updateDateFormat() const
         int daysCalc = q->model()->bannerTimeStamp().daysTo(QDateTime::currentDateTime());
         if (daysCalc > 1 && timeShortNoDate) {
             bannerTimeStampLabel->setText(MLocale().formatDateTime(
-                    q->model()->bannerTimeStamp().toLocalTime(),
-                    MLocale::DateShort, MLocale::TimeNone));
+                                              q->model()->bannerTimeStamp().toLocalTime(),
+                                              MLocale::DateShort, MLocale::TimeNone));
             timeShortNoDate = false;
         } else if (daysCalc == 0 && !timeShortNoDate) {
             bannerTimeStampLabel->setText(MLocale().formatDateTime(
-                    q->model()->bannerTimeStamp(), MLocale::DateNone,
-                    MLocale::TimeShort));
+                                              q->model()->bannerTimeStamp(), MLocale::DateNone,
+                                              MLocale::TimeShort));
             timeShortNoDate = true;
         }
     }
@@ -579,17 +577,17 @@ void MBannerViewPrivate::initDynamicLayout()
 {
     Q_Q(MBannerView);
 
-    if (q->model()->styleName()=="ShortEventBanner") {
+    if (q->model()->styleName() == MBannerType::ShortEventBanner) {
         layoutShortEventBanner();
-    } else if (q->model()->styleName()=="FullEventBanner") {
+    } else if (q->model()->styleName() == MBannerType::FullEventBanner) {
         layoutFullEventBanner();
-    } else if (q->model()->styleName()=="LockScreenEventBanner") {
+    } else if (q->model()->styleName() == MBannerType::LockScreenEventBanner) {
         layoutLockScreenEventBanner();
-    } else if (q->model()->styleName()=="PrivateEventBanner") {
+    } else if (q->model()->styleName() == MBannerType::PrivateEventBanner) {
         layoutPrivateEventBanner();
-    } else if (q->model()->styleName()=="SystemBanner") {
+    } else if (q->model()->styleName() == MBannerType::SystemBanner) {
         layoutSystemBanner();
-    } else if (q->model()->styleName()=="InformationBanner") {
+    } else if (q->model()->styleName() == MBannerType::InformationBanner) {
         layoutInformationBanner();
     } else {
         //If wrong or empty styleName == generic banner
