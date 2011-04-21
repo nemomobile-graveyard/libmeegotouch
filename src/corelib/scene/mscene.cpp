@@ -511,6 +511,10 @@ void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
     bool manualFocusForced = false;
     QList<QGraphicsItem*> itemsUnderMouse = itemsAtPosition(event->scenePos(), event->widget());
     foreach (QGraphicsItem *item, itemsUnderMouse) {
+        // Before checking other attributes of the item under mouse
+        // check if it has a focus proxy and let's continue with that instead.
+        item = item->focusProxy() ? item->focusProxy() : item;
+
         if (item->flags() & QGraphicsItem::ItemStopsFocusHandling) manualFocusForced = true;
         if (manualFocusForced && item->isEnabled() && (item->flags() & QGraphicsItem::ItemIsFocusable)) {
 
