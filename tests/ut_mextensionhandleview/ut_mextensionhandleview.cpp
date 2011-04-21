@@ -127,6 +127,11 @@ const MStyle *MStyleContainer::currentStyle() const
     return handleStyle;
 }
 
+MStyleContainer::~MStyleContainer()
+{
+    //Do nothing since the style is not properly initialized
+}
+
 // MWidgetView stubs
 MExtensionHandleModel handleModel;
 MWidgetModel *MWidgetView::model()
