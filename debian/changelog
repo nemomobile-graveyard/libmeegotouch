@@ -1,6 +1,7 @@
 libmeegotouch (0.21.8~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#243544 - Out of process application extension sockets should be moved to /var/run
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 21 Apr 2011 13:58:23 +0300
 

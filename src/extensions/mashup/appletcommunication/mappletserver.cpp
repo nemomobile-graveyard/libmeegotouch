@@ -36,14 +36,17 @@ bool MAppletServer::startServer(const QString &serverName)
 {
     closeConnection();
 
+    // Prepend the path to the server name
+    QString path = "/var/run/" + serverName;
+
     // Remove the socket file if it exists
-    QLocalServer::removeServer(serverName);
+    QLocalServer::removeServer(path);
 
     // Create a server and start listening for connections
     server = new QLocalServer;
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
-    if (!server->listen(serverName)) {
+    if (!server->listen(path)) {
         mWarning("MAppletServer") << "Could not init server." << server->errorString();
         return false;
     }

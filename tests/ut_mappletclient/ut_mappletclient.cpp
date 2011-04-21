@@ -51,9 +51,9 @@ void RemoteProcessThread::waitHere()
 
 void RemoteProcessThread::run()
 {
-    QLocalServer::removeServer("foobar");
+    QLocalServer::removeServer("/var/run/foobar");
     server = new QLocalServer();
-    server->listen("foobar");
+    server->listen("/var/run/foobar");
 
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
     doWait = true;

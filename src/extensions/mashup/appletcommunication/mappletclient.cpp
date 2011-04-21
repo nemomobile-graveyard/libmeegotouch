@@ -36,12 +36,15 @@ bool MAppletClient::connectToServer(const QString &serverName)
 {
     closeConnection();
 
+    // Prepend the path to the server name
+    QString path = "/var/run/" + serverName;
+
     // Connect to the specified server
     socket = new QLocalSocket;
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
     connect(socket, SIGNAL(error(QLocalSocket::LocalSocketError)), this, SLOT(socketError(QLocalSocket::LocalSocketError)));
 
-    socket->connectToServer(serverName);
+    socket->connectToServer(path);
 
     int attempt = 1;
     while (socket->state() != QLocalSocket::ConnectedState) {
@@ -53,7 +56,7 @@ bool MAppletClient::connectToServer(const QString &serverName)
         Sleep(100);
 #endif
         ++attempt;
-        socket->connectToServer(serverName);
+        socket->connectToServer(path);
     }
 
     if (attempt < MAX_CONNECTION_ATTEMPTS) {
