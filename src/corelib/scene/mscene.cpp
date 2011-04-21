@@ -516,14 +516,16 @@ void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
         item = item->focusProxy() ? item->focusProxy() : item;
 
         if (item->flags() & QGraphicsItem::ItemStopsFocusHandling) manualFocusForced = true;
-        if (manualFocusForced && item->isEnabled() && (item->flags() & QGraphicsItem::ItemIsFocusable)) {
-
-            if (!item->isWidget() || ((QGraphicsWidget *)item)->focusPolicy() & Qt::ClickFocus) {
-                if (item != q->focusItem())
-                    q->setFocusItem(item, Qt::MouseFocusReason);
-                focusSet = true;
-                break;
-            }
+        if (item->isEnabled()
+            && (item->flags() & QGraphicsItem::ItemIsFocusable)
+            && (!item->isWidget()
+                || ((QGraphicsWidget *)item)->focusPolicy() & Qt::ClickFocus)) {
+            // Only set focus if Qt does not do it for us. Either way,
+            // we know we have a focused item at this point.
+            if (manualFocusForced && item != q->focusItem())
+                q->setFocusItem(item, Qt::MouseFocusReason);
+            focusSet = true;
+            break;
         }
     }
 
