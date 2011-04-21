@@ -715,10 +715,13 @@ bool MScene::event(QEvent *event)
     if (d->eventEmulateTwoFingerGestures(event))
         return true;
 
+    if (event->type() == QEvent::GraphicsSceneMouseRelease) {
+        d->handleFocusChange(static_cast<QGraphicsSceneMouseEvent*>(event));
+    }
+
     bool retValue = QGraphicsScene::event(event);
 
     if (event->type() == QEvent::GraphicsSceneMouseRelease) {
-        d->handleFocusChange(static_cast<QGraphicsSceneMouseEvent*>(event));
         d->resetMouseGrabber();
     }
 
