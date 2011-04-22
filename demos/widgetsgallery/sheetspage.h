@@ -24,12 +24,16 @@
 
 #include <MTextEdit>
 #include <MImageWidget>
+
 #include <QModelIndex>
+#include <QPointer>
 
 class MBasicListItem;
 class MLinearLayoutPolicy;
 class MList;
 class MSheet;
+
+class QPropertyAnimation;
 
 class ClickableImageWidget : public MImageWidget
 {
@@ -67,6 +71,7 @@ private Q_SLOTS:
     void itemClicked(const QModelIndex &index);
     void openFullscreenPhotoSheet();
     void reparentPhotoImage();
+    void updateFullscreenPhotoSheetGeometry();
     void triggerHeaderVisibility();
     void processFullscreenSave();
     void processFullscreenSaveSuccess();
@@ -92,6 +97,8 @@ private:
 
     MSheet *photoSheet;
     MSheet *fullScreenPhotoSheet;
+    QPointer<QPropertyAnimation> photoSheetFullScreenTransition;
+
     ClickableImageWidget *sheetPhoto;
 };
 

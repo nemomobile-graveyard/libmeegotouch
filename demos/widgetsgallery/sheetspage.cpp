@@ -114,7 +114,8 @@ public:
 SheetsPage::SheetsPage()
     : TemplatePage(TemplatePage::DialogsSheetsAndBanners),
       policy(0),
-      list(0)
+      list(0),
+      photoSheetFullScreenTransition(0)
 {
 }
 
@@ -262,13 +263,17 @@ void SheetsPage::openFullscreenPhotoSheet()
     connect(fullScreenPhotoSheet, SIGNAL(disappearing()), this, SLOT(reparentPhotoImage()));
     fullScreenPhotoSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 
+    if (!photoSheetFullScreenTransition)
+        photoSheetFullScreenTransition = new QPropertyAnimation(sheetPhoto, "geometry", sheetPhoto);
 
-    QPropertyAnimation *animation = new QPropertyAnimation(sheetPhoto, "geometry", sheetPhoto);
-    animation->setStartValue(sheetPhoto->geometry());
-    animation->setEndValue(fullScreenPhotoSheet->centralWidget()->geometry());
-    animation->setDuration(350);
-    animation->setEasingCurve(QEasingCurve::InOutExpo);
-    animation->start();
+    photoSheetFullScreenTransition->setStartValue(sheetPhoto->geometry());
+    photoSheetFullScreenTransition->setEndValue(fullScreenPhotoSheet->centralWidget()->geometry());
+    photoSheetFullScreenTransition->setDuration(350);
+    photoSheetFullScreenTransition->setEasingCurve(QEasingCurve::InOutExpo);
+    photoSheetFullScreenTransition->start();
+
+    connect(fullScreenPhotoSheet->centralWidget(), SIGNAL(widthChanged()), this, SLOT(updateFullscreenPhotoSheetGeometry()));
+    connect(fullScreenPhotoSheet->centralWidget(), SIGNAL(heightChanged()), this, SLOT(updateFullscreenPhotoSheetGeometry()));
 }
 
 void SheetsPage::populateFullscreenPhotoSheetCentralWidget(QGraphicsWidget *centralWidget)
@@ -300,12 +305,20 @@ void SheetsPage::reparentPhotoImage()
     sheetPhoto->disconnect(this);
     connect(sheetPhoto, SIGNAL(clicked()), SLOT(openFullscreenPhotoSheet()));
 
-    QPropertyAnimation *animation = new QPropertyAnimation(sheetPhoto, "geometry", sheetPhoto);
-    animation->setStartValue(sheetPhoto->geometry());
-    animation->setEndValue(QRectF(100, 50, 300, 300));
-    animation->setDuration(350);
-    animation->setEasingCurve(QEasingCurve::InOutExpo);
-    animation->start();
+    disconnect(fullScreenPhotoSheet->centralWidget(), SIGNAL(widthChanged()), this, SLOT(updateFullscreenPhotoSheetGeometry()));
+    disconnect(fullScreenPhotoSheet->centralWidget(), SIGNAL(heightChanged()), this, SLOT(updateFullscreenPhotoSheetGeometry()));
+
+    photoSheetFullScreenTransition->setStartValue(sheetPhoto->geometry());
+    photoSheetFullScreenTransition->setEndValue(QRectF(100, 50, 300, 300));
+    photoSheetFullScreenTransition->start();
+}
+
+void SheetsPage::updateFullscreenPhotoSheetGeometry()
+{
+    if (photoSheetFullScreenTransition && photoSheetFullScreenTransition->state() == QPropertyAnimation::Running)
+        photoSheetFullScreenTransition->setEndValue(fullScreenPhotoSheet->centralWidget()->geometry());
+    else
+        sheetPhoto->setGeometry(fullScreenPhotoSheet->centralWidget()->geometry());
 }
 
 void SheetsPage::triggerHeaderVisibility()
