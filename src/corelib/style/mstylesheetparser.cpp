@@ -923,9 +923,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
                     return createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
                 } else {
 		    // release allocated attributes
-		    foreach(MStyleSheetAttribute* a, attributeList.values()) {
-			delete a;
-		    }
+                    qDeleteAll(attributeList);
                     return NULL;
                 }
             }
@@ -940,7 +938,9 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
 
             // last character was closing the whole selector -> we're done
             if (character == '}') {
-                return createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
+                MStyleSheetSelector *selector = createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
+                qDeleteAll(attributeList);
+                return selector;
             }
         }
 
@@ -948,9 +948,7 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
         outputParseError(parsedFileName, "Invalid selector, '}' is missing from the end.", getLineNum(stream, startSelector));
 
 	// release allocated attributes
-	foreach(MStyleSheetAttribute* a, attributeList.values()) {
-	    delete a;
-	}
+        qDeleteAll(attributeList);
         return NULL;
     } else if (className.length() == 0) {
         // We got comment or something similar,
