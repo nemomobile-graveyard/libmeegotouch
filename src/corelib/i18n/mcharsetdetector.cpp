@@ -276,8 +276,17 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
     }
     // iterate over the detected matches and do some fine tuning:
     bool sortNeeded = false;
+    qint32 koi8rConfidence = 0;
+    qint32 iso88595Confidence = 0;
+    qint32 windows1251Confidence = 0;
     QList<MCharsetMatch>::iterator it = mCharsetMatchList.begin();
     while(it != mCharsetMatchList.end()) {
+        if((*it).name() == QLatin1String("KOI8-R"))
+            koi8rConfidence += (*it).confidence();
+        if((*it).name() == QLatin1String("ISO-8859-5"))
+            iso88595Confidence += (*it).confidence();
+        if((*it).name() == QLatin1String("windows-1251"))
+            windows1251Confidence += (*it).confidence();
         if((*it).name() == QLatin1String("ISO-2022-JP")) {
             // non-Japanese text in ISO-2022-JP encoding is possible
             // but very unlikely:
@@ -339,7 +348,50 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
             // encoding.  Use a slightly lower value than for the
             // declared encoding. Setting the declared encoding
             // is more precise and should have somewhat higher priority
-            if((d->_declaredLocale.contains("TW")
+            if(d->_declaredLocale.startsWith("ru")) {
+                // Treat the Russian setDeclaredLocale("ru") case a
+                // bit different than the single byte encodings for
+                // other languages: Only increase the weight of
+                // Russian encodings if setDeclaredLocale("ru") has
+                // been used if libicu has really detected the same
+                // Russian encoding as well. libicu usually detects
+                // these Russian encodings with very low confidences <
+                // 10 for short input.  But if we are already pretty
+                // sure that it is Russian because of
+                // setDeclaredLocale("ru"), then these low confidences
+                // detected by libicu seem to be useful to distinguish
+                // between the different Russian legacy encodings.
+                //
+                // If the setDeclareLocale("ru") has been used, the
+                // accumulated confidence for the Russian single byte
+                // encoding is 10 (because of setDeclaredLocale("ru"))
+                // plus whatever libicu has detected. If libicu has
+                // not detected anything, the accumulated confidence
+                // is exactly 10 here and there is no way to
+                // distinguish between the Russian legacy
+                // encodings. Therefore, don’t increase the confidence
+                // if the accumulated confidence is not > 10.
+                //
+                // But if libicu has detected something with small
+                // confidence, the accumulated confidence is 10 plus
+                // something small. In that case, adding something
+                // around 20 seems to work reasonably well.
+                //
+                // I add 20 to the confidence for KOI8-R and
+                // ISO-8859-5 but 21 to the confidence for
+                // windows-1251 to prefer windows-1251 a little bit
+                // over ISO-8859-5.
+                if((*it).name() == QLatin1String("KOI8-R")
+                   && koi8rConfidence > 10 && koi8rConfidence < 30)
+                    (*it).setConfidence(20 + koi8rConfidence);
+                else if((*it).name() == QLatin1String("ISO-8859-5")
+                   && iso88595Confidence > 10 && iso88595Confidence < 30)
+                    (*it).setConfidence(20 + iso88595Confidence);
+                else if((*it).name() == QLatin1String("windows-1251")
+                   && windows1251Confidence > 10 && windows1251Confidence < 30)
+                    (*it).setConfidence(21 + windows1251Confidence);
+            }
+            else if((d->_declaredLocale.contains("TW")
                 || d->_declaredLocale.contains("HK")
                 || d->_declaredLocale.contains("MO"))
                && (*it).name() == QLatin1String("Big5")) {

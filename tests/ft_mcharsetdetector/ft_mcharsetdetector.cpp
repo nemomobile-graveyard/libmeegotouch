@@ -1681,6 +1681,152 @@ void Ft_MCharsetDetector::testDetection_data()
         << "GB2312"
         << "GB18030"
         << "zh";
+    QString song07RussianMp3Bug241236("Земля В Огне (Maximum Power Tr  Artist: Radiotrance (Радиотранс)К Звёздам (Эпизод II)2004www.allofmp3.com7");
+    // 07 - Земля В Огне (Maximum Power Trance Mix).mp3
+    // Title  : Земля В Огне (Maximum Power Tr
+    // Artist: Radiotrance (Радиотранс)
+    // Album  : К Звёздам (Эпизод II)
+    // Year: 2004
+    // Genre: Unknown (255)
+    // Comment: www.allofmp3.com
+    // Track: 7
+    QTest::newRow("song07RussianMp3Bug241236")
+        << song07RussianMp3Bug241236
+        << ""
+        << ""
+        << false
+        << "UTF-8"
+        << "UTF-8"
+        << "";
+    QTest::newRow("song07RussianMp3Bug241236")
+        << song07RussianMp3Bug241236
+        << ""
+        << "windows-1251" // declared encoding, makes it work
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "";
+    QTest::newRow("song07RussianMp3Bug241236")
+        << song07RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "ru";
+    QTest::newRow("song07RussianMp3Bug241236")
+        << song07RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "KOI8-R"
+        << "KOI8-R"
+        << "ru";
+    QTest::newRow("song07RussianMp3Bug241236")
+        << song07RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "ISO-8859-5"
+        << "ISO-8859-5"
+        << "ru";
+    QString song14RussianMp3Bug241236("Выключи СветRadiotrance (Радиотранс)К Звёздам (Эпизод II)2004www.allofmp3.com14");
+    // 14 - Выключи Свет.mp3
+    // Title  : Выключи Свет
+    // Artist: Radiotrance (Радиотранс)
+    // Album  : К Звёздам (Эпизод II)
+    // Year: 2004
+    // Genre: Unknown (255)
+    // Comment: www.allofmp3.com
+    // Track: 14
+    QTest::newRow("song14RussianMp3Bug241236")
+        << song14RussianMp3Bug241236
+        << ""
+        << ""
+        << false
+        << "UTF-8"
+        << "UTF-8"
+        << "";
+    QTest::newRow("song14RussianMp3Bug241236")
+        << song14RussianMp3Bug241236
+        << ""
+        << "windows-1251" // declared encoding, makes it work
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "";
+    QTest::newRow("song14RussianMp3Bug241236")
+        << song14RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "ru";
+    QTest::newRow("song14RussianMp3Bug241236")
+        << song14RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "KOI8-R"
+        << "KOI8-R"
+        << "ru";
+    QTest::newRow("song14RussianMp3Bug241236")
+        << song14RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "ISO-8859-5"
+        << "ISO-8859-5"
+        << "ru";
+    QString song02RussianMp3Bug241236("КосмонавтRadiotrance (Радиотранс)К Звёздам (Эпизод II)2004www.allofmp3.com2");
+    // Title  : Космонавт
+    // Artist: Radiotrance (Радиотранс)
+    // Album  : К Звёздам (Эпизод II)
+    // Year: 2004
+    // Genre: Unknown (255)
+    // Comment: www.allofmp3.com
+    // Track: 2
+    QTest::newRow("song02RussianMp3Bug241236")
+        << song02RussianMp3Bug241236
+        << ""
+        << ""
+        << false
+        << "UTF-8"
+        << "UTF-8"
+        << "";
+    QTest::newRow("song02RussianMp3Bug241236")
+        << song02RussianMp3Bug241236
+        << ""
+        << "windows-1251" // declared encoding, makes it work
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "";
+    QTest::newRow("song02RussianMp3Bug241236")
+        << song02RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "windows-1251"
+        << "windows-1251"
+        << "ru";
+    QTest::newRow("song02RussianMp3Bug241236")
+        << song02RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "KOI8-R"
+        << "KOI8-R"
+        << "ru";
+    QTest::newRow("song02RussianMp3Bug241236")
+        << song02RussianMp3Bug241236
+        << "ru"
+        << ""
+        << false
+        << "ISO-8859-5"
+        << "ISO-8859-5"
+        << "ru";
 }
 
 void Ft_MCharsetDetector::testDetection()
