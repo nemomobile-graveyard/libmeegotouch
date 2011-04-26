@@ -342,12 +342,26 @@ QList<MCharsetMatch> MCharsetDetector::detectAll()
             if((d->_declaredLocale.contains("TW")
                 || d->_declaredLocale.contains("HK")
                 || d->_declaredLocale.contains("MO"))
-               && (*it).name() == QLatin1String("Big5"))
-                (*it).setConfidence(39); // trad. Chinese, Big5 more likely
+               && (*it).name() == QLatin1String("Big5")) {
+                 // Traditional Chinese, Big5 more likely
+                (*it).setConfidence(39);
+            }
             else if((d->_declaredLocale.contains("CN")
-                     || d->_declaredLocale.contains("SG"))
-                    && (*it).name() == QLatin1String("GB18030"))
-                (*it).setConfidence(39); // simp. Chinese, GB18030/GB2312 more likely
+                     || d->_declaredLocale.contains("SG")
+                     || d->_declaredLocale == "zh")
+                    && (*it).name() == QLatin1String("GB18030")) {
+                // Simplified Chinese, GB18030/GB2312 more likely.
+                // Simplified Chinese is also assumed if only “zh”
+                // is set. If the variant is unknown, simplified
+                // Chinese seems a bit more likely. On top of that,
+                // the settings application sets only “zh” for
+                // simplified Chinese and the translations for
+                // simplified Chinese are also in files like
+                // “foo_zh.qm” which makes simplified Chinese more
+                // likely when only “zh” is set on the device (see
+                // also NB#242154).
+                (*it).setConfidence(39);
+            }
             else {
                 (*it).setConfidence(38);
             }

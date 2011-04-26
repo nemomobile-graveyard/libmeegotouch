@@ -1566,6 +1566,121 @@ void Ft_MCharsetDetector::testDetection_data()
         << "Big5"
         << "Big5"
         << "zh";
+    QTest::newRow("mjh10.mp3, bug#242154")
+        // mjh10.mp3
+        // Title: 长城谣
+        // Artist: 鲍比达
+        // Album: 鲍比达-新民乐-满江红
+        // Comment: 笑傲江湖http://minehome.51.net
+        << "长城谣鲍比达鲍比达-新民乐-满江红笑傲江湖http://minehome.51.net"
+        << "zh"
+        << ""
+        << false
+        << "GB2312"
+        << "GB18030"
+        << "zh";
+    QTest::newRow("yihsu.mp3, bug#242154")
+        // yihsu.mp3, bug#242154
+        // Title: 聪明的一休哥
+        // Album: 一休哥
+        // Comment: http://Parklife.cnnb.net
+        << "聪明的一休哥一休哥http://Parklife.cnnb.net"
+        << ""
+        << ""
+        << false
+        << "GB2312"
+        << "GB18030"
+        << "zh";
+    QTest::newRow("hanhong_xueyu.mp3, bug#242154")
+        // hanhong_xueyu.mp3:
+        // Title: 雪域光芒
+        // Artist: 韩红
+        // Album: 音乐殿堂MusicPalace
+        // Year: 2000
+        // Genre: Pop
+        // Comment: http://music.zkinfo.ha.cn
+        << "雪域光芒韩红音乐殿堂MusicPalace2000Pophttp://music.zkinfo.ha.cn"
+        << "" // no hint, does not work
+        << ""
+        << false
+        << "GB2312"
+        << "ISO-8859-1"
+        << "fr";
+    QTest::newRow("hanhong_xueyu.mp3, bug#242154")
+        // hanhong_xueyu.mp3:
+        // Title: 雪域光芒
+        // Artist: 韩红
+        // Album: 音乐殿堂MusicPalace
+        // Year: 2000
+        // Genre: Pop
+        // Comment: http://music.zkinfo.ha.cn
+        << "雪域光芒韩红音乐殿堂MusicPalace2000Pophttp://music.zkinfo.ha.cn"
+        << "en" // wrong hint on purpose, should not work
+        << ""
+        << false
+        << "GB2312"
+        << "ISO-8859-1"
+        << "en";
+    QTest::newRow("hanhong_xueyu.mp3, bug#242154")
+        // hanhong_xueyu.mp3:
+        // Title: 雪域光芒
+        // Artist: 韩红
+        // Album: 音乐殿堂MusicPalace
+        // Year: 2000
+        // Genre: Pop
+        // Comment: http://music.zkinfo.ha.cn
+        << "雪域光芒韩红音乐殿堂MusicPalace2000Pophttp://music.zkinfo.ha.cn"
+        << "zh_TW" // wrong hint on purpose, should not work
+        << ""
+        << false
+        << "GB2312"
+        << "Big5"
+        << "zh";
+    QTest::newRow("hanhong_xueyu.mp3, bug#242154")
+        // hanhong_xueyu.mp3:
+        // Title: 雪域光芒
+        // Artist: 韩红
+        // Album: 音乐殿堂MusicPalace
+        // Year: 2000
+        // Genre: Pop
+        // Comment: http://music.zkinfo.ha.cn
+        << "雪域光芒韩红音乐殿堂MusicPalace2000Pophttp://music.zkinfo.ha.cn"
+        << "zh_CN"
+        << ""
+        << false
+        << "GB2312"
+        << "GB18030"
+        << "zh";
+    QTest::newRow("hanhong_xueyu.mp3, bug#242154")
+        // hanhong_xueyu.mp3:
+        // Title: 雪域光芒
+        // Artist: 韩红
+        // Album: 音乐殿堂MusicPalace
+        // Year: 2000
+        // Genre: Pop
+        // Comment: http://music.zkinfo.ha.cn
+        << "雪域光芒韩红音乐殿堂MusicPalace2000Pophttp://music.zkinfo.ha.cn"
+        << "zh_Hans"
+        << ""
+        << false
+        << "GB2312"
+        << "GB18030"
+        << "zh";
+    QTest::newRow("hanhong_xueyu.mp3, bug#242154")
+        // hanhong_xueyu.mp3:
+        // Title: 雪域光芒
+        // Artist: 韩红
+        // Album: 音乐殿堂MusicPalace
+        // Year: 2000
+        // Genre: Pop
+        // Comment: http://music.zkinfo.ha.cn
+        << "雪域光芒韩红音乐殿堂MusicPalace2000Pophttp://music.zkinfo.ha.cn"
+        << "zh"
+        << ""
+        << false
+        << "GB2312"
+        << "GB18030"
+        << "zh";
 }
 
 void Ft_MCharsetDetector::testDetection()
