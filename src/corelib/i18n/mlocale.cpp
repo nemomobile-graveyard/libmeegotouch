@@ -482,36 +482,26 @@ QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) c
 {
     Q_Q(const MLocale);
     QString categoryLanguage = parseLanguage(categoryName);
-    // do nothing for languages other than ar, fa, hi:
+    // do nothing for languages other than ar, fa, hi, bn:
     if(categoryLanguage != "ar"
        && categoryLanguage != "fa"
-       && categoryLanguage != "hi")
+       && categoryLanguage != "hi"
+       && categoryLanguage != "bn")
         return categoryName;
     // if @numbers=<something> is already there, don’t touch it
     // and return immediately:
     if(!MIcuConversions::parseOption(categoryName, "numbers").isEmpty())
         return categoryName;
     QString numericCategoryLanguage = q->categoryLanguage(MLocale::MLcNumeric);
-    if(categoryLanguage == "ar") {
-        if(numericCategoryLanguage == "ar")
-            return MIcuConversions::setOption(categoryName, "numbers", "arab");
-        else
-            return MIcuConversions::setOption(categoryName, "numbers", "latn");
-    }
-    if(categoryLanguage == "fa") {
-        if(numericCategoryLanguage == "fa")
-            return MIcuConversions::setOption(categoryName, "numbers", "arabext");
-        else
-            return MIcuConversions::setOption(categoryName, "numbers", "latn");
-    }
-    if(categoryLanguage == "hi") {
-        if(numericCategoryLanguage == "hi")
-            return MIcuConversions::setOption(categoryName, "numbers", "deva");
-        else
-            return MIcuConversions::setOption(categoryName, "numbers", "latn");
-    }
-    // never reached:
-    return categoryName;
+    if(categoryLanguage == "ar" && numericCategoryLanguage == "ar")
+        return MIcuConversions::setOption(categoryName, "numbers", "arab");
+    else if(categoryLanguage == "fa" && numericCategoryLanguage == "fa")
+        return MIcuConversions::setOption(categoryName, "numbers", "arabext");
+    else if(categoryLanguage == "hi" && numericCategoryLanguage == "hi")
+        return MIcuConversions::setOption(categoryName, "numbers", "deva");
+    else if(categoryLanguage == "bn" && numericCategoryLanguage == "bn")
+        return MIcuConversions::setOption(categoryName, "numbers", "beng");
+    return MIcuConversions::setOption(categoryName, "numbers", "latn");
 }
 #endif
 
