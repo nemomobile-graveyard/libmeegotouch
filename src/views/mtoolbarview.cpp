@@ -179,8 +179,13 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
             button->setChecked(false);
     } else {
         //Need to fully remove the action
+
+        //Removes widget from policy and deletes adjacent spacer. Leaves item in layout.
         landscapePolicy->removeWidget(widget);
         portraitPolicy->removeWidget(widget);
+
+        //Remove widget from layout as well
+        layout->removeItem(widget);
 
         if (button) {
             button->setChecked(false);

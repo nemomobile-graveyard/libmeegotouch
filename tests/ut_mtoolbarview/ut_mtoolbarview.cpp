@@ -28,6 +28,7 @@
 #include <MTextEdit>
 #include <MWidgetAction>
 #include <MScene>
+#include <MLayout>
 #include <QGraphicsLinearLayout>
 #include <QPointer>
 
@@ -680,6 +681,11 @@ void Ut_MToolBarView::testButtons()
     // buttons to avoid having to recreate it if the action is added again
     MButton *removedButton = m_toolbarview->d_ptr->removedActionsButtons.take(action);
     QVERIFY(button == removedButton);
+
+    // Item should be removed from layout
+    MLayout *toolbarLayout = static_cast<MLayout *>(m_toolbar->layout()->itemAt(0));
+    QVERIFY(toolbarLayout);
+    QVERIFY(toolbarLayout->indexOf(button) == -1);
 }
 
 void Ut_MToolBarView::testMWidgetAction_data()
