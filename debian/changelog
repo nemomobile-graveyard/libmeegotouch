@@ -3,6 +3,7 @@ libmeegotouch (0.21.8~1) unstable; urgency=low
   * unreleased
   * Fixes: NB#243544 - Out of process application extension sockets should be moved to /var/run
   * Fixes: NB#242852 - in a long note, when focus is inserted to middle you cannot pan down
+  * Fixes: NB#244848 - Application extension runner is listening for root window notifications
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 21 Apr 2011 13:58:23 +0300
 

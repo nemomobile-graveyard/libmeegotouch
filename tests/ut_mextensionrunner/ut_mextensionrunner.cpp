@@ -51,7 +51,7 @@
 
 // ContextProperty stubs
 #ifdef HAVE_CONTEXTSUBSCRIBER
-QString gContextPropertyValue = "";
+QVariant gContextPropertyValue;
 QVariant ContextProperty::value() const
 {
     return gContextPropertyValue;
@@ -191,7 +191,7 @@ void Ut_MExtensionRunner::init()
     gMAppletSettingsStub->stubReset();
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    gContextPropertyValue = "";
+    gContextPropertyValue = QVariant();
 #endif
 }
 
@@ -523,7 +523,7 @@ void Ut_MExtensionRunner::testObjectMenuRequestMessageGetsPropagated()
 #ifdef HAVE_CONTEXTSUBSCRIBER
 void Ut_MExtensionRunner::testWhenDisplayBlankedThenAliveCheckingStops()
 {
-    gContextPropertyValue = "blanked";
+    gContextPropertyValue = QVariant(true);
     gQTimerStopCalls.clear();
     m_instance->updateDisplayState();
     QVERIFY(qFind(gQTimerStopCalls, m_instance->aliveTimer) != gQTimerStopCalls.end());
@@ -532,7 +532,7 @@ void Ut_MExtensionRunner::testWhenDisplayBlankedThenAliveCheckingStops()
     m_instance->messageReceived(MAppletAliveMessageRequest());
     QCOMPARE(gQTimerStartCalls.count(), 0);
 
-    gContextPropertyValue = "";
+    gContextPropertyValue = QVariant(false);
     m_instance->updateDisplayState();
     QVERIFY(qFind(gQTimerStartCalls, m_instance->aliveTimer) != gQTimerStartCalls.end());
 }

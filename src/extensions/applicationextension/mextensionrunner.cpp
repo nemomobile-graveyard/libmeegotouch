@@ -105,7 +105,7 @@ MExtensionRunner::MExtensionRunner() :
     scene(NULL),
     view(NULL),
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    screenBlankProperty(new ContextProperty("Session.State", this)),
+    screenBlankProperty(new ContextProperty("Screen.Blanked", this)),
 #endif
     displayBlanked(false),
     aliveTimer(new QTimer),
@@ -180,7 +180,7 @@ bool MExtensionRunner::init(const QString &serverName)
 void MExtensionRunner::updateDisplayState()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    bool blanked = screenBlankProperty->value().toString() == "blanked";
+    bool blanked = screenBlankProperty->value().toBool();
 
     if(displayBlanked != blanked) {
         displayBlanked = blanked;

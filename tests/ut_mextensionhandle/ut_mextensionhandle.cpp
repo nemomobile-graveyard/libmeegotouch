@@ -80,7 +80,7 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 
 // ContextProperty stubs
 #ifdef HAVE_CONTEXTSUBSCRIBER
-QString gContextPropertyValue = "";
+QVariant gContextPropertyValue;
 QVariant ContextProperty::value() const
 {
     return gContextPropertyValue;
@@ -267,7 +267,7 @@ void Ut_MExtensionHandle::init()
     gQTimerStopCalls.clear();
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    gContextPropertyValue = "";
+    gContextPropertyValue = QVariant();
 #endif
 
     gStartQProcess = true;
@@ -686,13 +686,13 @@ void Ut_MExtensionHandle::testWhenDisplayBlankedThenAliveCheckingStops()
     QVERIFY(qFind(gQTimerStartCalls, &handle->privateClass()->aliveTimer) != gQTimerStartCalls.end());
     QVERIFY(qFind(gQTimerStartCalls, &handle->privateClass()->communicationTimer) != gQTimerStartCalls.end());
 
-    gContextPropertyValue = "blanked";
+    gContextPropertyValue = QVariant(true);
     gQTimerStopCalls.clear();
     handle->updateDisplayState();
     QVERIFY(qFind(gQTimerStopCalls, &handle->privateClass()->aliveTimer) != gQTimerStopCalls.end());
     QVERIFY(qFind(gQTimerStopCalls, &handle->privateClass()->communicationTimer) != gQTimerStopCalls.end());
 
-    gContextPropertyValue = "";
+    gContextPropertyValue = QVariant(false);
     gQTimerStartCalls.clear();
     handle->updateDisplayState();
     QVERIFY(qFind(gQTimerStartCalls, &handle->privateClass()->aliveTimer) != gQTimerStartCalls.end());
