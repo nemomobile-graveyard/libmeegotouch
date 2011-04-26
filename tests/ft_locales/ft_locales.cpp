@@ -3528,72 +3528,103 @@ void Ft_Locales::checkAvailableLocales()
                     }
                     if (dateType == MLocale::DateNone && timeType == MLocale::TimeNone)
                         continue;
-                    for (int hourMode = 0; hourMode < 2; ++hourMode) {
-                        MLocale::TimeFormat24h timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
-                        locale.setTimeFormat24h(timeFormat24h);
-                        QCOMPARE(locale.timeFormat24h(), timeFormat24h);
-                        QString icuFormatStringDefault
-                            = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
-                                                     static_cast<MLocale::TimeType>(timeType),
-                                                     calendarType);
-                        QString formattedDateTimeDefault
-                            = locale.formatDateTime(calendar,
-                                                    static_cast<MLocale::DateType>(dateType),
-                                                    static_cast<MLocale::TimeType>(timeType));
-                        QString icuFormatStringForced;
-                        QString formattedDateTimeForced;
-                        QString timeFormat24hString;
-                        switch (hourMode) {
+                    unsigned maxMixing;
+                    if (dateType == MLocale::DateFull && timeType == MLocale::TimeFull)
+                        maxMixing = 4;
+                    else
+                        maxMixing = 0;
+                    for (unsigned mixing = 0; mixing <= maxMixing; ++mixing) {
+                        QString messageLocale;
+                        switch (mixing) {
                         case 0:
-                            timeFormat24h = MLocale::TwelveHourTimeFormat24h;
-                            locale.setTimeFormat24h(timeFormat24h);
-                            QCOMPARE(locale.timeFormat24h(), timeFormat24h);
-                            icuFormatStringForced
-                                = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
-                                                         static_cast<MLocale::TimeType>(timeType),
-                                                         calendarType);
-                            formattedDateTimeForced
-                                = locale.formatDateTime(calendar,
-                                                        static_cast<MLocale::DateType>(dateType),
-                                                        static_cast<MLocale::TimeType>(timeType));
-                            if (locale.defaultTimeFormat24h() == MLocale::TwelveHourTimeFormat24h) {
-                                QCOMPARE(icuFormatStringDefault, icuFormatStringForced);
-                                timeFormat24hString = "24/12 hour mode: 12 (default)";
-                            }
-                            else {
-                                timeFormat24hString = "24/12 hour mode: 12          ";
-                            }
+                        default:
+                            messageLocale = "";
                             break;
                         case 1:
-                            timeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
+                            messageLocale = "fi_FI";
+                            break;
+                        case 2:
+                            messageLocale = "ar_EG";
+                            break;
+                        case 3:
+                            messageLocale = "he_IL";
+                            break;
+                        case 4:
+                            messageLocale = "zh_CN";
+                            break;
+                        }
+                        locale.setCategoryLocale(MLocale::MLcTime, locale.name());
+                        locale.setCategoryLocale(MLocale::MLcMessages, messageLocale);
+                        for (int hourMode = 0; hourMode < 2; ++hourMode) {
+                            MLocale::TimeFormat24h timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
                             locale.setTimeFormat24h(timeFormat24h);
                             QCOMPARE(locale.timeFormat24h(), timeFormat24h);
-                            icuFormatStringForced
+                            QString icuFormatStringDefault
                                 = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
                                                          static_cast<MLocale::TimeType>(timeType),
                                                          calendarType);
-                            formattedDateTimeForced
+                            QString formattedDateTimeDefault
                                 = locale.formatDateTime(calendar,
                                                         static_cast<MLocale::DateType>(dateType),
                                                         static_cast<MLocale::TimeType>(timeType));
-                            if (locale.defaultTimeFormat24h() == MLocale::TwentyFourHourTimeFormat24h) {
-                                QCOMPARE(icuFormatStringDefault, icuFormatStringForced);
-                                timeFormat24hString = "24/12 hour mode: 24 (default)";
+                            QString icuFormatStringForced;
+                            QString formattedDateTimeForced;
+                            QString timeFormat24hString;
+                            switch (hourMode) {
+                            case 0:
+                                timeFormat24h = MLocale::TwelveHourTimeFormat24h;
+                                locale.setTimeFormat24h(timeFormat24h);
+                                QCOMPARE(locale.timeFormat24h(), timeFormat24h);
+                                icuFormatStringForced
+                                    = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
+                                                             static_cast<MLocale::TimeType>(timeType),
+                                                             calendarType);
+                                formattedDateTimeForced
+                                    = locale.formatDateTime(calendar,
+                                                            static_cast<MLocale::DateType>(dateType),
+                                                            static_cast<MLocale::TimeType>(timeType));
+                                if (locale.defaultTimeFormat24h() == MLocale::TwelveHourTimeFormat24h) {
+                                    QCOMPARE(icuFormatStringDefault, icuFormatStringForced);
+                                    timeFormat24hString = "24/12 hour mode: 12 (default)";
+                                }
+                                else {
+                                    timeFormat24hString = "24/12 hour mode: 12          ";
+                                }
+                                break;
+                            case 1:
+                                timeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
+                                locale.setTimeFormat24h(timeFormat24h);
+                                QCOMPARE(locale.timeFormat24h(), timeFormat24h);
+                                icuFormatStringForced
+                                    = locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
+                                                             static_cast<MLocale::TimeType>(timeType),
+                                                             calendarType);
+                                formattedDateTimeForced
+                                    = locale.formatDateTime(calendar,
+                                                            static_cast<MLocale::DateType>(dateType),
+                                                            static_cast<MLocale::TimeType>(timeType));
+                                if (locale.defaultTimeFormat24h() == MLocale::TwentyFourHourTimeFormat24h) {
+                                    QCOMPARE(icuFormatStringDefault, icuFormatStringForced);
+                                    timeFormat24hString = "24/12 hour mode: 24 (default)";
+                                }
+                                else {
+                                    timeFormat24hString = "24/12 hour mode: 24          ";
+                                }
+                                break;
                             }
-                            else {
-                                timeFormat24hString = "24/12 hour mode: 24          ";
-                            }
-                            break;
+                            ft_localesTestOutput +=
+                                newLinePlusSupportedLocaleName;
+                            if(mixing > 0)
+                                ft_localesTestOutput += QLatin1String(" & ") + messageLocale;
+                            ft_localesTestOutput +=
+                                QLatin1Char('\t')
+                                + dateTypeString + ", " + timeTypeString + ", "
+                                + calendarTypeString + ", " + timeFormat24hString
+                                + QLatin1Char('\t')
+                                + icuFormatStringForced
+                                + " -> "
+                                + formattedDateTimeForced;
                         }
-                        ft_localesTestOutput +=
-                            newLinePlusSupportedLocaleName
-                            + QLatin1Char('\t')
-                            + dateTypeString + ", " + timeTypeString + ", "
-                            + calendarTypeString + ", " + timeFormat24hString
-                            + QLatin1Char('\t')
-                            + icuFormatStringForced
-                            + " -> "
-                            + formattedDateTimeForced;
                     }
                 }
             }

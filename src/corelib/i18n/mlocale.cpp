@@ -478,6 +478,146 @@ void MLocalePrivate::dateFormatTo12h(icu::DateFormat *df) const
 #endif
 
 #ifdef HAVE_ICU
+void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
+{
+    if (df) {
+        icu::UnicodeString icuFormatString;
+        QString icuFormatQString;
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+        QString categoryNameTime = categoryName(MLocale::MLcTime);
+        QString categoryNameMessages = categoryName(MLocale::MLcMessages);
+        QString categoryScriptTime = MLocale::localeScript(categoryNameTime);
+        QString categoryScriptMessages = MLocale::localeScript(categoryNameMessages);
+        // replace some known language specific stuff with something
+        // generic which is understandable in a all languages or remove it
+        // if there is no good generic replacement:
+        if((categoryNameTime.startsWith("zh")
+           || categoryNameTime.startsWith("ja"))
+           && !categoryNameMessages.startsWith("zh")
+           && !categoryNameMessages.startsWith("ja")) {
+            // when mixing something *neither* Chinese *nor* Japanese,
+            // into a Chinese or Japanese date format, replace the
+            // Chinese characters with something understandable in the
+            // non-CJ language.  If mixing versions of Chinese or
+            // Japanese, do nothing the only difference then is
+            // whether the simplified 时 or the traditional character
+            // 時 for hour is used.
+            icuFormatQString.replace(QString::fromUtf8("年"), QLatin1String("-"));
+            icuFormatQString.replace(QString::fromUtf8("月"), QLatin1String("-"));
+            icuFormatQString.replace(QString::fromUtf8("日"), QLatin1String(" "));
+            icuFormatQString.replace(QString::fromUtf8("時"), QLatin1String(":"));
+            icuFormatQString.replace(QString::fromUtf8("时"), QLatin1String(":"));
+            icuFormatQString.replace(QString::fromUtf8("分"), QLatin1String(":"));
+            icuFormatQString.replace(QString::fromUtf8("秒"), QLatin1String(""));
+        }
+        if(categoryNameTime.startsWith("ko")) {
+            icuFormatQString.replace(QString::fromUtf8("년 "), QLatin1String("-"));
+            icuFormatQString.replace(QString::fromUtf8("월 "), QLatin1String("-"));
+            icuFormatQString.replace(QString::fromUtf8("일 "), QLatin1String(" "));
+            icuFormatQString.replace(QString::fromUtf8("시 "), QLatin1String(":"));
+            icuFormatQString.replace(QString::fromUtf8("분 "), QLatin1String(":"));
+            icuFormatQString.replace(QString::fromUtf8("초"), QLatin1String(""));
+        }
+        // es_AR contains “hh'h'''mm:ss” or “HH'h'''mm:ss”
+        icuFormatQString.replace(QLatin1String("h'h'''m"), QLatin1String("h:m"));
+        icuFormatQString.replace(QLatin1String("H'h'''m"), QLatin1String("H:m"));
+        // es_PE contains “hh'H'mm''ss''” or “HH'H'mm''ss''”
+        icuFormatQString.replace(QLatin1String("h'H'm"), QLatin1String("h:m"));
+        icuFormatQString.replace(QLatin1String("H'H'm"), QLatin1String("H:m"));
+        icuFormatQString.replace(QLatin1String("m''s"), QLatin1String("m:s"));
+        icuFormatQString.replace(QLatin1String("s''"), QLatin1String("s"));
+        // fa_IR may contain “ساعت” between date and time
+        icuFormatQString.replace(QString::fromUtf8("ساعت"), QLatin1String(""));
+        // pt_PT, ... contain “HH'h'mm'min'ss's' or “hh'h'mm'min'ss's'” and
+        // en_BE, fr_CA, ... contain “HH 'h' mm 'min' ss 's'” or “hh 'h' mm 'min' ss 's'”:
+        icuFormatQString.replace(QLatin1String("h'h'mm"), QLatin1String("h:mm"));
+        icuFormatQString.replace(QLatin1String("h 'h' mm"), QLatin1String("h:mm"));
+        icuFormatQString.replace(QLatin1String("H'h'mm"), QLatin1String("H:mm"));
+        icuFormatQString.replace(QLatin1String("H 'h' mm"), QLatin1String("H:mm"));
+        icuFormatQString.replace(QLatin1String("m'min's"), QLatin1String("m:s"));
+        icuFormatQString.replace(QLatin1String("m 'min' s"), QLatin1String("m:s"));
+        icuFormatQString.replace(QLatin1String("ss's'"), QLatin1String("ss"));
+        icuFormatQString.replace(QLatin1String("ss 's'"), QLatin1String("ss"));
+        // kk contains “'ж'.”
+        icuFormatQString.replace(QString::fromUtf8("'ж'."), QLatin1String(""));
+        // ru_RU contains “y 'г'.” (e.g. “2008 г.”)
+        // (note the U+00A0 NO-BREAK SPACE in front of the “'г'.”):
+        icuFormatQString.replace(QString::fromUtf8(" 'г'."), QLatin1String(""));
+        // sv_SE contains “d:'e'” (e.g. “18:e”):
+        icuFormatQString.replace(QLatin1String(":'e'"), QLatin1String(""));
+        // sv_SE and nb_NO contain “'kl'.”
+        icuFormatQString.replace(QLatin1String("'kl'."), QLatin1String(""));
+        // uk_UA contains “y 'р'.” (e.g. “2008 р.”):
+        icuFormatQString.replace(QString::fromUtf8("'р'."), QLatin1String(""));
+        // remove remaining quoted stuff not covered by the special
+        // cases above from the format strings, quoted stuff is
+        // hardcoded text in the language of the the time category and
+        // most likely not understandable in the language of the
+        // message locale:
+        icuFormatQString.replace(QRegExp("'[^']*'"), QLatin1String(""));
+        // use stand-alone versions of month names and weekday names only
+        // inflected versions will make no sense in the context of a different
+        // language:
+        icuFormatQString.replace(QLatin1String("EEEE"), QLatin1String("cccc"));
+        icuFormatQString.replace(QLatin1String("MMMM"), QLatin1String("LLLL"));
+        if(categoryNameTime.startsWith("th")) {
+            // th_TH contains “H นาฬิกา m นาที ss วินาที”
+            icuFormatQString.replace(QString::fromUtf8("H นาฬิกา m"), QLatin1String("H:m"));
+            icuFormatQString.replace(QString::fromUtf8("h นาฬิกา m"), QLatin1String("h:m"));
+            icuFormatQString.replace(QString::fromUtf8("m นาที s"), QLatin1String("m:s"));
+            icuFormatQString.replace(QString::fromUtf8("s วินาที"), QLatin1String("s"));
+            // th_TH contains “EEEEที่” or “ccccที่”
+            icuFormatQString.replace(QString::fromUtf8("cที่"), QLatin1String("c"));
+        }
+        if((categoryNameTime.startsWith("zh")
+           || categoryNameTime.startsWith("ja"))
+           && !categoryNameMessages.startsWith("zh")
+           && !categoryNameMessages.startsWith("ja")) {
+            // when mixing a language which is *neither* Chinese *nor*
+            // Japanese, into a Chinese or Japanese date format, add a
+            // few spaces for better readability:
+            icuFormatQString.replace(QLatin1String("cz"), QLatin1String("c z"));
+            icuFormatQString.replace(QLatin1String("zH"), QLatin1String("z H"));
+            icuFormatQString.replace(QLatin1String("za"), QLatin1String("z a"));
+            icuFormatQString.replace(QLatin1String("ca"), QLatin1String("c a"));
+            icuFormatQString.replace(QLatin1String("cH"), QLatin1String("c H"));
+            icuFormatQString.replace(QLatin1String("ah"), QLatin1String("a h"));
+        }
+        if(categoryScriptTime == QLatin1String("Arab")
+           && categoryScriptMessages != QLatin1String("Arab")) {
+            // replace Arabic comma with regular comma:
+            icuFormatQString.replace(QString::fromUtf8("،"), QLatin1String(","));
+            removeDirectionalFormattingCodes(&icuFormatQString);
+        }
+        if(categoryScriptTime == QLatin1String("Hebr")
+           && categoryScriptMessages != QLatin1String("Hebr")) {
+            // he_IL has “בMMMM” or “בLLLL”
+            icuFormatQString.replace(QString::fromUtf8("בL"), QLatin1String("L"));
+            removeDirectionalFormattingCodes(&icuFormatQString);
+        }
+        if(!categoryNameTime.startsWith("zh")
+           && !categoryNameTime.startsWith("ja")
+           && categoryScriptTime != QLatin1String("Arab")
+           && categoryScriptTime != QLatin1String("Hebr")) {
+            // remove remaining non-ASCII stuff which was not yet
+            // specially handled above (Keep it if the time locale is
+            // Chinese or Japanese or has Arabic or Hebrew script).
+            QString tmp;
+            for(int i = 0; i < icuFormatQString.size(); ++i)
+                if(icuFormatQString.at(i) < QChar(0x0080))
+                    tmp.append(icuFormatQString.at(i));
+            icuFormatQString = tmp;
+        }
+        // remove superfluous whitespace:
+        icuFormatQString.replace(QRegExp("[\\s]+"), QLatin1String(" "));
+        icuFormatString = MIcuConversions::qStringToUnicodeString(icuFormatQString);
+        static_cast<SimpleDateFormat *>(df)->applyPattern(icuFormatString);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
 QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) const
 {
     Q_Q(const MLocale);
@@ -553,15 +693,6 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
     icu::DateFormat *df
         = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-    if(!categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))) {
-        // mixing in symbols like month name and weekday name from the message locale
-        DateFormatSymbols *dfs =
-            MLocalePrivate::createDateFormatSymbols(
-                icu::Locale(qPrintable(categoryNameMessages)));
-        // This is not nice but seems to be the only way to set the
-        // symbols with the public API
-        static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
-    }
     if (timeType != MLocale::TimeNone) {
         switch (timeFormat24h) {
         case(MLocale::TwelveHourTimeFormat24h):
@@ -575,6 +706,26 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
         default:
             break;
         }
+    }
+    if(!categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))
+       && parseLanguage(categoryNameMessages) != parseLanguage(categoryNameTime)) {
+        // mixing symbols like month name and weekday name from the
+        // message locale into the date format of the time locale.
+        // Don’t do this, if the language is the same, i.e. don’t do
+        // it if one locale is “zh” and the other “zh_TW” or one
+        // locale is “pt” and the other “pt_PT”. When the locales
+        // share the same language, mixing should not be necessary,
+        // the symbols should be understandable already.
+        //
+        // If we are mixing really different languages, simplify the
+        // date format first to make the results less bad:
+        MLocalePrivate::simplifyDateFormatForMixing(df);
+        DateFormatSymbols *dfs =
+            MLocalePrivate::createDateFormatSymbols(
+                icu::Locale(qPrintable(categoryNameMessages)));
+        // This is not nice but seems to be the only way to set the
+        // symbols with the public API
+        static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
     }
     _dateFormatCache.insert(key, df);
     return df;
