@@ -1,11 +1,27 @@
-libmeegotouch (0.21.8~1) unstable; urgency=low
+libmeegotouch (0.21.8-1) unstable; urgency=low
 
-  * unreleased
-  * Fixes: NB#243544 - Out of process application extension sockets should be moved to /var/run
-  * Fixes: NB#242852 - in a long note, when focus is inserted to middle you cannot pan down
+  * New version
+  * Fixes: NB#249777 - <MemLeak> Memory leak in mtapandholdrecognizer.cpp, mwidgetview.cpp
+  * Fixes: NB#248153 - Flick cancelling behavior is off
+  * Fixes: Respect QGraphicsItem::ItemStopsClickFocusPropagation flag on focus change.
+  * Fixes: Change focus on mouse release but before delivering it further to widgets.
+  * Fixes: Don't touch focus if Qt has done it for us.
+  * Fixes: Handle focus proxy correctly in MScene::handleFocusChange
   * Fixes: NB#244848 - Application extension runner is listening for root window notifications
+  * Fixes: NB#242154 - Tracker does not decode language encoding scheme
+  * Fixes: NB#242852 - in a long note, when focus is inserted to middle you cannot
+  * Fixes: NB#230503 - There should be a sound in Query dialog
+  * Fixes: NB#243544 - Out of process application extension sockets should be moved to /var/run
+  * Fixes: NB#244805 - MSheet - wrong Scroll indicator style
+  * Fixes: NB#248802
+  * Fixes: NB#240179 - COREWEB: /usr/bin/sysuid 'malloc_consolidate _int_malloc _int_realloc __libc_realloc QString::realloc'
+  * Fixes: NB#247607 - mthedaemon needs to signal upstart when it has really started
+  * Fixes: NB#247183 - [TASK] coverity warnings in test cases 12.04.2011
+  * Fixes: NB#231497 - Toolbar in main views does not look as it should
+  * Fixes: NB#239220 - [TASK] check style reloading of in meegotouch
+  * Fixes: NB#248453 - Nothing signaled when system wide sheet is closed
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 21 Apr 2011 13:58:23 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 26 Apr 2011 17:58:27 +0300
 
 libmeegotouch (0.21.7-1) unstable; urgency=low
 
