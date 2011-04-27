@@ -730,6 +730,8 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
     }
 
 #ifdef Q_WS_X11
+    // We have to send this root message because the window itself is managing
+    // its close events. In MeeGo Touch there's no WM with a close button
     if (q->testAttribute(Qt::WA_QuitOnClose) &&
         q->windowState().testFlag(Qt::WindowNoState) &&
         !event->spontaneous())

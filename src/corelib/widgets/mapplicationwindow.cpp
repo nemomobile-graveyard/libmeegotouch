@@ -1188,8 +1188,6 @@ bool MApplicationWindow::event(QEvent *event)
     return MWindow::event(event);
 }
 
-// We have to send this root message because the window itself is managing
-// its close events. In directUi, there's no WM with a close button
 void MApplicationWindow::closeEvent(QCloseEvent *event)
 {
     // Don't really close if lazy shutdown used.
