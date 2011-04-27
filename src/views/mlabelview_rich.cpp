@@ -743,6 +743,11 @@ QRectF MLabelViewRich::textBoundaries(qreal *x) const
     // the text wrap correctly, the vertical padding is added
     // when drawing the pixmap into the screen
     bounds.adjust(0, 0, viewPrivate->style()->paddingLeft(), 0);
+    // Include the top and bottom padding, margins and reactive margins, so that we can paint in
+    // them if necessary
+    const MLabelStyle *style = viewPrivate->style();
+    bounds.adjust(0, -style->paddingTop() - style->marginTop() - style->reactiveMarginTop(),
+                  0, style->paddingBottom() + style->marginBottom() + style->reactiveMarginBottom());
 
     Q_ASSERT(x);
     *x = 0.0;

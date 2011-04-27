@@ -61,7 +61,7 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 
     if (clip) {
         painter->save();
-        painter->setClipRect(viewPrivate->controller->boundingRect(), Qt::IntersectClip);
+        painter->setClipRect(paintingRectWithMargins, Qt::IntersectClip);
         painter->drawStaticText(textOffset, staticText);
         painter->restore();
     } else {
