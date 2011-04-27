@@ -199,6 +199,7 @@ void MBasicSheetHeaderView::updateData(const QList<const char *> &modifications)
 void MBasicSheetHeaderView::applyStyle()
 {
     Q_D(MBasicSheetHeaderView);
+    MWidgetView::applyStyle();
 
     d->refreshStyles();
 }
