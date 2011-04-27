@@ -65,10 +65,12 @@ public:
 
     void setWidget(QGraphicsWidget *widget);
 
-private Q_SLOTS:
-    void resizeChildWidget();
+protected:
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:
+    void resizeChildWidget();
+
     QWeakPointer<QGraphicsWidget> widgetPointer;
     M_STYLABLE_WIDGET(MStylableWidgetStyle)
 };

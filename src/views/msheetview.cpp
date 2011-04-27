@@ -36,7 +36,6 @@
 
 MSheetSlot::MSheetSlot(QGraphicsItem *parent) : MStylableWidget(parent)
 {
-    connect(this, SIGNAL(geometryChanged()), SLOT(resizeChildWidget()));
 }
 
 MSheetSlot::~MSheetSlot()
@@ -71,6 +70,12 @@ void MSheetSlot::setWidget(QGraphicsWidget *widget)
     } else {
         widgetPointer.clear();
     }
+}
+
+void MSheetSlot::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    Q_UNUSED(event);
+    resizeChildWidget();
 }
 
 void MSheetSlot::resizeChildWidget()
