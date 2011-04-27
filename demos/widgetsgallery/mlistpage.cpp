@@ -83,6 +83,7 @@ MListPage::~MListPage()
 {
     delete model;
     delete imageLoader;
+    delete objectMenu;
 }
 
 QString MListPage::timedemoTitle()
@@ -374,7 +375,7 @@ void MListPage::createActions()
 
 void MListPage::createObjectMenuActions()
 {
-    objectMenu = new MObjectMenu(this);
+    objectMenu = new MObjectMenu(0);
 
     //% "Remove"
     MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), this);
