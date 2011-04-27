@@ -284,7 +284,13 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
         const QFontMetricsF metrics(viewPrivate->controller->font());
         foreach (const QString &string, strings) {
             text = string;
-            if (metrics.width(text) <= renderSize.width()) {
+            if (wrap()) {
+                QSizeF stringSize = metrics.boundingRect(QRectF(QPointF(0,0), renderSize),
+                                                         Qt::TextWordWrap, string).size();
+                if (stringSize.width() <= renderSize.width()
+                        && stringSize.height() <= renderSize.height())
+                    break;
+            } else if (metrics.width(text) <= renderSize.width()) {
                 break;
             }
         }
