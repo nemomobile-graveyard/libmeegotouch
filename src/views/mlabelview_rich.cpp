@@ -93,9 +93,11 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
         // The QPixmapCache is full. Draw the text directly as fallback.
         qreal x;
         const QRectF textBounds = textBoundaries(&x);
-        pixmapOffset.rx() -= x;
-        painter->translate(pixmapOffset);
-        textDocument.drawContents(painter, textBounds);
+        if (!textBounds.isEmpty()) {
+            pixmapOffset.rx() -= x;
+            painter->translate(pixmapOffset);
+            textDocument.drawContents(painter, textBounds);
+        }
     } else {
         drawTiles(painter, pixmapOffset, size);
     }

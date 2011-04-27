@@ -106,6 +106,7 @@ public:
     QSizeF preferredSize;
     QPointF textOffset;
     QRectF paintingRect;
+    QRectF paintingRectWithMargins;
     bool dirty;
     QStaticText staticText;
     QString unconstraintText;

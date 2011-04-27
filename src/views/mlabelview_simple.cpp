@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "mlabelview.h"
 #include "mlabelview_p.h"
 #include "mlabelmodel.h"
@@ -250,6 +249,7 @@ void MLabelViewSimple::initializeTextProperties()
     paintingRect = (viewPrivate->textOptions.textDirection() == Qt::LeftToRight)
         ? viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom())
         : viewPrivate->boundingRect().adjusted(style->paddingRight(), style->paddingTop(), -style->paddingLeft(), -style->paddingBottom());
+    paintingRectWithMargins = paintingRect.adjusted(0, -style->paddingTop() - style->marginTop() - style->reactiveMarginTop(), 0, style->paddingBottom() + style->marginBottom() + style->reactiveMarginBottom());
     textOffset = paintingRect.topLeft().toPoint();
 
     unconstraintText = textToRender(QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -262,10 +262,10 @@ void MLabelViewSimple::initializeTextProperties()
 
     adjustTextOffset();
 
-    clip =  textOffset.x() < viewPrivate->controller->boundingRect().x()
-           || textOffset.y() < viewPrivate->controller->boundingRect().y()
-           || textOffset.x() + staticText.size().width()  > viewPrivate->controller->boundingRect().right()
-           || textOffset.y() + staticText.size().height() > viewPrivate->controller->boundingRect().bottom();
+    clip =  textOffset.x() < paintingRectWithMargins.x()
+           || textOffset.y() < paintingRectWithMargins.y()
+           || textOffset.x() + staticText.size().width() > paintingRectWithMargins.right()
+           || textOffset.y() + staticText.size().height() > paintingRectWithMargins.bottom();
 
     const QColor& color = viewPrivate->model()->color();
     pen = QPen(color.isValid() ? color : style->color());
