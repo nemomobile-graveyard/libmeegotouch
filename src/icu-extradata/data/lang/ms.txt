@@ -1,68 +1,177 @@
-// ***************************************************************************
-// *
-// * Copyright (C) 2010 International Business Machines
-// * Corporation and others.  All Rights Reserved.
-// * Tool: com.ibm.icu.dev.tool.cldr.LDML2ICUConverter.java
-// * Source File:<path>/common/main/ms.xml
-// *
-// ***************************************************************************
-/**
- *  ICU <specials> source: <path>/xml/main/ms.xml
- */
+// converted from http://unicode.org/cldr/trac/browser/trunk/common/main/ms.xml
+// (downloaded 2011-04-27) to libicu format using some Emacs macros.
+//
+// for the license of CLDR see:
+// http://www.unicode.org/copyright.html 
+//
+//    EXHIBIT 1
+//    UNICODE, INC. LICENSE AGREEMENT - DATA FILES AND SOFTWARE
+//
+//    Unicode Data Files include all data files under the directories
+//    http://www.unicode.org/Public/, http://www.unicode.org/reports/,
+//    and http://www.unicode.org/cldr/data/. Unicode Data Files do not
+//    include PDF online code charts under the directory
+//    http://www.unicode.org/Public/. Software includes any source code
+//    published in the Unicode Standard or under the directories
+//    http://www.unicode.org/Public/, http://www.unicode.org/reports/,
+//    and http://www.unicode.org/cldr/data/.
+//
+//    NOTICE TO USER: Carefully read the following legal agreement. BY
+//    DOWNLOADING, INSTALLING, COPYING OR OTHERWISE USING UNICODE INC.'S
+//    DATA FILES ("DATA FILES"), AND/OR SOFTWARE ("SOFTWARE"), YOU
+//    UNEQUIVOCALLY ACCEPT, AND AGREE TO BE BOUND BY, ALL OF THE TERMS
+//    AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE, DO NOT
+//    DOWNLOAD, INSTALL, COPY, DISTRIBUTE OR USE THE DATA FILES OR
+//    SOFTWARE.
+//
+//    COPYRIGHT AND PERMISSION NOTICE
+//
+//    Copyright © 1991-2011 Unicode, Inc. All rights
+//    reserved. Distributed under the Terms of Use in
+//    http://www.unicode.org/copyright.html.
+//
+//    Permission is hereby granted, free of charge, to any person
+//    obtaining a copy of the Unicode data files and any associated
+//    documentation (the "Data Files") or Unicode software and any
+//    associated documentation (the "Software") to deal in the Data
+//    Files or Software without restriction, including without
+//    limitation the rights to use, copy, modify, merge, publish,
+//    distribute, and/or sell copies of the Data Files or Software, and
+//    to permit persons to whom the Data Files or Software are furnished
+//    to do so, provided that (a) the above copyright notice(s) and this
+//    permission notice appear with all copies of the Data Files or
+//    Software, (b) both the above copyright notice(s) and this
+//    permission notice appear in associated documentation, and (c)
+//    there is clear notice in each modified Data File or in the
+//    Software as well as in the documentation associated with the Data
+//    File(s) or Software that the data or software has been modified.
+//
+//    THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY
+//    OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+//    WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+//    AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE
+//    COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR
+//    ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR
+//    ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+//    PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+//    TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+//    PERFORMANCE OF THE DATA FILES OR SOFTWARE.
+//
+//    Except as contained in this notice, the name of a copyright holder
+//    shall not be used in advertising or otherwise to promote the sale,
+//    use or other dealings in these Data Files or Software without
+//    prior written authorization of the copyright holder.
+//
+//    Unicode and the Unicode logo are trademarks of Unicode, Inc. in
+//    the United States and other countries. All third party trademarks
+//    referenced herein are the property of their respective owners.
+//
 ms{
-    Languages{
-        af{"Afrikaans"}
-        am{"Amharic"}
-        ar{"Arab"}
-        as{"Assam"}
-        be{"Belarus"}
-        bn{"Benggala"}
-        bs{"Bosnia"}
-        ca{"Catalonia"}
-        cy{"Wales"}
-        eo{"Esperanto"}
-        eu{"Basque"}
-        fa{"Parsi"}
-        fy{"Frisian"}
-        gd{"Scots Gaelic"}
-        gl{"Galicia"}
-        gu{"Gujerat"}
-        hr{"Croat"}
-        hu{"Hungary"}
-        hy{"Armenia"}
-        id{"Indonesia"}
-        ka{"Georgia"}
-        km{"Khmer"}
-        kn{"Kannada"}
-        la{"Latin"}
-        ln{"Lingala"}
-        lo{"Laos"}
-        ml{"Malayalam"}
-        mn{"Mongolia"}
-        mr{"Marathi"}
+  Languages{
+        ab{"Abkhazia"}
+        ay{"Aymara"}
+        az{"Azerbaijan"}
+        bg{"Bulgaria"}
+        bo{"Tibet"}
+        cs{"Czech"}
+        da{"Denmark"}
+        de{"Jerman"}
+        de_AT{"Jerman Austria"}
+        de_CH{"Jerman Halus Switzerland"}
+        dv{"Divehi"}
+        dz{"Dzongkha"}
+        efi{"Efik"}
+        el{"Greek"}
+        en{"Inggeris"}
+        en_AU{"Inggeris Australia"}
+        en_CA{"Inggeris Kanada"}
+        en_GB{"Inggeris British"}
+        en_US{"Bahasa Inggeris AS"}
+        es{"Sepanyol"}
+        es_419{"Sepanyol Amerika Latin"}
+        es_ES{"Sepanyol Iberia"}
+        et{"Estonia"}
+        fi{"Finland"}
+        fil{"Filipina"}
+        fj{"Fiji"}
+        fo{"Faroe"}
+        fr{"Perancis"}
+        fr_CA{"Perancis Kanada"}
+        fr_CH{"Perancis Switzerland"}
+        ga{"Ireland"}
+        gn{"Guarani"}
+        gsw{"Jerman Switzerland"}
+        ha{"Hausa"}
+        haw{"Hawaii"}
+        he{"Ibrani"}
+        hi{"Hindi"}
+        ht{"Haiti"}
+        ig{"Igbo"}
+        is{"Iceland"}
+        it{"Itali"}
+        ja{"Jepun"}
+        jv{"Jawa"}
+        kk{"Kazakhstan"}
+        ko{"Korea"}
+        ks{"Kashmiri"}
+        ku{"Kurdish"}
+        ky{"Kirghiz"}
+        lb{"Luxembourg"}
+        lt{"Lithuania"}
+        lv{"Latvia"}
+        mg{"Malagasy"}
+        mi{"Maori"}
+        mk{"Macedonia"}
         ms{"Melayu"}
-        mt{"Malta"}
-        ne{"Nepal"}
-        nn{"Nynorsk Norway"}
-        pa{"Punjabi"}
+        my{"Burma"}
+        nb{"Bokmål Norway"}
+        nd{"Ndebele Utara"}
+        nl{"Belanda"}
+        nl_BE{"Flemish"}
+        nso{"Sotho Utara"}
+        ny{"Nyanja"}
+        or{"Oriya"}
+        os{"Ossete"}
+        pl{"Poland"}
+        ps{"Pashto"}
+        pt{"Portugis"}
+        pt_BR{"Portugis Brazil"}
         pt_PT{"Portugis Iberia"}
-        sa{"Sanskrit"}
-        sd{"Sindhi"}
-        sh{"SerboCroatia"}
-        si{"Sinhala"}
-        sk{"Slovak"}
-        sl{"Slovenia"}
-        so{"Somali"}
-        sq{"Albania"}
-        sr{"Serbia"}
-        su{"Sunda"}
-        sw{"Swahili"}
-        ta{"Tamil"}
-        te{"Telugu"}
-        th{"Thai"}
-        ti{"Tigrinya"}
-        ug{"Uighur"}
-        vi{"Vietnam"}
-    }
-    Version{"2.0.48.56"}
+        qu{"Quechua"}
+        rm{"Romansh"}
+        rn{"Rundi"}
+        ro{"Romania"}
+        ru{"Rusia"}
+        rw{"Kinyarwanda"}
+        se{"Sami Utara"}
+        sg{"Sango"}
+        sm{"Samoa"}
+        sn{"Shona"}
+        ss{"Swati"}
+        st{"Sotho Selatan"}
+        sv{"Sweden"}
+        tet{"Tetum"}
+        tg{"Tajik"}
+        tk{"Turkmen"}
+        tn{"Tswana"}
+        to{"Tonga"}
+        tpi{"Tok Pisin"}
+        tr{"Turki"}
+        ts{"Tsonga"}
+        tt{"Tatar"}
+        ty{"Tahiti"}
+        uk{"Ukraine"}
+        und{"Bahasa Tidak Diketahui"}
+        ur{"Urdu"}
+        uz{"Uzbekistan"}
+        ve{"Venda"}
+        wo{"Wolof"}
+        xh{"Xhosa"}
+        yo{"Yoruba"}
+        zh{"Cina"}
+        zh_Hans{"Cina Ringkas"}
+        zh_Hant{"Cina Tradisional"}
+        zu{"Zulu"}
+        zxx{"Tidak kandungan linguistik"}
+  }
 }
