@@ -23,6 +23,7 @@
 #include <QRectF>
 #include <QPointF>
 #include <QVariantAnimation>
+#include <QElapsedTimer>
 #include "mphysics2dpanning.h"
 
 class QTimeLine;
@@ -49,6 +50,7 @@ public:
     qreal   velY;
     qreal   pointerSpringX;
     qreal   pointerSpringY;
+    QElapsedTimer lastMovementTimer;
     QPointF sceneLastPos;
     qreal   maxVel;
 
