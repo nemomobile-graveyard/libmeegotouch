@@ -505,7 +505,7 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
             // 時 for hour is used.
             icuFormatQString.replace(QString::fromUtf8("年"), QLatin1String("-"));
             icuFormatQString.replace(QString::fromUtf8("月"), QLatin1String("-"));
-            icuFormatQString.replace(QString::fromUtf8("日"), QLatin1String(" "));
+            icuFormatQString.replace(QString::fromUtf8("日"), QLatin1String(""));
             icuFormatQString.replace(QString::fromUtf8("時"), QLatin1String(":"));
             icuFormatQString.replace(QString::fromUtf8("时"), QLatin1String(":"));
             icuFormatQString.replace(QString::fromUtf8("分"), QLatin1String(":"));
@@ -527,6 +527,10 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
         icuFormatQString.replace(QLatin1String("H'H'm"), QLatin1String("H:m"));
         icuFormatQString.replace(QLatin1String("m''s"), QLatin1String("m:s"));
         icuFormatQString.replace(QLatin1String("s''"), QLatin1String("s"));
+        // eo contains “h-'a' 'horo' 'kaj' m:ss” or “H-'a' 'horo' 'kaj' m:ss” or “EEEE, d-'a' 'de' MMMM y”
+        icuFormatQString.replace(QLatin1String("H-'a' 'horo' 'kaj' m:ss"), QLatin1String("HH:mm:ss"));
+        icuFormatQString.replace(QLatin1String("h-'a' 'horo' 'kaj' m:ss"), QLatin1String("hh:mm:ss"));
+        icuFormatQString.replace(QLatin1String("d-'a'"), QLatin1String("d "));
         // fa_IR may contain “ساعت” between date and time
         icuFormatQString.replace(QString::fromUtf8("ساعت"), QLatin1String(""));
         // pt_PT, ... contain “HH'h'mm'min'ss's' or “hh'h'mm'min'ss's'” and
@@ -561,6 +565,8 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
         // language:
         icuFormatQString.replace(QLatin1String("EEEE"), QLatin1String("cccc"));
         icuFormatQString.replace(QLatin1String("MMMM"), QLatin1String("LLLL"));
+        icuFormatQString.replace(QLatin1String("EEE"), QLatin1String("ccc"));
+        icuFormatQString.replace(QLatin1String("MMM"), QLatin1String("LLL"));
         if(categoryNameTime.startsWith("th")) {
             // th_TH contains “H นาฬิกา m นาที ss วินาที”
             icuFormatQString.replace(QString::fromUtf8("H นาฬิกา m"), QLatin1String("H:m"));
@@ -583,6 +589,10 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
             icuFormatQString.replace(QLatin1String("ca"), QLatin1String("c a"));
             icuFormatQString.replace(QLatin1String("cH"), QLatin1String("c H"));
             icuFormatQString.replace(QLatin1String("ah"), QLatin1String("a h"));
+            icuFormatQString.replace(QLatin1String("da"), QLatin1String("d a"));
+            icuFormatQString.replace(QLatin1String("dH"), QLatin1String("d H"));
+            icuFormatQString.replace(QLatin1String("dz"), QLatin1String("d z"));
+            icuFormatQString.replace(QLatin1String("dccc"), QLatin1String("d ccc"));
         }
         if(categoryScriptTime == QLatin1String("Arab")
            && categoryScriptMessages != QLatin1String("Arab")) {
@@ -610,7 +620,7 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
             icuFormatQString = tmp;
         }
         // remove superfluous whitespace:
-        icuFormatQString.replace(QRegExp("[\\s]+"), QLatin1String(" "));
+        icuFormatQString = icuFormatQString.simplified();
         icuFormatString = MIcuConversions::qStringToUnicodeString(icuFormatQString);
         static_cast<SimpleDateFormat *>(df)->applyPattern(icuFormatString);
     }

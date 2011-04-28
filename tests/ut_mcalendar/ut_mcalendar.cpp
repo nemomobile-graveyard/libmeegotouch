@@ -192,7 +192,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("de_DE, Gregorian calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "de_DE" // only lc_time matters
+        << "de_DE@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "dd.MM.yy"
@@ -206,7 +206,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("de_DE, Gregorian calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "de_DE" // only lc_time matters
+        << "de_DE@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "dd.MM.yy"
@@ -220,7 +220,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("de_DE, Gregorian calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "de_DE" // only lc_time matters
+        << "de_DE@mix-time-and-language=no" // only lc_time matters
         // de_DE has 24 hours by default, override it here:
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
@@ -236,7 +236,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("fi_FI, Gregorian calendar, LocaleDefaultTimeFormat24h")
         << "de_DE" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "fi_FI" // only lc_time matters
+        << "fi_FI@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "d.M.yyyy"
@@ -248,7 +248,7 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "H:mm:ss z"
         << "H:mm:ss zzzz";
     QTest::newRow("fi_FI, Gregorian calendar, LocaleDefaultTimeFormat24h")
-        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI@mix-time-and-language=no" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
         << "" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
@@ -264,7 +264,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("fi_FI, Gregorian calendar, TwentyFourHourTimeFormat24h")
         << "de_DE" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "fi_FI" // only lc_time matters
+        << "fi_FI@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d.M.yyyy"
@@ -278,7 +278,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("fi_FI, Gregorian calendar, TwelveHourTimeFormat24h")
         << "de_DE" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "fi_FI" // only lc_time matters
+        << "fi_FI@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d.M.yyyy"
@@ -291,7 +291,7 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "h:mm:ss a zzzz";
     //--------------------------------------------------
     QTest::newRow("fi_FI, Islamic calendar, LocaleDefaultTimeFormat24h")
-        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI@mix-time-and-language=no" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
         << "" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
@@ -305,7 +305,7 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "H:mm:ss z"
         << "H:mm:ss zzzz";
     QTest::newRow("fi_FI, Islamic calendar, TwentyFourHourTimeFormat24h")
-        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI@mix-time-and-language=no" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
         << "" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
@@ -319,7 +319,7 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "H:mm:ss z"
         << "H:mm:ss zzzz";
     QTest::newRow("fi_FI, Islamic calendar, TwelveHourTimeFormat24h")
-        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI@mix-time-and-language=no" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
         << "" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
@@ -336,7 +336,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("Arabic, Gregorian calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "ar_EG" // only lc_time matters
+        << "ar_EG@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
@@ -350,7 +350,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("Arabic, Gregorian calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "ar_EG" // only lc_time matters
+        << "ar_EG@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
@@ -364,7 +364,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("Arabic, Gregorian calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "ar_EG" // only lc_time matters
+        << "ar_EG@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
@@ -379,7 +379,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("Arabic, Islamic calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "ar_EG" // only lc_time matters
+        << "ar_EG@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::IslamicCalendar
         << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
@@ -393,7 +393,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("Arabic, Islamic calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "ar_EG" // only lc_time matters
+        << "ar_EG@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::IslamicCalendar
         << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
@@ -407,7 +407,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("Arabic, Islamic calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "de_DE" // lc_messages does not matter
-        << "ar_EG" // only lc_time matters
+        << "ar_EG@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::IslamicCalendar
         << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
@@ -422,7 +422,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("ja_JP, Gregorian calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "ja_JP" // only lc_time matters
+        << "ja_JP@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy/MM/dd"
@@ -436,7 +436,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("ja_JP, Gregorian calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "ja_JP" // only lc_time matters
+        << "ja_JP@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy/MM/dd"
@@ -450,7 +450,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("ja_JP, Gregorian calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "ja_JP" // only lc_time matters
+        << "ja_JP@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy/MM/dd"
@@ -465,7 +465,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("ja_JP, Japanese calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "ja_JP" // only lc_time matters
+        << "ja_JP@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::JapaneseCalendar
         << "Gyy/MM/dd"
@@ -480,7 +480,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("zh_CN, Gregorian calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "zh_CN" // only lc_time matters
+        << "zh_CN@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy-M-d"
@@ -494,7 +494,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("zh_CN, Gregorian calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "zh_CN" // only lc_time matters
+        << "zh_CN@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy-M-d"
@@ -508,7 +508,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("zh_CN, Gregorian calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "zh_CN" // only lc_time matters
+        << "zh_CN@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy-M-d"
@@ -523,7 +523,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("zh_CN, Chinese calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "zh_CN" // only lc_time matters
+        << "zh_CN@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::ChineseCalendar
         << "y'x'G-Ml-d"
@@ -537,7 +537,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("zh_CN, Chinese calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "zh_CN" // only lc_time matters
+        << "zh_CN@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::ChineseCalendar
         << "y'x'G-Ml-d"
@@ -551,7 +551,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("zh_CN, Chinese calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "zh_CN" // only lc_time matters
+        << "zh_CN@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::ChineseCalendar
         << "y'x'G-Ml-d"
@@ -566,7 +566,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("th_TH, Gregorian calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "th_TH" // only lc_time matters
+        << "th_TH@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "d/M/yyyy"
@@ -580,7 +580,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("th_TH, Gregorian calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "th_TH" // only lc_time matters
+        << "th_TH@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d/M/yyyy"
@@ -594,7 +594,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("th_TH, Gregorian calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "th_TH" // only lc_time matters
+        << "th_TH@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d/M/yyyy"
@@ -609,7 +609,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("th_TH, Buddhist calendar, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "th_TH" // only lc_time matters
+        << "th_TH@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::BuddhistCalendar
         << "d/M/yyyy"
@@ -623,7 +623,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("th_TH, Buddhist calendar, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "th_TH" // only lc_time matters
+        << "th_TH@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::BuddhistCalendar
         << "d/M/yyyy"
@@ -637,7 +637,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("th_TH, Buddhist calendar, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "th_TH" // only lc_time matters
+        << "th_TH@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::BuddhistCalendar
         << "d/M/yyyy"
@@ -652,7 +652,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("de_BE, Gregorian, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "de_BE" // only lc_time matters
+        << "de_BE@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "d/MM/yy"
@@ -666,7 +666,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("de_BE, Gregorian, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "de_BE" // only lc_time matters
+        << "de_BE@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d/MM/yy"
@@ -680,7 +680,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("de_BE, Gregorian, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "de_BE" // only lc_time matters
+        << "de_BE@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "d/MM/yy"
@@ -695,7 +695,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("en_BE, Gregorian, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "en_BE" // only lc_time matters
+        << "en_BE@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "dd/MM/yy"
@@ -709,7 +709,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("en_BE, Gregorian, TwentyFourHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "en_BE" // only lc_time matters
+        << "en_BE@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "dd/MM/yy"
@@ -723,7 +723,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("en_BE, Gregorian, TwelveHourTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "en_BE" // only lc_time matters
+        << "en_BE@mix-time-and-language=no" // only lc_time matters
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "dd/MM/yy"
@@ -738,7 +738,7 @@ void Ut_MCalendar::testIcuFormatString_data()
     QTest::newRow("eo, Gregorian, LocaleDefaultTimeFormat24h")
         << "fi_FI" // language does not matter unless lc_time is empty
         << "fi_FI" // lc_messages does not matter
-        << "eo" // only lc_time matters
+        << "eo@mix-time-and-language=no" // only lc_time matters
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy-MM-dd"
@@ -750,9 +750,9 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "HH:mm:ss z"
         << "H-'a' 'horo' 'kaj' m:ss zzzz";
     QTest::newRow("eo, Gregorian, TwentyFourHourTimeFormat24h")
-        << "fi_FI" // language does not matter unless lc_time is empty
-        << "fi_FI" // lc_messages does not matter
-        << "eo" // only lc_time matters
+        << "fi_FI"
+        << "fi_FI"
+        << "eo@mix-time-and-language=no" // lc_time
         << MLocale::TwentyFourHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy-MM-dd"
@@ -764,9 +764,9 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "HH:mm:ss z"
         << "H-'a' 'horo' 'kaj' m:ss zzzz";
     QTest::newRow("eo, Gregorian, TwelveHourTimeFormat24h")
-        << "fi_FI" // language does not matter unless lc_time is empty
-        << "fi_FI" // lc_messages does not matter
-        << "eo" // only lc_time matters
+        << "fi_FI"
+        << "fi_FI"
+        << "eo@mix-time-and-language=no" // lc_time
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
         << "yy-MM-dd"
@@ -777,6 +777,20 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "hh:mm:ss a"
         << "hh:mm:ss a z"
         << "h-'a' 'horo' 'kaj' m:ss a zzzz";
+    QTest::newRow("eo, Gregorian, TwelveHourTimeFormat24h")
+        << "fi_FI"
+        << "fi_FI"
+        << "eo@mix-time-and-language=yes" // lc_time
+        << MLocale::TwelveHourTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "yy-MM-dd"
+        << "y-LLL-dd"
+        << "y-LLLL-dd"
+        << "cccc, d LLLL y"
+        << "hh:mm a"
+        << "hh:mm:ss a"
+        << "hh:mm:ss a z"
+        << "hh:mm:ss a zzzz";
 }
 
 void Ut_MCalendar::testIcuFormatString()
@@ -825,17 +839,17 @@ void Ut_MCalendar::testIcuFormatString()
                 expectedResult = timeResults[timeType];
             else if (timeType == MLocale::TimeNone)
                 expectedResult = dateResults[dateType];
-            else if(locale.categoryName(MLocale::MLcTime) == "ja_JP"
+            else if(locale.categoryName(MLocale::MLcTime).startsWith("ja")
                     && calendarType == MLocale::GregorianCalendar
                     && (dateType == MLocale::DateLong
                         || dateType == MLocale::DateFull))
                 expectedResult = dateResults[dateType] + timeResults[timeType];
-            else if(locale.categoryName(MLocale::MLcTime) == "zh_CN"
+            else if(locale.categoryName(MLocale::MLcTime).startsWith("zh")
                     && calendarType == MLocale::GregorianCalendar
                     && (dateType == MLocale::DateLong
                         || dateType == MLocale::DateFull))
                 expectedResult = dateResults[dateType] + timeResults[timeType];
-            else if(locale.categoryName(MLocale::MLcTime) == "th_TH")
+            else if(locale.categoryName(MLocale::MLcTime).startsWith("th_TH"))
                 expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
             else
                 expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
@@ -1156,10 +1170,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
-        << "١٥‏/٦‏/٢٠٠٤"
-        << "١٥‏/٠٦‏/٢٠٠٤"
-        << "١٥ kesäkuuta، ٢٠٠٤"
-        << "tiistaina، ١٥ kesäkuuta، ٢٠٠٤"
+        << "١٥/٦/٢٠٠٤"
+        << "١٥/٠٦/٢٠٠٤"
+        << "١٥ kesäkuu, ٢٠٠٤"
+        << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
         << "٢:٣١ ip."
         << "٢:٣١:٠٠ ip."
         << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
@@ -1190,10 +1204,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
-        << "15‏/6‏/2004"
-        << "15‏/06‏/2004"
-        << "15 kesäkuuta، 2004"
-        << "tiistaina، 15 kesäkuuta، 2004"
+        << "15/6/2004"
+        << "15/06/2004"
+        << "15 kesäkuu, 2004"
+        << "tiistai, 15 kesäkuu, 2004"
         << "2:31 ip."
         << "2:31:00 ip."
         << "UTC+3.00 2:31:00 ip."
@@ -1224,10 +1238,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
-        << "١٥‏/٦‏/٢٠٠٤"
-        << "١٥‏/٠٦‏/٢٠٠٤"
-        << "١٥ kesäkuuta، ٢٠٠٤"
-        << "tiistaina، ١٥ kesäkuuta، ٢٠٠٤"
+        << "١٥/٦/٢٠٠٤"
+        << "١٥/٠٦/٢٠٠٤"
+        << "١٥ kesäkuu, ٢٠٠٤"
+        << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
         << "٢:٣١ ip."
         << "٢:٣١:٠٠ ip."
         << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
@@ -1258,10 +1272,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "Europe/Helsinki"
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
-        << "15‏/6‏/2004"
-        << "15‏/06‏/2004"
-        << "15 kesäkuuta، 2004"
-        << "tiistaina، 15 kesäkuuta، 2004"
+        << "15/6/2004"
+        << "15/06/2004"
+        << "15 kesäkuu, 2004"
+        << "tiistai, 15 kesäkuu, 2004"
         << "2:31 ip."
         << "2:31:00 ip."
         << "UTC+3.00 2:31:00 ip."
@@ -1294,8 +1308,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "15.06.04"
         << "15.06.2004"
-        << "15 kesäkuuta 2004 г."
-        << "tiistaina, 15 kesäkuuta 2004 г."
+        << "15 kesäkuu 2004"
+        << "tiistai, 15 kesäkuu 2004"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1327,9 +1341,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "6/15/04"
-        << "kesäkuuta 15, 2004"
-        << "kesäkuuta 15, 2004"
-        << "tiistaina, kesäkuuta 15, 2004"
+        << "kesä 15, 2004"
+        << "kesäkuu 15, 2004"
+        << "tiistai, kesäkuu 15, 2004"
         << "2:31 ip."
         << "2:31:00 ip."
         << "2:31:00 ip. UTC+3.00"
@@ -1361,9 +1375,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "15/06/04"
-        << "15 בkesäkuuta 2004"
-        << "15 בkesäkuuta 2004"
-        << "tiistaina, 15 בkesäkuuta 2004"
+        << "15 kesä 2004"
+        << "15 kesäkuu 2004"
+        << "tiistai, 15 kesäkuu 2004"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1396,8 +1410,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "2004.06.15."
         << "2004.06.15."
-        << "2004. kesäkuuta 15."
-        << "2004. kesäkuuta 15., tiistaina"
+        << "2004. kesäkuu 15."
+        << "2004. kesäkuu 15., tiistai"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1666,9 +1680,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "7/21/08"
-        << "heinäkuuta 21, 2008"
-        << "heinäkuuta 21, 2008"
-        << "maanantaina, heinäkuuta 21, 2008"
+        << "heinä 21, 2008"
+        << "heinäkuu 21, 2008"
+        << "maanantai, heinäkuu 21, 2008"
         << "2:31 ip."
         << "2:31:00 ip."
         << "2:31:00 ip. UTC+3.00"
@@ -1705,8 +1719,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 21
         << "21.07.08"
         << "21.07.2008"
-        << "21. heinäkuuta 2008"
-        << "maanantaina, 21. heinäkuuta 2008"
+        << "21. heinäkuu 2008"
+        << "maanantai, 21. heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1780,9 +1794,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21/07/2008"
-        << "21 heinäkuuta 2008"
-        << "21 heinäkuuta 2008"
-        << "maanantaina, 21 heinäkuuta 2008"
+        << "21 heinä 2008"
+        << "21 heinäkuu 2008"
+        << "maanantai, 21 heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1818,13 +1832,13 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21.07.08"
-        << "21. heinäkuuta. 2008" // bad, look at the dot!
-        << "21. heinäkuuta 2008"
-        << "maanantaina 21. heinäkuuta 2008"
+        << "21. heinä. 2008" // bad, look at the dot!
+        << "21. heinäkuu 2008"
+        << "maanantai 21. heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
-        << "kl. 14:31:00 Itä-Euroopan kesäaika";
+        << "14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -1856,13 +1870,13 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21.07.08"
-        << "21. heinäkuuta 2008"
-        << "21. heinäkuuta 2008"
-        << "maanantaina 21. heinäkuuta 2008"
+        << "21. heinä 2008"
+        << "21. heinäkuu 2008"
+        << "maanantai 21. heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
-        << "kl. 14:31:00 Itä-Euroopan kesäaika";
+        << "14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_no_NO_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -1894,13 +1908,13 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21.07.08"
-        << "21. heinäkuuta 2008"
-        << "21. heinäkuuta 2008"
-        << "maanantaina 21. heinäkuuta 2008"
+        << "21. heinä 2008"
+        << "21. heinäkuu 2008"
+        << "maanantai 21. heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
-        << "kl. 14:31:00 Itä-Euroopan kesäaika";
+        << "14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_ja_JP_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -1933,12 +1947,12 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 21
         << "08/07/21"
         << "2008/07/21"
-        << "2008年7月21日"
-        << "2008年7月21日maanantaina"
+        << "2008-7-21"
+        << "2008-7-21 maanantai"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
-        << "14時31分00秒 Itä-Euroopan kesäaika";
+        << "14:31:00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_zh_CN_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -1971,12 +1985,12 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 21
         << "08-7-21"
         << "2008-7-21"
-        << "2008年7月21日"
-        << "2008年7月21日maanantaina"
-        << "ip.2:31"
-        << "ip.2:31:00"
-        << "UTC+3.00ip.2时31分00秒"
-        << "Itä-Euroopan kesäaikaip.2时31分00秒";
+        << "2008-7-21"
+        << "2008-7-21 maanantai"
+        << "ip. 2:31"
+        << "ip. 2:31:00"
+        << "UTC+3.00 ip. 2:31:00"
+        << "Itä-Euroopan kesäaika ip. 2:31:00";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2026,10 +2040,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "15‏/6‏/2004"
-        << "15‏/06‏/2004"
-        << "15 kesäkuuta، 2004"
-        << "tiistaina، 15 kesäkuuta، 2004"
+        << "15/6/2004"
+        << "15/06/2004"
+        << "15 kesäkuu, 2004"
+        << "tiistai, 15 kesäkuu, 2004"
         << "2:31 ip."
         << "2:31:00 ip."
         << "UTC+3.00 2:31:00 ip."
@@ -2064,10 +2078,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 2004
         << 6
         << 15
-        << "١٥‏/٦‏/٢٠٠٤"
-        << "١٥‏/٠٦‏/٢٠٠٤"
-        << "١٥ kesäkuuta، ٢٠٠٤"
-        << "tiistaina، ١٥ kesäkuuta، ٢٠٠٤"
+        << "١٥/٦/٢٠٠٤"
+        << "١٥/٠٦/٢٠٠٤"
+        << "١٥ kesäkuu, ٢٠٠٤"
+        << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
         << "٢:٣١ ip."
         << "٢:٣١:٠٠ ip."
         << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
@@ -2160,9 +2174,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 6
         << 15
         << "۶/۱۵/۰۴"
-        << "kesäkuuta ۱۵, ۲۰۰۴"
-        << "kesäkuuta ۱۵, ۲۰۰۴"
-        << "tiistaina, kesäkuuta ۱۵, ۲۰۰۴"
+        << "kesä ۱۵, ۲۰۰۴"
+        << "kesäkuu ۱۵, ۲۰۰۴"
+        << "tiistai, kesäkuu ۱۵, ۲۰۰۴"
         << "۱۴:۳۱"
         << "۱۴:۳۱:۰۰"
         << "۱۴:۳۱:۰۰ (UTC+۳.۰۰)"
@@ -2198,9 +2212,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 6
         << 15
         << "6/15/04"
-        << "kesäkuuta 15, 2004"
-        << "kesäkuuta 15, 2004"
-        << "tiistaina, kesäkuuta 15, 2004"
+        << "kesä 15, 2004"
+        << "kesäkuu 15, 2004"
+        << "tiistai, kesäkuu 15, 2004"
         << "14:31"
         << "14:31:00"
         << "14:31:00 (UTC+3.00)"
@@ -2255,9 +2269,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 6
         << 15
         << "15/6/04"
-        << "15, kesäkuuta 2004"
-        << "15, kesäkuuta 2004"
-        << "tiistaina, 15, kesäkuuta 2004"
+        << "15, kesä 2004"
+        << "15, kesäkuu 2004"
+        << "tiistai, 15, kesäkuu 2004"
         << "2:31 ip."
         << "2:31:00 ip."
         << "2:31:00 ip. UTC+3.00"
@@ -2332,8 +2346,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 15
         << "१५-६-०४"
         << "१५-०६-२००४"
-        << "१५ kesäkuuta २००४"
-        << "tiistaina, १५ kesäkuuta २००४"
+        << "१५ kesäkuu २००४"
+        << "tiistai, १५ kesäkuu २००४"
         << "२:३१ ip."
         << "२:३१:०० ip."
         << "२:३१:०० ip. UTC+३.००"
@@ -2370,8 +2384,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 15
         << "15-6-04"
         << "15-06-2004"
-        << "15 kesäkuuta 2004"
-        << "tiistaina, 15 kesäkuuta 2004"
+        << "15 kesäkuu 2004"
+        << "tiistai, 15 kesäkuu 2004"
         << "2:31 ip."
         << "2:31:00 ip."
         << "2:31:00 ip. UTC+3.00"
@@ -2407,13 +2421,13 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21/7/2008"
-        << "21 heinäkuuta 2008"
-        << "21 heinäkuuta 2008"
-        << "maanantainaที่ 21 heinäkuuta jKr. 2008"
+        << "21 heinä 2008"
+        << "21 heinäkuu 2008"
+        << "maanantai 21 heinäkuu jKr. 2008"
         << "14:31"
         << "14:31:00"
-        << "14 นาฬิกา 31 นาที 00 วินาที UTC+3.00"
-        << "14 นาฬิกา 31 นาที 00 วินาที Itä-Euroopan kesäaika";
+        << "14:31:00 UTC+3.00"
+        << "14:31:00 Itä-Euroopan kesäaika";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
@@ -2475,19 +2489,37 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                      && calType == MLocale::GregorianCalendar
                      && (dateType == MLocale::DateLong
                          || dateType == MLocale::DateFull))
-                expectedResult = dateResults[dateType] + timeResults[timeType];
+                    if (MLocale::localeScript(locale.categoryName(MLocale::MLcMessages)) != QLatin1String("Kana")
+                        && MLocale::localeScript(locale.categoryName(MLocale::MLcMessages)) != QLatin1String("Hira")
+                        && MLocale::localeScript(locale.categoryName(MLocale::MLcMessages)) != QLatin1String("Hani")
+                        && !lcTime.contains("mix-time-and-language=no"))
+                        expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
+                    else
+                        expectedResult = dateResults[dateType] + timeResults[timeType];
             else if (locale.categoryName(MLocale::MLcTime).startsWith("zh_CN")
                      && calType == MLocale::GregorianCalendar
                      && (dateType == MLocale::DateLong
                          || dateType == MLocale::DateFull))
-                expectedResult = dateResults[dateType] + timeResults[timeType];
+                    if (MLocale::localeScript(locale.categoryName(MLocale::MLcMessages)) != QLatin1String("Hani")
+                        && !lcTime.contains("mix-time-and-language=no"))
+                        expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
+                    else
+                        expectedResult = dateResults[dateType] + timeResults[timeType];
             else if(locale.categoryName(MLocale::MLcTime).startsWith("th_TH"))
                 expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
             else if(locale.categoryName(MLocale::MLcTime).startsWith("fa_IR")) {
                 if (dateType == MLocale::DateShort || dateType == MLocale::DateMedium)
-                    expectedResult = dateResults[dateType] + "،‏ " + timeResults[timeType];
+                    if (MLocale::localeScript(locale.categoryName(MLocale::MLcMessages)) != QLatin1String("Arab")
+                        && !lcTime.contains("mix-time-and-language=no"))
+                        expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
+                    else
+                        expectedResult = dateResults[dateType] + "،‏ " + timeResults[timeType];
                 else
-                    expectedResult = dateResults[dateType] + "، ساعت " + timeResults[timeType];
+                    if (MLocale::localeScript(locale.categoryName(MLocale::MLcMessages)) != QLatin1String("Arab")
+                        && !lcTime.contains("mix-time-and-language=no"))
+                        expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
+                    else
+                        expectedResult = dateResults[dateType] + "، ساعت " + timeResults[timeType];
             }
             else
                 expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
