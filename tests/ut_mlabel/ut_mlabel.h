@@ -131,6 +131,8 @@ private slots:
 
     void testTextFormat();
 
+    void testRichTextTiles();
+
 private:
     /**
      * Helper method for testSizeHint().

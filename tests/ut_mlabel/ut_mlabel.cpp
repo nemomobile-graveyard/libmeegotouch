@@ -19,6 +19,8 @@
 
 #include "ut_mlabel.h"
 
+#include <mapplicationpage.h>
+#include <mapplicationwindow.h>
 #include <mwidget.h>
 #include <mwidgetcontroller.h>
 #include <mlabelview.h>
@@ -26,6 +28,8 @@
 #include <mwindow.h>
 #include <mapplication.h>
 #include <mlabelhighlighter.h>
+#include <mlabelview.h>
+#include <mpannableviewport.h>
 
 #include <QSignalSpy>
 #include <QTestEventList>
@@ -287,8 +291,12 @@ void Ut_MLabel::testTextWordWrap()
 void Ut_MLabel::testTextElide_data()
 {
     QTest::addColumn<QString>("text");
+    QTest::addColumn<QString>("elidedEnd");
 
-    QTest::newRow("plain") << "David Michael Hasselhoff (born July 17, 1952) is an American actor and singer.He is best known for his lead roles as Michael Knight in the popular 1980s U.S. series Knight Rider and as L.A. County Lifeguard Mitch Buchannon in the series Baywatch. Hasselhoff also produced Baywatch for a number of series in the 1990s up until 2001 when the series ended with Baywatch Hawaii. Hasselhoff also crossed over to a music career during the end of the 1980s and the early 1990s and was noted for his performance when the Berlin Wall was brought down in 1989. He enjoyed a short lived success as a singer primarily in German-speaking Europe, particularly in Germany and Austria. More recently Hasselhoff has been involved with talent shows such as NBC's America's Got Talent in 2006. Hasselhoff's autobiography, Making Waves, was released in the United Kingdom in September 2006.";
+    QTest::newRow("plain") << "David Michael Hasselhoff (born July 17, 1952) is an American actor and singer.He is best known for his lead roles as Michael Knight in the popular 1980s U.S. series Knight Rider and as L.A. County Lifeguard Mitch Buchannon in the series Baywatch. Hasselhoff also produced Baywatch for a number of series in the 1990s up until 2001 when the series ended with Baywatch Hawaii. Hasselhoff also crossed over to a music career during the end of the 1980s and the early 1990s and was noted for his performance when the Berlin Wall was brought down in 1989. He enjoyed a short lived success as a singer primarily in German-speaking Europe, particularly in Germany and Austria. More recently Hasselhoff has been involved with talent shows such as NBC's America's Got Talent in 2006. Hasselhoff's autobiography, Making Waves, was released in the United Kingdom in September 2006."
+                           << "American actor and singer.H...";
+    QTest::newRow("nospaces") << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                              << "xxxx...";
     // For some reason this doesn't work in CC -> solve why
     //QTest::newRow("rich") << "<b>David Michael Hasselhoff (born July 17, 1952) is an American actor and singer. He is best known for his lead roles as Michael Knight in the popular 1980s U.S. series Knight Rider and as L.A. County Lifeguard Mitch Buchannon in the series Baywatch. Hasselhoff also produced Baywatch for a number of series in the 1990s up until 2001 when the series ended with Baywatch Hawaii. Hasselhoff also crossed over to a music career during the end of the 1980s and the early 1990s and was noted for his performance when the Berlin Wall was brought down in 1989. He enjoyed a short lived success as a singer primarily in German-speaking Europe, particularly in Germany and Austria. More recently Hasselhoff has been involved with talent shows such as NBC's America's Got Talent in 2006. Hasselhoff's autobiography, Making Waves, was released in the United Kingdom in September 2006.</b>";
 }
@@ -296,17 +304,32 @@ void Ut_MLabel::testTextElide_data()
 void Ut_MLabel::testTextElide()
 {
     QFETCH(QString, text);
+    QFETCH(QString, elidedEnd);
     label->setText(text);
     QVERIFY(text == label->text());
 
     label->setWordWrap(false);
     label->setTextElide(true);
-    label->resize(400,400);
+    label->resize(400, 100);
     QVERIFY(label->textElide() == true);
     QImage elided = captureImage(label);
 
+    label->setWordWrap(true);
+    label->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    label->setTextElide(true);
+    label->resize(400, 100);
+
+#ifdef __arm__
+    // The scratchbox and device environment use a different font and theme per default.
+    // Only test the wrapping for the device to keep testTextElide_data() maintainable:
+    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
+    const QString labelTextEnd = view->renderedText().right(elidedEnd.length());
+    QCOMPARE(labelTextEnd, elidedEnd);
+#endif
+
+    label->setWordWrap(false);
     label->setTextElide(false);
-    label->resize(400,400);
+    label->resize(400, 100);
     QVERIFY(label->textElide() == false);
     QImage unelided = captureImage(label);
 
@@ -1048,6 +1071,108 @@ void Ut_MLabel::testTextFormat()
 
     label->setTextFormat(Qt::PlainText);
     QCOMPARE(label->textFormat(), Qt::PlainText);
+}
+
+void Ut_MLabel::testRichTextTiles()
+{
+    // A MSceneWindow is required as parent of MLabel for testing the tiles.
+    // The tiling functionality relies on QPixmapCache which can be cleared
+    // at any time. This makes it necessary to check whether tiling is available
+    // at all before triggering a wrong failure.
+    MApplicationWindow window;
+    MApplicationPage page;
+
+    MLabel *tiledLabel = new MLabel("Short richtext, only <i>one</i> tile should be used", page.centralWidget());
+    tiledLabel->setWordWrap(true);
+    tiledLabel->setWrapMode(QTextOption::WrapAnywhere);
+    tiledLabel->resize(400, 400);
+
+    page.appear(&window);
+    window.show();
+
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    const MLabelView* view = qobject_cast<const MLabelView*>(tiledLabel->view());
+
+    int y0;
+    int y1;
+    QPixmap tile0;
+    QPixmap tile1;
+
+    bool ok = view->tileInformation(0, tile0, y0);
+    ok = ok && view->tileInformation(1, tile1, y1);
+    if (!ok) {
+        qWarning() << "Skipped testRichTextTiles(): No tiles are available.";
+        return;
+    }
+
+    QVERIFY(!tile0.isNull());
+    QVERIFY(tile1.isNull());
+    QVERIFY(!contentRect(tile0.toImage()).isEmpty());
+    QCOMPARE(y0, 0);
+
+    QString longText;
+    for (int i = 0; i < 1000; ++i) {
+        longText.append("Long text: <i>Two</i> tiles should be used if the height of the label is large enough.");
+    }
+    tiledLabel->setText(longText);
+
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    ok = ok && view->tileInformation(0, tile0, y0);
+    ok = ok && view->tileInformation(1, tile1, y1);
+    if (!ok) {
+        qWarning() << "Skipped testRichTextTiles(): No tiles are available.";
+        return;
+    }
+
+    QVERIFY(!tile0.isNull());
+    QVERIFY(tile1.isNull());
+    QCOMPARE(y0, 0);
+
+    tiledLabel->resize(QSizeF(400, 10000));
+
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    MPannableViewport* pannableViewport = 0;
+    foreach(QGraphicsItem *childItem, page.childItems()) {
+        MPannableViewport *viewport = dynamic_cast<MPannableViewport*>(childItem);
+        if (viewport) {
+            pannableViewport = viewport;
+            break;
+        }
+    }
+    QVERIFY(pannableViewport);
+
+    const int tileHeight = tile0.height();
+    QVERIFY(tileHeight > 0);
+    const int maxViewportY = tiledLabel->size().height() - tileHeight;
+    for (int viewportY = 0; viewportY < maxViewportY; viewportY += 200) {
+        const QPointF newPos(0, viewportY);
+        pannableViewport->physics()->setPosition(newPos);
+
+        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+        ok = ok && view->tileInformation(0, tile0, y0);
+        ok = ok && view->tileInformation(1, tile1, y1);
+        if (!ok) {
+            qWarning() << "Skipped testRichTextTiles(): No tiles are available.";
+            return;
+        }
+
+        const int minY = (viewportY / tileHeight) * tileHeight;
+        const int maxY = minY + tileHeight - 1;
+        if (y0 > y1) {
+            qSwap(y0, y1);
+        }
+
+        QVERIFY(y0 <= minY);
+        QVERIFY(y1 + tileHeight - 1 >= maxY);
+        QVERIFY(!tile0.isNull());
+        QVERIFY(!tile1.isNull());
+        QVERIFY(!contentRect(tile0.toImage()).isEmpty());
+        QVERIFY(!contentRect(tile1.toImage()).isEmpty());
+    }
 }
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

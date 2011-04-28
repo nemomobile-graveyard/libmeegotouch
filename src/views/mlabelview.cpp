@@ -300,6 +300,18 @@ QPointF MLabelView::mapToRoot(const QPointF &point)
     return d->controller->mapToRoot(point);
 }
 
+QString MLabelView::renderedText() const
+{
+    Q_D(const MLabelView);
+    return d->impl->renderedText();
+}
+
+bool MLabelView::tileInformation(int index, QPixmap &pixmap, int &y) const
+{
+    Q_D(const MLabelView);
+    return d->impl->tileInformation(index, pixmap, y);
+}
+
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
 
 #include "moc_mlabelview.cpp"

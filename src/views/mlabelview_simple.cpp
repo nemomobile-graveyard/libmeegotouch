@@ -233,6 +233,19 @@ void MLabelViewSimple::applyStyle()
         const_cast<MLabelModel*>(viewPrivate->model())->setAlignment(viewPrivate->style()->horizontalAlignment() | viewPrivate->style()->verticalAlignment());
 }
 
+QString MLabelViewSimple::renderedText() const
+{
+    return staticText.text();
+}
+
+bool MLabelViewSimple::tileInformation(int index, QPixmap &pixmap, int &y) const
+{
+    Q_UNUSED(index);
+    Q_UNUSED(pixmap);
+    Q_UNUSED(y);
+    return false;
+}
+
 void MLabelViewSimple::initializeTextProperties()
 {
     if (!dirty) {

@@ -27,6 +27,7 @@
 
 class MLabel;
 class MLabelView;
+class MSceneWindow;
 class QGraphicsSceneResizeEvent;
 class QGestureEvent;
 class QTapAndHoldGesture;
@@ -50,6 +51,28 @@ public:
     virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
     virtual void applyStyle();
+
+    /**
+     * \return Text that gets rendered in drawContents(). The text might differ
+     *         from MLabel::text() because of the eliding or adjusted linebreaks.
+     *         The method is used by MLabelView::renderedText() to allow Ut_MLabel
+     *         accessing the rendered text for unit testing.
+     */
+    virtual QString renderedText() const;
+
+    /**
+     * The method is used by MLabelView::tileInformation() to allow Ut_MLabel
+     * accessing this information for unit testing.
+     *
+     * \param pixmap Output parameter that contains the tile-pixmap if the
+     *               the return value has been true.
+     * \param y      Output parameter that returns the y-position of the tile
+     *               if the return value has been true.
+     * \return       True if accessing the tiles is possible. If false has been
+     *               returned the tiling had been disabled because of e.g. a
+     *               cleared QPixmapCache.
+     */
+    virtual bool tileInformation(int index, QPixmap &pixmap, int &y) const;
 
     void initializeTextProperties();
 
@@ -147,6 +170,8 @@ public:
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
 
     virtual void applyStyle();
+    virtual QString renderedText() const;
+    virtual bool tileInformation(int index, QPixmap &pixmap, int &y) const;
 
     void ensureDocumentIsReady();
     int cursorPositionOfLastVisibleCharacter();
@@ -247,7 +272,6 @@ public:
 
     int tileHeight;
     QString tileCacheKey;
-    M::Orientation tileOrientation;
     QList<Tile> tiles;
 
     bool highlightersChanged;
