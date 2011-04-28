@@ -2342,6 +2342,8 @@ void MSceneManager::appearSceneWindowNow(MSceneWindow *window, MSceneWindow::Del
 
 int MSceneManager::execDialog(MDialog *dialog)
 {
+    bool ok;
+
     if (dialog == 0) {
         mWarning("MSceneManager") << "Invalid dialog instance";
         return MDialog::Rejected;
@@ -2349,7 +2351,8 @@ int MSceneManager::execDialog(MDialog *dialog)
 
     QEventLoop eventLoop;
     QPointer<MDialog> dialog_ptr = dialog;
-    connect(dialog, SIGNAL(finished(int)), &eventLoop, SLOT(quit()));
+    ok = connect(dialog, SIGNAL(disappeared()), &eventLoop, SLOT(quit()));
+    if (!ok) qFatal("signal connection failed");
     connect(dialog, SIGNAL(destroyed()), &eventLoop, SLOT(quit()));
 
     //TODO: Figure better workaround for this (or ask Qt to
