@@ -437,7 +437,7 @@ void Ut_MDialog::testSystemDialog()
     dialog->setSystem(true);
     dialog->setModal(false);
     dialog->appear(MSceneWindow::KeepWhenDone);
-    QVERIFY(dialog->d_func()->standAloneWindow);
+    QVERIFY(dialog->d_func()->standAloneWindow != 0);
     dialog->dismissEvent(new MDismissEvent());
 
     QCOMPARE(spyChanged1.count(), 1);
