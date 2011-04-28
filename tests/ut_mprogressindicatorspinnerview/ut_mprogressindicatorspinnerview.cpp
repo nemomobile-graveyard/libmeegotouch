@@ -90,4 +90,19 @@ void Ut_MProgressIndicatorSpinnerView::testThrottleAnimationWhenRenderedInSwitch
     QVERIFY(normalDuration < slowDuration);
 }
 
+void Ut_MProgressIndicatorSpinnerView::testAnimationPausedWhenNotVisible()
+{
+    // Regression test for NB#249480 - MProgressIndicator with unknown duration keeps spinning when hidden
+    MProgressIndicator* pi = new MProgressIndicator();
+    MSpinnerView* view = new MSpinnerView(pi);
+    pi->setUnknownDuration(true);
+    pi->setVisible(false);
+    pi->setView(view);
+    QVERIFY(view->d_func()->positionAnimation->state() == QPropertyAnimation::Paused ||
+            view->d_func()->positionAnimation->state() == QPropertyAnimation::Stopped);
+
+    delete pi;
+}
+
+
 QTEST_APPLESS_MAIN(Ut_MProgressIndicatorSpinnerView)

@@ -91,4 +91,13 @@ void Ut_MProgressIndicatorBarView::testThrottleAnimationWhenRenderedInSwitcher()
     QVERIFY(normalInterval < slowInterval);
 }
 
+void Ut_MProgressIndicatorBarView::testAnimationPausedWhenNotVisible()
+{
+    // Regression test for NB#249480 - MProgressIndicator with unknown duration keeps spinning when hidden
+    m_progressIndicator->setUnknownDuration(true);
+    m_progressIndicator->setVisible(false);
+    m_progressIndicator->resize(150,150);
+    QVERIFY(!m_subject->d_func()->animationTimer->isActive());
+}
+
 QTEST_APPLESS_MAIN(Ut_MProgressIndicatorBarView)

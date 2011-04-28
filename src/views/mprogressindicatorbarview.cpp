@@ -187,7 +187,8 @@ void MProgressIndicatorBarViewPrivate::setupAnimation()
         animationTimer->setInterval(interval);
 
     connect(animationTimer, SIGNAL(timeout()), this, SLOT(setAnimationCacheIndex()));
-    animationTimer->start();
+
+    animate(controller->isVisible());
 }
 
 void MProgressIndicatorBarViewPrivate::setupBarImages()

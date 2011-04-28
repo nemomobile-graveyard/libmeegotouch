@@ -71,17 +71,7 @@ void MSpinnerViewPrivate::refreshStyle()
 
 void MSpinnerViewPrivate::refreshModel()
 {
-    Q_Q(MSpinnerView);
-
-    if (q->model()->unknownDuration()) {
-        if (positionAnimation->state() == QPropertyAnimation::Paused)
-            positionAnimation->resume();
-        else
-            positionAnimation->start();
-    } else {
-        if (positionAnimation->state() == QPropertyAnimation::Running)
-            positionAnimation->pause();
-    }
+    _q_pauseOrResumeAnimation();
 }
 
 const MWindow* MSpinnerViewPrivate::getMWindow()
@@ -124,6 +114,8 @@ void MSpinnerViewPrivate::_q_resumeAnimation()
     if (q->model()->unknownDuration()) {
         if (positionAnimation->state() == QPropertyAnimation::Paused)
             positionAnimation->resume();
+        else if (positionAnimation->state() == QPropertyAnimation::Stopped)
+            positionAnimation->start();
     }
 }
 
@@ -137,7 +129,7 @@ void MSpinnerViewPrivate::_q_pauseOrResumeAnimation()
 {
     Q_Q(MSpinnerView);
 
-    if (controller->isVisible() && controller->isOnDisplay()) {
+    if (controller->isVisible() && controller->isOnDisplay() && q->model()->unknownDuration()) {
         const MWindow *mWindow = getMWindow();
         if (mWindow) {
             q->connect(mWindow, SIGNAL(switcherEntered()), SLOT(_q_switcherEntered()), Qt::UniqueConnection);
