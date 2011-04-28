@@ -195,13 +195,12 @@ public:
         */
         Show,
         /*!
-          \brief The list index appears on panning,
-            and disappears when panning is stopped.
+          \brief The list index appears on panning, and disappears when panning is stopped.
+            Group titles are displayed on the list index rail, when user performs the panning gesture on it's reactive area.
         */
         Auto,
         /*!
-          \brief The list index appears on tapping
-            right area of the list.
+          \brief Same as Auto, but group titles are not displayed on list index rail in this case.
         */
         Floating
     };
