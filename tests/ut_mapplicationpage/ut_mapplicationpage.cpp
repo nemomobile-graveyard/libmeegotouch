@@ -224,9 +224,11 @@ void Ut_MApplicationPage::testRememberPosition()
 
     m_subject->setRememberPosition(true);
 
+    appWin->sceneManager()->appearSceneWindowNow(m_subject);
+
     m_subject->d_func()->pannableViewport->setPosition(QPointF(0, 10));
-    emit m_subject->sceneWindowStateChanged(MSceneWindow::Disappeared, MSceneWindow::Appeared);
-    emit m_subject->sceneWindowStateChanged(MSceneWindow::Appeared, MSceneWindow::Disappeared);
+
+    appWin->sceneManager()->disappearSceneWindowNow(m_subject);
 
     QCOMPARE(m_subject->d_func()->pannableViewport->position() + QPointF(10, 10), QPointF(10, 20));
 }
