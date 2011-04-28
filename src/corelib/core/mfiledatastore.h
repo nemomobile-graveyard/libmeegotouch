@@ -92,6 +92,16 @@ public:
      */
     bool isWritable() const;
 
+    /*!
+     * Creates values to data store from given hash of key value pairs.
+     * With this method QSetting sync (file write) is done only once, which
+     * provides better performance then createValue() when storing multiple values.
+     *
+     * \param newValues the hash of key-value pairs that are updated to data store.
+     * \return \c true if the data store can be written
+     */
+    bool createValues(const QHash<QString, QVariant> &values);
+
 private:
     /*!
      * Takes a snapshot of keys and values in the underlying QSettings.

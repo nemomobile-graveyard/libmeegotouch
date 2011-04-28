@@ -411,4 +411,77 @@ void Ut_MFileDataStore::testSyncFailure()
     gQSettingsSyncFails = false;
 }
 
+void Ut_MFileDataStore::testCreatingValues()
+{
+    SignalReceptor receptor;
+    connect(m_subject, SIGNAL(valueChanged(QString, QVariant)),
+            &receptor, SLOT(valueChanged(QString, QVariant)));
+
+    QHash<QString, QVariant> values;
+    int amount = 3;
+    for (int i = 0; i < amount; i++) {
+        values.insert(QString("key%1").arg(i), QString("value%1").arg(i));
+    }
+
+    m_subject->createValues(values);
+
+    QCOMPARE(receptor.keys.count(), 3);
+    QCOMPARE(receptor.values.count(), 3);
+    QCOMPARE(settingsMapForNextQSettingsInstance->count(), 3);
+    for (int i = 0; i < amount; i++) {
+        QString key = QString("key%1").arg(i);
+        QString value = QString("value%1").arg(i);
+
+        QCOMPARE(receptor.keys.at(i), key);
+        QCOMPARE(receptor.values.at(i).toString(), value);
+
+        QVERIFY(settingsMapForNextQSettingsInstance->contains(key));
+        QCOMPARE(settingsMapForNextQSettingsInstance->value(key).toString(), value);
+    }
+}
+
+void Ut_MFileDataStore::testUpdatingValuesWithCreateValues()
+{
+    SignalReceptor receptor;
+    connect(m_subject, SIGNAL(valueChanged(QString, QVariant)),
+            &receptor, SLOT(valueChanged(QString, QVariant)));
+
+    QHash<QString, QVariant> values;
+    int amount = 3;
+    for (int i = 0; i < amount; i++) {
+        values.insert(QString("key%1").arg(i), QString("value%1").arg(i));
+    }
+    m_subject->createValues(values);
+
+    // Update value with one old and one new value
+    QHash<QString, QVariant> newValues;
+    int newAmount = 2;
+    for (int i = amount - 1; i < amount + newAmount - 1; i++) {
+        newValues.insert(QString("key%1").arg(i), QString("newValue%1").arg(i));
+    }
+    m_subject->createValues(newValues);
+
+    QCOMPARE(receptor.keys.count(), 5);
+    QCOMPARE(receptor.values.count(), 5);
+    QCOMPARE(settingsMapForNextQSettingsInstance->count(), 4);
+    // Verify old values (index 0&1)
+    int amountOfOldValues = amount - 1;
+    for (int i = 0; i < amountOfOldValues; i++) {
+        QString key = QString("key%1").arg(i);
+        QString value = QString("value%1").arg(i);
+
+        QVERIFY(settingsMapForNextQSettingsInstance->contains(key));
+        QCOMPARE(settingsMapForNextQSettingsInstance->value(key).toString(), value);
+    }
+    // Verify updated values (index 2&3)
+    int amountOfUpdatedValues = amount + newAmount - 1;
+    for (int i = amountOfOldValues; i < amountOfUpdatedValues; i++) {
+        QString key = QString("key%1").arg(i);
+        QString value = QString("newValue%1").arg(i);
+
+        QVERIFY(settingsMapForNextQSettingsInstance->contains(key));
+        QCOMPARE(settingsMapForNextQSettingsInstance->value(key).toString(), value);
+    }
+}
+
 QTEST_APPLESS_MAIN(Ut_MFileDataStore)

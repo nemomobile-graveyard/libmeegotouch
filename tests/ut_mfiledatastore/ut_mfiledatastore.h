@@ -68,6 +68,8 @@ private slots:
     void testFileContentsInvalid();
     void testSettingsFileModifiedExternally();
     void testSyncFailure();
+    void testCreatingValues();
+    void testUpdatingValuesWithCreateValues();
 };
 
 #endif // UT_MFILEDATASTORE_H

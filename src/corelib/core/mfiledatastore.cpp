@@ -329,3 +329,48 @@ void MFileDataStore::directoryChanged(const QString &fileName)
     }
 }
 
+bool MFileDataStore::createValues(const QHash<QString, QVariant> &values)
+{
+    Q_D(MFileDataStore);
+    if (!isWritable()) {
+        return false;
+    }
+
+    bool returnValue = false;
+    // QSettings has a cache so we'll prevent any temporary writes
+    // by checking if the data can be actually stored before doing anything
+    QHash<QString, QVariant> originalValues;
+    foreach (const QString &key, values.keys()) {
+        // Collect original values; add also new values with QVariant()
+        if (d->settings.contains(key)) {
+            originalValues.insert(key, d->settings.value(key));
+        } else {
+            originalValues.insert(key, QVariant());
+        }
+
+        d->settings.setValue(key, values[key]);
+    }
+
+    bool syncOk = doSync(d->settings, d->watcher);
+    if (syncOk) {
+        returnValue = true;
+        // Go through list of changed values and emit valueChanged() signals
+        foreach (const QString &key, originalValues.keys()) {
+            QVariant newValue = d->settings.value(key);
+            if (originalValues[key] != newValue) {
+                emit valueChanged(key, newValue);
+            }
+        }
+    } else {
+        // if sync fails, restore the original values and remove new values
+        foreach (const QString &key, originalValues.keys()) {
+            if (originalValues[key].isNull()) {
+                d->settings.remove(key);
+            } else {
+                d->settings.setValue(key, originalValues[key]);
+            }
+        }
+    }
+
+    return returnValue;
+}

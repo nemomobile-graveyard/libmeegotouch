@@ -44,8 +44,9 @@ class MFileDataStoreStub : public StubBase {
   virtual void takeSnapshot();
   virtual void fileChanged(const QString &fileName);
   virtual void directoryChanged(const QString &fileName);
+  virtual bool createValues(const QHash<QString, QVariant> &values);
   void * d_ptr;
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void MFileDataStoreStub::MFileDataStoreConstructor(const QString &filePath) {
@@ -123,6 +124,12 @@ void MFileDataStoreStub::directoryChanged(const QString &fileName) {
   stubMethodEntered("directoryChanged",params);
 }
 
+bool MFileDataStoreStub::createValues(const QHash<QString, QVariant> &values) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QHash<QString, QVariant> >(values));
+  stubMethodEntered("createValues",params);
+  return stubReturnValue<bool>("createValues");
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -189,5 +196,8 @@ void MFileDataStore::directoryChanged(const QString &fileName) {
   gMFileDataStoreStub->directoryChanged(fileName);
 }
 
+bool MFileDataStore::createValues(const QHash<QString, QVariant> &values) {
+  return gMFileDataStoreStub->createValues(values);
+}
 
 #endif
