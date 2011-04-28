@@ -33,6 +33,7 @@
 #include <mtheme.h>
 #include <mwindow.h>
 #include <mscenemanager.h>
+#include <mscenewindow.h>
 
 #include "../src/corelib/layout/mlayout_p.h"
 
@@ -153,7 +154,13 @@ void Ut_MLayout::init()
     m_button = new QPushButton("Test");
     m_form = new QGraphicsWidget;
     m_proxy = m_scene->addWidget(m_button);
-    m_scene->addItem(m_form);
+
+    // need to put items inside an appeared scene window
+    // otherwise they won't get orientation change events at all.
+    m_scenewindow = new MSceneWindow;
+    appWin->sceneManager()->appearSceneWindowNow(m_scenewindow);
+    m_proxy->setParentItem(m_scenewindow);
+    m_form->setParentItem(m_scenewindow);
 
     MApplication::activeWindow()->setOrientationAngle(M::Angle0);
     Q_ASSERT(0 != m_button);
@@ -169,6 +176,7 @@ void Ut_MLayout::cleanup()
     m_proxy = 0;
     m_button = 0;
     m_form = 0;
+    m_scenewindow = 0;
 }
 
 void Ut_MLayout::testTakeAt()
@@ -3033,7 +3041,7 @@ void Ut_MLayout::testAddingAndRemovingWithSpacing()
 void Ut_MLayout::testSwitchingPoliciesHidesItems()
 {
     QGraphicsWidget *form = new QGraphicsWidget;
-    m_scene->addItem(form);
+    form->setParentItem(m_scenewindow);
     MLayout *layout = new MLayoutTest(form);
     MFlowLayoutPolicy *policy1 = new MFlowLayoutPolicy(layout);
     MFlowLayoutPolicy *policy2 = new MFlowLayoutPolicy(layout);
@@ -3104,7 +3112,7 @@ void Ut_MLayout::testSwitchingPoliciesInsidePolicyHidesItems()
     //Switching policies should show/hide the items correctly.  Note that
     //currently adding the inner layout to only one outer policy is not supported.
     QGraphicsWidget *form = new QGraphicsWidget;
-    m_scene->addItem(form);
+    form->setParentItem(m_scenewindow);
     MLayout *layout = new MLayoutTest(form);
     MFlowLayoutPolicy *policy1 = new MFlowLayoutPolicy(layout);
     MFlowLayoutPolicy *policy2 = new MFlowLayoutPolicy(layout);

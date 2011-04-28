@@ -28,6 +28,7 @@
 class MScene;
 class QGraphicsProxyWidget;
 class QPushButton;
+class MSceneWindow;
 
 class Ut_MLayout : public QObject
 {
@@ -108,6 +109,7 @@ private:
     QGraphicsWidget *m_form;
     MScene *m_scene;
     QGraphicsProxyWidget *m_proxy;
+    MSceneWindow *m_scenewindow;
 };
 
 #endif // Header guard
