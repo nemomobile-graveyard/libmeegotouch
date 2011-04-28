@@ -42,7 +42,9 @@ class QString;
 
         - Text direction can be set.
         - Support for auto wrapping and manual line changes for rich text.
-          Use "<br>" to do a manual line change.
+          Use "<br>" to do a manual line change. "\n" will only act as line change
+          if the text does not contain any other rich text elements. "\n" in a rich
+          text is interpreted as space like in HTML.
         - Support for automatic text eliding. If the label is not fitting into
           the given area, the label is truncated, and elision marks "..." are
           added in the end of the label. For truncation, the label has to be at
@@ -313,6 +315,10 @@ public:
 
     /*!
         \brief Add highlighter object to mlabel.
+
+        \attention Adding a highlighter turns the label into a rich text label.
+        This means that "\n" is interpreted as space like in HTML. Use "<br>" to
+        force a line change.
 
         \sa MLabelHighlighter
     */
