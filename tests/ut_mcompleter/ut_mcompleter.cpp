@@ -178,6 +178,8 @@ void Ut_MCompleter::init()
     m_subject->setCharactersToTrim(QString("<>"));
     m_subject->setAcceptMultipleEntries(true);
     m_editWidget->setText("");
+
+    m_subject->view(); // force creation of the view as the next call needs it
     //set the completing time interval to 0, avoid wait
     (static_cast<MCompleterPrivate *>(m_subject->d_ptr))->completerTimer->setInterval(0);
 
