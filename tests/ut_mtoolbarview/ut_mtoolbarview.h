@@ -29,6 +29,7 @@ class MWidget;
 class MWidgetAction;
 class MAction;
 class MButton;
+class MSceneWindow;
 
 class Ut_MToolBarView : public QObject
 {
@@ -77,6 +78,7 @@ private slots:
 private:
     MToolBar *m_toolbar;
     MToolBarView *m_toolbarview;
+    MSceneWindow *m_scenewindow;
 
     MWidgetAction *createTextEditAction(MWidget *parentWidget);
 

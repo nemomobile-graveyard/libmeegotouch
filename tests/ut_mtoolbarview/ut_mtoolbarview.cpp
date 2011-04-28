@@ -28,6 +28,8 @@
 #include <MTextEdit>
 #include <MWidgetAction>
 #include <MScene>
+#include <MSceneManager>
+#include <MSceneWindow>
 #include <MLayout>
 #include <QGraphicsLinearLayout>
 #include <QPointer>
@@ -50,12 +52,18 @@ void Ut_MToolBarView::initTestCase()
     MTheme::loadCSS(qApp->applicationDirPath() + "/ut_mtoolbarview.css");
 
     appWin = new MApplicationWindow;
+
+    m_scenewindow = new MSceneWindow;
+    appWin->sceneManager()->appearSceneWindowNow(m_scenewindow);
 }
 
 void Ut_MToolBarView::cleanupTestCase()
 {
     delete appWin;
     delete app;
+
+    // gets deleted by the scene that, on its turn, is deleted by appWin
+    m_scenewindow = 0;
 }
 
 void Ut_MToolBarView::init()
@@ -63,7 +71,8 @@ void Ut_MToolBarView::init()
     appWin->setOrientationAngle(M::Angle0);
     m_toolbar = new MToolBar();
     QVERIFY(m_toolbar != 0);
-    appWin->scene()->addItem(m_toolbar);
+    // need to be in a scene window to get orientation change events
+    m_toolbar->setParentItem(m_scenewindow);
 
     m_toolbarview = new MToolBarView(m_toolbar);
     QVERIFY(m_toolbarview != 0);
