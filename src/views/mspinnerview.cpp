@@ -169,8 +169,8 @@ MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
 
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(_q_pauseOrResumeAnimation()));
 
-    connect(controller, SIGNAL(displayEntered()), this, SLOT(_q_pauseOrResumeAnimation()));
-    connect(controller, SIGNAL(displayExited()), this, SLOT(_q_pauseOrResumeAnimation()));
+    connect(controller, SIGNAL(displayEntered()), this, SLOT(_q_resumeAnimation()));
+    connect(controller, SIGNAL(displayExited()), this, SLOT(_q_pauseAnimation()));
 }
 
 
