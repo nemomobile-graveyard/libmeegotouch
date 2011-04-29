@@ -215,8 +215,7 @@ void MTextEditViewPrivate::scrolling()
         return;
     }
 
-    int maxScroll = activeDocument()->size().width() + 2 * activeDocument()->documentMargin()
-                    - q->geometry().width();
+    const int maxScroll(activeDocument()->size().width() - activeDocument()->textWidth());
 
     hscroll += scrollSpeedVertical;
 
@@ -273,7 +272,7 @@ void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event
     } else if (event->pos().x() < (ScrollMargin + paddingLeft) && hscroll > 0) {
         scrollSpeedVertical = -ScrollStep;
     } else if (event->pos().x() > (rect.width() - (ScrollMargin + paddingRight))
-               && hscroll < (activeDocument()->size().width() - rect.width())) {
+               && hscroll < (activeDocument()->size().width() - activeDocument()->textWidth())) {
         scrollSpeedVertical = ScrollStep;
     } else {
         scrollSpeedVertical = 0;
