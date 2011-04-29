@@ -1,3 +1,10 @@
+libmeegotouch (0.21.8-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#250390 - [REG] Collection toolbar menu item is displaying on the top of the screen for the given scenario
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 29 Apr 2011 12:54:35 +0300
+
 libmeegotouch (0.21.8-1) unstable; urgency=low
 
   * New version
