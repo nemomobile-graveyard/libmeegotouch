@@ -1,24 +1,16 @@
-/***************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of libmeegotouch.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+/*
+ * automatically generated with the command line :
+ * /home/dandrader/libmeegotouch/tools/m-servicefwgen -a com.nokia.FtMServiceFwGen2
+ *
+ * /home/dandrader/libmeegotouch/tools/m-servicefwgen ...
+ *
+ * This is an auto-generated file.
+ * This file may have been hand-edited. Look for HAND-EDIT comments
+ * before re-generating it.
+ */
 
-#ifndef FTMSERVICEFWGEN2ADAPTOR_H_1271167524
-#define FTMSERVICEFWGEN2ADAPTOR_H_1271167524
+#ifndef FTMSERVICEFWGEN2ADAPTOR_H_1304079669
+#define FTMSERVICEFWGEN2ADAPTOR_H_1304079669
 
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
