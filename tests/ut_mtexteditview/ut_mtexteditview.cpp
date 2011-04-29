@@ -356,5 +356,67 @@ void Ut_MTextEditView::testSendsScenePositionChangesOnMagnifier()
     QVERIFY(m_controller->flags() & QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
+void Ut_MTextEditView::testIgnoreFocusingTap_data()
+{
+    QTest::addColumn<bool>("focusOnPress");
+
+    QTest::newRow("focus on press") << true;
+    QTest::newRow("focus on release") << false;
+}
+
+void Ut_MTextEditView::testIgnoreFocusingTap()
+{
+    QFETCH(bool, focusOnPress);
+
+    // On focusing tap, text edit should not interact with mouse
+    // (other than becoming focused). Interactions tested here
+    // are longpress and text selecting.
+
+    // large enough for selecting to be possible
+    m_controller->setText("some text");
+    m_controller->resize(500, 50);
+
+    QGraphicsSceneMouseEvent press(QEvent::GraphicsSceneMousePress);
+    QGraphicsSceneMouseEvent move1(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent move2(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent release(QEvent::GraphicsSceneMouseRelease);
+
+    press.setPos(QPointF());
+    release.setPos(QPointF(1000, 0));
+    move1.setPos(press.pos());
+    move2.setPos(release.pos());
+
+    move1.setButtons(Qt::LeftButton);
+    move2.setButtons(Qt::LeftButton);
+
+    for (int tap = 0; tap < 2; ++tap) {
+        const bool firstTap = (tap == 0);
+
+        if (firstTap && focusOnPress) {
+            // Give focus on press.
+            QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                                      Q_ARG(Qt::FocusReason, Qt::MouseFocusReason));
+        }
+
+        m_subject->mousePressEvent(&press);
+        const bool expectedLongPressTimerActive = !firstTap;
+        QCOMPARE(m_subject->d_func()->longPressTimer->isActive(),
+                 expectedLongPressTimerActive);
+
+        m_subject->mouseMoveEvent(&move1);
+        m_subject->mouseMoveEvent(&move2);
+        const bool expectedHasSelection = !firstTap;
+        QCOMPARE(m_controller->hasSelectedText(),
+                 expectedHasSelection);
+
+        if (firstTap && !focusOnPress) {
+            // Give focus on release.
+            QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                                      Q_ARG(Qt::FocusReason, Qt::MouseFocusReason));
+        }
+        m_subject->mouseReleaseEvent(&release);
+    }
+}
+
 QTEST_APPLESS_MAIN(Ut_MTextEditView)
 

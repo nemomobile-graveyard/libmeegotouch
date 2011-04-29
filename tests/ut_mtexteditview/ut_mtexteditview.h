@@ -53,6 +53,8 @@ private slots:
     void testUpdateScrollWhenTextChanged();
     void testSizeHint();
     void testSendsScenePositionChangesOnMagnifier();
+    void testIgnoreFocusingTap_data();
+    void testIgnoreFocusingTap();
 
 private:
     MTextEdit *m_controller;

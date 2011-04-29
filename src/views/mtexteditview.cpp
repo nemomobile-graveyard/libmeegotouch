@@ -100,7 +100,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       promptFocusAnimation(this, "promptOpacity"),
       promptShowHideAnimation(this, "promptOpacity"),
       isPromptVisible(false),
-      focusAnimationDelay(new QTimer(this))
+      focusAnimationDelay(new QTimer(this)),
+      focusingTap(true)
 {
     // copy text options from actual document to prompt
     QTextOption option = document()->defaultTextOption();
@@ -1320,6 +1321,13 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
 
+    // Focus might be given on release so we are only
+    // assuming that this is the focusing tap.
+    if (d->focusingTap) {
+        // Stop event from propagating.
+        return;
+    }
+
     MTextEdit::TextFieldLocationType location;
     int cursor = d->cursorPosition(event);
     d->setMouseTarget(event->pos());
@@ -1360,6 +1368,14 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
+
+    if (d->focusingTap) {
+        if (d->focused) {
+            // Got focus. The next tap will not be focusing tap.
+            d->focusingTap = false;
+        }
+        return;
+    }
 
     MTextEdit::TextFieldLocationType location;
 
@@ -1422,6 +1438,11 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void MTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
+
+    if (d->focusingTap) {
+        return;
+    }
+
     // Only update selection if magnifier is not in use.
     const bool updateSelection = !(d->magnifier && d->magnifier->isAppeared());
     updateCursorPosition(event, updateSelection);
@@ -1812,6 +1833,8 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
 {
     Q_D(MTextEditView);
     Q_UNUSED(reason);
+
+    d->focusingTap = true;
 
     if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason)
         d->hideEditorToolbar();

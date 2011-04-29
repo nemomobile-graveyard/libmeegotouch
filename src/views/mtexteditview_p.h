@@ -174,6 +174,8 @@ protected:
     bool isPromptVisible;
     QTimer * const focusAnimationDelay;
 
+    bool focusingTap;
+
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;
     friend class Ut_MTextEdit;
