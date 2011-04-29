@@ -166,8 +166,6 @@ protected:
     QScopedPointer<MEditorToolbar> editorToolbar;
     bool oldItemSendsScenePositionChanges;
 
-    bool focusReleaseExpected;
-
     qreal currentPromptOpacity;
     QPropertyAnimation promptFocusAnimation;
     QPropertyAnimation promptShowHideAnimation;

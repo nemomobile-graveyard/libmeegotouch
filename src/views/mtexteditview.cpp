@@ -95,7 +95,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       inAutoSelectionClick(false),
       infoBanner(0),
       editActive(false),
-      focusReleaseExpected(false),
       currentPromptOpacity(0.2),
       promptFocusAnimation(this, "promptOpacity"),
       promptShowHideAnimation(this, "promptOpacity"),
@@ -1419,11 +1418,11 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 
-    if (magnifierHidden || (!d->focusReleaseExpected && !insideCurrentPreedit)
+    if (magnifierHidden
+        || !insideCurrentPreedit
         || d->controller->hasSelectedText()) {
         d->showEditorToolbar();
     }
-    d->focusReleaseExpected = false;
 
     d->selecting = false;
     d->inAutoSelectionClick = false;
@@ -1818,8 +1817,6 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
             d->controller->sceneManager()->ensureCursorVisible();
         }
     }
-
-    d->focusReleaseExpected = reason == Qt::MouseFocusReason;
 
     d->focused = true;
 
