@@ -79,6 +79,7 @@ public:
 
     QList<QGraphicsItem *> itemsAtPosition(const QPointF &scenePos,
                                            QWidget *widget) const;
+    bool itemUnderMouseAlreadyFocused(QGraphicsSceneMouseEvent *event) const;
     void handleFocusChange(QGraphicsSceneMouseEvent* mouseEvent);
     void resetMouseGrabber();
     void sendCancelEvent();
@@ -101,6 +102,8 @@ protected:
     QTouchEvent::TouchPoint emuPoint1, emuPoint2;
     bool pinchEmulationEnabled;
     QFontMetrics metrics;
+
+    bool dontChangeFocusOnRelease;
 
     Fps fps;
     FpsLog fpsLog;
