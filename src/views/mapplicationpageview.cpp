@@ -222,6 +222,8 @@ void MApplicationPageView::applyStyle()
 
     MSceneWindowView::applyStyle();
     d->updateTitleLabel();
+
+    d->controller->pannableViewport()->positionIndicator()->setStyleName(style()->positionIndicatorStyleName());
 }
 
 void MApplicationPageView::setupModel()

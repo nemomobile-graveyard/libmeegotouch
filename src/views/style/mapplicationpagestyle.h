@@ -33,6 +33,12 @@ class M_VIEWS_EXPORT MApplicationPageStyle : public MSceneWindowStyle
         \brief Controls whether the title Label should be visible or not.
     */
     M_STYLE_ATTRIBUTE(bool, hasTitleLabel, HasTitleLabel)
+
+    /*!
+        \property MApplicationPageStyle::positionIndicatorStyleName
+        \brief Name of the style to set to the position indicator.
+    */
+    M_STYLE_ATTRIBUTE(QString, positionIndicatorStyleName, PositionIndicatorStyleName)
 };
 
 class M_VIEWS_EXPORT MApplicationPageStyleContainer : public MSceneWindowStyleContainer
