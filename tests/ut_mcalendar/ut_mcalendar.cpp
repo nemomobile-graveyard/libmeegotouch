@@ -4194,7 +4194,7 @@ void Ut_MCalendar::testFormatDateTimeICU_data()
             << "de_DE" // lc_numeric
             << "Europe/Helsinki"
             << "MMM"
-            << "helmikuuta";
+            << "helmi";
     QTest::newRow("de_DE “MMM”")
             << MLocale::GregorianCalendar
             << 2011
