@@ -2906,15 +2906,24 @@ void MTextEdit::setTextInteractionFlags(Qt::TextInteractionFlags flags)
     if (model()->textInteractionFlags() == flags)
         return;
 
+    bool wasEditable = model()->textInteractionFlags() & Qt::TextEditable;
+    bool editable = flags & Qt::TextEditable;
     model()->setTextInteractionFlags(flags);
 
     // if not editable, remove focus and hide cursor. Commit preedit
-    if (!(model()->textInteractionFlags() & Qt::TextEditable)) {
+    if (!editable && wasEditable) {
         d->commitPreedit();
         setFocusPolicy(Qt::NoFocus);
 
-    } else {
+        QObject::disconnect(this, SIGNAL(copyAvailable(bool)),
+                            &(d->cutAction), SLOT(setVisible(bool)));
+        d->cutAction.setVisible(false);
+    } else if (editable && !wasEditable) {
         setFocusPolicy(Qt::ClickFocus);
+
+        QObject::connect(this, SIGNAL(copyAvailable(bool)),
+                         &(d->cutAction), SLOT(setVisible(bool)));
+        d->cutAction.setVisible(hasSelectedText());
     }
 
     // TODO: notify input context if editability changed
