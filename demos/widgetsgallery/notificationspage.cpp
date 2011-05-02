@@ -20,57 +20,29 @@
 #include "notificationspage.h"
 
 #include <MApplication>
-#include <MAbstractCellCreator>
-#include <MBasicListItem>
 #include <MBanner>
 #include <MLayout>
-#include <MList>
+#include <MButton>
 #include <MLinearLayoutPolicy>
-
-#include <QStringListModel>
-#include <QTimer>
-#include <MDialog>
+#include <MSeparator>
 #include <QGraphicsLinearLayout>
 
 #ifdef HAVE_DBUS
 #include <MNotification>
 #endif //HAVE_DBUS
 
-class NotificationsPageCellCreator : public MAbstractCellCreator<MBasicListItem>
-{
-public:
-    NotificationsPageCellCreator() : MAbstractCellCreator<MBasicListItem>() {
-    }
-
-    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
-        Q_UNUSED(index);
-
-        MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
-        if (cell == NULL) {
-            cell = new MBasicListItem(MBasicListItem::SingleTitle);
-            cell->initLayout();
-            cell->setLayoutPosition(M::CenterPosition);
-        }
-        updateCell(index, cell);
-
-        return cell;
-    }
-
-    void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
-        if(!item)
-            return;
-
-        item->setTitle(index.data().toString());
-    }
-};
-
 NotificationsPage::NotificationsPage()
     : TemplatePage(TemplatePage::DialogsSheetsAndBanners),
       policy(0),
-      list(0),
-      notificationPreviewsEnabled(false),
-      notificationPreviewEnabledLabel(0)
+      labelPageTitle(0),
+      labelTitleNotification(0),
+      labelSubtitleNotification(0),
+      textEditTitle(0),
+      textEditSubTitle(0),
+      labelIconEnable(0),
+      checkBoxIconEnable(0),
+      labelPreviewEnable(0),
+      checkBoxPreview(0)
 {
 }
 
@@ -87,31 +59,93 @@ void NotificationsPage::createContent()
     policy->setContentsMargins(0, 0, 0, 0);
     policy->setSpacing(0);
 
-    populateLayout();
+
+    labelPageTitle = new MLabel(centralWidget());
+    labelPageTitle->setStyleName("CommonHeader");
+    policy->addItem(labelPageTitle);
+
+    MSeparator *separator = new MSeparator();
+    separator->setStyleName("CommonHeaderDivider");
+    policy->addItem(separator);
+
+    labelTitleNotification = new MLabel(centralWidget());
+    labelTitleNotification->setStyleName("CommonTitle");
+    policy->addItem(labelTitleNotification);
+
+    textEditTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of title", centralWidget());
+    textEditTitle->setStyleName("CommonSingleInputFieldLabeled");
+    policy->addItem(textEditTitle);
+
+    labelSubtitleNotification = new MLabel(centralWidget());
+    labelSubtitleNotification->setStyleName("CommonTitle");
+    policy->addItem(labelSubtitleNotification);
+
+    textEditSubTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of subtitle", centralWidget());
+    textEditSubTitle->setStyleName("CommonSingleInputFieldLabeled");
+    policy->addItem(textEditSubTitle);
+
+    QGraphicsLinearLayout *l1;
+    l1 = new QGraphicsLinearLayout(Qt::Horizontal, layout);
+    l1->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    l1->setContentsMargins(0,0,0,0);
+    l1->setSpacing(0);
+
+    MSeparator *separator2 = new MSeparator();
+    separator2->setStyleName("CommonHeaderDivider");
+    policy->addItem(separator2);
+
+    labelIconEnable = new MLabel(centralWidget());
+    labelIconEnable->setStyleName("CommonTitle");
+    labelIconEnable->setAlignment(Qt::AlignTop);
+    labelIconEnable->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+    l1->addItem(labelIconEnable);
+
+    checkBoxIconEnable = new MButton(centralWidget());
+    checkBoxIconEnable->setViewType(MButton::checkboxType);
+    checkBoxIconEnable->setCheckable(true);
+    l1->addItem(checkBoxIconEnable);
+
+    policy->addItem(l1);
+
+
+    QGraphicsLinearLayout *l2;
+    l2 = new QGraphicsLinearLayout(Qt::Horizontal, layout);
+    l2->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    l2->setContentsMargins(0,0,0,0);
+    l2->setSpacing(0);
+
+    labelPreviewEnable = new MLabel(centralWidget());
+    labelPreviewEnable->setStyleName("CommonTitle");
+    labelPreviewEnable->setAlignment(Qt::AlignTop);
+    labelPreviewEnable->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+    l2->addItem(labelPreviewEnable);
+
+    checkBoxPreview = new MButton(centralWidget());
+    checkBoxPreview->setViewType(MButton::checkboxType);
+    checkBoxPreview->setCheckable(true);
+    checkBoxPreview->setChecked(true);
+    l2->addItem(checkBoxPreview);
+    policy->addItem(l2);
+    connect(checkBoxPreview, SIGNAL(clicked()), this, SLOT(toggleNotificationPreviewEnabled()));
+
+    MButton * createNotification = new MButton(centralWidget());
+    createNotification->setStyleName("CommonSingleButton");
+    createNotification->setText("Send notification");
+
+    connect(createNotification, SIGNAL(clicked()), this, SLOT(sendNotification()));
+    policy->addItem(createNotification, Qt::AlignCenter);
+
+    this->footnote = new MLabel(centralWidget());
+    footnote->setStyleName("CommonTitle");
+    footnote->setWordWrap(true);
+    footnote->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    policy->addItem(footnote);
+    policy->addStretch();
 
     retranslateUi();
 }
 
-void NotificationsPage::populateLayout()
-{    
-    notificationPreviewEnabledLabel = new MLabel(previewEnabledString(notificationPreviewsEnabled), centralWidget());
-    policy->addItem(notificationPreviewEnabledLabel);
-
-    list = new MList(centralWidget());
-    list->setCellCreator(new NotificationsPageCellCreator());
-    list->setItemModel(new QStringListModel(list));
-    policy->addItem(list, Qt::AlignCenter);
-
-    connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
-}
-
-void NotificationsPage::itemClicked(const QModelIndex &index)
-{
-    if (index.row() == 0)
-        sendNotification();
-    else if (index.row() == 1)
-        toggleNotificationPreviewEnabled();
-}
 
 QString NotificationsPage::timedemoTitle()
 {
@@ -121,7 +155,23 @@ QString NotificationsPage::timedemoTitle()
 void NotificationsPage::sendNotification()
 {
 #ifdef HAVE_DBUS
-    MNotification *notification = new MNotification("widgetsgalleryeventtype.conf", "This is a notification", "This is a notification");
+    MNotification *notification = new MNotification("widgetsgalleryeventtype.conf", textEditTitle->text(), textEditSubTitle->text());
+
+    if (checkBoxIconEnable->isChecked()) {
+
+        QStringList iconids;
+
+        iconids << "icon-l-activities" << "icon-l-backup" << "icon-l-browser" << "icon-l-calculator"
+                << "icon-l-calendar-reminder" << "icon-l-calendar" << "icon-l-camera" << "icon-l-clock"
+                << "icon-l-common-video-playback" << "icon-l-contacts" << "icon-l-content-manager"
+                << "icon-l-conversation" << "icon-l-documents"
+                << "icon-l-drive" << "icon-l-email" << "icon-l-extras" << "icon-l-gallery"
+                << "icon-l-games" << "icon-l-maps" << "icon-l-me" << "icon-l-mms" << "icon-l-music"
+                << "icon-l-notes" << "icon-l-office-tools" << "icon-l-ovi-store" << "icon-l-ovi"
+                << "icon-l-rss" << "icon-l-search" << "icon-l-settings";
+
+        notification->setImage(iconids.at(qrand () % iconids.count()));
+    }
     notification->publish();
     delete notification;
 #endif //HAVE_DBUS
@@ -129,29 +179,26 @@ void NotificationsPage::sendNotification()
 
 void NotificationsPage::toggleNotificationPreviewEnabled()
 {
-    notificationPreviewsEnabled = !notificationPreviewsEnabled;
-    MApplication::activeWindow()->setNotificationPreviewsVisible(notificationPreviewsEnabled);
-
-    notificationPreviewEnabledLabel->setText(previewEnabledString(notificationPreviewsEnabled));
+    MApplication::activeWindow()->setNotificationPreviewsVisible(checkBoxPreview->isChecked());
 }
 
 void NotificationsPage::retranslateUi()
 {
     //% "Notifications"
     setTitle(qtTrId("xx_notificationspage_title"));
+    //% "Notifications generator"
+    labelPageTitle->setText(qtTrId("xx_notificationspage_page_title"));
+    //% "Title"
+    labelTitleNotification->setText(qtTrId("xx_notificationspage_notification_title"));
+    //% "Subtitle"
+    labelSubtitleNotification->setText(qtTrId("xx_notificationspage_notification_subtitle"));
+    //% "Enable icon"
+    labelIconEnable->setText(qtTrId("xx_notificationspage_notification_icon_label"));
+    //% "Enable previews"
+    labelPreviewEnable->setText(qtTrId("xx_notificationspage_notification_previews_label"));
+   //% "Note: the title and subtitle will appear on inverted position at the events screen"
+    footnote->setText(qtTrId("xx_notificationspage_notification_footnote"));
+
     if (!isContentCreated())
         return;
-
-    QStringList bannerTypes;
-    //% "Send notification"
-    bannerTypes << qtTrId("xx_wg_notifications_page_send_notification");
-    //% "Toggle preview banner shown"
-    bannerTypes << qtTrId("xx_wg_notifications_page_toggle_preview_banner_show");
-
-    static_cast<QStringListModel *>(list->itemModel())->setStringList(bannerTypes);
-}
-
-QString NotificationsPage::previewEnabledString(const bool &enabled) const
-{
-    return (enabled ? "Previews shown" : "Previews not shown");
 }

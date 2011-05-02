@@ -22,8 +22,9 @@
 
 #include "templatepage.h"
 
-#include <QModelIndex>
 #include <MLabel>
+#include <MTextEdit>
+#include <MButton>
 
 class MList;
 
@@ -32,29 +33,35 @@ class NotificationsPage : public TemplatePage
     Q_OBJECT
 
 public:
+
     NotificationsPage();
 
     QString timedemoTitle();
 
     void createContent();
-    void populateLayout();
+
+protected:
+
+    void retranslateUi();
+
+private Q_SLOTS:
 
     void sendNotification();
     void toggleNotificationPreviewEnabled();
 
-protected:
-    void retranslateUi();
-
-private Q_SLOTS:
-    void itemClicked(const QModelIndex &index);
-
 private:
-    QString previewEnabledString(const bool &enabled) const;
 
     MLinearLayoutPolicy *policy;
-    MList *list;
-    bool notificationPreviewsEnabled;
-    MLabel *notificationPreviewEnabledLabel;
+    MLabel * labelPageTitle;
+    MLabel * labelTitleNotification;
+    MLabel * labelSubtitleNotification;
+    MTextEdit * textEditTitle;
+    MTextEdit * textEditSubTitle;
+    MLabel * labelIconEnable;
+    MButton * checkBoxIconEnable;
+    MLabel * labelPreviewEnable;
+    MButton * checkBoxPreview;
+    MLabel *footnote;
 };
 
 #endif
