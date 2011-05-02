@@ -26,7 +26,9 @@ greaterThan(ICUVERSION, 4.4) {
                  data/pt_PT.txt \
                  data/uk.txt \
                  data/ur.txt \
-                 data/zh_Hant.txt
+                 data/zh_Hant.txt \
+                 data/zh_Hant_HK.txt \
+                 data/zh_HK.txt
     LANGTXT    = data/lang/en.txt \
                  data/lang/es.txt \
                  data/lang/fr.txt \

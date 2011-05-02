@@ -791,6 +791,34 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "hh:mm:ss a"
         << "hh:mm:ss a z"
         << "hh:mm:ss a zzzz";
+    QTest::newRow("it_IT, Gregorian, TwentyFourHourTimeFormat24h")
+        << "fi_FI"
+        << "fi_FI"
+        << "it_IT@mix-time-and-language=no" // lc_time
+        << MLocale::TwentyFourHourTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "dd/MM/yy"
+        << "dd/MMM/y"
+        << "dd MMMM y"
+        << "cccc d LLLL y"
+        << "HH:mm"
+        << "HH:mm:ss"
+        << "HH:mm:ss z"
+        << "HH:mm:ss zzzz";
+    QTest::newRow("zh_HK, Gregorian, TwelveHourTimeFormat24h")
+        << "fi_FI"
+        << "fi_FI"
+        << "zh_HK@mix-time-and-language=no" // lc_time
+        << MLocale::TwelveHourTimeFormat24h
+        << MLocale::GregorianCalendar
+        << "yy/M/d"
+        << "yyyy/M/d"
+        << "y年M月d日"
+        << "y年M月d日EEEE"
+        << "ah:mm"
+        << "ahh:mm:ss"
+        << "zah時mm分ss秒"
+        << "zzzzah時mm分ss秒";
 }
 
 void Ut_MCalendar::testIcuFormatString()

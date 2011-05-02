@@ -1,0 +1,21 @@
+zh_Hant_HK{
+    calendar{
+        gregorian{
+            DateTimePatterns{
+                "zzzzah時mm分ss秒",
+                "zah時mm分ss秒",
+                "ahh:mm:ss",
+                "ah:mm",
+                "y年M月d日EEEE",
+                "y年M月d日",
+                "yyyy/M/d",
+                "yy/M/d",
+                "{1} {0}",
+                "{1}{0}",
+                "{1}{0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
+        }
+    }
+}
