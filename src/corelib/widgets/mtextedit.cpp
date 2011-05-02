@@ -430,6 +430,12 @@ void MTextEditPrivate::init()
 
 void MTextEditPrivate::_q_updatePasteActionState()
 {
+    Q_Q(const MTextEdit);
+
+    if (q->isReadOnly()) {
+        return;
+    }
+
     const bool hasText = !QApplication::clipboard()->text().isEmpty();
     pasteAction.setVisible(hasText);
 }
@@ -2918,12 +2924,14 @@ void MTextEdit::setTextInteractionFlags(Qt::TextInteractionFlags flags)
         QObject::disconnect(this, SIGNAL(copyAvailable(bool)),
                             &(d->cutAction), SLOT(setVisible(bool)));
         d->cutAction.setVisible(false);
+        d->pasteAction.setVisible(false);
     } else if (editable && !wasEditable) {
         setFocusPolicy(Qt::ClickFocus);
 
         QObject::connect(this, SIGNAL(copyAvailable(bool)),
                          &(d->cutAction), SLOT(setVisible(bool)));
         d->cutAction.setVisible(hasSelectedText());
+        d->_q_updatePasteActionState();
     }
 
     // TODO: notify input context if editability changed
