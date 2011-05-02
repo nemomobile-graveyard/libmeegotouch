@@ -1495,7 +1495,7 @@ void Ut_MTextEdit::testDoubleClick_data()
 {
     QTest::addColumn<Qt::TextInteractionFlag>("interactionFlag");
 
-    QTest::newRow("selectionEnabled") << Qt::TextSelectableByMouse;
+    QTest::newRow("selectionEnabled") << Qt::TextEditorInteraction;
     QTest::newRow("selectionDisabled") << Qt::NoTextInteraction;
 }
 

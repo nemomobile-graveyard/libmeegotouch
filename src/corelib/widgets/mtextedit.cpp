@@ -2188,7 +2188,8 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                     d->sendCopyAvailable(true);
                     d->doubleClickSelectionTime = QTime::currentTime();
                 }
-            } else if (inputMethodCorrectionEnabled()) {
+            } else if (inputMethodCorrectionEnabled()
+                       && !isReadOnly()) {
                 // clicks on words remove them from the normal contents and makes them preedit.
                 const int start(d->previousReleaseWordStart);
                 const int end(d->previousReleaseWordEnd);
