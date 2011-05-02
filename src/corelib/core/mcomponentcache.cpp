@@ -123,6 +123,12 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
 {
     if (mApplicationInstance == 0) {
         mApplicationInstance = new MApplication(argc, argv, appIdentifier, service);
+
+ #ifdef Q_WS_X11
+	// set customized X11 IO error handler if cache wasn't populated
+    	XSetIOErrorHandler(boostedapp_xio_errhandler);
+ #endif //Q_WS_X11
+
     } else {
         if (canUseCachedApp(argc, argv, appIdentifier)) {
             if(argc > ARGV_LIMIT) {
