@@ -1,3 +1,14 @@
+libmeegotouch (0.21.10-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#236902 - sockets changes for mthemedaemon
+  * Fixes: NB#236346, Not possible to place cursor after the last characted in text input field
+  * Fixes: NB#238974 - Date is not fitting in screen in event editor
+  * Fixes: NB#247795 - Legal bug in libmeegotouch
+  * Fixes: NB#250354 Allow multilength variant strings with wordwrap
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 02 May 2011 15:30:06 +0300
+
 libmeegotouch (0.21.9-1) unstable; urgency=low
 
   * New version
