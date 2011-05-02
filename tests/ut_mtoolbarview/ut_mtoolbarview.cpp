@@ -33,6 +33,7 @@
 #include <MLayout>
 #include <QGraphicsLinearLayout>
 #include <QPointer>
+#include <morientationchangeevent.h>
 
 #include "ut_mtoolbarview.h"
 #include "mtoolbarview_p.h"
@@ -54,7 +55,6 @@ void Ut_MToolBarView::initTestCase()
     appWin = new MApplicationWindow;
 
     m_scenewindow = new MSceneWindow;
-    appWin->sceneManager()->appearSceneWindowNow(m_scenewindow);
 }
 
 void Ut_MToolBarView::cleanupTestCase()
@@ -69,6 +69,7 @@ void Ut_MToolBarView::cleanupTestCase()
 void Ut_MToolBarView::init()
 {
     appWin->setOrientationAngle(M::Angle0);
+    appWin->sceneManager()->appearSceneWindowNow(m_scenewindow);
     m_toolbar = new MToolBar();
     QVERIFY(m_toolbar != 0);
     // need to be in a scene window to get orientation change events
@@ -1135,6 +1136,37 @@ void Ut_MToolBarView::testLabelOnlyAreNotCommonButtonsInTabBar()
 
     QVERIFY(buttonIconAndLabel->viewType() == "toolbartab");
     QVERIFY(buttonLabelOnly->viewType() == "toolbartab");
+}
+
+void Ut_MToolBarView::testGetOrientationChangeEventsWhenInDisappearedSceneWindow()
+{
+    EventSpy toolbarEventSpy;
+
+    appWin->setLandscapeOrientation();
+    appWin->sceneManager()->disappearSceneWindowNow(m_scenewindow);
+
+    m_toolbar->installEventFilter(&toolbarEventSpy);
+
+    appWin->setPortraitOrientation();
+
+    QVERIFY(toolbarEventSpy.eventTypesReceived.contains(MOrientationChangeEvent::eventNumber()));
+}
+
+void Ut_MToolBarView::testIsEmptyPropertyIsUpdatedWhenInDisappearedSceneWindow()
+{
+    MAction *actionIconAndLabel = new MAction("icon-l-search", "action", m_toolbar);
+    actionIconAndLabel->setLocation(MAction::ToolBarPortraitLocation);
+    m_toolbar->addAction(actionIconAndLabel);
+
+    appWin->setLandscapeOrientation();
+
+    QCOMPARE(m_toolbar->property("isEmpty").toBool(), true);
+
+    appWin->sceneManager()->disappearSceneWindowNow(m_scenewindow);
+
+    appWin->setPortraitOrientation();
+
+    QCOMPARE(m_toolbar->property("isEmpty").toBool(), false);
 }
 
 QTEST_APPLESS_MAIN(Ut_MToolBarView)

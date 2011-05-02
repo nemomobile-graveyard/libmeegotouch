@@ -74,6 +74,8 @@ private slots:
     void testLabelOnlyButtonsHaveDifferentStylename();
     void testLabelOnlyAreCommonButtonsInToolBar();
     void testLabelOnlyAreNotCommonButtonsInTabBar();
+    void testGetOrientationChangeEventsWhenInDisappearedSceneWindow();
+    void testIsEmptyPropertyIsUpdatedWhenInDisappearedSceneWindow();
 
 private:
     MToolBar *m_toolbar;
@@ -85,6 +87,22 @@ private:
     void createDummyActions(int count);
     MAction *createAction();
     bool isVisible(MButton *button);
+};
+
+class EventSpy : public QObject
+{
+    Q_OBJECT
+public:
+    EventSpy() {}
+    virtual ~EventSpy() {}
+
+    virtual bool eventFilter (QObject *watched, QEvent *event) {
+        Q_UNUSED(watched)
+        eventTypesReceived << event->type();
+        return false;
+    }
+
+    QList<QEvent::Type> eventTypesReceived;
 };
 
 #endif
