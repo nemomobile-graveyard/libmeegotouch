@@ -89,7 +89,8 @@ MScenePrivate::MScenePrivate() :
         emuPoint1(1),
         emuPoint2(2),
         pinchEmulationEnabled(false),
-        metrics(TextFont)
+        metrics(TextFont),
+        dontChangeFocusOnRelease(false)
 {
 }
 
@@ -501,6 +502,52 @@ QList<QGraphicsItem *> MScenePrivate::itemsAtPosition(const QPointF &scenePos,
                              Qt::DescendingOrder, viewTransform);
 }
 
+bool MScenePrivate::handleGraphicsSceneMousePress(QGraphicsSceneMouseEvent *event)
+{
+    Q_Q(MScene);
+    QGraphicsItem *focusedItemBefore = q->focusItem();
+    bool retValue = q->QGraphicsScene::event(event);
+
+    // If focus is touched by QGraphicsScene we leave it alone in release handler.
+    bool qtSetFocus = focusedItemBefore != q->focusItem();
+    dontChangeFocusOnRelease = qtSetFocus
+                               || itemUnderMouseAlreadyFocused(event);
+    return retValue;
+}
+
+bool MScenePrivate::handleGraphicsSceneMouseRelease(QGraphicsSceneMouseEvent *event)
+{
+    Q_Q(MScene);
+    if (!dontChangeFocusOnRelease) {
+        handleFocusChange(event);
+    }
+    bool retValue = q->QGraphicsScene::event(event);
+    resetMouseGrabber();
+    return retValue;
+}
+
+bool MScenePrivate::itemUnderMouseAlreadyFocused(QGraphicsSceneMouseEvent *event) const
+{
+    Q_Q(const MScene);
+
+    bool focused = false;
+    QList<QGraphicsItem *> items = itemsAtPosition(event->scenePos(),
+                                                   event->widget());
+    foreach (QGraphicsItem *item, items) {
+        QGraphicsWidget *widget = item->isWidget() ?
+                                  static_cast<QGraphicsWidget *>(item) : 0;
+        // Mimic the same checks as QGraphicsScene does in focus setting.
+        if (widget
+            && widget->isEnabled()
+            && widget->flags() & QGraphicsItem::ItemIsFocusable
+            && widget->focusPolicy() == Qt::ClickFocus) {
+            focused = (q->focusItem() == item);
+            break;
+        }
+    }
+    return focused;
+}
+
 void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
 {
     Q_Q(MScene);
@@ -719,17 +766,13 @@ bool MScene::event(QEvent *event)
     if (d->eventEmulateTwoFingerGestures(event))
         return true;
 
-    if (event->type() == QEvent::GraphicsSceneMouseRelease) {
-        d->handleFocusChange(static_cast<QGraphicsSceneMouseEvent*>(event));
+    if (event->type() == QEvent::GraphicsSceneMousePress) {
+        return d->handleGraphicsSceneMousePress(static_cast<QGraphicsSceneMouseEvent *>(event));
+    } else if (event->type() == QEvent::GraphicsSceneMouseRelease) {
+        return d->handleGraphicsSceneMouseRelease(static_cast<QGraphicsSceneMouseEvent *>(event));
     }
 
-    bool retValue = QGraphicsScene::event(event);
-
-    if (event->type() == QEvent::GraphicsSceneMouseRelease) {
-        d->resetMouseGrabber();
-    }
-
-    return retValue;
+    return QGraphicsScene::event(event);
 }
 
 void MScene::drawForeground(QPainter *painter, const QRectF &rect)
