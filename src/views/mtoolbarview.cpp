@@ -36,6 +36,8 @@
 #include "mtoolbarview_p.h"
 #include "mscalableimage.h"
 #include "mscenemanager.h"
+#include <morientationchangeevent.h>
+#include <mscene.h>
 
 MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
     : QObject(),
@@ -50,7 +52,8 @@ MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
       widgetAlignment(Qt::AlignHCenter),
       itemsEnabled(true),
       alignmentMargins(0),
-      centerOffset(0)
+      centerOffset(0),
+      lastOrientationChangeEventReceived(0)
 {
     this->controller = controller;
     controller->installEventFilter(this);
@@ -80,6 +83,8 @@ MToolBarViewPrivate::~MToolBarViewPrivate()
     removedActionsButtons.clear();
     delete layout;
     layout = NULL;
+
+    delete lastOrientationChangeEventReceived;
 }
 
 void MToolBarViewPrivate::init()
@@ -103,6 +108,8 @@ void MToolBarViewPrivate::init()
     foreach(QAction *action, controller->actions()) {
         add(action);
     }
+
+    onSceneManagerChanged(controller->sceneManager());
 
     updateWidgetAlignment();
 }
@@ -734,6 +741,47 @@ void MToolBarViewPrivate::refreshDisabledWidgets() const
     }
 }
 
+void MToolBarViewPrivate::_q_updateWidgetOrientation(M::Orientation orientation)
+{
+    if (!lastOrientationChangeEventReceived
+            || *lastOrientationChangeEventReceived != orientation) {
+        MOrientationChangeEvent orientationEvent(orientation);
+        controller->scene()->sendEvent(controller, &orientationEvent);
+    }
+}
+
+void MToolBarViewPrivate::onSceneManagerChanged(MSceneManager *newSceneManager)
+{
+    Q_Q(MToolBarView);
+
+    // This view must always have its orientation info up to date even if it's
+    // inside a disappeared scene window (only scene windows whose state != Disappeared get
+    // orientation change events)
+    // That's needed in order for us to provide an up-to-date "isEmpty" property.
+    // "isEmpty" may change from one orientation to another as there can be toolbar actions
+    // that are specific to a given orientation.
+
+    if (sceneManagerPointer.data() == newSceneManager)
+        return;
+
+    if (!sceneManagerPointer.isNull()) {
+        sceneManagerPointer.data()->disconnect(
+                    SIGNAL(orientationChanged(M::Orientation)),
+                    q, SLOT(_q_updateWidgetOrientation(M::Orientation)));
+        sceneManagerPointer.clear();
+    }
+
+    sceneManagerPointer = newSceneManager;
+
+    if (newSceneManager) {
+        bool ok;
+        ok = q->connect(newSceneManager,
+                SIGNAL(orientationChanged(M::Orientation)),
+                SLOT(_q_updateWidgetOrientation(M::Orientation)));
+        if (!ok) qFatal("signal connection failed");
+    }
+
+}
 
 MToolBarView::MToolBarView(MToolBar *controller) :
     MWidgetView(controller),
@@ -818,9 +866,30 @@ void MToolBarView::orientationChangeEvent(MOrientationChangeEvent *event)
 {
     Q_D(MToolBarView);
 
+    if (!d->lastOrientationChangeEventReceived)
+        d->lastOrientationChangeEventReceived = new M::Orientation;
+
+    *d->lastOrientationChangeEventReceived = event->orientation();
+
     MWidgetView::orientationChangeEvent(event);
 
     d->refreshDisabledWidgets();
+}
+
+void MToolBarView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    Q_D(MToolBarView);
+
+    if (change == QGraphicsItem::ItemSceneHasChanged) {
+        QGraphicsScene* newScene = value.value<QGraphicsScene*>();
+        MScene *newMScene = qobject_cast<MScene*>(newScene);
+        if (newMScene) {
+            d->onSceneManagerChanged(newMScene->sceneManager());
+        } else {
+            d->onSceneManagerChanged(0);
+        }
+    }
+    MWidgetView::notifyItemChange(change, value);
 }
 
 // bind view and controller together

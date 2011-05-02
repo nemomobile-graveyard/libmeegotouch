@@ -78,6 +78,7 @@ public:
     virtual QRectF boundingRect() const;
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual void orientationChangeEvent(MOrientationChangeEvent *event);
+    virtual void notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
     //! \reimp_end
 
 protected:
@@ -100,6 +101,7 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_groupButtonClicked(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_groupActionToggled(bool))
+    Q_PRIVATE_SLOT(d_func(), void _q_updateWidgetOrientation(M::Orientation))
 
 #ifdef UNIT_TEST
     friend class Ut_MToolBarView;
