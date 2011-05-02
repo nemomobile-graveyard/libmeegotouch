@@ -31,6 +31,8 @@
 #include "mapplicationwindow.h"
 #include "mscenemanager.h"
 
+#include <MCancelEvent>
+
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsLinearLayout>
 #include <QTextDocumentFragment>
@@ -405,7 +407,6 @@ void MCompleterView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     style()->pressFeedback().play();
     style().setModePressed();
     applyStyle();
-    update();
     event->accept();
 }
 
@@ -415,9 +416,15 @@ void MCompleterView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     style()->releaseFeedback().play();
     style().setModeDefault();
     applyStyle();
-    update();
     if (d->controller && d->controller->isVisible())
         d->controller->confirm();
+    event->accept();
+}
+
+void MCompleterView::cancelEvent(MCancelEvent *event)
+{
+    style().setModeDefault();
+    applyStyle();
     event->accept();
 }
 

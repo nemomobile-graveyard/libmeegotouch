@@ -44,6 +44,7 @@ protected:
     //! \reimp
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void cancelEvent(MCancelEvent *event);
     //! \reimp_end
 
 protected Q_SLOTS:
