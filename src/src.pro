@@ -5,7 +5,8 @@ SUBDIRS += \
     views \
     settings \
     extensions \
-    translations
+    translations \
+    preloader \
 
 macx:SUBDIRS -= settings extensions
 

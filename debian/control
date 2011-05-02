@@ -105,6 +105,23 @@ Depends: libmeegotouchviews0 (= ${Source-Version})
 Description: libmeegotouch debug package
  libmeegotouch debug symbols.
 
+Package: libmeegotouchpreloader0
+Section: libs
+Architecture: any
+Depends: ${misc:Depends},
+ ${launcher:Depends},
+ ${shlibs:Depends},
+ libmeegotouchcore0 (= ${Source-Version})
+Description: MeeGo Touch preloader library
+ MeeGo Touch preloader framework library
+
+Package: libmeegotouchpreloader0-dbg
+Section: devel
+Architecture: any
+Depends: libmeegotouchpreloader0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
+
 Package: libmeegotouch-bin
 Section: utils
 Architecture: any
