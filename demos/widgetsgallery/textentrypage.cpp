@@ -624,6 +624,22 @@ void TextEntryPage::createContent()
     Entries << uneditableTextEdit;
     row++;
 
+    // read only field
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+    Entries.last()->setStyleName("CommonSingleInputFieldLabeled");
+    Entries.last()->setReadOnly(true);
+    readOnlyEntryIndex = Entries.size() - 1;
+
+    labelReadOnly = new MLabel(centralWidget());
+    labelReadOnly->setStyleName("CommonFieldLabel");
+    labelReadOnly->setWordWrap(true);
+    labelReadOnly->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+    labelReadOnly->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(labelReadOnly);
+    layoutPolicy->addItem(Entries.last());
+    row++;
+
     // Auto capitalisation button (Toggle)
     button1 = new MButton(panel);
     button1->setStyleName("CommonSingleButton");
@@ -718,6 +734,12 @@ void TextEntryPage::retranslateUi()
     labelErrorHighlighting->setText(qtTrId("xx_error_highlighting_label"));
     //% "Uneditable Text Edit:"
     uneditableTextEditLabel->setText(qtTrId("xx_textentry_uneditable_textedit"));
+
+    //% "Read only field"
+    labelReadOnly->setText(qtTrId("xx_textentry_readonly_label"));
+
+    //% "This is a read only text field"
+    Entries.at(readOnlyEntryIndex)->setText(qtTrId("xx_textentry_readonly"));
 
     //% "Auto capitalisation"
     button1->setText(qtTrId("xx_auto_capitalisation"));

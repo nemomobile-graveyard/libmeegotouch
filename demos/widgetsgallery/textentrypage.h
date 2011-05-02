@@ -95,6 +95,7 @@ private:
     QPointer<MLabel> labelCustomToolbar2;
     QPointer<MLabel> labelErrorHighlighting;
     QPointer<MLabel> uneditableTextEditLabel;
+    QPointer<MLabel> labelReadOnly;
 
     QPointer<MLabel> labelHeader1;
     QPointer<MButton> button1;
@@ -103,6 +104,8 @@ private:
 
     QList<MLabel *> labels;
     QList<MTextEdit *> Entries;
+
+    int readOnlyEntryIndex;
 
     bool m_autoCapitalisation;
     bool m_errorCorrection;
