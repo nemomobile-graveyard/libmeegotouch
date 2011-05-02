@@ -262,7 +262,7 @@ void Pt_MCalendar::benchmarkIcuFormatString()
 {
     QString language("en_US");   // will be overridden
     QString lcMessages("en_US"); // should not matter
-    QString lcTime("fi_FI");     // this overrides language
+    QString lcTime("fi_FI@mix-time-and-language=no");     // this overrides language
     QString lcNumeric("en_US");  // should not matter, no localized numbers involved
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
