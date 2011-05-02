@@ -880,7 +880,7 @@ void MThemeImagesDirectory::addImageResource(const char *path, const char *filen
         }
     }
 
-    delete basename;
+    delete[] basename;
 }
 
 void MThemeImagesDirectory::addSvgResource(const char *path, bool localized)
@@ -918,7 +918,7 @@ void MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawl
         char *s = dirs.takeFirst();
         DIR *d = opendir(s);
         if (!d) {
-            delete s;
+            delete[] s;
             continue;
         }
 
@@ -950,8 +950,8 @@ void MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawl
             }
         }
 
-        delete s;
-        delete fnbuf;
+        delete[] s;
+        delete[] fnbuf;
         closedir(d);
     }
 }
