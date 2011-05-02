@@ -909,7 +909,9 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
                 if (error) {
                     *error = false;
                 }
-                return createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
+                MStyleSheetSelector *selector = createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
+                qDeleteAll(attributeList);
+                return selector;
             }
 
             // Parse attribute, if it fails, terminate
@@ -920,7 +922,9 @@ MStyleSheetSelector *MStyleSheetParserPrivate::parseSelector(QFile &stream, bool
                         className + '[' + classType + "]#" + objectName;
 
                 if (syntaxMode == MStyleSheetParser::RelaxedSyntax) {
-                    return createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
+                    MStyleSheetSelector *selector = createSelector(objectName, className, classType, orientation, mode, parentName, parentObjectName, flags, attributeList);
+                    qDeleteAll(attributeList);
+                    return selector;
                 } else {
 		    // release allocated attributes
                     qDeleteAll(attributeList);
