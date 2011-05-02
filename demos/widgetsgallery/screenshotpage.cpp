@@ -133,7 +133,7 @@ void ScreenShotPage::screenshotDelay()
 
 void ScreenShotPage::retranslateUi()
 {
-    /*% "You can set the number of seconds before to take the screenshot. Set the timer and press the button after that a screenshot will be taken.*/
+    /*% "You can set the number of seconds before to take the screenshot. Set the timer and press the button after that a screenshot will be taken."*/
     labelDescription->setText(qtTrId("xx_label_description_screenshot"));
 }
 

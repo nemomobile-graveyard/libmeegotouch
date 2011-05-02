@@ -286,7 +286,7 @@ void SheetsPage::populateFullscreenPhotoSheetHeader(MSheet *sheet)
 
     //% "Done"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_done"), basicHeader));
-    //% "Save
+    //% "Save"
     basicHeader->setPositiveAction(new QAction(qtTrId("xx_wg_sheets_save"), basicHeader));
     basicHeader->connect(basicHeader->negativeAction(), SIGNAL(triggered()), sheet, SLOT(dismiss()));
     basicHeader->connect(basicHeader->positiveAction(), SIGNAL(triggered()), this, SLOT(processFullscreenSave()));
