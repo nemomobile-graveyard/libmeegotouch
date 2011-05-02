@@ -77,6 +77,8 @@ public:
     bool eventEmulatePinch(QEvent *event);
     void fillMarginRectWithPattern(QPainter *painter, const QRectF& rect, int thickness);
 
+    bool handleGraphicsSceneMousePress(QGraphicsSceneMouseEvent *event);
+    bool handleGraphicsSceneMouseRelease(QGraphicsSceneMouseEvent *event);
     QList<QGraphicsItem *> itemsAtPosition(const QPointF &scenePos,
                                            QWidget *widget) const;
     bool itemUnderMouseAlreadyFocused(QGraphicsSceneMouseEvent *event) const;

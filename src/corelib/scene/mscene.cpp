@@ -502,6 +502,30 @@ QList<QGraphicsItem *> MScenePrivate::itemsAtPosition(const QPointF &scenePos,
                              Qt::DescendingOrder, viewTransform);
 }
 
+bool MScenePrivate::handleGraphicsSceneMousePress(QGraphicsSceneMouseEvent *event)
+{
+    Q_Q(MScene);
+    QGraphicsItem *focusedItemBefore = q->focusItem();
+    bool retValue = q->QGraphicsScene::event(event);
+
+    // If focus is touched by QGraphicsScene we leave it alone in release handler.
+    bool qtSetFocus = focusedItemBefore != q->focusItem();
+    dontChangeFocusOnRelease = qtSetFocus
+                               || itemUnderMouseAlreadyFocused(event);
+    return retValue;
+}
+
+bool MScenePrivate::handleGraphicsSceneMouseRelease(QGraphicsSceneMouseEvent *event)
+{
+    Q_Q(MScene);
+    if (!dontChangeFocusOnRelease) {
+        handleFocusChange(event);
+    }
+    bool retValue = q->QGraphicsScene::event(event);
+    resetMouseGrabber();
+    return retValue;
+}
+
 bool MScenePrivate::itemUnderMouseAlreadyFocused(QGraphicsSceneMouseEvent *event) const
 {
     Q_Q(const MScene);
@@ -743,20 +767,12 @@ bool MScene::event(QEvent *event)
         return true;
 
     if (event->type() == QEvent::GraphicsSceneMousePress) {
-        d->dontChangeFocusOnRelease =
-            d->itemUnderMouseAlreadyFocused(static_cast<QGraphicsSceneMouseEvent *>(event));
-    } else if (event->type() == QEvent::GraphicsSceneMouseRelease
-               && !d->dontChangeFocusOnRelease) {
-        d->handleFocusChange(static_cast<QGraphicsSceneMouseEvent*>(event));
+        return d->handleGraphicsSceneMousePress(static_cast<QGraphicsSceneMouseEvent *>(event));
+    } else if (event->type() == QEvent::GraphicsSceneMouseRelease) {
+        return d->handleGraphicsSceneMouseRelease(static_cast<QGraphicsSceneMouseEvent *>(event));
     }
 
-    bool retValue = QGraphicsScene::event(event);
-
-    if (event->type() == QEvent::GraphicsSceneMouseRelease) {
-        d->resetMouseGrabber();
-    }
-
-    return retValue;
+    return QGraphicsScene::event(event);
 }
 
 void MScene::drawForeground(QPainter *painter, const QRectF &rect)
