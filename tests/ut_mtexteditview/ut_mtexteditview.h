@@ -55,6 +55,7 @@ private slots:
     void testSendsScenePositionChangesOnMagnifier();
     void testIgnoreFocusingTap_data();
     void testIgnoreFocusingTap();
+    void testFirstTapOnAlreadyFocused();
 
 private:
     MTextEdit *m_controller;

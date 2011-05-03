@@ -418,5 +418,22 @@ void Ut_MTextEditView::testIgnoreFocusingTap()
     }
 }
 
+void Ut_MTextEditView::testFirstTapOnAlreadyFocused()
+{
+    m_controller->setText("some text");
+
+    QGraphicsSceneMouseEvent press(QEvent::GraphicsSceneMousePress);
+
+    // Give focus with some other reason than Qt::MouseFocusReason.
+    QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                              Q_ARG(Qt::FocusReason, Qt::OtherFocusReason));
+
+    // Now, even this is the first press it should not be ignored.
+    m_subject->mousePressEvent(&press);
+
+    // Verify by checking that long press timer is active.
+    QVERIFY(m_subject->d_func()->longPressTimer->isActive());
+}
+
 QTEST_APPLESS_MAIN(Ut_MTextEditView)
 

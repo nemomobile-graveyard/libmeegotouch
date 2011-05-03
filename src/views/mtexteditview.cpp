@@ -1818,6 +1818,11 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
         }
     }
 
+    if (reason != Qt::MouseFocusReason) {
+        // Next tap (or even current) will not be one that sets focus.
+        d->focusingTap = false;
+    }
+
     d->focused = true;
 
     d->playFocusAnimation(QAbstractAnimation::Forward, style()->focusedPromptOpacity());
