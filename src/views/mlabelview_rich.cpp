@@ -562,18 +562,20 @@ QString MLabelViewRich::renderedText() const
 
 bool MLabelViewRich::tileInformation(int index, QPixmap &pixmap, int &y) const
 {
-    Q_ASSERT(index == 0 || index == 1);
+    if (!tiles.isEmpty()) {
+        Q_ASSERT(index == 0 || index == 1);
 
-    if (index >= tiles.count()) {
-        pixmap = QPixmap();
-        y = 0;
-        return true;
-    }
+        if (index >= tiles.count()) {
+            pixmap = QPixmap();
+            y = 0;
+            return true;
+        }
 
-    const Tile &tile = tiles.at(index);
-    if (QPixmapCache::find(tile.pixmapCacheKey, &pixmap)) {
-        y = tile.y;
-        return true;
+        const Tile &tile = tiles.at(index);
+        if (QPixmapCache::find(tile.pixmapCacheKey, &pixmap)) {
+            y = tile.y;
+            return true;
+        }
     }
 
     return false;
@@ -612,7 +614,8 @@ void MLabelViewRich::initTiles(const QSize &size)
     int tileCount = 2;
     QSize tileSize = size;
 
-    const int requiredHeight = textDocument.size().height();
+    const int requiredHeight = qMin(viewPrivate->controller->size().height(),
+                                    textDocument.size().height() + topMargin() + bottomMargin());
     if (requiredHeight < tileSize.height()) {
         tileSize.setHeight(requiredHeight);
         tileCount = 1;
@@ -628,7 +631,7 @@ void MLabelViewRich::createTiles(int count, const QSize &size)
     }
 
     Q_ASSERT(tiles.isEmpty());
-    int y = 0;
+    int y = -topMargin();
     for (int i = 0; i < count; ++i) {
         Tile tile;
         tiles.append(tile);
@@ -693,22 +696,36 @@ void MLabelViewRich::updateTilesPosition()
     const QPointF rootOffset = viewPrivate->mapToRoot(viewPrivate->controller->pos());
     const int rootOffsetY = rootOffset.y();
 
+    const int labelYPos = viewPrivate->controller->pos().y();
+
     // Check if none of the tiles are visible
-    if (rootOffsetY + bottom->y + tileHeight < 0.0) {
+    if (rootOffsetY + bottom->y + tileHeight < labelYPos) {
         // None of the tiles are visible. Put them where they're visible
-        top->y = (-rootOffsetY / tileHeight) * tileHeight;
+        top->y = (-rootOffsetY / tileHeight) * tileHeight - topMargin();
         bottom->y = top->y + tileHeight;
         updateTilePixmap(*top);
         updateTilePixmap(*bottom);
-    } else if (rootOffsetY + top->y + tileHeight < 0.0) {
+    } else if (rootOffsetY + top->y + tileHeight < labelYPos) {
         // The top tile got invisible, use it as bottom tile for the next iteration
         top->y = bottom->y + tileHeight;
         updateTilePixmap(*top);
-    } else if (rootOffsetY + top->y > 0.0) {
+    } else if (rootOffsetY + top->y > labelYPos) {
         // The bottom tile got invisible, use it as top tile for the next iteration
         bottom->y = top->y - tileHeight;
         updateTilePixmap(*bottom);
     }
+}
+
+int MLabelViewRich::topMargin() const
+{
+    const MLabelStyle *style = viewPrivate->style();
+    return style->paddingTop() + style->marginTop() + style->reactiveMarginTop();
+}
+
+int MLabelViewRich::bottomMargin() const
+{
+    const MLabelStyle *style = viewPrivate->style();
+    return style->paddingBottom() + style->marginBottom() + style->reactiveMarginBottom();
 }
 
 bool MLabelViewRich::updateTilePixmap(const Tile &tile)

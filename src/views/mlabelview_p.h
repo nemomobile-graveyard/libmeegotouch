@@ -226,6 +226,16 @@ public:
     void updateTilesPosition();
 
     /**
+     * \return Sum of the style's top padding, margin and reactive margin.
+     */
+    int topMargin() const;
+
+    /**
+     * \return Sum of the style's bottom padding, margin and reactive margin.
+     */
+    int bottomMargin() const;
+
+    /**
      * Updates the pixmap of the tile with the content of the textdocument
      * from the position indicated by the tile.
      * \return False, if the updating has been failed because of a limited cache.

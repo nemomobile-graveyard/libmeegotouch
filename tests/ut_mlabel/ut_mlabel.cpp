@@ -1082,10 +1082,11 @@ void Ut_MLabel::testRichTextTiles()
     MApplicationWindow window;
     MApplicationPage page;
 
+    const int labelY = 300;
     MLabel *tiledLabel = new MLabel("Short richtext, only <i>one</i> tile should be used", page.centralWidget());
     tiledLabel->setWordWrap(true);
     tiledLabel->setWrapMode(QTextOption::WrapAnywhere);
-    tiledLabel->resize(400, 400);
+    tiledLabel->setGeometry(QRectF(0, labelY, 400, 400));
 
     page.appear(&window);
     window.show();
@@ -1144,9 +1145,7 @@ void Ut_MLabel::testRichTextTiles()
     }
     QVERIFY(pannableViewport);
 
-    const int tileHeight = tile0.height();
-    QVERIFY(tileHeight > 0);
-    const int maxViewportY = tiledLabel->size().height() - tileHeight;
+    const int maxViewportY = tiledLabel->size().height() / 2;
     for (int viewportY = 0; viewportY < maxViewportY; viewportY += 200) {
         const QPointF newPos(0, viewportY);
         pannableViewport->physics()->setPosition(newPos);
@@ -1160,19 +1159,49 @@ void Ut_MLabel::testRichTextTiles()
             return;
         }
 
-        const int minY = (viewportY / tileHeight) * tileHeight;
-        const int maxY = minY + tileHeight - 1;
+        const int tileHeight = tile0.height();
+        QCOMPARE(tile1.height(), tileHeight);
+
         if (y0 > y1) {
             qSwap(y0, y1);
         }
 
-        QVERIFY(y0 <= minY);
-        QVERIFY(y1 + tileHeight - 1 >= maxY);
+        QVERIFY(y0 <= viewportY + labelY);
+        QVERIFY(y1 + tileHeight >= viewportY + labelY);
+        QCOMPARE(y0 + tileHeight, y1);
         QVERIFY(!tile0.isNull());
         QVERIFY(!tile1.isNull());
         QVERIFY(!contentRect(tile0.toImage()).isEmpty());
         QVERIFY(!contentRect(tile1.toImage()).isEmpty());
     }
+}
+
+void Ut_MLabel::testDiacritics_data()
+{
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<QString>("textWithDiacritics");
+
+    const QString text = "ABC gyj";
+    const QString textWithDiacritics = QString::fromWCharArray(L"\u00C5\u00C4\u00C3b gyj");
+
+    QTest::newRow("plain") << text << textWithDiacritics;
+    QTest::newRow("rich")  << QString("<b>" + text + "</b>") << QString("<b>" + textWithDiacritics + "</b>");
+}
+
+void Ut_MLabel::testDiacritics()
+{
+    QFETCH(QString, text);
+    QFETCH(QString, textWithDiacritics);
+
+    label->setFont(QFont("Times", 30));
+
+    label->setText(text);
+    const QRect textRect = contentRect(captureImage(label));
+
+    label->setText(textWithDiacritics);
+    const QRect textWithDiacriticsRect = contentRect(captureImage(label));
+
+    QVERIFY(textWithDiacriticsRect.height() >= textRect.height() + 6);
 }
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

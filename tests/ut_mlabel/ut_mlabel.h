@@ -133,6 +133,9 @@ private slots:
 
     void testRichTextTiles();
 
+    void testDiacritics_data();
+    void testDiacritics();
+
 private:
     /**
      * Helper method for testSizeHint().
