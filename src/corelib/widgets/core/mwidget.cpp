@@ -245,7 +245,13 @@ void MWidgetPrivate::setVisible(bool visible)
                 resolveIsOnDisplay(q, &visibleSceneRect, &event);
         }
     }
- }
+}
+
+QPointF MWidgetPrivate::mapToRoot(const QPointF &point)
+{
+    Q_Q(MWidget);
+    return q->sceneManager()->mapToRoot(q, point);
+}
 
 void MWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 {

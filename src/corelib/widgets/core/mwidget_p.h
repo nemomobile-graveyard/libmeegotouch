@@ -40,6 +40,10 @@ public:
 
     void setVisible(bool visible);
 
+    //! \internal
+    QPointF mapToRoot(const QPointF &point);
+    //! \internal_end
+
     bool explicitlyHidden;  //< true if the user called hide(), as opposed to MLayout hiding it
     bool layoutHidden;  //< true if MLayout is currently hiding the widget
 

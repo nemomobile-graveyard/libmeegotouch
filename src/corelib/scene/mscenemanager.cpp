@@ -2625,6 +2625,15 @@ void MSceneManager::childEvent(QChildEvent *event)
     Q_UNUSED(event);
 }
 
+QPointF MSceneManager::mapToRoot(QGraphicsItem *item, const QPointF &point)
+{
+    Q_D(MSceneManager);
+    if (d->rootElement)
+        return d->rootElement->mapFromItem(item, point);
+
+    return QPointF();
+}
+
 void MSceneManager::fastForwardPageSwitchAnimation()
 {
     Q_D(MSceneManager);

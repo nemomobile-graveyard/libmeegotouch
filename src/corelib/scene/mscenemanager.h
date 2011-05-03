@@ -58,6 +58,7 @@ class M_CORE_EXPORT MSceneManager : public QObject
     friend class MWindowPrivate;
     friend class MApplicationWindowPrivate;
     friend class MSheetPrivate;
+    friend class MWidgetPrivate;
 
 #ifdef UNIT_TEST
     friend class Ut_MSceneManager;
@@ -339,6 +340,9 @@ private:
 #ifdef Q_WS_X11
     Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
 #endif
+
+    //! \internal
+    QPointF mapToRoot(QGraphicsItem *item, const QPointF &point);
 
     /*
      Methods for testing purposes
