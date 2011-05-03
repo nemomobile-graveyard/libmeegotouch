@@ -222,7 +222,7 @@ void MDialogViewPrivate::createTitleBar()
     closeButton->setStyleName("MDialogCloseButton");
     closeButton->setObjectName(closeButton->styleName());
     closeButton->setViewType("icon");
-    closeButton->setIconID("icon-m-framework-close");
+    closeButton->setIconID("icon-m-common-dialog-close");
     policyTitle = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     policyTitle->setSpacing(0);
     policyTitle->addItem(titleLabel);
