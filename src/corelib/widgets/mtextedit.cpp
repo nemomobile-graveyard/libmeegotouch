@@ -355,7 +355,9 @@ MTextEditPrivate::MTextEditPrivate()
       cutAction(0),
       copyAction(0),
       pasteAction(0),
-      programmaticalDocumentChange(false)
+      programmaticalDocumentChange(false),
+      positionChangeTimeout(0),
+      hasPositionChangesToHandle(false)
 {
 }
 
@@ -426,6 +428,16 @@ void MTextEditPrivate::init()
     q->addAction(&pasteAction);
 
     q->retranslateUi();
+
+    // to avoid too frequent calls of QInputContext::updateMicroFocus(),
+    // at most 1 change in a period (see call of setInterval() for value) is issued
+    // it works like this:
+    // * 1st update triggers updateMicroFocus(), then timer waits for period.
+    // * if there were updates, call updateMicroFocus(), repeat, otherwise stop a timer.
+    positionChangeTimeout = new QTimer(q);
+    positionChangeTimeout->setInterval(50);
+    positionChangeTimeout->setSingleShot(false);
+    QObject::connect(positionChangeTimeout, SIGNAL(timeout()), q, SLOT(_q_checkPositionChanges()));
 }
 
 void MTextEditPrivate::_q_updatePasteActionState()
@@ -438,6 +450,28 @@ void MTextEditPrivate::_q_updatePasteActionState()
 
     const bool hasText = !QApplication::clipboard()->text().isEmpty();
     pasteAction.setVisible(hasText);
+}
+
+void MTextEditPrivate::_q_handlePositionChanged()
+{
+    if (positionChangeTimeout->isActive()) {
+        hasPositionChangesToHandle = true;
+    } else {
+        // timer is stopper ==> this update is first after some long period
+        hasPositionChangesToHandle = false;
+        positionChangeTimeout->start();
+        updateMicroFocus();
+    }
+}
+
+void MTextEditPrivate::_q_checkPositionChanges()
+{
+    if (hasPositionChangesToHandle) {
+        hasPositionChangesToHandle = false;
+        updateMicroFocus();
+    } else {
+        positionChangeTimeout->stop();
+    }
 }
 
 QTextCursor *MTextEditPrivate::cursor() const
@@ -1918,6 +1952,8 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
             this, SLOT(_q_updatePasteActionState()));
 
     emit gainedFocus(event->reason());
+
+    connect(&d->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(_q_handlePositionChanged()));
 }
 
 // KLUDGE WARNING: Qt doesn't remove subfocus when losing focus by clicking outside 
@@ -1932,6 +1968,8 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MTextEdit);
+
+    disconnect(&d->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(_q_handlePositionChanged()));
 
     disconnect(QApplication::clipboard(), SIGNAL(dataChanged()),
                this, SLOT(_q_updatePasteActionState()));

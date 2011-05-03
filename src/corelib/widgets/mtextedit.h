@@ -578,6 +578,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_confirmCompletion(const QString &))
     Q_PRIVATE_SLOT(d_func(), void _q_updatePasteActionState())
     Q_PRIVATE_SLOT(d_func(), void _q_pasteAndClear())
+    Q_PRIVATE_SLOT(d_func(), void _q_handlePositionChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_checkPositionChanges())
 };
 
 #endif

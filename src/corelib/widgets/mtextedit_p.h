@@ -26,6 +26,7 @@
 #include <QInputMethodEvent>
 #include <QTime>
 #include <QAction>
+#include <QTimer>
 
 class QGraphicsSceneMouseEvent;
 class QValidator;
@@ -144,6 +145,8 @@ public:
     void _q_confirmCompletion(const QString &);
     void _q_updatePasteActionState();
     void _q_pasteAndClear();
+    void _q_handlePositionChanged();
+    void _q_checkPositionChanges();
 
     //! \brief Disable MTextEdit::updateMicroFocus().
     //!
@@ -212,6 +215,8 @@ private:
     QAction copyAction;
     QAction pasteAction;
     bool programmaticalDocumentChange; // true while text changed using public interface
+    QTimer *positionChangeTimeout;
+    bool hasPositionChangesToHandle;
 
     friend class MTextEditSignalEmitter;
     friend class MCompleterViewPrivate;
