@@ -202,7 +202,7 @@ MLayout *MBannerViewPrivate::createLayout()
 {
     layout = new MLayout(controller);
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    layout->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     landscapePolicy->setSpacing(0);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
@@ -220,7 +220,7 @@ MLayout *MBannerViewPrivate::createLayout()
 QGraphicsGridLayout *MBannerViewPrivate::createGrid()
 {
     gridBanner = new QGraphicsGridLayout(controller);
-    gridBanner->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    gridBanner->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     gridBanner->setContentsMargins(0, 0, 0, 0);
     gridBanner->setSpacing(0);
     controller->setLayout(gridBanner);
@@ -399,41 +399,37 @@ void MBannerViewPrivate::layoutFullEventBanner()
     Q_Q(MBannerView);
 
     gridBanner = createGrid();
-
-    if (!q->model()->iconID().isEmpty()) {
+    //Icon-ID has preference over setPixmap
+    if (!q->model()->pixmap().isNull() && q->model()->iconID().isEmpty()) {
+        pixmap()->setStyleName("FullEventBannerIcon");
+        icon()->setVisible(false);
+        pixmap()->setVisible(true);
+        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
+    } else {
         icon()->setStyleName("FullEventBannerIcon");
         icon()->setVisible(true);
+        pixmap()->setVisible(false);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     }
 
-    if (!q->model()->pixmap().isNull()) {
-        pixmap()->setStyleName("FullEventBannerIcon");
-        if (!q->model()->iconID().isEmpty())
-            icon()->setVisible(false);
-        pixmap()->setVisible(true);
-        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
-    }
+    title()->setStyleName("FullEventBannerTitle");
+    title()->setVisible(true);
+    title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    title()->setWordWrap(true);
+    title()->setTextElide(true);
+    gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
 
-    if (!q->model()->title().isEmpty()) {
-        title()->setStyleName("FullEventBannerTitle");
-        title()->setVisible(true);
-        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-        title()->setWordWrap(true);
-        title()->setTextElide(true);
-        gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
-    }
 
-    if (!q->model()->subtitle().isEmpty()) {
-        subtitle()->setStyleName("FullEventBannerSubtitle");
-        subtitle()->setVisible(true);
-        subtitle()->setWordWrap(false);
-        gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
-    }
+    subtitle()->setStyleName("FullEventBannerSubtitle");
+    subtitle()->setVisible(true);
+    subtitle()->setWordWrap(false);
+    gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+
 
     //Prefix is not show if it doesn't come with a valid datetime
     if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
-        layoutStamp->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        layoutStamp->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("FullEventBannerPrefixTimeStamp");
@@ -461,40 +457,35 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
 
     gridBanner = createGrid();
 
-    if (!q->model()->iconID().isEmpty()) {
+    //Icon-ID has preference over setPixmap
+    if (!q->model()->pixmap().isNull() && q->model()->iconID().isEmpty()) {
+        pixmap()->setStyleName("LockScreenEventBannerIcon");
+        icon()->setVisible(false);
+        pixmap()->setVisible(true);
+        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
+    } else {
         icon()->setStyleName("LockScreenEventBannerIcon");
         icon()->setVisible(true);
+        pixmap()->setVisible(false);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     }
 
-    if (!q->model()->pixmap().isNull()) {
-        pixmap()->setStyleName("LockScreenEventBannerIcon");
-        if (!q->model()->iconID().isEmpty())
-            icon()->setVisible(false);
-        pixmap()->setVisible(true);
-        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
-    }
+    title()->setStyleName("LockScreenEventBannerTitle");
+    title()->setVisible(true);
+    title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    title()->setWordWrap(true);
+    title()->setTextElide(true);
+    gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
 
-    if (!q->model()->title().isEmpty()) {
-        title()->setStyleName("LockScreenEventBannerTitle");
-        title()->setVisible(true);
-        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-        title()->setWordWrap(true);
-        title()->setTextElide(true);
-        gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
-    }
-
-    if (!q->model()->subtitle().isEmpty()) {
-        subtitle()->setStyleName("LockScreenEventBannerSubtitle");
-        subtitle()->setVisible(true);
-        subtitle()->setWordWrap(false);
-        gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
-    }
+    subtitle()->setStyleName("LockScreenEventBannerSubtitle");
+    subtitle()->setVisible(true);
+    subtitle()->setWordWrap(false);
+    gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
 
     //Prefix is not show if it doesn't come with a valid datetime
     if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
-        layoutStamp->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        layoutStamp->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("LockScreenEventBannerPrefixTimeStamp");
@@ -504,7 +495,7 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
-        gridBanner->addItem(layoutStamp, 2, 1,Qt::AlignTop);
+        gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("LockScreenEventBannerTimeStampIsolated");
@@ -527,44 +518,40 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
 
     gridBanner = createGrid();
 
-    if (!q->model()->iconID().isEmpty()) {
+    //Icon-ID has preference over setPixmap
+    if (!q->model()->pixmap().isNull() && q->model()->iconID().isEmpty()) {
+        pixmap()->setStyleName("PrivateEventBannerIcon");
+        icon()->setVisible(false);
+        pixmap()->setVisible(true);
+        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
+    } else {
         icon()->setStyleName("PrivateEventBannerIcon");
         icon()->setVisible(true);
+        pixmap()->setVisible(false);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
     }
 
-    if (!q->model()->pixmap().isNull()) {
-        pixmap()->setStyleName("PrivateEventBannerIcon");
-        if (!q->model()->iconID().isEmpty())
-            icon()->setVisible(false);
-        pixmap()->setVisible(true);
-        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
-    }
-
-    if (!q->model()->title().isEmpty()) {
-        title()->setStyleName("PrivateEventBannerTitle");
-        title()->setVisible(true);
-        gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
-    }
+    title()->setStyleName("PrivateEventBannerTitle");
+    title()->setVisible(true);
+    gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
 
     subtitle()->setVisible(false);
+    subtitle()->setActive(false);
 
     //Prefix is not show if it doesn't come with a valid datetime
     if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
-        layoutStamp->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        layoutStamp->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         layoutStamp->setContentsMargins(0,0,0,0);
         layoutStamp->setSpacing(0);
         prefixTimeStamp()->setStyleName("PrivateEventBannerPrefixTimeStamp");
         prefixTimeStamp()->setVisible(true);
-        prefixTimeStamp()->setAlignment(Qt::AlignTop);
         bannerTimeStamp()->setStyleName("PrivateEventBannerTimeStamp");
         bannerTimeStamp()->setVisible(true);
-        bannerTimeStamp()->setAlignment(Qt::AlignTop);
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
-        gridBanner->addItem(layoutStamp, 1, 1,Qt::AlignTop);
+        gridBanner->addItem(layoutStamp, 1, 1, Qt::AlignTop);
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("PrivateEventBannerTimeStamp");
