@@ -668,23 +668,23 @@ void MLabelViewRich::updateTilesPosition()
     Tile *bottom = bottomTile();
 
     // Update the tile pixmaps and position, if they got invalid because of a changed scene position
-    const QPointF scenePos = viewPrivate->controller->scenePos();
-    const int sceneY = (tileOrientation == M::Landscape) ? scenePos.y() : scenePos.x();
+    const QPointF rootOffset = viewPrivate->mapToRoot(viewPrivate->controller->pos());
+    const int rootOffsetY = rootOffset.y();
 
     // Check if none of the tiles are visible
-    if (sceneY + bottom->y + tileHeight < 0.0) {
+    if (rootOffsetY + bottom->y + tileHeight < 0.0) {
         // Put them where they're visible
-        top->y = qAbs(sceneY);
+        top->y = qAbs(rootOffsetY);
         bottom->y = top->y + tileHeight;
         updateTilePixmap(*top);
         updateTilePixmap(*bottom);
     }
-    else if (sceneY + top->y + tileHeight < 0.0) {
+    else if (rootOffsetY + top->y + tileHeight < 0.0) {
         // The top tile got invisible, use it as bottom tile for the next iteration
         top->y = bottom->y + tileHeight;
         updateTilePixmap(*top);
         viewPrivate->controller->update();
-    } else if (sceneY + top->y > 0.0) {
+    } else if (rootOffsetY + top->y > 0.0) {
         // The bottom tile got invisible, use it as top tile for the next iteration
         bottom->y = top->y - tileHeight;
         if (bottom->y >= 0.0) {

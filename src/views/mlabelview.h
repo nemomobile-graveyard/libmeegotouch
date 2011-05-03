@@ -138,6 +138,10 @@ private:
     Q_DISABLE_COPY(MLabelView)
     Q_DECLARE_PRIVATE(MLabelView)
 
+    //! \internal
+    QPointF mapToRoot(const QPointF &point);
+    //! \internal_end
+
     Q_PRIVATE_SLOT(d_func(), void _q_highlighterUpdateTimerExceeded())
 
 #ifdef UNIT_TEST

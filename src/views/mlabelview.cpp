@@ -62,6 +62,12 @@ const QRectF MLabelViewPrivate::boundingRect() const
     return q->boundingRect();
 }
 
+QPointF MLabelViewPrivate::mapToRoot(const QPointF &point)
+{
+    Q_Q(MLabelView);
+    return q->mapToRoot(point);
+}
+
 void MLabelViewPrivate::requestHighlighterUpdate(int interval)
 {
     Q_Q(MLabelView);
@@ -286,6 +292,12 @@ void MLabelView::orientationChangeEvent(MOrientationChangeEvent *event)
     Q_D(MLabelView);
     MWidgetView::orientationChangeEvent(event);
     d->impl->orientationChangeEvent(event);
+}
+
+QPointF MLabelView::mapToRoot(const QPointF &point)
+{
+    Q_D(MLabelView);
+    return d->controller->mapToRoot(point);
 }
 
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)

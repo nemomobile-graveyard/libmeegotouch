@@ -186,5 +186,10 @@ void MLabel::removeAllHighlighters()
     model()->setHighlighters(QList<MLabelHighlighter *>());
 }
 
+QPointF MLabel::mapToRoot(const QPointF &point)
+{
+    Q_D(MLabel);
+    return d->mapToRoot(point);
+}
 
 #include "moc_mlabel.cpp"

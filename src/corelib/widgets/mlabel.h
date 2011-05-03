@@ -388,6 +388,11 @@ protected:
 private:
     Q_DISABLE_COPY(MLabel)
     Q_DECLARE_PRIVATE(MLabel)
+    friend class MLabelView;
+
+    //! \internal
+    QPointF mapToRoot(const QPointF &point);
+    //! \internal_end
 
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members

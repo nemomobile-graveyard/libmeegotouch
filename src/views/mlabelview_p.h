@@ -265,6 +265,7 @@ public:
     const MLabelModel *model() const;
     const MLabelStyle *style() const;
     const QRectF boundingRect() const;
+    QPointF mapToRoot(const QPointF &point);
 
     /**
      * Triggers a call of MLabelViewSimple::handleNotification() after the specified
