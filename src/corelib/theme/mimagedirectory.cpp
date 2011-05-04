@@ -83,13 +83,6 @@ ImageResource::ImageResource(const QString& absoluteFilePath) :
     buffer(0),
     cacheFile(0)
 {
-#ifdef  Q_WS_X11
-    // When starting an application, the X11 window must be filled with a default background
-    // image in a fast way. The filling can only be done fast if the background image is available
-    // as X11 pixmap.
-    convertToX11 = MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()
-                   && absoluteFilePath.contains("forcex11");
-#endif
 }
 
 MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
@@ -97,6 +90,14 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
     QHash<QSize, PixmapCacheEntry*>::iterator it = cachedPixmaps.find(size);
     PixmapCacheEntry *cacheEntry;
     if (it == cachedPixmaps.end()) {
+#ifdef  Q_WS_X11
+        // When starting an application, the X11 window must be filled with a default background
+        // image in a fast way. The filling can only be done fast if the background image is available
+        // as X11 pixmap.
+        convertToX11 = MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()
+                       && filePath.contains("forcex11");
+#endif
+
         cacheEntry = new PixmapCacheEntry();
         cachedPixmaps.insert(size, cacheEntry);
 
