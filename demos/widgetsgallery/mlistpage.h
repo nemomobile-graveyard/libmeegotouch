@@ -79,6 +79,7 @@ public slots:
     void changeListIndexVisibility(int index);
     void changeLiveFilteringMode(int index);
     void changeGroupHeadersMode(int index);
+    void changeIndexMagnifierTitleRole(int index);
 
     void scrollToBottom();
     void scrollToTop();

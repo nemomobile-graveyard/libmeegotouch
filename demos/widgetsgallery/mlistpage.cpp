@@ -559,6 +559,21 @@ void MListPage::changeGroupHeadersMode(int index)
         comboListMode->setCurrentIndex(Grouped);
 }
 
+
+void MListPage::changeIndexMagnifierTitleRole(int index)
+{
+    Q_ASSERT(index >=0 && index <= 1);
+
+    switch (index) {
+    case 1:
+        list->setIndexMagnifierDataRole(PhoneBookModel::PhoneBookCustomMagnifierTitleRole);
+        break;
+    default:
+        list->setIndexMagnifierDataRole(Qt::DisplayRole);
+        break;
+    };
+}
+
 void MListPage::itemClick(const QModelIndex &index)
 {
     mDebug("MListPage::itemClick") << "Row was clicked: " << index.row();
@@ -693,6 +708,13 @@ void MListPage::showAdvancedConfigurationDialog()
         groupHeadersModes << "Default - Labels" << "Custom - Buttons" << "Advanced - Custom Widget";
         combo = createComboBoxLabelButton("Group Headers", groupHeadersModes, panel);
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeGroupHeadersMode(int)));
+
+        landscapePolicy->addItem(combo);
+
+        QStringList listIndexMagnifierDataRoles;
+        listIndexMagnifierDataRoles << "Default" << "Custom";
+        combo = createComboBoxLabelButton("List Index Magnifier Role", listIndexMagnifierDataRoles, panel);
+        connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeIndexMagnifierTitleRole(int)));
 
         landscapePolicy->addItem(combo);
 

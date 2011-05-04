@@ -148,6 +148,8 @@ QVariant PhoneBookModel::itemData(int row, int group, int role) const
         return QVariant::fromValue(phoneBookEntries[flatRow]->lastName);
     else if (role == PhoneBookFilterRole)
         return QVariant::fromValue(phoneBookEntries[flatRow]->fullName);
+    else if (role == PhoneBookCustomMagnifierTitleRole && group == -1)
+        return QVariant::fromValue("Title: " + groupTitle(row));
 
     return QVariant();
 }

@@ -73,7 +73,8 @@ public:
     // Defining roles here which will be used for sorting and filtering in PhoneBookSortedModel
     enum PhoneBookRoles {
         PhoneBookSortRole = Qt::UserRole + 1,
-        PhoneBookFilterRole
+        PhoneBookFilterRole,
+        PhoneBookCustomMagnifierTitleRole
     };
 
     PhoneBookModel();
