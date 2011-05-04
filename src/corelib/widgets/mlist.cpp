@@ -259,6 +259,11 @@ void MList::setIndexDisplayMode(MList::DisplayMode displayMode)
         model()->setListIndexVisible(true);
 }
 
+void MList::setIndexMagnifierDataRole(int role)
+{
+    model()->setListIndexMagnifierDataRole(role);
+}
+
 MList::DisplayMode MList::indexDisplayMode() const
 {
     return static_cast<MList::DisplayMode>(model()->listIndexDisplayMode());
@@ -353,4 +358,9 @@ void MList::setOptimizationFlags(ListOptimizationFlags optimizationFlags)
 {
     Q_D(MList);
     d->optimizationFlags = optimizationFlags;
+}
+
+int MList::indexMagnifierDataRole() const
+{
+    return model()->listIndexMagnifierDataRole();
 }

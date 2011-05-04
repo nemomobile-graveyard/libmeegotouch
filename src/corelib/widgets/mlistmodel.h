@@ -139,6 +139,12 @@ private:
         \sa MList::DisplayMode
     */
     M_MODEL_PROPERTY(int, listIndexDisplayMode, ListIndexDisplayMode, true, 0)
+
+    /*!
+        \property MListModel::listIndexMagnifierDataRole
+        \brief List index magnifier data role.
+    */
+    M_MODEL_PROPERTY(int, listIndexMagnifierDataRole, ListIndexMagnifierDataRole, true, Qt::DisplayRole)
 };
 
 #endif

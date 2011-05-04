@@ -394,6 +394,11 @@ public:
       */
     void setOptimizationFlags(ListOptimizationFlags optimizationFlags);
 
+    /*!
+      \return Data role of the title in the list index magnifier.
+     */
+    int indexMagnifierDataRole() const;
+
 public Q_SLOTS:
     /*!
         \brief Convenience function - Select the given item.
@@ -453,6 +458,11 @@ public Q_SLOTS:
       \sa MList::DisplayMode
     */
     void setIndexDisplayMode(DisplayMode displayMode);
+
+    /*!
+      \brief Specifies the data role for the title in the list index magnifier.
+    */
+    void setIndexMagnifierDataRole(int role);
 
     /*!
       \brief Returns visibility mode of list index.

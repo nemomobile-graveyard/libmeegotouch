@@ -227,7 +227,7 @@ void MListIndexViewPrivate::scrollToGroupHeader(int y)
     if (fastScrollRow != lastFastScrollRow && fastScrollRow >= 0 && fastScrollRow < groupCount)  {
         // Force updating the title of the bubble.
         if (lastFastScrollRow == -1)
-            tooltip()->setTitle(list->itemModel()->index(fastScrollRow, 0).data().toString());
+            tooltip()->setTitle(list->itemModel()->index(fastScrollRow, 0).data(list->indexMagnifierDataRole()).toString());
 
         lastFastScrollRow = fastScrollRow;
         if (!scrollToQueueTimer.isActive()) {
@@ -358,7 +358,7 @@ void MListIndexViewPrivate::_q_scrollToLastRow()
     if (lastFastScrollRow >= 0) {
         QModelIndex index = list->itemModel()->index(lastFastScrollRow, 0);
         list->scrollTo(index, MList::PositionAtTopHint);
-        tooltip()->setTitle(index.data().toString());
+        tooltip()->setTitle(index.data(list->indexMagnifierDataRole()).toString());
     }
 }
 
