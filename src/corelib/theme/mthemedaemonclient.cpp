@@ -102,7 +102,9 @@ void MThemeDaemonClient::reloadImagePaths(const QStringList &themes)
 
 void MThemeDaemonClient::addCustomImageDirectory(const QString &path, M::RecursionMode recursionMode)
 {
-    customImageDirs.insert(0, new MImageDirectory(path, recursionMode));
+    if (!customImageDirs.contains(path)) {
+        customImageDirs.insert(path, new MImageDirectory(path, recursionMode));
+    }
 }
 
 QStringList MThemeDaemonClient::removeAddedImageDirectories()

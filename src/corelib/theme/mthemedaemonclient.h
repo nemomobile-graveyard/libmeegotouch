@@ -73,7 +73,7 @@ private:
 
     QList<MThemeImagesDirectory *> themeImageDirs;
     QList<MThemeImagesDirectory *> toBeDeletedThemeImageDirs;
-    QList<MImageDirectory *> customImageDirs;
+    QHash<QString, MImageDirectory *> customImageDirs;
 
     QStringList themes;
 };
