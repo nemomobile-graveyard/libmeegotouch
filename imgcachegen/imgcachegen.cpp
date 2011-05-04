@@ -33,6 +33,9 @@
 #include "mimagedirectory.h"
 #include "msystemdirectories.h"
 
+namespace {
+    static bool gDebug = false;
+}
 
 void saveToFsCache(const QFileInfo &fileInfo)
 {
@@ -55,7 +58,8 @@ void saveToFsCache(const QFileInfo &fileInfo)
 void copyToFSCache(const QFileInfo &fileInfo)
 {
     saveToFsCache(fileInfo.absoluteFilePath());
-    mDebug("ImageCacheGen")<< "File processed" << fileInfo.absoluteFilePath();
+    if (gDebug)
+        mDebug("ImageCacheGen")<< "File processed" << fileInfo.absoluteFilePath();
 }
 
 void visitDirectory(QDir dir)
@@ -78,7 +82,9 @@ void visitDirectory(QDir dir)
 
 void printUsage(const char *prog)
 {
-    fprintf(stderr, "usage: %s [--prefix prefix] [directory ...]\n", prog);
+    fprintf(stderr, "usage: %s [OPTION] [directory ...]\n\n", prog);
+    fprintf(stderr, "  --prefix prefix    output directory prefix\n");
+    fprintf(stderr, "  --verbose          display debug output\n");
 }
 
 
@@ -89,19 +95,22 @@ int main(int argc, char** argv)
 
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
-            if (!strcmp(argv[i], "--prefix") && i+1 < argc) {
+            if (strcmp(argv[i], "--prefix") == 0 && i+1 < argc) {
                 MSystemDirectories::setPrefix( argv[i+1] );
+                i++;
+            } else if (strcmp(argv[i], "--verbose") == 0) {
+                gDebug = true;
                 i++;
             } else {
                 printUsage(argv[0]);
                 return 1;
             }
         } else
-            directories << QDir( argv[i] );
+            directories << QDir(argv[i]);
     }
 
     if (directories.size() < 1)
-        directories << QDir( THEMEDIR );
+        directories << QDir(THEMEDIR);
 
 
     mDebug("ImageCacheGen") << "Converting images ...";
