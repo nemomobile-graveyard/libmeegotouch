@@ -941,7 +941,7 @@ void MThemeImagesDirectory::crawlImageDirectory(MThemeImagesDirectory::FileCrawl
                 if(MAX_PATH_WITHOUT_ALLOC - 2 < l) { // avoid  hazardous buffer overflow by extra alloc/free round - slow path
                     char *tmp = ::appendToPath(s, e->d_name);
                     handler(this, tmp, tmp + strlen(s) + 1, localized);
-                    delete tmp;
+                    delete[] tmp;
                 } else {
                     memcpy(fnptr, e->d_name, l);
                     fnptr[l] = 0;
