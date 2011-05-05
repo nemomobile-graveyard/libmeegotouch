@@ -1876,6 +1876,15 @@ void MTextEditView::applyStyle()
     }
 
     QString maskString = s->maskString();
+
+    // special case when mask-string is an unicode character in the form "\uXXXX"
+    if (maskString.length() >= 6 &&
+        (maskString.indexOf("\\u", 0) == 0 || maskString.indexOf("\\U", 0) == 0)) {
+        maskString.remove(0, 2);
+        ushort us = maskString.toUShort(0, 16);
+        maskString = QChar(us);
+    }
+
     if (maskString.isEmpty() == false) {
         d->maskCharacter = maskString.at(0); // use only the first character
     }
