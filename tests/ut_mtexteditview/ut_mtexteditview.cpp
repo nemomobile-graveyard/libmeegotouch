@@ -37,6 +37,8 @@
 #include "corelib/widgets/mtextedit_p.h"
 #include "views/mtexteditview_p.h"
 
+Q_DECLARE_METATYPE(Qt::FocusReason)
+
 void Ut_MTextEditView::initTestCase()
 {
     static int dummyArgc = 1;
@@ -433,6 +435,86 @@ void Ut_MTextEditView::testFirstTapOnAlreadyFocused()
 
     // Verify by checking that long press timer is active.
     QVERIFY(m_subject->d_func()->longPressTimer->isActive());
+}
+
+void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLost_data()
+{
+    QTest::addColumn<Qt::FocusReason>("focusLostReason");
+    QTest::addColumn<Qt::FocusReason>("focusGainedReason");
+    QTest::addColumn<bool>("expectedToReappear");
+
+    QTest::newRow("focus lost by clicking")
+        << Qt::MouseFocusReason
+        << Qt::MouseFocusReason << false;
+    QTest::newRow("window system removed focus")
+        << Qt::ActiveWindowFocusReason
+        << Qt::ActiveWindowFocusReason << true;
+    QTest::newRow("focus removed by popup")
+        << Qt::PopupFocusReason
+        << Qt::PopupFocusReason << true;
+    QTest::newRow("window system removed focus, gained with mouse")
+        << Qt::ActiveWindowFocusReason
+        << Qt::MouseFocusReason << false;
+    QTest::newRow("focus removed by popup, gained with mouse")
+        << Qt::PopupFocusReason
+        << Qt::MouseFocusReason << false;
+    QTest::newRow("focus lost by clicking, gained by window system")
+        << Qt::MouseFocusReason
+        << Qt::ActiveWindowFocusReason << false;
+}
+
+void Ut_MTextEditView::testEditorToolbarReappearanceAfterFocusLost()
+{
+    QFETCH(Qt::FocusReason, focusLostReason);
+    QFETCH(Qt::FocusReason, focusGainedReason);
+    QFETCH(bool, expectedToReappear);
+
+    // large enough for selecting to be possible
+    m_controller->setText("to be selected");
+    m_controller->resize(500, 50);
+
+    QGraphicsSceneMouseEvent press(QEvent::GraphicsSceneMousePress);
+    QGraphicsSceneMouseEvent move1(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent move2(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent release(QEvent::GraphicsSceneMouseRelease);
+
+    press.setPos(QPointF());
+    release.setPos(QPointF(1000, 0));
+    move1.setPos(press.pos());
+    move2.setPos(release.pos());
+
+    move1.setButtons(Qt::LeftButton);
+    move2.setButtons(Qt::LeftButton);
+
+    // Give focus, with whatever reason.
+    QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                              Q_ARG(Qt::FocusReason, Qt::OtherFocusReason));
+
+    // Show editor toolbar by selecting text
+    m_subject->mousePressEvent(&press);
+    m_subject->mouseMoveEvent(&move1);
+    m_subject->mouseMoveEvent(&move2);
+    m_subject->mouseReleaseEvent(&release);
+    QVERIFY(m_controller->hasSelectedText());
+    QVERIFY(editorAppeared());
+
+    QMetaObject::invokeMethod(m_controller, "lostFocus",
+                              Q_ARG(Qt::FocusReason, focusLostReason));
+
+    // Lost focus always dismisses editor.
+    QVERIFY(!editorAppeared());
+
+    // Give focus again.
+    QMetaObject::invokeMethod(m_controller, "gainedFocus",
+                              Q_ARG(Qt::FocusReason, focusGainedReason));
+
+    QCOMPARE(editorAppeared(), expectedToReappear);
+}
+
+bool Ut_MTextEditView::editorAppeared() const
+{
+    return m_subject->d_func()->editorToolbar
+           && m_subject->d_func()->editorToolbar->isAppeared();
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextEditView)

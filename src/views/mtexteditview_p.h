@@ -164,7 +164,6 @@ protected:
 
     QScopedPointer<MTextMagnifier> magnifier;
     QScopedPointer<MEditorToolbar> editorToolbar;
-    bool oldItemSendsScenePositionChanges;
 
     qreal currentPromptOpacity;
     QPropertyAnimation promptFocusAnimation;

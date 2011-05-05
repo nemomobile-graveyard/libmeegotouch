@@ -56,6 +56,11 @@ private slots:
     void testIgnoreFocusingTap_data();
     void testIgnoreFocusingTap();
     void testFirstTapOnAlreadyFocused();
+    void testEditorToolbarReappearanceAfterFocusLost_data();
+    void testEditorToolbarReappearanceAfterFocusLost();
+
+private:
+    bool editorAppeared() const;
 
 private:
     MTextEdit *m_controller;

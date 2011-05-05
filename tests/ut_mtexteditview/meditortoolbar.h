@@ -19,7 +19,8 @@ class MEditorToolbar : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    explicit MEditorToolbar(const MWidget &) {}
+    explicit MEditorToolbar(const MWidget &)
+        : appeared(false) {}
     virtual ~MEditorToolbar() {}
 
     void setPosition(const QPointF &,
@@ -27,16 +28,20 @@ public:
     void setSelectionPresent(bool) {}
     bool isAppeared() const
     {
-        return false;
+        return appeared;
     }
-    void removeTemporaryDisappearance() {}
 
 signals:
     void sizeChanged();
 
 public slots:
-    void appear() {}
-    void disappear() {}
+    void appear() { appeared = true; }
+    void disappear() { appeared = false; }
+    void disappearTemporarily() { appeared = false; }
+    void removeTemporaryDisappearance() { appeared = true; }
+
+private:
+    bool appeared;
 };
 
 #endif // MEDITORTOOLBAR_H

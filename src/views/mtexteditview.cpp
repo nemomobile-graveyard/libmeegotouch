@@ -1827,6 +1827,13 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
 
     d->playFocusAnimation(QAbstractAnimation::Forward, style()->focusedPromptOpacity());
 
+    // Try restoring editor toolbar if window is no longer minimized,
+    // or if a popup window has disappeared.
+    if (reason == Qt::ActiveWindowFocusReason
+        || reason == Qt::PopupFocusReason) {
+        d->restoreEditorToolbar();
+    }
+
     doUpdate();
 }
 
@@ -1838,8 +1845,14 @@ void MTextEditView::removeFocus(Qt::FocusReason reason)
 
     d->focusingTap = true;
 
-    if (reason != Qt::ActiveWindowFocusReason && reason != Qt::PopupFocusReason)
-        d->hideEditorToolbar();
+    if (d->editorToolbar && d->editorToolbar->isAppeared()) {
+        if (reason != Qt::ActiveWindowFocusReason
+            && reason != Qt::PopupFocusReason) {
+            d->hideEditorToolbar();
+        } else {
+            d->editorToolbar->disappearTemporarily();
+        }
+    }
 
     if (d->controller->sceneManager()) {
         disconnect(d->controller, SIGNAL(cursorPositionChanged()),
