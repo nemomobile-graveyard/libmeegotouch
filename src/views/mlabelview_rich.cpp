@@ -50,7 +50,8 @@ static const int M_HIGHLIGHTER_ID_PROPERTY  = QTextFormat::UserProperty + 1;
 
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
-    tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false)
+    tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false),
+    minHeightCache(-1)
 {
     textDocument.setDocumentMargin(0);
     tileCacheKey.sprintf("%p", static_cast<void*>(this));
@@ -124,6 +125,7 @@ void MLabelViewRich::ensureDocumentIsReady()
         //textDocument.setHtml(wrapTextWithSpanTag(viewPrivate->model()->text()));
 
         tileHeight = -1;
+        minHeightCache = -1;
     }
 }
 
@@ -170,13 +172,16 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         //If we have word wrap or eliding, the minimum size is the size of a single letter,
         if (wrap() || viewPrivate->model()->textElide()) {
             QFontMetrics fm(viewPrivate->controller->font());
-            //Resize text document to maximum width to find the height of one line
-            //This follows the QLabel implementation
-            qreal oldWidth = textDocument.textWidth();
-            textDocument.setTextWidth(QWIDGETSIZE_MAX);
-            qreal height = textDocument.size().height();
-            textDocument.setTextWidth(oldWidth);
-            return QSizeF(fm.width('x'), height);
+            if (minHeightCache == -1) {
+                //Resize text document to maximum width to find the height of one line
+                //This follows the QLabel implementation
+                qreal oldWidth = textDocument.textWidth();
+                textDocument.setTextWidth(QWIDGETSIZE_MAX);
+                qreal height = textDocument.size().height();
+                const_cast<qreal&>(minHeightCache) = height;
+                textDocument.setTextWidth(oldWidth);
+            }
+            return QSizeF(fm.width('x'), minHeightCache);
         }
         //If word wrap and eliding are both disabled (the default) then fall through to preferred
         //size case, so that the preferred size == minimum size.
@@ -200,12 +205,16 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         // even for a constraint width of -1 (unconstrained)
         QSizeF size;
         if (viewPrivate->controller->sizePolicy().hasHeightForWidth() || constraint.width() >= 0) {
-            //By default, the label policy has height for width, meaning that the layout
-            //will pass us the constraint correctly, so we don't need to do anything special.
-            const qreal oldWidth = textDocument.textWidth();
-            textDocument.setTextWidth(constraint.width());
-            size = textDocument.size();
-            textDocument.setTextWidth(oldWidth);
+            if (constraint.width() == textDocument.size().width()) {
+                size = textDocument.size();
+            } else {
+                //By default, the label policy has height for width, meaning that the layout
+                //will pass us the constraint correctly, so we don't need to do anything special.
+                const qreal oldWidth = textDocument.textWidth();
+                textDocument.setTextWidth(constraint.width());
+                size = textDocument.size();
+                textDocument.setTextWidth(oldWidth);
+            }
         } else {
             //If the user has manually disabled the sizepolicy heightForWidth and there is
             //no constraint, then we need to fall back to previous behavior of using the current

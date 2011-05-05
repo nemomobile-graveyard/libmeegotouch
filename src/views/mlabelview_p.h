@@ -286,6 +286,7 @@ public:
 
     bool highlightersChanged;
     bool isElided;
+    qreal minHeightCache;
 };
 
 class MLabelViewPrivate : public MWidgetViewPrivate
