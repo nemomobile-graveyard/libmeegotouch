@@ -166,6 +166,18 @@ void MEditorToolbar::updateArrow(MEditorToolbarArrow::ArrowDirection direction)
     updateWidgetOrigin();
 }
 
+void MEditorToolbar::updateWidgetOrigin()
+{
+    // We include margin to arrow tip position.
+    QPointF arrowTip(arrow->size().width() / 2.0f, 0);
+    QPointF widgetOrigin = QPointF(mapFromItem(arrow, arrowTip).x(),
+                                   arrow->direction() == MEditorToolbarArrow::ArrowUp
+                                       ? 0.0f : size().height());
+
+    setTransform(QTransform::fromTranslate(-widgetOrigin.x(),
+                                           -widgetOrigin.y()));
+}
+
 bool MEditorToolbar::event(QEvent *event)
 {
     switch (event->type()) {
@@ -323,18 +335,6 @@ QSizeF MEditorToolbar::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
 void MEditorToolbar::resizeEvent(QGraphicsSceneResizeEvent *)
 {
     emit sizeChanged();
-}
-
-void MEditorToolbar::updateWidgetOrigin()
-{
-    // We include margin to arrow tip position.
-    QPointF arrowTip(arrow->size().width() / 2.0f, 0);
-    QPointF widgetOrigin = QPointF(mapFromItem(arrow, arrowTip).x(),
-                                   arrow->direction() == MEditorToolbarArrow::ArrowUp
-                                       ? 0.0f : size().height());
-
-    setTransform(QTransform::fromTranslate(-widgetOrigin.x(),
-                                           -widgetOrigin.y()));
 }
 
 void MEditorToolbar::updateEditorItemVisibility()
