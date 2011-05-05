@@ -194,6 +194,13 @@ void MWindowPrivate::init()
 
     MGraphicsSystemHelper::enableSwitchEvents();
 #endif //Q_WS_X11
+
+    // Ensure that if application code calls item->setFocus() that item
+    // will indeed gain focus once this window gets activated.
+    // The focus of QGraphicsItems inside a QGraphicsScene is a bit
+    // disconnected from the focus of QApplication/QWidget but the former
+    // does depend on the latter in order to work.
+    q->setFocus();
 }
 
 void MWindowPrivate::initSoftwareViewport()
