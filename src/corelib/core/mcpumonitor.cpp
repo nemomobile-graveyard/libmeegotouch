@@ -104,7 +104,10 @@ void MCpuMonitor::timedOut()
     d->getCpuUsageInformation(n_tot, n_idle);
 
     if (n_tot - d->jiffies_total) {
-        d->lastFrameUsage = 100 - 100 * (n_idle - d->jiffies_idle) / (n_tot - d->jiffies_total);
+        if(!n_idle)
+            d->lastFrameUsage = 100;  //no idle frame found
+        else
+            d->lastFrameUsage = 100 - 100 * (n_idle - d->jiffies_idle) / (n_tot - d->jiffies_total);
         d->usable = true;
 
         d->jiffies_idle = n_idle;

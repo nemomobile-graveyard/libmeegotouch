@@ -174,7 +174,7 @@ void MCommonPixmaps::loadOne()
     // stop the timer, so we can adjust the frequency depending on the usage
     cpuMonitor.stop();
 
-    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < maximumCpuUsageBeforeLoadingOneItem)) {
+    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() <= maximumCpuUsageBeforeLoadingOneItem)) {
         for (int i = 0; i < numberOfPixmapsToLoadAtOnce; ++i) {
             if (!toLoadList.isEmpty()) {
                 PixmapIdentifier id = *toLoadList.begin();
@@ -212,7 +212,7 @@ void MCommonPixmaps::updateClientsAboutMostUsed()
 {
     cpuMonitor.stop();
     // only wakeup all clients if the device is idle
-    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() < maximumCpuUsageBeforeSendingMostUsed)) {
+    if ((cpuMonitor.usage() != -1) && (cpuMonitor.usage() <= maximumCpuUsageBeforeSendingMostUsed)) {
         MostUsedPixmaps mostUsed;
         mostUsed.addedHandles = mostUsedPixmapHandles();
         emit mostUsedPixmapsChanged(mostUsed);
