@@ -21,6 +21,8 @@
 #define MMENUOBJECTVIEW_P_H
 
 #include <QObject>
+#include <QHash>
+#include <QAction>
 #include "mabstractlayoutpolicy.h"
 
 class MWidget;
@@ -33,6 +35,7 @@ class MPannableViewport;
 class MFreestyleLayoutPolicy;
 class MAction;
 class MWidget;
+class MMenuObjectView;
 
 class MObjectMenuLayoutPolicy : public MAbstractLayoutPolicy
 {
@@ -51,6 +54,8 @@ private:
 
 class MMenuObjectViewPrivate : public QObject
 {
+    Q_OBJECT
+
     Q_DECLARE_PUBLIC(MMenuObjectView)
 
 protected:
@@ -58,7 +63,6 @@ protected:
 
 public:
     MMenuObjectViewPrivate(MApplicationMenu *menu);
-
     virtual ~MMenuObjectViewPrivate();
 
     MApplicationMenu *controller;

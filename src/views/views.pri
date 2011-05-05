@@ -64,6 +64,7 @@ PRIVATE_HEADERS += \
     meditortoolbararrow.h \
     mapplicationmenuview_p.h \
     mapplicationmenubuttonview.h \
+    mmenuobjectview_p.h \
     mobjectmenuview_p.h \
     mprogressindicatorbarview_p.h \
     mcompleterview_p.h \
