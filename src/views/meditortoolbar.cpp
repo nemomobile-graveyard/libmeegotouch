@@ -26,6 +26,7 @@
 #include <MWidget>
 #include <QAction>
 
+#include <QtAlgorithms>
 #include <QApplication>
 #include <QGraphicsLinearLayout>
 
@@ -70,6 +71,7 @@ MEditorToolbar::~MEditorToolbar()
     if (overlay) {
         overlay->deleteLater();
     }
+    qDeleteAll(buttons);
 }
 
 void MEditorToolbar::setPosition(const QPointF &pos,
