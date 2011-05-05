@@ -1469,6 +1469,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         (QStringList()
            <<"a"
            <<"A"
+           <<"Â"
            <<"ae"
            <<"æ"
            <<"Æ"
@@ -1527,6 +1528,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
            <<"A"
            <<"A"
            <<"A"
+           <<"A"
            <<"C"
            <<"C"
            <<"C"
@@ -1564,6 +1566,11 @@ void Ft_Locales::testMLocaleIndexBucket_data()
     QTest::newRow("fr_CA")
         <<"ja_JP"
         <<"fr_CA"
+        << frenchStringsSorted
+        << frenchExpectedBuckets;
+    QTest::newRow("fr_FR")
+        <<"ja_JP"
+        <<"fr_FR"
         << frenchStringsSorted
         << frenchExpectedBuckets;
     QStringList spanishStringsSorted =
