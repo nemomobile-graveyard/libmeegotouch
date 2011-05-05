@@ -139,15 +139,22 @@ void MEditorToolbar::updateArrow(MEditorToolbarArrow::ArrowDirection direction)
     qreal offscreenLeft = qMax<qreal>(0.0f, mappedSceneRect.left());
     qreal offscreenRight = qMax<qreal>(0.0f, (effectiveSizeHint(Qt::PreferredSize).width()
                                               - mappedSceneRect.right()));
+    // Screen rectangle in overlay coordinate system, just like we are
+    const QRectF screenRectInOverlay(
+        overlay->mapRectFromScene(QRectF(QPointF(), sceneManager()->visibleSceneSize(M::Landscape))));
+    qreal x;
 
-    // The widget won't be off the screen from both ends at the same time.
-    // Width is restricted to screen width.
-
-    qreal x = center - arrow->size().width() / 2.0f
-              - offscreenLeft + offscreenRight;
-    x = qBound<qreal>(contentsRectangle.left(),
-                      x,
-                      contentsRectangle.right() - arrow->size().width());
+    if (size().width() < screenRectInOverlay.width()) {
+        // The widget won't be off the screen from both ends at the same time.
+        // Width is restricted to screen width.
+        x = center - arrow->size().width() / 2.0f
+            - offscreenLeft + offscreenRight;
+        x = qBound<qreal>(contentsRectangle.left(),
+                          x,
+                          contentsRectangle.right() - arrow->size().width());
+    } else {
+        x = geometry().center().x() - screenRectInOverlay.center().x() - arrow->size().width() / 2.0f;
+    }
 
     // Update vertically. Arrow graphics are designed to be aligned to either
     // top or bottom of buttons, completely overlapping them.
@@ -170,9 +177,13 @@ void MEditorToolbar::updateWidgetOrigin()
 {
     // We include margin to arrow tip position.
     QPointF arrowTip(arrow->size().width() / 2.0f, 0);
-    QPointF widgetOrigin = QPointF(mapFromItem(arrow, arrowTip).x(),
-                                   arrow->direction() == MEditorToolbarArrow::ArrowUp
-                                       ? 0.0f : size().height());
+    // We need to round to an integer coordinate to avoid graphics glitches; if
+    // widgetOrigin.x() is for example 75.5, in portrait mode with German language with
+    // Cut, Copy & Paste buttons visible the one pixel thick button separator lines cannot
+    // be seen.
+    const QPoint widgetOrigin(QPointF(mapFromItem(arrow, arrowTip).x(),
+                                      arrow->direction() == MEditorToolbarArrow::ArrowUp
+                                      ? 0.0f : size().height()).toPoint());
 
     setTransform(QTransform::fromTranslate(-widgetOrigin.x(),
                                            -widgetOrigin.y()));
