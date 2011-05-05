@@ -1320,10 +1320,13 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
 
-    // Focus might be given on release so we are only
-    // assuming that this is the focusing tap.
+    if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
+        // Honor MWidgetView's style and play press feedback
+        style()->pressFeedback().play();
+    }
+
+    // Only proceed if this is not the focusing tap.
     if (d->focusingTap) {
-        // Stop event from propagating.
         return;
     }
 
@@ -1345,9 +1348,6 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     d->controller->handleMousePress(cursor, event, &location);
 
     if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
-        // Honor MWidgetView's style and play press feedback
-        style()->pressFeedback().play();
-
         if (location == MTextEdit::Word) {
             style()->pressWordFeedback().play();
         } else {
@@ -1368,19 +1368,6 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
 
-    if (d->focusingTap) {
-        if (d->focused) {
-            // Got focus. The next tap will not be focusing tap.
-            d->focusingTap = false;
-        }
-        return;
-    }
-
-    MTextEdit::TextFieldLocationType location;
-
-    const bool magnifierHidden(d->magnifier && d->magnifier->isAppeared());
-    d->hideMagnifier();
-
     // Make sure cursor is visible. This is done here on release so
     // we don't do unnecessary scrolling if panning is started.
     if (d->controller->sceneManager()) {
@@ -1391,6 +1378,18 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         // Honor MWidgetView's style and play release feedback
         style()->releaseFeedback().play();
     }
+
+    // Only proceed if this is not the focusing tap.
+    if (d->focusingTap) {
+        if (d->focused) {
+            // Got focus. The next tap will not be focusing tap.
+            d->focusingTap = false;
+        }
+        return;
+    }
+
+    const bool magnifierHidden(d->magnifier && d->magnifier->isAppeared());
+    d->hideMagnifier();
 
     const int eventCursorPos = d->cursorPosition(event);
     const QTextCursor cursor(d->controller->textCursor());
@@ -1407,6 +1406,7 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         && !d->selecting
         // don't send either focus gaining mouse click with autoselect
         && !d->inAutoSelectionClick) {
+        MTextEdit::TextFieldLocationType location;
         d->controller->handleMouseRelease(eventCursorPos, event, &location);
 
         if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
