@@ -82,10 +82,8 @@ void MMessageBoxPrivate::_q_onSceneWindowStateChanged(MSceneWindow::SceneWindowS
     if ((oldState == MSceneWindow::Disappeared && newState == MSceneWindow::Appearing) ||
         (oldState == MSceneWindow::Disappeared && newState == MSceneWindow:: Appeared))
     {
-        const QString id = APPEAR_EFFECT_NORMAL;
-        const QString idStrong = APPEAR_EFFECT_STRONG;
         NgfProplist *p = NULL;
-        const gchar *event = isScreenBlanked() ? idStrong.toUtf8().constData() : id.toUtf8().constData();
+        const gchar *event = isScreenBlanked() ? APPEAR_EFFECT_STRONG : APPEAR_EFFECT_NORMAL;
 
         ngf_client_play_event(client, event, p);
     }
