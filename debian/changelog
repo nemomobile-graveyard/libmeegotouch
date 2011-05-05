@@ -1,8 +1,20 @@
 libmeegotouch (0.21.12-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#237669 - Possible memory leak in mthemedaemon process when sending IM messages
+  * Fixes: NB#250394 - [REG] Unlock-ui is displaying half screen only -remaining half screen is displaying blank.
+  * Fixes: NB#251712 - Items are incorrectly oriented when prestarting application in one orientation and launching it in another orientation.
+  * Fixes: NB#251785 - For an MStylableWidget subclass, calling setSizePolicy in constructor triggers immediate call to applyStyle
+  * Fixes: NB#245755 - Wrong scroll bar shown when virtual keyboard in launched from Clock application / Sound & vibration settings
+  * Fixes: NB#251601
+  * Fixes: NB#251612
+  * Fixes: NB#251224 - Console is flooded with "Querying graphics system but application not running yet!"
+  * Fixes: NB#216406 - Xorg crash leaves prestarted apps running
+  * Fixes: Unable to open magnifier on first tap to text field, if it initially was focused.
+  * Fixes: NB#231817 - Image improperly aligned in Sheet from photo widget (given scenario)
+  * Fixes: NB#251414 - Action lost from toolbar when rotated
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 03 May 2011 15:42:21 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 05 May 2011 15:59:06 +0300
 
 libmeegotouch (0.21.11-1) unstable; urgency=low
 
