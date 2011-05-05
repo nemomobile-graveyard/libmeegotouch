@@ -54,8 +54,7 @@ MCompleterViewPrivate::MCompleterViewPrivate(MCompleter *controller, MCompleterV
       completionLabel(0),
       completionsButton(0),
       layout(0),
-      popup(0),
-      overLaypreferredSize(QSizeF(0, 0))
+      popup(0)
 {
     completionLabel = new MLabel(controller);
     completionLabel->setObjectName(CompleterCandidatesLabelObjectName);
@@ -114,44 +113,11 @@ void MCompleterViewPrivate::organizeContents()
     if (!controller->widget() || !controller->isActive())
         return;
     QSize screenSize = MApplication::activeWindow()->visibleSceneSize();
-    int textWidgetWidth = 0;
 
-    //mcompleter has by default the same width than the according Text-field that it is attached to.
-    //default position is aligning left bottom with text widget
     const QRect textWidgetRect = controller->widget()->mapToScene(
                                      controller->widget()->boundingRect()).boundingRect().toRect();
-    textWidgetWidth = textWidgetRect.width();
-
-    int width = 0;
-    int height = DefaultCompleterHeight;
-
-    if (q->style()->height() > 0)
-        height = q->style()->height();
-
-    const int buttonWidth = q->style()->buttonWidth();
-    const int displayBorder = q->style()->displayBorder();
-
-    width = completionLabel->preferredWidth();
-    bool buttonVisible = (!completionsButton->text().isEmpty()) && completionsButton->isVisible();
-    if (buttonVisible) {
-        const int buttonMargin = q->style()->buttonMargin();
-        width += buttonWidth + buttonMargin;
-    }
-    // Input suggestions that do not fit into the available space force the completer to grow.
-    // First the completer grows to the right until it reaches the displayBorder.
-    // If then continues growing to the left until it reaches the left displayBorder.
-    // This means that the maximum size of the completer is the width of the display minus 2*displayBorder
-    if (width < textWidgetWidth)
-        width = textWidgetWidth;
-    if (width > (screenSize.width() - 2 * displayBorder)) {
-        width = screenSize.width() - 2 * displayBorder;
-    }
-    overLaypreferredSize = QSizeF(width, height);
 
     QPoint completerPos = locatePosition(textWidgetRect);
-    if ((completerPos.x() + width) > (screenSize.width() - displayBorder)) {
-        completerPos.setX(screenSize.width() - displayBorder - width);
-    }
     //add y position offset
     const int  yPositionOffset = q->style()->yPositionOffset();
     if (yPositionOffset > 0) {
@@ -161,9 +127,10 @@ void MCompleterViewPrivate::organizeContents()
     //adjust position, to avoid the completer to be beyond the screen edge
     //completer's position is fixed, aligning left bottom with text widget
     //judge completion should stay at text widget below or upper
-    if (height > (screenSize.height() - completerPos.y())) {
-        completerPos.setY(completerPos.y() - controller->widget()->boundingRect().height()
-                          - height + yPositionOffset);
+    if (controller->preferredSize().height() > (screenSize.height() - completerPos.y())) {
+        completerPos.setY(completerPos.y()
+                          - controller->widget()->boundingRect().height()
+                          - controller->preferredSize().height() + yPositionOffset);
     }
     if (completerPos != controller->pos())
         controller->setPos(completerPos);
@@ -172,24 +139,26 @@ void MCompleterViewPrivate::organizeContents()
 
 QPoint MCompleterViewPrivate::locatePosition(const QRect &r) const
 {
+    // locate the position for completer according input widget rectangle.
     QSize screenSize = MApplication::activeWindow()->visibleSceneSize();
     QPoint p;
     switch (MApplication::activeWindow()->orientationAngle()) {
     case M:: Angle90:
         p = r.topLeft();
-        p = QPoint(p.y(), (screenSize.height() - p.x()));
+        p = QPoint(0, (screenSize.height() - p.x()));
         break;
     case M:: Angle180:
         p = r.topRight();
-        p = QPoint((screenSize.width() - p.x()), (screenSize.height() - p.y()));
+        p = QPoint(0, (screenSize.height() - p.y()));
         break;
     case M:: Angle270:
         p = r.bottomRight();
-        p = QPoint((screenSize.width() - p.y()), p.x());
+        p = QPoint(0, p.x());
         break;
     case M:: Angle0:
     default:
         p = r.bottomLeft();
+        p.setX(0);
         break;
     }
     return p;
@@ -271,7 +240,6 @@ void MCompleterViewPrivate::createContents()
 
 void MCompleterViewPrivate::clear()
 {
-    overLaypreferredSize = QSize(0, 0);
     //clear focus proxy
     completionLabel->setFocusProxy(0);
     completionsButton->setFocusProxy(0);
@@ -359,6 +327,9 @@ void MCompleterViewPrivate::handleCompleterShown()
 
 void MCompleterViewPrivate::handleCompleterHidden()
 {
+    Q_Q(MCompleterView);
+    q->style().setModeDefault();
+    q->applyStyle();
     // connect to MTextEdit private signal scenePositionChanged() to enable
     // the completer to follow the text widget.
     MTextEdit *textWidget = qobject_cast<MTextEdit *>(controller->widget());
@@ -391,15 +362,9 @@ QSizeF MCompleterView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
 {
     Q_UNUSED(which);
     Q_UNUSED(constraint);
-    Q_D(const MCompleterView);
 
-    // return the actual height of mcompleter to avoid twice relocation.
-    if (!d->overLaypreferredSize.isEmpty())
-        return d->overLaypreferredSize;
-    else {
-        int height = (style()->height() > 0) ? style()->height() : DefaultCompleterHeight;
-        return QSize(MApplication::activeWindow()->visibleSceneSize().width(), height);
-    }
+    return QSize(MApplication::activeWindow()->visibleSceneSize().width(),
+                 DefaultCompleterHeight);
 }
 
 void MCompleterView::mousePressEvent(QGraphicsSceneMouseEvent *event)

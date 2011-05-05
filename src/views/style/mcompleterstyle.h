@@ -30,11 +30,6 @@ class M_VIEWS_EXPORT MCompleterStyle : public MSceneWindowStyle
     M_STYLE_INTERNAL(MCompleterStyle)
 
     M_STYLE_ATTRIBUTE(QColor, highlightColor, HighlightColor)
-    M_STYLE_ATTRIBUTE(int, height, Height)
-    M_STYLE_ATTRIBUTE(int, displayBorder, DisplayBorder)
-    M_STYLE_ATTRIBUTE(int, labelMargin, LabelMargin)
-    M_STYLE_ATTRIBUTE(int, buttonMargin, ButtonMargin)
-    M_STYLE_ATTRIBUTE(int, buttonWidth, ButtonWidth)
     M_STYLE_ATTRIBUTE(int, yPositionOffset, YPositionOffset)
 };
 

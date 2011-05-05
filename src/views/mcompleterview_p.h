@@ -75,7 +75,6 @@ protected:
     MButton *completionsButton;
     QGraphicsLinearLayout *layout;
     MPopupList *popup;
-    QSizeF overLaypreferredSize;
 };
 
 #endif
