@@ -2378,10 +2378,12 @@ int MSceneManager::execDialog(MDialog *dialog)
     }
 
     QEventLoop eventLoop;
+    // use QPointer to be safe in case the dialog is deleted while it is being shown
     QPointer<MDialog> dialog_ptr = dialog;
-    ok = connect(dialog, SIGNAL(disappeared()), &eventLoop, SLOT(quit()));
+
+    ok = connect(dialog_ptr, SIGNAL(disappeared()), &eventLoop, SLOT(quit()));
     if (!ok) qFatal("signal connection failed");
-    connect(dialog, SIGNAL(destroyed()), &eventLoop, SLOT(quit()));
+    connect(dialog_ptr, SIGNAL(destroyed()), &eventLoop, SLOT(quit()));
 
     //TODO: Figure better workaround for this (or ask Qt to
     //      fix this for us).
@@ -2397,16 +2399,15 @@ int MSceneManager::execDialog(MDialog *dialog)
     if (g)
         g->ungrabMouse();
 
-    appearSceneWindow(dialog);
+    appearSceneWindow(dialog_ptr);
     eventLoop.exec();
 
-    // use QPointer in case of the dialog being deleted in the meantime
     if (dialog_ptr) {
-        MButtonModel *clickedButton = dialog->clickedButton();
+        MButtonModel *clickedButton = dialog_ptr->clickedButton();
         if (clickedButton)
-            return dialog->standardButton(clickedButton);
+            return dialog_ptr->standardButton(clickedButton);
         else
-            return dialog->result();
+            return dialog_ptr->result();
     }
 
     return MDialog::Rejected;

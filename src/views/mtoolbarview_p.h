@@ -46,6 +46,8 @@ class MAction;
 //! \internal
 class MToolBarViewPrivate : public QObject
 {
+    Q_OBJECT
+
     Q_DECLARE_PUBLIC(MToolBarView)
 
 public:
