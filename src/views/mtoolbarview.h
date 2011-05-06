@@ -101,6 +101,7 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_groupButtonClicked(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_groupActionToggled(bool))
+    Q_PRIVATE_SLOT(d_func(), void _q_updateWidgetOrientation(M::Orientation))
 
 #ifdef UNIT_TEST
     friend class Ut_MToolBarView;
