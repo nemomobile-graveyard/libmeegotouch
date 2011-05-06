@@ -36,7 +36,6 @@
 #include "mwindow.h"
 #include "mdialog.h"
 #include "mcancelevent.h"
-#include <morientationchangeevent.h>
 
 #include "mmetatypes.h"
 
@@ -356,11 +355,6 @@ bool MSceneWindow::event(QEvent *event)
             d->focusItemBeforeWindowBlocked->setFocus(Qt::ActiveWindowFocusReason);
         }
         d->focusItemBeforeWindowBlocked = 0;
-    } else if (event->type() == MOrientationChangeEvent::eventNumber()) {
-        MOrientationChangeEvent *orientationChangeEvent =
-                static_cast<MOrientationChangeEvent *>(event);
-
-        d->orientationFromLastEvent = orientationChangeEvent->orientation();
     }
 
     return MWidgetController::event(event);

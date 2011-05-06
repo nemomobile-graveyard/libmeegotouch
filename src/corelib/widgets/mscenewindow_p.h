@@ -74,9 +74,6 @@ public:
 
     // Focused item before window blocked.
     QPointer<QGraphicsWidget> focusItemBeforeWindowBlocked;
-
-    // The orientation received from the last MOrientationChangeEvent
-    M::Orientation orientationFromLastEvent;
 };
 
 class MSceneWindowTestInterface : public QObject
