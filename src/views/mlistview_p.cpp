@@ -405,8 +405,16 @@ void MListViewPrivate::updatePannableViewportPosition()
 
     if(pannableViewport && controller) {
         QPointF oldListPosition = listPosition;
+        listPosition = QPointF(0,0);
 
-        listPosition = controller->mapToItem(pannableViewport->widget(), 0, 0);        
+        QGraphicsWidget *widget = controller;
+        while (widget && widget != pannableViewport->widget() && widget != pannableViewport) {
+            /* The MList could be inside another widget which is inside the pannable viewport, so traverse up the parent tree, adding up the geometry
+             * topLeft coordinates until we reach the pannableViewport->widget().  As a defensive check, we make sure that the parent isn't the
+             * pannableViewport itself and isn't NULL, but these scenarios should never happen. */
+            listPosition += widget->geometry().topLeft();
+            widget = widget->parentWidget();
+        }
         viewportTopLeft += (oldListPosition - listPosition);
 
         listOffset = calculatePannableViewportOffset(listPosition);
