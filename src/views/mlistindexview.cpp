@@ -290,23 +290,26 @@ void MListIndexViewPrivate::_q_hideIfNeeded()
 void MListIndexViewPrivate::_q_updateGeometry()
 {
     Q_Q(MListIndexView);
-    if (container->windowType() == MSceneWindow::ApplicationPage)
-        containerRect = static_cast<MApplicationPage*>(container)->exposedContentRect();
-    else if (container->windowType() == MSceneWindow::Sheet) {
-        QGraphicsWidget *headerWidget = static_cast<MSheet*>(container)->headerWidget();
-        QSizeF containerSize = container->size();
-        if (headerWidget)
-            containerRect = QRectF(QPointF(0, headerWidget->size().height()),
-                                   QSize(containerSize.width(), containerSize.height() - headerWidget->size().height()));
-        else
-            containerRect = QRectF(QPointF(), containerSize);
-    } else
-        containerRect = QRectF(QPointF(), container->size());
+    if (container) {
+        if (container->windowType() == MSceneWindow::ApplicationPage)
+            containerRect = static_cast<MApplicationPage*>(container)->exposedContentRect();
+        else if (container->windowType() == MSceneWindow::Sheet) {
+            QGraphicsWidget *headerWidget = static_cast<MSheet*>(container)->headerWidget();
+            QSizeF containerSize = container->size();
+            if (headerWidget)
+                containerRect = QRectF(QPointF(0, headerWidget->size().height()),
+                                       QSize(containerSize.width(), containerSize.height() - headerWidget->size().height()));
+            else
+                containerRect = QRectF(QPointF(), containerSize);
+        } else
+            containerRect = QRectF(QPointF(), container->size());
+    }
 
     layout->invalidate();
 
     q->updateGeometry();
-    controller->setPos(containerRect.width() - q->size().width(), containerRect.top() + q->model()->offset().y());
+    if (viewport)
+        controller->setPos(containerRect.width() - q->size().width(), containerRect.top() + viewport->pos().y());
 
     tooltip()->setPos(controller->mapFromParent(containerRect.left(), tooltip()->pos().y()));
     tooltip()->resize(containerRect.width(), tooltip()->size().height());
@@ -392,6 +395,7 @@ void MListIndexViewPrivate::_q_updatePositionIndicatorPosition(const QRectF &vie
 {
     viewportAdjustedRange = viewportRange;
     _q_updatePositionIndicatorPosition(viewport->position());
+    _q_updateGeometry();
 }
 
 void MListIndexViewPrivate::beginFastScrolling(const QPointF &pos)
@@ -557,9 +561,6 @@ void MListIndexView::updateData(const QList<const char *> &modifications)
         else if (member == MListIndexModel::DisplayMode) {
             d->setDisplayMode(model()->displayMode());
         }
-        else if (member == MListIndexModel::Offset) {
-            d->_q_updateGeometry();
-        }
     }
 }
 
@@ -585,8 +586,8 @@ QSizeF MListIndexView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
     Q_UNUSED(which);
     Q_UNUSED(constraint);
 
-    if (model())
-        return QSizeF(style()->preferredSize().width(), d->containerRect.height() - model()->offset().y());
+    if (model() && d->viewport)
+        return QSizeF(style()->preferredSize().width(), d->containerRect.height() - d->viewport->pos().y());
 
     return QSizeF();
 }

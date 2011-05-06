@@ -410,7 +410,6 @@ void MListViewPrivate::updatePannableViewportPosition()
         viewportTopLeft += (oldListPosition - listPosition);
 
         listOffset = calculatePannableViewportOffset(listPosition);
-        updateListIndexOffset();
     }
     else
         listPosition = QPointF(0,0);
@@ -771,10 +770,6 @@ void MListViewPrivate::scrollToLastIndex()
 }
 
 void MListViewPrivate::updateListIndexVisibility()
-{
-}
-
-void MListViewPrivate::updateListIndexOffset()
 {
 }
 
@@ -1542,12 +1537,6 @@ void MGroupHeaderListViewPrivate::updateListIndexVisibility()
 {
     if (listIndexWidget)
         listIndexWidget->setDisplayMode((MList::DisplayMode)controllerModel->listIndexDisplayMode());
-}
-
-void MGroupHeaderListViewPrivate::updateListIndexOffset()
-{
-    if (listIndexWidget)
-        listIndexWidget->setOffset(pannableViewport->pos());
 }
 
 void MGroupHeaderListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)

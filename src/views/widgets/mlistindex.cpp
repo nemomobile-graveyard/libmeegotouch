@@ -101,16 +101,6 @@ MList::DisplayMode MListIndex::displayMode()
     return (MList::DisplayMode)model()->displayMode();
 }
 
-void MListIndex::setOffset(const QPointF &offset)
-{
-    model()->setOffset(offset);
-}
-
-QPointF MListIndex::offset() const
-{
-    return model()->offset();
-}
-
 void MListIndex::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     event->accept();
