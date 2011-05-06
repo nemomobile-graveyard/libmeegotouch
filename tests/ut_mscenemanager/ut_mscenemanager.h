@@ -94,29 +94,8 @@ private slots:
     void testSceneWindowsBehindSheetAreShownWhenSheetAboutToDisappear();
     void testSceneWindowsBehindFirstSheetAreKeptHiddenWhenSecondSheetDisappears();
     void testDisappearingFirstSheetDoesNotAffectOthersVisibility();
-
-    // Tests that disappeared scene windows do not get MOrientationChange events.
-    // That's an optimization since it's a waste of resources to keep up to date
-    // scene windows that are not being displayed anyway.
-    void testDisappearedSceneWindowsDoNotGetOrientationChangeEvents();
 private:
     MComponentData* m_componentData;
-};
-
-class EventSpy : public QObject
-{
-    Q_OBJECT
-public:
-    EventSpy() {}
-    virtual ~EventSpy() {}
-
-    virtual bool eventFilter (QObject *watched, QEvent *event) {
-        Q_UNUSED(watched)
-        eventTypesReceived << event->type();
-        return false;
-    }
-
-    QList<QEvent::Type> eventTypesReceived;
 };
 
 #endif
