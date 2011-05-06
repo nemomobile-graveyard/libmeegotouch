@@ -19,6 +19,7 @@
 
 #include <MApplication>
 #include <QProcess>
+#include <QFileInfo>
 
 #include <qtest.h>
 #include <mbenchmark.h>
@@ -65,7 +66,9 @@ void Pt_MApplication::cachedConstructor()
 void Pt_MApplication::executeSelf(const QLatin1String &parameter)
 {
     QProcess proc;
-    const QString program       = "./pt_mapplication";
+    //const QString program = "./pt_mapplication";
+    //this allows to execute it from different dir (using xml definition),  QCoreApplication::applicationFilePath() cannot be used in this case
+    const QString program = QFileInfo("/proc/self/exe").symLinkTarget().toLatin1();
     const QStringList arguments = QStringList() << QLatin1String(parameter);
 
     MBENCHMARK_ONCE (
