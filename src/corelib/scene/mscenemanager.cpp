@@ -810,7 +810,8 @@ QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *s
         case MSceneWindow::Banner:
             if (sceneWindow->styleName() == MBannerType::ShortEventBanner)
                 root = rootElement;
-            else if (sceneWindow->styleName() == MBannerType::InformationBanner || sceneWindow->styleName() == MBannerType::SystemBanner)
+            else
+                //For all the MBanners except ShortEventBanner
                 root = homeButtonRootElement;
             break;
         case MSceneWindow::DockWidget:
