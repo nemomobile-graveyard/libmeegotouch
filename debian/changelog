@@ -1,3 +1,9 @@
+libmeegotouch (0.21.13~1) unstable; urgency=low
+
+  * Fixes: NB#253122 - systemwide sheet flickers when pressing cancel button
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 06 May 2011 14:29:57 +0300
+
 libmeegotouch (0.21.12-1) unstable; urgency=low
 
   * New version
