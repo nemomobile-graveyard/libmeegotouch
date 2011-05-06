@@ -24,7 +24,6 @@
 #include <QHash>
 #include <QCache>
 #include <QList>
-#include <QWeakPointer>
 
 #include "maction.h"
 #include "mnamespace.h"
@@ -43,7 +42,6 @@ class MLayout;
 class MToolBarLayoutPolicy;
 class MButtonGroup;
 class MAction;
-class MSceneManager;
 
 //! \internal
 class MToolBarViewPrivate : public QObject
@@ -96,8 +94,6 @@ protected:
     bool isLabelOnly(MButton *button) const;
     bool isIconOnly(MButton *button) const;
     MToolBarLayoutPolicy *currentPolicy() const;
-    void _q_updateWidgetOrientation(M::Orientation);
-    void onSceneManagerChanged(MSceneManager *newSceneManager);
 
 protected:
     MToolBarView *q_ptr;
@@ -119,8 +115,6 @@ protected:
     QString labelOnlyButtonStyleName;
     QString iconButtonStyleName;
     QString iconLabelButtonStyleName;
-    QWeakPointer<MSceneManager> sceneManagerPointer;
-    M::Orientation *lastOrientationChangeEventReceived;
 };
 //! \internal_end
 
