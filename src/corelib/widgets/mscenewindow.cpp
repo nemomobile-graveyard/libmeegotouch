@@ -36,6 +36,7 @@
 #include "mwindow.h"
 #include "mdialog.h"
 #include "mcancelevent.h"
+#include <morientationchangeevent.h>
 
 #include "mmetatypes.h"
 
@@ -74,8 +75,14 @@ MSceneWindowPrivate::MSceneWindowPrivate()
         disappearanceAnimation(0),
         queuedTransition(0),
         sceneManager(0),
-        focusItemBeforeWindowBlocked(0)
+        focusItemBeforeWindowBlocked(0),
+        orientationFromLastEvent(0)
 {
+}
+
+MSceneWindowPrivate::~MSceneWindowPrivate()
+{
+    delete orientationFromLastEvent;
 }
 
 void MSceneWindowPrivate::setSceneWindowState(MSceneWindow::SceneWindowState newState)
@@ -355,6 +362,14 @@ bool MSceneWindow::event(QEvent *event)
             d->focusItemBeforeWindowBlocked->setFocus(Qt::ActiveWindowFocusReason);
         }
         d->focusItemBeforeWindowBlocked = 0;
+    } else if (event->type() == MOrientationChangeEvent::eventNumber()) {
+        MOrientationChangeEvent *orientationChangeEvent =
+                static_cast<MOrientationChangeEvent *>(event);
+
+        if (!d->orientationFromLastEvent)
+            d->orientationFromLastEvent = new M::Orientation;
+
+        *d->orientationFromLastEvent = orientationChangeEvent->orientation();
     }
 
     return MWidgetController::event(event);
