@@ -1,3 +1,10 @@
+libmeegotouch (0.21.9-3) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#241875 - Unable to enter text in the field for the given scenerio.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 06 May 2011 15:28:22 +0300
+
 libmeegotouch (0.21.9-2) unstable; urgency=low
 
   * New version
