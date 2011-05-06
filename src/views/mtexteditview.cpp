@@ -1877,7 +1877,8 @@ void MTextEditView::applyStyle()
 
     QString maskString = s->maskString();
 
-    // special case when mask-string is an unicode character in the form "\uXXXX"
+    // special case when mask-string is an unicode character in the form "\uXXXX".
+    // reason: theming system doesn't support unicode strings for now.
     if (maskString.length() >= 6 &&
         (maskString.indexOf("\\u", 0) == 0 || maskString.indexOf("\\U", 0) == 0)) {
         maskString.remove(0, 2);
