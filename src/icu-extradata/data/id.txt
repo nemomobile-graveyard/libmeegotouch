@@ -3,8 +3,8 @@ id{
     calendar{
         gregorian{
             AmPmMarkers{
-                "pagi",
-                "malam",
+                "AM",
+                "PM",
             }
             DateTimePatterns{
                 "H.mm.ss zzzz",

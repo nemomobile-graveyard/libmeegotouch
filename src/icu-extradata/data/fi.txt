@@ -19,8 +19,8 @@ fi{
         }
         gregorian{
              AmPmMarkers{
-                 "ap.",
-                 "ip.",
+                 "AM",
+                 "PM",
              }
              DateTimePatterns{
                 "H:mm:ss zzzz",
