@@ -198,15 +198,23 @@ void MButtonViewPrivate::calcIconTextRects()
             //icon on bottom and text on top
             case Qt::AlignBottom: {
                 iconPosition = QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.bottom() - iconHeight);
-                textRect.setHeight(contentRect.height() - iconHeight - vTextMargin);
+                const qreal textHeight = qMax(contentRect.height() - iconHeight - vTextMargin, label->preferredHeight());
+                textRect.setHeight(textHeight);
                 break;
             }
 
             //icon on top and text on bottom
             default: {
                 iconPosition = QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.top());
-                textRect.setY(iconRect.bottom() + q->style()->textMarginTop());
-                textRect.setHeight(contentRect.height() - iconHeight - vTextMargin);
+                qreal textY = iconRect.bottom() + q->style()->textMarginTop();
+                qreal textHeight = contentRect.height() - iconHeight - vTextMargin;
+                const qreal preferredHeight = label->preferredHeight();
+                if (textHeight < preferredHeight) {
+                    textY -= preferredHeight - textHeight;
+                    textHeight = preferredHeight;
+                }
+                textRect.setY(textY);
+                textRect.setHeight(textHeight);
                 break;
             }
             }
