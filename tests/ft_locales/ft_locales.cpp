@@ -1568,11 +1568,14 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<"fr_CA"
         << frenchStringsSorted
         << frenchExpectedBuckets;
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+#else
     QTest::newRow("fr_FR")
         <<"ja_JP"
         <<"fr_FR"
         << frenchStringsSorted
         << frenchExpectedBuckets;
+#endif
     QStringList spanishStringsSorted =
         (QStringList()
          <<"aaa"
@@ -3680,7 +3683,6 @@ void Ft_Locales::checkAvailableLocales()
                 calendar = islamicCalendar;
                 break;
             }
-            locale.setCalendarType(calendarType);
             for (unsigned dateType = MLocale::DateNone;
                  dateType <= MLocale::DateFull;
                  ++dateType) {
@@ -3752,6 +3754,8 @@ void Ft_Locales::checkAvailableLocales()
                         }
                         locale.setCategoryLocale(MLocale::MLcTime, locale.name());
                         locale.setCategoryLocale(MLocale::MLcMessages, messageLocale);
+                        locale.setCalendarType(calendarType);
+                        QCOMPARE(locale.calendarType(), calendarType);
                         for (int hourMode = 0; hourMode < 2; ++hourMode) {
                             MLocale::TimeFormat24h timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
                             locale.setTimeFormat24h(timeFormat24h);
