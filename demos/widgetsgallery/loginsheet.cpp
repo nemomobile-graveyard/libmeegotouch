@@ -34,6 +34,7 @@ LoginSheet::LoginSheet()
     connect(&fakeAuthenticationTimer, SIGNAL(timeout()), SLOT(showLoginSuccessfulAndDismiss()));
 
     userNameTextEdit = 0;
+    messageBox = 0;
 
     createCentralWidget();
     createHeaderWidget();
@@ -120,7 +121,13 @@ void LoginSheet::cancel()
     if (fakeAuthenticationTimer.isActive()) {
         fakeAuthenticationTimer.stop();
     }
-    dismiss();
+
+    /* Dismiss the page only if the success message box hasn't been created yet. If the
+       sheet is system wide, dismissing the page will destroy the messagebox, which may
+       lead to a crash */
+    if (!messageBox) {
+        dismiss();
+    }
 }
 
 void LoginSheet::showLoginSuccessfulAndDismiss()
@@ -129,7 +136,7 @@ void LoginSheet::showLoginSuccessfulAndDismiss()
 
     header->setProgressIndicatorVisible(false);
 
-    MMessageBox *messageBox = new MMessageBox;
+    messageBox = new MMessageBox;
     messageBox->setObjectName("messageBox");
 
     //% "Access Granted!"

@@ -24,6 +24,7 @@
 #include <QTimer>
 
 class MTextEdit;
+class MMessageBox;
 
 class LoginSheet : public MSheet
 {
@@ -45,6 +46,7 @@ private:
 
     QTimer fakeAuthenticationTimer;
     MTextEdit *userNameTextEdit;
+    MMessageBox *messageBox;
 };
 
 #endif //LOGINSHEET_H
