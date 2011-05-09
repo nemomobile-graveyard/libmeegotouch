@@ -1,8 +1,21 @@
-libmeegotouch (0.21.13~1) unstable; urgency=low
+libmeegotouch (0.21.13-1) unstable; urgency=low
 
+  * New version
+  * Fixes: NB#246406 - Camera: Text is cropped in Turkish language
+  * Fixes: NB#238195 - MMS message containing more than 15kB of text cause messaging application hangs
+  * Fixes: NB#251414 - Action lost from toolbar when rotated
+  * Fixes: NB#249745 - [TASK] Optimize emission of MOrientationChangeEvent
+  * Fixes: NB#239001 - COREWEB: /usr/bin/music-suite 'd_func MWidgetViewPrivate::setEnabled MWidgetView::notifyItemChange MWidgetController::itemChange QGraphicsItemPrivate::setEnabledHelper'
+  * Fixes: NB#243384 - Fast scroll should go to top of the content when selecting first group.
+  * Fixes: NB#243558 - Long group titles get truncated in fast scroll magnifier widget.
+  * Fixes: NB#245312 - Inconsistent symbols for "hidden input" (aka password field)
+  * Fixes: NB#252511 - Crash in list index when container scene window is null.
+  * Fixes: NB#235643 - [TASK] Need unique Object names for the demos in widgetsgallery
+  * Fixes: NB#246452
+  * Fixes: NB#252583 - navigation bar appears in landscape in portrait-locked window
   * Fixes: NB#253122 - systemwide sheet flickers when pressing cancel button
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 06 May 2011 14:29:57 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 09 May 2011 15:24:56 +0300
 
 libmeegotouch (0.21.12-1) unstable; urgency=low
 
