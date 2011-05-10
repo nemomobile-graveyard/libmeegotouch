@@ -41,6 +41,7 @@
 #include "mbuttondefaulttransition.h"
 #include "mbuttonexpandingbackgroundtransition.h"
 #include "mbuttonimplodingbackgroundtransition.h"
+#include "mcancelevent.h"
 
 
 MButtonViewPrivate::MButtonViewPrivate()
@@ -671,6 +672,7 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 
 void MButtonView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
+    Q_D(const MButtonView);
     MWidgetView::notifyItemChange(change, value);
 
     if (change == QGraphicsItem::ItemEnabledHasChanged) {
@@ -680,6 +682,14 @@ void MButtonView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
             applyStyle();
         }
     }
+    //cancel the ongoing button press event when a button is made invisible
+    else if (change == QGraphicsItem::ItemVisibleHasChanged) {
+        if (!d->controller->isVisible() && model()->down()) {
+            MCancelEvent e;
+            cancelEvent(&e);
+        }
+    }
+
 }
 
 M_REGISTER_VIEW_NEW(MButtonView, MButton)

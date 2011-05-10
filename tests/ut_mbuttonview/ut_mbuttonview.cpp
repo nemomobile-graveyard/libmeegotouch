@@ -255,6 +255,14 @@ void Ut_MButtonView::testMouseEvents()
     m_subject->mouseMoveEvent(&moveEvent);
     QVERIFY(m_button->isDown() == false);
     m_subject->mouseReleaseEvent(&releaseEvent);
+
+    //press mouse down and hide it, this should cause cancel of the
+    //press, regression test for NB#240146
+    m_subject->mousePressEvent(&pressEvent);
+    QVERIFY(m_button->isDown() == true);
+    m_subject->hide();
+    QVERIFY(m_button->isDown() == false);
+
 }
 
 void Ut_MButtonView::testSwitchView()
