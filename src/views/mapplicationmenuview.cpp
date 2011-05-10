@@ -115,8 +115,6 @@ bool MActionsItemModel::eventFilter(QObject *, QEvent *event)
 MMenuListItem::MMenuListItem(QGraphicsItem* parent)
     : MListItem(parent), icon(0), title(0)
 {
-    setStyleName("CommonSmallPanelInverted");
-    setObjectName("menuactioncommand");
     new QGraphicsLinearLayout(this);
     layout()->setContentsMargins(0, 0, 0, 0);
 }
@@ -153,7 +151,7 @@ void MMenuListItem::setTitle(const QString &text)
     if (!title) {
         title = new MLabel(this);
         title->setTextElide(true);
-        title->setStyleName("CommonSingleTitleInverted");
+        title->setStyleName(titleStyleName);
     }
     title->setText(text);
 }
@@ -181,7 +179,18 @@ void MMenuListItem::setCustomWidget(MWidget* newWidget)
         MMenuListItem* previousParent = dynamic_cast<MMenuListItem*>(widget->parentItem());
         if (previousParent)
             previousParent->setCustomWidget(0);
+
+        MWidgetController *widgetCtrl = qobject_cast<MWidgetController*>(widget);
+        if (widgetCtrl && widgetCtrl->styleName().isEmpty())
+            widgetCtrl->setStyleName(styleName());
     }
+}
+
+void MMenuListItem::setTitleStyleName(const QString &styleName)
+{
+    titleStyleName = styleName;
+    if (title)
+        title->setStyleName(titleStyleName);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -196,6 +205,11 @@ MApplicationMenuCellCreator::MApplicationMenuCellCreator(MList* list)
 MWidget* MApplicationMenuCellCreator::createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
 {
     MWidget *cell = MListCellCreatorHelper<MMenuListItem>::createCell(recycler, QString(), QString());
+    MMenuListItem* item = static_cast<MMenuListItem*>(cell);
+    if (item) {
+        item->setStyleName(itemStyleName);
+        item->setTitleStyleName(itemTitleStyleName);
+    }
     updateCell(index, cell);
     return cell;
 }
@@ -207,6 +221,7 @@ void MApplicationMenuCellCreator::updateCell(const QModelIndex& index, MWidget *
    QString iconID = index.data(Qt::DecorationRole).toString();
    QAction* action = index.data(MActionsItemModel::ActionRole).value<QAction*>();
    MWidget* widget = extractWidget(action);
+   MWidgetController* widgetCtrl = qobject_cast<MWidgetController*>(widget);
 
    if (isComboBox(item->customWidget()))
        item->customWidget()->disconnect(SIGNAL(clicked()), item, SLOT(click()));
@@ -236,6 +251,18 @@ void MApplicationMenuCellCreator::updateCell(const QModelIndex& index, MWidget *
        item->setObjectName(QString("menuactioncommand_%1").arg(action->objectName()));
    else
        item->setObjectName("menuactioncommand");
+
+   if (index.model()->rowCount() == 1)
+       item->setLayoutPosition(M::DefaultPosition);
+   else if (index.row() == 0)
+       item->setLayoutPosition(M::VerticalTopPosition);
+   else if (index.row() == index.model()->rowCount() - 1)
+       item->setLayoutPosition(M::VerticalBottomPosition);
+   else
+       item->setLayoutPosition(M::VerticalCenterPosition);
+
+   if (widgetCtrl)
+       widgetCtrl->setLayoutPosition(item->layoutPosition());
 }
 
 bool MApplicationMenuCellCreator::isComboBox(MWidget* widget)
@@ -249,11 +276,19 @@ MWidget* MApplicationMenuCellCreator::extractWidget(QAction* action) const
     if (!widgetAction)
         return 0;
 
-    MWidgetController *widget = qobject_cast<MWidgetController*>(widgetAction->widget());
-    if (widget && widget->styleName().isEmpty())
-        widget->setStyleName(isComboBox(widget) ? "CommonComboBoxInverted" : "menuwidgetcommand");
     return widgetAction->widget();
 }
+
+void MApplicationMenuCellCreator::setItemStyleName(const QString &styleName)
+{
+    itemStyleName = styleName;
+}
+
+void MApplicationMenuCellCreator::setItemTitleStyleName(const QString &styleName)
+{
+    itemTitleStyleName = styleName;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -262,7 +297,8 @@ MApplicationMenuViewPrivate::MApplicationMenuViewPrivate(MApplicationMenu *menu)
       controller(menu),
       actionCommandViewport(0),
       topArea(0),
-      list(0)
+      list(0),
+      cellCreator(0)
 {}
 
 MApplicationMenuViewPrivate::~MApplicationMenuViewPrivate()
@@ -279,18 +315,27 @@ void MApplicationMenuViewPrivate::init()
     controllerLayout->setContentsMargins(0, 0, 0, 0);
     controllerLayout->setSpacing(0);
 
+    QGraphicsLinearLayout *actionLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    actionLayout->setSpacing(0);
+    actionLayout->setContentsMargins(0.0, 0.0, 0.0, 0.0);
+    MStylableWidget *actionListHolder = new MStylableWidget;
+    actionListHolder->setStyleName("ApplicationMenuActionListHolder");
+    actionListHolder->setLayout(actionLayout);
+
     actionCommandViewport = new MPannableViewport(controller);
     actionCommandViewport->setStyleName("MApplicationMenuActionViewport");
-    actionCommandViewport->positionIndicator()->setStyleName("CommonPositionIndicatorInverted");
     actionCommandViewport->setObjectName(actionCommandViewport->styleName());
     actionCommandViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+    actionCommandViewport->setWidget(actionListHolder);
 
-    list = new MList(actionCommandViewport);
+    list = new MList(actionListHolder);
     MActionsItemModel* actionItemModel = new MActionsItemModel(controller, this);
     list->setItemModel(actionItemModel);
-    list->setCellCreator(new MApplicationMenuCellCreator(list));
+    cellCreator = new MApplicationMenuCellCreator(list);
+    list->setCellCreator(cellCreator);
     list->setSelectionMode(MList::NoSelection);
-    actionCommandViewport->setWidget(list);
+
+    actionLayout->addItem(list);
 
     topArea = new MStylableWidget(controller);
     topArea->setStyleName("MApplicationMenuTopArea");
@@ -318,6 +363,18 @@ void MApplicationMenuViewPrivate::actionTriggered(const QModelIndex &index)
 void MApplicationMenuViewPrivate::resetListPosition()
 {
     list->scrollTo(list->itemModel()->index(0, 0), MList::PositionAtTopHint, MList::NonAnimated);
+    actionCommandViewport->setPosition(QPointF(0,0));
+}
+
+void MApplicationMenuViewPrivate::updateStyleNames()
+{
+    Q_Q(MApplicationMenuView);
+
+    const MApplicationMenuStyle *s = static_cast<const MApplicationMenuStyle *>(q->style().operator ->());
+
+    actionCommandViewport->positionIndicator()->setStyleName(s->positionIndicatorStyleName());
+    cellCreator->setItemStyleName(s->itemStyleName());
+    cellCreator->setItemTitleStyleName(s->itemTitleStyleName());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -347,11 +404,30 @@ MApplicationMenuView::~MApplicationMenuView()
 
 void MApplicationMenuView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    Q_UNUSED(option);
-
     Q_D(const MApplicationMenuView);
 
     const MApplicationMenuStyle *s = static_cast<const MApplicationMenuStyle *>(style().operator ->());
+
+    if (s->topShadowImage()) {
+        s->topShadowImage()->draw(0.0, (qreal)-s->topShadowImage()->pixmap()->size().height(),
+                                  boundingRect().width(), (qreal)s->topShadowImage()->pixmap()->size().height(),
+                                  painter);
+    }
+    if (s->leftShadowImage()) {
+        s->leftShadowImage()->draw((qreal)-s->leftShadowImage()->pixmap()->size().width(), 0.0,
+                                   (qreal)s->leftShadowImage()->pixmap()->size().width(), boundingRect().height(),
+                                   painter);
+    }
+    if (s->bottomShadowImage()) {
+        s->bottomShadowImage()->draw(0.0, boundingRect().height(),
+                                     boundingRect().width(), (qreal)s->bottomShadowImage()->pixmap()->size().height(),
+                                     painter);
+    }
+    if (s->rightShadowImage()) {
+        s->rightShadowImage()->draw(boundingRect().width(), 0.0,
+                                    (qreal)s->rightShadowImage()->pixmap()->size().width(), boundingRect().height(),
+                                    painter);
+    }
 
     if (s->canvasOpacity() > 0.0) {
         // draw canvas as a background of the pannable area
@@ -363,6 +439,8 @@ void MApplicationMenuView::drawBackground(QPainter *painter, const QStyleOptionG
             QColor color = s->canvasColor();
             painter->fillRect(layoutGeometry, QBrush(color));
         }
+    } else {
+        MSceneWindowView::drawBackground(painter, option);
     }
 }
 
@@ -373,7 +451,11 @@ void MApplicationMenuView::drawContents(QPainter *painter, const QStyleOptionGra
 
 void MApplicationMenuView::applyStyle()
 {
+    Q_D(MApplicationMenuView);
+
     MSceneWindowView::applyStyle();
+
+    d->updateStyleNames();
 }
 
 M_REGISTER_VIEW_NEW(MApplicationMenuView, MApplicationMenu)

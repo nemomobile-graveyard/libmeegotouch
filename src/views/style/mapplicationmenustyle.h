@@ -128,6 +128,48 @@ class M_VIEWS_EXPORT MApplicationMenuStyle : public MSceneWindowStyle
         \brief Opacity of the menu gap.
     */
     M_STYLE_ATTRIBUTE(qreal,                  gapOpacity,           GapOpacity)
+
+    /*!
+        \property MApplicationMenuStyle::topShadowImage
+        \brief Image for the top shadow.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  topShadowImage,        TopShadowImage)
+
+    /*!
+        \property MApplicationMenuStyle::leftShadowImage
+        \brief Image for the left shadow.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  leftShadowImage,       LeftShadowImage)
+
+    /*!
+        \property MApplicationMenuStyle::bottomShadowImage
+        \brief Image for the bottom shadow.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  bottomShadowImage,     BottomShadowImage)
+
+    /*!
+        \property MApplicationMenuStyle::rightShadowImage
+        \brief Image for the right shadow.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  rightShadowImage,      RightShadowImage)
+
+    /*!
+        \property MApplicationMenuStyle::itemStyleName
+        \brief Style name for items.
+    */
+    M_STYLE_ATTRIBUTE(QString, itemStyleName, ItemStyleName)
+
+    /*!
+        \property MApplicationMenuStyle::itemTitleStyleName
+        \brief Style name for the title in normal item.
+    */
+    M_STYLE_ATTRIBUTE(QString, itemTitleStyleName, ItemTitleStyleName)
+
+    /*!
+        \property MApplicationMenuStyle::positionIndicatorStyleName
+        \brief Style name for position indicator.
+    */
+    M_STYLE_ATTRIBUTE(QString, positionIndicatorStyleName, PositionIndicatorStyleName)
 };
 
 /*!

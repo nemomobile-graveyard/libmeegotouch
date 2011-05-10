@@ -84,10 +84,13 @@ public:
     void setCustomWidget(MWidget* widget);
     MWidget* customWidget() { return widget; }
     void updateLayout(ItemStyle itemStyle);
+    void setTitleStyleName(const QString &styleName);
+
 private:
     MImageWidget* icon;
     MLabel* title;
     QPointer<MWidget> widget;
+    QString titleStyleName;
 };
 
 class MApplicationMenuCellCreator : public MCellCreator
@@ -97,10 +100,15 @@ public:
     MWidget* createCell(const QModelIndex& index, MWidgetRecycler& recycler) const;
     void updateCell(const QModelIndex& index, MWidget * cell) const;
     QSizeF cellSize() const { return size; }
+    void setItemStyleName(const QString &styleName);
+    void setItemTitleStyleName(const QString &styleName);
+
 private:
     static bool isComboBox(MWidget* widget);
     MWidget* extractWidget(QAction* action) const;
     QSizeF size;
+    QString itemStyleName;
+    QString itemTitleStyleName;
 };
 
 class MApplicationMenuViewPrivate : public QObject
@@ -112,6 +120,7 @@ public:
     MApplicationMenuViewPrivate(MApplicationMenu *menu);
     virtual ~MApplicationMenuViewPrivate();
     void init();
+    void updateStyleNames();
 
 private slots:
     void actionTriggered(const QModelIndex &index);
@@ -120,10 +129,10 @@ private slots:
 private:
     MApplicationMenuView *q_ptr;
     MApplicationMenu *controller;
-
     MPannableViewport* actionCommandViewport;
     MStylableWidget *topArea;
     MList* list;
+    MApplicationMenuCellCreator *cellCreator;
 
 #ifdef UNIT_TEST
     friend class Ut_MApplicationMenu;

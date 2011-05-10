@@ -84,8 +84,6 @@ public:
     bool animateComponentsTransitions;
     QTimer navigationBarVisibilityUpdateTimer;
 
-    bool navigationBarPressed;
-
     void manageActions();
     void distributeAction(QAction *action, QAction *before);
     void refreshArrowIconVisibility();

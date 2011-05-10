@@ -97,9 +97,9 @@ public:
     enum WindowTypeZ {
         PlainSceneWindow = 0,
         ApplicationPage = PlainSceneWindow,          // MApplicationPage
-        ApplicationMenu = 500,                       // MApplicationMenu
-        NavigationBar = 1000,                        // MNavigationBar
+        NavigationBar = 500,                         // MNavigationBar
         DockWidget = NavigationBar,                  // MDockWidget
+        ApplicationMenu = 1000,                      // MApplicationMenu
         EscapeButtonPanel = 2000,                    // MEscapeButtonPanel
         Sheet = 3000,                                // MSheet
         Dialog = 4000,                               // MDialog

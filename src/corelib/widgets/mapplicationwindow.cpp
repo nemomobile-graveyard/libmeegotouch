@@ -101,7 +101,6 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , showingNavigationBar(false)
     , showingDockWidget(false)
     , animateComponentsTransitions(false)
-    , navigationBarPressed(false)
     , styleContainer(0)
 {
 
@@ -1403,13 +1402,6 @@ void MApplicationWindow::mousePressEvent(QMouseEvent *event)
 {
     Q_D(MApplicationWindow);
 
-    //check if the navigation or toolbar is pressed
-    if (d->navigationBar->boundingRect().contains(d->navigationBar->mapFromScene(event->pos().x(), event->pos().y()))
-        || d->toolBar->boundingRect().contains(d->toolBar->mapFromScene(event->pos().x(), event->pos().y()))) {
-        d->navigationBarPressed = true;
-    }   else
-        d->navigationBarPressed = false;
-
     if (d->autoHideComponentsTimer.isActive()) {
         d->autoHideComponentsTimer.stop();
     }
@@ -1421,15 +1413,6 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_D(MApplicationWindow);
     MSceneWindow *component;
-
-    //close menu if navigation or toolbar was clicked
-    if (isMenuOpen() && d->navigationBarPressed) {
-        if (d->navigationBar->boundingRect().contains(d->navigationBar->mapFromScene(event->pos().x(), event->pos().y()))
-            || d->toolBar->boundingRect().contains(d->toolBar->mapFromScene(event->pos().x(), event->pos().y()))) {
-            closeMenu();
-        }
-    }
-    d->navigationBarPressed = false;
 
     MWindow::mouseReleaseEvent(event);
 

@@ -72,7 +72,7 @@ public:
     MSeparator* titleSeparator;
 
     MPannableViewport* actionViewport;
-    QGraphicsWidget* actionWidget;
+    MStylableWidget* actionWidget;
 
 private:
     void contentActionTriggered();

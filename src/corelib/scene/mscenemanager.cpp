@@ -736,12 +736,13 @@ void MSceneManagerPrivate::setupLayerEffectForSceneWindow(MSceneWindow *window)
     case MSceneWindow::Dialog:
     case MSceneWindow::MessageBox:
     case MSceneWindow::ModalSceneWindow:
-    case MSceneWindow::ApplicationMenu:
+    case MSceneWindow::PopupList:
         effect = new MSceneLayerEffect("messagebox");
         break;
-    case MSceneWindow::PopupList:
     case MSceneWindow::ObjectMenu:
+    case MSceneWindow::ApplicationMenu:
         effect = new MSceneLayerEffect("objectmenu");
+        effect->setStyleName("MenuSceneLayerEffect");
         break;
     default:
         return;
@@ -794,9 +795,16 @@ QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *s
     switch (sceneWindow->windowType()) {
         case MSceneWindow::EscapeButtonPanel:
         case MSceneWindow::NavigationBar:
-        case MSceneWindow::ApplicationMenu:
             if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
                 root = topNavigationBarRootElement;
+            } else {
+                root = rootElement;
+            }
+            break;
+        case MSceneWindow::ObjectMenu:
+        case MSceneWindow::ApplicationMenu:
+            if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
+                root = topBorderDecorationRootElement;
             } else {
                 root = rootElement;
             }

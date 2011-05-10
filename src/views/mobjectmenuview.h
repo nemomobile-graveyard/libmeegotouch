@@ -64,6 +64,7 @@ protected:
     virtual void updateData(const QList<const char *> &modifications);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     //! \reimp_end
 
 protected slots:

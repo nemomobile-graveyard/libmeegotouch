@@ -35,6 +35,7 @@
 #include "mapplication.h"
 #include "mapplicationwindow.h"
 #include "mpannableviewport.h"
+#include "mscalableimage.h"
 
 MObjectMenuViewPrivate::MObjectMenuViewPrivate() :
       q_ptr(0),
@@ -94,8 +95,9 @@ void MObjectMenuViewPrivate::init()
     actionLayout = new QGraphicsLinearLayout(Qt::Vertical);
     actionLayout->setSpacing(0);
     actionLayout->setContentsMargins(0.0,0.0,0.0,0.0);
-    actionWidget = new QGraphicsWidget;
+    actionWidget = new MStylableWidget;
     actionWidget->setLayout(actionLayout);
+    actionWidget->setStyleName("ObjectMenuActionHolder");
     actionViewport = new MPannableViewport(controller);
     actionViewport->setWidget(actionWidget);
     actionViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
@@ -136,7 +138,8 @@ void MObjectMenuViewPrivate::updateTitleAreaVisibility()
     //hide whole title area if title == "" and icon is not visible
     if( q->model()->title().isEmpty() && q->model()->iconId().isEmpty() ) {
         mainLayout->removeItem(titleArea);
-        actionViewport->setStyleName("objectMenuViewportWithoutTitle");
+        actionWidget->setStyleName("ObjectMenuActionHolder");
+        actionViewport->setStyleName("ObjectMenuViewportWithoutTitle");
         titleArea->hide();
         if (controller->scene()) {
             //Remove from the scene as otherwise it might distract appear/disappear animation
@@ -144,7 +147,8 @@ void MObjectMenuViewPrivate::updateTitleAreaVisibility()
         }
     } else if( mainLayout->itemAt(0) != titleArea ) {
         mainLayout->insertItem(0, titleArea);
-        actionViewport->setStyleName("objectMenuViewportWithTitle");
+        actionWidget->setStyleName("ObjectMenuActionHolderWithTitle");
+        actionViewport->setStyleName("ObjectMenuViewportWithTitle");
         titleArea->show();
     }
 }
@@ -408,6 +412,34 @@ void MObjectMenuView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event);
     Q_D(MObjectMenuView);
     d->controller->dismiss();
+}
+
+void MObjectMenuView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    const MObjectMenuStyle *s = static_cast<const MObjectMenuStyle *>(style().operator ->());
+
+    if (s->topShadowImage()) {
+        s->topShadowImage()->draw(0.0, (qreal)-s->topShadowImage()->pixmap()->size().height(),
+                                  boundingRect().width(), (qreal)s->topShadowImage()->pixmap()->size().height(),
+                                  painter);
+    }
+    if (s->leftShadowImage()) {
+        s->leftShadowImage()->draw((qreal)-s->leftShadowImage()->pixmap()->size().width(), 0.0,
+                                   (qreal)s->leftShadowImage()->pixmap()->size().width(), boundingRect().height(),
+                                   painter);
+    }
+    if (s->bottomShadowImage()) {
+        s->bottomShadowImage()->draw(0.0, boundingRect().height(),
+                                     boundingRect().width(), (qreal)s->bottomShadowImage()->pixmap()->size().height(),
+                                     painter);
+    }
+    if (s->rightShadowImage()) {
+        s->rightShadowImage()->draw(boundingRect().width(), 0.0,
+                                    (qreal)s->rightShadowImage()->pixmap()->size().width(), boundingRect().height(),
+                                    painter);
+    }
+
+    MSceneWindowView::drawBackground(painter, option);
 }
 
 void MObjectMenuViewPrivate::contentActionTriggered()

@@ -32,6 +32,11 @@ class M_VIEWS_EXPORT MObjectMenuStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(QString, titleIconStyleName, TitleIconStyleName)
     M_STYLE_ATTRIBUTE(QString, titleLabelStyleName, TitleLabelStyleName)
     M_STYLE_ATTRIBUTE(QString, titleSeparatorStyleName, TitleSeparatorStyleName)
+
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  topShadowImage, TopShadowImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  leftShadowImage, LeftShadowImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  bottomShadowImage, BottomShadowImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  rightShadowImage, RightShadowImage)
 };
 
 class M_VIEWS_EXPORT MObjectMenuStyleContainer : public MSceneWindowStyleContainer
