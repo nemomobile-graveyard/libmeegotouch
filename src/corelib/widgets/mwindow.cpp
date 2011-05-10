@@ -1584,12 +1584,11 @@ void MWindow::setVisible(bool visible)
             }
             d->isLogicallyClosed = false;
         }
-
+    } else {
+        MOnDisplayChangeEvent ev(visible, sceneRect());
+        onDisplayChangeEvent(&ev);
     }
-
-    // Resets invisible paint event counter, as a side effect:
-    MOnDisplayChangeEvent ev(visible, sceneRect());
-    onDisplayChangeEvent(&ev);
+    d->invisiblePaintCounter = 0;
 
     QGraphicsView::setVisible(visible);
 }
