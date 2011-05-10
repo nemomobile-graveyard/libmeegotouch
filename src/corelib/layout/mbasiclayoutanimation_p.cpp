@@ -23,6 +23,7 @@
 MBasicLayoutAnimationPrivate::MBasicLayoutAnimationPrivate()
 {
     recordedTimeSinceLastUpdate = 0;
+    timeSinceLastUpdate.invalidate();
 }
 
 MBasicLayoutAnimationPrivate::~MBasicLayoutAnimationPrivate()
@@ -31,7 +32,15 @@ MBasicLayoutAnimationPrivate::~MBasicLayoutAnimationPrivate()
 void MBasicLayoutAnimationPrivate::tick()
 {
     Q_Q(MBasicLayoutAnimation);
-    recordedTimeSinceLastUpdate = timeSinceLastUpdate.restart();
+
+    if (! timeSinceLastUpdate.isValid()) {
+        timeSinceLastUpdate.start();
+        recordedTimeSinceLastUpdate = 0;
+    }
+    else {
+        recordedTimeSinceLastUpdate = timeSinceLastUpdate.restart();
+    }
+
     bool layout_is_done(true);
     for(int i = states.count() - 1; i >= 0; --i) {
         MItemState &state = states[i];

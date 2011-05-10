@@ -124,8 +124,12 @@ void MBasicLayoutAnimation::updateState(QAbstractAnimation::State newState, QAbs
 {
     Q_D(MBasicLayoutAnimation);
     Q_UNUSED(oldState);
-    if (newState == Running)
-        d->timeSinceLastUpdate.restart();
+    if (newState == Running) {
+        if (! d->timeSinceLastUpdate.isValid())
+            d->timeSinceLastUpdate.start();
+        else
+            d->timeSinceLastUpdate.restart();
+    }
 }
 void MBasicLayoutAnimation::updateCurrentTime(int msecs)
 {
