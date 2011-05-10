@@ -44,7 +44,7 @@ MColorComboBoxViewPrivate::MColorComboBoxViewPrivate(MColorComboBoxView *q, MCol
 
 MColorComboBoxViewPrivate::~MColorComboBoxViewPrivate()
 {
-    delete popupWidget();
+    delete popup;
 }
 
 void MColorComboBoxViewPrivate::init()
