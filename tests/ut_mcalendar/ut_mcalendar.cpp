@@ -1202,10 +1202,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "١٥/٠٦/٢٠٠٤"
         << "١٥ kesäkuu, ٢٠٠٤"
         << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
-        << "٢:٣١ ip."
-        << "٢:٣١:٠٠ ip."
-        << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
-        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ ip.";
+        << "٢:٣١ PM"
+        << "٢:٣١:٠٠ PM"
+        << "UTC+٣.٠٠ ٢:٣١:٠٠ PM"
+        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ PM";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
@@ -1236,10 +1236,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "15/06/2004"
         << "15 kesäkuu, 2004"
         << "tiistai, 15 kesäkuu, 2004"
-        << "2:31 ip."
-        << "2:31:00 ip."
-        << "UTC+3.00 2:31:00 ip."
-        << "Itä-Euroopan kesäaika 2:31:00 ip.";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "UTC+3.00 2:31:00 PM"
+        << "Itä-Euroopan kesäaika 2:31:00 PM";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
@@ -1270,10 +1270,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "١٥/٠٦/٢٠٠٤"
         << "١٥ kesäkuu, ٢٠٠٤"
         << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
-        << "٢:٣١ ip."
-        << "٢:٣١:٠٠ ip."
-        << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
-        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ ip.";
+        << "٢:٣١ PM"
+        << "٢:٣١:٠٠ PM"
+        << "UTC+٣.٠٠ ٢:٣١:٠٠ PM"
+        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ PM";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
@@ -1304,10 +1304,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "15/06/2004"
         << "15 kesäkuu, 2004"
         << "tiistai, 15 kesäkuu, 2004"
-        << "2:31 ip."
-        << "2:31:00 ip."
-        << "UTC+3.00 2:31:00 ip."
-        << "Itä-Euroopan kesäaika 2:31:00 ip.";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "UTC+3.00 2:31:00 PM"
+        << "Itä-Euroopan kesäaika 2:31:00 PM";
     QTest::newRow("15.6.2004_ru_RU_Gregorian")
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
@@ -1372,10 +1372,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << "kesä 15, 2004"
         << "kesäkuu 15, 2004"
         << "tiistai, kesäkuu 15, 2004"
-        << "2:31 ip."
-        << "2:31:00 ip."
-        << "2:31:00 ip. UTC+3.00"
-        << "2:31:00 ip. Itä-Euroopan kesäaika";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM UTC+3.00"
+        << "2:31:00 PM Itä-Euroopan kesäaika";
     QTest::newRow("15.6.2004_he_IL_Gregorian")
         << QDateTime(QDate(2004, 6, 15), QTime(14, 31))
         << QString("fi_FI")
@@ -1711,10 +1711,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "heinä 21, 2008"
         << "heinäkuu 21, 2008"
         << "maanantai, heinäkuu 21, 2008"
-        << "2:31 ip."
-        << "2:31:00 ip."
-        << "2:31:00 ip. UTC+3.00"
-        << "2:31:00 ip. Itä-Euroopan kesäaika";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM UTC+3.00"
+        << "2:31:00 PM Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_de_DE_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2015,10 +2015,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "2008-7-21"
         << "2008-7-21"
         << "2008-7-21 maanantai"
-        << "ip. 2:31"
-        << "ip. 2:31:00"
-        << "UTC+3.00 ip. 2:31:00"
-        << "Itä-Euroopan kesäaika ip. 2:31:00";
+        << "PM 2:31"
+        << "PM 2:31:00"
+        << "UTC+3.00 PM 2:31:00"
+        << "Itä-Euroopan kesäaika PM 2:31:00";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2072,10 +2072,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "15/06/2004"
         << "15 kesäkuu, 2004"
         << "tiistai, 15 kesäkuu, 2004"
-        << "2:31 ip."
-        << "2:31:00 ip."
-        << "UTC+3.00 2:31:00 ip."
-        << "Itä-Euroopan kesäaika 2:31:00 ip.";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "UTC+3.00 2:31:00 PM"
+        << "Itä-Euroopan kesäaika 2:31:00 PM";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2110,10 +2110,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "١٥/٠٦/٢٠٠٤"
         << "١٥ kesäkuu, ٢٠٠٤"
         << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
-        << "٢:٣١ ip."
-        << "٢:٣١:٠٠ ip."
-        << "UTC+٣.٠٠ ٢:٣١:٠٠ ip."
-        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ ip.";
+        << "٢:٣١ PM"
+        << "٢:٣١:٠٠ PM"
+        << "UTC+٣.٠٠ ٢:٣١:٠٠ PM"
+        << "Itä-Euroopan kesäaika ٢:٣١:٠٠ PM";
     QTest::newRow("15.6.2004_ar_EG_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2300,10 +2300,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "15, kesä 2004"
         << "15, kesäkuu 2004"
         << "tiistai, 15, kesäkuu 2004"
-        << "2:31 ip."
-        << "2:31:00 ip."
-        << "2:31:00 ip. UTC+3.00"
-        << "2:31:00 ip. Itä-Euroopan kesäaika";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM UTC+3.00"
+        << "2:31:00 PM Itä-Euroopan kesäaika";
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2319,10 +2319,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "१५-०६-२००४"
         << "१५ जून २००४"
         << "मंगलवार, १५ जून २००४"
-        << "२:३१ अपराह्न"
-        << "२:३१:०० अपराह्न"
-        << "२:३१:०० अपराह्न GMT+०३:००"
-        << "२:३१:०० अपराह्न GMT+०३:००";
+        << "२:३१ PM"
+        << "२:३१:०० PM"
+        << "२:३१:०० PM GMT+०३:००"
+        << "२:३१:०० PM GMT+०३:००";
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2338,10 +2338,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "15-06-2004"
         << "15 जून 2004"
         << "मंगलवार, 15 जून 2004"
-        << "2:31 अपराह्न"
-        << "2:31:00 अपराह्न"
-        << "2:31:00 अपराह्न GMT+03:00"
-        << "2:31:00 अपराह्न GMT+03:00";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM GMT+03:00"
+        << "2:31:00 PM GMT+03:00";
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2357,10 +2357,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "१५-०६-२००४"
         << "१५ जून २००४"
         << "मंगलवार, १५ जून २००४"
-        << "२:३१ अपराह्न"
-        << "२:३१:०० अपराह्न"
-        << "२:३१:०० अपराह्न GMT+०३:००"
-        << "२:३१:०० अपराह्न GMT+०३:००";
+        << "२:३१ PM"
+        << "२:३१:०० PM"
+        << "२:३१:०० PM GMT+०३:००"
+        << "२:३१:०० PM GMT+०३:००";
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2376,10 +2376,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "१५-०६-२००४"
         << "१५ kesäkuu २००४"
         << "tiistai, १५ kesäkuu २००४"
-        << "२:३१ ip."
-        << "२:३१:०० ip."
-        << "२:३१:०० ip. UTC+३.००"
-        << "२:३१:०० ip. Itä-Euroopan kesäaika";
+        << "२:३१ PM"
+        << "२:३१:०० PM"
+        << "२:३१:०० PM UTC+३.००"
+        << "२:३१:०० PM Itä-Euroopan kesäaika";
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI") // lc_messages
@@ -2395,10 +2395,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "15-06-2004"
         << "15 जून 2004"
         << "मंगलवार, 15 जून 2004"
-        << "2:31 अपराह्न"
-        << "2:31:00 अपराह्न"
-        << "2:31:00 अपराह्न GMT+03:00"
-        << "2:31:00 अपराह्न GMT+03:00";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM GMT+03:00"
+        << "2:31:00 PM GMT+03:00";
     QTest::newRow("15.6.2004_hi_HI_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI") // lc_messages
@@ -2414,10 +2414,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "15-06-2004"
         << "15 kesäkuu 2004"
         << "tiistai, 15 kesäkuu 2004"
-        << "2:31 ip."
-        << "2:31:00 ip."
-        << "2:31:00 ip. UTC+3.00"
-        << "2:31:00 ip. Itä-Euroopan kesäaika";
+        << "2:31 PM"
+        << "2:31:00 PM"
+        << "2:31:00 PM UTC+3.00"
+        << "2:31:00 PM Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_th_TH_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI") // lc_messages
@@ -2948,7 +2948,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%p" // %p locale's equivalent of either AM or PM; blank if not known
-            << "ip.";
+            << "PM";
     QTest::newRow("fi_FI %r")
             << MLocale::GregorianCalendar
             << 2008
@@ -2959,7 +2959,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%r" // locale specific 12-hour clock time
-            << "12:25 ip.";
+            << "12:25 PM";
     QTest::newRow("fi_FI %t")
             << MLocale::GregorianCalendar
             << 2008
