@@ -1,8 +1,21 @@
-libmeegotouch (0.21.14~1) unstable; urgency=low
+libmeegotouch (0.21.14-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#239785
+  * Fixes: NB#249081 - Clock; AM, PM not localized: English time label in 'New alarm' view
+  * Fixes: NB#240146 - Randomly for incoming call view END button comes in pressed state
+  * Fixes: NB#252360, <MemLeak> meditortoolbar.cpp
+  * Fixes: NB#231642 - Completer's "scale with content" functionality doesn't work
+  * Fixes: NB#252491 - Rich text object menu is not removed
+  * Fixes: NB#210912 - Error correction suggestion box is not rendered correctly after changing device orientation
+  * Fixes: NB#252471 - Uninitialized value in QElapsedTimer::restart()
+  * Fixes: 252471 - Uninitialized value in QElapsedTimer::restart()
+  * Fixes: NB#249081 - Clock; AM, PM not localized: English time label in 'New alarm' view
+  * Fixes: NB#253948
+  * Fixes: NB#254025 - Call-ui is crashing for outgoing and incoming calls
+  * Fixes: NB#252722 - Widgets Gallery crashed on entering junk data in the sheets
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 09 May 2011 15:37:53 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 11 May 2011 17:00:04 +0300
 
 libmeegotouch (0.21.13-1) unstable; urgency=low
 
