@@ -985,7 +985,11 @@ void MTextEditPrivate::removePreedit()
     QTextBlock block = cursor()->block();
     q->model()->setAdditionalFormats(QList<MTextEditFormatRange>());
 
+    // Remember current format because during
+    // removeSelectedText it will be cleared
+    QTextCharFormat format = cursor()->charFormat();
     cursor()->removeSelectedText();
+    cursor()->setCharFormat(format);
 }
 
 
