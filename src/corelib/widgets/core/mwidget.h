@@ -214,7 +214,12 @@ Q_SIGNALS:
      * - the widget has entered the visible area of the display
      * - the page containing the widget is not obscured anymore by another window / page
      * - the widget is explicitly shown with show() or setVisible(true) and is on the display area.
+     *
      * Note!: the stacking order of widgets is not taken into account
+     *
+     * Changing opacity from 0 to greater value doesn't cause this signal to be emitted.
+     * If widget has opacity 0 it will not emit this signal when entering display.
+     * \sa enterDisplayEvent
      */
     void displayEntered();
 
@@ -223,7 +228,12 @@ Q_SIGNALS:
      * - the widget has left the visible area of the display
      * - the page containing the widget has become obscured by another window / page
      * - the widget is explicitly hidden with hide() or setVisible(false).
+     *
      * Note!: the stacking order of widgets is not taken into account
+     *
+     * Changing opacity to from a value > 0 to 0 doesn't cause this signal to be emitted.
+     * If widget has opacity 0 it will not emit this signal when exiting display.
+     * \sa exitDisplayEvent
      */
     void displayExited();
 
@@ -231,11 +241,19 @@ protected:
 
     /*!
      * A handler that is called just before displayEntered() is emitted.
+     *
+     * Due to undocumented QT behaviour QTBUG-18267, widgets with opacity 0 are treated
+     * as if isVisible == false, so they don't receive any events. To work around this,
+     * set opacity to 0.001 instead of 0.
      */
     virtual void enterDisplayEvent();
 
     /*!
      * A handler that is called just before displayExited() is emitted.
+     *
+     * Due to undocumented QT behaviour QTBUG-18267, widgets with opacity 0 are treated
+     * as if isVisible == false, so they don't receive any events. To work around this,
+     * set opacity to 0.001 instead of 0.
      */
     virtual void exitDisplayEvent();
 
