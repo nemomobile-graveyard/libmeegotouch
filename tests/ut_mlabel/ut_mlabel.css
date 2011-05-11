@@ -31,3 +31,10 @@ MLabelStyle#size100 {
 MLabelStyle#width40 {
     preferred-size: 40 -1;
 }
+
+MLabelStyle#margins {
+    margin-left: 4;
+    margin-right: 4;
+    margin-top: 6;
+    margin-bottom: 6;
+}

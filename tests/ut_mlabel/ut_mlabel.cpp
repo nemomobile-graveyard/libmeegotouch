@@ -1182,7 +1182,7 @@ void Ut_MLabel::testDiacritics_data()
     QTest::addColumn<QString>("textWithDiacritics");
 
     const QString text = "ABC gyj";
-    const QString textWithDiacritics = QString::fromWCharArray(L"\u00C5\u00C4\u00C3b gyj");
+    const QString textWithDiacritics = QString::fromWCharArray(L"\u00C5\u00C4\u00C3\u00DA gyj");
 
     QTest::newRow("plain") << text << textWithDiacritics;
     QTest::newRow("rich")  << QString("<b>" + text + "</b>") << QString("<b>" + textWithDiacritics + "</b>");
@@ -1193,7 +1193,8 @@ void Ut_MLabel::testDiacritics()
     QFETCH(QString, text);
     QFETCH(QString, textWithDiacritics);
 
-    label->setFont(QFont("Times", 30));
+    label->setFont(QFont("Nokia Pure Text", 30));
+    label->setStyleName("margins");
 
     label->setText(text);
     const QRect textRect = contentRect(captureImage(label));

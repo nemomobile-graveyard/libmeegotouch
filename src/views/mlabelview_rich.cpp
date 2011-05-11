@@ -99,7 +99,7 @@ void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
             textDocument.drawContents(painter, textBounds);
         }
     } else {
-        drawTiles(painter, pixmapOffset, size);
+        drawTiles(painter, pixmapOffset);
     }
 }
 
@@ -666,7 +666,7 @@ void MLabelViewRich::cleanupTiles()
     tiles.clear();
 }
 
-void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos, const QSizeF &size)
+void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos)
 {
     foreach (const Tile &tile, tiles) {
         QPixmap pixmap;
@@ -675,11 +675,13 @@ void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos, const QSiz
         }
 
         const QPointF tileOffset(pos.x(), pos.y() + tile.y);
-        const bool clip = tileOffset.y() + pixmap.height() > size.height() ||
-                          tileOffset.y() + pixmap.height() <= 0.0;
+        const int minYOffset = -topMargin();
+        const QSizeF labelSize = viewPrivate->controller->size();
+        const bool clip = -minYOffset + tileOffset.y() + pixmap.height() > labelSize.height()
+                          || tileOffset.y() < minYOffset;
         if (clip) {
             painter->save();
-            const QRectF clipRect(QPointF(0, 0), size);
+            const QRectF clipRect(QPointF(0, minYOffset), labelSize);
             painter->setClipRect(clipRect, Qt::IntersectClip);
             painter->drawPixmap(tileOffset, pixmap);
             painter->restore();

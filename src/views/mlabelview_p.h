@@ -214,9 +214,8 @@ public:
     /**
      * \param painter Painter where the tiles are drawn into.
      * \param pos     Position of the tile relative to the painter.
-     * \param size    Size of the MLabelView widget.
      */
-    void drawTiles(QPainter *painter, const QPointF &pos, const QSizeF &size);
+    void drawTiles(QPainter *painter, const QPointF &pos);
 
     /**
      * If the scene-position has been changed the vertical position of the
