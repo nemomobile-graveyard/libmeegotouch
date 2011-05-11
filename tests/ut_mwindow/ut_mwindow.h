@@ -82,6 +82,8 @@ private slots:
 
     void testNotificationPreviewsDisabled();
 
+    void testKeepOffDisplayWhenShownAfterReceivingFullyOffDisplayEvent();
+
 public slots:
     void onDisplayTestSlot();
 

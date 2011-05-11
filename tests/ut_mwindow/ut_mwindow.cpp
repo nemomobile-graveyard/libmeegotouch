@@ -571,4 +571,30 @@ void Ut_MWindow::testNotificationPreviewsDisabled()
     QVERIFY( visible );
 }
 
+void Ut_MWindow::testKeepOffDisplayWhenShownAfterReceivingFullyOffDisplayEvent()
+{
+    win->hide();
+
+    // Tell the window that it is off display
+    MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
+    win->event(&event);
+
+    QSignalSpy spyDisplayEntered(win, SIGNAL(displayEntered()));
+
+    win->show();
+
+    // The show() call shouldn't cause the window to presume it's (or will pretty
+    // soon be) on display.
+    //
+    // A simple example is when window->show() is called while the physical display
+    // is turned off.
+    //
+    // Even if the screen is on there could be other windows stacked higher therefore
+    // only after a raise() it could go to the top. And in some cases, depending on the
+    // window type and policy, even after a raise() the window might not end up being
+    // the top most.
+    QCOMPARE(spyDisplayEntered.count(), 0);
+    QCOMPARE(win->isOnDisplay(), false);
+}
+
 QTEST_MAIN(Ut_MWindow);
