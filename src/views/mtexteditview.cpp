@@ -1268,10 +1268,20 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         QColor promptColor = s->promptColor();
         paintContext.palette.setColor(QPalette::Text, promptColor);
 
+        // KLUDGE: make sure here that prompt document has the same indentation as
+        // main QTextDocument just to support cases when app developer has been
+        // messing with indentation of it, e.g. to make first line indented a bit.
+        QTextCursor startCursor(d->document());
+        startCursor.setPosition(0);
+        QTextBlockFormat tbf = startCursor.blockFormat();
+        int indent = tbf.textIndent();
+        painter->translate(indent, 0); // assume that just translating is good enough
+
         qreal opacity = painter->opacity();
         painter->setOpacity(d->currentPromptOpacity);
         d->promptDocument()->documentLayout()->draw(painter, paintContext);
         painter->setOpacity(opacity);
+        painter->translate(-indent, 0);
     }
 
     // normal painting, also draw cursor when prompt is visible
