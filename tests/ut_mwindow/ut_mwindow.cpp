@@ -20,6 +20,7 @@
 #include <MApplication>
 #include <MWindow>
 #include <MSceneManager>
+#include <QTimerEvent>
 #include <MDeviceProfile>
 #include "mondisplaychangeevent.h"
 #include "corelib/widgets/mwindow_p.h"
@@ -283,8 +284,11 @@ void Ut_MWindow::testIsOnDisplay()
     MOnDisplayChangeEvent ev1(false, QRectF(QPointF(0, 0), win->visibleSceneSize()));
     win->event(&ev1);
 
-    // Sending displayExited should be delayed, wait a bit
-    sleep(1.2);
+    // The emission of displayExited is delayed
+    // Force a timeout on MWindow's internal timer so that the display change event
+    // gets processed immediately.
+    QTimerEvent timerEvent(win->d_func()->displayExitedTimer.timerId());
+    win->d_func()->displayExitedTimer.event(&timerEvent);
     MApplication::processEvents();
 
     QVERIFY(win->isOnDisplay() == false);
