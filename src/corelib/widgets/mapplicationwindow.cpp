@@ -260,6 +260,8 @@ void MApplicationWindowPrivate::init()
 
 void MApplicationWindowPrivate::_q_handleInSwitcherVisibilityChange()
 {
+    closeMenu();
+    sceneManager->d_func()->closePopupWindows();
 }
 
 #ifdef Q_WS_X11

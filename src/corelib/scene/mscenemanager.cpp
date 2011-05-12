@@ -2336,6 +2336,16 @@ MSceneWindow *MSceneManagerPrivate::findTopMostSheet()
     return sheet;
 }
 
+void MSceneManagerPrivate::closePopupWindows(MSceneWindow::WindowType popupType)
+{
+    foreach(MSceneWindow* sceneWindow, blockingWindows) {
+        if (sceneWindow->windowType() == popupType &&
+           (sceneWindow->sceneWindowState() == MSceneWindow::Appeared || sceneWindow->sceneWindowState() == MSceneWindow::Appearing)) {
+            sceneWindow->disappear();
+        }
+    }
+}
+
 void MSceneManagerPrivate::updateVisibilityOfSceneWindowsBehind(
         MSceneWindow *referenceSceneWindow, bool newVisibility)
 {

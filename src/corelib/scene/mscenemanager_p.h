@@ -243,6 +243,8 @@ public:
     void updateVisibilityOfSceneWindowsBehind(MSceneWindow *referenceSceneWindow, bool newVisibility);
     MSceneWindow *findTopMostSheet();
 
+    void closePopupWindows(MSceneWindow::WindowType popupType = MSceneWindow::ObjectMenu);
+
 public:
 
     MScene *scene;
