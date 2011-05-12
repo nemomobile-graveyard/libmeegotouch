@@ -114,8 +114,7 @@ MPixmapHandle ImageResource::fetchPixmap(const QSize &size)
             if (!image.isNull()) {
                 applyDebugColors(&image);
 
-                if (shouldBeCached()) {
-                    saveToFsCache(image, size);
+                if (shouldBeCached() && saveToFsCache(image, size)) {
                     QImage imageFromCache = loadFromFsCache(size, cacheEntry);
                     if (imageFromCache.isNull()) {
                         qCritical() << "Themedaemon: Failed to reload image" << uniqueKey() << "from cache. Something bad is happening.";
@@ -320,21 +319,21 @@ QImage ImageResource::loadFromFsCache(const QSize& size, PixmapCacheEntry *cache
     return QImage();
 }
 
-void ImageResource::saveToFsCache(QImage &image, const QSize &size)
+bool ImageResource::saveToFsCache(QImage &image, const QSize &size)
 {
-    saveToFsCache(image, size, uniqueKey());
+    return saveToFsCache(image, size, uniqueKey());
 }
 
-void ImageResource::saveToFsCache(QImage &image, const QSize& size, const QString &uniqueKey)
+bool ImageResource::saveToFsCache(QImage &image, const QSize& size, const QString &uniqueKey)
 {
     static bool failedCacheSaveAttempt = false;
 
     if (failedCacheSaveAttempt)
-        return;
+        return false;
 
     const QString cacheFileName = createCacheFilename(size, uniqueKey);
     if (cacheFileName.isEmpty()) {
-        return;
+        return false;
     }
 
     QFile cache(cacheFileName);
@@ -347,7 +346,7 @@ void ImageResource::saveToFsCache(QImage &image, const QSize& size, const QStrin
                      MThemeDaemon::systemThemeCacheDirectory() <<
                      ". Cache is disabled.";
             failedCacheSaveAttempt = true;
-            return;
+            return false;
         }
     }
 
@@ -356,9 +355,26 @@ void ImageResource::saveToFsCache(QImage &image, const QSize& size, const QStrin
         image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
     }
 
-    cache.write((const char*)image.constBits(), image.byteCount());
-    cache.flush();
+    int written = cache.write((const char*)image.constBits(), image.byteCount());
+    bool flushed = cache.flush();
     cache.close();
+
+      // TODO: basically this occurs when the system is low on disk space,
+      // now failedCacheSaveAttempt is set when this occurs which means
+      // writing caches will be disabled until TD is restarted. It should
+      // be considered whether to have some sort of a system to monitor
+      // available disk space, stop writing when available disk space goes
+      // below some point and resume after there's again enough disk space.
+      // This of course means that images that are loaded during low disk
+      // space conditions will be shared via shm segment instead of mmap to
+      // a cache file and won't be saved into cache until they are reloaded
+      // (in practice meaning all users free the image after which new user
+      // should request the image).
+    if (written < image.byteCount() || !flushed) {
+        QFile::remove(cacheFileName);
+        failedCacheSaveAttempt = true;
+        return false;
+    }
 
     const QString cacheMetaFileName = cacheFileName + QLatin1String(".meta");
     QFile meta(cacheMetaFileName);
@@ -368,17 +384,27 @@ void ImageResource::saveToFsCache(QImage &image, const QSize& size, const QStrin
                  MThemeDaemon::systemThemeCacheDirectory() <<
                  ". Cache is disabled.";
         failedCacheSaveAttempt = true;
-        return;
+        return false;
     }
-
+      // TODO: check if it's really enough to check if flushing failed to
+      // detect writing failures
     QDataStream stream(&meta);
     stream << IMAGE_CACHE_VERSION;
     QFileInfo fileInfo(absoluteFilePath());
     stream << fileInfo.lastModified().toTime_t();
     stream << image.size();
     stream << image.format();
-    meta.flush();
+    flushed = meta.flush();
     meta.close();
+
+    if (!flushed)  {
+        QFile::remove(cacheFileName);
+        QFile::remove(cacheMetaFileName);
+        failedCacheSaveAttempt = true;
+        return false;
+    }
+
+    return true;
 }
 
 QString ImageResource::createCacheFilename(const QSize& size, const QString &cacheKey)
