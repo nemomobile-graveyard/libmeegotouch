@@ -1367,7 +1367,7 @@ void MSceneManagerPrivate::startPageSwitchAnimation(MSceneWindow *newPage,
     Q_ASSERT(pageSwitchAnimation);
 
     if (navigationBarAnimation)
-        navigationBarAnimation->setTransitionDirection(direction == MPageSwitchAnimation::ToChildPage ?
+        navigationBarAnimation->setTransitionDirection(direction == MPageSwitchAnimation::ToParentPage ?
                                                        MAbstractWidgetAnimation::In : MAbstractWidgetAnimation::Out);
 
     pageSwitchAnimation->setNewPage(newPage);
@@ -1404,7 +1404,7 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
 
         setSceneWindowState(currentPage, MSceneWindow::Appearing);
 
-        startPageSwitchAnimation(currentPage, previousPage, MPageSwitchAnimation::ToParentPage);
+        startPageSwitchAnimation(currentPage, previousPage, MPageSwitchAnimation::ToChildPage);
     } else {
         if (previousPage)
             setSceneWindowState(previousPage, MSceneWindow::Disappeared);
@@ -1453,7 +1453,7 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
 
         setSceneWindowState(currentPage, MSceneWindow::Disappearing);
 
-        startPageSwitchAnimation(previousPage, currentPage, MPageSwitchAnimation::ToChildPage);
+        startPageSwitchAnimation(previousPage, currentPage, MPageSwitchAnimation::ToParentPage);
     } else {
         if (previousPage)
             setSceneWindowState(previousPage, MSceneWindow::Appeared);

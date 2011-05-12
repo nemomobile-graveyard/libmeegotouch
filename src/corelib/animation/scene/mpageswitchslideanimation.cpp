@@ -76,14 +76,14 @@ void MPageSwitchSlideAnimation::updateState(QAbstractAnimation::State newState,
     d->positionOldPageAnimation->setTargetObject(oldPage());
 
     if (newPage()) {
-        if (transitionDirection() == ToParentPage)
+        if (transitionDirection() == ToChildPage)
             d->positionNewPageAnimation->setStartValue(newPage()->boundingRect().width());
         else
             d->positionNewPageAnimation->setStartValue(-newPage()->boundingRect().width());
     }
 
     if (oldPage()) {
-        if (transitionDirection() == ToParentPage)
+        if (transitionDirection() == ToChildPage)
             d->positionOldPageAnimation->setEndValue(-oldPage()->boundingRect().width());
         else
             d->positionOldPageAnimation->setEndValue(oldPage()->boundingRect().width());
