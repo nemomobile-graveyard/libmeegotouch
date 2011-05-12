@@ -1,6 +1,7 @@
 libmeegotouch (0.21.15~1) unstable; urgency=low
 
   * unreleased
+  * Fixes: NB#248136 - [TASK] New View/Action/Object Menu
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 11 May 2011 17:02:36 +0300
 
