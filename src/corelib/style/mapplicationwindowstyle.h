@@ -69,6 +69,13 @@ class MApplicationWindowStyle : public MStyle
     M_STYLE_ATTRIBUTE(QString, statusBarStyleName, StatusBarStyleName)
 
     /*!
+      \brief Defines the style name of the application menu of this window
+      Allows different application windows to have different application menu styles
+    */
+    M_STYLE_ATTRIBUTE(QString, applicationMenuStyleName, ApplicationMenuStyleName)
+
+    /*!
+
       \brief This allows to customize application window background color.
     */
     M_STYLE_ATTRIBUTE(QColor, backgroundColor, BackgroundColor)

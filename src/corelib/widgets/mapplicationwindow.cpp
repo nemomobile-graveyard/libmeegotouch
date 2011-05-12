@@ -1102,6 +1102,9 @@ void MApplicationWindowPrivate::updateStyleNames()
     dockWidget->setStyleName(toolBar->styleName()); //dock widget will have the same style name as tool bar
     if (statusBar)
         statusBar->setStyleName(style()->statusBarStyleName());
+
+    if (menu)
+        menu->setStyleName(style()->applicationMenuStyleName());
 }
 
 
