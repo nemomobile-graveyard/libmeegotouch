@@ -307,16 +307,27 @@ void MCompleterPrivate::pollModel(bool isResetFocus)
     updateScene(isResetFocus);
 }
 
+/*
+ * \brief Update the completer visibility/content.
+ */
 void MCompleterPrivate::updateScene(bool isResetFocus)
 {
     Q_Q(MCompleter);
 
+    // The completer don't need to reshow/reset focus when popup is active
+    if (q->model()->popupActive())
+        return;
+
     if (matchedModel->rowCount() > 0) {
         q->model()->setMatchedIndex(0);
         q->model()->setActive(true);
+        // the completerview has currently broken expectation on the
+        // signal shown() and that's why the signal gets emitted even though
+        // completer was already shown.
+        // TODO: introduce a new signal like updateContent().
         q->widget()->sceneManager()->appearSceneWindowNow(q);
         emit q->shown();
-    } else if (q->isActive()) {
+    } else if (q->model()->active()) {
         reset();
         q->hideCompleter();
         if (isResetFocus)
