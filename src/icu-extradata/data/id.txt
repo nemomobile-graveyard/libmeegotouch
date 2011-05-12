@@ -7,14 +7,14 @@ id{
                 "PM",
             }
             DateTimePatterns{
-                "H.mm.ss zzzz",
+                "HH.mm.ss zzzz",
                 "HH.mm.ss z",
                 "HH.mm.ss",
                 "HH.mm",
                 "EEEE, d MMMM yyyy",
                 "d MMMM yyyy",
                 "d MMM yyyy",
-                "d/M/yy",
+                "dd/M/yy",
                 "{1} {0}",
                 "{1} {0}",
                 "{1} {0}",
