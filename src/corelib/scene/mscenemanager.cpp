@@ -836,6 +836,7 @@ void MSceneManagerPrivate::updateSceneWindowRootElement(MSceneWindow *sceneWindo
 {
     QGraphicsWidget *newRootElement = rootElementForSceneWindow(sceneWindow);
     QGraphicsWidget *currentRootElement;
+    QGraphicsWidget *effectBinder(0);
 
     if (sceneWindow->d_func()->displacementItem) {
         // skip the displacement item
@@ -846,11 +847,15 @@ void MSceneManagerPrivate::updateSceneWindowRootElement(MSceneWindow *sceneWindo
 
     if (sceneWindow->d_func()->effect) {
         // it's not yet the root element. we gotta skip the effect binder as well.
+        effectBinder = currentRootElement;
         currentRootElement = currentRootElement->parentWidget();
     }
 
     if (currentRootElement != newRootElement) {
-        setParentItemWithoutIncorrectRefocusing(sceneWindow, newRootElement);
+        if (effectBinder)
+            setParentItemWithoutIncorrectRefocusing(effectBinder, newRootElement);
+        else
+            setParentItemWithoutIncorrectRefocusing(sceneWindow, newRootElement);
     }
 }
 
