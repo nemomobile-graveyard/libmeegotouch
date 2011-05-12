@@ -1232,7 +1232,8 @@ MSliderViewPrivate::MSliderViewPrivate() :
     feedbackPlayedFor(0),
     pressTimerId(0),
     valueWhenPressed(0),
-    position(0)
+    position(0),
+    usingAnimation(false)
 {
     timeOnFeedback.invalidate();
     timeOnMove.invalidate();
@@ -1489,6 +1490,7 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
             }
             positionAnimation->setEndValue(newValue);
             positionAnimation->start();
+            usingAnimation = true;
         } else {
             position = newValue;
         }
@@ -1634,13 +1636,16 @@ void MSliderView::updateData(const QList<const char *>& modifications)
         else if (member == MSliderModel::Maximum)
             d->updateSliderGroove();
         else if (member == MSliderModel::Value) {
-            // The position should not be set here if the position animation
-            // is running or else it would not let the animation play correctly
-            if (!(d->controller->isVisible() && d->controller->isOnDisplay()) ||
-                !d->positionAnimation ||
-                (d->positionAnimation->state() != QAbstractAnimation::Running)) {
+            if (d->usingAnimation) {
+                // The position is being set by an ongoing animation, so don't
+                // need to do anything besides unsetting the flag.
+                d->usingAnimation = false;
+            } else {
+                // A value must be set without using an animation. We need to stop
+                // the animation if it's running and then set the value.
+                if (d->positionAnimation)
+                    d->positionAnimation->stop();
                 setPosition(model()->value());
-                continue;
             }
         }
         else if (member == MSliderModel::Steps)
@@ -1786,9 +1791,6 @@ void MSliderView::cancelEvent(MCancelEvent *event)
         killTimer(d->pressTimerId);
         d->pressTimerId = 0;
     }
-
-    if (d->positionAnimation)
-        d->positionAnimation->stop();
 
     model()->setValue(d->valueWhenPressed);
     d->sliderGroove->lowerHandleIndicator();

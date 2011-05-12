@@ -30,6 +30,9 @@
 #include <msliderstyle.h>
 #include "ut_msliderview.h"
 #include "mapplication.h"
+#include "mapplicationwindow.h"
+#include "mapplicationpage.h"
+#include "mscenemanager.h"
 #include <mdebug.h>
 
 MApplication *app;
@@ -145,6 +148,39 @@ void Ut_MSliderView::sliderPositionByValue()
         QCOMPARE(handle->geometry().x(),
                  groove->geometry().x() + ((float)m_seekbar->value()/100) * (groove->geometry().width()-handle->geometry().width()));
     }
+}
+
+void Ut_MSliderView::testSetValueWhileAnimation()
+{
+    MSeekBar *seekbar = new MSeekBar();
+    MSliderView *subject = new MSliderView(seekbar);
+    seekbar->setView(subject);
+    seekbar->setRange(0, 100);
+    QRectF rect = QRectF(0, 0, 400, 100);
+    seekbar->setGeometry(rect);
+    seekbar->setValue(0);
+
+    MApplicationWindow win;
+    MApplicationPage page;
+    page.setCentralWidget(seekbar);
+    win.sceneManager()->appearSceneWindowNow(&page);
+    win.show();
+
+    // this mouse event should start the animation
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setPos(QPointF(300,50));
+    subject->mousePressEvent(&pressEvent);
+
+    // ensure that the animation is running
+    QVERIFY(subject->d_func()->positionAnimation->state() == QAbstractAnimation::Running);
+
+    // set a value while the animation is ongoing
+    seekbar->setValue(1);
+
+    // ensure that animation has been stopped and value and position are ok
+    QVERIFY(subject->d_func()->positionAnimation->state() == QAbstractAnimation::Stopped);
+    QCOMPARE(subject->model()->value(), 1);
+    QCOMPARE(subject->d_func()->position, 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_MSliderView)

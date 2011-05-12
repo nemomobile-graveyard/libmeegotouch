@@ -305,6 +305,8 @@ public:
 
     int position;
 
+    bool usingAnimation;
+
     void init(MSlider *contoller);
 
     void insertMinIndicatorToLayout();
