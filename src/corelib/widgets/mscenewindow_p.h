@@ -36,7 +36,6 @@ class MSceneWindowPrivate : public MWidgetControllerPrivate
 
 public:
     MSceneWindowPrivate();
-    virtual ~MSceneWindowPrivate();
 
     virtual bool canDisappear() {return true;}
     virtual bool canDismiss() {return true;}
@@ -75,9 +74,6 @@ public:
 
     // Focused item before window blocked.
     QPointer<QGraphicsWidget> focusItemBeforeWindowBlocked;
-
-    // The orientation received from the last MOrientationChangeEvent
-    M::Orientation *orientationFromLastEvent;
 };
 
 class MSceneWindowTestInterface : public QObject

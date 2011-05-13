@@ -378,7 +378,7 @@ void MSceneManagerPrivate::_q_changeGlobalOrientationAngle()
     if (oldOrientation != newOrientation) {
         emit q->orientationAboutToChange(q->orientation());
 
-        notifyWidgetsBeingRenderedAboutOrientationChange();
+        notifyWidgetsAboutOrientationChange();
         setSceneWindowGeometries();
 
         // emit signal after sending the orientation event to widgets (in case someone
@@ -676,6 +676,9 @@ void MSceneManagerPrivate::addSceneWindow(MSceneWindow *sceneWindow)
     if (!sceneWindow->d_func()->sceneManager) {
         // Just add it
         addUnmanagedSceneWindow(sceneWindow);
+        // This window was not receiving any events. Might not know about orientation change yet.
+        MOrientationChangeEvent event(MDeviceProfile::instance()->orientationFromAngle(angle));
+        scene->sendEvent(sceneWindow, &event);
     } else {
         if (sceneWindow->d_func()->sceneManager != q) {
             // scene window belongs to another scene manager, remove it from him.
@@ -1032,43 +1035,9 @@ void MSceneManagerPrivate::updateStatusBarGeometryProperty()
 }
 #endif
 
-void MSceneManagerPrivate::notifyWidgetsBeingRenderedAboutOrientationChange()
+void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
 {
-    Q_Q(MSceneManager);
-    if (!scene)
-        return;
-
-    MOrientationChangeEvent event(q->orientation());
-
-    Q_FOREACH(MSceneWindow *sceneWindow, sceneWindowStack.list()) {
-        sendEventRecursively(sceneWindow, &event);
-        if (sceneWindow->d_func()->effect)
-            sendEventRecursively(sceneWindow->d_func()->effect, &event);
-    }
-}
-
-void MSceneManagerPrivate::sendEventRecursively(QGraphicsItem *item, QEvent *event)
-{
-    // event handlers might remove items from the scene
-    // so we must check if item it's still there
-    if (!scene->items().contains(item)) {
-        return;
-    }
-
-    scene->sendEvent(item, event);
-    // Sending an event to a widget means only its direct layout gets the orientation
-    // change event.
-    // To ensure that the event it sent to all layouts, we have to manually send it to
-    // the sub-layouts (layout inside a layout)
-    if (item->isWidget()) {
-        QGraphicsLayout *layout = static_cast<QGraphicsWidget *>(item)->layout();
-        if (layout)
-            MScenePrivate::sendEventToAllSubLayouts(layout, event);
-    }
-
-    Q_FOREACH(QGraphicsItem *child, item->children()) {
-        sendEventRecursively(child, event);
-    }
+    MScenePrivate::notifySceneAboutOrientationChange(scene, MDeviceProfile::instance()->orientationFromAngle(angle));
 }
 
 QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWindow) const
@@ -1344,19 +1313,6 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
     window->d_func()->dismissed = false;
 
     sceneWindowStack.add(window);
-
-    // This scene window was not receiving any orientation change events.
-    // Therefore it might have an outdated orientation.
-    M::Orientation currentOrientation = q->orientation();
-    M::Orientation *orientationFromLastEvent = window->d_func()->orientationFromLastEvent;
-    if (!orientationFromLastEvent || *orientationFromLastEvent != currentOrientation) {
-        // Update the orientaton of that scene window
-        MOrientationChangeEvent event(currentOrientation);
-        sendEventRecursively(window, &event);
-        if (window->d_func()->effect)
-            sendEventRecursively(window->d_func()->effect, &event);
-        Q_ASSERT(*(window->d_func()->orientationFromLastEvent) == currentOrientation);
-    }
 
     setSceneWindowGeometry(window);
     setupLayerEffectForSceneWindow(window);
