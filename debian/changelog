@@ -1,9 +1,24 @@
-libmeegotouch (0.21.15~1) unstable; urgency=low
+libmeegotouch (0.21.15-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#248439 - Date Format; Date Format in region Hong Kong (Traditional Chinese) is wrong
+  * Fixes: NB#244444 - Date format; Hong Kong date format is wrong.
+  * Fixes: NB#254993
+  * Fixes: NB#253281
+  * Fixes: NB#253814 - [Feature Request] MTextEdit prompt is not indented the same was as document.
+  * Fixes: NB#248439 - Date Format; Date Format in region Hong Kong (Traditional Chinese) is wrong.
+  * Fixes: NB#252655 - ButtonBox at MDialog shows the buttons out of the screen in landscape mode
+  * Fixes: BMC#17408 - ButtonBox of MDialog displays buttons out of borders in landscape
+  * Fixes: NB#255149 - Date Settings; dateShort, Gregorian calendar is displayed wrong in Indonesian date picker
+  * Fixes: NB#208577 - Effective text style does not match toolbar button state after erasing all text in rich text edit field (MRichTextEdit) with backspace
+  * Fixes: NB#255284 - MColorList contains wrong colors
+  * Fixes: NB#254123 - [TASK] View menu and object menu should close when app is minimized
+  * Fixes: MSceneManagerPrivate::updateSceneWindowRootElement reparenting effect binder
+  * Fixes: NB#238944 MListView - use the actual geometry to determine the position of the list
+  * Fixes: NB#237123 - Sysuid uses most CPU for updating its UI during night when screen is blanked & no apps are open
   * Fixes: NB#248136 - [TASK] New View/Action/Object Menu
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 11 May 2011 17:02:36 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 13 May 2011 17:28:02 +0300
 
 libmeegotouch (0.21.14-1) unstable; urgency=low
 
