@@ -78,8 +78,6 @@ namespace {
 /// Actual class
 
 MWindowPrivate::MWindowPrivate() :
-    glWidget(0),
-    glContext(0),
     sceneManager(0),
     oldOrientation(M::Landscape), // the initial value is not used at all
     orientationAngleLocked(false),
@@ -207,13 +205,11 @@ void MWindowPrivate::initSoftwareViewport()
 {
     Q_Q(MWindow);
 
-    mDebug("MWindow") << "Switching to software rendering";
-
-    MGraphicsSystemHelper::switchToSoftwareRendering(q);
-
-    q->setViewportUpdateMode(MWindow::MinimalViewportUpdate);
-
-    configureViewport();
+    if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
+        mDebug("MGraphicsSystemHelper") << "switching to QWidget";
+        q->setViewport(new QWidget());
+        q->setViewportUpdateMode(MWindow::MinimalViewportUpdate);
+    }
 }
 
 void MWindowPrivate::initGLViewport()
@@ -221,26 +217,38 @@ void MWindowPrivate::initGLViewport()
     Q_Q(MWindow);
 
 #ifdef QT_OPENGL_LIB
-    mDebug("MWindow") << "Window restored, switching to GL rendering";
+    if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
+        mDebug("MWindow") << "Switching to GL rendering";
 
-    bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);
+        bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);
 
-    MGraphicsSystemHelper::switchToHardwareRendering(q, &glContext);
+        QGLWidget *glWidget = 0;
+        if (translucent) {
+            QGLFormat fmt;
+            // disable multisampling, is enabled by default in Qt
+            fmt.setSampleBuffers(false);
+            fmt.setSamples(0);
+            fmt.setAlpha(true); // Workaround for NB#153625
+            glWidget = new QGLWidget(fmt);
+        } else {
+            glWidget = new QGLWidget();
+        }
 
-    if (translucent) {
-        QPalette palette;
-        palette.setColor(QPalette::Base, Qt::transparent);
-        palette.setColor(QPalette::Window, Qt::transparent);
-        q->setAutoFillBackground(true);
-        q->setPalette(palette);
-        q->viewport()->setAutoFillBackground(true);
-        q->viewport()->setPalette(palette);
+        q->setViewport(glWidget);
+
+        if (translucent) {
+            QPalette palette;
+            palette.setColor(QPalette::Base, Qt::transparent);
+            palette.setColor(QPalette::Window, Qt::transparent);
+            q->setAutoFillBackground(true);
+            q->setPalette(palette);
+            q->viewport()->setAutoFillBackground(true);
+            q->viewport()->setPalette(palette);
+        }
+
+        q->setViewportUpdateMode(MWindow::FullViewportUpdate);
     }
 #endif // QT_OPENGL_LIB
-
-    q->setViewportUpdateMode(MWindow::FullViewportUpdate);
-
-    configureViewport();
 }
 
 void MWindowPrivate::configureViewport()
@@ -710,25 +718,9 @@ void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event
         timeSinceLastPaintInSwitcher.invalidate();
     }
 
-#ifdef QT_OPENGL_LIB
-    if (MApplication::softwareRendering()
-        || !MGraphicsSystemHelper::canSwitchBetweenSoftwareAndHardwareRendering())
-        return;
-
     if (!event->oldState().testFlag(Qt::WindowMinimized) && q->windowState().testFlag(Qt::WindowMinimized)) {
-        initSoftwareViewport();
         MTheme::cleanupGarbage();
-    } else if (event->oldState().testFlag(Qt::WindowMinimized)
-               && !q->windowState().testFlag(Qt::WindowMinimized)) {
-        if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
-            q->setUpdatesEnabled(false);
-        }
-        initGLViewport();
-        if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
-            QTimer::singleShot(700, q, SLOT(_q_enablePaintUpdates()));
-        }
     }
-#endif
 }
 
 void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
@@ -864,16 +856,21 @@ void MWindow::setTranslucentBackground(bool enable)
 #endif
     }
 
-    // when the gl widget is not initialized yet we will also not initialize it
-    if (MApplication::softwareRendering() 
-        || MApplication::isPrestarted() 
-#ifndef Q_OS_WIN
-        || MComponentCache::populating()
-#endif
-        || (MGraphicsSystemHelper::isRunningNativeGraphicsSystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
-        d->initSoftwareViewport();
-    } else {
-        d->initGLViewport();
+    // when we are running with the native graphicssystem we explicitly choose software of hardware rendering
+    // otherwise qt is the once to choose
+    if (MGraphicsSystemHelper::isRunningNativeGraphicsSystem()) {
+        if (MApplication::softwareRendering()
+                || MApplication::isPrestarted()
+        #ifndef Q_OS_WIN
+                || MComponentCache::populating()
+        #endif
+                // when the gl widget is not initialized yet we will also not initialize it
+                || (MGraphicsSystemHelper::isRunningNativeGraphicsSystem() && !dynamic_cast<QGLWidget*>(viewport()))) {
+            d->initSoftwareViewport();
+        } else {
+            d->initGLViewport();
+        }
+        d->configureViewport();
     }
 
     if (MApplication::softwareRendering())
@@ -1605,8 +1602,6 @@ void MWindow::setVisible(bool visible)
                     if (!dynamic_cast<QGLWidget*>(viewport())) {
                         d->initGLViewport();
                     }
-                } else {
-                    d->initGLViewport();
                 }
             }
             d->isLogicallyClosed = false;

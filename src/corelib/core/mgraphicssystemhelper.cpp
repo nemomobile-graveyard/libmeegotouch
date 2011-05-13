@@ -120,66 +120,6 @@ namespace {
 #endif // Q_WS_X11
     }
 }
-void MGraphicsSystemHelper::switchToSoftwareRendering(MWindow *window)
-{
-#ifdef HAVE_MEEGOGRAPHICSSYSTEM
-    if (MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
-        if (QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
-            mDebug("MGraphicsSystemHelper") << "switching to raster";
-            QMeeGoGraphicsSystemHelper::switchToRaster();
-        }
-    } else
-#endif
-    {
-        window->setViewport(new QWidget());
-        mDebug("MGraphicsSystemHelper") << "switching to QWidget";
-    }
-}
-
-#ifdef QT_OPENGL_LIB
-void MGraphicsSystemHelper::switchToHardwareRendering(MWindow *window, QGLContext **glContext)
-{
-#ifdef HAVE_MEEGOGRAPHICSSYSTEM
-    if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() != QLatin1String("native")) {
-        if (!QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
-            mDebug("MGraphicsSystemHelper") << "Switching to hardware rendering with meego graphicssystem";
-            QMeeGoGraphicsSystemHelper::switchToMeeGo();
-        }
-        *glContext = const_cast<QGLContext*>(QGLContext::currentContext());
-    } else
-#endif // HAVE_MEEGOGRAPHICSSYSTEM
-    {
-        mDebug("MGraphicsSystemHelper") << "hardware rendering with QGLWidget enabled";
-        QGLWidget *glWidget = 0;
-        // The sequence of calls here is important. When translucency is not
-        // enabled, ensure setViewport() is called before DuiGLES2Renderer
-        // initializes its vertices, otherwise call setViewport() after
-        // DuiGLES2Renderer initializes itself. Failure to do this will cause
-        // a crash.
-        // This QGLWidget is owned by the viewport so previous one
-        // actually gets deleted if we overwrite it with a new one
-        bool translucent = window->testAttribute(Qt::WA_TranslucentBackground);
-        if (translucent) {
-            QGLFormat fmt;
-            // disable multisampling, is enabled by default in Qt
-            fmt.setSampleBuffers(false);
-            fmt.setSamples(0);
-            fmt.setAlpha(true); // Workaround for NB#153625
-
-            glWidget = new QGLWidget(fmt);
-        } else {
-            glWidget = new QGLWidget();
-        }
-
-        window->setViewport(glWidget);
-
-        // we need the const_cast as otherwise the MGLES2Renderer cannot call
-        // QGLContext::bindTexture(). as QGLWidget::bindTexture() just redirects
-        // the call to the QGLContext the cast is safe
-        *glContext = const_cast<QGLContext*>(glWidget->context());
-    }
-}
-#endif //QT_OPENGL_LIB
 
 void MGraphicsSystemHelper::pixmapFromImage(PixmapCacheEntry *cacheEntry, const QImage& image, const QString &uniqueKey, const QSize &requestedSize)
 {

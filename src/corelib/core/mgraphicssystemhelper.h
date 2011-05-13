@@ -27,10 +27,6 @@ class QSize;
 class MGraphicsSystemHelper
 {
 public:
-    static void switchToSoftwareRendering(MWindow *window);
-#ifdef QT_OPENGL_LIB
-    static void switchToHardwareRendering(MWindow *window, QGLContext **glContext);
-#endif
     static void pixmapFromImage(PixmapCacheEntry *cacheEntry, const QImage& image, const QString &uniqueKey, const QSize &requestedSize);
     static QPixmap pixmapFromHandle(const MPixmapHandle& pixmapHandle, void **addr, int *numBytes);
 

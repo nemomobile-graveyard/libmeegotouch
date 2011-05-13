@@ -72,10 +72,6 @@ public:
 
     void _q_onPixmapRequestsFinished();
 
-    QGLWidget *glWidget;
-    // a non-const pointer to the associated gl context
-    QGLContext *glContext;
-
     M::OrientationAngle angle;
 
     MSceneManager *sceneManager;
