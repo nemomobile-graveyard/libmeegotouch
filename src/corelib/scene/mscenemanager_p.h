@@ -127,8 +127,7 @@ public:
     void setSceneWindowGeometries();
     QGraphicsWidget *rootElementForSceneWindow(MSceneWindow *sceneWindow) const;
     void updateSceneWindowRootElement(MSceneWindow *sceneWindow);
-    void notifyWidgetsBeingRenderedAboutOrientationChange();
-    void sendEventRecursively(QGraphicsItem *item, QEvent *event);
+    void notifyWidgetsAboutOrientationChange();
     void rotateToAngle(M::OrientationAngle newAngle);
     void setOrientationAngleWithoutAnimation(M::OrientationAngle newAngle);
 
