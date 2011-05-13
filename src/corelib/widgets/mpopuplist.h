@@ -30,7 +30,7 @@ class QModelIndex;
 
 /**
     \class MPopupList
-    \brief MPopupList implements a popup list for the M Framework.
+    \brief MPopupList implements a popup list for the MeegoTouch Framework.
 
     \ingroup widgets
 
