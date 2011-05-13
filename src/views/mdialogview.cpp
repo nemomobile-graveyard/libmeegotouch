@@ -155,7 +155,7 @@ void MDialogViewPrivate::createDialogBox()
 
 void MDialogViewPrivate::createButtonBox()
 {
-    buttonBox = new MLabel;
+    buttonBox = new MWidgetController;
     buttonBox->setStyleName("MDialogButtonBox");
     buttonBox->setObjectName(buttonBox->styleName());
     buttonBoxLayout = new MLayout();
