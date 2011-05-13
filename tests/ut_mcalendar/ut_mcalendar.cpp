@@ -811,8 +811,8 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "zh_HK@mix-time-and-language=no" // lc_time
         << MLocale::TwelveHourTimeFormat24h
         << MLocale::GregorianCalendar
-        << "yy/M/d"
-        << "yyyy/M/d"
+        << "y年M月d日"
+        << "y年M月d日"
         << "y年M月d日"
         << "y年M月d日EEEE"
         << "ah:mm"
