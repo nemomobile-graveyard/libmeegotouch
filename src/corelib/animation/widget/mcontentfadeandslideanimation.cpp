@@ -23,9 +23,14 @@
 #include <QSequentialAnimationGroup>
 #include <QPauseAnimation>
 
-namespace {
-    const QPointF farFarAway(-100000, -100000);
-}
+// we need this to call protected drawItems method
+class MyGraphicsScene : public QGraphicsScene {
+public:
+    virtual void drawItems(QPainter *painter, int numItems,
+                           QGraphicsItem *items[],
+                           const QStyleOptionGraphicsItem options[],
+                           QWidget *widget = 0);
+};
 
 void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
 {
@@ -44,11 +49,28 @@ void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
     if (!painter.isActive())
         return;
 
-    const QPointF oldPos(target->pos());
-    // move target far away so nothing is below
-    target->setPos(farFarAway);
-    target->scene()->render(&painter, QRectF(), target->sceneBoundingRect());
-    target->setPos(oldPos);
+    QGraphicsItem* oldParent = target->parentItem();
+    QTransform transform = target->sceneTransform();
+
+    // QGraphicsScene::drawItems() doesn't just draw items passed but gets topLevelItem
+    // for each item and draw recursively from each topLevelItem.
+    // Since we don't want to have navigationbar background and rounded corners painted on the snapshot,
+    // we must temporarily make target a top level item.
+    //
+    // TODO: Currently target happens to be plain QGraphicsWidget and thus no style reloading takes place
+    // due to reparenting. But if MWidgetController derivatives starts to be used as targets we would have
+    // to create a mechanism to temporarily disable style reloading due to reparenting and use it here.
+    target->setParentItem(0);
+    target->setTransform(transform);
+
+    QRectF sourceRect = target->sceneBoundingRect();
+    painter.setWorldTransform(QTransform::fromTranslate(-sourceRect.left(), -sourceRect.top()), true);
+
+    QGraphicsItem *item = target;
+    static_cast<MyGraphicsScene*>(target->scene())->drawItems(&painter, 1, &item, 0);
+
+    target->setTransform(QTransform());
+    target->setParentItem(oldParent);
 }
 
 QRectF SnapshotItem::boundingRect() const
