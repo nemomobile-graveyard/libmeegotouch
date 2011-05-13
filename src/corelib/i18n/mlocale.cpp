@@ -500,7 +500,7 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
             // into a Chinese or Japanese date format, replace the
             // Chinese characters with something understandable in the
             // non-CJ language.  If mixing versions of Chinese or
-            // Japanese, do nothing the only difference then is
+            // Japanese, do nothing. The only difference then is
             // whether the simplified 时 or the traditional character
             // 時 for hour is used.
             icuFormatQString.replace(QString::fromUtf8("年"), QLatin1String("-"));
@@ -717,8 +717,13 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
             break;
         }
     }
+    QString languageMessages = parseLanguage(categoryNameMessages);
+    QString languageTime =  parseLanguage(categoryNameTime);
     if(!categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))
-       && parseLanguage(categoryNameMessages) != parseLanguage(categoryNameTime)) {
+       && languageMessages != languageTime
+       && languageMessages != "zh"
+       && languageMessages != "ja"
+       && languageMessages != "ko") {
         // mixing symbols like month name and weekday name from the
         // message locale into the date format of the time locale.
         // Don’t do this, if the language is the same, i.e. don’t do
@@ -726,6 +731,11 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
         // locale is “pt” and the other “pt_PT”. When the locales
         // share the same language, mixing should not be necessary,
         // the symbols should be understandable already.
+        //
+        // Disable the mixing *always* if the language is "zh", "ja"
+        // or "ko", results of mixing a CJK language with a non-CJK
+        // language are really weird, it is just nonsense to do this.
+        // (See https://projects.maemo.org/bugzilla/show_bug.cgi?id=244444)
         //
         // If we are mixing really different languages, simplify the
         // date format first to make the results less bad:

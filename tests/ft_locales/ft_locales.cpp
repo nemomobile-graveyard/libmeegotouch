@@ -3729,7 +3729,7 @@ void Ft_Locales::checkAvailableLocales()
                         continue;
                     unsigned maxMixing;
                     if (dateType == MLocale::DateFull && timeType == MLocale::TimeFull)
-                        maxMixing = 4;
+                        maxMixing = 3;
                     else
                         maxMixing = 0;
                     for (unsigned mixing = 0; mixing <= maxMixing; ++mixing) {
@@ -3747,9 +3747,6 @@ void Ft_Locales::checkAvailableLocales()
                             break;
                         case 3:
                             messageLocale = "he_IL";
-                            break;
-                        case 4:
-                            messageLocale = "zh_CN";
                             break;
                         }
                         locale.setCategoryLocale(MLocale::MLcTime, locale.name());

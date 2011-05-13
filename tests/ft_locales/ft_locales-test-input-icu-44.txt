@@ -291,8 +291,6 @@ ar_SA & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (defau
 ar_SA & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	EEEE، d MMMM، y zzzz H:mm:ss -> الإثنين، ٢١ يوليو، ٢٠٠٨ جرينتش+٠٠:٠٠ ١٤:٣١:٠٠
 ar_SA & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL, y zzzz h:mm:ss a -> יום שני, ٢١ יולי, ٢٠٠٨ GMT+٠٠:٠٠ ٢:٣١:٠٠ PM
 ar_SA & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL, y zzzz H:mm:ss -> יום שני, ٢١ יולי, ٢٠٠٨ GMT+٠٠:٠٠ ١٤:٣١:٠٠
-ar_SA & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL, y zzzz h:mm:ss a -> 星期一, ٢١ 七月, ٢٠٠٨ 格林尼治标准时间+٠٠٠٠ ٢:٣١:٠٠ 下午
-ar_SA & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL, y zzzz H:mm:ss -> 星期一, ٢١ 七月, ٢٠٠٨ 格林尼治标准时间+٠٠٠٠ ١٤:٣١:٠٠
 ar_SA	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm a -> ٢:٣١ م
 ar_SA	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> ١٤:٣١
 ar_SA	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm:ss a -> ٢:٣١:٠٠ م
@@ -347,8 +345,6 @@ ar_SA & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 ar_SA & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	EEEE، d MMMM، y zzzz H:mm:ss -> الإثنين، ١٨ رجب، ١٤٢٩ جرينتش+٠٠:٠٠ ١٤:٣١:٠٠
 ar_SA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL, y zzzz h:mm:ss a -> יום שני, ١٨ רג׳אב, ١٤٢٩ GMT+٠٠:٠٠ ٢:٣١:٠٠ PM
 ar_SA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL, y zzzz H:mm:ss -> יום שני, ١٨ רג׳אב, ١٤٢٩ GMT+٠٠:٠٠ ١٤:٣١:٠٠
-ar_SA & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL, y zzzz h:mm:ss a -> 星期一, ١٨ Rajab, ١٤٢٩ 格林尼治标准时间+٠٠٠٠ ٢:٣١:٠٠ 下午
-ar_SA & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL, y zzzz H:mm:ss -> 星期一, ١٨ Rajab, ١٤٢٩ 格林尼治标准时间+٠٠٠٠ ١٤:٣١:٠٠
 ca_ES	Language endonym	català
 ca_ES	Country endonym	Espanya
 ca_ES	Floating Point Number	-123.456.789,012
@@ -642,8 +638,6 @@ ca_ES & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 ca_ES & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y H:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 ca_ES & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y h:mm:ss a zzzz -> יום שני 21 יולי 2008 2:31:00 PM GMT+00:00
 ca_ES & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y H:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-ca_ES & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y h:mm:ss a zzzz -> 星期一 21 七月 2008 2:31:00 下午 格林尼治标准时间+0000
-ca_ES & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y H:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 ca_ES	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 p.m.
 ca_ES	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
 ca_ES	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 p.m.
@@ -698,8 +692,6 @@ ca_ES & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ca_ES & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y H:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 ca_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y h:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 2:31:00 PM GMT+00:00
 ca_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y H:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-ca_ES & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y h:mm:ss a zzzz -> 星期一 18 Rajab 1429 2:31:00 下午 格林尼治标准时间+0000
-ca_ES & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y H:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 da_DK	Language endonym	dansk
 da_DK	Country endonym	Danmark
 da_DK	Floating Point Number	-123.456.789,012
@@ -993,8 +985,6 @@ da_DK & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 da_DK & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 21. يوليو 2008 14:31:00 جرينتش+00:00
 da_DK & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 21. יולי 2008 02:31:00 PM GMT+00:00
 da_DK & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 21. יולי 2008 14:31:00 GMT+00:00
-da_DK & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 21. 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-da_DK & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 da_DK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 e.m.
 da_DK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 da_DK	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 e.m.
@@ -1049,8 +1039,6 @@ da_DK & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 da_DK & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 18. رجب 1429 14:31:00 جرينتش+00:00
 da_DK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 18. רג׳אב 1429 02:31:00 PM GMT+00:00
 da_DK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
-da_DK & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 18. Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-da_DK & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 18. Rajab 1429 14:31:00 格林尼治标准时间+0000
 de_CH	Language endonym	Schweizer Hochdeutsch
 de_CH	Country endonym	Schweiz
 de_CH	Floating Point Number	-123'456'789.012
@@ -1344,8 +1332,6 @@ de_CH & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 de_CH & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> الإثنين, 21. يوليو 2008 14:31:00 جرينتش+00:00
 de_CH & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> יום שני, 21. יולי 2008 02:31:00 PM GMT+00:00
 de_CH & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 21. יולי 2008 14:31:00 GMT+00:00
-de_CH & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> 星期一, 21. 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-de_CH & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> 星期一, 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 de_CH	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 de_CH	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 de_CH	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -1400,8 +1386,6 @@ de_CH & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 de_CH & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> الإثنين, 18. رجب 1429 14:31:00 جرينتش+00:00
 de_CH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> יום שני, 18. רג׳אב 1429 02:31:00 PM GMT+00:00
 de_CH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 18. רג׳אב 1429 14:31:00 GMT+00:00
-de_CH & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> 星期一, 18. Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-de_CH & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> 星期一, 18. Rajab 1429 14:31:00 格林尼治标准时间+0000
 de_DE	Language endonym	Deutsch
 de_DE	Country endonym	Deutschland
 de_DE	Floating Point Number	-123.456.789,012
@@ -1695,8 +1679,6 @@ de_DE & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 de_DE & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> الإثنين, 21. يوليو 2008 14:31:00 جرينتش+00:00
 de_DE & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> יום שני, 21. יולי 2008 02:31:00 PM GMT+00:00
 de_DE & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 21. יולי 2008 14:31:00 GMT+00:00
-de_DE & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> 星期一, 21. 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-de_DE & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> 星期一, 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 de_DE	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 de_DE	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 de_DE	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -1751,8 +1733,6 @@ de_DE & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 de_DE & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> الإثنين, 18. رجب 1429 14:31:00 جرينتش+00:00
 de_DE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> יום שני, 18. רג׳אב 1429 02:31:00 PM GMT+00:00
 de_DE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 18. רג׳אב 1429 14:31:00 GMT+00:00
-de_DE & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> 星期一, 18. Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-de_DE & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> 星期一, 18. Rajab 1429 14:31:00 格林尼治标准时间+0000
 de_DE@collation=phonebook	Language endonym	Deutsch
 de_DE@collation=phonebook	Country endonym	Deutschland
 de_DE@collation=phonebook	Floating Point Number	-123.456.789,012
@@ -2046,8 +2026,6 @@ de_DE@collation=phonebook & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 
 de_DE@collation=phonebook & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> الإثنين, 21. يوليو 2008 14:31:00 جرينتش+00:00
 de_DE@collation=phonebook & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> יום שני, 21. יולי 2008 02:31:00 PM GMT+00:00
 de_DE@collation=phonebook & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 21. יולי 2008 14:31:00 GMT+00:00
-de_DE@collation=phonebook & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> 星期一, 21. 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-de_DE@collation=phonebook & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> 星期一, 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 de_DE@collation=phonebook	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 de_DE@collation=phonebook	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 de_DE@collation=phonebook	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -2102,8 +2080,6 @@ de_DE@collation=phonebook & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 ho
 de_DE@collation=phonebook & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> الإثنين, 18. رجب 1429 14:31:00 جرينتش+00:00
 de_DE@collation=phonebook & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> יום שני, 18. רג׳אב 1429 02:31:00 PM GMT+00:00
 de_DE@collation=phonebook & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 18. רג׳אב 1429 14:31:00 GMT+00:00
-de_DE@collation=phonebook & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d. LLLL y hh:mm:ss a zzzz -> 星期一, 18. Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-de_DE@collation=phonebook & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> 星期一, 18. Rajab 1429 14:31:00 格林尼治标准时间+0000
 el_GR	Language endonym	Ελληνικά
 el_GR	Country endonym	Ελλάδα
 el_GR	Floating Point Number	-123.456.789,012
@@ -2397,8 +2373,6 @@ el_GR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (defau
 el_GR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, 21 يوليو 2008 14:31:00 جرينتش+00:00
 el_GR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, 21 יולי 2008 2:31:00 PM GMT+00:00
 el_GR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 21 יולי 2008 14:31:00 GMT+00:00
-el_GR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, 21 七月 2008 2:31:00 下午 格林尼治标准时间+0000
-el_GR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> 星期一, 21 七月 2008 14:31:00 格林尼治标准时间+0000
 el_GR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm a -> 2:31 μ.μ.
 el_GR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 el_GR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm:ss a -> 2:31:00 μ.μ.
@@ -2453,8 +2427,6 @@ el_GR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 el_GR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, 18 رجب 1429 14:31:00 جرينتش+00:00
 el_GR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, 18 רג׳אב 1429 2:31:00 PM GMT+00:00
 el_GR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
-el_GR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, 18 Rajab 1429 2:31:00 下午 格林尼治标准时间+0000
-el_GR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> 星期一, 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 en	Language endonym	English (United Kingdom)
 en	Country endonym	
 en	Floating Point Number	-123,456,789.012
@@ -2748,8 +2720,6 @@ en & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)
 en & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> الإثنين, يوليو 21, 2008 14:31:00 جرينتش+00:00
 en & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> יום שני, יולי 21, 2008 2:31:00 PM GMT+00:00
 en & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, יולי 21, 2008 14:31:00 GMT+00:00
-en & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> 星期一, 七月 21, 2008 2:31:00 下午 格林尼治标准时间+0000
-en & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> 星期一, 七月 21, 2008 14:31:00 格林尼治标准时间+0000
 en	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm a -> 2:31 PM
 en	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 en	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm:ss a -> 2:31:00 PM
@@ -2804,8 +2774,6 @@ en & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	c
 en & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> الإثنين, رجب 18, 1429 14:31:00 جرينتش+00:00
 en & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> יום שני, רג׳אב 18, 1429 2:31:00 PM GMT+00:00
 en & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, רג׳אב 18, 1429 14:31:00 GMT+00:00
-en & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> 星期一, Rajab 18, 1429 2:31:00 下午 格林尼治标准时间+0000
-en & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> 星期一, Rajab 18, 1429 14:31:00 格林尼治标准时间+0000
 en_BE	Language endonym	English (Belgium)
 en_BE	Country endonym	Belgium
 en_BE	Floating Point Number	-123.456.789,012
@@ -3099,8 +3067,6 @@ en_BE & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 en_BE & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 en_BE & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 21 יולי 2008 02:31:00 PM GMT+00:00
 en_BE & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-en_BE & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-en_BE & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 en_BE	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 en_BE	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 en_BE	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -3155,8 +3121,6 @@ en_BE & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 en_BE & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 en_BE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 en_BE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-en_BE & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-en_BE & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 en_GB	Language endonym	English (United Kingdom)
 en_GB	Country endonym	United Kingdom
 en_GB	Floating Point Number	-123,456,789.012
@@ -3450,8 +3414,6 @@ en_GB & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 en_GB & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, 21 يوليو 2008 14:31:00 جرينتش+00:00
 en_GB & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, 21 יולי 2008 2:31:00 PM GMT+00:00
 en_GB & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 21 יולי 2008 14:31:00 GMT+00:00
-en_GB & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, 21 七月 2008 2:31:00 下午 格林尼治标准时间+0000
-en_GB & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> 星期一, 21 七月 2008 14:31:00 格林尼治标准时间+0000
 en_GB	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 PM
 en_GB	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
 en_GB	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 PM
@@ -3506,8 +3468,6 @@ en_GB & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 en_GB & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, 18 رجب 1429 14:31:00 جرينتش+00:00
 en_GB & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, 18 רג׳אב 1429 2:31:00 PM GMT+00:00
 en_GB & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
-en_GB & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, 18 Rajab 1429 2:31:00 下午 格林尼治标准时间+0000
-en_GB & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> 星期一, 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 en_US	Language endonym	English (United States)
 en_US	Country endonym	United States
 en_US	Floating Point Number	-123,456,789.012
@@ -3801,8 +3761,6 @@ en_US & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (defau
 en_US & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> الإثنين, يوليو 21, 2008 14:31:00 جرينتش+00:00
 en_US & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> יום שני, יולי 21, 2008 2:31:00 PM GMT+00:00
 en_US & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, יולי 21, 2008 14:31:00 GMT+00:00
-en_US & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> 星期一, 七月 21, 2008 2:31:00 下午 格林尼治标准时间+0000
-en_US & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> 星期一, 七月 21, 2008 14:31:00 格林尼治标准时间+0000
 en_US	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm a -> 2:31 PM
 en_US	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 en_US	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm:ss a -> 2:31:00 PM
@@ -3857,8 +3815,6 @@ en_US & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 en_US & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> الإثنين, رجب 18, 1429 14:31:00 جرينتش+00:00
 en_US & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> יום שני, רג׳אב 18, 1429 2:31:00 PM GMT+00:00
 en_US & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, רג׳אב 18, 1429 14:31:00 GMT+00:00
-en_US & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> 星期一, Rajab 18, 1429 2:31:00 下午 格林尼治标准时间+0000
-en_US & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> 星期一, Rajab 18, 1429 14:31:00 格林尼治标准时间+0000
 en_US_POSIX	Language endonym	English (United States)
 en_US_POSIX	Country endonym	United States
 en_US_POSIX	Floating Point Number	-123456789.01234
@@ -4152,8 +4108,6 @@ en_US_POSIX & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 
 en_US_POSIX & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> الإثنين, يوليو 21, 2008 14:31:00 جرينتش+00:00
 en_US_POSIX & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> יום שני, יולי 21, 2008 2:31:00 PM GMT+00:00
 en_US_POSIX & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, יולי 21, 2008 14:31:00 GMT+00:00
-en_US_POSIX & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> 星期一, 七月 21, 2008 2:31:00 下午 格林尼治标准时间+0000
-en_US_POSIX & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> 星期一, 七月 21, 2008 14:31:00 格林尼治标准时间+0000
 en_US_POSIX	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm a -> 2:31 PM
 en_US_POSIX	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 en_US_POSIX	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm:ss a -> 2:31:00 PM
@@ -4208,8 +4162,6 @@ en_US_POSIX & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (d
 en_US_POSIX & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> الإثنين, رجب 18, 1429 14:31:00 جرينتش+00:00
 en_US_POSIX & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> יום שני, רג׳אב 18, 1429 2:31:00 PM GMT+00:00
 en_US_POSIX & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, רג׳אב 18, 1429 14:31:00 GMT+00:00
-en_US_POSIX & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, LLLL d, y h:mm:ss a zzzz -> 星期一, Rajab 18, 1429 2:31:00 下午 格林尼治标准时间+0000
-en_US_POSIX & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> 星期一, Rajab 18, 1429 14:31:00 格林尼治标准时间+0000
 es_419	Language endonym	español (América Latina)
 es_419	Country endonym	Latinoamérica y el Caribe
 es_419	Floating Point Number	-123.456.789,012
@@ -4503,8 +4455,6 @@ es_419 & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12      
 es_419 & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 es_419 & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 21 יולי 2008 02:31:00 PM GMT+00:00
 es_419 & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-es_419 & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-es_419 & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 es_419	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 p.m.
 es_419	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 es_419	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 p.m.
@@ -4559,8 +4509,6 @@ es_419 & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12        
 es_419 & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 es_419 & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 es_419 & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-es_419 & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-es_419 & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 eu_ES	Language endonym	euskara
 eu_ES	Country endonym	Espainia
 eu_ES	Floating Point Number	-123.456.789,012
@@ -4854,8 +4802,6 @@ eu_ES & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 eu_ES & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> الإثنين, 2008 يوليو 21 14:31:00 جرينتش+00:00
 eu_ES & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> יום שני, 2008 יולי 21 02:31:00 PM GMT+00:00
 eu_ES & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> יום שני, 2008 יולי 21 14:31:00 GMT+00:00
-eu_ES & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> 星期一, 2008 七月 21 02:31:00 下午 格林尼治标准时间+0000
-eu_ES & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> 星期一, 2008 七月 21 14:31:00 格林尼治标准时间+0000
 eu_ES	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 eu_ES	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 eu_ES	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -4910,8 +4856,6 @@ eu_ES & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 eu_ES & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> الإثنين, 1429 رجب 18 14:31:00 جرينتش+00:00
 eu_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> יום שני, 1429 רג׳אב 18 02:31:00 PM GMT+00:00
 eu_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> יום שני, 1429 רג׳אב 18 14:31:00 GMT+00:00
-eu_ES & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> 星期一, 1429 Rajab 18 02:31:00 下午 格林尼治标准时间+0000
-eu_ES & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> 星期一, 1429 Rajab 18 14:31:00 格林尼治标准时间+0000
 fa_IR	Language endonym	فارسی
 fa_IR	Country endonym	ایران
 fa_IR	Floating Point Number	−‏۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‏
@@ -5205,8 +5149,6 @@ fa_IR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 fa_IR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, LLLL d, y، H:mm:ss (zzzz) -> الإثنين, يوليو ۲۱, ۲۰۰۸، ۱۴:۳۱:۰۰ (جرينتش+۰۰:۰۰)
 fa_IR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, LLLL d, y, h:mm:ss ( a zzzz) -> יום שני, יולי ۲۱, ۲۰۰۸, ۲:۳۱:۰۰ ( PM GMT+۰۰:۰۰)
 fa_IR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, LLLL d, y, H:mm:ss (zzzz) -> יום שני, יולי ۲۱, ۲۰۰۸, ۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)
-fa_IR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, LLLL d, y, h:mm:ss ( a zzzz) -> 星期一, 七月 ۲۱, ۲۰۰۸, ۲:۳۱:۰۰ ( 下午 格林尼治标准时间+۰۰۰۰)
-fa_IR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, LLLL d, y, H:mm:ss (zzzz) -> 星期一, 七月 ۲۱, ۲۰۰۸, ۱۴:۳۱:۰۰ (格林尼治标准时间+۰۰۰۰)
 fa_IR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> ۲:۳۱ PM
 fa_IR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> ۱۴:۳۱
 fa_IR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> ۲:۳۱:۰۰ PM
@@ -5261,8 +5203,6 @@ fa_IR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 fa_IR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y GGGG، H:mm:ss (zzzz) -> الإثنين ۱۸ رجب ۱۴۲۹ هـ، ۱۴:۳۱:۰۰ (جرينتش+۰۰:۰۰)
 fa_IR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y GGGG, h:mm:ss ( a zzzz) -> יום שני ۱۸ רג׳אב ۱۴۲۹ שנת היג׳רה, ۲:۳۱:۰۰ ( PM GMT+۰۰:۰۰)
 fa_IR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y GGGG, H:mm:ss (zzzz) -> יום שני ۱۸ רג׳אב ۱۴۲۹ שנת היג׳רה, ۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)
-fa_IR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y GGGG, h:mm:ss ( a zzzz) -> 星期一 ۱۸ Rajab ۱۴۲۹ AH, ۲:۳۱:۰۰ ( 下午 格林尼治标准时间+۰۰۰۰)
-fa_IR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y GGGG, H:mm:ss (zzzz) -> 星期一 ۱۸ Rajab ۱۴۲۹ AH, ۱۴:۳۱:۰۰ (格林尼治标准时间+۰۰۰۰)
 fi_FI	Language endonym	suomi
 fi_FI	Country endonym	Suomi
 fi_FI	Floating Point Number	-123 456 789,012
@@ -5556,8 +5496,6 @@ fi_FI & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 fi_FI & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y H:mm:ss zzzz -> الإثنين 21. يوليو 2008 14:31:00 جرينتش+00:00
 fi_FI & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y h:mm:ss a zzzz -> יום שני 21. יולי 2008 2:31:00 PM GMT+00:00
 fi_FI & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y H:mm:ss zzzz -> יום שני 21. יולי 2008 14:31:00 GMT+00:00
-fi_FI & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y h:mm:ss a zzzz -> 星期一 21. 七月 2008 2:31:00 下午 格林尼治标准时间+0000
-fi_FI & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y H:mm:ss zzzz -> 星期一 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 fi_FI	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 PM
 fi_FI	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
 fi_FI	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 PM
@@ -5612,8 +5550,6 @@ fi_FI & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 fi_FI & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y G H:mm:ss zzzz -> الإثنين 18. رجب 1429 هـ 14:31:00 جرينتش+00:00
 fi_FI & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y G h:mm:ss a zzzz -> יום שני 18. רג׳אב 1429 שנת היג׳רה 2:31:00 PM GMT+00:00
 fi_FI & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y G H:mm:ss zzzz -> יום שני 18. רג׳אב 1429 שנת היג׳רה 14:31:00 GMT+00:00
-fi_FI & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y G h:mm:ss a zzzz -> 星期一 18. Rajab 1429 AH 2:31:00 下午 格林尼治标准时间+0000
-fi_FI & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y G H:mm:ss zzzz -> 星期一 18. Rajab 1429 AH 14:31:00 格林尼治标准时间+0000
 fr_FR	Language endonym	français (France)
 fr_FR	Country endonym	France
 fr_FR	Floating Point Number	-123 456 789,012
@@ -5907,8 +5843,6 @@ fr_FR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 fr_FR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 fr_FR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 21 יולי 2008 02:31:00 PM GMT+00:00
 fr_FR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-fr_FR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-fr_FR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 fr_FR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 fr_FR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 fr_FR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -5963,8 +5897,6 @@ fr_FR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 fr_FR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 fr_FR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 fr_FR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-fr_FR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-fr_FR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 gl_ES	Language endonym	galego
 gl_ES	Country endonym	España
 gl_ES	Floating Point Number	-123.456.789,012
@@ -6258,8 +6190,6 @@ gl_ES & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 gl_ES & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc dd LLLL y HH:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 gl_ES & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc dd LLLL y hh:mm:ss a zzzz -> יום שני 21 יולי 2008 02:31:00 PM GMT+00:00
 gl_ES & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc dd LLLL y HH:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-gl_ES & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc dd LLLL y hh:mm:ss a zzzz -> 星期一 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-gl_ES & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc dd LLLL y HH:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 gl_ES	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 gl_ES	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 gl_ES	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -6314,8 +6244,6 @@ gl_ES & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 gl_ES & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc dd LLLL y HH:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 gl_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc dd LLLL y hh:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 gl_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc dd LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-gl_ES & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc dd LLLL y hh:mm:ss a zzzz -> 星期一 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-gl_ES & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc dd LLLL y HH:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 he_IL	Language endonym	עברית
 he_IL	Country endonym	ישראל
 he_IL	Floating Point Number	-123,456,789.012
@@ -6609,8 +6537,6 @@ he_IL & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 he_IL & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 21 يوليو 2008 14:31:00 جرينتش+00:00
 he_IL & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE, d בMMMM y hh:mm:ss a zzzz -> יום שני, 21 ביולי 2008 02:31:00 PM GMT+00:00
 he_IL & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE, d בMMMM y HH:mm:ss zzzz -> יום שני, 21 ביולי 2008 14:31:00 GMT+00:00
-he_IL & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-he_IL & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 21 七月 2008 14:31:00 格林尼治标准时间+0000
 he_IL	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 he_IL	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 he_IL	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -6665,8 +6591,6 @@ he_IL & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 he_IL & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 18 رجب 1429 14:31:00 جرينتش+00:00
 he_IL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE, d בMMMM y hh:mm:ss a zzzz -> יום שני, 18 ברג׳אב 1429 02:31:00 PM GMT+00:00
 he_IL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d בMMMM y HH:mm:ss zzzz -> יום שני, 18 ברג׳אב 1429 14:31:00 GMT+00:00
-he_IL & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-he_IL & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 hi_IN	Language endonym	हिन्दी
 hi_IN	Country endonym	भारत
 hi_IN	Floating Point Number	-१२,३४,५६,७८९.०१२
@@ -6960,8 +6884,6 @@ hi_IN & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (defau
 hi_IN & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, २१ يوليو २००८ १४:३१:०० جرينتش+००:००
 hi_IN & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, २१ יולי २००८ २:३१:०० PM GMT+००:००
 hi_IN & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> יום שני, २१ יולי २००८ १४:३१:०० GMT+००:००
-hi_IN & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, २१ 七月 २००८ २:३१:०० 下午 格林尼治标准时间+००००
-hi_IN & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> 星期一, २१ 七月 २००८ १४:३१:०० 格林尼治标准时间+००००
 hi_IN	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm a -> २:३१ PM
 hi_IN	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> १४:३१
 hi_IN	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm:ss a -> २:३१:०० PM
@@ -7016,8 +6938,6 @@ hi_IN & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 hi_IN & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, १८ رجب १४२९ १४:३१:०० جرينتش+००:००
 hi_IN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, १८ רג׳אב १४२९ २:३१:०० PM GMT+००:००
 hi_IN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> יום שני, १८ רג׳אב १४२९ १४:३१:०० GMT+००:००
-hi_IN & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, १८ Rajab १४२९ २:३१:०० 下午 格林尼治标准时间+००००
-hi_IN & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> 星期一, १८ Rajab १४२९ १४:३१:०० 格林尼治标准时间+००००
 id_ID	Language endonym	Indonesia
 id_ID	Country endonym	Indonesia
 id_ID	Floating Point Number	-123.456.789,012
@@ -7311,8 +7231,6 @@ id_ID & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 id_ID & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL yyyy HH.mm.ss zzzz -> الإثنين, 21 يوليو 2008 14.31.00 جرينتش+00:00
 id_ID & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL yyyy hh.mm.ss a zzzz -> יום שני, 21 יולי 2008 02.31.00 PM GMT+00:00
 id_ID & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL yyyy HH.mm.ss zzzz -> יום שני, 21 יולי 2008 14.31.00 GMT+00:00
-id_ID & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL yyyy hh.mm.ss a zzzz -> 星期一, 21 七月 2008 02.31.00 下午 格林尼治标准时间+0000
-id_ID & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL yyyy HH.mm.ss zzzz -> 星期一, 21 七月 2008 14.31.00 格林尼治标准时间+0000
 id_ID	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh.mm a -> 02.31 PM
 id_ID	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH.mm -> 14.31
 id_ID	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh.mm.ss a -> 02.31.00 PM
@@ -7367,8 +7285,6 @@ id_ID & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 id_ID & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL yyyy HH.mm.ss zzzz -> الإثنين, 18 رجب 1429 14.31.00 جرينتش+00:00
 id_ID & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL yyyy hh.mm.ss a zzzz -> יום שני, 18 רג׳אב 1429 02.31.00 PM GMT+00:00
 id_ID & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL yyyy HH.mm.ss zzzz -> יום שני, 18 רג׳אב 1429 14.31.00 GMT+00:00
-id_ID & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL yyyy hh.mm.ss a zzzz -> 星期一, 18 Rajab 1429 02.31.00 下午 格林尼治标准时间+0000
-id_ID & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL yyyy HH.mm.ss zzzz -> 星期一, 18 Rajab 1429 14.31.00 格林尼治标准时间+0000
 it_IT	Language endonym	italiano
 it_IT	Country endonym	Italia
 it_IT	Floating Point Number	-123.456.789,012
@@ -7662,8 +7578,6 @@ it_IT & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 it_IT & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 it_IT & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 21 יולי 2008 02:31:00 PM GMT+00:00
 it_IT & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-it_IT & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-it_IT & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 it_IT	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 it_IT	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 it_IT	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -7718,8 +7632,6 @@ it_IT & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 it_IT & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 it_IT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 it_IT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-it_IT & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-it_IT & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 ja_JP	Language endonym	日本語
 ja_JP	Country endonym	日本
 ja_JP	Floating Point Number	-123,456,789.012
@@ -8013,8 +7925,6 @@ ja_JP & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 ja_JP & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	y-M-d cccc H:mm:ss zzzz -> 2008-7-21 الإثنين 14:31:00 جرينتش+00:00
 ja_JP & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	y-M-d cccc a h:mm:ss zzzz -> 2008-7-21 יום שני PM 2:31:00 GMT+00:00
 ja_JP & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	y-M-d cccc H:mm:ss zzzz -> 2008-7-21 יום שני 14:31:00 GMT+00:00
-ja_JP & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	y年M月d日ccccah時mm分ss秒 zzzz -> 2008年7月21日星期一下午2時31分00秒 格林尼治标准时间+0000
-ja_JP & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	y年M月d日ccccH時mm分ss秒 zzzz -> 2008年7月21日星期一14時31分00秒 格林尼治标准时间+0000
 ja_JP	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	ah:mm -> 午後2:31
 ja_JP	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
 ja_JP	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	ah:mm:ss -> 午後2:31:00
@@ -8069,8 +7979,6 @@ ja_JP & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ja_JP & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y-M-d cccc H:mm:ss zzzz -> 1429-7-18 الإثنين 14:31:00 جرينتش+00:00
 ja_JP & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	y-M-d cccc a h:mm:ss zzzz -> 1429-7-18 יום שני PM 2:31:00 GMT+00:00
 ja_JP & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y-M-d cccc H:mm:ss zzzz -> 1429-7-18 יום שני 14:31:00 GMT+00:00
-ja_JP & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	y年M月d日ccccah時mm分ss秒 zzzz -> 1429年7月18日星期一下午2時31分00秒 格林尼治标准时间+0000
-ja_JP & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y年M月d日ccccH時mm分ss秒 zzzz -> 1429年7月18日星期一14時31分00秒 格林尼治标准时间+0000
 ko_KR	Language endonym	한국어
 ko_KR	Country endonym	대한민국
 ko_KR	Floating Point Number	-123,456,789.012
@@ -8364,8 +8272,6 @@ ko_KR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (defau
 ko_KR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc H:m:s zzzz -> 2008-7-21 الإثنين 14:31:0 جرينتش+00:00
 ko_KR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y-M-d cccc a h:m:s zzzz -> 2008-7-21 יום שני PM 2:31:0 GMT+00:00
 ko_KR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc H:m:s zzzz -> 2008-7-21 יום שני 14:31:0 GMT+00:00
-ko_KR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y-M-d cccc a h:m:s zzzz -> 2008-7-21 星期一 下午 2:31:0 格林尼治标准时间+0000
-ko_KR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc H:m:s zzzz -> 2008-7-21 星期一 14:31:0 格林尼治标准时间+0000
 ko_KR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	a h:mm -> 오후 2:31
 ko_KR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	 H:mm ->  14:31
 ko_KR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	a h:mm:ss -> 오후 2:31:00
@@ -8420,8 +8326,6 @@ ko_KR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 ko_KR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc H:m:s zzzz -> 1429-7-18 الإثنين 14:31:0 جرينتش+00:00
 ko_KR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y-M-d cccc a h:m:s zzzz -> 1429-7-18 יום שני PM 2:31:0 GMT+00:00
 ko_KR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc H:m:s zzzz -> 1429-7-18 יום שני 14:31:0 GMT+00:00
-ko_KR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y-M-d cccc a h:m:s zzzz -> 1429-7-18 星期一 下午 2:31:0 格林尼治标准时间+0000
-ko_KR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc H:m:s zzzz -> 1429-7-18 星期一 14:31:0 格林尼治标准时间+0000
 ms_MY	Language endonym	Melayu
 ms_MY	Country endonym	Malaysia
 ms_MY	Floating Point Number	-123,456,789.012
@@ -8715,8 +8619,6 @@ ms_MY & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 ms_MY & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> الإثنين, 2008 يوليو 21 14:31:00 جرينتش+00:00
 ms_MY & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> יום שני, 2008 יולי 21 02:31:00 PM GMT+00:00
 ms_MY & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> יום שני, 2008 יולי 21 14:31:00 GMT+00:00
-ms_MY & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> 星期一, 2008 七月 21 02:31:00 下午 格林尼治标准时间+0000
-ms_MY & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> 星期一, 2008 七月 21 14:31:00 格林尼治标准时间+0000
 ms_MY	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 ms_MY	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 ms_MY	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -8771,8 +8673,6 @@ ms_MY & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ms_MY & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> الإثنين, 1429 رجب 18 14:31:00 جرينتش+00:00
 ms_MY & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> יום שני, 1429 רג׳אב 18 02:31:00 PM GMT+00:00
 ms_MY & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> יום שני, 1429 רג׳אב 18 14:31:00 GMT+00:00
-ms_MY & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, y LLLL dd hh:mm:ss a zzzz -> 星期一, 1429 Rajab 18 02:31:00 下午 格林尼治标准时间+0000
-ms_MY & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> 星期一, 1429 Rajab 18 14:31:00 格林尼治标准时间+0000
 nb_NO	Language endonym	norsk bokmål
 nb_NO	Country endonym	Norge
 nb_NO	Floating Point Number	-123 456 789,012
@@ -9066,8 +8966,6 @@ nb_NO & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 nb_NO & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 21. يوليو 2008 14:31:00 جرينتش+00:00
 nb_NO & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 21. יולי 2008 02:31:00 PM GMT+00:00
 nb_NO & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 21. יולי 2008 14:31:00 GMT+00:00
-nb_NO & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 21. 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-nb_NO & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 nb_NO	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 nb_NO	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 nb_NO	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -9122,8 +9020,6 @@ nb_NO & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 nb_NO & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 18. رجب 1429 14:31:00 جرينتش+00:00
 nb_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 18. רג׳אב 1429 02:31:00 PM GMT+00:00
 nb_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
-nb_NO & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 18. Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-nb_NO & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 18. Rajab 1429 14:31:00 格林尼治标准时间+0000
 nl_NL	Language endonym	Nederlands
 nl_NL	Country endonym	Nederland
 nl_NL	Floating Point Number	-123.456.789,012
@@ -9417,8 +9313,6 @@ nl_NL & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 nl_NL & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 nl_NL & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 21 יולי 2008 02:31:00 PM GMT+00:00
 nl_NL & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-nl_NL & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-nl_NL & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 nl_NL	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 nl_NL	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 nl_NL	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -9473,8 +9367,6 @@ nl_NL & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 nl_NL & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 nl_NL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 nl_NL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-nl_NL & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-nl_NL & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 nn_NO	Language endonym	nynorsk
 nn_NO	Country endonym	Noreg
 nn_NO	Floating Point Number	−123 456 789,012
@@ -9768,8 +9660,6 @@ nn_NO & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 nn_NO & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 21. يوليو 2008 14:31:00 جرينتش+00:00
 nn_NO & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 21. יולי 2008 02:31:00 PM GMT+00:00
 nn_NO & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 21. יולי 2008 14:31:00 GMT+00:00
-nn_NO & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 21. 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-nn_NO & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 nn_NO	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 nn_NO	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 nn_NO	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -9824,8 +9714,6 @@ nn_NO & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 nn_NO & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 18. رجب 1429 14:31:00 جرينتش+00:00
 nn_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 18. רג׳אב 1429 02:31:00 PM GMT+00:00
 nn_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
-nn_NO & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 18. Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-nn_NO & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 18. Rajab 1429 14:31:00 格林尼治标准时间+0000
 no_NO	Language endonym	norsk
 no_NO	Country endonym	Norge
 no_NO	Floating Point Number	-123 456 789,012
@@ -10119,8 +10007,6 @@ no_NO & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 no_NO & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 21. يوليو 2008 14:31:00 جرينتش+00:00
 no_NO & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 21. יולי 2008 02:31:00 PM GMT+00:00
 no_NO & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 21. יולי 2008 14:31:00 GMT+00:00
-no_NO & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 21. 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-no_NO & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 21. 七月 2008 14:31:00 格林尼治标准时间+0000
 no_NO	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 no_NO	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 no_NO	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -10175,8 +10061,6 @@ no_NO & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 no_NO & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> الإثنين 18. رجب 1429 14:31:00 جرينتش+00:00
 no_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> יום שני 18. רג׳אב 1429 02:31:00 PM GMT+00:00
 no_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
-no_NO & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d. LLLL y hh:mm:ss a zzzz -> 星期一 18. Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-no_NO & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> 星期一 18. Rajab 1429 14:31:00 格林尼治标准时间+0000
 pt_BR	Language endonym	português (Brasil)
 pt_BR	Country endonym	Brasil
 pt_BR	Floating Point Number	-123.456.789,012
@@ -10470,8 +10354,6 @@ pt_BR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 pt_BR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 21 يوليو 2008 14:31:00 جرينتش+00:00
 pt_BR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> יום שני, 21 יולי 2008 02:31:00 PM GMT+00:00
 pt_BR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 21 יולי 2008 14:31:00 GMT+00:00
-pt_BR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-pt_BR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 21 七月 2008 14:31:00 格林尼治标准时间+0000
 pt_BR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 pt_BR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 pt_BR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -10526,8 +10408,6 @@ pt_BR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 pt_BR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 18 رجب 1429 14:31:00 جرينتش+00:00
 pt_BR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> יום שני, 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 pt_BR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
-pt_BR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-pt_BR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 pt_PT	Language endonym	português (Portugal)
 pt_PT	Country endonym	Portugal
 pt_PT	Floating Point Number	-123.456.789,012
@@ -10821,8 +10701,6 @@ pt_PT & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 pt_PT & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 21 يوليو 2008 14:31:00 جرينتش+00:00
 pt_PT & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> יום שני, 21 יולי 2008 02:31:00 PM GMT+00:00
 pt_PT & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 21 יולי 2008 14:31:00 GMT+00:00
-pt_PT & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-pt_PT & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 21 七月 2008 14:31:00 格林尼治标准时间+0000
 pt_PT	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 pt_PT	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 pt_PT	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -10877,8 +10755,6 @@ pt_PT & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 pt_PT & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 18 رجب 1429 14:31:00 جرينتش+00:00
 pt_PT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> יום שני, 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 pt_PT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
-pt_PT & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-pt_PT & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 ru_RU	Language endonym	русский
 ru_RU	Country endonym	Россия
 ru_RU	Floating Point Number	-123 456 789,012
@@ -11172,8 +11048,6 @@ ru_RU & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 ru_RU & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, 21 يوليو 2008 14:31:00 جرينتش+00:00
 ru_RU & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, 21 יולי 2008 2:31:00 PM GMT+00:00
 ru_RU & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 21 יולי 2008 14:31:00 GMT+00:00
-ru_RU & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, 21 七月 2008 2:31:00 下午 格林尼治标准时间+0000
-ru_RU & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> 星期一, 21 七月 2008 14:31:00 格林尼治标准时间+0000
 ru_RU	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 PM
 ru_RU	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
 ru_RU	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 PM
@@ -11228,8 +11102,6 @@ ru_RU & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ru_RU & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> الإثنين, 18 رجب 1429 14:31:00 جرينتش+00:00
 ru_RU & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> יום שני, 18 רג׳אב 1429 2:31:00 PM GMT+00:00
 ru_RU & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
-ru_RU & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y h:mm:ss a zzzz -> 星期一, 18 Rajab 1429 2:31:00 下午 格林尼治标准时间+0000
-ru_RU & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> 星期一, 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 sv_SE	Language endonym	svenska
 sv_SE	Country endonym	Sverige
 sv_SE	Floating Point Number	−123 456 789,012
@@ -11523,8 +11395,6 @@ sv_SE & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 sv_SE & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 21 يوليو 2008 14:31:00 جرينتش+00:00
 sv_SE & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 21 יולי 2008 02:31:00 PM GMT+00:00
 sv_SE & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 21 יולי 2008 14:31:00 GMT+00:00
-sv_SE & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-sv_SE & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 21 七月 2008 14:31:00 格林尼治标准时间+0000
 sv_SE	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 em
 sv_SE	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 sv_SE	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 em
@@ -11579,8 +11449,6 @@ sv_SE & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 sv_SE & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> الإثنين 18 رجب 1429 14:31:00 جرينتش+00:00
 sv_SE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> יום שני 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 sv_SE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
-sv_SE & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> 星期一 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-sv_SE & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> 星期一 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 th_TH	Language endonym	ไทย
 th_TH	Country endonym	ไทย
 th_TH	Floating Point Number	-123,456,789.012
@@ -11874,8 +11742,6 @@ th_TH & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 th_TH & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL G y, H:m:ss zzzz -> الإثنين 21 يوليو م 2008, 14:31:00 جرينتش+00:00
 th_TH & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL G y, h:m:ss a zzzz -> יום שני 21 יולי לסה״נ 2008, 2:31:00 PM GMT+00:00
 th_TH & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL G y, H:m:ss zzzz -> יום שני 21 יולי לסה״נ 2008, 14:31:00 GMT+00:00
-th_TH & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL G y, h:m:ss a zzzz -> 星期一 21 七月 公元 2008, 2:31:00 下午 格林尼治标准时间+0000
-th_TH & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL G y, H:m:ss zzzz -> 星期一 21 七月 公元 2008, 14:31:00 格林尼治标准时间+0000
 th_TH	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	h:mm a -> 2:31 PM
 th_TH	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	H:mm -> 14:31
 th_TH	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	h:mm:ss a -> 2:31:00 PM
@@ -11930,8 +11796,6 @@ th_TH & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 th_TH & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL G y, H:m:ss zzzz -> الإثنين 18 رجب هـ 1429, 14:31:00 جرينتش+00:00
 th_TH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL G y, h:m:ss a zzzz -> יום שני 18 רג׳אב שנת היג׳רה 1429, 2:31:00 PM GMT+00:00
 th_TH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL G y, H:m:ss zzzz -> יום שני 18 רג׳אב שנת היג׳רה 1429, 14:31:00 GMT+00:00
-th_TH & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL G y, h:m:ss a zzzz -> 星期一 18 Rajab AH 1429, 2:31:00 下午 格林尼治标准时间+0000
-th_TH & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL G y, H:m:ss zzzz -> 星期一 18 Rajab AH 1429, 14:31:00 格林尼治标准时间+0000
 tr_TR	Language endonym	Türkçe
 tr_TR	Country endonym	Türkiye
 tr_TR	Floating Point Number	-123.456.789,012
@@ -12225,8 +12089,6 @@ tr_TR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 tr_TR & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd LLLL y cccc HH:mm:ss zzzz -> 21 يوليو 2008 الإثنين 14:31:00 جرينتش+00:00
 tr_TR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd LLLL y cccc hh:mm:ss a zzzz -> 21 יולי 2008 יום שני 02:31:00 PM GMT+00:00
 tr_TR & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd LLLL y cccc HH:mm:ss zzzz -> 21 יולי 2008 יום שני 14:31:00 GMT+00:00
-tr_TR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	dd LLLL y cccc hh:mm:ss a zzzz -> 21 七月 2008 星期一 02:31:00 下午 格林尼治标准时间+0000
-tr_TR & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	dd LLLL y cccc HH:mm:ss zzzz -> 21 七月 2008 星期一 14:31:00 格林尼治标准时间+0000
 tr_TR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 PM
 tr_TR	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 tr_TR	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 PM
@@ -12281,8 +12143,6 @@ tr_TR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 tr_TR & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd LLLL y cccc HH:mm:ss zzzz -> 18 رجب 1429 الإثنين 14:31:00 جرينتش+00:00
 tr_TR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd LLLL y cccc hh:mm:ss a zzzz -> 18 רג׳אב 1429 יום שני 02:31:00 PM GMT+00:00
 tr_TR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd LLLL y cccc HH:mm:ss zzzz -> 18 רג׳אב 1429 יום שני 14:31:00 GMT+00:00
-tr_TR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	dd LLLL y cccc hh:mm:ss a zzzz -> 18 Rajab 1429 星期一 02:31:00 下午 格林尼治标准时间+0000
-tr_TR & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd LLLL y cccc HH:mm:ss zzzz -> 18 Rajab 1429 星期一 14:31:00 格林尼治标准时间+0000
 uk_UA	Language endonym	українська
 uk_UA	Country endonym	Україна
 uk_UA	Floating Point Number	-123 456 789,012
@@ -12576,8 +12436,6 @@ uk_UA & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12       
 uk_UA & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 21 يوليو 2008 14:31:00 جرينتش+00:00
 uk_UA & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> יום שני, 21 יולי 2008 02:31:00 PM GMT+00:00
 uk_UA & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 21 יולי 2008 14:31:00 GMT+00:00
-uk_UA & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 21 七月 2008 02:31:00 下午 格林尼治标准时间+0000
-uk_UA & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 21 七月 2008 14:31:00 格林尼治标准时间+0000
 uk_UA	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12          	hh:mm a -> 02:31 p.m.
 uk_UA	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	HH:mm -> 14:31
 uk_UA	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12          	hh:mm:ss a -> 02:31:00 p.m.
@@ -12632,8 +12490,6 @@ uk_UA & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 uk_UA & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> الإثنين, 18 رجب 1429 14:31:00 جرينتش+00:00
 uk_UA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> יום שני, 18 רג׳אב 1429 02:31:00 PM GMT+00:00
 uk_UA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
-uk_UA & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc, d LLLL y hh:mm:ss a zzzz -> 星期一, 18 Rajab 1429 02:31:00 下午 格林尼治标准时间+0000
-uk_UA & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> 星期一, 18 Rajab 1429 14:31:00 格林尼治标准时间+0000
 ur_PK	Language endonym	اردو
 ur_PK	Country endonym	پاکستان
 ur_PK	Floating Point Number	-123,456,789.012
@@ -12927,8 +12783,6 @@ ur_PK & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (defau
 ur_PK & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d, LLLL y H:mm:ss zzzz -> الإثنين, 21, يوليو 2008 14:31:00 جرينتش+00:00
 ur_PK & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d, LLLL y h:mm:ss a zzzz -> יום שני, 21, יולי 2008 2:31:00 PM GMT+00:00
 ur_PK & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d, LLLL y H:mm:ss zzzz -> יום שני, 21, יולי 2008 14:31:00 GMT+00:00
-ur_PK & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	cccc, d, LLLL y h:mm:ss a zzzz -> 星期一, 21, 七月 2008 2:31:00 下午 格林尼治标准时间+0000
-ur_PK & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	cccc, d, LLLL y H:mm:ss zzzz -> 星期一, 21, 七月 2008 14:31:00 格林尼治标准时间+0000
 ur_PK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm a -> 2:31 PM
 ur_PK	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 ur_PK	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	h:mm:ss a -> 2:31:00 PM
@@ -12983,8 +12837,6 @@ ur_PK & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 ur_PK & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d, LLLL y H:mm:ss zzzz -> الإثنين, 18, رجب 1429 14:31:00 جرينتش+00:00
 ur_PK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d, LLLL y h:mm:ss a zzzz -> יום שני, 18, רג׳אב 1429 2:31:00 PM GMT+00:00
 ur_PK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d, LLLL y H:mm:ss zzzz -> יום שני, 18, רג׳אב 1429 14:31:00 GMT+00:00
-ur_PK & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	cccc, d, LLLL y h:mm:ss a zzzz -> 星期一, 18, Rajab 1429 2:31:00 下午 格林尼治标准时间+0000
-ur_PK & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d, LLLL y H:mm:ss zzzz -> 星期一, 18, Rajab 1429 14:31:00 格林尼治标准时间+0000
 zh_CN@collation=pinyin	Language endonym	中文 (中国大陆)
 zh_CN@collation=pinyin	Country endonym	中国
 zh_CN@collation=pinyin	Floating Point Number	-123,456,789.012
@@ -13278,8 +13130,6 @@ zh_CN@collation=pinyin & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hou
 zh_CN@collation=pinyin & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 الإثنين جرينتش+00:00 14:31:00
 zh_CN@collation=pinyin & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 2008-7-21 יום שני GMT+00:00 PM 2:31:00
 zh_CN@collation=pinyin & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 יום שני GMT+00:00 14:31:00
-zh_CN@collation=pinyin & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+0000下午2时31分00秒
-zh_CN@collation=pinyin & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+000014时31分00秒
 zh_CN@collation=pinyin	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm -> 下午2:31
 zh_CN@collation=pinyin	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 zh_CN@collation=pinyin	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm:ss -> 下午2:31:00
@@ -13334,8 +13184,6 @@ zh_CN@collation=pinyin & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour 
 zh_CN@collation=pinyin & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 الإثنين جرينتش+00:00 14:31:00
 zh_CN@collation=pinyin & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 1429-7-18 יום שני GMT+00:00 PM 2:31:00
 zh_CN@collation=pinyin & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 יום שני GMT+00:00 14:31:00
-zh_CN@collation=pinyin & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+0000下午2时31分00秒
-zh_CN@collation=pinyin & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+000014时31分00秒
 zh_CN@collation=stroke	Language endonym	中文 (中国大陆)
 zh_CN@collation=stroke	Country endonym	中国
 zh_CN@collation=stroke	Floating Point Number	-123,456,789.012
@@ -13629,8 +13477,6 @@ zh_CN@collation=stroke & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hou
 zh_CN@collation=stroke & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 الإثنين جرينتش+00:00 14:31:00
 zh_CN@collation=stroke & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 2008-7-21 יום שני GMT+00:00 PM 2:31:00
 zh_CN@collation=stroke & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 יום שני GMT+00:00 14:31:00
-zh_CN@collation=stroke & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+0000下午2时31分00秒
-zh_CN@collation=stroke & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+000014时31分00秒
 zh_CN@collation=stroke	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm -> 下午2:31
 zh_CN@collation=stroke	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 zh_CN@collation=stroke	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm:ss -> 下午2:31:00
@@ -13685,8 +13531,6 @@ zh_CN@collation=stroke & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour 
 zh_CN@collation=stroke & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 الإثنين جرينتش+00:00 14:31:00
 zh_CN@collation=stroke & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 1429-7-18 יום שני GMT+00:00 PM 2:31:00
 zh_CN@collation=stroke & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 יום שני GMT+00:00 14:31:00
-zh_CN@collation=stroke & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+0000下午2时31分00秒
-zh_CN@collation=stroke & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+000014时31分00秒
 zh_Hans_CN	Language endonym	中文 (中国大陆)
 zh_Hans_CN	Country endonym	中国
 zh_Hans_CN	Floating Point Number	-123,456,789.012
@@ -13980,8 +13824,6 @@ zh_Hans_CN & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (
 zh_Hans_CN & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 الإثنين جرينتش+00:00 14:31:00
 zh_Hans_CN & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 2008-7-21 יום שני GMT+00:00 PM 2:31:00
 zh_Hans_CN & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 יום שני GMT+00:00 14:31:00
-zh_Hans_CN & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+0000下午2时31分00秒
-zh_Hans_CN & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 2008年7月21日星期一格林尼治标准时间+000014时31分00秒
 zh_Hans_CN	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm -> 下午2:31
 zh_Hans_CN	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 zh_Hans_CN	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm:ss -> 下午2:31:00
@@ -14036,8 +13878,6 @@ zh_Hans_CN & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (de
 zh_Hans_CN & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 الإثنين جرينتش+00:00 14:31:00
 zh_Hans_CN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 1429-7-18 יום שני GMT+00:00 PM 2:31:00
 zh_Hans_CN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 יום שני GMT+00:00 14:31:00
-zh_Hans_CN & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+0000下午2时31分00秒
-zh_Hans_CN & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH时mm分ss秒 -> 1429年7月18日星期一格林尼治标准时间+000014时31分00秒
 zh_Hant_TW	Language endonym	中文 (台灣)
 zh_Hant_TW	Country endonym	台灣
 zh_Hant_TW	Floating Point Number	-123,456,789.012
@@ -14331,8 +14171,6 @@ zh_Hant_TW & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (
 zh_Hant_TW & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 الإثنين جرينتش+00:00 14:31:00
 zh_Hant_TW & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 2008-7-21 יום שני GMT+00:00 PM 2:31:00
 zh_Hant_TW & he_IL	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 2008-7-21 יום שני GMT+00:00 14:31:00
-zh_Hant_TW & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah時mm分ss秒 -> 2008年7月21日星期一GMT+00:00下午2時31分00秒
-zh_Hant_TW & zh_CN	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH時mm分ss秒 -> 2008年7月21日星期一GMT+00:0014時31分00秒
 zh_Hant_TW	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm -> 下午2:31
 zh_Hant_TW	dateNone, timeShort, Islamic calendar, 24/12 hour mode: 24          	H:mm -> 14:31
 zh_Hant_TW	dateNone, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	ah:mm:ss -> 下午2:31:00
@@ -14387,5 +14225,3 @@ zh_Hant_TW & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (de
 zh_Hant_TW & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 الإثنين جرينتش+00:00 14:31:00
 zh_Hant_TW & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y-M-d cccc zzzz a h:mm:ss -> 1429-7-18 יום שני GMT+00:00 PM 2:31:00
 zh_Hant_TW & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 יום שני GMT+00:00 14:31:00
-zh_Hant_TW & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	y年M月d日EEEEzzzzah時mm分ss秒 -> 1429年7月18日星期一GMT+00:00下午2時31分00秒
-zh_Hant_TW & zh_CN	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y年M月d日EEEEzzzzH時mm分ss秒 -> 1429年7月18日星期一GMT+00:0014時31分00秒
