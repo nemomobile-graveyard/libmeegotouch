@@ -112,6 +112,8 @@ private slots:
     void testCursorPositionChanged();
     void testCopyPaste();
     void testPasteOnPreedit();
+    void testClearClipboard_data();
+    void testClearClipboard();
     void testCut_data();
     void testCut();
     void testInputMethodQuery();

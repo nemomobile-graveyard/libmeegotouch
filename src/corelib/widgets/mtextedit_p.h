@@ -146,6 +146,7 @@ public:
     void _q_confirmCompletion(const QString &);
     void _q_updatePasteActionState();
     void _q_pasteAndClear();
+    void _q_onPasteFailed();
     void _q_handlePositionChanged();
     void _q_checkPositionChanges();
 
@@ -218,10 +219,14 @@ private:
     bool programmaticalDocumentChange; // true while text changed using public interface
     QTimer *positionChangeTimeout;
     bool hasPositionChangesToHandle;
+    bool pasteFailed;
 
     friend class MTextEditSignalEmitter;
     friend class MCompleterViewPrivate;
     friend class MTextEditViewPrivate;
+#ifdef UNIT_TEST
+    friend class Ut_MTextEdit;
+#endif
 };
 
 #endif

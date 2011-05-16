@@ -356,7 +356,8 @@ MTextEditPrivate::MTextEditPrivate()
       pasteAction(0),
       programmaticalDocumentChange(false),
       positionChangeTimeout(0),
-      hasPositionChangesToHandle(false)
+      hasPositionChangesToHandle(false),
+      pasteFailed(false)
 {
 }
 
@@ -437,6 +438,8 @@ void MTextEditPrivate::init()
     positionChangeTimeout->setInterval(50);
     positionChangeTimeout->setSingleShot(false);
     QObject::connect(positionChangeTimeout, SIGNAL(timeout()), q, SLOT(_q_checkPositionChanges()));
+
+    QObject::connect(q, SIGNAL(pasteFailed()), q, SLOT(_q_onPasteFailed()));
 }
 
 void MTextEditPrivate::_q_updatePasteActionState()
@@ -1542,6 +1545,21 @@ void  MTextEditPrivate::disconnectCompleter()
     }
 }
 
+void MTextEditPrivate::_q_pasteAndClear()
+{
+    Q_Q(MTextEdit);
+    pasteFailed = false;
+    q->paste();
+    if (!pasteFailed) {
+        QApplication::clipboard()->clear(QClipboard::Clipboard);
+    }
+}
+
+void MTextEditPrivate::_q_onPasteFailed()
+{
+    pasteFailed = true;
+}
+
 ///////////////////////////////////////////////
 // Actual class implementation
 
@@ -2374,13 +2392,6 @@ void MTextEdit::paste()
         emit pasteFailed();
     }
 
-}
-
-void MTextEditPrivate::_q_pasteAndClear()
-{
-    Q_Q(MTextEdit);
-    q->paste();
-    QApplication::clipboard()->clear(QClipboard::Clipboard);
 }
 
 void MTextEdit::cut()

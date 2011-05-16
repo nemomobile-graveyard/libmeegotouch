@@ -1942,6 +1942,44 @@ void Ut_MTextEdit::testPasteOnPreedit()
     QCOMPARE(m_subject->text(), text + text);
 }
 
+void Ut_MTextEdit::testClearClipboard_data()
+{
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<M::TextContentType>("contentType");
+    QTest::addColumn<bool>("expectedClearing");
+
+    QTest::newRow("free") << "some text 12345" << M::FreeTextContentType << true;
+    QTest::newRow("number+text") << "some text" << M::NumberContentType << false;
+    QTest::newRow("number+number") << "12345" << M::NumberContentType << true;
+    QTest::newRow("number+mix") << "asd12345" << M::NumberContentType << true;
+    QTest::newRow("free+empty string") << QString() << M::FreeTextContentType << true;
+}
+
+void Ut_MTextEdit::testClearClipboard()
+{
+    QFETCH(QString, text);
+    QFETCH(M::TextContentType, contentType);
+    QFETCH(bool, expectedClearing);
+
+    QSignalSpy spy(m_subject.get(), SIGNAL(pasteFailed()));
+    QVERIFY(spy.isValid());
+
+    QClipboard *clipboard = QApplication::clipboard();
+    QVERIFY(clipboard);
+
+    m_subject->setContentType(contentType);
+    clipboard->setText(text);
+    m_subject->d_func()->pasteAction.activate(QAction::Trigger);
+
+    if (expectedClearing) {
+        QCOMPARE(clipboard->text(), QString());
+        QCOMPARE(spy.count(), 0);
+    } else {
+        QCOMPARE(clipboard->text(), text);
+        QCOMPARE(spy.count(), 1);
+    }
+}
+
 void Ut_MTextEdit::testCut_data()
 {
     QTest::addColumn<QString>("clipboardText");
