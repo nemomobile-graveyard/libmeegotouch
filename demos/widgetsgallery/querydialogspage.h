@@ -25,6 +25,11 @@
 #include <QModelIndex>
 #include <QPointer>
 
+#ifdef HAVE_LIBNGF
+#   include <dbus/dbus.h>
+#   include <libngf/client.h>
+#endif
+
 class MDialog;
 class MList;
 
@@ -34,13 +39,15 @@ class QueryDialogsPage : public TemplatePage
 
 public:
     enum MessageBoxOption {
-        Default,
-        Icon,
-        LargeText
+        Default = 0,
+        Icon = 1,
+        LargeText = 2,
+        NgfEffect = 4
     };
     Q_DECLARE_FLAGS(MessageBoxOptions, MessageBoxOption)
 
     QueryDialogsPage();
+    virtual ~QueryDialogsPage();
 
     QString timedemoTitle();
 
@@ -60,6 +67,11 @@ private:
     MList *list;
 
     QPointer<MDialog> dialog;
+
+#ifdef HAVE_LIBNGF
+    DBusConnection *connection;
+    NgfClient *ngfClient;
+#endif
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(QueryDialogsPage::MessageBoxOptions)
 

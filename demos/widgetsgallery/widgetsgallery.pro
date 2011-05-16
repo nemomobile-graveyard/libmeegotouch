@@ -33,6 +33,12 @@ contains(DEFINES, HAVE_DBUS) {
     CONFIG += qdbus
     QT += dbus
 }
+
+contains(DEFINES, HAVE_LIBNGF) {
+    CONFIG *= link_pkgconfig
+    PKGCONFIG += libngf0 dbus-1 glib-2.0
+}
+
 SOURCES += main.cpp \
     templatepage.cpp \
     mainpage.cpp \

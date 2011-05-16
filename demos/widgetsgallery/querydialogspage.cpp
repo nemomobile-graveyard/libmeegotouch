@@ -33,6 +33,12 @@
 #include <QStringListModel>
 #include <QTimer>
 
+#ifdef HAVE_LIBNGF
+#   include <dbus/dbus-glib-lowlevel.h>
+#   include <QDBusMessage>
+#   include <QDBusConnection>
+#endif
+
 class QueryDialogsPageCellCreator : public MAbstractCellCreator<MBasicListItem>
 {
 public:
@@ -68,7 +74,23 @@ QueryDialogsPage::QueryDialogsPage()
       list(0),
       dialog()
 {
+#ifdef HAVE_LIBNGF
+    connection = dbus_bus_get(DBUS_BUS_SYSTEM, NULL);
+    dbus_connection_setup_with_g_main(connection, NULL);
+
+    ngfClient = ngf_client_create(NGF_TRANSPORT_DBUS, connection);
+#endif //HAVE_LIBNGF
 }
+
+
+QueryDialogsPage::~QueryDialogsPage()
+{
+#ifdef HAVE_LIBNGF
+    ngf_client_destroy(ngfClient);
+    dbus_connection_unref(connection);
+#endif
+}
+
 
 QString QueryDialogsPage::timedemoTitle()
 {
@@ -119,6 +141,9 @@ void QueryDialogsPage::itemClicked(const QModelIndex &index)
     case 3:
         openMessageBox(LargeText | Icon);
         break;
+    case 4:
+        openMessageBox(NgfEffect);
+        break;
     default:
         break;
     }
@@ -146,6 +171,21 @@ void QueryDialogsPage::openMessageBox(MessageBoxOptions options)
     if (options & Icon)
         messageBox->setIconId("icon-l-default-application");
 
+#ifdef HAVE_LIBNGF
+    if (options & NgfEffect) {
+        // play non graphical feedback effect
+        NgfProplist *p = NULL;
+        const gchar *event = "query";
+
+        ngf_client_play_event(ngfClient, event, p);
+
+        // OBS: A more encapsulated way of doing it would be to
+        // play it from within your MMessageBox specialized class
+        // when it leaves the MSceneWindow::Disappeared state
+        // (see MSceneWindow::sceneWindowStateChanged())
+    }
+#endif
+
     dialog = messageBox;
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
@@ -167,6 +207,8 @@ void QueryDialogsPage::retranslateUi()
     queryDialogTypes << qtTrId("xx_wg_query_dialogs_big_query_dialog_without_icon");
     //% "Big Query Dialog with Icon"
     queryDialogTypes << qtTrId("xx_wg_query_dialogs_big_query_dialog_with_icon");
+    //% "Query Dialog with NGF effect"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_query_dialog_with_ngf_effect");
 
 
     static_cast<QStringListModel *>(list->itemModel())->setStringList(queryDialogTypes);
