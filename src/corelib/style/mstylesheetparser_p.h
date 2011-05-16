@@ -48,12 +48,15 @@ public:
 
     QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> > fileInfoList;
     QSharedPointer<MStyleSheetParser::StylesheetFileInfo> privateFileInfo;
+    QSharedPointer<char> privateBinaryBuffer;
 
     /**
      \brief Load a previously-cached binary version of the style.
      \param binaryFilename The binary stylesheet file.
      */
     bool loadBinary(const QString &binaryFilename);
+    bool loadBinary(const char* buffer);
+    bool loadFromBuffer();
 
     /**
       * Returns the approximated size of the current stylesheet. The returned number is
@@ -67,6 +70,8 @@ public:
      \param binaryFilename The file to create.
      */
     bool dump(const QString &binaryFilename);
+    void dumpToBuffer(char **buffer);
+
     void readAllSelectors(char** buffer);
     void writeAllSelectors(char** buffer);
     void writeSelectorMap(const QMultiMap<MUniqueStringCache::Index, const MStyleSheetSelector *> &selectorMap, char **buffer);
@@ -100,6 +105,7 @@ public:
     const MLogicalValues *logicalValues;
     QSystemSemaphore cssSemaphore;
     QList<QSharedPointer<QFile> > mappedFiles;
+    QList<QSharedPointer<char> > binaryBuffers;
     QHash<QByteArray, QByteArray>* globalConstants;
 
     bool validName(const QByteArray &name);

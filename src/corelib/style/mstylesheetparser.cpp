@@ -177,6 +177,12 @@ public:
 #endif
     }
 };
+
+    static void deleteCharPtr(char *ptr)
+    {
+        delete[] ptr;
+    }
+
 }
 #endif
 
@@ -468,16 +474,28 @@ bool MStyleSheetParserPrivate::load(const QString &filename, QHash<QByteArray, Q
                         return false;
                     }
                     QString tmpBinaryFilename = binaryFilename + ".tmp";
-                    dump(tmpBinaryFilename);
-                    // now clear the stylesheets we just created and load the from the cache file
-                    // to make use of mmaping
-                    fileInfoList.clear();
-                    privateFileInfo.clear();
+                    if (dump(tmpBinaryFilename)) {
+                        if (rename(tmpBinaryFilename.toLatin1(), binaryFilename.toLatin1()) == 0) {
+                            // Dump has succeeded so now clear the stylesheets we just created
+                            // and load the from the cache file to make use of mmaping
+                            fileInfoList.clear();
+                            privateFileInfo.clear();
 
-                    rename(tmpBinaryFilename.toLatin1(), binaryFilename.toLatin1());
-
-                    cssSemaphore.release();
-                    return loadBinary(binaryFilename);
+                            cssSemaphore.release();
+                            bool result = loadBinary(binaryFilename);
+                            if (result)
+                                privateBinaryBuffer.clear();
+                            else
+                                return loadFromBuffer();
+                            return result;
+                        } else {
+                            cssSemaphore.release();
+                            return loadFromBuffer();
+                        }
+                    } else {
+                        cssSemaphore.release();
+                        return loadFromBuffer();
+                    }
                 }
             }
 
@@ -1064,6 +1082,7 @@ MStyleSheetParser::~MStyleSheetParser()
     Q_D(MStyleSheetParser);
 
     d->fileInfoList.clear();
+    d->privateBinaryBuffer.clear();
 
     delete d_ptr;
 }
@@ -1153,46 +1172,61 @@ bool MStyleSheetParserPrivate::loadBinary(const QString &binaryFilename)
         }
         mappedFiles.append(file);
         file->close();
-
-        char *bufferIterator = const_cast<char*>(buffer);
-        unsigned int file_version = readInteger<unsigned int>(&bufferIterator);
-
-        if (file_version == FILE_VERSION) {
-            quint32 timestampCount = readInteger<quint32>(&bufferIterator);
-            for (quint32 i = 0; i < timestampCount; ++i) {
-                MUniqueStringCache::Index fileNameIndex = readInteger<MUniqueStringCache::Index>(&bufferIterator);
-                QLatin1String fileName = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(fileNameIndex);
-
-                qint64 timestamp = readInteger<qint64>(&bufferIterator);
-
-                time_t current = modificationTime(fileName.latin1());
-                if (current != timestamp) {
-                    mDebug("MStyleSheetParserPrivate::loadBinary") << fileName << "changed. Recreating cache file";
-                    return false;
-                }
-            }
-
-            QList<uint> logicalTimestamps;
-            quint32 logicalTimestampCount = readInteger<int>(&bufferIterator);
-            for (quint32 i = 0; i < logicalTimestampCount; ++i) {
-                uint ts = readInteger<quint32>(&bufferIterator);
-                logicalTimestamps.append(ts);
-            }
-
-            if (logicalValues && logicalTimestamps != logicalValues->timestamps()) {
-                mDebug("MStyleSheetParserPrivate") << "Recreating" << binaryFilename << "as constants changed";
-                return false;
-            }
-
-            readAllSelectors(&bufferIterator);
-
-            return true;
-        }
-        return false;
+        return loadBinary(buffer);
     }
 
     mWarning("MStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << binaryFilename;
     return false;
+}
+
+bool MStyleSheetParserPrivate::loadBinary(const char *buffer)
+{
+    if (!buffer) {
+        mWarning("MStyleSheetParserPrivate::loadBinary") << "Memory location is invalid" << buffer;
+        return false;
+    }
+
+    char *bufferIterator = const_cast<char*>(buffer);
+    unsigned int file_version = readInteger<unsigned int>(&bufferIterator);
+
+    if (file_version == FILE_VERSION) {
+        quint32 timestampCount = readInteger<quint32>(&bufferIterator);
+        for (quint32 i = 0; i < timestampCount; ++i) {
+            MUniqueStringCache::Index fileNameIndex = readInteger<MUniqueStringCache::Index>(&bufferIterator);
+            QLatin1String fileName = MStyleSheetParser::stringCacheWithoutReverseLookup()->indexToString(fileNameIndex);
+
+            qint64 timestamp = readInteger<qint64>(&bufferIterator);
+
+            time_t current = modificationTime(fileName.latin1());
+            if (current != timestamp) {
+                mDebug("MStyleSheetParserPrivate::loadBinary") << fileName << "changed. Recreating cache file";
+                return false;
+            }
+        }
+
+        QList<uint> logicalTimestamps;
+        quint32 logicalTimestampCount = readInteger<int>(&bufferIterator);
+        for (quint32 i = 0; i < logicalTimestampCount; ++i) {
+            uint ts = readInteger<quint32>(&bufferIterator);
+            logicalTimestamps.append(ts);
+        }
+
+        if (logicalValues && logicalTimestamps != logicalValues->timestamps()) {
+            mDebug("MStyleSheetParserPrivate") << "Recreating as constants changed...";
+            return false;
+        }
+
+        readAllSelectors(&bufferIterator);
+
+        return true;
+    }
+    return false;
+}
+
+bool MStyleSheetParserPrivate::loadFromBuffer()
+{
+    binaryBuffers.append(privateBinaryBuffer);
+    return loadBinary(privateBinaryBuffer.data());
 }
 
 qint64 MStyleSheetParserPrivate::approximateSize()
@@ -1260,6 +1294,31 @@ qint64 MStyleSheetParserPrivate::approximateSize()
     return size;
 }
 
+void MStyleSheetParserPrivate::dumpToBuffer(char **buffer)
+{
+    writeInteger<unsigned int>(FILE_VERSION, buffer);
+
+    writeInteger<int>(fileInfoList.count(), buffer);
+    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fileInfoListEnd = fileInfoList.constEnd();
+    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fi = fileInfoList.constBegin();
+            fi != fileInfoListEnd;
+            ++fi) {
+        writeInteger(MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex((*fi)->filename), buffer);
+        writeInteger<qint64>((*fi)->time_t, buffer);
+    }
+
+    int timestampCount = 0;
+    if (logicalValues) {
+        timestampCount = logicalValues->timestamps().count();
+    }
+    writeInteger<int>(timestampCount, buffer);
+    for (int i = 0; i < timestampCount; ++i) {
+        writeInteger<uint>(logicalValues->timestamps().at(i), buffer);
+    }
+
+    writeAllSelectors(buffer);
+}
+
 bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
 {
     QFile file(binaryFilename);
@@ -1281,45 +1340,32 @@ bool MStyleSheetParserPrivate::dump(const QString &binaryFilename)
     mDebug("MStyleSheetParserPrivate::dump") << file.fileName();
 
     qint64 approximatedSize = approximateSize();
-    QScopedArrayPointer<const char> buffer(new char[approximatedSize]);
-    char *bufferIterator = const_cast<char*>(buffer.data());
+    privateBinaryBuffer = QSharedPointer<char>(new char[approximatedSize], deleteCharPtr);
+    char *bufferIterator = privateBinaryBuffer.data();
+    dumpToBuffer(&bufferIterator);
 
-    writeInteger<unsigned int>(FILE_VERSION, &bufferIterator);
-
-    writeInteger<int>(fileInfoList.count(), &bufferIterator);
-    QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fileInfoListEnd = fileInfoList.constEnd();
-    for (QList<QSharedPointer<MStyleSheetParser::StylesheetFileInfo> >::const_iterator fi = fileInfoList.constBegin();
-            fi != fileInfoListEnd;
-            ++fi) {
-        writeInteger(MStyleSheetParser::stringCacheWithoutReverseLookup()->stringToIndex((*fi)->filename), &bufferIterator);
-        writeInteger<qint64>((*fi)->time_t, &bufferIterator);
-    }
-
-    int timestampCount = 0;
-    if (logicalValues) {
-        timestampCount = logicalValues->timestamps().count();
-    }
-    writeInteger<int>(timestampCount, &bufferIterator);
-    for (int i = 0; i < timestampCount; ++i) {
-        writeInteger<uint>(logicalValues->timestamps().at(i), &bufferIterator);
-    }
-
-
-     writeAllSelectors(&bufferIterator);
-
-    qint64 bytesToWrite = bufferIterator - buffer.data();
+    qint64 bytesToWrite = bufferIterator - privateBinaryBuffer.data();
     if (approximatedSize < bytesToWrite) {
         // if this did not crash anyway we need to abort here. normally this should never happen
         qFatal("Tried to write %lld bytes but only allocated memory for %lld bytes. approximateSize() must be fixed.", bytesToWrite, approximatedSize);
     }
     file.resize(bytesToWrite);
-    qint64 writtenBytes = file.write(buffer.data(), bytesToWrite);
+    qint64 writtenBytes = file.write(privateBinaryBuffer.data(), bytesToWrite);
     if (bytesToWrite != writtenBytes) {
-        mWarning("MStyleSheetParserPrivate::dump") << "Could only write" << writtenBytes << "of" << bytesToWrite << "bytes to" << file.fileName();
-        qWarning() << file.errorString();
+        mCritical("MStyleSheetParserPrivate::dump") << "Could only write" << writtenBytes << "of" << bytesToWrite << "bytes to" <<
+                                                       file.fileName() << "error occured" << file.errorString();
+        file.close();
         file.remove();
     } else {
-        file.close();
+        file.flush();
+        if (file.error() != QFile::NoError) {
+            mCritical("MStyleSheetParserPrivate::dump") << "Failed to write" << file.fileName() << "due to" << file.errorString();
+            file.close();
+            file.remove();
+            return false;
+        } else {
+            file.close();
+        }
     }
 
     return true;
@@ -1481,6 +1527,7 @@ void MStyleSheetParser::operator += (const MStyleSheetParser &stylesheet)
     d->selectorTrees.append(stylesheet.d_ptr->selectorTrees);
     d->parentSelectorTrees.append(stylesheet.d_ptr->parentSelectorTrees);
     d->mappedFiles.append(stylesheet.d_ptr->mappedFiles);
+    d->binaryBuffers.append(stylesheet.d_ptr->binaryBuffers);
 }
 
 int MStyleSheetParser::getLineNum(QFile &stream, const qint64 &streamPos)
