@@ -23,34 +23,12 @@
 #include "mmessagebox.h"
 #include "mdialog_p.h"
 
-#ifdef HAVE_LIBNGF
-#   include <dbus/dbus.h>
-#   include <libngf/client.h>
-#   ifdef HAVE_CONTEXTSUBSCRIBER
-#      include <contextproperty.h>
-#   endif
-#endif
-
 class MMessageBoxPrivate : public MDialogPrivate
 {
     Q_DECLARE_PUBLIC(MMessageBox)
 public:
     MMessageBoxPrivate();
     ~MMessageBoxPrivate();
-
-    void init();
-
-#ifdef HAVE_LIBNGF
-    void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState newState,
-                                      MSceneWindow::SceneWindowState oldState);
-    bool isScreenBlanked();
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    ContextProperty *screenBlankedProperty;
-#endif
-
-    DBusConnection* connection;
-    NgfClient* client;
-#endif
 };
 
 #endif

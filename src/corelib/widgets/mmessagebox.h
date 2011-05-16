@@ -133,10 +133,6 @@ private:
     Q_DECLARE_PRIVATE(MMessageBox)
     Q_DISABLE_COPY(MMessageBox)
 
-#ifdef HAVE_LIBNGF
-    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState, MSceneWindow::SceneWindowState))
-#endif
-
     friend class MMessageBoxView;
     friend class MMessageBoxViewPrivate;
     friend class Ut_MMessageBox;

@@ -122,10 +122,6 @@ contains(DEFINES, HAVE_GLIB) {
     LIBS += -lglib-2.0
 }
 
-contains(DEFINES, HAVE_LIBNGF) {
-    PKGCONFIG += libngf0
-}
-
 QT += \
     svg \
     network \
