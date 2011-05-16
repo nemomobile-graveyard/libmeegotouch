@@ -37,7 +37,6 @@
 #include <QClipboard>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
-#include <QPointer>
 #include <QElapsedTimer>
 
 #include "mapplication.h"

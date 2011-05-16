@@ -27,6 +27,7 @@
 #include <QTime>
 #include <QAction>
 #include <QTimer>
+#include <QPointer>
 
 class QGraphicsSceneMouseEvent;
 class QValidator;
@@ -191,7 +192,7 @@ private:
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns
 
-    MCompleter *completer;
+    QPointer<MCompleter> completer;
     int registeredToolbarId;
 
     bool editActive; // true if editing started after getting focus
