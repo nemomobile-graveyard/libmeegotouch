@@ -807,6 +807,9 @@ void MTextEditViewPrivate::startSelection(QGraphicsSceneMouseEvent *event)
 {
     if (activeDocument() != maskedTextDocument) {
         selecting = true;
+        if (editorToolbar && editorToolbar->isAppeared()) {
+            hideEditorToolbar();
+        }
 
         int currentPos = cursorPosition(event);
         startCursorPos = cursorPosition(event->buttonDownPos(Qt::LeftButton));
