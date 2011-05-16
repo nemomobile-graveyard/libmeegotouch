@@ -1730,7 +1730,7 @@ void MTextEditView::informPasteFailed()
 {
     Q_D(MTextEditView);
 
-    if (d->infoBanner) {
+    if (d->infoBanner || !d->controller->scene()) {
         return;
     }
 
