@@ -530,7 +530,7 @@ void MApplicationPrivate::stdExit(int status)
       event loop ( i.e. from the constructor ), then
       qApp->exit() does nothing, see its documentation for
       reference. To really exit in this case, we call
-      the c exit() function.
+      the c _exit() function.
      */
 
     if ( qApp )
