@@ -37,6 +37,7 @@
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
     viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
 {
+    stringVariants << "";
     staticText.setPerformanceHint(QStaticText::AggressiveCaching);
     staticText.setTextFormat(Qt::PlainText);
 }
@@ -93,15 +94,7 @@ bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
         // if height is changed
         QFontMetricsF fm(viewPrivate->controller->font());
 
-        QString text = viewPrivate->model()->text();
-
-        // If the text represents a multilength-string, only respect the first
-        // (= longest) text for the bounding rectangle.
-        const QChar multiLengthSeparator(0x9c, 0);
-        const int index = text.indexOf(multiLengthSeparator);
-        if (index >= 0) {
-            text = text.left(index);
-        }
+        QString text = stringVariants.first();
 
         QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
                 viewPrivate->textOptions.alignment() | textFlagForWrapMode(),
@@ -118,13 +111,14 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 {
     switch (which) {
     case Qt::MinimumSize: {
-        //If we have word wrap or eliding, the minimum size is the size of a single letter,
-        if (wrap() || viewPrivate->model()->textElide()) {
+        //If we have word wrap, eliding, or a width constraint, then the minimum size is the size of a single letter,
+        if (wrap() || viewPrivate->model()->textElide() || constraint.width() >= 0 || stringVariants.first().isEmpty()) {
             QFontMetricsF fm(viewPrivate->controller->font());
             return QSizeF(fm.width(QLatin1Char('x')), fm.height());
         }
-        //If word wrap and eliding are both disabled (the default) then fall through to preferred
-        //size case, so that the preferred size == minimum size.
+        //If word wrap and eliding are both disabled (the default) then use the smallest string as
+        //the minimum size
+        return sizeForWidth(-1, stringVariants.last()); //Get the size of the smallest variant
     }
     case Qt::PreferredSize: {
         qreal width = constraint.width();
@@ -132,7 +126,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             if (preferredSize.width() >= 0 && (preferredSize.width() < width || width < 0))
                 width = preferredSize.width();
         }
-        return sizeForWidth(width);
+        return sizeForWidth(width, stringVariants.first()); //Get the size of the largest variant
     }
     case Qt::MaximumSize: {
         return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -168,6 +162,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
                 preferredSize = QSizeF(-1, -1);
             }
             viewPrivate->autoSetTextDirection();
+            updateStringVariants();
             needUpdate = true;
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
@@ -265,7 +260,6 @@ void MLabelViewSimple::initializeTextProperties()
     paintingRectWithMargins = paintingRect.adjusted(0, -style->paddingTop() - style->marginTop() - style->reactiveMarginTop(), 0, style->paddingBottom() + style->marginBottom() + style->reactiveMarginBottom());
     textOffset = paintingRect.topLeft().toPoint();
 
-    unconstraintText = textToRender(QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     const QString text = textToRender(paintingRect.size());
 
     staticText.setTextWidth(paintingRect.width());
@@ -285,30 +279,9 @@ void MLabelViewSimple::initializeTextProperties()
     font = QFont(viewPrivate->controller->font());
 }
 
-QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
+void MLabelViewSimple::updateStringVariants()
 {
     QString text = viewPrivate->model()->text();
-
-    const QChar multiLengthSeparator(0x9c, 0);
-    if (text.contains(multiLengthSeparator)) {
-        // The text consists of several strings. Find the first string that fits into the
-        // available width. If no string has been found, the last string will be used.
-        const QStringList strings = text.split(multiLengthSeparator);
-        const QFontMetricsF metrics(viewPrivate->controller->font());
-        foreach (const QString &string, strings) {
-            text = string;
-            if (wrap()) {
-                QSizeF stringSize = metrics.boundingRect(QRectF(QPointF(0,0), renderSize),
-                                                         Qt::TextWordWrap, string).size();
-                if (stringSize.width() <= renderSize.width()
-                        && stringSize.height() <= renderSize.height())
-                    break;
-            } else if (metrics.width(text) <= renderSize.width()) {
-                break;
-            }
-        }
-    }
-
     // QStaticText uses QTextLayout internally to render text. Contrary to
     // QPainter::drawText(const QRect &rectangle, ...) no pre-preparation of the
     // text is done (e. g. replace \n by QChar::LineSeparator or spaces dependent
@@ -323,6 +296,34 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
                 text[i] = QLatin1Char(' ');
             }
         }
+    }
+    const QChar multiLengthSeparator(0x9c, 0);
+    stringVariants = text.split(multiLengthSeparator);
+    if (stringVariants.isEmpty()) //Shouldn't ever happen, but just incase:w
+        stringVariants << "";
+}
+
+QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
+{
+    QString text;
+    if (stringVariants.size() > 1) {
+        // The text consists of several strings. Find the first string that fits into the
+        // available width. If no string has been found, the last string will be used.
+        const QFontMetricsF metrics(viewPrivate->controller->font());
+        foreach (const QString &string, stringVariants) {
+            text = string;
+            if (wrap()) {
+                QSizeF stringSize = metrics.boundingRect(QRectF(QPointF(0,0), renderSize),
+                                                         Qt::TextWordWrap, string).size();
+                if (stringSize.width() <= renderSize.width()
+                        && stringSize.height() <= renderSize.height())
+                    break;
+            } else if (metrics.width(text) <= renderSize.width()) {
+                break;
+            }
+        }
+    } else {
+        text = stringVariants.first();
     }
 
     if (viewPrivate->model()->textElide() && text.size() > 4) {
@@ -425,21 +426,20 @@ void MLabelViewSimple::adjustTextOffset()
     }
 }
 
-QSizeF MLabelViewSimple::sizeForWidth(qreal width) const
+QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text) const
 {
     const_cast<MLabelViewSimple*>(this)->initializeTextProperties();
 
     const bool equalWidth = (width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth();
-    if (equalWidth && staticText.text() == unconstraintText) {
+
+    if (equalWidth && staticText.text() == text)
         return staticText.size();
-    }
 
     QStaticText staticText2(staticText);
     staticText2.setTextOption(staticText.textOption());  // TODO: remove after Qt-bug #13368 has been fixed
     staticText2.setTextWidth(width);
-    if (staticText2.text() != unconstraintText) {
-        staticText2.setText(unconstraintText);
-    }
+    if (staticText2.text() != text)
+        staticText2.setText(text);
     staticText2.prepare(QTransform(), font);
 
     return staticText2.size();

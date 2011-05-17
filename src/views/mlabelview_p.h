@@ -114,7 +114,7 @@ public:
      * \return The required size of the label to fit into the given width. If the width
      *         is smaller than 0 no restriction for the width is given.
      */
-    QSizeF sizeForWidth(qreal width) const;
+    QSizeF sizeForWidth(qreal width, const QString &text) const;
 
     /**
      * \return Size for the constraint \a constraint. If the width or height
@@ -122,6 +122,8 @@ public:
      */
     QSizeF sizeForConstraint(const QSizeF &constraint) const;
 
+    /** Split the model->text() into variants, and replaces spaces with newlines */
+    void updateStringVariants();
     void markDirty();
 
     MLabelViewPrivate *viewPrivate;
@@ -132,7 +134,7 @@ public:
     QRectF paintingRectWithMargins;
     bool dirty;
     QStaticText staticText;
-    QString unconstraintText;
+    QStringList stringVariants;
 
     bool clip;
     QPen pen;
