@@ -722,15 +722,13 @@ void MToolBarViewPrivate::refreshDisabledWidgets() const
     // To work around this problem we send the event
     // by hand here.
 
-    if (!itemsEnabled) {
-        QEvent event(QEvent::StyleChange);
+    QEvent event(QEvent::StyleChange);
 
-        int count = currentPolicy()->widgetCount();
-        for (int i=0; i<count; i++) {
-            MWidgetController *wc = dynamic_cast<MWidgetController *>(currentPolicy()->widgetAt(i));
-            if (wc && !wc->isEnabled())
-                QApplication::sendEvent(wc, &event);
-        }
+    int count = currentPolicy()->widgetCount();
+    for (int i=0; i<count; i++) {
+        MWidgetController *wc = dynamic_cast<MWidgetController *>(currentPolicy()->widgetAt(i));
+        if (wc && !wc->isEnabled())
+            QApplication::sendEvent(wc, &event);
     }
 }
 
