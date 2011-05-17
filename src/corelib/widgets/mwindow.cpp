@@ -185,7 +185,7 @@ void MWindowPrivate::init()
 
     q->setTranslucentBackground(false);
     if (MApplication::fullScreen())
-        q->showFullScreen();
+        q->setWindowState(q->windowState() | Qt::WindowFullScreen);
 
 #ifdef Q_WS_X11
     if (MApplication::softwareRendering() || MGraphicsSystemHelper::isRunningMeeGoCompatibleGraphicsSystem()) {
