@@ -372,11 +372,16 @@ void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
     }
 #endif
 
-    if (q->isFullScreen() || pageAreaMaximized) {
-        statusBar->disappear();
-    } else {
-        statusBar->appear(q);
-    }
+    bool oldAnimateComponentsTransitions = animateComponentsTransitions;
+
+    // MSceneManagerPrivate::canHaveAnimatedTransitions returns true if onDisplaySet == false
+    // (this happens when application is starting) but we want statusbar to animate
+    // only if app is on display.
+    animateComponentsTransitions = q->isOnDisplay();
+    bool hidden = q->isFullScreen() || pageAreaMaximized;
+    setSceneWindowVisibility(statusBar, !hidden);
+
+    animateComponentsTransitions = oldAnimateComponentsTransitions;
 }
 
 void MApplicationWindowPrivate::_q_actionUpdated(QActionEvent *event)
