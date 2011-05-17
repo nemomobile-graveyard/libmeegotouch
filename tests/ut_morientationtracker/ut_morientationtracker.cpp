@@ -448,6 +448,47 @@ void Ut_MOrientationTracker::testFollowsCurrentAppWindowWhenOnStackButNotTopmost
     QCOMPARE(window1->orientationAngle(), secondAngle);
 }
 
+/*
+  A window that has the property "followsCurrentApplicationWindowOrientation" set to true
+  will rotate freely if the context property "/Screen/CurrentWindow/OrientationAngle"
+  is null or invalid.
+ */
+void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyNotSet()
+{
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    StubMap<QString, ContextProperty>::StubType *currentWindowOrientationPropStub =
+            gContextPropertyStubMap->findStub("/Screen/CurrentWindow/OrientationAngle");
+    StubMap<QString, ContextProperty>::StubType *topEdgePropStub =
+            gContextPropertyStubMap->findStub("Screen.TopEdge");
+
+    window1->setProperty("followsCurrentApplicationWindowOrientation", true);
+    window1->setVisible(true);
+
+    // Set a NULL variant to "/Screen/CurrentWindow/OrientationAngle"
+    currentWindowOrientationPropStub->stubReset();
+    currentWindowOrientationPropStub->stubSetReturnValue("value", QVariant(QVariant::Int));
+
+    topEdgePropStub->stubReset();
+    topEdgePropStub->stubSetReturnValue("value", QVariant(QString("top")));
+    QMetaObject::invokeMethod(topEdgePropStub->getProxy(), "valueChanged");
+
+    MOnDisplayChangeEvent displayEvent(true, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayEvent);
+
+    // Screen.TopEdge "top" == M::Angle0
+    QCOMPARE(static_cast<int>(window1->orientationAngle()),
+             static_cast<int>(M::Angle0));
+
+    topEdgePropStub->stubSetReturnValue("value", QVariant(QString("left")));
+    QMetaObject::invokeMethod(topEdgePropStub->getProxy(), "valueChanged");
+
+    // Screen.TopEdge "left" == M::Angle270
+    QCOMPARE(static_cast<int>(window1->orientationAngle()),
+             static_cast<int>(M::Angle270));
+}
+
 void Ut_MOrientationTracker::testFollowingDesktopOrientation_data()
 {
     QTest::addColumn<M::OrientationAngle>("firstAngle");
