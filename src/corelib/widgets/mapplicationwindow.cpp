@@ -516,10 +516,6 @@ void MApplicationWindowPrivate::openMenu()
         (navigationBar->sceneWindowState() != MSceneWindow::Disappearing)) {
         menu->appear(q);
         navigationBar->setEscapeButtonEnabled(false);
-
-        // Simply calling setEnabled(false) would uncheck the currently
-        // checked item in the toolbar if tab view is being used.
-        toolBar->setProperty(_M_IsEnabledPreservingSelection, QVariant(false));
     }
 }
 
@@ -553,7 +549,6 @@ void MApplicationWindowPrivate::_q_menuDisappeared()
                      q, SLOT(openMenu()));
 
     navigationBar->setEscapeButtonEnabled(true);
-    toolBar->setProperty(_M_IsEnabledPreservingSelection, QVariant(true));
 
     if (!componentsOnAutoHide.isEmpty() && !autoHideComponentsTimer.isActive())
         autoHideComponentsTimer.start();
