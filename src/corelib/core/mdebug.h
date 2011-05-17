@@ -120,6 +120,7 @@ inline QDebug mDebugStream(const QString &module)
  * as QString to categorize the output.
  *
  * \sa mDebug(const QString &)
+ * \sa mCritical(const QString &)
  * \sa mPerformanceWarning(const QString &)
  */
 inline QDebug mWarningStream(const QString &module)
@@ -130,6 +131,23 @@ inline QDebug mWarningStream(const QString &module)
 
 #define mWarning(x) mWarningStream(x)
 #endif // QT_NO_WARNING_OUTPUT
+
+/**
+ * Returns an object to send critical messages to the message handler.
+ * Use as a replacement for qCritical. Pass the name of the module
+ * as QString to categorize the output.
+ *
+ * \sa mDebug(const QString &)
+ * \sa mWarning(const QString &)
+ * \sa mPerformanceWarning(const QString &)
+ */
+inline QDebug mCriticalStream(const QString &module)
+{
+    // Use qPrintable around QString to avoid "" around it
+    return qCritical() << qPrintable(QString("%1:").arg(module));
+}
+
+#define mCritical(x) mCriticalStream(x)
 
 #define mPerformanceWarning(x) mPerformanceWarningStream(x)
 
