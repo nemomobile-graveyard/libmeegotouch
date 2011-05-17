@@ -71,9 +71,10 @@ public:
     bool currentIsKeyboardOpen;
     void doUpdateOrientationAngle(M::OrientationAngle angle, bool isKeyboardOpen,
                                   bool isDeviceFlat, bool tvIsConnected);
-    void resolveIfOrientationUpdatesRequired();
+    void reevaluateSubscriptionToSensorProperties();
     void rotateToAngleIfAllowed(M::OrientationAngle angle, MWindow* window);
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    bool checkIfOrientationUpdatesRequired();
     M::OrientationAngle angleForTopEdge(const QString topEdge) const;
     void subscribeToSensorProperies();
     void unsubscribeToSensorProperties();

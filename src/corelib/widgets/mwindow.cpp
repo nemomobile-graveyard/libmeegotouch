@@ -421,7 +421,7 @@ void MWindowPrivate::resolveOrientationRules() {
         privateTracker->stopFollowingCurrentAppWindow(q, true);
     }
 
-    MOrientationTracker::instance()->d_ptr->resolveIfOrientationUpdatesRequired();
+    MOrientationTracker::instance()->d_ptr->reevaluateSubscriptionToSensorProperties();
 
 }
 #endif

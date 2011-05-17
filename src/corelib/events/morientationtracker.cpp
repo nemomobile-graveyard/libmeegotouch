@@ -206,26 +206,39 @@ void MOrientationTrackerPrivate::isCoveredChanged()
 #endif
 }
 
-void MOrientationTrackerPrivate::resolveIfOrientationUpdatesRequired()
-{
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    bool updatesRequired = false;
-    if (!MApplication::isPrestarted()) {
-        foreach(MWindow* win, MApplication::windows()) {
+bool MOrientationTrackerPrivate::checkIfOrientationUpdatesRequired()
+{
+    if (MApplication::isPrestarted()) {
+        return false;
+    }
+
+    bool result = false;
+
+    foreach(MWindow* win, MApplication::windows()) {
 #ifdef Q_WS_X11
-            if (win && (win->isOnDisplay()) &&
-                !windowsFollowingCurrentAppWindow.contains(win) &&
-                !windowsFollowingWithConstraintsCurrentAppWindow.contains(win) &&
-                !windowsFollowingDesktop.contains(win))
+        if (win && (win->isOnDisplay()) &&
+            !windowsFollowingCurrentAppWindow.contains(win) &&
+            !windowsFollowingWithConstraintsCurrentAppWindow.contains(win) &&
+            !windowsFollowingDesktop.contains(win))
 #else
-            if (win && win->isOnDisplay())
+        if (win && win->isOnDisplay())
 #endif
-            {
-                updatesRequired = true;
-                break;
-            }
+        {
+            result = true;
+            break;
         }
     }
+
+    return result;
+}
+#endif
+
+void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
+{
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    bool updatesRequired = checkIfOrientationUpdatesRequired();
+
     if (updatesRequired && !isSubscribedToSensorProperties)
         subscribeToSensorProperies();
     else if (!updatesRequired && isSubscribedToSensorProperties)
@@ -313,18 +326,20 @@ void MOrientationTrackerPrivate::doUpdateOrientationAngle(M::OrientationAngle an
 #ifdef HAVE_CONTEXTSUBSCRIBER
 void MOrientationTrackerPrivate::rotateWindows(M::OrientationAngle angle)
 {
-    if (angle != currentAngle || hasJustSubscribedToSensorProperties) {
-        hasJustSubscribedToSensorProperties = false;
-        currentAngle = angle;
-        // instead of emitting a signal we have to explicitely call setOrientationAngle
-        // on windows, because this is very often excuted before the application's
-        // event loop is started and leads to crash in QMetaObject
-        foreach(MWindow * window, MApplication::windows()) {
-            if(!windowsFollowingCurrentAppWindow.contains(window) &&
-               !windowsFollowingWithConstraintsCurrentAppWindow.contains(window) &&
-               !windowsFollowingDesktop.contains(window))
-                rotateToAngleIfAllowed(angle, window);
-        }
+    if (angle == currentAngle && !hasJustSubscribedToSensorProperties) {
+        return;
+    }
+
+    hasJustSubscribedToSensorProperties = false;
+    currentAngle = angle;
+    // instead of emitting a signal we have to explicitely call setOrientationAngle
+    // on windows, because this is very often excuted before the application's
+    // event loop is started and leads to crash in QMetaObject
+    foreach(MWindow * window, MApplication::windows()) {
+        if(!windowsFollowingCurrentAppWindow.contains(window) &&
+           !windowsFollowingWithConstraintsCurrentAppWindow.contains(window) &&
+           !windowsFollowingDesktop.contains(window))
+            rotateToAngleIfAllowed(angle, window);
     }
 }
 #endif //HAVE_CONTEXTSUBSCRIBER
