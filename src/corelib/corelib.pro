@@ -26,5 +26,8 @@ contains(DEFINES, HAVE_DBUS) {
     include(servicefwif/servicefwif.pri)
     include(notification/notification.pri)
 }
+contains(DEFINES, HAVE_SHORTCUTS) {
+    DEFINES += M_SHORTCUTS
+}
 
 include(../common_bot.pri)

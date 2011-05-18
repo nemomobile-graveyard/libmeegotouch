@@ -65,6 +65,7 @@ CFG_MINIMAL=no
 CFG_BUILD_TESTS=no
 CFG_BUILD_BENCHMARKS=no
 CFG_BUILD_EXAMPLES=no
+CFG_BUILD_SHORTCUTS=no
 
 M_DEFAULT_BUILD_PARTS="libs demos"
 CFG_BUILD_PARTS=""
@@ -135,7 +136,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal|-dbus|-icu|-gconf|-meegographicssystem)
+        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal|-dbus|-icu|-gconf|-meegographicssystem|-shortcuts)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -250,6 +251,13 @@ while [ "$#" -gt 0 ]; do
         ;;
     maemo5)
         IS_MAEMO5="yes"
+        ;;
+    shortcuts)
+	if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_BUILD_SHORTCUTS="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
         ;;
     dbus)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
@@ -561,6 +569,7 @@ Additional options:
     -no-meegographicssystem .. Do not compile with meego graphicssystem support.
  +  -meegographicssystem ..... Compile with meego graphicssystem support.
 
+    -shortcuts................ Enables the keyboard's shortcut to debug the UI (margins, names, etc)
 EOF
 
 exit 0
@@ -644,6 +653,10 @@ fi
 
 if [ "$HAVE_ICU" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_ICU"
+fi
+
+if [ "$CFG_BUILD_SHORTCUTS" = "yes" ]; then
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_SHORTCUTS"
 fi
 
 if [ "$HAVE_CONTENTACTION" = "yes" ]; then
@@ -928,6 +941,7 @@ echo
 echo "Benchmarks .......... $CFG_BUILD_BENCHMARKS"
 echo "Tests ............... $CFG_BUILD_TESTS"
 echo "Examples ............ $CFG_BUILD_EXAMPLES"
+echo "Shortcuts.............$CFG_BUILD_SHORTCUTS"
 
 if [ "$IS_MAEMO5" = "yes" ]; then
     echo ""

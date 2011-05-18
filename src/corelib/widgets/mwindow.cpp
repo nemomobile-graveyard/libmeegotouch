@@ -1403,6 +1403,7 @@ bool MWindow::event(QEvent *event)
         d->handleCloseEvent(static_cast<QCloseEvent *>(event));
         // closeEvent() already called.
         return true;
+#ifdef M_SHORTCUTS
     } else if (QEvent::KeyPress == event->type()) {
         bool updateNeeded = false;
 
@@ -1486,6 +1487,7 @@ bool MWindow::event(QEvent *event)
         if (updateNeeded) {
             this->viewport()->update();
         }
+#endif
     } else if (event->type() == QEvent::ApplicationLayoutDirectionChange) {
         // tell the scene and its items about the layout change
         if (scene()) {
