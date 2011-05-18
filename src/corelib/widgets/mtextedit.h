@@ -265,10 +265,12 @@ public:
     void deselect();
 
     /*!
-     * \brief Selects text from word boundary to another so that start and start+length are
-     included in the selection
+     * \brief Selects text from word boundary to another so that anchorPosition and anchorPosition+length are
+     included in the selection.
+     * Puts the cursor position to anchorPosition+length.
+     * length may be negative
     */
-    void setSelection(int start, int length, bool useBoundaries = false);
+    void setSelection(int anchorPosition, int length, bool useBoundaries = false);
 
     /*
      * \brief returns the index of first selected character in the widget or -1 if no text is

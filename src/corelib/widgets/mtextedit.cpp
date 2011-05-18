@@ -1612,7 +1612,7 @@ MTextEdit::~MTextEdit()
 }
 
 
-void MTextEdit::setSelection(int start, int length, bool useBoundaries)
+void MTextEdit::setSelection(int anchorPosition, int length, bool useBoundaries)
 {
     Q_D(MTextEdit);
 
@@ -1623,44 +1623,34 @@ void MTextEdit::setSelection(int start, int length, bool useBoundaries)
     QString text = document()->toPlainText();
 
     // boundary check for positions
-    start = qBound(0, start, text.length());
-    length = qBound(-start, length, text.length() - start);
+    anchorPosition = qBound(0, anchorPosition, text.length());
+    length = qBound(-anchorPosition, length, text.length() - anchorPosition);
 
     d->commitPreedit();
 
-    // determine beginning of selection and the end
-    int begin;
-    int end;
-
-    if (length > 0) {
-        begin = start;
-        end = start + length;
-    } else {
-        begin = qMax(start + length, 0);
-        end = begin - length;
-    }
+    int newCursorPosition = anchorPosition + length;
 
     if (useBoundaries) {
         MBreakIterator breakIterator(text);
-        begin = breakIterator.previousInclusive(begin);
+        anchorPosition = breakIterator.previousInclusive(anchorPosition);
 
-        if (breakIterator.isBoundary(end) == false) {
-            end = breakIterator.next(end);
+        if (breakIterator.isBoundary(newCursorPosition) == false) {
+            newCursorPosition = breakIterator.next(newCursorPosition);
         }
     }
 
     // check if change actually happens
     QTextCursor *currentCursor = d->cursor();
-    if (begin == currentCursor->anchor() && end == currentCursor->position()) {
+    if (anchorPosition == currentCursor->anchor() && newCursorPosition == currentCursor->position()) {
         return;
     }
 
     // make an actual selection
-    currentCursor->setPosition(begin);
-    currentCursor->setPosition(end, QTextCursor::KeepAnchor);
+    currentCursor->setPosition(anchorPosition, QTextCursor::MoveAnchor);
+    currentCursor->setPosition(newCursorPosition, QTextCursor::KeepAnchor);
 
     // update mode to selection or basic if needed
-    if (begin != end) {
+    if (anchorPosition != newCursorPosition) {
         if (mode() != MTextEditModel::EditModeSelect) {
             d->setMode(MTextEditModel::EditModeSelect);
             d->sendCopyAvailable(true);
