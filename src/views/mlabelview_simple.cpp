@@ -34,6 +34,11 @@
 #include <QGestureEvent>
 #include <QTapAndHoldGesture>
 
+namespace
+{
+    const QChar TextVariantSeparator(0x9c, 0);
+} // namespace 
+
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
     viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
 {
@@ -297,8 +302,7 @@ void MLabelViewSimple::updateStringVariants()
             }
         }
     }
-    const QChar multiLengthSeparator(0x9c, 0);
-    stringVariants = text.split(multiLengthSeparator);
+    stringVariants = text.split(TextVariantSeparator);
     if (stringVariants.isEmpty()) //Shouldn't ever happen, but just incase:w
         stringVariants << "";
 }

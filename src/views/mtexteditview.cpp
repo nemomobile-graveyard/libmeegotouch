@@ -58,7 +58,7 @@ namespace
 
     const QChar DefaultMaskCharacter('*');
 
-    const int BinaryTextVariantSeparator = 0x9c;
+    const QChar TextVariantSeparator(0x9c, 0);
 
     const char * const CursorWidthProperty = "cursorWidth";
 
@@ -1687,7 +1687,7 @@ void MTextEditView::updateData(const QList<const char *> &modifications)
         } else if (member == MTextEditModel::Prompt) {
             // Note: only using the first length variant now
             QString promptText = model()->prompt();
-            promptText = promptText.left(promptText.indexOf(QChar(BinaryTextVariantSeparator)));
+            promptText = promptText.left(promptText.indexOf(TextVariantSeparator));
             d->promptTextDocument->setPlainText(promptText);
             d->setPromptOpacity(d->focused ? style()->focusedPromptOpacity() : style()->unfocusedPromptOpacity());
             d->isPromptVisible = (d->activeDocument()->isEmpty() == true
