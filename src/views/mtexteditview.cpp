@@ -100,6 +100,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       promptShowHideAnimation(this, "promptOpacity"),
       isPromptVisible(false),
       focusAnimationDelay(new QTimer(this)),
+      scrollSelectTimer(new QTimer(this)),
       focusingTap(true)
 {
     // copy text options from actual document to prompt
@@ -117,6 +118,9 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
 
     focusAnimationDelay->setSingleShot(true);
 
+    scrollSelectTimer->setSingleShot(false);
+    scrollSelectTimer->setInterval(200);
+
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
     QObject::connect(maskTimer, SIGNAL(timeout()), this, SLOT(hideUnmaskedText()));
@@ -126,6 +130,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
                      this, SLOT(updateEditorToolbarPosition()));
     QObject::connect(focusAnimationDelay, SIGNAL(timeout()),
                      this, SLOT(startFocusAnimation()));
+    QObject::connect(scrollSelectTimer, SIGNAL(timeout()),
+                     this, SLOT(scrollSelectSlot()));
 }
 
 
@@ -849,6 +855,26 @@ void MTextEditViewPrivate::updateSelection(QGraphicsSceneMouseEvent *event)
     updateSelection(event->pos());
 }
 
+/*!
+ * \brief Checks if widget is scrolled while selection
+ * If user start selection and then cause scrolling by coming too close to border
+ * selection must watch scrolling. This makes flickering less and can prevent
+ * a stuck if user does not move the finger.
+ * Since currently there is no way to notify a widget that is is being scrolled,
+ * the only way to know it is watch how mapping of last mouse position behaves.
+ * if it resolved ot another position in text - widget is being scrolled.
+ */
+void MTextEditViewPrivate::scrollSelectSlot()
+{
+    QPointF pos = controller->mapFromScene(scrollSelectScenePosition);
+    if (cursorPosition(pos) != controller->cursorPosition()) {
+        updateSelection(pos);
+        if (controller->sceneManager()) {
+            controller->sceneManager()->ensureCursorVisible();
+        }
+    }
+}
+
 
 /*!
  * \brief Method to handle mouse movement
@@ -1381,6 +1407,8 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
 
+    d->scrollSelectTimer->stop();
+
     // Make sure cursor is visible. This is done here on release so
     // we don't do unnecessary scrolling if panning is started.
     if (d->controller->sceneManager()) {
@@ -1458,8 +1486,15 @@ void MTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     // Only update selection if magnifier is not in use.
     const bool updateSelection = !(d->magnifier && d->magnifier->isAppeared());
     updateCursorPosition(event, updateSelection);
-    if (updateSelection && d->controller->sceneManager() != 0) {
-        d->controller->sceneManager()->ensureCursorVisible();
+    if (d->selecting) {
+        // start watching scrolling
+        // will stop in case of mouse release of if event is cancelled
+        d->scrollSelectScenePosition = event->scenePos();
+        d->scrollSelectTimer->start();
+
+        if (d->controller->sceneManager()) {
+            d->controller->sceneManager()->ensureCursorVisible();
+        }
     }
 
     d->updateMagnifierPosition();
@@ -1621,6 +1656,7 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
     d->scrollTimer->stop();
+    d->scrollSelectTimer->stop();
 
     // hide completer if there is active one
     if (d->controller->completer() && d->controller->completer()->isActive()) {

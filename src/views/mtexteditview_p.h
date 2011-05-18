@@ -91,6 +91,7 @@ protected slots:
     void restoreEditorToolbar();
     void updateEditorToolbarPosition();
     void startFocusAnimation();
+    void scrollSelectSlot();
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
@@ -170,6 +171,8 @@ protected:
     QPropertyAnimation promptShowHideAnimation;
     bool isPromptVisible;
     QTimer * const focusAnimationDelay;
+    QTimer * const scrollSelectTimer;
+    QPointF scrollSelectScenePosition;
 
     bool focusingTap;
 
