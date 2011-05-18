@@ -34,7 +34,7 @@ public:
 
 void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
 {
-    QSize newSize = target->sceneTransform().mapRect(target->boundingRect()).size().toSize();
+    QSize newSize = target->boundingRect().size().toSize();
 
     if (newSize != pixmap.size())
         pixmap = QPixmap(newSize);
@@ -50,7 +50,6 @@ void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
         return;
 
     QGraphicsItem* oldParent = target->parentItem();
-    QTransform transform = target->sceneTransform();
 
     // QGraphicsScene::drawItems() doesn't just draw items passed but gets topLevelItem
     // for each item and draw recursively from each topLevelItem.
@@ -61,7 +60,6 @@ void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
     // due to reparenting. But if MWidgetController derivatives starts to be used as targets we would have
     // to create a mechanism to temporarily disable style reloading due to reparenting and use it here.
     target->setParentItem(0);
-    target->setTransform(transform);
 
     QRectF sourceRect = target->sceneBoundingRect();
     painter.setWorldTransform(QTransform::fromTranslate(-sourceRect.left(), -sourceRect.top()), true);
@@ -69,7 +67,6 @@ void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
     QGraphicsItem *item = target;
     static_cast<MyGraphicsScene*>(target->scene())->drawItems(&painter, 1, &item, 0);
 
-    target->setTransform(QTransform());
     target->setParentItem(oldParent);
 }
 
@@ -221,11 +218,8 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
         d->fadeOut->setEasingCurve(style()->fadeOutEasingCurve());
         d->fadeOut->setTargetObject(d->snapshotItem);
 
-        QRectF startRect = d->contentItem->boundingRect();
-        QRectF finalRect = startRect.translated(style()->slideOutDisplacement());
-        QTransform transform = d->contentItem->sceneTransform();
-        d->slideOut->setStartValue(transform.mapRect(startRect).topLeft());
-        d->slideOut->setEndValue(transform.mapRect(finalRect).topLeft());
+        d->slideOut->setStartValue(d->contentItem->pos());
+        d->slideOut->setEndValue(d->contentItem->pos() + style()->slideOutDisplacement());
         d->slideOut->setDuration(style()->slideOutDuration());
         d->slideOut->setEasingCurve(style()->slideOutEasingCurve());
         d->slideOut->setTargetObject(d->snapshotItem);
@@ -244,7 +238,7 @@ void MContentFadeAndSlideAnimation::updateState(QAbstractAnimation::State newSta
         d->slideIn->setEasingCurve(style()->slideInEasingCurve());
         d->slideIn->setTargetObject(d->contentItem);
 
-        d->targetWidget->scene()->addItem(d->snapshotItem);
+        d->snapshotItem->setParentItem(d->targetWidget);
 
         // animation is delayed so apply initial values now
         d->contentItem->setOpacity(d->fadeIn->startValue().toReal());
