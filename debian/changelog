@@ -1,8 +1,20 @@
-libmeegotouch (0.99.0~1) unstable; urgency=low
+libmeegotouch (0.99.0-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#254806 - Not visible MList re-creates cells when data is changed in the model
+  * Fixes: NB#249113
+  * Fixes: NB#256530 - MToolbar disabled tab style is not updated after changing device orientation
+  * Fixes: NB#255064
+  * Fixes: NB#248439 - Date Format; Date Format in region Hong Kong (Traditional Chinese) is wrong.
+  * Fixes: NB#254783 - Application fails to start when binary stylesheet dump has failed.
+  * Fixes: NB#255149 - Date Settings; dateShort, Gregorian calendar is displayed wrong in Indonesian date picker
+  * Fixes: NB#240787 - [TASK] Clear clipboard after successful pasting from copy/paste widget
+  * Fixes: NB#255587 - MMessageBox should not always play the "query" NGF effect
+  * Fixes: NB#250365
+  * Fixes: NB#255870 - Coreweb: "MCompleterModel::active"
+  * Fixes: Bug 250308 - VKB keeps poping up itself while panning MPopup list in MCompleter
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 16 May 2011 09:35:49 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 18 May 2011 16:30:58 +0300
 
 libmeegotouch (0.21.15-1) unstable; urgency=low
 
