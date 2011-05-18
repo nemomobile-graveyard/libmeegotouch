@@ -319,6 +319,10 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
     themeLibraries = themeLibraryNames.toList();
     themeInheritance = newThemeInheritanceChain;
 
+    QString linkToCurrentTheme = MThemeDaemon::systemThemeCacheDirectory() + QDir::separator() + "currentTheme";
+    QFile::remove(linkToCurrentTheme);
+    QFile::link(QString(THEMEDIR) + QDir::separator() + themeInheritance.first(), linkToCurrentTheme);
+
 #ifdef MTHEME_PRINT_DEBUG
     mDebug("MThemeDaemon") << "    New theme inheritance chain is" << themeInheritance;
 #endif
