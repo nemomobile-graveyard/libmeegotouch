@@ -23,61 +23,37 @@
 #include <QSequentialAnimationGroup>
 #include <QPauseAnimation>
 
-// we need this to call protected drawItems method
-class MyGraphicsScene : public QGraphicsScene {
-public:
-    virtual void drawItems(QPainter *painter, int numItems,
-                           QGraphicsItem *items[],
-                           const QStyleOptionGraphicsItem options[],
-                           QWidget *widget = 0);
-};
+SnapshotTakerEffect::SnapshotTakerEffect(QObject* parent)
+    : QGraphicsEffect(parent)
+{}
+
+void SnapshotTakerEffect::draw(QPainter* painter)
+{
+    drawSource(painter);
+}
+
+QPixmap SnapshotTakerEffect::sourcePixmap(QPoint* offset) const
+{
+    return QGraphicsEffect::sourcePixmap(Qt::LogicalCoordinates, offset, QGraphicsEffect::NoPad);
+}
+
 
 void SnapshotItem::updateSnapshot(QGraphicsWidget* target)
 {
-    QSize newSize = target->boundingRect().size().toSize();
-
-    if (newSize != pixmap.size())
-        pixmap = QPixmap(newSize);
-
-    if (pixmap.isNull())
-        return;
-
-    pixmap.fill(Qt::transparent);
-
-    QPainter painter(&pixmap);
-
-    if (!painter.isActive())
-        return;
-
-    QGraphicsItem* oldParent = target->parentItem();
-
-    // QGraphicsScene::drawItems() doesn't just draw items passed but gets topLevelItem
-    // for each item and draw recursively from each topLevelItem.
-    // Since we don't want to have navigationbar background and rounded corners painted on the snapshot,
-    // we must temporarily make target a top level item.
-    //
-    // TODO: Currently target happens to be plain QGraphicsWidget and thus no style reloading takes place
-    // due to reparenting. But if MWidgetController derivatives starts to be used as targets we would have
-    // to create a mechanism to temporarily disable style reloading due to reparenting and use it here.
-    target->setParentItem(0);
-
-    QRectF sourceRect = target->sceneBoundingRect();
-    painter.setWorldTransform(QTransform::fromTranslate(-sourceRect.left(), -sourceRect.top()), true);
-
-    QGraphicsItem *item = target;
-    static_cast<MyGraphicsScene*>(target->scene())->drawItems(&painter, 1, &item, 0);
-
-    target->setParentItem(oldParent);
+    if (snapshotTaker.isNull())
+        snapshotTaker = new SnapshotTakerEffect(this);
+    target->setGraphicsEffect(snapshotTaker.data());
+    pixmap = snapshotTaker.data()->sourcePixmap(&offset);
 }
 
 QRectF SnapshotItem::boundingRect() const
 {
-    return QRectF(0, 0, pixmap.width(), pixmap.height());
+    return QRectF(offset.x(), offset.y(), pixmap.width(), pixmap.height());
 }
 
 void SnapshotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/, QWidget */*widget*/)
 {
-    painter->drawPixmap(QPoint(0, 0), pixmap);
+    painter->drawPixmap(offset, pixmap);
 }
 
 

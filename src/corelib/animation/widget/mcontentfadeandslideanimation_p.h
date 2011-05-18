@@ -21,12 +21,23 @@
 #define MCONTENTFADEANDSLIDEANIMATION_P_H
 
 #include "mabstractwidgetanimation_p.h"
+#include <QGraphicsEffect>
+#include <QWeakPointer>
 
 class MContentFadeAndSlideAnimation;
 class QParallelAnimationGroup;
 class QSequentialAnimationGroup;
 class QPropertyAnimation;
 class QPauseAnimation;
+
+class SnapshotTakerEffect : public QGraphicsEffect
+{
+public:
+    SnapshotTakerEffect(QObject* parent);
+
+    void draw(QPainter* painter);
+    QPixmap sourcePixmap(QPoint* offset) const;
+};
 
 class SnapshotItem : public QGraphicsWidget
 {
@@ -35,8 +46,10 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
+private:
     QPixmap pixmap;
+    QPoint offset;
+    QWeakPointer<SnapshotTakerEffect> snapshotTaker;
 };
 
 class MContentFadeAndSlideAnimationPrivate : public MAbstractWidgetAnimationPrivate
