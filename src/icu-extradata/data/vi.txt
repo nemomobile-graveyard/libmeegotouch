@@ -1,0 +1,10 @@
+vi{
+    calendar{
+        gregorian{
+             AmPmMarkers{
+                 "AM",
+                 "PM",
+             }
+        }
+    }
+}

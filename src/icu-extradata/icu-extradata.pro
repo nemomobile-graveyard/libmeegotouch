@@ -9,16 +9,21 @@ greaterThan(ICUVERSION, 4.4) {
     # the contents of the compiled resource files can be dumped
     # with commands like:
     # derb -c -i /usr/share/meegotouch/icu/usrdt44l/ lang/en_GB.res
-    LOCALESTXT = data/cs.txt \
+    LOCALESTXT = data/ca.txt \
+                 data/cs.txt \
                  data/da.txt \
                  data/de.txt \
                  data/en_GB.txt \
+                 data/en_IE.txt \
                  data/en_SG.txt \
+                 data/es.txt \
+                 data/es_AR.txt \
                  data/fa.txt \
                  data/fi.txt \
                  data/gl.txt \
                  data/he.txt \
                  data/hi.txt \
+                 data/hu.txt \
                  data/id.txt \
                  data/it.txt \
                  data/kk.txt \
@@ -29,9 +34,11 @@ greaterThan(ICUVERSION, 4.4) {
                  data/pt_BR.txt \
                  data/pt_PT.txt \
                  data/sk.txt \
+                 data/sv.txt \
                  data/th.txt \
                  data/uk.txt \
                  data/ur.txt \
+                 data/vi.txt \
                  data/zh_Hant.txt \
                  data/zh_Hant_HK.txt \
                  data/zh_HK.txt

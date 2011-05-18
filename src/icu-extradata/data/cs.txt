@@ -1,10 +1,10 @@
 cs{
     calendar{
         gregorian{
-            AmPmMarkers{
-                "dop.",
-                "odp.",
-            }
+             AmPmMarkers{
+                 "AM",
+                 "PM",
+             }
             DateTimePatterns{
                 "H:mm:ss zzzz",
                 "H:mm:ss z",

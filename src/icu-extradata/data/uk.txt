@@ -2,8 +2,8 @@ uk{
     calendar{
         gregorian{
              AmPmMarkers{
-                 "a.m.",
-                 "p.m.",
+                 "AM",
+                 "PM",
              }
         }
     }
