@@ -1455,6 +1455,9 @@ void MTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     // Only update selection if magnifier is not in use.
     const bool updateSelection = !(d->magnifier && d->magnifier->isAppeared());
     updateCursorPosition(event, updateSelection);
+    if (updateSelection && d->controller->sceneManager() != 0) {
+        d->controller->sceneManager()->ensureCursorVisible();
+    }
 
     d->updateMagnifierPosition();
 }
