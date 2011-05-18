@@ -299,8 +299,8 @@ void MGridPage::showGridConfigurationSheet()
     m_columnsLandscapeSlider->setRange(2,8);
     m_columnsLandscapeSlider->setValue(m_columnsLandscape);
     m_columnsLandscapeSlider->setHandleLabelVisible(true);
-    m_columnsLandscapeSlider->setMinLabelVisible(true);
-    m_columnsLandscapeSlider->setMaxLabelVisible(true);
+    m_columnsLandscapeSlider->setMinLabelVisible(false);
+    m_columnsLandscapeSlider->setMaxLabelVisible(false);
     m_columnsLandscapeSlider->setMinLabel("2");
     m_columnsLandscapeSlider->setMaxLabel("8");
 
@@ -310,8 +310,8 @@ void MGridPage::showGridConfigurationSheet()
     m_columnsPortraitSlider->setRange(2,5);
     m_columnsPortraitSlider->setValue(m_columnsPortrait);
     m_columnsPortraitSlider->setHandleLabelVisible(true);
-    m_columnsPortraitSlider->setMinLabelVisible(true);
-    m_columnsPortraitSlider->setMaxLabelVisible(true);
+    m_columnsPortraitSlider->setMinLabelVisible(false);
+    m_columnsPortraitSlider->setMaxLabelVisible(false);
     m_columnsPortraitSlider->setMinLabel("2");
     m_columnsPortraitSlider->setMaxLabel("5");
 

@@ -195,8 +195,8 @@ void SliderPage::retranslateUi()
     ageLabel->setText(qtTrId("xx_slider_age_label"));
 
     ageSlider->setRange(0, 100);
-    ageSlider->setMinLabelVisible(true);
-    ageSlider->setMaxLabelVisible(true);
+    ageSlider->setMinLabelVisible(false);
+    ageSlider->setMaxLabelVisible(false);
     ageSlider->setHandleLabelVisible(true);
 
     ageSlider->setMinLabel(QString::number(ageSlider->minimum()));
