@@ -623,7 +623,8 @@ void MLabelViewRich::initTiles(const QSize &size)
     int tileCount = 2;
     QSize tileSize = size;
 
-    const int requiredHeight = qMin(viewPrivate->controller->size().height(),
+    const MLabelStyle *style = viewPrivate->style();
+    const int requiredHeight = qMin(viewPrivate->controller->size().height() + style->reactiveMarginTop() + style->reactiveMarginBottom(),
                                     textDocument.size().height() + topMargin() + bottomMargin());
     if (requiredHeight < tileSize.height()) {
         tileSize.setHeight(requiredHeight);
@@ -676,7 +677,8 @@ void MLabelViewRich::drawTiles(QPainter *painter, const QPointF &pos)
 
         const QPointF tileOffset(pos.x(), pos.y() + tile.y);
         const int minYOffset = -topMargin();
-        const QSizeF labelSize = viewPrivate->controller->size();
+        const MLabelStyle *style = viewPrivate->style();
+        const QSizeF labelSize = viewPrivate->controller->size() + QSizeF(0,style->reactiveMarginBottom() + style->reactiveMarginTop());
         const bool clip = -minYOffset + tileOffset.y() + pixmap.height() > labelSize.height()
                           || tileOffset.y() < minYOffset;
         if (clip) {
