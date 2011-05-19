@@ -1219,7 +1219,8 @@ void MTextEditPrivate::storePreeditTextStyling(int start, int end)
  * number indicated by preeditStyling[currentListIndex].count.  Warning: this is
  * exactly the opposite of what it used to be originally.
  */
-void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount)
+void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &currentListIndex,
+                                                    int &currentCount)
 {
     if (text.isEmpty()) {
         return;
@@ -1261,7 +1262,8 @@ void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &cu
         const int insertLength(qMin(preeditStyling[currentListIndex].count - currentCount,
                                     remainingTextLength));
         currentCount = (currentCount + insertLength) % preeditStyling[currentListIndex].count;
-        textCursor.insertText(text.mid(textIndex, insertLength), preeditStyling[currentListIndex].charFormat);
+        textCursor.insertText(text.mid(textIndex, insertLength),
+                              preeditStyling[currentListIndex].charFormat);
         textIndex += insertLength;
     } while (currentListIndex < (numStyles - 1) && (textIndex < textLength));
 
