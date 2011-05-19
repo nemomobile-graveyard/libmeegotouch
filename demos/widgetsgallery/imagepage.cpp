@@ -31,6 +31,7 @@
 #include <MLinearLayoutPolicy>
 #include <MDebug>
 #include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 #include <QPinchGesture>
 #include <QGestureEvent>
 
@@ -38,7 +39,7 @@
 
 ImagePage::ImagePage() :
     TemplatePage(TemplatePage::SimpleWidgets),
-    propertiesLabel(NULL),
+    propertiesContainer(NULL),
     propertiesComboBox(NULL),
     visual(NULL),
     image(NULL),
@@ -70,9 +71,10 @@ void ImagePage::createContent()
     containerPolicy = new MLinearLayoutPolicy(containerLayout, Qt::Vertical);
     containerLayout->setPolicy(containerPolicy);
 
-    // Image properties label
-    propertiesLabel = new MLabel();
-    propertiesLabel->setObjectName("propertiesLabel");
+    // Image properties container
+    propertiesContainer = new MContainer();
+    propertiesContainer->setObjectName("propertiesContainer");
+    QGraphicsLinearLayout *propertiesLayout = new QGraphicsLinearLayout(Qt::Vertical, propertiesContainer->centralWidget());
 
     // Image properties comboBox
     propertiesComboBox = new MComboBox();
@@ -82,6 +84,7 @@ void ImagePage::createContent()
     // Image property slider
     slider = new MSlider();
     slider->setObjectName("slider");
+    slider->setStyleName("CommonSlider");
     slider->setOrientation(Qt::Horizontal);
     slider->setRange(0, 100);
     slider->setValue(0);
@@ -106,10 +109,11 @@ void ImagePage::createContent()
 
     QSize s = MApplication::activeApplicationWindow()->visibleSceneSize();
 
-    containerPolicy->addItem(propertiesLabel);
-    containerPolicy->addItem(propertiesComboBox);
-    containerPolicy->addItem(visual);
-    containerPolicy->addItem(slider);
+    propertiesLayout->addItem(propertiesComboBox);
+    propertiesLayout->addItem(visual);
+    propertiesLayout->addItem(slider);
+
+    containerPolicy->addItem(propertiesContainer);
 
     // Connect signals
     connect(propertiesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(operationChanged(int)));
@@ -125,7 +129,7 @@ void ImagePage::retranslateUi()
     if (!isContentCreated())
         return;
     //% "Image properties"
-    propertiesLabel->setText(qtTrId("xx_Image properties"));
+    propertiesContainer->setTitle(qtTrId("xx_Image properties"));
     int oldIndex = propertiesComboBox->currentIndex();
     propertiesComboBox->clear();
 

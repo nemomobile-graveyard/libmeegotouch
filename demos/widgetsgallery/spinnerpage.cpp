@@ -120,6 +120,7 @@ void SpinnerPage::inApplicationMainArea()
 
     description = new MLabel(centralWidget());
     description->setObjectName("appAreaDescriptionLabel");
+    description->setStyleName("CommonBodyText");
     //% "Spinner can be used while content is loading."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_application_area_description"));
     description->setWordWrap(true);
@@ -164,6 +165,7 @@ void SpinnerPage::inContainerHeader()
 
     description = new MLabel(centralWidget());
     description->setObjectName("containerDescriptionLabel");
+    description->setStyleName("CommonBodyText");
     //% "Spinner can be used in container header to indicate that the items inside the container "
     //% "are being updated, but visible items can be interacted with."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_container_header_description"));
@@ -211,6 +213,7 @@ void SpinnerPage::inDialog()
 
     description = new MLabel(centralWidget());
     description->setObjectName("dialogDescriptionLabel");
+    description->setStyleName("CommonBodyText");
     //% "Spinner can be placed in dialog header to indicate changing content."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_dialog_header_description"));
     description->setWordWrap(true);

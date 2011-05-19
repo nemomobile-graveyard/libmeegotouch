@@ -42,6 +42,7 @@ void CustomNavigationBarPage::createContent()
 
     infoLabel = new MLabel;
     infoLabel->setObjectName("infoLabel");
+    infoLabel->setStyleName("CommonBodyText");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

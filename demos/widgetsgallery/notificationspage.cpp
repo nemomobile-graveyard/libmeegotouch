@@ -69,7 +69,7 @@ void NotificationsPage::createContent()
     policy->addItem(separator);
 
     labelTitleNotification = new MLabel(centralWidget());
-    labelTitleNotification->setStyleName("CommonTitle");
+    labelTitleNotification->setStyleName("CommonFieldLabel");
     labelTitleNotification->setObjectName("labelTitleNotification");
     policy->addItem(labelTitleNotification);
 
@@ -78,7 +78,7 @@ void NotificationsPage::createContent()
     policy->addItem(textEditTitle);
 
     labelSubtitleNotification = new MLabel(centralWidget());
-    labelSubtitleNotification->setStyleName("CommonTitle");
+    labelSubtitleNotification->setStyleName("CommonFieldLabel");
     policy->addItem(labelSubtitleNotification);
 
     textEditSubTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of information label", centralWidget());
@@ -92,16 +92,17 @@ void NotificationsPage::createContent()
     l1->setSpacing(0);
 
     MSeparator *separator2 = new MSeparator();
-    separator2->setStyleName("CommonHeaderDivider");
+    separator2->setStyleName("CommonHorizontalSeparator");
     policy->addItem(separator2);
 
     labelIconEnable = new MLabel(centralWidget());
-    labelIconEnable->setStyleName("CommonTitle");
+    labelIconEnable->setStyleName("CommonBodyText");
     labelIconEnable->setAlignment(Qt::AlignTop);
     labelIconEnable->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     l1->addItem(labelIconEnable);
 
     checkBoxIconEnable = new MButton(centralWidget());
+    checkBoxIconEnable->setStyleName("CommonRightCheckBox");
     checkBoxIconEnable->setViewType(MButton::checkboxType);
     checkBoxIconEnable->setCheckable(true);
     l1->addItem(checkBoxIconEnable);
@@ -116,12 +117,13 @@ void NotificationsPage::createContent()
     l2->setSpacing(0);
 
     labelPreviewEnable = new MLabel(centralWidget());
-    labelPreviewEnable->setStyleName("CommonTitle");
+    labelPreviewEnable->setStyleName("CommonBodyText");
     labelPreviewEnable->setAlignment(Qt::AlignTop);
     labelPreviewEnable->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     l2->addItem(labelPreviewEnable);
 
     checkBoxPreview = new MButton(centralWidget());
+    checkBoxPreview->setStyleName("CommonRightCheckBox");
     checkBoxPreview->setViewType(MButton::checkboxType);
     checkBoxPreview->setCheckable(true);
     checkBoxPreview->setChecked(true);
@@ -137,7 +139,7 @@ void NotificationsPage::createContent()
     policy->addItem(createNotification, Qt::AlignCenter);
 
     this->footnote = new MLabel(centralWidget());
-    footnote->setStyleName("CommonTitle");
+    footnote->setStyleName("CommonBodyText");
     footnote->setWordWrap(true);
     footnote->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 

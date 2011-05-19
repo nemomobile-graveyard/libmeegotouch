@@ -28,6 +28,7 @@
 #include <MApplication>
 #include <MApplicationWindow>
 #include <MEscapeButtonPanel>
+#include <MContainer>
 
 #include <QGraphicsLinearLayout>
 #include <QStringList>
@@ -41,15 +42,19 @@ LabeledCheckbox::LabeledCheckbox(QGraphicsItem * parent, Qt::WindowFlags wFlags)
 
     button = new MButton;
     button->setObjectName("button");
+    button->setStyleName("CommonLeftCheckBox");
     button->setViewType(MButton::checkboxType);
     button->setCheckable(true);
 
     label = new MLabel;
+    label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     label->setObjectName("label");
+    label->setStyleName("CommonSingleTitle");
     label->setWordWrap(true);
     label->setTextElide(true);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal, this);
+    layout->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addItem(button);
@@ -68,8 +73,8 @@ DisplayModesPage::DisplayModesPage()
       comboNavigationBarDisplayMode(0),
       comboEscapeButtonDisplayMode(0),
       comboHomeButtonDisplayMode(0),
-      lblDisplayMode(0),
-      lblWindowState(0),
+      ctnDisplayMode(0),
+      ctnWindowState(0),
       fullScreenCheckbox(0),
       navigationBarTransparencyCheckbox(0),
       roundedCornersCheckbox(0)
@@ -88,14 +93,25 @@ QString DisplayModesPage::timedemoTitle()
 void DisplayModesPage::createContent()
 {
     QGraphicsLinearLayout *lytMain = new QGraphicsLinearLayout(Qt::Vertical);
-    lblDisplayMode = new MLabel(this);
-    lblDisplayMode->setObjectName("lblDisplayMode");
+    lytMain->setContentsMargins(0, 0, 0, 0);
+    lytMain->setSpacing(0);
 
-    QGraphicsLinearLayout *lytButtons = new QGraphicsLinearLayout(Qt::Vertical);
+    ctnDisplayMode = new MContainer(this);
+
+    createWindowStateWidgets();
+
+    QGraphicsLinearLayout *lytDisplayMode = new QGraphicsLinearLayout(Qt::Vertical, ctnDisplayMode->centralWidget()) ;
+    lytDisplayMode->setContentsMargins(0, 0, 0, 0);
+    lytDisplayMode->setSpacing(0);
+
+    QGraphicsLinearLayout *lytWindowState = new QGraphicsLinearLayout(Qt::Vertical, ctnWindowState->centralWidget());
+    lytWindowState->setContentsMargins(0, 0, 0, 0);
+    lytWindowState->setSpacing(0);
 
     // combo box nav bar display mode
-    comboNavigationBarDisplayMode = new MComboBox(this);
+    comboNavigationBarDisplayMode = new MComboBox;
     comboNavigationBarDisplayMode->setObjectName("comboNavigationBarDisplayMode");
+    comboNavigationBarDisplayMode->setStyleName("CommonComboBox");
     //%  "Navigation Bar"
     comboNavigationBarDisplayMode->setTitle(qtTrId("xx_displaymodes_navbarcombo"));
     comboNavigationBarDisplayMode->setIconVisible(false);
@@ -103,8 +119,9 @@ void DisplayModesPage::createContent()
             SLOT(changeNavigationBarDisplayMode(int)));
 
     // combo box escape button display mode
-    comboEscapeButtonDisplayMode = new MComboBox(this);
+    comboEscapeButtonDisplayMode = new MComboBox;
     comboEscapeButtonDisplayMode->setObjectName("comboEscapeButtonDisplayMode");
+    comboEscapeButtonDisplayMode->setStyleName("CommonComboBox");
     //% "Escape Button"
     comboEscapeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_escapebtncombo"));
     comboEscapeButtonDisplayMode->setIconVisible(false);
@@ -112,27 +129,25 @@ void DisplayModesPage::createContent()
             SLOT(changeEscapeButtonDisplayMode(int)));
 
     // combo box home button display mode
-    comboHomeButtonDisplayMode = new MComboBox(this);
+    comboHomeButtonDisplayMode = new MComboBox;
     comboHomeButtonDisplayMode->setObjectName("comboHomeButtonDisplayMode");
+    comboHomeButtonDisplayMode->setStyleName("CommonComboBox");
     //% "Home Button"
     comboHomeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_homebtncombo"));
     comboHomeButtonDisplayMode->setIconVisible(false);
     connect(comboHomeButtonDisplayMode, SIGNAL(currentIndexChanged(int)),
             SLOT(changeHomeButtonDisplayMode(int)));
 
-    createWindowStateWidgets();
+    lytDisplayMode->addItem(comboNavigationBarDisplayMode);
+    lytDisplayMode->addItem(navigationBarTransparencyCheckbox);
+    lytDisplayMode->addItem(comboHomeButtonDisplayMode);
+    lytDisplayMode->addItem(comboEscapeButtonDisplayMode);
 
-    lytButtons->addItem(comboNavigationBarDisplayMode);
-    lytButtons->addItem(navigationBarTransparencyCheckbox);
-    lytButtons->addItem(comboHomeButtonDisplayMode);
-    lytButtons->addItem(comboEscapeButtonDisplayMode);
+    lytWindowState->addItem(fullScreenCheckbox);
+    lytWindowState->addItem(roundedCornersCheckbox);
 
-    lytMain->addItem(lblDisplayMode);
-    lytMain->addItem(lytButtons);
-    lytMain->addItem(new MSeparator);
-    lytMain->addItem(lblWindowState);
-    lytMain->addItem(fullScreenCheckbox);
-    lytMain->addItem(roundedCornersCheckbox);
+    lytMain->addItem(ctnDisplayMode);
+    lytMain->addItem(ctnWindowState);
 
     centralWidget()->setLayout(lytMain);
 
@@ -142,10 +157,11 @@ void DisplayModesPage::createContent()
 
 void DisplayModesPage::createWindowStateWidgets()
 {
-    lblWindowState = new MLabel;
-    lblWindowState->setObjectName("lblWindowState");
+    ctnWindowState = new MContainer(this);
+    ctnWindowState->setObjectName("ctnWindowState");
 
     fullScreenCheckbox = new LabeledCheckbox;
+    fullScreenCheckbox->setParent(ctnWindowState);
     fullScreenCheckbox->setObjectName("fullScreenCheckbox");
     connect(fullScreenCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeFullScreenMode(bool)));
     // Init "full screen" checkbox state
@@ -154,6 +170,7 @@ void DisplayModesPage::createWindowStateWidgets()
     }
 
     roundedCornersCheckbox = new LabeledCheckbox;
+    roundedCornersCheckbox->setParent(ctnWindowState);
     roundedCornersCheckbox->setObjectName("roundedCornersCheckbox");
     connect(roundedCornersCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeRoundedCorners(bool)));
     // Init "rounded corners" checkbox state
@@ -162,6 +179,7 @@ void DisplayModesPage::createWindowStateWidgets()
     }
 
     navigationBarTransparencyCheckbox = new LabeledCheckbox;
+    navigationBarTransparencyCheckbox->setParent(ctnDisplayMode);
     navigationBarTransparencyCheckbox->setObjectName("navigationBarTransparencyCheckbox");
     connect(navigationBarTransparencyCheckbox->button, SIGNAL(toggled(bool)), SLOT(changeNavigationBarTransparency(bool)));
 }
@@ -192,11 +210,11 @@ void DisplayModesPage::retranslateUi()
     setTitle(qtTrId("xx_displaymodes_page_title"));
     if (!isContentCreated())
         return;
-    //% "Components' display mode:"
-    lblDisplayMode->setText(qtTrId("xx_displaymodes_display_mode"));
+    //% "Components' display mode"
+    ctnDisplayMode->setTitle(qtTrId("xx_displaymodes_display_mode"));
 
-    //% "Window state:"
-    lblWindowState->setText(qtTrId("xx_displaymodes_window_state"));
+    //% "Window state"
+    ctnWindowState->setTitle(qtTrId("xx_displaymodes_window_state"));
 
     //% "Full Screen"
     fullScreenCheckbox->label->setText(qtTrId("xx_displaymodes_full_screen"));

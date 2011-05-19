@@ -28,6 +28,9 @@
 #include <MLocale>
 #include <MApplicationPage>
 #include <MLinearLayoutPolicy>
+#include <MStylableWidget>
+#include <QGraphicsGridLayout>
+#include <MImageWidget>
 #include <QTimer>
 
 SliderPage::SliderPage() :
@@ -38,6 +41,8 @@ SliderPage::SliderPage() :
     playerSeekBar(0),
     playerButton(0),
     playerContainer(0),
+    playerMinLabel(0),
+    playerMaxLabel(0),
     playTime(1230),
     playerSeekBarIsPressed(false),
     loadedContentMinimum(0),
@@ -62,33 +67,23 @@ void SliderPage::createContent()
 
     MLayout *ageLayout = new MLayout;
 
-    MLinearLayoutPolicy *horizontalAgeLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Horizontal);
-    horizontalAgeLayoutPolicy->setSpacing(0);
-    horizontalAgeLayoutPolicy->setContentsMargins(0, 0, 0, 0);
-
-    MLinearLayoutPolicy *verticalAgeLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Vertical);
-    verticalAgeLayoutPolicy->setSpacing(0);
-    verticalAgeLayoutPolicy->setContentsMargins(0, 0, 0, 0);
-
-    ageLayout->setLandscapePolicy(horizontalAgeLayoutPolicy);
-    ageLayout->setPortraitPolicy(verticalAgeLayoutPolicy);
+    MLinearLayoutPolicy *ageLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Vertical);
+    ageLayoutPolicy->setSpacing(0);
+    ageLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
     ageLabel = new MLabel;
     ageLabel->setObjectName("ageLabel");
+    ageLabel->setStyleName("CommonFieldLabel");
     ageLabel->setTextElide(true);
 
-    horizontalAgeLayoutPolicy->addItem(ageLabel);
-    horizontalAgeLayoutPolicy->setStretchFactor(ageLabel, 0);
-    verticalAgeLayoutPolicy->addItem(ageLabel);
-    verticalAgeLayoutPolicy->setStretchFactor(ageLabel, 0);
+    ageLayoutPolicy->addItem(ageLabel);
+    ageLayoutPolicy->setStretchFactor(ageLabel, 0);
 
     ageSlider = new MSlider;
     ageSlider->setObjectName("ageSlider");
     ageSlider->setStyleName("CommonSlider");
-    horizontalAgeLayoutPolicy->addItem(ageSlider);
-    horizontalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
-    verticalAgeLayoutPolicy->addItem(ageSlider);
-    verticalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
+    ageLayoutPolicy->addItem(ageSlider);
+    ageLayoutPolicy->setStretchFactor(ageSlider, 1);
 
     ageContainer = new MContainer;
     ageContainer->setObjectName("ageContainer");
@@ -97,23 +92,46 @@ void SliderPage::createContent()
 
     QObject::connect(ageSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyAgeSliderHandle(int)));
 
-    MLayout *playerLayout = new MLayout;
-    MLinearLayoutPolicy *playerLayoutPolicy = new MLinearLayoutPolicy(playerLayout, Qt::Horizontal);
-    playerLayoutPolicy->setSpacing(0);
-    playerLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+    QGraphicsGridLayout *playerLayout = new QGraphicsGridLayout;
+    playerLayout->setSpacing(0);
+    playerLayout->setContentsMargins(0, 0, 0, 0);
 
     playerButton = new MButton;
     playerButton->setObjectName("playerButton");
+    playerButton->setStyleName("CommonMainIcon");
     playerButton->setViewType(MButton::iconType);
     playerButton->setIconID("icon-m-common-play");
-    playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
-    playerLayoutPolicy->setStretchFactor(playerButton, 0);
+    playerButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    playerLayout->addItem(playerButton, 0, 0);
 
-    playerSeekBar = new MSeekBar;
+    MStylableWidget *playerWidget = new MStylableWidget;
+    playerLayout->addItem(playerWidget, 0, 1);
+
+    playerSeekBar = new MSeekBar(playerWidget);
     playerSeekBar->setObjectName("playerSeekBar");
     playerSeekBar->setStyleName("CommonSeeker");
-    playerLayoutPolicy->addItem(playerSeekBar);
-    playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
+    playerSeekBar->setMaximumSize(380, -1);
+    playerSeekBar->setMinimumSize(380, -1);
+    playerSeekBar->setPreferredSize(380, -1);
+
+    playerMinLabel = new MLabel(playerWidget);
+    playerMinLabel->setAlignment(Qt::AlignLeft);
+    playerMinLabel->setStyleName("CommonSeekerLabel");
+    playerMinLabel->setMinimumSize(150, -1);
+    playerMinLabel->setMaximumSize(150, -1);
+    playerMinLabel->setPreferredSize(150, -1);
+
+    playerMaxLabel = new MLabel(playerWidget);
+    playerMaxLabel->setAlignment(Qt::AlignRight);
+    playerMaxLabel->setStyleName("CommonSeekerLabel");
+    playerMaxLabel->setMinimumSize(150, -1);
+    playerMaxLabel->setMaximumSize(150, -1);
+    playerMaxLabel->setPreferredSize(150, -1);
+
+    /* See NB#212946 for why this is so ugly. */
+    playerSeekBar->setPos(0, -17);
+    playerMinLabel->setPos(0, 38);
+    playerMaxLabel->setPos(230, 38);
 
     playerContainer = new MContainer;
     playerContainer->setObjectName("playerContainer");
@@ -132,9 +150,20 @@ void SliderPage::createContent()
     brightnessLayoutPolicy->setSpacing(0);
     brightnessLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
+    MImageWidget *t1 = new MImageWidget;
+    t1->setStyleName("CommonButtonIcon");
+    t1->setImage("icon-s-common-remove");
+    brightnessLayoutPolicy->addItem(t1, Qt::AlignCenter);
+
     brightnessSlider = new MSlider;
     brightnessSlider->setObjectName("brightnessSlider");
-    brightnessLayoutPolicy->addItem(brightnessSlider);
+    brightnessSlider->setStyleName("CommonSlider");
+    brightnessLayoutPolicy->addItem(brightnessSlider, Qt::AlignCenter);
+
+    MImageWidget *t2 = new MImageWidget;
+    t2->setStyleName("CommonRightIcon");
+    t2->setImage("icon-s-common-add");
+    brightnessLayoutPolicy->addItem(t2, Qt::AlignCenter);
 
     brightnessContainer = new MContainer;
     brightnessContainer->setObjectName("brightnessContainer");
@@ -151,10 +180,12 @@ void SliderPage::createLayout()
     layout = new MLayout(centralWidget());
 
     landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    landscapePolicy->setContentsMargins(0, 30, 0, 0);
+    landscapePolicy->setContentsMargins(0, 0, 0, 0);
+    landscapePolicy->setSpacing(0);
 
     portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    portraitPolicy->setContentsMargins(0, 30, 0, 0);
+    portraitPolicy->setContentsMargins(0, 0, 0, 0);
+    portraitPolicy->setSpacing(0);
 
     layout->setLandscapePolicy(landscapePolicy);
     layout->setPortraitPolicy(portraitPolicy);
@@ -164,6 +195,7 @@ void SliderPage::createLayout()
 
     infoLabel = new MLabel;
     infoLabel->setObjectName("infoLabel");
+    infoLabel->setStyleName("CommonBodyText");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 
@@ -207,8 +239,8 @@ void SliderPage::retranslateUi()
     //% "Player:"
     playerContainer->setTitle(qtTrId("xx_slider_player_label"));
 
-    playerSeekBar->setMinLabelVisible(true);
-    playerSeekBar->setMaxLabelVisible(true);
+    playerSeekBar->setMinLabelVisible(false);
+    playerSeekBar->setMaxLabelVisible(false);
     playerSeekBar->setHandleLabelVisible(true);
 
     playerSeekBar->setMinimum(0);
@@ -217,10 +249,10 @@ void SliderPage::retranslateUi()
     int minutes = (playTime / 10) / 60;
     int seconds = (playTime / 10) % 60;
 
-    playerSeekBar->setMinLabel("0:00");
+    playerMinLabel->setText("0:00");
 
     //minutes on one digit seconds on two digits
-    playerSeekBar->setMaxLabel(QString("%1:%2").arg(minutes).arg(seconds, 2, 10, QChar('0')));
+    playerMaxLabel->setText(QString("%1:%2").arg(minutes).arg(seconds, 2, 10, QChar('0')));
 
     modifyPlayerSeekBarHandle(playerSeekBar->minimum());
 
@@ -228,8 +260,8 @@ void SliderPage::retranslateUi()
     brightnessContainer->setTitle(qtTrId("xx_slider_brightness_label"));
 
     brightnessSlider->setRange(0, 100);
-    brightnessSlider->setMinLabelVisible(true);
-    brightnessSlider->setMaxLabelVisible(true);
+    brightnessSlider->setMinLabelVisible(false);
+    brightnessSlider->setMaxLabelVisible(false);
     brightnessSlider->setHandleLabelVisible(true);
 
     brightnessSlider->setMinLabelIconID("icon-m-common-strength1");

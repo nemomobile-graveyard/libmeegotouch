@@ -23,7 +23,7 @@
 #include "templatepage.h"
 
 class MButton;
-class MLabel;
+class MContainer;
 class MImageWidget;
 class MComboBox;
 class MSlider;
@@ -58,7 +58,7 @@ protected:
     virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
 
 private:
-    MLabel *propertiesLabel;
+    MContainer *propertiesContainer;
     MComboBox *propertiesComboBox;
     MWidget *visual;
     MImageWidget *image;

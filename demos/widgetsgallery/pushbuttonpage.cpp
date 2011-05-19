@@ -120,7 +120,9 @@ void PushButtonPage::twoButtonsRowLayout()
 
     layoutPolicy->addItem(layoutB7B8);
     layoutPolicy->setAlignment(layoutB7B8,Qt::AlignCenter);
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::threeButtonsRowLayout()
@@ -158,7 +160,9 @@ void PushButtonPage::threeButtonsRowLayout()
 
     layoutPolicy->addItem(layoutB9B10B11);
     layoutPolicy->setAlignment(layoutB9B10B11,Qt::AlignCenter);
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::callRejectButtonLayout()
@@ -174,7 +178,9 @@ void PushButtonPage::callRejectButtonLayout()
     text10->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text10);
 
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::callRejectRowLayout()
@@ -185,12 +191,12 @@ void PushButtonPage::callRejectRowLayout()
 
     button12 = new MButton();
     button12->setObjectName("button12");
-    button12->setStyleName("CommonLeftCallButton");
+    button12->setStyleName("CommonLeftButtonPositive");
     button12->setIconID("icon-m-telephony-call");
 
     button13 = new MButton();
     button13->setObjectName("button13");
-    button13->setStyleName("CommonRightRejectButton");
+    button13->setStyleName("CommonRightButtonNegative");
     button13->setIconID("icon-m-telephony-call-end");
 
     // sublayout
@@ -208,7 +214,9 @@ void PushButtonPage::callRejectRowLayout()
 
     layoutPolicy->addItem(layoutB12B13);
     layoutPolicy->setAlignment(layoutB12B13,Qt::AlignCenter);
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::splitButtonsLayout()
@@ -226,7 +234,7 @@ void PushButtonPage::splitButtonsLayout()
 
     text12 = new MLabel();
     text12->setObjectName("text12");
-    text12->setStyleName("TempWidgetsgalleryBodyText");
+    text12->setStyleName("CommonBodyText");
     text12->setWordWrap(true);
     text12->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text12);
@@ -262,7 +270,9 @@ void PushButtonPage::splitButtonsLayout()
 
     layoutPolicy->addItem(layoutB14B15B16);
     layoutPolicy->setAlignment(layoutB14B15B16,Qt::AlignCenter);
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 
     // vertical
     button17 = new MButton();
@@ -294,7 +304,9 @@ void PushButtonPage::splitButtonsLayout()
 
     layoutPolicy->addItem(layoutB17B18B19);
     layoutPolicy->setAlignment(layoutB17B18B19,Qt::AlignCenter);
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::singleButton()
@@ -305,7 +317,7 @@ void PushButtonPage::singleButton()
 
     text1 = new MLabel();
     text1->setObjectName("text1");
-    text1->setStyleName("TempWidgetsgalleryBodyText");
+    text1->setStyleName("CommonBodyText");
     text1->setWordWrap(true);
     text1->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text1);
@@ -318,7 +330,7 @@ void PushButtonPage::singleButton()
 
     text3 = new MLabel();
     text3->setObjectName("text3");
-    text3->setStyleName("TempWidgetsgalleryBodyText");
+    text3->setStyleName("CommonBodyText");
     text3->setWordWrap(true);
     text3->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text3);
@@ -328,14 +340,17 @@ void PushButtonPage::singleButton()
     button1->setObjectName("button1");
     button1->setStyleName("CommonSingleButton");
 
-
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 
     layoutPolicy->setAlignment(text1,Qt::AlignLeft);
     layoutPolicy->addItem(button1);
     layoutPolicy->setAlignment(button1,Qt::AlignCenter);
 
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::twoButtons()
@@ -350,7 +365,7 @@ void PushButtonPage::twoButtons()
 
     text5 = new MLabel();
     text5->setObjectName("text5");
-    text5->setStyleName("TempWidgetsgalleryBodyText");
+    text5->setStyleName("CommonBodyText");
     text5->setWordWrap(true);
     text5->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text5);
@@ -364,13 +379,15 @@ void PushButtonPage::twoButtons()
 
     text7 = new MLabel();
     text7->setObjectName("text7");
-    text7->setStyleName("TempWidgetsgalleryBodyText");
+    text7->setStyleName("CommonBodyText");
     text7->setWordWrap(true);
     text7->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text7);
 
 
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 
     /*
     * two buttons
@@ -399,7 +416,9 @@ void PushButtonPage::twoButtons()
 
     layoutPolicy->addItem(layoutB2B3);
     layoutPolicy->setAlignment(layoutB2B3,Qt::AlignCenter);
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::threeButtons()
@@ -437,7 +456,9 @@ void PushButtonPage::threeButtons()
 
     layoutPolicy->addItem(layoutB4B5B6);
     layoutPolicy->setAlignment(layoutB4B5B6,Qt::AlignCenter);
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 
     /*
     * text
@@ -452,12 +473,14 @@ void PushButtonPage::threeButtons()
 
     text9 = new MLabel();
     text9->setObjectName("text9");
-    text9->setStyleName("TempWidgetsgalleryBodyText");
+    text9->setStyleName("CommonBodyText");
     text9->setWordWrap(true);
     text9->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text9);
 
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::buttonTransitionsLayout()
@@ -482,12 +505,14 @@ void PushButtonPage::buttonTransitionsLayout()
 
     text14 = new MLabel();
     text14->setObjectName("text14");
-    text14->setStyleName("TempWidgetsgalleryBodyText");
+    text14->setStyleName("CommonBodyText");
     text14->setWordWrap(true);
     text14->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(text14);
 
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    MSeparator *separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 
     layoutPolicy->setAlignment(text14,Qt::AlignLeft);
 
@@ -509,7 +534,9 @@ void PushButtonPage::buttonTransitionsLayout()
     layoutPolicy->addItem(layoutB20B21B22);
     layoutPolicy->setAlignment(layoutB20B21B22,Qt::AlignCenter);
 
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 
     button23 = new MButton("A");
     button23->setObjectName("button23");
@@ -540,7 +567,9 @@ void PushButtonPage::buttonTransitionsLayout()
     layoutPolicy->addItem(layoutB23B24B25);
     layoutPolicy->setAlignment(layoutB23B24B25, Qt::AlignCenter);
 
-    layoutPolicy->addItem(new MSeparator(0,Qt::Horizontal));
+    separator = new MSeparator(0, Qt::Horizontal);
+    separator->setStyleName("CommonHorizontalSeparator");
+    layoutPolicy->addItem(separator);
 }
 
 void PushButtonPage::retranslateUi()

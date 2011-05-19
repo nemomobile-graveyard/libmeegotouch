@@ -97,6 +97,7 @@ void ApplicationMenuPage::createContent()
 
     infoLabel = new MLabel(panel);
     infoLabel->setObjectName("infoLabel");
+    infoLabel->setStyleName("CommonBodyText");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

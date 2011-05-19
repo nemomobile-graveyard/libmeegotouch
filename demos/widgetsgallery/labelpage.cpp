@@ -60,11 +60,13 @@ void LabelPage::createContent()
 
     simpleLabel = new MLabel();
     simpleLabel->setObjectName("simpleLabel");
+    simpleLabel->setStyleName("CommonBodyText");
     simpleLabel->setAlignment(Qt::AlignVCenter);
     containerPolicy->addItem(simpleLabel);
 
     richLabel = new MLabel();
     richLabel->setObjectName("richLabel");
+    richLabel->setStyleName("CommonBodyText");
 
     richLabel->setAlignment(Qt::AlignTop);
     richLabel->setWordWrap(true);

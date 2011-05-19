@@ -201,7 +201,6 @@ void ToolBarPage::createContent()
     callModel = new TestModel;
     callModel->setObjectName("callModel");
     callList->setItemModel(callModel);
-    containerPolicy->setSpacing(20);
     containerPolicy->addItem(callList);
     showCallDataAsGrid();
 
@@ -321,32 +320,40 @@ void ToolBarPage::retranslateUi()
 void ToolBarPage::setupCheckBoxes()
 {
     QGraphicsLinearLayout *layoutCheckboxes = new QGraphicsLinearLayout(Qt::Vertical);
+    layoutCheckboxes->setContentsMargins(0, 0, 0, 0);
+    layoutCheckboxes->setSpacing(0);
 
     visibleBackButton = new MButton();
     visibleBackButton->setObjectName("visibleBackButton");
+    visibleBackButton->setStyleName("CommonRightCheckBox");
     visibleBackButton->setViewType(MButton::checkboxType);
     visibleBackButton->setCheckable(true);
     visibleBackButton->setChecked(true);
     connect(visibleBackButton, SIGNAL(toggled(bool)), this, SLOT(setBackButtonVisible(bool)));
     visibleBackButtonLabel = new MLabel();
     visibleBackButtonLabel->setObjectName("visibleBackButtonLabel");
+    visibleBackButtonLabel->setStyleName("CommonSingleTitle");
     visibleBackButtonLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     visibleBackButtonLabel->setWordWrap(false);
     visibleBackButtonLabel->setTextElide(true);
 
     visibleMenuButton = new MButton();
     visibleMenuButton->setObjectName("visibleMenuButton");
+    visibleMenuButton->setStyleName("CommonRightCheckBox");
     visibleMenuButton->setViewType(MButton::checkboxType);
     visibleMenuButton->setCheckable(true);
     visibleMenuButton->setChecked(true);
     connect(visibleMenuButton, SIGNAL(toggled(bool)), this, SLOT(setMenuActionsVisible(bool)));
     visibleMenuButtonLabel = new MLabel();
     visibleMenuButtonLabel->setObjectName("visibleMenuButtonLabel");
+    visibleMenuButtonLabel->setStyleName("CommonSingleTitle");
     visibleMenuButtonLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     visibleMenuButtonLabel->setWordWrap(false);
     visibleMenuButtonLabel->setTextElide(true);
 
     QGraphicsLinearLayout *layoutBackCheckbox = new QGraphicsLinearLayout(Qt::Horizontal);
+    layoutBackCheckbox->setContentsMargins(0, 0, 0, 0);
+    layoutBackCheckbox->setSpacing(0);
     layoutBackCheckbox->addItem(visibleBackButtonLabel);
     layoutBackCheckbox->addItem(visibleBackButton);
     layoutBackCheckbox->setAlignment(visibleBackButtonLabel, Qt::AlignCenter);
@@ -354,6 +361,8 @@ void ToolBarPage::setupCheckBoxes()
     layoutCheckboxes->addItem(layoutBackCheckbox);
 
     QGraphicsLinearLayout *layoutMenuCheckbox = new QGraphicsLinearLayout(Qt::Horizontal);
+    layoutMenuCheckbox->setContentsMargins(0, 0, 0, 0);
+    layoutMenuCheckbox->setSpacing(0);
     layoutMenuCheckbox->addItem(visibleMenuButtonLabel);
     layoutMenuCheckbox->addItem(visibleMenuButton);
     layoutMenuCheckbox->setAlignment(visibleMenuButtonLabel, Qt::AlignCenter);
@@ -365,41 +374,45 @@ void ToolBarPage::setupCheckBoxes()
 
 void ToolBarPage::setupSliders()
 {
-    QGraphicsGridLayout *layoutSliders = new QGraphicsGridLayout;
+    QGraphicsLinearLayout *layoutSliders = new QGraphicsLinearLayout(Qt::Vertical);
+    layoutSliders->setContentsMargins(0, 0, 0, 0);
     layoutSliders->setSpacing(0);
-    layoutSliders->setColumnFixedWidth(1, 250);
 
     maxToolsLabel = new MLabel;
-    maxToolsLabel ->setObjectName("maxToolsLabel");
+    maxToolsLabel->setObjectName("maxToolsLabel");
+    maxToolsLabel->setStyleName("CommonFieldLabel");
     maxToolsLabel->setTextElide(true);
-    layoutSliders->addItem(maxToolsLabel, 0, 0);
+    layoutSliders->addItem(maxToolsLabel);
     maxToolsSlider = new MSlider;
     maxToolsSlider->setObjectName("maxToolsSlider");
+    maxToolsSlider->setStyleName("CommonSlider");
     maxToolsSlider->setRange(0, 5);
     maxToolsSlider->setValue(2);
-    maxToolsSlider->setMinLabelVisible(true);
-    maxToolsSlider->setMaxLabelVisible(true);
+    maxToolsSlider->setMinLabelVisible(false);
+    maxToolsSlider->setMaxLabelVisible(false);
     maxToolsSlider->setHandleLabelVisible(true);
     maxToolsSlider->setMinLabel(QString::number(maxToolsSlider->minimum()));
     maxToolsSlider->setMaxLabel(QString::number(maxToolsSlider->maximum()));
     QObject::connect(maxToolsSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTools(int)));
-    layoutSliders->addItem(maxToolsSlider, 0, 1);
+    layoutSliders->addItem(maxToolsSlider);
 
     maxTabsLabel = new MLabel;
     maxTabsLabel->setObjectName("maxTabsLabel");
+    maxTabsLabel->setStyleName("CommonFieldLabel");
     maxTabsLabel->setTextElide(true);
-    layoutSliders->addItem(maxTabsLabel, 1, 0);
+    layoutSliders->addItem(maxTabsLabel);
     maxTabsSlider = new MSlider;
     maxTabsSlider->setObjectName("maxTabsSlider");
+    maxTabsSlider->setStyleName("CommonSlider");
     maxTabsSlider->setRange(0, 4);
     maxTabsSlider->setValue(3);
-    maxTabsSlider->setMinLabelVisible(true);
-    maxTabsSlider->setMaxLabelVisible(true);
+    maxTabsSlider->setMinLabelVisible(false);
+    maxTabsSlider->setMaxLabelVisible(false);
     maxTabsSlider->setHandleLabelVisible(true);
     maxTabsSlider->setMinLabel(QString::number(maxTabsSlider->minimum()));
     maxTabsSlider->setMaxLabel(QString::number(maxTabsSlider->maximum()));
     QObject::connect(maxTabsSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTabs(int)));
-    layoutSliders->addItem(maxTabsSlider, 1, 1);
+    layoutSliders->addItem(maxTabsSlider);
 
     containerPolicy->addItem(layoutSliders);
 }

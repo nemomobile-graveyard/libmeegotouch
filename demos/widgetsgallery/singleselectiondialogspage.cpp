@@ -263,7 +263,7 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
     MButton *button = new MButton();
     button->setObjectName("progressIndicatorButton");
     button->setViewType(MButton::switchType);
-    button->setStyleName("CommonSwitchInverted");
+    button->setStyleName("CommonRightSwitchInverted");
     button->setCheckable(true);
     button->setChecked(true);
     connect(button, SIGNAL(toggled(bool)), this, SLOT(setDialogProgressIndicatorVisible(bool)));
@@ -271,13 +271,15 @@ void SingleSelectionDialogsPage::openDialogWithProgressIndicator()
     //% "Progress Indicator"
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_progress_indicator"));
     label->setObjectName("progressIndicatorLabel");
-    label->setStyleName("CommonTitleInverted");
+    label->setStyleName("CommonBodyTextInverted");
+    label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->addStretch();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
     layout->addItem(label);
     layout->addItem(button);
-    layout->addStretch();
+    layout->setAlignment(button, Qt::AlignCenter);
 
     dialog = new MDialog("Lorem ipsum", M::NoStandardButton);
     dialog->setObjectName("progressIndicatorDialog");
@@ -294,7 +296,7 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
     MButton *button = new MButton();
     button->setObjectName("iconDialogButton");
     button->setViewType(MButton::switchType);
-    button->setStyleName("CommonSwitchInverted");
+    button->setStyleName("CommonRightSwitchInverted");
     button->setCheckable(true);
     button->setChecked(true);
     connect(button, SIGNAL(toggled(bool)), this, SLOT(setDialogIconVisible(bool)));
@@ -302,13 +304,15 @@ void SingleSelectionDialogsPage::openDialogWithIcon()
     //% "Title Bar Icon"
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_icon"));
     label->setObjectName("iconDialogLabel");
-    label->setStyleName("CommonTitleInverted");
+    label->setStyleName("CommonBodyTextInverted");
+    label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->addStretch();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
     layout->addItem(label);
     layout->addItem(button);
-    layout->addStretch();
+    layout->setAlignment(button, Qt::AlignCenter);
 
     dialog = new MDialog("Lorem ipsum", M::NoStandardButton);
     dialog->setObjectName("iconDialog");

@@ -53,18 +53,20 @@ void ObjectMenuPage::createContent()
 {
     TemplatePage::createContent();
 
-    containerFriends = new MContainer(centralWidget());
+    containerFriends = new MContainer;
     containerFriends->setObjectName("containerFriends");
     QGraphicsLinearLayout *friendsLayout = new QGraphicsLinearLayout(containerFriends->centralWidget());
     friendsLayout->setContentsMargins(0, 0, 0, 0);
+    friendsLayout->setSpacing(0);
     friendsLayout->setOrientation(Qt::Vertical);
     containerFriends->centralWidget()->setLayout(friendsLayout);
     containerPolicy->addItem(containerFriends);
 
-    containerAlbums = new MContainer(centralWidget());
+    containerAlbums = new MContainer;
     containerAlbums->setObjectName("containerAlbums");
     QGraphicsLinearLayout *albumLayout = new QGraphicsLinearLayout(Qt::Horizontal, containerAlbums->centralWidget());
     albumLayout->setContentsMargins(0, 0, 0, 0);
+    albumLayout->setSpacing(0);
     containerAlbums->centralWidget()->setLayout(albumLayout);
     containerPolicy->addItem(containerAlbums);
 
@@ -83,6 +85,7 @@ void ObjectMenuPage::createContent()
     for (int i = 0; i < 3; ++i) {
         MBasicListItem *item = new MBasicListItem(MBasicListItem::IconWithTitleAndSubtitle, containerFriends->centralWidget());
         item->setObjectName("listItem");
+        item->setStyleName("CommonBasicListItem");
 
         // set content uri to dummy contact.
         item->setProperty("contentURI", QString("a.contact"));
@@ -96,6 +99,7 @@ void ObjectMenuPage::createContent()
         if (imageContacts.size() > 0) {
             MImageWidget *icon = new MImageWidget;
             icon->setObjectName("icon");
+            icon->setStyleName("CommonMainIcon");
             icon->setPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]);
             item->setImageWidget(icon);
         }
@@ -134,6 +138,7 @@ void ObjectMenuPage::createContent()
     for (int i = 0; i < 4; ++i) {
         MImageWidget *image = new MImageWidget(containerAlbums->centralWidget());
         image->setObjectName("albumImage");
+        image->setStyleName("CommonMainIcon");
 
         // set content uri to dummy album
         image->setProperty("contentURI", QString("a.album"));

@@ -58,6 +58,7 @@ void TemplatePage::createContent()
     createLayout();
     containerLayout = new MLayout(container);
     containerPolicy = new MLinearLayoutPolicy(containerLayout, Qt::Vertical);
+    containerPolicy->setContentsMargins(0, 0, 0, 0);
     containerLayout->setPolicy(containerPolicy);
 }
 
@@ -67,10 +68,10 @@ void TemplatePage::createLayout()
     layout = new MLayout(panel);
 
     landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-    landscapePolicy->setContentsMargins(0, 30, 0, 0);
+    landscapePolicy->setContentsMargins(0, 0, 0, 0);
 
     portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    portraitPolicy->setContentsMargins(0, 30, 0, 0);
+    portraitPolicy->setContentsMargins(0, 0, 0, 0);
 
     layout->setLandscapePolicy(landscapePolicy);
     layout->setPortraitPolicy(portraitPolicy);
@@ -83,10 +84,12 @@ void TemplatePage::createLayout()
 
     separator = new MSeparator();
     separator->setObjectName("separator");
+    separator->setStyleName("CommonVerticalSeparator");
     separator->setOrientation(Qt::Vertical);
 
     infoLabel = new MLabel();
     infoLabel->setObjectName("infoLabel");
+    infoLabel->setStyleName("CommonBodyText");
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

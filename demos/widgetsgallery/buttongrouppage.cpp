@@ -69,23 +69,20 @@ void ButtonGroupPage::createContent()
     // this causes the buttons to be rendered with different backgrounds for each position
     hPolicy1->setNotifyWidgetsOfLayoutPositionEnabled(true);
 
-    //make buttons evenly sized
-    QSizePolicy sizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
-    
     pushButton1 = new MButton();
     pushButton1->setObjectName("pushButton1");
+    pushButton1->setStyleName("CommonLeftSplitButton");
     // The group type makes the button use the MButton[group] CSS block from the theme,
     // this allows for gapless groups by modifying the margins.
     pushButton1->setViewType(MButton::groupType);
-    pushButton1->setSizePolicy(sizePolicy);
     pushButton2 = new MButton();
     pushButton2->setObjectName("pushButton2");
+    pushButton2->setStyleName("CommonHorizontalCenterSplitButton");
     pushButton2->setViewType(MButton::groupType);
-    pushButton2->setSizePolicy(sizePolicy);
     pushButton3 = new MButton();
     pushButton3->setObjectName("pushButton3");
+    pushButton3->setStyleName("CommonRightSplitButton");
     pushButton3->setViewType(MButton::groupType);
-    pushButton3->setSizePolicy(sizePolicy);
     hPolicy1->addItem(pushButton1);
     hPolicy1->addItem(pushButton2);
     hPolicy1->addItem(pushButton3);
@@ -98,20 +95,20 @@ void ButtonGroupPage::createContent()
     hPolicy2->setNotifyWidgetsOfLayoutPositionEnabled(true);
     pushButton4 = new MButton();
     pushButton4->setObjectName("pushButton4");
+    pushButton4->setStyleName("CommonLeftSplitButton");
     pushButton4->setCheckable(true);
     pushButton4->setViewType(MButton::groupType);
-    pushButton4->setSizePolicy(sizePolicy);
     pushButton5 = new MButton();
     pushButton5->setObjectName("pushButton5");
+    pushButton5->setStyleName("CommonHorizontalCenterSplitButton");
     pushButton5->setCheckable(true);
     pushButton5->setChecked(true); // Let's make this our default
     pushButton5->setViewType(MButton::groupType);
-    pushButton5->setSizePolicy(sizePolicy);
     pushButton6 = new MButton();
     pushButton6->setObjectName("pushButton6");
+    pushButton6->setStyleName("CommonRightSplitButton");
     pushButton6->setCheckable(true);
     pushButton6->setViewType(MButton::groupType);
-    pushButton6->setSizePolicy(sizePolicy);
     hPolicy2->addItem(pushButton4);
     hPolicy2->addItem(pushButton5);
     hPolicy2->addItem(pushButton6);
@@ -124,56 +121,69 @@ void ButtonGroupPage::createContent()
 
     // Init vertical button group, checkable
     MLayout* vLayout = new MLayout;
-    MLinearLayoutPolicy* vPolicy = new MLinearLayoutPolicy(vLayout, Qt::Vertical);
-    vPolicy->setNotifyWidgetsOfLayoutPositionEnabled(true);
-    vPolicy->setSpacing(0);
+    MLinearLayoutPolicy* vPolicyP = new MLinearLayoutPolicy(vLayout, Qt::Vertical);
+    vLayout->setPortraitPolicy(vPolicyP);
+    vPolicyP->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    vPolicyP->setContentsMargins(0, 0, 0, 0);
+    vPolicyP->setSpacing(0);
+    MLinearLayoutPolicy* vPolicyL = new MLinearLayoutPolicy(vLayout, Qt::Horizontal);
+    vLayout->setLandscapePolicy(vPolicyL);
+    vPolicyL->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    vPolicyL->setContentsMargins(0, 0, 0, 0);
+    vPolicyL->setSpacing(0);
+
     pushButton7 = new MButton();
     pushButton7->setObjectName("pushButton7");
+    pushButton7->setStyleName("CommonTopSplitButton");
     pushButton7->setCheckable(true);
     pushButton7->setViewType(MButton::groupType);
     pushButton8 = new MButton();
     pushButton8->setObjectName("pushButton8");
+    pushButton8->setStyleName("CommonVerticalCenterSplitButton");
     pushButton8->setCheckable(true);
     pushButton8->setViewType(MButton::groupType);
     pushButton9 = new MButton();
     pushButton9->setObjectName("pushButton9");
+    pushButton9->setStyleName("CommonBottomSplitButton");
     pushButton9->setCheckable(true);
     pushButton9->setViewType(MButton::groupType);
-    vPolicy->addItem(pushButton7);
-    vPolicy->addItem(pushButton8);
-    vPolicy->addItem(pushButton9);
+    vPolicyP->addItem(pushButton7);
+    vPolicyP->addItem(pushButton8);
+    vPolicyP->addItem(pushButton9);
+    vPolicyL->addItem(pushButton7);
+    vPolicyL->addItem(pushButton8);
+    vPolicyL->addItem(pushButton9);
 
     //add label and horizontal button group into page
     hLabel1 = new MLabel();
     hLabel1->setObjectName("hLabel1");
+    hLabel1->setStyleName("CommonFieldLabel");
     containerPolicy->addItem(hLabel1);
     containerPolicy->addItem(hLayout1);
 
     //add small spacer between button groups
-    QGraphicsWidget* spacer1 = new QGraphicsWidget;
+    MWidgetController* spacer1 = new MWidgetController;
     spacer1->setObjectName("spacer1");
-    spacer1->setMinimumSize(0, 20);
-    spacer1->setPreferredSize(0, 20);
-    spacer1->setMaximumSize(0, 20);
+    spacer1->setStyleName("CommonSpacer");
     containerPolicy->addItem(spacer1);
 
     //add label and horizontal button group into page
     hLabel2 = new MLabel();
     hLabel2->setObjectName("hLabel2");
+    hLabel2->setStyleName("CommonFieldLabel");
     containerPolicy->addItem(hLabel2);
     containerPolicy->addItem(hLayout2);
 
     //add small spacer between button groups
-    QGraphicsWidget* spacer2 = new QGraphicsWidget;
+    MWidgetController* spacer2 = new MWidgetController;
     spacer2->setObjectName("spacer2");
-    spacer2->setMinimumSize(0, 20);
-    spacer2->setPreferredSize(0, 20);
-    spacer2->setMaximumSize(0, 20);
+    spacer2->setStyleName("CommonSpacer");
     containerPolicy->addItem(spacer2);
 
     //add label and vertical button group into page
     vLabel = new MLabel();
     vLabel->setObjectName("vLabel");
+    vLabel->setStyleName("CommonFieldLabel");
     containerPolicy->addItem(vLabel);
     containerPolicy->addItem(vLayout);
 

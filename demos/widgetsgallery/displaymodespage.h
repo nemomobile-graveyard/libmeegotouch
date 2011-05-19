@@ -26,6 +26,7 @@ class MButton;
 class MComboBox;
 class MLabel;
 class QGraphicsLinearLayout;
+class MContainer;
 
 class LabeledCheckbox : public QGraphicsWidget
 {
@@ -80,8 +81,8 @@ private:
     MComboBox *comboNavigationBarDisplayMode;
     MComboBox *comboEscapeButtonDisplayMode;
     MComboBox *comboHomeButtonDisplayMode;
-    MLabel *lblDisplayMode;
-    MLabel *lblWindowState;
+    MContainer *ctnDisplayMode;
+    MContainer *ctnWindowState;
     LabeledCheckbox *fullScreenCheckbox;
     LabeledCheckbox *navigationBarTransparencyCheckbox;
     LabeledCheckbox *roundedCornersCheckbox;

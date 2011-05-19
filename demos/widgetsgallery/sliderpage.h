@@ -50,6 +50,8 @@ private:
     MSeekBar *playerSeekBar;
     MButton *playerButton;
     MContainer *playerContainer;
+    MLabel *playerMinLabel;
+    MLabel *playerMaxLabel;
 
     int playTime;
     bool playerSeekBarIsPressed;
