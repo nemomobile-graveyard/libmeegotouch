@@ -1389,15 +1389,6 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         style()->releaseFeedback().play();
     }
 
-    // Only proceed if this is not the focusing tap.
-    if (d->focusingTap) {
-        if (d->focused) {
-            // Got focus. The next tap will not be focusing tap.
-            d->focusingTap = false;
-        }
-        return;
-    }
-
     const bool magnifierHidden(d->magnifier && d->magnifier->isAppeared());
     d->hideMagnifier();
 
@@ -1426,6 +1417,15 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 style()->releaseBoundaryFeedback().play();
             }
         }
+    }
+
+    // Only proceed if this is not the focusing tap.
+    if (d->focusingTap) {
+        if (d->focused) {
+            // Got focus. The next tap will not be focusing tap.
+            d->focusingTap = false;
+        }
+        return;
     }
 
     if (magnifierHidden
