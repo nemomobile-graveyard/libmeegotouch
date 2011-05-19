@@ -26,8 +26,6 @@
 #include <QElapsedTimer>
 #include "mphysics2dpanning.h"
 
-class QTimeLine;
-
 class PanningAnimation : public QVariantAnimation
 {
     virtual void updateCurrentValue(const QVariant&) {}
