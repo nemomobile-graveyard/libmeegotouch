@@ -58,6 +58,13 @@ class QString;
     \section MLabelUseGuidelines Usage guidelines
         - Simple label is used for plain text on one line such as device buttons.
         - Rich label is used when text styling and formatting are needed.
+        - The MLabel can get very slow for long strings, especially when using very
+          long single words. For this reason, it is recommended to split such long
+          words to prevent slowness. In particular, applications should take care
+          when using non-trusted content such as network data not to cause
+          performance problems.
+          An alternative for displaying long text in a label could be a read-only
+          MTextEdit or a QWebView.
         - Application decides:
             - Position of the label in the view.
             - Content of the label.
