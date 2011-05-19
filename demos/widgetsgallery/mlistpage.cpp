@@ -432,9 +432,6 @@ void MListPage::changeAmountOfItemInList(int index)
         list->setShowGroups(false);
     }
 
-    if (model->rowCount() > 0)
-        model->removeRows(0, model->rowCount());
-
     int amountOfItems[] = {50, 100, 200, 1000};
     model->clear();
     model->insertRows(0, amountOfItems[index]);
