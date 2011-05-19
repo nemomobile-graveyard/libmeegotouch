@@ -1253,6 +1253,11 @@ void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &cu
             && (preeditStyling[currentListIndex].count < (currentCount + remainingTextLength))) {
             preeditStyling[currentListIndex].count = remainingTextLength + currentCount;
         }
+
+        if (preeditStyling[currentListIndex].count == 0) {
+            continue;
+        }
+
         const int insertLength(qMin(preeditStyling[currentListIndex].count - currentCount,
                                     remainingTextLength));
         currentCount = (currentCount + insertLength) % preeditStyling[currentListIndex].count;
