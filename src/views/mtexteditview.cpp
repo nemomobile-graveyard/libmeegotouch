@@ -1273,11 +1273,17 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
     // mTimestamp("MTextEditView", QString("start text=%1").arg(d->document()->toPlainText()));
     painter->save();
 
+    // as sanity check use style clipping only if it's smaller than real padding
+    int leftClipping = qMin<int>(s->textClippingLeft(), paddingLeft);
+    int rightClipping = qMin<int>(s->textClippingRight(), paddingRight);
+    int topClipping = qMin<int>(s->textClippingTop(), s->paddingTop());
+    int bottomClipping = qMin<int>(s->textClippingBottom(), s->paddingBottom());
+
     // set clipping rectangle to draw text inside the border
-    QRectF clipping(boundingRect().adjusted(paddingLeft,
-                                            s->paddingTop(),
-                                            -paddingRight,
-                                            -s->paddingBottom()));
+    QRectF clipping(boundingRect().adjusted(leftClipping,
+                                            topClipping,
+                                            -rightClipping,
+                                            -bottomClipping));
     clipping = clipping.intersected(option->exposedRect);
     painter->setClipRect(clipping, Qt::IntersectClip);
 
