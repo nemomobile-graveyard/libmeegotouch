@@ -29,6 +29,7 @@
 class MWindow;
 class MSceneLayerEffect;
 class MSceneWindowTransition;
+class QTimer;
 
 class MSceneWindowPrivate : public MWidgetControllerPrivate
 {
@@ -74,6 +75,8 @@ public:
 
     // Focused item before window blocked.
     QPointer<QGraphicsWidget> focusItemBeforeWindowBlocked;
+
+    QTimer *disappearTimer;
 };
 
 class MSceneWindowTestInterface : public QObject

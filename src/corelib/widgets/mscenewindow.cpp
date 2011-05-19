@@ -74,7 +74,8 @@ MSceneWindowPrivate::MSceneWindowPrivate()
         disappearanceAnimation(0),
         queuedTransition(0),
         sceneManager(0),
-        focusItemBeforeWindowBlocked(0)
+        focusItemBeforeWindowBlocked(0),
+        disappearTimer(0)
 {
 }
 
@@ -120,7 +121,14 @@ void MSceneWindowPrivate::startDisappearTimeout()
 
     if (q->view()) {
         if (q->model()->disappearTimeout() != 0) {
-            QTimer::singleShot(q->model()->disappearTimeout(), q, SLOT(disappear()));
+            if (!disappearTimer) {
+                disappearTimer = new QTimer(q);
+                disappearTimer->setSingleShot(true);
+                QObject::connect (disappearTimer, SIGNAL(timeout()), q, SLOT(disappear()));
+            } else if (disappearTimer->isActive()) {
+                disappearTimer->stop();
+            }
+            disappearTimer->start(q->model()->disappearTimeout());
         }
     }
 }
