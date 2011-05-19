@@ -24,6 +24,7 @@
 #include <QList>
 #include <QTimer>
 
+#include <mdynamicpropertywatcher.h>
 #include "mwidget.h"
 #include "private/mwidgetcontroller_p.h"
 
@@ -62,12 +63,17 @@ public:
     void _q_resetPhysics();
     void glassMousePressEvent(QGraphicsSceneMouseEvent *event);
 
+    void _q_updateMaximumVelocityForPress();
+
 private:
 
     QTimer *mousePressPhysicsStopTimer;
 
     MPhysics2DPanning *physics;
     MPannableWidgetGlass *glass;
+
+    qreal maximumVelocityForPress;
+    MDynamicPropertyWatcher maximumVelocityForPressPropertyWatcher;
 
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members

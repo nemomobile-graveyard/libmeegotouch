@@ -81,6 +81,12 @@ void MPannableWidgetView::applyStyle()
     Q_D(MPannableWidgetView);
 
     d->_q_applyStyleToPhysics();
+
+    // smuggle this style property to our controller so that he
+    // can use it internally.
+    d->controller->setProperty("_m_maximumVelocityForPress",
+                               style()->maximumVelocityForPress());
+
     MWidgetView::applyStyle();
 }
 

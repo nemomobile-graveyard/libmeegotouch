@@ -62,7 +62,8 @@ void MPannableWidgetGlass::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndH
 MPannableWidgetPrivate::MPannableWidgetPrivate() :
     mousePressPhysicsStopTimer(0),
     physics(0),
-    glass(0)
+    glass(0),
+    maximumVelocityForPress(0.0f)
 {
 }
 
@@ -102,6 +103,15 @@ void MPannableWidgetPrivate::init()
 
     q->setPosition(QPointF());
     q->setRange(QRectF());
+
+    // View class will fill it up with a proper value taken from the style sheet.
+    maximumVelocityForPressPropertyWatcher.watch(q);
+    maximumVelocityForPressPropertyWatcher.setPropertyName("_m_maximumVelocityForPress");
+    bool ok;
+    ok = q->connect(&maximumVelocityForPressPropertyWatcher,
+               SIGNAL(propertyChanged()),
+               SLOT(_q_updateMaximumVelocityForPress()));
+    if (!ok) qFatal("signal connection failed");
 }
 
 void MPannableWidgetPrivate::glassMousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -110,9 +120,14 @@ void MPannableWidgetPrivate::glassMousePressEvent(QGraphicsSceneMouseEvent *mous
     // This handler is called by the glass tapAndHoldGestureEvent method.
     if (q->isEnabled() && physics->inMotion()) {
         // The viewport is still moving,
-        // let's swallow this event
+        // let's swallow this event, if velocity is above treshold
+        if ((qAbs(physics->velocity().x()) <= maximumVelocityForPress)
+                && (qAbs(physics->velocity().y()) <= maximumVelocityForPress)) {
+            mouseEvent->ignore();
+        } else {
+            mouseEvent->accept();
+        }
         mousePressPhysicsStopTimer->start();
-        mouseEvent->accept();
     } else {
         mouseEvent->ignore();
     }
@@ -122,6 +137,14 @@ void MPannableWidgetPrivate::_q_resetPhysics()
 {
     physics->pointerRelease();
     physics->stop();
+}
+
+void MPannableWidgetPrivate::_q_updateMaximumVelocityForPress()
+{
+    Q_Q(MPannableWidget);
+    // reading from a regular variable is faster than reading from
+    // a dynamic property.
+    maximumVelocityForPress = q->property("_m_maximumVelocityForPress").toReal();
 }
 
 MPannableWidget::MPannableWidget(MPannableWidgetPrivate *dd, MPannableWidgetModel *model,

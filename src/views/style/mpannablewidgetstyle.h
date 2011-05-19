@@ -61,6 +61,18 @@ class M_VIEWS_EXPORT MPannableWidgetStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(qreal, panClickThreshold, PanClickThreshold)
 
     M_STYLE_ATTRIBUTE(qreal, maximumVelocity, MaximumVelocity)
+
+    /*!
+      \property MDialogStyle::maximumVelocityForPress
+      \brief Maximum panning velocity where widget gets Press events
+
+      Maximum panning velocity (MPhysics2DPanning::velocity) where a press
+      event is still passed on to the widget. If a press comes while the
+      panning velocity is above this threshold the widget will not get it.
+
+      Negative values have undefined behavior.
+     */
+    M_STYLE_ATTRIBUTE(qreal, maximumVelocityForPress, MaximumVelocityForPress)
 };
 
 class M_VIEWS_EXPORT MPannableWidgetStyleContainer : public MWidgetStyleContainer

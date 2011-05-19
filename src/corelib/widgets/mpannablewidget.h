@@ -295,6 +295,7 @@ private:
     Q_DECLARE_PRIVATE(MPannableWidget)
 
     Q_PRIVATE_SLOT(d_func(), void _q_resetPhysics())
+    Q_PRIVATE_SLOT(d_func(), void _q_updateMaximumVelocityForPress())
 
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members
