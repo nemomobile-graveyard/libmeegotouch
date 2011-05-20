@@ -73,7 +73,7 @@ void NotificationsPage::createContent()
     labelTitleNotification->setObjectName("labelTitleNotification");
     policy->addItem(labelTitleNotification);
 
-    textEditTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of title", centralWidget());
+    textEditTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of source label", centralWidget());
     textEditTitle->setStyleName("CommonSingleInputFieldLabeled");
     policy->addItem(textEditTitle);
 
@@ -81,7 +81,7 @@ void NotificationsPage::createContent()
     labelSubtitleNotification->setStyleName("CommonTitle");
     policy->addItem(labelSubtitleNotification);
 
-    textEditSubTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of subtitle", centralWidget());
+    textEditSubTitle = new MTextEdit(MTextEditModel::SingleLine, "Example of information label", centralWidget());
     textEditSubTitle->setStyleName("CommonSingleInputFieldLabeled");
     policy->addItem(textEditSubTitle);
 
@@ -190,15 +190,15 @@ void NotificationsPage::retranslateUi()
     setTitle(qtTrId("xx_notificationspage_title"));
     //% "Notifications generator"
     labelPageTitle->setText(qtTrId("xx_notificationspage_page_title"));
-    //% "Title"
+    //% "Source label"
     labelTitleNotification->setText(qtTrId("xx_notificationspage_notification_title"));
-    //% "Subtitle"
+    //% "Information label"
     labelSubtitleNotification->setText(qtTrId("xx_notificationspage_notification_subtitle"));
     //% "Enable icon"
     labelIconEnable->setText(qtTrId("xx_notificationspage_notification_icon_label"));
     //% "Enable previews"
     labelPreviewEnable->setText(qtTrId("xx_notificationspage_notification_previews_label"));
-   //% "Note: the title and subtitle will appear on inverted position at the events screen"
+   //% "Note: the source label and  the information label will appear on inverted position at the events screen"
     footnote->setText(qtTrId("xx_notificationspage_notification_footnote"));
 
     if (!isContentCreated())
