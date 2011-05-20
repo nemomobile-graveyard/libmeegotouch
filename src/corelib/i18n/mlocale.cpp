@@ -2216,6 +2216,7 @@ QString MLocale::formatNumber(double i, int prec) const
         }
 
         nf->setMaximumFractionDigits(prec);
+        nf->setMinimumFractionDigits(prec);
         nf->format(i, str);
         delete nf;
     }
