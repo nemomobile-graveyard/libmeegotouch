@@ -13,7 +13,7 @@ support some MeeGo Touch and Qt command line options.
 
 \li \subpage prestart "Application prestarting" is meant for
 applications with slow initialisation times. Prestarting the applications brings them to a state
-where they do not show the UI. In that state the application window can be displayed immediately when requested. This provides the fastest results, but the
+where they do not show the UI. In that state the application window can be displayed in most of the cases immediately when requested. This provides the fastest results, but the
 drawback is the high memory usage caused by the prestarted applications. There may also be unexpected system maintenance tasks for the
 prestarted application processes. <strong>In the MeeGo Touch UI framework
 prestarting is limited to a small set of critical applications. This

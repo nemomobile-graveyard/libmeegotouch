@@ -51,6 +51,13 @@ command line parameters, before using any other parts of the
 prestarting API. It is recommended to do this during or immediately after instantiating 
 the \c MApplication class.
 
+It is important to notice that before entering the prestarted state
+application should do all the initializations that can be done before
+calling MWindow::show(). Some initializations eg. MApplicationPage::createContent
+are done only after MWindow::show() is called and prestarted state is released.
+In practice this means that window is visible for the user only after
+MApplicationPage::createContent() is finished.
+
 Example:
 
 \code
