@@ -147,6 +147,7 @@ void MLabelViewSimple::setupModel()
 {
     viewPrivate->textOptions.setAlignment(viewPrivate->model()->alignment());
     viewPrivate->autoSetTextDirection();
+    updateStringVariants();
     if (viewPrivate->model()->wordWrap()) {
         viewPrivate->textOptions.setWrapMode(viewPrivate->model()->wrapMode());
     } else {
