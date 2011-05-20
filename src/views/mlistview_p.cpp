@@ -343,6 +343,7 @@ void MListViewPrivate::viewportRangeChanged(const QRectF &range)
 
     updatePannableViewportPosition();
     updateScrollToTargetPosition();
+    _q_relayoutItemsIfNeeded();
 }
 
 void MListViewPrivate::connectPannableViewport()
