@@ -172,16 +172,7 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         //If we have word wrap or eliding, the minimum size is the size of a single letter,
         if (wrap() || viewPrivate->model()->textElide()) {
             QFontMetrics fm(viewPrivate->controller->font());
-            if (minHeightCache == -1) {
-                //Resize text document to maximum width to find the height of one line
-                //This follows the QLabel implementation
-                qreal oldWidth = textDocument.textWidth();
-                textDocument.setTextWidth(QWIDGETSIZE_MAX);
-                qreal height = textDocument.size().height();
-                const_cast<qreal&>(minHeightCache) = height;
-                textDocument.setTextWidth(oldWidth);
-            }
-            return QSizeF(fm.width('x'), minHeightCache);
+            return QSizeF(fm.width('x'), fm.height());
         }
         //If word wrap and eliding are both disabled (the default) then fall through to preferred
         //size case, so that the preferred size == minimum size.
