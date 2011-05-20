@@ -27,6 +27,7 @@
 #include <QPointer>
 #include <QTimer>
 #include "mapplicationwindowstyle.h"
+#include <mstatusbarstylenamehandler.h>
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
 # include "contextproperty.h"
@@ -83,6 +84,8 @@ public:
 
     bool animateComponentsTransitions;
     QTimer navigationBarVisibilityUpdateTimer;
+
+    MStatusBarStyleNameHandler statusBarStyleNameHandler;
 
     void manageActions();
     void distributeAction(QAction *action, QAction *before);

@@ -153,6 +153,7 @@ void MApplicationWindowPrivate::init()
 
     if(MDeviceProfile::instance()->showStatusbar())    {
         statusBar = new MStatusBar;
+        statusBarStyleNameHandler.setStatusBar(statusBar);
     }
     else{
         statusBar = NULL;
@@ -778,6 +779,8 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
     // of the scene window is not yet changed, and is needed to store separately
     // before call to _q_updatePageExposedContentRect().
 
+    statusBarStyleNameHandler.sceneWindowAppearEvent(event);
+
     MSceneWindow *sceneWindow = event->sceneWindow();
 
     switch (sceneWindow->windowType()) {
@@ -805,6 +808,8 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
 
 void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *event)
 {
+    statusBarStyleNameHandler.sceneWindowDisappearEvent(event);
+
     MSceneWindow *sceneWindow = event->sceneWindow();
 
     switch (sceneWindow->windowType()) {
@@ -1106,6 +1111,9 @@ void MApplicationWindowPrivate::updateStyleNames()
 
     if (menu)
         menu->setStyleName(style()->applicationMenuStyleName());
+
+    statusBarStyleNameHandler.setRegularStyleName(style()->statusBarStyleName());
+    statusBarStyleNameHandler.setStyleNameForSheets(style()->statusBarStyleNameForSheets());
 }
 
 

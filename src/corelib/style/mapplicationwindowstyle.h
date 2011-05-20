@@ -69,6 +69,15 @@ class MApplicationWindowStyle : public MStyle
     M_STYLE_ATTRIBUTE(QString, statusBarStyleName, StatusBarStyleName)
 
     /*!
+      \brief style of the status bar while a sheet is on foreground.
+
+      Usually this style won't have any reactive margins so that when
+      tapping on a sheet header button the user won't accidentally trigger
+      the status menu instead.
+    */
+    M_STYLE_ATTRIBUTE(QString, statusBarStyleNameForSheets, StatusBarStyleNameForSheets)
+
+    /*!
       \brief Defines the style name of the application menu of this window
       Allows different application windows to have different application menu styles
     */

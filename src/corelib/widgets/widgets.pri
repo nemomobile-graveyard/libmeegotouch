@@ -131,6 +131,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mscenewindow_p.h \
     $$WIDGETS_SRC_DIR/msheet_p.h \
     $$WIDGETS_SRC_DIR/mstatusbar_p.h \
+    $$WIDGETS_SRC_DIR/mstatusbarstylenamehandler.h \
     $$WIDGETS_SRC_DIR/mwindow_p.h \
     $$WIDGETS_SRC_DIR/mwindowborderdecorator.h \
     $$WIDGETS_SRC_DIR/mrichtextedit_p.h \
@@ -190,6 +191,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mslider.cpp \
     $$WIDGETS_SRC_DIR/mslidermodel.cpp \
     $$WIDGETS_SRC_DIR/mstatusbar.cpp \
+    $$WIDGETS_SRC_DIR/mstatusbarstylenamehandler.cpp \
     $$WIDGETS_SRC_DIR/mtextedit.cpp \
     $$WIDGETS_SRC_DIR/mtexteditmodel.cpp \
     $$WIDGETS_SRC_DIR/mcompleter.cpp \

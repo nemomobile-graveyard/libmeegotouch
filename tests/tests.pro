@@ -98,6 +98,7 @@ SUBDIRS     =  \
     ut_mservicemapper \
     ut_mservicefwbaseif \
     ut_mscene \
+    ut_mstatusbarstylenamehandler \
     ut_mappletalivemessagerequest \
     ut_mappletalivemessageresponse \
     ut_mappletbutton \
