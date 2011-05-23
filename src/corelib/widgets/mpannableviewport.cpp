@@ -122,7 +122,9 @@ void MPannableViewportPrivate::applyAutoRange()
     }
 }
 
-void MPannableViewportPrivate::scrollTo(const QPointF &endPosition)
+void MPannableViewportPrivate::scrollTo(const QPointF &endPosition,
+                                        int duration,
+                                        const QEasingCurve &easingCurve)
 {
     Q_Q(MPannableViewport);
 
@@ -137,8 +139,8 @@ void MPannableViewportPrivate::scrollTo(const QPointF &endPosition)
         // TODO: Add animation parameters to some style.
         scrollToAnimation.setStartValue(q->position());
         scrollToAnimation.setEndValue(endPosition);
-        scrollToAnimation.setEasingCurve(QEasingCurve::InOutCubic);
-        scrollToAnimation.setDuration(300);
+        scrollToAnimation.setEasingCurve(easingCurve);
+        scrollToAnimation.setDuration(duration);
         scrollToAnimation.start();
     }
 }

@@ -20,6 +20,7 @@
 #ifndef MSCROLLCHAIN_H
 #define MSCROLLCHAIN_H
 
+#include <QEasingCurve>
 #include <QList>
 #include <QMap>
 #include <QPoint>
@@ -86,7 +87,8 @@ public:
      *
      *  Widgets are not expected to have finished their scrolling when this returns.
      */
-    void applyScrolling();
+    void applyScrolling(int duration = 0,
+                        const QEasingCurve &easingCurve = QEasingCurve());
 
     void stopScrolling();
 
@@ -124,7 +126,7 @@ private:
         // Helper methods
         ScrollChainItem(QSharedPointer<MAbstractScroller> scroller, QGraphicsWidget *scrollerWidget);
         void calculateScrolling(const QRect &targetRect, const QPoint &originPoint);
-        void applyScrolling();
+        void applyScrolling(int duration, const QEasingCurve &easingCurve);
         void stopScrolling();
         void restoreScrolling();
 

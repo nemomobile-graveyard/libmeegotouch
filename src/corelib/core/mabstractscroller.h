@@ -22,6 +22,7 @@
 
 #include <QObject>
 
+class QEasingCurve;
 class QGraphicsWidget;
 class QPoint;
 class QRect;
@@ -62,7 +63,8 @@ public:
                                         const QPoint &currentOffset) = 0;
 
     //! \brief Scrolls the contents of given \a widget by the amount of \a contentsOffset.
-    virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset) = 0;
+    virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset,
+                                int duration, const QEasingCurve &easingCurve) = 0;
 
     //! \brief Stops any ongoing scrolling animation in the given \a widget.
     virtual void stopScrolling(QGraphicsWidget *widget);

@@ -168,7 +168,8 @@ void MInputWidgetRelocator::update()
                     const QRect targetRect(anchorPoint, microRect.size());
                     newChain->addBottomUpScroll(targetRect, microRect.topLeft());
 
-                    newChain->applyScrolling();
+                    newChain->applyScrolling(style()->scrollDuration(),
+                                             style()->scrollEasingCurve());
                 } else {
                     // No scrolling was needed to be done. However, some earlier scrolling animations might
                     // still be ongoing, moving the input widget to an improper place.
@@ -443,7 +444,8 @@ bool MInputWidgetRelocator::scrollDockedWidget(MScrollChain *chain,
     }
 
     if (chainChanged) {
-        chain->applyScrolling();
+        chain->applyScrolling(style()->scrollDuration(),
+                              style()->scrollEasingCurve());
     }
 
     return true;

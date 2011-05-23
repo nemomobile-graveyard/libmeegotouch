@@ -22,6 +22,8 @@
 
 #include "mstyle.h"
 
+#include <QEasingCurve>
+
 //! \internal
 class MRelocatorStyle : public MStyle
 {
@@ -36,6 +38,12 @@ class MRelocatorStyle : public MStyle
 
     //! Margin on the bottom of visible screen area under which cursor will be relocated to anchor position.
     M_STYLE_ATTRIBUTE(qreal, bottomNoGoMargin, BottomNoGoMargin)
+
+    //! Easing curve used for scrolling. Applied for each component used in scrolling.
+    M_STYLE_ATTRIBUTE(QEasingCurve, scrollEasingCurve, ScrollEasingCurve)
+
+    //! Duration for scrolling, given in ms. Applied for each component used in scrolling.
+    M_STYLE_ATTRIBUTE(int, scrollDuration, ScrollDuration)
 };
 
 class MRelocatorStyleContainer : public MStyleContainer

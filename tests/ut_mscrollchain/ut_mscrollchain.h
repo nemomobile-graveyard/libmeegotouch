@@ -20,6 +20,8 @@
 #ifndef UT_MSCROLLCHAIN_H
 #define UT_MSCROLLCHAIN_H
 
+#include "scroller.h"
+
 #include <QtTest/QtTest>
 #include <QObject>
 #include <memory>
@@ -50,6 +52,8 @@ private slots:
     void testRestore();
     void testMultiplePointScrolls_data();
     void testMultiplePointScrolls();
+    void testAnimationParameters_data();
+    void testAnimationParameters();
 
 private:
     void addBottomUpScroll(QGraphicsWidget *widget, const QPoint &offset);
@@ -59,6 +63,7 @@ private:
     std::auto_ptr<MScrollChain> subject;
     std::auto_ptr<QGraphicsScene> scene;
     QGraphicsWidget *rootElement;
+    QSharedPointer<Scroller> scroller;
 };
 
 #endif // UT_MSCROLLCHAIN_H

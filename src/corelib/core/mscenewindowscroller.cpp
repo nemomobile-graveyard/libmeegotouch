@@ -62,7 +62,8 @@ QPoint MSceneWindowScroller::queryScrollingAmount(const QGraphicsWidget *widget,
     return QPoint(0, distanceFromBottom - newDistanceFromBottom);
 }
 
-void MSceneWindowScroller::applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset)
+void MSceneWindowScroller::applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset,
+                                          int, const QEasingCurve &)
 {
     if (!contentsOffset.isNull()) {
         MSceneWindow *sceneWindow = static_cast<MSceneWindow *>(widget);

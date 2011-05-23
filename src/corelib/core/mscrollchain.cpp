@@ -79,10 +79,10 @@ void MScrollChain::addMinimalScroll(const QRect &localRect,
     }
 }
 
-void MScrollChain::applyScrolling()
+void MScrollChain::applyScrolling(int duration, const QEasingCurve &easingCurve)
 {
     for (ChainItemList::iterator item = chainItems.begin(); item != chainItems.end(); ++item) {
-        item->applyScrolling();
+        item->applyScrolling(duration, easingCurve);
     }
 }
 
@@ -265,9 +265,11 @@ void MScrollChain::ScrollChainItem::calculateScrolling(const QRect &targetRect,
     contentsTranslation += scroller->queryScrollingAmount(widget, targetRect, originPoint, contentsTranslation);
 }
 
-void MScrollChain::ScrollChainItem::applyScrolling()
+void MScrollChain::ScrollChainItem::applyScrolling(int duration,
+                                                   const QEasingCurve &easingCurve)
 {
-    scroller->applyScrolling(widget, contentsTranslation);
+    scroller->applyScrolling(widget, contentsTranslation,
+                             duration, easingCurve);
 
     // We no longer know what the translation is.
     contentsTranslation = QPoint();

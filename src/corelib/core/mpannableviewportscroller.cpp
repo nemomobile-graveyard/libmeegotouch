@@ -61,11 +61,13 @@ QPoint MPannableViewportScroller::queryScrollingAmount(const QGraphicsWidget *wi
     return translation;
 }
 
-void MPannableViewportScroller::applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset)
+void MPannableViewportScroller::applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset,
+                                               int duration, const QEasingCurve &easingCurve)
 {
     MPannableViewport *viewport = static_cast<MPannableViewport *>(widget);
 
-    viewport->d_func()->scrollTo(viewport->position() - contentsOffset);
+    viewport->d_func()->scrollTo(viewport->position() - contentsOffset,
+                                 duration, easingCurve);
 
     // Disables kinetic scrolling until next pointer event.
     viewport->physics()->stop();
@@ -79,7 +81,7 @@ void MPannableViewportScroller::stopScrolling(QGraphicsWidget *widget)
     MPannableViewport *viewport = static_cast<MPannableViewport *>(widget);
 
     // Scroll to current position. This is effectively same as stopping the animation.
-    viewport->d_func()->scrollTo(viewport->position());
+    viewport->d_func()->scrollTo(viewport->position(), 0);
 }
 
 void MPannableViewportScroller::restoreScrolling(QGraphicsWidget *)

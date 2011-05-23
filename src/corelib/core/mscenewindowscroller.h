@@ -44,7 +44,8 @@ public:
                                         const QRect &targetRect,
                                         const QPoint &originPoint,
                                         const QPoint &currentOffset);
-    virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset);
+    virtual void applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset,
+                                int duration, const QEasingCurve &easingCurve);
     virtual void restoreScrolling(QGraphicsWidget *widget);
 };
 

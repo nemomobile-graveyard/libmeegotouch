@@ -20,6 +20,8 @@
 #ifndef MRELOCATORSTYLE_H
 #define MRELOCATORSTYLE_H
 
+#include <QEasingCurve>
+
 class QString;
 class MSceneManager;
 class MWidgetController;
@@ -35,6 +37,11 @@ public:
 
     //! Margin on the bottom of visible screen area under which cursor will be relocated to anchor position.
     qreal bottomNoGoMargin() const;
+
+    const QEasingCurve scrollEasingCurve() const { return QEasingCurve(); }
+
+    int scrollDuration() const { return 0; }
+
 }static gRelocatorStyle;
 
 class MRelocatorStyleContainer

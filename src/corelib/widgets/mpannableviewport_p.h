@@ -55,7 +55,9 @@ public:
     void setInputMethodArea(const QRect &imArea);
     void updateExtendedVerticalRange();
     void applyAutoRange();
-    void scrollTo(const QPointF &panningPosition);
+    void scrollTo(const QPointF &panningPosition,
+                  int duration = 0,
+                  const QEasingCurve &easingCurve = QEasingCurve(QEasingCurve::Linear));
     bool isTopmostVerticallyPannableViewport() const;
 
     void sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,

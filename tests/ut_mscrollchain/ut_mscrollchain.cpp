@@ -21,7 +21,6 @@
 #include "mabstractscroller.h"
 #include "mscrollchain.h"
 
-#include "scroller.h"
 #include "scrollablewidget.h"
 
 #include <MDeviceProfile>
@@ -47,7 +46,8 @@ void Ut_MScrollChain::initTestCase()
     rootElement->setFlag(QGraphicsItem::ItemHasNoContents, true);
     scene->addItem(rootElement);
 
-    MScrollChain::registerScroller<ScrollableWidget>(QSharedPointer<Scroller>(new Scroller));
+    scroller = QSharedPointer<Scroller>(new Scroller);
+    MScrollChain::registerScroller<ScrollableWidget>(scroller);
 }
 
 void Ut_MScrollChain::cleanupTestCase()
@@ -210,6 +210,36 @@ void Ut_MScrollChain::testMultiplePointScrolls()
     subject->applyScrolling();
 
     QCOMPARE(child.pos().toPoint().y(), actualIncrement);
+}
+
+void Ut_MScrollChain::testAnimationParameters_data()
+{
+    QTest::addColumn<int>("duration");
+    QTest::addColumn<QEasingCurve>("easingCurve");
+
+    // Test that simple values are forwarded properly to scroller.
+    QTest::newRow("zero duration")     << 0 << QEasingCurve(QEasingCurve::Linear);
+    QTest::newRow("1ms duration")      << 1 << QEasingCurve(QEasingCurve::InOutQuint);
+    QTest::newRow("1s duration")       << 1000 << QEasingCurve(QEasingCurve::InOutExpo);
+
+    // Negative values don't make sense but shouldn't cause crash or the like.
+    QTest::newRow("negative duration") << -1 << QEasingCurve(QEasingCurve::InBounce);
+}
+
+void Ut_MScrollChain::testAnimationParameters()
+{
+    QFETCH(int, duration);
+    QFETCH(QEasingCurve, easingCurve);
+
+    ScrollableWidget scrollable;
+    QGraphicsWidget child;
+    scrollable.setContentItem(&child);
+
+    subject.reset(new MScrollChain(&child));
+    subject->applyScrolling(duration, easingCurve);
+
+    QCOMPARE(scroller->lastEasingCurve.type(), easingCurve.type());
+    QCOMPARE(scroller->lastScrollDuration, duration);
 }
 
 void Ut_MScrollChain::addBottomUpScroll(QGraphicsWidget *widget, const QPoint &offset)

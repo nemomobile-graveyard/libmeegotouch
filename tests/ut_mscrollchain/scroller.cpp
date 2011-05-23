@@ -34,12 +34,16 @@ QPoint Scroller::queryScrollingAmount(const QGraphicsWidget *widget,
     return limitedOffset;
 }
 
-void Scroller::applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset)
+void Scroller::applyScrolling(QGraphicsWidget *widget, const QPoint &contentsOffset,
+                              int duration, const QEasingCurve &easingCurve)
 {
     ScrollableWidget *scrollableWidget = dynamic_cast<ScrollableWidget *>(widget);
     if (scrollableWidget) {
         scrollableWidget->scrollContents(contentsOffset);
     }
+
+    lastScrollDuration = duration;
+    lastEasingCurve = easingCurve;
 }
 
 void Scroller::restoreScrolling(QGraphicsWidget *widget)
