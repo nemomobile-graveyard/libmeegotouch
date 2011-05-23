@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef MPANNABLEVIEWPORTCROLLER_H
-#define MPANNABLEVIEWPORTCROLLER_H
+#ifndef MPANNABLEVIEWPORTSCROLLER_H
+#define MPANNABLEVIEWPORTSCROLLER_H
 
 #include "mabstractscroller.h"
 
@@ -38,4 +38,4 @@ public:
 
 //! \internal_end
 
-#endif // MPANNABLEVIEWPORTCROLLER_H
+#endif // MPANNABLEVIEWPORTSCROLLER_H
