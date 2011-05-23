@@ -622,7 +622,7 @@ void MScenePrivate::drawObjectNames(QPainter *painter, QList<QGraphicsItem *>::i
     if (widget) {
         fpsBackgroundBrush.setColor(Qt::transparent);
         painter->setOpacity(1.0);
-        QString name = widget->styleName();
+        QString name = widget->objectName();
         QRectF boundingRect = bp.boundingRect();
         QRect textBoundingRect = metrics.boundingRect(name);
         QPointF center;
