@@ -26,6 +26,7 @@
 
 #include <QCoreApplication>
 #include <QSizePolicy>
+#include <QTimer>
 
 #include "mcontainerview.h"
 #include "mcontainerview_p.h"
@@ -206,16 +207,24 @@ void MContainerViewPrivate::createProgressIndicator()
         progressIndicator = new MProgressIndicator;
     progressIndicator->setUnknownDuration(true);
     progressIndicator->setStyleName(q->style()->progressIndicatorStyleName());
+    progressIndicator->hide();
 }
 
 
 void MContainerViewPrivate::layoutProgressIndicator()
 {
     if (header) {
+        Q_Q(MContainerView);
+        progressIndicator->hide();
         headerLayout->insertItem(1, progressIndicator);
         headerLayout->setAlignment(progressIndicator,  Qt::AlignVCenter | Qt::AlignRight);
-        progressIndicator->show();
+        QTimer::singleShot(0, q, SLOT(_q_showProgressIndicator()));
     }
+}
+
+void MContainerViewPrivate::_q_showProgressIndicator()
+{
+    progressIndicator->show();
 }
 
 MContainerView::MContainerView(MContainer *controller) :
@@ -446,3 +455,5 @@ void MContainerView::headerReleased()
 
 // bind view and controller together
 M_REGISTER_VIEW_NEW(MContainerView, MContainer)
+
+#include "moc_mcontainerview.cpp"
