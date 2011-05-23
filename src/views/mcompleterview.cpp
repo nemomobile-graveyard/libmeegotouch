@@ -200,10 +200,11 @@ void MCompleterViewPrivate::createContents()
 
         // only highlight if there is a match in text.
         if (index != -1) {
-            QString highlightColor = q->style()->highlightColor().name();
-            QString replacedString = text.mid(index, prefix.length());
+            const QString highlightColor = q->style()->highlightColor().name();
+            const QString replacedString = text.mid(index, prefix.length());
+            const QString colorfulText = QString("<font color=%1>" + replacedString + "</font>").arg(highlightColor);
             text = text.replace(index, replacedString.length(),
-                                QString("<font color=%1>" + replacedString + "</font>").arg(highlightColor));
+                                q->style()->highlightDecoration().arg(colorfulText));
         }
         completionLabel->setText(text);
 

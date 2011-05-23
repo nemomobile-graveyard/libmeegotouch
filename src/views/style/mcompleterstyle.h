@@ -21,7 +21,7 @@
 #define MCOMPLETERSTYLE_H
 
 #include <QColor>
-#include <QFont>
+#include <QString>
 #include <mscenewindowstyle.h>
 
 class M_VIEWS_EXPORT MCompleterStyle : public MSceneWindowStyle
@@ -31,6 +31,7 @@ class M_VIEWS_EXPORT MCompleterStyle : public MSceneWindowStyle
 
     M_STYLE_ATTRIBUTE(QColor, highlightColor, HighlightColor)
     M_STYLE_ATTRIBUTE(int, yPositionOffset, YPositionOffset)
+    M_STYLE_ATTRIBUTE(QString, highlightDecoration, HighlightDecoration)
 };
 
 class M_VIEWS_EXPORT MCompleterStyleContainer : public MSceneWindowStyleContainer
