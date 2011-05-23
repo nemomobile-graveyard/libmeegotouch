@@ -1,3 +1,21 @@
+libmeegotouch (0.99.1-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#257891 - [TASK] Decrease status bar tappable area size for sheet views
+  * Fixes: NB#253011 - Add documentation about MDialog API contract with respect to instance deletion
+  * Fixes: NB#257692 - MLocale::formatNumber() does not return string with specified precision
+  * Fixes: MTextEditView to center copy popup if wider than screen.
+  * Fixes: NB#239443 - Selecting text does not scroll text edit vertically
+  * Fixes: NB256034, Long notes are scrolled when focused
+  * Fixes: NB#257767 - When switching from richtext to plaintext label is rendered empty.
+  * Fixes: NB#256325
+  * Fixes: NB#256849 - Widgets Gallery crashes on changing the text style and then orient the device
+  * Fixes: NB#243641 - Some times elapsed duration is not updated in seek bar
+  * Fixes: NB#240785 - [TASK] libmeegotouch should call _exit() instead of exit() for boosted applications
+  * Fixes: NB#256906 - Time displayed in the screensaver is slightly clipped for Denmark region
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 23 May 2011 15:46:41 +0300
+
 libmeegotouch (0.99.0-1) unstable; urgency=low
 
   * New version
