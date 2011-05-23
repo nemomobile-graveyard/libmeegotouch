@@ -94,6 +94,8 @@ public:
 
     void init(MScene *scene);
 
+    // [1] - StatusBar will get stacked righ below a Sheet if this
+    // Sheet is the top most scene window
     enum WindowTypeZ {
         PlainSceneWindow = 0,
         ApplicationPage = PlainSceneWindow,          // MApplicationPage
@@ -111,7 +113,7 @@ public:
         HomeButtonPanel = 7000,                      // MHomeButtonPanel
         ObjectMenu = 7500,                           // MObjectMenu
         Banner = 8000,                               // MBanner
-        StatusBar = 9000,                            // MStatusBar
+        StatusBar = 9000,                            // MStatusBar [1]
         BorderDecoration = StatusBar                 // MBorderDecoration
     };
 
@@ -243,6 +245,8 @@ public:
     MSceneWindow *findTopMostSheet();
 
     void closePopupWindows(MSceneWindow::WindowType popupType = MSceneWindow::ObjectMenu);
+
+    void stackStatusBarBehindSheetIfSheetIsTopMost();
 
 public:
 
