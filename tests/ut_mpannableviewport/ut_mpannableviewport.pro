@@ -2,6 +2,7 @@ include(../common_top.pri)
 INCLUDEPATH +=  \
     $$MSRCDIR/corelib/widgets \
     $$MSRCDIR/corelib/scene \
+    $$MSRCDIR/corelib/core \
 
 TARGET = ut_mpannableviewport
 
@@ -21,6 +22,7 @@ SOURCES += \
     $$MSRCDIR/corelib/widgets/mpannableviewportlayout.cpp \
     $$MSRCDIR/corelib/widgets/mpannableviewport.cpp \
     $$MSRCDIR/corelib/scene/mscene.cpp \
+    $$MSRCDIR/corelib/core/mdynamicpropertywatcher.cpp \
 
 # unit test and unit classes
 HEADERS += \
@@ -32,6 +34,7 @@ HEADERS += \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller_p.h \
     $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
     $$MSRCDIR/corelib/scene/mscene.h \
+    $$MSRCDIR/corelib/core/mdynamicpropertywatcher.h \
 
 support_files.files += \
     *.css \
