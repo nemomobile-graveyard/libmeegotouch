@@ -1,3 +1,10 @@
+libmeegotouch (0.99.0-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#257767 - When switching from richtext to plaintext label is rendered empty.
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 23 May 2011 15:04:14 +0300
+
 libmeegotouch (0.99.0-1) unstable; urgency=low
 
   * New version
