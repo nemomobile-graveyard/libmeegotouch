@@ -644,6 +644,9 @@ public Q_SLOTS:
      * application or to the home screen until the dialog is dismissed (the home
      * button won't be accessible).
      *
+     * Ownership is transfered to the MScene visualized by the MWindow that is
+     * used.
+     *
      * When using a MDialog with standard buttons, this method returns a StandardButton
      * value indicating the standard button that was clicked. When using MDialog with custom
      * buttons, this function returns an opaque value; use clickedButton() to determine which
@@ -657,6 +660,13 @@ public Q_SLOTS:
      *          bugs. See <a href="http://labs.trolltech.com/blogs/2010/02/23/unpredictable-exec/">Unpredictable exec()</a>
      *          article for more info. Instead, summon the dialog with appear() and
      *          process its result upon the emission of its disappeared() signal.
+     *
+     * \note If the window gets deleted while exec() is running, when this method
+     *       returns MDialog might be already null. Therefore if your code wants
+     *       to delete the dialog after exec() returns it's advisable to hold it
+     *       in a QWeakPointer or a QPointer so that you can check whether the
+     *       dialog pointer is still valid after the exec(). Take heed of the warning
+     *       above.
      *
      * \sa StandardButton, setSystemModal()
      */
