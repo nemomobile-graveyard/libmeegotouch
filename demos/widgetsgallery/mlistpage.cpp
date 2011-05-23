@@ -522,6 +522,9 @@ void MListPage::changeLiveFilteringMode(int index)
     Q_ASSERT(index >= 0 && index <= 1);
     bool enableLF = (index == 1);
 
+    if (list->filtering()->enabled() == enableLF)
+        return;
+
     if(enableLF) {
         list->filtering()->setEnabled(true);
         list->filtering()->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
@@ -683,6 +686,7 @@ void MListPage::showAdvancedConfigurationDialog()
         QStringList separatorsModes;
         separatorsModes << "Off" << "On";
         MComboBox *combo = createComboBoxLabelButton("Separators", separatorsModes, panel);
+        combo->setCurrentIndex(list->objectName() == "listWithSeparators" ? 1 : 0);
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSeparatorsMode(int)));
 
         landscapePolicy->addItem(combo);
@@ -690,6 +694,7 @@ void MListPage::showAdvancedConfigurationDialog()
         QStringList listIndexModes;
         listIndexModes << "Off" << "On" << "Auto" << "Floating";
         combo = createComboBoxLabelButton("List Index", listIndexModes, panel);
+        combo->setCurrentIndex(list->indexDisplayMode());
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
 
         landscapePolicy->addItem(combo);
@@ -697,6 +702,7 @@ void MListPage::showAdvancedConfigurationDialog()
         QStringList liveFilteringModes;
         liveFilteringModes << "Off" << "On";
         combo = createComboBoxLabelButton("Live Filtering", liveFilteringModes, panel);
+        combo->setCurrentIndex(list->filtering()->enabled() ? 1 : 0);
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLiveFilteringMode(int)));
 
         landscapePolicy->addItem(combo);
@@ -704,6 +710,13 @@ void MListPage::showAdvancedConfigurationDialog()
         QStringList groupHeadersModes;
         groupHeadersModes << "Default - Labels" << "Custom - Buttons" << "Advanced - Custom Widget";
         combo = createComboBoxLabelButton("Group Headers", groupHeadersModes, panel);
+        if (!list->headerCreator())
+            combo->setCurrentIndex(0);
+        else {
+            MCellCreator *creator = const_cast <MCellCreator *> (list->headerCreator());
+            combo->setCurrentIndex( dynamic_cast<MListCustomHeaderCreator *>(creator) ? 1 : 2 );
+        }
+
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeGroupHeadersMode(int)));
 
         landscapePolicy->addItem(combo);
@@ -711,6 +724,7 @@ void MListPage::showAdvancedConfigurationDialog()
         QStringList listIndexMagnifierDataRoles;
         listIndexMagnifierDataRoles << "Default" << "Custom";
         combo = createComboBoxLabelButton("List Index Magnifier Role", listIndexMagnifierDataRoles, panel);
+        combo->setCurrentIndex(list->indexMagnifierDataRole() == Qt::DisplayRole ? 0 : 1);
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeIndexMagnifierTitleRole(int)));
 
         landscapePolicy->addItem(combo);
