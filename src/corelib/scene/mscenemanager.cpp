@@ -545,6 +545,10 @@ void MSceneManagerPrivate::_q_onSceneWindowAppearanceAnimationFinished()
         applySceneWindowTransition(transition);
         delete transition;
     }
+
+    // statusBar animation can cause queuing of orientationChange
+    if (sceneWindow->windowType() == MSceneWindow::StatusBar)
+        _q_triggerAsyncPendingOrientationChange();
 }
 
 void MSceneManagerPrivate::_q_onSceneWindowDisappearanceAnimationFinished()
@@ -572,6 +576,10 @@ void MSceneManagerPrivate::_q_onSceneWindowDisappearanceAnimationFinished()
         applySceneWindowTransition(transition);
         delete transition;
     }
+
+    // statusBar animation can cause queuing of orientationChange
+    if (sceneWindow->windowType() == MSceneWindow::StatusBar)
+        _q_triggerAsyncPendingOrientationChange();
 }
 
 void MSceneManagerPrivate::_q_onPageSwitchAnimationFinished()
@@ -2543,7 +2551,13 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
 {
     Q_D(MSceneManager);
 
-    if (d->orientationAnimation->state() == QAbstractAnimation::Running) {
+    bool statusBarAnimates = d->statusBar &&
+            (d->statusBar->sceneWindowState() == MSceneWindow::Appearing ||
+             d->statusBar->sceneWindowState() == MSceneWindow::Disappearing);
+
+    // changing orientation during statusBar animation causes problems
+    // statusBar animation == to/from full screen transition
+    if (statusBarAnimates || d->orientationAnimation->state() == QAbstractAnimation::Running) {
         // Don't stop the current animation, instead remember the new
         // animation as pending and start it after the current animation
         // has been finished (see _q_applyPendingOrientationChange()).
