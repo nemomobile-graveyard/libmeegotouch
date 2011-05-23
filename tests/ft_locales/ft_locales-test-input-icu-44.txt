@@ -10083,7 +10083,7 @@ pt_BR	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	Jan
 pt_BR	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	Fev
 pt_BR	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	Mar
 pt_BR	Name of month 04 (Gregorian calendar), stand-alone, abbreviated	Abr
-pt_BR	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	Mai
+pt_BR	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	Maio
 pt_BR	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	Jun
 pt_BR	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	Jul
 pt_BR	Name of month 08 (Gregorian calendar), stand-alone, abbreviated	Ago
@@ -10119,7 +10119,7 @@ pt_BR	Name of month 01 (Gregorian calendar), format, abbreviated	jan
 pt_BR	Name of month 02 (Gregorian calendar), format, abbreviated	fev
 pt_BR	Name of month 03 (Gregorian calendar), format, abbreviated	mar
 pt_BR	Name of month 04 (Gregorian calendar), format, abbreviated	abr
-pt_BR	Name of month 05 (Gregorian calendar), format, abbreviated	mai
+pt_BR	Name of month 05 (Gregorian calendar), format, abbreviated	maio
 pt_BR	Name of month 06 (Gregorian calendar), format, abbreviated	jun
 pt_BR	Name of month 07 (Gregorian calendar), format, abbreviated	jul
 pt_BR	Name of month 08 (Gregorian calendar), format, abbreviated	ago
@@ -10430,7 +10430,7 @@ pt_PT	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	Jan
 pt_PT	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	Fev
 pt_PT	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	Mar
 pt_PT	Name of month 04 (Gregorian calendar), stand-alone, abbreviated	Abr
-pt_PT	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	Mai
+pt_PT	Name of month 05 (Gregorian calendar), stand-alone, abbreviated	Maio
 pt_PT	Name of month 06 (Gregorian calendar), stand-alone, abbreviated	Jun
 pt_PT	Name of month 07 (Gregorian calendar), stand-alone, abbreviated	Jul
 pt_PT	Name of month 08 (Gregorian calendar), stand-alone, abbreviated	Ago
@@ -10466,7 +10466,7 @@ pt_PT	Name of month 01 (Gregorian calendar), format, abbreviated	Jan
 pt_PT	Name of month 02 (Gregorian calendar), format, abbreviated	Fev
 pt_PT	Name of month 03 (Gregorian calendar), format, abbreviated	Mar
 pt_PT	Name of month 04 (Gregorian calendar), format, abbreviated	Abr
-pt_PT	Name of month 05 (Gregorian calendar), format, abbreviated	Mai
+pt_PT	Name of month 05 (Gregorian calendar), format, abbreviated	Maio
 pt_PT	Name of month 06 (Gregorian calendar), format, abbreviated	Jun
 pt_PT	Name of month 07 (Gregorian calendar), format, abbreviated	Jul
 pt_PT	Name of month 08 (Gregorian calendar), format, abbreviated	Ago

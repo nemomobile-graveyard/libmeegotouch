@@ -80,7 +80,7 @@ pt_PT{
                         "Fev",
                         "Mar",
                         "Abr",
-                        "Mai",
+                        "Maio",
                         "Jun",
                         "Jul",
                         "Ago",
