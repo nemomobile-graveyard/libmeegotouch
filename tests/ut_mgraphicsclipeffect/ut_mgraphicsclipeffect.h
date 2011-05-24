@@ -16,42 +16,39 @@
 ** of this file.
 **
 ****************************************************************************/
- 
 
-#ifndef MGRAPHICSCLIPEFFECT_H
-#define MGRAPHICSCLIPEFFECT_H
+#ifndef UT_MGRAPHICSCLIPEFFECT_H
+#define UT_MGRAPHICSCLIPEFFECT_H
 
-#include <QGraphicsEffect>
+#include <QtTest/QtTest>
+#include <QtGui/QMainWindow>
+#include "mgraphicsclipeffect.h"
+#include "mgraphicsclipeffect_p.h"
 
-class MGraphicsClipEffectPrivate;
+#define MARGIN 10
 
-//! \internal
-class MGraphicsClipEffect : public QGraphicsEffect
+class MApplication;
+
+class Ut_MGraphicsClipEffect : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRect drawRect READ drawRect WRITE setDrawRect)
 
-#ifdef UNIT_TEST
-    friend class Ut_MGraphicsClipEffect;
-#endif
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-public:
-    MGraphicsClipEffect(QObject *parent);
-    virtual ~MGraphicsClipEffect();
+    void init();
+    void cleanup();
 
-    void setDrawRect(const QRect &rect);
-    QRect drawRect() const;
+    // class testing
+    void testSetDrawRect();
 
-    void setClipMargin(int margin);
-    int clipMargin() const;
+    void testSetClipMargin();
 
-protected:
-    virtual void draw(QPainter *painter);
+ private:
+    MApplication *app;
+    MGraphicsClipEffect *clipEffect;
 
-private:
-    Q_DECLARE_PRIVATE(MGraphicsClipEffect)
-    MGraphicsClipEffectPrivate *d_ptr;
 };
-//! \internal_end
 
-#endif // MGRAPHICSWIDGETCLIPEFFECT_H
+#endif // UT_MGRAPHICSCLIPEFFECT_H

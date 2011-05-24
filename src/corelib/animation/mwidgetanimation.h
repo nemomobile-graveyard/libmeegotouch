@@ -95,6 +95,10 @@ class MWidgetAnimation : public MGroupAnimation
     Q_DECLARE_PRIVATE(MWidgetAnimation)
     M_ANIMATION(MAnimationStyle)
 
+#ifdef UNIT_TEST
+    friend class Ut_MWidgetAnimation;
+#endif
+
     /*!
       \brief Constructs the widget animation.
 

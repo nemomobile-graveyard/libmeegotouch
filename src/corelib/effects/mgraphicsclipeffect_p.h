@@ -27,6 +27,11 @@ class MGraphicsClipEffect;
 
 class MGraphicsClipEffectPrivate
 {
+
+#ifdef UNIT_TEST
+    friend class Ut_MGraphicsClipEffect;
+#endif
+
 public:
     MGraphicsClipEffectPrivate();
     virtual ~MGraphicsClipEffectPrivate();

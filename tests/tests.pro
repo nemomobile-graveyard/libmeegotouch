@@ -195,6 +195,8 @@ SUBDIRS     =  \
     ut_mtapstatemachine \
     ut_mcommonpixmaps \
     ut_mgles2renderer \
+    ut_mgraphicsclipeffect \
+    ut_mwidgetanimation \
 
 # enable only when we have icu available
 
