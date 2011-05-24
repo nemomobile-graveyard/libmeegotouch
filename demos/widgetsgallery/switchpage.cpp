@@ -61,6 +61,7 @@ void SwitchPage::createContent()
     switch1->setCheckable(true);
     switch1->setChecked(true);
     label1 = new MLabel();
+    label1->setTextElide(true);
     label1->setObjectName("label1");
     label1->setStyleName("CommonBodyText");
     label1->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -78,6 +79,7 @@ void SwitchPage::createContent()
     switch2->setViewType(MButton::switchType);
     switch2->setCheckable(true);
     label2 = new MLabel();
+    label2->setTextElide(true);
     label2->setObjectName("label2");
     label2->setStyleName("CommonBodyText");
     label2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -94,6 +96,7 @@ void SwitchPage::createContent()
     switch3->setViewType(MButton::switchType);
     switch3->setCheckable(true);
     label3 = new MLabel();
+    label3->setTextElide(true);
     label3->setObjectName("label3");
     label3->setStyleName("CommonBodyText");
     label3->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -110,6 +113,7 @@ void SwitchPage::createContent()
     switch4->setViewType(MButton::switchType);
     switch4->setCheckable(true);
     label4 = new MLabel();
+    label4->setTextElide(true);
     label4->setObjectName("label4");
     label4->setStyleName("CommonBodyText");
     label4->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -127,6 +131,7 @@ void SwitchPage::createContent()
     switch5->setCheckable(true);
     switch5->setChecked(true);
     label5 = new MLabel();
+    label5->setTextElide(true);
     label5->setObjectName("label5");
     label5->setStyleName("CommonBodyText");
     label5->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
