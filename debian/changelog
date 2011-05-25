@@ -1,10 +1,10 @@
-libmeegotouch (0.99.2~1) unstable; urgency=low
+libmeegotouch (0.22.0~1) unstable; urgency=low
 
   * unreleased
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 23 May 2011 16:45:56 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 25 May 2011 09:57:45 +0300
 
-libmeegotouch (0.99.1-1) unstable; urgency=low
+libmeegotouch (0.21.17-1) unstable; urgency=low
 
   * New version
   * Fixes: NB#257891 - [TASK] Decrease status bar tappable area size for sheet views
@@ -22,7 +22,7 @@ libmeegotouch (0.99.1-1) unstable; urgency=low
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 23 May 2011 15:46:41 +0300
 
-libmeegotouch (0.99.0-1) unstable; urgency=low
+libmeegotouch (0.21.16-1) unstable; urgency=low
 
   * New version
   * Fixes: NB#254806 - Not visible MList re-creates cells when data is changed in the model
