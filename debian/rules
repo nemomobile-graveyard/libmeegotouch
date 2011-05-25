@@ -183,6 +183,7 @@ binary-arch: build install
 	dh_strip -p libmeegotouchextensions0 --dbg-package=libmeegotouchextensions0
 	dh_strip -p libmeegotouchsettings0 --dbg-package=libmeegotouchsettings0
 	dh_strip -p libmeegotouchviews0 --dbg-package=libmeegotouchviews0
+	dh_strip -p libmeegotouchpreloader0 --dbg-package=libmeegotouchpreloader0
 	dh_strip -p libmeegotouch-bin --dbg-package=libmeegotouch-bin
 	dh_strip -p meegotouch-dev-tools --dbg-package=meegotouch-dev-tools
 	dh_strip -p libmeegotouch-tests --dbg-package=libmeegotouch-tests
