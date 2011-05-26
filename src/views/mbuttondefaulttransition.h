@@ -48,7 +48,8 @@ public:
     virtual void onRelease();
     virtual void onCancel();
     virtual void refreshStyle();
-private:
+
+protected:
     MButtonStyleContainer& style;
     MButtonModel* model;
     MWidgetController* controller;
@@ -56,9 +57,10 @@ private:
     QTimer liftTimer;
     QTimer stayUpTimer;
     bool userReleased;
-private slots:
-    void liftButton();
-    void pressButton();
+
+protected slots:
+    virtual void liftButton();
+    virtual void pressButton();
 };
 
 /*! \internal_end */

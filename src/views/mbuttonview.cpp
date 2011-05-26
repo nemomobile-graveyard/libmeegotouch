@@ -41,6 +41,7 @@
 #include "mbuttondefaulttransition.h"
 #include "mbuttonexpandingbackgroundtransition.h"
 #include "mbuttonimplodingbackgroundtransition.h"
+#include "mbuttontabtransition.h"
 #include "mcancelevent.h"
 
 
@@ -452,6 +453,12 @@ void MButtonView::applyStyle()
         if (!qobject_cast<MButtonImplodingBackgroundTransition*>(d->transition)) {
             delete d->transition;
             d->transition = new MButtonImplodingBackgroundTransition(style(), model(), d->controller,d);
+            d->transition->setParent(this);
+        }
+    } else if (style()->transition() == "tabbutton") {
+        if (!qobject_cast<MButtonTabTransition*>(d->transition)) {
+            delete d->transition;
+            d->transition = new MButtonTabTransition(style(), model(), d->controller, d);
             d->transition->setParent(this);
         }
     } else {

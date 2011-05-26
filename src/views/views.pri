@@ -92,6 +92,7 @@ PRIVATE_HEADERS += \
     mbuttondefaulttransition.h \
     mbuttonexpandingbackgroundtransition.h \
     mbuttonimplodingbackgroundtransition.h \
+    mbuttontabtransition.h \
     mlabelview_p.h \
     ../corelib/core/mdynamicpropertywatcher.h \ # an internal helper class that is also needed by the view lib
     mcolorcomboboxview_p.h \
@@ -164,6 +165,7 @@ SOURCES += \
     mbuttondefaulttransition.cpp \
     mbuttonexpandingbackgroundtransition.cpp \
     mbuttonimplodingbackgroundtransition.cpp \
+    mbuttontabtransition.cpp \
     ../corelib/core/mdynamicpropertywatcher.cpp \ # an internal helper class that is also needed by the view lib
     mcolorcomboboxview.cpp \
     mcolorlistview.cpp \
