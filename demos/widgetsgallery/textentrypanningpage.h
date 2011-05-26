@@ -25,7 +25,7 @@
 #include <QList>
 #include <QPointer>
 
-class MContentItem;
+class MBasicListItem;
 class MTextEdit;
 
 class TextEntryPanningPage : public TemplatePage
@@ -55,7 +55,7 @@ private:
     MButton *loseFocusOnPanButton;
     MPannableViewport *nestedViewport;
     QList< QPointer<MTextEdit> > textEdits;
-    QList< QPointer<MContentItem> > contentItems;
+    QList< QPointer<MBasicListItem> > contentItems;
 };
 
 #endif

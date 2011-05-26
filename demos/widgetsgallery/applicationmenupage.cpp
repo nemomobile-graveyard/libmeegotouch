@@ -92,12 +92,13 @@ void ApplicationMenuPage::retranslateUi()
 void ApplicationMenuPage::createContent()
 {
     MApplicationPage::createContent();
+    setStyleName(inv("CommonApplicationPage"));
 
     QGraphicsWidget *panel = centralWidget();
 
     infoLabel = new MLabel(panel);
     infoLabel->setObjectName("infoLabel");
-    infoLabel->setStyleName("CommonBodyText");
+    infoLabel->setStyleName(inv("CommonBodyText"));
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

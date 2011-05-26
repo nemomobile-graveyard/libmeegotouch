@@ -20,6 +20,7 @@
 
 #include "phonebookcell.h"
 
+#include <MApplication>
 #include <MLabel>
 #include <MLayout>
 
@@ -38,7 +39,7 @@ PhoneBookCell::PhoneBookCell()
     subtitleLabel(NULL),
     icon(NULL)
 {
-    setStyleName("CommonPanel");
+    setStyleName(inv("CommonPanel"));
 }
 
 PhoneBookCell::~PhoneBookCell()
@@ -82,7 +83,7 @@ MLabel *PhoneBookCell::landscapeTitleLabelWidget()
         landscapeTitleLabel = new MLabel(this);
         landscapeTitleLabel->setObjectName("phoneBookListItemLandscapeTitleLabel");
         landscapeTitleLabel->setTextElide(true);
-        landscapeTitleLabel->setObjectName("CommonTitle");
+        landscapeTitleLabel->setStyleName(inv("CommonTitle"));
     }
     return landscapeTitleLabel;
 }
@@ -94,7 +95,7 @@ MLabel *PhoneBookCell::portraitTitleLabelWidget()
         portraitTitleLabel = new MLabel(this);
         portraitTitleLabel->setObjectName("phoneBookListItemPortraitTitleLabel");
         portraitTitleLabel->setTextElide(true);
-        portraitTitleLabel->setObjectName("CommonSingleTitle");
+        portraitTitleLabel->setStyleName(inv("CommonSingleTitle"));
     }
     return portraitTitleLabel;
 }
@@ -105,7 +106,7 @@ MLabel *PhoneBookCell::subtitleLabelWidget()
         subtitleLabel = new MLabel(this);
         subtitleLabel->setObjectName("phoneBookListItemSubtitleLabel");
         subtitleLabel->setTextElide(true);
-        subtitleLabel->setObjectName("CommonSubTitle");
+        subtitleLabel->setStyleName(inv("CommonSubTitle"));
     }
     return subtitleLabel;
 }
@@ -116,7 +117,7 @@ MImageWidget *PhoneBookCell::imageWidget()
         // icon
         icon = new MImageWidget();
         icon->setObjectName("phoneBookListItemIcon");
-        icon->setObjectName("CommonMainIcon");
+        icon->setStyleName("CommonMainIcon");
         icon->setImage("icon-m-content-avatar-placeholder");
     }
     return icon;
@@ -164,5 +165,14 @@ void PhoneBookCell::setImage(const QImage &iconImage)
         imageWidget()->setImage(iconImage);
     else
         imageWidget()->setImage("icon-m-content-avatar-placeholder");
+}
+
+QString PhoneBookCell::inv(QString stylename)
+{
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        return stylename;
+    } else {
+        return stylename.append("Inverted");
+    }
 }
 

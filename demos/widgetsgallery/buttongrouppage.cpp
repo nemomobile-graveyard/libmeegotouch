@@ -71,17 +71,17 @@ void ButtonGroupPage::createContent()
 
     pushButton1 = new MButton();
     pushButton1->setObjectName("pushButton1");
-    pushButton1->setStyleName("CommonLeftSplitButton");
+    pushButton1->setStyleName(inv("CommonLeftSplitButton"));
     // The group type makes the button use the MButton[group] CSS block from the theme,
     // this allows for gapless groups by modifying the margins.
     pushButton1->setViewType(MButton::groupType);
     pushButton2 = new MButton();
     pushButton2->setObjectName("pushButton2");
-    pushButton2->setStyleName("CommonHorizontalCenterSplitButton");
+    pushButton2->setStyleName(inv("CommonHorizontalCenterSplitButton"));
     pushButton2->setViewType(MButton::groupType);
     pushButton3 = new MButton();
     pushButton3->setObjectName("pushButton3");
-    pushButton3->setStyleName("CommonRightSplitButton");
+    pushButton3->setStyleName(inv("CommonRightSplitButton"));
     pushButton3->setViewType(MButton::groupType);
     hPolicy1->addItem(pushButton1);
     hPolicy1->addItem(pushButton2);
@@ -95,18 +95,18 @@ void ButtonGroupPage::createContent()
     hPolicy2->setNotifyWidgetsOfLayoutPositionEnabled(true);
     pushButton4 = new MButton();
     pushButton4->setObjectName("pushButton4");
-    pushButton4->setStyleName("CommonLeftSplitButton");
+    pushButton4->setStyleName(inv("CommonLeftSplitButton"));
     pushButton4->setCheckable(true);
     pushButton4->setViewType(MButton::groupType);
     pushButton5 = new MButton();
     pushButton5->setObjectName("pushButton5");
-    pushButton5->setStyleName("CommonHorizontalCenterSplitButton");
+    pushButton5->setStyleName(inv("CommonHorizontalCenterSplitButton"));
     pushButton5->setCheckable(true);
     pushButton5->setChecked(true); // Let's make this our default
     pushButton5->setViewType(MButton::groupType);
     pushButton6 = new MButton();
     pushButton6->setObjectName("pushButton6");
-    pushButton6->setStyleName("CommonRightSplitButton");
+    pushButton6->setStyleName(inv("CommonRightSplitButton"));
     pushButton6->setCheckable(true);
     pushButton6->setViewType(MButton::groupType);
     hPolicy2->addItem(pushButton4);
@@ -134,17 +134,17 @@ void ButtonGroupPage::createContent()
 
     pushButton7 = new MButton();
     pushButton7->setObjectName("pushButton7");
-    pushButton7->setStyleName("CommonTopSplitButton");
+    pushButton7->setStyleName(inv("CommonTopSplitButton"));
     pushButton7->setCheckable(true);
     pushButton7->setViewType(MButton::groupType);
     pushButton8 = new MButton();
     pushButton8->setObjectName("pushButton8");
-    pushButton8->setStyleName("CommonVerticalCenterSplitButton");
+    pushButton8->setStyleName(inv("CommonVerticalCenterSplitButton"));
     pushButton8->setCheckable(true);
     pushButton8->setViewType(MButton::groupType);
     pushButton9 = new MButton();
     pushButton9->setObjectName("pushButton9");
-    pushButton9->setStyleName("CommonBottomSplitButton");
+    pushButton9->setStyleName(inv("CommonBottomSplitButton"));
     pushButton9->setCheckable(true);
     pushButton9->setViewType(MButton::groupType);
     vPolicyP->addItem(pushButton7);
@@ -157,7 +157,7 @@ void ButtonGroupPage::createContent()
     //add label and horizontal button group into page
     hLabel1 = new MLabel();
     hLabel1->setObjectName("hLabel1");
-    hLabel1->setStyleName("CommonFieldLabel");
+    hLabel1->setStyleName(inv("CommonFieldLabel"));
     containerPolicy->addItem(hLabel1);
     containerPolicy->addItem(hLayout1);
 
@@ -170,7 +170,7 @@ void ButtonGroupPage::createContent()
     //add label and horizontal button group into page
     hLabel2 = new MLabel();
     hLabel2->setObjectName("hLabel2");
-    hLabel2->setStyleName("CommonFieldLabel");
+    hLabel2->setStyleName(inv("CommonFieldLabel"));
     containerPolicy->addItem(hLabel2);
     containerPolicy->addItem(hLayout2);
 
@@ -183,7 +183,7 @@ void ButtonGroupPage::createContent()
     //add label and vertical button group into page
     vLabel = new MLabel();
     vLabel->setObjectName("vLabel");
-    vLabel->setStyleName("CommonFieldLabel");
+    vLabel->setStyleName(inv("CommonFieldLabel"));
     containerPolicy->addItem(vLabel);
     containerPolicy->addItem(vLayout);
 

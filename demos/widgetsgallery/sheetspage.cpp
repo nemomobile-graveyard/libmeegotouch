@@ -19,6 +19,7 @@
 
 #include "sheetspage.h"
 
+#include <MApplication>
 #include <MAbstractCellCreator>
 #include <MBasicListItem>
 #include <MButton>
@@ -94,6 +95,11 @@ public:
 
         if (cell == NULL) {
             cell = new MBasicListItem(MBasicListItem::SingleTitle);
+            if (MApplication::instance()->objectName() == "widgetsgallery") {
+                cell->setStyleName("CommonBasicListItem");
+            } else {
+                cell->setStyleName("CommonBasicListItemInverted");
+            }
             cell->initLayout();
             cell->setLayoutPosition(M::CenterPosition);
         }
@@ -129,6 +135,8 @@ void SheetsPage::createContent()
 {
     MApplicationPage::createContent();
 
+    setStyleName(inv("CommonApplicationPage"));
+
     QGraphicsWidget *panel = centralWidget();
 
     MLayout *layout = new MLayout(panel);
@@ -147,6 +155,7 @@ void SheetsPage::populateLayout()
 {
     list = new MList(centralWidget());
     list->setObjectName("list");
+    list->setStyleName(inv("CommonList"));
     list->setCellCreator(new SheetsPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
@@ -203,6 +212,7 @@ void SheetsPage::openLoginSheet()
 {
     MSheet *loginSheet = new LoginSheet;
     loginSheet->setObjectName("loginSheet");
+    loginSheet->setStyleName(inv(""));
     loginSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
@@ -210,6 +220,7 @@ void SheetsPage::openSystemwideSheet()
 {
     MSheet *loginSheet = new LoginSheet;
     loginSheet->setObjectName("loginSheet");
+    loginSheet->setStyleName(inv(""));
     loginSheet->appearSystemwide(MSceneWindow::DestroyWhenDone);
 }
 
@@ -217,6 +228,7 @@ void SheetsPage::openLongSheet()
 {
     MSheet *longSheet = new LongSheet;
     longSheet->setObjectName("longSheet");
+    longSheet->setStyleName(inv(""));
     longSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
@@ -224,6 +236,7 @@ void SheetsPage::openListSheet()
 {
     MSheet *listSheet = new ListSheet;
     listSheet->setObjectName("listSheet");
+    listSheet->setStyleName(inv(""));
     listSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
@@ -231,6 +244,7 @@ void SheetsPage::openPhotoSheet()
 {
     photoSheet = new MSheet;
     photoSheet->setObjectName("photoSheet");
+    photoSheet->setStyleName(inv(""));
 
     populatePhotoSheetCentralWidget(photoSheet->centralWidget());
     populatePhotoSheetHeader(photoSheet);
@@ -252,6 +266,7 @@ void SheetsPage::populatePhotoSheetHeader(MSheet *sheet)
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(sheet);
     basicHeader->setObjectName("basicHeader");
+    basicHeader->setStyleName(inv(""));
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));

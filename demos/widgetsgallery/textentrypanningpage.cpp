@@ -20,11 +20,12 @@
 #include "textentrypanningpage.h"
 
 #include <MButton>
-#include <MContentItem>
+#include <MBasicListItem>
 #include <MLabel>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MPannableViewport>
+#include <MPositionIndicator>
 #include <MSceneManager>
 #include <MTextEdit>
 
@@ -49,12 +50,16 @@ QString TextEntryPanningPage::timedemoTitle()
 
 void TextEntryPanningPage::createContent()
 {
+    setStyleName(inv("CommonApplicationPage"));
     MLayout *layout = new MLayout();
     MLinearLayoutPolicy *layoutPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    layoutPolicy->setContentsMargins(0, 0, 0, 0);
+    layoutPolicy->setSpacing(0);
     layout->setPolicy(layoutPolicy);
 
     infoLabel = new MLabel;
     infoLabel->setObjectName("InfoLabel");
+    infoLabel->setStyleName(inv("CommonBodyText"));
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 
@@ -66,6 +71,7 @@ void TextEntryPanningPage::createContent()
         addTextEdit(topHorizontalPolicy, M::NumberContentType);
 
         loseFocusOnPanButton = new MButton;
+        loseFocusOnPanButton->setStyleName(inv("CommonSingleButton"));
         loseFocusOnPanButton->setCheckable(true);
         topHorizontalPolicy->addItem(loseFocusOnPanButton);
         layoutPolicy->addItem(topLayout);
@@ -137,7 +143,7 @@ void TextEntryPanningPage::retranslateUi()
     }
 
     int runningItemIndex = 1;
-    foreach (QPointer<MContentItem> item, contentItems) {
+    foreach (QPointer<MBasicListItem> item, contentItems) {
         if (!item) {
             continue;
         }
@@ -209,6 +215,8 @@ void TextEntryPanningPage::addTextEdit(MLinearLayoutPolicy *layoutPolicy,
         break;
     }
 
+    edit->setStyleName(inv("CommonSingleInputField"));
+
     textEdits << edit;
     layoutPolicy->addItem(edit);
 }
@@ -217,8 +225,9 @@ void TextEntryPanningPage::addContentItems(MLinearLayoutPolicy *layoutPolicy, in
 {
     for (int i = 0; i < count; i++) {
 
-        MContentItem* contentItem = new MContentItem(MContentItem::TwoTextLabels);
+        MBasicListItem* contentItem = new MBasicListItem(MBasicListItem::TitleWithSubtitle);
         contentItem->setObjectName("PannableItem");
+        contentItem->setStyleName(inv("CommonBasicListItem"));
 
         contentItems << contentItem;
         layoutPolicy->addItem(contentItem);
@@ -229,6 +238,8 @@ MPannableViewport *TextEntryPanningPage::addNestedViewport(MLinearLayoutPolicy *
 {
     MLayout* layout = new MLayout();
     MLinearLayoutPolicy* linearLayoutPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    linearLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+    linearLayoutPolicy->setSpacing(0);
     layout->setPolicy(linearLayoutPolicy);
 
     addTextEdit(linearLayoutPolicy, M::FreeTextContentType);
@@ -240,6 +251,7 @@ MPannableViewport *TextEntryPanningPage::addNestedViewport(MLinearLayoutPolicy *
 
     MPannableViewport* viewport = new MPannableViewport();
     viewport->setObjectName("NestedPannable");
+    viewport->positionIndicator()->setStyleName(inv("CommonPositionIndicator"));
     viewport->setAutoRange(true);
     viewport->setWidget(new MWidget());
     viewport->widget()->setLayout(layout);

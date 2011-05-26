@@ -65,6 +65,8 @@ void ImagePage::createContent()
 {
     MApplicationPage::createContent();
 
+    setStyleName(inv("CommonApplicationPage"));
+
     createLayout();
     containerLayout = new MLayout(container);
 
@@ -74,17 +76,19 @@ void ImagePage::createContent()
     // Image properties container
     propertiesContainer = new MContainer();
     propertiesContainer->setObjectName("propertiesContainer");
+    propertiesContainer->setStyleName(inv("CommonContainer"));
     QGraphicsLinearLayout *propertiesLayout = new QGraphicsLinearLayout(Qt::Vertical, propertiesContainer->centralWidget());
 
     // Image properties comboBox
     propertiesComboBox = new MComboBox();
     propertiesComboBox->setObjectName("propertiesComboBox");
+    propertiesComboBox->setStyleName(inv("CommonComboBox"));
     propertiesComboBox->setIconID("icon-m-gallery-image-edit");
 
     // Image property slider
     slider = new MSlider();
     slider->setObjectName("slider");
-    slider->setStyleName("CommonSlider");
+    slider->setStyleName(inv("CommonSlider"));
     slider->setOrientation(Qt::Horizontal);
     slider->setRange(0, 100);
     slider->setValue(0);

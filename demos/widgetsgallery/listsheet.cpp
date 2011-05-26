@@ -22,6 +22,7 @@
 #include <QAction>
 #include <QGraphicsLinearLayout>
 
+#include <MApplication>
 #include <MAbstractCellCreator>
 #include <MBasicSheetHeader>
 #include <MList>
@@ -72,6 +73,7 @@ void ListSheet::createHeaderWidget()
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(this);
     basicHeader->setObjectName("basicSheetHeader");
+    basicHeader->setStyleName(inv(""));
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));
@@ -95,6 +97,7 @@ void ListSheet::createCentralWidget()
 
     MList *list = new MList(pannableViewport);
     list->setObjectName("list");
+    list->setStyleName(inv("CommonList"));
     list->setShowGroups(true);
     list->setItemModel(model);
     list->setCellCreator(new MListSheetContentItemCreator);
@@ -102,4 +105,13 @@ void ListSheet::createCentralWidget()
 
     model->setParent(list);
     pannableViewport->setWidget(list);
+}
+
+QString ListSheet::inv(QString stylename)
+{
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        return stylename;
+    } else {
+        return stylename.append("Inverted");
+    }
 }

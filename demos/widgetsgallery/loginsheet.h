@@ -43,6 +43,7 @@ private:
     void createCentralWidget();
     void createHeaderWidget();
     QGraphicsWidget *createSpacer() const;
+    QString inv(QString stylename);
 
     QTimer fakeAuthenticationTimer;
     MTextEdit *userNameTextEdit;

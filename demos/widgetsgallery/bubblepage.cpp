@@ -66,6 +66,8 @@ void BubblePage::createContent()
 {
     MApplicationPage::createContent();
 
+    setStyleName(inv("CommonApplicationPage"));
+
     QGraphicsWidget * panel = centralWidget();
     QGraphicsLinearLayout * layout = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(layout);

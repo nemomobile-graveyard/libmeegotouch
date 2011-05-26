@@ -19,6 +19,7 @@
 
 #include "sliderpage.h"
 
+#include <MApplication>
 #include <MContainer>
 #include <MLabel>
 #include <MButton>
@@ -73,7 +74,7 @@ void SliderPage::createContent()
 
     ageLabel = new MLabel;
     ageLabel->setObjectName("ageLabel");
-    ageLabel->setStyleName("CommonFieldLabel");
+    ageLabel->setStyleName(inv("CommonFieldLabel"));
     ageLabel->setTextElide(true);
 
     ageLayoutPolicy->addItem(ageLabel);
@@ -81,12 +82,13 @@ void SliderPage::createContent()
 
     ageSlider = new MSlider;
     ageSlider->setObjectName("ageSlider");
-    ageSlider->setStyleName("CommonSlider");
+    ageSlider->setStyleName(inv("CommonSlider"));
     ageLayoutPolicy->addItem(ageSlider);
     ageLayoutPolicy->setStretchFactor(ageSlider, 1);
 
     ageContainer = new MContainer;
     ageContainer->setObjectName("ageContainer");
+    ageContainer->setStyleName(inv("CommonContainer"));
     ageContainer->centralWidget()->setLayout(ageLayout);
     containerPolicy->addItem(ageContainer);
 
@@ -100,7 +102,11 @@ void SliderPage::createContent()
     playerButton->setObjectName("playerButton");
     playerButton->setStyleName("CommonMainIcon");
     playerButton->setViewType(MButton::iconType);
-    playerButton->setIconID("icon-m-common-play");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        playerButton->setIconID("icon-m-toolbar-mediacontrol-play");
+    } else {
+        playerButton->setIconID("icon-m-toolbar-mediacontrol-play-white");
+    }
     playerButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     playerLayout->addItem(playerButton, 0, 0);
 
@@ -109,21 +115,21 @@ void SliderPage::createContent()
 
     playerSeekBar = new MSeekBar(playerWidget);
     playerSeekBar->setObjectName("playerSeekBar");
-    playerSeekBar->setStyleName("CommonSeeker");
+    playerSeekBar->setStyleName(inv("CommonSeeker"));
     playerSeekBar->setMaximumSize(380, -1);
     playerSeekBar->setMinimumSize(380, -1);
     playerSeekBar->setPreferredSize(380, -1);
 
     playerMinLabel = new MLabel(playerWidget);
     playerMinLabel->setAlignment(Qt::AlignLeft);
-    playerMinLabel->setStyleName("CommonSeekerLabel");
+    playerMinLabel->setStyleName(inv("CommonSeekerLabel"));
     playerMinLabel->setMinimumSize(150, -1);
     playerMinLabel->setMaximumSize(150, -1);
     playerMinLabel->setPreferredSize(150, -1);
 
     playerMaxLabel = new MLabel(playerWidget);
     playerMaxLabel->setAlignment(Qt::AlignRight);
-    playerMaxLabel->setStyleName("CommonSeekerLabel");
+    playerMaxLabel->setStyleName(inv("CommonSeekerLabel"));
     playerMaxLabel->setMinimumSize(150, -1);
     playerMaxLabel->setMaximumSize(150, -1);
     playerMaxLabel->setPreferredSize(150, -1);
@@ -135,6 +141,7 @@ void SliderPage::createContent()
 
     playerContainer = new MContainer;
     playerContainer->setObjectName("playerContainer");
+    playerContainer->setStyleName(inv("CommonContainer"));
     playerContainer->centralWidget()->setLayout(playerLayout);
     containerPolicy->addItem(playerContainer);
 
@@ -152,21 +159,28 @@ void SliderPage::createContent()
 
     MImageWidget *t1 = new MImageWidget;
     t1->setStyleName("CommonButtonIcon");
-    t1->setImage("icon-s-common-remove");
     brightnessLayoutPolicy->addItem(t1, Qt::AlignCenter);
 
     brightnessSlider = new MSlider;
     brightnessSlider->setObjectName("brightnessSlider");
-    brightnessSlider->setStyleName("CommonSlider");
+    brightnessSlider->setStyleName(inv("CommonSlider"));
     brightnessLayoutPolicy->addItem(brightnessSlider, Qt::AlignCenter);
 
     MImageWidget *t2 = new MImageWidget;
     t2->setStyleName("CommonRightIcon");
-    t2->setImage("icon-s-common-add");
     brightnessLayoutPolicy->addItem(t2, Qt::AlignCenter);
+
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        t1->setImage("icon-s-common-remove");
+        t2->setImage("icon-s-common-add");
+    } else {
+        t1->setImage("icon-s-common-remove-inverse");
+        t2->setImage("icon-s-common-add-inverse");
+    }
 
     brightnessContainer = new MContainer;
     brightnessContainer->setObjectName("brightnessContainer");
+    brightnessContainer->setStyleName(inv("CommonContainer"));
     brightnessContainer->centralWidget()->setLayout(brightnessLayout);
     containerPolicy->addItem(brightnessContainer);
 
@@ -195,7 +209,7 @@ void SliderPage::createLayout()
 
     infoLabel = new MLabel;
     infoLabel->setObjectName("infoLabel");
-    infoLabel->setStyleName("CommonBodyText");
+    infoLabel->setStyleName(inv("CommonBodyText"));
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

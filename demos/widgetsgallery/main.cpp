@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     MApplication *application = new MApplication(argc, argv);
 #endif
 
-    application->setObjectName("application");
+    application->setObjectName("widgetsgallery");
 
     WidgetsgalleryRetranslator widgetsgalleryRetranslator;
     QObject::connect(application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
@@ -85,6 +85,7 @@ int main(int argc, char **argv)
     MApplicationWindow* window = new MApplicationWindow();
 #endif
     window->setObjectName("applicationWindow");
+    window->setStyleName("CommonApplicationWindow");
 
     MainPage *mainPage = new MainPage;
     mainPage->setObjectName("mainPage");

@@ -19,6 +19,7 @@
 
 #include "longsheet.h"
 
+#include <MApplication>
 #include <MBasicSheetHeader>
 #include <MLabel>
 #include <MMessageBox>
@@ -57,7 +58,7 @@ void LongSheet::createCentralWidget()
     //% "Connect to Service"
     MLabel *label = new MLabel(qtTrId("xx_wg_sheets_connect_service"));
     label->setObjectName("connectLabel");
-    label->setStyleName("CommonTitle");
+    label->setStyleName(inv("CommonTitle"));
     label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     mainLayout->addItem(label);
 
@@ -66,12 +67,12 @@ void LongSheet::createCentralWidget()
     //% "Username:"
     label = new MLabel(qtTrId("xx_wg_sheets_username"));
     label->setObjectName("usernameLKabel");
-    label->setStyleName("CommonFieldLabel");
+    label->setStyleName(inv("CommonFieldLabel"));
 
     mainLayout->addItem(label);
 
     MTextEdit *textEdit = new MTextEdit;
-    textEdit->setStyleName("CommonSingleInputFieldLabeled");
+    textEdit->setStyleName(inv("CommonSingleInputFieldLabeled"));
     textEdit->setObjectName("usernameTextEdit");
     mainLayout->addItem(textEdit);
 
@@ -80,11 +81,11 @@ void LongSheet::createCentralWidget()
     //% "Password:"
     label = new MLabel(qtTrId("xx_wg_sheets_password"));
     label->setObjectName("passwordLabel");
-    label->setStyleName("CommonFieldLabel");
+    label->setStyleName(inv("CommonFieldLabel"));
     mainLayout->addItem(label);
 
     textEdit = new MTextEdit;
-    textEdit->setStyleName("CommonSingleInputFieldLabeled");
+    textEdit->setStyleName(inv("CommonSingleInputFieldLabeled"));
     textEdit->setObjectName("passwordTextEdit");
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
@@ -93,7 +94,7 @@ void LongSheet::createCentralWidget()
     //% "content available."
     label = new MLabel(qtTrId("xx_wg_sheets_long_notice"));
     label->setObjectName("longNoticeLabel");
-    label->setStyleName("CommonBodyText");
+    label->setStyleName(inv("CommonBodyText"));
     label->setWordWrap(true);
     mainLayout->addItem(label);
 
@@ -108,7 +109,7 @@ void LongSheet::createCentralWidget()
         "cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id "
         "est laborum.");
     label->setObjectName("loremIpsumLabel");
-    label->setStyleName("CommonBodyText");
+    label->setStyleName(inv("CommonBodyText"));
     label->setWordWrap(true);
     mainLayout->addItem(label);
 
@@ -116,7 +117,7 @@ void LongSheet::createCentralWidget()
 
     MSlider *slider = new MSlider;
     slider->setObjectName("slider");
-    slider->setStyleName("CommonSlider");
+    slider->setStyleName(inv("CommonSlider"));
     slider->setRange(0, 100);
     slider->setMinLabelVisible(true);
     slider->setMaxLabelVisible(true);
@@ -128,11 +129,11 @@ void LongSheet::createCentralWidget()
     // OBS: No point in translating dummy text.
     label = new MLabel("Foobar:");
     label->setObjectName("foobarLabel");
-    label->setStyleName("CommonFieldLabel");
+    label->setStyleName(inv("CommonFieldLabel"));
     mainLayout->addItem(label);
     textEdit = new MTextEdit;
     textEdit->setObjectName("textEdit");
-    textEdit->setStyleName("CommonSingleInputFieldLabeled");
+    textEdit->setStyleName(inv("CommonSingleInputFieldLabeled"));
     mainLayout->addItem(textEdit);
 }
 
@@ -140,6 +141,7 @@ void LongSheet::createHeaderWidget()
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(this);
     basicHeader->setObjectName("basicSheetHeader");
+    basicHeader->setStyleName(inv(""));
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));
@@ -198,4 +200,13 @@ QGraphicsWidget *LongSheet::createSpacer() const
     spacer->setPreferredHeight(24.0);
     spacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     return spacer;
+}
+
+QString LongSheet::inv(QString stylename)
+{
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        return stylename;
+    } else {
+        return stylename.append("Inverted");
+    }
 }

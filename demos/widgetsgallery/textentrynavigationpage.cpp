@@ -45,12 +45,13 @@ QString TextEntryNavigationPage::timedemoTitle()
 void TextEntryNavigationPage::createContent()
 {
     MApplicationPage::createContent();
+    setStyleName(inv("CommonApplicationPage"));
     QGraphicsWidget *panel = centralWidget();
     MLayout *layout = new MLayout(panel);
     panel->setLayout(layout);
 
     MGridLayoutPolicy *layoutPolicy = new MGridLayoutPolicy(layout);
-    layoutPolicy->setContentsMargins(20, 0, 20, 0);
+    layoutPolicy->setContentsMargins(0, 0, 0, 0);
     layoutPolicy->setColumnStretchFactor(0,0);
 
     QList<MTextEdit *> edits;
@@ -68,8 +69,10 @@ void TextEntryNavigationPage::createContent()
     int j = 0;
     foreach (MTextEdit *edit, edits) {
         if (edit) {
+            edit->setStyleName(inv("CommonSingleInputFieldLabeled"));
             MLabel *label =  new MLabel(edit->objectName(), panel);
             label->setObjectName("label");
+            label->setStyleName(inv("CommonFieldLabel"));
             label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
             layoutPolicy->addItem(label, i, j);
             layoutPolicy->addItem(edit, i + 1, j);

@@ -32,6 +32,7 @@ public:
 protected:
     virtual void createCentralWidget();
     virtual void createHeaderWidget();
+    QString inv(QString stylename);
 };
 
 #endif // LISTSHEET_H

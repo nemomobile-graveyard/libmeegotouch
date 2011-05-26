@@ -522,6 +522,7 @@ MainPage::MainPage(const QString &title)
     : TimedemoPage(),
       list(0),
       actionThemes(0),
+      actionToggleInverted(0),
       actionToggleFPS(0),
       actionLanguage(0),
       comboOrientation(0),
@@ -585,6 +586,12 @@ void MainPage::createContent()
     comboOrientation = createComboBoxAction(NULL, items);
     connect(comboOrientation, SIGNAL(currentIndexChanged(int)), SLOT(changeOrientation(int)));
 
+    actionToggleInverted = new MAction(this);
+    actionToggleInverted->setObjectName("actionToggleInverted");
+    actionToggleInverted->setLocation(MAction::ApplicationMenuLocation);
+    this->addAction(actionToggleInverted);
+    connect(actionToggleInverted, SIGNAL(triggered()), SLOT(toggleInverted()));
+
     actionToggleFPS = new MAction(this);
     actionToggleFPS->setObjectName("actionToggleFPS");
     actionToggleFPS->setLocation(MAction::ApplicationMenuLocation);
@@ -615,6 +622,8 @@ void MainPage::retranslateUi()
     actionThemes->setText(qtTrId("xx_mainpage_themes"));
     //% "Orientation"
     comboOrientation->setTitle(qtTrId("xx_mainpage_orientation"));
+    //% "Toggle Inverted Styles"
+    actionToggleInverted->setText(qtTrId("xx_mainpage_toggle_inverted"));
     //% "Toggle FPS"
     actionToggleFPS->setText(qtTrId("xx_mainpage_toggle_fps"));
     //% "Language Settings"
@@ -640,8 +649,22 @@ void MainPage::setMainLoopHelper(EmptyMainLoopHelper *helper)
 
 void MainPage::populateLayout()
 {
+    if (list) {
+        policy->removeItem(list);
+        delete(list);
+    }
+
+    if (languageSettingsPage) {
+        delete(languageSettingsPage);
+    }
+
     list = new MList(centralWidget());
     list->setObjectName("list");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        list->setStyleName("CommonList");
+    } else {
+        list->setStyleName("CommonListInverted");
+    }
     list->setCellCreator(new WidgetGalleryCategoryCellCreator(list));
     list->setItemModel(new WidgetsGalleryDataModel(this));
     policy->addItem(list, Qt::AlignCenter);
@@ -877,6 +900,21 @@ void MainPage::changeOrientation(int index)
         applicationWindow()->setOrientationLocked(true);
         break;
     }
+}
+
+void MainPage::toggleInverted()
+{
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        MApplication::instance()->setObjectName("widgetsgalleryInverted");
+        applicationWindow()->setStyleName("CommonApplicationWindowInverted");
+        setStyleName("CommonApplicationPageInverted");
+    } else {
+        MApplication::instance()->setObjectName("widgetsgallery");
+        applicationWindow()->setStyleName("CommonApplicationWindow");
+        setStyleName("CommonApplicationPage");
+    }
+
+    populateLayout();
 }
 
 void MainPage::toggleFps()

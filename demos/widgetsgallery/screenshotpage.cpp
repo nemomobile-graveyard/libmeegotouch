@@ -55,7 +55,6 @@ void ScreenShotPage::createContent()
     setContentsMargins(0,0,0,0);
 
     layout = new MLayout(panel);
-    layout->setContentsMargins(0,0,0,0);
 
     layoutPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     layoutPolicy->setSpacing(0);
@@ -69,14 +68,16 @@ void ScreenShotPage::createContent()
     MLinearLayoutPolicy* elementsPolicyL = new MLinearLayoutPolicy(elementsLayout,Qt::Vertical);
     elementsLayout->setLandscapePolicy(elementsPolicyL);
     elementsPolicyL->setSpacing(0);
+    elementsPolicyL->setContentsMargins(0, 0, 0, 0);
 
     MLinearLayoutPolicy* elementsPolicyP = new MLinearLayoutPolicy(elementsLayout,Qt::Vertical);
     elementsLayout->setLandscapePolicy(elementsPolicyP);
     elementsPolicyP->setSpacing(0);
+    elementsPolicyP->setContentsMargins(0, 0, 0, 0);
 
     label1 = new MLabel ("Take a screenshot");
     label1->setObjectName("label1");
-    label1->setStyleName("CommonApplicationHeader");
+    label1->setStyleName(inv("CommonApplicationHeader"));
 
     elementsPolicyL->addItem(label1);
     elementsPolicyP->addItem(label1);
@@ -85,7 +86,7 @@ void ScreenShotPage::createContent()
     labelDescription->setObjectName("descriptionLabel");
     labelDescription->setWordWrap(true);
     labelDescription->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    labelDescription->setStyleName("CommonBodyText");
+    labelDescription->setStyleName(inv("CommonBodyText"));
 
     elementsPolicyL->addItem(labelDescription);
     elementsPolicyP->addItem(labelDescription);
@@ -95,14 +96,14 @@ void ScreenShotPage::createContent()
     entrySeconds = new MTextEdit(MTextEditModel::SingleLine,"");
     entrySeconds->setObjectName("secondsTextEntry");
     entrySeconds->setMaxLength(2);
-    entrySeconds->setStyleName("CommonSingleInputField");
+    entrySeconds->setStyleName(inv("CommonSingleInputField"));
     entrySeconds->setContentType(M::NumberContentType);
     entrySeconds->setText("8");
     entrySeconds->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     MLabel * secsLabel = new MLabel();
     secsLabel->setObjectName("secsLabel");
     secsLabel->setText("seconds");
-    secsLabel->setStyleName("CommonSingleTitle");
+    secsLabel->setStyleName(inv("CommonSingleTitle"));
 
     gridSecs->addItem(entrySeconds, 0 , 0 , Qt::AlignVCenter);
     gridSecs->addItem(secsLabel, 0 , 1, Qt::AlignVCenter);
@@ -112,7 +113,7 @@ void ScreenShotPage::createContent()
 
     buttonScreenshot = new MButton("Take it!");
     buttonScreenshot->setObjectName("screenshotButton");
-    buttonScreenshot->setStyleName("CommonSingleButton");
+    buttonScreenshot->setStyleName(inv("CommonSingleButton"));
 
     elementsPolicyL->addItem(buttonScreenshot);
     elementsPolicyP->addItem(buttonScreenshot);

@@ -1,7 +1,8 @@
 #include "mynavbarcontent.h"
 
+#include <MApplication>
 #include <MButton>
-#include <MSlider>
+#include <MTextEdit>
 
 #include <QGraphicsLinearLayout>
 
@@ -30,18 +31,19 @@ MyNavBarContent::MyNavBarContent(QGraphicsItem *parent)
     setLayout(layout);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    MSlider *slider = new MSlider;
-    slider->setObjectName("slider");
-    slider->setRange(0, 100);
-    slider->setMinLabelVisible(true);
-    slider->setMaxLabelVisible(true);
-    slider->setHandleLabelVisible(true);
-    layout->addItem(slider);
+    MTextEdit *edit = new MTextEdit;
+    edit->setObjectName("edit");
+    edit->setViewType("toolbar");
+    layout->addItem(edit);
 
     MButton *okButton = new MButton("OK");
     okButton->setObjectName("okButton");
     okButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    okButton->setStyleName("ToolBarLabelOnlyCommonButton");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        okButton->setStyleName("ToolBarLabelOnlyCommonButton");
+    } else {
+        okButton->setStyleName("ToolBarLabelOnlyCommonButtonInverted");
+    }
     connect(okButton, SIGNAL(clicked()), SIGNAL(okClicked()));
     layout->addItem(okButton);
 }

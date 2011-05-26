@@ -55,6 +55,7 @@ void ObjectMenuPage::createContent()
 
     containerFriends = new MContainer;
     containerFriends->setObjectName("containerFriends");
+    containerFriends->setStyleName(inv("CommonContainer"));
     QGraphicsLinearLayout *friendsLayout = new QGraphicsLinearLayout(containerFriends->centralWidget());
     friendsLayout->setContentsMargins(0, 0, 0, 0);
     friendsLayout->setSpacing(0);
@@ -64,6 +65,7 @@ void ObjectMenuPage::createContent()
 
     containerAlbums = new MContainer;
     containerAlbums->setObjectName("containerAlbums");
+    containerAlbums->setStyleName(inv("CommonContainer"));
     QGraphicsLinearLayout *albumLayout = new QGraphicsLinearLayout(Qt::Horizontal, containerAlbums->centralWidget());
     albumLayout->setContentsMargins(0, 0, 0, 0);
     albumLayout->setSpacing(0);
@@ -85,7 +87,7 @@ void ObjectMenuPage::createContent()
     for (int i = 0; i < 3; ++i) {
         MBasicListItem *item = new MBasicListItem(MBasicListItem::IconWithTitleAndSubtitle, containerFriends->centralWidget());
         item->setObjectName("listItem");
-        item->setStyleName("CommonBasicListItem");
+        item->setStyleName(inv("CommonBasicListItem"));
 
         // set content uri to dummy contact.
         item->setProperty("contentURI", QString("a.contact"));

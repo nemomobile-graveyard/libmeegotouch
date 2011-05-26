@@ -20,6 +20,7 @@
 #include "contentitemspage.h"
 #include "utils.h"
 
+#include <MApplication>
 #include <MAbstractCellCreator>
 #include <MImageWidget>
 #include <MLayout>
@@ -47,6 +48,11 @@ public:
         
         if (cell == NULL) {
             cell = new MBasicListItem(itemStyle);
+            if (MApplication::instance()->objectName() == "widgetsgallery") {
+                cell->setStyleName("CommonBasicListItem");
+            } else {
+                cell->setStyleName("CommonBasicListItemInverted");
+            }
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -109,6 +115,11 @@ public:
         
         if (cell == NULL) {
             cell = new MDetailedListItem(itemStyle);
+            if (MApplication::instance()->objectName() == "widgetsgallery") {
+                cell->setStyleName("CommonDetailedListItem");
+            } else {
+                cell->setStyleName("CommonDetailedListItemInverted");
+            }
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -183,6 +194,11 @@ public:
 
         if (cell == NULL) {
             cell = new MAdvancedListItem(itemStyle);
+            if (MApplication::instance()->objectName() == "widgetsgallery") {
+                cell->setStyleName("CommonAdvancedListItem");
+            } else {
+                cell->setStyleName("CommonAdvancedListItemInverted");
+            }
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -292,6 +308,8 @@ void ContentItemsPage::createContent()
 {
     MApplicationPage::createContent();
 
+    setStyleName(inv("CommonApplicationPage"));
+
     QGraphicsWidget *panel = centralWidget();
 
     MLayout *layout = new MLayout(panel);
@@ -347,6 +365,7 @@ MList *ContentItemsPage::createList(const QString &title, MCellCreator *creator)
 
     MList *list = new MList(centralWidget());
     list->setObjectName("list");
+    list->setStyleName(inv("CommonList"));
     list->setCellCreator(creator);
     list->setItemModel(model);
     list->setShowGroups(true);

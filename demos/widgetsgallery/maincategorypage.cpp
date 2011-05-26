@@ -3,6 +3,7 @@
 
 #include "drilldownlistitem.h"
 
+#include <MApplication>
 #include <MAbstractCellCreator>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
@@ -99,6 +100,13 @@ void MainCategoryPage::populateLayout()
 {
     list = new MList(centralWidget());
     list->setObjectName("list");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        setStyleName("CommonApplicationPage");
+        list->setStyleName("CommonList");
+    } else {
+        setStyleName("CommonApplicationPageInverted");
+        list->setStyleName("CommonListInverted");
+    }
     list->setCellCreator(new WidgetGalleryCellCreator());
     list->setItemModel(dataModel);
 

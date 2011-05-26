@@ -21,6 +21,7 @@
 
 #include <QGraphicsGridLayout>
 
+#include <MApplication>
 #include <MImageWidget>
 #include <MLabel>
 
@@ -41,12 +42,18 @@ QGraphicsLayout *DrillDownListItem::createLayout()
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    titleLabelWidget()->setStyleName("CommonSingleTitle");
     layout->addItem(titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
     imageWidget()->setStyleName("CommonDrillDownIcon");
-    imageWidget()->setImage("icon-m-common-drilldown-arrow");
     layout->addItem(imageWidget(), 0, 1, Qt::AlignCenter);
+
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        titleLabelWidget()->setStyleName("CommonSingleTitle");
+        imageWidget()->setImage("icon-m-common-drilldown-arrow");
+    } else {
+        titleLabelWidget()->setStyleName("CommonSingleTitleInverted");
+        imageWidget()->setImage("icon-m-common-drilldown-arrow-inverse");
+    }
 
     return layout;
 }

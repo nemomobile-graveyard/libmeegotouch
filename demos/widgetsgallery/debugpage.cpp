@@ -70,80 +70,80 @@ void DebugPage::createContent()
     layout->setLandscapePolicy(layoutPolicy);
     label1 = new MLabel ("Information Display");
     label1->setObjectName("label1");
-    label1->setStyleName("CommonApplicationHeader");
+    label1->setStyleName(inv("CommonApplicationHeader"));
     layoutPolicy->addItem(label1);
 
     labelNames= new MLabel ("Show style names");
     labelNames->setObjectName("labelNames");
-    labelNames->setStyleName("CommonSingleTitle");
+    labelNames->setStyleName(inv("CommonSingleTitle"));
 
     checkBoxNames = new MButton();
     checkBoxNames->setObjectName("checkBoxNames");
     checkBoxNames->setViewType(MButton::checkboxType);
-    checkBoxNames->setStyleName("CommonRightCheckBox");
+    checkBoxNames->setStyleName(inv("CommonRightCheckBox"));
     checkBoxNames->setCheckable(true);
 
     labelObjects= new MLabel ("Show object names");
     labelObjects->setObjectName("labelObjects");
-    labelObjects->setStyleName("CommonSingleTitle");
+    labelObjects->setStyleName(inv("CommonSingleTitle"));
 
     checkBoxobjNames = new MButton();
     checkBoxobjNames->setObjectName("checkBoxobjNames");
     checkBoxobjNames->setViewType(MButton::checkboxType);
-    checkBoxobjNames->setStyleName("CommonRightCheckBox");
+    checkBoxobjNames->setStyleName(inv("CommonRightCheckBox"));
     checkBoxobjNames->setCheckable(true);
 
     labelSize= new MLabel ("Show sizes");
     labelSize->setObjectName("labelSize");
-    labelSize->setStyleName("CommonSingleTitle");
+    labelSize->setStyleName(inv("CommonSingleTitle"));
 
     checkBoxSize = new MButton();
     checkBoxSize->setObjectName("checkBoxSize");
     checkBoxSize->setViewType(MButton::checkboxType);
     checkBoxSize->setCheckable(true);
-    checkBoxSize->setStyleName("CommonRightCheckBox");
+    checkBoxSize->setStyleName(inv("CommonRightCheckBox"));
 
     labelBoundingRect= new MLabel ("Show bounding rect");
     labelBoundingRect->setObjectName("labelBoundingRect");
-    labelBoundingRect->setStyleName("CommonSingleTitle");
+    labelBoundingRect->setStyleName(inv("CommonSingleTitle"));
 
     checkBoxBoundingRect = new MButton();
     checkBoxBoundingRect->setObjectName("checkBoxBoundingRect");
     checkBoxBoundingRect->setViewType(MButton::checkboxType);
     checkBoxBoundingRect->setCheckable(true);
-    checkBoxBoundingRect->setStyleName("CommonRightCheckBox");
+    checkBoxBoundingRect->setStyleName(inv("CommonRightCheckBox"));
 
     labelPosition= new MLabel ("Show positions");
     labelPosition->setObjectName("labelPosition");
-    labelPosition->setStyleName("CommonSingleTitle");
+    labelPosition->setStyleName(inv("CommonSingleTitle"));
 
     checkBoxPosition = new MButton();
     checkBoxPosition->setObjectName("checkBoxPosition");
     checkBoxPosition->setViewType(MButton::checkboxType);
     checkBoxPosition->setCheckable(true);
-    checkBoxPosition->setStyleName("CommonRightCheckBox");
+    checkBoxPosition->setStyleName(inv("CommonRightCheckBox"));
 
 
     labelMargins= new MLabel ("Show margins");
     labelMargins->setObjectName("labelMargins");
-    labelMargins->setStyleName("CommonSingleTitle");
+    labelMargins->setStyleName(inv("CommonSingleTitle"));
 
     checkBoxMargins = new MButton();
     checkBoxMargins->setObjectName("checkBoxMargins");
     checkBoxMargins->setViewType(MButton::checkboxType);
     checkBoxMargins->setCheckable(true);
-    checkBoxMargins->setStyleName("CommonRightCheckBox");
+    checkBoxMargins->setStyleName(inv("CommonRightCheckBox"));
 
 
     labelFps= new MLabel ("Show FPS");
     labelFps->setObjectName("labelFps");
-    labelFps->setStyleName("CommonSingleTitle");
+    labelFps->setStyleName(inv("CommonSingleTitle"));
 
     checkBoxFps = new MButton();
     checkBoxFps->setObjectName("checkBoxFps");
     checkBoxFps->setViewType(MButton::checkboxType);
     checkBoxFps->setCheckable(true);
-    checkBoxFps->setStyleName("CommonRightCheckBox");
+    checkBoxFps->setStyleName(inv("CommonRightCheckBox"));
 
     QGraphicsGridLayout *gridOptions = new QGraphicsGridLayout(layout);
     gridOptions->setContentsMargins(0, 0, 0, 0);

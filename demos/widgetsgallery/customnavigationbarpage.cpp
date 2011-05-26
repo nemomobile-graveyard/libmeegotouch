@@ -40,9 +40,11 @@ void CustomNavigationBarPage::createContent()
 {
     MApplicationPage::createContent();
 
+    setStyleName(inv("CommonApplicationPage"));
+
     infoLabel = new MLabel;
     infoLabel->setObjectName("infoLabel");
-    infoLabel->setStyleName("CommonBodyText");
+    infoLabel->setStyleName(inv("CommonBodyText"));
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 

@@ -77,6 +77,7 @@ public:
 
 public slots:
     void showThemeSelectionDialog();
+    void toggleInverted();
     void toggleFps();
     void showInitialPage();
     void showLanguageSettingsPage();
@@ -95,6 +96,7 @@ private:
 private:
     MList *list;
     MAction *actionThemes;
+    MAction *actionToggleInverted;
     MAction *actionToggleFPS;
     MAction *actionLanguage;
     MComboBox *comboOrientation;

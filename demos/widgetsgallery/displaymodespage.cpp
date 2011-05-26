@@ -42,14 +42,22 @@ LabeledCheckbox::LabeledCheckbox(QGraphicsItem * parent, Qt::WindowFlags wFlags)
 
     button = new MButton;
     button->setObjectName("button");
-    button->setStyleName("CommonLeftCheckBox");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        button->setStyleName("CommonLeftCheckBox");
+    } else {
+        button->setStyleName("CommonLeftCheckBoxInverted");
+    }
     button->setViewType(MButton::checkboxType);
     button->setCheckable(true);
 
     label = new MLabel;
     label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     label->setObjectName("label");
-    label->setStyleName("CommonSingleTitle");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        label->setStyleName("CommonSingleTitle");
+    } else {
+        label->setStyleName("CommonSingleTitleInverted");
+    }
     label->setWordWrap(true);
     label->setTextElide(true);
 
@@ -92,11 +100,14 @@ QString DisplayModesPage::timedemoTitle()
 
 void DisplayModesPage::createContent()
 {
+    setStyleName(inv("CommonApplicationPage"));
+
     QGraphicsLinearLayout *lytMain = new QGraphicsLinearLayout(Qt::Vertical);
     lytMain->setContentsMargins(0, 0, 0, 0);
     lytMain->setSpacing(0);
 
     ctnDisplayMode = new MContainer(this);
+    ctnDisplayMode->setStyleName(inv("CommonContainer"));
 
     createWindowStateWidgets();
 
@@ -111,7 +122,7 @@ void DisplayModesPage::createContent()
     // combo box nav bar display mode
     comboNavigationBarDisplayMode = new MComboBox;
     comboNavigationBarDisplayMode->setObjectName("comboNavigationBarDisplayMode");
-    comboNavigationBarDisplayMode->setStyleName("CommonComboBox");
+    comboNavigationBarDisplayMode->setStyleName(inv("CommonComboBox"));
     //%  "Navigation Bar"
     comboNavigationBarDisplayMode->setTitle(qtTrId("xx_displaymodes_navbarcombo"));
     comboNavigationBarDisplayMode->setIconVisible(false);
@@ -121,7 +132,7 @@ void DisplayModesPage::createContent()
     // combo box escape button display mode
     comboEscapeButtonDisplayMode = new MComboBox;
     comboEscapeButtonDisplayMode->setObjectName("comboEscapeButtonDisplayMode");
-    comboEscapeButtonDisplayMode->setStyleName("CommonComboBox");
+    comboEscapeButtonDisplayMode->setStyleName(inv("CommonComboBox"));
     //% "Escape Button"
     comboEscapeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_escapebtncombo"));
     comboEscapeButtonDisplayMode->setIconVisible(false);
@@ -131,7 +142,7 @@ void DisplayModesPage::createContent()
     // combo box home button display mode
     comboHomeButtonDisplayMode = new MComboBox;
     comboHomeButtonDisplayMode->setObjectName("comboHomeButtonDisplayMode");
-    comboHomeButtonDisplayMode->setStyleName("CommonComboBox");
+    comboHomeButtonDisplayMode->setStyleName(inv("CommonComboBox"));
     //% "Home Button"
     comboHomeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_homebtncombo"));
     comboHomeButtonDisplayMode->setIconVisible(false);
@@ -159,6 +170,7 @@ void DisplayModesPage::createWindowStateWidgets()
 {
     ctnWindowState = new MContainer(this);
     ctnWindowState->setObjectName("ctnWindowState");
+    ctnWindowState->setStyleName(inv("CommonContainer"));
 
     fullScreenCheckbox = new LabeledCheckbox;
     fullScreenCheckbox->setParent(ctnWindowState);
@@ -188,17 +200,29 @@ void DisplayModesPage::addExampleActions()
 {
     MAction *action;
 
-    action = new MAction("icon-m-toolbar-new-chat", "Chat", this);
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        action = new MAction("icon-m-toolbar-new-chat", "Chat", this);
+    } else {
+        action = new MAction("icon-m-toolbar-new-chat-white", "Chat", this);
+    }
     action->setObjectName("chatAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
-    action = new MAction("icon-m-toolbar-send-sms", "SMS", this);
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        action = new MAction("icon-m-toolbar-send-sms", "SMS", this);
+    } else {
+        action = new MAction("icon-m-toolbar-send-sms-white", "SMS", this);
+    }
     action->setObjectName("smsAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
-    action = new MAction("icon-m-toolbar-send-email", "Mail", this);
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        action = new MAction("icon-m-toolbar-send-email", "Mail", this);
+    } else {
+        action = new MAction("icon-m-toolbar-send-email-white", "Mail", this);
+    }
     action->setObjectName("mailAction");
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);

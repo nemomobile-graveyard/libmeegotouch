@@ -66,29 +66,44 @@ void TextEntryAttributeExtensionPage::createContent()
 
     MLayout *layout1 = new MLayout;
     MLinearLayoutPolicy* hPolicy1 = new MLinearLayoutPolicy(layout1, Qt::Vertical);
+    hPolicy1->setContentsMargins(0, 0, 0, 0);
+    hPolicy1->setSpacing(0);
 
     edits << new MTextEdit(MTextEditModel::SingleLine, "", panel);
     edits.at(0)->setObjectName("editwithoutextendedattribute1TextEdit");
+    edits.at(0)->setStyleName(inv("CommonSingleInputField"));
     //% "Example text edit without extended attributes"
     edits.at(0)->setPrompt(qtTrId("xx_tooltip_editwithoutextendedattribute1"));
     hPolicy1->addItem(edits.at(0));
 
     noteLabel = new MLabel(panel);
     noteLabel->setObjectName("noteLabel");
+    noteLabel->setStyleName(inv("CommonBodyText"));
+    noteLabel->setWordWrap(true);
     hPolicy1->addItem(noteLabel);
 
     edits << new MTextEdit(MTextEditModel::MultiLine, "", panel);
     edits.at(1)->setObjectName("customextendedattribute1TextEdit");
+    edits.at(1)->setStyleName(inv("CommonSingleInputField"));
     // create buttons
     MLayout *layout2 = new MLayout;
     MLinearLayoutPolicy* hPolicy2 = new MLinearLayoutPolicy(layout2, Qt::Horizontal);
+    hPolicy2->setContentsMargins(0, 0, 0, 0);
+    hPolicy2->setSpacing(0);
+    MLinearLayoutPolicy* vPolicy2 = new MLinearLayoutPolicy(layout2, Qt::Vertical);
+    vPolicy2->setContentsMargins(0, 0, 0, 0);
+    vPolicy2->setSpacing(0);
+    layout2->setLandscapePolicy(hPolicy2);
+    layout2->setPortraitPolicy(vPolicy2);
     // The policy notifies the widgets of their relative position inside the layout,
     // this causes the buttons to be rendered with different backgrounds for each position
     hPolicy2->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    vPolicy2->setNotifyWidgetsOfLayoutPositionEnabled(true);
 
     QSizePolicy sizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
     pushButton1 = new MButton();
     pushButton1->setObjectName("pushButton1");
+    pushButton1->setStyleName(inv("CommonTopSplitButton"));
     pushButton1->setCheckable(true);
     pushButton1->setViewType(MButton::toggleType);
     pushButton1->setSizePolicy(sizePolicy);
@@ -96,6 +111,7 @@ void TextEntryAttributeExtensionPage::createContent()
 
     pushButton2 = new MButton();
     pushButton2->setObjectName("pushButton2");
+    pushButton2->setStyleName(inv("CommonVerticalCenterSplitButton"));
     pushButton2->setCheckable(true);
     pushButton2->setViewType(MButton::toggleType);
     pushButton2->setSizePolicy(sizePolicy);
@@ -103,6 +119,7 @@ void TextEntryAttributeExtensionPage::createContent()
 
     pushButton3 = new MButton();
     pushButton3->setObjectName("pushButton3");
+    pushButton3->setStyleName(inv("CommonVerticalCenterSplitButton"));
     pushButton3->setCheckable(true);
     pushButton3->setViewType(MButton::toggleType);
     pushButton3->setSizePolicy(sizePolicy);
@@ -110,6 +127,7 @@ void TextEntryAttributeExtensionPage::createContent()
 
     pushButton4 = new MButton();
     pushButton4->setObjectName("pushButton4");
+    pushButton4->setStyleName(inv("CommonBottomSplitButton"));
     pushButton4->setCheckable(true);
     pushButton4->setViewType(MButton::toggleType);
     pushButton4->setSizePolicy(sizePolicy);
@@ -120,9 +138,15 @@ void TextEntryAttributeExtensionPage::createContent()
     hPolicy2->addItem(pushButton3);
     hPolicy2->addItem(pushButton4);
 
+    vPolicy2->addItem(pushButton1);
+    vPolicy2->addItem(pushButton2);
+    vPolicy2->addItem(pushButton3);
+    vPolicy2->addItem(pushButton4);
+
     MLayout *layout3 = new MLayout;
     MLinearLayoutPolicy* hPolicy3 = new MLinearLayoutPolicy(layout3, Qt::Horizontal);
-    hPolicy3->setContentsMargins(20, 0, 20, 0);
+    hPolicy3->setContentsMargins(0, 0, 0, 0);
+    hPolicy3->setSpacing(0);
 
     edits.at(1)->attachToolbar(registeredAttributeExtensionId1);
     //% "Example text edit 1 has extended attributes"
@@ -133,15 +157,26 @@ void TextEntryAttributeExtensionPage::createContent()
 
     edits << new MTextEdit(MTextEditModel::MultiLine, "", panel);
     edits.at(2)->setObjectName("customextendedattribute2TextEdit");
+    edits.at(2)->setStyleName(inv("CommonSingleInputField"));
     // create buttons
     MLayout *layout4 = new MLayout;
     MLinearLayoutPolicy* hPolicy4 = new MLinearLayoutPolicy(layout4, Qt::Horizontal);
+    hPolicy4->setContentsMargins(0, 0, 0, 0);
+    hPolicy4->setSpacing(0);
+    MLinearLayoutPolicy* vPolicy4 = new MLinearLayoutPolicy(layout4, Qt::Vertical);
+    hPolicy4->setContentsMargins(0, 0, 0, 0);
+    hPolicy4->setSpacing(0);
     // The policy notifies the widgets of their relative position inside the layout,
     // this causes the buttons to be rendered with different backgrounds for each position
     hPolicy4->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    vPolicy4->setNotifyWidgetsOfLayoutPositionEnabled(true);
+
+    layout4->setLandscapePolicy(hPolicy4);
+    layout4->setPortraitPolicy(vPolicy4);
 
     pushButton5 = new MButton();
-    pushButton5 ->setObjectName("pushButton5");
+    pushButton5->setObjectName("pushButton5");
+    pushButton5->setStyleName(inv("CommonTopSplitButton"));
     pushButton5->setCheckable(true);
     pushButton5->setViewType(MButton::toggleType);
     pushButton5->setSizePolicy(sizePolicy);
@@ -149,6 +184,7 @@ void TextEntryAttributeExtensionPage::createContent()
 
     pushButton6 = new MButton();
     pushButton6->setObjectName("pushButton6");
+    pushButton6->setStyleName(inv("CommonVerticalCenterSplitButton"));
     pushButton6->setCheckable(true);
     pushButton6->setViewType(MButton::toggleType);
     pushButton6->setSizePolicy(sizePolicy);
@@ -156,6 +192,7 @@ void TextEntryAttributeExtensionPage::createContent()
 
     pushButton7 = new MButton();
     pushButton7->setObjectName("pushButton7");
+    pushButton7->setStyleName(inv("CommonVerticalCenterSplitButton"));
     pushButton7->setCheckable(true);
     pushButton7->setViewType(MButton::toggleType);
     pushButton7->setSizePolicy(sizePolicy);
@@ -163,6 +200,7 @@ void TextEntryAttributeExtensionPage::createContent()
 
     pushButton8 = new MButton();
     pushButton8->setObjectName("pushButton8");
+    pushButton8->setStyleName(inv("CommonBottomSplitButton"));
     pushButton8->setCheckable(true);
     pushButton8->setViewType(MButton::toggleType);
     pushButton8->setSizePolicy(sizePolicy);
@@ -173,9 +211,14 @@ void TextEntryAttributeExtensionPage::createContent()
     hPolicy4->addItem(pushButton7);
     hPolicy4->addItem(pushButton8);
 
+    vPolicy4->addItem(pushButton5);
+    vPolicy4->addItem(pushButton6);
+    vPolicy4->addItem(pushButton7);
+    vPolicy4->addItem(pushButton8);
+
     MLayout *layout5 = new MLayout;
     MLinearLayoutPolicy* hPolicy5 = new MLinearLayoutPolicy(layout5, Qt::Horizontal);
-    hPolicy5->setContentsMargins(20, 0, 20, 0);
+    hPolicy5->setContentsMargins(0, 0, 0, 0);
 
     edits.at(2)->attachToolbar(registeredAttributeExtensionId2);
     //% "Example text edit 2 has extended attributes"

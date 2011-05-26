@@ -19,6 +19,7 @@
 
 #include "singleselectiondialogspage.h"
 
+#include <MApplication>
 #include <MAbstractCellCreator>
 #include <MButton>
 #include <MBasicListItem>
@@ -46,6 +47,11 @@ public:
         MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
         if (cell == NULL) {
             cell = new MBasicListItem(MBasicListItem::SingleTitle);
+            if (MApplication::instance()->objectName() == "widgetsgallery") {
+                cell->setStyleName("CommonBasicListItem");
+            } else {
+                cell->setStyleName("CommonBasicListItemInverted");
+            }
             cell->initLayout();
             cell->setLayoutPosition(M::CenterPosition);
         }
@@ -82,6 +88,8 @@ void SingleSelectionDialogsPage::createContent()
 {
     MApplicationPage::createContent();
 
+    setStyleName(inv("CommonApplicationPage"));
+
     QGraphicsWidget *panel = centralWidget();
 
     MLayout *layout = new MLayout(panel);
@@ -100,6 +108,7 @@ void SingleSelectionDialogsPage::populateLayout()
 {
     list = new MList(centralWidget());
     list->setObjectName("list");
+    list->setStyleName(inv("CommonList"));
     list->setCellCreator(new SingleSelectionDialogsPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);

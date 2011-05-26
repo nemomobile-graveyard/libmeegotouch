@@ -55,6 +55,7 @@ QStringList TemplatePage::groupNames()
 void TemplatePage::createContent()
 {
     MApplicationPage::createContent();
+    setStyleName(inv("CommonApplicationPage"));
     createLayout();
     containerLayout = new MLayout(container);
     containerPolicy = new MLinearLayoutPolicy(containerLayout, Qt::Vertical);
@@ -84,12 +85,12 @@ void TemplatePage::createLayout()
 
     separator = new MSeparator();
     separator->setObjectName("separator");
-    separator->setStyleName("CommonVerticalSeparator");
+    separator->setStyleName(inv("CommonVerticalSeparator"));
     separator->setOrientation(Qt::Vertical);
 
     infoLabel = new MLabel();
     infoLabel->setObjectName("infoLabel");
-    infoLabel->setStyleName("CommonBodyText");
+    infoLabel->setStyleName(inv("CommonBodyText"));
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 
@@ -111,5 +112,14 @@ void TemplatePage::retranslateUi()
 
     //% "Sample template"
     infoLabel->setText(qtTrId("xx_sample template"));
+}
+
+QString TemplatePage::inv(QString stylename)
+{
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        return stylename;
+    } else {
+        return stylename.append("Inverted");
+    }
 }
 

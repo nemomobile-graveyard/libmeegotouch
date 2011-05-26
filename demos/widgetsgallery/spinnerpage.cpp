@@ -120,7 +120,7 @@ void SpinnerPage::inApplicationMainArea()
 
     description = new MLabel(centralWidget());
     description->setObjectName("appAreaDescriptionLabel");
-    description->setStyleName("CommonBodyText");
+    description->setStyleName(inv("CommonBodyText"));
     //% "Spinner can be used while content is loading."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_application_area_description"));
     description->setWordWrap(true);
@@ -136,6 +136,7 @@ void SpinnerPage::inApplicationMainArea()
 
     spinner = new MProgressIndicator(centralWidget(), MProgressIndicator::spinnerType);
     spinner->setObjectName("spinner");
+    spinner->setStyleName(inv("CommonLargeSpinner"));
     spinner->setUnknownDuration(true);
     containerPolicy->addItem(spinner, Qt::AlignCenter);
 
@@ -155,6 +156,7 @@ void SpinnerPage::inContainerHeader()
 
     container = new MContainer(centralWidget());
     container->setObjectName("container");
+    container->setStyleName(inv("CommonContainer"));
     container->setProgressIndicatorVisible(true);
     //% "Online albums"
     container->setTitle(qtTrId("xx_spinner_page_container_title"));
@@ -165,7 +167,7 @@ void SpinnerPage::inContainerHeader()
 
     description = new MLabel(centralWidget());
     description->setObjectName("containerDescriptionLabel");
-    description->setStyleName("CommonBodyText");
+    description->setStyleName(inv("CommonBodyText"));
     //% "Spinner can be used in container header to indicate that the items inside the container "
     //% "are being updated, but visible items can be interacted with."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_container_header_description"));
@@ -213,7 +215,7 @@ void SpinnerPage::inDialog()
 
     description = new MLabel(centralWidget());
     description->setObjectName("dialogDescriptionLabel");
-    description->setStyleName("CommonBodyText");
+    description->setStyleName(inv("CommonBodyText"));
     //% "Spinner can be placed in dialog header to indicate changing content."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_dialog_header_description"));
     description->setWordWrap(true);

@@ -55,6 +55,8 @@ void ComboBoxPage::createContent()
 {
     MApplicationPage::createContent();
 
+    setStyleName(inv("CommonApplicationPage"));
+
     createLayout();
     containerLayout = new MLayout(container);
 
@@ -71,6 +73,7 @@ void ComboBoxPage::createContent()
     */
     comboBox1 = new MComboBox;
     comboBox1->setObjectName("comboBox1");
+    comboBox1->setStyleName(inv("CommonComboBox"));
     comboBox1->setIconID("icon-m-camera-scene-portrait");
     comboBox1->addItems(list);
     comboBox1->setCurrentIndex(40);
@@ -82,6 +85,7 @@ void ComboBoxPage::createContent()
     */
     comboBox2 = new MComboBox;
     comboBox2->setObjectName("comboBox2");
+    comboBox2->setStyleName(inv("CommonComboBoxButtonNoTitle"));
     comboBox2->setViewType("simpleButton");
 
     model1 = new QStringListModel(this);
@@ -97,6 +101,7 @@ void ComboBoxPage::createContent()
 
     comboBox3 = new MComboBox;
     comboBox3->setObjectName("comboBox3");
+    comboBox3->setStyleName(inv("CommonComboBox"));
     comboBox3->setIconID("icon-m-common-clock");
     comboBox3->setTitle("Time-consuming setting");
     comboBox3->addItem("Wash your car");

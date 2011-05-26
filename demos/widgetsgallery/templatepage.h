@@ -56,6 +56,7 @@ public:
 protected:
     virtual void createLayout();
     virtual void retranslateUi();
+    QString inv(QString stylename);
 
     MLayout              *layout;
 

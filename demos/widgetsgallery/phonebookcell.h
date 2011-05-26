@@ -65,6 +65,8 @@ private:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:
+    QString inv(QString stylename);
+
     MLayout *layout;
     MGridLayoutPolicy *landscapePolicy;
     MLinearLayoutPolicy *portraitPolicy;

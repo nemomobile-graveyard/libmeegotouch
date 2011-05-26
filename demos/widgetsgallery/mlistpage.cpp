@@ -482,17 +482,6 @@ void MListPage::changeSelectionMode(int index)
     }
 }
 
-void MListPage::changeSeparatorsMode(int index)
-{
-    Q_ASSERT(index >= 0 && index <= 1);
-    bool enableSeparators = (index == 1);
-
-    if (enableSeparators)
-        list->setObjectName("listWithSeparators");
-    else
-        list->setObjectName("list");
-}
-
 void MListPage::changeListIndexVisibility(int index)
 {
     Q_ASSERT(index >= 0 && index <= 3);
@@ -683,18 +672,9 @@ void MListPage::showAdvancedConfigurationDialog()
         // Use the same landscape policy for portrait mode.
         MLinearLayoutPolicy *portraitPolicy = landscapePolicy;
 
-        QStringList separatorsModes;
-        separatorsModes << "Off" << "On";
-        MComboBox *combo = createComboBoxLabelButton("Separators", separatorsModes, panel);
-        combo->setCurrentIndex(list->objectName() == "listWithSeparators" ? 1 : 0);
-        connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSeparatorsMode(int)));
-
-        landscapePolicy->addItem(combo);
-
         QStringList listIndexModes;
         listIndexModes << "Off" << "On" << "Auto" << "Floating";
-        combo = createComboBoxLabelButton("List Index", listIndexModes, panel);
-        combo->setCurrentIndex(list->indexDisplayMode());
+        MComboBox *combo = createComboBoxLabelButton("List Index", listIndexModes, panel);
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
 
         landscapePolicy->addItem(combo);
@@ -758,6 +738,7 @@ void MListPage::showTextEdit(bool show)
 void MListPage::createContent()
 {
     MApplicationPage::createContent();
+    setStyleName(inv("CommonApplicationPage"));
     createActions();
     createObjectMenuActions();
 
@@ -769,6 +750,7 @@ void MListPage::createContent()
 
     list = new MList(panel);
     list->setObjectName("list");
+    list->setStyleName(inv("CommonList"));
 
     setPlainListModel();
     changeListMode(Grouped);

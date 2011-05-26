@@ -82,51 +82,111 @@ QString LanguagePage::timedemoTitle()
 void LanguagePage::createContent()
 {
     MApplicationPage::createContent();
+
+    setStyleName(inv("CommonApplicationPage"));
+
     QGraphicsWidget *panel = centralWidget();
     panel->setObjectName("panel");
     MLayout *layout = new MLayout(panel);
+
     MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
+
     comboBoxLanguage = new MComboBox;
     comboBoxLanguage->setObjectName("comboBoxLanguage");
+    comboBoxLanguage->setStyleName(inv("CommonComboBox"));
     policy->addItem(comboBoxLanguage, 1, 1);
+
     comboBoxLcTime = new MComboBox;
     comboBoxLcTime->setObjectName("comboBoxLcTime");
+    comboBoxLcTime->setStyleName(inv("CommonComboBox"));
+
     comboBoxLcTimeFormat24h = new MComboBox;
     comboBoxLcTimeFormat24h->setObjectName("comboBoxLcTimeFormat24h");
+    comboBoxLcTimeFormat24h->setStyleName(inv("CommonComboBox"));
+
     comboBoxLcCollate = new MComboBox;
     comboBoxLcCollate->setObjectName("comboBoxLcCollate");
+    comboBoxLcCollate->setStyleName(inv("CommonComboBox"));
+
     comboBoxLcNumeric = new MComboBox;
     comboBoxLcNumeric->setObjectName("comboBoxLcNumeric");
+    comboBoxLcNumeric->setStyleName(inv("CommonComboBox"));
+
     comboBoxLcMonetary = new MComboBox;
     comboBoxLcMonetary->setObjectName("comboBoxLcMonetary");
+    comboBoxLcMonetary->setStyleName(inv("CommonComboBox"));
+
     labelHaveGconf = new MLabel;
     labelHaveGconf->setObjectName("labelHaveGconf");
+    labelHaveGconf->setStyleName(inv("CommonBodyText"));
+    labelHaveGconf->setWordWrap(true);
+
     labelHaveIcu = new MLabel;
     labelHaveIcu->setObjectName("labelHaveIcu");
+    labelHaveIcu->setStyleName(inv("CommonBodyText"));
+    labelHaveIcu->setWordWrap(true);
+
     labelExampleNumber = new MLabel;
     labelExampleNumber->setObjectName("labelExampleNumber");
+    labelExampleNumber->setStyleName(inv("CommonBodyText"));
+    labelExampleNumber->setWordWrap(true);
+
     labelExampleDateTime = new MLabel;
     labelExampleDateTime->setObjectName("labelExampleDateTime");
+    labelExampleDateTime->setStyleName(inv("CommonBodyText"));
+    labelExampleDateTime->setWordWrap(true);
+
     labelExampleWeekNumber = new MLabel;
     labelExampleWeekNumber->setObjectName("labelExampleWeekNumber");
+    labelExampleWeekNumber->setStyleName(inv("CommonBodyText"));
+    labelExampleWeekNumber->setWordWrap(true);
+
     labelExampleCurrency = new MLabel;
     labelExampleCurrency->setObjectName("labelExampleCurrency");
+    labelExampleCurrency->setStyleName(inv("CommonBodyText"));
+    labelExampleCurrency->setWordWrap(true);
+
     labelExampleTranslation1 = new MLabel;
     labelExampleTranslation1->setObjectName("labelExampleTranslation1");
+    labelExampleTranslation1->setStyleName(inv("CommonBodyText"));
+    labelExampleTranslation1->setWordWrap(true);
+
     labelExampleTranslation2 = new MLabel;
     labelExampleTranslation2->setObjectName("labelExampleTranslation2");
+    labelExampleTranslation2->setStyleName(inv("CommonBodyText"));
+    labelExampleTranslation2->setWordWrap(true);
+
     labelExampleTranslation3 = new MLabel;
     labelExampleTranslation3->setObjectName("labelExampleTranslation3");
+    labelExampleTranslation3->setStyleName(inv("CommonBodyText"));
+    labelExampleTranslation3->setWordWrap(true);
+
     labelLtrTest = new MLabel;
     labelLtrTest->setObjectName("labelLtrTest");
+    labelLtrTest->setStyleName(inv("CommonBodyText"));
+    labelLtrTest->setWordWrap(true);
+
     labelRtlTest = new MLabel;
     labelRtlTest->setObjectName("labelRtlTest");
+    labelRtlTest->setStyleName(inv("CommonBodyText"));
+    labelRtlTest->setWordWrap(true);
+
     labelLtrTestRich = new MLabel;
     labelLtrTestRich->setObjectName("labelLtrTestRich");
+    labelLtrTestRich->setStyleName(inv("CommonBodyText"));
+    labelLtrTestRich->setWordWrap(true);
+
     labelRtlTestRich = new MLabel;
     labelRtlTestRich->setObjectName("labelRtlTestRich");
+    labelRtlTestRich->setStyleName(inv("CommonBodyText"));
+    labelRtlTestRich->setWordWrap(true);
+
     labelFontTest = new MLabel;
     labelFontTest->setObjectName("labelFontTest");
+    labelFontTest->setStyleName(inv("CommonBodyText"));
+    labelFontTest->setWordWrap(true);
     labelFontTest->setWordWrap(true);
 
     policy->addItem(comboBoxLcTime, 2, 1);

@@ -19,6 +19,7 @@
 
 #include "loginsheet.h"
 
+#include <MApplication>
 #include <MBasicSheetHeader>
 #include <MLabel>
 #include <MMessageBox>
@@ -52,7 +53,7 @@ void LoginSheet::createCentralWidget()
     //% "Connect to Service"
     MLabel *label = new MLabel(qtTrId("xx_wg_sheets_connect_service"));
     label->setObjectName("connectLabel");
-    label->setStyleName("CommonTitle");
+    label->setStyleName(inv("CommonTitle"));
     label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     mainLayout->addItem(label);
 
@@ -61,13 +62,13 @@ void LoginSheet::createCentralWidget()
     //% "Username:"
     label = new MLabel(qtTrId("xx_wg_sheets_username"));
     label->setObjectName("usernameLabel");
-    label->setStyleName("CommonFieldLabel");
+    label->setStyleName(inv("CommonFieldLabel"));
 
     mainLayout->addItem(label);
 
     userNameTextEdit = new MTextEdit;
     userNameTextEdit->setObjectName("userNameTextEdit");
-    userNameTextEdit->setStyleName("CommonSingleInputFieldLabeled");
+    userNameTextEdit->setStyleName(inv("CommonSingleInputFieldLabeled"));
     mainLayout->addItem(userNameTextEdit);
 
     mainLayout->addItem(createSpacer());
@@ -75,12 +76,12 @@ void LoginSheet::createCentralWidget()
     //% "Password:"
     label = new MLabel(qtTrId("xx_wg_sheets_password"));
     label->setObjectName("PasswordLabel");
-    label->setStyleName("CommonFieldLabel");
+    label->setStyleName(inv("CommonFieldLabel"));
     mainLayout->addItem(label);
 
     MTextEdit *textEdit = new MTextEdit;
     textEdit->setObjectName("passwordTextEdit");
-    textEdit->setStyleName("CommonSingleInputFieldLabeled");
+    textEdit->setStyleName(inv("CommonSingleInputFieldLabeled"));
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
 
@@ -91,6 +92,7 @@ void LoginSheet::createHeaderWidget()
 {
     MBasicSheetHeader *basicHeader = new MBasicSheetHeader(this);
     basicHeader->setObjectName("basicSheetHeader");
+    basicHeader->setStyleName(inv(""));
 
     //% "Cancel"
     basicHeader->setNegativeAction(new QAction(qtTrId("xx_wg_sheets_cancel"), basicHeader));
@@ -161,4 +163,13 @@ QGraphicsWidget *LoginSheet::createSpacer() const
     spacer->setPreferredHeight(24.0);
     spacer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     return spacer;
+}
+
+QString LoginSheet::inv(QString stylename)
+{
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        return stylename;
+    } else {
+        return stylename.append("Inverted");
+    }
 }

@@ -100,10 +100,7 @@ private slots:
     void textFieldConfiguration();
     void iconAndLabelTabsBottomConfiguration();
     void iconTabsBottomConfiguration();
-    void textTabsBottomConfiguration();
-    void iconAndLabelTabsTopConfiguration();
     void iconTabsTopConfiguration();
-    void textTabsTopConfiguration();
 
     void setBackButtonVisible(bool visible);
     void setMenuActionsVisible(bool visible);
@@ -119,7 +116,7 @@ private:
     void removeLast(int count = 1);
     void toolsConfiguration(int count);
     void initDefaultViewToolBar();
-    void initTabViewToolBar(bool onTop, bool icons, bool labels);
+    void initTabViewToolBar(bool onTop, bool labels);
     void addTab(int tabNumber);
     bool isTabBarOnTop();
 
@@ -137,10 +134,7 @@ private:
     MAction *textFieldAction;
     MAction *iconAndLabelTabsAction;
     MAction *iconTabsAction;
-    MAction *textTabsAction;
-    MAction *iconAndLabelTabsTopAction;
     MAction *iconTabsTopAction;
-    MAction *textTabsTopAction;
 
     MButton *visibleBackButton;
     MLabel  *visibleBackButtonLabel;

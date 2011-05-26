@@ -53,12 +53,12 @@ void CheckboxPage::createContent()
     // Icon buttons
     checkbox = new MButton();
     checkbox->setObjectName("checkbox");
-    checkbox->setStyleName("CommonRightCheckBox");
+    checkbox->setStyleName(inv("CommonRightCheckBox"));
     checkbox->setViewType(MButton::checkboxType);
     checkbox->setCheckable(true);
     checkboxLabel = new MLabel();
     checkboxLabel->setObjectName("checkboxLabel");
-    checkboxLabel->setStyleName("CommonBodyText");
+    checkboxLabel->setStyleName(inv("CommonBodyText"));
     checkboxLabel->setWordWrap(true);
     checkboxLabel->setTextElide(false);
     checkboxLabel->setMinimumWidth(0);

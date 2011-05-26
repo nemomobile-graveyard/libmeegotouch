@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "toolbarpage.h"
+#include <MApplication>
 #include <MAction>
 #include <MButton>
 #include <MTextEdit>
@@ -97,6 +98,11 @@ public:
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
         MContentItem *contentItem = qobject_cast<MContentItem *>(cell);
+        if (MApplication::instance()->objectName() == "widgetsgallery") {
+            contentItem->setStyleName("CommonContentItem");
+        } else {
+            contentItem->setStyleName("CommonContentItemInverted");
+        }
 
         QVariant data = index.data(Qt::DisplayRole);
         QStringList rowData = data.value<QStringList>();
@@ -156,10 +162,7 @@ ToolBarPage::ToolBarPage() :
     textFieldAction(0),
     iconAndLabelTabsAction(0),
     iconTabsAction(0),
-    textTabsAction(0),
-    iconAndLabelTabsTopAction(0),
     iconTabsTopAction(0),
-    textTabsTopAction(0),
     visibleBackButton(0),
     visibleBackButtonLabel(0),
     visibleMenuButton(0),
@@ -191,6 +194,7 @@ void ToolBarPage::createContent()
 
     resetButton = new MButton();
     resetButton->setObjectName("resetButton");
+    resetButton->setStyleName(inv("CommonSingleButton"));
     connect(resetButton, SIGNAL(clicked()), this, SLOT(reset()));
     containerPolicy->addItem(resetButton, Qt::AlignCenter);
 
@@ -230,12 +234,6 @@ void ToolBarPage::createContent()
     connect(iconTabsAction, SIGNAL(triggered()), this, SLOT(iconTabsBottomConfiguration()));
     addAction(iconTabsAction);
 
-    textTabsAction = new MAction(this);
-    textTabsAction->setObjectName("textTabsAction");
-    textTabsAction->setLocation(MAction::ApplicationMenuLocation);
-    connect(textTabsAction, SIGNAL(triggered()), this, SLOT(textTabsBottomConfiguration()));
-    addAction(textTabsAction);
-
     iconAndLabelTabsAction = new MAction(this);
     iconAndLabelTabsAction->setObjectName("iconAndLabelTabsAction");
     iconAndLabelTabsAction->setLocation(MAction::ApplicationMenuLocation);
@@ -247,18 +245,6 @@ void ToolBarPage::createContent()
     iconTabsTopAction->setLocation(MAction::ApplicationMenuLocation);
     connect(iconTabsTopAction, SIGNAL(triggered()), this, SLOT(iconTabsTopConfiguration()));
     addAction(iconTabsTopAction);
-
-    textTabsTopAction = new MAction(this);
-    textTabsTopAction->setObjectName("textTabsTopAction");
-    textTabsTopAction->setLocation(MAction::ApplicationMenuLocation);
-    connect(textTabsTopAction, SIGNAL(triggered()), this, SLOT(textTabsTopConfiguration()));
-    addAction(textTabsTopAction);
-
-    iconAndLabelTabsTopAction = new MAction(this);
-    iconAndLabelTabsTopAction->setObjectName("iconAndLabelTabsTopAction");
-    iconAndLabelTabsTopAction->setLocation(MAction::ApplicationMenuLocation);
-    connect(iconAndLabelTabsTopAction, SIGNAL(triggered()), this, SLOT(iconAndLabelTabsTopConfiguration()));
-    addAction(iconAndLabelTabsTopAction);
 
     connect(this, SIGNAL(appearing()), this, SLOT(onAppear()));
     connect(this, SIGNAL(disappearing()), this, SLOT(onDisappear()));
@@ -294,14 +280,8 @@ void ToolBarPage::retranslateUi()
     iconAndLabelTabsAction->setText(qtTrId("xx_toolbar_page_icon_and_label_tabs"));
     //% "Icon tabs"
     iconTabsAction->setText(qtTrId("xx_toolbar_page_icon_tabs"));
-    //% "Text tabs"
-    textTabsAction->setText(qtTrId("xx_toolbar_page_text_tabs"));
-    //% "Icon + label tabs in portrait (top)"
-    iconAndLabelTabsTopAction->setText(qtTrId("xx_toolbar_page_icon_and_label_tabs_top"));
     //% "Icon tabs (top)"
     iconTabsTopAction->setText(qtTrId("xx_toolbar_page_icon_tabs_top"));
-    //% "Text tabs (top)"
-    textTabsTopAction->setText(qtTrId("xx_toolbar_page_text_tabs_top"));
 
     //% "Back button visible"
     visibleBackButtonLabel->setText(qtTrId("xx_toolbar_page_back_button_visible"));
@@ -325,28 +305,28 @@ void ToolBarPage::setupCheckBoxes()
 
     visibleBackButton = new MButton();
     visibleBackButton->setObjectName("visibleBackButton");
-    visibleBackButton->setStyleName("CommonRightCheckBox");
+    visibleBackButton->setStyleName(inv("CommonRightCheckBox"));
     visibleBackButton->setViewType(MButton::checkboxType);
     visibleBackButton->setCheckable(true);
     visibleBackButton->setChecked(true);
     connect(visibleBackButton, SIGNAL(toggled(bool)), this, SLOT(setBackButtonVisible(bool)));
     visibleBackButtonLabel = new MLabel();
     visibleBackButtonLabel->setObjectName("visibleBackButtonLabel");
-    visibleBackButtonLabel->setStyleName("CommonSingleTitle");
+    visibleBackButtonLabel->setStyleName(inv("CommonSingleTitle"));
     visibleBackButtonLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     visibleBackButtonLabel->setWordWrap(false);
     visibleBackButtonLabel->setTextElide(true);
 
     visibleMenuButton = new MButton();
     visibleMenuButton->setObjectName("visibleMenuButton");
-    visibleMenuButton->setStyleName("CommonRightCheckBox");
+    visibleMenuButton->setStyleName(inv("CommonRightCheckBox"));
     visibleMenuButton->setViewType(MButton::checkboxType);
     visibleMenuButton->setCheckable(true);
     visibleMenuButton->setChecked(true);
     connect(visibleMenuButton, SIGNAL(toggled(bool)), this, SLOT(setMenuActionsVisible(bool)));
     visibleMenuButtonLabel = new MLabel();
     visibleMenuButtonLabel->setObjectName("visibleMenuButtonLabel");
-    visibleMenuButtonLabel->setStyleName("CommonSingleTitle");
+    visibleMenuButtonLabel->setStyleName(inv("CommonSingleTitle"));
     visibleMenuButtonLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     visibleMenuButtonLabel->setWordWrap(false);
     visibleMenuButtonLabel->setTextElide(true);
@@ -380,12 +360,12 @@ void ToolBarPage::setupSliders()
 
     maxToolsLabel = new MLabel;
     maxToolsLabel->setObjectName("maxToolsLabel");
-    maxToolsLabel->setStyleName("CommonFieldLabel");
+    maxToolsLabel->setStyleName(inv("CommonFieldLabel"));
     maxToolsLabel->setTextElide(true);
     layoutSliders->addItem(maxToolsLabel);
     maxToolsSlider = new MSlider;
     maxToolsSlider->setObjectName("maxToolsSlider");
-    maxToolsSlider->setStyleName("CommonSlider");
+    maxToolsSlider->setStyleName(inv("CommonSlider"));
     maxToolsSlider->setRange(0, 5);
     maxToolsSlider->setValue(2);
     maxToolsSlider->setMinLabelVisible(false);
@@ -398,12 +378,12 @@ void ToolBarPage::setupSliders()
 
     maxTabsLabel = new MLabel;
     maxTabsLabel->setObjectName("maxTabsLabel");
-    maxTabsLabel->setStyleName("CommonFieldLabel");
+    maxTabsLabel->setStyleName(inv("CommonFieldLabel"));
     maxTabsLabel->setTextElide(true);
     layoutSliders->addItem(maxTabsLabel);
     maxTabsSlider = new MSlider;
     maxTabsSlider->setObjectName("maxTabsSlider");
-    maxTabsSlider->setStyleName("CommonSlider");
+    maxTabsSlider->setStyleName(inv("CommonSlider"));
     maxTabsSlider->setRange(0, 4);
     maxTabsSlider->setValue(3);
     maxTabsSlider->setMinLabelVisible(false);
@@ -553,9 +533,19 @@ void ToolBarPage::toolsConfiguration(int count)
                             "icon-m-toolbar-reply",
                             "icon-m-toolbar-stop",
                             "icon-m-toolbar-forward"};
+        QString invertedIcons[5] = {"icon-m-toolbar-list-white",
+                                    "icon-m-toolbar-grid-white",
+                                    "icon-m-toolbar-reply-white",
+                                    "icon-m-toolbar-stop-white",
+                                    "icon-m-toolbar-forward-white"};
 
         for (int i=currentCount; i<qMin(5, count); i++) {
-            MAction *action = new MAction(icons[i], "", this);
+            MAction *action;
+            if (MApplication::instance()->objectName() == "widgetsgallery") {
+                action = new MAction(icons[i], "", this);
+            } else {
+                action = new MAction(invertedIcons[i], "", this);
+            }
             action->setObjectName("configurationAction");
             action->setLocation(MAction::ToolBarLocation);
             addAction(action);
@@ -615,37 +605,19 @@ void ToolBarPage::textFieldConfiguration()
 void ToolBarPage::iconAndLabelTabsBottomConfiguration()
 {
     currentConfiguration = iconAndLabelTabsBottom;
-    initTabViewToolBar(false, true, true);
+    initTabViewToolBar(false, true);
 }
 
 void ToolBarPage::iconTabsBottomConfiguration()
 {
     currentConfiguration = iconTabsBottom;
-    initTabViewToolBar(false, true, false);
-}
-
-void ToolBarPage::textTabsBottomConfiguration()
-{
-    currentConfiguration = textTabsBottom;
-    initTabViewToolBar(false, false, true);
-}
-
-void ToolBarPage::iconAndLabelTabsTopConfiguration()
-{
-    currentConfiguration = iconAndLabelTabsTop;
-    initTabViewToolBar(true, true, true);
+    initTabViewToolBar(false, false);
 }
 
 void ToolBarPage::iconTabsTopConfiguration()
 {
     currentConfiguration = iconTabsTop;
-    initTabViewToolBar(true, true, false);
-}
-
-void ToolBarPage::textTabsTopConfiguration()
-{
-    currentConfiguration = textTabsTop;
-    initTabViewToolBar(true, false, true);
+    initTabViewToolBar(true, true);
 }
 
 int ToolBarPage::buttonCount()
@@ -683,23 +655,24 @@ void ToolBarPage::initDefaultViewToolBar()
     if (MApplication::activeWindow()->isFullScreen() && !wasFullScreen)
         MApplication::activeWindow()->showNormal();
     currentStyleName = defaultStyleName;
-    applicationWindow()->setStyleName(currentStyleName);
-    ((MApplicationWindow*)MApplication::activeWindow())->setToolbarViewType(MToolBar::defaultType);
+    if (!currentStyleName.isEmpty())
+        applicationWindow()->setStyleName(currentStyleName);
+    applicationWindow()->setToolbarViewType(MToolBar::defaultType);
 }
 
-void ToolBarPage::initTabViewToolBar(bool onTop, bool icons, bool labels)
+void ToolBarPage::initTabViewToolBar(bool onTop, bool labels)
 {
     if (onTop) {
+        currentStyleName = "CommonApplicationWindowTabBarOnTop";
         if (!MApplication::activeWindow()->isFullScreen())
             MApplication::activeWindow()->showFullScreen();
-        currentStyleName = (icons && labels) ? "CommonApplicationWindowTabBarOnTop" : (icons ? "IconTabsTop" : "LabelTabsTop");
-        applicationWindow()->setStyleName(currentStyleName);
     } else {
         if (MApplication::activeWindow()->isFullScreen() && !wasFullScreen)
             MApplication::activeWindow()->showNormal();
-        currentStyleName = (icons && labels) ? defaultStyleName : (icons ? "IconTabsBottom" : "LabelTabsBottom");
-        applicationWindow()->setStyleName(currentStyleName);
+        currentStyleName = labels ? "CommonApplicationWindow" : "CommonApplicationWindowTabBarLabelessIconTabs";
     }
+    currentStyleName = inv(currentStyleName);
+    applicationWindow()->setStyleName(currentStyleName);
 
     clearToolbarActions();
     ((MApplicationWindow*)MApplication::activeWindow())->setToolbarViewType(MToolBar::tabType);
@@ -790,7 +763,7 @@ void ToolBarPage::addTab(int tabNumber)
 
 bool ToolBarPage::isTabBarOnTop()
 {
-    return ((((MApplicationWindow*)MApplication::activeWindow())->toolbarViewType() == MToolBar::tabType) &&
+    return ((applicationWindow()->toolbarViewType() == MToolBar::tabType) &&
             (currentConfiguration == iconAndLabelTabsTop ||
              currentConfiguration == iconTabsTop ||
              currentConfiguration == textTabsTop));

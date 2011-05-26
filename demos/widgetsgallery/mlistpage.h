@@ -75,7 +75,6 @@ public slots:
     void changeListMode(int index);
     void changeAmountOfColumns(int index);
     void changeSelectionMode(int index);
-    void changeSeparatorsMode(int index);
     void changeListIndexVisibility(int index);
     void changeLiveFilteringMode(int index);
     void changeGroupHeadersMode(int index);
