@@ -103,9 +103,6 @@ void MDialogViewPrivate::createWidgetHierarchy()
     rightSpacer = createSpacer();
     rightSpacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     rootPolicy->addItem(rightSpacer, 1, 2);
-    createButtonBox();
-    dialogBoxLayout->addItem(buttonBox);
-
 }
 
 QGraphicsWidget *MDialogViewPrivate::createSpacer()
@@ -151,6 +148,9 @@ void MDialogViewPrivate::createDialogBox()
     contentsLayout->setContentsMargins(0, 0, 0, 0);
     contentsLayout->setSpacing(0);
     contents->setLayout(contentsLayout);
+
+    createButtonBox();
+    dialogBoxLayout->addItem(buttonBox);
 }
 
 void MDialogViewPrivate::createButtonBox()
@@ -158,24 +158,20 @@ void MDialogViewPrivate::createButtonBox()
     buttonBox = new MWidgetController;
     buttonBox->setStyleName("MDialogButtonBox");
     buttonBox->setObjectName(buttonBox->styleName());
-    buttonBoxLayout = new MLayout();
+
+    centerLayout = new QGraphicsLinearLayout(Qt::Horizontal, buttonBox);
+    centerLayout->setContentsMargins(0, 0, 0, 0);
+    centerLayout->setSpacing(0);
+
+
+    buttonContainer = new MWidgetController;
+    buttonContainer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    buttonBoxLayout = new MLayout(buttonContainer);
     buttonBoxLayoutPolicy = new MButtonGroupLayoutPolicy(buttonBoxLayout, Qt::Horizontal);
-    buttonBoxLayout->setPolicy(buttonBoxLayoutPolicy);
-    buttonBoxLayout->setContentsMargins(0, 0, 0, 0);
     buttonBoxLayoutPolicy->setContentsMargins(0,0,0,0);
     buttonBoxLayoutPolicy->setSpacing(0);
 
-    buttonBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    buttonBoxLayout->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-
-    centerLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    buttonBox->setLayout(centerLayout);
-    centerLayout->setContentsMargins(0, 0, 0, 0);
-    centerLayout->setSpacing(0);
-    buttonContainer = new MWidget;
-    buttonContainer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    buttonContainer->setContentsMargins(0,0,0,0);
-    buttonContainer->setLayout(buttonBoxLayout);
     centerLayout->addItem(buttonContainer);
 }
 
@@ -440,12 +436,6 @@ void MDialogViewPrivate::updateButtonBoxLayoutOrientation()
 
     if (q->style()->maximumHorizontalButtons() < buttonBoxLayoutPolicy->count())
             buttonBoxLayoutPolicy->setOrientation(Qt::Vertical);
-
-    if (q->model()->buttons().count() == 0 || buttonBoxLayoutPolicy->orientation() == Qt::Horizontal) {
-        buttonBox->setPreferredHeight(buttonBox->minimumHeight() + q->style()->verticalSpacing());
-    } else {
-        buttonBox->setPreferredHeight((q->model()->buttons().count() * buttonBox->minimumHeight()) + q->style()->verticalSpacing());
-    }
 }
 
 void MDialogViewPrivate::removeButtonsNotInDialogModel()
