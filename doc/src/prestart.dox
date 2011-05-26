@@ -120,6 +120,13 @@ The application can react to the launch by connecting the \c
 MApplication::prestartReleased() signal, or by overriding
 MApplication::releasePrestart() handler. The default handler shows
 the active window of a single-window application, if one exists.
+Note: default handler shows the window in the state where
+it was when it entered the prestart state. For example if application
+was minimized when entering the prestart state it will be shown as minimized 
+when releasing it. If application developer wants to change this behaviour 
+so that window isalways maximized it can be achieved for example 
+by overriding MApplication::releasePrestart() handler and calling 
+raise() for the active window.
 
 For multi-window applications, the default handler does nothing. They
 must explicitly release the application from the prestarted state by
