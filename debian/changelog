@@ -1,8 +1,19 @@
-libmeegotouch (0.22.0~1) unstable; urgency=low
+libmeegotouch (0.22.0-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#260110 - When a second sheet appears on top of another one, status bar disappears
+  * Fixes: NB#258666 - [TASK] Update documentation - prestarted lazyshutdown third party applications visible in switcher when launch for the second time
+  * Fixes: NB#258646 - MCompleter layout problems
+  * Fixes: Build dependency lmt-theme version changes
+  * Fixes: libmeegotouchpreloader also needs dbg package
+  * Fixes: NB#257495 - Consecutive banner displayed for very short time
+  * Fixes: libmeegotouchpreloader0 package does not contain the library files
+  * Fixes: NB#249870
+  * Fixes: NB#257877 - Document that usage if launcher needs run-time dependency to applauncherd pkg
+  * Fixes: NB#255343 - Applications are not launching when scrollbar is active
+  * Fixes: NB#257293 - Clock; Time and date; §qtn_cloc_alarm_title§; abbreviation of 'May'
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 25 May 2011 09:57:45 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 26 May 2011 15:57:42 +0300
 
 libmeegotouch (0.21.17-1) unstable; urgency=low
 
