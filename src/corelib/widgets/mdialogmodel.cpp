@@ -60,9 +60,10 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameOk);
         break;
     case M::OpenButton:
-        //~ uispec-document ??? FIXME
+        //~ uispec-document ..._Common_Strings_UI_Specification_1.21.doc
+        //: Command/Button. Opens a file.
         //% "Open"
-        button->setText(qtTrId("xx_open_button"));
+        button->setText(qtTrId("qtn_comm_open"));
         button->setObjectName(ButtonNameOpen);
         break;
     case M::SaveButton:
@@ -157,20 +158,10 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         button->setObjectName(ButtonNameAbort);
         break;
     case M::RetryButton:
-        // There is a “qtn_appl_retry” in
-        // “DirectUI_AppletAndLibrary_ UISpecification_0.28.doc”
-        // Description:
-        // “Restart applet instantiation from the beginning.
-        //  When this is tapped, the applet is re-instantiated
-        //  to the previous location in the experience canvas.”
-        // But this seems to not the correct one ...
-        // There is another “Qtn_tui_button_retry” (why the capital ‘Q’?)
-        // in “DirectUI_Transfer_and_Share_UI_Specification_0.13.doc”
-        // but this seems to be not the right one either ...
-
-        //~ uispec-document ??? FIXME
+        //~ uispec-document ..._Common_Strings_UI_Specification_1.21.doc
+        //: Command to retry something now
         //% "Retry"
-        button->setText(qtTrId("xx_retry_button"));
+        button->setText(qtTrId("qtn_comm_command_retry_now"));
         button->setObjectName(ButtonNameRetry);
         break;
     case M::IgnoreButton:
