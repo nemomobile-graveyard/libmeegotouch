@@ -2075,10 +2075,6 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
         updateVisibilityOfSceneWindowsBehind(sceneWindow, false);
     }
 
-    if (statusBar) {
-        stackStatusBarBehindSheetIfSheetIsTopMost();
-    }
-
     if (isOnDisplay()) {
         produceMustBeResolvedDisplayEvent(sceneWindow);
     }
@@ -2222,10 +2218,6 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
             sceneWindow->deleteLater();
         }
     }
-
-    if (statusBar) {
-        stackStatusBarBehindSheetIfSheetIsTopMost();
-    }
 }
 
 void MSceneManagerPrivate::sendCancelEvent(MSceneWindow *window)
@@ -2334,59 +2326,6 @@ void MSceneManagerPrivate::updateVisibilityOfSceneWindowsBehind(
             // obscures all scene windows behind it.
             break;
         }
-    }
-}
-
-/*
-  If a sheet is the top most scene window we place the status bar right below it.
-
-  The default MStatusBar style usually have a reactive margin on its bottom to
-  make it easier to tap on it to bring the status menu. But while a sheet is
-  being displayed this extra margin might partially cover the buttons on the
-  sheet header (or at least be very close to them), causing the user to
-  accidentally open the status menu when he wanted to press some sheet header
-  button.
-
-  This method avoids that by temporarily placing the status bar below the sheet
-  while that sheet is the top most scene window.
- */
-void MSceneManagerPrivate::stackStatusBarBehindSheetIfSheetIsTopMost()
-{
-    Q_ASSERT(statusBar);
-    const QList<MSceneWindow *> &stackList = sceneWindowStack.list();
-    const MSceneWindow *sceneWindow = 0;
-    const MSceneWindow *topMostSceneWindow = 0;
-    int i = stackList.count() - 1;
-
-    // OBS: Non-fullscreen scene windows such as BorderDecoration
-    // and HomeButton Panel are not taken into consideration, as well
-    // as the status bar itself.
-    while (!topMostSceneWindow && i >= 0) {
-        sceneWindow = stackList.at(i);
-        switch (sceneWindow->windowType()) {
-            case MSceneWindow::ObjectMenu:
-            case MSceneWindow::PopupList:
-            case MSceneWindow::ModalSceneWindow:
-            case MSceneWindow::MessageBox:
-            case MSceneWindow::Dialog:
-            case MSceneWindow::Sheet:
-            case MSceneWindow::ApplicationMenu:
-            case MSceneWindow::ApplicationPage:
-            case MSceneWindow::PlainSceneWindow:
-                topMostSceneWindow = sceneWindow;
-                break;
-            default:
-                // Ignore it and check the one below
-                --i;
-                break;
-        }
-    }
-
-    if (topMostSceneWindow
-            && topMostSceneWindow->windowType() == MSceneWindow::Sheet) {
-        statusBar->setZValue(topMostSceneWindow->zValue() - 1);
-    } else {
-        statusBar->setZValue(zForWindowType(MSceneWindow::StatusBar));
     }
 }
 

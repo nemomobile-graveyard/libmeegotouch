@@ -1322,40 +1322,4 @@ void Ut_MSceneManager::testDisappearingFirstSheetDoesNotAffectOthersVisibility()
     QCOMPARE(secondSheet->isVisible(), true);
 }
 
-void Ut_MSceneManager::testStatusBarIsBelowSheetWhileSheetIsTopMost()
-{
-    MSceneWindow *statusBar = new MStatusBar;
-    MSceneWindow *page = new MApplicationPage;
-    MSceneWindow *sheet = new MSheet;
-    MSceneWindow *dialog = new MDialog;
-
-    sm->appearSceneWindowNow(statusBar);
-    qreal statusBarNormalZValue = statusBar->zValue();
-
-    QCOMPARE(statusBar->zValue(), statusBarNormalZValue);
-
-    sm->appearSceneWindowNow(page);
-
-    QCOMPARE(statusBar->zValue(), statusBarNormalZValue);
-
-    sm->appearSceneWindowNow(sheet);
-
-    QCOMPARE(statusBar->zValue(), sheet->zValue() - 1.0);
-
-    sm->appearSceneWindowNow(dialog);
-
-    // sheet is no longer the top-most one since dialog is blocking it
-    QCOMPARE(statusBar->zValue(), statusBarNormalZValue);
-
-    sm->disappearSceneWindowNow(dialog);
-
-    // sheet is the top-most one again
-    QCOMPARE(statusBar->zValue(), sheet->zValue() - 1.0);
-
-    sm->disappearSceneWindowNow(sheet);
-
-    // Back to normal as sheet is no longer appearing in the scene
-    QCOMPARE(statusBar->zValue(), statusBarNormalZValue);
-}
-
 QTEST_MAIN(Ut_MSceneManager);
