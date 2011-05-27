@@ -77,7 +77,7 @@ public:
     bool checkIfOrientationUpdatesRequired();
     M::OrientationAngle angleForTopEdge(const QString topEdge) const;
     void subscribeToSensorProperies();
-    void unsubscribeToSensorProperties();
+    void unsubscribeFromSensorProperties();
     void waitForSensorPropertiesToSubscribe();
     void rotateWindows(M::OrientationAngle angle);
     //Properties based on sensors states

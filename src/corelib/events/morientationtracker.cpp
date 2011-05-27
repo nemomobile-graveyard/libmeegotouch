@@ -250,7 +250,7 @@ void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
     if (updatesRequired && !isSubscribedToSensorProperties)
         subscribeToSensorProperies();
     else if (!updatesRequired && isSubscribedToSensorProperties)
-        unsubscribeToSensorProperties();
+        unsubscribeFromSensorProperties();
 #endif
 }
 
@@ -457,7 +457,7 @@ void MOrientationTrackerPrivate::subscribeToSensorProperies()
     updateOrientationAngle();
 }
 
-void MOrientationTrackerPrivate::unsubscribeToSensorProperties()
+void MOrientationTrackerPrivate::unsubscribeFromSensorProperties()
 {
     if (isSubscribedToSensorProperties) {
         isSubscribedToSensorProperties = false;
