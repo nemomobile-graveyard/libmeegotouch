@@ -44,6 +44,7 @@ namespace{
 #endif
     static const qreal mmPerInch = 25.4;
     static const qreal pointsPerInch = 72.0;
+    static qreal dotsPerInch = 96.0;
 }
 
 MDeviceProfilePrivate::MDeviceProfilePrivate()
@@ -51,6 +52,10 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
 {
     QString filename;
     QString targetname = MApplication::deviceName();
+
+#ifdef Q_WS_X11
+    dotsPerInch = QX11Info::appDpiX();
+#endif
 
 #ifdef Q_OS_WIN
     QDir appDir(QCoreApplication::applicationDirPath());
@@ -130,8 +135,7 @@ bool MDeviceProfilePrivate::load(const QString& filename)
 
     pixelsPerMm = pixelsPerInch.width() / mmPerInch;
     pixelsPerMmF = pixelsPerInch.width() / mmPerInch;
-    pixelsPerPt = pixelsPerInch.height() / pointsPerInch;
-    pixelsPerPtF = pixelsPerInch.height() / pointsPerInch;
+    pixelsPerPtF = dotsPerInch / pointsPerInch;
 
     if (settings.value("/other/showStatusBar").toString() == "autodetect")
         showStatusBar = hasStatusbarProvider();
@@ -298,7 +302,7 @@ qreal MDeviceProfile::mmToPixelsF(qreal mm)
 int MDeviceProfile::ptToPixels(qreal pt)
 {
     Q_D(const MDeviceProfile);
-    return pt * d->pixelsPerPt;
+    return pt * d->pixelsPerPtF;
 }
 
 qreal MDeviceProfile::ptToPixelsF(qreal pt)
@@ -310,7 +314,7 @@ qreal MDeviceProfile::ptToPixelsF(qreal pt)
 int MDeviceProfile::pixelsToPt(int pixels)
 {
     Q_D(const MDeviceProfile);
-    return pixels / d->pixelsPerPt;
+    return pixels / d->pixelsPerPtF;
 }
 
 qreal MDeviceProfile::pixelsToPtF(qreal pixels)
