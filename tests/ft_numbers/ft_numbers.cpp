@@ -1121,7 +1121,7 @@ void Ft_Numbers::testToDouble_data()
         << int(2)
         << true
         << double(0.1)
-        << QString("0,10");
+        << QString("0,1");
     QTest::newRow("en_GB 0.1")
         << QString("en_GB")
         << QString("0.1")
@@ -2263,7 +2263,8 @@ void Ft_Numbers::testDoublesWithFormatting_data()
 {
     QTest::addColumn<QString>("localeName");
     QTest::addColumn<double>("val");
-    QTest::addColumn<int>("prec");
+    QTest::addColumn<int>("maxPrec");
+    QTest::addColumn<int>("minPrec");
     QTest::addColumn<QString>("formatted");
 
     double defaultNumber = 1234567.1234567;
@@ -2271,78 +2272,115 @@ void Ft_Numbers::testDoublesWithFormatting_data()
     QTest::newRow("fi_FI 0")
             << QString("fi_FI")
             << defaultNumber
-            << 0 << QString("1 234 567");
+            << 0 << 0 << QString("1 234 567");
     QTest::newRow("en_GB 0")
             << QString("en_GB")
             << defaultNumber
-            << 0 << QString("1,234,567");
+            << 0 << 0 << QString("1,234,567");
     QTest::newRow("fi_FI 1")
             << QString("fi_FI")
             << defaultNumber
-            << 1 << QString("1 234 567,1");
+            << 1 << 0 << QString("1 234 567,1");
     QTest::newRow("en_GB 1")
             << QString("en_GB")
             << defaultNumber
-            << 1 << QString("1,234,567.1");
+            << 1 << 0 << QString("1,234,567.1");
     QTest::newRow("fi_FI 2")
             << QString("fi_FI")
             << defaultNumber
-            << 2 << QString("1 234 567,12");
+            << 2 << 0 << QString("1 234 567,12");
     QTest::newRow("en_GB 2")
             << QString("en_GB")
             << defaultNumber
-            << 2 << QString("1,234,567.12");
+            << 2 << 0 << QString("1,234,567.12");
     QTest::newRow("fi_FI 3")
             << QString("fi_FI")
             << defaultNumber
-            << 3 << QString("1 234 567,123");
+            << 3 << 0 << QString("1 234 567,123");
     QTest::newRow("en_GB 3")
             << QString("en_GB")
             << defaultNumber
-            << 3 << QString("1,234,567.123");
+            << 3 << 0 << QString("1,234,567.123");
     QTest::newRow("fi_FI 4")
             << QString("fi_FI")
             << defaultNumber
-            << 4 << QString("1 234 567,1235");
+            << 4 << 0 << QString("1 234 567,1235");
     QTest::newRow("en_GB 4")
             << QString("en_GB")
             << defaultNumber
-            << 4 << QString("1,234,567.1235");
+            << 4 << 0 << QString("1,234,567.1235");
     QTest::newRow("fi_FI 5")
             << QString("fi_FI")
             << defaultNumber
-            << 5 << QString("1 234 567,12346");
+            << 5 << 0 << QString("1 234 567,12346");
     QTest::newRow("en_GB 5")
             << QString("en_GB")
             << defaultNumber
-            << 5 << QString("1,234,567.12346");
+            << 5 << 0 << QString("1,234,567.12346");
     QTest::newRow("fi_FI 6")
             << QString("fi_FI")
             << defaultNumber
-            << 6 << QString("1 234 567,123457");
+            << 6 << 0 << QString("1 234 567,123457");
     QTest::newRow("en_GB 6")
             << QString("en_GB")
             << defaultNumber
-            << 6 << QString("1,234,567.123457");
+            << 6 << 0 << QString("1,234,567.123457");
+    QTest::newRow("en_GB 6")
+            << QString("en_GB")
+            << defaultNumber
+            << 6 << 6 << QString("1,234,567.123457");
     QTest::newRow("en_GB 6")
             << QString("en_GB")
             << 1234567.123450
-            << 6 << QString("1,234,567.123450");
+            << 6 << 0 << QString("1,234,567.12345");
+    QTest::newRow("en_GB 6")
+            << QString("en_GB")
+            << 1234567.123450
+            << 6 << 6 << QString("1,234,567.123450");
+    QTest::newRow("en_GB 6")
+            << QString("en_GB")
+            << 1234567.123450
+            << 6 << 7 << QString("1,234,567.123450");
+    QTest::newRow("en_GB 6")
+            << QString("en_GB")
+            << 1234567.123450
+            << 6 << -5 << QString("1,234,567.12345");
+    QTest::newRow("en_GB -1 -5")
+            << QString("en_GB")
+            << 1234567.123450
+            << -1 << -5 << QString("1,234,567.123");
+    QTest::newRow("en_GB -1 -5")
+            << QString("en_GB")
+            << 1234567.120
+            << -1 << -5 << QString("1,234,567.12");
+    QTest::newRow("en_GB -1 2")
+            << QString("en_GB")
+            << 1234567.120
+            << -1 << 2 << QString("1,234,567.12");
     QTest::newRow("ar_EG@numbers=latn 6")
             << QString("ar_EG@numbers=latn")
             << 1234567.123450
-            << 6 << QString("‏1٬234٬567٫123450‏");
+            << 6 << 0 << QString("‏1٬234٬567٫12345‏");
+    QTest::newRow("ar_EG@numbers=latn 6")
+            << QString("ar_EG@numbers=latn")
+            << 1234567.123450
+            << 6 << 6 << QString("‏1٬234٬567٫123450‏");
     QTest::newRow("ar_EG@numbers=arab 6")
             << QString("ar_EG@numbers=arab")
             << 1234567.123450
-            << 6 << QString("‏١٬٢٣٤٬٥٦٧٫١٢٣٤٥٠‏");
+            << 6 << 0 << QString("‏١٬٢٣٤٬٥٦٧٫١٢٣٤٥‏");
+    QTest::newRow("ar_EG@numbers=arab 6")
+            << QString("ar_EG@numbers=arab")
+            << 1234567.123450
+            << 6 << 6 << QString("‏١٬٢٣٤٬٥٦٧٫١٢٣٤٥٠‏");
 }
 
 void Ft_Numbers::testDoublesWithFormatting()
 {
     QFETCH(QString, localeName);
     QFETCH(double, val);
-    QFETCH(int, prec);
+    QFETCH(int, maxPrec);
+    QFETCH(int, minPrec);
     QFETCH(QString, formatted);
     MLocale loc(localeName);
 #if defined(VERBOSE_OUTPUT)
@@ -2352,11 +2390,11 @@ void Ft_Numbers::testDoublesWithFormatting()
         << "localeName: " << localeName
         << " number: " << val
         << " expected: " << formatted
-        << " formatNumber result: " << loc.formatNumber(val,prec)
+        << " formatNumber result: " << loc.formatNumber(val, maxPrec, minPrec)
         << "\n";
     debugStream.flush();
 #endif
-    QCOMPARE(loc.formatNumber(val, prec), formatted);
+    QCOMPARE(loc.formatNumber(val, maxPrec, minPrec), formatted);
 }
 
 void Ft_Numbers::testPercents_data()

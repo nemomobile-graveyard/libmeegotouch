@@ -1114,14 +1114,32 @@ public:
     /*!
      * \brief Returns the string representation of a number
      * \param i number to format
-     * \param precision number of fractional digits
+     * \param maxPrecision maximum number of fractional digits
+     *
+     * This just calls formatNumber(i, maxPrecision, 0).
      *
      * \sa formatNumber(qlonglong i) const
      * \sa formatNumber(short i) const
      * \sa formatNumber(int i) const
      * \sa formatNumber(float i) const
      */
-    QString formatNumber(double i, int precision = -1) const;
+    QString formatNumber(double i, int maxPrecision = -1) const;
+
+    /*!
+     * \brief Returns the string representation of a number
+     * \param i number to format
+     * \param maxPrecision maximum number of fractional digits
+     * \param minPrecision minimum number of fractional digits
+     *
+     * minPrecision is bound to be between 0 and maxPrecision
+     * inclusive.
+     *
+     * \sa formatNumber(qlonglong i) const
+     * \sa formatNumber(short i) const
+     * \sa formatNumber(int i) const
+     * \sa formatNumber(float i) const
+     */
+    QString formatNumber(double i, int maxPrecision, int minPrecision) const;
 
     /*!
      * \brief Returns the double represented by a localized string
