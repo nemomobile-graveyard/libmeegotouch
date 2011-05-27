@@ -76,7 +76,7 @@ public:
 #ifdef HAVE_CONTEXTSUBSCRIBER
     bool checkIfOrientationUpdatesRequired();
     M::OrientationAngle angleForTopEdge(const QString topEdge) const;
-    void subscribeToSensorProperies();
+    void subscribeToSensorProperties();
     void unsubscribeFromSensorProperties();
     void waitForSensorPropertiesToSubscribe();
     void rotateWindows(M::OrientationAngle angle);

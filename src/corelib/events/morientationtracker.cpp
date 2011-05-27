@@ -248,7 +248,7 @@ void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
     bool updatesRequired = checkIfOrientationUpdatesRequired();
 
     if (updatesRequired && !isSubscribedToSensorProperties)
-        subscribeToSensorProperies();
+        subscribeToSensorProperties();
     else if (!updatesRequired && isSubscribedToSensorProperties)
         unsubscribeFromSensorProperties();
 #endif
@@ -442,7 +442,7 @@ void MOrientationTracker::doUpdateOrientationAngle(
     d->doUpdateOrientationAngle(angle, isKeyboardOpen, isDeviceFlat, tvIsConnected);
 }
 #ifdef HAVE_CONTEXTSUBSCRIBER
-void MOrientationTrackerPrivate::subscribeToSensorProperies()
+void MOrientationTrackerPrivate::subscribeToSensorProperties()
 {
     if (!isSubscribedToSensorProperties) {
         //waiting for properties to synchronize
