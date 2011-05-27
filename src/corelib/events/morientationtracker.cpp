@@ -144,8 +144,6 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
             this, SLOT(handleCurrentAppWindowOrientationAngleChange()));
     connect(desktopAngleProperty, SIGNAL(valueChanged()),
             this, SLOT(handleDesktopOrientationChange()));
-
-    waitForSensorPropertiesToSubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
 
 #ifdef Q_WS_X11
@@ -415,6 +413,17 @@ M::OrientationAngle MOrientationTracker::orientationAngle() const
 {
     Q_D(const MOrientationTracker);
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if (!d->isSubscribedToSensorProperties) {
+        MOrientationTrackerPrivate *priv = const_cast<MOrientationTracker*>(this)->d_ptr;
+        // Momentarily subscribe to sensor properties to ensure we have an up to date
+        // currentAngle value.
+        priv->subscribeToSensorProperties();
+        priv->updateOrientationAngle();
+        priv->unsubscribeFromSensorProperties();
+    }
+#endif
+
     return d->currentAngle;
 }
 
@@ -433,6 +442,12 @@ void MOrientationTracker::enableRotations()
 {
     Q_D(MOrientationTracker);
     d->enableRotations();
+}
+
+bool MOrientationTracker::isSubscribedToSensorProperties() const
+{
+    Q_D(const MOrientationTracker);
+    return d->isSubscribedToSensorProperties;
 }
 
 void MOrientationTracker::doUpdateOrientationAngle(

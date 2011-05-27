@@ -68,6 +68,8 @@ private slots:
     void testFollowingDesktopOrientation();
     void testFollowingDesktopOrientationWhenPropertyIsNotPresent();
 
+    void testSensorPropertiesSubscription();
+
 private:
     /*  Helper members   */
 

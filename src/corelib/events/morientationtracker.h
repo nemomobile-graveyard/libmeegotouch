@@ -76,6 +76,7 @@ private:
                                   bool isDeviceFlat, bool tvIsConnected);
     void disableRotations();
     void enableRotations();
+    bool isSubscribedToSensorProperties() const;
 
 #ifdef Q_WS_X11
     void handleCurrentAppWindowChange();

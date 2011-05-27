@@ -45,6 +45,16 @@ bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool
 
 void Ut_MOrientationTracker::init()
 {
+    // Give at least one valid angle so that
+    // MOrientationTracker::orientationAngle() can
+    // work correctly.
+    // MOrientationTracker::orientationAngle() is called
+    // in MWindow construction
+    supportedAnglesStubLists[KeyboardOpen].clear();
+    supportedAnglesStubLists[KeyboardClosed].clear();
+    supportedAnglesStubLists[KeyboardOpen] << M::Angle0;
+    supportedAnglesStubLists[KeyboardClosed] << M::Angle0;
+
     window1 = new MWindow;
     window2 = new MWindow;
 }
@@ -53,8 +63,6 @@ void Ut_MOrientationTracker::cleanup()
 {
     delete window1;
     delete window2;
-    supportedAnglesStubLists[KeyboardOpen].clear();
-    supportedAnglesStubLists[KeyboardClosed].clear();
 }
 
 void Ut_MOrientationTracker::initTestCase()
@@ -181,7 +189,10 @@ void Ut_MOrientationTracker::testOrientationPolicyDeviceProfileConstraints()
     QFETCH(M::OrientationAngle, allowedAngle);
     QFETCH(M::OrientationAngle, sensorAngle);
 
+    supportedAnglesStubLists[KeyboardOpen].clear();
     supportedAnglesStubLists[KeyboardOpen] << allowedAngle;
+
+    supportedAnglesStubLists[KeyboardClosed].clear();
     supportedAnglesStubLists[KeyboardClosed] << allowedAngle;
 
     mTracker->doUpdateOrientationAngle(sensorAngle, true, false, false);
@@ -324,6 +335,13 @@ void Ut_MOrientationTracker::testWindowRemoteOrientationLock()
     gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubSetReturnValue("value", QVariant(keyboardOpen));
     gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(tvOutState));
 
+    window1->setVisible(true);
+    window2->setVisible(true);
+    MOnDisplayChangeEvent displayEvent1(true, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    MOnDisplayChangeEvent displayEvent2(true, QRectF(QPointF(0,0), window2->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayEvent1);
+    qApp->sendEvent(window2, &displayEvent2);
+
     // Use this signal so that also the video_route gets updated when eventually entering the updateOrientationAndle()
     QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->getProxy(), "valueChanged");
 
@@ -357,6 +375,10 @@ void Ut_MOrientationTracker::testUpdatesPostponedUntilRotationsAreEnabled()
 
     // Use this signal so that also the video_route gets updated when eventually entering the updateOrientationAndle()
     QMetaObject::invokeMethod(gContextPropertyStubMap->findStub("com.nokia.policy.video_route")->getProxy(), "valueChanged");
+
+    window1->setVisible(true);
+    MOnDisplayChangeEvent displayEvent(true, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayEvent);
 
     // Cause MOrientationTrackerPrivate::updateOrienationAngle() slot to get called.
     // Will update the orientation of our window1
@@ -546,6 +568,32 @@ void Ut_MOrientationTracker::testFollowingDesktopOrientationWhenPropertyIsNotPre
 
     //if property is not present (value().isNull()) defaults to portrait
     QCOMPARE(window1->orientation(), M::Portrait);
+}
+
+
+void Ut_MOrientationTracker::testSensorPropertiesSubscription()
+{
+    setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
+    setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
+
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
+
+    M::Orientation angle = window1->orientation();
+    Q_UNUSED(angle);
+
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
+
+    window1->setVisible(true);
+    MOnDisplayChangeEvent displayEvent1(true, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayEvent1);
+
+    QVERIFY(mTracker->isSubscribedToSensorProperties());
+
+    window1->setVisible(false);
+    MOnDisplayChangeEvent displayEvent2(false, QRectF(QPointF(0,0), window1->visibleSceneSize()));
+    qApp->sendEvent(window1, &displayEvent2);
+
+    QVERIFY(!mTracker->isSubscribedToSensorProperties());
 }
 
 ///////////////////////////////////////////////////////
