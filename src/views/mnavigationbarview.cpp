@@ -98,6 +98,7 @@ void MNavigationBarViewPrivate::init()
 
     backButton = new MButton(escapeButtonSlot);
     backButton->setViewType("icon");
+    backButton->setTextVisible(false);
 
     layout = new MLayout;
     layout->setContentsMargins(0, 0, 0, 0);

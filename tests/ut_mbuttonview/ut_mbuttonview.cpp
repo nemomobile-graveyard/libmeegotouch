@@ -32,6 +32,7 @@
 #include <mbuttonstyle.h>
 #include "ut_mbuttonview.h"
 #include "mapplication.h"
+#include "mlabel.h"
 
 #include "mcancelevent.h"
 
@@ -52,6 +53,7 @@ void Ut_MButtonView::cleanupTestCase()
 void Ut_MButtonView::init()
 {
     m_button = new MButton();
+    m_button->setTextVisible(false);
     m_subject = new MButtonIconView(m_button);
     m_button->setView(m_subject);
 }
@@ -360,6 +362,18 @@ QImage Ut_MButtonView::captureImage(MButton *button)
     button->paint(&painter, NULL, NULL);
 
     return pixmap.toImage();
+}
+
+void Ut_MButtonView::testLabelCreation()
+{
+    QVERIFY(!m_subject->d_func()->label);
+    m_button->setTextVisible(true);
+    QVERIFY(m_subject->d_func()->label);
+
+    m_button->setText("text");
+    m_button->setTextVisible(false);
+    m_button->setText("");
+    QVERIFY(m_subject->d_func()->label->text() == "");
 }
 
 QTEST_APPLESS_MAIN(Ut_MButtonView)
