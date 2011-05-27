@@ -247,9 +247,10 @@ void MOrientationTrackerPrivate::reevaluateSubscriptionToSensorProperties()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     bool updatesRequired = checkIfOrientationUpdatesRequired();
 
-    if (updatesRequired && !isSubscribedToSensorProperties)
+    if (updatesRequired && !isSubscribedToSensorProperties) {
         subscribeToSensorProperties();
-    else if (!updatesRequired && isSubscribedToSensorProperties)
+        updateOrientationAngle();
+    } else if (!updatesRequired && isSubscribedToSensorProperties)
         unsubscribeFromSensorProperties();
 #endif
 }
@@ -454,7 +455,6 @@ void MOrientationTrackerPrivate::subscribeToSensorProperties()
         MKeyboardStateTracker::instance()->d_ptr->subscribe();
         waitForSensorPropertiesToSubscribe();
     }
-    updateOrientationAngle();
 }
 
 void MOrientationTrackerPrivate::unsubscribeFromSensorProperties()
