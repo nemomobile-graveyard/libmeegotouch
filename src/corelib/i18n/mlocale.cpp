@@ -2193,14 +2193,19 @@ int MLocale::toInt(const QString &s, bool *ok) const
 #endif
 }
 
-QString MLocale::formatNumber(double i, int prec) const
+QString MLocale::formatNumber(double i, int maxPrecision) const
+{
+    return formatNumber(i, maxPrecision, 0);
+}
+
+QString MLocale::formatNumber(double i, int maxPrecision, int minPrecision) const
 {
 #ifdef HAVE_ICU
     Q_D(const MLocale);
     icu::UnicodeString str;
     icu::FieldPosition pos;
 
-    if (prec == -1) {
+    if (maxPrecision < 0) {
         d->_numberFormat->format(i, str, pos);
     } else {
         // the cached number formatter isn't sufficient
@@ -2215,8 +2220,8 @@ QString MLocale::formatNumber(double i, int prec) const
             return QString(); // "null" string
         }
 
-        nf->setMaximumFractionDigits(prec);
-        nf->setMinimumFractionDigits(prec);
+        nf->setMaximumFractionDigits(maxPrecision);
+        nf->setMinimumFractionDigits(qBound(0, minPrecision, maxPrecision));
         nf->format(i, str);
         delete nf;
     }
@@ -2226,7 +2231,7 @@ QString MLocale::formatNumber(double i, int prec) const
     return result;
 #else
     Q_D(const MLocale);
-    return d->createQLocale(MLcNumeric).toString(i, 'g', prec);
+    return d->createQLocale(MLcNumeric).toString(i, 'g', maxPrecision);
 #endif
 }
 
