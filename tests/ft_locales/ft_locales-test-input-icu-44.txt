@@ -1,5 +1,6 @@
 ar_SA	Language endonym	العربية
 ar_SA	Country endonym	المملكة العربية السعودية
+ar_SA	Decimal point	٫
 ar_SA	Floating Point Number	‏١٢٣٤٥٦٧٨٩٫٠١٢‏-
 ar_SA	Percent value	-‏١٬٢٣٤٫٥٦٧٩‏٪
 ar_SA	Currency value	€‏١٢٣٤٫٥٦‏
@@ -347,6 +348,7 @@ ar_SA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 ar_SA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL, y zzzz H:mm:ss -> יום שני, ١٨ רג׳אב, ١٤٢٩ GMT+٠٠:٠٠ ١٤:٣١:٠٠
 ca_ES	Language endonym	català
 ca_ES	Country endonym	Espanya
+ca_ES	Decimal point	,
 ca_ES	Floating Point Number	-123.456.789,012
 ca_ES	Percent value	-1.234,5679%
 ca_ES	Currency value	1.234,56 €
@@ -694,6 +696,7 @@ ca_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ca_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y H:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 da_DK	Language endonym	dansk
 da_DK	Country endonym	Danmark
+da_DK	Decimal point	,
 da_DK	Floating Point Number	-123.456.789,012
 da_DK	Percent value	-1.234,5679 %
 da_DK	Currency value	1.234,56 €
@@ -1041,6 +1044,7 @@ da_DK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 da_DK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
 de_CH	Language endonym	Schweizer Hochdeutsch
 de_CH	Country endonym	Schweiz
+de_CH	Decimal point	.
 de_CH	Floating Point Number	-123'456'789.012
 de_CH	Percent value	-1'234.5679 %
 de_CH	Currency value	€ 1'234.56
@@ -1388,6 +1392,7 @@ de_CH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 de_CH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 18. רג׳אב 1429 14:31:00 GMT+00:00
 de_DE	Language endonym	Deutsch
 de_DE	Country endonym	Deutschland
+de_DE	Decimal point	,
 de_DE	Floating Point Number	-123.456.789,012
 de_DE	Percent value	-1.234,5679 %
 de_DE	Currency value	1.234,56 €
@@ -1735,6 +1740,7 @@ de_DE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 de_DE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 18. רג׳אב 1429 14:31:00 GMT+00:00
 de_DE@collation=phonebook	Language endonym	Deutsch
 de_DE@collation=phonebook	Country endonym	Deutschland
+de_DE@collation=phonebook	Decimal point	,
 de_DE@collation=phonebook	Floating Point Number	-123.456.789,012
 de_DE@collation=phonebook	Percent value	-1.234,5679 %
 de_DE@collation=phonebook	Currency value	1.234,56 €
@@ -2082,6 +2088,7 @@ de_DE@collation=phonebook & he_IL	dateFull, timeFull, Islamic calendar, 24/12 ho
 de_DE@collation=phonebook & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d. LLLL y HH:mm:ss zzzz -> יום שני, 18. רג׳אב 1429 14:31:00 GMT+00:00
 el_GR	Language endonym	Ελληνικά
 el_GR	Country endonym	Ελλάδα
+el_GR	Decimal point	,
 el_GR	Floating Point Number	-123.456.789,012
 el_GR	Percent value	-1.234,5679%
 el_GR	Currency value	1.234,56 €
@@ -2429,6 +2436,7 @@ el_GR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 el_GR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
 en	Language endonym	English (United Kingdom)
 en	Country endonym	
+en	Decimal point	.
 en	Floating Point Number	-123,456,789.012
 en	Percent value	-1,234.5679%
 en	Currency value	€1,234.56
@@ -2776,6 +2784,7 @@ en & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	c
 en & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, רג׳אב 18, 1429 14:31:00 GMT+00:00
 en_BE	Language endonym	English (Belgium)
 en_BE	Country endonym	Belgium
+en_BE	Decimal point	,
 en_BE	Floating Point Number	-123.456.789,012
 en_BE	Percent value	-1.234,5679%
 en_BE	Currency value	1.234,56 €
@@ -3123,6 +3132,7 @@ en_BE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 en_BE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 en_GB	Language endonym	English (United Kingdom)
 en_GB	Country endonym	United Kingdom
+en_GB	Decimal point	.
 en_GB	Floating Point Number	-123,456,789.012
 en_GB	Percent value	-1,234.5679%
 en_GB	Currency value	€1,234.56
@@ -3470,6 +3480,7 @@ en_GB & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 en_GB & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
 en_US	Language endonym	English (United States)
 en_US	Country endonym	United States
+en_US	Decimal point	.
 en_US	Floating Point Number	-123,456,789.012
 en_US	Percent value	-1,234.5679%
 en_US	Currency value	€1,234.56
@@ -3817,6 +3828,7 @@ en_US & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 en_US & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, רג׳אב 18, 1429 14:31:00 GMT+00:00
 en_US_POSIX	Language endonym	English (United States)
 en_US_POSIX	Country endonym	United States
+en_US_POSIX	Decimal point	.
 en_US_POSIX	Floating Point Number	-123456789.01234
 en_US_POSIX	Percent value	-1234.5679%
 en_US_POSIX	Currency value	€ 1234.56
@@ -4164,6 +4176,7 @@ en_US_POSIX & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (d
 en_US_POSIX & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, LLLL d, y H:mm:ss zzzz -> יום שני, רג׳אב 18, 1429 14:31:00 GMT+00:00
 es_419	Language endonym	español (América Latina)
 es_419	Country endonym	Latinoamérica y el Caribe
+es_419	Decimal point	,
 es_419	Floating Point Number	-123.456.789,012
 es_419	Percent value	-1.234,5679%
 es_419	Currency value	€ 1.234,56
@@ -4511,6 +4524,7 @@ es_419 & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12        
 es_419 & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 eu_ES	Language endonym	euskara
 eu_ES	Country endonym	Espainia
+eu_ES	Decimal point	,
 eu_ES	Floating Point Number	-123.456.789,012
 eu_ES	Percent value	-1.234,5679%
 eu_ES	Currency value	1.234,56 €
@@ -4858,6 +4872,7 @@ eu_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 eu_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> יום שני, 1429 רג׳אב 18 14:31:00 GMT+00:00
 fa_IR	Language endonym	فارسی
 fa_IR	Country endonym	ایران
+fa_IR	Decimal point	٫
 fa_IR	Floating Point Number	−‏۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‏
 fa_IR	Percent value	−٪‏۱٬۲۳۴٫۵۶۷۹‏
 fa_IR	Currency value	‏۱٬۲۳۴٫۵۶‏ €
@@ -5205,6 +5220,7 @@ fa_IR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 fa_IR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y GGGG, H:mm:ss (zzzz) -> יום שני ۱۸ רג׳אב ۱۴۲۹ שנת היג׳רה, ۱۴:۳۱:۰۰ (GMT+۰۰:۰۰)
 fi_FI	Language endonym	suomi
 fi_FI	Country endonym	Suomi
+fi_FI	Decimal point	,
 fi_FI	Floating Point Number	-123 456 789,012
 fi_FI	Percent value	-1 234,5679 %
 fi_FI	Currency value	1 234,56 €
@@ -5552,6 +5568,7 @@ fi_FI & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 fi_FI & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y G H:mm:ss zzzz -> יום שני 18. רג׳אב 1429 שנת היג׳רה 14:31:00 GMT+00:00
 fr_FR	Language endonym	français (France)
 fr_FR	Country endonym	France
+fr_FR	Decimal point	,
 fr_FR	Floating Point Number	-123 456 789,012
 fr_FR	Percent value	-1 234,5679 %
 fr_FR	Currency value	1 234,56 €
@@ -5899,6 +5916,7 @@ fr_FR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 fr_FR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 gl_ES	Language endonym	galego
 gl_ES	Country endonym	España
+gl_ES	Decimal point	,
 gl_ES	Floating Point Number	-123.456.789,012
 gl_ES	Percent value	-1.234,5679%
 gl_ES	Currency value	1.234,56 €
@@ -6246,6 +6264,7 @@ gl_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 gl_ES & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc dd LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 he_IL	Language endonym	עברית
 he_IL	Country endonym	ישראל
+he_IL	Decimal point	.
 he_IL	Floating Point Number	-123,456,789.012
 he_IL	Percent value	-1,234.5679%
 he_IL	Currency value	1,234.56 €
@@ -6593,6 +6612,7 @@ he_IL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 he_IL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE, d בMMMM y HH:mm:ss zzzz -> יום שני, 18 ברג׳אב 1429 14:31:00 GMT+00:00
 hi_IN	Language endonym	हिन्दी
 hi_IN	Country endonym	भारत
+hi_IN	Decimal point	.
 hi_IN	Floating Point Number	-१२,३४,५६,७८९.०१२
 hi_IN	Percent value	-१,२३४.५६७९%
 hi_IN	Currency value	€ १,२३४.५६
@@ -6940,6 +6960,7 @@ hi_IN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 hi_IN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d LLLL y H:mm:ss zzzz -> יום שני, १८ רג׳אב १४२९ १४:३१:०० GMT+००:००
 id_ID	Language endonym	Indonesia
 id_ID	Country endonym	Indonesia
+id_ID	Decimal point	,
 id_ID	Floating Point Number	-123.456.789,012
 id_ID	Percent value	-1.234,5679%
 id_ID	Currency value	€1.234,56
@@ -7287,6 +7308,7 @@ id_ID & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 id_ID & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL yyyy HH.mm.ss zzzz -> יום שני, 18 רג׳אב 1429 14.31.00 GMT+00:00
 it_IT	Language endonym	italiano
 it_IT	Country endonym	Italia
+it_IT	Decimal point	,
 it_IT	Floating Point Number	-123.456.789,012
 it_IT	Percent value	-1.234,5679%
 it_IT	Currency value	€ 1.234,56
@@ -7634,6 +7656,7 @@ it_IT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 it_IT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 ja_JP	Language endonym	日本語
 ja_JP	Country endonym	日本
+ja_JP	Decimal point	.
 ja_JP	Floating Point Number	-123,456,789.012
 ja_JP	Percent value	-1,234.5679%
 ja_JP	Currency value	€1,234.56
@@ -7981,6 +8004,7 @@ ja_JP & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ja_JP & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	y-M-d cccc H:mm:ss zzzz -> 1429-7-18 יום שני 14:31:00 GMT+00:00
 ko_KR	Language endonym	한국어
 ko_KR	Country endonym	대한민국
+ko_KR	Decimal point	.
 ko_KR	Floating Point Number	-123,456,789.012
 ko_KR	Percent value	-1,234.5679%
 ko_KR	Currency value	€1,234.56
@@ -8328,6 +8352,7 @@ ko_KR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 ko_KR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc H:m:s zzzz -> 1429-7-18 יום שני 14:31:0 GMT+00:00
 ms_MY	Language endonym	Melayu
 ms_MY	Country endonym	Malaysia
+ms_MY	Decimal point	.
 ms_MY	Floating Point Number	-123,456,789.012
 ms_MY	Percent value	-1,234.5679%
 ms_MY	Currency value	€1,234.56
@@ -8675,6 +8700,7 @@ ms_MY & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ms_MY & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, y LLLL dd HH:mm:ss zzzz -> יום שני, 1429 רג׳אב 18 14:31:00 GMT+00:00
 nb_NO	Language endonym	norsk bokmål
 nb_NO	Country endonym	Norge
+nb_NO	Decimal point	,
 nb_NO	Floating Point Number	-123 456 789,012
 nb_NO	Percent value	-1 234,5679 %
 nb_NO	Currency value	EUR 1 234,56
@@ -9022,6 +9048,7 @@ nb_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 nb_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
 nl_NL	Language endonym	Nederlands
 nl_NL	Country endonym	Nederland
+nl_NL	Decimal point	,
 nl_NL	Floating Point Number	-123.456.789,012
 nl_NL	Percent value	-1.234,5679%
 nl_NL	Currency value	€ 1.234,56
@@ -9369,6 +9396,7 @@ nl_NL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 nl_NL & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 nn_NO	Language endonym	nynorsk
 nn_NO	Country endonym	Noreg
+nn_NO	Decimal point	,
 nn_NO	Floating Point Number	−123 456 789,012
 nn_NO	Percent value	−1 234,5679 %
 nn_NO	Currency value	1 234,56 EUR
@@ -9716,6 +9744,7 @@ nn_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 nn_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
 no_NO	Language endonym	norsk
 no_NO	Country endonym	Norge
+no_NO	Decimal point	,
 no_NO	Floating Point Number	-123 456 789,012
 no_NO	Percent value	-1 234,5679 %
 no_NO	Currency value	EUR 1 234,56
@@ -10063,6 +10092,7 @@ no_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 no_NO & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d. LLLL y HH:mm:ss zzzz -> יום שני 18. רג׳אב 1429 14:31:00 GMT+00:00
 pt_BR	Language endonym	português (Brasil)
 pt_BR	Country endonym	Brasil
+pt_BR	Decimal point	,
 pt_BR	Floating Point Number	-123.456.789,012
 pt_BR	Percent value	-1.234,5679%
 pt_BR	Currency value	€1.234,56
@@ -10410,6 +10440,7 @@ pt_BR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 pt_BR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
 pt_PT	Language endonym	português (Portugal)
 pt_PT	Country endonym	Portugal
+pt_PT	Decimal point	,
 pt_PT	Floating Point Number	-123.456.789,012
 pt_PT	Percent value	-1.234,5679%
 pt_PT	Currency value	1.234,56 €
@@ -10757,6 +10788,7 @@ pt_PT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 pt_PT & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
 ru_RU	Language endonym	русский
 ru_RU	Country endonym	Россия
+ru_RU	Decimal point	,
 ru_RU	Floating Point Number	-123 456 789,012
 ru_RU	Percent value	-1 234,5679 %
 ru_RU	Currency value	1 234,56 €
@@ -11104,6 +11136,7 @@ ru_RU & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 ru_RU & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y H:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
 sv_SE	Language endonym	svenska
 sv_SE	Country endonym	Sverige
+sv_SE	Decimal point	,
 sv_SE	Floating Point Number	−123 456 789,012
 sv_SE	Percent value	−1 234,5679 %
 sv_SE	Currency value	1 234,56 €
@@ -11451,6 +11484,7 @@ sv_SE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 sv_SE & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> יום שני 18 רג׳אב 1429 14:31:00 GMT+00:00
 th_TH	Language endonym	ไทย
 th_TH	Country endonym	ไทย
+th_TH	Decimal point	.
 th_TH	Floating Point Number	-123,456,789.012
 th_TH	Percent value	-1,234.5679%
 th_TH	Currency value	€1,234.56
@@ -11798,6 +11832,7 @@ th_TH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 th_TH & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL G y, H:m:ss zzzz -> יום שני 18 רג׳אב שנת היג׳רה 1429, 14:31:00 GMT+00:00
 tr_TR	Language endonym	Türkçe
 tr_TR	Country endonym	Türkiye
+tr_TR	Decimal point	,
 tr_TR	Floating Point Number	-123.456.789,012
 tr_TR	Percent value	-% 1.234,5679
 tr_TR	Currency value	1.234,56 €
@@ -12145,6 +12180,7 @@ tr_TR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 tr_TR & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	dd LLLL y cccc HH:mm:ss zzzz -> 18 רג׳אב 1429 יום שני 14:31:00 GMT+00:00
 uk_UA	Language endonym	українська
 uk_UA	Country endonym	Україна
+uk_UA	Decimal point	,
 uk_UA	Floating Point Number	-123 456 789,012
 uk_UA	Percent value	-1 234,5679%
 uk_UA	Currency value	1 234,56 €
@@ -12492,6 +12528,7 @@ uk_UA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12         
 uk_UA & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc, d LLLL y HH:mm:ss zzzz -> יום שני, 18 רג׳אב 1429 14:31:00 GMT+00:00
 ur_PK	Language endonym	اردو
 ur_PK	Country endonym	پاکستان
+ur_PK	Decimal point	.
 ur_PK	Floating Point Number	-123,456,789.012
 ur_PK	Percent value	-1,234.5679%
 ur_PK	Currency value	€1,234.56
@@ -12839,6 +12876,7 @@ ur_PK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (default
 ur_PK & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	cccc, d, LLLL y H:mm:ss zzzz -> יום שני, 18, רג׳אב 1429 14:31:00 GMT+00:00
 zh_CN@collation=pinyin	Language endonym	中文 (中国大陆)
 zh_CN@collation=pinyin	Country endonym	中国
+zh_CN@collation=pinyin	Decimal point	.
 zh_CN@collation=pinyin	Floating Point Number	-123,456,789.012
 zh_CN@collation=pinyin	Percent value	-1,234.5679%
 zh_CN@collation=pinyin	Currency value	€1,234.56
@@ -13186,6 +13224,7 @@ zh_CN@collation=pinyin & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour 
 zh_CN@collation=pinyin & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 יום שני GMT+00:00 14:31:00
 zh_CN@collation=stroke	Language endonym	中文 (中国大陆)
 zh_CN@collation=stroke	Country endonym	中国
+zh_CN@collation=stroke	Decimal point	.
 zh_CN@collation=stroke	Floating Point Number	-123,456,789.012
 zh_CN@collation=stroke	Percent value	-1,234.5679%
 zh_CN@collation=stroke	Currency value	€1,234.56
@@ -13533,6 +13572,7 @@ zh_CN@collation=stroke & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour 
 zh_CN@collation=stroke & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 יום שני GMT+00:00 14:31:00
 zh_Hans_CN	Language endonym	中文 (中国大陆)
 zh_Hans_CN	Country endonym	中国
+zh_Hans_CN	Decimal point	.
 zh_Hans_CN	Floating Point Number	-123,456,789.012
 zh_Hans_CN	Percent value	-1,234.5679%
 zh_Hans_CN	Currency value	€1,234.56
@@ -13880,6 +13920,7 @@ zh_Hans_CN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12 (de
 zh_Hans_CN & he_IL	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24          	y-M-d cccc zzzz H:mm:ss -> 1429-7-18 יום שני GMT+00:00 14:31:00
 zh_Hant_TW	Language endonym	中文 (台灣)
 zh_Hant_TW	Country endonym	台灣
+zh_Hant_TW	Decimal point	.
 zh_Hant_TW	Floating Point Number	-123,456,789.012
 zh_Hant_TW	Percent value	-1,234.5679%
 zh_Hant_TW	Currency value	€1,234.56
