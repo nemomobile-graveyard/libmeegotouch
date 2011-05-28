@@ -2357,14 +2357,42 @@ void Ft_Numbers::testDoublesWithFormatting_data()
             << QString("en_GB")
             << 1234567.120
             << -1 << 2 << QString("1,234,567.12");
+    QTest::newRow("pt 6 6")
+            << QString("pt")
+            << 1234567.123450
+            << 6
+            << 6
+            << QString("1.234.567,123450");
+    QTest::newRow("pt_PT 6 6")
+            << QString("pt_PT")
+            << 1234567.123450
+            << 6
+            << 6
+            << QString("1.234.567,123450");
+    QTest::newRow("pt_BR 6 6")
+            << QString("pt_BR")
+            << 1234567.123450
+            << 6
+            << 6
+            << QString("1.234.567,123450");
     QTest::newRow("ar_EG@numbers=latn 6")
             << QString("ar_EG@numbers=latn")
             << 1234567.123450
-            << 6 << 0 << QString("‏1٬234٬567٫12345‏");
+            << 6 << 0
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+            << QString("‏1.234.567,12345‏");
+#else
+            << QString("‏1٬234٬567٫12345‏");
+#endif
     QTest::newRow("ar_EG@numbers=latn 6")
             << QString("ar_EG@numbers=latn")
             << 1234567.123450
-            << 6 << 6 << QString("‏1٬234٬567٫123450‏");
+            << 6 << 6
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+            << QString("‏1.234.567,123450‏");
+#else
+            << QString("‏1٬234٬567٫123450‏");
+#endif
     QTest::newRow("ar_EG@numbers=arab 6")
             << QString("ar_EG@numbers=arab")
             << 1234567.123450

@@ -30,9 +30,6 @@ greaterThan(ICUVERSION, 4.4) {
                  data/ms.txt \
                  data/ms_BN.txt \
                  data/nn.txt \
-                 data/pt.txt \
-                 data/pt_BR.txt \
-                 data/pt_PT.txt \
                  data/sk.txt \
                  data/sv.txt \
                  data/th.txt \
@@ -42,6 +39,15 @@ greaterThan(ICUVERSION, 4.4) {
                  data/zh_Hant.txt \
                  data/zh_Hant_HK.txt \
                  data/zh_HK.txt
+    greaterThan(ICUVERSION, 4.5) {
+        LOCALESTXT += data46/pt.txt \
+                      data46/pt_BR.txt \
+                      data46/pt_PT.txt
+    } else {
+        LOCALESTXT += data/pt.txt \
+                      data/pt_BR.txt \
+                      data/pt_PT.txt
+    }
     LANGTXT    = data/lang/en.txt \
                  data/lang/es.txt \
                  data/lang/fr.txt \
@@ -67,7 +73,8 @@ greaterThan(ICUVERSION, 4.4) {
 
 defineReplace(installPaths){
     for(a,$$1){
-       val = $$replace(a, data, $${ICUUSRDATA})
+       val = $$replace(a, data46, $${ICUUSRDATA})
+       val = $$replace(val, data, $${ICUUSRDATA})
        val = $$replace(val, txt, res)
        val = $$OUT_PWD/$$val
        result += $$val
