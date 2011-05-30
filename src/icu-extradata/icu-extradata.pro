@@ -38,7 +38,10 @@ greaterThan(ICUVERSION, 4.4) {
                  data/vi.txt \
                  data/zh_Hant.txt \
                  data/zh_Hant_HK.txt \
-                 data/zh_HK.txt
+                 data/zh_HK.txt \
+                 data/zh_TW.txt \
+                 data/zh_Hant_TW.txt
+
     greaterThan(ICUVERSION, 4.5) {
         LOCALESTXT += data46/pt.txt \
                       data46/pt_BR.txt \
