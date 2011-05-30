@@ -30,6 +30,41 @@ class MBasicLayoutAnimationPrivate;
  * The MBasicLayoutAnimation provides a simple animation of items for a MLayout.
  * It animates the items geometry and opacity in a linear way, with every animation
  * taking the same amount of time.
+ *
+ * The details of the animation can be specified in your CSS file.  For example:
+ *
+ * \code
+ *    x-translation-easing-curve: outback;
+ *    y-translation-easing-curve: outback;
+ *    opacity-easing-curve: linear;
+ *    scale-easing-curve: linear;
+ *    initial-showing-opacity: 0.0;
+ *    final-hiding-opacity: 0.0;
+ *
+ *    initial-showing-scale: 0.0;
+ *    final-hiding-scale: 0.0;
+ *
+ *    animate-opacity: true;
+ *    animate-scale: false;
+ *
+ *    duration: 600;
+ *
+ * \endcode
+ *
+ * When a new item is added to the layout, the QGraphicsItem::opacity() is animated
+ * starting from the given initial-showing-opacity to an opacity of 1.0, and the QGraphicsItem::scale() is animated from the
+ * initial-showing-scale to 1.0, in a duration of 'duration' milliseconds.  The opacity, scale, and
+ * translation animations can use any QEasingCurve, including a meegotouch easing curve such
+ * MOvershotBezierEasingCurve.
+ *
+ * The scale and opacity animations can be disabled entirely by setting animate-opacity and
+ * animate-scale to false.
+ *
+ * If you want the final scale or opacity to be something other than 1.0, you can place the widget
+ * inside of another widget, since their opacities will be combined.  Or you can inherit from
+ * MBasicLayoutAnimation and customize the animation.  Or disable layout animations and use a
+ * QPropertyAnimation.
+ *
  */
 class M_CORE_EXPORT MBasicLayoutAnimation : public MLayoutAnimation
 {
