@@ -27,6 +27,7 @@
 
 class QGraphicsLinearLayout;
 class QParallelAnimationGroup;
+class MSheetCentralSlot;
 class MSheetView;
 class MSheetSlot;
 class MSheetSpacer;
@@ -53,9 +54,8 @@ private:
     MSheetSpacer* rootLayoutHeaderSpacer;
 
     MSheetSlot *headerSlot;
-    MSheetSlot *centralSlot;
-    MPannableViewport *centralSlotPannableViewport;
     QParallelAnimationGroup* animationGroup;
+    MSheetCentralSlot *centralSlot;
 };
 
 class MSheetSlot : public MStylableWidget
@@ -82,6 +82,35 @@ class MSheetSpacer : public QGraphicsWidget
 {
     Q_OBJECT
     Q_PROPERTY(int maximumHeight READ maximumHeight WRITE setMaximumHeight)
+};
+
+class MSheetCentralSlot : public MStylableWidget
+{
+  Q_OBJECT
+
+public:
+    MSheetCentralSlot(QGraphicsItem *parent = 0);
+    virtual ~MSheetCentralSlot();
+
+    void setWidget(QGraphicsWidget *widget);
+
+    void setPositionIndicatorStyleName(const QString& name);
+
+protected:
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+
+private:
+    void resizeChildWidget();
+    void destroyPannableViewport();
+    void createPannableViewport();
+
+    // The sole purpose of this internal pannable is to guarantee
+    // proper input widget relocation if the central widget doesn't
+    // have a pannable viewport.
+    MPannableViewport *pannableViewport;
+
+    QWeakPointer<QGraphicsWidget> widgetPointer;
+    M_STYLABLE_WIDGET(MStylableWidgetStyle)
 };
 
 #endif // MSHEETVIEW_P_H

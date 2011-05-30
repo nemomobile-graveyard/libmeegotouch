@@ -88,15 +88,116 @@ void MSheetSlot::resizeChildWidget()
 }
 
 //////////////
+/// MSheetCentralSlot
+
+MSheetCentralSlot::MSheetCentralSlot(QGraphicsItem *parent)
+    : MStylableWidget(parent), pannableViewport(0)
+{
+}
+
+MSheetCentralSlot::~MSheetCentralSlot()
+{
+    // Widget belongs to controller. Remove it from scene graph.
+    QGraphicsWidget *widget = widgetPointer.data();
+    if (widget) {
+        if (pannableViewport) {
+            pannableViewport->setWidget(0);
+        }
+        widget->setParentItem(0);
+        scene()->removeItem(widget);
+        widgetPointer.clear();
+    }
+}
+
+void MSheetCentralSlot::setWidget(QGraphicsWidget *widget)
+{
+    QGraphicsWidget *currentWidget = widgetPointer.data();
+
+    if (widget == currentWidget)
+        return;
+
+    if (currentWidget) {
+        if (pannableViewport)
+            pannableViewport->setWidget(0);
+
+        currentWidget->setParentItem(0);
+        if (scene())
+            scene()->removeItem(currentWidget);
+    }
+
+    if (widget) {
+        widgetPointer = widget;
+
+        if (qobject_cast<MPannableViewport*>(widget)) {
+            destroyPannableViewport();
+            widget->setParentItem(this);
+            widget->setPos(0.0f, 0.0f);
+        } else {
+            createPannableViewport();
+            pannableViewport->setWidget(widget);
+        }
+
+        resizeChildWidget();
+    } else {
+        widgetPointer.clear();
+        destroyPannableViewport();
+    }
+}
+
+void MSheetCentralSlot::setPositionIndicatorStyleName(const QString& name) {
+    if (!pannableViewport)
+        return;
+
+    pannableViewport->positionIndicator()->setStyleName(name);
+}
+
+void MSheetCentralSlot::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    Q_UNUSED(event);
+    resizeChildWidget();
+}
+
+void MSheetCentralSlot::resizeChildWidget()
+{
+    QGraphicsWidget *widget;
+
+    if (pannableViewport) {
+        widget = pannableViewport;
+    } else {
+        widget = widgetPointer.data();
+    }
+
+    if (widget) {
+        widget->resize(size());
+    }
+}
+
+void MSheetCentralSlot::destroyPannableViewport()
+{
+    delete pannableViewport;
+    pannableViewport = 0;
+}
+
+void MSheetCentralSlot::createPannableViewport()
+{
+    if (pannableViewport)
+        return;
+
+    pannableViewport = new MPannableViewport(this);
+    pannableViewport->setPos(0.0f, 0.0f);
+    pannableViewport->setObjectName("MSheetCentralSlotPannableViewport");
+    pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+}
+
+//////////////
 /// MSheetViewPrivate
 
 MSheetViewPrivate::MSheetViewPrivate()
     : q_ptr(0),
       rootLayout(0),
       headerSlot(0),
-      centralSlot(0),
-      centralSlotPannableViewport(0),
-      animationGroup(0)
+      animationGroup(0),
+      centralSlot(0)
 {
 }
 
@@ -110,8 +211,8 @@ MSheetViewPrivate::~MSheetViewPrivate()
     headerSlot = 0;
 
     //rootLayout->removeItem(centralSlot);
-    delete centralSlotPannableViewport;
-    centralSlotPannableViewport = 0;
+    delete centralSlot;
+    centralSlot = 0;
 
     if (qobject_cast<MSheet *>(controller)) {
         // controller is still valid.
@@ -131,17 +232,11 @@ void MSheetViewPrivate::init()
     rootLayoutHeaderSpacer = new MSheetSpacer;
     rootLayoutHeaderSpacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    // The sole purpose of this internal pannable is to guarantee proper input widget relocation
-    // if the central widget doesn't have a pannable viewport.
-    centralSlotPannableViewport = new MPannableViewport(controller);
-    centralSlotPannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    centralSlotPannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
-    centralSlotPannableViewport->setObjectName("MSheetCentralSlotPannableViewport");
-    rootLayout->addItem(rootLayoutHeaderSpacer);
-    rootLayout->addItem(centralSlotPannableViewport);
+    centralSlot = new MSheetCentralSlot(controller);
+    centralSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    centralSlot = new MSheetSlot(centralSlotPannableViewport);
-    centralSlotPannableViewport->setWidget(centralSlot);
+    rootLayout->addItem(rootLayoutHeaderSpacer);
+    rootLayout->addItem(centralSlot);
 }
 
 void MSheetViewPrivate::updateStyle()
@@ -154,7 +249,7 @@ void MSheetViewPrivate::updateStyle()
     headerSlot->setMinimumWidth(centralSlot->geometry().width());
     rootLayoutHeaderSpacer->setMinimumHeight(headerSlot->preferredHeight());
 
-    centralSlotPannableViewport->positionIndicator()->setStyleName(
+    centralSlot->setPositionIndicatorStyleName(
                 q->style()->centralSlotPositionIndicatorStyleName());
 }
 
@@ -239,13 +334,6 @@ void MSheetView::updateData(const QList<const char *> &modifications)
         if (member == MSheetModel::HeaderVisible)
             d->updateHeaderVisibility();
         else if (member == MSheetModel::CentralWidget) {
-            if (qobject_cast<MPannableViewport*>(model()->centralWidget()))
-                // our internal pannable is not needed at all in this case
-                // TODO: consider removing centralSlotPannableViewport from the widget hierarchy altogether
-                //       if there's any performance benefit in doing so
-                d->centralSlotPannableViewport->setVerticalPanningPolicy(MPannableViewport::PanningAlwaysOff);
-            else
-                d->centralSlotPannableViewport->setVerticalPanningPolicy(MPannableViewport::PanningAsNeeded);
             d->centralSlot->setWidget(model()->centralWidget());
         } else if (member == MSheetModel::HeaderWidget)
             d->headerSlot->setWidget(model()->headerWidget());
