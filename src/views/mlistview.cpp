@@ -201,7 +201,7 @@ void MListView::setGeometry(const QRectF &rect)
             d_ptr->viewWidth = rect.width();
             d_ptr->updateItemSize();
             d_ptr->updateSeparatorSize();
-            d_ptr->_q_relayoutItemsIfNeeded();
+            relayoutItemsInViewportRect();
 
             d_ptr->scrollToLastIndex();
             d_ptr->lastGeometrySize = size();
@@ -257,7 +257,7 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
     if (!model()->firstVisibleItem().isValid() && !model()->lastVisibleItem().isValid())
         return;
 
-    if (d_ptr->controller->isVisible() && d_ptr->isOnDisplay) {
+    if (d_ptr->controller->isVisible()) {
         const MCellCreator *cellCreator = model()->cellCreator();
 
         int firstVisibleRow = d_ptr->indexToFlatRow(model()->firstVisibleItem());

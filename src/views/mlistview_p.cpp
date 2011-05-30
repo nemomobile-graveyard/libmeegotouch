@@ -63,7 +63,6 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     lastScrolledToFlatRow = -1;
     lastGeometrySize = QSizeF();
     isDeleted = false;
-    isOnDisplay = true;
 
     itemDeletionAnimation = NULL;
 
@@ -215,7 +214,7 @@ void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end,
         end += parentFlatRow + 1;
     }
 
-    if (start > last || !controller->isVisible() || !isOnDisplay)
+    if (start > last || !controller->isVisible())
         return;
 
     start = first > start ? first : start;
@@ -509,10 +508,7 @@ void MListViewPrivate::disconnectSignalsFromModelToListView()
 {
     if (model)
         model->disconnect(q_ptr);
-
     disconnect(controller, SIGNAL(visibleChanged()), q_ptr, SLOT(_q_relayoutItemsIfNeeded()));
-    disconnect(controller, SIGNAL(displayEntered()), q_ptr, SLOT(_q_enableListRelayout()));
-    disconnect(controller, SIGNAL(displayExited()), q_ptr, SLOT(_q_disableListRelayout()));
 }
 
 void MListViewPrivate::connectSignalsFromModelToListView()
@@ -533,8 +529,6 @@ void MListViewPrivate::connectSignalsFromModelToListView()
         connect(model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
 
         connect(controller, SIGNAL(visibleChanged()), q_ptr, SLOT(_q_relayoutItemsIfNeeded()));
-        connect(controller, SIGNAL(displayEntered()), q_ptr, SLOT(_q_enableListRelayout()));
-        connect(controller, SIGNAL(displayExited()), q_ptr, SLOT(_q_disableListRelayout()));
     }
 }
 
@@ -743,19 +737,8 @@ void MListViewPrivate::_q_relayoutItemsIfNeeded()
     if (isDeleted)
         return;
 
-    if (controller->isVisible() && isOnDisplay)
+    if (controller->isVisible())
         q_ptr->relayoutItemsInViewportRect();
-}
-
-void MListViewPrivate::_q_enableListRelayout()
-{
-    isOnDisplay = true;
-    _q_relayoutItemsIfNeeded();
-}
-
-void MListViewPrivate::_q_disableListRelayout()
-{
-    isOnDisplay = false;
 }
 
 void MListViewPrivate::updateScrollToTargetPosition()

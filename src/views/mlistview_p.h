@@ -184,9 +184,6 @@ public Q_SLOTS:
     void _q_itemLongTapped(const QPointF &pos);
     void _q_relayoutItemsIfNeeded();
 
-    void _q_enableListRelayout();
-    void _q_disableListRelayout();
-
 public:
     MListView *q_ptr;
     MList *controller;
@@ -232,7 +229,6 @@ public:
     MBasicListItemDeletionAnimation* itemDeletionAnimation;
 
     bool isDeleted;
-    bool isOnDisplay;
 };
 
 class MPlainListViewPrivate : public MListViewPrivate

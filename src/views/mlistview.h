@@ -90,9 +90,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_itemLongTapped(QPointF))
     Q_PRIVATE_SLOT(d_func(), void _q_relayoutItemsIfNeeded())
 
-    Q_PRIVATE_SLOT(d_func(), void _q_enableListRelayout())
-    Q_PRIVATE_SLOT(d_func(), void _q_disableListRelayout())
-
 private:
     Q_DECLARE_PRIVATE(MListView)
 
