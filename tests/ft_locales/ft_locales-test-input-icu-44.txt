@@ -13925,18 +13925,18 @@ zh_Hant_TW	Floating Point Number	-123,456,789.012
 zh_Hant_TW	Percent value	-1,234.5679%
 zh_Hant_TW	Currency value	€1,234.56
 zh_Hant_TW	Negative Currency value	-€1,234.56
-zh_Hant_TW	Name of month 01 (Gregorian calendar), stand-alone, wide	1月
-zh_Hant_TW	Name of month 02 (Gregorian calendar), stand-alone, wide	2月
-zh_Hant_TW	Name of month 03 (Gregorian calendar), stand-alone, wide	3月
-zh_Hant_TW	Name of month 04 (Gregorian calendar), stand-alone, wide	4月
-zh_Hant_TW	Name of month 05 (Gregorian calendar), stand-alone, wide	5月
-zh_Hant_TW	Name of month 06 (Gregorian calendar), stand-alone, wide	6月
-zh_Hant_TW	Name of month 07 (Gregorian calendar), stand-alone, wide	7月
-zh_Hant_TW	Name of month 08 (Gregorian calendar), stand-alone, wide	8月
-zh_Hant_TW	Name of month 09 (Gregorian calendar), stand-alone, wide	9月
-zh_Hant_TW	Name of month 10 (Gregorian calendar), stand-alone, wide	10月
-zh_Hant_TW	Name of month 11 (Gregorian calendar), stand-alone, wide	11月
-zh_Hant_TW	Name of month 12 (Gregorian calendar), stand-alone, wide	12月
+zh_Hant_TW	Name of month 01 (Gregorian calendar), stand-alone, wide	一月
+zh_Hant_TW	Name of month 02 (Gregorian calendar), stand-alone, wide	二月
+zh_Hant_TW	Name of month 03 (Gregorian calendar), stand-alone, wide	三月
+zh_Hant_TW	Name of month 04 (Gregorian calendar), stand-alone, wide	四月
+zh_Hant_TW	Name of month 05 (Gregorian calendar), stand-alone, wide	五月
+zh_Hant_TW	Name of month 06 (Gregorian calendar), stand-alone, wide	六月
+zh_Hant_TW	Name of month 07 (Gregorian calendar), stand-alone, wide	七月
+zh_Hant_TW	Name of month 08 (Gregorian calendar), stand-alone, wide	八月
+zh_Hant_TW	Name of month 09 (Gregorian calendar), stand-alone, wide	九月
+zh_Hant_TW	Name of month 10 (Gregorian calendar), stand-alone, wide	十月
+zh_Hant_TW	Name of month 11 (Gregorian calendar), stand-alone, wide	十一月
+zh_Hant_TW	Name of month 12 (Gregorian calendar), stand-alone, wide	十二月
 zh_Hant_TW	Name of month 01 (Gregorian calendar), stand-alone, abbreviated	一月
 zh_Hant_TW	Name of month 02 (Gregorian calendar), stand-alone, abbreviated	二月
 zh_Hant_TW	Name of month 03 (Gregorian calendar), stand-alone, abbreviated	三月
@@ -14166,16 +14166,16 @@ zh_Hant_TW	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)
 zh_Hant_TW	dateNone, timeLong, Gregorian calendar, 24/12 hour mode: 24          	zH時mm分ss秒 -> GMT+00:0014時31分00秒
 zh_Hant_TW	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	zzzzah時mm分ss秒 -> GMT+00:00下午2時31分00秒
 zh_Hant_TW	dateNone, timeFull, Gregorian calendar, 24/12 hour mode: 24          	zzzzH時mm分ss秒 -> GMT+00:0014時31分00秒
-zh_Hant_TW	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12 (default)	yy/M/d -> 08/7/21
-zh_Hant_TW	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24          	yy/M/d -> 08/7/21
-zh_Hant_TW	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	yy/M/d ah:mm -> 08/7/21 下午2:31
-zh_Hant_TW	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24          	yy/M/d H:mm -> 08/7/21 14:31
-zh_Hant_TW	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12 (default)	yy/M/d ah:mm:ss -> 08/7/21 下午2:31:00
-zh_Hant_TW	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24          	yy/M/d H:mm:ss -> 08/7/21 14:31:00
-zh_Hant_TW	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)	yy/M/d zah時mm分ss秒 -> 08/7/21 GMT+00:00下午2時31分00秒
-zh_Hant_TW	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24          	yy/M/d zH時mm分ss秒 -> 08/7/21 GMT+00:0014時31分00秒
-zh_Hant_TW	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	yy/M/d zzzzah時mm分ss秒 -> 08/7/21 GMT+00:00下午2時31分00秒
-zh_Hant_TW	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24          	yy/M/d zzzzH時mm分ss秒 -> 08/7/21 GMT+00:0014時31分00秒
+zh_Hant_TW	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy/M/d -> 2008/7/21
+zh_Hant_TW	dateShort, timeNone, Gregorian calendar, 24/12 hour mode: 24          	yyyy/M/d -> 2008/7/21
+zh_Hant_TW	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy/M/d ah:mm -> 2008/7/21 下午2:31
+zh_Hant_TW	dateShort, timeShort, Gregorian calendar, 24/12 hour mode: 24          	yyyy/M/d H:mm -> 2008/7/21 14:31
+zh_Hant_TW	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy/M/d ah:mm:ss -> 2008/7/21 下午2:31:00
+zh_Hant_TW	dateShort, timeMedium, Gregorian calendar, 24/12 hour mode: 24          	yyyy/M/d H:mm:ss -> 2008/7/21 14:31:00
+zh_Hant_TW	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy/M/d zah時mm分ss秒 -> 2008/7/21 GMT+00:00下午2時31分00秒
+zh_Hant_TW	dateShort, timeLong, Gregorian calendar, 24/12 hour mode: 24          	yyyy/M/d zH時mm分ss秒 -> 2008/7/21 GMT+00:0014時31分00秒
+zh_Hant_TW	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy/M/d zzzzah時mm分ss秒 -> 2008/7/21 GMT+00:00下午2時31分00秒
+zh_Hant_TW	dateShort, timeFull, Gregorian calendar, 24/12 hour mode: 24          	yyyy/M/d zzzzH時mm分ss秒 -> 2008/7/21 GMT+00:0014時31分00秒
 zh_Hant_TW	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy/M/d -> 2008/7/21
 zh_Hant_TW	dateMedium, timeNone, Gregorian calendar, 24/12 hour mode: 24          	yyyy/M/d -> 2008/7/21
 zh_Hant_TW	dateMedium, timeShort, Gregorian calendar, 24/12 hour mode: 12 (default)	yyyy/M/d ah:mm -> 2008/7/21 下午2:31
@@ -14220,16 +14220,16 @@ zh_Hant_TW	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	z
 zh_Hant_TW	dateNone, timeLong, Islamic calendar, 24/12 hour mode: 24          	zH時mm分ss秒 -> GMT+00:0014時31分00秒
 zh_Hant_TW	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	zzzzah時mm分ss秒 -> GMT+00:00下午2時31分00秒
 zh_Hant_TW	dateNone, timeFull, Islamic calendar, 24/12 hour mode: 24          	zzzzH時mm分ss秒 -> GMT+00:0014時31分00秒
-zh_Hant_TW	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12 (default)	yy/M/d -> 29/7/18
-zh_Hant_TW	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24          	yy/M/d -> 29/7/18
-zh_Hant_TW	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	yy/M/d ah:mm -> 29/7/18 下午2:31
-zh_Hant_TW	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24          	yy/M/d H:mm -> 29/7/18 14:31
-zh_Hant_TW	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	yy/M/d ah:mm:ss -> 29/7/18 下午2:31:00
-zh_Hant_TW	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24          	yy/M/d H:mm:ss -> 29/7/18 14:31:00
-zh_Hant_TW	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	yy/M/d zah時mm分ss秒 -> 29/7/18 GMT+00:00下午2時31分00秒
-zh_Hant_TW	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24          	yy/M/d zH時mm分ss秒 -> 29/7/18 GMT+00:0014時31分00秒
-zh_Hant_TW	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	yy/M/d zzzzah時mm分ss秒 -> 29/7/18 GMT+00:00下午2時31分00秒
-zh_Hant_TW	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24          	yy/M/d zzzzH時mm分ss秒 -> 29/7/18 GMT+00:0014時31分00秒
+zh_Hant_TW	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy/M/d -> 1429/7/18
+zh_Hant_TW	dateShort, timeNone, Islamic calendar, 24/12 hour mode: 24          	yyyy/M/d -> 1429/7/18
+zh_Hant_TW	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy/M/d ah:mm -> 1429/7/18 下午2:31
+zh_Hant_TW	dateShort, timeShort, Islamic calendar, 24/12 hour mode: 24          	yyyy/M/d H:mm -> 1429/7/18 14:31
+zh_Hant_TW	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy/M/d ah:mm:ss -> 1429/7/18 下午2:31:00
+zh_Hant_TW	dateShort, timeMedium, Islamic calendar, 24/12 hour mode: 24          	yyyy/M/d H:mm:ss -> 1429/7/18 14:31:00
+zh_Hant_TW	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy/M/d zah時mm分ss秒 -> 1429/7/18 GMT+00:00下午2時31分00秒
+zh_Hant_TW	dateShort, timeLong, Islamic calendar, 24/12 hour mode: 24          	yyyy/M/d zH時mm分ss秒 -> 1429/7/18 GMT+00:0014時31分00秒
+zh_Hant_TW	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy/M/d zzzzah時mm分ss秒 -> 1429/7/18 GMT+00:00下午2時31分00秒
+zh_Hant_TW	dateShort, timeFull, Islamic calendar, 24/12 hour mode: 24          	yyyy/M/d zzzzH時mm分ss秒 -> 1429/7/18 GMT+00:0014時31分00秒
 zh_Hant_TW	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy/M/d -> 1429/7/18
 zh_Hant_TW	dateMedium, timeNone, Islamic calendar, 24/12 hour mode: 24          	yyyy/M/d -> 1429/7/18
 zh_Hant_TW	dateMedium, timeShort, Islamic calendar, 24/12 hour mode: 12 (default)	yyyy/M/d ah:mm -> 1429/7/18 下午2:31
