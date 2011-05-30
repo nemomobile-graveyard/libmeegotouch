@@ -531,6 +531,11 @@ public:
     QString countryEndonym() const;
 
     /*!
+     * \brief returns the decimal point character of this locale.
+     */
+    QString decimalPoint() const;
+
+    /*!
      * \brief Returns the list of scripts used by the locale
      *
      * This returns the scripts used by the locale, in form of <a

@@ -146,6 +146,7 @@ public:
                                       MLocale::TimeType timeType,
                                       MLocale::CalendarType calendarType,
                                       MLocale::TimeFormat24h timeFormat24h) const;
+    QString numberingSystem(const QString &localeName) const;
 #endif
 
     static bool parseIcuLocaleString(const QString &localeString, QString *language, QString *script, QString *country, QString *variant);

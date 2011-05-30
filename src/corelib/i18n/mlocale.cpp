@@ -632,10 +632,14 @@ QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) c
 {
     Q_Q(const MLocale);
     QString categoryLanguage = parseLanguage(categoryName);
-    // do nothing for languages other than ar, fa, hi, bn:
+    // do nothing for languages other than ar, fa, hi, kn, mr, ne, pa, bn:
     if(categoryLanguage != "ar"
        && categoryLanguage != "fa"
        && categoryLanguage != "hi"
+       && categoryLanguage != "kn"
+       && categoryLanguage != "mr"
+       && categoryLanguage != "ne"
+       && categoryLanguage != "pa"
        && categoryLanguage != "bn")
         return categoryName;
     // if @numbers=<something> is already there, don’t touch it
@@ -649,6 +653,16 @@ QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) c
         return MIcuConversions::setOption(categoryName, "numbers", "arabext");
     else if(categoryLanguage == "hi" && numericCategoryLanguage == "hi")
         return MIcuConversions::setOption(categoryName, "numbers", "deva");
+    else if(categoryLanguage == "kn" && numericCategoryLanguage == "kn")
+        return MIcuConversions::setOption(categoryName, "numbers", "knda");
+    else if(categoryLanguage == "mr" && numericCategoryLanguage == "mr")
+        return MIcuConversions::setOption(categoryName, "numbers", "deva");
+    else if(categoryLanguage == "ne" && numericCategoryLanguage == "ne")
+        return MIcuConversions::setOption(categoryName, "numbers", "deva");
+    else if(categoryLanguage == "or" && numericCategoryLanguage == "or")
+        return MIcuConversions::setOption(categoryName, "numbers", "orya");
+    else if(categoryLanguage == "pa" && numericCategoryLanguage == "pa")
+        return MIcuConversions::setOption(categoryName, "numbers", "guru");
     else if(categoryLanguage == "bn" && numericCategoryLanguage == "bn")
         return MIcuConversions::setOption(categoryName, "numbers", "beng");
     return MIcuConversions::setOption(categoryName, "numbers", "latn");
@@ -2231,6 +2245,7 @@ QString MLocale::formatNumber(double i, int maxPrecision, int minPrecision) cons
     return result;
 #else
     Q_D(const MLocale);
+    Q_UNUSED(minPrecision);
     return d->createQLocale(MLcNumeric).toString(i, 'g', maxPrecision);
 #endif
 }
@@ -3222,12 +3237,127 @@ QString MLocale::countryEndonym() const
             return QString::fromUtf16(val, len);
         }
     } while (d->truncateLocaleName(&resourceBundleLocaleName));
-    // no country endonym found and there are not other resource
+    // no country endonym found and there are no other resource
     // bundles left to try, return the country code as a fallback:
     return countryCode;
 #else
     Q_D(const MLocale);
     return QLocale::countryToString(d->createQLocale(MLcMessages).country());
+#endif
+}
+
+#ifdef HAVE_ICU
+QString MLocalePrivate::numberingSystem(const QString &localeName) const
+{
+    QString numberingSystem
+        = MIcuConversions::parseOption(localeName, "numbers");
+    // if the numbers option is there in the locale name, trust it
+    // and return it, don’t test whether the requested numbering
+    // system actually exists for this locale:
+    if (!numberingSystem.isEmpty())
+        return numberingSystem;
+    QString resourceBundleLocaleName = localeName;
+    numberingSystem = QLatin1String("latn");
+    do {
+        // Trying several resource bundles is a workaround for
+        // http://site.icu-project.org/design/resbund/issues
+        UErrorCode status = U_ZERO_ERROR;
+        UResourceBundle *res = ures_open(NULL,
+                                         qPrintable(resourceBundleLocaleName),
+                                         &status);
+        if (U_FAILURE(status)) {
+            mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_open"
+                              << resourceBundleLocaleName
+                              << u_errorName(status);
+            ures_close(res);
+            return numberingSystem;
+        }
+        int len;
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+        res = ures_getByKey(res, "NumberElements", res, &status);
+        if (U_FAILURE(status)) {
+            ures_close(res);
+            continue;
+        }
+        const UChar *val = ures_getStringByKey(res,
+                                               "default",
+                                               &len,
+                                               &status);
+#else
+        const UChar *val = ures_getStringByKey(res,
+                                               "defaultNumberingSystem",
+                                               &len,
+                                               &status);
+#endif
+        ures_close(res);
+        if (U_SUCCESS(status)) {
+            // found numbering system, return it:
+            return QString::fromUtf16(val, len);
+        }
+    } while (truncateLocaleName(&resourceBundleLocaleName));
+    // no numbering system found and there are no other resource
+    // bundles left to try, return “latn” as a fallback:
+    return numberingSystem;
+}
+#endif
+
+QString MLocale::decimalPoint() const
+{
+#ifdef HAVE_ICU
+    Q_D(const MLocale);
+    QString categoryNameNumeric =
+        d->fixCategoryNameForNumbers(d->categoryName(MLocale::MLcNumeric));
+    QString numberingSystem = d->numberingSystem(categoryNameNumeric);
+    QString resourceBundleLocaleName = categoryNameNumeric;
+    QString decimal = QLatin1String(".");
+    do {
+        // Trying several resource bundles is a workaround for
+        // http://site.icu-project.org/design/resbund/issues
+        UErrorCode status = U_ZERO_ERROR;
+        UResourceBundle *res = ures_open(NULL,
+                                         qPrintable(resourceBundleLocaleName),
+                                         &status);
+        if (U_FAILURE(status)) {
+            mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error ures_open"
+                              << resourceBundleLocaleName
+                              << u_errorName(status);
+            ures_close(res);
+            return decimal;
+        }
+        res = ures_getByKey(res, "NumberElements", res, &status);
+        if (U_FAILURE(status)) {
+            ures_close(res);
+            continue;
+        }
+        int len;
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
+        res = ures_getByKey(res, numberingSystem.toStdString().c_str(),
+                            res, &status);
+        if (U_FAILURE(status)) {
+            ures_close(res);
+            continue;
+        }
+        res = ures_getByKey(res, "symbols", res, &status);
+        if (U_FAILURE(status)) {
+            ures_close(res);
+            continue;
+        }
+        const UChar *val = ures_getStringByKey(res, "decimal", &len, &status);
+#else
+        const UChar *val = ures_getStringByIndex(res, 0, &len, &status);
+#endif
+        ures_close(res);
+        if (U_SUCCESS(status)) {
+            // found decimal point, return it:
+            return QString::fromUtf16(val, len);
+        }
+    } while (d->truncateLocaleName(&resourceBundleLocaleName));
+    // no decimal point found and there are no other resource
+    // bundles left to try, return “.” as a fallback:
+    return decimal;
+#else
+    Q_D(const MLocale);
+    return d->createQLocale(MLcNumeric).decimalPoint();
 #endif
 }
 

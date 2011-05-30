@@ -3532,6 +3532,8 @@ void Ft_Locales::checkAvailableLocales()
             + locale.languageEndonym()
             + newLinePlusSupportedLocaleName + "\tCountry endonym\t"
             + locale.countryEndonym()
+            + newLinePlusSupportedLocaleName + "\tDecimal point\t"
+            + locale.decimalPoint()
             + newLinePlusSupportedLocaleName + "\tFloating Point Number\t"
             + locale.formatNumber(-123456789.01234)
             + newLinePlusSupportedLocaleName + "\tPercent value\t"
