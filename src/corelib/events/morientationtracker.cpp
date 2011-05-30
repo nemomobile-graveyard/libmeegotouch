@@ -446,8 +446,12 @@ void MOrientationTracker::enableRotations()
 
 bool MOrientationTracker::isSubscribedToSensorProperties() const
 {
+#ifdef HAVE_CONTEXTSUBSCRIBER
     Q_D(const MOrientationTracker);
     return d->isSubscribedToSensorProperties;
+#else
+    return false;
+#endif
 }
 
 void MOrientationTracker::doUpdateOrientationAngle(
