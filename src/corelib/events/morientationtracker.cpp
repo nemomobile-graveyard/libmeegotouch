@@ -46,6 +46,9 @@ MContextProperty::MContextProperty(const QString &key, QObject *parent)
     : QObject(parent), m_contextProperty(0), m_isSubscribed(false)
 {
     m_contextProperty = new ContextProperty(key, this);
+    // The ContextProperty constructor calls ContextProperty::subscribe(),
+    // unsubscribe again to stay consistent with m_isSubscribed.
+    m_contextProperty->unsubscribe();
     connect(m_contextProperty, SIGNAL(valueChanged()), SIGNAL(valueChanged()));
 }
 
@@ -124,6 +127,14 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     }
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    videoRouteProperty->unsubscribe();
+    topEdgeProperty->unsubscribe();
+    remoteTopEdgeProperty->unsubscribe();
+    isCoveredProperty->unsubscribe();
+    isFlatProperty->unsubscribe();
+    Q_ASSERT(!currentWindowAngleProperty->isSubscribed());
+    Q_ASSERT(!desktopAngleProperty->isSubscribed());
+
     connect(topEdgeProperty, SIGNAL(valueChanged()),
             this, SLOT(updateOrientationAngle()));
     connect(remoteTopEdgeProperty, SIGNAL(valueChanged()),
