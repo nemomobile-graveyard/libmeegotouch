@@ -78,6 +78,19 @@ class M_CORE_EXPORT MPhysics2DPanning : public QObject
     //! \brief Current maximum speed value
     Q_PROPERTY(qreal maximumVelocity READ maximumVelocity WRITE setMaximumVelocity)
 
+    /*!
+        \property MPhysics2DPanning::boundsBehavior
+
+        This property holds whether the position may be dragged beyond the
+        range's boundaries, or overshoot the range's boundaries when flicked.
+
+        This enables the feeling that the edges of the view are soft, rather
+        than a hard physical boundary.
+
+        Its default value is DragAndOvershootBounds.
+     */
+    Q_PROPERTY(BoundsBehavior boundsBehavior READ boundsBehavior WRITE setBoundsBehavior)
+
 public:
 
     /*!
@@ -240,6 +253,28 @@ public:
      * be restarted when pointer will be pressed again.
      */
     void stop();
+
+    /*!
+      The behavior when panning hits a range boundary
+     */
+    enum BoundsBehavior {
+        StopAtBounds, /*!< position cannot go beyond the range, and flicks will not
+                           overshoot. */
+        DragOverBounds, /*!< position can be dragged beyond the range, but flicks
+                             will not overshoot. */
+        DragAndOvershootBounds /*!< position can be dragged beyond the range and can
+                                    overshoot the range when flicked. */
+    };
+
+    /*!
+     * \brief Returns the value of BoundsBehavior property
+     */
+    BoundsBehavior boundsBehavior() const;
+
+    /*!
+     * \brief Sets the value of BoundsBehavior property
+     */
+    void setBoundsBehavior(BoundsBehavior newBoundsBehavior);
 
 Q_SIGNALS:
     /*!

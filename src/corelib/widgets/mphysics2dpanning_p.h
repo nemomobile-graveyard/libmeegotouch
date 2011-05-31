@@ -68,6 +68,8 @@ public:
     void _q_integrator(const QVariant &value);
     QPointF getVelocity();
 
+    MPhysics2DPanning::BoundsBehavior boundsBehavior;
+
 protected:
     MPhysics2DPanning *q_ptr;
 };

@@ -50,6 +50,7 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
     borderSpringK(0.0),
     borderFrictionC(0.0),
     panDirection(0),
+    boundsBehavior(MPhysics2DPanning::DragAndOvershootBounds),
     q_ptr(publicObject)
 {
 }
@@ -275,6 +276,16 @@ void MPhysics2DPanning::stop()
     }
 }
 
+MPhysics2DPanning::BoundsBehavior MPhysics2DPanning::boundsBehavior() const
+{
+    Q_D(const MPhysics2DPanning);
+    return d->boundsBehavior;
+}
+
+void MPhysics2DPanning::setBoundsBehavior(MPhysics2DPanning::BoundsBehavior newBoundsBehavior)
+{
+    d_ptr->boundsBehavior = newBoundsBehavior;
+}
 
 void MPhysics2DPanning::setRange(const QRectF &range)
 {
@@ -501,11 +512,35 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
         }
         velocity += a;
         velocity = velocity * f;
+        pointerDifference = 0;
+
+        if (d->boundsBehavior == DragOverBounds) {
+            if (velocity > 0.0f) {
+                if (position >= rangeEnd)
+                    velocity = 0;
+                else
+                    velocity = qMin(velocity, rangeEnd - position);
+            } else if (velocity < 0.0f) {
+                if (position <= rangeStart)
+                    velocity = 0;
+                else
+                    velocity = qMax(velocity, rangeStart - position);
+            }
+        }
+
         // Move content
         position += velocity;
-        pointerDifference = 0;
     }
 
+    if (d->boundsBehavior == StopAtBounds) {
+        if (position < rangeStart) {
+            velocity = 0;
+            position = rangeStart;
+        } else if (position > rangeEnd) {
+            velocity = 0;
+            position = rangeEnd;
+        }
+    }
 }
 
 #include "moc_mphysics2dpanning.cpp"
