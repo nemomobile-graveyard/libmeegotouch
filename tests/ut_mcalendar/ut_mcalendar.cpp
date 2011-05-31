@@ -2835,8 +2835,10 @@ void Ut_MCalendar::testPosixFormatPattern_data()
     QTest::addColumn<int>("minute");
     QTest::addColumn<int>("second");
     QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
     QTest::addColumn<QString>("format");
-    QTest::addColumn<QString>("result");
+    QTest::addColumn<QString>("expectedResult");
 
     // ************************************************************
     QTest::newRow("fi_FI %a")
@@ -2847,6 +2849,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%a" // locale's abbreviated weekday name (e.g., Sun)
             << "su";
@@ -2859,6 +2863,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%b" // locale's abbreviated month name (e.g., Jan)
             << "helmi";
     QTest::newRow("fi_FI %c")
@@ -2869,6 +2875,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%c" // locale's date and time (e.g., Thu Mar  3 23:05:25 2005)
             << "3.2.2008 12:25:03";
@@ -2881,6 +2889,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%d" // %d day of month (e.g, 01)
             << "03";
     QTest::newRow("fi_FI %e")
@@ -2891,6 +2901,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%e" // %e day of month, space padded; same as %_d
             << "3"; // padding missing, FIXME!!!
@@ -2903,6 +2915,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%g" // %g last two digits of year of ISO week number (see %G)
             << "08";
     QTest::newRow("fi_FI %h")
@@ -2913,6 +2927,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%h" // %h same as %b, locale's abbreviated month name (e.g., Jan)
             << "helmi";
@@ -2925,6 +2941,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%j" // day of year (001..366)
             << "034";
     QTest::newRow("fi_FI %m")
@@ -2936,19 +2954,10 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%m" // month (01..12)
             << "02";
-    QTest::newRow("fi_FI %p")
-            << MLocale::GregorianCalendar
-            << 2008
-            << 2
-            << 3
-            << 12
-            << 25
-            << 3
-            << "fi_FI"
-            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
-            << "PM";
     QTest::newRow("fi_FI %r")
             << MLocale::GregorianCalendar
             << 2008
@@ -2957,6 +2966,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%r" // locale specific 12-hour clock time
             << "12:25 PM";
@@ -2969,6 +2980,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%t" // a tab
             << "\t";
     QTest::newRow("fi_FI %u")
@@ -2979,6 +2992,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%u" // %u day of week (1..7); 1 is Monday
             << "7";
@@ -2991,6 +3006,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%v" // week number of the year in two digits (missing in POSIX?)
             << "05";
     QTest::newRow("fi_FI %w")
@@ -3001,6 +3018,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%w" // day of week (0..6); 0 is Sunday
             << "0";
@@ -3013,6 +3032,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%x" // locale's date representation (e.g., 12/31/99)
             << "3.2.2008";
     QTest::newRow("fi_FI %y")
@@ -3023,6 +3044,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%y" // last two digits of year (00..99)
             << "08";
@@ -3035,6 +3058,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%z" // +hhmm numeric timezone (e.g., -0400)
             << "+0200";
     QTest::newRow("fi_FI %A")
@@ -3045,6 +3070,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%A" // locale's full weekday name (e.g., Sunday)
             << "sunnuntai";
@@ -3057,6 +3084,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%B" // locale's full month name (e.g., January)
             << "helmikuu";
     QTest::newRow("fi_FI %C")
@@ -3067,6 +3096,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%C" // century; like %Y, except omit last two digits (e.g., 21)
             << "20";
@@ -3079,6 +3110,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%D" // date; same as %m/%d/%y
             << "02/03/08";
     QTest::newRow("fi_FI %F")
@@ -3089,6 +3122,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%F" // full date; same as %Y-%m-%d"
             << "2008-02-03";
@@ -3101,6 +3136,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%G" // year of ISO week number (see %V); normally useful only with %V
             << "2008";
     QTest::newRow("fi_FI %H")
@@ -3112,6 +3149,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "00";
     QTest::newRow("fi_FI %H")
@@ -3122,6 +3161,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 01
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "01";
@@ -3134,6 +3175,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "23";
     QTest::newRow("fi_FI %H")
@@ -3144,6 +3187,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 24 // for the “date” command this would be invalid input but ICU wraps around
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "00";
@@ -3156,6 +3201,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
     QTest::newRow("fi_FI %I")
@@ -3166,6 +3213,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 01
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "01";
@@ -3178,6 +3227,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "11";
     QTest::newRow("fi_FI %I")
@@ -3188,6 +3239,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
@@ -3200,6 +3253,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%M" // minute (00..59)"
             << "25";
     QTest::newRow("fi_FI %R")
@@ -3210,6 +3265,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%R" // locale specific 24-hour clock time
             << "12:25";
@@ -3222,6 +3279,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%S" // second (00..60)
             << "03";
     QTest::newRow("fi_FI %T")
@@ -3232,6 +3291,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%T" // time; same as %H:%M:%S
             << "12:25:03";
@@ -3244,6 +3305,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%U" // week number of year, with Sunday as first day of week (00..53)
             << "05";
     QTest::newRow("fi_FI %V")
@@ -3254,6 +3317,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%V" // ISO week number, with Monday as first day of week (01..53)"
             << "05";
@@ -3266,6 +3331,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%W" // week number of year, with Monday as first day of week (00..53)
             << "4";
     QTest::newRow("fi_FI %X")
@@ -3276,6 +3343,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%X" // locale's time representation (e.g., 23:13:48)
             << "12:25:03";
@@ -3288,6 +3357,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
             << "%Y" // year
             << "2008";
     QTest::newRow("fi_FI %Z")
@@ -3298,6 +3369,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%Z" // Time-zone name, or no characters if no time zone is determinable
             << "(Suomi)";
@@ -3312,6 +3385,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%a" // locale's abbreviated weekday name (e.g., Sun)
             << "Sun";
     QTest::newRow("en_GB %b")
@@ -3322,6 +3397,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%b" // locale's abbreviated month name (e.g., Jan)
             << "Feb";
@@ -3334,6 +3411,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%c" // locale's date and time (e.g., Thu Mar  3 23:05:25 2005)
             << "3 Feb 2008 12:25:03";
     QTest::newRow("en_GB %d")
@@ -3344,6 +3423,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%d" // %d day of month (e.g, 01)
             << "03";
@@ -3356,6 +3437,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%e" // %e day of month, space padded; same as %_d
             << "3"; // padding missing, FIXME!!!
     QTest::newRow("en_GB %g")
@@ -3366,6 +3449,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%g" // %g last two digits of year of ISO week number (see %G)
             << "08";
@@ -3378,6 +3463,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%h" // %h same as %b, locale's abbreviated month name (e.g., Jan)
             << "Feb";
     QTest::newRow("en_GB %j")
@@ -3388,6 +3475,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%j" // day of year (001..366)
             << "034";
@@ -3400,19 +3489,10 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%m" // month (01..12)
             << "02";
-    QTest::newRow("en_GB %p")
-            << MLocale::GregorianCalendar
-            << 2008
-            << 2
-            << 3
-            << 12
-            << 25
-            << 3
-            << "en_GB"
-            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
-            << "PM";
     QTest::newRow("en_GB %r")
             << MLocale::GregorianCalendar
             << 2008
@@ -3421,6 +3501,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%r" // locale specific 12-hour clock time
             << "12:25 PM";
@@ -3433,6 +3515,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%t" // a tab
             << "\t";
     QTest::newRow("en_GB %u")
@@ -3443,6 +3527,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%u" // %u day of week (1..7); 1 is Monday
             << "7";
@@ -3455,6 +3541,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%v" // week number of the year in two digits (missing in POSIX?)
             << "05";
     QTest::newRow("en_GB %w")
@@ -3465,6 +3553,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%w" // day of week (0..6); 0 is Sunday
             << "0";
@@ -3477,6 +3567,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%x" // locale's date representation (e.g., 12/31/99)
             << "3 Feb 2008";
     QTest::newRow("en_GB %y")
@@ -3487,6 +3579,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%y" // last two digits of year (00..99)
             << "08";
@@ -3499,6 +3593,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%z" // +hhmm numeric timezone (e.g., -0400)
             << "+0200";
     QTest::newRow("en_GB %A")
@@ -3509,6 +3605,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%A" // locale's full weekday name (e.g., Sunday)
             << "Sunday";
@@ -3521,6 +3619,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%B" // locale's full month name (e.g., January)
             << "February";
     QTest::newRow("en_GB %C")
@@ -3531,6 +3631,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%C" // century; like %Y, except omit last two digits (e.g., 21)
             << "20";
@@ -3543,6 +3645,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%D" // date; same as %m/%d/%y
             << "02/03/08";
     QTest::newRow("en_GB %F")
@@ -3553,6 +3657,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%F" // full date; same as %Y-%m-%d"
             << "2008-02-03";
@@ -3565,6 +3671,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%G" // year of ISO week number (see %V); normally useful only with %V
             << "2008";
     QTest::newRow("en_GB %H")
@@ -3576,6 +3684,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "00";
     QTest::newRow("en_GB %H")
@@ -3586,6 +3696,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 01
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "01";
@@ -3598,6 +3710,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "23";
     QTest::newRow("en_GB %H")
@@ -3608,6 +3722,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 24 // for the “date” command this would be invalid input but ICU wraps around
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%H" // Hour (24-hour clock), as a decimal number (00-23)
             << "00";
@@ -3620,6 +3736,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
     QTest::newRow("en_GB %I")
@@ -3630,6 +3748,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 01
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "01";
@@ -3642,6 +3762,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "11";
     QTest::newRow("en_GB %I")
@@ -3652,6 +3774,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
@@ -3664,6 +3788,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%M" // minute (00..59)"
             << "25";
     QTest::newRow("en_GB %R")
@@ -3674,6 +3800,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%R" // locale specific 24-hour clock time
             << "12:25";
@@ -3686,6 +3814,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%S" // second (00..60)
             << "03";
     QTest::newRow("en_GB %T")
@@ -3696,6 +3826,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%T" // time; same as %H:%M:%S
             << "12:25:03";
@@ -3708,6 +3840,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%U" // week number of year, with Sunday as first day of week (00..53)
             << "05";
     QTest::newRow("ar_EG %U")
@@ -3718,6 +3852,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "ar_EG"
+            << "ar_EG"
             << "ar_EG"
             << "%U" // week number of year, with Sunday as first day of week (00..53)
             << "٠٥";
@@ -3730,6 +3866,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%V" // ISO week number, with Monday as first day of week (01..53)"
             << "05";
     QTest::newRow("ar_EG %V")
@@ -3740,6 +3878,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "ar_EG"
+            << "ar_EG"
             << "ar_EG"
             << "%V" // ISO week number, with Monday as first day of week (01..53)"
             << "٠٥";
@@ -3752,6 +3892,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%W" // week number of year, with Monday as first day of week (00..53)
             << "4";
     QTest::newRow("en_GB %X")
@@ -3762,6 +3904,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%X" // locale's time representation (e.g., 23:13:48)
             << "12:25:03";
@@ -3774,6 +3918,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%Y" // year
             << "2008";
     QTest::newRow("en_GB %Z")
@@ -3784,6 +3930,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "en_GB"
+            << "en_GB"
             << "en_GB"
             << "%Z" // Time-zone name, or no characters if no time zone is determinable
             << "Finland Time";
@@ -3798,6 +3946,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "de_DE"
+            << "de_DE"
+            << "de_DE"
             << "%Z" // Time-zone name, or no characters if no time zone is determinable
             << "(Finnland)";
     // ************************************************************
@@ -3809,6 +3959,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 12
             << 25
             << 3
+            << "fi_FI"
+            << "fi_FI"
             << "fi_FI"
             << "%R %Z"
             << "12:25 (Suomi)";
@@ -3822,6 +3974,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
+            << "en_GB"
+            << "en_GB"
             << "%R %Z"
             << "12:25 Finland Time";
 
@@ -3834,8 +3988,88 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "de_DE"
+            << "de_DE"
+            << "de_DE"
             << "%R %Z"
             << "12:25 (Finnland)";
+    QTest::newRow("fi_FI %p")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "fi_FI"
+            << "fi_FI"
+            << "fi_FI"
+            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
+            << "PM";
+    QTest::newRow("en_GB %p")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "en_GB"
+            << "en_GB"
+            << "en_GB"
+            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
+            << "PM";
+    QTest::newRow("zh_CN zh_CN zh_CN %p")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "zh_CN"
+            << "zh_CN"
+            << "zh_CN"
+            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
+            << "下午";
+    QTest::newRow("zh_CN zh_CN zh_CN %p")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "zh_CN"
+            << "zh_CN"
+            << "fi_FI" // no mixing by default for Chinese messages
+            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
+            << "PM";
+    QTest::newRow("zh_CN zh_CN zh_CN %p")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "zh_CN"
+            << "zh_CN"
+            << "fi_FI@mix-time-and-language=no"
+            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
+            << "PM";
+    QTest::newRow("zh_CN zh_CN zh_CN %p")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "zh_CN"
+            << "zh_CN"
+            << "fi_FI@mix-time-and-language=yes"
+            << "%p" // %p locale's equivalent of either AM or PM; blank if not known
+            << "下午";
 }
 
 void Ut_MCalendar::testPosixFormatPattern()
@@ -3848,10 +4082,15 @@ void Ut_MCalendar::testPosixFormatPattern()
     QFETCH(int, minute);
     QFETCH(int, second);
     QFETCH(QString, localeName);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
     QFETCH(QString, format);
-    QFETCH(QString, result);
+    QFETCH(QString, expectedResult);
 
     MLocale locale(localeName);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCalendarType(calendarType);
     MCalendar mcal(locale);
     mcal.setDate(year, month, day);
@@ -3861,19 +4100,31 @@ void Ut_MCalendar::testPosixFormatPattern()
     QDateTime datetime(date, time, Qt::LocalTime);
     QLocale qlocale(localeName);
 
-    qDebug() << "format:" << format << "result: " << result;
-//    qDebug() << "QLocale time ShortFormat" << qlocale.toString(time, QLocale::ShortFormat) << "QLocale time LongFormat" << qlocale.toString(time, QLocale::LongFormat);
-//    qDebug() << "QLocale format" << qlocale.toString(time, "hh:mm");
-//    qDebug() << "QLocale date ShortFormat" << qlocale.toString(date, QLocale::ShortFormat) << "QLocale date LongFormat" << qlocale.toString(date, QLocale::LongFormat);
-    qDebug() << "DateNone TimeNone" << locale.formatDateTime(datetime, MLocale::DateNone, MLocale::TimeNone, calendarType);
-    qDebug() << "DateNone TimeShort" << locale.formatDateTime(datetime, MLocale::DateNone, MLocale::TimeShort, calendarType);
-    qDebug() << "DateShort TimeNone" << locale.formatDateTime(datetime, MLocale::DateShort, MLocale::TimeNone, calendarType);
-//    qDebug() << "DateShort TimeShort" << locale.formatDateTime(datetime, MLocale::DateShort, MLocale::TimeShort, calendarType);
-//    qDebug() << "DateMedium TimeMedium" << locale.formatDateTime(datetime, MLocale::DateMedium, MLocale::TimeMedium, calendarType);
-//    qDebug() << "DateLong TimeLong" << locale.formatDateTime(datetime, MLocale::DateLong, MLocale::TimeLong, calendarType);
-//    qDebug() << "DateFull TimeFull" << locale.formatDateTime(datetime, MLocale::DateFull, MLocale::TimeFull, calendarType);
-    QCOMPARE(locale.formatDateTime(mcal, format), result);
-    QCOMPARE(locale.formatDateTime(datetime, format), result);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "language " << localeName
+        << " lc_messages " << lcMessages
+        << " lc_time " << lcTime
+        << " format: " << format
+        << " expectedResult: " << expectedResult
+        << " result: " << locale.formatDateTime(mcal, format)
+        << "\n";
+//    debugStream << "QLocale time ShortFormat " << qlocale.toString(time, QLocale::ShortFormat) << "QLocale time LongFormat " << qlocale.toString(time, QLocale::LongFormat) << "\n";
+//    debugStream << "QLocale format" << qlocale.toString(time, "hh:mm") << "\n";
+//    debugStream << "QLocale date ShortFormat" << qlocale.toString(date, QLocale::ShortFormat) << "QLocale date LongFormat" << qlocale.toString(date, QLocale::LongFormat) << "\n";
+    debugStream << "DateNone TimeNone " << locale.formatDateTime(datetime, MLocale::DateNone, MLocale::TimeNone, calendarType) << "\n";
+    debugStream << "DateNone TimeShort " << locale.formatDateTime(datetime, MLocale::DateNone, MLocale::TimeShort, calendarType) << "\n";
+    debugStream << "DateShort TimeNone " << locale.formatDateTime(datetime, MLocale::DateShort, MLocale::TimeNone, calendarType) << "\n";
+//    debugStream << "DateShort TimeShort" << locale.formatDateTime(datetime, MLocale::DateShort, MLocale::TimeShort, calendarType) << "\n";
+//    debugStream << "DateMedium TimeMedium" << locale.formatDateTime(datetime, MLocale::DateMedium, MLocale::TimeMedium, calendarType) << "\n";
+//    debugStream << "DateLong TimeLong" << locale.formatDateTime(datetime, MLocale::DateLong, MLocale::TimeLong, calendarType) << "\n";
+//    debugStream << "DateFull TimeFull" << locale.formatDateTime(datetime, MLocale::DateFull, MLocale::TimeFull, calendarType) << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(locale.formatDateTime(mcal, format), expectedResult);
+    QCOMPARE(locale.formatDateTime(datetime, format), expectedResult);
 }
 
 void Ut_MCalendar::testFormatDateTimeICU_data()
@@ -4298,201 +4549,326 @@ void Ut_MCalendar::testFormatDateTimeICU()
 
 void Ut_MCalendar::testWeekdaySymbols_data()
 {
-    QTest::addColumn<QString>("localeName");
-    QTest::addColumn<MLocale::CalendarType>("cal");
+    QTest::addColumn<QString>("language");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<MLocale::CalendarType>("calendarType");
     QTest::addColumn<QStringList>("symbols");
 
-    QStringList fi_FI_Symbols;
-    fi_FI_Symbols
-            << QString("Maanantai")
-            << QString("Tiistai")
-            << QString("Keskiviikko")
-            << QString("Torstai")
-            << QString("Perjantai")
-            << QString("Lauantai")
-            << QString("Sunnuntai");
-
-    QTest::newRow("weekday_symbols_fi_FI_Gregorian")
-            << QString("fi_FI")
-            << MLocale::GregorianCalendar
-            << fi_FI_Symbols;
-
-    QStringList en_GB_Symbols;
-    en_GB_Symbols
-            << QString("Monday")
-            << QString("Tuesday")
-            << QString("Wednesday")
-            << QString("Thursday")
-            << QString("Friday")
-            << QString("Saturday")
-            << QString("Sunday");
-
-    QTest::newRow("weekday_symbols_en_GB_Gregorian")
-            << QString("en_GB")
-            << MLocale::GregorianCalendar
-            << en_GB_Symbols;
-
-    QStringList nn_NO_Symbols;
-    nn_NO_Symbols
-            << QString("Måndag")
-            << QString("Tysdag")
-            << QString("Onsdag")
-            << QString("Torsdag")
-            << QString("Fredag")
-            << QString("Laurdag")
-            << QString("Søndag");
-
-    QTest::newRow("weekday_symbols_nn_NO_Gregorian")
-            << QString("nn_NO")
-            << MLocale::GregorianCalendar
-            << nn_NO_Symbols;
-
-    QStringList nb_NO_Symbols;
-    nb_NO_Symbols
-            << QString("Mandag")
-            << QString("Tirsdag")
-            << QString("Onsdag")
-            << QString("Torsdag")
-            << QString("Fredag")
-            << QString("Lørdag")
-            << QString("Søndag");
-
-    QTest::newRow("weekday_symbols_nb_NO_Gregorian")
-            << QString("nb_NO")
-            << MLocale::GregorianCalendar
-            << nb_NO_Symbols;
-
-    QStringList no_NO_Symbols;
-    no_NO_Symbols = nb_NO_Symbols;
-
-    QTest::newRow("weekday_symbols_no_NO_Gregorian")
-            << QString("no_NO")
-            << MLocale::GregorianCalendar
-            << no_NO_Symbols;
+    QStringList fi_FI_Symbols = QStringList() << "Maanantai"
+                                              << "Tiistai"
+                                              << "Keskiviikko"
+                                              << "Torstai"
+                                              << "Perjantai"
+                                              << "Lauantai"
+                                              << "Sunnuntai";
+    QStringList en_GB_Symbols = QStringList() << "Monday"
+                                              << "Tuesday"
+                                              << "Wednesday"
+                                              << "Thursday"
+                                              << "Friday"
+                                              << "Saturday"
+                                              << "Sunday";
+    QStringList nn_NO_Symbols = QStringList() << "Måndag"
+                                              << "Tysdag"
+                                              << "Onsdag"
+                                              << "Torsdag"
+                                              << "Fredag"
+                                              << "Laurdag"
+                                              << "Søndag";
+    QStringList nb_NO_Symbols = QStringList() << "Mandag"
+                                              << "Tirsdag"
+                                              << "Onsdag"
+                                              << "Torsdag"
+                                              << "Fredag"
+                                              << "Lørdag"
+                                              << "Søndag";
+    QStringList no_NO_Symbols = nb_NO_Symbols;
+    QStringList zh_CN_Symbols = QStringList() << "星期一"
+                                              << "星期二"
+                                              << "星期三"
+                                              << "星期四"
+                                              << "星期五"
+                                              << "星期六"
+                                              << "星期日";
+    QTest::newRow("weekday_symbols fi_FI fi_FI fi_FI")
+        << "fi_FI"
+        << "fi_FI"
+        << "fi_FI"
+        << MLocale::GregorianCalendar
+        << fi_FI_Symbols;
+    QTest::newRow("weekday_symbols en_GB en_GB en_GB")
+        << "en_GB"
+        << "en_GB"
+        << "en_GB"
+        << MLocale::GregorianCalendar
+        << en_GB_Symbols;
+    QTest::newRow("weekday_symbols nn_NO nn_NO nn_NO")
+        << "nn_NO"
+        << "nn_NO"
+        << "nn_NO"
+        << MLocale::GregorianCalendar
+        << nn_NO_Symbols;
+    QTest::newRow("weekday_symbols nb_NO nb_NO nb_NO")
+        << "nb_NO"
+        << "nb_NO"
+        << "nb_NO"
+        << MLocale::GregorianCalendar
+        << nb_NO_Symbols;
+    QTest::newRow("weekday_symbols no_NO no_NO no_NO")
+        << "no_NO"
+        << "no_NO"
+        << "no_NO"
+        << MLocale::GregorianCalendar
+        << no_NO_Symbols;
+    QTest::newRow("weekday_symbols zh_CN zh_CN zh_CN")
+        << "zh_CN"
+        << "zh_CN"
+        << "zh_CN"
+        << MLocale::GregorianCalendar
+        << zh_CN_Symbols;
+    QTest::newRow("weekday_symbols zh_CN zh_CN zh_CN")
+        << "zh_CN"
+        << "zh_CN"
+        << "fi_FI@mix-time-and-language=no"
+        << MLocale::GregorianCalendar
+        << fi_FI_Symbols;
+    QTest::newRow("weekday_symbols zh_CN zh_CN zh_CN")
+        << "zh_CN"
+        << "zh_CN"
+        << "fi_FI" // no mixing by default for Chinese messages
+        << MLocale::GregorianCalendar
+        << fi_FI_Symbols;
+    QTest::newRow("weekday_symbols zh_CN zh_CN zh_CN")
+        << "zh_CN"
+        << "zh_CN"
+        << "fi_FI@mix-time-and-language=yes"
+        << MLocale::GregorianCalendar
+        << zh_CN_Symbols;
 }
 
 void Ut_MCalendar::testWeekdaySymbols()
 {
-    QFETCH(QString, localeName);
-    QFETCH(MLocale::CalendarType, cal);
+    QFETCH(QString, language);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(MLocale::CalendarType, calendarType);
     QFETCH(QStringList, symbols);
 
-    MLocale locale(localeName);
-    MCalendar mcal(cal);
+    MLocale locale(language);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    MCalendar mcal(calendarType);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "language " << language
+        << " lc_messages " << lcMessages
+        << " lc_time " << lcTime
+        << " calendarType " << calendarType << "\n";
     for (int i = 1; i <= 7; ++i) {
-        QString symbol = symbols.at(i - 1);
-        QCOMPARE(locale.weekdayName(mcal, i), symbol);
+        debugStream
+            << " i " << i
+            << " weekday name " << locale.weekdayName(mcal, i)
+            << " expected " << symbols.at(i-1)
+            << "\n";
     }
+    debugStream.flush();
+#endif
+    for (int i = 1; i <= 7; ++i)
+        QCOMPARE(locale.weekdayName(mcal, i), symbols.at(i-1));
 }
 
 void Ut_MCalendar::testMonthSymbols_data()
 {
-    QTest::addColumn<QString>("localeName");
-    QTest::addColumn<MLocale::CalendarType>("cal");
+    QTest::addColumn<QString>("language");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<MLocale::CalendarType>("calendarType");
     QTest::addColumn<QStringList>("symbols");
 
-    QStringList fi_FI_Symbols;
-    fi_FI_Symbols
-            << QString("Tammikuu")
-            << QString("Helmikuu")
-            << QString("Maaliskuu")
-            << QString("Huhtikuu")
-            << QString("Toukokuu")
-            << QString("Kesäkuu")
-            << QString("Heinäkuu")
-            << QString("Elokuu")
-            << QString("Syyskuu")
-            << QString("Lokakuu")
-            << QString("Marraskuu")
-            << QString("Joulukuu");
+    QStringList fi_FI_Symbols = QStringList() << "Tammikuu"
+                                              << "Helmikuu"
+                                              << "Maaliskuu"
+                                              << "Huhtikuu"
+                                              << "Toukokuu"
+                                              << "Kesäkuu"
+                                              << "Heinäkuu"
+                                              << "Elokuu"
+                                              << "Syyskuu"
+                                              << "Lokakuu"
+                                              << "Marraskuu"
+                                              << "Joulukuu";
+    QStringList en_GB_Symbols = QStringList() << "January"
+                                              << "February"
+                                              << "March"
+                                              << "April"
+                                              << "May"
+                                              << "June"
+                                              << "July"
+                                              << "August"
+                                              << "September"
+                                              << "October"
+                                              << "November"
+                                              << "December";
+    QStringList nn_NO_Symbols = QStringList() << "Januar"
+                                              << "Februar"
+                                              << "Mars"
+                                              << "April"
+                                              << "Mai"
+                                              << "Juni"
+                                              << "Juli"
+                                              << "August"
+                                              << "September"
+                                              << "Oktober"
+                                              << "November"
+                                              << "Desember";
+    QStringList nb_NO_Symbols = QStringList() << "Januar"
+                                              << "Februar"
+                                              << "Mars"
+                                              << "April"
+                                              << "Mai"
+                                              << "Juni"
+                                              << "Juli"
+                                              << "August"
+                                              << "September"
+                                              << "Oktober"
+                                              << "November"
+                                              << "Desember";
+    QStringList no_NO_Symbols = nb_NO_Symbols;
+    QStringList zh_CN_Symbols = QStringList() << "一月"
+                                              << "二月"
+                                              << "三月"
+                                              << "四月"
+                                              << "五月"
+                                              << "六月"
+                                              << "七月"
+                                              << "八月"
+                                              << "九月"
+                                              << "十月"
+                                              << "十一月"
+                                              << "十二月";
 
-    QTest::newRow("month_symbols_fi_FI_Gregorian")
-            << QString("fi_FI")
+    QTest::newRow("month_symbols de_DE fi_FI fi_FI")
+            << "de_DE"
+            << "fi_FI"
+            << "fi_FI"
             << MLocale::GregorianCalendar
             << fi_FI_Symbols;
-
-    QStringList en_GB_Symbols;
-    en_GB_Symbols
-            << QString("January")
-            << QString("February")
-            << QString("March")
-            << QString("April")
-            << QString("May")
-            << QString("June")
-            << QString("July")
-            << QString("August")
-            << QString("September")
-            << QString("October")
-            << QString("November")
-            << QString("December");
-
-    QTest::newRow("month_symbols_en_GB_Gregorian")
-            << QString("en_GB")
+    QTest::newRow("month_symbols de_DE en_GB fi_FI")
+            << "de_DE"
+            << "en_GB"
+            << "fi_FI"
             << MLocale::GregorianCalendar
             << en_GB_Symbols;
-
-    QStringList nn_NO_Symbols;
-    nn_NO_Symbols
-            << QString("Januar")
-            << QString("Februar")
-            << QString("Mars")
-            << QString("April")
-            << QString("Mai")
-            << QString("Juni")
-            << QString("Juli")
-            << QString("August")
-            << QString("September")
-            << QString("Oktober")
-            << QString("November")
-            << QString("Desember");
-
-    QTest::newRow("month_symbols_nn_NO_Gregorian")
-            << QString("nn_NO")
+    QTest::newRow("month_symbols fi_FI en_GB fi_FI@mix-time-and-language=no")
+            << "fi_FI"
+            << "en_GB"
+            << "fi_FI@mix-time-and-language=no"
             << MLocale::GregorianCalendar
-            << nn_NO_Symbols;
-
-    QStringList nb_NO_Symbols;
-    nb_NO_Symbols
-            << QString("Januar")
-            << QString("Februar")
-            << QString("Mars")
-            << QString("April")
-            << QString("Mai")
-            << QString("Juni")
-            << QString("Juli")
-            << QString("August")
-            << QString("September")
-            << QString("Oktober")
-            << QString("November")
-            << QString("Desember");
-
-    QTest::newRow("month_symbols_nb_NO_Gregorian")
-            << QString("nb_NO")
+            << fi_FI_Symbols;
+    QTest::newRow("month_symbols de_DE en_GB de_DE")
+            << "de_DE"
+            << "en_GB"
+            << "de_DE"
+            << MLocale::GregorianCalendar
+            << en_GB_Symbols;
+    QTest::newRow("month_symbols de_DE nb_NO de_DE")
+            << "de_DE"
+            << "nb_NO"
+            << "de_DE"
             << MLocale::GregorianCalendar
             << nb_NO_Symbols;
-
-    QStringList no_NO_Symbols;
-    no_NO_Symbols = nb_NO_Symbols;
-
-    QTest::newRow("month_symbols_no_NO_Gregorian")
-            << QString("no_NO")
+    QTest::newRow("month_symbols nn_NO nn_NO nn_NO")
+            << "nn_NO"
+            << "nn_NO"
+            << "nn_NO"
+            << MLocale::GregorianCalendar
+            << nn_NO_Symbols;
+    QTest::newRow("month_symbols nb_NO nb_NO nb_NO")
+            << "nb_NO"
+            << "nb_NO"
+            << "nb_NO"
             << MLocale::GregorianCalendar
             << no_NO_Symbols;
+    QTest::newRow("month_symbols no_NO no_NO no_NO")
+            << "no_NO"
+            << "no_NO"
+            << "no_NO"
+            << MLocale::GregorianCalendar
+            << no_NO_Symbols;
+    QTest::newRow("month_symbols zh_CN zh_CN zh_CN")
+            << "zh_CN"
+            << "zh_CN"
+            << "zh_CN"
+            << MLocale::GregorianCalendar
+            << zh_CN_Symbols;
+    QTest::newRow("month_symbols zh_CN zh_CN zh_CN")
+            << "zh_CN"
+            << "fi_FI"
+            << "zh_CN"
+            << MLocale::GregorianCalendar
+            << fi_FI_Symbols;
+    QTest::newRow("month_symbols zh_CN zh_CN zh_CN")
+            << "zh_CN"
+            << "fi_FI"
+            << "zh_CN@mix-time-and-language=no"
+            << MLocale::GregorianCalendar
+            << zh_CN_Symbols;
+    QTest::newRow("month_symbols zh_CN zh_CN zh_CN")
+            << "zh_CN"
+            << "zh_CN"
+            << "fi_FI" // no mixing by default for Chinese messages
+            << MLocale::GregorianCalendar
+            << fi_FI_Symbols;
+    QTest::newRow("month_symbols zh_CN zh_CN zh_CN")
+            << "zh_CN"
+            << "zh_CN"
+            << "fi_FI@mix-time-and-language=no"
+            << MLocale::GregorianCalendar
+            << fi_FI_Symbols;
+    QTest::newRow("month_symbols zh_CN zh_CN zh_CN")
+            << "zh_CN"
+            << "zh_CN"
+            << "fi_FI@mix-time-and-language=yes"
+            << MLocale::GregorianCalendar
+            << zh_CN_Symbols;
 }
 
 void Ut_MCalendar::testMonthSymbols()
 {
-    QFETCH(QString, localeName);
-    QFETCH(MLocale::CalendarType, cal);
-
-    MLocale locale(localeName);
-    MCalendar mcal(cal);
+    QFETCH(QString, language);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(MLocale::CalendarType, calendarType);
     QFETCH(QStringList, symbols);
 
+    MLocale locale(language);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    MCalendar mcal(calendarType);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "language " << language
+        << " lc_messages " << lcMessages
+        << " lc_time " << lcTime
+        << " calendarType " << calendarType << "\n";
     for (int i = 1; i <= 12; ++i) {
-        QString symbol = symbols.at(i - 1);
-        QCOMPARE(locale.monthName(mcal, i), symbol);
+        debugStream
+            << " i " << i
+            << " month name " << locale.monthName(mcal, i)
+            << " expected " << symbols.at(i-1)
+            << "\n";
     }
+    debugStream.flush();
+#endif
+    for (int i = 1; i <= 12; ++i)
+        QCOMPARE(locale.monthName(mcal, i), symbols.at(i-1));
 }
 
 QTEST_APPLESS_MAIN(Ut_MCalendar);

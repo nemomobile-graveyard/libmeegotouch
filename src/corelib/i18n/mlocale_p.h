@@ -128,6 +128,7 @@ public:
     void simplifyDateFormatForMixing(icu::DateFormat *df) const;
 
     QString fixCategoryNameForNumbers(const QString &categoryName) const;
+    bool mixingSymbolsWanted(const QString &categoryNameMessages, const QString &categoryNameTime) const;
     /*!
      * \brief returns ICU date and time format string of the current locale
      * \param dateType style of date formatting

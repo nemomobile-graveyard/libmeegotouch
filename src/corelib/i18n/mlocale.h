@@ -107,7 +107,8 @@ public:
         DateShort,
         DateMedium,
         DateLong,
-        DateFull
+        DateFull,
+        DateYearAndMonth
     };
 
     /*!

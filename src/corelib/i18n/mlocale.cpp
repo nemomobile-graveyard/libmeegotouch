@@ -690,6 +690,39 @@ QString MLocalePrivate::icuFormatString(MLocale::DateType dateType,
 #endif
 
 #ifdef HAVE_ICU
+bool MLocalePrivate::mixingSymbolsWanted(const QString &categoryNameMessages, const QString &categoryNameTime) const
+{
+    QString languageMessages = parseLanguage(categoryNameMessages);
+    QString languageTime =  parseLanguage(categoryNameTime);
+    if (categoryNameTime.contains(QRegExp("@.*mix-time-and-language=yes"))) {
+        return true;
+    }
+    else if(!categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))
+       && languageMessages != languageTime
+       && languageMessages != "zh"
+       && languageMessages != "ja"
+       && languageMessages != "ko") {
+        // mixing symbols like month name and weekday name from the
+        // message locale into the date format of the time locale.
+        // Don’t do this, if the language is the same, i.e. don’t do
+        // it if one locale is “zh” and the other “zh_TW” or one
+        // locale is “pt” and the other “pt_PT”. When the locales
+        // share the same language, mixing should not be necessary,
+        // the symbols should be understandable already.
+        //
+        // Disable the mixing *always* if the language is "zh", "ja"
+        // or "ko", results of mixing a CJK language with a non-CJK
+        // language are really weird, it is just nonsense to do this.
+        // (See https://projects.maemo.org/bugzilla/show_bug.cgi?id=244444)
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
 icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
                                                   MLocale::TimeType timeType,
                                                   MLocale::CalendarType calendarType,
@@ -731,26 +764,7 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
             break;
         }
     }
-    QString languageMessages = parseLanguage(categoryNameMessages);
-    QString languageTime =  parseLanguage(categoryNameTime);
-    if(!categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))
-       && languageMessages != languageTime
-       && languageMessages != "zh"
-       && languageMessages != "ja"
-       && languageMessages != "ko") {
-        // mixing symbols like month name and weekday name from the
-        // message locale into the date format of the time locale.
-        // Don’t do this, if the language is the same, i.e. don’t do
-        // it if one locale is “zh” and the other “zh_TW” or one
-        // locale is “pt” and the other “pt_PT”. When the locales
-        // share the same language, mixing should not be necessary,
-        // the symbols should be understandable already.
-        //
-        // Disable the mixing *always* if the language is "zh", "ja"
-        // or "ko", results of mixing a CJK language with a non-CJK
-        // language are really weird, it is just nonsense to do this.
-        // (See https://projects.maemo.org/bugzilla/show_bug.cgi?id=244444)
-        //
+    if(mixingSymbolsWanted(categoryNameMessages, categoryNameTime)) {
         // If we are mixing really different languages, simplify the
         // date format first to make the results less bad:
         MLocalePrivate::simplifyDateFormatForMixing(df);
@@ -2623,7 +2637,7 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
                        << u_errorName(status);
             formatter = NULL;
         }
-        if (formatter && !categoryNameTime.contains(QRegExp("@.*mix-time-and-language=no"))) {
+        if (formatter && d->mixingSymbolsWanted(categoryNameMessages, categoryNameTime)) {
             // mixing in symbols like month name and weekday name from the message locale
             DateFormatSymbols *dfs =
                 MLocalePrivate::createDateFormatSymbols(
@@ -3109,9 +3123,10 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
 
     monthNumber--; // months in array starting from index zero
 
+    QString categoryNameMessages = d->categoryName(MLcMessages);
     QString categoryName = d->categoryName(MLcTime);
-    if(!categoryName.contains(QRegExp("@.*mix-time-and-language=no")))
-        categoryName = d->categoryName(MLcMessages);
+    if(d->mixingSymbolsWanted(categoryNameMessages, categoryName))
+        categoryName = categoryNameMessages;
     categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
     icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 
@@ -3155,9 +3170,10 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
                                DateSymbolLength symbolLength) const
 {
     Q_D(const MLocale);
+    QString categoryNameMessages = d->categoryName(MLcMessages);
     QString categoryName = d->categoryName(MLcTime);
-    if(!categoryName.contains(QRegExp("@.*mix-time-and-language=no")))
-        categoryName = d->categoryName(MLcMessages);
+     if(d->mixingSymbolsWanted(categoryNameMessages, categoryName))
+        categoryName = categoryNameMessages;
     categoryName = MIcuConversions::setCalendarOption(categoryName, mCalendar.type());
     icu::Locale symbolLocale = icu::Locale(qPrintable(categoryName));
 
