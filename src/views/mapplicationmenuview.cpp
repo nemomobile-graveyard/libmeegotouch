@@ -348,7 +348,7 @@ void MApplicationMenuViewPrivate::init()
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), SLOT(actionTriggered(QModelIndex)));
     connect(controller, SIGNAL(displayEntered()), SLOT(resetListPosition()));
-    actionItemModel->connect(controller, SIGNAL(appeared()), SLOT(freeze()));
+    actionItemModel->connect(controller, SIGNAL(disappearing()), SLOT(freeze()));
     actionItemModel->connect(controller, SIGNAL(disappeared()), SLOT(unfreeze()));
 }
 
