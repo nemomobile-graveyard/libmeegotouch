@@ -22,14 +22,15 @@
 #include <msheet.h>
 #include "msheetview.h"
 #include "msheetview_p.h"
-#include "mabstractwidgetanimation.h"
-#include <MDebug>
 #include <mpannableviewport.h>
 #include <mpositionindicator.h>
 
 #include <QGraphicsAnchorLayout>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
+#include <QGraphicsLinearLayout>
 
 //////////////
 /// MSheetSlot
@@ -95,14 +96,14 @@ MSheetViewPrivate::MSheetViewPrivate()
       headerSlot(0),
       centralSlot(0),
       centralSlotPannableViewport(0),
-      headerAnimation(0)
+      animationGroup(0)
 {
 }
 
 MSheetViewPrivate::~MSheetViewPrivate()
 {
-    delete headerAnimation;
-    headerAnimation = 0;
+    delete animationGroup;
+    animationGroup = 0;
 
     //rootLayout->removeItem(headerSlot);
     delete headerSlot;
@@ -122,13 +123,13 @@ MSheetViewPrivate::~MSheetViewPrivate()
 
 void MSheetViewPrivate::init()
 {
-    rootLayout = new QGraphicsAnchorLayout(controller);
+    headerSlot = new MSheetSlot(controller);
+
+    rootLayout = new QGraphicsLinearLayout(Qt::Vertical, controller);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
-
-    headerSlot = new MSheetSlot(controller);
-    headerSlot->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    rootLayout->addCornerAnchors(headerSlot, Qt::TopRightCorner, rootLayout, Qt::TopRightCorner);
+    rootLayoutHeaderSpacer = new MSheetSpacer;
+    rootLayoutHeaderSpacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     // The sole purpose of this internal pannable is to guarantee proper input widget relocation
     // if the central widget doesn't have a pannable viewport.
@@ -136,8 +137,8 @@ void MSheetViewPrivate::init()
     centralSlotPannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     centralSlotPannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
     centralSlotPannableViewport->setObjectName("MSheetCentralSlotPannableViewport");
-    rootLayout->addCornerAnchors(centralSlotPannableViewport, Qt::TopLeftCorner, headerSlot, Qt::BottomLeftCorner);
-    rootLayout->addCornerAnchors(centralSlotPannableViewport, Qt::BottomRightCorner, rootLayout, Qt::BottomRightCorner);
+    rootLayout->addItem(rootLayoutHeaderSpacer);
+    rootLayout->addItem(centralSlotPannableViewport);
 
     centralSlot = new MSheetSlot(centralSlotPannableViewport);
     centralSlotPannableViewport->setWidget(centralSlot);
@@ -150,12 +151,8 @@ void MSheetViewPrivate::updateStyle()
     headerSlot->setStyleName(q->style()->headerSlotStyleName());
     centralSlot->setStyleName(q->style()->centralSlotStyleName());
 
-    delete headerAnimation;
-    headerAnimation = 0;
-    if (!q->style()->headerAnimation().isEmpty()) {
-        headerAnimation = qobject_cast<MAbstractWidgetAnimation*>(MTheme::animation(q->style()->headerAnimation()));
-        headerAnimation->setTargetWidget(headerSlot);
-    }
+    headerSlot->setMinimumWidth(centralSlot->geometry().width());
+    rootLayoutHeaderSpacer->setMinimumHeight(headerSlot->preferredHeight());
 
     centralSlotPannableViewport->positionIndicator()->setStyleName(
                 q->style()->centralSlotPositionIndicatorStyleName());
@@ -164,16 +161,44 @@ void MSheetViewPrivate::updateStyle()
 void MSheetViewPrivate::updateHeaderVisibility()
 {
     Q_Q(MSheetView);
-    if (q->model()->headerVisible())
-        headerSlot->setPos(0,0);
 
-    if (headerAnimation) {
-        if (q->model()->headerVisible())
-            headerAnimation->setTransitionDirection(MAbstractWidgetAnimation::In);
-        else
-            headerAnimation->setTransitionDirection(MAbstractWidgetAnimation::Out);
-        headerAnimation->start();
-    }
+    if (controller->sceneWindowState() != MSceneWindow::Appeared)
+        return;
+
+    if (!animationGroup)
+        setupAnimation();
+
+    if (q->model()->headerVisible())
+        animationGroup->setDirection(QAbstractAnimation::Backward);
+    else
+        animationGroup->setDirection(QAbstractAnimation::Forward);
+
+    animationGroup->start();
+}
+
+void MSheetViewPrivate::setupAnimation()
+{
+    animationGroup = new QParallelAnimationGroup;
+
+    //TODO: create animation class so that these parameters are stylable
+    QPropertyAnimation* headerAnimation = new QPropertyAnimation;
+    headerAnimation->setTargetObject(headerSlot);
+    headerAnimation->setPropertyName("y");
+    headerAnimation->setStartValue(0);
+    headerAnimation->setEndValue(-headerSlot->geometry().height());
+    headerAnimation->setEasingCurve(QEasingCurve::Linear);
+    headerAnimation->setDuration(300);
+
+    QPropertyAnimation* centralAnimation = new QPropertyAnimation;
+    centralAnimation->setTargetObject(rootLayoutHeaderSpacer);
+    centralAnimation->setPropertyName("maximumHeight");
+    centralAnimation->setStartValue(headerSlot->minimumHeight());
+    centralAnimation->setEndValue(0);
+    centralAnimation->setEasingCurve(QEasingCurve::Linear);
+    centralAnimation->setDuration(300);
+
+    animationGroup->addAnimation(centralAnimation);
+    animationGroup->addAnimation(headerAnimation);
 }
 
 //////////////

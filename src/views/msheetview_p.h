@@ -26,10 +26,10 @@
 #include <QWeakPointer>
 
 class QGraphicsLinearLayout;
-class QGraphicsAnchorLayout;
+class QParallelAnimationGroup;
 class MSheetView;
 class MSheetSlot;
-class MAbstractWidgetAnimation;
+class MSheetSpacer;
 class MPannableViewport;
 
 class MSheetViewPrivate : public MSceneWindowViewPrivate
@@ -43,16 +43,19 @@ public:
 
     void updateHeaderVisibility();
 
+    void setupAnimation();
+
 private:
     Q_DECLARE_PUBLIC(MSheetView)
     MSheetView *q_ptr;
 
-    QGraphicsAnchorLayout *rootLayout;
+    QGraphicsLinearLayout* rootLayout;
+    MSheetSpacer* rootLayoutHeaderSpacer;
 
     MSheetSlot *headerSlot;
     MSheetSlot *centralSlot;
     MPannableViewport *centralSlotPannableViewport;
-    MAbstractWidgetAnimation *headerAnimation;
+    QParallelAnimationGroup* animationGroup;
 };
 
 class MSheetSlot : public MStylableWidget
@@ -73,6 +76,12 @@ private:
 
     QWeakPointer<QGraphicsWidget> widgetPointer;
     M_STYLABLE_WIDGET(MStylableWidgetStyle)
+};
+
+class MSheetSpacer : public QGraphicsWidget
+{
+    Q_OBJECT
+    Q_PROPERTY(int maximumHeight READ maximumHeight WRITE setMaximumHeight)
 };
 
 #endif // MSHEETVIEW_P_H
