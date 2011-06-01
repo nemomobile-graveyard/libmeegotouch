@@ -1,3 +1,9 @@
+libmeegotouch (0.22.0-2) unstable; urgency=low
+
+  * Fixes: NB#260157 - Calculator application display area contains zeros and typing on keypad will append zero's as it is.
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 01 Jun 2011 11:52:24 +0300
+
 libmeegotouch (0.22.0-1) unstable; urgency=low
 
   * New version
