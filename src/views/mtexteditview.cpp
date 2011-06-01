@@ -1297,9 +1297,6 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         || d->promptShowHideAnimation.state() == QAbstractAnimation::Running) {
         // with no content we show the prompt text if there is prompt text
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        if (d->focused == true) {
-            paintContext.cursorPosition = 0;
-        }
         QColor promptColor = s->promptColor();
         paintContext.palette.setColor(QPalette::Text, promptColor);
 
