@@ -501,15 +501,17 @@ bool MWidget::event(QEvent *event)
             gestureEvent(static_cast<QGestureEvent*>(event));
             break;
         case QEvent::LayoutRequest: {
-            //When you have a widget inside a layout in a widget inside a layout in a widget...
-            //and the innermost widget or layout's sizehint is invalidated only the parent is notified in the next
-            //event loop. And that will notify its parent in the event loop after, and so on.  It can thus take many iterations
-            //of the event loop before the layout has settled down, leading to a visual 'jumping around' effect.
-            //So we manually invalidate the sizehint for all the parents immediately.
-            QGraphicsLayoutItem *item = this;
-            do {
-                item->updateGeometry();
-            } while( (item = item->parentLayoutItem()) );
+            if (!QGraphicsLayout::instantInvalidatePropagation()) {
+                //When you have a widget inside a layout in a widget inside a layout in a widget...
+                //and the innermost widget or layout's sizehint is invalidated only the parent is notified in the next
+                //event loop. And that will notify its parent in the event loop after, and so on.  It can thus take many iterations
+                //of the event loop before the layout has settled down, leading to a visual 'jumping around' effect.
+                //So we manually invalidate the sizehint for all the parents immediately.
+                QGraphicsLayoutItem *item = this;
+                do {
+                    item->updateGeometry();
+                } while( (item = item->parentLayoutItem()) );
+            }
             break;
         }
         default:
