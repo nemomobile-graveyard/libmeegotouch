@@ -118,9 +118,10 @@ void MSceneWindowStack::add(MSceneWindow *newSceneWindow)
     MSceneWindow *sceneWindow;
     int i = m_list.count() - 1;
     bool inserted = false;
+    int newSceneWindowZValue = MSceneManagerPrivate::zForWindowType(newSceneWindow->windowType());
     do {
         sceneWindow = m_list.at(i);
-        if (sceneWindow->zValue() <= newSceneWindow->zValue()) {
+        if (MSceneManagerPrivate::zForWindowType(sceneWindow->windowType()) <= newSceneWindowZValue) {
             // put newSceneWindow in front of sceneWindow
             m_list.insert(i + 1, newSceneWindow);
             inserted = true;
@@ -1320,6 +1321,15 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
     window->show();
     window->d_func()->dismissed = false;
 
+    if (isBlocker(window->windowType())) {
+        int maxZValue = zForWindowType(window->windowType());
+        MSceneWindow* blockableWindow = findTopMostBlockableWindow(maxZValue);
+        if (blockableWindow) {
+            QEvent e(QEvent::WindowBlocked);
+            qApp->sendEvent(blockableWindow, &e);
+        }
+    }
+
     sceneWindowStack.add(window);
 
     setSceneWindowGeometry(window);
@@ -2012,6 +2022,35 @@ void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
     }
 }
 
+bool MSceneManagerPrivate::isBlocker(MSceneWindow::WindowType type)
+{
+    return type == MSceneWindow::ApplicationPage ||
+           type == MSceneWindow::Dialog ||
+           type == MSceneWindow::MessageBox ||
+           type == MSceneWindow::ApplicationMenu ||
+           type == MSceneWindow::ObjectMenu ||
+           type == MSceneWindow::ModalSceneWindow ||
+           type == MSceneWindow::PopupList ||
+           type == MSceneWindow::Sheet;
+}
+
+MSceneWindow *MSceneManagerPrivate::findTopMostBlockableWindow(int maxZValue)
+{
+    MSceneWindow *blockableWindow = 0;
+
+    const QList<MSceneWindow *> &stackList = sceneWindowStack.list();
+    for (int i = stackList.count() - 1;  !blockableWindow && i >= 0; i--) {
+        MSceneWindow *sceneWindow = stackList.at(i);
+        if (isBlocker(sceneWindow->windowType()))
+            blockableWindow = sceneWindow;
+    }
+
+    if (blockableWindow && zForWindowType(blockableWindow->windowType()) <= maxZValue)
+        return blockableWindow;
+    else
+        return 0;
+}
+
 void MSceneManagerPrivate::onSceneWindowEnteringAppearingState(MSceneWindow *sceneWindow)
 {
     prepareWindowShow(sceneWindow);
@@ -2049,23 +2088,6 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
     }
 
     MSceneWindow::WindowType type = sceneWindow->windowType();
-
-    if (type == MSceneWindow::Dialog ||
-        type == MSceneWindow::MessageBox ||
-        type == MSceneWindow::ApplicationMenu ||
-        type == MSceneWindow::ObjectMenu ||
-        type == MSceneWindow::ModalSceneWindow ||
-        type == MSceneWindow::PopupList ||
-        type == MSceneWindow::Sheet) {
-
-        // Notify page on first blocker appearing
-        if (currentPage && blockingWindows.count() == 0) {
-            QEvent e(QEvent::WindowBlocked);
-            qApp->sendEvent(currentPage, &e);
-        }
-
-        blockingWindows.append(sceneWindow);
-    }
 
     if (type == MSceneWindow::Sheet) {
         // A sheet by definition takes the entire screen and is fully opaque.
@@ -2164,25 +2186,6 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
             break;
     }
 
-    MSceneWindow::WindowType type = sceneWindow->windowType();
-
-    if (type == MSceneWindow::Dialog ||
-        type == MSceneWindow::MessageBox ||
-        type == MSceneWindow::ApplicationMenu ||
-        type == MSceneWindow::ObjectMenu ||
-        type == MSceneWindow::ModalSceneWindow ||
-        type == MSceneWindow::PopupList ||
-        type == MSceneWindow::Sheet) {
-
-        blockingWindows.removeOne(sceneWindow);
-
-        // Notify page on last blocker having disappeared
-        if (currentPage && blockingWindows.count() == 0) {
-            QEvent e(QEvent::WindowUnblocked);
-            qApp->sendEvent(currentPage, &e);
-        }
-    }
-
     if (currentPage == sceneWindow)
         setCurrentPage(0);
 
@@ -2203,6 +2206,15 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
     destroyLayerEffectForSceneWindow(sceneWindow);
 
     sceneWindowStack.remove(sceneWindow);
+
+    if (isBlocker(sceneWindow->windowType())) {
+        int maxZValue = zForWindowType(sceneWindow->windowType());
+        MSceneWindow* blockableWindow = findTopMostBlockableWindow(maxZValue);
+        if (blockableWindow) {
+            QEvent e(QEvent::WindowUnblocked);
+            qApp->sendEvent(blockableWindow, &e);
+        }
+    }
 
     sceneWindow->hide();
 
@@ -2302,7 +2314,7 @@ MSceneWindow *MSceneManagerPrivate::findTopMostSheet()
 
 void MSceneManagerPrivate::closePopupWindows(MSceneWindow::WindowType popupType)
 {
-    foreach(MSceneWindow* sceneWindow, blockingWindows) {
+    foreach(MSceneWindow* sceneWindow, sceneWindowStack.list()) {
         if (sceneWindow->windowType() == popupType &&
            (sceneWindow->sceneWindowState() == MSceneWindow::Appeared || sceneWindow->sceneWindowState() == MSceneWindow::Appearing)) {
             sceneWindow->disappear();

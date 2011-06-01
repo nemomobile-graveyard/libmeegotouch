@@ -80,6 +80,36 @@ protected:
     }
 };
 
+class EventSpy : public QObject
+{
+public:
+    EventSpy(QObject* object, QEvent::Type eventType)
+        : eventType(eventType), counter(0)
+    {
+        object->installEventFilter(this);
+    }
+
+    int count()
+    {
+        return counter;
+    }
+
+    void clear() {
+        counter = 0;
+    }
+
+protected:
+    virtual bool eventFilter(QObject* object, QEvent *event)
+    {
+        if (event->type() == eventType)
+            counter += 1;
+        return QObject::eventFilter(object, event);
+    }
+
+    QEvent::Type eventType;
+    int counter;
+};
+
 // Test class implementation
 
 void Ut_MSceneManager::initTestCase()
@@ -1320,6 +1350,228 @@ void Ut_MSceneManager::testDisappearingFirstSheetDoesNotAffectOthersVisibility()
     // Nothing changes
     QCOMPARE(page->isVisible(), false);
     QCOMPARE(secondSheet->isVisible(), true);
+}
+
+void Ut_MSceneManager::testSheetBlocksPage_data()
+{
+    QTest::addColumn<bool>("onDisplay");
+
+    QTest::newRow("animated transitions") << true;
+    QTest::newRow("nonanimated transitions") << false;
+}
+
+void Ut_MSceneManager::testSheetBlocksPage()
+{
+    QFETCH(bool, onDisplay);
+
+    gMWindowIsOnDisplay = onDisplay;
+    mWindow->show();
+
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *sheet = new MSheet;
+
+    EventSpy pageBlockedSpy(page, QEvent::WindowBlocked);
+    EventSpy pageUnblockedSpy(page, QEvent::WindowUnblocked);
+
+    sm->appearSceneWindowNow(page);
+
+    sm->appearSceneWindow(sheet);
+    sm->fastForwardSceneWindowTransitionAnimation(sheet);
+
+    QCOMPARE(pageBlockedSpy.count(), 1);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+
+    pageBlockedSpy.clear();
+
+    sm->disappearSceneWindow(sheet);
+    sm->fastForwardSceneWindowTransitionAnimation(sheet);
+
+    QCOMPARE(pageBlockedSpy.count(), 0);
+    QCOMPARE(pageUnblockedSpy.count(), 1);
+
+    sm->disappearSceneWindowNow(page);
+
+    delete page;
+    delete sheet;
+}
+
+void Ut_MSceneManager::testMsgboxBlocksSheet_data()
+{
+    QTest::addColumn<bool>("onDisplay");
+
+    QTest::newRow("animated transitions") << true;
+    QTest::newRow("nonanimated transitions") << false;
+}
+
+void Ut_MSceneManager::testMsgboxBlocksSheet()
+{
+    QFETCH(bool, onDisplay);
+
+    gMWindowIsOnDisplay = onDisplay;
+    mWindow->show();
+
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *sheet = new MSheet;
+    MSceneWindow *msgbox = new MMessageBox;
+
+    EventSpy pageBlockedSpy(page, QEvent::WindowBlocked);
+    EventSpy pageUnblockedSpy(page, QEvent::WindowUnblocked);
+
+    EventSpy sheetBlockedSpy(sheet, QEvent::WindowBlocked);
+    EventSpy sheetUnblockedSpy(sheet, QEvent::WindowUnblocked);
+
+    sm->appearSceneWindowNow(page);
+
+    sm->appearSceneWindowNow(sheet);
+
+    pageBlockedSpy.clear();
+
+    sm->appearSceneWindow(msgbox);
+    sm->fastForwardSceneWindowTransitionAnimation(msgbox);
+
+    QCOMPARE(pageBlockedSpy.count(), 0);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+
+    QCOMPARE(sheetBlockedSpy.count(), 1);
+    QCOMPARE(sheetUnblockedSpy.count(), 0);
+
+    sheetBlockedSpy.clear();
+
+    sm->disappearSceneWindow(msgbox);
+    sm->fastForwardSceneWindowTransitionAnimation(msgbox);
+
+    QCOMPARE(pageBlockedSpy.count(), 0);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+
+    QCOMPARE(sheetBlockedSpy.count(), 0);
+    QCOMPARE(sheetUnblockedSpy.count(), 1);
+
+    sm->disappearSceneWindowNow(sheet);
+    sm->disappearSceneWindowNow(page);
+
+    delete page;
+    delete sheet;
+    delete msgbox;
+}
+
+void Ut_MSceneManager::testOverlayDoesntBlock_data()
+{
+    QTest::addColumn<bool>("onDisplay");
+
+    QTest::newRow("animated transitions") << true;
+    QTest::newRow("nonanimated transitions") << false;
+}
+
+void Ut_MSceneManager::testOverlayDoesntBlock()
+{
+    QFETCH(bool, onDisplay);
+
+    gMWindowIsOnDisplay = onDisplay;
+    mWindow->show();
+
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *sheet = new MSheet;
+    MSceneWindow *overlay = new MOverlay;
+
+    EventSpy pageBlockedSpy(page, QEvent::WindowBlocked);
+    EventSpy pageUnblockedSpy(page, QEvent::WindowUnblocked);
+
+    EventSpy overlayBlockedSpy(overlay, QEvent::WindowBlocked);
+    EventSpy overlayUnblockedSpy(overlay, QEvent::WindowUnblocked);
+
+    sm->appearSceneWindowNow(page);
+
+    sm->appearSceneWindow(overlay);
+    sm->fastForwardSceneWindowTransitionAnimation(overlay);
+
+    QCOMPARE(pageBlockedSpy.count(), 0);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+
+    sm->appearSceneWindow(sheet);
+    sm->fastForwardSceneWindowTransitionAnimation(overlay);
+
+    QCOMPARE(pageBlockedSpy.count(), 1);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+
+    QCOMPARE(overlayBlockedSpy.count(), 0);
+    QCOMPARE(overlayUnblockedSpy.count(), 0);
+
+    sm->disappearSceneWindowNow(sheet);
+    sm->disappearSceneWindowNow(overlay);
+    sm->disappearSceneWindowNow(page);
+
+    delete page;
+    delete sheet;
+    delete overlay;
+}
+
+void Ut_MSceneManager::testSheetDoesntBlockMsgbox_data()
+{
+    QTest::addColumn<bool>("onDisplay");
+
+    QTest::newRow("animated transitions") << true;
+    QTest::newRow("nonanimated transitions") << false;
+}
+
+void Ut_MSceneManager::testSheetDoesntBlockMsgbox()
+{
+    QFETCH(bool, onDisplay);
+
+    gMWindowIsOnDisplay = onDisplay;
+    mWindow->show();
+
+    MSceneWindow *page = new MApplicationPage;
+    MSceneWindow *sheet = new MSheet;
+    MSceneWindow *msgbox = new MMessageBox;
+
+    EventSpy pageBlockedSpy(page, QEvent::WindowBlocked);
+    EventSpy pageUnblockedSpy(page, QEvent::WindowUnblocked);
+
+    EventSpy msgboxBlockedSpy(msgbox, QEvent::WindowBlocked);
+    EventSpy msgboxUnblockedSpy(msgbox, QEvent::WindowUnblocked);
+
+    EventSpy sheetBlockedSpy(sheet, QEvent::WindowBlocked);
+    EventSpy sheetUnblockedSpy(sheet, QEvent::WindowUnblocked);
+
+
+    sm->appearSceneWindowNow(page);
+
+    sm->appearSceneWindow(msgbox);
+    sm->fastForwardSceneWindowTransitionAnimation(msgbox);
+
+    QCOMPARE(pageBlockedSpy.count(), 1);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+    pageBlockedSpy.clear();
+
+    sm->appearSceneWindow(sheet);
+    sm->fastForwardSceneWindowTransitionAnimation(sheet);
+
+    QCOMPARE(pageBlockedSpy.count(), 0);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+
+    QCOMPARE(msgboxBlockedSpy.count(), 0);
+    QCOMPARE(msgboxUnblockedSpy.count(), 0);
+
+    sm->disappearSceneWindow(msgbox);
+    sm->fastForwardSceneWindowTransitionAnimation(msgbox);
+
+    QCOMPARE(pageBlockedSpy.count(), 0);
+    QCOMPARE(pageUnblockedSpy.count(), 0);
+
+    QCOMPARE(sheetBlockedSpy.count(), 0);
+    QCOMPARE(sheetUnblockedSpy.count(), 1);
+
+    sm->disappearSceneWindowNow(sheet);
+    sm->fastForwardSceneWindowTransitionAnimation(sheet);
+
+    QCOMPARE(pageBlockedSpy.count(), 0);
+    QCOMPARE(pageUnblockedSpy.count(), 1);
+
+    sm->disappearSceneWindowNow(page);
+
+    delete page;
+    delete sheet;
+    delete msgbox;
 }
 
 QTEST_MAIN(Ut_MSceneManager);

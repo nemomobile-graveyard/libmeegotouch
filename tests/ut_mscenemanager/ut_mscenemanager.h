@@ -38,7 +38,6 @@ class Ut_MSceneManager: public QObject
 private:
     MSceneManager *sm;
     MWindow *mWindow;
-
 private slots:
     void initTestCase();
     void cleanupTestCase();
@@ -94,6 +93,14 @@ private slots:
     void testSceneWindowsBehindSheetAreShownWhenSheetAboutToDisappear();
     void testSceneWindowsBehindFirstSheetAreKeptHiddenWhenSecondSheetDisappears();
     void testDisappearingFirstSheetDoesNotAffectOthersVisibility();
+    void testSheetBlocksPage_data();
+    void testSheetBlocksPage();
+    void testMsgboxBlocksSheet_data();
+    void testMsgboxBlocksSheet();
+    void testOverlayDoesntBlock_data();
+    void testOverlayDoesntBlock();
+    void testSheetDoesntBlockMsgbox_data();
+    void testSheetDoesntBlockMsgbox();
 private:
     MComponentData* m_componentData;
 };

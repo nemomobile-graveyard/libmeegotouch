@@ -116,7 +116,7 @@ public:
     };
 
     void initOrientationAngles();
-    int zForWindowType(MSceneWindow::WindowType windowType);
+    static int zForWindowType(MSceneWindow::WindowType windowType);
     void setupLayerEffectForSceneWindow(MSceneWindow *sceneWindow);
     void destroyLayerEffectForSceneWindow(MSceneWindow *sceneWindow);
     bool windowIntersectsRect(const QRectF &rect, MSceneWindow *window);
@@ -243,6 +243,8 @@ public:
     MSceneWindow *findTopMostSheet();
 
     void closePopupWindows(MSceneWindow::WindowType popupType = MSceneWindow::ObjectMenu);
+    bool isBlocker(MSceneWindow::WindowType type);
+    MSceneWindow* findTopMostBlockableWindow(int maxZValue);
 
 public:
 
@@ -260,7 +262,6 @@ public:
     MContentFadeAndSlideAnimation* navigationBarAnimation;
 
     QList<MSceneWindow *> windows;
-    QList<MSceneWindow *> blockingWindows;
     QList< QPointer<MSceneWindow> > pageHistory;
 
     M::OrientationAngle angle;
