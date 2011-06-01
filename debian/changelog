@@ -1,8 +1,21 @@
-libmeegotouch (0.22.1~1) unstable; urgency=low
+libmeegotouch (0.22.1-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: Prompt in single line text edit is always wrapped.
+  * Fixes: NB#216388 - With the object menu on the foreground,able to enter characters through vkb.
+  * Fixes: NB#260245 - MObjectMenu and MDialog does not grab the focus from MTextEdit in some particular cases.
+  * Fixes: NB#260732 - RegionalFormat; Date and time format are using both English and Chinese format as UK format in Chinese TW.
+  * Fixes: NB#258447 - All applications wake up in the background when changing the orientation of the device
+  * Fixes: NB#260735 - RegionalFormat; Short format of date for Taiwan is hard to understand.
+  * Fixes: NB#260737 - RegionalFormat; Name of month in wide and abbreviated format are interchanged.
+  * Fixes: Temporary build break without context subscriber.
+  * Fixes: app keeps context properties subscritions if MWindow::show() is not called during its initialization
+  * Fixes: NB#223397
+  * Fixes: NB#260375
+  * Fixes: NB#260157 - Calculator application display area contains zeros and typing on keypad will append zero's as it is.
+  * Fixes: NB#258045 - [TPO/Accuweather] 'Retry' buttom is unlocalized (=!!Retry)
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Thu, 26 May 2011 16:21:04 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 01 Jun 2011 16:18:27 +0300
 
 libmeegotouch (0.22.0-1) unstable; urgency=low
 
