@@ -149,7 +149,7 @@ void Ft_MLocaleBuckets::testEnglishGrouping()
     MLocaleBuckets buckets;
     QVERIFY(buckets.isEmpty());
     buckets.setItems(inputItems);
-    // dumpBuckets(buckets, __FUNCTION__);
+    dumpBuckets(buckets, __FUNCTION__);
 
     QVERIFY(buckets.bucketCount() == Y_Bucket+1);
     QVERIFY(buckets.bucketName("Chaim") == "C");
@@ -192,6 +192,87 @@ void Ft_MLocaleBuckets::testEnglishGrouping()
     QVERIFY(buckets.bucketCount() == 0);
 }
 
+void Ft_MLocaleBuckets::testGermanPhonebookGrouping()
+{
+    MLocale locale("de_DE@collation=phonebook");
+    MLocale::setDefault(locale);
+
+    // Expecting:
+    //
+    // Bucket #0 [A] size 2
+    //   #0: Agnetha
+    //   #1: Anna
+    // Bucket #1 [B] size 1
+    //   #0: Bernardo
+    // Bucket #2 [C] size 3
+    //   #0: Chaim
+    //   #1: Christopher
+    //   #2: Claudia
+    // Bucket #3 [H] size 2
+    //   #0: Halvar
+    //   #1: Hendrik
+    // Bucket #4 [O] size 2
+    //   #0: Ömer
+    //   #1: Olund
+    // Bucket #5 [Y] size 1
+    //   #0: Yannick
+
+    enum EnBuckets
+    {
+        A_Bucket = 0,
+        B_Bucket,
+        C_Bucket,
+        H_Bucket,
+        O_Bucket,
+        Y_Bucket,
+        OneTooMany_Bucket
+    };
+
+    MLocaleBuckets buckets;
+    QVERIFY(buckets.isEmpty());
+    buckets.setItems(inputItems);
+    dumpBuckets(buckets, __FUNCTION__);
+
+    QVERIFY(buckets.bucketCount() == Y_Bucket+1);
+    QVERIFY(buckets.bucketName("Chaim") == "C");
+
+    QVERIFY(buckets.bucketName(C_Bucket) == "C");
+    QVERIFY(buckets.bucketName(H_Bucket) == "H");
+    QVERIFY(buckets.bucketName(O_Bucket) == "O");
+    QVERIFY(buckets.bucketName(OneTooMany_Bucket).isEmpty());
+    QVERIFY(buckets.bucketName(-1).isEmpty());
+
+    QVERIFY(buckets.bucketSize(A_Bucket) == 2);
+    QVERIFY(buckets.bucketSize(H_Bucket) == 2);
+    QVERIFY(buckets.bucketSize(-1) == -1);
+    QVERIFY(buckets.bucketSize(OneTooMany_Bucket+17) == -1);
+
+    QVERIFY(checkBucketContent(buckets, A_Bucket, QStringList() << "Agnetha" << "Anna"));
+    QVERIFY(checkBucketContent(buckets, B_Bucket, QStringList() << "Bernardo"));
+    QVERIFY(checkBucketContent(buckets, C_Bucket, QStringList() << "Chaim" << "Christopher" << "Claudia" ));
+    QVERIFY(checkBucketContent(buckets, H_Bucket, QStringList() << "Halvar" << "Hendrik"));
+    QVERIFY(checkBucketContent(buckets, O_Bucket, QStringList() << "Ömer" << "Olund"));
+    QVERIFY(checkBucketContent(buckets, Y_Bucket, QStringList() << "Yannick"));
+    QVERIFY(checkBucketContent(buckets, OneTooMany_Bucket, QStringList()));
+    QVERIFY(checkBucketContent(buckets, -1, QStringList()));
+
+    QVERIFY(buckets.origItemIndex(C_Bucket, 0) == inputItems.indexOf("Chaim"));
+    QVERIFY(buckets.origItemIndex(Y_Bucket, 0) == inputItems.indexOf("Yannick"));
+    QVERIFY(buckets.origItemIndex(OneTooMany_Bucket, 0) == -1);
+    QVERIFY(buckets.origItemIndex(OneTooMany_Bucket, 7) == -1);
+    QVERIFY(buckets.origItemIndex(-1, 0) == -1);
+
+    QVERIFY(buckets.bucketIndex("A") == A_Bucket);
+    QVERIFY(buckets.bucketIndex("C") == C_Bucket);
+    QVERIFY(buckets.bucketIndex("CH") == -1); // exists in Czech only
+    QVERIFY(buckets.bucketIndex("Y") == Y_Bucket);
+    QVERIFY(buckets.bucketIndex("NoBucketName") == -1);
+    QVERIFY(buckets.bucketIndex(QString()) == -1);
+
+    buckets.clear();
+    QVERIFY(buckets.isEmpty());
+    QVERIFY(buckets.bucketCount() == 0);
+}
 
 void Ft_MLocaleBuckets::testCzechGrouping()
 {
@@ -232,7 +313,7 @@ void Ft_MLocaleBuckets::testCzechGrouping()
     };
 
     MLocaleBuckets buckets(inputItems);
-    // dumpBuckets(buckets, __FUNCTION__);
+    dumpBuckets(buckets, __FUNCTION__);
 
     QVERIFY(buckets.bucketCount() == Y_Bucket+1);
     QVERIFY(buckets.bucketName("Chaim") == "CH");
