@@ -385,8 +385,12 @@ void MTextEditPrivate::init()
     // Qt::LayoutDirectionAuto.
     option.setTextDirection(Qt::LayoutDirectionAuto);
 
-    if (q->model()->line() == MTextEditModel::SingleLine) {
+    if (q->model()->line() == MTextEditModel::SingleLine)
         option.setWrapMode(QTextOption::NoWrap);
+
+    q->document()->setDefaultTextOption(option);
+
+    if (q->model()->line() == MTextEditModel::SingleLine) {
         q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     } else {
         //Set to expand vertically only in multiline mode
@@ -395,11 +399,11 @@ void MTextEditPrivate::init()
         q->setSizePolicy(policy);
     }
 
-    q->document()->setDefaultTextOption(option);
     if (!q->model()->cursor()) {
         q->model()->setCursor(new QTextCursor(q->document()));
     }
     q->model()->cursor()->movePosition(QTextCursor::End);
+
     q->setFocusPolicy(Qt::ClickFocus);
     q->setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
 
