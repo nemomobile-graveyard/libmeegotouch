@@ -751,10 +751,13 @@ void MSceneManagerPrivate::setupLayerEffectForSceneWindow(MSceneWindow *window)
     case MSceneWindow::PopupList:
         effect = new MSceneLayerEffect("messagebox");
         break;
-    case MSceneWindow::ObjectMenu:
     case MSceneWindow::ApplicationMenu:
         effect = new MSceneLayerEffect("objectmenu");
         effect->setStyleName("MenuSceneLayerEffect");
+        break;
+    case MSceneWindow::ObjectMenu:
+        effect = new MSceneLayerEffect("objectmenu");
+        effect->setStyleName("ObjectMenuSceneLayerEffect");
         break;
     default:
         return;
