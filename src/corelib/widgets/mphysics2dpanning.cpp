@@ -28,6 +28,7 @@ namespace {
     const int SampleCount = 5; // Used for speed calculation;
     const int VelocityCalculationTimeout = 50; //ms. Used to recognize if the last movement happened so far in the past that
                                                //the speed calculation should not be done;
+    const qreal CatchUpTime = 50.0f; // ms. delay between finger movement and physics movement that follows the finger.
 }
 
 MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObject) :
@@ -50,6 +51,7 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
     borderSpringK(0.0),
     borderFrictionC(0.0),
     panDirection(0),
+    integrationStepDeltaTime(0.0f),
     boundsBehavior(MPhysics2DPanning::DragAndOvershootBounds),
     q_ptr(publicObject)
 {
@@ -72,6 +74,13 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
 
     tempPosX = posX;
     tempPosY = posY;
+
+    if (integrationStepTimer.isValid()) {
+        integrationStepDeltaTime = integrationStepTimer.restart();
+    } else {
+        integrationStepDeltaTime = CatchUpTime;
+        integrationStepTimer.start();
+    }
 
     if (panDirection.testFlag(Qt::Horizontal)) {
         q->integrateAxis(Qt::Horizontal,
@@ -254,6 +263,7 @@ void MPhysics2DPanning::start()
         d->panningAnimation->setStartValue(0.0f);
         d->panningAnimation->setEndValue(1.0f);
 
+        d->integrationStepTimer.invalidate();
         d->panningAnimation->start();
     }
 }
@@ -480,12 +490,30 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
 
     if (pointerPressed) {
 
-        if (position < rangeStart || position > rangeEnd)
+        if (position < rangeStart || position > rangeEnd) {
+            // Follow only half of the finger movement as a way to tell the
+            // user that he is panning beyond the content boundaries
             pointerDifference /= 2;
 
-        position          -= pointerDifference;
-        pointerDifference = velocity = 0;
-
+            position          -= pointerDifference;
+            pointerDifference = 0;
+        } else {
+            // Precisely following the finger movement might cause the panning
+            // animation to be fidgety since the movement events coming to us
+            // might be unevenly distributed in time and space and contain some noise.
+            // Therefore we smooth things out here by following the finger movement with
+            // some delay but in a more steady way.
+            // The rationale is that smoothness is more important than immediacy when
+            // following the finger movement.
+            // The smaller the CatchUpTime the more immediate and precise it gets but if
+            // the quality of the movement events is not good (according to the definition above)
+            // enough the animation will also be more uneven and fidgety.
+            qreal factor = qMin(d->integrationStepDeltaTime / CatchUpTime, (qreal)1.0f);
+            qreal step = factor * pointerDifference;
+            position -= step;
+            pointerDifference -= step;
+        }
+        velocity = 0;
     } else {
 
         // Acceleration applies only when overshooting

@@ -65,6 +65,9 @@ public:
 
     QList<QPointF>  positions;
 
+    QElapsedTimer integrationStepTimer;
+    qreal integrationStepDeltaTime; // in milliseconds
+
     void _q_integrator(const QVariant &value);
     QPointF getVelocity();
 
