@@ -115,6 +115,7 @@ void MWidgetFadeAnimation::updateState(QAbstractAnimation::State newState, QAbst
         d->played = true;
 
         d->delay->setDuration(style()->delay());
+        d->opacityAnimation->setEasingCurve(style()->easingCurve());
         d->opacityAnimation->setDuration(style()->duration());
     }
 }
