@@ -533,6 +533,9 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
 
     title()->setStyleName("PrivateEventBannerTitle");
     title()->setVisible(true);
+    title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    title()->setWordWrap(true);
+    title()->setTextElide(true);
     gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
 
     subtitle()->setVisible(false);
