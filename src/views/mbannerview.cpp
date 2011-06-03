@@ -523,12 +523,12 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
         pixmap()->setStyleName("PrivateEventBannerIcon");
         icon()->setVisible(false);
         pixmap()->setVisible(true);
-        gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
+        gridBanner->addItem(pixmap(), 0, 0, 2, 1, Qt::AlignTop);
     } else {
         icon()->setStyleName("PrivateEventBannerIcon");
         icon()->setVisible(true);
         pixmap()->setVisible(false);
-        gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
+        gridBanner->addItem(icon(), 0, 0, 2, 1, Qt::AlignTop);
     }
 
     title()->setStyleName("PrivateEventBannerTitle");
