@@ -54,6 +54,7 @@
 #include "customnavigationbarpage.h"
 #include "debugpage.h"
 #include "screenshotpage.h"
+#include "viewheaderpage.h"
 
 #include "../../benchmarks/performancebenchmark/emptymainloophelper.h"
 
@@ -99,6 +100,7 @@ public:
         DisplayModesPageType,
         ToolBarPageType,
         CustomNavigationBarPageType,
+        ViewHeaderPageType,
         LabelPageType,
         ImagePageType,
         ProgressBarPageType,
@@ -147,6 +149,8 @@ public:
         addGalleryPage(0, qtTrId("xx_wg_application_view_toolbar_incl_tab_bar"), WidgetsGalleryDataModel::ToolBarPageType);
         //% "Custom Navigation Bar"
         addGalleryPage(0, qtTrId("xx_wg_application_view_custom_navigation_bar"), WidgetsGalleryDataModel::CustomNavigationBarPageType);
+        //% "View Header"
+        addGalleryPage(0, qtTrId("xx_wg_application_view_header"), WidgetsGalleryDataModel::ViewHeaderPageType);
 
         //% "Simple Widgets"
         addCategory(qtTrId("xx_wg_categories_simple_widgets"));
@@ -316,6 +320,10 @@ private:
                 case CustomNavigationBarPageType:
                     page = new CustomNavigationBarPage();
                     page->setObjectName("CustomNavigationBarPage");
+                    break;
+                case ViewHeaderPageType:
+                    page = new ViewHeaderPage();
+                    page->setObjectName("ViewHeaderPage");
                     break;
                 //category 1
                 case LabelPageType:

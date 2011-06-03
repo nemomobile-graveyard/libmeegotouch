@@ -67,6 +67,7 @@ SOURCES += main.cpp \
     checkboxpage.cpp \
     objectmenupage.cpp \
     displaymodespage.cpp \
+    viewheaderpage.cpp \
     languagepage.cpp \
     widgetsgalleryretranslator.cpp \
     utils.cpp \
@@ -127,6 +128,7 @@ HEADERS += templatepage.h \
     checkboxpage.h \
     objectmenupage.h \
     displaymodespage.h \
+    viewheaderpage.h \
     languagepage.h \
     widgetsgalleryretranslator.h \
     utils.h \
