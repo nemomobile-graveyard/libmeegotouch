@@ -1127,7 +1127,8 @@ for my $idFromSpec (sort (keys %idsFromSpecUsage)) {
     if($idsFromSpecUsage{$idFromSpec} eq "") {
         if ($idFromSpec =~ /qtn_clk_city/
             || $idFromSpec =~ /qtn_clk_country/
-            || $idFromSpec =~ /qtn_clk_region/) {
+            || $idFromSpec =~ /qtn_clk_region/
+            || $idFromSpec =~ /qtn_regn_/) {
             $idsFromSpecUsage{$idFromSpec} = "meegotouch-cities-template";
         }
     }
