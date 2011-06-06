@@ -1073,10 +1073,10 @@ if (!defined $OPT_HANDOFF_URL) {
     $OPT_HANDOFF_URL="https://projects.maemo.org/svn/l10n/projects/harmattan/vendor/handoff/";
 }
 if (!defined $OPT_HANDOFF_DIR) {
-    $OPT_HANDOFF_DIR="/tmp/messageid-check/handoff-${run_date}";
+    $OPT_HANDOFF_DIR="$ENV{HOME}/nokia/messageid-check/handoff-${run_date}";
 }
 if (!defined $OPT_SOURCEPACKAGES_DIR) {
-    $OPT_SOURCEPACKAGES_DIR="/tmp/messageid-check/sourcepackages-${run_date}";
+    $OPT_SOURCEPACKAGES_DIR="$ENV{HOME}/nokia/messageid-check/sourcepackages-${run_date}";
 }
 if (!defined $OPT_HTTP_USER) {
     $OPT_HTTP_USER="";
@@ -1429,12 +1429,21 @@ while (<SOURCES_LIST>) {
 }
 close (SOURCES_LIST);
 
+my $sb_conf_show = "";
+open (SBCONFSHOW, "sb-conf show |") || die "Can’t open sbconf show |: $!";
+while (<SBCONFSHOW>) {
+    $sb_conf_show .= "$ARG<br>";
+}
+close (SBCONFSHOW);
+
 $htmlOutIntroduction .= <<"EOF";
     <p>
     While this script was run, /etc/apt/sources.list contained:<br>
     $etc_apt_sources_list_contents
     i.e. the Engineering English packages and source packages
     listed below were downloaded from these repositories.
+    The output of “sbconf show” was:<br>
+    $sb_conf_show
     </p>
 EOF
 
