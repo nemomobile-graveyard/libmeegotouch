@@ -61,12 +61,17 @@ greaterThan(ICUVERSION, 4.4) {
                  data/lang/zh.txt \
                  data/lang/zh_Hant.txt
     COLLTXT    = data/coll/zh.txt
+    CURRTXT    = data/curr/en_HK.txt \
+                 data/curr/zh_HK.txt \
+                 data/curr/zh_Hans_HK.txt \
+                 data/curr/zh_Hant_HK.txt
     REGIONTXT  = 
 } else {
     # old icu version, just do nothing
     LOCALESTXT = # empty, do nothing
     LANGTXT =    # empty, do nothing
     COLLTXT =    # empty, do nothing
+    CURRTXT =    # empty, do nothing
     REGIONTXT =  # empty, do nothing
     dummy.files = dummy-icu42-workaround-this-file-never-exists
     dummy.CONFIG += no_check_exist
@@ -88,6 +93,7 @@ defineReplace(installPaths){
 LOCALESRES = $$installPaths(LOCALESTXT)
 LANGRES    = $$installPaths(LANGTXT)
 COLLRES    = $$installPaths(COLLTXT)
+CURRRES    = $$installPaths(CURRTXT)
 REGIONRES  = $$installPaths(REGIONTXT)
 
 isEqual(TEMPLATE_PREFIX, vc):vcproj=1
@@ -128,6 +134,13 @@ coll.commands += mkdir -p $$OUT_PWD/$$ICUUSRDATA/coll && $$ICUBINDIR/genrb -d $$
 coll.CONFIG = no_link target_predeps
 QMAKE_EXTRA_COMPILERS += coll
 
+curr.name = icu-curr-extradata-builder
+curr.input = CURRTXT
+curr.output = $$OUT_PWD/$$ICUUSRDATA/curr/${QMAKE_FILE_BASE}.res
+curr.commands += mkdir -p $$OUT_PWD/$$ICUUSRDATA/curr && $$ICUBINDIR/genrb -d $$OUT_PWD/$$ICUUSRDATA/curr -s $$IN_PWD -e UTF-8 ${QMAKE_FILE_IN}
+curr.CONFIG = no_link target_predeps
+QMAKE_EXTRA_COMPILERS += curr
+
 region.name = icu-region-extradata-builder
 region.input = REGIONTXT
 region.output = $$OUT_PWD/$$ICUUSRDATA/region/${QMAKE_FILE_BASE}.res
@@ -149,6 +162,11 @@ collres.files = $$COLLRES
 collres.CONFIG += no_check_exist
 collres.path = $$M_ICUEXTRADATA_DIR/$$ICUUSRDATA/coll
 INSTALLS += collres
+
+currres.files = $$CURRRES
+currres.CONFIG += no_check_exist
+currres.path = $$M_ICUEXTRADATA_DIR/$$ICUUSRDATA/curr
+INSTALLS += currres
 
 regionres.files = $$REGIONRES
 regionres.CONFIG += no_check_exist

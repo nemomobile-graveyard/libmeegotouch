@@ -1,0 +1,8 @@
+zh_Hans_HK{
+    Currencies{
+        HKD{
+            "HK$",
+            "港元",
+        }
+    }
+}

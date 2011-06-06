@@ -1,0 +1,12 @@
+en_HK{
+    Currencies{
+        HKD{
+            "HK$",
+            "Hong Kong Dollar",
+        }
+        USD{
+            "US$",
+            "US Dollar",
+        }
+    }
+}
