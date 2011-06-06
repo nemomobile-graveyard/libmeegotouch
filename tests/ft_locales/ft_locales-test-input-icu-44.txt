@@ -11412,16 +11412,16 @@ sv_SE	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 12          	d MM
 sv_SE	dateLong, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM y HH:mm:ss z -> 21 juli 2008 14:31:00 GMT+00:00
 sv_SE	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 12          	d MMMM y 'kl'. hh:mm:ss a zzzz -> 21 juli 2008 kl. 02:31:00 PM GMT+00:00
 sv_SE	dateLong, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	d MMMM y 'kl'. HH:mm:ss zzzz -> 21 juli 2008 kl. 14:31:00 GMT+00:00
-sv_SE	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y -> måndagen den 21:e juli 2008
-sv_SE	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y -> måndagen den 21:e juli 2008
-sv_SE	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y hh:mm a -> måndagen den 21:e juli 2008 02:31 PM
-sv_SE	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y HH:mm -> måndagen den 21:e juli 2008 14:31
-sv_SE	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y hh:mm:ss a -> måndagen den 21:e juli 2008 02:31:00 PM
-sv_SE	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y HH:mm:ss -> måndagen den 21:e juli 2008 14:31:00
-sv_SE	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y hh:mm:ss a z -> måndagen den 21:e juli 2008 02:31:00 PM GMT+00:00
-sv_SE	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y HH:mm:ss z -> måndagen den 21:e juli 2008 14:31:00 GMT+00:00
-sv_SE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y 'kl'. hh:mm:ss a zzzz -> måndagen den 21:e juli 2008 kl. 02:31:00 PM GMT+00:00
-sv_SE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y 'kl'. HH:mm:ss zzzz -> måndagen den 21:e juli 2008 kl. 14:31:00 GMT+00:00
+sv_SE	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y -> måndagen den 21 juli 2008
+sv_SE	dateFull, timeNone, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y -> måndagen den 21 juli 2008
+sv_SE	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y hh:mm a -> måndagen den 21 juli 2008 02:31 PM
+sv_SE	dateFull, timeShort, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y HH:mm -> måndagen den 21 juli 2008 14:31
+sv_SE	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y hh:mm:ss a -> måndagen den 21 juli 2008 02:31:00 PM
+sv_SE	dateFull, timeMedium, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y HH:mm:ss -> måndagen den 21 juli 2008 14:31:00
+sv_SE	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y hh:mm:ss a z -> måndagen den 21 juli 2008 02:31:00 PM GMT+00:00
+sv_SE	dateFull, timeLong, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y HH:mm:ss z -> måndagen den 21 juli 2008 14:31:00 GMT+00:00
+sv_SE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y 'kl'. hh:mm:ss a zzzz -> måndagen den 21 juli 2008 kl. 02:31:00 PM GMT+00:00
+sv_SE	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y 'kl'. HH:mm:ss zzzz -> måndagen den 21 juli 2008 kl. 14:31:00 GMT+00:00
 sv_SE & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> maanantai 21 heinäkuu 2008 02:31:00 PM UTC+0.00
 sv_SE & fi_FI	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> maanantai 21 heinäkuu 2008 14:31:00 UTC+0.00
 sv_SE & ar_EG	dateFull, timeFull, Gregorian calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> الإثنين 21 يوليو 2008 02:31:00 م جرينتش+00:00
@@ -11466,16 +11466,16 @@ sv_SE	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 12          	d MMMM
 sv_SE	dateLong, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM y HH:mm:ss z -> 18 Rajab 1429 14:31:00 GMT+00:00
 sv_SE	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 12          	d MMMM y 'kl'. hh:mm:ss a zzzz -> 18 Rajab 1429 kl. 02:31:00 PM GMT+00:00
 sv_SE	dateLong, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	d MMMM y 'kl'. HH:mm:ss zzzz -> 18 Rajab 1429 kl. 14:31:00 GMT+00:00
-sv_SE	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y -> måndagen den 18:e Rajab 1429
-sv_SE	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y -> måndagen den 18:e Rajab 1429
-sv_SE	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y hh:mm a -> måndagen den 18:e Rajab 1429 02:31 PM
-sv_SE	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y HH:mm -> måndagen den 18:e Rajab 1429 14:31
-sv_SE	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y hh:mm:ss a -> måndagen den 18:e Rajab 1429 02:31:00 PM
-sv_SE	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y HH:mm:ss -> måndagen den 18:e Rajab 1429 14:31:00
-sv_SE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y hh:mm:ss a z -> måndagen den 18:e Rajab 1429 02:31:00 PM GMT+00:00
-sv_SE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y HH:mm:ss z -> måndagen den 18:e Rajab 1429 14:31:00 GMT+00:00
-sv_SE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d:'e' MMMM y 'kl'. hh:mm:ss a zzzz -> måndagen den 18:e Rajab 1429 kl. 02:31:00 PM GMT+00:00
-sv_SE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d:'e' MMMM y 'kl'. HH:mm:ss zzzz -> måndagen den 18:e Rajab 1429 kl. 14:31:00 GMT+00:00
+sv_SE	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y -> måndagen den 18 Rajab 1429
+sv_SE	dateFull, timeNone, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y -> måndagen den 18 Rajab 1429
+sv_SE	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y hh:mm a -> måndagen den 18 Rajab 1429 02:31 PM
+sv_SE	dateFull, timeShort, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y HH:mm -> måndagen den 18 Rajab 1429 14:31
+sv_SE	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y hh:mm:ss a -> måndagen den 18 Rajab 1429 02:31:00 PM
+sv_SE	dateFull, timeMedium, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y HH:mm:ss -> måndagen den 18 Rajab 1429 14:31:00
+sv_SE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y hh:mm:ss a z -> måndagen den 18 Rajab 1429 02:31:00 PM GMT+00:00
+sv_SE	dateFull, timeLong, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y HH:mm:ss z -> måndagen den 18 Rajab 1429 14:31:00 GMT+00:00
+sv_SE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	EEEE'en' 'den' d MMMM y 'kl'. hh:mm:ss a zzzz -> måndagen den 18 Rajab 1429 kl. 02:31:00 PM GMT+00:00
+sv_SE	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	EEEE'en' 'den' d MMMM y 'kl'. HH:mm:ss zzzz -> måndagen den 18 Rajab 1429 kl. 14:31:00 GMT+00:00
 sv_SE & fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> maanantai 18 radžab 1429 02:31:00 PM UTC+0.00
 sv_SE & fi_FI	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default)	cccc d LLLL y HH:mm:ss zzzz -> maanantai 18 radžab 1429 14:31:00 UTC+0.00
 sv_SE & ar_EG	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 12          	cccc d LLLL y hh:mm:ss a zzzz -> الإثنين 18 رجب 1429 02:31:00 م جرينتش+00:00

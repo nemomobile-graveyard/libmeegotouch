@@ -1,10 +1,25 @@
 sv{
     calendar{
         gregorian{
-             AmPmMarkers{
-                 "AM",
-                 "PM",
-             }
+            AmPmMarkers{
+                "AM",
+                "PM",
+            }
+            DateTimePatterns{
+                "'kl'. HH:mm:ss zzzz",
+                "HH:mm:ss z",
+                "HH:mm:ss",
+                "HH:mm",
+                "EEEE'en' 'den' d MMMM y",
+                "d MMMM y",
+                "d MMM y",
+                "yyyy-MM-dd",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+                "{1} {0}",
+            }
         }
     }
 }
