@@ -606,7 +606,7 @@ sub getIdsFromSourcePackages {
     @sourcePackagesScanned = glob ("$OPT_SOURCEPACKAGES_DIR/*.tar.gz");
     my $sourcePackagesTsFile = "$OPT_SOURCEPACKAGES_DIR/sourcepackages.ts";
     unlink ($sourcePackagesTsFile);
-    my $command = "lupdate /usr/bin/lupdate -no-obsolete -locations absolute -no-ui-lines -no-sort -extensions ui,c,c++,cc,cpp,cxx,ch,h,h++,hh,hpp,hxx $OPT_SOURCEPACKAGES_DIR -ts $sourcePackagesTsFile";
+    my $command = "lupdate /usr/bin/lupdate -no-obsolete -locations absolute -no-ui-lines -no-sort -extensions ui,c,c++,cc,cpp,cxx,ch,h,h++,hh,hpp,hxx,js,qs,qml $OPT_SOURCEPACKAGES_DIR -ts $sourcePackagesTsFile";
     if (mySystem($command)) {
         printf (STDERR "“%s” didn’t work.\n", $command);
         exit (1);
