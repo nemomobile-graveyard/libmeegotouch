@@ -525,7 +525,6 @@ sub getIdsFromOneContextTreeFromSourcePackages {
             }
         }
     }
-    $totalNumberOfIdsFromSourcePackages = scalar (keys %idsFromSourcePackages);
 }
 
 sub getIdsFromHandoffFiles {
@@ -602,6 +601,26 @@ sub getIdsFromHandoffFiles {
     }
 }
 
+sub getIdsFromDesktopFilesInSourcePackages {
+    open (DESKTOPFILEQTNS, "find $OPT_SOURCEPACKAGES_DIR -name \"*.desktop\" | xargs grep qtn_ |")
+        || die "Can’t open find $OPT_SOURCEPACKAGES_DIR -name \"*.desktop\" | xargs grep qtn_ | : $!";
+    while(<DESKTOPFILEQTNS>) {
+        if ($ARG =~ /.*desktop:.*=(qtn_[a-z_]+)[[:space:]]*$/) {
+            my $messageId = $1;
+            my $location = $ARG;
+            if(defined $idsFromSourcePackages{$messageId}
+               && $idsFromSourcePackages{$messageId} ne "") {
+                $idsFromSourcePackages{$messageId} .=
+                    ", $location";
+            }
+            else {
+                $idsFromSourcePackages{$messageId} = $location;
+            }
+        }
+    }
+    close (DESKTOPFILEQTNS);
+}
+
 sub getIdsFromSourcePackages {
     @sourcePackagesScanned = glob ("$OPT_SOURCEPACKAGES_DIR/*.tar.gz");
     my $sourcePackagesTsFile = "$OPT_SOURCEPACKAGES_DIR/sourcepackages.ts";
@@ -632,6 +651,8 @@ sub getIdsFromSourcePackages {
           }
         }
     }
+    getIdsFromDesktopFilesInSourcePackages();
+    $totalNumberOfIdsFromSourcePackages = scalar (keys %idsFromSourcePackages);
 }
 
 sub checkMessageIdFromEngineeringEnglishAgainstHandoff {
@@ -1293,7 +1314,7 @@ $htmlOutTocHeader .= <<"EOF";
     </h3>
     <p>
     <b>
-    Total number of Ids found by scanning source packages with lupdate:
+    Total number of Ids found by scanning source packages with lupdate and in desktop files in the source packages:
     $totalNumberOfIdsFromSourcePackages
     </b>
     (unique)
