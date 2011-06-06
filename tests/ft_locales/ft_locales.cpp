@@ -1019,7 +1019,8 @@ void Ft_Locales::testMLocaleToLower_data()
         << QString("größe")
         ;
 
-    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119"
+       && libqtcore4PackageVersion < "4.7.4~git20110516-0maemo2") { // Qt uses libicu
         QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("GRÖẞE")
@@ -1036,7 +1037,8 @@ void Ft_Locales::testMLocaleToLower_data()
             ;
     }
 
-    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119"
+       && libqtcore4PackageVersion < "4.7.4~git20110516-0maemo2") { // Qt uses libicu
         QTest::newRow("de_CH") // no difference in behaviour to de_CH here
             << QString("de_CH")
             << QString("GRÖẞE")
@@ -1062,7 +1064,8 @@ void Ft_Locales::testMLocaleToLower_data()
         << QString("item naïve i̇")
         ;
 
-    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119"
+        && libqtcore4PackageVersion < "4.7.4~git20110516-0maemo2") { // Qt uses libicu
         QTest::newRow("tr_TR")
             << QString("tr_TR")
             << QString("ITEM NAÏVE İ")
@@ -1098,7 +1101,8 @@ void Ft_Locales::testMLocaleToLower_data()
         << QString("σι")
         ;
 
-    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119"
+        && libqtcore4PackageVersion < "4.7.4~git20110516-0maemo2") { // Qt uses libicu
         QTest::newRow("en_GB")
             << QString("en_GB")
             << QString("ΙΣ")
@@ -1119,7 +1123,8 @@ void Ft_Locales::testMLocaleToLower_data()
             ;
     }
 
-    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119"
+       && libqtcore4PackageVersion < "4.7.4~git20110516-0maemo2") { // Qt uses libicu
         QTest::newRow("el_GR")
             << QString("el_GR")
             << QString("ΙΣ")
@@ -1272,7 +1277,8 @@ void Ft_Locales::testMLocaleToUpper_data()
         << QString("ITEM NAÏVE I")
         ;
 
-    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119"
+       && libqtcore4PackageVersion < "4.7.4~git20110516-0maemo2") { // Qt uses libicu
         QTest::newRow("tr_TR")
             << QString("tr_TR")
             << QString("item naïve ı")
@@ -1296,7 +1302,8 @@ void Ft_Locales::testMLocaleToUpper_data()
         << QString("İ") // U+0049 (LATIN CAPITAL LETTER I) U+0307  (COMBINING DOT ABOVE)
         ;
 
-    if(libqtcore4PackageVersion >= "4.7.2~git20110119") { // Qt uses libicu now
+    if(libqtcore4PackageVersion >= "4.7.2~git20110119"
+       && libqtcore4PackageVersion < "4.7.4~git20110516-0maemo2") { // Qt uses libicu
         QTest::newRow("tr_TR")
             << QString("tr_TR")
             << QString("i̇") // U+0069 (LATIN SMALL LETTER I) U+0307  (COMBINING DOT ABOVE)
