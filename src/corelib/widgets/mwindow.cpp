@@ -63,7 +63,7 @@
 #endif
 
 namespace {
-    const QString ImagesPath(QDir::homePath() + "/MyDocs/.images");
+    const QString ImagesPath(QDir::homePath() + "/MyDocs/Pictures");
     const int DisplayExitedDelay = 1000; //ms.
     const int ThrottlingInSwitcherDelay = 3000; //ms
     const int AllowedPaintEventsWhenInvisible = 5;

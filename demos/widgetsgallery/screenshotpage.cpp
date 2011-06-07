@@ -30,7 +30,7 @@
 #include <QPropertyAnimation>
 #include <MBanner>
 
-const QString ImagesPath(QDir::homePath() + "/MyDocs/.images");
+const QString ImagesPath(QDir::homePath() + "/MyDocs/Pictures");
 
 ScreenShotPage::ScreenShotPage()
     : TemplatePage(TemplatePage::ApplicationView),
