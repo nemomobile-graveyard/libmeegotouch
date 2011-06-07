@@ -171,4 +171,12 @@ void Ut_MBanner::testPixmap()
     QCOMPARE(pixmapTest, m_subject->pixmap());
 }
 
+void Ut_MBanner::testBannerDown()
+{
+    m_subject->setDown(true);
+    QCOMPARE(m_subject->isDown(), true);
+    m_subject->setDown(false);
+    QCOMPARE(m_subject->isDown(), false);
+}
+
 QTEST_APPLESS_MAIN(Ut_MBanner)

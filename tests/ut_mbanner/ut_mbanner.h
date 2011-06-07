@@ -44,6 +44,7 @@ private slots:
     void testBannerCreation();
     void testBannerClicking();
     void testPixmap();
+    void testBannerDown();
 
 private:
     MBanner *m_subject;
