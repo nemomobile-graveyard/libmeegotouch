@@ -32,6 +32,7 @@
 #include <unicode/uloc.h>
 #include <unicode/dtfmtsym.h> // date format symbols
 #include <unicode/putil.h> // u_setDataDirectory
+#include <unicode/numsys.h>
 #endif
 
 #include <MDebug>
@@ -664,9 +665,9 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
 }
 #endif
 
-#ifdef HAVE_ICU
 QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) const
 {
+#ifdef HAVE_ICU
     Q_Q(const MLocale);
     QString categoryLanguage = parseLanguage(categoryName);
     // do nothing for languages other than ar, fa, hi, kn, mr, ne, pa, bn:
@@ -679,11 +680,11 @@ QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) c
        && categoryLanguage != "pa"
        && categoryLanguage != "bn")
         return categoryName;
+    QString numericCategoryLanguage = q->categoryLanguage(MLocale::MLcNumeric);
     // if @numbers=<something> is already there, don’t touch it
     // and return immediately:
     if(!MIcuConversions::parseOption(categoryName, "numbers").isEmpty())
         return categoryName;
-    QString numericCategoryLanguage = q->categoryLanguage(MLocale::MLcNumeric);
     if(categoryLanguage == "ar" && numericCategoryLanguage == "ar")
         return MIcuConversions::setOption(categoryName, "numbers", "arab");
     else if(categoryLanguage == "fa" && numericCategoryLanguage == "fa")
@@ -703,8 +704,11 @@ QString MLocalePrivate::fixCategoryNameForNumbers(const QString &categoryName) c
     else if(categoryLanguage == "bn" && numericCategoryLanguage == "bn")
         return MIcuConversions::setOption(categoryName, "numbers", "beng");
     return MIcuConversions::setOption(categoryName, "numbers", "latn");
-}
+#else
+    // nothing to do without ICU:
+    return categoryName;
 #endif
+}
 
 #ifdef HAVE_ICU
 QString MLocalePrivate::icuFormatString(MLocale::DateType dateType,
@@ -3311,9 +3315,9 @@ QString MLocale::countryEndonym() const
 #endif
 }
 
-#ifdef HAVE_ICU
 QString MLocalePrivate::numberingSystem(const QString &localeName) const
 {
+#ifdef HAVE_ICU
     QString numberingSystem
         = MIcuConversions::parseOption(localeName, "numbers");
     // if the numbers option is there in the locale name, trust it
@@ -3363,8 +3367,30 @@ QString MLocalePrivate::numberingSystem(const QString &localeName) const
     // no numbering system found and there are no other resource
     // bundles left to try, return “latn” as a fallback:
     return numberingSystem;
-}
+#else
+    QString language = parseLanguage(localeName);
+    if(language == "ar")
+        return QString("arab");
+    else if (language == "fa")
+        return QString("arabext");
+    else if (language == "hi")
+        return QString("deva");
+    else if (language == "kn")
+        return QString("knda");
+    else if (language == "mr")
+        return QString("deva");
+    else if (language == "ne")
+        return QString("deva");
+    else if (language == "or")
+        return QString("orya");
+    else if (language == "pa")
+        return QString("guru");
+    else if (language == "bn")
+        return QString("beng");
+    else
+        return QString("latn");
 #endif
+}
 
 QString MLocale::decimalPoint() const
 {
@@ -3748,6 +3774,137 @@ QStringList MLocale::dataPaths()
     return MLocalePrivate::dataPaths;
 }
 
+QString MLocale::toLocalizedNumbers(const QString &text) const
+{
+    Q_D(const MLocale);
+    QString categoryNameNumeric =
+        d->fixCategoryNameForNumbers(d->categoryName(MLocale::MLcNumeric));
+    QString targetNumberingSystem = d->numberingSystem(categoryNameNumeric);
+    QString targetDigits;
+#ifdef HAVE_ICU
+    UErrorCode status = U_ZERO_ERROR;
+ #if !((U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6))
+    if(targetNumberingSystem == "hanidec") {
+        targetDigits = QString::fromUtf8("〇一二三四五六七八九");
+    }
+    else {
+#else
+    if(true){
+#endif
+        icu::NumberingSystem * targetNumSys =
+            NumberingSystem::createInstanceByName(
+                targetNumberingSystem.toAscii().constData(), status);
+        if(U_FAILURE(status)) {
+            mDebug("MLocale") << __PRETTY_FUNCTION__
+                              << "Error NumberingSystem::createInstanceByName()"
+                              << targetNumberingSystem
+                              << u_errorName(status);
+            return text;
+        }
+        else {
+            if(!targetNumSys->isAlgorithmic() && targetNumSys->getRadix() == 10) {
+                targetDigits = MIcuConversions::unicodeStringToQString(
+                    targetNumSys->getDescription());
+                if(targetDigits.size() != 10) {
+                    mDebug("MLocale")
+                        << __PRETTY_FUNCTION__
+                        << targetNumberingSystem
+                        << "number of digits is not 10, should not happen";
+                    return text;
+                }
+            }
+            else {
+                mDebug("MLocale")
+                    << __PRETTY_FUNCTION__
+                    << targetNumberingSystem
+                    << "not algorithmic or radix not 10, should not happen";
+                return text;
+            }
+        }
+    }
+#else
+    if(targetNumberingSystem == "arab")
+        targetDigits = QString::fromUtf8("٠١٢٣٤٥٦٧٨٩");
+    else if(targetNumberingSystem == "arabext")
+        targetDigits = QString::fromUtf8("۰۱۲۳۴۵۶۷۸۹");
+    else if(targetNumberingSystem == "beng")
+        targetDigits = QString::fromUtf8("০১২৩৪৫৬৭৮৯");
+    else if(targetNumberingSystem == "deva")
+        targetDigits = QString::fromUtf8("०१२३४५६७८९");
+    else if(targetNumberingSystem == "fullwide")
+        targetDigits = QString::fromUtf8("０１２３４５６７８９");
+    else if(targetNumberingSystem == "gujr")
+        targetDigits = QString::fromUtf8("૦૧૨૩૪૫૬૭૮૯");
+    else if(targetNumberingSystem == "guru")
+        targetDigits = QString::fromUtf8("੦੧੨੩੪੫੬੭੮੯");
+    else if(targetNumberingSystem == "hanidec")
+        targetDigits = QString::fromUtf8("〇一二三四五六七八九");
+    else if(targetNumberingSystem == "khmr")
+        targetDigits = QString::fromUtf8("០១២៣៤៥៦៧៨៩");
+    else if(targetNumberingSystem == "knda")
+        targetDigits = QString::fromUtf8("೦೧೨೩೪೫೬೭೮೯");
+    else if(targetNumberingSystem == "laoo")
+        targetDigits = QString::fromUtf8("໐໑໒໓໔໕໖໗໘໙");
+    else if(targetNumberingSystem == "latn")
+        targetDigits = QString::fromUtf8("0123456789");
+    else if(targetNumberingSystem == "mlym")
+        targetDigits = QString::fromUtf8("൦൧൨൩൪൫൬൭൮൯");
+    else if(targetNumberingSystem == "mong")
+        targetDigits = QString::fromUtf8("᠐᠑᠒᠓᠔᠕᠖᠗᠘᠙");
+    else if(targetNumberingSystem == "mymr")
+        targetDigits = QString::fromUtf8("၀၁၂၃၄၅၆၇၈၉");
+    else if(targetNumberingSystem == "orya")
+        targetDigits = QString::fromUtf8("୦୧୨୩୪୫୬୭୮୯");
+    else if(targetNumberingSystem == "telu")
+        targetDigits = QString::fromUtf8("౦౧౨౩౪౫౬౭౮౯");
+    else if(targetNumberingSystem == "thai")
+        targetDigits = QString::fromUtf8("๐๑๒๓๔๕๖๗๘๙");
+    else if(targetNumberingSystem == "tibt")
+        targetDigits = QString::fromUtf8("༠༡༢༣༤༥༦༧༨༩");
+    else
+        targetDigits = QString::fromUtf8("0123456789");
+#endif
+    return MLocale::toLocalizedNumbers(text, targetDigits);
+}
+
+QString MLocale::toLocalizedNumbers(const QString &text, const QString &targetDigits)
+{
+    QString result = text;
+    if(targetDigits.size() != 10)
+        return text;
+    if(targetDigits == QLatin1String("0123456789")) {
+        bool isLatin1 = true;
+        for(int i = 0; i < text.size(); ++i) {
+            if(!text.at(i).toLatin1()) {
+                isLatin1 = false;
+                break;
+            }
+        }
+        if(isLatin1)
+            return text;
+        result.remove(QChar(0x200F)); // RIGHT-TO-LEFT MARK
+        result.remove(QChar(0x200E)); // LEFT-TO-RIGHT MARK
+        result.remove(QChar(0x202D)); // LEFT-TO-RIGHT OVERRIDE
+        result.remove(QChar(0x202E)); // RIGHT-TO-LEFT OVERRIDE
+        result.remove(QChar(0x202A)); // LEFT-TO-RIGHT EMBEDDING
+        result.remove(QChar(0x202B)); // RIGHT-TO-LEFT EMBEDDING
+        result.remove(QChar(0x202C)); // POP DIRECTIONAL FORMATTING
+    }
+    QStringList sourceDigitsList;
+    sourceDigitsList << QString::fromUtf8("〇一二三四五六七八九");
+    foreach(const QString &sourceDigits, sourceDigitsList)
+        for(int i = 0; i <= 9; ++i)
+            result.replace(sourceDigits.at(i), targetDigits.at(i));
+    for(int i = 0; i < result.size(); ++i)
+        if(result[i].isNumber() && result[i].digitValue() >= 0)
+            result[i] = targetDigits[result[i].digitValue()];
+    return result;
+}
+
+QString MLocale::toLatinNumbers(const QString &text)
+{
+    return MLocale::toLocalizedNumbers(text, QLatin1String("0123456789"));
+}
 
 #ifdef HAVE_ICU
 QString MLocale::localeScript(const QString &locale)

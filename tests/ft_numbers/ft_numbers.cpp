@@ -2808,5 +2808,395 @@ void Ft_Numbers::testPercentPlaceholdersInQt()
 
 }
 
+void Ft_Numbers::testToLatinNumbers_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("expectedResult");
+
+    QString directionalFormattingCodes(
+        QString()
+        +QChar(0x200F) // RIGHT-TO-LEFT MARK
+        +QChar(0x200E) // LEFT-TO-RIGHT MARK
+        +QChar(0x202D) // LEFT-TO-RIGHT OVERRIDE
+        +QChar(0x202E) // RIGHT-TO-LEFT OVERRIDE
+        +QChar(0x202A) // LEFT-TO-RIGHT EMBEDDING
+        +QChar(0x202B) // RIGHT-TO-LEFT EMBEDDING
+        +QChar(0x202C) // POP DIRECTIONAL FORMATTING
+        );
+
+    QString arab    ("٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩ ");
+    QString arabext ("۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ ");
+    QString beng    ("০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯ ");
+    QString deva    ("० १ २ ३ ४ ५ ६ ७ ८ ९ ");
+    QString fullwide("０ １ ２ ３ ４ ５ ６ ７ ８ ９ ");
+    QString gujr    ("૦ ૧ ૨ ૩ ૪ ૫ ૬ ૭ ૮ ૯ ");
+    QString guru    ("੦ ੧ ੨ ੩ ੪ ੫ ੬ ੭ ੮ ੯ ");
+    QString hanidec ("〇 一 二 三 四 五 六 七 八 九 ");
+    QString khmr    ("០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ");
+    QString knda    ("೦ ೧ ೨ ೩ ೪ ೫ ೬ ೭ ೮ ೯ ");
+    QString laoo    ("໐ ໑ ໒ ໓ ໔ ໕ ໖ ໗ ໘ ໙ ");
+    QString latn    ("0 1 2 3 4 5 6 7 8 9 ");
+    QString mlym    ("൦ ൧ ൨ ൩ ൪ ൫ ൬ ൭ ൮ ൯ ");
+    QString mong    ("᠐ ᠑ ᠒ ᠓ ᠔ ᠕ ᠖ ᠗ ᠘ ᠙ ");
+    QString mymr    ("၀ ၁ ၂ ၃ ၄ ၅ ၆ ၇ ၈ ၉ ");
+    QString orya    ("୦ ୧ ୨ ୩ ୪ ୫ ୬ ୭ ୮ ୯ ");
+    QString telu    ("౦ ౧ ౨ ౩ ౪ ౫ ౬ ౭ ౮ ౯ ");
+    QString thai    ("๐ ๑ ๒ ๓ ๔ ๕ ๖ ๗ ๘ ๙ ");
+    QString tibt    ("༠ ༡ ༢ ༣ ༤ ༥ ༦ ༧ ༨ ༩ ");
+
+    QTest::newRow("with spaces")
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn;
+
+    arab.remove(QChar(' '));
+    arabext.remove(QChar(' '));
+    beng.remove(QChar(' '));
+    deva.remove(QChar(' '));
+    fullwide.remove(QChar(' '));
+    gujr.remove(QChar(' '));
+    guru.remove(QChar(' '));
+    hanidec.remove(QChar(' '));
+    khmr.remove(QChar(' '));
+    knda.remove(QChar(' '));
+    laoo.remove(QChar(' '));
+    latn.remove(QChar(' '));
+    mlym.remove(QChar(' '));
+    mong.remove(QChar(' '));
+    mymr.remove(QChar(' '));
+    orya.remove(QChar(' '));
+    telu.remove(QChar(' '));
+    thai.remove(QChar(' '));
+    tibt.remove(QChar(' '));
+
+    QTest::newRow("without spaces")
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt + directionalFormattingCodes
+        << latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn;
+}
+
+void Ft_Numbers::testToLatinNumbers()
+{
+    QFETCH(QString, input);
+    QFETCH(QString, expectedResult);
+    QString result = MLocale::toLatinNumbers(input);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << QTest::currentTestFunction() << " "
+        << QTest::currentDataTag() << "\n"
+        << " input   =" << input << "\n"
+        << " result  =" << result << "\n"
+        << " expected=" << expectedResult << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(result, expectedResult);
+}
+
+void Ft_Numbers::testToLocalizedNumbers_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("localeNameLcNumeric");
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("expectedResult");
+
+    QString arab    ("٠١٢٣٤٥٦٧٨٩");
+    QString arabext ("۰۱۲۳۴۵۶۷۸۹");
+    QString beng    ("০১২৩৪৫৬৭৮৯");
+    QString deva    ("०१२३४५६७८९");
+    QString fullwide("０１２３４５６７８９");
+    QString gujr    ("૦૧૨૩૪૫૬૭૮૯");
+    QString guru    ("੦੧੨੩੪੫੬੭੮੯");
+    QString hanidec ("〇一二三四五六七八九");
+    QString khmr    ("០១២៣៤៥៦៧៨៩");
+    QString knda    ("೦೧೨೩೪೫೬೭೮೯");
+    QString laoo    ("໐໑໒໓໔໕໖໗໘໙");
+    QString latn    ("0123456789");
+    QString mlym    ("൦൧൨൩൪൫൬൭൮൯");
+    QString mong    ("᠐᠑᠒᠓᠔᠕᠖᠗᠘᠙");
+    QString mymr    ("၀၁၂၃၄၅၆၇၈၉");
+    QString orya    ("୦୧୨୩୪୫୬୭୮୯");
+    QString telu    ("౦౧౨౩౪౫౬౭౮౯");
+    QString thai    ("๐๑๒๓๔๕๖๗๘๙");
+    QString tibt    ("༠༡༢༣༤༥༦༧༨༩");
+
+    QTest::newRow("latn")
+        << "ar_EG"
+        << "de_DE"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn;
+    QTest::newRow("latn")
+        << "de_DE"
+        << "ar_EG@numbers=latn"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn;
+    QTest::newRow("arab")
+        << "de_DE"
+        << "ar_EG"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab;
+    QTest::newRow("arab")
+        << "de_DE"
+        << "ar_EG@numbers=arab"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab;
+    QTest::newRow("arabext")
+        << "de_DE"
+        << "fa_IR@numbers=arabext"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << arabext + arabext + arabext + arabext + arabext
+        +  arabext + arabext + arabext + arabext + arabext
+        +  arabext + arabext + arabext + arabext + arabext
+        +  arabext + arabext + arabext + arabext;
+    QTest::newRow("beng")
+        << "de_DE"
+        << "bn_BD@numbers=beng"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << beng + beng + beng + beng + beng
+        +  beng + beng + beng + beng + beng
+        +  beng + beng + beng + beng + beng
+        +  beng + beng + beng + beng;
+    QTest::newRow("deva")
+        << "de_DE"
+        << "hi_IN@numbers=deva"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << deva + deva + deva + deva + deva
+        +  deva + deva + deva + deva + deva
+        +  deva + deva + deva + deva + deva
+        +  deva + deva + deva + deva;
+    QTest::newRow("fullwide")
+        << "de_DE"
+        << "ja_JP@numbers=fullwide"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << fullwide + fullwide + fullwide + fullwide + fullwide
+        +  fullwide + fullwide + fullwide + fullwide + fullwide
+        +  fullwide + fullwide + fullwide + fullwide + fullwide
+        +  fullwide + fullwide + fullwide + fullwide;
+    QTest::newRow("gujr")
+        << "de_DE"
+        << "ja_JP@numbers=gujr"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << gujr + gujr + gujr + gujr + gujr
+        +  gujr + gujr + gujr + gujr + gujr
+        +  gujr + gujr + gujr + gujr + gujr
+        +  gujr + gujr + gujr + gujr;
+    QTest::newRow("guru")
+        << "de_DE"
+        << "pa_PK@numbers=guru"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << guru + guru + guru + guru + guru
+        +  guru + guru + guru + guru + guru
+        +  guru + guru + guru + guru + guru
+        +  guru + guru + guru + guru;
+    QTest::newRow("hanidec")
+        << "de_DE"
+        << "ja_JP@numbers=hanidec"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << hanidec + hanidec + hanidec + hanidec + hanidec
+        +  hanidec + hanidec + hanidec + hanidec + hanidec
+        +  hanidec + hanidec + hanidec + hanidec + hanidec
+        +  hanidec + hanidec + hanidec + hanidec;
+    QTest::newRow("khmr")
+        << "de_DE"
+        << "ja_JP@numbers=khmr"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << khmr + khmr + khmr + khmr + khmr
+        +  khmr + khmr + khmr + khmr + khmr
+        +  khmr + khmr + khmr + khmr + khmr
+        +  khmr + khmr + khmr + khmr;
+    QTest::newRow("knda")
+        << "de_DE"
+        << "kn_IN@numbers=knda"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << knda + knda + knda + knda + knda
+        +  knda + knda + knda + knda + knda
+        +  knda + knda + knda + knda + knda
+        +  knda + knda + knda + knda;
+    QTest::newRow("laoo")
+        << "de_DE"
+        << "de_DE@numbers=laoo"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << laoo + laoo + laoo + laoo + laoo
+        +  laoo + laoo + laoo + laoo + laoo
+        +  laoo + laoo + laoo + laoo + laoo
+        +  laoo + laoo + laoo + laoo;
+    QTest::newRow("mlym")
+        << "de_DE"
+        << "de_DE@numbers=mlym"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << mlym + mlym + mlym + mlym + mlym
+        +  mlym + mlym + mlym + mlym + mlym
+        +  mlym + mlym + mlym + mlym + mlym
+        +  mlym + mlym + mlym + mlym;
+    QTest::newRow("mong")
+        << "de_DE"
+        << "de_DE@numbers=mong"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << mong + mong + mong + mong + mong
+        +  mong + mong + mong + mong + mong
+        +  mong + mong + mong + mong + mong
+        +  mong + mong + mong + mong;
+    QTest::newRow("mymr")
+        << "de_DE"
+        << "de_DE@numbers=mymr"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << mymr + mymr + mymr + mymr + mymr
+        +  mymr + mymr + mymr + mymr + mymr
+        +  mymr + mymr + mymr + mymr + mymr
+        +  mymr + mymr + mymr + mymr;
+    QTest::newRow("orya")
+        << "de_DE"
+        << "or_IN@numbers=orya"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << orya + orya + orya + orya + orya
+        +  orya + orya + orya + orya + orya
+        +  orya + orya + orya + orya + orya
+        +  orya + orya + orya + orya;
+    QTest::newRow("telu")
+        << "de_DE"
+        << "te_IN@numbers=telu"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << telu + telu + telu + telu + telu
+        +  telu + telu + telu + telu + telu
+        +  telu + telu + telu + telu + telu
+        +  telu + telu + telu + telu;
+    QTest::newRow("thai")
+        << "de_DE"
+        << "th_TH@numbers=thai"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << thai + thai + thai + thai + thai
+        +  thai + thai + thai + thai + thai
+        +  thai + thai + thai + thai + thai
+        +  thai + thai + thai + thai;
+    QTest::newRow("tibt")
+        << "de_DE"
+        << "bo_IN@numbers=tibt"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << tibt + tibt + tibt + tibt + tibt
+        +  tibt + tibt + tibt + tibt + tibt
+        +  tibt + tibt + tibt + tibt + tibt
+        +  tibt + tibt + tibt + tibt;
+    QTest::newRow("latn only")
+        << "de_DE"
+        << "ar_EG@numbers=latn"
+        << latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn
+        << latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn + latn
+        +  latn + latn + latn + latn;
+}
+
+void Ft_Numbers::testToLocalizedNumbers()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, localeNameLcNumeric);
+    QFETCH(QString, input);
+    QFETCH(QString, expectedResult);
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
+    QString result = locale.toLocalizedNumbers(input);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << QTest::currentTestFunction() << " "
+        << QTest::currentDataTag() << "\n"
+        << " input   =" << input << "\n"
+        << " result  =" << result << "\n"
+        << " expected=" << expectedResult << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(result, expectedResult);
+}
+
 QTEST_APPLESS_MAIN(Ft_Numbers);
 

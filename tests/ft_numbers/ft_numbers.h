@@ -89,6 +89,11 @@ private slots:
 
     void testPercentPlaceholdersInQt_data();
     void testPercentPlaceholdersInQt();
+
+    void testToLatinNumbers_data();
+    void testToLatinNumbers();
+    void testToLocalizedNumbers_data();
+    void testToLocalizedNumbers();
 };
 
 

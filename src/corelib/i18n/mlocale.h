@@ -1762,6 +1762,77 @@ public:
                       const char *comment = 0, int n = -1);
 
     /*!
+     * \brief converts all digits in the input to localized digits
+     * \param text a string which may contain various localized digits
+     *
+     * This converts all digits in the input, whether they are already
+     * localized or not, into digits localized for the current locale.
+     *
+     * For example, if the input contains Devanagari digits and
+     * Latin digits, and if the current locale uses Eastern Arabic
+     * digits, both the Devanagari digits and the Latin digits
+     * are converted to Eastern Arabic digits.
+     *
+     * Only digits are changed, nothing else, except if the target
+     * digits are Latin digits, then it behaves like
+     * toLatinNumbers(const QString &text) which removes directional
+     * formatting codes as well.
+     *
+     * \sa toLocalizedNumbers(const QString &text, const QString &targetDigits)
+     * \sa toLatinNumbers(const QString &text)
+     */
+    QString toLocalizedNumbers(const QString &text) const;
+
+    /*!
+     * \brief converts all localized digits in the input to the given localized digits
+     * \param text a string which may contain various localized digits
+     * \param targetDigits a string of length 10 containing the target digits
+     *
+     * This is static, i.e. it does <b>not</b> depend on a specific
+     * locale.
+     *
+     * It converts all sorts of localized digits, for example
+     * Eastern Arabic digits, Devanagari digits, CJK full-width digits
+     * ... to the digits in the string given as the second parameter.
+     * The string given as the second parameter <b>must</b> have
+     * <b>exactly</b> a length of 10 specifying the digits of the
+     * desired target numbering system.
+     *
+     * Only digits are changed, nothing else, except if the target
+     * digits are "0123456789", i.e. Latin digits, then it removes
+     * directional formatting codes as well, i.e. it behaves like
+     * like toLatinNumbers(const QString &text).
+     *
+     * \sa toLocalizedNumbers(const QString &text)
+     * \sa toLatinNumbers(const QString &text)
+     */
+    static QString toLocalizedNumbers(const QString &text, const QString &targetDigits);
+
+    /*!
+     * \brief converts all localized digits in the input to Latin digits
+     * \param text a string which may contain various localized digits
+     *
+     * This is static, i.e. it does <b>not</b> depend on a specific
+     * locale.
+     *
+     * It converts all sorts of localized digits, for example
+     * Eastern Arabic digits, Devanagari digits, CJK full-width digits
+     * ... to the usual Latin digits. 
+     *
+     * On top of that, it removes directional formatting codes like
+     * RLM markers, strings containing numbers in Arabic may
+     * contain such markers, they should be removed when converting
+     * to Latin numbers.
+     *
+     * Other characters in the input apart from digits and directional
+     * formatting codes are returned unchanged.
+     *
+     * \sa toLocalizedNumbers(const QString &text)
+     * \sa toLocalizedNumbers(const QString &text, const QString &targetDigits)
+     */
+    static QString toLatinNumbers(const QString &text);
+
+    /*!
      * \brief Sets the DataPaths for the (ICU) locale system to the given paths.
      *
      * \param dataPaths a list of paths

@@ -130,7 +130,6 @@ public:
     // language less bad
     void simplifyDateFormatForMixing(icu::DateFormat *df) const;
 
-    QString fixCategoryNameForNumbers(const QString &categoryName) const;
     bool mixingSymbolsWanted(const QString &categoryNameMessages, const QString &categoryNameTime) const;
     /*!
      * \brief returns ICU date and time format string of the current locale
@@ -150,8 +149,9 @@ public:
                                       MLocale::TimeType timeType,
                                       MLocale::CalendarType calendarType,
                                       MLocale::TimeFormat24h timeFormat24h) const;
-    QString numberingSystem(const QString &localeName) const;
 #endif
+    QString fixCategoryNameForNumbers(const QString &categoryName) const;
+    QString numberingSystem(const QString &localeName) const;
 
     static bool parseIcuLocaleString(const QString &localeString, QString *language, QString *script, QString *country, QString *variant);
     // these return the requested part of a locale string,
