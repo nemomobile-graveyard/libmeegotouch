@@ -29,8 +29,8 @@
 #include <MSortFilterProxyModel>
 
 MListFilterPrivate::MListFilterPrivate() :
-    viewportPos(QPointF(0,0)),
-    panningStartPos(QPointF(0,0)),
+    pullStartPos(QPointF(0,0)),
+    pullStarted(false),
     cachedPannableViewport(NULL),
     q_ptr(NULL)
 {
@@ -38,48 +38,101 @@ MListFilterPrivate::MListFilterPrivate() :
 
 MListFilterPrivate::~MListFilterPrivate()
 {
+    Q_Q(MListFilter);
+
+    disconnect(q->list, SIGNAL(geometryChanged()), this, SLOT(updatePannableViewport()));
 }
 
 void MListFilterPrivate::init()
 {
     Q_Q(MListFilter);
-    connect(q->list, SIGNAL(panningStarted()), this, SLOT(panningStarted()));
+
+    updatePannableViewport();
+    connect(q->list, SIGNAL(geometryChanged()), this, SLOT(updatePannableViewport()));
 }
 
-void MListFilterPrivate::panningStarted()
+void MListFilterPrivate::updatePannableViewport()
 {
-    // When list's pannable viewport can be resolved for the first time,
-    // connect a signal to get viewport position changes
-    if(!cachedPannableViewport && pannableViewport()) {
-        MPannableViewport* viewport = pannableViewport();
-        connect(viewport, SIGNAL(positionChanged(QPointF)), this, SLOT(viewportPositionChanged(QPointF)));
+    MPannableViewport *viewPort = pannableViewport();
+    if (viewPort != cachedPannableViewport) {
+        if (cachedPannableViewport) {
+            disconnect(cachedPannableViewport->physics(),
+                       SIGNAL(pointerPressed()),
+                       this,
+                       SLOT(startEditorPullDown()));
+            disconnect(cachedPannableViewport->physics(),
+                       SIGNAL(pointerReleased()),
+                       this,
+                       SLOT(stopEditorPullDown()));
+
+            disconnect(cachedPannableViewport,
+                       SIGNAL(positionChanged(QPointF)),
+                       this,
+                       SLOT(checkEditorPullDistance(QPointF)));
+        }
+
+        if (viewPort) {
+            connect(viewPort->physics(),
+                    SIGNAL(pointerPressed()),
+                    this,
+                    SLOT(startEditorPullDown()),
+                    Qt::UniqueConnection);
+            connect(viewPort->physics(),
+                    SIGNAL(pointerReleased()),
+                    this,
+                    SLOT(stopEditorPullDown()),
+                    Qt::UniqueConnection);
+
+            connect(viewPort,
+                    SIGNAL(positionChanged(QPointF)),
+                    this,
+                    SLOT(checkEditorPullDistance(QPointF)),
+                    Qt::UniqueConnection);
+        }
     }
-    panningStartPos = viewportPos;
+    cachedPannableViewport = viewPort;
 }
 
-void MListFilterPrivate::viewportPositionChanged(const QPointF& pos)
+void MListFilterPrivate::startEditorPullDown()
 {
     Q_Q(MListFilter);
 
-    viewportPos = pos;
-    if(q->filteringEnabled && viewportPos.y() < 0 && panningStartPos.y() == 0) {
-        emit q->listPannedUpFromTop();
-        panningStartPos = pos;
-    }
+    pullStartPos = cachedPannableViewport->position();
+    if (q->filteringEnabled && !q->editor()->isVisible() && pullStartPos.y() <= 0)
+        pullStarted = true;
+}
+
+void MListFilterPrivate::checkEditorPullDistance(const QPointF& pos)
+{
+    Q_Q(MListFilter);
+
+    if (!pullStarted)
+        return;
+
+    qreal distance = pullStartPos.y() - pos.y();
+    if (distance >= q->filterEditor->preferredHeight()) {
+         emit q->listPannedUpFromTop();
+         stopEditorPullDown();
+     } else if (distance < 0)
+         stopEditorPullDown(); // wrong direction
+}
+
+void MListFilterPrivate::stopEditorPullDown()
+{
+    pullStarted = false;
 }
 
 MPannableViewport* MListFilterPrivate::pannableViewport()
 {
     Q_Q(MListFilter);
 
-    if(!cachedPannableViewport) {
-        QGraphicsWidget* parentWidget = q->list->parentWidget();
-        while(parentWidget && !cachedPannableViewport) {
-            cachedPannableViewport = qobject_cast<MPannableViewport*>(parentWidget);
-            parentWidget = parentWidget->parentWidget();
-        }
+    MPannableViewport *pannableViewport = NULL;
+    QGraphicsWidget *parentWidget = q->list->parentWidget();
+    while (parentWidget && !pannableViewport) {
+        pannableViewport = qobject_cast<MPannableViewport*>(parentWidget);
+        parentWidget = parentWidget->parentWidget();
     }
-    return cachedPannableViewport;
+    return pannableViewport;
 }
 
 MListFilter::MListFilter(MList *parent)
@@ -119,7 +172,7 @@ void MListFilter::setEnabled(bool enabled)
 {
     filteringEnabled = enabled;
 
-    if(enabled) {
+    if (enabled) {
         filterProxy->setSourceModel(list->itemModel());
         list->setItemModel(filterProxy);
         list->setFlag(QGraphicsItem::ItemIsFocusable, true);
@@ -127,7 +180,7 @@ void MListFilter::setEnabled(bool enabled)
         list->setFocus();
     } else {
         list->setFlag(QGraphicsItem::ItemIsFocusable, false);
-        if(filterProxy->sourceModel())
+        if (filterProxy->sourceModel())
             list->setItemModel(filterProxy->sourceModel());
         filterProxy->setSourceModel(NULL);
     }
@@ -136,7 +189,7 @@ void MListFilter::setEnabled(bool enabled)
 QAbstractItemModel* MListFilter::updateItemModel(QAbstractItemModel *itemModel)
 {
     QAbstractItemModel* proxyModel = itemModel;
-    if(filteringEnabled && itemModel != filterProxy) {
+    if (filteringEnabled && itemModel != filterProxy) {
         filterProxy->setSourceModel(itemModel);
         proxyModel = filterProxy;
     }
@@ -170,7 +223,7 @@ int MListFilter::filterRole() const
 
 void MListFilter::keyPressEvent(QKeyEvent *event)
 {
-    if(filteringEnabled && event->text()[0].isPrint()) {
+    if (filteringEnabled && event->text()[0].isPrint()) {
         filterEditor->insert(event->text());
         filterEditor->setFocus();
     }
@@ -178,7 +231,7 @@ void MListFilter::keyPressEvent(QKeyEvent *event)
 
 void MListFilter::editorTextChanged()
 {
-    if(filteringMode != MListFilter::FilterByApplication) {
+    if (filteringMode != MListFilter::FilterByApplication) {
 
         // Split the sentence in filter editor
         QStringList keywords(filterEditor->text().split(" "));

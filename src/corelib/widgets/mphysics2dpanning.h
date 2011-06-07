@@ -287,6 +287,16 @@ Q_SIGNALS:
      */
     void panningStopped();
 
+    /*!
+     * \brief Signals that the pointer has been pressed.
+     */
+    void pointerPressed();
+
+    /*!
+     * \brief Signals that the pointer has been released.
+     */
+    void pointerReleased();
+
 protected:
 
     /*!

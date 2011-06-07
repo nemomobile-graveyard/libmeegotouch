@@ -37,15 +37,18 @@ public:
     void init();
 
 public Q_SLOTS:
-    void panningStarted();
-    void viewportPositionChanged(const QPointF& pos);
+    void updatePannableViewport();
+    void startEditorPullDown();
+    void stopEditorPullDown();
+    void checkEditorPullDistance(const QPointF& pos);
 
 private:
     MPannableViewport* pannableViewport();
 
 private:
-    QPointF viewportPos;
-    QPointF panningStartPos;
+    QPointF pullStartPos;
+    bool pullStarted;
+
     MPannableViewport *cachedPannableViewport;
     MListFilter *q_ptr;
 };

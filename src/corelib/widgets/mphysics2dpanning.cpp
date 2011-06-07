@@ -412,6 +412,8 @@ void MPhysics2DPanning::pointerPress(const QPointF &pos)
 
     d->positions.clear();
     d->positions.push_front(pos);
+
+    emit pointerPressed();
 }
 
 
@@ -486,6 +488,8 @@ void MPhysics2DPanning::pointerRelease()
         d->velY = qBound(-d->maxVel, v.y(), d->maxVel);
         d->positions.clear();
     }
+
+    emit pointerReleased();
 }
 
 
