@@ -1,8 +1,17 @@
-libmeegotouch (0.22.2~1) unstable; urgency=low
+libmeegotouch (0.22.2-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#260921 - [TASK] Create MPhysics2DPanning::boundsBehavior property
+  * Fixes: NB#263027 - [TASK] Unable to take a screenshot using WidgetsGallery since the /home/user/MyDocs/.images directory does not exist anymore
+  * Fixes: NB#262316 - Regional format; Improvement for dollar sign under "Currency format" §qtn_regn_currency_title§ for Hong Kong.
+  * Fixes: NB#262381 - Swedish date string incorrect in Long format
+  * Fixes: NB#261545 - Useless hard code displays in the top of Arabic string in the search input field
+  * Fixes: NB#260210 - Object/Context Menu transition parameters are slightly off
+  * Fixes: NB#260204 - View/Action Menu transition parameters are slightly off
+  * Fixes: NB#261369 - MApplicationMenu fails to update enabled-state of action
+  * Fixes: NB#247870 - MSheet -> hiding a header won't cause the centralWidget to take the headers space
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 03 Jun 2011 13:04:52 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 07 Jun 2011 16:01:45 +0300
 
 libmeegotouch (0.22.1-1) unstable; urgency=low
 
