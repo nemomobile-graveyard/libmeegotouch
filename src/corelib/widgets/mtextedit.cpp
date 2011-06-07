@@ -988,7 +988,6 @@ void MTextEditPrivate::removePreedit()
         return;
     }
 
-    QTextBlock block = cursor()->block();
     q->model()->setAdditionalFormats(QList<MTextEditFormatRange>());
 
     // Remember current format because during
