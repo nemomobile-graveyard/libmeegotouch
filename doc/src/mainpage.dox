@@ -61,7 +61,7 @@
     <td>
       <ul>
        <li><a href="applicationextensions.html">Developing application extensions</a></li>
-       <li><a href="settingslanguageschema.html">Settings language reference</a></li>
+       <li><a href="settingslanguage.html">Declarative settings language</a></li>
        <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
        <li><a href="servicefw.html">Service framework</a></li>
        <li><a href="debugginginfo.html">MeeGo Touch debugging functions</a></li>

@@ -1,0 +1,186 @@
+/*! \page settingslanguage Settings declarative language
+
+\section basics Introduction
+
+Meegotouch settings language is a declarative way to define basic user
+interfaces. The user interface which can be built with it consists 
+of basic input widgets: selections, text entries etc. Their sequence,
+title and other properties are described in an xml file which gets
+loaded at runtime.
+
+\section parsing Load declarative widgets from meegotouch application
+
+Using a settings language user interface description xml file in an
+application needs the following steps:
+
+<ol>
+<li>
+Use MSettingsLanguageParser to parse the xml file and use it to create
+the MSettingsLanguageBinary which represents the parsed information.
+
+\see MSettingsLanguageParser::readFrom()
+\see MSettingsLanguageParser::createSettingsBinary()
+</li>
+<li>
+Set up a datastore which will store the state of the widgets (eg. which
+element got selected from a selection, or what content does the text entry has).
+
+\see MDataStore
+</li>
+<li>
+Create the widgets through MSettingsLanguageWidgetFactory, by specifying the
+above two.
+
+\see MSettingsLanguageWidgetFactory::createWidget()
+</li>
+</ol>
+
+Thats it, the widgets are ready, put them onto the page!
+
+\subsection declexample Example
+
+\code
+    QString filePath = "ui_description.xml";
+    QFile file (filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qCritical ("Unable to open the file.");
+        return;
+    }
+
+    MSettingsLanguageParser parser;
+    if (!parser.readFrom(file)) {
+        qCritical ("Error parsing the ui description");
+        return;
+    }
+
+    MSettingsLanguageBinary* binary = parser.createSettingsBinary();
+    if (!binary) {
+        qCritical ("Error parsing the ui description");
+        return;
+    }
+
+    MDataStore* datastore = new MyDataStore ();
+
+    MSettingsLanguageWidget* widget =
+        MSettingsLanguageWidgetFactory::createWidget(*binary, datastore );
+    page->setCentralWidget (widget);
+\endcode
+
+\section fileformat Declarative settings language file format
+
+The format of a settings declarative user interface description is the
+following:
+
+<ul>
+<li>
+The description must be started and finished with the &lt;settings&gt; and
+&lt;/settings&gt; tags.
+</li>
+<li>
+The input items can be grouped into zero or more &lt;group&gt; and &lt;/group&gt;
+tags. Each group has a title, and some input widgets in it. The "title"
+attribute of the group is mandatory.
+
+Example:
+\code
+<group title="Section 1">
+    some input widgets comes here
+</group>
+\endcode
+</li>
+
+<li>
+Common attributes for the input widgets are:
+<ul>
+<li>
+"title" - Specifies the title of the element. It can also be a translation
+id or the title itself if no need for multiple languages.
+</li>
+<li>
+"key" - A unique name / id of the input widget which determines the storage
+location of the item's value in the data store. (Eg. the text of the entry the
+user has typed)
+</li>
+</ul>
+
+<li>
+The following input widgets are available currently:
+<ul>
+<li>
+&lt;selection&gt;
+
+Contains some options the user can choose from. Each option
+is represented by a button in an exclusive button group.
+\code
+    <selection key="Enum1" title="Please select one">
+        <option title="value1" >1</option>
+        <option title="value2" >2</option>
+        <option title="value3" >3</option>
+    </selection>
+\endcode
+</li>
+<li>
+&lt;text&gt;
+
+A text entry with its title next to it.
+\code
+      <text key="Text1" title="Your name:" > </text>
+\endcode
+</li>
+<li>
+&lt;boolean&gt;
+
+A toggle button representing boolean user choice.
+\code
+      <boolean key="Bool1" title="I agree to the terms"></boolean>
+\endcode
+</li>
+<li>
+&lt;integer&gt;
+
+A slider through which the user can select a number between
+the specified min/max range.
+\code
+      <integer key="Integer1" title="Your age:" min="18" max="99">
+      </integer>
+\endcode
+</li>
+</ul>
+</li>
+</ul>
+
+For more details, see the schema of the language:
+<a href="settingslanguageschema.html">Settings language reference</a>
+
+\subsection declexample2 Example
+
+\code
+<?xml version='1.0' encoding='UTF-8'?>
+<settings>
+  <group title="declexample_group_title">
+      <text key="Text1"
+            title="declexample_text_title" >
+      </text>
+      <text key="Text2"
+            title="declexample_text_title2" >
+      </text>
+      <selection key="Enum1"
+                 title="declexample_value_title">
+        <option title="declexample_value1" >1</option>
+        <option title="declexample_value2" >2</option>
+        <option title="declexample_value3" >3</option>
+    </selection>
+  </group>
+  <group title="declexample_group_title2">
+      <boolean key="Bool1"
+               title="declexample_switch_title">
+      </boolean>
+      <integer key="Integer1"
+               title="declexample_select_title" min="30" max="60">
+      </integer>
+  </group>
+</settings>
+\endcode
+
+*/
+
