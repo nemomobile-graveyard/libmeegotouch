@@ -111,8 +111,6 @@ void ImagePage::createContent()
     image->setVisible(true);
     gridLayout->addItem(image, 0, 0);
 
-    QSize s = MApplication::activeApplicationWindow()->visibleSceneSize();
-
     propertiesLayout->addItem(propertiesComboBox);
     propertiesLayout->addItem(visual);
     propertiesLayout->addItem(slider);

@@ -64,8 +64,6 @@ void MObjectMenuLayoutPolicy::removeAt(int index)
 
 void MObjectMenuLayoutPolicy::relayout()
 {
-    QPointF topLeft = contentsArea().topLeft();
-
     int i = count();
     while (--i >= 0) {
         QGraphicsLayoutItem *item = itemAt(i);

@@ -613,6 +613,12 @@ void LanguagePage::changeLcTimeFormat24h(int index)
     if (index < 0 || index >= modelLcTimeFormat24h->rowCount())
         return;
     QString newLcTimeFormat24hString = modelLcTimeFormat24h->item(index, 1)->text();
+#ifdef HAVE_GCONF
+    MGConfItem lcTimeFormat24hItem("/meegotouch/i18n/lc_timeformat24h");
+    if (newLcTimeFormat24hString != lcTimeFormat24hItem.value().toString()) {
+        lcTimeFormat24hItem.set(newLcTimeFormat24hString);
+    }
+#else
     MLocale::TimeFormat24h newLcTimeFormat24h;
     if (newLcTimeFormat24hString == "24")
         newLcTimeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
@@ -620,12 +626,6 @@ void LanguagePage::changeLcTimeFormat24h(int index)
         newLcTimeFormat24h = MLocale::TwelveHourTimeFormat24h;
     else
         newLcTimeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
-#ifdef HAVE_GCONF
-    MGConfItem lcTimeFormat24hItem("/meegotouch/i18n/lc_timeformat24h");
-    if (newLcTimeFormat24hString != lcTimeFormat24hItem.value().toString()) {
-        lcTimeFormat24hItem.set(newLcTimeFormat24hString);
-    }
-#else
     MLocale currentLocale;
     if (newLcTimeFormat24h != currentLocale.timeFormat24h()) {
         currentLocale.setTimeFormat24h(newLcTimeFormat24h);

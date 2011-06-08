@@ -1244,7 +1244,6 @@ void processAdaptorHeaderFile()
     }
     QTextStream newAdaptorHeaderStream(&newAdaptorHeaderFile);
 
-    bool hasChains = false;
     QString previousLine;
 
     while (!adaptorHeaderFileStream.atEnd()) {
@@ -1337,7 +1336,6 @@ void processAdaptorHeaderFile()
                 }
 
                 if (line.contains(w.chainTag())) {
-                    hasChains = true;
                     line.remove(w.chainTag());
 
                     QString parameterString = "(const uint _windowId, const QString _taskTitle";
