@@ -71,6 +71,27 @@ void Ut_MNavigationBar::testToolbar()
     QVERIFY(!subject->model()->toolBar());
 }
 
+void Ut_MNavigationBar::testProgressIndicator()
+{
+    subject->setProgressIndicatorVisible(true);
+    QVERIFY(subject->isProgressIndicatorVisible());
+    subject->setProgressIndicatorVisible(false);
+    QVERIFY(!subject->isProgressIndicatorVisible());
+}
+
+void Ut_MNavigationBar::testEscapeButton()
+{
+    subject->setEscapeButtonVisible(true);
+    QVERIFY(subject->escapeButtonVisible());
+    subject->setEscapeButtonVisible(false);
+    QVERIFY(!subject->escapeButtonVisible());
+
+    subject->setEscapeButtonEnabled(true);
+    QVERIFY(subject->escapeButtonEnabled());
+    subject->setEscapeButtonEnabled(false);
+    QVERIFY(!subject->escapeButtonEnabled());
+}
+
 void Ut_MNavigationBar::testViewMenuIconID()
 {
     QString iconID("icon-m-framework-back");

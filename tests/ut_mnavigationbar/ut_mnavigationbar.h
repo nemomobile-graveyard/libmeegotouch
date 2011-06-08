@@ -40,6 +40,8 @@ private slots:
     void testToolbar();
     void testViewMenuIconID();
     void noMouseEventPropagation();
+    void testProgressIndicator();
+    void testEscapeButton();
 
 private:
     MNavigationBar *subject;
