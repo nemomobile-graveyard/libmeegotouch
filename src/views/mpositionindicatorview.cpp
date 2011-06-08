@@ -89,15 +89,12 @@ void MPositionIndicatorViewPrivate::_q_displayEntered()
 
 void MPositionIndicatorViewPrivate::_q_displayExited()
 {
-    Q_Q(MPositionIndicatorView);
-
     /* stop everything and keep indicator visible for next use */
     onDisplay = false;
     hideTimer->stop();
     fadeAnimation->stop();
     controller->setProperty("opacity", 1.0f);
     visible = true;
-    q->update();
 }
 
 MPositionIndicatorView::MPositionIndicatorView(MPositionIndicator *controller) :
