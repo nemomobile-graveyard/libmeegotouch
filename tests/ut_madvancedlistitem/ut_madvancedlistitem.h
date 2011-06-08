@@ -45,7 +45,7 @@ private slots:
     void testSideBottomImage();
     void testProgressIndicator();
     void testItemStyle();
-
+    void testResizeEvent();
 
 
 private:

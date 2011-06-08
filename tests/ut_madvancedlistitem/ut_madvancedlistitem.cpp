@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsLayout>
 
 #include <madvancedlistitem.h>
 #include <mapplication.h>
@@ -75,9 +76,31 @@ void Ut_MAdvancedListItem::testTitle()
 
 void Ut_MAdvancedListItem::testImageWidget()
 {
+    // Test image widgets without a layout
     MImageWidget *myImageWidget = new MImageWidget();
     m_subject->setImageWidget( myImageWidget );
     QCOMPARE( m_subject->imageWidget(), myImageWidget );
+
+    MImageWidget *myImageWidget2 = new MImageWidget();
+    m_subject->setImageWidget( myImageWidget2 );
+    QCOMPARE( m_subject->imageWidget(), myImageWidget2 );
+
+    // Test the image widget with a layout
+    m_subject->initLayout();
+    myImageWidget = new MImageWidget();
+    m_subject->setImageWidget( myImageWidget );
+    bool imageWidgetInLayout = false;
+    const QGraphicsLayout *layout = m_subject->layout();
+    if (layout) {
+        for (int i = 0; i < layout->count(); i++) {
+            if (layout->itemAt(i) == myImageWidget) {
+                imageWidgetInLayout = true;
+                break;
+            }
+        }
+    }
+    QCOMPARE( m_subject->imageWidget(), myImageWidget );
+    QVERIFY( imageWidgetInLayout );
 }
 
 void Ut_MAdvancedListItem::testSideTopImage()
@@ -103,6 +126,17 @@ void Ut_MAdvancedListItem::testItemStyle()
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon );
     m_subject->setItemStyle(MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons);
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons );
+}
+
+void Ut_MAdvancedListItem::testResizeEvent()
+{
+    // Test that the layout gets initialized
+    // when a resize event occurs
+    QGraphicsLayout *layout = m_subject->layout();
+    QVERIFY(layout == 0);
+    m_subject->resize(200, 200);
+    layout = m_subject->layout();
+    QVERIFY(layout != 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_MAdvancedListItem)
