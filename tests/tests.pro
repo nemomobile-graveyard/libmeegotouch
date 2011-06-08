@@ -198,6 +198,7 @@ SUBDIRS     =  \
     ut_mgles2renderer \
     ut_mgraphicsclipeffect \
     ut_mwidgetanimation \
+    ut_mcolorcombobox \
 
 # enable only when we have icu available
 
