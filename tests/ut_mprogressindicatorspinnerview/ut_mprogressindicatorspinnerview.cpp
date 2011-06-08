@@ -76,7 +76,7 @@ QImage Ut_MProgressIndicatorSpinnerView::captureImage(MProgressIndicator *progre
     return pixmap.toImage();
 }
 
-void Ut_MProgressIndicatorSpinnerView::testThrottleAnimationWhenRenderedInSwitcher()
+void Ut_MProgressIndicatorSpinnerView::testSpinnerInSwitcher()
 {
     // get animation duration
     int normalDuration = m_subject->d_func()->positionAnimation->duration();
@@ -88,21 +88,31 @@ void Ut_MProgressIndicatorSpinnerView::testThrottleAnimationWhenRenderedInSwitch
     int slowDuration = m_subject->d_func()->positionAnimation->duration();
 
     QVERIFY(normalDuration < slowDuration);
+
+    // emulate leaving the switcher
+    m_subject->d_func()->_q_switcherExited();
+    int currentDuration = m_subject->d_func()->positionAnimation->duration();
+    QCOMPARE(currentDuration, normalDuration);
 }
 
-void Ut_MProgressIndicatorSpinnerView::testAnimationPausedWhenNotVisible()
+void Ut_MProgressIndicatorSpinnerView::testAnimationState()
 {
-    // Regression test for NB#249480 - MProgressIndicator with unknown duration keeps spinning when hidden
     MProgressIndicator* pi = new MProgressIndicator();
     MSpinnerView* view = new MSpinnerView(pi);
     pi->setUnknownDuration(true);
     pi->setVisible(false);
     pi->setView(view);
+    // Regression test for NB#249480 - MProgressIndicator with unknown duration keeps spinning when hidden
     QVERIFY(view->d_func()->positionAnimation->state() == QPropertyAnimation::Paused ||
             view->d_func()->positionAnimation->state() == QPropertyAnimation::Stopped);
 
+    // Emulate displayEntered (it resumes animation)
+    view->d_func()->_q_resumeAnimation();
+    QCOMPARE(view->d_func()->positionAnimation->state(), QPropertyAnimation::Running);
+    // Emulate displayExited (it resumes animation)
+    view->d_func()->_q_pauseAnimation();
+    QCOMPARE(view->d_func()->positionAnimation->state(), QPropertyAnimation::Paused);
     delete pi;
 }
-
 
 QTEST_APPLESS_MAIN(Ut_MProgressIndicatorSpinnerView)
