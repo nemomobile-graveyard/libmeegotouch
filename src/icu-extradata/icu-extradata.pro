@@ -30,6 +30,7 @@ greaterThan(ICUVERSION, 4.4) {
                  data/ms.txt \
                  data/ms_BN.txt \
                  data/nn.txt \
+                 data/pl.txt \
                  data/sk.txt \
                  data/sv.txt \
                  data/th.txt \
