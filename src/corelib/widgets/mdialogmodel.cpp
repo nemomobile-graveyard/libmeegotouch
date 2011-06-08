@@ -89,14 +89,16 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         break;
     case M::DiscardButton:
         //~ uispec-document ??? FIXME
+        //: Command/Button. Discards changes.
         //% "Discard"
-        button->setText(qtTrId("xx_discard_button"));
+        button->setText(qtTrId("qtn_comm_discard"));
         button->setObjectName(ButtonNameDiscard);
         break;
     case M::ApplyButton:
         //~ uispec-document ??? FIXME
+        //: Command/Button. Applies a setting or changes.
         //% "Apply"
-        button->setText(qtTrId("xx_apply_button"));
+        button->setText(qtTrId("qtn_comm_apply"));
         button->setObjectName(ButtonNameApply);
         break;
     case M::ResetButton:
@@ -108,8 +110,9 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         break;
     case M::RestoreDefaultsButton:
         //~ uispec-document ??? FIXME
-        //% "Restore defaults"
-        button->setText(qtTrId("xx_restore-defaults_button"));
+        //: Command/Button. Puts something back to the former or original condition.
+        //% "Restore"
+        button->setText(qtTrId("qtn_comm_restore"));
         button->setObjectName(ButtonNameRestoreDefaults);
         break;
     case M::HelpButton:
@@ -121,8 +124,9 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         break;
     case M::SaveAllButton:
         //~ uispec-document ??? FIXME
+        //: Command/Button. Saves all modifications
         //% "Save all"
-        button->setText(qtTrId("xx_save-all_button"));
+        button->setText(qtTrId("qtn_comm_save_all"));
         button->setObjectName(ButtonNameSaveAll);
         break;
     case M::YesButton:
@@ -134,8 +138,9 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         break;
     case M::YesToAllButton:
         //~ uispec-document ??? FIXME
+        //: Command/Button. Confirms all queries at once.
         //% "Yes to all"
-        button->setText(qtTrId("xx_yes-to-all_button"));
+        button->setText(qtTrId("qtn_comm_yes_all"));
         button->setObjectName(ButtonNameYesToAll);
         break;
     case M::NoButton:
@@ -147,14 +152,16 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         break;
     case M::NoToAllButton:
         //~ uispec-document ??? FIXME
+        //: Command/Button. Ignores all queries at once.
         //% "No to all"
-        button->setText(qtTrId("xx_no-to-all_button"));
+        button->setText(qtTrId("qtn_comm_no_all"));
         button->setObjectName(ButtonNameNoToAll);
         break;
     case M::AbortButton:
         //~ uispec-document ??? FIXME
+        //: Command/Button. Cancels or terminates an operation.
         //% "Abort"
-        button->setText(qtTrId("xx_abort_button"));
+        button->setText(qtTrId("qtn_comm_abort"));
         button->setObjectName(ButtonNameAbort);
         break;
     case M::RetryButton:
@@ -166,8 +173,9 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
         break;
     case M::IgnoreButton:
         //~ uispec-document ??? FIXME
+        //: Command/Button. Rejects or dismisses something.
         //% "Ignore"
-        button->setText(qtTrId("xx_ignore_button"));
+        button->setText(qtTrId("qtn_comm_ignore"));
         button->setObjectName(ButtonNameIgnore);
         break;
     case M::DoneButton:
