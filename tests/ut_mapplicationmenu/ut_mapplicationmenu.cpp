@@ -21,6 +21,7 @@
 
 #include <QStringListModel>
 #include <QGraphicsSceneMouseEvent>
+#include <MDismissEvent>
 #include <MApplication>
 #include <MApplicationWindow>
 #include <MApplicationMenu>
@@ -35,6 +36,24 @@
 
 MApplication *app;
 MApplicationWindow *appWin;
+
+class MyMDismissEventFilter : public QObject
+{
+public:
+    MyMDismissEventFilter() : QObject(0) {
+        count = 0;
+    }
+
+    bool eventFilter(QObject *watched, QEvent *event) {
+        Q_UNUSED(watched)
+        if (event->type() == MDismissEvent::eventType()) {
+            count++;
+        }
+        return false;
+    }
+
+    int count;
+};
 
 void Ut_MApplicationMenu::init()
 {
@@ -345,8 +364,19 @@ void Ut_MApplicationMenu::testEventsPassingThrough()
     QGraphicsSceneMouseEvent mousePressEvent(QEvent::GraphicsSceneMousePress);
     QVERIFY(mousePressEvent.isAccepted());
 
+    MyMDismissEventFilter dismissEventFilter;
+    m_subject->installEventFilter(&dismissEventFilter);
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
+    m_subject->setVisible(false);
     m_subject->mouseReleaseEvent(&mouseReleaseEvent);
+    QCOMPARE(dismissEventFilter.count, 0);
+    m_subject->setVisible(true);
+    m_subject->mouseReleaseEvent(&mouseReleaseEvent);
+    QCOMPARE(dismissEventFilter.count, 1);
+
+    QGraphicsSceneContextMenuEvent contextMenuEvent(QEvent::GraphicsSceneContextMenu);
+    m_subject->contextMenuEvent(&contextMenuEvent);
+    QVERIFY(contextMenuEvent.isAccepted());
 }
 
 
