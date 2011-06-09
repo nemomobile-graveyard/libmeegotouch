@@ -32,6 +32,7 @@ MListItemViewPrivate::MListItemViewPrivate(MWidgetController *controller)
     : MWidgetViewPrivate(),
     down(false),
     tapAndHoldStarted(false),
+    expectMouseReleaseEvent(false),
     tapStateMachine(0)
 {
     this->controller = dynamic_cast<MListItem *>(controller);
@@ -101,6 +102,8 @@ void MListItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event);
     Q_D(MListItemView);
 
+    d->expectMouseReleaseEvent = true;
+
     if (d->down)
         return;
     
@@ -112,6 +115,8 @@ void MListItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MListItemView);
+
+    d->expectMouseReleaseEvent = false;
 
     if (!d->down)
         return;
@@ -136,6 +141,12 @@ void MListItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event);
     Q_D(MListItemView);
 
+    if (!d->expectMouseReleaseEvent) {
+        // The usual mouse-press -> mouse-move -> mouse-release cycle
+        // has been interrupted by a cancel event.
+        return;
+    }
+
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
     rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
@@ -156,6 +167,8 @@ void MListItemView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MListItemView);
+
+    d->expectMouseReleaseEvent = false;
 
     if (!d->down)
         return;
