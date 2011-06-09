@@ -289,12 +289,13 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
         if (!toLoadList.remove(*leastUsed)) {
             packet.removedIdentifiers.append(id);
         }
-        if (toLoadList.isEmpty()) {
-            emit mostUsedPixmapsChanged(packet);
-        }
 
         mostUsedPixmaps.remove(*leastUsed);
         mostUsedPixmaps.insert(id);
+
+        if (toLoadList.isEmpty()) {
+            emit mostUsedPixmapsChanged(packet);
+        }
     }
 }
 
