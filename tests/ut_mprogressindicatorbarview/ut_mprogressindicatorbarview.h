@@ -36,8 +36,8 @@ private slots:
     void cleanupTestCase();
 
     void testSpinnerZeroRange();
-    void testThrottleAnimationWhenRenderedInSwitcher();
-    void testAnimationPausedWhenNotVisible();
+    void testProgressBarInSwitcher();
+    void testAnimationState();
 
 private:
     QImage captureImage(MProgressIndicator *progressIndicator);

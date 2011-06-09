@@ -75,7 +75,7 @@ QImage Ut_MProgressIndicatorBarView::captureImage(MProgressIndicator *progressIn
     return pixmap.toImage();
 }
 
-void Ut_MProgressIndicatorBarView::testThrottleAnimationWhenRenderedInSwitcher()
+void Ut_MProgressIndicatorBarView::testProgressBarInSwitcher()
 {
     m_progressIndicator->setUnknownDuration(true);
 
@@ -89,14 +89,27 @@ void Ut_MProgressIndicatorBarView::testThrottleAnimationWhenRenderedInSwitcher()
     int slowInterval = m_subject->d_func()->animationTimer->interval();
 
     QVERIFY(normalInterval < slowInterval);
+
+    // emulate leaving the switcher
+    m_subject->d_func()->switcherExited();
+    int currentInterval = m_subject->d_func()->animationTimer->interval();
+    QCOMPARE(currentInterval, normalInterval);
 }
 
-void Ut_MProgressIndicatorBarView::testAnimationPausedWhenNotVisible()
+void Ut_MProgressIndicatorBarView::testAnimationState()
 {
     // Regression test for NB#249480 - MProgressIndicator with unknown duration keeps spinning when hidden
     m_progressIndicator->setUnknownDuration(true);
     m_progressIndicator->setVisible(false);
     m_progressIndicator->resize(150,150);
+    QVERIFY(!m_subject->d_func()->animationTimer->isActive());
+
+    // Emulate displayEntered (it resumes animation)
+    m_subject->resumeAnimation();
+    QVERIFY(m_subject->d_func()->animationTimer->isActive());
+
+    // Emulate displayExited (it pauses animation)
+    m_subject->pauseAnimation();
     QVERIFY(!m_subject->d_func()->animationTimer->isActive());
 }
 
