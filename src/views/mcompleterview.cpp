@@ -268,13 +268,13 @@ void MCompleterViewPrivate::showPopup()
     //if the label of the button is "10+", should query all before showing popup
     if (completionsButton->text() == QString("%1+").arg(DefaultMaximumHits))
         controller->queryAll();
+    q->model()->setPopupActive(true);
+
     controller->sceneManager()->appearSceneWindow(popup);
 }
 
 void MCompleterViewPrivate::handlePopupAppearing()
 {
-    Q_Q(MCompleterView);
-    q->model()->setPopupActive(true);
     //hide completion widget before showing popup
     controller->hideCompleter();
     controller->widget()->clearFocus();
