@@ -1,3 +1,9 @@
+libmeegotouch (0.22.4~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 09 Jun 2011 15:50:00 +0300
+
 libmeegotouch (0.22.3-1) unstable; urgency=low
 
   * Fixes: NB#262925 - When background applications' visibility changes from Recents view to hidden, many applications do heavy work in the background
