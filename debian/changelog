@@ -1,8 +1,12 @@
-libmeegotouch (0.22.3~1) unstable; urgency=low
+libmeegotouch (0.22.3-1) unstable; urgency=low
 
-  * [unreleased]
-
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 08 Jun 2011 17:27:05 +0300
+  * Fixes: NB#262925 - When background applications' visibility changes from Recents view to hidden, many applications do heavy work in the background
+  * Fixes: NB#263794 - Add new logical ids to corelib/widgets/mdialogmodel.cpp
+  * Fixes: NB#262315 - WeekDay in Day-Week View is clipped
+  * Fixes: NB#256664
+  * Fixes: NB#257891 - [TASK] Decrease status bar tappable area size for sheet views
+ 
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 09 Jun 2011 15:45:58 +0300
 
 libmeegotouch (0.22.2-1) unstable; urgency=low
 
