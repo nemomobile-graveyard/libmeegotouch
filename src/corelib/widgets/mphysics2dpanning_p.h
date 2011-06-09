@@ -48,7 +48,6 @@ public:
     qreal   velY;
     qreal   pointerSpringX;
     qreal   pointerSpringY;
-    QElapsedTimer lastMovementTimer;
     QPointF sceneLastPos;
     qreal   maxVel;
 

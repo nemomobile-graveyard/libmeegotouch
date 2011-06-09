@@ -24,8 +24,6 @@
 namespace {
     const qreal MinimumBorderSpeed = 0.1; //px. Used when physics parameters do not allow to drag the viewport to correct range.
     const int SampleCount = 5; // Used for speed calculation;
-    const int VelocityCalculationTimeout = 50; //ms. Used to recognize if the last movement happened so far in the past that
-                                               //the speed calculation should not be done;
     const qreal CatchUpTime = 50.0f; // ms. delay between finger movement and physics movement that follows the finger.
 }
 
@@ -38,7 +36,6 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
     velY(0.0),
     pointerSpringX(0.0),
     pointerSpringY(0.0),
-    lastMovementTimer(QElapsedTimer()),
     sceneLastPos(QPointF()),
     maxVel(0.0),
     panningAnimation(new PanningAnimation),
@@ -72,6 +69,10 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
 
     tempPosX = posX;
     tempPosY = posY;
+
+    if (pointerPressed) {
+        positions.push_front(sceneLastPos);
+    }
 
     if (integrationStepTimer.isValid()) {
         integrationStepDeltaTime = integrationStepTimer.restart();
@@ -384,7 +385,6 @@ void MPhysics2DPanning::pointerPress(const QPointF &pos)
 
     d->pointerPressed = true;
     d->sceneLastPos = pos;
-    d->lastMovementTimer.start();
 
     d->pointerSpringX = 0.0f;
     d->pointerSpringY = 0.0f;
@@ -402,8 +402,6 @@ void MPhysics2DPanning::pointerMove(const QPointF &pos)
     QPointF delta = pos - d->sceneLastPos;
 
     d->sceneLastPos = pos;
-    d->positions.push_front(pos);
-    d->lastMovementTimer.restart();
 
     if (d->enabled) {
         // We are going to follow the finger starting from the
@@ -459,7 +457,7 @@ void MPhysics2DPanning::pointerRelease()
     }
 
     // Resolve new velocity only if we have enough samples
-    if(d->positions.count() > 1 && d->lastMovementTimer.elapsed() < VelocityCalculationTimeout) {
+    if (d->positions.count() > 1) {
         // Get the current velocity
         QPointF v = d->getVelocity();
         // Limit the velocity
@@ -467,7 +465,6 @@ void MPhysics2DPanning::pointerRelease()
         d->velY = qBound(-d->maxVel, v.y(), d->maxVel);
         d->positions.clear();
     }
-    d->lastMovementTimer.invalidate();
 }
 
 
