@@ -48,6 +48,8 @@ MListIndexViewPrivate::MListIndexViewPrivate()
     panelLayout(0),
     container(0),
     appearanceAnimation(0),
+    tooltipAppearanceAnimation(0),
+    panelAppearanceAnimation(0),
     tooltipWidget(0),
     list(0),
     viewport(0),
@@ -74,6 +76,7 @@ void MListIndexViewPrivate::init()
     q->connect(controller, SIGNAL(groupTitlesChanged()), q, SLOT(_q_updateTitles()));
 
     appearanceAnimation = new QPropertyAnimation(q, "contentOpacity", q);
+    tooltipAppearanceAnimation = new QPropertyAnimation(tooltip(), "opacity", q);
 
     scrollToQueueTimer.setInterval(ScrollToDelay);
     scrollToQueueTimer.setSingleShot(true);
@@ -87,6 +90,7 @@ void MListIndexViewPrivate::initLayout()
 
     if (!panel) {
         panel = new QGraphicsWidget(controller);
+        panelAppearanceAnimation = new QPropertyAnimation(panel, "opacity", controller);
         panel->hide();
     }
 
@@ -251,7 +255,6 @@ void MListIndexViewPrivate::_q_showIfNeeded()
 
     if (list && list->itemModel() && list->itemModel()->rowCount() > 1) {
         if (q->model()->displayMode() != MList::Hide) {
-            panel->hide();
             appearanceAnimation->stop();
             appearanceAnimation->setStartValue(q->contentOpacity());
             appearanceAnimation->setEndValue(1.0);
@@ -403,6 +406,10 @@ void MListIndexViewPrivate::beginFastScrolling(const QPointF &pos)
     _q_showIfNeeded();
     isFastScrolling = true;
     updateFastScrolling(pos);
+
+    // the tooltip should appear immediately (without fade-in)
+    tooltipAppearanceAnimation->stop();
+    tooltip()->setOpacity(1.0);
     tooltip()->show();
 }
 
@@ -424,10 +431,20 @@ void MListIndexViewPrivate::endFastScrolling()
     }
 
     lastFastScrollRow = -1;
-    if (!list->model()->listIsMoving() && q->model()->displayMode() != MList::Show)
-        q->setContentOpacity(0);
-    tooltip()->hide();
-    panel->hide();
+
+    tooltipAppearanceAnimation->stop();
+    tooltipAppearanceAnimation->setDuration(q->style()->fadeDuration());
+    tooltipAppearanceAnimation->setStartValue(tooltip()->opacity());
+    tooltipAppearanceAnimation->setEndValue(0);
+    tooltipAppearanceAnimation->start();
+
+    panelAppearanceAnimation->stop();
+    panelAppearanceAnimation->setDuration(q->style()->fadeDuration());
+    panelAppearanceAnimation->setStartValue(panel->opacity());
+    panelAppearanceAnimation->setEndValue(0);
+    panelAppearanceAnimation->start();
+
+    _q_hideIfNeeded();
 }
 
 void MListIndexViewPrivate::updateGroupTitleHeight()
@@ -440,10 +457,14 @@ void MListIndexViewPrivate::updateGroupTitleHeight()
 void MListIndexViewPrivate::showTitlesPanel()
 {
     Q_Q(MListIndexView);
-    if (q->model()->displayMode() == MList::Floating)
+    if (q->model()->displayMode() == MList::Floating) {
         panel->hide();
-    else
+    } else {
+        // the titles panel appears without fade-in, like the tooltip
+        panelAppearanceAnimation->stop();
+        panel->setOpacity(1.0);
         panel->show();
+    }
 }
 
 void MListIndexViewPrivate::hideViewportPositionIndicator()

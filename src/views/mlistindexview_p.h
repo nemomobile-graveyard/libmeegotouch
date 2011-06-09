@@ -101,6 +101,8 @@ private:
     QRectF containerRect;
 
     QPropertyAnimation *appearanceAnimation;
+    QPropertyAnimation *tooltipAppearanceAnimation;
+    QPropertyAnimation *panelAppearanceAnimation;
 
     MListIndexTooltip *tooltipWidget;
 
