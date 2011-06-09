@@ -283,11 +283,16 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
         packet.addedHandles.append(PixmapHandle(id, handle));
 
         // release the old one from the list
+        mostUsedPixmaps.remove(*leastUsed);
         if (!toLoadList.remove(*leastUsed)) {
             packet.removedIdentifiers.append(id);
+
+            // OBS: if it's also in the toLoadList it means that it has not been
+            // fetched yet and therefore there's nothing to be released
+            ImageResource* old = daemon->findImageResource(leastUsed->imageId);
+            old->releasePixmap(leastUsed->size);
         }
 
-        mostUsedPixmaps.remove(*leastUsed);
         mostUsedPixmaps.insert(id);
 
         if (toLoadList.isEmpty()) {
