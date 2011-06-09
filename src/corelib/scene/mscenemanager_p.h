@@ -245,6 +245,7 @@ public:
     void closePopupWindows(MSceneWindow::WindowType popupType = MSceneWindow::ObjectMenu);
     bool isBlocker(MSceneWindow::WindowType type);
     MSceneWindow* findTopMostBlockableWindow(int maxZValue);
+    MSceneWindow* findNavigationBar();
 
 public:
 

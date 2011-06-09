@@ -101,6 +101,7 @@ private slots:
     void testOverlayDoesntBlock();
     void testSheetDoesntBlockMsgbox_data();
     void testSheetDoesntBlockMsgbox();
+    void testMsgboxBlocksNavigationBar();
 private:
     MComponentData* m_componentData;
 };

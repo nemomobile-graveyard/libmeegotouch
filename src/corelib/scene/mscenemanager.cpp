@@ -1331,6 +1331,14 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
             QEvent e(QEvent::WindowBlocked);
             qApp->sendEvent(blockableWindow, &e);
         }
+        // navigationbar should also be blocked
+        if (maxZValue >= zForWindowType(MSceneWindow::NavigationBar)) {
+            MSceneWindow* navBar = findNavigationBar();
+            if (navBar) {
+                QEvent e(QEvent::WindowBlocked);
+                qApp->sendEvent(navBar, &e);
+            }
+        }
     }
 
     sceneWindowStack.add(window);
@@ -2054,6 +2062,15 @@ MSceneWindow *MSceneManagerPrivate::findTopMostBlockableWindow(int maxZValue)
         return 0;
 }
 
+MSceneWindow *MSceneManagerPrivate::findNavigationBar()
+{
+    foreach(MSceneWindow* window, sceneWindowStack.list()) {
+        if (window->windowType() == MSceneWindow::NavigationBar)
+            return window;
+    }
+    return 0;
+}
+
 void MSceneManagerPrivate::onSceneWindowEnteringAppearingState(MSceneWindow *sceneWindow)
 {
     prepareWindowShow(sceneWindow);
@@ -2216,6 +2233,14 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
         if (blockableWindow) {
             QEvent e(QEvent::WindowUnblocked);
             qApp->sendEvent(blockableWindow, &e);
+        }
+        // navigationbar should also be unblocked
+        if (maxZValue >= zForWindowType(MSceneWindow::NavigationBar)) {
+            MSceneWindow* navBar = findNavigationBar();
+            if (navBar) {
+                QEvent e(QEvent::WindowUnblocked);
+                qApp->sendEvent(navBar, &e);
+            }
         }
     }
 

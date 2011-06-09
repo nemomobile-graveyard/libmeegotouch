@@ -55,6 +55,8 @@ private slots:
     void testSettingSameSceneWindowState();
 
     void testFocusHandlingOnWindowBlocking();
+    void testWindowBlockedEventSendsCancelEvent();
+    void testWindowDeactivateEventSendsCancelEvent();
 
 private:
     void processPendingEvents();

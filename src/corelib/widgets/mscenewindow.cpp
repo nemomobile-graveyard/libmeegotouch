@@ -357,12 +357,21 @@ bool MSceneWindow::event(QEvent *event)
                 d->focusItemBeforeWindowBlocked = static_cast<QGraphicsWidget*>(focusItem());
             focusItem()->clearFocus();
         }
+        // we are blocked by non system sheet/dialog/popuplist/menu etc.
+        // we must send cancel event to pressed buttons
+        if (MSceneManager *sceneMan = sceneManager())
+            sceneMan->d_func()->sendCancelEvent(this);
     } else if (event->type() == QEvent::WindowUnblocked) {
         // Unblocked scene window must restore the lost focus.
         if (d->focusItemBeforeWindowBlocked && !focusItem()) {
             d->focusItemBeforeWindowBlocked->setFocus(Qt::ActiveWindowFocusReason);
         }
         d->focusItemBeforeWindowBlocked = 0;
+    } else if (event->type() == QEvent::WindowDeactivate) {
+        // we are deactivated by another application or system sheet/dialog
+        // we must send cancel event to pressed buttons
+        if (MSceneManager *sceneMan = sceneManager())
+            sceneMan->d_func()->sendCancelEvent(this);
     }
 
     return MWidgetController::event(event);

@@ -1574,4 +1574,37 @@ void Ut_MSceneManager::testSheetDoesntBlockMsgbox()
     delete msgbox;
 }
 
+void Ut_MSceneManager::testMsgboxBlocksNavigationBar()
+{
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    MSceneWindow *navbar = new MNavigationBar;
+    MSceneWindow *msgbox = new MMessageBox;
+
+    EventSpy navbarBlockedSpy(navbar, QEvent::WindowBlocked);
+    EventSpy navbarUnblockedSpy(navbar, QEvent::WindowUnblocked);
+
+    sm->appearSceneWindowNow(navbar);
+
+    sm->appearSceneWindow(msgbox);
+    sm->fastForwardSceneWindowTransitionAnimation(msgbox);
+
+    QCOMPARE(navbarBlockedSpy.count(), 1);
+    QCOMPARE(navbarUnblockedSpy.count(), 0);
+
+    navbarBlockedSpy.clear();
+
+    sm->disappearSceneWindow(msgbox);
+    sm->fastForwardSceneWindowTransitionAnimation(msgbox);
+
+    QCOMPARE(navbarBlockedSpy.count(), 0);
+    QCOMPARE(navbarUnblockedSpy.count(), 1);
+
+    sm->disappearSceneWindowNow(navbar);
+
+    delete navbar;
+    delete msgbox;
+}
+
 QTEST_MAIN(Ut_MSceneManager);

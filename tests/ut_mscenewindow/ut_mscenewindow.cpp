@@ -25,6 +25,8 @@
 #include <MApplicationWindow>
 #include <MWindow>
 #include <MComponentData>
+#include <MCancelEvent>
+#include <MApplication>
 
 class MyMDismissEventFilter : public QObject
 {
@@ -42,6 +44,25 @@ public:
     }
 
     int count;
+};
+
+class MyCancelEventFilter : public QObject
+{
+public:
+    MyCancelEventFilter(QObject *object, QObject *parent = NULL)
+        : QObject(parent), eventCount(0)
+    {
+        object->installEventFilter(this);
+    }
+
+    bool eventFilter(QObject *object, QEvent *e)
+    {
+        if (dynamic_cast<MCancelEvent*>(e))
+            eventCount++;
+        return QObject::eventFilter(object, e);
+    }
+
+    int eventCount;
 };
 
 // Test class implementation
@@ -372,6 +393,36 @@ bool Ut_MSceneWindow::verifySceneWindowStateChange(QSignalSpy &spy,
     }
 
     return true;
+}
+
+void Ut_MSceneWindow::testWindowBlockedEventSendsCancelEvent()
+{
+    m_subject->appear(window);
+
+    QGraphicsWidget *widget = new QGraphicsWidget(m_subject);
+    widget->grabMouse();
+
+    MyCancelEventFilter *myCancelFilter = new MyCancelEventFilter(widget, this);
+
+    QEvent event(QEvent::WindowBlocked);
+    qApp->sendEvent(m_subject, &event);
+
+    QCOMPARE(myCancelFilter->eventCount, 1);
+}
+
+void Ut_MSceneWindow::testWindowDeactivateEventSendsCancelEvent()
+{
+    m_subject->appear(window);
+
+    QGraphicsWidget *widget = new QGraphicsWidget(m_subject);
+    widget->grabMouse();
+
+    MyCancelEventFilter *myCancelFilter = new MyCancelEventFilter(widget, this);
+
+    QEvent event(QEvent::WindowDeactivate);
+    qApp->sendEvent(m_subject, &event);
+
+    QCOMPARE(myCancelFilter->eventCount, 1);
 }
 
 TestBridge::TestBridge(QObject *parent)
