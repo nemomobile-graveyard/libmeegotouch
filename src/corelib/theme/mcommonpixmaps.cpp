@@ -245,9 +245,6 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
             MPixmapHandle handle = resource->fetchPixmap(id.size);
             mostUsedPixmaps.insert(id);
 
-            MostUsedPixmaps packet;
-            packet.addedHandles.append(PixmapHandle(id, handle));
-
             return;
         }
 
