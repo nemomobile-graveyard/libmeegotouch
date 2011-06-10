@@ -3555,7 +3555,9 @@ QString MLocale::indexBucket(const QString &str, const QStringList &buckets, con
 QString MLocale::indexBucket(const QString &str) const
 {
     QStringList bucketList = exemplarCharactersIndex();
-    return indexBucket(str, bucketList, this->collator());
+    MCollator coll = this->collator();
+    coll.setStrength(MLocale::CollatorStrengthPrimary);
+    return indexBucket(str, bucketList, coll);
 }
 #endif
 

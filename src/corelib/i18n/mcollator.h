@@ -34,6 +34,20 @@ public:
     MCollator(const MCollator &other);
     virtual ~MCollator();
 
+    /*!
+     * \brief returns the strength of an MCollator
+     *
+     * \sa setStrength(MLocale::CollatorStrength collatorStrength)
+     */
+    MLocale::CollatorStrength strength() const;
+
+    /*!
+     * \brief sets the strength of an MCollator
+     *
+     * \sa strength()
+     */
+    void setStrength(MLocale::CollatorStrength collatorStrength);
+
     bool operator()(const QString &s1, const QString &s2) const;
 
     static MLocale::Comparison compare(const QString &first, const QString &second);

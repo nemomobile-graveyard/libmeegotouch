@@ -27,6 +27,7 @@
 #include "micuconversions.h"
 #include "mlocale_p.h"
 
+#include <QDebug>
 
 /////////////////////
 // MCollatorPrivate
@@ -47,6 +48,11 @@ void MCollatorPrivate::initCollator(const icu::Locale &locale)
 {
     UErrorCode status = U_ZERO_ERROR;
     _coll = icu::Collator::createInstance(locale, status);
+    if(U_FAILURE(status)) {
+        qWarning() << __PRETTY_FUNCTION__
+                   << "icu::Collator::createInstance() failed with error"
+                   << u_errorName(status);
+    }
     _coll->setStrength(icu::Collator::QUATERNARY);
     // This is default already in Japanese locales:
     // _coll->setAttribute(UCOL_HIRAGANA_QUATERNARY_MODE, UCOL_ON, status);
@@ -112,6 +118,56 @@ MCollator::MCollator(const MCollator &other)
 MCollator::~MCollator()
 {
     delete d_ptr;
+}
+
+MLocale::CollatorStrength MCollator::strength() const
+{
+    Q_D(const MCollator);
+    switch(d->_coll->getStrength()) {
+    case icu::Collator::PRIMARY:
+        return MLocale::CollatorStrengthPrimary;
+        break;
+    case icu::Collator::SECONDARY:
+        return MLocale::CollatorStrengthSecondary;
+        break;
+    case icu::Collator::TERTIARY:
+        return MLocale::CollatorStrengthTertiary;
+        break;
+    case icu::Collator::QUATERNARY:
+        return MLocale::CollatorStrengthQuaternary;
+        break;
+    case icu::Collator::IDENTICAL:
+        return MLocale::CollatorStrengthIdentical;
+        break;
+    default:
+        return MLocale::CollatorStrengthQuaternary;
+        break;
+    }
+}
+
+void MCollator::setStrength(MLocale::CollatorStrength collatorStrength)
+{
+    Q_D(MCollator);
+    switch(collatorStrength) {
+    case MLocale::CollatorStrengthPrimary:
+        d->_coll->setStrength(icu::Collator::PRIMARY);
+        break;
+    case MLocale::CollatorStrengthSecondary:
+        d->_coll->setStrength(icu::Collator::SECONDARY);
+        break;
+    case MLocale::CollatorStrengthTertiary:
+        d->_coll->setStrength(icu::Collator::TERTIARY);
+        break;
+    case MLocale::CollatorStrengthQuaternary:
+        d->_coll->setStrength(icu::Collator::QUATERNARY);
+        break;
+    case MLocale::CollatorStrengthIdentical:
+        d->_coll->setStrength(icu::Collator::IDENTICAL);
+        break;
+    default:
+        d->_coll->setStrength(icu::Collator::QUATERNARY);
+        break;
+    }
 }
 
 //! operator () works as lessThan comparison.

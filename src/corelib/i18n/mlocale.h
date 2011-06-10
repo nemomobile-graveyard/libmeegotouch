@@ -187,8 +187,25 @@ public:
                   Saturday, Sunday
                  };
 
-    //! Return type for MCollator::compare(). Denotes the order of two strings.
+    /*!
+     * \brief Return type for MCollator::compare(). Denotes the order of two strings.
+     */
     enum Comparison {LessThan = -1, Equal = 0, GreaterThan = 1};
+
+    /*!
+     * \brief Type to select the strength of an MCollator object
+     *
+     * For an explanation of the collation strengths see the
+     * <a href="http://unicode.org/reports/tr10/">Unicode Collation
+     * Algorithm</a>.
+     */
+    enum CollatorStrength {
+        CollatorStrengthPrimary = 0,
+        CollatorStrengthSecondary = 1,
+        CollatorStrengthTertiary = 2,
+        CollatorStrengthQuaternary = 3,
+        CollatorStrengthIdentical = 15
+    };
 
     /*!
      * \brief Type for locale dependent date symbol presentation
@@ -750,6 +767,7 @@ public:
      *
      * \sa MLocaleBuckets
      * \sa exemplarCharactersIndex()
+     * \sa indexBucket(const QString &str, const QStringList &buckets, const MCollator &collator)
      */
     QString indexBucket(const QString &str) const;
     
@@ -764,6 +782,35 @@ public:
      * buckets is to be retrieved since it can re-use the buckets list and the
      * collator from one call to the next. Before the first call, initialize
      * the 'buckets' list with MLocale::exemplarCharactersIndex().
+     *
+     * On top of that, please take care to set the strength of the collator
+     * passed as an argument to primary strength, if this is not done the
+     * resulting buckets will be slightly wrong.
+     *
+     * But use primary strength only for the collator used to get the
+     * buckets, not for the collator used to do the actual
+     * sorting. The collator used to do the actual sorting should be
+     * set to quaternary strength in most cases.
+     *
+     * For an explanation of the collation strengths see the <a
+     * href="http://unicode.org/reports/tr10/">Unicode Collation
+     * Algorithm</a>.
+     *
+     * Example:
+     * \code
+     * MLocale locale; // gets the current system default locale
+     * MCollator collator = locale.collator();
+     * // IMPORTANT: don’t forget to set the collator for the buckets to
+     * // primary strength:
+     * collator.setStrength(MLocale::CollatorStrengthPrimary);
+     * QStringList buckets = locale.exemplarCharactersIndex();
+     * // now you can find the index bucket for a name, for example
+     * // in case of “Abraham”, the bucket will be “A” in “en_US” locale and most
+     * // other locales.
+     * QString bucket = indexBucket(QString::fromUtf8("Abraham"), buckets, collator);
+     * \endcode
+     *
+     * \sa indexBucket(const QString &str)
      */
     QString indexBucket(const QString &str, const QStringList &buckets, const MCollator &collator) const;
 
