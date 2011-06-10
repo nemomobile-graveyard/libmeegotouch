@@ -25,6 +25,14 @@ namespace {
     const qreal MinimumBorderSpeed = 0.1; //px. Used when physics parameters do not allow to drag the viewport to correct range.
     const int SampleCount = 5; // Used for speed calculation;
     const qreal CatchUpTime = 50.0f; // ms. delay between finger movement and physics movement that follows the finger.
+
+    // If the speed calculated when user's finger is lifted by the end of a
+    // flick/panning movement is below this number it will be considered as zero.
+    // (i.e. there will be no flick or panning inertia)
+    // In pixels per integration step.
+    // OBS: ideally it should be in pixels per time unit (e.g. millisecond)
+    //      But that will come once getVelocity() gets refactored
+    const qreal MinimumFlickStartingSpeed = 0.5f;
 }
 
 MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObject) :
@@ -139,7 +147,6 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
     }
 }
 
-
 QPointF MPhysics2DPanningPrivate::getVelocity()
 {
     // Here we assume that the samples were taken at a constant frequency.
@@ -149,7 +156,19 @@ QPointF MPhysics2DPanningPrivate::getVelocity()
     for(int i=0; i<validSampleCount; i++) {
             sum += positions[i] - positions[i + 1];
     }
-    return - sum / validSampleCount;
+
+    QPointF velocity = - sum / validSampleCount;
+
+    // We do it per-axis to simplify the computation and also because
+    // normally we pan only from one axis at a time.
+    if (qAbs(velocity.x()) < MinimumFlickStartingSpeed) {
+        velocity.rx() = 0.0f;
+    }
+    if (qAbs(velocity.y()) < MinimumFlickStartingSpeed) {
+        velocity.ry() = 0.0f;
+    }
+
+    return velocity;
 }
 
 
