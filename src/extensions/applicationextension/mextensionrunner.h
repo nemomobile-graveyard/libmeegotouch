@@ -136,6 +136,9 @@ protected:
         shared between the host and runner processes. */
     QPixmap pixmap;
 
+    /*! Temporary image to render into. */
+    QImage image;
+
     //! List to hold object menu actions received from widget.
     QList<QAction *> widgetObjectMenuActions;
 

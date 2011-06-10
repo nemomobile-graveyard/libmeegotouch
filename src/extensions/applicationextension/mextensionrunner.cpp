@@ -407,6 +407,7 @@ void MExtensionRunner::createAppletPixmap(Qt::HANDLE handle)
 {
     // Create a QPixmap out of the pixmap handle
     pixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
+    image = QImage(pixmap.size(), QImage::Format_ARGB32);
 
 #ifdef QT_OPENGL_LIB
     // The QGLWidget takes the ownership of the context
@@ -425,46 +426,60 @@ void MExtensionRunner::createAppletPixmap(Qt::HANDLE handle)
 
 void MExtensionRunner::sceneChanged(const QList<QRectF> &region)
 {
-    if (!region.empty() && !pixmap.isNull()) {
-        // Lock the pixmap mutex: this blocking call can't really fail in our case (see man pthread_mutex_lock) and even if it would there's not much that can be done about it
-        if (pixmapMutex->lock()) {
-            QPainter painter(&pixmap);
+    if (region.empty() || pixmap.isNull()) {
+        return;
+    }
 
-            foreach(const QRectF & r, region) {
-                // Don't draw areas that are outside the pixmap
-                QRectF drawRect = r.intersected(pixmap.rect());
+    // Lock the pixmap mutex: this blocking call can't really fail in our case
+    // (see man pthread_mutex_lock) and even if it would there's not much that
+    // can be done about it
+    if (!pixmapMutex->lock())
+        return;
 
-                if (visible && painter.isActive()) {
-                    // Clear region with full transparency
-                    painter.save();
-                    painter.setCompositionMode(QPainter::CompositionMode_Clear);
-                    painter.fillRect(drawRect, QBrush(QColor(0, 0, 0, 0)));
-                    painter.restore();
+    image.fill(qRgba(0,0,0,0));
 
-                    // Render the changes to the scene
-                    scene->render(&painter, drawRect, drawRect);
-                }
+    QPainter imagePainter(&image);
+    QPainter pixmapPainter(&pixmap);
 
-                // Calculate the union of the changed regions
-                changedRect = changedRect.united(drawRect);
-            }
+    foreach(const QRectF & r, region) {
+        // Don't draw areas that are outside the pixmap
+        QRectF drawRect = r.intersected(pixmap.rect());
 
-            if (visible && painter.isActive()) {
-                // Synchronize X to get the changes drawn to the pixmap
-                QApplication::syncX();
-            }
+        if (visible && imagePainter.isActive() && pixmapPainter.isActive()) {
+            // first render into a QImage to make sure the raster engine and
+            // not X11 rendering is used
+            scene->render(&imagePainter, drawRect, drawRect);
 
-            // Unlock the pixmap mutex
-            pixmapMutex->unlock();
+            // Clear region with full transparency
+            pixmapPainter.save();
+            pixmapPainter.setCompositionMode(QPainter::CompositionMode_Clear);
+            pixmapPainter.fillRect(drawRect, QBrush(QColor(0, 0, 0, 0)));
+            pixmapPainter.restore();
 
-            // Inform the host process about the union of the changed regions (if any)
-            if (!changedRect.isEmpty() && visible) {
-                MAppletPixmapModifiedMessage m(changedRect);
-                communicator->sendMessage(m);
-                // Clear the changedRect, since it has been sent and the widget is visible
-                changedRect = QRectF();
-            }
+            // and finally draw that QImage onto the pixmap
+            pixmapPainter.drawImage(drawRect, image, drawRect);
         }
+
+        // Calculate the union of the changed regions
+        changedRect = changedRect.united(drawRect);
+    }
+
+    imagePainter.end();
+    pixmapPainter.end();
+
+    if (visible) {
+        // Synchronize X to get the changes drawn to the pixmap
+        QApplication::syncX();
+    }
+
+    pixmapMutex->unlock();
+
+    // Inform the host process about the union of the changed regions (if any)
+    if (!changedRect.isEmpty() && visible) {
+        MAppletPixmapModifiedMessage m(changedRect);
+        communicator->sendMessage(m);
+        // Clear the changedRect, since it has been sent and the widget is visible
+        changedRect = QRectF();
     }
 }
 
