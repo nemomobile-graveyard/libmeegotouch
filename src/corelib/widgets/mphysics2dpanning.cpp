@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-#include <QTimeLine>
-
 #include "mpannablewidget.h"
 #include "mphysics2dpanning.h"
 #include "mphysics2dpanning_p.h"
