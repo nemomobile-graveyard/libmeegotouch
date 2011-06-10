@@ -297,7 +297,7 @@ Package: libmeegotouch-tests
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends},
- locales,
+ posix-locales,
  gstreamer0.10-plugins-base,
  gstreamer0.10-plugins-good
 Description: libmeegotouch unit tests
