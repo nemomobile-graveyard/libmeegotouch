@@ -142,6 +142,8 @@ void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
 
 QPointF MPhysics2DPanningPrivate::getVelocity()
 {
+    // Here we assume that the samples were taken at a constant frequency.
+    // FIXME: Make it independent of the integration update rate (or frame rate).
     QPointF sum;
     int validSampleCount = qMin(SampleCount, positions.count() - 1);
     for(int i=0; i<validSampleCount; i++) {
