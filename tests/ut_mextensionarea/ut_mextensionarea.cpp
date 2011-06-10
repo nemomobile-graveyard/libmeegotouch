@@ -26,17 +26,25 @@
 #include "mappletinstancemanager_stub.h"
 #include "mockdatastore.h"
 #include "mobjectmenu_stub.h"
+#include "mstylesheet.h"
 
 #include <QtTest/QtTest>
 
 #include <mwidgetcreator.h>
 M_REGISTER_WIDGET(TestExtensionArea);
 
+//To prevent crashing
+MStyleSheet::~MStyleSheet()
+{
+
+}
+
 // TestExtensionArea
 class TestExtensionArea : public MExtensionArea
 {
 public:
     TestExtensionArea() : MExtensionArea() { }
+    virtual ~TestExtensionArea() { }
     void addWidget(MWidget *widget, MDataStore &store) {
         MExtensionArea::addWidget(widget, store);
     }
