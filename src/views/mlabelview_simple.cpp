@@ -159,6 +159,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
 {
     const char *member = NULL;
     bool needUpdate = false;
+    bool needStringVariantsUpdate = false;
 
     const MLabelModel *model = viewPrivate->model();
 
@@ -168,7 +169,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
                 preferredSize = QSizeF(-1, -1);
             }
             viewPrivate->autoSetTextDirection();
-            updateStringVariants();
+            needStringVariantsUpdate = true;
             needUpdate = true;
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
@@ -176,6 +177,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             if (model->wordWrap()) {
                 viewPrivate->textOptions.setWrapMode(model->wrapMode());
             }
+            needStringVariantsUpdate = true;
             needUpdate = true;
         } else if (member == MLabelModel::TextElide) {
             needUpdate = true;
@@ -185,6 +187,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             } else {
                 viewPrivate->textOptions.setWrapMode(QTextOption::NoWrap);
             }
+            needStringVariantsUpdate = true;
             needUpdate = true;
         } else if (member == MLabelModel::TextDirection) {
             viewPrivate->autoSetTextDirection();
@@ -195,6 +198,10 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             needUpdate = true;
         }
     }
+
+    if (needStringVariantsUpdate)
+        updateStringVariants();
+
     return needUpdate;
 }
 
