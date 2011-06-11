@@ -128,6 +128,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
     const MPositionIndicatorModel *const activeModel = model();
     QSizeF  vpSize = activeModel->viewportSize();
+    const QSizeF currentSize = size();
     QRectF  pRange = activeModel->range().adjusted(0, 0, vpSize.width(), vpSize.height());
     QPointF pPos   = activeModel->position();
     const MPositionIndicatorStyle *const activeStyle = style().operator->();
@@ -141,7 +142,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
         qreal distanceK = pPos.y() / pRange.height();
         qreal sizeK = vpSize.height() / pRange.height();
-        qreal railHeight = size().height();
+        qreal railHeight = currentSize.height();
 
         const MScalableImage *rail = activeStyle->backgroundImage();
 
@@ -155,8 +156,8 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
         int indicatorPositionY = distanceK * railHeight;
 
-        if (indicatorPositionY + indicatorHeight >= int(size().height())) {
-            indicatorHeight = size().height() - indicatorPositionY;
+        if (indicatorPositionY + indicatorHeight >= int(currentSize.height())) {
+            indicatorHeight = currentSize.height() - indicatorPositionY;
             indicatorPositionY -= 1;
         }
 
@@ -167,16 +168,16 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
         if (rail) {
             int railPixmapSizeX = rail->pixmap()->width();
-            int railPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - railPixmapSizeX);
+            int railPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : currentSize.width() - railPixmapSizeX);
 
             rail->draw((qreal)railPositionX,
                         0.0,
                         (qreal)railPixmapSizeX,
-                        size().height(),
+                        currentSize.height(),
                         painter);
         }
 
-        int indicatorPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - indicatorPixmapSizeX);
+        int indicatorPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : currentSize.width() - indicatorPixmapSizeX);
 
         indicator->draw(indicatorPositionX,
                         indicatorPositionY,
@@ -198,8 +199,8 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         int indicatorWidth = qMax(activeStyle->minIndicatorSize(), int((vpSize.width()/pRange.width())*size().width()));
         int indicatorPositionX = (pPos.x()/pRange.width())*size().width();
 
-        if (indicatorPositionX + indicatorWidth > size().width()) {
-            indicatorWidth = size().width() - indicatorPositionX;
+        if (indicatorPositionX + indicatorWidth > currentSize.width()) {
+            indicatorWidth = currentSize.width() - indicatorPositionX;
         }
 
         if (indicatorPositionX < 0) {
@@ -211,14 +212,14 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
             int railPixmapSizeY = rail->pixmap()->height();
 
             rail->draw( 0.0,
-                        size().height() - railPixmapSizeY,
-                        size().width(),
+                        currentSize.height() - railPixmapSizeY,
+                        currentSize.width(),
                         (qreal)railPixmapSizeY,
                         painter);
         }
 
         indicator->draw((qreal)indicatorPositionX,
-                        size().height() - indicatorPixmapSizeY,
+                        currentSize.height() - indicatorPixmapSizeY,
                         (qreal)indicatorWidth,
                         (qreal)indicatorPixmapSizeY,
                         painter);
