@@ -126,12 +126,14 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         return;
     }
 
-    QSizeF  vpSize = model()->viewportSize();
-    QRectF  pRange = model()->range().adjusted(0, 0, vpSize.width(), vpSize.height());
-    QPointF pPos   = model()->position();
+    const MPositionIndicatorModel *const activeModel = model();
+    QSizeF  vpSize = activeModel->viewportSize();
+    QRectF  pRange = activeModel->range().adjusted(0, 0, vpSize.width(), vpSize.height());
+    QPointF pPos   = activeModel->position();
+    const MPositionIndicatorStyle *const activeStyle = style().operator->();
 
     if ((int)pRange.height() > (int)vpSize.height()) {
-        const MScalableImage *indicator = style()->indicatorImage();
+        const MScalableImage *indicator = activeStyle->indicatorImage();
         if (!indicator) {
             mWarning("MPositionIndicatorView") << "could not get \"indicator-image\"";
             return;
@@ -141,14 +143,14 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         qreal sizeK = vpSize.height() / pRange.height();
         qreal railHeight = size().height();
 
-        const MScalableImage *rail = style()->backgroundImage();
+        const MScalableImage *rail = activeStyle->backgroundImage();
 
         int indicatorPixmapSizeX = indicator->pixmap()->width();
 
         int indicatorHeight = sizeK * railHeight;
-        if (style()->minIndicatorSize() > indicatorHeight) {
-            railHeight -= (style()->minIndicatorSize() - indicatorHeight);
-            indicatorHeight = style()->minIndicatorSize();
+        if (activeStyle->minIndicatorSize() > indicatorHeight) {
+            railHeight -= (activeStyle->minIndicatorSize() - indicatorHeight);
+            indicatorHeight = activeStyle->minIndicatorSize();
         }
 
         int indicatorPositionY = distanceK * railHeight;
@@ -184,16 +186,16 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
     }
 
     if ((int)pRange.width() > (int)vpSize.width()) {
-        const MScalableImage *indicator = style()->indicatorImageHorizontal();
+        const MScalableImage *indicator = activeStyle->indicatorImageHorizontal();
         if (!indicator) {
             mWarning("MPositionIndicatorView") << "could not get \"indicator-image-horizontal\"";
             return;
         }
 
-        const MScalableImage *rail = style()->backgroundImageHorizontal();
+        const MScalableImage *rail = activeStyle->backgroundImageHorizontal();
 
         int indicatorPixmapSizeY = indicator->pixmap()->height();
-        int indicatorWidth = qMax(style()->minIndicatorSize(), int((vpSize.width()/pRange.width())*size().width()));
+        int indicatorWidth = qMax(activeStyle->minIndicatorSize(), int((vpSize.width()/pRange.width())*size().width()));
         int indicatorPositionX = (pPos.x()/pRange.width())*size().width();
 
         if (indicatorPositionX + indicatorWidth > size().width()) {
