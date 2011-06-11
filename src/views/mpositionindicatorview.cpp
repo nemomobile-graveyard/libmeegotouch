@@ -60,14 +60,15 @@ void MPositionIndicatorViewPrivate::init(MPositionIndicator *controller)
 
 bool MPositionIndicatorViewPrivate::isInSwitcher() const
 {
-    bool isInSwitcher = false;
-    if (controller->scene() && !controller->scene()->views().isEmpty()) {
-        MWindow* win = qobject_cast<MWindow*>(controller->scene()->views().at(0));
-        if (win) {
-            isInSwitcher = win->isInSwitcher();
-        }
+    if (const QGraphicsScene *const scene = controller->scene()) {
+        const QList<QGraphicsView*> views = scene->views();
+        if (views.isEmpty())
+            return false;
+
+        if (const MWindow *const win = qobject_cast<MWindow*>(views.first()))
+            return win->isInSwitcher();
     }
-    return isInSwitcher;
+    return false;
 }
 
 bool MPositionIndicatorViewPrivate::contentFullyVisible() const
