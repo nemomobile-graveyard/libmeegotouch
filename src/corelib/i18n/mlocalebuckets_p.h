@@ -82,7 +82,11 @@ public:
         collator(MLocale()),
 #endif
         sortOrder(sortOrder)
-        {}
+        {
+#ifdef HAVE_ICU
+            collator.setStrength(MLocale::CollatorStrengthQuaternary);
+#endif
+        }
 
     bool operator()(const MLocaleBucketItem &left, const MLocaleBucketItem &right)
     {

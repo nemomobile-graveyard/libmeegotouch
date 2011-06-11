@@ -29,6 +29,7 @@ MLocaleBucketsPrivate::MLocaleBucketsPrivate() :
     q_ptr(0)
 {
 #ifdef HAVE_ICU
+    collator.setStrength(MLocale::CollatorStrengthPrimary);
     allBuckets = locale.exemplarCharactersIndex();
 #endif
 }

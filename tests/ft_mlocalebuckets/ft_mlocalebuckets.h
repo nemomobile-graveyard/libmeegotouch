@@ -32,6 +32,7 @@ private slots:
     void cleanupTestCase();
     void initTestCase();
     void testEnglishGrouping();
+    void testChinesePinyinGrouping();
     void testGermanPhonebookGrouping();
     void testCzechGrouping();
     void testRemove();
