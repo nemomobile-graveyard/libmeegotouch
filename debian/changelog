@@ -1,8 +1,11 @@
-libmeegotouch (0.22.4~1) unstable; urgency=low
+libmeegotouch (0.22.4-1) unstable; urgency=low
 
-  * Unreleased
+  * Fixes: NB#263221
+  * Fixes NB#248658 - MPhysics2dPanning: Panning is restarted when a very still finger is lifted
+  * Fixes: NB#251756 - Tap down effect on the active tab
+  * Fixes: NB#263675 - Selected contacts are not added in To field in the mentioned scenario
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 09 Jun 2011 15:50:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 13 Jun 2011 15:36:02 +0300
 
 libmeegotouch (0.22.3-1) unstable; urgency=low
 
