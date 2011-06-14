@@ -68,6 +68,9 @@ public:
 
     void setWidget(QGraphicsWidget *widget);
 
+public slots:
+    void hideSlot();
+
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 

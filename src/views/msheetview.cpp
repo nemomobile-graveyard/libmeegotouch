@@ -87,6 +87,11 @@ void MSheetSlot::resizeChildWidget()
     }
 }
 
+void MSheetSlot::hideSlot()
+{
+    setVisible(false);
+}
+
 //////////////
 /// MSheetCentralSlot
 
@@ -272,11 +277,16 @@ void MSheetViewPrivate::updateHeaderVisibility()
     if (!animationGroup)
         setupAnimation();
 
-    if (q->model()->headerVisible())
+    if (q->model()->headerVisible()) {
         animationGroup->setDirection(QAbstractAnimation::Backward);
-    else
+        q->disconnect(animationGroup, SIGNAL(finished()), headerSlot, SLOT(hideSlot()));
+    } else {
         animationGroup->setDirection(QAbstractAnimation::Forward);
+        q->connect(animationGroup, SIGNAL(finished()), headerSlot, SLOT(hideSlot()));
+    }
 
+    if (!headerSlot->isVisible())
+        headerSlot->setVisible(true);
     animationGroup->start();
 }
 
