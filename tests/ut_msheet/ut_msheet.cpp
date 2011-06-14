@@ -25,6 +25,9 @@
 #include <QGraphicsView>
 #include <MDismissEvent>
 
+#include <mscenemanager.h>
+#include <mwindow.h>
+
 #include <msheet.h>
 
 // QCOMPARE doesn't know MSceneWindow::SceneWindowSate enum. Thus it won't
@@ -145,6 +148,43 @@ void Ut_MSheet::testMakingSheetDisappearHidesStandAloneWindow()
 
     // Disappearance is immediate from scene manager's point of view
     STATE_COMPARE(subject->sceneWindowState(), MSceneWindow::Disappeared);
+}
+
+/*
+  If user wants its centralWidget to be bigger than the area of the
+  central slot he has to add a MPannableViewport himself.
+  This behavior also unsures that our internal pannable viewport
+  doesn't messes up with some other pannable viewport that user might
+  add as a child of his central widget
+  */
+void Ut_MSheet::testCentralWidgetDoesntGrowBeyondSlotLimits()
+{
+    QGraphicsWidget *bigWidget = new QGraphicsWidget;
+    MSceneManager *sceneManager = new MSceneManager;
+    MWindow *window = new MWindow(sceneManager);
+
+    // Make bigWidget want to be bigger than the whole screen
+    QSizeF bigSize = window->size();
+    bigSize *= 2;
+    bigWidget->setPreferredSize(bigSize);
+    bigWidget->setMaximumSize(bigSize*4);
+
+    subject->setCentralWidget(bigWidget);
+
+    sceneManager->appearSceneWindowNow(subject);
+
+    // Make sure all layouts set the geometries of their widgets
+    app->processEvents();
+
+    QGraphicsWidget *slot = bigWidget->parentWidget();
+
+    QVERIFY(slot->size().width() <= window->size().width());
+    QVERIFY(slot->size().height() <= window->size().height());
+
+    // bigWidget should have exactly the same size of the slot
+    // that contains it.
+    QVERIFY(bigWidget->size().width() == slot->size().width());
+    QVERIFY(bigWidget->size().height() == slot->size().height());
 }
 
 QGraphicsView *Ut_MSheet::fetchStandAloneWindowOfSubject()

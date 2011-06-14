@@ -45,6 +45,7 @@ private slots:
     void testHidingStandAloneWindowMakesSheetDisappear();
     void testDismissingSheetClosesStandAloneWindow();
     void testMakingSheetDisappearHidesStandAloneWindow();
+    void testCentralWidgetDoesntGrowBeyondSlotLimits();
 
 private:
     QGraphicsView *fetchStandAloneWindowOfSubject();
