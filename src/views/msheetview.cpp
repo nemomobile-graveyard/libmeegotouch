@@ -117,30 +117,33 @@ void MSheetCentralSlot::setWidget(QGraphicsWidget *widget)
         return;
 
     if (currentWidget) {
-        if (pannableViewport)
-            pannableViewport->setWidget(0);
-
-        currentWidget->setParentItem(0);
-        if (scene())
-            scene()->removeItem(currentWidget);
+        if (pannedSlot) {
+            // slot will take care of removing widget from scene
+            pannedSlot->setWidget(0);
+        } else {
+            // we have to remove widget from scene ourselves
+            currentWidget->setParentItem(0);
+            if (scene())
+                scene()->removeItem(currentWidget);
+        }
     }
 
     if (widget) {
         widgetPointer = widget;
 
         if (qobject_cast<MPannableViewport*>(widget)) {
-            destroyPannableViewport();
+            destroyPannableViewportAndPannedSlot();
             widget->setParentItem(this);
             widget->setPos(0.0f, 0.0f);
         } else {
-            createPannableViewport();
-            pannableViewport->setWidget(widget);
+            createPannableViewportAndPannedSlot();
+            pannedSlot->setWidget(widget);
         }
 
         resizeChildWidget();
     } else {
         widgetPointer.clear();
-        destroyPannableViewport();
+        destroyPannableViewportAndPannedSlot();
     }
 }
 
@@ -172,13 +175,14 @@ void MSheetCentralSlot::resizeChildWidget()
     }
 }
 
-void MSheetCentralSlot::destroyPannableViewport()
+void MSheetCentralSlot::destroyPannableViewportAndPannedSlot()
 {
     delete pannableViewport;
     pannableViewport = 0;
+    pannedSlot = 0;
 }
 
-void MSheetCentralSlot::createPannableViewport()
+void MSheetCentralSlot::createPannableViewportAndPannedSlot()
 {
     if (pannableViewport)
         return;
@@ -187,6 +191,11 @@ void MSheetCentralSlot::createPannableViewport()
     pannableViewport->setPos(0.0f, 0.0f);
     pannableViewport->setObjectName("MSheetCentralSlotPannableViewport");
     pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+
+    pannedSlot = new MSheetSlot;
+    pannedSlot->setObjectName("MSheetCentralSlotPannedSlot");
+    pannedSlot->setFlag(QGraphicsItem::ItemHasNoContents);
+    pannableViewport->setWidget(pannedSlot);
 }
 
 //////////////

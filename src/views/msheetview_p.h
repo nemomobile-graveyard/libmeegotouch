@@ -101,13 +101,18 @@ protected:
 
 private:
     void resizeChildWidget();
-    void destroyPannableViewport();
-    void createPannableViewport();
+    void destroyPannableViewportAndPannedSlot();
+    void createPannableViewportAndPannedSlot();
 
     // The sole purpose of this internal pannable is to guarantee
     // proper input widget relocation if the central widget doesn't
     // have a pannable viewport.
     MPannableViewport *pannableViewport;
+    // We put the widget inside a slot instead of directly into the
+    // pannable viewport to ensure that its size hints are not obeyed
+    // by our internal pannable viewport.
+    MSheetSlot *pannedSlot;
+
 
     QWeakPointer<QGraphicsWidget> widgetPointer;
     M_STYLABLE_WIDGET(MStylableWidgetStyle)
