@@ -200,6 +200,7 @@ SUBDIRS     =  \
     ut_mgraphicsclipeffect \
     ut_mwidgetanimation \
     ut_mcolorcombobox \
+    ut_mgriditem \
 
 # enable only when we have icu available
 
