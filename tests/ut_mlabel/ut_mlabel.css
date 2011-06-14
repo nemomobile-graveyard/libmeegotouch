@@ -7,6 +7,11 @@ MLabelStyle {
     margin-top: 0;
     margin-bottom: 0;
 
+    reactive-margin-left: 0;
+    reactive-margin-right: 0;
+    reactive-margin-top: 0;
+    reactive-margin-bottom: 0;
+
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
