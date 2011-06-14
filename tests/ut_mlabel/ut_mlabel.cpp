@@ -90,6 +90,10 @@ MApplication *app;
 
 void Ut_MLabel::initTestCase()
 {
+#ifndef __arm__
+    QApplication::setGraphicsSystem("raster");
+#endif
+
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mlabel" };
     app = new MApplication(argc, app_name);

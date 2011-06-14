@@ -46,6 +46,10 @@ MApplication *app;
 Ut_AllWidgets::Ut_AllWidgets()
     : m_scene( 0 )
 {
+#ifndef __arm__
+    QApplication::setGraphicsSystem("raster");
+#endif
+
     static int argc = 1;
     static char *argv[1] = { (char *) "./ut_allwidgets" };
     app = new MApplication(argc, argv);
