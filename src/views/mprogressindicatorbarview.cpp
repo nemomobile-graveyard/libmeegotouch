@@ -159,7 +159,7 @@ void MProgressIndicatorBarViewPrivate::animate(bool animate)
 {
     Q_Q(MProgressIndicatorBarView);
 
-    animate = (animate && q->model()->unknownDuration());
+    animate = (animate && q->model()->unknownDuration() && !inSwitcher);
     if (animate)
         animationTimer->start();
     else
@@ -443,7 +443,14 @@ void MProgressIndicatorBarViewPrivate::createAnimationCache()
 
     QPainter painter;
 
-    int sliceWidth = 1;
+    int speed = s->speed();
+    qreal fps = static_cast<qreal>(s->refreshRate());
+    if (fps <= 0)
+       fps = 5;
+
+    int sliceWidth = (1.f / fps) * speed;
+    if (sliceWidth == 0)
+        sliceWidth = 1;
     int sliceX;
     if (!reverse)
         sliceX = -cacheSize;
