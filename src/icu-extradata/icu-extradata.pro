@@ -67,13 +67,18 @@ greaterThan(ICUVERSION, 4.4) {
                  data/curr/zh_HK.txt \
                  data/curr/zh_Hans_HK.txt \
                  data/curr/zh_Hant_HK.txt
-    REGIONTXT  = 
+    ZONETXT    = data/zone/bg.txt \
+                 data/zone/sk.txt \
+                 data/zone/sr.txt \
+                 data/zone/zh.txt
+    REGIONTXT  =
 } else {
     # old icu version, just do nothing
     LOCALESTXT = # empty, do nothing
     LANGTXT =    # empty, do nothing
     COLLTXT =    # empty, do nothing
     CURRTXT =    # empty, do nothing
+    ZONETXT =    # empty, do nothing
     REGIONTXT =  # empty, do nothing
     dummy.files = dummy-icu42-workaround-this-file-never-exists
     dummy.CONFIG += no_check_exist
@@ -96,6 +101,7 @@ LOCALESRES = $$installPaths(LOCALESTXT)
 LANGRES    = $$installPaths(LANGTXT)
 COLLRES    = $$installPaths(COLLTXT)
 CURRRES    = $$installPaths(CURRTXT)
+ZONERES    = $$installPaths(ZONETXT)
 REGIONRES  = $$installPaths(REGIONTXT)
 
 isEqual(TEMPLATE_PREFIX, vc):vcproj=1
@@ -143,6 +149,13 @@ curr.commands += mkdir -p $$OUT_PWD/$$ICUUSRDATA/curr && $$ICUBINDIR/genrb -d $$
 curr.CONFIG = no_link target_predeps
 QMAKE_EXTRA_COMPILERS += curr
 
+zone.name = icu-zone-extradata-builder
+zone.input = ZONETXT
+zone.output = $$OUT_PWD/$$ICUUSRDATA/zone/${QMAKE_FILE_BASE}.res
+zone.commands += mkdir -p $$OUT_PWD/$$ICUUSRDATA/zone && $$ICUBINDIR/genrb -d $$OUT_PWD/$$ICUUSRDATA/zone -s $$IN_PWD -e UTF-8 ${QMAKE_FILE_IN}
+zone.CONFIG = no_link target_predeps
+QMAKE_EXTRA_COMPILERS += zone
+
 region.name = icu-region-extradata-builder
 region.input = REGIONTXT
 region.output = $$OUT_PWD/$$ICUUSRDATA/region/${QMAKE_FILE_BASE}.res
@@ -169,6 +182,11 @@ currres.files = $$CURRRES
 currres.CONFIG += no_check_exist
 currres.path = $$M_ICUEXTRADATA_DIR/$$ICUUSRDATA/curr
 INSTALLS += currres
+
+zoneres.files = $$ZONERES
+zoneres.CONFIG += no_check_exist
+zoneres.path = $$M_ICUEXTRADATA_DIR/$$ICUUSRDATA/zone
+INSTALLS += zoneres
 
 regionres.files = $$REGIONRES
 regionres.CONFIG += no_check_exist

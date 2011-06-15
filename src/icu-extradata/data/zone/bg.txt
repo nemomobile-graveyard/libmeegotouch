@@ -1,0 +1,5 @@
+bg{
+    zoneStrings{
+        hourFormat { "+HH:mm;-HH:mm" }
+    }
+}

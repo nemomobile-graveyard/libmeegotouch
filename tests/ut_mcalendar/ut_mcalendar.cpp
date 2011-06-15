@@ -86,7 +86,7 @@ void Ut_MCalendar::testTimeZonesInCountry_data()
         << (QStringList() << "Europe/Helsinki");
     QTest::newRow("JP")
         << "JP"
-        << (QStringList() << "Asia/Tokyo" << "JST" << "Japan");
+        << (QStringList() << "Asia/Tokyo");
 }
 
 void Ut_MCalendar::testTimeZonesInCountry()
@@ -1998,7 +1998,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "2008年7月21日星期一"
         << "下午2:31"
         << "下午2:31:00"
-        << "格林尼治标准时间+0300下午2时31分00秒"
+        << "格林尼治标准时间+03:00下午2时31分00秒"
         << "东欧夏令时间下午2时31分00秒";
     QTest::newRow("21.7.2008_zh_CN_Gregorian")
         << QString("fi_FI")
