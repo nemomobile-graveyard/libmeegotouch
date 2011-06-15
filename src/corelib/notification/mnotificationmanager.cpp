@@ -37,13 +37,21 @@ MNotificationManager::MNotificationManager() :
         return;
     }
 
-    QFileInfo appFileInfo(QCoreApplication::applicationFilePath());
-    MFileDataStore userIdStore(DATA_PATH + appFileInfo.fileName() + ".data");
+    // Resolve application name from the application's path. If the application name is applauncherd.bin, resolve it from the first argument
+    QString appName = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
+    if (appName == "applauncherd.bin") {
+        QStringList args = QCoreApplication::arguments();
+        if (!args.isEmpty()) {
+            appName = QFileInfo(args.first()).fileName();
+        }
+    }
+
+    MFileDataStore userIdStore(DATA_PATH + appName + ".data");
     if (!userIdStore.isReadable()) {
         return;
     }
 
-    QString appId = QString("id/") + appFileInfo.fileName();
+    QString appId = QString("id/") + appName;
 
     // Check if a userId for an application with this name already exists
     if (userIdStore.contains(appId)) {
