@@ -201,6 +201,7 @@ SUBDIRS     =  \
     ut_mwidgetanimation \
     ut_mcolorcombobox \
     ut_mgriditem \
+    ut_mlistitem \
 
 # enable only when we have icu available
 

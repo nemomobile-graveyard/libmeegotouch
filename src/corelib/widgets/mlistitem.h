@@ -90,6 +90,10 @@ protected:
 private:   
     Q_DECLARE_PRIVATE(MListItem)
     Q_DISABLE_COPY(MListItem)
+
+#ifdef UNIT_TEST
+    friend class Ut_MListItem;
+#endif
 };
 
 #endif // MLISTITEM_H
