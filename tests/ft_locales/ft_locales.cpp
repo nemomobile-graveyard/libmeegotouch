@@ -740,7 +740,7 @@ void Ft_Locales::testMLocaleLanguageEndonym_data()
             << QString("中文 (中国大陆)");
     QTest::newRow("zh_HK")
             << QString("zh_HK")
-            << QString("繁體中文 (香港)");
+            << QString("中文 (香港)");
     QTest::newRow("zh_TW")
             << QString("zh_TW")
             << QString("中文 (台灣)");
