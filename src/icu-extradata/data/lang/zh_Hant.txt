@@ -503,12 +503,12 @@ zh_Hant{
         zh_CN{"中文 (中国大陆)"}
         zh_Hans_CN{"中文 (中国大陆)"}
         zh_Hant_CN{"中文 (中國大陸)"}
-        zh_SG{"中文(新加坡)"}
+        zh_SG{"中文 (新加坡)"}
         zh_Hans_SG{"中文 (新加坡)"}
         zh_Hant_SG{"中文 (新加坡)"}
-        zh_HK{"繁體中文 (香港)"}
+        zh_HK{"中文 (香港)"}
         zh_Hans_HK{"中文 (香港)"}
-        zh_Hant_HK{"繁體中文 (香港)"}
+        zh_Hant_HK{"中文 (香港)"}
         zh_MO{"中文 (澳門)"}
         zh_Hans_MO{"中文 (澳门)"}
         zh_Hant_MO{"中文 (澳門)"}
