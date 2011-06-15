@@ -1,0 +1,2026 @@
+qtn_clk_city_china_qingdao Qingdao Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_st_pierre_miquelon_pierre Saint-Pierre America/Miquelon :
+        qtn_clk_city_st_pierre_miquelon_pierre Saint-Pierre
+qtn_clk_city_bulg_sofia Sofia Europe/Sofia :
+        qtn_clk_city_bulg_sofia Sofia
+qtn_clk_city_usa_hatford Hartford, Connecticut America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_switzerland_zurich Zurich Europe/Zurich :
+        qtn_clk_city_switzerland_zurich Zurich
+        qtn_clk_city_switz_bern Bern
+qtn_clk_city_usa_miami Miami, Florida America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_martinique_fort_de_franc Fort-de-France America/Martinique :
+        qtn_clk_city_martinique_fort_de_franc Fort-de-France
+qtn_clk_city_gambia_banjul Banjul Africa/Banjul :
+        qtn_clk_city_gambia_banjul Banjul
+qtn_clk_city_qatar_doha Doha Asia/Qatar :
+        qtn_clk_city_qatar_doha Doha
+qtn_clk_city_lebanon_beirut Beirut Asia/Beirut :
+        qtn_clk_city_lebanon_beirut Beirut
+qtn_clk_city_norw_oslo Oslo Europe/Oslo :
+        qtn_clk_city_norw_oslo Oslo
+qtn_clk_city_bra_fortaleza Fortaleza America/Fortaleza :
+        qtn_clk_city_bra_fortaleza Fortaleza
+        qtn_clk_city_bra_sao_luis Sao Luis
+        qtn_clk_city_bra_natal Natal
+        qtn_clk_city_bra_teresina Teresina
+qtn_clk_city_png_portmoresby Port Moresby Pacific/Port_Moresby :
+        qtn_clk_city_png_portmoresby Port Moresby
+qtn_clk_city_canada_charlottetown Charlottetown America/Halifax :
+        qtn_clk_city_canada_halifax Halifax
+        qtn_clk_city_canada_charlottetown Charlottetown
+qtn_clk_city_christmas_island_christmas The Settlement Indian/Christmas :
+        qtn_clk_city_christmas_island_christmas The Settlement
+qtn_clk_city_georgia_tbilisi Tbilisi Asia/Tbilisi :
+        qtn_clk_city_georgia_tbilisi Tbilisi
+qtn_clk_city_usa_billings Billings, Montana America/Denver :
+        qtn_clk_city_usa_denver Denver, Colorado
+        qtn_clk_city_usa_billings Billings, Montana
+        qtn_clk_city_usa_saltlakec Salt Lake City, Utah
+        qtn_clk_city_usa_albuquer Albuquerque, New Mexico
+        qtn_clk_city_usa_cheyenne Cheyenne, Wyoming
+qtn_clk_city_mexico_chihua Chihuahua America/Chihuahua :
+        qtn_clk_city_mexico_chihua Chihuahua
+qtn_clk_city_iraq_baghdad Baghdad Asia/Baghdad :
+        qtn_clk_city_iraq_baghdad Baghdad
+qtn_clk_city_germ_berlin Berlin Europe/Berlin :
+        qtn_clk_city_germ_berlin Berlin
+qtn_clk_city_rwanda_kigali Kigali Africa/Kigali :
+        qtn_clk_city_rwanda_kigali Kigali
+qtn_clk_city_suriname_paramaribo Paramaribo America/Paramaribo :
+        qtn_clk_city_suriname_paramaribo Paramaribo
+qtn_clk_city_latvia_riga Riga Europe/Riga :
+        qtn_clk_city_latvia_riga Riga
+qtn_clk_city_canada_yellowknife Yellowknife America/Yellowknife :
+        qtn_clk_city_canada_yellowknife Yellowknife
+qtn_clk_city_faroe_islands_torshavn Tórshavn Atlantic/Faroe :
+        qtn_clk_city_faroe_islands_torshavn Tórshavn
+qtn_clk_city_mozambique_maputo Maputo Africa/Maputo :
+        qtn_clk_city_mozambique_maputo Maputo
+qtn_clk_city_swaziland_mbabane Mbabane Africa/Mbabane :
+        qtn_clk_city_swaziland_mbabane Mbabane
+qtn_clk_city_bosnia_sarajevo Sarajevo Europe/Sarajevo :
+        qtn_clk_city_bosnia_sarajevo Sarajevo
+qtn_clk_city_djibouti_djibouti Djibouti Africa/Djibouti :
+        qtn_clk_city_djibouti_djibouti Djibouti
+qtn_clk_city_macau Macau Asia/Macau :
+        qtn_clk_city_macau Macau
+qtn_clk_city_austria_vienna Vienna Europe/Vienna :
+        qtn_clk_city_austria_vienna Vienna
+qtn_clk_city_baham_nassau Nassau America/Nassau :
+        qtn_clk_city_baham_nassau Nassau
+qtn_clk_city_canada_cambridge_bay Cambridge Bay America/Cambridge_Bay :
+        qtn_clk_city_canada_cambridge_bay Cambridge Bay
+qtn_clk_city_south_georgia_grytviken Grytviken Atlantic/South_Georgia :
+        qtn_clk_city_south_georgia_grytviken Grytviken
+qtn_clk_city_st_kitts_nevis_basseterre Basseterre America/St_Kitts :
+        qtn_clk_city_st_kitts_nevis_basseterre Basseterre
+qtn_clk_city_nicarag_managua Managua America/Managua :
+        qtn_clk_city_nicarag_managua Managua
+qtn_clk_city_china_kunming Kunming Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_belg_brussels Brussels Europe/Brussels :
+        qtn_clk_city_belg_brussels Brussels
+qtn_clk_city_indon_jayapura Jayapura Asia/Jayapura :
+        qtn_clk_city_indon_jayapura Jayapura
+qtn_clk_city_syria_damascus Damascus Asia/Damascus :
+        qtn_clk_city_syria_damascus Damascus
+qtn_clk_city_usa_charlotte_amalie Charlotte Amalie, United States Virgin Islands America/St_Thomas :
+        qtn_clk_city_usa_charlotte_amalie Charlotte Amalie, United States Virgin Islands
+qtn_clk_city_china_changsha Changsha Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_usa_minneap Minneapolis, Minnesota America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_seychelles_victoria Victoria Indian/Mahe :
+        qtn_clk_city_seychelles_victoria Victoria
+qtn_clk_city_tanzania_dar_es_salaam Dar es Salaam Africa/Dar_es_Salaam :
+        qtn_clk_city_tanzania_dar_es_salaam Dar es Salaam
+qtn_clk_city_aus_perth Perth Australia/Perth :
+        qtn_clk_city_aus_perth Perth
+qtn_clk_city_aus_hobart Hobart Australia/Hobart :
+        qtn_clk_city_aus_hobart Hobart
+qtn_clk_city_usa_boise Boise, Idaho America/Boise :
+        qtn_clk_city_usa_boise Boise, Idaho
+qtn_clk_city_canada_dawson_creek Dawson Creek America/Dawson_Creek :
+        qtn_clk_city_canada_dawson_creek Dawson Creek
+qtn_clk_city_cocos_islands_cocos West Island Indian/Cocos :
+        qtn_clk_city_cocos_islands_cocos West Island
+qtn_clk_city_canada_rainy_river Rainy River America/Rainy_River :
+        qtn_clk_city_canada_rainy_river Rainy River
+qtn_clk_city_canada_calgar Calgary America/Edmonton :
+        qtn_clk_city_canada_edmonton Edmonton
+        qtn_clk_city_canada_calgar Calgary
+        qtn_clk_city_canada_lloydminster Lloydminster
+        qtn_clk_city_canada_cranbrook Cranbrook
+qtn_clk_city_china_guangzhou Guangzhou Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_aus_adelaide Adelaide Australia/Adelaide :
+        qtn_clk_city_aus_adelaide Adelaide
+qtn_clk_city_safric_johburg Johannesburg Africa/Johannesburg :
+        qtn_clk_city_safric_johburg Johannesburg
+        qtn_clk_city_safric_pretoria Pretoria
+qtn_clk_city_bra_riojan Rio de Janeiro America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_bra_sao_luis Sao Luis America/Fortaleza :
+        qtn_clk_city_bra_fortaleza Fortaleza
+        qtn_clk_city_bra_sao_luis Sao Luis
+        qtn_clk_city_bra_natal Natal
+        qtn_clk_city_bra_teresina Teresina
+qtn_clk_city_micronesia_ponape Palikir Pacific/Pohnpei :
+        qtn_clk_city_micronesia_ponape Palikir
+        qtn_clk_city_micronesia_colonia Colonia
+qtn_clk_city_vanuatu_port_vila Port Vila Pacific/Efate :
+        qtn_clk_city_vanuatu_port_vila Port Vila
+qtn_clk_city_usa_sanfranci San Francisco, California America/Los_Angeles :
+        qtn_clk_city_usa_losange Los Angeles, California
+        qtn_clk_city_usa_sanfranci San Francisco, California
+        qtn_clk_city_usa_seattle Seattle, Washington
+        qtn_clk_city_usa_portland Portland, Oregon
+        qtn_clk_city_usa_lasvega Las Vegas, Nevada
+qtn_clk_city_drc_kinshasa Kinshasa Africa/Kinshasa :
+        qtn_clk_city_drc_kinshasa Kinshasa
+qtn_clk_city_rus_stpeters St. Petersburg Europe/Moscow :
+        qtn_clk_city_rus_moscow Moscow
+        qtn_clk_city_rus_stpeters St. Petersburg
+qtn_clk_city_bra_curitiba Curitiba America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_nigeria_abuja Abuja Africa/Lagos :
+        qtn_clk_city_nigeria_abuja Abuja
+qtn_clk_city_north_korea_pyongyang Pyongyang Asia/Pyongyang :
+        qtn_clk_city_north_korea_pyongyang Pyongyang
+qtn_clk_city_phoenix_islands_rawaki Kanton Pacific/Enderbury :
+        qtn_clk_city_phoenix_islands_rawaki Kanton
+qtn_clk_city_china_hefei Hefei Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_norfolk_kingston Kingston Pacific/Norfolk :
+        qtn_clk_city_norfolk_kingston Kingston
+qtn_clk_city_gabon_libreville Libreville Africa/Libreville :
+        qtn_clk_city_gabon_libreville Libreville
+qtn_clk_city_spain_madrid Madrid Europe/Madrid :
+        qtn_clk_city_spain_madrid Madrid
+qtn_clk_city_canada_montreal Montreal America/Montreal :
+        qtn_clk_city_canada_montreal Montreal
+qtn_clk_city_rus_magadan Magadan Asia/Magadan :
+        qtn_clk_city_rus_magadan Magadan
+qtn_clk_city_sierra_leone_freetown Freetown Africa/Freetown :
+        qtn_clk_city_sierra_leone_freetown Freetown
+qtn_clk_city_china_nanchang Nanchang Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_egypt_cairo Cairo Africa/Cairo :
+        qtn_clk_city_egypt_cairo Cairo
+qtn_clk_city_tonga_nuku Nuku'alofa Pacific/Tongatapu :
+        qtn_clk_city_tonga_nuku Nuku'alofa
+qtn_clk_city_usa_boston Boston, Massachusetts America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_guinea_bissau_bissau Bissau Africa/Bissau :
+        qtn_clk_city_guinea_bissau_bissau Bissau
+qtn_clk_city_burundi_bujumbura Bujumbura Africa/Bujumbura :
+        qtn_clk_city_burundi_bujumbura Bujumbura
+qtn_clk_city_aruba_oranjestad Oranjestad America/Aruba :
+        qtn_clk_city_aruba_oranjestad Oranjestad
+qtn_clk_city_uk_london London Europe/London :
+        qtn_clk_city_uk_london London
+        qtn_clk_city_uk_cardiff Cardiff
+        qtn_clk_city_ireland_belfast Belfast
+        qtn_clk_city_uk_edingbu Edinburgh
+qtn_clk_city_paraqu_asunc Asunción America/Asuncion :
+        qtn_clk_city_paraqu_asunc Asunción
+qtn_clk_city_iceland_reykjavik Reykjavík Atlantic/Reykjavik :
+        qtn_clk_city_iceland_reykjavik Reykjavík
+qtn_clk_city_turkmenistan_ashgabat Ashgabat Asia/Ashgabat :
+        qtn_clk_city_turkmenistan_ashgabat Ashgabat
+qtn_clk_city_nzealand_welling Wellington Pacific/Auckland :
+        qtn_clk_city_newz_auckland Auckland
+        qtn_clk_city_nzealand_welling Wellington
+qtn_clk_city_greenl_thule Thule America/Thule :
+        qtn_clk_city_greenl_thule Thule
+qtn_clk_city_nepal_kathma Kathmandu Asia/Kathmandu :
+        qtn_clk_city_nepal_kathma Kathmandu
+qtn_clk_city_safric_pretoria Pretoria Africa/Johannesburg :
+        qtn_clk_city_safric_johburg Johannesburg
+        qtn_clk_city_safric_pretoria Pretoria
+qtn_clk_city_andorra_la_vella Andorra La Vella Europe/Andorra :
+        qtn_clk_city_andorra_la_vella Andorra La Vella
+qtn_clk_city_china_chongqing Chongqing Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_usa_losange Los Angeles, California America/Los_Angeles :
+        qtn_clk_city_usa_losange Los Angeles, California
+        qtn_clk_city_usa_sanfranci San Francisco, California
+        qtn_clk_city_usa_seattle Seattle, Washington
+        qtn_clk_city_usa_portland Portland, Oregon
+        qtn_clk_city_usa_lasvega Las Vegas, Nevada
+qtn_clk_city_switz_bern Bern Europe/Zurich :
+        qtn_clk_city_switzerland_zurich Zurich
+        qtn_clk_city_switz_bern Bern
+qtn_clk_city_china_shenzhen Shenzhen Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_china_tianjin Tianjin Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_est_tallinn Tallinn Europe/Tallinn :
+        qtn_clk_city_est_tallinn Tallinn
+qtn_clk_city_falkland_stanley Stanley Atlantic/Stanley :
+        qtn_clk_city_falkland_stanley Stanley
+        qtn_clk_city_argen_puerto_argentino Puerto Argentino
+qtn_clk_city_pol_warsaw Warsaw Europe/Warsaw :
+        qtn_clk_city_pol_warsaw Warsaw
+qtn_clk_city_bra_maceio Maceio America/Maceio :
+        qtn_clk_city_bra_maceio Maceio
+        qtn_clk_city_bra_aragaju Aracaju
+qtn_clk_city_canada_coral_harbour Coral Harbour America/Atikokan :
+        qtn_clk_city_canada_atikokan Atikokan
+        qtn_clk_city_canada_coral_harbour Coral Harbour
+qtn_clk_city_jordan_amman Amman Asia/Amman :
+        qtn_clk_city_jordan_amman Amman
+qtn_clk_city_rus_vladivost Vladivostok Asia/Vladivostok :
+        qtn_clk_city_rus_vladivost Vladivostok
+qtn_clk_city_usa_augusta Augusta, Maine America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_french_pol_gambier_islands Gambier Islands Pacific/Gambier :
+        qtn_clk_city_french_pol_gambier_islands Gambier Islands
+qtn_clk_city_cameroon_yaounde Yaoundé Africa/Douala :
+        qtn_clk_city_cameroon_yaounde Yaoundé
+qtn_clk_city_laos_vientiane Vientiane Asia/Vientiane :
+        qtn_clk_city_laos_vientiane Vientiane
+qtn_clk_city_kenya_nairob Nairobi Africa/Nairobi :
+        qtn_clk_city_kenya_nairob Nairobi
+qtn_clk_city_mexico_sonora Sonora America/Hermosillo :
+        qtn_clk_city_mexico_sonora Sonora
+qtn_clk_city_west_sahara_el_aaiun Laayoune Africa/El_Aaiun :
+        qtn_clk_city_west_sahara_el_aaiun Laayoune
+qtn_clk_city_mauritania_nouakchott Nouakchott Africa/Nouakchott :
+        qtn_clk_city_mauritania_nouakchott Nouakchott
+qtn_clk_city_ethiopia_addis_ababa Addis Ababa Africa/Addis_Ababa :
+        qtn_clk_city_ethiopia_addis_ababa Addis Ababa
+qtn_clk_city_bra_recife Recife America/Recife :
+        qtn_clk_city_bra_recife Recife
+        qtn_clk_city_bra_joao_pessoa João Pessoa
+qtn_clk_city_bra_salvador Salvador America/Bahia :
+        qtn_clk_city_bra_salvador Salvador
+qtn_clk_city_usa_hawaii Honolulu, Hawaii Pacific/Honolulu :
+        qtn_clk_city_usa_hawaii Honolulu, Hawaii
+qtn_clk_city_elsalva_sansalva San Salvador America/El_Salvador :
+        qtn_clk_city_elsalva_sansalva San Salvador
+qtn_clk_city_jp_osaka Osaka Asia/Tokyo :
+        qtn_clk_city_jp_tokyo Tokyo
+        qtn_clk_city_jp_osaka Osaka
+        qtn_clk_city_jp_sapporo Sapporo
+qtn_clk_city_r_congo_brazzaville Brazzaville Africa/Brazzaville :
+        qtn_clk_city_r_congo_brazzaville Brazzaville
+qtn_clk_city_panama_panamac Panama City America/Panama :
+        qtn_clk_city_panama_panamac Panama City
+qtn_clk_city_jp_sapporo Sapporo Asia/Tokyo :
+        qtn_clk_city_jp_tokyo Tokyo
+        qtn_clk_city_jp_osaka Osaka
+        qtn_clk_city_jp_sapporo Sapporo
+qtn_clk_city_bra_brasilia Brasília America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_bra_manaus Manaus America/Manaus :
+        qtn_clk_city_bra_manaus Manaus
+qtn_clk_city_botswana_gaborone Gaborone Africa/Gaborone :
+        qtn_clk_city_botswana_gaborone Gaborone
+qtn_clk_city_slove_ljubljana Ljubljana Europe/Ljubljana :
+        qtn_clk_city_slove_ljubljana Ljubljana
+qtn_clk_city_belarus_minsk Minsk Europe/Minsk :
+        qtn_clk_city_belarus_minsk Minsk
+qtn_clk_city_romania_buch Bucharest Europe/Bucharest :
+        qtn_clk_city_romania_buch Bucharest
+qtn_clk_city_usa_bismarck Bismarck, North Dakota America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_argen_puerto_argentino Puerto Argentino Atlantic/Stanley :
+        qtn_clk_city_falkland_stanley Stanley
+        qtn_clk_city_argen_puerto_argentino Puerto Argentino
+qtn_clk_city_usa_desmoines Des Moines, Iowa America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_italy_rome Rome Europe/Rome :
+        qtn_clk_city_italy_rome Rome
+qtn_clk_city_canada_whitehorse Whitehorse America/Whitehorse :
+        qtn_clk_city_canada_whitehorse Whitehorse
+qtn_clk_city_turks_caicos_kingston Cockburn Town America/Grand_Turk :
+        qtn_clk_city_turks_caicos_kingston Cockburn Town
+qtn_clk_city_canada_creighton Creighton America/Regina :
+        qtn_clk_city_canada_regina Regina
+        qtn_clk_city_canada_creighton Creighton
+qtn_clk_city_jp_tokyo Tokyo Asia/Tokyo :
+        qtn_clk_city_jp_tokyo Tokyo
+        qtn_clk_city_jp_osaka Osaka
+        qtn_clk_city_jp_sapporo Sapporo
+qtn_clk_city_namibia_windhoek Windhoek Africa/Windhoek :
+        qtn_clk_city_namibia_windhoek Windhoek
+qtn_clk_city_liechtenstein_vaduz Vaduz Europe/Vaduz :
+        qtn_clk_city_liechtenstein_vaduz Vaduz
+qtn_clk_city_canada_lloydminster Lloydminster America/Edmonton :
+        qtn_clk_city_canada_edmonton Edmonton
+        qtn_clk_city_canada_calgar Calgary
+        qtn_clk_city_canada_lloydminster Lloydminster
+        qtn_clk_city_canada_cranbrook Cranbrook
+qtn_clk_city_guy_georgetown Georgetown America/Guyana :
+        qtn_clk_city_guy_georgetown Georgetown
+qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_china_beijing Beijing Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_drc_lubumbashi Lubumbashi Africa/Lubumbashi :
+        qtn_clk_city_drc_lubumbashi Lubumbashi
+qtn_clk_city_tuvalu_funafuti Funafuti Pacific/Funafuti :
+        qtn_clk_city_tuvalu_funafuti Funafuti
+qtn_clk_city_bf_ouagadougou Ouagadougou Africa/Ouagadougou :
+        qtn_clk_city_bf_ouagadougou Ouagadougou
+qtn_clk_city_niue_alofi Alofi Pacific/Niue :
+        qtn_clk_city_niue_alofi Alofi
+qtn_clk_city_uk_cardiff Cardiff Europe/London :
+        qtn_clk_city_uk_london London
+        qtn_clk_city_uk_cardiff Cardiff
+        qtn_clk_city_ireland_belfast Belfast
+        qtn_clk_city_uk_edingbu Edinburgh
+qtn_clk_city_usa_saltlakec Salt Lake City, Utah America/Denver :
+        qtn_clk_city_usa_denver Denver, Colorado
+        qtn_clk_city_usa_billings Billings, Montana
+        qtn_clk_city_usa_saltlakec Salt Lake City, Utah
+        qtn_clk_city_usa_albuquer Albuquerque, New Mexico
+        qtn_clk_city_usa_cheyenne Cheyenne, Wyoming
+qtn_clk_city_fiji_suva Suva Pacific/Fiji :
+        qtn_clk_city_fiji_suva Suva
+qtn_clk_city_madeira_funchal Funchal Atlantic/Madeira :
+        qtn_clk_city_madeira_funchal Funchal
+qtn_clk_city_mayotte_mamoudzou Mamoudzou Indian/Mayotte :
+        qtn_clk_city_mayotte_mamoudzou Mamoudzou
+qtn_clk_city_china_xian Xi'an Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_fra_paris Paris Europe/Paris :
+        qtn_clk_city_fra_paris Paris
+qtn_clk_city_easter_island_mataveri Hanga Roa Pacific/Easter :
+        qtn_clk_city_easter_island_mataveri Hanga Roa
+qtn_clk_city_canada_goose_bay Goose Bay America/Goose_Bay :
+        qtn_clk_city_canada_goose_bay Goose Bay
+qtn_clk_city_bra_araguaina Araguaina America/Araguaina :
+        qtn_clk_city_bra_araguaina Araguaina
+        qtn_clk_city_bra_palmas Palmas
+qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_canada_ottawa Ottawa America/Toronto :
+        qtn_clk_city_canada_toronto Toronto
+        qtn_clk_city_canada_ottawa Ottawa
+qtn_clk_city_vatican_vatican_city Vatican City Europe/Vatican :
+        qtn_clk_city_vatican_vatican_city Vatican City
+qtn_clk_city_bra_palmas Palmas America/Araguaina :
+        qtn_clk_city_bra_araguaina Araguaina
+        qtn_clk_city_bra_palmas Palmas
+qtn_clk_city_usa_evansville Evansville, Indiana America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_usa_providence Providence, Rhode Island America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_gibraltar_gibraltar Gibraltar Europe/Gibraltar :
+        qtn_clk_city_gibraltar_gibraltar Gibraltar
+qtn_clk_city_viet_hanoi Hanoi Asia/Ho_Chi_Minh :
+        qtn_clk_city_viet_hanoi Hanoi
+qtn_clk_city_bra_saopaulo São Paulo America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_bra_campo_grande Campo Grande America/Campo_Grande :
+        qtn_clk_city_bra_campo_grande Campo Grande
+qtn_clk_city_usa_seattle Seattle, Washington America/Los_Angeles :
+        qtn_clk_city_usa_losange Los Angeles, California
+        qtn_clk_city_usa_sanfranci San Francisco, California
+        qtn_clk_city_usa_seattle Seattle, Washington
+        qtn_clk_city_usa_portland Portland, Oregon
+        qtn_clk_city_usa_lasvega Las Vegas, Nevada
+qtn_clk_city_kerguelen_port_aux_francais Port-aux-Francais Indian/Kerguelen :
+        qtn_clk_city_kerguelen_port_aux_francais Port-aux-Francais
+qtn_clk_city_azores_ponta_delgada Ponta Delgada Atlantic/Azores :
+        qtn_clk_city_azores_ponta_delgada Ponta Delgada
+qtn_clk_city_puertor_sanjuan San Juan America/Argentina/San_Juan :
+        qtn_clk_city_puertor_sanjuan San Juan
+qtn_clk_city_usa_montpelier Montpelier, Vermont America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_cook_islands_rarotonga Avarua Pacific/Rarotonga :
+        qtn_clk_city_cook_islands_rarotonga Avarua
+qtn_clk_city_rus_irkutsk Irkutsk Asia/Irkutsk :
+        qtn_clk_city_rus_irkutsk Irkutsk
+qtn_clk_city_cyprus_nicosia Nicosia Asia/Nicosia :
+        qtn_clk_city_cyprus_nicosia Nicosia
+qtn_clk_city_armenia_yerevan Yerevan Asia/Yerevan :
+        qtn_clk_city_armenia_yerevan Yerevan
+qtn_clk_city_usa_columbus Columbus, Ohio America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_greece_athens Athens Europe/Athens :
+        qtn_clk_city_greece_athens Athens
+qtn_clk_city_indon_jakarta Jakarta Asia/Jakarta :
+        qtn_clk_city_indon_jakarta Jakarta
+qtn_clk_city_bra_belo_horizonte Belo Horizonte America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_skorea_seoul Seoul Asia/Seoul :
+        qtn_clk_city_skorea_seoul Seoul
+qtn_clk_city_bra_belem Belem America/Belem :
+        qtn_clk_city_bra_belem Belem
+        qtn_clk_city_bra_macapa Macapa
+qtn_clk_city_swe_stockholm Stockholm Europe/Stockholm :
+        qtn_clk_city_swe_stockholm Stockholm
+qtn_clk_city_newz_auckland Auckland Pacific/Auckland :
+        qtn_clk_city_newz_auckland Auckland
+        qtn_clk_city_nzealand_welling Wellington
+qtn_clk_city_rus_kaliningrad Kaliningrad Europe/Kaliningrad :
+        qtn_clk_city_rus_kaliningrad Kaliningrad
+qtn_clk_city_srilan_colombo Colombo Asia/Colombo :
+        qtn_clk_city_srilan_colombo Colombo
+qtn_clk_city_bra_macapa Macapa America/Belem :
+        qtn_clk_city_bra_belem Belem
+        qtn_clk_city_bra_macapa Macapa
+qtn_clk_city_china_suzhou Suzhou Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_usa_phoenix Phoenix, Arizona America/Phoenix :
+        qtn_clk_city_usa_phoenix Phoenix, Arizona
+qtn_clk_city_n_mariana_i_saipan Saipan Pacific/Saipan :
+        qtn_clk_city_usa_saipan Saipan, Northern Mariana Islands
+        qtn_clk_city_n_mariana_i_saipan Saipan
+qtn_clk_city_czeh_prague Prague Europe/Prague :
+        qtn_clk_city_czeh_prague Prague
+qtn_clk_city_aus_lord_howe_island Lord Howe Island Australia/Lord_Howe :
+        qtn_clk_city_aus_lord_howe_island Lord Howe Island
+qtn_clk_city_guadeloupe_pointe_a_pitre Basse-Terre America/Guadeloupe :
+        qtn_clk_city_guadeloupe_pointe_a_pitre Basse-Terre
+qtn_clk_city_jamaica_kings Kingston America/Jamaica :
+        qtn_clk_city_jamaica_kings Kingston
+qtn_clk_city_canada_iqaluit Iqaluit America/Iqaluit :
+        qtn_clk_city_canada_iqaluit Iqaluit
+qtn_clk_city_barbados_bridgetown Bridgetown America/Barbados :
+        qtn_clk_city_barbados_bridgetown Bridgetown
+qtn_clk_city_taiw_taipei Taipei Asia/Taipei :
+        qtn_clk_city_taiw_taipei Taipei
+qtn_clk_city_usa_birmingham Birmingham, Alabama America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_montserrat_olveston Brades Estate America/Montserrat :
+        qtn_clk_city_montserrat_olveston Brades Estate
+qtn_clk_city_serb_belgrade Belgrade Europe/Belgrade :
+        qtn_clk_city_serb_belgrade Belgrade
+qtn_clk_city_china_shijiazhuang Shijiazhuang Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_china_wuhan Wuhan Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_albania_tirane Tirana Europe/Tirane :
+        qtn_clk_city_albania_tirane Tirana
+qtn_clk_city_bra_goiania Goiania America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_usa_richmond Richmond, Virginia America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_bermu_hamilton Hamilton Atlantic/Bermuda :
+        qtn_clk_city_bermu_hamilton Hamilton
+qtn_clk_city_canada_stjohns St. John's America/St_Johns :
+        qtn_clk_city_canada_stjohns St. John's
+qtn_clk_city_bra_aragaju Aracaju America/Maceio :
+        qtn_clk_city_bra_maceio Maceio
+        qtn_clk_city_bra_aragaju Aracaju
+qtn_clk_city_usa_jackson Jackson, Mississippi America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_afga_kabul Kabul Asia/Kabul :
+        qtn_clk_city_afga_kabul Kabul
+qtn_clk_city_biot_chagos Diego Garcia Indian/Chagos :
+        qtn_clk_city_biot_chagos Diego Garcia
+qtn_clk_city_togo_lome Lomé Africa/Lome :
+        qtn_clk_city_togo_lome Lomé
+qtn_clk_city_dominica_roseau Roseau America/Dominica :
+        qtn_clk_city_dominica_roseau Roseau
+qtn_clk_city_aus_brisbane Brisbane Australia/Brisbane :
+        qtn_clk_city_aus_brisbane Brisbane
+qtn_clk_city_aus_melbourne Melbourne Australia/Melbourne :
+        qtn_clk_city_aus_melbourne Melbourne
+qtn_clk_city_new_caledonia_noumea Noumea Pacific/Noumea :
+        qtn_clk_city_new_caledonia_noumea Noumea
+qtn_clk_city_libya_tripoli Tripoli Africa/Tripoli :
+        qtn_clk_city_libya_tripoli Tripoli
+qtn_clk_city_croatia_zagreb Zagreb Europe/Zagreb :
+        qtn_clk_city_croatia_zagreb Zagreb
+qtn_clk_city_mona_monaco Monaco Europe/Monaco :
+        qtn_clk_city_mona_monaco Monaco
+qtn_clk_city_malta_valletta Valletta Europe/Malta :
+        qtn_clk_city_malta_valletta Valletta
+qtn_clk_city_montenegro_podgorica Podgorica Europe/Podgorica :
+        qtn_clk_city_montenegro_podgorica Podgorica
+qtn_clk_city_colomb_bogota Bogotá America/Bogota :
+        qtn_clk_city_colomb_bogota Bogotá
+qtn_clk_city_usa_denver Denver, Colorado America/Denver :
+        qtn_clk_city_usa_denver Denver, Colorado
+        qtn_clk_city_usa_billings Billings, Montana
+        qtn_clk_city_usa_saltlakec Salt Lake City, Utah
+        qtn_clk_city_usa_albuquer Albuquerque, New Mexico
+        qtn_clk_city_usa_cheyenne Cheyenne, Wyoming
+qtn_clk_city_mexico_tijuana Tijuana America/Tijuana :
+        qtn_clk_city_mexico_tijuana Tijuana
+qtn_clk_city_canada_vancouv Vancouver America/Vancouver :
+        qtn_clk_city_canada_vancouv Vancouver
+qtn_clk_city_rus_novosib Novosibirsk Asia/Novosibirsk :
+        qtn_clk_city_rus_novosib Novosibirsk
+qtn_clk_city_tokelau_fakaofo Fakaofo Pacific/Fakaofo :
+        qtn_clk_city_tokelau_fakaofo Fakaofo
+qtn_clk_city_costar_sanjose San José America/Costa_Rica :
+        qtn_clk_city_costar_sanjose San José
+qtn_clk_city_maldives_male Male Indian/Maldives :
+        qtn_clk_city_maldives_male Male
+qtn_clk_city_bra_porto_velho Porto Velho America/Porto_Velho :
+        qtn_clk_city_bra_porto_velho Porto Velho
+qtn_clk_city_thai_bangkok Bangkok Asia/Bangkok :
+        qtn_clk_city_thai_bangkok Bangkok
+qtn_clk_city_yemen_sana Sanaa Asia/Aden :
+        qtn_clk_city_yemen_sana Sanaa
+qtn_clk_city_trinidad_portofspain Port of Spain America/Port_of_Spain :
+        qtn_clk_city_trinidad_portofspain Port of Spain
+qtn_clk_city_china_shenyang Shenyang Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_ab_saint_johns Saint John's America/Antigua :
+        qtn_clk_city_ab_saint_johns Saint John's
+qtn_clk_city_usa_portland Portland, Oregon America/Los_Angeles :
+        qtn_clk_city_usa_losange Los Angeles, California
+        qtn_clk_city_usa_sanfranci San Francisco, California
+        qtn_clk_city_usa_seattle Seattle, Washington
+        qtn_clk_city_usa_portland Portland, Oregon
+        qtn_clk_city_usa_lasvega Las Vegas, Nevada
+qtn_clk_city_slova_bratislava Bratislava Europe/Bratislava :
+        qtn_clk_city_slova_bratislava Bratislava
+qtn_clk_city_usa_wichita Wichita, Kansas America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_micronesia_colonia Colonia Pacific/Pohnpei :
+        qtn_clk_city_micronesia_ponape Palikir
+        qtn_clk_city_micronesia_colonia Colonia
+qtn_clk_city_usa_juneau Juneau, Alaska America/Juneau :
+        qtn_clk_city_usa_juneau Juneau, Alaska
+qtn_clk_city_marq_island_taiohae Taiohae Pacific/Marquesas :
+        qtn_clk_city_marq_island_taiohae Taiohae
+qtn_clk_city_canada_blanc_sablon Blanc-Sablon America/Blanc-Sablon :
+        qtn_clk_city_canada_blanc_sablon Blanc-Sablon
+qtn_clk_city_india_chennai Chennai Asia/Kolkata :
+        qtn_clk_city_india_calcut Kolkata
+        qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_chennai Chennai
+        qtn_clk_city_india_mumbai Mumbai
+qtn_clk_city_china_harbin Harbin Asia/Harbin :
+        qtn_clk_city_china_harbin Harbin
+        qtn_clk_city_china_changchun Changchun
+qtn_clk_city_cotedlvoire_abidjan Abidjan Africa/Abidjan :
+        qtn_clk_city_cotedlvoire_abidjan Abidjan
+qtn_clk_city_rus_yekaterinburg Yekaterinburg Asia/Yekaterinburg :
+        qtn_clk_city_rus_yekaterinburg Yekaterinburg
+qtn_clk_city_usa_saipan Saipan, Northern Mariana Islands Pacific/Saipan :
+        qtn_clk_city_usa_saipan Saipan, Northern Mariana Islands
+        qtn_clk_city_n_mariana_i_saipan Saipan
+qtn_clk_city_haiti_port_au_prince Port-au-Prince America/Port-au-Prince :
+        qtn_clk_city_haiti_port_au_prince Port-au-Prince
+qtn_clk_city_hk_hong Hong Kong Asia/Hong_Kong :
+        qtn_clk_city_hk_hong Hong Kong
+qtn_clk_city_rus_anadyr Anadyr Asia/Anadyr :
+        qtn_clk_city_rus_anadyr Anadyr
+qtn_clk_city_china_chengdu Chengdu Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_comoros_moroni Moroni Indian/Comoro :
+        qtn_clk_city_comoros_moroni Moroni
+qtn_clk_city_usa_baltimore Baltimore, Maryland America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_samoa_apia Apia Pacific/Apia :
+        qtn_clk_city_samoa_apia Apia
+qtn_clk_city_china_lanzhou Lanzhou Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_dominicareb_santod Santo Domingo America/Santo_Domingo :
+        qtn_clk_city_dominicareb_santod Santo Domingo
+qtn_clk_city_wallis_futuna_wallis Mata-Utu Pacific/Wallis :
+        qtn_clk_city_wallis_futuna_wallis Mata-Utu
+qtn_clk_city_china_guiyang Guiyang Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_canada_toronto Toronto America/Toronto :
+        qtn_clk_city_canada_toronto Toronto
+        qtn_clk_city_canada_ottawa Ottawa
+qtn_clk_city_usa_guam Guam Pacific/Guam :
+        qtn_clk_city_usa_guam Guam
+        qtn_clk_city_guam_agana Hagatna
+qtn_clk_city_china_taiyuan Taiyuan Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_usa_dover Dover, Delaware America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_bra_natal Natal America/Fortaleza :
+        qtn_clk_city_bra_fortaleza Fortaleza
+        qtn_clk_city_bra_sao_luis Sao Luis
+        qtn_clk_city_bra_natal Natal
+        qtn_clk_city_bra_teresina Teresina
+qtn_clk_city_peru_lima Lima America/Lima :
+        qtn_clk_city_peru_lima Lima
+qtn_clk_city_singp_singapore Singapore Asia/Singapore :
+        qtn_clk_city_singp_singapore Singapore
+qtn_clk_city_kyrgyzstan_bishkek Bishkek Asia/Bishkek :
+        qtn_clk_city_kyrgyzstan_bishkek Bishkek
+qtn_clk_city_madagascar_antananarivo Antananarivo Indian/Antananarivo :
+        qtn_clk_city_madagascar_antananarivo Antananarivo
+qtn_clk_city_canada_regina Regina America/Regina :
+        qtn_clk_city_canada_regina Regina
+        qtn_clk_city_canada_creighton Creighton
+qtn_clk_city_abu_dhabi Abu Dhabi Asia/Dubai :
+        qtn_clk_city_abu_dhabi Abu Dhabi
+qtn_clk_city_oman_muscat Muscat Asia/Muscat :
+        qtn_clk_city_oman_muscat Muscat
+qtn_clk_city_rus_yakutsk Yakutsk Asia/Yakutsk :
+        qtn_clk_city_rus_yakutsk Yakutsk
+qtn_clk_city_urugua_montev Montevideo America/Montevideo :
+        qtn_clk_city_urugua_montev Montevideo
+qtn_clk_city_usa_washington Washington, District of Columbia America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_angola_luanda Luanda Africa/Luanda :
+        qtn_clk_city_angola_luanda Luanda
+qtn_clk_city_china_changchun Changchun Asia/Harbin :
+        qtn_clk_city_china_harbin Harbin
+        qtn_clk_city_china_changchun Changchun
+qtn_clk_city_greenl_scoresbysund Ittoqqortoormiit America/Scoresbysund :
+        qtn_clk_city_greenl_scoresbysund Ittoqqortoormiit
+qtn_clk_city_bra_porto_alegre Porto Alegre America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_moroc_casabl Casablanca Africa/Casablanca :
+        qtn_clk_city_moroc_casabl Casablanca
+        qtn_clk_city_moroc_rabat Rabat
+qtn_clk_city_bra_joao_pessoa João Pessoa America/Recife :
+        qtn_clk_city_bra_recife Recife
+        qtn_clk_city_bra_joao_pessoa João Pessoa
+qtn_clk_city_bvi_road_town Road Town America/Tortola :
+        qtn_clk_city_bvi_road_town Road Town
+qtn_clk_city_iran_tehran Tehran Asia/Tehran :
+        qtn_clk_city_iran_tehran Tehran
+qtn_clk_city_mars_islands_majuro Majuro Pacific/Majuro :
+        qtn_clk_city_mars_islands_majuro Majuro
+qtn_clk_city_zimb_harare Harare Africa/Harare :
+        qtn_clk_city_zimb_harare Harare
+qtn_clk_city_eritrea_asmara Asmara Africa/Asmara :
+        qtn_clk_city_eritrea_asmara Asmara
+qtn_clk_city_india_calcut Kolkata Asia/Kolkata :
+        qtn_clk_city_india_calcut Kolkata
+        qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_chennai Chennai
+        qtn_clk_city_india_mumbai Mumbai
+qtn_clk_city_bangla_dhaka Dhaka Asia/Dhaka :
+        qtn_clk_city_bangla_dhaka Dhaka
+qtn_clk_city_usa_dallas Dallas, Texas America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_usa_neworlea New Orleans, Louisiana America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_luxembourg_luxembourg Luxembourg Europe/Luxembourg :
+        qtn_clk_city_luxembourg_luxembourg Luxembourg
+qtn_clk_city_uzbe_tashkent Tashkent Asia/Tashkent :
+        qtn_clk_city_uzbe_tashkent Tashkent
+qtn_clk_city_vene_caracas Caracas America/Caracas :
+        qtn_clk_city_vene_caracas Caracas
+qtn_clk_city_cambodia_phnom_penh Phnom Penh Asia/Phnom_Penh :
+        qtn_clk_city_cambodia_phnom_penh Phnom Penh
+qtn_clk_city_china_hohhot Hohhot Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_french_guiana_cayenne Cayenne America/Cayenne :
+        qtn_clk_city_french_guiana_cayenne Cayenne
+qtn_clk_city_curacao_willemstad Willemstad America/Curacao :
+        qtn_clk_city_curacao_willemstad Willemstad
+qtn_clk_city_mauritius_port_louis Port Louis Indian/Mauritius :
+        qtn_clk_city_mauritius_port_louis Port Louis
+qtn_clk_city_zambia_lusaka Lusaka Africa/Lusaka :
+        qtn_clk_city_zambia_lusaka Lusaka
+qtn_clk_city_canada_winnipeg Winnipeg America/Winnipeg :
+        qtn_clk_city_canada_winnipeg Winnipeg
+qtn_clk_city_usa_ny New York City, New York America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_grenada_saint_georges Saint George's America/Grenada :
+        qtn_clk_city_grenada_saint_georges Saint George's
+qtn_clk_city_ireland_dubli Dublin Europe/Dublin :
+        qtn_clk_city_ireland_dubli Dublin
+qtn_clk_city_newz_chatham Chatham Pacific/Chatham :
+        qtn_clk_city_newz_chatham Chatham
+qtn_clk_city_senegal_dakar Dakar Africa/Dakar :
+        qtn_clk_city_senegal_dakar Dakar
+qtn_clk_city_bahrain_al_manamah Manama Asia/Bahrain :
+        qtn_clk_city_bahrain_al_manamah Manama
+qtn_clk_city_bra_fernand Fernando de Noronha America/Noronha :
+        qtn_clk_city_bra_fernand Fernando de Noronha
+qtn_clk_city_saudiarab_riya Riyadh Asia/Riyadh :
+        qtn_clk_city_saudiarab_riya Riyadh
+qtn_clk_city_lesotho_maseru Maseru Africa/Maseru :
+        qtn_clk_city_lesotho_maseru Maseru
+qtn_clk_city_chad_ndjamena N'Djamena Africa/Ndjamena :
+        qtn_clk_city_chad_ndjamena N'Djamena
+qtn_clk_city_bra_cuiaba Cuiaba America/Cuiaba :
+        qtn_clk_city_bra_cuiaba Cuiaba
+qtn_clk_city_male_kualalump Kuala Lumpur Asia/Kuala_Lumpur :
+        qtn_clk_city_male_kualalump Kuala Lumpur
+qtn_clk_city_cuba_havanna Havana America/Havana :
+        qtn_clk_city_cuba_havanna Havana
+qtn_clk_city_india_newdel New Delhi Asia/Kolkata :
+        qtn_clk_city_india_calcut Kolkata
+        qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_chennai Chennai
+        qtn_clk_city_india_mumbai Mumbai
+qtn_clk_city_reunion_saint_denis Saint-Denis Indian/Reunion :
+        qtn_clk_city_reunion_saint_denis Saint-Denis
+qtn_clk_city_usa_charleston Charleston, West Virginia America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_kuwait_kuwait Kuwait Asia/Kuwait :
+        qtn_clk_city_kuwait_kuwait Kuwait
+qtn_clk_city_tahiti_papeete Papeete Pacific/Tahiti :
+        qtn_clk_city_tahiti_papeete Papeete
+qtn_clk_city_china_yinchuan Yinchuan Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_niger_niamey Niamey Africa/Niamey :
+        qtn_clk_city_niger_niamey Niamey
+qtn_clk_city_usa_chicago Chicago, Illinois America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_usa_concord Concord, New Hampshire America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_canada_cranbrook Cranbrook America/Edmonton :
+        qtn_clk_city_canada_edmonton Edmonton
+        qtn_clk_city_canada_calgar Calgary
+        qtn_clk_city_canada_lloydminster Lloydminster
+        qtn_clk_city_canada_cranbrook Cranbrook
+qtn_clk_city_fin_hki Helsinki Europe/Helsinki :
+        qtn_clk_city_fin_hki Helsinki
+qtn_clk_city_china_zhengzhou Zhengzhou Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_bolivia_lapaz La Paz America/La_Paz :
+        qtn_clk_city_bolivia_lapaz La Paz
+qtn_clk_city_argen_buenos Buenos Aires America/Argentina/Buenos_Aires :
+        qtn_clk_city_argen_buenos Buenos Aires
+qtn_clk_city_chile_santiago Santiago America/Santiago :
+        qtn_clk_city_chile_santiago Santiago
+qtn_clk_city_usa_pensacola Pensacola, Florida America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_canada_atikokan Atikokan America/Atikokan :
+        qtn_clk_city_canada_atikokan Atikokan
+        qtn_clk_city_canada_coral_harbour Coral Harbour
+qtn_clk_city_azerb_baku Baku Asia/Baku :
+        qtn_clk_city_azerb_baku Baku
+qtn_clk_city_neth_amsterdam Amsterdam Europe/Amsterdam :
+        qtn_clk_city_neth_amsterdam Amsterdam
+qtn_clk_city_pakist_islama Islamabad Asia/Karachi :
+        qtn_clk_city_pakistan_karac Karachi
+        qtn_clk_city_pakist_islama Islamabad
+qtn_clk_city_sudan_khartoum Khartoum Africa/Khartoum :
+        qtn_clk_city_sudan_khartoum Khartoum
+qtn_clk_city_ireland_belfast Belfast Europe/London :
+        qtn_clk_city_uk_london London
+        qtn_clk_city_uk_cardiff Cardiff
+        qtn_clk_city_ireland_belfast Belfast
+        qtn_clk_city_uk_edingbu Edinburgh
+qtn_clk_city_china_shanghai Shanghai Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_canary_las_palmas Las Palmas Atlantic/Canary :
+        qtn_clk_city_canary_las_palmas Las Palmas
+qtn_clk_city_kaz_aqtau Aqtau Asia/Aqtau :
+        qtn_clk_city_kaz_aqtau Aqtau
+qtn_clk_city_kaz_astana Astana Asia/Almaty :
+        qtn_clk_city_kaz_astana Astana
+qtn_clk_city_mongolia_choibalsan Choybalsan Asia/Choibalsan :
+        qtn_clk_city_mongolia_choibalsan Choybalsan
+qtn_clk_city_israel_telaviv Tel Aviv Asia/Jerusalem :
+        qtn_clk_city_israel_jerusalem Jerusalem
+        qtn_clk_city_israel_telaviv Tel Aviv
+qtn_clk_city_rus_moscow Moscow Europe/Moscow :
+        qtn_clk_city_rus_moscow Moscow
+        qtn_clk_city_rus_stpeters St. Petersburg
+qtn_clk_city_somalia_mogadishu Mogadishu Africa/Mogadishu :
+        qtn_clk_city_somalia_mogadishu Mogadishu
+qtn_clk_city_aus_sydney Sydney Australia/Sydney :
+        qtn_clk_city_aus_sydney Sydney
+        qtn_clk_city_aus_canberra Canberra
+qtn_clk_city_rus_krasnoyarsk Krasnoyarsk Asia/Krasnoyarsk :
+        qtn_clk_city_rus_krasnoyarsk Krasnoyarsk
+qtn_clk_city_st_vincent_kingstown Kingstown America/St_Vincent :
+        qtn_clk_city_st_vincent_kingstown Kingstown
+qtn_clk_city_benin_porto_novo Porto-Novo Africa/Porto-Novo :
+        qtn_clk_city_benin_porto_novo Porto-Novo
+qtn_clk_city_china_lhasa Lhasa Asia/Urumqi :
+        qtn_clk_city_china_urumqi Ürümqi
+        qtn_clk_city_china_lhasa Lhasa
+qtn_clk_city_turk_istanbul Istanbul Europe/Istanbul :
+        qtn_clk_city_turk_istanbul Istanbul
+        qtn_clk_city_turk_ankara Ankara
+qtn_clk_city_china_xining Xining Asia/Chongqing :
+        qtn_clk_city_china_chongqing Chongqing
+        qtn_clk_city_china_kunming Kunming
+        qtn_clk_city_china_xian Xi'an
+        qtn_clk_city_china_chengdu Chengdu
+        qtn_clk_city_china_lanzhou Lanzhou
+        qtn_clk_city_china_guiyang Guiyang
+        qtn_clk_city_china_hohhot Hohhot
+        qtn_clk_city_china_yinchuan Yinchuan
+        qtn_clk_city_china_xining Xining
+qtn_clk_city_philippines_manila Manila Asia/Manila :
+        qtn_clk_city_philippines_manila Manila
+qtn_clk_city_makedo_skopje Skopje Europe/Skopje :
+        qtn_clk_city_makedo_skopje Skopje
+qtn_clk_city_moroc_rabat Rabat Africa/Casablanca :
+        qtn_clk_city_moroc_casabl Casablanca
+        qtn_clk_city_moroc_rabat Rabat
+qtn_clk_city_palau_koror Melekeok Pacific/Palau :
+        qtn_clk_city_palau_koror Melekeok
+qtn_clk_city_den_copenhag Copenhagen Europe/Copenhagen :
+        qtn_clk_city_den_copenhag Copenhagen
+qtn_clk_city_st_helena_jamestown Jamestown Atlantic/St_Helena :
+        qtn_clk_city_st_helena_jamestown Jamestown
+qtn_clk_city_lith_vilnius Vilnius Europe/Vilnius :
+        qtn_clk_city_lith_vilnius Vilnius
+qtn_clk_city_greenl_danmarkshavn Danmarkshavn America/Danmarkshavn :
+        qtn_clk_city_greenl_danmarkshavn Danmarkshavn
+qtn_clk_city_guinea_conakry Conakry Africa/Conakry :
+        qtn_clk_city_guinea_conakry Conakry
+qtn_clk_city_usa_albuquer Albuquerque, New Mexico America/Denver :
+        qtn_clk_city_usa_denver Denver, Colorado
+        qtn_clk_city_usa_billings Billings, Montana
+        qtn_clk_city_usa_saltlakec Salt Lake City, Utah
+        qtn_clk_city_usa_albuquer Albuquerque, New Mexico
+        qtn_clk_city_usa_cheyenne Cheyenne, Wyoming
+qtn_clk_city_bhutan_thimphu Thimphu Asia/Thimphu :
+        qtn_clk_city_bhutan_thimphu Thimphu
+qtn_clk_city_usa_adak Adak, Alaska America/Adak :
+        qtn_clk_city_usa_adak Adak, Alaska
+qtn_clk_city_usa_memphis Memphis, Tennessee America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_nauru_makwa Yaren District Pacific/Nauru :
+        qtn_clk_city_nauru_makwa Yaren District
+qtn_clk_city_china_urumqi Ürümqi Asia/Urumqi :
+        qtn_clk_city_china_urumqi Ürümqi
+        qtn_clk_city_china_lhasa Lhasa
+qtn_clk_city_malawi_lilongwe Lilongwe Africa/Blantyre :
+        qtn_clk_city_malawi_lilongwe Lilongwe
+qtn_clk_city_ghana_accra Accra Africa/Accra :
+        qtn_clk_city_ghana_accra Accra
+qtn_clk_city_moldova_kishinev Chisinau Europe/Chisinau :
+        qtn_clk_city_moldova_kishinev Chisinau
+qtn_clk_city_turk_ankara Ankara Europe/Istanbul :
+        qtn_clk_city_turk_istanbul Istanbul
+        qtn_clk_city_turk_ankara Ankara
+qtn_clk_city_pakistan_karac Karachi Asia/Karachi :
+        qtn_clk_city_pakistan_karac Karachi
+        qtn_clk_city_pakist_islama Islamabad
+qtn_clk_city_usa_charlotte Charlotte, North Carolina America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_mongolia_hovd Hovd Asia/Hovd :
+        qtn_clk_city_mongolia_hovd Hovd
+qtn_clk_city_usa_detroit Detroit, Michigan America/Detroit :
+        qtn_clk_city_usa_detroit Detroit, Michigan
+qtn_clk_city_pitcairn_adamstown Adamstown Pacific/Pitcairn :
+        qtn_clk_city_pitcairn_adamstown Adamstown
+qtn_clk_city_uk_edingbu Edinburgh Europe/London :
+        qtn_clk_city_uk_london London
+        qtn_clk_city_uk_cardiff Cardiff
+        qtn_clk_city_ireland_belfast Belfast
+        qtn_clk_city_uk_edingbu Edinburgh
+qtn_clk_city_aus_darwin Darwin Australia/Darwin :
+        qtn_clk_city_aus_darwin Darwin
+qtn_clk_city_china_nanjing Nanjing Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_eq_guinea_malabo Malabo Africa/Malabo :
+        qtn_clk_city_eq_guinea_malabo Malabo
+qtn_clk_city_kiribati_tarawa Tarawa Pacific/Tarawa :
+        qtn_clk_city_kiribati_tarawa Tarawa
+qtn_clk_city_guam_agana Hagatna Pacific/Guam :
+        qtn_clk_city_usa_guam Guam
+        qtn_clk_city_guam_agana Hagatna
+qtn_clk_city_mali_bamako Bamako Africa/Bamako :
+        qtn_clk_city_mali_bamako Bamako
+qtn_clk_city_galapagos_islands_galapagos Puerto Baquerizo Moreno Pacific/Galapagos :
+        qtn_clk_city_galapagos_islands_galapagos Puerto Baquerizo Moreno
+qtn_clk_city_india_mumbai Mumbai Asia/Kolkata :
+        qtn_clk_city_india_calcut Kolkata
+        qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_chennai Chennai
+        qtn_clk_city_india_mumbai Mumbai
+qtn_clk_city_usa_stluis St. Louis, Missouri America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_china_kaifeng Kaifeng Asia/Shanghai :
+        qtn_clk_city_china_shanghai Shanghai
+        qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_qingdao Qingdao
+        qtn_clk_city_china_changsha Changsha
+        qtn_clk_city_china_guangzhou Guangzhou
+        qtn_clk_city_china_hefei Hefei
+        qtn_clk_city_china_nanchang Nanchang
+        qtn_clk_city_china_shenzhen Shenzhen
+        qtn_clk_city_china_tianjin Tianjin
+        qtn_clk_city_china_suzhou Suzhou
+        qtn_clk_city_china_shijiazhuang Shijiazhuang
+        qtn_clk_city_china_wuhan Wuhan
+        qtn_clk_city_china_shenyang Shenyang
+        qtn_clk_city_china_taiyuan Taiyuan
+        qtn_clk_city_china_zhengzhou Zhengzhou
+        qtn_clk_city_china_nanjing Nanjing
+        qtn_clk_city_china_kaifeng Kaifeng
+qtn_clk_city_portu_lisbon Lisbon Europe/Lisbon :
+        qtn_clk_city_portu_lisbon Lisbon
+qtn_clk_city_uganda_kampala Kampala Africa/Kampala :
+        qtn_clk_city_uganda_kampala Kampala
+qtn_clk_city_brunei_bandar_seri_begawar Bandar Seri Begawan Asia/Brunei :
+        qtn_clk_city_brunei_bandar_seri_begawar Bandar Seri Begawan
+qtn_clk_city_mongolia_ulan Ulaanbaatar Asia/Ulaanbaatar :
+        qtn_clk_city_mongolia_ulan Ulaanbaatar
+qtn_clk_city_bra_acre Acre America/Rio_Branco :
+        qtn_clk_city_bra_acre Acre
+qtn_clk_city_canada_halifax Halifax America/Halifax :
+        qtn_clk_city_canada_halifax Halifax
+        qtn_clk_city_canada_charlottetown Charlottetown
+qtn_clk_city_liber_monorov Monrovia Africa/Monrovia :
+        qtn_clk_city_liber_monorov Monrovia
+qtn_clk_city_bra_boa_vista Boa Vista America/Boa_Vista :
+        qtn_clk_city_bra_boa_vista Boa Vista
+qtn_clk_city_usa_pago_pago Pago Pago, American Samoa Pacific/Pago_Pago :
+        qtn_clk_city_usa_pago_pago Pago Pago, American Samoa
+qtn_clk_city_bra_teresina Teresina America/Fortaleza :
+        qtn_clk_city_bra_fortaleza Fortaleza
+        qtn_clk_city_bra_sao_luis Sao Luis
+        qtn_clk_city_bra_natal Natal
+        qtn_clk_city_bra_teresina Teresina
+qtn_clk_city_st_lucia_castries Castries America/St_Lucia :
+        qtn_clk_city_st_lucia_castries Castries
+qtn_clk_city_ecuad_quito Quito America/Guayaquil :
+        qtn_clk_city_ecuad_quito Quito
+qtn_clk_city_ukraine_kiev Kyiv Europe/Kiev :
+        qtn_clk_city_ukraine_kiev Kyiv
+qtn_clk_city_anguilla_anguilla The Valley America/Anguilla :
+        qtn_clk_city_anguilla_anguilla The Valley
+qtn_clk_city_tajikistan_dushanbe Dushanbe Asia/Dushanbe :
+        qtn_clk_city_tajikistan_dushanbe Dushanbe
+qtn_clk_city_aus_eucla Eucla Australia/Eucla :
+        qtn_clk_city_aus_eucla Eucla
+qtn_clk_city_usa_omaha Omaha, Nebraska America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_indon_makassar Makassar Asia/Makassar :
+        qtn_clk_city_indon_makassar Makassar
+qtn_clk_city_myanmar_rango Rangoon Asia/Rangoon :
+        qtn_clk_city_myanmar_rango Rangoon
+qtn_clk_city_sao_tome_principe_sao_tome São Tomé Africa/Sao_Tome :
+        qtn_clk_city_sao_tome_principe_sao_tome São Tomé
+qtn_clk_city_honduras_tegucigalpa Tegucigalpa America/Tegucigalpa :
+        qtn_clk_city_honduras_tegucigalpa Tegucigalpa
+qtn_clk_city_capv_praia Praia Atlantic/Cape_Verde :
+        qtn_clk_city_capv_praia Praia
+qtn_clk_city_usa_cheyenne Cheyenne, Wyoming America/Denver :
+        qtn_clk_city_usa_denver Denver, Colorado
+        qtn_clk_city_usa_billings Billings, Montana
+        qtn_clk_city_usa_saltlakec Salt Lake City, Utah
+        qtn_clk_city_usa_albuquer Albuquerque, New Mexico
+        qtn_clk_city_usa_cheyenne Cheyenne, Wyoming
+qtn_clk_city_usa_columbia Columbia, South Carolina America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_hung_budapest Budapest Europe/Budapest :
+        qtn_clk_city_hung_budapest Budapest
+qtn_clk_city_israel_jerusalem Jerusalem Asia/Jerusalem :
+        qtn_clk_city_israel_jerusalem Jerusalem
+        qtn_clk_city_israel_telaviv Tel Aviv
+qtn_clk_city_canada_edmonton Edmonton America/Edmonton :
+        qtn_clk_city_canada_edmonton Edmonton
+        qtn_clk_city_canada_calgar Calgary
+        qtn_clk_city_canada_lloydminster Lloydminster
+        qtn_clk_city_canada_cranbrook Cranbrook
+qtn_clk_city_east_timor_dili Dili Asia/Dili :
+        qtn_clk_city_east_timor_dili Dili
+qtn_clk_city_greenl_nuuk Nuuk America/Godthab :
+        qtn_clk_city_greenl_nuuk Nuuk
+qtn_clk_city_canada_rankin_inlet Rankin Inlet America/Rankin_Inlet :
+        qtn_clk_city_canada_rankin_inlet Rankin Inlet
+qtn_clk_city_bra_vitoria Vitoria America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_algeria_algiers Algiers Africa/Algiers :
+        qtn_clk_city_algeria_algiers Algiers
+qtn_clk_city_usa_atlanta Atlanta, Georgia America/New_York :
+        qtn_clk_city_usa_ny New York City, New York
+        qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_hatford Hartford, Connecticut
+        qtn_clk_city_usa_miami Miami, Florida
+        qtn_clk_city_usa_boston Boston, Massachusetts
+        qtn_clk_city_usa_augusta Augusta, Maine
+        qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania
+        qtn_clk_city_usa_providence Providence, Rhode Island
+        qtn_clk_city_usa_montpelier Montpelier, Vermont
+        qtn_clk_city_usa_columbus Columbus, Ohio
+        qtn_clk_city_usa_richmond Richmond, Virginia
+        qtn_clk_city_usa_baltimore Baltimore, Maryland
+        qtn_clk_city_usa_dover Dover, Delaware
+        qtn_clk_city_usa_charleston Charleston, West Virginia
+        qtn_clk_city_usa_concord Concord, New Hampshire
+        qtn_clk_city_usa_charlotte Charlotte, North Carolina
+        qtn_clk_city_usa_columbia Columbia, South Carolina
+        qtn_clk_city_usa_atlanta Atlanta, Georgia
+qtn_clk_city_ci_kiritimati London Pacific/Kiritimati :
+        qtn_clk_city_ci_kiritimati London
+qtn_clk_city_usa_gary Gary, Indiana America/Chicago :
+        qtn_clk_city_usa_chicago Chicago, Illinois
+        qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin
+        qtn_clk_city_usa_minneap Minneapolis, Minnesota
+        qtn_clk_city_usa_bismarck Bismarck, North Dakota
+        qtn_clk_city_usa_desmoines Des Moines, Iowa
+        qtn_clk_city_usa_oklahoma Oklahoma City, Oklahoma
+        qtn_clk_city_usa_sioux_falls Sioux Falls, South Dakota
+        qtn_clk_city_usa_evansville Evansville, Indiana
+        qtn_clk_city_usa_birmingham Birmingham, Alabama
+        qtn_clk_city_usa_jackson Jackson, Mississippi
+        qtn_clk_city_usa_wichita Wichita, Kansas
+        qtn_clk_city_usa_dallas Dallas, Texas
+        qtn_clk_city_usa_neworlea New Orleans, Louisiana
+        qtn_clk_city_usa_pensacola Pensacola, Florida
+        qtn_clk_city_usa_memphis Memphis, Tennessee
+        qtn_clk_city_usa_stluis St. Louis, Missouri
+        qtn_clk_city_usa_omaha Omaha, Nebraska
+        qtn_clk_city_usa_gary Gary, Indiana
+qtn_clk_city_cayman_georgetown George Town America/Cayman :
+        qtn_clk_city_cayman_georgetown George Town
+qtn_clk_city_tunisia_tunis Tunis Africa/Tunis :
+        qtn_clk_city_tunisia_tunis Tunis
+qtn_clk_city_mexico_mexicoc Mexico City America/Mexico_City :
+        qtn_clk_city_mexico_mexicoc Mexico City
+qtn_clk_city_usa_indiana Indianapolis, Indiana America/Indiana/Indianapolis :
+        qtn_clk_city_usa_indiana Indianapolis, Indiana
+qtn_clk_city_bra_joinville Joinville America/Sao_Paulo :
+        qtn_clk_city_bra_saopaulo São Paulo
+        qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_riojan Rio de Janeiro
+        qtn_clk_city_bra_curitiba Curitiba
+        qtn_clk_city_bra_belo_horizonte Belo Horizonte
+        qtn_clk_city_bra_goiania Goiania
+        qtn_clk_city_bra_porto_alegre Porto Alegre
+        qtn_clk_city_bra_vitoria Vitoria
+        qtn_clk_city_bra_joinville Joinville
+qtn_clk_city_car_bangui Bangui Africa/Bangui :
+        qtn_clk_city_car_bangui Bangui
+qtn_clk_city_aus_canberra Canberra Australia/Sydney :
+        qtn_clk_city_aus_sydney Sydney
+        qtn_clk_city_aus_canberra Canberra
+qtn_clk_city_rus_samara Samara Europe/Samara :
+        qtn_clk_city_rus_samara Samara
+qtn_clk_city_usa_lasvega Las Vegas, Nevada America/Los_Angeles :
+        qtn_clk_city_usa_losange Los Angeles, California
+        qtn_clk_city_usa_sanfranci San Francisco, California
+        qtn_clk_city_usa_seattle Seattle, Washington
+        qtn_clk_city_usa_portland Portland, Oregon
+        qtn_clk_city_usa_lasvega Las Vegas, Nevada
+qtn_clk_city_san_marino San Marino Europe/San_Marino :
+        qtn_clk_city_san_marino San Marino
+qtn_clk_city_usa_louisville Louisville, Kentucky America/Kentucky/Louisville :
+        qtn_clk_city_usa_louisville Louisville, Kentucky
+qtn_clk_city_belize_belmopan Belmopan America/Belize :
+        qtn_clk_city_belize_belmopan Belmopan
+qtn_clk_city_guatmal_guatemala Guatemala America/Guatemala :
+        qtn_clk_city_guatmal_guatemala Guatemala
+qtn_clk_city_solomis_honiar Honiara Pacific/Guadalcanal :
+        qtn_clk_city_solomis_honiar Honiara

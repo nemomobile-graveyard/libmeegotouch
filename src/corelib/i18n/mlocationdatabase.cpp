@@ -41,11 +41,13 @@ public:
     bool loadCountries();
     bool loadCities();
     bool loadTimeZoneData();
+    bool loadCapitals();
     QString canonicalizeTimeZoneId(QString timeZoneId);
 
     QHash<QString, MCity> cities;
     QHash<QString, MCountry> countries;
     QHash<QString, QString> canonicalTimeZoneIds;
+    QHash<QString, QString> capitals;
 };
 
 MLocationDatabasePrivate::MLocationDatabasePrivate()
@@ -241,6 +243,30 @@ QString MLocationDatabasePrivate::canonicalizeTimeZoneId(QString timeZoneId)
     return canonicalTimeZoneIds[timeZoneId];
 }
 
+bool MLocationDatabasePrivate::loadCapitals()
+{
+    // This information should be read from the database,
+    // but I have no time to add the information for
+    // all the capitals to the database now. Therefore
+    // I hardcode a few capitals here which can make
+    // a difference if two cities per Olson ID are displayed:
+    capitals[QLatin1String("qtn_clk_city_aus_canberra")]
+        = QLatin1String("qtn_clk_country_australia");
+    capitals[QLatin1String("qtn_clk_city_bra_brasilia")]
+        = QLatin1String("qtn_clk_country_brazil");
+    capitals[QLatin1String("qtn_clk_city_china_beijing")]
+        = QLatin1String("qtn_clk_country_china");
+    capitals[QLatin1String("qtn_clk_city_india_newdel")]
+        = QLatin1String("qtn_clk_country_india");
+    capitals[QLatin1String("qtn_clk_city_jp_tokyo")]
+        = QLatin1String("qtn_clk_country_japan");
+    capitals[QLatin1String("qtn_clk_city_switz_bern")]
+        = QLatin1String("qtn_clk_country_switzerland");
+    capitals[QLatin1String("qtn_clk_city_usa_washington")]
+        = QLatin1String("qtn_clk_country_usa");
+    return true;
+}
+
 MLocationDatabase::MLocationDatabase()
     : d_ptr( new MLocationDatabasePrivate )
 {
@@ -254,6 +280,11 @@ MLocationDatabase::MLocationDatabase()
     }
 
     if ( ! d_ptr->loadCities() )
+    {
+        qWarning( "loading of city list failed." );
+    }
+
+    if ( ! d_ptr->loadCapitals() )
     {
         qWarning( "loading of city list failed." );
     }
@@ -311,6 +342,21 @@ QList<MCity> MLocationDatabase::citiesInCountry( const QString& countryKey )
     return list;
 }
 
+static QString removeAccents(const QString &str)
+{
+    QString result;
+    for(int i = 0; i < str.size(); ++i) {
+        QString decomposition = str[i].decomposition();
+        if(decomposition == "")
+            result += str[i];
+        else
+            for(int j = 0; j < decomposition.size(); ++j)
+                if(!decomposition[j].isMark())
+                    result += decomposition[j];
+    }
+    return result;
+}
+
 QList<MCity> MLocationDatabase::citiesInTimeZone(const QString& timeZoneId)
 {
     Q_D(MLocationDatabase);
@@ -329,16 +375,23 @@ QList<MCity> MLocationDatabase::citiesInTimeZone(const QString& timeZoneId)
     QString canonicalCity = canonicalTimeZoneId.section('/', -1);
     canonicalCity.replace('_', ' ');
 
+    QList<MCity> olsonCities;
+    QList<MCity> capitalCities;
     foreach(const MCity& city, d->cities) {
         // city.timeZone is already canonical
         if (city.timeZone() == canonicalTimeZoneId) {
-            QString englishName = city.englishName();
-            if(englishName.contains(canonicalCity))
-                list.prepend(city);
+            if(removeAccents(city.englishName()).contains(canonicalCity))
+                olsonCities.append(city);
+            else if (!d->capitals[city.key()].isEmpty())
+                capitalCities.append(city);
             else
                 list.append(city);
         }
     }
+    foreach(const MCity &capitalCity, capitalCities)
+        list.prepend(capitalCity);
+    foreach(const MCity &olsonCity, olsonCities)
+        list.prepend(olsonCity);
     return list;
 }
 

@@ -331,6 +331,66 @@ void Ut_MLocationDatabase::testCitiesInTimeZone()
     }
 }
 
+void Ut_MLocationDatabase::dumpCitiesInTimeZoneIds()
+{
+    MLocationDatabase db;
+    QList<MCity> cities = db.cities();
+
+    // do only run the tests, if we were able to load
+    // some cities from the meegotouch-cities-*
+    // package.
+    if (cities.count() < 10) {
+        qWarning( "loading of city list failed, skipping test" );
+        return;
+    }
+
+    QString dump;
+    foreach(MCity city, cities) {
+        QString timeZoneId = city.timeZone();
+        dump
+            += city.key()
+            + " "
+            + city.englishName()
+            + " "
+            + timeZoneId
+            + " :\n";
+        QList<MCity> citiesInTimeZone = db.citiesInTimeZone(timeZoneId);
+        foreach(MCity cityInTimeZone, citiesInTimeZone) {
+            dump
+                += "        "
+                + cityInTimeZone.key()
+                + " "
+                + cityInTimeZone.englishName()
+                + "\n";
+        }
+    }
+    QString dumpFileName
+        = "/tmp/ut_mlocationdatabase-cities-in-timezone.txt";
+    QFile dumpFile(dumpFileName);
+    if(!dumpFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        QFAIL(qPrintable("could not open file " + dumpFileName));
+    int bytesWritten = dumpFile.write(dump.toUtf8().constData());
+    if (bytesWritten == -1)
+        QFAIL(qPrintable("could not write to file" + dumpFileName));
+    QCOMPARE(uint(bytesWritten), qstrlen(dump.toUtf8().constData()));
+    dumpFile.close();
+    QString testInputFileName
+        = qApp->applicationDirPath() + QDir::separator() + "ut_mlocationdatabase-cities-in-timezone-test-input.txt";
+    QFile testInputFile(testInputFileName);
+    if (!testInputFile.open(QIODevice::ReadOnly))
+        QFAIL(qPrintable("could not open file " + testInputFileName));
+    QString testInput = QString::fromUtf8(testInputFile.readAll().constData());
+    testInputFile.close();
+
+    if (dump != testInput) {
+        // don’t fail if there is a difference, there can easily
+        // be differences due to changes in the database.
+        // Just show the difference on standard output for easy checking
+        // what has changed:
+        QProcess::execute("diff -u " +  testInputFileName + ' ' + dumpFileName);
+    }
+}
+
 void Ut_MLocationDatabase::testCitiesInCountry_data()
 {
     QTest::addColumn<QString>("countryKey");
