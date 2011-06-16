@@ -459,7 +459,7 @@ void MProgressIndicatorBarViewPrivate::createAnimationCache()
 
     for (int i = 0; i < cacheSize; i += sliceWidth) {
         QImage* cachedImage = new QImage(viewRect.size(), QImage::Format_ARGB32);
-        cachedImage->fill(Qt::transparent);
+        cachedImage->fill(qRgba(0, 0, 0, 0));
 
         if (painter.begin(cachedImage)) {
             s->progressBarBackground()->draw(viewRect, &painter);
