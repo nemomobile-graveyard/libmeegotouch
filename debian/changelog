@@ -1,9 +1,13 @@
-libmeegotouch (0.22.5~1) unstable; urgency=low
+libmeegotouch (0.22.5-1) unstable; urgency=low
 
-  * Unreleased
   * Fixes: NB#264987 - Reminder for missed calendar event is not removed from events nor lock screen
+  * Fixes: NB#263763 - Setting font size in MRichTextEdit works unreliably
+  * Fixes: NB#263341 - No pixmaps (red placeholders) if graphicssystem == raster for theme daemon
+  * Fixes: When label text is set before changing wrap mode, newline chars are not working.
+  * Fixes: NB#264117
+  * Fixes: NB#259677 - "Search" bar NOT activated after switching views
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 13 Jun 2011 15:40:00 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 16 Jun 2011 11:59:46 +0300
 
 libmeegotouch (0.22.4-1) unstable; urgency=low
 
