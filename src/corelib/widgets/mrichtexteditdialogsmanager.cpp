@@ -80,6 +80,11 @@ void MRichTextEditDialogsManager::initTextStylingDialog()
     // Initialize Font Family combo box
     QFontDatabase fontDatabase;
     QStringList fontFamilyValues = fontDatabase.families();
+
+    // NOTE: black listing some ill-behaving fonts temporarily
+    fontFamilyValues.removeAll("Webdings");
+    fontFamilyValues.removeAll("Wingdings");
+
     fontFamilyCombo = new MComboBox(centralWidget);
     //% "Font"
     fontFamilyCombo->setTitle(qtTrId("qtn_comm_font"));
