@@ -1,3 +1,9 @@
+libmeegotouch (0.22.6~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 16 Jun 2011 12:02:00 +0300
+
 libmeegotouch (0.22.5-1) unstable; urgency=low
 
   * Fixes: NB#264987 - Reminder for missed calendar event is not removed from events nor lock screen
