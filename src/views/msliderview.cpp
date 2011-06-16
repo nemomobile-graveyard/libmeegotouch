@@ -1241,9 +1241,12 @@ MSliderViewPrivate::MSliderViewPrivate() :
 
 MSliderViewPrivate::~MSliderViewPrivate()
 {
-    sliderGroove->ensureSafeClosing();
+    delete sliderGroove;
 
     delete positionAnimation;
+
+    delete minIndicator;
+    delete maxIndicator;
 }
 
 //intializes main layout and layout policies
