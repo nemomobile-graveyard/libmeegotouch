@@ -37,6 +37,48 @@ fi{
                 "{1} {0}",
                 "{1} {0}",
             }
+            dayNames{
+                format{
+                    abbreviated{
+                        "su",
+                        "ma",
+                        "ti",
+                        "ke",
+                        "to",
+                        "pe",
+                        "la",
+                    }
+                    wide{
+                        "sunnuntaina",
+                        "maanantaina",
+                        "tiistaina",
+                        "keskiviikkona",
+                        "torstaina",
+                        "perjantaina",
+                        "lauantaina",
+                    }
+                }
+                stand-alone{
+                    narrow{
+                        "S",
+                        "M",
+                        "T",
+                        "K",
+                        "T",
+                        "P",
+                        "L",
+                    }
+                    wide{
+                        "Sunnuntai",
+                        "Maanantai",
+                        "Tiistai",
+                        "Keskiviikko",
+                        "Torstai",
+                        "Perjantai",
+                        "Lauantai",
+                    }
+                }
+            }
             monthNames{
                 format{
                     abbreviated{
@@ -70,18 +112,18 @@ fi{
                 }
                 stand-alone{
                     abbreviated{
-                        "tammi",
-                        "helmi",
-                        "maalis",
-                        "huhti",
-                        "touko",
-                        "kesä",
-                        "heinä",
-                        "elo",
-                        "syys",
-                        "loka",
-                        "marras",
-                        "joulu",
+                        "Tammi",
+                        "Helmi",
+                        "Maalis",
+                        "Huhti",
+                        "Touko",
+                        "Kesä",
+                        "Heinä",
+                        "Elo",
+                        "Syys",
+                        "Loka",
+                        "Marras",
+                        "Joulu",
                     }
                     narrow{
                         "T",
@@ -98,18 +140,18 @@ fi{
                         "J",
                     }
                     wide{
-                        "tammikuu",
-                        "helmikuu",
-                        "maaliskuu",
-                        "huhtikuu",
-                        "toukokuu",
-                        "kesäkuu",
-                        "heinäkuu",
-                        "elokuu",
-                        "syyskuu",
-                        "lokakuu",
-                        "marraskuu",
-                        "joulukuu",
+                        "Tammikuu",
+                        "Helmikuu",
+                        "Maaliskuu",
+                        "Huhtikuu",
+                        "Toukokuu",
+                        "Kesäkuu",
+                        "Heinäkuu",
+                        "Elokuu",
+                        "Syyskuu",
+                        "Lokakuu",
+                        "Marraskuu",
+                        "Joulukuu",
                     }
                 }
             }

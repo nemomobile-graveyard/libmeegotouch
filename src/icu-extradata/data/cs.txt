@@ -22,22 +22,6 @@ cs{
             }
             monthNames{
                 format{
-                    wide{
-                        "ledna",
-                        "února",
-                        "března",
-                        "dubna",
-                        "května",
-                        "června",
-                        "července",
-                        "srpna",
-                        "září",
-                        "října",
-                        "listopadu",
-                        "prosince",
-                    }
-                }
-                stand-alone{
                     abbreviated{
                         "led",
                         "úno",
@@ -67,18 +51,62 @@ cs{
                         "p",
                     }
                     wide{
-                        "leden",
-                        "únor",
-                        "březen",
-                        "duben",
-                        "květen",
-                        "červen",
-                        "červenec",
-                        "srpen",
+                        "ledna",
+                        "února",
+                        "března",
+                        "dubna",
+                        "května",
+                        "června",
+                        "července",
+                        "srpna",
                         "září",
-                        "říjen",
-                        "listopad",
-                        "prosinec",
+                        "října",
+                        "listopadu",
+                        "prosince",
+                    }
+                }
+                stand-alone{
+                    abbreviated{
+                        "Led",
+                        "Úno",
+                        "Bře",
+                        "Dub",
+                        "Kvě",
+                        "Čer",
+                        "Čvc",
+                        "Srp",
+                        "Zář",
+                        "Říj",
+                        "Lis",
+                        "Pro",
+                    }
+                    narrow{
+                        "L",
+                        "Ú",
+                        "B",
+                        "D",
+                        "K",
+                        "Č",
+                        "Č",
+                        "S",
+                        "Z",
+                        "Ř",
+                        "L",
+                        "P",
+                    }
+                    wide{
+                        "Leden",
+                        "Únor",
+                        "Březen",
+                        "Duben",
+                        "Květen",
+                        "Červen",
+                        "Červenec",
+                        "Srpen",
+                        "Září",
+                        "Říjen",
+                        "Listopad",
+                        "Prosinec",
                     }
                 }
             }

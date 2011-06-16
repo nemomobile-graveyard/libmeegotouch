@@ -122,6 +122,9 @@ public:
     void dateFormatTo24h(icu::DateFormat *df) const;
     // converts an ICU date format to 12 hour clock
     void dateFormatTo12h(icu::DateFormat *df) const;
+    // converts an ICU date format to a format which has only
+    // year and month
+    void dateFormatToYearAndMonth(icu::DateFormat *df) const;
     // simplifies an ICU date format to make the results of
     // mixing in the month names and weekday names from a different
     // language less bad

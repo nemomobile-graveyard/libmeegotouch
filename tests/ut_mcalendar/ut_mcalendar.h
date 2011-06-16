@@ -103,6 +103,9 @@ private slots:
 
     void testMonthSymbols_data();
     void testMonthSymbols();
+
+    void testDateYearAndMonth_data();
+    void testDateYearAndMonth();
 };
 
 #endif

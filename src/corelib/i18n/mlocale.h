@@ -100,7 +100,21 @@ public:
      *
      * This correlates closely with the <a
      * href="http://userguide.icu-project.org/formatparse/datetime#TOC-Producing-Normal-Date-Formats-for-a">
-     * date type in ICU</a> and Unicode CLDR
+     * date type in ICU</a> and Unicode CLDR. The values
+     * “DateShort”, “DateMedium”, “DateLong”, “DateFull”, have the same meaning
+     * as the respective data types in ICU.
+     * 
+     * The value “DateYearAndMonth” is a libmeegotouch addition to
+     * format only the year and the month without the
+     * day. “DateYearAndMonth” implies “TimeNone”. For example in
+     * Finnish locale the result of using “DateYearAndMonth” is
+     * something like “Joulukuu 2011” whereas in Chinese locale the
+     * result is something like “2011年 十二月”. This is useful
+     * for something like a month view in calendar where a headline
+     * showing the year and the month is needed but without the day
+     * because the days are shown in a table below the headline.
+     *
+     * \sa MLocale::TimeType
      */
     enum DateType {
         DateNone,
@@ -117,6 +131,8 @@ public:
      * This correlates closely with the <a
      * href="http://userguide.icu-project.org/formatparse/datetime#TOC-Producing-Normal-Date-Formats-for-a">
      * time type in ICU</a> and Unicode CLDR
+     *
+     * \sa MLocale::DateType
      */
     enum TimeType {
         TimeNone,
