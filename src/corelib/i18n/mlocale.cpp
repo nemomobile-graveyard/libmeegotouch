@@ -478,6 +478,43 @@ void MLocalePrivate::dateFormatTo12h(icu::DateFormat *df) const
 #endif
 
 #ifdef HAVE_ICU
+void MLocalePrivate::dateFormatToYearAndMonth(icu::DateFormat *df) const
+{
+    if (df) {
+        icu::UnicodeString icuFormatString;
+        QString icuFormatQString;
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+        QString categoryNameTime = categoryName(MLocale::MLcTime);
+        QString categoryNameMessages = categoryName(MLocale::MLcMessages);
+        if(categoryNameTime.startsWith("zh"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("yyyy年 LLLL"); // 2011年 十二月
+            else
+                icuFormatQString = QString::fromUtf8("yyyy LLLL");
+        else if(categoryNameTime.startsWith("ja"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("yyyy年M月"); // 2011年12月
+            else
+                icuFormatQString = QString::fromUtf8("yyyy LLLL");
+        else if(categoryNameTime.startsWith("ko"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("yyyy년 M월");
+            else
+                icuFormatQString = QString::fromUtf8("yyyy LLLL");
+        else if(categoryNameTime.startsWith("eu")
+                || categoryNameTime.startsWith("hu")
+                || categoryNameTime.startsWith("ms"))
+            icuFormatQString = QLatin1String("yyyy LLLL");
+        else
+            icuFormatQString = QLatin1String("LLLL yyyy");
+        icuFormatString = MIcuConversions::qStringToUnicodeString(icuFormatQString);
+        static_cast<SimpleDateFormat *>(df)->applyPattern(icuFormatString);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
 void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
 {
     if (df) {
@@ -746,11 +783,23 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     categoryNameMessages = fixCategoryNameForNumbers(
         MIcuConversions::setCalendarOption(categoryNameMessages, calendarType));
     icu::Locale calLocale = icu::Locale(qPrintable(categoryNameTime));
-    icu::DateFormat::EStyle dateStyle = MIcuConversions::toEStyle(dateType);
-    icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
+    icu::DateFormat::EStyle dateStyle;
+    icu::DateFormat::EStyle timeStyle;
+    if (dateType == MLocale::DateYearAndMonth) {
+        // doesn’t matter really will be customized anyway
+        dateStyle = MIcuConversions::toEStyle(MLocale::DateFull);
+        timeStyle = MIcuConversions::toEStyle(MLocale::TimeNone);
+    }
+    else {
+        dateStyle = MIcuConversions::toEStyle(dateType);
+        timeStyle = MIcuConversions::toEStyle(timeType);
+    }
     icu::DateFormat *df
         = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-    if (timeType != MLocale::TimeNone) {
+    if (dateType == MLocale::DateYearAndMonth) {
+        MLocalePrivate::dateFormatToYearAndMonth(df);
+    }
+    else if (timeType != MLocale::TimeNone) {
         switch (timeFormat24h) {
         case(MLocale::TwelveHourTimeFormat24h):
             MLocalePrivate::dateFormatTo12h(df);

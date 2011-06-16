@@ -105,6 +105,20 @@ pt_BR{
                     }
                 }
                 stand-alone{
+                    abbreviated{
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Abr",
+                        "Maio",
+                        "Jun",
+                        "Jul",
+                        "Ago",
+                        "Set",
+                        "Out",
+                        "Nov",
+                        "Dez",
+                    }
                     narrow{
                         "J",
                         "F",
@@ -118,6 +132,20 @@ pt_BR{
                         "O",
                         "N",
                         "D",
+                    }
+                    wide{
+                        "Janeiro",
+                        "Fevereiro",
+                        "Março",
+                        "Abril",
+                        "Maio",
+                        "Junho",
+                        "Julho",
+                        "Agosto",
+                        "Setembro",
+                        "Outubro",
+                        "Novembro",
+                        "Dezembro",
                     }
                 }
             }

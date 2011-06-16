@@ -1082,7 +1082,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21.7.2008")
             << QString("21.7.2008")
             << QString("21. heinäkuuta 2008")
-            << QString("maanantai 21. heinäkuuta 2008")
+            << QString("Maanantai 21. heinäkuuta 2008")
             << QString("12:31")
             << QString("12:31:00")
             << QString("12:31:00 UTC+3.00")
@@ -1200,8 +1200,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "١٥/٦/٢٠٠٤"
         << "١٥/٠٦/٢٠٠٤"
-        << "١٥ kesäkuu, ٢٠٠٤"
-        << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
+        << "١٥ Kesäkuu, ٢٠٠٤"
+        << "Tiistai, ١٥ Kesäkuu, ٢٠٠٤"
         << "٢:٣١ PM"
         << "٢:٣١:٠٠ PM"
         << "UTC+٣.٠٠ ٢:٣١:٠٠ PM"
@@ -1234,8 +1234,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "15/6/2004"
         << "15/06/2004"
-        << "15 kesäkuu, 2004"
-        << "tiistai, 15 kesäkuu, 2004"
+        << "15 Kesäkuu, 2004"
+        << "Tiistai, 15 Kesäkuu, 2004"
         << "2:31 PM"
         << "2:31:00 PM"
         << "UTC+3.00 2:31:00 PM"
@@ -1268,8 +1268,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "١٥/٦/٢٠٠٤"
         << "١٥/٠٦/٢٠٠٤"
-        << "١٥ kesäkuu, ٢٠٠٤"
-        << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
+        << "١٥ Kesäkuu, ٢٠٠٤"
+        << "Tiistai, ١٥ Kesäkuu, ٢٠٠٤"
         << "٢:٣١ PM"
         << "٢:٣١:٠٠ PM"
         << "UTC+٣.٠٠ ٢:٣١:٠٠ PM"
@@ -1302,8 +1302,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "15/6/2004"
         << "15/06/2004"
-        << "15 kesäkuu, 2004"
-        << "tiistai, 15 kesäkuu, 2004"
+        << "15 Kesäkuu, 2004"
+        << "Tiistai, 15 Kesäkuu, 2004"
         << "2:31 PM"
         << "2:31:00 PM"
         << "UTC+3.00 2:31:00 PM"
@@ -1336,8 +1336,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "15.06.04"
         << "15.06.2004"
-        << "15 kesäkuu 2004"
-        << "tiistai, 15 kesäkuu 2004"
+        << "15 Kesäkuu 2004"
+        << "Tiistai, 15 Kesäkuu 2004"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1369,9 +1369,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "6/15/04"
-        << "kesä 15, 2004"
-        << "kesäkuu 15, 2004"
-        << "tiistai, kesäkuu 15, 2004"
+        << "Kesä 15, 2004"
+        << "Kesäkuu 15, 2004"
+        << "Tiistai, Kesäkuu 15, 2004"
         << "2:31 PM"
         << "2:31:00 PM"
         << "2:31:00 PM UTC+3.00"
@@ -1403,9 +1403,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::LocaleDefaultTimeFormat24h
         << MLocale::GregorianCalendar
         << "15/06/04"
-        << "15 kesä 2004"
-        << "15 kesäkuu 2004"
-        << "tiistai, 15 kesäkuu 2004"
+        << "15 Kesä 2004"
+        << "15 Kesäkuu 2004"
+        << "Tiistai, 15 Kesäkuu 2004"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1438,8 +1438,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
         << MLocale::GregorianCalendar
         << "2004.06.15."
         << "2004.06.15."
-        << "2004. kesäkuu 15."
-        << "2004. kesäkuu 15., tiistai"
+        << "2004. Kesäkuu 15."
+        << "2004. Kesäkuu 15., Tiistai"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1610,7 +1610,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime_data()
             << MLocale::GregorianCalendar
             << QString("21.7.2008 15:31")
             << QString("21. heinäkuuta 2008 15:31:00 UTC+3.00")
-            << QString("maanantai 21. heinäkuuta 2008 15:31:00 Itä-Euroopan kesäaika");
+            << QString("Maanantai 21. heinäkuuta 2008 15:31:00 Itä-Euroopan kesäaika");
     QTest::newRow("21.7.2008_en_GB_Gregorian")
             << datetime
             << QString("en_GB")
@@ -1708,9 +1708,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "7/21/08"
-        << "heinä 21, 2008"
-        << "heinäkuu 21, 2008"
-        << "maanantai, heinäkuu 21, 2008"
+        << "Heinä 21, 2008"
+        << "Heinäkuu 21, 2008"
+        << "Maanantai, Heinäkuu 21, 2008"
         << "2:31 PM"
         << "2:31:00 PM"
         << "2:31:00 PM UTC+3.00"
@@ -1747,8 +1747,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 21
         << "21.07.08"
         << "21.07.2008"
-        << "21. heinäkuu 2008"
-        << "maanantai, 21. heinäkuu 2008"
+        << "21. Heinäkuu 2008"
+        << "Maanantai, 21. Heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1767,7 +1767,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "21.7.2008"
         << "21.7.2008"
         << "21. heinäkuuta 2008"
-        << "maanantai 21. heinäkuuta 2008"
+        << "Maanantai 21. heinäkuuta 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1822,9 +1822,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21/07/2008"
-        << "21 heinä 2008"
-        << "21 heinäkuu 2008"
-        << "maanantai, 21 heinäkuu 2008"
+        << "21 Heinä 2008"
+        << "21 Heinäkuu 2008"
+        << "Maanantai, 21 Heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1860,9 +1860,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21.07.08"
-        << "21. heinä. 2008" // bad, look at the dot!
-        << "21. heinäkuu 2008"
-        << "maanantai 21. heinäkuu 2008"
+        << "21. Heinä. 2008" // bad, look at the dot!
+        << "21. Heinäkuu 2008"
+        << "Maanantai 21. Heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1898,9 +1898,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21.07.08"
-        << "21. heinä 2008"
-        << "21. heinäkuu 2008"
-        << "maanantai 21. heinäkuu 2008"
+        << "21. Heinä 2008"
+        << "21. Heinäkuu 2008"
+        << "Maanantai 21. Heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1936,9 +1936,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21.07.08"
-        << "21. heinä 2008"
-        << "21. heinäkuu 2008"
-        << "maanantai 21. heinäkuu 2008"
+        << "21. Heinä 2008"
+        << "21. Heinäkuu 2008"
+        << "Maanantai 21. Heinäkuu 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -1976,7 +1976,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "08/07/21"
         << "2008/07/21"
         << "2008-7-21"
-        << "2008-7-21 maanantai"
+        << "2008-7-21 Maanantai"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -2014,7 +2014,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "08-7-21"
         << "2008-7-21"
         << "2008-7-21"
-        << "2008-7-21 maanantai"
+        << "2008-7-21 Maanantai"
         << "PM 2:31"
         << "PM 2:31:00"
         << "UTC+3.00 PM 2:31:00"
@@ -2070,8 +2070,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 15
         << "15/6/2004"
         << "15/06/2004"
-        << "15 kesäkuu, 2004"
-        << "tiistai, 15 kesäkuu, 2004"
+        << "15 Kesäkuu, 2004"
+        << "Tiistai, 15 Kesäkuu, 2004"
         << "2:31 PM"
         << "2:31:00 PM"
         << "UTC+3.00 2:31:00 PM"
@@ -2108,8 +2108,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 15
         << "١٥/٦/٢٠٠٤"
         << "١٥/٠٦/٢٠٠٤"
-        << "١٥ kesäkuu, ٢٠٠٤"
-        << "tiistai, ١٥ kesäkuu, ٢٠٠٤"
+        << "١٥ Kesäkuu, ٢٠٠٤"
+        << "Tiistai, ١٥ Kesäkuu, ٢٠٠٤"
         << "٢:٣١ PM"
         << "٢:٣١:٠٠ PM"
         << "UTC+٣.٠٠ ٢:٣١:٠٠ PM"
@@ -2202,9 +2202,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 6
         << 15
         << "۶/۱۵/۰۴"
-        << "kesä ۱۵, ۲۰۰۴"
-        << "kesäkuu ۱۵, ۲۰۰۴"
-        << "tiistai, kesäkuu ۱۵, ۲۰۰۴"
+        << "Kesä ۱۵, ۲۰۰۴"
+        << "Kesäkuu ۱۵, ۲۰۰۴"
+        << "Tiistai, Kesäkuu ۱۵, ۲۰۰۴"
         << "۱۴:۳۱"
         << "۱۴:۳۱:۰۰"
         << "۱۴:۳۱:۰۰ (UTC+۳.۰۰)"
@@ -2240,9 +2240,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 6
         << 15
         << "6/15/04"
-        << "kesä 15, 2004"
-        << "kesäkuu 15, 2004"
-        << "tiistai, kesäkuu 15, 2004"
+        << "Kesä 15, 2004"
+        << "Kesäkuu 15, 2004"
+        << "Tiistai, Kesäkuu 15, 2004"
         << "14:31"
         << "14:31:00"
         << "14:31:00 (UTC+3.00)"
@@ -2297,9 +2297,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 6
         << 15
         << "15/6/04"
-        << "15, kesä 2004"
-        << "15, kesäkuu 2004"
-        << "tiistai, 15, kesäkuu 2004"
+        << "15, Kesä 2004"
+        << "15, Kesäkuu 2004"
+        << "Tiistai, 15, Kesäkuu 2004"
         << "2:31 PM"
         << "2:31:00 PM"
         << "2:31:00 PM UTC+3.00"
@@ -2374,8 +2374,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 15
         << "१५-६-०४"
         << "१५-०६-२००४"
-        << "१५ kesäkuu २००४"
-        << "tiistai, १५ kesäkuu २००४"
+        << "१५ Kesäkuu २००४"
+        << "Tiistai, १५ Kesäkuu २००४"
         << "२:३१ PM"
         << "२:३१:०० PM"
         << "२:३१:०० PM UTC+३.००"
@@ -2412,8 +2412,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 15
         << "15-6-04"
         << "15-06-2004"
-        << "15 kesäkuu 2004"
-        << "tiistai, 15 kesäkuu 2004"
+        << "15 Kesäkuu 2004"
+        << "Tiistai, 15 Kesäkuu 2004"
         << "2:31 PM"
         << "2:31:00 PM"
         << "2:31:00 PM UTC+3.00"
@@ -2449,9 +2449,9 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << 7
         << 21
         << "21/7/2008"
-        << "21 heinä 2008"
-        << "21 heinäkuu 2008"
-        << "maanantai 21 heinäkuu jKr. 2008"
+        << "21 Heinä 2008"
+        << "21 Heinäkuu 2008"
+        << "Maanantai 21 Heinäkuu jKr. 2008"
         << "14:31"
         << "14:31:00"
         << "14:31:00 UTC+3.00"
@@ -2866,7 +2866,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << "fi_FI"
             << "fi_FI"
             << "%b" // locale's abbreviated month name (e.g., Jan)
-            << "helmi";
+            << "Helmi";
     QTest::newRow("fi_FI %c")
             << MLocale::GregorianCalendar
             << 2008
@@ -2931,7 +2931,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << "fi_FI"
             << "fi_FI"
             << "%h" // %h same as %b, locale's abbreviated month name (e.g., Jan)
-            << "helmi";
+            << "Helmi";
     QTest::newRow("fi_FI %j")
             << MLocale::GregorianCalendar
             << 2008
@@ -3074,7 +3074,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << "fi_FI"
             << "fi_FI"
             << "%A" // locale's full weekday name (e.g., Sunday)
-            << "sunnuntai";
+            << "Sunnuntai";
     QTest::newRow("fi_FI %B")
             << MLocale::GregorianCalendar
             << 2008
@@ -3087,7 +3087,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << "fi_FI"
             << "fi_FI"
             << "%B" // locale's full month name (e.g., January)
-            << "helmikuu";
+            << "Helmikuu";
     QTest::newRow("fi_FI %C")
             << MLocale::GregorianCalendar
             << 2008
@@ -4869,6 +4869,167 @@ void Ut_MCalendar::testMonthSymbols()
 #endif
     for (int i = 1; i <= 12; ++i)
         QCOMPARE(locale.monthName(mcal, i), symbols.at(i-1));
+}
+
+void Ut_MCalendar::testDateYearAndMonth_data()
+{
+    QTest::addColumn<MLocale::CalendarType>("calendarType");
+    QTest::addColumn<QDateTime>("qDateTime");
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<QString>("lcNumeric");
+    QTest::addColumn<QString>("expectedFormatString");
+    QTest::addColumn<QString>("expectedResult");
+
+    QTest::newRow("en_US")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "en_US"
+        << "en_US"
+        << "en_US"
+        << "en_US"
+        << "LLLL yyyy"
+        << "December 2011";
+    QTest::newRow("cs_CZ")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "cs_CZ"
+        << "cs_CZ"
+        << "cs_CZ"
+        << "cs_CZ"
+        << "LLLL yyyy"
+        << "Prosinec 2011";
+    QTest::newRow("fi_FI")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "fi_FI"
+        << "fi_FI"
+        << "LLLL yyyy"
+        << "Joulukuu 2011";
+    QTest::newRow("zh_CN")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "zh_CN"
+        << "zh_CN"
+        << "zh_CN"
+        << "zh_CN"
+        << "yyyy年 LLLL"
+        << "2011年 十二月";
+    QTest::newRow("fi_FI fi_FI zh_CN zh_CN")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "zh_CN@mix-time-and-language=yes"
+        << "zh_CN"
+        << "yyyy LLLL"
+        << "2011 Joulukuu";
+    QTest::newRow("zh_TW")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "zh_TW"
+        << "zh_TW"
+        << "zh_TW"
+        << "zh_TW"
+        << "yyyy年 LLLL"
+        << "2011年 十二月";
+    QTest::newRow("fi_FI fi_FI zh_TW zh_TW")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "zh_TW@mix-time-and-language=yes"
+        << "zh_TW"
+        << "yyyy LLLL"
+        << "2011 Joulukuu";
+    QTest::newRow("ja_JP")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "ja_JP"
+        << "ja_JP"
+        << "ja_JP"
+        << "ja_JP"
+        << "yyyy年M月"
+        << "2011年12月";
+    QTest::newRow("fi_FI fi_FI ja_JP ja_JP")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "ja_JP@mix-time-and-language=yes"
+        << "ja_JP"
+        << "yyyy LLLL"
+        << "2011 Joulukuu";
+    QTest::newRow("ko_KR")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "ko_KR"
+        << "ko_KR"
+        << "ko_KR"
+        << "ko_KR"
+        << "yyyy년 M월"
+        << "2011년 12월";
+    QTest::newRow("hu_HU")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "hu_HU"
+        << "hu_HU"
+        << "hu_HU"
+        << "hu_HU"
+        << "yyyy LLLL"
+        << "2011 December";
+    QTest::newRow("ms_MY")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "ms_MY"
+        << "ms_MY"
+        << "ms_MY"
+        << "ms_MY"
+        << "yyyy LLLL"
+        << "2011 Disember";
+}
+
+void Ut_MCalendar::testDateYearAndMonth()
+{
+    QFETCH(MLocale::CalendarType, calendarType);
+    QFETCH(QDateTime, qDateTime);
+    QFETCH(QString, localeName);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(QString, lcNumeric);
+    QFETCH(QString, expectedFormatString);
+    QFETCH(QString, expectedResult);
+
+    MLocale locale(localeName);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcTime, lcNumeric);
+    locale.setCalendarType(calendarType);
+    MCalendar mcal(locale);
+    mcal.setDateTime(qDateTime);
+    QString formatString = locale.icuFormatString(MLocale::DateYearAndMonth, MLocale::TimeNone, calendarType);
+    QString result = locale.formatDateTime(mcal, MLocale::DateYearAndMonth, MLocale::TimeNone);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "language " << localeName
+        << " lc_messages " << lcMessages
+        << " lc_time " << lcTime
+        << " lc_numeric " << lcNumeric
+        << " expectedFormatString: " << expectedFormatString
+        << " formatString: " << formatString
+        << " expectedResult: " << expectedResult
+        << " result: " << result
+        << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(formatString, expectedFormatString);
+    QCOMPARE(result, expectedResult);
 }
 
 QTEST_APPLESS_MAIN(Ut_MCalendar);
