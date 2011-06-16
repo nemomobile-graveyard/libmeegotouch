@@ -352,11 +352,33 @@ bool MSceneWindow::event(QEvent *event)
         }
     } else if (event->type() == QEvent::WindowBlocked) {
         // blocked scene windows must lose focus
-        if (focusItem()) {
-            if (focusItem()->isWidget())
-                d->focusItemBeforeWindowBlocked = static_cast<QGraphicsWidget*>(focusItem());
-            focusItem()->clearFocus();
+
+        // We're looking either for the scene window itself or for one
+        // of its children
+        QGraphicsItem *childItemWithFocus = focusItem();
+        d->focusItemBeforeWindowBlocked = 0;
+
+        if (!childItemWithFocus) {
+            // this->focusItem() says that no child is focused but there's a bug on
+            // Qt that might make it return null even though there a focused QGraphicsWidget
+            // that is a child of "this".
+            // Thus let's check for the same thing but through different means just to be sure.
+            QGraphicsItem *sceneFocusItem = scene()->focusItem();
+            if (sceneFocusItem) {
+                if (isAncestorOf(sceneFocusItem)) {
+                    // Yeah, this->focusItem() is bogus and returned null when it should have
+                    // returned sceneFocusItem instead.
+                    childItemWithFocus = sceneFocusItem;
+                }
+            }
         }
+
+        if (childItemWithFocus) {
+            if (childItemWithFocus->isWidget())
+                d->focusItemBeforeWindowBlocked = static_cast<QGraphicsWidget*>(childItemWithFocus);
+            childItemWithFocus->clearFocus();
+        }
+
         // we are blocked by non system sheet/dialog/popuplist/menu etc.
         // we must send cancel event to pressed buttons
         if (MSceneManager *sceneMan = sceneManager())
