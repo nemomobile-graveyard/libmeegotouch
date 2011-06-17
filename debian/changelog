@@ -1,7 +1,6 @@
 libmeegotouch (0.22.5-1) unstable; urgency=low
 
   * Fixes: NB#264987 - Reminder for missed calendar event is not removed from events nor lock screen
-  * Fixes: NB#263763 - Setting font size in MRichTextEdit works unreliably
   * Fixes: NB#263341 - No pixmaps (red placeholders) if graphicssystem == raster for theme daemon
   * Fixes: When label text is set before changing wrap mode, newline chars are not working.
   * Fixes: NB#264117

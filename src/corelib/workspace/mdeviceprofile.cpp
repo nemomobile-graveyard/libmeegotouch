@@ -302,7 +302,7 @@ qreal MDeviceProfile::mmToPixelsF(qreal mm)
 int MDeviceProfile::ptToPixels(qreal pt)
 {
     Q_D(const MDeviceProfile);
-    return qRound(pt * d->pixelsPerPtF);
+    return pt * d->pixelsPerPtF;
 }
 
 qreal MDeviceProfile::ptToPixelsF(qreal pt)
@@ -314,7 +314,7 @@ qreal MDeviceProfile::ptToPixelsF(qreal pt)
 int MDeviceProfile::pixelsToPt(int pixels)
 {
     Q_D(const MDeviceProfile);
-    return qRound(pixels / d->pixelsPerPtF);
+    return pixels / d->pixelsPerPtF;
 }
 
 qreal MDeviceProfile::pixelsToPtF(qreal pixels)
