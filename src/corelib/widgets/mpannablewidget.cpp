@@ -323,10 +323,15 @@ void MPannableWidget::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGe
     Q_D(MPannableWidget);
     // This handler is called by the glass tapAndHoldGestureEvent method.
     if (isEnabled() && d->physics->inMotion()) {
-        // The viewport is still moving,
-        // let's swallow this event and avoid showing
-        // object menu.
-        event->accept(tapAndHoldGesture);
+        // The viewport is still moving.
+        // Let's swallow this event unless the movement speed is considered
+        // small enough.
+        if ((qAbs(d->physics->velocity().x()) <= d->maximumVelocityForPress)
+                && (qAbs(d->physics->velocity().y()) <= d->maximumVelocityForPress)) {
+            event->ignore(tapAndHoldGesture);
+        } else {
+            event->accept(tapAndHoldGesture);
+        }
     } else {
         event->ignore(tapAndHoldGesture);
     }
