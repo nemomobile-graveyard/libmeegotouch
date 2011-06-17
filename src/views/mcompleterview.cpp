@@ -277,23 +277,27 @@ void MCompleterViewPrivate::handlePopupAppearing()
 {
     //hide completion widget before showing popup
     controller->hideCompleter();
-    controller->widget()->clearFocus();
-    connect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
-            this, SLOT(refocusPopup()), Qt::UniqueConnection);
+    if (controller->widget()) {
+        controller->widget()->clearFocus();
+        connect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
+                this, SLOT(refocusPopup()), Qt::UniqueConnection);
+    }
 }
 
 void MCompleterViewPrivate::handlePopupDisappeared()
 {
     Q_Q(MCompleterView);
-    disconnect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
-               this, SLOT(refocusPopup()));
-    if (popup->result() == MDialog::Accepted) {
-        //only confirm when accept
-        controller->scene()->setFocusItem(controller->widget());
-        q->model()->setMatchedIndex(popup->currentIndex().row());
-        controller->confirm();
-    } else {
-        controller->scene()->setFocusItem(controller->widget());
+    if (controller->widget()) {
+        disconnect(controller->widget(), SIGNAL(gainedFocus(Qt::FocusReason)),
+                   this, SLOT(refocusPopup()));
+        if (popup->result() == MDialog::Accepted) {
+            //only confirm when accept
+            controller->scene()->setFocusItem(controller->widget());
+            q->model()->setMatchedIndex(popup->currentIndex().row());
+            controller->confirm();
+        } else {
+            controller->scene()->setFocusItem(controller->widget());
+        }
     }
     q->model()->setPopupActive(false);
 }
