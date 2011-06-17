@@ -51,6 +51,7 @@ public:
     //void drawScalable3V(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const;
 
     void outputDownscaleWarning(const QString& origin, qreal w, qreal h) const;
+    void outputNearscaleWarning(const QString& origin, qreal w, qreal h) const;
 
     MScalableImageType m_imageType;
 
@@ -64,6 +65,7 @@ public:
 protected:
     MScalableImage *q_ptr;
     bool downscaleWarningPrinted;
+    bool nearscaleWarningPrinted;
 };
 
 #endif // MSCALABLEIMAGE_P_H

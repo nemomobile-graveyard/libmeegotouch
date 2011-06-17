@@ -27,10 +27,15 @@
 #include <QPixmapCache>
 #include <MDebug>
 
+namespace {
+    const qreal SCALE_WARN_LIMIT = 0.25;// 25%
+}
+
 MScalableImagePrivate::MScalableImagePrivate()
     : m_imageType(MScalable9), m_image(NULL),
       q_ptr(NULL),
       downscaleWarningPrinted(false)
+    ,nearscaleWarningPrinted(false)
 {
 }
 
@@ -144,6 +149,8 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
         } else {
             if (!downscaleWarningPrinted && (w < m_image->size().width() || h < m_image->size().height()))
                 outputDownscaleWarning("MScalableImage9", w, h);
+            else if(!nearscaleWarningPrinted && qAbs(m_image->size().width()/w-1.0) < SCALE_WARN_LIMIT && qAbs(m_image->size().height()/h-1.0) < SCALE_WARN_LIMIT)
+                outputNearscaleWarning("MScalableImage9", w, h);
             // caching isn't permitted for this case; scale and render direct to screen.
             qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
 
@@ -171,6 +178,8 @@ void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QP
     else {
         if (!downscaleWarningPrinted && (w < m_image->size().width() || h < m_image->size().height()))
             outputDownscaleWarning("MScalableImage1", w, h);
+        else if(!nearscaleWarningPrinted && qAbs(m_image->size().width()/w-1.0) < SCALE_WARN_LIMIT && qAbs(m_image->size().height()/h-1.0) < SCALE_WARN_LIMIT)
+            outputNearscaleWarning("MScalableImage1", w, h);
         bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
         painter->setRenderHint(QPainter::SmoothPixmapTransform);
         painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
@@ -186,6 +195,15 @@ void MScalableImagePrivate::outputDownscaleWarning(const QString& origin, qreal 
                                                 .arg(m_image->size().width()).arg(m_image->size().height())
                                                 .arg(w).arg(h);
     const_cast<MScalableImagePrivate*>(this)->downscaleWarningPrinted = true;
+}
+
+void MScalableImagePrivate::outputNearscaleWarning(const QString& origin, qreal w, qreal h) const
+{
+    mPerformanceWarning(origin) << QString("Nearscaling should be avoided as it causes performance hit and bad looking graphics. %1 (%2x%3) => (%4x%5)")
+        .arg(pixmapId)
+        .arg(m_image->size().width()).arg(m_image->size().height())
+        .arg(w).arg(h);
+    const_cast<MScalableImagePrivate*>(this)->nearscaleWarningPrinted = true;
 }
 
 MScalableImage::MScalableImage()
@@ -268,6 +286,7 @@ void MScalableImage::setPixmap(const QPixmap *pixmap)
     d->m_image = pixmap;
     d->pixmapId = "";
     d->downscaleWarningPrinted = false;
+    d->nearscaleWarningPrinted = false;
 
     d->validateSize();
 }
