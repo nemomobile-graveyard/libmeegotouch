@@ -83,6 +83,7 @@ struct PixmapCacheEntry {
 
 class ImageResource
 {
+    friend class Ut_MImageDirectory;
 public:
     ImageResource(const QString& absoluteFilePath);
     virtual ~ImageResource();
@@ -177,6 +178,7 @@ private:
 
 class MThemeImagesDirectory
 {
+    friend class Ut_MImageDirectory;
 public:
     static const QString pixmapsDir;
     static const QString iconsDir;

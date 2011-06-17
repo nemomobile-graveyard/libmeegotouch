@@ -40,6 +40,12 @@ public:
 
 class MThemeImagesDirectory;
 
+class ImageResource;
+
+class PixmapImageResource;
+
+class SvgImageResource;
+
 class Ut_MImageDirectory : public QObject
 {
     Q_OBJECT
@@ -53,8 +59,30 @@ private slots:
     void testReloadLocalizedResources_data();
     void testReloadLocalizedResources();
 
+    void testApplyDebugColors();
+    void testReleaseWithoutDelete();
+    void testPixmapCacheEntries();
+    void testSaveToFsCache();
+
+    void testPixmapImageResourceCreatePixmap();
+    void testSvgImageResourceCreatePixmap();
+
+    void testIsLocalizedResource();
+    void testPath();
+    void testSaveIdsInCache();
+
 private:
-    MThemeImagesDirectory *m_subject;
+    void createAndCheckPixmap(ImageResource *resource);
+
+private:
+    MThemeImagesDirectory *m_mThemeImagesDirectory;
+
+    PixmapImageResource *m_pixmapImageResource;
+
+    SvgImageResource *m_svgImageResource;
+
+    QString m_pngImageFileName;
+    QString m_svgImageFileName;
 };
 
 #endif

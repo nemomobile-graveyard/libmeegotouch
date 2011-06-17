@@ -13,6 +13,7 @@ SOURCES += \
     $${M_SOURCE_TREE}/src/corelib/theme/mimagedirectory.cpp \
     $${M_SOURCE_TREE}/src/corelib/theme/mpixmaphandle.cpp \
     $${M_SOURCE_TREE}/src/corelib/core/mgraphicssystemhelper.cpp \
+    $${M_SOURCE_TREE}/src/corelib/core/msystemdirectories.cpp \
 
 HEADERS += \
     ut_mimagedirectory.h \
