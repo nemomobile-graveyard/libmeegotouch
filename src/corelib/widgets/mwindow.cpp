@@ -458,22 +458,59 @@ void MWindowPrivate::handleApplicationLayoutDirectionChangeEvent(QGraphicsItem *
     }
 }
 
-void MWindowPrivate::handleLanguageChangeEvent(QGraphicsItem *item)
+void MWindowPrivate::handleLanguageChangeEvent(QEvent *event)
 {
-    if (item->isWidget()) {
-        QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
-        if (qobject_cast<MWidget*> (widget)) {
-            // If it is a MWidget, sent it the language change event
-            // to trigger the retranslateUi() method of the MWidget:
-            QEvent e(QEvent::LanguageChange);
-            qApp->sendEvent(widget, &e);
+    Q_Q(MWindow);
+
+    if (!q->scene()) {
+        return;
+    }
+
+    // If it is an MWidget, send it the language change event
+    // to trigger the retranslateUi() method of the MWidget:
+
+    // we will first build a list of QWeakPointers before sending
+    // the events as event handlers might delete widgets, therefore
+    // making the list returned by scene()->items() inaccurate
+    // and containing dangling pointers
+    QList< QWeakPointer<MWidget> > wigdetsToGetEvent;
+
+    // Build wigdetsToGetEvent list
+    // OBS: We will send the event in a root-to-leafs order for the sake of
+    // keeping the library's behavior the same as before. Just being on the
+    // safe side.
+    // But in practice the order shouldn't matter at all.
+    QList<QGraphicsItem *> items = q->scene()->items();
+    for (int i = 0; i < items.size(); i++) {
+        QGraphicsItem *item = items.at(i);
+        if (!item->parentItem()) {
+            findMWidgets(wigdetsToGetEvent, item);
         }
     }
-    // Propagate this change to all children.
+
+    // Use wigdetsToGetEvent list
+    MWidget *mWidget;
+    Q_FOREACH(const QWeakPointer<MWidget>& widgetPointer, wigdetsToGetEvent) {
+        mWidget = widgetPointer.data();
+        if (mWidget)
+            qApp->sendEvent(mWidget, event);
+    }
+}
+
+void MWindowPrivate::findMWidgets(QList< QWeakPointer<MWidget> > &mWidgetsList,
+                                  QGraphicsItem *item)
+{
+    if (item->isWidget()) {
+        MWidget *mWidget = qobject_cast<MWidget*>(static_cast<QGraphicsWidget *>(item));
+        if (mWidget) {
+            mWidgetsList.append(QWeakPointer<MWidget>(mWidget));
+        }
+    }
+
     const int size = item->childItems().size();
     for (int i = 0; i < size; ++i) {
         QGraphicsItem *childItem = item->childItems().at(i);
-        handleLanguageChangeEvent(childItem);
+        findMWidgets(mWidgetsList, childItem);
     }
 }
 
@@ -1503,19 +1540,7 @@ bool MWindow::event(QEvent *event)
         }
         return true;
     } else if (event->type() == QEvent::LanguageChange) {
-        // Tell the scene and its top-level items about the language change
-        if (scene()) {
-            QList<QGraphicsItem *> items = scene()->items();
-            // Call handler for language change event only for top
-            // level widgets. The handler then recurses over the
-            // children.
-            QList<QGraphicsItem *> itemsWithoutParents;
-            foreach(QGraphicsItem *item, items)
-                if(!item->parentItem()) itemsWithoutParents << item;
-            foreach(QGraphicsItem * item, itemsWithoutParents) {
-                d->handleLanguageChangeEvent(item);
-            }
-        }
+        d->handleLanguageChangeEvent(event);
         return true;
     } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
