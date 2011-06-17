@@ -467,10 +467,12 @@ void MCompleter::setWidget(MWidget *widget)
         return;
     //verify whether the widget supports inputmethod
     if (!widget || !(widget->flags() && QGraphicsItem::ItemAcceptsInputMethod)) {
-        qWarning() << __PRETTY_FUNCTION__ << ": invalid MWidget pointer!\nThe valid MWidget must \
+        if (widget) {
+            qWarning() << __PRETTY_FUNCTION__ << ": invalid MWidget pointer!\nThe valid MWidget must \
 support inputmethod (flags() with QGraphicsItem::ItemAcceptsInputMethod); \
 respond to inputMethodQuery() for Qt::ImCursorPosition and Qt::ImSurroundingText; \
 and insert the confirmed completion when receiving the signal confirmed().";
+        }
         if (this->widget()) {
             this->widget()->removeEventFilter(this);
             hideCompleter();

@@ -1609,6 +1609,9 @@ MTextEdit::~MTextEdit()
     if (d->focusEventState == MTextEditPrivate::FocusInEventReceived) {
         d->closeAutoSip();
         d->disconnectCompleter();
+        if (d->completer) {
+            d->completer->setWidget(0);
+        }
     }
 
     detachToolbar();
