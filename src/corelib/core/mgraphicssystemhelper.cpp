@@ -82,24 +82,12 @@ namespace {
 
     void createXPixmapFromImage(PixmapCacheEntry *cacheEntry, const QImage& image)
     {
-        if (image.width() <= 0 || image.height() <= 0) {
-            cacheEntry->handle.xHandle = 0;
-            return;
-        }
-
+        cacheEntry->pixmap = new QPixmap(QPixmap::fromImage(image));
 #ifdef  Q_WS_X11
-        Pixmap pixmap = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
-                                      image.width(), image.height(), image.depth());
-        XSync(QX11Info::display(), false);
-        cacheEntry->pixmap = new QPixmap();
-        *cacheEntry->pixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
-        cacheEntry->pixmap->convertFromImage(image);
-
         // Sync X-Server, without this the pixmap handle is still invalid in client-side
         XSync(QX11Info::display(), false);
         cacheEntry->handle.xHandle = cacheEntry->pixmap->handle();
 #else
-        cacheEntry->pixmap = new QPixmap(QPixmap::fromImage(image));
         cacheEntry->handle.xHandle = cacheEntry->pixmap;
 #endif // Q_WS_X11
     }
@@ -202,11 +190,16 @@ void MGraphicsSystemHelper::pixmapFromImage(PixmapCacheEntry *cacheEntry, const 
         if (!cacheEntry->handle.directMap) {
             allocateSharedMemory(&cacheEntry->handle, imageCopy, uniqueKey, requestedSize);
         }
-    } else
+    } else if (QMeeGoGraphicsSystemHelper::runningGraphicsSystemName() == QLatin1String("native"))
 #endif // HAVE_MEEGO_GRAPHICSSYSTEM
     {
         createXPixmapFromImage(cacheEntry, image);
     }
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    else {
+        qFatal("Only the MeeGo and the native graphicssystem are supported to create shareable pixmaps.");
+    }
+#endif // HAVE_MEEGO_GRAPHICSSYSTEM
 }
 
 QPixmap MGraphicsSystemHelper::pixmapFromHandle(const MPixmapHandle& pixmapHandle, void **addr, int *numBytes) {
