@@ -23,6 +23,7 @@
 #include "private/mwidgetview_p.h"
 
 class MPositionIndicator;
+class MWindow;
 class QPixmap;
 class QPoint;
 class QPropertyAnimation;
@@ -48,15 +49,23 @@ public:
      */
     bool contentFullyVisible() const;
 
+    /**
+     * \return MWindow instance where the position indicator is shown.
+     */
+    MWindow* fetchWindow() const;
+
     MPositionIndicator *controller;
     QTimer *hideTimer;
     bool visible;
     bool onDisplay;
+    qreal contentOpacity;
 
     QPropertyAnimation *fadeAnimation;
 
     void _q_displayEntered();
     void _q_displayExited();
+    void _q_visibleChanged();
+    void _q_showTemporarily();
 };
 
 #endif

@@ -36,7 +36,8 @@ MPositionIndicatorViewPrivate::MPositionIndicatorViewPrivate()
     : controller(0),
       hideTimer(new QTimer()),
       visible(false),
-      onDisplay(false)
+      onDisplay(false),
+      contentOpacity(0.0)
 {
 }
 
@@ -51,23 +52,21 @@ void MPositionIndicatorViewPrivate::init(MPositionIndicator *controller)
 
     this->controller = controller;
     hideTimer->setSingleShot(true);
-    fadeAnimation = new QPropertyAnimation(controller, "opacity", q);
+    fadeAnimation = new QPropertyAnimation(q, "contentOpacity", q);
 
     q->connect(hideTimer, SIGNAL(timeout()), SLOT(hide()));
     q->connect(controller, SIGNAL(displayEntered()), SLOT(_q_displayEntered()));
     q->connect(controller, SIGNAL(displayExited()), SLOT(_q_displayExited()));
+    q->connect(controller, SIGNAL(visibleChanged()), SLOT(_q_visibleChanged()));
 }
 
 bool MPositionIndicatorViewPrivate::isInSwitcher() const
 {
-    if (const QGraphicsScene *const scene = controller->scene()) {
-        const QList<QGraphicsView*> views = scene->views();
-        if (views.isEmpty())
-            return false;
-
-        if (const MWindow *const win = qobject_cast<MWindow*>(views.first()))
-            return win->isInSwitcher();
+    const MWindow* win = fetchWindow();
+    if (win) {
+        return win->isInSwitcher();
     }
+
     return false;
 }
 
@@ -78,24 +77,60 @@ bool MPositionIndicatorViewPrivate::contentFullyVisible() const
     return rangeSize.isNull();
 }
 
+MWindow* MPositionIndicatorViewPrivate::fetchWindow() const
+{
+    MWindow* win = 0;
+    if (const QGraphicsScene *const scene = controller->scene()) {
+        const QList<QGraphicsView*> views = scene->views();
+        if (!views.isEmpty())
+            win = qobject_cast<MWindow*>(views.first());
+    }
+
+    return win;
+}
+
 void MPositionIndicatorViewPrivate::_q_displayEntered()
 {
-    Q_Q(MPositionIndicatorView);
-
     onDisplay = true;
-    if (!isInSwitcher()) {
-        hideTimer->start(q->style()->hideTimeout());
-    }
+    _q_showTemporarily();
 }
 
 void MPositionIndicatorViewPrivate::_q_displayExited()
 {
-    /* stop everything and keep indicator visible for next use */
     onDisplay = false;
     hideTimer->stop();
     fadeAnimation->stop();
-    controller->setProperty("opacity", 1.0f);
-    visible = true;
+    contentOpacity = 0.0;
+    visible = false;
+    // no call to update() necessary if contentOpacity is 0 (see drawContents())
+}
+
+void MPositionIndicatorViewPrivate::_q_visibleChanged()
+{
+    Q_Q(MPositionIndicatorView);
+    MWindow* win = fetchWindow();
+    if (win) {
+        if (controller->isVisible()) {
+            q->connect(win, SIGNAL(switcherExited()), q, SLOT(_q_showTemporarily()));
+        } else {
+            q->disconnect(win, SIGNAL(switcherExited()), q, SLOT(_q_showTemporarily()));
+        }
+    }
+}
+
+void MPositionIndicatorViewPrivate::_q_showTemporarily()
+{
+    Q_Q(MPositionIndicatorView);
+    if (contentFullyVisible() || isInSwitcher()) {
+        return;
+    }
+
+    if (contentOpacity < 1.0) {
+        visible = true;
+        fadeAnimation->setEndValue(1.0);
+        fadeAnimation->start();
+    }
+    hideTimer->start(q->style()->hideTimeout());
 }
 
 MPositionIndicatorView::MPositionIndicatorView(MPositionIndicator *controller) :
@@ -126,6 +161,13 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         return;
     }
 
+    const qreal oldOpacity = painter->opacity();
+    const qreal newOpacity = contentOpacity() * oldOpacity;
+    if (newOpacity <= 0.0) {
+        return;
+    }
+    painter->setOpacity(newOpacity);
+
     const MPositionIndicatorModel *const activeModel = model();
     QSizeF  vpSize = activeModel->viewportSize();
     const QSizeF currentSize = size();
@@ -137,6 +179,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         const MScalableImage *indicator = activeStyle->indicatorImage();
         if (!indicator) {
             mWarning("MPositionIndicatorView") << "could not get \"indicator-image\"";
+            painter->setOpacity(oldOpacity);
             return;
         }
 
@@ -191,6 +234,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         const MScalableImage *indicator = activeStyle->indicatorImageHorizontal();
         if (!indicator) {
             mWarning("MPositionIndicatorView") << "could not get \"indicator-image-horizontal\"";
+            painter->setOpacity(oldOpacity);
             return;
         }
 
@@ -225,6 +269,8 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
                         (qreal)indicatorPixmapSizeY,
                         painter);
     }
+
+    painter->setOpacity(oldOpacity);
 }
 
 void MPositionIndicatorView::updateData(const QList<const char *>& modifications)
@@ -236,6 +282,19 @@ void MPositionIndicatorView::updateData(const QList<const char *>& modifications
     if (d->onDisplay) {
         resetHideTimer();
     }
+    update();
+}
+
+qreal MPositionIndicatorView::contentOpacity() const
+{
+    Q_D(const MPositionIndicatorView);
+    return d->contentOpacity;
+}
+
+void MPositionIndicatorView::setContentOpacity(qreal opacity)
+{
+    Q_D(MPositionIndicatorView);
+    d->contentOpacity = qBound(qreal(0.0f), opacity, qreal(1.0f));
     update();
 }
 
@@ -282,7 +341,7 @@ void MPositionIndicatorView::hide()
 
     // Only start the animation if the content is partly visible, otherwise
     // the position indicator won't be drawn at all (see drawContents())
-    if (!d->contentFullyVisible()) {
+    if (!d->contentFullyVisible() && !d->isInSwitcher()) {
         d->fadeAnimation->start();
         update();
     }
@@ -297,13 +356,17 @@ void MPositionIndicatorView::resetHideTimer()
 
         // Only start the animation if the content is partly visible, otherwise
         // the position indicator won't be drawn at all (see drawContents())
-        if (!d->contentFullyVisible()) {
+        if (!d->contentFullyVisible() && !d->isInSwitcher()) {
             d->fadeAnimation->start();
+            d->visible = true;
         }
-        d->visible = true;
     }
     d->hideTimer->stop();
-    if (!d->isInSwitcher()) {
+    if (d->isInSwitcher()) {
+        d->contentOpacity = 0.0;
+        d->visible = false;
+        // no call to update() necessary if contentOpacity is 0 (see drawContents())
+    } else {
         d->hideTimer->start(style()->hideTimeout());
     }
 }

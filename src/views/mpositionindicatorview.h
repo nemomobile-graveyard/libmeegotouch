@@ -46,6 +46,16 @@ class M_VIEWS_EXPORT MPositionIndicatorView : public MWidgetView
     Q_OBJECT
     M_VIEW(MPositionIndicatorModel, MPositionIndicatorStyle)
 
+    /*!
+      \property MPositionIndicatorView::contentOpacity
+      \brief Opacity of the position-indicator content. This property is
+             used instead of QGraphicsObject::opacity because of the undocumented
+             Qt behavior described at QTBUG-18267: Graphics widgets with
+             an opacity of 0 are handled like invisible widgets and hence don't
+             receive any events.
+    */
+    Q_PROPERTY(qreal contentOpacity READ contentOpacity WRITE setContentOpacity)
+
 public:
     /*!
       \brief Constructor
@@ -74,6 +84,8 @@ protected Q_SLOTS:
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 
+    qreal contentOpacity() const;
+    void setContentOpacity(qreal opacity);
 
 private Q_SLOTS:
     /*!
@@ -92,6 +104,8 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_displayEntered())
     Q_PRIVATE_SLOT(d_func(), void _q_displayExited())
+    Q_PRIVATE_SLOT(d_func(), void _q_visibleChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_showTemporarily())
 
     friend class  Ut_MPositionIndicatorView;
 };

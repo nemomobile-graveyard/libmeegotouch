@@ -40,6 +40,15 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testIndicatorDisappearsWhenItGetsOffDisplay_data();
+    void testIndicatorDisappearsWhenItGetsOffDisplay();
+
+    void testIndicatorAppearsWhenItGetsOnDisplay_data();
+    void testIndicatorAppearsWhenItGetsOnDisplay();
+
+    void testNoActivityInSwitcher_data();
+    void testNoActivityInSwitcher();
+
 private:
     MPositionIndicator *m_controller;
     MPositionIndicatorView *m_subject;
