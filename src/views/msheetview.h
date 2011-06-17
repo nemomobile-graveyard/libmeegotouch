@@ -48,6 +48,11 @@ protected:
 private:
     Q_DISABLE_COPY(MSheetView)
     Q_DECLARE_PRIVATE(MSheetView)
+
+#ifdef UNIT_TEST
+    //! Test unit is defined as a friend of production code to access private members
+    friend class Ut_MSheetView;
+#endif // UNIT_TEST
 };
 
 #endif // MSHEETVIEW_H

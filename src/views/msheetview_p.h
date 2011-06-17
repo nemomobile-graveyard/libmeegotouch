@@ -56,6 +56,10 @@ private:
     MSheetSlot *headerSlot;
     QParallelAnimationGroup* animationGroup;
     MSheetCentralSlot *centralSlot;
+
+#ifdef UNIT_TEST
+    friend class Ut_MSheetView;
+#endif // UNIT_TEST
 };
 
 class MSheetSlot : public MStylableWidget
@@ -79,6 +83,10 @@ private:
 
     QWeakPointer<QGraphicsWidget> widgetPointer;
     M_STYLABLE_WIDGET(MStylableWidgetStyle)
+
+#ifdef UNIT_TEST
+    friend class Ut_MSheetView;
+#endif // UNIT_TEST
 };
 
 class MSheetSpacer : public QGraphicsWidget
@@ -119,6 +127,10 @@ private:
 
     QWeakPointer<QGraphicsWidget> widgetPointer;
     M_STYLABLE_WIDGET(MStylableWidgetStyle)
+
+#ifdef UNIT_TEST
+    friend class Ut_MSheetView;
+#endif // UNIT_TEST
 };
 
 #endif // MSHEETVIEW_P_H
