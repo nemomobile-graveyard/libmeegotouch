@@ -145,7 +145,7 @@ void BannersPage::showSystemInformationBanner()
 {
     MBanner *systemBanner = new MBanner();
     systemBanner->setObjectName("systemBanner");
-    systemBanner->setStyleName(MBannerType::InformationBanner);
+    systemBanner->setStyleName(MBannerType::SystemBanner);
     systemBanner->setIconID("icon-m-common-usb");
     systemBanner->setTitle("Unable to continue video editing. USB disconnected.");
     systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
