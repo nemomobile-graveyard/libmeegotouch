@@ -40,7 +40,24 @@ LoginSheet::LoginSheet()
     createCentralWidget();
     createHeaderWidget();
 
-    connect(this, SIGNAL(appeared()), SLOT(setfocusOnUsernameTextEdit()));
+    autoFocusOnFirstTextEdit = false;
+}
+
+void LoginSheet::setAutoFocusOnFirstTextEditEnabled(bool enabled)
+{
+    if (enabled == autoFocusOnFirstTextEdit)
+        return;
+
+    autoFocusOnFirstTextEdit = enabled;
+
+    bool ok;
+
+    if (autoFocusOnFirstTextEdit) {
+        ok = connect(this, SIGNAL(appeared()), SLOT(setfocusOnUsernameTextEdit()));
+        if (!ok) qFatal("signal connection failed");
+    } else {
+        disconnect(SIGNAL(appeared()), this, SLOT(setfocusOnUsernameTextEdit()));
+    }
 }
 
 void LoginSheet::createCentralWidget()

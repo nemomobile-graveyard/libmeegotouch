@@ -29,8 +29,7 @@
 #include <QPointer>
 
 class MBasicListItem;
-class MLinearLayoutPolicy;
-class MList;
+class QGraphicsLinearLayout;
 class MSheet;
 
 class QPropertyAnimation;
@@ -68,7 +67,6 @@ protected:
     virtual void retranslateUi();
 
 private Q_SLOTS:
-    void itemClicked(const QModelIndex &index);
     void openFullscreenPhotoSheet();
     void reparentPhotoImage();
     void updateFullscreenPhotoSheetGeometry();
@@ -76,13 +74,13 @@ private Q_SLOTS:
     void processFullscreenSave();
     void processFullscreenSaveSuccess();
 
-private:
     void openLoginSheet();
-    void openSystemwideSheet();
+    void showSystemwideSheetPage();
     void openLongSheet();
     void openListSheet();
-
     void openPhotoSheet();
+
+private:
     void populatePhotoSheetCentralWidget(QGraphicsWidget *centralWidget);
     void populatePhotoSheetHeader(MSheet *sheet);
 
@@ -90,10 +88,16 @@ private:
     void populateFullscreenPhotoSheetHeader(MSheet *sheet);
 
 
+    MBasicListItem *createListItemAndAddToLayout();
     void populateLayout();
 
-    MLinearLayoutPolicy *policy;
-    MList *list;
+    QGraphicsLinearLayout *mainLayout;
+
+    MBasicListItem *loginSheetItem;
+    MBasicListItem *systemWideItem;
+    MBasicListItem *sheetFromPhotoItem;
+    MBasicListItem *longSheetItem;
+    MBasicListItem *listSheetItem;
 
     MSheet *photoSheet;
     MSheet *fullScreenPhotoSheet;

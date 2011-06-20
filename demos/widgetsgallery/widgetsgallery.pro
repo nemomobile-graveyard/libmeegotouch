@@ -101,6 +101,7 @@ SOURCES += main.cpp \
     listsheet.cpp \
     headeredtextedit.cpp \
     labeledcheckbox.cpp \
+    systemwidesheetpage.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -163,6 +164,7 @@ HEADERS += templatepage.h \
     listsheet.h \
     headeredtextedit.h \
     labeledcheckbox.h \
+    systemwidesheetpage.h \
 
 # theme
 include(theme/theme.pri)

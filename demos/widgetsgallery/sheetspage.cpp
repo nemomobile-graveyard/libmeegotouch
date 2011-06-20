@@ -48,6 +48,8 @@
 #include "loginsheet.h"
 #include "longsheet.h"
 #include "listsheet.h"
+#include "systemwidesheetpage.h"
+#include "drilldownlistitem.h"
 
 ClickableImageWidget::ClickableImageWidget(QGraphicsItem *parent)
     : MImageWidget(parent),
@@ -81,46 +83,8 @@ void ClickableImageWidget::cancelEvent(MCancelEvent *event)
     down = false;
 }
 
-class SheetsPageCellCreator : public MAbstractCellCreator<MBasicListItem>
-{
-public:
-    SheetsPageCellCreator() : MAbstractCellCreator<MBasicListItem>() {
-    }
-
-    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
-        Q_UNUSED(index);
-
-        MBasicListItem *cell = dynamic_cast<MBasicListItem *>(
-                recycler.take(MBasicListItem::staticMetaObject.className()));
-
-        if (cell == NULL) {
-            cell = new MBasicListItem(MBasicListItem::SingleTitle);
-            if (MApplication::instance()->objectName() == "widgetsgallery") {
-                cell->setStyleName("CommonBasicListItem");
-            } else {
-                cell->setStyleName("CommonBasicListItemInverted");
-            }
-            cell->initLayout();
-            cell->setLayoutPosition(M::CenterPosition);
-        }
-        updateCell(index, cell);
-
-        return cell;
-    }
-
-    void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
-        if(!item)
-            return;
-
-        item->setTitle(index.data().toString());
-    }
-};
-
 SheetsPage::SheetsPage()
     : TemplatePage(TemplatePage::DialogsSheetsAndBanners),
-      policy(0),
-      list(0),
       photoSheetFullScreenTransition(0)
 {
 }
@@ -139,51 +103,53 @@ void SheetsPage::createContent()
 
     QGraphicsWidget *panel = centralWidget();
 
-    MLayout *layout = new MLayout(panel);
-    layout->setContentsMargins(0, 0, 0, 0);
-    panel->setLayout(layout);
-    policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    policy->setContentsMargins(0, 0, 0, 0);
-    policy->setSpacing(0);
+    mainLayout = new QGraphicsLinearLayout(Qt::Vertical, panel);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
+    panel->setLayout(mainLayout);
 
     populateLayout();
 
     retranslateUi();
 }
 
-void SheetsPage::populateLayout()
+MBasicListItem *SheetsPage::createListItemAndAddToLayout()
 {
-    list = new MList(centralWidget());
-    list->setObjectName("list");
-    list->setStyleName(inv("CommonList"));
-    list->setCellCreator(new SheetsPageCellCreator());
-    list->setItemModel(new QStringListModel(list));
-    policy->addItem(list, Qt::AlignCenter);
-
-    connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
+    MBasicListItem *listItem = new MBasicListItem(MBasicListItem::SingleTitle, centralWidget());
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        listItem->setStyleName("CommonBasicListItem");
+    } else {
+        listItem->setStyleName("CommonBasicListItemInverted");
+    }
+    listItem->setLayoutPosition(M::CenterPosition);
+    mainLayout->addItem(listItem);
+    return listItem;
 }
 
-void SheetsPage::itemClicked(const QModelIndex &index)
+void SheetsPage::populateLayout()
 {
-    switch (index.row()) {
-    case 0:
-        openLoginSheet();
-        break;
-    case 1:
-        openSystemwideSheet();
-        break;
-    case 2:
-        openPhotoSheet();
-        break;
-    case 3:
-        openLongSheet();
-        break;
-    case 4:
-        openListSheet();
-        break;
-    default:
-        break;
-    }
+    bool ok;
+
+    loginSheetItem = createListItemAndAddToLayout();
+    ok = connect(loginSheetItem, SIGNAL(clicked()), SLOT(openLoginSheet()));
+    if (!ok) qFatal("signal connection failed");
+
+    systemWideItem = new DrillDownListItem(centralWidget());
+    mainLayout->addItem(systemWideItem);
+    ok = connect(systemWideItem, SIGNAL(clicked()), SLOT(showSystemwideSheetPage()));
+    if (!ok) qFatal("signal connection failed");
+
+    sheetFromPhotoItem = createListItemAndAddToLayout();
+    ok = connect(sheetFromPhotoItem, SIGNAL(clicked()), SLOT(openPhotoSheet()));
+    if (!ok) qFatal("signal connection failed");
+
+    longSheetItem = createListItemAndAddToLayout();
+    ok = connect(longSheetItem, SIGNAL(clicked()), SLOT(openLongSheet()));
+    if (!ok) qFatal("signal connection failed");
+
+    listSheetItem = createListItemAndAddToLayout();
+    ok = connect(listSheetItem, SIGNAL(clicked()), SLOT(openListSheet()));
+    if (!ok) qFatal("signal connection failed");
 }
 
 void SheetsPage::retranslateUi()
@@ -193,35 +159,31 @@ void SheetsPage::retranslateUi()
     if (!isContentCreated())
         return;
 
-    QStringList sheetExamples;
     //% "Login sheet"
-    sheetExamples << qtTrId("xx_wg_sheets_login_sheet");
+    loginSheetItem->setTitle(qtTrId("xx_wg_sheets_login_sheet"));
     //% "Systemwide sheet"
-    sheetExamples << qtTrId("xx_wg_sheets_systemwide_sheet");
+    systemWideItem->setTitle(qtTrId("xx_wg_sheets_systemwide_sheet"));
     //% "Sheet from photo"
-    sheetExamples << qtTrId("xx_wg_sheets_from_photo_sheet");
+    sheetFromPhotoItem->setTitle(qtTrId("xx_wg_sheets_from_photo_sheet"));
     //% "Long sheet"
-    sheetExamples << qtTrId("xx_wg_sheets_long_sheet");
+    longSheetItem->setTitle(qtTrId("xx_wg_sheets_long_sheet"));
     //% "List sheet"
-    sheetExamples << qtTrId("xx_wg_sheets_list_sheet");
-
-    static_cast<QStringListModel *>(list->itemModel())->setStringList(sheetExamples);
+    listSheetItem->setTitle(qtTrId("xx_wg_sheets_list_sheet"));
 }
 
 void SheetsPage::openLoginSheet()
 {
-    MSheet *loginSheet = new LoginSheet;
+    LoginSheet *loginSheet = new LoginSheet;
+    loginSheet->setAutoFocusOnFirstTextEditEnabled(true);
     loginSheet->setObjectName("loginSheet");
     loginSheet->setStyleName(inv(""));
     loginSheet->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
-void SheetsPage::openSystemwideSheet()
+void SheetsPage::showSystemwideSheetPage()
 {
-    MSheet *loginSheet = new LoginSheet;
-    loginSheet->setObjectName("loginSheet");
-    loginSheet->setStyleName(inv(""));
-    loginSheet->appearSystemwide(MSceneWindow::DestroyWhenDone);
+    MApplicationPage *page = new SystemwideSheetPage;
+    page->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void SheetsPage::openLongSheet()
