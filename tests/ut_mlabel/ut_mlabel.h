@@ -136,6 +136,9 @@ private slots:
     void testDiacritics_data();
     void testDiacritics();
 
+    void testLineBreakReplacement_data();
+    void testLineBreakReplacement();
+
 private:
     /**
      * Helper method for testSizeHint().

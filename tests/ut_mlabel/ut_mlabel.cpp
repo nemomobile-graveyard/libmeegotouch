@@ -1209,4 +1209,34 @@ void Ut_MLabel::testDiacritics()
     QVERIFY(textWithDiacriticsRect.height() >= textRect.height() + 6);
 }
 
+void Ut_MLabel::testLineBreakReplacement_data()
+{
+    QTest::addColumn<bool>("wordWrap");
+    QTest::addColumn<QTextOption::WrapMode>("wrapMode");
+    QTest::addColumn<int>("expectedLineCount");
+
+    QTest::newRow("no wordWrap, NoWrap") << false << QTextOption::NoWrap << 1;
+    QTest::newRow("wordWrap, NoWrap") << true << QTextOption::NoWrap << 1;
+    QTest::newRow("wordWrap, WrapAnywhere") << true << QTextOption::WrapAnywhere << 3;
+}
+
+void Ut_MLabel::testLineBreakReplacement()
+{
+    QFETCH(bool, wordWrap);
+    QFETCH(QTextOption::WrapMode, wrapMode);
+    QFETCH(int, expectedLineCount);
+
+    label->resize(300, 300);
+
+    label->setText("A\nB\nC");
+    QImage img = label->getLabelImage();
+    const int singleLineContentHeight = contentRect(img).height();
+
+    label->setWordWrap(wordWrap);
+    label->setWrapMode(wrapMode);
+    img = label->getLabelImage();
+    const int contentHeight = contentRect(img).height();
+    QVERIFY(contentHeight >= singleLineContentHeight * expectedLineCount);
+}
+
 QTEST_APPLESS_MAIN(Ut_MLabel);
