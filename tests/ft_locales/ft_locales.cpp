@@ -2580,6 +2580,10 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"ㄗ" // U+3117 BOPOMOFO LETTER Z
          <<"ㄘ" // U+3118 BOPOMOFO LETTER C
          <<"ㄙ" // U+3119 BOPOMOFO LETTER S
+         <<"ㄧ" // U+3127 BOPOMOFO LETTER I
+         <<"ㄨ" // U+3128 BOPOMOFO LETTER U
+         <<"威" // ㄨㄟ 9 strokes, 1st stroke horizontal, kHanyuPinlu wei1 U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
+         <<"ㄩ" // U+3129 BOPOMOFO LETTER IU
          <<"ㄚ" // U+311A BOPOMOFO LETTER A
          <<"阿" // ㄚ a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
          <<"ㄛ" // U+311B BOPOMOFO LETTER O
@@ -2594,10 +2598,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"ㄤ" // U+3124 BOPOMOFO LETTER ANG
          <<"ㄥ" // U+3125 BOPOMOFO LETTER ENG
          <<"ㄦ" // U+3126 BOPOMOFO LETTER ER
-         <<"ㄧ" // U+3127 BOPOMOFO LETTER I
-         <<"ㄨ" // U+3128 BOPOMOFO LETTER U
-         <<"威" // ㄨㄟ 9 strokes, 1st stroke horizontal, kHanyuPinlu wei1 U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
-         <<"ㄩ" // U+3129 BOPOMOFO LETTER IU
          <<"ㄪ" // U+312A BOPOMOFO LETTER V
          <<"ㄫ" // U+312B BOPOMOFO LETTER NG
          <<"ㄬ" // U+312C BOPOMOFO LETTER GN
@@ -2694,6 +2694,10 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"ㄗ"
          <<"ㄘ"
          <<"ㄙ"
+         <<"ㄧ"
+         <<"ㄨ"
+         <<"ㄨ"
+         <<"ㄩ"
          <<"ㄚ"
          <<"ㄚ"
          <<"ㄛ"
@@ -2708,10 +2712,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"ㄤ"
          <<"ㄥ"
          <<"ㄦ"
-         <<"ㄧ"
-         <<"ㄨ"
-         <<"ㄨ"
-         <<"ㄩ"
          <<"ㄪ"
          <<"ㄫ"
          <<"ㄬ"

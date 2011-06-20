@@ -38,6 +38,9 @@ private slots:
     void testRemove();
     void testCopy();
 
+    void sortTestFiles_data();
+    void sortTestFiles();
+
 private:
     void dumpBuckets(const MLocaleBuckets &buckets, const char *header=0) const;
     bool checkBucketContent(const MLocaleBuckets &buckets, int bucketIndex, const QStringList &expectedItems) const;

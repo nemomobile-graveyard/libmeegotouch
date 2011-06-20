@@ -1700,6 +1700,10 @@ sub zhuyinCompare ($$) {
         "ˇ". # U+02C7 CARON
         "ˋ". # U+02CB MODIFIER LETTER GRAVE ACCENT
         "˙". # U+02D9 DOT ABOVE
+        # order according to the 1919 standard
+        # described at
+        # http://zh.wikipedia.org/wiki/%E6%B3%A8%E9%9F%B3%E7%AC%A6%E8%99%9F#.E6.8E.92.E5.BA.8F
+        # Initial:
         "ㄅ". # U+3105 BOPOMOFO LETTER B
         "ㄆ". # U+3106 BOPOMOFO LETTER P
         "ㄇ". # U+3107 BOPOMOFO LETTER M
@@ -1721,6 +1725,11 @@ sub zhuyinCompare ($$) {
         "ㄗ". # U+3117 BOPOMOFO LETTER Z
         "ㄘ". # U+3118 BOPOMOFO LETTER C
         "ㄙ". # U+3119 BOPOMOFO LETTER S
+        # Medial:
+        "ㄧ". # U+3127 BOPOMOFO LETTER I
+        "ㄨ". # U+3128 BOPOMOFO LETTER U
+        "ㄩ". # U+3129 BOPOMOFO LETTER IU
+        # Final:
         "ㄚ". # U+311A BOPOMOFO LETTER A
         "ㄛ". # U+311B BOPOMOFO LETTER O
         "ㄜ". # U+311C BOPOMOFO LETTER E
@@ -1734,9 +1743,7 @@ sub zhuyinCompare ($$) {
         "ㄤ". # U+3124 BOPOMOFO LETTER ANG
         "ㄥ". # U+3125 BOPOMOFO LETTER ENG
         "ㄦ". # U+3126 BOPOMOFO LETTER ER
-        "ㄧ". # U+3127 BOPOMOFO LETTER I
-        "ㄨ". # U+3128 BOPOMOFO LETTER U
-        "ㄩ". # U+3129 BOPOMOFO LETTER IU
+        # unusual and obsolete characters:
         "ㄪ". # U+312A BOPOMOFO LETTER V
         "ㄫ". # U+312B BOPOMOFO LETTER NG
         "ㄬ". # U+312C BOPOMOFO LETTER GN
@@ -2141,7 +2148,13 @@ $libicuCollationOutput .= "&[before 2]o<<ō<<<Ō<<ó<<<Ó<<ǒ<<<Ǒ<<ò<<<Ò";
 $libicuCollationOutput .= "&[before 2]u<<ū<<<Ū<<ú<<<Ú<<ǔ<<<Ǔ<<ù<<<Ù";
 $libicuCollationOutput .= "&U<<ǖ<<<Ǖ<<ǘ<<<Ǘ<<ǚ<<<Ǚ<<ǜ<<<Ǜ<<ü<<<Ü";
 $libicuCollationOutput .= "&[last regular]";
-$libicuCollationOutput .= "<ㄅ<ㄆ<ㄇ<ㄈ<ㄉ<ㄊ<ㄋ<ㄌ<ㄍ<ㄎ<ㄏ<ㄐ<ㄑ<ㄒ<ㄓ<ㄔ<ㄕ<ㄖ<ㄗ<ㄘ<ㄙ<ㄚ<ㄛ<ㄜ<ㄝ<ㄞ<ㄟ<ㄠ<ㄡ<ㄢ<ㄣ<ㄤ<ㄥ<ㄦ<ㄧ<ㄨ<ㄩ<ㄪ<ㄫ<ㄬ<ㄭ";
+# this array needs not to be sorted, it is sorted
+# by the zhuyinCompare() function, the zhuyin order
+# we want is defined there.
+my @zhuyinCharacters = ("ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ㄪ", "ㄫ", "ㄬ", "ㄭ");
+for my $zhuyinCharacter (sort zhuyinCompare (@zhuyinCharacters)) {
+    $libicuCollationOutput .= "<${zhuyinCharacter}";
+}
 my $zhuyinIndexBucket = "";
 for my $key (sort zhuyinCompare keys(%zhuyinPcLists)) {
     for (my $i = 0; $i < length($zhuyinPcLists{$key}); ++$i) {

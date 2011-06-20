@@ -659,4 +659,80 @@ void Ft_MLocaleBuckets::testCopy()
     QVERIFY(buckets3.origItemIndex(Y_Bucket, 0) == inputItems.indexOf("Yannick"));
 }
 
+void Ft_MLocaleBuckets::sortTestFiles_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("fileName");
+
+    QTest::newRow("zh_TW@collation=zhuyin")
+        << "zh_TW@collation=zhuyin"
+        << "ft_mlocalebuckets_test-input.txt";
+}
+
+void Ft_MLocaleBuckets::sortTestFiles()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, fileName);
+
+    MLocale locale(localeName);
+    MLocale::setDefault(locale);
+    QString testInputFileName =
+        qApp->applicationDirPath() + QDir::separator() + fileName;
+    QFile testInputFile(testInputFileName);
+    if (!testInputFile.open(QIODevice::ReadOnly))
+        QFAIL(qPrintable("could not open file " + testInputFileName));
+    QStringList items;
+    while (!testInputFile.atEnd()) {
+        QString line = QString::fromUtf8(testInputFile.readLine().constData());
+        if (line.endsWith("\n"))
+            line.remove(line.size() - 1, 1);
+        if (!line.startsWith(QChar('#'))) // ignore comments
+            items << line;
+    }
+    testInputFile.close();
+
+    MLocaleBuckets buckets;
+    QVERIFY(buckets.isEmpty());
+    buckets.setItems(items);
+    // dumpBuckets(buckets1, __FUNCTION__);
+    QString separator("----------------- ");
+    QString prettyResult
+        = separator
+        + QChar('\n')
+        + QLatin1String("sort locale = ")
+        + localeName
+        + QChar('\n');
+    for (int b = 0; b < buckets.bucketCount(); ++b) {
+        prettyResult
+            += separator
+            + buckets.bucketName(b)
+            + QChar('\n');
+        QStringList bucketItems = buckets.bucketContent(b);
+        for (int i = 0; i < bucketItems.count(); ++i)
+            prettyResult += bucketItems[i] + QChar('\n');
+    }
+    prettyResult += separator + QChar('\n');
+    buckets.clear();
+    QVERIFY(buckets.isEmpty());
+    QVERIFY(buckets.bucketCount() == 0);
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream << prettyResult;
+    debugStream.flush();
+    QString testOutputFileName(
+        QLatin1String("/tmp/")
+        + fileName
+        + QLatin1String("___")
+        + localeName
+        + QLatin1String("___.txt"));
+    QFile testOutputFile(testOutputFileName);
+    if (!testOutputFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        QFAIL(qPrintable("could not open file " + testOutputFileName));
+    int bytesWritten = testOutputFile.write(prettyResult.toUtf8().constData());
+    if (bytesWritten == -1)
+        QFAIL(qPrintable("could not write to file" + testOutputFileName));
+    QCOMPARE(uint(bytesWritten), qstrlen(prettyResult.toUtf8().constData()));
+    testOutputFile.close();
+}
+
 QTEST_APPLESS_MAIN(Ft_MLocaleBuckets)
