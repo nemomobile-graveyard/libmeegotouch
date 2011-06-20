@@ -1,3 +1,13 @@
+libmeegotouch (0.22.6-1) unstable; urgency=low
+
+  * Fixes: NB#262082 - Language change event might lead to crash
+  * Fixes: NB#256749 - Chinese month and year have wrong order
+  * Fixes: NB#263591 - [TASK] Progress bar does insane amount of screen both on foreground and in Recents view
+  * Fixes: NB#262820 - COREWEB: 'MScalableImage::borders MSliderGroove::paint _q_paintItem QGraphicsScenePrivate::drawItemHelper QGraphicsScenePrivate::draw'
+  * Fixes: NB#260245 - MObjectMenu and MDialog does not grab the focus from MTextEdit in some particular cases
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Mon, 20 Jun 2011 15:46:00 +0300
+
 libmeegotouch (0.22.5-1) unstable; urgency=low
 
   * Fixes: NB#264987 - Reminder for missed calendar event is not removed from events nor lock screen
