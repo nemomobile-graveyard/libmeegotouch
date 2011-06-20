@@ -100,6 +100,7 @@ SOURCES += main.cpp \
     longsheet.cpp \
     listsheet.cpp \
     headeredtextedit.cpp \
+    labeledcheckbox.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -161,6 +162,7 @@ HEADERS += templatepage.h \
     longsheet.h \
     listsheet.h \
     headeredtextedit.h \
+    labeledcheckbox.h \
 
 # theme
 include(theme/theme.pri)

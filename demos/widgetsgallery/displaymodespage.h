@@ -27,18 +27,7 @@ class MComboBox;
 class MLabel;
 class QGraphicsLinearLayout;
 class MContainer;
-
-class LabeledCheckbox : public QGraphicsWidget
-{
-    Q_OBJECT
-public:
-    LabeledCheckbox(QGraphicsItem * parent = 0, Qt::WindowFlags wFlags = 0);
-    virtual ~LabeledCheckbox();
-
-    MButton *button;
-    MLabel *label;
-    QGraphicsLinearLayout *roundedCornersCheckboxLayout;
-};
+class LabeledCheckbox;
 
 class DisplayModesPage : public TemplatePage
 {

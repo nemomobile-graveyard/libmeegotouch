@@ -34,47 +34,7 @@
 #include <QStringList>
 #include <QTimer>
 #include <QPropertyAnimation>
-
-LabeledCheckbox::LabeledCheckbox(QGraphicsItem * parent, Qt::WindowFlags wFlags)
-    : QGraphicsWidget(parent, wFlags)
-{
-    setFlag(QGraphicsItem::ItemHasNoContents);
-
-    button = new MButton;
-    button->setObjectName("button");
-    if (MApplication::instance()->objectName() == "widgetsgallery") {
-        button->setStyleName("CommonLeftCheckBox");
-    } else {
-        button->setStyleName("CommonLeftCheckBoxInverted");
-    }
-    button->setViewType(MButton::checkboxType);
-    button->setCheckable(true);
-
-    label = new MLabel;
-    label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    label->setObjectName("label");
-    if (MApplication::instance()->objectName() == "widgetsgallery") {
-        label->setStyleName("CommonSingleTitle");
-    } else {
-        label->setStyleName("CommonSingleTitleInverted");
-    }
-    label->setWordWrap(true);
-    label->setTextElide(true);
-
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal, this);
-    layout->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    layout->setSpacing(0);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addItem(button);
-    layout->addItem(label);
-    layout->setAlignment(button, Qt::AlignCenter);
-    layout->setAlignment(label, Qt::AlignCenter);
-}
-
-LabeledCheckbox::~LabeledCheckbox()
-{
-}
-
+#include "labeledcheckbox.h"
 
 DisplayModesPage::DisplayModesPage()
     : TemplatePage(TemplatePage::ApplicationView),
