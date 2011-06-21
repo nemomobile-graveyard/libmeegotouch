@@ -54,6 +54,7 @@ public:
     // top-level MWindow)
     MSheetStandAloneWindow *standAloneWindow;
     MSceneWindow::DeletionPolicy *appearSystemwideDeletionPolicy;
+    bool statusBarVisibleInSystemwide;
 };
 
 #endif // MSHEET_P_H

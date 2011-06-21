@@ -33,7 +33,8 @@ M_REGISTER_WIDGET(MSheet)
 
 MSheetPrivate::MSheetPrivate()
     : standAloneWindow(0),
-    appearSystemwideDeletionPolicy(0)
+    appearSystemwideDeletionPolicy(0),
+    statusBarVisibleInSystemwide(false)
 {
 }
 
@@ -151,6 +152,7 @@ void MSheetPrivate::appearSystemwide(MSceneWindow::DeletionPolicy policy)
     }
 
     standAloneWindow->setSheet(q);
+    standAloneWindow->setStatusBarVisible(statusBarVisibleInSystemwide);
 
     q->connect(q, SIGNAL(disappeared()), SLOT(_q_onStandAloneSheetDisappeared()));
 
@@ -250,6 +252,18 @@ void MSheet::setHeaderVisible(bool visible)
 bool MSheet::isHeaderVisible() const
 {
     return model()->headerVisible();
+}
+
+void MSheet::setStatusBarVisibleInSystemwide(bool visible)
+{
+    Q_D(MSheet);
+    d->statusBarVisibleInSystemwide = visible;
+}
+
+bool MSheet::isStatusBarVisibleInSystemwide() const
+{
+    Q_D(const MSheet);
+    return d->statusBarVisibleInSystemwide;
 }
 
 #include "moc_msheet.cpp"

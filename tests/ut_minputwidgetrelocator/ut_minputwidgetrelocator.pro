@@ -20,6 +20,7 @@ HEADERS += \
     mrelocatorstyle.h \
     mscenemanager.h \
     mscene.h \
+    msheetstandalonewindow.h \
     $$MSRCDIR/corelib/core/minputwidgetrelocator.h \
     $$MSRCDIR/corelib/core/mscrollchain.h \
     $$MSRCDIR/corelib/core/mabstractscroller.h \

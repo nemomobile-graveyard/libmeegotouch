@@ -96,6 +96,19 @@ class M_CORE_EXPORT MSheet : public MSceneWindow
      */
     Q_PROPERTY(bool headerVisible READ isHeaderVisible WRITE setHeaderVisible)
 
+    /*!
+       \property MSheet::statusBarVisibleInSystemwide
+       \brief Defines whether the status bar should be visible when sheet appears systemwide
+
+       To get a proper animation of a systemwide appearance you should set this
+       property before calling appearSystemwide().
+
+       This property has an effect only with sheets that are displayed with appearSystemwide().
+
+       By default this property is false (status bar not visible for systemwide appearances).
+     */
+    Q_PROPERTY(bool statusBarVisibleInSystemwide READ isStatusBarVisibleInSystemwide WRITE setStatusBarVisibleInSystemwide)
+
 public:
     /*!
       \brief Constructs a new sheet.
@@ -168,7 +181,11 @@ public:
       \brief Makes the sheet appear systemwide.
 
       The sheet will appear on its own stand-alone MWindow and separate scene.
-      It will be fullscreen, providing no status bar.
+
+      By default it will be fullscreen, providing no status bar. That can be
+      changed with setStatusBarVisibleInSystemwide(true).
+
+      \sa MSheet::statusBarVisibleInSystemwide
      */
     void appearSystemwide(MSceneWindow::DeletionPolicy policy);
 
@@ -182,6 +199,18 @@ public:
       \brief Returns whether the header is visible.
      */
     bool isHeaderVisible() const;
+
+    /*!
+      \brief Sets whether the status bar will be visible for systemwide appearances.
+      \sa isStatusBarVisibleInSystemwide(), appearSystemwide()
+     */
+    void setStatusBarVisibleInSystemwide(bool visible);
+
+    /*!
+      \brief Returns whether the status bar will be visible for systemwide appearances.
+      \sa setStatusBarVisibleInSystemwide(), appearSystemwide()
+     */
+    bool isStatusBarVisibleInSystemwide() const;
 
 private:
     Q_DECLARE_PRIVATE(MSheet)

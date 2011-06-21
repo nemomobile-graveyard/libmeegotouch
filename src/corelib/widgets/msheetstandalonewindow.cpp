@@ -18,8 +18,11 @@
 ****************************************************************************/
 
 #include "msheetstandalonewindow.h"
+#include <mdeviceprofile.h>
 #include <mdismissevent.h>
 #include <mscenemanager.h>
+#include <msheet.h>
+#include <mstatusbar.h>
 
 #include <QApplication>
 #include <QTimer>
@@ -31,7 +34,10 @@
 #endif
 
 MSheetStandAloneWindow::MSheetStandAloneWindow()
-    : MWindow(new MSceneManager, 0), beingClosed(false), sheet(0)
+    : MWindow(new MSceneManager, 0)
+    , beingClosed(false)
+    , sheet(0)
+    , statusBar(0)
 {
     setRoundedCornersEnabled(true);
 #ifdef Q_WS_X11
@@ -41,11 +47,31 @@ MSheetStandAloneWindow::MSheetStandAloneWindow()
 
 MSheetStandAloneWindow::~MSheetStandAloneWindow()
 {
+    delete statusBar;
+    statusBar = 0;
 }
 
-void MSheetStandAloneWindow::setSheet(MSceneWindow *sheet)
+void MSheetStandAloneWindow::setSheet(MSheet *sheet)
 {
     this->sheet = sheet;
+}
+
+void MSheetStandAloneWindow::setStatusBarVisible(bool statusBarVisible)
+{
+    if (!statusBar && MDeviceProfile::instance()->showStatusbar()
+            && statusBarVisible)
+        statusBar = new MStatusBar;
+
+    if (statusBar) {
+        if (statusBarVisible) {
+            if (isVisible())
+                sceneManager()->appearSceneWindow(statusBar);
+            else
+                sceneManager()->appearSceneWindowNow(statusBar);
+        } else {
+            sceneManager()->disappearSceneWindow(statusBar);
+        }
+    }
 }
 
 void MSheetStandAloneWindow::closeEvent(QCloseEvent *event)
@@ -96,4 +122,15 @@ void MSheetStandAloneWindow::appendMSheetTypeProperty()
                     XInternAtom(QX11Info::display(), "_NET_WM_WINDOW_TYPE", False),
                     XA_ATOM, 32, PropModeAppend, (unsigned char*) &atomWindowType, 1);
 }
+
+void MSheetStandAloneWindow::maximizeSheetArea()
+{
+    setStatusBarVisible(false);
+}
+
+void MSheetStandAloneWindow::restoreSheetArea()
+{
+    setStatusBarVisible(sheet->isStatusBarVisibleInSystemwide());
+}
+
 #endif //Q_WS_X11

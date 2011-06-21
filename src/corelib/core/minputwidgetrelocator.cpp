@@ -29,6 +29,7 @@
 #include "mscenemanager.h"
 #include "mscene.h"
 #include "mscrollchain.h"
+#include <msheetstandalonewindow.h>
 
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
@@ -510,6 +511,11 @@ void MInputWidgetRelocator::maximizeScreenArea()
         MApplicationWindow *appWnd = qobject_cast<MApplicationWindow *>(view);
         if (appWnd) {
             appWnd->d_func()->maximizePageArea();
+        } else {
+            MSheetStandAloneWindow *sheetWnd = qobject_cast<MSheetStandAloneWindow *>(view);
+            if (sheetWnd) {
+                sheetWnd->maximizeSheetArea();
+            }
         }
     }
 }
@@ -521,6 +527,11 @@ void MInputWidgetRelocator::restoreScreenArea()
         MApplicationWindow *appWnd = qobject_cast<MApplicationWindow *>(view);
         if (appWnd) {
             appWnd->d_func()->restorePageArea();
+        } else {
+            MSheetStandAloneWindow *sheetWnd = qobject_cast<MSheetStandAloneWindow *>(view);
+            if (sheetWnd) {
+                sheetWnd->restoreSheetArea();
+            }
         }
     }
 }

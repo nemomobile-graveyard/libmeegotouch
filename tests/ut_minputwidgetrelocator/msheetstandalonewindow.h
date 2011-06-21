@@ -19,45 +19,18 @@
 
 #ifndef MSHEETSTANDALONEWINDOW_H
 
-//! \internal
-
 #include <mwindow.h>
 
-#include <QPointer>
-
-class MSheet;
-class MSceneWindow;
-
 /*
-  \class MSheetStandAloneWindow
-  \brief For MSheet::appearSystemwide()
+   mockup of MSheetStandAloneWindow
  */
 class MSheetStandAloneWindow : public MWindow
 {
     Q_OBJECT
 public:
-    MSheetStandAloneWindow();
-    virtual ~MSheetStandAloneWindow();
-    void setSheet(MSheet *sheet);
+    void maximizeSheetArea() {}
+    void restoreSheetArea() {}
 
-    void setStatusBarVisible(bool visible);
-    void maximizeSheetArea();
-    void restoreSheetArea();
-
-protected:
-    virtual void closeEvent(QCloseEvent *event);
-    virtual void showEvent(QShowEvent *event);
-    virtual void hideEvent(QHideEvent *event);
-
-private:
-#ifdef Q_WS_X11
-    void appendMSheetTypeProperty();
-#endif //Q_WS_X11
-    bool beingClosed;
-    MSheet *sheet;
-    QPointer<MSceneWindow> statusBar;
 };
-
-//! \internal_end
 
 #endif
