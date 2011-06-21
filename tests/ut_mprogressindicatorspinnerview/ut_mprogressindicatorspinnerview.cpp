@@ -47,6 +47,7 @@ void Ut_MProgressIndicatorSpinnerView::initTestCase()
     m_progressIndicator = new MProgressIndicator();
     m_subject = new MSpinnerView(m_progressIndicator);
     m_progressIndicator->setView(m_subject);
+    m_progressIndicator->setUnknownDuration(true);
 
     m_progressIndicator->resize(20, 20);
 
@@ -87,12 +88,16 @@ void Ut_MProgressIndicatorSpinnerView::testSpinnerInSwitcher()
     // get animation duration
     int slowDuration = m_subject->d_func()->positionAnimation->duration();
 
-    QVERIFY(normalDuration < slowDuration);
-
+    //same duration, but the animation should be paused when we are in switcher
+    QVERIFY(normalDuration == slowDuration);
+    QVERIFY(m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Paused ||
+            m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Stopped);
+    
     // emulate leaving the switcher
     m_subject->d_func()->_q_switcherExited();
     int currentDuration = m_subject->d_func()->positionAnimation->duration();
     QCOMPARE(currentDuration, normalDuration);
+    QVERIFY(m_subject->d_func()->positionAnimation->state() == QPropertyAnimation::Running);
 }
 
 void Ut_MProgressIndicatorSpinnerView::testAnimationState()

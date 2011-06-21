@@ -57,13 +57,7 @@ void MSpinnerViewPrivate::refreshStyle()
 {
     Q_Q(MSpinnerView);
 
-    const MWindow *mWindow = getMWindow();
-
-    if (mWindow && mWindow->isInSwitcher()) {
-        positionAnimation->setDuration(q->style()->period() * ANIMATION_SLOWDOWN_RATIO);
-    } else {
-        positionAnimation->setDuration(q->style()->period());
-    }
+    positionAnimation->setDuration(q->style()->period());
     positionAnimation->setStartValue(0);
     positionAnimation->setEndValue(q->style()->numberOfFrames());
     reloadFrames();
@@ -146,16 +140,12 @@ void MSpinnerViewPrivate::_q_pauseOrResumeAnimation()
 
 void MSpinnerViewPrivate::_q_switcherEntered()
 {
-    Q_Q(MSpinnerView);
-
-    positionAnimation->setDuration(q->style()->period() * ANIMATION_SLOWDOWN_RATIO);
+    _q_pauseAnimation();
 }
 
 void MSpinnerViewPrivate::_q_switcherExited()
 {
-    Q_Q(MSpinnerView);
-
-    positionAnimation->setDuration(q->style()->period());
+    _q_resumeAnimation();
 }
 
 MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
