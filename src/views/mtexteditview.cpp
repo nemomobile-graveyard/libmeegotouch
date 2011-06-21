@@ -1462,9 +1462,10 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    if (magnifierHidden
-        || !insideCurrentPreedit
-        || d->controller->hasSelectedText()) {
+    if ((magnifierHidden
+         || !insideCurrentPreedit
+         || d->controller->hasSelectedText())
+        && !style()->disableToolbar()) {
         d->showEditorToolbar();
     }
 

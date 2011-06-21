@@ -49,6 +49,7 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(int,          focusTransitionDuration,  FocusTransitionDuration)
     M_STYLE_ATTRIBUTE(int,          hideShowPromptDuration,   HideShowPromptDuration)
     M_STYLE_ATTRIBUTE(int,          promptTransitionDelay,    PromptTransitionDelay)
+    M_STYLE_ATTRIBUTE(bool,         disableToolbar,           DisableToolbar)
         
     M_STYLE_ATTRIBUTE(int,          textClippingLeft,         TextClippingLeft)
     M_STYLE_ATTRIBUTE(int,          textClippingTop,          TextClippingTop)
