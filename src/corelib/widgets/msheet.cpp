@@ -20,24 +20,13 @@
 #include "msheet.h"
 #include "msheetmodel.h"
 #include "msheet_p.h"
-#include "mdismissevent.h"
+#include "msheetstandalonewindow.h"
 #include <mscene.h>
 #include <mscenemanager.h>
 #include <mscenemanager_p.h>
-#include <mwindow.h>
-
-#include <QApplication>
-#include <QCloseEvent>
-#include <QTimer>
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MSheet)
-
-#ifdef Q_WS_X11
-# include <QX11Info>
-# include <X11/Xatom.h>
-# include <X11/Xlib.h>
-#endif
 
 //////////////////
 // MSheetPrivate
@@ -262,67 +251,5 @@ bool MSheet::isHeaderVisible() const
 {
     return model()->headerVisible();
 }
-
-//////////////////
-// MSheetStandAloneWindow
-
-MSheetStandAloneWindow::MSheetStandAloneWindow()
-    : MWindow(new MSceneManager, 0), beingClosed(false), sheet(0)
-{
-    setRoundedCornersEnabled(true);
-#ifdef Q_WS_X11
-    appendMSheetTypeProperty();
-#endif //Q_WS_X11
-}
-
-void MSheetStandAloneWindow::closeEvent(QCloseEvent *event)
-{
-    if (sheet) {
-        MDismissEvent dismissEvent;
-        QApplication::sendEvent(sheet, &dismissEvent);
-
-        event->setAccepted(dismissEvent.isAccepted());
-    } else {
-        event->accept();
-    }
-
-    beingClosed = event->isAccepted();
-}
-
-void MSheetStandAloneWindow::showEvent(QShowEvent *event)
-{
-    Q_UNUSED(event);
-    // reset variable
-    beingClosed = false;
-}
-
-void MSheetStandAloneWindow::hideEvent(QHideEvent *event)
-{
-    Q_UNUSED(event);
-
-    if (!sheet)
-        return;
-
-    // OBS: disappear only on the next event loop as we might be
-    // called from within MSceneWindowPrivate::canDisappear()
-
-    if (beingClosed) {
-        QTimer::singleShot(0, sheet, SIGNAL(_q_dismissSystemSheetImmediately()));
-    } else {
-        QTimer::singleShot(0, sheet, SIGNAL(_q_makeSystemSheetDisappearImmediately()));
-    }
-}
-
-#ifdef Q_WS_X11
-void MSheetStandAloneWindow::appendMSheetTypeProperty()
-{
-    Atom atomWindowType = XInternAtom(QX11Info::display(),
-                                      "_MEEGOTOUCH_NET_WM_WINDOW_TYPE_SHEET", False);
-
-    XChangeProperty(QX11Info::display(), effectiveWinId(),
-                    XInternAtom(QX11Info::display(), "_NET_WM_WINDOW_TYPE", False),
-                    XA_ATOM, 32, PropModeAppend, (unsigned char*) &atomWindowType, 1);
-}
-#endif //Q_WS_X11
 
 #include "moc_msheet.cpp"

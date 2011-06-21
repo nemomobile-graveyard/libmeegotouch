@@ -23,8 +23,6 @@
 #include "msheet.h"
 #include "mscenewindow_p.h"
 
-#include <mwindow.h>
-
 class MSheetStandAloneWindow;
 
 class MSheetPrivate : public MSceneWindowPrivate
@@ -56,27 +54,6 @@ public:
     // top-level MWindow)
     MSheetStandAloneWindow *standAloneWindow;
     MSceneWindow::DeletionPolicy *appearSystemwideDeletionPolicy;
-};
-
-class MSheetStandAloneWindow : public MWindow
-{
-    Q_OBJECT
-public:
-    MSheetStandAloneWindow();
-    virtual ~MSheetStandAloneWindow() {}
-    void setSheet(MSceneWindow *sheet) { this->sheet = sheet; }
-
-protected:
-    virtual void closeEvent(QCloseEvent *event);
-    virtual void showEvent(QShowEvent *event);
-    virtual void hideEvent(QHideEvent *event);
-
-private:
-#ifdef Q_WS_X11
-    void appendMSheetTypeProperty();
-#endif //Q_WS_X11
-    bool beingClosed;
-    MSceneWindow *sheet;
 };
 
 #endif // MSHEET_P_H

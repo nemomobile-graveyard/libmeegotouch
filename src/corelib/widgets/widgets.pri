@@ -130,6 +130,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mpopuplist_p.h \
     $$WIDGETS_SRC_DIR/mscenewindow_p.h \
     $$WIDGETS_SRC_DIR/msheet_p.h \
+    $$WIDGETS_SRC_DIR/msheetstandalonewindow.h \
     $$WIDGETS_SRC_DIR/mstatusbar_p.h \
     $$WIDGETS_SRC_DIR/mstatusbarstylenamehandler.h \
     $$WIDGETS_SRC_DIR/mwindow_p.h \
@@ -188,6 +189,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mscenewindow.cpp \
     $$WIDGETS_SRC_DIR/mseekbar.cpp \
     $$WIDGETS_SRC_DIR/msheet.cpp \
+    $$WIDGETS_SRC_DIR/msheetstandalonewindow.cpp \
     $$WIDGETS_SRC_DIR/mslider.cpp \
     $$WIDGETS_SRC_DIR/mslidermodel.cpp \
     $$WIDGETS_SRC_DIR/mstatusbar.cpp \
