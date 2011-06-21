@@ -50,11 +50,14 @@ public:
     void connectToStandAloneWindowSignals();
     void disconnectFromStandAloneWindowSignals();
 
+    void applySystemwideModeOrientation();
+
     // Objects used to display the sheet systemwide (inside a separate
     // top-level MWindow)
     MSheetStandAloneWindow *standAloneWindow;
     MSceneWindow::DeletionPolicy *appearSystemwideDeletionPolicy;
     bool statusBarVisibleInSystemwide;
+    MSheet::SystemwideModeOrientation systemwideModeOrientation;
 };
 
 #endif // MSHEET_P_H

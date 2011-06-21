@@ -109,7 +109,35 @@ class M_CORE_EXPORT MSheet : public MSceneWindow
      */
     Q_PROPERTY(bool statusBarVisibleInSystemwide READ isStatusBarVisibleInSystemwide WRITE setStatusBarVisibleInSystemwide)
 
+    /*!
+      \property MSheet::systemwideModeOrientation
+      \brief Orientation of the sheet when it appears systemwide.
+
+      This property affects only sheets that are shown with appearSystemwide().
+      You should set this property before calling appearSystemwide().
+
+      The default value of this property is FollowsDeviceOrientation.
+
+      \sa appearSystemwide()
+     */
+    Q_PROPERTY(SystemwideModeOrientation systemwideModeOrientation READ systemwideModeOrientation WRITE setSystemwideModeOrientation)
+
 public:
+
+    /*!
+     * This enum describes the possible behaviors of the sheet's
+       orientation when it's displayed systemwide.
+       \sa appearSystemwide()
+     */
+    enum SystemwideModeOrientation {
+        FollowsDeviceOrientation = 0, /*!< Follows the device orientation. */
+        FollowsCurrentAppWindowOrientation, /*!< Follows the orientation of the
+            current application window. E.g. if it's launched on top of an app. that's
+            locked to portrait the sheet will also be (and remain) in portrait.*/
+        LockedToPortraitOrientation, /*!< Locked to portrait orientation. */
+        LockedToLandscapeOrientation /*!< Locked to landscape orientation. */
+    };
+
     /*!
       \brief Constructs a new sheet.
      */
@@ -185,7 +213,10 @@ public:
       By default it will be fullscreen, providing no status bar. That can be
       changed with setStatusBarVisibleInSystemwide(true).
 
-      \sa MSheet::statusBarVisibleInSystemwide
+      You can change the orientation behavior of the systemwide sheet by
+      calling setSystemwideModeOrientation() before this method.
+
+      \sa MSheet::statusBarVisibleInSystemwide, MSheet::systemwideModeOrientation
      */
     void appearSystemwide(MSceneWindow::DeletionPolicy policy);
 
@@ -212,6 +243,19 @@ public:
      */
     bool isStatusBarVisibleInSystemwide() const;
 
+
+    /*!
+      \brief Returns the orientation behavior when sheet appears systemwide
+      \sa appearSystemwide()
+     */
+    SystemwideModeOrientation systemwideModeOrientation() const;
+
+    /*!
+      \brief Sets the orientation behavior for systemwide a appearance
+      \sa appearSystemwide()
+     */
+    void setSystemwideModeOrientation(SystemwideModeOrientation orientation);
+
 private:
     Q_DECLARE_PRIVATE(MSheet)
     Q_DISABLE_COPY(MSheet)
@@ -221,5 +265,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onCentralWidgetDestroyed())
     Q_PRIVATE_SLOT(d_func(), void _q_onHeaderWidgetDestroyed())
 };
+
+Q_DECLARE_METATYPE(MSheet::SystemwideModeOrientation)
 
 #endif // MSHEET_H

@@ -34,7 +34,8 @@ M_REGISTER_WIDGET(MSheet)
 MSheetPrivate::MSheetPrivate()
     : standAloneWindow(0),
     appearSystemwideDeletionPolicy(0),
-    statusBarVisibleInSystemwide(false)
+    statusBarVisibleInSystemwide(false),
+    systemwideModeOrientation(MSheet::FollowsDeviceOrientation)
 {
 }
 
@@ -151,6 +152,8 @@ void MSheetPrivate::appearSystemwide(MSceneWindow::DeletionPolicy policy)
         standAloneWindow = new MSheetStandAloneWindow;
     }
 
+    applySystemwideModeOrientation();
+
     standAloneWindow->setSheet(q);
     standAloneWindow->setStatusBarVisible(statusBarVisibleInSystemwide);
 
@@ -163,6 +166,40 @@ void MSheetPrivate::appearSystemwide(MSceneWindow::DeletionPolicy policy)
 
     standAloneWindow->sceneManager()->appearSceneWindowNow(q);
     standAloneWindow->show();
+}
+
+void MSheetPrivate::applySystemwideModeOrientation()
+{
+    Q_ASSERT(standAloneWindow);
+
+    switch (systemwideModeOrientation) {
+        case MSheet::FollowsDeviceOrientation:
+            standAloneWindow->unlockOrientation();
+            standAloneWindow->setProperty(
+                        "followsCurrentApplicationWindowOrientation", QVariant());
+            break;
+        case MSheet::FollowsCurrentAppWindowOrientation:
+            standAloneWindow->unlockOrientation();
+            standAloneWindow->setProperty(
+                        "followsCurrentApplicationWindowOrientation", 1);
+            break;
+        case MSheet::LockedToPortraitOrientation:
+            standAloneWindow->unlockOrientation();
+            standAloneWindow->setProperty(
+                        "followsCurrentApplicationWindowOrientation", QVariant());
+            standAloneWindow->setPortraitOrientation();
+            standAloneWindow->lockOrientation();
+            break;
+        case MSheet::LockedToLandscapeOrientation:
+            standAloneWindow->unlockOrientation();
+            standAloneWindow->setProperty(
+                        "followsCurrentApplicationWindowOrientation", QVariant());
+            standAloneWindow->setLandscapeOrientation();
+            standAloneWindow->lockOrientation();
+            break;
+        default:
+            qFatal("invalid enum value");
+    };
 }
 
 //////////////////
@@ -264,6 +301,26 @@ bool MSheet::isStatusBarVisibleInSystemwide() const
 {
     Q_D(const MSheet);
     return d->statusBarVisibleInSystemwide;
+}
+
+MSheet::SystemwideModeOrientation MSheet::systemwideModeOrientation() const
+{
+    Q_D(const MSheet);
+    return d->systemwideModeOrientation;
+}
+
+void MSheet::setSystemwideModeOrientation(MSheet::SystemwideModeOrientation orientation)
+{
+    Q_D(MSheet);
+
+    if (orientation == d->systemwideModeOrientation)
+        return;
+
+    d->systemwideModeOrientation = orientation;
+
+    if (d->standAloneWindow) {
+        d->applySystemwideModeOrientation();
+    }
 }
 
 #include "moc_msheet.cpp"
