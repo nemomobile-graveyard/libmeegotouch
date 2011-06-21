@@ -105,7 +105,7 @@ SUBDIRS     =  \
     ut_mappletcommunicator \
     ut_mappletserver \
     ut_mappletclient \
-    ut_mapplethandle \
+#    ut_mapplethandle \ // Tests obsolete component
     ut_mappletsharedmutex \
     ut_mappletinstancemanager \
     ut_mappletinstancedata \
