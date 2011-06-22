@@ -750,4 +750,105 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
 #endif
 }
 
+void Ut_MLocationDatabase::testTimeZoneOffsets()
+{
+    MLocationDatabase db;
+    QList<MCity> cities = db.cities();
+
+    // do only run the tests, if we were able to load
+    // some cities from the meegotouch-cities-*
+    // package.
+    if (cities.count() < 10) {
+        qWarning( "loading of city list failed, skipping test" );
+        return;
+    }
+
+    MLocale locale("en_US");
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+
+    QStringList olsonIds;
+#if 1
+    // full test, test almost all Olson IDs:
+    foreach(MCity city, cities) {
+        if(!olsonIds.contains(city.timeZone()))
+            olsonIds << city.timeZone();
+    }
+#else
+    // short test, test problematic Olson IDs only:
+    olsonIds = (QStringList()
+                << "Pacific/Fiji"
+                << "America/Santiago"
+                << "Pacific/Easter"
+                << "America/Havana"
+                << "Europe/Istanbul"
+                << "Pacific/Apia"
+                << "Africa/Casablanca"
+                << "Atlantic/Stanley"
+                << "Africa/Cairo");
+#endif
+    olsonIds.sort();
+
+    QDateTime startDateTime(QDate(2011,01,1), QTime(2,58,44), Qt::UTC);
+    QDateTime endDateTime(QDate(2012,01,1), QTime(2,58,45), Qt::UTC);
+    QHash<QString, QString> errorHash;
+    QString allErrors;
+    foreach(const QString &olsonId, olsonIds) {
+        debugStream << "checking olson id " << olsonId << "...\n";
+        debugStream.flush();
+        MCity city = db.citiesInTimeZone(olsonId).first();
+        setenv("TZ", olsonId.toUtf8().constData(), 1);
+        tzset();
+        for(QDateTime dateTime = startDateTime;
+            dateTime <  endDateTime;
+            dateTime = dateTime.addSecs(4*900)) {
+            QString dateTimeString = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+            time_t ts = dateTime.toMSecsSinceEpoch()/1000;
+            struct tm tm;
+            localtime_r(&ts, &tm);
+            qint32 gmtoffLibc = tm.tm_gmtoff;
+            qint32 gmtoffIcu = city.timeZoneTotalOffset(dateTime)/1000;
+            if(gmtoffIcu == gmtoffLibc) {
+                if (!errorHash[olsonId].isEmpty()) {
+                    QString oldError =
+                        dateTimeString + " FIXED: " + errorHash[olsonId];
+                    errorHash[olsonId] = "";
+                    allErrors += oldError;
+                    debugStream << oldError;
+                }
+            }
+            else {
+                QString errorString
+                    = "icu=" + QString::number(gmtoffIcu)
+                    + " libc=" + QString::number(gmtoffLibc)
+                    + " diff=" + QString::number(gmtoffIcu - gmtoffLibc)
+                    + " " + city.timeZone()
+                    + " " + city.key() + "\n";
+                if (errorHash[olsonId] != errorString) {
+                    errorHash[olsonId] = errorString;
+                    QString newError = dateTimeString + " " + errorString;
+                    allErrors += newError;
+                    debugStream << newError;
+                }
+            }
+        }
+    }
+    debugStream.flush();
+    QString errorFileName = "/tmp/ut_mlocationdatabase-gmtoffset-errors.txt";
+    QFile errorFile(errorFileName);
+    if (!errorFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        QFAIL(qPrintable("could not open file " + errorFileName));
+    int bytesWritten = errorFile.write(allErrors.toUtf8().constData());
+    if (bytesWritten == -1)
+        QFAIL(qPrintable("could not write to file" + errorFileName));
+    QCOMPARE(uint(bytesWritten), qstrlen(allErrors.toUtf8().constData()));
+    errorFile.close();
+    debugStream
+        << "------------------------------------------------------\n"
+        << "contents of " + errorFileName + " :\n"
+        << "------------------------------------------------------\n";
+    debugStream.flush();
+    QProcess::execute("cat " + errorFileName);
+    QVERIFY2(allErrors.isEmpty(), qPrintable("There were errors, please check contents of " + errorFileName));
+}
 QTEST_APPLESS_MAIN(Ut_MLocationDatabase);

@@ -59,6 +59,8 @@ private slots:
     void testCities();
 
     void testCitiesDumpInfo();
+
+    void testTimeZoneOffsets();
 };
 
 #endif
