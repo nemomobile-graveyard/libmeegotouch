@@ -24,7 +24,10 @@ configuration.</strong>
 be closed without terminating them. The next time when the application is needed, the application 
 window is displayed very quickly. Lazy shutdown does
 not speed up the first start-up at all, but it improves the performance
-of applications that already take advantage of prestarting.
+of applications that already take advantage of prestarting. <strong>In the MeeGo Touch UI framework
+lazy shutdown is limited to a small set of critical applications. This
+feature cannot be used without support from the system
+configuration.</strong>
 
 An application can use any combination of the above features.
 
