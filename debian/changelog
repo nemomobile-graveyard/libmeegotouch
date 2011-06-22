@@ -1,8 +1,18 @@
-libmeegotouch (0.23.0~1) unstable; urgency=low
+libmeegotouch (0.23.0-1) unstable; urgency=low
 
-  * Unreleased
+  * Fixes: NB#259561 - [TASK] System sheet should allow defining if status area is shown or not
+  * Fixes: NB#263587 - messaging-ui crash observed at SmsEditorBasePage in MTBF testing
+  * Fixes: NB#263867 - Long press is not recognized when page is autoscrolling very slowly
+  * Fixes: NB#257379 - Language names of Chinese languages lost consistency and logic
+  * Fixes: NB#263785 - FT_BR: The time zone name in settings and clock does not match.
+  * Fixes: NB#262082 - Language change event might lead to crash
+  * Fixes: NB#256749 - Chinese month and year have wrong order
+  * Fixes: NB#260245 - MObjectMenu and MDialog does not grab the focus from MTextEdit in some particular cases
+  * Fixes: NB#263591 - [TASK] Progress bar does insane amount of screen both on foreground and in Recents view
+  * Fixes: Pointer grab is not cancelled on focus out
+  * Fixes: NB#262820 - COREWEB: 'MScalableImage::borders MSliderGroove::paint _q_paintItem QGraphicsScenePrivate::drawItemHelper QGraphicsScenePrivate::draw'
 
- -- Pekka Vuorela <pekka.ta.vuorela@nokia.com>  Wed, 22 Jun 2011 14:26:39 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 22 Jun 2011 15:37:00 +0300
 
 libmeegotouch (0.22.5-1) unstable; urgency=low
 
