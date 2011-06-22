@@ -1,3 +1,9 @@
+libmeegotouch (0.23.1~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 22 Jun 2011 15:41:00 +0300
+
 libmeegotouch (0.23.0-1) unstable; urgency=low
 
   * Fixes: NB#259561 - [TASK] System sheet should allow defining if status area is shown or not
