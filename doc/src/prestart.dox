@@ -12,7 +12,9 @@ in the background in their mainloop but do not show or do anything. If an
 application gets terminated, Applifed prestarts it again automatically.
 
 When the user closes an application, lazy shutdown allows an application to enter the \b prestarted \b
-state instead of terminating it. This allows the next application to start up very quickly. 
+state instead of terminating it. This allows the next application to start up very quickly. To use this
+lazy shutdown feature an application shall be registered in \b Applifed configuration.
+Non-registered applications are closed by \b Applifed at the moment they returns from the running state to the prestarted state.
 Automatically prestarted applications can use lazy shutdown as well.
 
  
