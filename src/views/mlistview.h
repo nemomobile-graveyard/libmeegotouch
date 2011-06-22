@@ -99,6 +99,8 @@ private:
     friend class MPlainMultiColumnListViewPrivate;
     friend class MGroupHeaderListViewPrivate;
     friend class MMultiColumnListViewPrivate;
+
+    friend class Ut_MListView;
 };
 
 #endif

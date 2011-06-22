@@ -41,6 +41,7 @@ SUBDIRS     =  \
      ut_mnavigationbar \
      ut_mnavigationbarview \
      ut_mlist \
+     ut_mlistview \
      ut_mlistviewgroupheader \
      ut_mlistviewmulticolumn \
      ut_mlistviewseparators \
