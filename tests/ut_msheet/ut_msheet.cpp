@@ -18,13 +18,14 @@
 ****************************************************************************/
 
 #include "ut_msheet.h"
+#include "contextproperty_stub.h"
 
 #include <QObject>
+#include <mdeviceprofile.h>
 #include <MApplication>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <MDismissEvent>
-
 #include <mscenemanager.h>
 #include <mwindow.h>
 
@@ -34,6 +35,17 @@
 // print "Expected" and "Actual" values in case of failure unless they're cast
 // to a known type
 #define STATE_COMPARE(s1, s2) QCOMPARE(static_cast<int>(s1), static_cast<int>(s2));
+
+
+bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
+{
+    if (isKeyboardOpen) {
+        return angle == M::Angle0;
+    } else {
+        return true;
+    }
+}
+
 
 Ut_MSheet::Ut_MSheet():
         subject(0),
@@ -46,6 +58,31 @@ void Ut_MSheet::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_msheet" };
     app = new MApplication(argc, app_name);
+
+    gContextPropertyStubMap->createStub("/maemo/InternalKeyboard/Present")->stubSetReturnValue("value", QVariant("false"));
+    gContextPropertyStubMap->createStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(""));
+    gContextPropertyStubMap->createStub("Screen.IsCovered")->stubSetReturnValue("value", QVariant("false"));
+    gContextPropertyStubMap->findStub("/maemo/InternalKeyboard/Open")->stubSetReturnValue("value", QVariant("false"));
+
+    if (MDeviceProfile::instance()->orientationFromAngle(M::Angle0) == M::Landscape) {
+        gContextPropertyStubMap->findStub("Screen.TopEdge")->
+                stubSetReturnValue("value", QVariant("top")); // landscape
+
+        gContextPropertyStubMap->createStub("/Screen/Desktop/OrientationAngle")->
+                stubSetReturnValue("value", QVariant(0)); // landscape
+
+        gContextPropertyStubMap->createStub("/Screen/CurrentWindow/OrientationAngle")->
+                stubSetReturnValue("value", QVariant(270)); // portrait
+    } else {
+        gContextPropertyStubMap->findStub("Screen.TopEdge")->
+                stubSetReturnValue("value", QVariant("left")); // landscape
+
+        gContextPropertyStubMap->createStub("/Screen/Desktop/OrientationAngle")->
+                stubSetReturnValue("value", QVariant(270)); // landscape
+
+        gContextPropertyStubMap->createStub("/Screen/CurrentWindow/OrientationAngle")->
+                stubSetReturnValue("value", QVariant(0)); // portrait
+    }
 }
 
 void Ut_MSheet::cleanupTestCase()
@@ -187,11 +224,122 @@ void Ut_MSheet::testCentralWidgetDoesntGrowBeyondSlotLimits()
     QVERIFY(bigWidget->size().height() == slot->size().height());
 }
 
-QGraphicsView *Ut_MSheet::fetchStandAloneWindowOfSubject()
+void Ut_MSheet::testSettingInitialSystemwideModeOrientation_data()
+{
+    QTest::addColumn<MSheet::SystemwideModeOrientation>("systemwideModeOrientation");
+    QTest::addColumn<bool>("isOrientationLocked");
+    QTest::addColumn<M::Orientation>("orientation");
+    QTest::addColumn<QVariant>("followsCurrentApplicationWindowOrientation");
+
+    QTest::newRow("FollowsDeviceOrientation")
+            << MSheet::FollowsDeviceOrientation
+            << false // not locked
+            << M::Landscape // since device orientation is in landscape
+            << QVariant(); // don't follow current app window
+
+    QTest::newRow("FollowsCurrentAppWindowOrientation")
+            << MSheet::FollowsCurrentAppWindowOrientation
+            << false // not locked
+            << M::Portrait // since current app. window is in portrait
+            << QVariant(1); // do follow current app window
+
+    QTest::newRow("LockedToPortraitOrientation")
+            << MSheet::LockedToPortraitOrientation
+            << true // locked
+            << M::Portrait // since we're locked to portrait
+            << QVariant(); // don't follow current app window
+
+    QTest::newRow("LockedToLandscapeOrientation")
+            << MSheet::LockedToLandscapeOrientation
+            << true // locked
+            << M::Landscape // since we're locked to landscape
+            << QVariant(); // don't follow current app window
+}
+
+void Ut_MSheet::testSettingInitialSystemwideModeOrientation()
+{
+    QFETCH(MSheet::SystemwideModeOrientation, systemwideModeOrientation);
+    QFETCH(bool, isOrientationLocked);
+    QFETCH(M::Orientation, orientation);
+    QFETCH(QVariant, followsCurrentApplicationWindowOrientation);
+
+    subject->setSystemwideModeOrientation(systemwideModeOrientation);
+    subject->appearSystemwide(MSceneWindow::KeepWhenDone);
+
+    MWindow *standAloneWindow = fetchStandAloneWindowOfSubject();
+    QVERIFY(standAloneWindow != 0);
+
+    QCOMPARE(standAloneWindow->isOrientationLocked(), isOrientationLocked);
+    QCOMPARE(standAloneWindow->orientation(), orientation);
+    QCOMPARE(standAloneWindow->property("followsCurrentApplicationWindowOrientation"),
+             followsCurrentApplicationWindowOrientation);
+}
+
+void Ut_MSheet::testChangingSystemwideModeOrientationAfterAppearance_data()
+{
+    QTest::addColumn<MSheet::SystemwideModeOrientation>("systemwideModeOrientation");
+    QTest::addColumn<bool>("isOrientationLocked");
+    QTest::addColumn<M::Orientation>("orientation");
+    QTest::addColumn<QVariant>("followsCurrentApplicationWindowOrientation");
+
+    QTest::newRow("FollowsDeviceOrientation")
+            << MSheet::FollowsDeviceOrientation
+            << false // not locked
+            << M::Landscape // since device orientation is in landscape
+            << QVariant(); // don't follow current app window
+
+    QTest::newRow("FollowsCurrentAppWindowOrientation")
+            << MSheet::FollowsCurrentAppWindowOrientation
+            << false // not locked
+            << M::Portrait // since current app. window is in portrait
+            << QVariant(1); // do follow current app window
+
+    QTest::newRow("LockedToPortraitOrientation")
+            << MSheet::LockedToPortraitOrientation
+            << true // locked
+            << M::Portrait // since we're locked to portrait
+            << QVariant(); // don't follow current app window
+
+    QTest::newRow("LockedToLandscapeOrientation")
+            << MSheet::LockedToLandscapeOrientation
+            << true // locked
+            << M::Landscape // since we're locked to landscape
+            << QVariant(); // don't follow current app window
+}
+
+void Ut_MSheet::testChangingSystemwideModeOrientationAfterAppearance()
+{
+    QFETCH(MSheet::SystemwideModeOrientation, systemwideModeOrientation);
+    QFETCH(bool, isOrientationLocked);
+    QFETCH(M::Orientation, orientation);
+    QFETCH(QVariant, followsCurrentApplicationWindowOrientation);
+
+    // show it with its default systemwide orientation: FollowsDeviceOrientation
+    subject->appearSystemwide(MSceneWindow::KeepWhenDone);
+
+    MWindow *standAloneWindow = fetchStandAloneWindowOfSubject();
+    QVERIFY(standAloneWindow != 0);
+
+    // device orientation is landscape
+    QCOMPARE(standAloneWindow->isOrientationLocked(), false);
+    QCOMPARE(standAloneWindow->orientation(), M::Landscape);
+    QCOMPARE(standAloneWindow->property("followsCurrentApplicationWindowOrientation"),
+             QVariant());
+
+    // and now change it
+    subject->setSystemwideModeOrientation(systemwideModeOrientation);
+
+    QCOMPARE(standAloneWindow->isOrientationLocked(), isOrientationLocked);
+    QCOMPARE(standAloneWindow->orientation(), orientation);
+    QCOMPARE(standAloneWindow->property("followsCurrentApplicationWindowOrientation"),
+             followsCurrentApplicationWindowOrientation);
+}
+
+MWindow *Ut_MSheet::fetchStandAloneWindowOfSubject()
 {
     if (subject->scene()
             && subject->scene()->views().count() == 1) {
-        return subject->scene()->views()[0];
+        return qobject_cast<MWindow*>(subject->scene()->views()[0]);
     } else {
         return 0;
     }

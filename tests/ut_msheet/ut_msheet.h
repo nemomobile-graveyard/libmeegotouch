@@ -28,6 +28,7 @@
 class MApplication;
 class MSheet;
 class QGraphicsView;
+class MWindow;
 
 class Ut_MSheet : public QObject
 {
@@ -47,8 +48,14 @@ private slots:
     void testMakingSheetDisappearHidesStandAloneWindow();
     void testCentralWidgetDoesntGrowBeyondSlotLimits();
 
+    void testSettingInitialSystemwideModeOrientation_data();
+    void testSettingInitialSystemwideModeOrientation();
+
+    void testChangingSystemwideModeOrientationAfterAppearance_data();
+    void testChangingSystemwideModeOrientationAfterAppearance();
+
 private:
-    QGraphicsView *fetchStandAloneWindowOfSubject();
+    MWindow *fetchStandAloneWindowOfSubject();
 
     MSheet *subject;
     MApplication *app;

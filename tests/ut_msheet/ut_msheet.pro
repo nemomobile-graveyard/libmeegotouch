@@ -6,6 +6,7 @@ INCLUDEPATH += $$MSRCDIR/corelib/widgets
 # unit test
 SOURCES += \
     ut_msheet.cpp \
+    ../stubs/stubbase.cpp \
 
 # unit test
 HEADERS += \
