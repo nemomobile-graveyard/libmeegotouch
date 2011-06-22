@@ -23,6 +23,7 @@
 #include <MApplicationPage>
 
 class LabeledCheckbox;
+class MComboBox;
 
 class SystemwideSheetPage : public MApplicationPage
 {
@@ -35,8 +36,11 @@ private Q_SLOTS:
     void openSystemwideSheet();
 
 private:
+    void createOrientationComboBox();
+
     LabeledCheckbox *statusBarCheckbox;
     LabeledCheckbox *autoFocusCheckbox;
+    MComboBox *orientationCombobox;
 };
 
 #endif

@@ -22,6 +22,7 @@
 #include "loginsheet.h"
 #include <QGraphicsLinearLayout>
 #include <MApplication>
+#include <MComboBox>
 
 SystemwideSheetPage::SystemwideSheetPage()
     : MApplicationPage()
@@ -45,11 +46,48 @@ void SystemwideSheetPage::createContent()
     autoFocusCheckbox->button->setChecked(false);
     mainLayout->addItem(autoFocusCheckbox);
 
+    createOrientationComboBox();
+    mainLayout->addItem(orientationCombobox);
+
     MButton *button = new MButton(this);
     //% "Open systemwide sheet"
     button->setText(qtTrId("xx_open_systemwide_sheet"));
     connect(button, SIGNAL(clicked()), SLOT(openSystemwideSheet()));
     mainLayout->addItem(button);
+}
+
+void SystemwideSheetPage::createOrientationComboBox()
+{
+    orientationCombobox = new MComboBox;
+    orientationCombobox->setObjectName("orientationCombobox");
+    if (MApplication::instance()->objectName() == "widgetsgallery") {
+        orientationCombobox->setStyleName("CommonComboBox");
+    } else {
+        orientationCombobox->setStyleName("CommonComboBoxInverted");
+    }
+
+    //%  "Orientation mode"
+    orientationCombobox->setTitle(qtTrId("xx_systemwidesheet_orientation"));
+
+    orientationCombobox->setIconVisible(false);
+
+    //% "Follow device"
+    orientationCombobox->insertItem(MSheet::FollowsDeviceOrientation,
+        qtTrId("xx_followsdeviceorientation"));
+
+    //% "Follows current app"
+    orientationCombobox->insertItem(MSheet::FollowsCurrentAppWindowOrientation,
+        qtTrId("xx_followscurrentappwindoworientation"));
+
+    //% "Locked to portrait"
+    orientationCombobox->insertItem(MSheet::LockedToPortraitOrientation,
+        qtTrId("xx_lockedtoportraitorientation"));
+
+    //% "Locked to landscape"
+    orientationCombobox->insertItem(MSheet::LockedToLandscapeOrientation,
+        qtTrId("xx_lockedtolandscapeorientation"));
+
+    orientationCombobox->setCurrentIndex(0);
 }
 
 void SystemwideSheetPage::openSystemwideSheet() {
@@ -67,6 +105,10 @@ void SystemwideSheetPage::openSystemwideSheet() {
 
     loginSheet->setAutoFocusOnFirstTextEditEnabled(
                 autoFocusCheckbox->button->isChecked());
+
+    loginSheet->setSystemwideModeOrientation(
+        static_cast<MSheet::SystemwideModeOrientation>(
+                    orientationCombobox->currentIndex()));
 
     loginSheet->appearSystemwide(MSceneWindow::DestroyWhenDone);
 }
