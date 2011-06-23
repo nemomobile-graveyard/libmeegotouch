@@ -61,7 +61,8 @@ greaterThan(ICUVERSION, 4.4) {
                  data/lang/pt_PT.txt \
                  data/lang/zh.txt \
                  data/lang/zh_Hant.txt
-    COLLTXT    = data/coll/zh.txt
+    COLLTXT    = data/coll/zh.txt \
+                 data/coll/ru.txt
     CURRTXT    = data/curr/en_HK.txt \
                  data/curr/zh_HK.txt \
                  data/curr/zh_Hans_HK.txt \

@@ -1,0 +1,7 @@
+ru{
+    collations{
+        standard{
+            Sequence { "[suppressContractions [Ѐ-ЗК-зк-џ] ]&е<<<Е<ё<<<Ё" }
+        }
+    }
+}
