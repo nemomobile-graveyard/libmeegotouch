@@ -218,9 +218,8 @@ void SingleSelectionDialogsPage::openSystemDialog()
         qtTrId("xx_dialogs_and_notifications_system_dialog_title"), M::NoStandardButton);
     dialog->setObjectName("systemDialog");
     //% "I'm a system dialog.<br>"
-    //% "You can skip me with the home button.<br>"
-    //% "I'll be minimised to the task switcher<br>"
-    //% "but I'll remain alive until you make a selection."
+    //% "You can skip me by tapping outside <br>"
+    //% "or on close button."
     MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_system_dialog_label"));
     label->setObjectName("systemDialogLabel");
     label->setStyleName("CommonBodyTextInverted");

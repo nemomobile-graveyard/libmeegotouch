@@ -388,8 +388,8 @@ All Labels can be aligned left, right or center and will be automatically trunca
     </message>
     <message id="xx_dialogs_and_notifications_system_dialog_label">
         <location filename="../singleselectiondialogspage.cpp" line="178"/>
-        <source>I&apos;m a system dialog.&lt;br&gt;You can skip me with the home button.&lt;br&gt;I&apos;ll be minimised to the task switcher&lt;br&gt;but I&apos;ll remain alive until you make a selection.</source>
-        <translation>I&apos;m a system dialog.&lt;br&gt;You can skip me with the home button.&lt;br&gt;I&apos;ll be minimised to the task switcher&lt;br&gt;but I&apos;ll remain alive until you make a selection.</translation>
+        <source>I&apos;m a system dialog.&lt;br&gt;You can skip me by tapping outside&lt;br&gt;or on close button.</source>
+        <translation>I&apos;m a system dialog.&lt;br&gt;You can skip me by tapping outside&lt;br&gt;or on close button.</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
         <location filename="../singleselectiondialogspage.cpp" line="193"/>

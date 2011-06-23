@@ -131,7 +131,7 @@ void MDialogPrivate::updateStandAloneHomeButtonVisibility()
 {
     Q_Q(MDialog);
 
-    if (q->isSystem() && q->isModal()) {
+    if (q->isSystem()) { 
         // Remove the home button if it's there.
         removeSceneWindowFromStandaloneScene(homeButtonPanel);
         homeButtonPanel = 0;
