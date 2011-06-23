@@ -210,15 +210,15 @@ MSheetViewPrivate::MSheetViewPrivate()
     : q_ptr(0),
       rootLayout(0),
       headerSlot(0),
-      animationGroup(0),
+      headerHidingAnimation(0),
       centralSlot(0)
 {
 }
 
 MSheetViewPrivate::~MSheetViewPrivate()
 {
-    delete animationGroup;
-    animationGroup = 0;
+    delete headerHidingAnimation;
+    headerHidingAnimation = 0;
 
     //rootLayout->removeItem(headerSlot);
     delete headerSlot;
@@ -274,25 +274,25 @@ void MSheetViewPrivate::updateHeaderVisibility()
     if (controller->sceneWindowState() != MSceneWindow::Appeared)
         return;
 
-    if (!animationGroup)
-        setupAnimation();
+    if (!headerHidingAnimation)
+        setupHeaderHidingAnimation();
 
     if (q->model()->headerVisible()) {
-        animationGroup->setDirection(QAbstractAnimation::Backward);
-        q->disconnect(animationGroup, SIGNAL(finished()), headerSlot, SLOT(hideSlot()));
+        headerHidingAnimation->setDirection(QAbstractAnimation::Backward);
+        q->disconnect(headerHidingAnimation, SIGNAL(finished()), headerSlot, SLOT(hideSlot()));
     } else {
-        animationGroup->setDirection(QAbstractAnimation::Forward);
-        q->connect(animationGroup, SIGNAL(finished()), headerSlot, SLOT(hideSlot()));
+        headerHidingAnimation->setDirection(QAbstractAnimation::Forward);
+        q->connect(headerHidingAnimation, SIGNAL(finished()), headerSlot, SLOT(hideSlot()));
     }
 
     if (!headerSlot->isVisible())
         headerSlot->setVisible(true);
-    animationGroup->start();
+    headerHidingAnimation->start();
 }
 
-void MSheetViewPrivate::setupAnimation()
+void MSheetViewPrivate::setupHeaderHidingAnimation()
 {
-    animationGroup = new QParallelAnimationGroup;
+    headerHidingAnimation = new QParallelAnimationGroup;
 
     //TODO: create animation class so that these parameters are stylable
     QPropertyAnimation* headerAnimation = new QPropertyAnimation;
@@ -311,8 +311,8 @@ void MSheetViewPrivate::setupAnimation()
     centralAnimation->setEasingCurve(QEasingCurve::Linear);
     centralAnimation->setDuration(300);
 
-    animationGroup->addAnimation(centralAnimation);
-    animationGroup->addAnimation(headerAnimation);
+    headerHidingAnimation->addAnimation(centralAnimation);
+    headerHidingAnimation->addAnimation(headerAnimation);
 }
 
 //////////////

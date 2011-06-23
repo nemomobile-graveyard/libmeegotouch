@@ -44,7 +44,7 @@ public:
 
     void updateHeaderVisibility();
 
-    void setupAnimation();
+    void setupHeaderHidingAnimation();
 
 private:
     Q_DECLARE_PUBLIC(MSheetView)
@@ -54,7 +54,7 @@ private:
     MSheetSpacer* rootLayoutHeaderSpacer;
 
     MSheetSlot *headerSlot;
-    QParallelAnimationGroup* animationGroup;
+    QParallelAnimationGroup* headerHidingAnimation;
     MSheetCentralSlot *centralSlot;
 
 #ifdef UNIT_TEST

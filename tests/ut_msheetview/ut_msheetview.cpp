@@ -77,14 +77,14 @@ void Ut_MSheetView::testHeaderHiding()
 
     // switch off header visibility
     sheet->setHeaderVisible(false);
-    QVERIFY(subject->d_func()->animationGroup->state() == QAbstractAnimation::Running);
+    QVERIFY(subject->d_func()->headerHidingAnimation->state() == QAbstractAnimation::Running);
     QVERIFY(subject->d_func()->headerSlot->isVisible() == true);
 
     // fast-forward animations
-    subject->d_func()->animationGroup->setCurrentTime(subject->d_func()->animationGroup->duration());
+    subject->d_func()->headerHidingAnimation->setCurrentTime(subject->d_func()->headerHidingAnimation->duration());
 
     // and next the header should become hidden and animation should be stopped
-    QVERIFY(subject->d_func()->animationGroup->state() == QAbstractAnimation::Stopped);
+    QVERIFY(subject->d_func()->headerHidingAnimation->state() == QAbstractAnimation::Stopped);
     QVERIFY(subject->d_func()->headerSlot->isVisible() == false);
 
     QApplication::processEvents();
@@ -103,20 +103,20 @@ void Ut_MSheetView::testHeaderHiding()
 
     // check conditons when visiblity status hasn't been changed
     sheet->setHeaderVisible(false);
-    QVERIFY(subject->d_func()->animationGroup->state() == QAbstractAnimation::Stopped);
+    QVERIFY(subject->d_func()->headerHidingAnimation->state() == QAbstractAnimation::Stopped);
     QVERIFY(subject->d_func()->headerSlot->isVisible() == false);
 
 
     // switch on header visibility
     sheet->setHeaderVisible(true);
-    QVERIFY(subject->d_func()->animationGroup->state() == QAbstractAnimation::Running);
+    QVERIFY(subject->d_func()->headerHidingAnimation->state() == QAbstractAnimation::Running);
     QVERIFY(subject->d_func()->headerSlot->isVisible() == true);
 
     // fast-forward animations. OBS: it's running backwards now
-    subject->d_func()->animationGroup->setCurrentTime(0);
+    subject->d_func()->headerHidingAnimation->setCurrentTime(0);
 
     // and next the header should become invisible and animation should be stopped
-    QVERIFY(subject->d_func()->animationGroup->state() == QAbstractAnimation::Stopped);
+    QVERIFY(subject->d_func()->headerHidingAnimation->state() == QAbstractAnimation::Stopped);
     QVERIFY(subject->d_func()->headerSlot->isVisible() == true);
 
     QApplication::processEvents();
@@ -129,7 +129,7 @@ void Ut_MSheetView::testHeaderHiding()
 
     // check conditons when visiblity status hasn't been changed
     sheet->setHeaderVisible(true);
-    QVERIFY(subject->d_func()->animationGroup->state() == QAbstractAnimation::Stopped);
+    QVERIFY(subject->d_func()->headerHidingAnimation->state() == QAbstractAnimation::Stopped);
     QVERIFY(subject->d_func()->headerSlot->isVisible() == true);
 }
 
