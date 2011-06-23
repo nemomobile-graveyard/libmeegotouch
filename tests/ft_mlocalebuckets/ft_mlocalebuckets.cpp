@@ -667,6 +667,12 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("zh_TW@collation=zhuyin")
         << "zh_TW@collation=zhuyin"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("ru_RU")
+        << "ru_RU"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("en_US")
+        << "en_US"
+        << "ft_mlocalebuckets_test-input.txt";
 }
 
 void Ft_MLocaleBuckets::sortTestFiles()
@@ -686,7 +692,7 @@ void Ft_MLocaleBuckets::sortTestFiles()
         QString line = QString::fromUtf8(testInputFile.readLine().constData());
         if (line.endsWith("\n"))
             line.remove(line.size() - 1, 1);
-        if (!line.startsWith(QChar('#'))) // ignore comments
+        if (!line.isEmpty())
             items << line;
     }
     testInputFile.close();
@@ -695,7 +701,7 @@ void Ft_MLocaleBuckets::sortTestFiles()
     QVERIFY(buckets.isEmpty());
     buckets.setItems(items);
     // dumpBuckets(buckets1, __FUNCTION__);
-    QString separator("----------------- ");
+    QString separator("-------------------- ");
     QString prettyResult
         = separator
         + QChar('\n')
@@ -717,6 +723,7 @@ void Ft_MLocaleBuckets::sortTestFiles()
     QVERIFY(buckets.bucketCount() == 0);
     QTextStream debugStream(stdout);
     debugStream.setCodec("UTF-8");
+    debugStream << "**********************************************\n";
     debugStream << prettyResult;
     debugStream.flush();
     QString testOutputFileName(
