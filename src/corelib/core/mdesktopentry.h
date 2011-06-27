@@ -231,6 +231,15 @@ public:
      */
     bool contains(const QString &group, const QString &key) const;
 
+    /*!
+     * Parses a desktop entry file.
+     *
+     * \param device the QIODevice to read the desktop file from
+     * \param map the QMap to store key-value pairs to
+     * \return true if desktop file can be parsed
+     */
+    static bool readDesktopFile(QIODevice &device, QMap<QString, QString> &desktopEntriesMap);
+
 protected:
     /*! \internal */
     //! Pointer to the private class

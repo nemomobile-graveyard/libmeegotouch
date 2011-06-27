@@ -77,68 +77,7 @@ MDesktopEntryPrivate::~MDesktopEntryPrivate()
 
 bool MDesktopEntryPrivate::readDesktopFile(QIODevice &device, QMap<QString, QString> &desktopEntriesMap)
 {
-    // Group header is of form [groupname]
-    // The group name is captured
-    // Group names may contain all ASCII characters except for [ and ] and control characters
-    QRegExp groupHeaderRE("\\[([\\0040-\\0132\\0134\\0136-\\0176]+)\\]");
-    // Key-value pair is of form Key=Value or Key[localization]=Value
-    // The first capture is the key and the second capture is the value
-    QRegExp keyValueRE("([A-Za-z0-9-]+"                // key
-                       "(?:\\[[A-Za-z0-9_@.-]+\\])?"   // optional localization
-                       ")"                             // end key capturing
-                       "\\s*=\\s*"                     // equals
-                       "(.*)");                        // value
-    QString currentGroup;
-    QStringList groupNames;
-    while (device.bytesAvailable()) {
-        QString line = QString::fromUtf8(device.readLine()).trimmed();
-        if (!line.isEmpty() && !line.startsWith('#')) {
-            if (keyValueRE.exactMatch(line) && !currentGroup.isEmpty()) {
-                // A key-value line was found. Prepend the key with the current group name.
-                QString desktopKey = currentGroup + '/' + keyValueRE.cap(1);
-
-                // Check whether it's already in the map
-                if (!desktopEntriesMap.contains(desktopKey)) {
-                    QString value = keyValueRE.cap(2);
-
-                    // Check whether this is a known multivalue key
-                    if (desktopKey == CategoriesKey || desktopKey == OnlyShowInKey ||
-                            desktopKey == NotShowInKey || desktopKey == MimeTypeKey) {
-                        if (value.endsWith("\\;") || !value.endsWith(';')) {
-                            // Multivalue doesn't end with a semicolon so mark the desktop entry invalid
-                            mWarning("MDesktopEntryPrivate") << "Value for multivalue key" << desktopKey << "does not end in a semicolon";
-                            valid = false;
-                        }
-                    }
-
-                    // Add the value to the desktop entries map
-                    desktopEntriesMap.insert(desktopKey, value);
-                } else {
-                    // Key is already present in the map so issue a warning
-                    mWarning("MDesktopEntryPrivate") << "Key" << desktopKey << "already defined. Value" << keyValueRE.cap(2) << "is ignored";
-                }
-            } else if (groupHeaderRE.exactMatch(line)) {
-                // A group header line was found and if it's not already defined, set it as current group
-                if (!groupNames.contains(groupHeaderRE.cap(1), Qt::CaseSensitive)) {
-                    if (groupNames.isEmpty() && groupHeaderRE.cap(1) != "Desktop Entry") {
-                        mWarning("MDesktopEntryPrivate") << "Desktop entry should start with group name \"Desktop Entry\" ";
-                        valid = false;
-                    } else {
-                        groupNames.push_back(groupHeaderRE.cap(1));
-                        currentGroup = groupHeaderRE.cap(1);
-                    }
-                }
-                // Redefining a group name will cause the desktop entry to become invalid but still parsed by the parser.
-                else {
-                    currentGroup = groupHeaderRE.cap(1);
-                    mWarning("MDesktopEntryPrivate") << "Multiple definitions of group" << groupHeaderRE.cap(1);
-                    valid = false;
-                }
-            } else {
-                mWarning("MDesktopEntryPrivate") << "Invalid .desktop entry line:" << line;
-            }
-        }
-    }
+    valid = MDesktopEntry::readDesktopFile(device, desktopEntriesMap);
     return valid;
 }
 
@@ -381,4 +320,72 @@ QString MDesktopEntry::startupWMClass() const
 QString MDesktopEntry::url() const
 {
     return value(URLKey);
+}
+
+bool MDesktopEntry::readDesktopFile(QIODevice &device, QMap<QString, QString> &desktopEntriesMap)
+{
+    bool valid = true;
+    // Group header is of form [groupname]
+    // The group name is captured
+    // Group names may contain all ASCII characters except for [ and ] and control characters
+    QRegExp groupHeaderRE("\\[([\\0040-\\0132\\0134\\0136-\\0176]+)\\]");
+    // Key-value pair is of form Key=Value or Key[localization]=Value
+    // The first capture is the key and the second capture is the value
+    QRegExp keyValueRE("([A-Za-z0-9-]+"                // key
+                       "(?:\\[[A-Za-z0-9_@.-]+\\])?"   // optional localization
+                       ")"                             // end key capturing
+                       "\\s*=\\s*"                     // equals
+                       "(.*)");                        // value
+    QString currentGroup;
+    QStringList groupNames;
+    while (device.bytesAvailable()) {
+        QString line = QString::fromUtf8(device.readLine()).trimmed();
+        if (!line.isEmpty() && !line.startsWith('#')) {
+            if (keyValueRE.exactMatch(line) && !currentGroup.isEmpty()) {
+                // A key-value line was found. Prepend the key with the current group name.
+                QString desktopKey = currentGroup + '/' + keyValueRE.cap(1);
+
+                // Check whether it's already in the map
+                if (!desktopEntriesMap.contains(desktopKey)) {
+                    QString value = keyValueRE.cap(2);
+
+                    // Check whether this is a known multivalue key
+                    if (desktopKey == CategoriesKey || desktopKey == OnlyShowInKey ||
+                            desktopKey == NotShowInKey || desktopKey == MimeTypeKey) {
+                        if (value.endsWith("\\;") || !value.endsWith(';')) {
+                            // Multivalue doesn't end with a semicolon so mark the desktop entry invalid
+                            mWarning("MDesktopEntryPrivate") << "Value for multivalue key" << desktopKey << "does not end in a semicolon";
+                            valid = false;
+                        }
+                    }
+
+                    // Add the value to the desktop entries map
+                    desktopEntriesMap.insert(desktopKey, value);
+                } else {
+                    // Key is already present in the map so issue a warning
+                    mWarning("MDesktopEntryPrivate") << "Key" << desktopKey << "already defined. Value" << keyValueRE.cap(2) << "is ignored";
+                }
+            } else if (groupHeaderRE.exactMatch(line)) {
+                // A group header line was found and if it's not already defined, set it as current group
+                if (!groupNames.contains(groupHeaderRE.cap(1), Qt::CaseSensitive)) {
+                    if (groupNames.isEmpty() && groupHeaderRE.cap(1) != "Desktop Entry") {
+                        mWarning("MDesktopEntryPrivate") << "Desktop entry should start with group name \"Desktop Entry\" ";
+                        valid = false;
+                    } else {
+                        groupNames.push_back(groupHeaderRE.cap(1));
+                        currentGroup = groupHeaderRE.cap(1);
+                    }
+                }
+                // Redefining a group name will cause the desktop entry to become invalid but still parsed by the parser.
+                else {
+                    currentGroup = groupHeaderRE.cap(1);
+                    mWarning("MDesktopEntryPrivate") << "Multiple definitions of group" << groupHeaderRE.cap(1);
+                    valid = false;
+                }
+            } else {
+                mWarning("MDesktopEntryPrivate") << "Invalid .desktop entry line:" << line;
+            }
+        }
+    }
+    return valid;
 }
