@@ -30,6 +30,7 @@ PRIVATE_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mcontentfadeandslideanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetscalefadeanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/mstatusareaslideanimation_p.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mstatusbarslideanimation.h \
 
 SOURCES += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mapplicationmenuanimation.cpp \
@@ -42,3 +43,4 @@ SOURCES += \
     $$ANIMATIONS_WIDGET_SRC_DIR/mcontentfadeandslideanimation.cpp \
     $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetscalefadeanimation.cpp \
     $$ANIMATIONS_WIDGET_SRC_DIR/mstatusareaslideanimation.cpp \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mstatusbarslideanimation.cpp \

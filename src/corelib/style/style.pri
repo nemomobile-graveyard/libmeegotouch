@@ -51,6 +51,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mcontentfadeandslideanimationstyle.h \
     $$STYLE_SRC_DIR/mtapstatemachinestyle.h \
     $$STYLE_SRC_DIR/mstatusareaslideanimationstyle.h \
+    $$STYLE_SRC_DIR/mstatusbarslideanimationstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS

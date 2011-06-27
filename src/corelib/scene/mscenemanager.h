@@ -59,6 +59,7 @@ class M_CORE_EXPORT MSceneManager : public QObject
     friend class MApplicationWindowPrivate;
     friend class MSheetPrivate;
     friend class MWidgetPrivate;
+    friend class MStatusBarSlideAnimation; // to access calculateSceneWindowGeometry()
 
 #ifdef UNIT_TEST
     friend class Ut_MSceneManager;

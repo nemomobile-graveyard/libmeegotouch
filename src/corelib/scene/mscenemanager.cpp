@@ -74,6 +74,7 @@
 #include <mwidgetmoveanimation.h>
 #include <mdialoganimation.h>
 #include <mwidgetscalefadeanimation.h>
+#include <mstatusbarslideanimation.h>
 #include <mtheme.h>
 #include <QPropertyAnimation>
 
@@ -1298,25 +1299,6 @@ void MSceneManagerPrivate::updatePagesAndSheetsGeometry()
     }
 }
 
-void MSceneManagerPrivate::addPagesAndSheetsGeometryUpdateAnimation(QParallelAnimationGroup* mainAnimation)
-{
-    foreach(MSceneWindow* window, windows) {
-        if ((window->windowType() == MSceneWindow::Sheet || window->windowType() == MSceneWindow::ApplicationPage) &&
-            window->sceneWindowState() != MSceneWindow::Disappeared)
-        {
-            QPropertyAnimation *geometryAnimation = new QPropertyAnimation;
-            geometryAnimation->setTargetObject(window);
-            geometryAnimation->setPropertyName("geometry");
-            geometryAnimation->setStartValue(window->geometry());
-            geometryAnimation->setEndValue(calculateSceneWindowGeometry(window));
-            geometryAnimation->setEasingCurve(QEasingCurve::Linear);
-            geometryAnimation->setDuration(300);
-            mainAnimation->addAnimation(geometryAnimation);
-        }
-    }
-}
-
-
 void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 {
     Q_Q(MSceneManager);
@@ -1819,6 +1801,7 @@ void MSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *anim
 MAbstractWidgetAnimation *MSceneManagerPrivate::createAnimationFromSceneWindowType(
         MSceneWindow* sceneWindow)
 {
+    Q_Q(MSceneManager);
     MAbstractWidgetAnimation *animation = 0;
 
     switch(sceneWindow->windowType()) {
@@ -1860,7 +1843,13 @@ MAbstractWidgetAnimation *MSceneManagerPrivate::createAnimationFromSceneWindowTy
                 MTheme::animation(style()->objectMenuAnimation()));
         break;
     case MSceneWindow::StatusBar: {
-        animation = new MWidgetSlideAnimation(sceneWindow);
+        MStatusBarSlideAnimation *statusBarSlideAnimation = new MStatusBarSlideAnimation(sceneWindow);
+        statusBarSlideAnimation->setRootElementsDisplacedByStatusBar(rootElementsDisplacedByStatusBar);
+        statusBarSlideAnimation->setSceneWindowStack(&(sceneWindowStack.list()));
+        statusBarSlideAnimation->setSceneManager(q);
+
+        animation = statusBarSlideAnimation;
+
         break;
     }
     case MSceneWindow::Sheet: {
@@ -1890,21 +1879,6 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     // 2. If not defined, try to get it from our own style.
     if (!animation)
         animation = createAnimationFromSceneWindowType(sceneWindow);
-
-    // FIXME: Find a better place for this logic. Or find a better solution for this problem.
-    if (sceneWindow->windowType() == MSceneWindow::StatusBar &&
-        qobject_cast<MWidgetSlideAnimation*>(animation)) {
-
-        foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar) {
-            MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
-            moveAnimation->setWidget(widget);
-            moveAnimation->setFinalPos(QPointF(0, statusBar->size().height()));
-            animation->addAnimation(moveAnimation);
-        }
-
-        addPagesAndSheetsGeometryUpdateAnimation(animation);
-    }
-    // end of FIXME
 
     // 3. As a last resort, use hard coded animation assignment.
     if (!animation)
@@ -1938,24 +1912,6 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     // 2. If not defined, try to get it from our own style.
     if (!animation)
         animation = createAnimationFromSceneWindowType(sceneWindow);
-
-    // FIXME: Find a better place for this logic. Or find a better solution for this problem.
-    if (sceneWindow->windowType() == MSceneWindow::StatusBar &&
-        qobject_cast<MWidgetSlideAnimation*>(animation)) {
-
-        foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar) {
-            // OBS: for this to look correct both status bar slide animation
-            // and our root elements move animations must have the same
-            // parameters (easing curve, duration...)
-            MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
-            moveAnimation->setWidget(widget);
-            moveAnimation->setFinalPos(QPointF(0, 0));
-            animation->addAnimation(moveAnimation);
-        }
-
-        addPagesAndSheetsGeometryUpdateAnimation(animation);
-    }
-    // end of FIXME
 
     // 3. As a last resort, use hard coded animation assignment.
     if (!animation)

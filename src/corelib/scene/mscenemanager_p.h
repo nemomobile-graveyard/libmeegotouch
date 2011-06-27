@@ -237,7 +237,6 @@ public:
 #endif
 
     void updatePagesAndSheetsGeometry();
-    void addPagesAndSheetsGeometryUpdateAnimation(QParallelAnimationGroup* mainAnimation);
 
     void updateVisibilityOfSceneWindowsBehind(MSceneWindow *referenceSceneWindow, bool newVisibility);
     MSceneWindow *findTopMostSheet();
