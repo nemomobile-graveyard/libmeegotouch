@@ -295,6 +295,10 @@ void MLabelViewSimple::initializeTextProperties()
 void MLabelViewSimple::updateStringVariants()
 {
     QString text = viewPrivate->model()->text();
+
+    // First convert the \r\n windows line breaks (if any) into \n ones
+    text.replace(QLatin1String("\r\n"), QLatin1String("\n"));
+
     // QStaticText uses QTextLayout internally to render text. Contrary to
     // QPainter::drawText(const QRect &rectangle, ...) no pre-preparation of the
     // text is done (e. g. replace \n by QChar::LineSeparator or spaces dependent
