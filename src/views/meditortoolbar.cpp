@@ -177,11 +177,29 @@ void MEditorToolbar::updateWidgetOrigin()
 {
     // We include margin to arrow tip position.
     QPointF arrowTip(arrow->size().width() / 2.0f, 0);
+    arrowTip = mapFromItem(arrow, arrowTip);
+
+    qreal translateX = arrowTip.x();
+
+    const QRectF screenRectInOverlay(
+        overlay->mapRectFromScene(QRectF(QPointF(), sceneManager()->visibleSceneSize(M::Landscape))));
+
+    // Avoid editor toolbar clipping when possible
+    if (size().width() < screenRectInOverlay.width()) {
+        if (pos().x() < (screenRectInOverlay.width() - size().width())) {
+            // Don't allow editor toolbar to go over the left edge of the screen
+            translateX = qMin(translateX, pos().x());
+        } else {
+            // Don't allow editor toolbar to go over the right edge of the screen
+            translateX = qMax(translateX, size().width() + pos().x() - screenRectInOverlay.width());
+        }
+    }
+
     // We need to round to an integer coordinate to avoid graphics glitches; if
     // widgetOrigin.x() is for example 75.5, in portrait mode with German language with
     // Cut, Copy & Paste buttons visible the one pixel thick button separator lines cannot
     // be seen.
-    const QPoint widgetOrigin(QPointF(mapFromItem(arrow, arrowTip).x(),
+    const QPoint widgetOrigin(QPointF(translateX,
                                       arrow->direction() == MEditorToolbarArrow::ArrowUp
                                       ? 0.0f : size().height()).toPoint());
 
