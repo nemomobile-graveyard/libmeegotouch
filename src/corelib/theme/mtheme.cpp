@@ -74,6 +74,8 @@ M_LIBRARY
 #include <sys/mman.h>
 #endif
 
+#include <iostream>
+
 MTheme *gTheme = 0;
 
 QHash<QString, MLibrary *>* MThemePrivate::libraries = NULL;
@@ -140,7 +142,7 @@ MTheme::~MTheme()
     QHash<QString, CachedScalableImage>::iterator i2 = d_ptr->scalableImageIdentifiers.begin();
     QHash<QString, CachedScalableImage>::iterator end2 = d_ptr->scalableImageIdentifiers.end();
     for (; i2 != end2; ++i2) {
-        qWarning() << "MTheme - MScalableImage" << i2.key() << "not released!" << "refcount:" << i2.value().refcount;
+        std::cerr << "MTheme - MScalableImage " << qPrintable(i2.key()) << " not released! refcount: " << i2.value().refcount << std::endl;
         releasePixmap(i2.value().image->pixmap());
         delete i2.value().image;
     }
@@ -151,7 +153,7 @@ MTheme::~MTheme()
     QHash<QString, CachedPixmap>::iterator i = d_ptr->pixmapIdentifiers.begin();
     QHash<QString, CachedPixmap>::iterator end = d_ptr->pixmapIdentifiers.end();
     for (; i != end; ++i) {
-        qWarning() << "MTheme - pixmap" << i.key() << "not released!" << "refcount:" << i.value().refcount;
+        std::cerr << "MTheme - pixmap " << qPrintable(i.key()) << " not released! refcount: " << i.value().refcount << std::endl;
     }
 
     gTheme = NULL;
