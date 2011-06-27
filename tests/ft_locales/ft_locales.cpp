@@ -4139,6 +4139,152 @@ void Ft_Locales::testMLocaleIndexBucket()
     }
 }
 
+void Ft_Locales::testDifferentStrengthComparison_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcCollate");
+    QTest::addColumn<QString>("string1");
+    QTest::addColumn<QString>("string2");
+    QTest::addColumn<QList<MLocale::Comparison> >("comparisonExpectedResults");
+
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        <<"刘" // liú
+        <<"劉" // liú
+        << (QList<MLocale::Comparison>()
+            << MLocale::Equal
+            << MLocale::LessThan
+            << MLocale::LessThan
+            << MLocale::LessThan
+            );
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        <<"劉" // liú
+        <<"刘" // liú
+        << (QList<MLocale::Comparison>()
+            << MLocale::Equal
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            );
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        <<"刘" // liú
+        <<"流" // liú
+        << (QList<MLocale::Comparison>()
+            << MLocale::Equal
+            << MLocale::LessThan
+            << MLocale::LessThan
+            << MLocale::LessThan
+            );
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        <<"刘" // liú
+        <<"liu"
+        << (QList<MLocale::Comparison>()
+            << MLocale::Equal
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            );
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        <<"刘利" // liúlì
+        <<"liuli"
+        << (QList<MLocale::Comparison>()
+            << MLocale::Equal
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            );
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        <<"刘利" // liúlì
+        <<"liu li"
+        << (QList<MLocale::Comparison>()
+            << MLocale::Equal
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            );
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        <<"刘 利" // liúlì
+        <<"liuli"
+        << (QList<MLocale::Comparison>()
+            << MLocale::Equal
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            << MLocale::GreaterThan
+            );
+}
+
+void Ft_Locales::testDifferentStrengthComparison()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, lcCollate);
+    QFETCH(QString, string1);
+    QFETCH(QString, string2);
+    QFETCH(QList<MLocale::Comparison>, comparisonExpectedResults);
+
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcCollate, lcCollate);
+    MCollator collator = locale.collator();
+
+    QList<MLocale::Comparison> comparisonResults;
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << " lc_collate=" << lcCollate
+        << " " << string1 << " " << string2
+        << " (strength: result expectedResult) ";
+#endif
+    for (unsigned i = 0; i <= 3; ++i) {
+        switch(i+1) {
+        case 1:
+            collator.setStrength(MLocale::CollatorStrengthPrimary);
+            break;
+        case 2:
+            collator.setStrength(MLocale::CollatorStrengthSecondary);
+            break;
+        case 3:
+            collator.setStrength(MLocale::CollatorStrengthTertiary);
+            break;
+        case 4:
+            collator.setStrength(MLocale::CollatorStrengthQuaternary);
+            break;
+        }
+        if (collator(string1, string2))
+            comparisonResults << MLocale::LessThan;
+        else if (collator(string2, string1))
+            comparisonResults << MLocale::GreaterThan;
+        else
+            comparisonResults << MLocale::Equal;
+        
+#if defined(VERBOSE_OUTPUT)
+        debugStream
+            << " (" << i+1
+            << ": " << comparisonResults[i] << " " << comparisonExpectedResults[i] <<
+            ")";
+#endif
+    }
+#if defined(VERBOSE_OUTPUT)
+    debugStream << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(comparisonResults, comparisonExpectedResults);
+    
+}
+
 /*
  * To reduce the size of libicu, we customize the locale data included in
  * our package of libicu and include only what needs to be there.
