@@ -18,6 +18,7 @@ use Getopt::Long;
 use File::Path;
 use XML::Parser;
 use Data::Dumper;
+use Unicode::Normalize;
 
 binmode STDIN,  ":utf8";
 binmode STDOUT, ":utf8";
@@ -40,6 +41,9 @@ my $libicuCollationOutput = "";
 my $currentCollType = "";
 my @strokeBuckets = ();
 my @strokeShortBuckets = ();
+
+my %pinyinAnchorsInserted = ();
+my $pinyinCount = 0;
 
 my %zhuyinPcLists = ();
 my %pinyinZhuyin = (); # filled from %zhuyinPinyin
@@ -1812,6 +1816,32 @@ sub addZhuyinPcList {
     }
 }
 
+sub insertPinyin {
+    my ($char, $comment) = @_;
+    if ($comment =~ /([^[:space:]]+)[[:space:]]*(\(p.*\))?/) {
+        # remove " (p.*)" from comment
+        $comment = $1;
+    }
+    # comments without accents are not used at the moment ...
+    my $commentWithoutAccents = NFD($comment);
+    $commentWithoutAccents =~ s/\pM//og;
+    $pinyinCount++;
+    my $countString = sprintf("%05d", $pinyinCount);
+    my $firstLetter = substr($comment, 0, 1);
+    my $remainingLetters = substr($comment, 1, length($comment)-1);
+    my $insert = "<<$char";
+    if ($remainingLetters ne "") {
+        $insert .= "/${remainingLetters}${countString}";
+    }
+    elsif ($countString ne "") {
+        $insert .= "/${countString}";
+    }
+    if($OPT_VERBOSITY >= 1) {
+        print "$char $comment ($commentWithoutAccents) $insert\n";
+    }
+    $libicuCollationOutput .= "$insert";
+}
+
 sub maybeInsertPinyinAnchor {
     my ($comment) = @_;
     if ($comment =~ /\(p.*\)/) {
@@ -1823,76 +1853,12 @@ sub maybeInsertPinyinAnchor {
         # remove " (p1)" from comment
         $comment = $1;
     }
-    if ($comment eq "ā") {
-        $libicuCollationOutput .= "&a";
-    }
-    if ($comment eq "bā") {
-        $libicuCollationOutput .= "&b";
-    }
-    if ($comment eq "cā") {
-        $libicuCollationOutput .= "&c";
-    }
-    if ($comment eq "dā") {
-        $libicuCollationOutput .= "&d";
-    }
-    if ($comment eq "ē") {
-        $libicuCollationOutput .= "&e";
-    }
-    if ($comment eq "fā") {
-        $libicuCollationOutput .= "&f";
-    }
-    if ($comment eq "gā") {
-        $libicuCollationOutput .= "&g";
-    }
-    if ($comment eq "hā") {
-        $libicuCollationOutput .= "&h";
-    }
-    # There is no I bucket!!!
-    if ($comment eq "jī") {
-        $libicuCollationOutput .= "&j";
-    }
-    if ($comment eq "kā") {
-        $libicuCollationOutput .= "&k";
-    }
-    if ($comment eq "lā") {
-        $libicuCollationOutput .= "&l";
-    }
-    if ($comment eq "ḿ") { # !!!
-        $libicuCollationOutput .= "&m";
-    }
-    if ($comment eq "ń") { # !!!
-        $libicuCollationOutput .= "&n";
-    }
-    if ($comment eq "ō") {
-        $libicuCollationOutput .= "&o";
-    }
-    if ($comment eq "pā") {
-        $libicuCollationOutput .= "&p";
-    }
-    if ($comment eq "qī") {
-        $libicuCollationOutput .= "&q";
-    }
-    if ($comment eq "r") { # !!!
-        $libicuCollationOutput .= "&r";
-    }
-    if ($comment eq "sā") {
-        $libicuCollationOutput .= "&s";
-    }
-    if ($comment eq "tā") {
-        $libicuCollationOutput .= "&t";
-    }
-    # There are no U and V buckets
-    if ($comment eq "wā") {
-        $libicuCollationOutput .= "&w";
-    }
-    if ($comment eq "xī") {
-        $libicuCollationOutput .= "&x";
-    }
-    if ($comment eq "yā") {
-        $libicuCollationOutput .= "&y";
-    }
-    if ($comment eq "zā") {
-        $libicuCollationOutput .= "&z";
+    my $commentWithoutAccents = NFD($comment);
+    $commentWithoutAccents =~ s/\pM//og;
+    my $firstChar = substr($commentWithoutAccents, 0, 1);
+    if ($firstChar ne "" && !defined $pinyinAnchorsInserted{$firstChar}) {
+        $pinyinAnchorsInserted{$firstChar} = $firstChar;
+        $libicuCollationOutput .= "&${firstChar}";
     }
 }
 
@@ -2014,6 +1980,8 @@ while (<CLDR>) {
             if ($OPT_VERBOSITY >= 1) {
                 printf (STDOUT "start of collation $currentCollType...\n");
             }
+            %pinyinAnchorsInserted = ();
+            $pinyinCount = 0;
             $libicuCollationOutput .= "$collType\{\n";
             next;
         }
@@ -2093,8 +2061,8 @@ while (<CLDR>) {
         my $charList = $1;
         my $comment = $2;
         if ($currentCollType eq "pinyin" || $currentCollType eq "pinyinshort") {
-            maybeInsertPinyinAnchor($comment);
             addZhuyinPcList($charList, $comment);
+            maybeInsertPinyinAnchor($comment);
         }
         if ($currentCollType eq "stroke" || $currentCollType eq "strokeshort") {
             maybeGetStrokeBucket($charList, $comment);
@@ -2104,7 +2072,12 @@ while (<CLDR>) {
         }
         for (my $i = 0; $i < length($charList); ++$i) {
             my $char = substr($charList, $i, 1);
-            $libicuCollationOutput .= "<$char";
+            if ($currentCollType eq "pinyin" || $currentCollType eq "pinyinshort") {
+                insertPinyin($char, $comment);
+            }
+            else {
+                $libicuCollationOutput .= "<$char";
+            }
         }
         next;
     }

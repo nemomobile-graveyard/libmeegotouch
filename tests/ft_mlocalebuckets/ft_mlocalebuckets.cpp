@@ -664,14 +664,17 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::addColumn<QString>("localeName");
     QTest::addColumn<QString>("fileName");
 
-    QTest::newRow("zh_TW@collation=zhuyin")
-        << "zh_TW@collation=zhuyin"
+    QTest::newRow("en_US")
+        << "en_US"
         << "ft_mlocalebuckets_test-input.txt";
     QTest::newRow("ru_RU")
         << "ru_RU"
         << "ft_mlocalebuckets_test-input.txt";
-    QTest::newRow("en_US")
-        << "en_US"
+    QTest::newRow("zh_TW@collation=zhuyin")
+        << "zh_TW@collation=zhuyin"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("zh_CN@collation=pinyin")
+        << "zh_CN@collation=pinyin"
         << "ft_mlocalebuckets_test-input.txt";
 }
 

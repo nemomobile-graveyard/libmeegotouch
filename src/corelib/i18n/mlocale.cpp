@@ -3531,7 +3531,7 @@ QStringList MLocale::exemplarCharactersIndex() const
         ) {
         // to get all characters with pinyin starting with z
         // (last one is 蓙) into the Z bucket
-        exemplarCharactersIndex << QString::fromUtf8("あ");
+        exemplarCharactersIndex << QString::fromUtf8("α");
     }
     return exemplarCharactersIndex;
 }

@@ -2413,6 +2413,16 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"A"
          <<"Ａ"
          <<"阿" // a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
+         <<"bā"
+         <<"bá"
+         <<"bǎ"
+         <<"bà"
+         <<"ba"
+         <<"八" // bā
+         <<"拔" // bá
+         <<"把" // bǎ
+         <<"坝" // bà
+         <<"罷" // ba (bà ba pí according to http://www.zdic.net/zd/zi/ZdicE7ZdicBDZdicB7.htm !)
          <<"驰" // chi2, 6 strokes, 1st stroke bending, kHanyuPinlu chi2 U+9A70 kBigFive - kGB0 1959 kRSUnicode 187'.3
          <<"馳" // chi2, 13 strokes, 1st stroke vertical, kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3
          <<"东" // dong1, 5 strokes, 1st stroke horizontal, simplified of 東 U+4E1C
@@ -2444,31 +2454,33 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"働" // dong4, 13 strokes (Japanese only!) kRSUnicode 9.11
          <<"峠" // quia3??? ９ strokes, 1st stroke vertical, (Japanese only! variant of 卡) U+5CE0 kBigFive - kGB0 - kRSUnicode 46.6
          <<"蘅" // 20 strokes, 1st stroke horizontal, kHanyuPinlu heng2 U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
+         <<"jiào"
+         <<"叫" // jiào 5 strokes, 1st stroke vertical, kHanyuPinlu jiao4 U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2
          <<"john"
          <<"ｊｏｈｎ"
          <<"John"
          <<"Ｊｏｈｎ"
-         <<"叫" // 5 strokes, 1st stroke vertical, kHanyuPinlu jiao4 U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2
-         <<"君" // 7 strokes, 1st stroke bending, kHanyuPinlu jun1 U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4
+         <<"jūn"
+         <<"君" // jūn 7 strokes, 1st stroke bending, kHanyuPinlu jun1 U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4
          <<"卡" // 5 strokes, 1st stroke vertical, kHanyuPinlu ka3 U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3
          <<"李" // 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
-         <<"刘" // 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
-         <<"刘 Lucy" // liu2
-         <<"刘Lucy" // liu2
-         <<"刘利" // liu2 li4
-         <<"刘利军" // liu2 li4 jun1
-         <<"劉" // liu2; 15 strokes, 1st stroke bending, traditional of 刘 kRSUnicode 18.13
-         <<"劉 Lucy" // liu2; traditional
-         <<"劉Lucy" // liu2; traditional
-         <<"劉利" // liu2 li4; traditional
-         <<"劉利軍" // liu2 li4 jun1; traditional
-         <<"柳" // 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
-         <<"柳东" // liu3 dong1; 2nd character 5 strokes, initial stroke horizontal, 2nd character U+4E1C
-         <<"柳冬" // liu3 dong1; 2nd character 5 strokes, initial stroke down to left, 2nd character U+51AC
-         <<"柳咚" // liu3 dong1; 2nd character 8 strokes, initial stroke vertical, 2nd character U+549A
-         <<"柳東" // liu3 dong1; 2nd character traditional, 8 strokes, initial stroke horizontal, U+6771
-         <<"柳利军" // liu3 li4 jun1; 3rd character 5 strokes, initial stroke vertical, 3rd character U+519B
-         <<"柳利軍" // liu3 li4 jun1; 3rd character traditional, 9 strokes, initial stroke vertical, 3rd character U+8ECD
+         <<"刘" // liú 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
+         <<"刘 Lucy" //liú
+         <<"刘利" //liú lì
+         <<"刘利军" //liú lì jūn
+         <<"刘Lucy" //liú
+         <<"劉" //liú; 15 strokes, 1st stroke bending, traditional of 刘 kRSUnicode 18.13
+         <<"劉 Lucy" //liú ; traditional
+         <<"劉利" // liú lì; traditional
+         <<"劉利軍" // liú lì jūn; traditional
+         <<"劉Lucy" //liú ; traditional
+         <<"柳" // liǔ; 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
+         <<"柳东" // liǔ dōng; 2nd character 5 strokes, initial stroke horizontal, 2nd character U+4E1C
+         <<"柳冬" // liǔ dōng; 2nd character 5 strokes, initial stroke down to left, 2nd character U+51AC
+         <<"柳咚" // liǔ dōng; 2nd character 8 strokes, initial stroke vertical, 2nd character U+549A
+         <<"柳東" // liǔ dōng; 2nd character traditional, 8 strokes, initial stroke horizontal, U+6771
+         <<"柳利军" // liǔ lì jūn; 3rd character 5 strokes, initial stroke vertical, 3rd character U+519B
+         <<"柳利軍" // liǔ lì jūn; 3rd character traditional, 9 strokes, initial stroke vertical, 3rd character U+8ECD
          <<"宁" // kHanyuPinlu ning2   U+5B81 kBigFive C972 kGB0 3694 kRSUnicode 40.2"
          <<"saki"
          <<"ｓａｋｉ"
@@ -2477,6 +2489,14 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"威" // 9 strokes, 1st stroke horizontal, kHanyuPinlu wei1 U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
          <<"张" // 7 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
          <<"張" // 11 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F35 kBigFive B169 kGB0    - kRSUnicode 57.8"
+         <<"α" // Greek
+         <<"Α" // Greek
+         <<"β"
+         <<"Β"
+         <<"γ"
+         <<"Γ"
+         <<"а" // Cyrillic
+         <<"А" // Cyrillic
          <<"あ"
          <<"ㄅ"
          <<"ㄎ"
@@ -2489,6 +2509,16 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"A"
          <<"A"
          <<"A"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
          <<"C"
          <<"C"
          <<"D"
@@ -2526,6 +2556,8 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"J"
          <<"J"
          <<"J"
+         <<"J"
+         <<"J"
          <<"K"
          <<"L"
          <<"L"
@@ -2553,6 +2585,14 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"W"
          <<"Z"
          <<"Z"
+         <<"Α"
+         <<"Α"
+         <<"Β"
+         <<"Β"
+         <<"Γ"
+         <<"Γ"
+         <<"А"
+         <<"А"
          <<"あ"
          <<"ㄅ"
          <<"ㄎ"
