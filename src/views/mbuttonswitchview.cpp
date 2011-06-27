@@ -60,6 +60,7 @@ MButtonSwitchViewPrivate::MButtonSwitchViewPrivate() :
     mouseOffset(0),
     m_thumbDown(false),
     m_thumbDragged(false),
+    m_isShortDrag(true),
     m_feedbackOnPlayed(false),
     m_thumbPos(),
     m_thumbPosValid(false),
@@ -239,6 +240,7 @@ void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     //set switch to down mode
     d->m_thumbDown = true;
+    d->m_isShortDrag = true;
     model()->setDown(true);
 }
 
@@ -263,11 +265,16 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         d->m_thumbDragged = false;
         model()->setDown(false);
 
-        //set the state depending which side the thumb currently is
-        if (d->m_thumbPos.x() + (d->thumbSize().width() / 2)  > (size().width() / 2)) {
-            d->checkStateOnAnimationFinish = true;
+        if (d->m_isShortDrag) {
+            // if the drag was short, just toggle the switch
+            d->checkStateOnAnimationFinish = !(model()->checked());
         } else {
-            d->checkStateOnAnimationFinish = false;
+            //set the state depending which side the thumb currently is
+            if (d->m_thumbPos.x() + (d->thumbSize().width() / 2)  > (size().width() / 2)) {
+                d->checkStateOnAnimationFinish = true;
+            } else {
+                d->checkStateOnAnimationFinish = false;
+            }
         }
     }
     //user just clicked the switch, act like normal checkable button
@@ -340,6 +347,12 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 d->m_feedbackOnPlayed = false;
             }
         }
+
+        if (!model()->checked() && d->m_thumbPos.x() + (d->thumbSize().width() / 2)  > (size().width() / 2))
+            d->m_isShortDrag = false;
+
+        if (model()->checked() && d->m_thumbPos.x() + (d->thumbSize().width() / 2)  < (size().width() / 2))
+            d->m_isShortDrag = false;
 
         update();
     }

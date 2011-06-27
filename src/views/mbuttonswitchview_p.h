@@ -47,6 +47,7 @@ public:
 
     bool m_thumbDown;
     bool m_thumbDragged;
+    bool m_isShortDrag;
     bool m_feedbackOnPlayed;
     QPointF m_thumbPos;
     bool m_thumbPosValid;
