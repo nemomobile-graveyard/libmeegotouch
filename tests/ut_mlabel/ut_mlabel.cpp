@@ -717,6 +717,7 @@ void Ut_MLabel::testWordWrappingSizeHint()
 void Ut_MLabel::testUnknownSizeHint()
 {
     QSizeF hint = label->sizeHint((Qt::SizeHint)12345);
+    Q_UNUSED(hint);
 }
 
 void Ut_MLabel::testFont_data()

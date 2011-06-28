@@ -3749,6 +3749,7 @@ void Ft_Locales::checkAvailableLocales()
             + locale.formatCurrency(-1234.56, "EUR");
         for (unsigned i = 0; i < 2; ++i) {
             MLocale::CalendarType calendarType;
+            Q_UNUSED(calendarType);
             MCalendar calendar;
             QString calendarTypeString;
             switch (i) {
@@ -3807,6 +3808,7 @@ void Ft_Locales::checkAvailableLocales()
         }
         for (unsigned i = 0; i < 2; ++i) {
             MLocale::CalendarType calendarType;
+            Q_UNUSED(calendarType);
             MCalendar calendar;
             QString calendarTypeString;
             switch (i) {

@@ -305,6 +305,7 @@ void Ut_MImageWidget::testSetCropTopLeftPoint()
 
     QPointF point = m_subject->crop().topLeft();
     QSize imgSize = m_subject->imageSize();
+    Q_UNUSED(imgSize);
 
     QCOMPARE(point, topLeft);
 

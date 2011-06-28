@@ -234,6 +234,7 @@ void Ut_MBubbleItem::testInformationWidgets()
 void Ut_MBubbleItem::testForMemoryLeaks()
 {
     QSizeF size = m_bubble->preferredSize();
+    Q_UNUSED(size);
     MBubbleItem *bubble = new MBubbleItem();
 
     QPointer<MWidgetView> view = const_cast<MWidgetView*>(bubble->view());
