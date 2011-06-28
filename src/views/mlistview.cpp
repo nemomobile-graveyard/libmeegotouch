@@ -254,7 +254,7 @@ void MListView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem
 
 void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-    if (!model()->firstVisibleItem().isValid() && !model()->lastVisibleItem().isValid())
+    if (d_ptr->clearVisibleOnRelayout || (!model()->firstVisibleItem().isValid() && !model()->lastVisibleItem().isValid()))
         return;
 
     if (d_ptr->controller->isVisible()) {
@@ -322,6 +322,7 @@ void MListView::layoutChanged()
         d_ptr->layoutChanged();
 
         d_ptr->clearVisibleOnRelayout = true;
+        d_ptr->clearFirstAndLastVisibleRows();
         updateGeometry();
 
         d_ptr->lastScrolledToFlatRow = -1;
