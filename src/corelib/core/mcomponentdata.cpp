@@ -50,7 +50,13 @@
 #include "mwindow.h"
 #include "mapplicationwindow.h"
 #include "mtapandholdrecognizer.h"
-#include "mpanrecognizer.h"
+
+#ifdef __arm__
+    #include <mpanrecognizertouch.h>
+#else
+    #include <mpanrecognizer.h>
+#endif
+
 #include "mswiperecognizer.h"
 #include "msyslogclient.h"
 #include <MDebug>
@@ -562,7 +568,18 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
 
     QGestureRecognizer::unregisterRecognizer(Qt::PanGesture);
+
+    // We assume that ARM targets have a touchscreen and therefore generate
+    // QTouchEvents. In such case MPanRecognizerTouch (which uses QTouchEvents)
+    // can be used and produces better results than MPanRecognizer
+    // (which uses QMouseEvents).
+    // A better way to do it would be using QSystemDeviceInfo::inputMethodType(),
+    // but it's not worth bringing up this dependency just for this if{}else{} here.
+#ifdef __arm__
+    QGestureRecognizer::registerRecognizer(new MPanRecognizerTouch);
+#else
     QGestureRecognizer::registerRecognizer(new MPanRecognizer());
+#endif
 
     QGestureRecognizer::unregisterRecognizer(Qt::SwipeGesture);
     QGestureRecognizer::registerRecognizer(new MSwipeRecognizer());
