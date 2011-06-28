@@ -185,6 +185,7 @@ SUBDIRS     =  \
     ut_mtapandholdrecognizer \
     ut_mservicefwgen \
     ut_mpanrecognizer \
+    ut_mpanrecognizertouch \
     ut_mstatusbarview \
     ut_mabstractitemmodel \
     ut_phonenumberformatting \
