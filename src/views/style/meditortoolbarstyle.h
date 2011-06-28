@@ -16,6 +16,10 @@ class M_VIEWS_EXPORT MEditorToolbarStyle : public MWidgetStyle
      * The delay (in milliseconds) after which the toolbar will be hidden, if no text is selected.
      */
     M_STYLE_ATTRIBUTE(int, hideTimeout, HideTimeout)
+
+    /*! \brief Hide animation duration, in milliseconds.
+     */
+    M_STYLE_ATTRIBUTE(int, hideAnimationDuration, HideAnimationDuration)
 };
 
 class M_VIEWS_EXPORT MEditorToolbarStyleContainer : public MWidgetStyleContainer

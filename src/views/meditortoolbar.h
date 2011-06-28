@@ -21,6 +21,7 @@
 
 #include <QPointer>
 #include <QTimer>
+#include <QPropertyAnimation>
 
 #include <MStylableWidget>
 #include "meditortoolbararrow.h"
@@ -127,10 +128,12 @@ private:
     void updateEditorItemVisibility();
     void showEditorItem();
     void hideEditorItem();
+    void doDisappear(bool temporarily);
     void appearRaw();
 
 private slots:
     void updateAvailableButtons();
+    void startAnimatedHide();
 
 private:
     QList<MButton *> buttons;
@@ -144,6 +147,7 @@ private:
     bool buttonUpdateQueued;
     bool temporarilyDisappeared;
     QTimer autohideTimer;
+    QPropertyAnimation hideAnimation;
 
     M_STYLABLE_WIDGET(MEditorToolbarStyle)
 };

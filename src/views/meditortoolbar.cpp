@@ -38,7 +38,8 @@ MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
                                                  Qt::Horizontal)),
       arrow(new MEditorToolbarArrow(this)),
       buttonUpdateQueued(false),
-      temporarilyDisappeared(false)
+      temporarilyDisappeared(false),
+      hideAnimation(this, "opacity")
 {
     setFlag(QGraphicsItem::ItemHasNoContents, true);
     overlay->hide();
@@ -61,10 +62,12 @@ MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
     QObject::connect(sceneManager(), SIGNAL(orientationChanged(M::Orientation)),
                      this, SLOT(updateGeometry()));
 
-    updateArrow(MEditorToolbarArrow::ArrowDown);
-
-    QObject::connect(&autohideTimer, SIGNAL(timeout()), this, SLOT(disappear()));
+    QObject::connect(&autohideTimer, SIGNAL(timeout()), this, SLOT(startAnimatedHide()));
     autohideTimer.setSingleShot(true);
+
+    hideAnimation.setStartValue(1.0);
+    hideAnimation.setEndValue(0.0);
+    QObject::connect(&hideAnimation, SIGNAL(finished()), this, SLOT(disappear()));
 }
 
 MEditorToolbar::~MEditorToolbar()
@@ -91,6 +94,8 @@ void MEditorToolbar::appear(bool autohide)
 
     // then cancel currently pending actions and set new ones is necessary
     // (this function is called only by controller directly)
+    hideAnimation.stop();
+    setOpacity(1.0);
     if (autohide) {
         int interval = style()->hideTimeout();
         if (interval > 0) {
@@ -103,26 +108,43 @@ void MEditorToolbar::appear(bool autohide)
     temporarilyDisappeared = false;
 }
 
+void MEditorToolbar::startAnimatedHide()
+{
+    hideAnimation.setDuration(style()->hideAnimationDuration());
+    hideAnimation.start(QAbstractAnimation::KeepWhenStopped);
+}
+
 void MEditorToolbar::appearRaw()
 {
     overlay->show();
     updateEditorItemVisibility();
 }
 
-void MEditorToolbar::disappear()
+void MEditorToolbar::doDisappear(bool temporarily)
 {
+    if (temporarily && !isAppeared()) {
+        return;
+    }
     hideEditorItem();
     overlay->hide();
-    temporarilyDisappeared = false;
-    autohideTimer.stop();
+    if (temporarily) {
+        temporarilyDisappeared = true;
+    } else {
+        temporarilyDisappeared = false;
+        autohideTimer.stop();
+        hideAnimation.stop();
+        setOpacity(1.0);
+    }
+}
+
+void MEditorToolbar::disappear()
+{
+    doDisappear(false);
 }
 
 void MEditorToolbar::disappearTemporarily()
 {
-    if (isAppeared()) {
-        disappear();
-        temporarilyDisappeared = true;
-    }
+    doDisappear(true);
 }
 
 void MEditorToolbar::removeTemporaryDisappearance()
