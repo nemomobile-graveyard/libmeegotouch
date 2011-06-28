@@ -1,3 +1,10 @@
+libmeegotouch (0.22.8-1) unstable; urgency=low
+
+  * Fixes: NB#257379 - Language names of Chinese languages lost consistency and logic
+  * Fixes: NB#268830 - duicontrolpanel crashes at qt_message_output after lib is unloaded
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 28 Jun 2011 14:23:44 +0300
+
 libmeegotouch (0.22.7-1) unstable; urgency=low
 
   * Fixes: NB#263587 - messaging-ui crash observed at SmsEditorBasePage in MTBF testing 
