@@ -28,6 +28,9 @@ PRIVATE_HEADERS += \
         $$EVENTS_SRC_DIR/mswipegesture_p.h \
         $$EVENTS_SRC_DIR/mswiperecognizer_p.h \
         $$EVENTS_SRC_DIR/mswiperecognizer.h \
+        $$EVENTS_SRC_DIR/mpanrecognizertouch.h \
+        $$EVENTS_SRC_DIR/mpanrecognizertouch_p.h \
+        $$EVENTS_SRC_DIR/mpangesturetouch.h \
 
 contains(DEFINES, HAVE_DBUS) {
         PRIVATE_HEADERS += \
@@ -49,6 +52,8 @@ SOURCES += \
         $$EVENTS_SRC_DIR/mpangesture.cpp \
         $$EVENTS_SRC_DIR/mswiperecognizer.cpp \
         $$EVENTS_SRC_DIR/mswipegesture.cpp \
+        $$EVENTS_SRC_DIR/mpanrecognizertouch.cpp \
+        $$EVENTS_SRC_DIR/mpangesturetouch.cpp \
 
 contains(DEFINES, HAVE_DBUS) {
         SOURCES += \
