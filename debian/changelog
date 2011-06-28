@@ -1,8 +1,15 @@
-libmeegotouch (0.23.1~1) unstable; urgency=low
+libmeegotouch (0.23.1-1) unstable; urgency=low
 
-  * Unreleased
+  * New version
+  * Fixes: NB#263844 - Scroll and Fastscroll indicators appear and disappear with incorrect animation parameters
+  * Fixes: NB#268131 - Contacts list alphabetical sorting looks different in English and Russian locale
+  * Fixes: NB#268830 - duicontrolpanel crashes at qt_message_output after lib is unloaded
+  * Fixes: NB#267925 - Toggle/Switch button behavior needs a little finetuning
+  * Fixes: NB#259567 - [TASK] System sheet should allow locking the orientation
+  * Fixes: NB#239394 - [TASK] libmeegotouch should not have own logic for graphicssystem switch when minimized
+  * Fixes: NB#267592 - Zhuyin sort order should follow 1919 standard
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Wed, 22 Jun 2011 15:41:00 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 28 Jun 2011 14:29:47 +0300
 
 libmeegotouch (0.23.0-1) unstable; urgency=low
 
