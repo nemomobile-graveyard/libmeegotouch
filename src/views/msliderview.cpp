@@ -1077,8 +1077,8 @@ void MSliderGroove::setGeometry(const QRectF &rect)
 //by handle remains inside rect occupied by groove
 void MSliderGroove::updateHandlePos()
 {
-    qreal w = sliderHandle->rect().width();
-    qreal h = sliderHandle->rect().height();
+    qreal w = sliderHandle->effectiveSizeHint(Qt::PreferredSize).width();
+    qreal h = sliderHandle->effectiveSizeHint(Qt::PreferredSize).height();
     QPointF newPos((rect().width() - w) / 2.0f, (rect().height() - h) / 2.0f);
 
     int range = maximum - minimum;
