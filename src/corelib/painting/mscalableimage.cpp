@@ -24,8 +24,11 @@
 
 #include <QPaintEngine>
 #include <QPainter>
-#include <QPixmapCache>
 #include <MDebug>
+
+#ifndef __arm__
+#include <QPixmapCache>
+#endif
 
 namespace {
     const qreal SCALE_WARN_LIMIT = 0.25;// 25%
@@ -41,10 +44,12 @@ MScalableImagePrivate::MScalableImagePrivate()
 
 MScalableImagePrivate::~MScalableImagePrivate()
 {
+#ifndef __arm__
     if (!cachedImageKey.isEmpty()) {
         QPixmapCache::remove(cachedImageKey);
         cachedImageKey.clear();
     }
+#endif
 }
 
 void MScalableImagePrivate::validateSize() const
@@ -111,6 +116,13 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
         return;
     }
     else {
+#ifdef __arm__
+        if (!downscaleWarningPrinted && (w < m_image->size().width() || h < m_image->size().height()))
+            outputDownscaleWarning("MScalableImage9", w, h);
+        else if(!nearscaleWarningPrinted && qAbs(m_image->size().width()/w-1.0) < SCALE_WARN_LIMIT && qAbs(m_image->size().height()/h-1.0) < SCALE_WARN_LIMIT)
+            outputNearscaleWarning("MScalableImage9", w, h);
+        qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+#else
         //the image doesn't fit directly into the required size.
         //check whether or not we're allowed to cache
         bool docache = painter->paintEngine()->type() != QPaintEngine::OpenGL
@@ -159,6 +171,7 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
                 const_cast<MScalableImagePrivate*>(this)->cachedImageKey.clear();
             }
         }
+#endif // __arm__
     }
 }
 

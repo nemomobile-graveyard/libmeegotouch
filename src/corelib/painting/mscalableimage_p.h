@@ -60,7 +60,9 @@ public:
     QMargins m_preferredMargins;
 
     QString pixmapId;
+#ifndef __arm__
     QString cachedImageKey;
+#endif
 
 protected:
     MScalableImage *q_ptr;
