@@ -93,6 +93,11 @@ public:
 
     bool eventCancelled;
     bool expectMouseReleaseEvent;
+
+    // Point where the item was pressed, in scene coordinates.
+    // Only meaningful between a mousePressEvent() and a
+    // mouseReleaseEvent() call.
+    QPointF pressScenePos;
 };
 
 #endif

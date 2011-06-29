@@ -481,6 +481,8 @@ void MButtonView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     d->expectMouseReleaseEvent = true;
 
+    d->pressScenePos = event->scenePos();
+
     if (model()->down()) {
         return;
     }
@@ -497,6 +499,18 @@ void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QPointF touch = event->scenePos();
+
+    // Make sure that only regular taps can click an item.
+    // If the release point is too far from the press point then it's more
+    // likely a failed attempt at swiping away the app.
+    qreal distanceFromPressPoint = (touch - d->pressScenePos).manhattanLength();
+    if (distanceFromPressPoint > style()->maxDistanceForClick()) {
+        // It's too far from the press point.
+        // Let's cancel it so that a click never takes place.
+        QApplication::postEvent(d->controller, new MCancelEvent);
+        return;
+    }
+
     QRectF rect = d->controller->sceneBoundingRect();
     rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
                 M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
