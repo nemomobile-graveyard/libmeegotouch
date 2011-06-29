@@ -41,7 +41,6 @@ public:
 private:
     bool down;
     bool tapAndHoldStarted;
-    bool expectMouseReleaseEvent;
     MListItem *controller;
 
     MTapStateMachine* tapStateMachine;
