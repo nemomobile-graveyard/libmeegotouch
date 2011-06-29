@@ -41,7 +41,7 @@ namespace {
     // The bigger the delay, the better for "continuous panning" case.
     // The smaller the dealy, the better for "panning immediately stops when
     // finger hits screen" case.
-    const int MousePressStopingMovementTimeout = 70; //ms.
+    const int MousePressStopingMovementTimeout = 10; //ms.
 }
 
 MPannableWidgetGlass::MPannableWidgetGlass(MPannableWidget *pannableWidget) :
