@@ -202,6 +202,7 @@ endif
 	dh_gencontrol $(EXCLUSIONS)
 	dh_md5sums $(EXCLUSIONS)
 	dh_builddeb --destdir=$(DEBDIR) $(EXCLUSIONS)
+	aegis-deb-util --add-manifest libmeegotouch-bin
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure

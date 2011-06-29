@@ -24,7 +24,8 @@ Build-Depends: debhelper (>= 5),
  libx11-xcb-dev,
  libxcb1-dev,
  libxcb-composite0-dev,
- libngf-dev
+ libngf-dev,
+ aegis-builder (>= 1.6)
 Standards-Version: 3.7.2
 
 Package: libmeegotouchcore0
