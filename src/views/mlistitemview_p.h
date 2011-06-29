@@ -45,6 +45,11 @@ private:
     MListItem *controller;
 
     MTapStateMachine* tapStateMachine;
+
+    // Point where the item was pressed, in scene coordinates.
+    // Only meaningful between a mousePressEvent() and a
+    // mouseReleaseEvent() call.
+    QPointF pressScenePos;
 private:
     Q_DECLARE_PUBLIC(MListItemView)
 };

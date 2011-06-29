@@ -28,6 +28,16 @@ class M_VIEWS_EXPORT MListItemStyle : public MWidgetStyle
     M_STYLE(MListItemStyle)
 
     M_STYLE_ATTRIBUTE(QString, downStateEffect, DownStateEffect)
+
+    /*!
+       \property MListItemStyle::maxDistanceForClick
+
+       If the pointer gets further away from the press point than this value
+       a cancel event is sent. Thus no click can take place (for this
+       press-move-releae cycle) even if the pointer is released over the
+       item.
+     */
+    M_STYLE_ATTRIBUTE(int, maxDistanceForClick, MaxDistanceForClick)
 };
 
 class M_VIEWS_EXPORT MListItemStyleContainer : public MWidgetStyleContainer
