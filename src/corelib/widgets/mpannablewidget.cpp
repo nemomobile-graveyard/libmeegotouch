@@ -35,6 +35,12 @@ M_REGISTER_WIDGET(MPannableWidget)
 
 namespace {
     const int ZValueGlass = 2;
+
+    // Here you have to find the sweet spot to achieve both "continuous panning"
+    // and "panning immediately stops when finger hits screen" use cases.
+    // The bigger the delay, the better for "continuous panning" case.
+    // The smaller the dealy, the better for "panning immediately stops when
+    // finger hits screen" case.
     const int MousePressStopingMovementTimeout = 70; //ms.
 }
 
