@@ -1,3 +1,19 @@
+libmeegotouch (0.23.2-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#266547, Rich Text bubble cut when placed in empty composer
+  * Fixes: NB#260911 - Illogical behaviour of touches on the launcher
+  * Fixes: NB#260673 - Pointer grab is not cancelled on focus out
+  * Fixes: NB#258052 - MContainer and instantaneous bad position of progress indicator after using toggleProgressIndicatorVisible()
+  * Fixes: NB#269197 - MDesktopEntry should provide a way to parse a desktop entry without loading translation catalog
+  * Fixes: NB#267939 - Line break in status message is incorrectly displayed in Contacts
+  * Fixes: NB#268146 - MListView does not invalidate first and last visible rows on layout change.
+  * Fixes: NB#263666 - [TASK] Spinner takes too much CPU in Recents view
+  * Fixes: NB#261635 - Improve pinyin sorting (was: Tracker doesn't use MeegoTouch's libicu for collation when we HAVE_MEEGOTOUCH)
+  * Fixes: NB#263790 - [TASK] MScalableImage should warn about scaling to near size
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 29 Jun 2011 16:08:59 +0300
+
 libmeegotouch (0.23.1-1) unstable; urgency=low
 
   * New version
