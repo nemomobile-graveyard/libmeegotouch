@@ -1,3 +1,11 @@
+libmeegotouch (0.22.9-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#268146 - MListView does not invalidate first and last visible rows on layout change.
+  * Changes: Reduce MousePressStopingMovementTimeout value
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 29 Jun 2011 16:12:26 +0300
+
 libmeegotouch (0.22.8-1) unstable; urgency=low
 
   * Fixes: NB#257379 - Language names of Chinese languages lost consistency and logic
