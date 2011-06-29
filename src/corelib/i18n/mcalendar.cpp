@@ -27,10 +27,16 @@
 #include "mlocale_p.h"
 #include "micuconversions.h"
 
+#include "mdebug.h"
 
 MCalendarPrivate::MCalendarPrivate(MLocale::CalendarType calendarType)
     : _calendar(0), _calendarType(calendarType), _valid(true)
 {
+    if ( ! _watcher )
+    {
+        _watcher = new MTimeZoneWatcher();
+    }
+
     if (_calendarType == MLocale::DefaultCalendar) {
         MLocale defaultLocale;
         _calendarType = defaultLocale.calendarType();
@@ -53,6 +59,37 @@ MCalendarPrivate::~MCalendarPrivate()
     delete _calendar;
 }
 
+MTimeZoneWatcher *MCalendarPrivate::_watcher = NULL;
+
+MTimeZoneWatcher::MTimeZoneWatcher()
+{
+#ifdef HAVE_QMSYSTEM2
+    _qmtime = new MeeGo::QmTime();
+    bool result = connect( _qmtime, SIGNAL( timeOrSettingsChanged(MeeGo::QmTime::WhatChanged) ),
+			   this, SLOT( timeOrSettingsChangedSlot(MeeGo::QmTime::WhatChanged) ) );
+    if ( ! result )
+        mWarning( "connection to QmTime object failed" );
+#endif
+}
+
+MTimeZoneWatcher::~MTimeZoneWatcher()
+{
+#ifdef HAVE_QMSYSTEM2
+    delete _qmtime;
+#endif
+}
+
+#ifdef HAVE_QMSYSTEM2
+void MTimeZoneWatcher::timeOrSettingsChangedSlot( MeeGo::QmTime::WhatChanged )
+{
+    QString zone;
+    if ( ! _qmtime->getTimezone( zone ) ) {
+        mWarning( "MTimeZoneWatcher: QmTime::getTimeZone() failed" );
+    } else {
+        MCalendar::setSystemTimeZone( zone );
+    }
+}
+#endif
 
 MCalendarPrivate &MCalendarPrivate::operator=(const MCalendarPrivate &other)
 {
@@ -260,11 +297,14 @@ void MCalendar::setDateTime(QDateTime dateTime)
 
     if (originalTimeSpec == Qt::LocalTime) {
         // convert from local time to UTC
-        const icu::TimeZone &tz = d->_calendar->getTimeZone();
+        icu::UnicodeString tz_name = MIcuConversions::qStringToUnicodeString(MCalendar::systemTimeZone());
+        icu::TimeZone *tz = icu::TimeZone::createTimeZone(tz_name) ;
+        d->_calendar->setTimeZone(*tz);
         qint32 rawOffset;
         qint32 dstOffset;
-        tz.getOffset(icuDate, true /*local */, rawOffset, dstOffset, status);
+        tz->getOffset(icuDate, true /*local */, rawOffset, dstOffset, status);
         icuDate = icuDate - rawOffset - dstOffset;
+        delete tz ;
     }
 
     d->_calendar->setTime(icuDate, status);

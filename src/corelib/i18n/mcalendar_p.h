@@ -25,6 +25,13 @@
 #include "mlocale.h"
 #include "mcalendar.h"
 
+#ifdef HAVE_QMSYSTEM2
+#include <qmtime.h>
+#endif
+
+class MTimeZoneWatcher;
+
+
 class MCalendarPrivate
 {
 public:
@@ -40,10 +47,27 @@ public:
     icu::Calendar *_calendar;
     MLocale::CalendarType _calendarType;
     bool _valid;
+    static MTimeZoneWatcher *_watcher;
 
 private:
 
 
+};
+
+class MTimeZoneWatcher : public QObject
+{
+    Q_OBJECT
+public:
+    MTimeZoneWatcher();
+    virtual ~MTimeZoneWatcher();
+
+private Q_SLOTS:
+#ifdef HAVE_QMSYSTEM2
+    void timeOrSettingsChangedSlot( MeeGo::QmTime::WhatChanged );
+
+private:
+    MeeGo::QmTime *_qmtime;
+#endif
 };
 
 #endif

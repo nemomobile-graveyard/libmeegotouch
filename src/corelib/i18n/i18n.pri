@@ -14,6 +14,9 @@ PUBLIC_HEADERS += \
     $$I18N_SRC_DIR/mcity.h \
     $$I18N_SRC_DIR/mlocationdatabase.h \
 
+PRIVATE_HEADERS += \
+    $$I18N_SRC_DIR/mcalendar_p.h \
+
 SOURCES += \
     $$I18N_SRC_DIR/mbreakiterator.cpp \
     $$I18N_SRC_DIR/mlocale.cpp \
@@ -47,4 +50,9 @@ contains(DEFINES, HAVE_ICU) {
 
     SOURCES += \
         $$I18N_SRC_DIR/mnullbreakiterator.cpp
+}
+
+contains(DEFINES, HAVE_QMSYSTEM2) {
+    CONFIG+=qmsystem2
+    QMAKE_CXXFLAGS -= -pedantic
 }

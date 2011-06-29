@@ -5,6 +5,7 @@ Maintainer: Adrian Yanes <ext-adrian.yanes@nokia.com>
 Build-Depends: debhelper (>= 5),
  libqt4-dev (>= 4.7.3~git20110418-0maemo1+0m6),
  libicu-dev,
+ libqmsystem2-dev,
  libx11-dev,
  doxygen (>=1.5.9),
  libgconf2-dev,
@@ -36,7 +37,8 @@ Depends: ${misc:Depends},
  libmeegotouch-l10n-engineering-english (= ${Source-Version}),
  dbus-x11,
  meegotouchtheme (>= 0.23.1-1),
- libqtm-serviceframework
+ libqtm-serviceframework,
+ libqmsystem2
 Suggests: libmeegotouch-l10n-ar,
  libmeegotouch-l10n-de,
  libmeegotouch-l10n-en,
