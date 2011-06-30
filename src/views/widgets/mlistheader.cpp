@@ -65,8 +65,8 @@ MSeparator *MListHeaderPrivate::separatorWidget()
     Q_Q(MListHeader);
     if (!separator) {
         separator = new MSeparator(q);
-        separator->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         separator->setStyleName("CommonGroupHeaderDivider");
+        separator->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     }
     return separator;
 }
