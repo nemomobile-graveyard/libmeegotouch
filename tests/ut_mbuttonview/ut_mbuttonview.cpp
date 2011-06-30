@@ -253,6 +253,8 @@ void Ut_MButtonView::testMouseEvents()
     moveEvent.setScenePos(QPointF(300,300));
     
     m_subject->mouseMoveEvent(&moveEvent);
+    // a cancel event will be processed on next event loop
+    QApplication::processEvents();
     QVERIFY(m_button->isDown() == false);
     m_subject->mouseReleaseEvent(&releaseEvent);
 
