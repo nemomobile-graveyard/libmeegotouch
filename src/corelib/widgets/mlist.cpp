@@ -49,7 +49,6 @@ void MListPrivate::init()
 
     q->setOptimizationFlags(MList::DontCallCreateCellDuringUpdate);
     q->setSelectionMode(MList::NoSelection);
-    q->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)); //grow to available space in both directions
 }
 
 void MListPrivate::updateLongTapConnections()

@@ -39,6 +39,7 @@ MListView::MListView(MWidgetController *widgetController)
     d_ptr(NULL)
 {
     controller = dynamic_cast<MList *>(widgetController);
+    controller->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)); //grow to available space in both directions
 }
 
 MListView::~MListView()
