@@ -32,6 +32,7 @@
 #include "mscenemanager.h"
 
 #include <MCancelEvent>
+#include <MLocale>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsLinearLayout>
@@ -214,9 +215,9 @@ void MCompleterViewPrivate::createContents()
             // Workaround for NB#177781: MButton has different alignments for rich text and normal text in its label.
             // Both completionLabel and completionsButton use rich text label to get same alignment
             if (total <= DefaultMaximumHits)
-                completionsButton->setText(QString("<b></b>%1").arg(total));
+                completionsButton->setText(QString("<b></b>%1").arg(MLocale().formatNumber(total)));
             else
-                completionsButton->setText(QString("<b></b>%1+").arg(DefaultMaximumHits));
+                completionsButton->setText(QString("<b></b>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)));
             completionsButton->setFocusProxy(controller->widget());
             completionsButton->setVisible(true);
             layout->addItem(completionsButton);
