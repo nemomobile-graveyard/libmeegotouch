@@ -100,15 +100,26 @@ const QImage& MImageWidgetPrivate::getImage()
     return this->image;
 }
 
+void MImageWidgetPrivate::init() {
+    Q_Q(MImageWidget);
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    policy.setHeightForWidth(false);
+    q->setSizePolicy(policy);
+}
+
 MImageWidget::MImageWidget(QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
+    Q_D(MImageWidget);
+    d->init();
 }
 
 MImageWidget::MImageWidget(const QString &id, QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
+    Q_D(MImageWidget);
     setImage(id);
+    d->init();
 }
 
 MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
@@ -116,6 +127,7 @@ MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
 {
     Q_D(MImageWidget);
     d->image = *image;
+    d->init();
 }
 
 MImageWidget::MImageWidget(const QPixmap *pixmap, QGraphicsItem *parent) :
@@ -123,12 +135,15 @@ MImageWidget::MImageWidget(const QPixmap *pixmap, QGraphicsItem *parent) :
 {
     Q_D(MImageWidget);
     d->pixmap = new QPixmap(*pixmap);
+    d->init();
 }
 
 MImageWidget::MImageWidget(const MImageWidget &other) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), 0)
 {
+    Q_D(MImageWidget);
     *this = other;
+    d->init();
 }
 
 MImageWidget &MImageWidget::operator=(const MImageWidget &other)

@@ -43,13 +43,6 @@ MImageWidgetViewPrivate::~MImageWidgetViewPrivate()
 {
 }
 
-void MImageWidgetViewPrivate::init()
-{
-    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    policy.setHeightForWidth(false);
-    controller->setSizePolicy(policy);
-}
-
 void MImageWidgetViewPrivate::calculateDrawRect(const QSizeF &imageSize)
 {
     Q_Q(MImageWidgetView);
@@ -250,7 +243,6 @@ MImageWidgetView::MImageWidgetView(MImageWidget *controller) :
 {
     Q_D(MImageWidgetView);
     d->controller = controller;
-    d->init();
 }
 
 MImageWidgetView::MImageWidgetView(MImageWidgetViewPrivate &dd, MImageWidget *controller) :
@@ -258,7 +250,6 @@ MImageWidgetView::MImageWidgetView(MImageWidgetViewPrivate &dd, MImageWidget *co
 {
     Q_D(MImageWidgetView);
     d->controller = controller;
-    d->init();
 }
 
 MImageWidgetView::~MImageWidgetView()

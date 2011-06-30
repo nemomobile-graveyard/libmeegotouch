@@ -30,8 +30,6 @@ public:
     MImageWidgetViewPrivate();
     ~MImageWidgetViewPrivate();
 
-    void init();
-
     void calculateDrawRect(const QSizeF &imageSize);
     QSizeF calculateSourceSize(const QSizeF &imageSize);
     void calculateSourceRect(const QSizeF &imageSize);
