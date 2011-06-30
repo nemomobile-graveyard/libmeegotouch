@@ -1819,6 +1819,15 @@ void MTextEditView::setupModel()
     delete d->maskedTextDocument;
     d->maskedTextDocument = 0;
 
+    if (model()->line() == MTextEditModel::SingleLine) {
+        d->controller->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    } else {
+        //Set to expand vertically only in multiline mode
+        QSizePolicy policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        policy.setHeightForWidth(true);
+        d->controller->setSizePolicy(policy);
+    }
+
     if (model()->echo() != MTextEditModel::Normal) {
         d->initMaskedDocument();
     }
