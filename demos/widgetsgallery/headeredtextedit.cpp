@@ -33,14 +33,16 @@ HeaderedTextEdit::~HeaderedTextEdit()
 
 void HeaderedTextEdit::setHeaderText(const QString &text)
 {
-    headerLabel = new MLabel(this);
-    headerLabel->setObjectName("headerLabel");
-    headerLabel->setStyleName("CommonEditorInputFieldLabel");
-    headerLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    headerLabel->setPos(0, 0);
-    headerLabel->setPreferredHeight(effectiveSizeHint(Qt::PreferredSize).height());
+    if (!headerLabel) {
+        headerLabel = new MLabel(this);
+        headerLabel->setObjectName("headerLabel");
+        headerLabel->setStyleName("CommonEditorInputFieldLabel");
+        headerLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+        headerLabel->setPos(0, 0);
+        headerLabel->setPreferredHeight(effectiveSizeHint(Qt::PreferredSize).height());
+        headerLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    }
     headerLabel->setText(text);
-    headerLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     _q_updateTextLeftMargin();
 }
