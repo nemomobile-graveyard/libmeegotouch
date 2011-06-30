@@ -183,7 +183,6 @@ MDetailedListItem::MDetailedListItem(MDetailedListItem::ItemStyle style, QGraphi
     Q_D(MDetailedListItem);
     d->q_ptr = this;
 
-    setItemStyle(style);
     setObjectName("CommonPanel");
 }
 

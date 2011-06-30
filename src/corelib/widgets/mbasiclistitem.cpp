@@ -140,7 +140,6 @@ MBasicListItem::MBasicListItem(MBasicListItem::ItemStyle style, QGraphicsItem *p
     Q_D(MBasicListItem);
     d->q_ptr = this;
 
-    setItemStyle(style);
     setObjectName("CommonPanel");
 }
 
