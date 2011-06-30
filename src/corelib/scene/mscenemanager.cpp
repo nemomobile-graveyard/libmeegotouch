@@ -178,7 +178,12 @@ void MSceneManagerPrivate::init(MScene *scene)
     rootElementsDisplacedByStatusBar << homeButtonRootElement;
 
     topNavigationBarRootElement = new QGraphicsWidget(rootElement);
-    topNavigationBarRootElement->setZValue(zForWindowType(MSceneWindow::NavigationBar));
+    // We must set zValue to something bigger that zValue for NavigationBar
+    // otherwise child elements of topNavigationBarRootElement (i.e. ApplicationMenu)
+    // will always be displayed below NavigationBar.
+    // It is because NavigationBar is added later to rootElement and in case of the same zValues,
+    // later added items are displayed on top.
+    topNavigationBarRootElement->setZValue(zForWindowType(MSceneWindow::NavigationBar) + 1);
     topNavigationBarRootElement->setFlag(QGraphicsItem::ItemHasNoContents);
     rootElementsDisplacedByStatusBar << topNavigationBarRootElement;
 
@@ -820,7 +825,7 @@ QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *s
         case MSceneWindow::ObjectMenu:
         case MSceneWindow::ApplicationMenu:
             if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
-                root = topBorderDecorationRootElement;
+                root = topNavigationBarRootElement;
             } else {
                 root = rootElement;
             }
