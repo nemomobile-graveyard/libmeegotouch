@@ -27,7 +27,6 @@ HeaderedTextEdit::HeaderedTextEdit(QGraphicsItem *parent)
     connect(document(), SIGNAL(blockCountChanged(int)), this, SLOT(_q_resetNewBlockMargin()));
 }
 
-
 HeaderedTextEdit::~HeaderedTextEdit()
 {
 }
@@ -39,9 +38,10 @@ void HeaderedTextEdit::setHeaderText(const QString &text)
     headerLabel->setStyleName("CommonEditorInputFieldLabel");
     headerLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     headerLabel->setPos(0, 0);
-    headerLabel->setPreferredHeight(size().height());
+    headerLabel->setPreferredHeight(effectiveSizeHint(Qt::PreferredSize).height());
     headerLabel->setText(text);
     headerLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
     _q_updateTextLeftMargin();
 }
 
@@ -53,7 +53,6 @@ QString HeaderedTextEdit::staticHeaderText() const
 	return QString();
     }
 }
-
 
 void HeaderedTextEdit::_q_updateTextLeftMargin()
 {
