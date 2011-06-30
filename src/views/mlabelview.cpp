@@ -137,6 +137,10 @@ MLabelView::MLabelView(MLabel *controller) :
 {
     Q_D(MLabelView);
     d->controller = controller;
+
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    policy.setHeightForWidth(true);
+    d->controller->setSizePolicy(policy);
 }
 
 MLabelView::~MLabelView()
