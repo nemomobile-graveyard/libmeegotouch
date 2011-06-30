@@ -390,6 +390,15 @@ void MTextEditPrivate::init()
 
     q->document()->setDefaultTextOption(option);
 
+    if (q->model()->line() == MTextEditModel::SingleLine) {
+        q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    } else {
+        //Set to expand vertically only in multiline mode
+        QSizePolicy policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        policy.setHeightForWidth(true);
+        q->setSizePolicy(policy);
+    }
+
     if (!q->model()->cursor()) {
         q->model()->setCursor(new QTextCursor(q->document()));
     }
