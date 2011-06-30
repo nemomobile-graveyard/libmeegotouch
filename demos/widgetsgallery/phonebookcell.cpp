@@ -29,8 +29,8 @@
 #include <MImageWidget>
 #include <MProgressIndicator>
 
-PhoneBookCell::PhoneBookCell()
-    : MListItem(),
+PhoneBookCell::PhoneBookCell(QGraphicsItem *parent)
+    : MListItem(parent),
     layout(NULL),
     landscapePolicy(NULL),
     portraitPolicy(NULL),
@@ -115,7 +115,7 @@ MImageWidget *PhoneBookCell::imageWidget()
 {
     if (!icon) {
         // icon
-        icon = new MImageWidget();
+        icon = new MImageWidget(this);
         icon->setObjectName("phoneBookListItemIcon");
         icon->setStyleName("CommonMainIcon");
         icon->setImage("icon-m-content-avatar-placeholder");

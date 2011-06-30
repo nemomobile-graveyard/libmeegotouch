@@ -34,13 +34,13 @@
 class MListSheetContentItemCreator : public MAbstractCellCreator<PhoneBookCell>
 {
 public:
-    MListSheetContentItemCreator() { }
+    MListSheetContentItemCreator(MList *parent) : parent(parent) { }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
     {
         PhoneBookCell *cell = dynamic_cast<PhoneBookCell *>(recycler.take(PhoneBookCell::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new PhoneBookCell;
+            cell = new PhoneBookCell(parent);
         }
         updateCell(index, cell);
         return cell;
@@ -56,6 +56,9 @@ public:
         listCell->setSubtitle(entry->phoneNumber);
         listCell->setImage(entry->thumbnail);
     }
+
+private:
+    MList *parent;
 };
 
 ListSheet::ListSheet()
@@ -100,7 +103,7 @@ void ListSheet::createCentralWidget()
     list->setStyleName(inv("CommonList"));
     list->setShowGroups(true);
     list->setItemModel(model);
-    list->setCellCreator(new MListSheetContentItemCreator);
+    list->setCellCreator(new MListSheetContentItemCreator(list));
     list->setIndexDisplayMode(MList::Auto);
 
     model->setParent(list);

@@ -121,7 +121,7 @@ public:
 class MListContentItemCreator : public MAbstractCellCreator<PhoneBookCell>
 {
 public:
-    MListContentItemCreator() : amountOfColumns(1), highlightText("") {
+    MListContentItemCreator(MList *parent) : amountOfColumns(1), highlightText(""), parent(parent) {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
@@ -130,7 +130,7 @@ public:
         // set in constructor then the pixmaps are properly loaded.
         PhoneBookCell *cell = dynamic_cast<PhoneBookCell *>(recycler.take(PhoneBookCell::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new PhoneBookCell;
+            cell = new PhoneBookCell(parent);
         }
         updateCell(index, cell);
         return cell;
@@ -260,6 +260,7 @@ public:
 private:
     int amountOfColumns;
     QString highlightText;
+    MList *parent;
 };
 
 void MListPage::loadPicturesInVisibleItems()
@@ -269,7 +270,7 @@ void MListPage::loadPicturesInVisibleItems()
 
 void MListPage::setPlainListModel()
 {
-    cellCreator = new MListContentItemCreator();
+    cellCreator = new MListContentItemCreator(list);
     list->setCellCreator(cellCreator);
 
     model = new PhoneBookModel();
@@ -282,7 +283,6 @@ void MListPage::setPlainListModel()
     proxyModel->setSourceModel(model);
 
     list->setItemModel(proxyModel);
-
     imageLoader = new PhoneBookImageLoader;
     imageLoader->setObjectName("phoneBookImageLoader");
 

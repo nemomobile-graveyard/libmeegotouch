@@ -42,7 +42,7 @@ class PhoneBookCell : public MListItem
     Q_PROPERTY(QImage image READ image WRITE setImage)
 
 public:
-    PhoneBookCell();
+    PhoneBookCell(QGraphicsItem *parent = 0);
     virtual ~PhoneBookCell();
 
     QString title();
