@@ -41,8 +41,9 @@ private:
 class WidgetGalleryCellCreator : public MAbstractCellCreator<DrillDownListItem>
 {
 public:
-    WidgetGalleryCellCreator()
-        : MAbstractCellCreator<DrillDownListItem>()
+    WidgetGalleryCellCreator(MList *parent)
+        : MAbstractCellCreator<DrillDownListItem>(),
+          parent(parent)
     {
     }
 
@@ -51,7 +52,7 @@ public:
 
         DrillDownListItem *cell = dynamic_cast<DrillDownListItem *>(recycler.take(DrillDownListItem::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new DrillDownListItem;
+            cell = new DrillDownListItem(parent);
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -66,6 +67,9 @@ public:
 
         item->setTitle(index.data().toString());
     }
+
+private:
+    MList *parent;
 };
 
 MainCategoryPage::MainCategoryPage(QAbstractItemModel *demosDataModel, const QModelIndex &parentIndex) :
@@ -107,7 +111,7 @@ void MainCategoryPage::populateLayout()
         setStyleName("CommonApplicationPageInverted");
         list->setStyleName("CommonListInverted");
     }
-    list->setCellCreator(new WidgetGalleryCellCreator());
+    list->setCellCreator(new WidgetGalleryCellCreator(list));
     list->setItemModel(dataModel);
 
     policy->addItem(list, Qt::AlignCenter);
