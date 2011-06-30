@@ -48,6 +48,9 @@ MLabel::~MLabel()
 void MLabelPrivate::init()
 {
     Q_Q(MLabel);
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    policy.setHeightForWidth(true);
+    q->setSizePolicy(policy);
     q->grabGestureWithCancelPolicy(Qt::TapAndHoldGesture, Qt::GestureFlags(), MWidget::MouseEventCancelOnGestureFinished);
 }
 
