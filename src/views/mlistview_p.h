@@ -414,7 +414,7 @@ public:
 class MDefaultHeadersCreator : public MAbstractCellCreator<MListHeader>
 {
 public:
-    MDefaultHeadersCreator(const QString &headerStyleName) {
+    MDefaultHeadersCreator(const QString &headerStyleName, MList *parent) : parent(parent) {
         setHeaderStyleName(headerStyleName);
     }
 
@@ -425,7 +425,7 @@ public:
     virtual MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
         MListHeader *header = qobject_cast<MListHeader *>(recycler.take(MListHeader::staticMetaObject.className()));
         if (header == NULL) {
-            header = new MListHeader;
+            header = new MListHeader(parent);
             header->setStyleName(headerStyleName);
         }
         updateCell(index, header);
@@ -445,6 +445,7 @@ public:
 
 private:
     QString headerStyleName;
+    MList *parent;
 };
 
 #endif

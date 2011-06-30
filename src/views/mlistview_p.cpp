@@ -1240,7 +1240,7 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
 
     if (!controllerModel->headerCreator()) {
         if (!headersCreator)
-            headersCreator = new MDefaultHeadersCreator(q_ptr->style()->groupHeaderObjectName());
+            headersCreator = new MDefaultHeadersCreator(q_ptr->style()->groupHeaderObjectName(), controller);
         else
             updateHeaders();
     }
