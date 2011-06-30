@@ -47,8 +47,6 @@ void MContainerPrivate::init(const QString &newTitle)
     q->model()->setCentralWidget(new MWidget(q));
 
     q->setTitle(newTitle);
-
-    q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 MContainer::MContainer(QGraphicsItem *parent)
