@@ -50,22 +50,24 @@
 class ContentItemCreator : public MAbstractCellCreator<MWidgetController>
 {
 public:
-    ContentItemCreator(MGridPage* gridPage)
+    ContentItemCreator(MGridPage* gridPage, MList *parent)
         : MAbstractCellCreator<MWidgetController>(),
-          m_gridPage(0),
-          m_preferredSize()
+          m_gridPage(gridPage),
+          m_preferredSize(),
+          parent(parent)
     {
-        m_gridPage = gridPage;
     }
 
     virtual MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
     {
+        Q_UNUSED(recycler);
+
         MWidget *cell = NULL;
 
         MediaType m = index.data(Qt::DisplayRole).value<MediaType>();
 
         if (m.type == MediaType::Image) {
-            cell = MListCellCreatorHelper<GridImageWidget>::createCell(recycler, "", "");
+            cell = new GridImageWidget(parent);
             updateCell(index, cell);
         }
         return cell;
@@ -77,6 +79,7 @@ public:
 private:
     MGridPage* m_gridPage;
     QSizeF m_preferredSize;
+    MList *parent;
 };
 
 void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) const
@@ -154,7 +157,7 @@ void MGridPage::createContent()
     }
     m_itemSize.setHeight(m_itemSize.width());
 
-    ContentItemCreator *cellCreator = new ContentItemCreator(this);
+    ContentItemCreator *cellCreator = new ContentItemCreator(this, list);
     list->setCellCreator(cellCreator);
 
     QStringList mediaDirs;
