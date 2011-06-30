@@ -327,7 +327,7 @@ void MListIndexViewPrivate::_q_updateTitles()
     qDeleteAll(groupTitleLabelWidgets);
     groupTitleLabelWidgets.clear();
 
-    if (q->model()->displayMode() == MList::Floating)
+    if (q->model()->displayMode() == MList::Floating || !list || !list->itemModel())
         return;
 
     if (!groupTitleHeight)
