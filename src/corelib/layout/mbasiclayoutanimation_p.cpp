@@ -20,7 +20,8 @@
 #include "mbasiclayoutanimation_p.h"
 #include "mlayout_p.h"
 
-MBasicLayoutAnimationPrivate::MBasicLayoutAnimationPrivate()
+MBasicLayoutAnimationPrivate::MBasicLayoutAnimationPrivate() :
+    timeSinceLastUpdate(QElapsedTimer())
 {
     recordedTimeSinceLastUpdate = 0;
     timeSinceLastUpdate.invalidate();

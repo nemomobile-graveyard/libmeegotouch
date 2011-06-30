@@ -1228,6 +1228,8 @@ MSliderViewPrivate::MSliderViewPrivate() :
     horizontalPolicy(0),
     verticalPolicy(0),
     positionAnimation(0),
+    timeOnFeedback(QElapsedTimer()),
+    timeOnMove(QElapsedTimer()),
     previousValue(0),
     feedbackPlayedFor(0),
     pressTimerId(0),

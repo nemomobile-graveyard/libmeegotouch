@@ -91,6 +91,7 @@ MWindowPrivate::MWindowPrivate() :
     displayExitedTimer(),
     visibleInSwitcher(false),
     fullyObscured(false),
+    timeSinceLastPaintInSwitcher(QElapsedTimer()),
     throttleInSwitcher(false),
     updateIsPending(false),
     discardedPaintEvent(false),

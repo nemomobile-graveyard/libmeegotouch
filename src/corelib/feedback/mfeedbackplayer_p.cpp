@@ -34,7 +34,8 @@ namespace {
 static const char gSocketServer[] = "/tmp/mfeedbackd/player.sock";
 
 MFeedbackPlayerPrivate::MFeedbackPlayerPrivate(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      previousSuccessfullConnection(QElapsedTimer())
 {
     socketStream.setDevice(&socket);
     connect(&socket, SIGNAL(connected()), SLOT(onConnected()));

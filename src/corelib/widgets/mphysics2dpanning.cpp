@@ -54,7 +54,7 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
     borderSpringK(0.0),
     borderFrictionC(0.0),
     panDirection(0),
-    integrationStepTimer(),
+    integrationStepTimer(QElapsedTimer()),
     integrationStepDeltaTime(0.0f),
     boundsBehavior(MPhysics2DPanning::DragAndOvershootBounds),
     q_ptr(publicObject)

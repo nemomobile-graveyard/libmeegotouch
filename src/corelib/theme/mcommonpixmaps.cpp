@@ -71,7 +71,8 @@ const unsigned int PRELOAD_FILE_VERSION = VERSION(0, 1);
 
 MCommonPixmaps::MCommonPixmaps(MThemeDaemon *daemon, bool loadMostUsed) :
     minRequestsForCache(0),
-    daemon(daemon)
+    daemon(daemon),
+    timerSinceLastSave(QElapsedTimer())
 {
     if (loadMostUsed) {
         connect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), SLOT(loadOne()));
