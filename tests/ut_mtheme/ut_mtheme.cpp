@@ -393,6 +393,22 @@ void Ut_MTheme::testScalableImage()
     QCOMPARE(top, 3);
     QCOMPARE(bottom, 4);
 
+    const MScalableImage *image2 = m_theme->scalableImage(KnownIconId, 1, 2, 3, 4, QTileRules(Qt::RepeatTile, Qt::RepeatTile));
+    QVERIFY(image2 != 0);
+    QVERIFY(image2 != image);
+
+    left = -1;
+    right = -1;
+    top = -1;
+    bottom = -1;
+
+    image2->borders(&left, &right, &top, &bottom);
+    QCOMPARE(left, 1);
+    QCOMPARE(right, 2);
+    QCOMPARE(top, 3);
+    QCOMPARE(bottom, 4);
+
+
     const MScalableImage *unknownImage = m_theme->scalableImage(UnknownIconId, 1, 2, 3, 4);
     QVERIFY(unknownImage != 0);
 
@@ -404,6 +420,7 @@ void Ut_MTheme::testScalableImage()
     QCOMPARE(bottom, 4);
 
     m_theme->releaseScalableImage(image);
+    m_theme->releaseScalableImage(image2);
     m_theme->releaseScalableImage(unknownImage);
 }
 

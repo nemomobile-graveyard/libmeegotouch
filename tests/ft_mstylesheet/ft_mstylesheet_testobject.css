@@ -29,10 +29,14 @@ TestObjectStyle
     attribute-pixmap2: duibutton-background 30 30;
     attribute-pixmap3: "duibutton-background";
     attribute-pixmap4: duibutton-background;
+    
     attribute-scalable: "C1-container-background" 20 20 20 20;
     attribute-scalable2: C1-container-background 20 20 20 20;
     attribute-scalable3: "C1-container-background";
     attribute-scalable4: C1-container-background;
+
+    attribute-scalable5: C1-container-background stretch repeat;
+    attribute-scalable6: C1-container-background 20 20 20 20 round round;
     
     attribute-wrap-mode: nowrap;
 }

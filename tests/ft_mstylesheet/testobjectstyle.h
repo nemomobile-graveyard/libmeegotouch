@@ -66,6 +66,8 @@ class TestObjectStyle : public MStyle
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *, attributeScalable2, AttributeScalable2)
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *, attributeScalable3, AttributeScalable3)
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *, attributeScalable4, AttributeScalable4)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, attributeScalable5, AttributeScalable5)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, attributeScalable6, AttributeScalable6)
 };
 
 class TestObjectStyleContainer : public MStyleContainer

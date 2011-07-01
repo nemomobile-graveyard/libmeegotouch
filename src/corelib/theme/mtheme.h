@@ -42,6 +42,7 @@ class MPalette;
 class MDefaultFonts;
 class MComponentData;
 class QAbstractAnimation;
+class QTileRules;
 
 /*!
  \class MTheme
@@ -283,6 +284,13 @@ public:
      \sa releaseScalableImage
      */
     static const MScalableImage *scalableImage(const QString &id, int left, int right, int top, int bottom);
+
+    /*!
+      This is an overloaded function.
+
+      Returns a MScalableImage with the wanted tiling rules.
+    */
+    static const MScalableImage *scalableImage(const QString &id, int left, int right, int top, int bottom, const QTileRules& tileRules);
 
     /*!
      Releases a shared MScalableImage acquired through MTheme.

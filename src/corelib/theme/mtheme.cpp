@@ -35,6 +35,7 @@ M_LIBRARY
 #include <QTimer>
 #include <QSharedMemory>
 #include <QHash>
+#include <QTileRules>
 
 #include "private/mwidgetcontroller_p.h"
 
@@ -91,7 +92,7 @@ namespace
                 + QChar::fromLatin1('_') + QString::number(height);
     }
 
-    // "scalable_image_myscalable_5_5_5_5
+    // "scalable_image_myscalable_5_5_5_5"
     static QString scalableImageCacheId(const QString &name, int left, int top, int right, int bottom)
     {
         return QString::fromLatin1("scalable_image_") + name
@@ -99,6 +100,18 @@ namespace
                 + QChar::fromLatin1('_') + QString::number(top)
                 + QChar::fromLatin1('_') + QString::number(right)
                 + QChar::fromLatin1('_') + QString::number(bottom);
+    }
+
+    // "scalable_image_myscalable_5_5_5_5_0_0"
+    static QString scalableImageCacheId(const QString &name, int left, int top, int right, int bottom, const QTileRules& tileRules)
+    {
+        return QString::fromLatin1("scalable_image_") + name
+                + QChar::fromLatin1('_') + QString::number(left)
+                + QChar::fromLatin1('_') + QString::number(top)
+                + QChar::fromLatin1('_') + QString::number(right)
+                + QChar::fromLatin1('_') + QString::number(bottom)
+                + QChar::fromLatin1('_') + QString::number(tileRules.horizontal)
+                + QChar::fromLatin1('_') + QString::number(tileRules.vertical);
     }
 
     static QByteArray wrapConstCharInQByteArray(const char* rawPointer) {
@@ -271,6 +284,37 @@ const MScalableImage *MTheme::scalableImage(const QString &id, int left, int rig
 
     //create the actual scalable image and cache it
     MScalableImage *image = new MScalableImage(p, left, right, top, bottom, id);
+    instance()->d_ptr->scalableImageIdentifiers.insert(scalableidentifier, CachedScalableImage(image));
+
+    return image;
+}
+
+const MScalableImage *MTheme::scalableImage(const QString &id, int left, int right, int top, int bottom, const QTileRules& tileRules)
+{
+    // check if we already have this scalable image in the cache
+    QString scalableidentifier = scalableImageCacheId(id, left, top, right, bottom, tileRules);
+    QHash<QString, CachedScalableImage>::iterator i = instance()->d_ptr->scalableImageIdentifiers.find(scalableidentifier);
+    if (i != instance()->d_ptr->scalableImageIdentifiers.end()) {
+        //image found, increase refcount and return it
+        i.value().refcount.ref();
+        return i.value().image;
+    }
+
+    //first try to fetch the used pixmap from the cache
+    QString pixmapidentifier = defaultPixmapCacheId(id, 0, 0);
+    const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(pixmapidentifier);
+    if (!p) {
+        QPixmap *result = new QPixmap();
+
+        instance()->d_ptr->pixmapIdentifiers.insert(pixmapidentifier, CachedPixmap(result, id, QSize(0, 0)));
+        instance()->d_ptr->themeDaemon->pixmapHandleSync(id, QSize(0, 0));
+
+        p = result;
+    }
+
+    //create the actual scalable image and cache it
+    MScalableImage *image = new MScalableImage(p, left, right, top, bottom, id);
+    image->setTileRules(tileRules);
     instance()->d_ptr->scalableImageIdentifiers.insert(scalableidentifier, CachedScalableImage(image));
 
     return image;

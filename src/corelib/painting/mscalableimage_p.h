@@ -24,6 +24,7 @@
 #include <QList>
 #include <QPixmap>
 #include <QMargins>
+#include <QTileRules>
 
 #include "mscalableimage.h"
 
@@ -63,6 +64,8 @@ public:
 #ifndef __arm__
     QString cachedImageKey;
 #endif
+
+    QTileRules tileRules;
 
 protected:
     MScalableImage *q_ptr;

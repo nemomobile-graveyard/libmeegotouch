@@ -27,6 +27,7 @@
 #include <QTextCharFormat>
 #include <QEasingCurve>
 #include <QTextOption>
+#include <QTileRules>
 
 #include "mstylesheet.h"
 #include "mstyle.h"
@@ -166,7 +167,7 @@ public:
     QHash<QByteArray, QFont::Capitalization> CAPITALIZATION;
     QHash<QByteArray, int> EASINGCURVETYPES;
     QHash<QByteArray, QTextOption::WrapMode> WRAPMODES;
-
+    QHash<QByteArray, Qt::TileRule> TILERULE;
 
     QtDatatypeConverter() {
         ALIGNMENTS["left"] = Qt::AlignLeft;
@@ -261,6 +262,10 @@ public:
         WRAPMODES["wordwrap"] = QTextOption::WordWrap;
         WRAPMODES["wrapanywhere"] = QTextOption::WrapAnywhere;
         WRAPMODES["wrapatwordboundaryoranywhere"] =QTextOption::WrapAtWordBoundaryOrAnywhere;
+
+        TILERULE["stretch"] = Qt::StretchTile;
+        TILERULE["repeat"] = Qt::RepeatTile;
+        TILERULE["round"] = Qt::RoundTile;
 
         qRegisterMetaType<const QPixmap *>();
         qRegisterMetaType<QTextCharFormat::UnderlineStyle>();
@@ -705,8 +710,12 @@ bool MStyleSheetAttribute::writeAttribute(MUniqueStringCache::Index filename,
     } else if (attributeType == qMetaTypeId<const MScalableImage*>() || attributeType == qMetaTypeId<MBackgroundTiles>()) {
         //"background: image_id left right top bottom;"
         //"background: image_id;"
+        //"background: image id left right top bottom htilerule vtilerule;"
+        //"background: image id htilerule vtilerule;"
         //"background: "image id" left right top bottom;"
         //"background: "image id";"
+        //"background: "image id" left right top bottom htilerule vtilerule;"
+        //"background: "image id" htilerule vtilerule;"
 
         QList<QByteArray> list;
         if (valueString.startsWith('\"')) {
@@ -762,6 +771,39 @@ bool MStyleSheetAttribute::writeAttribute(MUniqueStringCache::Index filename,
                                                                 attributeToInt(list.at(2), &conversionOK),
                                                                 attributeToInt(list.at(3), &conversionOK),
                                                                 attributeToInt(list.at(4), &conversionOK))), false);
+            }
+        }
+        //image_id + tile rules
+        else if (list.size() == 3) {
+            if (DataTypeConverter.TILERULE.contains(list.at(1)) && DataTypeConverter.TILERULE.contains(list.at(2))) {
+                QTileRules tilerules(DataTypeConverter.TILERULE[list.at(1)], DataTypeConverter.TILERULE[list.at(2)]);
+                if(attributeType == qMetaTypeId<const MScalableImage*>()) {
+                    const MScalableImage *image = MTheme::scalableImage(list.at(0), 0, 0, 0, 0, tilerules);
+                    return fillProperty(property, style, cacheOrientation, qVariantFromValue(image), false);
+                } else {
+                    return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list.at(0), 0,0,0,0)), false);
+                }
+            }
+        }
+        //image_id + border width paramaters + tile rules
+        else if (list.size() == 7) {
+            if (DataTypeConverter.TILERULE.contains(list.at(5)) && DataTypeConverter.TILERULE.contains(list.at(6))) {
+                QTileRules tilerules(DataTypeConverter.TILERULE[list.at(5)], DataTypeConverter.TILERULE[list.at(6)]);
+                if(attributeType == qMetaTypeId<const MScalableImage*>()) {
+                    const MScalableImage *image = MTheme::scalableImage(list.at(0),
+                                                    attributeToInt(list.at(1), &conversionOK),
+                                                    attributeToInt(list.at(2), &conversionOK),
+                                                    attributeToInt(list.at(3), &conversionOK),
+                                                    attributeToInt(list.at(4), &conversionOK),
+                                                    tilerules);
+                    return fillProperty(property, style, cacheOrientation, qVariantFromValue(image), false);
+                } else {
+                    return fillProperty(property, style, cacheOrientation, QVariant::fromValue(MBackgroundTiles(list.at(0),
+                                                                    attributeToInt(list.at(1), &conversionOK),
+                                                                    attributeToInt(list.at(2), &conversionOK),
+                                                                    attributeToInt(list.at(3), &conversionOK),
+                                                                    attributeToInt(list.at(4), &conversionOK))), false);
+                }
             }
         }
     } else if (attributeType == QMetaType::QSize || attributeType == QMetaType::QSizeF) {

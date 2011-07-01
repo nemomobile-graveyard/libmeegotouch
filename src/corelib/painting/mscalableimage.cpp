@@ -76,14 +76,14 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
 {
     QMargins margins = m_preferredMargins;
 
-    if( w == -1 )
+    if (w == -1 )
         w = m_image->width();
-    if( h == -1 )
+    if (h == -1 )
         h = m_image->height();
 
     int cornerWidth = 0;
     int cornerHeight = 0;
-    if( m_imageType == MScalable9 ) {
+    if (m_imageType == MScalable9 ) {
         cornerWidth = margins.left() + margins.right();
         cornerHeight = margins.top() + margins.bottom();
     }
@@ -121,7 +121,7 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             outputDownscaleWarning("MScalableImage9", w, h);
         else if(!nearscaleWarningPrinted && qAbs(m_image->size().width()/w-1.0) < SCALE_WARN_LIMIT && qAbs(m_image->size().height()/h-1.0) < SCALE_WARN_LIMIT)
             outputNearscaleWarning("MScalableImage9", w, h);
-        qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+        qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image, m_image->rect(), margins, tileRules);
 #else
         //the image doesn't fit directly into the required size.
         //check whether or not we're allowed to cache
@@ -148,7 +148,7 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             QPainter p;
             if (p.begin(&scaled)) {
                 p.setRenderHint(QPainter::SmoothPixmapTransform);
-                qDrawBorderPixmap(&p, QRect(0, 0, w, h), margins, *m_image);
+                qDrawBorderPixmap(&p, QRect(0, 0, w, h), margins, *m_image, m_image->rect(), margins, tileRules);
                 p.end();
             }
 
@@ -164,7 +164,7 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
             else if(!nearscaleWarningPrinted && qAbs(m_image->size().width()/w-1.0) < SCALE_WARN_LIMIT && qAbs(m_image->size().height()/h-1.0) < SCALE_WARN_LIMIT)
                 outputNearscaleWarning("MScalableImage9", w, h);
             // caching isn't permitted for this case; scale and render direct to screen.
-            qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+            qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image, m_image->rect(), margins, tileRules);
 
             if (!cachedImageKey.isEmpty()) {
                 QPixmapCache::remove(cachedImageKey);
@@ -180,11 +180,14 @@ void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QP
 #if defined(M_OS_MAEMO5)
     // don't use smooth pixmap transformation on the N900, as this
     // decreases the performance
-    painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
+    if (tileRules.horizontal == Qt::StretchTile && tileRules.vertical == Qt::StretchTile)
+        painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
+    else
+        qDrawBorderPixmap(painter, QRect(x, y, w, h), m_preferredMargins, *m_image, m_image->rect(), m_preferredMargins, tileRules);
 #else
     //the image is used in its native size
     //no need to scale just draw it
-    if( m_image->size() == QSizeF(w, h) ) {
+    if (m_image->size() == QSizeF(w, h)) {
         painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
     }
     //the image needs some scaling, draw the image using smooth scaling
@@ -195,7 +198,10 @@ void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QP
             outputNearscaleWarning("MScalableImage1", w, h);
         bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
         painter->setRenderHint(QPainter::SmoothPixmapTransform);
-        painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
+        if (tileRules.horizontal == Qt::StretchTile && tileRules.vertical == Qt::StretchTile)
+            painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
+        else
+            qDrawBorderPixmap(painter, QRect(x, y, w, h), m_preferredMargins, *m_image, m_image->rect(), m_preferredMargins, tileRules);
         painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
     }
 #endif //defined(M_OS_MAEMO5)
@@ -290,6 +296,18 @@ void MScalableImage::setBorders(int left, int right, int top, int bottom)
         d->m_imageType = MScalableImagePrivate::MScalable9;
     }
     d->validateSize();
+}
+
+const QTileRules& MScalableImage::tileRules() const
+{
+    Q_D(const MScalableImage);
+    return d->tileRules;
+}
+
+void MScalableImage::setTileRules(const QTileRules& tileRules)
+{
+    Q_D(MScalableImage);
+    d->tileRules = tileRules;
 }
 
 void MScalableImage::setPixmap(const QPixmap *pixmap)

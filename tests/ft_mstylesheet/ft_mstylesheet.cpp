@@ -144,6 +144,8 @@ void Ft_MStyleSheet::test_supported_attribute_types()
     QVERIFY(style->attributeScalable2());
     QVERIFY(style->attributeScalable3());
     QVERIFY(style->attributeScalable4());
+    QVERIFY(style->attributeScalable5());
+    QVERIFY(style->attributeScalable6());
 
     QVERIFY(style->attributeScalable() == style->attributeScalable2());
     QVERIFY(style->attributeScalable3() == style->attributeScalable4());
@@ -154,6 +156,12 @@ void Ft_MStyleSheet::test_supported_attribute_types()
     QCOMPARE(right, 20);
     QCOMPARE(top, 20);
     QCOMPARE(bottom, 20);
+
+    QVERIFY(style->attributeScalable5() != style->attributeScalable6());
+    QTileRules tileRules(Qt::StretchTile, Qt::RepeatTile);
+    QVERIFY(tileRules.horizontal == style->attributeScalable5()->tileRules().horizontal && tileRules.vertical == style->attributeScalable5()->tileRules().vertical);
+    tileRules = QTileRules(Qt::RoundTile, Qt::RoundTile);
+    QVERIFY(tileRules.horizontal == style->attributeScalable6()->tileRules().horizontal && tileRules.vertical == style->attributeScalable6()->tileRules().vertical);
 
     MStyleSheet::releaseStyle(style);
 }

@@ -33,7 +33,7 @@ class QRect;
 class QRectF;
 class QPainter;
 class QPixmap;
-
+class QTileRules;
 
 /*!
   \class MScalableImage
@@ -93,6 +93,19 @@ public:
       description about how the borders affect to the image drawing/scaling.
      */
     void setBorders(int left, int right, int top, int bottom);
+
+    /*!
+      \brief Get tiling rules of the image.
+     */
+    const QTileRules& tileRules() const;
+
+    /*!
+      \brief Set tiling rulest for the image.
+
+      By default, the horizontal and vertical tile rules are set to Qt::StretchTile.
+      See QTileRules documentation for more details.
+     */
+    void setTileRules(const QTileRules& tileRules);
 
     /*!
       \brief Set/change the drawn pixmap.
