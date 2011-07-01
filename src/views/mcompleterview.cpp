@@ -267,7 +267,7 @@ void MCompleterViewPrivate::showPopup()
         popup->setCurrentIndex(popup->itemModel()->index(0, 0));
 
     //if the label of the button is "10+", should query all before showing popup
-    if (completionsButton->text() == QString("%1+").arg(DefaultMaximumHits))
+    if (completionsButton->text() == QString("<b></b>%1+").arg(MLocale().formatNumber(DefaultMaximumHits)))
         controller->queryAll();
     q->model()->setPopupActive(true);
 
