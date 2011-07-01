@@ -43,6 +43,7 @@ public:
     void setStatusBarVisible(bool visible);
     void maximizeSheetArea();
     void restoreSheetArea();
+    void updateChainTaskData();
 
 protected:
     virtual void closeEvent(QCloseEvent *event);
@@ -52,6 +53,7 @@ protected:
 private:
 #ifdef Q_WS_X11
     void appendMSheetTypeProperty();
+    void setWindowChainedProperty(const WId &parentWinId, const WId &childWinId);
 #endif //Q_WS_X11
     bool beingClosed;
     MSheet *sheet;

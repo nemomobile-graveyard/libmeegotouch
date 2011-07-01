@@ -165,6 +165,7 @@ void MSheetPrivate::appearSystemwide(MSceneWindow::DeletionPolicy policy)
     *appearSystemwideDeletionPolicy = policy;
 
     standAloneWindow->sceneManager()->appearSceneWindowNow(q);
+    standAloneWindow->updateChainTaskData();
     standAloneWindow->show();
 }
 

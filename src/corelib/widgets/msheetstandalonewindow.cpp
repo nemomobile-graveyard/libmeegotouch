@@ -23,6 +23,7 @@
 #include <mscenemanager.h>
 #include <msheet.h>
 #include <mstatusbar.h>
+#include <mcomponentdata.h>
 
 #include <QApplication>
 #include <QTimer>
@@ -123,6 +124,38 @@ void MSheetStandAloneWindow::appendMSheetTypeProperty()
                     XA_ATOM, 32, PropModeAppend, (unsigned char*) &atomWindowType, 1);
 }
 
+void MSheetStandAloneWindow::setWindowChainedProperty(const WId &parentWinId, const WId &childWinId)
+{
+    Atom atomMInvokedBy = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_WM_INVOKED_BY", False);
+    Display *display = QX11Info::display();
+
+    // for compositor page transition
+    XChangeProperty(display, childWinId,
+            atomMInvokedBy, XA_WINDOW,
+            32, PropModeReplace,
+            (unsigned char *)&parentWinId, 1);
+
+    // for task switcher view stacking
+    XSetTransientForHint(display, childWinId, parentWinId);
+}
+#endif //Q_WS_X11
+
+void MSheetStandAloneWindow::updateChainTaskData()
+{
+#ifdef Q_WS_X11
+    // here we try to inject the chainTaskData into this MSheetStandAloneWindow
+    if (!MComponentData::chainDataStackIsEmpty()) {
+        MComponentData::ChainData thisData = MComponentData::popChainData();
+
+        WId chainParentWinId = thisData.first;
+
+        setWindowChainedProperty(chainParentWinId, effectiveWinId());
+    } else {
+        setWindowChainedProperty(0, effectiveWinId());
+    }
+#endif //Q_WS_X11
+}
+
 void MSheetStandAloneWindow::maximizeSheetArea()
 {
     setStatusBarVisible(false);
@@ -133,4 +166,3 @@ void MSheetStandAloneWindow::restoreSheetArea()
     setStatusBarVisible(sheet->isStatusBarVisibleInSystemwide());
 }
 
-#endif //Q_WS_X11
