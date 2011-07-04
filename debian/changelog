@@ -1,8 +1,17 @@
-libmeegotouch (0.23.3~1) unstable; urgency=low
+libmeegotouch (0.23.3-1) unstable; urgency=low
 
-  * unreleased
+  * New version
+  * Fixes: NB#258981 - Long dialogs with buttonbox are shifted outside the screen border
+  * Fixes: NB#262511 - Regression - Dialog appears under ApplicationMenu
+  * Fixes: NB#269462 - Mail: The number of contacts shown up in Latin instead of Hindi.
+  * Fixes: NB#219871 - Failed swiping away of applications has unwanted side effects in those applications
+  * Fixes: NB#263702
+  * Fixes: NB#263769 - [TASK] check if scalable images should be really saved in the pixmap cache when minimized
+  * Fixes: NB#269029 - MTF causes uninitialised reads
+  * Fixes: NB#254714 - [TASK] mthemedaemon is missing capabilities
+  * Fixes: NB#266344 - MCalendar sometimes calculates wrong local time
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 29 Jun 2011 16:10:32 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 04 Jul 2011 15:06:21 +0300
 
 libmeegotouch (0.23.2-1) unstable; urgency=low
 
