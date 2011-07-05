@@ -38,8 +38,6 @@ public:
     MPanRecognizerTouchPrivate();
     virtual ~MPanRecognizerTouchPrivate();
 
-    void clearNotAlignedMovement(MPanGestureTouch *panGesture);
-
     static const QTouchEvent::TouchPoint *fetchPressedPoint(
         const QList<QTouchEvent::TouchPoint> &points);
 

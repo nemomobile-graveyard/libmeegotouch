@@ -42,8 +42,6 @@ public:
 private:
     const MPanRecognizerStyle* style;
 
-    void clearNotAlignedMovement(MPanGesture *panGesture);
-
     QGestureRecognizer::Result recognitionStart(MPanGesture *panGesture, const QMouseEvent *ev);
     QGestureRecognizer::Result recognitionUpdate(MPanGesture *panGesture, const QMouseEvent *ev);
     QGestureRecognizer::Result recognitionFinish(MPanGesture *panGesture);

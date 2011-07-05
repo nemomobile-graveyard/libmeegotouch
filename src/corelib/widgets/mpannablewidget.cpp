@@ -283,24 +283,25 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
     QTransform itemTransform(sceneTransform().inverted());
     QPointF itemSpaceOffset = panGesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
 
-    //Ignoring pan gestures with directions not aligned with enabled pannign directions
-    if (itemSpaceOffset.x() != 0) {
-        if ( horizontalPanningPolicy() == PanningAlwaysOff ||
-            (horizontalPanningPolicy() == PanningAsNeeded && range().width() == 0) ) {
+    if (panGesture->state() == Qt::GestureStarted) {
+        bool verticalPanDirection = qAbs(itemSpaceOffset.y()) >= qAbs(itemSpaceOffset.x());
 
-            event->ignore(panGesture);
-            d->_q_resetPhysics();
-            return;
+        if (!verticalPanDirection) {
+            if (horizontalPanningPolicy() == PanningAlwaysOff ||
+                (horizontalPanningPolicy() == PanningAsNeeded && range().width() == 0)) {
+                event->ignore(panGesture);
+                d->_q_resetPhysics();
+                return;
+            }
         }
-    }
 
-    if (itemSpaceOffset.y() != 0) {
-        if ( verticalPanningPolicy() == PanningAlwaysOff ||
-            (verticalPanningPolicy() == PanningAsNeeded && range().height() == 0) ) {
-
-            event->ignore(panGesture);
-            d->_q_resetPhysics();
-            return;
+        if (verticalPanDirection) {
+            if (verticalPanningPolicy() == PanningAlwaysOff ||
+                (verticalPanningPolicy() == PanningAsNeeded && range().height() == 0)) {
+                event->ignore(panGesture);
+                d->_q_resetPhysics();
+                return;
+            }
         }
     }
 

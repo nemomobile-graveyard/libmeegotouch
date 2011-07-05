@@ -35,21 +35,6 @@ MPanRecognizerPrivate::~MPanRecognizerPrivate()
 {
 }
 
-void MPanRecognizerPrivate::clearNotAlignedMovement(MPanGesture *panGesture)
-{
-    if (panGesture->panDirection.testFlag(Qt::Vertical)) {
-        QPointF zeroedOffset = panGesture->offset();
-        zeroedOffset.setX(0);
-        panGesture->setOffset(zeroedOffset);
-    } else if (panGesture->panDirection.testFlag(Qt::Horizontal)) {
-        QPointF zeroedOffset = panGesture->offset();
-        zeroedOffset.setY(0);
-        panGesture->setOffset(zeroedOffset);
-    } else {
-        panGesture->setOffset(QPointF());
-    }
-}
-
 QGestureRecognizer::Result MPanRecognizerPrivate::recognitionStart(MPanGesture *panGesture, const QMouseEvent *ev)
 {
     panGesture->startPos = ev->pos();
@@ -90,8 +75,6 @@ QGestureRecognizer::Result MPanRecognizerPrivate::recognitionUpdate(MPanGesture 
     } else {
         result = QGestureRecognizer::MayBeGesture;
     }
-
-    clearNotAlignedMovement(panGesture);
 
     return result;
 }

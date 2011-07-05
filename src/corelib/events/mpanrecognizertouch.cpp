@@ -36,21 +36,6 @@ MPanRecognizerTouchPrivate::~MPanRecognizerTouchPrivate()
 {
 }
 
-void MPanRecognizerTouchPrivate::clearNotAlignedMovement(MPanGestureTouch *panGesture)
-{
-    if (panGesture->panDirection.testFlag(Qt::Vertical)) {
-        QPointF zeroedOffset = panGesture->offset();
-        zeroedOffset.setX(0);
-        panGesture->setOffset(zeroedOffset);
-    } else if (panGesture->panDirection.testFlag(Qt::Horizontal)) {
-        QPointF zeroedOffset = panGesture->offset();
-        zeroedOffset.setY(0);
-        panGesture->setOffset(zeroedOffset);
-    } else {
-        panGesture->setOffset(QPointF());
-    }
-}
-
 const QTouchEvent::TouchPoint *MPanRecognizerTouchPrivate::fetchPressedPoint(
     const QList<QTouchEvent::TouchPoint> &points)
 {
@@ -139,8 +124,6 @@ QGestureRecognizer::Result MPanRecognizerTouchPrivate::updateGesture(
             result = QGestureRecognizer::MayBeGesture;
         }
     }
-
-    clearNotAlignedMovement(panGesture);
 
     return result;
 }
