@@ -1009,6 +1009,7 @@ void MSliderGroove::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_UNUSED(event);
 
+    sliderBoundingRect = controller->rect();
     updateHandlePos();
 }
 
