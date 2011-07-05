@@ -163,6 +163,8 @@ void MSheetStandAloneWindow::maximizeSheetArea()
 
 void MSheetStandAloneWindow::restoreSheetArea()
 {
-    setStatusBarVisible(sheet->isStatusBarVisibleInSystemwide());
+    if (sheet) {
+        setStatusBarVisible(sheet->isStatusBarVisibleInSystemwide());
+    }
 }
 
