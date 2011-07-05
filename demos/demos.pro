@@ -4,7 +4,7 @@ CONFIG += ordered
 TEMPLATE    = subdirs
 SUBDIRS     =  \
     widgetsgallery \
-    widgetsgallery/translations \
+    widgetsgallery/translations
 
 # we do not have compiled QtDBusd4
 !macx:!win32 {
@@ -13,7 +13,8 @@ SUBDIRS     =  \
         appletinstallationsource \
         applicationextension \
         applicationextension/demoextension \
-        applicationextension/demoextension2
+        applicationextension/demoextension2 \
+        widgetsgallery/access_manager
     }
 }
 

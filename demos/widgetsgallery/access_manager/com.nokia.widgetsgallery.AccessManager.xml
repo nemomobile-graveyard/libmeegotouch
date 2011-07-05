@@ -1,0 +1,11 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.nokia.widgetsgallery.AccessManager">
+        <method name="login" chainTask="true">
+            <arg name="fullscreen" type='b' direction="in"/>
+            <arg name="autofocus" type='b' direction="in"/>
+            <arg name="orientation" type='i' direction="in"/>
+            <arg name="" type='b' direction="out"/>
+        </method>
+    </interface>
+</node>

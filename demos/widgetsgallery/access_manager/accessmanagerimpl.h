@@ -17,32 +17,21 @@
 **
 ****************************************************************************/
 
-#ifndef SYSTEMWIDESHEETPAGE_H
-#define SYSTEMWIDESHEETPAGE_H
+#ifndef ACCESS_MANAGER_IMPL_H
+#define ACCESS_MANAGER_IMPL_H
 
-#include <MApplicationPage>
+#include <QObject>
+class MSheet;
 
-class LabeledCheckbox;
-class MComboBox;
-
-class SystemwideSheetPage : public MApplicationPage
+class AccessManagerImpl : public QObject
 {
     Q_OBJECT
 public:
-    SystemwideSheetPage();
-    virtual void createContent();
+    explicit AccessManagerImpl(QObject *parent = 0);
+    virtual ~AccessManagerImpl();
 
-private Q_SLOTS:
-    void openSystemwideSheet();
-
-private:
-    void createOrientationComboBox();
-    void openSystemwideSheetViaService();
-
-    LabeledCheckbox *statusBarCheckbox;
-    LabeledCheckbox *autoFocusCheckbox;
-    MComboBox *orientationCombobox;
-    LabeledCheckbox *chainedCheckbox;
+public slots:
+    bool login(bool fullscreen, bool autofocus, int orientation);
 };
 
-#endif
+#endif // ACCESS_MANAGER_IMPL_H

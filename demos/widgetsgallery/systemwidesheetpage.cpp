@@ -23,6 +23,8 @@
 #include <QGraphicsLinearLayout>
 #include <MApplication>
 #include <MComboBox>
+#include <MMessageBox>
+#include "accessmanager.h"
 
 SystemwideSheetPage::SystemwideSheetPage()
     : MApplicationPage()
@@ -48,6 +50,12 @@ void SystemwideSheetPage::createContent()
 
     createOrientationComboBox();
     mainLayout->addItem(orientationCombobox);
+
+    chainedCheckbox = new LabeledCheckbox(this);
+    //% "Chained, via service"
+    chainedCheckbox->label->setText(qtTrId("xx_chained_via_service"));
+    chainedCheckbox->button->setChecked(false);
+    mainLayout->addItem(chainedCheckbox);
 
     MButton *button = new MButton(this);
     //% "Open systemwide sheet"
@@ -91,6 +99,11 @@ void SystemwideSheetPage::createOrientationComboBox()
 }
 
 void SystemwideSheetPage::openSystemwideSheet() {
+    if (chainedCheckbox->button->isChecked()) {
+        openSystemwideSheetViaService();
+        return;
+    }
+
     LoginSheet *loginSheet = new LoginSheet;
     loginSheet->setObjectName("loginSheet");
 
@@ -111,4 +124,32 @@ void SystemwideSheetPage::openSystemwideSheet() {
                     orientationCombobox->currentIndex()));
 
     loginSheet->appearSystemwide(MSceneWindow::DestroyWhenDone);
+}
+
+void SystemwideSheetPage::openSystemwideSheetViaService()
+{
+    AccessManager manager("com.nokia.widgetsgallery.AccessManager");
+
+    if (!manager.isValid()) {
+        qWarning() << "Cannot connect to service";
+        return;
+    }
+
+    bool res = manager.login(
+                !statusBarCheckbox->button->isChecked(),
+                autoFocusCheckbox->button->isChecked(),
+                orientationCombobox->currentIndex()
+                );
+
+    if (res) {
+        MMessageBox* messageBox = new MMessageBox;
+        messageBox->setObjectName("messageBox");
+
+        //% "Access Granted!"
+        messageBox->setTitle(qtTrId("xx_wg_sheets_connection_success"));
+        //% "You are now able to use the requested services."
+        messageBox->setText(qtTrId("xx_wg_sheets_connection_success_text"));
+
+        messageBox->appear(MSceneWindow::DestroyWhenDone);
+    }
 }

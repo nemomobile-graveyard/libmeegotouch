@@ -102,6 +102,8 @@ SOURCES += main.cpp \
     headeredtextedit.cpp \
     labeledcheckbox.cpp \
     systemwidesheetpage.cpp \
+    accessmanager.cpp \
+    accessmanagerproxy.cpp
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -165,6 +167,8 @@ HEADERS += templatepage.h \
     headeredtextedit.h \
     labeledcheckbox.h \
     systemwidesheetpage.h \
+    accessmanager.h \
+    accessmanagerproxy.h
 
 # theme
 include(theme/theme.pri)

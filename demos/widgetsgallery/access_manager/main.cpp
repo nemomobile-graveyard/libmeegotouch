@@ -17,32 +17,22 @@
 **
 ****************************************************************************/
 
-#ifndef SYSTEMWIDESHEETPAGE_H
-#define SYSTEMWIDESHEETPAGE_H
+#include <MApplication>
+#include <QDBusConnection>
+#include "accessmanagerimpl.h"
+#include "accessmanageradaptor.h"
 
-#include <MApplicationPage>
-
-class LabeledCheckbox;
-class MComboBox;
-
-class SystemwideSheetPage : public MApplicationPage
+int main(int argc, char *argv[])
 {
-    Q_OBJECT
-public:
-    SystemwideSheetPage();
-    virtual void createContent();
+    MApplication app(argc, argv);
 
-private Q_SLOTS:
-    void openSystemwideSheet();
+    AccessManagerImpl implementation;
 
-private:
-    void createOrientationComboBox();
-    void openSystemwideSheetViaService();
+    new AccessManagerAdaptor(&implementation);
 
-    LabeledCheckbox *statusBarCheckbox;
-    LabeledCheckbox *autoFocusCheckbox;
-    MComboBox *orientationCombobox;
-    LabeledCheckbox *chainedCheckbox;
-};
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.registerService("com.nokia.widgetsgallery.AccessManager");
+    connection.registerObject("/",&implementation);
 
-#endif
+    return app.exec();
+}

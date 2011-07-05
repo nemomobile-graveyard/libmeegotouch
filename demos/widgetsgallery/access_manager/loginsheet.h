@@ -17,32 +17,42 @@
 **
 ****************************************************************************/
 
-#ifndef SYSTEMWIDESHEETPAGE_H
-#define SYSTEMWIDESHEETPAGE_H
+#ifndef LOGINSHEET_H
+#define LOGINSHEET_H
 
-#include <MApplicationPage>
+#include <MSheet>
+#include <QTimer>
 
-class LabeledCheckbox;
-class MComboBox;
+class MTextEdit;
+class MMessageBox;
 
-class SystemwideSheetPage : public MApplicationPage
+class LoginSheet : public MSheet
 {
     Q_OBJECT
+
 public:
-    SystemwideSheetPage();
-    virtual void createContent();
+    LoginSheet();
+
+    void setAutoFocusOnFirstTextEditEnabled(bool enabled);
+    bool isLoginSuccessful()
+    {
+        return successful;
+    }
 
 private Q_SLOTS:
-    void openSystemwideSheet();
+    void login();
+    void cancel();
+    void setfocusOnUsernameTextEdit();
 
 private:
-    void createOrientationComboBox();
-    void openSystemwideSheetViaService();
+    void createCentralWidget();
+    void createHeaderWidget();
+    QGraphicsWidget *createSpacer() const;
 
-    LabeledCheckbox *statusBarCheckbox;
-    LabeledCheckbox *autoFocusCheckbox;
-    MComboBox *orientationCombobox;
-    LabeledCheckbox *chainedCheckbox;
+    QTimer fakeAuthenticationTimer;
+    MTextEdit *userNameTextEdit;
+    bool autoFocusOnFirstTextEdit;
+    bool successful;
 };
 
-#endif
+#endif //LOGINSHEET_H
