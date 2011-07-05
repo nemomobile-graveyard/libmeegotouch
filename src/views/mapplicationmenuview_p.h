@@ -25,6 +25,7 @@
 #include <QAction>
 #include <QPointer>
 #include <QList>
+#include <QGraphicsLinearLayout>
 
 #include "mlistitem.h"
 #include "mabstractcellcreator.h"
@@ -111,6 +112,22 @@ private:
     QString itemTitleStyleName;
 };
 
+class MApplicationMenuLayout : public QObject, public QGraphicsLinearLayout
+{
+    Q_OBJECT
+public:
+    MApplicationMenuLayout(QGraphicsLayoutItem *parent = 0);
+
+Q_SIGNALS:
+    void geometrySet();
+
+protected:
+    //! \reimp
+    virtual void setGeometry(const QRectF &rect);
+    //! \reimp_end
+
+};
+
 class MApplicationMenuViewPrivate : public QObject
 {
     Q_OBJECT
@@ -125,6 +142,9 @@ public:
 private slots:
     void actionTriggered(const QModelIndex &index);
     void resetListPosition();
+    void checkIfNewControllerGeometryNeeded();
+    void onAppeared();
+    void onControllerGeometryChanged();
 
 private:
     MApplicationMenuView *q_ptr;
@@ -133,6 +153,9 @@ private:
     MStylableWidget *topArea;
     MList* list;
     MApplicationMenuCellCreator *cellCreator;
+
+    QSizeF preferredSizeWhenLastChecked;
+    QSizeF preferredSizeWhenControllerGeometryLastSet;
 
 #ifdef UNIT_TEST
     friend class Ut_MApplicationMenu;

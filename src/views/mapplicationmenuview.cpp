@@ -289,6 +289,19 @@ void MApplicationMenuCellCreator::setItemTitleStyleName(const QString &styleName
     itemTitleStyleName = styleName;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// MApplicationMenuLayout
+
+MApplicationMenuLayout::MApplicationMenuLayout(QGraphicsLayoutItem *parent)
+    : QObject(0), QGraphicsLinearLayout(Qt::Vertical, parent)
+{
+}
+
+void MApplicationMenuLayout::setGeometry(const QRectF &rect)
+{
+    QGraphicsLinearLayout::setGeometry(rect);
+    emit geometrySet();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -311,9 +324,21 @@ MApplicationMenuViewPrivate::~MApplicationMenuViewPrivate()
 
 void MApplicationMenuViewPrivate::init()
 {
-    QGraphicsLinearLayout* controllerLayout = new QGraphicsLinearLayout(Qt::Vertical, controller);
+    bool ok;
+
+    ok = connect(controller, SIGNAL(geometryChanged()), SLOT(onControllerGeometryChanged()));
+    if (!ok) qFatal("signal connection failed");
+
+    ok = connect(controller, SIGNAL(appeared()), SLOT(onAppeared()));
+    if (!ok) qFatal("signal connection failed");
+
+    MApplicationMenuLayout* controllerLayout = new MApplicationMenuLayout(controller);
     controllerLayout->setContentsMargins(0, 0, 0, 0);
     controllerLayout->setSpacing(0);
+    ok = connect(controllerLayout, SIGNAL(geometrySet()),
+                 SLOT(checkIfNewControllerGeometryNeeded()),
+                 Qt::QueuedConnection);
+    if (!ok) qFatal("signal connection failed");
 
     QGraphicsLinearLayout *actionLayout = new QGraphicsLinearLayout(Qt::Vertical);
     actionLayout->setSpacing(0);
@@ -364,6 +389,48 @@ void MApplicationMenuViewPrivate::resetListPosition()
 {
     list->scrollTo(list->itemModel()->index(0, 0), MList::PositionAtTopHint, MList::NonAnimated);
     actionCommandViewport->setPosition(QPointF(0,0));
+}
+
+void MApplicationMenuViewPrivate::checkIfNewControllerGeometryNeeded()
+{
+    if (!controller)
+        return;
+
+    Q_Q(MApplicationMenuView);
+
+    if (controller->sceneWindowState() != MSceneWindow::Appeared)
+        return;
+
+    QSizeF currentPreferredSize = controller->effectiveSizeHint(Qt::PreferredSize);
+
+    if (currentPreferredSize != preferredSizeWhenControllerGeometryLastSet
+        && currentPreferredSize != preferredSizeWhenLastChecked) {
+
+        // Our contents have grown or shrunk while we are being displayed.
+        // Therefore we would like to have a new geometry that better reflects our
+        // currently preferred size. Emitting the signal below will cause
+        // MSceneManager to update the geometry of our controller.
+        emit q->geometryAttributesChanged();
+    }
+
+    preferredSizeWhenLastChecked = currentPreferredSize;
+}
+
+void MApplicationMenuViewPrivate::onAppeared()
+{
+    preferredSizeWhenLastChecked = QSizeF();
+    preferredSizeWhenControllerGeometryLastSet = QSizeF();
+}
+
+void MApplicationMenuViewPrivate::onControllerGeometryChanged()
+{
+    if (!controller)
+        return;
+
+    if (controller->sceneWindowState() == MSceneWindow::Appeared) {
+        preferredSizeWhenControllerGeometryLastSet =
+                controller->effectiveSizeHint(Qt::PreferredSize);
+    }
 }
 
 void MApplicationMenuViewPrivate::updateStyleNames()
