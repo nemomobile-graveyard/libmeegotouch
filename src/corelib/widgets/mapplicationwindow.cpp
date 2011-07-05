@@ -1084,6 +1084,8 @@ void MApplicationWindowPrivate::updateChainTaskData()
 
         // for compositor page animation
         setWindowChainedProperty( chainParentWinId, q->effectiveWinId() );
+    } else {
+        setWindowChainedProperty(0, q->effectiveWinId());
     }
 #endif
 }
