@@ -34,7 +34,6 @@
 #include <QPalette>
 #include <QDebug>
 
-
 MBannerViewPrivate::MBannerViewPrivate() :
     layout(0),
     gridBanner(0),
@@ -184,10 +183,19 @@ void MBannerViewPrivate::updateDateFormat() const
     if (bannerTimeStampData) {
         //If the datetime is more than 24 hours, change the format to DateShort
         int daysCalc = q->model()->bannerTimeStamp().daysTo(QDateTime::currentDateTime());
-        if (daysCalc > 1 && timeShortNoDate) {
-            bannerTimeStampLabel->setText(MLocale().formatDateTime(
-                                              q->model()->bannerTimeStamp().toLocalTime(),
-                                              MLocale::DateShort, MLocale::TimeNone));
+        if (daysCalc >= 1 && timeShortNoDate) {
+            QString formattedDateTime;
+            if (q->style()->timestampSeparator().isEmpty()) {
+                formattedDateTime = QString("%1 %2")
+                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+            } else {
+                formattedDateTime = QString("%1 %2 %3")
+                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+                        .arg(q->style()->timestampSeparator())
+                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+            }
+            bannerTimeStampLabel->setText(formattedDateTime);
             timeShortNoDate = false;
         } else if (daysCalc == 0 && !timeShortNoDate) {
             bannerTimeStampLabel->setText(MLocale().formatDateTime(
