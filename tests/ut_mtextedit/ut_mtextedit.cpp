@@ -3137,4 +3137,43 @@ void Ut_MTextEdit::testSetters()
     tester.setDoesNotReparent(new MTextEditModel);
 }
 
+// NB#267555
+void Ut_MTextEdit::testPreeditDiacritics()
+{
+
+    const QList<QInputMethodEvent::Attribute> noAttributes;
+    m_subject->clear();
+
+    // Put some committed text
+    QInputMethodEvent p0;
+    p0.setCommitString("abc ");
+    m_subject->inputMethodEvent(&p0);
+    qDebug() << m_subject->text();
+    QCOMPARE(m_subject->text(), QString("abc "));
+
+    // Add a character
+    QInputMethodEvent p1(QString::fromUtf8("a"),noAttributes);
+    m_subject->inputMethodEvent(&p1);
+    QCOMPARE(m_subject->text(), QString::fromUtf8("abc a"));
+
+    // Add a composited character
+    QInputMethodEvent p2(QString::fromUtf8("a\u0102"),noAttributes);
+    m_subject->inputMethodEvent(&p2);
+    QCOMPARE(m_subject->text(), QString::fromUtf8("abc a\u0102"));
+
+    // Add a composition character
+    QInputMethodEvent p3(QString::fromUtf8("a\u0102\u0323"),noAttributes);
+    m_subject->inputMethodEvent(&p3);
+    QCOMPARE(m_subject->text(), QString::fromUtf8("abc a\u0102\u0323"));
+
+    // Add another normal character
+    QInputMethodEvent p4(QString::fromUtf8("a\u0102\u0323f"),noAttributes);
+    m_subject->inputMethodEvent(&p4);
+    QCOMPARE(m_subject->text(), QString::fromUtf8("abc a\u0102\u0323f"));
+
+    qDebug() << m_subject->text();
+
+}
+
+
 QTEST_APPLESS_MAIN(Ut_MTextEdit);

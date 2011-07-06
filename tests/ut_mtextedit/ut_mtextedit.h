@@ -159,6 +159,7 @@ private slots:
 
     void testArrowKeyNavigation_data();
     void testArrowKeyNavigation();
+    void testPreeditDiacritics();
 };
 
 #endif
