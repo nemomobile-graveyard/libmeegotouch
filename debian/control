@@ -20,9 +20,6 @@ Build-Depends: debhelper (>= 5),
  xsltproc,
  libqtm-serviceframework-dev,
  libxcomposite-dev,
- libx11-xcb-dev,
- libxcb1-dev,
- libxcb-composite0-dev,
  libngf-dev
 Standards-Version: 3.7.2
 

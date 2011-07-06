@@ -86,14 +86,6 @@ contains(DEFINES, HAVE_XCOMPOSITE) {
     PKGCONFIG += xcomposite
 }
 
-contains(DEFINES, HAVE_X11_XCB) {
-    PKGCONFIG += x11-xcb xcb
-}
-
-contains(DEFINES, HAVE_XCB_COMPOSITE) {
-    PKGCONFIG += xcb-composite
-}
-
 contains(DEFINES, HAVE_ICU) {
     LIBS += -licui18n -licuuc -licudata
 }
