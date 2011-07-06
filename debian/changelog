@@ -1,3 +1,10 @@
+libmeegotouch (0.22.11-1) unstable; urgency=low
+
+  *  Revert "Changes: Add optional depencies to libx11-xcb and libxcb-composite."
+  *  Fixes: NB#265870 - Randomly when a notification comes, the window underneatch is changed to show something for 1s
+
+ -- Tobias Koch <tobias.koch@nokia.com>  Wed, 06 Jul 2011 15:33:37 +0300
+
 libmeegotouch (0.22.10-1) natty; urgency=low
 
   * Fixes: NB#270670 - MDesktopEntry construction is slow when desktop entry has TranslationCatalogKey
