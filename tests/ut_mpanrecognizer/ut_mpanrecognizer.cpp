@@ -129,25 +129,6 @@ void Ut_MPanRecognizer::testTapIsNotRecognizedAsPan()
     QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
 }
 
-void Ut_MPanRecognizer::testTheMovementInDirectionOtherThanRecognizedIsZeroed()
-{
-    QMouseEvent pressEvent(QEvent::MouseButtonPress,QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
-    QMouseEvent moveEvent1(QEvent::MouseMove,QPoint(0,100), Qt::LeftButton, Qt::LeftButton, 0);
-    QMouseEvent moveEvent2(QEvent::MouseMove,QPoint(30,100), Qt::LeftButton, Qt::LeftButton, 0);
-
-    QGestureRecognizer::Result currentState;
-    currentState = recognizer->recognize(panGesture, 0, &pressEvent);
-    QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
-
-    currentState = recognizer->recognize(panGesture, 0, &moveEvent1);
-    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
-
-    //Artificially setting state of QGesture object.
-    currentGestureState = Qt::GestureUpdated;
-    recognizer->recognize(panGesture, 0, &moveEvent2);
-    QCOMPARE( panGesture->offset().x(), 0.0);
-}
-
 void Ut_MPanRecognizer::testReset()
 {
     MPanGesture * panGesture = new MPanGesture(0);

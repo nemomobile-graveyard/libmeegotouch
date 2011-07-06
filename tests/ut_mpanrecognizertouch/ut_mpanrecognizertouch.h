@@ -42,7 +42,6 @@ private slots:
 
     void testSimplePanGestureRecognition();
     void testTapIsNotRecognizedAsPan();
-    void testTheMovementInDirectionOtherThanRecognizedIsZeroed();
 
     /*
       Use case:

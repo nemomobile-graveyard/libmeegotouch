@@ -41,7 +41,6 @@ private slots:
     void testCreateGesture();
     void testRecognize();
     void testTapIsNotRecognizedAsPan();
-    void testTheMovementInDirectionOtherThanRecognizedIsZeroed();
     void testReset();
 };
 

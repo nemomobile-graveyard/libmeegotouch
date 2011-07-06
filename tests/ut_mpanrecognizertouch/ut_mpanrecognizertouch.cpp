@@ -197,66 +197,6 @@ void Ut_MPanRecognizerTouch::testTapIsNotRecognizedAsPan()
     delete panGesture;
 }
 
-void Ut_MPanRecognizerTouch::testTheMovementInDirectionOtherThanRecognizedIsZeroed()
-{
-    QList<QTouchEvent::TouchPoint> touchPoints;
-    QTouchEvent::TouchPoint touchPoint;
-    MPanGestureTouch *panGesture = 0;
-
-    QGestureRecognizer::Result currentState;
-
-    panGesture = static_cast<MPanGestureTouch*>(recognizer->create(0));
-    QVERIFY(panGesture);
-
-    currentGestureState = Qt::NoGesture;
-    {
-        touchPoint.setId(0);
-        touchPoint.setScenePos(QPointF(0.0f, 0.0f));
-        touchPoint.setState(Qt::TouchPointPressed);
-        touchPoints.append(touchPoint);
-        QTouchEvent pressEvent(QEvent::TouchBegin,
-                               QTouchEvent::TouchScreen,
-                               Qt::NoModifier,
-                               Qt::TouchPointPressed,
-                               touchPoints);
-        currentState = recognizer->recognize(panGesture, 0, &pressEvent);
-    }
-    QCOMPARE(currentState, QGestureRecognizer::MayBeGesture);
-
-    {
-        touchPoints.clear();
-        touchPoint.setScenePos(QPointF(0.0f, 100.0f));
-        touchPoint.setState(Qt::TouchPointMoved);
-        touchPoints.append(touchPoint);
-        QTouchEvent moveEvent(QEvent::TouchUpdate,
-                               QTouchEvent::TouchScreen,
-                               Qt::NoModifier,
-                               Qt::TouchPointMoved,
-                               touchPoints);
-        currentState = recognizer->recognize(panGesture, 0, &moveEvent);
-    }
-    QCOMPARE(currentState, QGestureRecognizer::TriggerGesture);
-
-    currentGestureState = Qt::GestureStarted;
-
-    {
-        touchPoints.clear();
-        touchPoint.setScenePos(QPointF(30.0f, 100.0f));
-        touchPoint.setState(Qt::TouchPointMoved);
-        touchPoints.append(touchPoint);
-        QTouchEvent moveEvent(QEvent::TouchUpdate,
-                               QTouchEvent::TouchScreen,
-                               Qt::NoModifier,
-                               Qt::TouchPointMoved,
-                               touchPoints);
-        currentState = recognizer->recognize(panGesture, 0, &moveEvent);
-    }
-    QCOMPARE(panGesture->offset().x(), 0.0);
-
-
-    delete panGesture;
-}
-
 void Ut_MPanRecognizerTouch::testSecondTouchPointHasNoEffectOnSequentialPannings()
 {
     QList<QTouchEvent::TouchPoint> touchPoints;
@@ -470,7 +410,7 @@ void Ut_MPanRecognizerTouch::testSecondTouchPointHasNoEffectOnSequentialPannings
         currentState = recognizer->recognize(panGesture, 0, &pressEvent);
     }
     QCOMPARE(currentState, QGestureRecognizer::TriggerGesture);
-    QCOMPARE(panGesture->offset(), QPointF(0.0f, 100.0f));
+    QCOMPARE(panGesture->offset(), QPointF(100.0f, 100.0f));
 }
 
 QTEST_APPLESS_MAIN(Ut_MPanRecognizerTouch)
