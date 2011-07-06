@@ -1,3 +1,9 @@
+libmeegotouch (0.22.10-1) natty; urgency=low
+
+  * Fixes: NB#270670 - MDesktopEntry construction is slow when desktop entry has TranslationCatalogKey
+
+ -- Tobias Koch <tobias.koch@nokia.com>  Wed, 06 Jul 2011 15:10:54 +0300
+
 libmeegotouch (0.22.9-1) unstable; urgency=low
 
   * New version
