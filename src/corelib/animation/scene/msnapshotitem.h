@@ -3,6 +3,7 @@
 
 #include <QGraphicsObject>
 
+class QGLFramebufferObject;
 class QGraphicsScene;
 class QRectF;
 class QImage;
@@ -24,9 +25,15 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     //! \reimp_end
 
+protected:
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+     virtual bool eventFilter(QObject *obj, QEvent *event);
+#endif
+
 private:
     QRectF m_boundingRect;
     QPixmap pixmap;
+    QGLFramebufferObject *framebufferObject;
 };
 
 #endif
