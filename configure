@@ -84,8 +84,6 @@ HAVE_CONTENTACTION=no
 HAVE_XDAMAGE=no
 HAVE_XFIXES=no
 HAVE_XCOMPOSITE=no
-HAVE_X11_XCB=no
-HAVE_XCB_COMPOSITE=no
 HAVE_QTM_SERVICEFRAMEWORK=no
 IS_MAEMO5=no
 HAVE_MEEGOGRAPHICSSYSTEM=no
@@ -466,16 +464,6 @@ if [ $? -eq 0 ]; then
         fi
     fi
 
-    pkg-config --exists x11-xcb xcb
-    if [ $? -eq 0 ]; then
-        HAVE_X11_XCB=yes
-    fi
-
-    pkg-config --exists xcb-composite
-    if [ $? -eq 0 ]; then
-        HAVE_XCB_COMPOSITE=yes
-    fi
-
     # For Scratchbox and  For OBS/MeeGo
     if [ ! -z "`uname -m | grep arm`" ]; then   
     	IS_ARMEL=yes  
@@ -680,14 +668,6 @@ fi
 
 if [ "$HAVE_XCOMPOSITE" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_XCOMPOSITE"
-fi
-
-if [ "$HAVE_X11_XCB" = "yes" ]; then
-    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_X11_XCB"
-fi
-
-if [ "$HAVE_XCB_COMPOSITE" = "yes" ]; then
-    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_XCB_COMPOSITE"
 fi
 
 if [ "$HAVE_CONTEXTSUBSCRIBER" = "yes" ]; then
@@ -925,8 +905,6 @@ echo "DBus (incl. QtDBus) ............. $HAVE_DBUS"
 echo "XDamage ......................... $HAVE_XDAMAGE"
 echo "XFixes .......................... $HAVE_XFIXES"
 echo "XComposite....................... $HAVE_XCOMPOSITE"
-echo "XLib XCB Integration............. $HAVE_X11_XCB"
-echo "XCB Composite bindings........... $HAVE_XCB_COMPOSITE"
 echo "Qt Mobility Service Framework ... $HAVE_QTM_SERVICEFRAMEWORK"
 echo "MeeGo graphicssystem ............ $HAVE_MEEGOGRAPHICSSYSTEM"
 echo "Non-graphical feedback client ... $HAVE_LIBNGF"
