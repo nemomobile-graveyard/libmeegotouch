@@ -373,6 +373,13 @@ void MApplicationMenuViewPrivate::init()
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), SLOT(actionTriggered(QModelIndex)));
     connect(controller, SIGNAL(displayEntered()), SLOT(resetListPosition()));
+
+    ok = actionItemModel->connect(controller, SIGNAL(appearing()), SLOT(freeze()));
+    if (!ok) qFatal("signal connection failed");
+
+    ok = actionItemModel->connect(controller, SIGNAL(appeared()), SLOT(unfreeze()));
+    if (!ok) qFatal("signal connection failed");
+
     actionItemModel->connect(controller, SIGNAL(disappearing()), SLOT(freeze()));
     actionItemModel->connect(controller, SIGNAL(disappeared()), SLOT(unfreeze()));
 }
