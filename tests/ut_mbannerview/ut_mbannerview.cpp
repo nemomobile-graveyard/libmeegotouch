@@ -107,7 +107,11 @@ void Ut_MBannerView::testBannerDateFormats()
     //Date in banner is old it should use DateShort + TimeNone
     m_banner->setBannerTimeStamp(time);
     //Banner should detect that the date is older and it will convert the date
-    QString dateLocaleShort = MLocale().formatDateTime(time, MLocale::DateShort, MLocale::TimeNone);
+    //See NB#246264
+    QString dateLocaleShort = QString("%1 %2 %3").arg(MLocale().formatDateTime(time.toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+                                        .arg(m_subject->style()->timestampSeparator())
+                                        .arg(MLocale().formatDateTime(time.toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+
     QCOMPARE(dateLocaleShort, m_subject->d_func()->bannerTimeStamp()->text());
     //Now  we put the date in current date  == banner must change the date format again
     time.setDate(QDate::currentDate());
