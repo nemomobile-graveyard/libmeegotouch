@@ -5,21 +5,21 @@
 #include <QPainter>
 #include <QApplication>
 #include <QGraphicsView>
+#include <QGLFramebufferObject>
 
-#if defined(HAVE_X11_XCB) && defined(HAVE_XCB_COMPOSITE)
-#include <QX11Info>
-#include <X11/Xlib-xcb.h>
-#include <xcb/xcb.h>
-#include <xcb/composite.h>
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+#include <QtMeeGoGraphicsSystemHelper>
 #endif
 
 MSnapshotItem::MSnapshotItem(const QRectF &sceneTargetRect, QGraphicsItem *parent)
-    : QGraphicsObject(parent), m_boundingRect(sceneTargetRect)
+    : QGraphicsObject(parent), m_boundingRect(sceneTargetRect), pixmap(), framebufferObject(0)
 {
 }
 
 MSnapshotItem::~MSnapshotItem()
 {
+    delete framebufferObject;
+    framebufferObject = 0;
 }
 
 QRectF MSnapshotItem::boundingRect() const
@@ -34,34 +34,30 @@ void MSnapshotItem::updateSnapshot()
     if (scene() && scene()->views().count() == 0)
         return;
 
-#if defined(Q_WS_MAC) || defined(Q_WS_WIN)
-    pixmap = QPixmap::grabWidget(scene()->views().at(0));
-#elif defined(HAVE_X11_XCB) && defined(HAVE_XCB_COMPOSITE)
-    xcb_connection_t *c = XGetXCBConnection(QX11Info::display());
-    xcb_window_t windowId = scene()->views().at(0)->effectiveWinId();
-    xcb_pixmap_t x11Pixmap = xcb_generate_id(c);
-    xcb_void_cookie_t cookie = xcb_composite_name_window_pixmap_checked(c, windowId, x11Pixmap);
-    xcb_generic_error_t *error;
+    QGraphicsView *graphicsView = scene()->views().at(0);
+    Q_ASSERT(graphicsView);
 
-    if ((error = xcb_request_check(c, cookie)) == NULL) {
-        // We are being composited. If we use Qt's QPixmap::grabWindow() our snapshot
-        // will contain not only our window but also any other window that happens
-        // to be on top of it (e.g., a translucent window showing a small dialog box with
-        // a translucent dimming background).
-        //
-        // We use a copy because we don't want the live pixmap where our window is
-        // rendering to.
-        pixmap = QPixmap::fromX11Pixmap(x11Pixmap).copy();
-        XFreePixmap(QX11Info::display(), x11Pixmap);
-    } else {
-        // We are most likely not being composited. Thus Qt's QPixmap::grabWindow() will
-        // work just fine.
-        pixmap = QPixmap::grabWindow(windowId);
-        free (error);
-    }
-#else
-    pixmap = QPixmap::grabWindow(scene()->views().at(0)->effectiveWinId());
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    graphicsView->installEventFilter(this);
 #endif
+
+    const QRect rect = m_boundingRect.toRect();
+
+    delete framebufferObject;
+    framebufferObject = new QGLFramebufferObject(rect.size());
+    if (framebufferObject->isValid()) {
+        QPainter painter(framebufferObject);
+        graphicsView->render(&painter, QRectF(), rect);
+    } else {
+        delete framebufferObject;
+        framebufferObject = 0;
+
+#if defined(Q_WS_MAC) || defined(Q_WS_WIN)
+        pixmap = QPixmap::grabWidget(graphicsView);
+#else
+        pixmap = QPixmap::grabWindow(graphicsView->effectiveWinId());
+#endif
+    }
 }
 
 void MSnapshotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -70,6 +66,22 @@ void MSnapshotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    if (!pixmap.isNull())
+    if (framebufferObject && framebufferObject->isValid()) {
+        framebufferObject->drawTexture(m_boundingRect, framebufferObject->texture());
+    } else if (!pixmap.isNull()) {
         painter->drawPixmap(0,0, pixmap);
+    }
 }
+
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+bool MSnapshotItem::eventFilter(QObject *obj, QEvent *event)
+{
+    QMeeGoSwitchEvent* switchEvent = dynamic_cast<QMeeGoSwitchEvent*>(event);
+    if (switchEvent && switchEvent->state() == QMeeGoSwitchEvent::WillSwitch) {
+        delete framebufferObject;
+        framebufferObject = 0;
+    }
+
+    return QGraphicsObject::eventFilter(obj, event);
+}
+#endif
