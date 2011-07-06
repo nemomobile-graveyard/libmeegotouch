@@ -169,19 +169,27 @@ void Ut_MTheme::testThemeChangeCompleted()
     connect(m_theme, SIGNAL(themeChangeCompleted()), &eventLoop, SLOT(quit()));
 
     //This time should be same as: THEME_CHANGE_TIMEOUT at mthemedaemon (3 seconds)
-    QTimer::singleShot(3000, &eventLoop, SLOT(quit()));
+    QTimer eventLoopQuitTimer;
+    eventLoopQuitTimer.setInterval(300);
+    eventLoopQuitTimer.setSingleShot(true);
+    QObject::connect(&eventLoopQuitTimer, SIGNAL(timeout()),
+                     &eventLoop, SLOT(quit()));
 
     for (int i = 0; i < themes.size(); i++) {
         //We set every theme available except the current one
         if (m_theme->currentTheme() != themes[i].theme) {
             themeNameItem.set(themes[i].theme);
             QVERIFY(themeNameItem.value().toString() == themes[i].theme);
+            eventLoopQuitTimer.start();
             eventLoop.exec();
+            eventLoopQuitTimer.stop();
         }
     }
     //Coming back to the initial theme
     themeNameItem.set(initialTheme);
+    eventLoopQuitTimer.start();
     eventLoop.exec();
+    eventLoopQuitTimer.stop();
     QVERIFY(themeNameItem.value().toString() == initialTheme);
     //After all we should have so many signals as themes installed due to we go through all the themes
     QCOMPARE(themeChange.count(), themes.size());
