@@ -62,8 +62,11 @@ MDesktopEntryPrivate::MDesktopEntryPrivate(const QString &fileName) :
             if (desktopEntriesMap.contains(TranslationCatalogKey)) {
                 MLocale locale;
                 // Load the catalog from disk if it's not yet loaded
-                locale.installTrCatalog(desktopEntriesMap.value(TranslationCatalogKey));
-                MLocale::setDefault(locale);
+                QString catalog = desktopEntriesMap.value(TranslationCatalogKey);
+                if (!locale.isInstalledTrCatalog(catalog)) {
+                    locale.installTrCatalog(catalog);
+                    MLocale::setDefault(locale);
+                }
             }
         }
     } else {
