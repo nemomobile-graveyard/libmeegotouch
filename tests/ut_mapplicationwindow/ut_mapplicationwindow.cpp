@@ -29,6 +29,7 @@
 #include <MScene>
 #include <MSceneManager>
 #include <MToolBar>
+#include <MInputMethodState>
 #include <MNavigationBar>
 #include <MApplicationMenu>
 #include <MAction>
@@ -348,24 +349,24 @@ void Ut_MApplicationWindow::testComponentsDisplayMode()
 void Ut_MApplicationWindow::testStatusBarVisibility_data()
 {
     QTest::addColumn< QList<StatusBarTestOperation> >("operations");
-    QTest::addColumn<bool>("expectedVisibility");  // true = visible, false = invisible
+    QTest::addColumn<MSceneWindow::SceneWindowState>("expectedState");
 
     typedef QList<StatusBarTestOperation> OpList;
 
-    QTest::newRow("Fullscreen OFF") << (OpList() << MakeNormal) << true;
-    QTest::newRow("Fullscreen ON") << (OpList() << MakeFullScreen) << false;
-    QTest::newRow("Maximize page area") << (OpList() << MakeNormal << MaximizePageArea) << false;
-    QTest::newRow("Restore page area") << (OpList() << MakeNormal << RestorePageArea) << true;
-    QTest::newRow("Restore page area while fullscreen1") << (OpList() << MakeFullScreen << RestorePageArea) << false;
-    QTest::newRow("Restore page area while fullscreen2") << (OpList() << MakeFullScreen << RestorePageArea << MakeNormal) << true;
-    QTest::newRow("Maximize page area while fullscreen1") << (OpList() << MakeFullScreen << MaximizePageArea) << false;
-    QTest::newRow("Maximize page area while fullscreen2") << (OpList() << MakeFullScreen << MaximizePageArea << MakeNormal) << false;
+    QTest::newRow("Fullscreen OFF") << (OpList() << MakeNormal) << MSceneWindow::Appeared;
+    QTest::newRow("Fullscreen ON") << (OpList() << MakeFullScreen) << MSceneWindow::Disappeared;
+    QTest::newRow("Maximize page area") << (OpList() << MakeNormal << MaximizePageArea) << MSceneWindow::Disappeared;
+    QTest::newRow("Restore page area") << (OpList() << MakeNormal << RestorePageArea) << MSceneWindow::Appeared;
+    QTest::newRow("Restore page area while fullscreen1") << (OpList() << MakeFullScreen << RestorePageArea) << MSceneWindow::Disappeared;
+    QTest::newRow("Restore page area while fullscreen2") << (OpList() << MakeFullScreen << RestorePageArea << MakeNormal) << MSceneWindow::Appeared;
+    QTest::newRow("Maximize page area while fullscreen1") << (OpList() << MakeFullScreen << MaximizePageArea) << MSceneWindow::Disappeared;
+    QTest::newRow("Maximize page area while fullscreen2") << (OpList() << MakeFullScreen << MaximizePageArea << MakeNormal) << MSceneWindow::Disappeared;
 }
 
 void Ut_MApplicationWindow::testStatusBarVisibility()
 {
     QFETCH(QList<StatusBarTestOperation>, operations);
-    QFETCH(bool, expectedVisibility);
+    QFETCH(MSceneWindow::SceneWindowState, expectedState);
 
     MSceneWindow *statusBar = 0;
 
@@ -378,6 +379,9 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
     m_subject->sceneManager()->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
     QVERIFY(m_subject->orientationAngle() == M::Angle0);
 
+    QApplication::processEvents();
+    m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
+
     foreach (StatusBarTestOperation op, operations) {
         switch (op) {
         case MakeFullScreen:
@@ -387,21 +391,31 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
             m_subject->showNormal();
             break;
         case MaximizePageArea:
-            // Status bar hides because along with other decorations.
-            m_subject->d_func()->pageAreaMaximized = true;
-            QMetaObject::invokeMethod(m_subject, "_q_updateStatusBarVisibility", Qt::DirectConnection);
+            // Faking the presence of an input method panel (e.g.
+            // virtual keyboard) which will make MInputWidgetRelocator
+            // call MApplicationWindow::maximizePageArea
+            MInputMethodState::instance()->setInputMethodArea(
+                        QRect(0, 0, m_subject->width(), m_subject->height()/2));
             break;
         case RestorePageArea:
-            m_subject->d_func()->pageAreaMaximized = false;
-            QMetaObject::invokeMethod(m_subject, "_q_updateStatusBarVisibility", Qt::DirectConnection);
+            // MAke the fake input method panel (e.g.
+            // virtual keyboard) go away, which will make MInputWidgetRelocator
+            // call MApplicationWindow::restorePageArea
+            MInputMethodState::instance()->setInputMethodArea(QRect());
             break;
         }
+        QApplication::processEvents();
+        m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();
     }
 
-    m_subject->sceneManager()->fastForwardSceneWindowTransitionAnimation(statusBar);
-    // This relies on status bar being out of display which means no animation
-    // and change in QGraphicsItem visibility is immediate.
-    QCOMPARE(statusBar->isVisible(), expectedVisibility);
+    // OBS: statis_cast to int is needed so that error messages displays the
+    //      expected and actual values
+    QCOMPARE(static_cast<int>(statusBar->sceneWindowState()),
+             static_cast<int>(expectedState));
+
+    // Restore original MInputMethodState state since it's a singleton and
+    // will therefore preserve its state beyond this test method.
+    MInputMethodState::instance()->setInputMethodArea(QRect());
 }
 
 
