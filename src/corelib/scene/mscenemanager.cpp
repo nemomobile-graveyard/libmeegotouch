@@ -2649,6 +2649,16 @@ void MSceneManager::fastForwardSceneWindowTransitionAnimation(MSceneWindow *scen
     d->fastForwardSceneWindowTransitionAnimation(sceneWindow);
 }
 
+void MSceneManager::fastForwardAllSceneWindowTransitionAnimations()
+{
+    Q_D(MSceneManager);
+
+    QList<MSceneWindow *> list = d->sceneWindowStack.list();
+
+    Q_FOREACH(MSceneWindow *sceneWindow, list)
+        d->fastForwardSceneWindowTransitionAnimation(sceneWindow);
+}
+
 void MSceneManager::addSceneWindow(MSceneWindow *sceneWindow)
 {
     Q_D(MSceneManager);

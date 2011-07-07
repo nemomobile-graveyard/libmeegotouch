@@ -351,6 +351,7 @@ private:
     void fastForwardPageSwitchAnimation();
     void fastForwardOrientationChangeAnimation();
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
+    void fastForwardAllSceneWindowTransitionAnimations();
     void addSceneWindow(MSceneWindow *sceneWindow);
     void removeSceneWindow(MSceneWindow *sceneWindow);
 };
