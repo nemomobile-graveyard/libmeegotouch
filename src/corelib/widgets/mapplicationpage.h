@@ -246,7 +246,10 @@ public:
         NavigationBar = 0x1, /*!< The navigation bar  */
         HomeButton = 0x2, /*!< The home button  */
         EscapeButton = 0x4, /*!< The escape button  */
-        AllComponents = NavigationBar | HomeButton | EscapeButton /*!< All components */
+        StatusBar = 0x8, /*!< The status bar */
+        AllComponents = NavigationBar | HomeButton | EscapeButton /*!< Navigation bar, home button and escape button.
+                                                                       For historical reasons it does not include the
+                                                                       status bar */
     };
     Q_DECLARE_FLAGS(Components, Component)
 

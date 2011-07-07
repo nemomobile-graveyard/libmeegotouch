@@ -84,6 +84,8 @@ private:
 
     M_MODEL_PROPERTY(MApplicationPageModel::ComponentDisplayMode, navigationBarDisplayMode, NavigationBarDisplayMode, true, MApplicationPageModel::Show)
 
+    M_MODEL_PROPERTY(MApplicationPageModel::ComponentDisplayMode, statusBarDisplayMode, StatusBarDisplayMode, true, MApplicationPageModel::Show)
+
     /*!
      * \property MApplicationPageModel::escapeMode
      * \brief Page's escape mode.

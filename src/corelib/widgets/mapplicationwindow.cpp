@@ -226,8 +226,18 @@ void MApplicationWindowPrivate::init()
         sceneManager->appearSceneWindowNow(dockWidget);
     }
 
+    statusBarVisibilityUpdateTimer.setSingleShot(true);
+    statusBarVisibilityUpdateTimer.setInterval(0);
+    bool ok = q->connect(&statusBarVisibilityUpdateTimer, SIGNAL(timeout()),
+                         SLOT(_q_updateStatusBarVisibility()));
+    if (!ok) qFatal("siganl connection failed!");
+
     if (!MApplication::fullScreen() && statusBar) {
-        sceneManager->appearSceneWindowNow(statusBar);
+        // Try to show the status bar only in the next event loop to give the
+        // application a chance to make its first page appear.
+        // That's becasue the status bar display mode in the page also
+        // affects the final visibility of our status bar.
+        statusBarVisibilityUpdateTimer.start();
     }
 
     _q_placeToolBar();
@@ -362,6 +372,12 @@ void MApplicationWindowPrivate::restorePageArea()
 void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 {
     Q_Q(MApplicationWindow);
+
+    // remove any pending update since we're doing it right now.
+    if (statusBarVisibilityUpdateTimer.isActive()) {
+        statusBarVisibilityUpdateTimer.stop();
+    }
+
     if (!statusBar)
         return;
 
@@ -378,8 +394,15 @@ void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
     // MSceneManagerPrivate::canHaveAnimatedTransitions returns true if onDisplaySet == false
     // (this happens when application is starting) but we want statusbar to animate
     // only if app is on display.
-    animateComponentsTransitions = q->isOnDisplay();
+    // And never before the first paint event is received by MWindow
+    animateComponentsTransitions = q->isOnDisplay() && !beforeFirstPaintEvent;
+
     bool hidden = q->isFullScreen() || pageAreaMaximized;
+    if (page) {
+        hidden = hidden
+            || page->model()->statusBarDisplayMode() != MApplicationPageModel::Show;
+    }
+
     setSceneWindowVisibility(statusBar, !hidden);
 
     animateComponentsTransitions = oldAnimateComponentsTransitions;
@@ -436,7 +459,9 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
             }
         }
 
-        if (member == MApplicationPageModel::ProgressIndicatorVisible) {
+        if (member == MApplicationPageModel::StatusBarDisplayMode) {
+            _q_updateStatusBarVisibility();
+        } else if (member == MApplicationPageModel::ProgressIndicatorVisible) {
             navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
 
         } else if (member == MApplicationPageModel::EscapeMode) {
@@ -1275,6 +1300,10 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
 
     // Dock widget follows navigation bar display mode.
     setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
+
+    // Since the page has changed we have a new
+    // page->model()->statusBarDisplayMode()
+    statusBarVisibilityUpdateTimer.start();
 
     emit q->pageChanged(page);
 }

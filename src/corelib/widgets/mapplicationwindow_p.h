@@ -87,6 +87,8 @@ public:
 
     MStatusBarStyleNameHandler statusBarStyleNameHandler;
 
+    QTimer statusBarVisibilityUpdateTimer;
+
     void manageActions();
     void distributeAction(QAction *action, QAction *before);
     void refreshArrowIconVisibility();

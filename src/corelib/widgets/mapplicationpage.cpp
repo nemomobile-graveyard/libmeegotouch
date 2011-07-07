@@ -267,8 +267,12 @@ MApplicationPageModel::ComponentDisplayMode MApplicationPage::componentDisplayMo
         displayMode = model()->homeButtonDisplayMode();
         break;
 
-    default:
+    case EscapeButton:
         displayMode = model()->escapeButtonDisplayMode();
+        break;
+
+    default: // StatusBar
+        displayMode = model()->statusBarDisplayMode();
     };
 
     return displayMode;
@@ -287,6 +291,10 @@ void MApplicationPage::setComponentsDisplayMode(Components components,
 
     if (components.testFlag(EscapeButton)) {
         model()->setEscapeButtonDisplayMode(displayMode);
+    }
+
+    if (components.testFlag(StatusBar)) {
+        model()->setStatusBarDisplayMode(displayMode);
     }
 }
 
