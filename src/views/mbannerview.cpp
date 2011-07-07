@@ -52,6 +52,7 @@ MBannerViewPrivate::MBannerViewPrivate() :
 
 MBannerViewPrivate::~MBannerViewPrivate()
 {
+    delete bannerTimeStampData;
 }
 
 MLabel *MBannerViewPrivate::title()
