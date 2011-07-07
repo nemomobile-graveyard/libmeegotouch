@@ -153,6 +153,16 @@ MListIndexTooltip *MListIndexViewPrivate::tooltip()
     return tooltipWidget;
 }
 
+MWindow *MListIndexViewPrivate::currentWindow()
+{
+    QGraphicsScene *scene = controller->scene();
+
+    if (!scene || scene->views().isEmpty())
+        return 0;
+
+    return qobject_cast<MWindow*>(scene->views().at(0));
+}
+
 void MListIndexViewPrivate::setDisplayMode(int mode)
 {
     MList::DisplayMode displayMode = static_cast<MList::DisplayMode>(mode);
@@ -181,7 +191,7 @@ void MListIndexViewPrivate::_q_attachToListContainer()
             q->disconnect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_updateGeometry()));
         q->disconnect(container, SIGNAL(widthChanged()), q, SLOT(_q_updateGeometry()));
         q->disconnect(container, SIGNAL(heightChanged()), q, SLOT(_q_updateGeometry()));
-        q->disconnect(container, SIGNAL(appearing()), q, SLOT(_q_appearOnSceneWindow()));
+        q->disconnect(container, SIGNAL(displayEntered()), q, SLOT(_q_appearOnSceneWindow()));
     }
 
     if (q->model()->list()) {
@@ -195,7 +205,7 @@ void MListIndexViewPrivate::_q_attachToListContainer()
                 q->connect(container, SIGNAL(exposedContentRectChanged()), q, SLOT(_q_updateGeometry()));
             q->connect(container, SIGNAL(widthChanged()), q, SLOT(_q_updateGeometry()));
             q->connect(container, SIGNAL(heightChanged()), q, SLOT(_q_updateGeometry()));
-            q->connect(container, SIGNAL(appearing()), q, SLOT(_q_appearOnSceneWindow()));
+            q->connect(container, SIGNAL(displayEntered()), q, SLOT(_q_appearOnSceneWindow()));
             _q_updateGeometry();
         }
     }
@@ -266,6 +276,11 @@ void MListIndexViewPrivate::_q_showIfNeeded()
 void MListIndexViewPrivate::_q_appearOnSceneWindow()
 {
     Q_Q(MListIndexView);
+
+    // Do not show the list index in the switcher.
+    MWindow *window = currentWindow();
+    if (window && window->isInSwitcher())
+        return;
 
     // Show only if there's more than just 1 group.
     if (list && list->itemModel() && list->itemModel()->rowCount() > 1) {

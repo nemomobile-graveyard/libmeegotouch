@@ -21,6 +21,7 @@
 #define MLISTINDEXVIEW_H
 
 #include <MWidgetView>
+#include <MSceneWindow>
 #include "mlistindexmodel.h"
 #include "mlistindexstyle.h"
 

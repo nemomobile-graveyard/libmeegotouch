@@ -33,6 +33,7 @@ class MListIndexTooltip;
 class MPannableViewport;
 class MSceneWindow;
 class MWidgetController;
+class MWindow;
 
 class QGraphicsAnchorLayout;
 class QGraphicsLinearLayout;
@@ -53,6 +54,7 @@ public:
     MLabel *createGroupTitleLabel();
 
     MListIndexTooltip *tooltip();
+    MWindow *currentWindow();
 
     void setDisplayMode(int mode);
 
