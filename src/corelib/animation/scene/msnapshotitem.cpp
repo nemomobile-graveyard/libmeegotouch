@@ -1,5 +1,6 @@
 #include "msnapshotitem.h"
 
+#include <mgraphicssystemhelper.h>
 #include <QGraphicsScene>
 #include <QImage>
 #include <QPainter>
@@ -30,6 +31,8 @@ QRectF MSnapshotItem::boundingRect() const
 void MSnapshotItem::updateSnapshot()
 {
     pixmap = QPixmap();
+    delete framebufferObject;
+    framebufferObject = 0;
 
     if (scene() && scene()->views().count() == 0)
         return;
@@ -37,21 +40,21 @@ void MSnapshotItem::updateSnapshot()
     QGraphicsView *graphicsView = scene()->views().at(0);
     Q_ASSERT(graphicsView);
 
+    bool grabContent = true;
+    if (MGraphicsSystemHelper::isRunningMeeGoGraphicsSystem()) {
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
-    graphicsView->installEventFilter(this);
+        graphicsView->installEventFilter(this);
 #endif
+        const QRect rect = m_boundingRect.toRect();
+        framebufferObject = new QGLFramebufferObject(rect.size());
+        if (framebufferObject->isValid()) {
+            QPainter painter(framebufferObject);
+            graphicsView->render(&painter, QRectF(), rect);
+            grabContent = false;
+        }
+    }
 
-    const QRect rect = m_boundingRect.toRect();
-
-    delete framebufferObject;
-    framebufferObject = new QGLFramebufferObject(rect.size());
-    if (framebufferObject->isValid()) {
-        QPainter painter(framebufferObject);
-        graphicsView->render(&painter, QRectF(), rect);
-    } else {
-        delete framebufferObject;
-        framebufferObject = 0;
-
+    if (grabContent) {
 #if defined(Q_WS_MAC) || defined(Q_WS_WIN)
         pixmap = QPixmap::grabWidget(graphicsView);
 #else
