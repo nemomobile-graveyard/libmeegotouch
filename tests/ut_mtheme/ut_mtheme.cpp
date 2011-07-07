@@ -170,7 +170,7 @@ void Ut_MTheme::testThemeChangeCompleted()
 
     //This time should be same as: THEME_CHANGE_TIMEOUT at mthemedaemon (3 seconds)
     QTimer eventLoopQuitTimer;
-    eventLoopQuitTimer.setInterval(300);
+    eventLoopQuitTimer.setInterval(3000);
     eventLoopQuitTimer.setSingleShot(true);
     QObject::connect(&eventLoopQuitTimer, SIGNAL(timeout()),
                      &eventLoop, SLOT(quit()));
