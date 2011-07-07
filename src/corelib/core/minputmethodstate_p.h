@@ -24,21 +24,31 @@
 #include <QMap>
 #include <QVariant>
 
+#ifdef HAVE_MALIIT
+#include <maliit/attributeextension.h>
+#endif
+
 #include "minputmethodstate.h"
 #include "mnamespace.h"
-
 
 class AttributeExtensionInfo {
 public:
     AttributeExtensionInfo(const QString &attributeExtensionFile)
+#ifdef HAVE_MALIIT
+        : extension(new Maliit::AttributeExtension(attributeExtensionFile))
+#else
         : fileName(attributeExtensionFile)
+#endif
     {
     }
 
+#ifdef HAVE_MALIIT
+    QScopedPointer<Maliit::AttributeExtension> extension;
+#else
     QString fileName;
+#endif
     MInputMethodState::ExtendedAttributeMap extendedAttributes;
 };
-
 
 class MInputMethodStatePrivate
 {

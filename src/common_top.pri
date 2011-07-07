@@ -126,6 +126,10 @@ contains(DEFINES, HAVE_MEEGOGRAPHICSSYSTEM) {
     QT += meegographicssystemhelper
 }
 
+contains(DEFINES, HAVE_MALIIT) {
+    PKGCONFIG += maliit-1.0
+}
+
 contains(QT_CONFIG, opengles2) {
     DEFINES += M_USE_OPENGL
 }

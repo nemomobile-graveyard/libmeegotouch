@@ -22,7 +22,8 @@ Build-Depends: debhelper (>= 5),
  libqtm-serviceframework-dev,
  libxcomposite-dev,
  libngf-dev,
- aegis-builder (>= 1.6)
+ aegis-builder (>= 1.6),
+ libmaliit1-dev
 Standards-Version: 3.7.2
 
 Package: libmeegotouchcore0

@@ -52,6 +52,10 @@
 #include <mapplicationpage.h>
 #include <mdialog.h>
 
+#ifdef HAVE_MALIIT
+#include <maliit/preeditinjectionevent.h>
+#endif
+
 #include "mtextedit_p.h"
 #include "utils.h"
 
@@ -153,7 +157,11 @@ public:
             break;
         }
 
+#ifdef HAVE_MALIIT
+        if (ev->type() == Maliit::PreeditInjectionEvent::eventNumber()) {
+#else
         if (ev->type() == MPreeditInjectionEvent::eventNumber()) {
+#endif
             return true;
         }
 
@@ -162,7 +170,11 @@ public:
 
     bool event(QEvent *event)
     {
+#ifdef HAVE_MALIIT
+        if (event->type() == Maliit::PreeditInjectionEvent::eventNumber()) {
+#else
         if (event->type() == MPreeditInjectionEvent::eventNumber()) {
+#endif
             event->accept();
             return true;
         }

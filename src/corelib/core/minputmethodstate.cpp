@@ -27,6 +27,14 @@
 #include <QTimer>
 #include <QKeyEvent>
 
+#ifdef HAVE_MALIIT
+#include <maliit/attributeextension.h>
+#include <maliit/inputmethod.h>
+
+using Maliit::InputMethod;
+using Maliit::AttributeExtension;
+#endif
+
 namespace {
     const char * const ToolbarExtension("/toolbar");
 }
@@ -63,6 +71,21 @@ MInputMethodState::MInputMethodState()
             this, SIGNAL(toolbarRegistered(int,QString)));
     connect(this, SIGNAL(attributeExtensionUnregistered(int)),
             this, SIGNAL(toolbarUnregistered(int)));
+#ifdef HAVE_MALIIT
+    bool ok;
+
+    ok = connect(Maliit::InputMethod::instance(), SIGNAL(areaChanged(QRect)),
+                 this, SIGNAL(inputMethodAreaChanged(QRect)));
+    if (!ok) qFatal("signal connection failed!");
+
+    ok = connect(Maliit::InputMethod::instance(), SIGNAL(keyPress(QKeyEvent)),
+                 this, SIGNAL(keyPress(QKeyEvent)));
+    if (!ok) qFatal("signal connection failed!");
+
+    ok = connect(Maliit::InputMethod::instance(), SIGNAL(keyRelease(QKeyEvent)),
+                 this, SIGNAL(keyRelease(QKeyEvent)));
+    if (!ok) qFatal("signal connection failed!");
+#endif
 }
 
 MInputMethodState::~MInputMethodState()
@@ -79,19 +102,27 @@ MInputMethodState *MInputMethodState::instance()
 
 void MInputMethodState::setInputMethodArea(const QRect &newRegion)
 {
+#ifdef HAVE_MALIIT
+    Maliit::InputMethod::instance()->setArea(newRegion);
+#else
     Q_D(MInputMethodState);
 
     if (d->region != newRegion) {
         d->region = newRegion;
         emit inputMethodAreaChanged(d->region);
     }
+#endif
 }
 
 QRect MInputMethodState::inputMethodArea() const
 {
+#ifdef HAVE_MALIIT
+    return Maliit::InputMethod::instance()->area();
+#else
     Q_D(const MInputMethodState);
 
     return d->region;
+#endif
 }
 
 void MInputMethodState::startActiveWindowOrientationAngleChange(M::OrientationAngle newOrientationAngle)
@@ -103,6 +134,9 @@ void MInputMethodState::startActiveWindowOrientationAngleChange(M::OrientationAn
         d->rotationInProgress = true;
         emit activeWindowOrientationAngleAboutToChange(newOrientationAngle);
     }
+#ifdef HAVE_MALIIT
+    Maliit::InputMethod::instance()->startOrientationAngleChange(static_cast<Maliit::OrientationAngle>(newOrientationAngle));
+#endif
 }
 
 void MInputMethodState::setActiveWindowOrientationAngle(M::OrientationAngle newOrientationAngle)
@@ -117,6 +151,9 @@ void MInputMethodState::setActiveWindowOrientationAngle(M::OrientationAngle newO
         d->rotationInProgress = false;
         emit activeWindowOrientationAngleChanged(newOrientationAngle);
     }
+#ifdef HAVE_MALIIT
+    Maliit::InputMethod::instance()->setOrientationAngle(static_cast<Maliit::OrientationAngle>(newOrientationAngle));
+#endif
 }
 
 M::OrientationAngle MInputMethodState::activeWindowOrientationAngle() const
@@ -128,6 +165,9 @@ M::OrientationAngle MInputMethodState::activeWindowOrientationAngle() const
 
 void MInputMethodState::requestSoftwareInputPanel()
 {
+#ifdef HAVE_MALIIT
+    Maliit::requestInputMethodPanel();
+#else
     QInputContext *inputContext = qApp->inputContext();
 
     if (!inputContext) {
@@ -136,10 +176,14 @@ void MInputMethodState::requestSoftwareInputPanel()
 
     QEvent request(QEvent::RequestSoftwareInputPanel);
     inputContext->filterEvent(&request);
+#endif
 }
 
 void MInputMethodState::closeSoftwareInputPanel()
 {
+#ifdef HAVE_MALIIT
+    Maliit::closeInputMethodPanel();
+#else
     QInputContext *inputContext = qApp->inputContext();
 
     if (!inputContext) {
@@ -149,6 +193,7 @@ void MInputMethodState::closeSoftwareInputPanel()
     QEvent close(QEvent::CloseSoftwareInputPanel);
     inputContext->filterEvent(&close);
     inputContext->reset();
+#endif
 }
 
 void MInputMethodState::emitKeyPress(const QKeyEvent &event)
@@ -201,6 +246,11 @@ void MInputMethodState::setToolbarItemAttribute(int id, const QString &item,
     AttributeExtensionInfo *attributeExtension = d->attributeExtensions[id];
     bool changed = (value != attributeExtension->extendedAttributes[ToolbarExtension][item][attribute]);
 
+#ifdef HAVE_MALIIT
+    const QString &key = QString::fromLatin1("%1/%2/%3").arg(ToolbarExtension, item, attribute);
+    attributeExtension->extension->setAttribute(key, value);
+#endif
+
     if (changed) {
         attributeExtension->extendedAttributes[ToolbarExtension][item][attribute] = value;
         emit toolbarItemAttributeChanged(id, item, attribute, value);
@@ -230,11 +280,16 @@ MInputMethodState::ExtendedAttributeMap MInputMethodState::extendedAttributes(in
 int MInputMethodState::registerAttributeExtension(const QString &fileName)
 {
     Q_D(MInputMethodState);
+    AttributeExtensionInfo *attributeExtension = new AttributeExtensionInfo(fileName);
+#ifdef HAVE_MALIIT
+    int newId = attributeExtension->extension->id();
+#else
     static int idCounter = 0;
     // generate an application local unique identifier for the toolbar.
     int newId = idCounter;
     idCounter++;
-    d->attributeExtensions.insert(newId, new AttributeExtensionInfo(fileName));
+#endif
+    d->attributeExtensions.insert(newId, attributeExtension);
     emit attributeExtensionRegistered(newId, fileName);
     return newId;
 }
@@ -259,6 +314,11 @@ void MInputMethodState::setExtendedAttribute(int id, const QString &target, cons
     AttributeExtensionInfo *attributeExtension = d->attributeExtensions[id];
     bool changed = (value != attributeExtension->extendedAttributes[target][targetItem][attribute]);
 
+#ifdef HAVE_MALIIT
+    const QString &key = QString::fromLatin1("%1/%2/%3").arg(target, targetItem, attribute);
+    attributeExtension->extension->setAttribute(key, value);
+#endif
+
     if (changed) {
         attributeExtension->extendedAttributes[target][targetItem][attribute] = value;
         emit extendedAttributeChanged(id, target, targetItem, attribute, value);
@@ -272,7 +332,11 @@ QString MInputMethodState::attributeExtensionFile(int id) const
     AttributeExtensionInfo *attributeExtension = d->attributeExtensions.value(id);
 
     if (attributeExtension) {
+#ifdef HAVE_MALIIT
+        return attributeExtension->extension->fileName();
+#else
         return attributeExtension->fileName;
+#endif
     } else {
         return QString();
     }

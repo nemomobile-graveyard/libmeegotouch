@@ -54,6 +54,10 @@
 #include "minputmethodstate.h"
 
 #include "mwidgetcreator.h"
+
+#ifdef HAVE_MALIIT
+#include <maliit/preeditinjectionevent.h>
+#endif
 M_REGISTER_WIDGET(MTextEdit)
 
 
@@ -2291,7 +2295,11 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                 if (ic) { 
                     QString preedit = text.mid(start, end - start);
                     d->preeditInjectionInProgress = true;
+#ifdef HAVE_MALIIT
+                    Maliit::PreeditInjectionEvent event(preedit, eventCursorPosition - start);
+#else
                     MPreeditInjectionEvent event(preedit, eventCursorPosition - start);
+#endif
                     injectionAccepted = ic->filterEvent(&event);
                     d->preeditInjectionInProgress = false;
                 }

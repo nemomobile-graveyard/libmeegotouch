@@ -2,6 +2,11 @@ include(../common_top.pri)
 
 TARGET = ut_mtextedit
 
+contains(DEFINES, HAVE_MALIIT) {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += maliit-1.0
+}
+
 SOURCES += \
     ut_mtextedit.cpp \
     $$STUBSDIR/stubbase.cpp \
