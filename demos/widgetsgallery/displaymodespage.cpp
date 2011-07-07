@@ -41,6 +41,7 @@ DisplayModesPage::DisplayModesPage()
       comboNavigationBarDisplayMode(0),
       comboEscapeButtonDisplayMode(0),
       comboHomeButtonDisplayMode(0),
+      comboStatusBarDisplayMode(0),
       ctnDisplayMode(0),
       ctnWindowState(0),
       fullScreenCheckbox(0),
@@ -60,6 +61,7 @@ QString DisplayModesPage::timedemoTitle()
 
 void DisplayModesPage::createContent()
 {
+    bool ok;
     setStyleName(inv("CommonApplicationPage"));
 
     QGraphicsLinearLayout *lytMain = new QGraphicsLinearLayout(Qt::Vertical);
@@ -109,10 +111,22 @@ void DisplayModesPage::createContent()
     connect(comboHomeButtonDisplayMode, SIGNAL(currentIndexChanged(int)),
             SLOT(changeHomeButtonDisplayMode(int)));
 
+    // combo box status bar display mode
+    comboStatusBarDisplayMode = new MComboBox;
+    comboStatusBarDisplayMode->setObjectName("comboStatusBarDisplayMode");
+    comboStatusBarDisplayMode->setStyleName(inv("CommonComboBox"));
+    //% "Status Bar"
+    comboStatusBarDisplayMode->setTitle(qtTrId("xx_displaymodes_statusbarcombo"));
+    comboStatusBarDisplayMode->setIconVisible(false);
+    ok = connect(comboStatusBarDisplayMode, SIGNAL(currentIndexChanged(int)),
+            SLOT(changeStatusBarDisplayMode(int)));
+    if (!ok) qFatal("signal connection failed!");
+
     lytDisplayMode->addItem(comboNavigationBarDisplayMode);
     lytDisplayMode->addItem(navigationBarTransparencyCheckbox);
     lytDisplayMode->addItem(comboHomeButtonDisplayMode);
     lytDisplayMode->addItem(comboEscapeButtonDisplayMode);
+    lytDisplayMode->addItem(comboStatusBarDisplayMode);
 
     lytWindowState->addItem(fullScreenCheckbox);
     lytWindowState->addItem(roundedCornersCheckbox);
@@ -212,6 +226,7 @@ void DisplayModesPage::retranslateUi()
     retranslateDisplayModeComboBox(comboNavigationBarDisplayMode);
     retranslateDisplayModeComboBox(comboHomeButtonDisplayMode);
     retranslateDisplayModeComboBox(comboEscapeButtonDisplayMode);
+    retranslateDisplayModeComboBox(comboStatusBarDisplayMode);
 }
 
 void DisplayModesPage::retranslateDisplayModeComboBox(MComboBox *combo)
@@ -221,7 +236,8 @@ void DisplayModesPage::retranslateDisplayModeComboBox(MComboBox *combo)
     combo->clear();
     //% "Show"
     combo->insertItem(ComboShow, qtTrId("xx_displaymode_show"));
-    if (combo != comboEscapeButtonDisplayMode) {
+    if (combo != comboEscapeButtonDisplayMode
+        && combo != comboStatusBarDisplayMode) {
         //% "Auto Hide"
         combo->insertItem(ComboAutoHide, qtTrId("xx_displaymode_autohide"));
     }
@@ -270,6 +286,17 @@ void DisplayModesPage::changeHomeButtonDisplayMode(int index)
         break;
     default:
         setComponentsDisplayMode(HomeButton, MApplicationPageModel::Hide);
+    }
+}
+
+void DisplayModesPage::changeStatusBarDisplayMode(int index)
+{
+    switch (index) {
+    case ComboShow:
+        setComponentsDisplayMode(StatusBar, MApplicationPageModel::Show);
+        break;
+    default:
+        setComponentsDisplayMode(StatusBar, MApplicationPageModel::Hide);
     }
 }
 

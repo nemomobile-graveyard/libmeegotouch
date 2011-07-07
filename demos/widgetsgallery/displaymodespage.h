@@ -55,6 +55,7 @@ public slots:
     void changeNavigationBarDisplayMode(int index);
     void changeEscapeButtonDisplayMode(int index);
     void changeHomeButtonDisplayMode(int index);
+    void changeStatusBarDisplayMode(int index);
     void changeFullScreenMode(bool fullScreen);
     void changeRoundedCorners(bool enable);
     void changeNavigationBarTransparency(bool transparent);
@@ -70,6 +71,7 @@ private:
     MComboBox *comboNavigationBarDisplayMode;
     MComboBox *comboEscapeButtonDisplayMode;
     MComboBox *comboHomeButtonDisplayMode;
+    MComboBox *comboStatusBarDisplayMode;
     MContainer *ctnDisplayMode;
     MContainer *ctnWindowState;
     LabeledCheckbox *fullScreenCheckbox;
