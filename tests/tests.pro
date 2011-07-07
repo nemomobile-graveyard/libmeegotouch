@@ -204,6 +204,7 @@ SUBDIRS     =  \
     ut_mcolorcombobox \
     ut_mgriditem \
     ut_mlistitem \
+    ut_mapplicationifproxy \
 
 # enable only when we have icu available
 
