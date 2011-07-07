@@ -361,6 +361,8 @@ void Ut_MApplicationWindow::testStatusBarVisibility_data()
     QTest::newRow("Restore page area while fullscreen2") << (OpList() << MakeFullScreen << RestorePageArea << MakeNormal) << MSceneWindow::Appeared;
     QTest::newRow("Maximize page area while fullscreen1") << (OpList() << MakeFullScreen << MaximizePageArea) << MSceneWindow::Disappeared;
     QTest::newRow("Maximize page area while fullscreen2") << (OpList() << MakeFullScreen << MaximizePageArea << MakeNormal) << MSceneWindow::Disappeared;
+    QTest::newRow("Fullscreen OFF, Hide display mode") << (OpList() << PageAppearWithStatusBarHideDisplayMode  << MakeNormal) << MSceneWindow::Disappeared;
+    QTest::newRow("Fullscreen ON, Show display mode") << (OpList() << PageAppearWithStatusBarHideDisplayMode  << MakeNormal) << MSceneWindow::Disappeared;
 }
 
 void Ut_MApplicationWindow::testStatusBarVisibility()
@@ -403,6 +405,18 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
             // call MApplicationWindow::restorePageArea
             MInputMethodState::instance()->setInputMethodArea(QRect());
             break;
+        case PageAppearWithStatusBarHideDisplayMode: {
+            MApplicationPage *page = new MApplicationPage;
+            page->setComponentsDisplayMode(MApplicationPage::StatusBar,
+                                           MApplicationPageModel::Hide);
+            page->appear(m_subject);
+            } break;
+        case PageAppearWithStatusBarShowDisplayMode: {
+            MApplicationPage *page = new MApplicationPage;
+            page->setComponentsDisplayMode(MApplicationPage::StatusBar,
+                                           MApplicationPageModel::Show);
+            page->appear(m_subject);
+            } break;
         }
         QApplication::processEvents();
         m_subject->sceneManager()->fastForwardAllSceneWindowTransitionAnimations();

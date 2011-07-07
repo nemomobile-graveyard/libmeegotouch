@@ -114,7 +114,9 @@ enum StatusBarTestOperation {
     MakeFullScreen,
     MakeNormal,
     MaximizePageArea,
-    RestorePageArea
+    RestorePageArea,
+    PageAppearWithStatusBarHideDisplayMode,
+    PageAppearWithStatusBarShowDisplayMode,
 };
 
 Q_DECLARE_METATYPE(MApplicationPage *);
