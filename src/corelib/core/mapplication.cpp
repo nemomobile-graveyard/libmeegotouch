@@ -20,6 +20,7 @@
 #include <qglobal.h>
 #include <cstdlib>
 #include <QCoreApplication>
+#include <QGraphicsLayout>
 
 #include "mapplication.h"
 #include "mcomponentdata.h"
@@ -47,6 +48,7 @@ MApplicationPrivate::MApplicationPrivate():
         xDamageErrorBase(0),
         q_ptr(NULL)
 {
+    QGraphicsLayout::setInstantInvalidatePropagation(true);
 #if defined(HAVE_XDAMAGE) && defined(Q_WS_X11)
     XDamageQueryExtension(QX11Info::display(), &xDamageEventBase, &xDamageErrorBase);
 #endif //HAVE_XDAMAGE && Q_WS_X11
