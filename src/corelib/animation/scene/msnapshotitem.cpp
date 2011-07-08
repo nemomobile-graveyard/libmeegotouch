@@ -76,10 +76,12 @@ void MSnapshotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 #ifdef HAVE_MEEGOGRAPHICSSYSTEM
 bool MSnapshotItem::eventFilter(QObject *obj, QEvent *event)
 {
-    QMeeGoSwitchEvent* switchEvent = dynamic_cast<QMeeGoSwitchEvent*>(event);
-    if (switchEvent && switchEvent->state() == QMeeGoSwitchEvent::WillSwitch) {
-        delete framebufferObject;
-        framebufferObject = 0;
+    if (event->type() == QMeeGoSwitchEvent::eventNumber()) {
+        QMeeGoSwitchEvent* switchEvent = static_cast<QMeeGoSwitchEvent*>(event);
+        if (switchEvent->state() == QMeeGoSwitchEvent::WillSwitch) {
+            delete framebufferObject;
+            framebufferObject = 0;
+        }
     }
 
     return QGraphicsObject::eventFilter(obj, event);
