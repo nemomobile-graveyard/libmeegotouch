@@ -205,6 +205,7 @@ SUBDIRS     =  \
     ut_mgriditem \
     ut_mlistitem \
     ut_mapplicationifproxy \
+    ut_mdbusservicewaiter \
 
 # enable only when we have icu available
 
