@@ -26,7 +26,6 @@
 
 #include <QCoreApplication>
 #include <QSizePolicy>
-#include <QTimer>
 
 #include "mcontainerview.h"
 #include "mcontainerview_p.h"
@@ -207,31 +206,16 @@ void MContainerViewPrivate::createProgressIndicator()
         progressIndicator = new MProgressIndicator;
     progressIndicator->setUnknownDuration(true);
     progressIndicator->setStyleName(q->style()->progressIndicatorStyleName());
-    progressIndicator->hide();
 }
 
 
 void MContainerViewPrivate::layoutProgressIndicator()
 {
     if (header) {
-        Q_Q(MContainerView);
-        progressIndicator->hide();
         headerLayout->insertItem(1, progressIndicator);
         headerLayout->setAlignment(progressIndicator,  Qt::AlignVCenter | Qt::AlignRight);
-
-        // Joaquim Rocha:
-        // When showing the spinner in a container header, it would first show
-        // up on the left and quickly repositioned to the right. This happened
-        // due to the fact that it would be drawn before the layout finished adding
-        // it. Showing it from a single shot timer delays the drawing a bit
-        // and fixes this situation.
-        QTimer::singleShot(0, q, SLOT(_q_showProgressIndicator()));
+        progressIndicator->show();
     }
-}
-
-void MContainerViewPrivate::_q_showProgressIndicator()
-{
-    progressIndicator->show();
 }
 
 MContainerView::MContainerView(MContainer *controller) :
@@ -462,5 +446,3 @@ void MContainerView::headerReleased()
 
 // bind view and controller together
 M_REGISTER_VIEW_NEW(MContainerView, MContainer)
-
-#include "moc_mcontainerview.cpp"

@@ -91,8 +91,6 @@ Q_SIGNALS:
 private:
     Q_DISABLE_COPY(MContainerView)
     Q_DECLARE_PRIVATE(MContainerView)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_showProgressIndicator())
 };
 
 #endif

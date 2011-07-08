@@ -72,9 +72,6 @@ public:
 
     MContainerView *q_ptr;
     Q_DECLARE_PUBLIC(MContainerView)
-
-protected:
-    void _q_showProgressIndicator();
 };
 
 
