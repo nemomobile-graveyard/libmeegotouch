@@ -230,7 +230,7 @@ void MApplicationWindowPrivate::init()
     statusBarVisibilityUpdateTimer.setInterval(0);
     bool ok = q->connect(&statusBarVisibilityUpdateTimer, SIGNAL(timeout()),
                          SLOT(_q_updateStatusBarVisibility()));
-    if (!ok) qFatal("siganl connection failed!");
+    if (!ok) qFatal("Signal connection failed!");
 
     if (!MApplication::fullScreen() && statusBar) {
         // Try to show the status bar only in the next event loop to give the
