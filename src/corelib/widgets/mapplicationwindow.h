@@ -235,9 +235,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))
     Q_PRIVATE_SLOT(d_func(), void _q_menuAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_menuDisappeared())
-#ifdef HAVE_CONTEXTSUBSCRIBER
     Q_PRIVATE_SLOT(d_func(), void _q_updateStatusBarVisibility())
-#endif
 #ifdef M_OS_MAEMO5
     Q_PRIVATE_SLOT(d_func(), void _q_exitAppView())
 #endif //M_OS_MAEMO5
