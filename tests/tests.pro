@@ -206,6 +206,7 @@ SUBDIRS     =  \
     ut_mlistitem \
     ut_mapplicationifproxy \
     ut_mdbusservicewaiter \
+    ut_msyslogclient \
 
 # enable only when we have icu available
 
