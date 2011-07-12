@@ -59,8 +59,9 @@ void Ut_MSharedData::testReadWrite_1()
     QFont dataIn4("Times", 10, QFont::Bold), dataOut4;
     QVariant dataIn5("qqq"), dataOut5;
     QString dataIn6("asdf"), dataOut6;
+    QByteArray dataIn7("hello"), dataOut7;
 
-    qint64 pos1, pos2, pos3, pos4, pos5, pos6;
+    qint64 pos1, pos2, pos3, pos4, pos5, pos6, pos7;
 
     MSharedData *shm = new MSharedData("buffer");
 
@@ -85,6 +86,9 @@ void Ut_MSharedData::testReadWrite_1()
     pos6 = shm->pos();
     *shm << dataIn6;
 
+    pos7 = shm->pos();
+    *shm << dataIn7;
+
     shm->close();
 
     QVERIFY(shm->open(MSharedData::ReadOnly) == true);
@@ -99,6 +103,10 @@ void Ut_MSharedData::testReadWrite_1()
     shm->close();
 
     QVERIFY(shm->open(MSharedData::ReadOnly) == true);
+
+    shm->seek(pos7);
+    *shm >> dataOut7;
+    QVERIFY(dataIn7 == dataOut7);
 
     shm->seek(pos6);
     *shm >> dataOut6;
@@ -176,7 +184,13 @@ void Ut_MSharedData::testReadWrite_1000()
 
     MSharedData *shm1 = new MSharedData("buffer1K");
     shm1->setPageSize(1000);
+    QCOMPARE(shm1->pageSize(), 1000);
     QVERIFY(shm1->open(MSharedData::Write) == true);
+
+    // the page size can not be changed again because the buffer is open
+    QVERIFY( ! shm1->setPageSize(1001));
+    QCOMPARE(shm1->errorString(), QString("cannot change pageSize after shared data buffer was open"));
+    QCOMPARE(shm1->pageSize(), 1000);
 
     testReadWrite_N(shm1, data, offsets);
 
@@ -184,6 +198,7 @@ void Ut_MSharedData::testReadWrite_1000()
 
     MSharedData *shm2 = new MSharedData("buffer1K");
     shm2->setPageSize(1000);
+    QCOMPARE(shm2->pageSize(), 1000);
     QVERIFY(shm2->open(MSharedData::ReadOnly) == true);
 
     testReadWrite_N_verify(shm2, data, offsets);
