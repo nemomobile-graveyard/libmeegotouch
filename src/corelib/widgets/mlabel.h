@@ -163,6 +163,15 @@ class M_CORE_EXPORT MLabel : public MWidgetController
     Q_PROPERTY(bool textElide READ textElide WRITE setTextElide)
 
     /*!
+        \property MLabel::preferredLineCount
+        \brief Limits the preferred height returned sizeHint() to the given number of lines of text
+
+        Default is -1, disabling this feature.
+        \sa textElide()
+    */
+    Q_PROPERTY(int preferredLineCount READ preferredLineCount WRITE setPreferredLineCount)
+
+    /*!
         \property MLabel::text
         \brief Text of the label.
 
@@ -280,6 +289,22 @@ public:
         \sa Qt::TextElideMode
      */
     bool textElide() const;
+
+    /*!
+        \brief Limits the preferred height returned sizeHint() to the given number of lines of text
+
+        Default is -1, disabling this feature.
+        \sa textElide()
+    */
+    void setPreferredLineCount(int lineCount);
+
+    /*!
+        \brief Limits the preferred height returned sizeHint() to the given number of lines of text
+        \return Number of lines, or -1 (default) indicating that the number of lines won't be limited
+
+        \sa textElide()
+    */
+    int preferredLineCount() const;
 
     /*!
         \brief Set the font used in MLabel.

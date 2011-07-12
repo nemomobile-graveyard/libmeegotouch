@@ -952,6 +952,7 @@ void Ut_MLabel::wrapModes()
 void Ut_MLabel::multiLengthSeparator()
 {
     label->resize(100, 100);
+    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
 
     QChar separatorChar(0x9c, 0);
     QString separator(separatorChar);
@@ -964,8 +965,10 @@ void Ut_MLabel::multiLengthSeparator()
 
     label->setText(shortAndShort);
     QImage shortAndShortCapture = captureImage(label);
+    QCOMPARE(view->renderedText(), shortWord);
     label->setText(shortWord);
     QImage shortCapture = captureImage(label);
+    QCOMPARE(view->renderedText(), shortWord);
 
     QCOMPARE(shortCapture.isNull(), false);
     QCOMPARE(shortAndShortCapture.isNull(), false);
@@ -974,6 +977,7 @@ void Ut_MLabel::multiLengthSeparator()
     label->setText(longAndShort);
     QImage longAndShortCapture = captureImage(label);
 
+    QCOMPARE(view->renderedText(), shortWord);
     QCOMPARE(shortCapture, longAndShortCapture);
 
 }
@@ -1243,6 +1247,62 @@ void Ut_MLabel::testLineBreakReplacement()
     img = label->getLabelImage();
     const int contentHeight = contentRect(img).height();
     QVERIFY(contentHeight >= singleLineContentHeight * expectedLineCount);
+}
+
+void Ut_MLabel::testPreferredLineCount_data()
+{
+    QTest::addColumn<bool>("wordWrap");
+    QTest::addColumn<QTextOption::WrapMode>("wrapMode");
+
+    QTest::newRow("no wordWrap, NoWrap") << false << QTextOption::NoWrap;
+    QTest::newRow("wordWrap, NoWrap") << true << QTextOption::NoWrap;
+    QTest::newRow("wordWrap, WrapAnywhere") << true << QTextOption::WrapAnywhere;
+}
+
+void Ut_MLabel::testPreferredLineCount()
+{
+    QFETCH(bool, wordWrap);
+    QFETCH(QTextOption::WrapMode, wrapMode);
+
+    QCOMPARE(label->preferredLineCount(), -1);
+    label->setWordWrap(wordWrap);
+    label->setWrapMode(wrapMode);
+    label->setTextElide(true);
+    label->setText("A\nB\nC");
+    label->resize(label->preferredSize());
+    qWarning() << "label->size" << label->size();
+    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
+    if (wrapMode == QTextOption::WrapAnywhere) {
+        qWarning() << "text lengh" << view->renderedText().length() << QString::number(view->renderedText().at(1).unicode(), 16);
+        QCOMPARE(view->renderedText(), QString("A\nB\nC"));
+    }
+    else
+        QCOMPARE(view->renderedText(), QString("A B C"));
+    label->setPreferredLineCount(3);
+    label->resize(label->preferredSize());
+    if (wrapMode == QTextOption::WrapAnywhere)
+        QCOMPARE(view->renderedText(), QString("A\nB\nC"));
+    else
+        QCOMPARE(view->renderedText(), QString("A B C"));
+    label->setPreferredLineCount(2);
+    label->resize(label->preferredSize());
+    const QChar ellipsisChar(0x2026);
+    if (wrapMode == QTextOption::WrapAnywhere)
+        QCOMPARE(view->renderedText(), QString("A\nB") + ellipsisChar);
+    else
+        QCOMPARE(view->renderedText(), QString("A B C"));
+    label->setPreferredLineCount(1);
+    label->resize(label->preferredSize());
+    if (wrapMode == QTextOption::WrapAnywhere)
+        QCOMPARE(view->renderedText(), QString("A") + ellipsisChar);
+    else
+        QCOMPARE(view->renderedText(), QString("A B C"));
+    label->setPreferredLineCount(0);
+    label->resize(label->preferredSize());
+    if (wrapMode == QTextOption::WrapAnywhere)
+        QCOMPARE(view->renderedText(), QString(""));
+    else
+        QCOMPARE(view->renderedText(), QString(""));
 }
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

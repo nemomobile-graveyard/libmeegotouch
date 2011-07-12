@@ -91,6 +91,12 @@ class M_CORE_EXPORT MLabelModel : public MWidgetModel
     */
     M_MODEL_PROPERTY(bool, textElide, TextElide, true, false)
 
+    /*
+        \property MLabelModel::preferredLineCount
+        \brief Limits the preferred height returned MLabel::sizeHint() to the given number of lines of text
+    */
+    M_MODEL_PROPERTY(int, preferredLineCount, PreferredLineCount, true, -1)
+
     /*!
         \property MLabelModel::useModelFont
         \brief Boolean value which defines whether to use the font from model or CSS.

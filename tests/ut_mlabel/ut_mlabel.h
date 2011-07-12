@@ -61,7 +61,6 @@ private:
 
     QImage captureText(Qt::TextFormat textFormat, QString text);
 
-    
 private slots:
     void initTestCase();
     void cleanupTestCase();
@@ -138,6 +137,9 @@ private slots:
 
     void testLineBreakReplacement_data();
     void testLineBreakReplacement();
+
+    void testPreferredLineCount_data();
+    void testPreferredLineCount();
 
 private:
     /**

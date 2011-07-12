@@ -130,6 +130,16 @@ bool MLabel::textElide() const
     return model()->textElide();
 }
 
+void MLabel::setPreferredLineCount(int lineCount)
+{
+    model()->setPreferredLineCount(lineCount);
+}
+
+int MLabel::preferredLineCount() const
+{
+    return model()->preferredLineCount();
+}
+
 void MLabel::setFont(const QFont &font)
 {
     model()->setUseModelFont(true);

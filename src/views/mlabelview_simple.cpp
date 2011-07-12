@@ -111,7 +111,6 @@ bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
             return false;
     }
 }
-
 QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     switch (which) {
@@ -123,7 +122,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         }
         //If word wrap and eliding are both disabled (the default) then use the smallest string as
         //the minimum size
-        return sizeForWidth(-1, stringVariants.last()); //Get the size of the smallest variant
+        return sizeForWidth(-1, stringVariants.last(), 1); //Get the size of the smallest variant
     }
     case Qt::PreferredSize: {
         qreal width = constraint.width();
@@ -131,7 +130,8 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             if (preferredSize.width() >= 0 && (preferredSize.width() < width || width < 0))
                 width = preferredSize.width();
         }
-        return sizeForWidth(width, stringVariants.first()); //Get the size of the largest variant
+        QSizeF size = sizeForWidth(width, stringVariants.first(), viewPrivate->model()->preferredLineCount()); //Get the size of the largest variant
+        return size;
     }
     case Qt::MaximumSize: {
         return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -196,6 +196,8 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             viewPrivate->textOptions.setAlignment(viewPrivate->model()->alignment());
         } else if (member == MLabelModel::UseModelFont || member == MLabelModel::Font) {
             needUpdate = true;
+        } else if (member == MLabelModel::PreferredLineCount) {
+            needUpdate = true;
         }
     }
 
@@ -243,7 +245,8 @@ void MLabelViewSimple::applyStyle()
 
 QString MLabelViewSimple::renderedText() const
 {
-    return staticText.text();
+    const_cast<MLabelViewSimple*>(this)->initializeTextProperties();
+    return staticText.text().replace(QChar::LineSeparator, QLatin1Char('\n'));
 }
 
 bool MLabelViewSimple::tileInformation(int index, QPixmap &pixmap, int &y) const
@@ -315,68 +318,104 @@ void MLabelViewSimple::updateStringVariants()
         }
     }
     stringVariants = text.split(TextVariantSeparator);
-    if (stringVariants.isEmpty()) //Shouldn't ever happen, but just incase:w
+    if (stringVariants.isEmpty()) //Shouldn't ever happen, but just incase
         stringVariants << "";
 }
 
 QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
 {
+    QFont font = viewPrivate->controller->font();
+    QFontMetricsF fm(font);
+
+    QTextLayout textLayout;
+    textLayout.setFont(font);
+    textLayout.setTextOption(staticText.textOption());
+
+    int lineCount = 0;
+    int elideAtLineNumber = -1;
+    qreal leading = fm.leading();
+    qreal height = -leading;
+
     QString text;
-    if (stringVariants.size() > 1) {
-        // The text consists of several strings. Find the first string that fits into the
-        // available width. If no string has been found, the last string will be used.
-        const QFontMetricsF metrics(viewPrivate->controller->font());
-        foreach (const QString &string, stringVariants) {
-            text = string;
-            if (wrap()) {
-                QSizeF stringSize = metrics.boundingRect(QRectF(QPointF(0,0), renderSize),
-                                                         Qt::TextWordWrap, string).size();
-                if (stringSize.width() <= renderSize.width()
-                        && stringSize.height() <= renderSize.height())
+    bool firstVariant = true;
+
+    foreach (const QString &stringVariant, stringVariants) {
+        lineCount = 0;
+        elideAtLineNumber = -1;
+        text = stringVariant;
+        if (!firstVariant) {
+            textLayout.endLayout();
+            textLayout.clearLayout();
+        }
+        firstVariant = false;
+        textLayout.setText(text);
+        textLayout.beginLayout();
+        forever {
+            QTextLine line = textLayout.createLine();
+            if (!line.isValid())
+                break;
+            lineCount++;
+            height += leading;
+            if (height <= renderSize.height()) {
+                line.setLineWidth(renderSize.width());
+                height += line.height();
+                if (!wrap() && line.naturalTextWidth() > renderSize.width()) {
+                    // We've exceed the maximum available width, so we need to elide this line
+                    elideAtLineNumber = lineCount -1;
                     break;
-            } else if (metrics.width(text) <= renderSize.width()) {
+                }
+            }
+            if (height > renderSize.height() && lineCount > 1) {
+                // We've exceed the maximum available space, so we need to elide the previous line
+                elideAtLineNumber = lineCount - 2;
                 break;
             }
         }
-    } else {
-        text = stringVariants.first();
+        //If we don't need to elide, then the string fits, so no need to try the next string
+        //variant
+        if (elideAtLineNumber == -1)
+            break;
     }
 
-    if (viewPrivate->model()->textElide() && text.size() > 4) {
-        if (!wrap()) {
-            QFontMetrics metrics(viewPrivate->controller->font());
-            //No word wrap, so simple to elide
-            text = metrics.elidedText(text, Qt::ElideRight, renderSize.width());
-        } else {
-            //For word wrapping and eliding, bisect to find where to elide
-            QStaticText staticText2;
-            staticText2.setTextOption(staticText.textOption());
-            staticText2.setTextWidth(renderSize.width());
-            staticText2.setText(text);
-            staticText2.prepare(QTransform(), viewPrivate->controller->font());
+    if (elideAtLineNumber >= 0) {
+        QTextLine line = textLayout.lineAt(elideAtLineNumber);
+        Q_ASSERT(line.isValid());
 
-            if (staticText2.size().height() > renderSize.height() || staticText2.size().width() > renderSize.width()) {
-                int bad = text.length();
-                int good = 0;
-                int offset = bad + (good - bad)/2;
-                while (offset != good && offset != bad) {
-                    staticText2.setText(text.left(offset) + "...");
-                    if (staticText2.size().height() > renderSize.height() || staticText2.size().width() > renderSize.width())
-                        bad = offset;
-                    else
-                        good = offset;
-                    offset = bad + (good - bad)/2;
-                }
-                text = text.left(good) + "...";
-            }
-        }
+        // The string might have a newline at the end, so it's important that we remove it
+        // before eliding etc.  Also remove any other spaces from the end.
+        int lineLength = line.textLength();
+        while (lineLength && text.at(line.textStart() + lineLength - 1).isSpace())
+            --lineLength;
+
+        /* We want to just truncate the text, and not actually elide */
+        if (!viewPrivate->model()->textElide())
+            return text.left(line.textStart() + lineLength);
+
+        // Get the text to elide, but here we use a little trick - we append the elide
+        // character and then send it to elidedText.  There are three possible cases:
+        //
+        // 1. The original line length was too long to fit on the line.  In this case, it
+        // doesn't matter that we've added an elide character, because it will be cut off
+        // anyway.
+        //
+        // 2. The original line length was far too too short to fit on the line.  In this case,
+        // elidedText will do nothing, and so the elide character that we've added is shown
+        // only.
+        //
+        // 3. The original line length was only just too short to fit on the line.  In this
+        // case, adding the additional elide character will make it just too long, and so
+        // elidedText will remove it, along with a few of the last characters, and use its own
+        // eliding mechanism.
+        const QChar ellipsisChar(0x2026);
+        QString textToElide = text.mid(line.textStart(), lineLength) + ellipsisChar;
+
+        return text.left(line.textStart()) + fm.elidedText(textToElide, Qt::ElideRight, renderSize.width(), /*We have no option for showing mnemonics*/0);
     }
-
     return text;
 }
 
 qreal MLabelViewSimple::restrictedTextWidth(const QString &text, qreal width) const
-{   
+{
     qreal textWidth = -1.0;
     if (wrap()) {
         const QFontMetricsF metrics(viewPrivate->controller->font());
@@ -442,23 +481,59 @@ void MLabelViewSimple::adjustTextOffset()
     }
 }
 
-QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text) const
+QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text, int maximumLineCount) const
 {
     const_cast<MLabelViewSimple*>(this)->initializeTextProperties();
 
-    const bool equalWidth = (width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth();
+    if (maximumLineCount < 0) {
+        const bool equalWidth = (width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth();
+        if (equalWidth && staticText.text() == text)
+            return staticText.size();
+    } else if (maximumLineCount == 0) {
+        return QSizeF(0,0);
+    }
 
-    if (equalWidth && staticText.text() == text)
-        return staticText.size();
+    QTextLayout textLayout(text, font);
+    textLayout.setTextOption(staticText.textOption());
 
-    QStaticText staticText2(staticText);
-    staticText2.setTextOption(staticText.textOption());  // TODO: remove after Qt-bug #13368 has been fixed
-    staticText2.setTextWidth(width);
-    if (staticText2.text() != text)
-        staticText2.setText(text);
-    staticText2.prepare(QTransform(), font);
+    textLayout.beginLayout();
+    int lineCount = 0;
+    QFontMetricsF fm(font);
+    qreal leading = fm.leading();
+    qreal height = -leading;
+    forever {
+        QTextLine line = textLayout.createLine();
+        if (!line.isValid())
+            break;
 
-    return staticText2.size();
+        if (width >= 0)
+            line.setLineWidth(width);
+        else
+            line.setLineWidth(INT_MAX);
+        height += leading;
+        line.setPosition(QPointF(0.0, height));
+        height += line.height();
+        lineCount++;
+
+        if (maximumLineCount >= 0 && lineCount >= maximumLineCount) {
+            if (width < 0) {
+                //We need to work out the correct width, because we might want to an eliding
+                //character on the end of the text
+                QTextLine nextLine = textLayout.createLine();
+                if (nextLine.isValid()) {
+                    //We need to elide
+                    const QChar ellipsisChar(0x2026);
+                    QRectF lastLineRect = fm.boundingRect(text.mid(line.textStart(), line.textLength()) + ellipsisChar);
+                    textLayout.endLayout();
+                    return textLayout.boundingRect().united(lastLineRect).size();
+                }
+            }
+            break;
+        }
+    }
+    textLayout.endLayout();
+
+    return textLayout.boundingRect().size();
 }
 
 void MLabelViewSimple::markDirty()

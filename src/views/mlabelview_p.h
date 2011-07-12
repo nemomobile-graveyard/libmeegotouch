@@ -116,7 +116,7 @@ public:
      * \return The required size of the label to fit into the given width. If the width
      *         is smaller than 0 no restriction for the width is given.
      */
-    QSizeF sizeForWidth(qreal width, const QString &text) const;
+    QSizeF sizeForWidth(qreal width, const QString &text, int maximumLineCount) const;
 
     /**
      * \return Size for the constraint \a constraint. If the width or height
