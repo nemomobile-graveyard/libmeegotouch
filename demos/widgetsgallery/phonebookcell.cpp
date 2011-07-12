@@ -28,6 +28,7 @@
 #include <MLinearLayoutPolicy>
 #include <MImageWidget>
 #include <MProgressIndicator>
+#include <MSceneManager>
 
 PhoneBookCell::PhoneBookCell(QGraphicsItem *parent)
     : MListItem(parent),
@@ -150,8 +151,7 @@ QString PhoneBookCell::subtitle()
 
 void PhoneBookCell::setSubtitle(const QString &subtitle)
 {
-    if (layout && layout->policy() == landscapePolicy)
-        subtitleLabelWidget()->setText(subtitle);
+    subtitleLabelWidget()->setText(subtitle);
 }
 
 QImage PhoneBookCell::image()
