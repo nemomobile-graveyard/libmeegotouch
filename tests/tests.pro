@@ -207,6 +207,7 @@ SUBDIRS     =  \
     ut_mapplicationifproxy \
     ut_mdbusservicewaiter \
     ut_msyslogclient \
+    ut_mscenewindowscroller \
 
 # enable only when we have icu available
 
