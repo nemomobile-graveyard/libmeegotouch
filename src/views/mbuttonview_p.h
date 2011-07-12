@@ -88,6 +88,12 @@ public:
 
     virtual void updateItemsAfterModeChange();
 
+    // Ideally we would like MCheckBoxView to reimplement updateData(),
+    // but that wouldn't be 100% safe in terms of ABI compatibility.
+    // This virtual method was created as a workaround for this
+    // technical limitation.
+    virtual void onDownChanged();
+
     int pressTimeout() const;
     MButtonTransition* transition;
 

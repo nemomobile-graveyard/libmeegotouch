@@ -29,6 +29,7 @@ class MCheckboxViewPrivate : public MButtonViewPrivate
 public:
     MCheckboxViewPrivate();
     ~MCheckboxViewPrivate();
+    virtual void onDownChanged();
 };
 
 #endif

@@ -39,6 +39,21 @@ MCheckboxViewPrivate::~MCheckboxViewPrivate()
 {
 }
 
+void MCheckboxViewPrivate::onDownChanged()
+{
+    Q_Q(MCheckboxView);
+
+    if (!q->model()->down()) {
+        if (q->model()->checked()) {
+            q->style()->releaseOffFeedback().play();
+        } else {
+            q->style()->releaseOnFeedback().play();
+        }
+    }
+
+    MButtonViewPrivate::onDownChanged();
+}
+
 MCheckboxView::MCheckboxView(MButton *controller) :
     MButtonView(* new MCheckboxViewPrivate, controller)
 {
@@ -61,84 +76,17 @@ void MCheckboxView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
 
 void MCheckboxView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_UNUSED(event);
-    Q_D(MCheckboxView);
-
-    if (model()->down()) {
-        return;
-    }
-
-    // Honor MWidgetView's style and play press feedback.
-    style()->pressFeedback().play();
-
-    if (model()->checked()) {
-        style()->pressOffFeedback().play();
-    } else {
-        style()->pressOnFeedback().play();
-    }
-
-    model()->setDown(true);
-    d->transition->onPress();
+    MButtonView::mousePressEvent(event);
 }
 
 void MCheckboxView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_D(MCheckboxView);
-
-    QPointF touch = event->scenePos();
-    QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
-                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
-
-    if (rect.contains(touch)) {
-        if (!model()->down()) {
-            model()->setDown(true);
-	    d->transition->onPress();
-
-            // Honor MWidgetView's style and play press feedback.
-            style()->pressFeedback().play();
-
-            if (model()->checked()) {
-                style()->pressOffFeedback().play();
-            } else {
-                style()->pressOnFeedback().play();
-            }
-        }
-    } else {
-        if (model()->down()) {
-            model()->setDown(false);
-            style()->cancelFeedback().play();
-	    d->transition->onCancel();
-        }
-    }
-
+    MButtonView::mouseMoveEvent(event);
 }
 
 void MCheckboxView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_D(MCheckboxView);
-
-    if (!model()->down()) {
-        return;
-    }
-    model()->setDown(false);
-    d->transition->onRelease();
-
-    if (model()->checked()) {
-        style()->releaseOffFeedback().play();
-    } else {
-        style()->releaseOnFeedback().play();
-    }
-
-    // Honor MWidgetView's style and play release feedback.
-    style()->releaseFeedback().play();
-
-    QPointF touch = event->scenePos();
-    QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
-                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
-    if (rect.contains(touch))
-        model()->click();
+    MButtonView::mouseReleaseEvent(event);
 }
 
 M_REGISTER_VIEW_NEW(MCheckboxView, MButton)

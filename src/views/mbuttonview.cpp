@@ -366,6 +366,26 @@ void MButtonViewPrivate::updateLabelStyle()
     }
 }
 
+void MButtonViewPrivate::onDownChanged()
+{
+    Q_Q(MButtonView);
+
+    if (q->model()->down()) {
+        transition->onPress();
+        q->style()->pressFeedback().play();
+    } else {
+        if (!eventCancelled) {
+            transition->onRelease();
+            q->style()->releaseFeedback().play();
+        } else {
+            transition->onCancel();
+            q->style()->cancelFeedback().play();
+            eventCancelled = false;
+        }
+    }
+
+}
+
 MButtonView::MButtonView(MButton *controller) :
     MWidgetView(* new MButtonViewPrivate, controller)
 {
@@ -604,19 +624,7 @@ void MButtonView::updateData(const QList<const char *>& modifications)
                    member == MButtonModel::Checkable) {
             d->transition->refreshStyle();
         } else if (member == MButtonModel::Down) {
-            if (model()->down()) {
-                d->transition->onPress();
-                style()->pressFeedback().play();
-            } else {
-                if (!d->eventCancelled) {
-                    d->transition->onRelease();
-                    style()->releaseFeedback().play();
-                } else {
-                    d->transition->onCancel();
-                    style()->cancelFeedback().play();
-                    d->eventCancelled = false;
-                }
-            }
+            d->onDownChanged();
         }
     }
 
