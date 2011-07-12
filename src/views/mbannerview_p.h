@@ -93,6 +93,10 @@ protected:
     mutable bool timeShortNoDate;
 
     MBanner *controller;
+
+#ifdef UNIT_TEST
+    friend class Ut_MBannerView;
+#endif
 };
 
 #endif
