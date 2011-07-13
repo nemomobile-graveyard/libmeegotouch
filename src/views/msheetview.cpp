@@ -260,8 +260,11 @@ void MSheetViewPrivate::updateStyle()
     headerSlot->setStyleName(q->style()->headerSlotStyleName());
     centralSlot->setStyleName(q->style()->centralSlotStyleName());
 
-    headerSlot->setMinimumWidth(centralSlot->geometry().width());
     rootLayoutHeaderSpacer->setMinimumHeight(headerSlot->preferredHeight());
+
+    // Since headerSlot's geometry is not being managed by a QGraphicsLayout we
+    // have to set its geometry ourselves.
+    headerSlot->setGeometry(QRectF(QPointF(0.0f, 0.0f), headerSlot->preferredSize()));
 
     centralSlot->setPositionIndicatorStyleName(
                 q->style()->centralSlotPositionIndicatorStyleName());
