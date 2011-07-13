@@ -30,6 +30,8 @@
 
 LoginSheet::LoginSheet()
 {
+    setCentralWidgetSizePolicyRespected(true);
+
     fakeAuthenticationTimer.setSingleShot(true);
     fakeAuthenticationTimer.setInterval(2000);
     connect(&fakeAuthenticationTimer, SIGNAL(timeout()), SLOT(showLoginSuccessfulAndDismiss()));
@@ -62,6 +64,7 @@ void LoginSheet::setAutoFocusOnFirstTextEditEnabled(bool enabled)
 
 void LoginSheet::createCentralWidget()
 {
+    centralWidget()->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical,
                                                                   centralWidget());
     mainLayout->setContentsMargins(0,0,0,0);
@@ -101,8 +104,6 @@ void LoginSheet::createCentralWidget()
     textEdit->setStyleName(inv("CommonSingleInputFieldLabeled"));
     textEdit->setEchoMode(MTextEditModel::Password);
     mainLayout->addItem(textEdit);
-
-    mainLayout->addStretch();
 }
 
 void LoginSheet::createHeaderWidget()
