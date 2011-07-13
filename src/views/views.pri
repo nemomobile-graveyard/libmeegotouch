@@ -100,6 +100,7 @@ PRIVATE_HEADERS += \
     mcolorwidget.h \
     mcolorcomboboxview.h \
     mcolorlistview.h \
+    mslollayout.h \
 
 SOURCES += \
     mapplicationpageview.cpp \
@@ -170,4 +171,5 @@ SOURCES += \
     mcolorcomboboxview.cpp \
     mcolorlistview.cpp \
     mcolorwidget.cpp \
+    mslotlayout.cpp \
 

@@ -122,6 +122,25 @@ class M_CORE_EXPORT MSheet : public MSceneWindow
      */
     Q_PROPERTY(SystemwideModeOrientation systemwideModeOrientation READ systemwideModeOrientation WRITE setSystemwideModeOrientation)
 
+    // OBS: The property below exists because we want to fix an issue
+    // without causing a behavioral break.
+    // In a perfect world we wouldn't have it and the behavior
+    // would be the same as setting it to true.
+    /*!
+      \property MSheet::centralWidgetSizePolicyRespected
+      \brief Whether central widget's size policy should be used/respected.
+
+      If true, MSheet will consider central widget's size policy when setting its
+      geometry.
+
+      If false, central widget will always have the size of sheet's central area
+      regardless of his size policy. It effectively works as if his size policy
+      was set to QSizePolicy::Expanding on both directions.
+
+      By default this property is false.
+     */
+    Q_PROPERTY(bool centralWidgetSizePolicyRespected READ isCentralWidgetSizePolicyRespected WRITE setCentralWidgetSizePolicyRespected)
+
 public:
 
     /*!
@@ -255,6 +274,16 @@ public:
       \sa appearSystemwide()
      */
     void setSystemwideModeOrientation(SystemwideModeOrientation orientation);
+
+    /*!
+      \brief Returns whether central widget's size policy is being respected.
+     */
+    bool isCentralWidgetSizePolicyRespected() const;
+
+    /*!
+      \brief Sets whether central widget's size policy should be respected.
+     */
+    void setCentralWidgetSizePolicyRespected(bool enabled);
 
 private:
     Q_DECLARE_PRIVATE(MSheet)

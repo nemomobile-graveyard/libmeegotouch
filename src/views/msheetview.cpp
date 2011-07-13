@@ -22,6 +22,7 @@
 #include <msheet.h>
 #include "msheetview.h"
 #include "msheetview_p.h"
+#include "mslotlayout.h"
 #include <mpannableviewport.h>
 #include <mpositionindicator.h>
 
@@ -97,8 +98,10 @@ void MSheetSlot::hideSlot()
 /// MSheetCentralSlot
 
 MSheetCentralSlot::MSheetCentralSlot(QGraphicsItem *parent)
-    : MStylableWidget(parent), pannableViewport(0)
+    : MStylableWidget(parent), pannableViewport(0), pannedSlot(0)
 {
+    rootLayout = new MSlotLayout(this);
+    rootLayout->setContentsMargins(0, 0, 0, 0);
 }
 
 MSheetCentralSlot::~MSheetCentralSlot()
@@ -124,14 +127,14 @@ void MSheetCentralSlot::setWidget(QGraphicsWidget *widget)
 
     if (currentWidget) {
         if (pannedSlot) {
-            // slot will take care of removing widget from scene
-            pannedSlot->setWidget(0);
+            pannedSlot->layout()->removeAt(0);
         } else {
-            // we have to remove widget from scene ourselves
-            currentWidget->setParentItem(0);
-            if (scene())
-                scene()->removeItem(currentWidget);
+            rootLayout->setWidget(0);
         }
+        rootLayout->setSizePolicyProxyWidget(0);
+        currentWidget->setParentItem(0);
+        if (scene())
+            scene()->removeItem(currentWidget);
     }
 
     if (widget) {
@@ -139,14 +142,15 @@ void MSheetCentralSlot::setWidget(QGraphicsWidget *widget)
 
         if (qobject_cast<MPannableViewport*>(widget)) {
             destroyPannableViewportAndPannedSlot();
-            widget->setParentItem(this);
-            widget->setPos(0.0f, 0.0f);
+            rootLayout->setWidget(widget);
+            rootLayout->setSizePolicyProxyWidget(0);
         } else {
             createPannableViewportAndPannedSlot();
-            pannedSlot->setWidget(widget);
+            rootLayout->setWidget(pannableViewport);
+            static_cast<QGraphicsLinearLayout *>(pannedSlot->layout())
+                    ->addItem(widget);
+            rootLayout->setSizePolicyProxyWidget(widget);
         }
-
-        resizeChildWidget();
     } else {
         widgetPointer.clear();
         destroyPannableViewportAndPannedSlot();
@@ -160,24 +164,16 @@ void MSheetCentralSlot::setPositionIndicatorStyleName(const QString& name) {
     pannableViewport->positionIndicator()->setStyleName(name);
 }
 
+void MSheetCentralSlot::setWidgetSizePolicyRespected(bool respected)
+{
+    rootLayout->setIgnoreSizePolicies(!respected);
+}
+
 void MSheetCentralSlot::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_UNUSED(event);
-    resizeChildWidget();
-}
-
-void MSheetCentralSlot::resizeChildWidget()
-{
-    QGraphicsWidget *widget;
-
-    if (pannableViewport) {
-        widget = pannableViewport;
-    } else {
-        widget = widgetPointer.data();
-    }
-
-    if (widget) {
-        widget->resize(size());
+    if (pannedSlot) {
+        pannedSlot->setMaximumSize(size());
     }
 }
 
@@ -194,11 +190,14 @@ void MSheetCentralSlot::createPannableViewportAndPannedSlot()
         return;
 
     pannableViewport = new MPannableViewport(this);
-    pannableViewport->setPos(0.0f, 0.0f);
     pannableViewport->setObjectName("MSheetCentralSlotPannableViewport");
     pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
 
-    pannedSlot = new MSheetSlot;
+    pannedSlot = new QGraphicsWidget;
+    QGraphicsLinearLayout *pannedSlotLayout =
+            new QGraphicsLinearLayout(Qt::Vertical, pannedSlot);
+    pannedSlotLayout->setContentsMargins(0, 0, 0, 0);
+    pannedSlotLayout->setSpacing(0);
     pannedSlot->setObjectName("MSheetCentralSlotPannedSlot");
     pannedSlot->setFlag(QGraphicsItem::ItemHasNoContents);
     pannableViewport->setWidget(pannedSlot);
@@ -342,6 +341,7 @@ void MSheetView::setupModel()
     modifications << MSheetModel::HeaderWidget;
     modifications << MSheetModel::CentralWidget;
     modifications << MSheetModel::HeaderVisible;
+    modifications << MSheetModel::CentralWidgetSizePolicyRespected;
 
     updateData(modifications);
 }
@@ -360,6 +360,10 @@ void MSheetView::updateData(const QList<const char *> &modifications)
             d->centralSlot->setWidget(model()->centralWidget());
         } else if (member == MSheetModel::HeaderWidget)
             d->headerSlot->setWidget(model()->headerWidget());
+        else if (member == MSheetModel::CentralWidgetSizePolicyRespected) {
+            d->centralSlot->setWidgetSizePolicyRespected(
+                model()->centralWidgetSizePolicyRespected());
+        }
     }
 }
 

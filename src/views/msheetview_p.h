@@ -32,6 +32,7 @@ class MSheetView;
 class MSheetSlot;
 class MSheetSpacer;
 class MPannableViewport;
+class MSlotLayout;
 
 class MSheetViewPrivate : public MSceneWindowViewPrivate
 {
@@ -107,13 +108,16 @@ public:
 
     void setPositionIndicatorStyleName(const QString& name);
 
+    void setWidgetSizePolicyRespected(bool enabled);
+
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:
-    void resizeChildWidget();
     void destroyPannableViewportAndPannedSlot();
     void createPannableViewportAndPannedSlot();
+
+    MSlotLayout *rootLayout;
 
     // The sole purpose of this internal pannable is to guarantee
     // proper input widget relocation if the central widget doesn't
@@ -122,7 +126,7 @@ private:
     // We put the widget inside a slot instead of directly into the
     // pannable viewport to ensure that its size hints are not obeyed
     // by our internal pannable viewport.
-    MSheetSlot *pannedSlot;
+    QGraphicsWidget *pannedSlot;
 
 
     QWeakPointer<QGraphicsWidget> widgetPointer;

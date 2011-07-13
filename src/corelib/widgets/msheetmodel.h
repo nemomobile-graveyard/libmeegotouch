@@ -40,6 +40,14 @@ class M_CORE_EXPORT MSheetModel : public MSceneWindowModel
     M_MODEL_PTR_PROPERTY(QGraphicsWidget *, centralWidget, CentralWidget, true, new QGraphicsWidget)
 
     M_MODEL_PROPERTY(bool, headerVisible, HeaderVisible, true, true)
+
+    /*!
+      \property MSheetModel::centralWidgetSizePolicyRespected
+      \brief Same as MSheet::centralWidgetSizePolicyRespected
+
+      \sa MSheet::centralWidgetSizePolicyRespected
+     */
+    M_MODEL_PROPERTY(bool, centralWidgetSizePolicyRespected, CentralWidgetSizePolicyRespected, true, false)
 };
 
 #endif // MSHEETMODEL_H

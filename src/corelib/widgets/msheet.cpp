@@ -324,4 +324,14 @@ void MSheet::setSystemwideModeOrientation(MSheet::SystemwideModeOrientation orie
     }
 }
 
+bool MSheet::isCentralWidgetSizePolicyRespected() const
+{
+    return model()->centralWidgetSizePolicyRespected();
+}
+
+void MSheet::setCentralWidgetSizePolicyRespected(bool enabled)
+{
+    model()->setCentralWidgetSizePolicyRespected(enabled);
+}
+
 #include "moc_msheet.cpp"
