@@ -1,8 +1,22 @@
-libmeegotouch (0.23.4~1) unstable; urgency=low
+libmeegotouch (0.23.4-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#271257
+  * Fixes: NB#270106 - Fast scroll isn't shown on initial startup.
+  * Fixes: NB#271155 - MBannerViewPrivate leaks memory
+  * Fixes: NB#270387 - Fast scroll panning not working if panning is not done vertically
+  * Fixes: NB#269404 - If the top left corner of an MSlider is beyond the left edge of the screen the slider's groove won't be drawn
+  * Fixes: NB#247337 - [TASK] CSS background-repeat should be supported
+  * Fixes: NB#267555 - Thai and Vietnamese rendering not working properly
+  * Fixes: NB#265870 - Randomly when a notification comes, the window underneatch is changed to show something for 1s
+  * Fixes: NB#270670 - MDesktopEntry construction is slow when desktop entry has TranslationCatalogKey
+  * Fixes: NB#264396
+  * Fixes: NB#268062 - Segmentation fault when systemwide sheet's statusbar visibility state is changed during sheet is appearing.
+  * Fixes: NB#246264 - Improvements to notifications' timestamp format
+  * Fixes: NB#253429 - China Variant:Colon is missing in Time stamp for email.
+  * Fixes: NB#264208
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 04 Jul 2011 15:07:39 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 13 Jul 2011 12:37:24 +0300
 
 libmeegotouch (0.23.3-1) unstable; urgency=low
 
