@@ -65,5 +65,15 @@ private slots:
     void testMultipleGroupNames();
     void testGroupNameLocation();
     void testInvalidGroupNames();
+
+    void testContainsInGroup();
+    void testValueInGroup();
+    void testHash();
+    void testNameUnlocalized();
+    void testOnlyShowIn();
+    void testNotShowIn();
+    void testMimeType();
+    void testStartupWMClass();
+    void testUrl();
 };
 #endif

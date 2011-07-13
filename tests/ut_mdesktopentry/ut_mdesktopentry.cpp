@@ -21,7 +21,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include <MLocale>
-#include <mdesktopentry.h>
+#include "mdesktopentry.h"
 #include "mdesktopentry_p.h"
 #include "ut_mdesktopentry.h"
 #include "mlocale_stub.h"
@@ -448,6 +448,98 @@ void Ut_MDesktopEntry::testInvalidGroupNames()
         m_subject = new MockMDesktopEntry(ValueList(), additionalGroups, false);
         QCOMPARE(m_subject->isValid(), false);
     }
+}
+
+void Ut_MDesktopEntry::testContainsInGroup()
+{
+    QString key = "testkey";
+    QString value = "testvalue";
+    QString group = "Test Group";
+
+    ValueGroupList additionalGroups;
+    additionalGroups.append(ValueGroup(group, ValueList() << Value(key, value)));
+    m_subject = new MockMDesktopEntry(ValueList(), additionalGroups);
+
+    QCOMPARE(m_subject->contains(group, key), true);
+
+    QCOMPARE(m_subject->contains("", value), false);
+
+    QCOMPARE(m_subject->contains(group, ""), false);
+
+    QCOMPARE(m_subject->contains("", ""), false);
+}
+
+void Ut_MDesktopEntry::testValueInGroup()
+{
+    QString key = "testkey";
+    QString value = "testvalue";
+    QString group = "Test Group";
+
+    ValueGroupList additionalGroups;
+    additionalGroups.append(ValueGroup(group, ValueList() << Value(key, value)));
+    m_subject = new MockMDesktopEntry(ValueList(), additionalGroups);
+
+    QCOMPARE(m_subject->value(group, ""), QString());
+    QCOMPARE(m_subject->value("", key), QString());
+
+    QCOMPARE(m_subject->value(group, key), value);
+}
+
+void Ut_MDesktopEntry::testHash()
+{
+    m_subject = new MockMDesktopEntry(ValueList());
+    QVERIFY(m_subject->MDesktopEntry::hash());
+}
+
+void Ut_MDesktopEntry::testNameUnlocalized()
+{
+    m_subject = new MockMDesktopEntry(ValueList());
+    QVERIFY(m_subject->nameUnlocalized() != QString());
+}
+
+void Ut_MDesktopEntry::testOnlyShowIn()
+{
+    ValueGroupList additionalGroups;
+    additionalGroups.append(ValueGroup("Desktop Entry", ValueList() << Value("OnlyShowIn", "test;")));
+    m_subject = new MockMDesktopEntry(ValueList(), additionalGroups);
+
+    QVERIFY(!m_subject->onlyShowIn().isEmpty());
+}
+
+void Ut_MDesktopEntry::testNotShowIn()
+{
+    ValueGroupList additionalGroups;
+    additionalGroups.append(ValueGroup("Desktop Entry", ValueList() << Value("NotShowIn", "test;")));
+    m_subject = new MockMDesktopEntry(ValueList(), additionalGroups);
+
+    QVERIFY(!m_subject->notShowIn().isEmpty());
+}
+
+void Ut_MDesktopEntry::testMimeType()
+{
+    ValueGroupList additionalGroups;
+    additionalGroups.append(ValueGroup("Desktop Entry", ValueList() << Value("MimeType", "test;")));
+    m_subject = new MockMDesktopEntry(ValueList(), additionalGroups);
+
+    QVERIFY(!m_subject->mimeType().isEmpty());
+}
+
+void Ut_MDesktopEntry::testStartupWMClass()
+{
+    ValueGroupList additionalGroups;
+    additionalGroups.append(ValueGroup("Desktop Entry", ValueList() << Value("StartupWMClass", "test")));
+    m_subject = new MockMDesktopEntry(ValueList(), additionalGroups);
+
+    QVERIFY(m_subject->startupWMClass() != QString());
+}
+
+void Ut_MDesktopEntry::testUrl()
+{
+    ValueGroupList additionalGroups;
+    additionalGroups.append(ValueGroup("Desktop Entry", ValueList() << Value("URL", "test")));
+    m_subject = new MockMDesktopEntry(ValueList(), additionalGroups);
+
+    QVERIFY(m_subject->url() != QString());
 }
 
 QTEST_MAIN(Ut_MDesktopEntry)

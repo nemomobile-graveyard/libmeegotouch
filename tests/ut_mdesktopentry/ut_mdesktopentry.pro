@@ -8,8 +8,8 @@ HEADERS += ut_mdesktopentry.h \
     $$MSRCDIR/corelib/i18n/mlocale.h \
     $$STUBSDIR/stubbase.h
 
-SOURCES += ut_mdesktopentry.cpp \
-    $$MSRCDIR/corelib/core/mdesktopentry.cpp \
+SOURCES += $$MSRCDIR/corelib/core/mdesktopentry.cpp \
+    ut_mdesktopentry.cpp \
     $$STUBSDIR/stubbase.cpp
 
 
