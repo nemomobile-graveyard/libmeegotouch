@@ -21,6 +21,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include <mlist.h>
+#include <mlistfilter.h>
 #include <mcontentitem.h>
 #include <mabstractcellcreator.h>
 #include <mapplication.h>
@@ -36,7 +37,7 @@ class MContentItemCreator : public MAbstractCellCreator<MContentItem>
 public:
     MContentItemCreator()
     {
-       destroyed = false;
+        destroyed = false;
     }
 
     ~MContentItemCreator()
@@ -46,7 +47,7 @@ public:
 
     void updateCell(const QModelIndex& index, MWidget * cell) const
     {
-       MContentItem * contentItem = qobject_cast<MContentItem *>(cell);
+        MContentItem * contentItem = qobject_cast<MContentItem *>(cell);
         QVariant data = index.data(Qt::DisplayRole);
         QStringList rowData = data.value<QStringList>();
         contentItem->boundingRect();
@@ -91,7 +92,7 @@ void Ut_mlist::initTestCase()
 
 void Ut_mlist::cleanupTestCase()
 {
-        delete app;
+    delete app;
 }
 
 void Ut_mlist::testCreateListWithIndexedModel()
@@ -156,6 +157,24 @@ void Ut_mlist::testScrollTo()
     QModelIndex result = qvariant_cast<QModelIndex>(spy.at(0).at(0));
 
     QCOMPARE( result, index );
+
+    QSignalSpy spy2(m_subject, SIGNAL(scrollToIndex(QModelIndex)));
+
+    m_subject->scrollTo(index, MList::EnsureVisibleHint); //triggering the signal
+
+    QCOMPARE(spy2.count(), 1); // make sure the signal was emitted exactly one time
+    QModelIndex result2 = qvariant_cast<QModelIndex>(spy2.at(0).at(0));
+
+    QCOMPARE( result2, index );
+
+    QSignalSpy spy3(m_subject, SIGNAL(scrollToIndex(QModelIndex)));
+
+    m_subject->scrollTo(index, MList::Animated); //triggering the signal
+
+    QCOMPARE(spy3.count(), 1); // make sure the signal was emitted exactly one time
+    QModelIndex result3 = qvariant_cast<QModelIndex>(spy3.at(0).at(0));
+
+    QCOMPARE( result3, index );
 
     delete indexedModel;
 }
@@ -394,8 +413,8 @@ QVariant MyIndexedModel::data(const QModelIndex &index, int role) const
 
 //ListTesterModel class
 ListTesterModel::ListTesterModel(QObject* parent)
-: QAbstractListModel(parent),
-  elementType(Button)
+    : QAbstractListModel(parent),
+      elementType(Button)
 {
     theHeaderData.append("Title");
     theHeaderData.append("Subtitle");
@@ -416,7 +435,7 @@ bool ListTesterModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
     if (row < 0)
-    return false;
+        return false;
     beginInsertRows(QModelIndex(), row, row + count - 1);
     QStringList listNames;
     int firstIndex = theData.size();
@@ -452,15 +471,13 @@ int ListTesterModel::columnCount ( const QModelIndex & parent ) const {
 
 QVariant ListTesterModel::data(const QModelIndex& index, int role) const
 {
-
-
-   if (role == Qt::DisplayRole) {
+    if (role == Qt::DisplayRole) {
         if(index.isValid() && index.row() < theData.size()) {
             QStringList rowData = theData[index.row()];
             return QVariant(rowData);
         }
     }
-   return QVariant();
+    return QVariant();
 }
 
 QVariant ListTesterModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -471,6 +488,49 @@ QVariant ListTesterModel::headerData(int section, Qt::Orientation orientation, i
         }
     }
     return QVariant();
+}
+
+void Ut_mlist::testIndexMagnifierDataRole()
+{
+    m_subject->setIndexMagnifierDataRole(7);
+
+    QCOMPARE(m_subject->indexMagnifierDataRole(), 7);
+}
+
+void Ut_mlist::testSetOptimizationFlag()
+{
+    m_subject->setOptimizationFlag(MList::DontCallCreateCellDuringUpdate, true);
+
+    QVERIFY(m_subject->optimizationFlags() & MList::DontCallCreateCellDuringUpdate);
+
+    m_subject->setOptimizationFlag(MList::DontCallCreateCellDuringUpdate, false);
+
+    QCOMPARE(m_subject->optimizationFlags() & MList::DontCallCreateCellDuringUpdate, 0);
+}
+
+void Ut_mlist::testConnectNotify()
+{
+    connect(m_subject, SIGNAL(itemLongTapped(QModelIndex,QPointF)),
+            this, SIGNAL(itemLongTapped(QModelIndex,QPointF)));
+
+    m_subject->connectNotify(SIGNAL(itemLongTapped(QModelIndex,QPointF)));
+
+    disconnect(m_subject, SIGNAL(itemLongTapped(QModelIndex,QPointF)),
+               this, SIGNAL(itemLongTapped(QModelIndex,QPointF)));
+}
+
+void Ut_mlist::testDisconnectNotify()
+{
+    m_subject->disconnectNotify(SIGNAL(itemLongTapped(QModelIndex,QPointF)));
+}
+
+void Ut_mlist::testKeyPressEvent()
+{
+    m_subject->filtering()->setEnabled(true);
+    QKeyEvent *keyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_0, Qt::NoModifier);
+    m_subject->keyPressEvent(keyEvent);
+
+    delete keyEvent;
 }
 
 QTEST_APPLESS_MAIN(Ut_mlist)

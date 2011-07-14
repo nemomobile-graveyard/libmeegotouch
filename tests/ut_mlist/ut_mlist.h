@@ -106,6 +106,14 @@ private slots:
     void testLongTap();
     void testModelScrollTo();
 
+    void testIndexMagnifierDataRole();
+    void testSetOptimizationFlag();
+    void testConnectNotify();
+    void testDisconnectNotify();
+    void testKeyPressEvent();
+
+signals:
+	void itemLongTapped(QModelIndex, QPointF);
 
 private:
     MList *m_subject;

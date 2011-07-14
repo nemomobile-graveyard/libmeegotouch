@@ -540,6 +540,10 @@ private:
     Q_DECLARE_PRIVATE(MList)
     Q_DISABLE_COPY(MList)
     friend class MListView;
+
+#ifdef UNIT_TEST
+    friend class Ut_mlist;
+#endif
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MList::ListOptimizationFlags)
