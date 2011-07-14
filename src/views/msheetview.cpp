@@ -45,7 +45,8 @@ MSheetSlot::~MSheetSlot()
     QGraphicsWidget *widget = widgetPointer.data();
     if (widget) {
         widget->setParentItem(0);
-        scene()->removeItem(widget);
+        if (scene())
+            scene()->removeItem(widget);
         widgetPointer.clear();
     }
 }
