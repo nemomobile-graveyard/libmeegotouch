@@ -43,6 +43,10 @@ private slots:
 
     void testHeaderHiding();
 
+    void testCentralWidgetSizePolicyRespected_preferred();
+    void testCentralWidgetSizePolicyRespected_expanding();
+    void testCentralWidgetSizePolicyIgnored();
+
 private:
     MApplication* app;
     MWindow* window;

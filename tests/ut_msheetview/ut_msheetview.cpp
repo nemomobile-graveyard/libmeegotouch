@@ -141,4 +141,62 @@ void Ut_MSheetView::testHeaderHiding()
     QVERIFY(subject->d_func()->headerSlot->isVisible() == true);
 }
 
+void Ut_MSheetView::testCentralWidgetSizePolicyRespected_preferred()
+{
+    QGraphicsWidget *centralWidget = new QGraphicsWidget;
+    QSizeF preferredSize(20.0f, 10.0f);
+    centralWidget->setPreferredSize(preferredSize);
+
+    sheet->setCentralWidgetSizePolicyRespected(true);
+    sheet->setCentralWidget(centralWidget);
+
+    window->sceneManager()->appearSceneWindowNow(sheet);
+
+    // It might take some iterations for all layouts to act
+    app->processEvents();
+    app->processEvents();
+
+    QCOMPARE(centralWidget->size(), preferredSize);
+}
+
+void Ut_MSheetView::testCentralWidgetSizePolicyRespected_expanding()
+{
+    QGraphicsWidget *centralWidget = new QGraphicsWidget;
+    QSizeF preferredSize(20.0f, 10.0f);
+    centralWidget->setPreferredSize(preferredSize);
+    centralWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+    sheet->setCentralWidgetSizePolicyRespected(true);
+    sheet->setCentralWidget(centralWidget);
+
+    window->sceneManager()->appearSceneWindowNow(sheet);
+
+    // It might take some iterations for all layouts to act
+    app->processEvents();
+    app->processEvents();
+
+    QSizeF expectedSize(subject->d_func()->centralSlot->size().width(), 10.0f);
+    QCOMPARE(centralWidget->size(), expectedSize);
+}
+
+void Ut_MSheetView::testCentralWidgetSizePolicyIgnored()
+{
+    QGraphicsWidget *centralWidget = new QGraphicsWidget;
+    QSizeF preferredSize(20.0f, 10.0f);
+    centralWidget->setPreferredSize(preferredSize);
+
+    sheet->setCentralWidget(centralWidget);
+
+    window->sceneManager()->appearSceneWindowNow(sheet);
+
+    // It might take some iterations for all layouts to act
+    app->processEvents();
+    app->processEvents();
+
+    // Preferred height is ignored and it will be stretched to fill
+    // the entire central slot
+    QCOMPARE(centralWidget->size(),
+             subject->d_func()->centralSlot->size());
+}
+
 QTEST_APPLESS_MAIN(Ut_MSheetView)
