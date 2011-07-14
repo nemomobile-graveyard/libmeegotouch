@@ -262,7 +262,7 @@
         <location filename="../views/mcomboboxview.cpp" line="82"/>
         <source>Tap to Select</source>
         <extracomment>Default value for Popup List button sub-label when no item has been selected yet</extracomment>
-        <translation>Tap to Select</translation>
+        <translation>Tap to select</translation>
     </message>
 </context>
 </TS>
