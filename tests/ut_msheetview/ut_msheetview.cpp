@@ -25,8 +25,9 @@
 #include "msheetview_p.h"
 
 #include "mapplication.h"
-#include "mapplicationwindow.h"
+#include "mwindow.h"
 #include "mbasicsheetheader.h"
+#include <mscenemanager.h>
 #include "qanimationgroup.h"
 
 MApplication *app;
@@ -41,31 +42,38 @@ void Ut_MSheetView::initTestCase()
     static int argc = 2;
     static char *app_name[2] = { (char *) "./ut_msheetview", (char *) "-software" };
     app = new MApplication(argc, app_name);
-
-    sheet = new MSheet;
-    subject = new MSheetView(sheet);
-    sheet->setView(subject);
-
-    window = new MApplicationWindow;
-    window->show();
-
-    QTest::qWaitForWindowShown(window);
-
-    sheet->appear(window);
-    sheet->setHeaderWidget(new MBasicSheetHeader);
 }
 
 void Ut_MSheetView::cleanupTestCase()
 {
-    delete sheet;
-    sheet = 0;
     delete app;
     app = 0;
 }
 
+void Ut_MSheetView::init()
+{
+    sheet = new MSheet;
+    subject = new MSheetView(sheet);
+    sheet->setView(subject);
+
+    window = new MWindow;
+}
+
+void Ut_MSheetView::cleanup()
+{
+    delete sheet;
+    sheet = 0;
+    subject = 0; // destroyed by sheet
+
+    delete window;
+    window = 0;
+}
+
 void Ut_MSheetView::testHeaderHiding()
 {
-    QTest::qWaitForWindowShown(window);
+    window->show();
+
+    window->sceneManager()->appearSceneWindowNow(sheet);
 
     QRectF initHeaderGeometry = subject->d_func()->headerSlot->geometry();
     QRectF initCentralGeometry = subject->d_func()->centralSlot->geometry();

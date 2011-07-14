@@ -27,7 +27,7 @@ class MSheetView;
 class MApplication;
 class MApplicationPage;
 class MSheet;
-class MApplicationWindow;
+class MWindow;
 
 class Ut_MSheetView : public QObject
 {
@@ -36,14 +36,16 @@ public:
     Ut_MSheetView();
 
 private slots:
-    void initTestCase();
-    void cleanupTestCase();
+    void initTestCase();     // called once before all tests
+    void cleanupTestCase(); // called once after all tests
+    void init(); // called before every single test
+    void cleanup(); // called after every single test
 
     void testHeaderHiding();
 
 private:
     MApplication* app;
-    MApplicationWindow* window;
+    MWindow* window;
     MSheetView *subject;
     MSheet* sheet;
 };
