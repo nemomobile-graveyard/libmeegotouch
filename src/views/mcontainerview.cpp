@@ -214,6 +214,11 @@ void MContainerViewPrivate::layoutProgressIndicator()
     if (header) {
         headerLayout->insertItem(1, progressIndicator);
         headerLayout->setAlignment(progressIndicator,  Qt::AlignVCenter | Qt::AlignRight);
+
+        // otherwise it will be shown on the top left for an instant before
+        // settling down on its correct position.
+        headerLayout->activate();
+
         progressIndicator->show();
     }
 }
