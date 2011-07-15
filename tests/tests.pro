@@ -208,6 +208,7 @@ SUBDIRS     =  \
     ut_mdbusservicewaiter \
     ut_msyslogclient \
     ut_mscenewindowscroller \
+    ut_mdebug \
 
 # enable only when we have icu available
 
