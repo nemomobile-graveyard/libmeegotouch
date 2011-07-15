@@ -913,9 +913,9 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
 
     QRectF geom = calculateSceneWindowGeometry(window);
 
-    // restart running navigationbar appearance animation to update animation endValues
+    // restart running navigationbar's and sheet's appearance animation to update animation endValues
     MAbstractWidgetAnimation* animation = window->d_func()->appearanceAnimation;
-    if (window->windowType() == MSceneWindow::NavigationBar &&
+    if ((window->windowType() == MSceneWindow::NavigationBar || window->windowType() == MSceneWindow::Sheet) &&
         animation && animation->state() == QAbstractAnimation::Running)
     {
         animation->stop();
