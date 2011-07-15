@@ -414,27 +414,35 @@ void MBannerViewPrivate::layoutFullEventBanner()
         icon()->setVisible(false);
         pixmap()->setVisible(true);
         gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
-    } else {
+    } else if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("FullEventBannerIcon");
         icon()->setVisible(true);
         pixmap()->setVisible(false);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
+    } else {
+        icon()->setVisible(false);
+        pixmap()->setVisible(false);
     }
 
-    title()->setStyleName("FullEventBannerTitle");
-    title()->setVisible(true);
-    title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    title()->setWordWrap(true);
-    title()->setTextElide(true);
-    gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
+    if (!q->model()->title().isEmpty()) {
+        title()->setStyleName("FullEventBannerTitle");
+        title()->setVisible(true);
+        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        title()->setWordWrap(true);
+        title()->setTextElide(true);
+        gridBanner->addItem(title(), 0, 1);
+    } else {
+        title()->setVisible(false);
+    }
 
-
-    subtitle()->setStyleName("FullEventBannerSubtitle");
-    subtitle()->setVisible(true);
-    subtitle()->setWordWrap(false);
-    gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
-
-
+    if (!q->model()->subtitle().isEmpty()) {
+        subtitle()->setStyleName("FullEventBannerSubtitle");
+        subtitle()->setVisible(true);
+        subtitle()->setWordWrap(false);
+        gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+    } else {
+        subtitle()->setVisible(false);
+    }
     //Prefix is not show if it doesn't come with a valid datetime
     if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
@@ -448,11 +456,20 @@ void MBannerViewPrivate::layoutFullEventBanner()
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
-        gridBanner->addItem(layoutStamp, 2, 1,Qt::AlignTop);
+        //If the subtitle is not there timestamp & prefix go one row up
+        if (subtitle()->isVisible()) {
+            gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(layoutStamp, 1, 1, Qt::AlignTop);
+        }
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("FullEventBannerTimeStampIsolated");
-        gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+        if (subtitle()->isVisible()) {
+            gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
+        }
     } else {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setVisible(false);
@@ -472,25 +489,35 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         icon()->setVisible(false);
         pixmap()->setVisible(true);
         gridBanner->addItem(pixmap(), 0, 0, 3, 1, Qt::AlignTop);
-    } else {
+    } else if (!q->model()->iconID().isEmpty()) {
         icon()->setStyleName("LockScreenEventBannerIcon");
         icon()->setVisible(true);
         pixmap()->setVisible(false);
         gridBanner->addItem(icon(), 0, 0, 3, 1, Qt::AlignTop);
+    } else {
+        icon()->setVisible(false);
+        pixmap()->setVisible(false);
     }
 
-    title()->setStyleName("LockScreenEventBannerTitle");
-    title()->setVisible(true);
-    title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    title()->setWordWrap(true);
-    title()->setTextElide(true);
-    gridBanner->addItem(title(), 0, 1, Qt::AlignTop);
+    if (!q->model()->title().isEmpty()) {
+        title()->setStyleName("LockScreenEventBannerTitle");
+        title()->setVisible(true);
+        title()->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        title()->setWordWrap(true);
+        title()->setTextElide(true);
+        gridBanner->addItem(title(), 0, 1);
+    } else {
+        title()->setVisible(false);
+    }
 
-    subtitle()->setStyleName("LockScreenEventBannerSubtitle");
-    subtitle()->setVisible(true);
-    subtitle()->setWordWrap(false);
-    gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
-
+    if (!q->model()->subtitle().isEmpty()) {
+        subtitle()->setStyleName("LockScreenEventBannerSubtitle");
+        subtitle()->setVisible(true);
+        subtitle()->setWordWrap(false);
+        gridBanner->addItem(subtitle(), 1, 1, Qt::AlignTop);
+    } else {
+        subtitle()->setVisible(false);
+    }
     //Prefix is not show if it doesn't come with a valid datetime
     if (!q->model()->prefixTimeStamp().isEmpty() && q->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = new QGraphicsLinearLayout(gridBanner);
@@ -504,11 +531,20 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         layoutStamp->addItem(prefixTimeStamp());
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
-        gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
+        //If the subtitle is not there timestamp & prefix go one row up
+        if (subtitle()->isVisible()) {
+            gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(layoutStamp, 1, 1, Qt::AlignTop);
+        }
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("LockScreenEventBannerTimeStampIsolated");
-        gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+        if (subtitle()->isVisible()) {
+            gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
+        }
     } else {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setVisible(false);
