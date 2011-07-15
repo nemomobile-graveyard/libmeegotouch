@@ -94,8 +94,11 @@ class MBannerPrivate;
     a good practice <b>you should setup one of the mentioned stylenames</b> to avoid conflicts
     in the look and feel.
 
-    By default MBanner is dismissed automatically after a certain amount of time. This
-    parameter is defined in mbannerstyle.css under the name of disappear-timeout.
+    By default MBanner <b>is dismissed automatically after a certain amount of time</b>. This
+    parameter is defined in <b>mbannerstyle.css under the name of disappear-timeout</b>.
+
+    <b>If you want to customized the timeout of your banner, you must modified the
+    parameter "disappear-timeout" in your custom css.</b>
 
     The whole MBanner is interactive. If you click the MBanner before the diappear-timeout
     is reached it will be dismissed.
