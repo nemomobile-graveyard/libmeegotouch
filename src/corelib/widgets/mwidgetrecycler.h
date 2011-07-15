@@ -91,8 +91,10 @@ public:
     /*!
       \brief Puts a new widget to the recycler.
 
-      Widget ownership is transferred to recycler. If the widget recycler is full,
-      widget will be deleted.
+      If the widget recycler is full, widget will be deleted.
+      Widget ownership is transferred to recycler but, due to performance reasons, the item parent is not
+      effectively changed, so the application must ensure that the widget doesn't get deleted once put into
+      the recycler (for example, resetting the item's parent if the parent is going to be deleted).
 
       Recycler will check if widget has a property MWidgetRecycler::RecycledObjectIdentifier it will use it's
       value as a identifier, otherwise recycler will use class name.
@@ -102,7 +104,9 @@ public:
     /*!
       \brief Returns a widget from the recycler, if available.
 
-      Ownership of returned widget is transferred to the user.
+      Ownership of returned widget is transferred to the user. If the previous parent of the widget is not valid,
+      the caller is responsible for setting a new appropriate parent to it.
+
       Returns 0 if no widget of the specified class is available.
 
       \sa recycle(MWidget *)
