@@ -1,8 +1,10 @@
-libmeegotouch (0.23.5~1) unstable; urgency=low
+libmeegotouch (0.23.5-1) unstable; urgency=low
 
-  * [unreleased] 
+  * New version
+  * Fixes: NB#258052 - MContainer and instantaneous bad position of progress indicator after using toggleProgressIndicatorVisible()
+  * Fixes: NB#265183 - To-do status is not working as expected
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 13 Jul 2011 12:41:54 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 15 Jul 2011 14:59:38 +0300
 
 libmeegotouch (0.23.4-1) unstable; urgency=low
 
