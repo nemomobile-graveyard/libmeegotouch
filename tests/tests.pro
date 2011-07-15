@@ -209,6 +209,7 @@ SUBDIRS     =  \
     ut_msyslogclient \
     ut_mscenewindowscroller \
     ut_mdebug \
+    ut_mpannableviewportscroller \
 
 # enable only when we have icu available
 
