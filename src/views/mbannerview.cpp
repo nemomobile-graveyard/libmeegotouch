@@ -457,7 +457,7 @@ void MBannerViewPrivate::layoutFullEventBanner()
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setVisible(false);
     }
-    isDownOpacityEnabled = true;
+    isDownOpacityEnabled = false;
 }
 
 void MBannerViewPrivate::layoutLockScreenEventBanner()
@@ -513,7 +513,7 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setVisible(false);
     }
-    isDownOpacityEnabled = true;
+    isDownOpacityEnabled = false;
 }
 
 void MBannerViewPrivate::layoutPrivateEventBanner()
@@ -572,7 +572,7 @@ void MBannerViewPrivate::layoutPrivateEventBanner()
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setVisible(false);
     }
-    isDownOpacityEnabled = true;
+    isDownOpacityEnabled = false;
 }
 
 void MBannerViewPrivate::initDynamicLayout()
