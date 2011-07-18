@@ -199,4 +199,34 @@ void Ut_MSheetView::testCentralWidgetSizePolicyIgnored()
              subject->d_func()->centralSlot->size());
 }
 
+void Ut_MSheetView::testCentralWidgetDoesntGrowBeyondCentralSlot_data()
+{
+    QTest::addColumn<bool>("respectSizePolicy");
+
+    QTest::newRow("respect size policy") << true;
+    QTest::newRow("ignore size policy") << false;
+}
+
+void Ut_MSheetView::testCentralWidgetDoesntGrowBeyondCentralSlot()
+{
+    QFETCH(bool, respectSizePolicy);
+    QGraphicsWidget *centralWidget = new QGraphicsWidget;
+    // A really tall widget
+    QSizeF preferredSize(window->size().width(),
+                         window->size().height()*10.0f);
+    centralWidget->setPreferredSize(preferredSize);
+
+    sheet->setCentralWidgetSizePolicyRespected(respectSizePolicy);
+    sheet->setCentralWidget(centralWidget);
+
+    window->sceneManager()->appearSceneWindowNow(sheet);
+
+    // It might take some iterations for all layouts to act
+    app->processEvents();
+    app->processEvents();
+
+    QSizeF expectedSize(subject->d_func()->centralSlot->size());
+    QCOMPARE(centralWidget->size(), expectedSize);
+}
+
 QTEST_APPLESS_MAIN(Ut_MSheetView)

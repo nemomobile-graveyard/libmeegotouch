@@ -47,6 +47,15 @@ private slots:
     void testCentralWidgetSizePolicyRespected_expanding();
     void testCentralWidgetSizePolicyIgnored();
 
+    /*
+      We want to ensure that the central widget never grows
+      beyond the limits of the central slot.
+
+      Regression test for NB#264117
+     */
+    void testCentralWidgetDoesntGrowBeyondCentralSlot_data();
+    void testCentralWidgetDoesntGrowBeyondCentralSlot();
+
 private:
     MApplication* app;
     MWindow* window;
