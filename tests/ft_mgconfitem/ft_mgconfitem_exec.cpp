@@ -306,15 +306,15 @@ void MGConfItemTests::set_external()
     // This must be the last test case.  The values that are set here
     // are checked after this program exits.
 
-    boolItem->set(false);
-    intItem->set(54321);
-    stringItem->set("Good bye GConf");
-    doubleItem->set(-2.5);
-    stringListItem->set(QStringList() << "Good" << "bye" << "GConf" << QString::fromUtf8("äöü"));
-    intListItem->set(QList<QVariant>() << 5 << 4 << 3 << 2 << 1);
-    doubleListItem->set(QList<QVariant>() << -2.5 << -2.5);
-    boolListItem->set(QList<QVariant>() << false << false << true << true);
-    unsetAfterItem->set(QVariant());
+    boolItem->set(true);
+    intItem->set(123);
+    stringItem->set("Hello GConf");
+    doubleItem->set(3.5);
+    stringListItem->set(QStringList() << "Hello" << "GConf" << QString::fromUtf8("ÄÖÜ"));
+    intListItem->set(QList<QVariant>() << 1 << 2 << 3 << 4);
+    doubleListItem->set(QList<QVariant>() << 3.5 << 3.5 << 3.5);
+    boolListItem->set(QList<QVariant>() << false << true << true << false);
+    unsetBeforeItem->unset();
 }
 
 QTEST_MAIN(MGConfItemTests);
