@@ -301,7 +301,7 @@ void Pt_MCalendar::benchmarkFormatDateTime()
 
     QCOMPARE(locale.formatDateTime(
                  calendar, MLocale::DateFull, MLocale::TimeFull),
-             QString("tiistai 13. heinäkuuta 2010 14:51:07 Itä-Euroopan kesäaika"));
+             QString("Tiistai 13. heinäkuuta 2010 14:51:07 Itä-Euroopan kesäaika"));
 
     QBENCHMARK {
         locale.formatDateTime(
@@ -316,7 +316,7 @@ void Pt_MCalendar::benchmarkFormatDateTimeICU()
     QString lcTime("fi_FI@mix-time-and-language=no"); // this overrides language
     QString lcNumeric("en_US");  // should not matter
     QString formatString("cccc d. MMMM y H:mm:ss zzzz");
-    QString formattedResult("tiistai 13. heinäkuuta 2010 14:51:07 Itä-Euroopan kesäaika");
+    QString formattedResult("Tiistai 13. heinäkuuta 2010 14:51:07 Itä-Euroopan kesäaika");
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
