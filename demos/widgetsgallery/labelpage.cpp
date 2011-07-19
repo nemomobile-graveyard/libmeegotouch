@@ -34,6 +34,8 @@ LabelPage::LabelPage()
     : TemplatePage(TemplatePage::SimpleWidgets),
       simpleLabel(0),
       richLabel(0),
+      ignoreClickAndLongPressCheckbox(0),
+      ignoreClickAndLongPressLabel(0),
       phoneHighlighter(0),
       urlHighlighter(0),
       emailHighlighter(0),
@@ -72,6 +74,16 @@ void LabelPage::createContent()
     richLabel->setWordWrap(true);
     containerPolicy->addItem(richLabel);
 
+    ignoreClickAndLongPressLabel = new MLabel;
+    ignoreClickAndLongPressLabel->setTextElide(true);
+    containerPolicy->addItem(ignoreClickAndLongPressLabel);
+
+    ignoreClickAndLongPressCheckbox = new MButton;
+    ignoreClickAndLongPressCheckbox->setViewType(MButton::checkboxType);
+    ignoreClickAndLongPressCheckbox->setCheckable(true);
+    ignoreClickAndLongPressCheckbox->setChecked(true);
+    containerPolicy->addItem(ignoreClickAndLongPressCheckbox);
+
     QRegExp phoneregexp("[\\+]{0,1}(\\d{8,13}|[\\(][\\+]{0,1}\\d{2,}[\\)]*\\d{5,13}|\\d{2,6}[\\-]{1}\\d{2,13}[\\-]*\\d{3,13})",
                         Qt::CaseInsensitive);
     QRegExp emailregexp("([0-9A-Z]([-\\.\\w]*[0-9A-Z])*@([0-9A-Z][-\\w]*[0-9A-Z]\\.)+[A-Z]{2,9})",
@@ -97,6 +109,8 @@ void LabelPage::createContent()
 
     connect(url, SIGNAL(longPressed(QString)), this, SLOT(urlLongPressed(QString)));
     connect(url, SIGNAL(clicked(QString)), this, SLOT(urlClicked(QString)));
+
+    connect(ignoreClickAndLongPressCheckbox, SIGNAL(toggled(bool)), this, SLOT(enableOrDisableClickAndLongPressHandling(bool)));
 
     phoneHighlighter = phone;
     emailHighlighter = email;
@@ -129,6 +143,9 @@ void LabelPage::retranslateUi()
     //% "http://www.nokia.com, +358401234567, fors.fagerstrom@email.com"
     richLabel->setText(qtTrId("xx_rich_label"));
 
+    //% "Handle click and long press events:"
+    ignoreClickAndLongPressLabel->setText(qtTrId("xx_label_page_handle_click_and_long_press_events"));
+
     update();
 }
 
@@ -160,4 +177,11 @@ void LabelPage::urlLongPressed(const QString &link)
 void LabelPage::urlClicked(const QString &link)
 {
     mDebug("LabelPage::urlClicked()") << link;
+}
+
+void LabelPage::enableOrDisableClickAndLongPressHandling(bool checked)
+{
+    phoneHighlighter->setIgnoreClickAndLongPressEvents(!checked);
+    emailHighlighter->setIgnoreClickAndLongPressEvents(!checked);
+    urlHighlighter->setIgnoreClickAndLongPressEvents(!checked);
 }

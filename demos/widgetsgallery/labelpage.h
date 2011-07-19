@@ -46,10 +46,13 @@ protected slots:
     void phoneNumberLongPressed(const QString &link);
     void urlClicked(const QString &link);
     void urlLongPressed(const QString &link);
+    void enableOrDisableClickAndLongPressHandling(bool checked);
 
 private:
     MLabel *simpleLabel;
     MLabel *richLabel;
+    MButton *ignoreClickAndLongPressCheckbox;
+    MLabel *ignoreClickAndLongPressLabel;
 
     MLabelHighlighter *phoneHighlighter;
     MLabelHighlighter *urlHighlighter;
