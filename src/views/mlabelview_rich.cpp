@@ -377,7 +377,8 @@ void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* ge
     // the gesture was insid highlightable text.
     event->ignore(gesture);
 
-    QPointF gesturePos = viewPrivate->controller->mapFromScene(gesture->position() - QPointF(viewPrivate->style()->marginLeft(), viewPrivate->style()->marginTop()));
+    QPointF gesturePos = viewPrivate->controller->mapFromScene(gesture->position());
+    gesturePos -= QPointF(viewPrivate->style()->marginLeft(), viewPrivate->style()->marginTop());
     int cursorPos = textDocument.documentLayout()->hitTest(gesturePos - pixmapOffset, Qt::ExactHit);
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
