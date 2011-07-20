@@ -1,3 +1,9 @@
+libmeegotouch (0.23.6-2) unstable; urgency=low
+
+  * Fixing build
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 20 Jul 2011 15:17:28 +0300
+
 libmeegotouch (0.23.6-1) unstable; urgency=low
 
   * New version
