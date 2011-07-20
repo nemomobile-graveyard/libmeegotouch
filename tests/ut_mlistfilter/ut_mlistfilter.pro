@@ -2,8 +2,12 @@ include(../common_top.pri)
 
 TARGET = ut_mlistfilter
 
-HEADERS += ut_mlistfilter.h
+INCLUDEPATH += $${MSRCDIR}/corelib/widgets
 
-SOURCES += ut_mlistfilter.cpp
+HEADERS += ut_mlistfilter.h \
+           $${MSRCDIR}/corelib/widgets/mlistfilter_p.h
+
+SOURCES += ut_mlistfilter.cpp \
+           $${MSRCDIR}/corelib/widgets/mlistfilter.cpp
 
 include(../common_bot.pri )

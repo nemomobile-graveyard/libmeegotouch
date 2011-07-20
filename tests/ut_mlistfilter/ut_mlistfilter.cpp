@@ -25,6 +25,8 @@
 #include "mapplication.h"
 #include "mlist.h"
 #include "mlistfilter.h"
+#include "mlistfilter_p.h"
+#include "mpannableviewport.h"
 #include "mtextedit.h"
 #include "msortfilterproxymodel.h"
 #include "ut_mlistfilter.h"
@@ -35,10 +37,16 @@ MApplication *app;
 
 void Ut_MListFilter::init()
 {
+    viewport = new MPannableViewport();
+
+    viewport->resize(50, 100);
+    list = new MList(viewport);
 }
 
 void Ut_MListFilter::cleanup()
 {
+    delete list;
+    delete viewport;
 }
 
 void Ut_MListFilter::initTestCase()
@@ -55,39 +63,26 @@ void Ut_MListFilter::cleanupTestCase()
 
 void Ut_MListFilter::testCreation()
 {
-    MList *list = new MList();
-
-    QVERIFY(list->filtering() != NULL);
-
-    delete list;
+    QVERIFY(list->filtering());
 }
 
 void Ut_MListFilter::testEnabling()
 {
-    MList *list = new MList();
-
     QCOMPARE(list->filtering()->enabled(), false);
     list->filtering()->setEnabled(true);
     QCOMPARE(list->filtering()->enabled(), true);
-
-    delete list;
 }
 
 void Ut_MListFilter::testEditor()
 {
-    MList *list = new MList();
-
     QVERIFY(list->filtering()->editor() != NULL);
     QCOMPARE(list->filtering()->editor()->inputMethodAutoCapitalizationEnabled(), false);
     QCOMPARE(list->filtering()->editor()->inputMethodCorrectionEnabled(), false);
     QCOMPARE(list->filtering()->editor()->inputMethodPredictionEnabled(), false);
-
-    delete list;
 }
 
 void Ut_MListFilter::testProxy()
 {
-    MList *list = new MList();
     QStringListModel *listModel = new QStringListModel();
     list->setItemModel(listModel);
 
@@ -95,24 +90,17 @@ void Ut_MListFilter::testProxy()
     QVERIFY(list->filtering()->proxy()->sourceModel() == NULL);
     list->filtering()->setEnabled(true);
     QCOMPARE(list->filtering()->proxy()->sourceModel(), listModel);
-
-    delete list;
 }
 
 void Ut_MListFilter::testFilterRole()
 {
-    MList *list = new MList();
-
     QCOMPARE(list->filtering()->filterRole(), (int)Qt::DisplayRole);
     list->filtering()->setFilterRole(Qt::DecorationRole);
     QCOMPARE(list->filtering()->filterRole(), (int)Qt::DecorationRole);
-
-    delete list;
 }
 
 void Ut_MListFilter::testKeyEvent()
 {
-    MList *list = new MList();
     QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_X, Qt::ControlModifier, QString("X"));
 
     list->filtering()->keyPressEvent(event);
@@ -122,26 +110,20 @@ void Ut_MListFilter::testKeyEvent()
     QCOMPARE(list->filtering()->editor()->text().length(), 1);
 
     delete event;
-    delete list;
 }
 
 void Ut_MListFilter::testEditorTextChange()
 {
-    MList *list = new MList();
     QSignalSpy spy(list->filtering()->editor(), SIGNAL(textChanged()));
     QCOMPARE(spy.count(), 0);
 
     list->filtering()->editor()->setText("X");
     QCOMPARE(spy.count(), 1);
     QCOMPARE(list->filtering()->proxy()->filterRegExp(), QRegExp(".*X.*", Qt::CaseInsensitive, QRegExp::RegExp));
-
-    delete list;
 }
 
 void Ut_MListFilter::testItemModelUpdate()
 {
-    MList *list = new MList();
-
     QVERIFY(list->itemModel() == NULL);
     QVERIFY(list->filtering()->proxy() != NULL);
     QVERIFY(list->filtering()->proxy()->sourceModel() == NULL);
@@ -157,14 +139,107 @@ void Ut_MListFilter::testItemModelUpdate()
     QCOMPARE(list->filtering()->proxy()->sourceModel(), listModel);
 
     QStringListModel *updatedListModel = new QStringListModel();
+
     list->setItemModel(updatedListModel);
+    delete listModel;
     QCOMPARE(list->itemModel(), list->filtering()->proxy());
     QCOMPARE(list->filtering()->proxy()->sourceModel(), updatedListModel);
 
     list->filtering()->setEnabled(false);
     QCOMPARE(list->itemModel(), updatedListModel);
+}
 
-    delete list;
+void Ut_MListFilter::testUpdatePannableViewport()
+{
+    list->filtering()->d_ptr->updatePannableViewport();
+    QVERIFY(list->filtering()->d_ptr->cachedPannableViewport);
+
+    QSignalSpy spy(list->filtering()->d_ptr->cachedPannableViewport->physics(), SIGNAL(pointerPressed()));
+    QSignalSpy spy2(list->filtering()->d_ptr->cachedPannableViewport->physics(), SIGNAL(pointerReleased()));
+    QSignalSpy spy3(list->filtering()->d_ptr->cachedPannableViewport->physics(), SIGNAL(positionChanged(const QPointF&)));
+
+    list->filtering()->d_ptr->cachedPannableViewport->physics()->pointerPress(QPointF(0, 0));
+
+    QCOMPARE(spy.count(), 1);
+
+    int positionChangeCount = 10;
+    QPointF position(0, 0);
+
+    for (int i = 0; i < positionChangeCount; i++)
+    {
+        list->filtering()->d_ptr->cachedPannableViewport->physics()->setPosition(position += QPointF(i, i));
+    }
+
+    list->filtering()->d_ptr->cachedPannableViewport->physics()->pointerRelease();
+    QCOMPARE(spy2.count(), 1);
+
+    //ensure there is no position update after pointer release
+    list->filtering()->d_ptr->cachedPannableViewport->physics()->setPosition(position += QPointF(0, 1));
+
+    QCOMPARE(spy3.count(), 10);
+}
+
+void Ut_MListFilter::testStartEditorPullDown()
+{
+    list->filtering()->d_ptr->updatePannableViewport();
+
+    list->filtering()->setEnabled(true);
+
+    list->filtering()->d_ptr->startEditorPullDown();
+    QVERIFY(list->filtering()->d_ptr->pullStarted);
+}
+
+void Ut_MListFilter::testCheckEditorPullDistanceInProgress()
+{
+    testStartEditorPullDown();
+
+    QPointF point(0,-10);
+    //pulling in progress
+    list->filtering()->d_ptr->checkEditorPullDistance(point);
+    QVERIFY(list->filtering()->d_ptr->pullStarted);
+}
+
+void Ut_MListFilter::testCheckEditorPullDistancePanningFromTop()
+{
+    testStartEditorPullDown();
+
+    QSignalSpy spy(list->filtering(), SIGNAL(listPannedUpFromTop()));
+    QPointF point = QPointF(0, -100);
+    //end due to panning up from top
+    list->filtering()->d_ptr->checkEditorPullDistance(point);
+    QVERIFY(!list->filtering()->d_ptr->pullStarted);
+    QCOMPARE(spy.count(), 1);
+}
+
+void Ut_MListFilter::testCheckEditorPullDistanceWrongDirection()
+{
+    testStartEditorPullDown();
+
+    QSignalSpy spy(list->filtering(), SIGNAL(listPannedUpFromTop()));
+
+    QPointF point = QPointF(0, 100);
+    //wrong direction
+    list->filtering()->d_ptr->checkEditorPullDistance(point);
+    QVERIFY(!list->filtering()->d_ptr->pullStarted);
+
+    QCOMPARE(spy.count(), 0);
+}
+
+void Ut_MListFilter::testStopEditorPullDown()
+{
+    testStartEditorPullDown();
+
+    list->filtering()->d_ptr->startEditorPullDown();
+    list->filtering()->d_ptr->stopEditorPullDown();
+    QVERIFY(!list->filtering()->d_ptr->pullStarted);
+}
+
+void Ut_MListFilter::testFilterMode()
+{
+    MListFilter::FilterMode filterMode = MListFilter::FilterAsSubstring;
+    list->filtering()->setFilterMode(filterMode);
+
+    QCOMPARE(list->filtering()->filterMode(), filterMode);
 }
 
 QTEST_APPLESS_MAIN(Ut_MListFilter)

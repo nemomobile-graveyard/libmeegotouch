@@ -171,6 +171,10 @@ private:
     bool filteringEnabled;
     MListFilterPrivate *d_ptr;
     FilterMode filteringMode;
+
+#ifdef UNIT_TEST
+    friend class Ut_MListFilter;
+#endif
 };
 
 #endif

@@ -23,6 +23,9 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
+class MList;
+class MPannableViewport;
+
 class Ut_MListFilter : public QObject
 {
     Q_OBJECT
@@ -41,6 +44,18 @@ private slots:
     void testKeyEvent();
     void testEditorTextChange();
     void testItemModelUpdate();
+
+    void testUpdatePannableViewport();
+    void testStartEditorPullDown();
+    void testCheckEditorPullDistanceInProgress();
+    void testCheckEditorPullDistancePanningFromTop();
+    void testCheckEditorPullDistanceWrongDirection();
+    void testStopEditorPullDown();
+    void testFilterMode();
+
+private:
+    MList *list;
+    MPannableViewport *viewport;
 };
 
 #endif
