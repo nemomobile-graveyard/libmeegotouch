@@ -210,6 +210,7 @@ SUBDIRS     =  \
     ut_mscenewindowscroller \
     ut_mdebug \
     ut_mpannableviewportscroller \
+    ut_mtimestamp \
 
 # enable only when we have icu available
 
