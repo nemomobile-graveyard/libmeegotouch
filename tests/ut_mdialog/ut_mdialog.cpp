@@ -35,6 +35,11 @@
 
 #include "ut_mdialog.h"
 
+// QCOMPARE doesn't know MSceneWindow::SceneWindowSate enum. Thus it won't
+// print "Expected" and "Actual" values in case of failure unless they're cast
+// to a known type
+#define STATE_COMPARE(s1, s2) QCOMPARE(static_cast<int>(s1), static_cast<int>(s2));
+
 MWindow *appWin;
 void Ut_MDialog::initTestCase()
 {
@@ -471,6 +476,27 @@ void Ut_MDialog::testCentralWidgetSurviveDoubleDelete()
     delete newCentralWidget;
     dialog->setCentralWidget(anotherCentralWidget);
     QVERIFY(true);
+}
+
+void Ut_MDialog::testDisappearedSystemDialogKeepsStandAloneWindowIfAppearIsPending()
+{
+    dialog->setSystem(true);
+    dialog->setModal(false);
+    dialog->appear(MSceneWindow::KeepWhenDone);
+    dialog->sceneManager()->fastForwardSceneWindowTransitionAnimation(dialog);
+
+    // start disappear animation
+    dialog->disappear();
+    STATE_COMPARE(dialog->sceneWindowState(), MSceneWindow::Disappearing);
+    // appear animation will be queued
+    dialog->appear(MSceneWindow::KeepWhenDone);
+    STATE_COMPARE(dialog->sceneWindowState(), MSceneWindow::Disappearing);
+    // finish disappear animation
+    dialog->sceneManager()->fastForwardSceneWindowTransitionAnimation(dialog);
+    STATE_COMPARE(dialog->sceneWindowState(), MSceneWindow::Appearing);
+    // standAloneWindow shouldn't be deleted because we are doing the queued
+    // state transition to Appeared state.
+    QVERIFY(dialog->d_func()->standAloneWindow != 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_MDialog);

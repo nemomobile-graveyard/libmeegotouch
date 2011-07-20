@@ -134,13 +134,15 @@ void MDialogPrivate::updateStandAloneHomeButtonVisibility()
     if (q->isSystem() && q->isModal()) {
         // Remove the home button if it's there.
         removeSceneWindowFromStandaloneScene(homeButtonPanel);
+        homeButtonPanel = 0;
     } else {
         // Put a home button on the system modal window
-        homeButtonPanel = new MHomeButtonPanel;
-        homeButtonPanel->setStyleName("systemDialog");
-        standAloneWindow->connect(homeButtonPanel,
-                                  SIGNAL(buttonClicked()), SLOT(showMinimized()));
-
+        if (!homeButtonPanel) {
+            homeButtonPanel = new MHomeButtonPanel;
+            homeButtonPanel->setStyleName("systemDialog");
+            standAloneWindow->connect(homeButtonPanel,
+                                      SIGNAL(buttonClicked()), SLOT(showMinimized()));
+        }
         standAloneWindow->sceneManager()->appearSceneWindowNow(homeButtonPanel);
     }
 }
@@ -150,9 +152,15 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
     Q_Q(MDialog);
     Q_ASSERT(standAloneWindow != 0);
 
+    if (queuedTransition) {
+        // we have appear pending, so do not destroy anything here
+        return;
+    }
+
     q->disconnect(SIGNAL(disappeared()), q, SLOT(_q_onStandAloneDialogDisappeared()));
 
     removeSceneWindowFromStandaloneScene(homeButtonPanel);
+    homeButtonPanel = 0;
 
     // Remove dialog from scene otherwise scene will delete dialog
     // on scene's destructor
