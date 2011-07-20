@@ -1,8 +1,15 @@
-libmeegotouch (0.23.6~1) unstable; urgency=low
+libmeegotouch (0.23.6-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#260701 - FullEventBanner & LockScreenBanner have the wrong spacing between items
+  * Fixes: NB#271743 - Pt_MCalendar performance test broken after merge
+  * Fixes: NB#272817
+  * Fixes: NB#272522 - Statusbar overlaps MSheet header.
+  * Fixes: NB#272853 - MWidgetRecycler::recycle doesn't take ownership of widget
+  * Fixes: NB#272510
+  * Fixes: NB#273172 - Pressed down state of full event banner is not the same as other (custom) tappable elements' on events vi
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 15 Jul 2011 15:01:27 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 20 Jul 2011 14:58:58 +0300
 
 libmeegotouch (0.23.5-1) unstable; urgency=low
 
