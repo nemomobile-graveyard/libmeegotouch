@@ -112,6 +112,10 @@ private:
     //! The rect is returned in rotated scene coordinates.
     const QRect &exposedContentRect();
 
+    void adjustTargetRectWithMargins(QRect &targetRect,
+                                     int topMargin,
+                                     int bottomMargin);
+
     bool needsMoreScreenArea() const;
     void updateScreenArea();
     void maximizeScreenArea();

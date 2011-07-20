@@ -155,18 +155,23 @@ void MInputWidgetRelocator::update()
             // and an anchor point.
             if (!widgetWasDocked) {
                 if (needsRelocation(inputWidget, microRect)) {
+                    // Calculate target rectangle in root coordinates
+                    QRect targetRect(rootElement->mapFromItem(inputWidget, microRect.topLeft()).x(), // Don't move horizontally.
+                                     exposedContentRect().top() + style()->verticalAnchorPosition(),
+                                     microRect.width(),
+                                     microRect.height());
 
-                    // Calculate anchor point in root coordinates
-                    const QPoint anchorPoint(rootElement->mapFromItem(inputWidget, microRect.topLeft()).x(),
-                                             exposedContentRect().top() + style()->verticalAnchorPosition());
+                    // Use nogo zones as margins for cursor's target rectangle.
+                    adjustTargetRectWithMargins(targetRect,
+                                                style()->topNoGoMargin(),
+                                                style()->bottomNoGoMargin());
 
                     // First, center context widget to anchorPoint but ensure always top edge
                     // is within exposed content rect. The term "context widget" refers to the first
                     // scrollable parent widget of the input widget, and therefore it can be
                     // used to show user "context" or visibility around the focused input widget.
-                    centerContextWidgetToAnchorPoint(newChain, anchorPoint, inputWidget);
+                    centerContextWidgetToAnchorPoint(newChain, targetRect.topLeft(), inputWidget);
 
-                    const QRect targetRect(anchorPoint, microRect.size());
                     newChain->addBottomUpScroll(targetRect, microRect.topLeft());
 
                     newChain->applyScrolling(style()->scrollDuration(),
@@ -231,6 +236,30 @@ const QRect &MInputWidgetRelocator::exposedContentRect()
     cachedExposedRect.setHeight(cachedExposedRect.height() - obstructedHeight);
 
     return cachedExposedRect;
+}
+
+void MInputWidgetRelocator::adjustTargetRectWithMargins(QRect &targetRect,
+                                                        int topMargin,
+                                                        int bottomMargin)
+{
+    // From QRect::bottom() documentation:
+    //   Note that for historical reasons this function returns top() + height() - 1;
+    //   use y() + height() to retrieve the true y-coordinate.
+    int targetRectBottom = targetRect.y() + targetRect.height();
+    int exposedContentRectBottom = exposedContentRect().y() + exposedContentRect().height();
+
+    if (targetRect.height() + topMargin + bottomMargin > exposedContentRect().height()) {
+        // No room for margins. Centralize.
+        targetRect.moveTop(targetRect.top()
+                           + (exposedContentRect().center().y()
+                              - targetRect.center().y()));
+    } else if (targetRectBottom > exposedContentRectBottom - bottomMargin) {
+        // Add bottom margin
+        targetRect.moveBottom(exposedContentRectBottom - bottomMargin);
+    } else if (targetRect.top() < exposedContentRect().top() + topMargin) {
+        // Add top margin
+        targetRect.moveTop(exposedContentRect().top() + topMargin);
+    }
 }
 
 void MInputWidgetRelocator::handleRotationBegin(M::Orientation orientation)
@@ -372,6 +401,12 @@ bool MInputWidgetRelocator::needsRelocation(const QGraphicsWidget *inputWidget,
 
     // The normal case. Check whether widget's rect fits inside allowed area,
     // or whether it is obscured.
+
+    if (exposedContentRect().height() <= style()->topNoGoMargin()
+                                         + style()->bottomNoGoMargin()) {
+        // No room even for margins. Always try to relocate.
+        return true;
+    }
 
     const QRect allowedRect(exposedContentRect().adjusted(0, style()->topNoGoMargin(),
                                                           0, -style()->bottomNoGoMargin()));

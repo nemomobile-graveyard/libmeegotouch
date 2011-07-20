@@ -70,6 +70,7 @@ private slots:
     void testTargetPosition();
     void testDockBottom_data();
     void testDockBottom();
+    void testTightFit();
 
 private:
     QRect allowedZone(const QRect &exposedContentRect, M::Orientation orientation) const;
@@ -79,6 +80,7 @@ private:
     void moveWidgetToZone(InputWidget *widget, Zone zone,
                           const QRect &exposedContentRect, M::Orientation orientation) const;
     void updateStubbedStyleValues(M::Orientation orientation = M::Landscape) const;
+    void setupOrientationAndSip(M::Orientation orientation, const QRect &sipRect);
 
 private:
     MApplication *app;

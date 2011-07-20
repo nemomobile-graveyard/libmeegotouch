@@ -88,6 +88,9 @@ void Ut_MInputWidgetRelocator::init()
     // Let's have something funny here so we get "changed" signals.
     MInputMethodState::instance()->setInputMethodArea(QRect(1, 2, 3, 4));
 
+    // Clear transforms
+    rootElement->setTransform(QTransform());
+
     subject = new MInputWidgetRelocator(*sceneManager, rootElement, M::Landscape);
 
     parentScrollableWidget = QPointer<ScrollableWidget>(new ScrollableWidget(rootElement));
@@ -203,23 +206,27 @@ void Ut_MInputWidgetRelocator::testTargetPosition_data()
 
     // Sip rectangle is given in scene coordinates.
     const QSize screenSize(MDeviceProfile::instance()->resolution());
-    const QRect sipRect(0, screenSize.height() / 2,
-                        screenSize.width(),
-                        screenSize.height() - (screenSize.height() / 2));
+    const int sipHeight = screenSize.height() / 2;
+    const QRect landscapeSip(0, screenSize.height() - sipHeight,
+                             screenSize.width(),
+                             sipHeight);
+    const QRect portraitSip(screenSize.width() - sipHeight, 0,
+                            sipHeight,
+                            screenSize.height());
 
     QTest::newRow("no sip, widget at upper nogo zone")   << M::Landscape << QRect() << UpperNoGoZone;
     QTest::newRow("no sip, widget already visible")    << M::Landscape << QRect() << AllowedZone;
     QTest::newRow("no sip, widget at lower nogo zone")   << M::Landscape << QRect() << LowerNoGoZone;
-    QTest::newRow("with sip, widget at upper nogo zone") << M::Landscape << sipRect << UpperNoGoZone;
-    QTest::newRow("with sip, widget already visible")  << M::Landscape << sipRect << AllowedZone;
-    QTest::newRow("with sip, widget at lower nogo zone") << M::Landscape << sipRect << LowerNoGoZone;
+    QTest::newRow("with sip, widget at upper nogo zone") << M::Landscape << landscapeSip << UpperNoGoZone;
+    QTest::newRow("with sip, widget already visible")  << M::Landscape << landscapeSip << AllowedZone;
+    QTest::newRow("with sip, widget at lower nogo zone") << M::Landscape << landscapeSip << LowerNoGoZone;
 
     QTest::newRow("PT, no sip, widget at upper nogo zone")   << M::Portrait << QRect() << UpperNoGoZone;
     QTest::newRow("PT, no sip, widget already visible")    << M::Portrait << QRect() << AllowedZone;
     QTest::newRow("PT, no sip, widget at lower nogo zone")   << M::Portrait << QRect() << LowerNoGoZone;
-    QTest::newRow("PT, with sip, widget at upper nogo zone") << M::Portrait << sipRect << UpperNoGoZone;
-    QTest::newRow("PT, with sip, widget already visible")  << M::Portrait << sipRect << AllowedZone;
-    QTest::newRow("PT, with sip, widget at lower nogo zone") << M::Portrait << sipRect << LowerNoGoZone;
+    QTest::newRow("PT, with sip, widget at upper nogo zone") << M::Portrait << portraitSip << UpperNoGoZone;
+    QTest::newRow("PT, with sip, widget already visible")  << M::Portrait << portraitSip << AllowedZone;
+    QTest::newRow("PT, with sip, widget at lower nogo zone") << M::Portrait << portraitSip << LowerNoGoZone;
 }
 
 void Ut_MInputWidgetRelocator::testTargetPosition()
@@ -228,16 +235,10 @@ void Ut_MInputWidgetRelocator::testTargetPosition()
     QFETCH(QRect, sipRect);
     QFETCH(Zone, initialZone);
 
-    // Apply orientation
-    subject->handleRotationBegin(orientation);
-    subject->handleRotationFinished();
-
-    updateStubbedStyleValues(orientation);
-
-    MInputMethodState::instance()->setInputMethodArea(sipRect);
-    qApp->processEvents(); //  Process above area change.
+    setupOrientationAndSip(orientation, sipRect);
 
     QRect exposedContentRect(rootElement->mapRectFromScene(scene->sceneRect()).toRect());
+
     if (!sipRect.isNull()) {
         sipRect = rootElement->mapRectFromScene(sipRect).toRect();
         // Assume sip comes from bottom of screen.
@@ -276,23 +277,27 @@ void Ut_MInputWidgetRelocator::testDockBottom_data()
 
     // Sip rectangle is given in scene coordinates.
     const QSize screenSize(MDeviceProfile::instance()->resolution());
-    const QRect sipRect(0, screenSize.height() / 2,
-                        screenSize.height() - (screenSize.height() / 2),
-                        screenSize.width());
+    const int sipHeight = screenSize.height() / 2;
+    const QRect landscapeSip(0, screenSize.height() - sipHeight,
+                             screenSize.width(),
+                             sipHeight);
+    const QRect portraitSip(screenSize.width() - sipHeight, 0,
+                            sipHeight,
+                            screenSize.height());
 
     QTest::newRow("no sip, widget at upper nogo zone")   << M::Landscape << QRect() << UpperNoGoZone;
     QTest::newRow("no sip, widget already visible")    << M::Landscape << QRect() << AllowedZone;
     QTest::newRow("no sip, widget at lower nogo zone")   << M::Landscape << QRect() << LowerNoGoZone;
-    QTest::newRow("with sip, widget at upper nogo zone") << M::Landscape << sipRect << UpperNoGoZone;
-    QTest::newRow("with sip, widget already visible")  << M::Landscape << sipRect << AllowedZone;
-    QTest::newRow("with sip, widget at lower nogo zone") << M::Landscape << sipRect << LowerNoGoZone;
+    QTest::newRow("with sip, widget at upper nogo zone") << M::Landscape << landscapeSip << UpperNoGoZone;
+    QTest::newRow("with sip, widget already visible")  << M::Landscape << landscapeSip << AllowedZone;
+    QTest::newRow("with sip, widget at lower nogo zone") << M::Landscape << landscapeSip << LowerNoGoZone;
 
     QTest::newRow("PT, no sip, widget at upper nogo zone")   << M::Portrait << QRect() << UpperNoGoZone;
     QTest::newRow("PT, no sip, widget already visible")    << M::Portrait << QRect() << AllowedZone;
     QTest::newRow("PT, no sip, widget at lower nogo zone")   << M::Portrait << QRect() << LowerNoGoZone;
-    QTest::newRow("PT, with sip, widget at upper nogo zone") << M::Portrait << sipRect << UpperNoGoZone;
-    QTest::newRow("PT, with sip, widget already visible")  << M::Portrait << sipRect << AllowedZone;
-    QTest::newRow("PT, with sip, widget at lower nogo zone") << M::Portrait << sipRect << LowerNoGoZone;
+    QTest::newRow("PT, with sip, widget at upper nogo zone") << M::Portrait << portraitSip << UpperNoGoZone;
+    QTest::newRow("PT, with sip, widget already visible")  << M::Portrait << portraitSip << AllowedZone;
+    QTest::newRow("PT, with sip, widget at lower nogo zone") << M::Portrait << portraitSip << LowerNoGoZone;
 }
 
 void Ut_MInputWidgetRelocator::testDockBottom()
@@ -301,14 +306,7 @@ void Ut_MInputWidgetRelocator::testDockBottom()
     QFETCH(QRect, sipRect);
     QFETCH(Zone, initialZone);
 
-    // Apply orientation
-    subject->handleRotationBegin(orientation);
-    subject->handleRotationFinished();
-
-    updateStubbedStyleValues(orientation);
-
-    MInputMethodState::instance()->setInputMethodArea(sipRect);
-    qApp->processEvents(); //  Process above area change.
+    setupOrientationAndSip(orientation, sipRect);
 
     QRect exposedContentRect(rootElement->mapRectFromScene(scene->sceneRect()).toRect());
     if (!sipRect.isNull()) {
@@ -337,6 +335,35 @@ void Ut_MInputWidgetRelocator::testDockBottom()
     qreal error = dockedRectAfter.bottom()
                   - static_cast<qreal>(exposedContentRect.bottom());
     QVERIFY(qAbs<qreal>(error) <= 1.0);
+}
+
+void Ut_MInputWidgetRelocator::testTightFit()
+{
+    // Sip rectangle is given in scene coordinates.
+    const QSize screenSize(MDeviceProfile::instance()->resolution());
+     // Set sipHeight just big enough for cursor.
+    const int sipHeight = screenSize.height() - inputWidget->microFocusRect().height();
+    const QRect landscapeSip(0, screenSize.height() - sipHeight,
+                             screenSize.width(),
+                             sipHeight);
+
+    setupOrientationAndSip(M::Landscape, landscapeSip);
+
+    QRect exposedContentRect(QPoint(), screenSize);
+    exposedContentRect.setBottom(landscapeSip.top());
+
+    moveWidgetToZone(inputWidget, UpperNoGoZone, exposedContentRect, M::Landscape);
+    inputWidget->setFocus();
+
+    subject->update();
+    QRectF actualRectAfter = rootElement->mapRectFromItem(inputWidget, inputWidget->rect());
+
+    // Verify that anchor position is more than 0. The point of the whole test is to
+    // check that anchor position is not respected in this specific scenario.
+    QVERIFY(verticalAnchorPosition(M::Landscape) > 0);
+
+    qreal expectedY = 0.0f;
+    QCOMPARE(actualRectAfter.y(), expectedY); // Cannot have moved since there is no better place.
 }
 
 // Helper methods
@@ -403,6 +430,28 @@ void Ut_MInputWidgetRelocator::updateStubbedStyleValues(M::Orientation orientati
     gStyleVerticalAnchorPosition = verticalAnchorPosition(orientation);
     gStyleTopNoGoMargin = topNoGoMargin(orientation);
     gStyleBottomNoGoMargin = bottomNoGoMargin(orientation);
+}
+
+void Ut_MInputWidgetRelocator::setupOrientationAndSip(M::Orientation orientation,
+                                                      const QRect &sipRect)
+{
+    // Apply orientation
+    subject->handleRotationBegin(orientation);
+    subject->handleRotationFinished();
+
+    // Rotate root element.
+    if (orientation == M::Portrait) {
+        QPointF rotationOrigin(scene->sceneRect().height() / 2,
+                               scene->sceneRect().height() / 2);
+        rootElement->setTransform(QTransform().translate(rotationOrigin.x(), rotationOrigin.y())
+                                              .rotate(270)
+                                              .translate(-rotationOrigin.x(), -rotationOrigin.y()));
+    }
+
+    updateStubbedStyleValues(orientation);
+
+    MInputMethodState::instance()->setInputMethodArea(sipRect);
+    qApp->processEvents(); //  Process above area change.
 }
 
 QTEST_APPLESS_MAIN(Ut_MInputWidgetRelocator)
