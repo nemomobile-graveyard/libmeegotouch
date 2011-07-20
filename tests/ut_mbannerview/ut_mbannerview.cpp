@@ -248,8 +248,6 @@ void Ut_MBannerView::testPrivateLayoutFullEventBanner()
 
     QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->title()), "Title not found");
 
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->subtitle()), "Subtitle not found");
-
     testLayoutTimeStamp();
 }
 
@@ -269,8 +267,6 @@ void Ut_MBannerView::testPrivateLayoutLockScreenEventBanner()
     QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, expected), "Pixmap or icon not found");
 
     QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->title()), "Title not found");
-
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->subtitle()), "Subtitle not found");
 
     testLayoutTimeStamp();
 }
@@ -356,14 +352,8 @@ void Ut_MBannerView::testLayoutTimeStamp()
 {
     if (!m_subject->model()->prefixTimeStamp().isEmpty() && m_subject->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = NULL;
-        for(int i = 0; i < m_subject->d_ptr->gridBanner->rowCount(); i++) {
-            for(int j = 0; j < m_subject->d_ptr->gridBanner->columnCount(); j++) {
-                layoutStamp = dynamic_cast<QGraphicsLinearLayout*>(m_subject->d_ptr->gridBanner->itemAt(i, j));
-                if (layoutStamp){
-                    break;
-                }
-            }
-        }
+        layoutStamp = dynamic_cast<QGraphicsLinearLayout*>(m_subject->d_ptr->gridBanner->itemAt(1, 1));
+
         QVERIFY2(layoutStamp, "Layout stamp not found");
         QCOMPARE(layoutStamp->count(), 2);
     } else {
