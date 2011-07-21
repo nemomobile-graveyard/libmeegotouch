@@ -1,6 +1,7 @@
 libmeegotouch (0.23.7~1) unstable; urgency=low
 
   * [unreleased]
+  * Fixes: NB#269549 - Sheet header bottom line disappears when user changes orientation to portrait and back
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 20 Jul 2011 15:18:48 +0300
 
