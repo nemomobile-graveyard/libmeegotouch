@@ -161,7 +161,11 @@ void Ut_MImageDirectory::testReleaseWithoutDelete()
     QVERIFY2(!m_pixmapImageResource->pixmapCacheEntries().contains(size),
              "PixmapCacheEntry for given size shall not be found in cache");
 
+#ifdef HAVE_MEEGOGRAPHICSSYSTEM
+    QCOMPARE(pixmapCacheEntry->handle.size, size);
+#else
     QCOMPARE(pixmapCacheEntry->pixmap->size(), size);
+#endif
 }
 
 void Ut_MImageDirectory::testPixmapCacheEntries()
