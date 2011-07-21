@@ -673,6 +673,9 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("zh_TW@collation=zhuyin")
         << "zh_TW@collation=zhuyin"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("zh_HK")
+        << "zh_HK" // stroke count sorting
+        << "ft_mlocalebuckets_test-input.txt";
     QTest::newRow("zh_CN@collation=pinyin")
         << "zh_CN@collation=pinyin"
         << "ft_mlocalebuckets_test-input.txt";
