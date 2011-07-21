@@ -1,4 +1,4 @@
-es{
+es_PR{
     NumberElements{
         ",",
         " ",
@@ -12,13 +12,5 @@ es{
         "∞",
         "NaN",
         "+",
-    }
-    calendar{
-        gregorian{
-             AmPmMarkers{
-                 "AM",
-                 "PM",
-             }
-        }
     }
 }

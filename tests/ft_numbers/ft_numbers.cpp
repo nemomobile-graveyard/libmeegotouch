@@ -1063,6 +1063,54 @@ void Ft_Numbers::testDoubles_data()
             << QString("hi_HI")
             << double(1234567.1234567)
             << QString("१२,३४,५६७.१२३");
+    QTest::newRow("es 1234567.1234567")
+            << QString("es")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_419 1234567.1234567")
+            << QString("es_419")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_DO 1234567.1234567")
+            << QString("es_DO")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_GT 1234567.1234567")
+            << QString("es_GT")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_HN 1234567.1234567")
+            << QString("es_HN")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_MX 1234567.1234567")
+            << QString("es_MX")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_NI 1234567.1234567")
+            << QString("es_NI")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_PA 1234567.1234567")
+            << QString("es_PA")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_PE 1234567.1234567")
+            << QString("es_PE")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_PR 1234567.1234567")
+            << QString("es_PR")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_SV 1234567.1234567")
+            << QString("es_SV")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
+    QTest::newRow("es_US 1234567.1234567")
+            << QString("es_US")
+            << double(1234567.1234567)
+            << QString("1 234 567,123");
 }
 
 void Ft_Numbers::testDoubles()

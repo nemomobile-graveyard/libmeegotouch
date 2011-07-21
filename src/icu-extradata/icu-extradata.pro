@@ -16,7 +16,6 @@ greaterThan(ICUVERSION, 4.4) {
                  data/en_GB.txt \
                  data/en_IE.txt \
                  data/en_SG.txt \
-                 data/es.txt \
                  data/es_AR.txt \
                  data/fa.txt \
                  data/fi.txt \
@@ -44,11 +43,35 @@ greaterThan(ICUVERSION, 4.4) {
                  data/zh_Hant_TW.txt
 
     greaterThan(ICUVERSION, 4.5) {
-        LOCALESTXT += data46/pt.txt \
+        LOCALESTXT += data46/es.txt \
+                      data46/es_419.txt \
+                      data46/es_DO.txt \
+                      data46/es_GT.txt \
+                      data46/es_HN.txt \
+                      data46/es_MX.txt \
+                      data46/es_NI.txt \
+                      data46/es_PA.txt \
+                      data46/es_PE.txt \
+                      data46/es_PR.txt \
+                      data46/es_SV.txt \
+                      data46/es_US.txt \
+                      data46/pt.txt \
                       data46/pt_BR.txt \
                       data46/pt_PT.txt
     } else {
-        LOCALESTXT += data/pt.txt \
+        LOCALESTXT += data/es.txt \
+                      data/es_419.txt \
+                      data/es_DO.txt \
+                      data/es_GT.txt \
+                      data/es_HN.txt \
+                      data/es_MX.txt \
+                      data/es_NI.txt \
+                      data/es_PA.txt \
+                      data/es_PE.txt \
+                      data/es_PR.txt \
+                      data/es_SV.txt \
+                      data/es_US.txt \
+                      data/pt.txt \
                       data/pt_BR.txt \
                       data/pt_PT.txt
     }

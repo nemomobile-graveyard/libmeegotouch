@@ -1,0 +1,33 @@
+es{
+    NumberElements{
+        latn{
+            patterns{
+                currencyFormat { "¤ #,##0.00" }
+                decimalFormat { "#,##0.###" }
+                percentFormat { "#,##0%" }
+                scientificFormat { "#E0" }
+            }
+            symbols{
+                decimal { "," }
+                exponential { "E" }
+                group { " " }
+                infinity { "∞" }
+                list { ";" }
+                minusSign { "-" }
+                nan { "NaN" }
+                perMille { "‰" }
+                percentSign { "%" }
+                plusSign { "+" }
+            }
+        }
+    }
+    calendar{
+        gregorian{
+             AmPmMarkers{
+                 "AM",
+                 "PM",
+             }
+        }
+    }
+}
+

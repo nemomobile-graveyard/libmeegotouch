@@ -1,0 +1,10 @@
+es_MX{
+    NumberElements{
+        latn{
+            symbols{
+                decimal { "," }
+                group { " " }
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+es_PE{
+    NumberElements{
+        latn{
+            symbols{
+                decimal { "," }
+                group { " " }
+            }
+        }
+    }
+}
