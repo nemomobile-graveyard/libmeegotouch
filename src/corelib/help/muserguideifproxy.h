@@ -76,7 +76,7 @@ public Q_SLOTS: // METHODS
 
     inline QDBusPendingReply<bool> pageByPathChained(const QString &path, const QString &_taskTitle)
     {
-        Qt::HANDLE windowId = 0;
+        WId windowId = 0;
 
         MWindow *win = MApplication::instance()->activeWindow();
         if (win) {
