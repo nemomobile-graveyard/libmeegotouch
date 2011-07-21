@@ -55,6 +55,10 @@ private:
     bool isLayoutInitialized;
     MDetailedListItem::ItemStyle listItemStyle;
     MDetailedListItem::IconStyle iconStyle;
+
+#ifdef UNIT_TEST
+    friend class Ut_mdetailedlistitem;
+#endif
 };
 
 #endif // MDETAILEDLISTITEM_P_H

@@ -26,6 +26,9 @@
 // the real unit/mdetailedlistitem class declaration
 #include <mdetailedlistitem.h>
 
+class QGraphicsLayoutItem;
+class QGraphicsGridLayout;
+
 Q_DECLARE_METATYPE(MDetailedListItem *);
 
 class Ut_mdetailedlistitem : public QObject
@@ -46,8 +49,12 @@ private slots:
     void testSetSubtitle();
     void testSetSideBottomTitle();
     void testSideBottomImageWidget();
+    void testResizeEvent();
 
 private:
+    bool findItemInGridLayout(QGraphicsGridLayout *layout,
+                              QGraphicsLayoutItem *item);
+
     MDetailedListItem *m_subject;
 };
 

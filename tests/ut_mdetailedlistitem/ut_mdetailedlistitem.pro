@@ -2,9 +2,13 @@ include(../common_top.pri)
 
 TARGET = ut_mdetailedlistitem
 
-HEADERS += ut_mdetailedlistitem.h
+INCLUDEPATH += $$MSRCDIR/corelib/widgets
 
-SOURCES += ut_mdetailedlistitem.cpp
+HEADERS += ut_mdetailedlistitem.h \
+           $$MSRCDIR/corelib/widgets/mdetailedlistitem_p.h
+
+SOURCES += ut_mdetailedlistitem.cpp \
+            $$MSRCDIR/corelib/widgets/mdetailedlistitem.cpp
 
 include(../common_bot.pri)
 

@@ -286,6 +286,10 @@ protected:
 private:
     Q_DECLARE_PRIVATE(MDetailedListItem)
     MDetailedListItemPrivate *d_ptr;
+
+#ifdef UNIT_TEST
+    friend class Ut_mdetailedlistitem;
+#endif
 };
 
 

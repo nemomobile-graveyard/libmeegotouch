@@ -19,20 +19,24 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsGridLayout>
+#include <QGraphicsItem>
 
 #include <mdetailedlistitem.h>
+#include <mlabel.h>
 #include <mapplication.h>
 #include <mlist.h>
 #include <mimagewidget.h>
 #include <mapplication.h>
 
 #include "ut_mdetailedlistitem.h"
+#include "mdetailedlistitem_p.h"
 
 MApplication *app(NULL);
 
 void Ut_mdetailedlistitem::init()
 {
-        m_subject = new MDetailedListItem();
+    m_subject = new MDetailedListItem();
 }
 
 void Ut_mdetailedlistitem::cleanup()
@@ -85,8 +89,29 @@ void Ut_mdetailedlistitem::testSetItemStyle()
 {
     //check if m_subject was created with proper style
     QCOMPARE( m_subject->itemStyle(), MDetailedListItem::IconTitleSubtitleAndTwoSideIcons );
+    m_subject->clearLayout();
     m_subject->setItemStyle(MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel);
     QCOMPARE( m_subject->itemStyle(), MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel );
+
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->imageWidget()) );
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->titleLabelWidget()) );
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->subtitleLabelWidget()) );
+
+    m_subject->clearLayout();
+    m_subject->setItemStyle(MDetailedListItem::ThumbnailTitleAndTwoSideIcons);
+    QCOMPARE( m_subject->itemStyle(), MDetailedListItem::ThumbnailTitleAndTwoSideIcons );
+
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->imageWidget()) );
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->titleLabelWidget()) );
+    QVERIFY( !findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->subtitleLabelWidget()) );
+
+    m_subject->clearLayout();
+    m_subject->setItemStyle(MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons );
+    QCOMPARE( m_subject->itemStyle(), MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons );
+
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->imageWidget()) );
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->titleLabelWidget()) );
+    QVERIFY( findItemInGridLayout(m_subject->d_ptr->layout(), m_subject->subtitleLabelWidget()) );
 }
 
 void Ut_mdetailedlistitem::testSetIconStyle()
@@ -100,9 +125,34 @@ void Ut_mdetailedlistitem::testSetIconStyle()
 
 void Ut_mdetailedlistitem::testSetImageWidget()
 {
+    m_subject->createLayout();
     MImageWidget *myImageWidget = new MImageWidget();
     m_subject->setImageWidget( myImageWidget );
+    QCOMPARE( m_subject->d_ptr->image, myImageWidget );
     QCOMPARE( m_subject->imageWidget(), myImageWidget );
+
+    //now there is an image widget already set, test if it is deleted from layout
+    MImageWidget *myImageWidget2 = new MImageWidget();
+    m_subject->setImageWidget(myImageWidget2);
+
+    bool foundRemovedInLayout = false;
+    bool foundNewInLayout = false;
+
+    for (int i = 0; i < m_subject->d_ptr->layout()->count(); i++)
+    {
+        if (m_subject->d_ptr->layout()->itemAt(i) == myImageWidget)
+        {
+            foundRemovedInLayout = true;
+        }
+        if(m_subject->d_ptr->layout()->itemAt(i) == myImageWidget2)
+        {
+            foundNewInLayout = true;
+        }
+    }
+
+    QCOMPARE(foundRemovedInLayout, false);
+    QCOMPARE(foundNewInLayout, true);
+    QVERIFY(!m_subject->d_ptr->image->objectName().isEmpty());
 }
 
 void Ut_mdetailedlistitem::testSetTitle()
@@ -131,6 +181,31 @@ void Ut_mdetailedlistitem::testSideBottomImageWidget()
     QCOMPARE(m_subject->sideBottomImageWidget()->objectName(), QString("CommonSubIconBottom"));
 }
 
+void Ut_mdetailedlistitem::testResizeEvent()
+{
+    QGraphicsSceneResizeEvent event;
+    event.setOldSize(QSizeF(100, 100));
 
+    QSizeF newSize(200, 200);
+    event.setNewSize(newSize);
+    m_subject->resizeEvent(&event);
+
+    QVERIFY(m_subject->d_ptr->layout());
+}
+
+bool Ut_mdetailedlistitem::findItemInGridLayout(QGraphicsGridLayout *layout,
+        QGraphicsLayoutItem *item)
+{
+    bool found = false;
+    for(int i = 0; i < layout->rowCount(); i++) {
+        for(int j = 0; j < layout->columnCount(); j++) {
+            if (layout->itemAt(i, j) == item) {
+                found = true;
+                break;
+            }
+        }
+    }
+    return found;
+}
 
 QTEST_APPLESS_MAIN(Ut_mdetailedlistitem)
