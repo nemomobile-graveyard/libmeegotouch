@@ -59,6 +59,7 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
     boundsBehavior(MPhysics2DPanning::DragAndOvershootBounds),
     q_ptr(publicObject)
 {
+    integrationStepTimer.invalidate();
 }
 
 
