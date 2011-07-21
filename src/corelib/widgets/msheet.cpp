@@ -48,7 +48,7 @@ MSheetPrivate::~MSheetPrivate()
     appearSystemwideDeletionPolicy = 0;
 }
 
-bool MSheetPrivate::canDisappear(bool dismissing)
+bool MSheetPrivate::canDisappear()
 {
     Q_Q(MSheet);
 
@@ -65,11 +65,7 @@ bool MSheetPrivate::canDisappear(bool dismissing)
         // The scene window animation is not used at all and is therefore
         // denied here.
 
-        if (dismissing) {
-            standAloneWindow->close();
-        } else {
-            standAloneWindow->hide();
-        }
+        standAloneWindow->close();
 
         return false;
     } else {
@@ -77,14 +73,9 @@ bool MSheetPrivate::canDisappear(bool dismissing)
     }
 }
 
-bool MSheetPrivate::canDisappear()
-{
-    return canDisappear(false);
-}
-
 bool MSheetPrivate::canDismiss()
 {
-    return canDisappear(true);
+    return canDisappear();
 }
 
 void MSheetPrivate::_q_makeSystemSheetDisappearImmediately()

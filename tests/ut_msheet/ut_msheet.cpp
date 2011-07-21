@@ -167,7 +167,7 @@ void Ut_MSheet::testDismissingSheetClosesStandAloneWindow()
     STATE_COMPARE(subject->sceneWindowState(), MSceneWindow::Disappeared);
 }
 
-void Ut_MSheet::testMakingSheetDisappearHidesStandAloneWindow()
+void Ut_MSheet::testMakingSheetDisappearClosesStandAloneWindow()
 {
     subject->appearSystemwide(MSceneWindow::KeepWhenDone);
 
@@ -182,7 +182,7 @@ void Ut_MSheet::testMakingSheetDisappearHidesStandAloneWindow()
     subject->disappear();
 
     QVERIFY(!standAloneWindow->isVisible());
-    QCOMPARE(windowCloseSpy.typesOfEventsReceived.count(QEvent::Close), 0);
+    QCOMPARE(windowCloseSpy.typesOfEventsReceived.count(QEvent::Close), 1);
 
     QApplication::processEvents(); // sheet disappearance comes on next event loop
 

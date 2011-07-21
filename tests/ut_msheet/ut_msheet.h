@@ -45,7 +45,7 @@ private slots:
     void testClosingStandAloneWindowDismissesSheet();
     void testHidingStandAloneWindowMakesSheetDisappear();
     void testDismissingSheetClosesStandAloneWindow();
-    void testMakingSheetDisappearHidesStandAloneWindow();
+    void testMakingSheetDisappearClosesStandAloneWindow();
     void testCentralWidgetDoesntGrowBeyondSlotLimits();
 
     void testSettingInitialSystemwideModeOrientation_data();

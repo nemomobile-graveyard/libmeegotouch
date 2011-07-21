@@ -36,8 +36,6 @@ public:
     virtual bool canDisappear();
     virtual bool canDismiss();
 
-    bool canDisappear(bool dismissing);
-
     void _q_makeSystemSheetDisappearImmediately();
     void _q_dismissSystemSheetImmediately();
 
