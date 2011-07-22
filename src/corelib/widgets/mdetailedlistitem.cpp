@@ -147,7 +147,7 @@ void MDetailedListItemPrivate::createLayout()
 void MDetailedListItemPrivate::clearLayout()
 {
     if (layout()) {
-        for (int i = 0; i < layout()->count(); i++) {
+        while (layout()->count() > 0) {
             QGraphicsLayoutItem *item = layoutGrid->itemAt(0);
             layoutGrid->removeAt(0);
             delete item;
