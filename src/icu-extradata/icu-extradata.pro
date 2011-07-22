@@ -19,6 +19,7 @@ greaterThan(ICUVERSION, 4.4) {
                  data/es_AR.txt \
                  data/fa.txt \
                  data/fi.txt \
+                 data/fr_CA.txt \
                  data/gl.txt \
                  data/he.txt \
                  data/hi.txt \
