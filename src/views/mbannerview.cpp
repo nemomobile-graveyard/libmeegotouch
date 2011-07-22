@@ -457,18 +457,18 @@ void MBannerViewPrivate::layoutFullEventBanner()
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
         //If the subtitle is not there timestamp & prefix go one row up
-        if (subtitle()->isVisible()) {
-            gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
-        } else {
+        if (q->model()->subtitle().isEmpty()) {
             gridBanner->addItem(layoutStamp, 1, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
         }
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("FullEventBannerTimeStampIsolated");
-        if (subtitle()->isVisible()) {
-            gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
-        } else {
+        if (q->model()->subtitle().isEmpty()) {
             gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
         }
     } else {
         prefixTimeStamp()->setVisible(false);
@@ -532,18 +532,18 @@ void MBannerViewPrivate::layoutLockScreenEventBanner()
         layoutStamp->addItem(bannerTimeStamp());
         layoutStamp->addStretch();
         //If the subtitle is not there timestamp & prefix go one row up
-        if (subtitle()->isVisible()) {
-            gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
-        } else {
+        if (q->model()->subtitle().isEmpty()) {
             gridBanner->addItem(layoutStamp, 1, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(layoutStamp, 2, 1, Qt::AlignTop);
         }
     } else if (q->model()->bannerTimeStamp().isValid()) {
         prefixTimeStamp()->setVisible(false);
         bannerTimeStamp()->setStyleName("LockScreenEventBannerTimeStampIsolated");
-        if (subtitle()->isVisible()) {
-            gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
-        } else {
+        if (q->model()->subtitle().isEmpty()) {
             gridBanner->addItem(bannerTimeStamp(), 1, 1, Qt::AlignTop);
+        } else {
+            gridBanner->addItem(bannerTimeStamp(), 2, 1, Qt::AlignTop);
         }
     } else {
         prefixTimeStamp()->setVisible(false);
