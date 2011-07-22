@@ -25,6 +25,7 @@
 #include "mondisplaychangeevent.h"
 #include "mwidgetcreator.h"
 #include "mpannableviewport.h"
+#include "mdebug.h"
 
 #include <QAction>
 #include <QGraphicsLinearLayout>
@@ -271,8 +272,15 @@ MApplicationPageModel::ComponentDisplayMode MApplicationPage::componentDisplayMo
         displayMode = model()->escapeButtonDisplayMode();
         break;
 
-    default: // StatusBar
+    case StatusBar:
         displayMode = model()->statusBarDisplayMode();
+        break;
+
+    default: //AllComponents
+        // return EscapeButton to keep original behaviour but throw a warning
+        displayMode = model()->escapeButtonDisplayMode();
+        mWarning("MApplicationPage") << "MApplicationPageModel::AllComponents is "
+                                     << "not allowed when asking for componentDisplayMode";
     };
 
     return displayMode;
