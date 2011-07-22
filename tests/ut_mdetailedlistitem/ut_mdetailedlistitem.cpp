@@ -193,6 +193,16 @@ void Ut_mdetailedlistitem::testResizeEvent()
     QVERIFY(m_subject->d_ptr->layout());
 }
 
+void Ut_mdetailedlistitem::testClearLayout()
+{
+    m_subject->d_ptr->createLayout();
+    QVERIFY(m_subject->d_ptr->layout()->count() > 0);
+    m_subject->d_ptr->clearLayout();
+    QVERIFY(m_subject->d_ptr->layout()->count() == 0);
+    m_subject->d_ptr->createLayout();
+    QVERIFY(m_subject->d_ptr->layout()->count() > 0);
+}
+
 bool Ut_mdetailedlistitem::findItemInGridLayout(QGraphicsGridLayout *layout,
         QGraphicsLayoutItem *item)
 {

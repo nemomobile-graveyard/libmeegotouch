@@ -50,6 +50,7 @@ private slots:
     void testSetSideBottomTitle();
     void testSideBottomImageWidget();
     void testResizeEvent();
+    void testClearLayout();
 
 private:
     bool findItemInGridLayout(QGraphicsGridLayout *layout,
