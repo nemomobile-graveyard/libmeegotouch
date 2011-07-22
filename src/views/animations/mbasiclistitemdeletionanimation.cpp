@@ -46,18 +46,21 @@ void MBasicListItemDeletionAnimationPrivate::_q_resetAnimation()
 
 void MBasicListItemDeletionAnimationPrivate::appendTargetWidget(MWidget *cell)
 {
-    targets.insert(cell, TargetDefaultProperties(cell->zValue(), cell->opacity(), cell->scale(), cell->isVisible()));
+    targets.insert(new QWeakPointer<MWidget>(cell), TargetDefaultProperties(cell->zValue(), cell->opacity(), cell->scale(), cell->isVisible()));
 }
 
 void MBasicListItemDeletionAnimationPrivate::resetTargetWidgets()
 {
-    foreach (MWidget *cell, targets.keys()) {
-        TargetDefaultProperties properties = targets.value(cell);
-        cell->setZValue(properties.zValue);
-        cell->setOpacity(properties.opacity);
-        cell->setScale(properties.scale);
-        cell->setVisible(properties.visible);
+    foreach (QWeakPointer<MWidget>* cell, targets.keys()) {
+        if (!cell->isNull()) {
+            TargetDefaultProperties properties = targets.value(cell);
+            cell->data()->setZValue(properties.zValue);
+            cell->data()->setOpacity(properties.opacity);
+            cell->data()->setScale(properties.scale);
+            cell->data()->setVisible(properties.visible);
+        }
     }
+    qDeleteAll(targets.keys());
     targets.clear();
 }
 

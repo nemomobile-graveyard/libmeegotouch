@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QPointF>
 #include <QHash>
+#include <QWeakPointer>
 
 class MBasicListItemDeletionAnimation;
 class MWidget;
@@ -43,7 +44,7 @@ private:
         qreal scale;
         bool visible;
     };
-    QHash<MWidget*, TargetDefaultProperties> targets;
+    QHash<QWeakPointer<MWidget>*, TargetDefaultProperties> targets;
 
 public:
     MBasicListItemDeletionAnimationPrivate();
