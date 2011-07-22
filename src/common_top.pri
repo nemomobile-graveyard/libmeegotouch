@@ -100,6 +100,7 @@ contains(DEFINES, HAVE_CONTENTACTION) {
 
 contains(DEFINES, HAVE_GCONF) {
     PKGCONFIG += gconf-2.0
+macx:PKGCONFIG += gobject-2.0
     # TODO: Why is this necessary? 
     # The PKGCONFIG call above usually causes qmake to link to the correct libraries
     # automatically, but that does not happen if we remove these explicit mentions.
