@@ -766,6 +766,15 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void MApplicationWindowPrivate::_q_updateNavigationBarVisibility()
 {
+    bool switchingPages = page && page->sceneWindowState() != MSceneWindow::Appeared;
+    if (switchingPages) {
+        navigationBar->setProperty("_m_appearanceAnimation", "MWidgetFadeAnimation");
+        navigationBar->setProperty("_m_disappearanceAnimation", "MWidgetFadeAnimation");
+    } else {
+        navigationBar->setProperty("_m_appearanceAnimation", "MWidgetSlideAnimation");
+        navigationBar->setProperty("_m_disappearanceAnimation", "MWidgetSlideAnimation");
+    }
+
     // remove any pending update since we're doing it right now.
     if (navigationBarVisibilityUpdateTimer.isActive()) {
         navigationBarVisibilityUpdateTimer.stop();
