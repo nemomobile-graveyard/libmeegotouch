@@ -18,7 +18,9 @@
 ****************************************************************************/
 
 #include "ut_msheet.h"
+#ifdef HAVE_CONTEXTSUBSCRIBER
 #include "contextproperty_stub.h"
+#endif
 
 #include <QObject>
 #include <mdeviceprofile.h>
@@ -58,7 +60,7 @@ void Ut_MSheet::initTestCase()
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_msheet" };
     app = new MApplication(argc, app_name);
-
+#ifdef HAVE_CONTEXTSUBSCRIBER
     gContextPropertyStubMap->createStub("/maemo/InternalKeyboard/Present")->stubSetReturnValue("value", QVariant("false"));
     gContextPropertyStubMap->createStub("com.nokia.policy.video_route")->stubSetReturnValue("value", QVariant(""));
     gContextPropertyStubMap->createStub("Screen.IsCovered")->stubSetReturnValue("value", QVariant("false"));
@@ -83,6 +85,7 @@ void Ut_MSheet::initTestCase()
         gContextPropertyStubMap->createStub("/Screen/CurrentWindow/OrientationAngle")->
                 stubSetReturnValue("value", QVariant(0)); // portrait
     }
+#endif
 }
 
 void Ut_MSheet::cleanupTestCase()
@@ -270,7 +273,11 @@ void Ut_MSheet::testSettingInitialSystemwideModeOrientation()
     QVERIFY(standAloneWindow != 0);
 
     QCOMPARE(standAloneWindow->isOrientationLocked(), isOrientationLocked);
+#ifdef HAVE_CONTEXTSUBSCRIBER
     QCOMPARE(standAloneWindow->orientation(), orientation);
+#else
+    Q_UNUSED(orientation);
+#endif
     QCOMPARE(standAloneWindow->property("followsCurrentApplicationWindowOrientation"),
              followsCurrentApplicationWindowOrientation);
 }
@@ -330,7 +337,11 @@ void Ut_MSheet::testChangingSystemwideModeOrientationAfterAppearance()
     subject->setSystemwideModeOrientation(systemwideModeOrientation);
 
     QCOMPARE(standAloneWindow->isOrientationLocked(), isOrientationLocked);
+#ifdef HAVE_CONTEXTSUBSCRIBER
     QCOMPARE(standAloneWindow->orientation(), orientation);
+#else
+    Q_UNUSED(orientation);
+#endif
     QCOMPARE(standAloneWindow->property("followsCurrentApplicationWindowOrientation"),
              followsCurrentApplicationWindowOrientation);
 }
