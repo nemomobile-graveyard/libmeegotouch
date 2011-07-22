@@ -160,9 +160,24 @@ bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
         return true; // Successfully added 0 rows.
 
     QVector<PhoneBookEntry *> entries = phoneBookEntries;
-    for (int i = entries.size(); i < count; i++) {
-        PhoneBookEntry *entry = generateEntry();
-        entries.append(entry);
+    PhoneBookEntry *entry = NULL;
+    int currentRowCount = rowCount();
+
+    for (int i = row; i < row+count; i++) {
+        if (isGrouped() && buckets.bucketCount() != 0 && count == 1) {
+            int flatRow = buckets.origItemIndex(parent.row(), row);
+            entry = new PhoneBookEntry(entries.at(flatRow));
+            entry->fullName += " - copy";
+        } else if (currentRowCount > 0 && count == 1) {
+            entry = new PhoneBookEntry(entries.at(i));
+            entry->fullName += " - copy";
+        } else {
+            entry = generateEntry();
+        }
+
+
+        if (entry)
+            entries.insert(i, entry);
     }
 
     QStringList entriesList;
@@ -178,30 +193,35 @@ bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
         return false; // Something went wrong.
     }
 
-    bool layoutHasChanged = false;
-    if (entryBuckets.bucketCount() == buckets.bucketCount())
-        layoutHasChanged = true;
-
-    if (layoutHasChanged) {
-        layoutAboutToBeChanged();
+    QModelIndex realParent = parent;
+    if (entry) {
+        if (isGrouped()) {
+            for (int i = 0; i < entryBuckets.bucketCount(); i++) {
+                for (int j = 0; j < entryBuckets.bucketSize(i); j++) {
+                    if (entryBuckets.bucketContent(i).at(j) == entry->fullName) {
+                        row = j;
+                        realParent = index(i, 0, QModelIndex());
+                        break;
+                    }
+                }
+            }
+        }
     }
-    else {
-        if (isGrouped() && !parent.isValid())
-           beginInsertRows(QModelIndex(), row, row + (entryBuckets.bucketCount() - buckets.bucketCount()) - 1, false);
-        else
-           beginInsertRows(parent, row, row + count - 1, false);
-    }
 
+    if (isGrouped() && !parent.isValid())
+        beginInsertRows(QModelIndex(), row, row + (entryBuckets.bucketCount() - buckets.bucketCount()) - 1, count == 1);
+    else
+        beginInsertRows(realParent, row, row + count - 1, count == 1);
 
     phoneBookEntries = entries;
     buckets = entryBuckets;
 
-    if (layoutHasChanged)
+    endInsertRows();
+
+    if (isGrouped()) {
+        layoutAboutToBeChanged();
         layoutChanged();
-    else
-        endInsertRows();
-
-
+    }
     return true;
 }
 
@@ -222,12 +242,8 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
     beginRemoveRows(parent, row, row + count - 1, count == 1);
     qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
     phoneBookEntries.remove(flatRow, count);
-    if (isGrouped() && group >= 0) {
-        bool bucketEmpty = buckets.removeBucketItems(group, row, count);
-
-        if (bucketEmpty)
-            regenerateModel();
-    }
+    if (isGrouped() && group >= 0)
+        buckets.removeBucketItems(group, row, count);
     else
         regenerateModel();
 

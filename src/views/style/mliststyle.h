@@ -83,6 +83,14 @@ class M_VIEWS_EXPORT MListStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, groupSeparatorObjectName, GroupSeparatorObjectName)
 
     /*!
+        \property MListStyle::listInsertItemAnimation
+        \brief Sets object name for insert item animation
+
+        Sets object name for insert item animation.
+    */
+    M_STYLE_ATTRIBUTE(QString, insertItemAnimation, InsertItemAnimation)
+
+    /*!
         \property MListStyle::listDeleteItemAnimation
         \brief Sets object name for delete item animation
 

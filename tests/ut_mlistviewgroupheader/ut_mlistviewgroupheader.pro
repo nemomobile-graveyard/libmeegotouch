@@ -17,6 +17,7 @@ HEADERS += ut_mlistviewgroupheader.h \
         $$MSRCDIR/views/style/mlistindextooltipstyle.h \
         $$MSRCDIR/views/style/mlistheaderstyle.h \
         $$MSRCDIR/views/style/mbasiclistitemdeletionanimationstyle.h \
+        $$MSRCDIR/views/style/mbasiclistiteminsertionanimationstyle.h \
 
 SOURCES += ut_mlistviewgroupheader.cpp  \
         ../mlistviewcommon/myindexedmodel.cpp \
@@ -34,5 +35,7 @@ SOURCES += ut_mlistviewgroupheader.cpp  \
         ../../src/views/.gen/gen_mlistheaderstyledata.cpp \
         $$MSRCDIR/views/animations/mbasiclistitemdeletionanimation.cpp \
         ../../src/views/.gen/gen_mbasiclistitemdeletionanimationstyledata.cpp \
+        $$MSRCDIR/views/animations/mbasiclistiteminsertionanimation.cpp \
+        ../../src/views/.gen/gen_mbasiclistiteminsertionanimationstyledata.cpp \
 
 include(../common_bot.pri)

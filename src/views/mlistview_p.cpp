@@ -34,6 +34,7 @@
 #include "mapplicationpageview_p.h"
 
 #include "mlistview.h"
+#include "animations/mbasiclistiteminsertionanimation.h"
 #include "animations/mbasiclistitemdeletionanimation.h"
 
 using namespace MListViewPrivateNamespace;
@@ -64,6 +65,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     lastGeometrySize = QSizeF();
     isDeleted = false;
 
+    itemInsertionAnimation = NULL;
     itemDeletionAnimation = NULL;
 
     movingDetectorTimer.setSingleShot(true);
@@ -81,6 +83,7 @@ MListViewPrivate::~MListViewPrivate()
 
     delete hseparator;
     delete recycler;
+    delete itemInsertionAnimation;
     delete itemDeletionAnimation;
 }
 
@@ -197,7 +200,43 @@ void MListViewPrivate::selectionChange(const QItemSelection &selected, const QIt
 
 bool MListViewPrivate::isAnimating()
 {
-    return (itemDeletionAnimation && itemDeletionAnimation->state() == QParallelAnimationGroup::Running);
+    if (itemDeletionAnimation && itemDeletionAnimation->state() == QParallelAnimationGroup::Running)
+        return true;
+    else if (itemInsertionAnimation && itemInsertionAnimation->state() == QParallelAnimationGroup::Running)
+        return true;
+
+    return false;
+}
+
+bool MListViewPrivate::animateRowsInsertion(const QModelIndex &parent, int start, int end, bool animated)
+{
+    if (!animated || isAnimating() || !itemInsertionAnimation)
+        return false;
+
+    // Refresh group items position and size cache.
+    updateHeaderHeight();
+
+    int firstVisibleRow = indexToFlatRow(controllerModel->firstVisibleItem());
+    int lastVisibleRow = indexToFlatRow(controllerModel->lastVisibleItem());
+
+    if (parent.isValid()) {
+        int parentFlatRow = indexToFlatRow(parent);
+        start += parentFlatRow + 1;
+        end += parentFlatRow + 1;
+    }
+
+    if (start > lastVisibleRow + 1 || !controller->isVisible())
+        return false;
+
+    start = firstVisibleRow > start ? firstVisibleRow : start;
+    end = end > lastVisibleRow + 1 ? lastVisibleRow + 1 : end;
+
+    // Set targets for insert animation
+    appendTargetsToInsertAnimation(start, end, firstVisibleRow, lastVisibleRow);
+
+    // Start item insert animation
+    itemInsertionAnimation->start();
+    return true;
 }
 
 void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end, bool animated)
@@ -224,6 +263,32 @@ void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end,
 
     // Start item deletion animation
     itemDeletionAnimation->start();
+}
+
+void MListViewPrivate::appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow)
+{
+    QPointF offset(0,0);
+    animatingItems = visibleItems.values().toVector();
+
+    for (int flatRow = start; flatRow <= end; ++flatRow) {
+        MWidget *cell = createCell(flatRow);
+        cell->setPos(qreal(0), qreal(locatePosOfItem(flatRow)));
+        itemInsertionAnimation->appendInsertTarget(cell);
+        offset += QPointF(0, cellSize(flatRow).height() + hseparatorHeight);
+        animatingItems.append(cell);
+    }
+
+    for (int flatRow = firstVisibleRow; flatRow <= lastVisibleRow; ++flatRow) {
+        MWidget *cell = visibleItems[flatRow];
+        if (cell) {
+            if (flatRow < start) {
+                itemInsertionAnimation->appendBeforeTarget(cell);
+            } else {
+                itemInsertionAnimation->appendAfterTarget(cell, cell->pos() + offset);
+            }
+        }
+    }
+    visibleItems.clear();
 }
 
 void MListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
@@ -446,14 +511,21 @@ QPointF MListViewPrivate::calculatePannableViewportOffset(const QPointF &listPos
 
 void MListViewPrivate::updateAnimations()
 {
+    delete itemInsertionAnimation;
+    itemInsertionAnimation = 0;
+    if (!q_ptr->style()->insertItemAnimation().isEmpty()) {
+        itemInsertionAnimation = qobject_cast<MBasicListItemInsertionAnimation*>(MTheme::animation(q_ptr->style()->insertItemAnimation()));
+        if (itemInsertionAnimation)
+            connect(itemInsertionAnimation, SIGNAL(finished()), this, SLOT(resetAnimatedWidgets()));
+    }
+
     delete itemDeletionAnimation;
     itemDeletionAnimation = 0;
-    if (q_ptr->style()->deleteItemAnimation().isEmpty())
-        return;
-
-    itemDeletionAnimation = qobject_cast<MBasicListItemDeletionAnimation*>(MTheme::animation(q_ptr->style()->deleteItemAnimation()));
-    if (itemDeletionAnimation)
-        connect(itemDeletionAnimation, SIGNAL(finished()), this, SLOT(resetAnimatedWidgets()));
+    if (!q_ptr->style()->deleteItemAnimation().isEmpty()) {
+        itemDeletionAnimation = qobject_cast<MBasicListItemDeletionAnimation*>(MTheme::animation(q_ptr->style()->deleteItemAnimation()));
+        if (itemDeletionAnimation)
+            connect(itemDeletionAnimation, SIGNAL(finished()), this, SLOT(resetAnimatedWidgets()));
+    }
 }
 
 void MListViewPrivate::updateItemHeight()
@@ -1157,6 +1229,35 @@ void MPlainMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column
     painter->translate(-pos.x(), -pos.y());
 }
 
+void MPlainMultiColumnListViewPrivate::appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow)
+{
+    animatingItems = visibleItems.values().toVector();
+    int insertedCount = 0;
+    for (int flatRow = start; flatRow <= end; ++flatRow) {
+        MWidget *cell = createCell(flatRow);
+        int cellColumn = flatRowToColumn(flatRow);
+        cell->setPos(qreal(cellColumn * viewWidth / controllerModel->columns()), qreal(locatePosOfItem(flatRow)));
+        itemInsertionAnimation->appendInsertTarget(cell);
+        animatingItems.append(cell);
+        ++insertedCount;
+    }
+
+    for (int flatRow = firstVisibleRow; flatRow <= lastVisibleRow; flatRow ++) {
+        MWidget *cell = findCellAtRow(flatRow);
+        if (cell) {
+            if (flatRow < start) {
+                itemInsertionAnimation->appendBeforeTarget(cell);
+            } else {
+                int cellColumn = flatRowToColumn(flatRow + insertedCount);
+                QPointF targetPosition = QPointF(
+                        qreal(cellColumn * viewWidth / controllerModel->columns()), qreal(locatePosOfItem(flatRow + insertedCount)));
+                itemInsertionAnimation->appendAfterTarget(cell, targetPosition);
+            }
+        }
+    }
+    visibleItems.clear();
+}
+
 void MPlainMultiColumnListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
 {
     QPointF destination = findCellAtRow(start)->pos();
@@ -1551,6 +1652,11 @@ void MGroupHeaderListViewPrivate::updateListIndexVisibility()
         listIndexWidget->setDisplayMode((MList::DisplayMode)controllerModel->listIndexDisplayMode());
 }
 
+void MGroupHeaderListViewPrivate::appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow)
+{
+    MListViewPrivate::appendTargetsToInsertAnimation(start, end, firstVisibleRow, lastVisibleRow);
+}
+
 void MGroupHeaderListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)
 {
     MListViewPrivate::appendTargetsToDeleteAnimation(start, end, first, last);
@@ -1898,6 +2004,47 @@ void MMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column, QPa
     painter->translate(pos.x(), pos.y());
     vseparator->paint(painter, option);
     painter->translate(-pos.x(), -pos.y());
+}
+
+void MMultiColumnListViewPrivate::appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow)
+{
+    animatingItems = visibleItems.values().toVector();
+    for (int flatRow = start; flatRow <= end; ++flatRow) {
+        MWidget *cell = createCell(flatRow);
+        int cellColumn = flatRowToColumn(flatRow);
+        cell->setPos(qreal(cellColumn * viewWidth / controllerModel->columns()), qreal(locatePosOfItem(flatRow)));
+        itemInsertionAnimation->appendInsertTarget(cell);
+        animatingItems.append(cell);
+    }
+
+    bool shifting = false;
+    QPointF offset(0,0);
+    for (int flatRow = firstVisibleRow; flatRow <= lastVisibleRow; flatRow ++) {
+        MWidget *cell = visibleItems[flatRow];
+        if (cell) {
+            if (flatRow < start) {
+                itemInsertionAnimation->appendBeforeTarget(cell);
+            } else {
+                if (headersRows.contains(flatRow) && !shifting) {
+                    int itemsInGroup = itemsCount(headersRows.indexOf(flatRow) - 1);
+                    int newGroupRows = itemsToRows(itemsInGroup);
+                    int oldGroupRows = itemsToRows(itemsInGroup - (end - start + 1));
+                    offset = QPointF(0, (newGroupRows - oldGroupRows) * (itemHeight + hseparatorHeight));
+                    shifting = true;
+                }
+                if (!shifting) {
+                    int column = flatRowToColumn(flatRow + 1);
+                    QPointF destination = QPointF(
+                            qreal(column * viewWidth / controllerModel->columns()),
+                            qreal(locatePosOfItem(flatRow + 1)));
+                    itemInsertionAnimation->appendAfterTarget(cell, destination);
+                } else {
+                    itemInsertionAnimation->appendAfterTarget(cell, cell->pos() + offset);
+                }
+            }
+        }
+    }
+    visibleItems.clear();
 }
 
 void MMultiColumnListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int first, int last)

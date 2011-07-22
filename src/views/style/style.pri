@@ -68,6 +68,7 @@ PUBLIC_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mlistindextooltipstyle.h \
     $$STYLE_SRC_DIR/mgraphicshighlighteffectstyle.h \
     $$STYLE_SRC_DIR/mlistheaderstyle.h \
+    $$STYLE_SRC_DIR/mbasiclistiteminsertionanimationstyle.h \
     $$STYLE_SRC_DIR/mbasiclistitemdeletionanimationstyle.h \
 
 STYLE_HEADERS += \

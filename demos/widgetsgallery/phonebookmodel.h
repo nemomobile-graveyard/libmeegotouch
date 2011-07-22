@@ -31,6 +31,12 @@
 
 // Structure which contain data for each row
 struct PhoneBookEntry {
+    PhoneBookEntry(PhoneBookEntry *entry) :
+        firstName(entry->firstName), lastName(entry->lastName),
+        fullName(entry->fullName), phoneNumber(entry->phoneNumber),
+        thumbnail(entry->thumbnail), thumbnailId(entry->thumbnailId)
+    {}
+    PhoneBookEntry() {}
     QString firstName; // store first and last names for searching
     QString lastName;
     QString fullName; // store fullname so that we don't need to concatenate first and last name

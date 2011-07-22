@@ -17,11 +17,13 @@ SOURCES += \
         $${M_SOURCE_TREE}/src/views/mapplicationpageview.cpp \
         $${M_SOURCE_TREE}/src/views/widgets/mlistheader.cpp \
         $${M_SOURCE_TREE}/src/views/animations/mbasiclistitemdeletionanimation.cpp \
+        $${M_SOURCE_TREE}/src/views/animations/mbasiclistiteminsertionanimation.cpp \
         $${M_BUILD_TREE}/src/views/.gen/gen_mlistindexmodeldata.cpp \
         $${M_BUILD_TREE}/src/views/.gen/gen_mlistindexstyledata.cpp \
         $${M_BUILD_TREE}/src/views/.gen/gen_mlistindextooltipstyledata.cpp \
         $${M_BUILD_TREE}/src/views/.gen/gen_mlistheaderstyledata.cpp \
         $${M_BUILD_TREE}/src/views/.gen/gen_mbasiclistitemdeletionanimationstyledata.cpp \
+        $${M_BUILD_TREE}/src/views/.gen/gen_mbasiclistiteminsertionanimationstyledata.cpp \
         $${M_BUILD_TREE}/src/views/.moc/moc_mlistheader.cpp \
         $${M_BUILD_TREE}/src/views/.moc/moc_mlistview_p.cpp \
 
@@ -33,5 +35,7 @@ HEADERS += \
         $${M_SOURCE_TREE}/src/views/style/mlistindextooltipstyle.h \
         $${M_SOURCE_TREE}/src/views/style/mlistheaderstyle.h \
         $${M_SOURCE_TREE}/src/views/style/mbasiclistitemdeletionanimationstyle.h \
+        $${M_SOURCE_TREE}/src/views/style/mbasiclistiteminsertionanimationstyle.h \
+
 
 include(../common_bot.pri)

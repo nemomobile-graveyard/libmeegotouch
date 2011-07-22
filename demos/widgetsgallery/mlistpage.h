@@ -86,6 +86,7 @@ public slots:
     void itemClick(const QModelIndex &index);
     void itemLongTapped(const QModelIndex &index, const QPointF &position);
 
+    void insertListItem();
     void removeListItem();
     void editListItem();
 

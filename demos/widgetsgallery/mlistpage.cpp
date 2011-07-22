@@ -280,6 +280,7 @@ void MListPage::setPlainListModel()
     proxyModel->setObjectName("proxyModel");
     proxyModel->setSortRole(PhoneBookModel::PhoneBookSortRole);
     proxyModel->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
+    proxyModel->setDynamicSortFilter(true);
     proxyModel->setSourceModel(model);
 
     list->setItemModel(proxyModel);
@@ -385,8 +386,14 @@ void MListPage::createObjectMenuActions()
     objectMenu = new MObjectMenu(0);
     objectMenu->setObjectName("objectMenu");
 
+    //% "Clone"
+    MAction *action = new MAction(qtTrId("xx_listpage_list_clone"), this);
+    action->setObjectName("insertAction");
+    objectMenu->addAction(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(insertListItem()));
+
     //% "Remove"
-    MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), this);
+    action = new MAction(qtTrId("xx_listpage_list_remove"), this);
     action->setObjectName("removeAction");
     objectMenu->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
@@ -585,6 +592,15 @@ void MListPage::itemLongTapped(const QModelIndex &index, const QPointF &position
         sceneManager()->appearSceneWindow(objectMenu);
     }
     longTappedIndex = index;
+}
+
+void MListPage::insertListItem()
+{
+    if(longTappedIndex.isValid()) {
+        mDebug("MListPage::insertListItem") << "Row about to be inserted: " << longTappedIndex.row();
+        list->itemModel()->insertRow(longTappedIndex.row(), longTappedIndex.parent());
+        longTappedIndex = QModelIndex();
+    }
 }
 
 void MListPage::removeListItem()

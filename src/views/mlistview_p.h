@@ -44,6 +44,7 @@ class QItemSelectionModel;
 class QItemSelection;
 class QPropertyAnimation;
 class QParallelAnimationGroup;
+class MBasicListItemInsertionAnimation;
 class MBasicListItemDeletionAnimation;
 
 namespace MListViewPrivateNamespace
@@ -138,7 +139,9 @@ public:
     virtual void resetModel(MListModel *controllerModel);
     virtual int locateVisibleRowAt(int y, int x = 0) = 0;
 
+    virtual bool animateRowsInsertion(const QModelIndex &parent, int start, int end, bool animated);
     virtual void removeRows(const QModelIndex &parent, int start, int end, bool animated);
+    virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
     virtual bool isAnimating();
 
@@ -226,6 +229,7 @@ public:
     QSizeF lastGeometrySize;
 
     // Item remove animations
+    MBasicListItemInsertionAnimation* itemInsertionAnimation;
     MBasicListItemDeletionAnimation* itemDeletionAnimation;
 
     bool isDeleted;
@@ -291,6 +295,7 @@ public:
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
+    virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
 public:
     QHash<MWidget *, int> widgetFlatRows;
@@ -352,6 +357,7 @@ public:
     virtual void updateListIndexStyle();
     virtual void updateListIndexTitles();
 
+    virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
 
 public:
@@ -404,6 +410,7 @@ public:
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
+    virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
 public:
     QHash<MWidget *, int> widgetFlatRows;

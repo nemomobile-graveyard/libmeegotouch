@@ -294,12 +294,8 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
  */
 void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool animated)
 {
-    Q_UNUSED(parent);
-    Q_UNUSED(start);
-    Q_UNUSED(end);
-    Q_UNUSED(animated);
-
-    layoutChanged();
+    if (!d_ptr->animateRowsInsertion(parent, start, end, animated))
+        layoutChanged();
 }
 
 /*!
