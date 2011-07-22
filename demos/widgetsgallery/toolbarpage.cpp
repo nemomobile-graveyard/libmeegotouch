@@ -276,9 +276,9 @@ void ToolBarPage::retranslateUi()
     textButtonsAction->setText(qtTrId("xx_toolbar_page_text_buttons"));
     //% "Text field"
     textFieldAction->setText(qtTrId("xx_toolbar_page_text_field"));
-    //% "Icon + label tabs in portrait (default)"
+    //% "Label tabs (+icon in portrait)"
     iconAndLabelTabsAction->setText(qtTrId("xx_toolbar_page_icon_and_label_tabs"));
-    //% "Icon tabs"
+    //% "Tabs (with icons in portrait)"
     iconTabsAction->setText(qtTrId("xx_toolbar_page_icon_tabs"));
     //% "Icon tabs (top)"
     iconTabsTopAction->setText(qtTrId("xx_toolbar_page_icon_tabs_top"));
