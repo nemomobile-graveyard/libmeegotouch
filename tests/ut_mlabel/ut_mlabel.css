@@ -43,3 +43,18 @@ MLabelStyle#margins {
     margin-top: 6;
     margin-bottom: 6;
 }
+MLabelStyle {
+    preferred-line-count: -1;
+}
+MLabelStyle#lineCount0 {
+    preferred-line-count: 0;
+}
+MLabelStyle#lineCount1 {
+    preferred-line-count: 1;
+}
+MLabelStyle#lineCount2 {
+    preferred-line-count: 2;
+}
+MLabelStyle#lineCount3 {
+    preferred-line-count: 3;
+}

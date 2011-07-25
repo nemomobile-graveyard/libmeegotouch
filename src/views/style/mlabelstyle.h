@@ -92,6 +92,16 @@ class M_VIEWS_EXPORT MLabelStyle : public MWidgetStyle
     */
     M_STYLE_ATTRIBUTE(Qt::Alignment, verticalAlignment, VerticalAlignment)
 
+    /*!
+      \property MLabelStyle::preferredLineCount
+      \brief Set the preferred height of the label to the
+      given number of lines of text.
+
+      Default is -1, indicating to use the entire text.
+
+      Typically used with MLabel::setElide()
+    */
+    M_STYLE_ATTRIBUTE(int, preferredLineCount, PreferredLineCount)
 };
 
 /*!

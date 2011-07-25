@@ -130,7 +130,11 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             if (preferredSize.width() >= 0 && (preferredSize.width() < width || width < 0))
                 width = preferredSize.width();
         }
-        QSizeF size = sizeForWidth(width, stringVariants.first(), viewPrivate->model()->preferredLineCount()); //Get the size of the largest variant
+        //Model overrides style
+        int preferredLineCount = viewPrivate->model()->preferredLineCount();
+        if (preferredLineCount < 0)
+            preferredLineCount = viewPrivate->style()->preferredLineCount();
+        QSizeF size = sizeForWidth(width, stringVariants.first(), preferredLineCount); //Get the size of the largest variant
         return size;
     }
     case Qt::MaximumSize: {
@@ -241,6 +245,7 @@ void MLabelViewSimple::applyStyle()
 {
     if (viewPrivate->model()->alignmentFromStyle())
         const_cast<MLabelModel*>(viewPrivate->model())->setAlignment(viewPrivate->style()->horizontalAlignment() | viewPrivate->style()->verticalAlignment());
+    //preferredLineCount might have changed, but MLabelView::applyStyle will call updateGeometry() for us
 }
 
 QString MLabelViewSimple::renderedText() const

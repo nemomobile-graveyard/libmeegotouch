@@ -1253,16 +1253,21 @@ void Ut_MLabel::testPreferredLineCount_data()
 {
     QTest::addColumn<bool>("wordWrap");
     QTest::addColumn<QTextOption::WrapMode>("wrapMode");
+    QTest::addColumn<bool>("useCSS");
 
-    QTest::newRow("no wordWrap, NoWrap") << false << QTextOption::NoWrap;
-    QTest::newRow("wordWrap, NoWrap") << true << QTextOption::NoWrap;
-    QTest::newRow("wordWrap, WrapAnywhere") << true << QTextOption::WrapAnywhere;
+    QTest::newRow("no wordWrap, NoWrap, CSS") << false << QTextOption::NoWrap << true;
+    QTest::newRow("wordWrap, NoWrap, CSS") << true << QTextOption::NoWrap << true;
+    QTest::newRow("wordWrap, WrapAnywhere, CSS") << true << QTextOption::WrapAnywhere << true;
+    QTest::newRow("no wordWrap, NoWrap, setPreferredLineCount()") << false << QTextOption::NoWrap << false;
+    QTest::newRow("wordWrap, NoWrap, setPreferredLineCount()") << true << QTextOption::NoWrap << false;
+    QTest::newRow("wordWrap, WrapAnywhere, setPreferredLineCount()") << true << QTextOption::WrapAnywhere << false;
 }
 
 void Ut_MLabel::testPreferredLineCount()
 {
     QFETCH(bool, wordWrap);
     QFETCH(QTextOption::WrapMode, wrapMode);
+    QFETCH(bool, useCSS);
 
     QCOMPARE(label->preferredLineCount(), -1);
     label->setWordWrap(wordWrap);
@@ -1270,39 +1275,63 @@ void Ut_MLabel::testPreferredLineCount()
     label->setTextElide(true);
     label->setText("A\nB\nC");
     label->resize(label->preferredSize());
-    qWarning() << "label->size" << label->size();
     const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
     if (wrapMode == QTextOption::WrapAnywhere) {
-        qWarning() << "text lengh" << view->renderedText().length() << QString::number(view->renderedText().at(1).unicode(), 16);
         QCOMPARE(view->renderedText(), QString("A\nB\nC"));
     }
     else
         QCOMPARE(view->renderedText(), QString("A B C"));
-    label->setPreferredLineCount(3);
+    if (useCSS)
+        label->setStyleName("lineCount3");
+    else
+        label->setPreferredLineCount(3);
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere)
         QCOMPARE(view->renderedText(), QString("A\nB\nC"));
     else
         QCOMPARE(view->renderedText(), QString("A B C"));
-    label->setPreferredLineCount(2);
+    if (useCSS)
+        label->setStyleName("lineCount2");
+    else
+        label->setPreferredLineCount(2);
     label->resize(label->preferredSize());
     const QChar ellipsisChar(0x2026);
     if (wrapMode == QTextOption::WrapAnywhere)
         QCOMPARE(view->renderedText(), QString("A\nB") + ellipsisChar);
     else
         QCOMPARE(view->renderedText(), QString("A B C"));
+    if (useCSS)
+        label->setStyleName("lineCount1");
+    else
+        label->setPreferredLineCount(1);
+    label->resize(label->preferredSize());
+    if (wrapMode == QTextOption::WrapAnywhere)
+        QCOMPARE(view->renderedText(), QString("A") + ellipsisChar);
+    else
+        QCOMPARE(view->renderedText(), QString("A B C"));
+    if (useCSS)
+        label->setStyleName("lineCount0");
+    else
+        label->setPreferredLineCount(0);
+    label->resize(label->preferredSize());
+    if (wrapMode == QTextOption::WrapAnywhere)
+        QCOMPARE(view->renderedText(), QString(""));
+    else
+        QCOMPARE(view->renderedText(), QString(""));
+
+    if (useCSS)
+        QCOMPARE(label->preferredLineCount(), -1);
+    else
+        QCOMPARE(label->preferredLineCount(), 0);
+
+    // Set both model and CSS line count, and make sure that model overrides CSS
+    label->setStyleName("lineCount3");
     label->setPreferredLineCount(1);
     label->resize(label->preferredSize());
     if (wrapMode == QTextOption::WrapAnywhere)
         QCOMPARE(view->renderedText(), QString("A") + ellipsisChar);
     else
         QCOMPARE(view->renderedText(), QString("A B C"));
-    label->setPreferredLineCount(0);
-    label->resize(label->preferredSize());
-    if (wrapMode == QTextOption::WrapAnywhere)
-        QCOMPARE(view->renderedText(), QString(""));
-    else
-        QCOMPARE(view->renderedText(), QString(""));
 }
 
 QTEST_APPLESS_MAIN(Ut_MLabel);
