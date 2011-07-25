@@ -25,6 +25,7 @@
 #include <QObject>
 #include "mapplication.h"
 class MPannableWidget;
+class MPannableWidgetGlass;
 class DummyGraphicsItem;
 
 class Ut_MPannableWidget : public QObject
@@ -49,8 +50,16 @@ private slots:
     void panGestureMovesPhysicsPointer();
     void panGestureAgainstPanningDirectionStopsPanning();
 
+    void testGlassMousePressEvent();
+    void testGlassTapAndHoldGestureEvent();
+    void testEnabled();
+    void testUpdatePosition();
+    void testPanThreshold();
+
 private:
     MPannableWidget *widget;
+
+    MPannableWidgetGlass *widgetGlass;
 };
 
 

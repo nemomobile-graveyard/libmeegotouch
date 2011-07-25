@@ -340,6 +340,7 @@ private:
 #ifdef UNIT_TEST
     //! Test unit is defined as a friend of production code to access private members
     friend class Ut_MPhysics2DPanning;
+    friend class Ut_MPannableWidget;
 #endif
 };
 

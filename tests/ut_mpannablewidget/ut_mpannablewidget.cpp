@@ -20,6 +20,7 @@
 #include "ut_mpannablewidget.h"
 #include "mpannablewidget.h"
 #include "mpannablewidget_p.h"
+#include "mphysics2dpanning_p.h"
 #include "mcancelevent.h"
 
 #include <QGestureEvent>
@@ -62,29 +63,9 @@ struct PhysicsState {
 };
 PhysicsState *physicsState = 0;
 
-//Physics stubs:
-void MPhysics2DPanning::start()
-{
-}
-
-void MPhysics2DPanning::stop()
-{
-    physicsState->physicsStopped = true;
-}
-
-void MPhysics2DPanning::pointerPress(const QPointF& /*pos*/)
-{
-    physicsState->pointerPressed = true;
-}
-
 void MPhysics2DPanning::pointerMove(const QPointF& /*pos*/)
 {
     physicsState->pointerMoved = true;
-}
-
-void MPhysics2DPanning::pointerRelease()
-{
-    physicsState->pointerReleased = true;
 }
 
  Qt::GestureState currentPanState = Qt::NoGesture;
@@ -108,10 +89,12 @@ void Ut_MPannableWidget::init()
     dummyItem = new DummyGraphicsItem;
     physicsState = new PhysicsState;
     widget = new MPannableWidget;
+    widgetGlass = new MPannableWidgetGlass(widget);
 }
 
 void Ut_MPannableWidget::cleanup()
 {
+    delete widgetGlass;
     delete widget;
     delete physicsState;
     delete dummyItem;
@@ -126,27 +109,35 @@ void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
     QGestureEvent event(gestureList);
 
     currentPanState = Qt::GestureStarted;
-    widget->panGestureEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, true);
-    QCOMPARE(physicsState->pointerMoved, true);
-    QCOMPARE(physicsState->pointerReleased, false);
 
-    physicsState->pointerPressed = false;
+    QSignalSpy spyPress(widget->d_func()->physics, SIGNAL(pointerPressed()));
+    QSignalSpy spyRelease(widget->d_func()->physics, SIGNAL(pointerReleased()));
+    widget->panGestureEvent(&event, &panGesture);
+    QCOMPARE(spyPress.count(), 1);
+    QCOMPARE(physicsState->pointerMoved, true);
+    QCOMPARE(spyRelease.count(), 0);
+
+    physicsState->pointerMoved = false;
 
     currentPanState = Qt::GestureUpdated;
+
+    QSignalSpy spyPress2(widget->d_func()->physics, SIGNAL(pointerPressed()));
+    QSignalSpy spyRelease2(widget->d_func()->physics, SIGNAL(pointerReleased()));
     widget->panGestureEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, false);
+    QCOMPARE(spyPress2.count(), 0);
     QCOMPARE(physicsState->pointerMoved, true);
-    QCOMPARE(physicsState->pointerReleased, false);
+    QCOMPARE(spyRelease2.count(), 0);
 
     physicsState->pointerMoved = false;
 
     currentPanState = Qt::GestureFinished;
-    widget->panGestureEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, false);
-    QCOMPARE(physicsState->pointerMoved, false);
-    QCOMPARE(physicsState->pointerReleased, true);
 
+    QSignalSpy spyPress3(widget->d_func()->physics, SIGNAL(pointerPressed()));
+    QSignalSpy spyRelease3(widget->d_func()->physics, SIGNAL(pointerReleased()));
+    widget->panGestureEvent(&event, &panGesture);
+    QCOMPARE(spyPress3.count(), 0);
+    QCOMPARE(physicsState->pointerMoved, false);
+    QCOMPARE(spyRelease3.count(), 1);
 }
 
 void Ut_MPannableWidget::panGestureAgainstPanningDirectionStopsPanning()
@@ -160,10 +151,12 @@ void Ut_MPannableWidget::panGestureAgainstPanningDirectionStopsPanning()
     currentPanState = Qt::GestureStarted;
     panGesture.setOffset(QPointF(100,0));
 
+    QSignalSpy spyPress(widget->d_func()->physics, SIGNAL(pointerPressed()));
+    QSignalSpy spyRelease(widget->d_func()->physics, SIGNAL(pointerReleased()));
     widget->panGestureEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, false);
+    QCOMPARE(spyPress.count(), 0);
     QCOMPARE(physicsState->pointerMoved, false);
-    QCOMPARE(physicsState->pointerReleased, true);
+    QCOMPARE(spyRelease.count(), 1);
     QCOMPARE(event.isAccepted(&panGesture), false);
 }
 
@@ -198,12 +191,80 @@ void Ut_MPannableWidget::settingNewPhysicsShouldEmitPhysicsChangeSignal()
     widget->setPhysics(new MPhysics2DPanning(widget));
 }
 
-
 void Ut_MPannableWidget::settingPhysicsToNULLShouldNotBreakTheWidget()
 {
     widget->setPhysics(NULL);
     QVERIFY(static_cast<MPannableWidgetPrivate *>(widget->d_ptr)->physics != NULL);
+}
 
+void Ut_MPannableWidget::testGlassMousePressEvent()
+{
+    QGraphicsSceneMouseEvent event;
+    //physics not in motion, ignore expected
+    widgetGlass->mousePressEvent(&event);
+    QVERIFY(!event.isAccepted());
+
+    widget->d_func()->physics->setPosition(QPointF(100, 100));
+    widget->d_func()->physics->setMaximumVelocity(10.0);
+    //add some positions samples to calculate velocity
+    widget->d_func()->physics->d_ptr->positions.push_front(QPointF(40, 40));
+    widget->d_func()->physics->d_ptr->positions.push_front(QPointF(30, 30));
+    widget->d_func()->physics->d_ptr->positions.push_front(QPointF(20, 20));
+    widget->d_func()->physics->pointerRelease();
+    //physics in motion
+    widgetGlass->mousePressEvent(&event);
+    QVERIFY(event.isAccepted());
+}
+
+void Ut_MPannableWidget::testGlassTapAndHoldGestureEvent()
+{
+    QList<QGesture*> gestures;
+
+    QTapAndHoldGesture *gesture1 = new QTapAndHoldGesture();
+    gesture1->setPosition(QPointF(20, 20));
+    gestures.append(gesture1);
+    QGestureEvent event(gestures);
+
+    widgetGlass->tapAndHoldGestureEvent(&event, gesture1);
+    //widget is not in motion, so event won't be accepted
+    QVERIFY(!event.isAccepted(gesture1));
+
+    widget->d_func()->physics->setPosition(QPointF(20, 20));
+    widget->d_func()->physics->setMaximumVelocity(10.0);
+    //add some positions samples to calculate velocity
+    widget->d_func()->physics->d_ptr->positions.push_front(QPointF(40, 40));
+    widget->d_func()->physics->d_ptr->positions.push_front(QPointF(30, 30));
+    widget->d_func()->physics->d_ptr->positions.push_front(QPointF(20, 20));
+    widget->d_func()->physics->pointerRelease();
+    widgetGlass->tapAndHoldGestureEvent(&event, gesture1);
+    QVERIFY(event.isAccepted(gesture1));
+    gestures.clear();
+}
+
+void Ut_MPannableWidget::testEnabled()
+{
+    widget->setEnabled(true);
+
+    QVERIFY(widget->isEnabled());
+}
+
+void Ut_MPannableWidget::testUpdatePosition()
+{
+    QSignalSpy spy(widget->d_func()->physics, SIGNAL(positionChanged(const QPointF)));
+    widget->d_func()->physics->setPosition(QPointF(20, 20));
+
+    QCOMPARE(spy.count(), 1);
+
+    //nothing more to test
+}
+
+void Ut_MPannableWidget::testPanThreshold()
+{
+    //nothing to test as MPannableWidget::panThreshold()
+    //and MPannableWidget::setPanThreshold() is not implemented
+
+    widget->setPanThreshold(0);
+    widget->panThreshold();
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableWidget);
