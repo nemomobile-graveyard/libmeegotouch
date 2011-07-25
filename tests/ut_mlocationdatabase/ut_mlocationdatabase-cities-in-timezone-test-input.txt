@@ -1,6 +1,6 @@
 qtn_clk_city_china_qingdao Qingdao Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -21,8 +21,8 @@ qtn_clk_city_st_pierre_miquelon_pierre Saint-Pierre America/Miquelon :
 qtn_clk_city_bulg_sofia Sofia Europe/Sofia :
         qtn_clk_city_bulg_sofia Sofia
 qtn_clk_city_usa_hatford Hartford, Connecticut America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -59,11 +59,11 @@ qtn_clk_city_usa_milwaukee Milwaukee, Wisconsin America/Chicago :
         qtn_clk_city_usa_omaha Omaha, Nebraska
         qtn_clk_city_usa_gary Gary, Indiana
 qtn_clk_city_switzerland_zurich Zurich Europe/Zurich :
-        qtn_clk_city_switzerland_zurich Zurich
         qtn_clk_city_switz_bern Bern
+        qtn_clk_city_switzerland_zurich Zurich
 qtn_clk_city_usa_miami Miami, Florida America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -167,8 +167,8 @@ qtn_clk_city_syria_damascus Damascus Asia/Damascus :
 qtn_clk_city_usa_charlotte_amalie Charlotte Amalie, United States Virgin Islands America/St_Thomas :
         qtn_clk_city_usa_charlotte_amalie Charlotte Amalie, United States Virgin Islands
 qtn_clk_city_china_changsha Changsha Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -225,8 +225,8 @@ qtn_clk_city_canada_calgar Calgary America/Edmonton :
         qtn_clk_city_canada_lloydminster Lloydminster
         qtn_clk_city_canada_cranbrook Cranbrook
 qtn_clk_city_china_guangzhou Guangzhou Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -248,8 +248,8 @@ qtn_clk_city_safric_johburg Johannesburg Africa/Johannesburg :
         qtn_clk_city_safric_johburg Johannesburg
         qtn_clk_city_safric_pretoria Pretoria
 qtn_clk_city_bra_riojan Rio de Janeiro America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -279,8 +279,8 @@ qtn_clk_city_rus_stpeters St. Petersburg Europe/Moscow :
         qtn_clk_city_rus_moscow Moscow
         qtn_clk_city_rus_stpeters St. Petersburg
 qtn_clk_city_bra_curitiba Curitiba America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -295,8 +295,8 @@ qtn_clk_city_north_korea_pyongyang Pyongyang Asia/Pyongyang :
 qtn_clk_city_phoenix_islands_rawaki Kanton Pacific/Enderbury :
         qtn_clk_city_phoenix_islands_rawaki Kanton
 qtn_clk_city_china_hefei Hefei Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -325,8 +325,8 @@ qtn_clk_city_rus_magadan Magadan Asia/Magadan :
 qtn_clk_city_sierra_leone_freetown Freetown Africa/Freetown :
         qtn_clk_city_sierra_leone_freetown Freetown
 qtn_clk_city_china_nanchang Nanchang Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -347,8 +347,8 @@ qtn_clk_city_egypt_cairo Cairo Africa/Cairo :
 qtn_clk_city_tonga_nuku Nuku'alofa Pacific/Tongatapu :
         qtn_clk_city_tonga_nuku Nuku'alofa
 qtn_clk_city_usa_boston Boston, Massachusetts America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -411,11 +411,11 @@ qtn_clk_city_usa_losange Los Angeles, California America/Los_Angeles :
         qtn_clk_city_usa_portland Portland, Oregon
         qtn_clk_city_usa_lasvega Las Vegas, Nevada
 qtn_clk_city_switz_bern Bern Europe/Zurich :
-        qtn_clk_city_switzerland_zurich Zurich
         qtn_clk_city_switz_bern Bern
+        qtn_clk_city_switzerland_zurich Zurich
 qtn_clk_city_china_shenzhen Shenzhen Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -432,8 +432,8 @@ qtn_clk_city_china_shenzhen Shenzhen Asia/Shanghai :
         qtn_clk_city_china_nanjing Nanjing
         qtn_clk_city_china_kaifeng Kaifeng
 qtn_clk_city_china_tianjin Tianjin Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -467,8 +467,8 @@ qtn_clk_city_jordan_amman Amman Asia/Amman :
 qtn_clk_city_rus_vladivost Vladivostok Asia/Vladivostok :
         qtn_clk_city_rus_vladivost Vladivostok
 qtn_clk_city_usa_augusta Augusta, Maine America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -523,8 +523,8 @@ qtn_clk_city_jp_sapporo Sapporo Asia/Tokyo :
         qtn_clk_city_jp_osaka Osaka
         qtn_clk_city_jp_sapporo Sapporo
 qtn_clk_city_bra_brasilia Brasília America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -608,8 +608,8 @@ qtn_clk_city_canada_lloydminster Lloydminster America/Edmonton :
 qtn_clk_city_guy_georgetown Georgetown America/Guyana :
         qtn_clk_city_guy_georgetown Georgetown
 qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -627,8 +627,8 @@ qtn_clk_city_usa_philadelp Philadelphia, Pennsylvania America/New_York :
         qtn_clk_city_usa_columbia Columbia, South Carolina
         qtn_clk_city_usa_atlanta Atlanta, Georgia
 qtn_clk_city_china_beijing Beijing Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -754,8 +754,8 @@ qtn_clk_city_usa_evansville Evansville, Indiana America/Chicago :
         qtn_clk_city_usa_omaha Omaha, Nebraska
         qtn_clk_city_usa_gary Gary, Indiana
 qtn_clk_city_usa_providence Providence, Rhode Island America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -777,8 +777,8 @@ qtn_clk_city_gibraltar_gibraltar Gibraltar Europe/Gibraltar :
 qtn_clk_city_viet_hanoi Hanoi Asia/Ho_Chi_Minh :
         qtn_clk_city_viet_hanoi Hanoi
 qtn_clk_city_bra_saopaulo São Paulo America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -801,8 +801,8 @@ qtn_clk_city_azores_ponta_delgada Ponta Delgada Atlantic/Azores :
 qtn_clk_city_puertor_sanjuan San Juan America/Argentina/San_Juan :
         qtn_clk_city_puertor_sanjuan San Juan
 qtn_clk_city_usa_montpelier Montpelier, Vermont America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -828,8 +828,8 @@ qtn_clk_city_cyprus_nicosia Nicosia Asia/Nicosia :
 qtn_clk_city_armenia_yerevan Yerevan Asia/Yerevan :
         qtn_clk_city_armenia_yerevan Yerevan
 qtn_clk_city_usa_columbus Columbus, Ohio America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -851,8 +851,8 @@ qtn_clk_city_greece_athens Athens Europe/Athens :
 qtn_clk_city_indon_jakarta Jakarta Asia/Jakarta :
         qtn_clk_city_indon_jakarta Jakarta
 qtn_clk_city_bra_belo_horizonte Belo Horizonte America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -878,8 +878,8 @@ qtn_clk_city_bra_macapa Macapa America/Belem :
         qtn_clk_city_bra_belem Belem
         qtn_clk_city_bra_macapa Macapa
 qtn_clk_city_china_suzhou Suzhou Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -938,8 +938,8 @@ qtn_clk_city_montserrat_olveston Brades Estate America/Montserrat :
 qtn_clk_city_serb_belgrade Belgrade Europe/Belgrade :
         qtn_clk_city_serb_belgrade Belgrade
 qtn_clk_city_china_shijiazhuang Shijiazhuang Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -956,8 +956,8 @@ qtn_clk_city_china_shijiazhuang Shijiazhuang Asia/Shanghai :
         qtn_clk_city_china_nanjing Nanjing
         qtn_clk_city_china_kaifeng Kaifeng
 qtn_clk_city_china_wuhan Wuhan Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -976,8 +976,8 @@ qtn_clk_city_china_wuhan Wuhan Asia/Shanghai :
 qtn_clk_city_albania_tirane Tirana Europe/Tirane :
         qtn_clk_city_albania_tirane Tirana
 qtn_clk_city_bra_goiania Goiania America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -986,8 +986,8 @@ qtn_clk_city_bra_goiania Goiania America/Sao_Paulo :
         qtn_clk_city_bra_vitoria Vitoria
         qtn_clk_city_bra_joinville Joinville
 qtn_clk_city_usa_richmond Richmond, Virginia America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1083,8 +1083,8 @@ qtn_clk_city_yemen_sana Sanaa Asia/Aden :
 qtn_clk_city_trinidad_portofspain Port of Spain America/Port_of_Spain :
         qtn_clk_city_trinidad_portofspain Port of Spain
 qtn_clk_city_china_shenyang Shenyang Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -1139,8 +1139,8 @@ qtn_clk_city_marq_island_taiohae Taiohae Pacific/Marquesas :
 qtn_clk_city_canada_blanc_sablon Blanc-Sablon America/Blanc-Sablon :
         qtn_clk_city_canada_blanc_sablon Blanc-Sablon
 qtn_clk_city_india_chennai Chennai Asia/Kolkata :
-        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_chennai Chennai
         qtn_clk_city_india_mumbai Mumbai
 qtn_clk_city_china_harbin Harbin Asia/Harbin :
@@ -1172,8 +1172,8 @@ qtn_clk_city_china_chengdu Chengdu Asia/Chongqing :
 qtn_clk_city_comoros_moroni Moroni Indian/Comoro :
         qtn_clk_city_comoros_moroni Moroni
 qtn_clk_city_usa_baltimore Baltimore, Maryland America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1223,8 +1223,8 @@ qtn_clk_city_usa_guam Guam Pacific/Guam :
         qtn_clk_city_usa_guam Guam
         qtn_clk_city_guam_agana Hagatna
 qtn_clk_city_china_taiyuan Taiyuan Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -1241,8 +1241,8 @@ qtn_clk_city_china_taiyuan Taiyuan Asia/Shanghai :
         qtn_clk_city_china_nanjing Nanjing
         qtn_clk_city_china_kaifeng Kaifeng
 qtn_clk_city_usa_dover Dover, Delaware America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1284,8 +1284,8 @@ qtn_clk_city_rus_yakutsk Yakutsk Asia/Yakutsk :
 qtn_clk_city_urugua_montev Montevideo America/Montevideo :
         qtn_clk_city_urugua_montev Montevideo
 qtn_clk_city_usa_washington Washington, District of Columbia America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1310,8 +1310,8 @@ qtn_clk_city_china_changchun Changchun Asia/Harbin :
 qtn_clk_city_greenl_scoresbysund Ittoqqortoormiit America/Scoresbysund :
         qtn_clk_city_greenl_scoresbysund Ittoqqortoormiit
 qtn_clk_city_bra_porto_alegre Porto Alegre America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -1336,8 +1336,8 @@ qtn_clk_city_zimb_harare Harare Africa/Harare :
 qtn_clk_city_eritrea_asmara Asmara Africa/Asmara :
         qtn_clk_city_eritrea_asmara Asmara
 qtn_clk_city_india_calcut Kolkata Asia/Kolkata :
-        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_chennai Chennai
         qtn_clk_city_india_mumbai Mumbai
 qtn_clk_city_bangla_dhaka Dhaka Asia/Dhaka :
@@ -1409,8 +1409,8 @@ qtn_clk_city_zambia_lusaka Lusaka Africa/Lusaka :
 qtn_clk_city_canada_winnipeg Winnipeg America/Winnipeg :
         qtn_clk_city_canada_winnipeg Winnipeg
 qtn_clk_city_usa_ny New York City, New York America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1452,15 +1452,15 @@ qtn_clk_city_male_kualalump Kuala Lumpur Asia/Kuala_Lumpur :
 qtn_clk_city_cuba_havanna Havana America/Havana :
         qtn_clk_city_cuba_havanna Havana
 qtn_clk_city_india_newdel New Delhi Asia/Kolkata :
-        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_chennai Chennai
         qtn_clk_city_india_mumbai Mumbai
 qtn_clk_city_reunion_saint_denis Saint-Denis Indian/Reunion :
         qtn_clk_city_reunion_saint_denis Saint-Denis
 qtn_clk_city_usa_charleston Charleston, West Virginia America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1513,8 +1513,8 @@ qtn_clk_city_usa_chicago Chicago, Illinois America/Chicago :
         qtn_clk_city_usa_omaha Omaha, Nebraska
         qtn_clk_city_usa_gary Gary, Indiana
 qtn_clk_city_usa_concord Concord, New Hampshire America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1539,8 +1539,8 @@ qtn_clk_city_canada_cranbrook Cranbrook America/Edmonton :
 qtn_clk_city_fin_hki Helsinki Europe/Helsinki :
         qtn_clk_city_fin_hki Helsinki
 qtn_clk_city_china_zhengzhou Zhengzhou Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -1599,8 +1599,8 @@ qtn_clk_city_ireland_belfast Belfast Europe/London :
         qtn_clk_city_ireland_belfast Belfast
         qtn_clk_city_uk_edingbu Edinburgh
 qtn_clk_city_china_shanghai Shanghai Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -1633,8 +1633,8 @@ qtn_clk_city_rus_moscow Moscow Europe/Moscow :
 qtn_clk_city_somalia_mogadishu Mogadishu Africa/Mogadishu :
         qtn_clk_city_somalia_mogadishu Mogadishu
 qtn_clk_city_aus_sydney Sydney Australia/Sydney :
-        qtn_clk_city_aus_sydney Sydney
         qtn_clk_city_aus_canberra Canberra
+        qtn_clk_city_aus_sydney Sydney
 qtn_clk_city_rus_krasnoyarsk Krasnoyarsk Asia/Krasnoyarsk :
         qtn_clk_city_rus_krasnoyarsk Krasnoyarsk
 qtn_clk_city_st_vincent_kingstown Kingstown America/St_Vincent :
@@ -1723,8 +1723,8 @@ qtn_clk_city_pakistan_karac Karachi Asia/Karachi :
         qtn_clk_city_pakistan_karac Karachi
         qtn_clk_city_pakist_islama Islamabad
 qtn_clk_city_usa_charlotte Charlotte, North Carolina America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1755,8 +1755,8 @@ qtn_clk_city_uk_edingbu Edinburgh Europe/London :
 qtn_clk_city_aus_darwin Darwin Australia/Darwin :
         qtn_clk_city_aus_darwin Darwin
 qtn_clk_city_china_nanjing Nanjing Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -1784,8 +1784,8 @@ qtn_clk_city_mali_bamako Bamako Africa/Bamako :
 qtn_clk_city_galapagos_islands_galapagos Puerto Baquerizo Moreno Pacific/Galapagos :
         qtn_clk_city_galapagos_islands_galapagos Puerto Baquerizo Moreno
 qtn_clk_city_india_mumbai Mumbai Asia/Kolkata :
-        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_newdel New Delhi
+        qtn_clk_city_india_calcut Kolkata
         qtn_clk_city_india_chennai Chennai
         qtn_clk_city_india_mumbai Mumbai
 qtn_clk_city_usa_stluis St. Louis, Missouri America/Chicago :
@@ -1808,8 +1808,8 @@ qtn_clk_city_usa_stluis St. Louis, Missouri America/Chicago :
         qtn_clk_city_usa_omaha Omaha, Nebraska
         qtn_clk_city_usa_gary Gary, Indiana
 qtn_clk_city_china_kaifeng Kaifeng Asia/Shanghai :
-        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_beijing Beijing
+        qtn_clk_city_china_shanghai Shanghai
         qtn_clk_city_china_qingdao Qingdao
         qtn_clk_city_china_changsha Changsha
         qtn_clk_city_china_guangzhou Guangzhou
@@ -1897,8 +1897,8 @@ qtn_clk_city_usa_cheyenne Cheyenne, Wyoming America/Denver :
         qtn_clk_city_usa_albuquer Albuquerque, New Mexico
         qtn_clk_city_usa_cheyenne Cheyenne, Wyoming
 qtn_clk_city_usa_columbia Columbia, South Carolina America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1932,8 +1932,8 @@ qtn_clk_city_greenl_nuuk Nuuk America/Godthab :
 qtn_clk_city_canada_rankin_inlet Rankin Inlet America/Rankin_Inlet :
         qtn_clk_city_canada_rankin_inlet Rankin Inlet
 qtn_clk_city_bra_vitoria Vitoria America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -1944,8 +1944,8 @@ qtn_clk_city_bra_vitoria Vitoria America/Sao_Paulo :
 qtn_clk_city_algeria_algiers Algiers Africa/Algiers :
         qtn_clk_city_algeria_algiers Algiers
 qtn_clk_city_usa_atlanta Atlanta, Georgia America/New_York :
-        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_washington Washington, District of Columbia
+        qtn_clk_city_usa_ny New York City, New York
         qtn_clk_city_usa_hatford Hartford, Connecticut
         qtn_clk_city_usa_miami Miami, Florida
         qtn_clk_city_usa_boston Boston, Massachusetts
@@ -1992,8 +1992,8 @@ qtn_clk_city_mexico_mexicoc Mexico City America/Mexico_City :
 qtn_clk_city_usa_indiana Indianapolis, Indiana America/Indiana/Indianapolis :
         qtn_clk_city_usa_indiana Indianapolis, Indiana
 qtn_clk_city_bra_joinville Joinville America/Sao_Paulo :
-        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_brasilia Brasília
+        qtn_clk_city_bra_saopaulo São Paulo
         qtn_clk_city_bra_riojan Rio de Janeiro
         qtn_clk_city_bra_curitiba Curitiba
         qtn_clk_city_bra_belo_horizonte Belo Horizonte
@@ -2004,8 +2004,8 @@ qtn_clk_city_bra_joinville Joinville America/Sao_Paulo :
 qtn_clk_city_car_bangui Bangui Africa/Bangui :
         qtn_clk_city_car_bangui Bangui
 qtn_clk_city_aus_canberra Canberra Australia/Sydney :
-        qtn_clk_city_aus_sydney Sydney
         qtn_clk_city_aus_canberra Canberra
+        qtn_clk_city_aus_sydney Sydney
 qtn_clk_city_rus_samara Samara Europe/Samara :
         qtn_clk_city_rus_samara Samara
 qtn_clk_city_usa_lasvega Las Vegas, Nevada America/Los_Angeles :

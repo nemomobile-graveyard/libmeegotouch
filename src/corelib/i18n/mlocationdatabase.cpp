@@ -388,10 +388,10 @@ QList<MCity> MLocationDatabase::citiesInTimeZone(const QString& timeZoneId)
                 list.append(city);
         }
     }
-    foreach(const MCity &capitalCity, capitalCities)
-        list.prepend(capitalCity);
     foreach(const MCity &olsonCity, olsonCities)
         list.prepend(olsonCity);
+    foreach(const MCity &capitalCity, capitalCities)
+        list.prepend(capitalCity);
     return list;
 }
 
