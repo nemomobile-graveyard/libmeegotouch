@@ -2017,7 +2017,13 @@ while (<CLDR>) {
         next;
     }
     if ($ARG =~ /<reset><last_non_ignorable \/><\/reset>/) {
-        $libicuCollationOutput .= "&[last regular]";
+        if ($currentCollType eq "stroke") {
+            # If stroke count sorting is used, put Chinese before “a”:
+            $libicuCollationOutput .= "&[before 1]a";
+        }
+        else {
+            $libicuCollationOutput .= "&[last regular]";
+        }
         if ($currentCollType eq "unihan") {
             for (my $i = 0; $i < length($radicalList); ++$i) {
                 my $char = substr($radicalList, $i, 1);
@@ -2120,7 +2126,7 @@ $libicuCollationOutput .= "&[before 2]n<<n̄<<<N̄<<ń<<<Ń<<ň<<<Ň<<ǹ<<<Ǹ";
 $libicuCollationOutput .= "&[before 2]o<<ō<<<Ō<<ó<<<Ó<<ǒ<<<Ǒ<<ò<<<Ò";
 $libicuCollationOutput .= "&[before 2]u<<ū<<<Ū<<ú<<<Ú<<ǔ<<<Ǔ<<ù<<<Ù";
 $libicuCollationOutput .= "&U<<ǖ<<<Ǖ<<ǘ<<<Ǘ<<ǚ<<<Ǚ<<ǜ<<<Ǜ<<ü<<<Ü";
-$libicuCollationOutput .= "&[last regular]";
+$libicuCollationOutput .= "&[before 1]a";
 # this array needs not to be sorted, it is sorted
 # by the zhuyinCompare() function, the zhuyin order
 # we want is defined there.

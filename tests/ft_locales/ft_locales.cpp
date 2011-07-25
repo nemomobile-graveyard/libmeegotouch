@@ -2177,10 +2177,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"15"
          <<"2"
          <<"25"
-         <<"A"<<"john"<<"John"<<"saki"<<"Saki"
-         <<"あ"
-         <<"ㄅ"
-         <<"ㄎ"
          <<"一" // 1 stroke
          <<"乙" // 1 stroke
          <<"丁" // 2 strokes
@@ -2199,9 +2195,9 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"丞" // 6 strokes U+4E1E
          <<"刘" // 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
          <<"刘 Lucy" // liu2
-         <<"刘Lucy" // liu2
          <<"刘利" // liu2 li4
          <<"刘利军" // liu2 li4 jun1
+         <<"刘Lucy" // liu2
          <<"动" // dong4, 6 strokes, 1st stroke horizontal, simplified of 動 U+52A8
          <<"羊" // 6 strokes U+7F8A
          <<"驰" // chi2, 6 strokes, 1st stroke bending, simplified of 馳, kHanyuPinlu chi2 U+9A70 kBigFive - kGB0 1959 kRSUnicode 187'.3
@@ -2259,9 +2255,9 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"億" // 15 strokes, 1st stroke down to left U+5104
          <<"劉" // liu2; 15 strokes, 1st stroke bending, traditional of 刘 U+5289
          <<"劉 Lucy" // liu2; traditional
-         <<"劉Lucy" // liu2; traditional
          <<"劉利" // liu2 li4; traditional
          <<"劉利軍" // liu2 li4 jun1; traditional
+         <<"劉Lucy" // liu2; traditional
          <<"蝙" // 15 strokes, 1st stroke vertical U+8759
          <<"儒" // 16 U+5112
          <<"頻" // 16 U+FA6A
@@ -2286,6 +2282,10 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"鑽" // 27
          <<"鬱" // 29
          <<"驫" // 30
+         <<"A"<<"john"<<"John"<<"saki"<<"Saki"
+         <<"あ"
+         <<"ㄅ"
+         <<"ㄎ"
             );
         QStringList strokeExpectedBuckets =
         (QStringList()
@@ -2296,10 +2296,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"1"
          <<"2"
          <<"2"
-         <<"A"<<"J"<<"J"<<"S"<<"S"
-         <<"あ"
-         <<"ㄅ"
-         <<"ㄎ"
          <<"1筆"
          <<"1筆"
          <<"2筆"
@@ -2405,6 +2401,10 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"27筆"
          <<"29筆"
          <<"30筆"
+         <<"A"<<"J"<<"J"<<"S"<<"S"
+         <<"あ"
+         <<"ㄅ"
+         <<"ㄎ"
             );
     QStringList pinyinStringsSorted =
         (QStringList()
@@ -2601,17 +2601,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
     QStringList zhuyinStringsSorted =
         (QStringList()
          <<"∮"<<"♨"
-         <<"A"
-         <<"Ａ"
-         <<"john"
-         <<"ｊｏｈｎ"
-         <<"John"
-         <<"Ｊｏｈｎ"
-         <<"saki"
-         <<"ｓａｋｉ"
-         <<"Saki"
-         <<"Ｓａｋｉ"
-         <<"あ"
          <<"ㄅ" // U+3105 BOPOMOFO LETTER B
          <<"ㄆ" // U+3106 BOPOMOFO LETTER P
          <<"ㄇ" // U+3107 BOPOMOFO LETTER M
@@ -2651,14 +2640,14 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"李" // ㄌㄧ 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
          <<"刘" // ㄌㄧㄡˊ 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
          <<"刘 Lucy" // ㄌㄧㄡˊ Lucy liu2
-         <<"刘Lucy" // ㄌㄧㄡˊLucy liu2
          <<"刘利" // ㄌㄧㄡˊㄌㄧˋ liu2 li4
          <<"刘利军" // ㄌㄧㄡˊㄌㄧˋㄐㄩㄣ liu2 li4 jun1
+         <<"刘Lucy" // ㄌㄧㄡˊLucy liu2
          <<"劉" // ㄌㄧㄡˊ liu2; 15 strokes, 1st stroke bending, traditional of 刘
          <<"劉 Lucy" // ㄌㄧㄡˊ Lucy liu2; traditional
-         <<"劉Lucy" // ㄌㄧㄡˊLucy liu2; traditional
          <<"劉利" // ㄌㄧㄡˊㄌㄧˋ liu2 li4; traditional
          <<"劉利軍" // ㄌㄧㄡˊㄌㄧˋㄐㄩㄣ liu2 li4 jun1; traditional
+         <<"劉Lucy" // ㄌㄧㄡˊLucy liu2; traditional
          <<"柳" // ㄌㄧㄡˇ 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
          <<"柳东" //  ㄌㄧㄡˇㄉㄨㄥ liu3 dong1; 2nd character 5 strokes, initial stroke horizontal, 2nd character U+4E1C
          <<"柳冬" //  ㄌㄧㄡˇㄉㄨㄥ liu3 dong1; 2nd character 5 strokes, initial stroke down to left, 2nd character U+51AC
@@ -2710,22 +2699,22 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"ㄫ" // U+312B BOPOMOFO LETTER NG
          <<"ㄬ" // U+312C BOPOMOFO LETTER GN
          <<"ㄭ" // U+312D BOPOMOFO LETTER IH
+         <<"A"
+         <<"Ａ"
+         <<"john"
+         <<"ｊｏｈｎ"
+         <<"John"
+         <<"Ｊｏｈｎ"
+         <<"saki"
+         <<"ｓａｋｉ"
+         <<"Saki"
+         <<"Ｓａｋｉ"
+         <<"あ"
          <<"𠮩" // 5 strokes, 1st stroke vertical, kHanyuPinlu - U+20BA9 kBigFive - kGB0- kRSUnicode 30.2"
             );
     QStringList zhuyinExpectedBuckets =
         (QStringList()
          <<"∮"<<"♨"
-         <<"A"
-         <<"Ａ"
-         <<"J"
-         <<"Ｊ"
-         <<"J"
-         <<"Ｊ"
-         <<"S"
-         <<"Ｓ"
-         <<"S"
-         <<"Ｓ"
-         <<"あ"
          <<"ㄅ"
          <<"ㄆ"
          <<"ㄇ"
@@ -2824,6 +2813,17 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"ㄫ"
          <<"ㄬ"
          <<"ㄭ"
+         <<"A"
+         <<"Ａ"
+         <<"J"
+         <<"Ｊ"
+         <<"J"
+         <<"Ｊ"
+         <<"S"
+         <<"Ｓ"
+         <<"S"
+         <<"Ｓ"
+         <<"あ"
          <<"𠮩"
             );
     QStringList unihanStringsSorted =
