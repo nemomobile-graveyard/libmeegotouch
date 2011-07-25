@@ -17,33 +17,36 @@ private slots:
 
     void initTestCase();
     void cleanupTestCase();
-    void testBannerModelDatainViews();
-    void testBannerDateFormats();
-    void testBannerPixmapAndIcon();
-    void testBannerMouseEvents();
 
     void testInstantiateBannerView();
+    void testBannerModelDatainViews();
+    void testBannerPixmapAndIcon();
+    void testBannerDateFormats();
+    void testBannerMouseEvents();
     void testMouseMoveEvent();
     void testDrawForeground();
     void testDrawContents();
+    void testBannerStyles();
+    void testPrivateManageOpacities();
 
-    void testPrivateCreateGrid();
+private:
+
     void testPrivateLayoutShortEventBanner();
     void testPrivateLayoutInformationBanner();
     void testPrivateLayoutSystemBanner();
     void testPrivateLayoutFullEventBanner();
     void testPrivateLayoutLockScreenEventBanner();
     void testPrivateLayoutPrivateEventBanner();
-    void testPrivateManageOpacities();
-
-private:
 
     void testLayoutSetup();
-    void testSystemBannerLayoutItemsExist();
+    void testGridItemsExist();
+    void testTitleLabel();
+    void testSubtitleLabel();
+    void testPixmapOrIconGrid();
+    void testPixmapOrIconLayout();
     bool findItemInGridLayout(QGraphicsGridLayout *layout,
                               QGraphicsLayoutItem *item);
     void testLayoutTimeStamp();
-
 
     MBanner *m_banner;
     MBannerView *m_subject;

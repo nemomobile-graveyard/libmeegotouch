@@ -34,6 +34,7 @@
 #include <MCancelEvent>
 #include <MImageWidget>
 #include <MLinearLayoutPolicy>
+#include <MLayout>
 
 #include "mbannerview.h"
 #include "mbanner.h"
@@ -75,7 +76,6 @@ void Ut_MBannerView::cleanupTestCase()
 void Ut_MBannerView::testInstantiateBannerView()
 {
     MBanner *banner = new MBanner();
-
     MBannerViewPrivate *bannerViewPrivate = new MBannerViewPrivate();
     MBannerView *bannerView = new MBannerView(*bannerViewPrivate, banner);
     banner->setView(bannerView);
@@ -134,6 +134,12 @@ void Ut_MBannerView::testBannerDateFormats()
     QCOMPARE(dateLocaleShort, m_subject->d_func()->bannerTimeStamp()->text());
 }
 
+// The model contains now this information
+// Title: Hello
+// Subtitle: World
+// Prefixtimemstamp: Latest
+// Timestamp: 20:32 22-10-2010
+
 void Ut_MBannerView::testBannerMouseEvents()
 {
     QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
@@ -180,115 +186,25 @@ void Ut_MBannerView::testDrawContents()
     m_subject->drawContents(NULL, NULL);
 }
 
-void Ut_MBannerView::testPrivateCreateGrid()
+
+void Ut_MBannerView::testBannerStyles()
 {
-    m_subject->model()->setStyleName(MBannerType::FullEventBanner);
+    //When we change the stylename the different layouts
+    //must change and re-organize the elements
+    //according with the stylename set.
 
-    QVERIFY2(m_subject->d_ptr->createGrid(), "NULL returned");
-}
-
-void Ut_MBannerView::testPrivateLayoutShortEventBanner()
-{
-    m_subject->d_ptr->layoutShortEventBanner();
-
-    QVERIFY2(m_subject->d_ptr->layout, "NULL returned");
-
-    testLayoutSetup();
-
-    testSystemBannerLayoutItemsExist();
-
-    QCOMPARE(m_subject->model()->subtitle().isEmpty(),
-             -1 == m_subject->d_ptr->landscapePolicy->indexOf(m_subject->d_ptr->subtitle()));
-
-    QCOMPARE(m_subject->model()->subtitle().isEmpty(),
-             -1 == m_subject->d_ptr->portraitPolicy->indexOf(m_subject->d_ptr->subtitle()));
-}
-
-void Ut_MBannerView::testPrivateLayoutInformationBanner()
-{
-    m_subject->d_ptr->layoutInformationBanner();
-
-    QVERIFY2(m_subject->d_ptr->layout, "NULL returned");
-
-    testLayoutSetup();
-
-    QCOMPARE(m_subject->model()->title().isEmpty(),
-             -1 == m_subject->d_ptr->landscapePolicy->indexOf(m_subject->d_ptr->title()));
-
-    QCOMPARE(m_subject->model()->title().isEmpty(),
-             -1 == m_subject->d_ptr->portraitPolicy->indexOf(m_subject->d_ptr->title()));
-}
-
-void Ut_MBannerView::testPrivateLayoutSystemBanner()
-{
-    m_subject->d_ptr->layoutSystemBanner();
-
-    QVERIFY2(m_subject->d_ptr->layout, "NULL returned");
-
-    testLayoutSetup();
-
-    testSystemBannerLayoutItemsExist();
-}
-
-void Ut_MBannerView::testPrivateLayoutFullEventBanner()
-{
-    m_subject->d_ptr->layoutFullEventBanner();
-
-    QVERIFY2(m_subject->d_ptr->controller->layout(), "layout not set in controller");
-    QVERIFY2(m_subject->d_ptr->gridBanner, "NULL returned");
-
-    QGraphicsLayoutItem *expected = NULL;
-    if (!m_subject->model()->pixmap().isNull() && m_subject->model()->iconID().isEmpty()) {
-        expected = m_subject->d_ptr->pixmap();
-    } else {
-        expected = m_subject->d_ptr->icon();
-    }
-
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, expected), "Pixmap or icon not found");
-
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->title()), "Title not found");
-
-    testLayoutTimeStamp();
-}
-
-void Ut_MBannerView::testPrivateLayoutLockScreenEventBanner()
-{
-    m_subject->d_ptr->layoutLockScreenEventBanner();
-    QVERIFY2(m_subject->d_ptr->controller->layout(), "layout not set in controller");
-    QVERIFY2(m_subject->d_ptr->gridBanner, "NULL returned");
-
-    QGraphicsLayoutItem *expected = NULL;
-    if (!m_subject->model()->pixmap().isNull() && m_subject->model()->iconID().isEmpty()) {
-        expected = m_subject->d_ptr->pixmap();
-    } else {
-        expected = m_subject->d_ptr->icon();
-    }
-
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, expected), "Pixmap or icon not found");
-
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->title()), "Title not found");
-
-    testLayoutTimeStamp();
-}
-
-void Ut_MBannerView::testPrivateLayoutPrivateEventBanner()
-{
-    m_subject->d_ptr->layoutPrivateEventBanner();
-    QVERIFY2(m_subject->d_ptr->controller->layout(), "layout not set in controller");
-    QVERIFY2(m_subject->d_ptr->gridBanner, "NULL returned");
-
-    QGraphicsLayoutItem *expected = NULL;
-    if (!m_subject->model()->pixmap().isNull() && m_subject->model()->iconID().isEmpty()) {
-        expected = m_subject->d_ptr->pixmap();
-    } else {
-        expected = m_subject->d_ptr->icon();
-    }
-
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, expected), "Pixmap or icon not found");
-
-    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->title()), "Title not found");
-
-    testLayoutTimeStamp();
+    m_banner->setStyleName(MBannerType::ShortEventBanner);
+    testPrivateLayoutShortEventBanner();
+    m_banner->setStyleName(MBannerType::InformationBanner);
+    testPrivateLayoutInformationBanner();
+    m_banner->setStyleName(MBannerType::SystemBanner);
+    testPrivateLayoutSystemBanner();
+    m_banner->setStyleName(MBannerType::FullEventBanner);
+    testPrivateLayoutFullEventBanner();
+    m_banner->setStyleName(MBannerType::LockScreenEventBanner);
+    testPrivateLayoutLockScreenEventBanner();
+    m_banner->setStyleName(MBannerType::PrivateEventBanner);
+    testPrivateLayoutPrivateEventBanner();
 }
 
 void Ut_MBannerView::testPrivateManageOpacities()
@@ -300,8 +216,64 @@ void Ut_MBannerView::testPrivateManageOpacities()
     m_subject->model()->setDown(true);
 
     m_subject->d_ptr->manageOpacities();
+}
 
+void Ut_MBannerView::testPrivateLayoutShortEventBanner()
+{
     QVERIFY2(m_subject->d_ptr->layout, "NULL returned");
+
+    testLayoutSetup();
+
+    testPixmapOrIconLayout();
+    testTitleLabel();
+    testSubtitleLabel();
+
+}
+
+void Ut_MBannerView::testPrivateLayoutInformationBanner()
+{
+    QVERIFY2(m_subject->d_ptr->layout, "NULL returned");
+
+    testLayoutSetup();
+
+    testTitleLabel();
+}
+
+void Ut_MBannerView::testPrivateLayoutSystemBanner()
+{
+    QVERIFY2(m_subject->d_ptr->layout, "NULL returned");
+
+    testLayoutSetup();
+
+    testPixmapOrIconLayout();
+    testTitleLabel();
+}
+
+void Ut_MBannerView::testPrivateLayoutFullEventBanner()
+{
+    QVERIFY2(m_subject->d_ptr->gridBanner, "NULL returned");
+
+    testGridItemsExist();
+
+    testLayoutTimeStamp();
+}
+
+void Ut_MBannerView::testPrivateLayoutLockScreenEventBanner()
+{
+    QVERIFY2(m_subject->d_ptr->gridBanner, "NULL returned");
+
+    testGridItemsExist();
+
+    testLayoutTimeStamp();
+}
+
+
+void Ut_MBannerView::testPrivateLayoutPrivateEventBanner()
+{
+    QVERIFY2(m_subject->d_ptr->controller->layout(), "layout not set in controller");
+    QVERIFY2(m_subject->d_ptr->gridBanner, "NULL returned");
+
+    testLayoutTimeStamp();
 }
 
 void Ut_MBannerView::testLayoutSetup()
@@ -311,27 +283,55 @@ void Ut_MBannerView::testLayoutSetup()
     QVERIFY2(m_subject->d_ptr->portraitPolicy->layout(), "Portrait policy layout not set");
 }
 
-void Ut_MBannerView::testSystemBannerLayoutItemsExist()
+void Ut_MBannerView::testGridItemsExist()
 {
-    //icon is replaced by pixmap
-    QCOMPARE(m_subject->model()->iconID().isEmpty() || !m_subject->model()->pixmap().isNull(),
-             -1 == m_subject->d_ptr->landscapePolicy->indexOf(m_subject->d_ptr->icon()));
+    testPixmapOrIconGrid();
 
-    QCOMPARE(m_subject->model()->pixmap().isNull(),
-             -1 == m_subject->d_ptr->landscapePolicy->indexOf(m_subject->d_ptr->pixmap()));
+    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->title()), "Title not found");
 
+    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->subtitle()), "Subtitle not found");
+
+}
+
+void Ut_MBannerView::testTitleLabel()
+{
     QCOMPARE(m_subject->model()->title().isEmpty(),
              -1 == m_subject->d_ptr->landscapePolicy->indexOf(m_subject->d_ptr->title()));
 
-    //icon is replaced by pixmap
-    QCOMPARE(m_subject->model()->iconID().isEmpty() || !m_subject->model()->pixmap().isNull(),
-             -1 == m_subject->d_ptr->portraitPolicy->indexOf(m_subject->d_ptr->icon()));
-
-    QCOMPARE(m_subject->model()->pixmap().isNull(),
-             -1 == m_subject->d_ptr->portraitPolicy->indexOf(m_subject->d_ptr->pixmap()));
-
     QCOMPARE(m_subject->model()->title().isEmpty(),
              -1 == m_subject->d_ptr->portraitPolicy->indexOf(m_subject->d_ptr->title()));
+}
+
+void Ut_MBannerView::testSubtitleLabel()
+{
+    QCOMPARE(m_subject->model()->subtitle().isEmpty(),
+             -1 == m_subject->d_ptr->landscapePolicy->indexOf(m_subject->d_ptr->subtitle()));
+
+    QCOMPARE(m_subject->model()->subtitle().isEmpty(),
+             -1 == m_subject->d_ptr->portraitPolicy->indexOf(m_subject->d_ptr->subtitle()));
+}
+
+void Ut_MBannerView::testPixmapOrIconGrid()
+{
+
+    QGraphicsLayoutItem *expected = NULL;
+
+    if (!m_subject->model()->pixmap().isNull() && m_subject->model()->iconID().isEmpty()) {
+        expected = m_subject->d_ptr->pixmap();
+    } else {
+        expected = m_subject->d_ptr->icon();
+    }
+
+    QVERIFY2(findItemInGridLayout(m_subject->d_ptr->gridBanner, expected), "Pixmap or icon not found");
+}
+
+void Ut_MBannerView::testPixmapOrIconLayout()
+{
+    if (!m_subject->model()->iconID().isEmpty() && m_subject->model()->pixmap().isNull()) {
+        QCOMPARE(m_subject->d_ptr->layout->itemAt(0), m_subject->d_ptr->icon());
+    } else if (!m_subject->model()->pixmap().isNull()){
+        QCOMPARE(m_subject->d_ptr->layout->itemAt(0), m_subject->d_ptr->pixmap());
+    }
 }
 
 bool Ut_MBannerView::findItemInGridLayout(QGraphicsGridLayout *layout, QGraphicsLayoutItem *item)
@@ -352,17 +352,18 @@ void Ut_MBannerView::testLayoutTimeStamp()
 {
     if (!m_subject->model()->prefixTimeStamp().isEmpty() && m_subject->model()->bannerTimeStamp().isValid()) {
         QGraphicsLinearLayout *layoutStamp = NULL;
-        layoutStamp = dynamic_cast<QGraphicsLinearLayout*>(m_subject->d_ptr->gridBanner->itemAt(1, 1));
+        if ((m_subject->model()->subtitle().isEmpty() && !m_subject->d_ptr->subtitle()->isVisible() )
+                || m_banner->styleName() == MBannerType::PrivateEventBanner) {
+            layoutStamp = dynamic_cast<QGraphicsLinearLayout*>(m_subject->d_ptr->gridBanner->itemAt(1, 1));
+
+        } else {
+            layoutStamp = dynamic_cast<QGraphicsLinearLayout*>(m_subject->d_ptr->gridBanner->itemAt(2, 1));
+        }
 
         QVERIFY2(layoutStamp, "Layout stamp not found");
         QCOMPARE(layoutStamp->count(), 2);
-    } else {
-        QCOMPARE(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->bannerTimeStamp()),
-                 m_subject->model()->bannerTimeStamp().isValid());
-
-        QCOMPARE(findItemInGridLayout(m_subject->d_ptr->gridBanner, m_subject->d_ptr->prefixTimeStamp()),
-                 !m_subject->model()->prefixTimeStamp().isEmpty());
+        QCOMPARE(layoutStamp->itemAt(0), m_subject->d_ptr->prefixTimeStamp());
+        QCOMPARE(layoutStamp->itemAt(1), m_subject->d_ptr->bannerTimeStamp());
     }
 }
-
 QTEST_APPLESS_MAIN(Ut_MBannerView)

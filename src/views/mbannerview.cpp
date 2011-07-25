@@ -830,6 +830,8 @@ void MBannerView::updateData(const QList<const char *>& modifications)
         } else if (member == MBannerModel::Pixmap) {
             d->setPixmap(model()->pixmap());
             updateLayout=true;
+        } else if (member == MBannerModel::StyleName) {
+            updateLayout=true;
         }
     }
     /*! Due to the dynamic method for the layouts
