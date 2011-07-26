@@ -306,9 +306,7 @@ void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool
  */
 void MListView::rowsRemoved(const QModelIndex &parent, int start, int end, bool animated)
 {
-    d_ptr->removeRows(parent, start, end, animated);
-
-    if (!animated)
+    if (!d_ptr->animateRowsRemoval(parent, start, end, animated))
         layoutChanged();
 }
 

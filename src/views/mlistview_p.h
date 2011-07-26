@@ -140,7 +140,7 @@ public:
     virtual int locateVisibleRowAt(int y, int x = 0) = 0;
 
     virtual bool animateRowsInsertion(const QModelIndex &parent, int start, int end, bool animated);
-    virtual void removeRows(const QModelIndex &parent, int start, int end, bool animated);
+    virtual bool animateRowsRemoval(const QModelIndex &parent, int start, int end, bool animated);
     virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
     virtual bool isAnimating();

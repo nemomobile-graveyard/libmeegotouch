@@ -239,13 +239,13 @@ bool MListViewPrivate::animateRowsInsertion(const QModelIndex &parent, int start
     return true;
 }
 
-void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end, bool animated)
+bool MListViewPrivate::animateRowsRemoval(const QModelIndex &parent, int start, int end, bool animated)
 {
     if (!animated || isAnimating() || !itemDeletionAnimation)
-        return;
+        return false;
 
-    int first = indexToFlatRow(controllerModel->firstVisibleItem());
-    int last = indexToFlatRow(controllerModel->lastVisibleItem());
+    int firstVisibleRow = indexToFlatRow(controllerModel->firstVisibleItem());
+    int lastVisibleRow = indexToFlatRow(controllerModel->lastVisibleItem());
 
     if (parent.isValid()) {
         int parentFlatRow = indexToFlatRow(parent);
@@ -253,16 +253,17 @@ void MListViewPrivate::removeRows(const QModelIndex &parent, int start, int end,
         end += parentFlatRow + 1;
     }
 
-    if (start > last || !controller->isVisible())
-        return;
+    if (start > lastVisibleRow || !controller->isVisible())
+        return false;
 
-    start = first > start ? first : start;
-    end = end > last ? last : end;
+    start = firstVisibleRow > start ? firstVisibleRow : start;
+    end = end > lastVisibleRow ? lastVisibleRow : end;
     // Set targets for deletion animation
-    appendTargetsToDeleteAnimation(start, end, first, last);
+    appendTargetsToDeleteAnimation(start, end, firstVisibleRow, lastVisibleRow);
 
     // Start item deletion animation
     itemDeletionAnimation->start();
+    return true;
 }
 
 void MListViewPrivate::appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow)
