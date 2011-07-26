@@ -3785,6 +3785,8 @@ void Ft_Locales::checkAvailableLocales()
     islamicCalendar.setDateTime(dateTime);
     QStringList sortingTestList;
     sortingTestList
+        // symbols
+        <<"#" <<"/" <<"%"<<"∮" <<"♨" <<"☺"
         // Western Numbers:
         <<"01" <<"02" <<"04" <<"05"<<"06"<<"1"<<"2"<<"4"<<"5"<<"6"<<"11"<<"12"<<"14"<<"15"<<"16"<<"21"<<"22"<<"24"<<"25"<<"26"
         // Eastern Arabic Numbers:
