@@ -100,6 +100,9 @@ private slots:
 
     void testNavigationBarShowAfterNonAnimatedPageAppearance();
 
+    void testNavigationBarFadesInPageSwitch();
+    void testNavigationBarSlidesIfPageIsStatic();
+
 private:
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;

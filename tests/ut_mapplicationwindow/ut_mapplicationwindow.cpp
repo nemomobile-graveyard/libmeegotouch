@@ -40,6 +40,11 @@
 #include <QSignalSpy>
 #include <QEvent>
 
+// QCOMPARE doesn't know MSceneWindow::SceneWindowSate enum. Thus it won't
+// print "Expected" and "Actual" values in case of failure unless they're cast
+// to a known type
+#define STATE_COMPARE(s1, s2) QCOMPARE(static_cast<int>(s1), static_cast<int>(s2));
+
 // Test class implementation
 
 void Ut_MApplicationWindow::initTestCase()
@@ -933,6 +938,93 @@ void Ut_MApplicationWindow::testNavigationBarShowAfterNonAnimatedPageAppearance(
     QCOMPARE((int)navigationBar->sceneWindowState(), (int)MSceneWindow::Appearing);
 
     delete page;
+}
+
+/* during a page swtich animation the navigation bar should
+   appear or disappear using a fade animation
+*/
+void Ut_MApplicationWindow::testNavigationBarFadesInPageSwitch()
+{
+    MApplicationPage *rootPage = new MApplicationPage;
+    MApplicationPage *childPage = new MApplicationPage;
+    MSceneWindow *navigationBar = m_subject->d_func()->navigationBar;
+    MSceneManager *sceneManager = m_subject->sceneManager();
+
+    rootPage->appear(m_subject);
+
+    m_subject->show();
+
+    QApplication::processEvents();
+
+    STATE_COMPARE(rootPage->sceneWindowState(), MSceneWindow::Appeared);
+    STATE_COMPARE(childPage->sceneWindowState(), MSceneWindow::Disappeared);
+    STATE_COMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
+
+    childPage->appear(m_subject);
+
+    STATE_COMPARE(rootPage->sceneWindowState(), MSceneWindow::Disappearing);
+    STATE_COMPARE(childPage->sceneWindowState(), MSceneWindow::Appearing);
+    STATE_COMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(navigationBar->property("_m_appearanceAnimation").toString(),
+             QString("MWidgetFadeAnimation"));
+
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    childPage->dismiss();
+
+    STATE_COMPARE(rootPage->sceneWindowState(), MSceneWindow::Appearing);
+    STATE_COMPARE(childPage->sceneWindowState(), MSceneWindow::Disappearing);
+    STATE_COMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(navigationBar->property("_m_disappearanceAnimation").toString(),
+             QString("MWidgetFadeAnimation"));
+}
+
+/* if the navigation bar is shown or hidden while the current page remains
+   the same (e.g. tapping on the page to get a fullscreen view), it should do
+   so using a slide animation
+*/
+void Ut_MApplicationWindow::testNavigationBarSlidesIfPageIsStatic()
+{
+    MApplicationPage *page = new MApplicationPage;
+    MNavigationBar *navigationBar = m_subject->d_func()->navigationBar;
+    MSceneManager *sceneManager = m_subject->sceneManager();
+
+    // Put something on the nav bar so that it's not completely empty
+    // MApplicationWindow will refuse to show an empty navigation bar.
+    page->setCustomNavigationBarContent(new QGraphicsWidget);
+
+    page->appear(m_subject);
+
+    m_subject->show();
+
+    QApplication::processEvents();
+
+    STATE_COMPARE(page->sceneWindowState(), MSceneWindow::Appeared);
+    STATE_COMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appeared);
+
+    page->setComponentsDisplayMode(MApplicationPage::NavigationBar,
+                                   MApplicationPageModel::Hide);
+    // processing of new nav bar display mode is done only in the next event loop
+    QApplication::processEvents();
+
+    STATE_COMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappearing);
+    // That's what we are really interested in checking in this test
+    QCOMPARE(navigationBar->property("_m_disappearanceAnimation").toString(),
+             QString("MWidgetSlideAnimation"));
+
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    STATE_COMPARE(navigationBar->sceneWindowState(), MSceneWindow::Disappeared);
+
+    page->setComponentsDisplayMode(MApplicationPage::NavigationBar,
+                                   MApplicationPageModel::Show);
+    // processing of new nav bar display mode is done only in the next event loop
+    QApplication::processEvents();
+
+    STATE_COMPARE(navigationBar->sceneWindowState(), MSceneWindow::Appearing);
+    // That's what we are really interested in checking in this test
+    QCOMPARE(navigationBar->property("_m_appearanceAnimation").toString(),
+             QString("MWidgetSlideAnimation"));
 }
 
 QTEST_MAIN(Ut_MApplicationWindow)
