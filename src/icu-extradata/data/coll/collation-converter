@@ -1667,6 +1667,11 @@ my %zhuyinPinyin = (
 
 my $radicalList = "⼀⼁⼂⼃⼄⼅⼆⼇⼈⼉⼊⼋⼌⼍⼎⼏⼐⼑⼒⼓⼔⼕⼖⼗⼘⼙⼚⼛⼜⼝⼞⼟⼠⼡⼢⼣⼤⼥⼦⼧⼨⼩⼪⼫⼬⼭⼮⼯⼰⼱⼲⼳⼴⼵⼶⼷⼸⼹⼺⼻⼼⼽⼾⼿⽀⽁⽂⽃⽄⽅⽆⽇⽈⽉⽊⽋⽌⽍⽎⽏⽐⽑⽒⽓⽔⽕⽖⽗⽘⽙⽚⽛⽜⽝⽞⽟⽠⽡⽢⽣⽤⽥⽦⽧⽨⽩⽪⽫⽬⽭⽮⽯⽰⽱⽲⽳⽴⽵⽶⽷⽸⽹⽺⽻⽼⽽⽾⽿⾀⾁⾂⾃⾄⾅⾆⾇⾈⾉⾊⾋⾌⾍⾎⾏⾐⾑⾒⾓⾔⾕⾖⾗⾘⾙⾚⾛⾜⾝⾞⾟⾠⾡⾢⾣⾤⾥⾦⾧⾨⾩⾪⾫⾬⾭⾮⾯⾰⾱⾲⾳⾴⾵⾶⾷⾸⾹⾺⾻⾼⾽⾾⾿⿀⿁⿂⿃⿄⿅⿆⿇⿈⿉⿊⿋⿌⿍⿎⿏⿐⿑⿒⿓⿔⿕";
 
+# this array needs not to be sorted, it is sorted when needed
+# by the zhuyinCompare() function, the zhuyin order
+# we want is defined there.
+my @zhuyinCharacters = ("ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ㄪ", "ㄫ", "ㄬ", "ㄭ");
+
 #----------------------------------------------------------------------
 # subroutines:
 
@@ -2020,6 +2025,9 @@ while (<CLDR>) {
         if ($currentCollType eq "stroke") {
             # If stroke count sorting is used, put Chinese before “a”:
             $libicuCollationOutput .= "&[before 1]a";
+            for my $zhuyinCharacter (sort zhuyinCompare (@zhuyinCharacters)) {
+                $libicuCollationOutput .= "<${zhuyinCharacter}";
+            }
         }
         else {
             $libicuCollationOutput .= "&[last regular]";
@@ -2127,10 +2135,6 @@ $libicuCollationOutput .= "&[before 2]o<<ō<<<Ō<<ó<<<Ó<<ǒ<<<Ǒ<<ò<<<Ò";
 $libicuCollationOutput .= "&[before 2]u<<ū<<<Ū<<ú<<<Ú<<ǔ<<<Ǔ<<ù<<<Ù";
 $libicuCollationOutput .= "&U<<ǖ<<<Ǖ<<ǘ<<<Ǘ<<ǚ<<<Ǚ<<ǜ<<<Ǜ<<ü<<<Ü";
 $libicuCollationOutput .= "&[before 1]a";
-# this array needs not to be sorted, it is sorted
-# by the zhuyinCompare() function, the zhuyin order
-# we want is defined there.
-my @zhuyinCharacters = ("ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ㄪ", "ㄫ", "ㄬ", "ㄭ");
 for my $zhuyinCharacter (sort zhuyinCompare (@zhuyinCharacters)) {
     $libicuCollationOutput .= "<${zhuyinCharacter}";
 }

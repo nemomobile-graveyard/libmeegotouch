@@ -2177,6 +2177,8 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"15"
          <<"2"
          <<"25"
+         <<"ㄅ"
+         <<"ㄎ"
          <<"一" // 1 stroke
          <<"乙" // 1 stroke
          <<"丁" // 2 strokes
@@ -2284,8 +2286,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"驫" // 30
          <<"A"<<"john"<<"John"<<"saki"<<"Saki"
          <<"あ"
-         <<"ㄅ"
-         <<"ㄎ"
             );
         QStringList strokeExpectedBuckets =
         (QStringList()
@@ -2296,6 +2296,8 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"1"
          <<"2"
          <<"2"
+         <<"ㄅ"
+         <<"ㄎ"
          <<"1筆"
          <<"1筆"
          <<"2筆"
@@ -2403,8 +2405,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"30筆"
          <<"A"<<"J"<<"J"<<"S"<<"S"
          <<"あ"
-         <<"ㄅ"
-         <<"ㄎ"
             );
     QStringList pinyinStringsSorted =
         (QStringList()
