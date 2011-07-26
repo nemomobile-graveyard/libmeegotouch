@@ -33,7 +33,6 @@
 #endif
 #include "morientationtracker.h"
 #include "mdeviceprofile.h"
-#include "mdeviceprofile.h"
 #include "mwidget.h"
 #include "mcomponentdata.h"
 #include "morientationchangeevent.h"
