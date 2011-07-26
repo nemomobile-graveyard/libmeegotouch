@@ -1,9 +1,29 @@
-libmeegotouch (0.23.7~1) unstable; urgency=low
+libmeegotouch (0.23.7-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#247177 - [TASK] System Dialog's description should be modified to exclude reference to Home Button
+  * Fixes: BMC#11351 - System Dialogs cannot be minimised to Home anymore
+  * Fixes: NB#259929 - [TASK] Create listitem insertion animation
+  * Fixes: NB#272252 - Chinese contacts are located at the end of phonebook
+  * Fixes: NB#258946 - Clock; The name of city displays incorrectly in clock main view.
+  * Fixes: NB#274062 - Missed call notification is not displaying properly in events screen for the given scenario.
+  * Fixes: NB#273218 - Toolbar is not displayed on tapping in the viewer view
+  * Fixes: NB#267835 - Clock; Wrong format used for DateMedium in canadian french
+  * Fixes: BMC#20506 - libmeegotouch OS X Build requires pkgconfig gobject-2.0 inclusion
+  * Fixes: Core dumping ut_mextensionarea unit test
+  * Fixes: NB#273913 - Use <number>筆 instead of just <number> for the stroke count bucket labels
+  * Fixes: BMC#20408 - Build fail on OS X: invalid conversion in libmeegotouch
+  * Fixes: MDetailedListItemPrivate::clearLayout() does not remove all items from gridLayout.
+  * Fixes: NB#273952 - Widgetsgallery: icon tabs labels causes confusion for landscape orientation
+  * Fixes: NB#271740 - black content while a systemsheet is sliding away
+  * Fixes: NB#212995 - [TASK] Make it possible to disable handling of events by MLabel when tapping a highlighted part
+  * Fixes: NB#265742 - Calculator, Input display: Wrong format for es_419
+  * Fixes: NB#268598, Text edit not fully visible in landscape sheet
+  * Fixes: NB#273166, Gallery; Input field in sheet is cut with Landscape, Zhuyin VKB
+  * Fixes: NB#27278
   * Fixes: NB#269549 - Sheet header bottom line disappears when user changes orientation to portrait and back
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Wed, 20 Jul 2011 15:18:48 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 26 Jul 2011 14:09:18 +0300
 
 libmeegotouch (0.23.6-2) unstable; urgency=low
 
