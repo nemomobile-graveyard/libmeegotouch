@@ -28,217 +28,320 @@
 #include <MList>
 #include <MListItem>
 #include <MProgressIndicator>
+#include <MLabel>
 
 #include <MBasicListItem>
 #include <MDetailedListItem>
 #include <MAdvancedListItem>
 
-class BasicListItemCreator : public MAbstractCellCreator<MBasicListItem>
-{
-public:
-    BasicListItemCreator(MBasicListItem::ItemStyle style)
-        : itemStyle(style),
-        defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+#include <QGraphicsGridLayout>
+
+namespace {
+
+    class CustomListItem : public MListItem
     {
-    }
+    public:
+        CustomListItem(QGraphicsItem *parent = 0) : MListItem(parent) {
+            setObjectName("CommonLargePanel");
 
-    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
-        Q_UNUSED(index);
-        MBasicListItem *cell = dynamic_cast<MBasicListItem*>(recycler.take(MBasicListItem::staticMetaObject.className()));
-        
-        if (cell == NULL) {
-            cell = new MBasicListItem(itemStyle);
-            if (MApplication::instance()->objectName() == "widgetsgallery") {
-                cell->setStyleName("CommonBasicListItem");
-            } else {
-                cell->setStyleName("CommonBasicListItemInverted");
-            }
-            cell->setLayoutPosition(M::CenterPosition);
+            // Layout
+            layoutGrid = new QGraphicsGridLayout(this);
+
+            // Title
+            titleLabel = new MLabel(this);
+            titleLabel->setTextElide(true);
+            titleLabel->setObjectName("CommonTitle");
+
+            // Subtitle
+            subtitleLabel = new MLabel(this);
+            subtitleLabel->setTextElide(true);
+            subtitleLabel->setWordWrap(true);
+            subtitleLabel->setPreferredLineCount(3);
+            subtitleLabel->setObjectName("CommonSubTitle");
+
+            // Icon
+            image = new MImageWidget(this);
+            image->setObjectName("CommonMainIcon");
+
+            // Construct layout
+            layoutGrid->addItem(image, 0, 0, 2, 1);
+            layoutGrid->addItem(titleLabel, 0, 1);
+            layoutGrid->addItem(subtitleLabel, 1, 1);
         }
-        updateCell(index, cell);
 
-        return cell;
-    }
-
-    void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MBasicListItem *item = dynamic_cast<MBasicListItem*>(cell);
-        if (!item)
-            return;
-
-        switch (itemStyle) {
-        case MBasicListItem::SingleTitle: {
-            item->setTitle(index.data().toString());
-            break;
+        void setTitle(const QString &title)
+        {
+            titleLabel->setText(title);
         }
-        case MBasicListItem::TitleWithSubtitle: {
-            item->setTitle(index.data().toString());
-            //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            break;
+
+        void setSubtitle(const QString &subtitle)
+        {
+            subtitleLabel->setText(subtitle);
         }
-        case MBasicListItem::IconWithTitle: {
-            item->setTitle(index.data().toString());
-            item->imageWidget()->setImage(defaultImage);
-            break;    
+
+        void setImage(const QImage &picture)
+        {
+            image->setImage(picture);
         }
-        case MBasicListItem::IconWithTitleAndSubtitle: {
-            item->setTitle(index.data().toString());
-            //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->imageWidget()->setImage(defaultImage);
-            break;    
-        }
-        default:
-            break;
-        };
 
-    }
+    private:
+        MLabel *titleLabel;
+        MLabel *subtitleLabel;
+        MImageWidget *image;
+        QGraphicsGridLayout *layoutGrid;
+    };
 
-private:
-    MBasicListItem::ItemStyle itemStyle;
-    QImage defaultImage;
-};
-
-
-class DetailedListItemCreator : public MAbstractCellCreator<MDetailedListItem>
-{
-public:
-    DetailedListItemCreator(MDetailedListItem::ItemStyle style)
-        : itemStyle(style),
-        defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+    class CustomListItemCreator : public MAbstractCellCreator<CustomListItem>
     {
-    }
+    public:
+        CustomListItemCreator()
+            : defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+        {
+            veryLongSubtitle = "This is multi-line elided text.";
 
-    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
-        Q_UNUSED(index);
-        MDetailedListItem *cell = dynamic_cast<MDetailedListItem*>(recycler.take(MDetailedListItem::staticMetaObject.className()));
-        
-        if (cell == NULL) {
-            cell = new MDetailedListItem(itemStyle);
-            if (MApplication::instance()->objectName() == "widgetsgallery") {
-                cell->setStyleName("CommonDetailedListItem");
-            } else {
-                cell->setStyleName("CommonDetailedListItemInverted");
+            for (int i = 10; i > 0; i--) {
+                veryLongSubtitle += " " + veryLongSubtitle;
             }
-            cell->setLayoutPosition(M::CenterPosition);
         }
-        updateCell(index, cell);
 
-        return cell;
-    }
+        MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
+            Q_UNUSED(index);
+            CustomListItem *cell = dynamic_cast<CustomListItem*>(recycler.take(CustomListItem::staticMetaObject.className()));
 
-    void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MDetailedListItem *item = dynamic_cast<MDetailedListItem*>(cell);
-        if (!item)
-            return;
+            if (cell == NULL) {
+                cell = new CustomListItem;
+                if (MApplication::instance()->objectName() == "widgetsgallery") {
+                    cell->setStyleName("CommonBasicListItem");
+                } else {
+                    cell->setStyleName("CommonBasicListItemInverted");
+                }
+                cell->setLayoutPosition(M::CenterPosition);
+            }
+            updateCell(index, cell);
 
-        switch (itemStyle) {
-        case MDetailedListItem::IconTitleSubtitleAndTwoSideIcons: {
+            return cell;
+        }
+
+        void updateCell(const QModelIndex &index, MWidget *cell) const {
+            CustomListItem *item = dynamic_cast<CustomListItem*>(cell);
+            if (!item)
+                return;
+
             item->setTitle(index.data().toString());
-            //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->imageWidget()->setImage(defaultImage);
-            item->sideTopImageWidget()->setImage(defaultImage);
-            item->sideBottomImageWidget()->setImage(defaultImage);
-            break;    
+            item->setSubtitle(veryLongSubtitle);
+            item->setImage(defaultImage);
         }
-        case MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel: {
-            item->setTitle(index.data().toString());
-            //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->imageWidget()->setImage(defaultImage);
-            item->sideTopImageWidget()->setImage(defaultImage);
-            //% "Side"
-            item->setSideBottomTitle(qtTrId("xx_wg_contentitemspage_sidetitle"));
-            break;    
-        }
-        case MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons: {
-            item->setTitle(index.data().toString());
-            //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->imageWidget()->setImage(defaultImage);
-            item->sideTopImageWidget()->setImage(defaultImage);
-            item->sideBottomImageWidget()->setImage(defaultImage);
-            break;    
-        }
-        case MDetailedListItem::ThumbnailTitleAndTwoSideIcons: {
-            item->setTitle(index.data().toString());
-            item->imageWidget()->setImage(defaultImage);
-            item->sideTopImageWidget()->setImage(defaultImage);
-            item->sideBottomImageWidget()->setImage(defaultImage);
-            break;    
-        }
-        default:
-            break;
-        };
 
-    }
+    private:
+        QString veryLongSubtitle;
+        QImage defaultImage;
+    };
 
-private:
-    MDetailedListItem::ItemStyle itemStyle;
-    QImage defaultImage;
-};
-
-class AdvancedListItemCreator : public MAbstractCellCreator<MAdvancedListItem>
-{
-public:
-    AdvancedListItemCreator(MAdvancedListItem::ItemStyle style)
-        : itemStyle(style),
-        defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+    class BasicListItemCreator : public MAbstractCellCreator<MBasicListItem>
     {
-    }
-
-    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
-        Q_UNUSED(index);
-        MAdvancedListItem *cell = dynamic_cast<MAdvancedListItem*>(recycler.take(MAdvancedListItem::staticMetaObject.className()));
-
-        if (cell == NULL) {
-            cell = new MAdvancedListItem(itemStyle);
-            if (MApplication::instance()->objectName() == "widgetsgallery") {
-                cell->setStyleName("CommonAdvancedListItem");
-            } else {
-                cell->setStyleName("CommonAdvancedListItemInverted");
-            }
-            cell->setLayoutPosition(M::CenterPosition);
+    public:
+        BasicListItemCreator(MBasicListItem::ItemStyle style)
+            : itemStyle(style),
+            defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+        {
         }
-        updateCell(index, cell);
 
-        return cell;
-    }
+        MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
+            Q_UNUSED(index);
+            MBasicListItem *cell = dynamic_cast<MBasicListItem*>(recycler.take(MBasicListItem::staticMetaObject.className()));
 
-    void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MAdvancedListItem *item = dynamic_cast<MAdvancedListItem*>(cell);
-        if (!item)
-            return;
+            if (cell == NULL) {
+                cell = new MBasicListItem(itemStyle);
+                if (MApplication::instance()->objectName() == "widgetsgallery") {
+                    cell->setStyleName("CommonBasicListItem");
+                } else {
+                    cell->setStyleName("CommonBasicListItemInverted");
+                }
+                cell->setLayoutPosition(M::CenterPosition);
+            }
+            updateCell(index, cell);
 
-        switch (itemStyle) {
-        case MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons: {
+            return cell;
+        }
+
+        void updateCell(const QModelIndex &index, MWidget *cell) const {
+            MBasicListItem *item = dynamic_cast<MBasicListItem*>(cell);
+            if (!item)
+                return;
+
+            switch (itemStyle) {
+            case MBasicListItem::SingleTitle: {
+                item->setTitle(index.data().toString());
+                break;
+            }
+            case MBasicListItem::TitleWithSubtitle: {
+                item->setTitle(index.data().toString());
+                //% "Subtitle"
+                item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+                break;
+            }
+            case MBasicListItem::IconWithTitle: {
+                item->setTitle(index.data().toString());
+                item->imageWidget()->setImage(defaultImage);
+                break;
+            }
+            case MBasicListItem::IconWithTitleAndSubtitle: {
+                item->setTitle(index.data().toString());
+                //% "Subtitle"
+                item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+                item->imageWidget()->setImage(defaultImage);
+                break;
+            }
+            default:
+                break;
+            };
+
+        }
+
+    private:
+        MBasicListItem::ItemStyle itemStyle;
+        QImage defaultImage;
+    };
+
+    class DetailedListItemCreator : public MAbstractCellCreator<MDetailedListItem>
+    {
+    public:
+        DetailedListItemCreator(MDetailedListItem::ItemStyle style)
+            : itemStyle(style),
+            defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+        {
+        }
+
+        MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
+            Q_UNUSED(index);
+            MDetailedListItem *cell = dynamic_cast<MDetailedListItem*>(recycler.take(MDetailedListItem::staticMetaObject.className()));
+
+            if (cell == NULL) {
+                cell = new MDetailedListItem(itemStyle);
+                if (MApplication::instance()->objectName() == "widgetsgallery") {
+                    cell->setStyleName("CommonDetailedListItem");
+                } else {
+                    cell->setStyleName("CommonDetailedListItemInverted");
+                }
+                cell->setLayoutPosition(M::CenterPosition);
+            }
+            updateCell(index, cell);
+
+            return cell;
+        }
+
+        void updateCell(const QModelIndex &index, MWidget *cell) const {
+            MDetailedListItem *item = dynamic_cast<MDetailedListItem*>(cell);
+            if (!item)
+                return;
+
+            switch (itemStyle) {
+            case MDetailedListItem::IconTitleSubtitleAndTwoSideIcons: {
+                item->setTitle(index.data().toString());
+                //% "Subtitle"
+                item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+                item->imageWidget()->setImage(defaultImage);
+                item->sideTopImageWidget()->setImage(defaultImage);
+                item->sideBottomImageWidget()->setImage(defaultImage);
+                break;
+            }
+            case MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel: {
+                item->setTitle(index.data().toString());
+                //% "Subtitle"
+                item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+                item->imageWidget()->setImage(defaultImage);
+                item->sideTopImageWidget()->setImage(defaultImage);
+                //% "Side"
+                item->setSideBottomTitle(qtTrId("xx_wg_contentitemspage_sidetitle"));
+                break;
+            }
+            case MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons: {
+                item->setTitle(index.data().toString());
+                //% "Subtitle"
+                item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+                item->imageWidget()->setImage(defaultImage);
+                item->sideTopImageWidget()->setImage(defaultImage);
+                item->sideBottomImageWidget()->setImage(defaultImage);
+                break;
+            }
+            case MDetailedListItem::ThumbnailTitleAndTwoSideIcons: {
                 item->setTitle(index.data().toString());
                 item->imageWidget()->setImage(defaultImage);
                 item->sideTopImageWidget()->setImage(defaultImage);
                 item->sideBottomImageWidget()->setImage(defaultImage);
-                item->progressIndicator()->setValue(55);
                 break;
             }
-        case MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon: {
-                item->setTitle(index.data().toString());
-                item->imageWidget()->setImage(defaultImage);
-                item->sideTopImageWidget()->setImage(defaultImage);
-                item->progressIndicator()->setUnknownDuration(true);
+            default:
                 break;
+            };
+
+        }
+
+    private:
+        MDetailedListItem::ItemStyle itemStyle;
+        QImage defaultImage;
+    };
+
+    class AdvancedListItemCreator : public MAbstractCellCreator<MAdvancedListItem>
+    {
+    public:
+        AdvancedListItemCreator(MAdvancedListItem::ItemStyle style)
+            : itemStyle(style),
+            defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+        {
+        }
+
+        MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
+            Q_UNUSED(index);
+            MAdvancedListItem *cell = dynamic_cast<MAdvancedListItem*>(recycler.take(MAdvancedListItem::staticMetaObject.className()));
+
+            if (cell == NULL) {
+                cell = new MAdvancedListItem(itemStyle);
+                if (MApplication::instance()->objectName() == "widgetsgallery") {
+                    cell->setStyleName("CommonAdvancedListItem");
+                } else {
+                    cell->setStyleName("CommonAdvancedListItemInverted");
+                }
+                cell->setLayoutPosition(M::CenterPosition);
             }
-        default:
-            break;
-        };
+            updateCell(index, cell);
 
-    }
+            return cell;
+        }
 
-private:
-    MAdvancedListItem::ItemStyle itemStyle;
-    QImage defaultImage;
-};
+        void updateCell(const QModelIndex &index, MWidget *cell) const {
+            MAdvancedListItem *item = dynamic_cast<MAdvancedListItem*>(cell);
+            if (!item)
+                return;
 
+            switch (itemStyle) {
+            case MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons: {
+                    item->setTitle(index.data().toString());
+                    item->imageWidget()->setImage(defaultImage);
+                    item->sideTopImageWidget()->setImage(defaultImage);
+                    item->sideBottomImageWidget()->setImage(defaultImage);
+                    item->progressIndicator()->setValue(55);
+                    break;
+                }
+            case MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon: {
+                    item->setTitle(index.data().toString());
+                    item->imageWidget()->setImage(defaultImage);
+                    item->sideTopImageWidget()->setImage(defaultImage);
+                    item->progressIndicator()->setUnknownDuration(true);
+                    break;
+                }
+            default:
+                break;
+            };
 
+        }
+
+    private:
+        MAdvancedListItem::ItemStyle itemStyle;
+        QImage defaultImage;
+    };
+
+}
 
 class ContentItemsPageModel : public QAbstractItemModel {
 public:
@@ -356,6 +459,9 @@ void ContentItemsPage::populateLayout()
     //% "Icon with Title Progress Indicator and Top Side Icon"
     contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title_progress_indicator_and_top_side_icon"),
                                        new AdvancedListItemCreator(MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon)));
+
+    //% "Icon with Title and Multiline Subtitle"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title_and_multiline_subtitle"), new CustomListItemCreator));
 }
 
 MList *ContentItemsPage::createList(const QString &title, MCellCreator *creator)
