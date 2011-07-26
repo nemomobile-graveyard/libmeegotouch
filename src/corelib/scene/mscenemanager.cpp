@@ -1874,18 +1874,29 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     Q_ASSERT(sceneWindow->d_func()->appearanceAnimation == 0);
     MAbstractWidgetAnimation *animation = 0;
 
-    // 1. First get the animation from the scene window style itself.
+    // 1. First try to get the animation from a scene window property
+    //    (set programatically by the creator of that scene window)
     QString appearanceAnimationName = sceneWindow->property("_m_appearanceAnimation").toString();
     if (!appearanceAnimationName.isEmpty()) {
         animation = qobject_cast<MAbstractWidgetAnimation*>(
                 MTheme::animation(appearanceAnimationName));
     }
 
-    // 2. If not defined, try to get it from our own style.
+    // 2. If not defined, try to get it from the scene window style.
+    if (!animation) {
+        appearanceAnimationName =
+                sceneWindow->property("_m_appearanceAnimationFromStyle").toString();
+        if (!appearanceAnimationName.isEmpty()) {
+            animation = qobject_cast<MAbstractWidgetAnimation*>(
+                    MTheme::animation(appearanceAnimationName));
+        }
+    }
+
+    // 3. If still not defined, try to get it from our own style.
     if (!animation)
         animation = createAnimationFromSceneWindowType(sceneWindow);
 
-    // 3. As a last resort, use hard coded animation assignment.
+    // 4. As a last resort, use a hard coded animation definition.
     if (!animation)
         animation = new MWidgetFadeAnimation(sceneWindow);
 
@@ -1906,7 +1917,8 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     Q_ASSERT(sceneWindow->d_func()->disappearanceAnimation == 0);
     MAbstractWidgetAnimation *animation = 0;
 
-    // 1. First get the animation from the scene window style itself.
+    // 1. First try to get the animation from a scene window property
+    //    (set programatically by the creator of that scene window)
     QString disappearanceAnimationName =
             sceneWindow->property("_m_disappearanceAnimation").toString();
     if (!disappearanceAnimationName.isEmpty()) {
@@ -1914,11 +1926,21 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
                 MTheme::animation(disappearanceAnimationName));
     }
 
-    // 2. If not defined, try to get it from our own style.
+    // 2. If not defined, try to get it from the scene window style.
+    if (!animation) {
+        disappearanceAnimationName =
+                sceneWindow->property("_m_disappearanceAnimationFromStyle").toString();
+        if (!disappearanceAnimationName.isEmpty()) {
+            animation = qobject_cast<MAbstractWidgetAnimation*>(
+                    MTheme::animation(disappearanceAnimationName));
+        }
+    }
+
+    // 3. If still not defined, try to get it from our own style.
     if (!animation)
         animation = createAnimationFromSceneWindowType(sceneWindow);
 
-    // 3. As a last resort, use hard coded animation assignment.
+    // 4. As a last resort, use a hard coded animation definition.
     if (!animation)
         animation = new MWidgetFadeAnimation(sceneWindow);
 

@@ -77,8 +77,8 @@ void MSceneWindowView::applyStyle()
     MWidgetView::applyStyle();
 
     // smuggle those style properties to our controller so that MSceneManager can use them.
-    d->controller->setProperty("_m_appearanceAnimation", style()->appearanceAnimation());
-    d->controller->setProperty("_m_disappearanceAnimation", style()->disappearanceAnimation());
+    d->controller->setProperty("_m_appearanceAnimationFromStyle", style()->appearanceAnimation());
+    d->controller->setProperty("_m_disappearanceAnimationFromStyle", style()->disappearanceAnimation());
 
     emit geometryAttributesChanged();
 }
