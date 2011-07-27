@@ -93,6 +93,7 @@ public:
     static void sendEventToAllSubLayouts(QGraphicsLayout *layout, QEvent *event);
     static void notifySceneAboutOrientationChange(QGraphicsScene *scene, M::Orientation orientation);
 
+    static bool mouseSetsFocusForItem(QGraphicsItem *item);
     static QGraphicsItem *actualClickFocusTarget(QGraphicsItem *item);
 
 protected:

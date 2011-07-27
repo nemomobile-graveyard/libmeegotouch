@@ -526,6 +526,20 @@ bool MScenePrivate::handleGraphicsSceneMouseRelease(QGraphicsSceneMouseEvent *ev
     return retValue;
 }
 
+// KLUDGE WARNING: Here we would need access to item->d_ptr->mouseSetsFocus
+// but since that is private we're out of luck. However, at the time of writing,
+// the mouseSetsFocus is true for all non-declarative items and false for all
+// declarative items.
+bool MScenePrivate::mouseSetsFocusForItem(QGraphicsItem *item)
+{
+    bool mouseSetsFocus = true;
+    const QGraphicsObject *gobj = item->toGraphicsObject();
+    if (gobj && gobj->inherits("QDeclarativeItem")) {
+        mouseSetsFocus = false;
+    }
+    return mouseSetsFocus;
+}
+
 QGraphicsItem *MScenePrivate::actualClickFocusTarget(QGraphicsItem *item)
 {
     // If item has focus proxy, use it instead.
@@ -582,6 +596,8 @@ void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
 
     if (cancelSent) return;
 
+    // The following code mimics focus handling code in QGraphicsScenePrivate::mousePressEventHandler.
+
     bool focusSet = false;
     bool manualFocusForced = false; // Set to true in situation where Qt doesn't set focus for us.
     QList<QGraphicsItem*> itemsUnderMouse = itemsAtPosition(event->scenePos(), event->widget());
@@ -592,9 +608,13 @@ void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
 
         QGraphicsItem *globalFocusCandidate = actualClickFocusTarget(item);
         if (globalFocusCandidate) {
-            // Only set focus if Qt does not do it for us. Either way,
-            // we know we have a focused item at this point.
-            if (manualFocusForced && globalFocusCandidate != q->focusItem()) {
+            // Only set focus if Qt does not do it for us.
+            // The candidate must have mouseSetsFocus. If not,
+            // leave focus untouched and continue as if focused item
+            // was found.
+            if (manualFocusForced
+                && globalFocusCandidate != q->focusItem()
+                && mouseSetsFocusForItem(globalFocusCandidate)) {
                 q->setFocusItem(globalFocusCandidate, Qt::MouseFocusReason);
             }
             focusSet = true;
