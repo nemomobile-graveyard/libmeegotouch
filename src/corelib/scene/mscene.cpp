@@ -533,6 +533,19 @@ QGraphicsItem *MScenePrivate::actualClickFocusTarget(QGraphicsItem *item)
         item = item->focusProxy();
     }
 
+    // Find focus scope item and use it instead.
+    QGraphicsItem *p = item->parentItem();
+    while (p) {
+        if (p->flags() & QGraphicsItem::ItemIsFocusScope) {
+            if (p->focusScopeItem()) {
+                item = p->focusScopeItem();
+            }
+            break;
+        }
+        p = p->parentItem();
+    }
+
+
     // Mimic the same checks as QGraphicsScene does in focus setting.
     const bool canBeFocusedByClick = (item->isEnabled()
                                       && item->flags() & QGraphicsItem::ItemIsFocusable
