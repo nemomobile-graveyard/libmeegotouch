@@ -39,7 +39,7 @@ public slots:
 };
 
 // Tests for the public API
-class MGConfItemTests : public QObject
+class Ft_MGConfItem : public QObject
 {
     Q_OBJECT
 

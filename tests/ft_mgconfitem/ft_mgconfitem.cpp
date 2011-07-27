@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include "ft_mgconfitem_exec.h"
+#include "ft_mgconfitem.h"
 
 #define MYLOGLEVEL 2
 void myMessageOutput(QtMsgType type, const char *msg)
@@ -46,26 +46,39 @@ void myMessageOutput(QtMsgType type, const char *msg)
 // Definition of testcases: Normal tests
 //
 
-void MGConfItemTests::timeout()
+void Ft_MGConfItem::timeout()
 {
     timed_out = true;
     timer.stop();
 }
 
 // Before all tests
-void MGConfItemTests::initTestCase()
+void Ft_MGConfItem::initTestCase()
 {
+    QProcess process;
+    QStringList arguments;
+    arguments << "-set-keys";
+    process.start(qApp->applicationFilePath(), arguments);
+    QVERIFY(process.waitForFinished());
+    QCOMPARE(process.exitCode(), 0);
+
     connect(&timer, SIGNAL(timeout()),
             this, SLOT(timeout()));
 }
 
 // After all tests
-void MGConfItemTests::cleanupTestCase()
+void Ft_MGConfItem::cleanupTestCase()
 {
+    // Unset all entries
+    QStringList entries = MGConfItem("/Test").listEntries();
+    foreach(QString entry, entries) {
+        MGConfItem gconfEntry(entry);
+        gconfEntry.unset();
+    }
 }
 
 // Before each test
-void MGConfItemTests::init()
+void Ft_MGConfItem::init()
 {
     boolItem = new MGConfItem("/Test/Bool");
     intItem = new MGConfItem("/Test/Int");
@@ -91,7 +104,7 @@ void MGConfItemTests::init()
 }
 
 // After each test
-void MGConfItemTests::cleanup()
+void Ft_MGConfItem::cleanup()
 {
     QObject::disconnect(boolItem, SIGNAL(valueChanged()), signalSpy, SLOT(valueChanged()));
     QObject::disconnect(intItem, SIGNAL(valueChanged()), signalSpy, SLOT(valueChanged()));
@@ -116,7 +129,7 @@ void MGConfItemTests::cleanup()
     timer.stop();
 }
 
-void MGConfItemTests::path()
+void Ft_MGConfItem::path()
 {
     QCOMPARE(boolItem->key(), QString("/Test/Bool"));
     QCOMPARE(intItem->key(), QString("/Test/Int"));
@@ -130,7 +143,7 @@ void MGConfItemTests::path()
     QCOMPARE(unsetAfterItem->key(), QString("/Test/UnsetAfter"));
 }
 
-void MGConfItemTests::external_values()
+void Ft_MGConfItem::external_values()
 {
     // These values are set before this program starts.
     QCOMPARE(boolItem->value().toBool(), true);
@@ -145,7 +158,7 @@ void MGConfItemTests::external_values()
     QCOMPARE(unsetAfterItem->value().isValid(), true);
 }
 
-void MGConfItemTests::set_bool()
+void Ft_MGConfItem::set_bool()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -157,7 +170,7 @@ void MGConfItemTests::set_bool()
     QCOMPARE(signalSpy->numberOfCalls, 2);
 }
 
-void MGConfItemTests::set_int()
+void Ft_MGConfItem::set_int()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -169,7 +182,7 @@ void MGConfItemTests::set_int()
     QCOMPARE(signalSpy->numberOfCalls, 2);
 }
 
-void MGConfItemTests::set_string()
+void Ft_MGConfItem::set_string()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -179,7 +192,7 @@ void MGConfItemTests::set_string()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::set_unicode_string()
+void Ft_MGConfItem::set_unicode_string()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -189,7 +202,7 @@ void MGConfItemTests::set_unicode_string()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::set_double()
+void Ft_MGConfItem::set_double()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -199,7 +212,7 @@ void MGConfItemTests::set_double()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::set_string_list()
+void Ft_MGConfItem::set_string_list()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -209,7 +222,7 @@ void MGConfItemTests::set_string_list()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::set_int_list()
+void Ft_MGConfItem::set_int_list()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -219,7 +232,7 @@ void MGConfItemTests::set_int_list()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::set_double_list()
+void Ft_MGConfItem::set_double_list()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -229,7 +242,7 @@ void MGConfItemTests::set_double_list()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::set_bool_list()
+void Ft_MGConfItem::set_bool_list()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -239,7 +252,7 @@ void MGConfItemTests::set_bool_list()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::unset()
+void Ft_MGConfItem::unset()
 {
     signalSpy->numberOfCalls = 0;
 
@@ -249,7 +262,7 @@ void MGConfItemTests::unset()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::list_dirs()
+void Ft_MGConfItem::list_dirs()
 {
     MGConfItem test("/Test");
     QStringList dirs = test.listDirs();
@@ -267,12 +280,12 @@ void MGConfItemTests::list_dirs()
     QVERIFY(dirs.contains("/Test/Dir"));
 }
 
-void MGConfItemTests::list_entries()
+void Ft_MGConfItem::list_entries()
 {
     MGConfItem test("/Test");
     QStringList entries = test.listEntries();
 
-    QVERIFY(!entries.contains("/Test/Bool"));  // has been unset above!
+    QVERIFY(!entries.contains("/Test/Bool") || !MGConfItem("/Test/Bool").value().isValid());  // has been unset above!
     QVERIFY(entries.contains("/Test/Int"));
     QVERIFY(entries.contains("/Test/String"));
     QVERIFY(entries.contains("/Test/Double"));
@@ -280,12 +293,12 @@ void MGConfItemTests::list_entries()
     QVERIFY(entries.contains("/Test/IntList"));
     QVERIFY(entries.contains("/Test/DoubleList"));
     QVERIFY(entries.contains("/Test/BoolList"));
-    QVERIFY(!entries.contains("/Test/UnsetBefore"));
+    QVERIFY(!entries.contains("/Test/UnsetBefore") || !MGConfItem("/Test/UnsetBefore").value().isValid());
     QVERIFY(entries.contains("/Test/UnsetAfter"));
     QVERIFY(!entries.contains("/Test/Dir"));
 }
 
-void MGConfItemTests::get_default()
+void Ft_MGConfItem::get_default()
 {
     intItem->unset();
     QCOMPARE(intItem->value(123).toInt(), 123);
@@ -293,7 +306,7 @@ void MGConfItemTests::get_default()
     QCOMPARE(intItem->value(123).toInt(), 234);
 }
 
-void MGConfItemTests::propagate()
+void Ft_MGConfItem::propagate()
 {
     MGConfItem secondIntItem("/Test/Int");
     secondIntItem.set(3000);
@@ -301,7 +314,7 @@ void MGConfItemTests::propagate()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
-void MGConfItemTests::set_external()
+void Ft_MGConfItem::set_external()
 {
     // This must be the last test case.  The values that are set here
     // are checked after this program exits.
@@ -315,6 +328,98 @@ void MGConfItemTests::set_external()
     doubleListItem->set(QList<QVariant>() << -2.5 << -2.5);
     boolListItem->set(QList<QVariant>() << false << false << true << true);
     unsetAfterItem->set(QVariant());
+
+    QProcess process;
+    QStringList arguments;
+    arguments << "-verify-keys";
+    process.start(qApp->applicationFilePath(), arguments);
+    QVERIFY(process.waitForFinished());
+    QCOMPARE(process.exitCode(), 0);
 }
 
-QTEST_MAIN(MGConfItemTests);
+void set_gconf_keys()
+{
+    MGConfItem boolItem("/Test/Bool");
+    boolItem.set(true);
+
+    MGConfItem intItem("/Test/Int");
+    intItem.set(123);
+
+    MGConfItem stringItem("/Test/String");
+    stringItem.set("Hello GConf");
+
+    MGConfItem doubleItem("/Test/Double");
+    doubleItem.set(3.5);
+
+    MGConfItem stringListItem("/Test/StringList");
+    stringListItem.set(QStringList() << "Hello" << "GConf" << QString::fromUtf8("ÄÖÜ"));
+
+    MGConfItem intListItem("/Test/IntList");
+    intListItem.set(QList<QVariant>() << 1 << 2 << 3 << 4);
+
+    MGConfItem doubleListItem("/Test/DoubleList");
+    doubleListItem.set(QList<QVariant>() << 3.5 << 3.5 << 3.5);
+
+    MGConfItem boolListItem("/Test/BoolList");
+    boolListItem.set(QList<QVariant>() << false << true << true << false);
+
+    MGConfItem unsetBeforeItem("/Test/UnsetBefore");
+    unsetBeforeItem.unset();
+
+    MGConfItem unsetAfterItem ("/Test/UnsetAfter");
+    unsetAfterItem.set(1);
+}
+
+void verify_gconf_keys()
+{
+    MGConfItem boolItem("/Test/Bool");
+    QCOMPARE(boolItem.value().toBool(), false);
+
+    MGConfItem intItem("/Test/Int");
+    QCOMPARE(intItem.value().toInt(), 54321);
+
+    MGConfItem stringItem("/Test/String");
+    QCOMPARE(stringItem.value().toString(), QString("Good bye GConf"));
+
+    MGConfItem doubleItem("/Test/Double");
+    QCOMPARE(doubleItem.value().toDouble(), -2.5);
+
+    MGConfItem stringListItem("/Test/StringList");
+    QCOMPARE(stringListItem.value().toStringList(), QStringList() << "Good" << "bye" << "GConf" << QString::fromUtf8("äöü"));
+
+    MGConfItem intListItem("/Test/IntList");
+    QCOMPARE(intListItem.value().toList(), QList<QVariant>() << 5 << 4 << 3 << 2 << 1);
+
+    MGConfItem doubleListItem("/Test/DoubleList");
+    QCOMPARE(doubleListItem.value().toList(), QList<QVariant>() << -2.5 << -2.5);
+
+    MGConfItem boolListItem("/Test/BoolList");
+    QCOMPARE(boolListItem.value().toList(), QList<QVariant>() << false << false << true << true);
+
+    MGConfItem unsetBeforeItem("/Test/UnsetBefore");
+    QVERIFY(!unsetBeforeItem.value().isValid());
+
+    MGConfItem unsetAfterItem("/Test/UnsetAfter");
+    QVERIFY(!unsetAfterItem.value().isValid());
+}
+
+int main(int argc, char *argv[])
+{
+    QStringList arguments;
+    for (int i = 1; i < argc; i ++) {
+        arguments << argv[i];
+    }
+    QApplication app(argc, argv);
+    QTEST_DISABLE_KEYPAD_NAVIGATION
+
+    if (arguments.contains("-set-keys")) {
+        set_gconf_keys();
+    } else if (arguments.contains("-verify-keys")) {
+        verify_gconf_keys();
+    } else {
+        Ft_MGConfItem tc;
+        return QTest::qExec(&tc, argc, argv);
+    }
+
+    return 0;
+}
