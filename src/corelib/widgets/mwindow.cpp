@@ -136,16 +136,11 @@ void MWindowPrivate::init()
     if ( !MApplication::fullScreen() ) {
 #endif //M_OS_MAEMO5
 
+    /* M_DECORATED can be used to force decorated windows */
     QString env = qgetenv("M_DECORATED");
-    if (env.contains("0")) {
+    if (env.isEmpty() || env.contains("0")) {
         q->setWindowFlags(Qt::FramelessWindowHint);
     }
-    /* Workaround until we get M_DECORATED defined in the target env */
-#ifdef __arm__
-    else if (env.isEmpty()) {
-        q->setWindowFlags(Qt::FramelessWindowHint);
-    }
-#endif // __arm__
 
 #ifdef M_OS_MAEMO5
     }
