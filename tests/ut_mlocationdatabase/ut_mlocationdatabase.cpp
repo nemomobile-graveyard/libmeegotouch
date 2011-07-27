@@ -267,8 +267,8 @@ void Ut_MLocationDatabase::testCitiesInTimeZone_data()
     QTest::newRow("America/New_York")
         << "America/New_York"
         << (QStringList()
+            << "qtn_clk_city_usa_washington"
             << "qtn_clk_city_usa_ny"
-            << "qtn_clk_city_usa_boston"
             );
     QTest::newRow("America/North_Dakota/Center")
         << "America/North_Dakota/Center"
