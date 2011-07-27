@@ -202,6 +202,7 @@ SUBDIRS     =  \
     ut_mgraphicsclipeffect \
     ut_mwidgetanimation \
     ut_mcolorcombobox \
+    ut_mcolorcomboboxbutton \
     ut_mgriditem \
     ut_mlistitem \
     ut_mapplicationifproxy \

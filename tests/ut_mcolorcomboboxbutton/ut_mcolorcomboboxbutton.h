@@ -17,50 +17,33 @@
 **
 ****************************************************************************/
 
-#ifndef MCOLORCOMBOBOXBUTTON_H
-#define MCOLORCOMBOBOXBUTTON_H
+#ifndef UT_MTEXTEDIT_H
+#define UT_MTEXTEDIT_H
 
-#include "mlistitem.h"
+#include <QtTest/QtTest>
+#include <QObject>
 
-class MLabel;
-class QColor;
-class QString;
-class MColorWidget;
-class QGraphicsItem;
-class QGraphicsLinearLayout;
+class MColorComboBoxButton;
 
-//! \internal
-
-class MColorComboBoxButton : public MListItem
+class Ut_MColorComboBoxButton : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(MColorComboBoxButton)
 
-public:
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-    MColorComboBoxButton(QGraphicsItem *parent = 0);
+    void init();
+    void cleanup();
 
-    void setTitle(const QString &title);
-
-    void setTitleStyleName(const QString &name);
-
-    void setColor(const QColor &color);
-
-    void setColorStyleName(const QString &name);
+    void testTitle();
+    void testTitleStyleName();
+    void testColor();
+    void testColorStyleName();
 
 private:
-
-    MLabel *titleLabel;
-
-    MColorWidget *colorWidget;
-
-    QGraphicsLinearLayout *layout;
-
-#ifdef UNIT_TEST
-    friend class Ut_MColorComboBoxButton;
-#endif
+    MColorComboBoxButton *m_subject;
 };
 
-//! \internal_end
+#endif // UT_MCOLORCOMBOBOX_H
 
-#endif
