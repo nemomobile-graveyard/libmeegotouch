@@ -529,7 +529,7 @@ bool MScenePrivate::handleGraphicsSceneMouseRelease(QGraphicsSceneMouseEvent *ev
 QGraphicsItem *MScenePrivate::actualClickFocusTarget(QGraphicsItem *item)
 {
     // If item has focus proxy, use it instead.
-    if (item->focusProxy()) {
+    while (item->focusProxy()) {
         item = item->focusProxy();
     }
 
