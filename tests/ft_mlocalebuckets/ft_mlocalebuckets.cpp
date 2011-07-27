@@ -673,6 +673,9 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("ar_EG")
         << "ar_EG"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("sk_SK")
+        << "sk_SK"
+        << "ft_mlocalebuckets_test-input.txt";
     QTest::newRow("zh_TW@collation=zhuyin")
         << "zh_TW@collation=zhuyin"
         << "ft_mlocalebuckets_test-input.txt";

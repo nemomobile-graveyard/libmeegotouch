@@ -1,0 +1,7 @@
+sk{
+    collations{
+        standard{
+            Sequence { "&A<ä<<<Ä&C<č<<<Č&D<ď<<<Ď&H<ch<<<cH<<<Ch<<<CH&L<ľ<<<Ľ&O<ô<<<Ô&R<ř<<<Ř&S<š<<<Š&t<ť<<<Ť&Z<ž<<<Ž" }
+        }
+    }
+}

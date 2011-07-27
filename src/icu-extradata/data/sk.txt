@@ -1,4 +1,5 @@
 sk{
+    ExemplarCharactersIndex { "[A Ä B C Č D Ď E F G H {CH} I J K L Ľ M N O Ô P Q R Ř S Š T Ť U V W X Y Z Ž]" }
     calendar{
         gregorian{
              AmPmMarkers{
