@@ -295,12 +295,13 @@ void Ut_MLabel::testTextWordWrap()
 void Ut_MLabel::testTextElide_data()
 {
     QTest::addColumn<QString>("text");
-    QTest::addColumn<QString>("elidedEnd");
+    QTest::addColumn<QString>("elidedEndWithoutWordWrap");
+    QTest::addColumn<QString>("elidedEndWithWordWrap");
 
     QTest::newRow("plain") << "David Michael Hasselhoff (born July 17, 1952) is an American actor and singer.He is best known for his lead roles as Michael Knight in the popular 1980s U.S. series Knight Rider and as L.A. County Lifeguard Mitch Buchannon in the series Baywatch. Hasselhoff also produced Baywatch for a number of series in the 1990s up until 2001 when the series ended with Baywatch Hawaii. Hasselhoff also crossed over to a music career during the end of the 1980s and the early 1990s and was noted for his performance when the Berlin Wall was brought down in 1989. He enjoyed a short lived success as a singer primarily in German-speaking Europe, particularly in Germany and Austria. More recently Hasselhoff has been involved with talent shows such as NBC's America's Got Talent in 2006. Hasselhoff's autobiography, Making Waves, was released in the United Kingdom in September 2006."
-                           << "American actor and singer.H...";
+                           << "American actor and singer...." << "in Wall was brought down in...";
     QTest::newRow("nospaces") << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                              << "xxxx...";
+                              << "xxxx..." << "xxxx...";
     // For some reason this doesn't work in CC -> solve why
     //QTest::newRow("rich") << "<b>David Michael Hasselhoff (born July 17, 1952) is an American actor and singer. He is best known for his lead roles as Michael Knight in the popular 1980s U.S. series Knight Rider and as L.A. County Lifeguard Mitch Buchannon in the series Baywatch. Hasselhoff also produced Baywatch for a number of series in the 1990s up until 2001 when the series ended with Baywatch Hawaii. Hasselhoff also crossed over to a music career during the end of the 1980s and the early 1990s and was noted for his performance when the Berlin Wall was brought down in 1989. He enjoyed a short lived success as a singer primarily in German-speaking Europe, particularly in Germany and Austria. More recently Hasselhoff has been involved with talent shows such as NBC's America's Got Talent in 2006. Hasselhoff's autobiography, Making Waves, was released in the United Kingdom in September 2006.</b>";
 }
@@ -308,7 +309,8 @@ void Ut_MLabel::testTextElide_data()
 void Ut_MLabel::testTextElide()
 {
     QFETCH(QString, text);
-    QFETCH(QString, elidedEnd);
+    QFETCH(QString, elidedEndWithoutWordWrap);
+    QFETCH(QString, elidedEndWithWordWrap);
     label->setText(text);
     QVERIFY(text == label->text());
 
@@ -318,6 +320,14 @@ void Ut_MLabel::testTextElide()
     QVERIFY(label->textElide() == true);
     QImage elided = captureImage(label);
 
+#ifdef __arm__
+    // The scratchbox and device environment use a different font and theme per default.
+    // Only test the wrapping for the device to keep testTextElide_data() maintainable:
+    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
+    QString labelTextEnd = view->renderedText().right(elidedEndWithoutWordWrap.length());
+    QCOMPARE(labelTextEnd, elidedEndWithoutWordWrap);
+#endif
+
     label->setWordWrap(true);
     label->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     label->setTextElide(true);
@@ -326,9 +336,8 @@ void Ut_MLabel::testTextElide()
 #ifdef __arm__
     // The scratchbox and device environment use a different font and theme per default.
     // Only test the wrapping for the device to keep testTextElide_data() maintainable:
-    const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
-    const QString labelTextEnd = view->renderedText().right(elidedEnd.length());
-    QCOMPARE(labelTextEnd, elidedEnd);
+    labelTextEnd = view->renderedText().right(elidedEndWithWordWrap.length());
+    QCOMPARE(labelTextEnd, elidedEndWithWordWrap);
 #endif
 
     label->setWordWrap(false);
@@ -1295,7 +1304,7 @@ void Ut_MLabel::testPreferredLineCount()
     else
         label->setPreferredLineCount(2);
     label->resize(label->preferredSize());
-    const QChar ellipsisChar(0x2026);
+    QString ellipsisChar("...");
     if (wrapMode == QTextOption::WrapAnywhere)
         QCOMPARE(view->renderedText(), QString("A\nB") + ellipsisChar);
     else

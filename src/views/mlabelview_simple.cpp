@@ -33,10 +33,10 @@
 #include <QGraphicsSceneResizeEvent>
 #include <QGestureEvent>
 #include <QTapAndHoldGesture>
-
 namespace
 {
     const QChar TextVariantSeparator(0x9c, 0);
+    const QChar EllipsisChar(0x2026);
 } // namespace 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
@@ -251,7 +251,7 @@ void MLabelViewSimple::applyStyle()
 QString MLabelViewSimple::renderedText() const
 {
     const_cast<MLabelViewSimple*>(this)->initializeTextProperties();
-    return staticText.text().replace(QChar::LineSeparator, QLatin1Char('\n'));
+    return staticText.text().replace(QChar::LineSeparator, QLatin1Char('\n')).replace(EllipsisChar, QLatin1String("..."));
 }
 
 bool MLabelViewSimple::tileInformation(int index, QPixmap &pixmap, int &y) const
@@ -334,7 +334,7 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
 
     QTextLayout textLayout;
     textLayout.setFont(font);
-    textLayout.setTextOption(staticText.textOption());
+    textLayout.setTextOption(viewPrivate->textOptions);
 
     int lineCount = 0;
     int elideAtLineNumber = -1;
@@ -411,9 +411,7 @@ QString MLabelViewSimple::textToRender(const QSizeF &renderSize) const
         // case, adding the additional elide character will make it just too long, and so
         // elidedText will remove it, along with a few of the last characters, and use its own
         // eliding mechanism.
-        const QChar ellipsisChar(0x2026);
-        QString textToElide = text.mid(line.textStart(), lineLength) + ellipsisChar;
-
+        QString textToElide = text.mid(line.textStart(), lineLength) + EllipsisChar;
         return text.left(line.textStart()) + fm.elidedText(textToElide, Qt::ElideRight, renderSize.width(), /*We have no option for showing mnemonics*/0);
     }
     return text;
@@ -499,7 +497,7 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text, int maxi
     }
 
     QTextLayout textLayout(text, font);
-    textLayout.setTextOption(staticText.textOption());
+    textLayout.setTextOption(viewPrivate->textOptions);
 
     textLayout.beginLayout();
     int lineCount = 0;
@@ -527,8 +525,7 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text, int maxi
                 QTextLine nextLine = textLayout.createLine();
                 if (nextLine.isValid()) {
                     //We need to elide
-                    const QChar ellipsisChar(0x2026);
-                    QRectF lastLineRect = fm.boundingRect(text.mid(line.textStart(), line.textLength()) + ellipsisChar);
+                    QRectF lastLineRect = fm.boundingRect(text.mid(line.textStart(), line.textLength()) + EllipsisChar);
                     textLayout.endLayout();
                     return textLayout.boundingRect().united(lastLineRect).size();
                 }
