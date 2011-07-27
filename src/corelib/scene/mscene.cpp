@@ -526,6 +526,25 @@ bool MScenePrivate::handleGraphicsSceneMouseRelease(QGraphicsSceneMouseEvent *ev
     return retValue;
 }
 
+QGraphicsItem *MScenePrivate::actualClickFocusTarget(QGraphicsItem *item)
+{
+    // If item has focus proxy, use it instead.
+    if (item->focusProxy()) {
+        item = item->focusProxy();
+    }
+
+    // Mimic the same checks as QGraphicsScene does in focus setting.
+    const bool canBeFocusedByClick = (item->isEnabled()
+                                      && item->flags() & QGraphicsItem::ItemIsFocusable
+                                      && (!item->isWidget()
+                                          || static_cast<QGraphicsWidget *>(item)->focusPolicy() == Qt::ClickFocus));
+    if (!canBeFocusedByClick) {
+        item = 0;
+    }
+
+    return item;
+}
+
 bool MScenePrivate::itemUnderMouseAlreadyFocused(QGraphicsSceneMouseEvent *event) const
 {
     Q_Q(const MScene);
@@ -533,14 +552,10 @@ bool MScenePrivate::itemUnderMouseAlreadyFocused(QGraphicsSceneMouseEvent *event
     bool focused = false;
     QList<QGraphicsItem *> items = itemsAtPosition(event->scenePos(),
                                                    event->widget());
+
     foreach (QGraphicsItem *item, items) {
-        QGraphicsWidget *widget = item->isWidget() ?
-                                  static_cast<QGraphicsWidget *>(item) : 0;
-        // Mimic the same checks as QGraphicsScene does in focus setting.
-        if (widget
-            && widget->isEnabled()
-            && widget->flags() & QGraphicsItem::ItemIsFocusable
-            && widget->focusPolicy() == Qt::ClickFocus) {
+        item = actualClickFocusTarget(item);
+        if (item) {
             focused = (q->focusItem() == item);
             break;
         }
@@ -555,22 +570,20 @@ void MScenePrivate::handleFocusChange(QGraphicsSceneMouseEvent *event)
     if (cancelSent) return;
 
     bool focusSet = false;
-    bool manualFocusForced = false;
+    bool manualFocusForced = false; // Set to true in situation where Qt doesn't set focus for us.
     QList<QGraphicsItem*> itemsUnderMouse = itemsAtPosition(event->scenePos(), event->widget());
+
     foreach (QGraphicsItem *item, itemsUnderMouse) {
-        // Before checking other attributes of the item under mouse
-        // check if it has a focus proxy and let's continue with that instead.
-        item = item->focusProxy() ? item->focusProxy() : item;
 
         if (item->flags() & QGraphicsItem::ItemStopsFocusHandling) manualFocusForced = true;
-        if (item->isEnabled()
-            && (item->flags() & QGraphicsItem::ItemIsFocusable)
-            && (!item->isWidget()
-                || ((QGraphicsWidget *)item)->focusPolicy() & Qt::ClickFocus)) {
+
+        QGraphicsItem *globalFocusCandidate = actualClickFocusTarget(item);
+        if (globalFocusCandidate) {
             // Only set focus if Qt does not do it for us. Either way,
             // we know we have a focused item at this point.
-            if (manualFocusForced && item != q->focusItem())
-                q->setFocusItem(item, Qt::MouseFocusReason);
+            if (manualFocusForced && globalFocusCandidate != q->focusItem()) {
+                q->setFocusItem(globalFocusCandidate, Qt::MouseFocusReason);
+            }
             focusSet = true;
             break;
         }
