@@ -754,6 +754,12 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
         }
 
         if (!q->closeOnLazyShutdown()) {
+#ifdef Q_WS_X11
+            if (!q->isHidden()) {
+                // compositor needs this in order to animate window disappearance correctly
+                sendNetCloseWindow();
+            }
+#endif
             q->hide();
             event->ignore();
             return;
@@ -764,7 +770,7 @@ void MWindowPrivate::handleCloseEvent(QCloseEvent *event)
     // We have to send this root message because the window itself is managing
     // its close events. In MeeGo Touch there's no WM with a close button
     if (q->testAttribute(Qt::WA_QuitOnClose) &&
-        q->windowState().testFlag(Qt::WindowNoState) &&
+        !q->windowState().testFlag(Qt::WindowMinimized) &&
         !event->spontaneous())
     {
         sendNetCloseWindow();
