@@ -194,18 +194,14 @@ void MCompleterViewPrivate::createContents()
             return;
 
         //highlight the completionPrefix
-        QString prefix = q->model()->completionPrefix();
+        QString prefix = q->model()->completionPrefix().trimmed();
         text = text.replace('<', "&lt;");
         text = text.replace('>', "&gt;");
         prefix = prefix.replace('<', "&lt;");
         prefix = prefix.replace('>', "&gt;");
-        QRegExp exp(QString("^%1").arg(prefix), Qt::CaseInsensitive);
-        int index = exp.indexIn(text);
-        if (index == -1) {
-            exp.setPattern(QString("\\W%1").arg(prefix));
-            index = exp.indexIn(text);
-            if (index != -1)
-                ++index;
+        int index = -1;
+        if (!text.isEmpty() && !prefix.isEmpty()) {
+            index = text.indexOf(prefix, 0, Qt::CaseInsensitive);
         }
 
         // only highlight if there is a match in text.
