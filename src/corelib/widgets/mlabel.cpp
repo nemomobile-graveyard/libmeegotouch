@@ -132,7 +132,15 @@ bool MLabel::textElide() const
 
 void MLabel::setPreferredLineCount(int lineCount)
 {
+    setPreferredLineCount(lineCount, LineCountSetsPreferredHeight);
+}
+
+void MLabel::setPreferredLineCount(int lineCount, PreferredLineCountBehavior behavior)
+{
+    model()->beginTransaction();
     model()->setPreferredLineCount(lineCount);
+    model()->setPreferredLineCountBehavior(behavior);
+    model()->commitTransaction();
 }
 
 int MLabel::preferredLineCount() const

@@ -199,6 +199,22 @@ class M_CORE_EXPORT MLabel : public MWidgetController
     Q_PROPERTY(Qt::TextFormat textFormat READ textFormat WRITE setTextFormat);
 
 public:
+    /*!
+      This enumeration is used by MLabel to indicate how preferredLineCount property affects its preferred height.
+    */
+    enum PreferredLineCountBehavior {
+        /*!
+         Preferred height will hold the value needed to accomodate the current text up to the number of
+         lines defined by preferredLineCount. If the text needs more lines to be fully displayed than
+         what preferredLineCount says, preferredHeight will still correspond to preferredLineCount.
+        */
+        LineCountLimitsPreferredHeight = 0,
+
+        /*!
+         Preferred height will correspond to the number of lines defined by preferredLineCount regardless of label's text.
+        */
+        LineCountSetsPreferredHeight
+    };
     
     /*!
         \brief Constructs label widget.
@@ -291,18 +307,42 @@ public:
     bool textElide() const;
 
     /*!
-        \brief Limits the preferred height returned sizeHint() to the given number of lines of text
+        \brief Sets the preferred height returned by sizeHint() to the given number of lines of text
+
+        Equivalent to:
+        \code
+          setPreferredLineCount(lineCount, LineCountSetsPreferredHeight);
+        \endcode
+
+        \param lineCount indicates how many lines of text is preferred to be shown.
 
         Default is -1, disabling this feature.
-        \sa textElide()
+        \sa MLabel::textElide()
+        \sa MLabel::PreferredLineCountBehavior
     */
     void setPreferredLineCount(int lineCount);
 
     /*!
-        \brief Limits the preferred height returned sizeHint() to the given number of lines of text
-        \return Number of lines, or -1 (default) indicating that the number of lines won't be limited
+        \brief Limits or sets the preferred height returned by sizeHint() to the given number of lines of text, with optional behavior.
 
-        \sa textElide()
+        \param lineCount indicates how many lines of text is preferred to be shown.
+        \param behavior indicates how preferredLineCount() affects the preferred height of the label.
+
+        Default is -1, disabling this feature.
+        \sa MLabel::textElide()
+        \sa MLabel::PreferredLineCountBehavior
+    */
+    void setPreferredLineCount(int lineCount, PreferredLineCountBehavior behavior);
+
+    /*!
+        To get the current preferredLineCount() behavior you need to:
+        \code
+        model()->preferredLineCountBehavior();
+        \endcode
+
+        \return Number of lines, or -1 (default) indicating that the number of lines in preferred height is not limited and neither set.
+
+        \sa MLabel::textElide()
     */
     int preferredLineCount() const;
 

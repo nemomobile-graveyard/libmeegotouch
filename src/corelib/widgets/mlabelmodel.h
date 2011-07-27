@@ -91,11 +91,17 @@ class M_CORE_EXPORT MLabelModel : public MWidgetModel
     */
     M_MODEL_PROPERTY(bool, textElide, TextElide, true, false)
 
-    /*
+    /*!
         \property MLabelModel::preferredLineCount
-        \brief Limits the preferred height returned MLabel::sizeHint() to the given number of lines of text
+        \brief Limits or sets the preferred height returned MLabel::sizeHint() to the given number of lines of text.
     */
     M_MODEL_PROPERTY(int, preferredLineCount, PreferredLineCount, true, -1)
+
+    /*!
+        \property MLabelModel::preferredLineCountBehavior
+        \brief Describes how the preferredLineCount affects preferred height of the MLabel.
+    */
+    M_MODEL_PROPERTY(int, preferredLineCountBehavior, PreferredLineCountBehavior, true, 1)
 
     /*!
         \property MLabelModel::useModelFont

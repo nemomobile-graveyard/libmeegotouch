@@ -97,11 +97,28 @@ class M_VIEWS_EXPORT MLabelStyle : public MWidgetStyle
       \brief Set the preferred height of the label to the
       given number of lines of text.
 
+      If there is not enough text to reach the preferredLineCount, then
+      if preferredLineCountBehavior is set as MLabel::LineCountSetsPreferredHeight,
+      the preferred height will be equal to the height of the lines given, plus the height
+      of empty lines to fill out to the given preferredLineCount.
+
       Default is -1, indicating to use the entire text.
 
       Typically used with MLabel::setElide()
     */
     M_STYLE_ATTRIBUTE(int, preferredLineCount, PreferredLineCount)
+
+    /*!
+      \property MLabelStyle::preferredLineCountBehavior
+      \brief Describes how the preferredLineCount affects preferred height of the MLabel.
+
+      Default is MLabel::LineCountSetsPreferredHeight, "set".
+      For MLabel::LineCountLimitsPreferredHeight, use "limit".
+
+      Only used if preferredLineCount > 0
+    */
+    M_STYLE_ATTRIBUTE(QString, preferredLineCountBehavior, PreferredLineCountBehavior)
+
 };
 
 /*!

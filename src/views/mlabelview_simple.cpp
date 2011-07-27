@@ -37,6 +37,12 @@ namespace
 {
     const QChar TextVariantSeparator(0x9c, 0);
     const QChar EllipsisChar(0x2026);
+
+    MLabel::PreferredLineCountBehavior stringToLineCountBehavior(const QString &behavior) {
+        if (behavior.compare("limit", Qt::CaseInsensitive) == 0)
+            return MLabel::LineCountLimitsPreferredHeight;
+        return MLabel::LineCountSetsPreferredHeight;
+    }
 } // namespace 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
@@ -122,7 +128,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         }
         //If word wrap and eliding are both disabled (the default) then use the smallest string as
         //the minimum size
-        return sizeForWidth(-1, stringVariants.last(), 1); //Get the size of the smallest variant
+        return sizeForWidth(-1, stringVariants.last(), 1, MLabel::LineCountLimitsPreferredHeight); //Get the size of the smallest variant
     }
     case Qt::PreferredSize: {
         qreal width = constraint.width();
@@ -132,9 +138,12 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         }
         //Model overrides style
         int preferredLineCount = viewPrivate->model()->preferredLineCount();
-        if (preferredLineCount < 0)
+        int preferredLineCountBehavior = viewPrivate->model()->preferredLineCountBehavior();
+        if (preferredLineCount < 0) {
             preferredLineCount = viewPrivate->style()->preferredLineCount();
-        QSizeF size = sizeForWidth(width, stringVariants.first(), preferredLineCount); //Get the size of the largest variant
+            preferredLineCountBehavior = stringToLineCountBehavior(viewPrivate->style()->preferredLineCountBehavior());
+        }
+        QSizeF size = sizeForWidth(width, stringVariants.first(), preferredLineCount, preferredLineCountBehavior); //Get the size of the largest variant
         return size;
     }
     case Qt::MaximumSize: {
@@ -201,6 +210,8 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
         } else if (member == MLabelModel::UseModelFont || member == MLabelModel::Font) {
             needUpdate = true;
         } else if (member == MLabelModel::PreferredLineCount) {
+            needUpdate = true;
+        } else if (member == MLabelModel::PreferredLineCountBehavior) {
             needUpdate = true;
         }
     }
@@ -484,7 +495,7 @@ void MLabelViewSimple::adjustTextOffset()
     }
 }
 
-QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text, int maximumLineCount) const
+QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text, int maximumLineCount, int preferredLineCountBehavior) const
 {
     const_cast<MLabelViewSimple*>(this)->initializeTextProperties();
 
@@ -535,7 +546,11 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width, const QString &text, int maxi
     }
     textLayout.endLayout();
 
-    return textLayout.boundingRect().size();
+    QSizeF size = textLayout.boundingRect().size();
+    if (preferredLineCountBehavior == MLabel::LineCountSetsPreferredHeight && lineCount < maximumLineCount) {
+        size.rheight() += fm.height() * (maximumLineCount - lineCount) + fm.leading() * (maximumLineCount - lineCount - 1);
+    }
+    return size;
 }
 
 void MLabelViewSimple::markDirty()
