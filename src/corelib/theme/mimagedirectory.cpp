@@ -206,7 +206,11 @@ PixmapCacheEntry* ImageResource::releaseWithoutDelete(const QSize &size)
 {
     Q_ASSERT_X(cachedPixmaps.contains(size), "ImageResource", "Cannot release pixmap because the cache entry cannot be found for the pixmap!");
 
-    PixmapCacheEntry *cacheEntry = cachedPixmaps[size];
+    QHash<QSize, PixmapCacheEntry*>::iterator iter = cachedPixmaps.find(size);
+    if(iter == cachedPixmaps.end())
+        return NULL;
+
+    PixmapCacheEntry *cacheEntry = *iter;
 
     // decrease the refcount.
     --cacheEntry->refCount;
