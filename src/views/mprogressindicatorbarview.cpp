@@ -57,7 +57,7 @@ void MProgressIndicatorBarViewPrivate::drawBar(QPainter* painter) const
 
     const MProgressIndicatorStyle *s = static_cast<const MProgressIndicatorStyle *>(q->style().operator ->());
 
-    bool reverse = qApp->isRightToLeft();
+    bool reverse = (controller->layoutDirection() == Qt::RightToLeft);
     QRectF viewRect(q->rect());
 
     if (s->progressBarBackground() &&
@@ -421,7 +421,7 @@ void MProgressIndicatorBarViewPrivate::createAnimationCache()
 
     const MProgressIndicatorStyle *s = static_cast<const MProgressIndicatorStyle *>(q->style().operator ->());
 
-    bool reverse = qApp->isRightToLeft();
+    bool reverse = (controller->layoutDirection() == Qt::RightToLeft);
     QRect viewRect = q->rect().toRect();
 
     if (!s->progressBarBackground() ||
