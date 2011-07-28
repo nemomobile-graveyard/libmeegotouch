@@ -127,6 +127,9 @@ private slots:
 
     void testInputMethodHints();
 
+    void testSurroundingText_data();
+    void testSurroundingText();
+
     void testAttachToolbar_data();
     void testAttachToolbar();
     void testDetachToolbar_data();

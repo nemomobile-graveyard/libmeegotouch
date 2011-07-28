@@ -2231,6 +2231,42 @@ void Ut_MTextEdit::testInputMethodHints()
     QVERIFY(m_subject->inputMethodAutoCapitalizationEnabled() == false);
 }
 
+void Ut_MTextEdit::testSurroundingText_data()
+{
+    QTest::addColumn<QString>("content");
+    QTest::addColumn<int>("blockCount");
+    QTest::addColumn<int>("preeditStart");
+    QTest::addColumn<int>("preeditLength");
+    QTest::addColumn<QString>("expected");
+
+    QTest::newRow("preedit: 'one' in single row")
+        << "this is one" << 1 << 8 << 3 << "this is ";
+    QTest::newRow("preedit: 'two' in last row")
+        << "this is one\r\nthis is two" << 2 << 20 << 3 << "this is ";
+    QTest::newRow("preedit: 'this' in last row")
+        << "this is one\r\nthis is two" << 2 << 12 << 4 << " is two";
+    QTest::newRow("preedit: 'is' in last row")
+        << "this is one\r\nthis is two\r\nthis is three" << 3 << 29 << 2 << "this  three";
+}
+
+void Ut_MTextEdit::testSurroundingText()
+{
+    QFETCH(QString, content);
+    QFETCH(int, blockCount);
+    QFETCH(int, preeditStart);
+    QFETCH(int, preeditLength);
+    QFETCH(QString, expected);
+
+    MTextEdit edit(MTextEditModel::MultiLine, content);
+    QCOMPARE(edit.document()->blockCount(), blockCount);
+
+    edit.setCursorPosition(preeditStart);
+    edit.setSelection(preeditStart, preeditLength);
+    edit.model()->setEdit(MTextEditModel::EditModeActive);
+
+    QCOMPARE(edit.inputMethodQuery(Qt::ImSurroundingText).toString(), expected);
+}
+
 void Ut_MTextEdit::testAttachToolbar_data()
 {
     QTest::addColumn<bool>("isSipRequested");

@@ -2879,7 +2879,6 @@ void MTextEdit::setContentType(M::TextContentType type)
     setInputMethodHints((inputMethodHints() & ~Qt::ImhExclusiveInputMask) | newHint);
 }
 
-
 QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
 {
     Q_D(const MTextEdit);
@@ -2902,9 +2901,12 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case Qt::ImSurroundingText: {
             QString surroundingText = block.text();
             if (d->isPreediting()) {
+
                 int start = d->cursor()->anchor();
                 int end = d->cursor()->position();
-                surroundingText.remove(start, end - start);
+
+                // Remove the block's cursor offset from start, end:
+                surroundingText.remove(start - block.position(), end - start);
             }
             return QVariant(surroundingText);
         }
