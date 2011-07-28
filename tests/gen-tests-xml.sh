@@ -14,7 +14,7 @@ UT_COUNT=0
 FT_COUNT=0
 SKIPPED_COUNT=0
 for TEST in `ls -d ?t_*`; do
-       if [ -x $TEST/$TEST -o -x $TEST/${TEST}_exec ]; then
+       if [ -x $TEST/$TEST ]; then
 		if [ -e $TESTDIR/$TEST/insignificant ]; then
 			INSIGNIFICANT="true"
 		else
