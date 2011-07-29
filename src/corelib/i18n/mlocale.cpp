@@ -3560,6 +3560,8 @@ QString MLocale::indexBucket(const QString &str, const QStringList &buckets, con
         firstCharacter = strUpperCase.at(0) + strUpperCase.at(1);
     else
         firstCharacter = strUpperCase.at(0);
+    if (firstCharacter[0].isNumber())
+        firstCharacter = this->toLocalizedNumbers(firstCharacter);
     for (int i = 0; i < buckets.size(); ++i) {
         if (coll(strUpperCase, buckets[i])) {
             if (i == 0) {

@@ -670,8 +670,11 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("ru_RU")
         << "ru_RU"
         << "ft_mlocalebuckets_test-input.txt";
-    QTest::newRow("ar_EG")
-        << "ar_EG"
+    QTest::newRow("ar_EG@numbers=arab")
+        << "ar_EG@numbers=arab"
+        << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("hi_IN@numbers=deva")
+        << "hi_IN@numbers=deva"
         << "ft_mlocalebuckets_test-input.txt";
     QTest::newRow("sk_SK")
         << "sk_SK"
