@@ -223,19 +223,15 @@ bool MOrientationTrackerPrivate::checkIfOrientationUpdatesRequired()
     }
 
     bool result = false;
-    bool excludeWindowsFollowingCurrentAppWindow = true;
 
-    QVariant currentWindowAngleVariant = currentWindowAngleProperty->value();
-    if (currentWindowAngleVariant.isNull() || !currentWindowAngleVariant.isValid()) {
-        // Since there's no current app. window to follow, those windows are free to
-        // rotate like the others
-        excludeWindowsFollowingCurrentAppWindow = false;
-    }
+    // If there's no current app. window angle to follow, those windows are free to
+    // rotate like the others
+    bool haveCurrWindowAngle = currentWindowAnglePropertyContainsValidAngle();
 
     foreach(MWindow* win, MApplication::windows()) {
 #ifdef Q_WS_X11
         if (win && (win->isOnDisplay()) &&
-            (!excludeWindowsFollowingCurrentAppWindow || (!windowsFollowingCurrentAppWindow.contains(win) &&
+            (!haveCurrWindowAngle || (!windowsFollowingCurrentAppWindow.contains(win) &&
             !windowsFollowingWithConstraintsCurrentAppWindow.contains(win))) &&
             !windowsFollowingDesktop.contains(win))
 #else
@@ -354,17 +350,13 @@ void MOrientationTrackerPrivate::rotateWindows(M::OrientationAngle angle)
     // on windows, because this is very often excuted before the application's
     // event loop is started and leads to crash in QMetaObject
 
-    bool excludeWindowsFollowingCurrentAppWindow = true;
-
-    QVariant currentWindowAngleVariant = currentWindowAngleProperty->value();
-    if (currentWindowAngleVariant.isNull() || !currentWindowAngleVariant.isValid()) {
-        // Since there's no current app. window to follow, those windows are free to
-        // rotate like the others
-        excludeWindowsFollowingCurrentAppWindow = false;
-    }
+    bool haveCurrWindowAngle = currentWindowAnglePropertyContainsValidAngle();
 
     foreach(MWindow * window, MApplication::windows()) {
-        if (excludeWindowsFollowingCurrentAppWindow &&
+
+        // If there's no current app. window angle to follow, those windows are
+        // free to rotate like the others
+        if (haveCurrWindowAngle &&
             (windowsFollowingCurrentAppWindow.contains(window) ||
              windowsFollowingWithConstraintsCurrentAppWindow.contains(window)))
             continue;
@@ -530,7 +522,15 @@ void MOrientationTrackerPrivate::handleCurrentAppWindowOrientationAngleChange()
     if (angleVariant.isNull() || !angleVariant.isValid())
         return;
 
-    M::OrientationAngle angle = static_cast<M::OrientationAngle>(angleVariant.toInt());
+    int angleInt = angleVariant.toInt();
+    if (angleInt != 0 && angleInt != 90 && angleInt != 180 && angleInt != 270) {
+        // We won't do anything if the property is holding an unsupported/invalid angle.
+        // I.e., an angle that doesn't correspond to any value in M::OrientationAngle
+        // enumeration.
+        return;
+    }
+
+    M::OrientationAngle angle = static_cast<M::OrientationAngle>(angleInt);
     //windows like system dialog will follow current window to any orientation
     foreach(MWindow * win, windowsFollowingCurrentAppWindow) {
         win->setOrientationAngle(angle);
@@ -567,6 +567,22 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win, boo
         windowsFollowingCurrentAppWindow.isEmpty())
         currentWindowAngleProperty->unsubscribe();
 #endif //HAVE_CONTEXTSUBSCRIBER
+}
+
+bool MOrientationTrackerPrivate::currentWindowAnglePropertyContainsValidAngle()
+{
+    QVariant currentWindowAngleVariant = currentWindowAngleProperty->value();
+
+    if (currentWindowAngleVariant.isNull() || !currentWindowAngleVariant.isValid()) {
+        return false;
+    }
+
+    int currentWindowAngleValue = currentWindowAngleVariant.toInt();
+
+    return currentWindowAngleValue == 0
+        || currentWindowAngleValue == 90
+        || currentWindowAngleValue == 180
+        || currentWindowAngleValue == 270;
 }
 
 void MOrientationTrackerPrivate::disableRotations()

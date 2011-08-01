@@ -107,6 +107,7 @@ public:
     QList<QPointer<MWindow> > windowsFollowingWithConstraintsCurrentAppWindow;
     void startFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
     void stopFollowingCurrentAppWindow(MWindow* win, bool limitedByConstraints = false);
+    bool currentWindowAnglePropertyContainsValidAngle();
 
     void startFollowingDesktop(MWindow *win);
     void stopFollowingDesktop(MWindow *win);
