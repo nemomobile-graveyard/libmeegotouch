@@ -1217,8 +1217,10 @@ void MComponentData::setActiveWindow(MWindow *w)
     }
 
     MWindow *activeWindow = MComponentData::activeWindow();
-    MSceneManager *oldSceneManager = (activeWindow) ? activeWindow->sceneManager() : NULL;
-    MSceneManager *newSceneManager = (w) ? w->sceneManager() : NULL;
+    // OBS: call the const version of sceneManager() as we don't want to trigger the creation of a
+    // scene manager if window doesn't have one yet.
+    MSceneManager *oldSceneManager = (activeWindow) ? const_cast<const MWindow*>(activeWindow)->sceneManager() : NULL;
+    MSceneManager *newSceneManager = (w) ? const_cast<const MWindow*>(w)->sceneManager() : NULL;
 
     if (oldSceneManager) {
         QObject::disconnect(oldSceneManager,
