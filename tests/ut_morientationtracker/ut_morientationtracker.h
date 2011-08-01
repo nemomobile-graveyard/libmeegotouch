@@ -62,7 +62,9 @@ private slots:
     void testFollowsCurrentAppWindowWhenDynamicPropertySet();
     void testFollowsCurrentAppWindowWhenOnStackButNotTopmost_data();
     void testFollowsCurrentAppWindowWhenOnStackButNotTopmost();
-    void testRotatesFreelyIfCurrentAppWindowContextPorpertyNotSet();
+
+    void testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid_data();
+    void testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid();
 
     void testFollowingDesktopOrientation_data();
     void testFollowingDesktopOrientation();

@@ -470,13 +470,23 @@ void Ut_MOrientationTracker::testFollowsCurrentAppWindowWhenOnStackButNotTopmost
     QCOMPARE(window1->orientationAngle(), secondAngle);
 }
 
+void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid_data()
+{
+    QTest::addColumn<QVariant>("angleVariant");
+
+    QTest::newRow("Null") << QVariant(QVariant::Int);
+    QTest::newRow("Invalid orientation angle") << QVariant(123);
+}
+
 /*
   A window that has the property "followsCurrentApplicationWindowOrientation" set to true
   will rotate freely if the context property "/Screen/CurrentWindow/OrientationAngle"
-  is null or invalid.
+  is null or invalid or has an integer that doesn't map to any value from M::OrientationAngle.
  */
-void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyNotSet()
+void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyIsInvalid()
 {
+    QFETCH(QVariant, angleVariant);
+
     setAllAngles(&supportedAnglesStubLists[KeyboardOpen]);
     setAllAngles(&supportedAnglesStubLists[KeyboardClosed]);
 
@@ -488,9 +498,9 @@ void Ut_MOrientationTracker::testRotatesFreelyIfCurrentAppWindowContextPorpertyN
     window1->setProperty("followsCurrentApplicationWindowOrientation", true);
     window1->setVisible(true);
 
-    // Set a NULL variant to "/Screen/CurrentWindow/OrientationAngle"
+    // Set a NULL or unsupported angle to "/Screen/CurrentWindow/OrientationAngle"
     currentWindowOrientationPropStub->stubReset();
-    currentWindowOrientationPropStub->stubSetReturnValue("value", QVariant(QVariant::Int));
+    currentWindowOrientationPropStub->stubSetReturnValue("value", angleVariant);
 
     topEdgePropStub->stubReset();
     topEdgePropStub->stubSetReturnValue("value", QVariant(QString("top")));
