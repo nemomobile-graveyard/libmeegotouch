@@ -2514,6 +2514,17 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
 {
     Q_D(MSceneManager);
 
+    // Properly handle misuses such as
+    // sceneManager->setOrientationAngle(static_cast<M::OrientationAngle>(123));
+    if (angle != M::Angle0
+        && angle != M::Angle90
+        && angle != M::Angle180
+        && angle != M::Angle270) {
+
+        mWarning("MSceneManager") << "Invalid orientation angle:" << angle;
+        return;
+    }
+
     bool statusBarAnimates = d->statusBar &&
             (d->statusBar->sceneWindowState() == MSceneWindow::Appearing ||
              d->statusBar->sceneWindowState() == MSceneWindow::Disappearing);
