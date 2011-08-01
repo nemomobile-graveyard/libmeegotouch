@@ -1225,6 +1225,17 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
 {
     Q_D(MWindow);
 
+    // Properly handle misuses such as
+    // window->setOrientationAngle(static_cast<M::OrientationAngle>(123));
+    if (angle != M::Angle0
+        && angle != M::Angle90
+        && angle != M::Angle180
+        && angle != M::Angle270) {
+
+        mWarning("MWindow") << "Invalid orientation angle:" << angle;
+        return;
+    }
+
     //orientation was forced by command line option
     if (MComponentData::isOrientationForced())
         return;
