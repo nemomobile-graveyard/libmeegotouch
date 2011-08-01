@@ -220,14 +220,14 @@ void Ut_MWindow::testOrientationChangedSignalPropagationFromSceneManager()
 
 void Ut_MWindow::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
 {
+    // create the scene manager
+    win->sceneManager();
+    win->setOrientationAngle(M::Angle0);
+
     QSignalSpy orientationSpy(win, SIGNAL(orientationChanged(M::Orientation)));
     QSignalSpy angleSpy(win, SIGNAL(orientationAngleChanged(M::OrientationAngle)));
 
-    // create the scene manager
-    win->sceneManager();
-    M::OrientationAngle newAngle = (M::OrientationAngle)(win->orientationAngle() + 180);
-
-    win->setOrientationAngle(newAngle);
+    win->setOrientationAngle(M::Angle180);
 
     QCOMPARE(orientationSpy.count(), 0);
     QCOMPARE(angleSpy.count(), 1);
