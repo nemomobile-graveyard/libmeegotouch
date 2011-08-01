@@ -102,6 +102,7 @@ private slots:
     void testSheetDoesntBlockMsgbox_data();
     void testSheetDoesntBlockMsgbox();
     void testMsgboxBlocksNavigationBar();
+    void testInvalidOrientationAngle();
 private:
     MComponentData* m_componentData;
 };

@@ -1607,4 +1607,17 @@ void Ut_MSceneManager::testMsgboxBlocksNavigationBar()
     delete msgbox;
 }
 
+void Ut_MSceneManager::testInvalidOrientationAngle()
+{
+    sm->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
+
+    QCOMPARE(static_cast<int>(sm->orientationAngle()), 90);
+
+    sm->setOrientationAngle(static_cast<M::OrientationAngle>(15),
+                            MSceneManager::ImmediateTransition);
+
+    // Nothing should happen. Angle remains unchanged.
+    QCOMPARE(static_cast<int>(sm->orientationAngle()), 90);
+}
+
 QTEST_MAIN(Ut_MSceneManager);
