@@ -601,4 +601,17 @@ void Ut_MWindow::testKeepOffDisplayWhenShownAfterReceivingFullyOffDisplayEvent()
     QCOMPARE(win->isOnDisplay(), false);
 }
 
+// OBS: Here we want to test it without an underlying a scene manager.
+void Ut_MWindow::testInvalidOrientationAngle()
+{
+    win->setOrientationAngle(M::Angle90);
+
+    QCOMPARE(static_cast<int>(win->orientationAngle()), 90);
+
+    win->setOrientationAngle(static_cast<M::OrientationAngle>(15));
+
+    // Nothing should happen. Angle remains unchanged.
+    QCOMPARE(static_cast<int>(win->orientationAngle()), 90);
+}
+
 QTEST_MAIN(Ut_MWindow);

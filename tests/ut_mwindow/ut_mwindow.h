@@ -84,6 +84,8 @@ private slots:
 
     void testKeepOffDisplayWhenShownAfterReceivingFullyOffDisplayEvent();
 
+    void testInvalidOrientationAngle();
+
 public slots:
     void onDisplayTestSlot();
 
