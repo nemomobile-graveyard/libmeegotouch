@@ -4062,10 +4062,10 @@ void Ft_Locales::checkAvailableLocales()
                             messageLocale = "fi_FI";
                             break;
                         case 2:
-                            messageLocale = "ar_EG";
+                            messageLocale = "de_DE";
                             break;
                         case 3:
-                            messageLocale = "he_IL";
+                            messageLocale = "en_US";
                             break;
                         }
                         locale.setCategoryLocale(MLocale::MLcTime, locale.name());

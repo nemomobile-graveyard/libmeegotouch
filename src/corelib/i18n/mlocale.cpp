@@ -632,17 +632,10 @@ void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
             icuFormatQString.replace(QLatin1String("dz"), QLatin1String("d z"));
             icuFormatQString.replace(QLatin1String("dccc"), QLatin1String("d ccc"));
         }
-        if(categoryScriptTime == QLatin1String("Arab")
-           && categoryScriptMessages != QLatin1String("Arab")) {
-            // replace Arabic comma with regular comma:
-            icuFormatQString.replace(QString::fromUtf8("،"), QLatin1String(","));
-            removeDirectionalFormattingCodes(&icuFormatQString);
-        }
         if(categoryScriptTime == QLatin1String("Hebr")
            && categoryScriptMessages != QLatin1String("Hebr")) {
             // he_IL has “בMMMM” or “בLLLL”
             icuFormatQString.replace(QString::fromUtf8("בL"), QLatin1String("L"));
-            removeDirectionalFormattingCodes(&icuFormatQString);
         }
         if(!categoryNameTime.startsWith("zh")
            && !categoryNameTime.startsWith("ja")
@@ -735,6 +728,12 @@ bool MLocalePrivate::mixingSymbolsWanted(const QString &categoryNameMessages, co
 {
     QString languageMessages = parseLanguage(categoryNameMessages);
     QString languageTime =  parseLanguage(categoryNameTime);
+    QString categoryScriptTime = MLocale::localeScript(categoryNameTime);
+    QString categoryScriptMessages = MLocale::localeScript(categoryNameMessages);
+    bool timeIsRtl = (categoryScriptTime == QLatin1String("Arab")
+                      || categoryScriptTime == QLatin1String("Hebr"));
+    bool messagesIsRtl = (categoryScriptMessages == QLatin1String("Arab")
+                          || categoryScriptMessages == QLatin1String("Hebr"));
     if (categoryNameTime.contains(QRegExp("@.*mix-time-and-language=yes"))) {
         return true;
     }
@@ -742,7 +741,8 @@ bool MLocalePrivate::mixingSymbolsWanted(const QString &categoryNameMessages, co
        && languageMessages != languageTime
        && languageMessages != "zh"
        && languageMessages != "ja"
-       && languageMessages != "ko") {
+       && languageMessages != "ko"
+       && (timeIsRtl == messagesIsRtl)) {
         // mixing symbols like month name and weekday name from the
         // message locale into the date format of the time locale.
         // Don’t do this, if the language is the same, i.e. don’t do
@@ -755,6 +755,17 @@ bool MLocalePrivate::mixingSymbolsWanted(const QString &categoryNameMessages, co
         // or "ko", results of mixing a CJK language with a non-CJK
         // language are really weird, it is just nonsense to do this.
         // (See https://projects.maemo.org/bugzilla/show_bug.cgi?id=244444)
+        //
+        // Also disable mixing *always* if the message locale and the
+        // time locale have use scripts with different direction, i.e.
+        // do not attempt to do this mixing if one of the locales has
+        // a right-to-left script and the other a left-to-right
+        // script.  Mixing for locales with different script
+        // directions almost always gives nonsensical results, trying
+        // to fix this for all corner cases in
+        // MLocalePrivate::simplifyDateFormatForMixing() is quite
+        // hopeless.  (See also
+        // https://projects.maemo.org/bugzilla/show_bug.cgi?id=270020)
         return true;
     }
     else {
