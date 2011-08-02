@@ -410,6 +410,20 @@ void MGConfItem::unset()
     set(QVariant());
 }
 
+void MGConfItem::sync()
+{
+    GError *error = NULL;
+    withClient(client) {
+        gconf_client_suggest_sync(client, &error);
+        if (error) {
+            mWarning("MGConfItem") << error->message;
+            g_error_free(error);
+        }
+        // Clear internal cache.
+        gconf_client_clear_cache(client);
+    }
+}
+
 QList<QString> MGConfItem::listDirs() const
 {
     QList<QString> children;

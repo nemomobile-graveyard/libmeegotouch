@@ -114,6 +114,10 @@ public:
      */
     void unset();
 
+    /*! Suggest to GConf that it's an optimal time to sync to permanent storage.
+    */
+    void sync();
+
     /*! Return a list of the directories below this item.  The
         returned strings are absolute key names like
         "/myapp/settings".
