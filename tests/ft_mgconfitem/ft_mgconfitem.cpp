@@ -42,6 +42,21 @@ void myMessageOutput(QtMsgType type, const char *msg)
     }
 }
 
+void unsetRecursive(MGConfItem *item) {
+    QStringList dirs = item->listDirs();
+    foreach(QString dir, dirs) {
+        MGConfItem gconfDir(dir);
+        unsetRecursive(&gconfDir);
+        gconfDir.sync();
+    }
+
+    QStringList entries = item->listEntries();
+    foreach(QString entry, entries) {
+        MGConfItem gconfEntry(entry);
+        gconfEntry.unset();
+    }
+}
+
 //
 // Definition of testcases: Normal tests
 //
@@ -70,11 +85,11 @@ void Ft_MGConfItem::initTestCase()
 void Ft_MGConfItem::cleanupTestCase()
 {
     // Unset all entries
-    QStringList entries = MGConfItem("/Test").listEntries();
-    foreach(QString entry, entries) {
-        MGConfItem gconfEntry(entry);
-        gconfEntry.unset();
-    }
+    MGConfItem rootItem("/Test");
+    unsetRecursive(&rootItem);
+    rootItem.sync();
+
+    QCOMPARE(rootItem.listEntries().count(), 0);
 }
 
 // Before each test
@@ -262,6 +277,26 @@ void Ft_MGConfItem::unset()
     QCOMPARE(signalSpy->numberOfCalls, 1);
 }
 
+void Ft_MGConfItem::unset_dir()
+{
+    MGConfItem test("/Test");
+    QStringList dirs = test.listDirs();
+    QStringList entries = test.listEntries();
+
+    QVERIFY(dirs.contains("/Test/UnsetDir"));
+    QVERIFY(!entries.contains("/Test/UnsetDir"));
+
+    MGConfItem testDirItem("/Test/UnsetDir/Item");
+    testDirItem.unset();
+    testDirItem.sync();
+
+    dirs = test.listDirs();
+    entries = test.listEntries();
+
+    QVERIFY(!dirs.contains("/Test/UnsetDir"));
+    QVERIFY(!entries.contains("/Test/UnsetDir"));
+}
+
 void Ft_MGConfItem::list_dirs()
 {
     MGConfItem test("/Test");
@@ -283,9 +318,10 @@ void Ft_MGConfItem::list_dirs()
 void Ft_MGConfItem::list_entries()
 {
     MGConfItem test("/Test");
+    test.sync();
     QStringList entries = test.listEntries();
 
-    QVERIFY(!entries.contains("/Test/Bool") || !MGConfItem("/Test/Bool").value().isValid());  // has been unset above!
+    QVERIFY(!entries.contains("/Test/Bool"));  // has been unset above!
     QVERIFY(entries.contains("/Test/Int"));
     QVERIFY(entries.contains("/Test/String"));
     QVERIFY(entries.contains("/Test/Double"));
@@ -293,7 +329,7 @@ void Ft_MGConfItem::list_entries()
     QVERIFY(entries.contains("/Test/IntList"));
     QVERIFY(entries.contains("/Test/DoubleList"));
     QVERIFY(entries.contains("/Test/BoolList"));
-    QVERIFY(!entries.contains("/Test/UnsetBefore") || !MGConfItem("/Test/UnsetBefore").value().isValid());
+    QVERIFY(!entries.contains("/Test/UnsetBefore"));
     QVERIFY(entries.contains("/Test/UnsetAfter"));
     QVERIFY(!entries.contains("/Test/Dir"));
 }
@@ -368,6 +404,12 @@ void set_gconf_keys()
 
     MGConfItem unsetAfterItem ("/Test/UnsetAfter");
     unsetAfterItem.set(1);
+
+    MGConfItem testDirItem("/Test/Dir/Item");
+    testDirItem.set("Dir Item");
+
+    MGConfItem testUnsetDirItem("/Test/UnsetDir/Item");
+    testUnsetDirItem.set("Dir Item");
 }
 
 void verify_gconf_keys()

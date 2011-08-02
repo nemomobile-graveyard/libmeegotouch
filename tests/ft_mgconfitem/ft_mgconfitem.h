@@ -83,6 +83,7 @@ private slots:
     void set_double_list();
     void set_bool_list();
     void unset();
+    void unset_dir();
     void get_default();
     void list_dirs();
     void list_entries();
