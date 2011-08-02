@@ -24,6 +24,8 @@
 #include <QtTest/QtTest>
 #include "mscene.h"
 
+class MSceneManager;
+
 class Ut_MScene : public QObject
 {
     Q_OBJECT
@@ -48,10 +50,15 @@ private slots:
     void touchPointCopyMousePosToPointStartPos();
     void touchPointMirrorMousePosToPointPos();
     void touchPointMirrorMousePosToPointStartPos();
+
+    void testEventEmulateTwoFingerGestures();
+
 private:
+    void verifyReceivedEvents(bool begin, bool update, bool end);
 
     MApplication *app;
     MScene *m_subject;
+    MSceneManager *sceneManager;
 };
 
 #endif

@@ -23,14 +23,60 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGesture>
 #include <QGestureEvent>
+#include <mcomponentdata.h>
 #include "mwidget.h"
 #include "mbutton.h"
 
 #include "ut_mscene.h"
 #include "mscene_p.h"
+#include "mscenemanager.h"
 #include "mdeviceprofile.h"
 
 #define MAX_PARAMS 10
+
+class TestGraphicsView : public QGraphicsView
+{
+public:
+    TestGraphicsView(QGraphicsScene* scene)
+    : QGraphicsView(scene)
+    {
+        resetEventsIndications();
+    }
+
+    void resetEventsIndications()
+    {
+        touchBeginReceived = false;
+        touchUpdateReceived = false;
+        touchEndReceived = false;
+    }
+
+    bool touchBeginReceived;
+    bool touchUpdateReceived;
+    bool touchEndReceived;
+
+    bool event(QEvent *event)
+    {
+        switch (event->type())
+        {
+        case QEvent::TouchBegin:
+            touchBeginReceived = true;
+            event->accept();
+            return true;
+        case QEvent::TouchUpdate:
+            touchUpdateReceived = true;
+            event->accept();
+            return true;
+        case QEvent::TouchEnd:
+            touchEndReceived = true;
+            event->accept();
+            return true;
+        default:
+            return QGraphicsView::event(event);
+        }
+    }
+};
+
+TestGraphicsView* view;
 
 class EventTester : public MWidget
 {
@@ -110,14 +156,14 @@ void Ut_MScene::initTestCase()
     QChar sep(' ');
     static char *argv[MAX_PARAMS];
     static int x = 0;
-    QString params("./ut_mscene -software -show-br -show-fps -show-size -show-position");
+    QString params("./ut_mscene -software -show-br -show-fps -show-size -show-position -show-object-names -show-style-names");
 
     QStringList list = params.split(sep);
     QStringListIterator it(list);
     while (it.hasNext() && x < MAX_PARAMS)  {
         argv[x++] = strdup(it.next().toLocal8Bit().constData());
     }
-    x = 6;
+
     app = new MApplication(x, argv);
 }
 
@@ -131,19 +177,30 @@ void Ut_MScene::init()
 {
     eventTester = new EventTester;
     m_subject = new MScene();
+    sceneManager = new MSceneManager(m_subject);
 
     m_subject->addItem(eventTester);
     eventTester->resize(1000,1000);
+
+    view = new TestGraphicsView(m_subject);
 }
 
 void Ut_MScene::cleanup()
 {
+    delete sceneManager;
+    sceneManager = 0;
+
     delete m_subject;
     m_subject = 0;
+
+    delete view;
+    view = 0;
 }
 
 void Ut_MScene::drawForeground()
 {
+    MApplication::setShowMargins(true);
+
     QPixmap *p = new QPixmap(300, 300);
     p->fill(QColor(255, 255, 255, 0));
     QPainter *myPainter = new QPainter(p);
@@ -509,6 +566,59 @@ void Ut_MScene::touchPointMirrorMousePosToPointStartPos()
 
     QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().rx(), mirror_x ));
     QVERIFY(qFuzzyCompare ( touchPoint.startScreenPos().ry(), mirror_y ));
+}
+
+void Ut_MScene::testEventEmulateTwoFingerGestures()
+{
+    MComponentData::setEmulateTwoFingerGestures(true);
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+
+    //neither release nor move event should be processed if there was no press
+    //event earlier
+    QVERIFY(!m_subject->d_ptr->eventEmulateTwoFingerGestures(&releaseEvent));
+    QVERIFY(!m_subject->d_ptr->eventEmulateTwoFingerGestures(&moveEvent));
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setModifiers(Qt::ControlModifier);
+    pressEvent.setButton(Qt::LeftButton);
+    pressEvent.setScreenPos(QPoint(100, 100));
+
+    QVERIFY(m_subject->d_ptr->eventEmulateTwoFingerGestures(&pressEvent));
+    QCOMPARE(Qt::TouchPointPressed, m_subject->d_ptr->emuPoint1.state());
+    QCOMPARE(Qt::TouchPointPressed, m_subject->d_ptr->emuPoint2.state());
+
+    pressEvent.setModifiers(Qt::NoModifier);
+    QVERIFY(!m_subject->d_ptr->eventEmulateTwoFingerGestures(&pressEvent));
+
+    pressEvent.setButton(Qt::RightButton);
+    pressEvent.setModifiers(Qt::ControlModifier);
+    QVERIFY(!m_subject->d_ptr->eventEmulateTwoFingerGestures(&pressEvent));
+
+    QVERIFY(m_subject->d_ptr->eventEmulateTwoFingerGestures(&moveEvent));
+    verifyReceivedEvents(false, true, false);
+    QCOMPARE(Qt::TouchPointMoved, m_subject->d_ptr->emuPoint1.state());
+    QCOMPARE(Qt::TouchPointMoved, m_subject->d_ptr->emuPoint2.state());
+
+    QVERIFY(m_subject->d_ptr->eventEmulateTwoFingerGestures(&releaseEvent));
+    verifyReceivedEvents(false, false, true);
+    QCOMPARE(Qt::TouchPointReleased, m_subject->d_ptr->emuPoint1.state());
+    QCOMPARE(Qt::TouchPointReleased, m_subject->d_ptr->emuPoint2.state());
+
+    //move should not be processed before next press event
+    QVERIFY(!m_subject->d_ptr->eventEmulateTwoFingerGestures(&moveEvent));
+    QCOMPARE(Qt::TouchPointReleased, m_subject->d_ptr->emuPoint1.state());
+    QCOMPARE(Qt::TouchPointReleased, m_subject->d_ptr->emuPoint2.state());
+}
+
+void Ut_MScene::verifyReceivedEvents(bool begin, bool update, bool end)
+{
+    QCOMPARE(view->touchBeginReceived, begin);
+    QCOMPARE(view->touchUpdateReceived, update);
+    QCOMPARE(view->touchEndReceived, end);
+    view->resetEventsIndications();
 }
 
 QTEST_APPLESS_MAIN(Ut_MScene)
