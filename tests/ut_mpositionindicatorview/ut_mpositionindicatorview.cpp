@@ -124,9 +124,10 @@ void Ut_MPositionIndicatorView::testNoActivityInSwitcher()
     m_controller->setRange(range);
 
     MWindow window;
+    MScene *scene = new MScene;
+    window.setScene(scene);
     window.show();
 
-    MScene *scene = window.scene();
     scene->addItem(m_controller);
     window.showMinimized();
     QVERIFY(window.isInSwitcher());
@@ -145,6 +146,8 @@ void Ut_MPositionIndicatorView::testNoActivityInSwitcher()
     QCOMPARE(m_subject->contentOpacity(), qreal(0.0));
 
     scene->removeItem(m_controller);
+
+    delete scene;
 }
 
 QTEST_APPLESS_MAIN(Ut_MPositionIndicatorView)
