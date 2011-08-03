@@ -134,9 +134,6 @@ void Ut_MImageDirectory::testReloadLocalizedResources()
     QCOMPARE( myLocale, gotLocale );
 }
 
-QTEST_APPLESS_MAIN(Ut_MImageDirectory);
-
-
 void Ut_MImageDirectory::testApplyDebugColors()
 {
     QSize imageSize(16, 16);
@@ -151,13 +148,13 @@ void Ut_MImageDirectory::testApplyDebugColors()
 void Ut_MImageDirectory::testReleaseWithoutDelete()
 {
     QSize size(8, 8);
+    QSize invalidSize(-1, -1);
 
     m_pixmapImageResource->fetchPixmap(size);
 
     PixmapCacheEntry *pixmapCacheEntry = m_pixmapImageResource->releaseWithoutDelete(size);
 
     QVERIFY2(pixmapCacheEntry, "PixmapCacheEntry not found");
-
     QVERIFY2(!m_pixmapImageResource->pixmapCacheEntries().contains(size),
              "PixmapCacheEntry for given size shall not be found in cache");
 
@@ -166,6 +163,9 @@ void Ut_MImageDirectory::testReleaseWithoutDelete()
 #else
     QCOMPARE(pixmapCacheEntry->pixmap->size(), size);
 #endif
+
+    pixmapCacheEntry = m_pixmapImageResource->releaseWithoutDelete(invalidSize);
+    QCOMPARE(pixmapCacheEntry, (void*)NULL);
 }
 
 void Ut_MImageDirectory::testPixmapCacheEntries()
@@ -260,3 +260,5 @@ void Ut_MImageDirectory::testSaveIdsInCache()
 
     QFile::remove(cacheFileName);
 }
+
+QTEST_APPLESS_MAIN(Ut_MImageDirectory)
