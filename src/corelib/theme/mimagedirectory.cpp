@@ -204,10 +204,8 @@ void ImageResource::releasePixmap(const QSize &size)
 
 PixmapCacheEntry* ImageResource::releaseWithoutDelete(const QSize &size)
 {
-    Q_ASSERT_X(cachedPixmaps.contains(size), "ImageResource", "Cannot release pixmap because the cache entry cannot be found for the pixmap!");
-
     QHash<QSize, PixmapCacheEntry*>::iterator iter = cachedPixmaps.find(size);
-    if(iter == cachedPixmaps.end())
+    if (iter == cachedPixmaps.end())
         return NULL;
 
     PixmapCacheEntry *cacheEntry = *iter;
