@@ -569,6 +569,7 @@ void MOrientationTrackerPrivate::stopFollowingCurrentAppWindow(MWindow *win, boo
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
 bool MOrientationTrackerPrivate::currentWindowAnglePropertyContainsValidAngle()
 {
     QVariant currentWindowAngleVariant = currentWindowAngleProperty->value();
@@ -584,6 +585,7 @@ bool MOrientationTrackerPrivate::currentWindowAnglePropertyContainsValidAngle()
         || currentWindowAngleValue == 180
         || currentWindowAngleValue == 270;
 }
+#endif //HAVE_CONTEXTSUBSCRIBER
 
 void MOrientationTrackerPrivate::disableRotations()
 {
