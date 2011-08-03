@@ -103,6 +103,9 @@ private slots:
     void testNavigationBarFadesInPageSwitch();
     void testNavigationBarSlidesIfPageIsStatic();
 
+    void testPageExposedContentRectWhenStatusBarAppearsImmediately();
+    void testPageExposedContentRectAfterOrientationChange();
+
 private:
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;

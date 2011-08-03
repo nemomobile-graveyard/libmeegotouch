@@ -1027,4 +1027,80 @@ void Ut_MApplicationWindow::testNavigationBarSlidesIfPageIsStatic()
              QString("MWidgetSlideAnimation"));
 }
 
+/*
+  Check if page::exposedContentRect() gets properly updated if status bar
+  appears immediately
+
+  Regression test for https://projects.maemo.org/bugzilla/show_bug.cgi?id=274325
+ */
+void Ut_MApplicationWindow::testPageExposedContentRectWhenStatusBarAppearsImmediately()
+{
+    MApplicationPage *page = new MApplicationPage;
+    MSceneWindow *statusBar = m_subject->d_func()->statusBar;
+
+    page->appear(m_subject);
+
+    // Unlike in real usage, showing the window here will cause
+    // a paint event to come before the zeroed timer that calls
+    //_q_updateStatusBarVisibility. That will cause the status bar
+    // to be shown in an animated fashion instead of immediately
+    //m_subject->show();
+
+    QApplication::processEvents();
+
+    // make sure it came immediately
+    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared);
+
+    QRectF expectedExposedContentRect;
+    expectedExposedContentRect.setWidth(m_subject->width());
+    expectedExposedContentRect.setHeight(
+                m_subject->height() - statusBar->geometry().height());
+
+    QCOMPARE(page->exposedContentRect(), expectedExposedContentRect);
+}
+
+/*
+  Check if page::exposedContentRect() gets properly updated after a change in
+  orientation. When the orientation changes (from landscape to portrait or
+  vice-versa), the page geometry is also changed (unless the screen is
+  perfectly square) which, on its turn, causes page::exposedContentRect()
+  to be different.
+ */
+void Ut_MApplicationWindow::testPageExposedContentRectAfterOrientationChange()
+{
+    MApplicationPage *page = new MApplicationPage;
+    MSceneManager *sceneManager = m_subject->sceneManager();
+    QRectF expectedExposedContentRect;
+
+    // We don't want MOrientationTracker to mess up with
+    // the orientation angle of our subject.
+    m_subject->setOrientationAngleLocked(true);
+
+    m_subject->setPortraitOrientation();
+    sceneManager->fastForwardOrientationChangeAnimation();
+
+    // let's take status bar out of the equation to simplify
+    // the calculation of the exposed content rect.
+    page->setComponentsDisplayMode(MApplicationPage::StatusBar,
+                                   MApplicationPageModel::Hide);
+    page->appear(m_subject);
+
+    m_subject->show();
+
+    QApplication::processEvents();
+
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    expectedExposedContentRect.setWidth(m_subject->height());
+    expectedExposedContentRect.setHeight(m_subject->width());
+    QCOMPARE(page->exposedContentRect(), expectedExposedContentRect);
+
+    m_subject->setLandscapeOrientation();
+    sceneManager->fastForwardOrientationChangeAnimation();
+
+    expectedExposedContentRect.setWidth(m_subject->width());
+    expectedExposedContentRect.setHeight(m_subject->height());
+    QCOMPARE(page->exposedContentRect(), expectedExposedContentRect);
+}
+
 QTEST_MAIN(Ut_MApplicationWindow)
