@@ -253,14 +253,14 @@ void MApplicationWindowPrivate::init()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     q->connect(&callStatusProperty, SIGNAL(valueChanged()), SLOT(_q_updateStatusBarVisibility()));
 #endif
-    q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
-            SLOT(_q_updatePageExposedContentRect()));
-    q->connect(MTheme::instance(), SIGNAL(themeChangeCompleted()),
-               SLOT(_q_updatePageExposedContentRect()));
 
     if (statusBar) {
-        q->connect(statusBar, SIGNAL(appeared()), SLOT(_q_updatePageExposedContentRect()));
-        q->connect(statusBar, SIGNAL(disappeared()), SLOT(_q_updatePageExposedContentRect()));
+        ok = q->connect(statusBar,
+            SIGNAL(sceneWindowStateChanged(MSceneWindow::SceneWindowState,
+                                          MSceneWindow::SceneWindowState)),
+            SLOT(_q_onStatusBarStateChanged(MSceneWindow::SceneWindowState,
+                                           MSceneWindow::SceneWindowState)));
+        if (!ok) qFatal("Signal connection failed!");
     }
 
     navigationBarVisibilityUpdateTimer.setSingleShot(true);
@@ -1269,6 +1269,7 @@ void MApplicationWindow::setToolbarViewType(const MTheme::ViewType& viewType)
 void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
 {
     Q_Q(MApplicationWindow);
+    bool ok;
 
     Q_ASSERT(newPage != 0);
     page = newPage;
@@ -1304,6 +1305,18 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
     // Since the page has changed we have a new
     // page->model()->statusBarDisplayMode()
     statusBarVisibilityUpdateTimer.start();
+
+    if (statusBar->sceneWindowState() != MSceneWindow::Appearing
+            && statusBar->sceneWindowState() != MSceneWindow::Disappearing) {
+        ok = q->connect(page, SIGNAL(geometryChanged()),
+                        SLOT(_q_updatePageExposedContentRect()));
+        if (!ok) qFatal("Signal connection failed!");
+    } /* else {
+        We will make this connection once status bar animation has finished.
+        Status bar animation will squeese or stretch the page and we don't
+        wanna update page's exposedContentRect() for every single animation
+        frame for the sake of saving some CPU cycles.
+    } */
 
     emit q->pageChanged(page);
 }
@@ -1393,6 +1406,36 @@ void MApplicationWindowPrivate::_q_setupNavigationBarCustomContent()
     }
 
     navigationBar->setCustomContent(page->customNavigationBarContent());
+}
+
+void MApplicationWindowPrivate::_q_onStatusBarStateChanged(
+    MSceneWindow::SceneWindowState newState,
+    MSceneWindow::SceneWindowState oldState)
+{
+    Q_Q(MApplicationWindow);
+
+    if (!page)
+        return;
+
+    // Status bar animation will squeese or stretch the page.
+    // During that time let's not update page's exposedContentRect() for the
+    // sake of saving some CPU cycles.
+    // Do it only once the animation has finished.
+    if (newState == MSceneWindow::Appearing || newState == MSceneWindow::Disappearing) {
+        QObject::disconnect(page, SIGNAL(geometryChanged()),
+                            q, SLOT(_q_updatePageExposedContentRect()));
+
+    } else if ((oldState == MSceneWindow::Appearing && newState == MSceneWindow::Appeared)
+               ||
+               (oldState == MSceneWindow::Disappearing && newState == MSceneWindow::Disappeared)) {
+
+        _q_updatePageExposedContentRect();
+
+        bool ok;
+        ok = q->connect(page, SIGNAL(geometryChanged()), SLOT(_q_updatePageExposedContentRect()),
+                        Qt::UniqueConnection);
+        if (!ok) qFatal("Signal connection failed!");
+    }
 }
 
 void MApplicationWindowPrivate::setSceneWindowVisibility(MSceneWindow* sceneWindow, bool visible)

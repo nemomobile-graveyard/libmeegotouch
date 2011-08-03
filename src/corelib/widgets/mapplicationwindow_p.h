@@ -205,6 +205,8 @@ public:
     void _q_handleInSwitcherVisibilityChange();
     void _q_updateStyle();
     void _q_setupNavigationBarCustomContent();
+    void _q_onStatusBarStateChanged(MSceneWindow::SceneWindowState newState,
+                                    MSceneWindow::SceneWindowState oldState);
 
     void updateChainTaskData();
     void applyWindowBackground();
