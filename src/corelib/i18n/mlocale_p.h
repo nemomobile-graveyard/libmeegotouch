@@ -125,6 +125,14 @@ public:
     // converts an ICU date format to a format which has only
     // year and month
     void dateFormatToYearAndMonth(icu::DateFormat *df) const;
+    // converts an ICU date format to a format which has only
+    // the weekday in abbreviated form (like “Mon”) and the day of
+    // the month
+    void dateFormatToWeekdayAbbreviatedAndDayOfMonth(icu::DateFormat *df) const;
+    // converts an ICU date format to a format which has only
+    // the weekday in full form (like “Monday”) and the day of
+    // the month
+    void dateFormatToWeekdayWideAndDayOfMonth(icu::DateFormat *df) const;
     // simplifies an ICU date format to make the results of
     // mixing in the month names and weekday names from a different
     // language less bad

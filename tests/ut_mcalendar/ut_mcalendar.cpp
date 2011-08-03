@@ -5024,5 +5024,290 @@ void Ut_MCalendar::testDateYearAndMonth()
     QCOMPARE(result, expectedResult);
 }
 
+void Ut_MCalendar::testDateWeekdayAbbreviatedAndDayOfMonth_data()
+{
+    QTest::addColumn<MLocale::CalendarType>("calendarType");
+    QTest::addColumn<QDateTime>("qDateTime");
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<QString>("lcNumeric");
+    QTest::addColumn<QString>("expectedFormatString");
+    QTest::addColumn<QString>("expectedResult");
+
+    QTest::newRow("en_US")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "en_US"
+        << "en_US"
+        << "en_US"
+        << "en_US"
+        << "ccc d"
+        << "Fri 16";
+    QTest::newRow("cs_CZ")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "cs_CZ"
+        << "cs_CZ"
+        << "cs_CZ"
+        << "cs_CZ"
+        << "ccc d"
+        << "pá 16";
+    QTest::newRow("fi_FI")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "fi_FI"
+        << "fi_FI"
+        << "ccc d"
+        << "pe 16";
+    QTest::newRow("zh_CN")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "zh_CN"
+        << "zh_CN"
+        << "zh_CN"
+        << "zh_CN"
+        << "d日ccc"
+        << "16日周五";
+    QTest::newRow("fi_FI fi_FI zh_CN zh_CN")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "zh_CN@mix-time-and-language=yes"
+        << "zh_CN"
+        << "d ccc"
+        << "16 pe";
+    QTest::newRow("zh_TW")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "zh_TW"
+        << "zh_TW"
+        << "zh_TW"
+        << "zh_TW"
+        << "d日ccc"
+        << "16日週五";
+    QTest::newRow("fi_FI fi_FI zh_TW zh_TW")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "zh_TW@mix-time-and-language=yes"
+        << "zh_TW"
+        << "d ccc"
+        << "16 pe";
+    QTest::newRow("ja_JP")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "ja_JP"
+        << "ja_JP"
+        << "ja_JP"
+        << "ja_JP"
+        << "d日(ccc)"
+        << "16日(金)";
+    QTest::newRow("fi_FI fi_FI ja_JP ja_JP")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "ja_JP@mix-time-and-language=yes"
+        << "ja_JP"
+        << "d ccc"
+        << "16 pe";
+    QTest::newRow("ko_KR")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "ko_KR"
+        << "ko_KR"
+        << "ko_KR"
+        << "ko_KR"
+        << "d일 ccc"
+        << "16일 금";
+}
+
+void Ut_MCalendar::testDateWeekdayAbbreviatedAndDayOfMonth()
+{
+    QFETCH(MLocale::CalendarType, calendarType);
+    QFETCH(QDateTime, qDateTime);
+    QFETCH(QString, localeName);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(QString, lcNumeric);
+    QFETCH(QString, expectedFormatString);
+    QFETCH(QString, expectedResult);
+
+    MLocale locale(localeName);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcTime, lcNumeric);
+    locale.setCalendarType(calendarType);
+    MCalendar mcal(locale);
+    mcal.setDateTime(qDateTime);
+    QString formatString = locale.icuFormatString(MLocale::DateWeekdayAbbreviatedAndDayOfMonth, MLocale::TimeNone, calendarType);
+    QString result = locale.formatDateTime(mcal, MLocale::DateWeekdayAbbreviatedAndDayOfMonth, MLocale::TimeNone);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "language " << localeName
+        << " lc_messages " << lcMessages
+        << " lc_time " << lcTime
+        << " lc_numeric " << lcNumeric
+        << " expectedFormatString: " << expectedFormatString
+        << " formatString: " << formatString
+        << " expectedResult: " << expectedResult
+        << " result: " << result
+        << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(formatString, expectedFormatString);
+    QCOMPARE(result, expectedResult);
+}
+
+void Ut_MCalendar::testDateWeekdayWideAndDayOfMonth_data()
+{
+    QTest::addColumn<MLocale::CalendarType>("calendarType");
+    QTest::addColumn<QDateTime>("qDateTime");
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<QString>("lcNumeric");
+    QTest::addColumn<QString>("expectedFormatString");
+    QTest::addColumn<QString>("expectedResult");
+
+    QTest::newRow("en_US")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "en_US"
+        << "en_US"
+        << "en_US"
+        << "en_US"
+        << "cccc d"
+        << "Friday 16";
+    QTest::newRow("cs_CZ")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "cs_CZ"
+        << "cs_CZ"
+        << "cs_CZ"
+        << "cs_CZ"
+        << "cccc d"
+        << "pátek 16";
+    QTest::newRow("fi_FI")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "fi_FI"
+        << "fi_FI"
+        << "cccc d"
+        << "Perjantai 16";
+    QTest::newRow("zh_CN")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "zh_CN"
+        << "zh_CN"
+        << "zh_CN"
+        << "zh_CN"
+        << "d日cccc"
+        << "16日星期五";
+    QTest::newRow("fi_FI fi_FI zh_CN zh_CN")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "zh_CN@mix-time-and-language=yes"
+        << "zh_CN"
+        << "d cccc"
+        << "16 Perjantai";
+    QTest::newRow("zh_TW")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "zh_TW"
+        << "zh_TW"
+        << "zh_TW"
+        << "zh_TW"
+        << "d日cccc"
+        << "16日星期五";
+    QTest::newRow("fi_FI fi_FI zh_TW zh_TW")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "zh_TW@mix-time-and-language=yes"
+        << "zh_TW"
+        << "d cccc"
+        << "16 Perjantai";
+    QTest::newRow("ja_JP")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "ja_JP"
+        << "ja_JP"
+        << "ja_JP"
+        << "ja_JP"
+        << "d日(cccc)"
+        << "16日(金曜日)";
+    QTest::newRow("fi_FI fi_FI ja_JP ja_JP")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "fi_FI"
+        << "fi_FI"
+        << "ja_JP@mix-time-and-language=yes"
+        << "ja_JP"
+        << "d cccc"
+        << "16 Perjantai";
+    QTest::newRow("ko_KR")
+        << MLocale::GregorianCalendar
+        << QDateTime(QDate(2011,12,16),QTime(18,42,5))
+        << "ko_KR"
+        << "ko_KR"
+        << "ko_KR"
+        << "ko_KR"
+        << "d일 cccc"
+        << "16일 금요일";
+}
+
+void Ut_MCalendar::testDateWeekdayWideAndDayOfMonth()
+{
+    QFETCH(MLocale::CalendarType, calendarType);
+    QFETCH(QDateTime, qDateTime);
+    QFETCH(QString, localeName);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(QString, lcNumeric);
+    QFETCH(QString, expectedFormatString);
+    QFETCH(QString, expectedResult);
+
+    MLocale locale(localeName);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcTime, lcNumeric);
+    locale.setCalendarType(calendarType);
+    MCalendar mcal(locale);
+    mcal.setDateTime(qDateTime);
+    QString formatString = locale.icuFormatString(MLocale::DateWeekdayWideAndDayOfMonth, MLocale::TimeNone, calendarType);
+    QString result = locale.formatDateTime(mcal, MLocale::DateWeekdayWideAndDayOfMonth, MLocale::TimeNone);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "language " << localeName
+        << " lc_messages " << lcMessages
+        << " lc_time " << lcTime
+        << " lc_numeric " << lcNumeric
+        << " expectedFormatString: " << expectedFormatString
+        << " formatString: " << formatString
+        << " expectedResult: " << expectedResult
+        << " result: " << result
+        << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(formatString, expectedFormatString);
+    QCOMPARE(result, expectedResult);
+}
 QTEST_APPLESS_MAIN(Ut_MCalendar);
 

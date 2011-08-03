@@ -114,6 +114,20 @@ public:
      * showing the year and the month is needed but without the day
      * because the days are shown in a table below the headline.
      *
+     *
+     * The value “DateWeekdayAbbreviatedAndDayOfMonth” is a libmeegotouch
+     * addition to format only the weekday name in abbreviated form
+     * and the day of the month. For example in Finnish locale
+     * the result of using “DateWeekdayAbbreviatedAndDayOfMonth” is
+     * something like “ma 5” whereas in Chinese locale it is something
+     * like “5日周一”.
+     *
+     * The value “DateWeekdayWideAndDayOfMonth” is also a libmeegotouch
+     * addition, similar to “DateWeekdayAbbreviatedAndDayOfMonth”. It
+     * uses a longer format of the weekday name. For example in Finnish
+     * locale it would result in something like “maanantaina 5" whereas
+     * in Chinese locale it is something like “5日星期一”.
+     *
      * \sa MLocale::TimeType
      */
     enum DateType {
@@ -122,7 +136,9 @@ public:
         DateMedium,
         DateLong,
         DateFull,
-        DateYearAndMonth
+        DateYearAndMonth,
+        DateWeekdayAbbreviatedAndDayOfMonth,
+        DateWeekdayWideAndDayOfMonth
     };
 
     /*!

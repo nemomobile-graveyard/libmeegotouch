@@ -106,6 +106,12 @@ private slots:
 
     void testDateYearAndMonth_data();
     void testDateYearAndMonth();
+
+    void testDateWeekdayAbbreviatedAndDayOfMonth_data();
+    void testDateWeekdayAbbreviatedAndDayOfMonth();
+
+    void testDateWeekdayWideAndDayOfMonth_data();
+    void testDateWeekdayWideAndDayOfMonth();
 };
 
 #endif

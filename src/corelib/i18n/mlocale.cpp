@@ -516,6 +516,72 @@ void MLocalePrivate::dateFormatToYearAndMonth(icu::DateFormat *df) const
 #endif
 
 #ifdef HAVE_ICU
+void MLocalePrivate::dateFormatToWeekdayAbbreviatedAndDayOfMonth(icu::DateFormat *df) const
+{
+    if (df) {
+        icu::UnicodeString icuFormatString;
+        QString icuFormatQString;
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+        QString categoryNameTime = categoryName(MLocale::MLcTime);
+        QString categoryNameMessages = categoryName(MLocale::MLcMessages);
+        if(categoryNameTime.startsWith("zh"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("d日ccc"); // 5日周一
+            else
+                icuFormatQString = QString::fromUtf8("d ccc");
+        else if(categoryNameTime.startsWith("ja"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("d日(ccc)"); // 5日(月)
+            else
+                icuFormatQString = QString::fromUtf8("d ccc");
+        else if(categoryNameTime.startsWith("ko"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("d일 ccc");
+            else
+                icuFormatQString = QString::fromUtf8("d ccc");
+        else
+            icuFormatQString = QLatin1String("ccc d");
+        icuFormatString = MIcuConversions::qStringToUnicodeString(icuFormatQString);
+        static_cast<SimpleDateFormat *>(df)->applyPattern(icuFormatString);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void MLocalePrivate::dateFormatToWeekdayWideAndDayOfMonth(icu::DateFormat *df) const
+{
+    if (df) {
+        icu::UnicodeString icuFormatString;
+        QString icuFormatQString;
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+        QString categoryNameTime = categoryName(MLocale::MLcTime);
+        QString categoryNameMessages = categoryName(MLocale::MLcMessages);
+        if(categoryNameTime.startsWith("zh"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("d日cccc"); // 5日星期一
+            else
+                icuFormatQString = QString::fromUtf8("d cccc");
+        else if(categoryNameTime.startsWith("ja"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("d日(cccc)"); // 5日(月曜日)
+            else
+                icuFormatQString = QString::fromUtf8("d cccc");
+        else if(categoryNameTime.startsWith("ko"))
+            if(!mixingSymbolsWanted(categoryNameMessages, categoryNameTime))
+                icuFormatQString = QString::fromUtf8("d일 cccc");
+            else
+                icuFormatQString = QString::fromUtf8("d cccc");
+        else
+            icuFormatQString = QLatin1String("cccc d");
+        icuFormatString = MIcuConversions::qStringToUnicodeString(icuFormatQString);
+        static_cast<SimpleDateFormat *>(df)->applyPattern(icuFormatString);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
 void MLocalePrivate::simplifyDateFormatForMixing(icu::DateFormat *df) const
 {
     if (df) {
@@ -800,7 +866,9 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     icu::Locale calLocale = icu::Locale(qPrintable(categoryNameTime));
     icu::DateFormat::EStyle dateStyle;
     icu::DateFormat::EStyle timeStyle;
-    if (dateType == MLocale::DateYearAndMonth) {
+    if (dateType == MLocale::DateYearAndMonth
+        || dateType == MLocale::DateWeekdayAbbreviatedAndDayOfMonth
+        || dateType == MLocale::DateWeekdayWideAndDayOfMonth) {
         // doesn’t matter really will be customized anyway
         dateStyle = MIcuConversions::toEStyle(MLocale::DateFull);
         timeStyle = MIcuConversions::toEStyle(MLocale::TimeNone);
@@ -813,6 +881,12 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
         = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
     if (dateType == MLocale::DateYearAndMonth) {
         MLocalePrivate::dateFormatToYearAndMonth(df);
+    }
+    else if (dateType == MLocale::DateWeekdayAbbreviatedAndDayOfMonth) {
+        MLocalePrivate::dateFormatToWeekdayAbbreviatedAndDayOfMonth(df);
+    }
+    else if (dateType == MLocale::DateWeekdayWideAndDayOfMonth) {
+        MLocalePrivate::dateFormatToWeekdayWideAndDayOfMonth(df);
     }
     else if (timeType != MLocale::TimeNone) {
         switch (timeFormat24h) {
