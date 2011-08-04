@@ -665,6 +665,43 @@ int MCalendar::minimalDaysInFirstWeek() const
 }
 
 /*!
+  \brief returns whether the given day of the week is a weekday, a weekend day, or a day that transitions from one to the other, in this calendar system.
+
+  \sa MLocale::WeekdayType
+ */
+MLocale::WeekdayType MCalendar::getDayOfWeekType(MLocale::Weekday weekday) const
+{
+    Q_D(const MCalendar);
+    UErrorCode status = U_ZERO_ERROR;
+    UCalendarWeekdayType icuWeekDayType = d->_calendar->getDayOfWeekType(MIcuConversions::icuWeekday(static_cast<int>(weekday)), status);
+    if (U_FAILURE(status))
+        mDebug("MLocale") << __PRETTY_FUNCTION__ << "Error getDayOfWeekType"
+                          << u_errorName(status);
+    return MIcuConversions::mWeekdayType(icuWeekDayType);
+}
+
+/*!
+  \brief returns the time during the day at which the weekend begins or ends in this calendar system.
+
+  Returns the milliseconds after midnight at which the weekend begins or ends.
+  
+  For regular weekdays it returns -1.
+
+  \sa getDayOfWeekType() const
+ */
+qint32 MCalendar::getWeekendTransition(MLocale::Weekday weekday) const
+{
+    Q_D(const MCalendar);
+    UErrorCode status = U_ZERO_ERROR;
+    qint32 milliseconds = d->_calendar->getWeekendTransition(MIcuConversions::icuWeekday(static_cast<int>(weekday)), status);
+    if (U_FAILURE(status)) {
+        // this is a regular weekday, there is no weekend transition
+        milliseconds = -1;
+    }
+    return milliseconds;
+}
+
+/*!
   \brief Returns the current week number.
  */
 int MCalendar::weekNumber() const

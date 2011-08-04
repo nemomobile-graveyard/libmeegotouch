@@ -5309,5 +5309,225 @@ void Ut_MCalendar::testDateWeekdayWideAndDayOfMonth()
     QCOMPARE(formatString, expectedFormatString);
     QCOMPARE(result, expectedResult);
 }
+
+void Ut_MCalendar::testWeekdayType_data()
+{
+   QTest::addColumn<QString>("language");
+   QTest::addColumn<QString>("lcTime");
+   QTest::addColumn<MLocale::CalendarType>("calendarType");
+   QTest::addColumn<int>("firstDayOfWeek");
+   QTest::addColumn<int>("mondayType");
+   QTest::addColumn<int>("tuesdayType");
+   QTest::addColumn<int>("wednesdayType");
+   QTest::addColumn<int>("thursdayType");
+   QTest::addColumn<int>("fridayType");
+   QTest::addColumn<int>("saturdayType");
+   QTest::addColumn<int>("sundayType");
+   QTest::addColumn<int>("mondayTransition");
+   QTest::addColumn<int>("tuesdayTransition");
+   QTest::addColumn<int>("wednesdayTransition");
+   QTest::addColumn<int>("thursdayTransition");
+   QTest::addColumn<int>("fridayTransition");
+   QTest::addColumn<int>("saturdayTransition");
+   QTest::addColumn<int>("sundayTransition");
+
+   QTest::newRow("de_DE")
+       << "de_DE"
+       << "de_DE"
+       << MLocale::DefaultCalendar
+       << 1
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 << 3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("de_DE")
+       << "de_DE"
+       << "de_DE"
+       << MLocale::GregorianCalendar
+       << 1
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 << 3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("de_DE")
+       << "de_DE"
+       << "de_DE"
+       << MLocale::IslamicCalendar
+       << 1
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 << 3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ar")
+       << "ar"
+       << "ar"
+       << MLocale::DefaultCalendar
+       << 1
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 << 3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ar")
+       << "ar"
+       << "ar"
+       << MLocale::GregorianCalendar
+       << 1
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 << 3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ar")
+       << "ar"
+       << "ar"
+       << MLocale::IslamicCalendar
+       << 1
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 << 3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ar ar_EG")
+       << "ar"
+       << "ar_EG"
+       << MLocale::IslamicCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  0 <<  1 <<        3 <<  0
+       << -1 << -1 << -1 << -1 <<  0 << 86400000 << -1;
+   QTest::newRow("de_DE ar_EG")
+       << "de_DE"
+       << "ar_EG"
+       << MLocale::IslamicCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  0 <<  1 <<        3 <<  0
+       << -1 << -1 << -1 << -1 <<  0 << 86400000 << -1;
+   QTest::newRow("ar_EG de_DE")
+       << "ar_EG"
+       << "de_DE"
+       << MLocale::IslamicCalendar
+       << 1
+       <<  0 <<  0 <<  0 <<  0 <<  0 << 1 << 3
+       << -1 << -1 << -1 << -1 << -1 << 0 << 86400000;
+   QTest::newRow("ar_EG")
+       << "ar_EG"
+       << "ar_EG"
+       << MLocale::DefaultCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  0 <<  1 <<        3 <<  0
+       << -1 << -1 << -1 << -1 <<  0 << 86400000 << -1;
+   QTest::newRow("ar_EG")
+       << "ar_EG"
+       << "ar_EG"
+       << MLocale::GregorianCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  0 <<  1 <<        3 <<  0
+       << -1 << -1 << -1 << -1 <<  0 << 86400000 << -1;
+   QTest::newRow("ar_EG")
+       << "ar_EG"
+       << "ar_EG"
+       << MLocale::IslamicCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  0 <<  1 <<        3 <<  0
+       << -1 << -1 << -1 << -1 <<  0 << 86400000 << -1;
+   QTest::newRow("ar_SA")
+       << "ar_SA"
+       << "ar_SA"
+       << MLocale::DefaultCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  1 <<        3 <<  0 <<  0
+       << -1 << -1 << -1 <<  0 << 86400000 << -1 << -1;
+   QTest::newRow("ar_SA")
+       << "ar_SA"
+       << "ar_SA"
+       << MLocale::GregorianCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  1 <<        3 <<  0 <<  0
+       << -1 << -1 << -1 <<  0 << 86400000 << -1 << -1;
+   QTest::newRow("ar_SA")
+       << "ar_SA"
+       << "ar_SA"
+       << MLocale::IslamicCalendar
+       << 6
+       <<  0 <<  0 <<  0 <<  1 <<        3 <<  0 <<  0
+       << -1 << -1 << -1 <<  0 << 86400000 << -1 << -1;
+   QTest::newRow("he_IL")
+       << "he_IL"
+       << "he_IL"
+       << MLocale::GregorianCalendar
+       << 7
+       <<  0 <<  0 <<  0 <<  0 <<  1 <<        3 <<  0
+       << -1 << -1 << -1 << -1 <<  0 << 86400000 << -1;
+}
+
+void Ut_MCalendar::testWeekdayType()
+{
+    QFETCH(QString, language);
+    QFETCH(QString, lcTime);
+    QFETCH(MLocale::CalendarType, calendarType);
+    QFETCH(int, firstDayOfWeek);
+    QFETCH(int, mondayType);
+    QFETCH(int, tuesdayType);
+    QFETCH(int, wednesdayType);
+    QFETCH(int, thursdayType);
+    QFETCH(int, fridayType);
+    QFETCH(int, saturdayType);
+    QFETCH(int, sundayType);
+    QFETCH(int, mondayTransition);
+    QFETCH(int, tuesdayTransition);
+    QFETCH(int, wednesdayTransition);
+    QFETCH(int, thursdayTransition);
+    QFETCH(int, fridayTransition);
+    QFETCH(int, saturdayTransition);
+    QFETCH(int, sundayTransition);
+
+    MLocale locale(language);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCalendarType(calendarType);
+    MCalendar calendar(locale);
+    QVERIFY(calendar.isValid());
+    QCOMPARE(calendar.type(), calendarType);
+    calendar.setDate(2011, 1, 31);
+    calendar.setTime(19, 23, 0);
+#if defined(VERBOSE_OUTPUT)
+    QTextStream debugStream(stdout);
+    debugStream.setCodec("UTF-8");
+    debugStream
+        << "language " << language << " lc_time " << lcTime
+        << " calendar type " << calendar.type()
+        << "\n   firstDayOfWeek " << calendar.firstDayOfWeek()
+        << "\tmon "
+        << calendar.getDayOfWeekType(MLocale::Monday)
+        << " "
+        << calendar.getWeekendTransition(MLocale::Monday)
+        << "\ttue "
+        << calendar.getDayOfWeekType(MLocale::Tuesday)
+        << " "
+        << calendar.getWeekendTransition(MLocale::Tuesday)
+        << "\twed "
+        << calendar.getDayOfWeekType(MLocale::Wednesday)
+        << " "
+        << calendar.getWeekendTransition(MLocale::Wednesday)
+        << "\tthu "
+        << calendar.getDayOfWeekType(MLocale::Thursday)
+        << " "
+        << calendar.getWeekendTransition(MLocale::Thursday)
+        << "\tfri "
+        << calendar.getDayOfWeekType(MLocale::Friday)
+        << " "
+        << calendar.getWeekendTransition(MLocale::Friday)
+        << "\tsat "
+        << calendar.getDayOfWeekType(MLocale::Saturday)
+        << " "
+        << calendar.getWeekendTransition(MLocale::Saturday)
+        << "\tsun "
+        << calendar.getDayOfWeekType(MLocale::Sunday)
+        << " "
+        << calendar.getWeekendTransition(MLocale::Sunday)
+        << "\n";
+    debugStream.flush();
+#endif
+    QCOMPARE(firstDayOfWeek, (int) calendar.firstDayOfWeek());
+    QCOMPARE(mondayType, (int) calendar.getDayOfWeekType(MLocale::Monday));
+    QCOMPARE(tuesdayType, (int) calendar.getDayOfWeekType(MLocale::Tuesday));
+    QCOMPARE(wednesdayType, (int) calendar.getDayOfWeekType(MLocale::Wednesday));
+    QCOMPARE(thursdayType, (int) calendar.getDayOfWeekType(MLocale::Thursday));
+    QCOMPARE(fridayType, (int) calendar.getDayOfWeekType(MLocale::Friday));
+    QCOMPARE(saturdayType, (int) calendar.getDayOfWeekType(MLocale::Saturday));
+    QCOMPARE(sundayType, (int) calendar.getDayOfWeekType(MLocale::Sunday));
+    QCOMPARE(mondayTransition, calendar.getWeekendTransition(MLocale::Monday));
+    QCOMPARE(tuesdayTransition, calendar.getWeekendTransition(MLocale::Tuesday));
+    QCOMPARE(wednesdayTransition, calendar.getWeekendTransition(MLocale::Wednesday));
+    QCOMPARE(thursdayTransition, calendar.getWeekendTransition(MLocale::Thursday));
+    QCOMPARE(fridayTransition, calendar.getWeekendTransition(MLocale::Friday));
+    QCOMPARE(saturdayTransition, calendar.getWeekendTransition(MLocale::Saturday));
+    QCOMPARE(sundayTransition, calendar.getWeekendTransition(MLocale::Sunday));
+}
 QTEST_APPLESS_MAIN(Ut_MCalendar);
 

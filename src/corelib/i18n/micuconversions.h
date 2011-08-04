@@ -157,6 +157,11 @@ namespace MIcuConversions
     int mWeekday(int icuWeekday);
 
     /*!
+     * \brief transforms an ICU weekday type to an M weekday type
+     */
+    MLocale::WeekdayType mWeekdayType(UCalendarWeekdayType icuWeekdayType);
+
+    /*!
      * \brief escapes all 's in a string as ''
      *
      * ICU date patterns need to have 's escaped as ''

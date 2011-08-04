@@ -94,6 +94,9 @@ public:
     void setMinimalDaysInFirstWeek(int days);
     int minimalDaysInFirstWeek() const;
 
+    MLocale::WeekdayType getDayOfWeekType(MLocale::Weekday weekday) const;
+    qint32 getWeekendTransition(MLocale::Weekday weekday) const;
+
     int weekNumber() const;
     int maximumWeeksInMonth() const;
     int daysInWeek() const;

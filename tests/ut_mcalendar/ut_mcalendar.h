@@ -112,6 +112,9 @@ private slots:
 
     void testDateWeekdayWideAndDayOfMonth_data();
     void testDateWeekdayWideAndDayOfMonth();
+
+    void testWeekdayType_data();
+    void testWeekdayType();
 };
 
 #endif

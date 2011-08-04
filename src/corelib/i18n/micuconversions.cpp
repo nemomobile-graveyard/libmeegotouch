@@ -300,6 +300,20 @@ int MIcuConversions::mWeekday(int icuWeekday)
     }
 }
 
+MLocale::WeekdayType MIcuConversions::mWeekdayType(UCalendarWeekdayType icuWeekdayType)
+{
+    if (icuWeekdayType == UCAL_WEEKDAY)
+        return MLocale::WeekdayTypeWeekday;
+    else if (icuWeekdayType == UCAL_WEEKEND)
+        return MLocale::WeekdayTypeWeekend;
+    else if (icuWeekdayType == UCAL_WEEKEND_ONSET)
+        return MLocale::WeekdayTypeWeekendOnset;
+    else if (icuWeekdayType == UCAL_WEEKEND_CEASE)
+        return MLocale::WeekdayTypeWeekendCease;
+    else
+        return MLocale::WeekdayTypeWeekday;
+}
+
 QString MIcuConversions::icuDatePatternEscaped(const QString &str)
 {
     QString result = str;

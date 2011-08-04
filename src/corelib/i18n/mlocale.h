@@ -204,6 +204,18 @@ public:
                  };
 
     /*!
+     * \brief enum for weekday types
+     *
+     * \sa MLocale::Weekday
+     */
+    enum WeekdayType {
+        WeekdayTypeWeekday,
+        WeekdayTypeWeekend,
+        WeekdayTypeWeekendOnset,
+        WeekdayTypeWeekendCease
+    };
+
+    /*!
      * \brief Return type for MCollator::compare(). Denotes the order of two strings.
      */
     enum Comparison {LessThan = -1, Equal = 0, GreaterThan = 1};
