@@ -39,7 +39,6 @@ public:
 public Q_SLOTS:
     void makeTextItalic();
     void makeTextNormal();
-    void toggleWindowIconVisibility();
 
 protected:
     virtual void retranslateUi();
@@ -50,7 +49,6 @@ private:
     MComboBox *comboBox;
     MAction *actionItalic;
     MAction *actionNormal;
-    MAction *actionIcon;
 
     void showText(int index);
 };

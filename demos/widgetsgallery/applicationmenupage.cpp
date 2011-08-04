@@ -46,7 +46,6 @@ ApplicationMenuPage::ApplicationMenuPage()
     , comboBox(0)
     , actionItalic(0)
     , actionNormal(0)
-    , actionIcon(0)
 {
 }
 
@@ -85,8 +84,6 @@ void ApplicationMenuPage::retranslateUi()
     actionItalic->setText(qtTrId("xx_appmenu_italic"));
     //% "Normal"
     actionNormal->setText(qtTrId("xx_appmenu_normal"));
-    //% "Window Icon"
-    actionIcon->setText(qtTrId("xx_appmenu_window_icon"));
 }
 
 void ApplicationMenuPage::createContent()
@@ -129,13 +126,7 @@ void ApplicationMenuPage::createContent()
     comboBox->setTitle("ComboBox");
     comboBox->setCurrentIndex(0);
     widgetAction->setWidget(comboBox);
-
-    actionIcon = new MAction(panel);
-    actionIcon->setObjectName("actionIcon");
-    actionIcon->setLocation(MAction::ApplicationMenuLocation);
-    addAction(actionIcon);
-    connect(actionIcon, SIGNAL(triggered()), this, SLOT(toggleWindowIconVisibility()));
-    insertAction(actionIcon, widgetAction);
+    addAction(widgetAction);
 
     MLayout *layout = new MLayout(panel);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -177,18 +168,4 @@ void ApplicationMenuPage::makeTextItalic()
 void ApplicationMenuPage::makeTextNormal()
 {
     showText(2);
-}
-
-void ApplicationMenuPage::toggleWindowIconVisibility()
-{
-    MApplicationWindow *window = MApplication::activeApplicationWindow();
-    if (!window) {
-        return;
-    }
-    QString oldIconID = window->windowIconID();
-    if (oldIconID.isEmpty()) {
-        window->setWindowIconID("icon-m-toolbar-gallery");
-    } else {
-        window->setWindowIconID("");
-    }
 }
