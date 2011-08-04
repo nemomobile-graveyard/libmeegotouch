@@ -1,8 +1,16 @@
-libmeegotouch (0.23.8~1) unstable; urgency=low
+libmeegotouch (0.23.8-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#256611 - M_DECORATED=0 should be the default in official SDK
+  * Fixes: NB#274865 - window is stuck halfway rotated
+  * Fixes: NB#274711 - Inconsistent behavior with surroundingText()+ preedit with multi-line text
+  * Fixes: NB#270020 - Time format is placed after the date in the phone log
+  * Fixes: NB#265473, Text magnifier is not working in Nokia account creation
+  * Fixes: NB#274827 - Meegotouch seems to offer no support for progress bar in right-to-left languages
+  * Fixes: NB#258946 - Clock; The name of city displays incorrectly in clock main view.
+  * Fixes: NB#245184 - Toolbar appears/disappears with wrong motion when drilling down/up
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 26 Jul 2011 14:11:49 +0300
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 04 Aug 2011 14:52:15 +0300
 
 libmeegotouch (0.23.7-1) unstable; urgency=low
 
