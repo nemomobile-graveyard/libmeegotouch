@@ -144,8 +144,9 @@ MApplication *Ut_MApplication::buildPrestartApp(int count, const QString &params
     MApplication *retVal = 0;
 
     QChar sep(' ');
-    static char *argv[MAX_PARAMS];
+    static char *argv[MAX_PARAMS] = {'\0'};;
     static int x = 0;
+    x = 0; //we have to always reset it
 
     QStringList list = params.split(sep);
     QStringListIterator it(list);
