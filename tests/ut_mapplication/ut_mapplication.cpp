@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <MLocale>
+#include <mwindow_p.h>
 #include "ut_mapplication.h"
 
 #include <MApplication>
@@ -25,9 +26,23 @@
 #include <MApplicationService>
 
 #include <mtheme.h>
-#include <mfeedbackplayer_stub.h>
-#include <mfeedbackplayerprivate_stub.h>
+#include <mwindow_stub.h>
+//#include <mfeedbackplayer_stub.h>
+//#include <mfeedbackplayerprivate_stub.h>
 #include <mfeedback_stub.h>
+
+
+//todo: mapplication.cpp - these functions should not be called this way: window->d_ptr->sendDelayedExitDisplayEvent();
+//when we fix that we can get rid off these 3 stubs
+void MWindowPrivate::sendDelayedExitDisplayEvent()
+{
+}
+void MWindowPrivate::setX11PrestartProperty(bool)
+{
+}
+void MWindowPrivate::resolveOrientationRules()
+{
+}
 
 class MyApplication: public MApplication
 {
@@ -95,14 +110,16 @@ MApplication *Ut_MApplication::buildApp(int count, const QString &params, const 
     MApplication *retVal = 0;
 
     QChar sep(' ');
-    static char *argv[MAX_PARAMS];
+    static char *argv[MAX_PARAMS] = {'\0'};
     static int x = 0;
+    x = 0; //we have to always reset it
 
     QStringList list = params.split(sep);
     QStringListIterator it(list);
     while (it.hasNext() && x < MAX_PARAMS)  {
         argv[x++] = strdup(it.next().toLocal8Bit().constData());
     }
+
 
     // try to call the constructor with the correct signature
     if (service) {
@@ -317,7 +334,7 @@ void Ut_MApplication::mApplicationTranslationPath()
 
     delete app;
 }
-
+/*
 void Ut_MApplication::mApplicationNoFeedback()
 {
     gMFeedbackPlayerPrivateStub->stubSetReturnValue("init", false);
@@ -330,8 +347,8 @@ void Ut_MApplication::mApplicationNoFeedback()
     QVERIFY(app->feedbackPlayer() != 0);
     delete app;
 }
+*/
 
-/*
 void Ut_MApplication::testActiveApplicationWindow()
 {
     app = buildApp( 2, "appName -software" );
@@ -371,7 +388,7 @@ void Ut_MApplication::testApplicationWindows()
     delete appWin1;
     delete app;
 }
-*/
+
 
 void Ut_MApplication::testPrestartMode()
 {

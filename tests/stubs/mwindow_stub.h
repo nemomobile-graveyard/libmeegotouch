@@ -31,18 +31,14 @@ class MWindowStub : public StubBase
 public:
     virtual void MWindowConstructor(QWidget *parent);
     virtual void MWindowDestructor();
-    virtual void setOrientationAnimationLength(MWindow::OrientationAnimationPhase phase, qreal lenghtInSecs);
     virtual bool orientationChanging();
     virtual qreal orientationChangePhase();
     virtual void registerForPermanentOrientationChangeAnimation(MWidget *widget);
     virtual void storeOrientationChangeParameters(MWidget *widget, MOrientationChangeParameters *parameters);
     virtual MOrientationChangeParameters *orientationChangeParameters(MWidget *widget);
-    virtual void orientationAngleChanged(MDeviceProfile::DeviceOrientationAngle angle);
+    virtual void orientationAngleChanged(M::OrientationAngle angle);
     virtual void orientationAnimationChanged(qreal value);
     virtual void orientationAnimationCompleted();
-    virtual void prepareOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase, int startAngle, int endAngle);
-    virtual void executeOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase, qreal offset, int startAngle, int endAngle);
-    virtual void finalizeOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase);
     virtual bool event(QEvent *event);
 };
 
@@ -56,14 +52,6 @@ void MWindowStub::MWindowDestructor()
 {
 
 }
-void MWindowStub::setOrientationAnimationLength(MWindow::OrientationAnimationPhase phase, qreal lenghtInSecs)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<MWindow::OrientationAnimationPhase >(phase));
-    params.append(new Parameter<qreal >(lenghtInSecs));
-    stubMethodEntered("setOrientationAnimationLength", params);
-}
-
 bool MWindowStub::orientationChanging()
 {
     stubMethodEntered("orientationChanging");
@@ -99,10 +87,10 @@ MOrientationChangeParameters *MWindowStub::orientationChangeParameters(MWidget *
     return stubReturnValue<MOrientationChangeParameters *>("orientationChangeParameters");
 }
 
-void MWindowStub::orientationAngleChanged(MDeviceProfile::DeviceOrientationAngle angle)
+void MWindowStub::orientationAngleChanged(M::OrientationAngle angle)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<MDeviceProfile::DeviceOrientationAngle >(angle));
+    params.append(new Parameter<M::OrientationAngle >(angle));
     stubMethodEntered("orientationAngleChanged", params);
 }
 
@@ -116,32 +104,6 @@ void MWindowStub::orientationAnimationChanged(qreal value)
 void MWindowStub::orientationAnimationCompleted()
 {
     stubMethodEntered("orientationAnimationCompleted");
-}
-
-void MWindowStub::prepareOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase, int startAngle, int endAngle)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<MWindow::OrientationAnimationPhase >(phase));
-    params.append(new Parameter<int >(startAngle));
-    params.append(new Parameter<int >(endAngle));
-    stubMethodEntered("prepareOrientationAnimationPhase", params);
-}
-
-void MWindowStub::executeOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase, qreal offset, int startAngle, int endAngle)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<MWindow::OrientationAnimationPhase >(phase));
-    params.append(new Parameter<qreal >(offset));
-    params.append(new Parameter<int >(startAngle));
-    params.append(new Parameter<int >(endAngle));
-    stubMethodEntered("executeOrientationAnimationPhase", params);
-}
-
-void MWindowStub::finalizeOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<MWindow::OrientationAnimationPhase >(phase));
-    stubMethodEntered("finalizeOrientationAnimationPhase", params);
 }
 
 bool MWindowStub::event(QEvent *event)
@@ -168,66 +130,6 @@ MWindow::MWindow(QWidget *parent) : d_ptr(0)
 MWindow::~MWindow()
 {
     gMWindowStub->MWindowDestructor();
-}
-
-void MWindow::setOrientationAnimationLength(MWindow::OrientationAnimationPhase phase, qreal lenghtInSecs)
-{
-    gMWindowStub->setOrientationAnimationLength(phase, lenghtInSecs);
-}
-
-bool MWindow::orientationChanging()
-{
-    return gMWindowStub->orientationChanging();
-}
-
-qreal MWindow::orientationChangePhase()
-{
-    return gMWindowStub->orientationChangePhase();
-}
-
-void MWindow::registerForPermanentOrientationChangeAnimation(MWidget *widget)
-{
-    gMWindowStub->registerForPermanentOrientationChangeAnimation(widget);
-}
-
-void MWindow::storeOrientationChangeParameters(MWidget *widget, MOrientationChangeParameters *parameters)
-{
-    gMWindowStub->storeOrientationChangeParameters(widget, parameters);
-}
-
-MOrientationChangeParameters *MWindow::orientationChangeParameters(MWidget *widget)
-{
-    return gMWindowStub->orientationChangeParameters(widget);
-}
-
-void MWindow::orientationAngleChanged(MDeviceProfile::DeviceOrientationAngle angle)
-{
-    gMWindowStub->orientationAngleChanged(angle);
-}
-
-void MWindow::orientationAnimationChanged(qreal value)
-{
-    gMWindowStub->orientationAnimationChanged(value);
-}
-
-void MWindow::orientationAnimationCompleted()
-{
-    gMWindowStub->orientationAnimationCompleted();
-}
-
-void MWindow::prepareOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase, int startAngle, int endAngle)
-{
-    gMWindowStub->prepareOrientationAnimationPhase(phase, startAngle, endAngle);
-}
-
-void MWindow::executeOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase, qreal offset, int startAngle, int endAngle)
-{
-    gMWindowStub->executeOrientationAnimationPhase(phase, offset, startAngle, endAngle);
-}
-
-void MWindow::finalizeOrientationAnimationPhase(MWindow::OrientationAnimationPhase phase)
-{
-    gMWindowStub->finalizeOrientationAnimationPhase(phase);
 }
 
 bool MWindow::event(QEvent *event)

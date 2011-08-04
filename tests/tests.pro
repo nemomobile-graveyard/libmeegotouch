@@ -19,7 +19,7 @@ SUBDIRS     =  \
     ft_mslider \
     ft_mscalableimage \
     ut_allwidgets \
-#     ut_mapplication \ // Depends on private class
+     ut_mapplication \ 
      ut_madvancedlistitem \
      ut_mapplicationpage \
      ut_mapplicationwindow \

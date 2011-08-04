@@ -8,7 +8,13 @@ TARGET = ut_mapplication
 
 TEST_HEADERS = $$MSRCDIR/corelib/core/mapplication.h
 
-INCLUDEPATH += $$MSRCDIR/corelib/feedback
+INCLUDEPATH += \
+        $$MSRCDIR/corelib/widgets \
+        $$MSRCDIR/corelib/scene \
+        $$MSRCDIR/corelib/core \
+        $$MSRCDIR/corelib/style \
+        $$MSRCDIR/corelib/events \
+#        $$MSRCDIR/corelib/feedback
 
 TEST_SOURCES = \
     $$MSRCDIR/corelib/core/mapplication.cpp
