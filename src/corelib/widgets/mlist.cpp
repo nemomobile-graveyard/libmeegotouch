@@ -93,6 +93,9 @@ void MList::updateData(const QList<const char *>& modifications)
         if (member == MListModel::ListIsMoving) {
             model()->listIsMoving() ? emit panningStarted() : emit panningStopped();
         }
+        else if (member == MListModel::IndexIsScrolling) {
+            model()->indexIsScrolling() ? emit indexScrollStarted() : emit indexScrollEnded();
+        }
     }
 }
 

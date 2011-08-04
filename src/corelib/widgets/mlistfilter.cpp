@@ -51,6 +51,17 @@ void MListFilterPrivate::init()
     connect(q->list, SIGNAL(geometryChanged()), this, SLOT(updatePannableViewport()));
 }
 
+void MListFilterPrivate::_q_moveFocusToList()
+{
+    Q_Q(MListFilter);
+
+    if (q->filterEditor)
+        q->filterEditor->clearFocus();
+
+    if (q->list)
+        q->list->setFocus();
+}
+
 void MListFilterPrivate::updatePannableViewport()
 {
     MPannableViewport *viewPort = pannableViewport();
@@ -161,6 +172,7 @@ MListFilter::MListFilter(MList *parent)
     filterProxy->setFilterRegExp(regExp);
 
     connect(filterEditor, SIGNAL(textChanged()), this, SLOT(editorTextChanged()));
+    connect(list, SIGNAL(indexScrollStarted()), this, SLOT(_q_moveFocusToList()));
 }
 
 MListFilter::~MListFilter()
@@ -264,3 +276,5 @@ MListFilter::FilterMode MListFilter::filterMode() const
 {
     return filteringMode;
 }
+
+#include "moc_mlistfilter.cpp"

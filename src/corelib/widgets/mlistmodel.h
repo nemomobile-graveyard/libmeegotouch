@@ -145,6 +145,12 @@ private:
         \brief List index magnifier data role.
     */
     M_MODEL_PROPERTY(int, listIndexMagnifierDataRole, ListIndexMagnifierDataRole, true, Qt::DisplayRole)
+
+    /*!
+        \property MListModel::indexIsScrolling
+        \brief List index is scrolling property.
+    */
+    M_MODEL_PROPERTY(bool, indexIsScrolling, IndexIsScrolling, true, false)
 };
 
 #endif

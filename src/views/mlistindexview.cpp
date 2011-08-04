@@ -433,6 +433,9 @@ void MListIndexViewPrivate::_q_updatePositionIndicatorPosition(const QRectF &vie
 
 void MListIndexViewPrivate::beginFastScrolling(const QPointF &pos)
 {   
+    if (!isFastScrolling && list)
+        list->model()->setIndexIsScrolling(true);
+
     _q_showIfNeeded();
     isFastScrolling = true;
     updateFastScrolling(pos);
@@ -453,6 +456,9 @@ void MListIndexViewPrivate::updateFastScrolling(const QPointF &pos)
 void MListIndexViewPrivate::endFastScrolling()
 {
     Q_Q(MListIndexView);
+
+    if (isFastScrolling && list)
+        list->model()->setIndexIsScrolling(false);
 
     isFastScrolling = false;
     if (scrollToQueueTimer.isActive()) {

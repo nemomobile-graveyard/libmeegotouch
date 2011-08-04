@@ -165,6 +165,8 @@ private:
     Q_DECLARE_PRIVATE(MListFilter)
     friend class MList;
 
+    Q_PRIVATE_SLOT(d_func(), void _q_moveFocusToList())
+
     MList *list;
     MTextEdit *filterEditor;
     MSortFilterProxyModel *filterProxy;

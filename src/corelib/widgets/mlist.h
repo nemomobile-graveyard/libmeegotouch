@@ -508,6 +508,16 @@ Q_SIGNALS:
       */
     void panningStopped();
 
+    /*!
+        \brief Emitted when index scrolling is started
+      */
+    void indexScrollStarted();
+
+    /*!
+        \brief Emitted when index scrolling ends
+      */
+    void indexScrollEnded();
+
 protected:
     MList(MListPrivate *dd, MListModel *model, QGraphicsItem *parent);
 

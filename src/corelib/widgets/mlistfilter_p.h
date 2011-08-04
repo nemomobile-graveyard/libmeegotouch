@@ -36,6 +36,8 @@ public:
     virtual ~MListFilterPrivate();
     void init();
 
+    void _q_moveFocusToList();
+
 public Q_SLOTS:
     void updatePannableViewport();
     void startEditorPullDown();
