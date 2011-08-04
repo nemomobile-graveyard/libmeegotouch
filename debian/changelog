@@ -1,3 +1,9 @@
+libmeegotouch (0.23.9~1) unstable; urgency=low
+
+  * Unreleased
+
+ -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 04 Aug 2011 14:58:15 +0300
+
 libmeegotouch (0.23.8-1) unstable; urgency=low
 
   * New version
