@@ -2133,6 +2133,25 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "2:31:00 م"
         << "جرينتش+03:00 2:31:00 م"
         << "جرينتش+03:00 2:31:00 م";
+    QTest::newRow("15.6.2004_ar_EG_Islamic")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG@mix-time-and-language=no") // lc_time
+        << QString("fi_FI") // lc_numeric
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::IslamicCalendar
+        << 2004
+        << 6
+        << 15
+        << "27‏/4‏/1425"
+        << "27‏/04‏/1425"
+        << "27 ربيع الآخر، 1425"
+        << "الثلاثاء، 27 ربيع الآخر، 1425"
+        << "2:31 م"
+        << "2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م"
+        << "جرينتش+03:00 2:31:00 م";
     QTest::newRow("15.6.2004_fa_IR_Gregorian")
         << QString("fi_FI")
         << QString("fi_FI")
@@ -2456,6 +2475,44 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "14:31:00"
         << "14:31:00 UTC+3.00"
         << "14:31:00 Itä-Euroopan kesäaika";
+    QTest::newRow("21.7.2008_th_TH_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI") // lc_messages
+        << QString("th_TH@calendar=gregorian;mix-time-and-language=no") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::BuddhistCalendar
+        << 2008
+        << 7
+        << 21
+        << "21/7/2551"
+        << "21 ก.ค. 2551"
+        << "21 กรกฎาคม 2551"
+        << "วันจันทร์ที่ 21 กรกฎาคม พ.ศ. 2551"
+        << "14:31"
+        << "14:31:00"
+        << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00"
+        << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00";
+    QTest::newRow("21.7.2008_th_TH_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI") // lc_messages
+        << QString("th_TH@calendar=gregorian;mix-time-and-language=no") // lc_time
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::LocaleDefaultTimeFormat24h
+        << MLocale::DefaultCalendar
+        << 2008
+        << 7
+        << 21
+        << "21/7/2551"
+        << "21 ก.ค. 2551"
+        << "21 กรกฎาคม 2551"
+        << "วันจันทร์ที่ 21 กรกฎาคม พ.ศ. 2551"
+        << "14:31"
+        << "14:31:00"
+        << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00"
+        << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
@@ -2485,11 +2542,15 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
     locale.setTimeFormat24h(timeFormat24h);
+    locale.setCalendarType(calType);
     MCalendar::setSystemTimeZone("Europe/Helsinki");
     MCalendar mcal(calType);
-    mcal.setDate(year, month, day);
-    mcal.setTime(14, 31, 0);
+    MCalendar mcalConstructedFromLocale(locale);
+    QCOMPARE(mcal.type(), calType);
+    QCOMPARE(mcalConstructedFromLocale.type(), calType);
     QDateTime dateTime(QDate(year, month, day), QTime(14, 31, 0, 0));
+    mcal.setDateTime(dateTime);
+    mcalConstructedFromLocale.setDateTime(dateTime);
 
     QList<QString> dateResults;
     dateResults << QString("")
@@ -2556,17 +2617,28 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                     static_cast<MLocale::DateType>(dateType),
                     static_cast<MLocale::TimeType>(timeType),
                     calType)
-                << "| actual result |"
+                << "| actual result mcalendar |"
                 << locale.formatDateTime(
                     mcal,
                     static_cast<MLocale::DateType>(dateType),
                     static_cast<MLocale::TimeType>(timeType))
+                << "| actual result qdatetime |"
+                << locale.formatDateTime(
+                    dateTime,
+                    static_cast<MLocale::DateType>(dateType),
+                    static_cast<MLocale::TimeType>(timeType),
+                    calType)
                 << "| expected result |" << expectedResult << "|\n";
             debugStream.flush();
 #endif
 #if 1
             QCOMPARE(
                 locale.formatDateTime(mcal,
+                                      static_cast<MLocale::DateType>(dateType),
+                                      static_cast<MLocale::TimeType>(timeType)),
+                expectedResult);
+            QCOMPARE(
+                locale.formatDateTime(mcalConstructedFromLocale,
                                       static_cast<MLocale::DateType>(dateType),
                                       static_cast<MLocale::TimeType>(timeType)),
                 expectedResult);
