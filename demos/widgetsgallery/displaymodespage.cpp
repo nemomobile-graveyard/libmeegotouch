@@ -29,6 +29,7 @@
 #include <MApplicationWindow>
 #include <MEscapeButtonPanel>
 #include <MContainer>
+#include <MPannableViewport>
 
 #include <QGraphicsLinearLayout>
 #include <QStringList>
@@ -135,6 +136,7 @@ void DisplayModesPage::createContent()
     lytMain->addItem(ctnWindowState);
 
     centralWidget()->setLayout(lytMain);
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     addExampleActions();
     retranslateUi();

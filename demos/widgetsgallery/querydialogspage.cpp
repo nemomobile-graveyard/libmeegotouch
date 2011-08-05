@@ -29,6 +29,7 @@
 #include <MList>
 #include <MLinearLayoutPolicy>
 #include <MMessageBox>
+#include <MPannableViewport>
 
 #include <QGraphicsLinearLayout>
 #include <QStringListModel>
@@ -106,6 +107,7 @@ QString QueryDialogsPage::timedemoTitle()
 void QueryDialogsPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

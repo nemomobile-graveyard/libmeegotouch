@@ -126,6 +126,7 @@ MGridPage::~MGridPage()
 void MGridPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     MTheme::addPixmapDirectory(QDir(CONTACTS_DIR).canonicalPath());
     QGraphicsWidget *panel = centralWidget();

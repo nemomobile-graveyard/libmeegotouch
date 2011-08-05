@@ -8,6 +8,7 @@
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MList>
+#include <MPannableViewport>
 
 class WidgetsGalleryCategoryDataModel : public QAbstractListModel {
 public:
@@ -88,6 +89,7 @@ QString MainCategoryPage::timedemoTitle()
 void MainCategoryPage::createContent()
 {
     TimedemoPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     QGraphicsWidget *panel = centralWidget();
 

@@ -30,6 +30,7 @@
 #include <MAction>
 #include <MApplicationMenu>
 #include <MWidgetAction>
+#include <MPannableViewport>
 
 #include <MNavigationBar>
 #include <MApplicationWindow>
@@ -89,6 +90,8 @@ void ApplicationMenuPage::retranslateUi()
 void ApplicationMenuPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
+
     setStyleName(inv("CommonApplicationPage"));
 
     QGraphicsWidget *panel = centralWidget();

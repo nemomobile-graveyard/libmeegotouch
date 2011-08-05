@@ -36,6 +36,7 @@
 #include <MGridLayoutPolicy>
 #include <MLayout>
 #include <MComponentData>
+#include <MPannableViewport>
 
 MyImageWidget::MyImageWidget(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
@@ -271,6 +272,7 @@ void ItemDetailPage::createContent()
         grabKeyboard();        
     }
     retranslateUi();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 }
 
 void ItemDetailPage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)

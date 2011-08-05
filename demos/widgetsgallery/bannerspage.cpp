@@ -26,6 +26,7 @@
 #include <MLayout>
 #include <MList>
 #include <MLinearLayoutPolicy>
+#include <MPannableViewport>
 
 #include <QStringListModel>
 #include <QTimer>
@@ -82,6 +83,7 @@ QString BannersPage::timedemoTitle()
 void BannersPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

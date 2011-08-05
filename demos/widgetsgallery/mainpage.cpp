@@ -562,6 +562,8 @@ QString MainPage::timedemoTitle()
 void MainPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
+
     if (createEmpty)
         return;
 

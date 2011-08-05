@@ -30,6 +30,8 @@
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MDebug>
+#include <MPannableViewport>
+
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 #include <QPinchGesture>
@@ -64,6 +66,7 @@ QString ImagePage::timedemoTitle()
 void ImagePage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

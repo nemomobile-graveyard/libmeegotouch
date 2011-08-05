@@ -92,6 +92,7 @@ void TextEntryPanningPage::createContent()
     centralWidget()->setLayout(layout);
 
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     retranslateUi();
 

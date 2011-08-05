@@ -46,6 +46,7 @@ QString ViewHeaderPage::timedemoTitle()
 void ViewHeaderPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

@@ -108,6 +108,7 @@ void ListSheet::createCentralWidget()
 
     model->setParent(list);
     pannableViewport->setWidget(list);
+    pannableViewport->setAcceptGesturesFromAnyDirection(true);
 }
 
 QString ListSheet::inv(QString stylename)

@@ -29,6 +29,7 @@
 #include <MRichTextEdit>
 #include <MLinearLayoutPolicy>
 #include <MWidgetStyle>
+#include <MPannableViewport>
 
 #include <QList>
 #include <QStringListModel>
@@ -289,6 +290,7 @@ QString TextEntryPage::timedemoTitle()
 void TextEntryPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
     setStyleName(inv("CommonApplicationPage"));
     QGraphicsWidget *panel = centralWidget();
     MLinearLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupLinearPolicy(panel);

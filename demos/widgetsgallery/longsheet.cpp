@@ -44,6 +44,7 @@ void LongSheet::createCentralWidget()
 {
     MPannableViewport *pannableViewport = new MPannableViewport;
     pannableViewport->setObjectName("pannableViewport");
+    pannableViewport->setAcceptGesturesFromAnyDirection(true);
 
     QGraphicsWidget *contentWidget = new QGraphicsWidget;
     contentWidget->setObjectName("contentWidget");

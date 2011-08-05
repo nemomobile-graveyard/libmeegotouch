@@ -27,6 +27,7 @@
 #include <MSeparator>
 #include <MLabel>
 #include <MLocale>
+#include <MPannableViewport>
 
 #define CONTAINER_MIN_WIDTH 400
 
@@ -55,6 +56,8 @@ QStringList TemplatePage::groupNames()
 void TemplatePage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
+
     setStyleName(inv("CommonApplicationPage"));
     createLayout();
     containerLayout = new MLayout(container);

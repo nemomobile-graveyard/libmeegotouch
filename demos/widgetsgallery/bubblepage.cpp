@@ -29,6 +29,7 @@
 #include <MLabel>
 #include <MMessageBox>
 #include <MBubbleItem>
+#include <MPannableViewport>
 
 #include "utils.h"
 #include "bubblelistmodel.h"
@@ -65,6 +66,7 @@ BubblePage::~BubblePage()
 void BubblePage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

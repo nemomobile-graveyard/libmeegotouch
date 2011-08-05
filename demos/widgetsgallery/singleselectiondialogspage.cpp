@@ -30,6 +30,7 @@
 #include <MLinearLayoutPolicy>
 #include <MMessageBox>
 #include <MTextEdit>
+#include <MPannableViewport>
 
 #include <QGraphicsLinearLayout>
 #include <QStringListModel>
@@ -87,6 +88,7 @@ QString SingleSelectionDialogsPage::timedemoTitle()
 void SingleSelectionDialogsPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

@@ -32,6 +32,7 @@
 #include <MTextEdit>
 #include <MImageWidget>
 #include <MMessageBox>
+#include <MPannableViewport>
 
 #include <QStringListModel>
 #include <QGraphicsLinearLayout>
@@ -98,6 +99,7 @@ QString SheetsPage::timedemoTitle()
 void SheetsPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

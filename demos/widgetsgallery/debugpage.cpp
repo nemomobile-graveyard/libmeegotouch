@@ -23,6 +23,8 @@
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MButton>
+#include <MPannableViewport>
+
 #include <QDebug>
 #include <QBitArray>
 
@@ -54,6 +56,7 @@ DebugPage::~DebugPage()
 void DebugPage::createContent()
 {
     TemplatePage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     QGraphicsWidget *panel = centralWidget();
     panel->setContentsMargins(0,0,0,0);

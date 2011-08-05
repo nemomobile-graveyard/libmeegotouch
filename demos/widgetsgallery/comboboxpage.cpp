@@ -26,6 +26,7 @@
 #include <MComboBox>
 #include <MPopupList>
 #include <MButton>
+#include <MPannableViewport>
 
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
@@ -54,6 +55,7 @@ QString ComboBoxPage::timedemoTitle()
 void ComboBoxPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

@@ -25,6 +25,8 @@
 #include <MButton>
 #include <MLinearLayoutPolicy>
 #include <MSeparator>
+#include <MPannableViewport>
+
 #include <QGraphicsLinearLayout>
 
 #ifdef HAVE_DBUS
@@ -49,6 +51,7 @@ NotificationsPage::NotificationsPage()
 void NotificationsPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

@@ -29,6 +29,7 @@
 #include <MListItem>
 #include <MProgressIndicator>
 #include <MLabel>
+#include <MPannableViewport>
 
 #include <MBasicListItem>
 #include <MDetailedListItem>
@@ -410,6 +411,7 @@ QString ContentItemsPage::timedemoTitle()
 void ContentItemsPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

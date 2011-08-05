@@ -20,6 +20,8 @@
 #include "customnavigationbarpage.h"
 #include "mynavbarcontent.h"
 
+#include <MPannableViewport>
+
 #include <QGraphicsLinearLayout>
 
 CustomNavigationBarPage::CustomNavigationBarPage()
@@ -39,6 +41,7 @@ QString CustomNavigationBarPage::timedemoTitle()
 void CustomNavigationBarPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

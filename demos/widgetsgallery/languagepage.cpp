@@ -27,6 +27,7 @@
 #include <MButton>
 #include <MComboBox>
 #include <MTheme>
+#include <MPannableViewport>
 #ifdef HAVE_GCONF
 #include <MGConfItem>
 #endif
@@ -82,6 +83,7 @@ QString LanguagePage::timedemoTitle()
 void LanguagePage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
 
     setStyleName(inv("CommonApplicationPage"));
 

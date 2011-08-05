@@ -754,6 +754,7 @@ void MListPage::showTextEdit(bool show)
 void MListPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
     setStyleName(inv("CommonApplicationPage"));
     createActions();
     createObjectMenuActions();

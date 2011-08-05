@@ -5,6 +5,7 @@
 #include <MLabel>
 #include <MLayout>
 #include <MGridLayoutPolicy>
+#include <MPannableViewport>
 
 namespace {
     MTextEdit *createTextEdit(QGraphicsItem *parent,
@@ -45,6 +46,7 @@ QString TextEntryNavigationPage::timedemoTitle()
 void TextEntryNavigationPage::createContent()
 {
     MApplicationPage::createContent();
+    pannableViewport()->setAcceptGesturesFromAnyDirection(true);
     setStyleName(inv("CommonApplicationPage"));
     QGraphicsWidget *panel = centralWidget();
     MLayout *layout = new MLayout(panel);
