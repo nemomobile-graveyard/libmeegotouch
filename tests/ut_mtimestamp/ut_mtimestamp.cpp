@@ -16,6 +16,8 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <iostream>
+using namespace std;
 
 #include <MApplication>
 
@@ -36,12 +38,15 @@ void Ut_MTimestamp::initTestCase()
 
 void messageHandler(QtMsgType type, const char *msg)
 {
-    QVERIFY(type == QtWarningMsg);
+    QCOMPARE(type, QtWarningMsg);
 
-    const char *regexSt = "^" MODULE_NAME ": \"([0-9]*).[0-9]* MARK\\|" __FILE__ "\\|void Ut_MTimestamp::testMTimestampStream\\(\\)\\|" MESSAGE "\" $";
+    QString regexSt = "^" + QRegExp::escape(MODULE_NAME)
+            + ": \"([0-9]*).[0-9]* MARK\\|" + QRegExp::escape(__FILE__)
+            + "\\|void Ut_MTimestamp::testMTimestampStream\\(\\)\\|"
+            + QRegExp::escape(MESSAGE) + "\" $";
     QRegExp regex(regexSt);
 
-    QVERIFY(regex.indexIn(msg) == 0);
+    QCOMPARE(regex.indexIn(msg), 0);
 }
 
 void Ut_MTimestamp::testMTimestamp()
