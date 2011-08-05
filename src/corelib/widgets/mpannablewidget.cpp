@@ -284,24 +284,17 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
     QPointF itemSpaceOffset = panGesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
 
     if (panGesture->state() == Qt::GestureStarted) {
+        bool shouldAcceptHPan = !(horizontalPanningPolicy() == PanningAlwaysOff || (horizontalPanningPolicy() == PanningAsNeeded && range().width() == 0));
+        bool shouldAcceptVPan = !(verticalPanningPolicy() == PanningAlwaysOff || (verticalPanningPolicy() == PanningAsNeeded && range().height() == 0));
+
         bool verticalPanDirection = qAbs(itemSpaceOffset.y()) >= qAbs(itemSpaceOffset.x());
 
-        if (!verticalPanDirection) {
-            if (horizontalPanningPolicy() == PanningAlwaysOff ||
-                (horizontalPanningPolicy() == PanningAsNeeded && range().width() == 0)) {
-                event->ignore(panGesture);
-                d->_q_resetPhysics();
-                return;
-            }
-        }
-
-        if (verticalPanDirection) {
-            if (verticalPanningPolicy() == PanningAlwaysOff ||
-                (verticalPanningPolicy() == PanningAsNeeded && range().height() == 0)) {
-                event->ignore(panGesture);
-                d->_q_resetPhysics();
-                return;
-            }
+        if ((!acceptGesturesFromAnyDirection() &&
+             ((verticalPanDirection && !shouldAcceptVPan) || (!verticalPanDirection && !shouldAcceptHPan))) ||
+                (!shouldAcceptHPan && !shouldAcceptVPan)) {
+            event->ignore(panGesture);
+            d->_q_resetPhysics();
+            return;
         }
     }
 
@@ -419,6 +412,16 @@ Qt::Orientations MPannableWidget::panDirection() const
         directions |= Qt::Horizontal;
 
     return directions;
+}
+
+void MPannableWidget::setAcceptGesturesFromAnyDirection(bool accept)
+{
+    model()->setAcceptGesturesFromAnyDirection(accept);
+}
+
+bool MPannableWidget::acceptGesturesFromAnyDirection() const
+{
+    return model()->acceptGesturesFromAnyDirection();
 }
 
 void MPannableWidget::setPanThreshold(qreal value)

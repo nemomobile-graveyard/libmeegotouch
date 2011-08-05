@@ -69,6 +69,8 @@ class M_CORE_EXPORT MPannableWidget : public MWidgetController
     Q_PROPERTY(QPointF position READ position WRITE setPosition NOTIFY positionChanged USER true)
     //! \brief Panning threshold
     Q_PROPERTY(qreal panThreshold READ panThreshold WRITE setPanThreshold)
+    //! \brief Ignore panning direction flag
+    Q_PROPERTY(bool acceptGesturesFromAnyDirection READ acceptGesturesFromAnyDirection WRITE setAcceptGesturesFromAnyDirection)
 
 public:
 
@@ -229,6 +231,42 @@ public:
      * By default, the panning is enabled in Qt::Vertical direction.
      */
     Qt::Orientations panDirection() const;
+
+    /*!
+     * \brief Sets if pannable widget should accept pan gestures from
+     * all directions.
+     *
+     * By default, the pan gesture is accepted only if its direction
+     * corresponds with the panning policies.
+     *
+     * When enabled, all pan gestures are accepted. Useful when your
+     * pannable widget is not embedded in another one as it will be
+     * more responsive to user’s gestures. I.e. a vertical-only panning
+     * widget will work also if the user starts his gesture horizontally
+     * and then drags his finger vertically.
+     *
+     * If disabled (its default value), only pan gestures whose initial
+     * direction is pannable (according to MPannableWidget’s  panning
+     * policy) will be accepted. For instance: a pannable widget whose
+     * vertical panning policy is PanningAlwaysOn and horizontal panning
+     * policy is PanningAlwaysOff will accept pan gestures that start
+     * vertically but will ignore the ones that start horizontally. This
+     * is useful when you have nested pannable widgets of different directions
+     * (a horizontal panning widget embedded in a vertical panning one).
+     *
+     * \param accept accepts pan gestures from any direction.
+     *
+     * \sa MPannableWidget::acceptGesturesFromAnyDirection()
+     * \sa MPannableWidget::setVerticalPanningPolicy()
+     * \sa MPannableWidget::setHorizontalPanningPolicy()
+     */
+    void setAcceptGesturesFromAnyDirection(bool accept);
+
+    /*!
+      \return Returns whether pannable widget acceps pan gestures from any direction or not.
+      \sa MPannableWidget::setAcceptGesturesFromAnyDirection()
+     */
+    bool acceptGesturesFromAnyDirection() const;
 
     /*!
      * \brief Deprecated since 0.20
