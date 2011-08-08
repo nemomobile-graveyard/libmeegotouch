@@ -1,3 +1,10 @@
+libmeegotouch (0.23.7-2) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#274325 - Nokia account login view appears down (two status bars appear)
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 08 Aug 2011 15:53:09 +0300
+
 libmeegotouch (0.23.7-1) unstable; urgency=low
 
   * New version
