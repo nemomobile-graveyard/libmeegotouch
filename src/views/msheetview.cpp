@@ -190,6 +190,7 @@ void MSheetCentralSlot::createPannableViewportAndPannedSlot()
         return;
 
     pannableViewport = new MPannableViewport(this);
+    pannableViewport->setAcceptGesturesFromAnyDirection(true);
     pannableViewport->setObjectName("MSheetCentralSlotPannableViewport");
     pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
 
