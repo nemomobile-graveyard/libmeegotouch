@@ -321,6 +321,7 @@ void MMenuObjectViewPrivate::init()
 {
     // create pannable viewport
     viewport = new MPannableViewport(controller);
+    viewport->setAcceptGesturesFromAnyDirection(true);
 
     // create container widget for pannable viewport
     container = new MWidget;

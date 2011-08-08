@@ -99,6 +99,7 @@ void MObjectMenuViewPrivate::init()
     actionWidget->setLayout(actionLayout);
     actionWidget->setStyleName("ObjectMenuActionHolder");
     actionViewport = new MPannableViewport(controller);
+    actionViewport->setAcceptGesturesFromAnyDirection(true);
     actionViewport->setWidget(actionWidget);
     actionViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
     actionViewport->setObjectName("ObjectMenuActionViewport");
