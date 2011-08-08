@@ -348,6 +348,7 @@ void MApplicationMenuViewPrivate::init()
     actionListHolder->setLayout(actionLayout);
 
     actionCommandViewport = new MPannableViewport(controller);
+    actionCommandViewport->setAcceptGesturesFromAnyDirection(true);
     actionCommandViewport->setStyleName("MApplicationMenuActionViewport");
     actionCommandViewport->setObjectName(actionCommandViewport->styleName());
     actionCommandViewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
