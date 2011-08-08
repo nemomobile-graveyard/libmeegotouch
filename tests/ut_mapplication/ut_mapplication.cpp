@@ -31,7 +31,6 @@
 //#include <mfeedbackplayerprivate_stub.h>
 #include <mfeedback_stub.h>
 
-
 //todo: mapplication.cpp - these functions should not be called this way: window->d_ptr->sendDelayedExitDisplayEvent();
 //when we fix that we can get rid off these 3 stubs
 void MWindowPrivate::sendDelayedExitDisplayEvent()
@@ -78,6 +77,7 @@ void MyApplication::restorePrestart()
 
 void Ut_MApplication::init()
 {
+    app = NULL;
     m_prestartReleased = false;
     m_prestartRestored = false;
     m_releasePrestart = false;
@@ -182,8 +182,6 @@ void Ut_MApplication::mApplicationConstructor()
     QFETCH(int, count);
     QFETCH(QString, params);
 
-    MApplication *app = NULL;
-
     app = buildApp(count, params);
     QVERIFY(app != NULL);
     QVERIFY(!registeredService.isEmpty());
@@ -206,7 +204,7 @@ void Ut_MApplication::mApplicationConstructorWithAppId()
     QString argv0;
 
     argv0 = "appName";
-    MApplication *app = buildApp(1, argv0);
+    app = buildApp(1, argv0);
     delete app;
     QCOMPARE(registeredService, serviceBasename + argv0);
 
@@ -243,28 +241,28 @@ MyApplicationService::~MyApplicationService()
 void Ut_MApplication::mApplicationConstructorWithService()
 {
     MyApplicationService *myService = new MyApplicationService("com.nokia.Ut_MApplicationService");
-    MApplication *app = buildApp(1, "appName", myService);
+    app = buildApp(1, "appName", myService);
     QString thisRegisteredName = myService->registeredName();
     delete app;
     QCOMPARE(thisRegisteredName, QString("com.nokia.Ut_MApplicationService"));
 }
 
-#if 0
-void Ut_MApplication::mApplicationName()
+
+void Ut_MApplication::mAppName()
 {
-    MApplication *app = buildApp(1, "appName -foobar");
-    QCOMPARE(app->applicationName(), QString("appName"));
+    app = buildApp(1, "appName1 -foobar");
+    QCOMPARE(app->appName(), QString("appName1"));
     delete app;
 
-    app = buildApp(1, "./appName -foobar");
-    QCOMPARE(app->applicationName(), QString("appName"));
+    app = buildApp(1, "./appName2 -foobar");
+    QCOMPARE(app->appName(), QString("appName2"));
     delete app;
 
-    app = buildApp(1, "/foo/bar/appName -foobar");
-    QCOMPARE(app->applicationName(), QString("appName"));
+    app = buildApp(1, "/foo/bar/appName3 -foobar");
+    QCOMPARE(app->appName(), QString("appName3"));
     delete app;
 }
-
+#if 0
 void Ut_MApplication::themeFileLoadingFromCurrentPath()
 {
     // Setup the testing environment
@@ -272,7 +270,7 @@ void Ut_MApplication::themeFileLoadingFromCurrentPath()
     gFileSystemVerifier.addValidFile("m.css");
     gFileSystemVerifier.addValidFile("m.svg");
     // Create application
-    MApplication *app = buildApp(1, "appName -foobar");
+    app = buildApp(1, "appName -foobar");
     QCOMPARE(app->applicationName(), QString("appName"));
     delete app;
 
@@ -289,7 +287,7 @@ void Ut_MApplication::themeFileLoadingFromApplicationThemePath()
     gFileSystemVerifier.addValidPath(generateThemeDirectory().path());
     gFileSystemVerifier.addValidPath(generateApplicationThemeDirectory("appName").path());
     // Create application
-    MApplication *app = buildApp(1, "appName -foobar");
+    app = buildApp(1, "appName -foobar");
     QCOMPARE(app->applicationName(), QString("appName"));
     delete app;
 
@@ -307,7 +305,7 @@ void Ut_MApplication::themeFileLoadingFromGlobalThemePath()
     // Setup the testing environment
     gFileSystemVerifier.addValidPath(generateThemeDirectory().path());
     // Create application
-    MApplication *app = buildApp(1, "appName -foobar");
+    app = buildApp(1, "appName -foobar");
     QCOMPARE(app->applicationName(), QString("appName"));
     delete app;
 
@@ -323,7 +321,7 @@ void Ut_MApplication::themeFileLoadingFromGlobalThemePath()
 
 void Ut_MApplication::mApplicationTranslationPath()
 {
-    MApplication *app = buildApp(1, "appName");
+    app = buildApp(1, "appName");
     MLocale l;
 
     QStringList list = l.translationPaths();
@@ -339,7 +337,7 @@ void Ut_MApplication::mApplicationTranslationPath()
 void Ut_MApplication::mApplicationNoFeedback()
 {
     gMFeedbackPlayerPrivateStub->stubSetReturnValue("init", false);
-    MApplication *app = buildApp(1, "appName");
+    app = buildApp(1, "appName");
     QVERIFY(app->feedbackPlayer() == 0);
     delete app;
 
@@ -348,7 +346,7 @@ void Ut_MApplication::mApplicationNoFeedback()
     QVERIFY(app->feedbackPlayer() != 0);
     delete app;
 }
-*/
+
 
 void Ut_MApplication::testActiveApplicationWindow()
 {
@@ -389,7 +387,7 @@ void Ut_MApplication::testApplicationWindows()
     delete appWin1;
     delete app;
 }
-
+*/
 
 void Ut_MApplication::testPrestartMode()
 {

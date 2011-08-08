@@ -61,8 +61,8 @@ private slots:
     void mApplicationTranslationPath();
     //void mApplicationNoFeedback();
 
-    void testActiveApplicationWindow();
-    void testApplicationWindows();
+    //void testActiveApplicationWindow();
+    //void testApplicationWindows();
     void testPrestartMode();
     void testReleasePrestartModeLazyShutdown();
     void testReleasePrestartModeTerminateOnClose();
@@ -78,6 +78,7 @@ private slots:
     void testIsPrestartedTerminateOnCloseMultiWindow();
     void testIsPrestartedLazyShutdownMultiWindow();
     void testPrestartedProperty();
+    void mAppName();
 public slots:
 
     // Test slots for prestart signals
@@ -85,7 +86,6 @@ public slots:
     void prestartRestored();
 
 #if 0
-    void mApplicationName();
     void themeFileLoadingFromCurrentPath();
     void themeFileLoadingFromApplicationThemePath();
     void themeFileLoadingFromGlobalThemePath();
