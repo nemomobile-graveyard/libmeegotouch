@@ -136,6 +136,7 @@ void MDialogViewPrivate::createDialogBox()
     dialogBoxLayout->addItem(titleBar);
 
     contentsViewport = new MPannableViewport;
+    contentsViewport->setAcceptGesturesFromAnyDirection(true);
     contentsViewport->setStyleName("MDialogContentsViewport");
     contentsViewport->positionIndicator()->setStyleName("CommonPositionIndicatorInverted");
     contentsViewport->setObjectName(contentsViewport->styleName());
