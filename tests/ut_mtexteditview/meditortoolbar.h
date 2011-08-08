@@ -39,6 +39,7 @@ public slots:
     void disappear() { appeared = false; }
     void disappearTemporarily() { appeared = false; }
     void removeTemporaryDisappearance() { appeared = true; }
+    void setStyleName(const QString &) { }
 
 private:
     bool appeared;

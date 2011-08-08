@@ -515,8 +515,13 @@ QTextDocument *MTextEditViewPrivate::activeDocument() const
 
 void MTextEditViewPrivate::showEditorToolbar()
 {
+    Q_Q(const MTextEditView);
     if (!editorToolbar) {
         editorToolbar.reset(new MEditorToolbar(*controller));
+        const MTextEditStyle *textEditStyle = static_cast<const MTextEditStyle *>(q->style().operator ->());
+        if (textEditStyle) {
+            editorToolbar->setStyleName(textEditStyle->toolbarStyleName());
+        }
         foreach (QAction *action, controller->actions()) {
             if (!action->property(NoCloseToolbarOnTriggerProperty).toBool()) {
                 connect(action, SIGNAL(triggered()), editorToolbar.data(), SLOT(disappear()));
@@ -1993,6 +1998,10 @@ void MTextEditView::applyStyle()
     d->promptShowHideAnimation.setEndValue(0);
 
     d->focusAnimationDelay->setInterval(s->promptTransitionDelay());
+
+    if (d->editorToolbar) {
+        d->editorToolbar->setStyleName(s->toolbarStyleName());
+    }
 
     MWidgetView::applyStyle();
 }

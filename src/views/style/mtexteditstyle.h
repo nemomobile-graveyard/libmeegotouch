@@ -85,6 +85,12 @@ class M_VIEWS_EXPORT MTextEditStyle : public MWidgetStyle
         \brief Feedback given when finger movement changes text selection
       */
     M_STYLE_ATTRIBUTE(MFeedback, changeSelectionFeedback, ChangeSelectionFeedback)
+
+    /*!
+     * \property MTextEditStyle::toolbarStyleName
+     * \brief Style to use for this control's toolbar.
+     */
+    M_STYLE_ATTRIBUTE(QString, toolbarStyleName, ToolbarStyleName)
 };
 
 class M_VIEWS_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer
