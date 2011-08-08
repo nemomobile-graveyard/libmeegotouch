@@ -1,4 +1,7 @@
+-
+ 
 #
+@
 /
 %
 ∮
@@ -81,6 +84,7 @@ Dieter
 ♨
 A
 a
+a b
 b
 c
 d
@@ -193,6 +197,7 @@ z
 ㄩ
 ㄚ
 阿
+阿 阿
 ㄛ
 ㄜ
 ㄝ
@@ -367,6 +372,92 @@ z
 陈好
 刘备
 张飞
+陈
+Chén
+Chen
+chen
+陈循
+ChénXún
+ChenXun
+chenxun
+陈 循
+Chén Xún
+Chen Xun
+chen xun
+卜
+Bǔ
+Bu
+bu
+卜涛
+BǔTāo
+BuTao
+butao
+卜 涛
+Bǔ Tāo
+Bu Tao
+bu tao
+范
+Fàn
+Fan
+fan
+范刚
+FànGāng
+FanGang
+fangang
+范 刚
+Fàn Gāng
+Fan Gang
+fan gang
+黄
+Huáng
+Huang
+huang
+黄俊杰
+HuángJùnjié
+HuangJunjie
+huangjunjie
+黄 俊杰
+Huáng Jùnjié
+Huang Junjie
+huang junjie
+姜
+Jiāng
+Jiang
+jiang
+姜可
+JiāngKě
+JiangKe
+jiangke
+姜 可
+Jiāng Kě
+Jiang Ke
+jiang ke
+Bjorn Hushft Alf
+Boa
+Boe
+Boi
+Bom
+Bom
+Boo
+Bou
+Bov
+Borgman Daniel
+Chen Xun
+Chen  Xun
+Chen   Xun
+Chen    Xun
+Chen     Xun
+Chen Yang Ying
+Chen Yangying
+ChenYangYing
+ChenYangying
+ChenYang ying
+Fan Yaobo
+Fei Cui Tourist Co.
+Huang Zhigang
+Huaxia Stock Exchange
+Jiang Xiaowei
+Jin Shi
 Andrei
 Bustany
 Cat woman
@@ -1718,6 +1809,33 @@ Yrjö
 Åke
 Åsa
 Öhman
+א
+ב
+ג
+ד
+ה
+ו
+ז
+ח
+ט
+י
+כ
+ך
+ל
+מ
+ם
+נ
+ן
+ס
+ע
+פ
+ף
+צ
+ץ
+ק
+ר
+ש
+ת
 ا
 ب
 ت
@@ -1748,3 +1866,21 @@ Yrjö
 و
 ه
 ي
+มกราคม
+กุมภาพันธ์
+มีนาคม
+เมษายน
+พฤษภาคม
+มิถุนายน
+กรกฏาคม
+สิงหาคม
+กันยายน
+ตุลาคม
+พฤษจิกายน
+ธันวาคม
+ศรัณย์
+คล่องนักรบ
+ไก่
+กา
+กิน
+กำ 

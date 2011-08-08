@@ -688,6 +688,9 @@ void Ft_MLocaleBuckets::sortTestFiles_data()
     QTest::newRow("zh_CN@collation=pinyin")
         << "zh_CN@collation=pinyin"
         << "ft_mlocalebuckets_test-input.txt";
+    QTest::newRow("th_TH")
+        << "th_TH"
+        << "ft_mlocalebuckets_test-input.txt";
 }
 
 void Ft_MLocaleBuckets::sortTestFiles()
