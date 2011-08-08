@@ -11,6 +11,11 @@ class M_VIEWS_EXPORT MEditorToolbarStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MEditorToolbarStyle)
+
+    /*! \brief Autohide timeout.
+     * The delay (in milliseconds) after which the toolbar will be hidden, if no text is selected.
+     */
+    M_STYLE_ATTRIBUTE(int, hideTimeout, HideTimeout)
 };
 
 class M_VIEWS_EXPORT MEditorToolbarStyleContainer : public MWidgetStyleContainer

@@ -20,6 +20,7 @@
 #define MEDITORTOOLBAR_H
 
 #include <QPointer>
+#include <QTimer>
 
 #include <MStylableWidget>
 #include "meditortoolbararrow.h"
@@ -85,11 +86,14 @@ signals:
     void sizeChanged();
 
 public slots:
-    /*! \bried Show the toolbar.
+    /*! \brief Show the toolbar.
+     *
+     *  /param autohide if set, toolbar will be hidden after timeout.
+     *  The timeout value is taken from hideTimeout attribute from style.
      *
      *  Nothing is shown unless/until at least one action is in visible state.
      */
-    void appear();
+    void appear(bool autohide);
 
     //! \brief Hide the toolbar.
     void disappear();
@@ -123,6 +127,7 @@ private:
     void updateEditorItemVisibility();
     void showEditorItem();
     void hideEditorItem();
+    void appearRaw();
 
 private slots:
     void updateAvailableButtons();
@@ -138,6 +143,7 @@ private:
 
     bool buttonUpdateQueued;
     bool temporarilyDisappeared;
+    QTimer autohideTimer;
 
     M_STYLABLE_WIDGET(MEditorToolbarStyle)
 };

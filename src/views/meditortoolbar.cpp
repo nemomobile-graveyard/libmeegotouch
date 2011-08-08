@@ -18,6 +18,7 @@
 ****************************************************************************/
 #include "meditortoolbar.h"
 #include "mtopleveloverlay.h"
+#include <mtexteditstyle.h>
 
 #include <MButton>
 #include <MLayout>
@@ -61,6 +62,9 @@ MEditorToolbar::MEditorToolbar(const MWidget &followWidget)
                      this, SLOT(updateGeometry()));
 
     updateArrow(MEditorToolbarArrow::ArrowDown);
+
+    QObject::connect(&autohideTimer, SIGNAL(timeout()), this, SLOT(disappear()));
+    autohideTimer.setSingleShot(true);
 }
 
 MEditorToolbar::~MEditorToolbar()
@@ -81,11 +85,28 @@ void MEditorToolbar::setPosition(const QPointF &pos,
     updateArrow(direction);
 }
 
-void MEditorToolbar::appear()
+void MEditorToolbar::appear(bool autohide)
+{
+    appearRaw();
+
+    // then cancel currently pending actions and set new ones is necessary
+    // (this function is called only by controller directly)
+    if (autohide) {
+        int interval = style()->hideTimeout();
+        if (interval > 0) {
+            autohideTimer.setInterval(interval);
+            autohideTimer.start();
+        }
+    } else {
+        autohideTimer.stop();
+    }
+    temporarilyDisappeared = false;
+}
+
+void MEditorToolbar::appearRaw()
 {
     overlay->show();
     updateEditorItemVisibility();
-    temporarilyDisappeared = false;
 }
 
 void MEditorToolbar::disappear()
@@ -93,6 +114,7 @@ void MEditorToolbar::disappear()
     hideEditorItem();
     overlay->hide();
     temporarilyDisappeared = false;
+    autohideTimer.stop();
 }
 
 void MEditorToolbar::disappearTemporarily()
@@ -106,7 +128,8 @@ void MEditorToolbar::disappearTemporarily()
 void MEditorToolbar::removeTemporaryDisappearance()
 {
     if (temporarilyDisappeared) {
-        appear();
+        appearRaw();
+        temporarilyDisappeared = false;
     }
 }
 

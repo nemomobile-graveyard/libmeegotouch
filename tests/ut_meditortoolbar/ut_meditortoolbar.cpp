@@ -68,7 +68,7 @@ void Ut_MEditorToolbar::testAppear()
     QCOMPARE(subject->isAppeared(), false);
 
     // Show the widget.
-    subject->appear();
+    subject->appear(false);
     QCOMPARE(subject->isAppeared(), true);
 
     subject->disappear();
@@ -88,7 +88,7 @@ void Ut_MEditorToolbar::testItemVisibility()
 
     QCOMPARE(subject->isVisible(), false);
 
-    subject->appear();
+    subject->appear(false);
 
     // There are no visible actions in it, so the item is hidden.
     QCOMPARE(subject->isVisible(), false);

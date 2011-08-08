@@ -35,7 +35,7 @@ signals:
     void sizeChanged();
 
 public slots:
-    void appear() { appeared = true; }
+    void appear(bool) { appeared = true; }
     void disappear() { appeared = false; }
     void disappearTemporarily() { appeared = false; }
     void removeTemporaryDisappearance() { appeared = true; }

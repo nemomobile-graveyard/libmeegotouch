@@ -540,7 +540,7 @@ void MTextEditViewPrivate::showEditorToolbar()
                 this, SLOT(updateEditorToolbarPosition()), Qt::UniqueConnection);
     }
 
-    editorToolbar->appear();
+    editorToolbar->appear(!controller->hasSelectedText());
     updateEditorToolbarPosition();
 }
 
