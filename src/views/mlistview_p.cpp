@@ -235,6 +235,7 @@ bool MListViewPrivate::animateRowsInsertion(const QModelIndex &parent, int start
     appendTargetsToInsertAnimation(start, end, firstVisibleRow, lastVisibleRow);
 
     // Start item insert animation
+    clearVisibleOnRelayout = true;
     itemInsertionAnimation->start();
     return true;
 }
@@ -262,6 +263,7 @@ bool MListViewPrivate::animateRowsRemoval(const QModelIndex &parent, int start, 
     appendTargetsToDeleteAnimation(start, end, firstVisibleRow, lastVisibleRow);
 
     // Start item deletion animation
+    clearVisibleOnRelayout = true;
     itemDeletionAnimation->start();
     return true;
 }

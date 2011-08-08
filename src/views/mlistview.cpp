@@ -273,11 +273,13 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
             QModelIndex cellIndex = d_ptr->flatRowToIndex(i);
             if (!d_ptr->isGroupHeader(cellIndex)) {
                 MWidget *cell = d_ptr->findCellAtRow(i);
-                if( (controller->optimizationFlags() & MList::DontCallCreateCellDuringUpdate) == MList::DontCallCreateCellDuringUpdate) {
-                    cellCreator->updateCell(cellIndex, cell);
-                } else {
-                    MWidget* newCell = d_ptr->createCell(i);
-                    d_ptr->replaceItem(cell, newCell);
+                if (cell) {
+                    if( (controller->optimizationFlags() & MList::DontCallCreateCellDuringUpdate) == MList::DontCallCreateCellDuringUpdate) {
+                        cellCreator->updateCell(cellIndex, cell);
+                    } else {
+                        MWidget* newCell = d_ptr->createCell(i);
+                        d_ptr->replaceItem(cell, newCell);
+                    }
                 }
             }
         }
