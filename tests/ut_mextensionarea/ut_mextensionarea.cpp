@@ -81,6 +81,7 @@ void Ut_MExtensionArea::cleanupTestCase()
 
 void Ut_MExtensionArea::testAddition()
 {
+    qRegisterMetaType< QList<const char *> >("QList<const char *>");
     QSignalSpy spy(area->model(), SIGNAL(modified(QList<const char *>)));
 
     MWidget *widget1 = new MWidget;
