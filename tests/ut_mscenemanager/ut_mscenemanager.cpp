@@ -42,6 +42,7 @@
 #include <mapplicationwindow.h>
 #include <MDeviceProfile>
 #include "mstatusbar.h"
+#include <mapplicationmenu.h>
 
 #include "mondisplaychangeevent.h"
 
@@ -1618,6 +1619,54 @@ void Ut_MSceneManager::testInvalidOrientationAngle()
 
     // Nothing should happen. Angle remains unchanged.
     QCOMPARE(static_cast<int>(sm->orientationAngle()), 90);
+}
+
+void Ut_MSceneManager::testApplicationMenuBelowStatusBar_data()
+{
+    QTest::addColumn<bool>("animated");
+
+    QTest::newRow("animated transitions") << true;
+    QTest::newRow("immediate transitions") << false;
+}
+
+void Ut_MSceneManager::testApplicationMenuBelowStatusBar()
+{
+    QFETCH(bool, animated);
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+
+    MSceneWindow* menu = new MApplicationMenu;
+    MSceneWindow* statusBar = new MStatusBar;
+
+    sm->appearSceneWindowNow(statusBar);
+    QVERIFY(statusBar->geometry().height() > 0);
+
+    if (animated) {
+        sm->appearSceneWindow(menu);
+        sm->fastForwardAllSceneWindowTransitionAnimations();
+    } else {
+        sm->appearSceneWindowNow(menu);
+    }
+    QCOMPARE(menu->geometry().top(), statusBar->geometry().height());
+
+    if (animated) {
+        sm->disappearSceneWindow(statusBar);
+        sm->fastForwardAllSceneWindowTransitionAnimations();
+    } else {
+        sm->disappearSceneWindowNow(statusBar);
+    }
+    QCOMPARE(menu->geometry().top(), (qreal)0.0);
+
+    if (animated) {
+        sm->appearSceneWindow(statusBar);
+        sm->fastForwardAllSceneWindowTransitionAnimations();
+    } else {
+        sm->appearSceneWindowNow(statusBar);
+    }
+    QCOMPARE(menu->geometry().top(), statusBar->geometry().height());
 }
 
 QTEST_MAIN(Ut_MSceneManager);

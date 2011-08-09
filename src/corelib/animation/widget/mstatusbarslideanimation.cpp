@@ -215,8 +215,10 @@ void MStatusBarSlideAnimation::createAndSetupSceneWindowsAnimations()
     Q_FOREACH(MSceneWindow *sceneWindow, *sceneWindowStack) {
 
         if (sceneWindow->windowType() == MSceneWindow::Sheet ||
-                sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
-
+            sceneWindow->windowType() == MSceneWindow::ApplicationPage ||
+            sceneWindow->windowType() == MSceneWindow::ObjectMenu ||
+            sceneWindow->windowType() == MSceneWindow::ApplicationMenu)
+        {
             QPropertyAnimation *geometryAnimation = new QPropertyAnimation;
             geometryAnimation->setTargetObject(sceneWindow);
             geometryAnimation->setPropertyName("geometry");

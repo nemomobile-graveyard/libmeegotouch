@@ -236,7 +236,7 @@ public:
     void updateStatusBarGeometryProperty();
 #endif
 
-    void updatePagesAndSheetsGeometry();
+    void updateGeometryOfWindowsBelowStatusBar();
 
     void updateVisibilityOfSceneWindowsBehind(MSceneWindow *referenceSceneWindow, bool newVisibility);
     MSceneWindow *findTopMostSheet();

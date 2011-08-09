@@ -822,14 +822,6 @@ QGraphicsWidget *MSceneManagerPrivate::rootElementForSceneWindow(MSceneWindow *s
                 root = rootElement;
             }
             break;
-        case MSceneWindow::ObjectMenu:
-        case MSceneWindow::ApplicationMenu:
-            if (sceneWindow->alignment().testFlag(Qt::AlignTop)) {
-                root = topNavigationBarRootElement;
-            } else {
-                root = rootElement;
-            }
-            break;
         case MSceneWindow::HomeButtonPanel:
             root = homeButtonRootElement;
             break;
@@ -1064,7 +1056,10 @@ QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *sceneWind
     QSizeF sceneSize = q->visibleSceneSize(MDeviceProfile::instance()->orientationFromAngle(angle));
     QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
-    if ((sceneWindow->windowType() == MSceneWindow::Sheet || sceneWindow->windowType() == MSceneWindow::ApplicationPage)
+    if ((sceneWindow->windowType() == MSceneWindow::Sheet ||
+         sceneWindow->windowType() == MSceneWindow::ApplicationPage ||
+         sceneWindow->windowType() == MSceneWindow::ObjectMenu ||
+         sceneWindow->windowType() == MSceneWindow::ApplicationMenu)
         && statusBar && (statusBar->sceneWindowState() == MSceneWindow::Appearing ||
                          statusBar->sceneWindowState() == MSceneWindow::Appeared))
     {
@@ -1293,11 +1288,14 @@ void MSceneManagerPrivate::produceSceneWindowEvent(QEvent::Type type,
     }
 }
 
-void MSceneManagerPrivate::updatePagesAndSheetsGeometry()
+void MSceneManagerPrivate::updateGeometryOfWindowsBelowStatusBar()
 {
     foreach(MSceneWindow* window, windows) {
-        if ((window->windowType() == MSceneWindow::Sheet || window->windowType() == MSceneWindow::ApplicationPage) &&
-            window->sceneWindowState() != MSceneWindow::Disappeared)
+        if ((window->windowType() == MSceneWindow::Sheet ||
+             window->windowType() == MSceneWindow::ApplicationPage ||
+             window->windowType() == MSceneWindow::ObjectMenu ||
+             window->windowType() == MSceneWindow::ApplicationMenu)
+            && window->sceneWindowState() != MSceneWindow::Disappeared)
         {
             setSceneWindowGeometry(window);
         }
@@ -1624,7 +1622,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
                 foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar)
                     widget->setPos(0, y);
 
-                updatePagesAndSheetsGeometry();
+                updateGeometryOfWindowsBelowStatusBar();
             }
         }
     }
@@ -1784,7 +1782,7 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
             foreach(QGraphicsWidget *widget, rootElementsDisplacedByStatusBar)
                 widget->setPos(0, 0);
 
-            updatePagesAndSheetsGeometry();
+            updateGeometryOfWindowsBelowStatusBar();
         }
     }
 }
