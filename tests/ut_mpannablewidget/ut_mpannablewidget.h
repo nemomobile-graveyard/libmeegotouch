@@ -56,6 +56,11 @@ private slots:
     void testUpdatePosition();
     void testPanThreshold();
 
+    void testAcceptPanGestureFromAnyDirection();
+
+    void testPanningPoliciesAlwaysOff_data();
+    void testPanningPoliciesAlwaysOff();
+
 private:
     MPannableWidget *widget;
 

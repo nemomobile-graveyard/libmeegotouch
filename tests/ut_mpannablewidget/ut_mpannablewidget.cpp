@@ -82,6 +82,7 @@ void Ut_MPannableWidget::initTestCase()
 
 void Ut_MPannableWidget::cleanupTestCase()
 {
+    qApp->quit();
 }
 
 void Ut_MPannableWidget::init()
@@ -265,6 +266,92 @@ void Ut_MPannableWidget::testPanThreshold()
 
     widget->setPanThreshold(0);
     widget->panThreshold();
+}
+
+void Ut_MPannableWidget::testAcceptPanGestureFromAnyDirection()
+{
+    QList<QGesture *> gestures;
+    widget->setAcceptGesturesFromAnyDirection(true);
+    QVERIFY(widget->acceptGesturesFromAnyDirection());
+
+    widget->setHorizontalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+    QCOMPARE(widget->horizontalPanningPolicy(), MPannableWidget::PanningAlwaysOff);
+    widget->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOn);
+    QCOMPARE(widget->verticalPanningPolicy(), MPannableWidget::PanningAlwaysOn);
+
+    // Test vertical gesture.
+    QPanGesture *panGesture = new QPanGesture();
+    currentPanState = Qt::GestureStarted;
+    gestures.append(panGesture);
+    QGestureEvent event(gestures);
+    panGesture->setOffset(QPointF(0, 100));
+    widget->panGestureEvent(&event, panGesture);
+    QVERIFY(event.isAccepted(panGesture));
+
+    // Finish gesture.
+    currentPanState = Qt::GestureFinished;
+    widget->panGestureEvent(&event, panGesture);
+    QVERIFY(event.isAccepted(panGesture));
+
+    // Test horizontal gesture.
+    currentPanState = Qt::GestureStarted;
+    panGesture->setOffset(QPointF(100, 0));
+    widget->panGestureEvent(&event, panGesture);
+    QVERIFY(event.isAccepted(panGesture));
+
+    // Finish gesture.
+    currentPanState = Qt::GestureFinished;
+    widget->panGestureEvent(&event, panGesture);
+    QVERIFY(event.isAccepted(panGesture));
+
+    // Test non accepted.
+    widget->setAcceptGesturesFromAnyDirection(false);
+    QVERIFY(!widget->acceptGesturesFromAnyDirection());
+
+    currentPanState = Qt::GestureStarted;
+    panGesture->setOffset(QPointF(100, 0));
+    widget->panGestureEvent(&event, panGesture);
+    QVERIFY(!event.isAccepted(panGesture));
+
+    gestures.clear();
+}
+
+void Ut_MPannableWidget::testPanningPoliciesAlwaysOff_data()
+{
+    QTest::addColumn<bool>("acceptPanGestureFromAnyDirection");
+
+    QTest::newRow("disabled") << true;
+    QTest::newRow("enabled") << false;
+}
+
+void Ut_MPannableWidget::testPanningPoliciesAlwaysOff()
+{
+    QFETCH(bool, acceptPanGestureFromAnyDirection);
+
+    widget->setAcceptGesturesFromAnyDirection(acceptPanGestureFromAnyDirection);
+    QCOMPARE(widget->acceptGesturesFromAnyDirection(), acceptPanGestureFromAnyDirection);
+    widget->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+    QCOMPARE(widget->verticalPanningPolicy(), MPannableWidget::PanningAlwaysOff);
+    widget->setHorizontalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+    QCOMPARE(widget->horizontalPanningPolicy(), MPannableWidget::PanningAlwaysOff);
+
+    QList<QGesture *> gestures;
+    // Test vertical gesture.
+    QPanGesture *panGesture = new QPanGesture();
+    currentPanState = Qt::GestureStarted;
+    gestures.append(panGesture);
+    QGestureEvent event(gestures);
+    panGesture->setOffset(QPointF(0, 100));
+    widget->panGestureEvent(&event, panGesture);
+    QVERIFY(!event.isAccepted(panGesture));
+
+    // Test horizontal gesture.
+    currentPanState = Qt::GestureStarted;
+    panGesture->setOffset(QPointF(100, 0));
+    widget->panGestureEvent(&event, panGesture);
+    QVERIFY(!event.isAccepted(panGesture));
+
+    gestures.clear();
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableWidget);
