@@ -53,6 +53,10 @@ private:
     M_GRAPHICS_EFFECT(MGraphicsHighlightEffectStyle)
     Q_DECLARE_PRIVATE(MGraphicsHighlightEffect)
     MGraphicsHighlightEffectPrivate *d_ptr;
+
+#ifdef UNIT_TEST
+    friend class Ut_MGraphicsHighlightEffect;
+#endif
 };
 
 //! \internal_end

@@ -212,6 +212,7 @@ SUBDIRS     =  \
     ut_mdebug \
     ut_mpannableviewportscroller \
     ut_mtimestamp \
+    ut_mgraphicshighlighteffect \
 
 # enable only when we have icu available
 
