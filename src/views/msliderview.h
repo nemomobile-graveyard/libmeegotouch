@@ -129,6 +129,8 @@ protected:
      */
     virtual void swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture);
 
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);
+
     /*!
         \brief Updates MSliderView class instance when current model is changed.
 

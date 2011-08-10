@@ -1605,6 +1605,7 @@ MSliderView::MSliderView(MSlider *controller):
     d->init(controller);
 
     controller->grabGesture(Qt::SwipeGesture);
+    controller->grabGesture(Qt::PanGesture);
 
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(changeSliderHandleIndicatorVisibility()));
     connect(controller, SIGNAL(displayExited()), this, SLOT(lowerSliderHandleIndicator()));
@@ -1857,6 +1858,24 @@ void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void MSliderView::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
 {
+    event->accept(gesture);
+}
+
+void MSliderView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+    Q_D(MSliderView);
+
+    if (gesture->state() == Qt::GestureStarted) {
+        QTransform itemTransform(d->controller->sceneTransform().inverted());
+        QPointF itemSpaceOffset = gesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
+
+        bool horizontalPan = qAbs(itemSpaceOffset.y()) <= qAbs(itemSpaceOffset.x());
+        if (!horizontalPan) {
+            event->ignore(gesture);
+            return;
+        }
+    }
+
     event->accept(gesture);
 }
 
