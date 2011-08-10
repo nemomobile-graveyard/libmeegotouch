@@ -37,6 +37,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QTimer>
 #include <QStyleOptionGraphicsItem>
+#include <QPanGesture>
 
 #include "mtextedit.h"
 #include "mtextedit_p.h"
@@ -120,6 +121,8 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
 
     scrollSelectTimer->setSingleShot(false);
     scrollSelectTimer->setInterval(200);
+
+    controller->grabGesture(Qt::PanGesture);
 
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
@@ -1680,6 +1683,24 @@ void MTextEditView::notifyItemChange(QGraphicsItem::GraphicsItemChange change,
                                      const QVariant &value)
 {
     MWidgetView::notifyItemChange(change, value);
+}
+
+void MTextEditView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+    Q_D(MTextEditView);
+
+    if (gesture->state() == Qt::GestureStarted) {
+        QTransform itemTransform(d->controller->sceneTransform().inverted());
+        QPointF itemSpaceOffset = gesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
+
+        bool horizontalPan = qAbs(itemSpaceOffset.y()) <= qAbs(itemSpaceOffset.x());
+        if (!horizontalPan) {
+            event->ignore(gesture);
+            return;
+        }
+    }
+
+    event->accept(gesture);
 }
 
 QVariant MTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const

@@ -67,6 +67,7 @@ protected:
     virtual void cancelEvent(MCancelEvent *event);
     virtual void notifyItemChange(QGraphicsItem::GraphicsItemChange change,
                                   const QVariant &value);
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);
     //! \reimp_end
 
     //! \brief Notifies this and possibly derived views about the need for redraw.
