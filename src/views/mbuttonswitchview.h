@@ -110,6 +110,7 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture *gesture);
     virtual void cancelEvent(MCancelEvent *event);
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end

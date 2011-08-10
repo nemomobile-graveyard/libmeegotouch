@@ -28,6 +28,7 @@
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QVariantAnimation>
+#include <QPanGesture>
 
 namespace {
     //Minimum distance that the thumb must be dragged before the
@@ -166,6 +167,7 @@ MButtonSwitchView::MButtonSwitchView(MButton *controller) :
     MButtonView(* new MButtonSwitchViewPrivate, controller)
 {
     Q_D(MButtonSwitchView);
+    controller->grabGesture(Qt::PanGesture);
     connect(d->m_thumbAnimation, SIGNAL(finished()), this, SLOT(_q_toggleCheck()));
 }
 
@@ -356,6 +358,24 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         update();
     }
+}
+
+void MButtonSwitchView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+    Q_D(MButtonSwitchView);
+
+    if (gesture->state() == Qt::GestureStarted) {
+        QTransform itemTransform(d->controller->sceneTransform().inverted());
+        QPointF itemSpaceOffset = gesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
+
+        bool horizontalPan = qAbs(itemSpaceOffset.y()) <= qAbs(itemSpaceOffset.x());
+        if (!horizontalPan) {
+            event->ignore(gesture);
+            return;
+        }
+    }
+
+    event->accept(gesture);
 }
 
 void MButtonSwitchView::cancelEvent(MCancelEvent *event)
