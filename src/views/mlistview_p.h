@@ -27,6 +27,7 @@
 #include <QRectF>
 #include <QTimer>
 #include <QSet>
+#include <QAbstractAnimation>
 #include <MLabel>
 #include <MList>
 #include "mabstractcellcreator.h"
@@ -144,6 +145,7 @@ public:
     virtual void appendTargetsToInsertAnimation(int start, int end, int firstVisibleRow, int lastVisibleRow);
     virtual void appendTargetsToDeleteAnimation(int start, int end, int first, int last);
     virtual bool isAnimating();
+    virtual void resetAnimatedWidgets();
 
     virtual int locatePosOfItem(int row) = 0;
     virtual int locatePosOfItem(const QModelIndex &index) = 0;
@@ -176,7 +178,7 @@ public:
     virtual void updateItemLongTapConnection(MWidget *cell);
 
 public Q_SLOTS:
-    void resetAnimatedWidgets();
+    void syncAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);
     void viewportSizeChanged(const QSizeF &size);

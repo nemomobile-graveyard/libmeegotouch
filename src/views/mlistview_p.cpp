@@ -339,6 +339,20 @@ void MListViewPrivate::resetAnimatedWidgets()
     _q_relayoutItemsIfNeeded();
 }
 
+void MListViewPrivate::syncAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState)
+{
+    if (newState == QAbstractAnimation::Stopped && oldState == QAbstractAnimation::Running) {
+        resetAnimatedWidgets();
+        if (pannableViewport)
+            pannableViewport->setProperty("_m_movable", true);
+    } else if (newState == QAbstractAnimation::Running) {
+        if (scrollToAnimation)
+            scrollToAnimation->stop();
+        if (pannableViewport)
+            pannableViewport->setProperty("_m_movable", false);
+    }
+}
+
 void MListViewPrivate::deleteItem(MWidget *widget)
 {
     recycler->recycle(widget);
@@ -532,7 +546,8 @@ void MListViewPrivate::updateAnimations()
     if (!q_ptr->style()->insertItemAnimation().isEmpty()) {
         itemInsertionAnimation = qobject_cast<MBasicListItemInsertionAnimation*>(MTheme::animation(q_ptr->style()->insertItemAnimation()));
         if (itemInsertionAnimation)
-            connect(itemInsertionAnimation, SIGNAL(finished()), this, SLOT(resetAnimatedWidgets()));
+            connect(itemInsertionAnimation, SIGNAL(stateChanged(QAbstractAnimation::State,QAbstractAnimation::State)),
+                    this, SLOT(syncAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
     }
 
     delete itemDeletionAnimation;
@@ -540,7 +555,8 @@ void MListViewPrivate::updateAnimations()
     if (!q_ptr->style()->deleteItemAnimation().isEmpty()) {
         itemDeletionAnimation = qobject_cast<MBasicListItemDeletionAnimation*>(MTheme::animation(q_ptr->style()->deleteItemAnimation()));
         if (itemDeletionAnimation)
-            connect(itemDeletionAnimation, SIGNAL(finished()), this, SLOT(resetAnimatedWidgets()));
+            connect(itemDeletionAnimation, SIGNAL(stateChanged(QAbstractAnimation::State,QAbstractAnimation::State)),
+                    this, SLOT(syncAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
     }
 }
 
