@@ -2162,7 +2162,13 @@ QString MTextEdit::text() const
 int MTextEdit::cursorPosition() const
 {
     Q_D(const MTextEdit);
-    return d->cursor()->position();
+    int position = d->cursor()->position();
+
+    if (d->isPreediting() && model()->preeditCursor() >= 0) {
+        position = d->cursor()->anchor() + model()->preeditCursor();
+    }
+
+    return position;
 }
 
 
@@ -2478,7 +2484,6 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     bool emitTextChanged = false;
     const int cursorPositionBefore(cursorPosition());
-    const int preeditCursorPositionBefore(d->isPreediting() ? model()->preeditCursor() : -1);
     QString preedit = event->preeditString();
 
     // The first click of a double click sequence causes pre-edit injection, which implies
@@ -2573,7 +2578,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     d->editActive = true;
     // Pre-edit position will be adjusted based on replacement and commit text
     // and possibly overridden at the end by Selection attribute.
-    int newPreeditPosition(wasPreediting ? d->cursor()->selectionStart() : cursorPosition());
+    int newPreeditPosition(wasPreediting ? d->cursor()->selectionStart() : d->cursor()->position());
 
     if (event->replacementLength()) {
         emitTextChanged = true;
@@ -2608,7 +2613,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         d->cursor()->setPosition(qBound(0, d->cursor()->position() + event->replacementStart(),
                                         d->realCharacterCount()));
         if (!wasPreediting) {
-            newPreeditPosition = cursorPosition();
+            newPreeditPosition = d->cursor()->position();
         }
     }
 
@@ -2617,7 +2622,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
     // append possible commit string
     if (!commitString.isEmpty()) {
         d->removePreedit();
-        const int commitPosition(cursorPosition());
+        const int commitPosition(d->cursor()->position());
         insertionSuccess = d->doTextInsert(commitString, true);
         emitTextChanged = emitTextChanged || wasPreediting || insertionSuccess;
 
@@ -2634,9 +2639,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         }
         if (insertionSuccess) {
             if (!wasPreediting) {
-                newPreeditPosition = cursorPosition();
+                newPreeditPosition = d->cursor()->position();
             } else if (commitPosition <= newPreeditPosition) {
-                newPreeditPosition += cursorPosition() - commitPosition;
+                newPreeditPosition += d->cursor()->position() - commitPosition;
             }
         }
         d->preeditStyling.clear();
@@ -2689,9 +2694,7 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         }
     }
 
-    const bool emitCursorPositionChanged(
-        (cursorPositionBefore != cursorPosition())
-        || (preeditCursorPositionBefore != (d->isPreediting() ? model()->preeditCursor() : -1)));
+    const bool emitCursorPositionChanged(cursorPosition() != cursorPositionBefore);
 
     if (emitCursorPositionChanged || emitTextChanged) {
         d->updateMicroFocus();
@@ -2894,7 +2897,7 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
 
     switch ((int)query) {
     case Qt::ImCursorPosition: {
-            int pos = cursorPosition() - block.position();
+            int pos = d->cursor()->position() - block.position();
             if (d->isPreediting()) {
                 pos = d->cursor()->anchor() - block.position();
             }
