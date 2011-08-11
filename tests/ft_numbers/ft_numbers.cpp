@@ -2990,7 +2990,7 @@ void Ft_Numbers::testToLocalizedNumbers_data()
         +  latn + latn + latn + latn + latn
         +  latn + latn + latn + latn + latn
         +  latn + latn + latn + latn;
-    QTest::newRow("latn")
+    QTest::newRow("ar_EG@numbers=latn")
         << "de_DE"
         << "ar_EG@numbers=latn"
         << arab + arabext + beng + deva + fullwide
@@ -3001,7 +3001,18 @@ void Ft_Numbers::testToLocalizedNumbers_data()
         +  latn + latn + latn + latn + latn
         +  latn + latn + latn + latn + latn
         +  latn + latn + latn + latn;
-    QTest::newRow("arab")
+    QTest::newRow("ar")
+        << "de_DE"
+        << "ar"
+        << arab + arabext + beng + deva + fullwide
+        +  gujr +  guru + hanidec + khmr + knda
+        +  laoo +  latn + mlym + mong + mymr
+        +  orya +  telu + thai + tibt
+        << arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab + arab
+        +  arab + arab + arab + arab;
+    QTest::newRow("ar_EG")
         << "de_DE"
         << "ar_EG"
         << arab + arabext + beng + deva + fullwide
@@ -3012,7 +3023,7 @@ void Ft_Numbers::testToLocalizedNumbers_data()
         +  arab + arab + arab + arab + arab
         +  arab + arab + arab + arab + arab
         +  arab + arab + arab + arab;
-    QTest::newRow("arab")
+    QTest::newRow("ar_EG@numbers=arab")
         << "de_DE"
         << "ar_EG@numbers=arab"
         << arab + arabext + beng + deva + fullwide

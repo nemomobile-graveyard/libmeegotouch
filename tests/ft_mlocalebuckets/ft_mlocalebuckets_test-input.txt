@@ -376,6 +376,14 @@ z
 Chén
 Chen
 chen
+Chén Ai
+Chen Ai
+Chén Wang
+Chen Wang
+chén Ai
+chen Ai
+chén Wang
+chen Wang
 陈循
 ChénXún
 ChenXun
@@ -383,6 +391,7 @@ chenxun
 陈 循
 Chén Xún
 Chen Xun
+chen Xun
 chen xun
 卜
 Bǔ
@@ -459,6 +468,8 @@ Huaxia Stock Exchange
 Jiang Xiaowei
 Jin Shi
 Andrei
+Bugs Bunny
+Buxx Bunny
 Bustany
 Cat woman
 Cz
