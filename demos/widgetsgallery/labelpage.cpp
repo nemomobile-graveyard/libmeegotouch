@@ -75,10 +75,14 @@ void LabelPage::createContent()
     containerPolicy->addItem(richLabel);
 
     ignoreClickAndLongPressLabel = new MLabel;
-    ignoreClickAndLongPressLabel->setTextElide(true);
+    ignoreClickAndLongPressLabel->setObjectName("ignoreClickAndLongPressLabel");
+    ignoreClickAndLongPressLabel->setStyleName(inv("CommonBodyText"));
+    ignoreClickAndLongPressLabel->setWordWrap(true);
     containerPolicy->addItem(ignoreClickAndLongPressLabel);
 
     ignoreClickAndLongPressCheckbox = new MButton;
+    ignoreClickAndLongPressCheckbox->setObjectName("ignoreClickAndLongPressCheckbox");
+    ignoreClickAndLongPressCheckbox->setStyleName(inv("CommonCheckBox"));
     ignoreClickAndLongPressCheckbox->setViewType(MButton::checkboxType);
     ignoreClickAndLongPressCheckbox->setCheckable(true);
     ignoreClickAndLongPressCheckbox->setChecked(true);
