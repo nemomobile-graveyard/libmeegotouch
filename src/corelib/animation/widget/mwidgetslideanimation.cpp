@@ -114,13 +114,13 @@ void MWidgetSlideAnimation::updateState(QAbstractAnimation::State newState, QAbs
             style().setObjectName("In");
 
         if (style()->origin() == "top") {
-            offscreenPos = QPointF(0, -targetWidget()->size().height());
+            offscreenPos = QPointF(d->originalPos.x(), -targetWidget()->size().height());
         } else if (style()->origin() == "right") {
-            offscreenPos = QPointF(targetWidget()->sceneManager()->visibleSceneSize().width() , 0);
+            offscreenPos = QPointF(targetWidget()->sceneManager()->visibleSceneSize().width(), d->originalPos.y());
         } else if (style()->origin() == "bottom") {
-            offscreenPos = QPointF(0, targetWidget()->sceneManager()->visibleSceneSize().height());
+            offscreenPos = QPointF(d->originalPos.x(), targetWidget()->sceneManager()->visibleSceneSize().height());
         } else if (style()->origin() == "left") {
-            offscreenPos = QPointF(-targetWidget()->boundingRect().width(), 0);
+            offscreenPos = QPointF(-targetWidget()->boundingRect().width(), d->originalPos.y());
         }
 
         if (d->direction == In) {
