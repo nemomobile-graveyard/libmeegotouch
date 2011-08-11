@@ -39,11 +39,13 @@ my @ignoredCollTypes = ("pinyinshort", "strokeshort");
 
 my $libicuCollationOutput = "";
 my $currentCollType = "";
+my %collTypeCollationOutput = ();
 my @strokeBuckets = ();
 my @strokeShortBuckets = ();
 
 my %pinyinAnchorsInserted = ();
-my $pinyinCount = 0;
+my %pinyinSearchAnchorsInserted = ();
+my $pinyinSearchCount = 0;
 
 my %zhuyinPcLists = ();
 my %pinyinZhuyin = (); # filled from %zhuyinPinyin
@@ -1663,7 +1665,7 @@ my %zhuyinPinyin = (
     "ㄗㄨㄛˇ" => "zuǒ",
     "ㄗㄨㄛˋ" => "zuò",
     "ㄗㄨㄛ˙" => "zuo",
-);
+    );
 
 my $radicalList = "⼀⼁⼂⼃⼄⼅⼆⼇⼈⼉⼊⼋⼌⼍⼎⼏⼐⼑⼒⼓⼔⼕⼖⼗⼘⼙⼚⼛⼜⼝⼞⼟⼠⼡⼢⼣⼤⼥⼦⼧⼨⼩⼪⼫⼬⼭⼮⼯⼰⼱⼲⼳⼴⼵⼶⼷⼸⼹⼺⼻⼼⼽⼾⼿⽀⽁⽂⽃⽄⽅⽆⽇⽈⽉⽊⽋⽌⽍⽎⽏⽐⽑⽒⽓⽔⽕⽖⽗⽘⽙⽚⽛⽜⽝⽞⽟⽠⽡⽢⽣⽤⽥⽦⽧⽨⽩⽪⽫⽬⽭⽮⽯⽰⽱⽲⽳⽴⽵⽶⽷⽸⽹⽺⽻⽼⽽⽾⽿⾀⾁⾂⾃⾄⾅⾆⾇⾈⾉⾊⾋⾌⾍⾎⾏⾐⾑⾒⾓⾔⾕⾖⾗⾘⾙⾚⾛⾜⾝⾞⾟⾠⾡⾢⾣⾤⾥⾦⾧⾨⾩⾪⾫⾬⾭⾮⾯⾰⾱⾲⾳⾴⾵⾶⾷⾸⾹⾺⾻⾼⾽⾾⾿⿀⿁⿂⿃⿄⿅⿆⿇⿈⿉⿊⿋⿌⿍⿎⿏⿐⿑⿒⿓⿔⿕";
 
@@ -1671,6 +1673,61 @@ my $radicalList = "⼀⼁⼂⼃⼄⼅⼆⼇⼈⼉⼊⼋⼌⼍⼎⼏⼐⼑⼒⼓�
 # by the zhuyinCompare() function, the zhuyin order
 # we want is defined there.
 my @zhuyinCharacters = ("ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ㄪ", "ㄫ", "ㄬ", "ㄭ");
+
+my %fullWidthChars = (
+    "a" => "ａ",
+    "A" => "Ａ",
+    "b" => "ｂ",
+    "B" => "Ｂ",
+    "c" => "ｃ",
+    "C" => "Ｃ",
+    "d" => "ｄ",
+    "D" => "Ｄ",
+    "e" => "ｅ",
+    "E" => "Ｅ",
+    "f" => "ｆ",
+    "F" => "Ｆ",
+    "g" => "ｇ",
+    "G" => "Ｇ",
+    "h" => "ｈ",
+    "H" => "Ｈ",
+    "i" => "ｉ",
+    "I" => "Ｉ",
+    "j" => "ｊ",
+    "J" => "Ｊ",
+    "k" => "ｋ",
+    "K" => "Ｋ",
+    "l" => "ｌ",
+    "L" => "Ｌ",
+    "m" => "ｍ",
+    "M" => "Ｍ",
+    "n" => "ｎ",
+    "N" => "Ｎ",
+    "o" => "ｏ",
+    "O" => "Ｏ",
+    "p" => "ｐ",
+    "P" => "Ｐ",
+    "q" => "ｑ",
+    "Q" => "Ｑ",
+    "r" => "ｒ",
+    "R" => "Ｒ",
+    "s" => "ｓ",
+    "S" => "Ｓ",
+    "t" => "ｔ",
+    "T" => "Ｔ",
+    "u" => "ｕ",
+    "U" => "Ｕ",
+    "v" => "ｖ",
+    "V" => "Ｖ",
+    "w" => "ｗ",
+    "W" => "Ｗ",
+    "x" => "ｘ",
+    "X" => "Ｘ",
+    "y" => "ｙ",
+    "Y" => "Ｙ",
+    "z" => "ｚ",
+    "Z" => "Ｚ",
+    );
 
 #----------------------------------------------------------------------
 # subroutines:
@@ -1830,8 +1887,35 @@ sub insertPinyin {
     # comments without accents are not used at the moment ...
     my $commentWithoutAccents = NFD($comment);
     $commentWithoutAccents =~ s/\pM//og;
-    $pinyinCount++;
-    my $countString = sprintf("%05d", $pinyinCount);
+    my $insert = "<$char";
+    if($OPT_VERBOSITY >= 1) {
+        print "insertPinyin: $char $comment ($commentWithoutAccents) $insert\n";
+    }
+    $collTypeCollationOutput{"pinyin"} .= "$insert";
+}
+
+sub insertPinyinSearch {
+    my ($char, $comment) = @_;
+    if ($comment =~ /([^[:space:]]+)[[:space:]]*(\(p.*\))?/) {
+        # remove " (p.*)" from comment
+        $comment = $1;
+    }
+    # comments without accents are not used at the moment ...
+    my $commentWithoutAccents = NFD($comment);
+    $commentWithoutAccents =~ s/\pM//og;
+    $pinyinSearchCount++;
+    my $countString = sprintf("%05d", $pinyinSearchCount);
+    # $countString =~ s/0/ /og; # U+2000 EN QUAD
+    # $countString =~ s/1/ /og; # U+2001 EM QUAD
+    # $countString =~ s/2/ /og; # U+2002 EN SPACE
+    # $countString =~ s/3/ /og; # U+2003 EM SPACE
+    # $countString =~ s/4/ /og; # U+2004 THREE-PER-EM SPACE
+    # $countString =~ s/5/ /og; # U+2005 FOUR-PER-EM SPACE
+    # $countString =~ s/6/ /og; # U+2006 SIX-PER-EM SPACE
+    # $countString =~ s/7/ /og; # U+2007 FIGURE SPACE
+    # $countString =~ s/8/ /og; # U+2008 PUNCTUATION SPACE
+    # $countString =~ s/9/ /og; # U+2009 THIN SPACE
+    $countString = "";
     my $firstLetter = substr($comment, 0, 1);
     my $remainingLetters = substr($comment, 1, length($comment)-1);
     my $insert = "<<$char";
@@ -1842,12 +1926,32 @@ sub insertPinyin {
         $insert .= "/${countString}";
     }
     if($OPT_VERBOSITY >= 1) {
-        print "$char $comment ($commentWithoutAccents) $insert\n";
+        print "insertPinyinSearch: $char $comment ($commentWithoutAccents) $insert\n";
     }
-    $libicuCollationOutput .= "$insert";
+    $collTypeCollationOutput{"pinyinsearch"} .= "$insert";
 }
 
 sub maybeInsertPinyinAnchor {
+    my ($comment, $charList) = @_;
+    if ($comment =~ /\(p.*\)/) {
+        if ($comment !~ /\(p1\)/) {
+            return; # ignore comments which are not for the first part
+        }
+    }
+    if ($comment =~ /([^[:space:]]+)[[:space:]]*(\(p1\))?/) {
+        # remove " (p1)" from comment
+        $comment = $1;
+    }
+    my $commentWithoutAccents = NFD($comment);
+    $commentWithoutAccents =~ s/\pM//og;
+    my $anchorChar = $fullWidthChars{uc(substr($commentWithoutAccents, 0, 1))};
+    if ($anchorChar ne "" && !defined $pinyinAnchorsInserted{$anchorChar}) {
+        $pinyinAnchorsInserted{$anchorChar} = substr($charList, 0, 1);
+        $collTypeCollationOutput{"pinyin"} .= "&${anchorChar}";
+    }
+}
+
+sub maybeInsertPinyinSearchAnchor {
     my ($comment) = @_;
     if ($comment =~ /\(p.*\)/) {
         if ($comment !~ /\(p1\)/) {
@@ -1861,9 +1965,9 @@ sub maybeInsertPinyinAnchor {
     my $commentWithoutAccents = NFD($comment);
     $commentWithoutAccents =~ s/\pM//og;
     my $firstChar = substr($commentWithoutAccents, 0, 1);
-    if ($firstChar ne "" && !defined $pinyinAnchorsInserted{$firstChar}) {
-        $pinyinAnchorsInserted{$firstChar} = $firstChar;
-        $libicuCollationOutput .= "&${firstChar}";
+    if ($firstChar ne "" && !defined $pinyinSearchAnchorsInserted{$firstChar}) {
+        $pinyinSearchAnchorsInserted{$firstChar} = $firstChar;
+        $collTypeCollationOutput{"pinyinsearch"} .= "&${firstChar}";
     }
 }
 
@@ -1877,7 +1981,7 @@ sub maybeInsertUnihanAnchor {
         my $simplified = $2;
         my $residualStrokeCount = $3;
         if ($residualStrokeCount == 0 && !defined($simplified)) {
-            $libicuCollationOutput .=
+            $collTypeCollationOutput{"unihan"} .=
                 "&" . substr($radicalList, $radicalNumber - 1, 1);
         }
     }
@@ -1957,9 +2061,9 @@ while (<CLDR>) {
         next;
     }
     if ($ARG =~ /<\/collations>/) {
-        # don’t close the collations block here, we
-        # still want to add zhuyin maybe
-        # $libicuCollationOutput .= "}\n";
+        # don’t close the collations block here
+        # just ignore it here, we want to insert more stuff later
+        # before the close of the collations block
         next;
     }
     if ($ARG =~ /<default type=["'](.+)["'] \/>/) {
@@ -1983,11 +2087,15 @@ while (<CLDR>) {
         }
         else {
             if ($OPT_VERBOSITY >= 1) {
-                printf (STDOUT "start of collation $currentCollType...\n");
+                printf (STDOUT "start of parsing collation $currentCollType...\n");
             }
-            %pinyinAnchorsInserted = ();
-            $pinyinCount = 0;
-            $libicuCollationOutput .= "$collType\{\n";
+            $collTypeCollationOutput{$currentCollType} .= "$currentCollType\{\n";
+            if($currentCollType eq "pinyin") {
+                %pinyinAnchorsInserted = ();
+                %pinyinSearchAnchorsInserted = ();
+                $pinyinSearchCount = 0;
+                $collTypeCollationOutput{"pinyinsearch"} .= "pinyinsearch\{\n";
+            }
             next;
         }
     }
@@ -2002,7 +2110,10 @@ while (<CLDR>) {
             if ($OPT_VERBOSITY >= 1) {
                 printf (STDOUT "end of collation $currentCollType.\n");
             }
-            $libicuCollationOutput .= "}\n";
+            $collTypeCollationOutput{$currentCollType} .= "}\n";
+            if($currentCollType eq "pinyin") {
+                $collTypeCollationOutput{"pinyinsearch"} .= "}\n";
+            }
             next;
         }
     }
@@ -2010,33 +2121,59 @@ while (<CLDR>) {
         next;
     }
     if ($ARG =~ /<rules>/) {
-        $libicuCollationOutput .= "Sequence { \"";
+        $collTypeCollationOutput{$currentCollType} .= "Sequence { \"";
+        if($currentCollType eq "pinyin") {
+            $collTypeCollationOutput{"pinyinsearch"} .= "Sequence { \"";
+        }
+        if ($currentCollType eq "pinyin") {
+            # Ignore variable code points on the primary level,
+            # i.e. ignore spaces when sorting pinyin:
+            $collTypeCollationOutput{"pinyin"} .= "[alternate shifted]";
+            $collTypeCollationOutput{"pinyinsearch"} .= "[alternate shifted]";
+        }
         next;
     }
     if ($ARG =~ /<\/rules>/) {
-        $libicuCollationOutput .= "\" }\n";
+        $collTypeCollationOutput{$currentCollType} .= "\" }\n";
+        if($currentCollType eq "pinyin") {
+            $collTypeCollationOutput{"pinyinsearch"} .= "\" }\n";
+        }
         next;
     }
     if ($ARG =~ /<reset before=["']secondary["']>(.+)<\/reset>/) {
-        $libicuCollationOutput .= "&[before 2]$1";
+        $collTypeCollationOutput{$currentCollType} .= "&[before 2]$1";
+        if($currentCollType eq "pinyin") {
+            $collTypeCollationOutput{"pinyinsearch"} .= "&[before 2]$1";
+        }
         next;
     }
     if ($ARG =~ /<reset><last_non_ignorable \/><\/reset>/) {
         if ($currentCollType eq "stroke") {
             # If stroke count sorting is used, put Chinese before “a”:
-            $libicuCollationOutput .= "&[before 1]a";
+            $collTypeCollationOutput{"stroke"} .= "&[before 1]a";
             for my $zhuyinCharacter (sort zhuyinCompare (@zhuyinCharacters)) {
-                $libicuCollationOutput .= "<${zhuyinCharacter}";
+                $collTypeCollationOutput{"stroke"} .= "<${zhuyinCharacter}";
+            }
+        }
+        elsif ($currentCollType eq "unihan") {
+            $collTypeCollationOutput{"unihan"} .= "&[last regular]";
+            for (my $i = 0; $i < length($radicalList); ++$i) {
+                my $char = substr($radicalList, $i, 1);
+                $collTypeCollationOutput{"unihan"} .= "<$char";
+            }
+        }
+        elsif ($currentCollType eq "pinyin") {
+            $collTypeCollationOutput{"pinyinsearch"} .= "&[last regular]";
+            $collTypeCollationOutput{"pinyin"} .= "&[before 1]a";
+            my $latinCharList = "abcdefghijklmnopqrstuvwxyz";
+            for (my $i = 0; $i < length($latinCharList); ++$i) {
+                my $lcChar = $fullWidthChars{lc(substr($latinCharList, $i, 1))};
+                my $ucChar = $fullWidthChars{uc(substr($latinCharList, $i, 1))};
+                $collTypeCollationOutput{"pinyin"} .= "<$lcChar<<<$ucChar";
             }
         }
         else {
-            $libicuCollationOutput .= "&[last regular]";
-        }
-        if ($currentCollType eq "unihan") {
-            for (my $i = 0; $i < length($radicalList); ++$i) {
-                my $char = substr($radicalList, $i, 1);
-                $libicuCollationOutput .= "<$char";
-            }
+            $collTypeCollationOutput{$currentCollType} .= "&[last regular]";
         }
         next;
     }
@@ -2044,15 +2181,24 @@ while (<CLDR>) {
         my $val = $1;
         $val =~ s/\(/'\('/;
         $val =~ s/\)/'\)'/;
-        $libicuCollationOutput .= "&$val";
+        $collTypeCollationOutput{$currentCollType} .= "&$val";
+        if($currentCollType eq "pinyin") {
+            $collTypeCollationOutput{"pinyinsearch"} .= "&$val";
+        }
         next;
     }
     if ($ARG =~ /<s>(.+)<\/s>/) {
-        $libicuCollationOutput .= "<<$1";
+        $collTypeCollationOutput{$currentCollType} .= "<<$1";
+        if($currentCollType eq "pinyin") {
+            $collTypeCollationOutput{"pinyinsearch"} .= "<<$1";
+        }
         next;
     }
     if ($ARG =~ /<t>(.+)<\/t>/) {
-        $libicuCollationOutput .= "<<<$1";
+        $collTypeCollationOutput{$currentCollType} .= "<<<$1";
+        if($currentCollType eq "pinyin") {
+            $collTypeCollationOutput{"pinyinsearch"} .= "<<<$1";
+        }
         next;
     }
     if ($ARG =~ /<pc>(.+)<\/pc>[[:space:]]*$/) {
@@ -2067,7 +2213,7 @@ while (<CLDR>) {
         my $charList = $1;
         for (my $i = 0; $i < length($charList); ++$i) {
             my $char = substr($charList, $i, 1);
-            $libicuCollationOutput .= "<$char";
+            $collTypeCollationOutput{$currentCollType} .= "<$char";
         }
         next;
     }
@@ -2076,7 +2222,8 @@ while (<CLDR>) {
         my $comment = $2;
         if ($currentCollType eq "pinyin" || $currentCollType eq "pinyinshort") {
             addZhuyinPcList($charList, $comment);
-            maybeInsertPinyinAnchor($comment);
+            maybeInsertPinyinAnchor($comment, $charList);
+            maybeInsertPinyinSearchAnchor($comment);
         }
         if ($currentCollType eq "stroke" || $currentCollType eq "strokeshort") {
             maybeGetStrokeBucket($charList, $comment);
@@ -2088,9 +2235,10 @@ while (<CLDR>) {
             my $char = substr($charList, $i, 1);
             if ($currentCollType eq "pinyin" || $currentCollType eq "pinyinshort") {
                 insertPinyin($char, $comment);
+                insertPinyinSearch($char, $comment);
             }
             else {
-                $libicuCollationOutput .= "<$char";
+                $collTypeCollationOutput{$currentCollType} .= "<$char";
             }
         }
         next;
@@ -2123,20 +2271,20 @@ while (<CLDR>) {
 }
 
 # add zhuyin table:
-$libicuCollationOutput .= "zhuyin{\n";
-$libicuCollationOutput .= "Sequence { \"";
-$libicuCollationOutput .= "&[before 2]a<<ā<<<Ā<<á<<<Á<<ǎ<<<Ǎ<<à<<<À";
-$libicuCollationOutput .= "&[before 2]e<<ē<<<Ē<<é<<<É<<ě<<<Ě<<è<<<È";
-$libicuCollationOutput .= "&e<<ê̄<<<Ê̄<<ế<<<Ế<<ê̌<<<Ê̌<<ề<<<Ề\n";
-$libicuCollationOutput .= "&[before 2]i<<ī<<<Ī<<í<<<Í<<ǐ<<<Ǐ<<ì<<<Ì";
-$libicuCollationOutput .= "&[before 2]m<<m̄<<<M̄<<ḿ<<<Ḿ<<m̌<<<M̌<<m̀<<<M̀";
-$libicuCollationOutput .= "&[before 2]n<<n̄<<<N̄<<ń<<<Ń<<ň<<<Ň<<ǹ<<<Ǹ";
-$libicuCollationOutput .= "&[before 2]o<<ō<<<Ō<<ó<<<Ó<<ǒ<<<Ǒ<<ò<<<Ò";
-$libicuCollationOutput .= "&[before 2]u<<ū<<<Ū<<ú<<<Ú<<ǔ<<<Ǔ<<ù<<<Ù";
-$libicuCollationOutput .= "&U<<ǖ<<<Ǖ<<ǘ<<<Ǘ<<ǚ<<<Ǚ<<ǜ<<<Ǜ<<ü<<<Ü";
-$libicuCollationOutput .= "&[before 1]a";
+$collTypeCollationOutput{"zhuyin"} .= "zhuyin{\n";
+$collTypeCollationOutput{"zhuyin"} .= "Sequence { \"";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 2]a<<ā<<<Ā<<á<<<Á<<ǎ<<<Ǎ<<à<<<À";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 2]e<<ē<<<Ē<<é<<<É<<ě<<<Ě<<è<<<È";
+$collTypeCollationOutput{"zhuyin"} .= "&e<<ê̄<<<Ê̄<<ế<<<Ế<<ê̌<<<Ê̌<<ề<<<Ề\n";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 2]i<<ī<<<Ī<<í<<<Í<<ǐ<<<Ǐ<<ì<<<Ì";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 2]m<<m̄<<<M̄<<ḿ<<<Ḿ<<m̌<<<M̌<<m̀<<<M̀";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 2]n<<n̄<<<N̄<<ń<<<Ń<<ň<<<Ň<<ǹ<<<Ǹ";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 2]o<<ō<<<Ō<<ó<<<Ó<<ǒ<<<Ǒ<<ò<<<Ò";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 2]u<<ū<<<Ū<<ú<<<Ú<<ǔ<<<Ǔ<<ù<<<Ù";
+$collTypeCollationOutput{"zhuyin"} .= "&U<<ǖ<<<Ǖ<<ǘ<<<Ǘ<<ǚ<<<Ǚ<<ǜ<<<Ǜ<<ü<<<Ü";
+$collTypeCollationOutput{"zhuyin"} .= "&[before 1]a";
 for my $zhuyinCharacter (sort zhuyinCompare (@zhuyinCharacters)) {
-    $libicuCollationOutput .= "<${zhuyinCharacter}";
+    $collTypeCollationOutput{"zhuyin"} .= "<${zhuyinCharacter}";
 }
 my $zhuyinIndexBucket = "";
 for my $key (sort zhuyinCompare keys(%zhuyinPcLists)) {
@@ -2148,13 +2296,23 @@ for my $key (sort zhuyinCompare keys(%zhuyinPcLists)) {
         }
         if ($currentZhuyinIndexBucket ne $zhuyinIndexBucket) {
             $zhuyinIndexBucket = $currentZhuyinIndexBucket;
-            $libicuCollationOutput .= "&${currentZhuyinIndexBucket}";
+            $collTypeCollationOutput{"zhuyin"} .= "&${currentZhuyinIndexBucket}";
         }
-        $libicuCollationOutput .= "<$char";
+        $collTypeCollationOutput{"zhuyin"} .= "<$char";
     }
 }
-$libicuCollationOutput .= "\" }\n"; # Sequence { }
-$libicuCollationOutput .= "}\n"; # zhuyin { }
+$collTypeCollationOutput{"zhuyin"} .= "\" }\n"; # Sequence { }
+$collTypeCollationOutput{"zhuyin"} .= "}\n"; # zhuyin { }
+
+# add the collations to the output:
+$libicuCollationOutput .= $collTypeCollationOutput{"standard"};
+$libicuCollationOutput .= $collTypeCollationOutput{"pinyin"};
+$libicuCollationOutput .= $collTypeCollationOutput{"pinyinsearch"};
+$libicuCollationOutput .= $collTypeCollationOutput{"gb2312han"};
+$libicuCollationOutput .= $collTypeCollationOutput{"stroke"};
+$libicuCollationOutput .= $collTypeCollationOutput{"big5han"};
+$libicuCollationOutput .= $collTypeCollationOutput{"unihan"};
+$libicuCollationOutput .= $collTypeCollationOutput{"zhuyin"};
 
 # close the <collations>...</collations> block:
 $libicuCollationOutput .= "}\n";
@@ -2166,11 +2324,15 @@ binmode LIBICU, ":utf8";
 printf LIBICU "%s", $libicuCollationOutput;
 close (LIBICU);
 
-print "// strokeBuckets      = @strokeBuckets\n";
-print "// strokeShortBuckets = @strokeShortBuckets\n";
-print "//\n";
+printf STDOUT "//pinyin anchors inserted:\n";
+for my $key (sort keys(%pinyinAnchorsInserted)) {
+    printf STDOUT "// anchor: $key first char after anchor: $pinyinAnchorsInserted{$key}\n";
+}
+
+printf STDOUT "// strokeBuckets      = @strokeBuckets\n";
+printf STDOUT "//\n";
 
 for (my $i = 1; $i <= $#strokeBuckets +1; ++$i) {
-    print "// $i: $strokeBuckets[$i-1]\n";
+    printf STDOUT "// $i: $strokeBuckets[$i-1]\n";
 }
 

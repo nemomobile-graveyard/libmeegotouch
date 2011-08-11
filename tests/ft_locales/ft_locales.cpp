@@ -1664,7 +1664,6 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<"de_DE@collation=phonebook"
         << germanPhonebookStringsSorted
         << germanPhonebookExpectedBuckets;
-#if 1
     QStringList frenchStringsSorted =
         (QStringList()
            <<"a"
@@ -2409,6 +2408,198 @@ void Ft_Locales::testMLocaleIndexBucket_data()
     QStringList pinyinStringsSorted =
         (QStringList()
          <<"∮"<<"♨"
+         <<"Ａ"
+         <<"阿" // a1, 8 strokes, 1st stroke bending, kHanyuPinlu a1 U+963F kBigFive AAFC kGB0 1602 kRSUnicode 170.5
+         <<"八" // bā
+         <<"拔" // bá
+         <<"把" // bǎ
+         <<"坝" // bà
+         <<"罷" // ba (bà ba pí according to http://www.zdic.net/zd/zi/ZdicE7ZdicBDZdicB7.htm !)
+         <<"驰" // chi2, 6 strokes, 1st stroke bending, kHanyuPinlu chi2 U+9A70 kBigFive - kGB0 1959 kRSUnicode 187'.3
+         <<"馳" // chi2, 13 strokes, 1st stroke vertical, kHanyuPinlu chi2    U+99B3 kBigFive B9A3 kGB0    - kRSUnicode 187.3
+         <<"东" // dong1, 5 strokes, 1st stroke horizontal, simplified of 東 U+4E1C
+         <<"冬" // dong1, 5 strokes, 1st stroke down to left U+51AC
+         <<"咚" // dong1, 8 strokes, 1st stroke vertical U+549A
+         <<"岽" // dong1, 8 strokes, 1st stroke vertical, simplified of 崠 U+5CBD kRSUnicode 46.5
+         <<"東" // dong1, 8 strokes, 1st stroke horizontal, traditional of 东 U+6771 kRSUnicode 75.4
+         <<"苳" // dong1, 8 strokes, 1st stroke horizontal U+82F3 kRSUnicode 140.5
+         <<"氡" // dong1, 9 strokes, 1st stroke down to left kRSUnicode 84.5
+         <<"鸫" // dong1, 10 strokes, 1st stroke horizontal, simplified of 鶇 U+9E2B kRSUnicode 196'.5
+         <<"崠" // dong1, dong4 (libicu44 sorts as dong4, libicu46 as dong1), 11 strokes, 1st stroke vertical, traditional of 岽 U+5D20 kRSUnicode 46.8
+         <<"涷" // dong1, 11 strokes U+6DB7 kRSUnicode 85.8
+         <<"蝀" // dong1, 14 strokes kRSUnicode 142.8
+         <<"鼕" // dong1, 18 strokes kRSUnicode 207.5
+         <<"鶇" // dong1, 19 strokes, 1st stroke horizontal, traditional of 鸫 kRSUnicode 196.8
+         <<"董" // dong3, 12 strokes kRSUnicode 140.9
+         <<"懂" // dong3, 15 strokes kRSUnicode 61.13
+         <<"动" // dong4, 6 strokes, 1st stroke horizontal, simplified of 動 kRSUnicode 19.4
+         <<"冻" // dong4, 7 strokes, 1st stroke down to right, simplified of 凍 kRSUnicode 15.5
+         <<"侗" // dong4, 8 strokes kRSUnicode 9.6
+         <<"恫" // dong4, 9 strokes, 1st stroke vertical U+606B kRSUnicode 61.6
+         <<"栋" // dong4, 9 strokes, 1st stroke horizontal, simplified of 棟 U+680B kRSUnicode 75.5
+         <<"洞" // dong4, 9 strokes, 1st stroke down to right U+6D1E kRSUnicode 85.6
+         <<"凍" // dong4, 10 strokes, 1st stroke down to right, traditional of 冻 U+51CD kRSUnicode 15.8
+         <<"胴" // dong4, 10 strokes, 1st stroke down to left U+80F4 kRSUnicode 130.6
+         <<"動" // dong4, 11 strokes, 1st stroke down to left, traditional of 动 U+52D5 kRSUnicode 19.9
+         <<"硐" // dong4, 11 strokes, 1st stroke horizontal U+7850 kRSUnicode 112.6
+         <<"棟" // dong4, 12 strokes, 1st stroke horizontal, traditional of 栋 kRSUnicode 75.8
+         <<"働" // dong4, 13 strokes (Japanese only!) kRSUnicode 9.11
+         <<"峠" // quia3??? ９ strokes, 1st stroke vertical, (Japanese only! variant of 卡) U+5CE0 kBigFive - kGB0 - kRSUnicode 46.6
+         <<"蘅" // 20 strokes, 1st stroke horizontal, kHanyuPinlu heng2 U+8605 kBigFive F4C1 kGB0 6231 kRSUnicode 140.16
+         <<"ｊｏｈｎ"
+         <<"Ｊｏｈｎ"
+         <<"叫" // jiào 5 strokes, 1st stroke vertical, kHanyuPinlu jiao4 U+53EB kBigFive A573 kGB0 2948 kRSUnicode 30.2
+         <<"君" // jūn 7 strokes, 1st stroke bending, kHanyuPinlu jun1 U+541B kBigFive A767 kGB0 3093 kRSUnicode 30.4
+         <<"卡" // 5 strokes, 1st stroke vertical, kHanyuPinlu ka3 U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3
+         <<"李" // 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
+         <<"刘" // liú 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
+         <<"刘利" //liú lì
+         <<"刘利军" //liú lì jūn
+         <<"刘 Lucy" //liú
+         <<"刘Lucy" //liú
+         <<"劉" //liú; 15 strokes, 1st stroke bending, traditional of 刘 kRSUnicode 18.13
+         <<"劉利" // liú lì; traditional
+         <<"劉利軍" // liú lì jūn; traditional
+         <<"劉 Lucy" //liú ; traditional
+         <<"劉Lucy" //liú ; traditional
+         <<"柳" // liǔ; 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
+         <<"柳东" // liǔ dōng; 2nd character 5 strokes, initial stroke horizontal, 2nd character U+4E1C
+         <<"柳冬" // liǔ dōng; 2nd character 5 strokes, initial stroke down to left, 2nd character U+51AC
+         <<"柳咚" // liǔ dōng; 2nd character 8 strokes, initial stroke vertical, 2nd character U+549A
+         <<"柳東" // liǔ dōng; 2nd character traditional, 8 strokes, initial stroke horizontal, U+6771
+         <<"柳利军" // liǔ lì jūn; 3rd character 5 strokes, initial stroke vertical, 3rd character U+519B
+         <<"柳利軍" // liǔ lì jūn; 3rd character traditional, 9 strokes, initial stroke vertical, 3rd character U+8ECD
+         <<"宁" // kHanyuPinlu ning2   U+5B81 kBigFive C972 kGB0 3694 kRSUnicode 40.2"
+         <<"ｓａｋｉ"
+         <<"Ｓａｋｉ"
+         <<"威" // 9 strokes, 1st stroke horizontal, kHanyuPinlu wei1 U+5A01 kBigFive ABC2 kGB0 4594 kRSUnicode 38.6"
+         <<"张" // 7 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F20 kBigFive    - kGB0 5337 kRSUnicode 57.4"
+         <<"張" // 11 strokes, 1st stroke bending, kHanyuPinlu zhang1  U+5F35 kBigFive B169 kGB0    - kRSUnicode 57.8"
+         <<"Á"
+         <<"A"
+         <<"bā"
+         <<"bá"
+         <<"bǎ"
+         <<"bà"
+         <<"ba"
+         <<"jiào"
+         <<"john"
+         <<"John"
+         <<"jūn"
+         <<"saki"
+         <<"Saki"
+         <<"α" // Greek
+         <<"Α" // Greek
+         <<"β"
+         <<"Β"
+         <<"γ"
+         <<"Γ"
+         <<"а" // Cyrillic
+         <<"А" // Cyrillic
+         <<"あ"
+         <<"ㄅ"
+         <<"ㄎ"
+         <<"𠮩" // 5 strokes, 1st stroke vertical, kHanyuPinlu - U+20BA9 kBigFive - kGB0- kRSUnicode 30.2"
+            );
+    QStringList pinyinExpectedBuckets =
+        (QStringList()
+         <<"∮"<<"♨"
+         <<"Ａ"
+         <<"Ａ"
+         <<"Ｂ"
+         <<"Ｂ"
+         <<"Ｂ"
+         <<"Ｂ"
+         <<"Ｂ"
+         <<"Ｃ"
+         <<"Ｃ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｄ"
+         <<"Ｇ"
+         <<"Ｈ"
+         <<"Ｊ"
+         <<"Ｊ"
+         <<"Ｊ"
+         <<"Ｊ"
+         <<"Ｋ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｌ"
+         <<"Ｎ"
+         <<"Ｓ"
+         <<"Ｓ"
+         <<"Ｗ"
+         <<"Ｚ"
+         <<"Ｚ"
+         <<"A"
+         <<"A"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"B"
+         <<"J"
+         <<"J"
+         <<"J"
+         <<"J"
+         <<"S"
+         <<"S"
+         <<"Α"
+         <<"Α"
+         <<"Β"
+         <<"Β"
+         <<"Γ"
+         <<"Γ"
+         <<"А"
+         <<"А"
+         <<"あ"
+         <<"ㄅ"
+         <<"ㄎ"
+         <<"𠮩"
+            );
+    QStringList pinyinSearchStringsSorted =
+        (QStringList()
+         <<"∮"<<"♨"
          <<"Á"
          <<"A"
          <<"Ａ"
@@ -2465,22 +2656,22 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"卡" // 5 strokes, 1st stroke vertical, kHanyuPinlu ka3 U+5361 kBigFive A564 kGB0 3108 kRSUnicode 25.3
          <<"李" // 7 strokes, 1st stroke horizontal, kHanyuPinlu li5 U+674E kBigFive A7F5 kGB0 3278 kRSUnicode 75.3
          <<"刘" // liú 6 strokes, 1st stroke vertical, kMandarin liu2 U+5218 kBigFive - kGB0 3385 kRSUnicode 18.4
-         <<"刘 Lucy" //liú
-         <<"刘利" //liú lì
-         <<"刘利军" //liú lì jūn
-         <<"刘Lucy" //liú
          <<"劉" //liú; 15 strokes, 1st stroke bending, traditional of 刘 kRSUnicode 18.13
-         <<"劉 Lucy" //liú ; traditional
-         <<"劉利" // liú lì; traditional
-         <<"劉利軍" // liú lì jūn; traditional
-         <<"劉Lucy" //liú ; traditional
          <<"柳" // liǔ; 9 strokes, 1st stroke horizontal, kHanyuPinlu liu3 U+67F3 kBigFive AC68 kGB0 3388 kRSUnicode 75.5"
          <<"柳东" // liǔ dōng; 2nd character 5 strokes, initial stroke horizontal, 2nd character U+4E1C
          <<"柳冬" // liǔ dōng; 2nd character 5 strokes, initial stroke down to left, 2nd character U+51AC
          <<"柳咚" // liǔ dōng; 2nd character 8 strokes, initial stroke vertical, 2nd character U+549A
          <<"柳東" // liǔ dōng; 2nd character traditional, 8 strokes, initial stroke horizontal, U+6771
+         <<"刘利" //liú lì
+         <<"劉利" // liú lì; traditional
+         <<"刘利军" //liú lì jūn
+         <<"劉利軍" // liú lì jūn; traditional
          <<"柳利军" // liǔ lì jūn; 3rd character 5 strokes, initial stroke vertical, 3rd character U+519B
          <<"柳利軍" // liǔ lì jūn; 3rd character traditional, 9 strokes, initial stroke vertical, 3rd character U+8ECD
+         <<"刘 Lucy" //liú
+         <<"刘Lucy" //liú
+         <<"劉 Lucy" //liú ; traditional
+         <<"劉Lucy" //liú ; traditional
          <<"宁" // kHanyuPinlu ning2   U+5B81 kBigFive C972 kGB0 3694 kRSUnicode 40.2"
          <<"saki"
          <<"ｓａｋｉ"
@@ -2502,7 +2693,7 @@ void Ft_Locales::testMLocaleIndexBucket_data()
          <<"ㄎ"
          <<"𠮩" // 5 strokes, 1st stroke vertical, kHanyuPinlu - U+20BA9 kBigFive - kGB0- kRSUnicode 30.2"
             );
-    QStringList pinyinExpectedBuckets =
+    QStringList pinyinSearchExpectedBuckets =
         (QStringList()
          <<"∮"<<"♨"
          <<"A"
@@ -3430,6 +3621,12 @@ void Ft_Locales::testMLocaleIndexBucket_data()
         <<"zh_CN" // collation=pinyin is default for zh_CN
         << pinyinStringsSorted
         << pinyinExpectedBuckets;
+    QTest::newRow("zh_CN@collation=pinyinsearch")
+        <<"ja_JP"
+        <<"zh_CN@collation=pinyinsearch"
+        << pinyinSearchStringsSorted
+        << pinyinSearchExpectedBuckets;
+#if 0
     QTest::newRow("zh_TW@collation=zhuyin")
         <<"ja_JP"
         <<"zh_TW@collation=zhuyin"

@@ -3562,10 +3562,20 @@ QStringList MLocale::exemplarCharactersIndex() const
             charStr = QString::fromUtf8("ㄅ ㄆ ㄇ ㄈ ㄉ ㄊ ㄋ ㄌ ㄍ ㄎ ㄏ ㄐ ㄑ ㄒ ㄓ ㄔ ㄕ ㄖ ㄗ ㄘ ㄙ ㄧ ㄨ ㄩ ㄚ ㄛ ㄜ ㄝ ㄞ ㄟ ㄠ ㄡ ㄢ ㄣ ㄤ ㄥ ㄦ ㄪ ㄫ ㄬ ㄭ");
             return charStr.split(QLatin1String(" "),QString::SkipEmptyParts);
         }
+        if(collationLocaleName.contains(QLatin1String("collation=pinyinsearch"))) {
+            collationLocaleName = QLatin1String("zh_CN@collation=pinyinsearch");
+            charStr = QString::fromUtf8("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
+            exemplarCharactersIndex =
+                charStr.split(QLatin1String(" "),QString::SkipEmptyParts);
+            // to get all characters with pinyin starting with z
+            // (last one is 蓙) into the Z bucket
+            exemplarCharactersIndex << QString::fromUtf8("α");
+            return exemplarCharactersIndex;
+        }
         if(collationLocaleName.contains(QLatin1String("collation=stroke")))
-            collationLocaleName = QLatin1String("zh_TW");
+            collationLocaleName = QLatin1String("zh_TW@collation=stroke");
         if(collationLocaleName.contains(QLatin1String("collation=pinyin")))
-            collationLocaleName = QLatin1String("zh_CN");
+            collationLocaleName = QLatin1String("zh_CN@collation=pinyin");
     }
 
     UErrorCode status = U_ZERO_ERROR;
@@ -3608,15 +3618,14 @@ QStringList MLocale::exemplarCharactersIndex() const
     if (exemplarCharactersIndex.last() == QString::fromUtf8("ᄒ")) {
         exemplarCharactersIndex << QString::fromUtf8("あ"); // to get 학,  學, ... ᄒ bucket
     }
-    // Special hack for the last pinyin bucket:
+    // Special hacks for the pinyin buckets:
     if (exemplarCharactersIndex.last() == QString::fromUtf8("Z") &&
         (collationLocaleName.contains(QLatin1String("collation=pinyin"))
          || collationLocaleName.startsWith(QLatin1String("zh_CN"))
          || collationLocaleName.startsWith(QLatin1String("zh_SG")))
         ) {
-        // to get all characters with pinyin starting with z
-        // (last one is 蓙) into the Z bucket
-        exemplarCharactersIndex << QString::fromUtf8("α");
+        charStr = QString::fromUtf8("Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
+        return charStr.split(QLatin1String(" "),QString::SkipEmptyParts);
     }
     return exemplarCharactersIndex;
 }
