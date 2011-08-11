@@ -48,6 +48,14 @@ static const QString unicodeEllipsisString = QString("...");//QChar(0x2026);
 static const int M_HIGHLIGHT_PROPERTY       = QTextFormat::UserProperty;
 static const int M_HIGHLIGHTER_ID_PROPERTY  = QTextFormat::UserProperty + 1;
 
+namespace {
+struct CursorAndFormat {
+    int anchorPos;
+    int cursorPos;
+    QTextCharFormat format;
+};
+}
+
 MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1),
     tileHeight(-1), tileCacheKey(), tiles(), highlightersChanged(false), isElided(false),
@@ -508,7 +516,8 @@ void MLabelViewRich::updateHighlighters()
 
 void MLabelViewRich::updateHighlighting()
 {
-    QTextCursor cursor(&textDocument);
+    QList<CursorAndFormat> neededFormatChanges;
+
     for (QTextBlock block = textDocument.begin(); block != textDocument.end(); block = block.next()) {
         QTextBlock::iterator it = block.begin();
         for(;!(it.atEnd()); ++it) {
@@ -523,14 +532,24 @@ void MLabelViewRich::updateHighlighting()
                     format.setForeground(QBrush(viewPrivate->style()->highlightColor()));
                 }
                 if(frag.charFormat() != format) {
-                    // the color did change, so apply the format to the fragment
+                    // the color did change, so apply the format to the fragment - this has to happen
+                    // once iteration is complete as QTextBlock just provides a read-only API
                     // this is quite time consuming, which is the reason for the comparison of old vs. new
-                    cursor.setPosition(frag.position());
-                    cursor.setPosition(frag.position()+frag.length(), QTextCursor::KeepAnchor);
-                    cursor.setCharFormat(format);
+                    CursorAndFormat cf;
+                    cf.anchorPos = frag.position();
+                    cf.cursorPos = frag.position() + frag.length();
+                    cf.format = format;
+                    neededFormatChanges.push_back(cf);
                 }
             }
         }
+    }
+
+    QTextCursor cursor(&textDocument);
+    foreach (const CursorAndFormat& cf, neededFormatChanges) {
+        cursor.setPosition(cf.anchorPos);
+        cursor.setPosition(cf.cursorPos, QTextCursor::KeepAnchor);
+        cursor.setCharFormat(cf.format);
     }
 }
 
