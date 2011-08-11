@@ -596,15 +596,20 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_tooltip_entry0">
         <location filename="../textentrypage.cpp" line="601"/>
         <source>Enter text here</source>
+        <!-- The first variant DOES NOT fit in landscape mode -->
         <translation variants="yes">
-          <lengthvariant>Enter text here</lengthvariant>
+          <lengthvariant>Enter text here (text in brackets must be seen only if there is enough space)</lengthvariant>
           <lengthvariant>Enter text</lengthvariant>
         </translation>
     </message>
     <message id="xx_tooltip_entry1">
         <location filename="../textentrypage.cpp" line="604"/>
         <source>This tooltip is quite long and will be clipped on the display</source>
-        <translation>This tooltip is quite long and will be clipped on the display</translation>
+        <!-- The first variant DOES fit in landscape mode -->
+        <translation variants="yes">
+          <lengthvariant>Enter text here (txt in brackets must be seen only if there is enough space)</lengthvariant>
+          <lengthvariant>This tooltip is quite long and will be clipped on the display</lengthvariant>
+        </translation>
     </message>
     <message id="xx_textentry_custom_toolbar1">
         <location filename="../textentrypage.cpp" line="645"/>

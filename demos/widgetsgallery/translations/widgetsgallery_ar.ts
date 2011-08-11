@@ -481,6 +481,11 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>Recipient:</source>
         <translation>مستلم :</translation>
     </message>
+    <message id="xx_recipient_prompt">
+        <location filename="../../../../demos/widgetsgallery/textentrypage.cpp" line="659"/>
+        <source>Enter recipient</source>
+        <translation>مستلم</translation>
+    </message>
     <message id="xx_textentry_title">
         <location filename="../textentrypage.cpp" line="597"/>
         <source>Text Entries</source>

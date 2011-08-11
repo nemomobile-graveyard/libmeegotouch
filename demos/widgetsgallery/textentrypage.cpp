@@ -656,6 +656,7 @@ void TextEntryPage::createContent()
     uneditableTextEdit->setObjectName("uneditableTextEdit");
     uneditableTextEdit->setStyleName(inv("CommonEditorInputFieldMultiline"));
     uneditableTextEdit->setHeaderText("Recipient:");
+    uneditableTextEdit->setPrompt("Enter recipient");
     uneditableTextEdit->setContentType(M::FreeTextContentType);
     uneditableTextEdit->setCompleter(m_completer.data());
     uneditableTextEditLabel = new MLabel(centralWidget());
@@ -781,6 +782,8 @@ void TextEntryPage::retranslateUi()
     uneditableTextEditLabel->setText(qtTrId("xx_textentry_uneditable_textedit"));
     //% "Recipient:"
     uneditableTextEdit->setHeaderText(qtTrId("xx_recipient_label"));
+    //% "Enter recipient"
+    uneditableTextEdit->setPrompt(qtTrId("xx_recipient_prompt"));
 
     //% "Read only field"
     labelReadOnly->setText(qtTrId("xx_textentry_readonly_label"));
