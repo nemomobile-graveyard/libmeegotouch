@@ -74,6 +74,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
 
 MListViewPrivate::~MListViewPrivate()
 {
+    isDeleted = true;
     deleteVisibleItemsArray();
 
     if(controllerModel)
@@ -83,8 +84,19 @@ MListViewPrivate::~MListViewPrivate()
 
     delete hseparator;
     delete recycler;
-    delete itemInsertionAnimation;
-    delete itemDeletionAnimation;
+
+    if (itemInsertionAnimation) {
+        itemInsertionAnimation->disconnect(this);
+        delete itemInsertionAnimation;
+    }
+
+    if (itemDeletionAnimation) {
+        itemDeletionAnimation->disconnect(this);
+        delete itemDeletionAnimation;
+    }
+
+    qDeleteAll(animatingItems);
+    animatingItems.clear();
 }
 
 void MListViewPrivate::setSeparator(MWidget *separator)
@@ -317,10 +329,11 @@ void MListViewPrivate::appendTargetsToDeleteAnimation(int start, int end, int fi
 
 void MListViewPrivate::resetAnimatedWidgets()
 {
-    while (!animatingItems.isEmpty()) {
-        delete animatingItems.front();
-        animatingItems.pop_front();
-    }
+    qDeleteAll(animatingItems);
+    animatingItems.clear();
+
+    if (isDeleted)
+        return;
 
     q_ptr->layoutChanged();
     _q_relayoutItemsIfNeeded();
