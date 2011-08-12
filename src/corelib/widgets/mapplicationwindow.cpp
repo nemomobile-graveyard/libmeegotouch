@@ -255,6 +255,9 @@ void MApplicationWindowPrivate::init()
 #endif
 
     if (statusBar) {
+        ok = q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
+                   SLOT(_q_updatePageExposedContentRect()));
+
         ok = q->connect(statusBar,
             SIGNAL(sceneWindowStateChanged(MSceneWindow::SceneWindowState,
                                           MSceneWindow::SceneWindowState)),
