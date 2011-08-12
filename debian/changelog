@@ -1,3 +1,10 @@
+libmeegotouch (0.22.12-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#276459 - Homescreen freezes when panning to the Events view
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 12 Aug 2011 16:30:00 +0300
+
 libmeegotouch (0.22.11-1) unstable; urgency=low
 
   *  Revert "Changes: Add optional depencies to libx11-xcb and libxcb-composite."
