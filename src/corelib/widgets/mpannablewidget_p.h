@@ -64,6 +64,7 @@ public:
     void glassMousePressEvent(QGraphicsSceneMouseEvent *event);
 
     void _q_updateMaximumVelocityForPress();
+    void _q_allowOrIgnoreMovement();
 
 private:
 
@@ -74,6 +75,8 @@ private:
 
     qreal maximumVelocityForPress;
     MDynamicPropertyWatcher maximumVelocityForPressPropertyWatcher;
+    MDynamicPropertyWatcher movablePropertyWatcher;
+    bool isMovable;
 
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members

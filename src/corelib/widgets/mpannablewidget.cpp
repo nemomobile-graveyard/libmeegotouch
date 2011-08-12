@@ -69,7 +69,8 @@ MPannableWidgetPrivate::MPannableWidgetPrivate() :
     mousePressPhysicsStopTimer(0),
     physics(0),
     glass(0),
-    maximumVelocityForPress(0.0f)
+    maximumVelocityForPress(0.0f),
+    isMovable(true)
 {
 }
 
@@ -118,6 +119,11 @@ void MPannableWidgetPrivate::init()
                SIGNAL(propertyChanged()),
                SLOT(_q_updateMaximumVelocityForPress()));
     if (!ok) qFatal("signal connection failed");
+
+    q->setProperty("_m_movable", isMovable);
+    movablePropertyWatcher.watch(q);
+    movablePropertyWatcher.setPropertyName("_m_movable");
+    q->connect(&movablePropertyWatcher, SIGNAL(propertyChanged()), SLOT(_q_allowOrIgnoreMovement()));
 }
 
 void MPannableWidgetPrivate::glassMousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -151,6 +157,15 @@ void MPannableWidgetPrivate::_q_updateMaximumVelocityForPress()
     // reading from a regular variable is faster than reading from
     // a dynamic property.
     maximumVelocityForPress = q->property("_m_maximumVelocityForPress").toReal();
+}
+
+void MPannableWidgetPrivate::_q_allowOrIgnoreMovement()
+{
+    Q_Q(MPannableWidget);
+    isMovable = q->property("_m_movable").toBool();
+    if (!isMovable) {
+        _q_resetPhysics();
+    }
 }
 
 MPannableWidget::MPannableWidget(MPannableWidgetPrivate *dd, MPannableWidgetModel *model,
@@ -259,8 +274,10 @@ void MPannableWidget::setPosition(const QPointF &p)
 {
     Q_D(const MPannableWidget);
 
-    d->physics->setPosition(p);
-    emit positionChanged(p);
+    if (d->isMovable) {
+        d->physics->setPosition(p);
+        emit positionChanged(p);
+    }
 }
 
 QPointF MPannableWidget::position() const
@@ -291,7 +308,7 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
 
         if ((!acceptGesturesFromAnyDirection() &&
              ((verticalPanDirection && !shouldAcceptVPan) || (!verticalPanDirection && !shouldAcceptHPan))) ||
-                (!shouldAcceptHPan && !shouldAcceptVPan)) {
+                (!shouldAcceptHPan && !shouldAcceptVPan) || !d->isMovable) {
             event->ignore(panGesture);
             d->_q_resetPhysics();
             return;

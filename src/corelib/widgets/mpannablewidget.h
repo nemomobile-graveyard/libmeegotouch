@@ -334,6 +334,7 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_resetPhysics())
     Q_PRIVATE_SLOT(d_func(), void _q_updateMaximumVelocityForPress())
+    Q_PRIVATE_SLOT(d_func(), void _q_allowOrIgnoreMovement())
 
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members
