@@ -823,11 +823,14 @@ QPointF MListViewPrivate::locateScrollToPosition(int row, MList::ScrollHint hint
 QPointF MListViewPrivate::locateStartScrollToPosition(const QPointF &targetPosition)
 {
     QPointF startPosition;
-    if (targetPosition.y() > pannableViewport->position().y())
+    if (qAbs(targetPosition.y() - pannableViewport->position().y()) < SCROLLTOANIMATIONSNAPDISTANCE)
+        return pannableViewport->position();
+
+    if (targetPosition.y() < pannableViewport->position().y())
         startPosition = targetPosition + QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE);
     else
         startPosition = targetPosition - QPointF(0, SCROLLTOANIMATIONSNAPDISTANCE);
-    startPosition.setY(qMin(startPosition.y(), pannableViewport->range().height() - SCROLLTOANIMATIONSNAPDISTANCE));
+    startPosition.setY(qBound((qreal)0, startPosition.y(), pannableViewport->range().height()));
     return startPosition;
 }
 
