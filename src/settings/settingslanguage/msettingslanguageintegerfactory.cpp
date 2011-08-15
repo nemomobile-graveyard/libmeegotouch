@@ -47,19 +47,26 @@ MWidgetController *MSettingsLanguageIntegerFactory::createWidget(const MSettings
     parentWidget->setLayout(layout);
 
     // Create a label widget and put it into the layout
-    MLabel *label = new MLabel(settingsInteger.title());
+    MLabel *label = new MLabel(settingsInteger.title(), parentWidget);
     label->setStyleName("CommonSingleTitleInverted");
     layout->addItem(label);
 
-    MSlider *slider = new MSlider;
+    MSlider *slider = new MSlider(parentWidget);
     slider->setStyleName("CommonSliderInverted");
+    slider->setHandleLabelVisible(true);
+    intController->setProperty("slider", qVariantFromValue(static_cast<void *>(slider)));
+
     int minVal;
     if (settingsInteger.minValue(minVal)) {
         slider->setMinimum(minVal);
+        slider->setMinLabel(QString::number(minVal));
+        slider->setMinLabelVisible(true);
     }
     int maxVal;
     if (settingsInteger.maxValue(maxVal)) {
         slider->setMaximum(maxVal);
+        slider->setMaxLabel(QString::number(maxVal));
+        slider->setMaxLabelVisible(true);
     }
 
     slider->connect(slider, SIGNAL(valueChanged(int)), intController, SLOT(changeValue(int)));

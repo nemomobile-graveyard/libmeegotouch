@@ -20,6 +20,7 @@
 #include "msettingslanguageintegercontroller.h"
 
 #include <MDataStore>
+#include <MSlider>
 
 MSettingsLanguageIntegerController::MSettingsLanguageIntegerController(QObject *parent) :
     QObject(parent)
@@ -32,6 +33,11 @@ MSettingsLanguageIntegerController::~MSettingsLanguageIntegerController()
 
 void MSettingsLanguageIntegerController::changeValue(int newValue)
 {
+    MSlider *slider = static_cast<MSlider *>(property("slider").value<void *>());
+    if (slider != NULL) {
+        slider->setHandleLabel(QString::number(newValue));
+    }
+
     MDataStore *dataStore = static_cast<MDataStore *>(property("dataStore").value<void *>());
     if (dataStore != NULL) {
         dataStore->createValue(property("key").toString(), newValue);
