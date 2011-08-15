@@ -1,8 +1,16 @@
-libmeegotouch (0.23.9~1) unstable; urgency=low
+libmeegotouch (0.23.9-1) unstable; urgency=low
 
-  * Unreleased
+  * New version
+  * Fixes: NB#276885 - Regression - application menu has wrong animation in landscape
+  * Fixes: NB#276459 - Homescreen freezes when panning to the Events view
+  * Fixes: NB#276512 - Deleting the list view private class while animation is running will cause a crash.
+  * Fixes: NB#266546 - Rich Text bubble cannot be dismissed
+  * Fixes: NB#276191 - Object menu is appearing underneath sheet.
+  * Fixes: NB#275709 - Emitting dataChanged after starting animation will result in a crash.
+  * Fixes: NB#269478 - Window Icon is not displaying in the tool bar when rotation changed in the given scenario.
+  * Fixes: NB#274325 - Nokia account login view appears down (two status bars appear)
 
- -- Natalia Dobrovolskaya <natalia.dobrovolskaya@nokia.com>  Thu, 04 Aug 2011 14:58:15 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 15 Aug 2011 12:33:54 +0300
 
 libmeegotouch (0.23.8-1) unstable; urgency=low
 
