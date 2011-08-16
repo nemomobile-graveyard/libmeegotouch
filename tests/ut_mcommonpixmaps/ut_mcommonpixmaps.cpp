@@ -97,6 +97,7 @@ void Ut_MCommonPixmaps::createCache()
     foreach(QString imageId, cacheImages) {
         const M::MThemeDaemonProtocol::PixmapIdentifier id(imageId, QSize(20,20));
         ImageResource *resource = m_themeDaemon->findImageResource(imageId);
+        QVERIFY2(resource != NULL, qPrintable(QString("Cannot find requested image: %1").arg(imageId)));
         commonPixmaps->increaseRequestCount(id, resource);
     }
 
