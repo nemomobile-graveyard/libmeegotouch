@@ -213,6 +213,7 @@ SUBDIRS     =  \
     ut_mpannableviewportscroller \
     ut_mtimestamp \
     ut_mgraphicshighlighteffect \
+    ut_mhelpbutton \
 
 # enable only when we have icu available
 
