@@ -68,8 +68,8 @@ void MScalableImagePrivate::validateSize() const
         cornerHeight = m_preferredMargins.top() + m_preferredMargins.bottom();
     }
 
-    if ( (w < cornerWidth || h < cornerHeight) && !(w == 1 && h == 1) ) //1x1 means a temporary pixmap
-        mWarning("MScalableImage") << QString("The size of the image '%1', %2x%3, is smaller than combined corner size %4x%5. This might cause rendering artifacts.").arg(pixmapId).arg(w).arg(h).arg(cornerWidth).arg(cornerHeight);
+    if ((w <= cornerWidth || h <= cornerHeight) && !(w == 1 && h == 1)) //1x1 means a temporary pixmap
+        mWarning("MScalableImage") << QString("The size of the image '%1', %2x%3, is smaller or equal than combined corner size %4x%5. This might cause rendering artifacts.").arg(pixmapId).arg(w).arg(h).arg(cornerWidth).arg(cornerHeight);
 }
 
 void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const
@@ -92,11 +92,11 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
     //bigger than the 4 corner blocks. If necessary,
     //use smaller border values than those set with setBorders API
     //call.
-    if (w < cornerWidth) {
+    if (w <= cornerWidth) {
         margins.setLeft(qMax((qreal)0.0, margins.left() - (cornerWidth - w + 1) / 2));
         margins.setRight(qMax((qreal)0.0, margins.right() - (cornerWidth - w + 1) / 2));
     }
-    if (h < cornerHeight) {
+    if (h <= cornerHeight) {
         margins.setTop(qMax((qreal)0.0, margins.top() - (cornerHeight - h + 1) / 2));
         margins.setBottom(qMax((qreal)0.0, margins.bottom() - (cornerHeight - h + 1) / 2));
     }
@@ -116,6 +116,23 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
         return;
     }
     else {
+#if QT_VERSION < QT_VERSION_CHECK(4,8,0)
+        //There is a known bug in Qt 4.7 qDrawBorderPixmap/QPainter which
+        //can cause graphical glitches if the chosen borders result in
+        //zero-sized blocks on the image, so as a workaround the borders
+        //must be altered to prevent that in cases where rendering is done
+        //using qDrawBorderPixmap.
+        if (margins.top() == 0)
+            margins.setTop(1);
+        if (margins.left() == 0)
+            margins.setLeft(1);
+
+        if (margins.bottom() == 0)
+            margins.setBottom(1);
+        if (margins.right() == 0)
+            margins.setRight(1);
+#endif
+
 #ifdef __arm__
         if (!downscaleWarningPrinted && (w < m_image->size().width() || h < m_image->size().height()))
             outputDownscaleWarning("MScalableImage9", w, h);
@@ -177,13 +194,28 @@ void MScalableImagePrivate::drawScalable9(qreal x, qreal y, qreal w, qreal h, QP
 
 void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QPainter *painter) const
 {
+    QMargins margins = m_preferredMargins;
+
+#if QT_VERSION < QT_VERSION_CHECK(4,8,0)
+    if ((tileRules.horizontal != Qt::StretchTile || tileRules.vertical != Qt::StretchTile)) {
+        //There is a known bug in Qt 4.7 qDrawBorderPixmap/QPainter which
+        //can cause graphical glitches if the chosen borders result in
+        //zero-sized blocks on the image, so as a workaround the borders
+        //must be altered to prevent that in cases where rendering is done
+        //using qDrawBorderPixmap.
+
+        // the margins are always zero for Scalable1, so just change them to 1
+        margins = QMargins(1,1,1,1);
+    }
+#endif
+
 #if defined(M_OS_MAEMO5)
     // don't use smooth pixmap transformation on the N900, as this
     // decreases the performance
     if (tileRules.horizontal == Qt::StretchTile && tileRules.vertical == Qt::StretchTile)
         painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
     else
-        qDrawBorderPixmap(painter, QRect(x, y, w, h), m_preferredMargins, *m_image, m_image->rect(), m_preferredMargins, tileRules);
+        qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image, m_image->rect(), margins, tileRules);
 #else
     //the image is used in its native size
     //no need to scale just draw it
@@ -201,7 +233,7 @@ void MScalableImagePrivate::drawScalable1(qreal x, qreal y, qreal w, qreal h, QP
         if (tileRules.horizontal == Qt::StretchTile && tileRules.vertical == Qt::StretchTile)
             painter->drawPixmap(QRectF(x, y, w, h), *m_image, m_image->rect());
         else
-            qDrawBorderPixmap(painter, QRect(x, y, w, h), m_preferredMargins, *m_image, m_image->rect(), m_preferredMargins, tileRules);
+            qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image, m_image->rect(), margins, tileRules);
         painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
     }
 #endif //defined(M_OS_MAEMO5)

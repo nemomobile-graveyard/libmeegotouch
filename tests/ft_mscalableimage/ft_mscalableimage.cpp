@@ -34,25 +34,25 @@ QString COLOR_BOTTOMLEFT("#00ff00");
 QString COLOR_BOTTOM("#ff0000");
 QString COLOR_BOTTOMRIGHT("#00ff00");
 
-const QPixmap *createPixmap(const QSize &size)
+const QPixmap *createPixmap(const QSize &size, const int blockSize)
 {
     QSize image_size = size.isValid() ? size : QSize(512, 512);
     QPixmap *pixmap = new QPixmap(image_size);
 
-    int center_width = image_size.width() - 2 * BLOCK_SIZE;
-    int center_height = image_size.height() - 2 * BLOCK_SIZE;
+    int center_width = image_size.width() - 2 * blockSize;
+    int center_height = image_size.height() - 2 * blockSize;
 
     QPainter painter(pixmap);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
-    painter.fillRect(0, 0, BLOCK_SIZE, BLOCK_SIZE, QColor(COLOR_TOPLEFT));
-    painter.fillRect(BLOCK_SIZE, 0, center_width, BLOCK_SIZE, QColor(COLOR_TOP));
-    painter.fillRect(BLOCK_SIZE + center_width, 0, BLOCK_SIZE, BLOCK_SIZE, QColor(COLOR_TOPRIGHT));
-    painter.fillRect(0, BLOCK_SIZE, BLOCK_SIZE, center_height, QColor(COLOR_LEFT));
-    painter.fillRect(BLOCK_SIZE, BLOCK_SIZE, center_width, center_height, QColor(COLOR_CENTER));
-    painter.fillRect(BLOCK_SIZE + center_width, BLOCK_SIZE, BLOCK_SIZE, center_height, QColor(COLOR_RIGHT));
-    painter.fillRect(0, BLOCK_SIZE + center_height, BLOCK_SIZE, BLOCK_SIZE, QColor(COLOR_BOTTOMLEFT));
-    painter.fillRect(BLOCK_SIZE, BLOCK_SIZE + center_height, center_width, BLOCK_SIZE, QColor(COLOR_BOTTOM));
-    painter.fillRect(BLOCK_SIZE + center_width, BLOCK_SIZE + center_height, BLOCK_SIZE, BLOCK_SIZE, QColor(COLOR_BOTTOMRIGHT));
+    painter.fillRect(0, 0, blockSize, blockSize, QColor(COLOR_TOPLEFT));
+    painter.fillRect(blockSize, 0, center_width, blockSize, QColor(COLOR_TOP));
+    painter.fillRect(blockSize + center_width, 0, blockSize, blockSize, QColor(COLOR_TOPRIGHT));
+    painter.fillRect(0, blockSize, blockSize, center_height, QColor(COLOR_LEFT));
+    painter.fillRect(blockSize, blockSize, center_width, center_height, QColor(COLOR_CENTER));
+    painter.fillRect(blockSize + center_width, blockSize, blockSize, center_height, QColor(COLOR_RIGHT));
+    painter.fillRect(0, blockSize + center_height, blockSize, blockSize, QColor(COLOR_BOTTOMLEFT));
+    painter.fillRect(blockSize, blockSize + center_height, center_width, blockSize, QColor(COLOR_BOTTOM));
+    painter.fillRect(blockSize + center_width, blockSize + center_height, blockSize, blockSize, QColor(COLOR_BOTTOMRIGHT));
 
     // debug
     //pixmap->save("test2.png");
@@ -106,7 +106,7 @@ bool isImageBlockColor(const QImage &image, const QRect &rect, const QString &co
 void Ft_MScalableImage::test_draw_scalable9()
 {
     QSize image_size    = QSize(512, 512);
-    const QPixmap *pm = createPixmap(image_size);
+    const QPixmap *pm = createPixmap(image_size, BLOCK_SIZE);
     
     m_subject->setPixmap(pm);
     m_subject->setBorders(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -123,13 +123,13 @@ void Ft_MScalableImage::test_draw_scalable9()
     canvas.fill(Qt::black);
     m_subject->draw(paint_offset, paint_size, &painter);
     QImage image = canvas.toImage().copy(paint_rect);
-    verifyResult(image, paint_size);
+    verifyResult(image, paint_size, BLOCK_SIZE);
 
     //void draw(const QRect &rect, QPainter *painter) const;
     canvas.fill(Qt::black);
     m_subject->draw(paint_rect, &painter);
     image = canvas.toImage().copy(paint_rect);
-    verifyResult(image, paint_size);
+    verifyResult(image, paint_size, BLOCK_SIZE);
 
     //void draw(const QRect &rect, const QPoint& pixmapOffset, const QPixmap* pixmap, QPainter *painter) const;
     QPixmap fillPm(paint_size);
@@ -137,12 +137,23 @@ void Ft_MScalableImage::test_draw_scalable9()
     m_subject->draw(paint_rect, QPoint(0,0), &fillPm, &painter);
     image = canvas.toImage().copy(paint_rect);
     QCOMPARE(fillPm.toImage(), image);
+
+    // cover the special case with zero center area (see NB#274332)
+    // zero border case is already covered by test_draw_scalable1
+    const QPixmap *pm2 = createPixmap(image_size,paint_size.width()/2);
+    m_subject->setPixmap(pm2);
+
+    m_subject->setBorders(paint_size.width()/2, paint_size.width()/2, paint_size.height()/2, paint_size.height()/2);
+    canvas.fill(Qt::black);
+    m_subject->draw(paint_rect, &painter);
+    image = canvas.toImage().copy(paint_rect);
+    verifyResult(image, paint_size, paint_size.width()/2 - 1); //the borders should get reduced when the image is rendered
 }
 
 void Ft_MScalableImage::test_draw_scalable1()
 {
     QSize image_size    = QSize(512, 512);
-    const QPixmap *pm = createPixmap(image_size);
+    const QPixmap *pm = createPixmap(image_size, BLOCK_SIZE);
     
     m_subject->setPixmap(pm);
     m_subject->setBorders(0, 0, 0, 0);
@@ -158,13 +169,13 @@ void Ft_MScalableImage::test_draw_scalable1()
     canvas.fill(Qt::black);
     m_subject->draw(paint_offset, paint_size, &painter);
     QImage image = canvas.toImage().copy(paint_rect);
-    verifyResult(image, paint_size);
+    verifyResult(image, paint_size, BLOCK_SIZE);
     
     //void draw(const QRect &rect, QPainter *painter) const;
     canvas.fill(Qt::black);
     m_subject->draw(paint_rect, &painter);
     image = canvas.toImage().copy(paint_rect);
-    verifyResult(image, paint_size);
+    verifyResult(image, paint_size, BLOCK_SIZE);
     
     //void draw(const QRect &rect, const QPoint& pixmapOffset, const QPixmap* pixmap, QPainter *painter) const;
     QPixmap fillPm(paint_size);
@@ -174,26 +185,26 @@ void Ft_MScalableImage::test_draw_scalable1()
     QCOMPARE(fillPm.toImage(), image);
 }
 
-void Ft_MScalableImage::verifyResult(const QImage& image, const QSize& paintSize)
+void Ft_MScalableImage::verifyResult(const QImage& image, const QSize& paintSize, const int blockSize)
 {
     // calculate the size for the center block
-    int center_width = paintSize.width() - 2 * BLOCK_SIZE;
-    int center_height = paintSize.height() - 2 * BLOCK_SIZE;
+    int center_width = paintSize.width() - 2 * blockSize;
+    int center_height = paintSize.height() - 2 * blockSize;
 
     // corners
-    QCOMPARE(isImageBlockColor(image, QRect(2, 2, BLOCK_SIZE-2, BLOCK_SIZE-2), COLOR_TOPLEFT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width + 2, 2, BLOCK_SIZE-2, BLOCK_SIZE-2), COLOR_TOPRIGHT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(2, BLOCK_SIZE + center_height + 2, BLOCK_SIZE-2, BLOCK_SIZE-2), COLOR_BOTTOMLEFT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width + 2, BLOCK_SIZE + center_height + 2, BLOCK_SIZE - 2, BLOCK_SIZE - 2), COLOR_BOTTOMRIGHT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(2, 2, blockSize-2, blockSize-2), COLOR_TOPLEFT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(blockSize + center_width + 2, 2, blockSize-2, blockSize-2), COLOR_TOPRIGHT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(2, blockSize + center_height + 2, blockSize-2, blockSize-2), COLOR_BOTTOMLEFT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(blockSize + center_width + 2, blockSize + center_height + 2, blockSize - 2, blockSize - 2), COLOR_BOTTOMRIGHT), true);
 
     // edges
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE+2, 2, center_width-2, BLOCK_SIZE-2), COLOR_TOP), true);
-    QCOMPARE(isImageBlockColor(image, QRect(2, BLOCK_SIZE+2, BLOCK_SIZE-2, center_height-2), COLOR_LEFT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE+2, BLOCK_SIZE + center_height + 2, center_width-2, BLOCK_SIZE-2), COLOR_BOTTOM), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width + 2, BLOCK_SIZE + 2, BLOCK_SIZE-2, center_height-2), COLOR_RIGHT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(blockSize+2, 2, center_width-2, blockSize-2), COLOR_TOP), true);
+    QCOMPARE(isImageBlockColor(image, QRect(2, blockSize+2, blockSize-2, center_height-2), COLOR_LEFT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(blockSize+2, blockSize + center_height + 2, center_width-2, blockSize-2), COLOR_BOTTOM), true);
+    QCOMPARE(isImageBlockColor(image, QRect(blockSize + center_width + 2, blockSize + 2, blockSize-2, center_height-2), COLOR_RIGHT), true);
 
     // center
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE, BLOCK_SIZE, center_width, center_height), COLOR_CENTER), true);
+    QCOMPARE(isImageBlockColor(image, QRect(blockSize, blockSize, center_width, center_height), COLOR_CENTER), true);
 }
 
 void Ft_MScalableImage::testEnableOptimizedRendering()
