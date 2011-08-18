@@ -105,6 +105,7 @@ private slots:
 
     void testPageExposedContentRectWhenStatusBarAppearsImmediately();
     void testPageExposedContentRectAfterOrientationChange();
+    void testPageExposedContentRectAfterTwoOrientationChanges();
 
 private:
     MApplicationWindow *m_subject;

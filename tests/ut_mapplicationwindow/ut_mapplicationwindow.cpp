@@ -1103,4 +1103,47 @@ void Ut_MApplicationWindow::testPageExposedContentRectAfterOrientationChange()
     QCOMPARE(page->exposedContentRect(), expectedExposedContentRect);
 }
 
+/*
+  Check the exposedContentRect of page after two orientation changes.
+
+  Regression test for: https://projects.maemo.org/bugzilla/show_bug.cgi?id=276436
+ */
+void Ut_MApplicationWindow::testPageExposedContentRectAfterTwoOrientationChanges()
+{
+    MApplicationPage *page = new MApplicationPage;
+    MSceneManager *sceneManager = m_subject->sceneManager();
+
+    // We don't want MOrientationTracker to mess up with
+    // the orientation angle of our subject.
+    m_subject->setOrientationAngleLocked(true);
+    m_subject->setLandscapeOrientation();
+    sceneManager->fastForwardOrientationChangeAnimation();
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    // force navigation bar to be displayed
+    page->setEscapeMode(MApplicationPageModel::EscapeManualBack);
+
+    page->appear(m_subject);
+    m_subject->show();
+
+    QApplication::processEvents();
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    QRectF initialContentRect = page->exposedContentRect();
+
+    // to to protrait
+    m_subject->setPortraitOrientation();
+    sceneManager->fastForwardOrientationChangeAnimation();
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    // and then return back to landscape
+    m_subject->setLandscapeOrientation();
+    sceneManager->fastForwardOrientationChangeAnimation();
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    // we should have the same exposedContentRect() as we had initially,
+    // before going to portrait
+    QCOMPARE(initialContentRect, page->exposedContentRect());
+}
+
 QTEST_MAIN(Ut_MApplicationWindow)
