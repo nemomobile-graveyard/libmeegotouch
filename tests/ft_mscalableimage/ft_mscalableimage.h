@@ -43,7 +43,7 @@ private slots:
     void testEnableOptimizedRendering();
 
 private:
-    void verifyResult(const QImage& image, const QSize& paintSize);
+    void verifyResult(const QImage& image, const QSize& paintSize, const int blockSize);
     class MScalableImage *m_subject;
 };
 

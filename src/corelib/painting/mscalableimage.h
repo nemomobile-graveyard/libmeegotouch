@@ -48,13 +48,21 @@ class QTileRules;
 
   The scalable area of the image is defined using the left, right, top and bottom
   border parameters. The borders are defined as pixels and they cannot be larger
-  the used source pixmap.
+  than the used source pixmap.
 
   The corner blocks are not scaled at all. The horizontal edges (h_edge) are
   scaled only horizontally and the vertical edges (v_edge) only vertically. The
   center block is scaled vertically and horizontally if needed. The size inputted
   into one the draw() methods cannot be smaller than the defined borders.
+
+  \note Due to a known bug in Qt 4.7 trying to render a scaled image with the defined
+        borders resulting in empty blocks (zero borders or borders covering the
+        entire image) can result in graphical glitches in certain cases. The image
+        will be rendered with automatically adjusted borders in such situations.
+        Zero borders will be adjusted to 1 and borders covering the entire image will
+        be reduced.
 */
+
 class M_CORE_EXPORT MScalableImage : public QObject
 {
     Q_OBJECT
