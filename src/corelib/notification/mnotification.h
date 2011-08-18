@@ -288,6 +288,35 @@ public:
     QString identifier() const;
 
     /*!
+     * Sets a user specified timestamp for notification.
+     *
+     * If user has not set the timestamp with setTimestamp() since the previous
+     * publish(), system current time is used as the notification's timestamp
+     * the next time the notification is published with publish().
+     *
+     * If timestamp provided is invalid, notification's timestamp is null.
+     *
+     * Use timestamp() to get the actual published timestamp.
+     *
+     * NOTE! Setting timestamp for MNotificationGroup does nothing.
+     *
+     *\param timestamp Timestamp for notification
+     *
+     *\sa timestamp()
+     */
+    void setTimestamp(const QDateTime &timestamp);
+
+    /*!
+     * Returns the published timestamp of the notification. If notification
+     * has not yet been published null QDateTime is returned.
+     *
+     *\return timestamp of notification. If timestamp is not published null QDateTime is returned.
+     *
+     *\sa setTimestamp()
+     */
+    const QDateTime timestamp() const;
+
+    /*!
      * Publishes the notification. If the notification has not yet been
      * published a notification is created into the given notification
      * group (if any) and is given an ID by the notification manager.
@@ -375,5 +404,4 @@ protected:
 };
 
 Q_DECLARE_METATYPE(MNotification)
-
 #endif /* MNOTIFICATION_H_ */

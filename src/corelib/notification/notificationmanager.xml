@@ -4,39 +4,38 @@
     <method name="notificationUserId">
       <arg name="notificationUserId" type="u" direction="out"/>
     </method>
-    <method name="addGroup">
+    <method name="notificationIdList">
       <arg name="notificationUserId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
-      <arg name="groupId" type="u" direction="out"/>
+      <arg name="result" type="au" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; uint &gt; "/>
+    </method>
+    <method name="notificationListWithNotificationParameters">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="result" type="a(uua{sv})" direction="out"/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotification &gt; "/>
+    </method>
+    <method name="notificationGroupListWithNotificationParameters">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="result" type="a(ua{sv})" direction="out"/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroup &gt; "/>
+    </method>
+    <method name="notificationCountInGroup">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="groupId" type="u" direction="in"/>
+       <arg name="result" type="u" direction="out"/>
     </method>
     <method name="addGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
-      <arg name="summary" type="s" direction="in"/>
-      <arg name="body" type="s" direction="in"/>
-      <arg name="action" type="s" direction="in"/>
-      <arg name="imageURI" type="s" direction="in"/>
-      <arg name="count" type="u" direction="in"/>
-      <arg name="identifier" type="s" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
       <arg name="groupId" type="u" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="QHash &lt; QString, QVariant &gt; "/>
     </method>
     <method name="updateGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="groupId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
       <arg name="result" type="b" direction="out"/>
-    </method>
-    <method name="updateGroup">
-      <arg name="notificationUserId" type="u" direction="in"/>
-      <arg name="groupId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
-      <arg name="summary" type="s" direction="in"/>
-      <arg name="body" type="s" direction="in"/>
-      <arg name="action" type="s" direction="in"/>
-      <arg name="imageURI" type="s" direction="in"/>
-      <arg name="count" type="u" direction="in"/>
-      <arg name="identifier" type="s" direction="in"/>
-      <arg name="result" type="b" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In2" value="QHash &lt; QString, QVariant &gt; "/>
     </method>
     <method name="removeGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -46,63 +45,21 @@
     <method name="addNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="groupId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
       <arg name="notificationId" type="u" direction="out"/>
-    </method>
-    <method name="addNotification">
-      <arg name="notificationUserId" type="u" direction="in"/>
-      <arg name="groupId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
-      <arg name="summary" type="s" direction="in"/>
-      <arg name="body" type="s" direction="in"/>
-      <arg name="action" type="s" direction="in"/>
-      <arg name="imageURI" type="s" direction="in"/>
-      <arg name="count" type="u" direction="in"/>
-      <arg name="identifier" type="s" direction="in"/>
-      <arg name="notificationId" type="u" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In2" value="QVariantHash"/>
     </method>
     <method name="updateNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="notificationId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
       <arg name="result" type="b" direction="out"/>
-    </method>
-    <method name="updateNotification">
-      <arg name="notificationUserId" type="u" direction="in"/>
-      <arg name="notificationId" type="u" direction="in"/>
-      <arg name="eventType" type="s" direction="in"/>
-      <arg name="summary" type="s" direction="in"/>
-      <arg name="body" type="s" direction="in"/>
-      <arg name="action" type="s" direction="in"/>
-      <arg name="imageURI" type="s" direction="in"/>
-      <arg name="count" type="u" direction="in"/>
-      <arg name="identifier" type="s" direction="in"/>
-      <arg name="result" type="b" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In2" value="QHash &lt; QString, QVariant &gt; "/>
     </method>
     <method name="removeNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="notificationId" type="u" direction="in"/>
       <arg name="result" type="b" direction="out"/>
-    </method>
-    <method name="notificationIdList">
-      <arg name="notificationUserId" type="u" direction="in"/>
-      <arg name="result" type="au" direction="out"/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; uint &gt; "/>
-    </method>
-    <method name="notificationListWithIdentifiers">
-       <arg name="notificationUserId" type="u" direction="in"/>
-       <arg name="result" type="a(uusssssus)" direction="out"/>
-       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotification &gt; "/>
-    </method>
-    <method name="notificationGroupListWithIdentifiers">
-       <arg name="notificationUserId" type="u" direction="in"/>
-       <arg name="result" type="a(usssssus)" direction="out"/>
-       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroup &gt; "/>
-    </method>
-    <method name="notificationCountInGroup">
-       <arg name="notificationUserId" type="u" direction="in"/>
-       <arg name="groupId" type="u" direction="in"/>
-       <arg name="result" type="u" direction="out"/>
     </method>
   </interface>
 </node>

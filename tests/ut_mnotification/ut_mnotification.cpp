@@ -19,10 +19,39 @@
 
 #include "ut_mnotification.h"
 #include "mnotification.h"
-#include <mnotificationmanager_stub.h>
+#include "mnotificationmanager_stub.h"
 #include <mremoteaction_stub.h>
 #include <maction_stub.h>
 #include <mnotificationgroup_stub.h>
+
+// MNotificationManager stub
+const QString MNotificationManager::eventTypeKey = "eventType";
+const QString MNotificationManager::summaryKey = "summary";
+const QString MNotificationManager::bodyKey = "body";
+const QString MNotificationManager::actionKey = "action";
+const QString MNotificationManager::imageKey = "imageUri";
+const QString MNotificationManager::countKey = "count";
+const QString MNotificationManager::identifierKey = "identifier";
+const QString MNotificationManager::timestampKey = "timestamp";
+
+
+QDateTime gCurrentDateTimeUtc = QDateTime();
+QDateTime QDateTime::currentDateTimeUtc()
+{
+    return gCurrentDateTimeUtc;
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const QVariantHash &parameters)
+{
+    Q_UNUSED(parameters);
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, QVariantHash &parameters)
+{
+    Q_UNUSED(parameters);
+    return argument;
+}
 
 // Subclasses to gain access to the IDs
 class TestNotification : public MNotification
@@ -51,6 +80,7 @@ void Ut_MNotification::cleanupTestCase()
 
 void Ut_MNotification::init()
 {
+    gCurrentDateTimeUtc = QDateTime();
 }
 
 void Ut_MNotification::cleanup()
@@ -65,7 +95,7 @@ void Ut_MNotification::testGettingAllNotifications()
     notifications.append(TestNotification(3));
     notifications.append(TestNotification(42));
     notifications.append(TestNotification(100));
-    gDefaultMNotificationManagerStub.stubSetReturnValue("notificationListWithIdentifiers", notifications);
+    gDefaultMNotificationManagerStub.stubSetReturnValue("notificationList", notifications);
 
     QList<MNotification *> notificationList = MNotification::notifications();
     QCOMPARE(notificationList.count(), notifications.count());
@@ -79,6 +109,37 @@ void Ut_MNotification::testGettingAllNotifications()
         }
         QVERIFY(found);
     }
+}
+
+void Ut_MNotification::testThatTimestampOfNotificationIsUpdatedInPublish()
+{
+    MNotification notification;
+    uint timestamp = 1234567890;
+    gCurrentDateTimeUtc = QDateTime::fromTime_t(123456);
+
+    QCOMPARE(notification.timestamp().isNull(), true);
+
+    // Timestamp is not set and addNotification is successfull
+    gDefaultMNotificationManagerStub.stubSetReturnValue("addNotification", (uint)1);
+    notification.publish();
+    QCOMPARE(notification.timestamp(), gCurrentDateTimeUtc);
+
+    // Timestamp is set and updateNotification is successfull
+    gDefaultMNotificationManagerStub.stubSetReturnValue("updateNotification", true);
+    notification.setTimestamp(QDateTime::fromTime_t(timestamp));
+    notification.publish();
+    QCOMPARE(notification.timestamp(), QDateTime::fromTime_t(timestamp));
+
+    // updateNotification is not succesfull, so timestamp is previously updated timestamp
+    gDefaultMNotificationManagerStub.stubSetReturnValue("updateNotification", false);
+    notification.publish();
+    QCOMPARE(notification.timestamp(), QDateTime::fromTime_t(timestamp));
+
+    // Timestamp set is null QDateTime and updateNotification is successfull
+    gDefaultMNotificationManagerStub.stubSetReturnValue("updateNotification", true);
+    notification.setTimestamp(QDateTime());
+    notification.publish();
+    QCOMPARE(notification.timestamp(), gCurrentDateTimeUtc);
 }
 
 QTEST_APPLESS_MAIN(Ut_MNotification)

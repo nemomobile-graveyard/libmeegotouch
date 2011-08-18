@@ -33,6 +33,7 @@
 #include <QStringList>
 #include <QRegExp>
 #include <QApplication>
+#include <QDateTime>
 
 // Subclasses to gain access to the IDs
 class MNotificationToolNotification : public MNotification
@@ -115,6 +116,9 @@ uint count = 1;
 // The notification identifier to use
 QString identifier = QString();
 
+// Timestamp for notification
+uint timestamp = 0;
+
 // Prints usage information
 int usage(const char *program)
 {
@@ -133,6 +137,7 @@ int usage(const char *program)
     std::cerr << std::setw(7) << "  -c, --count=NUMBER         The number of notifications. This parameter has no effect when the action is 'remove'" << std::endl;
     std::cerr << std::setw(7) << "  -l, --list                 List all notifications that belong to this application. Returns a count of notifications as an exit value." << std::endl;
     std::cerr << std::setw(7) << "  -I, --identifier           Notification identifier to use" << std::endl;
+    std::cerr << std::setw(7) << "  -t, --timestamp            Timestamp to use on a notification. Use UNIX time representation. Seconds since Unix epoch. "<< std::endl;
     std::cerr << std::setw(7) << "      --help     display this help and exit" << std::endl;
     return -1;
 }
@@ -150,10 +155,11 @@ int parseArguments(int argc, char *argv[])
             { "help", no_argument, NULL, 'h' },
             { "list", no_argument, NULL, 'l'},
             { "identifier", required_argument, NULL, 'I'},
+            { "timestamp", required_argument, NULL, 't'},
             { 0, 0, 0, 0 }
         };
 
-        int c = getopt_long(argc, argv, "a:gi:I:c:pl", long_options, &option_index);
+        int c = getopt_long(argc, argv, "a:gi:I:c:t:pl", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -184,6 +190,9 @@ int parseArguments(int argc, char *argv[])
             break;
         case 'I':
             identifier = optarg;
+            break;
+        case 't':
+            timestamp = atoi(optarg);
             break;
         default:
             break;
@@ -240,7 +249,7 @@ int main(int argc, char *argv[])
         std::cout << list.size() << " " << itemName << "." << std::endl;
         if (list.size() > 0) {
             std::cout << itemNameCapital << ":" << std::endl;
-            std::cout << "Id\tType\tSummary\tBody\tImage\tCount\tIdentifier" << std::endl;
+            std::cout << "Id\tType\tSummary\tBody\tImage\tCount\tIdentifier\tTimestamp" << std::endl;
             foreach(MNotification *notification, list) {
                 MNotificationToolNotification *toolNotification = static_cast<MNotificationToolNotification *>(notification);
                 std::cout << toolNotification->id() << "\t" <<
@@ -249,7 +258,8 @@ int main(int argc, char *argv[])
                              toolNotification->body().toUtf8().constData() << "\t" <<
                              toolNotification->image().toUtf8().constData() << "\t" <<
                              toolNotification->count() << "\t" <<
-                             toolNotification->identifier().toUtf8().constData() << std::endl;
+                             toolNotification->identifier().toUtf8().constData() << "\t" <<
+                             toolNotification->timestamp().toTime_t() << "\t" << std::endl;
                 delete notification;
             }
         }
@@ -297,6 +307,9 @@ int main(int argc, char *argv[])
                 group.setAction(*remoteAction);
                 group.setCount(count);
                 group.setIdentifier(identifier);
+                if (timestamp != 0) {
+                    group.setTimestamp(QDateTime::fromTime_t(timestamp));
+                }
                 group.publish();
                 result = group.id();
             } else {
@@ -307,6 +320,9 @@ int main(int argc, char *argv[])
                     notification.setAction(*remoteAction);
                     notification.setCount(count);
                     notification.setIdentifier(identifier);
+                    if (timestamp != 0) {
+                        notification.setTimestamp(QDateTime::fromTime_t(timestamp));
+                    }
                     notification.publish();
                     result = notification.id();
                 } else {
@@ -315,6 +331,9 @@ int main(int argc, char *argv[])
                     notification.setAction(*remoteAction);
                     notification.setCount(count);
                     notification.setIdentifier(identifier);
+                    if (timestamp != 0) {
+                        notification.setTimestamp(QDateTime::fromTime_t(timestamp));
+                    }
                     notification.publish();
                     result = notification.id();
                 }
@@ -330,6 +349,9 @@ int main(int argc, char *argv[])
                 group.setAction(*remoteAction);
                 group.setCount(count);
                 group.setIdentifier(identifier);
+                if (timestamp != 0) {
+                    group.setTimestamp(QDateTime::fromTime_t(timestamp));
+                }
                 group.publish();
             } else {
                 MNotificationToolNotification notification(id);
@@ -340,6 +362,9 @@ int main(int argc, char *argv[])
                 notification.setAction(*remoteAction);
                 notification.setCount(count);
                 notification.setIdentifier(identifier);
+                if (timestamp != 0) {
+                    notification.setTimestamp(QDateTime::fromTime_t(timestamp));
+                }
                 notification.publish();
             }
         }

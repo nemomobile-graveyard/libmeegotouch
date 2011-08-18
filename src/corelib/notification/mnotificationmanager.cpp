@@ -24,6 +24,18 @@
 
 static const QString DATA_PATH = QDir::homePath() + QString("/.config/libmeegotouch/notifications/");
 
+const QString MNotificationManager::eventTypeKey = "eventType";
+const QString MNotificationManager::summaryKey = "summary";
+const QString MNotificationManager::bodyKey = "body";
+const QString MNotificationManager::actionKey = "action";
+const QString MNotificationManager::imageKey = "imageUri";
+const QString MNotificationManager::countKey = "count";
+const QString MNotificationManager::identifierKey = "identifier";
+const QString MNotificationManager::timestampKey = "timestamp";
+
+Q_DECLARE_METATYPE(QVariantHash)
+Q_DECLARE_METATYPE(QList<QVariantHash>)
+
 MNotificationManager::MNotificationManager() :
     proxy("com.meego.core.MNotificationManager", "/notificationmanager", QDBusConnection::sessionBus()),
     userId(0)
@@ -69,6 +81,8 @@ MNotificationManager::MNotificationManager() :
     qDBusRegisterMetaType<MNotificationGroup>();
     qDBusRegisterMetaType<QList<MNotification> >();
     qDBusRegisterMetaType<QList<MNotificationGroup> >();
+    qDBusRegisterMetaType<QList<QVariantHash> >();
+    qDBusRegisterMetaType<QVariantHash>();
 }
 
 MNotificationManager::~MNotificationManager()
@@ -81,29 +95,34 @@ MNotificationManager *MNotificationManager::instance()
     return &notificationManagerInstance;
 }
 
-uint MNotificationManager::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+QList<uint> MNotificationManager::notificationIdList()
 {
-    return proxy.addGroup(userId, eventType, summary, body, action, imageURI, count, identifier);
+    return proxy.notificationIdList(userId);
 }
 
-uint MNotificationManager::addGroup(const QString &eventType)
+QList<MNotification> MNotificationManager::notificationList()
 {
-    return proxy.addGroup(userId, eventType);
+    return proxy.notificationListWithNotificationParameters(userId);
 }
 
-uint MNotificationManager::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+QList<MNotificationGroup> MNotificationManager::notificationGroupList()
 {
-    return proxy.addNotification(userId, groupId, eventType, summary, body, action, imageURI, count, identifier);
+    return proxy.notificationGroupListWithNotificationParameters(userId);
 }
 
-uint MNotificationManager::addNotification(uint groupId, const QString &eventType)
+uint MNotificationManager::notificationCountInGroup(uint groupId)
 {
-    return proxy.addNotification(userId, groupId, eventType);
+    return proxy.notificationCountInGroup(userId, groupId);
 }
 
-bool MNotificationManager::removeGroup(uint groupId)
+uint MNotificationManager::addNotification(uint groupId, const QVariantHash  &parameters)
 {
-    return proxy.removeGroup(userId, groupId);
+    return proxy.addNotification(userId, groupId, parameters);
+}
+
+bool MNotificationManager::updateNotification(uint notificationId, const QVariantHash  &parameters)
+{
+    return proxy.updateNotification(userId, notificationId, parameters);
 }
 
 bool MNotificationManager::removeNotification(uint notificationId)
@@ -111,42 +130,53 @@ bool MNotificationManager::removeNotification(uint notificationId)
     return proxy.removeNotification(userId, notificationId);
 }
 
-bool MNotificationManager::updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+uint MNotificationManager::addGroup(const QVariantHash  &parameters)
 {
-    return proxy.updateGroup(userId, groupId, eventType, summary, body, action, imageURI, count, identifier);
+    return proxy.addGroup(userId, parameters);
 }
 
-bool MNotificationManager::updateGroup(uint groupId, const QString &eventType)
+bool MNotificationManager::updateGroup(uint groupId, const QVariantHash  &parameters)
 {
-    return proxy.updateGroup(userId, groupId, eventType);
+    return proxy.updateGroup(userId, groupId, parameters);
 }
 
-bool MNotificationManager::updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+bool MNotificationManager::removeGroup(uint groupId)
 {
-    return proxy.updateNotification(userId, notificationId, eventType, summary, body, action, imageURI, count, identifier);
+    return proxy.removeGroup(userId, groupId);
 }
 
-bool MNotificationManager::updateNotification(uint notificationId, const QString &eventType)
+QDBusArgument &operator<<(QDBusArgument &argument, const QVariantHash &parameters)
 {
-    return proxy.updateNotification(userId, notificationId, eventType);
+    QHashIterator<QString, QVariant> i(parameters);
+
+    argument.beginMap(QMetaType::QString, qMetaTypeId<QDBusVariant>());
+    while (i.hasNext()) {
+        i.next();
+
+        argument.beginMapEntry();
+        argument << i.key();
+        argument << QDBusVariant(i.value());
+        argument.endMapEntry();
+    }
+    argument.endMap();
+    return argument;
 }
 
-QList<uint> MNotificationManager::notificationIdList()
+const QDBusArgument &operator>>(const QDBusArgument &argument, QVariantHash &parameters)
 {
-    return proxy.notificationIdList(userId);
-}
+    argument.beginMap();
+    while (!argument.atEnd()) {
+        QString key;
+        QDBusVariant value;
 
-QList<MNotification> MNotificationManager::notificationListWithIdentifiers()
-{
-    return proxy.notificationListWithIdentifiers(userId);
-}
+        argument.beginMapEntry ();
+        argument >> key;
+        argument >> value;
+        argument.endMapEntry ();
 
-QList<MNotificationGroup> MNotificationManager::notificationGroupListWithIdentifiers()
-{
-    return proxy.notificationGroupListWithIdentifiers(userId);
-}
+        parameters[key] = value.variant();
+    }
+    argument.endMap();
 
-uint MNotificationManager::notificationCountInGroup(uint groupId)
-{
-    return proxy.notificationCountInGroup(userId, groupId);
+    return argument;
 }

@@ -366,4 +366,52 @@ void Ut_MBannerView::testLayoutTimeStamp()
         QCOMPARE(layoutStamp->itemAt(1), m_subject->d_ptr->bannerTimeStamp());
     }
 }
+
+void Ut_MBannerView::testSettingTimestampDateTimeFormatWhenTimestampForBannerIsSet()
+{
+    QDateTime testDateTime = QDateTime::currentDateTime();
+    m_banner->setBannerTimeStamp(testDateTime);
+
+    QString currentTimeString = MLocale().formatDateTime(testDateTime, MLocale::DateNone, MLocale::TimeShort);
+
+    QCOMPARE(currentTimeString, m_subject->d_func()->bannerTimeStamp()->text());
+
+    QDateTime oldDateTime = testDateTime.addDays(-1);
+    m_banner->setBannerTimeStamp(oldDateTime);
+
+    QString oldTimeString = QString("%1 %2 %3").arg(MLocale().formatDateTime(oldDateTime.toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+        .arg(m_subject->style()->timestampSeparator())
+        .arg(MLocale().formatDateTime(oldDateTime.toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+
+    QCOMPARE(oldTimeString, m_subject->d_func()->bannerTimeStamp()->text());
+
+    oldDateTime = testDateTime.addDays(-2);
+    m_banner->setBannerTimeStamp(oldDateTime);
+
+    QString olderTimeString = QString("%1 %2 %3").arg(MLocale().formatDateTime(oldDateTime.toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+        .arg(m_subject->style()->timestampSeparator())
+        .arg(MLocale().formatDateTime(oldDateTime.toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+
+    QCOMPARE(olderTimeString, m_subject->d_func()->bannerTimeStamp()->text());
+}
+
+void Ut_MBannerView::testTimestampDateTimeFormatIsUpdatedWhenDayHasPassed()
+{
+    QDateTime testDateTime = QDateTime::currentDateTime();
+    m_banner->setBannerTimeStamp(testDateTime);
+    QString currentTimeString = MLocale().formatDateTime(testDateTime, MLocale::DateNone, MLocale::TimeShort);
+
+    m_subject->drawForeground(NULL, NULL);
+    QCOMPARE(currentTimeString, m_subject->d_func()->bannerTimeStamp()->text());
+
+    QDateTime oldDateTime = testDateTime.addDays(-1);
+    m_banner->setBannerTimeStamp(oldDateTime);
+    QString oldTimeString = QString("%1 %2 %3").arg(MLocale().formatDateTime(oldDateTime.toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+        .arg(m_subject->style()->timestampSeparator())
+        .arg(MLocale().formatDateTime(oldDateTime.toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+
+    m_subject->drawForeground(NULL, NULL);
+    QCOMPARE(oldTimeString, m_subject->d_func()->bannerTimeStamp()->text());
+}
+
 QTEST_APPLESS_MAIN(Ut_MBannerView)

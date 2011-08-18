@@ -51,16 +51,16 @@ private slots:
     void cleanup();
 
     // Test cases
-    void testAddNotification();
-    void testUpdateNotification();
-    void testRemoveNotification();
-    void testAddGroup();
-    void testUpdateGroup();
-    void testRemoveGroup();
-    void testAddToGroup();
     void testNotificationIdList();
     void testNotificationList();
     void testNotificationGroupList();
+    void testAddNotificationWithParameters();
+    void testUpdateNotificationWithParameters();
+    void testRemoveNotificationWithParameters();
+    void testAddGroupWithParameters();
+    void testUpdateGroupWithParameters();
+    void testRemoveGroupWithParameters();
+
 };
 
 #endif

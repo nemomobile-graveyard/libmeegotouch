@@ -42,17 +42,16 @@ MBannerViewPrivate::MBannerViewPrivate() :
     subtitleLabel(NULL),
     bannerTimeStampLabel(NULL),
     prefixTimeStampLabel(NULL),
-    bannerTimeStampData(NULL),
+    bannerTimeStampData(QDateTime()),
     isDownOpacityEnabled(false),
     pixmapBanner(NULL),
-    timeShortNoDate(false),
+    dayPassed(false),
     controller(0)
 {
 }
 
 MBannerViewPrivate::~MBannerViewPrivate()
 {
-    delete bannerTimeStampData;
 }
 
 MLabel *MBannerViewPrivate::title()
@@ -96,7 +95,6 @@ MLabel *MBannerViewPrivate::bannerTimeStamp()
         bannerTimeStampLabel = new MLabel(controller);
 	//Banners can't have html
         bannerTimeStampLabel->setTextFormat(Qt::PlainText);
-        timeShortNoDate = true;
     }
 
     return bannerTimeStampLabel;
@@ -140,15 +138,15 @@ void MBannerViewPrivate::setIcon(const QString &i, const QSize &s)
 
 void MBannerViewPrivate::setBannerTimeStamp(const QDateTime &date)
 {
-    if (!bannerTimeStampData && date.isValid()) {
-        bannerTimeStampData = new QDateTime();
-    }
-
+    Q_Q(MBannerView);
     if (date.isValid()) {
-        bannerTimeStampData->setMSecsSinceEpoch(date.toMSecsSinceEpoch());
         //By default Date Time format is TimeShort (show hours & minutes + prefix)
-        bannerTimeStamp()->setText(MLocale().formatDateTime(date, MLocale::DateNone, MLocale::TimeShort));
-        updateDateFormat();
+        bannerTimeStamp();
+
+        if (q->model()->bannerTimeStamp() != bannerTimeStampData) {
+            bannerTimeStampData = q->model()->bannerTimeStamp();
+            updateDateFormat();
+        }
     }
 }
 
@@ -180,29 +178,26 @@ void MBannerViewPrivate::updateDateFormat() const
 {
     Q_Q(const MBannerView);
 
-    if (bannerTimeStampData) {
-        //If the datetime is more than 24 hours, change the format to DateShort
-        int daysCalc = q->model()->bannerTimeStamp().daysTo(QDateTime::currentDateTime());
-        if (daysCalc >= 1 && timeShortNoDate) {
-            QString formattedDateTime;
-            if (q->style()->timestampSeparator().isEmpty()) {
-                formattedDateTime = QString("%1 %2")
-                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
-                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
-            } else {
-                formattedDateTime = QString("%1 %2 %3")
-                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
-                        .arg(q->style()->timestampSeparator())
-                        .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
-            }
-            bannerTimeStampLabel->setText(formattedDateTime);
-            timeShortNoDate = false;
-        } else if (daysCalc == 0 && !timeShortNoDate) {
-            bannerTimeStampLabel->setText(MLocale().formatDateTime(
-                                              q->model()->bannerTimeStamp(), MLocale::DateNone,
-                                              MLocale::TimeShort));
-            timeShortNoDate = true;
+    //If the datetime is more than 24 hours old, change the format to DateShort
+    if (bannerTimeStampData.daysTo(QDateTime::currentDateTime()) >= 1) {
+        QString formattedDateTime;
+        dayPassed = true;
+        if (q->style()->timestampSeparator().isEmpty()) {
+            formattedDateTime = QString("%1 %2")
+                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
+        } else {
+            formattedDateTime = QString("%1 %2 %3")
+                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateShort, MLocale::TimeNone))
+                .arg(q->style()->timestampSeparator())
+                .arg(MLocale().formatDateTime(q->model()->bannerTimeStamp().toLocalTime(), MLocale::DateNone, MLocale::TimeShort));
         }
+        bannerTimeStampLabel->setText(formattedDateTime);
+    } else {
+        dayPassed = false;
+        bannerTimeStampLabel->setText(MLocale().formatDateTime(
+                    q->model()->bannerTimeStamp(), MLocale::DateNone,
+                    MLocale::TimeShort));
     }
 }
 
@@ -829,8 +824,9 @@ void MBannerView::drawForeground(QPainter *painter, const QStyleOptionGraphicsIt
     Q_UNUSED(painter);
     Q_UNUSED(option);
 
-    if (d->bannerTimeStampLabel)
+    if (d->bannerTimeStampLabel && d->dayPassed != (d->bannerTimeStampData.daysTo(QDateTime::currentDateTime()) >= 1)) {
         d->updateDateFormat();
+    }
 }
 
 void MBannerView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const

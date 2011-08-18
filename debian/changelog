@@ -1,6 +1,7 @@
 libmeegotouch (0.24.6~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#276864 - [TASK] Support for setting the timestamp of notifications
 
  -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 17 Oct 2011 17:09:45 +0300
 

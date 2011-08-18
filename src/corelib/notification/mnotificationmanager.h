@@ -59,116 +59,6 @@ public:
     static MNotificationManager *instance();
 
     /*!
-     * Adds a new notification group.
-     *
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \param count the number of items inside this group
-     * \param identifier the identifier string of the notification
-     * \return the ID of the new notification group
-     */
-    uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
-
-    /*!
-     * Adds a new notification group.
-     *
-     * \param eventType the event type of the notification
-     * \return the ID of the new notification group
-     */
-    uint addGroup(const QString &eventType);
-
-    /*!
-     * Adds a new notification.
-     *
-     * \param groupId the ID of the notification group to put the notification in
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \param count the number of items inside this notification
-     * \param identifier the identifier string of the notification
-     * \return the ID of the new notification
-     */
-    uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1, const QString &identifier = QString());
-
-    /*!
-     * Adds a new notification.
-     *
-     * \param groupId the ID of the notification group to put the notification in
-     * \param eventType the event type of the notification
-     * \return the ID of the new notification
-     */
-    uint addNotification(uint groupId, const QString &eventType);
-
-    /*!
-     * Removes a notification group and all notifications in the group.
-     *
-     * \param groupId the ID of the notification group to be removed
-     * \return true if the removal succeeded, false otherwise
-     */
-    bool removeGroup(uint groupId);
-
-    /*!
-     * Removes a notification.
-     *
-     * \param notificationId the ID of the notification to be removed
-     * \return true if the removal succeeded, false otherwise
-     */
-    bool removeNotification(uint notificationId);
-
-    /*!
-     * Updates an existing notification group.
-     *
-     * \param groupId the ID of the notification group to be updated
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \param count the number of items inside this group
-     * \param identifier the identifier string of the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier = QString());
-
-    /*!
-     * Updates an existing notification group.
-     *
-     * \param groupId the ID of the notification group to be updated
-     * \param eventType the event type of the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateGroup(uint groupId, const QString &eventType);
-
-    /*!
-     * Updates an existing notification.
-     *
-     * \param notificationId the ID of the notification to be updated
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \param count the number of items inside this notification
-     * \param identifier the identifier string of the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1, const QString &identifier = QString());
-
-    /*!
-     * Updates an existing notification.
-     *
-     * \param notificationId the ID of the notification to be updated
-     * \param eventType the event type of the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateNotification(uint notificationId, const QString &eventType);
-
-    /*!
      * Returns a list of IDs for notifications owned by this application
      *
      * \deprecated this function has been deprecated in favor of notificationList() and will be removed in libmeegotouch 0.21.
@@ -181,14 +71,14 @@ public:
      *
      * \return list of notifications
      */
-    QList<MNotification> notificationListWithIdentifiers();
+    QList<MNotification> notificationList();
 
     /*!
      * Returns a list of notification groups owned by this application
      *
      * \return list of notification groups
      */
-    QList<MNotificationGroup> notificationGroupListWithIdentifiers();
+    QList<MNotificationGroup> notificationGroupList();
 
     /*!
      * Returns amount of notifications in a given group
@@ -197,8 +87,91 @@ public:
      * \return amount of notifications in given group
      */
     uint notificationCountInGroup(uint groupId);
+
+    /*!
+     * Add a new notification.
+     *
+     * If groupKey is defined notification is added to group.
+     *
+     * \param parameters a hash of key-value pairs containing information of notification.
+     * \return id of created notification. If notification creation succeeded id is bigger than 0.
+     */
+    uint addNotification(uint groupId, const QVariantHash  &parameters);
+
+    /*!
+     * Updates a notification.
+     *
+     * notificationIdKey for the notification to be updated must be defined.
+     * Replaces all defined keys. Keys that are not defined won't be replaced.
+     * timestampKey is updated to system's current time if not defined.
+     *
+     * \param parameters a hash of key-value pairs containing information of notification.
+     * \return true is returned if succeeded, false otherwise
+     */
+    bool updateNotification(uint notificationId, const QVariantHash  &parameters);
+
+    /*!
+     * Removes a notification
+     *
+     * notificationId of the removable notification must be defined
+     *
+     * \param parameters a hash of key-value pairs containing information of notification.
+     * \return true is returned if succeeded, false otherwise
+     */
+    bool removeNotification(uint notificationId);
+
+    /*!
+     * Add a new group.
+     *
+     * \param parameters a hash of key-value pairs containing information of group.
+     * \return id of created group. If group creation succeeded id is bigger than 0.
+     */
+    uint addGroup(const QVariantHash  &parameters);
+
+    /*!
+     * Updates a group.
+     *
+     * groupIdKey for the group to be updated must be defined.
+     * Replaces all defined keys. Keys that are not defined won't be replaced.
+     *
+     * \param parameters a hash of key-value pairs containing information of group.
+     * \return true is returned if succeeded, false otherwise
+     */
+    bool updateGroup(uint groupId, const QVariantHash  &parameters);
+
+    /*!
+     * Removes a group and all notifications in group.
+     *
+     * groupId of the removable group must be defined
+     *
+     * \param parameters a hash of key-value pairs containing information of group.
+     * \return true is returned if succeeded, false otherwise
+     */
+    bool removeGroup(uint groupId);
+
+    //! Predefined notification parameter keys
+
+    //! eventType the event type of the notification
+    static const QString eventTypeKey;
+    //! summary is text to be used in the notification
+    static const QString summaryKey;
+    //! body is text to be used in the notification
+    static const QString bodyKey;
+    //! action is the ID of the content to be used in the notification
+    static const QString actionKey;
+    //! imageURI is the ID of the icon to be used in the notification
+    static const QString imageKey;
+    //! count is the number of items inside this group
+    static const QString countKey;
+    //! identifier is the identifier string of the notification
+    static const QString identifierKey;
+    //! timestamp is the userspecified timestamp of notification
+    static const QString timestampKey;
+
 };
 
+    QDBusArgument &operator<<(QDBusArgument &, const QVariantHash &);
+    const QDBusArgument &operator>>(const QDBusArgument &, QVariantHash &);
 //! \internal_end
 
 #endif /* MNOTIFICATIONMANAGER_H_ */

@@ -36,6 +36,22 @@ public:
      */
     virtual ~MNotificationPrivate();
 
+    /*!
+     * Creates a hash containing notification's information (notificationId,
+     * eventType, action etc.) in key-value pairs.
+     *
+     * \return QVariantHash (same as QHash(QString, QVariant)) containing notification's information.
+     */
+    QVariantHash notificationParameters() const;
+
+    /*!
+     * Extracts notification's information from a hash and populates
+     * notification's members.
+     *
+     * \param QVariantHash containing notification's information.
+     */
+    void extractNotificationParameters(const QVariantHash &parameters);
+
     //! The ID of the notification
     uint id;
 
@@ -62,6 +78,12 @@ public:
 
     //! The identifier of the notification set by the application
     QString identifier;
+
+    //! User set timestamp of notification
+    uint userSetTimestamp;
+
+    //!  Timestamp that has been previously published
+    uint publishedTimestamp;
 };
 
 #endif // MNOTIFICATION_P_H

@@ -85,12 +85,11 @@ protected:
     MLabel *subtitleLabel;
     MLabel *bannerTimeStampLabel;
     MLabel *prefixTimeStampLabel;
-    QDateTime *bannerTimeStampData;
+    QDateTime bannerTimeStampData;
     //To activate the opacity in the press down state
     bool isDownOpacityEnabled;
     MImageWidget *pixmapBanner;
-    //To perform updateDateFormat only when is needed
-    mutable bool timeShortNoDate;
+    mutable bool dayPassed;
 
     MBanner *controller;
 

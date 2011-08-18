@@ -46,6 +46,8 @@ private slots:
     void testDrawContents();
     void testBannerStyles();
     void testPrivateManageOpacities();
+    void testSettingTimestampDateTimeFormatWhenTimestampForBannerIsSet();
+    void testTimestampDateTimeFormatIsUpdatedWhenDayHasPassed();
 
 private:
 

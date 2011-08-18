@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef MNOTIFICATIONMANAGERPROXY_H_1298979880
-#define MNOTIFICATIONMANAGERPROXY_H_1298979880
+#ifndef MNOTIFICATIONMANAGERPROXY_H_1318419651
+#define MNOTIFICATIONMANAGERPROXY_H_1318419651
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -46,31 +46,17 @@ public:
     ~MNotificationManagerProxy();
 
 public Q_SLOTS: // METHODS
-    inline QDBusPendingReply<uint> addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+    inline QDBusPendingReply<uint> addGroup(uint notificationUserId, const QHash < QString, QVariant >  &parameters)
     {
         QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(eventType) << qVariantFromValue(summary) << qVariantFromValue(body) << qVariantFromValue(action) << qVariantFromValue(imageURI) << qVariantFromValue(count) << qVariantFromValue(identifier);
+        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(parameters);
         return asyncCallWithArgumentList(QLatin1String("addGroup"), argumentList);
     }
 
-    inline QDBusPendingReply<uint> addGroup(uint notificationUserId, const QString &eventType)
+    inline QDBusPendingReply<uint> addNotification(uint notificationUserId, uint groupId, const QVariantHash &parameters)
     {
         QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(eventType);
-        return asyncCallWithArgumentList(QLatin1String("addGroup"), argumentList);
-    }
-
-    inline QDBusPendingReply<uint> addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(groupId) << qVariantFromValue(eventType) << qVariantFromValue(summary) << qVariantFromValue(body) << qVariantFromValue(action) << qVariantFromValue(imageURI) << qVariantFromValue(count) << qVariantFromValue(identifier);
-        return asyncCallWithArgumentList(QLatin1String("addNotification"), argumentList);
-    }
-
-    inline QDBusPendingReply<uint> addNotification(uint notificationUserId, uint groupId, const QString &eventType)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(groupId) << qVariantFromValue(eventType);
+        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(groupId) << qVariantFromValue(parameters);
         return asyncCallWithArgumentList(QLatin1String("addNotification"), argumentList);
     }
 
@@ -81,11 +67,11 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("notificationCountInGroup"), argumentList);
     }
 
-    inline QDBusPendingReply<QList < MNotificationGroup > > notificationGroupListWithIdentifiers(uint notificationUserId)
+    inline QDBusPendingReply<QList < MNotificationGroup > > notificationGroupListWithNotificationParameters(uint notificationUserId)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(notificationUserId);
-        return asyncCallWithArgumentList(QLatin1String("notificationGroupListWithIdentifiers"), argumentList);
+        return asyncCallWithArgumentList(QLatin1String("notificationGroupListWithNotificationParameters"), argumentList);
     }
 
     inline QDBusPendingReply<QList < uint > > notificationIdList(uint notificationUserId)
@@ -95,11 +81,11 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("notificationIdList"), argumentList);
     }
 
-    inline QDBusPendingReply<QList < MNotification > > notificationListWithIdentifiers(uint notificationUserId)
+    inline QDBusPendingReply<QList < MNotification > > notificationListWithNotificationParameters(uint notificationUserId)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(notificationUserId);
-        return asyncCallWithArgumentList(QLatin1String("notificationListWithIdentifiers"), argumentList);
+        return asyncCallWithArgumentList(QLatin1String("notificationListWithNotificationParameters"), argumentList);
     }
 
     inline QDBusPendingReply<uint> notificationUserId()
@@ -122,31 +108,17 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("removeNotification"), argumentList);
     }
 
-    inline QDBusPendingReply<bool> updateGroup(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+    inline QDBusPendingReply<bool> updateGroup(uint notificationUserId, uint groupId, const QHash < QString, QVariant >  &parameters)
     {
         QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(groupId) << qVariantFromValue(eventType) << qVariantFromValue(summary) << qVariantFromValue(body) << qVariantFromValue(action) << qVariantFromValue(imageURI) << qVariantFromValue(count) << qVariantFromValue(identifier);
+        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(groupId) << qVariantFromValue(parameters);
         return asyncCallWithArgumentList(QLatin1String("updateGroup"), argumentList);
     }
 
-    inline QDBusPendingReply<bool> updateGroup(uint notificationUserId, uint groupId, const QString &eventType)
+    inline QDBusPendingReply<bool> updateNotification(uint notificationUserId, uint notificationId, const QHash < QString, QVariant >  &parameters)
     {
         QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(groupId) << qVariantFromValue(eventType);
-        return asyncCallWithArgumentList(QLatin1String("updateGroup"), argumentList);
-    }
-
-    inline QDBusPendingReply<bool> updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(notificationId) << qVariantFromValue(eventType) << qVariantFromValue(summary) << qVariantFromValue(body) << qVariantFromValue(action) << qVariantFromValue(imageURI) << qVariantFromValue(count) << qVariantFromValue(identifier);
-        return asyncCallWithArgumentList(QLatin1String("updateNotification"), argumentList);
-    }
-
-    inline QDBusPendingReply<bool> updateNotification(uint notificationUserId, uint notificationId, const QString &eventType)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(notificationId) << qVariantFromValue(eventType);
+        argumentList << qVariantFromValue(notificationUserId) << qVariantFromValue(notificationId) << qVariantFromValue(parameters);
         return asyncCallWithArgumentList(QLatin1String("updateNotification"), argumentList);
     }
 

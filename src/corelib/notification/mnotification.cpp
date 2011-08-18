@@ -49,7 +49,9 @@ const QString MNotification::MessageArrivedEvent = "x-nokia.message.arrived";
 MNotificationPrivate::MNotificationPrivate() :
     id(0),
     groupId(0),
-    count(1)
+    count(0),
+    userSetTimestamp(0),
+    publishedTimestamp(0)
 {
 }
 
@@ -57,6 +59,56 @@ MNotificationPrivate::~MNotificationPrivate()
 {
 }
 
+QHash<QString, QVariant> MNotificationPrivate::notificationParameters() const
+{
+    QVariantHash hash;
+
+    if (userSetTimestamp != 0) {
+        hash.insert(MNotificationManager::timestampKey, QVariant(userSetTimestamp));
+    }
+
+    if (count != 0) {
+        hash.insert(MNotificationManager::countKey, QVariant(count));
+    }
+
+    if (!eventType.isNull()) {
+        hash.insert(MNotificationManager::eventTypeKey, QVariant(eventType));
+    }
+
+    if (!summary.isNull()) {
+        hash.insert(MNotificationManager::summaryKey, QVariant(summary));
+    }
+
+    if (!body.isNull()) {
+        hash.insert(MNotificationManager::bodyKey, QVariant(body));
+    }
+
+    if (!action.isNull()) {
+        hash.insert(MNotificationManager::actionKey, QVariant(action));
+    }
+
+    if (!image.isNull()) {
+        hash.insert(MNotificationManager::imageKey, QVariant(image));
+    }
+
+    if (!identifier.isNull()) {
+        hash.insert(MNotificationManager::identifierKey, QVariant(identifier));
+    }
+
+    return hash;
+}
+
+void MNotificationPrivate::extractNotificationParameters(const QVariantHash &parameters)
+{
+    count = parameters.value(MNotificationManager::countKey).toUInt();
+    publishedTimestamp = parameters.value(MNotificationManager::timestampKey).toUInt();
+    eventType = parameters.value(MNotificationManager::eventTypeKey).toString();
+    summary = parameters.value(MNotificationManager::summaryKey).toString();
+    body = parameters.value(MNotificationManager::bodyKey).toString();
+    action = parameters.value(MNotificationManager::actionKey).toString();
+    image = parameters.value(MNotificationManager::imageKey).toString();
+    identifier = parameters.value(MNotificationManager::identifierKey).toString();
+}
 
 MNotification::MNotification(MNotificationPrivate &dd) :
     d_ptr(&dd)
@@ -185,26 +237,44 @@ QString MNotification::identifier() const
     return d->identifier;
 }
 
+void MNotification::setTimestamp(const QDateTime &timestamp)
+{
+    Q_D(MNotification);
+    d->userSetTimestamp = timestamp.isValid() ? timestamp.toTime_t() : 0;
+}
+
+const QDateTime MNotification::timestamp() const
+{
+    Q_D(const MNotification);
+    return d->publishedTimestamp != 0 ? QDateTime::fromTime_t(d->publishedTimestamp) : QDateTime();
+}
+
 bool MNotification::publish()
 {
     Q_D(MNotification);
 
+    if (d->userSetTimestamp == 0) {
+        d->userSetTimestamp = QDateTime::currentDateTimeUtc().toTime_t();
+    }
+
     bool success = false;
     if (d->id == 0) {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
-            d->id = MNotificationManager::instance()->addNotification(d->groupId, d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
-        } else {
-            d->id = MNotificationManager::instance()->addNotification(d->groupId, d->eventType);
+
+        if (d->count == 0) {
+            d->count = 1;
         }
 
+        d->id = MNotificationManager::instance()->addNotification(d->groupId, d->notificationParameters());
         success = d->id != 0;
     } else {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
-            success = MNotificationManager::instance()->updateNotification(d->id, d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
-        } else {
-            success = MNotificationManager::instance()->updateNotification(d->id, d->eventType);
-        }
+        success = MNotificationManager::instance()->updateNotification(d->id, d->notificationParameters());
     }
+
+    if (success) {
+        d->publishedTimestamp = d->userSetTimestamp;
+    }
+
+    d->userSetTimestamp = 0;
 
     return success;
 }
@@ -231,7 +301,7 @@ bool MNotification::isPublished() const
 
 QList<MNotification *> MNotification::notifications()
 {
-    QList<MNotification> list = MNotificationManager::instance()->notificationListWithIdentifiers();
+    QList<MNotification> list = MNotificationManager::instance()->notificationList();
     QList<MNotification *> notifications;
     foreach(const MNotification &notification, list) {
         notifications.append(new MNotification(notification));
@@ -245,13 +315,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const MNotification &notifica
     argument.beginStructure();
     argument << d->id;
     argument << d->groupId;
-    argument << d->eventType;
-    argument << d->summary;
-    argument << d->body;
-    argument << d->image;
-    argument << d->action;
-    argument << d->count;
-    argument << d->identifier;
+    argument << d->notificationParameters();
     argument.endStructure();
     return argument;
 }
@@ -259,17 +323,15 @@ QDBusArgument &operator<<(QDBusArgument &argument, const MNotification &notifica
 const QDBusArgument &operator>>(const QDBusArgument &argument, MNotification &notification)
 {
     MNotificationPrivate *d = notification.d_func();
+    QVariantHash parameters;
     argument.beginStructure();
     argument >> d->id;
     argument >> d->groupId;
-    argument >> d->eventType;
-    argument >> d->summary;
-    argument >> d->body;
-    argument >> d->image;
-    argument >> d->action;
-    argument >> d->count;
-    argument >> d->identifier;
+    argument >> parameters;
     argument.endStructure();
+
+    d->extractNotificationParameters(parameters);
+
     return argument;
 }
 
@@ -286,5 +348,7 @@ MNotification &MNotification::operator=(const MNotification &notification)
     d->action = dn->action;
     d->count = dn->count;
     d->identifier = dn->identifier;
+    d->userSetTimestamp = dn->userSetTimestamp;
+    d->publishedTimestamp = dn->publishedTimestamp;
     return *this;
 }

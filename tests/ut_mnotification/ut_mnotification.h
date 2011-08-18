@@ -42,6 +42,9 @@ private slots:
     void cleanup();
     // Test quering of notifications
     void testGettingAllNotifications();
+    // Test that publishing notification sets timestamp to 0 and
+    // publishedTimestamp stays as it is.
+    void testThatTimestampOfNotificationIsUpdatedInPublish();
 };
 
 #endif

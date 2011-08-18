@@ -55,6 +55,8 @@ MNotificationGroup::~MNotificationGroup()
 
 MNotificationGroup::MNotificationGroup(uint id) : MNotification(id)
 {
+    Q_D(MNotificationGroup);
+    d->groupId = id;
 }
 
 bool MNotificationGroup::publish()
@@ -64,19 +66,10 @@ bool MNotificationGroup::publish()
     bool success = false;
 
     if (d->id == 0) {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
-            d->id = MNotificationManager::instance()->addGroup(d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
-        } else {
-            d->id = MNotificationManager::instance()->addGroup(d->eventType);
-        }
-
+         d->id = d->groupId = MNotificationManager::instance()->addGroup(d->notificationParameters());
         success = d->id != 0;
     } else {
-        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull() || !d->identifier.isNull()) {
-            success = MNotificationManager::instance()->updateGroup(d->id, d->eventType, d->summary, d->body, d->action, d->image, d->count, d->identifier);
-        } else {
-            success = MNotificationManager::instance()->updateGroup(d->id, d->eventType);
-        }
+        success = MNotificationManager::instance()->updateGroup(d->id, d->notificationParameters());
     }
 
     return success;
@@ -99,6 +92,7 @@ bool MNotificationGroup::remove()
     } else {
         Q_D(MNotificationGroup);
         uint id = d->id;
+        d->groupId = 0;
         d->id = 0;
         return MNotificationManager::instance()->removeGroup(id);
     }
@@ -106,7 +100,7 @@ bool MNotificationGroup::remove()
 
 QList<MNotificationGroup *> MNotificationGroup::notificationGroups()
 {
-    QList<MNotificationGroup> list = MNotificationManager::instance()->notificationGroupListWithIdentifiers();
+    QList<MNotificationGroup> list = MNotificationManager::instance()->notificationGroupList();
     QList<MNotificationGroup *> notificationGroups;
     foreach(const MNotificationGroup &group, list) {
         notificationGroups.append(new MNotificationGroup(group));
@@ -119,13 +113,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationGroup &gro
     const MNotificationGroupPrivate *d = group.d_func();
     argument.beginStructure();
     argument << d->id;
-    argument << d->eventType;
-    argument << d->summary;
-    argument << d->body;
-    argument << d->image;
-    argument << d->action;
-    argument << d->count;
-    argument << d->identifier;
+    argument << d->notificationParameters();
     argument.endStructure();
     return argument;
 }
@@ -133,15 +121,17 @@ QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationGroup &gro
 const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGroup &group)
 {
     MNotificationGroupPrivate *d = group.d_func();
+    QVariantHash parameters;
     argument.beginStructure();
     argument >> d->id;
-    argument >> d->eventType;
-    argument >> d->summary;
-    argument >> d->body;
-    argument >> d->image;
-    argument >> d->action;
-    argument >> d->count;
-    argument >> d->identifier;
+    argument >> parameters;
     argument.endStructure();
+
+    d->extractNotificationParameters(parameters);
     return argument;
+}
+
+void MNotificationGroup::setTimestamp(const QDateTime &)
+{
+    qWarning("MNotificationGroup should not set timestamp for itself. Setting timestamp does nothing.");
 }

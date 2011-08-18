@@ -221,247 +221,6 @@ void Ut_MNotificationManager::cleanup()
 {
 }
 
-void Ut_MNotificationManager::testAddNotification()
-{
-    MNotification notification1("event");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    notification1.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 3);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(0));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    QList<QVariant> arguments;
-    TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    MNotification notification2("event");
-    notification2.setSummary("summary");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    notification2.setBody("body");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    notification2.setImage("image");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    notification2.setAction(action);
-    QCOMPARE(asyncCallMethods.count(), 0);
-    notification2.setCount(42);
-    QCOMPARE(asyncCallMethods.count(), 0);
-    notification2.setIdentifier("testidentifier");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    notification2.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 9);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(0));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
-    QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
-    QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
-    QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
-    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant("testidentifier"));
-}
-
-void Ut_MNotificationManager::testUpdateNotification()
-{
-    TestNotification notification("event");
-    notification.publish();
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    QList<QVariant> arguments;
-    TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    notification.setSummary("summary");
-    notification.setBody("body");
-    notification.setImage("image");
-    notification.setCount(42);
-    notification.setAction(action);
-    notification.setIdentifier("testidentifier");
-    notification.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("updateNotification"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 9);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(notification.id()));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
-    QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
-    QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
-    QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
-    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant("testidentifier"));
-}
-
-void Ut_MNotificationManager::testRemoveNotification()
-{
-    TestNotification notification("event");
-    notification.publish();
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    int id = notification.id();
-    notification.remove();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("removeNotification"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 2);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(id));
-}
-
-void Ut_MNotificationManager::testAddGroup()
-{
-    MNotificationGroup group1("event");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    group1.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("addGroup"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 2);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant("event"));
-
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    QList<QVariant> arguments;
-    TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    TestNotificationGroup group2("event");
-    group2.setSummary("summary");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    group2.setBody("body");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    group2.setImage("image");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    group2.setAction(action);
-    QCOMPARE(asyncCallMethods.count(), 0);
-    group2.setCount(42);
-    QCOMPARE(asyncCallMethods.count(), 0);
-    group2.setIdentifier("testidentifier");
-    QCOMPARE(asyncCallMethods.count(), 0);
-    group2.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("addGroup"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 8);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("summary"));
-    QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("body"));
-    QCOMPARE(asyncCallArguments.at(0).at(4), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(5), QVariant("image"));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("42"));
-    QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("testidentifier"));
-}
-
-void Ut_MNotificationManager::testUpdateGroup()
-{
-    QList<QVariant> arguments;
-    TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    TestNotificationGroup group("event");
-    group.publish();
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    group.setSummary("summary");
-    group.setBody("body");
-    group.setImage("image");
-    group.setCount(42);
-    group.setAction(action);
-    group.setIdentifier("testidentifier");
-    group.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("updateGroup"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 9);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group.id()));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
-    QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
-    QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
-    QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
-    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant("testidentifier"));
-}
-
-void Ut_MNotificationManager::testRemoveGroup()
-{
-    QList<QVariant> arguments;
-    TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    TestNotificationGroup group("event");
-    group.publish();
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    int id = group.id();
-    group.remove();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("removeGroup"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 2);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(id));
-}
-
-void Ut_MNotificationManager::testAddToGroup()
-{
-    TestNotificationGroup group1("event");
-    group1.publish();
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    TestNotification notification1("event");
-    notification1.setGroup(group1);
-    notification1.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 3);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group1.id()));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-
-    QList<QVariant> arguments;
-    TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    TestNotificationGroup group2("event");
-    group2.setSummary("summary");
-    group2.setBody("body");
-    group2.setImage("image");
-    group2.setAction(action);
-    group2.publish();
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    TestNotification notification2("event");
-    notification2.setGroup(group2);
-    notification2.setSummary("summary");
-    notification2.setBody("body");
-    notification2.setImage("image");
-    notification2.setAction(action);
-    notification2.publish();
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 9);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group2.id()));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
-    QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
-    QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
-    QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("1"));
-    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant(""));
-}
-
 void Ut_MNotificationManager::testNotificationIdList()
 {
     MNotificationManager::instance()->notificationIdList();
@@ -473,20 +232,158 @@ void Ut_MNotificationManager::testNotificationIdList()
 
 void Ut_MNotificationManager::testNotificationList()
 {
-    MNotificationManager::instance()->notificationListWithIdentifiers();
+    MNotificationManager::instance()->notificationList();
     QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("notificationListWithIdentifiers"));
+    QCOMPARE(asyncCallMethods.at(0), QString("notificationListWithNotificationParameters"));
     QCOMPARE(asyncCallArguments.count(), 1);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
 }
 
 void Ut_MNotificationManager::testNotificationGroupList()
 {
-    MNotificationManager::instance()->notificationGroupListWithIdentifiers();
+    MNotificationManager::instance()->notificationGroupList();
     QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("notificationGroupListWithIdentifiers"));
+    QCOMPARE(asyncCallMethods.at(0), QString("notificationGroupListWithNotificationParameters"));
     QCOMPARE(asyncCallArguments.count(), 1);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
+}
+
+void Ut_MNotificationManager::testAddNotificationWithParameters()
+{
+    TestNotification notification("Event", "Summary", "Body");
+    TestRemoteAction action("service", "object", "interface", "method", QList<QVariant>());
+    notification.setAction(action);
+    QDateTime timestamp = QDateTime::currentDateTime();
+    notification.setTimestamp(timestamp);
+    TestNotificationGroup group("");
+    uint groupId = group.id();
+    notification.setGroup(group);
+    notification.publish();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
+
+    QCOMPARE(asyncCallArguments.at(0).at(0).toUInt(), notificationUserId);
+    QCOMPARE(asyncCallArguments.at(0).at(1).toUInt(), groupId);
+
+    QHash<QString, QVariant> varHash = asyncCallArguments.at(0).at(2).toHash();
+    QCOMPARE(varHash.value(MNotificationManager::eventTypeKey).toString(), QString("Event"));
+    QCOMPARE(varHash.value(MNotificationManager::summaryKey).toString(), QString("Summary"));
+    QCOMPARE(varHash.value(MNotificationManager::bodyKey).toString(), QString("Body"));
+    QCOMPARE(varHash.value(MNotificationManager::timestampKey), QVariant(timestamp.toTime_t()));
+    QCOMPARE(varHash.value(MNotificationManager::actionKey).toString(), action.toString());
+
+}
+
+void Ut_MNotificationManager::testUpdateNotificationWithParameters()
+{
+    TestNotification notification("Event", "Summary", "Body");
+    QDateTime timestamp = QDateTime::currentDateTime();
+    notification.setTimestamp(timestamp);
+    notification.publish();
+    uint notificationId = notification.id();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
+
+    asyncCallMethods.clear();
+    asyncCallArguments.clear();
+
+    notification.setSummary("Summary Updated");
+    QDateTime timestampUpdated = timestamp.addDays(1);
+    notification.setTimestamp(timestampUpdated);
+    notification.publish();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("updateNotification"));
+    QCOMPARE(asyncCallArguments.at(0).at(0).toUInt(), notificationUserId);
+    QCOMPARE(asyncCallArguments.at(0).at(1).toUInt(), notificationId);
+
+    QHash<QString, QVariant> varHash = asyncCallArguments.at(0).at(2).toHash();
+
+    QCOMPARE(varHash.value(MNotificationManager::eventTypeKey).toString(), QString("Event"));
+    QCOMPARE(varHash.value(MNotificationManager::summaryKey).toString(), QString("Summary Updated"));
+    QCOMPARE(varHash.value(MNotificationManager::bodyKey).toString(), QString("Body"));
+    QCOMPARE(varHash.value(MNotificationManager::timestampKey), QVariant(timestampUpdated.toTime_t()));
+
+}
+
+void Ut_MNotificationManager::testRemoveNotificationWithParameters()
+{
+    TestNotification notification("Event");
+    notification.publish();
+    asyncCallMethods.clear();
+    asyncCallArguments.clear();
+
+    uint notificationId = notification.id();
+    notification.remove();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("removeNotification"));
+    QCOMPARE(asyncCallArguments.at(0).at(0).toUInt(), notificationUserId);
+    QCOMPARE(asyncCallArguments.at(0).at(1).toUInt(), notificationId);
+}
+
+void Ut_MNotificationManager::testAddGroupWithParameters()
+{
+    TestNotificationGroup group("Event", "Summary", "Body");
+    TestRemoteAction action("service", "object", "interface", "method", QList<QVariant>());
+    group.setAction(action);
+    group.publish();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("addGroup"));
+    QCOMPARE(asyncCallArguments.at(0).at(0).toUInt(), notificationUserId);
+
+    QHash<QString, QVariant> varHash = asyncCallArguments.at(0).at(1).toHash();
+
+    QCOMPARE(varHash.value(MNotificationManager::eventTypeKey).toString(), QString("Event"));
+    QCOMPARE(varHash.value(MNotificationManager::summaryKey).toString(), QString("Summary"));
+    QCOMPARE(varHash.value(MNotificationManager::bodyKey).toString(), QString("Body"));
+    QCOMPARE(varHash.value(MNotificationManager::actionKey).toString(), action.toString());
+
+}
+
+void Ut_MNotificationManager::testUpdateGroupWithParameters()
+{
+    TestNotificationGroup group("Event", "Summary", "Body");
+    group.publish();
+    uint groupId = group.id();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("addGroup"));
+
+    asyncCallMethods.clear();
+    asyncCallArguments.clear();
+
+    group.setSummary("Summary Updated");
+    group.publish();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("updateGroup"));
+    QCOMPARE(asyncCallArguments.at(0).at(0).toUInt(), notificationUserId);
+    QCOMPARE(asyncCallArguments.at(0).at(1).toUInt(), groupId);
+    QHash<QString, QVariant> varHash = asyncCallArguments.at(0).at(2).toHash();
+
+    QCOMPARE(varHash.value(MNotificationManager::eventTypeKey).toString(), QString("Event"));
+    QCOMPARE(varHash.value(MNotificationManager::summaryKey).toString(), QString("Summary Updated"));
+    QCOMPARE(varHash.value(MNotificationManager::bodyKey).toString(), QString("Body"));
+}
+
+void Ut_MNotificationManager::testRemoveGroupWithParameters()
+{
+    TestNotificationGroup group("Event");
+    group.publish();
+    asyncCallMethods.clear();
+    asyncCallArguments.clear();
+
+    uint groupId = group.id();
+    group.remove();
+
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("removeGroup"));
+    QCOMPARE(asyncCallArguments.at(0).at(0).toUInt(), notificationUserId);
+    QCOMPARE(asyncCallArguments.at(0).at(1).toUInt(), groupId);
 }
 
 QTEST_MAIN(Ut_MNotificationManager)

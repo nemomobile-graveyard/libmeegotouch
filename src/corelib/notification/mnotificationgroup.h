@@ -108,6 +108,15 @@ public:
      */
     uint notificationCount();
 
+    //! \internal
+    /*!
+     * Timestamp cannot be set for MotificationGroup.
+     * This is to disable setTimestamp inherited from
+     * MNotification.
+     */
+    void setTimestamp(const QDateTime &timestamp);
+    //! \internal_end
+
     friend QDBusArgument &operator<<(QDBusArgument &, const MNotificationGroup &);
     friend const QDBusArgument &operator>>(const QDBusArgument &, MNotificationGroup &);
 
