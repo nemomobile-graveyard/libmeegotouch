@@ -41,10 +41,10 @@ MRichTextEditDialogsManager::MRichTextEditDialogsManager()
       fontSizeCombo(0),
       fontColorCombo(0)
 {
-    sizeValues << 8 << 9 << 10 << 11
-               << 12 << 13 << 16 << 18
-               << 20 << 22 << 24 << 26
-               << 28 << 32 << 48 << 72;
+    //Maximum 64pt see NB#274753
+    for (int i = 8; i <= 64; i++ ) {
+        sizeValues.append(i);
+    }
 }
 
 
