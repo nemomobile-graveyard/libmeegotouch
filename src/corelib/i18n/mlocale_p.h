@@ -169,6 +169,8 @@ public:
     static QString parseScript(const QString &localeString);
     static QString parseVariant(const QString &localeString);
 
+    static QString removeAccents(const QString &str);
+
     QString formatPhoneNumber( const QString& phoneNumber,
                                MLocale::PhoneNumberGrouping grouping ) const;
 

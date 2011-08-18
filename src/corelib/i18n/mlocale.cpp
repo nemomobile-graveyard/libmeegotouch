@@ -1613,6 +1613,21 @@ QString MLocalePrivate::parseVariant(const QString &localeString)
     return variant;
 }
 
+QString MLocalePrivate::removeAccents(const QString &str)
+{
+    QString result;
+    for(int i = 0; i < str.size(); ++i) {
+        QString decomposition = str[i].decomposition();
+        if(decomposition == "")
+            result += str[i];
+        else
+            for(int j = 0; j < decomposition.size(); ++j)
+                if(!decomposition[j].isMark())
+                    result += decomposition[j];
+    }
+    return result;
+}
+
 //////////////////////////////////
 ///// MLocale class implementation
 
@@ -3654,6 +3669,12 @@ QString MLocale::indexBucket(const QString &str, const QStringList &buckets, con
         firstCharacter = strUpperCase.at(0) + strUpperCase.at(1);
     else
         firstCharacter = strUpperCase.at(0);
+    firstCharacter = MLocalePrivate::removeAccents(firstCharacter);
+    // removing the accents as above also does expansions
+    // like “㈠ → (一)”. If this happened, take the first character
+    //  of the expansion:
+    if (!firstCharacter.at(0).isHighSurrogate())
+        firstCharacter = firstCharacter.at(0);
     if (firstCharacter[0].isNumber())
         firstCharacter = this->toLocalizedNumbers(firstCharacter);
     for (int i = 0; i < buckets.size(); ++i) {
