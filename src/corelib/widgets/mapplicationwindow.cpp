@@ -1357,6 +1357,9 @@ void MApplicationWindowPrivate::disconnectPage(MApplicationPage *pageToDisconnec
 
     navigationBar->setCustomContent(0);
 
+    QObject::disconnect(page, SIGNAL(geometryChanged()),
+                        q, SLOT(_q_updatePageExposedContentRect()));
+
     page = 0;
 }
 
