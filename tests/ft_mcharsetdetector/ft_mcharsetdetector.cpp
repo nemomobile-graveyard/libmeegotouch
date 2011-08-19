@@ -1827,6 +1827,39 @@ void Ft_MCharsetDetector::testDetection_data()
         << "ISO-8859-5"
         << "ISO-8859-5"
         << "ru";
+    QString finnishMp3Bug278171("Samuli Edelmann - Ei mitään hätää");
+        QTest::newRow("finnishMp3Bug278171")
+        << finnishMp3Bug278171
+        << ""
+        << ""
+        << false
+        << "UTF-8"
+        << "UTF-8"
+        << "";
+        QTest::newRow("finnishMp3Bug278171")
+        << finnishMp3Bug278171
+        << ""
+        << ""
+        << false
+        << "ISO-8859-1"
+        << "ISO-8859-1"
+        << "de";
+        QTest::newRow("finnishMp3Bug278171")
+        << finnishMp3Bug278171
+        << "de"
+        << ""
+        << false
+        << "ISO-8859-1"
+        << "ISO-8859-1"
+        << "de";
+        QTest::newRow("finnishMp3Bug278171")
+        << finnishMp3Bug278171
+        << "fi"
+        << ""
+        << false
+        << "ISO-8859-1"
+        << "ISO-8859-1"
+        << "fi";
 }
 
 void Ft_MCharsetDetector::testDetection()
