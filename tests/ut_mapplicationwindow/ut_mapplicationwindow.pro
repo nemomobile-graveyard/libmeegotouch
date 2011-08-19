@@ -14,10 +14,12 @@ contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
 }
 
 SOURCES += \
-    ut_mapplicationwindow.cpp
+    ut_mapplicationwindow.cpp \
+    testpage.cpp
 
 HEADERS += \
-    ut_mapplicationwindow.h
+    ut_mapplicationwindow.h \
+    testpage.h
 
 support_files.files += \
     ut_mapplicationwindow.css

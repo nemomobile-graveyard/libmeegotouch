@@ -40,6 +40,8 @@
 #include <QSignalSpy>
 #include <QEvent>
 
+#include "testpage.h"
+
 // QCOMPARE doesn't know MSceneWindow::SceneWindowSate enum. Thus it won't
 // print "Expected" and "Actual" values in case of failure unless they're cast
 // to a known type
@@ -1144,6 +1146,65 @@ void Ut_MApplicationWindow::testPageExposedContentRectAfterTwoOrientationChanges
     // we should have the same exposedContentRect() as we had initially,
     // before going to portrait
     QCOMPARE(initialContentRect, page->exposedContentRect());
+}
+
+/*
+  Regression test for the following bug:
+  https://projects.maemo.org/bugzilla/show_bug.cgi?id=277533
+ */
+void Ut_MApplicationWindow::testRotatingPageAndShowingStatusBarDoesNotCrash()
+{
+    MSceneManager *sceneManager = m_subject->sceneManager();
+    MApplicationPage *rootPage = new TestPage;
+    MApplicationPage *childPage = new TestPage;
+    MSceneWindow *statusBar = 0;
+
+    statusBar = m_subject->d_func()->statusBar;
+    if (!statusBar) {
+        QSKIP("No status bar used so skipping test.", SkipSingle);
+    }
+
+    // We don't want MOrientationTracker to mess up with
+    // the orientation angle of our subject.
+    m_subject->setOrientationAngleLocked(true);
+
+    m_subject->setLandscapeOrientation();
+    sceneManager->fastForwardOrientationChangeAnimation();
+
+    sceneManager->appearSceneWindowNow(rootPage);
+
+    m_subject->show();
+    // Force paint event to be processed.
+    // That will cause MWindowPrivate::beforeFirstPaintEvent to be set
+    // to false, causing status bar [dis]appearances to be animated as
+    // defined in MApplicationWindowPrivate::_q_updateStatusBarVisibility()
+    QApplication::processEvents();
+
+    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Disappeared)
+
+    sceneManager->appearSceneWindowNow(childPage);
+
+    // Causes TestPage::orientationChangeEvent() to be called, which will ask
+    // MApplicationWindow to show its status bar
+    m_subject->setPortraitOrientation();
+    sceneManager->fastForwardOrientationChangeAnimation();
+
+    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appearing)
+
+    // Simulate a user tapping on the back button right after the rotation
+    // animation is complete
+    childPage->dismiss();
+
+    STATE_COMPARE(childPage->sceneWindowState(), MSceneWindow::Disappearing)
+    STATE_COMPARE(rootPage->sceneWindowState(), MSceneWindow::Appearing)
+
+    // In the original bug, this call would cause a crash as status bar
+    // reaches its Appeared state.
+    sceneManager->fastForwardAllSceneWindowTransitionAnimations();
+
+    STATE_COMPARE(statusBar->sceneWindowState(), MSceneWindow::Appeared)
+    STATE_COMPARE(childPage->sceneWindowState(), MSceneWindow::Disappeared)
+    STATE_COMPARE(rootPage->sceneWindowState(), MSceneWindow::Appeared)
 }
 
 QTEST_MAIN(Ut_MApplicationWindow)

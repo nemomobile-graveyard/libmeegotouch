@@ -107,6 +107,8 @@ private slots:
     void testPageExposedContentRectAfterOrientationChange();
     void testPageExposedContentRectAfterTwoOrientationChanges();
 
+    void testRotatingPageAndShowingStatusBarDoesNotCrash();
+
 private:
     MApplicationWindow *m_subject;
     MComponentData *m_componentData;
