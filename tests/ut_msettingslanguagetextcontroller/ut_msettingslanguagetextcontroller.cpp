@@ -27,6 +27,12 @@
 #include <MDataStore>
 #include "../stubs/mockdatastore.h"
 
+void TestTextEdit::focusIn()
+{
+    QFocusEvent event(QEvent::FocusIn);
+    focusInEvent(&event);
+}
+
 void TestTextEdit::focusOut()
 {
     QFocusEvent event(QEvent::FocusOut);
@@ -61,6 +67,9 @@ void Ut_MSettingsLanguageTextController::testTextChanged()
 {
     MockDataStore dataStore;
     TestTextEdit textEdit;
+
+    textEdit.focusIn();
+
     textEdit.setProperty("key", QString("textKey"));
     textEdit.setText("Test");
     textEdit.setProperty("dataStore", qVariantFromValue(static_cast<void *>(&dataStore)));

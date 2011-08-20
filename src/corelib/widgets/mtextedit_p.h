@@ -149,6 +149,10 @@ public:
     void _q_onPasteFailed();
     void _q_handlePositionChanged();
     void _q_checkPositionChanges();
+    void _q_updateTextDirection();
+
+    //! \brief Text direction based on current input method language.
+    Qt::LayoutDirection defaultTextDirection() const;
 
     //! \brief Disable MTextEdit::updateMicroFocus().
     //!

@@ -13,6 +13,7 @@ HEADERS += \
     $$STUBSDIR/mtheme_stub.h \
     $$STUBSDIR/mwidgetview_stub.h \
     ut_mtextedit.h \
+    $$MSRCDIR/corelib/core/minputmethodstate.h
 
 INCLUDEPATH += \
     $$MSRCDIR/corelib/widgets/ \

@@ -31,6 +31,7 @@ class MSettingsLanguageTextController;
 class TestTextEdit : public MTextEdit
 {
 public:
+    void focusIn();
     void focusOut();
 };
 
