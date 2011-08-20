@@ -38,11 +38,6 @@ namespace
     const QChar TextVariantSeparator(0x9c, 0);
     const QChar EllipsisChar(0x2026);
 
-    MLabel::PreferredLineCountBehavior stringToLineCountBehavior(const QString &behavior) {
-        if (behavior.compare("limit", Qt::CaseInsensitive) == 0)
-            return MLabel::LineCountLimitsPreferredHeight;
-        return MLabel::LineCountSetsPreferredHeight;
-    }
 } // namespace 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
@@ -141,7 +136,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         int preferredLineCountBehavior = viewPrivate->model()->preferredLineCountBehavior();
         if (preferredLineCount < 0) {
             preferredLineCount = viewPrivate->style()->preferredLineCount();
-            preferredLineCountBehavior = stringToLineCountBehavior(viewPrivate->style()->preferredLineCountBehavior());
+            preferredLineCountBehavior = viewPrivate->stringToLineCountBehavior(viewPrivate->style()->preferredLineCountBehavior());
         }
         QSizeF size = sizeForWidth(width, stringVariants.first(), preferredLineCount, preferredLineCountBehavior); //Get the size of the largest variant
         return size;

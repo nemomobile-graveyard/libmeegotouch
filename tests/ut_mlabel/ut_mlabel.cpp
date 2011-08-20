@@ -1080,7 +1080,7 @@ void Ut_MLabel::testSizeHint()
     } else if (wrapMode == QTextOption::NoWrap || wrapMode == QTextOption::ManualWrap ) {
         QCOMPARE(minSizeHint.width(), prefSizeHint.width());
     } else {
-        QCOMPARE(minSizeHint.width(), fm.width(QLatin1Char('x')));
+        QCOMPARE((int)(minSizeHint.width()+0.5), (int)(fm.width(QLatin1Char('x'))+0.5)); //round up the width for the x character
     }
     if (constraint.height() > 0.0) {
         QCOMPARE(minSizeHint.width(), constraint.height());
@@ -1269,6 +1269,7 @@ void Ut_MLabel::testColor()
 void Ut_MLabel::linefeedBeforeFirstTag()
 {
     label->setWordWrap(true);
+    label->resize(400,400);
 
     label->setText("\n<b></b>\na\nb\nc\nd\ne\nf\ng\n");
     QImage image1  = captureImage(label);
@@ -1733,73 +1734,85 @@ void Ut_MLabel::testLineBreakReplacement()
 
 void Ut_MLabel::testPreferredLineCount_data()
 {
+    QTest::addColumn<bool>("richText");
+    QTest::addColumn<bool>("useCSS");
     QTest::addColumn<bool>("wordWrap");
     QTest::addColumn<QTextOption::WrapMode>("wrapMode");
-    QTest::addColumn<bool>("useCSS");
 
-    QTest::newRow("no wordWrap, NoWrap, CSS") << false << QTextOption::NoWrap << true;
-    QTest::newRow("wordWrap, NoWrap, CSS") << true << QTextOption::NoWrap << true;
-    QTest::newRow("wordWrap, WrapAnywhere, CSS") << true << QTextOption::WrapAnywhere << true;
-    QTest::newRow("no wordWrap, NoWrap, setPreferredLineCount()") << false << QTextOption::NoWrap << false;
-    QTest::newRow("wordWrap, NoWrap, setPreferredLineCount()") << true << QTextOption::NoWrap << false;
-    QTest::newRow("wordWrap, WrapAnywhere, setPreferredLineCount()") << true << QTextOption::WrapAnywhere << false;
+    for (int richText = 1; richText < 2; richText++)
+        for (int useCSS = 0; useCSS < 1; useCSS++)
+            for (int wrapMode = 0; wrapMode < 1; wrapMode++) {
+                QString description = QString(richText?"Richtext ":"Plaintext ") + (useCSS?"CSS ":"setPreferredLineCount() ");
+                if (wrapMode == 0)
+                    QTest::newRow((description + "no wordWrap, NoWrap").toLatin1()) << (bool)richText << (bool)useCSS << false << QTextOption::NoWrap;
+                else if (wrapMode == 1)
+                    QTest::newRow((description + "wordWrap, NoWrap").toLatin1()) << (bool)richText << (bool)useCSS << true << QTextOption::NoWrap;
+                else
+                    QTest::newRow((description + "wordWrap, WrapAnywhere").toLatin1()) << (bool)richText << (bool)useCSS << true << QTextOption::WrapAnywhere;
+            }
+}
+
+QString removeHtml(QString string) {
+    return string.replace(QRegExp("<head>.*</head>"), "").replace(QRegExp("<br[^>]*>"), "\n").replace(QRegExp("<[^>]*>"), "").trimmed();
 }
 
 void Ut_MLabel::testPreferredLineCount()
 {
+    QFETCH(bool, richText);
+    QFETCH(bool, useCSS);
     QFETCH(bool, wordWrap);
     QFETCH(QTextOption::WrapMode, wrapMode);
-    QFETCH(bool, useCSS);
 
     QCOMPARE(label->preferredLineCount(), -1);
     label->setWordWrap(wordWrap);
     label->setWrapMode(wrapMode);
     label->setTextElide(true);
-    label->setText("A\nB\nC");
+    if (richText)
+        label->setText("<qt>AAA<br>BBB<br>CCC");
+    else
+        label->setText("A\nB\nC");
     label->resize(label->preferredSize());
     const MLabelView* view = qobject_cast<const MLabelView*>(label->view());
-    if (wrapMode == QTextOption::WrapAnywhere) {
-        QCOMPARE(view->renderedText(), QString("A\nB\nC"));
-    }
+    if (wrapMode == QTextOption::WrapAnywhere || richText)
+        QCOMPARE(removeHtml(view->renderedText()), QString("AAA\nBBB\nCCC"));
     else
-        QCOMPARE(view->renderedText(), QString("A B C"));
+        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount3");
     else
         label->setPreferredLineCount(3);
     label->resize(label->preferredSize());
-    if (wrapMode == QTextOption::WrapAnywhere)
-        QCOMPARE(view->renderedText(), QString("A\nB\nC"));
+    if (wrapMode == QTextOption::WrapAnywhere || richText)
+        QCOMPARE(removeHtml(view->renderedText()), QString("AAA\nBBB\nCCC"));
     else
-        QCOMPARE(view->renderedText(), QString("A B C"));
+        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount2");
     else
         label->setPreferredLineCount(2);
+    QVERIFY(label->size() != label->preferredSize()); // Size should have changed since we decreased the number of visible lines
     label->resize(label->preferredSize());
     QString ellipsisChar("...");
-    if (wrapMode == QTextOption::WrapAnywhere)
-        QCOMPARE(view->renderedText(), QString("A\nB") + ellipsisChar);
+    if (wrapMode == QTextOption::WrapAnywhere || richText)
+        QCOMPARE(removeHtml(view->renderedText()), QString("AAA\nBBB") + ellipsisChar);
     else
-        QCOMPARE(view->renderedText(), QString("A B C"));
+        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount1");
     else
         label->setPreferredLineCount(1);
     label->resize(label->preferredSize());
-    if (wrapMode == QTextOption::WrapAnywhere)
-        QCOMPARE(view->renderedText(), QString("A") + ellipsisChar);
+    if (wrapMode == QTextOption::WrapAnywhere || richText)
+        QCOMPARE(removeHtml(view->renderedText()), QString("AAA") + ellipsisChar);
     else
-        QCOMPARE(view->renderedText(), QString("A B C"));
+        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
     if (useCSS)
         label->setStyleName("lineCount0");
     else
         label->setPreferredLineCount(0);
+    label->setMinimumSize(0,0);
     label->resize(label->preferredSize());
-    if (wrapMode == QTextOption::WrapAnywhere)
-        QCOMPARE(view->renderedText(), QString(""));
-    else
-        QCOMPARE(view->renderedText(), QString(""));
+    QCOMPARE(removeHtml(view->renderedText()), QString(""));
 
     if (useCSS)
         QCOMPARE(label->preferredLineCount(), -1);
@@ -1810,10 +1823,10 @@ void Ut_MLabel::testPreferredLineCount()
     label->setStyleName("lineCount3");
     label->setPreferredLineCount(1);
     label->resize(label->preferredSize());
-    if (wrapMode == QTextOption::WrapAnywhere)
-        QCOMPARE(view->renderedText(), QString("A") + ellipsisChar);
+    if (wrapMode == QTextOption::WrapAnywhere || richText)
+        QCOMPARE(removeHtml(view->renderedText()), QString("AAA") + ellipsisChar);
     else
-        QCOMPARE(view->renderedText(), QString("A B C"));
+        QCOMPARE(removeHtml(view->renderedText()), QString("A B C"));
 }
 void Ut_MLabel::testSingleLineElidingWithWordwrap()
 {
@@ -1852,4 +1865,29 @@ void Ut_MLabel::testPaintOffsetNoAffectOnGeometry()
     QCOMPARE(noOffsetGeometry, label->geometry());
 }
 
-QTEST_APPLESS_MAIN(Ut_MLabel)
+void Ut_MLabel::testRichTextPreferredLineCount_data()
+{
+    QTest::addColumn<QString>("twoLinesOfText");
+
+    QTest::newRow("Richtext with <br>") << "<qt>Hello<br>There";
+    QTest::newRow("Richtext with <p>") << "<qt>Hello<p>There";
+    QTest::newRow("Richtext with <b>") << "<qt>Hello<p><b>There</b>";
+    QTest::newRow("Richtext with <font size=20>") << "<qt>Hello<p><font size=20>There</font>";
+    QTest::newRow("Richtext with mixed font sizes on single line 1") << "<qt>Hello<p><font size=8>There</font> <font size=30>big</font>";
+}
+
+void Ut_MLabel::testRichTextPreferredLineCount()
+{
+    QFETCH(QString, twoLinesOfText);
+    label->setTextElide(true);
+    label->setText(twoLinesOfText);
+    qreal height = label->preferredHeight();
+
+    label->setText(twoLinesOfText + "<p>lines that<p>should not be shown");
+    label->setPreferredLineCount(2);
+    QCOMPARE(height, label->preferredHeight());
+
+    label->setTextElide(false);
+    QCOMPARE(height, label->preferredHeight());
+}
+QTEST_APPLESS_MAIN(Ut_MLabel);

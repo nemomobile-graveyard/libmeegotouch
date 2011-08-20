@@ -43,7 +43,7 @@
 #include "morientationtracker.h"
 #include "mcomponentdata.h"
 
-static const QString unicodeEllipsisString = QString("...");//QChar(0x2026);
+static const QString ellipsisString = QString("...");//QChar(0x2026);
 
 static const int M_HIGHLIGHT_PROPERTY       = QTextFormat::UserProperty;
 static const int M_HIGHLIGHTER_ID_PROPERTY  = QTextFormat::UserProperty + 1;
@@ -74,13 +74,7 @@ MLabelViewRich::~MLabelViewRich()
 
 void MLabelViewRich::drawContents(QPainter *painter, const QSizeF &size)
 {
-    if (tileHeight < 0) {
-        QSize resolution = MDeviceProfile::instance()->resolution();
-        tileHeight = qMax(resolution.width(), resolution.height());
-        dirty = true;
-    }
-
-    initTiles(QSize(size.width(), tileHeight));
+    initTiles();
     updateTilesPosition();
 
     // There's no way to set document height to QTextDocument. The document height contains
@@ -204,16 +198,51 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         // even for a constraint width of -1 (unconstrained)
         QSizeF size;
         if (viewPrivate->controller->sizePolicy().hasHeightForWidth() || constraint.width() >= 0) {
-            if (constraint.width() == textDocument.size().width()) {
-                size = textDocument.size();
-            } else {
+            qreal oldWidth = -1;
+            bool widthChanged = (constraint.width() != textDocument.size().width());
+            if (widthChanged) {
                 //By default, the label policy has height for width, meaning that the layout
                 //will pass us the constraint correctly, so we don't need to do anything special.
-                const qreal oldWidth = textDocument.textWidth();
+                oldWidth = textDocument.textWidth();
                 textDocument.setTextWidth(constraint.width());
-                size = textDocument.size();
-                textDocument.setTextWidth(oldWidth);
             }
+
+            size = textDocument.size();
+
+            int preferredLineCount = viewPrivate->model()->preferredLineCount();
+            int preferredLineCountBehavior = viewPrivate->model()->preferredLineCountBehavior();
+            if (preferredLineCount < 0) {
+                preferredLineCount = viewPrivate->style()->preferredLineCount();
+                preferredLineCountBehavior = viewPrivate->stringToLineCountBehavior(viewPrivate->style()->preferredLineCountBehavior());
+            }
+
+            if (preferredLineCount == 0) {
+                size.setHeight(0);
+            } else if (preferredLineCount > 0) {
+                QTextCursor cursor = QTextCursor(&textDocument);
+
+                int cursorLine = 0;
+                while (++cursorLine < preferredLineCount && cursor.movePosition(QTextCursor::Down)) {}
+                QFontMetrics fm(viewPrivate->controller->font());
+                if (cursorLine == preferredLineCount) {
+                    //We have now placed the cursor on the last visible line.  Find the bottom of this line
+                    QTextLayout *layout = cursor.block().layout();
+                    QTextLine line = layout->lineForTextPosition(cursor.positionInBlock());
+                    size.setHeight(line.position().y() + line.height() + layout->position().y());
+                    //If there are lines below this one, we will have to elide, to include the
+                    //eliding symbol as part of the preferred width
+                    if (constraint.width() == -1 && cursor.movePosition(QTextCursor::Down))
+                        size.setWidth( qMax( size.width(), line.width() + fm.boundingRect(ellipsisString).right() + 1 + layout->position().x()));
+                } else if (preferredLineCountBehavior == MLabel::LineCountSetsPreferredHeight) {
+                    /* Our text has fewer lines than the preferred line count, so if we want to pad
+                     * out the preferred size, add on the height of sufficient empty lines.
+                     * Note that this should be the same formula as that used in mlabelview_simple.cpp  */
+                    size.rheight() += fm.height() * (preferredLineCount - cursorLine) + fm.leading() * (preferredLineCount - cursorLine - 1);
+                }
+            }
+
+            if (widthChanged)
+                textDocument.setTextWidth(oldWidth);
         } else {
             //If the user has manually disabled the sizepolicy heightForWidth and there is
             //no constraint, then we need to fall back to previous behavior of using the current
@@ -313,7 +342,14 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
             textDocumentDirty = true;
         } else if (member == MLabelModel::Highlighters) {
             highlightersChanged = true;
+        } else if (member == MLabelModel::PreferredLineCount) {
+            needUpdate = true;
+            textDocumentDirty = true;
+        } else if (member == MLabelModel::PreferredLineCountBehavior) {
+            needUpdate = true;
+            textDocumentDirty = true;
         }
+
     }
 
     // We have to update rich text document now because next call
@@ -435,15 +471,17 @@ void MLabelViewRich::updateRichTextEliding()
         //implementation is as bad but this works correctly.
 
         //estimate the last visible character by roughly removing text from label
-        int charJump = (textDocument.characterCount() <= 30) ? textDocument.characterCount() / 2 : 20;
+        int charJump = textDocument.characterCount() / 2;
         QTextCursor cursor(&textDocument);
         cursor.beginEditBlock();
         while (shouldElide()) {
             cursor.movePosition(QTextCursor::End);
-            charJump = (cursor.position() <= charJump) ? (textDocument.characterCount() / 2) : 20;
+            charJump = textDocument.characterCount() / 2;
+            if (!charJump)
+                break;
             cursor.setPosition(cursor.position() - charJump, QTextCursor::KeepAnchor);
             cursor.removeSelectedText();
-            textDocument.setTextWidth(viewPrivate->boundingRect().size().width());
+            textDocument.setTextWidth(viewPrivate->boundingRect().width());
         }
         cursor.endEditBlock();
         int charcount = textDocument.characterCount() + charJump;
@@ -452,15 +490,25 @@ void MLabelViewRich::updateRichTextEliding()
         //find the last visible character by removing one character at a time
         //starting from the rough estimation end position
         charJump = 1;
+
         cursor.beginEditBlock();
         cursor.movePosition(QTextCursor::End);
-        cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, textDocument.characterCount() - charcount + unicodeEllipsisString.size());
-        cursor.insertText(unicodeEllipsisString);
-        textDocument.setTextWidth(viewPrivate->boundingRect().size().width());
+        cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, textDocument.characterCount() - charcount);
+        //Insert the ellipsis string, making sure we clear any existing formatting, leaving only the
+        //default font
+        QTextCharFormat format;
+        format.setFont(textDocument.defaultFont());
+        cursor.insertText(ellipsisString, format);
+        cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, ellipsisString.size());
+
+        QTextLayout *layout = cursor.block().layout();
+        QTextLine line = layout->lineForTextPosition(cursor.positionInBlock());
         while (shouldElide()) {
-            cursor.movePosition(QTextCursor::End);
-            cursor.setPosition(cursor.position() - charJump - unicodeEllipsisString.size(), QTextCursor::KeepAnchor);
-            cursor.insertText(unicodeEllipsisString);
+            if (cursor.atStart()) {
+                textDocument.clear();
+                break;
+            }
+            cursor.deletePreviousChar();
             textDocument.setTextWidth(viewPrivate->boundingRect().size().width());
         }
         cursor.endEditBlock();
@@ -470,11 +518,8 @@ void MLabelViewRich::updateRichTextEliding()
 
 bool MLabelViewRich::shouldElide() const
 {
-    const int MaximumNonElidingTextSize = 4;
-
     return viewPrivate->model()->textElide()
-           && (textDocument.size().width() > viewPrivate->boundingRect().size().width())
-           && (textDocument.characterCount() > MaximumNonElidingTextSize);
+           && (textDocument.size().width() > viewPrivate->boundingRect().size().width() || textDocument.size().height() > viewPrivate->boundingRect().size().height());
 }
 
 void MLabelViewRich::updateHighlighters()
@@ -570,6 +615,7 @@ void MLabelViewRich::applyStyle()
 
 QString MLabelViewRich::renderedText() const
 {
+    const_cast<MLabelViewRich*>(this)->initTiles();
     return textDocument.toHtml();
 }
 
@@ -625,8 +671,16 @@ int MLabelViewRich::cursorPosition(const QPointF& pos)
     return textDocument.documentLayout()->hitTest(pos - pixmapOffset, Qt::ExactHit);
 }
 
-void MLabelViewRich::initTiles(const QSize &size)
+void MLabelViewRich::initTiles()
 {
+    if (tileHeight < 0) {
+        QSize resolution = MDeviceProfile::instance()->resolution();
+        tileHeight = qMax(resolution.width(), resolution.height());
+        dirty = true;
+    }
+
+    QSize size = QSize(viewPrivate->boundingRect().width(), tileHeight);
+
     if (dirty || textDocumentDirty || highlightersChanged) {
         cleanupTiles();
         dirty = false;

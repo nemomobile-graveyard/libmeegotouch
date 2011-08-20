@@ -150,6 +150,8 @@ private slots:
 
     void testPaintOffsetNoAffectOnGeometry();
 
+    void testRichTextPreferredLineCount_data();
+    void testRichTextPreferredLineCount();
 private:
     /**
      * Helper method for testSizeHint().

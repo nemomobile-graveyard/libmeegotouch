@@ -132,6 +132,11 @@ void MLabelViewPrivate::autoSetTextDirection(const QString &text, bool isMultipl
     textOptions.setAlignment(alignment);
 }
 
+MLabel::PreferredLineCountBehavior MLabelViewPrivate::stringToLineCountBehavior(const QString &behavior) const {
+    if (behavior.compare("limit", Qt::CaseInsensitive) == 0)
+        return MLabel::LineCountLimitsPreferredHeight;
+    return MLabel::LineCountSetsPreferredHeight;
+}
 
 MLabelView::MLabelView(MLabel *controller) :
     MWidgetView(new MLabelViewPrivate)
@@ -318,7 +323,6 @@ bool MLabelView::tileInformation(int index, QPixmap &pixmap, int &y) const
     Q_D(const MLabelView);
     return d->impl->tileInformation(index, pixmap, y);
 }
-
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
 
 #include "moc_mlabelview.cpp"

@@ -23,6 +23,7 @@
 #include <QTextOption>
 #include <QTextDocument>
 #include <QStaticText>
+#include "mlabel.h"
 #include "private/mwidgetview_p.h"
 
 class MLabel;
@@ -207,7 +208,7 @@ public:
      * If enough pixmap cache is available the member 'tiles'
      * represents the list of all tiles.
      */
-    void initTiles(const QSize &size);
+    void initTiles();
 
     /**
      * Creates \a count tiles with a size of \a size
@@ -321,6 +322,9 @@ public:
 
     //Should label be rendered as rich text
     bool displayAsRichText(QString text, Qt::TextFormat textFormat, int numberOfHighlighters) const;
+
+    // Map CSS string to an enum, for the preferred line count behavior
+    MLabel::PreferredLineCountBehavior stringToLineCountBehavior(const QString &behavior) const;
 
     // Set the text direction and alignment in textOptions according to the text direction in
     // the model or (if auto) based on give text and whether it wraps over multiple lines

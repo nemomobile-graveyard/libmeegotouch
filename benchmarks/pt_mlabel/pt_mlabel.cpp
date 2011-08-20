@@ -44,12 +44,14 @@ void Pt_MLabel::cleanupTestCase()
 void Pt_MLabel::init()
 {
     QFETCH(QString, text);
+    QFETCH(bool, textElide);
 
     // create widget, set size
     subject = new MLabel(text);
     subject->resize(864, 480);
     currentView = new MLabelView(subject);
     subject->setView(currentView);   // transfers ownership to controller
+    subject->setTextElide(textElide);
 
     // wait for the resource loading to finish
     while (MTheme::instance()->hasPendingRequests()) {
@@ -114,6 +116,22 @@ void Pt_MLabel::multiplePaintPerformance_data()
     data();
 }
 
+void Pt_MLabel::elidePerformance_data()
+{
+    data();
+}
+
+void Pt_MLabel::elidePerformance()
+{
+    subject->setPreferredLineCount(2);
+    QBENCHMARK {
+        subject->resize(subject->sizeHint(Qt::PreferredSize, QSizeF(100,-1)));
+        currentView->paint(painter, NULL);
+        subject->resize(subject->sizeHint(Qt::PreferredSize, QSizeF(150,-1)));
+        currentView->paint(painter, NULL);
+    }
+}
+
 void Pt_MLabel::sizeHint()
 {
     QFETCH(QSizeF, constraint);
@@ -127,22 +145,38 @@ void Pt_MLabel::sizeHint()
 void Pt_MLabel::sizeHint_data()
 {
     QTest::addColumn<QString>("text");
+    QTest::addColumn<bool>("textElide");
     QTest::addColumn<QSizeF>("constraint");
 
     const QString text("Longer text will get wrapped above several lines inside MLabel.");
-    QTest::newRow("none") << text << QSizeF(-1, -1);
-    QTest::newRow("50/50") << text << QSizeF(50, 50);
-    QTest::newRow("100/100") << text << QSizeF(100, 100);
+    QTest::newRow("none") << text << false << QSizeF(-1, -1);
+    QTest::newRow("50/50") << text << false << QSizeF(50, 50);
+    QTest::newRow("100/100") << text << false << QSizeF(100, 100);
+
+    QTest::newRow("none with elide") << text << true << QSizeF(-1, -1);
+    QTest::newRow("50/50 with elide") << text << true << QSizeF(50, 50);
+    QTest::newRow("100/100 with elide") << text << true << QSizeF(100, 100);
+
 }
 
 void Pt_MLabel::data()
 {
     QTest::addColumn<QString>("text");
+    QTest::addColumn<bool>("textElide");
 
-    QTest::newRow("plaintext") << "Silence!";
-    QTest::newRow("multilength-strings") << "Very very long text" + QLatin1Char(0x9c) + "Very long text" +  QLatin1Char(0x9c) + "Long text" +  QLatin1Char(0x9c) + "text";
-    QTest::newRow("richtext") << "<span>Silence! I <b>kill</b> you!</span>";
-    QTest::newRow("veryrich") << "<h5>Very rich text, multi line label</h5><p>The phrase \"<b>to be, or not to be</b>\" comes from <font color=\"white\">William Shakespeare's <i>Hamlet</i></font> (written about 1600), act three, scene one. It is one of the most famous quotations in <small>world literature</small> and the <u>best-known of this particular play</u>...<h6>And tables...</h6><table border=1><tr><td>Cell 1</td><td>Cell 2</td></tr></table></p>";
+    QTest::newRow("plaintext without elide") << "Silence!" << false;
+    QTest::newRow("multilength-strings without elide") << "Very very long text" + QLatin1Char(0x9c) + "Very long text" +  QLatin1Char(0x9c) + "Long text" +  QLatin1Char(0x9c) + "text" << false;
+    QTest::newRow("richtext without elide") << "<span>Silence! I <b>kill</b> you!</span>" << false;
+    QTest::newRow("veryrich without elide") << "<h5>Very rich text, multi line label</h5><p>The phrase \"<b>to be, or not to be</b>\" comes from <font color=\"white\">William Shakespeare's <i>Hamlet</i></font> (written about 1600), act three, scene one. It is one of the most famous quotations in <small>world literature</small> and the <u>best-known of this particular play</u>...<h6>And tables...</h6><table border=1><tr><td>Cell 1</td><td>Cell 2</td></tr></table></p>" << false;
+    QTest::newRow("plaintext with elide") << "Silence!" << true;
+    QTest::newRow("veryrich with elide") << "<h5>Very rich text, multi line label</h5><p>The phrase \"<b>to be, or not to be</b>\" comes from <font color=\"white\">William Shakespeare's <i>Hamlet</i></font> (written about 1600), act three, scene one. It is one of the most famous quotations in <small>world literature</small> and the <u>best-known of this particular play</u>...<h6>And tables...</h6><table border=1><tr><td>Cell 1</td><td>Cell 2</td></tr></table></p>" << true;
+    QString string = "All work and no play makes Jack a dull boy, ";
+    for(int i = 0; i < 5; i++)
+        string = string + string;
+    QTest::newRow("very long plaintext without elide") << string << false;
+    QTest::newRow("very long richtext without elide") << "<qt>" + string << false;
+    QTest::newRow("very long plaintext with elide") << string << true;
+    QTest::newRow("very long richtext with elide") << "<qt>" + string << true;
 }
 
 QTEST_APPLESS_MAIN(Pt_MLabel)
