@@ -51,6 +51,8 @@ public:
 
     typedef QList<PositionedTextEdit> PositionedTextEditList;
     typedef QList<Qt::Key> KeyList;
+    typedef QList<Qt::LayoutDirection> TextDirectionList;
+    typedef QList<int> IntegerList;
 
 private:
     void confirmKeyEventIgnored(MTextEdit *subject, int key, int expectedReturnPressed);
@@ -163,6 +165,9 @@ private slots:
     void testArrowKeyNavigation_data();
     void testArrowKeyNavigation();
     void testPreeditDiacritics();
+
+    void testTextDirection_data();
+    void testTextDirection();
 };
 
 #endif

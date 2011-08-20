@@ -583,6 +583,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onPasteFailed())
     Q_PRIVATE_SLOT(d_func(), void _q_handlePositionChanged())
     Q_PRIVATE_SLOT(d_func(), void _q_checkPositionChanges())
+    Q_PRIVATE_SLOT(d_func(), void _q_updateTextDirection())
 };
 
 #endif

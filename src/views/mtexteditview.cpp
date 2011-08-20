@@ -211,7 +211,6 @@ int MTextEditViewPrivate::cursorPosition(const QPointF &point, Qt::HitTestAccura
     return activeDocument()->documentLayout()->hitTest(hitPoint, accuracy);
 }
 
-
 /*!
  * \brief Scrolling slot, do the auto scrolling when cursor moves to the scroll area
  */
@@ -415,7 +414,6 @@ QAbstractTextDocumentLayout::PaintContext MTextEditViewPrivate::paintContext() c
     } else if (focused == true) {
         if ( q->model()->edit() == MTextEditModel::EditModeBasic) {
             paintContext.cursorPosition = cursor.position();
-
         } else if (q->model()->edit() == MTextEditModel::EditModeActive
                    && q->model()->preeditCursor() >= 0) {
             // the absolute position for preedit cursor is the relative
@@ -799,6 +797,22 @@ void MTextEditViewPrivate::handleDocumentUpdated()
     // take in to account the width of the cursor.
     if (currentWidth > (textWidth - cursorWidth()) && currentWidth <= textWidth) {
         checkScroll();
+    }
+
+    // Update masked document's text direction.
+    if (maskedTextDocument
+        && controller->textCursor().block().isValid()) {
+        Qt::LayoutDirection dir = controller->textCursor().block().textDirection();
+
+        // Create text cursor for masked document.
+        QTextCursor maskCursor(maskedTextDocument);
+        maskCursor.setPosition(controller->cursorPosition());
+
+        QTextBlockFormat maskedFormat = maskCursor.block().blockFormat();
+        if (maskedFormat.layoutDirection() != dir) {
+            maskedFormat.setLayoutDirection(dir);
+            maskCursor.setBlockFormat(maskedFormat);
+        }
     }
 }
 
@@ -1884,6 +1898,7 @@ void MTextEditView::setFocused(Qt::FocusReason reason)
     if (!model()->errorHighlight()) {
         style().setModeSelected();
     }
+
     if (reason == Qt::MouseFocusReason &&
             textEdit != 0 && textEdit->isAutoSelectionEnabled() == true) {
         // assuming the selection got made since the autoselection is enabled and focus was

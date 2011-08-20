@@ -27,6 +27,7 @@
 #include <QTextCursor>
 #include <QSignalSpy>
 #include <QTextDocument>
+#include <QTextBlock>
 #include <QInputMethodEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QValidator>
@@ -51,6 +52,7 @@
 #include <mhomebuttonpanel.h>
 #include <mapplicationpage.h>
 #include <mdialog.h>
+#include <MInputMethodState>
 
 #ifdef HAVE_MALIIT
 #include <maliit/preeditinjectionevent.h>
@@ -69,10 +71,18 @@ Q_DECLARE_METATYPE(Qt::KeyboardModifiers);
 Q_DECLARE_METATYPE(Qt::FocusReason);
 Q_DECLARE_METATYPE(Qt::Key)
 Q_DECLARE_METATYPE(Qt::TextInteractionFlag);
+Q_DECLARE_METATYPE(Ut_MTextEdit::TextDirectionList)
+Q_DECLARE_METATYPE(Ut_MTextEdit::IntegerList)
 
 const QString Ut_MTextEdit::testString = QString("jallajalla");
+QString gInputMethodLanguage;
 
 Q_DECLARE_METATYPE(MTextEditModel::LineMode);
+
+QString MInputMethodState::language() const
+{
+    return gInputMethodLanguage;
+}
 
 class ReplacerValidator : public QValidator
 {
@@ -127,7 +137,7 @@ public:
 
     QString language()
     {
-        return QString();
+        return m_language;
     }
 
     void reset()
@@ -195,6 +205,7 @@ public:
     bool selectionAvailableAtLastUpdate;
     QString selectedTextAtLastUpdate;
     MTextEdit *edit;
+    QString m_language;
 
 private:
     bool m_visible;
@@ -313,6 +324,7 @@ void Ut_MTextEdit::cleanupTestCase()
  */
 void Ut_MTextEdit::init()
 {
+    gInputMethodLanguage = "";
     m_subject.reset(new MTextEdit(MTextEditModel::MultiLine, ""));
     qApp->setInputContext(m_sic = new SimpleInputContext);
     m_sic->edit = m_subject.get();
@@ -3221,6 +3233,116 @@ void Ut_MTextEdit::testPreeditDiacritics()
 
     qDebug() << m_subject->text();
 
+}
+
+// NB#252531
+void Ut_MTextEdit::testTextDirection_data()
+{
+    QTest::addColumn<QString>("language");
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<IntegerList>("cursorPositions");
+    QTest::addColumn<TextDirectionList>("directions");
+
+    // Directions are stored like:
+    //   l1c1, l2c1, l3c1,
+    //   l1c2, l2c2, l3c2,
+    //   l1c3, l2c3, l3c3,
+    //   where lx = direction on line x,
+    //   and cx = direction after x:th cursor positioning
+
+    // There is a minor issue in implementation which causes
+    // previously set direction not to be restored back to
+    // Qt::LayoutDirectionAuto. These are marked with "*"
+    // comments below.
+
+    // No content
+    QTest::newRow("English, empty") << "en" << ""
+        << (IntegerList() << 0)
+        << (TextDirectionList() << Qt::LeftToRight);
+    QTest::newRow("Arabic, empty") << "ar" << ""
+        << (IntegerList() << 0)
+        << (TextDirectionList() << Qt::RightToLeft);
+    QTest::newRow("Hebrew, empty") << "he" << ""
+        << (IntegerList() << 0)
+        << (TextDirectionList() << Qt::RightToLeft);
+
+    // Multilines
+    QTest::newRow("English, rows: abc,def") << "en" << "abc\ndef"
+        << (IntegerList() << 7)
+        << (TextDirectionList()
+            << Qt::LayoutDirectionAuto
+            << Qt::LayoutDirectionAuto);
+
+    QTest::newRow("Arabic, two empty rows") << "ar" << "\n"
+        << (IntegerList() << 0 << 1)
+        << (TextDirectionList()
+            << Qt::RightToLeft // cursor
+            << Qt::RightToLeft // *
+
+            << Qt::RightToLeft // *
+            << Qt::RightToLeft); // cursor
+
+    QTest::newRow("English, rows: a,م,b,") << "en" << QString("a\nم\nb\n")
+        << (IntegerList() << 8 << 7)
+        << (TextDirectionList()
+            << Qt::LayoutDirectionAuto
+            << Qt::LayoutDirectionAuto
+            << Qt::LayoutDirectionAuto
+            << Qt::LeftToRight // cursor is here
+
+            // for second cursor position
+            << Qt::LayoutDirectionAuto
+            << Qt::LayoutDirectionAuto
+            << Qt::LayoutDirectionAuto // cursor
+            << Qt::LeftToRight); // *
+
+    QTest::newRow("Arabic, rows: a,م,b,") << "ar" << QString("a\nم\nb\n")
+        << (IntegerList() << 8)
+        << (TextDirectionList()
+            << Qt::LayoutDirectionAuto
+            << Qt::LayoutDirectionAuto
+            << Qt::LayoutDirectionAuto
+            << Qt::RightToLeft); // cursor
+}
+
+void Ut_MTextEdit::testTextDirection()
+{
+    QFETCH(QString, language);
+    QFETCH(QString, text);
+    QFETCH(IntegerList, cursorPositions);
+    QFETCH(TextDirectionList, directions);
+
+    gInputMethodLanguage = language;
+    QCOMPARE(MInputMethodState::instance()->language(),
+             language);
+
+    m_subject->setText(text);
+
+    // Check test parameters.
+    QCOMPARE(m_subject->document()->blockCount(),
+             directions.count() / cursorPositions.length());
+
+    // Give subject a fake focus.
+    QFocusEvent focusIn(QEvent::FocusIn);
+    m_subject->focusInEvent(&focusIn);
+
+    foreach (int pos, cursorPositions) {
+        qDebug() << "Changing cursor position to" << pos;
+        m_subject->setCursorPosition(pos);
+
+        // Enumerate blocks and check their layout directions.
+        QTextBlock block = m_subject->document()->firstBlock();
+        while (block.isValid()) {
+            Qt::LayoutDirection expected = directions.takeFirst();
+            Qt::LayoutDirection actual = block.blockFormat().layoutDirection();
+
+            qDebug() << "Line contents:" << block.text();
+
+            QCOMPARE(actual, expected);
+
+            block = block.next();
+        }
+    }
 }
 
 

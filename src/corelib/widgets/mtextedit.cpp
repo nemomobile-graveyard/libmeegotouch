@@ -484,6 +484,72 @@ void MTextEditPrivate::_q_checkPositionChanges()
     }
 }
 
+void MTextEditPrivate::_q_updateTextDirection()
+{
+    Q_Q(MTextEdit);
+
+    QTextCursor *cursor = this->cursor();
+    if (!cursor || cursor->isNull()) {
+        // Cannot update text direction because there is no cursor set in controller
+        return;
+    }
+
+    // Layout direction can be different in different rows.
+    // Therefore, set layout direction per block.
+    QTextBlock block = cursor->block();
+    if (!block.isValid()) {
+        return;
+    }
+
+    Qt::LayoutDirection dir;
+
+    // Always use default (no content based) text direction if...
+    if (block.text().isEmpty() // ...there is no text, only cursor
+        || q->model()->echo() == MTextEditModel::NoEcho // ...no text because of NoEcho
+        // ...or if entering password; we cannot see the content anyhow.
+        || q->model()->echo() == MTextEditModel::Password) {
+        dir = defaultTextDirection();
+    } else {
+        // Otherwise use content based text direction.
+        dir = Qt::LayoutDirectionAuto;
+    }
+
+    // Update layout direction for the block if needed.
+    QTextBlockFormat format = block.blockFormat();
+    if (format.layoutDirection() != dir) {
+        format.setLayoutDirection(dir);
+        // Warning: Ignoring possible intentionally set LTR or RTL direction.
+        // This could be done via MTextEdit::document() or textCursor() interface.
+        // It is documented, however, that the use of those interfaces should
+        // be done with caution.
+        cursor->setBlockFormat(format);
+
+        q->update();
+    }
+
+    // What this doesn't do is restore a previously touched
+    // block's direction back to LayoutDirectionAuto.
+    // However, it is unlikely that it will cause problems
+    // since whenever new content is added to an existing block
+    // (which has explicit direction set) this method will
+    // be called again, unless the content is added directly
+    // via MTextEdit::textCursor() interface.
+}
+
+Qt::LayoutDirection MTextEditPrivate::defaultTextDirection() const
+{
+    QString language = MInputMethodState::instance()->language();
+
+    Qt::LayoutDirection dir;
+    if (!language.isEmpty()) {
+        dir = QLocale(language).textDirection();
+    } else {
+        dir = Qt::LeftToRight;
+    }
+
+    return dir;
+}
+
 QTextCursor *MTextEditPrivate::cursor() const
 {
     Q_Q(const MTextEdit);
@@ -1971,7 +2037,6 @@ void MTextEdit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     MWidgetController::mouseReleaseEvent(event);
 }
 
-
 void MTextEdit::focusInEvent(QFocusEvent *event)
 {
     Q_D(MTextEdit);
@@ -1982,6 +2047,30 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     d->focusEventState = MTextEditPrivate::FocusInEventReceived;
 
     d->editActive = false;
+
+    // Setup text direction. This special direction handling is done on focus
+    // in event since that's when cursors becomes visible.
+    // 1) Empty text edit:
+    //    Text direction is set based on a guess on what user will be typing.
+    //    Results are visible in cursor position, left or right aligned.
+    //    Implemented by using language information from MInputMethodState.
+    // 2) Non-empty text edit:
+    //    Text direction is set based on text content.
+    //    Implemented by using the flag Qt::LayoutDirectionAuto.
+    //    If QApplication::keyboardInputDirection() was supported the case 1)
+    //    would be handled automatically but now direction of empty text edit
+    //    has to be determined separately.
+
+    // Text direction depends on text contents on the row cursor is currently in,
+    // and input language; connect appropriate signals.
+
+    d->_q_updateTextDirection();
+    bool ok = true;
+    ok &= connect(this, SIGNAL(cursorPositionChanged()),
+                  this, SLOT(_q_updateTextDirection()));
+    ok &= connect(MInputMethodState::instance(), SIGNAL(languageChanged(QString)),
+                  this, SLOT(_q_updateTextDirection()));
+    Q_ASSERT(ok);
 
     if (sceneManager()) {
         d->requestAutoSip();
@@ -2015,6 +2104,13 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MTextEdit);
+
+    bool ok = true;
+    ok &= disconnect(this, SIGNAL(cursorPositionChanged()),
+                     this, SLOT(_q_updateTextDirection()));
+    ok &= disconnect(MInputMethodState::instance(), SIGNAL(languageChanged(QString)),
+                     this, SLOT(_q_updateTextDirection()));
+    Q_ASSERT(ok);
 
     disconnect(&d->signalEmitter, SIGNAL(scenePositionChanged()), this, SLOT(_q_handlePositionChanged()));
 
