@@ -1314,14 +1314,14 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
         QTextCursor startCursor(d->document());
         startCursor.setPosition(0);
         QTextBlockFormat tbf = startCursor.blockFormat();
-        int indent = tbf.textIndent();
-        painter->translate(indent, 0); // assume that just translating is good enough
+        QTextCursor promptCursor(d->promptDocument());
+        promptCursor.setPosition(0);
+        promptCursor.setBlockFormat(tbf);
 
         qreal opacity = painter->opacity();
         painter->setOpacity(d->currentPromptOpacity);
         d->promptDocument()->documentLayout()->draw(painter, paintContext);
         painter->setOpacity(opacity);
-        painter->translate(-indent, 0);
     }
 
     // normal painting, also draw cursor when prompt is visible
