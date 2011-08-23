@@ -209,6 +209,7 @@ testsxml.path = $$M_INSTALL_DATA/meegotouch-demos-widgetsgallery-tests/
 DEFINES += CONTACTS_DIR=\"\\\"$$M_THEME_DIR/base/meegotouch/widgetsgallery/images/contacts/\\\"\"
 DEFINES += IMAGES_DIR=\"\\\"$$M_THEME_DIR/base/meegotouch/widgetsgallery/images/\\\"\"
 DEFINES += MEDIA_DIR=\"\\\"$$M_INSTALL_DATA/widgetsgallery/media\\\"\"
+DEFINES += DATA_DIR=\"\\\"$$M_INSTALL_DATA/widgetsgallery/\\\"\"
 
 data_files.files = data/*
 data_files.path = $$M_INSTALL_DATA/widgetsgallery/

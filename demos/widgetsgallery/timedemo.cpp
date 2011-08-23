@@ -39,6 +39,9 @@ namespace
     const int pageDuration = 5000;
 }
 
+//in milliseconds how long should particular benchmark run
+const int BenchmarkMinimumRuntime = 3000;
+
 Timedemo::Timedemo(MainPage *mainPage, const QStringList& demoPageTitles)
     : QObject(),
     m_pFrontPage(mainPage),
@@ -132,6 +135,7 @@ void Timedemo::showFirstPage()
     m_currentPageIndex = 0;
     benchmarkResults.resize(demoPages.count());
 
+    qDebug() << "Current page:" << demoPages[m_currentPageIndex]->timedemoTitle();
     demoPages[m_currentPageIndex]->createBenchmarks(this);
     beginBenchmark();
 }
@@ -151,6 +155,7 @@ void Timedemo::beginBenchmark()
 
     connect(benchmark.data(), SIGNAL(finished()), this, SLOT(benchmarkFinished()));
 
+    qDebug() << "\tStarting benchmark:" << benchmark->name();
     benchmark->start();
 }
 
@@ -174,6 +179,7 @@ void Timedemo::showNextPage()
 
     if (m_currentPageIndex < demoPages.count()) {
         TimedemoPage* currentPage = demoPages[m_currentPageIndex];
+        qDebug() << "Current page:" << currentPage->timedemoTitle();
         demoPages[m_currentPageIndex]->createBenchmarks(this);
 
         if (currentPage == m_pFrontPage) {
@@ -337,4 +343,16 @@ void Timedemo::saveFramelog() {
     framelog.writeEndDocument();
 
     framelogFile.flush();
+}
+
+int Timedemo::currentBenchmarkRuntime() const
+{
+    const QLinkedList<qint64>& timestamps = SwapHook::instance()->timestamps();
+
+    return timestamps.isEmpty() ? 0 : timestamps.last() - timestamps.first();
+}
+
+bool Timedemo::currentBenchmarkRuntimeReached() const
+{
+    return currentBenchmarkRuntime() >= BenchmarkMinimumRuntime;
 }

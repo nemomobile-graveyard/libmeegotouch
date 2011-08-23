@@ -1,0 +1,8 @@
+MCrossFadedOrientationAnimationStyle {
+    duration: 3000;
+    rotation-point: 240 240;
+    rotation-easing-curve: inoutexpo;
+    translation-easing-curve: inoutexpo;
+    fading-easing-curve: inoutexpo;
+}
+

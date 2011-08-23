@@ -42,20 +42,19 @@ public:
 
 private slots:
     void waitBeforePanning();
-    void panDown();
+    void pan();
     void terminateBenchmark();
 
 private:
+    void doPan(bool panDown);
+
     MPannableViewport *pannableViewport;
-
     bool timingStarted;
-
     QPointF formerPosition;
-
     QTime timer;
 
 private:
-     M::OrientationAngle targetOrientationAngle;
+    M::OrientationAngle targetOrientationAngle;
 };
 
 #endif // PANNINGBENCHMARK_H
