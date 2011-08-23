@@ -214,6 +214,7 @@ SUBDIRS     =  \
     ut_mtimestamp \
     ut_mgraphicshighlighteffect \
     ut_mhelpbutton \
+    ut_mpreloader \
 
 # enable only when we have icu available
 

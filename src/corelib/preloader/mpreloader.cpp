@@ -54,10 +54,14 @@ void MPreloader::preloadFonts()
         return;
     }
 
-    static int argc = 1;
-    static char *argv[1] = { (char *) "mpreloader_initialization_application" };
+    QApplication *app = 0;
+    if (!qApp)
+    {
+        static int argc = 1;
+        static char *argv[1] = { (char *) "mpreloader_initialization_application" };
 
-    QApplication app(argc, argv);
+        app = new QApplication(argc, argv);
+    }
 
     QSettings settings(configFile, QSettings::IniFormat);
     settings.setIniCodec("UTF-8");
@@ -109,11 +113,11 @@ void MPreloader::preloadFonts()
         }
         settings.endGroup();
     }
+
+    delete app;
 }
 
 void MPreloader::preloadStyles()
 {
     //TODO: fill with life
 }
-
-
