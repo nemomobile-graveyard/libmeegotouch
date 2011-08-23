@@ -43,7 +43,7 @@ private slots:
     void terminateBenchmark();
 
 private:
-     M::OrientationAngle targetOrientationAngle;
+    M::OrientationAngle targetOrientationAngle;
 };
 
 #endif // ROTATIONBENCHMARK_H

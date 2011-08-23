@@ -78,10 +78,10 @@ void PanningBenchmark::start()
 void PanningBenchmark::waitBeforePanning()
 {
     verifyAppearanceTimer->stop();
-    QTimer::singleShot(2500, this, SLOT(panDown()));
+    QTimer::singleShot(2500, this, SLOT(pan()));
 }
 
-void PanningBenchmark::panDown()
+void PanningBenchmark::pan()
 {
     if (!timingStarted) {
         timedemo->startTiming(this);
@@ -93,13 +93,28 @@ void PanningBenchmark::panDown()
     QPointF currentPosition = pannableViewport->physics()->position();
     QRectF range = pannableViewport->physics()->range();
 
-    if (currentPosition.y() < range.height()) {
-        pannableViewport->physics()->setPosition(currentPosition + QPointF(0., ySpeed * timer.elapsed()));
-        timer.start();
-        QTimer::singleShot(updateInterval, this, SLOT(panDown()));
-    } else {
+    if (!timedemo->currentBenchmarkRuntimeReached()) {
+        if (currentPosition.y() >= range.height())
+            formerPosition = currentPosition;
+        else if (currentPosition.y() <= 0)
+            formerPosition = currentPosition;
+
+        doPan(formerPosition.y() < range.height());
+    }
+    else {
         terminateBenchmark();
     }
+}
+
+void PanningBenchmark::doPan(bool panDown)
+{
+    qreal displacement = ySpeed * timer.elapsed();
+
+    QPointF currentPosition = pannableViewport->physics()->position();
+    pannableViewport->physics()->setPosition(currentPosition +
+            QPointF(0., panDown ? displacement : -displacement));
+    timer.start();
+    QTimer::singleShot(updateInterval, this, SLOT(pan()));
 }
 
 void PanningBenchmark::terminateBenchmark()

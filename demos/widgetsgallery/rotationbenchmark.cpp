@@ -26,8 +26,8 @@
 #include <QTimer>
 
 RotationBenchmark::RotationBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle)
-    : TimedemoBenchmark(applicationPage, timedemo)
-    , targetOrientationAngle(targetOrientationAngle)
+    : TimedemoBenchmark(applicationPage, timedemo),
+      targetOrientationAngle(targetOrientationAngle)
 {
 }
 

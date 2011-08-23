@@ -79,6 +79,9 @@ int main(int argc, char **argv)
     WidgetsgalleryRetranslator widgetsgalleryRetranslator;
     QObject::connect(application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
 
+    if (qApp->arguments().indexOf("-timedemo") != -1)
+        MTheme::loadCSS(QString(DATA_DIR) + QDir::separator() + "timedemo.css");
+
 #ifndef Q_OS_WIN
     MApplicationWindow* window = MComponentCache::mApplicationWindow();
 #else

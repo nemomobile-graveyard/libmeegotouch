@@ -83,6 +83,10 @@ public:
     void stopTiming(const TimedemoBenchmark *activeBenchmark);
 
     void displayBenchmarkResults();
+
+    int currentBenchmarkRuntime() const;
+
+    bool currentBenchmarkRuntimeReached() const;
 private:
     void saveFramelog();
 
