@@ -97,6 +97,9 @@ public:
     ExtendedAttributeMap extendedAttributes(int id) const;
     //! \internal_end
 
+    //! \brief Returns the current language of the input method.
+    QString language() const;
+
 public Q_SLOTS:
     /*!
      * \brief Application's active window start to rotate to \a newOrientationAngle.
@@ -240,6 +243,9 @@ Q_SIGNALS:
     //! Emitted when input method extended attribute is changed.
     void extendedAttributeChanged(int id, const QString &target, const QString &targetItem,
                                   const QString &attribute, const QVariant &value);
+
+    //! Emitted on language change in input method.
+    void languageChanged(const QString &newLanguage);
 
 private:
     //! Disable default construction

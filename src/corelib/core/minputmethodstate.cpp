@@ -85,6 +85,10 @@ MInputMethodState::MInputMethodState()
     ok = connect(Maliit::InputMethod::instance(), SIGNAL(keyRelease(QKeyEvent)),
                  this, SIGNAL(keyRelease(QKeyEvent)));
     if (!ok) qFatal("signal connection failed!");
+
+    ok = connect(Maliit::InputMethod::instance(), SIGNAL(languageChanged(QString)),
+                 this, SIGNAL(languageChanged(QString)));
+    if (!ok) qFatal("signal connection failed!");
 #endif
 }
 
@@ -340,6 +344,16 @@ QString MInputMethodState::attributeExtensionFile(int id) const
     } else {
         return QString();
     }
+}
+
+QString MInputMethodState::language() const
+{
+#ifdef HAVE_MALIIT
+    return Maliit::InputMethod::instance()->language();
+#else
+    QInputContext *inputContext = qApp->inputContext();
+    return inputContext ? inputContext->language() : QString();
+#endif
 }
 
 #include "moc_minputmethodstate.cpp"
