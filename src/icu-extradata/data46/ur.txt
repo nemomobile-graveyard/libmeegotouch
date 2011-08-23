@@ -1,0 +1,13 @@
+ur{
+    ExemplarCharactersIndex { "[ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ک گ ل م ن و ه ي]" }
+    NumberElements{
+        latn{
+            patterns{
+                currencyFormat { "¤#,##0.00;¤-#,##0.00" }
+                decimalFormat { "#,##0.###;-#,##0.###" }
+                percentFormat { "#,##0%;-#,##0%" }
+                scientificFormat { "#E0" }
+             }
+        }
+    }
+}

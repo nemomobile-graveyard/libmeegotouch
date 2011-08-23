@@ -2568,42 +2568,24 @@ void MLocalePrivate::removeDirectionalFormattingCodes(QString *str) const
 #ifdef HAVE_ICU
 void MLocalePrivate::fixFormattedNumberForRTL(QString *formattedNumber) const
 {
-    // see https://projects.maemo.org/bugzilla/show_bug.cgi?id=232757
-    // and http://comments.gmane.org/gmane.comp.internationalization.bidi/2
+    Q_Q(const MLocale);
+    // see http://comments.gmane.org/gmane.comp.internationalization.bidi/2
+    // and consider the bugs:
+    // https://projects.maemo.org/bugzilla/show_bug.cgi?id=232757
+    // https://projects.maemo.org/bugzilla/show_bug.cgi?id=277180
     //
-    // If the user interface (lc_messages) is Arabic or Persian,
-    // make formatted numbers with percents, minus-signs,... at the end
-    // or the beginning reorder correctly, even if a string starts with
-    // such a number and even if the number is alone in a label.
-    QString categoryNameMessages = categoryName(MLocale::MLcMessages);
-    if(!categoryNameMessages.startsWith(QLatin1String("ar"))
-       && !categoryNameMessages.startsWith(QLatin1String("fa")))
+    // If the user interface (lc_messages) uses a language which uses
+    // right-to-left script, wrap the result in LRE...PDF markers to
+    // make sure the result is not reordered again depending on
+    // context (this assumes that the formats are all edited exactly
+    // as they should appear in display order already!):
+    if(q->localeScripts()[0] != "Arab" && q->localeScripts()[0] != "Hebr")
         return;
-    // Some number formats, for example Persian, already contain some
-    // markup for bidi reordering, although it doesn’t seem to be right.
-    // Remove all already existing markers first to avoid conflicts
-    // with the markers I insert:
+    // remove formatting codes already found in the format, there
+    // should not be any but better make sure:
     removeDirectionalFormattingCodes(formattedNumber);
-    // Now insert a RIGHT-TO-LEFT MARK before the first EN or AN
-    // and another one after the last EN or AN:
-    int first = -1;
-    int last = -1;
-    for(int i = 0; i < formattedNumber->size(); ++i) {
-        switch(formattedNumber->at(i).direction()) {
-        case QChar::DirEN:
-        case QChar::DirAN:
-            last = i;
-            if(first == -1)
-                first = i;
-            break;
-        default:
-            break;
-        }
-    }
-    if(last != -1)
-        formattedNumber->insert(last+1, QChar(0x200F)); // RIGHT-TO-LEFT MARK
-    if(first != -1)
-        formattedNumber->insert(first, QChar(0x200F)); // RIGHT-TO-LEFT MARK
+    formattedNumber->prepend(QChar(0x202A)); // LEFT-TO-RIGHT EMBEDDING
+    formattedNumber->append(QChar(0x202C)); // POP DIRECTIONAL FORMATTING
     return;
 }
 #endif
