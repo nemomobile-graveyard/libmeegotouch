@@ -278,4 +278,14 @@ QString MInputMethodState::attributeExtensionFile(int id) const
     }
 }
 
+QString MInputMethodState::language() const
+{
+#ifdef HAVE_MALIIT
+    return Maliit::InputMethod::instance()->language();
+#else
+    QInputContext *inputContext = qApp->inputContext();
+    return inputContext ? inputContext->language() : QString();
+#endif
+}
+
 #include "moc_minputmethodstate.cpp"
