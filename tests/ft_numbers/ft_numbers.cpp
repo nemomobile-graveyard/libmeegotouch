@@ -102,92 +102,84 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("ar_EG")
             << QString("ar_EG")
             << qlonglong(0)
-            << QString("‏٠‏");
+            << QString("‪٠‬");
     QTest::newRow("ar_EG")
             << QString("ar_EG")
             << QString("ar_EG")
             << qlonglong(1542678073)
-            << QString("‏١٬٥٤٢٬٦٧٨٬٠٧٣‏");
+            << QString("‪١٬٥٤٢٬٦٧٨٬٠٧٣‬");
     QTest::newRow("ar_EG")
             << QString("ar_EG")
             << QString("ar_EG")
             << qlonglong(-1542678073)
-            << QString("‏١٬٥٤٢٬٦٧٨٬٠٧٣‏-");
+            << QString("‪-١٬٥٤٢٬٦٧٨٬٠٧٣‬");
     QTest::newRow("ar_EG")
             << QString("ar_EG")
             << QString("en_US")
             << qlonglong(1542678073)
-            << QString("‏1,542,678,073‏");
+            << QString("‪1,542,678,073‬");
     QTest::newRow("ar_EG")
             << QString("ar_EG@numbers=arab")
             << QString("ar_EG@numbers=latn")
             << qlonglong(-1542678073)
-        // with RLM markers because language is ar!:
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
-            << QString("‏1.542.678.073‏-");
+            << QString("‪-1.542.678.073‬");
 #else
-            << QString("‏1٬542٬678٬073‏-");
+            << QString("‪-1٬542٬678٬073‬");
 #endif
     QTest::newRow("ar_EG")
             << QString("fa")
             << QString("ar_EG@numbers=latn")
             << qlonglong(-1542678073)
-        // with RLM markers because language is fa!:
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
-            << QString("‏1.542.678.073‏-");
+            << QString("‪-1.542.678.073‬");
 #else
-            << QString("‏1٬542٬678٬073‏-");
+            << QString("‪-1٬542٬678٬073‬");
 #endif
     QTest::newRow("ar_EG")
             << QString("en_US")
             << QString("ar_EG@numbers=latn")
             << qlonglong(-1542678073)
-        // without RLM markers because language is en_US!:
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
-            << QString("1.542.678.073-");
+            << QString("-1.542.678.073");
 #else
-            << QString("1٬542٬678٬073-");
+            << QString("-1٬542٬678٬073");
 #endif
     QTest::newRow("ar_TN")
             << QString("ar_TN@numbers=arab")
             << QString("ar_TN@numbers=latn")
             << qlonglong(-1542678073)
-        // with RLM markers because language is ar!:
-            << QString("‏1542678073‏-");
+            << QString("‪-1542678073‬");
     QTest::newRow("ar_TN")
             << QString("ar_TN@numbers=arab")
             << QString("ar_TN@numbers=arab")
             << qlonglong(-1542678073)
-        // with RLM markers because language is ar!:
-            << QString("‏١٥٤٢٦٧٨٠٧٣‏-");
+            << QString("‪-١٥٤٢٦٧٨٠٧٣‬");
     QTest::newRow("ar_TN")
             << QString("en_US")
             << QString("ar_TN@numbers=arab")
             << qlonglong(-1542678073)
-        // without RLM markers because language is en_US!:
-            << QString("١٥٤٢٦٧٨٠٧٣-");
+            << QString("-١٥٤٢٦٧٨٠٧٣");
     QTest::newRow("ar_TN")
             << QString("en_US")
             << QString("ar_TN")
             << qlonglong(-1542678073)
-        // without RLM markers because language is en_US!:
-            << QString("١٥٤٢٦٧٨٠٧٣-");
+            << QString("-١٥٤٢٦٧٨٠٧٣");
     QTest::newRow("ar_TN")
             << QString("ar_TN")
             << QString("ar_TN")
             << qlonglong(-1542678073)
-        // with RLM markers because language is en_US!:
-            << QString("‏١٥٤٢٦٧٨٠٧٣‏-");
+            << QString("‪-١٥٤٢٦٧٨٠٧٣‬");
     QTest::newRow("ur_PK")
             << QString("ur_PK")
             << QString("ur_PK")
             << qlonglong(1542678073)
-            << QString("1,542,678,073");
+            << QString("‪1,542,678,073‬");
     QTest::newRow("ur_IN")
             << QString("ur_IN")
             << QString("ur_IN")
             << qlonglong(1542678073)
-            << QString("1,54,26,78,073");
+            << QString("‪1,54,26,78,073‬");
     QTest::newRow("zh_CN")
             << QString("zh_CN")
             << QString("zh_CN")
@@ -207,7 +199,7 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("ar_EG")
             << QString("ar_EG")
             << qlonglong(0)
-            << QString("‏٠‏");
+            << QString("‪٠‬");
 }
 
 void Ft_Numbers::testQLongLongs()
@@ -225,8 +217,8 @@ void Ft_Numbers::testQLongLongs()
         << "localeName: " << localeName
         << " localeNameLcNumeric: " << localeNameLcNumeric
         << " number: " << val
-        << " expected: " << formatted
-        << " formatNumber result: " << loc.formatNumber(val)
+        << " expected: [" << formatted << "]"
+        << " formatNumber result: [" << loc.formatNumber(val) << "]"
         << "\n";
     debugStream.flush();
 #endif
@@ -362,31 +354,31 @@ void Ft_Numbers::testToLongLong_data()
         << QString("١٢٣٤")
         << true
         << qlonglong(1234)
-        << QString("‏١٢٣٤‏");
+        << QString("‪١٢٣٤‬");
     QTest::newRow("ar_EG ١٢٣٤") // ar_EG uses thousands separators
         << QString("ar_EG")
         << QString("١٢٣٤")
         << true
         << qlonglong(1234)
-        << QString("‏١٬٢٣٤‏");
+        << QString("‪١٬٢٣٤‬");
     QTest::newRow("ar_EG ١٬٢٣٤") // ar_EG uses thousands separators
         << QString("ar_EG")
         << QString("١٬٢٣٤")
         << true
         << qlonglong(1234)
-        << QString("‏١٬٢٣٤‏");
+        << QString("‪١٬٢٣٤‬");
     QTest::newRow("fa_IR ۱٬۰۰۰")
         << QString("fa_IR")
         << QString("۱٬۰۰۰")
         << true
         << qlonglong(1000)
-        << QString("‏۱٬۰۰۰‏");
+        << QString("‪۱٬۰۰۰‬");
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
         << QString("ar_SA")
         << QString("١٢٣٤٫١٢٣")
         << false
         << qlonglong(0)
-        << QString("‏٠‏");
+        << QString("‪٠‬");
     QTest::newRow("hi_HI ४,५६७")
         << QString("hi_HI")
         << QString("४,५६७")
@@ -635,25 +627,25 @@ void Ft_Numbers::testToShort_data()
         << QString("١٢٣٤")
         << true
         << short(1234)
-        << QString("‏١٢٣٤‏");
+        << QString("‪١٢٣٤‬");
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
         << QString("ar_SA")
         << QString("١٢٣٤٫١٢٣")
         << false
         << short(0)
-        << QString("‏٠‏");
+        << QString("‪٠‬");
     QTest::newRow("ar_SA ١٢٣٤-")
         << QString("ar_SA")
-        << QString("١٢٣٤-")
+        << QString("-١٢٣٤")
         << true
         << short(-1234)
-        << QString("‏١٢٣٤‏-");
+        << QString("‪-١٢٣٤‬");
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣-")
         << QString("ar_SA")
         << QString("١٢٣٤٫١٢٣-")
         << false
         << short(0)
-        << QString("‏٠‏");
+        << QString("‪٠‬");
     QTest::newRow("hi_HI ४,५६७")
         << QString("hi_HI")
         << QString("४,५६७")
@@ -891,13 +883,13 @@ void Ft_Numbers::testToInt_data()
         << QString("١٢٣٤")
         << true
         << int(1234)
-        << QString("‏١٢٣٤‏");
+        << QString("‪١٢٣٤‬");
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
         << QString("ar_SA")
         << QString("١٢٣٤٫١٢٣")
         << false
         << int(0)
-        << QString("‏٠‏");
+        << QString("‪٠‬");
     QTest::newRow("hi_HI ४,५६७")
         << QString("hi_HI")
         << QString("४,५६७")
@@ -1058,7 +1050,7 @@ void Ft_Numbers::testDoubles_data()
     QTest::newRow("ar_SA 1234567.1234567")
             << QString("ar_SA")
             << double(1234567.1234567)
-            << QString("‏١٢٣٤٥٦٧٫١٢٣‏");
+            << QString("‪١٢٣٤٥٦٧٫١٢٣‬");
     QTest::newRow("hi_HI 1234567.1234567")
             << QString("hi_HI")
             << double(1234567.1234567)
@@ -1472,7 +1464,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1E+10)
-             << QString("‏١٠٠٠٠٠٠٠٠٠٠‏");
+             << QString("‪١٠٠٠٠٠٠٠٠٠٠‬");
 
         QTest::newRow("ar_SA ١٠٠٠") // ar_SA does not use thousands separators
             << QString("ar_SA")
@@ -1480,7 +1472,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1000.0)
-             << QString("‏١٠٠٠‏");
+             << QString("‪١٠٠٠‬");
 
         QTest::newRow("ar_SA ١٬٠٠٠") // ar_SA does not use thousands separators
             << QString("ar_SA")
@@ -1488,7 +1480,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << false
             << double(0.0)
-            << QString("‏٠‏");
+            << QString("‪٠‬");
 
         QTest::newRow("ar_EG ١اس+١٠") // ar_EG does not use thousands separators
             << QString("ar_EG")
@@ -1496,7 +1488,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1E+10)
-            << QString("‏١٠٬٠٠٠٬٠٠٠٬٠٠٠‏");
+            << QString("‪١٠٬٠٠٠٬٠٠٠٬٠٠٠‬");
 
         QTest::newRow("ar_EG ١٠٠٠") // ar_EG does not use thousands separators
             << QString("ar_EG")
@@ -1504,7 +1496,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1000.0)
-            << QString("‏١٬٠٠٠‏");
+            << QString("‪١٬٠٠٠‬");
 
         QTest::newRow("ar_EG ١٬٠٠٠") // ar_EG does not use thousands separators
             << QString("ar_EG")
@@ -1512,7 +1504,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1000.0)
-            << QString("‏١٬٠٠٠‏");
+            << QString("‪١٬٠٠٠‬");
 
         QTest::newRow("fa_IR ١×۱۰^١۰")
             << QString("fa_IR")
@@ -1520,7 +1512,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1E+10)
-            << QString("‏۱۰٬۰۰۰٬۰۰۰٬۰۰۰‏");
+            << QString("‪۱۰٬۰۰۰٬۰۰۰٬۰۰۰‬");
 
         QTest::newRow("fa_IR ۱۰۰۰")
             << QString("fa_IR")
@@ -1528,7 +1520,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1000.0)
-            << QString("‏۱٬۰۰۰‏");
+            << QString("‪۱٬۰۰۰‬");
 
         QTest::newRow("fa_IR ۱٬۰۰۰")
             << QString("fa_IR")
@@ -1536,7 +1528,7 @@ void Ft_Numbers::testToDouble_data()
             << int(0)
             << true
             << double(1000.0)
-            << QString("‏۱٬۰۰۰‏");
+            << QString("‪۱٬۰۰۰‬");
     }
 
     QTest::newRow("de_DE 1234.56")
@@ -1601,14 +1593,14 @@ void Ft_Numbers::testToDouble_data()
         << int(7)
         << true
         << double(1234567.1234567)
-        << QString("‏١٢٣٤٥٦٧٫١٢٣٤٥٦٧‏");
+        << QString("‪١٢٣٤٥٦٧٫١٢٣٤٥٦٧‬");
     QTest::newRow("ar_SA ١٢٣٤٥٦٧٫١٢٣٤٥٦٧")
         << QString("ar_SA")
-        << QString("‏١٢٣٤٥٦٧٫١٢٣٤٥٦٧‏")
+        << QString("‪١٢٣٤٥٦٧٫١٢٣٤٥٦٧‬")
         << int(7)
         << true
         << double(1234567.1234567)
-        << QString("‏١٢٣٤٥٦٧٫١٢٣٤٥٦٧‏");
+        << QString("‪١٢٣٤٥٦٧٫١٢٣٤٥٦٧‬");
     QTest::newRow("hi_HI १२,३४,५६७.१२३४५६७")
         << QString("hi_HI")
         << QString("१२,३४,५६७.१२३४५६७")
@@ -2067,117 +2059,117 @@ void Ft_Numbers::testToFloat_data()
             << QString("١اس+١٠")
             << true
             << float(1E+10)
-            << QString("‏١٠٠٠٠٠٠٠٠٠٠‏");
+            << QString("‪١٠٠٠٠٠٠٠٠٠٠‬");
         QTest::newRow("ar_SA ١اس+١٠")
             << QString("ar_SA")
-            << QString("‏١اس+١٠‏")
+            << QString("‪١اس+١٠‬")
             << true
             << float(1E+10)
-            << QString("‏١٠٠٠٠٠٠٠٠٠٠‏");
+            << QString("‪١٠٠٠٠٠٠٠٠٠٠‬");
 
         QTest::newRow("ar_SA ١٠٠٠")
             << QString("ar_SA")
             << QString("١٠٠٠")
             << true
             << float(1000.0)
-            << QString("‏١٠٠٠‏");
+            << QString("‪١٠٠٠‬");
         QTest::newRow("ar_SA ١٠٠٠")
             << QString("ar_SA")
-            << QString("‏١٠٠٠‏")
+            << QString("‪١٠٠٠‬")
             << true
             << float(1000.0)
-            << QString("‏١٠٠٠‏");
+            << QString("‪١٠٠٠‬");
 
         QTest::newRow("ar_SA ١٬٠٠٠")
             << QString("ar_SA")
             << QString("١٬٠٠٠")
             << false
             << float(0.0)
-            << QString("‏٠‏");
+            << QString("‪٠‬");
         QTest::newRow("ar_SA ١٬٠٠٠")
             << QString("ar_SA")
-            << QString("‏١٬٠٠٠‏")
+            << QString("‪١٬٠٠٠‬")
             << false
             << float(0.0)
-            << QString("‏٠‏");
+            << QString("‪٠‬");
 
         QTest::newRow("ar_EG ١اس+١٠")
             << QString("ar_EG")
             << QString("١اس+١٠")
             << true
             << float(1E+10)
-            << QString("‏١٠٬٠٠٠٬٠٠٠٬٠٠٠‏");
+            << QString("‪١٠٬٠٠٠٬٠٠٠٬٠٠٠‬");
         QTest::newRow("ar_EG ١اس+١٠")
             << QString("ar_EG")
-            << QString("‏١اس+١٠‏")
+            << QString("‪١اس+١٠‬")
             << true
             << float(1E+10)
-            << QString("‏١٠٬٠٠٠٬٠٠٠٬٠٠٠‏");
+            << QString("‪١٠٬٠٠٠٬٠٠٠٬٠٠٠‬");
 
         QTest::newRow("ar_EG ١٠٠٠")
             << QString("ar_EG")
             << QString("١٠٠٠")
             << true
             << float(1000.0)
-            << QString("‏١٬٠٠٠‏");
+            << QString("‪١٬٠٠٠‬");
         QTest::newRow("ar_EG ١٠٠٠")
             << QString("ar_EG")
-            << QString("‏١٠٠٠‏")
+            << QString("‪١٠٠٠‬")
             << true
             << float(1000.0)
-            << QString("‏١٬٠٠٠‏");
+            << QString("‪١٬٠٠٠‬");
 
         QTest::newRow("ar_EG ١٬٠٠٠")
             << QString("ar_EG")
             << QString("١٬٠٠٠")
             << true
             << float(1000.0)
-            << QString("‏١٬٠٠٠‏");
+            << QString("‪١٬٠٠٠‬");
         QTest::newRow("ar_EG ١٬٠٠٠")
             << QString("ar_EG")
-            << QString("‏١٬٠٠٠‏")
+            << QString("‪١٬٠٠٠‬")
             << true
             << float(1000.0)
-            << QString("‏١٬٠٠٠‏");
+            << QString("‪١٬٠٠٠‬");
 
         QTest::newRow("fa_IR ١×۱۰^١۰")
             << QString("fa_IR")
             << QString("۱×۱۰^۱۰")
             << true
             << float(1E+10)
-            << QString("‏۱۰٬۰۰۰٬۰۰۰٬۰۰۰‏");
+            << QString("‪۱۰٬۰۰۰٬۰۰۰٬۰۰۰‬");
         QTest::newRow("fa_IR ١×۱۰^١۰")
             << QString("fa_IR")
-            << QString("‏۱×۱۰^۱۰‏")
+            << QString("‪۱×۱۰^۱۰‬")
             << true
             << float(1E+10)
-            << QString("‏۱۰٬۰۰۰٬۰۰۰٬۰۰۰‏");
+            << QString("‪۱۰٬۰۰۰٬۰۰۰٬۰۰۰‬");
 
         QTest::newRow("fa_IR ۱۰۰۰")
             << QString("fa_IR")
             << QString("۱۰۰۰")
             << true
             << float(1000.0)
-            << QString("‏۱٬۰۰۰‏");
+            << QString("‪۱٬۰۰۰‬");
         QTest::newRow("fa_IR ۱۰۰۰")
             << QString("fa_IR")
-            << QString("‏۱۰۰۰‏")
+            << QString("‪۱۰۰۰‬")
             << true
             << float(1000.0)
-            << QString("‏۱٬۰۰۰‏");
+            << QString("‪۱٬۰۰۰‬");
 
         QTest::newRow("fa_IR ۱٬۰۰۰")
             << QString("fa_IR")
             << QString("۱٬۰۰۰")
             << true
             << float(1000.0)
-            << QString("‏۱٬۰۰۰‏");
+            << QString("‪۱٬۰۰۰‬");
         QTest::newRow("fa_IR ۱٬۰۰۰")
             << QString("fa_IR")
-            << QString("‏۱٬۰۰۰‏")
+            << QString("‪۱٬۰۰۰‬")
             << true
             << float(1000.0)
-            << QString("‏۱٬۰۰۰‏");
+            << QString("‪۱٬۰۰۰‬");
     }
 
     QTest::newRow("en_GB 1E+38")
@@ -2258,16 +2250,16 @@ void Ft_Numbers::testToFloat_data()
         << QString("0");
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
         << QString("ar_SA")
-        << QString("‏١٢٣٤٫١٢٣‏")
+        << QString("‪١٢٣٤٫١٢٣‬")
         << true
         << float(1234.123)
-        << QString("‏١٢٣٤٫١٢٣‏");
+        << QString("‪١٢٣٤٫١٢٣‬");
     QTest::newRow("ar_SA ١٢٣٤٫١٢٣")
         << QString("ar_SA")
         << QString("١٢٣٤٫١٢٣")
         << true
         << float(1234.123)
-        << QString("‏١٢٣٤٫١٢٣‏");
+        << QString("‪١٢٣٤٫١٢٣‬");
     QTest::newRow("hi_HI ४,५६७.१२३")
         << QString("hi_HI")
         << QString("४,५६७.१२३")
@@ -2428,27 +2420,27 @@ void Ft_Numbers::testDoublesWithFormatting_data()
             << 1234567.123450
             << 6 << 0
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
-            << QString("‏1.234.567,12345‏");
+            << QString("‪1.234.567,12345‬");
 #else
-            << QString("‏1٬234٬567٫12345‏");
+            << QString("‪1٬234٬567٫12345‬");
 #endif
     QTest::newRow("ar_EG@numbers=latn 6")
             << QString("ar_EG@numbers=latn")
             << 1234567.123450
             << 6 << 6
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
-            << QString("‏1.234.567,123450‏");
+            << QString("‪1.234.567,123450‬");
 #else
-            << QString("‏1٬234٬567٫123450‏");
+            << QString("‪1٬234٬567٫123450‬");
 #endif
     QTest::newRow("ar_EG@numbers=arab 6")
             << QString("ar_EG@numbers=arab")
             << 1234567.123450
-            << 6 << 0 << QString("‏١٬٢٣٤٬٥٦٧٫١٢٣٤٥‏");
+            << 6 << 0 << QString("‪١٬٢٣٤٬٥٦٧٫١٢٣٤٥‬");
     QTest::newRow("ar_EG@numbers=arab 6")
             << QString("ar_EG@numbers=arab")
             << 1234567.123450
-            << 6 << 6 << QString("‏١٬٢٣٤٬٥٦٧٫١٢٣٤٥٠‏");
+            << 6 << 6 << QString("‪١٬٢٣٤٬٥٦٧٫١٢٣٤٥٠‬");
 }
 
 void Ft_Numbers::testDoublesWithFormatting()
@@ -2640,7 +2632,7 @@ void Ft_Numbers::testCurrencies_data()
         << QString("ar_EG")
         << 1234.56
         << "USD"
-        << QString("US$ ١٬٢٣٤٫٥٦");
+        << QString("١٬٢٣٤٫٥٦ US$");
     QTest::newRow("ar_EG")
         << QString("de_DE") // language
         << QString("ar_EG") // lc_monetary
@@ -2648,9 +2640,9 @@ void Ft_Numbers::testCurrencies_data()
         << 1234.56
         << "USD"
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
-        << QString("US$ 1.234,56");
+        << QString("1.234,56 US$");
 #else
-        << QString("US$ 1٬234٫56");
+        << QString("1٬234٫56 US$");
 #endif
     QTest::newRow("ar_SA")
         << QString("de_DE")
@@ -2658,7 +2650,7 @@ void Ft_Numbers::testCurrencies_data()
         << QString("ar_SA")
         << 1234.56
         << "USD"
-        << QString("US$١٢٣٤٫٥٦");
+        << QString("١٢٣٤٫٥٦US$");
     QTest::newRow("ar_SA")
         << QString("de_DE")
         << QString("ar_SA")
@@ -2666,9 +2658,9 @@ void Ft_Numbers::testCurrencies_data()
         << 1234.56
         << "USD"
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=6)
-        << QString("US$1234,56");
+        << QString("1234,56US$");
 #else
-        << QString("US$1234٫56");
+        << QString("1234٫56US$");
 #endif
     QTest::newRow("hi_IN")
         << QString("de_DE")

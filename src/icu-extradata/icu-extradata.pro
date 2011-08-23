@@ -17,7 +17,6 @@ greaterThan(ICUVERSION, 4.4) {
                  data/en_IE.txt \
                  data/en_SG.txt \
                  data/es_AR.txt \
-                 data/fa.txt \
                  data/fi.txt \
                  data/fr_CA.txt \
                  data/gl.txt \
@@ -35,7 +34,6 @@ greaterThan(ICUVERSION, 4.4) {
                  data/sv.txt \
                  data/th.txt \
                  data/uk.txt \
-                 data/ur.txt \
                  data/vi.txt \
                  data/zh_Hant.txt \
                  data/zh_Hant_HK.txt \
@@ -44,7 +42,13 @@ greaterThan(ICUVERSION, 4.4) {
                  data/zh_Hant_TW.txt
 
     greaterThan(ICUVERSION, 4.5) {
-        LOCALESTXT += data46/es.txt \
+        LOCALESTXT += data46/ar.txt \
+                      data46/ar_QA.txt \
+                      data46/ar_SA.txt \
+                      data46/ar_SY.txt \
+                      data46/ar_TN.txt \
+                      data46/ar_YE.txt \
+                      data46/es.txt \
                       data46/es_419.txt \
                       data46/es_DO.txt \
                       data46/es_GT.txt \
@@ -56,11 +60,20 @@ greaterThan(ICUVERSION, 4.4) {
                       data46/es_PR.txt \
                       data46/es_SV.txt \
                       data46/es_US.txt \
+                      data46/fa.txt \
+                      data46/fa_AF.txt \
                       data46/pt.txt \
                       data46/pt_BR.txt \
-                      data46/pt_PT.txt
+                      data46/pt_PT.txt \
+                      data46/ur.txt \
+                      data46/ur_IN.txt
     } else {
-        LOCALESTXT += data/es.txt \
+        LOCALESTXT += data/ar.txt \
+                      data/ar_QA.txt \
+                      data/ar_SA.txt \
+                      data/ar_SY.txt \
+                      data/ar_TN.txt \
+                      data/ar_YE.txt \
                       data/es_419.txt \
                       data/es_DO.txt \
                       data/es_GT.txt \
@@ -72,9 +85,13 @@ greaterThan(ICUVERSION, 4.4) {
                       data/es_PR.txt \
                       data/es_SV.txt \
                       data/es_US.txt \
+                      data/fa.txt \
+                      data/fa_AF.txt \
                       data/pt.txt \
                       data/pt_BR.txt \
-                      data/pt_PT.txt
+                      data/pt_PT.txt \
+                      data/ur.txt \
+                      data/ur_IN.txt
     }
     LANGTXT    = data/lang/en.txt \
                  data/lang/es.txt \
