@@ -1,10 +1,10 @@
 ar_SA	Language endonym	العربية
 ar_SA	Country endonym	المملكة العربية السعودية
 ar_SA	Decimal point	٫
-ar_SA	Floating Point Number	‏١٢٣٤٥٦٧٨٩٫٠١٢‏-
-ar_SA	Percent value	-‏١٬٢٣٤٫٥٦٧٩‏٪
-ar_SA	Currency value	€‏١٢٣٤٫٥٦‏
-ar_SA	Negative Currency value	-€‏١٢٣٤٫٥٦‏
+ar_SA	Floating Point Number	‪-١٢٣٤٥٦٧٨٩٫٠١٢‬
+ar_SA	Percent value	‪-١٬٢٣٤٫٥٦٧٩%‬
+ar_SA	Currency value	‪١٢٣٤٫٥٦€‬
+ar_SA	Negative Currency value	‪-١٢٣٤٫٥٦€‬
 ar_SA	Name of month 01 (Gregorian calendar), stand-alone, wide	يناير
 ar_SA	Name of month 02 (Gregorian calendar), stand-alone, wide	فبراير
 ar_SA	Name of month 03 (Gregorian calendar), stand-alone, wide	مارس
@@ -4873,10 +4873,10 @@ eu_ES & en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default
 fa_IR	Language endonym	فارسی
 fa_IR	Country endonym	ایران
 fa_IR	Decimal point	٫
-fa_IR	Floating Point Number	−‏۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‏
-fa_IR	Percent value	−٪‏۱٬۲۳۴٫۵۶۷۹‏
-fa_IR	Currency value	‏۱٬۲۳۴٫۵۶‏ €
-fa_IR	Negative Currency value	−‏۱٬۲۳۴٫۵۶‏ €
+fa_IR	Floating Point Number	‪−۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‬
+fa_IR	Percent value	‪−۱٬۲۳۴٫۵۶۷۹%‬
+fa_IR	Currency value	‪€ ۱٬۲۳۴٫۵۶‬
+fa_IR	Negative Currency value	‪€ −۱٬۲۳۴٫۵۶‬
 fa_IR	Name of month 01 (Gregorian calendar), stand-alone, wide	ژانویه
 fa_IR	Name of month 02 (Gregorian calendar), stand-alone, wide	فوریه
 fa_IR	Name of month 03 (Gregorian calendar), stand-alone, wide	مارس
@@ -6265,10 +6265,10 @@ gl_ES & en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default
 he_IL	Language endonym	עברית
 he_IL	Country endonym	ישראל
 he_IL	Decimal point	.
-he_IL	Floating Point Number	-123,456,789.012
-he_IL	Percent value	-1,234.5679%
-he_IL	Currency value	1,234.56 €
-he_IL	Negative Currency value	-1,234.56 €
+he_IL	Floating Point Number	‪-123,456,789.012‬
+he_IL	Percent value	‪-1,234.5679%‬
+he_IL	Currency value	‪1,234.56 €‬
+he_IL	Negative Currency value	‪-1,234.56 €‬
 he_IL	Name of month 01 (Gregorian calendar), stand-alone, wide	ינואר
 he_IL	Name of month 02 (Gregorian calendar), stand-alone, wide	פברואר
 he_IL	Name of month 03 (Gregorian calendar), stand-alone, wide	מרס
@@ -12529,10 +12529,10 @@ uk_UA & en_US	dateFull, timeFull, Islamic calendar, 24/12 hour mode: 24 (default
 ur_PK	Language endonym	اردو
 ur_PK	Country endonym	پاکستان
 ur_PK	Decimal point	.
-ur_PK	Floating Point Number	-123,456,789.012
-ur_PK	Percent value	-1,234.5679%
-ur_PK	Currency value	€1,234.56
-ur_PK	Negative Currency value	-€1,234.56
+ur_PK	Floating Point Number	‪-123,456,789.012‬
+ur_PK	Percent value	‪-1,234.5679%‬
+ur_PK	Currency value	‪€1,234.56‬
+ur_PK	Negative Currency value	‪€-1,234.56‬
 ur_PK	Name of month 01 (Gregorian calendar), stand-alone, wide	جنوری
 ur_PK	Name of month 02 (Gregorian calendar), stand-alone, wide	فروری
 ur_PK	Name of month 03 (Gregorian calendar), stand-alone, wide	مار چ
@@ -13109,8 +13109,8 @@ zh_CN@collation=pinyin	Name of weekday 04 (Islamic calendar), format, narrow	四
 zh_CN@collation=pinyin	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_CN@collation=pinyin	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_CN@collation=pinyin	Name of weekday 07 (Islamic calendar), format, narrow	日
-zh_CN@collation=pinyin	Collation sample	/ # % ∮ ☺ ♨ 01 ٠١ ०१ 02 ٠٢ ०२ 04 ٠٤ ٠۴ ०४ 05 ٠٥ ٠۵ ०५ 06 ٠٦ ٠۶ ०६ 1 ١ १ 11 ١١ ११ 12 ١٢ १२ 14 ١٤ ١۴ १४ 15 ١٥ ١۵ १५ 16 ١٦ ١۶ १६ 2 ٢ २ 21 ٢١ २१ 22 ٢٢ २२ 24 ٢٤ ٢۴ २४ 25 ٢٥ ٢۵ २५ 26 ٢٦ ٢۶ २६ 4 ٤ ۴ ४ 5 ٥ ۵ ५ 6 ٦ ۶ ६ á Á a A ă Ă å Å ä Ä 爱 b 播 c č ca ča čc ch cH Ch CH 此 coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa 得 dz ďz ě e 俄 ěa ea 二 ěz ez h H i I 鳩山 楽谷 ň ň Ň n N ňa na 内山 ňz nz o O ö Ö oegh öfgh 攀 r ř ra řa 若山 rz řz s š sa ša 三 沙紀 山田 松下 sz šz t ť ta ťa tz ťz ú U ů Ů 小中 一 z ž za ža 正 中 中村 竹山 竹山 zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン
-zh_CN@collation=pinyin	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z α]
+zh_CN@collation=pinyin	Collation sample	/ # % ∮ ☺ ♨ 01 ٠١ ०१ 02 ٠٢ ०२ 04 ٠٤ ٠۴ ०४ 05 ٠٥ ٠۵ ०५ 06 ٠٦ ٠۶ ०६ 1 ١ १ 11 ١١ ११ 12 ١٢ १२ 14 ١٤ ١۴ १४ 15 ١٥ ١۵ १५ 16 ١٦ ١۶ १६ 2 ٢ २ 21 ٢١ २१ 22 ٢٢ २२ 24 ٢٤ ٢۴ २४ 25 ٢٥ ٢۵ २५ 26 ٢٦ ٢۶ २६ 4 ٤ ۴ ४ 5 ٥ ۵ ५ 6 ٦ ۶ ६ 爱 播 此 得 俄 二 鳩山 楽谷 内山 攀 若山 三 沙紀 山田 松下 小中 一 正 中 中村 竹山 竹山 á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン
+zh_CN@collation=pinyin	Exemplar characters index	[Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 zh_CN@collation=pinyin	Scripts used	Hani
 zh_CN@collation=pinyin	%r (locale specific 12 hour “TimeShort”)	下午2:31
 zh_CN@collation=pinyin	%R (locale specific 24 hour “TimeShort”)	14:31
@@ -13805,7 +13805,7 @@ zh_Hans_CN	Name of weekday 04 (Islamic calendar), format, narrow	四
 zh_Hans_CN	Name of weekday 05 (Islamic calendar), format, narrow	五
 zh_Hans_CN	Name of weekday 06 (Islamic calendar), format, narrow	六
 zh_Hans_CN	Name of weekday 07 (Islamic calendar), format, narrow	日
-zh_Hans_CN	Collation sample	/ # % ∮ ☺ ♨ 01 ٠١ ०१ 02 ٠٢ ०२ 04 ٠٤ ٠۴ ०४ 05 ٠٥ ٠۵ ०५ 06 ٠٦ ٠۶ ०६ 1 ١ १ 11 ١١ ११ 12 ١٢ १२ 14 ١٤ ١۴ १४ 15 ١٥ ١۵ १५ 16 ١٦ ١۶ १६ 2 ٢ २ 21 ٢١ २१ 22 ٢٢ २२ 24 ٢٤ ٢۴ २४ 25 ٢٥ ٢۵ २५ 26 ٢٦ ٢۶ २६ 4 ٤ ۴ ४ 5 ٥ ۵ ५ 6 ٦ ۶ ६ á Á a A ă Ă å Å ä Ä 爱 b 播 c č ca ča čc ch cH Ch CH 此 coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa 得 dz ďz ě e 俄 ěa ea 二 ěz ez h H i I 鳩山 楽谷 ň ň Ň n N ňa na 内山 ňz nz o O ö Ö oegh öfgh 攀 r ř ra řa 若山 rz řz s š sa ša 三 沙紀 山田 松下 sz šz t ť ta ťa tz ťz ú U ů Ů 小中 一 z ž za ža 正 中 中村 竹山 竹山 zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン
+zh_Hans_CN	Collation sample	/ # % ∮ ☺ ♨ 01 ٠١ ०१ 02 ٠٢ ०२ 04 ٠٤ ٠۴ ०४ 05 ٠٥ ٠۵ ०५ 06 ٠٦ ٠۶ ०६ 1 ١ १ 11 ١١ ११ 12 ١٢ १२ 14 ١٤ ١۴ १४ 15 ١٥ ١۵ १५ 16 ١٦ ١۶ १६ 2 ٢ २ 21 ٢١ २१ 22 ٢٢ २२ 24 ٢٤ ٢۴ २४ 25 ٢٥ ٢۵ २५ 26 ٢٦ ٢۶ २६ 4 ٤ ۴ ४ 5 ٥ ۵ ५ 6 ٦ ۶ ६ 爱 播 此 得 俄 二 鳩山 楽谷 内山 攀 若山 三 沙紀 山田 松下 小中 一 正 中 中村 竹山 竹山 á Á a A ă Ă å Å ä Ä b c č ca ča čc ch cH Ch CH coté COTÉ cote COTE côté CÔTÉ côte CÔTE cz čz d ď da ďa dz ďz ě e ěa ea ěz ez h H i I ň ň Ň n N ňa na ňz nz o O ö Ö oegh öfgh r ř ra řa rz řz s š sa ša sz šz t ť ta ťa tz ťz ú U ů Ů z ž za ža zz žz α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ک گ ل م ن ه و ي あ うちやま か こなか さ さき ジョン た ティロー な なかむら ナターシャ は はとやま ヘンリー ま マイケル まつした や やまだ ヤングマン ら ラースロ らくたに わ わかやま ワトソン
 zh_Hans_CN	Exemplar characters index	[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
 zh_Hans_CN	Scripts used	Hani
 zh_Hans_CN	%r (locale specific 12 hour “TimeShort”)	下午2:31
