@@ -355,8 +355,6 @@ void MApplicationMenuViewPrivate::init()
     actionCommandViewport->setWidget(actionListHolder);
 
     list = new MList(actionListHolder);
-    MActionsItemModel* actionItemModel = new MActionsItemModel(controller, this);
-    list->setItemModel(actionItemModel);
     cellCreator = new MApplicationMenuCellCreator(list);
     list->setCellCreator(cellCreator);
     list->setSelectionMode(MList::NoSelection);
@@ -374,15 +372,6 @@ void MApplicationMenuViewPrivate::init()
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), SLOT(actionTriggered(QModelIndex)));
     connect(controller, SIGNAL(displayEntered()), SLOT(resetListPosition()));
-
-    ok = actionItemModel->connect(controller, SIGNAL(appearing()), SLOT(freeze()));
-    if (!ok) qFatal("signal connection failed");
-
-    ok = actionItemModel->connect(controller, SIGNAL(appeared()), SLOT(unfreeze()));
-    if (!ok) qFatal("signal connection failed");
-
-    actionItemModel->connect(controller, SIGNAL(disappearing()), SLOT(freeze()));
-    actionItemModel->connect(controller, SIGNAL(disappeared()), SLOT(unfreeze()));
 }
 
 void MApplicationMenuViewPrivate::actionTriggered(const QModelIndex &index)
@@ -452,6 +441,20 @@ void MApplicationMenuViewPrivate::updateStyleNames()
     cellCreator->setItemTitleStyleName(s->itemTitleStyleName());
 }
 
+void MApplicationMenuViewPrivate::setupListModel()
+{
+    MActionsItemModel* actionItemModel = new MActionsItemModel(controller, this);
+    list->setItemModel(actionItemModel);
+
+    bool ok = actionItemModel->connect(controller, SIGNAL(appearing()), SLOT(freeze()));
+    if (!ok) qFatal("signal connection failed");
+
+    ok = actionItemModel->connect(controller, SIGNAL(appeared()), SLOT(unfreeze()));
+    if (!ok) qFatal("signal connection failed");
+
+    actionItemModel->connect(controller, SIGNAL(disappearing()), SLOT(freeze()));
+    actionItemModel->connect(controller, SIGNAL(disappeared()), SLOT(unfreeze()));
+}
 /////////////////////////////////////////////////////////////////////////////
 
 MApplicationMenuView::MApplicationMenuView(MApplicationMenu *controller) :
@@ -531,6 +534,15 @@ void MApplicationMenuView::applyStyle()
     MSceneWindowView::applyStyle();
 
     d->updateStyleNames();
+}
+
+void MApplicationMenuView::setupModel()
+{
+    Q_D(MApplicationMenuView);
+
+    MSceneWindowView::setupModel();
+
+    d->setupListModel();
 }
 
 M_REGISTER_VIEW_NEW(MApplicationMenuView, MApplicationMenu)

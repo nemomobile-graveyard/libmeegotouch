@@ -103,6 +103,7 @@ public:
 protected:
     //! \reimp
     virtual void applyStyle();
+    virtual void setupModel();
     //! \reimp_end
     MApplicationMenuView(MApplicationMenuViewPrivate &dd, MApplicationMenu *controller);
 

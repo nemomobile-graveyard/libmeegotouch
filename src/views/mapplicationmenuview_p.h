@@ -138,6 +138,7 @@ public:
     virtual ~MApplicationMenuViewPrivate();
     void init();
     void updateStyleNames();
+    void setupListModel();
 
 private slots:
     void actionTriggered(const QModelIndex &index);
