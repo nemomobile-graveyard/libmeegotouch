@@ -1,8 +1,10 @@
-libmeegotouch (0.23.10~1) unstable; urgency=low
+libmeegotouch (0.23.10-1) unstable; urgency=low
 
-  * [unreleased]
+  * New version
+  * Fixes: NB#278171 - Some songs with Finnish title shown wrong in music player
+  * Fixes: NB#243758 - (AcceptId-919470) [TASK] [FEA] Chinese sorting in Contact List
 
- -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Mon, 15 Aug 2011 12:35:19 +0300
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Tue, 23 Aug 2011 10:58:11 +0300
 
 libmeegotouch (0.23.9-1) unstable; urgency=low
 
