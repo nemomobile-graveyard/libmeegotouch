@@ -261,15 +261,15 @@ void Ut_MApplication::mApplicationConstructorWithService()
 
 void Ut_MApplication::mAppName()
 {
-    app = buildApp(1, "appName1 -foobar");
+    app = buildApp(2, "appName1 -foobar");
     QCOMPARE(app->appName(), QString("appName1"));
     delete app;
 
-    app = buildApp(1, "./appName2 -foobar");
+    app = buildApp(2, "./appName2 -foobar");
     QCOMPARE(app->appName(), QString("appName2"));
     delete app;
 
-    app = buildApp(1, "/foo/bar/appName3 -foobar");
+    app = buildApp(2, "/foo/bar/appName3 -foobar");
     QCOMPARE(app->appName(), QString("appName3"));
     delete app;
 }
@@ -358,11 +358,15 @@ void Ut_MApplication::mApplicationNoFeedback()
     QVERIFY(app->feedbackPlayer() != 0);
     delete app;
 }
+*/
 
-
+//these 2 tests request graphcical assets from themedaemon which is running on device
+//in meego graphicssystem so we need to use raster and local daemon instance.
+//anyway these 2 tests are a bit fragile so in case they can be disabled..
 void Ut_MApplication::testActiveApplicationWindow()
 {
-    app = buildApp( 2, "appName -software" );
+    //we have to avoid using meego graphicssystem
+    app = buildApp( 4, "appName -graphicssystem raster -local-theme" );
     QVERIFY( app->activeApplicationWindow() == 0 );
 
     MApplicationWindow *appWin = new MApplicationWindow;
@@ -376,9 +380,10 @@ void Ut_MApplication::testActiveApplicationWindow()
 
 void Ut_MApplication::testApplicationWindows()
 {
-    app = buildApp( 2, "appName -software" );
+    //we have to avoid using meego graphicssystem
+    app = buildApp( 4, "appName -graphicssystem raster -local-theme" );
+
     MApplicationWindow *appWin1 = new MApplicationWindow;
-    Q_UNUSED(appWin1);
     MApplicationWindow *appWin2 = new MApplicationWindow;
     MApplicationWindow *appWin3 = new MApplicationWindow;
 
@@ -399,7 +404,7 @@ void Ut_MApplication::testApplicationWindows()
     delete appWin1;
     delete app;
 }
-*/
+
 
 void Ut_MApplication::testPrestartMode()
 {
