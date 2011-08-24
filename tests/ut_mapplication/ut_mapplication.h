@@ -61,8 +61,8 @@ private slots:
     void mApplicationTranslationPath();
     //void mApplicationNoFeedback();
 
-    //void testActiveApplicationWindow();
-    //void testApplicationWindows();
+    void testActiveApplicationWindow();
+    void testApplicationWindows();
     void testPrestartMode();
     void testReleasePrestartModeLazyShutdown();
     void testReleasePrestartModeTerminateOnClose();
